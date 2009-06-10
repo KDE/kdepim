@@ -41,6 +41,7 @@ GlobalContactModel::GlobalContactModel()
   scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
   mMonitor = new Akonadi::Monitor;
+  mMonitor->fetchCollection( true );
   mMonitor->setItemFetchScope( scope );
   mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
   mMonitor->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
