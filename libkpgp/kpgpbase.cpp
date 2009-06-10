@@ -353,7 +353,7 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kdDebug(5100) << "PGP exited with exit status " << childExitStatus 
+    kdDebug(5100) << "PGP exited with exit status " << childExitStatus
                   << endl;
   }
   else {
@@ -585,7 +585,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
           // disable polling of stderr
           poller[STD_ERR].events = 0;
         }
-        
+
         if (num_pollers > 2) {
           if (poller[STD_IN].revents & ( POLLERR | POLLHUP ) ) {
             kdDebug(5100) << "GnuPG seems to have hung up" << endl;
@@ -602,7 +602,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
                 len2 = len2-input_pos+1;
 
               //kdDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
-              len2 = write(pin[1], input.mid(input_pos,len2).data(), len2);
+              len2 = write(pin[1], input.data() + input_pos, len2 );
               //kdDebug(5100) << "Wrote " << len2 << " bytes to pin[1] ..." << endl;
               input_pos += len2;
 
@@ -635,7 +635,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   } while(waitpidRetVal == 0);
 
   if( 0 <= pin[1] )
-    close (pin[1]); 
+    close (pin[1]);
   close(pout[0]);
   close(perr[0]);
 
@@ -646,7 +646,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
   if (WIFEXITED(childExitStatus) != 0) {
     // Get the return code of the child
     childExitStatus = WEXITSTATUS(childExitStatus);
-    kdDebug(5100) << "GnuPG exited with exit status " << childExitStatus 
+    kdDebug(5100) << "GnuPG exited with exit status " << childExitStatus
                   << endl;
   }
   else {
