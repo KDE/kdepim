@@ -134,6 +134,7 @@ using KMail::TeeHtmlWriter;
 #include <kactioncollection.h>
 #include <kconfiggroup.h>
 #include <KColorScheme>
+#include <KApplication>
 
 #include <QClipboard>
 #include <QCursor>
@@ -1007,8 +1008,8 @@ bool KMReaderWin::event(QEvent *e)
 //-----------------------------------------------------------------------------
 void KMReaderWin::readConfig(void)
 {
-    /*should be: const*/ KConfigGroup mdnGroup;//( /*FIXME(Andras) port to akonadi KMKernel::config() , "MDN" */);
-  /*should be: const*/ KConfigGroup reader;//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
+   const KConfigGroup mdnGroup(KApplication::kApplication()->sessionConfig(), "MDN");//( /*FIXME(Andras) port to akonadi KMKernel::config() , "MDN" */);
+  /*should be: const*/ KConfigGroup reader(KApplication::kApplication()->sessionConfig(), "Reader");//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
 
   delete mCSSHelper;
   mCSSHelper = new KMail::CSSHelper( mViewer->view() );

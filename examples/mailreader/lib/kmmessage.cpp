@@ -46,6 +46,7 @@ using KMail::HeaderStrategy;
 #include <kuser.h>
 #include <kconfiggroup.h>
 #include <KProtocolManager>
+#include <KApplication>
 
 #include <QList>
 #include <QCursor>
@@ -2954,11 +2955,11 @@ void KMMessage::readConfig()
 {
   KMMsgBase::readConfig();
 
-  KConfigGroup config;//FIXME(Andras) port to akonadi ( KMKernel::config(), "General" );
+  KConfigGroup config(KApplication::kApplication()->sessionConfig(), "General");//FIXME(Andras) port to akonadi ( KMKernel::config(), "General" );
 
 
   { // area for config group "Composer"
-      KConfigGroup config;//FIXME(Andras) port to akonadi ( KMKernel::config(), "Composer" );
+      KConfigGroup config(KApplication::kApplication()->sessionConfig(), "Composer");//FIXME(Andras) port to akonadi ( KMKernel::config(), "Composer" );
     /*FIXME(Andras) port to akonadi
       s->smartQuote = GlobalSettings::self()->smartQuote();
     s->wordWrap = GlobalSettings::self()->wordWrap();
@@ -2973,7 +2974,7 @@ void KMMessage::readConfig()
   }
 
   { // area for config group "Reader"
-      KConfigGroup config;//FIXME(Andras) port to akonadi ( KMKernel::config(), "Reader" );
+      KConfigGroup config(KApplication::kApplication()->sessionConfig(), "Reader" );//FIXME(Andras) port to akonadi ( KMKernel::config(), "Reader" );
     s->headerStrategy = HeaderStrategy::create( config.readEntry( "header-set-displayed", "rich" ) );
   }
 }

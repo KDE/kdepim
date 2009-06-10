@@ -21,6 +21,7 @@
 #include <kcodecs.h>
 #include <kdatetime.h>
 #include <kconfiggroup.h>
+#include <KApplication>
 
 #include <mimelib/mimepp.h>
 #include <kmime/kmime_codecs.h>
@@ -1246,7 +1247,7 @@ static bool sReplaceSubjPrefix, sReplaceForwSubjPrefix;
 void KMMsgBase::readConfig()
 {
 // FIXME(Andras) port to akonadi KConfigGroup composerGroup( KMKernel::config(), "Composer" );
-    KConfigGroup composerGroup;
+    KConfigGroup composerGroup(KApplication::kApplication()->sessionConfig(), "Composer" );
   sReplySubjPrefixes = composerGroup.readEntry("reply-prefixes", QStringList());
   if (sReplySubjPrefixes.isEmpty())
     sReplySubjPrefixes << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:";
