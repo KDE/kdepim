@@ -1,0 +1,40 @@
+Actions w/o (correct) icons
+=mainwindow.cpp=============
+file_new_certificate
+file_export_certificate
+file_export_certifictes_to_server
+file_export_secret_keys
+file_lookup_certificates (from server)
+file_import_certificates
+file_decrypt_verify_files (use same in gpgex)
+file_sign_encrypt_files (use same in gpgex)
+
+view_certificate_details
+certificates_delete
+certificates_certify_certificate
+certificates_change_expiry
+certificates_change_owner_trust
+certificates_change_passphrase
+certificates_add_userid
+certificates_add_subkey (not used yet)
+certificates_revoke (not used yet)
+
+crl_import_crl (import crl from file)
+
+Settings dialog icons
+=conf/*.desktop===============
+kleopatra_config_appear
+kleopatra_config_dirserv
+kleopatra_config_dnorder
+kleopatra_config_smimevalidation
+kleopatra_config_gnupgsystem
+
+States w/o (correct or outdated) icons
+=libkleopatrarc.desktop===============
+Smartcard  (implemented in gpgme++, not yet in KeyFilter)
+Expired
+Revoked
+[Qualified (qualified signature as defined by the German law)]
+[Root      (could be color only)]
+[Trusted   (could be color only)]
+[Untrusted (could be color only)]
