@@ -27,6 +27,7 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/job.h>
 #include <akonadi/collectionmodel.h>
+#include <akonadi/collectionstatisticsmodel.h>
 #include <akonadi/collectionview.h>
 #include <akonadi/control.h>
 #include <akonadi/item.h>
@@ -95,7 +96,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   connect( mCollectionView, SIGNAL(clicked(QModelIndex)), SLOT(collectionActivated(QModelIndex)) );
   splitter->addWidget( mCollectionView );
 
-  mCollectionModel = new Akonadi::CollectionModel( this );
+  mCollectionModel = new Akonadi::CollectionStatisticsModel( this );
   QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
   sortModel->setDynamicSortFilter( true );
   sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
