@@ -149,7 +149,8 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
   if (!onlyReadFromPGP) {
     if (!input.isEmpty()) {
       // write to pin[1] one line after the other to prevent dead lock
-      for (unsigned int i=0; i<input.length(); i+=len2) {
+      uint input_length = input.length();
+      for (unsigned int i=0; i<input_length; i+=len2) {
         len2 = 0;
 
         // check if writing now to pin[1] will not block (5 ms timeout)
@@ -164,12 +165,12 @@ Base::run( const char *cmd, const char *passphrase, bool onlyReadFromPGP )
           else if (pollin.revents & POLLOUT) {
             // search end of next line
             if ((len2 = input.find('\n', i)) == -1)
-              len2 = input.length()-i;
+              len2 = input_length - i;
             else
-              len2 = len2-i+1;
+              len2 = len2 - i + 1;
 
             //kdDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
-            len2 = write(pin[1], input.mid(i,len2).data(), len2);
+            len2 = write(pin[1], input.data() + i, len2);
             //kdDebug(5100) << "Wrote " << len2 << " bytes to pin[1] ..." << endl;
           }
         }
@@ -524,6 +525,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
 
   pid_t waitpidRetVal;
   unsigned int input_pos = 0;
+  uint input_length = input.length();
 
   do {
     //kdDebug(5100) << "Checking if GnuPG is still running..." << endl;
@@ -597,9 +599,9 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
             if (!input.isEmpty()) {
               // search end of next line
               if ((len2 = input.find('\n', input_pos)) == -1)
-                len2 = input.length()-input_pos;
+                len2 = input_length - input_pos;
               else
-                len2 = len2-input_pos+1;
+                len2 = len2 - input_pos + 1;
 
               //kdDebug(5100) << "Trying to write " << len2 << " bytes to pin[1] ..." << endl;
               len2 = write(pin[1], input.data() + input_pos, len2 );
@@ -607,7 +609,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
               input_pos += len2;
 
               // We are done.
-              if (input_pos >= input.length()) {
+              if (input_pos >= input_length) {
                 //kdDebug(5100) << "All input was written to pin[1]" << endl;
                 close (pin[1]);
                 pin[1] = -1;
