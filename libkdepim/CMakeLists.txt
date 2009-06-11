@@ -36,6 +36,7 @@ set(kdepim_LIB_SRCS
    ldapsearchdialog.cpp
    overlaywidget.cpp
    progressmanager.cpp
+   agentprogressmonitor.cpp
    progressdialog.cpp
    statusbarprogresswidget.cpp
    ssllabel.cpp
@@ -101,6 +102,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  ${KDE4_AKONADI_LIBS}
 )
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
