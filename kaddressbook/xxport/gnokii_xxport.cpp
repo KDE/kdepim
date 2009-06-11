@@ -319,14 +319,14 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		  } else {
 			// multiple strings -> split them.
 			a->setFamilyName(addrlist.last().simplified());
-			addrlist.remove(addrlist.last());
+			addrlist.removeLast();
 			a->setGivenName(addrlist.join(" ").simplified());
 		  }
 		} else {
 		  // assumed format: "familyname, ... givenname"
 		  addrlist = s.split(',', QString::SkipEmptyParts);
 		  a->setFamilyName(addrlist.first().simplified());
-		  addrlist.remove(addrlist.first());
+		  addrlist.removeFirst();
 		  a->setGivenName(addrlist.join(" ").simplified());
 		}
 
