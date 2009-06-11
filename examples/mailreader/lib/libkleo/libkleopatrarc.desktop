@@ -1,6 +1,8 @@
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key
+Name[sv]=Ovaliderad nyckel
+Name[uk]=Неперевірений ключ
 
 [Key Filter #1]
 was-validated=true
@@ -8,17 +10,23 @@ is-expired=true
 is-revoked=false
 foreground-color=255,0,0
 Name=Expired Key
+Name[sv]=Utgången nyckel
+Name[uk]=Застарілий ключ
 
 [Key Filter #2]
 was-validated=true
 is-revoked=true
 Name=Revoked Key
+Name[sv]=Återkallad nyckel
+Name[uk]=Анульований ключ
 
 [Key Filter #3]
 was-validated=true
 is-root-certificate=true
 is-validity=ultimate
 Name=Trusted Root Certificate
+Name[sv]=Pålitligt rotcertifikat
+Name[uk]=Кореневий сертифікат з довірою
 background-color=95,135,255
 font-bold=true
 
@@ -28,15 +36,21 @@ was-validated=true
 is-root-certificate=true
 is-not-validity=ultimate
 Name=Not Trusted Root Certificate
+Name[sv]=Opålitligt rotcertifikat
+Name[uk]=Кореневий сертифікат без довіри
 
 [Key Filter #5]
 was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for Qualified Signatures
+Name[sv]=Nycklar för kvalificerade signaturer
+Name[uk]=Ключі підписів обмеженого використання
 
 [Key Filter #6]
 was-validated=true
 Name=Other Keys
+Name[sv]=Övriga nycklar
+Name[uk]=Інші ключі
 
 
