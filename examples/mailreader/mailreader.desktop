@@ -1,12 +1,16 @@
 [Desktop Entry]
 Name=mailreader
 Name[sv]=E-postläsare
+Name[x-test]=xxmailreaderxx
 Exec=mailreader %i -caption "%c"
 Icon=mailreader
 Type=Application
 X-DocPath=mailreader/index.html
 GenericName=A KDE4 Application
 GenericName[km]=កម្មវិធី​របស់ KDE4
+GenericName[pt]=Uma Aplicação do KDE4
+GenericName[pt_BR]=Uma Aplicação do KDE4
 GenericName[sv]=Ett KDE4-program
 GenericName[uk]=Програма для KDE4
+GenericName[x-test]=xxA KDE4 Applicationxx
 Terminal=false

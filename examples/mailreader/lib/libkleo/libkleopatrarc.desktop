@@ -1,8 +1,12 @@
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key
+Name[de]=Ungeprüfter Schlüssel
+Name[pt]=Chave Não Validada
+Name[pt_BR]=Chave Não Validada
 Name[sv]=Ovaliderad nyckel
 Name[uk]=Неперевірений ключ
+Name[x-test]=xxNot Validated Keyxx
 
 [Key Filter #1]
 was-validated=true
@@ -10,23 +14,35 @@ is-expired=true
 is-revoked=false
 foreground-color=255,0,0
 Name=Expired Key
+Name[de]=Abgelaufener Schlüssel
+Name[pt]=Chave Expirada
+Name[pt_BR]=Chave Expirada
 Name[sv]=Utgången nyckel
 Name[uk]=Застарілий ключ
+Name[x-test]=xxExpired Keyxx
 
 [Key Filter #2]
 was-validated=true
 is-revoked=true
 Name=Revoked Key
+Name[de]=Widerrufener Schlüssel
+Name[pt]=Chave Revogada
+Name[pt_BR]=Chave Revogada
 Name[sv]=Återkallad nyckel
 Name[uk]=Анульований ключ
+Name[x-test]=xxRevoked Keyxx
 
 [Key Filter #3]
 was-validated=true
 is-root-certificate=true
 is-validity=ultimate
 Name=Trusted Root Certificate
+Name[de]=Vertrauenswürdiges Wurzelzertifikat
+Name[pt]=Certificado de Raiz de Confiança
+Name[pt_BR]=Certificado de Raiz de Confiança
 Name[sv]=Pålitligt rotcertifikat
 Name[uk]=Кореневий сертифікат з довірою
+Name[x-test]=xxTrusted Root Certificatexx
 background-color=95,135,255
 font-bold=true
 
@@ -36,21 +52,33 @@ was-validated=true
 is-root-certificate=true
 is-not-validity=ultimate
 Name=Not Trusted Root Certificate
+Name[de]=Nicht vertrauenswürdiges Wurzelzertifikat
+Name[pt]=Certificado de Raiz Não de Confiança
+Name[pt_BR]=Certificado de Raiz Não de Confiança
 Name[sv]=Opålitligt rotcertifikat
 Name[uk]=Кореневий сертифікат без довіри
+Name[x-test]=xxNot Trusted Root Certificatexx
 
 [Key Filter #5]
 was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for Qualified Signatures
+Name[de]=Schlüssel für qualifizierte Signaturen
+Name[pt]=Chaves das Assinaturas Qualificadas
+Name[pt_BR]=Chaves das Assinaturas Qualificadas
 Name[sv]=Nycklar för kvalificerade signaturer
 Name[uk]=Ключі підписів обмеженого використання
+Name[x-test]=xxKeys for Qualified Signaturesxx
 
 [Key Filter #6]
 was-validated=true
 Name=Other Keys
+Name[de]=Andere Schlüssel
+Name[pt]=Outras Chaves
+Name[pt_BR]=Outras Chaves
 Name[sv]=Övriga nycklar
 Name[uk]=Інші ключі
+Name[x-test]=xxOther Keysxx
 
 
