@@ -8,7 +8,7 @@ Problems addressed
 * kolab/issue3678: Speed up displaying of inline PGP encrypted messages
 * kolab/issue3694: Fix crash when displaying an invitation mail
 * kolab/issue3692: Fix crash when quickly closing the window displaying a signed message
-* A info about the invitation options in KMail's handbook
+* Add info about the invitation options in KMail's handbook
 
 
 Friday, June 5th 2009
