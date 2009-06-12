@@ -36,9 +36,11 @@
 
 #include "interfaces/bodypart.h"
 
-class partNode;
-
 class QTextCodec;
+
+namespace KMime {
+  class Content;
+}
 
 namespace KMail {
 
@@ -47,7 +49,7 @@ namespace KMail {
   */
   class PartNodeBodyPart : public Interface::BodyPart {
   public:
-    explicit PartNodeBodyPart( partNode & n, const QTextCodec * codec=0 );
+    explicit PartNodeBodyPart( KMime::Content* content, const QTextCodec * codec=0 );
 
     QString makeLink( const QString & path ) const;
     QString asText() const;
@@ -64,7 +66,7 @@ namespace KMail {
     void setDefaultDisplay( BodyPart::Display );
 
   private:
-    partNode & mPartNode;
+    KMime::Content *mContent;
     const QTextCodec * mCodec;
     BodyPart::Display mDefaultDisplay;
   };

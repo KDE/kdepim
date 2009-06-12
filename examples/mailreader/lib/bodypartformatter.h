@@ -32,7 +32,9 @@
 #ifndef __KMAIL_BODYPARTFORMATTER_H__
 #define __KMAIL_BODYPARTFORMATTER_H__
 
-class partNode;
+namespace KMime {
+  class Content;
+}
 
 namespace KMail {
 
@@ -47,7 +49,7 @@ namespace KMail {
   public:
     virtual ~BodyPartFormatter() {}
 
-    virtual bool process( ObjectTreeParser *, partNode *, ProcessResult & ) const = 0;
+    virtual bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const = 0;
 
     static const BodyPartFormatter * createFor( int type, int subtype );
     static const BodyPartFormatter * createFor( const char * type, const char * subtype );

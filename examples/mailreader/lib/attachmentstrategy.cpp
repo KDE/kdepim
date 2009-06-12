@@ -31,11 +31,11 @@
 
 #include "attachmentstrategy.h"
 
-#include "partNode.h"
 #include "kmmsgpart.h"
 
 #include <QString>
 
+#include <kmime/kmime_content.h>
 #include <kdebug.h>
 
 
@@ -52,17 +52,17 @@ namespace KMail {
   protected:
     IconicAttachmentStrategy() : AttachmentStrategy() {}
     virtual ~IconicAttachmentStrategy() {}
-    
+
   public:
     const char * name() const { return "iconic"; }
     const AttachmentStrategy * next() const { return smart(); }
     const AttachmentStrategy * prev() const { return hidden(); }
 
     bool inlineNestedMessages() const { return false; }
-    Display defaultDisplay( const partNode * node ) const {
-      if ( node->type() == DwMime::kTypeText &&
-           node->msgPart().fileName().trimmed().isEmpty() &&
-           node->msgPart().name().trimmed().isEmpty() )
+    Display defaultDisplay( KMime::Content * node ) const {
+      if ( node->contentType()->isText() &&
+           node->contentDisposition()->filename().trimmed().isEmpty() &&
+           node->contentType()->name().trimmed().isEmpty() )
         // text/* w/o filename parameter:
         return Inline;
       return AsIcon;
@@ -81,23 +81,23 @@ namespace KMail {
   protected:
     SmartAttachmentStrategy() : AttachmentStrategy() {}
     virtual ~SmartAttachmentStrategy() {}
-    
+
   public:
     const char * name() const { return "smart"; }
     const AttachmentStrategy * next() const { return inlined(); }
     const AttachmentStrategy * prev() const { return iconic(); }
 
     bool inlineNestedMessages() const { return true; }
-    Display defaultDisplay( const partNode * node ) const {
-      if ( node->hasContentDispositionInline() )
+    Display defaultDisplay( KMime::Content * node ) const {
+      if ( node->contentDisposition()->disposition() == KMime::Headers::CDinline )
         // explict "inline" disposition:
         return Inline;
-      if ( node->isAttachment() )
+      if ( node->contentDisposition()->disposition() == KMime::Headers::CDattachment)
         // explicit "attachment" disposition:
         return AsIcon;
-      if ( node->type() == DwMime::kTypeText &&
-           node->msgPart().fileName().trimmed().isEmpty() &&
-           node->msgPart().name().trimmed().isEmpty() )
+      if ( node->contentType()->isText() &&
+           node->contentDisposition()->filename().trimmed().isEmpty() &&
+           node->contentType()->name().trimmed().isEmpty() )
         // text/* w/o filename parameter:
         return Inline;
       return AsIcon;
@@ -121,7 +121,7 @@ namespace KMail {
     const AttachmentStrategy * prev() const { return smart(); }
 
     bool inlineNestedMessages() const { return true; }
-    Display defaultDisplay( const partNode * ) const { return Inline; }
+    Display defaultDisplay( KMime::Content * ) const { return Inline; }
   };
 
   //
@@ -141,15 +141,15 @@ namespace KMail {
     const AttachmentStrategy * prev() const { return inlined(); }
 
     bool inlineNestedMessages() const { return false; }
-    Display defaultDisplay( const partNode * node ) const {
-      if ( node->type() == DwMime::kTypeText &&
-           node->msgPart().fileName().trimmed().isEmpty() &&
-           node->msgPart().name().trimmed().isEmpty() )
+    Display defaultDisplay( KMime::Content * node ) const {
+      if ( node->contentType()->isText() &&
+           node->contentDisposition()->filename().trimmed().isEmpty() &&
+           node->contentType()->name().trimmed().isEmpty() )
         // text/* w/o filename parameter:
         return Inline;
 
-      if ( node->parentNode()->type() == DwMime::kTypeMultipart &&
-           node->parentNode()->subType() == DwMime::kSubtypeRelated )
+      if ( node->parent() && node->parent()->contentType()->isMultipart() &&
+           node->parent()->contentType()->subType() == "related" )
         return Inline;
 
       return None;

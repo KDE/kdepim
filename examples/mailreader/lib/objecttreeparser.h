@@ -43,6 +43,10 @@ class KMMessagePart;
 class QString;
 class partNode;
 
+namespace KMime {
+    class Content;
+}
+
 namespace GpgME {
   class Error;
 }
@@ -153,14 +157,14 @@ namespace KMail {
         the children of that node and it's next sibling. */
     //  Function is called internally by "parseMsg(KMMessage* msg)"
     //  and it will be replaced once KMime is alive.
-    void parseObjectTree( partNode * node );
+    void parseObjectTree( KMime::Content * node );
 
   private:
     /** Standard children handling a.k.a. multipart/mixed (w/o
         kroupware hacks) */
     void stdChildHandling( partNode * child );
 
-    void defaultHandling( partNode * node, ProcessResult & result );
+    void defaultHandling( KMime::Content * node, ProcessResult & result );
 
     /** 1. Create a new partNode using 'content' data and Content-Description
             found in 'cntDesc'.
@@ -241,7 +245,7 @@ namespace KMail {
                           const QTextCodec * codec,
                           ProcessResult & result, bool decorate );
 
-    void writePartIcon( KMMessagePart * msgPart, int partNumber, bool inlineImage = false );
+    void writePartIcon( KMime::Content * msgPart, bool inlineImage = false );
 
     QString sigStatusToString( const Kleo::CryptoBackend::Protocol * cryptProto,
                                int status_code,
@@ -270,8 +274,8 @@ namespace KMail {
         part of the message get italized */
     QString quotedHTML(const QString& pos, bool decorate);
 
-    const QTextCodec * codecFor( partNode * node ) const;
-    /** Check if the newline at position @p newLinePos in string @p s 
+    const QTextCodec * codecFor( KMime::Content * node ) const;
+    /** Check if the newline at position @p newLinePos in string @p s
         seems to separate two paragraphs (important for correct BiDi
         behavior, but is heuristic because paragraphs are not
         well-defined) */

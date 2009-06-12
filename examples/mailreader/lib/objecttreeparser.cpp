@@ -115,6 +115,8 @@ using KPIMUtils::LinkLocator;
 #include <memory>
 // FIXME(Andras) port to akonadi #include "chiasmuskeyselector.h"
 
+#include <kmime/kmime_message.h>
+
 namespace KMail {
 
   // A small class that eases temporary CryptPlugWrapper changes:
@@ -219,7 +221,7 @@ namespace KMail {
                                  append );
     }
     ObjectTreeParser otp( mReader, cryptoProtocol() );
-    otp.parseObjectTree( newNode );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime    otp.parseObjectTree( newNode );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
@@ -229,11 +231,12 @@ namespace KMail {
 
 //-----------------------------------------------------------------------------
 
-  void ObjectTreeParser::parseObjectTree( partNode * node ) {
+  void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
 
     if ( !node )
       return;
 
+/* FIXME(Andras) check how to handle this with KMime
     // reset "processed" flags for...
     if ( showOnlyOneMimePart() ) {
       // ... this node and all descendants
@@ -244,31 +247,37 @@ namespace KMail {
       // ...this node and all it's siblings and descendants
       node->setProcessed( false, true );
     }
+*/
 
     // Make sure the whole content is relative, so that nothing is painted over the header
     // if a malicious message uses absolute positioning.
-    bool isRoot = ( node->parentNode() == 0 );
+    bool isRoot = node->isTopLevel();
     if ( isRoot && mReader )
       htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
-    for ( ; node ; node = node->nextSibling() ) {
-      if ( node->processed() )
+    KMime::Content::List contents = node->contents();
+    Q_FOREACH(KMime::Content *c, contents)
+    {
+  /* FIXME(Andras) check how to handle this with KMime
+    if ( node->processed() )
         continue;
-
+ */
       ProcessResult processResult;
 
       if ( mReader )
-        htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"/>").arg( node->nodeId() ) );
+        htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"/>").arg( node->indexForContent(c).toString() ) );
       if ( const Interface::BodyPartFormatter * formatter
-           = BodyPartFormatterFactory::instance()->createFor( node->typeString(), node->subTypeString() ) ) {
-        PartNodeBodyPart part( *node, codecFor( node ) );
+           = BodyPartFormatterFactory::instance()->createFor( c->contentType()->name(), c->contentType()->subType() ) ) {
+        PartNodeBodyPart part( c, codecFor( c ) );
         // Set the default display strategy for this body part relying on the
         // identity of KMail::Interface::BodyPart::Display and AttachmentStrategy::Display
-        part.setDefaultDisplay( (KMail::Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( node ) );
+        part.setDefaultDisplay( (KMail::Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
         const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
+        /*FIXME(Andras) port it
         if ( mReader && node->bodyPartMemento() )
           if ( Interface::Observable * obs = node->bodyPartMemento()->asObservable() )
             obs->attach( mReader );
+            */
         switch ( result ) {
         case Interface::BodyPartFormatter::AsIcon:
           processResult.setNeverDisplayInline( true );
@@ -283,17 +292,18 @@ namespace KMail {
         }
       } else {
         const BodyPartFormatter * bpf
-          = BodyPartFormatter::createFor( node->type(), node->subType() );
+          = BodyPartFormatter::createFor( c->contentType()->name().toUtf8().data(), c->contentType()->subType() );
         kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
-                              << node->typeString() << '/' << node->subTypeString() << ')';
+                              << c->contentType()->name() << '/' << c->contentType()->subType() << ')';
 
         if ( bpf && !bpf->process( this, node, processResult ) )
           defaultHandling( node, processResult );
       }
+  /* FIXME(Andras) check how to handle this with KMime
       node->setProcessed( true, false );
-
+ */
       // adjust signed/encrypted flags if inline PGP was found
-      processResult.adjustCryptoStatesOfNode( node );
+//FIXME(Andras) Port it    processResult.adjustCryptoStatesOfNode( node );
 
       if ( showOnlyOneMimePart() )
         break;
@@ -303,24 +313,24 @@ namespace KMail {
       htmlWriter()->queue( "</div>\n" );
   }
 
-  void ObjectTreeParser::defaultHandling( partNode * node, ProcessResult & result ) {
+  void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & result ) {
     // ### (mmutz) default handling should go into the respective
     // ### bodypartformatters.
     if ( !mReader )
       return;
 
     // always show images in multipart/related when showing in html, not with an additional icon
-    if ( result.isImage() &&
-         node->parentNode()->subType() == DwMime::kSubtypeRelated && mReader->htmlMail() ) {
-      QString fileName = mReader->writeMessagePartToTempFile( &node->msgPart(), node->nodeId() );
+    if ( result.isImage() && node->parent() &&
+         node->parent()->contentType()->subType() == "related" && mReader->htmlMail() ) {
+      QString fileName = mReader->writeMessagePartToTempFile( node );
       QString href = "file:" + KUrl::toPercentEncoding( fileName );
-      htmlWriter()->embedPart( node->msgPart().contentId(), href);
+      htmlWriter()->embedPart( node->index().toString().toUtf8(), href);
       return;
    }
 
     if ( attachmentStrategy() == AttachmentStrategy::hidden() &&
          !showOnlyOneMimePart() &&
-         node->parentNode() /* message is not an attachment */ )
+         node->parent() /* message is not an attachment */ )
       return;
 
     bool asIcon = true;
@@ -328,30 +338,34 @@ namespace KMail {
       // ### (mmutz) this is wrong! If I click on an image part, I
       // want the equivalent of "view...", except for the extra
       // window!
-      asIcon = !node->hasContentDispositionInline();
+      asIcon = !node->contentDisposition()->disposition() == KMime::Headers::CDinline;
     else if ( !result.neverDisplayInline() )
       if ( const AttachmentStrategy * as = attachmentStrategy() )
         asIcon = as->defaultDisplay( node ) == AttachmentStrategy::AsIcon;
 
     // neither image nor text -> show as icon
     if ( !result.isImage()
-         && node->type() != DwMime::kTypeText )
+         && !node->contentType()->isText() )
       asIcon = true;
 
+/*FIXME(Andras) port it
     // if the image is not complete do not try to show it inline
     if ( result.isImage() && !node->msgPart().isComplete() )
       asIcon = true;
+      */
 
     if ( asIcon ) {
       if ( attachmentStrategy() != AttachmentStrategy::hidden()
            || showOnlyOneMimePart() )
-        writePartIcon( &node->msgPart(), node->nodeId() );
+        writePartIcon( node );
     } else if ( result.isImage() )
-      writePartIcon( &node->msgPart(), node->nodeId(), true );
-    else
-      writeBodyString( node->msgPart().bodyDecoded(),
-                       node->trueFromAddress(),
+      writePartIcon( node );
+    else {
+      KMime::Message *topLevel = dynamic_cast<KMime::Message*>(node->topLevel());
+      writeBodyString( node->decodedContent(),
+                       topLevel ? topLevel->from()->asUnicodeString() : QString(),
                        codecFor( node ), result, false );
+    }
     // end of ###
   }
 
@@ -639,7 +653,7 @@ namespace KMail {
       }
 
       ObjectTreeParser otp( mReader, cryptProto, true );
-      otp.parseObjectTree( data );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( data );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -869,13 +883,13 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
       return true;
 
     QString bodyText;
-    if ( mReader->htmlMail() )
-      bodyText = codecFor( curNode )->toUnicode( partBody );
+    if ( mReader->htmlMail() ) ;
+//FIXME(Andras) disable, as OTP is rewritten to use KMime      bodyText = codecFor( curNode )->toUnicode( partBody );
     else
       bodyText = StringUtil::html2source( partBody );
 
     if ( curNode->isFirstTextPart() ||
-         attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
+//FIXME(Andras) disable, as OTP is rewritten to use KMime         attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
          showOnlyOneMimePart() )
     {
       if ( mReader->htmlMail() ) {
@@ -1073,7 +1087,7 @@ namespace KMail {
     }
 
     if ( !curNode->isFirstTextPart() &&
-         attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
+//FIXME(Andras) disable, as OTP is rewritten to use KMime         attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
          !showOnlyOneMimePart() )
       return false;
 
@@ -1096,10 +1110,10 @@ namespace KMail {
       const QString comment =
         StringUtil::quoteHtmlChars( curNode->msgPart().contentDescription(), true );
 
-      const QString fileName =
+      const QString fileName;/*FIXME(Andras) disable, as OTP is rewritten to use KMime =
         mReader->writeMessagePartToTempFile( &curNode->msgPart(),
                                              curNode->nodeId() );
-
+*/
       const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
 
       QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
@@ -1120,8 +1134,10 @@ namespace KMail {
     // enable verification of the embedded messages' signatures
     if ( !isMailmanMessage( curNode ) ||
          !processMailmanMessage( curNode ) )
-      writeBodyString( mRawReplyString, curNode->trueFromAddress(),
+         ;
+   /*FIXME(Andras) disable, as OTP is rewritten to use KMime   writeBodyString( mRawReplyString, curNode->trueFromAddress(),
                        codecFor( curNode ), result, !bDrawFrame );
+                       */
     if ( bDrawFrame )
       htmlWriter()->queue( "</td></tr></table>" );
 
@@ -1134,7 +1150,7 @@ namespace KMail {
 
     ObjectTreeParser otp( *this );
     otp.setShowOnlyOneMimePart( false );
-    otp.parseObjectTree( child );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime    otp.parseObjectTree( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
@@ -1251,8 +1267,11 @@ namespace KMail {
       node->setEncryptionState( KMMsgFullyEncrypted );
       const QByteArray cstr = node->msgPart().bodyDecoded();
       if ( mReader )
+      ;
+      /*FIXME(Andras) disable, as OTP is rewritten to use KMime
         writeBodyString( cstr, node->trueFromAddress(),
                          codecFor( node ), result, false );
+                         */
       mRawReplyString += cstr;
       return true;
     }
@@ -1376,7 +1395,7 @@ namespace KMail {
 
     if ( partNode * child = node->firstChild() ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
-      otp.parseObjectTree( child );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( child );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -1389,9 +1408,10 @@ namespace KMail {
       messagePart.isEncrypted = false;
       messagePart.isSigned = false;
       messagePart.isEncapsulatedRfc822Message = true;
-      QString filename =
+      QString filename;/*FIXME(Andras) disable, as OTP is rewritten to use KMime =
         mReader->writeMessagePartToTempFile( &node->msgPart(),
                                             node->nodeId() );
+                                            */
       htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                cryptoProtocol(),
                                                node->trueFromAddress(),
@@ -1405,7 +1425,7 @@ namespace KMail {
     KMMessage rfc822message( rfc822DwMessage );
     node->setFromAddress( rfc822message.from() );
     if ( mReader )
-      htmlWriter()->queue( mReader->writeMsgHeader( &rfc822message ) );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime      htmlWriter()->queue( mReader->writeMsgHeader( &rfc822message ) );
       //mReader->parseMsgHeader( &rfc822message );
     // display the body of the encapsulated message
     insertAndParseNewChildNode( *node,
@@ -1420,7 +1440,7 @@ namespace KMail {
   bool ObjectTreeParser::processApplicationOctetStreamSubtype( partNode * node, ProcessResult & result ) {
     if ( partNode * child = node->firstChild() ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
-      otp.parseObjectTree( child );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( child );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -1436,8 +1456,10 @@ namespace KMail {
       if ( keepEncryptions() ) {
         const QByteArray cstr = node->msgPart().bodyDecoded();
         if ( mReader )
-          writeBodyString( cstr, node->trueFromAddress(),
+          ;
+          /*FIXME(Andras) disable, as OTP is rewritten to use KMimewriteBodyString( cstr, node->trueFromAddress(),
                            codecFor( node ), result, false );
+                           */
         mRawReplyString += cstr;
       } else if ( mReader && !mReader->decryptMessage() ) {
         writeDeferredDecryptionBlock();
@@ -1500,7 +1522,7 @@ namespace KMail {
   bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( partNode * node, ProcessResult & result ) {
     if ( partNode * child = node->firstChild() ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
-      otp.parseObjectTree( child );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( child );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -1665,7 +1687,7 @@ namespace KMail {
                                                      cryptoProtocol(),
                                                      node->trueFromAddress() ) );
             assert( mReader->decryptMessage() ); // handled above
-            writePartIcon( &node->msgPart(), node->nodeId() );
+//FIXME(Andras) disable, as OTP is rewritten to use KMime            writePartIcon( &node->msgPart(), node->nodeId() );
             htmlWriter()->queue( writeSigstatFooter( messagePart ) );
           }
         } else {
@@ -1811,9 +1833,10 @@ bool ObjectTreeParser::processApplicationChiasmusTextSubtype( partNode * curNode
                                              curNode->trueFromAddress() ) );
   const QByteArray body = bOkDecrypt ? decryptedBody : data;
   const QString chiasmusCharset = curNode->contentTypeParameter("chiasmus-charset");
-  const QTextCodec* aCodec = chiasmusCharset.isEmpty()
+  const QTextCodec* aCodec;/*FIXME(Andras) disable, as OTP is rewritten to use KMime
+   = chiasmusCharset.isEmpty()
     ? codecFor( curNode )
-    : KMMsgBase::codecForName( chiasmusCharset.toAscii() );
+    : KMMsgBase::codecForName( chiasmusCharset.toAscii() );*/
   htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
   result.setInlineEncryptionState( KMMsgFullyEncrypted );
   if ( mReader )
@@ -1827,7 +1850,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( partNode *node, ProcessR
   if ( !mReader )
     return false;
 
-  const QString fileName = mReader->writeMessagePartToTempFile( &node->msgPart(), node->nodeId() );
+  const QString fileName;//FIXME(Andras) disable, as OTP is rewritten to use KMime = mReader->writeMessagePartToTempFile( &node->msgPart(), node->nodeId() );
   KTnef::KTNEFParser parser;
   if ( !parser.openFile( fileName ) || !parser.message()) {
     kDebug() << "Could not parse" << fileName;
@@ -1902,37 +1925,39 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( partNode *node, ProcessR
     result.setInlineEncryptionState( inlineEncryptionState );
   }
 
-  void ObjectTreeParser::writePartIcon( KMMessagePart * msgPart, int partNum, bool inlineImage )
+  void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage )
   {
     if ( !mReader || !msgPart )
       return;
 
-    QString label = msgPart->fileName();
+    QString label = msgPart->contentDisposition()->filename();
     if ( label.isEmpty() )
-      label = msgPart->name();
+      label = msgPart->contentType()->name();//TODO(Andras) check it!
     if ( label.isEmpty() )
       label = i18nc( "display name for an unnamed attachment", "Unnamed" );
     label = StringUtil::quoteHtmlChars( label, true );
 
-    QString comment = msgPart->contentDescription();
+    QString comment = msgPart->contentDescription()->asUnicodeString();
     comment = StringUtil::quoteHtmlChars( comment, true );
     if ( label == comment )
       comment.clear();
 
-    QString fileName = mReader->writeMessagePartToTempFile( msgPart, partNum );
+    QString fileName = mReader->writeMessagePartToTempFile( msgPart );
     QString href = "file:" + KUrl::toPercentEncoding( fileName ) ;
 
     QString iconName;
-    QByteArray contentId = msgPart->contentId();
+    QByteArray contentId = msgPart->index().toString().toUtf8();
     if ( inlineImage ) {
       iconName = href;
     }
     else {
+      /*FIXME(Andras) port it!
       iconName = msgPart->iconName();
       if( iconName.right( 14 ) == "mime_empty.png" ) {
         msgPart->magicSetType();
         iconName = msgPart->iconName();
       }
+      */
     }
 
     if ( inlineImage ) {
@@ -2962,11 +2987,13 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
 
 
 
-  const QTextCodec * ObjectTreeParser::codecFor( partNode * node ) const {
+  const QTextCodec * ObjectTreeParser::codecFor( KMime::Content * node ) const {
     assert( node );
     if ( mReader && mReader->overrideCodec() )
       return mReader->overrideCodec();
-    return node->msgPart().codec();
+      //FIXME(Andras) create a content->codec mapping?
+    //return node->msgPart().codec();
+    return QTextCodec::codecForName("UTF-8");
   }
 
   // Guesstimate if the newline at newLinePos actually separates paragraphs in the text s

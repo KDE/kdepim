@@ -32,8 +32,13 @@
 #ifndef __KMAIL_HEADERSTYLE_H__
 #define __KMAIL_HEADERSTYLE_H__
 
+class QByteArray;
 class QString;
-class KMMessage;
+class KDateTime;
+
+namespace KMime {
+    class Message;
+}
 
 namespace KMail {
 
@@ -77,10 +82,14 @@ namespace KMail {
     //
     // HeaderStyle interface:
     //
-    virtual QString format( const KMMessage * message,
+    virtual QString format( KMime::Message * message,
 			    const KMail::HeaderStrategy * strategy,
 			    const QString & vCardName,
 			    bool printing = false, bool topLevel = false ) const = 0;
+
+    QString dateStr(const KDateTime &dateTime) const;
+    QByteArray dateShortStr(const KDateTime &dateTime) const;
+
   };
 
 } // namespace KMail

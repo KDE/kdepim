@@ -305,7 +305,7 @@ void KMMimePartTree::startHandleAttachmentCommand( int action )
     return;
 
   partNode *node = static_cast<KMMimePartTreeItem *>( selected.first() )->node();
-  QString name = mReaderWin->tempFileUrlFromPartNode( node ).path();
+  QString name;//FIXME(Andras) disable, as it is rewritten to use KMime = mReaderWin->tempFileUrlFromPartNode( node ).path();
 
   mReaderWin->prepareHandleAttachment( node->nodeId(), name );
   mReaderWin->slotHandleAttachment( action );
@@ -318,7 +318,7 @@ void KMMimePartTree::slotCopy()
     return;
   partNode *node = static_cast<KMMimePartTreeItem *>( selected.first() )->node();
   QList<QUrl> urls;
-  KUrl kUrl = mReaderWin->tempFileUrlFromPartNode( node );
+  KUrl kUrl;//FIXME(Andras) disable, as it is rewritten to use KMime  = mReaderWin->tempFileUrlFromPartNode( node );
   QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
   if ( !url.isValid() )
     return;
@@ -339,7 +339,7 @@ void KMMimePartTree::startDrag( Qt::DropActions )
     return;
 
   QList<QUrl> urls;
-  KUrl kUrl = mReaderWin->tempFileUrlFromPartNode( node );
+  KUrl kUrl;//FIXME(Andras) disable, as it is rewritten to use KMime  = mReaderWin->tempFileUrlFromPartNode( node );
   QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
   if ( !url.isValid() )
     return;

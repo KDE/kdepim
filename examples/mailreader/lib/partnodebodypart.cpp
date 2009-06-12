@@ -34,46 +34,46 @@
 
 #include "partnodebodypart.h"
 
-#include "partNode.h"
-
 #include <kurl.h>
+
+#include <kmime/content.h>
 
 #include <QString>
 
 static int serial = 0;
 
-KMail::PartNodeBodyPart::PartNodeBodyPart( partNode & n, const QTextCodec * codec  )
-  : KMail::Interface::BodyPart(), mPartNode( n ), mCodec( codec ),
+KMail::PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, const QTextCodec * codec  )
+  : KMail::Interface::BodyPart(), mContent( content ), mCodec( codec ),
     mDefaultDisplay( KMail::Interface::BodyPart::None )
 {}
 
 QString KMail::PartNodeBodyPart::makeLink( const QString & path ) const {
   // FIXME: use a PRNG for the first arg, instead of a serial number
   return QString( "x-kmail:/bodypart/%1/%2/%3" )
-    .arg( serial++ ).arg( mPartNode.nodeId() )
+    .arg( serial++ ).arg( mContent-C>index().toString() )
     .arg( QString::fromLatin1( KUrl::toPercentEncoding( path, "/" ) ) );
 }
 
 QString KMail::PartNodeBodyPart::asText() const {
-  if ( mPartNode.type() != DwMime::kTypeText )
+  if ( mContent->contentType()->name() != "text/plain" )
     return QString();
-  return mPartNode.msgPart().bodyToUnicode( mCodec );
+  return mCodec->toUnicode( mContent->decodedContent() );
 }
 
 QByteArray KMail::PartNodeBodyPart::asBinary() const {
-  return mPartNode.msgPart().bodyDecodedBinary();
+  return mContent->decodedContent();
 }
 
 QString KMail::PartNodeBodyPart::contentTypeParameter( const char * param ) const {
-  return mPartNode.contentTypeParameter( param );
+  return mContent->contentType()->parameter( param );
 }
 
 QString KMail::PartNodeBodyPart::contentDescription() const {
-  return mPartNode.msgPart().contentDescription();
+  return mContent->contentDescription()->asUnicodeString();
 }
 
-QString KMail::PartNodeBodyPart::contentDispositionParameter( const char * ) const {
-  kWarning() << "Sorry, not yet implemented.";
+QString KMail::PartNodeBodyPart::contentDispositionParameter( const char * param ) const {
+  return mContent->contentDisposition()->parameter( param );
   return QString();
 }
 
@@ -83,11 +83,16 @@ bool KMail::PartNodeBodyPart::hasCompleteBody() const {
 }
 
 KMail::Interface::BodyPartMemento * KMail::PartNodeBodyPart::memento() const {
+ /*FIXME(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
   return mPartNode.bodyPartMemento();
+  */
+  return 0;
 }
 
 void KMail::PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
+/*FIXME(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
   mPartNode.setBodyPartMemento( memento );
+  */
 }
 
 KMail::Interface::BodyPart::Display KMail::PartNodeBodyPart::defaultDisplay() const {

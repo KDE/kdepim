@@ -35,6 +35,9 @@ using KPIM::MessageStatus;
 #include "kmmimeparttree.h" // Needed for friend declaration.
 #include "interfaces/observer.h"
 
+//Akonadi includes
+#include <akonadi/item.h>
+
 class QSplitter;
 class KHBox;
 class QTreeWidgetItem;
@@ -53,6 +56,12 @@ class KUrl;
 class KMFolder;
 class KMMessage;
 class KMMessagePart;
+
+namespace KMime {
+    class Message;
+    class Content;
+}
+
 namespace KMail {
   namespace Interface {
     class Observable;
@@ -147,6 +156,8 @@ public:
   /** Set the message that shall be shown. If msg is 0, an empty page is
       displayed. */
   virtual void setMsg(KMMessage* msg, bool force = false);
+
+  void setMessageItem(const Akonadi::Item& item, bool force = false);
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
@@ -257,7 +268,7 @@ public:
 
   partNode * partNodeForId( int id );
 
-  KUrl tempFileUrlFromPartNode( const partNode *node );
+  KUrl tempFileUrlFromPartNode( const KMime::Content *node );
 
   /** Returns id of message part from given URL or -1 if invalid. */
   static int msgPartFromUrl(const KUrl &url);
@@ -450,16 +461,16 @@ protected:
   void displayMessage();
 
   /** Parse given message and add it's contents to the reader window. */
-  virtual void parseMsg( KMMessage* msg  );
+  virtual void parseMsg( KMime::Message* msg  );
 
   /** Creates a nice mail header depending on the current selected
     header style. */
-  QString writeMsgHeader( KMMessage* aMsg, bool hasVCard = false, bool topLevel = false );
+  QString writeMsgHeader( KMime::Message* aMsg, bool hasVCard = false, bool topLevel = false );
 
   /** Writes the given message part to a temporary file and returns the
       name of this file or QString() if writing failed.
   */
-  QString writeMessagePartToTempFile( KMMessagePart* msgPart, int partNumber );
+  QString writeMessagePartToTempFile( KMime::Content* msgPart );
 
   /**
     Creates a temporary dir for saving attachments, etc.
@@ -502,11 +513,14 @@ private:
 
   QString renderAttachments( partNode *node, const QColor &bgColor );
 
+  KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type);
+
 private:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   int mAtmCurrent;
   QString mAtmCurrentName;
   KMMessage *mMessage;
+  Akonadi::Item mMessageItem;
   // widgets:
   QSplitter * mSplitter;
   KHBox *mBox;

@@ -35,7 +35,6 @@
 //FIXME(Andras) port to akonadi #include "kmkernel.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
-#include "kmmessage.h"
 // FIXME(Andras) port to akonadi  #include "spamheaderanalyzer.h"
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include "stringutil.h"
@@ -43,10 +42,6 @@ using KPIMUtils::LinkLocator;
 #include <kpimutils/email.h>
 #include "libkdepim/kxface.h"
 using namespace KPIM;
-
-#include <mimelib/string.h>
-#include <mimelib/field.h>
-#include <mimelib/headers.h>
 
 #include <kdebug.h>
 #include <kconfiggroup.h>
@@ -57,7 +52,7 @@ using namespace KPIM;
 #include <kcodecs.h>
 #include <KColorScheme>
 
-#include <QDateTime>
+#include <KDateTime>
 #include <QBuffer>
 #include <QBitmap>
 #include <QImage>
@@ -65,6 +60,10 @@ using namespace KPIM;
 #include <QRegExp>
 
 #include <kstandarddirs.h>
+#include <KApplication>
+
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_dateformatter.h>
 
 namespace KMail {
 
@@ -97,11 +96,11 @@ namespace KMail {
     const HeaderStyle * next() const { return plain(); }
     const HeaderStyle * prev() const { return fancy(); }
 
-    QString format( const KMMessage * message, const HeaderStrategy * strategy,
+    QString format( KMime::Message * message, const HeaderStrategy * strategy,
                     const QString & vCardName, bool printing, bool topLevel ) const;
   };
 
-  QString BriefHeaderStyle::format( const KMMessage * message,
+  QString BriefHeaderStyle::format( KMime::Message * message,
                                     const HeaderStrategy * strategy,
                                     const QString & vCardName, bool printing, bool topLevel ) const {
     Q_UNUSED( topLevel );
@@ -121,20 +120,19 @@ namespace KMail {
     // direction.
 
     QString subjectDir;
-    if (!message->subject().isEmpty())
-      subjectDir = directionOf( message->cleanSubject() );
+    if ( message->subject(false) )
+      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
     else
       subjectDir = directionOf( i18n("No Subject") );
 
     // Prepare the date string (when printing always use the localized date)
     QString dateString;
     if( printing ) {
-      QDateTime dateTime;
+      KDateTime dateTime = message->date()->dateTime();
       KLocale * locale = KGlobal::locale();
-      dateTime.setTime_t( message->date() );
       dateString = locale->formatDateTime( dateTime );
     } else {
-      dateString = message->dateStr();
+      dateString = dateStr( message->date()->dateTime() );
     }
 
     QString headerStr = "<div class=\"header\" dir=\"" + dir + "\">\n";
@@ -142,29 +140,31 @@ namespace KMail {
     if ( strategy->showHeader( "subject" ) )
       headerStr += "<div dir=\"" + subjectDir + "\">\n"
                    "<b style=\"font-size:130%\">" +
-                           strToHtml( message->subject() ) +
-                           "</b></div>\n";
+                    strToHtml( message->subject()->asUnicodeString() ) +
+                    "</b></div>\n";
 
     QStringList headerParts;
 
     if ( strategy->showHeader( "from" ) ) {
-      QString fromStr = message->from();
+      QString fromStr = message->from()->asUnicodeString();
+/*TODO(Andras) review if it can happen or not
       if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
         fromStr = message->fromStrip(); // let's use that
+*/
       QString fromPart = KMail::StringUtil::emailAddrAsAnchor( fromStr, true );
       if ( !vCardName.isEmpty() )
         fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\">" + i18n("[vCard]") + "</a>";
       headerParts << fromPart;
     }
 
-    if ( strategy->showHeader( "cc" ) && !message->cc().isEmpty() )
-      headerParts << i18n("CC: ") + KMail::StringUtil::emailAddrAsAnchor( message->cc(), true );
+    if ( strategy->showHeader( "cc" ) && message->cc(false) )
+      headerParts << i18n("CC: ") + KMail::StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true );
 
-    if ( strategy->showHeader( "bcc" ) && !message->bcc().isEmpty() )
-      headerParts << i18n("BCC: ") + KMail::StringUtil::emailAddrAsAnchor( message->bcc(), true );
+    if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
+      headerParts << i18n("BCC: ") + KMail::StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true );
 
     if ( strategy->showHeader( "date" ) )
-      headerParts << strToHtml(message->dateShortStr());
+      headerParts << strToHtml(dateShortStr(message->date()->dateTime()));
 
     // remove all empty (modulo whitespace) entries and joins them via ", \n"
     headerStr += " (" + headerParts.filter( QRegExp( "\\S" ) ).join( ",\n" ) + ')';
@@ -193,14 +193,14 @@ namespace KMail {
     const HeaderStyle * next() const { return fancy(); }
     const HeaderStyle * prev() const { return brief(); }
 
-    QString format( const KMMessage * message, const HeaderStrategy * strategy,
+    QString format( KMime::Message * message, const HeaderStrategy * strategy,
                     const QString & vCardName, bool printing, bool topLevel ) const;
 
   private:
-    QString formatAllMessageHeaders( const KMMessage * message ) const;
+    QString formatAllMessageHeaders( KMime::Message * message ) const;
   };
 
-  QString PlainHeaderStyle::format( const KMMessage * message,
+  QString PlainHeaderStyle::format( KMime::Message * message,
                                     const HeaderStrategy * strategy,
                                     const QString & vCardName, bool printing, bool topLevel ) const {
     Q_UNUSED( topLevel );
@@ -220,21 +220,20 @@ namespace KMail {
     // direction.
 
     QString subjectDir;
-    if (!message->subject().isEmpty())
-      subjectDir = directionOf( message->cleanSubject() );
+    if (message->subject(false))
+      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
     else
       subjectDir = directionOf( i18n("No Subject") );
 
     // Prepare the date string (when printing always use the localized date)
     QString dateString;
     if( printing ) {
-      QDateTime dateTime;
+      KDateTime dateTime = message->date()->dateTime();
       KLocale* locale = KGlobal::locale();
-      dateTime.setTime_t( message->date() );
       dateString = locale->formatDateTime( dateTime );
     }
     else {
-      dateString = message->dateStr();
+      dateString = dateStr(message->date()->dateTime());
     }
 
     QString headerStr;
@@ -253,16 +252,18 @@ namespace KMail {
     //case HdrLong:
     if ( strategy->showHeader( "subject" ) )
       headerStr += QString("<div dir=\"%1\"><b style=\"font-size:130%\">" +
-                           strToHtml(message->subject()) + "</b></div>\n")
+                           strToHtml(message->subject()->asUnicodeString()) + "</b></div>\n")
                         .arg(subjectDir);
 
     if ( strategy->showHeader( "date" ) )
       headerStr.append(i18n("Date: ") + strToHtml(dateString)+"<br/>\n");
 
     if ( strategy->showHeader( "from" ) ) {
-      QString fromStr = message->from();
+      QString fromStr = message->from()->asUnicodeString();
+/*FIXME(Andras) review if it is still needed
       if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
         fromStr = message->fromStrip(); // let's use that
+*/
       headerStr.append( i18n("From: ") +
                         KMail::StringUtil::emailAddrAsAnchor( fromStr, false, "", true ) );
       if ( !vCardName.isEmpty() )
@@ -270,41 +271,42 @@ namespace KMail {
               "\">" + i18n("[vCard]") + "</a>" );
 
       if ( strategy->showHeader( "organization" )
-          && !message->headerField("Organization").isEmpty())
+          && message->headerByType("Organization"))
         headerStr.append("&nbsp;&nbsp;(" +
-              strToHtml(message->headerField("Organization")) + ')');
+              strToHtml(message->headerByType("Organization")->asUnicodeString()) + ')');
       headerStr.append("<br/>\n");
     }
 
     if ( strategy->showHeader( "to" ) )
       headerStr.append(i18nc("To-field of the mailheader.", "To: ")+
-                       KMail::StringUtil::emailAddrAsAnchor(message->to(),false) + "<br/>\n");
+                       KMail::StringUtil::emailAddrAsAnchor(message->to()->asUnicodeString(),false) + "<br/>\n");
 
-    if ( strategy->showHeader( "cc" ) && !message->cc().isEmpty() )
+    if ( strategy->showHeader( "cc" ) && message->cc(false) )
       headerStr.append(i18n("CC: ")+
-                       KMail::StringUtil::emailAddrAsAnchor(message->cc(),false) + "<br/>\n");
+                       KMail::StringUtil::emailAddrAsAnchor(message->cc()->asUnicodeString(),false) + "<br/>\n");
 
-    if ( strategy->showHeader( "bcc" ) && !message->bcc().isEmpty() )
+    if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
       headerStr.append(i18n("BCC: ")+
-                       KMail::StringUtil::emailAddrAsAnchor(message->bcc(),false) + "<br/>\n");
+                       KMail::StringUtil::emailAddrAsAnchor(message->bcc()->asUnicodeString(),false) + "<br/>\n");
 
-    if ( strategy->showHeader( "reply-to" ) && !message->replyTo().isEmpty())
+    if ( strategy->showHeader( "reply-to" ) && message->replyTo(false))
       headerStr.append(i18n("Reply to: ")+
-                     KMail::StringUtil::emailAddrAsAnchor(message->replyTo(),false) + "<br/>\n");
+                     KMail::StringUtil::emailAddrAsAnchor(message->replyTo()->asUnicodeString(),false) + "<br/>\n");
 
     headerStr += "</div>\n";
 
     return headerStr;
   }
 
-  QString PlainHeaderStyle::formatAllMessageHeaders( const KMMessage * message ) const {
-    const DwHeaders & headers = message->headers();
+  QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message * message ) const {
+    QByteArray head = message->head();
+    KMime::Headers::Generic *header = message->nextHeader(head);
     QString result;
-
-    for ( const DwField * field = headers.FirstField() ; field ; field = field->Next() ) {
-      result += ( field->FieldNameStr() + ": " ).c_str();
-      result += strToHtml( field->FieldBodyStr().c_str() );
-      result += "<br/>\n";
+    while ( header ) {
+      result += QLatin1String(header->type()) + ": ";
+      result += strToHtml( header->asUnicodeString() );
+      delete header;
+      header = message->nextHeader(head);
     }
 
     return result;
@@ -326,7 +328,7 @@ namespace KMail {
     const HeaderStyle * next() const { return enterprise(); }
     const HeaderStyle * prev() const { return plain(); }
 
-    QString format( const KMMessage * message, const HeaderStrategy * strategy,
+    QString format( KMime::Message * message, const HeaderStrategy * strategy,
                     const QString & vCardName, bool printing, bool topLevel ) const;
     static QString imgToDataUrl( const QImage & image );
 
@@ -398,7 +400,7 @@ namespace KMail {
   }
 
 
-  QString FancyHeaderStyle::format( const KMMessage * message,
+  QString FancyHeaderStyle::format( KMime::Message * message,
                                     const HeaderStrategy * strategy,
                                     const QString & vCardName, bool printing, bool topLevel ) const {
     Q_UNUSED( topLevel );
@@ -407,7 +409,7 @@ namespace KMail {
       strategy = HeaderStrategy::rich();
 
 //FIXME(Andras) port to akonadi     KConfigGroup configReader( KMKernel::config(), "Reader" );
-    KConfigGroup configReader;
+    KConfigGroup configReader(KApplication::kApplication()->sessionConfig(), "Reader" );
 
     // ### from kmreaderwin begin
     // The direction of the header is determined according to the direction
@@ -423,21 +425,20 @@ namespace KMail {
     // direction.
 
     QString subjectDir;
-    if ( !message->subject().isEmpty() )
-      subjectDir = directionOf( message->cleanSubject() );
+    if ( message->subject(false) )
+      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
     else
       subjectDir = directionOf( i18n("No Subject") );
 
     // Prepare the date string (when printing always use the localized date)
     QString dateString;
     if( printing ) {
-      QDateTime dateTime;
+      KDateTime dateTime = message->date()->dateTime();
       KLocale* locale = KGlobal::locale();
-      dateTime.setTime_t( message->date() );
       dateString = locale->formatDateTime( dateTime );
     }
     else {
-      dateString = message->dateStr();
+      dateString = dateStr(message->date()->dateTime());
     }
 
     // Spam header display.
@@ -457,7 +458,7 @@ namespace KMail {
     QString userHTML;
 
     KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-    KABC::Addressee::List addresses = addressBook->findByEmail( KPIMUtils::firstEmailAddress( message->from() ) );
+    KABC::Addressee::List addresses = addressBook->findByEmail( KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() ) );
 
     QString photoURL;
     int photoWidth = 60;
@@ -497,9 +498,9 @@ namespace KMail {
       userHTML = "&nbsp;";
     }
 
-    if( photoURL.isEmpty() ) {
+    if( photoURL.isEmpty() && message->headerByType( "Face" )) {
       // no photo, look for a Face header
-      QString faceheader = message->headerField( "Face" );
+      QString faceheader = message->headerByType( "Face" )->asUnicodeString();
       if ( !faceheader.isEmpty() ) {
         QImage faceimage;
 
@@ -530,11 +531,11 @@ namespace KMail {
       }
     }
 
-    if( photoURL.isEmpty() )
+    if( photoURL.isEmpty() && message->headerByType( "X-Face" ))
     {
       // no photo, look for a X-Face header
       QString xfaceURL;
-      QString xfhead = message->headerField( "X-Face" );
+      QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
       if ( !xfhead.isEmpty() )
       {
         KXFace xf;
@@ -565,9 +566,9 @@ namespace KMail {
 
         headerStr += QString("<div dir=\"%1\">%2</div>\n")
                         .arg(subjectDir)
-                        .arg(message->subject().isEmpty()?
+                        .arg(!message->subject()?
                              i18n("No Subject") :
-                             strToHtml( message->subject(), flags ));
+                             strToHtml( message->subject()->asUnicodeString(), flags ));
     }
     headerStr += "<table class=\"outer\"><tr><td width=\"100%\"><table>\n";
     //headerStr += "<table>\n";
@@ -575,25 +576,27 @@ namespace KMail {
     // the mailto: URLs can contain %3 etc., therefore usage of multiple
     // QString::arg is not possible
     if ( strategy->showHeader( "from" ) ) {
-      QString fromStr = message->from();
+      QString fromStr = message->from()->asUnicodeString();
+      /*TODO(Andras) review if needed
       if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
         fromStr = message->fromStrip(); // let's use that
+        */
       headerStr += QString("<tr><th>%1</th>\n"
                            "<td>")
                            .arg(i18n("From: "))
                  + KMail::StringUtil::emailAddrAsAnchor( fromStr, false )
-                 + ( !message->headerField( "Resent-From" ).isEmpty() ? "&nbsp;"
+                 + ( message->headerByType( "Resent-From" ) ? "&nbsp;"
                                 + i18n("(resent from %1)",
                                     KMail::StringUtil::emailAddrAsAnchor(
-                                    message->headerField( "Resent-From" ),false) )
+                                    message->headerByType( "Resent-From" )->asUnicodeString(),false) )
                               : QString("") )
                  + ( !vCardName.isEmpty() ? "&nbsp;&nbsp;<a href=\"" + vCardName + "\">"
                                 + i18n("[vCard]") + "</a>"
                               : QString("") )
-                 + ( message->headerField("Organization").isEmpty()
+                 + ( !message->headerByType("Organization")
                               ? QString("")
                               : "&nbsp;&nbsp;("
-                                + strToHtml(message->headerField("Organization"))
+                                + strToHtml(message->headerByType("Organization")->asUnicodeString())
                                 + ')')
                  + "</td></tr>\n";
     }
@@ -602,27 +605,27 @@ namespace KMail {
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td>%2</td></tr>\n")
                             .arg(i18nc("To-field of the mail header.","To: "))
-                            .arg(KMail::StringUtil::emailAddrAsAnchor(message->to(),false)));
+                            .arg(KMail::StringUtil::emailAddrAsAnchor(message->to()->asUnicodeString(),false)));
 
     // cc line, if any
-    if ( strategy->showHeader( "cc" ) && !message->cc().isEmpty())
+    if ( strategy->showHeader( "cc" ) && message->cc(false))
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td>%2</td></tr>\n")
                               .arg(i18n("CC: "))
-                              .arg(KMail::StringUtil::emailAddrAsAnchor(message->cc(),false)));
+                              .arg(KMail::StringUtil::emailAddrAsAnchor(message->cc()->asUnicodeString(),false)));
 
     // Bcc line, if any
-    if ( strategy->showHeader( "bcc" ) && !message->bcc().isEmpty())
+    if ( strategy->showHeader( "bcc" ) && message->bcc(false))
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td>%2</td></tr>\n")
                               .arg(i18n("BCC: "))
-                              .arg(KMail::StringUtil::emailAddrAsAnchor(message->bcc(),false)));
+                              .arg(KMail::StringUtil::emailAddrAsAnchor(message->bcc()->asUnicodeString(),false)));
 
     if ( strategy->showHeader( "date" ) )
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td dir=\"%2\">%3</td></tr>\n")
                             .arg(i18n("Date: "))
-                    .arg( directionOf( message->dateStr() ) )
+                    .arg( directionOf( dateStr(message->date()->dateTime() ) ) )
                             .arg(strToHtml(dateString)));
 /*FIXME(Andras) port to akonadi
     if ( GlobalSettings::self()->showUserAgent() ) {
@@ -680,11 +683,11 @@ namespace KMail {
     const HeaderStyle * next() const { return brief(); }
     const HeaderStyle * prev() const { return fancy(); }
 
-    QString format( const KMMessage * message, const HeaderStrategy * strategy,
+    QString format( KMime::Message * message, const HeaderStrategy * strategy,
                     const QString & vCardName, bool printing, bool topLevel ) const;
   };
 
-  QString EnterpriseHeaderStyle::format( const KMMessage * message,
+  QString EnterpriseHeaderStyle::format( KMime::Message * message,
                                          const HeaderStrategy * strategy,
                                          const QString & vCardName, bool printing, bool topLevel ) const
   {
@@ -705,12 +708,12 @@ namespace KMail {
     // considered left-to-right, they are ignored when determining its
     // direction.
 
+//TODO(Andras) this is duplicate code, try to factor out!
     QString subjectDir;
-    if ( !message->subject().isEmpty() ) {
-      subjectDir = directionOf( message->cleanSubject() );
-    } else {
+    if (message->subject(false))
+      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
+    else
       subjectDir = directionOf( i18n("No Subject") );
-    }
 
     // colors depend on if it is encapsulated or not
     QColor fontColor( Qt::white );
@@ -725,31 +728,33 @@ namespace KMail {
       linkColor = "class =\"black\"";
     }
 
+//TODO(Andras) this looks like  duplicate code, try to factor out!
     QStringList headerParts;
     if ( strategy->showHeader( "to" ) ) {
-      headerParts << KMail::StringUtil::emailAddrAsAnchor( message->to(), false, linkColor );
+      headerParts << KMail::StringUtil::emailAddrAsAnchor( message->to()->asUnicodeString(), false, linkColor );
     }
 
-    if ( strategy->showHeader( "cc" ) && !message->cc().isEmpty() ) {
-      headerParts << i18n("CC: ") + KMail::StringUtil::emailAddrAsAnchor( message->cc(), true, linkColor );
+    if ( strategy->showHeader( "cc" ) && message->cc(false) ) {
+      headerParts << i18n("CC: ") + KMail::StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true, linkColor );
     }
 
-    if ( strategy->showHeader( "bcc" ) && !message->bcc().isEmpty() ) {
-      headerParts << i18n("BCC: ") + KMail::StringUtil::emailAddrAsAnchor( message->bcc(), true, linkColor );
+    if ( strategy->showHeader( "bcc" ) && message->bcc(false) ) {
+      headerParts << i18n("BCC: ") + KMail::StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true, linkColor );
     }
 
     // remove all empty (modulo whitespace) entries and joins them via ", \n"
     QString headerPart = ' ' + headerParts.filter( QRegExp( "\\S" ) ).join( ", " );
 
+//TODO(Andras) this is duplicate code, try to factor out!
     // Prepare the date string (when printing always use the localized date)
     QString dateString;
     if( printing ) {
-      QDateTime dateTime;
-      KLocale * locale = KGlobal::locale();
-      dateTime.setTime_t( message->date() );
+      KDateTime dateTime = message->date()->dateTime();
+      KLocale* locale = KGlobal::locale();
       dateString = locale->formatDateTime( dateTime );
-    } else {
-      dateString = message->dateStr();
+    }
+    else {
+      dateString = dateStr(message->date()->dateTime());
     }
 
     QString imgpath( KStandardDirs::locate("data","kmail/pics/") );
@@ -784,15 +789,17 @@ namespace KMail {
       headerStr +=
         "     <tr> \n"
         "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\"></td> \n"
-        "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">"+message->subject()+"</td> \n"
+        "      <td style=\"font-weight: bolder; font-size: 120%; padding-right: 91px; "+borderSettings+"\">"+message->subject()->asUnicodeString()+"</td> \n"
         "     </tr> \n";
     }
 
     // from
     if ( strategy->showHeader( "from" ) ) {
-      QString fromStr = message->from();
+      QString fromStr = message->from()->asUnicodeString();
+      /*TODO(Andras) review if needed
       if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
         fromStr = message->fromStrip(); // let's use that
+        */
       // TODO vcard
       QString fromPart = KMail::StringUtil::emailAddrAsAnchor( fromStr, true, linkColor );
       if ( !vCardName.isEmpty() )
@@ -918,5 +925,31 @@ namespace KMail {
       enterpriseStyle = new EnterpriseHeaderStyle();
     return enterpriseStyle;
   }
+
+  QString HeaderStyle::dateStr(const KDateTime &dateTime) const
+  {
+      KConfigGroup general(KApplication::kApplication()->sessionConfig(), "General");//FIXME(Andras) port to akonadi ( KMKernel::config(), "General" );
+      time_t unixTime = dateTime.toTime_t();
+
+  //kDebug()<<"####  Date ="<<header.Date().AsString().c_str();
+
+      return KMime::DateFormatter::formatDate(
+                                              static_cast<KMime::DateFormatter::FormatType>(general.readEntry( "dateFormat",
+              int( KMime::DateFormatter::Fancy ) )),
+                   unixTime, general.readEntry( "customDateFormat" ));
+  }
+
+    QByteArray HeaderStyle::dateShortStr(const KDateTime &dateTime) const
+    {
+        time_t unixTime = dateTime.toTime_t();
+
+        QByteArray result = ctime(&unixTime);
+
+        if (result[result.length()-1]=='\n')
+            result.truncate(result.length()-1);
+
+        return result;
+    }
+
 
 } // namespace KMail

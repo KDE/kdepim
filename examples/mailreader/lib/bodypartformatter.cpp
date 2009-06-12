@@ -35,11 +35,15 @@
 #include "interfaces/bodypartformatter.h"
 
 #include "objecttreeparser.h"
-#include "partNode.h"
+/*
+#include "KMime::Content.h"
 
 #include <mimelib/enum.h>
 #include <mimelib/string.h>
 #include <mimelib/utility.h>
+*/
+
+#include <kmime/kmime_content.h>
 
 #include <kdebug.h>
 #include <kascii.h>
@@ -55,7 +59,7 @@ namespace {
       return AsIcon;
     }
 
-    bool process( KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult & result ) const {
+    bool process( KMail::ObjectTreeParser *, KMime::Content *, KMail::ProcessResult & result ) const {
       result.setNeverDisplayInline( true );
       return false;
     }
@@ -72,7 +76,7 @@ namespace {
   class ImageTypeBodyPartFormatter : public KMail::BodyPartFormatter {
     static const ImageTypeBodyPartFormatter * self;
   public:
-    bool process( KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult & result ) const {
+    bool process( KMail::ObjectTreeParser *, KMime::Content *, KMail::ProcessResult & result ) const {
       result.setIsImage( true );
       return false;
     }
@@ -89,7 +93,7 @@ namespace {
   class subtype##BodyPartFormatter : public KMail::BodyPartFormatter { \
     static const subtype##BodyPartFormatter * self; \
   public: \
-    bool process( KMail::ObjectTreeParser *, partNode *, KMail::ProcessResult & ) const; \
+    bool process( KMail::ObjectTreeParser *, KMime::Content *, KMail::ProcessResult & ) const; \
     static const KMail::BodyPartFormatter * create() { \
       if ( !self ) \
 	self = new subtype##BodyPartFormatter(); \
@@ -99,9 +103,10 @@ namespace {
   \
   const subtype##BodyPartFormatter * subtype##BodyPartFormatter::self; \
   \
-  bool subtype##BodyPartFormatter::process( KMail::ObjectTreeParser * otp, partNode * node, KMail::ProcessResult & result ) const { \
+  bool subtype##BodyPartFormatter::process( KMail::ObjectTreeParser * otp, KMime::Content * node, KMail::ProcessResult & result ) const { \
     return otp->process##subtype##Subtype( node, result ); \
   }
+
 
   CREATE_BODY_PART_FORMATTER(TextPlain)
   CREATE_BODY_PART_FORMATTER(TextHtml)
