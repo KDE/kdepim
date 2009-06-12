@@ -1,3 +1,16 @@
+Friday, June 12th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3685: Fix invitation handling regression, now the update mails of moved events can be
+                   entered into the calendar again
+* kolab/issue3678: Speed up displaying of inline PGP encrypted messages
+* kolab/issue3694: Fix crash when displaying an invitation mail
+* kolab/issue3692: Fix crash when quickly closing the window displaying a signed message
+* A info about the invitation options in KMail's handbook
+
+
 Friday, June 5th 2009
 
 Problems addressed
