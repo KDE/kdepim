@@ -1,3 +1,33 @@
+Friday, June 12th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3493: Freebusy information couldn't get loaded
+* kolab/issue3619: Fix sending to local distribution lists
+* Make display of invitation mails for beautiful
+* More work an the Kontact admin handbook
+
+Merges
+------
+
+* Merges from KDE trunk:
+      - Fix an infinite loop that could happen when the reminder daemon pops up the reminder dialog
+      - Fix the combo boxes in KMail's filter dialog being too big
+      - Make the option to delete invitations after replying also work for online IMAP users (KDE bug 170940)
+      - Fix subresource names in KOrganizer not being correctly translatable (KDE bug 170277)
+      - Fix a crash when editing a calendar entry with an attachment (KDE bug 195654)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3424 (partly): The comment of an event rejection is not seen with Outlook
+      - kolab/issue3685: Fix invitation handling regression, now the update mails of moved events can be
+                         entered into the calendar again
+      - kolab/issue3678: Speed up displaying of inline PGP encrypted messages
+      - kolab/issue3694: Fix crash when displaying an invitation mail
+      - kolab/issue3692: Fix crash when quickly closing the window displaying a signed message
+      - Add info about the invitation options to KMail's handbook
+
+
 Friday, June 5th 2009
 
 Problems addressed
