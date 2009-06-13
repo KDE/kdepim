@@ -1,6 +1,6 @@
 <ui version="4.0" stdsetdef="1" >
   <class>confPageMisc</class>
-  <widget class="QDialog" name="confPageMisc" >
+  <widget class="QWidget" name="confPageMisc" >
     <property name="geometry" >
       <rect>
         <x>0</x>

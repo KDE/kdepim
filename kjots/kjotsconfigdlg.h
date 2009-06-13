@@ -23,10 +23,10 @@
 #include <kcmultidialog.h>
 #include "ui_confpagemisc.h"
 
-class confPageMisc : public QDialog, public Ui::confPageMisc
+class confPageMisc : public QWidget, public Ui::confPageMisc
 {
 public:
-    confPageMisc( QWidget *parent ) : QDialog( parent ) {
+    confPageMisc( QWidget *parent ) : QWidget( parent ) {
         setupUi( this );
     }
 };
