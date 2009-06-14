@@ -48,11 +48,21 @@ namespace KCal
 class Event;
 }
 
+inline int _upDBAI(struct AppointmentAppInfo *m, const unsigned char *b, size_t s)
+{
+	return unpack_AppointmentAppInfo(m,b,s);
+}
+
+inline int _pDBAI(const struct AppointmentAppInfo *m, unsigned char *b, size_t s)
+{
+	return pack_AppointmentAppInfo(m,b,s);
+}
+
 /** Interpreted form of the AppInfo block in the datebook database. */
 typedef PilotAppInfo<
 	AppointmentAppInfo,
-	unpack_AppointmentAppInfo, 
-	pack_AppointmentAppInfo> PilotDateInfo_;
+	_upDBAI, 
+	_pDBAI> PilotDateInfo_;
 
 
 class PilotDateInfo : public PilotDateInfo_

@@ -100,6 +100,17 @@ private:
 
 };
 
-typedef PilotAppInfo<struct MemoAppInfo,unpack_MemoAppInfo, pack_MemoAppInfo> PilotMemoInfo;
+inline int _upMAI(struct MemoAppInfo *m, const unsigned char *b, size_t s)
+{
+	return unpack_MemoAppInfo(m,b,s);
+}
+
+inline int _pMAI(const struct MemoAppInfo *m, unsigned char *b, size_t s)
+{
+	return pack_MemoAppInfo(m,b,s);
+}
+
+typedef PilotAppInfo<struct MemoAppInfo, _upMAI, _pMAI> PilotMemoInfo;
+
 
 #endif

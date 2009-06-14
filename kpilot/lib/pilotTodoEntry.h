@@ -159,7 +159,17 @@ private:
 	unsigned int fDescriptionSize, fNoteSize;
 };
 
-typedef PilotAppInfo<ToDoAppInfo,unpack_ToDoAppInfo, pack_ToDoAppInfo> PilotToDoInfo;
+inline int _upTDAI(struct ToDoAppInfo *m, const unsigned char *b, size_t s)
+{
+	return unpack_ToDoAppInfo(m,b,s);
+}
+
+inline int _pTDAI(const struct ToDoAppInfo *m, unsigned char *b, size_t s)
+{
+	return pack_ToDoAppInfo(m,b,s);
+}
+
+typedef PilotAppInfo<ToDoAppInfo, _upTDAI,  _pTDAI> PilotToDoInfo;
 
 
 #endif

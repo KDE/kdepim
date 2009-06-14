@@ -39,11 +39,21 @@
 #include <pi-macros.h>
 #include <pi-address.h>
 
+inline int _upAAI(struct AddressAppInfo *m, const unsigned char *b, size_t s)
+{
+	return unpack_AddressAppInfo(m,b,s);
+}
+
+inline int _pAAI(const struct AddressAppInfo *m, unsigned char *b, size_t s)
+{
+	return pack_AddressAppInfo(m,b,s);
+}
+
 /** Interpreted form of the AppInfo block in the address database. */
 typedef PilotAppInfo<
 	AddressAppInfo,
-	unpack_AddressAppInfo,
-	pack_AddressAppInfo> PilotAddressInfo_;
+	_upAAI,
+	_pAAI> PilotAddressInfo_;
 
 /** This class exists @em only to clear up the type mess that
 *   is the field-numbers-and-indexes for phone numbers in the
