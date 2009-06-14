@@ -286,8 +286,10 @@ void BrowserWidget::modelChanged()
       mItemModel = new ItemModel( this );
   }
   itemUi.itemView->setModel( mItemModel );
-  if ( mCurrentCollection > 0 )
-    mItemModel->setCollection( Collection( mCurrentCollection ) );
+  if ( mCurrentCollection > 0 ) {
+    const Collection col = mCollectionView->currentIndex().data( CollectionModel::CollectionRole ).value<Collection>();
+    mItemModel->setCollection( col );
+  }
   if ( mStdActionManager )
     mStdActionManager->setItemSelectionModel( itemUi.itemView->selectionModel() );
 }
