@@ -151,19 +151,37 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 #endif
 }
 
+void BrowserWidget::clear()
+{
+  contentUi.stack->setCurrentWidget( contentUi.unsupportedTypePage );
+  contentUi.dataView->clear();
+  contentUi.id->clear();
+  contentUi.remoteId->clear();
+  contentUi.mimeType->clear();
+  contentUi.revision->clear();
+  contentUi.size->clear();
+  contentUi.modificationtime->clear();
+  contentUi.flags->clear();
+  contentUi.attrView->setModel( 0 );
+}
+
 void BrowserWidget::collectionActivated(const QModelIndex & index)
 {
   mCurrentCollection = mCollectionView->model()->data( index, CollectionModel::CollectionIdRole ).toLongLong();
   if ( mCurrentCollection <= 0 )
     return;
-  mItemModel->setCollection( Collection( mCurrentCollection ) );
+  const Collection col = mCollectionView->currentIndex().data( CollectionModel::CollectionRole ).value<Collection>();
+  mItemModel->setCollection( col );
+  clear();
 }
 
 void BrowserWidget::itemActivated(const QModelIndex & index)
 {
   const Item item = mItemModel->itemForIndex( index );
-  if ( !item.isValid() )
+  if ( !item.isValid() ) {
+    clear();
     return;
+  }
 
   ItemFetchJob *job = new ItemFetchJob( item, this );
   job->fetchScope().fetchFullPayload();

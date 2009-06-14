@@ -67,6 +67,7 @@ class BrowserWidget: public QWidget
     void delAttribute();
     void setItem( const Akonadi::Item &item );
     void dumpToXmlResult( KJob *job );
+    void clear();
 
   private:
     Akonadi::CollectionModel *mCollectionModel;
