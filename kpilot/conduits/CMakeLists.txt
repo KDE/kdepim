@@ -6,6 +6,11 @@ include_directories(
 
 link_libraries( ${QT_QT3SUPPORT_LIBRARY} )
 
+# We need Akonadi, and by extension Boost. But in particular
+# we need the Boost includes.
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+
 # libs
 add_subdirectory(akonadibase)
 add_subdirectory(base)

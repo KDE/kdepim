@@ -1,8 +1,13 @@
+find_package(Boost)
+
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../base
 	${CMAKE_CURRENT_BINARY_DIR}/../../lib
 	${CMAKE_CURRENT_BINARY_DIR}
+	${Boost_INCLUDE_DIRS}
 )
+
+message(STATUS "Boost includes ${Boost_INCLUDE_DIRS}")
 
 set(akonadibase_SRCS
 	collectioncombobox.cc
