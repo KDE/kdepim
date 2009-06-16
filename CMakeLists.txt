@@ -86,7 +86,7 @@ else(KDEPIM_ONLY_KLEO)
 # Otherwise...
 ############### Find the stuff we need ###############
 
-  find_package(Akonadi)
+  find_package(Akonadi QUIET NO_MODULE)
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
