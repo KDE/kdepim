@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/gui/signingcertificateselectiondialog.h
+    crypto/gui/signingcertificateselectionwidget.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2007, 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,28 +29,30 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
-#define __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONWIDGET_H__
+#define __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONWIDGET_H__
 
-#include <KDialog>
+#include <QWidget>
 
-#include <gpgme++/key.h>
+#include <gpgme++/global.h>
 
 #include <utils/pimpl_ptr.h>
 
 template <typename K, typename U> class QMap;
 
+namespace GpgME {
+    class Key;
+}
+
 namespace Kleo {
 namespace Crypto {
 namespace Gui {
 
-    class SigningCertificateSelectionWidget;
-
-    class SigningCertificateSelectionDialog : public KDialog {
+    class SigningCertificateSelectionWidget : public QWidget {
         Q_OBJECT
     public:
-        explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WFlags f=0 );
-        ~SigningCertificateSelectionDialog();
+        explicit SigningCertificateSelectionWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~SigningCertificateSelectionWidget();
 
         void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );
         void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
@@ -59,12 +61,13 @@ namespace Gui {
         bool rememberAsDefault() const;
 
     private:
-        SigningCertificateSelectionWidget * widget;
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
 
 }
 }
 }
 
-#endif // __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
+#endif // __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONWIDGET_H__
 
