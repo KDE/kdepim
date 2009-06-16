@@ -96,10 +96,10 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(STRIGI_FOUND "Strigi" "Index metadata of files" "http:// strigi.sourceforge.net" TRUE "" "")
 
   find_package(QGpgme)
-  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library." "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
+  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
   macro_optional_find_package(Soprano)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" FALSE "" "" "Soprano is needed for Nepomuk")
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "" "Soprano is needed for Nepomuk")
 
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
