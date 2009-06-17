@@ -53,7 +53,7 @@ namespace Gui {
     class ResultListWidget : public QWidget {
         Q_OBJECT
     public:
-        ResultListWidget( QWidget * parent=0, Qt::WindowFlags flags=0 );
+        explicit ResultListWidget( QWidget * parent=0, Qt::WindowFlags flags=0 );
         ~ResultListWidget();
 
         void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
