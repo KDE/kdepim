@@ -33,6 +33,9 @@
 #include "resourcekolab.h"
 #include "contact.h"
 
+#include "libkdepim/distributionlist.h"
+#include "libkdepim/distributionlistconverter.h"
+
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -81,7 +84,8 @@ static const char* s_inlineMimeType = "text/x-vcard"; // the new mimetype name i
 KABC::ResourceKolab::ResourceKolab()
   : KABC::ResourceABC(),
     Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
-    mCachedSubresource( QString() ), mLocked( false )
+    mCachedSubresource( QString() ), mLocked( false ),
+    mDistListConverter( new KPIM::DistributionListConverter( this ) )
 {
   setType( "imap" );
 }
@@ -89,7 +93,8 @@ KABC::ResourceKolab::ResourceKolab()
 KABC::ResourceKolab::ResourceKolab( const KConfigGroup& config )
   : KABC::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
-    mCachedSubresource( QString() ), mLocked( false )
+    mCachedSubresource( QString() ), mLocked( false ),
+    mDistListConverter( new KPIM::DistributionListConverter( this ) )
 {
   setType( "imap" );
 }
@@ -101,6 +106,8 @@ KABC::ResourceKolab::~ResourceKolab()
   if ( isOpen() ) {
     close();
   }
+
+  delete mDistListConverter;
 }
 
 void KABC::ResourceKolab::loadSubResourceConfig( KConfig& config,
@@ -169,9 +176,14 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
     addr = converter.parseVCard( contactData.toUtf8() );
   }
 
-  addr.setResource( this );
-  addr.setChanged( false );
-  KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
+  if ( KPIM::DistributionList::isDistributionList( addr ) ) {
+    KABC::DistributionList *list = mDistListConverter->convertToKABC( addr );
+    KABC::Resource::insertDistributionList( list );
+  } else {
+    addr.setResource( this );
+    addr.setChanged( false );
+    KABC::Resource::insertAddressee( addr ); // same as mAddrMap.insert( addr.uid(), addr );
+  }
   mUidMap[ addr.uid() ] = StorageReference( subResource, sernum );
   kDebug(5650) <<"Loaded contact uid=" << addr.uid() <<" sernum=" << sernum <<" fullName=" << addr.name();
   return addr.uid();
@@ -446,6 +458,44 @@ void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
   mUidMap.remove( uid );
 
   Resource::removeAddressee( addr );
+}
+
+void KABC::ResourceKolab::insertDistributionList( DistributionList *list )
+{
+  const QString uid = list->identifier();
+  //kDebug(5650) << uid;
+  bool ok = false;
+  if ( mUidMap.contains( uid ) ) {
+    mUidsPendingUpdate.append( uid );
+  } else {
+    mUidsPendingAdding.append( uid );
+  }
+
+  KPIM::DistributionList addr = mDistListConverter->convertFromKABC( list );
+
+  ok = kmailUpdateAddressee( addr );
+
+  if ( ok )
+    Resource::insertDistributionList( list );
+}
+
+void KABC::ResourceKolab::removeDistributionList( DistributionList *list )
+{
+  const QString uid = list->identifier();
+  if ( mUidMap.find( uid ) == mUidMap.end() ) return;
+  //kDebug(5650) << uid;
+  const QString resource = mUidMap[ uid ].resource();
+  if ( !subresourceWritable( resource ) ) {
+    kWarning() <<"Wow! Something tried to delete a non-writable addressee! Fix this caller:" << kBacktrace();
+    return;
+  }
+  /* The user told us to delete, tell KMail */
+  kmailDeleteIncidence( resource,
+                        mUidMap[ uid ].serialNumber() );
+  mUidsPendingDeletion.append( uid );
+  mUidMap.remove( uid );
+
+  Resource::removeDistributionList( list );
 }
 
 /*

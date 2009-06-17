@@ -39,6 +39,10 @@
 #include <kmail/groupware_types.h>
 #include "kabckolab_export.h"
 
+namespace KPIM {
+  class DistributionListConverter;
+}
+
 namespace KABC {
 
 
@@ -99,10 +103,25 @@ public:
   virtual void insertAddressee( const Addressee& );
 
   /**
-  * Removes a addressee from resource. This method is mainly
+   * Removes a addressee from resource. This method is mainly
    * used by record-based resources like LDAP or SQL.
    */
   virtual void removeAddressee( const Addressee& addr );
+
+  /**
+   * Adds a distribution @p list into this resource.
+   *
+   * @param list The list to insert.
+   */
+  virtual void insertDistributionList( DistributionList *list );
+
+  /**
+   * Removes a distribution @p list from this resource.
+   *
+   * @param list The list to remove.
+   */
+  virtual void removeDistributionList( DistributionList *list );
+
 
   // Listen to KMail changes in the amount of sub resources
   void fromKMailAddSubresource( const QString& type, const QString& id,
@@ -170,6 +189,8 @@ protected:
   Kolab::ResourceMap mSubResources;
   QString mCachedSubresource;
   bool mLocked;
+
+  KPIM::DistributionListConverter *mDistListConverter;
 };
 
 }
