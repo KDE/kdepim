@@ -113,7 +113,7 @@ void SigningCertificateSelectionWidget::Private::addCandidates( GpgME::Protocol 
     const std::vector<GpgME::Key> keys = candidates( prot );
     Q_FOREACH( const GpgME::Key& i, keys )
         combo->addItem( Formatting::formatForComboBox( i ),
-                        QByteArray( i.primaryFingerprint() ) );
+                        QVariant( QByteArray( i.primaryFingerprint() ) ) );
 }
 
 
@@ -136,12 +136,14 @@ bool SigningCertificateSelectionWidget::rememberAsDefault() const
 void SigningCertificateSelectionWidget::setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols )
 {
     assert( allowedProtocols.size() >= 1 );
-    if ( !allowedProtocols.contains( GpgME::OpenPGP ) ) {
-        d->ui.pgpLabel->hide();
-        d->ui.pgpCombo->hide();
-    }
-    if ( !allowedProtocols.contains( GpgME::CMS ) ) {
-        d->ui.cmsLabel->hide();
-        d->ui.cmsCombo->hide();
-    }
+    const bool pgp = allowedProtocols.contains( GpgME::OpenPGP );
+    const bool cms = allowedProtocols.contains( GpgME::CMS );
+
+    d->ui.pgpLabel->setVisible( pgp );
+    d->ui.pgpCombo->setVisible( pgp );
+
+    d->ui.cmsLabel->setVisible( cms );
+    d->ui.cmsCombo->setVisible( cms );
 }
+
+#include "moc_signingcertificateselectionwidget.cpp"
