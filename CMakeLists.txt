@@ -36,6 +36,7 @@ find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
+include(MacroBoolTo01)
 find_package(KdepimLibs 4.2.87 REQUIRED)
 
 
@@ -87,7 +88,7 @@ else(KDEPIM_ONLY_KLEO)
 ############### Find the stuff we need ###############
 
   find_package(Akonadi QUIET NO_MODULE)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
   macro_log_feature(ZLIB_FOUND "zlib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
@@ -96,10 +97,10 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(STRIGI_FOUND "Strigi" "Index metadata of files" "http:// strigi.sourceforge.net" TRUE "" "")
 
   find_package(QGpgme)
-  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library." "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
+  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
   macro_optional_find_package(Soprano)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" FALSE "" "" "Soprano is needed for Nepomuk")
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "" "Soprano is needed for Nepomuk")
 
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
@@ -167,7 +168,9 @@ set(libkdgantt1_SRCS
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
-    macro_optional_add_subdirectory(akonadi)
+    if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
+      macro_optional_add_subdirectory(akonadi)
+    endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(knode)
   endif(KDEPIM_BUILD_EVERYTHING)
 
