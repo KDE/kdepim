@@ -683,7 +683,7 @@ void KABCore::newDistributionList()
       foundUnused = addressBook()->findDistributionListByName( name ) == 0;
     }
   }
-  KABC::DistributionList *list = mAddressBook->createDistributionList( name );
+  KABC::DistributionList *list = mAddressBook->createDistributionList( name, resource );
   editDistributionList( list );
 }
 
@@ -904,6 +904,12 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 void KABCore::extensionModified( const KABC::DistributionList *list )
 {
   if ( list != 0 ) {
+    // let the resource know that the data has changed
+    // ideally the list would be using observer pattern or explicit
+    // "changed" marking
+    KABC::Resource *resource = list->resource();
+    Q_ASSERT( resource != 0 );
+    resource->insertDistributionList( const_cast<KABC::DistributionList*>( list ) );
     setModified( true );
   }
 }
@@ -1569,6 +1575,14 @@ void KABCore::removeSelectedContactsFromDistList()
       }
     }
   }
+
+  // let the resource know that the data has changed
+  // ideally the list would be using observer pattern or explicit
+  // "changed" marking
+  KABC::Resource *resource = dist->resource();
+  Q_ASSERT( resource != 0 );
+  resource->insertDistributionList( dist );
+
   setModified();
 }
 
@@ -1636,6 +1650,13 @@ void KABCore::editDistributionList( KABC::DistributionList *dist )
       }
 
       dist->setName( newDist.name() );
+
+      // let the resource know that the data has changed
+      // ideally the list would be using observer pattern or explicit
+      // "changed" marking
+      KABC::Resource *resource = dist->resource();
+      Q_ASSERT( resource != 0 );
+      resource->insertDistributionList( dist );
 
       setModified();
     }

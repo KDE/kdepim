@@ -101,7 +101,7 @@ void KPIM::DistributionListPickerDialog::slotUser1()
         if ( validName )
         {
             KABC::DistributionList *list = m_book->createDistributionList( name );
-            list->setIdentifier( KRandom::randomString( 10 ) );
+            Q_UNUSED( list );
 
             QListWidgetItem* const item = new QListWidgetItem( name );
             m_listWidget->addItem( item );
