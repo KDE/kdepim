@@ -85,7 +85,8 @@ KABC::ResourceKolab::ResourceKolab()
   : KABC::ResourceABC(),
     Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
     mCachedSubresource( QString() ), mLocked( false ),
-    mDistListConverter( new KPIM::DistributionListConverter( this ) )
+    mDistListConverter( new KPIM::DistributionListConverter( this ) ),
+    mInternalDistListChange( false )
 {
   setType( "imap" );
 }
@@ -94,7 +95,8 @@ KABC::ResourceKolab::ResourceKolab( const KConfigGroup& config )
   : KABC::ResourceABC( config ),
     Kolab::ResourceKolabBase( "ResourceKolab_KABC" ),
     mCachedSubresource( QString() ), mLocked( false ),
-    mDistListConverter( new KPIM::DistributionListConverter( this ) )
+    mDistListConverter( new KPIM::DistributionListConverter( this ) ),
+    mInternalDistListChange( false )
 {
   setType( "imap" );
 }
@@ -177,8 +179,14 @@ QString KABC::ResourceKolab::loadContact( const QString& contactData,
   }
 
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
-    KABC::DistributionList *list = mDistListConverter->convertToKABC( addr );
-    KABC::Resource::insertDistributionList( list );
+    KABC::DistributionList *list = mDistListMap.value( addr.uid(), 0 );
+    if ( list == 0 ) {
+        mInternalDistListChange = true;
+        mDistListConverter->convertToKABC( addr );
+        mInternalDistListChange = false;
+    } else {
+        mDistListConverter->updateKABC( addr, list );
+    }
   } else {
     addr.setResource( this );
     addr.setChanged( false );
@@ -464,6 +472,12 @@ void KABC::ResourceKolab::insertDistributionList( DistributionList *list )
 {
   const QString uid = list->identifier();
   //kDebug(5650) << uid;
+
+  if ( mInternalDistListChange ) {
+    Resource::insertDistributionList( list );
+    return;
+  }
+
   bool ok = false;
   if ( mUidMap.contains( uid ) ) {
     mUidsPendingUpdate.append( uid );
@@ -484,6 +498,12 @@ void KABC::ResourceKolab::removeDistributionList( DistributionList *list )
   const QString uid = list->identifier();
   if ( mUidMap.find( uid ) == mUidMap.end() ) return;
   //kDebug(5650) << uid;
+
+  if ( mInternalDistListChange ) {
+    Resource::removeDistributionList( list );
+    return;
+  }
+
   const QString resource = mUidMap[ uid ].resource();
   if ( !subresourceWritable( resource ) ) {
     kWarning() <<"Wow! Something tried to delete a non-writable addressee! Fix this caller:" << kBacktrace();
@@ -549,6 +569,9 @@ void KABC::ResourceKolab::fromKMailDelIncidence( const QString& type,
   } else {
     // We didn't trigger this, so KMail did, remove the reference to the uid
     mAddrMap.remove( uid );
+    mInternalDistListChange = true;
+    delete mDistListMap.value( uid, 0 );
+    mInternalDistListChange = false;
     mUidMap.remove( uid );
     addressBook()->emitAddressBookChanged();
   }
@@ -615,6 +638,9 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
     QStringList::ConstIterator it;
     for ( it = uids.begin(); it != uids.end(); ++it ) {
       mAddrMap.remove( *it );
+      mInternalDistListChange = true;
+      delete mDistListMap.value( *it, 0 );
+      mInternalDistListChange = false;
       mUidMap.remove( *it );
     }
 
