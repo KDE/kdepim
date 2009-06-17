@@ -87,7 +87,7 @@ else(KDEPIM_ONLY_KLEO)
 ############### Find the stuff we need ###############
 
   find_package(Akonadi QUIET NO_MODULE)
-  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
   macro_log_feature(ZLIB_FOUND "zlib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
@@ -167,7 +167,9 @@ set(libkdgantt1_SRCS
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
-    macro_optional_add_subdirectory(akonadi)
+    if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
+      macro_optional_add_subdirectory(akonadi)
+    endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(knode)
   endif(KDEPIM_BUILD_EVERYTHING)
 
