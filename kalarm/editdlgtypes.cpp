@@ -1,7 +1,7 @@
 /*
 *  editdlgtypes.cpp  -  dialogs to create or edit alarm or alarm template types
 *  Program:  kalarm
-*  Copyright © 2001-2008 by David Jarvie <djarvie@kde.org>
+*  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
 *
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License as published by
@@ -581,7 +581,8 @@ void EditDisplayAlarmDlg::slotPickFile()
 	static QString defaultDir;   // default directory for file browse button
 	QString file = KAlarm::browseFile(i18nc("@title:window", "Choose Text or Image File to Display"),
 	                                  defaultDir, mFileMessageEdit->text(), QString(), KFile::ExistingOnly, this);
-	mFileMessageEdit->setText(file);
+	if (!file.isEmpty())
+		mFileMessageEdit->setText(file);
 }
 
 /******************************************************************************
