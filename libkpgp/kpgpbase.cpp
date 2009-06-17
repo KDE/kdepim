@@ -614,7 +614,7 @@ Base::runGpg( const char *cmd, const char *passphrase, bool onlyReadFromGnuPG )
                 len2 = len2-input_pos+1;
 
               //kDebug( 5326 ) <<"Trying to write" << len2 <<" bytes to pin[1] ...";
-              len2 = write(pin[1], input.mid(input_pos,len2).data(), len2);
+              len2 = write(pin[1], input.data() + input_pos, len2 );
               //kDebug( 5326 ) <<"Wrote" << len2 <<" bytes to pin[1] ...";
               input_pos += len2;
 
