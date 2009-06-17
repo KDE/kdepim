@@ -31,6 +31,10 @@
 
 #define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1
 
+namespace KABC {
+class DistributionList;
+}
+
 namespace KAB {
 class Core;
 class ConfigureWidget;
@@ -78,6 +82,7 @@ class KABINTERFACES_EXPORT ExtensionWidget : public QWidget
 
   Q_SIGNALS:
     void modified( const KABC::Addressee::List &list );
+    void modified( const KABC::DistributionList *list );
     void deleted( const QStringList& uidList );
 
   private:

@@ -164,6 +164,8 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
            SLOT( updateIncSearchWidget() ) );
   connect( mExtensionManager, SIGNAL( modified( const KABC::Addressee::List& ) ),
            this, SLOT( extensionModified( const KABC::Addressee::List& ) ) );
+  connect( mExtensionManager, SIGNAL( modified( const KABC::DistributionList* ) ),
+           this, SLOT( extensionModified( const KABC::DistributionList* ) ) );
   connect( mExtensionManager, SIGNAL( deleted( const QStringList& ) ),
            this, SLOT( extensionDeleted( const QStringList& ) ) );
 
@@ -899,6 +901,13 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
   }
 }
 
+void KABCore::extensionModified( const KABC::DistributionList *list )
+{
+  if ( list != 0 ) {
+    setModified( true );
+  }
+}
+
 void KABCore::extensionDeleted( const QStringList &uidList )
 {
   DeleteCommand *command = new DeleteCommand( mAddressBook, uidList );
@@ -1620,14 +1629,14 @@ void KABCore::editDistributionList( KABC::DistributionList *dist )
       foreach ( const KABC::DistributionList::Entry &entry, kabcEntries ) {
         dist->removeEntry( entry.addressee(), entry.email() );
       }
-      
+
       const KPIM::DistributionList::Entry::List kpimEntries = newDist.entries( addressBook() );
       foreach ( const KPIM::DistributionList::Entry &entry, kpimEntries ) {
         dist->insertEntry( entry.addressee, entry.email );
       }
-      
+
       dist->setName( newDist.name() );
-      
+
       setModified();
     }
   }

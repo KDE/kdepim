@@ -38,7 +38,7 @@ class QPoint;
 class QToolButton;
 
 namespace KABC {
-    class DistributionListManager;
+    class DistributionList;
 }
 
 namespace KAB {
@@ -91,6 +91,8 @@ private slots:
     void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees );
 
 private:
+    void changed( const KABC::DistributionList* );
+
     ListBox *mListBox;
     QStringList mCurrentEntries;
     QToolButton *mAddButton;
