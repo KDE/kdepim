@@ -1616,9 +1616,18 @@ void KABCore::editDistributionList( KABC::DistributionList *dist )
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
     if ( !newDist.isEmpty() ) {
-      // FIXME: update dist with newDist rather than replace
-      delete dist;
-      converter.convertToKABC( newDist );
+      const KABC::DistributionList::Entry::List kabcEntries = dist->entries();
+      foreach ( const KABC::DistributionList::Entry &entry, kabcEntries ) {
+        dist->removeEntry( entry.addressee(), entry.email() );
+      }
+      
+      const KPIM::DistributionList::Entry::List kpimEntries = newDist.entries( addressBook() );
+      foreach ( const KPIM::DistributionList::Entry &entry, kpimEntries ) {
+        dist->insertEntry( entry.addressee, entry.email );
+      }
+      
+      dist->setName( newDist.name() );
+      
       setModified();
     }
   }
