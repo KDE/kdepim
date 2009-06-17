@@ -28,8 +28,7 @@
 #include <QtCore/QHash>
 
 #include <kabc/stdaddressbook.h>
-
-#include <libkdepim/distributionlist.h>
+#include <kabc/distributionlist.h>
 
 typedef QStringList (*valueListGetter)( KABC::Field&, const KABC::Addressee& );
 typedef QHash<QString, valueListGetter> ValueListGetters;
@@ -75,7 +74,7 @@ class SearchManager : public QObject
     /**
       Returns all the distribution lists.
      */
-    KPIM::DistributionList::List distributionLists() const;
+    QList<KABC::DistributionList*> distributionLists() const;
 
     /**
       Returns the name of all the distribution lists.
@@ -94,7 +93,7 @@ class SearchManager : public QObject
   private:
     KABC::Addressee::List mContacts;
     QString mSelectedDistributionList;
-    KPIM::DistributionList::List mDistributionLists;
+    QList<KABC::DistributionList*> mDistributionLists;
     KABC::AddressBook *mAddressBook;
 
     QString mPattern;

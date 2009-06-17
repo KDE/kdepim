@@ -30,6 +30,7 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>
+#include <kabc/distributionlist.h>
 
 #include <kglobal.h>
 #include <kiconloader.h>
@@ -264,8 +265,9 @@ KPIM::DistributionListEditor::Line* KPIM::DistributionListEditor::EditorWidgetPr
 void KPIM::DistributionListEditor::EditorWidget::saveList()
 {
     const QString name = d->nameLineEdit->text();
-    const KPIM::DistributionList existing = KPIM::DistributionList::findByName( d->addressBook, name );
-    if ( !existing.isEmpty() && existing.uid() != d->distListUid )
+    const KABC::DistributionList *existing =
+      d->addressBook->findDistributionListByName( name );
+    if ( existing && existing->identifier() != d->distListUid )
     {
         KMessageBox::error( this, i18n( "A distribution list with the name %1 already exists. Please choose another name.", name ), i18n( "Name in Use" ) );
         return;

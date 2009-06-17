@@ -24,7 +24,7 @@
 #ifndef KAB_CORE_H
 #define KAB_CORE_H
 
-#include <libkdepim/distributionlist.h>
+#include <kabc/distributionlist.h>
 
 #include <QObject>
 
@@ -116,7 +116,7 @@ class KABINTERFACES_EXPORT Core : public QObject
     /**
       Returns all the distribution lists.
      */
-    virtual KPIM::DistributionList::List distributionLists() const = 0;
+    virtual QList<KABC::DistributionList*> distributionLists() const = 0;
 
 
     /**

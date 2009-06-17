@@ -231,6 +231,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
 
   allContacts = list;
 
+#if 0
   // Extract distribution lists from allContacts
   mDistributionLists.clear();
   KABC::Addressee::List::Iterator rmIt( allContacts.begin() );
@@ -241,16 +242,18 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     } else
       ++rmIt;
   }
+#endif
+  mDistributionLists = mAddressBook->allDistributionLists();
 
-  typedef KPIM::DistributionList::Entry Entry;
+  typedef KABC::DistributionList::Entry Entry;
   if ( !mSelectedDistributionList.isNull() ) {
-    const KPIM::DistributionList dl = KPIM::DistributionList::findByName( mAddressBook, mSelectedDistributionList );
-    if ( !dl.isEmpty() ) {
+    const KABC::DistributionList *dl = mAddressBook->findDistributionListByName( mSelectedDistributionList );
+    if ( dl ) {
       allContacts.clear();
-      const Entry::List entries = dl.entries( mAddressBook );
-      const Entry::List::ConstIterator end = entries.end();
-      for ( Entry::List::ConstIterator it = entries.begin(); it != end; ++it ) {
-        allContacts.append( (*it).addressee );
+      const Entry::List entries = dl->entries();
+      const Entry::List::ConstIterator end = entries.constEnd();
+      for ( Entry::List::ConstIterator it = entries.constBegin(); it != end; ++it ) {
+        allContacts.append( (*it).addressee() );
       }
     }
   }
@@ -281,9 +284,6 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
   KABC::Addressee::List::ConstIterator it( allContacts.constBegin() );
   const KABC::Addressee::List::ConstIterator endIt( allContacts.constEnd() );
   for ( ; it != endIt; ++it ) {
-    if ( KPIM::DistributionList::isDistributionList( *it ) )
-      continue;
-
     bool found = false;
     // search over all fields
     fieldIt = fieldList.constBegin();
@@ -320,8 +320,8 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
       // search over custom fields
       const QStringList customs = (*it).customs();
 
-      QStringList::ConstIterator customIt( customs.begin() );
-      const QStringList::ConstIterator customEndIt( customs.end() );
+      QStringList::ConstIterator customIt( customs.constBegin() );
+      const QStringList::ConstIterator customEndIt( customs.constEnd() );
       for ( ; customIt != customEndIt; ++customIt ) {
         int pos = (*customIt).indexOf( ':' );
         if ( pos != -1 ) {
@@ -365,20 +365,14 @@ void KAB::SearchManager::setSelectedDistributionList( const QString &name )
   reload();
 }
 
-KPIM::DistributionList::List KAB::SearchManager::distributionLists() const
+QList<KABC::DistributionList*> KAB::SearchManager::distributionLists() const
 {
   return mDistributionLists;
 }
 
 QStringList KAB::SearchManager::distributionListNames() const
 {
-  QStringList lst;
-  KPIM::DistributionList::List::ConstIterator it( mDistributionLists.begin() );
-  const KPIM::DistributionList::List::ConstIterator endIt( mDistributionLists.end() );
-  for ( ; it != endIt; ++it ) {
-    lst.append( (*it).formattedName() );
-  }
-  return lst;
+  return mAddressBook->allDistributionListNames();
 }
 
 #include "searchmanager.moc"

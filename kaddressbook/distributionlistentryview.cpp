@@ -90,20 +90,19 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
 void KAB::DistributionListEntryView::emailButtonClicked( int id )
 {
     const QString email = m_idToEmail[ id ];
-    if ( m_entry.email == email )
+    if ( m_entry.email() == email )
         return;
-    m_list.removeEntry( m_entry.addressee, m_entry.email );
-    m_entry.email = email;
-    m_list.insertEntry( m_entry.addressee, m_entry.email );
-    m_core->addressBook()->insertAddressee( m_list );
+    m_list->removeEntry( m_entry.addressee(), m_entry.email() );
+    m_entry = KABC::DistributionList::Entry( m_entry.addressee(), email );
+    m_list->insertEntry( m_entry.addressee(), m_entry.email() );
 }
 
 void KAB::DistributionListEntryView::clear()
 {
-    setEntry( KPIM::DistributionList(), KPIM::DistributionList::Entry() );
+    setEntry( 0, KABC::DistributionList::Entry() );
 }
 
-void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry )
+void KAB::DistributionListEntryView::setEntry( KABC::DistributionList *list, const KABC::DistributionList::Entry &entry )
 {
     m_list = list;
     m_entry = entry;
@@ -112,23 +111,27 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     m_emailGroup = 0;
 
     QPixmap pixmap;
-    if ( m_entry.addressee.photo().data().isNull() )
+    if ( m_entry.addressee().photo().data().isNull() )
       pixmap = KIcon( "user-identity" ).pixmap( 100, 140 );
     else
-      pixmap = QPixmap::fromImage( m_entry.addressee.photo().data() );
+      pixmap = QPixmap::fromImage( m_entry.addressee().photo().data() );
     m_imageLabel->setPixmap( pixmap );
-    m_addresseeLabel->setText( i18nc( "Formatted name, role, organization", "<qt><h2>%1</h2><p>%2<br/>%3</p></qt>", m_entry.addressee.formattedName(), m_entry.addressee.role(), m_entry.addressee.organization() ) );
-    m_distListLabel->setUrl( m_list.name() );
-    m_distListLabel->setText( m_list.name() );
-    m_resourceLabel->setText( i18n( "<b>Address book:</b> %1", (m_entry.addressee.resource() ? m_entry.addressee.resource()->resourceName() : QString()) ) );
+    m_addresseeLabel->setText( i18nc( "Formatted name, role, organization", "<qt><h2>%1</h2><p>%2<br/>%3</p></qt>", m_entry.addressee().formattedName(), m_entry.addressee().role(), m_entry.addressee().organization() ) );
+    if ( m_list ) {
+      m_distListLabel->setUrl( m_list->name() );
+      m_distListLabel->setText( m_list->name() );
+    } else {
+      m_distListLabel->clear();
+    }
+    m_resourceLabel->setText( i18n( "<b>Address book:</b> %1", (m_entry.addressee().resource() ? m_entry.addressee().resource()->resourceName() : QString()) ) );
     m_resourceLabel->setWordWrap( false );
     m_emailGroup = new QWidget( this );
     QBoxLayout *emailGroupLayout = new QVBoxLayout( m_emailGroup );
     QButtonGroup* buttonGroup = new QButtonGroup( m_emailGroup );
     buttonGroup->setExclusive( true );
 
-    const QString preferred = m_entry.email.isNull() ? m_entry.addressee.preferredEmail() : m_entry.email;
-    const QStringList mails = m_entry.addressee.emails();
+    const QString preferred = m_entry.email().isNull() ? m_entry.addressee().preferredEmail() : m_entry.email();
+    const QStringList mails = m_entry.addressee().emails();
     m_idToEmail.clear();
     int nextId = 0;
     foreach ( const QString it, mails )

@@ -26,7 +26,7 @@
 
 #include "core.h"
 #include <kabc/field.h>
-#include <libkdepim/distributionlist.h>
+#include <kabc/distributionlist.h>
 
 #include <QHash>
 #include <QLabel>
@@ -35,6 +35,7 @@
 
 namespace KABC {
 class AddressBook;
+class DistributionList;
 class Ticket;
 }
 
@@ -42,7 +43,6 @@ namespace KPIM {
 class AddresseeView;
 class CategoryEditDialog;
 class CategorySelectDialog;
-class DistributionList;
 }
 
 class KAboutData;
@@ -148,7 +148,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     /**
       Returns all the distribution lists.
      */
-    virtual KPIM::DistributionList::List distributionLists() const;
+    virtual QList<KABC::DistributionList*> distributionLists() const;
 
     /**
       Returns the name of all the distribution lists.
@@ -385,7 +385,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
   private:
 
-    void editDistributionList( const KPIM::DistributionList &list );
+    void editDistributionList( KABC::DistributionList *list );
     void showDistributionListEntry( const QString &uid );
 
   private slots:

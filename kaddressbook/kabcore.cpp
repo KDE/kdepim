@@ -62,6 +62,8 @@
 #include <kxmlguiclient.h>
 #include <ktoolbar.h>
 #include <libkdepim/addresseeview.h>
+#include <libkdepim/distributionlist.h>
+#include <libkdepim/distributionlistconverter.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
 
@@ -467,9 +469,11 @@ void KABCore::deleteDistributionLists( const QStringList & names )
 
   QStringList uids;
   for ( QStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
-      uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() );
+      const KABC::DistributionList *list = mAddressBook->findDistributionListByName( *it );
+      if ( list )
+          uids.append( list->identifier() );
   }
-  DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
+  DeleteDistListsCommand *command = new DeleteDistListsCommand( mAddressBook, uids );
   mCommandHistory->push( command );
   setModified( true );
 }
@@ -668,19 +672,16 @@ void KABCore::newDistributionList()
     return;
 
   QString name = i18n( "New Distribution List" );
-  const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
-  if ( !distList.isEmpty() ) {
+  const KABC::DistributionList *distList = addressBook()->findDistributionListByName( name );
+  if ( distList ) {
     bool foundUnused = false;
     int i = 1;
     while ( !foundUnused ) {
       name = i18n( "New Distribution List (%1)", i++ );
-      foundUnused = KPIM::DistributionList::findByName( addressBook(), name ).isEmpty();
+      foundUnused = addressBook()->findDistributionListByName( name ) == 0;
     }
   }
-  KPIM::DistributionList list;
-  list.setUid( KRandom::randomString( 10 ) );
-  list.setName( name );
-  list.setResource( resource );
+  KABC::DistributionList *list = mAddressBook->createDistributionList( name );
   editDistributionList( list );
 }
 
@@ -1540,60 +1541,62 @@ bool KABCore::handleCommandLine()
 
 void KABCore::removeSelectedContactsFromDistList()
 {
-  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
-  if ( dist.isEmpty() )
+  KABC::DistributionList *dist = addressBook()->findDistributionListByName( mSelectedDistributionList );
+  if ( !dist )
     return;
   const QStringList uids = selectedUIDs();
   if ( uids.isEmpty() )
       return;
-  for ( QStringList::ConstIterator uidIt = uids.begin(); uidIt != uids.end(); ++uidIt ) {
-    typedef KPIM::DistributionList::Entry::List EntryList;
-    const EntryList entries = dist.entries( addressBook() );
-    for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
-      if ( (*it).addressee.uid() == (*uidIt) ) {
-        dist.removeEntry( (*it).addressee, (*it).email );
-        break;
+  for ( QStringList::ConstIterator uidIt = uids.constBegin(); uidIt != uids.constEnd(); ++uidIt ) {
+    const KABC::Addressee addressee = addressBook()->findByUid( *uidIt );
+    if ( !addressee.isEmpty() ) {
+      typedef KABC::DistributionList::Entry::List EntryList;
+      const EntryList entries = dist->entries();
+      for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
+        if ( (*it).addressee().uid() == (*uidIt) ) {
+          dist->removeEntry( (*it).addressee(), (*it).email() );
+          break;
+        }
       }
     }
   }
-  addressBook()->insertAddressee( dist );
   setModified();
 }
 
 void KABCore::sendMailToDistributionList( const QString &name )
 {
-  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), name );
-  if ( dist.isEmpty() )
+  KABC::DistributionList *dist = addressBook()->findDistributionListByName( name );
+  if ( !dist )
     return;
-  typedef KPIM::DistributionList::Entry::List EntryList;
+  typedef KABC::DistributionList::Entry::List EntryList;
   QStringList mails;
-  const EntryList entries = dist.entries( addressBook() );
-  for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
-    mails += (*it).addressee.fullEmail( (*it).email );
+  const EntryList entries = dist->entries();
+  for ( EntryList::ConstIterator it = entries.constBegin(); it != entries.constEnd(); ++it )
+    mails += (*it).addressee().fullEmail( (*it).email() );
   sendMail( mails.join( ", " ) );
 }
 
 void KABCore::editSelectedDistributionList()
 {
-  editDistributionList( KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList ) );
+  editDistributionList( addressBook()->findDistributionListByName( mSelectedDistributionList ) );
 }
 
 
 void KABCore::editDistributionList( const QString &name )
 {
-  editDistributionList( KPIM::DistributionList::findByName( addressBook(), name ) );
+  editDistributionList( addressBook()->findDistributionListByName( name ) );
 }
 
 
 void KABCore::showDistributionListEntry( const QString& uid )
 {
-  KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
-  if ( !dist.isEmpty() ) {
+  KABC::DistributionList *dist = addressBook()->findDistributionListByName( mSelectedDistributionList );
+  if ( dist ) {
     mDistListEntryView->clear();
-    typedef KPIM::DistributionList::Entry::List EntryList;
-    const EntryList entries = dist.entries( addressBook() );
-    for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
-      if ( (*it).addressee.uid() == uid ) {
+    typedef KABC::DistributionList::Entry::List EntryList;
+    const EntryList entries = dist->entries();
+    for (EntryList::ConstIterator it = entries.constBegin(); it != entries.constEnd(); ++it ) {
+      if ( (*it).addressee().uid() == uid ) {
         mDistListEntryView->setEntry( dist, *it );
         break;
       }
@@ -1601,16 +1604,21 @@ void KABCore::showDistributionListEntry( const QString& uid )
   }
 }
 
-void KABCore::editDistributionList( const KPIM::DistributionList &dist )
+void KABCore::editDistributionList( KABC::DistributionList *dist )
 {
-  if ( dist.isEmpty() )
+  if ( !dist )
     return;
+
+  KPIM::DistributionListConverter converter( dist->resource() );
+  KPIM::DistributionList pimDist = converter.convertFromKABC( dist );
   QPointer<KPIM::DistributionListEditor::EditorWidget> dlg = new KPIM::DistributionListEditor::EditorWidget( addressBook(), widget() );
-  dlg->setDistributionList( dist );
+  dlg->setDistributionList( pimDist );
   if ( dlg->exec() == QDialog::Accepted && dlg ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
     if ( !newDist.isEmpty() ) {
-      addressBook()->insertAddressee( newDist );
+      // FIXME: update dist with newDist rather than replace
+      delete dist;
+      converter.convertToKABC( newDist );
       setModified();
     }
   }
@@ -1618,7 +1626,7 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
 }
 
 
-KPIM::DistributionList::List KABCore::distributionLists() const
+QList<KABC::DistributionList*> KABCore::distributionLists() const
 {
   return mSearchManager->distributionLists();
 }

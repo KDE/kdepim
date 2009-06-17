@@ -22,7 +22,7 @@
 
 #include "distributionlistpicker.h"
 
-#include <libkdepim/distributionlist.h>
+#include <kabc/distributionlist.h>
 
 #include <kabc/addressbook.h>
 
@@ -65,10 +65,9 @@ KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressB
              this, SLOT( slotUser1() ) );
 
     setMainWidget( main );
-    Q_FOREACH ( const KPIM::DistributionList i,
-                KPIM::DistributionList::allDistributionLists( m_book ) )
+    Q_FOREACH ( const KABC::DistributionList *i, m_book->allDistributionLists() )
     {
-        m_listWidget->addItem( i.name() );
+        m_listWidget->addItem( i->name() );
     }
 }
 
@@ -85,10 +84,9 @@ void KPIM::DistributionListPickerDialog::setLabelText( const QString& text )
 void KPIM::DistributionListPickerDialog::slotUser1()
 {
     QStringList listNames;
-    Q_FOREACH( const KPIM::DistributionList i,
-               KPIM::DistributionList::allDistributionLists( m_book ) )
+    Q_FOREACH ( const KABC::DistributionList *i, m_book->allDistributionLists() )
     {
-        listNames += i.name();
+        listNames += i->name();
     }
 
     bool validName = false;
@@ -102,10 +100,8 @@ void KPIM::DistributionListPickerDialog::slotUser1()
 
         if ( validName )
         {
-            KPIM::DistributionList list;
-            list.setName( name );
-            list.setUid( KRandom::randomString( 10 ) );
-            m_book->insertAddressee( list );
+            KABC::DistributionList *list = m_book->createDistributionList( name );
+            list->setIdentifier( KRandom::randomString( 10 ) );
 
             QListWidgetItem* const item = new QListWidgetItem( name );
             m_listWidget->addItem( item );
