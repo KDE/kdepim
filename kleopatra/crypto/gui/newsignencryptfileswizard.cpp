@@ -507,7 +507,7 @@ namespace {
             KDAB_SET_OBJECT_NAME( widget );
             KDAB_SET_OBJECT_NAME( vlay );
 
-            //vlay->setMargin( 0 );
+            vlay->setMargin( 0 );
             vlay->addWidget( &widget );
 
             // ### connect something to completeChanged()
