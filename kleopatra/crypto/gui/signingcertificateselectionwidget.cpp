@@ -66,6 +66,23 @@ private:
 };
 
 
+static GpgME::Key current_cert( const QComboBox & cb ) {
+    const QByteArray fpr = cb.itemData( cb.currentIndex() ).toByteArray();
+    return KeyCache::instance()->findByFingerprint( fpr.constData() );
+}
+
+static void select_cert( QComboBox & cb, const GpgME::Key & key ) {
+    const QByteArray fpr = key.primaryFingerprint();
+    if ( !fpr.isEmpty() )
+        cb.setCurrentIndex( cb.findData( fpr ) );
+}
+
+static void add_cert( QComboBox & cb, const GpgME::Key & key ) {
+    cb.addItem( Formatting::formatForComboBox( key ),
+                QVariant( QByteArray( key.primaryFingerprint() ) ) );
+
+}
+
 SigningCertificateSelectionWidget::Private::Private( SigningCertificateSelectionWidget * qq )
     : q( qq ), ui()
 {
@@ -90,6 +107,12 @@ SigningCertificateSelectionWidget::~SigningCertificateSelectionWidget() {}
 
 void SigningCertificateSelectionWidget::setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates )
 {
+    setSelectedCertificates( certificates[GpgME::OpenPGP], certificates[GpgME::CMS] );
+}
+
+void SigningCertificateSelectionWidget::setSelectedCertificates( const GpgME::Key & pgp, const GpgME::Key & cms ) {
+    select_cert( *d->ui.pgpCombo, pgp );
+    select_cert( *d->ui.cmsCombo, cms );
 }
 
 std::vector<GpgME::Key> SigningCertificateSelectionWidget::Private::candidates( GpgME::Protocol prot )
@@ -112,8 +135,7 @@ void SigningCertificateSelectionWidget::Private::addCandidates( GpgME::Protocol 
 {
     const std::vector<GpgME::Key> keys = candidates( prot );
     Q_FOREACH( const GpgME::Key& i, keys )
-        combo->addItem( Formatting::formatForComboBox( i ),
-                        QVariant( QByteArray( i.primaryFingerprint() ) ) );
+        add_cert( *combo, i );
 }
 
 
@@ -121,10 +143,9 @@ QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionWidget::selectedCer
 {
     QMap<GpgME::Protocol, GpgME::Key> res;
 
-    const QByteArray pgpfpr = d->ui.pgpCombo->itemData( d->ui.pgpCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::OpenPGP, KeyCache::instance()->findByFingerprint( pgpfpr.constData() ) );
-    const QByteArray cmsfpr = d->ui.cmsCombo->itemData( d->ui.cmsCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::CMS, KeyCache::instance()->findByFingerprint( cmsfpr.constData() ) );
+    res.insert( GpgME::OpenPGP, current_cert( *d->ui.pgpCombo ) );
+    res.insert( GpgME::CMS,     current_cert( *d->ui.cmsCombo ) );
+
     return res;
 }
 

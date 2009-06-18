@@ -57,6 +57,7 @@ namespace Gui {
         void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );
         void setAllowedProtocols( bool pgp, bool cms );
         void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
+        void setSelectedCertificates( const GpgME::Key & pgp, const GpgME::Key & cms );
         QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
 
         bool rememberAsDefault() const;
