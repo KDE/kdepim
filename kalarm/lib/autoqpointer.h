@@ -1,7 +1,7 @@
 /*
- *  kalarm.h  -  global header file
+ *  autoqpointer.h  -  QPointer which on destruction deletes object
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,16 +18,25 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#ifndef KALARM_H
-#define KALARM_H
+#ifndef AUTOQPOINTER_H
+#define AUTOQPOINTER_H
 
-#undef QT3_SUPPORT
+#include <QPointer>
 
-#define KALARM_VERSION "2.2.4"
-#define KALARM_NAME "KAlarm"
-#define KALARM_DBUS_SERVICE  "org.kde.kalarm"  // D-Bus service name of KAlarm application
 
-#include <kdeversion.h>
+/**
+ *  A QPointer which when destructed, deletes the object it points to.
+ *
+ *  @author David Jarvie <djarvie@kde.org>
+ */
+template <class T>
+class AutoQPointer : public QPointer<T>
+{
+	public:
+		AutoQPointer() : QPointer<T>() {}
+		AutoQPointer(T* p) : QPointer<T>(p) {}
+		AutoQPointer(const QPointer<T>& p) : QPointer<T>(p) {}
+		~AutoQPointer()  { delete this->data(); }
+};
 
-#endif // KALARM_H
-
+#endif // AUTOQPOINTER_H
