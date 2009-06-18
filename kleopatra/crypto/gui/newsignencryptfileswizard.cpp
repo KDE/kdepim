@@ -37,6 +37,8 @@
 #include "newresultpage.h"
 #include "signingcertificateselectionwidget.h"
 
+#include <crypto/certificateresolver.h>
+
 #include <view/keytreeview.h>
 #include <view/searchbar.h>
 
@@ -535,6 +537,7 @@ namespace {
     public:
         explicit SignerPage( QWidget * parent=0 )
             : WizardPage( parent ),
+              signPref(),
               pgpCB( i18n("Sign with OpenPGP"), this ),
               cmsCB( i18n("Sign with S/MIME"), this ),
               widget( this )
@@ -594,6 +597,12 @@ namespace {
 
         /* reimp */ void initializePage() {
 
+            if ( QWizard * wiz = wizard() ) {
+                // need to do this here, since wizard() == 0 in the ctor
+                disconnect( wiz, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()) );
+                connect( wiz, SIGNAL(operationPrepared()), this, SLOT(slotCommitSigningPreferences()) );
+            }
+
             bool pgp = effectiveProtocol() == OpenPGP;
             bool cms = effectiveProtocol() == CMS;
 
@@ -631,6 +640,16 @@ namespace {
 
                 setButtonText( QWizard::CommitButton, i18nc("@action","Sign && Encrypt") );
             }
+
+            if ( !signPref ) {
+                signPref.reset( new KConfigBasedSigningPreferences( KGlobal::config() ) );
+                widget.setSelectedCertificates( signPref->preferredCertificate( OpenPGP ),
+                                                signPref->preferredCertificate( CMS ) );
+            }
+        }
+
+        /* reimp */ bool validatePage() {
+            return true;
         }
 
     private:
@@ -646,7 +665,15 @@ namespace {
             emit completeChanged();
         }
 
+        void slotCommitSigningPreferences() {
+            if ( widget.rememberAsDefault() )
+                Q_FOREACH( const GpgME::Key & key, keys() )
+                    if ( !key.isNull() )
+                        signPref->setPreferredCertificate( key.protocol(), key );
+        }
+
     private:
+        shared_ptr<SigningPreferences> signPref;
         QCheckBox pgpCB, cmsCB;
         SigningCertificateSelectionWidget widget;
     };
