@@ -610,7 +610,7 @@ void KeyCache::remove( const std::vector<Key> & keys ) {
         remove( key );
 }
 
-std::vector<GpgME::Key> KeyCache::keys() const
+const std::vector<GpgME::Key> & KeyCache::keys() const
 {
     return d->by.fpr;
 }
