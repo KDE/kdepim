@@ -89,7 +89,7 @@ namespace Gui {
         bool isAsciiArmorEnabled() const;
         bool isRemoveUnencryptedFilesEnabled() const;
 
-        std::vector<GpgME::Key> resolvedRecipients() const;
+        const std::vector<GpgME::Key> & resolvedRecipients() const;
         std::vector<GpgME::Key> resolvedSigners() const;
 
         void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
