@@ -172,6 +172,14 @@ namespace _detail {
     bool none_of_secret( const T & t ) {
         return kdtools::none_of( t, boost::mem_fn( &GpgME::Key::hasSecret ) );
     }
+
+
+    template <typename T>
+    void grep_can_encrypt( T & t ) {
+        t.erase( std::remove_if( t.begin(), t.end(), !boost::bind( &GpgME::Key::canEncrypt, _1 ) ), t.end() );
+    }
+
+
 }
 }
 
