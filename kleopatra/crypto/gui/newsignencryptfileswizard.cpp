@@ -384,8 +384,8 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_unselectPB );
             KDAB_SET_OBJECT_NAME( m_selectedKTV );
 
-            m_selectPB.setIcon( KIcon( "list-add" ) );
-            m_unselectPB.setIcon( KIcon( "list-remove" ) );
+            m_selectPB.setIcon( KIcon( "arrow-down" ) );
+            m_unselectPB.setIcon( KIcon( "arrow-up" ) );
 
             m_selectPB.setEnabled( false );
             m_unselectPB.setEnabled( false );
