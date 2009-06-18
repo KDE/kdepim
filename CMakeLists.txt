@@ -108,6 +108,8 @@ else(KDEPIM_ONLY_KLEO)
   find_package(LibKNotificationItem-1_New)
   macro_log_feature(LIBKNOTIFICATIONITEM-1_FOUND "LibKNotificationItem-1" "An experimental library" "svn://anonsvn.kde.org/home/kde/trunk/KDE/kdelibs/experimental" TRUE "" "LibKNotificationItem-1 is an unfinished library which is required by korgac and akonaditray.")
 
+  macro_optional_find_package(LibKRSS)
+  macro_log_feature(LibKRSS_FOUND "libkrss" "The KRSS library" "svn://anonsvn.kde.org/home/kde/trunk/playground/pim/krss" FALSE "" "KRSS provides RSS support for Akonadi and is required for Akregator") 
 
 ############### Needed commands before building anything ###############
 
@@ -177,7 +179,9 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(knode)
   endif(KDEPIM_BUILD_EVERYTHING)
 
+if (LIBKRSS_FOUND)
   macro_optional_add_subdirectory(akregator)
+endif(LIBKRSS_FOUND)
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(kaddressbook)
   macro_optional_add_subdirectory(kalarm)
