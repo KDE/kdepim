@@ -1,7 +1,7 @@
 /*
  *  pickfileradio.cpp  -  radio button with an associated file picker
  *  Program:  kalarm
- *  Copyright © 2005 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright © 2005,2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -156,9 +156,13 @@ bool PickFileRadio::pickFileIfNone()
 */
 void PickFileRadio::slotPickFile()
 {
-	mFile = pickFile();
-	if (mEdit)
-		mEdit->setText(mFile);
+	QString file = pickFile();
+	if (!file.isEmpty())
+	{
+		mFile = file;
+		if (mEdit)
+			mEdit->setText(mFile);
+	}
 	if (mFile.isEmpty())
 	{
 		// No file is selected, so revert to the previous radio button selection.
