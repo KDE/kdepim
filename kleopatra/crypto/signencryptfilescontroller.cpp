@@ -218,7 +218,7 @@ unsigned int SignEncryptFilesController::operationMode() const {
 void SignEncryptFilesController::setFiles( const QStringList & files ) {
     kleo_assert( !files.empty() );
     d->files = files;
-    d->ensureWizardVisible();
+    d->ensureWizardCreated();
     d->wizard->setFiles( files );
 }
 
