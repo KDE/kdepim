@@ -55,6 +55,7 @@ namespace Gui {
         ~SigningCertificateSelectionWidget();
 
         void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );
+        void setAllowedProtocols( bool pgp, bool cms );
         void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
         QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
 

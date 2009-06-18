@@ -135,10 +135,12 @@ bool SigningCertificateSelectionWidget::rememberAsDefault() const
 
 void SigningCertificateSelectionWidget::setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols )
 {
-    assert( allowedProtocols.size() >= 1 );
-    const bool pgp = allowedProtocols.contains( GpgME::OpenPGP );
-    const bool cms = allowedProtocols.contains( GpgME::CMS );
+    setAllowedProtocols( allowedProtocols.contains( GpgME::OpenPGP ),
+                         allowedProtocols.contains( GpgME::CMS ) );
+}
 
+void SigningCertificateSelectionWidget::setAllowedProtocols( bool pgp, bool cms )
+{
     d->ui.pgpLabel->setVisible( pgp );
     d->ui.pgpCombo->setVisible( pgp );
 
