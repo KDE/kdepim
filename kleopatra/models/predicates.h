@@ -33,6 +33,8 @@
 #ifndef __KLEOPATRA_MODELS_PREDICATES_H__
 #define __KLEOPATRA_MODELS_PREDICATES_H__
 
+#include <utils/stl_util.h>
+
 #include <QByteArray>
 
 #include <gpgme++/key.h>
@@ -134,6 +136,21 @@ namespace _detail {
     template <typename T>
     void grep_protocol( T & t, GpgME::Protocol proto ) {
         t.erase( std::remove_if( t.begin(), t.end(), boost::bind( &GpgME::Key::protocol, _1 ) != proto ), t.end() );
+    }
+
+    template <typename T>
+    bool any_protocol( const T & t, GpgME::Protocol proto ) {
+        return kdtools::any( t, boost::bind( &GpgME::Key::protocol, _1 ) == proto );
+    }
+
+    template <typename T>
+    bool all_protocol( const T & t, GpgME::Protocol proto ) {
+        return kdtools::all( t, boost::bind( &GpgME::Key::protocol, _1 ) == proto );
+    }
+
+    template <typename T>
+    bool none_of_protocol( const T & t, GpgME::Protocol proto ) {
+        return kdtools::none_of( t, boost::bind( &GpgME::Key::protocol, _1 ) == proto );
     }
 }
 }
