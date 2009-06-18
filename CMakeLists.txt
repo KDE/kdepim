@@ -71,7 +71,7 @@ endif(WIN32)
 # The KDEPIM_ONLY_KLEO option is true
 if(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
-  macro_log_feature(QGPGME_FOUND "qgpgme" "The QGpgME library." "http://www.kde.org" TRUE "" "QGpgME is required to build Kleopatra.")
+  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" TRUE "" "QGpgME is required to build Kleopatra.")
 
   add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
   include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR})
@@ -91,10 +91,10 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi server libraries (from kdesupport)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
-  macro_log_feature(ZLIB_FOUND "zlib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
+  macro_log_feature(ZLIB_FOUND "ZLib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
 
   find_package(Strigi)
-  macro_log_feature(STRIGI_FOUND "Strigi" "Index metadata of files" "http:// strigi.sourceforge.net" TRUE "" "")
+  macro_log_feature(STRIGI_FOUND "Strigi" "Index metadata of files" "http://strigi.sourceforge.net" TRUE "" "")
 
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
