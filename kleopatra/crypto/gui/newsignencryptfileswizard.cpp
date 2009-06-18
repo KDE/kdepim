@@ -55,10 +55,13 @@
 #include <QRadioButton>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QDialogButtonBox>
 #include <QTreeView>
+#include <QListWidget>
 #include <QLayout>
 
 #include <QVariant>
+#include <QPointer>
 
 #include <gpgme++/key.h>
 
@@ -117,7 +120,43 @@ static void remove_all_cms_keys( KeyTreeView & ktv ) {
     ktv.removeKeys( cms );
 }
 
+static QString join_max( const QStringList & sl, const int max, const QString & glue ) {
+    return QStringList( sl.mid( 0, max ) ).join( glue );
+}
+
+
 namespace {
+
+    // Simple dialog to show a list of files
+    class ListDialog : public QDialog {
+        Q_OBJECT
+    public:
+        explicit ListDialog( const QStringList & files, QWidget * parent=0 )
+            : QDialog( parent ),
+              listWidget( this ),
+              buttonBox( QDialogButtonBox::Close, Qt::Vertical, this ),
+              hlay( this )
+        {
+            setWindowTitle( i18nc("@title:window","Selected Files") );
+
+            KDAB_SET_OBJECT_NAME( listWidget );
+            KDAB_SET_OBJECT_NAME( buttonBox );
+            KDAB_SET_OBJECT_NAME( hlay );
+
+            listWidget.setSelectionMode( QListWidget::NoSelection );
+            listWidget.addItems( files );
+
+            hlay.addWidget( &listWidget );
+            hlay.addWidget( &buttonBox );
+
+            connect( &buttonBox, SIGNAL(rejected()), this, SLOT(reject()) );
+        }
+
+    private:
+        QListWidget listWidget;
+        QDialogButtonBox buttonBox;
+        QHBoxLayout hlay;
+    };
 
     //
     // This is a simple QLabel subclass, used mainly to have a widget
@@ -127,14 +166,24 @@ namespace {
         Q_OBJECT // ### PENDING(marc) deal with lots of files (->listbox)
         Q_PROPERTY( QStringList files READ files WRITE setFiles )
     public:
+        static const int MaxLinesShownInline = 5;
+
         explicit ObjectsLabel( QWidget * parent=0, Qt::WindowFlags f=0 )
-            : QLabel( parent, f ), m_files()
+            : QLabel( parent, f ), m_dialog(), m_files( dummyFiles() )
         {
+            connect( this, SIGNAL(linkActivated(QString)),
+                     this, SLOT(slotLinkActivated()) );
             updateText();
+            // updateGeometry() doesn't seem to reset the
+            // minimumSizeHint(), using max-height dummy text here
+            // does... Go figure
+            m_files.clear();
         }
         explicit ObjectsLabel( const QStringList & files, QWidget * parent=0, Qt::WindowFlags f=0 )
-            : QLabel( parent, f ), m_files( files )
+            : QLabel( parent, f ), m_dialog(), m_files( files )
         {
+            connect( this, SIGNAL(linkActivated(QString)),
+                     this, SLOT(slotLinkActivated()) );
             updateText();
         }
 
@@ -146,17 +195,38 @@ namespace {
             updateText();
         }
 
+    private Q_SLOTS:
+        void slotLinkActivated() {
+            if ( !m_dialog ) {
+                m_dialog = new ListDialog( m_files, this );
+                m_dialog->setAttribute( Qt::WA_DeleteOnClose );
+            }
+            if ( m_dialog->isVisible() )
+                m_dialog->raise();
+            else
+                m_dialog->show();
+        }
+
     private:
+        static QStringList dummyFiles() {
+            QStringList dummy;
+            for ( int i = 0 ; i < MaxLinesShownInline+1 ; ++i )
+                dummy.push_back( QString::number( i ) );
+            return dummy;
+        }
         QString makeText() const {
             if ( m_files.empty() )
-                return i18n("No files selected.");
-            else
-                return i18np("Selected file:", "Selected files:", m_files.size() )
-                    + QLatin1String("\n  ") + m_files.join( QLatin1String("\n  ") );
+                return "<p>" + i18n("No files selected.") + "</p>";
+            QString html = "<p>" + i18np("Selected file:", "Selected files:", m_files.size() ) + "</p>"
+                + "<ul><li>" + join_max( m_files, MaxLinesShownInline, "</li><li>" ) + "</li></ul>" ;
+            if ( m_files.size() > MaxLinesShownInline )
+                html += "<p><a href=\"link:/\">" + i18nc("@action","More...") + "</a></p>";
+            return html;
         }
         void updateText() { setText( makeText() ); }
 
     private:
+        QPointer<ListDialog> m_dialog;
         QStringList m_files;
     };
 
