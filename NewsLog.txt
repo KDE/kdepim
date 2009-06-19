@@ -1,3 +1,30 @@
+Friday, June 19th 2009
+
+Problems addressed
+------------------
+
+* Rework the wizard for signing and encrypting files in Kleopatra
+* Fix the -mms-bitfields problem, which caused problems on Windows
+* Add an option to hide a folder from the folder selection dialogs in KMail
+
+Merges
+------
+
+* Merges from KDE trunk:
+      - kolab/issue3619: Many merges to fix broken distribution list handling
+      - Fix a crash when exporting addresses to HTML in KOrganizer (KDE bug 196615)
+      - Fix month calendar header during HTML export
+      - Show a wait cursor when exporting to HTML
+      - Fix detection of the own mail addresses in KOrganizer (KDE bug 195815)
+      - Remove the broken option to show decorations in the month view
+      - Show the receiver column by default again in the sent-mail folder (KDE bug 190232)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3375: Fix attachment overview in the header being confusing for short mails
+      - kolab/issue3578: Minimize the amount of key lookups in KMail, especially when not encrypting at all 
+      - kolab/issue3682: Fix a crash when displaying certain S/MIME messages
+
+
 Friday, June 12th 2009
 
 Problems addressed
