@@ -3,6 +3,7 @@ Friday, June 19th 2009
 Problems addressed
 ------------------
 
+* Fix saving distribution lists from within KMail's composer
 * Rework the wizard for signing and encrypting files in Kleopatra
 * Fix the -mms-bitfields problem, which caused problems on Windows
 * Add an option to hide a folder from the folder selection dialogs in KMail
