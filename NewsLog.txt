@@ -1,3 +1,13 @@
+Friday, June 19th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3375: Fix attachment overview in the header being confusing for short mails
+* kolab/issue3578: Minimize the amount of key lookups in KMail, especially when not encrypting at all
+* kolab/issue3682: Fix a crash when displaying certain S/MIME messages
+
+
 Friday, June 12th 2009
 
 Problems addressed
