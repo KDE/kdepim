@@ -1,5 +1,5 @@
 <ui version="4.0" >
- <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
+ <author>Volker Krause &lt;vkrause@kde.org></author>
  <class>KNode::ReadNewsGeneralWidgetBase</class>
  <widget class="KCModule" name="ReadNewsGeneralWidgetBase" >
   <property name="geometry" >

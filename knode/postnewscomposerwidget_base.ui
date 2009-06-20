@@ -1,5 +1,5 @@
 <ui version="4.0" >
- <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
+ <author>Volker Krause &lt;vkrause@kde.org></author>
  <class>KNode::PostNewsComposerWidgetBase</class>
  <widget class="KCModule" name="KNode::PostNewsComposerWidgetBase" >
   <property name="geometry" >

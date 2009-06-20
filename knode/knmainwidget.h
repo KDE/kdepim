@@ -1,7 +1,7 @@
 /*
     KNode, the KDE newsreader
     Copyright (c) 2003 Zack Rusin <zack@kde.org>
-    Copyright (c) 2004-2006 Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2004-2006 Volker Krause <vkrause@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
