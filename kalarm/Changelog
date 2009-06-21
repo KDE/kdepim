@@ -1,9 +1,10 @@
 KAlarm Change Log
 
-=== Version 2.1.9 --- 14 June 2009 ===
+=== Version 2.1.9 --- 21 June 2009 ===
 - Fix email alarms sending multiple mails, when sent via KMail.
 - Fix crash when closing remote calendars.
 - Fix crash when more than one alarm with audio is displayed simultaneously.
+- Fix crash creating alarm from command line, if KAlarm not already running.
 
 === Version 2.1.8 (KDE 4.2.4) --- 25 May 2009 ===
 - Fix crash on exit from birthday import dialogue.
