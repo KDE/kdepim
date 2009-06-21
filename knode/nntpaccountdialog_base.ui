@@ -1,5 +1,5 @@
 <ui version="4.0" >
- <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
+ <author>Volker Krause &lt;vkrause@kde.org></author>
  <class>KNode::NntpAccountDialogBase</class>
  <widget class="QFrame" name="KNode::NntpAccountDialogBase" >
   <property name="geometry" >

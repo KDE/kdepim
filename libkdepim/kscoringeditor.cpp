@@ -2,7 +2,7 @@
   kscoringeditor.cpp
 
   Copyright (c) 2001 Mathias Waack <mathias@atoll-net.de>
-  Copyright (C) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
+  Copyright (C) 2005 by Volker Krause <vkrause@kde.org>
 
   Author: Mathias Waack <mathias@atoll-net.de>
 

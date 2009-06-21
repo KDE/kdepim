@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
+    Copyright (c) 2005 by Volker Krause <vkrause@kde.org>
     Copyright (c) 2005 by Florian Schröder <florian@deltatauchi.de>
 
     This program is free software; you can redistribute it and/or modify

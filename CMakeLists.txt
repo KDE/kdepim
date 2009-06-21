@@ -42,9 +42,8 @@ find_package(KdepimLibs 4.2.87 REQUIRED)
 
 ############### search Boost ###############
 
-set(Boost_MINIMUM_VERSION "1.33.1")
-find_package(Boost)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Required by several critical KDEPIM apps.")
+find_package(Boost 1.33.1)
+macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by several critical KDEPIM apps.")
 
 # Kleopatra needs to know if the topological.hpp header exists (part of Boost_graph).
 find_path(Boost_TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
