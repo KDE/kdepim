@@ -108,7 +108,7 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(LIBKNOTIFICATIONITEM-1_FOUND "LibKNotificationItem-1" "An experimental library" "svn://anonsvn.kde.org/home/kde/trunk/KDE/kdelibs/experimental" TRUE "" "LibKNotificationItem-1 is an unfinished library which is required by korgac and akonaditray.")
 
   macro_optional_find_package(LibKRSS)
-  macro_log_feature(LibKRSS_FOUND "libkrss" "The KRSS library" "svn://anonsvn.kde.org/home/kde/trunk/playground/pim/krss" FALSE "" "KRSS provides RSS support for Akonadi and is required for Akregator") 
+  macro_log_feature(LIBKRSS_FOUND "libkrss" "The KRSS library" "svn://anonsvn.kde.org/home/kde/trunk/playground/pim/krss" FALSE "" "KRSS provides RSS support for Akonadi and is required for Akregator") 
 
 ############### Needed commands before building anything ###############
 
