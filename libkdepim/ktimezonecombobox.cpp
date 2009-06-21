@@ -1,5 +1,6 @@
 /*
   Copyright (C) 2007 Bruno Virlet <bruno.virlet@gmail.com>
+  Copyright 2008 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
