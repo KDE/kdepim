@@ -2,7 +2,7 @@
     commands/lookupcertificatescommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008, 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,8 +43,7 @@
 #include <utils/stl_util.h>
 #include <utils/formatting.h>
 
-#include <kleo/downloadjob.h>
-#include <kleo/importjob.h>
+#include <kleo/importfromkeyserverjob.h>
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
@@ -52,6 +51,7 @@
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
+#include <gpgme++/importresult.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -89,8 +89,6 @@ private:
     }
     void slotKeyListResult( const KeyListResult & result );
     void slotImportRequested( const std::vector<Key> & keys );
-    void slotOpenPGPDownloadResult( const Error & err, const QByteArray & data );
-    void slotCMSDownloadResult( const Error & err, const QByteArray & data );
     void slotDetailsRequested( const Key & key );
     void slotSaveAsRequested( const std::vector<Key> & keys );
     void slotDialogRejected() {
@@ -106,13 +104,12 @@ private:
         const CryptoBackend::Protocol * const cbp = CryptoBackendFactory::instance()->protocol( proto );
         return cbp ? cbp->keyListJob( true ) : 0 ;
     }
-    DownloadJob * createDownloadJob( GpgME::Protocol proto ) const {
+    ImportFromKeyserverJob * createImportJob( GpgME::Protocol proto ) const {
         const CryptoBackend::Protocol * const cbp = CryptoBackendFactory::instance()->protocol( proto );
-        return cbp ? cbp->downloadJob() : 0 ;
+        return cbp ? cbp->importFromKeyserverJob() : 0 ;
     }
     void startKeyListJob( GpgME::Protocol proto, const QString & str );
-    void startDownloadJob( const Key & key );
-    void checkForDownloadFinished();
+    void startImportJob( const Key & key );
     bool checkConfig() const;
 
     QWidget * dialogOrParentWidgetOrView() const { if ( dialog ) return dialog; else return parentWidgetOrView();
@@ -127,13 +124,6 @@ private:
 
         void reset() { *this = KeyListingVariables(); }
     } keyListing;
-    struct DownloadVariables {
-        Key key;
-        QPointer<DownloadJob> job;
-        Error error;
-    };
-    std::vector<DownloadVariables> downloads;
-    QByteArray openPGPDownloadData, cmsDownloadData;
 };
 
 
@@ -270,129 +260,21 @@ void LookupCertificatesCommand::Private::slotImportRequested( const std::vector<
     dialog = 0;
 
     assert( !keys.empty() );
-    kdtools::for_each( keys, bind( &Private::startDownloadJob, this, _1 ) );
-}
+    assert( kdtools::none_of( keys, mem_fn( &Key::isNull ) ) );
 
-static shared_ptr<QBuffer> make_open_qbuffer() {
-    const shared_ptr<QBuffer> buffer( new QBuffer );
-    if ( !buffer->open( QIODevice::WriteOnly ) )
-        kFatal() << "QBuffer::open failed";
-    return buffer;
-}
-
-void LookupCertificatesCommand::Private::startDownloadJob( const Key & key ) {
-    if ( key.isNull() )
-        return;
-
-    QStringList fprs;
-    const char * const fpr  = key.primaryFingerprint();
-    const char * const kid  = key.keyID();
-    if ( fpr && *fpr )
-        fprs.push_back( QString::fromLatin1( fpr ) );
-    else if ( kid && *kid )
-        fprs.push_back( QString::fromLatin1( kid ) );
-    else
-        return;
-
-    DownloadJob * const dlj = createDownloadJob( key.protocol() );
-    if ( !dlj )
-        return;
-    connect( dlj, SIGNAL(result(GpgME::Error,QByteArray)),
-             q, key.protocol() == CMS
-             ? SLOT(slotCMSDownloadResult(GpgME::Error,QByteArray))
-             : SLOT(slotOpenPGPDownloadResult(GpgME::Error,QByteArray)) );
-    DownloadVariables var;
-    var.key = key;
-
-    if ( const Error err = dlj->start( fprs ) )
-        var.error = err;
-    else
-        var.job = dlj;
-    downloads.push_back( var );
-}
-
-namespace {
-    template <typename T>
-    QStringList filter_and_format_successful_downloads( const T & t ) {
-        QStringList result;
-
-        return result;
-    }
-
-    template <typename T>
-    QByteArray combined_nonfailed_data( GpgME::Protocol proto, const T & t ) {
-        QByteArray result;
-        Q_FOREACH( const typename T::value_type & v, t )
-            if ( !v.error.code() && v.data && v.key.protocol() == proto )
-                result.append( v.data->data() );
-        return result;
-    }
-}
-
-void LookupCertificatesCommand::Private::slotOpenPGPDownloadResult( const GpgME::Error & err, const QByteArray & keyData ) {
-    const std::vector<DownloadVariables>::iterator it =
-        std::find_if( downloads.begin(), downloads.end(),
-                      bind( &DownloadVariables::job, _1 ) == q->sender() );
-    assert( it != downloads.end() );
-
-    openPGPDownloadData.append( keyData );
-
-    it->job = 0;
-    it->error = err;
-
-    checkForDownloadFinished();
-}
-
-void LookupCertificatesCommand::Private::slotCMSDownloadResult( const GpgME::Error & err, const QByteArray & keyData ) {
-    const std::vector<DownloadVariables>::iterator it =
-        std::find_if( downloads.begin(), downloads.end(),
-                      bind( &DownloadVariables::job, _1 ) == q->sender() );
-    assert( it != downloads.end() );
-
-    cmsDownloadData.append( keyData );
-
-    it->job = 0;
-    it->error = err;
-
-    checkForDownloadFinished();
-}
-
-void LookupCertificatesCommand::Private::checkForDownloadFinished() {
-
-    if ( kdtools::any( downloads, mem_fn( &DownloadVariables::job ) ) )
-        return; // still jobs to end
-
-    if ( kdtools::all( downloads, mem_fn( &DownloadVariables::error ) ) ) {
-        KMessageBox::information( dialogOrParentWidgetOrView(),
-                                  downloads.size() == 1 ?
-                                  i18n( "Download of certificate %1 failed. Error message: %2",
-                                        Formatting::formatForComboBox( downloads.front().key ),
-                                        QString::fromLocal8Bit( downloads.front().error.asString() ) ) :
-                                  i18n( "All certificate downloads failed. Sample error message: %1",
-                                        QString::fromLocal8Bit( downloads.front().error.asString() ) ),
-                                  i18n( "Certificate Downloads Failed" ) );
-        finished();
-        return;
-    } else if ( kdtools::any( downloads, mem_fn( &DownloadVariables::error ) ) &&
-                KMessageBox::questionYesNoList( dialogOrParentWidgetOrView(),
-                                                i18n( "Some certificates failed to download. "
-                                                      "Do you want to proceed importing the following, succeded, downloads?" ),
-                                                filter_and_format_successful_downloads( downloads ),
-                                                i18n( "Certificate Downloads Failed" ) )
-                == KMessageBox::No )
-    {
-        finished();
-        return;
-    }
-
-    const QByteArray cms = cmsDownloadData;//combined_nonfailed_data( CMS,     downloads );
-    const QByteArray pgp = openPGPDownloadData;//combined_nonfailed_data( OpenPGP, downloads );
-
-    if ( !cms.isEmpty() )
-        startImport( CMS,     cms );
-    if ( !pgp.isEmpty() )
+    std::vector<Key> pgp, cms;
+    pgp.reserve( keys.size() );
+    cms.reserve( keys.size() );
+    kdtools::separate_if( keys.begin(), keys.end(),
+                          std::back_inserter( pgp ),
+                          std::back_inserter( cms ),
+                          bind( &Key::protocol, _1 ) == OpenPGP );
+    if ( !pgp.empty() )
         startImport( OpenPGP, pgp );
+    if ( !cms.empty() )
+        startImport( CMS, cms );
 }
+
 
 void LookupCertificatesCommand::Private::slotSaveAsRequested( const std::vector<Key> & keys ) {
     kDebug() << "not implemented";
