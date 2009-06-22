@@ -28,6 +28,7 @@
 
 #include <boost/range.hpp>
 #include <boost/iterator/filter_iterator.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 
 namespace kdtools {
 
@@ -59,6 +60,12 @@ namespace kdtools {
     Value accumulate_if( InputIterator first, InputIterator last, UnaryPredicate filter, const Value & value=Value() ) {
         return std::accumulate( boost::make_filter_iterator( filter, first, last ),
                                 boost::make_filter_iterator( filter, last,  last ), value );
+    }
+
+    template <typename Value, typename InputIterator, typename UnaryFunction>
+    Value accumulate_transform( InputIterator first, InputIterator last, UnaryFunction map, const Value & value=Value() ) {
+        return std::accumulate( boost::make_transform_iterator( first, map ),
+                                boost::make_transform_iterator( last, map ), value );
     }
 
     template <typename InputIterator, typename OutputIterator1, typename OutputIterator2, typename UnaryPredicate>
@@ -238,6 +245,11 @@ namespace kdtools {
     template <typename V, typename I, typename F>
     V accumulate_if( const I & i, F f, V v=V() ) {
         return accumulate_if( boost::begin( i ), boost::end( i ), f, v );
+    }
+
+    template <typename V, typename I, typename F>
+    V accumulate_transform( const I & i, F f, V v=V() ) {
+        return accumulate_transform( boost::begin( i ), boost::end( i ), f, v );
     }
 
     template <typename O, typename I>
