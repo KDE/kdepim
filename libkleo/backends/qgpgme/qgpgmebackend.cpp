@@ -166,6 +166,17 @@ namespace {
       return new Kleo::QGpgMEImportJob( context );             
     }
 
+    Kleo::ImportFromKeyserverJob * importFromKeyserverJob() const {
+#if 0
+      GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
+      if ( !context )
+        return 0;
+      return new Kleo::QGpgMEImportFromKeyserverJob( context );
+#else
+      return 0;
+#endif
+    }
+
     Kleo::ExportJob * publicKeyExportJob( bool armor ) const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )

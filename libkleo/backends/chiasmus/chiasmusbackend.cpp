@@ -369,6 +369,7 @@ public:
   VerifyDetachedJob * verifyDetachedJob( bool ) const { return 0; }
   VerifyOpaqueJob * verifyOpaqueJob( bool ) const { return 0; }
   KeyGenerationJob * keyGenerationJob() const { return 0; }
+  ImportFromKeyserverJob * importFromKeyserverJob() const { return 0; }
   ImportJob * importJob() const { return 0; }
   ExportJob * publicKeyExportJob( bool ) const { return 0; }
   ExportJob * secretKeyExportJob( bool, const QString& ) const { return 0; }
