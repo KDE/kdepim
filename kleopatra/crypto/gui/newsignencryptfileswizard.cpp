@@ -324,7 +324,7 @@ namespace {
             vlay->addWidget( &m_armor );
             vlay->addWidget( &m_removeSource );
 
-            m_armor.setChecked( true );
+            m_armor.setChecked( false );
 
             registerField( "files", &m_objectsLabel, "files" );
 
