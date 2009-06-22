@@ -49,6 +49,7 @@
 #include "qgpgmeexportjob.h"
 #include "qgpgmeverifydetachedjob.h"
 #include "qgpgmeimportjob.h"
+#include "qgpgmeimportfromkeyserverjob.h"
 #include "qgpgmeverifyopaquejob.h"
 #include "qgpgmechangeexpiryjob.h"
 #include "qgpgmechangeownertrustjob.h"
@@ -167,14 +168,10 @@ namespace {
     }
 
     Kleo::ImportFromKeyserverJob * importFromKeyserverJob() const {
-#if 0
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
         return 0;
       return new Kleo::QGpgMEImportFromKeyserverJob( context );
-#else
-      return 0;
-#endif
     }
 
     Kleo::ExportJob * publicKeyExportJob( bool armor ) const {
