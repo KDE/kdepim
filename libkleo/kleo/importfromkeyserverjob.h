@@ -43,6 +43,7 @@ namespace GpgME {
   class ImportResult;
 }
 
+#include <vector>
 
 namespace Kleo {
 
