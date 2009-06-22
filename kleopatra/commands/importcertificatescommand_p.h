@@ -47,6 +47,7 @@ namespace GpgME {
 
 namespace Kleo {
     class ImportJob;
+    class ImportFromKeyserverJob;
 }
 
 class QByteArray;
@@ -59,6 +60,7 @@ public:
     ~Private();
 
     void startImport( GpgME::Protocol proto, const QByteArray & data, const QString & id=QString() );
+    void startImport( GpgME::Protocol proto, const std::vector<GpgME::Key> & keys, const QString & id=QString() );
     void importResult( const GpgME::ImportResult & );
 
     void showError( QWidget * parent, const GpgME::Error & error, const QString & id=QString() );
@@ -71,6 +73,7 @@ public:
 
 private:
     QPointer<Kleo::ImportJob> cmsImportJob, pgpImportJob;
+    QPointer<Kleo::ImportFromKeyserverJob> cmsImportFromKeyserverJob, pgpImportFromKeyserverJob;
 };
 
 inline Kleo::ImportCertificatesCommand::Private * Kleo::ImportCertificatesCommand::d_func() { return static_cast<Private*>(d.get()); }

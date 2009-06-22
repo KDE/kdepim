@@ -42,6 +42,7 @@
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/importjob.h>
+#include <kleo/importfromkeyserverjob.h>
 
 #include <gpgme++/global.h>
 #include <gpgme++/importresult.h>
@@ -333,12 +334,58 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
     }
 }
 
+static std::auto_ptr<ImportFromKeyserverJob> get_import_from_keyserver_job( GpgME::Protocol protocol ) {
+    assert( protocol != UnknownProtocol );
+    if ( const Kleo::CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( protocol ) )
+        return std::auto_ptr<ImportFromKeyserverJob>( backend->importFromKeyserverJob() );
+    else
+        return std::auto_ptr<ImportFromKeyserverJob>();
+}
+
+void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, const std::vector<Key> & keys, const QString & id ) {
+    assert( protocol != UnknownProtocol );
+
+    std::auto_ptr<ImportFromKeyserverJob> job = get_import_from_keyserver_job( protocol );
+    if ( !job.get() ) {
+        setImportResultProxyModel( ImportResult(), id );
+        KMessageBox::error( parentWidgetOrView(), 
+                            i18n( "The type of this certificate (%1) is not supported by this Kleopatra installation.",
+                                  Formatting::displayName( protocol ) ),
+                            i18n( "Certificate Import Failed" ) );
+        finished();
+        return;
+    }
+
+    connect( job.get(), SIGNAL(result(GpgME::ImportResult)),
+             q, SLOT(importResult(GpgME::ImportResult)) );
+    connect( job.get(), SIGNAL(progress(QString,int,int)), 
+             q, SIGNAL(progress(QString,int,int)) );
+    if ( const GpgME::Error err = job->start( keys ) ) {
+        setImportResultProxyModel( ImportResult( err ), id );
+        showError( err, id );
+        finished();
+    } else if ( err.isCanceled() ) {
+        setImportResultProxyModel( ImportResult( err ), id );
+        emit q->canceled();
+        finished();
+    } else {
+        if ( protocol == CMS )
+            cmsImportFromKeyserverJob = job.release();
+        else
+            pgpImportFromKeyserverJob = job.release();
+    }
+}
+
 
 void ImportCertificatesCommand::doCancel() {
     if ( d->cmsImportJob )
         d->cmsImportJob->slotCancel();
     if ( d->pgpImportJob )
         d->pgpImportJob->slotCancel();
+    if ( d->cmsImportFromKeyserverJob )
+        d->cmsImportFromKeyserverJob->slotCancel();
+    if ( d->pgpImportFromKeyserverJob )
+        d->pgpImportFromKeyserverJob->slotCancel();
 }
 
 #undef d
