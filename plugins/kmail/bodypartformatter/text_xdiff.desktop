@@ -45,6 +45,7 @@ Comment[et]=Põhiosa vormindamisplugin (MIME tüübile text/x-patch)
 Comment[fa]=یک وصلۀ قالب‌دهندۀ جزء بدنه برای text/x-patch
 Comment[fr]=Module de mise en forme du corps du message pour text/x-patch
 Comment[gl]=Un engadido para formatar o corpo do texto/x-patch
+Comment[hu]=Formázómodul text/x-patch adatok kezeléséhez
 Comment[it]=Un'estensione per la formattazione di text/x-patch nei messaggi di posta
 Comment[ja]=text/x-patch 用のメッセージ本体フォーマッタ
 Comment[kk]=Text/x-diff бөлімін пішімдеу модулі
