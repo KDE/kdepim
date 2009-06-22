@@ -35,8 +35,6 @@
 
 #include "job.h"
 
-#include <QtCore/QByteArray>
-
 namespace GpgME {
   class Key;
   class Error;
