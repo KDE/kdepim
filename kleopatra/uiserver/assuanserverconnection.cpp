@@ -332,13 +332,22 @@ private:
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         const QString str = QString::fromUtf8( line );
-        QRegExp rx( QLatin1String( "(?:\\d+)(?:\\s+(.*))?" ) );
+        QRegExp rx( QLatin1String( "(\\d+)(?:\\s+(.*))?" ) );
         if ( !rx.exactMatch( str ) ) {
             static const QString errorString = i18n("Parse error");
             return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_SYNTAX ), errorString );
         }
-        if ( !rx.cap( 1 ).isEmpty() )
-            conn.sessionTitle = rx.cap( 1 );
+        bool ok = false;
+        if ( const qulonglong id = rx.cap( 1 ).toULongLong( &ok ) ) {
+            if ( ok && id <= std::numeric_limits<unsigned int>::max() ) {
+                conn.sessionId = id;
+            } else {
+                static const QString errorString = i18n("Parse error: numerial session id too large");
+                return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_SYNTAX ), errorString );
+            }
+        }
+        if ( !rx.cap( 2 ).isEmpty() )
+            conn.sessionTitle = rx.cap( 2 );
         return assuan_process_done( ctx_, 0 );
     }
 
@@ -730,6 +739,7 @@ private:
         recipients.clear();
         informativeRecipients = false;
         sessionTitle.clear();
+        sessionId = 0;
         mementos.clear();
         close_all( files );
         files.clear();
@@ -755,6 +765,7 @@ private:
     bool informativeRecipients; // address taken, so no : 1
     GpgME::Protocol bias;
     QString sessionTitle;
+    unsigned int sessionId;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
@@ -790,6 +801,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
       informativeSenders( false ),
       informativeRecipients( false ),
       bias( GpgME::UnknownProtocol ),
+      sessionId( 0 ),
       factories( factories_ )
 {
 #ifdef __GNUC__
@@ -980,6 +992,7 @@ public:
     bool informativeRecipients, informativeSenders;
     GpgME::Protocol bias;
     QString sessionTitle;
+    unsigned int sessionId;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
@@ -1288,6 +1301,10 @@ QString AssuanCommand::sessionTitle() const {
     return d->sessionTitle;
 }
 
+unsigned int AssuanCommand::sessionId() const {
+    return d->sessionId;
+}
+
 bool AssuanCommand::informativeSenders() const {
     return d->informativeSenders;
 }
@@ -1331,6 +1348,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->informativeSenders    = conn.informativeSenders;
         cmd->d->bias                  = conn.bias;
         cmd->d->sessionTitle          = conn.sessionTitle;
+        cmd->d->sessionId             = conn.sessionId;
 
         const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
         for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )

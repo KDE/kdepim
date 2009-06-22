@@ -261,6 +261,7 @@ namespace Kleo {
         bool isDone() const;
 
         QString sessionTitle() const;
+        unsigned int sessionId() const;
 
         bool informativeRecipients() const;
         bool informativeSenders() const;
