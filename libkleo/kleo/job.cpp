@@ -90,9 +90,11 @@ bool Kleo::Job::isAuditLogSupported() const {
     return auditLogError().code() != GPG_ERR_NOT_IMPLEMENTED ;
 }
 
-#define make_job_subclass(x) \
-  Kleo::x::x( QObject * parent ) : Job( parent ) {} \
+#define make_job_subclass_ext(x,y)                \
+  Kleo::x::x( QObject * parent ) : y( parent ) {} \
   Kleo::x::~x() {}
+
+#define make_job_subclass(x) make_job_subclass_ext(x,Job)
 
 make_job_subclass(KeyListJob)
 make_job_subclass(EncryptJob)
@@ -104,8 +106,9 @@ make_job_subclass(SignKeyJob)
 make_job_subclass(VerifyDetachedJob)
 make_job_subclass(VerifyOpaqueJob)
 make_job_subclass(KeyGenerationJob)
-make_job_subclass(ImportJob)
-make_job_subclass(ImportFromKeyserverJob)
+make_job_subclass(AbstractImportJob)
+make_job_subclass_ext(ImportJob,AbstractImportJob)
+make_job_subclass_ext(ImportFromKeyserverJob,AbstractImportJob)
 make_job_subclass(ExportJob)
 make_job_subclass(ChangeExpiryJob)
 make_job_subclass(ChangeOwnerTrustJob)
@@ -129,6 +132,7 @@ make_job_subclass(SpecialJob)
 #include "verifydetachedjob.moc"
 #include "verifyopaquejob.moc"
 #include "keygenerationjob.moc"
+#include "abstractimportjob.moc"
 #include "importjob.moc"
 #include "importfromkeyserverjob.moc"
 #include "exportjob.moc"
