@@ -22,7 +22,7 @@
 #include "mainwindow.h"
 
 #include "mainwidget.h"
-#include "uistatesaver.h"
+#include "libkdepim-copy/uistatesaver.h"
 
 #include <akonadi/control.h>
 

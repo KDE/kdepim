@@ -38,7 +38,7 @@
 #include <akonadi/collectionpropertiesdialog.h>
 #include <akonadi/standardactionmanager.h>
 #include <akonadi/monitor.h>
-#include <akonadi/xml/xmlwritejob.h>
+#include <xml/xmlwritejob.h>
 
 #include <kcal/kcalmodel.h>
 #include <kcal/incidence.h>
@@ -46,7 +46,7 @@
 #include <kabc/kabcitembrowser.h>
 #include <akonadi/kmime/messagemodel.h>
 
-#include <libkdepim/addresseeview.h>
+#include <libkdepim-copy/addresseeview.h>
 
 #include <kdebug.h>
 #include <kconfig.h>
