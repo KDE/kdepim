@@ -170,7 +170,7 @@ set(libkdgantt1_SRCS
     if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
       macro_optional_add_subdirectory(akonadi)
       if(KDEPIM_BUILD_KCONTACTMANAGER)
-          macro_optional_add_subdirectory(kcontactmanager)
+        macro_optional_add_subdirectory(kcontactmanager)
       endif(KDEPIM_BUILD_KCONTACTMANAGER)
     endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(knode)
