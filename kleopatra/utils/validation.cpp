@@ -45,7 +45,7 @@
 
 using namespace Kleo;
 
-static const char email_rx[] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+static const char email_rx[] = "[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?";
 // these are modeled after gnupg/g10/keygen.c:ask_user_id:
 static const char name_rx[] = "[^0-9<>][^<>@]{4,}";
 static const char comment_rx[] = "[^()]*";
