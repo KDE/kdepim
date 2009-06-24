@@ -47,6 +47,7 @@ endif(BUILD_konsolekalendar)
 
 if(BUILD_kontact)
   add_subdirectory(kontact)
+  add_subdirectory(kontact-admin)
 endif(BUILD_kontact)
 
 if(BUILD_kpilot)
