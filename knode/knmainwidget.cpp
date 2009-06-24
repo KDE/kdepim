@@ -113,8 +113,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   mSecondSplitter->setObjectName( "mSecondSplitter" );
 
   //article view
-  mArticleViewer = new ArticleWidget( mPrimarySplitter, knGlobals.guiClient, actionCollection() );
-  knGlobals.artWidget = mArticleViewer;
+  mArticleViewer = new ArticleWidget( mPrimarySplitter, knGlobals.guiClient, actionCollection(), true/*main viewer*/ );
 
   //collection view
   c_olView = new KNCollectionView( mSecondSplitter );

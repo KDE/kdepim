@@ -41,7 +41,6 @@ class KNScoringManager;
 class KNMemoryManager;
 class KXMLGUIClient;
 namespace KNode {
-  class ArticleWidget;
   class Scheduler;
   class Settings;
 }
@@ -64,10 +63,9 @@ class KNODE_EXPORT KNGlobals
     KNMainWidget          *top;
     /** Returns the KXMLGUIClient of the main window. */
     KXMLGUIClient         *guiClient;
-    /** Returns the article widget of the main window. */
-    KNode::ArticleWidget  *artWidget;
     /** Returns the article factory. */
     KNArticleFactory      *artFactory;
+    /** Returns KNode's main configuration. */
     KConfig               *config();
     /** Returns the current instance. */
     const KComponentData &componentData() const;

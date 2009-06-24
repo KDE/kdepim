@@ -81,7 +81,7 @@ QList<ArticleWidget*> ArticleWidget::mInstances;
 
 ArticleWidget::ArticleWidget( QWidget *parent,
                               KXMLGUIClient *guiClient,
-                              KActionCollection *actionCollection ) :
+                              KActionCollection *actionCollection, bool isMainViewer ) :
   QWidget( parent ),
   mArticle( 0 ),
   mViewer( 0 ),
@@ -94,7 +94,8 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   mOverrideCharset( KMime::Headers::Latin1 ),
   mTimer( 0 ),
   mGuiClient( guiClient ),
-  mActionCollection( actionCollection )
+  mActionCollection( actionCollection ),
+  mIsMainViewer( isMainViewer )
 {
   mInstances.append( this );
 
@@ -357,8 +358,9 @@ void ArticleWidget::readConfig()
 void ArticleWidget::writeConfig()
 {
   // main viewer determines the settings
-  if ( knGlobals.artWidget != this )
+  if ( !mIsMainViewer ) {
     return;
+  }
 
   KConfigGroup conf(knGlobals.config(), "READNEWS" );
   conf.writeEntry( "attachmentStyle", mAttachmentStyle );
