@@ -241,16 +241,24 @@ namespace {
 
         }
 
-        bool isSigningSelected() const {
-            return field("sign").toBool() || isSignEncryptSelected() ;
+        bool isSignOnlySelected() const {
+            return field("sign").toBool();
         }
 
-        bool isEncryptionSelected() const {
-            return field("encrypt").toBool() || isSignEncryptSelected() ;
+        bool isEncryptOnlySelected() const {
+            return field("encrypt").toBool();
         }
 
         bool isSignEncryptSelected() const {
             return field("signencrypt").toBool() ;
+        }
+
+        bool isSigningSelected() const {
+            return isSignOnlySelected() || isSignEncryptSelected() ;
+        }
+
+        bool isEncryptionSelected() const {
+            return isEncryptOnlySelected() || isSignEncryptSelected() ;
         }
 
         Protocol protocol() const { return m_presetProtocol; }
@@ -480,20 +488,13 @@ namespace {
     };
 
 
-    static QVector<Protocol> make_allowed_protocols( Protocol proto ) {
-        QVector<Protocol> result;
-        if ( proto == UnknownProtocol )
-            result << OpenPGP << CMS ;
-        else
-            result << proto;
-        return result;
-    }
-
     class SignerPage : public WizardPage {
         Q_OBJECT
     public:
         explicit SignerPage( QWidget * parent=0 )
             : WizardPage( parent ),
+              pgpCB( i18n("Sign with OpenPGP"), this ),
+              cmsCB( i18n("Sign with S/MIME"), this ),
               widget( this )
         {
             setTitle( i18nc("@title","Who do you want to sign as?") );
@@ -504,30 +505,44 @@ namespace {
 
             QVBoxLayout * vlay = new QVBoxLayout( this );
 
+            KDAB_SET_OBJECT_NAME( pgpCB );
+            KDAB_SET_OBJECT_NAME( cmsCB );
             KDAB_SET_OBJECT_NAME( widget );
             KDAB_SET_OBJECT_NAME( vlay );
 
-            vlay->setMargin( 0 );
+            vlay->addWidget( &pgpCB );
+            vlay->addWidget( &cmsCB );
+
+            widget.layout()->setMargin( 0 );
             vlay->addWidget( &widget );
 
             // ### connect something to completeChanged()
             // ### deal with widget.rememberAsDefault()
+
+            connect( &pgpCB, SIGNAL(toggled(bool)), this, SLOT(slotSignProtocolToggled()) );
+            connect( &cmsCB, SIGNAL(toggled(bool)), this, SLOT(slotSignProtocolToggled()) );
         }
 
         std::vector<Key> keys() const {
             const QMap<Protocol,Key> keys = widget.selectedCertificates();
+            const bool pgp = pgpCB.isChecked();
+            const bool cms = cmsCB.isChecked();
+
             std::vector<Key> result;
-            if ( effectiveProtocol() == UnknownProtocol )
-                result = kdtools::copy< std::vector<Key> >( keys.values() );
-            else
-                result.push_back( keys[effectiveProtocol()] );
+            result.reserve( pgp + cms );
+
+            if ( pgp )
+                result.push_back( keys[OpenPGP] );
+            if ( cms )
+                result.push_back( keys[CMS] );
+
             // remove empty keys, for good measure...
             result.erase( std::remove_if( result.begin(), result.end(), mem_fn( &Key::isNull ) ),
                           result.end() );
             return result;
         }
 
-        /* reimp */ bool isCompleted() const {
+        /* reimp */ bool isComplete() const {
             return !keys().empty();
         }
 
@@ -536,13 +551,61 @@ namespace {
         }
 
         /* reimp */ void initializePage() {
-            if ( isEncryptionSelected() )
-                setButtonText( QWizard::CommitButton, i18nc("@action","Sign && Encrypt") );
-            else
+
+            bool pgp = effectiveProtocol() == OpenPGP;
+            bool cms = effectiveProtocol() == CMS;
+
+            if ( effectiveProtocol() == UnknownProtocol )
+                pgp = cms = true;
+
+            assert( pgp || cms );
+
+            if ( isSignOnlySelected() ) {
+                // free choice of OpenPGP and/or CMS
+                // (except when protocol() requires otherwise):
+                pgpCB.setEnabled( pgp );
+                cmsCB.setEnabled( cms );
+                pgpCB.setChecked( pgp );
+                cmsCB.setChecked( cms );
+
                 setButtonText( QWizard::CommitButton, i18nc("@action","Sign") );
-            widget.setAllowedProtocols( make_allowed_protocols( effectiveProtocol() ) );
+            } else {
+                // we need signing keys for each of protocols that
+                // make up the recipients:
+
+                const std::vector<Key> & recipients = resolvedRecipients();
+                assert( !recipients.empty() );
+                if ( _detail::none_of_protocol( recipients, OpenPGP ) )
+                    pgp = false;
+                if ( _detail::none_of_protocol( recipients, CMS ) )
+                    cms = false;
+
+                assert( pgp || cms );
+
+                pgpCB.setEnabled( false );
+                cmsCB.setEnabled( false );
+                pgpCB.setChecked( pgp );
+                cmsCB.setChecked( cms );
+
+                setButtonText( QWizard::CommitButton, i18nc("@action","Sign && Encrypt") );
+            }
         }
+
     private:
+        const std::vector<Key> & resolvedRecipients() const {
+            assert( wizard() );
+            assert( qobject_cast<NewSignEncryptFilesWizard*>( wizard() ) == static_cast<NewSignEncryptFilesWizard*>( wizard() ) );
+            return static_cast<NewSignEncryptFilesWizard*>( wizard() )->resolvedRecipients();
+        }
+
+    private Q_SLOTS:
+        void slotSignProtocolToggled() {
+            widget.setAllowedProtocols( pgpCB.isChecked(), cmsCB.isChecked() );
+            emit completeChanged();
+        }
+
+    private:
+        QCheckBox pgpCB, cmsCB;
         SigningCertificateSelectionWidget widget;
     };
 
@@ -692,7 +755,7 @@ bool NewSignEncryptFilesWizard::isRemoveUnencryptedFilesEnabled() const {
     return isEncryptionSelected() && field("remove").toBool();
 }
 
-std::vector<Key> NewSignEncryptFilesWizard::resolvedRecipients() const {
+const std::vector<Key> & NewSignEncryptFilesWizard::resolvedRecipients() const {
     return d->recipientsPage->keys();
 }
 
