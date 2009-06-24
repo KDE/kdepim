@@ -19,9 +19,8 @@
 #include <kdialog.h>
 #include <kvbox.h>
 
-#include <qglobal.h>
 #include <QList>
-#include <QEvent>
+
 
 class Q3ListViewItem;
 class QLineEdit;
@@ -42,7 +41,6 @@ class KXMLGUIFactory;
 
 class KNHeaderView;
 class KNCollectionView;
-class KNCollectionViewItem;
 class KNProgress;
 class KNConfigManager;
 class KNAccountManager;
@@ -53,9 +51,6 @@ class KNArticleFactory;
 class KNFilterManager;
 class KNScoringManager;
 class KNFilterSelectAction;
-namespace Kpgp {
-    class Module;
-}
 namespace KNode {
   class ArticleWidget;
 }
