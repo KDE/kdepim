@@ -517,6 +517,13 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
   const bool isString = isStringType();
 
   if ( isList() ) {
+    if ( argType() == ArgType_None ) {
+        bool ok = true;
+        const QVariant v = str.isEmpty() ? 0U : str.toUInt( &ok ) ;
+        if ( !ok )
+            kWarning(5150) << "list-of-none should have an unsigned int as value:" << str;
+        return v;
+    }
     QList<QVariant> lst;
     QStringList items = str.split( ',', QString::SkipEmptyParts );
     for( QStringList::const_iterator valit = items.constBegin(); valit != items.constEnd(); ++valit ) {
