@@ -45,7 +45,7 @@
 // Other headers
 #include <iostream>
 
-#define KPILOT_VERSION	"5.3.0-beta1 (KDE 4.3.0)"
+#define KPILOT_VERSION	"5.3.0-rc1 (KDE 4.3.0)"
 
 extern KDE_EXPORT int debug_level;
 

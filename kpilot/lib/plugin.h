@@ -58,7 +58,7 @@ namespace Pilot
 	* Bump this number every release to the current YYYYMMDD
 	* value.
 	*/
-	static const unsigned int PLUGIN_API = 20090107;
+	static const unsigned int PLUGIN_API = 20090624;
 }
 
 /**
