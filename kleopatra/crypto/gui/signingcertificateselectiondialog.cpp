@@ -33,58 +33,21 @@
 #include <config-kleopatra.h>
 
 #include "signingcertificateselectiondialog.h"
-
-#include "ui_signingcertificateselectionwidget.h"
-
-#include <models/keycache.h>
-
-#include <utils/formatting.h>
-#include <utils/stl_util.h>
+#include "signingcertificateselectionwidget.h"
 
 #include <KLocalizedString>
-#include <QByteArray>
-#include <QMap>
-
-#include <boost/bind.hpp>
 
 #include <cassert>
 
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
 
-class SigningCertificateSelectionDialog::Private {
-    friend class ::SigningCertificateSelectionDialog;
-    SigningCertificateSelectionDialog * const q;
-public:
-    explicit Private( SigningCertificateSelectionDialog * qq );
-    ~Private();
-    std::vector<GpgME::Key> candidates( GpgME::Protocol prot ) const;
-    void addCandidates( GpgME::Protocol prot, QComboBox* combo );
-
-private:
-    Ui::SigningCertificateSelectionWidget ui;
-};
-
-
-SigningCertificateSelectionDialog::Private::Private( SigningCertificateSelectionDialog * qq )
-  : q( qq )
-{
-    q->setWindowTitle( i18n( "Select Signing Certificates" ) );
-    QWidget* main = new QWidget( q );
-    ui.setupUi( main );
-    q->setMainWidget( main );
-    addCandidates( GpgME::CMS, ui.cmsCombo );
-    addCandidates( GpgME::OpenPGP, ui.pgpCombo );
-    ui.rememberCO->setChecked( true );
-}
-
-SigningCertificateSelectionDialog::Private::~Private() {}
-
-
-
 SigningCertificateSelectionDialog::SigningCertificateSelectionDialog( QWidget * parent, Qt::WFlags f )
-  : KDialog( parent, f ), d( new Private( this ) )
+    : KDialog( parent, f ),
+      widget( new SigningCertificateSelectionWidget( this ) )
 {
+    setWindowTitle( i18n( "Select Signing Certificates" ) );
+    setMainWidget( widget );
 }
 
 SigningCertificateSelectionDialog::~SigningCertificateSelectionDialog() {}
@@ -92,58 +55,22 @@ SigningCertificateSelectionDialog::~SigningCertificateSelectionDialog() {}
 
 void SigningCertificateSelectionDialog::setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates )
 {
+    widget->setSelectedCertificates( certificates );
 }
-
-std::vector<GpgME::Key> SigningCertificateSelectionDialog::Private::candidates( GpgME::Protocol prot ) const
-{
-    assert( prot != GpgME::UnknownProtocol );
-    std::vector<GpgME::Key> keys = KeyCache::instance()->keys();
-    std::vector<GpgME::Key>::iterator end = keys.end();
-
-    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::protocol, _1 ) != prot );
-    end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
-    assert( kdtools::all( keys.begin(), end, bind( &GpgME::Key::hasSecret, _1 ) ) );
-    end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::canSign, _1 ) );
-    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::isExpired, _1 ) );
-    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::isRevoked, _1 ) );
-    keys.erase( end, keys.end() );
-    return keys;
-}
-
-void SigningCertificateSelectionDialog::Private::addCandidates( GpgME::Protocol prot, QComboBox* combo )
-{
-    const std::vector<GpgME::Key> keys = candidates( prot );
-    Q_FOREACH( const GpgME::Key& i, keys )
-        combo->addItem( Formatting::formatForComboBox( i ),
-                        QByteArray( i.primaryFingerprint() ) );
-}
-
 
 QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCertificates() const
 {
-    QMap<GpgME::Protocol, GpgME::Key> res;
-
-    const QByteArray pgpfpr = d->ui.pgpCombo->itemData( d->ui.pgpCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::OpenPGP, KeyCache::instance()->findByFingerprint( pgpfpr.constData() ) );
-    const QByteArray cmsfpr = d->ui.cmsCombo->itemData( d->ui.cmsCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::CMS, KeyCache::instance()->findByFingerprint( cmsfpr.constData() ) );
-    return res;
+    return widget->selectedCertificates();
 }
 
 bool SigningCertificateSelectionDialog::rememberAsDefault() const
 {
-    return d->ui.rememberCO->isChecked();
+    return widget->rememberAsDefault();
 }
 
 void SigningCertificateSelectionDialog::setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols )
 {
-    assert( allowedProtocols.size() >= 1 );
-    if ( !allowedProtocols.contains( GpgME::OpenPGP ) ) {
-        d->ui.pgpLabel->hide();
-        d->ui.pgpCombo->hide();
-    }
-    if ( !allowedProtocols.contains( GpgME::CMS ) ) {
-        d->ui.cmsLabel->hide();
-        d->ui.cmsCombo->hide();
-    }
+    widget->setAllowedProtocols( allowedProtocols );
 }
+
+#include "moc_signingcertificateselectiondialog.cpp"
