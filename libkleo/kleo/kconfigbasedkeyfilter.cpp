@@ -44,6 +44,78 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
+//
+//
+// FontDescription - intuitive font property resolving
+//                   (QFont::resolve doesn't work for us)
+//
+//
+struct KeyFilter::FontDescription::Private {
+    bool bold, italic, strikeOut, fullFont;
+    QFont font;
+};
+
+KeyFilter::FontDescription::FontDescription()
+    : d( new Private )
+{
+    d->bold = d->italic = d->strikeOut = d->fullFont = false;
+}
+
+KeyFilter::FontDescription::FontDescription( const FontDescription & other )
+    : d( new Private( *other.d ) )
+{
+
+}
+
+KeyFilter::FontDescription KeyFilter::FontDescription::create( bool b, bool i, bool s ) {
+    FontDescription fd;
+    fd.d->bold = b;
+    fd.d->italic = i;
+    fd.d->strikeOut = s;
+    return fd;
+}
+
+KeyFilter::FontDescription KeyFilter::FontDescription::create( const QFont & f, bool b, bool i, bool s ) {
+    FontDescription fd;
+    fd.d->fullFont = true;
+    fd.d->font = f;
+    fd.d->bold = b;
+    fd.d->italic = i;
+    fd.d->strikeOut = s;
+    return fd;
+}
+
+QFont KeyFilter::FontDescription::font( const QFont & base ) const {
+    QFont font;
+    if ( d->fullFont ) {
+        font = d->font;
+        font.setPointSize( base.pointSize() );
+    } else {
+        font = base;
+    }
+    if ( d->bold )
+        font.setBold( true );
+    if ( d->italic )
+        font.setItalic( true );
+    if ( d->strikeOut )
+        font.setStrikeOut( true );
+    return font;
+}
+
+KeyFilter::FontDescription KeyFilter::FontDescription::resolve( const FontDescription & other ) const {
+    FontDescription fd;
+    fd.d->fullFont = this->d->fullFont || other.d->fullFont ;
+    if ( fd.d->fullFont )
+        fd.d->font = this->d->fullFont ? this->d->font : other.d->font ;
+    fd.d->bold = this->d->bold || other.d->bold ;
+    fd.d->italic = this->d->italic || other.d->italic ;
+    fd.d->strikeOut = this->d->strikeOut || other.d->strikeOut ;
+    return fd;
+}
+
+
+
+
 static const struct {
   const char * name;
   Key::OwnerTrust trust;
@@ -115,6 +187,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
     mUseFullFont = true;
     mFont = config.readEntry( "font" );
   } else {
+    mUseFullFont = false;
     mItalic = config.readEntry( "font-italic", false );
     mBold = config.readEntry( "font-bold", false );
   }
@@ -284,26 +357,9 @@ bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const
   return true;
 }
 
-static inline QFont resizedFont( QFont font, int pointSize, bool strike ) {
-  font.setPointSize( pointSize );
-  if ( strike )
-    font.setStrikeOut( true );
-  return font;
-}
-
-static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
-  if ( it )
-    font.setItalic( true );
-  if ( b )
-    font.setBold( true );
-  if ( strike )
-    font.setStrikeOut( true );
-  return font;
-}
-
-QFont KeyFilterImplBase::font( const QFont & f ) const {
+KeyFilter::FontDescription KeyFilterImplBase::fontDesription() const {
   if ( mUseFullFont )
-    return resizedFont( mFont, f.pointSize(), mStrikeOut );
+    return FontDescription::create( mFont, mBold, mItalic, mStrikeOut );
   else
-    return adapt( f, mItalic, mBold, mStrikeOut );
+    return FontDescription::create( mBold, mItalic, mStrikeOut );
 }
