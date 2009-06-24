@@ -36,6 +36,7 @@
 #include <gpgme++/key.h>
 
 class QString;
+class QStringList;
 class QDate;
 
 namespace GpgME {
@@ -113,6 +114,7 @@ namespace Formatting {
     const char * summaryToString( const GpgME::Signature::Summary summary );
 
     QString importMetaData( const GpgME::Import & import );
+    QString importMetaData( const GpgME::Import & import, const QStringList & sources );
 
     QString formatOverview( const GpgME::Key & key );
 }
