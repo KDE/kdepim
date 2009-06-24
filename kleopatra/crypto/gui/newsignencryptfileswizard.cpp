@@ -115,10 +115,10 @@ static void move_selected_from_to( KeyTreeView & from, KeyTreeView & to ) {
     to.addKeysSelected( keys );
 }
 
-static void remove_all_cms_keys( KeyTreeView & ktv ) {
-    const std::vector<Key> cms
-        = kdtools::copy_if< std::vector<Key> >( ktv.keys(), bind( &Key::protocol, _1 ) == CMS );
-    ktv.removeKeys( cms );
+static void remove_all_keys_not_xyz( KeyTreeView & ktv, Protocol proto ) {
+    const std::vector<Key> k
+        = kdtools::copy_if< std::vector<Key> >( ktv.keys(), bind( &Key::protocol, _1 ) != proto );
+    ktv.removeKeys( k );
 }
 
 static QString join_max( const QStringList & sl, const int max, const QString & glue ) {
@@ -368,8 +368,7 @@ namespace {
     public:
         explicit RecipientsPage( QWidget * parent=0 )
             : WizardPage( parent ),
-              m_keysLoaded( false ),
-              m_cmsKeysLoaded( false ),
+              m_lastEffectiveProtocol( static_cast<Protocol>(-1) ), // dummy start
               m_searchbar( this ),
               m_unselectedKTV( this ),
               m_selectPB( i18n("Add"), this ),
@@ -438,28 +437,36 @@ namespace {
                 return ResultPageId;
         }
 
+        static bool need_reload( Protocol now, Protocol then ) {
+            if ( then == UnknownProtocol )
+                return false;
+            if ( now == UnknownProtocol )
+                return true;
+            return now != then;
+        }
+
+        static bool need_grep( Protocol now, Protocol then ) {
+            return now != UnknownProtocol && then == UnknownProtocol ;
+        }
+
         /* reimp */ void initializePage() {
 
             setCommitPage( !isSigningSelected() );
 
-            const bool signEncrypt = isSignEncryptSelected();
-            kDebug() << "m_keysLoaded" << m_keysLoaded
-                     << "m_cmsKeysLoaded" << m_cmsKeysLoaded
-                     << "signEncrypt" << signEncrypt;
-            if ( !m_keysLoaded ) {
+            const Protocol currentEffectiveProtocol = effectiveProtocol();
+
+            if ( need_reload( currentEffectiveProtocol, m_lastEffectiveProtocol ) ) {
                 std::vector<Key> keys = KeyCache::instance()->keys();
-                kDebug() << "keys.size" << keys.size();
-                if ( signEncrypt )
-                    // only OpenPGP can do sign+encrypt in one operation
-                    _detail::grep_protocol( keys, OpenPGP );
+                _detail::grep_can_encrypt( keys );
+                if ( currentEffectiveProtocol != UnknownProtocol )
+                    _detail::grep_protocol( keys, currentEffectiveProtocol );
                 m_unselectedKTV.setKeys( keys );
-                m_keysLoaded = true;
-                m_cmsKeysLoaded = !signEncrypt;
-            } else if ( m_cmsKeysLoaded && signEncrypt ) {
-                remove_all_cms_keys( m_unselectedKTV );
-                remove_all_cms_keys( m_selectedKTV );
-                m_cmsKeysLoaded = false;
+            } else if ( need_grep( currentEffectiveProtocol, m_lastEffectiveProtocol ) ) {
+                remove_all_keys_not_xyz( m_unselectedKTV, currentEffectiveProtocol );
+                remove_all_keys_not_xyz( m_selectedKTV,   currentEffectiveProtocol );
             }
+
+            m_lastEffectiveProtocol = currentEffectiveProtocol;
         }
 
         /* reimp */ bool validatePage() {
@@ -511,6 +518,8 @@ namespace {
         }
 
     private:
+        Protocol m_lastEffectiveProtocol;
+
         bool m_keysLoaded    : 1;
         bool m_cmsKeysLoaded : 1;
 
