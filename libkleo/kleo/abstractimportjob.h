@@ -1,8 +1,8 @@
 /*
-    importjob.h
+    abstractimportjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,48 +30,28 @@
     your version.
 */
 
-#ifndef __KLEO_IMPORTJOB_H__
-#define __KLEO_IMPORTJOB_H__
+#ifndef __KLEO_ABSTRACTIMPORTJOB_H__
+#define __KLEO_ABSTRACTIMPORTJOB_H__
 
-#include "abstractimportjob.h"
-
-#include <QtCore/QByteArray>
+#include "job.h"
 
 namespace GpgME {
   class Error;
-    class ImportResult;
+  class ImportResult;
 }
 
 
 namespace Kleo {
 
-  /**
-     @short An abstract base class for asynchronous importers
-
-     To use a ImportJob, first obtain an instance from the
-     CryptoBackend implementation, connect the progress() and result()
-     signals to suitable slots and then start the import with a call
-     to start(). This call might fail, in which case the ImportJob
-     instance will have scheduled it's own destruction with a call to
-     QObject::deleteLater().
-
-     After result() is emitted, the ImportJob will schedule it's own
-     destruction by calling QObject::deleteLater().
-  */
-  class ImportJob : public AbstractImportJob {
+  class AbstractImportJob : public Job {
     Q_OBJECT
   protected:
-    explicit ImportJob( QObject * parent );
+    explicit AbstractImportJob( QObject * parent );
   public:
-    ~ImportJob();
+    ~AbstractImportJob();
 
-    /**
-       Starts the importing operation. \a keyData contains the data to
-       import from.
-    */
-    virtual GpgME::Error start( const QByteArray & keyData ) = 0;
-
-    virtual GpgME::ImportResult exec( const QByteArray & keyData ) = 0;
+  Q_SIGNALS:
+    void result( const GpgME::ImportResult & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }

@@ -129,6 +129,7 @@ install( FILES
 	kleo/job.h
 	kleo/keylistjob.h
 	kleo/keygenerationjob.h
+        kleo/abstractimportjob.h
 	kleo/importjob.h
 	kleo/importfromkeyserverjob.h
 	kleo/exportjob.h

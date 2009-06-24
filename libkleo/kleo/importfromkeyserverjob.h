@@ -33,7 +33,7 @@
 #ifndef __KLEO_IMPORTFROMKEYSERVERJOB_H__
 #define __KLEO_IMPORTFROMKEYSERVERJOB_H__
 
-#include "job.h"
+#include "abstractimportjob.h"
 
 namespace GpgME {
   class Key;
@@ -58,7 +58,7 @@ namespace Kleo {
      After result() is emitted, the ImportJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class ImportFromKeyserverJob : public Job {
+  class ImportFromKeyserverJob : public AbstractImportJob {
     Q_OBJECT
   protected:
     explicit ImportFromKeyserverJob( QObject * parent );
@@ -72,9 +72,6 @@ namespace Kleo {
     virtual GpgME::Error start( const std::vector<GpgME::Key> & keys ) = 0;
 
     virtual GpgME::ImportResult exec( const std::vector<GpgME::Key> & keys ) = 0;
-
-  Q_SIGNALS:
-    void result( const GpgME::ImportResult & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }
