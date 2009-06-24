@@ -1246,11 +1246,14 @@ C=DE
       </para>
 
       <para>
-	The only mandatory key in a <literal>Key Filter
-	#<replaceable>n</replaceable></literal> group is
+	The only mandatory keys in a <literal>Key Filter
+	#<replaceable>n</replaceable></literal> group are
 	<varname>Name</varname>, containing the name of the category
 	as displayed in the <link
-	linkend="configuration-appearance">config dialog</link>.
+	linkend="configuration-appearance">config dialog</link>, and
+	<varname>id</varname>, which is used as a reference for the
+	filter in other configuration sections (such as <literal>View
+	#<replaceable>n</replaceable></literal>).
       </para>
 
       <para>
@@ -1360,6 +1363,21 @@ C=DE
 	      <entry><varname>is-revoked</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>the key has been revoked.</entry>
+	    </row>
+	    <row>
+	      <entry><varname>match-context</varname></entry>
+	      <entry>
+                context<footnote>
+                  <para>
+                    Context is an enumeration with the following
+                    allowed values:
+                    <literal>appearance</literal>,
+                    <literal>filtering</literal>
+                    and <literal>any</literal>.
+                  </para>
+                </footnote>
+              </entry>
+	      <entry>the context in which this filter matches.</entry>
 	    </row>
 	    <row>
 	      <entry><varname>is-expired</varname></entry>
