@@ -287,6 +287,8 @@ namespace GpgME {
   //
   //
 
+  KDE_EXPORT void initializeLibrary();
+
   KDE_EXPORT GpgME::Error setDefaultLocale( int category, const char * value );
 
   KDE_EXPORT Context * wait( GpgME::Error & e, bool hang=true );

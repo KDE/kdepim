@@ -46,7 +46,7 @@ libgpgme___la_SOURCES = context.cpp \
 #   (Interfaces added/removed/changed:  CURRENT++, REVISION=0)
 #   (Interfaces added:                  AGE++)
 #   (Interfaces removed/changed:        AGE=0)
-libgpgme___la_LDFLAGS = -no-undefined -version-info 3:0:3
+libgpgme___la_LDFLAGS = -no-undefined -version-info 4:0:4
 libgpgme___la_LIBADD = $(GPGME_LIBS)
 libgpgme___la_DEPENDENCIES = $(GPGME_LIBS_DEP)
 
