@@ -57,6 +57,7 @@ KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAc
   filterEdit=new KLineEdit(page);
   QLabel *l=new QLabel(i18n("S&earch:"),page);
   l->setBuddy(filterEdit);
+  filterEdit->setClearButtonShown( true );
   noTreeCB=new QCheckBox(i18n("Disable &tree view"), page);
   noTreeCB->setChecked(false);
   subCB=new QCheckBox(i18n("&Subscribed only"), page);
@@ -333,7 +334,7 @@ void KNGroupBrowser::slotFilter(const QString &txt)
     kDebug() << "Populating view, incremental is " << doIncrementalUpdate;
   if (doIncrementalUpdate) {
     QList<KNGroupInfo> *tempList = new QList<KNGroupInfo>();
-    
+
     Q_FOREACH(const KNGroupInfo& g, *matchList) {
       if ((notCheckSub||g.subscribed)&&
           (notCheckNew||g.newGroup)&&
