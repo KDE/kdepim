@@ -21,7 +21,10 @@
 #include <kconfig.h>
 #include <kcomponentdata.h>
 
-// keep compatibility with the old way
+/**
+  Keep compatibility with the old way.
+  @deprecated Use KNGlobals::self().
+*/
 #define knGlobals (*KNGlobals::self())
 
 class KComponentData;
