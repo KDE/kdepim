@@ -134,6 +134,8 @@ void NewResultPage::Private::allDone()
         else
             m_progressLabelByTag.value( i )->setText( i18n("All operations completed." ) );
     }
+    if ( QAbstractButton * cancel = q->wizard()->button( QWizard::CancelButton ) )
+        cancel->setEnabled( false );
     emit q->completeChanged();
 }
 
