@@ -63,19 +63,18 @@ bool KNArticleVector::resize(int s)
 }
 
 
-bool KNArticleVector::append(KNArticle *a, bool autoSort)
+bool KNArticleVector::append( KNArticle *a )
 {
   if( (l_en+1 > s_ize) && !resize()) // array too small => try to realloc
     return false; // allocation failed !!
 
   l_ist[l_en++]=a;
 
-  if(autoSort) sort();
   return true;
 }
 
 
-void KNArticleVector::remove(int pos, bool autoDel, bool autoCompact)
+void KNArticleVector::remove( int pos, bool autoDel )
 {
 
   if(pos < 0 || pos > l_en-1)
@@ -85,9 +84,6 @@ void KNArticleVector::remove(int pos, bool autoDel, bool autoCompact)
     delete l_ist[pos];
 
   l_ist[pos]=0;
-
-  if(autoCompact)
-    compact();
 }
 
 
@@ -327,13 +323,12 @@ bool KNArticleCollection::resize(int s)
 
 
 
-bool KNArticleCollection::append(KNArticle *a, bool autoSync)
+bool KNArticleCollection::append( KNArticle *a )
 {
-  if(a_rticles.append(a, false)) {
+  if ( a_rticles.append( a ) ) {
     if(a->id()==-1)
       a->setId(++l_astID);
-    if(autoSync)
-      syncSearchIndex();
+
     return true;
   }
   return false;
