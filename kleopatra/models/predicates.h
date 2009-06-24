@@ -36,7 +36,13 @@
 #include <QByteArray>
 #include <string>
 
+#include <gpgme++/key.h>
+
+#include <boost/bind.hpp>
+
 #include <cstring>
+#include <algorithm>
+#include <iterator>
 
 namespace Kleo {
 namespace _detail {
@@ -97,6 +103,39 @@ namespace _detail {
     make_comparator_str_fast( ByShortKeyID, .shortKeyID() );
     make_comparator_str_fast( ByChainID, .chainID() );
 
+    template <typename T>
+    void sort_by_fpr( T & t ) {
+        std::sort( t.begin(), t.end(), ByFingerprint<std::less>() );
+    }
+
+    template <typename T>
+    void remove_duplicates_by_fpr( T & t ) {
+        t.erase( std::unique( t.begin(), t.end(), ByFingerprint<std::equal_to>() ), t.end() );
+    }
+
+    template <typename T>
+    T union_by_fpr( const T & t1, const T & t2 ) {
+        T result;
+        result.reserve( t1.size() + t2.size() );
+        std::set_union( t1.begin(), t1.end(),
+                        t2.begin(), t2.end(),
+                        std::back_inserter( result ),
+                        ByFingerprint<std::less>() );
+        return result;
+    }
+
+    template <typename T>
+    T union_by_fpr_dirty( const T & t1, const T & t2 ) {
+        T cleaned( t1 );
+        sort_by_fpr( cleaned );
+        remove_duplicates_by_fpr( cleaned );
+        return union_by_fpr( cleaned, t2 );
+    }
+
+    template <typename T>
+    void grep_protocol( T & t, GpgME::Protocol proto ) {
+        t.erase( std::remove_if( t.begin(), t.end(), boost::bind( &GpgME::Key::protocol, _1 ) != proto ), t.end() );
+    }
 }
 }
 
