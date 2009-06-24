@@ -153,6 +153,26 @@ namespace _detail {
     bool none_of_protocol( const T & t, GpgME::Protocol proto ) {
         return kdtools::none_of( t, boost::bind( &GpgME::Key::protocol, _1 ) == proto );
     }
+
+    template <typename T>
+    void grep_secret( T & t ) {
+        t.erase( std::remove_if( t.begin(), t.end(), boost::mem_fn( &GpgME::Key::hasSecret ) ), t.end() );
+    }
+
+    template <typename T>
+    bool any_secret( const T & t ) {
+        return kdtools::any( t, boost::mem_fn( &GpgME::Key::hasSecret ) );
+    }
+
+    template <typename T>
+    bool all_secret( const T & t ) {
+        return kdtools::all( t, boost::mem_fn( &GpgME::Key::hasSecret ) );
+    }
+
+    template <typename T>
+    bool none_of_secret( const T & t ) {
+        return kdtools::none_of( t, boost::mem_fn( &GpgME::Key::hasSecret ) );
+    }
 }
 }
 
