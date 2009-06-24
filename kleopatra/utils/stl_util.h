@@ -37,6 +37,17 @@ namespace kdtools {
         void operator()( const T * ) const {}
     };
 
+    struct identity {
+        template <typename T>
+        T * operator()( T * t ) const { return t; }
+        template <typename T>
+        const T * operator()( const T * t ) const { return t; }
+        template <typename T>
+        T & operator()( T & t ) const { return t; }
+        template <typename T>
+        const T & operator()( const T & t ) const { return t; }
+    };
+
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
     OutputIterator copy_if( InputIterator first, InputIterator last, OutputIterator dest, UnaryPredicate pred ) {
 	while ( first != last ) {
@@ -145,6 +156,13 @@ namespace kdtools {
             value = tmp;
         }
         return op;
+    }
+
+    template <typename ForwardIterator, typename UnaryPredicate, typename UnaryFunction>
+    UnaryFunction for_each_if( ForwardIterator first, ForwardIterator last, UnaryPredicate pred, UnaryFunction func ) {
+        return std::for_each( boost::make_filter_iterator( pred, first, last ),
+                              boost::make_filter_iterator( pred, last, last ),
+                              func );
     }
 
     //@{
@@ -271,6 +289,11 @@ namespace kdtools {
         return std::for_each( boost::begin( i ), boost::end( i ), p );
     }
 
+    template <typename I, typename P>
+    P for_each( I & i, P p ) {
+        return std::for_each( boost::begin( i ), boost::end( i ), p );
+    }
+
     //@}
 
     template <typename C>
@@ -306,6 +329,21 @@ namespace kdtools {
     template <typename C, typename B>
     B for_each_adjacent_pair( const C & c, B b ) {
         return for_each_adjacent_pair( boost::begin( c ), boost::end( c ), b );
+    }
+
+    template <typename C, typename B>
+    B for_each_adjacent_pair( C & c, B b ) {
+        return for_each_adjacent_pair( boost::begin( c ), boost::end( c ), b );
+    }
+
+    template <typename C, typename P, typename F>
+    P for_each_if( const C & c, P p, F f ) {
+        return for_each_if( boost::begin( c ), boost::end( c ), p, f );
+    }
+
+    template <typename C, typename P, typename F>
+    P for_each_if( C & c, P p, F f ) {
+        return for_each_if( boost::begin( c ), boost::end( c ), p, f );
     }
 
     template <typename C>
