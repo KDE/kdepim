@@ -101,4 +101,17 @@ void QGpgMEVerifyDetachedJob::start( const shared_ptr<QIODevice> & signature, co
   run( bind( &verify_detached, _1, weak_ptr<QIODevice>( signature ), weak_ptr<QIODevice>( signedData ) ) );
 }
 
+GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray & signature,
+                                                               const QByteArray & signedData ) {
+  const result_type r = verify_detached_qba( context(), signature, signedData );
+  resultHook( r );
+  return mResult;
+}
+
+//PENDING(marc) implement showErrorDialog()
+
+void Kleo::QGpgMEVerifyDetachedJob::resultHook( const result_type & tuple ) {
+  mResult = get<0>( tuple );
+}
+
 #include "qgpgmeverifydetachedjob.moc"

@@ -105,4 +105,18 @@ void QGpgMEDecryptJob::start( const shared_ptr<QIODevice> & cipherText, const sh
   run( bind( &decrypt, _1, weak_ptr<QIODevice>( cipherText ), weak_ptr<QIODevice>( plainText ) ) );
 }
 
+GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec( const QByteArray & cipherText,
+                                                      QByteArray & plainText ) {
+  const result_type r = decrypt_qba( context(), cipherText );
+  plainText = get<1>( r );
+  resultHook( r );
+  return mResult;
+}
+
+//PENDING(marc) implement showErrorDialog()
+
+void QGpgMEDecryptJob::resultHook( const result_type & tuple ) {
+  mResult = get<0>( tuple );
+}
+
 #include "qgpgmedecryptjob.moc"
