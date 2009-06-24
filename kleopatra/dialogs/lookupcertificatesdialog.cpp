@@ -57,9 +57,6 @@
 
 #include <cassert>
 
-static const bool ALLOW_MULTI_SELECTION = true;
-static const bool ALLOW_MULTI_PROTOCOL  = true;
-
 using namespace Kleo;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
@@ -101,6 +98,9 @@ private:
         else
             return QModelIndexList();
     }
+    unsigned int numSelectedCertificates() const {
+        return selectedIndexes().size();
+    }
 private:
     AbstractKeyListModel * model;
     KeyListSortFilterProxyModel proxy;
@@ -114,12 +114,6 @@ private:
             setupUi( q );
 
             saveAsPB->hide(); // ### not yet implemented in LookupCertificatesCommand
-
-            if ( !ALLOW_MULTI_SELECTION ) {
-                resultTV->setSelectionMode( QAbstractItemView::SingleSelection );
-                selectAllPB->hide();
-                deselectAllPB->hide();
-            }
 
             findED->setClearButtonShown( true );
 
@@ -171,6 +165,7 @@ LookupCertificatesDialog::~LookupCertificatesDialog() {}
 void LookupCertificatesDialog::setCertificates( const std::vector<Key> & certs ) {
     d->model->setKeys( certs );
     d->ui.resultTV->header()->resizeSections( QHeaderView::ResizeToContents );
+    d->ui.resultTV->setFocus();
 }
 
 std::vector<Key> LookupCertificatesDialog::selectedCertificates() const {
@@ -205,20 +200,11 @@ void LookupCertificatesDialog::Private::enableDisableWidgets() {
 
     ui.findPB->setEnabled( searchText().length() > minimalSearchTextLength );
 
-    const std::vector<Key> selection = q->selectedCertificates();
+    const unsigned int n = numSelectedCertificates();
 
-    ui.detailsPB->setEnabled(   selection.size() == 1 );
-    ui.saveAsPB->setEnabled(    selection.size() == 1 );
-    if ( ALLOW_MULTI_SELECTION ) {
-        // this is commented out until such a time as we know how to
-        // import more than one key in one go.
-        ui.importPB()->setEnabled( !selection.empty() &&
-                                   ( ALLOW_MULTI_PROTOCOL ||
-                                     // suppress mixed imports:
-                                     kdtools::all( selection, bind( &Key::protocol, _1 ) == selection.front().protocol() ) ) );
-    } else {
-        ui.importPB()->setEnabled(  selection.size() == 1 );
-    }
+    ui.detailsPB->setEnabled(  n == 1 );
+    ui.saveAsPB->setEnabled(   n == 1 );
+    ui.importPB()->setEnabled( n != 0 );
     ui.importPB()->setDefault( false ); // otherwise Import becomes default button if enabled and return triggers both a search and accept()
 }
 

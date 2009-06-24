@@ -244,8 +244,8 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
         showResult( dialog, keyListing.result );
 
     if ( dialog ) {
-        dialog->setCertificates( keyListing.keys );
         dialog->setPassive( false );
+        dialog->setCertificates( keyListing.keys );
     } else {
         finished();
     }
