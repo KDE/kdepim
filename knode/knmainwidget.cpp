@@ -205,9 +205,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   //connect(s_coreManager, SIGNAL(changedRules()), SLOT(slotReScore()));
   connect(s_coreManager, SIGNAL(finishedEditing()), SLOT(slotReScore()));
 
-  // Memory Manager
-  m_emManager = knGlobals.memoryManager();
-
   QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportScriptableSlots );
   //-------------------------------- </CORE> -----------------------------------
 
@@ -273,7 +270,7 @@ KNMainWidget::~KNMainWidget()
   delete c_fgManager;
   kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Config deleted";
 
-  delete m_emManager;
+  delete knGlobals.memoryManager();
   kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Memory Manager deleted";
 
 }

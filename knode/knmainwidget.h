@@ -214,7 +214,6 @@ protected:
   KNFolderManager   *f_olManager;
   KNFilterManager   *f_ilManager;
   KNScoringManager  *s_coreManager;
-  KNMemoryManager   *m_emManager;
 
 protected slots:
   //listview slots
