@@ -51,11 +51,11 @@ include_directories(
     ${QT_INCLUDE_DIR}
     ${QT_QTDBUS_INCLUDE_DIR}
     ${KDE4_INCLUDE_DIR}
-    ${PILOTLINK_INCLUDE_DIR}
 )
 
 # Only build stuff if p-l is found
 if (PILOTLINK_FOUND)
+    include_directories(${PILOTLINK_INCLUDE_DIR})
     # tell cmake to process CMakeLists.txt in that subdirectory
     add_subdirectory(lib)
     add_subdirectory(kpilot)
