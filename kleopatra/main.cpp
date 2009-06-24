@@ -76,6 +76,8 @@ namespace Kleo {
 #include <QThreadPool>
 #include <QDebug>
 
+#include <gpgme++/global.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <cassert>
@@ -163,6 +165,8 @@ int main( int argc, char** argv )
 {
     QTime timer;
     timer.start();
+
+    GpgME::initializeLibrary();
 
   {
       const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
