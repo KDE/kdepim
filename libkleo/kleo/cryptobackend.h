@@ -40,6 +40,7 @@ namespace Kleo {
   class KeyListJob;
   class KeyGenerationJob;
   class ImportJob;
+  class ImportFromKeyserverJob;
   class ExportJob;
   class DownloadJob;
   class DeleteJob;
@@ -109,6 +110,7 @@ namespace Kleo {
     virtual VerifyOpaqueJob     * verifyOpaqueJob( bool textmode=false ) const = 0;
     virtual KeyGenerationJob    * keyGenerationJob() const = 0;
     virtual ImportJob           * importJob() const = 0;
+    virtual ImportFromKeyserverJob * importFromKeyserverJob() const = 0;
     virtual ExportJob           * publicKeyExportJob( bool armor=false ) const = 0;
     // @param charset the encoding of the passphrase in the exported file
     virtual ExportJob           * secretKeyExportJob( bool armor=false, const QString& charset = QString() ) const = 0;

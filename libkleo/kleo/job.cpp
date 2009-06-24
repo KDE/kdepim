@@ -44,6 +44,7 @@
 #include "verifyopaquejob.h"
 #include "keygenerationjob.h"
 #include "importjob.h"
+#include "importfromkeyserverjob.h"
 #include "exportjob.h"
 #include "changeexpiryjob.h"
 #include "changeownertrustjob.h"
@@ -104,6 +105,7 @@ make_job_subclass(VerifyDetachedJob)
 make_job_subclass(VerifyOpaqueJob)
 make_job_subclass(KeyGenerationJob)
 make_job_subclass(ImportJob)
+make_job_subclass(ImportFromKeyserverJob)
 make_job_subclass(ExportJob)
 make_job_subclass(ChangeExpiryJob)
 make_job_subclass(ChangeOwnerTrustJob)
@@ -128,6 +130,7 @@ make_job_subclass(SpecialJob)
 #include "verifyopaquejob.moc"
 #include "keygenerationjob.moc"
 #include "importjob.moc"
+#include "importfromkeyserverjob.moc"
 #include "exportjob.moc"
 #include "changeexpiryjob.moc"
 #include "changeownertrustjob.moc"
