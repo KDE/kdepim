@@ -74,6 +74,8 @@ namespace Kleo {
 #include <QEventLoop>
 #include <QThreadPool>
 
+#include <gpgme++/global.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <cassert>
@@ -108,7 +110,7 @@ protected:
             KSplashScreen::timerEvent( ev );
         }
     }
-          
+
 };
 
 static bool selfCheck( KSplashScreen & splash ) {
@@ -149,6 +151,8 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
 int main( int argc, char** argv )
 {
+  GpgME::initializeLibrary();
+
   {
       const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
       QThreadPool::globalInstance()->setMaxThreadCount( qMax( 2U, threads ) );
