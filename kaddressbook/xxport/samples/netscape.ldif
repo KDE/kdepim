@@ -1,0 +1,38 @@
+dn: cn=John Smith,mail=john@smilt.com
+modifytimestamp: 20030219222547Z
+cn: John Smith
+xmozillanickname: JS
+mail: john@smilt.com
+xmozillausehtmlmail: FALSE
+o: Beer
+locality: Peckham
+givenname: John
+sn: Smith
+st: London
+description:: Tm9uZSByZWFsbHkKQW5vdGhlciBsaW5lIQ==
+title: Mr
+streetaddress: 1 Some Street
+postalcode: ABC 123
+countryname: England
+telephonenumber: 020 8888 2232
+homephone: 020 8888 1234
+facsimiletelephonenumber: 020 7777 1234
+xmozillauseconferenceserver: 0
+ou: Brewing
+cellphone: 07752 123 456
+homeurl: www.johnsmith.com
+xmozillaanyphone: 020 8888 2232
+objectclass: top
+objectclass: person
+
+# this is a comment
+dn: cn=KDE,mail=kde@kde.org
+modifytimestamp: 20030219222638Z
+cn: KDE
+mail: kde@kde.org
+xmozillausehtmlmail: FALSE
+givenname: KDE
+xmozillauseconferenceserver: 0
+objectclass: top
+objectclass: person
+

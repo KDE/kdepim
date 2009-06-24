@@ -1,0 +1,109 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="kaddressbook" version="395">
+  <MenuBar>
+    <Menu name="file" noMerge="1"><text>&amp;File</text>
+      <Menu name="file_new_actions_menu"><text>New</text>
+  	    <Action name="file_new_contact"/>
+	    <Action name="file_new_distributionlist"/>
+	  </Menu>
+      <Separator/>
+      <Action name="file_sync"/>
+      <Menu name="file_import"><text>&amp;Import</text>
+      </Menu>
+      <Menu name="file_export"><text>&amp;Export</text>
+      </Menu>
+      <Separator/>
+      <Action name="file_print"/>
+      <Action name="file_mail"/>
+      <Action name="file_mail_vcard"/>
+      <Action name="file_chat"/>
+      <Separator/>
+      <Action name="file_quit"/>
+    </Menu>
+
+    <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
+      <Action name="edit_undo"/>
+      <Action name="edit_redo"/>
+      <Separator/>
+      <Action name="edit_cut"/>
+      <Action name="edit_copy"/>
+      <Action name="edit_paste"/>
+      <Action name="copy_contact_to"/>
+      <Action name="move_contact_to"/>
+      <Separator/>
+      <Action name="edit_delete" append="edit_paste_merge"/>
+      <Separator/>
+      <Action name="edit_select_all"/>
+      <Separator/>
+      <Action name="edit_merge"/>
+      <Action name="edit_set_categories"/>
+      <Action name="edit_set_personal"/>
+    </Menu>
+
+    <Menu name="view" noMerge="1"><text>&amp;View</text>
+      <Action name="select_view"/>
+      <Action name="view_add"/>
+      <Action name="view_modify"/>
+      <Action name="view_delete"/>
+      <Separator/>
+      <ActionList name="extensions_list"/>
+      <Separator/>
+      <Action name="view_refresh"/>
+    </Menu>
+
+    <Menu name="tools" noMerge="1"><text>Tools</text>
+      <Action name="ldap_lookup"/>
+    </Menu>
+
+    <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
+      <Merge name="StandardToolBarMenuHandler" />
+      <Action name="options_show_jump_bar"/>
+      <Action name="options_show_details"/>
+      <Action name="options_show_statusbar"/>
+      <Merge name="show_merge"/>
+      <Separator/>
+      <Merge/>
+      <Action name="options_edit_filters"/>
+      <Separator/>
+      <Action name="kaddressbook_configure" group="settings_configure"/>
+    </Menu>
+  </MenuBar>
+
+  <Menu name="RMBPopup">
+    <Action name="file_properties"/>
+    <Action name="file_new_contact"/>
+    <Separator/>
+    <Action name="edit_cut"/>
+    <Action name="edit_copy"/>
+    <Action name="edit_paste"/>
+    <Action name="copy_contact_to"/>
+    <Action name="move_contact_to"/>
+    <Separator/>
+    <Action name="edit_delete"/>
+    <Separator/>
+    <Action name="file_mail"/>
+    <Action name="file_mail_vcard"/>
+    <Action name="file_chat"/>
+  </Menu>
+
+  <ToolBar noMerge="1" name="mainToolBar" fullWidth="true">
+    <text>Main Toolbar</text>
+    <Action name="file_new_contact"/>
+    <Action name="file_new_distributionlist"/>
+    <Action name="file_properties"/>
+    <Separator/>
+    <Action name="file_sync" />
+    <Separator/>
+    <Action name="edit_cut"/>
+    <Action name="edit_copy"/>
+    <Action name="edit_paste"/>
+    <Separator/>
+    <Action name="edit_undo"/>
+    <Action name="edit_redo"/>
+    <Separator/>
+    <Action name="edit_delete"/>
+    <Separator/>
+    <Action name="ldap_lookup"/>
+  </ToolBar>
+
+</kpartgui>

@@ -1,5 +1,5 @@
 /*
-    This file is part of KContactManager.
+    This file is part of KAddressBook.
     Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ using namespace KABPrinting;
 
 
 PrintStyle::PrintStyle( PrintingWizard* parent, const char* name )
-  : QObject( parent ), mWizard( parent )
+  : QObject( parent ), mWizard( parent ), mSortField( 0 )
 {
   setObjectName( name );
 }
@@ -110,13 +110,13 @@ void PrintStyle::hidePages()
   }
 }
 
-void PrintStyle::setPreferredSortOptions( ContactFields::Field field, bool ascending )
+void PrintStyle::setPreferredSortOptions( KABC::Field *field, bool ascending )
 {
   mSortField = field;
   mSortType = ascending;
 }
 
-ContactFields::Field PrintStyle::preferredSortField()
+KABC::Field* PrintStyle::preferredSortField()
 {
   return mSortField;
 }

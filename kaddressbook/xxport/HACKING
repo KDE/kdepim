@@ -1,0 +1,38 @@
+Coding Style
+=============
+
+Please use the coding style conventions from kdepim/kaddressbook/HACKING
+if you want to commit your xxport plugin into the cvs.
+
+
+
+Programming a XXPort Plugins
+=============================
+
+Implementing a new xxport plugin is quite easy. But for better understanding
+you should know what happens during the import or export.
+
+At first the modules are loaded by kaddressbook (or better said by the
+xxportmanager class) and an instance of every modul is created.
+In the constructor of a module, the methods createImportAction() and/or
+createExportAction() should be called to register the import and/or
+export gui items in the GUI menu.
+
+Now if the user selects one of the items, the xxportmanager searchs the proper
+plugin.
+
+If the item was a export item, the manager do the following 2 steps:
+ 1) check if the modul requires a sorted list of addresses
+ 2) show a dialog where the user can select, which contacts shall be exported
+    and, if requested, which order the contacts shall have
+Afterwards the exportContacts() method of the module is called with the
+list of all contacts, the user filtered via the dialog.
+
+If the item was an import item, the importContacts() method of the proper
+module is called directly.
+
+To implement your own module you just need to call the createXXportAction()s
+in the constructor and reimplement the importContacts() and/or exportContacts()
+method... thats all :)
+
+<will continue>
