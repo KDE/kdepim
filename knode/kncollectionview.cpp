@@ -1,6 +1,7 @@
 /*
     KNode, the KDE newsreader
     Copyright (c) 2004-2005 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Olivier Trichet <nive@nivalis.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,22 +28,18 @@
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include <QCursor>
 #include <QDropEvent>
+#include <QPainter>
+
 
 
 KNCollectionView::KNCollectionView( QWidget *parent ) :
   FolderTreeWidget( parent ),
-  mActiveItem( 0 )
+  mActiveItem( 0 ),
+  mDragTargetItem( 0 )
 {
-/* TODO
   setDragEnabled(true);
-  addAcceptableDropMimetype("x-knode-drag/article", false);
-  addAcceptableDropMimetype("x-knode-drag/folder", true);
-*/
-/* TODO
-  setDropHighlighter(true);
-*/
+  setDropIndicatorShown( false ); // We draw our own (see paintEvent)
 
   // add unread and total columns if necessary
   loadLayout();
@@ -129,7 +126,7 @@ void KNCollectionView::removeAccount(KNNntpAccount *a)
   KNCollectionViewItem *child = 0;
   KNCollectionViewItem *aitem = a->listItem();
   while ( ( child = static_cast<KNCollectionViewItem*>( aitem->takeChild( 0 ) ) ) ) {
-    removeGroup(static_cast<KNGroup*>(child->coll));
+    removeGroup( static_cast<KNGroup*>( child->collection() ) );
   }
   delete aitem;
   a->setListItem(0);
@@ -217,7 +214,7 @@ void KNCollectionView::removeFolder(KNFolder* f)
   KNCollectionViewItem *child = 0;
   KNCollectionViewItem *it = f->listItem();
   while ( ( child = static_cast<KNCollectionViewItem*>( it->takeChild( 0 ) ) ) ) {
-    removeFolder(static_cast<KNFolder*>(child->coll));
+    removeFolder( static_cast<KNFolder*>( child->collection() ) );
   }
   delete f->listItem();
   f->setListItem(0);
@@ -333,33 +330,149 @@ void KNCollectionView::contextMenuEvent( QContextMenuEvent *event )
   }
 }
 
-/*
-Q3DragObject* KNCollectionView::dragObject()
+
+
+void KNCollectionView::paintEvent( QPaintEvent *event )
 {
-  FolderTreeWidgetItem *item = static_cast<FolderTreeWidgetItem*>
-      (itemAt(viewport()->mapFromGlobal(QCursor::pos())));
-  if ( item && item->protocol() == FolderTreeWidgetItem::Local && item->folderType() == FolderTreeWidgetItem::Other ) {
-    Q3DragObject *d = new Q3StoredDrag( "x-knode-drag/folder", viewport() );
-    d->setPixmap( SmallIcon("folder") );
-    return d;
+  FolderTreeWidget::paintEvent( event );
+
+  if ( mDragTargetItem ) {
+    QRect rect = visualItemRect( mDragTargetItem );
+    if ( rect.isValid() ) {
+      QPainter p( viewport() );
+      QBrush brush = KColorScheme( QPalette::Active, KColorScheme::Selection ).decoration( KColorScheme::HoverColor ).color();
+      p.setPen( QPen( brush, 2 ) );
+      p.drawRect( rect );
+    }
   }
-  return 0;
 }
 
 
-void KNCollectionView::contentsDropEvent( QDropEvent *e )
+void KNCollectionView::dragEnterEvent( QDragEnterEvent *event )
 {
-  cleanItemHighlighter(); // necessary since we overwrite K3ListView::contentsDropEvent()
-  Q3ListViewItem *item = itemAt( contentsToViewport(e->pos()) );
-  KNCollectionViewItem *fti = static_cast<KNCollectionViewItem*>(item);
-  if (fti && (fti->coll) && acceptDrag(e)) {
-    emit folderDrop( e, fti );
-    e->setAccepted( true );
+  if ( event->mimeData() && event->mimeData()->hasFormat( "x-knode-drag/folder" ) ) {
+    event->accept();
+  } else {
+    event->ignore();
   }
-  else
-    e->setAccepted( false );
 }
-*/
+
+void KNCollectionView::dragLeaveEvent( QDragLeaveEvent *event )
+{
+  FolderTreeWidget::dragLeaveEvent( event );
+
+  mDragTargetItem = 0;
+  viewport()->update(); // repaint
+}
+
+void KNCollectionView::dragMoveEvent( QDragMoveEvent *event )
+{
+  // Needed for auto-scrolling
+  FolderTreeWidget::dragMoveEvent( event );
+
+  handleDragNDropEvent( event, false );
+}
+
+void KNCollectionView::dropEvent( QDropEvent *event )
+{
+  handleDragNDropEvent( event, true );
+
+  mDragTargetItem = 0;
+  viewport()->update(); // repaint
+}
+
+void KNCollectionView::handleDragNDropEvent( QDropEvent *event, bool enforceDrop )
+{
+  QTreeWidgetItem *item = itemAt( event->pos() );
+  KNCollectionViewItem *fti = static_cast<KNCollectionViewItem*>( item );
+  bool accepted = false;
+  if ( fti && fti->collection() && fti->collection()->type()==KNCollection::CTfolder ) {
+    const QMimeData *md = event->mimeData();
+    if( md && md->hasFormat( "x-knode-drag/folder" ) ) {
+      KNFolder *dest = static_cast<KNFolder*>( fti->collection() );
+      KNFolderManager *folderManager = KNGlobals::self()->folderManager();
+      if ( !enforceDrop ) {
+        // Notify that the move is possible.
+        accepted = folderManager->canMoveFolder( folderManager->currentFolder(), dest );
+      } else {
+        // Informs whether the move succeeded.
+        accepted = folderManager->moveFolder( folderManager->currentFolder(), dest );
+      }
+    }
+    /* TODO: redo drag and drop of articles.
+    else if ( md && md->hasFormat( "message/news" ) ) {
+      if ( !static_cast<KNFolder*>( fti->collection() )->isRootFolder() ) {   // don't drop articles on the root folder
+        if ( !enforceDrop ) {
+          accepted = true;
+        } else if(f_olManager->currentFolder()) {
+            if (e->dropAction() == Qt::MoveAction) {
+              KNLocalArticle::List l;
+              getSelectedArticles(l);
+              a_rtManager->moveIntoFolder(l, dest);
+              accepted = true;
+            } else {
+              KNArticle::List l;
+              getSelectedArticles(l);
+              a_rtManager->copyIntoFolder(l, dest);
+              accepted = true;
+            }
+          }
+          else if(g_rpManager->currentGroup()) {
+            KNArticle::List l;
+            getSelectedArticles(l);
+            a_rtManager->copyIntoFolder(l, dest);
+            accepted = true;
+          }
+      }
+    }
+    */
+  }
+
+  // Trigger an update of the target item (drawing of target's borders)
+  bool repaintTarget =    ( mDragTargetItem == item )       /* target changes */
+                       || ( !accepted && mDragTargetItem ); /* just entered an invalid target */
+  mDragTargetItem = accepted ? item : 0;
+  if ( repaintTarget ) {
+    viewport()->update();
+  }
+
+  event->setAccepted( accepted );
+}
+
+QStringList KNCollectionView::mimeTypes() const
+{
+  QStringList l;
+  l << "x-knode-drag/folder";
+  return l;
+}
+
+void KNCollectionView::startDrag( Qt::DropActions supportedActions )
+{
+  Q_UNUSED( supportedActions );
+
+  KNCollectionViewItem *item = static_cast<KNCollectionViewItem*>( currentItem() );
+  // Only folders can be dragged
+  if ( !item || !item->collection() || item->collection()->type()!=KNCollection::CTfolder ) {
+    return;
+  }
+
+  KNFolder *folder = static_cast<KNFolder*>( item->collection() );
+
+  // Can not drag special folders
+  if ( folder->isRootFolder() || folder->isStandardFolder() ) {
+    return;
+  }
+
+  QMimeData *mimeData = new QMimeData();
+  const QByteArray id( QString::number( folder->id() ).toAscii() );
+  mimeData->setData( "x-knode-drag/folder", id );
+
+  QDrag *drag = new QDrag( this );
+  drag->setMimeData( mimeData );
+  drag->setPixmap( SmallIcon( "folder" ) );
+
+  drag->exec( Qt::MoveAction );
+}
 
 
 #include "kncollectionview.moc"

@@ -62,6 +62,16 @@ class KNFolderManager : public QObject
     KNFolder* newFolder(KNFolder *p);
     bool deleteFolder(KNFolder *f);
     void emptyFolder(KNFolder *f);
+
+    /**
+      Returns true if the folder @p f can be moved under
+      a new parent @p p.
+    */
+    bool canMoveFolder( KNFolder *f, KNFolder *p );
+    /**
+      Move the folder @p f to a new parent @p p.
+      @returns false if the move is not possible.
+    */
     bool moveFolder(KNFolder *f, KNFolder *p);
 
     //unsent articles

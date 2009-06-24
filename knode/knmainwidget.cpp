@@ -15,7 +15,6 @@
 
 #include <Q3Accel>
 #include <QEvent>
-#include <QDropEvent>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QMenu>
@@ -124,8 +123,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
            this, SLOT(slotCollectionSelected()) );
   connect( c_olView, SIGNAL(contextMenu(QTreeWidgetItem*, const QPoint&)),
            this, SLOT(slotCollectionRMB(QTreeWidgetItem*, const QPoint&)) );
-  connect(c_olView, SIGNAL(folderDrop(QDropEvent*, KNCollectionViewItem*)),
-          SLOT(slotCollectionViewDrop(QDropEvent*, KNCollectionViewItem*)));
   connect( c_olView, SIGNAL(renamed(QTreeWidgetItem*)),
            this, SLOT(slotCollectionRenamed(QTreeWidgetItem*)) );
 
@@ -1174,7 +1171,7 @@ void KNMainWidget::slotCollectionSelected()
 
   QTreeWidgetItem *i = c_olView->selectedItems().value( 0 ); // Single item selection
   if(i) {
-    c=(static_cast<KNCollectionViewItem*>(i))->coll;
+    c = static_cast<KNCollectionViewItem*>( i )->collection();
     switch(c->type()) {
       case KNCollection::CTnntpAccount :
         selectedAccount=static_cast<KNNntpAccount*>(c);
@@ -1280,45 +1277,13 @@ void KNMainWidget::slotCollectionRenamed(QTreeWidgetItem *i)
   kDebug(5003) <<"KNMainWidget::slotCollectionRenamed(QListViewItem *i)";
 
   if (i) {
-    (static_cast<KNCollectionViewItem*>(i))->coll->setName(i->text(0));
+    static_cast<KNCollectionViewItem*>( i )->collection()->setName( i->text( 0 ) );
     updateCaption();
     a_rtManager->updateStatusString();
-    if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTnntpAccount)
-      a_ccManager->accountRenamed(static_cast<KNNntpAccount*>((static_cast<KNCollectionViewItem*>(i))->coll));
+    if ( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTnntpAccount ) {
+      a_ccManager->accountRenamed( static_cast<KNNntpAccount*>( static_cast<KNCollectionViewItem*>( i )->collection() ) );
+    }
     disableAccels(false);
-  }
-}
-
-
-void KNMainWidget::slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after)
-{
-  kDebug(5003) <<"KNMainWidget::slotCollectionViewDrop() : type =" << e->format(0);
-
-  KNCollectionViewItem *cvi=static_cast<KNCollectionViewItem*>(after);
-  if (cvi && cvi->coll->type() != KNCollection::CTfolder)   // safety measure...
-    return;
-  KNFolder *dest=cvi ? static_cast<KNFolder*>(cvi->coll) : 0;
-
-  if (e->provides("x-knode-drag/folder") && f_olManager->currentFolder()) {
-    f_olManager->moveFolder(f_olManager->currentFolder(), dest);
-  }
-  else if(dest && e->provides("x-knode-drag/article")) {
-    if(f_olManager->currentFolder()) {
-      if (e->dropAction() == Qt::MoveAction) {
-        KNLocalArticle::List l;
-        getSelectedArticles(l);
-        a_rtManager->moveIntoFolder(l, dest);
-      } else {
-        KNArticle::List l;
-        getSelectedArticles(l);
-        a_rtManager->copyIntoFolder(l, dest);
-      }
-    }
-    else if(g_rpManager->currentGroup()) {
-      KNArticle::List l;
-      getSelectedArticles(l);
-      a_rtManager->copyIntoFolder(l, dest);
-    }
   }
 }
 
@@ -1349,10 +1314,10 @@ void KNMainWidget::slotCollectionRMB( QTreeWidgetItem *i, const QPoint &pos )
 
   if(i) {
     QMenu *popup = 0;
-    if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup) {
+    if( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTgroup ) {
       popup = static_cast<QMenu *>(factory()->container("group_popup", m_GUIClient));
-    } else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
-      if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder()) {
+    } else if ( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTfolder ) {
+      if ( static_cast<KNFolder*>( static_cast<KNCollectionViewItem*>( i )->collection() )->isRootFolder() ) {
         popup = static_cast<QMenu *>(factory()->container("root_folder_popup", m_GUIClient));
       } else {
         popup = static_cast<QMenu *>(factory()->container("folder_popup", m_GUIClient));

@@ -197,10 +197,15 @@ void KNFolderManager::emptyFolder(KNFolder *f)
 }
 
 
-bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
+bool KNFolderManager::canMoveFolder( KNFolder *f, KNFolder *p )
 {
   if(!f || p==f->parent()) // nothing to be done
     return true;
+
+  // Moving a folder on itself
+  if ( f == p ) {
+    return false;
+  }
 
   // is "p" a child of "f" ?
   KNCollection *p2=p?p->parent():0;
@@ -212,6 +217,19 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
 
   if( (p2 && p2==f) || f==p || f->isStandardFolder() || f->isRootFolder()) //  no way ;-)
     return false;
+
+  return true;
+}
+
+bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
+{
+  if ( !f || p==f->parent() ) { // nothing to be done
+    return true;
+  }
+
+  if ( !canMoveFolder( f, p ) ) {
+    return false;
+  }
 
   emit folderRemoved(f);
 
