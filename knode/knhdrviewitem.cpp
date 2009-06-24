@@ -221,10 +221,11 @@ QString KNHdrViewItem::text( int col ) const
   }
 
   if ( col == hv->paintInfo()->sizeCol ) {
-    if ( art->lines()->numberOfLines() != -1 )
+    if ( art->lines()->numberOfLines() != 0 ) { // invalid values are read as '0' in KNGroup::insortHeaders()
       return QString::number( art->lines()->numberOfLines() );
-    else
+    } else {
       return QString();
+    }
   }
 
   if ( col == hv->paintInfo()->scoreCol ) {
