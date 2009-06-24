@@ -66,6 +66,7 @@ set(knodecommon_LIB_SRCS
    articlewidget.cpp
    csshelper.cpp
    utils/locale.cpp
+   utils/startup.cpp
 )
 
 qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMainWidget)

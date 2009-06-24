@@ -53,10 +53,6 @@ KNGlobals::KNGlobals() :
   mSettings( 0 )
 {
   kDebug();
-
-  // find knode icons even when running in kontact
-  KIconLoader::global()->addAppDir("knode");
-  KIconLoader::global()->addAppDir("kdepim");
 }
 
 KNGlobals::~KNGlobals( )
