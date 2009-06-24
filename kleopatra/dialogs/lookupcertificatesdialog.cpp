@@ -58,7 +58,7 @@
 #include <cassert>
 
 static const bool ALLOW_MULTI_SELECTION = true;
-static const bool ALLOW_MULTI_PROTOCOL  = false;
+static const bool ALLOW_MULTI_PROTOCOL  = true;
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
