@@ -8,6 +8,7 @@ add_subdirectory( filters )
 include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5003 )
 
 ########### next target ###############
 
