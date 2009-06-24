@@ -300,3 +300,4 @@ Name[zh_TW]=其他金鑰
 [Key Filter #7]
 is-cardkey=true
 Name=Smartcard Key
+icon=smartcard
