@@ -17,7 +17,6 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <kiconloader.h>
-#include <k3staticdeleter.h>
 
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
@@ -31,8 +30,15 @@
 #include "scheduler.h"
 #include "settings.h"
 
-KNGlobals* KNGlobals::mSelf = 0;
-static K3StaticDeleter<KNGlobals> staticKNGlobalsDeleter;
+
+class KNGlobalsPrivate
+{
+  public:
+    KNGlobals instance;
+};
+
+K_GLOBAL_STATIC( KNGlobalsPrivate, kNGlobalsPrivate );
+
 
 KNGlobals::KNGlobals() :
   mScheduler( 0 ),
@@ -46,7 +52,7 @@ KNGlobals::KNGlobals() :
   mMemManager( 0 ),
   mSettings( 0 )
 {
-  kDebug(5003) ;
+  kDebug();
 
   // find knode icons even when running in kontact
   KIconLoader::global()->addAppDir("knode");
@@ -55,16 +61,17 @@ KNGlobals::KNGlobals() :
 
 KNGlobals::~KNGlobals( )
 {
-  kDebug(5003) ;
+  kDebug();
   delete mScoreManager;
   delete mSettings;
 }
 
+
 KNGlobals * KNGlobals::self()
 {
-  if ( !mSelf )
-    mSelf = staticKNGlobalsDeleter.setObject( mSelf, new KNGlobals() );
-  return mSelf;
+  Q_ASSERT ( !kNGlobalsPrivate.isDestroyed() );
+
+  return &kNGlobalsPrivate->instance;
 }
 
 

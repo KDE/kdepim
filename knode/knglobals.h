@@ -52,8 +52,9 @@ namespace KNode {
     (knode.h isn't include everywhere) */
 class KNODE_EXPORT KNGlobals
 {
+  friend class KNGlobalsPrivate;
+
   public:
-    ~KNGlobals();
     /** Return the KNGlobals instance. */
     static KNGlobals *self();
 
@@ -96,10 +97,10 @@ class KNODE_EXPORT KNGlobals
     void setStatusMsg(const QString& text = QString(), int id = SB_MAIN);
 
   private:
-    /// Create a new KNGlobals object, should only be called by self().
+    /** Create a new KNGlobals object, should only be called by the friend class KNGlobalsPrivate. */
     KNGlobals();
-
-    static KNGlobals *mSelf;
+    /** Destroy the KNGlobals. */
+    ~KNGlobals();
 
     KSharedConfig::Ptr c_onfig;
 
