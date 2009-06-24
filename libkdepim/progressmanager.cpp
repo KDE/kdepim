@@ -23,9 +23,15 @@
 
 #include "progressmanager.h"
 
+#include "agentprogressmonitor.h"
+
 #include <KDebug>
 #include <KLocale>
-#include <kglobal.h>
+#include <KGlobal>
+
+#include <Akonadi/AgentInstance>
+
+using namespace Akonadi;
 
 namespace KPIM {
 
@@ -47,7 +53,7 @@ ProgressItem::~ProgressItem()
 
 void ProgressItem::setComplete()
 {
-  // kDebug() << label();
+  kDebug() << label();
 
   if ( mChildren.isEmpty() ) {
     if ( !mCanceled ) {
@@ -196,6 +202,23 @@ ProgressItem *ProgressManager::createProgressItemImpl( const QString &parent,
 {
   ProgressItem *p = mTransactions.value( parent );
   return createProgressItemImpl( p, id, label, status, canBeCanceled, usesCrypto );
+}
+
+ProgressItem *ProgressManager::createProgressItemForAgent( ProgressItem *parent,
+                                                           const Akonadi::AgentInstance &instance,
+                                                           const QString &id,
+                                                           const QString &label,
+                                                           const QString &status,
+                                                           bool cancellable,
+                                                           bool usesCrypto )
+{
+  ProgressItem *t = createProgressItemImpl( parent, id, label, status, cancellable, usesCrypto );
+  // TODO ^ emits progressItemAdded() before I'm done connecting the signals.
+  // Should I block that and emit it when I'm done?
+
+  kDebug() << "Created ProgressItem for agent" << instance.name();
+  new AgentProgressMonitor( instance, t );
+  return t;
 }
 
 void ProgressManager::emitShowProgressDialogImpl()

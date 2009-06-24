@@ -31,6 +31,10 @@
 #include <QMap>
 #include <QHash>
 
+namespace Akonadi {
+  class AgentInstance;
+}
+
 namespace KPIM {
 
 class ProgressItem;
@@ -338,7 +342,24 @@ class KDEPIM_EXPORT ProgressManager : public QObject
     }
 
     /**
-     * @return true when there is no more progress item
+     * Version for Akonadi agents.
+     * This connects all the proper signals so that you do not have to
+     * worry about updating the progress or reacting to progressItemCanceled().
+     */
+    static ProgressItem *createProgressItem( ProgressItem *parent,
+                                             const Akonadi::AgentInstance &agent,
+                                             const QString &id,
+                                             const QString &label,
+                                             const QString &status = QString(),
+                                             bool canBeCanceled = true,
+                                             bool usesCrypto = false )
+    {
+      return instance()->createProgressItemForAgent( parent, agent, id, label,
+                                                     status, canBeCanceled, usesCrypto );
+    }
+
+    /**
+     * @return true when there are no more progress items.
      */
     bool isEmpty() const
     {
@@ -416,6 +437,13 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                                   const QString &status,
                                                   bool cancellable,
                                                   bool usesCrypto );
+    ProgressItem *createProgressItemForAgent( ProgressItem *parent,
+                                              const Akonadi::AgentInstance &instance,
+                                              const QString &id,
+                                              const QString &label,
+                                              const QString &status,
+                                              bool cancellable,
+                                              bool usesCrypto );
     void emitShowProgressDialogImpl();
 
     QHash< QString, ProgressItem* > mTransactions;
