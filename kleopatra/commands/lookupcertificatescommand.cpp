@@ -109,11 +109,9 @@ private:
         return cbp ? cbp->importFromKeyserverJob() : 0 ;
     }
     void startKeyListJob( GpgME::Protocol proto, const QString & str );
-    void startImportJob( const Key & key );
     bool checkConfig() const;
 
-    QWidget * dialogOrParentWidgetOrView() const { if ( dialog ) return dialog; else return parentWidgetOrView();
-}
+    QWidget * dialogOrParentWidgetOrView() const { if ( dialog ) return dialog; else return parentWidgetOrView(); }
 
 private:
     QPointer<LookupCertificatesDialog> dialog;
@@ -269,10 +267,19 @@ void LookupCertificatesCommand::Private::slotImportRequested( const std::vector<
                           std::back_inserter( pgp ),
                           std::back_inserter( cms ),
                           bind( &Key::protocol, _1 ) == OpenPGP );
+
+    setWaitForMoreJobs( true );
     if ( !pgp.empty() )
-        startImport( OpenPGP, pgp );
+        startImport( OpenPGP, pgp,
+                     i18nc("@title %1:\"OpenPGP\" or \"CMS\"",
+                           "%1 Certificate Server",
+                           Formatting::displayName( OpenPGP ) ) );
     if ( !cms.empty() )
-        startImport( CMS, cms );
+        startImport( CMS, cms,
+                     i18nc("@title %1:\"OpenPGP\" or \"CMS\"",
+                           "%1 Certificate Server",
+                           Formatting::displayName( CMS ) ) );
+    setWaitForMoreJobs( false );
 }
 
 

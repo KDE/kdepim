@@ -130,29 +130,23 @@ void ImportCertificateFromFileCommand::doStart()
         d->finished();
         return;
     }
-    // TODO: allow multiple files
-    if ( d->files.size() > 1 ) {
-        d->information( i18n( "Importing more than one file at a time is not yet implemented." ),
-                        i18n( "Too many files" ) );
-        emit canceled();
-        d->finished();
-        return;
-    }
 
     //TODO: use KIO here
-    QFile in( d->files.front() );
-    if ( !in.open( QIODevice::ReadOnly ) ) {
-        d->error( i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
-        d->finished();
-        return;
+    d->setWaitForMoreJobs( true );
+    Q_FOREACH( const QString & fn, d->files ) {
+        QFile in( fn );
+        if ( !in.open( QIODevice::ReadOnly ) ) {
+            d->error( i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
+            continue;
+        }
+        const GpgME::Protocol protocol = findProtocol( fn );
+        if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
+            d->error( i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
+            continue;
+        }
+        d->startImport( protocol, in.readAll(), fn );
     }
-    const GpgME::Protocol protocol = findProtocol( d->files.front() );
-    if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
-        d->error( i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
-        d->finished();
-        return;
-    }
-    d->startImport( protocol, in.readAll(), d->files.front() );
+    d->setWaitForMoreJobs( false );
 }
 
 static QStringList get_file_name( QWidget * parent ) {
@@ -163,14 +157,13 @@ static QStringList get_file_name( QWidget * parent ) {
         const KConfigGroup group( config, "Import Certificate" );
         previousDir = group.readPathEntry( "last-open-file-directory", QDir::homePath() );
     }
-    const QString fn = QFileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
-    if ( fn.isEmpty() )
-        return QStringList();
-    if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
-        KConfigGroup group( config, "Import Certificate" );
-        group.writePathEntry( "last-open-file-directory", QFileInfo( fn ).path() );
-    }
-    return QStringList( fn );
+    const QStringList files = QFileDialog::getOpenFileNames( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
+    if ( !files.empty() )
+        if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
+            KConfigGroup group( config, "Import Certificate" );
+            group.writePathEntry( "last-open-file-directory", QFileInfo( files.front() ).path() );
+        }
+    return files;
 }
 
 bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
@@ -179,22 +172,6 @@ bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
         files = get_file_name( parentWidgetOrView() );
     return !files.empty();
 }
-
-void ImportCertificateFromFileCommand::Private::importResult( const GpgME::ImportResult& result )
-{
-    if ( result.error().code() ) {
-        setImportResultProxyModel( result );
-        if ( result.error().isCanceled() )
-            emit q->canceled();
-        else
-            showError( result.error(), files.front() );
-    } else {
-        showDetails( result, files.front() );
-    }
-
-    finished();
-}
-
 
 #undef d
 #undef q
