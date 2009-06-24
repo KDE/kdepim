@@ -54,6 +54,10 @@ using std::endl;
 
 namespace GpgME {
 
+  void initializeLibrary() {
+    gpgme_check_version( 0 );
+  }
+
   const char * Error::source() const {
     return gpgme_strsource( (gpgme_error_t)mErr );
   }
