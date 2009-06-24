@@ -50,6 +50,7 @@
 #include <QLabel>
 #include <QProgressBar>
 #include <QVBoxLayout>
+#include <QTimer>
 
 #include <cassert>
 
@@ -112,10 +113,9 @@ void NewResultPage::Private::keepOpenWhenDone( bool )
 void NewResultPage::Private::allDone()
 {
     assert( m_tasks );
-    // PENDING(marc) needed? then fix, else remove
-    //q->setAutoAdvance( !m_keepOpenCB->isChecked() && !m_tasks->errorOccurred() );
     m_progressBar->setRange( 0, 100 );
     m_progressBar->setValue( 100 );
+    const bool errorOccurred = m_tasks->errorOccurred();
     m_tasks.reset();
     Q_FOREACH ( const QString & i, m_progressLabelByTag.keys() ) {
         if ( !i.isEmpty() )
@@ -126,6 +126,10 @@ void NewResultPage::Private::allDone()
     if ( QAbstractButton * cancel = q->wizard()->button( QWizard::CancelButton ) )
         cancel->setEnabled( false );
     emit q->completeChanged();
+    if ( !m_keepOpenCB->isChecked() && !errorOccurred )
+        if ( QWizard * wiz = q->wizard() )
+            if ( QAbstractButton * btn = wiz->button( QWizard::FinishButton ) )
+                QTimer::singleShot( 500, btn, SLOT(animateClick()) );
 }
 
 void NewResultPage::Private::result( const shared_ptr<const Task::Result> & )
