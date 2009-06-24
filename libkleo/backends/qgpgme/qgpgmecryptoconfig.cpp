@@ -742,7 +742,10 @@ void QGpgMECryptoConfigEntry::resetToDefault()
   if ( mFlags & GPGCONF_FLAG_DEFAULT )
     mValue = mDefaultValue;
   else if ( mArgType == ArgType_None )
-    mValue = false;
+    if ( isList() )
+      mValue = 0U;
+    else
+      mValue = false;
 }
 
 void QGpgMECryptoConfigEntry::setBoolValue( bool b )
@@ -800,7 +803,9 @@ void QGpgMECryptoConfigEntry::setNumberOfTimesSet( unsigned int i )
 {
   Q_ASSERT( mArgType == ArgType_None );
   Q_ASSERT( isList() );
-  setUIntValue( i );
+  mValue = i;
+  mSet = i > 0;
+  mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
