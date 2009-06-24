@@ -114,14 +114,14 @@ namespace {
 
       context->setArmor( armor );
       context->setTextMode( textmode );
-      return new Kleo::QGpgMEEncryptJob( context );             
+      return new Kleo::QGpgMEEncryptJob( context );
     }
 
     Kleo::DecryptJob * decryptJob() const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
         return 0;
-      return new Kleo::QGpgMEDecryptJob( context );             
+      return new Kleo::QGpgMEDecryptJob( context );
     }
 
     Kleo::SignJob * signJob( bool armor, bool textMode ) const {
@@ -131,16 +131,16 @@ namespace {
 
       context->setArmor( armor );
       context->setTextMode( textMode );
-      return new Kleo::QGpgMESignJob( context );                    
+      return new Kleo::QGpgMESignJob( context );
     }
-    
+
     Kleo::VerifyDetachedJob * verifyDetachedJob( bool textMode ) const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
         return 0;
 
       context->setTextMode( textMode );
-      return new Kleo::QGpgMEVerifyDetachedJob( context );             
+      return new Kleo::QGpgMEVerifyDetachedJob( context );
     }
 
     Kleo::VerifyOpaqueJob * verifyOpaqueJob( bool textMode ) const {
@@ -149,21 +149,21 @@ namespace {
         return 0;
 
       context->setTextMode( textMode );
-      return new Kleo::QGpgMEVerifyOpaqueJob( context );   
+      return new Kleo::QGpgMEVerifyOpaqueJob( context );
     }
 
     Kleo::KeyGenerationJob * keyGenerationJob() const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
         return 0;
-      return new Kleo::QGpgMEKeyGenerationJob( context );             
+      return new Kleo::QGpgMEKeyGenerationJob( context );
     }
 
     Kleo::ImportJob * importJob() const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
         return 0;
-      return new Kleo::QGpgMEImportJob( context );             
+      return new Kleo::QGpgMEImportJob( context );
     }
 
     Kleo::ExportJob * publicKeyExportJob( bool armor ) const {
@@ -172,7 +172,7 @@ namespace {
         return 0;
 
       context->setArmor( armor );
-      return new Kleo::QGpgMEExportJob( context );             
+      return new Kleo::QGpgMEExportJob( context );
     }
 
     Kleo::ExportJob * secretKeyExportJob( bool armor, const QString& charset ) const {
@@ -180,7 +180,7 @@ namespace {
         return 0;
 
       // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-      return new Kleo::QGpgMESecretKeyExportJob( armor, charset );            
+      return new Kleo::QGpgMESecretKeyExportJob( armor, charset );
     }
 
     Kleo::RefreshKeysJob * refreshKeysJob() const {
@@ -188,7 +188,7 @@ namespace {
         return 0;
 
       // this operation is not supported by gpgme, so we have to call gpgsm ourselves:
-      return new Kleo::QGpgMERefreshKeysJob();             
+      return new Kleo::QGpgMERefreshKeysJob();
     }
 
     Kleo::DownloadJob * downloadJob( bool armor ) const {
@@ -199,14 +199,14 @@ namespace {
       context->setArmor( armor );
       // this is the hackish interface for downloading from keyserers currently:
       context->setKeyListMode( GpgME::Extern );
-      return new Kleo::QGpgMEDownloadJob( context );             
+      return new Kleo::QGpgMEDownloadJob( context );
     }
 
     Kleo::DeleteJob * deleteJob() const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
         return 0;
-      return new Kleo::QGpgMEDeleteJob( context );             
+      return new Kleo::QGpgMEDeleteJob( context );
     }
 
     Kleo::SignEncryptJob * signEncryptJob( bool armor, bool textMode ) const {
@@ -216,7 +216,7 @@ namespace {
 
       context->setArmor( armor );
       context->setTextMode( textMode );
-      return new Kleo::QGpgMESignEncryptJob( context );             
+      return new Kleo::QGpgMESignEncryptJob( context );
     }
 
     Kleo::DecryptVerifyJob * decryptVerifyJob( bool textMode ) const {
@@ -225,7 +225,7 @@ namespace {
         return 0;
 
       context->setTextMode( textMode );
-      return new Kleo::QGpgMEDecryptVerifyJob( context );             
+      return new Kleo::QGpgMEDecryptVerifyJob( context );
     }
 
     Kleo::ChangeExpiryJob * changeExpiryJob() const {
@@ -280,7 +280,7 @@ Kleo::QGpgMEBackend::QGpgMEBackend()
     mOpenPGPProtocol( 0 ),
     mSMIMEProtocol( 0 )
 {
-
+  GpgME::initializeLibrary();
 }
 
 Kleo::QGpgMEBackend::~QGpgMEBackend() {
