@@ -59,6 +59,7 @@ public:
     ~NewResultPage();
 
     void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
+    void addTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 
     /* reimp */ bool isComplete() const;
 
