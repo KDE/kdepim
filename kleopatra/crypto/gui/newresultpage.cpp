@@ -179,6 +179,12 @@ void NewResultPage::setKeepOpenWhenDone( bool keep )
     d->m_keepOpenCB->setChecked( keep );
 }
 
+void NewResultPage::setKeepOpenWhenDoneShown( bool on ) {
+    d->m_keepOpenCB->setVisible( on );
+    if ( !on )
+        d->m_keepOpenCB->setChecked( true );
+}
+
 void NewResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 {
     //clear(); ### PENDING(marc) implement
