@@ -54,6 +54,8 @@
 
 #include <cassert>
 
+static const int ProgressBarHideDelay = 2000; // 2 secs
+
 using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
@@ -72,6 +74,7 @@ public:
     QLabel * labelForTag( const QString & tag );
 
     std::vector< shared_ptr<TaskCollection> > m_collections;
+    QTimer m_hideProgressTimer;
     QProgressBar* m_progressBar;
     QHash<QString, QLabel*> m_progressLabelByTag;
     QVBoxLayout* m_progressLabelLayout;
@@ -82,6 +85,9 @@ public:
 
 NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 0 )
 {
+    m_hideProgressTimer.setInterval( ProgressBarHideDelay );
+    m_hideProgressTimer.setSingleShot( true );
+
     QBoxLayout* const layout = new QVBoxLayout( q );
     QWidget* const labels = new QWidget;
     m_progressLabelLayout = new QVBoxLayout( labels );
@@ -96,6 +102,8 @@ NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemI
     m_keepOpenCB->setChecked(true );
     connect( m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)) );
     layout->addWidget( m_keepOpenCB );
+
+    connect( &m_hideProgressTimer, SIGNAL(timeout()), m_progressBar, SLOT(hide()) );
 }
 
 void NewResultPage::Private::progress( const QString & msg, int progress, int total )
@@ -133,6 +141,7 @@ void NewResultPage::Private::allDone()
         if ( QWizard * wiz = q->wizard() )
             if ( QAbstractButton * btn = wiz->button( QWizard::FinishButton ) )
                 QTimer::singleShot( 500, btn, SLOT(animateClick()) );
+    m_hideProgressTimer.start();
 }
 
 void NewResultPage::Private::result( const shared_ptr<const Task::Result> & )
@@ -181,6 +190,8 @@ void NewResultPage::addTaskCollection( const shared_ptr<TaskCollection> & coll )
     assert( coll );
     if ( kdtools::contains( d->m_collections, coll ) )
         return;
+    d->m_hideProgressTimer.stop();
+    d->m_progressBar->show();
     d->m_collections.push_back( coll );
     d->m_resultList->addTaskCollection( coll );
     connect( coll.get(), SIGNAL(progress(QString,int,int)),
