@@ -172,7 +172,7 @@ namespace KMail {
         3. Insert the respective entries in the Mime Tree Viewer.
         3. Parse the 'node' to display the content. */
     //  Function will be replaced once KMime is alive.
-    void insertAndParseNewChildNode( partNode & node,
+    void insertAndParseNewChildNode( KMime::Content & node,
                                      const char * content,
                                      const char * cntDesc,
                                      bool append=false );
@@ -211,7 +211,7 @@ namespace KMail {
                         GpgME::Error & auditLogError,
                         QString& auditLog );
 
-    bool processMailmanMessage( partNode * node );
+    bool processMailmanMessage( KMime::Content* node );
 
     /** Checks whether @p str contains external references. To be precise,
         we only check whether @p str contains 'xxx="http[s]:' where xxx is
@@ -222,7 +222,7 @@ namespace KMail {
   public:// (during refactoring)
 
     bool processTextHtmlSubtype( partNode * node, ProcessResult & result );
-    bool processTextPlainSubtype( partNode * node, ProcessResult & result );
+    bool processTextPlainSubtype( KMime::Content *node, ProcessResult & result );
 
     bool processMultiPartMixedSubtype( partNode * node, ProcessResult & result );
     bool processMultiPartAlternativeSubtype( partNode * node, ProcessResult & result );

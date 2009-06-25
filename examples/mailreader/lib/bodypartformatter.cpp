@@ -208,7 +208,7 @@ static const struct {
 
 #undef DIM
 
-const KMail::BodyPartFormatter * KMail::BodyPartFormatter::createFor( int type, int subtype ) {
+usinconst KMail::BodyPartFormatter * KMail::BodyPartFormatter::createFor( int type, int subtype ) {
   DwString t, st;
   DwTypeEnumToStr( type, t );
   DwSubtypeEnumToStr( subtype, st );

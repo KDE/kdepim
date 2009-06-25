@@ -177,16 +177,16 @@ namespace KMail {
 
   ObjectTreeParser::~ObjectTreeParser() {}
 
-  void ObjectTreeParser::insertAndParseNewChildNode( partNode& startNode,
+  void ObjectTreeParser::insertAndParseNewChildNode( KMime::Content& startNode,
                                                      const char* content,
                                                      const char* cntDesc,
                                                      bool append )
   {
-    DwBodyPart* myBody = new DwBodyPart( DwString( content ), 0 );
-    myBody->Parse();
-
+    KMime::Content *newNode = new KMime::Content();
+    newNode->setContent( content );
+ /*TODO (Andras) port it
     if ( ( !myBody->Body().FirstBodyPart() ||
-           myBody->Body().AsString().length() == 0 ) &&
+           myBody->body().length() == 0 ) &&
          startNode.dwPart() &&
          startNode.dwPart()->Body().Message() &&
          startNode.dwPart()->Body().Message()->Body().FirstBodyPart() )
@@ -195,33 +195,25 @@ namespace KMail {
       // so we need to keep the child dwparts
       myBody = new DwBodyPart( *(startNode.dwPart()->Body().Message()) );
     }
+    */
 
-    if ( myBody->hasHeaders() ) {
-      DwText& desc = myBody->Headers().ContentDescription();
-      desc.FromString( cntDesc );
-      desc.SetModified();
-      myBody->Headers().Parse();
+    if ( !newNode->head().isEmpty() ) {
+      newNode->contentDescription()->from7BitString( cntDesc );
     }
 
-    partNode* parentNode = &startNode;
-    partNode* newNode = new partNode(false, myBody);
-    if ( append && parentNode->firstChild() ) {
-      parentNode = parentNode->firstChild();
-      while( parentNode->nextSibling() )
-        parentNode = parentNode->nextSibling();
-      parentNode->setNext( newNode );
-    } else
-      parentNode->setFirstChild( newNode );
+    KMime::Content* parentNode = &startNode;
+    parentNode->addContent( newNode, !append );
 
+  /*TODO(Andras) check what should we do here:
     newNode->buildObjectTree( false );
 
     if ( startNode.mimePartTreeItem() ) {
       newNode->fillMimePartTree( startNode.mimePartTreeItem(), 0,
                                  QString(), QString(), QString(), 0,
                                  append );
-    }
+    }*/
     ObjectTreeParser otp( mReader, cryptoProtocol() );
-//FIXME(Andras) disable, as OTP is rewritten to use KMime    otp.parseObjectTree( newNode );
+    otp.parseObjectTree( newNode );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
@@ -954,23 +946,23 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
   }
 } // namespace KMail
 
-static bool isMailmanMessage( partNode * curNode ) {
-  if ( !curNode->dwPart() || !curNode->dwPart()->hasHeaders() )
+static bool isMailmanMessage( KMime::Content * curNode ) {
+  if ( !curNode || curNode->head().isEmpty() )
     return false;
-  DwHeaders & headers = curNode->dwPart()->Headers();
-  if ( headers.HasField("X-Mailman-Version") )
+  if ( curNode->hasHeader("X-Mailman-Version") )
     return true;
-  if ( headers.HasField("X-Mailer") &&
-       0 == QString::fromLatin1( headers.FieldBody("X-Mailer").AsString().c_str() )
-       .contains("MAILMAN", Qt::CaseInsensitive ) )
-    return true;
+  if ( curNode->hasHeader("X-Mailer") ) {
+      KMime::Headers::Base *header = curNode->headerByType("X-Mailer");
+      if ( header->asUnicodeString().contains("MAILMAN", Qt::CaseInsensitive ) )
+        return true;
+  }
   return false;
 }
 
 namespace KMail {
 
-  bool ObjectTreeParser::processMailmanMessage( partNode * curNode ) {
-    const QString str = QString::fromLatin1( curNode->msgPart().bodyDecoded() );
+  bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
+    const QString str = QString::fromLatin1( curNode->decodedContent() );
 
     //###
     const QLatin1String delim1( "--__--__--\n\nMessage:" );
@@ -1012,8 +1004,7 @@ namespace KMail {
     //mReader->queueHtml("<br><hr><br>");
     // temporarily change curent node's Content-Type
     // to get our embedded RfC822 messages properly inserted
-    curNode->setType(    DwMime::kTypeMultipart );
-    curNode->setSubType( DwMime::kSubtypeDigest );
+    curNode->contentType()->setMimeType( "multipart/digest" );
     while( -1 < nextDelim ){
       int thisEoL = str.indexOf("\nMessage:", thisDelim, Qt::CaseInsensitive );
       if ( -1 < thisEoL )
@@ -1057,8 +1048,7 @@ namespace KMail {
         nextDelim = str.indexOf(delimZ2, thisDelim, Qt::CaseInsensitive);
     }
     // reset curent node's Content-Type
-    curNode->setType(    DwMime::kTypeText );
-    curNode->setSubType( DwMime::kSubtypePlain );
+    curNode->contentType()->setMimeType( "text/plain" );
     int thisEoL = str.indexOf( "_____________", thisDelim );
     if ( -1 < thisEoL ){
       thisDelim = thisEoL;
@@ -1076,44 +1066,44 @@ namespace KMail {
     return true;
   }
 
-  bool ObjectTreeParser::processTextPlainSubtype( partNode * curNode, ProcessResult & result ) {
+  bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, ProcessResult & result )
+  {
+    bool isFirstTextPart = (curNode->topLevel()->textContent() == curNode);
+
     if ( !mReader ) {
-      mRawReplyString = curNode->msgPart().bodyDecoded();
-      if ( curNode->isFirstTextPart() ) {
-        mTextualContent += curNode->msgPart().bodyToUnicode();
-        mTextualContentCharset = curNode->msgPart().charset();
+      mRawReplyString = curNode->decodedContent();
+      if ( isFirstTextPart ) {
+        mTextualContent += curNode->decodedText();
+        mTextualContentCharset = curNode->defaultCharset();
       }
       return true;
     }
 
-    if ( !curNode->isFirstTextPart() &&
-//FIXME(Andras) disable, as OTP is rewritten to use KMime         attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
+    if ( !isFirstTextPart && attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
          !showOnlyOneMimePart() )
       return false;
 
-    mRawReplyString = curNode->msgPart().bodyDecoded();
-    if ( curNode->isFirstTextPart() ) {
-      mTextualContent += curNode->msgPart().bodyToUnicode();
-      mTextualContentCharset = curNode->msgPart().charset();
+    mRawReplyString = curNode->decodedContent();
+    if ( isFirstTextPart ) {
+      mTextualContent += curNode->decodedText();
+      mTextualContentCharset = curNode->defaultCharset();
     }
 
-    QString label = curNode->msgPart().fileName().trimmed();
+    QString label = curNode->contentDisposition()->filename().trimmed();
     if ( label.isEmpty() )
-      label = curNode->msgPart().name().trimmed();
+      label = curNode->contentType()->name().trimmed();
 
-    const bool bDrawFrame = !curNode->isFirstTextPart()
+    const bool bDrawFrame = !isFirstTextPart
                           && !showOnlyOneMimePart()
                           && !label.isEmpty();
     if ( bDrawFrame ) {
       label = StringUtil::quoteHtmlChars( label, true );
 
       const QString comment =
-        StringUtil::quoteHtmlChars( curNode->msgPart().contentDescription(), true );
+        StringUtil::quoteHtmlChars( curNode->contentDescription()->asUnicodeString(), true );
 
-      const QString fileName;/*FIXME(Andras) disable, as OTP is rewritten to use KMime =
-        mReader->writeMessagePartToTempFile( &curNode->msgPart(),
-                                             curNode->nodeId() );
-*/
+      const QString fileName;
+      mReader->writeMessagePartToTempFile( curNode );
       const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
 
       QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
@@ -1135,9 +1125,8 @@ namespace KMail {
     if ( !isMailmanMessage( curNode ) ||
          !processMailmanMessage( curNode ) )
          ;
-   /*FIXME(Andras) disable, as OTP is rewritten to use KMime   writeBodyString( mRawReplyString, curNode->trueFromAddress(),
+   writeBodyString( mRawReplyString, static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString(),
                        codecFor( curNode ), result, !bDrawFrame );
-                       */
     if ( bDrawFrame )
       htmlWriter()->queue( "</td></tr></table>" );
 
