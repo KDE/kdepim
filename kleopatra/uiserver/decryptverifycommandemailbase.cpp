@@ -116,6 +116,7 @@ int DecryptVerifyCommandEMailBase::doStart() {
         Q_FOREACH ( const shared_ptr<Input> & i, inputs() )
             i->setLabel( st );
 
+    d->controller->setSessionId( sessionId() );
     d->controller->setOperation( operation() );
     d->controller->setVerificationMode( messages().empty() ? Opaque : Detached );
     d->controller->setInputs( inputs() );
