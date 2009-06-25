@@ -74,7 +74,7 @@ namespace Kleo {
 
         void addFileSystemWatcher( const boost::shared_ptr<FileSystemWatcher>& watcher );
 
-        std::vector<GpgME::Key> keys() const;
+        const std::vector<GpgME::Key> & keys() const;
         std::vector<GpgME::Key> secretKeys() const;
 
         const GpgME::Key & findByFingerprint( const char * fpr ) const;

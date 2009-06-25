@@ -36,8 +36,10 @@
 
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
+#include <models/predicates.h>
 
 #include <utils/headerview.h>
+#include <utils/stl_util.h>
 
 #include <kleo/keyfilter.h>
 
@@ -237,6 +239,14 @@ static QItemSelection itemSelectionFromKeys( const std::vector<Key> & keys, cons
     return result;
 }
 
+void KeyTreeView::selectKeys( const std::vector<Key> & keys ) {
+    m_view->selectionModel()->select( itemSelectionFromKeys( keys, *m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+}
+
+std::vector<Key> KeyTreeView::selectedKeys() const {
+    return m_proxy->keys( m_view->selectionModel()->selectedRows() );
+}
+
 void KeyTreeView::setHierarchicalView( bool on ) {
     if ( on == m_isHierarchical )
         return;
@@ -247,7 +257,7 @@ void KeyTreeView::setHierarchicalView( bool on ) {
     find_last_proxy( m_proxy )->setSourceModel( model() );
     if ( on )
         m_view->expandAll();
-    m_view->selectionModel()->select( itemSelectionFromKeys( selectedKeys, *m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+    selectKeys( selectedKeys );
     if ( !currentKey.isNull() ) {
         const QModelIndex currentIndex = m_proxy->index( currentKey );
         if ( currentIndex.isValid() ) {
@@ -259,14 +269,70 @@ void KeyTreeView::setHierarchicalView( bool on ) {
 }
 
 void KeyTreeView::setKeys( const std::vector<Key> & keys ) {
-    m_keys = keys;
+    std::vector<Key> sorted = keys;
+    _detail::sort_by_fpr( sorted );
+    _detail::remove_duplicates_by_fpr( sorted );
+    m_keys = sorted;
     if ( m_flatModel )
-        m_flatModel->setKeys( keys );
+        m_flatModel->setKeys( sorted );
     if ( m_hierarchicalModel )
-        m_hierarchicalModel->setKeys( keys );
-    if ( !keys.empty() )
+        m_hierarchicalModel->setKeys( sorted );
+    if ( !sorted.empty() )
         if ( QHeaderView * const hv = m_view ? m_view->header() : 0 )
             hv->resizeSections( QHeaderView::ResizeToContents );
+}
+
+void KeyTreeView::addKeysImpl( const std::vector<Key> & keys, bool select ) {
+    if ( keys.empty() )
+        return;
+    if ( m_keys.empty() ) {
+        setKeys( keys );
+        return;
+    }
+
+    std::vector<Key> sorted = keys;
+    _detail::sort_by_fpr( sorted );
+    _detail::remove_duplicates_by_fpr( sorted );
+
+    std::vector<Key> newKeys = _detail::union_by_fpr( sorted, m_keys );
+    m_keys.swap( newKeys );
+
+    if ( m_flatModel )
+        m_flatModel->addKeys( sorted );
+    if ( m_hierarchicalModel )
+        m_hierarchicalModel->addKeys( sorted );
+
+    if ( select )
+        selectKeys( sorted );
+}
+
+void KeyTreeView::addKeysSelected( const std::vector<Key> & keys ) {
+    addKeysImpl( keys, true );
+}
+
+void KeyTreeView::addKeysUnselected( const std::vector<Key> & keys ) {
+    addKeysImpl( keys, false );
+}
+
+void KeyTreeView::removeKeys( const std::vector<Key> & keys ) {
+    if ( keys.empty() )
+        return;
+    std::vector<Key> sorted = keys;
+    _detail::sort_by_fpr( sorted );
+    _detail::remove_duplicates_by_fpr( sorted );
+    std::vector<Key> newKeys;
+    newKeys.reserve( m_keys.size() );
+    std::set_difference( m_keys.begin(), m_keys.end(),
+                         sorted.begin(), sorted.end(),
+                         std::back_inserter( newKeys ),
+                         _detail::ByFingerprint<std::less>() );
+    m_keys.swap( newKeys );
+
+    if ( m_flatModel )
+        kdtools::for_each( sorted, bind( &AbstractKeyListModel::removeKey, m_flatModel, _1 ) );
+    if ( m_hierarchicalModel )
+        kdtools::for_each( sorted, bind( &AbstractKeyListModel::removeKey, m_hierarchicalModel, _1 ) );
+
 }
 
 #include "moc_keytreeview.cpp"

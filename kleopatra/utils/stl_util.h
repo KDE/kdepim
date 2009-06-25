@@ -28,12 +28,24 @@
 
 #include <boost/range.hpp>
 #include <boost/iterator/filter_iterator.hpp>
+#include <boost/iterator/transform_iterator.hpp>
 
 namespace kdtools {
 
     struct nodelete {
         template <typename T>
         void operator()( const T * ) const {}
+    };
+
+    struct identity {
+        template <typename T>
+        T * operator()( T * t ) const { return t; }
+        template <typename T>
+        const T * operator()( const T * t ) const { return t; }
+        template <typename T>
+        T & operator()( T & t ) const { return t; }
+        template <typename T>
+        const T & operator()( const T & t ) const { return t; }
     };
 
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
@@ -59,6 +71,12 @@ namespace kdtools {
     Value accumulate_if( InputIterator first, InputIterator last, UnaryPredicate filter, const Value & value=Value() ) {
         return std::accumulate( boost::make_filter_iterator( filter, first, last ),
                                 boost::make_filter_iterator( filter, last,  last ), value );
+    }
+
+    template <typename Value, typename InputIterator, typename UnaryFunction>
+    Value accumulate_transform( InputIterator first, InputIterator last, UnaryFunction map, const Value & value=Value() ) {
+        return std::accumulate( boost::make_transform_iterator( first, map ),
+                                boost::make_transform_iterator( last, map ), value );
     }
 
     template <typename InputIterator, typename OutputIterator1, typename OutputIterator2, typename UnaryPredicate>
@@ -138,6 +156,13 @@ namespace kdtools {
             value = tmp;
         }
         return op;
+    }
+
+    template <typename ForwardIterator, typename UnaryPredicate, typename UnaryFunction>
+    UnaryFunction for_each_if( ForwardIterator first, ForwardIterator last, UnaryPredicate pred, UnaryFunction func ) {
+        return std::for_each( boost::make_filter_iterator( pred, first, last ),
+                              boost::make_filter_iterator( pred, last, last ),
+                              func );
     }
 
     //@{
@@ -240,6 +265,11 @@ namespace kdtools {
         return accumulate_if( boost::begin( i ), boost::end( i ), f, v );
     }
 
+    template <typename V, typename I, typename F>
+    V accumulate_transform( const I & i, F f, V v=V() ) {
+        return accumulate_transform( boost::begin( i ), boost::end( i ), f, v );
+    }
+
     template <typename O, typename I>
     O copy( const I & i ) {
         O o;
@@ -256,6 +286,11 @@ namespace kdtools {
 
     template <typename I, typename P>
     P for_each( const I & i, P p ) {
+        return std::for_each( boost::begin( i ), boost::end( i ), p );
+    }
+
+    template <typename I, typename P>
+    P for_each( I & i, P p ) {
         return std::for_each( boost::begin( i ), boost::end( i ), p );
     }
 
@@ -294,6 +329,21 @@ namespace kdtools {
     template <typename C, typename B>
     B for_each_adjacent_pair( const C & c, B b ) {
         return for_each_adjacent_pair( boost::begin( c ), boost::end( c ), b );
+    }
+
+    template <typename C, typename B>
+    B for_each_adjacent_pair( C & c, B b ) {
+        return for_each_adjacent_pair( boost::begin( c ), boost::end( c ), b );
+    }
+
+    template <typename C, typename P, typename F>
+    P for_each_if( const C & c, P p, F f ) {
+        return for_each_if( boost::begin( c ), boost::end( c ), p, f );
+    }
+
+    template <typename C, typename P, typename F>
+    P for_each_if( C & c, P p, F f ) {
+        return for_each_if( boost::begin( c ), boost::end( c ), p, f );
     }
 
     template <typename C>

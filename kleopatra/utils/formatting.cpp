@@ -554,6 +554,16 @@ QString Formatting::signatureToString( const Signature & sig, const Key & key )
 // ImportResult
 //
 
+QString Formatting::importMetaData( const Import & import, const QStringList & ids ) {
+    const QString result = importMetaData( import );
+    if ( result.isEmpty() )
+        return QString();
+    else
+        return result + '\n' +
+            i18n("This certificate was imported from the following sources:") + '\n' +
+            ids.join("\n");
+}
+
 QString Formatting::importMetaData( const Import & import ) {
 
     if ( import.isNull() )

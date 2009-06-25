@@ -1,6 +1,7 @@
 /*
     KNode, the KDE newsreader
     Copyright (c) 2004-2005 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2009 Olivier Trichet <nive@nivalis.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,14 +17,13 @@
 
 #include <foldertreewidget.h>
 
-#include <QDropEvent>
-
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
 class KNCollectionViewItem;
 
 class QContextMenuEvent;
+class QDropEvent;
 
 using namespace KPIM;
 
@@ -71,7 +71,6 @@ class KNCollectionView : public FolderTreeWidget
     void selectCurrentFolder();
 
   signals:
-    void folderDrop( QDropEvent *e, KNCollectionViewItem *item );
     /**
       This signal is emitted when a context menu should be displayed
       for @p item as global position @p position.
@@ -86,17 +85,60 @@ class KNCollectionView : public FolderTreeWidget
       */
     virtual void contextMenuEvent( QContextMenuEvent *event );
 
-    // dnd
-/* TODO
-    virtual Q3DragObject* dragObject();
-    virtual void contentsDropEvent( QDropEvent *e );
-*/
+
+    virtual void paintEvent( QPaintEvent *event );
+
+
+    // Drag and drop
+    /**
+      Reimplement to only accept MIME types which are accepted in dropEvent.
+    */
+    virtual void dragEnterEvent ( QDragEnterEvent *event );
+    /**
+      Reimplemented to hide the drop indicator when the drag leave the view.
+    */
+    virtual void dragLeaveEvent ( QDragLeaveEvent *event );
+    /**
+      Reimplemented to accept the @p event only when the target folder can be
+      dropped articles or folders.
+    */
+    virtual void dragMoveEvent( QDragMoveEvent *event );
+    /**
+      Handles actual droping of articles or folder.
+    */
+    virtual void dropEvent( QDropEvent *event );
+    /**
+      Called by dragMoveEvent() and dropEvent().
+      @param event The drop/drag-move event.
+      @param enforceDrop If true the actual move of folder or move/copy of articles happens.
+    */
+    void handleDragNDropEvent( QDropEvent *event, bool enforceDrop );
+
+    /**
+      Returns the "x-knode-drag/folder" mime-type for drag&droping of folders within this view.
+    */
+    virtual QStringList mimeTypes() const;
+
+    /**
+      Reimplemented to perform the actual drag operations of folders.
+      This takes care of showing a nice drag icon/cursor instead of the default that consists
+      of the whole item widget (cells of label & counts).
+      @param supportedActions unused parameter.
+    */
+    virtual void startDrag( Qt::DropActions supportedActions );
+
 
   private:
     /** Loads the column layout. */
     void loadLayout();
 
     QTreeWidgetItem *mActiveItem;
+
+    /**
+      Current target of a drag & drop operation.
+      Used to highlight this item.
+    */
+    QTreeWidgetItem *mDragTargetItem;
 };
 
 #endif // KNODE_KNCOLLECTIONVIEW_H

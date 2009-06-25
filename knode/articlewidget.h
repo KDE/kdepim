@@ -58,7 +58,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// Construct a new article widget.
     ArticleWidget( QWidget *parent,
                    KXMLGUIClient *guiClient,
-                   KActionCollection *actionCollection );
+                   KActionCollection *actionCollection, bool isMainViewer = false );
     /// Destroy the article widget.
     ~ArticleWidget();
 
@@ -249,6 +249,10 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
     /// list of all instances of this class
     static QList<ArticleWidget*> mInstances;
+    /**
+      Indicates if this ArticleWidget is the main one (displayed in KNMainWidget)
+    */
+    bool mIsMainViewer;
 
     KXMLGUIClient *mGuiClient;
     KActionCollection *mActionCollection;

@@ -70,8 +70,6 @@ AgentWidget::AgentWidget( QWidget *parent )
   ui.syncButton->setIcon( KIcon( "view-refresh" ) );
   connect( ui.syncButton, SIGNAL( clicked() ), this, SLOT( synchronizeAgent() ) );
 
-  ui.abortButton->setIcon( KIcon("dialog-cancel") );
-  connect( ui.abortButton, SIGNAL(clicked()), this, SLOT(abortAgent()) );
   ui.restartButton->setIcon( KIcon( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
@@ -136,13 +134,6 @@ void AgentWidget::synchronizeTree()
   AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.synchronizeCollectionTree();
-}
-
-void AgentWidget::abortAgent()
-{
-  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
-  if ( agent.isValid() )
-    agent.abort();
 }
 
 void AgentWidget::restartAgent()
@@ -230,16 +221,7 @@ void AgentWidget::currentChanged(const Akonadi::AgentInstance& instance)
   if ( instance.isValid() ) {
     ui.identifierLabel->setText( instance.identifier() );
     ui.typeLabel->setText( instance.type().name() );
-    QString onlineStatus = ( instance.isOnline() ? i18n( "Online" ) : i18n( "Offline" ) );
-    QString agentStatus;
-    switch( instance.status() ) {
-      case AgentInstance::Idle: agentStatus = i18n( "Idle" ); break;
-      case AgentInstance::Running: agentStatus = i18n( "Running (%1%)", instance.progress() ); break;
-      case AgentInstance::Broken: agentStatus = i18n( "Broken" ); break;
-    }
-    ui.statusLabel->setText( i18nc( "Two statuses, for example \"Online, Running (66%)\" or \"Offline, Broken\"",
-          "%1, %2", onlineStatus, agentStatus ) );
-    ui.statusMessageLabel->setText( instance.statusMessage() );
+    ui.statusLabel->setText( instance.isOnline() ? i18n( "Online" ) : i18n( "Offline" ) );
     ui.capabilitiesLabel->setText( instance.type().capabilities().join( ", " ) );
     ui.mimeTypeLabel->setText( instance.type().mimeTypes().join( ", " ) );
   } else {
@@ -258,7 +240,6 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
   menu.addSeparator();
   menu.addMenu( mSyncMenu );
-  menu.addAction( KIcon("dialog-cancel"), i18n("Abort Activity"), this, SLOT(abortAgent()) );
   menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
   menu.addAction( KIcon("configure"), i18n("Configure..."), this, SLOT(configureAgent()) );

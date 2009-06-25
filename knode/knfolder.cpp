@@ -499,7 +499,7 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
     delete a->listItem();
 
     //delete article
-    a_rticles.remove(positions[idx], del, false);
+    a_rticles.remove( positions[idx], del );
     delCnt++;
     if(!del)
       a->setId(-1);

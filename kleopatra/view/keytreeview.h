@@ -72,6 +72,13 @@ namespace Kleo {
         void setKeys( const std::vector<GpgME::Key> & keys );
         const std::vector<GpgME::Key> & keys() const { return m_keys; }
 
+        void selectKeys( const std::vector<GpgME::Key> & keys );
+        std::vector<GpgME::Key> selectedKeys() const;
+
+        void addKeysUnselected( const std::vector<GpgME::Key> & keys );
+        void addKeysSelected( const std::vector<GpgME::Key> & keys );
+        void removeKeys( const std::vector<GpgME::Key> & keys );
+
 #if 0
         void setToolTipOptions( int options );
         int toolTipOptions() const;
@@ -105,6 +112,7 @@ namespace Kleo {
 
     private:
         void init();
+        void addKeysImpl( const std::vector<GpgME::Key> &, bool );
 
     private:
         std::vector<GpgME::Key> m_keys;

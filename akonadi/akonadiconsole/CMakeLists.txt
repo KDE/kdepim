@@ -1,7 +1,5 @@
 project(akonadiconsole)
 
-include_directories(${CMAKE_SOURCE_DIR}/akonadi)
-include_directories(${CMAKE_SOURCE_DIR}/libkdepim)
 include_directories(${AKONADI_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIR})
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
@@ -80,7 +78,7 @@ target_link_libraries( akonadiconsole_bin
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   akonadi-kcal
   akonadi-xml
-  kdepim
+  kdepim-copy
   ${KDE4_KUTILS_LIBS}
   ${AKONADICONSOLE_EXTRA_LIBS}
   ${QT_QTSQL_LIBRARY}

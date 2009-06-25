@@ -17,12 +17,10 @@
 #include "kncollectionview.h"
 #include "kngroup.h"
 #include "knfolder.h"
-#include "knglobals.h"
 #include "knconfigmanager.h"
 
 #include <kiconloader.h>
 
-#include <QDropEvent>
 
 KNCollectionViewItem::KNCollectionViewItem( FolderTreeWidget *parent, Protocol protocol, FolderType type) :
   FolderTreeWidgetItem(parent, QString(), protocol, type), coll(0)
@@ -99,16 +97,10 @@ bool KNCollectionViewItem::operator<( const QTreeWidgetItem &other ) const
 }
 
 
-bool KNCollectionViewItem::acceptDrag(QDropEvent* event) const
+void KNCollectionViewItem::setCollection( KNCollection *c )
 {
-  const QMimeData *md = event?event->mimeData():0;
-  if (md && coll && coll->type()==KNCollection::CTfolder) {
-    if ( md->hasFormat("x-knode-drag/article") )
-      return !(static_cast<KNFolder*>(coll)->isRootFolder());   // don't drop articles on the root folder
-    else if (md->hasFormat("x-knode-drag/folder"))
-      return !isSelected();             // don't drop on itself
-  }
-  return false;
+  coll = c;
+  setUp();
 }
 
 

@@ -33,7 +33,7 @@
 #ifndef __KLEO_IMPORTJOB_H__
 #define __KLEO_IMPORTJOB_H__
 
-#include "job.h"
+#include "abstractimportjob.h"
 
 #include <QtCore/QByteArray>
 
@@ -58,7 +58,7 @@ namespace Kleo {
      After result() is emitted, the ImportJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class ImportJob : public Job {
+  class ImportJob : public AbstractImportJob {
     Q_OBJECT
   protected:
     explicit ImportJob( QObject * parent );
@@ -71,8 +71,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QByteArray & keyData ) = 0;
 
-  Q_SIGNALS:
-    void result( const GpgME::ImportResult & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
+    virtual GpgME::ImportResult exec( const QByteArray & keyData ) = 0;
   };
 
 }

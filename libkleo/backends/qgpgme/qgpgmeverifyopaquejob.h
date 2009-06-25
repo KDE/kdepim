@@ -37,6 +37,8 @@
 
 #include "threadedjobmixin.h"
 
+#include <gpgme++/verificationresult.h>
+
 namespace Kleo {
 
   class QGpgMEVerifyOpaqueJob
@@ -60,6 +62,15 @@ namespace Kleo {
 
     /*! \reimp from VerifyOpaqueJob */
     void start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText );
+
+    /*! \reimp form VerifyOpaqueJob */
+    GpgME::VerificationResult exec( const QByteArray & signedData, QByteArray & plainData );
+
+    /*! \reimp from ThreadedJobMixin */
+    void resultHook( const result_type & r );
+
+  private:
+    GpgME::VerificationResult mResult;
   };
 
 }

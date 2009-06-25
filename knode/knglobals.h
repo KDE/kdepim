@@ -21,7 +21,10 @@
 #include <kconfig.h>
 #include <kcomponentdata.h>
 
-// keep compatibility with the old way
+/**
+  Keep compatibility with the old way.
+  @deprecated Use KNGlobals::self().
+*/
 #define knGlobals (*KNGlobals::self())
 
 class KComponentData;
@@ -38,7 +41,6 @@ class KNScoringManager;
 class KNMemoryManager;
 class KXMLGUIClient;
 namespace KNode {
-  class ArticleWidget;
   class Scheduler;
   class Settings;
 }
@@ -50,8 +52,9 @@ namespace KNode {
     (knode.h isn't include everywhere) */
 class KNODE_EXPORT KNGlobals
 {
+  friend class KNGlobalsPrivate;
+
   public:
-    ~KNGlobals();
     /** Return the KNGlobals instance. */
     static KNGlobals *self();
 
@@ -61,10 +64,9 @@ class KNODE_EXPORT KNGlobals
     KNMainWidget          *top;
     /** Returns the KXMLGUIClient of the main window. */
     KXMLGUIClient         *guiClient;
-    /** Returns the article widget of the main window. */
-    KNode::ArticleWidget  *artWidget;
     /** Returns the article factory. */
     KNArticleFactory      *artFactory;
+    /** Returns KNode's main configuration. */
     KConfig               *config();
     /** Returns the current instance. */
     const KComponentData &componentData() const;
@@ -95,10 +97,10 @@ class KNODE_EXPORT KNGlobals
     void setStatusMsg(const QString& text = QString(), int id = SB_MAIN);
 
   private:
-    /// Create a new KNGlobals object, should only be called by self().
+    /** Create a new KNGlobals object, should only be called by the friend class KNGlobalsPrivate. */
     KNGlobals();
-
-    static KNGlobals *mSelf;
+    /** Destroy the KNGlobals. */
+    ~KNGlobals();
 
     KSharedConfig::Ptr c_onfig;
 

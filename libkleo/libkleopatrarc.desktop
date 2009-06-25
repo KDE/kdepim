@@ -349,4 +349,6 @@ Name[x-test]=xxOther Keysxx
 Name[zh_CN]=其它密钥
 Name[zh_TW]=其他金鑰
 
-
+[Key Filter #7]
+is-cardkey=true
+Name=Smartcard Key

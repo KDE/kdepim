@@ -44,9 +44,11 @@ namespace Kleo {
 namespace Crypto {
 namespace Gui {
 
+    class SigningCertificateSelectionWidget;
+
     class SigningCertificateSelectionDialog : public KDialog {
         Q_OBJECT
-            public:
+    public:
         explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WFlags f=0 );
         ~SigningCertificateSelectionDialog();
 
@@ -57,8 +59,7 @@ namespace Gui {
         bool rememberAsDefault() const;
 
     private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
+        SigningCertificateSelectionWidget * widget;
     };
 
 }

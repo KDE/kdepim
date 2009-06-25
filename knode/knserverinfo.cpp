@@ -26,9 +26,11 @@ using namespace KWallet;
 #include "knaccountmanager.h"
 #include "utilities.h"
 
+#include <kio/ioslave_defaults.h>
+
 
 KNServerInfo::KNServerInfo() :
-  i_d( -1 ), p_ort( 119 ),
+  i_d( -1 ), p_ort( DEFAULT_NNTP_PORT ),
   n_eedsLogon( false ), p_assDirty( false ),
   mPassLoaded( false ),
   mEncryption( None )
@@ -45,7 +47,7 @@ KNServerInfo::~KNServerInfo()
 void KNServerInfo::readConf(KConfigGroup& conf)
 {
   s_erver=conf.readEntry("server", "localhost");
-  p_ort=conf.readEntry("port", 119);
+  p_ort=conf.readEntry( "port", DEFAULT_NNTP_PORT );
   i_d=conf.readEntry("id", -1);
 
   n_eedsLogon=conf.readEntry("needsLogon",false);
@@ -78,7 +80,7 @@ void KNServerInfo::readConf(KConfigGroup& conf)
 void KNServerInfo::saveConf(KConfigGroup &conf)
 {
   conf.writeEntry("server", s_erver);
-  if ( p_ort == 0 ) p_ort = 119;
+  if ( p_ort == 0 ) p_ort = DEFAULT_NNTP_PORT;
   conf.writeEntry("port", p_ort);
   conf.writeEntry("id", i_d);
 

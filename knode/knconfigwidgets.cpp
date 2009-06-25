@@ -39,6 +39,7 @@
 #include <QTextEdit>
 
 #include <kcharsets.h>
+#include <kio/ioslave_defaults.h>
 #include <klocale.h>
 #include <knumvalidator.h>
 #include <kmessagebox.h>
@@ -487,6 +488,13 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
       mEncTLS->setChecked( true );
       break;
   }
+  connect( mEncNone, SIGNAL( toggled( bool ) ),
+           this, SLOT( encryptionChanged( bool ) ) );
+  connect( mEncSSL, SIGNAL( toggled( bool ) ),
+           this, SLOT( encryptionChanged( bool ) ) );
+  connect( mEncTLS, SIGNAL( toggled( bool ) ),
+           this, SLOT( encryptionChanged( bool ) ) );
+
 
   mIntervalChecking->setChecked( a->intervalChecking() );
   mInterval->setValue( a->checkInterval() );
@@ -571,6 +579,19 @@ void KNode::NntpAccountConfDialog::slotPasswordChanged()
   if ( mPassword->text().isEmpty() )
     mPassword->setText( mAccount->pass() );
 }
+
+
+void KNode::NntpAccountConfDialog::encryptionChanged( bool checked )
+{
+  if ( checked ) { // All 3 buttons are connected to this slot, so only the checked one is taken into account.
+    if ( mEncNone->isChecked() ) {
+      mPort->setValue( DEFAULT_NNTP_PORT );
+    } else if ( mEncSSL->isChecked() || mEncTLS->isChecked() ) {
+      mPort->setValue( DEFAULT_NNTPS_PORT );
+    }
+  }
+}
+
 
 //END: NNTP account configuration widgets ------------------------------------
 

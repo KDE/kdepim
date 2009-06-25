@@ -185,6 +185,10 @@ class KNODE_EXPORT NntpAccountConfDialog : public KPageDialog, private Ui::NntpA
 
   private slots:
     void slotPasswordChanged();
+    /**
+      Changes the port to follow change of the encryption selection.
+    */
+    void encryptionChanged( bool checked );
 
   private:
     KNNntpAccount *mAccount;

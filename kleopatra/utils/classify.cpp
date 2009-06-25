@@ -110,7 +110,7 @@ namespace {
         { "PRIVATE KEY BLOCK", ExportedPSM },
         { "PUBLIC KEY BLOCK",  Certificate },
         { "SIGNATURE",         DetachedSignature },
-        { "SIGNED MESSAGE",    ClearsignedMessage },
+        { "SIGNED MESSAGE",    ClearsignedMessage|DetachedSignature },
     };
 
     template <template <typename U> class Op>

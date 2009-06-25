@@ -2,7 +2,7 @@ project(kleopatra)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 2.0.9 )
+set( kleopatra_version 2.0.10 )
 set( kleopatra_release FALSE )
 
 if (NOT kleopatra_release)
@@ -171,11 +171,16 @@ set( _kleopatra_SRCS
 
   crypto/gui/wizard.cpp
   crypto/gui/wizardpage.cpp
+
+  crypto/gui/signingcertificateselectionwidget.cpp
   crypto/gui/signingcertificateselectiondialog.cpp
 
   crypto/gui/resultitemwidget.cpp
   crypto/gui/resultlistwidget.cpp
   crypto/gui/resultpage.cpp
+
+  crypto/gui/newresultpage.cpp
+  crypto/gui/newsignencryptfileswizard.cpp
 
   crypto/gui/decryptverifyoperationwidget.cpp
   crypto/gui/decryptverifyfileswizard.cpp
@@ -305,13 +310,16 @@ install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
-install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( FILES kleopatra.desktop
+               kleopatra_import.desktop
+         DESTINATION ${XDG_APPS_INSTALL_DIR} )
+
 install( FILES kleopatra_signencryptfiles.desktop
                kleopatra_signencryptfolders.desktop
                kleopatra_decryptverifyfiles.desktop
                kleopatra_decryptverifyfolders.desktop
-                                         DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES kleopatra.rc              DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
+         DESTINATION ${SERVICES_INSTALL_DIR} )
+
+install( FILES kleopatra.rc DESTINATION ${DATA_INSTALL_DIR}/kleopatra )
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
-

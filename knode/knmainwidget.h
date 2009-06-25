@@ -19,10 +19,8 @@
 #include <kdialog.h>
 #include <kvbox.h>
 
-#include <qglobal.h>
 #include <QList>
-#include <QEvent>
-#include <QDropEvent>
+
 
 class Q3ListViewItem;
 class QLineEdit;
@@ -43,7 +41,6 @@ class KXMLGUIFactory;
 
 class KNHeaderView;
 class KNCollectionView;
-class KNCollectionViewItem;
 class KNProgress;
 class KNConfigManager;
 class KNAccountManager;
@@ -53,11 +50,7 @@ class KNArticleManager;
 class KNArticleFactory;
 class KNFilterManager;
 class KNScoringManager;
-class KNMemoryManager;
 class KNFilterSelectAction;
-namespace Kpgp {
-    class Module;
-}
 namespace KNode {
   class ArticleWidget;
 }
@@ -214,7 +207,6 @@ protected:
   KNFolderManager   *f_olManager;
   KNFilterManager   *f_ilManager;
   KNScoringManager  *s_coreManager;
-  KNMemoryManager   *m_emManager;
 
 protected slots:
   //listview slots
@@ -224,7 +216,6 @@ protected slots:
   void slotCollectionSelected();
   /** Called when a collection is renamed. */
   void slotCollectionRenamed( QTreeWidgetItem *i );
-  void slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after);
   void slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p);
   /** Display a menu on items of the collections view. */
   void slotCollectionRMB( QTreeWidgetItem *i, const QPoint &pos );

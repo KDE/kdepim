@@ -37,7 +37,7 @@
 #include "signencryptfilestask.h"
 #include "certificateresolver.h"
 
-#include <crypto/gui/signencryptfileswizard.h>
+#include <crypto/gui/newsignencryptfileswizard.h>
 #include <crypto/taskcollection.h>
 
 #include <utils/input.h>
@@ -93,7 +93,8 @@ private:
 private:
     std::vector< shared_ptr<SignEncryptFilesTask> > runnable, completed;
     shared_ptr<SignEncryptFilesTask> cms, openpgp;
-    QPointer<SignEncryptFilesWizard> wizard;
+    QPointer<NewSignEncryptFilesWizard> wizard;
+    QStringList files;
     unsigned int operation;
     Protocol protocol;
 };
@@ -104,6 +105,7 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
       cms(),
       openpgp(),
       wizard(),
+      files(),
       operation( SignAllowed|EncryptAllowed ),
       protocol( UnknownProtocol )
 {
@@ -184,26 +186,26 @@ void SignEncryptFilesController::Private::updateWizardMode() {
     switch ( signOp ) {
     case SignForced:
     case SignDisallowed:
-        wizard->setSigningSelected( signOp == SignForced );
+        wizard->setSigningPreset( signOp == SignForced );
         wizard->setSigningUserMutable( false );
         break;
     default:
         assert( !"Should not happen" );
     case SignAllowed:
-        wizard->setSigningSelected( encrOp == EncryptDisallowed );
+        wizard->setSigningPreset( encrOp == EncryptDisallowed );
         wizard->setSigningUserMutable( true );
         break;
     }
     switch ( encrOp ) {
     case EncryptForced:
     case EncryptDisallowed:
-        wizard->setEncryptionSelected( encrOp == EncryptForced );
+        wizard->setEncryptionPreset( encrOp == EncryptForced );
         wizard->setEncryptionUserMutable( false );
         break;
     default:
         assert( !"Should not happen" );
     case EncryptAllowed:
-        wizard->setEncryptionSelected( true );
+        wizard->setEncryptionPreset( true );
         wizard->setEncryptionUserMutable( true );
         break;
     }
@@ -215,7 +217,8 @@ unsigned int SignEncryptFilesController::operationMode() const {
 
 void SignEncryptFilesController::setFiles( const QStringList & files ) {
     kleo_assert( !files.empty() );
-    d->ensureWizardVisible();
+    d->files = files;
+    d->ensureWizardCreated();
     d->wizard->setFiles( files );
 }
 
@@ -289,17 +292,17 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
     try {
 
         kleo_assert( wizard );
+        kleo_assert( !files.empty() );
 
-        const bool sign = wizard->signingSelected();
-        const bool encrypt = wizard->encryptionSelected();
+        const bool sign = wizard->isSigningSelected();
+        const bool encrypt = wizard->isEncryptionSelected();
 
         const bool ascii = wizard->isAsciiArmorEnabled();
-        const bool removeUnencrypted = wizard->removeUnencryptedFile();
-        const QFileInfoList files = wizard->resolvedFiles();
+        const bool removeUnencrypted = wizard->isRemoveUnencryptedFilesEnabled();
 
         std::vector<Key> pgpRecipients, cmsRecipients, pgpSigners, cmsSigners;
         if ( encrypt ) {
-            const std::vector<Key> recipients = wizard->resolvedCertificates();
+            const std::vector<Key> recipients = wizard->resolvedRecipients();
             kdtools::copy_if( recipients.begin(), recipients.end(),
                               std::back_inserter( pgpRecipients ),
                               bind( &Key::protocol, _1 ) == GpgME::OpenPGP );
@@ -319,17 +322,15 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             kleo_assert( pgpSigners.size() + cmsSigners.size() == signers.size() );
         }
 
-        kleo_assert( !files.empty() );
-
         std::vector< shared_ptr<SignEncryptFilesTask> > tasks;
         tasks.reserve( files.size() );
 
         ensureWizardCreated();
         const shared_ptr<OverwritePolicy> overwritePolicy( new OverwritePolicy( wizard ) );
 
-        Q_FOREACH( const QFileInfo & fi, files ) {
+        Q_FOREACH( const QString & file, files ) {
             const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
-                createSignEncryptTasksForFileInfo( fi, sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
+                createSignEncryptTasksForFileInfo( QFileInfo( file ), sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
             Q_FOREACH( const shared_ptr<SignEncryptFilesTask> & i, created )
                 i->setOverwritePolicy( overwritePolicy );
             tasks.insert( tasks.end(), created.begin(), created.end() );
@@ -441,11 +442,11 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    std::auto_ptr<SignEncryptFilesWizard> w( new SignEncryptFilesWizard );
+    std::auto_ptr<NewSignEncryptFilesWizard> w( new NewSignEncryptFilesWizard );
     w->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection );
-    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
+    connect( w.get(), SIGNAL(rejected()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     wizard = w.release();
 
     updateWizardMode();

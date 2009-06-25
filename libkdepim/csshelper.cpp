@@ -240,6 +240,7 @@ namespace KPIM {
             QString::number( printFont.pointSize() ) )
       +
       QString( "tr.textAtmH,\n"
+               "tr.signInProgressH,\n"
                "tr.rfc822H,\n"
                "tr.encrH,\n"
                "tr.signOkKeyOkH,\n"
@@ -384,10 +385,12 @@ namespace KPIM {
                "  background-color: %3 ! important;\n"
                "}\n\n"
 
+               "table.signInProgress,\n"
                "table.rfc822 {\n"
                "  background-color: %3 ! important;\n"
                "}\n\n"
 
+               "tr.signInProgressH,\n"
                "tr.rfc822H {\n"
                "%4"
                "}\n\n" )
@@ -544,6 +547,7 @@ namespace KPIM {
       "  font-weight: normal ! important;\n"
       "}\n\n"
 
+      "tr.signInProgressH,\n"
       "tr.rfc822H,\n"
       "tr.encrH,\n"
       "tr.signOkKeyOkH,\n"
@@ -571,6 +575,7 @@ namespace KPIM {
       "table.signErr,\n"
       "table.signOkKeyBad,\n"
       "table.signOkKeyOk,\n"
+      "table.signInProgress,\n"
       "div.fancy.header table {\n"
       "  width: 100% ! important;\n"
       "  border-width: 0px ! important;\n"

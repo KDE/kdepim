@@ -33,9 +33,7 @@ class KNArticleVector {
     virtual ~KNArticleVector();
 
     // list-info
-    KNArticleVector* master()            { return m_aster; }
     void setMaster(KNArticleVector *m)   { m_aster=m; }
-    bool isMaster()   { return (m_aster==0); }
 
     bool isEmpty()    { return ( (l_ist==0) || (l_en==0) ); }
     int length()      { return l_en; }
@@ -43,16 +41,20 @@ class KNArticleVector {
 
     // list-handling
     bool resize(int s=0);
-    bool append(KNArticle *a, bool autoSort=false);
-    void remove(int pos, bool autoDel=false, bool autoCompact=false);
+    /**
+      Appends an article to this store.
+    */
+    bool append( KNArticle *a );
+    /**
+      Remove the element at position @p pos in this store.
+    */
+    void remove( int pos, bool autoDel=false );
     void clear();
     void compact();
     void syncWithMaster();
 
     // sorting
-    SortingType sortMode()            { return s_ortType; }
     void setSortMode(SortingType s)   { s_ortType=s; }
-    void sort();
     static int compareById(const void *a1, const void *a2);
     static int compareByMsgId(const void *a1, const void *a2);
 
@@ -65,6 +67,8 @@ class KNArticleVector {
     int indexForMsgId( const QByteArray &id );
 
   protected:
+    void sort();
+
     KNArticleVector *m_aster;
     int l_en,
         s_ize;
@@ -98,7 +102,10 @@ class KNArticleCollection : public KNCollection {
 
     // list-handling
     bool resize(int s=0);
-    bool append(KNArticle *a, bool autoSync=false);
+    /**
+      Appends an article to this collection.
+    */
+    bool append( KNArticle *a );
     void clear();
     void compact();
     void setLastID();

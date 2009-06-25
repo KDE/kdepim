@@ -38,7 +38,7 @@
 
 #include <gpgme++/global.h>
 
-#include <QPointer>
+#include <vector>
 
 namespace GpgME {
     class ImportResult;
@@ -46,7 +46,7 @@ namespace GpgME {
 }
 
 namespace Kleo {
-    class ImportJob;
+    class AbstractImportJob;
 }
 
 class QByteArray;
@@ -58,19 +58,31 @@ public:
     explicit Private( ImportCertificatesCommand * qq, KeyListController * c );
     ~Private();
 
+    void setWaitForMoreJobs( bool waiting );
+
     void startImport( GpgME::Protocol proto, const QByteArray & data, const QString & id=QString() );
+    void startImport( GpgME::Protocol proto, const std::vector<GpgME::Key> & keys, const QString & id=QString() );
     void importResult( const GpgME::ImportResult & );
 
     void showError( QWidget * parent, const GpgME::Error & error, const QString & id=QString() );
     void showError( const GpgME::Error & error, const QString & id=QString() );
 
-    void showDetails( QWidget * parent, const GpgME::ImportResult & result, const QString & id=QString() );
-    void showDetails( const GpgME::ImportResult & result, const QString & id=QString() );
+    void showDetails( QWidget * parent, const std::vector<GpgME::ImportResult> & results, const QStringList & ids );
+    void showDetails( const std::vector<GpgME::ImportResult> & results, const QStringList & ids );
 
-    void setImportResultProxyModel( const GpgME::ImportResult & result, const QString & id=QString() );
+    void setImportResultProxyModel( const std::vector<GpgME::ImportResult> & results, const QStringList & ids );
 
 private:
-    QPointer<Kleo::ImportJob> cmsImportJob, pgpImportJob;
+    void tryToFinish();
+    void importResult( const GpgME::ImportResult &, const QString & );
+
+private:
+    bool waitForMoreJobs;
+    std::vector<GpgME::Protocol> nonWorkingProtocols;
+    std::map<QObject*,QString> idsByJob;
+    std::vector<Kleo::AbstractImportJob*> jobs;
+    std::vector<GpgME::ImportResult> results;
+    QStringList ids;
 };
 
 inline Kleo::ImportCertificatesCommand::Private * Kleo::ImportCertificatesCommand::d_func() { return static_cast<Private*>(d.get()); }

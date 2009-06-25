@@ -62,6 +62,16 @@ namespace Kleo {
 
     /*! \reimp from VerifyDetachedJob */
     void start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData );
+
+    /*! \reimp from VerifyDetachedJob */
+    GpgME::VerificationResult exec( const QByteArray & signature,
+                                    const QByteArray & signedData );
+
+    /*! \reimp from ThreadedJobMixin */
+    void resultHook( const result_type & r );
+
+  private:
+    GpgME::VerificationResult mResult;
   };
 
 }

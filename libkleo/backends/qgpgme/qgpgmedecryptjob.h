@@ -62,6 +62,16 @@ namespace Kleo {
 
     /*! \reimp from DecryptJob */
     void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText );
+
+    /*! \reimp from DecryptJob */
+    GpgME::DecryptionResult exec( const QByteArray & cipherText,
+                                  QByteArray & plainText );
+
+    /*! \reimp from ThreadedJobMixin */
+    void resultHook( const result_type & r );
+
+  private:
+    GpgME::DecryptionResult mResult;
   };
 
 }

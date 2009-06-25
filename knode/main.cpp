@@ -22,6 +22,8 @@
 #include "knode.h"
 #include "aboutdata.h"
 #include "knode_options.h"
+#include "utils/startup.h"
+
 using KNode::AboutData;
 
 int main(int argc, char* argv[])
@@ -36,7 +38,8 @@ int main(int argc, char* argv[])
     return 0;
 
   KNApplication app;
-  KGlobal::locale()->insertCatalog("libkdepim");
-  KGlobal::locale()->insertCatalog("libkpgp");
+
+  KNode::Utilities::Startup::loadLibrariesIconsAndTranslations();
+
   return app.exec();
 }

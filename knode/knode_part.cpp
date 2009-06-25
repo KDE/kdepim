@@ -23,10 +23,13 @@
 */
 
 #include "knode_part.h"
+
 #include "knglobals.h"
 #include "knmainwidget.h"
 #include "aboutdata.h"
 #include "kncollectionview.h"
+#include "utils/startup.h"
+
 
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
@@ -53,14 +56,13 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList
   kDebug(5003) <<"KNodePart()...";
   kDebug(5003) <<"  InstanceName:" << KGlobal::mainComponent().componentName();
 
-  KGlobal::locale()->insertCatalog("libkdepim");
-  KGlobal::locale()->insertCatalog("libkpgp");
+  KNode::Utilities::Startup::loadLibrariesIconsAndTranslations();
+
 #ifdef __GNUC__
 #warning Port me!
 #endif
 //   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
-  KIconLoader::global()->addAppDir("knode");
-  KIconLoader::global()->addAppDir("kdepim");
+
   knGlobals.setComponentData( KNodeFactory::componentData() );
 
   // create a canvas to insert our widget

@@ -112,4 +112,18 @@ void QGpgMEDecryptVerifyJob::start( const shared_ptr<QIODevice> & cipherText, co
   run( bind( &decrypt_verify, _1, weak_ptr<QIODevice>( cipherText ), weak_ptr<QIODevice>( plainText ) ) );
 }
 
+std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>
+Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & plainText ) {
+  const result_type r = decrypt_verify_qba( context(), cipherText );
+  plainText = get<2>( r );
+  resultHook( r );
+  return mResult;
+}
+
+//PENDING(marc) implement showErrorDialog()
+
+void QGpgMEDecryptVerifyJob::resultHook( const result_type & tuple ) {
+  mResult = std::make_pair( get<0>( tuple ), get<1>( tuple ) );
+}
+
 #include "qgpgmedecryptverifyjob.moc"

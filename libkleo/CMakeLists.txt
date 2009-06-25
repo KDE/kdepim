@@ -21,6 +21,7 @@ set(libkleo_backend_qgpgme_SRCS
 	backends/qgpgme/qgpgmekeylistjob.cpp
 	backends/qgpgme/qgpgmekeygenerationjob.cpp
 	backends/qgpgme/qgpgmeimportjob.cpp
+	backends/qgpgme/qgpgmeimportfromkeyserverjob.cpp
 	backends/qgpgme/qgpgmeexportjob.cpp
 	backends/qgpgme/qgpgmesecretkeyexportjob.cpp
 	backends/qgpgme/qgpgmechangeexpiryjob.cpp
@@ -128,7 +129,9 @@ install( FILES
 	kleo/job.h
 	kleo/keylistjob.h
 	kleo/keygenerationjob.h
+        kleo/abstractimportjob.h
 	kleo/importjob.h
+	kleo/importfromkeyserverjob.h
 	kleo/exportjob.h
 	kleo/changeexpiryjob.h
 	kleo/changeownertrustjob.h

@@ -395,12 +395,12 @@
   <customwidget>
    <class>KPIM::AddresseeView</class>
    <extends>KTextBrowser</extends>
-   <header location="global" >libkdepim/addresseeview.h</header>
+   <header location="global">libkdepim-copy/addresseeview.h</header>
   </customwidget>
   <customwidget>
    <class>Akonadi::KCalItemBrowser</class>
    <extends>KTextBrowser</extends>
-   <header location="global" >akonadi/kcal/kcalitembrowser.h</header>
+   <header location="global" >kcal/kcalitembrowser.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

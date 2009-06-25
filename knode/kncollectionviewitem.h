@@ -17,8 +17,6 @@
 
 #include <foldertreewidget.h>
 
-#include <QDropEvent>
-
 class KNCollection;
 
 using namespace KPIM;
@@ -38,10 +36,15 @@ class KNCollectionViewItem : public FolderTreeWidgetItem  {
      */
     bool operator<( const QTreeWidgetItem &other ) const;
 
-    // DND
-    virtual bool acceptDrag(QDropEvent* event) const;
-
-    KNCollection *coll;
+    /**
+      Sets the collection this item represents.
+    */
+    void setCollection( KNCollection *c );
+    /**
+      Returns the collection this item represents.
+    */
+    KNCollection *collection() const
+      { return coll; };
 
   protected:
     /**
@@ -49,10 +52,12 @@ class KNCollectionViewItem : public FolderTreeWidgetItem  {
       (e.g. fr.comp.lang.perl is elided to f.c.lang.perl)
      */
     virtual QString elidedLabelText( const QFontMetrics &fm, unsigned int width ) const;
+
   private:
     /** Inialize this item. */
     void setUp();
 
+    KNCollection *coll;
 };
 
 #endif

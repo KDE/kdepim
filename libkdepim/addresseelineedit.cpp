@@ -180,6 +180,11 @@ void AddresseeLineEdit::setFont( const QFont &font )
   }
 }
 
+void AddresseeLineEdit::allowSemiColonAsSeparator( bool useSemiColonAsSeparator )
+{
+  m_useSemiColonAsSeparator = useSemiColonAsSeparator;
+}
+
 void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
 {
   bool accept = false;
@@ -909,7 +914,7 @@ void AddresseeLineEdit::updateSearchString()
     if ( inQuote ) {
       continue;
     }
-    if ( m_searchString[ i ] == ',' ) {
+    if ( m_searchString[ i ] == ',' || ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) ) {
       n = i;
     }
   }
