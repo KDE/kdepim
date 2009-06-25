@@ -126,7 +126,7 @@ void ResultListWidget::Private::setupSingle()
 void ResultListWidget::Private::resizeIfStandalone()
 {
     if ( m_standaloneMode )
-        q->resize( q->sizeHint() );
+        q->resize( q->size().expandedTo( q->sizeHint() ) );
 }
 
 void ResultListWidget::Private::setupMulti()
@@ -144,16 +144,12 @@ void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
     assert( widget );
     assert( m_tasks && !m_tasks->isEmpty() );
     
-    if ( m_tasks->size() > 1 ) {
-        assert( m_scrollArea );
-        assert( m_scrollArea->widget() );
-        assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
-        QBoxLayout & blay = *static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() );
-        blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
-    } else { // single task
-        widget->showCloseButton( m_standaloneMode );
-        m_layout->insertWidget( m_layout->count() - 1, widget, m_standaloneMode ? 1 : 0 );
-    }
+    assert( m_scrollArea );
+    assert( m_scrollArea->widget() );
+    assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
+    QBoxLayout & blay = *static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() );
+    blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
+
     widget->show();
     resizeIfStandalone();
 }
@@ -190,10 +186,7 @@ void ResultListWidget::setTaskCollection( const shared_ptr<TaskCollection> & col
     connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
     connect( d->m_tasks.get(), SIGNAL(done()), this, SLOT(allTasksDone()) );
-    if ( coll->size() == 1 )
-        d->setupSingle();
-    else
-        d->setupMulti();
+    d->setupMulti();
     setStandaloneMode( d->m_standaloneMode );
 }
 
@@ -214,7 +207,7 @@ void ResultListWidget::setStandaloneMode( bool standalone ) {
     d->m_standaloneMode = standalone;
     if ( !d->m_tasks || d->m_tasks->isEmpty() )
         return;
-    d->m_closeButton->setVisible( standalone && d->m_tasks->size() > 1 );
+    d->m_closeButton->setVisible( standalone );
     d->m_progressLabel->setVisible( standalone );
 }
 
