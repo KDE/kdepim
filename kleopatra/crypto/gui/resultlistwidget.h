@@ -57,10 +57,14 @@ namespace Gui {
         ~ResultListWidget();
 
         void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
+        void addTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 
         void setStandaloneMode( bool standalone );
 
         bool isComplete() const;
+
+        unsigned int totalNumberOfTasks() const;
+        unsigned int numberOfCompletedTasks() const;
 
     Q_SIGNALS:
         void linkActivated( const QString & link );
