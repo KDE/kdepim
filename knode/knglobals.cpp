@@ -37,7 +37,7 @@ class KNGlobalsPrivate
     KNGlobals instance;
 };
 
-K_GLOBAL_STATIC( KNGlobalsPrivate, kNGlobalsPrivate );
+K_GLOBAL_STATIC( KNGlobalsPrivate, kNGlobalsPrivate )
 
 
 KNGlobals::KNGlobals() :
