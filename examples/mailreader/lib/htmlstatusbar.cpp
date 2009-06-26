@@ -31,12 +31,6 @@
 */
 
 #include "htmlstatusbar.h"
-/*FIXME(Andras) port to akonadi
-#ifndef KMAIL_TESTING
-#include "kmkernel.h"
-#else
-#endif
-*/
 
 #include <klocale.h>
 #include <kconfig.h>

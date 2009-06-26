@@ -35,13 +35,6 @@
 #include "interfaces/bodypartformatter.h"
 
 #include "objecttreeparser.h"
-/*
-#include "KMime::Content.h"
-
-#include <mimelib/enum.h>
-#include <mimelib/string.h>
-#include <mimelib/utility.h>
-*/
 
 #include <kmime/kmime_content.h>
 

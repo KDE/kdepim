@@ -32,8 +32,6 @@
 
 #include "headerstrategy.h"
 
-//FIXME(Andras) port to akonadi #include "kmkernel.h"
-
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>

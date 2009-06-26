@@ -53,10 +53,6 @@ class KToggleAction;
 class KHTMLPart;
 class KUrl;
 
-class KMFolder;
-class KMMessage;
-class KMMessagePart;
-
 namespace KMime {
     class Message;
     class Content;
@@ -75,9 +71,6 @@ namespace KMail {
   class HtmlStatusBar;
   class CSSHelper;
 }
-
-class partNode; // might be removed when KMime is used instead of mimelib
-                //                                      (khz, 29.11.2001)
 
 namespace KParts {
   struct BrowserArguments;
@@ -155,13 +148,13 @@ public:
 
   /** Set the message that shall be shown. If msg is 0, an empty page is
       displayed. */
-  virtual void setMsg(KMMessage* msg, bool force = false);
+  virtual void setMsg(KMime::Message* msg, bool force = false);
 
   void setMessageItem(const Akonadi::Item& item, bool force = false);
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
-  void setMsgPart( KMMessagePart* aMsgPart, bool aHTML,
+  void setMsgPart( KMime::Content* aMsgPart, bool aHTML,
                    const QString& aFileName, const QString& pname );
 
   void setMsgPart( partNode * node );
@@ -188,7 +181,7 @@ public:
   void update(bool force = false);
 
   /** Print message. */
-  virtual void printMsg(  KMMessage* aMsg );
+  virtual void printMsg(  KMime::Message* aMsg );
 
   /** Return selected text */
   QString copyText();
@@ -229,7 +222,7 @@ public:
   void enableMsgDisplay();
 
   /** View message part of type message/RFC822 in extra viewer window. */
-  void atmViewMsg(KMMessagePart* msgPart);
+  void atmViewMsg(KMime::Content* msgPart);
 
   bool atBottom() const;
 
@@ -257,9 +250,9 @@ public:
   // message parts - *after* all encryption has been removed that
   // could be removed.
   // - This is used to store the message in decrypted form.
-  void objectTreeToDecryptedMsg( partNode* node,
+  void objectTreeToDecryptedMsg( KMime::Content* node,
                                  QByteArray& resultingData,
-                                 KMMessage& theMessage,
+                                 KMime::Message& theMessage,
                                  bool weAreReplacingTheRootNode = false,
                                  int recCount = 0 );
 
@@ -280,7 +273,8 @@ public:
   KHTMLPart * htmlPart() const { return mViewer; }
 
   /** Returns the current message or 0 if none. */
-  KMMessage* message(KMFolder** folder=0) const;
+
+  KMime::Message* message(/*KMFolder** folder=0*/) const;
 
   void openAttachment( int id, const QString & name );
 
@@ -334,7 +328,7 @@ signals:
   void replaceMsgByUnencryptedVersion();
 
   /** The user presses the right mouse button. 'url' may be 0. */
-  void popupMenu(KMMessage &msg, const KUrl &url, const QPoint& mousePos);
+  void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
 
   /** The user has clicked onto an URL that is no attachment. */
   void urlClicked(const KUrl &url, int button);
@@ -399,7 +393,7 @@ public slots:
   void slotSaveMsg();
   void slotSaveAttachments();
 
-  void slotMessageArrived( KMMessage *msg );
+  void slotMessageArrived( KMime::Message *msg );
 
   void slotLevelQuote( int l );
   void slotTouchMessage();
@@ -480,7 +474,7 @@ protected:
   QString createTempDir( const QString &param = QString() );
 
   /** show window containing infos about a vCard. */
-  void showVCard(KMMessagePart *msgPart);
+  void showVCard(KMime::Content *msgPart);
 
   /** HTML initialization. */
   virtual void initHtmlWidget(void);
@@ -511,7 +505,7 @@ private:
   /** Read override codec from configuration */
   void readGlobalOverrideCodec();
 
-  QString renderAttachments( partNode *node, const QColor &bgColor );
+  QString renderAttachments( KMime::Content *node, const QColor &bgColor );
 
   KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type);
 
@@ -519,7 +513,7 @@ private:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   int mAtmCurrent;
   QString mAtmCurrentName;
-  KMMessage *mMessage;
+  KMime::Message *mMessage;
   Akonadi::Item mMessageItem;
   // widgets:
   QSplitter * mSplitter;
@@ -555,7 +549,7 @@ private:
   int mMimeTreeMode;
   bool mMimeTreeAtBottom;
   QList<int> mSplitterSizes;
-  partNode* mRootNode;
+  KMime::Content* mRootNode;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;

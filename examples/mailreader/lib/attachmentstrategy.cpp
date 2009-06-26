@@ -31,8 +31,6 @@
 
 #include "attachmentstrategy.h"
 
-#include "kmmsgpart.h"
-
 #include <QString>
 
 #include <kmime/kmime_content.h>

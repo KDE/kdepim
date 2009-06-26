@@ -143,6 +143,7 @@ void KMMimePartTree::showEvent( QShowEvent* e )
 
 void KMMimePartTree::slotItemClicked( QTreeWidgetItem* item )
 {
+/*FIXME(Andras) port it
   if ( const KMMimePartTreeItem * i = dynamic_cast<KMMimePartTreeItem*>( item ) ) {
     // Display the clicked tree node in the reader window
     if ( mReaderWin->mRootNode == i->node() ) {
@@ -156,10 +157,12 @@ void KMMimePartTree::slotItemClicked( QTreeWidgetItem* item )
     else
       mReaderWin->setMsgPart( i->node() ); // Show the message sub-part
   }
+  */
 }
 
 void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
 {
+/*FIXME(Andras) port it
   KMMimePartTreeItem * item = dynamic_cast<KMMimePartTreeItem *>( itemAt( p ) );
   const bool isAttachment = item && ( item->node()->nodeId() > 2 ) &&
                       ( item->node()->typeString() != "Multipart" );
@@ -181,11 +184,8 @@ void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
     }
   }
 
-  /*
-   * FIXME make optional?
-  popup.addAction( i18n( "Save as &Encoded..." ), this,
-                   SLOT( slotSaveAsEncoded() ) );
-  */
+  // FIXME make optional?
+  //popup.addAction( i18n( "Save as &Encoded..." ), this, SLOT( slotSaveAsEncoded() ) );
 
   popup.addAction( i18n( "Save All Attachments..." ), this,
                    SLOT( slotSaveAll() ) );
@@ -195,19 +195,19 @@ void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
                        this, SLOT( slotCopy() ) );
-/* FIXME(Andras) port to akonadi
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT( slotDelete() ) );
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT( slotEdit() ) );
- */   }
+  }
 
     if ( item && item->node()->nodeId() > 0 )
       popup.addAction( i18n( "Properties" ), this, SLOT( slotProperties() ) );
   }
   popup.exec( viewport()->mapToGlobal( p ) );
+  */
 }
 
 //-----------------------------------------------------------------------------

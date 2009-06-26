@@ -36,7 +36,6 @@
 // other KMail headers
 //FIXME(Andras) port to akonadi #include "kmkernel.h"
 #include "kmreaderwin.h"
-#include "partNode.h"
 #include <kpimutils/email.h>
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
@@ -51,12 +50,6 @@
 #include "util.h"
 #include "kleojobexecutor.h"
 #include "stringutil.h"
-
-// other module headers
-#include <mimelib/enum.h>
-#include <mimelib/bodypart.h>
-#include <mimelib/string.h>
-#include <mimelib/text.h>
 
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -362,12 +355,14 @@ namespace KMail {
     // end of ###
   }
 
-  void ProcessResult::adjustCryptoStatesOfNode( partNode * node ) const {
+  void ProcessResult::adjustCryptoStatesOfNode( KMime::Content * node ) const {
+  /*FIXME(Andras) port it
     if ( ( inlineSignatureState()  != KMMsgNotSigned ) ||
          ( inlineEncryptionState() != KMMsgNotEncrypted ) ) {
       node->setSignatureState( inlineSignatureState() );
       node->setEncryptionState( inlineEncryptionState() );
     }
+    */
   }
 
   //////////////////

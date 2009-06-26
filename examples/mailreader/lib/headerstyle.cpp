@@ -32,7 +32,6 @@
 #include "headerstyle.h"
 
 #include "headerstrategy.h"
-//FIXME(Andras) port to akonadi #include "kmkernel.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 // FIXME(Andras) port to akonadi  #include "spamheaderanalyzer.h"

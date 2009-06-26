@@ -39,9 +39,7 @@
 #include <gpgme++/verificationresult.h>
 
 class KMReaderWin;
-class KMMessagePart;
 class QString;
-class partNode;
 
 namespace KMime {
     class Content;
@@ -93,7 +91,7 @@ namespace KMail {
       mIsImage = image;
     }
 
-    void adjustCryptoStatesOfNode( partNode * node ) const;
+    void adjustCryptoStatesOfNode( KMime::Content * node ) const;
 
   private:
     KMMsgSignatureState mInlineSignatureState;
@@ -268,6 +266,7 @@ namespace KMail {
     void writeBodyStr( const QByteArray & bodyString,
                        const QTextCodec * aCodec,
                        const QString & fromAddress );
+    static KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
 
   private:
     /** Change the string to `quoted' html (meaning, that the quoted
@@ -286,7 +285,6 @@ namespace KMail {
 #else
     void dumpToFile( const char *, const char *, size_t ) {}
 #endif
-  KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
 
   private:
     KMReaderWin * mReader;
