@@ -1,3 +1,13 @@
+Friday, June 26th 2009
+
+Problems addressed
+------------------
+
+* Fix problems with Free/Busy passwords that have a '!' in them.
+  This fix is in kdelibs, not in the enterprise branch.
+* Fix incompatibility with GPGME 1.2
+
+
 Friday, June 19th 2009
 
 Problems addressed
