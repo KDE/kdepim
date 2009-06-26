@@ -99,7 +99,7 @@ unsigned int Kleo::stringListToCryptoMessageFormats( const QStringList & sl ) {
   return result;
 }
 
-// For the config values used below, see also kaddressbook/editors/cryptowidget.cpp
+// For the config values used below, see also kcontactmanager/editor/cryptowidget.cpp
 
 const char* Kleo::encryptionPreferenceToString( EncryptionPreference pref )
 {

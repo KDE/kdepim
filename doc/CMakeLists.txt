@@ -6,10 +6,6 @@ if(BUILD_kabcclient)
   add_subdirectory(kabcclient)
 endif(BUILD_kabcclient)
 
-if(BUILD_kaddressbook)
-  add_subdirectory(kaddressbook)
-endif(BUILD_kaddressbook)
-
 if(BUILD_kalarm)
   add_subdirectory(kalarm)
 endif(BUILD_kalarm)
