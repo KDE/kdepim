@@ -54,7 +54,7 @@ Kleo::QGpgMEBackend::QGpgMEBackend()
     mOpenPGPProtocol( 0 ),
     mSMIMEProtocol( 0 )
 {
-
+  GpgME::initializeLibrary();
 }
 
 Kleo::QGpgMEBackend::~QGpgMEBackend() {
