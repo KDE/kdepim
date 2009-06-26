@@ -37,11 +37,10 @@ KContactManagerPart::KContactManagerPart( QWidget *parentWidget, QObject *parent
                                     const QVariantList & )
   : KParts::ReadOnlyPart( parent )
 {
-  setComponentData( KContactManagerPart::componentData() );
+  setComponentData( KContactManagerFactory::componentData() );
 
   KIconLoader::global()->addAppDir( "kcontactmanager" );
-#warning "fix me"
-  setXMLFile( "../kcontactmanager/kcontactmanager_part.rc" );
+  setXMLFile( "kcontactmanagerui.rc" );
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget );
   canvas->setFocusPolicy( Qt::ClickFocus );

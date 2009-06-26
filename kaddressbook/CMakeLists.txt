@@ -129,5 +129,4 @@ kde4_add_plugin(kcontactmanagerpart ${kcontactmanager_PART_SRCS})
 target_link_libraries(kcontactmanagerpart ${KDE4_KPARTS_LIBS} kcontactmanagerprivate )
 install(TARGETS kcontactmanagerpart DESTINATION ${PLUGIN_INSTALL_DIR})
 install( FILES kcontactmanagerpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES kcontactmanager_part.rc DESTINATION ${DATA_INSTALL_DIR}/kcontactmanager)
 
