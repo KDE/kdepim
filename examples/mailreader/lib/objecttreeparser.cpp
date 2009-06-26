@@ -184,6 +184,7 @@ namespace KMail {
   {
     KMime::Content *newNode = new KMime::Content();
     newNode->setContent( content );
+    newNode->parse();
  /*TODO (Andras) port it
     if ( ( !myBody->Body().FirstBodyPart() ||
            myBody->body().length() == 0 ) &&
@@ -393,8 +394,8 @@ namespace KMail {
     }
   }
 
-  bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( partNode* data,
-                                                      partNode& sign,
+  bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
+                                                      KMime::Content& sign,
                                                       const QString& fromAddress,
                                                       bool doCheck,
                                                       QByteArray* cleartextData,
@@ -433,7 +434,7 @@ namespace KMail {
 
     if ( doCheck && cryptProto ) {
       if ( data ) {
-        cleartext = KMail::Util::ByteArray( data->dwPart()->AsString() );
+        cleartext = data->head() + "\n\n" + data->body(); //TODO(Andras) check if this is safe if there is no header for example
 
         dumpToFile( "dat_01_reader_signedtext_before_canonicalization",
                     cleartext.data(), cleartext.length() );
@@ -448,7 +449,7 @@ namespace KMail {
       dumpToFile( "dat_02_reader_signedtext_after_canonicalization",
                   cleartext.data(), cleartext.length() );
 
-      signaturetext = sign.msgPart().bodyDecodedBinary();
+      signaturetext = sign.decodedContent();
       dumpToFile( "dat_03_reader.sig", signaturetext.data(),
                   signaturetext.size() );
     }
@@ -645,7 +646,7 @@ namespace KMail {
       }
 
       ObjectTreeParser otp( mReader, cryptProto, true );
-//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( data );
+      otp.parseObjectTree( data );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -686,7 +687,7 @@ void ObjectTreeParser::writeDeferredDecryptionBlock()
   htmlWriter()->queue( writeSigstatFooter( messagePart ) );
 }
 
-bool ObjectTreeParser::okDecryptMIME( partNode& data,
+bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                                       QByteArray& decryptedData,
                                       bool& signatureFound,
                                       std::vector<GpgME::Signature> &signatures,
@@ -716,7 +717,7 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
   const QString errorMsg = i18n( "Could not decrypt the data." );
   if ( cryptProto /*FIXME(Andras) port to akonadi
        && !kmkernel->contextMenuShown()*/ ) {
-    QByteArray ciphertext = data.msgPart().bodyDecodedBinary();
+    QByteArray ciphertext = data.decodedContent();
 #ifdef MARCS_DEBUG
     QString cipherStr = QString::fromLatin1( ciphertext );
     bool cipherIsBinary = ( !cipherStr.contains("BEGIN ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
@@ -803,7 +804,7 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
              kmkernel->contextMenuShown()*/ true ) {
     // ### Workaround for bug 56693 (kmail freeze with the complete desktop
     // ### while pinentry-qt appears)
-    QByteArray ciphertext( data.msgPart().bodyDecodedBinary() );
+    QByteArray ciphertext( data.decodedContent() );
     QString cipherStr = QString::fromLatin1( ciphertext );
     bool cipherIsBinary = ( !cipherStr.contains("BEGIN ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
                           ( !cipherStr.contains("BEGIN PGP ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
@@ -862,26 +863,25 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
     return false;
   }
 
-  bool ObjectTreeParser::processTextHtmlSubtype( partNode * curNode, ProcessResult & ) {
-    const QByteArray partBody( curNode->msgPart().bodyDecoded() );
+  bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & ) {
+    const QByteArray partBody( curNode->decodedContent() );
 
     mRawReplyString = partBody;
-    if ( curNode->isFirstTextPart() ) {
-      mTextualContent += curNode->msgPart().bodyToUnicode();
-      mTextualContentCharset = curNode->msgPart().charset();
+    if ( curNode->topLevel()->textContent() == curNode ) {
+      mTextualContent += curNode->decodedText();
+      mTextualContentCharset = curNode->defaultCharset();
     }
 
     if ( !mReader )
       return true;
 
     QString bodyText;
-    if ( mReader->htmlMail() ) ;
-//FIXME(Andras) disable, as OTP is rewritten to use KMime      bodyText = codecFor( curNode )->toUnicode( partBody );
+    if ( mReader->htmlMail() )
+      bodyText = codecFor( curNode )->toUnicode( partBody );
     else
       bodyText = StringUtil::html2source( partBody );
 
-    if ( curNode->isFirstTextPart() ||
-//FIXME(Andras) disable, as OTP is rewritten to use KMime         attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
+    if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
          showOnlyOneMimePart() )
     {
       if ( mReader->htmlMail() ) {
@@ -1124,30 +1124,32 @@ namespace KMail {
     // enable verification of the embedded messages' signatures
     if ( !isMailmanMessage( curNode ) ||
          !processMailmanMessage( curNode ) )
-         ;
-   writeBodyString( mRawReplyString, static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString(),
-                       codecFor( curNode ), result, !bDrawFrame );
+       writeBodyString( mRawReplyString, static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString(),
+                        codecFor( curNode ), result, !bDrawFrame );
     if ( bDrawFrame )
       htmlWriter()->queue( "</td></tr></table>" );
 
     return true;
   }
 
-  void ObjectTreeParser::stdChildHandling( partNode * child ) {
+  void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
     if ( !child )
       return;
 
     ObjectTreeParser otp( *this );
     otp.setShowOnlyOneMimePart( false );
-//FIXME(Andras) disable, as OTP is rewritten to use KMime    otp.parseObjectTree( child );
+    otp.parseObjectTree( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
       mTextualContentCharset = otp.textualContentCharset();
   }
 
-  bool ObjectTreeParser::processMultiPartMixedSubtype( partNode * node, ProcessResult & ) {
-    partNode * child = node->firstChild();
+  bool ObjectTreeParser::processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & )
+  {
+    KMime::Content * child = 0;
+    if ( !node->contents().isEmpty() )
+      child = node->contents().at(0);
     if ( !child )
       return false;
 
@@ -1156,27 +1158,32 @@ namespace KMail {
     return true;
   }
 
-  bool ObjectTreeParser::processMultiPartAlternativeSubtype( partNode * node, ProcessResult & ) {
-    partNode * child = node->firstChild();
+  bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & )
+  {
+    KMime::Content * child = 0;
+    if ( !node->contents().isEmpty() )
+      child = node->contents().at(0);
     if ( !child )
       return false;
 
-    partNode * dataHtml = child->findType( DwMime::kTypeText,
-                                           DwMime::kSubtypeHtml, false, true );
-    partNode * dataPlain = child->findType( DwMime::kTypeText,
-                                            DwMime::kSubtypePlain, false, true );
+    KMime::Content* dataHtml = findType( child, "text/html", false, true );
+    KMime::Content* dataPlain = findType( child, "text/plain", false, true );
 
     if ( (mReader && mReader->htmlMail() && dataHtml) ||
-         (dataHtml && dataPlain && dataPlain->msgPart().body().isEmpty()) ) {
+         (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
+      /*FIXME(Andras) port it
       if ( dataPlain )
         dataPlain->setProcessed( true, false );
+        */
       stdChildHandling( dataHtml );
       return true;
     }
 
     if ( !mReader || (!mReader->htmlMail() && dataPlain) ) {
+      /*FIXME(Andras) port it
       if ( dataHtml )
         dataHtml->setProcessed( true, false );
+        */
       stdChildHandling( dataPlain );
       return true;
     }
@@ -1185,40 +1192,43 @@ namespace KMail {
     return true;
   }
 
-  bool ObjectTreeParser::processMultiPartDigestSubtype( partNode * node, ProcessResult & result ) {
+  bool ObjectTreeParser::processMultiPartDigestSubtype( KMime::Content * node, ProcessResult & result ) {
     return processMultiPartMixedSubtype( node, result );
   }
 
-  bool ObjectTreeParser::processMultiPartParallelSubtype( partNode * node, ProcessResult & result ) {
+  bool ObjectTreeParser::processMultiPartParallelSubtype( KMime::Content * node, ProcessResult & result ) {
     return processMultiPartMixedSubtype( node, result );
   }
 
-  bool ObjectTreeParser::processMultiPartSignedSubtype( partNode * node, ProcessResult & ) {
-    if ( node->childCount() != 2 ) {
+  bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & )
+  {
+     KMime::Content * child = 0;
+     if ( !node->contents().isEmpty() )
+       child = node->contents().at(0);
+    if ( node->contents().size() != 2 ) {
       kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
                << "processing as multipart/mixed";
-      if ( node->firstChild() )
-        stdChildHandling( node->firstChild() );
-      return node->firstChild();
+     if ( child )
+        stdChildHandling( child );
+      return child;
     }
 
-    partNode * signedData = node->firstChild();
+    KMime::Content * signedData = child;
     assert( signedData );
 
-    partNode * signature = signedData->nextSibling();
+    KMime::Content * signature = node->contents().at(1);
     assert( signature );
 
+/*FIXME(Andras) port it
     signature->setProcessed( true, true );
-
+*/
     if ( !includeSignatures() ) {
       stdChildHandling( signedData );
       return true;
     }
 
-    QString protocolContentType = node->contentTypeParameter( "protocol" ).toLower();
-    const QString signatureContentType =
-        QString( "%1/%2" ).arg( QString( signature->typeString() ).toLower() )
-                          .arg( QString( signature->subTypeString() ).toLower() );
+    QString protocolContentType = node->contentType()->parameter( "protocol" ).toLower();
+    const QString signatureContentType = signature->contentType()->mimeType().toLower();
     if ( protocolContentType.isEmpty() ) {
       kWarning() << "Message doesn't set the protocol for the multipart/signed content-type, "
                     "using content-type of the signature:" << signatureContentType;
@@ -1234,33 +1244,39 @@ namespace KMail {
       protocol = Kleo::CryptoBackendFactory::instance()->openpgp();
 
     if ( !protocol ) {
+    /*FIXME(Andras) port it
       signature->setProcessed( true, true );
+      */
       stdChildHandling( signedData );
       return true;
     }
 
     CryptoProtocolSaver saver( this, protocol );
+    /*FIXME(Andras) port it
 
     node->setSignatureState( KMMsgFullySigned );
+    */
     writeOpaqueOrMultipartSignedData( signedData, *signature,
-                                      node->trueFromAddress() );
+                                      static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() );
     return true;
   }
 
-  bool ObjectTreeParser::processMultiPartEncryptedSubtype( partNode * node, ProcessResult & result ) {
-    partNode * child = node->firstChild();
+  bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result )
+  {
+    KMime::Content * child = 0;
+    if ( !node->contents().isEmpty() )
+      child = node->contents().at(0);
     if ( !child )
       return false;
 
     if ( keepEncryptions() ) {
+    /*FIXME(Andras) port it
       node->setEncryptionState( KMMsgFullyEncrypted );
-      const QByteArray cstr = node->msgPart().bodyDecoded();
+      */
+      const QByteArray cstr = node->decodedContent();
       if ( mReader )
-      ;
-      /*FIXME(Andras) disable, as OTP is rewritten to use KMime
-        writeBodyString( cstr, node->trueFromAddress(),
+        writeBodyString( cstr, static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                          codecFor( node ), result, false );
-                         */
       mRawReplyString += cstr;
       return true;
     }
@@ -1270,14 +1286,12 @@ namespace KMail {
     /*
       ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
     */
-    partNode * data = child->findType( DwMime::kTypeApplication,
-                                       DwMime::kSubtypeOctetStream, false, true );
+    KMime::Content* data = findType( child, "application/octet-stream", false, true );
     if ( data ) {
       useThisCryptProto = Kleo::CryptoBackendFactory::instance()->openpgp();
     }
     if ( !data ) {
-      data = child->findType( DwMime::kTypeApplication,
-                              DwMime::kSubtypePkcs7Mime, false, true );
+      data = findType( child, "application/pkcs7-mime", false, true );
       if ( data ) {
         useThisCryptProto = Kleo::CryptoBackendFactory::instance()->smime();
       }
@@ -1293,16 +1307,21 @@ namespace KMail {
 
     CryptoProtocolSaver cpws( this, useThisCryptProto );
 
-    if ( partNode * dataChild = data->firstChild() ) {
+    KMime::Content * dataChild = 0;
+    if ( !data->contents().isEmpty() )
+      dataChild = data->contents().at(0);
+    if ( dataChild ) {
       stdChildHandling( dataChild );
       return true;
     }
-
+/*FIXME(Andras) port it
     node->setEncryptionState( KMMsgFullyEncrypted );
-
+*/
     if ( mReader && !mReader->decryptMessage() ) {
       writeDeferredDecryptionBlock();
+/*FIXME(Andras) port it
       data->setProcessed( true, false ); // Set the data node to done to prevent it from being processed
+*/
       return true;
     }
 
@@ -1331,7 +1350,7 @@ namespace KMail {
       messagePart.isSigned = false;
       htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                cryptoProtocol(),
-                                               node->trueFromAddress() ) );
+                                               static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
     }
 
     if ( bOkDecrypt ) {
@@ -1349,12 +1368,14 @@ namespace KMail {
       if ( signatureFound ) {
         writeOpaqueOrMultipartSignedData( 0,
                                           *node,
-                                          node->trueFromAddress(),
+                                          static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                                           false,
                                           &decryptedData,
                                           signatures,
                                           false );
+        /*FIXME(Andras) port it
         node->setSignatureState( KMMsgFullySigned );
+        */
       } else {
         insertAndParseNewChildNode( *node,
                                     decryptedData.constData(),
@@ -1371,20 +1392,26 @@ namespace KMail {
 
     if ( mReader )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+      /*FIXME(Andras) port it
     data->setProcessed( true, false ); // Set the data node to done to prevent it from being processed
+    */
     return true;
   }
 
 
-  bool ObjectTreeParser::processMessageRfc822Subtype( partNode * node, ProcessResult & ) {
+  bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, ProcessResult & )
+  {
     if ( mReader
          && !attachmentStrategy()->inlineNestedMessages()
          && !showOnlyOneMimePart() )
       return false;
 
-    if ( partNode * child = node->firstChild() ) {
+    KMime::Content * child = 0;
+    if ( !node->contents().isEmpty() )
+      child = node->contents().at(0);
+    if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
-//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( child );
+      otp.parseObjectTree( child );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -1403,18 +1430,18 @@ namespace KMail {
                                             */
       htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                cryptoProtocol(),
-                                               node->trueFromAddress(),
+                                               static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                                                filename ) );
     }
-    QByteArray rfc822messageStr( node->msgPart().bodyDecoded() );
+    QByteArray rfc822messageStr( node->decodedContent() );
     // display the headers of the encapsulated message
-    DwMessage* rfc822DwMessage = new DwMessage(); // will be deleted by c'tor of rfc822headers
-    rfc822DwMessage->FromString( rfc822messageStr );
-    rfc822DwMessage->Parse();
-    KMMessage rfc822message( rfc822DwMessage );
-    node->setFromAddress( rfc822message.from() );
+    KMime::Message* rfc822message = new KMime::Message();
+    rfc822message->setContent( rfc822messageStr );
+    rfc822message->parse();
+    static_cast<KMime::Message*>(node->topLevel())->from()->from7BitString( rfc822message->from()->as7BitString() );
     if ( mReader )
-//FIXME(Andras) disable, as OTP is rewritten to use KMime      htmlWriter()->queue( mReader->writeMsgHeader( &rfc822message ) );
+      htmlWriter()->queue( mReader->writeMsgHeader( rfc822message ) );
+    delete rfc822message;
       //mReader->parseMsgHeader( &rfc822message );
     // display the body of the encapsulated message
     insertAndParseNewChildNode( *node,
@@ -1426,10 +1453,14 @@ namespace KMail {
   }
 
 
-  bool ObjectTreeParser::processApplicationOctetStreamSubtype( partNode * node, ProcessResult & result ) {
-    if ( partNode * child = node->firstChild() ) {
+  bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result )
+  {
+    KMime::Content * child = 0;
+    if ( !node->contents().isEmpty() )
+      child = node->contents().at(0);
+    if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
-//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( child );
+      otp.parseObjectTree( child );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -1438,12 +1469,13 @@ namespace KMail {
     }
 
     const Kleo::CryptoBackend::Protocol* oldUseThisCryptPlug = cryptoProtocol();
-    if (    node->parentNode()
-            && DwMime::kTypeMultipart    == node->parentNode()->type()
-            && DwMime::kSubtypeEncrypted == node->parentNode()->subType() ) {
+    if (    node->parent()
+            && node->parent()->contentType()->mimeType() == "multipart/encrypted" ) {
+/*FIXME(Andras) port it
       node->setEncryptionState( KMMsgFullyEncrypted );
+      */
       if ( keepEncryptions() ) {
-        const QByteArray cstr = node->msgPart().bodyDecoded();
+        const QByteArray cstr = node->decodedContent();
         if ( mReader )
           ;
           /*FIXME(Andras) disable, as OTP is rewritten to use KMimewriteBodyString( cstr, node->trueFromAddress(),
@@ -1482,7 +1514,7 @@ namespace KMail {
           messagePart.isSigned = false;
           htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                    cryptoProtocol(),
-                                                   node->trueFromAddress() ) );
+                                                   static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
         }
 
         if ( bOkDecrypt ) {
@@ -1508,10 +1540,14 @@ namespace KMail {
     return false;
   }
 
-  bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( partNode * node, ProcessResult & result ) {
-    if ( partNode * child = node->firstChild() ) {
+  bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result )
+  {
+    KMime::Content * child = 0;
+    if ( !node->contents().isEmpty() )
+      child = node->contents().at(0);
+    if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
-//FIXME(Andras) disable, as OTP is rewritten to use KMime      otp.parseObjectTree( child );
+      otp.parseObjectTree( child );
       mRawReplyString += otp.rawReplyString();
       mTextualContent += otp.textualContent();
       if ( !otp.textualContentCharset().isEmpty() )
@@ -1519,12 +1555,12 @@ namespace KMail {
       return true;
     }
 
-    if ( !node->dwPart() || !node->dwPart()->hasHeaders() )
+    if ( node->head().isEmpty() )
       return false;
 
     const Kleo::CryptoBackend::Protocol * smimeCrypto = Kleo::CryptoBackendFactory::instance()->smime();
 
-    const QString smimeType = node->contentTypeParameter("smime-type").toLower();
+    const QString smimeType = node->contentType()->parameter("smime-type").toLower();
 
     if ( smimeType == "certs-only" ) {
       result.setNeverDisplayInline( true );
@@ -1536,7 +1572,7 @@ namespace KMail {
       if ( !reader.readEntry( "AutoImportKeys", false ) )
         return false;
 
-      const QByteArray certData = node->msgPart().bodyDecodedBinary();
+      const QByteArray certData = node->decodedContent();
 
       Kleo::ImportJob *import = smimeCrypto->importJob();
       KleoJobExecutor executor;
@@ -1609,7 +1645,7 @@ namespace KMail {
     // Analyze "signTestNode" node to find/verify a signature.
     // If zero this verification was successfully done after
     // decrypting via recursion by insertAndParseNewChildNode().
-    partNode* signTestNode = isEncrypted ? 0 : node;
+    KMime::Content* signTestNode = isEncrypted ? 0 : node;
 
 
     // We try decrypting the content
@@ -1644,14 +1680,16 @@ namespace KMail {
                           messagePart.auditLog ) ) {
         kDebug() << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
         isEncrypted = true;
+        /*FIXME(Andras) port it
         node->setEncryptionState( KMMsgFullyEncrypted );
+        */
         signTestNode = 0;
         // paint the frame
         messagePart.isDecryptable = true;
         if ( mReader )
           htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                    cryptoProtocol(),
-                                                   node->trueFromAddress() ) );
+                                                   static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
         insertAndParseNewChildNode( *node,
                                     decryptedData.constData(),
                                     "encrypted data" );
@@ -1674,17 +1712,19 @@ namespace KMail {
           if ( mReader ) {
             htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                      cryptoProtocol(),
-                                                     node->trueFromAddress() ) );
+                                                     static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
             assert( mReader->decryptMessage() ); // handled above
-//FIXME(Andras) disable, as OTP is rewritten to use KMime            writePartIcon( &node->msgPart(), node->nodeId() );
+            writePartIcon( node );
             htmlWriter()->queue( writeSigstatFooter( messagePart ) );
           }
         } else {
           kDebug() << "pkcs7 mime  -  NO encryption found";
         }
       }
+/*FIXME(Andras) port it
       if ( isEncrypted )
         node->setEncryptionState( KMMsgFullyEncrypted );
+*/
     }
 
     // We now try signature verification if necessarry.
@@ -1696,7 +1736,7 @@ namespace KMail {
 
       bool sigFound = writeOpaqueOrMultipartSignedData( 0,
                                                         *signTestNode,
-                                                        node->trueFromAddress(),
+                                                        static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                                                         true,
                                                         0,
                                                         std::vector<GpgME::Signature>(),
@@ -1706,9 +1746,11 @@ namespace KMail {
           kDebug() << "pkcs7 mime  -  signature found  -  opaque signed data !";
           isSigned = true;
         }
-        signTestNode->setSignatureState( KMMsgFullySigned );
+    /*FIXME(Andras) port it
+    signTestNode->setSignatureState( KMMsgFullySigned );
         if ( signTestNode != node )
           node->setSignatureState( KMMsgFullySigned );
+*/
       } else {
         kDebug() << "pkcs7 mime  -  NO signature found   :-(";
       }
@@ -1798,18 +1840,18 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   return true;
 }
 
-bool ObjectTreeParser::processApplicationChiasmusTextSubtype( partNode * curNode, ProcessResult & result )
+bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * curNode, ProcessResult & result )
 {
   if ( !mReader ) {
-    mRawReplyString = curNode->msgPart().bodyDecoded();
-    mTextualContent += curNode->msgPart().bodyToUnicode();
-    mTextualContentCharset = curNode->msgPart().charset();
+    mRawReplyString = curNode->decodedContent();
+    mTextualContent += curNode->decodedText();
+    mTextualContentCharset = curNode->defaultCharset();
     return true;
   }
 
   QByteArray decryptedBody;
   QString errorText;
-  const QByteArray data = curNode->msgPart().bodyDecodedBinary();
+  const QByteArray data = curNode->decodedContent();
   bool bOkDecrypt = decryptChiasmus( data, decryptedBody, errorText );
   PartMetaData messagePart;
   messagePart.isDecryptable = bOkDecrypt;
@@ -1819,9 +1861,9 @@ bool ObjectTreeParser::processApplicationChiasmusTextSubtype( partNode * curNode
   if ( mReader )
     htmlWriter()->queue( writeSigstatHeader( messagePart,
                                              0, //cryptPlugWrapper(),
-                                             curNode->trueFromAddress() ) );
+                                             static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString() ) );
   const QByteArray body = bOkDecrypt ? decryptedBody : data;
-  const QString chiasmusCharset = curNode->contentTypeParameter("chiasmus-charset");
+  const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
   const QTextCodec* aCodec;/*FIXME(Andras) disable, as OTP is rewritten to use KMime
    = chiasmusCharset.isEmpty()
     ? codecFor( curNode )
@@ -1833,7 +1875,7 @@ bool ObjectTreeParser::processApplicationChiasmusTextSubtype( partNode * curNode
   return true;
 }
 
-bool ObjectTreeParser::processApplicationMsTnefSubtype( partNode *node, ProcessResult &result )
+bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result )
 {
   Q_UNUSED( result );
   if ( !mReader )
@@ -1853,11 +1895,11 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( partNode *node, ProcessR
   }
 
   if ( !showOnlyOneMimePart() ) {
-    QString label = node->msgPart().fileName().trimmed();
+    QString label = node->contentDisposition()->filename().trimmed();
     if ( label.isEmpty() )
-      label = node->msgPart().name().trimmed();
+      label = node->contentType()->name().trimmed();
     label = StringUtil::quoteHtmlChars( label, true );
-    const QString comment = StringUtil::quoteHtmlChars( node->msgPart().contentDescription(), true );
+    const QString comment = StringUtil::quoteHtmlChars( node->contentDescription()->asUnicodeString(), true );
     const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
 
     QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
@@ -3074,6 +3116,24 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     }
   }
 #endif // !NDEBUG
+
+
+  KMime::Content* ObjectTreeParser::findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide )
+  {
+      if( ( !content->contentType()->isEmpty() )
+          && ( mimeType.isEmpty()  || ( mimeType == content->contentType()->mimeType() ) ) )
+          return content;
+      if ( !content->contents().isEmpty() && deep ) //first child
+          return findType( content->contents().at(0), mimeType, deep, wide );
+      KMime::Content *parent = content->parent();
+      if ( parent ) {
+        KMime::Content::List contents = parent->contents();
+        int index = contents.indexOf( content ) + 1;
+        if (index <= contents.size() &&  wide ) //next on the same level
+          return findType( contents.at(index), mimeType, deep, wide );
+      }
+      return 0;
+  }
 
 
 } // namespace KMail

@@ -162,7 +162,7 @@ namespace KMail {
   private:
     /** Standard children handling a.k.a. multipart/mixed (w/o
         kroupware hacks) */
-    void stdChildHandling( partNode * child );
+    void stdChildHandling( KMime::Content * child );
 
     void defaultHandling( KMime::Content * node, ProcessResult & result );
 
@@ -186,8 +186,8 @@ namespace KMail {
 
         Returns whether a signature was found or not: use this to
         find out if opaque data is signed or not. */
-    bool writeOpaqueOrMultipartSignedData( partNode * data,
-                                           partNode & sign,
+    bool writeOpaqueOrMultipartSignedData( KMime::Content * data,
+                                           KMime::Content & sign,
                                            const QString & fromAddress,
                                            bool doCheck=true,
                                            QByteArray * cleartextData=0,
@@ -200,7 +200,7 @@ namespace KMail {
 
     /** Returns the contents of the given multipart/encrypted
         object. Data is decypted.  May contain body parts. */
-    bool okDecryptMIME( partNode& data,
+    bool okDecryptMIME( KMime::Content& data,
                         QByteArray& decryptedData,
                         bool& signatureFound,
                         std::vector<GpgME::Signature> &signatures,
@@ -221,22 +221,22 @@ namespace KMail {
 
   public:// (during refactoring)
 
-    bool processTextHtmlSubtype( partNode * node, ProcessResult & result );
+    bool processTextHtmlSubtype( KMime::Content * node, ProcessResult & result );
     bool processTextPlainSubtype( KMime::Content *node, ProcessResult & result );
 
-    bool processMultiPartMixedSubtype( partNode * node, ProcessResult & result );
-    bool processMultiPartAlternativeSubtype( partNode * node, ProcessResult & result );
-    bool processMultiPartDigestSubtype( partNode * node, ProcessResult & result );
-    bool processMultiPartParallelSubtype( partNode * node, ProcessResult & result );
-    bool processMultiPartSignedSubtype( partNode * node, ProcessResult & result );
-    bool processMultiPartEncryptedSubtype( partNode * node, ProcessResult & result );
+    bool processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & result );
+    bool processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & result );
+    bool processMultiPartDigestSubtype( KMime::Content * node, ProcessResult & result );
+    bool processMultiPartParallelSubtype( KMime::Content * node, ProcessResult & result );
+    bool processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & result );
+    bool processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result );
 
-    bool processMessageRfc822Subtype( partNode * node, ProcessResult & result );
+    bool processMessageRfc822Subtype( KMime::Content * node, ProcessResult & result );
 
-    bool processApplicationOctetStreamSubtype( partNode * node, ProcessResult & result );
-    bool processApplicationPkcs7MimeSubtype( partNode * node, ProcessResult & result );
-    bool processApplicationChiasmusTextSubtype( partNode * node, ProcessResult & result );
-    bool processApplicationMsTnefSubtype( partNode *node, ProcessResult &result );
+    bool processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result );
+    bool processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result );
+    bool processApplicationChiasmusTextSubtype( KMime::Content * node, ProcessResult & result );
+    bool processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result );
 
   private:
     bool decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText );
@@ -286,6 +286,7 @@ namespace KMail {
 #else
     void dumpToFile( const char *, const char *, size_t ) {}
 #endif
+  KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
 
   private:
     KMReaderWin * mReader;

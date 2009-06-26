@@ -208,13 +208,6 @@ static const struct {
 
 #undef DIM
 
-usinconst KMail::BodyPartFormatter * KMail::BodyPartFormatter::createFor( int type, int subtype ) {
-  DwString t, st;
-  DwTypeEnumToStr( type, t );
-  DwSubtypeEnumToStr( subtype, st );
-  return createFor( t.c_str(), st.c_str() );
-}
-
 static const KMail::BodyPartFormatter * createForText( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {

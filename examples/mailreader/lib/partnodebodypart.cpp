@@ -36,9 +36,12 @@
 
 #include <kurl.h>
 
-#include <kmime/content.h>
+#include <kmime/kmime_content.h>
+
+#include <KDebug>
 
 #include <QString>
+#include <QTextCodec>
 
 static int serial = 0;
 
@@ -50,7 +53,7 @@ KMail::PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, const QTextC
 QString KMail::PartNodeBodyPart::makeLink( const QString & path ) const {
   // FIXME: use a PRNG for the first arg, instead of a serial number
   return QString( "x-kmail:/bodypart/%1/%2/%3" )
-    .arg( serial++ ).arg( mContent-C>index().toString() )
+    .arg( serial++ ).arg( mContent->index().toString() )
     .arg( QString::fromLatin1( KUrl::toPercentEncoding( path, "/" ) ) );
 }
 

@@ -47,7 +47,7 @@ kde4_add_kcfg_files(mailreader_SRCS settings.kcfgc )
 
 kde4_add_executable(mailreader ${mailreader_SRCS})
 
-target_link_libraries(mailreader kdepim mimelib kpgp  kleo ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}    ${KDE4_KTNEF_LIBRARY}
+target_link_libraries(mailreader kdepim mimelib kpgp kleo akonadi-kde ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}    ${KDE4_KTNEF_LIBRARY}
  ${QGPGME_LIBRARIES}
 )
 
