@@ -1,3 +1,21 @@
+Friday, June 26th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3694: Don't crash when displaying an invitation which contains an attendee that is not
+                   in the address book
+* Many improvments in Kleopatra, especially when importing keys and certificates
+* Fix passwords with '!' in them not working
+
+Merges
+------
+
+* Merges from KDE trunk:
+      - Fix a crash when removing attendees from an event (KDE bug 181944)
+      - Speed up displaying of mails with many attachments (KDE bugs 189961 and 191666)
+
+
 Friday, June 19th 2009
 
 Problems addressed
