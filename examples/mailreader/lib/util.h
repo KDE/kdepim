@@ -96,15 +96,6 @@ namespace Util {
      */
     QByteArray lf2crlf( const QByteArray & src );
 
-    /**
-     * Construct a QByteArray from a DwString
-     */
-    QByteArray ByteArray( const DwString& str );
-
-    /**
-     * Construct a DwString from a QByteArray
-     */
-    DwString dwString( const QByteArray& str );
 
     /**
      * A LaterDeleter is intended to be used with the RAII ( Resource

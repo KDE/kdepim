@@ -157,7 +157,7 @@ public:
   void setMsgPart( KMime::Content* aMsgPart, bool aHTML,
                    const QString& aFileName, const QString& pname );
 
-  void setMsgPart( partNode * node );
+  void setMsgPart( KMime::Content * node );
 
   /** Show or hide the Mime Tree Viewer if configuration
       is set to smart mode.  */
@@ -257,9 +257,9 @@ public:
                                  int recCount = 0 );
 
   /** Returns message part from given URL or null if invalid. */
-  partNode* partNodeFromUrl(const KUrl &url);
+  KMime::Content* partNodeFromUrl(const KUrl &url);
 
-  partNode * partNodeForId( int id );
+  KMime::Content * partNodeForId( int id );
 
   KUrl tempFileUrlFromPartNode( const KMime::Content *node );
 
@@ -398,8 +398,8 @@ public slots:
   void slotLevelQuote( int l );
   void slotTouchMessage();
 
-  void slotDeleteAttachment( partNode* node );
-  void slotEditAttachment( partNode* node );
+  void slotDeleteAttachment( KMime::Content* node );
+  void slotEditAttachment( KMime::Content* node );
 
   /**
    * Does an action for the current attachment.
@@ -508,6 +508,29 @@ private:
   QString renderAttachments( KMime::Content *node, const QColor &bgColor );
 
   KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type);
+    /**
+   * Fixes an encoding received by a KDE function and returns the proper,
+   * MIME-compilant encoding name instead.
+   * @see encodingForName
+   */
+  static QString fixEncoding( const QString &encoding );
+
+  /**
+   * Drop-in replacement for KCharsets::encodingForName(). The problem with
+   * the KCharsets function is that it returns "human-readable" encoding names
+   * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
+   * This function fixes this by replacing whitespace with a hyphen.
+   */
+  static QString encodingForName( const QString &descriptiveName );
+
+  /** Return a QTextCodec for the specified charset.
+   * This function is a bit more tolerant, than QTextCodec::codecForName */
+  static const QTextCodec* codecForName(const QByteArray& _str);
+  /**
+   * Return a list of the supported encodings
+   * @param usAscii if true, US-Ascii encoding will be prepended to the list.
+   */
+  static QStringList supportedEncodings( bool usAscii );
 
 private:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;

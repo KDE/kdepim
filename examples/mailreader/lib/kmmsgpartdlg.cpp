@@ -5,8 +5,6 @@
 #include "kmmsgpartdlg.h"
 
 // other KMail includes:
-#include "kmmessage.h"
-#include "kmmsgpart.h"
 #include "kcursorsaver.h"
 
 // other kdenetwork includes: (none)
@@ -21,6 +19,10 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcomponentdata.h>
+#include <kascii.h>
+#include <KCharsets>
+
+#include <kmime/kmime_content.h>
 
 // other Qt includes:
 #include <QLabel>
@@ -28,6 +30,7 @@
 #include <QGridLayout>
 #include <QByteArray>
 #include <QCheckBox>
+#include <QTextCodec>
 
 // other includes:
 #include <assert.h>
@@ -43,6 +46,11 @@ static const struct {
 };
 static const int numEncodingTypes =
   sizeof encodingTypes / sizeof *encodingTypes;
+
+QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
+QByteArray encodeRFC2231String( const QString& _str, const QByteArray& charset );
+const QTextCodec* codecForName(const QByteArray& _str);
+QByteArray toUsAscii(const QString& _str, bool *ok = 0);
 
 KMMsgPartDialog::KMMsgPartDialog( const QString & caption,
                                   QWidget * parent )
@@ -360,12 +368,12 @@ KMMsgPartDialogCompat::KMMsgPartDialogCompat( const char *, bool readOnly)
 
 KMMsgPartDialogCompat::~KMMsgPartDialogCompat() {}
 
-void KMMsgPartDialogCompat::setMsgPart( KMMessagePart * aMsgPart )
+void KMMsgPartDialogCompat::setMsgPart( KMime::Content * aMsgPart )
 {
   mMsgPart = aMsgPart;
   assert( mMsgPart );
 
-  QByteArray enc = mMsgPart->cteStr();
+  QByteArray enc = mMsgPart->contentTransferEncoding()->as7BitString();
   if ( enc == "7bit" )
     setEncoding( SevenBit );
   else if ( enc == "8bit" )
@@ -375,11 +383,11 @@ void KMMsgPartDialogCompat::setMsgPart( KMMessagePart * aMsgPart )
   else
     setEncoding( Base64 );
 
-  setDescription( mMsgPart->contentDescription() );
-  setFileName( mMsgPart->fileName() );
-  setMimeType( mMsgPart->typeStr(), mMsgPart->subtypeStr() );
-  setSize( mMsgPart->decodedSize() );
-  QString cd(mMsgPart->contentDisposition());
+  setDescription( mMsgPart->contentDescription()->asUnicodeString() );
+  setFileName( mMsgPart->contentDisposition()->filename() );
+  setMimeType( mMsgPart->contentType()->mediaType(), mMsgPart->contentType()->subType() );
+  setSize( mMsgPart->decodedContent().size() );
+  QString cd(mMsgPart->contentDisposition()->asUnicodeString());
   setInline( cd.indexOf( QRegExp("^\\s*inline", Qt::CaseInsensitive) ) >= 0 );
 }
 
@@ -398,25 +406,25 @@ void KMMsgPartDialogCompat::applyChanges()
     cDisp = "attachment;";
 
   QString name = fileName();
-  if ( !name.isEmpty() || !mMsgPart->name().isEmpty()) {
-    mMsgPart->setName( name );
-    QByteArray encoding = KMMsgBase::autoDetectCharset( mMsgPart->charset(),
-      KMMessage::preferredCharsets(), name );
+  if ( !name.isEmpty() || !mMsgPart->contentType()->name().isEmpty()) {
+    mMsgPart->contentType()->setName( name, mMsgPart->contentType()->charset()); //FIXME(Andras) check if the second arg is ok
+    QByteArray encoding = autoDetectCharset( mMsgPart->contentType()->charset(), QStringList()
+      /*KMMessage::preferredCharsets()*/, name ); //FIXME(Andras) read the pref charset
     if ( encoding.isEmpty() ) encoding = "utf-8";
-    QByteArray encName = KMMsgBase::encodeRFC2231String( name, encoding );
+    QByteArray encName = encodeRFC2231String( name, encoding );
 
     cDisp += "\n\tfilename";
     if ( name != QString( encName ) )
       cDisp += "*=" + encName;
     else
       cDisp += "=\"" + encName.replace( '\\', "\\\\" ).replace( '"', "\\\"" ) + '"';
-    mMsgPart->setContentDisposition( cDisp );
+    mMsgPart->contentDisposition()->from7BitString( cDisp );
   }
 
   // apply Content-Description"
   QString desc = description();
-  if ( !desc.isEmpty() || !mMsgPart->contentDescription().isEmpty() )
-    mMsgPart->setContentDescription( desc );
+  if ( !desc.isEmpty() || !mMsgPart->contentDescription()->asUnicodeString().isEmpty() )
+    mMsgPart->contentDescription()->fromUnicodeString( desc, mMsgPart->contentDescription()->defaultCharset() );
 
   // apply Content-Type:
   QByteArray type = mimeType().toLatin1();
@@ -428,8 +436,7 @@ void KMMsgPartDialogCompat::applyChanges()
     subtype = type.mid( idx+1 );
     type = type.left( idx );
   }
-  mMsgPart->setTypeStr(type);
-  mMsgPart->setSubtypeStr(subtype);
+  mMsgPart->contentType()->setMimeType( type + "/" + subtype );
 
   // apply Content-Transfer-Encoding:
   QByteArray cte;
@@ -442,10 +449,10 @@ void KMMsgPartDialogCompat::applyChanges()
   case QuotedPrintable: cte = "quoted-printable"; break;
   case Base64: default: cte = "base64";           break;
   }
-  if ( cte != mMsgPart->cteStr().toLower() ) {
-    QByteArray body = mMsgPart->bodyDecodedBinary();
-    mMsgPart->setCteStr( cte );
-    mMsgPart->setBodyEncodedBinary( body );
+  if ( cte != mMsgPart->contentTransferEncoding()->as7BitString().toLower() ) {
+    QByteArray body = mMsgPart->decodedContent();
+    mMsgPart->contentTransferEncoding()->from7BitString( cte );
+    mMsgPart->setBody( body );
   }
 }
 
@@ -455,6 +462,140 @@ void KMMsgPartDialogCompat::slotOk()
 {
   applyChanges();
 }
+
+QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text)
+{
+    QStringList charsets = encodingList;
+    if (!_encoding.isEmpty())
+    {
+       QString currentCharset = QString::fromLatin1(_encoding);
+       charsets.removeAll(currentCharset);
+       charsets.prepend(currentCharset);
+    }
+
+    QStringList::ConstIterator it = charsets.constBegin();
+    for (; it != charsets.constEnd(); ++it)
+    {
+       QByteArray encoding = (*it).toLatin1();
+       if (encoding == "locale")
+       {
+       /*FIXME(Andras) port it
+         encoding = kmkernel->networkCodec()->name();
+         kAsciiToLower(encoding.data());
+         */
+       }
+       if (text.isEmpty())
+         return encoding;
+       if (encoding == "us-ascii") {
+         bool ok;
+         (void) toUsAscii(text, &ok);
+         if (ok)
+            return encoding;
+       }
+       else
+       {
+         const QTextCodec *codec = codecForName(encoding);
+         if (!codec) {
+           kDebug() <<"Auto-Charset: Something is wrong and I can not get a codec. [" << encoding <<"]";
+         } else {
+           if (codec->canEncode(text))
+              return encoding;
+         }
+       }
+    }
+    return 0;
+}
+
+QByteArray encodeRFC2231String( const QString& _str,
+                                         const QByteArray& charset )
+{
+  static const QByteArray especials = "()<>@,;:\"/[]?.= \033";
+
+  if ( _str.isEmpty() )
+    return QByteArray();
+
+  QByteArray cset;
+  if ( charset.isEmpty() )
+  {
+  /*FIXME(Andras) port it
+    cset = kmkernel->networkCodec()->name();
+    kAsciiToLower( cset.data() );
+    */
+  }
+  else
+    cset = charset;
+  const QTextCodec *codec = codecForName( cset );
+  QByteArray latin;
+  if ( charset == "us-ascii" )
+    latin = toUsAscii( _str );
+  else if ( codec )
+    latin = codec->fromUnicode( _str );
+  else
+    latin = _str.toLocal8Bit();
+
+  char *l;
+  for ( l = latin.data(); *l; ++l ) {
+    if ( ( ( *l & 0xE0 ) == 0 ) || ( *l & 0x80 ) )
+      // *l is control character or 8-bit char
+      break;
+  }
+  if ( !*l )
+    return latin;
+
+  QByteArray result = cset + "''";
+  for ( l = latin.data(); *l; ++l ) {
+    bool needsQuoting = ( *l & 0x80 ) || ( *l == '%' );
+    if( !needsQuoting ) {
+      int len = especials.length();
+      for ( int i = 0; i < len; i++ )
+        if ( *l == especials[i] ) {
+          needsQuoting = true;
+          break;
+        }
+    }
+    if ( needsQuoting ) {
+      result += '%';
+      unsigned char hexcode;
+      hexcode = ( ( *l & 0xF0 ) >> 4 ) + 48;
+      if ( hexcode >= 58 )
+        hexcode += 7;
+      result += hexcode;
+      hexcode = ( *l & 0x0F ) + 48;
+      if ( hexcode >= 58 )
+        hexcode += 7;
+      result += hexcode;
+    } else {
+      result += *l;
+    }
+  }
+  return result;
+}
+
+//-----------------------------------------------------------------------------
+const QTextCodec* codecForName(const QByteArray& _str)
+{
+  if (_str.isEmpty())
+    return 0;
+  QByteArray codec = _str;
+  kAsciiToLower(codec.data());
+  return KGlobal::charsets()->codecForName(codec);
+}
+
+QByteArray toUsAscii(const QString& _str, bool *ok)
+{
+  bool all_ok =true;
+  QString result = _str;
+  int len = result.length();
+  for (int i = 0; i < len; i++)
+    if (result.at(i).unicode() >= 128) {
+      result[i] = '?';
+      all_ok = false;
+    }
+  if (ok)
+    *ok = all_ok;
+  return result.toLatin1();
+}
+
 
 
 //-----------------------------------------------------------------------------

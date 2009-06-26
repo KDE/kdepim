@@ -38,7 +38,10 @@
 #include "libkdepim/treewidget.h"
 #include <QString>
 
-class partNode;
+namespace KMime {
+  class Content;
+}
+
 class KMReaderWin;
 class KMMimePartTreeItem;
 class QAction;
@@ -106,14 +109,14 @@ class KMMimePartTreeItem : public QTreeWidgetItem
 {
 public:
   KMMimePartTreeItem( KMMimePartTree *parent,
-                      partNode *node,
+                      KMime::Content *node,
                       const QString &labelDescr,
                       const QString &labelCntType  = QString(),
                       const QString &labelEncoding = QString(),
                       KIO::filesize_t size = 0 );
 
   KMMimePartTreeItem( KMMimePartTreeItem * parent,
-                      partNode *node,
+                      KMime::Content *node,
                       const QString &labelDescr,
                       const QString &labelCntType  = QString(),
                       const QString &labelEncoding = QString(),
@@ -124,7 +127,7 @@ public:
   /**
   * @returns a pointer to the partNode this item is displaying.
   */
-  partNode* node() const
+  KMime::Content* node() const
     { return mPartNode; }
 
   /**
@@ -153,7 +156,7 @@ private:
   void correctSize();
 
 private:
-  partNode* mPartNode;
+  KMime::Content* mPartNode;
   KIO::filesize_t mDataSize;
 };
 

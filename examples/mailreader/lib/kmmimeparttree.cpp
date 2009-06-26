@@ -33,8 +33,6 @@
 
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include "kmreaderwin.h"
-#include "partNode.h"
-#include "kmmsgpart.h"
 //FIXME(Andras) port to akonadi #include "kmkernel.h"
 //FIXME(Andras) port to akonadi #include "kmcommands.h"
 
@@ -45,6 +43,7 @@
 #include <kiconloader.h>
 #include <kurl.h>
 #include <kmenu.h>
+#include <kmime/kmime_content.h>
 
 #include <QApplication>
 #include <QClipboard>
@@ -231,7 +230,7 @@ void KMMimePartTree::saveSelectedBodyParts( bool encoded )
   if ( selected.isEmpty() )
     return;
 
-  QList<partNode*> parts;
+  QList<KMime::Content*> parts;
   for ( QList<QTreeWidgetItem*>::Iterator it = selected.begin(); it != selected.end(); ++it )
     parts.append( static_cast<KMMimePartTreeItem *>( *it )->node() );
 
@@ -300,15 +299,17 @@ void KMMimePartTree::slotProperties()
 
 void KMMimePartTree::startHandleAttachmentCommand( int action )
 {
+/*FIXME(Andras) port it
   QList<QTreeWidgetItem *> selected = selectedItems();
   if ( selected.count() != 1 )
     return;
 
   partNode *node = static_cast<KMMimePartTreeItem *>( selected.first() )->node();
-  QString name;//FIXME(Andras) disable, as it is rewritten to use KMime = mReaderWin->tempFileUrlFromPartNode( node ).path();
+  QString name = mReaderWin->tempFileUrlFromPartNode( node ).path();
 
   mReaderWin->prepareHandleAttachment( node->nodeId(), name );
   mReaderWin->slotHandleAttachment( action );
+  */
 }
 
 void KMMimePartTree::slotCopy()
@@ -316,9 +317,9 @@ void KMMimePartTree::slotCopy()
   QList<QTreeWidgetItem *> selected = selectedItems();
   if ( selected.count() != 1 )
     return;
-  partNode *node = static_cast<KMMimePartTreeItem *>( selected.first() )->node();
+  KMime::Content *node = static_cast<KMMimePartTreeItem *>( selected.first() )->node();
   QList<QUrl> urls;
-  KUrl kUrl;//FIXME(Andras) disable, as it is rewritten to use KMime  = mReaderWin->tempFileUrlFromPartNode( node );
+  KUrl kUrl = mReaderWin->tempFileUrlFromPartNode( node );
   QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
   if ( !url.isValid() )
     return;
@@ -334,12 +335,12 @@ void KMMimePartTree::startDrag( Qt::DropActions )
   KMMimePartTreeItem *item = static_cast<KMMimePartTreeItem*>( currentItem() );
   if ( !item )
     return;
-  partNode *node = item->node();
+  KMime::Content *node = item->node();
   if ( !node )
     return;
 
   QList<QUrl> urls;
-  KUrl kUrl;//FIXME(Andras) disable, as it is rewritten to use KMime  = mReaderWin->tempFileUrlFromPartNode( node );
+  KUrl kUrl = mReaderWin->tempFileUrlFromPartNode( node );
   QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
   if ( !url.isValid() )
     return;
@@ -356,7 +357,7 @@ void KMMimePartTree::startDrag( Qt::DropActions )
 //=============================================================================
 
 KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTree * parent,
-                                        partNode* node,
+                                        KMime::Content* node,
                                         const QString & description,
                                         const QString & mimetype,
                                         const QString & encoding,
@@ -365,8 +366,10 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTree * parent,
     mPartNode( node ), mDataSize( size )
 {
   Q_ASSERT( parent );
+/*FIXME(Andras) port it
   if ( node )
     node->setMimePartTreeItem( this );
+    */
   setText( columnDescription, description );
   setIconAndTextForType( mimetype );
   setText( columnEncoding, encoding );
@@ -375,7 +378,7 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTree * parent,
 }
 
 KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTreeItem * parent,
-                                        partNode* node,
+                                        KMime::Content* node,
                                         const QString & description,
                                         const QString & mimetype,
                                         const QString & encoding,
@@ -396,9 +399,10 @@ KMMimePartTreeItem::KMMimePartTreeItem( KMMimePartTreeItem * parent,
     }
   }
   // Attach to the data tree node
-  if ( node )
+ /*FIXME(Andras) port it
+ if ( node )
     node->setMimePartTreeItem( this );
-
+*/
   // Setup column data
   setText( columnDescription, description );
   setIconAndTextForType( mimetype );

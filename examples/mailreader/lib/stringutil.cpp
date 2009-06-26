@@ -21,10 +21,8 @@
 #ifndef KMAIL_UNITTESTS
 
 #include "kmaddrbook.h"
-//FIXME(Andras) port to akonadi #include "kmkernel.h"
 
 #include <libkdepim/kaddrbookexternal.h>
-#include <mimelib/enum.h>
 
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_header_parsing.h>
@@ -244,6 +242,7 @@ QString stripSignature ( const QString & msg, bool clearSigned )
 }
 
 #ifndef KMAIL_UNITTESTS
+/*FIXME(Andras) check if needed
 //-----------------------------------------------------------------------------
 QList<int> determineAllowedCtes( const CharFreq& cf,
                                  bool allow8Bit,
@@ -290,6 +289,7 @@ QList<int> determineAllowedCtes( const CharFreq& cf,
 
          return allowedCtes;
 }
+*/
 
 AddressList splitAddrField( const QByteArray & str )
 {

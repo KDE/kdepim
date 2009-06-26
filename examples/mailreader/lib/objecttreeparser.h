@@ -33,10 +33,28 @@
 #ifndef _KMAIL_OBJECTTREEPARSER_H_
 #define _KMAIL_OBJECTTREEPARSER_H_
 
-#include "kmmsgbase.h"
-
 #include <kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>
+
+/** Flags for the encryption state. */
+typedef enum
+{
+    KMMsgEncryptionStateUnknown=' ',
+    KMMsgNotEncrypted='N',
+    KMMsgPartiallyEncrypted='P',
+    KMMsgFullyEncrypted='F',
+    KMMsgEncryptionProblematic='X'
+} KMMsgEncryptionState;
+
+/** Flags for the signature state. */
+typedef enum
+{
+    KMMsgSignatureStateUnknown=' ',
+    KMMsgNotSigned='N',
+    KMMsgPartiallySigned='P',
+    KMMsgFullySigned='F',
+    KMMsgSignatureProblematic='X'
+} KMMsgSignatureState;
 
 class KMReaderWin;
 class QString;

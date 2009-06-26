@@ -51,9 +51,11 @@ namespace StringUtil
    * the given result of the character frequency analysis of a message or
    * message part under the given restrictions.
    */
+/*FIXME(Andras) check if needed
   QList<int> determineAllowedCtes( const KMime::CharFreq& cf,
                                    bool allow8Bit,
                                    bool willBeSigned );
+                                   */
 
   /**
    * Splits the given address list into separate addresses.

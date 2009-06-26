@@ -565,7 +565,7 @@ void KMReaderWin::createActions()
   ac->addAction("encoding", mSelectEncodingAction );
   connect(mSelectEncodingAction,SIGNAL( triggered(int)),
           SLOT( slotSetEncoding() ));
-  QStringList encodings = KMMsgBase::supportedEncodings( false );
+  QStringList encodings = KMReaderWin::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   mSelectEncodingAction->setItems( encodings );
   mSelectEncodingAction->setCurrentItem( 0 );
@@ -1142,7 +1142,7 @@ void KMReaderWin::setOverrideEncoding( const QString & encoding )
       QStringList encodings = mSelectEncodingAction->items();
       int i = 0;
       for ( QStringList::const_iterator it = encodings.constBegin(), end = encodings.constEnd(); it != end; ++it, ++i ) {
-        if ( KMMsgBase::encodingForName( *it ) == encoding ) {
+        if ( KMReaderWin::encodingForName( *it ) == encoding ) {
           mSelectEncodingAction->setCurrentItem( i );
           break;
         }
@@ -1172,7 +1172,7 @@ const QTextCodec * KMReaderWin::overrideCodec() const
   if ( mOverrideEncoding.isEmpty() || mOverrideEncoding == "Auto" ) // Auto
     return 0;
   else
-    return KMMsgBase::codecForName( mOverrideEncoding.toLatin1() );
+    return KMReaderWin::codecForName( mOverrideEncoding.toLatin1() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1181,7 +1181,7 @@ void KMReaderWin::slotSetEncoding()
   if ( mSelectEncodingAction->currentItem() == 0 ) // Auto
     mOverrideEncoding.clear();
   else
-    mOverrideEncoding = KMMsgBase::encodingForName( mSelectEncodingAction->currentText() );
+    mOverrideEncoding = KMReaderWin::encodingForName( mSelectEncodingAction->currentText() );
   update( true );
 }
 
@@ -2265,8 +2265,7 @@ void KMReaderWin::atmViewMsg(KMime::Content* aMsgPart)
 }
 
 
-void KMReaderWin::setMsgPart( partNode * node ) {
-/*FIXME(Andras) port it or remove, see setMessageItem
+void KMReaderWin::setMsgPart( KMime::Content * node ) {
   htmlWriter()->reset();
   mColorBar->hide();
   htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
@@ -2279,7 +2278,6 @@ void KMReaderWin::setMsgPart( partNode * node ) {
   // ### this, too
   htmlWriter()->queue( "</body></html>" );
   htmlWriter()->flush();
-  */
 }
 
 //-----------------------------------------------------------------------------
@@ -2712,12 +2710,12 @@ void KMReaderWin::slotUrlCopy()
 {
   // we don't necessarily need a mainWidget for KMUrlCopyCommand so
   // it doesn't matter if the dynamic_cast fails.
-    /* FIXME ANDRAS
+  /* FIXME(Andras) port it
   KMCommand *command =
     new KMUrlCopyCommand( mUrlClicked,
                           dynamic_cast<KMMainWidget*>( mMainWindow ) );
   command->start();
-    */
+  */
 }
 
 //-----------------------------------------------------------------------------
@@ -2760,14 +2758,14 @@ void KMReaderWin::slotMailtoReply()
 }
 
 //-----------------------------------------------------------------------------
-partNode * KMReaderWin::partNodeFromUrl( const KUrl & url ) {
+KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url ) {
     /*FIXME(Andras) port to akonadi
   return mRootNode ? mRootNode->findId( msgPartFromUrl( url ) ) : 0 ;
   */
   return 0;
 }
 
-partNode * KMReaderWin::partNodeForId( int id ) {
+KMime::Content * KMReaderWin::partNodeForId( int id ) {
     /*FIXME(Andras) port to akonadi
   return mRootNode ? mRootNode->findId( id ) : 0 ;
   */
@@ -2836,7 +2834,7 @@ bool KMReaderWin::eventFilter( QObject *, QEvent *e )
   return false;
 }
 
-void KMReaderWin::slotDeleteAttachment(partNode * node)
+void KMReaderWin::slotDeleteAttachment(KMime::Content * node)
 {
   if ( KMessageBox::warningContinueCancel( this,
        i18n("Deleting an attachment might invalidate any digital signature on this message."),
@@ -2851,7 +2849,7 @@ void KMReaderWin::slotDeleteAttachment(partNode * node)
   */
 }
 
-void KMReaderWin::slotEditAttachment(partNode * node)
+void KMReaderWin::slotEditAttachment(KMime::Content * node)
 {
   if ( KMessageBox::warningContinueCancel( this,
         i18n("Modifying an attachment might invalidate any digital signature on this message."),
@@ -3021,6 +3019,57 @@ KMime::Content* KMReaderWin::findContentByType(KMime::Content *content, const QB
 
 }
 
+//-----------------------------------------------------------------------------
+QString KMReaderWin::fixEncoding( const QString &encoding )
+{
+  QString returnEncoding = encoding;
+  // According to http://www.iana.org/assignments/character-sets, uppercase is
+  // preferred in MIME headers
+  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
+    returnEncoding = returnEncoding.toUpper();
+    returnEncoding.replace( "ISO ", "ISO-" );
+  }
+  return returnEncoding;
+}
+
+//-----------------------------------------------------------------------------
+QString KMReaderWin::encodingForName( const QString &descriptiveName )
+{
+  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
+  return KMReaderWin::fixEncoding( encoding );
+}
+
+//-----------------------------------------------------------------------------
+const QTextCodec* KMReaderWin::codecForName(const QByteArray& _str)
+{
+  if (_str.isEmpty())
+    return 0;
+  QByteArray codec = _str;
+  kAsciiToLower(codec.data());
+  return KGlobal::charsets()->codecForName(codec);
+}
+
+QStringList KMReaderWin::supportedEncodings(bool usAscii)
+{
+  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
+  QStringList encodings;
+  QMap<QString,bool> mimeNames;
+  for (QStringList::Iterator it = encodingNames.begin();
+    it != encodingNames.end(); ++it)
+  {
+    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
+    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
+    if (!mimeNames.contains(mimeName) )
+    {
+      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
+      mimeNames.insert( mimeName, true );
+    }
+  }
+  encodings.sort();
+  if (usAscii)
+    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
+  return encodings;
+}
 
 #include "kmreaderwin.moc"
 

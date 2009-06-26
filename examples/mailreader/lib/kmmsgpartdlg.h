@@ -23,7 +23,9 @@
 #include <kdialog.h>
 #include <kio/global.h>
 
-class KMMessagePart;
+namespace KMime {
+  class Content;
+}
 class KComboBox;
 class KLineEdit;
 
@@ -143,10 +145,10 @@ public:
   virtual ~KMMsgPartDialogCompat();
 
   /** Display information about this message part. */
-  void setMsgPart(KMMessagePart* msgPart);
+  void setMsgPart(KMime::Content* msgPart);
 
   /** Returns the (possibly modified) message part. */
-  KMMessagePart* msgPart(void) const { return mMsgPart; }
+  KMime::Content* msgPart(void) const { return mMsgPart; }
 
 protected slots:
   void slotOk();
@@ -156,7 +158,7 @@ protected:
       when the Ok button is pressed. */
   void applyChanges(void);
 
-  KMMessagePart *mMsgPart;
+  KMime::Content *mMsgPart;
 };
 
 #endif /*kmmsgpartdlg_h*/
