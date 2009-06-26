@@ -12,7 +12,6 @@ set(mailreader_SRCS
    mailreaderview.cpp
 
 lib/kmreaderwin.cpp
-#lib/partNode.cpp
 lib/khtmlparthtmlwriter.cpp
 lib/htmlstatusbar.cpp
 lib/headerstyle.cpp
@@ -20,15 +19,10 @@ lib/headerstrategy.cpp
 lib/kmaddrbook.cpp
 lib/stringutil.cpp
 lib/attachmentstrategy.cpp
-#lib/kmmessage.cpp
-#lib/kmmsgbase.cpp
-#lib/kmmsgpart.cpp
-#lib/kmmsginfo.cpp
 lib/kmmsgpartdlg.cpp
 lib/isubject.cpp
 lib/csshelper.cpp
 lib/util.cpp
-#lib/kmmessagetag.cpp
 lib/kmmimeparttree.cpp
 lib/objecttreeparser.cpp
 lib/kleojobexecutor.cpp
