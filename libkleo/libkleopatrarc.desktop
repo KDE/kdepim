@@ -352,5 +352,8 @@ Name[zh_TW]=其他金鑰
 [Key Filter #7]
 is-cardkey=true
 Name=Smartcard Key
+Name[nb]=Smartkort-nøkkel
+Name[pt]=Chave do 'Smartcard'
+Name[pt_BR]=Chave do 'Smartcard'
 Name[sv]=Smartkortsnyckel
 Name[uk]=Ключ картки пам’яті
