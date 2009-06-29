@@ -34,8 +34,6 @@ add_subdirectory( knut )
 add_subdirectory( kolabproxy )
 add_subdirectory( localbookmarks )
 add_subdirectory( maildir )
-#the mbox resource isn't quite ready for 4.3.  it will be available in 4.4, hopefully.
-#add_subdirectory( mbox )
 add_subdirectory( microblog )
 
 if ( NEPOMUK_FOUND )
