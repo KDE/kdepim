@@ -10,7 +10,7 @@ if(KDEPIM_BUILD_EVERYTHING)
   ########### next target ###############
 
   set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp
-      egroupwarewizard.cpp
+#      egroupwarewizard.cpp
       groupwisewizard.cpp
       sloxwizard.cpp
       kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp
@@ -23,8 +23,9 @@ if(KDEPIM_BUILD_EVERYTHING)
 
   kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
 
+  # FIXME: egroupware is disabled due to a kaddressbook dependency
+  # kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
   target_link_libraries(groupwarewizard ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS}
-  kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
   kabcgroupwise kcalgroupwise
   kcal_slox kabc_slox
   kabckolab knoteskolab

@@ -101,8 +101,9 @@ OverViewPage::~OverViewPage()
 
 void OverViewPage::showWizardEGroupware()
 {
-  EGroupwareWizard wizard;
-  wizard.exec();
+// FIXME: disabled as egroupware is disabled due to a kaddressbook dependency
+/*  EGroupwareWizard wizard;
+  wizard.exec();*/
 }
 
 void OverViewPage::showWizardKolab()
