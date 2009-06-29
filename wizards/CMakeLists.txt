@@ -38,18 +38,18 @@ if(KDEPIM_BUILD_EVERYTHING)
 
   ########### next target ###############
 
-  set(egroupwarewizard_SRCS ${libknotesresources_SRCS} egroupwarewizard.cpp egroupwaremain.cpp)
+#  set(egroupwarewizard_SRCS ${libknotesresources_SRCS} egroupwarewizard.cpp egroupwaremain.cpp)
 
-  kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
+#  kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
 
   # todo: more appropriate icon?
-  kde4_add_app_icon(egroupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
+#  kde4_add_app_icon(egroupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
 
-  kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
+#  kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 
-  target_link_libraries(egroupwarewizard ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDEPIMLIBS_KCAL_LIBS} kdepim  )
+#  target_link_libraries(egroupwarewizard ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDEPIMLIBS_KCAL_LIBS} kdepim  )
 
-  install(TARGETS egroupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+#  install(TARGETS egroupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
   ########### next target ###############
