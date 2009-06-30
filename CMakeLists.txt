@@ -8,7 +8,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
-option(KDEPIM_BUILD_KCONTACTMANAGER "Build KcontactManager which will replace KAddressBook in KDE 4.4." FALSE)
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 if(KDEPIM_ENTERPRISE_BUILD)
   set(KDEPIM_ONLY_KLEO FALSE)
@@ -169,9 +168,6 @@ set(libkdgantt1_SRCS
   if(KDEPIM_BUILD_EVERYTHING)
     if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
       macro_optional_add_subdirectory(akonadi)
-      if(KDEPIM_BUILD_KCONTACTMANAGER)
-        macro_optional_add_subdirectory(kcontactmanager)
-      endif(KDEPIM_BUILD_KCONTACTMANAGER)
     endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(knode)
   endif(KDEPIM_BUILD_EVERYTHING)
