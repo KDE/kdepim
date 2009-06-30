@@ -236,7 +236,7 @@ DecryptVerifyEMailWizard * DecryptVerifyEMailController::Private::findOrCreateWi
 
     collectGarbage( s_wizards );
 
-    kDebug() << id;
+    qDebug( "DecryptVerifyEMailWizard::Private::findOrCreateWizard( %ud )", id );
 
     if ( id != 0 ) {
 
@@ -456,7 +456,7 @@ void DecryptVerifyEMailController::setProtocol( Protocol prot )
 
 void DecryptVerifyEMailController::setSessionId( unsigned int id )
 {
-    kDebug();
+    qDebug( "DecryptVerifyEMailController::setSessionId( %ud )", id );
     d->m_sessionId = id;
 }
 
