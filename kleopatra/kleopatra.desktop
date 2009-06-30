@@ -17,5 +17,6 @@ GenericName[pt_BR]=Gestor de Certificados e GUI Unificada de Criptografia
 GenericName[sv]=Certifikathantering och gemensamt grafiskt användargränssnitt för kryptering
 GenericName[tr]=Sertifika Yöneticisi ve Birleşik Şifreleme Arayüzü
 GenericName[uk]=Засіб для керування сертифікатами і уніфікований графічний інтерфейс шифрування
+GenericName[x-test]=xxCertificate Manager and Unified Crypto GUIxx
 Terminal=false
 X-KDE-StartupNotify=true
