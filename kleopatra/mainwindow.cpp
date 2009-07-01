@@ -655,7 +655,7 @@ void MainWindow::dropEvent( QDropEvent * e ) {
     if ( signEncrypt || decryptVerify )
         menu.addSeparator();
 
-    QAction * const importCerts = mayBeAnyCertStoreType( classification ) ? menu.addAction( i18n("Import Certificates") ) : 0 ;
+    QAction * const importCerts = mayBeImportable( classification ) ? menu.addAction( i18n("Import Certificates") ) : 0 ;
     QAction * const importCRLs  = mayBeCertificateRevocationList( classification ) ? menu.addAction( i18n("Import CRLs") ) : 0 ;
     if ( importCerts || importCRLs )
         menu.addSeparator();
