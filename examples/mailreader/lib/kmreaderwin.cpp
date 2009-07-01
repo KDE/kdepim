@@ -2769,6 +2769,7 @@ KMime::Content * KMReaderWin::partNodeForId( int id ) {
     /*FIXME(Andras) port to akonadi
   return mRootNode ? mRootNode->findId( id ) : 0 ;
   */
+  return 0;
 }
 
 
