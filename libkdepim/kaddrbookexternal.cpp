@@ -154,14 +154,6 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
 {
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
 
-  // PORT. FIXME: This ugly hack will be removed in 4.0
-  while ( !addressBook->loadingHasFinished() ) {
-    qApp->processEvents( QEventLoop::ExcludeUserInputEvents );
-
-    // use sleep here to reduce cpu usage
-    usleep( 100 );
-  }
-
   // Select a resource
   QList<KABC::Resource*> kabcResources = addressBook->resources();
   QList<KRES::Resource*> kresResources;
