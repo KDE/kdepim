@@ -135,7 +135,7 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
             if (sig_block2 == OE5_EMAIL_SIG_2) {
                 folderName = "OE-Import/" + mailfileinfo.completeBaseName();
                 if(parsedFolder) {
-                    QString _tmpFolder = getFolderName(_nameOfFile);
+                    const QString _tmpFolder = getFolderName(_nameOfFile);
                     if(!_tmpFolder.isEmpty()) folderName = "OE-Import/" + _tmpFolder;
                 }
                 info->addLog(i18n("Importing OE5+ Mailbox %1", QString("../") + _nameOfFile));
