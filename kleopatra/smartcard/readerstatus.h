@@ -56,6 +56,7 @@ namespace SmartCard {
         };
 
         Status cardStatus( unsigned int slot ) const;
+        bool isAnyCardPresent() const;
 
     Q_SIGNALS:
         void anyCardPresentChanged( bool );
