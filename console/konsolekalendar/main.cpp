@@ -104,7 +104,7 @@ int main( int argc, char *argv[] )
   options.add( "dry-run",
                ki18n( "Print what would have been done, but do not execute" ) );
   options.add( "allow-gui",
-               ki18n( "Allow resources which might need an interactive user interface" ) );
+               ki18n( "Allow calendars which might need an interactive user interface" ) );
   options.add( "file <calendar-file>",
                ki18n( "Specify which calendar you want to use" ) );
   options.add( ":",
