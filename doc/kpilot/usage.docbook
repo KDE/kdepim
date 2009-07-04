@@ -8,7 +8,7 @@ can be useful when debugging problems.
 </para>
 
 <para>
-On the first start &kpilot; opens the configuration dialog which allows to you adjust its 
+On the first start &kpilot; opens the configuration dialog which allows you to adjust its 
 settings and select and configure the conduits to be used.
 Click the <guibutton>OK</guibutton> button to switch to the
 &HotSync;-log, as shown <link linkend="main-app">here</link>.
