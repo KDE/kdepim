@@ -80,10 +80,11 @@ static QString toString( const QString str )
 
 static QString toString( bool value )
 {
-  if ( value )
-    return i18n( "Yes" );
-  else
-    return i18n( "No" );
+  if ( value ) {
+    return i18nc( "boolean yes", "Yes" );
+  } else {
+    return i18nc( "boolean no", "No" );
+  }
 }
 
 CalendarDiffAlgo::CalendarDiffAlgo( Incidence *leftIncidence,
@@ -169,7 +170,7 @@ void CalendarDiffAlgo::diffIncidence( Incidence *left, Incidence *right )
 	// TODO: recurrence dates and date/times, exrules, rrules
 
   if ( left->created() != right->created() )
-    conflictField( i18n( "Created" ), left->created().toString(), right->created().toString() );
+    conflictField( i18nc( "todo creation time", "Created" ), left->created().toString(), right->created().toString() );
 
   if ( !compareString( left->relatedToUid(), right->relatedToUid() ) )
     conflictField( i18n( "Related Uid" ), left->relatedToUid(), right->relatedToUid() );
@@ -191,22 +192,34 @@ void CalendarDiffAlgo::diffEvent( Event *left, Event *right )
 void CalendarDiffAlgo::diffTodo( Todo *left, Todo *right )
 {
   if ( left->hasStartDate() != right->hasStartDate() )
-    conflictField( i18n( "Has Start Date" ), toString( left->hasStartDate() ), toString( right->hasStartDate() ) );
+    conflictField( i18n( "Has Start Date" ),
+                   toString( left->hasStartDate() ),
+                   toString( right->hasStartDate() ) );
 
   if ( left->hasDueDate() != right->hasDueDate() )
-    conflictField( i18n( "Has Due Date" ), toString( left->hasDueDate() ), toString( right->hasDueDate() ) );
+    conflictField( i18n( "Has Due Date" ),
+                   toString( left->hasDueDate() ),
+                   toString( right->hasDueDate() ) );
 
   if ( left->dtDue() != right->dtDue() )
-    conflictField( i18n( "Due Date" ), left->dtDue().toString(), right->dtDue().toString() );
+    conflictField( i18n( "Due Date" ),
+                   left->dtDue().toString(),
+                   right->dtDue().toString() );
 
   if ( left->hasCompletedDate() != right->hasCompletedDate() )
-    conflictField( i18n( "Has Complete Date" ), toString( left->hasCompletedDate() ), toString( right->hasCompletedDate() ) );
+    conflictField( i18n( "Has Complete Date" ),
+                   toString( left->hasCompletedDate() ),
+                   toString( right->hasCompletedDate() ) );
 
   if ( left->percentComplete() != right->percentComplete() )
-    conflictField( i18n( "Complete" ), QString::number( left->percentComplete() ), QString::number( right->percentComplete() ) );
+    conflictField( i18nc( "to-do completion percentage", "Complete" ),
+                   QString::number( left->percentComplete() ),
+                   QString::number( right->percentComplete() ) );
 
   if ( left->completed() != right->completed() )
-    conflictField( i18n( "Completed" ), toString( left->completed() ), toString( right->completed() ) );
+    conflictField( i18nc( "if to-do is completed", "Completed" ),
+                   toString( left->completed() ),
+                   toString( right->completed() ) );
 }
 
 template <class L>
