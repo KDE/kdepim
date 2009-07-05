@@ -261,7 +261,7 @@ void KIncidenceChooser::showIncidence1()
   connect( mTbL, SIGNAL( okClicked() ), this, SLOT( detailsDialogClosed() ) );
   QTextBrowser *textBrowser = new QTextBrowser( mTbL );
   mTbL->setMainWidget( textBrowser );
-  textBrowser->setHtml( KCal::IncidenceFormatter::extensiveDisplayString( mInc1 ) );
+  textBrowser->setHtml( KCal::IncidenceFormatter::extensiveDisplayStr( mInc1 ) );
   mTbL->setMinimumSize( 400, 400 );
   showDetails1->setText( i18n( "Hide Details" ) );
   mTbL->show();
@@ -324,7 +324,7 @@ void KIncidenceChooser::showIncidence2()
   connect( mTbN, SIGNAL( okClicked() ), this, SLOT( detailsDialogClosed() ) );
   QTextBrowser *textBrowser = new QTextBrowser( mTbN );
   mTbN->setMainWidget( textBrowser );
-  textBrowser->setHtml( KCal::IncidenceFormatter::extensiveDisplayString( mInc2 ) );
+  textBrowser->setHtml( KCal::IncidenceFormatter::extensiveDisplayStr( mInc2 ) );
   mTbN->setMinimumSize( 400, 400 );
   showDetails2->setText( i18n( "Hide Details" ) );
   mTbN->show();
