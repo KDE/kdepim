@@ -404,7 +404,8 @@ void KPrefsWidDate::readConfig()
   if ( !mItem->value().date().isValid() ) {
     mItem->setValue( QDateTime::currentDateTime() );
   }
-  mDateEdit->setDate( mItem->value().date().isValid() ? mItem->value().date() : QDate::currentDate()  );
+  mDateEdit->setDate( mItem->value().date().isValid() ?
+                      mItem->value().date() : QDate::currentDate() );
 }
 
 void KPrefsWidDate::writeConfig()
@@ -584,7 +585,7 @@ KPrefsWidPath::~KPrefsWidPath()
 
 void KPrefsWidPath::readConfig()
 {
-  mURLRequester->setPath( mItem->value() );
+  mURLRequester->setUrl( KUrl( mItem->value() ) );
 }
 
 void KPrefsWidPath::writeConfig()
