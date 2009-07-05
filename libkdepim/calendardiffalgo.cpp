@@ -20,14 +20,18 @@
 */
 
 #include "calendardiffalgo.h"
+using namespace KPIM;
 
+#include <KCal/Alarm>
+#include <KCal/Attachment>
+#include <KCal/Attendee>
+#include <KCal/Event>
+#include <KCal/Incidence>
 #include <KCal/IncidenceFormatter>
-using namespace KCal;
+#include <KCal/Todo>
 
 #include <KDateTime>
 #include <KLocale>
-
-using namespace KPIM;
 
 #ifndef KDE_USE_FINAL
 static bool compareString( const QString &left, const QString &right )
@@ -39,22 +43,22 @@ static bool compareString( const QString &left, const QString &right )
 }
 #endif
 
-static QString toString( KCal::Attendee *attendee )
+static QString toString( Attendee *attendee )
 {
   return attendee->name() + '<' + attendee->email() + '>';
 }
 
-static QString toString( KCal::Alarm * )
+static QString toString( Alarm * )
 {
   return QString();
 }
 
-static QString toString( KCal::Incidence * )
+static QString toString( Incidence * )
 {
   return QString();
 }
 
-static QString toString( KCal::Attachment * )
+static QString toString( Attachment * )
 {
   return QString();
 }
@@ -82,8 +86,8 @@ static QString toString( bool value )
     return i18n( "No" );
 }
 
-CalendarDiffAlgo::CalendarDiffAlgo( KCal::Incidence *leftIncidence,
-                                    KCal::Incidence *rightIncidence )
+CalendarDiffAlgo::CalendarDiffAlgo( Incidence *leftIncidence,
+                                    Incidence *rightIncidence )
   : mLeftIncidence( leftIncidence ), mRightIncidence( rightIncidence )
 {
 }
@@ -95,13 +99,13 @@ void CalendarDiffAlgo::run()
   diffIncidenceBase( mLeftIncidence, mRightIncidence );
   diffIncidence( mLeftIncidence, mRightIncidence );
 
-  KCal::Event *leftEvent = dynamic_cast<KCal::Event*>( mLeftIncidence );
-  KCal::Event *rightEvent = dynamic_cast<KCal::Event*>( mRightIncidence );
+  Event *leftEvent = dynamic_cast<Event*>( mLeftIncidence );
+  Event *rightEvent = dynamic_cast<Event*>( mRightIncidence );
   if ( leftEvent && rightEvent ) {
     diffEvent( leftEvent, rightEvent );
   } else {
-    KCal::Todo *leftTodo = dynamic_cast<KCal::Todo*>( mLeftIncidence );
-    KCal::Todo *rightTodo = dynamic_cast<KCal::Todo*>( mRightIncidence );
+    Todo *leftTodo = dynamic_cast<Todo*>( mLeftIncidence );
+    Todo *rightTodo = dynamic_cast<Todo*>( mRightIncidence );
     if ( leftTodo && rightTodo ) {
       diffTodo( leftTodo, rightTodo );
     }
@@ -110,7 +114,7 @@ void CalendarDiffAlgo::run()
   end();
 }
 
-void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left, KCal::IncidenceBase *right )
+void CalendarDiffAlgo::diffIncidenceBase( IncidenceBase *left, IncidenceBase *right )
 {
   diffList( i18n( "Attendees" ), left->attendees(), right->attendees() );
 
@@ -135,7 +139,7 @@ void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left, KCal::Incid
     conflictField( i18n( "Duration" ), QString::number( left->duration().asSeconds() ), QString::number( right->duration().asSeconds() ) );
 }
 
-void CalendarDiffAlgo::diffIncidence( KCal::Incidence *left, KCal::Incidence *right )
+void CalendarDiffAlgo::diffIncidence( Incidence *left, Incidence *right )
 {
   if ( !compareString( left->description(), right->description() ) )
     conflictField( i18n( "Description" ), left->description(), right->description() );
@@ -171,7 +175,7 @@ void CalendarDiffAlgo::diffIncidence( KCal::Incidence *left, KCal::Incidence *ri
     conflictField( i18n( "Related Uid" ), left->relatedToUid(), right->relatedToUid() );
 }
 
-void CalendarDiffAlgo::diffEvent( KCal::Event *left, KCal::Event *right )
+void CalendarDiffAlgo::diffEvent( Event *left, Event *right )
 {
   if ( left->hasEndDate() != right->hasEndDate() )
     conflictField( i18n( "Has End Date" ), toString( left->hasEndDate() ), toString( right->hasEndDate() ) );
@@ -184,7 +188,7 @@ void CalendarDiffAlgo::diffEvent( KCal::Event *left, KCal::Event *right )
   // TODO: check transparency
 }
 
-void CalendarDiffAlgo::diffTodo( KCal::Todo *left, KCal::Todo *right )
+void CalendarDiffAlgo::diffTodo( Todo *left, Todo *right )
 {
   if ( left->hasStartDate() != right->hasStartDate() )
     conflictField( i18n( "Has Start Date" ), toString( left->hasStartDate() ), toString( right->hasStartDate() ) );
