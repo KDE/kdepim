@@ -573,7 +573,7 @@ void CSVImportDialog::saveTemplate()
 
 void CSVImportDialog::setFile( const KUrl &fileName )
 {
-   setFile( fileName.path() );
+   setFile( fileName.toLocalFile() );
 }
 
 void CSVImportDialog::setFile( const QString &fileName )

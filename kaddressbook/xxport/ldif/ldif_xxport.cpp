@@ -108,7 +108,7 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
 
     return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
   } else {
-    const QString fileName = url.path();
+    const QString fileName = url.toLocalFile();
 
     if ( QFileInfo( fileName ).exists() ) {
       if ( KMessageBox::questionYesNo( parentWidget(), i18n( "Do you want to overwrite file \"%1\"", fileName ) ) == KMessageBox::No )

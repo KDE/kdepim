@@ -208,8 +208,8 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
   if ( url.isEmpty() )
       return true;
 
-  if( QFileInfo(url.path()).exists() ) {
-      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"", url.path()) ) == KMessageBox::No)
+  if( QFileInfo( url.isLocalFile() ? url.toLocalFile() : url.path() ).exists() ) {
+      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"", url.isLocalFile() ? url.toLocalFile() : url.path()) ) == KMessageBox::No)
         return false;
   }
 
@@ -226,7 +226,7 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
 
     return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
   } else {
-    QString filename = url.path();
+    QString filename = url.toLocalFile();
     QFile file( filename );
 
     if ( !file.open( QIODevice::WriteOnly ) ) {
