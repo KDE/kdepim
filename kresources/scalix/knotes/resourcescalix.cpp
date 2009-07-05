@@ -176,11 +176,13 @@ KCal::Journal* ResourceScalix::addNote( const QString& data, const QString& subr
   journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
 
   Q_ASSERT( journal );
-  if( journal && !mUidMap.contains( journal->uid() ) )
-    if ( addNote( journal, subresource, sernum ) )
+  if( journal && !mUidMap.contains( journal->uid() ) ) {
+    if ( addNote( journal, subresource, sernum ) ) {
       return journal;
-    else
+    } else {
       delete journal;
+    }
+  }
   return 0;
 }
 

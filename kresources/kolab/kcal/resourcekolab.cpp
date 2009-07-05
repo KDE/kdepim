@@ -592,11 +592,13 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       text += "<br>";
       if ( incidence->type() == "Event" ) {
         Event* event = static_cast<Event*>( incidence );
-        if ( event->hasEndDate() )
-          if ( !event->recurrence()->allDay() )
+        if ( event->hasEndDate() ) {
+          if ( !event->recurrence()->allDay() ) {
             text += i18n( "<b>End:</b> %1, %2", event->dtEndDateStr(), event->dtEndTimeStr() );
-          else
+          } else {
             text += i18n( "<b>End:</b> %1", event->dtEndDateStr() );
+          }
+        }
         text += "<br>";
       }
       subResource = findWritableResource( *map, text );
