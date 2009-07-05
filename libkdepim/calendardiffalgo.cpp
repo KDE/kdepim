@@ -1,25 +1,28 @@
 /*
-    This file is part of libkdepim.
+  This file is part of libkdepim.
 
-    Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
+  Copyright (c) 2004 Tobias Koenig <tokoe@kde.org>
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Library General Public
-    License as published by the Free Software Foundation; either
-    version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-    You should have received a copy of the GNU Library General Public License
-    along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-    Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "calendardiffalgo.h"
+
+#include <KCal/IncidenceFormatter>
+using namespace KCal;
 
 #include <KDateTime>
 #include <KLocale>
@@ -112,7 +115,9 @@ void CalendarDiffAlgo::diffIncidenceBase( KCal::IncidenceBase *left, KCal::Incid
   diffList( i18n( "Attendees" ), left->attendees(), right->attendees() );
 
   if ( left->dtStart() != right->dtStart() )
-    conflictField( i18n( "Start time" ), left->dtStartStr(), right->dtStartStr() );
+    conflictField( i18n( "Start time" ),
+                   IncidenceFormatter::dateToString( left->dtStart() ),
+                   IncidenceFormatter::dateToString( right->dtStart() ) );
 
   if ( !compareString( left->organizer().fullName(), right->organizer().fullName() ) )
     conflictField( i18n( "Organizer" ), left->organizer().fullName(), right->organizer().fullName() );
@@ -172,7 +177,9 @@ void CalendarDiffAlgo::diffEvent( KCal::Event *left, KCal::Event *right )
     conflictField( i18n( "Has End Date" ), toString( left->hasEndDate() ), toString( right->hasEndDate() ) );
 
   if ( left->dtEnd() != right->dtEnd() )
-    conflictField( i18n( "End Date" ), left->dtEndStr(), right->dtEndStr() );
+    conflictField( i18n( "End Date" ),
+                   IncidenceFormatter::dateToString( left->dtEnd() ),
+                   IncidenceFormatter::dateToString( right->dtEnd() ) );
 
   // TODO: check transparency
 }
