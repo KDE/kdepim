@@ -36,11 +36,7 @@ using namespace KPIM;
 #ifndef KDE_USE_FINAL
 static bool compareString( const QString &left, const QString &right )
 {
-  if ( left.isEmpty() && right.isEmpty() ) {
-    return true;
-  } else {
-    return left == right;
-  }
+  return left == right;
 }
 #endif
 
