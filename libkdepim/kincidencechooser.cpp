@@ -23,25 +23,20 @@
 */
 
 #include "kincidencechooser.h"
+using namespace KPIM;
 
-#include <kcal/incidence.h>
-#include <kcal/incidenceformatter.h>
+#include <KCal/Incidence>
+#include <KCal/IncidenceFormatter>
+using namespace KCal;
 
-#include <KGlobal>
 #include <KHBox>
 #include <KLocale>
 
-#include <QApplication>
+#include <Q3ButtonGroup>
 #include <QGridLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QTextBrowser>
-#include <Q3ButtonGroup>
-#include <Q3ScrollView>
-
-using namespace KPIM;
 
 int KIncidenceChooser::chooseMode = KIncidenceChooser::ask ;
 
@@ -69,11 +64,11 @@ KIncidenceChooser::KIncidenceChooser( QWidget *parent )
     topLayout->addWidget( b_box, iii, 0, 1, 3 );
     ++iii;
     QPushButton *button = new QPushButton( i18n( "Take Local" ), b_box );
-    connect ( button, SIGNAL( clicked()), this, SLOT (takeIncidence1() ) );
+    connect ( button, SIGNAL(clicked()), this, SLOT (takeIncidence1()) );
     button = new QPushButton( i18n( "Take New" ), b_box );
-    connect ( button, SIGNAL( clicked()), this, SLOT (takeIncidence2() ) );
+    connect ( button, SIGNAL(clicked()), this, SLOT (takeIncidence2()) );
     button = new QPushButton( i18n( "Take Both" ), b_box );
-    connect ( button, SIGNAL( clicked()), this, SLOT (takeBoth() ) );
+    connect ( button, SIGNAL(clicked()), this, SLOT (takeBoth()) );
     topLayout->setSpacing( spacingHint() );
     topLayout->setMargin( marginHint() );
     // text is not translated, because text has to be set later
@@ -86,7 +81,7 @@ KIncidenceChooser::KIncidenceChooser( QWidget *parent )
     mMod1lab = new QLabel ( i18n("Set Last modified"), topFrame );
     topLayout->addWidget( mMod1lab, iii, 1 );
     showDetails1 = new QPushButton( i18n( "Show Details" ), topFrame );
-    connect ( showDetails1, SIGNAL( clicked()), this, SLOT (showIncidence1() ) );
+    connect ( showDetails1, SIGNAL(clicked()), this, SLOT (showIncidence1()) );
     topLayout->addWidget( showDetails1, iii, 2 );
     ++iii;
 
@@ -99,14 +94,14 @@ KIncidenceChooser::KIncidenceChooser( QWidget *parent )
     mMod2lab = new QLabel ( i18n("Set Last modified"), topFrame );
     topLayout->addWidget( mMod2lab, iii, 1 );
     showDetails2 = new QPushButton( i18n( "Show Details" ), topFrame );
-    connect ( showDetails2, SIGNAL( clicked()), this, SLOT (showIncidence2() ) );
+    connect ( showDetails2, SIGNAL(clicked()), this, SLOT (showIncidence2()) );
     topLayout->addWidget( showDetails2, iii, 2 );
     ++iii;
     //
 #if 0
     // commented out for now, because the diff code has too many bugs
     diffBut = new QPushButton( i18n( "Show Differences" ), topFrame );
-    connect ( diffBut, SIGNAL( clicked()), this, SLOT ( showDiff() ) );
+    connect ( diffBut, SIGNAL(clicked()), this, SLOT (showDiff()) );
     topLayout->addWidget( cdiffBut, iii, 0, 1, 3 );
     ++iii;
 #else
@@ -136,7 +131,7 @@ KIncidenceChooser::KIncidenceChooser( QWidget *parent )
     mDisplayDiff = 0;
     choosedIncidence = 0;
     button = new QPushButton( i18n( "Apply This to All Conflicts of This Sync" ), topFrame );
-    connect ( button, SIGNAL( clicked()), this, SLOT ( setSyncMode() ) );
+    connect ( button, SIGNAL(clicked()), this, SLOT (setSyncMode()) );
     topLayout->addWidget( button, iii, 0, 1, 3 );
 }
 
@@ -154,16 +149,16 @@ KIncidenceChooser::~KIncidenceChooser()
   }
 }
 
-void KIncidenceChooser::setIncidence( KCal::Incidence *local, KCal::Incidence *remote )
+void KIncidenceChooser::setIncidence( Incidence *local, Incidence *remote )
 {
   mInc1 = local;
   mInc2 = remote;
   setLabels();
 
 }
-KCal::Incidence *KIncidenceChooser::getIncidence( )
+Incidence *KIncidenceChooser::getIncidence( )
 {
-  KCal::Incidence *retval = choosedIncidence;
+  Incidence *retval = choosedIncidence;
   if ( chooseMode == KIncidenceChooser::local ) {
     retval = mInc1;
   } else if ( chooseMode == KIncidenceChooser::remote ) {
@@ -200,7 +195,7 @@ void KIncidenceChooser::useGlobalMode()
 
 void KIncidenceChooser::setLabels()
 {
-  KCal::Incidence *inc = mInc1;
+  Incidence *inc = mInc1;
   QLabel *des = mInc1lab;
   QLabel *sum = mInc1Sumlab;
 
@@ -258,10 +253,10 @@ void KIncidenceChooser::showIncidence1()
   mTbL->setCaption( mInc1lab->text() );
   mTbL->setModal( false );
   mTbL->setButtons( Ok );
-  connect( mTbL, SIGNAL( okClicked() ), this, SLOT( detailsDialogClosed() ) );
+  connect( mTbL, SIGNAL(okClicked()), this, SLOT(detailsDialogClosed()) );
   QTextBrowser *textBrowser = new QTextBrowser( mTbL );
   mTbL->setMainWidget( textBrowser );
-  textBrowser->setHtml( KCal::IncidenceFormatter::extensiveDisplayStr( mInc1 ) );
+  textBrowser->setHtml( IncidenceFormatter::extensiveDisplayStr( mInc1 ) );
   mTbL->setMinimumSize( 400, 400 );
   showDetails1->setText( i18n( "Hide Details" ) );
   mTbL->show();
@@ -321,10 +316,10 @@ void KIncidenceChooser::showIncidence2()
   mTbN->setCaption( mInc2lab->text() );
   mTbN->setModal( false );
   mTbN->setButtons( Ok );
-  connect( mTbN, SIGNAL( okClicked() ), this, SLOT( detailsDialogClosed() ) );
+  connect( mTbN, SIGNAL(okClicked()), this, SLOT(detailsDialogClosed()) );
   QTextBrowser *textBrowser = new QTextBrowser( mTbN );
   mTbN->setMainWidget( textBrowser );
-  textBrowser->setHtml( KCal::IncidenceFormatter::extensiveDisplayStr( mInc2 ) );
+  textBrowser->setHtml( IncidenceFormatter::extensiveDisplayStr( mInc2 ) );
   mTbN->setMinimumSize( 400, 400 );
   showDetails2->setText( i18n( "Hide Details" ) );
   mTbN->show();
