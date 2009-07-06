@@ -113,10 +113,15 @@ ContactListView *ContactListViewItem::parent()
 
 void ContactListViewItem::refresh()
 {
-  // Update our addressee, since it may have changed else were
-  mAddressee = mDocument->findByUid(mAddressee.uid());
-  if (mAddressee.isEmpty())
+  if ( !mDocument ) {
     return;
+  }
+
+  // Update our addressee, since it may have changed else were
+  mAddressee = mDocument->findByUid( mAddressee.uid() );
+  if ( mAddressee.isEmpty() ) {
+    return;
+  }
 
   int i = 0;
   // don't show unknown presence, it's not interesting
