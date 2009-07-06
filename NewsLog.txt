@@ -6,7 +6,6 @@ Problems addressed
 * kolab/issue3694: Don't crash when displaying an invitation which contains an attendee that is not
                    in the address book
 * Many improvments in Kleopatra, especially when importing keys and certificates
-* Fix passwords with '!' in them not working
 
 Merges
 ------
