@@ -986,7 +986,7 @@ void Incidence::loadAttachments()
       QByteArray data;
       KUrl url;
       if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, attachment ) && !url.isEmpty() ) {
-        QFile f( url.path() );
+        QFile f( url.toLocalFile() );
         if ( f.open( QFile::ReadOnly ) ) {
           data = f.readAll();
           QString mimeType;
