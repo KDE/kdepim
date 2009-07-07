@@ -107,6 +107,7 @@ set( _kleopatra_SRCS
   utils/filesystemwatcher.cpp
   utils/kdpipeiodevice.cpp
   utils/kdlogtextwidget.cpp
+  utils/kdsignalblocker.cpp
   utils/headerview.cpp
   utils/scrollarea.cpp
   utils/dragqueen.cpp
