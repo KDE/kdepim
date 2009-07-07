@@ -96,8 +96,7 @@ namespace {
 
                     m_skipped = false;
 
-                    std::auto_ptr<AssuanTransaction> transaction( new GpgAgentGetInfoAssuanTransaction( GpgAgentGetInfoAssuanTransaction::Version ) );
-                    const AssuanResult result = ctx->assuanTransact( transaction );
+                    const AssuanResult result = ctx->assuanTransact( "GETINFO version" );
                     if ( result.error() ) {
                         m_passed = false;
                         m_error = i18n("not reachable");
