@@ -242,7 +242,7 @@ namespace {
 
     private:
         /* reimp */ void run() {
-            const shared_ptr<Context> gpgAgent = Context::createForEngine( AssuanEngine );
+            const shared_ptr<Context> gpgAgent( Context::createForEngine( AssuanEngine ) );
 
             while ( true ) {
 
