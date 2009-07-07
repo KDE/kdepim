@@ -359,7 +359,7 @@ void KIncidenceChooser::showIncidence1()
   mTbL->setModal( false );
   mTbL->setButtons( Ok );
   connect( mTbL, SIGNAL(okClicked()), this, SLOT(detailsDialogClosed()) );
-  QTextBrowser *textBrowser = new QTextBrowser( mTbL );
+  KTextBrowser *textBrowser = new KTextBrowser( mTbL );
   mTbL->setMainWidget( textBrowser );
   textBrowser->setHtml( IncidenceFormatter::extensiveDisplayStr( mInc1 ) );
   textBrowser->setToolTip( i18nc( "@info:tooltip", "Incidence details" ) );
@@ -427,7 +427,7 @@ void KIncidenceChooser::showIncidence2()
   mTbN->setModal( false );
   mTbN->setButtons( Ok );
   connect( mTbN, SIGNAL(okClicked()), this, SLOT(detailsDialogClosed()) );
-  QTextBrowser *textBrowser = new QTextBrowser( mTbN );
+  KTextBrowser *textBrowser = new KTextBrowser( mTbN );
   mTbN->setMainWidget( textBrowser );
   textBrowser->setHtml( IncidenceFormatter::extensiveDisplayStr( mInc2 ) );
   textBrowser->setToolTip( i18nc( "@info:tooltip", "Incidence details" ) );
