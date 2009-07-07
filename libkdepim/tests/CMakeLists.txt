@@ -72,3 +72,12 @@ kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
 target_link_libraries(testkmeditorwin  kdepim ${KDE4_KDEUI_LIBS} )
 
 
+########### next target ###############
+
+set(testkincidencechooser_SRCS testkincidencechooser.cpp )
+
+
+kde4_add_executable(testkincidencechooser TEST ${testkincidencechooser_SRCS})
+
+target_link_libraries(testkincidencechooser  kdepim ${KDE4_KDEUI_LIBS} )
+
