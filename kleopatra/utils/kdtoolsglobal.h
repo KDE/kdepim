@@ -65,6 +65,8 @@ inline T & __kdtools__dereference_for_methodcall( T * o ) {
 
 #define KDAB_SET_OBJECT_NAME( x ) __kdtools__dereference_for_methodcall( x ).setObjectName( QLatin1String( #x ) )
 
+#define KDAB_SYNCHRONIZED( mutex ) if ( bool __counter_##__LINE__ = false ) {} else \
+        for ( QMutexLocker __locker_##__LINE__( &__kdtools__dereference_for_methodcall( mutex ) ) ; !__counter_##__LINE__ ; __counter_##__LINE__ = true )
 
 #endif /* __KDTOOLS_KDTOOLSGLOBAL_H__ */
 
