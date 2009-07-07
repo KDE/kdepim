@@ -82,11 +82,11 @@ class KDEPIM_EXPORT KIncidenceChooser : public KDialog
     HTMLDiffAlgoDisplay *mDisplayDiff;
     CalendarDiffAlgo *diff;
     KDialog *mTbL, *mTbN;
-    Incidence *choosedIncidence;
+    Incidence *mSelIncidence;
     Incidence *mInc1, *mInc2;
     Q3ButtonGroup *mBg;
-    QPushButton *diffBut,*showDetails1,*showDetails2;
-    QLabel *mInc1lab, *mInc2lab,* mInc1Sumlab, *mInc2Sumlab,*mMod1lab,*mMod2lab;
+    QPushButton *mDiffBut, *mShowDetails1, *mShowDetails2;
+    QLabel *mInc1lab, *mInc2lab, *mInc1Sumlab, *mInc2Sumlab, *mMod1lab, *mMod2lab;
 };
 
 }
