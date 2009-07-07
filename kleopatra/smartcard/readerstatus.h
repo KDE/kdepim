@@ -49,24 +49,31 @@ namespace SmartCard {
         enum Status {
             NoCard,
             CardPresent,
-            CardUsable,
             CardActive,
+            CardUsable,
 
-            NumStatus
+            _NumScdStates,
+
+            CardCanLearnKeys = _NumScdStates,
+            CardHasNullPin,
+
+            NumStates
         };
 
         Status cardStatus( unsigned int slot ) const;
-        bool isAnyCardPresent() const;
+        bool anyCardNeedsAttention() const;
+        bool anyCardHasNullPin() const;
+        bool anyCardCanLearnKeys() const;
 
     Q_SIGNALS:
-        void anyCardPresentChanged( bool );
-        void cardStatusChanged( unsigned int slot, Status status );
+        void anyCardNeedsAttentionChanged( bool );
+        void anyCardHasNullPinChanged( bool );
+        void anyCardCanLearnKeysChanged( bool );
+        void cardStatusChanged( unsigned int slot, ReaderStatus::Status status );
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotFileChanged(QString) )
-        Q_PRIVATE_SLOT( d, void slotDirectoryChanged(QString) )
     };
 
 
