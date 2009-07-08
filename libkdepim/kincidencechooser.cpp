@@ -287,14 +287,14 @@ void KIncidenceChooser::setSyncMode()
 {
   chooseMode = mBg->selectedId();
   if ( chooseMode != KIncidenceChooser::ask ) {
-    QDialog::accept();
+    KDialog::accept();
   }
 }
 
 void KIncidenceChooser::useGlobalMode()
 {
   if ( chooseMode != KIncidenceChooser::ask ) {
-    QDialog::reject();
+    KDialog::reject();
   }
 }
 
@@ -442,19 +442,19 @@ void KIncidenceChooser::showIncidence2()
 void KIncidenceChooser::takeIncidence1()
 {
   mSelIncidence = mInc1;
-  QDialog::accept();
+  KDialog::accept();
 }
 
 void KIncidenceChooser::takeIncidence2()
 {
   mSelIncidence = mInc2;
-  QDialog::accept();
+  KDialog::accept();
 }
 
 void KIncidenceChooser::takeBoth()
 {
   mSelIncidence = 0;
-  QDialog::accept();
+  KDialog::accept();
 }
 
 #include "kincidencechooser.moc"
