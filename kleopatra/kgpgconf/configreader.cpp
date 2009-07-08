@@ -121,7 +121,7 @@ Config* ConfigReader::readConfig() const
     std::auto_ptr<Config> cfg( new Config );
     const QMap<QString,QString> componentInfo = d->readComponentInfo();
 
-    Q_FOREACH ( const QString i, componentInfo.keys() )
+    Q_FOREACH ( const QString& i, componentInfo.keys() )
     {
         std::auto_ptr<ConfigComponent> component( new ConfigComponent( i ) );
         component->setDescription( componentInfo[i] );

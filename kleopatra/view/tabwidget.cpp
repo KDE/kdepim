@@ -742,7 +742,7 @@ void TabWidget::loadViews( const KConfig * config ) {
 void TabWidget::saveViews( KConfig * config ) const {
     if ( !config )
         return;
-    Q_FOREACH( QString group, extractViewGroups( config ) )
+    Q_FOREACH( const QString & group, extractViewGroups( config ) )
         config->deleteGroup( group );
     unsigned int vg = 0;
     for ( unsigned int i = 0, end = count() ; i != end ; ++i ) {

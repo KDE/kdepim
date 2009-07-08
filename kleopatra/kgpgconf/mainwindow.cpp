@@ -170,21 +170,21 @@ void MainWindow::readConfiguration()
 {
     QStringList components = m_config->componentList();
     qSort( components );
-    Q_FOREACH ( const QString i, components )
+    Q_FOREACH ( const QString& i, components )
     {
         ConfigComponent* const component = m_config->component( i );
         assert( component );
         QTreeWidgetItem* const componentItem = new QTreeWidgetItem;
         componentItem->setText( NameColumn, component->name() );
         m_ui.treeWidget->addTopLevelItem( componentItem );
-        Q_FOREACH ( const QString j, component->groupList() )
+        Q_FOREACH ( const QString& j, component->groupList() )
         {
             ConfigGroup* const group = component->group( j );
             assert( group );
             QTreeWidgetItem* const groupItem = new QTreeWidgetItem;
             groupItem->setText( NameColumn, group->name() );
             componentItem->addChild( groupItem );
-            Q_FOREACH( const QString k, group->entryList() )
+            Q_FOREACH( const QString& k, group->entryList() )
             {
                 ConfigEntry* const entry = group->entry( k );
                 assert( entry );
