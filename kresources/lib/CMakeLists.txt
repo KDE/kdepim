@@ -3,21 +3,21 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
-set(kgroupwarebase_LIB_SRCS 
-   folderlister.cpp 
-   folderconfig.cpp 
-   folderlistview.cpp 
-   folderselectdialog.cpp 
-   groupwaredataadaptor.cpp 
-   groupwaredownloadjob.cpp 
-   calendaradaptor.cpp 
-   addressbookadaptor.cpp 
-   groupwareresourcejob.cpp 
-   groupwareuploadjob.cpp 
-   kcal_resourcegroupwarebase.cpp 
-   kabc_resourcegroupwarebase.cpp 
-   kcal_resourcegroupwarebaseconfig.cpp 
-   kabc_resourcegroupwarebaseconfig.cpp 
+set(kgroupwarebase_LIB_SRCS
+   folderlister.cpp
+   folderconfig.cpp
+   folderlistview.cpp
+   folderselectdialog.cpp
+   groupwaredataadaptor.cpp
+   groupwaredownloadjob.cpp
+   calendaradaptor.cpp
+   addressbookadaptor.cpp
+   groupwareresourcejob.cpp
+   groupwareuploadjob.cpp
+   kcal_resourcegroupwarebase.cpp
+   kabc_resourcegroupwarebase.cpp
+   kcal_resourcegroupwarebaseconfig.cpp
+   kabc_resourcegroupwarebaseconfig.cpp
    kcal_cachesettingsdlg.cpp )
 
 
@@ -33,10 +33,10 @@ install(TARGETS kgroupwarebase ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
-set(kgroupwaredav_LIB_SRCS 
-   davcalendaradaptor.cpp 
-   davaddressbookadaptor.cpp 
-   webdavhandler.cpp 
+set(kgroupwaredav_LIB_SRCS
+   davcalendaradaptor.cpp
+   davaddressbookadaptor.cpp
+   webdavhandler.cpp
    davgroupwareglobals.cpp )
 
 
