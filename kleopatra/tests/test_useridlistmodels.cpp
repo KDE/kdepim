@@ -39,7 +39,6 @@
 #include <KAboutData>
 
 #include <QTreeView>
-#include <QtCore>
 
 #ifdef KLEO_MODEL_TEST
 # include <models/modeltest.h>

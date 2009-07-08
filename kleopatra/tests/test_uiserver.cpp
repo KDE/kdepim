@@ -44,7 +44,6 @@
 #include "../utils/wsastarter.h"
 #include "../utils/hex.h"
 
-#include <QtCore>
 
 #ifndef Q_OS_WIN32
 # include <unistd.h>
