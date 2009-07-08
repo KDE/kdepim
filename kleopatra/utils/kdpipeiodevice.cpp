@@ -21,7 +21,11 @@
 
 #include "kdpipeiodevice.h"
 
-#include <QtCore>
+#include <QtCore/QDebug>
+#include <QtCore/QMutex>
+#include <QtCore/QPointer>
+#include <QtCore/QThread>
+#include <QtCore/QWaitCondition>
 
 #include <cassert>
 #include <cstring>

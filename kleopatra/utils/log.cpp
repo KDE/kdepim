@@ -30,7 +30,7 @@
     your version.
 */
 
-#include "config-kleopatra.h"
+#include <config-kleopatra.h>
 
 #include "log.h"
 #include "exception.h"
