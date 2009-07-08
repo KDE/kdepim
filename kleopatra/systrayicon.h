@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    systemtrayicon.h
+    systrayicon.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,51 +30,46 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SYSTEMTRAYICON_H__
-#define __KLEOPATRA_SYSTEMTRAYICON_H__
+#ifndef __KLEOPATRA_SYSTRAYICON_H__
+#define __KLEOPATRA_SYSTRAYICON_H__
 
-#include <QSystemTrayIcon>
+#include <utils/systemtrayicon.h>
 
 #include <utils/pimpl_ptr.h>
 
-class SystemTrayIcon : public QSystemTrayIcon {
+class MainWindow;
+class QDialog;
+
+class SysTrayIcon : public Kleo::SystemTrayIcon {
     Q_OBJECT
 public:
-    explicit SystemTrayIcon( QObject * parent=0 );
-    ~SystemTrayIcon();
+    explicit SysTrayIcon( QObject * parent=0 );
+    ~SysTrayIcon();
 
-    void setMainWindow( QWidget * w );
-    QWidget * mainWindow() const;
+    MainWindow * mainWindow() const;
+    QDialog * attentionWindow() const;
 
 public Q_SLOTS:
     void openOrRaiseMainWindow();
     void openOrRaiseConfigDialog();
+    void setAnyCardHasNullPin( bool );
+    void setAnyCardCanLearnKeys( bool );
 
 private:
-    virtual QWidget * doCreateMainWindow() const = 0;
-    /* reimp */ bool eventFilter( QObject *, QEvent * );
+    /* reimp */ void doMainWindowClosed( QWidget * );
+    /* reimp */ void doActivated();
+    /* reimp */ void slotEnableDisableActions();
 
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
     Q_PRIVATE_SLOT( d, void slotAbout() )
-    Q_PRIVATE_SLOT( d, void slotActivated( QSystemTrayIcon::ActivationReason ) )
-    Q_PRIVATE_SLOT( d, void slotEnableDisableActions() )
     Q_PRIVATE_SLOT( d, void slotEncryptClipboard() )
     Q_PRIVATE_SLOT( d, void slotOpenPGPSignClipboard() )
     Q_PRIVATE_SLOT( d, void slotSMIMESignClipboard() )
     Q_PRIVATE_SLOT( d, void slotDecryptVerifyClipboard() )
+    Q_PRIVATE_SLOT( d, void slotSetInitialPin() )
+    Q_PRIVATE_SLOT( d, void slotLearnCertificates() )
 };
 
-template <typename T_Widget>
-class SystemTrayIconFor : public SystemTrayIcon {
-public:
-    explicit SystemTrayIconFor( QObject * parent=0 ) : SystemTrayIcon( parent ) {}
-
-    T_Widget * mainWindow() const { return static_cast<T_Widget*>( SystemTrayIcon::mainWindow() ); }
-
-private:
-    /* reimp */ QWidget * doCreateMainWindow() const { return new T_Widget; }
-};
-
-#endif /* __KLEOPATRA_SYSTEMTRAYICON_H__ */
+#endif /* __KLEOPATRA_SYSTRAYICON_H__ */

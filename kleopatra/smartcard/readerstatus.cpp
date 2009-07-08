@@ -222,7 +222,6 @@ namespace {
         }
 
     Q_SIGNALS:
-        void anyCardNeedsAttentionChanged( bool );
         void anyCardHasNullPinChanged( bool );
         void anyCardCanLearnKeysChanged( bool );
         void cardStatusChanged( unsigned int, ReaderStatus::Status );
@@ -310,9 +309,8 @@ namespace {
                     ++idx;
                 }
 
-                emit anyCardCanLearnKeysChanged( anyLC );
                 emit anyCardHasNullPinChanged( anyNP );
-                emit anyCardNeedsAttentionChanged( anyNP || anyLC );
+                emit anyCardCanLearnKeysChanged( anyLC );
             }
         }
 
@@ -345,12 +343,10 @@ public:
 
         connect( this, SIGNAL(cardStatusChanged(unsigned int,ReaderStatus::Status)),
                  q, SIGNAL(cardStatusChanged(unsigned int,ReaderStatus::Status)) );
-        connect( this, SIGNAL(anyCardNeedsAttentionChanged(bool)),
-                 q, SIGNAL(anyCardNeedsAttentionChanged(bool)) );
         connect( this, SIGNAL(anyCardHasNullPinChanged(bool)),
                  q, SIGNAL(anyCardHasNullPinChanged(bool)) );
         connect( this, SIGNAL(anyCardCanLearnKeysChanged(bool)),
-                 q, SIGNAL(anyCardHasNullPinChanged(bool)) );
+                 q, SIGNAL(anyCardCanLearnKeysChanged(bool)) );
 
         connect( &watcher, SIGNAL(triggered()), this, SLOT(ping()) );
 
@@ -364,12 +360,12 @@ public:
     }
 
 private:
-    bool anyCardNeedsAttentionImpl() const {
-        return kdtools::any( cardInfos(), bind( &CardInfo::status, _1 ) > CardUsable );
-    }
-
     bool anyCardHasNullPinImpl() const {
         return kdtools::any( cardInfos(), bind( &CardInfo::status, _1 ) == CardHasNullPin );
+    }
+
+    bool anyCardCanLearnKeysImpl() const {
+        return kdtools::any( cardInfos(), bind( &CardInfo::status, _1 ) == CardCanLearnKeys );
     }
 
 private:
@@ -389,12 +385,12 @@ ReaderStatus::Status ReaderStatus::cardStatus( unsigned int slot ) const {
     return d->cardStatus( slot );
 }
 
-bool ReaderStatus::anyCardNeedsAttention() const {
-    return d->anyCardNeedsAttentionImpl();
-}
-
 bool ReaderStatus::anyCardHasNullPin() const {
     return d->anyCardHasNullPinImpl();
+}
+
+bool ReaderStatus::anyCardCanLearnKeys() const {
+    return d->anyCardCanLearnKeysImpl();
 }
 
 #include "moc_readerstatus.cpp"

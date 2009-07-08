@@ -114,6 +114,7 @@ set( _kleopatra_SRCS
   utils/multivalidator.cpp
   utils/progressmanager.cpp
   utils/filedialog.cpp
+  utils/systemtrayicon.cpp
 
   utils/hex.cpp
   utils/input.cpp
@@ -237,7 +238,7 @@ set( _kleopatra_SRCS
   newcertificatewizard/newcertificatewizard.cpp
 
   aboutdata.cpp
-  systemtrayicon.cpp
+  systrayicon.cpp
   kleopatraapplication.cpp
   main.cpp )
 
