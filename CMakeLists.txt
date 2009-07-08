@@ -152,6 +152,16 @@ set(libkdgantt1_SRCS
 
   include (kleopatra/ConfigureChecks.cmake)
 
+  # These targets will always be built before anything else.
+  add_subdirectory(libkdepim)
+  add_subdirectory(libkleo)
+  add_subdirectory(libkpgp)
+  add_subdirectory(libksieve)
+  add_subdirectory(kontactinterfaces)
+  add_subdirectory(mimelib)
+  add_subdirectory(kdgantt1)
+  add_subdirectory(icons)
+
   if(QGPGME_FOUND)
     if (Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
@@ -197,20 +207,11 @@ set(libkdgantt1_SRCS
     #endif(OPENSYNC_FOUND AND GLIB2_FOUND)
   endif(NOT WIN32)
 
-  # These targets will always be built
-  add_subdirectory(libkdepim)
-  add_subdirectory(libkleo)
-  add_subdirectory(libkpgp)
-  add_subdirectory(libksieve)
-  add_subdirectory(kontactinterfaces)
-  add_subdirectory(mimelib)
-  add_subdirectory(kresources)
-  add_subdirectory(kdgantt1)
-  add_subdirectory(icons)
-  add_subdirectory(plugins)
+  # These targets depend on optional applications
+  add_subdirectory(kresources) # Must be after KAddressbook
+  add_subdirectory(plugins) # Must be after KMail
 
 endif (KDEPIM_ONLY_KLEO)
-
 
 # doc must be a subdir of kdepim or packagers will kill us
 macro_optional_add_subdirectory(doc)
