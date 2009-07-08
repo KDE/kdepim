@@ -33,6 +33,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QMap>
+#include <QtCore/QList>
 #include <QtCore/QTextStream>
 
 #include <kcodecs.h>
@@ -47,6 +48,10 @@
 K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( kaddrbk_gmx_xxport, GMXXXPort, "kaddrbk_gmx_xxport" )
 
 #define GMX_FILESELECTION_STRING "*.gmxa|" + i18n( "GMX address book file (*.gmxa)" )
+
+const int typeHome  = 0;
+const int typeWork  = 1;
+const int typeOther = 2;
 
 GMXXXPort::GMXXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
@@ -99,10 +104,11 @@ KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
   QStringList strList;
   typedef QMap<QString, KABC::Addressee *> AddressMap;
   AddressMap addrMap;
+  QMap<QString, QString>  catList;
 
   // "Address_id,Nickname,Firstname,Lastname,Title,Birthday,Comments,Change_date,Status,Address_link_id,Categories"
   line = gmxStream.readLine();
-  while (!line.startsWith(QLatin1String("####")) && !gmxStream.atEnd()) {
+  while ( (line!=QLatin1String("####")) && !gmxStream.atEnd() ) {
     while (1) {
        strList = line.split('#', QString::KeepEmptyParts );
        if (strList.count() >= 11)
@@ -115,13 +121,14 @@ KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
     addr->setNickName(strList[1]);
     addr->setGivenName(strList[2]);
     addr->setFamilyName(strList[3]);
-    addr->setTitle(strList[4]);
+    addr->setFormattedName(strList[3] + ", " + strList[2]);
+    addr->setPrefix(strList[4]);
     if (checkDateTime(strList[5],dt)) addr->setBirthday(dt);
     addr->setNote(strList[6]);
     if (checkDateTime(strList[7],dt)) addr->setRevision(dt);
     // addr->setStatus(strList[8]); Status
     // addr->xxx(strList[9]); Address_link_id
-    // addr->setCategory(strList[10]); Categories
+    catList[strList[0]] = strList[10];
     addrMap[strList[0]] = addr;
 
     line = gmxStream.readLine();
@@ -149,25 +156,50 @@ KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
 
     KABC::Addressee *addr = addrMap[strList[0]];
     if (addr) {
-	for ( QStringList::Iterator it = strList.begin(); it != strList.end(); ++it )
-		*it = (*it).simplified();
 	// strList[1] = Record_id (numbered item, ignore here)
-	int id = strList[14].toInt(); // Record_type_id (0=work,1=home,2=other)
-  KABC::Address::Type type = (id==0) ? KABC::Address::Work : KABC::Address::Home;
-	if (!strList[19].isEmpty() && strList[19].toInt()!=0)
-		type |= KABC::Address::Pref; // Preferred address (seems to be bitfield for telephone Prefs)
+	int id = strList[14].toInt(); // Record_type_id (0=home,1=work,2=other)
+	KABC::Address::Type type;
+	KABC::PhoneNumber::Type phoneType;
+	switch ( id ) {
+	  case typeHome:
+	    type = KABC::Address::Home;
+	    phoneType = KABC::PhoneNumber::Home;
+	    break;
+	  case typeWork:
+	    type = KABC::Address::Work;
+	    phoneType = KABC::PhoneNumber::Work;
+	    break;
+	  case typeOther:
+	  default:
+	    type = KABC::Address::Intl;
+	    phoneType = KABC::PhoneNumber::Voice;
+	    break;
+	}
         KABC::Address adr = addr->address(type);
 	adr.setStreet(strList[2]);
 	adr.setCountry(strList[3]);
 	adr.setPostalCode(strList[4]);
 	adr.setLocality(strList[5]);
-	addr->insertPhoneNumber( KABC::PhoneNumber(strList[6], KABC::PhoneNumber::Home) );
-	addr->insertPhoneNumber( KABC::PhoneNumber(strList[7], KABC::PhoneNumber::Fax) );
+	if (!strList[6].isEmpty()) {
+	  addr->insertPhoneNumber(
+	    KABC::PhoneNumber(strList[6], phoneType)
+	  );
+	}
+	if (!strList[7].isEmpty())
+	  addr->insertPhoneNumber(
+	    KABC::PhoneNumber(strList[7], KABC::PhoneNumber::Fax)
+	);
   KABC::PhoneNumber::Type celltype = KABC::PhoneNumber::Cell;
 	// strList[9]=Mobile_type // always 0 or -1(default phone).
-	if (strList[9].toInt()) celltype |= KABC::PhoneNumber::Pref;
-	addr->insertPhoneNumber( KABC::PhoneNumber(strList[8], celltype) );
-	addr->insertEmail(strList[10]);
+	//if ( strList[19].toInt() & 4 ) celltype |= KABC::PhoneNumber::Pref;
+	//  avoid duplicates
+	if (!strList[8].isEmpty())
+	  addr->insertPhoneNumber(
+	    KABC::PhoneNumber(strList[8], celltype)
+	);
+	bool preferred = false;
+	if (strList[19].toInt() & 1 ) preferred = true;
+	addr->insertEmail(strList[10], preferred);
 	if (!strList[11].isEmpty()) addr->setUrl(strList[11]);
 	if (!strList[12].isEmpty()) addr->setRole(strList[12]);
 	// strList[13]=Comments
@@ -187,9 +219,39 @@ KABC::Addressee::List GMXXXPort::importContacts( const QString& ) const
     line = gmxStream.readLine();
   }
 
+  // read the categories
+  QStringList categories;
+  line = gmxStream.readLine();
+  line2 = gmxStream.readLine();
+  if ( !line.startsWith( QLatin1String( "AB_CATEGORIES:" ) ) ||
+    !line2.startsWith( QLatin1String( "Category_id" ) ) ) {
+    kWarning() <<"Could not find categories records!";
+  } else {
+    while ( !line.startsWith( QLatin1String( "####" ) ) &&
+            !gmxStream.atEnd() ) {
+      while (1) {
+        strList = line.split( '#', QString::KeepEmptyParts );
+        if ( strList.count() >= 3 )
+          break;
+        line.append( '\n' );
+        line.append( gmxStream.readLine() );
+      };
+      categories.append( strList[1] );
+      line = gmxStream.readLine();
+    };
+  }
+
   // now add the addresses to to addrList
   for ( AddressMap::Iterator it = addrMap.begin(); it != addrMap.end(); ++it ) {
      KABC::Addressee *addr = it.value();
+     // Add categories
+     int addrCat = catList[it.key()].toInt();
+     for ( int i=32; i >= 0; --i ) {
+       int cat =  1<<i;
+       if ( cat > addrCat ) continue;
+       if ( cat & addrCat  && categories.count() > i )
+         addr->insertCategory( categories[i] );
+     }
      addrList.append(*addr);
      delete addr;
   }
@@ -252,6 +314,27 @@ static const QString dateString( const QDateTime &dt )
   return d;
 }
 
+static const QStringList assignedCategoriesSorted(
+  const KABC::AddresseeList &list )
+{
+  // Walk through the addressees and collect up to 31 categories,
+  // returned sorted alphabetically
+  QStringList catList;
+  KABC::AddresseeList::ConstIterator it;
+  const KABC::Addressee *addr;
+  for ( it = list.begin(); it != list.end() && catList.count() < 32; ++it ) {
+    addr = &(*it);
+    if ( addr->isEmpty() ) continue;
+    const QStringList categories = addr->categories();
+    for ( int i=0; i < categories.count() && catList.count() < 32; ++i ) {
+      if ( !catList.contains( categories[i]) )
+        catList.append( categories[i] );
+    }
+  }
+  catList.sort();
+  return catList;
+}
+
 void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 {
   if (!fp || !list.count())
@@ -269,6 +352,23 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
   t << "Address_id,Nickname,Firstname,Lastname,Title,Birthday,Comments,"
        "Change_date,Status,Address_link_id,Categories\n";
 
+  // Categories: The gmxa file lists the categories in the last section
+  // and allows multi-category assignment through bitfields.
+  // However, the category definition in GMX is not updated through the
+  // import (only the category assignment of the addressees). The addresses
+  // may point to non-existing or wrong categories after the import.
+  // This implies that the user needs to make sure he/she manually creates
+  // the categories in the GMX UI *in the same sequence* as in the gmxa files.
+  // Of course this is only necessary if the category list has changed since
+  // the last import.
+  // The GMX UI displays the categories alphabetically sorted (thus hiding the
+  // sequence of entering categories. Therefore the easiest is to output the
+  // category list in the gmxa file alphabetically sorted as well. If you need
+  // to enter a new category, you can delete any existing category which sorts
+  // higher than the new one and then enter the new and remaining category.
+  QList<QString> catList;
+  catList.append( assignedCategoriesSorted( list ) );
+
   int no = 0;
   const QChar DELIM('#');
   for ( it = list.begin(); it != list.end(); ++it ) {
@@ -276,15 +376,34 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
      if (addr->isEmpty())
         continue;
      addrMap[++no] = addr;
+  
+    // Assign categories as bitfield
+    const QStringList categories = addr->categories();
+    long int category = 0;
+    if ( categories.count() > 0 ) {
+      for ( int i=0; i < categories.count(); i++ ) {
+        if ( catList.contains( categories[i] ) )
+          category |= 1 << catList.indexOf( categories[i], 0 ) ;
+      }
+    }
+
+    // GMX sorts by nickname by default - don't leave empty
+    QString nickName = addr->nickName();
+    if ( nickName.isEmpty() )
+      nickName = addr->formattedName();
+
      t << no << DELIM			// Address_id
-	<< addr->nickName() << DELIM	// Nickname
+	<< nickName << DELIM            // Nickname
 	<< addr->givenName() << DELIM	// Firstname
 	<< addr->familyName() << DELIM	// Lastname
-	<< addr->title() << DELIM	// Title
+	<< addr->prefix() << DELIM	// Title - Note: ->title()
+                                        // refers to the professional title
 	<< dateString(addr->birthday()) << DELIM   // Birthday
 	<< addr->note() /*.replace('\n',"\r\n")*/ << DELIM // Comments
 	<< dateString(addr->revision()) << DELIM   // Change_date
-	<< "1##0\n";			// Status, Address_link_id, Categories
+        << "1" << DELIM                 // Status
+        << DELIM                        // Address_link_id
+        << category << endl;            // Categories
   }
 
   t << "####\n";
@@ -295,27 +414,94 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 
   no = 1;
   while ( (addr = addrMap[no]) != NULL ) {
+
+    const KABC::PhoneNumber::List cellPhones =
+      addr->phoneNumbers( KABC::PhoneNumber::Cell );
+
+    const QStringList emails = addr->emails();
+
     for (int record_id=0; record_id<3; ++record_id) {
 
 	KABC::Address address;
   	KABC::PhoneNumber phone, fax, cell;
+     
+      // address preference flag:
+      // & 1: preferred email address
+      // & 4: preferred cell phone
+      int prefFlag=0;
 
-	/* record ID == 1: Work address */
-        if (record_id == 1) {
-		address = addr->address(KABC::Address::Work);
-		phone = addr->phoneNumber(KABC::PhoneNumber::Work);
-		fax   = addr->phoneNumber(KABC::PhoneNumber::Fax);
-		cell  = addr->phoneNumber(KABC::PhoneNumber::Work | KABC::PhoneNumber::Cell);
-	} else {
-		address = addr->address(KABC::Address::Home);
-		phone = addr->phoneNumber(KABC::PhoneNumber::Home);
-		cell  = addr->phoneNumber(KABC::PhoneNumber::Cell);
-	}
+      switch (record_id) {
+      // Assign address, phone and cellphone, fax if applicable
+        case typeHome:
+          address = addr->address( KABC::Address::Home );
+          phone   = addr->phoneNumber( KABC::PhoneNumber::Home );
+          if ( cellPhones.count() > 0 ) {
+            cell  = cellPhones.at(0);
+            if ( !cell.isEmpty() )
+              prefFlag |= 4;
+          }
+          break;
+        case typeWork:
+          address = addr->address( KABC::Address::Work );
+          phone   = addr->phoneNumber( KABC::PhoneNumber::Work );
+          if ( cellPhones.count() >= 2 )
+            cell  = cellPhones.at(1);
+          fax     = addr->phoneNumber( KABC::PhoneNumber::Fax );
+          break;
+        case typeOther:
+        default:
+          if ( addr->addresses( KABC::Address::Home ).count() > 1 )
+            address = addr->addresses( KABC::Address::Home ).at(1);
+          if ( ( address.isEmpty() ) &&
+               ( addr->addresses( KABC::Address::Work ).count() > 1 ) )
+            address = addr->addresses( KABC::Address::Work ).at(1);
+          if ( address.isEmpty() )
+            address = addr->address( KABC::Address::Dom );
+          if ( address.isEmpty() )
+            address = addr->address( KABC::Address::Intl );
+          if ( address.isEmpty() )
+            address = addr->address( KABC::Address::Postal );
+          if ( address.isEmpty() )
+            address = addr->address( KABC::Address::Parcel );
 
-	const QStringList emails = addr->emails();
-	QString email;
-	if (emails.count()>record_id) email = emails[record_id];
+          if ( addr->phoneNumbers( KABC::PhoneNumber::Home ).count() > 1 )
+            phone = addr->phoneNumbers( KABC::PhoneNumber::Home ).at(1);
+          if ( ( phone.isEmpty() ) &&
+               ( addr->phoneNumbers( KABC::PhoneNumber::Work ).count() > 1 ) )
+            phone = addr->phoneNumbers( KABC::PhoneNumber::Work ).at(1);
+          if ( phone.isEmpty() )
+            phone = addr->phoneNumber( KABC::PhoneNumber::Voice );
+          if ( phone.isEmpty() )
+            phone = addr->phoneNumber( KABC::PhoneNumber::Msg );
+          if ( phone.isEmpty() )
+            phone = addr->phoneNumber( KABC::PhoneNumber::Isdn );
+          if ( phone.isEmpty() )
+            phone = addr->phoneNumber( KABC::PhoneNumber::Car );
+          if ( phone.isEmpty() )
+            phone = addr->phoneNumber( KABC::PhoneNumber::Pager );
 
+          switch ( cellPhones.count() ) {
+            case 0: break;
+            case 1:
+            case 2:
+              if ( !address.isEmpty() )
+                cell = cellPhones.at(0);
+              break;
+            default:
+              cell = cellPhones.at(2);
+              break;
+          }
+          break;
+      }
+
+      QString email="";
+      if (emails.count()>record_id) {
+        email = emails[record_id];
+        if ( email == addr->preferredEmail() ) prefFlag |= 1;
+      }
+
+      if ( !address.isEmpty() || !phone.isEmpty() ||
+           !cell.isEmpty()    || !email.isEmpty() ) {
 	t << no << DELIM			// Address_id
 	  << record_id << DELIM			// Record_id
 	  << address.street() << DELIM		// Street
@@ -325,25 +511,37 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 	  << phone.number() << DELIM		// Phone
 	  << fax.number() << DELIM		// Fax
 	  << cell.number() << DELIM		// Mobile
-	  << ((cell.type()&KABC::PhoneNumber::Pref)?-1:0) << DELIM // Mobile_type
+	  << ((record_id==typeWork)?0:1 ) << DELIM   // Mobile_type
 	  << email << DELIM			// Email
-	  << ((record_id==1)?addr->url().url():QString()) << DELIM // Homepage
-	  << ((record_id==1)?addr->role():QString()) << DELIM	// Position
-	  << DELIM				// Comments
+	  << ((record_id==typeWork)?addr->url().url():QString()) << DELIM // Homepage
+	  << ((record_id==typeWork)?addr->role():QString()) << DELIM // Position
+	  << ((record_id==typeHome)?addr->custom("KADDRESSBOOK", "X-SpousesName"):QString() ) << DELIM // Comments
 	  << record_id << DELIM			// Record_type_id (0,1,2) - see above
 	  << DELIM				// Record_type (name of this additional record entry)
-	  << ((record_id==1)?addr->organization():QString()) << DELIM // Company
-	  << ((record_id==1)?addr->custom("KADDRESSBOOK", "X-Department"):QString()) << DELIM // Department
+	  << ((record_id==typeWork)?addr->organization():QString()) << DELIM // Company
+	  << ((record_id==typeWork)?addr->custom("KADDRESSBOOK", "X-Department"):QString() ) << DELIM // Department
 	  << dateString(addr->revision()) << DELIM	// Change_date
-	  << 5 << DELIM				// Preferred
+	  << prefFlag << DELIM			// Preferred:
+	                                        // ( & 1: preferred email,
+	                                        //   & 4: preferred cell phone )
 	  << 1 << endl;				// Status (should always be "1")
+      }
     }
 
     ++no;
   };
 
-  t << "####";
+  t << "####" << endl;
+  t << "AB_CATEGORIES:" << endl;
+  t << "Category_id,Name,Icon_id" << endl;
+
+  //  Write Category List (beware: Category_ID 0 is reserved for none
+  //  Interestingly: The index here is an int sequence and does not
+  //  correspond to the bit reference used above.
+  for ( int i = 0; i < catList.size(); i++ ) {
+    t << ( i + 1 ) << DELIM << catList.at( i ) << DELIM << 0 << endl;
+  }
+  t << "####" << endl;
 }
 
 #include "gmx_xxport.moc"
-
