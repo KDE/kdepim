@@ -79,11 +79,11 @@ namespace {
             const QString domainRestored = QUrl::fromAce( domainEncoded );
             QString encoded = str.left( atIdx ) + '@' + QString::fromLatin1( domainEncoded );
             if ( needsDotOrgAdded ) {
-                assert( encoded.endsWith( ".org" ) );
+                assert( encoded.endsWith( QLatin1String( ".org" ) ) );
                 encoded.chop( 4 );
             }
             if ( needsOrgAdded ) {
-                assert( encoded.endsWith( ".org" ) );
+                assert( encoded.endsWith( QLatin1String( ".org" ) ) );
                 encoded.chop( 3 ); // '.' was part of domain before
             }
             kDebug() << "\n str           :" << str

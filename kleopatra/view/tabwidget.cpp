@@ -412,7 +412,7 @@ TabWidget::Private::Private( TabWidget * qq )
 
     for ( unsigned int i = 0 ; i < NumPageActions ; ++i ) {
         action_data ad = actionData[i];
-        assert( QString::fromLatin1( ad.name ).startsWith( "window_" ) );
+        assert( QString::fromLatin1( ad.name ).startsWith( QLatin1String( "window_" ) ) );
         ad.name = ad.name + strlen("window_");
         ad.tooltip.clear();
         ad.receiver = 0;

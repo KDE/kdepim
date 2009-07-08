@@ -88,7 +88,7 @@ namespace {
             }
             const QList<QByteArray> lines = gpgconf.readAll().split( '\n' );
             Q_FOREACH( const QByteArray & line, lines )
-                if ( line.startsWith( "sysconfdir:" ) )
+                if ( line.startsWith( "sysconfdir:" ) ) //krazy:exclude=strings
                     try {
                         return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( "gpgconf.conf" );
                     } catch ( ... ) { return false; }
