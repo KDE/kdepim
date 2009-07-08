@@ -604,7 +604,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		}
 		subentry->number_type = type;
 		strncpy(subentry->data.number, makeValidPhone(s).toAscii(), sizeof(subentry->data.number)-1);
-		subentry->id = phone_location<<8+entry.subentries_count;
+		subentry->id = ( phone_location << 8 ) + entry.subentries_count;
 		entry.subentries_count++;
 		subentry++;
 		if (entry.subentries_count >= GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)

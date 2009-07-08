@@ -200,7 +200,7 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
 
           KIO::NetAccess::removeTempFile( fileName );
         } else {
-          QString text = i18nc( "@info", 
+          QString text = i18nc( "@info",
                                 "<para>When trying to read the vCard, there was an error opening the file <filename>%1</filename>:</para>"
                                 "<para>%2</para>",
                                 (*it).pathOrUrl(),
@@ -242,11 +242,11 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data )
 {
-  if( QFileInfo(url.path()).exists() ) {
-      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"", url.path()) ) == KMessageBox::No)
+  if( QFileInfo(url.isLocalFile() ? url.toLocalFile() : url.path()).exists() ) {
+      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"", url.isLocalFile() ? url.toLocalFile() : url.path()) ) == KMessageBox::No)
         return false;
   }
-	
+
   KTemporaryFile tmpFile;
   tmpFile.open();
 

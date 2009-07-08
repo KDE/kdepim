@@ -43,8 +43,8 @@ bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
   if ( url.isEmpty() )
       return true;
 
-  if ( QFileInfo(url.path()).exists() ) {
-    if ( KMessageBox::questionYesNo( parentWidget(), i18n( "Do you want to overwrite file \"%1\"", url.path() ) ) == KMessageBox::No )
+  if ( QFileInfo(url.isLocalFile() ? url.toLocalFile() : url.path()).exists() ) {
+    if ( KMessageBox::questionYesNo( parentWidget(), i18n( "Do you want to overwrite file \"%1\"", url.isLocalFile() ? url.toLocalFile() : url.path() ) ) == KMessageBox::No )
       return true;
   }
 
@@ -62,9 +62,9 @@ bool CsvXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
 
   } else {
-    QFile file( url.path() );
+    QFile file( url.toLocalFile() );
     if ( !file.open( QIODevice::WriteOnly ) ) {
-      const QString msg = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", url.path() );
+      const QString msg = i18n( "<qt>Unable to open file <b>%1</b>.</qt>", url.toLocalFile() );
       KMessageBox::error( parentWidget(), msg );
       return false;
     }

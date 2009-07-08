@@ -1255,7 +1255,7 @@ QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::Resou
   QImage img;
   KUrl url;
   if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
-    const QString path = url.path();
+    const QString path = url.toLocalFile();
     img.load( path );
     QFile::remove(path);
   }
@@ -1281,7 +1281,7 @@ QByteArray Kolab::Contact::loadDataFromKMail( const QString& attachmentName, KAB
   QByteArray data;
   KUrl url;
   if ( resource->kmailGetAttachment( url, subResource, sernum, attachmentName ) && !url.isEmpty() ) {
-    QFile f( url.path() );
+    QFile f( url.toLocalFile() );
     if ( f.open( QIODevice::ReadOnly ) ) {
       data = f.readAll();
       f.close();

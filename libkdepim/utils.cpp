@@ -236,13 +236,15 @@ QString Utils::rot13(const QString &s)
   QString r(s);
 
   for (int i=0; i<r.length(); i++) {
-    if ( r[i] >= QChar('A') && r[i] <= QChar('M') ||
-         r[i] >= QChar('a') && r[i] <= QChar('m') )
+    if ( ( r[i] >= QLatin1Char('A') && r[i] <= QLatin1Char('M') ) ||
+         ( r[i] >= QLatin1Char('a') && r[i] <= QLatin1Char('m') ) ) {
       r[i] = (char)((int)QChar(r[i]).toLatin1() + 13);
-    else
-      if  ( r[i] >= QChar('N') && r[i] <= QChar('Z') ||
-            r[i] >= QChar('n') && r[i] <= QChar('z') )
+    } else {
+      if  ( ( r[i] >= QLatin1Char('N') && r[i] <= QLatin1Char('Z') ) ||
+            ( r[i] >= QLatin1Char('n') && r[i] <= QLatin1Char('z') ) ) {
         r[i] = (char)((int)QChar(r[i]).toLatin1() - 13);
+      }
+    }
   }
 
   return r;

@@ -19,6 +19,7 @@
 #include <klocale.h>
 #include <QDir>
 
+
 KNode::GroupListJob::GroupListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool incremental ) :
   KNJobData( KNJobData::JTFetchGroups, c, a, i ),
   mIncremental( incremental )
@@ -213,7 +214,15 @@ void KNode::ArticleFetchJob::execute()
 
   KUrl url = baseUrl();
   path += QDir::separator();
-  path += target->messageID()->as7BitString( false );
+
+  // By default, fetch articles by their server-side Id.
+  // (some server does not understand the "ARTICLE <msg-id>" command correctly (bug #193550))
+  if ( target->articleNumber() != -1 ) {
+    path += QString::number( target->articleNumber() );
+  } else {
+    // User asked to fetch a message by its msg-id
+    path += target->messageID()->as7BitString( false );
+  }
   url.setPath( path );
 
   KIO::Job* job = KIO::storedGet( url, KIO::NoReload, KIO::HideProgressInfo );
