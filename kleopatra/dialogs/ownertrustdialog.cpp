@@ -32,9 +32,9 @@
 
 #include <config-kleopatra.h>
 
-#include <utils/formatting.h>
-
 #include "ownertrustdialog.h"
+
+#include <utils/formatting.h>
 
 #include "ui_ownertrustdialog.h"
 
