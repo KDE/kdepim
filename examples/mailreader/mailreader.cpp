@@ -86,15 +86,17 @@ void mailreader::slotCollectionsReceived(const Akonadi::Collection::List &collec
 
 void mailreader::slotCollectionSelected(int index)
 {
+  m_nextMessage->setEnabled(false);
+  m_previousMessage->setEnabled(false);
   qint64 id = m_collectionCombo->itemData(index).toLongLong();
   if ( id == -1 ) {
     m_view->showAboutPage();
-    m_nextMessage->setEnabled(false);
-    m_previousMessage->setEnabled(false);
   }
+  m_items.clear();
   Akonadi::Collection c(id);
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(c);
   connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemsReceived(const Akonadi::Item::List &)));
+  connect(job, SIGNAL(finished(KJob*)), SLOT(slotCollectionFecthDone()));
 }
 
 void mailreader::slotItemsReceived(const Akonadi::Item::List &items)
@@ -108,6 +110,13 @@ void mailreader::slotItemsReceived(const Akonadi::Item::List &items)
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
     job->fetchScope().fetchFullPayload();
     connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
+  }
+}
+
+void mailreader::slotCollectionFecthDone()
+{
+  if (m_items.isEmpty()) {
+    m_view->showAboutPage();
   }
 }
 

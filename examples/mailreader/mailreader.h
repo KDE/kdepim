@@ -44,6 +44,7 @@ public:
 private slots:
     void slotCollectionsReceived(const Akonadi::Collection::List &);
     void slotCollectionSelected(int index);
+    void slotCollectionFecthDone();
     void slotItemsReceived(const Akonadi::Item::List &items);
     void slotItemReceived(const Akonadi::Item::List &items);
     void slotPreviousMessage();
