@@ -96,7 +96,7 @@ void mailreader::slotCollectionSelected(int index)
   Akonadi::Collection c(id);
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(c);
   connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemsReceived(const Akonadi::Item::List &)));
-  connect(job, SIGNAL(finished(KJob*)), SLOT(slotCollectionFecthDone()));
+  connect(job, SIGNAL(result(KJob*)), SLOT(slotCollectionFecthDone()));
 }
 
 void mailreader::slotItemsReceived(const Akonadi::Item::List &items)
