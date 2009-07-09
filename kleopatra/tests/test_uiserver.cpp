@@ -54,6 +54,7 @@
 #endif
 #include <assert.h>
 
+#include <cstdlib>
 #include <iostream>
 #include <map>
 #include <string>
@@ -226,10 +227,10 @@ int main( int argc, char * argv[] ) {
             qDebug( "%s", Exception( err, "OUTPUT FD" ).what() );
             return 1;
         }
-    }    
+    }
 #endif
 
-    
+
     for ( std::vector<std::string>::const_iterator it = inFiles.begin(), end = inFiles.end() ; it != end ; ++it ) {
         char buffer[1024];
         sprintf( buffer, "INPUT FILE=%s", hexencode( *it ).c_str() );
@@ -240,7 +241,7 @@ int main( int argc, char * argv[] ) {
         }
     }
 
-    
+
     for ( std::vector<std::string>::const_iterator it = msgFiles.begin(), end = msgFiles.end() ; it != end ; ++it ) {
         char buffer[1024];
         sprintf( buffer, "MESSAGE FILE=%s", hexencode( *it ).c_str() );
@@ -251,7 +252,7 @@ int main( int argc, char * argv[] ) {
         }
     }
 
-    
+
     for ( std::vector<std::string>::const_iterator it = outFiles.begin(), end = outFiles.end() ; it != end ; ++it ) {
         char buffer[1024];
         sprintf( buffer, "OUTPUT FILE=%s", hexencode( *it ).c_str() );
@@ -262,8 +263,8 @@ int main( int argc, char * argv[] ) {
         }
     }
 
-    
-    
+
+
     Q_FOREACH( const char * opt, options ) {
         std::string line = "OPTION ";
         line += opt;
@@ -279,6 +280,6 @@ int main( int argc, char * argv[] ) {
     }
 
     assuan_disconnect( ctx );
-    
+
     return 0;
 }
