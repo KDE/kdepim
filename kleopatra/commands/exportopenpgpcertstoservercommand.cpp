@@ -114,7 +114,7 @@ QStringList ExportOpenPGPCertsToServerCommand::arguments() const {
     if ( !haveKeyserverConfigured() )
         result << "--keyserver" << "keys.gnupg.net";
     result << "--send-keys";
-    Q_FOREACH( const Key & key, d->keys() )
+    Q_FOREACH( const Key & key, d->keys() ) //krazy:exclude=foreach
         result << key.primaryFingerprint();
     return result;
 }
