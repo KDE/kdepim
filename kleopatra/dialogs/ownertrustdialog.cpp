@@ -33,10 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "ownertrustdialog.h"
+#include "ui_ownertrustdialog.h"
 
 #include <utils/formatting.h>
-
-#include "ui_ownertrustdialog.h"
 
 #include <QPushButton>
 

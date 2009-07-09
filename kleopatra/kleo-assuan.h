@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_ASSUAN_H__
-#define __KLEOPATRA_ASSUAN_H__
+#ifndef __KLEO_ASSUAN_H__
+#define __KLEO_ASSUAN_H__
 
 #ifndef _ASSUAN_ONLY_GPG_ERRORS
 #define _ASSUAN_ONLY_GPG_ERRORS
