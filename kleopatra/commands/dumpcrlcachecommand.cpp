@@ -84,7 +84,7 @@ namespace {
 
             explicit Ui( DumpCrlCacheDialog * q )
                 : logTextWidget( q ),
-                  updateButton( i18n("&Update"), q ),
+                  updateButton( i18nc("@action:button Update the log text widget", "&Update"), q ),
                   closeButton( KStandardGuiItem::close(), q ),
                   vlay( q ),
                   hlay()

@@ -80,7 +80,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
                                                        "configuration dialog.</para>"
                                                        "<para>Do you want to continue with <resource>keys.gnupg.net</resource> "
                                                        "as fallback server?</para>" ),
-                                                 i18n("OpenPGP Certificate Refresh"),
+                                                 i18nc("@title:window", "OpenPGP Certificate Refresh"),
                                                  KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                  QLatin1String( "warn-refresh-openpgp-missing-keyserver" ) )
              != KMessageBox::Continue )
@@ -93,7 +93,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
                                                     "connections, and can take up to an hour or more to complete, depending on "
                                                     "your network connection, and the number of certificates to check.</para> "
                                                     "<para>Are you sure you want to continue?</para>"),
-                                               i18n("OpenPGP Certificate Refresh"),
+                                               i18nc("@title:window", "OpenPGP Certificate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-refresh-openpgp-expensive" ) )
         == KMessageBox::Continue;
@@ -109,11 +109,11 @@ QStringList RefreshOpenPGPCertsCommand::arguments() const {
 }
 
 QString RefreshOpenPGPCertsCommand::errorCaption() const {
-    return i18n( "OpenPGP Certificate Refresh Error" );
+    return i18nc( "@title:window", "OpenPGP Certificate Refresh Error" );
 }
 
 QString RefreshOpenPGPCertsCommand::successCaption() const {
-    return i18n( "OpenPGP Certificate Refresh Finished" );
+    return i18nc( "@title:window", "OpenPGP Certificate Refresh Finished" );
 }
 
 QString RefreshOpenPGPCertsCommand::crashExitMessage( const QStringList & args ) const {
@@ -131,7 +131,7 @@ QString RefreshOpenPGPCertsCommand::errorExitMessage( const QStringList & args )
 }
 
 QString RefreshOpenPGPCertsCommand::successMessage( const QStringList & ) const {
-    return i18n( "OpenPGP certificates refreshed successfully." );
+    return i18nc( "@info", "OpenPGP certificates refreshed successfully." );
     // ### --check-trustdb
 }
 
