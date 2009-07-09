@@ -103,15 +103,19 @@ static QString linkPerson( const QString& email, QString name, QString uid )
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
-    KABC::Addressee o = addressList.first();
-    if ( !o.isEmpty() && addressList.size() < 2 ) {
-      if ( name.isEmpty() )
-        // No name set, so use the one from the addressbook
-        name = o.formattedName();
-      uid = o.uid();
-    } else
-      // Email not found in the addressbook. Don't make a link
-      uid = QString::null;
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        if ( name.isEmpty() ) {
+          // No name set, so use the one from the addressbook
+          name = o.formattedName();
+        }
+        uid = o.uid();
+      } else {
+        // Email not found in the addressbook. Don't make a link
+        uid = QString::null;
+      }
+    }
   }
   kdDebug(5850) << "formatAttendees: uid = " << uid << endl;
 
@@ -119,11 +123,12 @@ static QString linkPerson( const QString& email, QString name, QString uid )
   QString tmpString = "<li>";
   if ( !uid.isEmpty() ) {
     // There is a UID, so make a link to the addressbook
-    if ( name.isEmpty() )
+    if ( name.isEmpty() ) {
       // Use the email address for text
       tmpString += eventViewerAddLink( "uid:" + uid, email );
-    else
+    } else {
       tmpString += eventViewerAddLink( "uid:" + uid, name );
+    }
   } else {
     // No UID, just show some text
     tmpString += ( name.isEmpty() ? email : name );
@@ -132,13 +137,14 @@ static QString linkPerson( const QString& email, QString name, QString uid )
 
   // Make the mailto link
   if ( !email.isEmpty() ) {
-    KCal::Person person( name, email );
     KURL mailto;
     mailto.setProtocol( "mailto" );
-    mailto.setPath( person.fullName() );
-    tmpString += eventViewerAddLink( mailto.url(), QString::null );
+    mailto.setPath( email );
+    const QString iconPath =
+      KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
+    tmpString += eventViewerAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" );
   }
-  tmpString += "</li>\n";
+  tmpString += "</li>";
 
   return tmpString;
 }
@@ -751,26 +757,31 @@ static QString invitationPerson( const QString& email, QString name, QString uid
   if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
     KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
     KABC::Addressee::List addressList = add_book->findByEmail( email );
-    KABC::Addressee o = addressList.first();
-    if ( !o.isEmpty() && addressList.size() < 2 ) {
-      if ( name.isEmpty() )
-        // No name set, so use the one from the addressbook
-        name = o.formattedName();
-      uid = o.uid();
-    } else
-      // Email not found in the addressbook. Don't make a link
-      uid = QString::null;
+    if ( !addressList.isEmpty() ) {
+      KABC::Addressee o = addressList.first();
+      if ( !o.isEmpty() && addressList.size() < 2 ) {
+        if ( name.isEmpty() ) {
+          // No name set, so use the one from the addressbook
+          name = o.formattedName();
+        }
+        uid = o.uid();
+      } else {
+        // Email not found in the addressbook. Don't make a link
+        uid = QString::null;
+      }
+    }
   }
 
   // Show the attendee
   QString tmpString;
   if ( !uid.isEmpty() ) {
     // There is a UID, so make a link to the addressbook
-    if ( name.isEmpty() )
+    if ( name.isEmpty() ) {
       // Use the email address for text
       tmpString += eventViewerAddLink( "uid:" + uid, email );
-    else
+    } else {
       tmpString += eventViewerAddLink( "uid:" + uid, name );
+    }
   } else {
     // No UID, just show some text
     tmpString += ( name.isEmpty() ? email : name );
@@ -783,7 +794,10 @@ static QString invitationPerson( const QString& email, QString name, QString uid
     KURL mailto;
     mailto.setProtocol( "mailto" );
     mailto.setPath( person.fullName() );
-    tmpString += eventViewerAddLink( mailto.url(), QString::null );
+    const QString iconPath =
+      KGlobal::iconLoader()->iconPath( "mail_new", KIcon::Small );
+    tmpString += eventViewerAddLink( mailto.url(), "<img src=\"" + iconPath + "\">" )
+;
   }
   tmpString += "\n";
 
@@ -906,17 +920,39 @@ static QString invitationDetailsTodo( Todo *todo )
     return QString::null;
 
   QString sSummary = i18n( "Summary unspecified" );
-  QString sDescr = i18n( "Description unspecified" );
   if ( ! todo->summary().isEmpty() ) {
-    sSummary = todo->summary();
+    sSummary = string2HTML( todo->summary() );
   }
-  if ( ! todo->description().isEmpty() ) {
-    sDescr = todo->description();
+
+  QString sLocation = i18n( "Location unspecified" );
+  if ( ! todo->location().isEmpty() ) {
+    sLocation = string2HTML( todo->location() );
   }
-  QString html( "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n" );
-  html += invitationRow( i18n( "Summary:" ), sSummary );
-  html += invitationRow( i18n( "Description:" ), sDescr );
-  html += "</table>\n";
+
+  QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
+  QString html = QString("<div dir=\"%1\">\n").arg(dir);
+
+  html += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";
+
+  // Invitation summary & location rows
+  html += invitationRow( i18n( "What:" ), sSummary );
+  html += invitationRow( i18n( "Where:" ), sLocation );
+
+  if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
+    html += invitationRow( i18n( "Start Date:" ), todo->dtStartStr( false ) );
+  }
+  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
+    html += invitationRow( i18n( "Due Date:" ), todo->dtDueDateStr( false ) );
+    if ( !todo->doesFloat() ) {
+      html += invitationRow( i18n( "Due Time:" ),
+                             KGlobal::locale()->formatTime( todo->dtDue().time() ) );
+    }
+
+  } else {
+    html += invitationRow( i18n( "Due Date:" ), i18n( "None" ) );
+  }
+
+  html += "</table></div>\n";
   html += invitationsDetailsIncidence( todo );
 
   return html;
@@ -1657,13 +1693,16 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       Attendee *ea = 0;
       if ( inc ) {
         a = inc->attendees().first();
-        if ( a && helper->calendar() ) {
+        if ( a ) {
           ea = findAttendee( existingIncidence, a->email() );
         }
       }
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
-        html += "<br/>";
-        html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
+        if ( inc->revision() > 0 ) {
+          html += "<br><u><i>";
+          html += i18n( "The response has been recorded [%1]" ).arg( ea->statusStr() );
+          html += "</i></u>";
+        }
       } else {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "reply", i18n( "[Record response into my task list]" ) );
