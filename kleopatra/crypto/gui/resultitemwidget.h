@@ -53,7 +53,7 @@ namespace Gui {
     class ResultItemWidget : public QWidget {
         Q_OBJECT
     public:
-        ResultItemWidget( const boost::shared_ptr<const Task::Result> &result, QWidget * parent=0, Qt::WindowFlags flags=0 );
+        explicit ResultItemWidget( const boost::shared_ptr<const Task::Result> &result, QWidget * parent=0, Qt::WindowFlags flags=0 );
         ~ResultItemWidget();
 
         bool detailsVisible() const;
