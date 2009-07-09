@@ -1,7 +1,7 @@
 /*
  * mailreaderview.h
  *
- * Copyright (C) 2007 Andras Mantia <amantia@kde.org>
+ * Copyright (C) 2009 Andras Mantia <amantia@kde.org>
  */
 #ifndef MAILREADERVIEW_H
 #define MAILREADERVIEW_H
@@ -13,6 +13,10 @@
 class QPainter;
 class KUrl;
 class KMReaderWin;
+
+namespace Akonadi {
+  class Item;
+}
 
 /**
  * This is the main view class for mailreader.  Most of the non-menu,
@@ -37,6 +41,9 @@ public:
      * Destructor
      */
     virtual ~mailreaderView();
+
+    void showItem(Akonadi::Item& item);
+    void showAboutPage();
 
 private:
     Ui::mailreaderview ui_mailreaderview;

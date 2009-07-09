@@ -1,7 +1,7 @@
 /*
  * mailreaderview.cpp
  *
- * Copyright (C) 2008 Andras Mantia <amantia@kde.org>
+ * Copyright (C) 2009 Andras Mantia <amantia@kde.org>
  */
 #include "mailreaderview.h"
 #include "settings.h"
@@ -11,6 +11,9 @@
 #include <klocale.h>
 #include <QtGui/QLabel>
 #include <QHBoxLayout>
+#include <KDebug>
+
+#include <akonadi/item.h>
 
 mailreaderView::mailreaderView(QWidget *parent)
 {
@@ -20,7 +23,6 @@ mailreaderView::mailreaderView(QWidget *parent)
     layout->addWidget(m_readerWin);
     setLayout(layout);
     setAutoFillBackground(true);
-
     m_readerWin->displayAboutPage();
 }
 
@@ -41,6 +43,18 @@ void mailreaderView::switchColors()
 
 void mailreaderView::settingsChanged()
 {
+}
+
+void mailreaderView::showItem(Akonadi::Item& item)
+{
+  kDebug() << "Show item with ID: " << item.id();
+  m_readerWin->enableMsgDisplay();
+  m_readerWin->setMessageItem(item, true);
+}
+
+void mailreaderView::showAboutPage()
+{
+  m_readerWin->displayAboutPage();
 }
 
 #include "mailreaderview.moc"

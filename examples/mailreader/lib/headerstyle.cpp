@@ -565,7 +565,7 @@ namespace KMail {
 
         headerStr += QString("<div dir=\"%1\">%2</div>\n")
                         .arg(subjectDir)
-                        .arg(!message->subject()?
+                        .arg(!message->subject(false)?
                              i18n("No Subject") :
                              strToHtml( message->subject()->asUnicodeString(), flags ));
     }

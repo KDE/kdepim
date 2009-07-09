@@ -149,7 +149,6 @@ static void setup() {
   }
 }
 
-
 const KMail::Interface::BodyPartFormatter * KMail::BodyPartFormatterFactory::createFor( const char * type, const char * subtype ) const {
   if ( !type || !*type )
     type = "*"; //krazy:exclude=doublequote_chars

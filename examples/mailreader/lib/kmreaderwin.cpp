@@ -1381,7 +1381,7 @@ void KMReaderWin::displaySplashPage( const QString &info )
   mViewer->begin(KUrl::fromPath( location ));
 
   QString fontSize = QString::number( pointsToPixel( mCSSHelper->bodyFont().pointSize() ) );
-  QString appTitle = i18n("KMail");
+  QString appTitle = i18n("Mailreader");
   QString catchPhrase = ""; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
   QString quickDescription = i18n("The email client for the K Desktop Environment.");
   mViewer->write(content.arg(fontSize).arg(appTitle).arg(catchPhrase).arg(quickDescription).arg(info));
@@ -1410,25 +1410,15 @@ void KMReaderWin::displayOfflinePage()
 void KMReaderWin::displayAboutPage()
 {
   KLocalizedString info =
-    ki18nc("%1: KMail version; %2: help:// URL; %3: homepage URL; "
+    ki18nc("%1: Mailreader version; %2: help:// URL; %3: homepage URL; "
          "%4: generated list of new features; "
          "%5: First-time user text (only shown on first start); "
          "%6: generated list of important changes; "
          "--- end of comment ---",
-         "<h2 style='margin-top: 0px;'>Welcome to KMail %1</h2><p>KMail is the email client for the K "
-         "Desktop Environment. It is designed to be fully compatible with "
-         "Internet mailing standards including MIME, SMTP, POP3 and IMAP."
+         "<h2 style='margin-top: 0px;'>Welcome to Mailreader %1</h2><p>Mailread is the proof of concept reader for the K "
+         "Desktop Environment using the Akonadi/KMime framework."
          "</p>\n"
-         "<ul><li>KMail has many powerful features which are described in the "
-         "<a href=\"%2\">documentation</a></li>\n"
-         "<li>The <a href=\"%3\">KMail homepage</A> offers information about "
-         "new versions of KMail</li></ul>\n"
-         "%6\n" // important changes
-         "%4\n" // new features
-         "%5\n" // first start info
-         "<p>We hope that you will enjoy KMail.</p>\n"
-         "<p>Thank you,</p>\n"
-         "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The KMail Team</p>")
+         "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The Akonadi Team</p>")
            .subs( "0.1" /*FIXME KMAIL_VERSION*/ ) // KMail version
            .subs( "help:/kmail/index.html" ) // KMail help:// URL
            .subs( "http://kontact.kde.org/kmail/" ); // KMail homepage URL
@@ -1570,6 +1560,7 @@ void KMReaderWin::displayMessage() {
 
   KMime::Message message;
   message.setContent(mMessageItem.payloadData());
+  message.parse();
 
   //FIXME(Andras) handle codec overrides
   //msg->setOverrideCodec( overrideCodec() );

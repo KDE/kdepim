@@ -7,23 +7,25 @@
 #include "mailreaderview.h"
 #include "settings.h"
 
-#include <QtGui/QDropEvent>
-#include <QtGui/QPainter>
-#include <QtGui/QPrinter>
-
 #include <kconfigdialog.h>
 #include <kstatusbar.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
+#include <KComboBox>
+#include <KToolBar>
 
 #include <KDE/KLocale>
+
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 
 mailreader::mailreader()
     : KXmlGuiWindow(),
       m_view(new mailreaderView(this)),
-      m_printer(0)
+      m_itemIndex(0)
 {
     // accept dnd
     setAcceptDrops(true);
@@ -43,6 +45,16 @@ mailreader::mailreader()
     // mainwindow to automatically save settings if changed: window size,
     // toolbar position, icon size, etc.
     setupGUI();
+
+    m_collectionCombo = new KComboBox(this);
+    m_collectionCombo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+    m_collectionCombo->addItem("Select mailbox", -1);
+    toolBar("naviToolbar")->insertWidget(m_previousMessage, m_collectionCombo);
+    connect(m_collectionCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionSelected(int)));
+
+    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive );
+    connect(job, SIGNAL(collectionsReceived(const Akonadi::Collection::List &)), SLOT(slotCollectionsReceived(const Akonadi::Collection::List &)));
+
 }
 
 mailreader::~mailreader()
@@ -51,44 +63,91 @@ mailreader::~mailreader()
 
 void mailreader::setupActions()
 {
-    KStandardAction::openNew(this, SLOT(fileNew()), actionCollection());
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
 
-    KStandardAction::preferences(this, SLOT(optionsPreferences()), actionCollection());
-
-    // custom menu and menu item - the slot is in the class mailreaderView
-    KAction *custom = new KAction(KIcon("colorize"), i18n("Swi&tch Colors"), this);
-    actionCollection()->addAction( QLatin1String("switch_action"), custom );
-    connect(custom, SIGNAL(triggered(bool)), m_view, SLOT(switchColors()));
+    m_previousMessage = new KAction("Previous message", this);
+    actionCollection()->addAction("previous_message", m_previousMessage);
+    connect(m_previousMessage, SIGNAL(triggered( bool )), SLOT(slotPreviousMessage()));
+    m_nextMessage = new KAction("Next message", this);
+    actionCollection()->addAction("next_message", m_nextMessage);
+    connect(m_nextMessage, SIGNAL(triggered( bool )), SLOT(slotNextMessage()));
+    m_nextMessage->setEnabled(false);
+    m_previousMessage->setEnabled(false);
 }
 
-void mailreader::fileNew()
+void mailreader::slotCollectionsReceived(const Akonadi::Collection::List &collections)
 {
-    // this slot is called whenever the File->New menu is selected,
-    // the New shortcut is pressed (usually CTRL+N) or the New toolbar
-    // button is clicked
-
-    // create a new window
-    (new mailreader)->show();
-}
-
-void mailreader::optionsPreferences()
-{
-    // The preference dialog is derived from prefs_base.ui
-    //
-    // compare the names of the widgets in the .ui file
-    // to the names of the variables in the .kcfg file
-    //avoid to have 2 dialogs shown
-    if ( KConfigDialog::showDialog( "settings" ) )  {
-        return;
+ Q_FOREACH(Akonadi::Collection collection, collections) {
+    if (collection.contentMimeTypes().contains("message/rfc822")) {
+      m_collectionCombo->addItem(collection.name(), collection.id());
     }
-    KConfigDialog *dialog = new KConfigDialog(this, "settings", Settings::self());
-    QWidget *generalSettingsDlg = new QWidget;
-    ui_prefs_base.setupUi(generalSettingsDlg);
-    dialog->addPage(generalSettingsDlg, i18n("General"), "package_setting");
-    connect(dialog, SIGNAL(settingsChanged(QString)), m_view, SLOT(settingsChanged()));
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->show();
+  }
+}
+
+void mailreader::slotCollectionSelected(int index)
+{
+  qint64 id = m_collectionCombo->itemData(index).toLongLong();
+  if ( id == -1 ) {
+    m_view->showAboutPage();
+    m_nextMessage->setEnabled(false);
+    m_previousMessage->setEnabled(false);
+  }
+  Akonadi::Collection c(id);
+  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(c);
+  connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemsReceived(const Akonadi::Item::List &)));
+}
+
+void mailreader::slotItemsReceived(const Akonadi::Item::List &items)
+{
+  m_items = items;
+  m_itemIndex = 0;
+  if (!m_items.isEmpty()) {
+    if (m_items.size() > 1)
+      m_nextMessage->setEnabled(true);
+    Akonadi::Item item = m_items.at(0);
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
+    job->fetchScope().fetchFullPayload();
+    connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
+  }
+}
+
+void mailreader::slotItemReceived(const Akonadi::Item::List &items)
+{
+  if (!items.isEmpty()) {
+    Akonadi::Item item = items.at(0);
+    m_view->showItem(item);
+  }
+}
+
+
+void mailreader::slotPreviousMessage()
+{
+  if (m_itemIndex > 0 && !m_items.isEmpty()) {
+    m_nextMessage->setEnabled(true);
+    m_itemIndex--;
+    if (m_itemIndex < 1)
+      m_previousMessage->setEnabled(false);
+    Akonadi::Item item = m_items.at(m_itemIndex);
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
+    job->fetchScope().fetchFullPayload();
+    connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
+  }
+
+}
+
+void mailreader::slotNextMessage()
+{
+  if (m_itemIndex + 1 < m_items.size() && !m_items.isEmpty()) {
+    m_previousMessage->setEnabled(true);
+    m_itemIndex++;
+    if (m_itemIndex + 1 >= m_items.size())
+      m_nextMessage->setEnabled(false);
+    Akonadi::Item item = m_items.at(m_itemIndex);
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
+    job->fetchScope().fetchFullPayload();
+    connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
+  }
+
 }
 
 #include "mailreader.moc"

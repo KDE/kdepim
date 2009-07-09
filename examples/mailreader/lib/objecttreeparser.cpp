@@ -195,8 +195,7 @@ namespace KMail {
       newNode->contentDescription()->from7BitString( cntDesc );
     }
 
-    KMime::Content* parentNode = &startNode;
-    parentNode->addContent( newNode, !append );
+    startNode.addContent( newNode, !append );
 
   /*TODO(Andras) check what should we do here:
     newNode->buildObjectTree( false );
@@ -242,6 +241,8 @@ namespace KMail {
       htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
     KMime::Content::List contents = node->contents();
+    if (contents.isEmpty() && node->contentType()->isText())
+      contents += node; //if it is a simple text node, it should be parsed and rendered as well
     Q_FOREACH(KMime::Content *c, contents)
     {
   /* FIXME(Andras) check how to handle this with KMime
@@ -253,7 +254,7 @@ namespace KMail {
       if ( mReader )
         htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"/>").arg( node->indexForContent(c).toString() ) );
       if ( const Interface::BodyPartFormatter * formatter
-           = BodyPartFormatterFactory::instance()->createFor( c->contentType()->name(), c->contentType()->subType() ) ) {
+           = BodyPartFormatterFactory::instance()->createFor( c->contentType()->mediaType(), c->contentType()->subType() ) ) {
         PartNodeBodyPart part( c, codecFor( c ) );
         // Set the default display strategy for this body part relying on the
         // identity of KMail::Interface::BodyPart::Display and AttachmentStrategy::Display
@@ -278,12 +279,12 @@ namespace KMail {
         }
       } else {
         const BodyPartFormatter * bpf
-          = BodyPartFormatter::createFor( c->contentType()->name().toUtf8().data(), c->contentType()->subType() );
+          = BodyPartFormatter::createFor( c->contentType()->mediaType(), c->contentType()->subType() );
         kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
-                              << c->contentType()->name() << '/' << c->contentType()->subType() << ')';
+                              << c->contentType()->mediaType() << '/' << c->contentType()->subType() << ')';
 
-        if ( bpf && !bpf->process( this, node, processResult ) )
-          defaultHandling( node, processResult );
+        if ( bpf && !bpf->process( this, c, processResult ) )
+          defaultHandling( c, processResult );
       }
   /* FIXME(Andras) check how to handle this with KMime
       node->setProcessed( true, false );
@@ -1419,10 +1420,7 @@ namespace KMail {
       messagePart.isEncrypted = false;
       messagePart.isSigned = false;
       messagePart.isEncapsulatedRfc822Message = true;
-      QString filename;/*FIXME(Andras) disable, as OTP is rewritten to use KMime =
-        mReader->writeMessagePartToTempFile( &node->msgPart(),
-                                            node->nodeId() );
-                                            */
+      QString filename = mReader->writeMessagePartToTempFile( node );
       htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                cryptoProtocol(),
                                                static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),

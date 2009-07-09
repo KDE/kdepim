@@ -9,12 +9,15 @@
 
 #include <kxmlguiwindow.h>
 
-#include "ui_prefs_base.h"
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 
 class mailreaderView;
-class QPrinter;
 class KToggleAction;
 class KUrl;
+class KComboBox;
+class KAction;
+
 
 /**
  * This class serves as the main window for mailreader.  It handles the
@@ -39,19 +42,24 @@ public:
     virtual ~mailreader();
 
 private slots:
-    void fileNew();
-    void optionsPreferences();
+    void slotCollectionsReceived(const Akonadi::Collection::List &);
+    void slotCollectionSelected(int index);
+    void slotItemsReceived(const Akonadi::Item::List &items);
+    void slotItemReceived(const Akonadi::Item::List &items);
+    void slotPreviousMessage();
+    void slotNextMessage();
 
 private:
     void setupActions();
 
 private:
-    Ui::prefs_base ui_prefs_base ;
     mailreaderView *m_view;
 
-    QPrinter   *m_printer;
-    KToggleAction *m_toolbarAction;
-    KToggleAction *m_statusbarAction;
+    KComboBox *m_collectionCombo;
+    KAction *m_nextMessage;
+    KAction *m_previousMessage;
+    Akonadi::Item::List m_items;
+    int m_itemIndex;
 };
 
 #endif // _MAILREADER_H_
