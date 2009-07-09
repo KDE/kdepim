@@ -140,7 +140,7 @@ void SelectCertificateCommand::Private::slotDialogAccepted() {
         QByteArray data;
         Q_FOREACH( const GpgME::Key & key, dialog->selectedCertificates() ) {
             data += key.primaryFingerprint();
-            data += "\n";
+            data += '\n';
         }
         q->sendData( data );
         q->done();
