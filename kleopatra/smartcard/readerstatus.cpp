@@ -51,28 +51,55 @@
 #include <QWaitCondition>
 #include <QThread>
 #include <QTimer>
+#include <QPointer>
 #include <QDebug>
 
+#include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/case_conv.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/range.hpp>
 #include <boost/bind.hpp>
 
 #include <vector>
 #include <set>
+#include <list>
 #include <algorithm>
 #include <iterator>
 #include <utility>
+#include <cstdlib>
 
 using namespace Kleo;
 using namespace Kleo::SmartCard;
 using namespace GpgME;
 using namespace boost;
 
+static ReaderStatus * self = 0;
+
 struct CardInfo {
-    CardInfo() : fileName(), status( ReaderStatus::NoCard ) {}
-    CardInfo( const QString & fn, ReaderStatus::Status s ) : fileName( fn ), status( s ) {}
+    CardInfo()
+        : fileName(),
+          status( ReaderStatus::NoCard ),
+          appType( ReaderStatus::UnknownApplication ),
+          appVersion( -1 )
+    {
+
+    }
+    CardInfo( const QString & fn, ReaderStatus::Status s )
+        : fileName( fn ),
+          status( s ),
+          appType( ReaderStatus::UnknownApplication ),
+          appVersion( -1 )
+    {
+
+    }
+
     QString fileName;
     ReaderStatus::Status status;
+    std::string serialNumber;
+    ReaderStatus::AppType appType;
+    int appVersion;
+    std::vector<ReaderStatus::PinState> pinStates;
 };
 
 static const char * flags[] = {
@@ -132,6 +159,13 @@ namespace {
             return std::auto_ptr<T_Target>();
         }
     }
+
+    template <typename T>
+    const T & _trace__impl( const T & t, const char * msg ) {
+        qDebug() << msg << t;
+        return t;
+    }
+#define TRACE( x ) _trace__impl( x, #x )
 }
 
 static QDebug operator<<( QDebug s, const std::vector< std::pair<std::string,std::string> > & v ) {
@@ -142,24 +176,119 @@ static QDebug operator<<( QDebug s, const std::vector< std::pair<std::string,std
     return s << ')';
 }
 
+static const char * app_types[] = {
+    "_", // will hopefully never be used as an app-type :)
+    "openpgp",
+    "nks",
+    "p15",
+    "dinsig",
+    "geldkarte",
+};
+BOOST_STATIC_ASSERT(( sizeof app_types / sizeof *app_types == ReaderStatus::NumAppTypes ));
+    
+
+static ReaderStatus::AppType parse_app_type( const std::string & s ) {
+    qDebug() << "parse_app_type(" << s.c_str() << ")";
+    const char ** it = std::find( begin( app_types ), end( app_types ), to_lower_copy( s ) );
+    if ( it == end( app_types ) )
+        return TRACE( ReaderStatus::UnknownApplication );
+    return TRACE( static_cast<ReaderStatus::AppType>( it - begin( app_types ) ) );
+}
+
+static int parse_app_version( const std::string & s ) {
+    return std::atoi( s.c_str() );
+}
+
+static ReaderStatus::PinState parse_pin_state( const std::string & s ) {
+    switch ( int i = std::atoi( s.c_str() ) ) {
+    case -4: return ReaderStatus::NullPin;
+    case -3: return ReaderStatus::PinBlocked;
+    case -2: return ReaderStatus::NoPin;
+    case -1: return ReaderStatus::UnknownPinState;
+    default:
+        if ( i < 0 )
+            return ReaderStatus::UnknownPinState;
+        else
+            return ReaderStatus::PinOk;
+    }
+}
+
+static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( const shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
+    qDebug() << "gpgagent_transact(" << command << ")";
+    const AssuanResult res = gpgAgent->assuanTransact( command );
+    err = res.error();
+    if ( !err.code() )
+        err = res.assuanError();
+    if ( err.code() ) {
+        qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
+        return std::auto_ptr<DefaultAssuanTransaction>();
+    }
+    std::auto_ptr<AssuanTransaction> t = gpgAgent->takeLastAssuanTransaction();
+    return dynamic_pointer_cast<DefaultAssuanTransaction>( t );
+}
+
+// returns const std::string so template deduction in boost::split works, and we don't need a temporary
+static const std::string scd_getattr_status( const shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
+    std::string cmd = "SCD GETATTR ";
+    cmd += what;
+    const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, cmd.c_str(), err );
+    if ( t.get() ) {
+        qDebug() << "scd_getattr_status(" << what << "): got" << t->statusLines();
+        return t->firstStatusLine( what );
+    } else {
+        qDebug() << "scd_getattr_status(" << what << "): t == NULL";
+        return std::string();
+    }
+}
+
+// returns const std::string so template deduction in boost::split works, and we don't need a temporary
+static const std::string gpgagent_data( const shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
+    const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, what, err );
+    if ( t.get() )
+        return t->data();
+    else
+        return std::string();
+}
+
 static CardInfo get_more_detailed_status( const QString & fileName, unsigned int idx, const shared_ptr<Context> & gpg_agent ) {
     qDebug() << "get_more_detailed_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
+    CardInfo ci( fileName, ReaderStatus::CardUsable );
     if ( idx != 0 || !gpg_agent )
-        return CardInfo( fileName, ReaderStatus::CardUsable );
-    const AssuanResult serialNoResult = gpg_agent->assuanTransact( "SCD SERIALNO" );
-    if ( serialNoResult.error().code() )
-        return CardInfo( fileName, ReaderStatus::CardUsable );
-    const AssuanResult chvStatusResult = gpg_agent->assuanTransact( "SCD GETATTR CHV-STATUS" );
-    if ( chvStatusResult.error().code() )
-        return CardInfo( fileName, ReaderStatus::CardUsable );
-    std::auto_ptr<AssuanTransaction> chvStatusTransaction = gpg_agent->takeLastAssuanTransaction();
-    std::auto_ptr<DefaultAssuanTransaction> chvStatus = dynamic_pointer_cast<DefaultAssuanTransaction>( chvStatusTransaction );
-    if ( chvStatus.get() )
-        qDebug() << "get_more_detailed_status: data=" << QString::fromStdString( chvStatus->data() ) << endl
-                 << "  status:" << chvStatus->statusLines();
-    const QStringList pinStates = QString::fromStdString( chvStatus->firstStatusLine( "CHV-STATUS" ) ).split( QLatin1Char( ' ' ), QString::SkipEmptyParts );
-    if ( pinStates.contains( QLatin1String( "-4" ) ) )
-        return CardInfo( fileName, ReaderStatus::CardHasNullPin );
+        return ci;
+    Error err;
+    ci.serialNumber = gpgagent_data( gpg_agent, "SCD SERIALNO", err );
+    if ( err.code() )
+        return ci;
+    ci.appType = parse_app_type( scd_getattr_status( gpg_agent, "APPTYPE", err ) );
+    if ( err.code() )
+        return ci;
+    if ( ci.appType != ReaderStatus::NksApplication ) {
+        qDebug() << "get_more_detailed_status: not a NetKey card, giving up";
+        return ci;
+    }
+    ci.appVersion = parse_app_version( scd_getattr_status( gpg_agent, "NKS-VERSION", err ) );
+    if ( err.code() )
+        return ci;
+    if ( ci.appVersion != 3 ) {
+        qDebug() << "get_more_detailed_status: not a NetKey v3 card, giving up";
+        return ci;
+    }
+
+    // the following only works for NKS v3...
+    std::vector<std::string> chvStatus;
+    chvStatus.reserve( 4 ); // expected number of fields
+    split( chvStatus, scd_getattr_status( gpg_agent, "CHV-STATUS", err ), is_any_of( " \t" ), token_compress_on );
+    if ( err.code() )
+        return ci;
+    std::transform( chvStatus.begin(), chvStatus.end(),
+                    std::back_inserter( ci.pinStates ),
+                    parse_pin_state );
+
+    if ( kdtools::contains( ci.pinStates, ReaderStatus::NullPin ) ) {
+        ci.status = ReaderStatus::CardHasNullPin;
+        return ci;
+    }
+
     // PENDING(marc) check for keys to learn
     return CardInfo( fileName, ReaderStatus::CardUsable );
 }
@@ -195,6 +324,16 @@ static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, con
     return result;
 }
 
+struct Transaction {
+    QByteArray command;
+    QPointer<QObject> receiver;
+    const char * slot;
+    GpgME::Error error;
+};
+
+static const Transaction updateTransaction = { "__update__", 0, 0, Error() };
+static const Transaction quitTransaction   = { "__quit__",   0, 0, Error() };
+
 namespace {
     class ReaderStatusThread : public QThread {
         Q_OBJECT
@@ -202,10 +341,10 @@ namespace {
         explicit ReaderStatusThread( QObject * parent=0 )
             : QThread( parent ),
               m_gnupgHomePath( Kleo::gnupgHomeDirectory() ),
-              m_quit( false ),
-              m_pendingPing( true ) // force an initial scan
+              m_transactions( 1, updateTransaction ) // force initial scan
         {
-
+            connect( this, SIGNAL(oneTransactionFinished()),
+                     this, SLOT(slotOneTransactionFinished()) );
         }
 
         std::vector<CardInfo> cardInfos() const {
@@ -221,22 +360,38 @@ namespace {
                 return ReaderStatus::NoCard;
         }
 
+        void addTransaction( const Transaction & t ) {
+            const QMutexLocker locker( &m_mutex );
+            m_transactions.push_back( t );
+            m_waitForTransactions.wakeOne();
+        }
+
     Q_SIGNALS:
         void anyCardHasNullPinChanged( bool );
         void anyCardCanLearnKeysChanged( bool );
-        void cardStatusChanged( unsigned int, ReaderStatus::Status );
+        void cardStatusChanged( unsigned int, Kleo::SmartCard::ReaderStatus::Status );
+        void oneTransactionFinished();
 
     public Q_SLOTS:
         void ping() {
             qDebug() << "ReaderStatusThread[GUI]::ping()";
-            const QMutexLocker locker( &m_mutex );
-            m_pendingPing = true;
-            m_waitForPing.wakeOne();
+            addTransaction( updateTransaction );
         }
 
         void stop() {
-            m_quit = true;
-            ping();
+            const QMutexLocker locker( &m_mutex );
+            m_transactions.push_front( quitTransaction );
+            m_waitForTransactions.wakeOne();
+        }
+
+    private Q_SLOTS:
+        void slotOneTransactionFinished() {
+            std::list<Transaction> ft;
+            KDAB_SYNCHRONIZED( m_mutex )
+                ft.splice( ft.begin(), m_finishedTransactions );
+            Q_FOREACH( const Transaction & t, ft )
+                if ( t.receiver && t.slot && *t.slot )
+                    QMetaObject::invokeMethod( t.receiver, t.slot, Qt::DirectConnection, Q_ARG( GpgME::Error, t.error ) );
         }
 
     private:
@@ -245,83 +400,97 @@ namespace {
 
             while ( true ) {
 
-                bool quit;
-                bool pending;
+                QByteArray command;
+                bool nullSlot;
+                std::list<Transaction> item;
                 std::vector<CardInfo> oldCardInfos;
 
                 KDAB_SYNCHRONIZED( m_mutex ) {
 
-                    if ( !m_pendingPing ) {
+                    while ( m_transactions.empty() ) {
                         // go to sleep waiting for more work:
                         qDebug( "ReaderStatusThread[2nd]: .zZZ" );
-                        m_waitForPing.wait( &m_mutex );
+                        m_waitForTransactions.wait( &m_mutex );
                         qDebug( "ReaderStatusThread[2nd]: .oOO" );
                     }
 
-                    // make local copies so we can release the mutex again:
-
-                    quit = m_quit;
-                    pending = m_pendingPing;
+                    // splice off the first transaction without
+                    // copying, so we own it without really importing
+                    // it into this thread (the QPointer isn't
+                    // thread-safe):
+                    item.splice( item.end(),
+                                 m_transactions, m_transactions.begin() );
+                    
+                    // make local copies of the interesting stuff so
+                    // we can release the mutex again:
+                    command = item.front().command;
+                    nullSlot = !item.front().slot;
                     oldCardInfos = m_cardInfos;
-
-                    // reset the pending flag:
-                    m_pendingPing = false;
                 }
 
-                qDebug() << "ReaderStatusThread[2nd]: new iteration quit=" << quit << " ; pending=" << pending;
+                qDebug() << "ReaderStatusThread[2nd]: new iteration command=" << command << " ; nullSlot=" << nullSlot;
 
                 // now, let's see what we got:
 
-                if ( quit )
-                    return;
+                if ( nullSlot && command == quitTransaction.command )
+                    return; // quit
 
-                if ( !pending )
-                    continue;
+                if ( nullSlot && command == updateTransaction.command ) {
 
-                // the actual implemementation (the rest is boilerplate code):
-                std::vector<CardInfo> newCardInfos
-                    = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos );
+                    std::vector<CardInfo> newCardInfos
+                        = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos );
 
-                newCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
-                oldCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
+                    newCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
+                    oldCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
 
-                KDAB_SYNCHRONIZED( m_mutex )
-                    m_cardInfos = newCardInfos;
+                    KDAB_SYNCHRONIZED( m_mutex )
+                        m_cardInfos = newCardInfos;
 
-                std::vector<CardInfo>::const_iterator
-                    nit = newCardInfos.begin(), nend = newCardInfos.end(),
-                    oit = oldCardInfos.begin(), oend = oldCardInfos.end() ;
+                    std::vector<CardInfo>::const_iterator
+                        nit = newCardInfos.begin(), nend = newCardInfos.end(),
+                        oit = oldCardInfos.begin(), oend = oldCardInfos.end() ;
 
-                unsigned int idx = 0;
-                bool anyLC = false;
-                bool anyNP = false;
-                while ( nit != nend && oit != oend ) {
-                    if ( nit->status != oit->status ) {
-                        qDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
-                        emit cardStatusChanged( idx, nit->status );
+                    unsigned int idx = 0;
+                    bool anyLC = false;
+                    bool anyNP = false;
+                    while ( nit != nend && oit != oend ) {
+                        if ( nit->status != oit->status ) {
+                            qDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
+                            emit cardStatusChanged( idx, nit->status );
+                        }
+                        if ( nit->status == ReaderStatus::CardCanLearnKeys )
+                            anyLC = true;
+                        if ( nit->status == ReaderStatus::CardHasNullPin )
+                            anyNP = true;
+                        ++nit;
+                        ++oit;
+                        ++idx;
                     }
-                    if ( nit->status == ReaderStatus::CardCanLearnKeys )
-                        anyLC = true;
-                    if ( nit->status == ReaderStatus::CardHasNullPin )
-                        anyNP = true;
-                    ++nit;
-                    ++oit;
-                    ++idx;
-                }
 
-                emit anyCardHasNullPinChanged( anyNP );
-                emit anyCardCanLearnKeysChanged( anyLC );
+                    emit anyCardHasNullPinChanged( anyNP );
+                    emit anyCardCanLearnKeysChanged( anyLC );
+
+                } else {
+
+                    (void)gpgagent_transact( gpgAgent, command.constData(), item.front().error );
+
+                    KDAB_SYNCHRONIZED( m_mutex )
+                        // splice 'item' into m_finishedTransactions:
+                        m_finishedTransactions.splice( m_finishedTransactions.end(), item );
+
+                    emit oneTransactionFinished();
+
+                }
             }
         }
 
     private:
         mutable QMutex m_mutex;
-        QWaitCondition m_waitForPing;
+        QWaitCondition m_waitForTransactions;
         const QString m_gnupgHomePath;
         // protected by m_mutex:
-        bool m_quit;
-        bool m_pendingPing;
         std::vector<CardInfo> m_cardInfos;
+        std::list<Transaction> m_transactions, m_finishedTransactions;
     };
 
 }
@@ -341,8 +510,8 @@ public:
         watcher.addPath( Kleo::gnupgHomeDirectory() );
         watcher.setDelay( 100 );
 
-        connect( this, SIGNAL(cardStatusChanged(unsigned int,ReaderStatus::Status)),
-                 q, SIGNAL(cardStatusChanged(unsigned int,ReaderStatus::Status)) );
+        connect( this, SIGNAL(cardStatusChanged(unsigned int,Kleo::SmartCard::ReaderStatus::Status)),
+                 q, SIGNAL(cardStatusChanged(unsigned int,Kleo::SmartCard::ReaderStatus::Status)) );
         connect( this, SIGNAL(anyCardHasNullPinChanged(bool)),
                  q, SIGNAL(anyCardHasNullPinChanged(bool)) );
         connect( this, SIGNAL(anyCardCanLearnKeysChanged(bool)),
@@ -377,9 +546,20 @@ ReaderStatus::ReaderStatus( QObject * parent )
     : QObject( parent ), d( new Private( this ) )
 {
     QTimer::singleShot( 500, d.get(), SLOT(start()) );
+    self = this;
 }
 
-ReaderStatus::~ReaderStatus() {}
+ReaderStatus::~ReaderStatus() { self = 0; }
+
+// static
+ReaderStatus * ReaderStatus::mutableInstance() {
+    return self;
+}
+
+// static
+const ReaderStatus * ReaderStatus::instance() {
+    return self;
+}
 
 ReaderStatus::Status ReaderStatus::cardStatus( unsigned int slot ) const {
     return d->cardStatus( slot );
@@ -391,6 +571,19 @@ bool ReaderStatus::anyCardHasNullPin() const {
 
 bool ReaderStatus::anyCardCanLearnKeys() const {
     return d->anyCardCanLearnKeysImpl();
+}
+
+std::vector<ReaderStatus::PinState> ReaderStatus::pinStates( unsigned int slot ) const {
+    const std::vector<CardInfo> ci = d->cardInfos();
+    if ( slot < ci.size() )
+        return ci[slot].pinStates;
+    else
+        return std::vector<PinState>();
+}
+
+void ReaderStatus::startSimpleTransaction( const QByteArray & command, QObject * receiver, const char * slot ) {
+    const Transaction t = { command, receiver, slot, Error() };
+    d->addTransaction( t );
 }
 
 #include "moc_readerstatus.cpp"
