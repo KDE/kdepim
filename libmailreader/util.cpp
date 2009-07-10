@@ -129,15 +129,4 @@ bool KMail::Util::handleUrlOnMac( const KUrl& url )
 #endif
 }
 
-bool KMail::Util::checkTransport( QWidget *w )
-{
-/* FIXME(Andras) port to akonadi
-    if ( MailTransport::TransportManager::self()->transportNames().isEmpty() ) {
-    KMessageBox::information( w,
-                              i18n("Please create an account for sending and try again.") );
-    return false;
-  }
- */ return true;
-
-}
 

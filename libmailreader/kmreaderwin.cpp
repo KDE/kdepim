@@ -1438,18 +1438,8 @@ void KMReaderWin::displayAboutPage()
   }
   else
     info = info.subs( QString() ); // remove the place holder
-/*FIXME(Andras) port to akonadi
-  if( kmkernel->firstStart() ) {
-    info = info.subs( i18n("<p>Please take a moment to fill in the KMail "
-                           "configuration panel at Settings-&gt;Configure "
-                           "KMail.\n"
-                           "You need to create at least a default identity and "
-                           "an incoming as well as outgoing mail account."
-                           "</p>\n") );
-  } else */
-  {
-    info = info.subs( QString() ); // remove the place holder
-  }
+
+  info = info.subs( QString() ); // remove the place holder
 
   if ( ( numKMailChanges > 1 ) || ( numKMailChanges == 1 && strlen(kmailChanges[0]) > 0 ) ) {
     QString changesText =
@@ -1485,11 +1475,8 @@ void KMReaderWin::updateReaderWin()
   mViewer->setOnlyLocalReferences( !htmlLoadExternal() );
 
   htmlWriter()->reset();
-/*FIXME(Andras) port it
-  KMFolder* folder = 0;
-  if (message(&folder))
-*/
-  if (true) //FIXME(Andras) see above!
+  //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
+  if ( mMessageItem.hasPayload() )
   {
     if ( mShowColorbar ) {
       mColorBar->show();
