@@ -23,18 +23,25 @@
 
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <kglobal.h>
 #include <kicon.h>
 #include <klocale.h>
 
 using namespace Akonadi;
 
 ContactsTreeModel::ContactsTreeModel( Session *session, Monitor *monitor, QObject *parent )
-  : EntityTreeModel( session, monitor, parent )
+  : EntityTreeModel( session, monitor, parent ), mColumns( Columns() << FullName )
 {
 }
 
 ContactsTreeModel::~ContactsTreeModel()
 {
+}
+
+void ContactsTreeModel::setColumns( const Columns &columns )
+{
+  mColumns = columns;
+  emit layoutChanged();
 }
 
 QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) const
@@ -62,22 +69,51 @@ QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) co
       }
       return QVariant();
     } else if ( (role == Qt::DisplayRole) || (role == Qt::EditRole) ) {
-      switch ( column ) {
-        case 0:
+      switch ( mColumns.at( column ) ) {
+        case FullName:  // fallthrough
           if ( !contact.formattedName().isEmpty() )
             return contact.formattedName();
           else
             return contact.assembledName();
-        case 1:
-          return contact.givenName();
           break;
-        case 2:
-          return contact.familyName();
+        case ShortName:
+          return QString( "%1 %2" ).arg( contact.givenName() ).arg( contact.familyName() );
           break;
-        case 3:
+        case Birthday:
+          if ( contact.birthday().isValid() )
+            return KGlobal::locale()->formatDate( contact.birthday().date() );
+          break;
+        case HomeAddress:
+          {
+            const KABC::Address address = contact.address( KABC::Address::Home );
+            if ( !address.isEmpty() )
+              return address.formattedAddress();
+          }
+          break;
+        case BusinessAddress:
+          {
+            const KABC::Address address = contact.address( KABC::Address::Work );
+            if ( !address.isEmpty() )
+              return address.formattedAddress();
+          }
+          break;
+        case PhoneNumbers:
+          return QString();
+          break;
+        case PreferredEmail:
           return contact.preferredEmail();
           break;
-        default:
+        case AllEmails:
+          return QString();
+          break;
+        case Organization:
+          return contact.organization();
+          break;
+        case Homepage:
+          return contact.url().url();
+          break;
+        case Note:
+          return contact.note();
           break;
       }
     }
@@ -97,8 +133,9 @@ QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) co
       else
         return QVariant();
     } else if ( (role == Qt::DisplayRole) || (role == Qt::EditRole) ) {
-      switch ( column ) {
-        case 0:
+      switch ( mColumns.at( column ) ) {
+        case FullName:    // fallthrough
+        case ShortName:
           {
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
             return group.name();
@@ -127,10 +164,9 @@ QVariant ContactsTreeModel::getData( const Collection &collection, int column, i
   return EntityTreeModel::getData( collection, column, role );
 }
 
-int ContactsTreeModel::columnCount( const QModelIndex &index ) const
+int ContactsTreeModel::columnCount( const QModelIndex& ) const
 {
-  Q_UNUSED(index);
-  return 4;
+  return mColumns.count();
 }
 
 QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const
@@ -148,21 +184,40 @@ QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientat
             break;
         }
       } else if ( headerSet == EntityTreeModel::ItemListHeaders ) {
-        if ( section >= 4 )
+        if ( section >= mColumns.count() )
           return QVariant();
 
-        switch ( section ) {
-          case 0:
+        switch ( mColumns.at( section ) ) {
+          case FullName:  // fallthrough
+          case ShortName:
             return i18nc( "@title:column, name of a person", "Name" );
             break;
-          case 1:
-            return KABC::Addressee::givenNameLabel();
+          case Birthday:
+            return KABC::Addressee::birthdayLabel();
             break;
-          case 2:
-            return KABC::Addressee::familyNameLabel();
+          case HomeAddress:
+            return i18nc( "@title:column, home address of a person", "Home" );
             break;
-          case 3:
+          case BusinessAddress:
+            return i18nc( "@title:column, home address of a person", "Work" );
+            break;
+          case PhoneNumbers:
+            return i18nc( "@title:column, phone numbers of a person", "Phone Numbers" );
+            break;
+          case PreferredEmail:
             return KABC::Addressee::emailLabel();
+            break;
+          case AllEmails:
+            return i18nc( "@title:column, all email addresses of a person", "EMails" );
+            break;
+          case Organization:
+            return KABC::Addressee::organizationLabel();
+            break;
+          case Homepage:
+            return KABC::Addressee::urlLabel();
+            break;
+          case Note:
+            return KABC::Addressee::noteLabel();
             break;
         }
       }

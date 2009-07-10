@@ -36,8 +36,72 @@ class ContactsTreeModel : public EntityTreeModel
       EmailCompletionRole = EntityTreeModel::UserRole
     };
 
+    /**
+     * Describes the columns that can be shown by the model.
+     */
+    enum Column
+    {
+      /**
+       * Shows the formatted name or, if empty, the assembled name.
+       */
+      FullName,
+
+      /**
+       * Shows only given and family name.
+       */
+      ShortName,
+
+      /**
+       * Shows the birthday.
+       */
+      Birthday,
+
+      /**
+       * Shows the formatted home address.
+       */
+      HomeAddress,
+
+      /**
+       * Shows the formatted business address.
+       */
+      BusinessAddress,
+
+      /**
+       * Shows the phone numbers.
+       */
+      PhoneNumbers,
+
+      /**
+       * Shows the preferred email address.
+       */
+      PreferredEmail,
+
+      /**
+       * Shows all email address.
+       */
+      AllEmails,
+
+      /**
+       * Shows organization name.
+       */
+      Organization,
+
+      /**
+       * Shows homepage url.
+       */
+      Homepage,
+
+      /**
+       * Shows the note.
+       */
+      Note
+    };
+    typedef QList<Column> Columns;
+
     ContactsTreeModel( Session *session, Monitor *monitor, QObject *parent = 0 );
     virtual ~ContactsTreeModel();
+
+    void setColumns( const Columns &columns );
 
     virtual QVariant getData( const Item &item, int column, int role = Qt::DisplayRole ) const;
     virtual QVariant getData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
@@ -45,6 +109,7 @@ class ContactsTreeModel : public EntityTreeModel
     virtual QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
 
   private:
+    Columns mColumns;
 };
 
 }
