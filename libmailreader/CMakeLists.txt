@@ -31,6 +31,7 @@ target_link_libraries(mailreader kdepim mimelib kpgp kleo akonadi-kde
 )
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIRS}
     ${GPGME_INCLUDES}
 )
