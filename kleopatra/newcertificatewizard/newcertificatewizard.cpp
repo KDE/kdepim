@@ -705,7 +705,7 @@ namespace {
                                                             "imp", i18n("PKCS#10 Requests (*.p10)") );
             if ( fileName.isEmpty() )
                 return;
-            if ( !fileName.endsWith( ".p10", Qt::CaseInsensitive ) )
+            if ( !fileName.endsWith( QLatin1String( ".p10" ), Qt::CaseInsensitive ) )
                 fileName += ".p10";
             QFile src( QUrl( url() ).toLocalFile() );
             if ( !src.copy( fileName ) )

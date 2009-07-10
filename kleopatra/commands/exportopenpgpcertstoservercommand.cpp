@@ -90,7 +90,7 @@ bool ExportOpenPGPCertsToServerCommand::preStartHook( QWidget * parent ) const {
                                                        "configuration dialog.</para>"
                                                        "<para>Do you want to continue with <resource>keys.gnupg.net</resource> "
                                                        "as the server to export to?</para>" ),
-                                                 i18n("OpenPGP Certificate Export"),
+                                                 i18nc("@title:window", "OpenPGP Certificate Export"),
                                                  KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                  QLatin1String( "warn-export-openpgp-missing-keyserver" ) )
              != KMessageBox::Continue )
@@ -102,7 +102,7 @@ bool ExportOpenPGPCertsToServerCommand::preStartHook( QWidget * parent ) const {
                                                      "<para>Before exporting your certificate to a public directory server, make sure that you "
                                                      "have created a revocation certificate so you can revoke the certificate if needed later.</para>"
                                                      "<para>Are you sure you want to continue?</para>"),
-                                               i18n("OpenPGP Certificate Export"),
+                                               i18nc("@title:window", "OpenPGP Certificate Export"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-export-openpgp-nonrevocable" ) )
         == KMessageBox::Continue;
@@ -114,17 +114,17 @@ QStringList ExportOpenPGPCertsToServerCommand::arguments() const {
     if ( !haveKeyserverConfigured() )
         result << "--keyserver" << "keys.gnupg.net";
     result << "--send-keys";
-    Q_FOREACH( const Key & key, d->keys() )
+    Q_FOREACH( const Key & key, d->keys() ) //krazy:exclude=foreach
         result << key.primaryFingerprint();
     return result;
 }
 
 QString ExportOpenPGPCertsToServerCommand::errorCaption() const {
-    return i18n( "OpenPGP Certificate Export Error" );
+    return i18nc( "@title:window", "OpenPGP Certificate Export Error" );
 }
 
 QString ExportOpenPGPCertsToServerCommand::successCaption() const {
-    return i18n( "OpenPGP Certificate Export Finished" );
+    return i18nc( "@title:window", "OpenPGP Certificate Export Finished" );
 }
 
 QString ExportOpenPGPCertsToServerCommand::crashExitMessage( const QStringList & args ) const {
@@ -142,7 +142,7 @@ QString ExportOpenPGPCertsToServerCommand::errorExitMessage( const QStringList &
 }
 
 QString ExportOpenPGPCertsToServerCommand::successMessage( const QStringList & ) const {
-    return i18n( "OpenPGP certificates exported successfully." );
+    return i18nc( "@info", "OpenPGP certificates exported successfully." );
 }
 
 #include "moc_exportopenpgpcertstoservercommand.cpp"

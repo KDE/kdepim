@@ -32,9 +32,8 @@
 
 #include <config-kleopatra.h>
 
-#include "emailoperationspreferences.h"
-
 #include "decryptverifyemailcontroller.h"
+#include "emailoperationspreferences.h"
 
 #include <crypto/gui/resultlistwidget.h>
 #include <crypto/decryptverifytask.h>

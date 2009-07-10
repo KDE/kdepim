@@ -559,7 +559,7 @@ void ConfigEntry::setUIntValueList( const QList<unsigned int>& lst )
 void ConfigEntry::setURLValueList( const KUrl::List& urls )
 {
     QStringList lst;
-    Q_FOREACH( const KUrl i, urls ) {
+    Q_FOREACH( const KUrl& i, urls ) {
         lst << splitUrl( m_argType, i );
     }
     m_value = lst;

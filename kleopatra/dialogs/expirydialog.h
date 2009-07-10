@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_DIALOGS_EXIPRYDIALOG_H__
-#define __KLEOPATRA_DIALOGS_EXIPRYDIALOG_H__
+#ifndef __KLEOPATRA_DIALOGS_EXPIRYDIALOG_H__
+#define __KLEOPATRA_DIALOGS_EXPIRYDIALOG_H__
 
 #include <QDialog>
 
@@ -63,4 +63,4 @@ namespace Dialogs {
 }
 }
 
-#endif /* __KLEOPATRA_DIALOGS_EXIPRYDIALOG_H__ */
+#endif /* __KLEOPATRA_DIALOGS_EXPIRYDIALOG_H__ */

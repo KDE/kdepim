@@ -412,7 +412,7 @@ TabWidget::Private::Private( TabWidget * qq )
 
     for ( unsigned int i = 0 ; i < NumPageActions ; ++i ) {
         action_data ad = actionData[i];
-        assert( QString::fromLatin1( ad.name ).startsWith( "window_" ) );
+        assert( QString::fromLatin1( ad.name ).startsWith( QLatin1String( "window_" ) ) );
         ad.name = ad.name + strlen("window_");
         ad.tooltip.clear();
         ad.receiver = 0;
@@ -742,7 +742,7 @@ void TabWidget::loadViews( const KConfig * config ) {
 void TabWidget::saveViews( KConfig * config ) const {
     if ( !config )
         return;
-    Q_FOREACH( QString group, extractViewGroups( config ) )
+    Q_FOREACH( const QString & group, extractViewGroups( config ) )
         config->deleteGroup( group );
     unsigned int vg = 0;
     for ( unsigned int i = 0, end = count() ; i != end ; ++i ) {

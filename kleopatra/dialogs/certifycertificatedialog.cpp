@@ -396,3 +396,4 @@ void CertifyCertificateDialog::Private::ensureSummaryPageVisible() {
 
 #include "moc_certifycertificatedialog.cpp"
 #include "moc_certifycertificatedialog_p.cpp"
+

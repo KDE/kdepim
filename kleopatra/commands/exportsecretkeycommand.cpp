@@ -126,11 +126,11 @@ QStringList ExportSecretKeyCommand::arguments() const {
 }
 
 QString ExportSecretKeyCommand::errorCaption() const {
-    return i18n( "Secret Key Export Error" );
+    return i18nc( "@title:window", "Secret Key Export Error" );
 }
 
 QString ExportSecretKeyCommand::successCaption() const {
-    return i18n( "Secret Key Export Finished" );
+    return i18nc( "@title:window", "Secret Key Export Finished" );
 }
 
 QString ExportSecretKeyCommand::crashExitMessage( const QStringList & args ) const {
@@ -148,7 +148,7 @@ QString ExportSecretKeyCommand::errorExitMessage( const QStringList & args ) con
 }
 
 QString ExportSecretKeyCommand::successMessage( const QStringList & ) const {
-    return i18n( "Secret key successfully exported." );
+    return i18nc( "@info", "Secret key successfully exported." );
 }
 
 #include "moc_exportsecretkeycommand.cpp"

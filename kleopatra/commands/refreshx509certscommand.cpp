@@ -65,7 +65,7 @@ bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
                                                      "connections, and can take up to an hour or more to complete, depending on "
                                                      "your network connection, and the number of certificates to check.</para> "
                                                      "<para>Are you sure you want to continue?</para>"),
-                                               i18n("X.509 Certificate Refresh"),
+                                               i18nc("@title:window", "X.509 Certificate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-refresh-x509-expensive" ) )
         == KMessageBox::Continue;
@@ -76,11 +76,11 @@ QStringList RefreshX509CertsCommand::arguments() const {
 }
 
 QString RefreshX509CertsCommand::errorCaption() const {
-    return i18n( "X.509 Certificate Refresh Error" );
+    return i18nc( "@title:window", "X.509 Certificate Refresh Error" );
 }
 
 QString RefreshX509CertsCommand::successCaption() const {
-    return i18n( "X.509 Certificate Refresh Finished" );
+    return i18nc( "@title:window", "X.509 Certificate Refresh Finished" );
 }
 
 QString RefreshX509CertsCommand::crashExitMessage( const QStringList & args ) const {
@@ -98,7 +98,7 @@ QString RefreshX509CertsCommand::errorExitMessage( const QStringList & args ) co
 }
 
 QString RefreshX509CertsCommand::successMessage( const QStringList & ) const {
-    return i18n( "X.509 certificates refreshed successfully." );
+    return i18nc( "@info", "X.509 certificates refreshed successfully." );
 }
 
 #include "moc_refreshx509certscommand.cpp"

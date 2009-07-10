@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_DIALOGS_SIGNCERTIFICATEDIALOG_P_H__
-#define __KLEOPATRA_DIALOGS_SIGNCERTIFICATEDIALOG_P_H__
+#ifndef __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_P_H
+#define __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_P_H
 
 #include "ui_selectchecklevelwidget.h"
 #include "ui_certificationoptionswidget.h"
@@ -156,3 +156,4 @@ namespace Kleo {
 }
 
 #endif
+

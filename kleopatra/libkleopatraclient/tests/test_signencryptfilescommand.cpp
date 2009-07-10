@@ -2,7 +2,8 @@
 
 #include "test_util.h"
 
-#include <QtGui>
+#include <QtGui/QApplication>
+#include <QtGui/QMessageBox>
 
 using namespace KLEOPATRACLIENT_NAMESPACE;
 

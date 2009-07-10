@@ -24,7 +24,12 @@
 
 #include "kdlogtextwidget.h"
 
-#include <QtGui>
+#include <QtCore/QBasicTimer>
+#include <QtCore/QHash>
+
+#include <QtGui/QPainter>
+#include <QtGui/QPaintEvent>
+#include <QtGui/QScrollBar>
 
 #include <cassert>
 #include <algorithm>

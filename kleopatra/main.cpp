@@ -96,7 +96,7 @@ namespace {
 static QPixmap UserIcon_nocached( const char * name ) {
     // KIconLoader insists on caching all pixmaps. Since the splash
     // screen is a particularly large 'icon' and used only once,
-    // caching is unneccesary and just hurts startup preformance.
+    // caching is unneccesary and just hurts startup performance.
     KIconLoader * const il = KIconLoader::global();
     assert( il );
     const QString iconPath = il->iconPath( QLatin1String( name ), KIconLoader::User );

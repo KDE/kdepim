@@ -213,7 +213,7 @@ static QString make_tooltip( const QStringList & ids ) {
                           Qt::escape( ids.front() ) );
     else
         return i18nc( "@info:tooltip",
-                      "Imported certificates from these sources:<br>%1",
+                      "Imported certificates from these sources:<br/>%1",
                       format_ids( ids ) );
 }
 

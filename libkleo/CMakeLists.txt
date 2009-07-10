@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR}  )
+include_directories( ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
 
 if (KDEPIM_ONLY_KLEO)
   add_definitions( -DKDEPIM_ONLY_KLEO )
@@ -14,42 +14,42 @@ add_subdirectory( tests )
 
 ########### next target ###############
 set(libkleo_backend_qgpgme_SRCS
-	backends/qgpgme/gnupgprocessbase.cpp
-	backends/qgpgme/qgpgmeprogresstokenmapper.cpp
-	backends/qgpgme/qgpgmebackend.cpp
-        backends/qgpgme/threadedjobmixin.cpp
-	backends/qgpgme/qgpgmekeylistjob.cpp
-	backends/qgpgme/qgpgmekeygenerationjob.cpp
-	backends/qgpgme/qgpgmeimportjob.cpp
-	backends/qgpgme/qgpgmeimportfromkeyserverjob.cpp
-	backends/qgpgme/qgpgmeexportjob.cpp
-	backends/qgpgme/qgpgmesecretkeyexportjob.cpp
-	backends/qgpgme/qgpgmechangeexpiryjob.cpp
-	backends/qgpgme/qgpgmechangeownertrustjob.cpp
-	backends/qgpgme/qgpgmedownloadjob.cpp
-	backends/qgpgme/qgpgmedeletejob.cpp
-	backends/qgpgme/qgpgmeencryptjob.cpp
-	backends/qgpgme/qgpgmedecryptjob.cpp
-	backends/qgpgme/qgpgmesignjob.cpp
-	backends/qgpgme/qgpgmesignkeyjob.cpp
-        backends/qgpgme/qgpgmeadduseridjob.cpp
-	backends/qgpgme/qgpgmeverifydetachedjob.cpp
-	backends/qgpgme/qgpgmeverifyopaquejob.cpp
-	backends/qgpgme/qgpgmesignencryptjob.cpp
-	backends/qgpgme/qgpgmedecryptverifyjob.cpp
-	backends/qgpgme/qgpgmecryptoconfig.cpp
-	backends/qgpgme/qgpgmerefreshkeysjob.cpp
-	)
+    backends/qgpgme/gnupgprocessbase.cpp
+    backends/qgpgme/qgpgmeprogresstokenmapper.cpp
+    backends/qgpgme/qgpgmebackend.cpp
+    backends/qgpgme/threadedjobmixin.cpp
+    backends/qgpgme/qgpgmekeylistjob.cpp
+    backends/qgpgme/qgpgmekeygenerationjob.cpp
+    backends/qgpgme/qgpgmeimportjob.cpp
+    backends/qgpgme/qgpgmeimportfromkeyserverjob.cpp
+    backends/qgpgme/qgpgmeexportjob.cpp
+    backends/qgpgme/qgpgmesecretkeyexportjob.cpp
+    backends/qgpgme/qgpgmechangeexpiryjob.cpp
+    backends/qgpgme/qgpgmechangeownertrustjob.cpp
+    backends/qgpgme/qgpgmedownloadjob.cpp
+    backends/qgpgme/qgpgmedeletejob.cpp
+    backends/qgpgme/qgpgmeencryptjob.cpp
+    backends/qgpgme/qgpgmedecryptjob.cpp
+    backends/qgpgme/qgpgmesignjob.cpp
+    backends/qgpgme/qgpgmesignkeyjob.cpp
+    backends/qgpgme/qgpgmeadduseridjob.cpp
+    backends/qgpgme/qgpgmeverifydetachedjob.cpp
+    backends/qgpgme/qgpgmeverifyopaquejob.cpp
+    backends/qgpgme/qgpgmesignencryptjob.cpp
+    backends/qgpgme/qgpgmedecryptverifyjob.cpp
+    backends/qgpgme/qgpgmecryptoconfig.cpp
+    backends/qgpgme/qgpgmerefreshkeysjob.cpp
+    )
 
 
 set(libkleo_backend_chiasmus_SRCS
-	backends/chiasmus/config_data.c
-	backends/chiasmus/obtainkeysjob.cpp
-	backends/chiasmus/symcryptrunprocessbase.cpp
-	backends/chiasmus/chiasmusjob.cpp
-	backends/chiasmus/chiasmuslibrary.cpp
-	backends/chiasmus/chiasmusbackend.cpp
-	)
+    backends/chiasmus/config_data.c
+    backends/chiasmus/obtainkeysjob.cpp
+    backends/chiasmus/symcryptrunprocessbase.cpp
+    backends/chiasmus/chiasmusjob.cpp
+    backends/chiasmus/chiasmuslibrary.cpp
+    backends/chiasmus/chiasmusbackend.cpp
+    )
 
 
 set(libkleo_core_SRCS
@@ -91,8 +91,8 @@ set(libkleo_compat_SRCS # make this a separate lib.
    kleo/cryptplugfactory.cpp )
 
 kde4_add_ui_files(libkleo_ui_common_SRCS
-	ui/adddirectoryservicedialog.ui
-	ui/directoryserviceswidget.ui
+    ui/adddirectoryservicedialog.ui
+    ui/directoryserviceswidget.ui
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
@@ -115,59 +115,59 @@ set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION $
 install(TARGETS kleo ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
-	kleo/cryptplug.h
-	kleo/cryptplugfactory.h
-	kleo/cryptplugwrapper.h
-	kleo/cryptplugwrapperlist.h
-	kleo/kleo_export.h
-	kleo/enum.h
-	kleo/oidmap.h
-	kleo/cryptobackend.h
-	kleo/cryptobackendfactory.h
-	kleo/cryptoconfig.h
-	kleo/dn.h
-	kleo/job.h
-	kleo/keylistjob.h
-	kleo/keygenerationjob.h
-        kleo/abstractimportjob.h
-	kleo/importjob.h
-	kleo/importfromkeyserverjob.h
-	kleo/exportjob.h
-	kleo/changeexpiryjob.h
-	kleo/changeownertrustjob.h
-	kleo/downloadjob.h
-	kleo/deletejob.h
-	kleo/encryptjob.h
-	kleo/decryptjob.h
-	kleo/signjob.h
-	kleo/specialjob.h
-	kleo/verifydetachedjob.h
-	kleo/verifyopaquejob.h
-	kleo/decryptverifyjob.h
-	kleo/signencryptjob.h
-	kleo/signkeyjob.h
-        kleo/adduseridjob.h
-	kleo/refreshkeysjob.h
-	kleo/multideletejob.h
-	kleo/hierarchicalkeylistjob.h
-	kleo/keyfilter.h
-	kleo/keyfiltermanager.h
-	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo COMPONENT Devel)
+    kleo/cryptplug.h
+    kleo/cryptplugfactory.h
+    kleo/cryptplugwrapper.h
+    kleo/cryptplugwrapperlist.h
+    kleo/kleo_export.h
+    kleo/enum.h
+    kleo/oidmap.h
+    kleo/cryptobackend.h
+    kleo/cryptobackendfactory.h
+    kleo/cryptoconfig.h
+    kleo/dn.h
+    kleo/job.h
+    kleo/keylistjob.h
+    kleo/keygenerationjob.h
+    kleo/abstractimportjob.h
+    kleo/importjob.h
+    kleo/importfromkeyserverjob.h
+    kleo/exportjob.h
+    kleo/changeexpiryjob.h
+    kleo/changeownertrustjob.h
+    kleo/downloadjob.h
+    kleo/deletejob.h
+    kleo/encryptjob.h
+    kleo/decryptjob.h
+    kleo/signjob.h
+    kleo/specialjob.h
+    kleo/verifydetachedjob.h
+    kleo/verifyopaquejob.h
+    kleo/decryptverifyjob.h
+    kleo/signencryptjob.h
+    kleo/signkeyjob.h
+    kleo/adduseridjob.h
+    kleo/refreshkeysjob.h
+    kleo/multideletejob.h
+    kleo/hierarchicalkeylistjob.h
+    kleo/keyfilter.h
+    kleo/keyfiltermanager.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/kleo COMPONENT Devel)
 
 install ( FILES
-	ui/kdhorizontalline.h
-	ui/messagebox.h
-	ui/progressbar.h
-	ui/progressdialog.h
-	ui/keylistview.h
-	ui/keyselectiondialog.h
-	ui/keyrequester.h
-	ui/keyapprovaldialog.h
-	ui/backendconfigwidget.h
-	ui/dnattributeorderconfigwidget.h
-	ui/cryptoconfigmodule.h
-	ui/cryptoconfigdialog.h
-	ui/directoryserviceswidget.h
-	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui COMPONENT Devel)
+    ui/kdhorizontalline.h
+    ui/messagebox.h
+    ui/progressbar.h
+    ui/progressdialog.h
+    ui/keylistview.h
+    ui/keyselectiondialog.h
+    ui/keyrequester.h
+    ui/keyapprovaldialog.h
+    ui/backendconfigwidget.h
+    ui/dnattributeorderconfigwidget.h
+    ui/cryptoconfigmodule.h
+    ui/cryptoconfigdialog.h
+    ui/directoryserviceswidget.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui COMPONENT Devel)
 
 install ( FILES libkleopatrarc.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )

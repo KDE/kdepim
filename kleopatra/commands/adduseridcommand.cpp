@@ -212,13 +212,13 @@ void AddUserIDCommand::Private::showErrorDialog( const Error & err ) {
                              "<para>An error occurred while trying to add the user-id: "
                               "<message>%1</message></para>",
                              QString::fromLocal8Bit( err.asString() ) ),
-                        i18n("Add User-ID Error") );
+                        i18nc("@title:window", "Add User-ID Error") );
 }
 
 void AddUserIDCommand::Private::showSuccessDialog() {
     KMessageBox::information( parentWidgetOrView(),
-                              i18n("User-ID successfully added."),
-                              i18n("Add User-ID Succeeded") );
+                              i18nc("@info", "User-ID successfully added."),
+                              i18nc("@title:window", "Add User-ID Succeeded") );
 }
 
 #undef d

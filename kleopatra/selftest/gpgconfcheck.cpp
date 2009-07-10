@@ -88,7 +88,7 @@ namespace {
             }
             const QList<QByteArray> lines = gpgconf.readAll().split( '\n' );
             Q_FOREACH( const QByteArray & line, lines )
-                if ( line.startsWith( "sysconfdir:" ) )
+                if ( line.startsWith( "sysconfdir:" ) ) //krazy:exclude=strings
                     try {
                         return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( "gpgconf.conf" );
                     } catch ( ... ) { return false; }
@@ -126,7 +126,7 @@ namespace {
                 if ( !output.trimmed().isEmpty() )
                     m_explaination += '\n' + i18n("Diagnostics:") + '\n' + output ;
 
-                m_proposedFix = QString();
+                m_proposedFix.clear();
             } else if ( process.exitCode() ) {
                 m_passed = false;
                 m_error = i18nc("self-check did not pass", "Failed");
@@ -139,7 +139,7 @@ namespace {
                     : i18nc("self-check did not pass",
                             "The GnuPG configuration self-check failed with error code %1.\n"
                             "No output was received.", process.exitCode() );
-                m_proposedFix = QString();
+                m_proposedFix.clear();
             } else {
                 m_passed = true;
             }

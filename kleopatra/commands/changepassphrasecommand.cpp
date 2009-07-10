@@ -76,11 +76,11 @@ QStringList ChangePassphraseCommand::arguments() const {
 }
 
 QString ChangePassphraseCommand::errorCaption() const {
-    return i18n( "Passphrase Change Error" );
+    return i18nc( "@title:window", "Passphrase Change Error" );
 }
 
 QString ChangePassphraseCommand::successCaption() const {
-    return i18n( "Passphrase Change Finished" );
+    return i18nc( "@title:window", "Passphrase Change Finished" );
 }
 
 QString ChangePassphraseCommand::crashExitMessage( const QStringList & args ) const {
@@ -98,7 +98,7 @@ QString ChangePassphraseCommand::errorExitMessage( const QStringList & args ) co
 }
 
 QString ChangePassphraseCommand::successMessage( const QStringList & ) const {
-    return i18n( "Passphrase changed successfully." );
+    return i18nc( "@info", "Passphrase changed successfully." );
 }
 
 #include "moc_changepassphrasecommand.cpp"
