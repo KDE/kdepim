@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Microblog (Twitter and Identi.ca)
+Name[ca]=Microblog (Twitter i Identi.ca)
 Name[da]=Microblog (Twitter og Identi.ca)
 Name[de]=Microblog (Twitter und Identi.ca)
 Name[el]=Microblog (Twitter και Identi.ca)
@@ -23,6 +24,7 @@ Name[x-test]=xxMicroblog (Twitter and Identi.ca)xx
 Name[zh_CN]=微博客(Twitter 和 Identi.ca 等)
 Name[zh_TW]=Microblog（Twitter 與 Identi.ca）
 Comment=Shows your microblog data from Twitter or Identi.ca.
+Comment[ca]=Mostra les vostres dades d'un microblog de Twitter o identi.ca.
 Comment[da]=Viser dine microblog-data fra Twitter eller Identi.ca.
 Comment[de]=Zeigt Microblog-Daten aus Twitter oder Identi.ca an.
 Comment[el]=Εμφάνιση των δεδομένων σας microblog από το Twitter ή Identi.ca.
