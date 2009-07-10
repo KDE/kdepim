@@ -65,10 +65,10 @@ void mailreader::setupActions()
 {
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
 
-    m_previousMessage = new KAction("Previous message", this);
+    m_previousMessage = new KAction("Previous Message", this);
     actionCollection()->addAction("previous_message", m_previousMessage);
     connect(m_previousMessage, SIGNAL(triggered( bool )), SLOT(slotPreviousMessage()));
-    m_nextMessage = new KAction("Next message", this);
+    m_nextMessage = new KAction("Next Message", this);
     actionCollection()->addAction("next_message", m_nextMessage);
     connect(m_nextMessage, SIGNAL(triggered( bool )), SLOT(slotNextMessage()));
     m_nextMessage->setEnabled(false);
