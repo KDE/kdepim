@@ -34,6 +34,7 @@
 using KPIM::MessageStatus;
 #include "kmmimeparttree.h" // Needed for friend declaration.
 #include "interfaces/observer.h"
+#include "kmail_export.h"
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -94,7 +95,7 @@ class KMReaderWin: public QWidget, public KMail::Interface::Observer {
   friend class KMail::KHtmlPartHtmlWriter;
 
 public:
-  KMReaderWin( QWidget *parent, QWidget *mainWindow,
+  KMAIL_EXPORT KMReaderWin( QWidget *parent, QWidget *mainWindow,
                KActionCollection *actionCollection, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
@@ -150,7 +151,7 @@ public:
       displayed. */
   virtual void setMsg(KMime::Message* msg, bool force = false);
 
-  void setMessageItem(const Akonadi::Item& item, bool force = false);
+  KMAIL_EXPORT void setMessageItem(const Akonadi::Item& item, bool force = false);
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
@@ -211,15 +212,15 @@ public:
   void displaySplashPage( const QString &info );
 
   /** Display the about page instead of a message */
-  void displayAboutPage();
+  KMAIL_EXPORT void displayAboutPage();
 
   /** Display the 'please wait' page instead of a message */
-  void displayBusyPage();
+  KMAIL_EXPORT void displayBusyPage();
   /** Display the 'we are currently in offline mode' page instead of a message */
-  void displayOfflinePage();
+  KMAIL_EXPORT void displayOfflinePage();
 
   /** Enable the displaying of messages again after an URL was displayed */
-  void enableMsgDisplay();
+  KMAIL_EXPORT void enableMsgDisplay();
 
   /** View message part of type message/RFC822 in extra viewer window. */
   void atmViewMsg(KMime::Content* msgPart);

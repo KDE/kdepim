@@ -225,3 +225,6 @@ if(NOT QGPGME_FOUND)
 endif(NOT QGPGME_FOUND)
 # All done, let's display what we found...
 macro_display_feature_log()
+
+add_subdirectory(libmailreader)
+add_subdirectory(mailreader)
