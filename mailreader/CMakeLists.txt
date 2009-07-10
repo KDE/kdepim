@@ -5,7 +5,10 @@ set(mailreader_SRCS
    mailreaderview.cpp
  )
 
-include_directories(${CMAKE_SOURCE_DIR}/libmailreader)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/libmailreader
+    ${Boost_INCLUDE_DIRS}
+)
 
 kde4_add_ui_files(mailreader_SRCS mailreaderview.ui prefs_base.ui)
 
