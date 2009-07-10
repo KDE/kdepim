@@ -58,7 +58,7 @@ QString KMail::PartNodeBodyPart::makeLink( const QString & path ) const {
 }
 
 QString KMail::PartNodeBodyPart::asText() const {
-  if ( mContent->contentType()->mimeType() != "text/plain" )
+  if ( !mContent->contentType()->isPlainText() )
     return QString();
   return mCodec->toUnicode( mContent->decodedContent() );
 }
