@@ -40,6 +40,8 @@
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
+#include <smartcard/readerstatus.h>
+
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
 
@@ -61,6 +63,7 @@
 
 using namespace Kleo; 
 using namespace Kleo::Commands; 
+using namespace Kleo::SmartCard;
 using namespace boost;
 using namespace GpgME;
 
@@ -414,6 +417,13 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 
     if ( all_secret_are_not_owner_trust_ultimate( keys ) )
         result |= Command::MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate;
+
+    if ( const ReaderStatus * rs = ReaderStatus::instance() ) {
+        if ( rs->anyCardHasNullPin() )
+            result |= Command::AnyCardHasNullPin;
+        if ( rs->anyCardCanLearnKeys() )
+            result |= Command::AnyCardCanLearnKeys;
+    }
 
     return result;
 }
