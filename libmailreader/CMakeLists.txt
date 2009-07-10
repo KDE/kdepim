@@ -30,6 +30,11 @@ target_link_libraries(mailreader kdepim mimelib kpgp kleo akonadi-kde
  ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
 )
 
+include_directories(
+    ${Boost_INCLUDE_DIRS}
+    ${GPGME_INCLUDES}
+)
+
 install(TARGETS mailreader ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 install( FILES kmreaderwin.h  DESTINATION  ${INCLUDE_INSTALL_DIR}/mailreader COMPONENT devel)
