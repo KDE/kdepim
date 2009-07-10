@@ -155,10 +155,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
 
-  // hide all columns except the first one
-  for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
-    mItemView->setColumnHidden( column, true );
-
   mXXPortManager->setSelectionModel( mItemView->selectionModel() );
 
   connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
