@@ -34,7 +34,7 @@
 using KPIM::MessageStatus;
 #include "kmmimeparttree.h" // Needed for friend declaration.
 #include "interfaces/observer.h"
-#include "kmail_export.h"
+#include "kmail_export.h" //FIXME(Andras) use our own export macros
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -95,8 +95,8 @@ class KMReaderWin: public QWidget, public KMail::Interface::Observer {
   friend class KMail::KHtmlPartHtmlWriter;
 
 public:
-  KMAIL_EXPORT KMReaderWin( QWidget *parent, QWidget *mainWindow,
-               KActionCollection *actionCollection, Qt::WindowFlags f = 0 );
+  KMAIL_EXPORT KMReaderWin( QWidget *parent, QWidget *mainWindow = 0,
+               KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
   /**

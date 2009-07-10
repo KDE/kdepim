@@ -419,6 +419,8 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true )
 {
+  if ( !mainWindow )
+    mainWindow = aParent;
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mDelayedMarkTimer.setObjectName( "mDelayedMarkTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
