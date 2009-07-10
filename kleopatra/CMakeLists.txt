@@ -160,6 +160,7 @@ set( _kleopatra_SRCS
   dialogs/certificatedetailsdialog.cpp
   dialogs/exportcertificatesdialog.cpp
   dialogs/deletecertificatesdialog.cpp
+  dialogs/setinitialpindialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -229,6 +230,7 @@ set( _kleopatra_SRCS
   commands/exportopenpgpcertstoservercommand.cpp
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
+  commands/setinitialpincommand.cpp
   
   ${_kleopatra_uiserver_files}
 
@@ -257,6 +259,7 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/exportsecretkeydialog.ui
   dialogs/adduseriddialog.ui
   dialogs/certificatedetailsdialog.ui
+  dialogs/setinitialpindialog.ui
   newcertificatewizard/listwidget.ui
   newcertificatewizard/chooseprotocolpage.ui
   newcertificatewizard/enterdetailspage.ui

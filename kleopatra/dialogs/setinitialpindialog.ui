@@ -1,0 +1,192 @@
+<ui version="4.0" >
+ <class>SetInitialPinDialog</class>
+ <widget class="QDialog" name="SetInitialPinDialog" >
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" colspan="3" >
+    <widget class="QLabel" name="mainLB" >
+     <property name="text" >
+      <string>&lt;p>On this SmartCard, there is space for two certificates:
+&lt;ol>
+&lt;li>A normal certificate&lt;/li>
+&lt;li>A special certificate for making &lt;em>qualified signatures&lt;/em> according to the German Signaturgesetz&lt;/li>
+&lt;/ol>
+You need to set initial PINs for both of them.&lt;/p></string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="3" >
+    <widget class="Line" name="line_3" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2" >
+    <widget class="QLabel" name="nksLB" >
+     <property name="text" >
+      <string>Step 1: Set the initial PIN for the first certificate ("NKS"):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="2" >
+    <widget class="QPushButton" name="nksPB" >
+     <property name="text" >
+      <string>Set Initial PIN (NKS)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" >
+    <widget class="QLabel" name="nksResultIcon" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="2" >
+    <widget class="QLabel" name="nksStatusLB" >
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="3" >
+    <widget class="Line" name="line" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2" >
+    <widget class="QLabel" name="sigGLB" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="text" >
+      <string>Step 2: Set the initial PIN for the qualified signature certificate ("SigG"):</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="2" >
+    <widget class="QPushButton" name="sigGPB" >
+     <property name="enabled" >
+      <bool>false</bool>
+     </property>
+     <property name="text" >
+      <string>Set Initial PIN (SigG)</string>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0" >
+    <widget class="QLabel" name="sigGResultIcon" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="1" colspan="2" >
+    <widget class="QLabel" name="sigGStatusLB" >
+     <property name="text" >
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0" colspan="3" >
+    <widget class="Line" name="line_2" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" >
+    <spacer name="spacer" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>13</width>
+       <height>13</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="9" column="0" colspan="3" >
+    <widget class="QDialogButtonBox" name="dialogButtonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Close</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>dialogButtonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>SetInitialPinDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>334</x>
+     <y>373</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>879</x>
+     <y>280</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>nksPB</sender>
+   <signal>clicked()</signal>
+   <receiver>SetInitialPinDialog</receiver>
+   <slot>slotNksButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>845</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>877</x>
+     <y>166</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sigGPB</sender>
+   <signal>clicked()</signal>
+   <receiver>SetInitialPinDialog</receiver>
+   <slot>slotSigGButtonClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>1070</x>
+     <y>266</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>879</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotNksButtonClicked()</slot>
+  <slot>slotSigGButtonClicked()</slot>
+ </slots>
+</ui>
