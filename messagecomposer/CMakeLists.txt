@@ -20,7 +20,7 @@ set( messagecomposer_src
 )
 
 include_directories(
-    ${Boost_INCLUDE_DIRS}
+    ${Boost_INCLUDE_DIR}
 )
 
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
