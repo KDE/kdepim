@@ -287,7 +287,7 @@ namespace KMail {
       NodeHelper::instance()->instance()->setNodeProcessed( c, false);
 
       // adjust signed/encrypted flags if inline PGP was found
-//FIXME(Andras) Port it    processResult.adjustCryptoStatesOfNode( node );
+      processResult.adjustCryptoStatesOfNode( node );
 
       if ( showOnlyOneMimePart() )
         break;
@@ -1166,10 +1166,7 @@ namespace KMail {
     }
 
     if ( !mReader || (!mReader->htmlMail() && dataPlain) ) {
-      /*FIXME(Andras) port it
-      if ( dataHtml )
-        dataHtml->setProcessed( true, false );
-        */
+      NodeHelper::instance()->setNodeProcessed( dataHtml, false );
       stdChildHandling( dataPlain );
       return true;
     }
@@ -1833,7 +1830,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
   if ( !mReader )
     return false;
 
-  const QString fileName;//FIXME(Andras) disable, as OTP is rewritten to use KMime = mReader->writeMessagePartToTempFile( &node->msgPart(), node->nodeId() );
+  const QString fileName = mReader->writeMessagePartToTempFile( node );
   KTnef::KTNEFParser parser;
   if ( !parser.openFile( fileName ) || !parser.message()) {
     kDebug() << "Could not parse" << fileName;
@@ -1934,13 +1931,11 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
       iconName = href;
     }
     else {
-      /*FIXME(Andras) port it!
-      iconName = msgPart->iconName();
+      iconName = NodeHelper::instance()->iconName( msgPart );
       if( iconName.right( 14 ) == "mime_empty.png" ) {
-        msgPart->magicSetType();
-        iconName = msgPart->iconName();
+        NodeHelper::instance()->magicSetType( msgPart );
+        iconName = NodeHelper::instance()->iconName( msgPart );
       }
-      */
     }
 
     if ( inlineImage ) {

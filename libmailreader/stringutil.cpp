@@ -26,6 +26,7 @@
 
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_header_parsing.h>
+#include <kmime/kmime_util.h>
 #include <KPIMUtils/Email>
 #include <KPIMIdentities/IdentityManager>
 
@@ -403,9 +404,8 @@ QByteArray html2source( const QByteArray & src )
 #ifndef KMAIL_UNITTESTS
 QString encodeMailtoUrl( const QString& str )
 {
-  QString result;
+  QString result = QString::fromLatin1( KMime::encodeRFC2047String( str, "utf-8" ) );
 
-  //FIXME(Andras) port to akonadi result = QString::fromLatin1( KMMsgBase::encodeRFC2047String( str, "utf-8" ) );
   result = KUrl::toPercentEncoding( result );
   return result;
 }
@@ -414,7 +414,8 @@ QString decodeMailtoUrl( const QString& url )
 {
   QString result;
   result = KUrl::fromPercentEncoding( url.toLatin1() );
-  //FIXME(Andras) port to akonadi result = KMMsgBase::decodeRFC2047String( result.toLatin1() );
+  result = KMime::decodeRFC2047String( result.toLatin1() );
+
   return result;
 }
 #endif

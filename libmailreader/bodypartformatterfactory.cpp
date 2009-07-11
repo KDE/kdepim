@@ -37,7 +37,7 @@
 using namespace KMail::BodyPartFormatterFactoryPrivate;
 
 #include "interfaces/bodypartformatter.h"
-// FIXME(Andras) port to akonadi #include "urlhandlermanager.h"
+#include "urlhandlermanager.h"
 
 // libkdepim
 #include <libkdepim/pluginloader.h>
@@ -135,10 +135,9 @@ static void loadPlugins() {
       insertBodyPartFormatter( type, subtype, bfp );
     }
     const KMail::Interface::BodyPartURLHandler * handler;
-/* FIXME(Andras) port to akonadi
-       for ( int i = 0 ; (handler = plugin->urlHandler( i )) ; ++i )
+    for ( int i = 0 ; (handler = plugin->urlHandler( i )) ; ++i )
       KMail::URLHandlerManager::instance()->registerHandler( handler );
- */ }
+  }
 }
 
 static void setup() {

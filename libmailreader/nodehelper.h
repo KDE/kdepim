@@ -22,6 +22,7 @@
 
 #include <QList>
 #include <QMap>
+#include <kiconloader.h>
 
 namespace KMime {
   class Content;
@@ -74,6 +75,12 @@ public:
 
     KMime::Content *nextSibling( KMime::Content* node ) const;
     KMime::Content *firstChild( KMime::Content* node ) const;
+
+    QString iconName( KMime::Content *node, int size = KIconLoader::Desktop ) const;
+  /** Set the 'Content-Type' by mime-magic from the contents of the body.
+    If autoDecode is true the decoded body will be used for mime type
+    determination (this does not change the body itself). */
+    void magicSetType( KMime::Content *node, bool autoDecode=true );
 
 private:
     NodeHelper();

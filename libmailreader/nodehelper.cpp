@@ -17,8 +17,12 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 #include "nodehelper.h"
+#include "iconnamecache.h"
 
 #include <kmime/kmime_content.h>
+#include <kmimetype.h>
+#include <kdebug.h>
+#include <kascii.h>
 
 KMail::NodeHelper * KMail::NodeHelper::mSelf = 0;
 
@@ -43,6 +47,8 @@ NodeHelper::~NodeHelper()
 
 void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
 {
+  if ( !node )
+    return;
   mProcessedNodes.append( node );
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
@@ -55,6 +61,8 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
 
 void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
 {
+  if ( !node )
+    return;
   mProcessedNodes.removeAll( node );
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
@@ -67,6 +75,8 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
 
 bool NodeHelper::nodeProcessed( KMime::Content* node ) const
 {
+  if ( !node )
+    return true;
   return mProcessedNodes.contains( node );
 }
 
@@ -225,6 +235,44 @@ KMMsgSignatureState NodeHelper::overallSignatureState( KMime::Content* node ) co
 //kDebug() <<"\n\n  KMMsgSignatureState:" << myState;
 
     return myState;
+}
+
+QString NodeHelper::iconName( KMime::Content *node, int size ) const
+{
+  if ( !node )
+    return QString();
+
+  QByteArray mimeType = node->contentType()->mimeType();
+  kAsciiToLower( mimeType.data() );
+
+  QString fileName;
+  KMimeType::Ptr mime = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+  if (mime) {
+    fileName = mime->iconName();
+  } else {
+    kWarning() <<"unknown mimetype" << mimeType;
+  }
+
+  if ( fileName.isEmpty() )
+  {
+    fileName = node->contentDisposition()->filename();
+    if ( fileName.isEmpty() ) fileName = node->contentType()->name();
+    if ( !fileName.isEmpty() )
+    {
+      fileName = KMimeType::findByPath( "/tmp/"+fileName, 0, true )->iconName();
+    }
+  }
+
+  return IconNameCache::instance()->iconPath( fileName, size );
+}
+
+void NodeHelper::magicSetType( KMime::Content* node, bool aAutoDecode )
+{
+  const QByteArray body = ( aAutoDecode ) ? node->decodedContent() : node->body() ;
+  KMimeType::Ptr mime = KMimeType::findByContent( body );
+
+  QString mimetype = mime->name();
+  node->contentType()->setMimeType( mimetype.toLatin1() );
 }
 
 }

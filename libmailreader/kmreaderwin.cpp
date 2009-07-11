@@ -30,6 +30,7 @@
 #include "kmmsgpartdlg.h"
 //FIXME(Andras) port to akonadi #include "mailsourceviewer.h"
 //FIXME(Andras) port to akonadi using KMail::MailSourceViewer;
+#include <QTextDocument>
 #include <QByteArray>
 #include <QImageReader>
 #include <QCloseEvent>
@@ -2019,10 +2020,9 @@ void KMReaderWin::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   const KUrl url( aUrl );
   mUrlClicked = url;
 
-/*FIXME(Andras) port to akonadi
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
-*/
+
   if ( message() ) {
     kWarning() << "Unhandled URL right-click!";
     emit popupMenu( *message(), url, aPos );
@@ -2311,7 +2311,7 @@ void KMReaderWin::setMsgPart( KMime::Content* aMsgPart, bool aHTML,
           "[KMail: Attachment contains binary data. Trying to show first %1 characters.]",
                                str.length()) + QChar::fromLatin1('\n') );
     }
-//FIXME(Andras) port to akonadi      htmlWriter()->queue( Qt::escape( str ) );
+    htmlWriter()->queue( Qt::escape( str ) );
     htmlWriter()->queue( "</pre>" );
     htmlWriter()->queue("</body></html>");
     htmlWriter()->flush();
@@ -2896,9 +2896,7 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
     }
   } else {
     QString label, icon;
-    /*FIXME(Andras) port it
-    icon = node->msgPart().iconName( KIconLoader::Small );
-    */
+    icon = NodeHelper::instance()->iconName( node, KIconLoader::Small );
     label = node->contentDescription()->asUnicodeString();
     if( label.isEmpty() )
       label = node->contentType()->name().trimmed();
