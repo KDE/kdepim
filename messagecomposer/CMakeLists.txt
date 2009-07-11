@@ -19,6 +19,10 @@ set( messagecomposer_src
      multipartjob.cpp
 )
 
+include_directories(
+    ${Boost_INCLUDE_DIRS}
+)
+
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} kmime )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
