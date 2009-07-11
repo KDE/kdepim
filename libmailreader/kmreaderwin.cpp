@@ -29,6 +29,7 @@
 #include <kpimutils/kfileio.h>
 #include "kmmsgpartdlg.h"
 //FIXME(Andras) port to akonadi #include "mailsourceviewer.h"
+//FIXME(Andras) port to akonadi using KMail::MailSourceViewer;
 #include <QByteArray>
 #include <QImageReader>
 #include <QCloseEvent>
@@ -38,10 +39,9 @@
 #include <QMouseEvent>
 #include <QScrollArea>
 #include <QSignalMapper>
-//FIXME(Andras) port to akonadi using KMail::MailSourceViewer;
 #include "kcursorsaver.h"
-//FIXME(Andras) port to akonadi ##include "vcardviewer.h"
-//FIXME(Andras) port to akonadi #using KMail::VCardViewer;
+#include "vcardviewer.h"
+using KMail::VCardViewer;
 #include "objecttreeparser.h"
 using KMail::ObjectTreeParser;
 #include "partmetadata.h"
@@ -886,8 +886,7 @@ void KMReaderWin::update( KMail::Interface::Observable * observable )
   QByteArray data = node->decodedContent();
   if ( node->contentType()->mediaType() == "text" && data.size() > 0 ) {
     // convert CRLF to LF before writing text attachments to disk
-    const size_t newsize = KMail::Util::crlf2lf( data.data(), data.size() );
-    data.truncate( newsize );
+    data = KMime::CRLFtoLF( data );
   }
   KPIMUtils::kByteArrayToFile( data, mAtmCurrentName, false, false, false );
   ::chmod( QFile::encodeName( mAtmCurrentName ), S_IRUSR );
@@ -1775,11 +1774,10 @@ QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
 
   QString fileName = aMsgPart->contentDisposition()->filename();
 
-  //TODO(Andras) handle this case
-  /*
-  if( fileName.isEmpty() )
-    fileName = aMsgPart->name();
-*/
+  if ( fileName.isEmpty() )
+    fileName = aMsgPart->contentType()->name();
+
+
   QString fname = createTempDir( aMsgPart->index().toString() );
   if ( fname.isEmpty() )
     return QString();
@@ -1795,8 +1793,7 @@ QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
   QByteArray data = aMsgPart->decodedContent();
   if ( aMsgPart->contentType()->isText() && data.size() > 0 ) {
     // convert CRLF to LF before writing text attachments to disk
-    const size_t newsize = KMail::Util::crlf2lf( data.data(), data.size() );
-    data.truncate( newsize );
+    data = KMime::CRLFtoLF( data );
   }
   if( !KPIMUtils::kByteArrayToFile( data, fname, false, false, false ) )
     return QString();
@@ -1834,12 +1831,10 @@ QString KMReaderWin::createTempDir( const QString &param )
 //-----------------------------------------------------------------------------
 void KMReaderWin::showVCard( KMime::Content* msgPart ) {
   const QByteArray vCard = msgPart->decodedContent();
-/*  FIXME(Andras) port to akonadi
 
   VCardViewer *vcv = new VCardViewer(this, vCard );
   vcv->setObjectName( "vCardDialog" );
   vcv->show();
-*/
 }
 
 //-----------------------------------------------------------------------------

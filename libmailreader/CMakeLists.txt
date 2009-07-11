@@ -22,6 +22,7 @@ bodypartformatterfactory.cpp
 partnodebodypart.cpp
 nodehelper.cpp
 urlhandlermanager.cpp
+vcardviewer.cpp
  )
 
 configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)

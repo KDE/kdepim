@@ -67,6 +67,7 @@ namespace Util {
     // return true if we should proceed, false if we should abort
     bool checkOverwrite( const KUrl &url, QWidget *w );
 
+//TODO(Andras) decide to keep it or use KMime (this is supposed to be faster). Or move to KMime?
     /**
      * Convert all sequences of "\r\n" (carriage return followed by a line
      * feed) to a single "\n" (line feed). The conversion happens in place.
@@ -84,6 +85,7 @@ namespace Util {
      */
     bool handleUrlOnMac( const KUrl& url );
 
+//TODO(Andras) decide to keep it or use KMime (this is supposed to be faster). Or move to KMime?
     /**
      * Convert "\n" line endings to "\r\n".
      * @param src The source string to convert.

@@ -434,7 +434,7 @@ namespace KMail {
         // replace simple LFs by CRLSs
         // according to RfC 2633, 3.1.1 Canonicalization
         kDebug() <<"Converting LF to CRLF (see RfC 2633, 3.1.1 Canonicalization)";
-        cleartext = Util::lf2crlf( cleartext );
+        cleartext = KMime::LFtoCRLF( cleartext );
         kDebug() <<"                                                       done.";
 }
 
