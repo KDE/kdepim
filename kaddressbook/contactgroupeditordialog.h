@@ -56,11 +56,6 @@ class ContactGroupEditorDialog : public KDialog
     ~ContactGroupEditorDialog();
 
     /**
-     * Sets the contact completion @p model that shall be used.
-     */
-    void setCompletionModel( QAbstractItemModel *model );
-
-    /**
      * Sets the contact @p group to edit when in EditMode.
      */
     void setContactGroup( const Akonadi::Item &group );
