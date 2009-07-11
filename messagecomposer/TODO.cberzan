@@ -1,0 +1,3 @@
+Design:
+* Lots of duplication between AttachmentStrategy, AlternativeStrategy,
+  RelatedStrategy on one hand, and GpgSigned, GpgEncrypted on the other hand...

@@ -1,0 +1,60 @@
+How the composer works:
+--------------------------
+Input data:
+
+MessagePart classes represent the data of messages in an abstract way that is very close to
+the way a GUI composer would see the data.  Thus, the composer takes the folowing input data:
+* InfoPart:
+  - Mode: compose the messages to be sent, or to be saved somewhere locally.
+  - Sender and recipients.
+  - The transport to use.
+  - Signing and encryption settings.
+* TextPart:
+  - The plain text and, optionally, the HTML text from an editor.
+  - The charsets the user prefers.
+* Zero or more AttachmentParts:
+  - The file to be attached.
+  - Signing and encryption settings for the attachment.
+
+--------------------------
+Output data:
+
+The composer outputs a set of Messages.  If crypto is used, we have to encrypt the message
+separately with each recipient's public key, hence we may need to send more than one message.
+A Message contains the KMime::Message to be sent, and the From:, To:, Cc:, and Bcc: strings
+to use for the transport.  Note that, because of crypto and the fact that Bcc: need to be
+blind, these fields used for transport may be different from the corresponding headers encoded
+in the KMime::Message.  If the message is composed for saving (as opposed to being composed
+for sending), these fields are saved in the KMime::Message as custom X- fields.
+
+--------------------------
+Class hierarchy:
++ Composer (:KJob)          -- The master object that controls everything else.
++ FinalMessage (:)          -- Container for a final KMime::Message as well as sender and
+                               recipient addresses to be used for transport.
++ Job (:KJob)               -- Abstract base class for representing some content part from a KMime
+                               point of view. FIXME not true
+  + ...
++ MessagePart (:QObject)    -- Abstract base class for representing some part of the message from
+                               a GUI composer point of view.
+  + ...
+
+--------------------------
+Logic:
+
+Definitions:
+* Early attachment -- An attachment that has the same signing / crypto settings as the main
+                      text part, and is joined with the text part before any signing or
+                      encryption.
+* Late attachment  -- An attachment that has different signing / crypto settings from the main
+                      text part, and is encrypted, signed, and added only after the main part
+                      has been signed and encrypted.
+
+Algorithm:
+1) Take the text content (plain or plain+HTML) and the early attachments, and compose them
+   into contentBeforeCrypto.
+2) For each recipient of the message, encrypt contentBeforeCrypto, encrypt and add the late
+   attachments, save the recipients address (so that we know whom to send this message to),
+   and save this as one of the final messages.
+
+--------------------------
