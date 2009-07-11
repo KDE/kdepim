@@ -61,8 +61,8 @@ using KMail::HtmlStatusBar;
 using KMail::CSSHelper;
 #include "isubject.h"
 using KMail::ISubject;
-// FIXME(Andras) port to akonadi #include "urlhandlermanager.h"
-// FIXME(Andras) port to akonadi using KMail::URLHandlerManager;
+#include "urlhandlermanager.h"
+using KMail::URLHandlerManager;
 #include "interfaces/observable.h"
 #include "util.h"
 #include "nodehelper.h"
@@ -448,6 +448,9 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mUpdateReaderWinTimer.setSingleShot( true );
   connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
            this, SLOT(updateReaderWin()) );
+
+ connect( this, SIGNAL(urlClicked(const KUrl&,int)),
+          this, SLOT(slotUrlClicked()) );
 
   setMsg( 0, false );
 }
@@ -1995,12 +1998,11 @@ void KMReaderWin::slotUrlOn(const QString &aUrl)
   }
 
   mUrlClicked = url;
-/*FIXME(Andras) port to akonadi
 
   const QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
 
   kWarning( msg.isEmpty(), 5006 ) << "Unhandled URL hover!";
-  KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );*/
+  KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );
 }
 
 
@@ -2009,11 +2011,9 @@ void KMReaderWin::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments &
 {
   mUrlClicked = aUrl;
 
- /*FIXME(Andras) port to akonadi
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
     return;
 
- */
   kWarning() << "Unhandled URL click!";
   emit urlClicked( aUrl, Qt::LeftButton );
 }
@@ -2564,10 +2564,7 @@ void KMReaderWin::saveRelativePosition()
 //-----------------------------------------------------------------------------
 void KMReaderWin::update( bool force )
 {
-  KMime::Message *msg = message();
-  if ( msg ) {
-    setMsg( msg, force );
-  }
+  setMessageItem( mMessageItem, force);
 }
 
 //-----------------------------------------------------------------------------
@@ -2596,6 +2593,7 @@ KMime::Message *KMReaderWin::message( /*KMFolder **aFolder*/ ) const
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlClicked()
 {
+  kDebug() << "Clicked on " << mUrlClicked;
     /*FIXME Andras
   KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>(mMainWindow);
   uint identity = 0;
@@ -2663,12 +2661,11 @@ void KMReaderWin::slotUrlCopy()
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlOpen( const KUrl &url )
 {
-  /*FIXME(Andras) port to akonadi
-  if ( !url.isEmpty() )
+  kDebug() << "slotUrlOpen " << url;
+  if ( !url.isEmpty() ) {
     mUrlClicked = url;
-  KMCommand *command = new KMUrlOpenCommand( mUrlClicked, this );
-  command->start();
-    */
+    slotUrlOpen( url, KParts::OpenUrlArguments(), KParts::BrowserArguments() );
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -2700,10 +2697,13 @@ void KMReaderWin::slotMailtoReply()
 }
 
 //-----------------------------------------------------------------------------
-KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url ) {
+KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )
+{
     /*FIXME(Andras) port to akonadi
   return mRootNode ? mRootNode->findId( msgPartFromUrl( url ) ) : 0 ;
   */
+  kWarning() << "FIXME PORT KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )";
+
   return 0;
 }
 
@@ -2711,6 +2711,7 @@ KMime::Content * KMReaderWin::partNodeForId( int id ) {
     /*FIXME(Andras) port to akonadi
   return mRootNode ? mRootNode->findId( id ) : 0 ;
   */
+  kWarning() << "FIXME PORT KMime::Content * KMReaderWin::partNodeForId( int id )";
   return 0;
 }
 
@@ -2817,7 +2818,7 @@ bool KMReaderWin::decryptMessage() const
   if ( !GlobalSettings::self()->alwaysDecrypt() )
     return mDecrytMessageOverwrite;
     */
-  return true;
+  return mDecrytMessageOverwrite;
 }
 
 void KMReaderWin::injectAttachments()
