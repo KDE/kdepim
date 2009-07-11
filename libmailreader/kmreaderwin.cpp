@@ -65,6 +65,8 @@ using KMail::ISubject;
 // FIXME(Andras) port to akonadi using KMail::URLHandlerManager;
 #include "interfaces/observable.h"
 #include "util.h"
+#include "nodehelper.h"
+
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
 
@@ -397,7 +399,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mDelayedMarkTimer( 0 ),
     mOldGlobalOverrideEncoding( "---" ), // init with dummy value
     mCSSHelper( 0 ),
-    mRootNode( 0 ),
     mMainWindow( mainWindow ),
     mActionCollection( actionCollection ),
     mMailToComposeAction( 0 ),
@@ -419,6 +420,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true )
 {
+  mRootNode = 0;
   if ( !mainWindow )
     mainWindow = aParent;
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
@@ -1531,26 +1533,34 @@ void KMReaderWin::displayMessage() {
 
   if ( !msg )
     return;
-
-  msg->setOverrideCodec( overrideCodec() );
-
-  htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
-  htmlWriter()->queue( mCSSHelper->htmlHead( isFixedFont() ) );
-
-  if (!parent())
-    setWindowTitle(msg->subject());
-
-  removeTempFiles();
-
-  mColorBar->setNeutralMode();
-
-  parseMsg(msg);
     */
+  if ( mRootNode && !KMail::NodeHelper::instance()->nodeProcessed( mRootNode ) ) {
+    kWarning() << "The root node is not yet processed! Danger!";
+    return;
+  } else {
+    delete mRootNode;
+    mRootNode = 0;
+  }
+  KMail::NodeHelper::instance()->clear();
+  /*
+  mRootNode->setContent(mMessageItem.payloadData());
+  mRootNode->parse();*/
+  if (!mMessageItem.hasPayload<MessagePtr>()) {
+    kWarning() << "Payload is not a MessagePtr!";
+    return;
+  }
+  //Note: if I use MessagePtr for mRootNode all over, I get a crash in the destructor
+  mRootNode = new KMime::Message;
+  mRootNode->setContent( mMessageItem.payloadData() );
+  mRootNode->parse();
 
-  KMime::Message message;
-  message.setContent(mMessageItem.payloadData());
-  message.parse();
-
+             kDebug() << "ANDRIS head: " << mRootNode->head();
+              kDebug() << "ANDRIS body: " << mRootNode->body();
+              Q_FOREACH(KMime::Content *c, mRootNode->contents()) {
+              kDebug() << "ANDRIS Chead: " << c->head();
+              kDebug() << "ANDRIS Cbody: " << c->body();
+              }
+//              kDebug() << "ANDRIS payload: " << mMessageItem.payloadData();
   //FIXME(Andras) handle codec overrides
   //msg->setOverrideCodec( overrideCodec() );
 
@@ -1558,13 +1568,13 @@ void KMReaderWin::displayMessage() {
   htmlWriter()->queue( mCSSHelper->htmlHead( isFixedFont() ) );
 
   if (!parent())
-      setWindowTitle(message.subject()->asUnicodeString());
+      setWindowTitle(mRootNode->subject()->asUnicodeString());
 
   removeTempFiles();
 
   mColorBar->setNeutralMode();
 
-  parseMsg(&message);
+  parseMsg();
 
   if( mColorBar->isNeutral() )
     mColorBar->setNormalMode();
@@ -1577,27 +1587,30 @@ void KMReaderWin::displayMessage() {
 
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::parseMsg(KMime::Message* aMsg)
+void KMReaderWin::parseMsg()
 {
+    assert( mRootNode != 0 );
+
+
     QString cntDesc = i18n("( body part )");
 
-    if (aMsg->subject(false) )
-        cntDesc = aMsg->subject()->asUnicodeString();
+    if (mRootNode->subject(false) )
+        cntDesc = mRootNode->subject()->asUnicodeString();
 
-    KIO::filesize_t cntSize = aMsg->size();
+    KIO::filesize_t cntSize = mRootNode->size();
 
     QString cntEnc= "7bit";
-    if (aMsg->contentTransferEncoding(false))
-        cntEnc = aMsg->contentTransferEncoding()->asUnicodeString();
+    if (mRootNode->contentTransferEncoding(false))
+        cntEnc = mRootNode->contentTransferEncoding()->asUnicodeString();
 
     //TODO(Andras) fill the mime tree/model
 
   // Check if any part of this message is a v-card
   // v-cards can be either text/x-vcard or text/directory, so we need to check
   // both.
-    KMime::Content* vCardContent = findContentByType( aMsg, "text/x-vcard" );
+    KMime::Content* vCardContent = findContentByType( mRootNode, "text/x-vcard" );
     if ( !vCardContent )
-        vCardContent = findContentByType( aMsg, "text/directory" );
+        vCardContent = findContentByType( mRootNode, "text/directory" );
 
     bool hasVCard = false;
 
@@ -1612,11 +1625,11 @@ void KMReaderWin::parseMsg(KMime::Message* aMsg)
             writeMessagePartToTempFile( vCardContent );
         }
     }
-    htmlWriter()->queue( writeMsgHeader( aMsg, hasVCard, true ) );
+    htmlWriter()->queue( writeMsgHeader( mRootNode, hasVCard, true ) );
 
     // show message content
     ObjectTreeParser otp( this );
-    otp.parseObjectTree( aMsg );
+    otp.parseObjectTree( mRootNode );
 
     bool emitReplaceMsgByUnencryptedVersion = false;
     /*FIXME(Andras) port to Akonadi
@@ -2628,7 +2641,7 @@ KMime::Message *KMReaderWin::message( /*KMFolder **aFolder*/ ) const
     return message;
   }
     */
-  return 0;
+  return mMessage;
 }
 
 //-----------------------------------------------------------------------------
@@ -2982,7 +2995,7 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
   if ( parent ) {
     KMime::Content::List contents = parent->contents();
     int index = contents.indexOf( node ) + 1;
-    if (index <= contents.size()) //next on the same level
+    if (index < contents.size()) //next on the same level
       html += renderAttachments( contents.at(index), nextColor ( bgColor ) );
   }
   return html;

@@ -50,6 +50,7 @@
 #include "util.h"
 #include "kleojobexecutor.h"
 #include "stringutil.h"
+#include "nodehelper.h"
 
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -109,6 +110,7 @@ using KPIMUtils::LinkLocator;
 // FIXME(Andras) port to akonadi #include "chiasmuskeyselector.h"
 
 #include <kmime/kmime_message.h>
+
 
 namespace KMail {
 
@@ -241,14 +243,12 @@ namespace KMail {
       htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
     KMime::Content::List contents = node->contents();
-    if (contents.isEmpty() && node->contentType()->isText())
-      contents += node; //if it is a simple text node, it should be parsed and rendered as well
+//     if (contents.isEmpty() && node->contentType()->isText())
+      contents.prepend(node); //if it is a simple text node, it should be parsed and rendered as well
     Q_FOREACH(KMime::Content *c, contents)
     {
-  /* FIXME(Andras) check how to handle this with KMime
-    if ( node->processed() )
+      if ( NodeHelper::instance()->nodeProcessed( c ) )
         continue;
- */
       ProcessResult processResult;
 
       if ( mReader )
@@ -286,9 +286,8 @@ namespace KMail {
         if ( bpf && !bpf->process( this, c, processResult ) )
           defaultHandling( c, processResult );
       }
-  /* FIXME(Andras) check how to handle this with KMime
-      node->setProcessed( true, false );
- */
+      NodeHelper::instance()->instance()->setNodeProcessed( c, false);
+
       // adjust signed/encrypted flags if inline PGP was found
 //FIXME(Andras) Port it    processResult.adjustCryptoStatesOfNode( node );
 
@@ -430,7 +429,8 @@ namespace KMail {
 
     if ( doCheck && cryptProto ) {
       if ( data ) {
-        cleartext = data->head() + "\n\n" + data->body(); //TODO(Andras) check if this is safe if there is no header for example
+        cleartext = data->head() + "\n" + data->body(); //TODO(Andras) check if this is safe if there is no header for example
+        kDebug() << "ClearText : " << cleartext;
 
         dumpToFile( "dat_01_reader_signedtext_before_canonicalization",
                     cleartext.data(), cleartext.length() );
@@ -445,7 +445,7 @@ namespace KMail {
       dumpToFile( "dat_02_reader_signedtext_after_canonicalization",
                   cleartext.data(), cleartext.length() );
 
-      signaturetext = sign.decodedContent();
+      signaturetext = sign.body();
       dumpToFile( "dat_03_reader.sig", signaturetext.data(),
                   signaturetext.size() );
     }
@@ -722,7 +722,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
 
     dumpToFile( "dat_04_reader.encrypted", ciphertext.data(), ciphertext.size() );
 
-    QByteArray deb;
+    QString deb;
     deb =  "\n\nE N C R Y P T E D    D A T A = ";
     if ( cipherIsBinary )
       deb += "[binary data]";
@@ -1167,10 +1167,8 @@ namespace KMail {
 
     if ( (mReader && mReader->htmlMail() && dataHtml) ||
          (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
-      /*FIXME(Andras) port it
       if ( dataPlain )
-        dataPlain->setProcessed( true, false );
-        */
+        NodeHelper::instance()->setNodeProcessed( dataPlain, false);
       stdChildHandling( dataHtml );
       return true;
     }
@@ -1215,9 +1213,8 @@ namespace KMail {
     KMime::Content * signature = node->contents().at(1);
     assert( signature );
 
-/*FIXME(Andras) port it
-    signature->setProcessed( true, true );
-*/
+    NodeHelper::instance()->setNodeProcessed( signature, true);
+
     if ( !includeSignatures() ) {
       stdChildHandling( signedData );
       return true;
@@ -1240,9 +1237,7 @@ namespace KMail {
       protocol = Kleo::CryptoBackendFactory::instance()->openpgp();
 
     if ( !protocol ) {
-    /*FIXME(Andras) port it
-      signature->setProcessed( true, true );
-      */
+      NodeHelper::instance()->setNodeProcessed( signature, true );
       stdChildHandling( signedData );
       return true;
     }
@@ -1315,9 +1310,7 @@ namespace KMail {
 */
     if ( mReader && !mReader->decryptMessage() ) {
       writeDeferredDecryptionBlock();
-/*FIXME(Andras) port it
-      data->setProcessed( true, false ); // Set the data node to done to prevent it from being processed
-*/
+      NodeHelper::instance()->setNodeProcessed( data, false );// Set the data node to done to prevent it from being processed
       return true;
     }
 
@@ -1388,9 +1381,7 @@ namespace KMail {
 
     if ( mReader )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
-      /*FIXME(Andras) port it
-    data->setProcessed( true, false ); // Set the data node to done to prevent it from being processed
-    */
+    NodeHelper::instance()->setNodeProcessed( data, false ); // Set the data node to done to prevent it from being processed
     return true;
   }
 
@@ -3127,6 +3118,5 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       }
       return 0;
   }
-
 
 } // namespace KMail

@@ -58,6 +58,7 @@ namespace KMime {
     class Message;
     class Content;
 }
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace KMail {
   namespace Interface {
@@ -455,8 +456,8 @@ protected:
     HTML begin/end parts are written around the message. */
   void displayMessage();
 
-  /** Parse given message and add it's contents to the reader window. */
-  virtual void parseMsg( KMime::Message* msg  );
+  /** Parse the root message and add it's contents to the reader window. */
+  void parseMsg();
 
   /** Creates a nice mail header depending on the current selected
     header style. */
@@ -573,7 +574,7 @@ private:
   int mMimeTreeMode;
   bool mMimeTreeAtBottom;
   QList<int> mSplitterSizes;
-  KMime::Content* mRootNode;
+  KMime::Message* mRootNode;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;

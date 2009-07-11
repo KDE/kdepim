@@ -36,6 +36,10 @@
 #include <kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>
 
+#include <QList>
+
+#define MARCS_DEBUG 1
+
 /** Flags for the encryption state. */
 typedef enum
 {
@@ -319,6 +323,7 @@ namespace KMail {
     // DataUrl Icons cache
     QString mCollapseIcon;
     QString mExpandIcon;
+
   };
 
 } // namespace KMail

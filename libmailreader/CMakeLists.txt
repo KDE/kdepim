@@ -1,3 +1,5 @@
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 set(libmailreader_SRCS
 
 kmreaderwin.cpp
@@ -18,6 +20,7 @@ kleojobexecutor.cpp
 bodypartformatter.cpp
 bodypartformatterfactory.cpp
 partnodebodypart.cpp
+nodehelper.cpp
  )
 
 configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)
