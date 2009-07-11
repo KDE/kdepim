@@ -44,6 +44,11 @@ void ContactsTreeModel::setColumns( const Columns &columns )
   emit layoutChanged();
 }
 
+ContactsTreeModel::Columns ContactsTreeModel::columns() const
+{
+  return mColumns;
+}
+
 QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) const
 {
   if ( item.mimeType() == KABC::Addressee::mimeType() ) {
@@ -104,7 +109,7 @@ QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) co
           return contact.preferredEmail();
           break;
         case AllEmails:
-          return QString();
+          return contact.emails().join( "\n" );
           break;
         case Organization:
           return contact.organization();
@@ -184,7 +189,7 @@ QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientat
             break;
         }
       } else if ( headerSet == EntityTreeModel::ItemListHeaders ) {
-        if ( section >= mColumns.count() )
+        if ( section < 0 || section >= mColumns.count() )
           return QVariant();
 
         switch ( mColumns.at( section ) ) {
