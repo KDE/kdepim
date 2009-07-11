@@ -38,8 +38,6 @@
 
 #include <QList>
 
-#define MARCS_DEBUG 1
-
 /** Flags for the encryption state. */
 typedef enum
 {
