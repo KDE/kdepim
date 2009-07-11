@@ -62,6 +62,7 @@
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
 #include "kcontactmanageradaptor.h"
+#include "modelcolumnmanager.h"
 #include "quicksearchwidget.h"
 #include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
@@ -185,6 +186,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   // create the dbus adaptor
   new MainWidgetAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/KContactManager", this, QDBusConnection::ExportAdaptors );
+
+  ModelColumnManager *manager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
+  manager->setWidget( mItemView->header() );
 }
 
 MainWidget::~MainWidget()
