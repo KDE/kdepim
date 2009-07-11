@@ -53,6 +53,18 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   }
 }
 
+void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
+{
+  mProcessedNodes.removeAll( node );
+  if ( recurse ) {
+    KMime::Content::List contents = node->contents();
+    Q_FOREACH( KMime::Content *c, contents )
+    {
+      setNodeUnprocessed( c, true );
+    }
+  }
+}
+
 bool NodeHelper::nodeProcessed( KMime::Content* node ) const
 {
   return mProcessedNodes.contains( node );

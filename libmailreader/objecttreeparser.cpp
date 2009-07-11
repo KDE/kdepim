@@ -223,18 +223,16 @@ namespace KMail {
     if ( !node )
       return;
 
-/* FIXME(Andras) check how to handle this with KMime
     // reset "processed" flags for...
     if ( showOnlyOneMimePart() ) {
       // ... this node and all descendants
-      node->setProcessed( false, false );
-      if ( partNode * child = node->firstChild() )
-        child->setProcessed( false, true );
-    } else if ( mReader && !node->parentNode() ) {
+      NodeHelper::instance()->setNodeUnprocessed( node, false );
+      if ( KMime::Content* child = NodeHelper::instance()->firstChild( node ) )
+          NodeHelper::instance()->setNodeUnprocessed( node, true );
+    } else if ( mReader && !node->parent() ) {
       // ...this node and all it's siblings and descendants
-      node->setProcessed( false, true );
+      NodeHelper::instance()->setNodeUnprocessed( node, true );
     }
-*/
 
     // Make sure the whole content is relative, so that nothing is painted over the header
     // if a malicious message uses absolute positioning.
@@ -427,7 +425,7 @@ namespace KMail {
 
     if ( doCheck && cryptProto ) {
       if ( data ) {
-        cleartext = data->head() + "\n" + data->body(); //TODO(Andras) check if this is safe if there is no header for example
+        cleartext = data->head() + "\n" + data->body();
         kDebug() << "ClearText : " << cleartext;
 
         dumpToFile( "dat_01_reader_signedtext_before_canonicalization",
@@ -438,7 +436,7 @@ namespace KMail {
         kDebug() <<"Converting LF to CRLF (see RfC 2633, 3.1.1 Canonicalization)";
         cleartext = Util::lf2crlf( cleartext );
         kDebug() <<"                                                       done.";
-      }
+}
 
       dumpToFile( "dat_02_reader_signedtext_after_canonicalization",
                   cleartext.data(), cleartext.length() );

@@ -59,6 +59,7 @@ public:
     ~NodeHelper();
 
     void setNodeProcessed( KMime::Content* node, bool recurse );
+    void setNodeUnprocessed( KMime::Content* node, bool recurse );
     bool nodeProcessed( KMime::Content* node ) const;
     void clear();
 
