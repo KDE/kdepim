@@ -356,13 +356,11 @@ namespace KMail {
   }
 
   void ProcessResult::adjustCryptoStatesOfNode( KMime::Content * node ) const {
-  /*FIXME(Andras) port it
     if ( ( inlineSignatureState()  != KMMsgNotSigned ) ||
          ( inlineEncryptionState() != KMMsgNotEncrypted ) ) {
-      node->setSignatureState( inlineSignatureState() );
-      node->setEncryptionState( inlineEncryptionState() );
+      NodeHelper::instance()->setSignatureState( node, inlineSignatureState() );
+      NodeHelper::instance()->setEncryptionState( node, inlineEncryptionState() );
     }
-    */
   }
 
   //////////////////
@@ -1143,9 +1141,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & )
   {
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( !child )
       return false;
 
@@ -1156,9 +1152,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & )
   {
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( !child )
       return false;
 
@@ -1196,9 +1190,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & )
   {
-     KMime::Content * child = 0;
-     if ( !node->contents().isEmpty() )
-       child = node->contents().at(0);
+     KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( node->contents().size() != 2 ) {
       kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
                << "processing as multipart/mixed";
@@ -1243,10 +1235,8 @@ namespace KMail {
     }
 
     CryptoProtocolSaver saver( this, protocol );
-    /*FIXME(Andras) port it
+    NodeHelper::instance()->setSignatureState( node, KMMsgFullySigned);
 
-    node->setSignatureState( KMMsgFullySigned );
-    */
     writeOpaqueOrMultipartSignedData( signedData, *signature,
                                       static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() );
     return true;
@@ -1254,16 +1244,12 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result )
   {
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( !child )
       return false;
 
     if ( keepEncryptions() ) {
-    /*FIXME(Andras) port it
-      node->setEncryptionState( KMMsgFullyEncrypted );
-      */
+      NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
       const QByteArray cstr = node->decodedContent();
       if ( mReader )
         writeBodyString( cstr, static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
@@ -1298,16 +1284,14 @@ namespace KMail {
 
     CryptoProtocolSaver cpws( this, useThisCryptProto );
 
-    KMime::Content * dataChild = 0;
-    if ( !data->contents().isEmpty() )
-      dataChild = data->contents().at(0);
+    KMime::Content * dataChild = NodeHelper::instance()->firstChild( data );
     if ( dataChild ) {
       stdChildHandling( dataChild );
       return true;
     }
-/*FIXME(Andras) port it
-    node->setEncryptionState( KMMsgFullyEncrypted );
-*/
+
+    NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
+
     if ( mReader && !mReader->decryptMessage() ) {
       writeDeferredDecryptionBlock();
       NodeHelper::instance()->setNodeProcessed( data, false );// Set the data node to done to prevent it from being processed
@@ -1362,9 +1346,7 @@ namespace KMail {
                                           &decryptedData,
                                           signatures,
                                           false );
-        /*FIXME(Andras) port it
-        node->setSignatureState( KMMsgFullySigned );
-        */
+        NodeHelper::instance()->setSignatureState( node, KMMsgFullySigned);
       } else {
         insertAndParseNewChildNode( *node,
                                     decryptedData.constData(),
@@ -1393,9 +1375,7 @@ namespace KMail {
          && !showOnlyOneMimePart() )
       return false;
 
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
       otp.parseObjectTree( child );
@@ -1439,9 +1419,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result )
   {
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
       otp.parseObjectTree( child );
@@ -1455,9 +1433,7 @@ namespace KMail {
     const Kleo::CryptoBackend::Protocol* oldUseThisCryptPlug = cryptoProtocol();
     if (    node->parent()
             && node->parent()->contentType()->mimeType() == "multipart/encrypted" ) {
-/*FIXME(Andras) port it
-      node->setEncryptionState( KMMsgFullyEncrypted );
-      */
+      NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
       if ( keepEncryptions() ) {
         const QByteArray cstr = node->decodedContent();
         if ( mReader )
@@ -1526,9 +1502,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result )
   {
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
       otp.parseObjectTree( child );
@@ -1664,9 +1638,7 @@ namespace KMail {
                           messagePart.auditLog ) ) {
         kDebug() << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
         isEncrypted = true;
-        /*FIXME(Andras) port it
-        node->setEncryptionState( KMMsgFullyEncrypted );
-        */
+        NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
         signTestNode = 0;
         // paint the frame
         messagePart.isDecryptable = true;
@@ -1705,10 +1677,8 @@ namespace KMail {
           kDebug() << "pkcs7 mime  -  NO encryption found";
         }
       }
-/*FIXME(Andras) port it
       if ( isEncrypted )
-        node->setEncryptionState( KMMsgFullyEncrypted );
-*/
+        NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
     }
 
     // We now try signature verification if necessarry.
@@ -1730,11 +1700,10 @@ namespace KMail {
           kDebug() << "pkcs7 mime  -  signature found  -  opaque signed data !";
           isSigned = true;
         }
-    /*FIXME(Andras) port it
-    signTestNode->setSignatureState( KMMsgFullySigned );
+
+        NodeHelper::instance()->setSignatureState( signTestNode, KMMsgFullySigned );
         if ( signTestNode != node )
-          node->setSignatureState( KMMsgFullySigned );
-*/
+          NodeHelper::instance()->setSignatureState( node, KMMsgFullySigned );
       } else {
         kDebug() << "pkcs7 mime  -  NO signature found   :-(";
       }
@@ -3107,15 +3076,14 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       if( ( !content->contentType()->isEmpty() )
           && ( mimeType.isEmpty()  || ( mimeType == content->contentType()->mimeType() ) ) )
           return content;
-      if ( !content->contents().isEmpty() && deep ) //first child
-          return findType( content->contents().at(0), mimeType, deep, wide );
-      KMime::Content *parent = content->parent();
-      if ( parent ) {
-        KMime::Content::List contents = parent->contents();
-        int index = contents.indexOf( content ) + 1;
-        if (index <= contents.size() &&  wide ) //next on the same level
-          return findType( contents.at(index), mimeType, deep, wide );
-      }
+      KMime::Content *child = NodeHelper::instance()->firstChild( content );
+      if ( child && deep ) //first child
+          return findType( child, mimeType, deep, wide );
+
+      KMime::Content *next = NodeHelper::instance()->nextSibling( content );
+      if (next &&  wide ) //next on the same level
+        return findType( next, mimeType, deep, wide );
+
       return 0;
   }
 

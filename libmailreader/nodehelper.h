@@ -21,16 +21,37 @@
 #define KMAILNODEHELPER_H
 
 #include <QList>
+#include <QMap>
 
 namespace KMime {
   class Content;
 }
 
 namespace KMail {
-
 /**
-	@author
+  @author Andras Mantia <andras@kdab.net>
 */
+
+/** Flags for the encryption state. */
+typedef enum
+{
+    KMMsgEncryptionStateUnknown=' ',
+    KMMsgNotEncrypted='N',
+    KMMsgPartiallyEncrypted='P',
+    KMMsgFullyEncrypted='F',
+    KMMsgEncryptionProblematic='X'
+} KMMsgEncryptionState;
+
+/** Flags for the signature state. */
+typedef enum
+{
+    KMMsgSignatureStateUnknown=' ',
+    KMMsgNotSigned='N',
+    KMMsgPartiallySigned='P',
+    KMMsgFullySigned='F',
+    KMMsgSignatureProblematic='X'
+} KMMsgSignatureState;
+
 class NodeHelper{
 public:
     static NodeHelper * instance();
@@ -38,14 +59,28 @@ public:
     ~NodeHelper();
 
     void setNodeProcessed( KMime::Content* node, bool recurse );
-    bool nodeProcessed( KMime::Content* node );
+    bool nodeProcessed( KMime::Content* node ) const;
     void clear();
+
+    void setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state );
+    KMMsgEncryptionState encryptionState( KMime::Content *node ) const;
+
+    void setSignatureState( KMime::Content* node, const KMMsgSignatureState state );
+    KMMsgSignatureState signatureState( KMime::Content *node ) const;
+
+    KMMsgSignatureState overallSignatureState( KMime::Content* node ) const;
+    KMMsgEncryptionState overallEncryptionState( KMime::Content *node ) const;
+
+    KMime::Content *nextSibling( KMime::Content* node ) const;
+    KMime::Content *firstChild( KMime::Content* node ) const;
 
 private:
     NodeHelper();
     static NodeHelper * mSelf;
 
     QList<KMime::Content*> mProcessedNodes;
+    QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
+    QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
 };
 
 }

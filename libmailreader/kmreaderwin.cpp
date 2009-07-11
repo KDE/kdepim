@@ -157,6 +157,8 @@ using KMail::TeeHtmlWriter;
 #include <QTextDocument>
 #endif
 
+using namespace KMail;
+
 // This function returns the complete data that were in this
 // message parts - *after* all encryption has been removed that
 // could be removed.
@@ -172,9 +174,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
   if( node ) {
     KMime::Content* curNode = node;
     KMime::Content* dataNode = curNode;
-    KMime::Content * child = 0;
-    if ( !node->contents().isEmpty() )
-      child = node->contents().at(0);
+    KMime::Content * child = NodeHelper::instance()->firstChild( node );
     bool bIsMultipart = false;
 
     QString type = curNode->contentType()->mediaType();
@@ -195,9 +195,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
                 ObjectTreeParser::findType( child, "application/octet-stream", false, true );
               if ( !data )
                 data = ObjectTreeParser::findType( child, "application/pkcs7-mime", false, true );
-              dataNode = 0;
-              if ( data && !data->contents().isEmpty() )
-                dataNode = data->contents().at(0);
+              dataNode = NodeHelper::instance()->firstChild( data );
             }
         }
     } else if ( type == "message" ) {
@@ -214,11 +212,9 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
           } else if ( subType == "pkcs7-mime" ) {
               // note: subtype Pkcs7Mime can also be signed
               //       and we do NOT want to remove the signature!
-/*FIXME(Andras) port it
-              if ( child && curNode->encryptionState() != KMMsgNotEncrypted )
+              if ( child && NodeHelper::instance()->encryptionState( curNode ) != KMMsgNotEncrypted ) {
                 dataNode = child;
             }
-*/
           }
     } else if ( type == "image" ) {
         kDebug() <<"* image *";
@@ -271,9 +267,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
       if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
         kDebug() <<"is valid Multipart, processing children:";
         QByteArray boundary = headerContent->contentType()->boundary();
-        curNode = 0;
-        if ( !dataNode->contents().isEmpty() )
-          curNode = dataNode->contents().at(0);
+        curNode = NodeHelper::instance()->firstChild( dataNode );
         // store children of multipart
         while( curNode ) {
           kDebug() <<"--boundary";
@@ -292,16 +286,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
                                     theMessage,
                                     false,
                                     recCount + 1 );
-          KMime::Content *parent = curNode->parent();
-          if (parent) {
-           KMime::Content::List contents = parent->contents();
-           int index = contents.indexOf( curNode ) + 1;
-           curNode = 0;
-           if (index <= contents.size() ) //next on the same level
-            curNode = contents.at(index);
-          } else {
-            curNode = 0;
-          }
+          curNode = NodeHelper::instance()->nextSibling( curNode );
         }
         kDebug() <<"--boundary--";
         resultingData += "\n--";
@@ -1553,14 +1538,14 @@ void KMReaderWin::displayMessage() {
   mRootNode = new KMime::Message;
   mRootNode->setContent( mMessageItem.payloadData() );
   mRootNode->parse();
-
-             kDebug() << "ANDRIS head: " << mRootNode->head();
-              kDebug() << "ANDRIS body: " << mRootNode->body();
-              Q_FOREACH(KMime::Content *c, mRootNode->contents()) {
-              kDebug() << "ANDRIS Chead: " << c->head();
-              kDebug() << "ANDRIS Cbody: " << c->body();
-              }
-//              kDebug() << "ANDRIS payload: " << mMessageItem.payloadData();
+/*
+  kDebug() << "Main head: " << mRootNode->head();
+  kDebug() << "Main body: " << mRootNode->body();
+  Q_FOREACH(KMime::Content *c, mRootNode->contents()) {
+    kDebug() << "Subcontent head: " << c->head();
+    kDebug() << "Subcontent body: " << c->body();
+  }
+  */
   //FIXME(Andras) handle codec overrides
   //msg->setOverrideCodec( overrideCodec() );
 
@@ -1589,62 +1574,24 @@ void KMReaderWin::displayMessage() {
 //-----------------------------------------------------------------------------
 void KMReaderWin::parseMsg()
 {
-    assert( mRootNode != 0 );
+  assert( mRootNode != 0 );
 
+  /* aMsg->setIsBeingParsed( true ); //FIXME(Andras) review and port */
 
-    QString cntDesc = i18n("( body part )");
+  QString cntDesc = i18n("( body part )");
 
-    if (mRootNode->subject(false) )
-        cntDesc = mRootNode->subject()->asUnicodeString();
+  if (mRootNode->subject(false) )
+      cntDesc = mRootNode->subject()->asUnicodeString();
 
-    KIO::filesize_t cntSize = mRootNode->size();
+  KIO::filesize_t cntSize = mRootNode->size();
 
-    QString cntEnc= "7bit";
-    if (mRootNode->contentTransferEncoding(false))
-        cntEnc = mRootNode->contentTransferEncoding()->asUnicodeString();
+  QString cntEnc= "7bit";
+  if (mRootNode->contentTransferEncoding(false))
+      cntEnc = mRootNode->contentTransferEncoding()->asUnicodeString();
 
-    //TODO(Andras) fill the mime tree/model
-
-  // Check if any part of this message is a v-card
-  // v-cards can be either text/x-vcard or text/directory, so we need to check
-  // both.
-    KMime::Content* vCardContent = findContentByType( mRootNode, "text/x-vcard" );
-    if ( !vCardContent )
-        vCardContent = findContentByType( mRootNode, "text/directory" );
-
-    bool hasVCard = false;
-
-    if( vCardContent ) {
-    // ### FIXME: We should only do this if the vCard belongs to the sender,
-    // ### i.e. if the sender's email address is contained in the vCard.
-        const QByteArray vCard = vCardContent->decodedContent();
-        KABC::VCardConverter t;
-        if ( !t.parseVCards( vCard ).isEmpty() ) {
-            hasVCard = true;
-            kDebug() <<"FOUND A VALID VCARD";
-            writeMessagePartToTempFile( vCardContent );
-        }
-    }
-    htmlWriter()->queue( writeMsgHeader( mRootNode, hasVCard, true ) );
-
-    // show message content
-    ObjectTreeParser otp( this );
-    otp.parseObjectTree( mRootNode );
-
-    bool emitReplaceMsgByUnencryptedVersion = false;
-    /*FIXME(Andras) port to Akonadi
+   /*FIXME(Andras) port to Akonadi's mimetree model/view stuff
     KMMessagePart msgPart;
 
-  assert(aMsg!=0);
-
-  aMsg->setIsBeingParsed( true );
-
-  if ( mRootNode && !mRootNode->processed() ) {
-    kWarning() << "The root node is not yet processed! Danger!";
-    return;
-  } else {
-    delete mRootNode;
-  }
   mRootNode = partNode::fromMessage( aMsg );
   const QByteArray mainCntTypeStr = mRootNode->typeString() + '/' + mRootNode->subTypeString();
 
@@ -1661,45 +1608,50 @@ void KMReaderWin::parseMsg()
   // fill the MIME part tree viewer
   mRootNode->fillMimePartTree( 0, mMimePartTree, cntDesc, mainCntTypeStr,
                                cntEnc, cntSize );
+*/
 
-  // Check if any part of this message is a v-card
-  // v-cards can be either text/x-vcard or text/directory, so we need to check
-  // both.
-  partNode* vCardNode = mRootNode->findType( DwMime::kTypeText, DwMime::kSubtypeXVCard );
-  if ( !vCardNode )
-    vCardNode = mRootNode->findType( DwMime::kTypeText, DwMime::kSubtypeDirectory );
+
+// Check if any part of this message is a v-card
+// v-cards can be either text/x-vcard or text/directory, so we need to check
+// both.
+  KMime::Content* vCardContent = findContentByType( mRootNode, "text/x-vcard" );
+  if ( !vCardContent )
+      vCardContent = findContentByType( mRootNode, "text/directory" );
 
   bool hasVCard = false;
-  if( vCardNode ) {
-    // ### FIXME: We should only do this if the vCard belongs to the sender,
-    // ### i.e. if the sender's email address is contained in the vCard.
-    const QByteArray vCard = vCardNode->msgPart().bodyDecodedBinary();
-    KABC::VCardConverter t;
-    if ( !t.parseVCards( vCard ).isEmpty() ) {
-      hasVCard = true;
-      kDebug() <<"FOUND A VALID VCARD";
-      writeMessagePartToTempFile( &vCardNode->msgPart(), vCardNode->nodeId() );
-    }
+
+  if( vCardContent ) {
+  // ### FIXME: We should only do this if the vCard belongs to the sender,
+  // ### i.e. if the sender's email address is contained in the vCard.
+      const QByteArray vCard = vCardContent->decodedContent();
+      KABC::VCardConverter t;
+      if ( !t.parseVCards( vCard ).isEmpty() ) {
+          hasVCard = true;
+          kDebug() <<"FOUND A VALID VCARD";
+          writeMessagePartToTempFile( vCardContent );
+      }
   }
-  htmlWriter()->queue( writeMsgHeader( aMsg, hasVCard, true ) );
+  htmlWriter()->queue( writeMsgHeader( mRootNode, hasVCard, true ) );
 
   // show message content
   ObjectTreeParser otp( this );
   otp.parseObjectTree( mRootNode );
 
+  bool emitReplaceMsgByUnencryptedVersion = false;
+
   // store encrypted/signed status information in the KMMessage
   //  - this can only be done *after* calling parseObjectTree()
-  KMMsgEncryptionState encryptionState = mRootNode->overallEncryptionState();
-  KMMsgSignatureState  signatureState  = mRootNode->overallSignatureState();
-  aMsg->setEncryptionState( encryptionState );
+  KMMsgEncryptionState encryptionState = NodeHelper::instance()->overallEncryptionState( mRootNode );
+  KMMsgSignatureState  signatureState  = NodeHelper::instance()->overallSignatureState( mRootNode );
+  NodeHelper::instance()->setEncryptionState( mRootNode, encryptionState );
   // Don't reset the signature state to "not signed" (e.g. if one canceled the
   // decryption of a signed messages which has already been decrypted before).
   if ( signatureState != KMMsgNotSigned ||
-       aMsg->signatureState() == KMMsgSignatureStateUnknown ) {
-    aMsg->setSignatureState( signatureState );
+       NodeHelper::instance()->signatureState( mRootNode ) == KMMsgSignatureStateUnknown ) {
+    NodeHelper::instance()->setSignatureState( mRootNode, signatureState );
   }
 
-  bool emitReplaceMsgByUnencryptedVersion = false;
+  /* FIXME(Andras) port it
   const KConfigGroup reader(KMKernel::config() ,"Reader" );
   if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
 
@@ -1751,16 +1703,14 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
       aMsg->setBody( decryptedData );
       KMMessage* unencryptedMessage = new KMMessage( *aMsg );
       unencryptedMessage->setParent( 0 );
-      */
       // because this did not work:
-      /*
+#if 0
       DwMessage dwMsg( DwString( aMsg->asString() ) );
       dwMsg.Body() = DwBody( DwString( resultString.data() ) );
       dwMsg.Body().Parse();
       KMMessage* unencryptedMessage = new KMMessage( &dwMsg );
-      */
+#endif
 
-      /*FIXME(Andras) port it!
       kDebug() << "Resulting message:" << unencryptedMessage->asString();
       kDebug() << "Attach unencrypted message to aMsg";
 
@@ -1768,10 +1718,9 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
 
       emitReplaceMsgByUnencryptedVersion = true;
     }
+    }
   }
-  }
-  */
-
+*/
   // save current main Content-Type before deleting mRootNode
   const QByteArray rootNodeCntType = mRootNode ? mRootNode->contentType()->mediaType() :"text";
   const QByteArray rootNodeCntSubtype = mRootNode ? mRootNode->contentType()->subType() : "plain";
@@ -2924,9 +2873,7 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
     return QString();
 
   QString html;
-  KMime::Content * child = 0;
-  if ( !node->contents().isEmpty() )
-    child = node->contents().at(0);
+  KMime::Content * child = NodeHelper::instance()->firstChild( node );
 
   if ( child) {
     QString subHtml = renderAttachments( child, nextColor( bgColor ) );
@@ -2991,13 +2938,10 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
     }
   }
 
-  KMime::Content *parent = node->parent();
-  if ( parent ) {
-    KMime::Content::List contents = parent->contents();
-    int index = contents.indexOf( node ) + 1;
-    if (index < contents.size()) //next on the same level
-      html += renderAttachments( contents.at(index), nextColor ( bgColor ) );
-  }
+  KMime::Content *next  = NodeHelper::instance()->nextSibling( node );
+  if ( next )
+    html += renderAttachments( next, nextColor ( bgColor ) );
+
   return html;
 }
 
