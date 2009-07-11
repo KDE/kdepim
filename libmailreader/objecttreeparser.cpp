@@ -795,7 +795,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
       break;
     }
   } else if (/*FIXME(Andras) port to akonadi
-             kmkernel->contextMenuShown()*/ true ) {
+             kmkernel->contextMenuShown()*/ false ) {
     // ### Workaround for bug 56693 (kmail freeze with the complete desktop
     // ### while pinentry-qt appears)
     QByteArray ciphertext( data.decodedContent() );
@@ -1348,6 +1348,7 @@ namespace KMail {
                                           false );
         NodeHelper::instance()->setSignatureState( node, KMMsgFullySigned);
       } else {
+        decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
         insertAndParseNewChildNode( *node,
                                     decryptedData.constData(),
                                     "encrypted data" );
