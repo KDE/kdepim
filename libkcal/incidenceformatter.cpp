@@ -949,7 +949,7 @@ static QString invitationDetailsTodo( Todo *todo )
     }
 
   } else {
-    html += invitationRow( i18n( "Due Date:" ), i18n( "None" ) );
+    html += invitationRow( i18n( "Due Date:" ), i18n( "Due Date: None", "None" ) );
   }
 
   html += "</table></div>\n";
