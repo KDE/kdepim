@@ -47,6 +47,7 @@ class MessageComposer::MainTextJobPrivate : public JobPrivate
     {
     }
 
+    bool chooseSourcePlainText();
     bool chooseCharsetAndEncode();
     bool chooseCharset();
     void encodeTexts();
@@ -62,6 +63,31 @@ class MessageComposer::MainTextJobPrivate : public JobPrivate
 
     Q_DECLARE_PUBLIC( MainTextJob )
 };
+
+bool MainTextJobPrivate::chooseSourcePlainText()
+{
+  Q_Q( MainTextJob );
+  Q_ASSERT( composer );
+  Q_ASSERT( textPart );
+  if( composer->behaviour().isActionEnabled( Behaviour::UseWrapping ) ) {
+    sourcePlainText = textPart->wrappedPlainText();
+    if( sourcePlainText.isEmpty() &&
+        !textPart->cleanPlainText().isEmpty() ) {
+      q->setError( Job::BugError );
+      q->setErrorText( i18n( "Asked to use word wrapping, but given no wrapped plain text." ) );
+      return false;
+    }
+  } else {
+    sourcePlainText = textPart->cleanPlainText();
+    if( sourcePlainText.isEmpty() &&
+        !textPart->wrappedPlainText().isEmpty() ) {
+      q->setError( Job::BugError );
+      q->setErrorText( i18n( "Asked not to use word wrapping, but given no clean plain text." ) );
+      return false;
+    }
+  }
+  return true;
+}
 
 bool MainTextJobPrivate::chooseCharsetAndEncode()
 {
@@ -212,10 +238,11 @@ void MainTextJob::doStart()
   Q_ASSERT( d->composer );
 
   // Word wrapping.
-  if( d->composer->behaviour().isActionEnabled( Behaviour::UseWrapping ) ) {
-    d->sourcePlainText = d->textPart->wrappedPlainText();
-  } else {
-    d->sourcePlainText = d->textPart->cleanPlainText();
+  if( !d->chooseSourcePlainText() ) {
+    // chooseSourcePlainText has set an error.
+    Q_ASSERT( error() );
+    emitResult();
+    return;
   }
 
   // Charset.
@@ -241,6 +268,7 @@ void MainTextJob::doStart()
     // chooseCharsetAndEncode has set an error.
     Q_ASSERT( error() );
     emitResult();
+    return;
   }
 }
 

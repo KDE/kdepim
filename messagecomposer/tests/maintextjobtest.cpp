@@ -55,6 +55,34 @@ void MainTextJobTest::testPlainText()
   QCOMPARE( QString::fromLatin1( result->body() ), data );
 }
 
+void MainTextJobTest::testWrappingErrors()
+{
+  {
+    Composer *composer = new Composer;
+    composer->behaviour().disableAction( Behaviour::UseGui );
+    composer->behaviour().disableAction( Behaviour::UseWrapping );
+    composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+    TextPart *textPart = new TextPart;
+    QString data = QString::fromLatin1( "they said their nevers they slept their dream" );
+    textPart->setWrappedPlainText( data );
+    MainTextJob *mjob = new MainTextJob( textPart, composer );
+    QVERIFY( !mjob->exec() ); // error: not UseWrapping but given only wrapped text
+    QCOMPARE( mjob->error(), int( Job::BugError ) );
+  }
+  {
+    Composer *composer = new Composer;
+    composer->behaviour().disableAction( Behaviour::UseGui );
+    composer->behaviour().enableAction( Behaviour::UseWrapping );
+    composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+    TextPart *textPart = new TextPart;
+    QString data = QString::fromLatin1( "they said their nevers they slept their dream" );
+    textPart->setCleanPlainText( data );
+    MainTextJob *mjob = new MainTextJob( textPart, composer );
+    QVERIFY( !mjob->exec() ); // error: UseWrapping but given only clean text
+    QCOMPARE( mjob->error(), int( Job::BugError ) );
+  }
+}
+
 void MainTextJobTest::testCustomCharset()
 {
   Composer *composer = new Composer;
