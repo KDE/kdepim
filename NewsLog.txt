@@ -7,6 +7,7 @@ Problems addressed
 * kolab/issue3740: Fix crash when trying to delete attachment inside an encapsulated message
 * kolab/issue3608: Also show the surname of an attendee
 * kolab/issue3746: Fix summary not showing in an update mail and remove empty rectangle
+* kolab/issue3721: Fix incorrect translation for ical import tool
 
 
 Friday, June 26th 2009
