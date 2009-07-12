@@ -2,6 +2,13 @@ add_subdirectory( strigifeeder )
 
 if( Nepomuk_FOUND AND NOT Q_WS_MAC )
 
+  #so we can build against kdelibs4.4
+  if (${KDE_VERSION} VERSION_GREATER 4.3.50)
+    include(NepomukAddOntologyClasses)
+  else()
+    include(MacroAddOntologyClasses)
+  endif()
+
   #The following code to compute SOPRANO_PLUGIN_RAPTORPARSER_FOUND is lifted
   #from KDE4.2's FindSoprano.cmake. We have this code here for backwards
   #compatibility, and can be removed sometime after KDE 4.3 is released.
