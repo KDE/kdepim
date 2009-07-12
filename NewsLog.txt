@@ -1,3 +1,27 @@
+Sunday, July 12th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3752: Fix wrong translations of resources
+* kolab/issue3746: Fix summary not showing in an update mail and remove empty rectangle
+* kolab/issue3721: Fix incorrect translation for ical import tool
+* Make Assuan support in Kleopatra work
+* More work on SmartCard support in Kleopatra
+* Add self-checks to Kleopatra that check for gpg-agent
+* Add new system tray icon functionallity to Kleopatra
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Fix a problem that kio_sieve would sometimes use 100% CPU
+      - kolab/issue3727: Crash when entering a folder with at least 1 message for the first time
+
+* Merges from enterprise35 branch:
+      - kolab/issue3608: Also show the surname of an attendee
+
+
 Friday, June 26th 2009
 
 Problems addressed
