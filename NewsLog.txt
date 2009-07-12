@@ -1,3 +1,14 @@
+Sunday, July 12th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3722: Don't indicate that mails can be dropped to the attachment editor, that is not possible
+* kolab/issue3740: Fix crash when trying to delete attachment inside an encapsulated message
+* kolab/issue3608: Also show the surname of an attendee
+* kolab/issue3746: Fix summary not showing in an update mail and remove empty rectangle
+
+
 Friday, June 26th 2009
 
 Problems addressed
