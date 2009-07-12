@@ -247,7 +247,6 @@ struct ProgressManagerPrivate;
  * needed regularly without the to store a pointer to them or to add child
  * items to parents by id.
  */
-
 class KDEPIM_EXPORT ProgressManager : public QObject
 {
 
@@ -419,7 +418,7 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                                   bool usesCrypto );
     void emitShowProgressDialogImpl();
 
-    QHash<QString,ProgressItem*> mTransactions;
+    QHash< QString, ProgressItem* > mTransactions;
     static unsigned int uID;
 };
 

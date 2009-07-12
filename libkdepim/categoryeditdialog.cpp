@@ -28,23 +28,17 @@
 
 #include <KLocale>
 
-#include <QLayout>
-#include <QStringList>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QBoxLayout>
-#include <QList>
 #include <QHeaderView>
+#include <QList>
+#include <QStringList>
 
 using namespace KPIM;
 
-CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget *parent, bool modal )
+CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget *parent )
   : KDialog( parent ), mPrefs( prefs )
 {
   setCaption( i18n( "Edit Categories" ) );
-  setModal( modal );
-  setButtons( Ok|Apply|Cancel|Help );
+  setButtons( Ok | Apply | Cancel | Help );
   mWidgets = new Ui::CategoryEditDialog_base();
   QWidget *widget = new QWidget( this );
   widget->setObjectName( "CategoryEdit" );
@@ -55,33 +49,45 @@ CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget *parent, bool 
   mWidgets->mButtonAddSubcategory->setIcon( KIcon( "list-add" ) );
   mWidgets->mButtonRemove->setIcon( KIcon( "list-remove" ) );
 
+  // unfortunately, kde-core-devel will not allow this code in KDialog
+  // because these button's functionality cannot be easily generalized.
+  //TODO(KDE4.3): uncomment when strings are unfrozen
+  //setButtonToolTip( Ok, i18n( "Apply changes and close" ) );
+  //setButtonWhatsThis( Ok, i18n( "When clicking <b>Ok</b>, "
+  //                              "the settings will be handed over to the "
+  //                              "program and the dialog will be closed." ) );
+  //setButtonToolTip( Cancel, i18n( "Cancel changes and close" ) );
+  //setButtonWhatsThis( Cancel, i18n( "When clicking <b>Cancel</b>, "
+  //                                  "the settings will be discarded and the "
+  //                                  "dialog will be closed." ) );
+
+  //setButtonWhatsThis( Help, i18n( "When clicking <b>Help</b>, "
+  //                                "a separate KHelpCenter window will open "
+  //                                "providing more information about the settings." ) );
+
   setMainWidget( widget );
 
   fillList();
 
-  connect( mWidgets->mCategories,
-           SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * )),
-           SLOT( editItem( QTreeWidgetItem * )) );
-  connect( mWidgets->mCategories, SIGNAL( itemSelectionChanged() ),
-           SLOT( slotSelectionChanged() ) );
-  connect( mWidgets->mCategories, SIGNAL( itemCollapsed( QTreeWidgetItem * ) ),
-           SLOT( expandIfToplevel( QTreeWidgetItem * ) ) );
-  connect( mWidgets->mEdit, SIGNAL( textChanged( const QString & )),
-           this, SLOT( slotTextChanged( const QString & )));
-  connect( mWidgets->mButtonAdd, SIGNAL( clicked() ),
-           this, SLOT( add() ) );
-  connect( mWidgets->mButtonAddSubcategory, SIGNAL( clicked() ),
-           this, SLOT( addSubcategory() ) );
-  connect( mWidgets->mButtonRemove, SIGNAL( clicked() ),
-           this, SLOT( remove() ) );
-  connect( this, SIGNAL( okClicked() ), this, SLOT( slotOk() ) );
-  connect( this, SIGNAL( cancelClicked() ), this, SLOT( slotCancel() ) );
-  connect( this, SIGNAL( applyClicked() ), this, SLOT( slotApply() ) );
+  connect( mWidgets->mCategories, SIGNAL(currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)),
+           SLOT(editItem(QTreeWidgetItem *)) );
+  connect( mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
+           SLOT(slotSelectionChanged()) );
+  connect( mWidgets->mCategories, SIGNAL(itemCollapsed(QTreeWidgetItem *)),
+           SLOT(expandIfToplevel(QTreeWidgetItem *)) );
+  connect( mWidgets->mEdit, SIGNAL(textChanged(const QString &)),
+           this, SLOT(slotTextChanged(const QString &)) );
+  connect( mWidgets->mButtonAdd, SIGNAL(clicked()),
+           this, SLOT(add()) );
+  connect( mWidgets->mButtonAddSubcategory, SIGNAL(clicked()),
+           this, SLOT(addSubcategory()) );
+  connect( mWidgets->mButtonRemove, SIGNAL(clicked()),
+           this, SLOT(remove()) );
+  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
+  connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
+  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
 }
 
-/*
- *  Destroys the object and frees any allocated resources
- */
 CategoryEditDialog::~CategoryEditDialog()
 {
   delete mWidgets;
@@ -113,10 +119,10 @@ void CategoryEditDialog::add()
 {
   if ( !mWidgets->mEdit->text().isEmpty() ) {
     QTreeWidgetItem *newItem =
-      new QTreeWidgetItem( mWidgets->mCategories, QStringList( "" ) );
-    // FIXME: Use a better string once string changes are allowed again
-//                                                i18n("New category") );
+      new QTreeWidgetItem( mWidgets->mCategories,
+                           QStringList( i18n( "New category" ) ) );
     newItem->setExpanded( true );
+
     mWidgets->mCategories->setCurrentItem( newItem );
     mWidgets->mCategories->clearSelection();
     newItem->setSelected( true );
@@ -131,10 +137,10 @@ void CategoryEditDialog::addSubcategory()
 {
   if ( !mWidgets->mEdit->text().isEmpty() ) {
     QTreeWidgetItem *newItem =
-      new QTreeWidgetItem( mWidgets->mCategories->currentItem(), QStringList( "" ) );
-    // FIXME: Use a better string once string changes are allowed again
-//                                                i18n("New category") );
+      new QTreeWidgetItem( mWidgets->mCategories->currentItem(),
+                           QStringList( i18n( "New category" ) ) );
     newItem->setExpanded( true );
+
     mWidgets->mCategories->setCurrentItem( newItem );
     mWidgets->mCategories->clearSelection();
     newItem->setSelected( true );

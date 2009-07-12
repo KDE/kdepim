@@ -210,9 +210,9 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
   }
 
   if ( fieldMask & PhoneFields ) {
-    KABC::PhoneNumber::List phones = addr.phoneNumbers();
+    const KABC::PhoneNumber::List phones = addr.phoneNumbers();
     KABC::PhoneNumber::List::ConstIterator phoneIt;
-    for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
+    for ( phoneIt = phones.constBegin(); phoneIt != phones.constEnd(); ++phoneIt ) {
       QString number = Qt::escape( (*phoneIt).number() );
 
       QString url;
@@ -238,10 +238,10 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
   }
 
   if ( fieldMask & EmailFields ) {
-    QStringList emails = addr.emails();
+    const QStringList emails = addr.emails();
     QStringList::ConstIterator emailIt;
     QString type = i18n( "Email" );
-    for ( emailIt = emails.begin(); emailIt != emails.end(); ++emailIt ) {
+    for ( emailIt = emails.constBegin(); emailIt != emails.constEnd(); ++emailIt ) {
       QByteArray fullEmail = KUrl::toPercentEncoding( addr.fullEmail( *emailIt ) );
 
       if ( linkMask & EmailLinks ) {
@@ -277,9 +277,9 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
   }
 
   if ( fieldMask & AddressFields ) {
-    KABC::Address::List addresses = addr.addresses();
+    const KABC::Address::List addresses = addr.addresses();
     KABC::Address::List::ConstIterator addrIt;
-    for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
+    for ( addrIt = addresses.constBegin(); addrIt != addresses.constEnd(); ++addrIt ) {
       if ( (*addrIt).label().isEmpty() ) {
         QString formattedAddress;
 
@@ -353,12 +353,12 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
           QString key = customEntry.left( pos );
           const QString value = customEntry.mid( pos + 1 );
 
-          // blog is handled separated
-          if ( key == "BlogFeed" )
+          // blog and im address are handled separated
+          if ( key == "BlogFeed" || key == "IMAddress" )
             continue;
 
-          const QMap<QString, QString>::ConstIterator keyIt = titleMap.find( key );
-          if ( keyIt != titleMap.end() )
+          const QMap<QString, QString>::ConstIterator keyIt = titleMap.constFind( key );
+          if ( keyIt != titleMap.constEnd() )
             key = keyIt.value();
 
           customData += rowFmtStr.arg( key ).arg( Qt::escape( value ) ) ;
@@ -370,29 +370,39 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
   QString name( Qt::escape( addr.realName() ) );
   QString role( Qt::escape( addr.role() ) );
   QString organization( Qt::escape( addr.organization() ) );
-/*
-  if ( proxy && (fieldMask & IMFields) ) {
-    if ( proxy->isPresent( addr.uid() ) && proxy->presenceNumeric( addr.uid() ) > 0 ) {
-      // set image source to either a QMimeSourceFactory key or a data:/ URL
-      QString imgSrc = pixmapAsDataUrl( proxy->presenceIcon( addr.uid() ) );
 
-      // make the status a link, if required
-      QString imStatus;
-      if ( linkMask & IMLinks )
-        imStatus = QString::fromLatin1( "<a href=\"im:\"><img src=\"%1\"> (%2)</a>" );
-      else
-        imStatus = QString::fromLatin1( "<img src=\"%1\"> (%2)" );
+  if ( fieldMask & IMFields ) {
 
-      // append our status to the rest of the dynamic part of the addressee
-      dynamicPart += rowFmtStr
-              .arg( i18n( "Presence" ) )
-              .arg( imStatus
-                        .arg( imgSrc )
-                        .arg( proxy->presenceString( addr.uid() ) )
-                  );
+    const QString imAddress = addr.custom( "KADDRESSBOOK", "X-IMAddress" );
+    if ( !imAddress.isEmpty() ) {
+      customData += rowFmtStr.arg( i18n( "IM Address" ) ).arg( Qt::escape( imAddress ) ) ;
     }
-  }
+
+/*
+    if ( proxy ) {
+      if ( proxy->isPresent( addr.uid() ) && proxy->presenceNumeric( addr.uid() ) > 0 ) {
+        // set image source to either a QMimeSourceFactory key or a data:/ URL
+        QString imgSrc = pixmapAsDataUrl( proxy->presenceIcon( addr.uid() ) );
+
+        // make the status a link, if required
+        QString imStatus;
+        if ( linkMask & IMLinks )
+          imStatus = QString::fromLatin1( "<a href=\"im:\"><img src=\"%1\"> (%2)</a>" );
+        else
+          imStatus = QString::fromLatin1( "<img src=\"%1\"> (%2)" );
+
+        // append our status to the rest of the dynamic part of the addressee
+        dynamicPart += rowFmtStr
+                .arg( i18n( "Presence" ) )
+                .arg( imStatus
+                          .arg( imgSrc )
+                          .arg( proxy->presenceString( addr.uid() ) )
+                    );
+      }
+    }
 */
+  }
+
   // @STYLE@ - construct the string by parts, substituting in
   // the styles first. There are lots of appends, but we need to
   // do it this way to avoid cases where the substituted string
@@ -760,7 +770,7 @@ QString AddresseeView::strippedNumber( const QString &number )
 
   for ( int i = 0; i < number.length(); ++i ) {
     QChar c = number[ i ];
-    if ( c.isDigit() || c == '*' || c == '#' || c == '+' && i == 0 )
+    if ( c.isDigit() || c == '*' || c == '#' || (c == '+' && i == 0) )
       retval.append( c );
   }
 

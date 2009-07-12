@@ -4,7 +4,7 @@
     Copyright (c) 2003 Don Sanders <sanders@kde.org>
     Copyright (c) 2005 George Staikos <staikos@kde.org>
     Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
-    Copyright (c) 2008 Thomas McGuire <thomas.mcguire@gmx.net>
+    Copyright (c) 2008 Thomas McGuire <mcguire@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -254,7 +254,7 @@ QVariant MailListMimeData::retrieveData( const QString & mimeType,
       dlg->progressBar()->setValue( i );
       dlg->show();
 
-      for ( MailList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
+      for ( MailList::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it ) {
 
         // Get the serial number from the mail summary and use the mail text source
         // to get the actual text of the mail.

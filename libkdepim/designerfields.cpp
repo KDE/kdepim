@@ -70,9 +70,6 @@ void DesignerFields::initGUI( const QString &uiFile )
 
   layout->addWidget( wdg );
 
-  QList<QWidget*> list = wdg->findChildren<QWidget*>();
-  QWidget *it;
-
   QStringList allowedTypes;
   allowedTypes << "QLineEdit"
                << "QTextEdit"
@@ -84,6 +81,8 @@ void DesignerFields::initGUI( const QString &uiFile )
                << "KDateTimeWidget"
                << "KDatePicker";
 
+  QList<QWidget*> list = wdg->findChildren<QWidget*>();
+  QWidget *it;
   Q_FOREACH( it, list ) {
     if ( allowedTypes.contains( it->metaObject()->className() ) ) {
       QString name = it->objectName();
@@ -144,7 +143,7 @@ void DesignerFields::load( DesignerFields::Storage *storage )
   // we can't do this in the following loop, as it works on the
   // custom fields of the vcard, which may not be set.
   QMap<QString, QWidget *>::ConstIterator widIt;
-  for ( widIt = mWidgets.begin(); widIt != mWidgets.end(); ++widIt ) {
+  for ( widIt = mWidgets.constBegin(); widIt != mWidgets.constEnd(); ++widIt ) {
     QString value;
     if ( widIt.value()->inherits( "QLineEdit" ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( widIt.value() );
@@ -174,11 +173,11 @@ void DesignerFields::load( DesignerFields::Storage *storage )
   }
 
   QStringList::ConstIterator it2;
-  for ( it2 = keys.begin(); it2 != keys.end(); ++it2 ) {
+  for ( it2 = keys.constBegin(); it2 != keys.constEnd(); ++it2 ) {
     QString value = storage->read( *it2 );
 
-    QMap<QString, QWidget *>::ConstIterator it = mWidgets.find( *it2 );
-    if ( it != mWidgets.end() ) {
+    QMap<QString, QWidget *>::ConstIterator it = mWidgets.constFind( *it2 );
+    if ( it != mWidgets.constEnd() ) {
       if ( it.value()->inherits( "QLineEdit" ) ) {
         QLineEdit *wdg = static_cast<QLineEdit*>( it.value() );
         wdg->setText( value );

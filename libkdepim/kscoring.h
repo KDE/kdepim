@@ -2,7 +2,7 @@
   kscoring.h
 
   Copyright (c) 2001 Mathias Waack <mathias@atoll-net.de>
-  Copyright (C) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
+  Copyright (C) 2005 by Volker Krause <vkrause@kde.org>
 
   Author: Mathias Waack <mathias@atoll-net.de>
 
@@ -217,7 +217,6 @@ class KDEPIM_EXPORT KScoringExpression
   private:
     bool neg;
     QString header;
-    const char *c_header;
     Condition cond;
     QRegExp expr;
     QString expr_str;
@@ -289,7 +288,7 @@ class KDEPIM_EXPORT KScoringRule
 };
 
 /** this helper class implements a stack for lists of lists of rules.
-    With the help of this class its very easy for the KScoringManager
+    With the help of this class it is very easy for the KScoringManager
     to temporary drop lists of rules and restore them afterwards
 */
 class KDEPIM_EXPORT RuleStack

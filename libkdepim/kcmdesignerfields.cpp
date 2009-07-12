@@ -79,9 +79,6 @@ class PageItem : public Q3CheckListItem
         QImage img = pm.toImage().scaled( 300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation );
         mPreview = QPixmap::fromImage(img);
 
-        QList<QWidget*> list = wdg->findChildren<QWidget*>();
-        QWidget *it;
-
         QMap<QString, QString> allowedTypes;
         allowedTypes.insert( "QLineEdit", i18n( "Text" ) );
         allowedTypes.insert( "QTextEdit", i18n( "Text" ) );
@@ -90,9 +87,12 @@ class PageItem : public Q3CheckListItem
         allowedTypes.insert( "QComboBox", i18n( "Selection" ) );
         allowedTypes.insert( "QDateTimeEdit", i18n( "Date & Time" ) );
         allowedTypes.insert( "KLineEdit", i18n( "Text" ) );
+        allowedTypes.insert( "KTextEdit", i18n( "Text" ) );
         allowedTypes.insert( "KDateTimeWidget", i18n( "Date & Time" ) );
         allowedTypes.insert( "KDatePicker", i18n( "Date" ) );
 
+        QList<QWidget*> list = wdg->findChildren<QWidget*>();
+        QWidget *it;
         Q_FOREACH( it, list ) {
           if ( allowedTypes.contains( it->metaObject()->className() )  ) {
             QString name = it->objectName();

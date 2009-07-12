@@ -36,23 +36,33 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KEditListBox>
-#include <K3StaticDeleter>
 
+#include <QCoreApplication>
 #include <QLayout>
 #include <QVBoxLayout>
 
 using namespace KPIM;
 
-static K3StaticDeleter<RecentAddresses> sd;
+RecentAddresses *s_self = 0;
 
-RecentAddresses *RecentAddresses::s_self = 0;
+void deleteGlobalRecentAddresses()
+{
+  delete s_self;
+  s_self = 0;
+}
 
 RecentAddresses *RecentAddresses::self( KConfig *config )
 {
   if ( !s_self ) {
-    sd.setObject( s_self, new RecentAddresses( config ) );
+    s_self = new RecentAddresses( config );
+    qAddPostRoutine( deleteGlobalRecentAddresses );
   }
   return s_self;
+}
+
+bool RecentAddresses::exists()
+{
+  return s_self != 0;
 }
 
 RecentAddresses::RecentAddresses( KConfig *config )
@@ -102,8 +112,8 @@ void RecentAddresses::save( KConfig *config )
 void RecentAddresses::add( const QString &entry )
 {
   if ( !entry.isEmpty() && m_maxCount > 0 ) {
-    QStringList list = KPIMUtils::splitAddressList( entry );
-    for ( QStringList::const_iterator e_it = list.begin(); e_it != list.end(); ++e_it ) {
+    const QStringList list = KPIMUtils::splitAddressList( entry );
+    for ( QStringList::const_iterator e_it = list.constBegin(); e_it != list.constEnd(); ++e_it ) {
       KPIMUtils::EmailParseResult errorCode = KPIMUtils::isValidAddress( *e_it );
       if ( errorCode != KPIMUtils::AddressOk ) {
         continue;
@@ -152,8 +162,8 @@ void RecentAddresses::clear()
 QStringList RecentAddresses::addresses() const
 {
   QStringList addresses;
-  for ( KABC::Addressee::List::ConstIterator it = m_addresseeList.begin();
-        it != m_addresseeList.end(); ++it ) {
+  for ( KABC::Addressee::List::ConstIterator it = m_addresseeList.constBegin();
+        it != m_addresseeList.constEnd(); ++it ) {
     addresses.append( (*it).fullEmail() );
   }
   return addresses;

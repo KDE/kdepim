@@ -154,11 +154,11 @@ ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
                                                        bool usesCrypto )
 {
   ProgressItem *t = 0;
-  if ( !mTransactions[ id ] ) {
+  if ( !mTransactions.value( id ) ) {
     t = new ProgressItem ( parent, id, label, status, cancellable, usesCrypto );
     mTransactions.insert( id, t );
     if ( parent ) {
-      ProgressItem *p = mTransactions[ parent->id() ];
+      ProgressItem *p = mTransactions.value( parent->id() );
       if ( p ) {
         p->addChild( t );
       }
@@ -182,7 +182,7 @@ ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
     emit progressItemAdded( t );
   } else {
     // Hm, is this what makes the most sense?
-    t = mTransactions[id];
+    t = mTransactions.value( id );
   }
   return t;
 }
@@ -194,7 +194,7 @@ ProgressItem *ProgressManager::createProgressItemImpl( const QString &parent,
                                                        bool canBeCanceled,
                                                        bool usesCrypto )
 {
-  ProgressItem *p = mTransactions[parent];
+  ProgressItem *p = mTransactions.value( parent );
   return createProgressItemImpl( p, id, label, status, canBeCanceled, usesCrypto );
 }
 
@@ -219,24 +219,28 @@ void ProgressManager::slotStandardCancelHandler( ProgressItem *item )
 ProgressItem *ProgressManager::singleItem() const
 {
   ProgressItem *item = 0;
-  Q_FOREACH( ProgressItem * it, mTransactions ) {
-    if ( it && !it->parent() ) { // if it's a top level one, only those count
+  QHash< QString, ProgressItem* >::const_iterator it = mTransactions.constBegin();
+  while ( it != mTransactions.constEnd() ) {
+    if ( !(*it)->parent() ) { // if it's a top level one, only those count
       if ( item ) {
         return 0; // we found more than one
       } else {
-        item = it;
+        item = (*it);
       }
     }
+    ++it;
   }
   return item;
 }
 
 void ProgressManager::slotAbortAll()
 {
-  Q_FOREACH( ProgressItem * it, mTransactions ) {
-      if ( it )
-          it->cancel();
+  QHashIterator<QString, ProgressItem *> it(mTransactions);
+  while (it.hasNext()) {
+    it.next();
+    it.value()->cancel();
   }
+
 }
 
 } // namespace

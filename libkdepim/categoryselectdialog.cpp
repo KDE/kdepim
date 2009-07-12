@@ -52,7 +52,7 @@ class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog
 using namespace KPIM;
 
 CategorySelectWidget::CategorySelectWidget( QWidget *parent, KPimPrefs *prefs )
-  : QWidget(parent), mPrefs( prefs )
+  : QWidget( parent ), mPrefs( prefs )
 {
   QHBoxLayout *topL = new QHBoxLayout( this );
   topL->setMargin( 0 );
@@ -170,12 +170,10 @@ void CategorySelectWidget::setCategoryList( const QStringList &categories )
    mCategoryList = categories;
 }
 
-CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget *parent,
-                                            bool modal )
+CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget *parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Select Categories" ) );
-  setModal( modal );
   setButtons( Ok | Apply | Cancel | Help );
   showButtonSeparator( true );
   QWidget *page = new QWidget;
@@ -192,11 +190,10 @@ CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget *parent,
   mWidgets->setCategories();
   mWidgets->setFocus();
 
-  connect( mWidgets, SIGNAL(editCategories()),
-           SIGNAL(editCategories()) );
+  connect( mWidgets, SIGNAL(editCategories()), SIGNAL(editCategories()) );
 
-  connect( this, SIGNAL( okClicked() ), this, SLOT( slotOk() ) );
-  connect( this, SIGNAL( applyClicked() ), this, SLOT( slotApply() ) );
+  connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
+  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
 }
 
 CategorySelectDialog::~CategorySelectDialog()
@@ -212,9 +209,9 @@ QStringList CategorySelectDialog::selectedCategories() const
 void CategorySelectDialog::slotApply()
 {
   QString categoriesStr;
-  QStringList categories = mWidgets->selectedCategories(categoriesStr);
-  emit categoriesSelected(categories);
-  emit categoriesSelected(categoriesStr);
+  QStringList categories = mWidgets->selectedCategories( categoriesStr );
+  emit categoriesSelected( categories );
+  emit categoriesSelected( categoriesStr );
 }
 
 void CategorySelectDialog::slotOk()
@@ -226,24 +223,24 @@ void CategorySelectDialog::slotOk()
 void CategorySelectDialog::updateCategoryConfig()
 {
   QString tmp;
-  QStringList selected = mWidgets->selectedCategories(tmp);
+  QStringList selected = mWidgets->selectedCategories( tmp );
   mWidgets->setCategories();
-  mWidgets->setSelected(selected);
+  mWidgets->setSelected( selected );
 }
 
 void CategorySelectDialog::setAutoselectChildren( bool autoselectChildren )
 {
-  mWidgets->setAutoselectChildren(autoselectChildren);
+  mWidgets->setAutoselectChildren( autoselectChildren );
 }
 
 void CategorySelectDialog::setCategoryList( const QStringList &categories )
 {
-  mWidgets->setCategoryList(categories);
+  mWidgets->setCategoryList( categories );
 }
 
 void CategorySelectDialog::setSelected( const QStringList &selList )
 {
-  mWidgets->setSelected(selList);
+  mWidgets->setSelected( selList );
 }
 
 void CategorySelectDialog::enterEvent( QEvent *event )

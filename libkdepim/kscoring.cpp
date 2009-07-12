@@ -2,7 +2,7 @@
   kscoring.cpp
 
   Copyright (c) 2001 Mathias Waack <mathias@atoll-net.de>
-  Copyright (C) 2005 by Volker Krause <volker.krause@rwth-aachen.de>
+  Copyright (C) 2005 by Volker Krause <vkrause@kde.org>
 
   Author: Mathias Waack <mathias@atoll-net.de>
 
@@ -196,7 +196,7 @@ QString ActionBase::userName( int type )
   case COLOR:
     return i18n( "Colorize Header" );
   case MARKASREAD:
-    return i18n( "Mark As Read" );
+    return i18n( "Mark as Read" );
   default:
     kWarning(5100) <<"unknown type" << type <<" in ActionBase::userName()";
     return 0;
@@ -456,9 +456,8 @@ KScoringExpression::KScoringExpression( const QString &h, const QString &t,
   }
 
   neg = ng.toInt();
-  c_header = header.toLatin1();
 
-  kDebug(5100) <<"new expr:" << c_header << t
+  kDebug(5100) <<"new expr:" << header << t
                << expr_str << neg;
 }
 
@@ -550,7 +549,7 @@ bool KScoringExpression::match( ScorableArticle &a ) const
   } else if ( header == "Subject" ) {
     head = a.subject();
   } else {
-    head = a.getHeaderByType(c_header);
+    head = a.getHeaderByType( header );
   }
 
   if ( !head.isEmpty() ) {

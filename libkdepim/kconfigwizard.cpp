@@ -99,7 +99,7 @@ void KConfigWizard::setupRulesPage()
 {
   QFrame *page = new QFrame(this);
   KPageWidgetItem *item = addPage( page, i18nc( "@title:tab", "Rules" ) );
-  item->setHeader( i18nc( "@title:window", "Setup Rules" ) );
+  item->setHeader( i18nc( "@title:window", "Set Up Rules" ) );
   //TODO: set item icon
   //rame *topFrame = new QFrame( this );
   QVBoxLayout *topLayout = new QVBoxLayout;
@@ -123,9 +123,9 @@ void KConfigWizard::updateRules()
 
   mRuleView->clear();
 
-  KConfigPropagator::Rule::List rules = mPropagator->rules();
+  const KConfigPropagator::Rule::List rules = mPropagator->rules();
   KConfigPropagator::Rule::List::ConstIterator it;
-  for ( it = rules.begin(); it != rules.end(); ++it ) {
+  for ( it = rules.constBegin(); it != rules.constEnd(); ++it ) {
     KConfigPropagator::Rule r = *it;
     QString source = r.sourceFile + '/' + r.sourceGroup + '/' +
                      r.sourceEntry;
@@ -144,7 +144,7 @@ void KConfigWizard::setupChangesPage()
 {
   QFrame *page = new QFrame( this );
   KPageWidgetItem *item = addPage( page, i18nc( "@title:tab", "Changes" ) );
-  item->setHeader( i18nc( "@title:window", "Setup Changes" ) );
+  item->setHeader( i18nc( "@title:window", "Set Up Changes" ) );
   //TODO: set item icon
   QVBoxLayout *topLayout = new QVBoxLayout;
   page->setLayout(topLayout);

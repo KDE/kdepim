@@ -29,8 +29,12 @@
 #include <KLocale>
 
 #include <QHeaderView>
+#include <QVector>
+#include <QEvent>
 
 namespace KPIM {
+
+#define KPIM_TREEWIDGET_DEFAULT_CONFIG_KEY "TreeWidgetLayout"
 
 TreeWidget::TreeWidget( QWidget * parent, const char * name )
 : QTreeWidget( parent )
@@ -41,33 +45,55 @@ TreeWidget::TreeWidget( QWidget * parent, const char * name )
   header()->setMovable( true );
 
   setManualColumnHidingEnabled( true );
+
+  // At the moment of writing (25.11.2008) there is a bug in Qt
+  // which causes an assertion failure in animated views when
+  // the animated item is deleted. The bug notification has been
+  // sent to qt-bugs. For the moment we keep animations explicitly disabled.
+  // FIXME: Re-enable animations once the qt bug is fixed.
+  setAnimated( false );
 }
 
-bool TreeWidget::saveLayout( KConfigGroup &group, const char * keyName ) const
+void TreeWidget::changeEvent( QEvent *e )
 {
-  if( !keyName )
-    return false;
+  QTreeWidget::changeEvent( e );
 
-  group.writeEntry( keyName, QVariant( header()->saveState().toHex() ) );
+  if ( e->type() == QEvent::StyleChange )
+  {
+    // At the moment of writing (25.11.2008) there is a bug in Qt
+    // which causes an assertion failure in animated views when
+    // the animated item is deleted. The bug notification has been
+    // sent to qt-bugs. For the moment we keep animations explicitly disabled.
+    // FIXME: Re-enable animations once the qt bug is fixed.
+    setAnimated( false );
+  }
 }
 
-bool TreeWidget::saveLayout( KConfig * config, const char * groupName, const char * keyName ) const
+bool TreeWidget::saveLayout( KConfigGroup &group, const QString &keyName ) const
 {
-  if( !config || !groupName || !keyName )
+  group.writeEntry(
+      keyName.isEmpty() ? QString( KPIM_TREEWIDGET_DEFAULT_CONFIG_KEY ) : keyName,
+      QVariant( header()->saveState().toHex() )
+    );
+
+  return true;
+}
+
+bool TreeWidget::saveLayout( KConfig * config, const QString &groupName, const QString &keyName ) const
+{
+  if( !config || groupName.isEmpty() )
     return false;
 
   KConfigGroup group( config, groupName );
   return saveLayout( group, keyName );
 }
 
-bool TreeWidget::restoreLayout( KConfigGroup &group, const char * keyName )
+bool TreeWidget::restoreLayout( KConfigGroup &group, const QString &keyName )
 {
-  if( !keyName )
-    return false;
-
   // Restore the view column order, width and visibility
   QByteArray state = group.readEntry(
-                             keyName, QVariant( QVariant::ByteArray )
+                             keyName.isEmpty() ? QString( KPIM_TREEWIDGET_DEFAULT_CONFIG_KEY ) : keyName,
+                             QVariant( QVariant::ByteArray )
                          ).toByteArray();
   state = QByteArray::fromHex( state );
 
@@ -111,10 +137,16 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const char * keyName )
   for ( int i = 0 ; i < cc ; i++ )
   {
      savedSizes[ i ] = header()->sectionSize( i );
+    header()->resizeSection( i , 10 );
   }
 
   if ( !header()->restoreState( state ) )
+  {
+    // failed: be consistent and restore the section sizes before returning
+    for ( int c = 0 ; c < cc ; c++ )
+      header()->resizeSection( c , savedSizes[ c ] );
     return false;
+  }
 
   header()->setClickable( sectionsWereClickable );
   header()->setMovable( sectionsWereMovable );
@@ -126,12 +158,18 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const char * keyName )
     header()->setResizeMode( i, resizeModes[ i ] );
   }
 
+  // FIXME: This would cause the sections to be resized and thus
+  //        can't be reliably reset after the configuration
+  //        has been read. Can do nothing about that except warning
+  //        the user in the docs.
+  //header()->setDefaultSectionSize( defaultSectionSize );
+
   return true;
 }
 
-bool TreeWidget::restoreLayout( KConfig * config, const char * groupName, const char * keyName )
+bool TreeWidget::restoreLayout( KConfig * config, const QString &groupName, const QString &keyName )
 {
-  if( !config || !groupName || !keyName )
+  if( !config || groupName.isEmpty() )
     return false;
 
   if ( !config->hasGroup( groupName ) )
@@ -159,15 +197,17 @@ void TreeWidget::setManualColumnHidingEnabled( bool enable )
 
 void TreeWidget::setColumnHidden( int logicalIndex, bool hide )
 {
+  if ( header()->isSectionHidden( logicalIndex ) == hide )
+    return;
   header()->setSectionHidden( logicalIndex, hide );
+
+  emit columnVisibilityChanged( logicalIndex );
 }
 
 bool TreeWidget::isColumnHidden( int logicalIndex ) const
 {
   return header()->isSectionHidden( logicalIndex );
 }
-
-static const int columnActionIDBase = 0x10000;
 
 bool TreeWidget::fillHeaderContextMenu( KMenu * menu, const QPoint & )
 {
@@ -191,14 +231,25 @@ bool TreeWidget::fillHeaderContextMenu( KMenu * menu, const QPoint & )
     act->setCheckable( true );
     if ( !header()->isSectionHidden( i ) )
         act->setChecked( true );
-    act->setData( QVariant( columnActionIDBase + i ) );
+    act->setData( QVariant( i ) );
+
+    connect(
+        act, SIGNAL( triggered( bool ) ),
+        this, SLOT( slotToggleColumnActionTriggered( bool ) ) );
   }
 
   return true;
 }
 
-void TreeWidget::slotToggleColumnActionTriggered( QAction *act )
+void TreeWidget::toggleColumn( int logicalIndex )
 {
+  setColumnHidden( logicalIndex, !header()->isSectionHidden( logicalIndex ) );
+}
+
+
+void TreeWidget::slotToggleColumnActionTriggered( bool )
+{
+  QAction *act = dynamic_cast< QAction * >( sender() );
   if ( !act )
     return;
 
@@ -209,15 +260,10 @@ void TreeWidget::slotToggleColumnActionTriggered( QAction *act )
   if ( !ok )
     return;
 
-  if ( id <= columnActionIDBase )
-    return;
-
-  id -= columnActionIDBase;
-
   if ( id > columnCount() )
     return;
 
-  header()->setSectionHidden( id, !act->isChecked() );
+  setColumnHidden( id, !act->isChecked() );
 }
 
 void TreeWidget::slotHeaderContextMenuRequested( const QPoint &clickPoint )
@@ -226,9 +272,6 @@ void TreeWidget::slotHeaderContextMenuRequested( const QPoint &clickPoint )
 
   if ( !fillHeaderContextMenu( &menu, clickPoint ) )
     return;
-
-  connect( &menu, SIGNAL( triggered( QAction* ) ),
-           this, SLOT( slotToggleColumnActionTriggered( QAction* ) ) );
 
   menu.exec( header()->mapToGlobal( clickPoint ) );
 }
@@ -263,6 +306,33 @@ bool TreeWidget::setColumnText( int columnIndex, const QString &label )
     return false;
   hitem->setText( columnIndex, label );
   return true;
+}
+
+QTreeWidgetItem * TreeWidget::firstItem() const
+{
+  if ( topLevelItemCount() < 1 )
+    return 0;
+  return topLevelItem( 0 );
+}
+
+QTreeWidgetItem * TreeWidget::lastItem() const
+{
+  QTreeWidgetItem *it = 0;
+  int cc = topLevelItemCount();
+  if ( cc < 1 )
+    return 0;
+  it = topLevelItem( cc - 1 );
+  if ( !it )
+    return 0; // sanity check
+  cc = it->childCount();
+  while ( cc > 0 )
+  {
+    it = it->child( cc - 1 );
+    if ( !it )
+      return 0; // aaaaaargh: something is really wrong :D
+    cc = it->childCount();
+  }
+  return it;
 }
 
 }

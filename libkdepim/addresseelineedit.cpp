@@ -416,6 +416,7 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
     if ( m_searchString.isEmpty() ) {
       break;
     }
+    //else: fall-through to the CompletionPopup case
   }
 
   case KGlobalSettings::CompletionPopup:
@@ -753,8 +754,9 @@ void AddresseeLineEdit::slotStartLDAPLookup()
 {
   KGlobalSettings::Completion  mode = completionMode();
 
-  if ( mode == KGlobalSettings::CompletionNone  )
+  if ( mode == KGlobalSettings::CompletionNone ) {
     return;
+  }
 
   if ( !s_LDAPSearch->isAvailable() ) {
     return;
@@ -1073,7 +1075,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
         item->setSelected( true );
       }
     } else if ( ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab ) {
-      /// first, find the header of teh current section
+      /// first, find the header of the current section
       QListWidgetItem *myHeader = 0;
       int i = currentIndex;
       while ( i>=0 ) {
@@ -1126,8 +1128,8 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
   QMap<int, QStringList> sections;
   QStringList sortedItems;
   for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
-    CompletionItemsMap::const_iterator cit = s_completionItemMap->find(*it);
-    if ( cit == s_completionItemMap->end() ) {
+    CompletionItemsMap::const_iterator cit = s_completionItemMap->constFind(*it);
+    if ( cit == s_completionItemMap->constEnd() ) {
       continue;
     }
     int idx = (*cit).second;
