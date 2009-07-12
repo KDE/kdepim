@@ -43,28 +43,16 @@
 
 #include "kcursorsaver.h"
 #include "vcardviewer.h"
-using KMail::VCardViewer;
 #include "objecttreeparser.h"
-using KMail::ObjectTreeParser;
 #include "partmetadata.h"
-using KMail::PartMetaData;
 #include "attachmentstrategy.h"
-using KMail::AttachmentStrategy;
 #include "headerstrategy.h"
-using KMail::HeaderStrategy;
 #include "headerstyle.h"
-using KMail::HeaderStyle;
 #include "khtmlparthtmlwriter.h"
-using KMail::HtmlWriter;
-using KMail::KHtmlPartHtmlWriter;
 #include "htmlstatusbar.h"
-using KMail::HtmlStatusBar;
 #include "csshelper.h"
-using KMail::CSSHelper;
 #include "isubject.h"
-using KMail::ISubject;
 #include "urlhandlermanager.h"
-using KMail::URLHandlerManager;
 #include "interfaces/observable.h"
 #include "util.h"
 #include "nodehelper.h"
@@ -73,12 +61,9 @@ using KMail::URLHandlerManager;
 #include "libkdepim/broadcaststatus.h"
 
 #include <kmime/kmime_mdn.h>
-using namespace KMime;
 #ifdef KMAIL_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
-using KMail::FileHtmlWriter;
 #include "teehtmlwriter.h"
-using KMail::TeeHtmlWriter;
 #endif
 
 //KMime headers
@@ -160,6 +145,7 @@ using KMail::TeeHtmlWriter;
 #endif
 
 using namespace KMail;
+using namespace KMime;
 
 // This function returns the complete data that were in this
 // message parts - *after* all encryption has been removed that
