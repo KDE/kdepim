@@ -241,8 +241,7 @@ namespace KMail {
       htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
     KMime::Content::List contents = node->contents();
-//     if (contents.isEmpty() && node->contentType()->isText())
-      contents.prepend(node); //if it is a simple text node, it should be parsed and rendered as well
+    contents.prepend(node); //the toplevel node needs to parsed as well
     Q_FOREACH(KMime::Content *c, contents)
     {
       if ( NodeHelper::instance()->nodeProcessed( c ) )
@@ -2969,9 +2968,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     assert( node );
     if ( mReader && mReader->overrideCodec() )
       return mReader->overrideCodec();
-      //FIXME(Andras) create a content->codec mapping?
-    //return node->msgPart().codec();
-    return QTextCodec::codecForName("UTF-8");
+    return NodeHelper::instance()->codec( node );
   }
 
   // Guesstimate if the newline at newLinePos actually separates paragraphs in the text s

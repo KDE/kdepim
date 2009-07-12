@@ -24,6 +24,10 @@
 #include <kmimetype.h>
 #include <kdebug.h>
 #include <kascii.h>
+#include <klocale.h>
+#include <kcharsets.h>
+
+#include <QTextCodec>
 
 KMail::NodeHelper * KMail::NodeHelper::mSelf = 0;
 
@@ -42,6 +46,29 @@ NodeHelper::NodeHelper()
   //TODO(Andras) add methods to modify these prefixes
   mReplySubjPrefixes << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:";
   mForwardSubjPrefixes << "Fwd:" << "FW:";
+
+  mLocalCodec = QTextCodec::codecForName( KGlobal::locale()->encoding() );
+
+  // In the case of Japan. Japanese locale name is "eucjp" but
+  // The Japanese mail systems normally used "iso-2022-jp" of locale name.
+  // We want to change locale name from eucjp to iso-2022-jp at KMail only.
+
+  // (Introduction to i18n, 6.6 Limit of Locale technology):
+  // EUC-JP is the de-facto standard for UNIX systems, ISO 2022-JP
+  // is the standard for Internet, and Shift-JIS is the encoding
+  // for Windows and Macintosh.
+  if ( mLocalCodec->name().toLower() == "eucjp"
+#if defined Q_WS_WIN || defined Q_WS_MACX
+    || mLocalCodec->name().toLower() == "shift-jis" // OK?
+#endif
+  )
+  {
+    mLocalCodec = QTextCodec::codecForName("jis7");
+    // QTextCodec *cdc = QTextCodec::codecForName("jis7");
+    // QTextCodec::setCodecForLocale(cdc);
+    // KGlobal::locale()->setEncoding(cdc->mibEnum());
+  }
+
 }
 
 NodeHelper::~NodeHelper()
@@ -91,6 +118,7 @@ void NodeHelper::clear()
   mSignatureState.clear();
   qDeleteAll(mUnencryptedMessages);
   mUnencryptedMessages.clear();
+  mOverrideCodecs.clear();
 }
 
 void NodeHelper::setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state )
@@ -337,5 +365,48 @@ void NodeHelper::attachUnencryptedMessage( KMime::Message* message, KMime::Messa
     delete mUnencryptedMessages[message];
   mUnencryptedMessages[message] = unencrypted;
 }
+
+void NodeHelper::setOverrideCodec( KMime::Content* node, const QTextCodec* codec )
+{
+  if (! node )
+    return;
+
+  mOverrideCodecs[node] = codec;
+}
+
+const QTextCodec * NodeHelper::codec( KMime::Content* node )
+{
+  if (! node )
+    return mLocalCodec;
+
+  const QTextCodec *c = mOverrideCodecs[node];
+  if ( !c ) {
+    // no override-codec set for this message, try the CT charset parameter:
+    c = codecForName( node->contentType()->charset() );
+  }
+  /*FIXME(Andras) read from configuration or provide a method to se the fallback codec
+  if ( !c ) {
+    // Ok, no override and nothing in the message, let's use the fallback
+    // the user configured
+    c = KMMsgBase::codecForName( GlobalSettings::self()->fallbackCharacterEncoding().toLatin1() );
+  }
+  */
+  if ( !c ) {
+    // no charset means us-ascii (RFC 2045), so using local encoding should
+    // be okay
+    c = mLocalCodec;
+  }
+  return c;
+}
+
+const QTextCodec* NodeHelper::codecForName(const QByteArray& _str)
+{
+  if (_str.isEmpty())
+    return 0;
+  QByteArray codec = _str;
+  kAsciiToLower(codec.data());
+  return KGlobal::charsets()->codecForName(codec);
+}
+
 
 }

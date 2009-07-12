@@ -24,6 +24,8 @@
 #include <QMap>
 #include <kiconloader.h>
 
+class QTextCodec;
+
 namespace KMime {
   class Content;
   class Message;
@@ -101,6 +103,14 @@ public:
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted);
 
+  /** Get a QTextCodec suitable for this message part */
+    const QTextCodec * codec( KMime::Content* node );
+
+  /** Set the charset the user selected for the message to display */
+    void setOverrideCodec( KMime::Content* node, const QTextCodec* codec );
+
+    const QTextCodec * localCodec() const { return mLocalCodec;}
+
 private:
     NodeHelper();
 
@@ -113,6 +123,8 @@ private:
     QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
                           const QString& newPrefix ) const;
 
+    const QTextCodec* codecForName(const QByteArray& _str);
+
 
     static NodeHelper * mSelf;
 
@@ -121,6 +133,9 @@ private:
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
+    QTextCodec *mLocalCodec;
+    QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
+
 };
 
 }

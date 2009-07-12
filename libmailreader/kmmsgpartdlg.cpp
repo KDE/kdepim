@@ -3,6 +3,8 @@
 
 // my includes:
 #include "kmmsgpartdlg.h"
+#include "nodehelper.h"
+using namespace KMail;
 
 // other KMail includes:
 #include "kcursorsaver.h"
@@ -479,10 +481,8 @@ QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &enc
        QByteArray encoding = (*it).toLatin1();
        if (encoding == "locale")
        {
-       /*FIXME(Andras) port it
-         encoding = kmkernel->networkCodec()->name();
+         encoding = NodeHelper::instance()->localCodec()->name();
          kAsciiToLower(encoding.data());
-         */
        }
        if (text.isEmpty())
          return encoding;
@@ -517,10 +517,8 @@ QByteArray encodeRFC2231String( const QString& _str,
   QByteArray cset;
   if ( charset.isEmpty() )
   {
-  /*FIXME(Andras) port it
-    cset = kmkernel->networkCodec()->name();
+    cset = NodeHelper::instance()->localCodec()->name();
     kAsciiToLower( cset.data() );
-    */
   }
   else
     cset = charset;

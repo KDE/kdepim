@@ -1541,8 +1541,7 @@ void KMReaderWin::displayMessage() {
     kDebug() << "Subcontent body: " << c->body();
   }
   */
-  //FIXME(Andras) handle codec overrides
-  //msg->setOverrideCodec( overrideCodec() );
+  NodeHelper::instance()->setOverrideCodec( mRootNode, overrideCodec() );
 
   htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
   htmlWriter()->queue( mCSSHelper->htmlHead( isFixedFont() ) );
@@ -2260,13 +2259,13 @@ void KMReaderWin::setMsgPart( KMime::Content* aMsgPart, bool aHTML,
 
       if (aHTML && aMsgPart->contentType()->subType() == "html" ) { // HTML
         // ### this is broken. It doesn't stip off the HTML header and footer!
-        htmlWriter()->queue( aMsgPart->decodedText(  ) );//FIXME(Andras) take into account overrideCodec()
+        htmlWriter()->queue( overrideCodec()? overrideCodec()->toUnicode(aMsgPart->decodedContent() ) : aMsgPart->decodedText() );
         mColorBar->setHtmlMode();
       } else { // plain text
         const QByteArray str = aMsgPart->decodedContent();
         ObjectTreeParser otp( this );
         otp.writeBodyStr( str,
-                          overrideCodec() ? overrideCodec() : 0, //FIXME(Andras) should be aMsgPart->codec()
+                          overrideCodec() ? overrideCodec() : NodeHelper::instance()->codec( aMsgPart ),
                           message() ? message()->from()->asUnicodeString() : QString() );
       }
       htmlWriter()->queue("</body></html>");
