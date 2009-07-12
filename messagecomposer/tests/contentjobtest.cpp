@@ -42,8 +42,28 @@ void ContentJobTest::testContent()
   result->assemble();
   kDebug() << result->encodedContent();
   QCOMPARE( result->body(), data );
+  QVERIFY( result->contentDisposition( false ) == 0 ); // Not created unless demanded.
   QVERIFY( result->contentType( false ) == 0 ); // Not created unless demanded.
   QVERIFY( result->contentTransferEncoding( false ) ); // KMime gives it a default one (7bit).
+}
+
+void ContentJobTest::testContentDisposition()
+{
+  Composer *composer = new Composer;
+  ContentJob *cjob = new ContentJob( composer );
+  QByteArray data( "birds came flying from the underground");
+  cjob->setData( data );
+  QString filename = QString::fromUtf8( "test_ăîşţâ.txt" );
+  cjob->contentDisposition()->setDisposition( Headers::CDattachment );
+  cjob->contentDisposition()->setFilename( filename );
+  QVERIFY( cjob->exec() );
+  Content *result = cjob->content();
+  result->assemble();
+  kDebug() << result->encodedContent();
+  QCOMPARE( result->body(), data );
+  QVERIFY( result->contentDisposition( false ) );
+  QCOMPARE( result->contentDisposition()->disposition(), Headers::CDattachment );
+  QCOMPARE( result->contentDisposition()->filename(), filename );
 }
 
 void ContentJobTest::testContentType()
@@ -53,7 +73,9 @@ void ContentJobTest::testContentType()
   QByteArray data( "birds came flying from the underground");
   cjob->setData( data );
   QByteArray mimeType( "text/plain" );
+  QByteArray charset( "utf-8" );
   cjob->contentType()->setMimeType( mimeType );
+  cjob->contentType()->setCharset( charset );
   QVERIFY( cjob->exec() );
   Content *result = cjob->content();
   result->assemble();
@@ -61,6 +83,7 @@ void ContentJobTest::testContentType()
   QCOMPARE( result->body(), data );
   QVERIFY( result->contentType( false ) );
   QCOMPARE( result->contentType()->mimeType(), mimeType );
+  QCOMPARE( result->contentType()->charset(), charset );
 }
 
 void ContentJobTest::testContentTransferEncoding()
@@ -75,7 +98,6 @@ void ContentJobTest::testContentTransferEncoding()
   result->assemble();
   kDebug() << result->encodedContent();
   QCOMPARE( result->body(), data );
-  QVERIFY( result->contentType( false ) == 0 ); // Not created unless demanded.
   QVERIFY( result->contentTransferEncoding( false ) );
   QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CEquPr );
 }

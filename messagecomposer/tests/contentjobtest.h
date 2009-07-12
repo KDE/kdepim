@@ -27,6 +27,7 @@ class ContentJobTest : public QObject
   Q_OBJECT
   private Q_SLOTS:
     void testContent();
+    void testContentDisposition();
     void testContentType();
     void testContentTransferEncoding();
 };

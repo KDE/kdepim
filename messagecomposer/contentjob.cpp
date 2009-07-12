@@ -33,12 +33,14 @@ class MessageComposer::ContentJobPrivate : public JobPrivate
   public:
     ContentJobPrivate( ContentJob *qq )
       : JobPrivate( qq )
+      , contentDisposition( 0 )
       , contentTransferEncoding( 0 )
       , contentType( 0 )
     {
     }
 
     QByteArray data;
+    Headers::ContentDisposition *contentDisposition;
     Headers::ContentTransferEncoding *contentTransferEncoding;
     Headers::ContentType *contentType;
 };
@@ -62,6 +64,15 @@ void ContentJob::setData( const QByteArray &data )
 {
   Q_D( ContentJob );
   d->data = data;
+}
+
+Headers::ContentDisposition *ContentJob::contentDisposition()
+{
+  Q_D( ContentJob );
+  if( !d->contentDisposition ) {
+    d->contentDisposition = new Headers::ContentDisposition;
+  }
+  return d->contentDisposition;
 }
 
 Headers::ContentTransferEncoding *ContentJob::contentTransferEncoding()
@@ -89,6 +100,10 @@ void ContentJob::process()
   d->resultContent = new Content;
   
   // Headers.
+  if( d->contentDisposition ) {
+    d->resultContent->setHeader( d->contentDisposition );
+    d->contentDisposition->setParent( d->resultContent );
+  }
   if( d->contentTransferEncoding ) {
     d->resultContent->setHeader( d->contentTransferEncoding );
     d->contentTransferEncoding->setParent( d->resultContent );
