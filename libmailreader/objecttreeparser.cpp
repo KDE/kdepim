@@ -227,7 +227,7 @@ namespace KMail {
     if ( showOnlyOneMimePart() ) {
       // ... this node and all descendants
       NodeHelper::instance()->setNodeUnprocessed( node, false );
-      if ( KMime::Content* child = NodeHelper::instance()->firstChild( node ) )
+      if ( KMime::Content* child = NodeHelper::firstChild( node ) )
           NodeHelper::instance()->setNodeUnprocessed( node, true );
     } else if ( mReader && !node->parent() ) {
       // ...this node and all it's siblings and descendants
@@ -1139,7 +1139,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & )
   {
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     if ( !child )
       return false;
 
@@ -1150,7 +1150,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & )
   {
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     if ( !child )
       return false;
 
@@ -1185,7 +1185,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & )
   {
-     KMime::Content * child = NodeHelper::instance()->firstChild( node );
+     KMime::Content * child = NodeHelper::firstChild( node );
     if ( node->contents().size() != 2 ) {
       kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
                << "processing as multipart/mixed";
@@ -1239,7 +1239,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result )
   {
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     if ( !child )
       return false;
 
@@ -1279,7 +1279,7 @@ namespace KMail {
 
     CryptoProtocolSaver cpws( this, useThisCryptProto );
 
-    KMime::Content * dataChild = NodeHelper::instance()->firstChild( data );
+    KMime::Content * dataChild = NodeHelper::firstChild( data );
     if ( dataChild ) {
       stdChildHandling( dataChild );
       return true;
@@ -1371,7 +1371,7 @@ namespace KMail {
          && !showOnlyOneMimePart() )
       return false;
 
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
       otp.parseObjectTree( child );
@@ -1415,7 +1415,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result )
   {
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
       otp.parseObjectTree( child );
@@ -1498,7 +1498,7 @@ namespace KMail {
 
   bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result )
   {
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     if ( child ) {
       ObjectTreeParser otp( mReader, cryptoProtocol() );
       otp.parseObjectTree( child );
@@ -3070,11 +3070,11 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       if( ( !content->contentType()->isEmpty() )
           && ( mimeType.isEmpty()  || ( mimeType == content->contentType()->mimeType() ) ) )
           return content;
-      KMime::Content *child = NodeHelper::instance()->firstChild( content );
+      KMime::Content *child = NodeHelper::firstChild( content );
       if ( child && deep ) //first child
           return findType( child, mimeType, deep, wide );
 
-      KMime::Content *next = NodeHelper::instance()->nextSibling( content );
+      KMime::Content *next = NodeHelper::nextSibling( content );
       if (next &&  wide ) //next on the same level
         return findType( next, mimeType, deep, wide );
 

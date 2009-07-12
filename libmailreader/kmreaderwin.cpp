@@ -175,7 +175,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
   if( node ) {
     KMime::Content* curNode = node;
     KMime::Content* dataNode = curNode;
-    KMime::Content * child = NodeHelper::instance()->firstChild( node );
+    KMime::Content * child = NodeHelper::firstChild( node );
     bool bIsMultipart = false;
 
     QString type = curNode->contentType()->mediaType();
@@ -196,7 +196,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
                 ObjectTreeParser::findType( child, "application/octet-stream", false, true );
               if ( !data )
                 data = ObjectTreeParser::findType( child, "application/pkcs7-mime", false, true );
-              dataNode = NodeHelper::instance()->firstChild( data );
+              dataNode = NodeHelper::firstChild( data );
             }
         }
     } else if ( type == "message" ) {
@@ -268,7 +268,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
       if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
         kDebug() <<"is valid Multipart, processing children:";
         QByteArray boundary = headerContent->contentType()->boundary();
-        curNode = NodeHelper::instance()->firstChild( dataNode );
+        curNode = NodeHelper::firstChild( dataNode );
         // store children of multipart
         while( curNode ) {
           kDebug() <<"--boundary";
@@ -287,7 +287,7 @@ void KMReaderWin::objectTreeToDecryptedMsg( KMime::Content* node,
                                     theMessage,
                                     false,
                                     recCount + 1 );
-          curNode = NodeHelper::instance()->nextSibling( curNode );
+          curNode = NodeHelper::nextSibling( curNode );
         }
         kDebug() <<"--boundary--";
         resultingData += "\n--";
@@ -2869,7 +2869,7 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
     return QString();
 
   QString html;
-  KMime::Content * child = NodeHelper::instance()->firstChild( node );
+  KMime::Content * child = NodeHelper::firstChild( node );
 
   if ( child) {
     QString subHtml = renderAttachments( child, nextColor( bgColor ) );
@@ -2932,7 +2932,7 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
     }
   }
 
-  KMime::Content *next  = NodeHelper::instance()->nextSibling( node );
+  KMime::Content *next  = NodeHelper::nextSibling( node );
   if ( next )
     html += renderAttachments( next, nextColor ( bgColor ) );
 

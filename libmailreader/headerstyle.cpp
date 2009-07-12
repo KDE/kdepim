@@ -37,6 +37,7 @@ using KPIMUtils::LinkLocator;
 // FIXME(Andras) port to akonadi  #include "spamheaderanalyzer.h"
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include "stringutil.h"
+#include "nodehelper.h"
 
 #include <kpimutils/email.h>
 #include "libkdepim/kxface.h"
@@ -120,7 +121,7 @@ namespace KMail {
 
     QString subjectDir;
     if ( message->subject(false) )
-      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
+      subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
     else
       subjectDir = directionOf( i18n("No Subject") );
 
@@ -220,7 +221,7 @@ namespace KMail {
 
     QString subjectDir;
     if (message->subject(false))
-      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
+      subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
     else
       subjectDir = directionOf( i18n("No Subject") );
 
@@ -425,7 +426,7 @@ namespace KMail {
 
     QString subjectDir;
     if ( message->subject(false) )
-      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
+      subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
     else
       subjectDir = directionOf( i18n("No Subject") );
 
@@ -710,7 +711,7 @@ namespace KMail {
 //TODO(Andras) this is duplicate code, try to factor out!
     QString subjectDir;
     if (message->subject(false))
-      subjectDir = directionOf( message->subject()->asUnicodeString() ); //FIXME(Andras) clean the subject, like KMMessage::cleanSubject()
+      subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
     else
       subjectDir = directionOf( i18n("No Subject") );
 

@@ -26,6 +26,7 @@
 
 namespace KMime {
   class Content;
+  class Message;
 }
 
 namespace KMail {
@@ -73,8 +74,8 @@ public:
     KMMsgSignatureState overallSignatureState( KMime::Content* node ) const;
     KMMsgEncryptionState overallEncryptionState( KMime::Content *node ) const;
 
-    KMime::Content *nextSibling( KMime::Content* node ) const;
-    KMime::Content *firstChild( KMime::Content* node ) const;
+    static KMime::Content *nextSibling( KMime::Content* node );
+    static KMime::Content *firstChild( KMime::Content* node );
 
     QString iconName( KMime::Content *node, int size = KIconLoader::Desktop ) const;
   /** Set the 'Content-Type' by mime-magic from the contents of the body.
@@ -82,13 +83,41 @@ public:
     determination (this does not change the body itself). */
     void magicSetType( KMime::Content *node, bool autoDecode=true );
 
+  /** Check for prefixes @p prefixRegExps in @p str. If none
+      is found, @p newPrefix + ' ' is prepended to @p str and the
+      resulting string is returned. If @p replace is true, any
+      sequence of whitespace-delimited prefixes at the beginning of
+      @p str is replaced by @p newPrefix.
+  **/
+    static QString replacePrefixes( const QString& str,
+                                  const QStringList& prefixRegExps,
+                                  bool replace,
+                                  const QString& newPrefix );
+
+  /** Return this mails subject, with all "forward" and "reply"
+      prefixes removed */
+    QString cleanSubject( KMime::Message* message ) const;
+
+
 private:
     NodeHelper();
+
+    /** Check for prefixes @p prefixRegExps in #subject(). If none
+        is found, @p newPrefix + ' ' is prepended to the subject and the
+        resulting string is returned. If @p replace is true, any
+        sequence of whitespace-delimited prefixes at the beginning of
+        #subject() is replaced by @p newPrefix
+    **/
+    QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
+                          const QString& newPrefix ) const;
+
+
     static NodeHelper * mSelf;
 
     QList<KMime::Content*> mProcessedNodes;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
+    QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
 };
 
 }
