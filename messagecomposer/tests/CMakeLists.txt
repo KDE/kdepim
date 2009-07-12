@@ -22,5 +22,6 @@ add_messagecomposer_test( multipartjobtest.cpp )
 
 # More complex jobs.
 add_messagecomposer_test( skeletonmessagejobtest.cpp )
+add_messagecomposer_test( maintextjobtest.cpp )
 
 # Composer.

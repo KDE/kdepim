@@ -28,6 +28,7 @@ class MainTextJobTest : public QObject
   private Q_SLOTS:
     void testPlainText();
     void testCustomCharset();
+    void testNoCharset();
     void testBadCharset();
     void testFallbackCharset();
 };

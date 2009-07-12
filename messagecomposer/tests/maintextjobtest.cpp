@@ -19,6 +19,8 @@
 
 #include "maintextjobtest.h"
 
+#include <QTextCodec>
+
 #include <KDebug>
 #include <qtest_kde.h>
 
@@ -26,26 +28,101 @@
 using namespace KMime;
 
 #include <messagecomposer/composer.h>
-#include <messagecomposer/contentjob.h>
+#include <messagecomposer/maintextjob.h>
+#include <messagecomposer/textpart.h>
 using namespace MessageComposer;
 
-QTEST_KDEMAIN( ContentJobTest, GUI )
+QTEST_KDEMAIN( MainTextJobTest, NoGUI )
 
 void MainTextJobTest::testPlainText()
 {
-  // LEFT TODO
+  Composer *composer = new Composer;
+  composer->behaviour().disableAction( Behaviour::UseGui );
+  TextPart *textPart = new TextPart;
+  QString data = QString::fromLatin1( "they said their nevers they slept their dream" );
+  QList<QByteArray> charsets;
+  charsets << "us-ascii" << "utf-8";
+  textPart->setWrappedPlainText( data );
+  textPart->setCharsets( charsets );
+  MainTextJob *mjob = new MainTextJob( textPart, composer );
+  QVERIFY( mjob->exec() );
+  Content *result = mjob->content();
+  result->assemble();
+  kDebug() << result->encodedContent();
+  QVERIFY( result->contentType( false ) );
+  QCOMPARE( result->contentType()->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( result->contentType()->charset(), QByteArray( "us-ascii" ) );
+  QCOMPARE( QString::fromLatin1( result->body() ), data );
 }
 
 void MainTextJobTest::testCustomCharset()
 {
+  Composer *composer = new Composer;
+  composer->behaviour().disableAction( Behaviour::UseGui );
+  TextPart *textPart = new TextPart;
+  QString data = QString::fromUtf8( "şi el o să se-nchidă cu o frunză de pelin" );
+  QByteArray charset( "iso-8859-2" );
+  textPart->setWrappedPlainText( data );
+  textPart->setCharsets( QList<QByteArray>() << charset );
+  MainTextJob *mjob = new MainTextJob( textPart, composer );
+  QVERIFY( mjob->exec() );
+  Content *result = mjob->content();
+  result->assemble();
+  kDebug() << result->encodedContent();
+  QVERIFY( result->contentType( false ) );
+  QCOMPARE( result->contentType()->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( result->contentType()->charset(), charset );
+  QByteArray outData = result->body();
+  QTextCodec *codec = QTextCodec::codecForName( charset );
+  QVERIFY( codec );
+  QCOMPARE( codec->toUnicode( outData ), data );
+}
+
+void MainTextJobTest::testNoCharset()
+{
+  Composer *composer = new Composer;
+  composer->behaviour().disableAction( Behaviour::UseGui );
+  TextPart *textPart = new TextPart;
+  QString data = QString::fromLatin1( "do you still play the accordion?" );
+  textPart->setWrappedPlainText( data );
+  MainTextJob *mjob = new MainTextJob( textPart, composer );
+  QVERIFY( !mjob->exec() ); // Error.
+  QCOMPARE( mjob->error(), int( Job::BugError ) );
+  kDebug() << mjob->errorString();
 }
 
 void MainTextJobTest::testBadCharset()
 {
+  Composer *composer = new Composer;
+  composer->behaviour().disableAction( Behaviour::UseGui );
+  TextPart *textPart = new TextPart;
+  QString data = QString::fromUtf8( "el a plâns peste ţară cu lacrima limbii noastre" );
+  QByteArray charset( "us-ascii" ); // Cannot handle Romanian chars.
+  textPart->setWrappedPlainText( data );
+  textPart->setCharsets( QList<QByteArray>() << charset );
+  MainTextJob *mjob = new MainTextJob( textPart, composer );
+  QVERIFY( !mjob->exec() ); // Error.
+  QCOMPARE( mjob->error(), int( Job::UserError ) );
+  kDebug() << mjob->errorString();
 }
 
 void MainTextJobTest::testFallbackCharset()
 {
+  Composer *composer = new Composer;
+  composer->behaviour().disableAction( Behaviour::UseGui );
+  composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+  TextPart *textPart = new TextPart;
+  QString data = QString::fromLatin1( "and when he falleth..." );
+  textPart->setWrappedPlainText( data );
+  MainTextJob *mjob = new MainTextJob( textPart, composer );
+  QVERIFY( mjob->exec() );
+  Content *result = mjob->content();
+  result->assemble();
+  kDebug() << result->encodedContent();
+  QVERIFY( result->contentType( false ) );
+  QCOMPARE( result->contentType()->mimeType(), QByteArray( "text/plain" ) );
+  QCOMPARE( result->contentType()->charset(), QByteArray( "utf-8" ) ); // Fallback is UTF-8.
+  QCOMPARE( QString::fromLatin1( result->body() ), data );
 }
 
 #include "maintextjobtest.moc"

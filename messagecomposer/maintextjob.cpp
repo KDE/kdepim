@@ -78,7 +78,12 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
     charsets << "utf-8";
     // TODO somehow save the chosen charset in a custom header if behaviour allows it...
   }
-  Q_ASSERT( !charsets.isEmpty() );
+  if( charsets.isEmpty() ) {
+    q->setError( Job::BugError );
+    q->setErrorText( i18n( "No charsets were available for encoding,"
+                           " and the fallback charset was disabled." ) );
+    return false;
+  }
 
   if( chooseCharset() ) {
     // Good, one of the charsets can encode the data without loss.
@@ -141,7 +146,7 @@ bool MainTextJobPrivate::chooseCharset()
   foreach( const QByteArray &name, charsets ) {
     // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
     // the former knows us-ascii is latin1.
-    QTextCodec *codec = KGlobal::charsets()->codecForName( name );
+    QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( name ) );
     if( !codec ) {
       kWarning() << "Could not get text codec for charset" << name;
       continue;
@@ -163,7 +168,7 @@ bool MainTextJobPrivate::chooseCharset()
 void MainTextJobPrivate::encodeTexts()
 {
   Q_Q( MainTextJob );
-  QTextCodec *codec = KGlobal::charsets()->codecForName( chosenCharset );
+  QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( chosenCharset ) );
   if( !codec ) {
     kError() << "Could not get text codec for charset" << chosenCharset;
     q->setError( Job::BugError );
