@@ -24,6 +24,7 @@ nodehelper.cpp
 urlhandlermanager.cpp
 vcardviewer.cpp
 iconnamecache.cpp
+mailsourceviewer.cpp
  )
 
 configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)

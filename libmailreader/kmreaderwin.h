@@ -374,6 +374,9 @@ public slots:
   /** The user toggled the "Fixed Font" flag from the view menu. */
   void slotToggleFixedFont();
 
+  /** Show the message source */
+  void slotShowMsgSrc();
+
   /** Copy the selected text to the clipboard */
   void slotCopySelectedText();
 
@@ -581,7 +584,7 @@ private:
   KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
       *mAddAddrBookAction, *mOpenAddrBookAction, *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mSelectAllAction,
-      *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction;
+      *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction, *mViewSourceAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction;
   KUrl mUrlClicked;

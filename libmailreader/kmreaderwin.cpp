@@ -28,8 +28,7 @@
 // #include "kmversion.h"
 #include <kpimutils/kfileio.h>
 #include "kmmsgpartdlg.h"
-//FIXME(Andras) port to akonadi #include "mailsourceviewer.h"
-//FIXME(Andras) port to akonadi using KMail::MailSourceViewer;
+#include "mailsourceviewer.h"
 #include <QTextDocument>
 #include <QByteArray>
 #include <QImageReader>
@@ -40,6 +39,8 @@
 #include <QMouseEvent>
 #include <QScrollArea>
 #include <QSignalMapper>
+#include <QDesktopWidget>
+
 #include "kcursorsaver.h"
 #include "vcardviewer.h"
 using KMail::VCardViewer;
@@ -639,6 +640,11 @@ void KMReaderWin::createActions()
   ac->addAction( "toggle_fixedfont", mToggleFixFontAction );
   connect( mToggleFixFontAction, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()) );
   mToggleFixFontAction->setShortcut( QKeySequence( Qt::Key_X ) );
+
+  mViewSourceAction  = new KAction(i18n("&View Source"), this);
+  ac->addAction("view_source", mViewSourceAction );
+  connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotShowMsgSrc()));
+  mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
   //
   // Scroll actions
@@ -2170,6 +2176,37 @@ void KMReaderWin::slotToggleFixedFont()
   saveRelativePosition();
   update( true );
 }
+
+void KMReaderWin::slotShowMsgSrc()
+{
+/* FIXME(Andras)
+  if ( msg->isComplete() && !mMsgWasComplete ) {
+    msg->notify(); // notify observers as msg was transferred
+  }
+*/
+  QString str = QString::fromAscii( mMessageItem.payloadData() );
+
+  MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
+  viewer->setWindowTitle( i18n("Message as Plain Text") );
+  viewer->setText( str );
+  if( mUseFixedFont ) {
+    viewer->setFont( KGlobalSettings::fixedFont() );
+  }
+
+  // Well, there is no widget to be seen here, so we have to use QCursor::pos()
+  // Update: (GS) I'm not going to make this code behave according to Xinerama
+  //         configuration because this is quite the hack.
+  if ( QApplication::desktop()->isVirtualDesktop() ) {
+    int scnum = QApplication::desktop()->screenNumber( QCursor::pos() );
+    viewer->resize( QApplication::desktop()->screenGeometry( scnum ).width()/2,
+                    2 * QApplication::desktop()->screenGeometry( scnum ).height()/3);
+  } else {
+    viewer->resize( QApplication::desktop()->geometry().width()/2,
+                    2 * QApplication::desktop()->geometry().height()/3);
+  }
+  viewer->show();
+}
+
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotCopySelectedText()
