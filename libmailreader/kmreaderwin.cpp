@@ -1646,8 +1646,7 @@ void KMReaderWin::parseMsg()
     NodeHelper::instance()->setSignatureState( mRootNode, signatureState );
   }
 
-  /* FIXME(Andras) port it
-  const KConfigGroup reader(KMKernel::config() ,"Reader" );
+  const KConfigGroup reader(KApplication::kApplication()->sessionConfig(), "Reader");//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
   if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
 
   // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
@@ -1664,58 +1663,47 @@ void KMReaderWin::parseMsg()
 
 
 kDebug() <<"\n\n\nSpecial post-encryption handling:\n1.";
-kDebug() <<"(aMsg == msg) ="                      << (aMsg == message());
+//FIXME(Andras) do we need it? kDebug() <<"(aMsg == msg) ="                      << (aMsg == message());
 kDebug() <<"   mLastStatus.isOfUnknownStatus() =" << mLastStatus.isOfUnknownStatus();
 kDebug() <<"|| mLastStatus.isNew() ="             << mLastStatus.isNew();
 kDebug() <<"|| mLastStatus.isUnread) ="           << mLastStatus.isUnread();
-kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
+//FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
 kDebug() <<"   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
 kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
-  if(    (aMsg == message())
+  if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
          // only proceed if this message was not saved encryptedly before
          // to make sure only *new* messages are saved in decrypted form
       && (    mLastStatus.isOfUnknownStatus()
            || mLastStatus.isNew()
            || mLastStatus.isUnread() )
          // avoid endless recursions
-      && (mIdOfLastViewedMessage != aMsg->msgId())
+//FIXME(Andras)      && (mIdOfLastViewedMessage != aMsg->msgId())
          // only proceed if this message is (at least partially) encrypted
       && (    (KMMsgFullyEncrypted == encryptionState)
            || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
 
     kDebug() <<"Calling objectTreeToDecryptedMsg()";
 
+    KMime::Message *unencryptedMessage = new KMime::Message;
     QByteArray decryptedData;
     // note: The following call may change the message's headers.
-    objectTreeToDecryptedMsg( mRootNode, decryptedData, *aMsg );
+    objectTreeToDecryptedMsg( mRootNode, decryptedData, *unencryptedMessage );
     kDebug() << "Resulting data:" << decryptedData;
 
     if( !decryptedData.isEmpty() ) {
       kDebug() <<"Composing unencrypted message";
-      // try this:
-      aMsg->setBody( decryptedData );
-      KMMessage* unencryptedMessage = new KMMessage( *aMsg );
-      unencryptedMessage->setParent( 0 );
-      // because this did not work:
-#if 0
-      DwMessage dwMsg( DwString( aMsg->asString() ) );
-      dwMsg.Body() = DwBody( DwString( resultString.data() ) );
-      dwMsg.Body().Parse();
-      KMMessage* unencryptedMessage = new KMMessage( &dwMsg );
-#endif
-
-      kDebug() << "Resulting message:" << unencryptedMessage->asString();
+      unencryptedMessage->setBody( decryptedData );
+     //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
       kDebug() << "Attach unencrypted message to aMsg";
 
-      aMsg->setUnencryptedMsg( unencryptedMessage );
+      NodeHelper::instance()->attachUnencryptedMessage( mRootNode, unencryptedMessage );
 
       emitReplaceMsgByUnencryptedVersion = true;
     }
     }
   }
-*/
   // save current main Content-Type before deleting mRootNode
   const QByteArray rootNodeCntType = mRootNode ? mRootNode->contentType()->mediaType() :"text";
   const QByteArray rootNodeCntSubtype = mRootNode ? mRootNode->contentType()->subType() : "plain";
@@ -1726,7 +1714,7 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
 */
   if( emitReplaceMsgByUnencryptedVersion ) {
     kDebug() << "Invoce saving in decrypted form:";
-    emit replaceMsgByUnencryptedVersion();
+    emit replaceMsgByUnencryptedVersion(); //FIXME(Andras) actually connect and do the replacement on the server (see KMMainWidget::slotReplaceByUnencryptedVersion)
   } else {
     showHideMimeTree( rootNodeCntType == "text" &&
                       rootNodeCntSubtype == "plain" );

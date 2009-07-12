@@ -89,6 +89,8 @@ void NodeHelper::clear()
   mProcessedNodes.clear();
   mEncryptionState.clear();
   mSignatureState.clear();
+  qDeleteAll(mUnencryptedMessages);
+  mUnencryptedMessages.clear();
 }
 
 void NodeHelper::setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state )
@@ -326,5 +328,14 @@ QString NodeHelper::cleanSubject( KMime::Message* message, const QStringList & p
                                      newPrefix );
 }
 
+void NodeHelper::attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted)
+{
+ if ( !message )
+  return;
+
+ if ( mUnencryptedMessages.contains( message ) )
+    delete mUnencryptedMessages[message];
+  mUnencryptedMessages[message] = unencrypted;
+}
 
 }

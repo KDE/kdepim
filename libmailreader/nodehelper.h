@@ -98,6 +98,8 @@ public:
       prefixes removed */
     QString cleanSubject( KMime::Message* message ) const;
 
+    /** Attach an unencrypted message to an encrypted one */
+    void attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted);
 
 private:
     NodeHelper();
@@ -117,6 +119,7 @@ private:
     QList<KMime::Content*> mProcessedNodes;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
+    QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
 };
 
