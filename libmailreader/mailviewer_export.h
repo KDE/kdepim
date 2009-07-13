@@ -17,24 +17,24 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMAIL_EXPORT_H
-#define KMAIL_EXPORT_H
+#ifndef MAILVIEWER_EXPORT_H
+#define MAILVIEWER_EXPORT_H
 
 /* needed for KDE_EXPORT and KDE_IMPORT macros */
 #include <kdemacros.h>
 
-#ifndef KMAIL_EXPORT
+#ifndef MAILVIEWER_EXPORT
 # if defined(MAKE_KMAILPRIVATE_LIB)
    /* We are building this library */
-#  define KMAIL_EXPORT KDE_EXPORT
+#  define MAILVIEWER_EXPORT KDE_EXPORT
 # else
    /* We are using this library */
-#  define KMAIL_EXPORT KDE_IMPORT
+#  define MAILVIEWER_EXPORT KDE_IMPORT
 # endif
 #endif
 
-# ifndef KMAIL_EXPORT_DEPRECATED
-#  define KMAIL_EXPORT_DEPRECATED KDE_DEPRECATED KMAIL_EXPORT
+# ifndef MAILVIEWER_EXPORT_DEPRECATED
+#  define MAILVIEWER_EXPORT_DEPRECATED KDE_DEPRECATED MAILVIEWER_EXPORT
 # endif
 
 #endif

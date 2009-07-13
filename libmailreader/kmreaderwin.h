@@ -33,7 +33,7 @@
 #include <kvbox.h>
 using KPIM::MessageStatus;
 #include "interfaces/observer.h"
-#include "kmail_export.h" //FIXME(Andras) use our own export macros
+#include "mailviewer_export.h"
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -101,7 +101,7 @@ class KMReaderWin: public QWidget, public KMail::Interface::Observer {
   friend class KMail::KHtmlPartHtmlWriter;
 
 public:
-  KMAIL_EXPORT KMReaderWin( QWidget *parent, QWidget *mainWindow = 0,
+  MAILVIEWER_EXPORT KMReaderWin( QWidget *parent, QWidget *mainWindow = 0,
                KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
@@ -157,7 +157,7 @@ public:
       displayed. */
   virtual void setMsg(KMime::Message* msg, bool force = false);
 
-  KMAIL_EXPORT void setMessageItem(const Akonadi::Item& item, bool force = false);
+  MAILVIEWER_EXPORT void setMessageItem(const Akonadi::Item& item, bool force = false);
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
@@ -218,15 +218,15 @@ public:
   void displaySplashPage( const QString &info );
 
   /** Display the about page instead of a message */
-  KMAIL_EXPORT void displayAboutPage();
+  MAILVIEWER_EXPORT void displayAboutPage();
 
   /** Display the 'please wait' page instead of a message */
-  KMAIL_EXPORT void displayBusyPage();
+  MAILVIEWER_EXPORT void displayBusyPage();
   /** Display the 'we are currently in offline mode' page instead of a message */
-  KMAIL_EXPORT void displayOfflinePage();
+  MAILVIEWER_EXPORT void displayOfflinePage();
 
   /** Enable the displaying of messages again after an URL was displayed */
-  KMAIL_EXPORT void enableMsgDisplay();
+  MAILVIEWER_EXPORT void enableMsgDisplay();
 
   /** View message part of type message/RFC822 in extra viewer window. */
   void atmViewMsg(KMime::Content* msgPart);
