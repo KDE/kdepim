@@ -32,19 +32,20 @@
 #include "libkdepim/messagestatus.h"
 #include <kvbox.h>
 using KPIM::MessageStatus;
-#include "kmmimeparttree.h" // Needed for friend declaration.
 #include "interfaces/observer.h"
 #include "kmail_export.h" //FIXME(Andras) use our own export macros
 
 //Akonadi includes
 #include <akonadi/item.h>
 
+//TODO(Andras) Just a note so I won't forget: use MailViewer as namespace and library name instead of KMail/MailReader before moving back to trunk
+
 class QSplitter;
 class KHBox;
 class QTreeWidgetItem;
 class QString;
 class QTextCodec;
-
+class QTreeView;
 
 class KActionCollection;
 class KAction;
@@ -53,6 +54,10 @@ class KToggleAction;
 class KToggleAction;
 class KHTMLPart;
 class KUrl;
+
+namespace MailViewer {
+ class MimeTreeModel;
+}
 
 namespace KMime {
     class Message;
@@ -86,12 +91,12 @@ namespace KParts {
 
 class KMReaderWin: public QWidget, public KMail::Interface::Observer {
   Q_OBJECT
-
+/*FIXME(Andras) remove?
   friend void KMMimePartTree::slotItemClicked( QTreeWidgetItem* );
   friend void KMMimePartTree::slotContextMenuRequested( const QPoint & );
   friend void KMMimePartTree::slotSaveAs();
   friend void KMMimePartTree::startDrag( Qt::DropActions actions );
-
+*/
   friend class KMail::ObjectTreeParser;
   friend class KMail::KHtmlPartHtmlWriter;
 
@@ -547,7 +552,8 @@ private:
   QSplitter * mSplitter;
   KHBox *mBox;
   KMail::HtmlStatusBar *mColorBar;
-  KMMimePartTree* mMimePartTree;
+  QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
+  MailViewer::MimeTreeModel *mMimePartModel;
   KHTMLPart *mViewer;
 
   const KMail::AttachmentStrategy * mAttachmentStrategy;

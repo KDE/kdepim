@@ -56,6 +56,7 @@
 #include "interfaces/observable.h"
 #include "util.h"
 #include "nodehelper.h"
+#include "mimetreemodel.h"
 
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
@@ -125,6 +126,7 @@
 #include <QLabel>
 #include <QSplitter>
 #include <QStyle>
+#include <QTreeView>
 
 // X headers...
 #undef Never
@@ -144,6 +146,7 @@
 #include <QTextDocument>
 #endif
 
+using namespace MailViewer;
 using namespace KMail;
 using namespace KMime;
 
@@ -334,8 +337,10 @@ void KMReaderWin::createWidgets() {
   mSplitter->setObjectName( "mSplitter" );
   mSplitter->setChildrenCollapsible( false );
   vlay->addWidget( mSplitter );
-  mMimePartTree = new KMMimePartTree( this, mSplitter );
+  mMimePartTree = new QTreeView( mSplitter );
   mMimePartTree->setObjectName( "mMimePartTree" );
+  mMimePartModel = new MimeTreeModel( mMimePartTree );
+  mMimePartTree->setModel( mMimePartModel );
   mBox = new KHBox( mSplitter );
   setStyleDependantFrameWidth();
   mBox->setFrameStyle( mMimePartTree->frameStyle() );
@@ -1261,9 +1266,9 @@ void KMReaderWin::setMsg(KMime::Message* aMsg, bool force)
     \*/
   }
 
+  if (mRootNode) {
+    NodeHelper::instance()->setOverrideCodec( mRootNode, overrideCodec() );
   /*FIXME(Andras) port to akonadi
-  if (aMsg) {
-    aMsg->setOverrideCodec( overrideCodec() );
     aMsg->setDecodeHTML( htmlMail() );
     mLastStatus = aMsg->status();
     // FIXME: workaround to disable DND for IMAP load-on-demand
@@ -1271,10 +1276,10 @@ void KMReaderWin::setMsg(KMime::Message* aMsg, bool force)
       mViewer->setDNDEnabled( false );
     else
       mViewer->setDNDEnabled( true );
+  */
   } else {
     mLastStatus.clear();
   }
-  */
 
   // only display the msg if it is complete
   // otherwise we'll get flickering with progressively loaded messages
@@ -1469,7 +1474,7 @@ void KMReaderWin::updateReaderWin()
   } else {
     mColorBar->hide();
     mMimePartTree->hide();
-    mMimePartTree->clearAndResetSortOrder();
+  //FIXME(Andras)  mMimePartTree->clearAndResetSortOrder();
     htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
     htmlWriter()->write( mCSSHelper->htmlHead( isFixedFont() ) + "</body></html>" );
     htmlWriter()->end();
@@ -1492,8 +1497,10 @@ int KMReaderWin::pointsToPixel(int pointSize) const
 //-----------------------------------------------------------------------------
 void KMReaderWin::showHideMimeTree( bool isPlainTextTopLevel ) {
   if ( mMimeTreeMode == 2 ||
-       ( mMimeTreeMode == 1 && !isPlainTextTopLevel ) )
+       ( mMimeTreeMode == 1 && !isPlainTextTopLevel ) ) {
+    mMimePartTree->expandToDepth( 3 );
     mMimePartTree->show();
+  }
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
       KConfigGroup reader;//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
@@ -1502,18 +1509,8 @@ void KMReaderWin::showHideMimeTree( bool isPlainTextTopLevel ) {
   }
 }
 
-void KMReaderWin::displayMessage() {
-  /*FIXME(Andras) port to Akonadi
-  KMMessage * msg = message();
-
-  mMimePartTree->clearAndResetSortOrder();
-  showHideMimeTree( !msg || // treat no message as "text/plain"
-                    ( msg->type() == DwMime::kTypeText
-                   && msg->subtype() == DwMime::kSubtypePlain ) );
-
-  if ( !msg )
-    return;
-    */
+void KMReaderWin::displayMessage()
+{
   if ( mRootNode && !KMail::NodeHelper::instance()->nodeProcessed( mRootNode ) ) {
     kWarning() << "The root node is not yet processed! Danger!";
     return;
@@ -1540,6 +1537,19 @@ void KMReaderWin::displayMessage() {
     kDebug() << "Subcontent head: " << c->head();
     kDebug() << "Subcontent body: " << c->body();
   }
+  */
+
+  /*FIXME(Andras) port to Akonadi
+  KMMessage * msg = message();
+
+  mMimePartTree->clearAndResetSortOrder();
+  */
+  mMimePartModel->setRoot( mRootNode );
+  showHideMimeTree( !mRootNode || // treat no message as "text/plain"
+                    ( mRootNode->contentType()->isPlainText() ) );
+/*FIXME(Andras) remove ?
+  if ( !msg )
+    return;
   */
   NodeHelper::instance()->setOverrideCodec( mRootNode, overrideCodec() );
 
@@ -1582,28 +1592,6 @@ void KMReaderWin::parseMsg()
   QString cntEnc= "7bit";
   if (mRootNode->contentTransferEncoding(false))
       cntEnc = mRootNode->contentTransferEncoding()->asUnicodeString();
-
-   /*FIXME(Andras) port to Akonadi's mimetree model/view stuff
-    KMMessagePart msgPart;
-
-  mRootNode = partNode::fromMessage( aMsg );
-  const QByteArray mainCntTypeStr = mRootNode->typeString() + '/' + mRootNode->subTypeString();
-
-  QString cntDesc = aMsg->subject();
-  if( cntDesc.isEmpty() )
-    cntDesc = i18n("( body part )");
-  KIO::filesize_t cntSize = aMsg->msgSize();
-  QString cntEnc;
-  if( aMsg->contentTransferEncodingStr().isEmpty() )
-    cntEnc = "7bit";
-  else
-    cntEnc = aMsg->contentTransferEncodingStr();
-
-  // fill the MIME part tree viewer
-  mRootNode->fillMimePartTree( 0, mMimePartTree, cntDesc, mainCntTypeStr,
-                               cntEnc, cntSize );
-*/
-
 
 // Check if any part of this message is a v-card
 // v-cards can be either text/x-vcard or text/directory, so we need to check

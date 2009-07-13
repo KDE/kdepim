@@ -14,7 +14,6 @@ kmmsgpartdlg.cpp
 isubject.cpp
 csshelper.cpp
 util.cpp
-kmmimeparttree.cpp
 objecttreeparser.cpp
 kleojobexecutor.cpp
 bodypartformatter.cpp
@@ -25,6 +24,7 @@ urlhandlermanager.cpp
 vcardviewer.cpp
 iconnamecache.cpp
 mailsourceviewer.cpp
+mimetreemodel.cpp
  )
 
 configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)
