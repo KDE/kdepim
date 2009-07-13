@@ -35,21 +35,13 @@
 **   your version.
 **
 *******************************************************************************/
-#ifndef KMAILUTIL_H
-#define KMAILUTIL_H
+#ifndef MAILVIEWERUTIL_H
+#define MAILVIEWERUTIL_H
 
-#include <stdlib.h>
-#include <QObject>
-#include <QByteArray>
-#include <QWidget>
-#include <kio/netaccess.h>
-#include <kmessagebox.h>
-#include <klocale.h>
-
-class DwString;
 class KUrl;
+class QWidget;
 
-namespace KMail
+namespace MailViewer
 {
     /**
      * The Util namespace contains a collection of helper functions use in
@@ -57,71 +49,14 @@ namespace KMail
      */
 namespace Util {
 
-    /**
-     * First disconnect then reconnect a sender/signal-receiver/slot pair.
-     * This improves readability of code a bit by reducing two (maybe long and complex) lines
-     * to one and often helps in avoiding a pair of brackets.
-     */
-    void reconnectSignalSlotPair( QObject *src, const char *signal, QObject *dst, const char *slot );
-
     // return true if we should proceed, false if we should abort
     bool checkOverwrite( const KUrl &url, QWidget *w );
-
-//TODO(Andras) decide to keep it or use KMime (this is supposed to be faster). Or move to KMime?
-    /**
-     * Convert all sequences of "\r\n" (carriage return followed by a line
-     * feed) to a single "\n" (line feed). The conversion happens in place.
-     * Returns the length of the resulting string.
-     * @param str The string to convert.
-     * @param strLen The length of the string to convert.
-     * @return The new length of the converted string.
-     */
-    size_t crlf2lf( char* str, const size_t strLen );
-
 
     /**
      * Delegates opening a URL to the Max OSX mechanisms for that.
      * Returns false if it did nothing (such as on other platforms.
      */
     bool handleUrlOnMac( const KUrl& url );
-
-//TODO(Andras) decide to keep it or use KMime (this is supposed to be faster). Or move to KMime?
-    /**
-     * Convert "\n" line endings to "\r\n".
-     * @param src The source string to convert.
-     * @return The result string.
-     */
-    QByteArray lf2crlf( const QByteArray & src );
-
-
-    /**
-     * A LaterDeleter is intended to be used with the RAII ( Resource
-     * Acquisiation is Initialization ) paradigm. When an instance of it
-     * goes out of scope it deletes the associated object  It can be
-     * disabled, in case the deletion needs to be avoided for some
-     * reason, since going out-of-scope cannot be avoided.
-     */
-    class LaterDeleter
-    {
-      public:
-      LaterDeleter( QObject *o)
-        :m_object( o ), m_disabled( false )
-      {
-      }
-      virtual ~LaterDeleter()
-      {
-        if ( !m_disabled ) {
-          m_object->deleteLater();
-        }
-      }
-      void setDisabled( bool v )
-      {
-        m_disabled = v;
-      }
-      protected:
-      QObject *m_object;
-      bool m_disabled;
-    };
 
 }
 }

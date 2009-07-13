@@ -36,71 +36,15 @@
 **
 *******************************************************************************/
 
-
 #include "util.h"
 
-#include <stdlib.h>
-#include <mailtransport/transportmanager.h>
-#include <mailtransport/transport.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kio/netaccess.h>
 
-void KMail::Util::reconnectSignalSlotPair( QObject *src, const char *signal, QObject *dst, const char *slot )
-{
-  QObject::disconnect( src, signal, dst, slot );
-  QObject::connect( src, signal, dst, slot );
-}
+#include <QWidget>
 
-
-size_t KMail::Util::crlf2lf( char* str, const size_t strLen )
-{
-    if ( !str || strLen == 0 )
-        return 0;
-
-    const char* source = str;
-    const char* sourceEnd = source + strLen;
-
-    // search the first occurrence of "\r\n"
-    for ( ; source < sourceEnd - 1; ++source ) {
-        if ( *source == '\r' && *( source + 1 ) == '\n' )
-            break;
-    }
-
-    if ( source == sourceEnd - 1 ) {
-        // no "\r\n" found
-        return strLen;
-    }
-
-    // replace all occurrences of "\r\n" with "\n" (in place)
-    char* target = const_cast<char*>( source ); // target points to '\r'
-    ++source; // source points to '\n'
-    for ( ; source < sourceEnd; ++source ) {
-        if ( *source != '\r' || *( source + 1 ) != '\n' )
-            * target++ = *source;
-    }
-    *target = '\0'; // terminate result
-    return target - str;
-}
-
-QByteArray KMail::Util::lf2crlf( const QByteArray & src )
-{
-    QByteArray result;
-    result.resize( 2*src.size() );  // maximal possible length
-
-    QByteArray::ConstIterator s = src.begin();
-    QByteArray::Iterator d = result.begin();
-  // we use cPrev to make sure we insert '\r' only there where it is missing
-    char cPrev = '?';
-    const char* end = src.end();
-    while ( s != end ) {
-        if ( ('\n' == *s) && ('\r' != cPrev) )
-            *d++ = '\r';
-        cPrev = *s;
-        *d++ = *s++;
-    }
-    result.truncate( d - result.begin() );
-    return result;
-}
-
-bool KMail::Util::checkOverwrite( const KUrl &url, QWidget *w )
+bool MailViewer::Util::checkOverwrite( const KUrl &url, QWidget *w )
 {
   if ( KIO::NetAccess::exists( url, KIO::NetAccess::DestinationSide, w ) ) {
     if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(
@@ -118,7 +62,7 @@ bool KMail::Util::checkOverwrite( const KUrl &url, QWidget *w )
 #include <QDesktopServices>
 #endif
 
-bool KMail::Util::handleUrlOnMac( const KUrl& url )
+bool MailViewer::Util::handleUrlOnMac( const KUrl& url )
 {
 #ifdef Q_WS_MACX
   QDesktopServices::openUrl( url );
