@@ -17,17 +17,21 @@
   02110-1301, USA.
 */
 
-#ifndef MULTIPARTJOBTEST_H
-#define MULTIPARTJOBTEST_H
+#include "util.h"
 
-#include <QtCore/QObject>
+using namespace KMime;
+using namespace MessageComposer;
 
-class MultipartJobTest : public QObject
+QString MessageComposer::nameForEncoding( Headers::contentEncoding enc )
 {
-  Q_OBJECT
-  private Q_SLOTS:
-    void testMultipartMixed();
-    void test8BitPropagation();
-};
+  switch( enc ) {
+    case Headers::CE7Bit: return QString::fromLatin1( "7bit" );
+    case Headers::CE8Bit: return QString::fromLatin1( "8bit" );
+    case Headers::CEquPr: return QString::fromLatin1( "quoted-printable" );
+    case Headers::CEbase64: return QString::fromLatin1( "base64" );
+    case Headers::CEuuenc: return QString::fromLatin1( "uuencode" );
+    case Headers::CEbinary: return QString::fromLatin1( "binary" );
+    default: return QString::fromLatin1( "unknown" );
+  }
+}
 
-#endif

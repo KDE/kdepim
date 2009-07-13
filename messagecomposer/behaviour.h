@@ -40,6 +40,7 @@ class MESSAGECOMPOSER_EXPORT Behaviour
       WarnBadCharset,
       WarnZeroRecipients,
       CustomHeaders,
+      EightBitTransport,
       LastAction // TODO should this be made =100 for further expansion?
     };
 

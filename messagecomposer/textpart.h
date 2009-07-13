@@ -27,6 +27,8 @@
 
 namespace MessageComposer {
 
+/** setOverrideTransferEncoding for a textPart means setting it for the plain text part,
+  and possibly for the html part. */
 class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
 {
   Q_OBJECT

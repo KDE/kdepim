@@ -32,6 +32,7 @@ Behaviour::Behaviour()
   d->actions[ WarnBadCharset ] = true;
   d->actions[ WarnZeroRecipients ] = true;
   d->actions[ CustomHeaders ] = false;
+  d->actions[ EightBitTransport ] = false;
 }
 
 Behaviour::~Behaviour()
@@ -80,6 +81,7 @@ Behaviour Behaviour::behaviourForPrinting()
     beh.d->actions[ WarnBadCharset ] = true;
     beh.d->actions[ WarnZeroRecipients ] = false;
     beh.d->actions[ CustomHeaders ] = false;
+    beh.d->actions[ EightBitTransport ] = false;
     init = true;
   }
   return beh;
@@ -98,6 +100,7 @@ Behaviour Behaviour::behaviourForAutosaving()
     beh.d->actions[ WarnBadCharset ] = false;
     beh.d->actions[ WarnZeroRecipients ] = false;
     beh.d->actions[ CustomHeaders ] = true;
+    beh.d->actions[ EightBitTransport ] = false;
     init = true;
   }
   return beh;
@@ -116,6 +119,7 @@ Behaviour Behaviour::behaviourForSavingLocally()
     beh.d->actions[ WarnBadCharset ] = true;
     beh.d->actions[ WarnZeroRecipients ] = false;
     beh.d->actions[ CustomHeaders ] = true;
+    beh.d->actions[ EightBitTransport ] = false;
     init = true;
   }
   return beh;

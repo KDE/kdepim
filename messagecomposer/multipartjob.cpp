@@ -68,8 +68,12 @@ void MultipartJob::process()
   d->resultContent = new Content;
   d->resultContent->contentType( true )->setMimeType( "multipart/" + d->subtype );
   d->resultContent->contentType()->setBoundary( KMime::multiPartBoundary() );
+  d->resultContent->contentTransferEncoding()->setEncoding( Headers::CE7Bit );
   foreach( Content *c, d->subjobContents ) {
     d->resultContent->addContent( c );
+    if( c->contentTransferEncoding()->encoding() == Headers::CE8Bit ) {
+      d->resultContent->contentTransferEncoding()->setEncoding( Headers::CE8Bit );
+    }
   }
   kDebug() << "Created" << d->resultContent->contentType()->name() << "content with"
     << d->resultContent->contents().count() << "subjobContents.";

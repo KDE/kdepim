@@ -35,7 +35,7 @@ void ContentJobTest::testContent()
 {
   Composer *composer = new Composer;
   ContentJob *cjob = new ContentJob( composer );
-  QByteArray data( "birds came flying from the underground");
+  QByteArray data( "birds came flying from the underground" );
   cjob->setData( data );
   QVERIFY( cjob->exec() );
   Content *result = cjob->content();
@@ -51,7 +51,7 @@ void ContentJobTest::testContentDisposition()
 {
   Composer *composer = new Composer;
   ContentJob *cjob = new ContentJob( composer );
-  QByteArray data( "birds came flying from the underground");
+  QByteArray data( "birds came flying from the underground" );
   cjob->setData( data );
   QString filename = QString::fromUtf8( "test_ăîşţâ.txt" );
   cjob->contentDisposition()->setDisposition( Headers::CDattachment );
@@ -70,7 +70,7 @@ void ContentJobTest::testContentType()
 {
   Composer *composer = new Composer;
   ContentJob *cjob = new ContentJob( composer );
-  QByteArray data( "birds came flying from the underground");
+  QByteArray data( "birds came flying from the underground" );
   cjob->setData( data );
   QByteArray mimeType( "text/plain" );
   QByteArray charset( "utf-8" );
@@ -89,17 +89,51 @@ void ContentJobTest::testContentType()
 void ContentJobTest::testContentTransferEncoding()
 {
   Composer *composer = new Composer;
-  ContentJob *cjob = new ContentJob( composer );
-  QByteArray data( "birds came flying from the underground");
-  cjob->setData( data );
-  cjob->contentTransferEncoding()->setEncoding( Headers::CEquPr );
-  QVERIFY( cjob->exec() );
-  Content *result = cjob->content();
-  result->assemble();
-  kDebug() << result->encodedContent();
-  QCOMPARE( result->body(), data );
-  QVERIFY( result->contentTransferEncoding( false ) );
-  QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CEquPr );
+  QVERIFY( !composer->behaviour().isActionEnabled( Behaviour::EightBitTransport ) );
+  composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+  
+  // 7bit if possible.
+  {
+    ContentJob *cjob = new ContentJob( composer );
+    QByteArray data( "and the sun will set for you..." );
+    cjob->setData( data );
+    QVERIFY( cjob->exec() );
+    Content *result = cjob->content();
+    result->assemble();
+    kDebug() << result->encodedContent();
+    QVERIFY( result->contentTransferEncoding( false ) );
+    QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CE7Bit );
+    QCOMPARE( result->body(), data );
+  }
+
+  // quoted-printable if text doesn't fit in 7bit.
+  {
+    ContentJob *cjob = new ContentJob( composer );
+    QByteArray data( "some long text to make qupr more compact than base64 [ăîşţâ]" ); // utf-8
+    cjob->setData( data );
+    QVERIFY( cjob->exec() );
+    Content *result = cjob->content();
+    result->assemble();
+    kDebug() << result->encodedContent();
+    QVERIFY( result->contentTransferEncoding( false ) );
+    QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CEquPr );
+    QCOMPARE( result->body(), data );
+  }
+
+  // base64 if it's shorter than quoted-printable
+  {
+    ContentJob *cjob = new ContentJob( composer );
+    QByteArray data( "[ăîşţâ]" ); // utf-8
+    cjob->setData( data );
+    QVERIFY( cjob->exec() );
+    QVERIFY( cjob->exec() );
+    Content *result = cjob->content();
+    result->assemble();
+    kDebug() << result->encodedContent();
+    QVERIFY( result->contentTransferEncoding( false ) );
+    QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CEbase64 );
+    QCOMPARE( result->body(), data );
+  }
 }
 
 #include "contentjobtest.moc"

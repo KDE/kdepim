@@ -25,3 +25,4 @@ add_messagecomposer_test( skeletonmessagejobtest.cpp )
 add_messagecomposer_test( maintextjobtest.cpp )
 
 # Composer.
+add_messagecomposer_test( composertest.cpp )

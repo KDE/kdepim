@@ -246,30 +246,29 @@ void MainTextJob::doStart()
   }
 
   // Charset.
-  if( d->chooseCharsetAndEncode() ) {
-    // Encoding was successful.  The user and we are happy with the charset, even if it may
-    // lose characters.
-    if( d->encodedHtml.isEmpty() ) {
-      kDebug() << "Making text/plain";
-      // Content is text/plain.
-      ContentJob *cjob = new ContentJob( this );
-      cjob->contentType()->setMimeType( "text/plain" );
-      cjob->contentType()->setCharset( d->chosenCharset );
-      cjob->setData( d->encodedPlainText );
-
-      // TODO temporary until I figure out what the CTE policy is.
-      cjob->contentTransferEncoding()->setEncoding( Headers::CEquPr );
-    } else {
-      // TODO Handle multipart/alternative and multipart/related.
-      Q_ASSERT( false );
-    }
-    Job::doStart();
-  } else {
+  if( !d->chooseCharsetAndEncode() ) {
     // chooseCharsetAndEncode has set an error.
     Q_ASSERT( error() );
     emitResult();
     return;
   }
+
+  // Assemble the Content.
+  if( d->encodedHtml.isEmpty() ) {
+    kDebug() << "Making text/plain";
+    // Content is text/plain.
+    ContentJob *cjob = new ContentJob( this );
+    cjob->contentType()->setMimeType( "text/plain" );
+    cjob->contentType()->setCharset( d->chosenCharset );
+    cjob->setData( d->encodedPlainText );
+    if( !d->textPart->isAutoTransferEncoding() ) {
+      cjob->contentTransferEncoding()->setEncoding( d->textPart->overrideTransferEncoding() );
+    }
+  } else {
+    // TODO Handle multipart/alternative and multipart/related.
+    Q_ASSERT( false );
+  }
+  Job::doStart();
 }
 
 void MainTextJob::process()

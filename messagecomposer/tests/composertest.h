@@ -17,17 +17,16 @@
   02110-1301, USA.
 */
 
-#ifndef MULTIPARTJOBTEST_H
-#define MULTIPARTJOBTEST_H
+#ifndef COMPOSERTEST_H
+#define COMPOSERTEST_H
 
 #include <QtCore/QObject>
 
-class MultipartJobTest : public QObject
+class ComposerTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void testMultipartMixed();
-    void test8BitPropagation();
+    void testCTEErrors();
 };
 
 #endif

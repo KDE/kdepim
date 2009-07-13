@@ -17,17 +17,21 @@
   02110-1301, USA.
 */
 
-#ifndef MULTIPARTJOBTEST_H
-#define MULTIPARTJOBTEST_H
+#ifndef MESSAGECOMPOSER_UTIL_H
+#define MESSAGECOMPOSER_UTIL_H
 
-#include <QtCore/QObject>
+//#include "messagecomposer_export.h"
 
-class MultipartJobTest : public QObject
-{
-  Q_OBJECT
-  private Q_SLOTS:
-    void testMultipartMixed();
-    void test8BitPropagation();
-};
+#include <QtCore/QString>
+
+#include <kmime/kmime_headers.h>
+ 
+namespace MessageComposer {
+
+// TODO move to KMime?
+// or move to ContentJob if we'll only need it there.
+QString nameForEncoding( KMime::Headers::contentEncoding enc );
+
+}
 
 #endif

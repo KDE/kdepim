@@ -25,6 +25,8 @@
 
 #include <QtCore/QObject>
 
+#include <kmime/kmime_headers.h>
+
 namespace MessageComposer {
 
 class MessagePartPrivate;
@@ -38,6 +40,10 @@ class MESSAGECOMPOSER_EXPORT MessagePart : public QObject
   public:
     MessagePart( QObject *parent = 0 );
     virtual ~MessagePart();
+
+    bool isAutoTransferEncoding() const;
+    KMime::Headers::contentEncoding overrideTransferEncoding() const;
+    void setOverrideTransferEncoding( KMime::Headers::contentEncoding cte );
 
   private:
     class Private;

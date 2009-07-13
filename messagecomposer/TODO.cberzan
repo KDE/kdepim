@@ -1,3 +1,26 @@
-Design:
-* Lots of duplication between AttachmentStrategy, AlternativeStrategy,
-  RelatedStrategy on one hand, and GpgSigned, GpgEncrypted on the other hand...
+1) Make it work for plain text (including charset, word wrapping stuff)
+2) Figure out headers (groups, display names, empty to:, local usernames, comments?)
+3) HTML
+4) Transport
+5) Attachments
+6) Signing & Crypto
++tests at every step.
+
+Questions:
+* If multi-recipient-crypto, save all in sent-mail or just one unencrypted copy?
+  KMail seems to save the encrypted stuff, but then how can it be decrypted
+  without someone's private key?  Or does KMail save a copy encrypted with my own
+  key??? --> Now I think that's exactly what it does.
+* Why is KeyResolver in KMail and not kleopatra / libkleo???
+* Can KMime::Message::Ptr be forward-declared somehow?
+* I have no clue how to make this extensible... and Behaviour is already a problem.
+* Disable copy constructors of jobs...
+* Should drafts be encrypted to self?
+* Figure out if MessagePart & family need to be qobjects at all...
+* MessageComposer::Job and Akonadi::Job collide...
+* The errors are defined in Job and Composer does not inherit that.  I don't want
+  to make it inherit Job because it is really different from a Job (it doesn't
+  create a content, for starters).  But then apps need to compare with
+  Job::SomeError instead of Composer::SomeError, and need to include job.h just for
+  that :-(
+* Think of where shared_ptrs should be used.

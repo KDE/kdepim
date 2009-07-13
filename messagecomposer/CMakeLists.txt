@@ -9,10 +9,12 @@ set( messagecomposer_src
 
      composer.cpp
      behaviour.cpp
-     attachmentpart.cpp
      finalmessage.cpp
-     infopart.cpp
+     util.cpp
+
      messagepart.cpp
+     attachmentpart.cpp
+     infopart.cpp
      skeletonmessagejob.cpp
      textpart.cpp
 

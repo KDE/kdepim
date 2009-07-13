@@ -153,4 +153,32 @@ void MainTextJobTest::testFallbackCharset()
   QCOMPARE( QString::fromLatin1( result->body() ), data );
 }
 
+void MainTextJobTest::testOverrideCTE()
+{
+  Composer *composer = new Composer;
+  QVERIFY( !composer->behaviour().isActionEnabled( Behaviour::EightBitTransport ) );
+  composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+  TextPart *textPart = new TextPart;
+
+  // 8bit if asked for and allowed.
+  {
+    composer->behaviour().enableAction( Behaviour::EightBitTransport );
+    QString data = QString::fromUtf8( "[ăîşţâ]" );
+    textPart->setWrappedPlainText( data );
+    // Force it to use an 8bit encoding:
+    QByteArray charset( "iso-8859-2" );
+    textPart->setCharsets( QList<QByteArray>() << charset );
+    MainTextJob *mjob = new MainTextJob( textPart, composer );
+    QVERIFY( mjob->exec() );
+    Content *result = mjob->content();
+    result->assemble();
+    kDebug() << result->encodedContent();
+    QVERIFY( result->contentTransferEncoding( false ) );
+    QCOMPARE( result->contentTransferEncoding()->encoding(), Headers::CE8Bit );
+    QTextCodec *codec = QTextCodec::codecForName( charset );
+    QVERIFY( codec );
+    QCOMPARE( codec->toUnicode( result->body() ), data );
+  }
+}
+
 #include "maintextjobtest.moc"

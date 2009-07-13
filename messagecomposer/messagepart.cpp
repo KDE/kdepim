@@ -21,11 +21,19 @@
 
 #include <KDebug>
 
+using namespace KMime;
 using namespace MessageComposer;
 
 class MessagePart::Private
 {
   public:
+    Private()
+      : autoCTE( true )
+    {
+    }
+
+    bool autoCTE;
+    Headers::contentEncoding cte;
 };
 
 
@@ -39,6 +47,26 @@ MessagePart::MessagePart( QObject *parent )
 MessagePart::~MessagePart()
 {
   delete d;
+}
+
+bool MessagePart::isAutoTransferEncoding() const
+{
+  return d->autoCTE;
+}
+
+KMime::Headers::contentEncoding MessagePart::overrideTransferEncoding() const
+{
+  if( d->autoCTE ) {
+    kWarning() << "Called when CTE is auto.";
+    return Headers::CEbinary;
+  }
+  return d->cte;
+}
+
+void MessagePart::setOverrideTransferEncoding( KMime::Headers::contentEncoding cte )
+{
+  d->autoCTE = false;
+  d->cte = cte;
 }
 
 #include "messagepart.moc"

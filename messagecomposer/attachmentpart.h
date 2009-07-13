@@ -28,6 +28,8 @@ class KUrl;
 
 namespace MessageComposer {
 
+/** setOverrideTransferEncoding for an AttachmentPart means setting the CTE for the sub-Content
+  representing this attachment */
 class MESSAGECOMPOSER_EXPORT AttachmentPart : public MessagePart
 {
   Q_OBJECT
