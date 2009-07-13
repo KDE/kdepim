@@ -65,6 +65,7 @@ set( kcontactmanager_LIB_SRCS
   collectionselectiondialog.cpp
   globalcontactmodel.cpp
   mainwidget.cpp
+  modelcolumnmanager.cpp
   quicksearchwidget.cpp
   standardcontactactionmanager.cpp
   xxport/csv/csv_xxport.cpp

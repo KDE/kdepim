@@ -62,6 +62,7 @@
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
 #include "kcontactmanageradaptor.h"
+#include "modelcolumnmanager.h"
 #include "quicksearchwidget.h"
 #include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
@@ -155,10 +156,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
 
-  // hide all columns except the first one
-  for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
-    mItemView->setColumnHidden( column, true );
-
   mXXPortManager->setSelectionModel( mItemView->selectionModel() );
 
   connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
@@ -189,6 +186,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   // create the dbus adaptor
   new MainWidgetAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/KContactManager", this, QDBusConnection::ExportAdaptors );
+
+  ModelColumnManager *manager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
+  manager->setWidget( mItemView->header() );
 }
 
 MainWidget::~MainWidget()
