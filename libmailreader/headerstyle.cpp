@@ -34,7 +34,7 @@
 #include "headerstrategy.h"
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
-// FIXME(Andras) port to akonadi  #include "spamheaderanalyzer.h"
+#include "spamheaderanalyzer.h"
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include "stringutil.h"
 #include "nodehelper.h"
@@ -451,10 +451,10 @@ namespace KMail {
     QString spamHTML;
 
     if ( configReader.readEntry( "showSpamStatus", true ) ) {
-/*FIXME(Andras) port to akonadi       SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
+      SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
       for ( SpamScoresIterator it = scores.begin(); it != scores.end(); ++it )
         spamHTML += (*it).agent() + ' ' +
-                    drawSpamMeter( (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );*/
+                    drawSpamMeter( (*it).score(), (*it).confidence(), (*it).spamHeader(), (*it).confidenceHeader() );
     }
 
     QString userHTML;

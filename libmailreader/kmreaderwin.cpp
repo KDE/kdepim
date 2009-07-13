@@ -22,8 +22,6 @@
 //#define KMAIL_READER_HTML_DEBUG 1
 #include "kmreaderwin.h"
 
-// #include <config-kmail.h>
-
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include <kpimutils/kfileio.h>
 #include "kmmsgpartdlg.h"

@@ -35,14 +35,17 @@
 #include "spamheaderanalyzer.h"
 
 #include "antispamconfig.h"
-#include "kmmessage.h"
+
+#include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 
 #include <kdebug.h>
 
-using namespace KMail;
+using namespace KMail; //for AntiSpamConfig
+using namespace MailViewer;
 
 // static
-SpamScores SpamHeaderAnalyzer::getSpamScores( const KMMessage* message ) {
+SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message* message ) {
   SpamScores scores;
   SpamAgents agents = AntiSpamConfig::instance()->uniqueAgents();
 
@@ -54,7 +57,12 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( const KMMessage* message ) {
       continue;
 
     // Do we have the needed score field for this agent?
-    QString mField = message->headerField( (*it).header() );
+    KMime::Headers::Base *header= message->headerByType( (*it).header() );
+    if ( !header )
+      continue;
+
+    QString mField = header->asUnicodeString();
+
     if ( mField.isEmpty() )
       continue;
 
@@ -152,7 +160,10 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( const KMMessage* message ) {
     QString confidenceString = "-2.0";
     bool confidenceValid = false;
     // Do we have the needed confidence field for this agent?
-    QString mCField = message->headerField( (*it).confidenceHeader() );
+    KMime::Headers::Base *cHeader = message->headerByType( (*it).confidenceHeader() );
+    QString mCField;
+    if ( cHeader )
+      mCField = cHeader->asUnicodeString();
     if ( ! mCField.isEmpty() ) {
       // Can we extract the confidence?
       QRegExp cScorePattern = (*it).confidencePattern();
