@@ -1483,10 +1483,7 @@ void KMReaderWin::displayMessage()
   mMimePartModel->setRoot( mRootNode );
   showHideMimeTree( !mRootNode || // treat no message as "text/plain"
                     ( mRootNode->contentType()->isPlainText() ) );
-/*FIXME(Andras) remove ?
-  if ( !msg )
-    return;
-  */
+
   NodeHelper::instance()->setOverrideCodec( mRootNode, overrideCodec() );
 
   htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
@@ -1913,7 +1910,7 @@ void KMReaderWin::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments &
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
     return;
 
-  kWarning() << "Unhandled URL click!";
+  kWarning() << "Unhandled URL click! " << aUrl;
   emit urlClicked( aUrl, Qt::LeftButton );
 }
 
@@ -2518,6 +2515,7 @@ KMime::Message *KMReaderWin::message( /*KMFolder **aFolder*/ ) const
     */
   return mMessage;
 }
+
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlClicked()

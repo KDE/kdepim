@@ -65,6 +65,7 @@ signals:
 private slots:
     void switchColors();
     void settingsChanged();
+    void urlClicked( const KUrl& url, int button);
 };
 
 #endif // mailreaderVIEW_H

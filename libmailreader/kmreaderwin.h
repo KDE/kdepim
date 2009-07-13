@@ -92,12 +92,6 @@ namespace KParts {
 
 class KMReaderWin: public QWidget, public KMail::Interface::Observer {
   Q_OBJECT
-/*FIXME(Andras) remove?
-  friend void KMMimePartTree::slotItemClicked( QTreeWidgetItem* );
-  friend void KMMimePartTree::slotContextMenuRequested( const QPoint & );
-  friend void KMMimePartTree::slotSaveAs();
-  friend void KMMimePartTree::startDrag( Qt::DropActions actions );
-*/
   friend class KMail::ObjectTreeParser;
   friend class KMail::KHtmlPartHtmlWriter;
 

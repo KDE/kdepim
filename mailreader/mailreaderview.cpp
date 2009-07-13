@@ -25,6 +25,7 @@ mailreaderView::mailreaderView(QWidget *parent)
     setLayout(layout);
     setAutoFillBackground(true);
     displayAboutPage();
+    connect( m_readerWin, SIGNAL(urlClicked(const KUrl&, int)), this, SLOT(urlClicked(const KUrl&, int)));
 }
 
 mailreaderView::~mailreaderView()
@@ -70,7 +71,7 @@ void mailreaderView::displayAboutPage()
          "<h2 style='margin-top: 0px;'>Welcome to Mailreader %1</h2><p>Mailread is the proof of concept reader for the K "
          "Desktop Environment using the Akonadi/KMime framework."
          "</p>\n"
-         "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The Akonadi Team</p>")
+         "<p style='margin-bottom: 0px'>&nbsp; &nbsp; <a href='http://pim.kde.org/akonadi'>The Akonadi Team</a></p>")
            .subs( "0.1" /*FIXME KMAIL_VERSION*/ ) // KMail version
            .subs( "help:/kmail/index.html" ) // KMail help:// URL
            .subs( "http://kontact.kde.org/kmail/" ); // KMail homepage URL
@@ -80,5 +81,9 @@ void mailreaderView::displayAboutPage()
    m_readerWin->displaySplashPage( info.toString() );
 }
 
+void mailreaderView::urlClicked( const KUrl& url, int button)
+{
+  kDebug() << url << " clicked in the mail viewer";
+}
 
 #include "mailreaderview.moc"

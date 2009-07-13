@@ -364,14 +364,6 @@ namespace {
         return true;
       }
 
-      if ( url.path() == "goOnline" ) {
-      /*FIXME(Andras)
-        kmkernel->resumeNetworkJobs();
-        */
-        kWarning() << "FIXME DISABLED CODE IN   bool KMailProtocolURLHandler::handleClick( const KUrl & url, KMReaderWin * w ) const";
-        return true;
-      }
-
       if ( url.path() == "decryptMessage" ) {
         w->setDecryptMessageOverwrite( true );
         w->update( true );
