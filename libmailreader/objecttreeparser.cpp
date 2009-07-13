@@ -34,7 +34,6 @@
 #include "objecttreeparser.h"
 
 // other KMail headers
-//FIXME(Andras) port to akonadi #include "kmkernel.h"
 #include "kmreaderwin.h"
 #include <kpimutils/email.h>
 #include "partmetadata.h"
@@ -1434,10 +1433,8 @@ namespace KMail {
       if ( keepEncryptions() ) {
         const QByteArray cstr = node->decodedContent();
         if ( mReader )
-          ;
-          /*FIXME(Andras) disable, as OTP is rewritten to use KMimewriteBodyString( cstr, node->trueFromAddress(),
+          writeBodyString( cstr, static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                            codecFor( node ), result, false );
-                           */
         mRawReplyString += cstr;
       } else if ( mReader && !mReader->decryptMessage() ) {
         writeDeferredDecryptionBlock();
