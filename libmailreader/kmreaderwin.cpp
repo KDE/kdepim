@@ -25,7 +25,6 @@
 // #include <config-kmail.h>
 
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
-// #include "kmversion.h"
 #include <kpimutils/kfileio.h>
 #include "kmmsgpartdlg.h"
 #include "mailsourceviewer.h"
@@ -1362,7 +1361,7 @@ void KMReaderWin::displaySplashPage( const QString &info )
   mMsgDisplay = false;
   adjustLayout();
 
-  QString location = KStandardDirs::locate("data", "kmail/about/main.html");
+  QString location = KStandardDirs::locate("data", "kmail/about/main.html");//FIXME(Andras) copy to $KDEDIR/share/apps/mailviewer
   QString content = KPIMUtils::kFileToByteArray( location );
   content = content.arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage.css" ) );
   if ( QApplication::isRightToLeft() )
@@ -1381,73 +1380,8 @@ void KMReaderWin::displaySplashPage( const QString &info )
   mViewer->end();
 }
 
-void KMReaderWin::displayBusyPage()
-{
-  QString info =
-    i18n( "<h2 style='margin-top: 0px;'>Retrieving Folder Contents</h2><p>Please wait . . .</p>&nbsp;" );
-
-  displaySplashPage( info );
-}
-
-void KMReaderWin::displayOfflinePage()
-{
-  QString info =
-    i18n( "<h2 style='margin-top: 0px;'>Offline</h2><p>KMail is currently in offline mode. "
-        "Click <a href=\"kmail:goOnline\">here</a> to go online . . .</p>&nbsp;" );
-
-  displaySplashPage( info );
-}
-
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::displayAboutPage()
-{
-  KLocalizedString info =
-    ki18nc("%1: Mailreader version; %2: help:// URL; %3: homepage URL; "
-         "%4: generated list of new features; "
-         "%5: First-time user text (only shown on first start); "
-         "%6: generated list of important changes; "
-         "--- end of comment ---",
-         "<h2 style='margin-top: 0px;'>Welcome to Mailreader %1</h2><p>Mailread is the proof of concept reader for the K "
-         "Desktop Environment using the Akonadi/KMime framework."
-         "</p>\n"
-         "<p style='margin-bottom: 0px'>&nbsp; &nbsp; The Akonadi Team</p>")
-           .subs( "0.1" /*FIXME KMAIL_VERSION*/ ) // KMail version
-           .subs( "help:/kmail/index.html" ) // KMail help:// URL
-           .subs( "http://kontact.kde.org/kmail/" ); // KMail homepage URL
-
-  if ( ( numKMailNewFeatures > 1 ) || ( numKMailNewFeatures == 1 && strlen(kmailNewFeatures[0]) > 0 ) ) {
-    QString featuresText =
-      i18n("<p>Some of the new features in this release of KMail include "
-           "(compared to KMail %1, which is part of KDE %2):</p>\n",
-       QString("1.9"), QString("3.5")); // prior KMail and KDE version
-    featuresText += "<ul>\n";
-    for ( int i = 0 ; i < numKMailChanges ; i++ )
-      featuresText += "<li>" + i18n( kmailNewFeatures[i] ) + "</li>\n";
-    featuresText += "</ul>\n";
-    info = info.subs( featuresText );
-  }
-  else
-    info = info.subs( QString() ); // remove the place holder
-
-  info = info.subs( QString() ); // remove the place holder
-
-  if ( ( numKMailChanges > 1 ) || ( numKMailChanges == 1 && strlen(kmailChanges[0]) > 0 ) ) {
-    QString changesText =
-      i18n("<p><span style='font-size:125%; font-weight:bold;'>"
-           "Important changes</span> (compared to KMail %1):</p>\n",
-       QString("1.9"));
-    changesText += "<ul>\n";
-    for ( int i = 0 ; i < numKMailChanges ; i++ )
-      changesText += i18n("<li>%1</li>\n", i18n( kmailChanges[i] ) );
-    changesText += "</ul>\n";
-    info = info.subs( changesText );
-  }
-  else
-    info = info.subs( QString() ); // remove the place holder
-
-  displaySplashPage( info.toString() );
-}
 
 void KMReaderWin::enableMsgDisplay() {
   mMsgDisplay = true;

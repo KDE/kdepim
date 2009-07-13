@@ -224,15 +224,7 @@ public:
   static QString newFeaturesMD5();
 
   /** Display a generic HTML splash page instead of a message */
-  void displaySplashPage( const QString &info );
-
-  /** Display the about page instead of a message */
-  MAILVIEWER_EXPORT void displayAboutPage();
-
-  /** Display the 'please wait' page instead of a message */
-  MAILVIEWER_EXPORT void displayBusyPage();
-  /** Display the 'we are currently in offline mode' page instead of a message */
-  MAILVIEWER_EXPORT void displayOfflinePage();
+  MAILVIEWER_EXPORT void displaySplashPage( const QString &info );
 
   /** Enable the displaying of messages again after an URL was displayed */
   MAILVIEWER_EXPORT void enableMsgDisplay();

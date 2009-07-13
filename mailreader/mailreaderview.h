@@ -46,6 +46,8 @@ public:
     void showAboutPage();
 
 private:
+    void displayAboutPage();
+
     Ui::mailreaderview ui_mailreaderview;
     KMReaderWin *m_readerWin;
 
