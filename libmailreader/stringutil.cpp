@@ -17,6 +17,7 @@
    Boston, MA 02110-1301, USA.
 */
 #include "stringutil.h"
+#include "global.h"
 
 #ifndef KMAIL_UNITTESTS
 
@@ -47,6 +48,8 @@ using namespace KMime::Types;
 using namespace KMime::HeaderParsing;
 
 #endif
+
+using namespace MailViewer;
 
 namespace KMail
 {
@@ -312,8 +315,7 @@ QString generateMessageId( const QString& addr )
   msgIdStr = '<' + datetime.toString( "yyyyMMddhhmm.sszzz" );
 
   QString msgIdSuffix;
-//FIXME(Andras) port to akonadi   KConfigGroup general( KMKernel::config(), "General" );
-  KConfigGroup general;
+  KConfigGroup general( Global::instance()->config(), "General" );
 
   if( general.readEntry( "useCustomMessageIdSuffix", false ) )
     msgIdSuffix = general.readEntry( "myMessageIdSuffix" );
@@ -891,8 +893,7 @@ QString expandAliases( const QString& recipients )
     // check whether the address is missing the domain part
     // FIXME: looking for '@' might be wrong
     if ( !receiver.contains('@') ) {
-//FIXME(Andras) port to akonadi       KConfigGroup general( KMKernel::config(), "General" );
-        KConfigGroup general;
+      KConfigGroup general( Global::instance()->config(), "General" );
       QString defaultdomain = general.readEntry( "Default domain" );
       if( !defaultdomain.isEmpty() ) {
         expandedRecipients += receiver + '@' + defaultdomain;

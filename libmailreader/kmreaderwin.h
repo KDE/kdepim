@@ -20,6 +20,8 @@
 #ifndef KMREADERWIN_H
 #define KMREADERWIN_H
 
+#include "mailviewer_export.h"
+
 #include <QWidget>
 #include <QTimer>
 #include <QStringList>
@@ -33,7 +35,6 @@
 #include <kvbox.h>
 using KPIM::MessageStatus;
 #include "interfaces/observer.h"
-#include "mailviewer_export.h"
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -101,7 +102,15 @@ class KMReaderWin: public QWidget, public KMail::Interface::Observer {
   friend class KMail::KHtmlPartHtmlWriter;
 
 public:
-  MAILVIEWER_EXPORT KMReaderWin( QWidget *parent, QWidget *mainWindow = 0,
+  /**
+   * Create a mail viewer widget
+   * @param config a config object from where the configuration is read
+   * @param parent parent widget
+   * @param mainWindow the application's main window
+   * @param actionCollection the action collection where the widget's actions will belong to
+   * @param f window flags
+   */
+  MAILVIEWER_EXPORT KMReaderWin( QWidget *parent,  KSharedConfigPtr config = KSharedConfigPtr(), QWidget *mainWindow = 0,
                KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 

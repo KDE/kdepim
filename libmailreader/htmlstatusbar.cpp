@@ -31,6 +31,7 @@
 */
 
 #include "htmlstatusbar.h"
+#include "global.h"
 
 #include <klocale.h>
 #include <kconfig.h>
@@ -40,6 +41,8 @@
 #include <QColor>
 #include <QString>
 #include <QLabel>
+
+using namespace MailViewer;
 
 KMail::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
   : QLabel( parent, f ),
@@ -97,20 +100,9 @@ QString KMail::HtmlStatusBar::message() const {
   }
 }
 
-namespace {
-  inline KConfig * config() {
-/*FIXME(Andras) port to akonadi
-#ifndef KMAIL_TESTING
-    return KMKernel::config();
-#else
-    return kApp->config();
-#endif */
-      return KApplication::kApplication()->sessionConfig();
-  }
-}
 
 QColor KMail::HtmlStatusBar::fgColor() const {
-  KConfigGroup conf( config(), "Reader" );
+  KConfigGroup conf( Global::instance()->config(), "Reader" );
   QColor defaultColor, color;
   switch ( mode() ) {
   case Html:
@@ -138,7 +130,7 @@ QColor KMail::HtmlStatusBar::fgColor() const {
 }
 
 QColor KMail::HtmlStatusBar::bgColor() const {
-  KConfigGroup conf( config(), "Reader" );
+  KConfigGroup conf( Global::instance()->config(), "Reader" );
 
   QColor defaultColor, color;
   switch ( mode() ) {

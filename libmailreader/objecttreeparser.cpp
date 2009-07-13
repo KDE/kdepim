@@ -48,6 +48,7 @@
 #include "interfaces/bodypartformatter.h"
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include "util.h"
+#include "global.h"
 #include "kleojobexecutor.h"
 #include "stringutil.h"
 #include "nodehelper.h"
@@ -111,6 +112,7 @@ using KPIMUtils::LinkLocator;
 
 #include <kmime/kmime_message.h>
 
+using namespace MailViewer;
 
 namespace KMail {
 
@@ -1520,8 +1522,7 @@ namespace KMail {
       if ( !smimeCrypto || !mReader )
         return false;
 
-// FIXME(Andras) port to akonadi const KConfigGroup reader( KMKernel::config(), "Reader" );
-      const KConfigGroup reader;
+      const KConfigGroup reader( Global::instance()->config(), "Reader" );
       if ( !reader.readEntry( "AutoImportKeys", false ) )
         return false;
 

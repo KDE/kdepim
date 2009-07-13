@@ -38,6 +38,7 @@ using KPIMUtils::LinkLocator;
 //FIXME(Andras) port to akonadi #include "globalsettings.h"
 #include "stringutil.h"
 #include "nodehelper.h"
+#include "global.h"
 
 #include <kpimutils/email.h>
 #include "libkdepim/kxface.h"
@@ -64,6 +65,8 @@ using namespace KPIM;
 
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
+
+using namespace MailViewer;
 
 namespace KMail {
 
@@ -408,8 +411,7 @@ namespace KMail {
     if ( !strategy )
       strategy = HeaderStrategy::rich();
 
-//FIXME(Andras) port to akonadi     KConfigGroup configReader( KMKernel::config(), "Reader" );
-    KConfigGroup configReader(KApplication::kApplication()->sessionConfig(), "Reader" );
+    KConfigGroup configReader( Global::instance()->config(), "Reader" );
 
     // ### from kmreaderwin begin
     // The direction of the header is determined according to the direction
@@ -928,9 +930,8 @@ namespace KMail {
 
   QString HeaderStyle::dateStr(const KDateTime &dateTime) const
   {
-      KConfigGroup general(KApplication::kApplication()->sessionConfig(), "General");//FIXME(Andras) port to akonadi ( KMKernel::config(), "General" );
+      KConfigGroup general( Global::instance()->config(), "General");
       time_t unixTime = dateTime.toTime_t();
-
   //kDebug()<<"####  Date ="<<header.Date().AsString().c_str();
 
       return KMime::DateFormatter::formatDate(

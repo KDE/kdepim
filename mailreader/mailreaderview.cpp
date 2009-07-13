@@ -12,6 +12,7 @@
 #include <QtGui/QLabel>
 #include <QHBoxLayout>
 #include <KDebug>
+#include <KApplication>
 
 #include <akonadi/item.h>
 
@@ -19,7 +20,7 @@ mailreaderView::mailreaderView(QWidget *parent)
 {
     ui_mailreaderview.setupUi(this);
     QHBoxLayout *layout = new QHBoxLayout;
-    m_readerWin = new KMReaderWin(this, parent, dynamic_cast<KXmlGuiWindow*>(parent)->actionCollection());
+    m_readerWin = new KMReaderWin( this, KSharedConfig::openConfig(KApplication::kApplication()->sessionConfig()->componentData(), KApplication::kApplication()->sessionConfig()->name()), parent, dynamic_cast<KXmlGuiWindow*>(parent)->actionCollection());
     layout->addWidget(m_readerWin);
     setLayout(layout);
     setAutoFillBackground(true);

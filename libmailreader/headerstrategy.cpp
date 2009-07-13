@@ -31,10 +31,12 @@
 
 
 #include "headerstrategy.h"
+#include "global.h"
 
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
+using namespace MailViewer;
 
 namespace KMail {
 
@@ -201,8 +203,7 @@ namespace KMail {
   CustomHeaderStrategy::CustomHeaderStrategy()
     : HeaderStrategy()
   {
-//FIXME(Andras) port to akonadi     KConfigGroup customHeader( KMKernel::config(), "Custom Headers" );
-      KConfigGroup customHeader;
+    KConfigGroup customHeader( Global::instance()->config(), "Custom Headers" );
     if ( customHeader.hasKey( "headers to display" ) ) {
       mHeadersToDisplay = customHeader.readEntry( "headers to display", QStringList() );
       for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != mHeadersToDisplay.end() ; ++ it )

@@ -31,6 +31,7 @@
 
 
 #include "csshelper.h"
+#include "global.h"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -41,13 +42,14 @@
 #include <QFont>
 #include <QPalette>
 
+using namespace MailViewer;
+
 namespace KMail {
 
   CSSHelper::CSSHelper( const QPaintDevice *pd ) :
     KPIM::CSSHelper( pd )
   {
-// FIXME(Andras) port to akonadi KConfig * config = KMKernel::config();
-      KConfig *config = KApplication::kApplication()->sessionConfig();
+    KSharedConfigPtr config = Global::instance()->config();
 
     KConfigGroup reader( config, "Reader" );
     KConfigGroup fonts( config, "Fonts" );

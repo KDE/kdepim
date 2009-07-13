@@ -57,6 +57,7 @@
 #include "util.h"
 #include "nodehelper.h"
 #include "mimetreemodel.h"
+#include "global.h"
 
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
@@ -115,7 +116,6 @@
 #include <ktoggleaction.h>
 #include <kconfiggroup.h>
 #include <kactioncollection.h>
-#include <kconfiggroup.h>
 #include <KColorScheme>
 #include <KApplication>
 
@@ -365,6 +365,7 @@ const int KMReaderWin::delay = 150;
 
 //-----------------------------------------------------------------------------
 KMReaderWin::KMReaderWin(QWidget *aParent,
+                         KSharedConfigPtr config,
                          QWidget *mainWindow,
                          KActionCollection* actionCollection,
                          Qt::WindowFlags aFlags )
@@ -401,6 +402,8 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mRootNode = 0;
   if ( !mainWindow )
     mainWindow = aParent;
+
+  Global::instance()->setConfig( config );
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mDelayedMarkTimer.setObjectName( "mDelayedMarkTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
@@ -931,8 +934,8 @@ bool KMReaderWin::event(QEvent *e)
 //-----------------------------------------------------------------------------
 void KMReaderWin::readConfig(void)
 {
-   const KConfigGroup mdnGroup(KApplication::kApplication()->sessionConfig(), "MDN");//( /*FIXME(Andras) port to akonadi KMKernel::config() , "MDN" */);
-  /*should be: const*/ KConfigGroup reader(KApplication::kApplication()->sessionConfig(), "Reader");//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
+  const KConfigGroup mdnGroup(Global::instance()->config(), "MDN");
+  KConfigGroup reader(Global::instance()->config(), "Reader");
 
   delete mCSSHelper;
   mCSSHelper = new KMail::CSSHelper( mViewer->view() );
@@ -1028,8 +1031,9 @@ void KMReaderWin::saveSplitterSizes( KConfigGroup & c ) const {
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::writeConfig( bool sync ) const {
-    KConfigGroup reader;//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
+void KMReaderWin::writeConfig( bool sync ) const
+{
+  KConfigGroup reader( Global::instance()->config() , "Reader" );
 
   reader.writeEntry( "useFixedFont", mUseFixedFont );
   if ( headerStyle() )
@@ -1503,7 +1507,7 @@ void KMReaderWin::showHideMimeTree( bool isPlainTextTopLevel ) {
   }
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
-      KConfigGroup reader;//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
+      KConfigGroup reader( Global::instance()->config() , "Reader" );
     saveSplitterSizes( reader );
     mMimePartTree->hide();
   }
@@ -1633,7 +1637,7 @@ void KMReaderWin::parseMsg()
     NodeHelper::instance()->setSignatureState( mRootNode, signatureState );
   }
 
-  const KConfigGroup reader(KApplication::kApplication()->sessionConfig(), "Reader");//( /*FIXME(Andras) port to akonadi KMKernel::config() , "Reader" */);
+  const KConfigGroup reader( Global::instance()->config(), "Reader" );
   if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
 
   // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
