@@ -111,6 +111,10 @@ public:
 
     const QTextCodec * localCodec() const { return mLocalCodec;}
 
+  /** Return a QTextCodec for the specified charset.
+   * This function is a bit more tolerant, than QTextCodec::codecForName */
+    static const QTextCodec* codecForName(const QByteArray& _str);
+
 private:
     NodeHelper();
 
@@ -123,7 +127,6 @@ private:
     QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
                           const QString& newPrefix ) const;
 
-    const QTextCodec* codecForName(const QByteArray& _str);
 
 
     static NodeHelper * mSelf;

@@ -1813,10 +1813,8 @@ bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * c
                                              static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString() ) );
   const QByteArray body = bOkDecrypt ? decryptedBody : data;
   const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
-  const QTextCodec* aCodec;/*FIXME(Andras) disable, as OTP is rewritten to use KMime
-   = chiasmusCharset.isEmpty()
-    ? codecFor( curNode )
-    : KMMsgBase::codecForName( chiasmusCharset.toAscii() );*/
+  const QTextCodec* aCodec = chiasmusCharset.isEmpty() ? codecFor( curNode )
+                             : NodeHelper::codecForName( chiasmusCharset.toAscii() );
   htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
   result.setInlineEncryptionState( KMMsgFullyEncrypted );
   if ( mReader )
