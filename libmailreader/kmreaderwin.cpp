@@ -397,9 +397,10 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true )
 {
-  mRootNode = 0;
   if ( !mainWindow )
     mainWindow = aParent;
+
+  mDeleteMessage = false;
 
   Global::instance()->setConfig( config );
   GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
@@ -412,7 +413,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mSplitterSizes << 180 << 100;
   mMimeTreeMode = 1;
   mMimeTreeAtBottom = true;
-  mAutoDelete = false;
   mLastSerNum = 0;
   mWaitingForSerNum = 0;
   mMessage = 0;
@@ -448,7 +448,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
  connect( this, SIGNAL(urlClicked(const KUrl&,int)),
           this, SLOT(slotUrlClicked()) );
 
-  setMsg( 0, false );
+  setMessage( 0, Delayed );
 }
 
 void KMReaderWin::createActions()
@@ -759,7 +759,7 @@ void KMReaderWin::slotLevelQuote( int l )
 
   mLevelQuote = l;
   saveRelativePosition();
-  update( true );
+  update( Force );
 }
 
 void KMReaderWin::slotCycleHeaderStyles() {
@@ -824,10 +824,9 @@ KMReaderWin::~KMReaderWin()
 {
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mCSSHelper;
-  /*FIXME(Andras) port it
-  if (mAutoDelete) delete message();
-  */
-  delete mRootNode; mRootNode = 0;
+  if ( mDeleteMessage )
+    delete mMessage;
+  mMessage = 0;
   removeTempFiles();
 }
 
@@ -843,7 +842,7 @@ void KMReaderWin::slotMessageArrived( KMime::Message *msg )
       kDebug() << "Ignoring update";
     }
     */
-    setMsg(msg, true);
+    setMessage( msg, Force );
   }
 }
 
@@ -856,7 +855,7 @@ void KMReaderWin::update( KMail::Interface::Observable * observable )
     return;
   }
 
-  if ( !mRootNode )
+  if ( !mMessage )
     return;
 
 /*FIXME(Andras) port it
@@ -872,14 +871,14 @@ void KMReaderWin::update( KMail::Interface::Observable * observable )
     kDebug() << "No updated part";
     return;
   }
-  partNode* node = mRootNode->findNodeForDwPart( msg->lastUpdatedPart() );
+  partNode* node = mMessage->findNodeForDwPart( msg->lastUpdatedPart() );
   if ( !node ) {
     kDebug() << "Can't find node for part";
     return;
   }
   node->setDwPart( msg->lastUpdatedPart() );
   */
-  KMime::Content *node = mRootNode; //FIXME(Andras) see above
+  KMime::Content *node = mMessage; //FIXME(Andras) see above
 
   // update the tmp file
   // we have to set it writeable temporarily
@@ -924,7 +923,7 @@ bool KMReaderWin::event(QEvent *e)
     if (message())
       message()->readConfig();
 */
-    update( true ); // Force update
+    update( Force ); // Force update
     return true;
   }
   return QWidget::event(e);
@@ -1113,14 +1112,14 @@ void KMReaderWin::initHtmlWidget(void)
 
 void KMReaderWin::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
   mAttachmentStrategy = strategy ? strategy : AttachmentStrategy::smart();
-  update( true );
+  update( Force );
 }
 
 void KMReaderWin::setHeaderStyleAndStrategy( const HeaderStyle * style,
                                              const HeaderStrategy * strategy ) {
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
-  update( true );
+  update( Force );
 }
 
 //-----------------------------------------------------------------------------
@@ -1152,7 +1151,7 @@ void KMReaderWin::setOverrideEncoding( const QString & encoding )
       }
     }
   }
-  update( true );
+  update( Force );
 }
 
 
@@ -1178,7 +1177,7 @@ void KMReaderWin::slotSetEncoding()
     mOverrideEncoding.clear();
   else
     mOverrideEncoding = KMReaderWin::encodingForName( mSelectEncodingAction->currentText() );
-  update( true );
+  update( Force );
 }
 
 //-----------------------------------------------------------------------------
@@ -1192,28 +1191,47 @@ void KMReaderWin::readGlobalOverrideCodec()
   mOldGlobalOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
 }
 
-void KMReaderWin::setMessageItem(const Akonadi::Item &item, bool force)
+void KMReaderWin::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
 {
+    if ( mDeleteMessage ) {
+      delete mMessage;
+      mMessage = 0;
+    }
+    KMail::NodeHelper::instance()->clear();
+
+    mMessage = 0; //forget the old message if it was set
     mMessageItem = item;
 
+    if ( !mMessageItem.hasPayload<MessagePtr>() ) {
+      kWarning() << "Payload is not a MessagePtr!";
+      return;
+    }
+    //Note: if I use MessagePtr for mMessage all over, I get a crash in the destructor
+    mMessage = new KMime::Message;
+  /*
+  mMessage->setContent(mMessageItem.payloadData());
+  mMessage->parse();*/
 
-    // Avoid flicker, somewhat of a cludge
-    if (force) {
-      // stop the timer to avoid calling updateReaderWin twice
-        mUpdateReaderWinTimer.stop();
-        updateReaderWin();
-    }
-    else if (mUpdateReaderWinTimer.isActive()) {
-        mUpdateReaderWinTimer.setInterval( delay );
-    } else {
-        mUpdateReaderWinTimer.start( 0 );
-    }
+    mMessage ->setContent( mMessageItem.payloadData() );
+    mMessage ->parse();
+    mDeleteMessage = true;
+
+    update( updateMode );
+
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::setMsg(KMime::Message* aMsg, bool force)
+void KMReaderWin::setMessage(KMime::Message* aMsg, UpdateMode updateMode, Ownership ownerShip)
 {
-  if (aMsg) {
+  if ( mDeleteMessage ) {
+    delete mMessage;
+    mMessage = 0;
+  }
+  KMail::NodeHelper::instance()->clear();
+
+
+
+  if ( aMsg ) {
   /*FIXME(Andras) port to akonadi
       kDebug() <<"(" << aMsg->getMsgSerNum() <<", last" << mLastSerNum <<")" << aMsg->subject()
         << aMsg->fromStrip() << ", readyToShow" << (aMsg->readyToShow());
@@ -1252,7 +1270,6 @@ void KMReaderWin::setMsg(KMime::Message* aMsg, bool force)
 
   mDelayedMarkTimer.stop();
 
-  mMessage = 0;
   if ( !aMsg ) {
     mWaitingForSerNum = 0; // otherwise it has been set
     mLastSerNum = 0;
@@ -1264,15 +1281,14 @@ void KMReaderWin::setMsg(KMime::Message* aMsg, bool force)
     // when going to another message in the mainwindow.
     // Otherwise, keep only mMessage, this is fine for standalone KMReaderMainWins since
     // we're working on a copy of the KMMessage, which we own.
-    if (message() != aMsg) {
-      mMessage = aMsg;
-      mLastSerNum = 0;
-    }
-    \*/
+    */
+    mMessage = aMsg;
+    mDeleteMessage = (ownerShip == Transfer);
+    mLastSerNum = 0;
   }
 
-  if (mRootNode) {
-    NodeHelper::instance()->setOverrideCodec( mRootNode, overrideCodec() );
+  if ( mMessage ) {
+    NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
   /*FIXME(Andras) port to akonadi
     aMsg->setDecodeHTML( htmlMail() );
     mLastStatus = aMsg->status();
@@ -1290,17 +1306,7 @@ void KMReaderWin::setMsg(KMime::Message* aMsg, bool force)
   // otherwise we'll get flickering with progressively loaded messages
   if ( complete )
   {
-    // Avoid flicker, somewhat of a cludge
-    if (force) {
-      // stop the timer to avoid calling updateReaderWin twice
-      mUpdateReaderWinTimer.stop();
-      updateReaderWin();
-    }
-    else if (mUpdateReaderWinTimer.isActive()) {
-      mUpdateReaderWinTimer.setInterval( delay );
-    } else {
-      mUpdateReaderWinTimer.start( 0 );
-    }
+    update( updateMode );
   }
 
 
@@ -1324,37 +1330,6 @@ void KMReaderWin::clearCache()
   mLastSerNum = 0;
   mWaitingForSerNum = 0;
   mMessage = 0;
-}
-
-// enter items for the "Important changes" list here:
-static const char * const kmailChanges[] = {
-  ""
-};
-static const int numKMailChanges =
-  sizeof kmailChanges / sizeof *kmailChanges;
-
-// enter items for the "new features" list here, so the main body of
-// the welcome page can be left untouched (probably much easier for
-// the translators). Note that the <li>...</li> tags are added
-// automatically below:
-static const char * const kmailNewFeatures[] = {
-  ""
-};
-static const int numKMailNewFeatures =
-  sizeof kmailNewFeatures / sizeof *kmailNewFeatures;
-
-
-//-----------------------------------------------------------------------------
-//static
-QString KMReaderWin::newFeaturesMD5()
-{
-  QByteArray str;
-  for ( int i = 0 ; i < numKMailChanges ; ++i )
-    str += kmailChanges[i];
-  for ( int i = 0 ; i < numKMailNewFeatures ; ++i )
-    str += kmailNewFeatures[i];
-  KMD5 md5( str );
-  return md5.base64Digest();
 }
 
 //-----------------------------------------------------------------------------
@@ -1403,7 +1378,7 @@ void KMReaderWin::updateReaderWin()
 
   htmlWriter()->reset();
   //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
-  if ( mMessageItem.hasPayload() )
+  if ( mMessage )
   {
     if ( mShowColorbar ) {
       mColorBar->show();
@@ -1451,50 +1426,21 @@ void KMReaderWin::showHideMimeTree( bool isPlainTextTopLevel ) {
 
 void KMReaderWin::displayMessage()
 {
-  if ( mRootNode && !KMail::NodeHelper::instance()->nodeProcessed( mRootNode ) ) {
-    kWarning() << "The root node is not yet processed! Danger!";
-    return;
-  } else {
-    delete mRootNode;
-    mRootNode = 0;
-  }
-  KMail::NodeHelper::instance()->clear();
-  /*
-  mRootNode->setContent(mMessageItem.payloadData());
-  mRootNode->parse();*/
-  if (!mMessageItem.hasPayload<MessagePtr>()) {
-    kWarning() << "Payload is not a MessagePtr!";
-    return;
-  }
-  //Note: if I use MessagePtr for mRootNode all over, I get a crash in the destructor
-  mRootNode = new KMime::Message;
-  mRootNode->setContent( mMessageItem.payloadData() );
-  mRootNode->parse();
-/*
-  kDebug() << "Main head: " << mRootNode->head();
-  kDebug() << "Main body: " << mRootNode->body();
-  Q_FOREACH(KMime::Content *c, mRootNode->contents()) {
-    kDebug() << "Subcontent head: " << c->head();
-    kDebug() << "Subcontent body: " << c->body();
-  }
-  */
 
   /*FIXME(Andras) port to Akonadi
-  KMMessage * msg = message();
-
   mMimePartTree->clearAndResetSortOrder();
   */
-  mMimePartModel->setRoot( mRootNode );
-  showHideMimeTree( !mRootNode || // treat no message as "text/plain"
-                    ( mRootNode->contentType()->isPlainText() ) );
+  mMimePartModel->setRoot( mMessage );
+  showHideMimeTree( !mMessage || // treat no message as "text/plain"
+                    ( mMessage->contentType()->isPlainText() ) );
 
-  NodeHelper::instance()->setOverrideCodec( mRootNode, overrideCodec() );
+  NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
 
   htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
   htmlWriter()->queue( mCSSHelper->htmlHead( isFixedFont() ) );
 
   if (!parent())
-      setWindowTitle(mRootNode->subject()->asUnicodeString());
+      setWindowTitle( mMessage->subject()->asUnicodeString() );
 
   removeTempFiles();
 
@@ -1515,27 +1461,27 @@ void KMReaderWin::displayMessage()
 //-----------------------------------------------------------------------------
 void KMReaderWin::parseMsg()
 {
-  assert( mRootNode != 0 );
+  assert( mMessage != 0 );
 
   /* aMsg->setIsBeingParsed( true ); //FIXME(Andras) review and port */
 
   QString cntDesc = i18n("( body part )");
 
-  if (mRootNode->subject(false) )
-      cntDesc = mRootNode->subject()->asUnicodeString();
+  if ( mMessage->subject( false ) )
+      cntDesc = mMessage->subject()->asUnicodeString();
 
-  KIO::filesize_t cntSize = mRootNode->size();
+  KIO::filesize_t cntSize = mMessage->size();
 
   QString cntEnc= "7bit";
-  if (mRootNode->contentTransferEncoding(false))
-      cntEnc = mRootNode->contentTransferEncoding()->asUnicodeString();
+  if ( mMessage->contentTransferEncoding( false ) )
+      cntEnc = mMessage->contentTransferEncoding()->asUnicodeString();
 
 // Check if any part of this message is a v-card
 // v-cards can be either text/x-vcard or text/directory, so we need to check
 // both.
-  KMime::Content* vCardContent = findContentByType( mRootNode, "text/x-vcard" );
+  KMime::Content* vCardContent = findContentByType( mMessage, "text/x-vcard" );
   if ( !vCardContent )
-      vCardContent = findContentByType( mRootNode, "text/directory" );
+      vCardContent = findContentByType( mMessage, "text/directory" );
 
   bool hasVCard = false;
 
@@ -1550,24 +1496,24 @@ void KMReaderWin::parseMsg()
           writeMessagePartToTempFile( vCardContent );
       }
   }
-  htmlWriter()->queue( writeMsgHeader( mRootNode, hasVCard, true ) );
+  htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard, true ) );
 
   // show message content
   ObjectTreeParser otp( this );
-  otp.parseObjectTree( mRootNode );
+  otp.parseObjectTree( mMessage );
 
   bool emitReplaceMsgByUnencryptedVersion = false;
 
   // store encrypted/signed status information in the KMMessage
   //  - this can only be done *after* calling parseObjectTree()
-  KMMsgEncryptionState encryptionState = NodeHelper::instance()->overallEncryptionState( mRootNode );
-  KMMsgSignatureState  signatureState  = NodeHelper::instance()->overallSignatureState( mRootNode );
-  NodeHelper::instance()->setEncryptionState( mRootNode, encryptionState );
+  KMMsgEncryptionState encryptionState = NodeHelper::instance()->overallEncryptionState( mMessage );
+  KMMsgSignatureState  signatureState  = NodeHelper::instance()->overallSignatureState( mMessage );
+  NodeHelper::instance()->setEncryptionState( mMessage, encryptionState );
   // Don't reset the signature state to "not signed" (e.g. if one canceled the
   // decryption of a signed messages which has already been decrypted before).
   if ( signatureState != KMMsgNotSigned ||
-       NodeHelper::instance()->signatureState( mRootNode ) == KMMsgSignatureStateUnknown ) {
-    NodeHelper::instance()->setSignatureState( mRootNode, signatureState );
+       NodeHelper::instance()->signatureState( mMessage ) == KMMsgSignatureStateUnknown ) {
+    NodeHelper::instance()->setSignatureState( mMessage, signatureState );
   }
 
   const KConfigGroup reader( Global::instance()->config(), "Reader" );
@@ -1613,7 +1559,7 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
     KMime::Message *unencryptedMessage = new KMime::Message;
     QByteArray decryptedData;
     // note: The following call may change the message's headers.
-    objectTreeToDecryptedMsg( mRootNode, decryptedData, *unencryptedMessage );
+    objectTreeToDecryptedMsg( mMessage, decryptedData, *unencryptedMessage );
     kDebug() << "Resulting data:" << decryptedData;
 
     if( !decryptedData.isEmpty() ) {
@@ -1622,15 +1568,15 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
      //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
       kDebug() << "Attach unencrypted message to aMsg";
 
-      NodeHelper::instance()->attachUnencryptedMessage( mRootNode, unencryptedMessage );
+      NodeHelper::instance()->attachUnencryptedMessage( mMessage, unencryptedMessage );
 
       emitReplaceMsgByUnencryptedVersion = true;
     }
     }
   }
-  // save current main Content-Type before deleting mRootNode
-  const QByteArray rootNodeCntType = mRootNode ? mRootNode->contentType()->mediaType() :"text";
-  const QByteArray rootNodeCntSubtype = mRootNode ? mRootNode->contentType()->subType() : "plain";
+  // save current main Content-Type before deleting mMessage
+  const QByteArray rootNodeCntType = mMessage->contentType()->mediaType();
+  const QByteArray rootNodeCntSubtype = mMessage->contentType()->subType();
 
   // store message id to avoid endless recursions
 /*FIXME(Andras) port it
@@ -1743,11 +1689,11 @@ void KMReaderWin::showVCard( KMime::Content* msgPart ) {
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::printMsg( KMime::Message* aMsg )
+void KMReaderWin::printMessage( KMime::Message* aMsg )
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  setMsg( aMsg, true );
+  setMessage( aMsg, Force );
 }
 
 //-----------------------------------------------------------------------------
@@ -2030,7 +1976,7 @@ void KMReaderWin::slotHandleAttachment( int choice )
 {
     /*FIXME(Andras) port to akonadi
   mAtmUpdate = true;
-  partNode* node = mRootNode ? mRootNode->findId( mAtmCurrent ) : 0;
+  partNode* node = mMessage ? mMessage->findId( mAtmCurrent ) : 0;
   if ( choice == KMHandleAttachmentCommand::Delete ) {
     slotDeleteAttachment( node );
   } else if ( choice == KMHandleAttachmentCommand::Edit ) {
@@ -2072,7 +2018,7 @@ void KMReaderWin::slotToggleFixedFont()
 {
   mUseFixedFont = !mUseFixedFont;
   saveRelativePosition();
-  update( true );
+  update( Force );
 }
 
 void KMReaderWin::slotShowMsgSrc()
@@ -2082,7 +2028,7 @@ void KMReaderWin::slotShowMsgSrc()
     msg->notify(); // notify observers as msg was transferred
   }
 */
-  QString str = QString::fromAscii( mMessageItem.payloadData() );
+  QString str = QString::fromAscii( mMessage->encodedContent() );
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
   viewer->setWindowTitle( i18n("Message as Plain Text") );
@@ -2137,7 +2083,8 @@ void KMReaderWin::atmViewMsg(KMime::Content* aMsgPart)
 }
 
 
-void KMReaderWin::setMsgPart( KMime::Content * node ) {
+void KMReaderWin::setMessagePart( KMime::Content * node )
+{
   htmlWriter()->reset();
   mColorBar->hide();
   htmlWriter()->begin( mCSSHelper->cssDefinitions( isFixedFont() ) );
@@ -2153,7 +2100,7 @@ void KMReaderWin::setMsgPart( KMime::Content * node ) {
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::setMsgPart( KMime::Content* aMsgPart, bool aHTML,
+void KMReaderWin::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
                               const QString& aFileName, const QString& pname )
 {
   // Cancel scheduled updates of the reader window, as that would stop the
@@ -2170,9 +2117,9 @@ void KMReaderWin::setMsgPart( KMime::Content* aMsgPart, bool aHTML,
       assert(aMsgPart!=0);
       msg->setContent(aMsgPart->decodedContent());
       msg->parse();
-      mMainWindow->setWindowTitle(msg->subject()->asUnicodeString());
-      setMsg(msg, true);
-      setAutoDelete(true);
+      mMainWindow->setWindowTitle( msg->subject()->asUnicodeString() );
+      setMessage( msg, Force );
+      mDeleteMessage = true;
   } else if ( aMsgPart->contentType()->mediaType() == "text" ) {
       if ( aMsgPart->contentType()->subType() == "x-vcard" ||
           aMsgPart->contentType()->subType() == "directory" ) {
@@ -2259,7 +2206,7 @@ void KMReaderWin::setMsgPart( KMime::Content* aMsgPart, bool aHTML,
 void KMReaderWin::slotAtmView( int id, const QString& name )
 {
 /*FIXME(Andras) port it
-  partNode* node = mRootNode ? mRootNode->findId( id ) : 0;
+  partNode* node = mMessage ? mMessage->findId( id ) : 0;
   if( node ) {
     mAtmCurrent = id;
     mAtmCurrentName = name;
@@ -2296,7 +2243,7 @@ void KMReaderWin::openAttachment( int id, const QString & name )
 
   QString str, pname, cmd, fileName;
 
-  partNode* node = mRootNode ? mRootNode->findId( id ) : 0;
+  partNode* node = mMessage ? mMessage->findId( id ) : 0;
   if( !node ) {
     kWarning() << "Could not find node" << id;
     return;
@@ -2492,32 +2439,19 @@ void KMReaderWin::saveRelativePosition()
 
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::update( bool force )
+void KMReaderWin::update( UpdateMode updateMode )
 {
-  setMessageItem( mMessageItem, force);
-}
-
-//-----------------------------------------------------------------------------
-KMime::Message *KMReaderWin::message( /*KMFolder **aFolder*/ ) const
-{
-/*FIXME(Andras) port to akonadi
-  KMFolder*  tmpFolder;
-  KMFolder*& folder = aFolder ? *aFolder : tmpFolder;
-  folder = 0;
-  if (mMessage)
-      return mMessage;
-  if (mLastSerNum) {
-    KMMessage *message = 0;
-    int index;
-    KMMsgDict::instance()->getLocation( mLastSerNum, &folder, &index );
-    if (folder )
-      message = folder->getMsg( index );
-    if (!message)
-      kWarning() <<"Attempt to reference invalid serial number" << mLastSerNum;
-    return message;
+  // Avoid flicker, somewhat of a cludge
+  if ( updateMode == Force ) {
+    // stop the timer to avoid calling updateReaderWin twice
+      mUpdateReaderWinTimer.stop();
+      updateReaderWin();
   }
-    */
-  return mMessage;
+  else if (mUpdateReaderWinTimer.isActive()) {
+      mUpdateReaderWinTimer.setInterval( delay );
+  } else {
+      mUpdateReaderWinTimer.start( 0 );
+  }
 }
 
 
@@ -2631,7 +2565,7 @@ void KMReaderWin::slotMailtoReply()
 KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )
 {
     /*FIXME(Andras) port to akonadi
-  return mRootNode ? mRootNode->findId( msgPartFromUrl( url ) ) : 0 ;
+  return mMessage ? mMessage->findId( msgPartFromUrl( url ) ) : 0 ;
   */
   kWarning() << "FIXME PORT KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )";
 
@@ -2640,7 +2574,7 @@ KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )
 
 KMime::Content * KMReaderWin::partNodeForId( int id ) {
     /*FIXME(Andras) port to akonadi
-  return mRootNode ? mRootNode->findId( id ) : 0 ;
+  return mMessage ? mMessage->findId( id ) : 0 ;
   */
   kWarning() << "FIXME PORT KMime::Content * KMReaderWin::partNodeForId( int id )";
   return 0;
@@ -2771,7 +2705,7 @@ void KMReaderWin::injectAttachments()
   }
 
   QColor background = KColorScheme( QPalette::Active, KColorScheme::View ).background().color();
-  QString html = renderAttachments( mRootNode, background );
+  QString html = renderAttachments( mMessage, background );
   if ( html.isEmpty() )
     return;
 
@@ -2814,17 +2748,17 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
       }
 
       QString margin;
-      if ( node != mRootNode || headerStyle() != HeaderStyle::enterprise() )
+      if ( node != mMessage || headerStyle() != HeaderStyle::enterprise() )
         margin = "padding:2px; margin:2px; ";
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType() == "message" || node == mRootNode )
+      if ( node->contentType()->mediaType() == "message" || node == mMessage )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType() == "message" || node == mRootNode )
+      if ( node->contentType()->mediaType() == "message" || node == mMessage )
         html += "</div>";
     }
   } else {
@@ -2845,7 +2779,7 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
                      || ( node->contentType()->subType() == "octet-stream" &&
                           node->contentDisposition()->filename() == "msg.asc" );
     }
-    typeBlacklisted = typeBlacklisted || node == mRootNode;
+    typeBlacklisted = typeBlacklisted || node == mMessage;
     if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
@@ -2946,7 +2880,8 @@ QWidget* KMReaderWin::configWidget()
 void KMReaderWin::slotSettingsChanged()
 {
   mShowColorbar = GlobalSettings::self()->showColorBar();
-  update( true );
+  saveRelativePosition();
+  update( Force );
 }
 
 KConfigSkeleton *KMReaderWin::configObject()

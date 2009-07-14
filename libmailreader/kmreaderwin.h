@@ -111,11 +111,13 @@ public:
                KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
+  KMime::Message *message() const { return mMessage;}
+
   /**
      \reimp from Interface::Observer
      Updates the current message
    */
-  void update( KMail::Interface::Observable * );
+  virtual void update( KMail::Interface::Observable * );
 
   /** Read settings from app's config file. */
   void readConfig();
@@ -159,18 +161,28 @@ public:
   /** Set printing mode */
   virtual void setPrinting(bool enable) { mPrinting = enable; }
 
+  enum UpdateMode {
+    Force = 0,
+    Delayed
+  };
+
+  enum Ownership {
+    Transfer= 0,
+    Keep
+  };
+
   /** Set the message that shall be shown. If msg is 0, an empty page is
       displayed. */
-  virtual void setMsg(KMime::Message* msg, bool force = false);
+  MAILVIEWER_EXPORT void setMessage(KMime::Message* msg, UpdateMode updateMode = Delayed, Ownership = Keep);
 
-  MAILVIEWER_EXPORT void setMessageItem(const Akonadi::Item& item, bool force = false);
+  MAILVIEWER_EXPORT void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
-  void setMsgPart( KMime::Content* aMsgPart, bool aHTML,
+  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
                    const QString& aFileName, const QString& pname );
 
-  void setMsgPart( KMime::Content * node );
+  void setMessagePart( KMime::Content * node );
 
   /** Show or hide the Mime Tree Viewer if configuration
       is set to smart mode.  */
@@ -184,24 +196,20 @@ public:
     { mIdOfLastViewedMessage = msgId; }
 
   /** Clear the reader and discard the current message. */
-  void clear(bool force = false) { setMsg(0, force); }
+  MAILVIEWER_EXPORT void clear(UpdateMode updateMode = Delayed ) { setMessage(0, updateMode); }
 
   /** Saves the relative position of the scroll view. Call this before calling update()
       if you want to preserve the current view. */
   void saveRelativePosition();
 
   /** Re-parse the current message. */
-  void update(bool force = false);
+  virtual void update(UpdateMode updateMode = Delayed);
 
   /** Print message. */
-  virtual void printMsg(  KMime::Message* aMsg );
+  virtual void printMessage(  KMime::Message* aMsg );
 
   /** Return selected text */
   QString copyText();
-
-  /** Get/set auto-delete msg flag. */
-  bool autoDelete(void) const { return mAutoDelete; }
-  void setAutoDelete(bool f) { mAutoDelete=f; }
 
   /** Override default html mail setting */
   bool htmlOverride() const { return mHtmlOverride; }
@@ -216,9 +224,6 @@ public:
 
   /** Is loading ext. references to be supported? Takes into account override */
   bool htmlLoadExternal();
-
-  /** Returns the MD5 hash for the list of new features */
-  static QString newFeaturesMD5();
 
   /** Display a generic HTML splash page instead of a message */
   MAILVIEWER_EXPORT void displaySplashPage( const QString &info );
@@ -276,10 +281,6 @@ public:
   /** Access to the KHTMLPart used for the viewer. Use with
       care! */
   KHTMLPart * htmlPart() const { return mViewer; }
-
-  /** Returns the current message or 0 if none. */
-
-  KMime::Message* message(/*KMFolder** folder=0*/) const;
 
   void openAttachment( int id, const QString & name );
 
@@ -558,8 +559,9 @@ private:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   int mAtmCurrent;
   QString mAtmCurrentName;
-  KMime::Message *mMessage;
-  Akonadi::Item mMessageItem;
+  KMime::Message *mMessage; //the current message, if it was set manually
+  Akonadi::Item mMessageItem; //the message item from Akonadi
+  bool mDeleteMessage; //the message was created in the lib, eg. by calling setMessageItem()
   // widgets:
   QSplitter * mSplitter;
   KHBox *mBox;
@@ -595,7 +597,6 @@ private:
   int mMimeTreeMode;
   bool mMimeTreeAtBottom;
   QList<int> mSplitterSizes;
-  KMime::Message* mRootNode;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;

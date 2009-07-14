@@ -354,45 +354,45 @@ namespace {
 
       if ( url.path() == "showHTML" ) {
         w->setHtmlOverride( !w->htmlOverride() );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
 
       if ( url.path() == "loadExternal" ) {
         w->setHtmlLoadExtOverride( !w->htmlLoadExtOverride() );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
 
       if ( url.path() == "decryptMessage" ) {
         w->setDecryptMessageOverwrite( true );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
 
       if ( url.path() == "showSignatureDetails" ) {
         w->setShowSignatureDetails( true );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
 
       if ( url.path() == "hideSignatureDetails" ) {
         w->setShowSignatureDetails( false );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
 
       if ( url.path() == "showAttachmentQuicklist" ) {
         w->saveRelativePosition();
         w->setShowAttachmentQuicklist( true );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
 
       if ( url.path() == "hideAttachmentQuicklist" ) {
         w->saveRelativePosition();
         w->setShowAttachmentQuicklist( false );
-        w->update( true );
+        w->update( KMReaderWin::Force );
         return true;
       }
     }
