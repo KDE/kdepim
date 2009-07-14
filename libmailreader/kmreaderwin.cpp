@@ -404,7 +404,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mSettingsUi = new Ui_Settings;
   Global::instance()->setConfig( config );
   GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
-  GlobalSettings::self()->readConfig();
+  GlobalSettings::self()->readConfig(); //need to re-read the config as the config object might be different than the default mailviewerrc
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mDelayedMarkTimer.setObjectName( "mDelayedMarkTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
