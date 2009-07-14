@@ -403,6 +403,8 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
 
   mSettingsUi = new Ui_Settings;
   Global::instance()->setConfig( config );
+  GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
+  GlobalSettings::self()->readConfig();
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mDelayedMarkTimer.setObjectName( "mDelayedMarkTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
