@@ -51,6 +51,9 @@ private:
     Ui::mailreaderview ui_mailreaderview;
     KMReaderWin *m_readerWin;
 
+public slots:
+    void slotConfigure();
+
 signals:
     /**
      * Use this signal to change the content of the statusbar

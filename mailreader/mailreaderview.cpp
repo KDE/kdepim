@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "kmreaderwin.h"
 #include <KXmlGuiWindow>
+#include <KConfigDialog>
 
 #include <klocale.h>
 #include <QtGui/QLabel>
@@ -84,6 +85,19 @@ void mailreaderView::displayAboutPage()
 void mailreaderView::urlClicked( const KUrl& url, int button)
 {
   kDebug() << url << " clicked in the mail viewer";
+}
+
+void mailreaderView::slotConfigure()
+{
+  if(KConfigDialog::showDialog("mailviewersettings"))
+     return;
+  KConfigDialog *dialog = new KConfigDialog( this, "mailviewersettings", m_readerWin->configObject() );
+  QWidget* widget = m_readerWin->configWidget();
+  dialog->addPage( widget, i18n("Viewer"), "kmail");
+  connect( dialog, SIGNAL(settingsChanged(const QString& )),
+         m_readerWin, SLOT(slotSettingsChanged()) );
+  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  dialog->show();
 }
 
 #include "mailreaderview.moc"

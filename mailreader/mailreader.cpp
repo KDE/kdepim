@@ -64,6 +64,7 @@ mailreader::~mailreader()
 void mailreader::setupActions()
 {
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
+    KStandardAction::preferences(m_view, SLOT(slotConfigure()), actionCollection());
 
     m_previousMessage = new KAction("Previous Message", this);
     actionCollection()->addAction("previous_message", m_previousMessage);
