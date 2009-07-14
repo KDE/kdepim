@@ -112,6 +112,25 @@ bool NodeHelper::nodeProcessed( KMime::Content* node ) const
   return mProcessedNodes.contains( node );
 }
 
+void NodeHelper::setNodeBeingProcessed( KMime::Content* node, bool process )
+{
+  if ( !node )
+    return;
+
+  if ( process )
+    mNodesUnderProcess.append( node );
+  else
+   mNodesUnderProcess.removeAll( node );
+}
+
+bool NodeHelper::nodeBeingProcessed( KMime::Content* node )
+{
+  if (!node)
+    return false;
+
+  return mNodesUnderProcess.contains(node);
+}
+
 void NodeHelper::clear()
 {
   mProcessedNodes.clear();

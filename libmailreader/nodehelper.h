@@ -62,6 +62,8 @@ public:
 
     ~NodeHelper();
 
+    void setNodeBeingProcessed( KMime::Content* node, bool processing );
+    bool nodeBeingProcessed( KMime::Content* node );
     void setNodeProcessed( KMime::Content* node, bool recurse );
     void setNodeUnprocessed( KMime::Content* node, bool recurse );
     bool nodeProcessed( KMime::Content* node ) const;
@@ -132,6 +134,7 @@ private:
     static NodeHelper * mSelf;
 
     QList<KMime::Content*> mProcessedNodes;
+    QList<KMime::Content*> mNodesUnderProcess;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;

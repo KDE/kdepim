@@ -393,6 +393,7 @@ namespace KMail {
                                                       const std::vector<GpgME::Signature> & paramSignatures,
                                                       bool hideErrors )
   {
+  kDebug() << "DECRYPT" << mReader->message();
     bool bIsOpaqueSigned = false;
     enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
       cryptPlugError = NO_PLUGIN;
@@ -406,6 +407,7 @@ namespace KMail {
       cryptPlugDisplayName = cryptProto->displayName();
     }
 
+#ifdef DEBUG_SIGNATURE
 #ifndef NDEBUG
     if ( !doCheck )
       kDebug() << "showing OpenPGP (Encrypted+Signed) data";
@@ -419,6 +421,7 @@ namespace KMail {
     if ( doCheck && cryptProto ) {
       kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
     }
+#endif
 
     QByteArray cleartext;
     QByteArray signaturetext;
@@ -426,6 +429,7 @@ namespace KMail {
     if ( doCheck && cryptProto ) {
       if ( data ) {
         cleartext = data->head() + "\n" + data->body();
+#ifdef DEBUG_SIGNATURE
         kDebug() << "ClearText : " << cleartext;
 
         dumpToFile( "dat_01_reader_signedtext_before_canonicalization",
@@ -434,8 +438,11 @@ namespace KMail {
         // replace simple LFs by CRLSs
         // according to RfC 2633, 3.1.1 Canonicalization
         kDebug() <<"Converting LF to CRLF (see RfC 2633, 3.1.1 Canonicalization)";
+#endif
         cleartext = KMime::LFtoCRLF( cleartext );
+#ifdef DEBUG_SIGNATURE
         kDebug() <<"                                                       done.";
+#endif
 }
 
       dumpToFile( "dat_02_reader_signedtext_after_canonicalization",
@@ -483,18 +490,24 @@ namespace KMail {
       }
       std::stringstream ss;
       ss << result;
+#ifdef DEBUG_SIGNATURE
       kDebug() << ss.str().c_str();
+#endif
       signatures = result.signatures();
     }
     else
       messagePart.auditLogError = GpgME::Error( GPG_ERR_NOT_IMPLEMENTED );
 
+#ifdef DEBUG_SIGNATURE
     if ( doCheck )
       kDebug() << "returned from CRYPTPLUG";
+#endif
 
     // ### only one signature supported
     if ( !signatures.empty() ) {
+#ifdef DEBUG_SIGNATURE
       kDebug() << "\nFound signature";
+#endif
       GpgME::Signature signature = signatures.front();
 
       messagePart.status_code = signatureToStatus( signature );
@@ -559,11 +572,11 @@ namespace KMail {
             messagePart.signer += " <" + messagePart.signerMailAddresses.front() + '>';
         }
       }
-
+#ifdef DEBUG_SIGNATURE
       kDebug() << "\n  key id:" << messagePart.keyId
                << "\n  key trust:" << messagePart.keyTrust
                << "\n  signer:" << messagePart.signer;
-
+#endif
     } else {
       messagePart.creationTime = QDateTime();
     }
@@ -647,8 +660,10 @@ namespace KMail {
       if ( mReader )
         htmlWriter()->queue( writeSigstatFooter( messagePart ) );
     }
-
+#ifdef DEBUG_SIGNATURE
     kDebug() << "done, returning" << ( bIsOpaqueSigned ? "TRUE" : "FALSE" );
+#endif
+kDebug() << "DECRYPTED" << mReader->message();
     return bIsOpaqueSigned;
   }
 

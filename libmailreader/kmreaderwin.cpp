@@ -429,6 +429,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
 
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
+  mHtmlLoadExternal = false;
 
   mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
   mLevelQuote = 1;
@@ -1193,11 +1194,23 @@ void KMReaderWin::readGlobalOverrideCodec()
 
 void KMReaderWin::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
 {
+  if ( mMessage && !KMail::NodeHelper::instance()->nodeProcessed( mMessage ) ) {
+    kWarning() << "The root node is not yet processed! Danger!";
+    return;
+  }
+
+  if ( mMessage && KMail::NodeHelper::instance()->nodeBeingProcessed( mMessage ) ) {
+    kWarning() << "The root node is not yet fully processed! Danger!";
+    return;
+  }
+
     if ( mDeleteMessage ) {
+      kDebug() << "DELETE " << mMessage;
       delete mMessage;
       mMessage = 0;
     }
     KMail::NodeHelper::instance()->clear();
+    mMimePartModel->setRoot( 0 );
 
     mMessage = 0; //forget the old message if it was set
     mMessageItem = item;
@@ -1208,6 +1221,7 @@ void KMReaderWin::setMessageItem(const Akonadi::Item &item, UpdateMode updateMod
     }
     //Note: if I use MessagePtr for mMessage all over, I get a crash in the destructor
     mMessage = new KMime::Message;
+    kDebug() << "START SHOWING" << mMessage;
   /*
   mMessage->setContent(mMessageItem.payloadData());
   mMessage->parse();*/
@@ -1216,7 +1230,9 @@ void KMReaderWin::setMessageItem(const Akonadi::Item &item, UpdateMode updateMod
     mMessage ->parse();
     mDeleteMessage = true;
 
+
     update( updateMode );
+    kDebug() << "SHOWN" << mMessage;
 
 }
 
@@ -1228,6 +1244,7 @@ void KMReaderWin::setMessage(KMime::Message* aMsg, UpdateMode updateMode, Owners
     mMessage = 0;
   }
   KMail::NodeHelper::instance()->clear();
+  mMimePartModel->setRoot( 0 );
 
 
 
@@ -1464,6 +1481,7 @@ void KMReaderWin::parseMsg()
   assert( mMessage != 0 );
 
   /* aMsg->setIsBeingParsed( true ); //FIXME(Andras) review and port */
+  NodeHelper::instance()->setNodeBeingProcessed( mMessage, true );
 
   QString cntDesc = i18n("( body part )");
 
@@ -1592,6 +1610,7 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
 /* FIXME(Andras) port it!
   aMsg->setIsBeingParsed( false );
   */
+  NodeHelper::instance()->setNodeBeingProcessed( mMessage, false );
 }
 
 
