@@ -55,6 +55,7 @@
 #include "nodehelper.h"
 #include "mimetreemodel.h"
 #include "global.h"
+#include "ui_settings.h"
 
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
@@ -400,6 +401,7 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   if ( !mainWindow )
     mainWindow = aParent;
 
+  mSettingsUi = new Ui_Settings;
   Global::instance()->setConfig( config );
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mDelayedMarkTimer.setObjectName( "mDelayedMarkTimer" );
@@ -821,6 +823,7 @@ KMReaderWin::~KMReaderWin()
 {
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mCSSHelper;
+  delete mSettingsUi;
   /*FIXME(Andras) port it
   if (mAutoDelete) delete message();
   */
@@ -955,14 +958,17 @@ void KMReaderWin::readConfig(void)
   if ( raction )
     raction->setChecked( true );
 
+//FIXME(Andras) with KConfigXT the default (false) value is not written back, so if Kpgp::Module::getKpgp()->usePGP() is true,
+//the option is enabled even if the user explicitely disabled it -> BAD. Disable this code for now.
+/*
   // if the user uses OpenPGP then the color bar defaults to enabled
   // else it defaults to disabled
   mShowColorbar = reader.readEntry( "showColorbar", Kpgp::Module::getKpgp()->usePGP() ) ;
   // if the value defaults to enabled and KMail (with color bar) is used for
   // the first time the config dialog doesn't know this if we don't save the
   // value now
-  reader.writeEntry( "showColorbar", mShowColorbar );
-
+  GlobalSettings::self()->setShowColorBar( mShowColorbar );
+*/
   mMimeTreeAtBottom = reader.readEntry( "MimeTreeLocation", "bottom" ) != "top";
   const QString s = reader.readEntry( "MimeTreeMode", "smart" );
   if ( s == "never" )
@@ -2929,6 +2935,25 @@ QStringList KMReaderWin::supportedEncodings(bool usAscii)
     encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
   return encodings;
 }
+
+QWidget* KMReaderWin::configWidget()
+{
+  QWidget* widget = new QWidget;
+  mSettingsUi->setupUi( widget );
+  return widget;
+}
+
+void KMReaderWin::slotSettingsChanged()
+{
+  mShowColorbar = GlobalSettings::self()->showColorBar();
+  update( true );
+}
+
+KConfigSkeleton *KMReaderWin::configObject()
+{
+  return GlobalSettings::self();
+}
+
 
 #include "kmreaderwin.moc"
 

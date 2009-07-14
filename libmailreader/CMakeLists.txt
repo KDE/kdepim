@@ -36,6 +36,10 @@ kde4_add_kcfg_files(libmailreader_SRCS
   globalsettings_base.kcfgc
 )
 
+kde4_add_ui_files(libmailreader_SRCS
+  settings.ui
+)
+
 kde4_add_library(mailreader SHARED ${libmailreader_SRCS})
 
 

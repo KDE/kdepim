@@ -450,7 +450,7 @@ namespace KMail {
 
     QString spamHTML;
 
-    if ( configReader.readEntry( "showSpamStatus", true ) ) {
+    if ( GlobalSettings::self()->showSpamStatus() ) {
       SpamScores scores = SpamHeaderAnalyzer::getSpamScores( message );
       for ( SpamScoresIterator it = scores.begin(); it != scores.end(); ++it )
         spamHTML += (*it).agent() + ' ' +

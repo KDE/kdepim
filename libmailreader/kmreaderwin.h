@@ -55,10 +55,13 @@ class KToggleAction;
 class KToggleAction;
 class KHTMLPart;
 class KUrl;
+class KConfigSkeleton;
 
 namespace MailViewer {
  class MimeTreeModel;
 }
+
+class Ui_Settings;
 
 namespace KMime {
     class Message;
@@ -324,6 +327,18 @@ public:
   /* show or hide the list that points to the attachments */
   void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true ) { mShowAttachmentQuicklist = showAttachmentQuicklist; }
 
+  /**
+   * Get an instance for the configuration widget. The caller has the ownership and must delete the widget. See also configObject();
+   * The caller should also call the slotSettingsChanged() if the configuration has changed.
+   */
+  MAILVIEWER_EXPORT QWidget* configWidget();
+
+  /**
+   * Returns the configuration object that can be used in a KConfigDialog together with configWidget();
+   */
+  MAILVIEWER_EXPORT KConfigSkeleton *configObject();
+
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -339,6 +354,7 @@ signals:
   void noDrag(void);
 
 public slots:
+
 
   /** Select message body. */
   void selectAll();
@@ -497,6 +513,7 @@ protected:
 private slots:
   void slotSetEncoding();
   void injectAttachments();
+  void slotSettingsChanged();
 
 private:
   void adjustLayout();
@@ -604,6 +621,7 @@ private:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
+  Ui_Settings *mSettingsUi;
 };
 
 

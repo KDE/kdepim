@@ -34,6 +34,18 @@
        <whatsthis>Changing this from its default 'Auto' will force the use of the specified encoding for all emails, regardless of what they specify themselves.</whatsthis>
      </entry>
 
+     <entry name="showColorBar" type="Bool">
+       <default>false</default>
+       <label>Show HTML status bar</label>
+       <whatsthis></whatsthis>
+     </entry>
+
+     <entry name="showSpamStatus" type="Bool">
+       <default>true</default>
+       <label>Show spam status in fancy headers</label>
+       <whatsthis></whatsthis>
+     </entry>
+
      <entry name="ShowEmoticons" type="Bool">
        <default>true</default>
        <label>Replace smileys by emoticons</label>
