@@ -32,6 +32,7 @@
 
 #include "csshelper.h"
 #include "global.h"
+#include "globalsettings.h"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -95,7 +96,7 @@ namespace KMail {
       }
     }
 
-// FIXME(Andras) port to akonadi mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
+    mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
 
     mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
     mBackingPixmapOn = !mBackingPixmapStr.isEmpty();

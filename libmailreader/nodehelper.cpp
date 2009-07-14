@@ -18,6 +18,7 @@
 */
 #include "nodehelper.h"
 #include "iconnamecache.h"
+#include "globalsettings.h"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
@@ -384,13 +385,11 @@ const QTextCodec * NodeHelper::codec( KMime::Content* node )
     // no override-codec set for this message, try the CT charset parameter:
     c = codecForName( node->contentType()->charset() );
   }
-  /*FIXME(Andras) read from configuration or provide a method to se the fallback codec
   if ( !c ) {
     // Ok, no override and nothing in the message, let's use the fallback
     // the user configured
-    c = KMMsgBase::codecForName( GlobalSettings::self()->fallbackCharacterEncoding().toLatin1() );
+    c = codecForName( GlobalSettings::self()->fallbackCharacterEncoding().toLatin1() );
   }
-  */
   if ( !c ) {
     // no charset means us-ascii (RFC 2045), so using local encoding should
     // be okay

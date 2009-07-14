@@ -22,7 +22,7 @@
 //#define KMAIL_READER_HTML_DEBUG 1
 #include "kmreaderwin.h"
 
-//FIXME(Andras) port to akonadi #include "globalsettings.h"
+#include "globalsettings.h"
 #include <kpimutils/kfileio.h>
 #include "kmmsgpartdlg.h"
 #include "mailsourceviewer.h"
@@ -427,8 +427,8 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mHtmlOverride = false;
   mHtmlLoadExtOverride = false;
 
-  //FIXME(Andras) port to akonadi   mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
- mLevelQuote = 1;
+  mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
+  mLevelQuote = 1;
 
   mResizeTimer.setSingleShot( true );
   connect( &mResizeTimer, SIGNAL(timeout()),
@@ -1178,14 +1178,12 @@ void KMReaderWin::slotSetEncoding()
 //-----------------------------------------------------------------------------
 void KMReaderWin::readGlobalOverrideCodec()
 {
-/*FIXME(Andras) port to akonadi
   // if the global character encoding wasn't changed then there's nothing to do
  if ( GlobalSettings::self()->overrideCharacterEncoding() == mOldGlobalOverrideEncoding )
     return;
 
   setOverrideEncoding( GlobalSettings::self()->overrideCharacterEncoding() );
   mOldGlobalOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
-*/
 }
 
 void KMReaderWin::setMessageItem(const Akonadi::Item &item, bool force)
@@ -2741,11 +2739,8 @@ KMail::CSSHelper* KMReaderWin::cssHelper() const
 
 bool KMReaderWin::decryptMessage() const
 {
-    /*FIXME(Andras) port to akonadi
   if ( !GlobalSettings::self()->alwaysDecrypt() )
     return mDecrytMessageOverwrite;
-    */
-  return mDecrytMessageOverwrite;
 }
 
 void KMReaderWin::injectAttachments()

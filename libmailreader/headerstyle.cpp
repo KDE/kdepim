@@ -35,7 +35,7 @@
 #include <kpimutils/linklocator.h>
 using KPIMUtils::LinkLocator;
 #include "spamheaderanalyzer.h"
-//FIXME(Andras) port to akonadi #include "globalsettings.h"
+#include "globalsettings.h"
 #include "stringutil.h"
 #include "nodehelper.h"
 #include "global.h"
@@ -559,12 +559,9 @@ namespace KMail {
     //case HdrFancy:
     // the subject line and box below for details
     if ( strategy->showHeader( "subject" ) ) {
-/*FIXME(Andras) port to akonadi
-              const int flags = LinkLocator::PreserveSpaces |
-                        ( GlobalSettings::self()->showEmoticons() ?
-                          LinkLocator::ReplaceSmileys : 0 );
-      */
-        const int flags = LinkLocator::PreserveSpaces;
+        const int flags = LinkLocator::PreserveSpaces |
+                  ( GlobalSettings::self()->showEmoticons() ?
+                    LinkLocator::ReplaceSmileys : 0 );
 
         headerStr += QString("<div dir=\"%1\">%2</div>\n")
                         .arg(subjectDir)
@@ -629,27 +626,25 @@ namespace KMail {
                             .arg(i18n("Date: "))
                     .arg( directionOf( dateStr(message->date()->dateTime() ) ) )
                             .arg(strToHtml(dateString)));
-/*FIXME(Andras) port to akonadi
     if ( GlobalSettings::self()->showUserAgent() ) {
       if ( strategy->showHeader( "user-agent" ) ) {
-        if ( !message->headerField("User-Agent").isEmpty() ) {
+        if ( message->headerByType("User-Agent") ) {
           headerStr.append(QString("<tr><th>%1</th>\n"
                                    "<td>%2</td></tr>\n")
                            .arg(i18n("User-Agent: "))
-                           .arg( strToHtml( message->headerField("User-Agent") ) ) );
+                           .arg( strToHtml( message->headerByType("User-Agent")->as7BitString() ) ) );
         }
       }
 
       if ( strategy->showHeader( "x-mailer" ) ) {
-        if ( !message->headerField("X-Mailer").isEmpty() ) {
+        if ( message->headerByType("X-Mailer") ) {
           headerStr.append(QString("<tr><th>%1</th>\n"
                                    "<td>%2</td></tr>\n")
                            .arg(i18n("X-Mailer: "))
-                           .arg( strToHtml( message->headerField("X-Mailer") ) ) );
+                           .arg( strToHtml( message->headerByType("X-Mailer")->as7BitString() ) ) );
         }
       }
     }
-    */
     headerStr.append( QString( "<tr><td colspan=\"2\"><div id=\"attachmentInjectionPoint\"></div></td></tr>" ) );
     headerStr.append(
           QString( "</table></td><td align=\"center\">%1</td></tr></table>\n" ).arg(userHTML) );

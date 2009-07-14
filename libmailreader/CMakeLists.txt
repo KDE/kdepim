@@ -28,11 +28,16 @@ mimetreemodel.cpp
 global.cpp
 spamheaderanalyzer.cpp
 antispamconfig.cpp
+globalsettings.cpp
  )
 
-configure_file(kmail.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/kmail.kcfg)
+
+kde4_add_kcfg_files(libmailreader_SRCS
+  globalsettings_base.kcfgc
+)
 
 kde4_add_library(mailreader SHARED ${libmailreader_SRCS})
+
 
 target_link_libraries(mailreader kdepim mimelib kpgp kleo akonadi-kde
  ${KDEPIMLIBS_KMIME_LIBS}

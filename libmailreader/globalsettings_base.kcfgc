@@ -1,4 +1,4 @@
-File=kmail.kcfg
+File=mailviewer.kcfg
 ClassName=GlobalSettingsBase
 Mutators=true
 Singleton=true

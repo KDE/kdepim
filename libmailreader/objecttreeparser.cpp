@@ -45,7 +45,7 @@
 #include "bodypartformatterfactory.h"
 #include "partnodebodypart.h"
 #include "interfaces/bodypartformatter.h"
-//FIXME(Andras) port to akonadi #include "globalsettings.h"
+#include "globalsettings.h"
 #include "util.h"
 #include "global.h"
 #include "kleojobexecutor.h"
@@ -1748,12 +1748,11 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
                                    GlobalSettings::chiasmusDecryptionOptions() );
   if ( selectorDlg.exec() != KDialog::Accepted )
     return false;
-*/
-/* FIXME(Andras) port to akonadi
   GlobalSettings::setChiasmusDecryptionOptions( selectorDlg.options() );
   GlobalSettings::setChiasmusDecryptionKey( selectorDlg.key() );
   assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
 */
+
   Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
   if ( !job ) {
     errorText = i18n( "Chiasmus backend does not offer the "
@@ -1761,7 +1760,6 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
     return false;
   }
 
-/*FIXME(Andras) port to akonadi
   if ( !job->setProperty( "key", GlobalSettings::chiasmusDecryptionKey() ) ||
        !job->setProperty( "options", GlobalSettings::chiasmusDecryptionOptions() ) ||
        !job->setProperty( "input", data ) ) {
@@ -1769,7 +1767,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
                       "the expected parameters. Please report this bug." );
     return false;
   }
-*/
+
   if ( job->exec() ) {
     errorText = i18n( "Chiasmus Decryption Error" );
     return false;
@@ -2791,11 +2789,10 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
   assert( cssHelper() );
 
   int convertFlags = LinkLocator::PreserveSpaces | LinkLocator::HighlightText;
-/* FIXME(Andras) port to akonadi
   if ( decorate && GlobalSettings::self()->showEmoticons() ) {
     convertFlags |= LinkLocator::ReplaceSmileys;
   }
- */ QString htmlStr;
+  QString htmlStr;
   const QString normalStartTag = cssHelper()->nonQuotedFontTag();
   QString quoteFontTag[3];
   QString deepQuoteFontTag[3];
@@ -2835,7 +2832,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     /* calculate line's current quoting depth */
     int actQuoteLevel = -1;
 
-// FIXME(Andras) port to akonadi if ( GlobalSettings::self()->showExpandQuotesMark() )
+    if ( GlobalSettings::self()->showExpandQuotesMark() )
     {
       // Cache Icons
       if ( mCollapseIcon.isEmpty() ) {
@@ -2867,11 +2864,10 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     QString textExpand;
 
     // This quoted line needs be hidden
-/*FIXME(Andras) port to akonadi
     if (GlobalSettings::self()->showExpandQuotesMark() && mReader->mLevelQuote >= 0
         && mReader->mLevelQuote <= ( actQuoteLevel ) )
       actHidden = true;
-*/
+
     if ( actQuoteLevel != currQuoteLevel ) {
       /* finish last quotelevel */
       if (currQuoteLevel == -1)
@@ -2884,7 +2880,7 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         htmlStr += normalStartTag;
       else
       {
-// FIXME(Andras) port to akonadi if ( GlobalSettings::self()->showExpandQuotesMark() )
+      if ( GlobalSettings::self()->showExpandQuotesMark() )
           if (true)
         {
           if (  actHidden )

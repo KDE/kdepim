@@ -32,6 +32,7 @@
 
 #include "htmlstatusbar.h"
 #include "global.h"
+#include "globalsettings.h"
 
 #include <klocale.h>
 #include <kconfig.h>
@@ -108,20 +109,16 @@ QColor KMail::HtmlStatusBar::fgColor() const {
   case Html:
     defaultColor = Qt::white;
     color = defaultColor;
-    /*FIXME(Andras) port to akonadi
     if ( !GlobalSettings::self()->useDefaultColors() ) {
       color = conf.readEntry( "ColorbarForegroundHTML", defaultColor );
     }
-    */
     return color;
   case Normal:
     defaultColor = Qt::black;
     color = defaultColor;
-    /*FIXME(Andras) port to akonadi
     if ( !GlobalSettings::self()->useDefaultColors() ) {
       color = conf.readEntry( "ColorbarForegroundPlain", defaultColor );
     }
-    */
     return color;
   default:
   case Neutral:
@@ -137,20 +134,16 @@ QColor KMail::HtmlStatusBar::bgColor() const {
   case Html:
     defaultColor = Qt::black;
     color = defaultColor;
-    /*FIXME(Andras) port to akonadi
     if ( !GlobalSettings::self()->useDefaultColors() ) {
       color = conf.readEntry( "ColorbarBackgroundHTML", defaultColor );
     }
-    */
     return color;
   case Normal:
     defaultColor = Qt::lightGray;
     color = defaultColor;
-    /*FIXME(Andras) port to akonadi
     if ( !GlobalSettings::self()->useDefaultColors() ) {
       color = conf.readEntry( "ColorbarBackgroundPlain", defaultColor );
     }
-    */
     return color;
   default:
   case Neutral:
