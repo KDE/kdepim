@@ -59,9 +59,9 @@ class KConfigSkeleton;
 
 namespace MailViewer {
  class MimeTreeModel;
+ class ConfigureWidget;
 }
 
-class Ui_Settings;
 
 namespace KMime {
     class Message;
@@ -329,7 +329,7 @@ public:
 
   /**
    * Get an instance for the configuration widget. The caller has the ownership and must delete the widget. See also configObject();
-   * The caller should also call the slotSettingsChanged() if the configuration has changed.
+   * The caller should also call the widget's slotSettingsChanged() if the configuration has changed.
    */
   MAILVIEWER_EXPORT QWidget* configWidget();
 
@@ -621,7 +621,6 @@ private:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
-  Ui_Settings *mSettingsUi;
 };
 
 

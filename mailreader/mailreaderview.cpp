@@ -95,7 +95,7 @@ void mailreaderView::slotConfigure()
   QWidget* widget = m_readerWin->configWidget();
   dialog->addPage( widget, i18n("Viewer"), "kmail");
   connect( dialog, SIGNAL(settingsChanged(const QString& )),
-         m_readerWin, SLOT(slotSettingsChanged()) );
+         widget, SLOT(slotSettingsChanged()) );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
   dialog->show();
 }

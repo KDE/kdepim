@@ -55,7 +55,7 @@
 #include "nodehelper.h"
 #include "mimetreemodel.h"
 #include "global.h"
-#include "ui_settings.h"
+#include "configurewidget.h"
 
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
@@ -401,7 +401,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   if ( !mainWindow )
     mainWindow = aParent;
 
-  mSettingsUi = new Ui_Settings;
   Global::instance()->setConfig( config );
   GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
   GlobalSettings::self()->readConfig(); //need to re-read the config as the config object might be different than the default mailviewerrc
@@ -825,7 +824,6 @@ KMReaderWin::~KMReaderWin()
 {
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mCSSHelper;
-  delete mSettingsUi;
   /*FIXME(Andras) port it
   if (mAutoDelete) delete message();
   */
@@ -2940,9 +2938,9 @@ QStringList KMReaderWin::supportedEncodings(bool usAscii)
 
 QWidget* KMReaderWin::configWidget()
 {
-  QWidget* widget = new QWidget;
-  mSettingsUi->setupUi( widget );
-  return widget;
+  ConfigureWidget *w = new ConfigureWidget();
+  connect( w, SIGNAL( settingsChanged() ), SLOT( slotSettingsChanged() ) );
+  return w;
 }
 
 void KMReaderWin::slotSettingsChanged()

@@ -29,6 +29,7 @@ global.cpp
 spamheaderanalyzer.cpp
 antispamconfig.cpp
 globalsettings.cpp
+configurewidget.cpp
  )
 
 
