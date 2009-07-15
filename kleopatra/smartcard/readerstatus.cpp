@@ -35,6 +35,7 @@
 #include "readerstatus.h"
 
 #include <utils/gnupg-helper.h>
+#include <utils/stl_util.h>
 
 #include <QFileSystemWatcher>
 #include <QStringList>
@@ -162,11 +163,17 @@ public:
             const bool changed = cardInfos[idx].status != ci.status ;
             qDebug() << "ReaderStatus: slot" << idx << "changed from" << flags[cardInfos[idx].status] << "to" << flags[ci.status];
             cardInfos[idx] = ci;
-            if ( changed )
+            if ( changed ) {
                 emit q->cardStatusChanged( idx, ci.status );
+                emit q->anyCardPresentChanged( isAnyCardPresent() );
+            }
         } else {
             qDebug() << "ReaderStatus: failed to extract slot index from filename" << readerFile;
         }
+    }
+
+    bool isAnyCardPresent() const {
+        return kdtools::any( cardInfos, bind( &CardInfo::status, _1 ) == CardUsable );
     }
 
 private:
@@ -199,6 +206,10 @@ ReaderStatus::Status ReaderStatus::cardStatus( unsigned int slot ) const {
         return d->cardInfos[slot].status;
     else
         return NoCard;
+}
+
+bool ReaderStatus::isAnyCardPresent() const {
+    return d->isAnyCardPresent();
 }
 
 #include "moc_readerstatus.cpp"
