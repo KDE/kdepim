@@ -145,7 +145,7 @@ private:
         setInitialPinAction.setEnabled( anyCardHasNullPin );
         learnCertificatesAction.setEnabled( anyCardCanLearnKeys );
 
-        q->setAttentionWanted( anyCardHasNullPin || anyCardCanLearnKeys );
+        q->setAttentionWanted( ( anyCardHasNullPin || anyCardCanLearnKeys ) && !q->attentionWindow() );
     }
 
     void startCommand( Command * cmd ) {
@@ -316,7 +316,7 @@ MainWindow * SysTrayIcon::mainWindow() const {
 }
 
 QDialog * SysTrayIcon::attentionWindow() const {
-    return static_cast<QDialog*>( SysTrayIcon::attentionWindow() );
+    return static_cast<QDialog*>( SystemTrayIcon::attentionWindow() );
 }
 
 static void open_or_raise( QWidget * w ) {
