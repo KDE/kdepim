@@ -34,8 +34,11 @@
 #define __KLEOPATRA__SMARTCARD__READERSTATUS_H___
 
 #include <QObject>
+#include <QMetaType>
 
 #include <utils/pimpl_ptr.h>
+
+#include <vector>
 
 namespace Kleo {
 namespace SmartCard {
@@ -45,6 +48,32 @@ namespace SmartCard {
     public:
         explicit ReaderStatus( QObject * parent=0 );
         ~ReaderStatus();
+
+        static const ReaderStatus * instance();
+        static ReaderStatus * mutableInstance();
+
+        void startSimpleTransaction( const QByteArray & cmd, QObject * receiver, const char * slot );
+
+        enum AppType {
+            UnknownApplication,
+            OpenPGPApplication,
+            NksApplication,
+            P15Application,
+            DinSigApplication,
+            GeldkarteApplication,
+
+            NumAppTypes
+        };
+
+        enum PinState {
+            UnknownPinState,
+            NullPin,
+            PinBlocked,
+            NoPin,
+            PinOk,
+
+            NumPinStates
+        };
 
         enum Status {
             NoCard,
@@ -64,10 +93,12 @@ namespace SmartCard {
         bool anyCardHasNullPin() const;
         bool anyCardCanLearnKeys() const;
 
+        std::vector<PinState> pinStates( unsigned int slot ) const;
+
     Q_SIGNALS:
         void anyCardHasNullPinChanged( bool );
         void anyCardCanLearnKeysChanged( bool );
-        void cardStatusChanged( unsigned int slot, ReaderStatus::Status status );
+        void cardStatusChanged( unsigned int slot, Kleo::SmartCard::ReaderStatus::Status status );
 
     private:
         class Private;
@@ -77,5 +108,7 @@ namespace SmartCard {
 
 } // namespace SmartCard
 } // namespace Kleo
+
+Q_DECLARE_METATYPE( Kleo::SmartCard::ReaderStatus::Status )
 
 #endif /* __KLEOPATRA__SMARTCARD__READERSTATUS_H___ */
