@@ -147,7 +147,7 @@ void SoundWidget::loadSound()
     return;
 
   if ( url.isLocalFile() )
-    fileName = url.path();
+    fileName = url.toLocalFile();
   else if ( !KIO::NetAccess::download( url, fileName, this ) )
     return;
 

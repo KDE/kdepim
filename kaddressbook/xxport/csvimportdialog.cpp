@@ -647,7 +647,7 @@ void CSVImportDialog::fillTable()
 
   QStringList headerLabels( typeStore );
 
-  for ( column = typeStore.count(); column < mTable->columnCount(); 
+  for ( column = typeStore.count(); column < mTable->columnCount();
         ++column ) {
     headerLabels << mTypeMap.key( Undefined );
   }
@@ -953,7 +953,7 @@ void CSVImportDialog::ignoreDuplicatesChanged( int )
 
 void CSVImportDialog::setFile( const KUrl &fileName )
 {
-   setFile(fileName.path());
+   setFile(fileName.toLocalFile());
 }
 
 void CSVImportDialog::setFile( const QString &fileName )

@@ -59,7 +59,7 @@ KABC::Picture ImageLoader::loadPicture( const KUrl &url, bool *ok )
 
   QImage image;
   if ( url.isLocalFile() ) {
-    if ( image.load( url.path() ) ) {
+    if ( image.load( url.toLocalFile() ) ) {
       picture.setData( image );
       (*ok) = true;
     }

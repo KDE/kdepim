@@ -65,14 +65,14 @@ QFile* KNSaveHelper::getFile(const QString &dialogTitle)
   lastPath = url.upUrl().url();
 
   if (url.isLocalFile()) {
-    if (QFileInfo(url.path()).exists() &&
+    if (QFileInfo(url.toLocalFile()).exists() &&
         (KMessageBox::warningContinueCancel(knGlobals.topWidget,
                                             i18n("<qt>A file named <b>%1</b> already exists.<br />Do you want to replace it?</qt>", url.path()),
                                             dialogTitle, KGuiItem(i18n("&Replace"))) != KMessageBox::Continue)) {
       return 0;
     }
 
-    file = new QFile(url.path());
+    file = new QFile(url.toLocalFile());
     if(!file->open(QIODevice::WriteOnly)) {
       KNHelper::displayExternalFileError();
       delete file;
@@ -141,7 +141,7 @@ QFile* KNLoadHelper::setURL(const KUrl& url)
     if (KIO::NetAccess::download(u_rl, t_empName, 0))
       fileName = t_empName;
   } else
-    fileName = u_rl.path();
+    fileName = u_rl.toLocalFile();
 
   if (fileName.isEmpty())
     return 0;

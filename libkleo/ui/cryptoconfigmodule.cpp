@@ -593,7 +593,7 @@ void Kleo::CryptoConfigEntryPath::doSave()
 void Kleo::CryptoConfigEntryPath::doLoad()
 {
 #ifdef ONLY_KLEO
-  mFileNameRequester->setFileName( mEntry->urlValue().path() );
+  mFileNameRequester->setFileName( mEntry->urlValue().toLocalFile() );
 #else
   mUrlRequester->setUrl( mEntry->urlValue() );
 #endif
@@ -655,7 +655,7 @@ void Kleo::CryptoConfigEntryDirPath::doSave()
 void Kleo::CryptoConfigEntryDirPath::doLoad()
 {
 #ifdef ONLY_KLEO
-  mFileNameRequester->setFileName( mEntry->urlValue().path() );
+  mFileNameRequester->setFileName( mEntry->urlValue().toLocalFile() );
 #else
   mUrlRequester->setUrl( mEntry->urlValue() );
 #endif

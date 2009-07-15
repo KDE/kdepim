@@ -617,7 +617,7 @@ int main( int argc, char *argv[] )
     bool exists, remote;
     KUrl url( variables.getCalendarFile() );
     if ( url.isLocalFile() ) {
-      variables.setCalendarFile( url.path() );
+      variables.setCalendarFile( url.toLocalFile() );
       exists = QFile::exists( variables.getCalendarFile() );
       remote = false;
     } else if ( url.protocol().isEmpty() ) {

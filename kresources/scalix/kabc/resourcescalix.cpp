@@ -317,7 +317,7 @@ void AttachmentList::updatePictureAttachment( const QImage& image, const QString
     image.save( &tempFile, "PNG" );
     KUrl url;
     url.setPath( tempFile.fileName() );
-    kDebug(5650) <<"picture saved to" << url.path();
+    kDebug(5650) <<"picture saved to" << url.toLocalFile();
     addAttachment( url.url(), name, "image/png" );
   } else {
     deletedAttachments.append( name );
@@ -334,7 +334,7 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
     tempFile.write( data );
     KUrl url;
     url.setPath( tempFile.fileName() );
-    kDebug(5650) <<"data saved to" << url.path();
+    kDebug(5650) <<"data saved to" << url.toLocalFile();
     addAttachment( url.url(), name, mimetype );
   } else {
     deletedAttachments.append( name );

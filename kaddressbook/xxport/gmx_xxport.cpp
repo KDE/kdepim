@@ -223,7 +223,7 @@ bool GMXXXPort::exportContacts( const KABC::AddresseeList &list, const QString& 
 
     return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
   } else {
-    QString filename = url.path();
+    QString filename = url.toLocalFile();
     QFile file( filename );
 
     if ( !file.open( QIODevice::WriteOnly ) ) {
