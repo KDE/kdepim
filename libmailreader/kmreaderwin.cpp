@@ -48,9 +48,7 @@
 #include "khtmlparthtmlwriter.h"
 #include "htmlstatusbar.h"
 #include "csshelper.h"
-#include "isubject.h"
 #include "urlhandlermanager.h"
-#include "interfaces/observable.h"
 #include "util.h"
 #include "nodehelper.h"
 #include "mimetreemodel.h"
@@ -845,54 +843,6 @@ void KMReaderWin::slotMessageArrived( KMime::Message *msg )
     */
     setMessage( msg, Force );
   }
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::update( KMail::Interface::Observable * observable )
-{
-  if ( !mAtmUpdate ) {
-    // reparse the msg
-    updateReaderWin();
-    return;
-  }
-
-  if ( !mMessage )
-    return;
-
-/*FIXME(Andras) port it
-
-  KMime::Message* msg = static_cast<KMime::Message*>( observable );
-*/
- KMime::Message *msg = 0;   //just to compile now
-  assert( msg != 0 );
-
-  // find our partNode and update it
-/*FIXME(Andras) port it
-  if ( !msg->lastUpdatedPart() ) {
-    kDebug() << "No updated part";
-    return;
-  }
-  partNode* node = mMessage->findNodeForDwPart( msg->lastUpdatedPart() );
-  if ( !node ) {
-    kDebug() << "Can't find node for part";
-    return;
-  }
-  node->setDwPart( msg->lastUpdatedPart() );
-  */
-  KMime::Content *node = mMessage; //FIXME(Andras) see above
-
-  // update the tmp file
-  // we have to set it writeable temporarily
-  ::chmod( QFile::encodeName( mAtmCurrentName ), S_IRWXU );
-  QByteArray data = node->decodedContent();
-  if ( node->contentType()->mediaType() == "text" && data.size() > 0 ) {
-    // convert CRLF to LF before writing text attachments to disk
-    data = KMime::CRLFtoLF( data );
-  }
-  KPIMUtils::kByteArrayToFile( data, mAtmCurrentName, false, false, false );
-  ::chmod( QFile::encodeName( mAtmCurrentName ), S_IRUSR );
-
-  mAtmUpdate = false;
 }
 
 //-----------------------------------------------------------------------------

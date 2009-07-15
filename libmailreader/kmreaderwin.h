@@ -34,7 +34,6 @@
 #include "libkdepim/messagestatus.h"
 #include <kvbox.h>
 using KPIM::MessageStatus;
-#include "interfaces/observer.h"
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -93,7 +92,7 @@ namespace KParts {
    used for reading or viewing messages.
 */
 
-class KMReaderWin: public QWidget, public KMail::Interface::Observer {
+class KMReaderWin: public QWidget {
   Q_OBJECT
   friend class KMail::ObjectTreeParser;
   friend class KMail::KHtmlPartHtmlWriter;
@@ -111,13 +110,11 @@ public:
                KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
   virtual ~KMReaderWin();
 
-  KMime::Message *message() const { return mMessage;}
-
   /**
-     \reimp from Interface::Observer
-     Updates the current message
+   * The current message displayed in the viewer.
+   * @return
    */
-  virtual void update( KMail::Interface::Observable * );
+  MAILVIEWER_EXPORT KMime::Message *message() const { return mMessage;}
 
   /** Read settings from app's config file. */
   void readConfig();

@@ -11,7 +11,6 @@ kmaddrbook.cpp
 stringutil.cpp
 attachmentstrategy.cpp
 kmmsgpartdlg.cpp
-isubject.cpp
 csshelper.cpp
 util.cpp
 objecttreeparser.cpp
