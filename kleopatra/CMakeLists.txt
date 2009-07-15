@@ -3,7 +3,7 @@ project(kleopatra)
 include(MacroOptionalAddSubdirectory)
 
 set( kleopatra_version 2.0.10 )
-set( kleopatra_release FALSE )
+set( kleopatra_release TRUE )
 
 if (NOT kleopatra_release)
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
