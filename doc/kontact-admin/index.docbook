@@ -201,6 +201,34 @@ in the installed <filename>share/config.kcfg/kmail.kcfg</filename> file.
 </sect1>
 </chapter>
 
+<!-- Chapter RFC Compromises -->
+<chapter id="nonrfc">
+<title>RFC Compromises</title>
+
+<para>&kappname; is designed to interoperate as well as possible
+with a wide variety of groupware solutions.  To that end, we sometimes
+make design compromises with respect to the various Internet RFCs
+that provide the basis for low-level libraries on which &kappname;
+relies heavily.</para>
+
+<note><para>We never knowingly violate any RFC.</para></note>
+
+<para>The following list of RFC compromises is made by &kappname; or
+the low-levels libraries used by &kappname;:</para>
+
+<itemizedlist>
+<listitem>
+<para>
+When writing durations values into iCalendar files, &kappname; never
+writes the DURATION property in terms of weeks (i.e., 1*DIGIT "W"); 
+instead, the integer number of weeks is always multiplied by 7 and written
+in terms of days (i.e. 1*DIGIT "D").
+</para>
+</listitem>
+</itemizedlist>
+
+</chapter>
+
 <!-- Chapter Common Problems -->
 <chapter id="common-problems">
 <title>Common Problems</title>
