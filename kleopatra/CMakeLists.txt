@@ -133,6 +133,8 @@ set( _kleopatra_SRCS
   selftest/gpgconfcheck.cpp
   selftest/gpgagentcheck.cpp
 
+  smartcard/readerstatus.cpp
+
   ${_kleopatra_extra_SRCS}
 
   models/keycache.cpp
