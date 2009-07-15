@@ -418,7 +418,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mMsgDisplay = true;
   mPrinting = false;
   mShowColorbar = false;
-  mAtmUpdate = false;
 
   createWidgets();
   createActions();
@@ -882,7 +881,7 @@ bool KMReaderWin::event(QEvent *e)
 
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::readConfig(void)
+void KMReaderWin::readConfig()
 {
   const KConfigGroup mdnGroup(Global::instance()->config(), "MDN");
   KConfigGroup reader(Global::instance()->config(), "Reader");
@@ -1231,7 +1230,6 @@ void KMReaderWin::setMessage(KMime::Message* aMsg, UpdateMode updateMode, Owners
   if (aMsg)
     aMsg->attach( this );
   */
-  mAtmUpdate = false;
 
   // connect to the updates if we have hancy headers
 
@@ -1327,7 +1325,7 @@ void KMReaderWin::displaySplashPage( const QString &info )
 
 //-----------------------------------------------------------------------------
 
-void KMReaderWin::enableMsgDisplay() {
+void KMReaderWin::enableMessageDisplay() {
   mMsgDisplay = true;
   adjustLayout();
 }
@@ -1587,7 +1585,7 @@ QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
   // If the message part is already written to a file, no point in doing it again.
   // This function is called twice actually, once from the rendering of the attachment
   // in the body and once for the header.
-  KUrl existingFileName = tempFileUrlFromPartNode( aMsgPart );
+  KUrl existingFileName = tempFileUrlFromNode( aMsgPart );
   if ( !existingFileName.isEmpty() ) {
     return existingFileName.path();
   }
@@ -1954,7 +1952,7 @@ void KMReaderWin::slotHandleAttachment( int choice )
     if ( !node )
       return;
     QList<QUrl> urls;
-    KUrl kUrl = tempFileUrlFromPartNode( node );
+    KUrl kUrl = tempFileUrlFromNode( node );
     QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
 
     if ( !url.isValid() )
@@ -2180,7 +2178,7 @@ void KMReaderWin::slotAtmView( int id, const QString& name )
     mAtmCurrent = id;
     mAtmCurrentName = name;
     if ( mAtmCurrentName.isEmpty() )
-      mAtmCurrentName = tempFileUrlFromPartNode( node ).path();
+      mAtmCurrentName = tempFileUrlFromNode( node ).path();
 
     KMMessagePart& msgPart = node->msgPart();
     QString pname = msgPart.fileName();
@@ -2218,7 +2216,7 @@ void KMReaderWin::openAttachment( int id, const QString & name )
     return;
   }
   if ( mAtmCurrentName.isEmpty() )
-    mAtmCurrentName = tempFileUrlFromPartNode( node ).path();
+    mAtmCurrentName = tempFileUrlFromNode( node ).path();
 
   KMMessagePart& msgPart = node->msgPart();
   if (kasciistricmp(msgPart.typeStr(), "message")==0)
@@ -2550,7 +2548,7 @@ KMime::Content * KMReaderWin::partNodeForId( int id ) {
 }
 
 
-KUrl KMReaderWin::tempFileUrlFromPartNode( const KMime::Content *node )
+KUrl KMReaderWin::tempFileUrlFromNode( const KMime::Content *node )
 {
   if (!node)
     return KUrl();

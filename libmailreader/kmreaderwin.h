@@ -92,6 +92,7 @@ namespace KParts {
    used for reading or viewing messages.
 */
 
+//TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 class KMReaderWin: public QWidget {
   Q_OBJECT
   friend class KMail::ObjectTreeParser;
@@ -116,47 +117,9 @@ public:
    */
   MAILVIEWER_EXPORT KMime::Message *message() const { return mMessage;}
 
-  /** Read settings from app's config file. */
-  void readConfig();
-
-  /** Write settings to app's config file. Calls sync() if withSync is true. */
-  void writeConfig( bool withSync=true ) const;
-
-  const KMail::HeaderStyle * headerStyle() const {
-    return mHeaderStyle;
-  }
-  /** Set the header style and strategy. We only want them to be set
-      together. */
-  void setHeaderStyleAndStrategy( const KMail::HeaderStyle * style,
-                                  const KMail::HeaderStrategy * strategy );
-
-  /** Getthe message header strategy. */
-  const KMail::HeaderStrategy * headerStrategy() const {
-    return mHeaderStrategy;
-  }
-
-  /** Get/set the message attachment strategy. */
-  const KMail::AttachmentStrategy * attachmentStrategy() const {
-    return mAttachmentStrategy;
-  }
-  void setAttachmentStrategy( const KMail::AttachmentStrategy * strategy );
-
-  /** Get selected override character encoding.
-      @return The encoding selected by the user or an empty string if auto-detection
-      is selected. */
-  QString overrideEncoding() const { return mOverrideEncoding; }
-
-  /** Set the override character encoding. */
-  void setOverrideEncoding( const QString & encoding );
-
-  void setPrintFont( const QFont& font );
-
-  /** Get codec corresponding to the currently selected override character encoding.
+   /** Get codec corresponding to the currently selected override character encoding.
       @return The override codec or 0 if auto-detection is selected. */
-  const QTextCodec * overrideCodec() const;
-
-  /** Set printing mode */
-  virtual void setPrinting(bool enable) { mPrinting = enable; }
+  MAILVIEWER_EXPORT const QTextCodec * overrideCodec() const;
 
   enum UpdateMode {
     Force = 0,
@@ -174,70 +137,40 @@ public:
 
   MAILVIEWER_EXPORT void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
-  /** Instead of settings a message to be shown sets a message part
-      to be shown */
-  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                   const QString& aFileName, const QString& pname );
-
-  void setMessagePart( KMime::Content * node );
-
-  /** Show or hide the Mime Tree Viewer if configuration
-      is set to smart mode.  */
-  void showHideMimeTree( bool isPlainTextTopLevel );
-
-  /** Store message id of last viewed message,
-      normally no need to call this function directly,
-      since correct value is set automatically in
-      parseMsg(KMMessage* aMsg, bool onlyProcessHeaders). */
-  void setIdOfLastViewedMessage( const QString & msgId )
-    { mIdOfLastViewedMessage = msgId; }
-
   /** Clear the reader and discard the current message. */
   MAILVIEWER_EXPORT void clear(UpdateMode updateMode = Delayed ) { setMessage(0, updateMode); }
 
   /** Saves the relative position of the scroll view. Call this before calling update()
       if you want to preserve the current view. */
-  void saveRelativePosition();
+  MAILVIEWER_EXPORT void saveRelativePosition();
 
   /** Re-parse the current message. */
-  virtual void update(UpdateMode updateMode = Delayed);
+  MAILVIEWER_EXPORT void update(UpdateMode updateMode = Delayed);
 
   /** Print message. */
-  virtual void printMessage(  KMime::Message* aMsg );
+  MAILVIEWER_EXPORT void printMessage(  KMime::Message* aMsg );
 
   /** Return selected text */
-  QString copyText();
+  MAILVIEWER_EXPORT QString copyText();
 
   /** Override default html mail setting */
-  bool htmlOverride() const { return mHtmlOverride; }
-  void setHtmlOverride( bool override );
+  MAILVIEWER_EXPORT bool htmlOverride() const { return mHtmlOverride; }
+  MAILVIEWER_EXPORT void setHtmlOverride( bool override );
 
   /** Override default load external references setting */
-  bool htmlLoadExtOverride() const { return mHtmlLoadExtOverride; }
-  void setHtmlLoadExtOverride( bool override );
-
-  /** Is html mail to be supported? Takes into account override */
-  bool htmlMail();
-
-  /** Is loading ext. references to be supported? Takes into account override */
-  bool htmlLoadExternal();
+  MAILVIEWER_EXPORT bool htmlLoadExtOverride() const { return mHtmlLoadExtOverride; }
+  MAILVIEWER_EXPORT void setHtmlLoadExtOverride( bool override );
 
   /** Display a generic HTML splash page instead of a message */
   MAILVIEWER_EXPORT void displaySplashPage( const QString &info );
 
   /** Enable the displaying of messages again after an URL was displayed */
-  MAILVIEWER_EXPORT void enableMsgDisplay();
+  MAILVIEWER_EXPORT void enableMessageDisplay();
 
-  /** View message part of type message/RFC822 in extra viewer window. */
-  void atmViewMsg(KMime::Content* msgPart);
+  MAILVIEWER_EXPORT bool atBottom() const;
 
-  bool atBottom() const;
-
-  bool isFixedFont() { return mUseFixedFont; }
-  void setUseFixedFont( bool useFixedFont ) { mUseFixedFont = useFixedFont; }
-
-  /** Return the HtmlWriter connected to the KHTMLPart we use */
-  KMail::HtmlWriter * htmlWriter() { return mHtmlWriter; }
+  MAILVIEWER_EXPORT bool isFixedFont() { return mUseFixedFont; }
+  MAILVIEWER_EXPORT void setUseFixedFont( bool useFixedFont ) { mUseFixedFont = useFixedFont; }
 
   // Action to reply to a message
   // but action( "some_name" ) some name could be used instead.
@@ -268,20 +201,16 @@ public:
 
   KMime::Content * partNodeForId( int id );
 
-  KUrl tempFileUrlFromPartNode( const KMime::Content *node );
-
   /** Returns id of message part from given URL or -1 if invalid. */
   static int msgPartFromUrl(const KUrl &url);
 
-  void setUpdateAttachment( bool update = true ) { mAtmUpdate = update; }
-
   /** Access to the KHTMLPart used for the viewer. Use with
       care! */
-  KHTMLPart * htmlPart() const { return mViewer; }
+  MAILVIEWER_EXPORT KHTMLPart * htmlPart() const { return mViewer; }
 
-  void openAttachment( int id, const QString & name );
+  MAILVIEWER_EXPORT void openAttachment( int id, const QString & name );
 
-  void emitUrlClicked( const KUrl & url, int button ) {
+  MAILVIEWER_EXPORT void emitUrlClicked( const KUrl & url, int button ) {
     emit urlClicked( url, button );
   }
 
@@ -305,25 +234,20 @@ public:
 
   QWidget* mainWindow() { return mMainWindow; }
 
-  /** Returns whether the message should be decryted. */
-  bool decryptMessage() const;
-
   /** Enforce message decryption. */
-  void setDecryptMessageOverwrite( bool overwrite = true ) { mDecrytMessageOverwrite = overwrite; }
+  MAILVIEWER_EXPORT void setDecryptMessageOverwrite( bool overwrite = true ) { mDecrytMessageOverwrite = overwrite; }
 
   /** Show signature details. */
-  bool showSignatureDetails() const { return mShowSignatureDetails; }
+  MAILVIEWER_EXPORT bool showSignatureDetails() const { return mShowSignatureDetails; }
 
   /** Show signature details. */
-  void setShowSignatureDetails( bool showDetails = true ) { mShowSignatureDetails = showDetails; }
-
-  KMail::CSSHelper* cssHelper() const;
+  MAILVIEWER_EXPORT void setShowSignatureDetails( bool showDetails = true ) { mShowSignatureDetails = showDetails; }
 
   /* show or hide the list that points to the attachments */
-  bool showAttachmentQuicklist() const { return mShowAttachmentQuicklist; }
+  MAILVIEWER_EXPORT bool showAttachmentQuicklist() const { return mShowAttachmentQuicklist; }
 
   /* show or hide the list that points to the attachments */
-  void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true ) { mShowAttachmentQuicklist = showAttachmentQuicklist; }
+  MAILVIEWER_EXPORT void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true ) { mShowAttachmentQuicklist = showAttachmentQuicklist; }
 
   /**
    * Get an instance for the configuration widget. The caller has the ownership and must delete the widget. See also configObject();
@@ -455,6 +379,22 @@ protected slots:
   void slotPrintMsg();
 
 protected:
+//TODO(Andras) These were public, but made protected as only ObjectTreeParser uses them. Make public if needed
+  /** Is html mail to be supported? Takes into account override */
+  bool htmlMail();
+
+  /** Is loading ext. references to be supported? Takes into account override */
+  bool htmlLoadExternal();
+
+  /** Return the HtmlWriter connected to the KHTMLPart we use */
+  KMail::HtmlWriter * htmlWriter() { return mHtmlWriter; }
+
+  /** Returns whether the message should be decryted. */
+  bool decryptMessage() const;
+
+  KMail::CSSHelper* cssHelper() const;
+//(Andras) end of moved methods
+
   /** reimplemented in order to update the frame width in case of a changed
       GUI style */
   void styleChange( QStyle& oldStyle );
@@ -514,6 +454,67 @@ private slots:
   void slotSettingsChanged();
 
 private:
+
+//TODO(Andras) these methods were moved from public to private to keep the public API clean. In case there is a need from them,
+//we can reconsider making them public again
+  /** Read settings from app's config file. */
+  void readConfig();
+
+  /** Write settings to app's config file. Calls sync() if withSync is true. */
+  void writeConfig( bool withSync=true ) const;
+
+   /** Get the message header style. */
+  const KMail::HeaderStyle * headerStyle() const {
+    return mHeaderStyle;
+  }
+
+  /** Set the header style and strategy. We only want them to be set
+      together. */
+  void setHeaderStyleAndStrategy( const KMail::HeaderStyle * style,
+                                  const KMail::HeaderStrategy * strategy );
+
+  /** Get the message header strategy. */
+  const KMail::HeaderStrategy * headerStrategy() const {
+    return mHeaderStrategy;
+  }
+
+  /** Get/set the message attachment strategy. */
+  const KMail::AttachmentStrategy * attachmentStrategy() const {
+    return mAttachmentStrategy;
+  }
+  void setAttachmentStrategy( const KMail::AttachmentStrategy * strategy );
+
+  /** Get selected override character encoding.
+      @return The encoding selected by the user or an empty string if auto-detection
+      is selected. */
+  QString overrideEncoding() const { return mOverrideEncoding; }
+
+  /** Set the override character encoding. */
+  void setOverrideEncoding( const QString & encoding );
+
+  void setPrintFont( const QFont& font );
+
+  /** Set printing mode */
+  virtual void setPrinting(bool enable) { mPrinting = enable; }
+
+  /** Instead of settings a message to be shown sets a message part
+      to be shown */
+  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
+                   const QString& aFileName, const QString& pname );
+
+  void setMessagePart( KMime::Content * node );
+
+  /** Show or hide the Mime Tree Viewer if configuration
+      is set to smart mode.  */
+  void showHideMimeTree( bool isPlainTextTopLevel );
+
+  /** View message part of type message/RFC822 in extra viewer window. */
+  void atmViewMsg(KMime::Content* msgPart);
+
+  KUrl tempFileUrlFromNode( const KMime::Content *node );
+
+//(Andras) end of moved methods
+
   void adjustLayout();
   void createWidgets();
   void createActions();
@@ -609,8 +610,6 @@ private:
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */
   QPointer<KMail::KHtmlPartHtmlWriter> mPartHtmlWriter;
 
-  // an attachment should be updated
-  bool mAtmUpdate;
   int mChoice;
   unsigned long mWaitingForSerNum;
   float mSavedRelativePosition;
