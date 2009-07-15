@@ -91,6 +91,8 @@ public:
     void setVerificationMode( VerificationMode vm );
     void setProtocol( GpgME::Protocol protocol );
 
+    void setSessionId( unsigned int id );
+
     void start();
 
 public Q_SLOTS:
