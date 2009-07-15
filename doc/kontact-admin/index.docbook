@@ -93,7 +93,7 @@ scheduling, address book and other &PIM; functionality.  </para>
 <title>Compatibility Issues</title>
 
 <para>
-This chapter provides help with how how to make &kappname;
+This chapter provides help with how to make &kappname;
 communicate effectively with various groupware solutions.
 </para>
 
@@ -121,7 +121,7 @@ try setting this option.</para>
 <para>Details: When mailing an iCal invitation this makes the message have 
 the From: header that is the same as the To: header. It also sets header
  X-KMail-Identity to the To's UIOD and makes sure the BCC: is blank.
-i.e. Outlook will only understand the reply if the From: header is 
+Outlook will only understand the reply if the From: header is 
 the same as the To: header of the invitation message.</para>
 </listitem>
 </varlistentry>
@@ -130,7 +130,7 @@ the same as the To: header of the invitation message.</para>
 <term><guilabel>Send invitations in the mail body</guilabel></term>
 <listitem>
 <para>Invitations are normally sent as attachments to a mail. This switch
-changes the invitation mails to be sent in the text of the mail insead;
+changes the invitation mails to be sent in the text of the mail instead;
 this is necessary to send invitations and replies to Microsoft Outlook.
 But, when you do this, you no longer get descriptive text that mail
 programs can read; so, to people who have email programs that do not
@@ -165,10 +165,10 @@ The invitation will be sent as an attachment with name <filename>ical.ics</filen
 <listitem>
 <para>When the user provides comments when responding to invitations, send the
 comment in way that Microsoft Outlook(tm) understands. If this option is not
-enabled, the reponse comments will not be seen in Outlook.</para>
+enabled, the response comments will not be seen in Outlook.</para>
 <para>Details: Comments when answering the invititation will be sent as a
 DESCRIPTION iCal property instead of the COMMENT iCal property
-(in violation or RFC2446).</para>
+(in violation of RFC2446).</para>
 </listitem>
 </varlistentry>
 
@@ -195,7 +195,7 @@ CC: or BCC: fields separated by a semicolon (';') character in addition
 to a comma (',').  By default, &kappname; only allows the comma as an address
 separator character.  To also allow the semicolon, change the
 <option>AllowSemicolonAsAddressSeparator</option> from false to true
-in the installed <filename>share/config.kcfg/kmail.kcfg</filename> file 
+in the installed <filename>share/config.kcfg/kmail.kcfg</filename> file. 
 </para>
 
 </sect1>
