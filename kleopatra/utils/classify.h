@@ -69,12 +69,13 @@ namespace Kleo {
 
             AnyMessageType     = AnySignature|CipherText,
 
-            Certificate        = 0x100,
-            ExportedPSM        = 0x200,
+            Importable         = 0x100,
+            Certificate        = 0x200|Importable,
+            ExportedPSM        = 0x400|Importable,
 
             AnyCertStoreType   = Certificate|ExportedPSM,
 
-            CertificateRequest = 0x400,
+            CertificateRequest = 0x800,
 
             CertificateRevocationList = 0x1000,
 
@@ -122,6 +123,25 @@ namespace Kleo {
     make_convenience( CertificateRevocationList, TypeMask )
     make_convenience( AnyCertStoreType,  TypeMask )
 #undef make_convenience
+
+    inline bool isImportable( const unsigned int classifcation ) {
+        return ( classifcation & Class::TypeMask ) == Class::Importable
+            || ( classifcation & Class::TypeMask ) == Class::ExportedPSM
+            || ( classifcation & Class::TypeMask ) == Class::Certificate
+            || ( classifcation & Class::TypeMask ) == Class::ExportedPSM|Class::Certificate ;
+    }
+
+    inline bool mayBeImportable( const unsigned int classifcation ) {
+        return classifcation & Class::Importable ;
+    }
+
+    inline bool isImportable( const QString & filename ) {
+        return isImportable( classify( filename ) );
+    }
+
+    inline bool mayBeImportable( const QString & filename ) {
+        return mayBeImportable( classify( filename ) );
+    }
 
     inline GpgME::Protocol findProtocol( const unsigned int classifcation ) {
         if ( isOpenPGP( classifcation ) )
