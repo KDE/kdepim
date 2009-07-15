@@ -35,6 +35,8 @@
 
 #include <QtCore/QFlags>
 
+#include <algorithm>
+
 namespace GpgME {
   class Key;
 }
@@ -72,9 +74,35 @@ namespace Kleo {
     // the easiest way:
     virtual QColor fgColor() const = 0;
     virtual QColor bgColor() const = 0;
-    virtual QFont  font( const QFont & ) const = 0;
     virtual QString name() const = 0;
     virtual QString icon() const = 0;
+
+    class FontDescription {
+    public:
+        FontDescription();
+        FontDescription( const FontDescription & other );
+        FontDescription & operator=( const FontDescription & other ) {
+            FontDescription copy( other );
+            swap( copy );
+            return *this;
+        }
+
+        static FontDescription create( bool bold, bool italic, bool strikeOut );
+        static FontDescription create( const QFont & font, bool bold, bool italic, bool strikeOut );
+
+        QFont font( const QFont & base ) const;
+
+        FontDescription resolve( const FontDescription & other ) const;
+
+        void swap( FontDescription & other ) {
+            std::swap( this->d, other.d );
+        }
+        struct Private;
+    private:
+        Private * d;
+    };
+
+    virtual FontDescription fontDesription() const = 0;
   };
 
   Q_DECLARE_OPERATORS_FOR_FLAGS( KeyFilter::MatchContexts )

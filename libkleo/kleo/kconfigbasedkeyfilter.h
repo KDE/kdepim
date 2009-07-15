@@ -38,6 +38,7 @@
 #include <QFont>
 #include <QString>
 #include <QColor>
+#include <QIcon>
 
 #include <gpgme++/key.h>
 
@@ -58,7 +59,7 @@ namespace Kleo {
 
     QColor fgColor() const { return mFgColor; }
     QColor bgColor() const { return mBgColor; }
-    QFont  font( const QFont & ) const;
+    FontDescription  fontDesription() const;
     QString name() const { return mName; }
     QString icon() const { return mIcon; }
 
