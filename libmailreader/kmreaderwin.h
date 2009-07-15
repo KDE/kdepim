@@ -69,9 +69,6 @@ namespace KMime {
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace KMail {
-  namespace Interface {
-    class Observable;
-  }
   class ObjectTreeParser;
   class AttachmentStrategy;
   class HeaderStrategy;
