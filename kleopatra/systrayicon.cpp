@@ -40,6 +40,7 @@
 #include <commands/encryptclipboardcommand.h>
 #include <commands/signclipboardcommand.h>
 #include <commands/decryptverifyclipboardcommand.h>
+#include <commands/setinitialpincommand.h>
 
 #include <conf/configuredialog.h>
 
@@ -68,28 +69,6 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 
 namespace {
-    class SetInitialPinCommand : public Kleo::Command {
-    public:
-        explicit SetInitialPinCommand( KeyListController * ctrl )
-            : Kleo::Command( ctrl ), m_dialog( 0 ) {}
-
-        void doStart() {
-            emit finished();
-        }
-        void doCancel() {}
-
-        QDialog * dialog() {
-            if ( !m_dialog ) {
-                m_dialog = new QDialog;
-                m_dialog->setAttribute( Qt::WA_DeleteOnClose );
-                m_dialog->setWindowTitle( i18n("Set Initial PIN") );
-                m_dialog->show();
-            }
-            return m_dialog;
-        }
-        QDialog * m_dialog;
-    };
-
     class LearnCertificatesCommand : public Kleo::Command {
     public:
         explicit LearnCertificatesCommand( KeyListController * ctrl )
@@ -171,7 +150,7 @@ private:
     }
 
     void slotSetInitialPin() {
-        SetInitialPinCommand * cmd = new SetInitialPinCommand( 0 );
+        SetInitialPinCommand * cmd = new SetInitialPinCommand;
         q->setAttentionWindow( cmd->dialog() );
         startCommand( cmd );
     }
