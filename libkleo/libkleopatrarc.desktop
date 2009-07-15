@@ -352,7 +352,6 @@ Name[zh_TW]=其他金鑰
 [Key Filter #7]
 is-cardkey=true
 Name=Smartcard Key
-icon=smartcard
 Name[gl]=Chave de smartcard
 Name[nb]=Smartkort-nøkkel
 Name[nds]=Smartkoort-Slötel
@@ -364,3 +363,4 @@ Name[tr]=Akıllı Kart Anahtarı
 Name[uk]=Ключ картки пам’яті
 Name[x-test]=xxSmartcard Keyxx
 Name[zh_TW]=智慧卡金鑰
+icon=smartcard
