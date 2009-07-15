@@ -22,13 +22,13 @@
 #include "calendardiffalgo.h"
 using namespace KPIM;
 
-#include <KCal/Alarm>
-#include <KCal/Attachment>
-#include <KCal/Attendee>
-#include <KCal/Event>
-#include <KCal/Incidence>
-#include <KCal/IncidenceFormatter>
-#include <KCal/Todo>
+#include <kcal/alarm.h>
+#include <kcal/attachment.h>
+#include <kcal/attendee.h>
+#include <kcal/event.h>
+#include <kcal/incidence.h>
+#include <kcal/incidenceformatter.h>
+#include <kcal/todo.h>
 
 #include <KDateTime>
 #include <KLocale>

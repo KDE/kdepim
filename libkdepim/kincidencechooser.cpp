@@ -26,8 +26,8 @@
 #include "kincidencechooser.h"
 using namespace KPIM;
 
-#include <KCal/Incidence>
-#include <KCal/IncidenceFormatter>
+#include <kcal/incidence.h>
+#include <kcal/incidenceformatter.h>
 using namespace KCal;
 
 #include <KHBox>

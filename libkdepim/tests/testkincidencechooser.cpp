@@ -20,7 +20,7 @@
 #include <KApplication>
 #include <KCmdLineArgs>
 
-#include <KCal/Event>
+#include <kcal/event.h>
 
 #include "../kincidencechooser.h"
 using namespace KPIM;
