@@ -80,11 +80,21 @@ namespace {
         {
             KDAB_SET_OBJECT_NAME( m_resultPage );
 
+            m_resultPage.setSubTitle( i18n("Status and progress of the crypto operations is shown here.") );
+
             addPage( &m_resultPage );
         }
 
         void addTaskCollection( const shared_ptr<TaskCollection> & coll ) {
             m_resultPage.addTaskCollection( coll );
+        }
+
+    public Q_SLOTS:
+        void accept() {
+            EMailOperationsPreferences prefs;
+            prefs.setDecryptVerifyPopupGeometry( geometry() );
+            prefs.writeConfig();
+            QWizard::accept();
         }
 
     private:
