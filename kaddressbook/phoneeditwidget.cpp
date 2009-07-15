@@ -200,7 +200,6 @@ void PhoneNumberListWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list
   types << KABC::PhoneNumber::Home;
   types << KABC::PhoneNumber::Work;
   types << KABC::PhoneNumber::Cell;
-
   // add an empty entry per default
   if ( mPhoneNumberList.count() < 3 )
     for ( int i = mPhoneNumberList.count(); i < 3; ++i )
@@ -317,7 +316,6 @@ void PhoneEditWidget::setReadOnly( bool readOnly )
   mReadOnly = readOnly;
   mAddButton->setEnabled( !readOnly );
   mRemoveButton->setEnabled( !readOnly && mPhoneNumberListWidget->phoneNumberCount() > 3 );
-
   mPhoneNumberListWidget->setReadOnly( readOnly );
 }
 
@@ -329,6 +327,7 @@ void PhoneEditWidget::changed()
 void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
   mPhoneNumberListWidget->setPhoneNumbers( list );
+  mRemoveButton->setEnabled( !mReadOnly && list.count() > 3 );
 }
 
 KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
