@@ -158,9 +158,7 @@ DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq
 void DecryptVerifyEMailController::Private::slotWizardCanceled()
 {
     kDebug();
-    if ( m_operationCompleted )
-        q->emitDoneOrError();
-    else
+    if ( !m_operationCompleted )
         reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
 
@@ -199,8 +197,7 @@ void DecryptVerifyEMailController::Private::schedule()
         // if there is a popup, wait for either the client cancel or the user closing the popup.
         // Otherwise (silent case), finish immediately
         m_operationCompleted = true;
-        if ( m_silent )
-            q->emitDoneOrError();
+        q->emitDoneOrError();
     }
 }
 
