@@ -35,7 +35,7 @@
 #include "decryptverifyemailcontroller.h"
 #include "emailoperationspreferences.h"
 
-#include <crypto/gui/resultlistwidget.h>
+#include <crypto/gui/newresultpage.h>
 #include <crypto/decryptverifytask.h>
 #include <crypto/taskcollection.h>
 
@@ -71,14 +71,24 @@ using namespace KMime::Types;
 
 namespace {
 
-    class DecryptVerifyEMailWizard : public ResultListWidget {
+    class DecryptVerifyEMailWizard : public QWizard {
         Q_OBJECT
     public:
         explicit DecryptVerifyEMailWizard( QWidget * parent=0, Qt::WindowFlags f=0 )
-            : ResultListWidget( parent, f )
+            : QWizard( parent, f ),
+              m_resultPage( this )
         {
-            setStandaloneMode( true );
+            KDAB_SET_OBJECT_NAME( m_resultPage );
+
+            addPage( &m_resultPage );
         }
+
+        void addTaskCollection( const shared_ptr<TaskCollection> & coll ) {
+            m_resultPage.addTaskCollection( coll );
+        }
+
+    private:
+        NewResultPage m_resultPage;
     };
 
 }
