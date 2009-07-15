@@ -189,7 +189,7 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
   return saved;
 }
 
-QString KAddrBookExternal::expandDistributionList( const QString &listName )
+QString KAddrBookExternal::expandDistributionList( const QString &listName,bool &emptyList )
 {
   if ( listName.isEmpty() ) {
     return QString();
@@ -198,9 +198,11 @@ QString KAddrBookExternal::expandDistributionList( const QString &listName )
   const QString lowerListName = listName.toLower();
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   KABC::DistributionList* list = addressBook->findDistributionListByName( listName, Qt::CaseInsensitive );
-
   if ( list ) {
-    return list->emails().join( ", " );
+    const QString listOfEmails = list->emails().join( ", " );
+    emptyList = listOfEmails.isEmpty();
+    return listOfEmails;
   }
+  emptyList = false;
   return QString();
 }
