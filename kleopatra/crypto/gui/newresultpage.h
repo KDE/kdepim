@@ -66,6 +66,8 @@ public:
     bool keepOpenWhenDone() const;
     void setKeepOpenWhenDone( bool keep );
 
+    void setKeepOpenWhenDoneShown( bool on );
+
 Q_SIGNALS:
     void linkActivated( const QString & link );
 

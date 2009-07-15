@@ -81,6 +81,8 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_resultPage );
 
             m_resultPage.setSubTitle( i18n("Status and progress of the crypto operations is shown here.") );
+            // there's no way we're letting users fast-forward over the decryption/verification results...
+            m_resultPage.setKeepOpenWhenDoneShown( false );
 
             addPage( &m_resultPage );
         }
