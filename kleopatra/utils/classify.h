@@ -124,25 +124,6 @@ namespace Kleo {
     make_convenience( AnyCertStoreType,  TypeMask )
 #undef make_convenience
 
-    inline bool isImportable( const unsigned int classifcation ) {
-        return ( classifcation & Class::TypeMask ) == Class::Importable
-            || ( classifcation & Class::TypeMask ) == Class::ExportedPSM
-            || ( classifcation & Class::TypeMask ) == Class::Certificate
-            || ( classifcation & Class::TypeMask ) == Class::ExportedPSM|Class::Certificate ;
-    }
-
-    inline bool mayBeImportable( const unsigned int classifcation ) {
-        return classifcation & Class::Importable ;
-    }
-
-    inline bool isImportable( const QString & filename ) {
-        return isImportable( classify( filename ) );
-    }
-
-    inline bool mayBeImportable( const QString & filename ) {
-        return mayBeImportable( classify( filename ) );
-    }
-
     inline GpgME::Protocol findProtocol( const unsigned int classifcation ) {
         if ( isOpenPGP( classifcation ) )
             return GpgME::OpenPGP;
