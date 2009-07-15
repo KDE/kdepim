@@ -73,10 +73,34 @@ namespace kdtools {
                                 boost::make_filter_iterator( filter, last,  last ), value );
     }
 
+    template <typename Value, typename InputIterator, typename UnaryPredicate, typename BinaryOperation>
+    Value accumulate_if( InputIterator first, InputIterator last, UnaryPredicate filter, const Value & value, BinaryOperation op ) {
+        return std::accumulate( boost::make_filter_iterator( filter, first, last ),
+                                boost::make_filter_iterator( filter, last,  last ), value, op );
+    }
+
     template <typename Value, typename InputIterator, typename UnaryFunction>
     Value accumulate_transform( InputIterator first, InputIterator last, UnaryFunction map, const Value & value=Value() ) {
         return std::accumulate( boost::make_transform_iterator( first, map ),
                                 boost::make_transform_iterator( last, map ), value );
+    }
+
+    template <typename Value, typename InputIterator, typename UnaryFunction, typename BinaryOperation>
+    Value accumulate_transform( InputIterator first, InputIterator last, UnaryFunction map, const Value & value, BinaryOperation op ) {
+        return std::accumulate( boost::make_transform_iterator( first, map ),
+                                boost::make_transform_iterator( last, map ), value, op );
+    }
+
+    template <typename Value, typename InputIterator, typename UnaryFunction, typename UnaryPredicate>
+    Value accumulate_transform_if( InputIterator first, InputIterator last, UnaryFunction map, UnaryPredicate pred, const Value & value=Value() ) {
+        return std::accumulate( boost::make_transform_iterator( first, map ),
+                                boost::make_transform_iterator( last, map ), value );
+    }
+
+    template <typename Value, typename InputIterator, typename UnaryFunction, typename UnaryPredicate, typename BinaryOperation>
+    Value accumulate_transform_if( InputIterator first, InputIterator last, UnaryFunction map, UnaryPredicate filter, const Value & value, BinaryOperation op ) {
+        return std::accumulate( boost::make_transform_iterator( boost::make_filter_iterator( filter, first, last ), map ),
+                                boost::make_transform_iterator( boost::make_filter_iterator( filter, last, last ), map ), value, op );
     }
 
     template <typename InputIterator, typename OutputIterator1, typename OutputIterator2, typename UnaryPredicate>
@@ -265,9 +289,29 @@ namespace kdtools {
         return accumulate_if( boost::begin( i ), boost::end( i ), f, v );
     }
 
+    template <typename V, typename I, typename F, typename B>
+        V accumulate_if( const I & i, F f, V v, B b ) {
+        return accumulate_if( boost::begin( i ), boost::end( i ), f, v, b );
+    }
+
     template <typename V, typename I, typename F>
     V accumulate_transform( const I & i, F f, V v=V() ) {
         return accumulate_transform( boost::begin( i ), boost::end( i ), f, v );
+    }
+
+    template <typename V, typename I, typename F, typename B>
+    V accumulate_transform( const I & i, F f, V v, B b ) {
+        return accumulate_transform( boost::begin( i ), boost::end( i ), f, v, b );
+    }
+
+    template <typename V, typename I, typename F, typename P>
+    V accumulate_transform_if( const I & i, F f, P p, V v=V() ) {
+        return accumulate_transform_if( boost::begin( i ), boost::end( i ), f, p, v );
+    }
+
+    template <typename V, typename I, typename F, typename P, typename B>
+    V accumulate_transform_if( const I & i, F f, P p, V v, B b ) {
+        return accumulate_transform_if( boost::begin( i ), boost::end( i ), f, p, v, b );
     }
 
     template <typename O, typename I>
