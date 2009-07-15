@@ -51,7 +51,7 @@ void mailreaderView::settingsChanged()
 void mailreaderView::showItem(Akonadi::Item& item)
 {
   kDebug() << "Show item with ID: " << item.id();
-  m_readerWin->enableMsgDisplay();
+  m_readerWin->enableMessageDisplay();
   m_readerWin->setDecryptMessageOverwrite( false );
   m_readerWin->setMessageItem(item, KMReaderWin::Force);
 }
