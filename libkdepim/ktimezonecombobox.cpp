@@ -49,7 +49,7 @@ void KTimeZoneComboBox::Private::fillComboBox() const
 
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
   for ( KTimeZones::ZoneMap::ConstIterator it=timezones.begin(); it != timezones.end(); ++it ) {
-    list.append( it.key().toUtf8() );
+    list.append( i18n( it.key().toUtf8() ).replace( '_', ' ' ) );
   }
   list.sort();
 
@@ -58,7 +58,7 @@ void KTimeZoneComboBox::Private::fillComboBox() const
     const ICalTimeZones::ZoneMap calzones = mCalendar->timeZones()->zones();
     for ( ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin(); it != calzones.end(); ++it ) {
       kDebug() << "Prepend timezone " << it.key().toUtf8();
-      list.prepend( it.key().toUtf8() );
+      list.prepend( i18n( it.key().toUtf8() ).replace( '_', ' ' ) );
     }
   }
 
