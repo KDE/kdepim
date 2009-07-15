@@ -78,6 +78,7 @@ namespace Kleo {
 #include <QDebug>
 
 #include <gpgme++/global.h>
+#include <gpgme++/error.h>
 
 #include <boost/shared_ptr.hpp>
 
