@@ -43,7 +43,7 @@ kde4_add_ui_files(libmailreader_SRCS
 kde4_add_library(mailreader SHARED ${libmailreader_SRCS})
 
 
-target_link_libraries(mailreader kdepim mimelib kpgp kleo akonadi-kde
+target_link_libraries(mailreader kdepim kpgp kleo akonadi-kde
  ${KDEPIMLIBS_KMIME_LIBS}
  ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KTNEF_LIBRARY}
  ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
