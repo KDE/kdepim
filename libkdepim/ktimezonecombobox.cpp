@@ -63,7 +63,7 @@ void KTimeZoneComboBox::Private::fillComboBox() const
   }
 
   // Prepend UTC and Floating, for convenience
-  list.prepend( "UTC" );
+  list.prepend( i18n( "UTC" ) );
   list.prepend( i18n( "Floating" ) );
 
   mParent->addItems( list );
@@ -107,7 +107,7 @@ KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec()
 {
   KDateTime::Spec spec;
 
-  if ( currentText() == "UTC" ) {
+  if ( currentText() == i18n( "UTC" ) ) {
     spec.setType( KDateTime::UTC );
   } else if ( currentText() == i18n( "Floating" ) ) {
     spec = KDateTime::Spec( KDateTime::ClockTime );
