@@ -27,6 +27,8 @@
 
 #include <xxport.h>
 
+class QFile;
+
 class GMXXXPort : public KAB::XXPort
 {
   Q_OBJECT
@@ -36,7 +38,7 @@ class GMXXXPort : public KAB::XXPort
 
     QString identifier() const { return "gmx"; }
 
-  public slots:
+  public Q_SLOTS:
     bool exportContacts( const KABC::AddresseeList &list, const QString &data );
     KABC::Addressee::List importContacts( const QString &data ) const;
 
