@@ -131,6 +131,7 @@ set( _kleopatra_SRCS
   selftest/selftest.cpp
   selftest/enginecheck.cpp
   selftest/gpgconfcheck.cpp
+  selftest/gpgagentcheck.cpp
 
   ${_kleopatra_extra_SRCS}
 
