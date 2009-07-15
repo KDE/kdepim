@@ -61,12 +61,10 @@ namespace SmartCard {
         };
 
         Status cardStatus( unsigned int slot ) const;
-        bool anyCardNeedsAttention() const;
         bool anyCardHasNullPin() const;
         bool anyCardCanLearnKeys() const;
 
     Q_SIGNALS:
-        void anyCardNeedsAttentionChanged( bool );
         void anyCardHasNullPinChanged( bool );
         void anyCardCanLearnKeysChanged( bool );
         void cardStatusChanged( unsigned int slot, ReaderStatus::Status status );

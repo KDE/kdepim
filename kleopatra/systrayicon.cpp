@@ -32,7 +32,10 @@
 
 #include <config-kleopatra.h>
 
-#include "systemtrayicon.h"
+#include "systrayicon.h"
+#include "mainwindow.h"
+
+#include <utils/kdsignalblocker.h>
 
 #include <commands/encryptclipboardcommand.h>
 #include <commands/signclipboardcommand.h>
@@ -49,17 +52,11 @@
 
 #include <QMenu>
 #include <QAction>
-#include <QVBoxLayout>
-#include <QTextEdit>
-#include <QLabel>
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QPushButton>
-
+#include <QTimer>
 #include <QApplication>
 #include <QClipboard>
-#include <QProcess>
 #include <QPointer>
+#include <QDebug>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
@@ -71,27 +68,56 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 
 namespace {
-    class SignalBlocker {
+    class SetInitialPinCommand : public Kleo::Command {
     public:
-        explicit SignalBlocker( QObject * obj ) : object( obj ), previous( object && object->blockSignals( true ) ) {
-            assert( object );
-        }
+        explicit SetInitialPinCommand( KeyListController * ctrl )
+            : Kleo::Command( ctrl ), m_dialog( 0 ) {}
 
-        ~SignalBlocker() {
-            if ( object )
-                object->blockSignals( previous );
+        void doStart() {
+            emit finished();
         }
-    private:
-        const QPointer<QObject> object;
-        const bool previous;
+        void doCancel() {}
+
+        QDialog * dialog() {
+            if ( !m_dialog ) {
+                m_dialog = new QDialog;
+                m_dialog->setAttribute( Qt::WA_DeleteOnClose );
+                m_dialog->setWindowTitle( i18n("Set Initial PIN") );
+                m_dialog->show();
+            }
+            return m_dialog;
+        }
+        QDialog * m_dialog;
+    };
+
+    class LearnCertificatesCommand : public Kleo::Command {
+    public:
+        explicit LearnCertificatesCommand( KeyListController * ctrl )
+            : Kleo::Command( ctrl ), m_dialog( 0 ) {}
+
+        void doStart() {
+            emit finished();
+        }
+        void doCancel() {}
+
+        QDialog * dialog() {
+            if ( !m_dialog ) {
+                m_dialog = new QDialog;
+                m_dialog->setAttribute( Qt::WA_DeleteOnClose );
+                m_dialog->setWindowTitle( i18n("Learn Keys") );
+                m_dialog->show();
+            }
+            return m_dialog;
+        }
+        QDialog * m_dialog;
     };
 }
 
-class SystemTrayIcon::Private {
-    friend class ::SystemTrayIcon;
-    SystemTrayIcon * const q;
+class SysTrayIcon::Private {
+    friend class ::SysTrayIcon;
+    SysTrayIcon * const q;
 public:
-    explicit Private( SystemTrayIcon * qq );
+    explicit Private( SysTrayIcon * qq );
     ~Private();
 
 private:
@@ -106,20 +132,20 @@ private:
         else
             aboutDialog->show();
     }
-    void slotActivated( ActivationReason reason ) {
-        if ( reason == QSystemTrayIcon::Trigger )
-            q->openOrRaiseMainWindow();
-    }
 
-    void slotEnableDisableActions() {
+    void enableDisableActions() {
         //work around a Qt bug (seen with Qt 4.4.0, Windows): QClipBoard->mimeData() triggers QClipboard::changed(),
         //triggering slotEnableDisableActions again
-        const SignalBlocker block( QApplication::clipboard() );
-        openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
+        const KDSignalBlocker blocker( QApplication::clipboard() );
+        openCertificateManagerAction.setEnabled( !q->mainWindow() || !q->mainWindow()->isVisible() );
         encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
         openPGPSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
         smimeSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
         decryptVerifyClipboardAction.setEnabled( DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() );
+        setInitialPinAction.setEnabled( anyCardHasNullPin );
+        learnCertificatesAction.setEnabled( anyCardCanLearnKeys );
+
+        q->setAttentionWanted( anyCardHasNullPin || anyCardCanLearnKeys );
     }
 
     void startCommand( Command * cmd ) {
@@ -144,24 +170,40 @@ private:
         startCommand( new DecryptVerifyClipboardCommand( 0 ) );
     }
 
+    void slotSetInitialPin() {
+        SetInitialPinCommand * cmd = new SetInitialPinCommand( 0 );
+        q->setAttentionWindow( cmd->dialog() );
+        startCommand( cmd );
+    }
+
+    void slotLearnCertificates() {
+        LearnCertificatesCommand * cmd = new LearnCertificatesCommand( 0 );
+        q->setAttentionWindow( cmd->dialog() );
+        startCommand( cmd );
+    }
+
 private:
     void connectConfigureDialog() {
-        if ( configureDialog && mainWindow )
-            connect( configureDialog, SIGNAL(configCommitted()), mainWindow, SLOT(slotConfigCommitted()) );
+        if ( configureDialog && q->mainWindow() )
+            connect( configureDialog, SIGNAL(configCommitted()), q->mainWindow(), SLOT(slotConfigCommitted()) );
     }
     void disconnectConfigureDialog() {
-        if ( configureDialog && mainWindow )
-            disconnect( configureDialog, SIGNAL(configCommitted()), mainWindow, SLOT(slotConfigCommitted()) );
+        if ( configureDialog && q->mainWindow() )
+            disconnect( configureDialog, SIGNAL(configCommitted()), q->mainWindow(), SLOT(slotConfigCommitted()) );
     }
     void connectMainWindow() {
-        if ( mainWindow )
-            connect( mainWindow, SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
+        if ( q->mainWindow() )
+            connect( q->mainWindow(), SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
     }
     void disconnectMainWindow() {
-        if ( mainWindow )
-            connect( mainWindow, SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
+        if ( q->mainWindow() )
+            connect( q->mainWindow(), SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
     }
+
 private:
+    bool anyCardHasNullPin;
+    bool anyCardCanLearnKeys;
+
     QMenu menu;
     QAction openCertificateManagerAction;
     QAction configureAction;
@@ -172,30 +214,39 @@ private:
     QAction smimeSignClipboardAction;
     QAction openPGPSignClipboardAction;
     QAction decryptVerifyClipboardAction;
+    QMenu cardMenu;
+    QAction setInitialPinAction;
+    QAction learnCertificatesAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
     QPointer<ConfigureDialog> configureDialog;
 
-    QPointer<QWidget> mainWindow;
-    QRect previousGeometry;
+    QRect mainWindowPreviousGeometry;
 };
 
-SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
+SysTrayIcon::Private::Private( SysTrayIcon * qq )
     : q( qq ),
+      anyCardHasNullPin( false ),
+      anyCardCanLearnKeys( false ),
       menu(),
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
       configureAction( i18n("&Configure %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
-      quitAction( i18n("&Quit Kleopatra"), q ),
+      quitAction( i18n("&Shutdown Kleopatra"), q ),
       clipboardMenu( i18n("Clipboard" ) ),
       encryptClipboardAction( i18n("Encrypt..."), q ),
       smimeSignClipboardAction( i18n("S/MIME-Sign..."), q ),
       openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
       decryptVerifyClipboardAction( i18n("Decrypt/Verify..."), q ),
+      cardMenu( i18n("SmartCard") ),
+      setInitialPinAction( i18n("Set Initial PIN..."), q ),
+      learnCertificatesAction( i18n("Learn Card Certificates..."), q ),
       aboutDialog(),
-      mainWindow(),
-      previousGeometry()
+      mainWindowPreviousGeometry()
 {
+    q->setNormalIcon( KIcon( "kleopatra" ) );
+    q->setAttentionIcon( KIcon( "smartcard" ) );
+
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
     KDAB_SET_OBJECT_NAME( configureAction );
@@ -206,6 +257,9 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( smimeSignClipboardAction );
     KDAB_SET_OBJECT_NAME( openPGPSignClipboardAction );
     KDAB_SET_OBJECT_NAME( decryptVerifyClipboardAction );
+    KDAB_SET_OBJECT_NAME( cardMenu );
+    KDAB_SET_OBJECT_NAME( setInitialPinAction );
+    KDAB_SET_OBJECT_NAME( learnCertificatesAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
     connect( &configureAction, SIGNAL(triggered()), q, SLOT(openOrRaiseConfigDialog()) );
@@ -215,11 +269,11 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     connect( &smimeSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotSMIMESignClipboard()) );
     connect( &openPGPSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotOpenPGPSignClipboard()) );
     connect( &decryptVerifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptVerifyClipboard()) );
+    connect( &setInitialPinAction, SIGNAL(triggered()), q, SLOT(slotSetInitialPin()) );
+    connect( &learnCertificatesAction, SIGNAL(triggered()), q, SLOT(slotLearnCertificates()) );
 
     connect( QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)),
              q, SLOT(slotEnableDisableActions()) );
-
-    connect( q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)) );
 
     menu.addAction( &openCertificateManagerAction );
     menu.addAction( &configureAction );
@@ -231,87 +285,100 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     clipboardMenu.addAction( &openPGPSignClipboardAction );
     clipboardMenu.addAction( &decryptVerifyClipboardAction );
     menu.addSeparator();
+    menu.addMenu( &cardMenu );
+    cardMenu.addAction( &setInitialPinAction );
+    cardMenu.addAction( &learnCertificatesAction );
+    menu.addSeparator();
     menu.addAction( &quitAction );
 
     q->setContextMenu( &menu );
+}
 
+SysTrayIcon::Private::~Private() {}
+
+SysTrayIcon::SysTrayIcon( QObject * p )
+    : SystemTrayIcon( p ), d( new Private( this ) )
+{
+    KGlobal::ref();
     slotEnableDisableActions();
 }
 
-SystemTrayIcon::Private::~Private() {}
-
-SystemTrayIcon::SystemTrayIcon( QObject * p )
-    : QSystemTrayIcon( KIcon( "kleopatra" ), p ), d( new Private( this ) )
-{
-    KGlobal::ref();
-}
-
-SystemTrayIcon::~SystemTrayIcon() {
+SysTrayIcon::~SysTrayIcon() {
     KGlobal::deref();
 }
 
-void SystemTrayIcon::setMainWindow( QWidget * mw ) {
-    if ( d->mainWindow )
-        return;
-    d->disconnectConfigureDialog();
-    d->disconnectMainWindow();
-    d->mainWindow = mw;
-    d->connectConfigureDialog();
-    d->connectMainWindow();
-    mw->installEventFilter( this );
-    d->slotEnableDisableActions();
+void SysTrayIcon::doMainWindowClosed( QWidget * mw ) {
+    d->mainWindowPreviousGeometry = mw->geometry();
 }
 
-QWidget * SystemTrayIcon::mainWindow() const {
-    return d->mainWindow;
+MainWindow * SysTrayIcon::mainWindow() const {
+    return static_cast<MainWindow*>( SystemTrayIcon::mainWindow() );
 }
 
-bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
-    if ( o == d->mainWindow )
-        switch ( e->type() ) {
-        case QEvent::Close:
-            d->previousGeometry = static_cast<QWidget*>( o )->geometry();
-            // fall through:
-        case QEvent::Show:
-        case QEvent::DeferredDelete:
-            QMetaObject::invokeMethod( this, "slotEnableDisableActions", Qt::QueuedConnection );
-        default: ;
-        }
-    return false;
+QDialog * SysTrayIcon::attentionWindow() const {
+    return static_cast<QDialog*>( SysTrayIcon::attentionWindow() );
 }
 
-void SystemTrayIcon::openOrRaiseMainWindow() {
-    if ( !d->mainWindow ) {
-        d->mainWindow = doCreateMainWindow();
-        assert( d->mainWindow );
-        if ( d->previousGeometry.isValid() )
-            d->mainWindow->setGeometry( d->previousGeometry );
-        d->mainWindow->installEventFilter( this );
+static void open_or_raise( QWidget * w ) {
+    if ( w->isMinimized() ) {
+        KWindowSystem::unminimizeWindow( w->winId());
+        w->raise();
+    } else if ( w->isVisible() ) {
+        w->raise();
+    } else {
+        w->show();
+    }
+}
+
+void SysTrayIcon::openOrRaiseMainWindow() {
+    MainWindow * mw = mainWindow();
+    if ( !mw ) {
+        mw = new MainWindow;
+        mw->setAttribute( Qt::WA_DeleteOnClose );
+        if ( d->mainWindowPreviousGeometry.isValid() )
+            mw->setGeometry( d->mainWindowPreviousGeometry );
+        setMainWindow( mw );
         d->connectConfigureDialog();
         d->connectMainWindow();
     }
-    if ( d->mainWindow->isMinimized() ) {
-        KWindowSystem::unminimizeWindow( d->mainWindow->winId());
-        d->mainWindow->raise();
-    } else if ( d->mainWindow->isVisible() ) {
-        d->mainWindow->raise();
-    } else {
-        d->mainWindow->show();
-    }
+    open_or_raise( mw );
 }
 
-void SystemTrayIcon::openOrRaiseConfigDialog() {
+void SysTrayIcon::doActivated() {
+    if ( d->anyCardHasNullPin )
+        d->slotSetInitialPin();
+    else if ( d->anyCardCanLearnKeys )
+        d->slotLearnCertificates();
+    else
+        openOrRaiseMainWindow();
+}
+
+void SysTrayIcon::openOrRaiseConfigDialog() {
     if ( !d->configureDialog ) {
         d->configureDialog = new ConfigureDialog;
         d->configureDialog->setAttribute( Qt::WA_DeleteOnClose );
         d->connectConfigureDialog();
     }
-
-    if ( d->configureDialog->isVisible() )
-        d->configureDialog->raise();
-    else
-        d->configureDialog->show();
+    open_or_raise( d->configureDialog );
 }
 
-#include "moc_systemtrayicon.cpp"
+void SysTrayIcon::setAnyCardHasNullPin( bool on ) {
+    if ( d->anyCardHasNullPin == on )
+        return;
+    d->anyCardHasNullPin = on;
+    slotEnableDisableActions();
+}
+
+void SysTrayIcon::setAnyCardCanLearnKeys( bool on ) {
+    if ( d->anyCardCanLearnKeys == on )
+        return;
+    d->anyCardCanLearnKeys = on;
+    slotEnableDisableActions();
+}
+
+void SysTrayIcon::slotEnableDisableActions() {
+    d->enableDisableActions();
+}
+
+#include "moc_systrayicon.cpp"
 
