@@ -86,7 +86,7 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
   int nCurrentlySet = -1;
 
   for ( int i = 0; i < count(); ++i ) {
-    if ( itemText( i ) ==  spec.timeZone().name() ) {
+    if ( itemText( i ) == i18n( spec.timeZone().name().toUtf8() ).replace( '_', ' ' ) ) {
       nCurrentlySet = i;
       break;
     }
@@ -113,7 +113,7 @@ KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec()
     spec = KDateTime::Spec( KDateTime::ClockTime );
   } else {
     //TODO: calendar defined timezone might be selected
-    spec.setType( KSystemTimeZones::zone( currentText() ) );
+    spec.setType( KSystemTimeZones::zone( i18n( currentText().toUtf8() ).replace( '_', ' ' ) ) );
   }
 
   return spec;
