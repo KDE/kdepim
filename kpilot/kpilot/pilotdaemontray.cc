@@ -245,11 +245,8 @@ void PilotDaemonTray::setupWidget()
 	MI( SyncAction::SyncMode::eFullSync, false );
 	MI( SyncAction::SyncMode::eCopyPCToHH, false );
 	MI( SyncAction::SyncMode::eCopyHHToPC, false );
-   /*
-   TODO: Put these back when we're sure they still work. =:/
 	MI( SyncAction::SyncMode::eBackup, false );
 	MI( SyncAction::SyncMode::eRestore, false );
-   */
 #undef MI
 
 	connect( d->fSyncTypeActionsGroup, SIGNAL( triggered( QAction* ) ), this
