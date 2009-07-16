@@ -26,6 +26,7 @@
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 #include <kstartupinfo.h>
+#include <kwindowsystem.h>
 
 #include <qdbusconnectioninterface.h>
 #include <qdbusinterface.h>
@@ -85,6 +86,8 @@ bool PimApplication::start()
     }
 #endif
 
+    KWindowSystem::allowExternalProcessWindowActivation();
+
     const QString objectName = QString( '/' ) + appName + "_PimApplication";
     //kDebug() << objectName;
     QDBusInterface iface(
@@ -92,9 +95,6 @@ bool PimApplication::start()
     QDBusReply<int> reply;
     if ( iface.isValid() &&
          ( reply = iface.call( "newInstance", new_asn_id, saved_args ) ).isValid() ) {
-#ifdef Q_WS_WIN
-      KPIM::Utils::activateWindowForProcess( appName );
-#endif
       return false; // success means that main() can exit now.
     }
   }
