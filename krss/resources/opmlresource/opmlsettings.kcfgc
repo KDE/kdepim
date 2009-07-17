@@ -1,0 +1,5 @@
+File=opmlresource.kcfg
+ClassName=Settings
+Mutators=true
+ItemAccessors=true
+Singleton=true
