@@ -1,3 +1,13 @@
+Friday, July 17th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3687: When printing from KOrganizer, make sure to include the Location
+* kolab/issue3756: Fix problems with reminders not showing up with freshly configured folders
+* kolab/issue3740: Fix crash when trying to delete attachment inside an encapsulated message
+
+
 Sunday, July 12th 2009
 
 Problems addressed
