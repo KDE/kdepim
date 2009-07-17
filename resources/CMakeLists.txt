@@ -1,0 +1,2 @@
+add_subdirectory(newsgatorresource)
+add_subdirectory(opmlresource)

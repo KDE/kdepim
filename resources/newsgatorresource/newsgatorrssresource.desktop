@@ -1,0 +1,31 @@
+[Desktop Entry]
+Name=Akonadi RSS Resource for NewsGator Online RSS Reader
+Name[et]=Akonadi NewsGatori võrgu-RSS-lugeja RSS-ressurss
+Name[ga]=Acmhainn RSS Akonadi le haghaidh Léitheoir RSS Ar Líne NewsGator
+Name[gl]=Recurso RSS para Akonadi para o lector en liña de RSS NewsGator
+Name[ja]=NewsGator オンライン RSS リーダーのための Akonadi RSS リソース
+Name[km]=ធនធាន Akonadi RSS សម្រាប់​ NewsGator កម្មវិធី​អាន RSS លើ​បណ្ដាញ
+Name[nds]=Akonadi-RSS-Ressource för NewsGator-Online-RSS-Leser
+Name[pt]=Recurso de RSS do Akonadi para o Leitor de RSS 'Online' NewsGator
+Name[pt_BR]=Recurso de RSS do Akonadi para o Leitor de RSS 'Online' NewsGator
+Name[sv]=Akonadi RSS-resurs för Newsgator RSS-direktläsare
+Name[uk]=Ресурс RSS Akonadi для інтерактивного інструменту читання RSS NewsGator
+Name[x-test]=xxAkonadi RSS Resource for NewsGator Online RSS Readerxx
+Comment=Allows you to synchronize your RSS subscriptions via the NewsGator Online RSS Reader.
+Comment[en_GB]=Allows you to synchronise your RSS subscriptions via the NewsGator Online RSS Reader.
+Comment[et]=Võimaldab sünkroniseerida oma RSS-voogude tellimused NewsGatori võrgu-RSS-lugeja abil.
+Comment[ga]=Leis seo is féidir leat do shíntiúis RSS a shioncrónú tríd an Léitheoir RSS Ar Líne NewsGator
+Comment[gl]=Permite sincronizar as subscricións RSS mediante o lector RSS en liña NewsGator
+Comment[km]=អនុញ្ញាត​ឲ្យ​អ្នក​ធ្វើសមកាលកម្ម​ការ​ជាវ RSS របស់​អ្នក​តាមរយៈ​ NewsGator កម្មវិធី​អាន RSS លើ​បណ្ដាញ ។
+Comment[pt]=Permite-lhe sincronizar as suas inscrições de RSS através do leitor de RSS 'online' NewsGator.
+Comment[pt_BR]=Permite-lhe sincronizar as suas inscrições de RSS através do leitor de RSS 'online' NewsGator.
+Comment[sv]=Låter dig synkronisera dina RSS-prenumerationer via Newsgator RSS-direktläsare.
+Comment[uk]=Надає вам змогу синхронізувати ваші підписки RSS за допомогою інтерактивного інструменту читання RSS NewsGator.
+Comment[x-test]=xxAllows you to synchronize your RSS subscriptions via the NewsGator Online RSS Reader.xx
+Type=AkonadiResource
+Exec=akonadi_newsgator_rss_resource
+Icon=akregator
+
+X-Akonadi-MimeTypes=application/rss+xml
+X-Akonadi-Capabilities=Resource,RssResource
+X-Akonadi-Identifier=akonadi_newsgator_rss_resource
