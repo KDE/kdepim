@@ -1,8 +1,5 @@
 project(proxymodeltestapp)
 
-add_definitions(
-   -DAKONADI_NEXT_EXPORT=
-)
 set(proxymodeltestapp_SRCS
     main.cpp
     mainwindow.cpp
