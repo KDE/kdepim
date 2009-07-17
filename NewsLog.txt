@@ -1,3 +1,35 @@
+Friday, July 17th 2009
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - kolab/issue3707: Fix sent UTF-16 mails being broken
+      - kolab/issue3645: Don't use UNIX end of lines when exporting a calendar to HTML.
+      - kolab/issue3696: Don't disable the button that removes phone number fields in KAddressbook
+      - kolab/issue3631: Fix mouse clicks not being accepted in the address completer on Windows
+      - Fix problems with applications using the wallet getting stuck when the D-Bus daemon dies.
+      - On windows, ensure that the wallet password prompt always appears in the foreground
+      - Don't show a console window on Windows when starting kdeinit4
+      - Add holidays for India
+      - Fix crash in KMail when a mail contains a foreign canceled meeting request
+      - Fix a possible KAddressbook crash (KDE bug 199186)
+      - Improve search dialog in KOrganizer: Better inital date ranger, nicer layout
+      - Fix KMail not being able to check the local mailbox (KDE bug 130938)
+      - In KMail's search window results list view, make single click on a message put the focus
+        on that message and make double click open a viewer window for that message.
+      - When writing to the ICAL format, only write one CATEGORIES per component, according to
+        RFC (KDE bug 171576)
+      - Show a message if a user tries to use work week view without configuring work days (KDE bug 192239).
+      - Provide a nicer "do you want to delete filter" dialog in KOrganizer.
+      - Show a message box when pasting to the calendar failed because of an invalid target date.
+      - When deleting an item, ask the user if that is ok, instead of just informing him.
+      - Fix a crash when applying filters in the todo view
+
+* Merges from enterprise35 branch:
+      - kolab/issue3687: When printing from KOrganizer, make sure to include the Location
+
+
 Sunday, July 12th 2009
 
 Problems addressed
