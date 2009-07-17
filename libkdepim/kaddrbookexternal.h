@@ -37,7 +37,7 @@ class KDEPIM_EXPORT KAddrBookExternal
 
     static bool addVCard( const KABC::Addressee &addressee, QWidget *parent );
 
-    static QString expandDistributionList( const QString &listName,bool &emptyList );
+    static QString expandDistributionList( const QString &listName );
 
   private:
     static bool addAddressee( const KABC::Addressee &addressee );
