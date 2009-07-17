@@ -202,13 +202,18 @@ void ResourceSelection::edit()
   if ( !item )
     return;
 
-  KRES::ConfigDialog dlg( this, QString( "contact" ), item->resource() );
+  // view items can change during "edit", e.g. sub resources being removed ->
+  // sub resource item removed
+  // thus keep their data rather than their pointer
+  KABC::Resource *resource = item->resource();
+
+  KRES::ConfigDialog dlg( this, QString( "contact" ), resource );
 
   if ( dlg.exec() ) {
-    mManager->change( item->resource() );
-    item->resource()->asyncLoad();
+    mManager->change( resource );
+    resource->asyncLoad();
 
-    mLastResource = item->resource()->identifier();
+    mLastResource = resource->identifier();
     updateView();
   }
 }
