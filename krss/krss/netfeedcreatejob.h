@@ -33,6 +33,7 @@ template <typename T> class shared_ptr;
 namespace KRss {
 
 class FeedList;
+class NetFeedCreateJobPrivate;
 
 class KRSS_EXPORT NetFeedCreateJob : public KJob
 {
@@ -63,8 +64,8 @@ public:
     Feed::Id feedId() const;
 
 private:
-    class Private;
-    Private * const d;
+    friend class ::KRss::NetFeedCreateJobPrivate;
+    NetFeedCreateJobPrivate* const d;
     Q_PRIVATE_SLOT( d, void doStart() )
     Q_PRIVATE_SLOT( d, void slotCallFinished( const QVariantMap& ) )
     Q_PRIVATE_SLOT( d, void slotCollectionLoaded( KJob* job ) )
