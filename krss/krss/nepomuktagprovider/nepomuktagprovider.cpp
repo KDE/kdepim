@@ -17,7 +17,7 @@
 
 #include "nepomuktagprovider.h"
 #include "nepomuktagjobimpls.h"
-#include "nepomuktag_p.h"
+#include "krss/tag_p.h"
 
 #include <KLocale>
 #include <KDebug>

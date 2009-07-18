@@ -20,7 +20,7 @@
 #include "tagidsattribute.h"
 #include "subscriptionlabelscollectionattribute.h"
 #include "feedpropertiescollectionattribute.h"
-#include "krss/config-nepomuk.h"
+#include "config-nepomuk.h"
 
 #ifndef HAVE_NEPOMUK
 #include "defaulttagprovider/tagpropertiesattribute.h"
