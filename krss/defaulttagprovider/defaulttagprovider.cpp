@@ -17,7 +17,7 @@
 
 #include "defaulttagprovider.h"
 #include "defaulttagjobimpls.h"
-#include "defaulttag_p.h"
+#include "krss/tag_p.h"
 #include "tagpropertiesattribute.h"
 
 #include <akonadi/collectionfetchjob.h>
@@ -39,7 +39,7 @@ DefaultTagProvider::DefaultTagProvider( const QList<Akonadi::Collection>& tagCol
     Q_FOREACH( const Collection& tagCollection, tagCollections ) {
         if ( tagCollection.hasAttribute<TagPropertiesAttribute>() ) {
             Tag tag;
-            tag.d->setAkonadiCollection( tagCollection );
+            TagPrivate::tag_d( tag )->m_collection = tagCollection;
             m_tags[ tag.id() ] = tag;
             kDebug() << "Converted tag:" << tag.label();
         }
@@ -103,7 +103,7 @@ void DefaultTagProvider::slotCollectionAdded( const Akonadi::Collection& col, co
 
     kDebug() << "Collection created: " << col.id();
     Tag tag;
-    tag.d->setAkonadiCollection( col );
+    TagPrivate::tag_d( tag )->m_collection = col;
     m_tags[ tag.id() ] = tag;
     emit tagCreated( tag );
 }
@@ -115,7 +115,7 @@ void DefaultTagProvider::slotCollectionChanged( const Akonadi::Collection& col )
 
     kDebug() << "Collection modified: " << col.id();
     Tag tag;
-    tag.d->setAkonadiCollection( col );
+    TagPrivate::tag_d( tag )->m_collection = col;
 
     // When creating a new tag, first a virtual search collection is created and then
     // its attributes are modified using a separate job. Therefore slotCollectionAdded()
@@ -140,7 +140,7 @@ void DefaultTagProvider::slotCollectionRemoved( const Akonadi::Collection& col )
 
     kDebug() << "Collection deleted: " << col.id();
     Tag tag;
-    tag.d->setAkonadiCollection( col );
+    TagPrivate::tag_d( tag )->m_collection = col;
 
     // see the explanation above
     if ( !m_tags.contains( tag.id() ) )

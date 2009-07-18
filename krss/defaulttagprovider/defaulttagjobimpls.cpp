@@ -17,7 +17,7 @@
 */
 
 #include "defaulttagjobimpls.h"
-#include "defaulttag_p.h"
+#include "krss/tag_p.h"
 #include "defaulttagprovider.h"
 #include "krss/feedcollection.h"
 #include "krss/tagidsattribute.h"
@@ -109,9 +109,8 @@ void DefaultTagCreateJob::doStart()
 
     // generate a pseudo unique URI
     const QString remoteId = "rss-tag-" + KRandom::randomString( 10 );
-    Collection col = m_tag.d->akonadiCollection();
-    col.setRemoteId( remoteId );
-    m_tag.d->setAkonadiCollection( col );
+    TagPrivate::tag_d( m_tag )->m_collection.setRemoteId( remoteId );
+    const Collection col = TagPrivate::tag_d( m_tag )->m_collection;
     SearchCreateJob *sjob = new SearchCreateJob( col.name(), col.remoteId() );
     connect( sjob, SIGNAL( result( KJob* ) ), this, SLOT( slotCollectionCreated( KJob* ) ) );
     sjob->start();
@@ -150,10 +149,8 @@ void DefaultTagCreateJob::slotCollectionsFetched( KJob *job )
     Q_FOREACH( const Collection& col, cols ) {
         if ( col.remoteId() == Tag::idToString( m_tag.id() ) ) {
             kDebug() << "Found the just created tag at id:" << col.id();
-            Collection oldOne = m_tag.d->akonadiCollection();
-            oldOne.setId( col.id() );
-            m_tag.d->setAkonadiCollection( oldOne );
-            CollectionModifyJob *mjob = new CollectionModifyJob( oldOne );
+            TagPrivate::tag_d( m_tag )->m_collection.setId( col.id() );
+            CollectionModifyJob *mjob = new CollectionModifyJob( TagPrivate::tag_d( m_tag )->m_collection );
             connect( mjob, SIGNAL( result( KJob* ) ), this, SLOT( slotCollectionModified( KJob* ) ) );
             mjob->start();
             return;
@@ -204,7 +201,7 @@ QString DefaultTagModifyJob::errorString() const
 
 void DefaultTagModifyJob::start()
 {
-    CollectionModifyJob *mjob = new CollectionModifyJob( m_tag.d->akonadiCollection() );
+    CollectionModifyJob *mjob = new CollectionModifyJob( TagPrivate::tag_d( m_tag )->m_collection );
     connect( mjob, SIGNAL( result( KJob* ) ), this, SLOT( slotCollectionModified( KJob* ) ) );
     mjob->start();
 }
@@ -304,7 +301,7 @@ void DefaultTagDeleteJob::slotCollectionsFetched( KJob *job )
 
     if ( m_pendingCollectionFetchJobs == 0 && m_pendingCollectionModifyJobs == 0 ) {
         kDebug() << "Done with collections, loading items";
-        Akonadi::ItemFetchJob *fjob = new Akonadi::ItemFetchJob( m_tag.d->akonadiCollection() );
+        Akonadi::ItemFetchJob *fjob = new Akonadi::ItemFetchJob( TagPrivate::tag_d( m_tag )->m_collection );
         fjob->fetchScope().fetchFullPayload( false );
         fjob->fetchScope().fetchAllAttributes( false );
         fjob->fetchScope().fetchAttribute<TagIdsAttribute>( true );
@@ -326,7 +323,7 @@ void DefaultTagDeleteJob::slotCollectionModified( KJob *job )
 
     if ( m_pendingCollectionFetchJobs == 0 && m_pendingCollectionModifyJobs == 0 ) {
         kDebug() << "Done with collections, loading items";
-        Akonadi::ItemFetchJob *fjob = new Akonadi::ItemFetchJob( m_tag.d->akonadiCollection() );
+        Akonadi::ItemFetchJob *fjob = new Akonadi::ItemFetchJob( TagPrivate::tag_d( m_tag )->m_collection );
         fjob->fetchScope().fetchFullPayload( false );
         fjob->fetchScope().fetchAllAttributes( false );
         fjob->fetchScope().fetchAttribute<TagIdsAttribute>( true );
@@ -366,7 +363,7 @@ void DefaultTagDeleteJob::slotItemsFetched( KJob *job )
     if ( items.isEmpty() ) {
         // there were no items, we are done
         kDebug() << "Deleting the tag";
-        CollectionDeleteJob *djob = new CollectionDeleteJob( m_tag.d->akonadiCollection() );
+        CollectionDeleteJob *djob = new CollectionDeleteJob( TagPrivate::tag_d( m_tag )->m_collection );
         connect( djob, SIGNAL( result( KJob* ) ), this, SLOT( slotTagDeleted( KJob* ) ) );
         djob->start();
     }
@@ -385,7 +382,7 @@ void DefaultTagDeleteJob::slotItemModified( KJob *job )
 
     if ( m_pendingItemModifyJobs == 0 ) {
         kDebug() << "Deleting the tag";
-        CollectionDeleteJob *djob = new CollectionDeleteJob( m_tag.d->akonadiCollection() );
+        CollectionDeleteJob *djob = new CollectionDeleteJob( TagPrivate::tag_d( m_tag )->m_collection );
         connect( djob, SIGNAL( result( KJob* ) ), this, SLOT( slotTagDeleted( KJob* ) ) );
         djob->start();
     }
@@ -470,7 +467,7 @@ void DefaultTagCreateReferencesJob::start()
 
     Q_FOREACH( const TagId& id, tags ) {
         const Tag tag = m_tagProvider->tag( id );
-        const Collection col = tag.d->akonadiCollection();
+        const Collection col = TagPrivate::tag_d( tag )->m_collection;
         ++m_pendingLinkJobs;
         LinkJob *ljob = new LinkJob( col, QList<Akonadi::Item>() <<
                                      Akonadi::Item( RssItem::itemIdToAkonadi( m_item.id() ) )
@@ -568,7 +565,7 @@ void DefaultTagModifyReferencesJob::start()
     // delete hardlinks
     Q_FOREACH( const TagId& id, m_removedTags ) {
         const Tag tag = m_tagProvider->tag( id );
-        const Collection col = tag.d->akonadiCollection();
+        const Collection col = TagPrivate::tag_d( tag )->m_collection;
         ++m_pendingUnlinkJobs;
         UnlinkJob *ujob = new UnlinkJob( col, QList<Akonadi::Item>() <<
                                          Akonadi::Item( RssItem::itemIdToAkonadi( m_item.id() ) )
@@ -580,7 +577,7 @@ void DefaultTagModifyReferencesJob::start()
     // create hardlinks
     Q_FOREACH( const TagId& id, m_addedTags ) {
         const Tag tag = m_tagProvider->tag( id );
-        const Collection col = tag.d->akonadiCollection();
+        const Collection col = TagPrivate::tag_d( tag )->m_collection;
         ++m_pendingLinkJobs;
         LinkJob *ljob = new LinkJob( col, QList<Akonadi::Item>() <<
                                      Akonadi::Item( RssItem::itemIdToAkonadi( m_item.id() ) )
@@ -685,7 +682,7 @@ void DefaultTagDeleteReferencesJob::start()
 
     Q_FOREACH( const TagId& id, tags ) {
         const Tag tag = m_tagProvider->tag( id );
-        const Collection col = tag.d->akonadiCollection();
+        const Collection col = TagPrivate::tag_d( tag )->m_collection;
         kDebug() << "Unlinking from:" << col.id();
         ++m_pendingUnlinkJobs;
         UnlinkJob *ujob = new UnlinkJob( col, QList<Akonadi::Item>() <<

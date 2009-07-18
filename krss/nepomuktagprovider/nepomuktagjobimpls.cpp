@@ -16,7 +16,7 @@
 */
 
 #include "nepomuktagjobimpls.h"
-#include "nepomuktag_p.h"
+#include "krss/tag_p.h"
 #include "krss/tagidsattribute.h"
 #include "krss/feed.h"
 #include "krss/feedcollection.h"

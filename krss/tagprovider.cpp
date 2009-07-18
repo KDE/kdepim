@@ -16,7 +16,7 @@
 */
 
 #include "tagprovider.h"
-#include "krss/config-nepomuk.h"
+#include "config-nepomuk.h"
 
 #include <KLocale>
 #include <KDebug>

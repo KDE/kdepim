@@ -19,7 +19,6 @@
 #define KRSS_TAG_H
 
 #include "krss_export.h"
-#include "krss/config-nepomuk.h"
 
 #include <KUrl>
 
@@ -31,6 +30,8 @@
 namespace KRss {
 
 typedef KUrl TagId;
+
+class TagPrivate;
 
 class KRSS_EXPORT Tag
 {
@@ -61,20 +62,8 @@ public:
     bool isNull() const;
 
 private:
-#ifdef HAVE_NEPOMUK
-    typedef class NepomukTagPrivate TagPrivateImpl;
-    QSharedDataPointer<TagPrivateImpl> d;
-#else
-    friend class DefaultTagProvider;
-    friend class DefaultTagCreateJob;
-    friend class DefaultTagModifyJob;
-    friend class DefaultTagDeleteJob;
-    friend class DefaultTagCreateReferencesJob;
-    friend class DefaultTagModifyReferencesJob;
-    friend class DefaultTagDeleteReferencesJob;
-    typedef class DefaultTagPrivate TagPrivateImpl;
-    QSharedDataPointer<TagPrivateImpl> d;
-#endif
+    friend class TagPrivate;
+    QSharedDataPointer<TagPrivate> d;
 };
 
 inline QDebug operator<<( QDebug debug, const Tag &tag )

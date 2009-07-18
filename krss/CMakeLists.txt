@@ -110,7 +110,6 @@ endif(Nepomuk_FOUND)
 
 set(krss_LIB_HDRS
    krss_export.h
-   ${CMAKE_CURRENT_BINARY_DIR}/config-nepomuk.h
    item.h
    enclosure.h
    exportopmljob.h

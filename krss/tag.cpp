@@ -16,13 +16,6 @@
 */
 
 #include "tag_p.h"
-#include "krss/config-nepomuk.h"
-
-#ifdef HAVE_NEPOMUK
-#include "nepomuktagprovider/nepomuktag_p.h"
-#else
-#include "defaulttagprovider/defaulttag_p.h"
-#endif
 
 using namespace boost;
 using namespace KRss;
@@ -38,7 +31,7 @@ TagId Tag::idFromString( const QString& s )
 }
 
 Tag::Tag( const TagId& id )
-    : d( new TagPrivateImpl( id ) )
+    : d( new TagPrivate( id ) )
 {
 }
 
@@ -65,7 +58,7 @@ Tag& Tag::operator=( const Tag& other )
 
 bool Tag::operator==( const Tag& other ) const
 {
-    return d->m_id == other.d->m_id;
+    return d->id() == other.d->id();
 }
 
 bool Tag::operator!=( const Tag& other ) const
@@ -110,10 +103,10 @@ void Tag::setIcon( const QString &icon )
 
 TagId Tag::id() const
 {
-    return d->m_id;
+    return d->id();
 }
 
 bool Tag::isNull() const
 {
-    return d->m_id.isEmpty();
+    return d->id().isEmpty();
 }
