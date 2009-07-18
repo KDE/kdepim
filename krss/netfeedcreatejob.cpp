@@ -38,11 +38,11 @@ using Akonadi::Collection;
 
 namespace KRss {
 
-class NetFeedCreateJob::Private
+class NetFeedCreateJobPrivate
 {
     NetFeedCreateJob* const q;
 public:
-    explicit Private( const QString &xmlUrl,
+    explicit NetFeedCreateJobPrivate( const QString &xmlUrl,
                       const QString &subscriptionLabel,
                       const QString &resourceIdentifier,
                       NetFeedCreateJob* qq )
@@ -67,7 +67,7 @@ public:
 
 NetFeedCreateJob::NetFeedCreateJob( const QString &xmlUrl, const QString &subscriptionLabel,
                                     const QString &resourceIdentifier, QObject *parent ) :
-    KJob( parent ), d( new Private( xmlUrl, subscriptionLabel, resourceIdentifier, this ) )
+    KJob( parent ), d( new NetFeedCreateJobPrivate( xmlUrl, subscriptionLabel, resourceIdentifier, this ) )
 {
 }
 
@@ -111,7 +111,7 @@ QString NetFeedCreateJob::errorString() const
     return result;
 }
 
-void NetFeedCreateJob::Private::doStart()
+void NetFeedCreateJobPrivate::doStart()
 {
     org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Agent." + m_resourceIdentifier, "/KRss",
                                                     QDBusConnection::sessionBus(), q );
@@ -121,18 +121,18 @@ void NetFeedCreateJob::Private::doStart()
     argumentList << qVariantFromValue( m_xmlUrl ) << qVariantFromValue( m_subscriptionLabel );
     if ( !interface->callWithCallback( QLatin1String( "addFeed" ), argumentList,
                             q, SLOT( slotCallFinished(QVariantMap) ) ) ) {
-        q->setError( CouldNotCreateFeed );
+        q->setError( NetFeedCreateJob::CouldNotCreateFeed );
         q->setErrorText( "Failed to place a D-Bus call");
         q->emitResult();
     }
 }
 
-void NetFeedCreateJob::Private::slotCallFinished( const QVariantMap& res )
+void NetFeedCreateJobPrivate::slotCallFinished( const QVariantMap& res )
 {
     const int error = res.value( "error" ).toInt();
     if ( error ) {
         const QString errorString = res.value( "errorString" ).toString();
-        q->setError( CouldNotCreateFeed );
+        q->setError( NetFeedCreateJob::CouldNotCreateFeed );
         q->setErrorText( errorString );
         q->emitResult();
         return;
@@ -151,10 +151,10 @@ void NetFeedCreateJob::Private::slotCallFinished( const QVariantMap& res )
     }
 }
 
-void NetFeedCreateJob::Private::slotCollectionLoaded( KJob* job )
+void NetFeedCreateJobPrivate::slotCollectionLoaded( KJob* job )
 {
     if ( job->error() ) {
-        q->setError( CouldNotLoadFeed );
+        q->setError( NetFeedCreateJob::CouldNotLoadFeed );
         q->setErrorText( job->errorString() );
         q->emitResult();
         return;

@@ -34,7 +34,7 @@ class SearchFeed;
 class RetrieveFeedListJob;
 class RetrieveFeedListJobPrivate;
 class NetFeedCreateJob;
-
+class NetFeedCreateJobPrivate;
 class FeedListPrivate;
 
 class KRSS_EXPORT FeedList : public QObject
@@ -43,6 +43,7 @@ class KRSS_EXPORT FeedList : public QObject
     friend class ::KRss::RetrieveFeedListJob;
     friend class ::KRss::RetrieveFeedListJobPrivate;
     friend class ::KRss::NetFeedCreateJob;
+    friend class ::KRss::NetFeedCreateJobPrivate;
 
 public:
 
