@@ -18,7 +18,7 @@ namespace KRss {
             NoTimeout=INT_MAX
         };
 
-        bool callWithCallback( QDBusAbstractInterface* iface, const QString& method, const QList<QVariant>& args, QObject* receiver, const char* slot, Timeout timeout=DefaultTimeout );
+        bool callWithCallback( QDBusAbstractInterface* iface, const QString& method, const QList<QVariant>& args, QObject* receiver, const char* slot, const char* errorMethod, Timeout timeout=DefaultTimeout );
     }
 }
 

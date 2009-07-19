@@ -66,6 +66,7 @@ private:
     Private* const d;
     Q_PRIVATE_SLOT( d, void doStart() )
     Q_PRIVATE_SLOT( d, void importFinished(QVariantMap) )
+    Q_PRIVATE_SLOT( d, void importError(QDBusError) )
 };
 
 }
