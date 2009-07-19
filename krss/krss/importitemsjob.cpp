@@ -38,6 +38,7 @@ public:
 
     void doStart();
     void importFinished( const QVariantMap& );
+    void importError( const QDBusError& err );
 
     QString url;
     QString sourceFile;
@@ -75,7 +76,7 @@ void ImportItemsJob::start() {
 }
 
 void ImportItemsJob::Private::doStart() {
-    if ( !DBusHelper::callWithCallback( interface, "importItems", QList<QVariant>() << url << sourceFile, q, SLOT(importFinished(QVariantMap)), DBusHelper::NoTimeout ) ) {
+    if ( !DBusHelper::callWithCallback( interface, "importItems", QList<QVariant>() << url << sourceFile, q, SLOT(importFinished(QVariantMap)), SLOT(importError(QDBusError)), DBusHelper::NoTimeout ) ) {
         q->setError( ImportItemsJob::ImportFailedError );
         q->setErrorText( i18n( "Could not start import." ) );
         q->emitResult();
@@ -87,6 +88,12 @@ void ImportItemsJob::Private::importFinished( const QVariantMap& map ) {
         q->setError( ImportItemsJob::ImportFailedError );
         q->setErrorText( map.value( "errorString" ).toString() );
     }
+    q->emitResult();
+}
+
+void ImportItemsJob::Private::importError( const QDBusError& err ) {
+    q->setError( ImportItemsJob::ImportFailedError );
+    q->setErrorText( i18n( "Item import failed: %1, %2" ).arg( err.name(), err.message() ) );
     q->emitResult();
 }
 
