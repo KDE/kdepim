@@ -41,7 +41,8 @@ class FeedPrivate
 {
 public:
 
-    FeedPrivate( const FeedCollection& feedCollection, const Resource *resource, Feed *qq )
+    FeedPrivate( const FeedCollection& feedCollection, const boost::shared_ptr<const Resource>& resource,
+                 Feed *qq )
         : q( qq ), m_feedCollection( feedCollection ), m_resource( resource ),
           m_unreadCount( 0 ), m_totalCount( 0 ), m_fetching( false )
     {
@@ -61,7 +62,7 @@ public:
 
     Feed* const q;
     FeedCollection m_feedCollection;
-    const Resource *m_resource;
+    const boost::shared_ptr<const Resource> m_resource;
     int m_unreadCount;
     int m_totalCount;
     bool m_fetching;

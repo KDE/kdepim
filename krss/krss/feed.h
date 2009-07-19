@@ -29,6 +29,10 @@ class QPixmap;
 
 class KJob;
 
+namespace Akonadi {
+class CollectionStatistics;
+}
+
 namespace KRss {
 
 class ConstFeedVisitor;
@@ -104,12 +108,24 @@ Q_SIGNALS:
     void unreadCountChanged( const KRss::Feed::Id& feedId, int count );
 
 protected:
-    explicit Feed( const FeedCollection& feedCollection, const Resource *resource, QObject *parent = 0 );
+    explicit Feed( const FeedCollection& feedCollection, const boost::shared_ptr<Resource>& resource,
+                   QObject *parent = 0 );
+
+private:
+    void triggerChanged();
+    void triggerRemoved();
+    void triggerStatisticsChanged( const Akonadi::CollectionStatistics& statistics );
+    void triggerFetchStarted();
+    void triggerFetchPercent( uint percentage );
+    void triggerFetchFinished();
+    void triggerFetchFailed( const QString& errorMessage );
+    void triggerFetchAborted();
 
 protected:
     FeedPrivate * const d;
     Q_DISABLE_COPY(Feed)
 
+    friend class ::KRss::Resource; // for trigger*Something
     friend class ::KRss::FeedListPrivate;
     friend class FeedModifyJobPrivate;
     friend class FeedDeleteJobPrivate;
@@ -120,16 +136,6 @@ protected:
 
     Q_PRIVATE_SLOT( d, void slotCollectionLoadDone( KJob *job ) )
     Q_PRIVATE_SLOT( d, void slotStatisticsFetchDone( KJob *job ) )
-    Q_PRIVATE_SLOT( d, void slotFeedChanged( const KRss::Feed::Id& feedId ) )
-    Q_PRIVATE_SLOT( d, void slotFeedRemoved( const KRss::Feed::Id& feedId ) )
-    Q_PRIVATE_SLOT( d, void slotFetchStarted( const KRss::Feed::Id& feedId ) )
-    Q_PRIVATE_SLOT( d, void slotFetchPercent( const KRss::Feed::Id& feedId, uint percentage ) )
-    Q_PRIVATE_SLOT( d, void slotFetchFinished( const KRss::Feed::Id& feedId ) )
-    Q_PRIVATE_SLOT( d, void slotFetchFailed( const KRss::Feed::Id& feedId,
-                                             const QString &errorMessage ) )
-    Q_PRIVATE_SLOT( d, void slotFetchAborted( const KRss::Feed::Id& feedId ) )
-    Q_PRIVATE_SLOT( d, void slotStatisticsChanged( const KRss::Feed::Id& feedId,
-                                                const Akonadi::CollectionStatistics& stats ) )
 };
 
 } // namespace KRss

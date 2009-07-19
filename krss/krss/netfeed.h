@@ -44,7 +44,8 @@ public:
     //TODO: cache policies
 
 private:
-    explicit NetFeed( const FeedCollection& feedCollection, const Resource *resource, QObject *parent = 0 );
+    NetFeed( const FeedCollection& feedCollection, const boost::shared_ptr<Resource>& resource,
+             QObject* parent = 0 );
 
 private:
     friend class FeedListPrivate;

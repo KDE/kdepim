@@ -20,6 +20,7 @@
 #include "feedcollection.h"
 #include "feedlist.h"
 #include "feedlist_p.h"
+#include "netresource.h"
 
 #include <Akonadi/Collection>
 #include <Akonadi/CollectionFetchJob>
@@ -42,12 +43,9 @@ class NetFeedCreateJobPrivate
 {
     NetFeedCreateJob* const q;
 public:
-    explicit NetFeedCreateJobPrivate( const QString &xmlUrl,
-                      const QString &subscriptionLabel,
-                      const QString &resourceIdentifier,
-                      NetFeedCreateJob* qq )
-        : q( qq ), m_xmlUrl( xmlUrl ), m_subscriptionLabel( subscriptionLabel ),
-          m_resourceIdentifier( resourceIdentifier ), id(0)
+    NetFeedCreateJobPrivate( const QString& xmlUrl, const weak_ptr<NetResource>& resource,
+                             NetFeedCreateJob* qq )
+        : q( qq ), m_xmlUrl( xmlUrl ), m_resource( resource ), m_id(0)
     {
     }
 
@@ -56,18 +54,18 @@ public:
     void slotCollectionLoaded( KJob* job );
 
     const QString m_xmlUrl;
-    const QString m_subscriptionLabel;
-    const QString m_resourceIdentifier;
-    Feed::Id id;
+    const weak_ptr<NetResource> m_resource;
+    shared_ptr<NetResource> m_sharedResource;
+    QString m_subscriptionLabel;
+    Feed::Id m_id;
     weak_ptr<FeedList> m_feedList;
-    shared_ptr<FeedList> m_sharedFeedList;
 };
 
 } // namespace KRss
 
-NetFeedCreateJob::NetFeedCreateJob( const QString &xmlUrl, const QString &subscriptionLabel,
-                                    const QString &resourceIdentifier, QObject *parent ) :
-    KJob( parent ), d( new NetFeedCreateJobPrivate( xmlUrl, subscriptionLabel, resourceIdentifier, this ) )
+NetFeedCreateJob::NetFeedCreateJob( const QString& xmlUrl, const weak_ptr<NetResource>& resource,
+                                    QObject* parent ) :
+    KJob( parent ), d( new NetFeedCreateJobPrivate( xmlUrl, resource, this ) )
 {
 }
 
@@ -81,9 +79,14 @@ void NetFeedCreateJob::setFeedList( const weak_ptr<FeedList>& feedList )
     d->m_feedList = feedList;
 }
 
+void NetFeedCreateJob::setSubscriptionLabel( const QString& subscriptionLabel )
+{
+    d->m_subscriptionLabel = subscriptionLabel;
+}
+
 Feed::Id NetFeedCreateJob::feedId() const
 {
-    return d->id;
+    return d->m_id;
 }
 
 void NetFeedCreateJob::start()
@@ -113,8 +116,16 @@ QString NetFeedCreateJob::errorString() const
 
 void NetFeedCreateJobPrivate::doStart()
 {
-    org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Agent." + m_resourceIdentifier, "/KRss",
-                                                    QDBusConnection::sessionBus(), q );
+    if ( m_resource.expired() ) {
+        q->setError( NetFeedCreateJob::CouldNotCreateFeed );
+        q->setErrorText( i18n( "Resource not available" ) );
+        q->emitResult();
+        return;
+    }
+
+    m_sharedResource = m_resource.lock();
+    org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Agent." + m_sharedResource->id(),
+                                                    "/KRss", QDBusConnection::sessionBus(), q );
 
     // don't block, set callbacks instead
     QList<QVariant> argumentList;
@@ -137,14 +148,13 @@ void NetFeedCreateJobPrivate::slotCallFinished( const QVariantMap& res )
         q->emitResult();
         return;
     }
-    id = res.value( "feedId" ).toLongLong();
+    m_id = res.value( "feedId" ).toLongLong();
 
     if ( m_feedList.expired() ) {
         q->emitResult();
     }
     else {
-        m_sharedFeedList = m_feedList.lock();
-        CollectionFetchJob *job = new CollectionFetchJob( Collection( FeedCollection::feedIdToAkonadi( id ) ),
+        CollectionFetchJob *job = new CollectionFetchJob( Collection( FeedCollection::feedIdToAkonadi( m_id ) ),
                                                           CollectionFetchJob::Base, q );
         QObject::connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotCollectionLoaded( KJob* ) ) );
         job->start();
@@ -162,8 +172,14 @@ void NetFeedCreateJobPrivate::slotCollectionLoaded( KJob* job )
 
     const CollectionFetchJob* const cj = qobject_cast<const CollectionFetchJob*>( job );
     Q_ASSERT( cj && cj->collections().count() == 1 );
-    if ( !m_sharedFeedList->d->m_feeds.contains( id ) ) {
-        m_sharedFeedList->d->appendFeed( cj->collections().first() );
+    if ( m_feedList.expired() ) {
+        q->emitResult();
+        return;
+    }
+
+    shared_ptr<FeedList> sharedFeedList = m_feedList.lock();
+    if ( !sharedFeedList->d->m_feeds.contains( m_id ) ) {
+        sharedFeedList->d->appendFeedCollection( cj->collections().first(), m_sharedResource );
     }
 
     q->emitResult();

@@ -40,14 +40,13 @@ class FeedListPrivate;
 class KRSS_EXPORT FeedList : public QObject
 {
     Q_OBJECT
+    friend class ::KRss::FeedListPrivate;
     friend class ::KRss::RetrieveFeedListJob;
     friend class ::KRss::RetrieveFeedListJobPrivate;
     friend class ::KRss::NetFeedCreateJob;
     friend class ::KRss::NetFeedCreateJobPrivate;
 
 public:
-
-    explicit FeedList( const QStringList &resourceIdentifiers, QObject *parent = 0 );
     ~FeedList();
 
     QList<boost::shared_ptr<Feed> > feeds() const;
@@ -79,12 +78,10 @@ Q_SIGNALS:
     void fetchFailed( const KRss::Feed::Id& id, const QString& errorMessage );
 
 private:
-
-    friend class FeedListPrivate;
+    explicit FeedList( QObject* parent = 0 );
     FeedListPrivate * const d;
-
     Q_DISABLE_COPY( FeedList )
-    Q_PRIVATE_SLOT( d, void slotFeedAdded( const KRss::Feed::Id& id ) )
+    Q_PRIVATE_SLOT( d, void slotFeedAdded( const QString& resourceId, const KRss::Feed::Id& id ) )
     Q_PRIVATE_SLOT( d, void slotFeedRemoved( const KRss::Feed::Id& id ) )
     Q_PRIVATE_SLOT( d, void slotCollectionLoadDone( KJob *job ) )
 };
@@ -98,14 +95,16 @@ class KRSS_EXPORT RetrieveFeedListJob : public KJob
 
 public:
     enum Error {
-        CouldNotRetrieveFeedListError=KJob::UserDefinedError //TODO ...
+        CouldNotRetrieveFeedList = KJob::UserDefinedError,
+        UserDefinedError = CouldNotRetrieveFeedList
     };
 
     explicit RetrieveFeedListJob( QObject* parent=0 );
     ~RetrieveFeedListJob();
 
-    void setResourceIdentifiers( const QStringList& resourceIdentifiers );
-    QStringList resourceIdentifiers() const;
+    // TODO: change to weak_ptr?
+    void setResources( const QList<boost::shared_ptr<Resource> >& resources );
+    QList<boost::shared_ptr<Resource> > resources() const;
 
     /* impl */ void start();
 

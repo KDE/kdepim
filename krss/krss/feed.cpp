@@ -36,6 +36,7 @@
 using Akonadi::Collection;
 using Akonadi::ItemFetchJob;
 using Akonadi::CollectionFetchJob;
+using boost::shared_ptr;
 
 using namespace KRss;
 
@@ -63,21 +64,6 @@ void FeedPrivate::slotCollectionLoadDone( KJob *job )
     emit q->changed( m_feedCollection.feedId() );
 }
 
-void FeedPrivate::slotFeedChanged( const KRss::Feed::Id& feedId )
-{
-    if ( m_feedCollection.feedId() == feedId ) {
-        CollectionFetchJob *job = new CollectionFetchJob( m_feedCollection, CollectionFetchJob::Base, q );
-        QObject::connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotCollectionLoadDone( KJob* ) ) );
-        job->start();
-    }
-}
-
-void FeedPrivate::slotFeedRemoved( const KRss::Feed::Id& feedId )
-{
-    if ( m_feedCollection.feedId() == feedId )
-        emit q->removed( feedId );
-}
-
 void FeedPrivate::slotStatisticsFetchDone( KJob* j )
 {
     const Akonadi::CollectionStatisticsJob* const job = qobject_cast<Akonadi::CollectionStatisticsJob*>( j );
@@ -89,78 +75,15 @@ void FeedPrivate::slotStatisticsFetchDone( KJob* j )
     updateFromStatistics( job->statistics() );
 }
 
-void FeedPrivate::slotStatisticsChanged( const KRss::Feed::Id& feedId,
-                                         const Akonadi::CollectionStatistics& stats )
-{
-    kDebug() << feedId << stats.unreadCount();
-    if ( m_feedCollection.feedId() != feedId )
-        return;
-    updateFromStatistics( stats );
-}
-
-void FeedPrivate::slotFetchStarted( const KRss::Feed::Id& feedId )
-{
-    if ( m_feedCollection.feedId() != feedId )
-        return;
-    m_fetching = true;
-    emit q->fetchStarted( feedId );
-}
-
-void FeedPrivate::slotFetchPercent( const KRss::Feed::Id& feedId, uint percentage )
-{
-    if ( m_feedCollection.feedId() != feedId )
-        return;
-    emit q->fetchPercent( feedId, percentage );
-}
-
-void FeedPrivate::slotFetchFinished( const KRss::Feed::Id& feedId )
-{
-    if ( m_feedCollection.feedId() != feedId )
-        return;
-    m_fetching = false;
-    emit q->fetchFinished( feedId );
-}
-
-void FeedPrivate::slotFetchFailed( const KRss::Feed::Id& feedId, const QString& errorMessage )
-{
-    if ( m_feedCollection.feedId() != feedId )
-        return;
-    m_fetching = false;
-    emit q->fetchFailed( feedId, errorMessage );
-}
-
-void FeedPrivate::slotFetchAborted( const KRss::Feed::Id& feedId )
-{
-    if ( m_feedCollection.feedId() != feedId )
-        return;
-    m_fetching = false;
-    emit q->fetchAborted( feedId );
-}
-
 bool Feed::isFetching() const
 {
     return d->m_fetching;
 }
 
-Feed::Feed( const FeedCollection& feedCollection, const Resource *resource, QObject *parent )
+Feed::Feed( const FeedCollection& feedCollection, const shared_ptr<Resource>& resource, QObject* parent )
     : QObject( parent ), d( new FeedPrivate( feedCollection, resource, this ) )
 {
-    connect( d->m_resource, SIGNAL( feedChanged( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFeedChanged( const KRss::Feed::Id& ) ) );
-    connect( d->m_resource, SIGNAL( feedRemoved( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFeedRemoved( const KRss::Feed::Id& ) ) );
-
-    connect( d->m_resource, SIGNAL( fetchStarted( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFetchStarted( const KRss::Feed::Id& ) ) );
-    connect( d->m_resource, SIGNAL( fetchPercent( const KRss::Feed::Id&, uint ) ),
-             this, SLOT( slotFetchPercent( const KRss::Feed::Id&, uint ) ) );
-    connect( d->m_resource, SIGNAL( fetchFinished( const KRss::Feed::Id& ) ),
-             this, SLOT( slotFetchFinished( const KRss::Feed::Id& ) ) );
-    connect( d->m_resource, SIGNAL( fetchFailed( const KRss::Feed::Id&, const QString& ) ),
-             this, SLOT( slotFetchFailed( const KRss::Feed::Id&, const QString& ) ) );
-    connect( d->m_resource, SIGNAL( statisticsChanged(KRss::Feed::Id, Akonadi::CollectionStatistics) ),
-             this , SLOT( slotStatisticsChanged(KRss::Feed::Id, Akonadi::CollectionStatistics)) );
-
+    resource->registerListeningFeed( this );
     Akonadi::CollectionStatisticsJob* job = new Akonadi::CollectionStatisticsJob( feedCollection );
     connect( job, SIGNAL(finished(KJob*)), this, SLOT(slotStatisticsFetchDone(KJob*)) );
     job->start();
@@ -296,6 +219,53 @@ void Feed::abortFetch() const
     if ( d->m_resource )
         d->m_resource->abortFetch( d->m_feedCollection.feedId() );
 }
+
+void Feed::triggerChanged()
+{
+    CollectionFetchJob* const job = new CollectionFetchJob( d->m_feedCollection, CollectionFetchJob::Base, this );
+    connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotCollectionLoadDone( KJob* ) ) );
+    job->start();
+}
+
+void Feed::triggerRemoved()
+{
+    emit removed( d->m_feedCollection.feedId() );
+}
+
+void Feed::triggerStatisticsChanged( const Akonadi::CollectionStatistics& stats )
+{
+    d->updateFromStatistics( stats );
+}
+
+void Feed::triggerFetchStarted()
+{
+    d->m_fetching = true;
+    emit fetchStarted( d->m_feedCollection.feedId() );
+}
+
+void Feed::triggerFetchPercent( uint percentage )
+{
+    emit fetchPercent( d->m_feedCollection.feedId(), percentage );
+}
+
+void Feed::triggerFetchFinished()
+{
+    d->m_fetching = false;
+    emit fetchFinished( d->m_feedCollection.feedId() );
+}
+
+void Feed::triggerFetchFailed( const QString& errorMessage )
+{
+    d->m_fetching = false;
+    emit fetchFailed( d->m_feedCollection.feedId(), errorMessage );
+}
+
+void Feed::triggerFetchAborted()
+{
+    d->m_fetching = false;
+    emit fetchAborted( d->m_feedCollection.feedId() );
+}
+
 
 void ItemListJobImpl::slotItemsReceived( const Akonadi::Item::List& items )
 {

@@ -29,6 +29,9 @@ set(krss_LIB_SRCS
    feedcollection.cpp
    resourcemanager.cpp
    resource.cpp
+   netresource.cpp
+   #searchresource.cpp
+   retrieveresourcecollectionsjob.cpp
    feed.cpp
    feedvisitor.cpp
    searchfeed.cpp

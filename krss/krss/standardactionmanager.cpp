@@ -27,6 +27,7 @@
 #include "feedjobs.h"
 #include "itemjobs.h"
 #include "resourcemanager.h"
+#include "netresource.h"
 #include "ui/netfeedcreatedialog.h"
 #include "ui/feedpropertiesdialog.h"
 #include "subscriptionsmodel.h"
@@ -267,10 +268,9 @@ void StandardActionManager::slotCreateNetFeed()
     NetFeedCreateDialog *dialog = new NetFeedCreateDialog( d->m_parentWidget );
 
     QList<QPair<QString, QString> > resourceDescriptions;
-    QStringList identifiers = ResourceManager::self()->identifiers();
-    Q_FOREACH( const QString &identifier, identifiers ) {
-        QPair<QString, QString> resourceDescription( identifier, ResourceManager::self()->resourceName( identifier ) );
-        resourceDescriptions.append( resourceDescription );
+    const QList<shared_ptr<NetResource> > resources = ResourceManager::self()->netResources();
+    Q_FOREACH( const shared_ptr<NetResource>& resource, resources ) {
+        resourceDescriptions.append( QPair<QString, QString>( resource->id(), resource->name() ) );
     }
 
     dialog->setResourceDescriptions( resourceDescriptions );
@@ -278,9 +278,14 @@ void StandardActionManager::slotCreateNetFeed()
         const QString identifier = dialog->resourceIdentifier();
         const QString url = dialog->url();
 
-        NetFeedCreateJob *job = new NetFeedCreateJob( url, d->m_subscriptionLabel, identifier, this );
-        connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotNetFeedCreated( KJob* ) ) );
-        job->start();
+        Q_FOREACH( const shared_ptr<NetResource>& resource, resources ) {
+            if ( resource->id() == identifier ) {
+                NetFeedCreateJob* const job = resource->netFeedCreateJob( url );
+                connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotNetFeedCreated( KJob* ) ) );
+                job->start();
+                break;
+            }
+        }
     }
 
     delete dialog;

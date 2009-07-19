@@ -20,6 +20,8 @@
 
 #include "feed.h"
 
+#include <Akonadi/Collection>
+
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QHash>
@@ -36,30 +38,23 @@ class FeedList;
 class FeedListPrivate
 {
 public:
-
     explicit FeedListPrivate( FeedList *qq )
-        : q( qq )
-    {
-    }
+        : q( qq ) {}
 
-    KRss::Feed::Id appendFeed( const FeedCollection& feedCollection );
-    void dump();
+    void appendResourceCollections( const QList<Akonadi::Collection>& collections,
+                                    const boost::shared_ptr<Resource>& resource );
+    void appendFeedCollection( const FeedCollection& feedCollection,
+                               const boost::shared_ptr<Resource>& resource );
 
-    void slotFeedAdded( const KRss::Feed::Id& id );
+    void slotFeedAdded( const QString& resourceId, const KRss::Feed::Id& id );
     void slotFeedRemoved( const KRss::Feed::Id& id );
     void slotCollectionLoadDone( KJob *job );
 
 public:
-
     FeedList * const q;
-
-    // resource id => list of child feed ids
-    QHash<QString, QList<Feed::Id> > m_feedsMap;
-    // feed id => feed
     QHash<Feed::Id, boost::shared_ptr<Feed> > m_feeds;
-    // resource id => resource
-    QHash<QString, const Resource *> m_resources;
-
+    QHash<QString, boost::shared_ptr<Resource> > m_resources;
+    QHash<const KJob*, QString> m_pendingJobs;
 };
 
 } // namespace KRss

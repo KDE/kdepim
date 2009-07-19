@@ -21,81 +21,72 @@
 #include "krss_export.h"
 #include "feed.h"
 
-#include <Akonadi/CollectionStatistics>
-
-class KJob;
+#include <boost/shared_ptr.hpp>
 
 namespace Akonadi {
-class Item;
-class Collection;
-class AgentInstance;
+class CollectionStatistics;
 }
 
 namespace KRss {
 
-class ExportOpmlJob;
-class ImportItemsJob;
-class ImportOpmlJob;
+class RetrieveResourceCollectionsJob;
 class ResourcePrivate;
 
 class KRSS_EXPORT Resource : public QObject
 {
     Q_OBJECT
-
 public:
-
-    bool isValid() const;
-
-    ImportItemsJob* createImportItemsJob( const QString& xmlUrl, const QString& sourceFile ) const;
-
-    ImportOpmlJob* createImportOpmlJob( const KUrl& url ) const;
-    ExportOpmlJob* createExportOpmlJob( const KUrl& url ) const;
-
-Q_SIGNALS:
-
-    void feedAdded( const KRss::Feed::Id& feedId );
-    void feedChanged( const KRss::Feed::Id& feedId );
-    void feedRemoved( const KRss::Feed::Id& feedId );
-
-    void statisticsChanged( const KRss::Feed::Id& feedId,
-                            const Akonadi::CollectionStatistics &statistics );
-
-
-    void fetchStarted( const KRss::Feed::Id& feedId );
-    void fetchPercent( const KRss::Feed::Id& feedId, uint percent );
-    void fetchFinished( const KRss::Feed::Id& feedId );
-    void fetchFailed( const KRss::Feed::Id& feedId, const QString &errorMessage );
-    void fetchAborted( const KRss::Feed::Id& feedId );
-    void fetchQueueStarted();
-    void fetchQueueFinished();
+    ~Resource();
+    QString id() const;
+    QString name() const;
 
 public Q_SLOTS:
+    virtual void fetchFeed( const KRss::Feed::Id& feedId ) const = 0;
+    virtual void abortFetch( const KRss::Feed::Id& feedId ) const = 0;
 
-    void addFeed( const QString &xmlUrl, const QString &subscriptionLabel ) const;
-    void fetchFeed( const KRss::Feed::Id& feedId ) const;
-    void abortFetch( const KRss::Feed::Id& feedId ) const;
+Q_SIGNALS:
+    void feedAdded( const QString& resourceId, const KRss::Feed::Id& feedId );
+    void feedChanged( const QString& resourceId, const KRss::Feed::Id& feedId );
+    void feedRemoved( const QString& resourceId, const KRss::Feed::Id& feedId );
+
+    void statisticsChanged( const QString& resourceId, const KRss::Feed::Id& feedId,
+                            const Akonadi::CollectionStatistics& statistics );
+
+    void fetchStarted( const QString& resourceId, const KRss::Feed::Id& feedId );
+    void fetchPercent( const QString& resourceId, const KRss::Feed::Id& feedId, uint percent );
+    void fetchFinished( const QString& resourceId, const KRss::Feed::Id& feedId );
+    void fetchFailed( const QString& resourceId, const KRss::Feed::Id& feedId, const QString& errorMessage );
+    void fetchAborted( const QString& resourceId, const KRss::Feed::Id& feedId );
+    void fetchQueueStarted( const QString& resourceId );
+    void fetchQueueFinished( const QString& resourceId );
+
+public:
+    void registerListeningFeed( Feed* feed );
+    void unregisterListeningFeed( Feed* feed );
+    virtual RetrieveResourceCollectionsJob* retrieveResourceCollectionsJob() const = 0;
+
+protected:
+    Resource( const QString& resourceId, const QString& name, QObject* parent = 0 );
+    explicit Resource( ResourcePrivate& dd, QObject* parent = 0 );
+
+    void triggerFeedChanged( const KRss::Feed::Id& feedId );
+    void triggerFeedRemoved( const KRss::Feed::Id& feedId );
+    void triggerStatisticsChanged( const KRss::Feed::Id& feedId,
+                                   const Akonadi::CollectionStatistics &statistics );
+    void triggerFetchStarted( const KRss::Feed::Id& feedId );
+    void triggerFetchPercent( const KRss::Feed::Id& feedId, uint percentage );
+    void triggerFetchFinished( const KRss::Feed::Id& feedId );
+    void triggerFetchFailed( const KRss::Feed::Id& feedId, const QString &errorMessage );
+    void triggerFetchAborted( const KRss::Feed::Id& feedId );
+
+protected:
+    ResourcePrivate* const d_ptr;
 
 private:
-    explicit Resource( const Akonadi::AgentInstance &instance, QObject *parent = 0 );
-    ~Resource();
-
-private:
-    friend class ResourcePrivate;
-    friend class ResourceManager;
-    ResourcePrivate * const d;
-    Q_DISABLE_COPY( Resource )
-    Q_PRIVATE_SLOT( d, void slotCollectionAdded( const Akonadi::Collection& col,
-                                                 const Akonadi::Collection& parent ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionChanged( const Akonadi::Collection& col ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionRemoved( const Akonadi::Collection& col ) )
-    Q_PRIVATE_SLOT( d, void slotCollectionStatisticsChanged( Akonadi::Collection::Id id,
-                                                             const Akonadi::CollectionStatistics& statistics ) )
-    Q_PRIVATE_SLOT( d, void slotFetchStarted( qlonglong id ) )
-    Q_PRIVATE_SLOT( d, void slotFetchPercent( qlonglong id, uint percent ) )
-    Q_PRIVATE_SLOT( d, void slotFetchFinished( qlonglong id ) )
-    Q_PRIVATE_SLOT( d, void slotFetchFailed( qlonglong id, const QString& errorMessage ) )
-    Q_PRIVATE_SLOT( d, void slotFetchAborted( qlonglong id ) )
-    Q_PRIVATE_SLOT( d, void slotRootCollectionFetchFinished( KJob* ) )
+    friend class Feed;  // for register/unregisterListeningFeed
+    friend class RetrieveFeedListJobPrivate; // for retrieveResourceCollectionsJob
+    Q_DECLARE_PRIVATE( Resource );
+    Q_DISABLE_COPY( Resource );
 };
 
 } //namespace KRss

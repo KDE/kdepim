@@ -23,7 +23,8 @@
 using namespace KRss;
 using namespace boost;
 
-SearchFeed::SearchFeed( const FeedCollection& feedCollection, Resource *resource, QObject *parent )
+SearchFeed::SearchFeed( const FeedCollection& feedCollection, const shared_ptr<Resource>& resource,
+                        QObject* parent )
     : Feed( feedCollection, resource, parent )
 {
 }

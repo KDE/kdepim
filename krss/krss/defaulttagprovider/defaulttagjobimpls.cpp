@@ -259,7 +259,8 @@ QString DefaultTagDeleteJob::errorString() const
 
 void DefaultTagDeleteJob::start()
 {
-    const QStringList resources = ResourceManager::self()->identifiers();
+    //FIXME: make it work
+    const QStringList resources;// = ResourceManager::self()->identifiers();
     Q_FOREACH( const QString& resource, resources ) {
         CollectionFetchJob *fjob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
         fjob->includeUnsubscribed( true );
