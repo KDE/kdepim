@@ -25,7 +25,8 @@
 using namespace KRss;
 using namespace boost;
 
-NetFeed::NetFeed( const FeedCollection &feedCollection, const Resource *resource, QObject *parent )
+NetFeed::NetFeed( const FeedCollection& feedCollection, const shared_ptr<Resource>& resource,
+                  QObject* parent )
     : Feed( feedCollection, resource, parent )
 {
     setIcon( KIcon("application-rss+xml") );

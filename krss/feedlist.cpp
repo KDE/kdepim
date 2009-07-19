@@ -23,6 +23,7 @@
 #include "netfeed.h"
 #include "searchfeed.h"
 #include "feedcollection.h"
+#include "retrieveresourcecollectionsjob.h"
 
 #include <akonadi/collectionfetchjob.h>
 
@@ -44,11 +45,23 @@ using boost::shared_ptr;
 using boost::dynamic_pointer_cast;
 
 // private implementation
-KRss::Feed::Id FeedListPrivate::appendFeed( const FeedCollection& collection )
+void FeedListPrivate::appendResourceCollections( const QList<Collection>& collections,
+                                                 const shared_ptr<Resource>& resource )
 {
-    m_feedsMap[ collection.resource() ].append( collection.feedId() );
-    shared_ptr<Feed> feed( new NetFeed( collection, m_resources.value( collection.resource() ) ) );
-    m_feeds.insert( collection.feedId(), feed );
+    Q_FOREACH( const Collection& collection, collections )
+        appendFeedCollection( collection, resource );
+
+    m_resources.insert( resource->id(), resource );
+    QObject::connect( resource.get(), SIGNAL( feedAdded( const QString&, const KRss::Feed::Id& ) ),
+                      q, SLOT( slotFeedAdded( const QString&, const KRss::Feed::Id& ) ) );
+}
+
+void FeedListPrivate::appendFeedCollection( const FeedCollection& collection,
+                                            const shared_ptr<Resource>& resource )
+{
+    // TODO: support for SearchFeeds
+    shared_ptr<Feed> feed( new NetFeed( collection, resource ) );
+    m_feeds.insert( feed->id(), feed );
 
     QObject::connect( feed.get(), SIGNAL( unreadCountChanged( const KRss::Feed::Id&, int ) ),
                       q, SIGNAL( unreadCountChanged( const KRss::Feed::Id&, int ) ) );
@@ -67,26 +80,9 @@ KRss::Feed::Id FeedListPrivate::appendFeed( const FeedCollection& collection )
                       q, SIGNAL( feedChanged( const KRss::Feed::Id& ) ) );
     QObject::connect( feed.get(), SIGNAL( removed( const KRss::Feed::Id& ) ),
                       q, SLOT( slotFeedRemoved( const KRss::Feed::Id& ) ) );
-
-    return feed->id();
 }
 
-void FeedListPrivate::dump()
-{
-    QHashIterator<QString, QList<Feed::Id> > it_res( m_feedsMap );
-    while( it_res.hasNext() ) {
-        it_res.next();
-        kDebug() << "Resource:" << it_res.key() << ", feeds:" << it_res.value();
-    }
-
-    QHashIterator<Feed::Id, shared_ptr<Feed> > it_feed( m_feeds );
-    while( it_feed.hasNext() ) {
-        it_feed.next();
-        kDebug() << "Feed id:" << it_feed.key() << ", title:" << it_feed.value()->title();
-    }
-}
-
-void FeedListPrivate::slotFeedAdded( const KRss::Feed::Id& id )
+void FeedListPrivate::slotFeedAdded( const QString& resourceId, const KRss::Feed::Id& id )
 {
     // NetFeedCreateJob may have already added this feed to the list
     if ( m_feeds.contains( id ) )
@@ -95,6 +91,7 @@ void FeedListPrivate::slotFeedAdded( const KRss::Feed::Id& id )
     CollectionFetchJob *job = new CollectionFetchJob( Collection( FeedCollection::feedIdToAkonadi( id ) ),
                                                       CollectionFetchJob::Base, q );
     QObject::connect( job, SIGNAL( result( KJob* ) ), q, SLOT( slotCollectionLoadDone( KJob* ) ) );
+    m_pendingJobs.insert( job, resourceId );
     job->start();
 }
 
@@ -112,27 +109,21 @@ void FeedListPrivate::slotCollectionLoadDone( KJob *job )
         return;
     }
 
-    Collection col = static_cast<CollectionFetchJob*>( job )->collections().first();
-    const KRss::Feed::Id id = appendFeed( col );
-    emit q->feedAdded( id );
-    dump();
+    const CollectionFetchJob* const fjob = qobject_cast<const CollectionFetchJob*>( job );
+    assert( fjob );
+    assert( fjob->collections().count() == 1 );
+    assert( m_pendingJobs.contains( job ) );
+
+    const Collection collection = fjob->collections().first();
+    const shared_ptr<Resource> resource = m_resources.value( m_pendingJobs.value( job ) );
+    appendFeedCollection( collection, resource );
+    emit q->feedAdded( FeedCollection::feedIdFromAkonadi( collection.id() ) );
 }
 
 // public interface implementation
-FeedList::FeedList( const QStringList &resourceIdentifiers, QObject *parent )
+FeedList::FeedList( QObject* parent )
     : QObject( parent ), d ( new FeedListPrivate( this ) )
 {
-    Q_FOREACH( const QString &resourceIdentifier, resourceIdentifiers ) {
-        const Resource *resource = ResourceManager::self()->resource( resourceIdentifier );
-        if ( !resource ) {
-            kDebug() << "Resource" << resourceIdentifier << " is not valid";
-            continue;
-        }
-
-        d->m_resources.insert( resourceIdentifier, resource );
-        connect( resource, SIGNAL( feedAdded( const KRss::Feed::Id& ) ),
-                 this, SLOT( slotFeedAdded( const KRss::Feed::Id& ) ) );
-    }
 }
 
 FeedList::~FeedList()
@@ -268,15 +259,13 @@ public:
 
 public:
     shared_ptr<FeedList> feedList;
-    int pendingFetchJobs;
-    QStringList resourceIdentifiers;
+    QHash<KJob*, Resource*> pendingJobs;
+    QList<shared_ptr<Resource> > resources;
 };
 
 RetrieveFeedListJobPrivate::RetrieveFeedListJobPrivate( RetrieveFeedListJob* qq )
     : q( qq )
-    , feedList()
-    , pendingFetchJobs( 0 )
-    , resourceIdentifiers()
+    , feedList( new FeedList )
 {
 }
 
@@ -289,44 +278,39 @@ RetrieveFeedListJob::~RetrieveFeedListJob()
     delete d;
 }
 
-void RetrieveFeedListJob::setResourceIdentifiers( const QStringList& resourceIdentifiers )
+void RetrieveFeedListJob::setResources( const QList<shared_ptr<Resource> >& resources )
 {
-    d->resourceIdentifiers = resourceIdentifiers;
+    d->resources = resources;
 }
 
-QStringList RetrieveFeedListJob::resourceIdentifiers() const
+QList<shared_ptr<Resource> > RetrieveFeedListJob::resources() const
 {
-    return d->resourceIdentifiers;
+    return d->resources;
 }
 
 void RetrieveFeedListJobPrivate::loadDone( KJob* job_ )
 {
-    CollectionFetchJob* const job = qobject_cast<CollectionFetchJob*>( job_ );
+    const RetrieveResourceCollectionsJob* const job = dynamic_cast<const RetrieveResourceCollectionsJob*>( job_ );
     assert( job );
-    assert( pendingFetchJobs > 0 );
-    --pendingFetchJobs;
+    assert( pendingJobs.count() > 0 );
+    Resource* const res = pendingJobs.take( job_ );
 
     if ( job->error() ) {
-        q->setError( RetrieveFeedListJob::CouldNotRetrieveFeedListError );
+        q->setError( RetrieveFeedListJob::CouldNotRetrieveFeedList );
         q->setErrorText( job->errorString() );
         q->emitResult();
         return;
     }
 
-    const QList<Collection> cols = job->collections();
-    QList<KUrl> uris;
-    Q_FOREACH( const Collection &col, cols ) {
-        // accept only 'first generation' child collections
-        if ( col.parent() != Collection::root().id() ) {
-            feedList->d->appendFeed( col );
-            uris.append( col.url() );
+    Q_FOREACH( const shared_ptr<Resource>& resource, resources ) {
+        if ( resource.get() == res ) {
+            feedList->d->appendResourceCollections( job->collections(), resource );
+            break;
         }
     }
 
-    if ( pendingFetchJobs > 0 )
-        return;
-
-    q->emitResult();
+    if ( pendingJobs.count() == 0 )
+        q->emitResult();
 }
 
 shared_ptr<FeedList> RetrieveFeedListJob::feedList() const
@@ -341,19 +325,18 @@ void RetrieveFeedListJob::start()
 
 void RetrieveFeedListJobPrivate::doStart()
 {
-    feedList.reset( new FeedList( resourceIdentifiers ) );
-    if ( resourceIdentifiers.isEmpty() ) {
+    if ( resources.isEmpty() ) {
         q->emitResult();
         return;
     }
 
-    Q_FOREACH( const QString &resourceId, resourceIdentifiers ) {
-        std::auto_ptr<CollectionFetchJob> job( new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive ) );
-        job->includeUnsubscribed( true );
-        job->setResource( resourceId );
-        q->connect( job.get(), SIGNAL(result(KJob*)), q, SLOT(loadDone(KJob*)) );
-        ++pendingFetchJobs;
-        job.release()->start();
+    Q_FOREACH( const shared_ptr<Resource>& resource, resources ) {
+        if ( !resource )
+            continue;
+        RetrieveResourceCollectionsJob* const job = resource->retrieveResourceCollectionsJob();
+        q->connect( job, SIGNAL( result( KJob * ) ), q, SLOT( loadDone( KJob* ) ) );
+        pendingJobs.insert( job, resource.get() );
+        job->start();
     }
 }
 

@@ -35,12 +35,12 @@ namespace KIO {
 
 namespace KRss {
 
-class Resource;
+class NetResource;
 
 class KRSS_EXPORT ExportOpmlJob : public KJob {
     Q_OBJECT
 
-    friend class ::KRss::Resource;
+    friend class ::KRss::NetResource;
 
 public:
     ~ExportOpmlJob();

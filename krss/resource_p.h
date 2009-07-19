@@ -15,34 +15,28 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KRSS_SEARCHFEED_H
-#define KRSS_SEARCHFEED_H
+#ifndef KRSS_RESOURCE_P_H
+#define KRSS_RESOURCE_P_H
 
-#include "krss_export.h"
 #include "feed.h"
+
+#include <QtCore/QHash>
+#include <QtCore/QPointer>
 
 namespace KRss {
 
-class KRSS_EXPORT SearchFeed : public Feed
+class ResourcePrivate
 {
-    Q_OBJECT
-
 public:
-    /* reimp */ void accept( FeedVisitor* );
-    /* reimp */ void accept( ConstFeedVisitor* ) const;
+    explicit ResourcePrivate( const QString& resourceId, const QString& name )
+        : m_id( resourceId ), m_name( name ) {};
+    virtual ~ResourcePrivate();
 
-    bool isVirtual() const;
-    QString query() const;
-    void setQuery( const QString& query );
-
-private:
-    SearchFeed( const FeedCollection& feedCollection, const boost::shared_ptr<Resource>& resource,
-                QObject* parent = 0 );
-
-private:
-    Q_DISABLE_COPY(SearchFeed)
+    const QString m_id;
+    const QString m_name;
+    QHash<Feed::Id, QPointer<Feed> > m_feeds;
 };
 
 } // namespace KRss
 
-#endif // KRSS_SEARCHFEED_H
+#endif // KRSS_RESOURCE_P_H

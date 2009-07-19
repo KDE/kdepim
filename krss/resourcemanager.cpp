@@ -16,7 +16,7 @@
 */
 
 #include "resourcemanager.h"
-#include "resource.h"
+#include "netresource.h"
 #include "tagidsattribute.h"
 #include "subscriptionlabelscollectionattribute.h"
 #include "feedpropertiescollectionattribute.h"
@@ -32,46 +32,37 @@
 #include <KDebug>
 
 #include <QtCore/QHash>
+#include <boost/shared_ptr.hpp>
 
 using namespace KRss;
+using boost::shared_ptr;
 
 namespace KRss {
 
 class ResourceManagerPrivate
 {
 public:
-
-    explicit ResourceManagerPrivate()
-    {
-    }
-
-    QHash<QString, Akonadi::AgentInstance> m_instances;
-    QHash<QString, const Resource *> m_resources;
-    static ResourceManager *m_self;
+    QHash<QString, shared_ptr<NetResource> > m_resources;
 };
 
 } // namespace KRss
 
-ResourceManager* ResourceManagerPrivate::m_self = 0;
-
 ResourceManager* ResourceManager::self()
 {
-    if ( ! ResourceManagerPrivate::m_self ) {
-        ResourceManagerPrivate::m_self = new ResourceManager();
-    }
-
-    return ResourceManagerPrivate::m_self;
+    static ResourceManager s_instance;
+    return &s_instance;
 }
 
 ResourceManager::ResourceManager()
-    : QObject( 0 ), d( new ResourceManagerPrivate() )
+    : d( new ResourceManagerPrivate() )
 {
     QList<Akonadi::AgentInstance> instances = Akonadi::AgentManager::self()->instances();
-    Q_FOREACH( const Akonadi::AgentInstance &instance, instances ) {
+    Q_FOREACH( const Akonadi::AgentInstance& instance, instances ) {
         kDebug() << "Instance:" << instance.identifier();
         kDebug() << "Capabilities:" << instance.type().capabilities();
         if ( instance.type().capabilities().contains( "RssResource" ) ) {
-            d->m_instances[ instance.identifier() ] = instance;
+            NetResource* const resource = new NetResource( instance.identifier(), instance.name() );
+            d->m_resources.insert( instance.identifier(), shared_ptr<NetResource>( resource ) );
         }
     }
 }
@@ -81,32 +72,28 @@ ResourceManager::~ResourceManager()
     delete d;
 }
 
+shared_ptr<NetResource> ResourceManager::resource( const QString& resourceId ) const
+{
+    return d->m_resources.value( resourceId );
+}
+
 QStringList ResourceManager::identifiers() const
 {
-    return d->m_instances.keys();
+    return d->m_resources.keys();
 }
 
-QString ResourceManager::resourceName( const QString &resourceIdentifier ) const
+QList<shared_ptr<Resource> > ResourceManager::resources() const
 {
-    return d->m_instances.value( resourceIdentifier ).name();
+    QList<shared_ptr<Resource> > allResources;
+    Q_FOREACH( const shared_ptr<NetResource>& resource, d->m_resources.values() )
+        allResources.append( resource );
+
+    return allResources;
 }
 
-const Resource* ResourceManager::resource( const QString &resourceIdentifier )
+QList<shared_ptr<NetResource> > ResourceManager::netResources() const
 {
-    // check if we allocated this resource earlier
-    const Resource* resource1 = d->m_resources.value( resourceIdentifier );
-    if ( resource1 )
-        return resource1;
-
-    // check if this resource exists at all
-    Akonadi::AgentInstance instance = d->m_instances.value( resourceIdentifier );
-    if ( !instance.isValid() )
-        return 0;
-
-    // ok, allocate a new resource
-    const Resource* resource2 = new Resource( instance );
-    d->m_resources[ resourceIdentifier ] = resource2;
-    return resource2;
+    return d->m_resources.values();
 }
 
 void ResourceManager::registerAttributes()

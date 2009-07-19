@@ -20,35 +20,38 @@
 
 #include "krss_export.h"
 
-#include <QtCore/QStringList>
+#include <QtCore/QObject>
+
+namespace boost {
+template <typename T> class shared_ptr;
+}
 
 namespace KRss {
 
 class Resource;
+class NetResource;
 class ResourceManagerPrivate;
 
 class KRSS_EXPORT ResourceManager : public QObject
 {
     Q_OBJECT
-
 public:
-
     static ResourceManager* self();
     ~ResourceManager();
 
+    // FIXME: to be removed
+    boost::shared_ptr<NetResource> resource( const QString& resourceId ) const;
     QStringList identifiers() const;
-    QString resourceName( const QString &resourceIdentifier ) const;
 
-    const Resource* resource( const QString &resourceIdentifier );
+    QList<boost::shared_ptr<Resource> > resources() const;
+    QList<boost::shared_ptr<NetResource> > netResources() const;
+    //QList<boost::shared_ptr<SearchResource> > searchResources();
+
+    // TODO: use a static initializer to register the attributes
+    // automatically on library load?
     static void registerAttributes();
 
-Q_SIGNALS:
-
-    void resourceAdded( const QString &identifier );
-    void resourceRemoved( const QString &identifier );
-
 private:
-
     ResourceManager();
     ResourceManagerPrivate * const d;
 };

@@ -27,30 +27,27 @@
 
 namespace boost {
 template <typename T> class weak_ptr;
-template <typename T> class shared_ptr;
 }
 
 namespace KRss {
 
 class FeedList;
+class NetResource;
 class NetFeedCreateJobPrivate;
 
 class KRSS_EXPORT NetFeedCreateJob : public KJob
 {
     Q_OBJECT
+    friend class ::KRss::NetResource;
+    friend class ::KRss::NetFeedCreateJobPrivate;
 
 public:
-
     enum Error {
         CouldNotCreateFeed = KJob::UserDefinedError,
         CouldNotLoadFeed,
         UserDefinedError = CouldNotCreateFeed + 100
     };
 
-public:
-
-    explicit NetFeedCreateJob( const QString &xmlUrl, const QString &subscriptionLabel,
-                               const QString &resourceIdentifier, QObject *parent = 0 );
     ~NetFeedCreateJob();
 
     /** If \a feedList is set when the job will ensure that the actual feed object
@@ -58,13 +55,17 @@ public:
      *  Otherwise you have to listen to FeedList::feedAdded( const KRss::Feed::Id& id ).
      */
     void setFeedList( const boost::weak_ptr<FeedList>& feedList );
+    void setSubscriptionLabel( const QString& subscriptionLabel );
 
     void start();
     QString errorString() const;
     Feed::Id feedId() const;
 
 private:
-    friend class ::KRss::NetFeedCreateJobPrivate;
+    NetFeedCreateJob( const QString& xmlUrl, const boost::weak_ptr<NetResource>& resource,
+                      QObject* parent = 0 );
+
+private:
     NetFeedCreateJobPrivate* const d;
     Q_PRIVATE_SLOT( d, void doStart() )
     Q_PRIVATE_SLOT( d, void slotCallFinished( const QVariantMap& ) )
