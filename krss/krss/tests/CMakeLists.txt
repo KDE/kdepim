@@ -39,3 +39,6 @@ add_simple_test(testcategory testcategory.cpp)
 add_simple_test(testperson testperson.cpp)
 add_simple_test(testenclosure testenclosure.cpp)
 add_akonadi_isolated_test(tagprovidertest tagprovidertest.cpp)
+
+kde4_add_executable(itemimporter itemimporter.cpp)
+target_link_libraries(itemimporter ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTTEST_LIBRARY} ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDECORE_LIBS} krss)
