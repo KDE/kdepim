@@ -23,11 +23,12 @@
 #include <QCoreApplication>
 
 #include <krss/importitemsjob.h>
-#include <krss/resource.h>
+#include <krss/netresource.h>
 #include <krss/resourcemanager.h>
 
 #include <iostream>
 
+using namespace boost;
 using namespace KRss;
 
 static void printUsage() {
@@ -62,7 +63,7 @@ int main( int argc, char** argv ) {
     const QString url = QString::fromLocal8Bit( argv[2] );
     const QString file = QString::fromLocal8Bit( argv[3] );
 
-    const Resource* const r = ResourceManager::self()->resource( resourceId );
+    const shared_ptr<const NetResource> r = ResourceManager::self()->resource( resourceId );
     if ( !r ) {
         std::cerr << "Resource does not exist: " << qPrintable(resourceId) << std::endl;
         return 1;
