@@ -600,6 +600,11 @@ static KCal::Attendee::PartStat attendeeStringToStatus( const QString& s )
 {
   if ( s == "none" )
     return KCal::Attendee::NeedsAction;
+  if ( s == "needs-action" ) {
+    // kolab 2.2.0 sets needs-action (invalid according the standard),
+    // but let's be nice and support it anyway
+    return KCal::Attendee::NeedsAction;
+  }
   if ( s == "tentative" )
     return KCal::Attendee::Tentative;
   if ( s == "declined" )
