@@ -46,6 +46,7 @@
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
 # include <selftest/uiservercheck.h>
 #endif
+#include <selftest/gpgagentcheck.h>
 
 #include <utils/stl_util.h>
 
@@ -142,6 +143,7 @@ private:
         //emit q->info( i18n("Checking Ui Server connectivity...") );
         tests.push_back( makeUiServerConnectivitySelfTest() );
 #endif
+        tests.push_back( makeGpgAgentConnectivitySelfTest() );
 
         if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
             finished();

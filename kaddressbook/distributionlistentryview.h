@@ -45,6 +45,7 @@ private:
     QGridLayout* m_radioLayout;
     QBoxLayout* m_mainLayout;
     QWidget* m_emailGroup;
+    QWidget* m_mailSelectorWidget;
     QLabel* m_addresseeLabel;
     KUrlLabel* m_distListLabel;
     QLabel* m_imageLabel;

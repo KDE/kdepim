@@ -35,7 +35,7 @@
 #include "decryptverifyemailcontroller.h"
 #include "emailoperationspreferences.h"
 
-#include <crypto/gui/resultlistwidget.h>
+#include <crypto/gui/newresultpage.h>
 #include <crypto/decryptverifytask.h>
 #include <crypto/taskcollection.h>
 
@@ -69,6 +69,43 @@ using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace KMime::Types;
 
+namespace {
+
+    class DecryptVerifyEMailWizard : public QWizard {
+        Q_OBJECT
+    public:
+        explicit DecryptVerifyEMailWizard( QWidget * parent=0, Qt::WindowFlags f=0 )
+            : QWizard( parent, f ),
+              m_resultPage( this )
+        {
+            KDAB_SET_OBJECT_NAME( m_resultPage );
+
+            m_resultPage.setSubTitle( i18n("Status and progress of the crypto operations is shown here.") );
+            // there's no way we're letting users fast-forward over the decryption/verification results...
+            m_resultPage.setKeepOpenWhenDoneShown( false );
+
+            addPage( &m_resultPage );
+        }
+
+        void addTaskCollection( const shared_ptr<TaskCollection> & coll ) {
+            m_resultPage.addTaskCollection( coll );
+        }
+
+    public Q_SLOTS:
+        void accept() {
+            EMailOperationsPreferences prefs;
+            prefs.setDecryptVerifyPopupGeometry( geometry() );
+            prefs.writeConfig();
+            QWizard::accept();
+        }
+
+    private:
+        NewResultPage m_resultPage;
+    };
+
+}
+
+
 class DecryptVerifyEMailController::Private {
     DecryptVerifyEMailController* const q;
 public:
@@ -79,6 +116,8 @@ public:
     void schedule();
 
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > buildTasks();
+
+    static DecryptVerifyEMailWizard * findOrCreateWizard( unsigned int id );
 
     void ensureWizardCreated();
     void ensureWizardVisible();
@@ -91,7 +130,8 @@ public:
     std::vector<shared_ptr<Input> > m_inputs, m_signedDatas;
     std::vector<shared_ptr<Output> > m_outputs;
 
-    QPointer<ResultListWidget> m_wizard;
+    unsigned int m_sessionId;
+    QPointer<DecryptVerifyEMailWizard> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
     shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
@@ -105,6 +145,7 @@ public:
 
 DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq )
     : q( qq ),
+    m_sessionId( 0 ),
     m_silent( false ),
     m_operationCompleted( false ),
     m_operation( DecryptVerify ),
@@ -117,9 +158,7 @@ DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq
 void DecryptVerifyEMailController::Private::slotWizardCanceled()
 {
     kDebug();
-    if ( m_operationCompleted )
-        q->emitDoneOrError();
-    else
+    if ( !m_operationCompleted )
         reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
 
@@ -158,8 +197,7 @@ void DecryptVerifyEMailController::Private::schedule()
         // if there is a popup, wait for either the client cancel or the user closing the popup.
         // Otherwise (silent case), finish immediately
         m_operationCompleted = true;
-        if ( m_silent )
-            q->emitDoneOrError();
+        q->emitDoneOrError();
     }
 }
 
@@ -168,16 +206,57 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
     if ( m_wizard )
         return;
 
-    std::auto_ptr<ResultListWidget> w( new ResultListWidget );
+    DecryptVerifyEMailWizard * w = findOrCreateWizard( m_sessionId );
+    connect( w, SIGNAL(destroyed()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
+    m_wizard = w;
+
+}
+
+namespace {
+    template <typename C>
+    void collectGarbage( C & c ) {
+        typename C::iterator it = c.begin();
+        while ( it != c.end() /*sic!*/ )
+            if ( it->second )
+                ++it;
+            else
+                c.erase( it++ /*sic!*/ );
+    }
+}
+
+// static
+DecryptVerifyEMailWizard * DecryptVerifyEMailController::Private::findOrCreateWizard( unsigned int id )
+{
+
+    static std::map<unsigned int, QPointer<DecryptVerifyEMailWizard> > s_wizards;
+
+    collectGarbage( s_wizards );
+
+    qDebug( "DecryptVerifyEMailWizard::Private::findOrCreateWizard( %ud )", id );
+
+    if ( id != 0 ) {
+
+        const std::map<unsigned int, QPointer<DecryptVerifyEMailWizard> >::const_iterator it
+            = s_wizards.find( id );
+
+        if ( it != s_wizards.end() ) {
+            assert( it->second && "This should have been garbage-collected" );
+            return it->second;
+        }
+
+    }
+
+    DecryptVerifyEMailWizard * w = new DecryptVerifyEMailWizard;
     w->setWindowTitle( i18n( "Decrypt/Verify E-Mail" ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
-    w->setStandaloneMode( true );
+
     const QRect preferredGeometry = EMailOperationsPreferences().decryptVerifyPopupGeometry();
     if ( preferredGeometry.isValid() )
         w->setGeometry( preferredGeometry );
-    connect( w.get(), SIGNAL(destroyed()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-    m_wizard = w.release();
 
+    s_wizards[id] = w;
+
+    return w;
 }
 
 std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailController::Private::buildTasks()
@@ -310,7 +389,7 @@ void DecryptVerifyEMailController::start()
     }
     coll->setTasks( tsks );
     d->ensureWizardCreated();
-    d->m_wizard->setTaskCollection( coll );
+    d->m_wizard->addTaskCollection( coll );
 
     d->ensureWizardVisible();
     QTimer::singleShot( 0, this, SLOT(schedule()) );
@@ -373,6 +452,12 @@ void DecryptVerifyEMailController::setProtocol( Protocol prot )
     d->m_protocol = prot;
 }
 
+void DecryptVerifyEMailController::setSessionId( unsigned int id )
+{
+    qDebug( "DecryptVerifyEMailController::setSessionId( %ud )", id );
+    d->m_sessionId = id;
+}
+
 void DecryptVerifyEMailController::cancel()
 {
     kDebug();
@@ -399,3 +484,4 @@ void DecryptVerifyEMailController::Private::cancelAllTasks() {
 }
 
 #include "decryptverifyemailcontroller.moc"
+#include "moc_decryptverifyemailcontroller.cpp"

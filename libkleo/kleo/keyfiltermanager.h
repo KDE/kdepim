@@ -40,12 +40,17 @@
 
 #include <kleo/keyfilter.h>
 
+#include <vector>
+
 namespace GpgME {
   class Key;
 }
 
 class QAbstractItemModel;
 class QModelIndex;
+class QFont;
+class QColor;
+class QIcon;
 
 namespace Kleo {
 
@@ -59,6 +64,7 @@ namespace Kleo {
     static KeyFilterManager * instance();
 
     const boost::shared_ptr<KeyFilter> & filterMatching( const GpgME::Key & key, KeyFilter::MatchContexts contexts ) const;
+    std::vector< boost::shared_ptr<KeyFilter> > filtersMatching( const GpgME::Key & key, KeyFilter::MatchContexts contexts ) const;
 
     QAbstractItemModel * model() const;
 
@@ -67,6 +73,11 @@ namespace Kleo {
     QModelIndex toModelIndex( const boost::shared_ptr<KeyFilter> & kf ) const;
 
     void reload();
+
+    QFont font( const GpgME::Key & key, const QFont & baseFont ) const;
+    QColor bgColor( const GpgME::Key & key ) const;
+    QColor fgColor( const GpgME::Key & key ) const;
+    QIcon icon( const GpgME::Key & key ) const;
 
     class Private;
   private:

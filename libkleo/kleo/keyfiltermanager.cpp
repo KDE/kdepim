@@ -38,6 +38,8 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
+#include <KIcon>
+#include <KDebug>
 
 #include <QCoreApplication>
 #include <QRegExp>
@@ -46,10 +48,13 @@
 #include <QModelIndex>
 
 #include <boost/bind.hpp>
+#include <boost/iterator/filter_iterator.hpp>
 
 #include <algorithm>
 #include <vector>
 #include <climits>
+
+#include <kleopatra/utils/stl_util.h>
 
 using namespace Kleo;
 using namespace boost;
@@ -187,6 +192,15 @@ const shared_ptr<KeyFilter> & KeyFilterManager::filterMatching( const Key & key,
     return null;
 }
 
+std::vector< shared_ptr<KeyFilter> > KeyFilterManager::filtersMatching( const Key & key, KeyFilter::MatchContexts contexts ) const {
+    std::vector< shared_ptr<KeyFilter> > result;
+    result.reserve( d->filters.size() );
+    std::remove_copy_if( d->filters.begin(), d->filters.end(),
+                         std::back_inserter( result ),
+                         !bind( &KeyFilter::matches, _1, cref( key ), contexts ) );
+    return result;
+}
+
 namespace {
     struct ByDecreasingSpecificity : std::binary_function<shared_ptr<KeyFilter>,shared_ptr<KeyFilter>,bool> {
         bool operator()( const shared_ptr<KeyFilter> & lhs, const shared_ptr<KeyFilter> & rhs ) const {
@@ -263,6 +277,57 @@ QVariant Model::data( const QModelIndex & idx, int role ) const {
         return m_keyFilterManagerPrivate->filters[idx.row()]->icon();
     else
         return m_keyFilterManagerPrivate->filters[idx.row()]->name();
+}
+
+namespace {
+    template <typename C, typename P1, typename P2>
+    typename C::const_iterator find_if_and( const C & c, P1 p1, P2 p2 ) {
+        return std::find_if( boost::make_filter_iterator( p1, boost::begin( c ), boost::end( c ) ),
+                             boost::make_filter_iterator( p1, boost::end( c ), boost::end( c ) ),
+                             p2 ).base();
+    }
+}
+
+QFont KeyFilterManager::font( const Key & key, const QFont & baseFont ) const {
+    return kdtools::accumulate_transform_if( d->filters, mem_fn( &KeyFilter::fontDesription ),
+                                             bind( &KeyFilter::matches, _1, key, KeyFilter::Appearance ),
+                                             KeyFilter::FontDescription(),
+                                             bind( &KeyFilter::FontDescription::resolve, _1, _2 ) ).font( baseFont );
+}
+
+static QColor get_color( const std::vector< shared_ptr<KeyFilter> > & filters, const Key & key, QColor (KeyFilter::*fun)() const ) {
+    const std::vector< shared_ptr<KeyFilter> >::const_iterator it
+        = find_if_and( filters,
+                       bind( &KeyFilter::matches, _1, key, KeyFilter::Appearance ),
+                       bind( &QColor::isValid, bind( fun, _1 ) ) );
+    if ( it == filters.end() )
+        return QColor();
+    else
+        return (it->get()->*fun)();
+}
+
+static QString get_string( const std::vector< shared_ptr<KeyFilter> > & filters, const Key & key, QString (KeyFilter::*fun)() const ) {
+    const std::vector< shared_ptr<KeyFilter> >::const_iterator it
+        = find_if_and( filters,
+                       bind( &KeyFilter::matches, _1, key, KeyFilter::Appearance ),
+                       !bind( &QString::isEmpty, bind( fun, _1 ) ) );
+    if ( it == filters.end() )
+        return QString();
+    else
+        return (*it)->icon();
+}
+
+QColor KeyFilterManager::bgColor( const Key & key ) const {
+    return get_color( d->filters, key, &KeyFilter::bgColor );
+}
+
+QColor KeyFilterManager::fgColor( const Key & key ) const {
+    return get_color( d->filters, key, &KeyFilter::fgColor );
+}
+
+QIcon KeyFilterManager::icon( const Key & key ) const {
+    const QString icon = get_string( d->filters, key, &KeyFilter::icon );
+    return icon.isEmpty() ? QIcon() : QIcon( KIcon( icon ) ) ;
 }
 
 #include "keyfiltermanager.moc"

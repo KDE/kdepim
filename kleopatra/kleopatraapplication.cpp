@@ -35,7 +35,9 @@
 #include "kleopatraapplication.h"
 
 #include "mainwindow.h"
-#include "systemtrayicon.h"
+#include "systrayicon.h"
+
+#include <smartcard/readerstatus.h>
 
 #include <utils/gnupg-helper.h>
 #include <utils/filesystemwatcher.h>
@@ -127,11 +129,25 @@ static QList<QByteArray> default_logging_options() {
 
 class KleopatraApplication::Private {
 public:
-    Private() : ignoreNewInstance( true ) {}
+    Private()
+        : ignoreNewInstance( true )
+    {
+        KDAB_SET_OBJECT_NAME( readerStatus );
+        KDAB_SET_OBJECT_NAME( sysTray );
+
+        sysTray.setAnyCardHasNullPin( readerStatus.anyCardHasNullPin() );
+        sysTray.setAnyCardCanLearnKeys( readerStatus.anyCardCanLearnKeys() );
+
+        connect( &readerStatus, SIGNAL(anyCardHasNullPinChanged(bool)),
+                 &sysTray, SLOT(setAnyCardHasNullPin(bool)) );
+        connect( &readerStatus, SIGNAL(anyCardCanLearnKeysChanged(bool)),
+                 &sysTray, SLOT(setAnyCardCanLearnKeys(bool)) );
+    }
 
 public:
     bool ignoreNewInstance;
-    SystemTrayIconFor<MainWindow> sysTray;
+    SmartCard::ReaderStatus readerStatus;
+    SysTrayIcon sysTray;
     shared_ptr<KeyCache> keyCache;
     shared_ptr<Log> log;
     shared_ptr<FileSystemWatcher> watcher;
@@ -272,11 +288,11 @@ int KleopatraApplication::newInstance() {
     return 0;
 }
 
-const SystemTrayIconFor<MainWindow> * KleopatraApplication::sysTrayIcon() const {
+const SysTrayIcon * KleopatraApplication::sysTrayIcon() const {
     return &d->sysTray;
 }
 
-SystemTrayIconFor<MainWindow> * KleopatraApplication::sysTrayIcon() {
+SysTrayIcon * KleopatraApplication::sysTrayIcon() {
     return &d->sysTray;
 }
 

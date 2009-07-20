@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    systemtrayicon.h
+    dialogs/setinitialpindialog.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,51 +30,47 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SYSTEMTRAYICON_H__
-#define __KLEOPATRA_SYSTEMTRAYICON_H__
+#ifndef __KLEOPATRA_DIALOGS_SETINITIALPINDIALOG_H__
+#define __KLEOPATRA_DIALOGS_SETINITIALPINDIALOG_H__
 
-#include <QSystemTrayIcon>
+#include <QDialog>
 
 #include <utils/pimpl_ptr.h>
 
-class SystemTrayIcon : public QSystemTrayIcon {
-    Q_OBJECT
-public:
-    explicit SystemTrayIcon( QObject * parent=0 );
-    ~SystemTrayIcon();
+namespace GpgME {
+    class Error;
+}
 
-    void setMainWindow( QWidget * w );
-    QWidget * mainWindow() const;
+namespace Kleo {
+namespace Dialogs {
 
-public Q_SLOTS:
-    void openOrRaiseMainWindow();
-    void openOrRaiseConfigDialog();
+    class SetInitialPinDialog : public QDialog {
+        Q_OBJECT
+    public:
+        explicit SetInitialPinDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~SetInitialPinDialog();
 
-private:
-    virtual QWidget * doCreateMainWindow() const = 0;
-    /* reimp */ bool eventFilter( QObject *, QEvent * );
+        void setNksPinPresent( bool );
+        void setSigGPinPresent( bool );
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotAbout() )
-    Q_PRIVATE_SLOT( d, void slotActivated( QSystemTrayIcon::ActivationReason ) )
-    Q_PRIVATE_SLOT( d, void slotEnableDisableActions() )
-    Q_PRIVATE_SLOT( d, void slotEncryptClipboard() )
-    Q_PRIVATE_SLOT( d, void slotOpenPGPSignClipboard() )
-    Q_PRIVATE_SLOT( d, void slotSMIMESignClipboard() )
-    Q_PRIVATE_SLOT( d, void slotDecryptVerifyClipboard() )
-};
+        bool isComplete() const;
 
-template <typename T_Widget>
-class SystemTrayIconFor : public SystemTrayIcon {
-public:
-    explicit SystemTrayIconFor( QObject * parent=0 ) : SystemTrayIcon( parent ) {}
+    public Q_SLOTS:
+        void setNksPinSettingResult( const GpgME::Error & error );
+        void setSigGPinSettingResult( const GpgME::Error & error );
 
-    T_Widget * mainWindow() const { return static_cast<T_Widget*>( SystemTrayIcon::mainWindow() ); }
+    Q_SIGNALS:
+        void nksPinRequested();
+        void sigGPinRequested();
 
-private:
-    /* reimp */ QWidget * doCreateMainWindow() const { return new T_Widget; }
-};
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotNksButtonClicked() )
+        Q_PRIVATE_SLOT( d, void slotSigGButtonClicked() )
+    };
 
-#endif /* __KLEOPATRA_SYSTEMTRAYICON_H__ */
+}
+}
+
+#endif /* __KLEOPATRA_DIALOGS_SETINITIALPINDIALOG_H__ */

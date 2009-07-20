@@ -39,7 +39,7 @@
 
 #include <crypto/taskcollection.h>
 
-#include <utils/scrollarea.h>
+#include <utils/stl_util.h>
 
 #include <KLocalizedString>
 
@@ -53,6 +53,8 @@
 #include <QTimer>
 
 #include <cassert>
+
+static const int ProgressBarHideDelay = 2000; // 2 secs
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -71,7 +73,8 @@ public:
     void keepOpenWhenDone( bool keep );
     QLabel * labelForTag( const QString & tag );
 
-    shared_ptr<TaskCollection> m_tasks;
+    std::vector< shared_ptr<TaskCollection> > m_collections;
+    QTimer m_hideProgressTimer;
     QProgressBar* m_progressBar;
     QHash<QString, QLabel*> m_progressLabelByTag;
     QVBoxLayout* m_progressLabelLayout;
@@ -82,6 +85,9 @@ public:
 
 NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 0 )
 {
+    m_hideProgressTimer.setInterval( ProgressBarHideDelay );
+    m_hideProgressTimer.setSingleShot( true );
+
     QBoxLayout* const layout = new QVBoxLayout( q );
     QWidget* const labels = new QWidget;
     m_progressLabelLayout = new QVBoxLayout( labels );
@@ -96,6 +102,8 @@ NewResultPage::Private::Private( NewResultPage* qq ) : q( qq ), m_lastErrorItemI
     m_keepOpenCB->setChecked(true );
     connect( m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)) );
     layout->addWidget( m_keepOpenCB );
+
+    connect( &m_hideProgressTimer, SIGNAL(timeout()), m_progressBar, SLOT(hide()) );
 }
 
 void NewResultPage::Private::progress( const QString & msg, int progress, int total )
@@ -112,11 +120,14 @@ void NewResultPage::Private::keepOpenWhenDone( bool )
 
 void NewResultPage::Private::allDone()
 {
-    assert( m_tasks );
+    assert( !m_collections.empty() );
+    if ( !m_resultList->isComplete() )
+        return;
     m_progressBar->setRange( 0, 100 );
     m_progressBar->setValue( 100 );
-    const bool errorOccurred = m_tasks->errorOccurred();
-    m_tasks.reset();
+    const bool errorOccurred =
+        kdtools::any( m_collections, mem_fn( &TaskCollection::errorOccurred ) );
+    m_collections.clear();
     Q_FOREACH ( const QString & i, m_progressLabelByTag.keys() ) {
         if ( !i.isEmpty() )
             m_progressLabelByTag.value( i )->setText( i18n("%1: All operations completed.", i ) );
@@ -130,6 +141,7 @@ void NewResultPage::Private::allDone()
         if ( QWizard * wiz = q->wizard() )
             if ( QAbstractButton * btn = wiz->button( QWizard::FinishButton ) )
                 QTimer::singleShot( 500, btn, SLOT(animateClick()) );
+    m_hideProgressTimer.start();
 }
 
 void NewResultPage::Private::result( const shared_ptr<const Task::Result> & )
@@ -143,7 +155,7 @@ void NewResultPage::Private::started( const shared_ptr<Task> & task )
     QLabel * const label = labelForTag( tag );
     assert( label );
     if ( tag.isEmpty() )
-        label->setText( i18nc( "number, operation description", "Operation %1: %2", m_tasks->numberOfCompletedTasks() + 1, task->label() ) );
+        label->setText( i18nc( "number, operation description", "Operation %1: %2", m_resultList->numberOfCompletedTasks() + 1, task->label() ) );
     else
         label->setText( i18nc( "tag( \"OpenPGP\" or \"CMS\"),  operation description", "%1: %2", tag, task->label() ) );
 }
@@ -167,25 +179,41 @@ void NewResultPage::setKeepOpenWhenDone( bool keep )
     d->m_keepOpenCB->setChecked( keep );
 }
 
+void NewResultPage::setKeepOpenWhenDoneShown( bool on ) {
+    d->m_keepOpenCB->setVisible( on );
+    if ( !on )
+        d->m_keepOpenCB->setChecked( true );
+}
+
 void NewResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 {
-    assert( !d->m_tasks );
-    if ( d->m_tasks == coll )
+    //clear(); ### PENDING(marc) implement
+    addTaskCollection( coll );
+}
+
+void NewResultPage::addTaskCollection( const shared_ptr<TaskCollection> & coll )
+{
+    assert( coll );
+    if ( kdtools::contains( d->m_collections, coll ) )
         return;
-    d->m_tasks = coll;
-    assert( d->m_tasks );
-    d->m_resultList->setTaskCollection( coll );
-    connect( d->m_tasks.get(), SIGNAL(progress(QString,int,int)),
+    d->m_hideProgressTimer.stop();
+    d->m_progressBar->show();
+    d->m_collections.push_back( coll );
+    d->m_resultList->addTaskCollection( coll );
+    connect( coll.get(), SIGNAL(progress(QString,int,int)),
              this, SLOT(progress(QString,int,int)) );
-    connect( d->m_tasks.get(), SIGNAL(done()),
+    connect( coll.get(), SIGNAL(done()),
              this, SLOT(allDone()) );
-    connect( d->m_tasks.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+    connect( coll.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
              this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
-    connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
+    connect( coll.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
     
-    Q_FOREACH ( const shared_ptr<Task> & i, d->m_tasks->tasks() ) // create labels for all tags in collection
-        assert( i && d->labelForTag( i->tag() ) );
+    Q_FOREACH ( const shared_ptr<Task> & i, coll->tasks() ) { // create labels for all tags in collection
+        assert( i );
+        QLabel * l = d->labelForTag( i->tag() );
+        assert( l ); (void)l;
+    }
     emit completeChanged();
 }
 
@@ -202,7 +230,7 @@ QLabel* NewResultPage::Private::labelForTag( const QString & tag ) {
 
 bool NewResultPage::isComplete() const
 {
-    return d->m_tasks ? d->m_tasks->allTasksCompleted() : true;
+    return d->m_resultList->isComplete();
 }
 
 

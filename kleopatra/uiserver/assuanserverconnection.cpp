@@ -349,6 +349,8 @@ private:
         }
         if ( !rx.cap( 2 ).isEmpty() )
             conn.sessionTitle = rx.cap( 2 );
+        qDebug( "session_handler: id=%lu, title=%s",
+                static_cast<unsigned long>( conn.sessionId ), qPrintable( conn.sessionTitle ) );
         return assuan_process_done( ctx_, 0 );
     }
 

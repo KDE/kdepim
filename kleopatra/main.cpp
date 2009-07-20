@@ -66,6 +66,7 @@ namespace Kleo {
 #include <klocale.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
+#include <kmessagebox.h>
 
 #include <QTextDocument> // for Qt::escape
 #include <QStringList>
@@ -77,6 +78,7 @@ namespace Kleo {
 #include <QDebug>
 
 #include <gpgme++/global.h>
+#include <gpgme++/error.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -166,7 +168,7 @@ int main( int argc, char** argv )
     QTime timer;
     timer.start();
 
-    GpgME::initializeLibrary();
+    const GpgME::Error gpgmeInitError = GpgME::initializeLibrary(0);
 
   {
       const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
@@ -186,6 +188,16 @@ int main( int argc, char** argv )
   qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  if ( gpgmeInitError ) {
+      KMessageBox::sorry( 0, i18nc("@info",
+                                   "<para>The version of the <application>GpgME</application> library you are running against "
+                                   "is older than the one that the <application>GpgME++</application> library was built against.</para>"
+                                   "<para><application>Kleopatra</application> will not function in this setting.</para>"
+                                   "<para>Please ask your administrator for help in resolving this issue.</para>"),
+                          i18nc("@title", "GpgME Too Old") );
+      return EXIT_FAILURE;
+  }
 
   SplashScreen splash;
 

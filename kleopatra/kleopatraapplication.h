@@ -41,7 +41,7 @@
 
 class KCmdLineOptions;
 class MainWindow;
-template <typename T> class SystemTrayIconFor;
+class SysTrayIcon;
 
 class KleopatraApplication : public KUniqueApplication {
     Q_OBJECT
@@ -56,8 +56,8 @@ public:
     const MainWindow * mainWindow() const;
     MainWindow * mainWindow();
 
-    const SystemTrayIconFor<MainWindow> * sysTrayIcon() const;
-    SystemTrayIconFor<MainWindow> * sysTrayIcon();
+    const SysTrayIcon * sysTrayIcon() const;
+    SysTrayIcon * sysTrayIcon();
 
     void setIgnoreNewInstance( bool on );
     bool ignoreNewInstance() const;

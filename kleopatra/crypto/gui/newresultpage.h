@@ -59,11 +59,14 @@ public:
     ~NewResultPage();
 
     void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
+    void addTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 
     /* reimp */ bool isComplete() const;
 
     bool keepOpenWhenDone() const;
     void setKeepOpenWhenDone( bool keep );
+
+    void setKeepOpenWhenDoneShown( bool on );
 
 Q_SIGNALS:
     void linkActivated( const QString & link );

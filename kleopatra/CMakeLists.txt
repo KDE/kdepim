@@ -2,7 +2,7 @@ project(kleopatra)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 2.0.10 )
+set( kleopatra_version 2.0.11 )
 set( kleopatra_release FALSE )
 
 if (NOT kleopatra_release)
@@ -109,11 +109,13 @@ set( _kleopatra_SRCS
   utils/filedialog.cpp
   utils/kdpipeiodevice.cpp
   utils/kdlogtextwidget.cpp
+  utils/kdsignalblocker.cpp
   utils/headerview.cpp
   utils/scrollarea.cpp
   utils/dragqueen.cpp
   utils/multivalidator.cpp
   utils/progressmanager.cpp
+  utils/systemtrayicon.cpp
 
   utils/hex.cpp
   utils/input.cpp
@@ -131,6 +133,9 @@ set( _kleopatra_SRCS
   selftest/selftest.cpp
   selftest/enginecheck.cpp
   selftest/gpgconfcheck.cpp
+  selftest/gpgagentcheck.cpp
+
+  smartcard/readerstatus.cpp
 
   ${_kleopatra_extra_SRCS}
 
@@ -156,6 +161,7 @@ set( _kleopatra_SRCS
   dialogs/certificatedetailsdialog.cpp
   dialogs/exportcertificatesdialog.cpp
   dialogs/deletecertificatesdialog.cpp
+  dialogs/setinitialpindialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -225,6 +231,7 @@ set( _kleopatra_SRCS
   commands/exportopenpgpcertstoservercommand.cpp
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
+  commands/setinitialpincommand.cpp
   
   ${_kleopatra_uiserver_files}
 
@@ -234,7 +241,7 @@ set( _kleopatra_SRCS
   newcertificatewizard/newcertificatewizard.cpp
 
   aboutdata.cpp
-  systemtrayicon.cpp
+  systrayicon.cpp
   kleopatraapplication.cpp
   main.cpp )
 
@@ -253,6 +260,7 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/exportsecretkeydialog.ui
   dialogs/adduseriddialog.ui
   dialogs/certificatedetailsdialog.ui
+  dialogs/setinitialpindialog.ui
   newcertificatewizard/listwidget.ui
   newcertificatewizard/chooseprotocolpage.ui
   newcertificatewizard/enterdetailspage.ui

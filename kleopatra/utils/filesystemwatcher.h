@@ -58,7 +58,8 @@ namespace Kleo {
         void addPaths( const QStringList& paths );
         void addPath( const QString& path );
 
-        void blacklistFiles( const QStringList & files );
+        void blacklistFiles( const QStringList & patterns );
+        void whitelistFiles( const QStringList & patterns );
 
         QStringList directories() const;
         QStringList files() const;
@@ -68,6 +69,7 @@ namespace Kleo {
     Q_SIGNALS:
         void directoryChanged( const QString& path );
         void fileChanged( const QString& path );
+        void triggered();
 
     private:
         class Private;

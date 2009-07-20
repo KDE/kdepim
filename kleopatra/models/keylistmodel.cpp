@@ -263,9 +263,9 @@ static QVariant returnIfValid( const QColor & t ) {
         return QVariant();
 }
 
-static QVariant returnIfValidIcon( const QString & t ) {
-    if ( !t.isEmpty() )
-        return QIcon( KIcon( t ) );
+static QVariant returnIfValid( const QIcon & t ) {
+    if ( !t.isNull() )
+        return t;
     else
         return QVariant();
 }
@@ -310,25 +310,14 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         }
     else if ( role == Qt::ToolTipRole )
         return Formatting::toolTip( key, toolTipOptions() );
-    else if ( role == Qt::FontRole ) {
-        QFont font = qApp->font(); // ### correct font?
-        if ( column == Fingerprint )
-            font.setFamily( "courier" );
-        if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) )
-            return filter->font( font );
-        else
-            return font;
-    } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
-        if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) ) {
-            switch ( role ) {
-            case Qt::DecorationRole: return column == Icon ? returnIfValidIcon( filter->icon() ) : QVariant() ;
-            case Qt::BackgroundRole: return returnIfValid( filter->bgColor() );
-            case Qt::ForegroundRole: return returnIfValid( filter->fgColor() );
-            default: ; // silence compiler
-            }
-        }
-    } else if ( role == Qt::TextAlignmentRole ) { // needed?
-    }
+    else if ( role == Qt::FontRole )
+        return KeyFilterManager::instance()->font( key, column == Fingerprint ? QFont( "courier" ) : QFont() );
+    else if ( role == Qt::DecorationRole )
+        return column == Icon ? returnIfValid( KeyFilterManager::instance()->icon( key ) ) : QVariant() ;
+    else if ( role == Qt::BackgroundRole )
+        return returnIfValid( KeyFilterManager::instance()->bgColor( key ) );
+    else if ( role == Qt::ForegroundRole )
+        return returnIfValid( KeyFilterManager::instance()->fgColor( key ) );
     return QVariant();
 }
 

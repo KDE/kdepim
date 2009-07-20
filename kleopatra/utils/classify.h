@@ -69,12 +69,13 @@ namespace Kleo {
 
             AnyMessageType     = AnySignature|CipherText,
 
-            Certificate        = 0x100,
-            ExportedPSM        = 0x200,
+            Importable         = 0x100,
+            Certificate        = 0x200|Importable,
+            ExportedPSM        = 0x400|Importable,
 
             AnyCertStoreType   = Certificate|ExportedPSM,
 
-            CertificateRequest = 0x400,
+            CertificateRequest = 0x800,
 
             CertificateRevocationList = 0x1000,
 

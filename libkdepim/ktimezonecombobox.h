@@ -2,6 +2,7 @@
   This file is part of KOrganizer.
 
   Copyright (C) 2007 Bruno Virlet <bruno.virlet@gmail.com>
+  Copyright 2008-2009 Allen Winter <winter@kde.org>
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -47,6 +48,12 @@ class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
   public:
     explicit KTimeZoneComboBox( KCal::Calendar *calendar, QWidget *parent = 0 );
     ~KTimeZoneComboBox();
+
+    /**
+     * Sets the associated calendar.
+     * @param calendar is a pointer to a Calendar instance.
+     */
+    void setCalendar( KCal::Calendar *calendar );
 
     /**
      * Selects the item in the combobox corresponding to the given @p spec.

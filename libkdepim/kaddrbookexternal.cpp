@@ -170,7 +170,7 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
   }
   kabcResource =
     static_cast<KABC::Resource*>( KRES::SelectDialog::getResource( kresResources, 0 ) );
-  if( !kabcResource ) 
+  if( !kabcResource )
     return false;
   KABC::Ticket *ticket = addressBook->requestSaveTicket( kabcResource );
   bool saved = false;
@@ -189,8 +189,9 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
   return saved;
 }
 
-QString KAddrBookExternal::expandDistributionList( const QString &listName )
+QString KAddrBookExternal::expandDistributionList( const QString &listName,bool &emptyList )
 {
+  emptyList = false;
   if ( listName.isEmpty() ) {
     return QString();
   }
@@ -198,9 +199,10 @@ QString KAddrBookExternal::expandDistributionList( const QString &listName )
   const QString lowerListName = listName.toLower();
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   KABC::DistributionList* list = addressBook->findDistributionListByName( listName, Qt::CaseInsensitive );
-
   if ( list ) {
-    return list->emails().join( ", " );
+    const QString listOfEmails = list->emails().join( ", " );
+    emptyList = listOfEmails.isEmpty();
+    return listOfEmails;
   }
   return QString();
 }

@@ -63,6 +63,11 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     emailLabel->setWordWrap( false );
     m_mainLayout->addWidget( emailLabel );
 
+    m_mailSelectorWidget = new QWidget( this );
+    QVBoxLayout *mailSelectorLayout = new QVBoxLayout( m_mailSelectorWidget );
+    mailSelectorLayout->setSpacing( KDialog::spacingHint() );
+    mailSelectorLayout->setMargin( 0 );
+
     QWidget* emailWidget = new QWidget;
     QBoxLayout* emailLayout = new QHBoxLayout( emailWidget );
     emailLayout->setSpacing( KDialog::spacingHint() );
@@ -72,7 +77,9 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
     m_radioLayout = new QGridLayout( radioWidget );
     emailLayout->addWidget( radioWidget );
     emailLayout->addStretch();
-    m_mainLayout->addWidget( emailWidget );
+    mailSelectorLayout->addWidget( emailWidget );
+
+    m_mainLayout->addWidget( m_mailSelectorWidget );
 
     QWidget* resourceWidget = new QWidget;
     QBoxLayout* resourceLayout = new QHBoxLayout( resourceWidget );
@@ -132,7 +139,8 @@ void KAB::DistributionListEntryView::setEntry( KABC::DistributionList *list, con
     const QStringList mails = m_entry.addressee().emails();
     m_idToEmail.clear();
     int nextId = 0;
-    foreach ( const QString& it, mails )
+    m_mailSelectorWidget ->setHidden( mails.size() <= 1 );
+    foreach ( const QString &it, mails )
     {
         QRadioButton* button = new QRadioButton( m_emailGroup );
         button->setText( it );

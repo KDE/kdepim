@@ -86,10 +86,12 @@ QStringList Kleo::gnupgFileBlacklist() {
     return QStringList()
         << "dirmngr-cache.d"
         << "S.uiserver"
+        << "S.gpg-agent"
         << "random_seed"
         << "*~"
         << "*.bak"
         << "*.lock"
         << "*.tmp"
+        << "reader_*.status"
         ;
 }
