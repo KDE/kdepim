@@ -85,8 +85,8 @@ protected:
 private:
     friend class Feed;  // for register/unregisterListeningFeed
     friend class RetrieveFeedListJobPrivate; // for retrieveResourceCollectionsJob
-    Q_DECLARE_PRIVATE( Resource );
-    Q_DISABLE_COPY( Resource );
+    Q_DECLARE_PRIVATE( Resource )
+    Q_DISABLE_COPY( Resource )
 };
 
 } //namespace KRss
