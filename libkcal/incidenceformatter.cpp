@@ -723,6 +723,10 @@ static Attendee *findAttendee( Incidence *incidence, const QString &email )
 
 static bool rsvpRequested( Incidence *incidence )
 {
+  if ( !incidence ) {
+    return false;
+  }
+
   //use a heuristic to determine if a response is requested.
 
   bool rsvp = true; // better send superfluously than not at all
