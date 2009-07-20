@@ -79,6 +79,7 @@ private slots:
 private:
 	class Private;
 	Private* d;
+	Akonadi::Item::Id selectedId;
 };
 
 #endif
