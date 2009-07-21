@@ -58,6 +58,6 @@
     3.2 alpha1
 */
 
-#define KDEPIM_VERSION "4.3.0"
+#define KDEPIM_VERSION "4.3.0 rc3"
 
 #endif
