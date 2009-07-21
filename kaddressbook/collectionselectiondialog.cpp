@@ -22,7 +22,7 @@
 
 #include "collectioncombobox.h"
 
-#include <akonadi_next/descendantsproxymodel.h>
+#include <akonadi/descendantsproxymodel.h>
 #include <akonadi_next/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 
