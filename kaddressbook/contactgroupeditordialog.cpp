@@ -24,7 +24,7 @@
 
 #include "collectioncombobox.h"
 #include "collectionfiltermodel.h"
-#include <akonadi_next/descendantentitiesproxymodel.h>
+#include <akonadi/descendantsproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/contactgroup.h>
@@ -51,7 +51,7 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
     // flatten the collection tree structure to a collection list
-    Akonadi::DescendantEntitiesProxyModel *descendantModel = new Akonadi::DescendantEntitiesProxyModel( this );
+    Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( this );
     descendantModel->setSourceModel( collectionModel );
 
     // filter for collections that support contact groups

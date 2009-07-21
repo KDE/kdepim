@@ -33,8 +33,10 @@
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/control.h>
+#include <akonadi/descendantsproxymodel.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -51,10 +53,8 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
-#include "akonadi_next/descendantentitiesproxymodel.h"
 #include "akonadi_next/entityfilterproxymodel.h"
 #include "akonadi_next/entitytreeview.h"
-#include "akonadi_next/selectionproxymodel.h"
 #include "contacteditordialog.h"
 #include "contactfiltermodel.h"
 #include "contactgroupeditordialog.h"
@@ -133,7 +133,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
                                                                                         this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
 
-  mDescendantTree = new Akonadi::DescendantEntitiesProxyModel( this );
+  mDescendantTree = new Akonadi::DescendantsProxyModel( this );
   mDescendantTree->setSourceModel( selectionProxyModel );
 
   mItemTree = new Akonadi::EntityFilterProxyModel( this );
