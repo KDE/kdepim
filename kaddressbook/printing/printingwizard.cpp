@@ -35,11 +35,12 @@
 #include <kglobal.h>
 #include <klocale.h>
 
+#include <akonadi/descendantsproxymodel.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entityfilterproxymodel.h>
+
 #include "globalcontactmodel.h"
 #include "contactstreemodel.h"
-#include "descendantentitiesproxymodel.h"
-#include "entitytreemodel.h"
-#include "entityfilterproxymodel.h"
 #include "entitytreeview.h"
 
 // including the styles
@@ -178,7 +179,7 @@ void PrintingWizard::print()
     } else {
       Akonadi::ContactsTreeModel *contactsModel = GlobalContactModel::instance()->model();
 
-      Akonadi::DescendantEntitiesProxyModel *descendantTree = new Akonadi::DescendantEntitiesProxyModel( this );
+      Akonadi::DescendantsProxyModel *descendantTree = new Akonadi::DescendantsProxyModel( this );
       descendantTree->setSourceModel( contactsModel );
 
       Akonadi::EntityFilterProxyModel *allContacts = new Akonadi::EntityFilterProxyModel( this );
