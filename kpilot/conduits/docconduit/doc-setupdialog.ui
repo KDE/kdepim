@@ -177,7 +177,7 @@
                     <bool>true</bool>
                   </property>
                   <property name="whatsThis" stdset="0" >
-                    <string>&lt;qt>Check this box to enable bookmark creation when converting text files to Palm DOC databases. Most doc readers support bookmarks. In order to create a bookmark, it is necessary to to provide the location in the text where the bookmark should be set and the bookmark title, in at least one of the formats listed below.&lt;/qt></string>
+                    <string>&lt;qt>Check this box to enable bookmark creation when converting text files to Palm DOC databases. Most doc readers support bookmarks. In order to create a bookmark, it is necessary to provide the location in the text where the bookmark should be set and the bookmark title, in at least one of the formats listed below.&lt;/qt></string>
                   </property>
                 </widget>
               </item>
