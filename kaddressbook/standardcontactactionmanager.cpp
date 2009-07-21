@@ -19,13 +19,12 @@
 
 #include "standardcontactactionmanager.h"
 
-#include "akonadi_next/entitytreemodel.h"
-
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/agentmanager.h>
 #include <akonadi/agenttypedialog.h>
+#include "akonadi/entitytreemodel.h"
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kaction.h>

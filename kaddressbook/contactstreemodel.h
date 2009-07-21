@@ -22,7 +22,7 @@
 #ifndef CONTACTSTREEMODEL_H
 #define CONTACTSTREEMODEL_H
 
-#include "entitytreemodel.h"
+#include <akonadi/entitytreemodel.h>
 
 namespace Akonadi {
 

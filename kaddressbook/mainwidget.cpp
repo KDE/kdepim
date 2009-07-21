@@ -34,6 +34,7 @@
 #include <akonadi/collectionmodel.h>
 #include <akonadi/control.h>
 #include <akonadi/descendantsproxymodel.h>
+#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
 #include <akonadi/selectionproxymodel.h>
@@ -53,7 +54,6 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
-#include "akonadi_next/entityfilterproxymodel.h"
 #include "akonadi_next/entitytreeview.h"
 #include "contacteditordialog.h"
 #include "contactfiltermodel.h"

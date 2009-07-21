@@ -25,6 +25,8 @@
 #include "collectionselectiondialog.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 
@@ -33,9 +35,7 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QWidget>
 
-#include "entitytreemodel.h"
-#include "entityfilterproxymodel.h"
-#include "entitytreeview.h"
+#include "akonadi_next/entitytreeview.h"
 
 
 XXPortManager::XXPortManager( QWidget *parent )
