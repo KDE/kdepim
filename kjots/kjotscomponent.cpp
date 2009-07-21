@@ -277,7 +277,6 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
 
     bookmarkMenu = actionCollection->add<KActionMenu>("bookmarks");
     bookmarkMenu->setText(i18n("&Bookmarks"));
-    bookmarkMenu->setIcon(KIcon("bookmarks"));
     KJotsBookmarks* bookmarks = new KJotsBookmarks(bookshelf);
     /*KBookmarkMenu *bmm =*/ new KBookmarkMenu(
         KBookmarkManager::managerForFile(KStandardDirs::locateLocal("data","kjots/bookmarks.xml"), "kjots"),
