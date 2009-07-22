@@ -3,6 +3,7 @@ X-KDE-Library=kaddrbk_gmx_xxport
 Name=KAB GMX XXPort Plugin
 Name[bg]=KAB CSV XXPort Plugin
 Name[ca]=Connector d'importació/exportació GMX per al KAB
+Name[cs]=Mdul KAB GMX XXPort
 Name[da]=KAB GMX XXPort-plugin
 Name[de]=GMX-Modul für das Adressbuch
 Name[el]=Πρόσθετο GMX XXPort του KAB
