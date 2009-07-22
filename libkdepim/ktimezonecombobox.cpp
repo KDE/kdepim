@@ -42,7 +42,7 @@ void KTimeZoneComboBox::Private::fillComboBox() const
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
 
   for ( KTimeZones::ZoneMap::ConstIterator it = timezones.begin();  it != timezones.end();  ++it ) {
-    list.append( i18n( it.key().toUtf8() ) );
+    list.append( i18n( it.key().toUtf8() ).replace( '_', ' ' ) );
   }
 
   list.sort();
