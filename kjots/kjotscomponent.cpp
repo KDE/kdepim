@@ -545,7 +545,7 @@ void KJotsComponent::deletePage()
     if ( !page ) return;
 
     if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-        i18nc("remove the page, by title", <qt>Are you sure you want to delete the page <strong>%1</strong>?</qt>", page->title()),
+        i18nc("remove the page, by title", "<qt>Are you sure you want to delete the page <strong>%1</strong>?</qt>", page->title()),
         i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeletePageWarning") == KMessageBox::Cancel) {
         return;
     }
