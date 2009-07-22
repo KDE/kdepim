@@ -93,6 +93,9 @@ QString Attendee::statusName( Attendee::PartStat s )
     case InProcess:
       return i18n("In Process");
       break;
+    case None:
+      return i18n("attendee status unknown", "Unknown");
+      break;
   }
 }
 
