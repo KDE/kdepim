@@ -593,17 +593,16 @@ static KCal::Attendee::PartStat attendeeStringToStatus( const QString& s )
 {
   if ( s == "none" )
     return KCal::Attendee::NeedsAction;
-  if ( s == "needs-action" ) {
-    // kolab 2.2.0 sets needs-action (invalid according the standard),
-    // but let's be nice and support it anyway
-    return KCal::Attendee::NeedsAction;
-  }
   if ( s == "tentative" )
     return KCal::Attendee::Tentative;
   if ( s == "declined" )
     return KCal::Attendee::Declined;
   if ( s == "delegated" )
     return KCal::Attendee::Delegated;
+  if ( s == "needs-action" ) {
+    // kolab 2.2.0 sets needs-action (invalid according the standard),
+    return KCal::Attendee::None;
+  }
 
   // Default:
   return KCal::Attendee::Accepted;
@@ -626,6 +625,8 @@ static QString attendeeStatusToString( KCal::Attendee::PartStat status )
   case KCal::Attendee::InProcess:
     // These don't have any meaning in the Kolab format, so just use:
     return "accepted";
+  case KCal::Attendee::None:
+    return "unknown";
   }
 
   // Default for the case that there are more added later:
