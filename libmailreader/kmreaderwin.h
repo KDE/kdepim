@@ -172,11 +172,6 @@ public:
   // Action to reply to a message
   // but action( "some_name" ) some name could be used instead.
   KToggleAction *toggleFixFontAction() { return mToggleFixFontAction; }
-  KAction *mailToComposeAction() { return mMailToComposeAction; }
-  KAction *mailToReplyAction() { return mMailToReplyAction; }
-  KAction *mailToForwardAction() { return mMailToForwardAction; }
-  KAction *addAddrBookAction() { return mAddAddrBookAction; }
-  KAction *openAddrBookAction() { return mOpenAddrBookAction; }
   KAction *copyAction() { return mCopyAction; }
   KAction *selectAllAction() { return mSelectAllAction; }
   KAction *copyURLAction() { return mCopyURLAction; }
@@ -317,12 +312,6 @@ public slots:
 
    void slotUrlClicked();
 
-  /** Operations on mailto: URLs. */
-  void slotMailtoReply();
-  void slotMailtoCompose();
-  void slotMailtoForward();
-  void slotMailtoAddAddrBook();
-  void slotMailtoOpenAddrBook();
   /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
       beginning of URL before copying. */
   void slotUrlCopy();
@@ -595,8 +584,7 @@ private:
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;
-  KAction *mMailToComposeAction, *mMailToReplyAction, *mMailToForwardAction,
-      *mAddAddrBookAction, *mOpenAddrBookAction, *mCopyAction, *mCopyURLAction,
+  KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction, *mViewSourceAction;
   KSelectAction *mSelectEncodingAction;

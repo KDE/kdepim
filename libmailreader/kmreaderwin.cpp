@@ -376,11 +376,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mCSSHelper( 0 ),
     mMainWindow( mainWindow ),
     mActionCollection( actionCollection ),
-    mMailToComposeAction( 0 ),
-    mMailToReplyAction( 0 ),
-    mMailToForwardAction( 0 ),
-    mAddAddrBookAction( 0 ),
-    mOpenAddrBookAction( 0 ),
     mCopyAction( 0 ),
     mCopyURLAction( 0 ),
     mUrlOpenAction( 0 ),
@@ -559,41 +554,6 @@ void KMReaderWin::createActions()
   //
   // Message Menu
   //
-
-  // new message to
-  mMailToComposeAction = new KAction( KIcon( "mail-message-new" ),
-                                      i18n( "New Message To..." ), this );
-  ac->addAction("mail_new", mMailToComposeAction );
-  connect( mMailToComposeAction, SIGNAL(triggered(bool)),
-           SLOT(slotMailtoCompose()) );
-
-  // reply to
-  mMailToReplyAction = new KAction( KIcon( "mail-reply-sender" ),
-                                    i18n( "Reply To..." ), this );
-  ac->addAction( "mailto_reply", mMailToReplyAction );
-  connect( mMailToReplyAction, SIGNAL(triggered(bool)),
-           SLOT(slotMailtoReply()) );
-
-  // forward to
-  mMailToForwardAction = new KAction( KIcon( "mail-forward" ),
-                                      i18n( "Forward To..." ), this );
-  ac->addAction( "mailto_forward", mMailToForwardAction );
-  connect( mMailToForwardAction, SIGNAL(triggered(bool)),
-           SLOT(slotMailtoForward()) );
-
-  // add to addressbook
-  mAddAddrBookAction = new KAction( KIcon( "contact-new" ),
-                                    i18n( "Add to Address Book" ), this );
-  ac->addAction( "add_addr_book", mAddAddrBookAction );
-  connect( mAddAddrBookAction, SIGNAL(triggered(bool)),
-           SLOT(slotMailtoAddAddrBook()) );
-
-  // open in addressbook
-  mOpenAddrBookAction = new KAction( KIcon( "view-pim-contacts" ),
-                                     i18n( "Open in Address Book" ), this );
-  ac->addAction( "openin_addr_book", mOpenAddrBookAction );
-  connect( mOpenAddrBookAction, SIGNAL(triggered(bool)),
-           SLOT(slotMailtoOpenAddrBook()) );
 
   // copy selected text to clipboard
   mCopyAction = ac->addAction( KStandardAction::Copy, "kmail_copy", this,
@@ -2370,11 +2330,6 @@ void KMReaderWin::slotDocumentDone()
 void KMReaderWin::setHtmlOverride( bool override )
 {
   mHtmlOverride = override;
-  /*FIXME(Andras) port it
-  if ( message() ) {
-    message()->setDecodeHTML( htmlMail() );
-  }
-  */
 }
 
 //-----------------------------------------------------------------------------
@@ -2439,45 +2394,6 @@ void KMReaderWin::slotUrlClicked()
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::slotMailtoCompose()
-{
-/*FIXME(Andras) port to akonadi
-      KMCommand *command = new KMMailtoComposeCommand( mUrlClicked, message() );
-  command->start();
-    */
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::slotMailtoForward()
-{
-  /*FIXME(Andras) port to akonadi
-    KMCommand *command = new KMMailtoForwardCommand( mMainWindow, mUrlClicked,
-                                                   message() );
-  command->start();
-    */
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::slotMailtoAddAddrBook()
-{
-    /*FIXME(Andras) port to akonadi
-  KMCommand *command = new KMMailtoAddAddrBookCommand( mUrlClicked,
-                                                       mMainWindow);
-  command->start();
-    */
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::slotMailtoOpenAddrBook()
-{
-    /*FIXME(Andras) port to akonadi
-  KMCommand *command = new KMMailtoOpenAddrBookCommand( mUrlClicked,
-                                                        mMainWindow );
-  command->start();
-    */
-}
-
-//-----------------------------------------------------------------------------
 void KMReaderWin::slotUrlCopy()
 {
   // we don't necessarily need a mainWidget for KMUrlCopyCommand so
@@ -2514,16 +2430,6 @@ void KMReaderWin::slotUrlSave()
 {
     /*FIXME(Andras) port to akonadi
   KMCommand *command = new KMUrlSaveCommand( mUrlClicked, mMainWindow );
-  command->start();
-    */
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::slotMailtoReply()
-{
-    /*FIXME(Andras) port to akonadi
-  KMCommand *command = new KMMailtoReplyCommand( mMainWindow, mUrlClicked,
-    message(), copyText() );
   command->start();
     */
 }
