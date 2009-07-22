@@ -68,7 +68,7 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
   int nCurrentlySet = -1;
 
   for ( int i = 0; i < count(); ++i ) {
-    if ( itemText(i) ==  spec.timeZone().name() ) {
+    if ( itemText( i ) == i18n( spec.timeZone().name().toUtf8() ).replace( '_', ' ' ) ) {
       nCurrentlySet = i;
       break;
     }
@@ -98,7 +98,7 @@ KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec()
   } else if ( currentText() == i18n( "Floating" ) ) {
     spec = KDateTime::Spec( KDateTime::ClockTime );
   } else {
-    spec.setType( KSystemTimeZones::zone( currentText() ) );
+    spec.setType( KSystemTimeZones::zone( i18n( currentText().toUtf8() ).replace( '_', ' ' ) ) );
   }
 
   return spec;
