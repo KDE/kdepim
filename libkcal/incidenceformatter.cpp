@@ -1670,7 +1670,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
           html += helper->makeLink( "forward", i18n( "[Forward]" ) );
 
           // Check calendar
-          if ( inc->type() == "Event" ) {
+          if ( inc && inc->type() == "Event" ) {
             html += "</td><td> &nbsp; </td><td>";
             html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
           }
@@ -1681,7 +1681,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
     case Scheduler::Cancel:
       // Remove invitation
-      if ( existingIncidence ) {
+      if ( inc && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
           html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
         } else {
@@ -1702,16 +1702,18 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         }
       }
       if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
-        if ( inc->revision() > 0 ) {
+        if ( inc && inc->revision() > 0 ) {
           html += "<br><u><i>";
           html += i18n( "The response has been recorded [%1]" ).arg( ea->statusStr() );
           html += "</i></u>";
         }
       } else {
-        if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Record response into my task list]" ) );
-        } else {
-          html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+        if ( inc ) {
+          if ( inc->type() == "Todo" ) {
+            html += helper->makeLink( "reply", i18n( "[Record response into my task list]" ) );
+          } else {
+            html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+          }
         }
       }
       break;
