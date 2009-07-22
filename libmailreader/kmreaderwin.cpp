@@ -379,8 +379,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mCopyAction( 0 ),
     mCopyURLAction( 0 ),
     mUrlOpenAction( 0 ),
-    mUrlSaveAsAction( 0 ),
-    mAddBookmarksAction( 0 ),
     mSelectAllAction( 0 ),
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
@@ -575,17 +573,6 @@ void KMReaderWin::createActions()
   mUrlOpenAction = new KAction( KIcon( "document-open" ), i18n( "Open URL" ), this );
   ac->addAction( "open_url", mUrlOpenAction );
   connect( mUrlOpenAction, SIGNAL(triggered(bool)), SLOT(slotUrlOpen()) );
-
-  // bookmark message
-  mAddBookmarksAction = new KAction( KIcon( "bookmark-new" ), i18n( "Bookmark This Link" ), this );
-  ac->addAction( "add_bookmarks", mAddBookmarksAction );
-  connect( mAddBookmarksAction, SIGNAL(triggered(bool)),
-           SLOT(slotAddBookmarks()) );
-
-  // save URL as
-  mUrlSaveAsAction = new KAction( i18n( "Save Link As..." ), this );
-  ac->addAction( "saveas_url", mUrlSaveAsAction );
-  connect( mUrlSaveAsAction, SIGNAL(triggered(bool)), SLOT(slotUrlSave()) );
 
   // use fixed font
   mToggleFixFontAction = new KToggleAction( i18n( "Use Fi&xed Font" ), this );
@@ -2414,15 +2401,6 @@ void KMReaderWin::slotUrlOpen( const KUrl &url )
     mUrlClicked = url;
     slotUrlOpen( url, KParts::OpenUrlArguments(), KParts::BrowserArguments() );
   }
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::slotAddBookmarks()
-{
-    /*FIXME(Andras) port to akonadi
-    KMCommand *command = new KMAddBookmarksCommand( mUrlClicked, this );
-    command->start();
-    */
 }
 
 //-----------------------------------------------------------------------------

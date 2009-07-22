@@ -176,8 +176,6 @@ public:
   KAction *selectAllAction() { return mSelectAllAction; }
   KAction *copyURLAction() { return mCopyURLAction; }
   KAction *urlOpenAction() { return mUrlOpenAction; }
-  KAction *urlSaveAsAction() { return mUrlSaveAsAction; }
-  KAction *addBookmarksAction() { return mAddBookmarksAction;}
   // This function returns the complete data that were in this
   // message parts - *after* all encryption has been removed that
   // could be removed.
@@ -318,7 +316,6 @@ public slots:
   void slotUrlOpen( const KUrl &url = KUrl() );
   /** Save the page to a file */
   void slotUrlSave();
-  void slotAddBookmarks();
   void slotSaveMsg();
   void slotSaveAttachments();
 
@@ -585,7 +582,7 @@ private:
   QWidget *mMainWindow;
   KActionCollection *mActionCollection;
   KAction *mCopyAction, *mCopyURLAction,
-      *mUrlOpenAction, *mUrlSaveAsAction, *mAddBookmarksAction, *mSelectAllAction,
+      *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction, *mViewSourceAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction;
