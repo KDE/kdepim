@@ -80,7 +80,7 @@ class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
 
   private:
     class Private;
-    Private * const d;
+    Private *const d;
 };
 
 }
