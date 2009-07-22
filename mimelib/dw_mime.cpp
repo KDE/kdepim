@@ -341,6 +341,9 @@ int DwSubtypeStrToEnum(const DwString& aStr)
         if (DwStrcasecmp(aStr, "x-diff") == 0) {
             type = DwMime::kSubtypeXDiff;
         }
+        if (DwStrcasecmp(aStr, "x-vcalendar") == 0) {
+            type = DwMime::kSubtypeVCal;
+        }
         break;
     }
     return type;
