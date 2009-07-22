@@ -527,7 +527,7 @@ void KJotsComponent::deleteBook()
     if ( !book ) return;
 
     if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-        i18nc("remove the book, by title", <qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", book->title()),
+        i18nc("remove the book, by title", "<qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", book->title()),
         i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeleteBookWarning") == KMessageBox::Cancel) {
         return;
     }
