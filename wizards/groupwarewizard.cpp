@@ -23,6 +23,7 @@
 #include "overviewpage.h"
 
 #include <klocale.h>
+#include <kicon.h>
 
 #include <QApplication>
 #include <QLayout>
@@ -31,6 +32,7 @@ GroupwareWizard::GroupwareWizard( QWidget *parent)
   : QWidget( parent )
 {
   setWindowTitle( i18n( "KDE Groupware Wizard" ) );
+  setWindowIcon( KIcon("kontact") );
 
   QVBoxLayout *layout = new QVBoxLayout;
   setLayout(layout);
