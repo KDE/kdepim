@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="441" >
+<kpartgui name="kleopatra" version="442" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -85,8 +85,7 @@
         <Action name="view_redisplay"/>
         <Action name="view_stop_operations"/>
         <Separator/>
-        <Action name="certificates_delete"/>
-        <Action name="certificates_change_expiry"/>
+        <Action name="file_lookup_certificates"/>
 </ToolBar>
 
 <ToolBar fullWidth="true" name="searchToolBar" newline="true" iconText="icononly">
