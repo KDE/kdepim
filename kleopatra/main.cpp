@@ -175,10 +175,6 @@ int main( int argc, char** argv )
       QThreadPool::globalInstance()->setMaxThreadCount( qMax( 2U, threads ) );
   }
 
-#ifdef ONLY_KLEO
-  KIconLoader::setLogIconUse( true );
-#endif
-
   AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);

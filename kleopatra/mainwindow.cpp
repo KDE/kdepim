@@ -90,7 +90,6 @@
 #include <KShortcutsDialog>
 #include <KXMLGUIFactory>
 #include <KEditToolBar>
-#include <KIconLoader>
 #include <KAboutApplicationDialog>
 #include <kdebug.h>
 
@@ -293,22 +292,6 @@ public:
             kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
     }
 
-#ifdef ONLY_KLEO
-    void saveIconUsageLog() {
-        const QString filename = FileDialog::getSaveFileName( q, QString(), "debug" );
-        if ( filename.isEmpty() )
-            return;
-        QFile file( filename );
-        if ( !file.open( QIODevice::WriteOnly ) ) {
-            KMessageBox::error( q, i18nc( "@info", "Could not open <filename>%1</filename> for writing: <message>%2</message>",
-                                          filename, file.errorString() ),
-                                i18nc("@title","Error Writing Icon Usage Log") );
-            return;
-        }
-        QTextStream( &file ) << KIconLoader::iconUsageLog() << '\n';
-    }
-#endif
-
     void aboutGpg4Win() {
         ( new KAboutApplicationDialog( aboutGpg4WinData(), q ) )->show();
     }
@@ -417,10 +400,6 @@ void MainWindow::Private::setupActions() {
           "document-export", q, SLOT(exportCertificatesToServer()), "Ctrl+Shift+E", false, true },
         { "file_export_secret_keys", i18n("Export Secret Key..."), QString(),
           "document-export", q, SLOT(exportSecretKey()), QString(), false, true },
-#ifdef ONLY_KLEO
-        { "file_save_icon_usage_log", i18n("Save Icon Usage Log..."), QString(),
-          0, q, SLOT(saveIconUsageLog()), QString(), false, true },
-#endif
         { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
           "edit-find", q, SLOT(lookupCertificates()), "Shift+Ctrl+I", false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
