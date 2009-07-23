@@ -3,6 +3,7 @@ KAlarm Change Log
 === Version 2.2.6 --- 23 July 2009 ===
 - Use new setting after "prompt for calendar to store in" selection changes.
 - Sort alarm list after an alarm triggers.
+- Display translated time zone names in time zone selection combo box.
 
 === Version 2.2.5 --- 10 July 2009 ===
 - Fix alarms not triggering when reminder is erroneously AFTER the main alarm.
