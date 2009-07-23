@@ -9,6 +9,9 @@
     <Action name="file_PCtoHH" />
     <Action name="file_HHtoPC" />
     <Separator />
+      <Action name="file_backup" />
+      <Action name="file_restore" />
+    <Separator />
     <Action name="file_quit" />
   </Menu>
   <Menu name="settings" noMerge="1"><text>&amp;Settings</text>

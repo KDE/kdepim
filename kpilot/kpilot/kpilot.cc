@@ -322,13 +322,6 @@ void initMenu( KXmlGuiWindow *parent )
                 "overwriting entries on the PC."));
         QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotHHtoPCRequested()));
 
-        /*
-         * TODO: Not sure what the state of these are and we don't have
-         *       time/manpower to catch them before 4.2. These have been
-			*       taken out of kpilotui.rc for the time being. (Backup and
-			*       Restore). We can look at enabling them back later, after
-			*       the smoke has cleared.
-			*/
         a = parent->actionCollection()->addAction( "file_backup");
         a->setText(i18n("&Backup"));
         a->setIcon(KIcon(CSL1("kpilot_backup")));
