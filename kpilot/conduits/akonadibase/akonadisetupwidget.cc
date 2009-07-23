@@ -34,7 +34,7 @@
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 
-#include "collectioncombobox.h"
+#include <akonadi/collectionview.h>
 #include "options.h"
 
 using namespace Akonadi;
@@ -50,7 +50,7 @@ public:
 	
 	Ui::AkonadiWidget fUi;
 	Akonadi::CollectionFilterProxyModel* fCollectionFilterModel;
-	CollectionComboBox* fCollections;
+	CollectionView* fCollections;
 	Entity::Id fConfiguredCollection;
 	bool fCollectionModified;
 };
@@ -67,10 +67,10 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 	d->fCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
 	d->fCollectionFilterModel->setSourceModel( collectionModel );
 	
-	d->fCollections = new CollectionComboBox( this );
+	d->fCollections = new CollectionView( this );
 	d->fCollections->setModel( d->fCollectionFilterModel );
 	
-	connect( d->fCollections, SIGNAL( selectionChanged( const Akonadi::Collection& ) )
+	connect( d->fCollections, SIGNAL( currentChanged( const Akonadi::Collection& ) )
 			,this , SLOT( changeCollection( const Akonadi::Collection& ) ) );
 	
 	d->fUi.fWarnIcon1->setPixmap(
@@ -111,11 +111,12 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 		
 		emit collectionChanged();
 	}
+	selectedId = col.id();
 }
 
 Akonadi::Item::Id AkonadiSetupWidget::collection() const
 {
-	return d->fCollections->selectedCollection().id();
+	return selectedId;
 }
 
 bool AkonadiSetupWidget::modified() const
@@ -155,7 +156,14 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 
 		d->fUi.fWarnIcon1->setVisible( false );
 		d->fUi.fSelectionWarnLabel->setVisible( false );
-		d->fCollections->setSelectedCollection( id );
+
+		QModelIndexList result = d->fCollections->model()->match( d->fCollections->model()->index( 0, 0 ), CollectionModel::CollectionIdRole, id );
+  		selectedId = id;
+  		if( !result.isEmpty() ) {
+    			d->fCollections->setCurrentIndex( result.first());
+  		} else {
+    			DEBUGKPILOT << "invalid id requested.";
+  		}
 	}
 }
 
