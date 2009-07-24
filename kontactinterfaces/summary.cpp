@@ -83,18 +83,15 @@ int Summary::summaryHeight() const
 QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const QString &heading )
 {
   setStyleSheet( "KHBox {"
-                    "border: 1px solid palette(window);"
-                    "border-top: 0px solid white;"
-                    "border-left: 0px solid white;"
-                    "border-right: 0px solid white;"
+                    "border: 0px;"
                     "font: bold large;"
                     "padding: 2px;"
+                    "background: palette(window);"
+                    "color: palette(windowtext);"
                  "}"
                  "KHBox > QLabel { font: bold larger; } " );
 
   KHBox *hbox = new KHBox( parent );
-  //hbox->setMargin( 2 );
-  //hbox->setAutoFillBackground( true );
 
   QLabel *label = new QLabel( hbox );
   label->setPixmap( KIconLoader::global()->loadIcon( iconname, KIconLoader::Toolbar ) );
