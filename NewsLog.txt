@@ -1,3 +1,23 @@
+Friday, July 24th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3718: Don't show the warning about too many recipients when sending invitations
+* kolab/issue3769: Don't crash when reading a free/busy list that was sent as mail
+* kolab/issue3771: In the attendee edit dialog, allow to edit the organizer field if it is empty
+* kolab/issue3744: Also recognize invitation attachments marked as text/x-vcalendar
+* kolab/issue3734: Allow to change the free/busy and active alarm setting of the default groupware
+                   folders as well
+* kolab/issue3683: Fix the webpage export in KOrganizer not showing the right events
+* kolab/issue3735: Fix append-only IMAP folders leading to sync and conflict loops
+* kolab/issue3725: When forwarding encrypted mails, correctly include the attachments in the mail
+* kolab/issue3724: Fix various issues with invitations if you have access to a calendar of another
+                   person that is also invited
+* kolab/issue3742: Don't show the combo box that changes the folder type for online IMAP folders, since
+                   that is not supported there
+
+
 Friday, July 17th 2009
 
 Problems addressed
