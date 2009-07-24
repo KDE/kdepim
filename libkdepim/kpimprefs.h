@@ -25,7 +25,6 @@
 #include "kdepim_export.h"
 
 #include <KConfigSkeleton>
-#include <KDateTime>
 
 #include <QStringList>
 
@@ -50,17 +49,6 @@ class KDEPIM_EXPORT KPimPrefs : public KConfigSkeleton
 
     /** Write preferences to config file */
     void usrWriteConfig();
-
-    /**
-     * Get user's time zone.
-     *
-     * This will first look for whatever time zone is stored in KOrganizer's
-     * configuration file.  If no time zone is found there, it uses the
-     * local system time zone.
-     *
-     * @see Calendar
-     */
-    static KDateTime::Spec timeSpec();
 
   public:
     QStringList mCustomCategories;

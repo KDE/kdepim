@@ -29,18 +29,18 @@
 #include "stdcalendar.h"
 
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kstandarddirs.h>
+#include <ksystemtimezone.h>
 #include <klocale.h>
 #include <kurl.h>
 
 #include <kcal/resourcecalendar.h>
 
-#include "libkdepim/kpimprefs.h"
-
 using namespace KCal;
 
 StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
-  : CalendarResources( KPIM::KPimPrefs::timeSpec() )
+  : CalendarResources( KSystemTimeZones::local() )
 {
   mManager = resourceManager();
   if ( mManager->isEmpty() ) {
@@ -54,7 +54,7 @@ StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
 }
 
 StdCalendar::StdCalendar()
-  : CalendarResources( KPIM::KPimPrefs::timeSpec() )
+  : CalendarResources( KSystemTimeZones::local() )
 {
   readConfig();
 
@@ -112,7 +112,7 @@ void StdCalendar::addFileResource( const QString &fileName,
     }
 
     if ( resource ) {
-      resource->setTimeSpec( KPIM::KPimPrefs::timeSpec() );
+      resource->setTimeSpec( KSystemTimeZones::local() );
       resource->setResourceName( resName );
       mManager->add( resource );
       mManager->setStandardResource( resource );
