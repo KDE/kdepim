@@ -292,8 +292,8 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           KMessageBox::warningYesNo( 0,
               i18n("The event, task or journal to be updated could not be found. "
                   "Maybe it has already been deleted, or the calendar that "
-                  "contains it is disabled. Press continue to create a new "
-                  "one or 'throw away' to discard this update." ),
+                  "contains it is disabled. Press 'Store' to create a new "
+                  "one or 'Throw away' to discard this update." ),
               i18n("Discard this update?"), i18n("Store"), i18n("Throw away") ) == KMessageBox::Yes ) {
     kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
     mCalendar->addIncidence(inc);
