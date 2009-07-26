@@ -482,7 +482,7 @@ MiscPrefTab::MiscPrefTab(StackedScrollGroup* scrollGroup)
 void MiscPrefTab::restore(bool defaults)
 {
 	Q_UNUSED(defaults);
-	mAutoStart->setChecked(Preferences::autoStart());
+	mAutoStart->setChecked(defaults ? true : Preferences::autoStart());
 	mQuitWarn->setChecked(Preferences::quitWarn());
 	mConfirmAlarmDeletion->setChecked(Preferences::confirmAlarmDeletion());
 	mDefaultDeferTime->setValue(Preferences::defaultDeferTime());
