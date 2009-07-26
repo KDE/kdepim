@@ -641,4 +641,10 @@ namespace KPIM {
     mPrintFont = font;
   }
 
+  QColor CSSHelper::quoteColor( int level )
+  {
+    const int actualLevel = qMin( qMax( level, 0 ), 2 );
+    return mQuoteColor[actualLevel];
+  }
+
 } // namespace KPIM

@@ -68,6 +68,9 @@ class KDEPIM_EXPORT CSSHelper {
     void setBodyFont( const QFont& font );
     void setPrintFont( const QFont& font );
 
+    /** @return the quote color for the given level, where level ranges from 0 to 2 **/
+    QColor quoteColor( int level );
+
   protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */
