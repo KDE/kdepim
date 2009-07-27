@@ -11,4 +11,5 @@ MimeType=text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text
 X-KDE-ServiceTypes=KParts/ReadOnlyPart
 X-KDE-Library=kjotspart
 Type=Service
+Icon=kjots
 

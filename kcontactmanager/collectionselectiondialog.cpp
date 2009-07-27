@@ -22,8 +22,8 @@
 
 #include "collectioncombobox.h"
 
-#include <akonadi_next/descendantentitiesproxymodel.h>
-#include <akonadi_next/entityfilterproxymodel.h>
+#include <akonadi/descendantsproxymodel.h>
+#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/addressee.h>
@@ -44,7 +44,7 @@ CollectionSelectionDialog::CollectionSelectionDialog( QAbstractItemModel *collec
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
   // flatten the collection tree structure to a collection list
-  Akonadi::DescendantEntitiesProxyModel *descendantModel = new Akonadi::DescendantEntitiesProxyModel( this );
+  Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( this );
   descendantModel->setSourceModel( collectionModel );
 
 /*

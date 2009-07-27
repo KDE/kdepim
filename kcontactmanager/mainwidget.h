@@ -28,7 +28,7 @@
 namespace Akonadi {
 class Collection;
 class CollectionFilterProxyModel;
-class DescendantEntitiesProxyModel;
+class DescendantsProxyModel;
 class EntityFilterProxyModel;
 class EntityTreeView;
 class ContactGroupBrowser;
@@ -79,7 +79,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
 
     Akonadi::EntityFilterProxyModel *mCollectionTree;
     Akonadi::EntityFilterProxyModel *mItemTree;
-    Akonadi::DescendantEntitiesProxyModel *mDescendantTree;
+    Akonadi::DescendantsProxyModel *mDescendantTree;
 
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;

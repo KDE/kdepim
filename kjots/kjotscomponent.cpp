@@ -277,7 +277,6 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
 
     bookmarkMenu = actionCollection->add<KActionMenu>("bookmarks");
     bookmarkMenu->setText(i18n("&Bookmarks"));
-    bookmarkMenu->setIcon(KIcon("bookmarks"));
     KJotsBookmarks* bookmarks = new KJotsBookmarks(bookshelf);
     /*KBookmarkMenu *bmm =*/ new KBookmarkMenu(
         KBookmarkManager::managerForFile(KStandardDirs::locateLocal("data","kjots/bookmarks.xml"), "kjots"),
@@ -528,7 +527,7 @@ void KJotsComponent::deleteBook()
     if ( !book ) return;
 
     if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-        i18n("<qt>Are you sure you want to delete the <strong>%1</strong> book?</qt>", book->title()),
+        i18nc("remove the book, by title", "<qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", book->title()),
         i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeleteBookWarning") == KMessageBox::Cancel) {
         return;
     }
@@ -546,7 +545,7 @@ void KJotsComponent::deletePage()
     if ( !page ) return;
 
     if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-        i18n("<qt>Are you sure you want to delete the <strong>%1</strong> page?</qt>", page->title()),
+        i18nc("remove the page, by title", "<qt>Are you sure you want to delete the page <strong>%1</strong>?</qt>", page->title()),
         i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeletePageWarning") == KMessageBox::Cancel) {
         return;
     }

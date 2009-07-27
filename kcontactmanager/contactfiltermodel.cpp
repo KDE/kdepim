@@ -19,7 +19,7 @@
 
 #include "contactfiltermodel.h"
 
-#include <akonadi_next/entitytreemodel.h>
+#include <akonadi/entitytreemodel.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 

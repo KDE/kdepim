@@ -30,7 +30,7 @@
  * This proxy model filters Akonadi collections by content
  * mime type and rights.
  * It works on a flat list of collections, so a EntityTreeModel
- * has to be adapted by using DescendantEntityProxyModel.
+ * has to be adapted by using Akonadi::DescendantsProxyModel.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
