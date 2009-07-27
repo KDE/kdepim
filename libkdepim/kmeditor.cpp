@@ -103,12 +103,6 @@ class KMeditorPrivate
      */
     QList< QPair<int,int> > signaturePositions( const KPIMIdentities::Signature &sig ) const;
 
-    /**
-     * Returns the text of the signature. If the signature is HTML, the HTML
-     * tags will be stripped.
-     */
-    QString plainSignatureText( const KPIMIdentities::Signature &signature ) const;
-
     // Data members
     QString extEditorPath;
     KMeditor *q;
@@ -544,7 +538,7 @@ QList< QPair<int,int> > KMeditorPrivate::signaturePositions( const KPIMIdentitie
   QList< QPair<int,int> > signaturePositions;
   if ( !sig.rawText().isEmpty() ) {
 
-    QString sigText = plainSignatureText( sig );
+    QString sigText = sig.plainText();
 
     int currentSearchPosition = 0;
     forever {
@@ -563,14 +557,13 @@ QList< QPair<int,int> > KMeditorPrivate::signaturePositions( const KPIMIdentitie
   return signaturePositions;
 }
 
-
 void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
                                  const KPIMIdentities::Signature &newSig )
 {
   QTextCursor cursor( document() );
   cursor.beginEditBlock();
 
-  QString oldSigText = d->plainSignatureText( oldSig );
+  QString oldSigText = oldSig.plainText();
 
   int currentSearchPosition = 0;
   forever {
@@ -601,7 +594,7 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
     // Skip quoted signatures
     if ( isLineQuoted( cursor.block().text() ) ) {
-      currentSearchPosition += d->plainSignatureText( oldSig ).length();
+      currentSearchPosition += oldSig.plainText().length();
       continue;
     }
 
@@ -615,27 +608,10 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     else
       cursor.insertText( newSig.rawText() );
 
-    currentSearchPosition += d->plainSignatureText( newSig ).length();
+    currentSearchPosition += newSig.plainText().length();
   }
 
   cursor.endEditBlock();
-}
-
-
-QString KMeditorPrivate::plainSignatureText( const KPIMIdentities::Signature &signature ) const
-{
-  QString sigText = signature.rawText();
-  if ( signature.isInlinedHtml() &&
-       signature.type() == KPIMIdentities::Signature::Inlined ) {
-
-    // Use a QTextDocument as a helper, it does all the work for us and
-    // strips all HTML tags.
-    QTextDocument helper;
-    QTextCursor helperCursor( &helper );
-    helperCursor.insertHtml( sigText );
-    sigText = helper.toPlainText();
-  }
-  return sigText;
 }
 
 #include "kmeditor.moc"

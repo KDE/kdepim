@@ -10,7 +10,6 @@ include_directories(
 message(STATUS "Boost includes ${Boost_INCLUDE_DIRS}")
 
 set(akonadibase_SRCS
-	collectioncombobox.cc
 	akonadirecord.cc
 	akonadidataproxy.cc
 	akonadisetupwidget.cc
