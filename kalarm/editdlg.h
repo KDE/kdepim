@@ -178,6 +178,7 @@ class EditAlarmDlg : public KDialog
 		bool                mDesiredReadOnly;    // the specified read-only status of the dialog
 		bool                mReadOnly;           // the actual read-only status of the dialog
 		bool                mShowingMore;        // the More Options button has been clicked
+		bool                mWantRepaint;        // repaint after resize() is called
 
 		// Initial state of all controls
 		KAEvent*            mSavedEvent;

@@ -152,6 +152,7 @@ EditAlarmDlg::EditAlarmDlg(bool Template, KAEvent::Action action, QWidget* paren
 	  mDesiredReadOnly(false),
 	  mReadOnly(false),
 	  mShowingMore(true),
+	  mWantRepaint(false),
 	  mSavedEvent(0)
 {
 	init(0, getResource);
@@ -175,6 +176,7 @@ EditAlarmDlg::EditAlarmDlg(bool Template, const KAEvent* event, QWidget* parent,
 	  mDesiredReadOnly(readOnly),
 	  mReadOnly(readOnly),
 	  mShowingMore(true),
+	  mWantRepaint(false),
 	  mSavedEvent(0)
 {
 	init(event, getResource);
@@ -784,6 +786,7 @@ void EditAlarmDlg::showEvent(QShowEvent* se)
 void EditAlarmDlg::slotResize()
 {
 	QSize s = mTabScrollGroup->adjustSize(true);
+	mWantRepaint = true;
 	s = minimumSizeHint();
 	if (height() > s.height())
 	{
@@ -808,6 +811,9 @@ void EditAlarmDlg::resizeEvent(QResizeEvent* re)
 		KAlarm::writeConfigWindowSize(mTemplate ? TEMPLATE_DIALOG_NAME : EDIT_DIALOG_NAME, s);
 	}
 	KDialog::resizeEvent(re);
+	// Sometimes only the dialog background is shown when first displayed.
+	// Force a repaint after the size has been adjusted by slotResize().
+	QTimer::singleShot(0, this, SLOT(update()));
 }
 
 /******************************************************************************
