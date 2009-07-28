@@ -1190,6 +1190,13 @@ namespace KMail {
       return false;
 
     KMime::Content* dataHtml = findType( child, "text/html", false, true );
+    if ( !dataHtml ) {
+      // If we didn't find the HTML part as the first child of the multipart/alternative, it might
+      // be that this is a HTML message with images, and text/plain and multipart/related are the
+      // immediate children of this multipart/alternative node.
+      // In this case, the HTML node is a child of multipart/related.
+      dataHtml = findType( child, "multipart/related", false, true );
+    }
     KMime::Content* dataPlain = findType( child, "text/plain", false, true );
 
     if ( (mReader && mReader->htmlMail() && dataHtml) ||
