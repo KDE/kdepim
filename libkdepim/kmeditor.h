@@ -30,8 +30,6 @@ namespace KPIMIdentities {
   class Signature;
 }
 
-class KUrl;
-
 namespace KPIM {
 
 class KMeditorPrivate;
@@ -53,11 +51,10 @@ class KDEPIM_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 
   public:
 
-
     /**
      * Constructs a KMeditor object
      */
-    explicit KMeditor( const QString& text, QWidget *parent = 0 );
+    explicit KMeditor( const QString &text, QWidget *parent = 0 );
 
     /**
      * Constructs a KMeditor object.
