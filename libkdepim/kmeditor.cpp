@@ -31,6 +31,7 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QPointer>
 #include <QProcess>
 #include <QShortcut>
 #include <QTimer>
@@ -238,17 +239,19 @@ void KMeditor::setFontForWholeText( const QFont &font )
 
 KUrl KMeditor::insertFile()
 {
-  KEncodingFileDialog fdlg( QString(), QString(),  QString(), QString(),
-                            KFileDialog::Opening, this );
-  fdlg.okButton()->setText( i18nc( "@action:button", "&Insert" ) );
-  fdlg.setCaption( i18nc( "@title:window", "Insert File" ) );
-  if ( !fdlg.exec() ) {
-    return KUrl();
-  } else {
-    KUrl url = fdlg.selectedUrl();
-    url.setFileEncoding( fdlg.selectedEncoding() );
-    return url;
+  QPointer<KEncodingFileDialog> fdlg =
+    new KEncodingFileDialog( QString(), QString(),  QString(), QString(),
+                             KFileDialog::Opening, this );
+  fdlg->okButton()->setText( i18nc( "@action:button", "&Insert" ) );
+  fdlg->setCaption( i18nc( "@title:window", "Insert File" ) );
+
+  KUrl url;
+  if ( fdlg->exec() ) {
+    url = fdlg->selectedUrl();
+    url.setFileEncoding( fdlg->selectedEncoding() );
   }
+  delete fdlg;
+  return url;
 }
 
 void KMeditor::enableWordWrap( int wrapColumn )
