@@ -167,7 +167,7 @@ KMMsgSignatureState NodeHelper::signatureState( KMime::Content *node ) const
   return KMMsgSignatureStateUnknown;
 }
 
-KMime::Content *NodeHelper::firstChild( KMime::Content* node )
+KMime::Content *NodeHelper::firstChild( const KMime::Content* node )
 {
   if ( !node )
     return 0;
@@ -179,7 +179,7 @@ KMime::Content *NodeHelper::firstChild( KMime::Content* node )
   return child;
 }
 
-KMime::Content *NodeHelper::nextSibling( KMime::Content* node )
+KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
 {
   if ( !node )
     return 0;
@@ -188,7 +188,7 @@ KMime::Content *NodeHelper::nextSibling( KMime::Content* node )
   KMime::Content *parent = node->parent();
   if ( parent ) {
     KMime::Content::List contents = parent->contents();
-    int index = contents.indexOf( node ) + 1;
+    int index = contents.indexOf( const_cast<KMime::Content*>(node) ) + 1;
     if ( index < contents.size() ) //next on the same level
       next =  contents.at( index );
   }
@@ -426,5 +426,22 @@ const QTextCodec* NodeHelper::codecForName(const QByteArray& _str)
   return KGlobal::charsets()->codecForName(codec);
 }
 
+QByteArray NodeHelper::path(const KMime::Content* node)
+{
+  if ( !node->parent() ) {
+    return QByteArray( ":" );
+  }
+  const KMime::Content *p = node->parent();
+
+  // count number of siblings with the same type as us:
+  int nth = 0;
+  for ( KMime::Content *c = NodeHelper::firstChild(p); c != node; c = NodeHelper::nextSibling(c) ) {
+    if ( c->contentType()->mediaType() == const_cast<KMime::Content*>(node)->contentType()->mediaType() && c->contentType()->subType() == const_cast<KMime::Content*>(node)->contentType()->subType() ) {
+      ++nth;
+    }
+  }
+  QString subpath;
+  return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType(), const_cast<KMime::Content*>(node)->contentType()->subType(), nth ).toLocal8Bit();
+}
 
 }

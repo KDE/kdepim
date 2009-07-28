@@ -40,16 +40,18 @@ class QString;
 namespace KMail {
   namespace Interface {
 
+/*FIXME(Andras) review, port
     class Observer;
     class Observable;
-
+*/
     /**
        @short interface of classes that implement status for BodyPartFormatters.
     */
     class BodyPartMemento {
     public:
       virtual ~BodyPartMemento() {}
-
+#if 0
+/*FIXME(Andras) review, port
       /** If your BodyPartMemento implementation also implements the
 	  KMail::Observer interface, simply implement these as
 	  <code>return this;</code>, else as <code>return
@@ -65,6 +67,8 @@ namespace KMail {
 	  plugins on internal KMail classes.
       */
       virtual Observable * asObservable() = 0;
+*/
+#endif
     };
 
     /**

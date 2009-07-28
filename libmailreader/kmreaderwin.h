@@ -32,8 +32,9 @@
 #include <kurl.h>
 #include <kservice.h>
 #include "libkdepim/messagestatus.h"
-#include <kvbox.h>
 using KPIM::MessageStatus;
+#include <kvbox.h>
+#include <map>
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -77,6 +78,9 @@ namespace KMail {
   class KHtmlPartHtmlWriter;
   class HtmlStatusBar;
   class CSSHelper;
+  namespace Interface {
+    class BodyPartMemento;
+  }
 }
 
 namespace KParts {
@@ -250,6 +254,19 @@ public:
    */
   MAILVIEWER_EXPORT KConfigSkeleton *configObject();
 
+
+/* retrieve BodyPartMemento of id \a which for partNode \a node */
+   KMail::Interface::BodyPartMemento * bodyPartMemento( const KMime::Content * node, const QByteArray & which ) const;
+
+   /* set/replace BodyPartMemento \a memento of id \a which for
+      partNode \a node. If there was a BodyPartMemento registered
+      already, replaces (deletes) that one. */
+   void setBodyPartMemento( const KMime::Content * node, const QByteArray & which, KMail::Interface::BodyPartMemento * memento );
+
+private:
+   /* deletes all BodyPartMementos. Use this when skipping to another
+      message (as opposed to re-loading the same one again). */
+   void clearBodyPartMementos();
 
 signals:
   /** Emitted after parsing of a message to have it stored
@@ -591,11 +608,12 @@ private:
   /** Used only to be able to connect and disconnect finished() signal
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */
   QPointer<KMail::KHtmlPartHtmlWriter> mPartHtmlWriter;
+  std::map<QByteArray,KMail::Interface::BodyPartMemento*> mBodyPartMementoMap;
 
   int mChoice;
   unsigned long mWaitingForSerNum;
   float mSavedRelativePosition;
-	int mLevelQuote;
+  int mLevelQuote;
   bool mDecrytMessageOverwrite;
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;

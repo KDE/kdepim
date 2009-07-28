@@ -78,8 +78,8 @@ public:
     KMMsgSignatureState overallSignatureState( KMime::Content* node ) const;
     KMMsgEncryptionState overallEncryptionState( KMime::Content *node ) const;
 
-    static KMime::Content *nextSibling( KMime::Content* node );
-    static KMime::Content *firstChild( KMime::Content* node );
+    static KMime::Content *nextSibling( const KMime::Content* node );
+    static KMime::Content *firstChild( const KMime::Content* node );
 
     QString iconName( KMime::Content *node, int size = KIconLoader::Desktop ) const;
   /** Set the 'Content-Type' by mime-magic from the contents of the body.
@@ -116,6 +116,8 @@ public:
   /** Return a QTextCodec for the specified charset.
    * This function is a bit more tolerant, than QTextCodec::codecForName */
     static const QTextCodec* codecForName(const QByteArray& _str);
+
+    static QByteArray path(const KMime::Content* node);
 
 private:
     NodeHelper();
