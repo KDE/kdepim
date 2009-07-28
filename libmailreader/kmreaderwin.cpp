@@ -1528,7 +1528,6 @@ QString KMReaderWin::writeMsgHeader(KMime::Message* aMsg, bool hasVCard, bool to
 
 
 //-----------------------------------------------------------------------------
-//TODO(Andras) check how can we get rid of writing in a temp file
 QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
 {
   // If the message part is already written to a file, no point in doing it again.
@@ -1536,7 +1535,7 @@ QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
   // in the body and once for the header.
   KUrl existingFileName = tempFileUrlFromNode( aMsgPart );
   if ( !existingFileName.isEmpty() ) {
-    return existingFileName.path();
+    return existingFileName.toLocalFile();
   }
 
   QString fileName = aMsgPart->contentDisposition()->filename();
@@ -1628,7 +1627,7 @@ int KMReaderWin::msgPartFromUrl( const KUrl &aUrl )
   if ( aUrl.isEmpty() ) return -1;
   if ( !aUrl.isLocalFile() ) return -1;
 
-  QString path = aUrl.path();
+  QString path = aUrl.toLocalFile();
   uint right = path.lastIndexOf( '/' );
   uint left = path.lastIndexOf( '.', right );
 
@@ -2127,7 +2126,7 @@ void KMReaderWin::slotAtmView( int id, const QString& name )
     mAtmCurrent = id;
     mAtmCurrentName = name;
     if ( mAtmCurrentName.isEmpty() )
-      mAtmCurrentName = tempFileUrlFromNode( node ).path();
+      mAtmCurrentName = tempFileUrlFromNode( node ).toLocalFile();
 
     KMMessagePart& msgPart = node->msgPart();
     QString pname = msgPart.fileName();
@@ -2165,7 +2164,7 @@ void KMReaderWin::openAttachment( int id, const QString & name )
     return;
   }
   if ( mAtmCurrentName.isEmpty() )
-    mAtmCurrentName = tempFileUrlFromNode( node ).path();
+    mAtmCurrentName = tempFileUrlFromNode( node ).toLocalFile();
 
   KMMessagePart& msgPart = node->msgPart();
   if (kasciistricmp(msgPart.typeStr(), "message")==0)
@@ -2487,7 +2486,7 @@ bool KMReaderWin::eventFilter( QObject *, QEvent *e )
       // special processing for shift+click
       mAtmCurrent = msgPartFromUrl( mUrlClicked );
       if ( mAtmCurrent < 0 ) return false; // not an attachment
-      mAtmCurrentName = mUrlClicked.path();
+      mAtmCurrentName = mUrlClicked.toLocalFile();
 //FIXME(Andras) port to akonadi      slotHandleAttachment( KMHandleAttachmentCommand::Save ); // save
       return true; // eat event
     }

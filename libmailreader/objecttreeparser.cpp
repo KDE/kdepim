@@ -259,11 +259,6 @@ namespace KMail {
         // identity of KMail::Interface::BodyPart::Display and AttachmentStrategy::Display
         part.setDefaultDisplay( (KMail::Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
         const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
-        /*FIXME(Andras) port it
-        if ( mReader && node->bodyPartMemento() )
-          if ( Interface::Observable * obs = node->bodyPartMemento()->asObservable() )
-            obs->attach( mReader );
-            */
         switch ( result ) {
         case Interface::BodyPartFormatter::AsIcon:
           processResult.setNeverDisplayInline( true );
