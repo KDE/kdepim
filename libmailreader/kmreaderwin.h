@@ -432,7 +432,7 @@ protected:
   */
   QString createTempDir( const QString &param = QString() );
 
-  /** show window containing infos about a vCard. */
+  /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
   /** HTML initialization. */
