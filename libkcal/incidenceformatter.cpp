@@ -56,7 +56,6 @@
 
 #include <time.h>
 
-
 using namespace KCal;
 
 
@@ -600,7 +599,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static QString string2HTML( const QString& str )
 {
-  return QStyleSheet::escape( str );
+  return QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
 }
 
 static QString eventStartTimeStr( Event *event )
@@ -852,12 +851,12 @@ static QString invitationDetailsEvent( Event* event )
 
   QString sSummary = i18n( "Summary unspecified" );
   if ( ! event->summary().isEmpty() ) {
-    sSummary = string2HTML( event->summary() );
+    sSummary = QStyleSheet::escape( event->summary() );
   }
 
   QString sLocation = i18n( "Location unspecified" );
   if ( ! event->location().isEmpty() ) {
-    sLocation = string2HTML( event->location() );
+    sLocation = QStyleSheet::escape( event->location() );
   }
 
   QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
@@ -925,12 +924,12 @@ static QString invitationDetailsTodo( Todo *todo )
 
   QString sSummary = i18n( "Summary unspecified" );
   if ( ! todo->summary().isEmpty() ) {
-    sSummary = string2HTML( todo->summary() );
+    sSummary = QStyleSheet::escape( todo->summary() );
   }
 
   QString sLocation = i18n( "Location unspecified" );
   if ( ! todo->location().isEmpty() ) {
-    sLocation = string2HTML( todo->location() );
+    sLocation = QStyleSheet::escape( todo->location() );
   }
 
   QString dir = ( QApplication::reverseLayout() ? "rtl" : "ltr" );
