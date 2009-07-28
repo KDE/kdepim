@@ -1,6 +1,7 @@
 [Misc]
 Name=Application Octetstream
 Name[af]=Application/Octet-stream
+Name[ar]=تطبيق ثماني التدفق
 Name[ca]=Aplicació Octetstream
 Name[cs]=Aplikace octetstream
 Name[da]=Program oktetstrøm
@@ -35,6 +36,7 @@ Name[x-test]=xxApplication Octetstreamxx
 Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/calendar
 Comment[af]='n Data (boodskap lyf) formateer inprop module vir 'text/calendar'
+Comment[ar]=ملحق منسق جزء الجسم لنص/تقويم
 Comment[bg]=Редактор с поддръжка на форматиране за текст/календар
 Comment[ca]=Un connector formatador del cos per a text/calendar
 Comment[cs]=Formátovač těla emailu pro typ text/calendar

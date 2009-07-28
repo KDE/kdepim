@@ -13,6 +13,7 @@ X-KDE-CfgDlgHierarchy=KMail
 X-KDE-Weight=300
 
 Name=Appearance
+Name[ar]=المظهر
 Name[be]=Вонкавы выгляд
 Name[bg]=Външен вид
 Name[br]=Neuziadur
@@ -75,6 +76,7 @@ Name[zh_CN]=外观
 Name[zh_TW]=外觀
 Comment=Customize Visual Appearance
 Comment[af]=Pasmaak die visuele voorkoms
+Comment[ar]=تخصيص المظهر المرئي
 Comment[bg]=Настройки на външния вид
 Comment[ca]=Personalitza l'aparença visual
 Comment[cs]=Nastavení vzhledu

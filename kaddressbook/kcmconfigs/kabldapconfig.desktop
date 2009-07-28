@@ -12,6 +12,7 @@ X-KDE-Weight=300
 
 Name=LDAP Lookup
 Name[af]=LDAP Opkyk
+Name[ar]=بحث LDAP
 Name[be]=Пошук у LDAP
 Name[bg]=Търсене в LDAP
 Name[br]=Klask LDAP
@@ -65,6 +66,7 @@ Name[x-test]=xxLDAP Lookupxx
 Name[zh_CN]=LDAP 查询
 Comment=Configure the Address Book LDAP Settings
 Comment[af]=Stel die adres boek se LDAP opstelling op.
+Comment[ar]=اضبط إعدادات دفتر عناوين LDAP
 Comment[bg]=Настройки на адресника за използване на сървър LDAP
 Comment[ca]=Configura les opcions de la Llibreta d'adreces LDAP
 Comment[cs]=Nastavit LDAP pro Knihu adres

@@ -3,6 +3,7 @@
 
 [Misc]
 Name=Letter business/work address
+Name[ar]=عنوان العمل/الوظيفة للرسالة
 Name[ca]=Adreça postal negoci/treball
 Name[cs]=Obchodní korespondenční adresa
 Name[da]=Postadresse erhverv/arbejde

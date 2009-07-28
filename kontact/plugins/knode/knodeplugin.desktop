@@ -17,6 +17,7 @@ X-KDE-PluginInfo-EnabledByDefault=false
 
 Comment=Kontact KNode Plugin
 Comment[af]=Kontact KNode inprop module
+Comment[ar]=ملحق Kontact KNode
 Comment[be]=Утулка Kontact KNode
 Comment[bg]=Приставка за четене на новини
 Comment[br]=Lugent Kontact KNode
@@ -72,6 +73,7 @@ Comment[x-test]=xxKontact KNode Pluginxx
 Comment[zh_CN]=Kontact KNode 插件
 Comment[zh_TW]=Kontact KNode 外掛程式
 Name=Usenet
+Name[ar]=اليوزنت
 Name[ko]=유즈넷
 Name[ne]=युजनेट
 Name[nn]=Temagrupper

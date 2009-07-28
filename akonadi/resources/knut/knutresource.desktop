@@ -3,6 +3,7 @@ Name=Knut
 Name[pa]=ਕੇ-ਨੁਟ
 Name[x-test]=xxKnutxx
 Comment=An agent for debugging purpose
+Comment[ar]=أداة لتصحيح الأخطاء
 Comment[ca]=Un agent amb la finalitat de depuració
 Comment[da]=En agent til fejlretningsformål
 Comment[de]=Agent für Zwecke der Fehlersuche

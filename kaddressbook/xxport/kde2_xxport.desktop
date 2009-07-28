@@ -2,6 +2,7 @@
 X-KDE-Library=kaddrbk_kde2_xxport
 Name=KAB KDE2 XXPort Plugin
 Name[af]=KAB KDE2 XXPort inprop module
+Name[ar]=ملحق KAB KDE2 XXPort
 Name[br]=Lugent XXPorzh KAB KDE2
 Name[ca]=Connector d'importació/exportació KDE2 per a KAB
 Name[cs]=Exportní modul KDE2
@@ -51,6 +52,7 @@ Name[zh_CN]=KAB KDE2 XXPort 插件
 Name[zh_TW]=KAB KDE2 XXPort 外掛程式
 Comment=Plugin to import the old KDE 2 address book
 Comment[af]=Inprop module om 'n ou KDE 2 adres boek in te voer
+Comment[ar]=ملحق إستيراد دفتر عناوين كدي2
 Comment[bg]=Приставка за импортиране на контактите от старата версия на адресника в KDE 2
 Comment[ca]=Connector per a importar l'antiga llibreta d'adreces del KDE 2
 Comment[cs]=Modul pro import staré KDE 2 knihy adres

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KAddressBook
+Name[ar]=دفتر عناوين كدي
 Name[cy]=KAddressBook/LlyfrKyfeiriadau
 Name[de]=Adressbuch
 Name[et]=KDE aadressiraamat
@@ -23,6 +24,7 @@ Name[x-test]=xxKAddressBookxx
 Name[zh_TW]=KAddressBook 通訊錄
 GenericName=Address Manager
 GenericName[af]=Adres Bestuurder
+GenericName[ar]=مدير العناوين
 GenericName[be]=Кіраванне адрасамі
 GenericName[bg]=Адресник
 GenericName[br]=Merour ar chomlec'hioù

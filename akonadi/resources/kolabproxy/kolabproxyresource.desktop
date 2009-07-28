@@ -1,8 +1,10 @@
 [Desktop Entry]
 Name=Akonadi Kolab Proxy Resource
+Name[ar]=مورد وكيل Kolab لاكوندا
 Name[ca]=Recurs Kolab Proxy de l'Akonadi
 Name[da]=Akonadi Kolab-proxy-ressource
 Name[de]=Akonadi-Proxy-Ressource für Kolab
+Name[es]=Recurso proxy Kolab de Akonadi
 Name[et]=Akonadi Kolabi puhverserveri ressurss
 Name[fr]=Ressource mandaire Kolab Akonadi
 Name[gl]=Recurso proxy de Kolab do Akonadi
@@ -23,9 +25,11 @@ Name[x-test]=xxAkonadi Kolab Proxy Resourcexx
 Name[zh_CN]=Akonadi Kolab 代理资源
 Name[zh_TW]=Akonadi Kolab Proxy 資源
 Comment=Proxy resource to monitor groupware folders.
+Comment[ar]=موارد الوكيل لمراقبة مجلدات البرنامج الجماعي.
 Comment[ca]=Recurs proxy per controlar carpetes de groupware.
 Comment[da]=Proxy-ressource til overvågning af groupware-mapper.
 Comment[de]=Proxy-Ressource zur Überwachung von Arbeitsgruppen-Ordnern.
+Comment[es]=Recurso de proxy para seguimiento de carpetas groupware.
 Comment[et]=Puhverserveri ressurss grupitöö kaustade jälgimiseks
 Comment[fr]=Ressource mandataire permettant de surveiller les dossiers de travail collaboratif
 Comment[gl]=Recurso de proxy para vixiar cartafoles de traballo en grupo.

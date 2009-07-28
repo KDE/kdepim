@@ -13,6 +13,7 @@ X-KDE-CfgDlgHierarchy=KMail
 X-KDE-Weight=100
 
 Name=Identities
+Name[ar]=الهويات
 Name[be]=Увасабленні
 Name[bg]=Самоличност
 Name[br]=Anvelezhioù
@@ -72,6 +73,7 @@ Name[zh_CN]=身份
 Name[zh_TW]=身份
 Comment=Manage Identities
 Comment[af]=Bestuur identiteite
+Comment[ar]=أدِر الهويات
 Comment[be]=Кіраванне увасабленнямі
 Comment[bg]=Настройки на самоличността
 Comment[br]=Merañ an anvelezhioù

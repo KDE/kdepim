@@ -1,6 +1,7 @@
 [KMail Profile]
 Name=Default
 Name[af]=Standaard
+Name[ar]=افتراضي
 Name[be]=Прадвызначаны
 Name[bg]=Стандартен
 Name[br]=Dre ziouer
@@ -66,6 +67,7 @@ Name[zh_CN]=默认
 Name[zh_TW]=預設
 Comment=Standard profile
 Comment[af]=Standaard profiel
+Comment[ar]=التشكيلة القياسية
 Comment[be]=Стандартны профіль
 Comment[bg]=Стандартен профил
 Comment[ca]=Perfil estàndard

@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KMail
+Name[ar]=برنامج البريد KMail
 Name[eo]=Retpoŝto
 Name[mk]=КПошта
 Name[ne]=केडीई पत्र
@@ -15,6 +16,7 @@ Icon=kmail
 X-DocPath=kmail/index.html
 GenericName=Mail Client
 GenericName[af]=E-pos kliënt
+GenericName[ar]=عميل البريد
 GenericName[be]=Паштовы кліент
 GenericName[bg]=Пощенски клиент
 GenericName[br]=Kliant postel

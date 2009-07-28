@@ -2,6 +2,7 @@
 X-KDE-Library=kaddrbk_gnokii_xxport
 Name=KAB Mobile Phone XXPort Plugin
 Name[af]=KAB selfoon XXPort inprop module
+Name[ar]=ملحق الهاتف المحمول KAB XXPort
 Name[ca]=Connector d'importació/exportació de telèfon mòbil per a KAB
 Name[cs]=Exportní modul do mobilního telefonu
 Name[cy]=Ategyn XXPort Ffôn Symudol KAB
@@ -49,6 +50,7 @@ Name[x-test]=xxKAB Mobile Phone XXPort Pluginxx
 Name[zh_CN]=KAB 移动电话 XXPort 插件
 Name[zh_TW]=KAB Mobile Phone XXPort 外掛程式
 Comment=Mobile phone plugin to import and export address book entries
+Comment[ar]=ملحق الهاتف المحمول لإستيراد و تصدير مدخلات دفتر العناوين
 Comment[ca]=Connector de telèfon mòbil per a importar i exportar entrades de la llibreta d'adreces
 Comment[cs]=Modul mobilního telefonu pro import a export záznamů Knihy adres
 Comment[da]=Mobiltelefon-plugin til import og eksport af adressebogsindgange

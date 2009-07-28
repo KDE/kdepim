@@ -2,6 +2,7 @@
 Type=Service
 Name=Instant Messaging
 Name[af]=Kits bootskap
+Name[ar]=التراسل الفوري
 Name[be]=Імгненныя паведамленні
 Name[bg]=Мигновени съобщения
 Name[br]=Postelerezh a-benn-kaer
@@ -57,6 +58,7 @@ Name[zh_CN]=即时通讯
 Name[zh_TW]=即時通訊
 Comment=Instant Messaging Address Editor
 Comment[af]=Kits boodskap adres redigeerder
+Comment[ar]=محرر عناوين التراسل الفوري
 Comment[bg]=Редактор на адреси за мигновените съобщения
 Comment[ca]=Editor d'adreces de missatgeria instantània
 Comment[cs]=Editor adres komunikátorů

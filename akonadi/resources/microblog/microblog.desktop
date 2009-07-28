@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Microblog (Twitter and Identi.ca)
+Name[ar]=التدوين المصغر ( تويتر و Identi.ca )
 Name[ca]=Microblog (Twitter i Identi.ca)
 Name[da]=Microblog (Twitter og Identi.ca)
 Name[de]=Microblog (Twitter und Identi.ca)
 Name[el]=Microblog (Twitter και Identi.ca)
+Name[es]=Microblog (Twitter e Identi.ca)
 Name[et]=Mikroblogi (Twitter ja Identi.ca)
 Name[fr]=Microblog (Twitter et Identi.ca)
 Name[ga]=Micreabhlagadóireacht (Twitter agus Identi.ca)
@@ -26,10 +28,12 @@ Name[x-test]=xxMicroblog (Twitter and Identi.ca)xx
 Name[zh_CN]=微博客(Twitter 和 Identi.ca 等)
 Name[zh_TW]=Microblog（Twitter 與 Identi.ca）
 Comment=Shows your microblog data from Twitter or Identi.ca.
+Comment[ar]=تظهر بيانات التدوين المصغر من Twitter أو Identi.ca .
 Comment[ca]=Mostra les vostres dades d'un microblog de Twitter o identi.ca.
 Comment[da]=Viser dine microblog-data fra Twitter eller Identi.ca.
 Comment[de]=Zeigt Microblog-Daten aus Twitter oder Identi.ca an.
 Comment[el]=Εμφάνιση των δεδομένων σας microblog από το Twitter ή Identi.ca.
+Comment[es]=Muestra sus datos microblog desde Twitter o Identi.ca.
 Comment[et]=Näitab mikroblogi andmeid Twitterist või Identi.ca-st
 Comment[fr]=Affiche vos informations de Twitter ou Identi.ca
 Comment[gl]=Mostra os seus datos de microblog de Twitter ou Identi.ca.

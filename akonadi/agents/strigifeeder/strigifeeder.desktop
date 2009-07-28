@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Strigi Feeder
+Name[ar]=مغذي سراتجي
 Name[ca]=Alimentador del Strigi
 Name[da]=Strigi-feeder
 Name[de]=Modul für Strigi
@@ -33,6 +34,7 @@ Name[uk]=Передавач Strigi
 Name[x-test]=xxStrigi Feederxx
 Name[zh_CN]=Strigi 采集器
 Comment=Strigi-based fulltext search
+Comment[ar]=بحث كامل النص معتمد على سراتجي
 Comment[ca]=Motor de cerca per text sencer basat en el Strigi
 Comment[da]=Strigi-baseret fuldtekst-søgning
 Comment[de]=Strigi-basierte Volltextsuche

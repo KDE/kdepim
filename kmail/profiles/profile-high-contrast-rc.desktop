@@ -1,6 +1,7 @@
 [KMail Profile]
 Name=High Contrast
 Name[af]=Hoë kontras
+Name[ar]=تباين عالي
 Name[be]=Высокакантрасны
 Name[bg]=Висок контраст
 Name[br]=Dargemm huel
@@ -59,6 +60,7 @@ Name[zh_CN]=高对比
 Name[zh_TW]=高反差
 Comment=Increased font sizes for visually impaired users
 Comment[af]=Vergroot die skrif tipe vir visueel gestremde gebruikers
+Comment[ar]=تكبير حجم الخط للمستخدمين المصابين بضعف البصر
 Comment[bg]=Увеличаване на размера на шрифта за потребители със зрителни увреждания
 Comment[ca]=Augmenta la mida dels tipus de lletra per als usuaris amb deficiències visuals
 Comment[cs]=Zvětší velikost písma pro zrakově postižené uživatele

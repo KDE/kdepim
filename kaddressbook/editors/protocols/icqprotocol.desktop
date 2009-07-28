@@ -5,6 +5,7 @@ X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/icq
 Comment=ICQ Protocol
 Comment[af]=ICQ protokol
+Comment[ar]=بروتوكول ICQ 
 Comment[be]=Пратакол ICQ
 Comment[bg]=Протокол ICQ
 Comment[br]=Komenad ICQ

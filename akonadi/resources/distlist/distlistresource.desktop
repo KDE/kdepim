@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=Distribution List File
+Name[ar]=ملف قائمة التوزيع
 Name[ca]=Fitxers de llistes de distribució
 Name[da]=Distributionsliste-fil
 Name[de]=Verteilerlistendatei
 Name[el]=Αρχείο λίστας διανομής
+Name[es]=Archivo de lista de distribución
 Name[et]=Postiloendi fail
 Name[fr]=Fichier de liste de distribution
 Name[ga]=Comhad Liosta Dáilte
@@ -28,10 +30,12 @@ Name[x-test]=xxDistribution List Filexx
 Name[zh_CN]=分发列表文件
 Name[zh_TW]=分派清單檔
 Comment=Loads data from a distribution list file
+Comment[ar]=تحميل البيانات من ملف قائمة التوزيع
 Comment[ca]=Carrega dades des d'un fitxer de llistes de distribució
 Comment[da]=Indlæser data fra en distributionsliste-fil
 Comment[de]=Daten werden aus einer Verteilerlistendatei geladen
 Comment[el]=Φόρτωση δεδομένων από ένα αρχείο λίστας διανομής
+Comment[es]=Carga datos desde un archivo de lista de distribución.
 Comment[et]=Andmete laadimine postiloendi failist
 Comment[fr]=Charger les données depuis un fichier de liste de distribution
 Comment[ga]=Breiseán a luchtaíonn sonraí ó chomhad liosta dáilte

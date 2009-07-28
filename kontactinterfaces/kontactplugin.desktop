@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=Kontact/Plugin
 Name=Kontact Plugin
 Name[af]=Kontact inprop module
+Name[ar]=ملحق Kontact
 Name[be]=Утулка Kontact
 Name[bg]=Приставка на Kontact
 Name[br]=Lugent Kontact

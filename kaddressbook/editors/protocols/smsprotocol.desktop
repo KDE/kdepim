@@ -5,6 +5,7 @@ X-KDE-ServiceTypes=KABC/IMProtocol,KPluginInfo
 X-KDE-InstantMessagingKABCField=messaging/sms
 Comment=SMS Protocol
 Comment[af]=SMS protokol
+Comment[ar]=بروتوكول SMS
 Comment[be]=Пратакол SMS
 Comment[bg]=Протокол SMS
 Comment[br]=Komenad SMS

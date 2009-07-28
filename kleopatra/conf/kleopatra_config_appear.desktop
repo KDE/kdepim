@@ -13,6 +13,7 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Appearance
+Name[ar]=المظهر
 Name[be]=Вонкавы выгляд
 Name[bg]=Външен вид
 Name[br]=Neuziadur
@@ -75,6 +76,7 @@ Name[zh_CN]=外观
 Name[zh_TW]=外觀
 Comment=Colors & Fonts Configuration
 Comment[af]=Kleur en skrif tipe opstelling
+Comment[ar]=ضبط الألوان و الخطوط
 Comment[be]=Настаўленні колераў і шрыфтоў
 Comment[bg]=Настройки на цветовете и шрифтовете
 Comment[ca]=Configuració de colors i tipus de lletra

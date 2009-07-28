@@ -3,6 +3,7 @@ Type=ServiceType
 X-KDE-ServiceType=KAddressBook/Extension
 Comment=KAddressBook Extension Plugin
 Comment[af]=KAddressBook uitbrei inprop module
+Comment[ar]=ملحق تمديد دفتر عناوين كدي
 Comment[bg]=Приставка-разширение за адресника
 Comment[ca]=Connector Extension per al KAddressBook
 Comment[cs]=Rozšiřující modul pro Knihu adres

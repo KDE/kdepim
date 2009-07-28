@@ -2,6 +2,7 @@
 X-KDE-Library=kaddrbk_csv_xxport
 Name=KAB CSV XXPort Plugin
 Name[af]=KAB CSV XXPort inprop module
+Name[ar]=ملحق KAB CSV XXPort 
 Name[br]=Lugent XXPorzh CSV KAB
 Name[ca]=Connector d'importació/exportació CSV per al KAB
 Name[cs]=Exportní modul CSV
@@ -49,6 +50,7 @@ Name[zh_CN]=KAB CSV XXPort 插件
 Name[zh_TW]=KAB CSV XXPort 外掛程式
 Comment=Plugin to import and export contacts in CSV format
 Comment[af]=Inprop module wat kontakte in CSV formaat invoer en uitvoer
+Comment[ar]=ملحق استيراد و تصدير جهات الإتصال في تنسيق CSV
 Comment[bg]=Приставка за импортиране/експортиране на контактите във формат CSV
 Comment[ca]=Connector per a importar i exportar contactes en format CSV
 Comment[cs]=Modul pro import a export kontaktů ve formátu CSV

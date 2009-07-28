@@ -6,6 +6,7 @@ MimeType=application/pkcs7-mime;application/x-x509-ca-cert;application/x-pkcs12;
 Categories=Qt;KDE;Utility;Security;X-KDE-Utilities-PIM;
 
 Name=Kleopatra
+Name[ar]=كليوبترا
 Name[is]=Kleópatra
 Name[mk]=Клеопатра
 Name[ne]=क्लेओपेट्रा
@@ -13,6 +14,7 @@ Name[pa]=ਕਲੀਉਪਾਟਰਾ
 Name[ta]=க்ளியோபட்ரா
 Name[x-test]=xxKleopatraxx
 Comment=Certificate Manager and Unified Crypto GUI
+Comment[ar]=الواجهة الرسومية لمدير الشهادة و الشفرة الموحدة
 Comment[ca]=Gestor de certificats i IGU criptogràfica unificada
 Comment[cs]=Správce certifikátů a rozhraní pro šifrování
 Comment[da]=Certifikathåndtering og forenet krypterings-GUI

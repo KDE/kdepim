@@ -2,6 +2,7 @@
 X-KDE-Library=kaddrbk_vcard_xxport
 Name=KAB vCard XXPort Plugin
 Name[af]=KAB vCard XXPort inprop module
+Name[ar]=ملحق KAB vCard XXPort
 Name[br]=Lugent KAB vCard XXPort
 Name[ca]=Connector d'importació/exportació vCard per a KAB
 Name[cs]=Exportní modul vCard
@@ -52,6 +53,7 @@ Name[zh_CN]=KAB vCard XXPort 插件
 Name[zh_TW]=KAB vCard XXPort 外掛程式
 Comment=Plugin to import and export contacts in vCard format
 Comment[af]=Inprop module wat kontakte in vCard formaat invoer en uitvoer
+Comment[ar]=ملحق استيراد و تصدير جهات الإتصال في تنسيق vCard
 Comment[bg]=Приставка за експортиране/импортиране на контактите във формат на vCard
 Comment[ca]=Connector per a importar i exportar contactes en el format vCard
 Comment[cs]=Modul pro import a export kontaktů ve formátu vCard

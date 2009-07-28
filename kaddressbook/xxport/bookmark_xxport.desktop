@@ -2,6 +2,7 @@
 X-KDE-Library=kaddrbk_bookmark_xxport
 Name=KAB Bookmark XXPort Plugin
 Name[af]=KAB boekmerk XXPort inprop module
+Name[ar]=ملحق XXPort لعلامات KAB
 Name[br]=Lugent XXPorzh sined KAB
 Name[ca]=Connector d'importació/exportació de punts per al KAB
 Name[cs]=Exportní modul záložek
@@ -50,6 +51,7 @@ Name[zh_CN]=KAB 书签 XXPort 插件
 Name[zh_TW]=KAB Bookmark XXPort 外掛程式
 Comment=Plugin to export the web addresses of the contacts as bookmarks
 Comment[af]=Inprop module wat die web adresse van kontakte as boekmerke uitvoer
+Comment[ar]=ملحق لتصدير عناوين الويب لجهات الإتصال كعلامات
 Comment[bg]=Приставка за експортиране на уеб адресите на контактите, като отметки
 Comment[ca]=Connector per a exportar les adreces web dels contactes com a punts
 Comment[cs]=Modul pro exportování webových adres kontaktů jako záložky

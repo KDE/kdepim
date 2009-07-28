@@ -8,6 +8,7 @@ Exec=kabcdistlistupdater --disable-autostart
 Icon=x-mail-distribution-list
 Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
+Comment[ar]=أداة لتحديث قوائم التوزيع لقوائم جديدة.
 Comment[ca]=Eina per actualitzar les llistes de distribució antigues a les noves.
 Comment[da]=Værktøj til at opdatere de gamle distributionslister til de nye.
 Comment[de]=Werkzeug zum Aktualisieren alter Verteilerlisten in das neue Format.

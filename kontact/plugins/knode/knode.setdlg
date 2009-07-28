@@ -1,5 +1,6 @@
 [KNode]
 Name=Usenet
+Name[ar]=اليوزنت
 Name[ko]=유즈넷
 Name[ne]=युजनेट
 Name[nn]=Temagrupper
@@ -7,6 +8,7 @@ Name[pa]=ਯੂਜ਼-ਨੈੱਟ
 Name[sl]=Novičarske skupine
 Name[x-test]=xxUsenetxx
 Comment=Usenet Component
+Comment[ar]=مكون اليوزنت
 Comment[bg]=Модул за е-поща
 Comment[ca]=Component de notícies
 Comment[cs]=Komponenta novinek
