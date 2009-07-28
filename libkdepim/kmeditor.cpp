@@ -94,9 +94,9 @@ class KMeditorPrivate
                                 const KPIMIdentities::Signature &sig );
 
     /**
-     * Returns a list of all occurences of the given signature.
-     * The list contains pairs which consists of the starting position and the end
-     * of the signature.
+     * Returns a list of all occurrences of the given signature.
+     * The list contains pairs which consists of the starting position and
+     * the end of the signature.
      *
      * @param sig this signature will be searched for
      * @return a list of pairs of start and end positions of the signature
@@ -162,7 +162,7 @@ void KMeditorPrivate::startExternalEditor()
   }
 }
 
-void KMeditorPrivate::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
+void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::NormalExit ) {
     mExtEditorTempFile->flush();
@@ -348,21 +348,27 @@ QString KMeditorPrivate::addQuotesToText( const QString &inputText )
   return q->smartQuote( answer );
 }
 
-QString KMeditor::smartQuote( const QString & msg )
+QString KMeditor::smartQuote( const QString &msg )
 {
   return msg;
 }
 
 bool KMeditor::checkExternalEditorFinished()
 {
-  if ( !d->mExtEditorProcess )
+  if ( !d->mExtEditorProcess ) {
     return true;
-  switch ( KMessageBox::warningYesNoCancel( topLevelWidget(),
-           i18n("The external editor is still running.\n"
-                "Abort the external editor or leave it open?"),
-           i18n("External Editor"),
-           KGuiItem( i18n("Abort Editor") ),
-           KGuiItem( i18n("Leave Editor Open") ) ) ) {
+  }
+
+  switch ( KMessageBox::warningYesNoCancel(
+             topLevelWidget(),
+             i18nc( "@info",
+                    "The external editor is still running.<nl>"
+                    "Do you want to stop the editor or keep it running?</nl>"
+                    "<warning>Stopping the editor will cause all your "
+                    "unsaved changes to be lost!</warning>" ),
+             i18nc( "@title:window", "External Editor Running" ),
+             KGuiItem( i18nc( "@action:button", "Stop Editor" ) ),
+             KGuiItem( i18nc( "@action:button", "Keep Editor Running" ) ) ) ) {
   case KMessageBox::Yes:
     killExternalEditor();
     return true;
@@ -492,7 +498,7 @@ void KMeditorPrivate::cleanWhitespaceHelper( const QRegExp &regExp,
     bool insideSignature = false;
     QList< QPair<int,int> > sigPositions = signaturePositions( sig );
     QPair<int,int> position;
-    foreach( position, sigPositions ) { //krazy:exclude=foreach
+    foreach ( position, sigPositions ) { //krazy:exclude=foreach
       if ( cursor.position() >= position.first &&
            cursor.position() <= position.second )
         insideSignature = true;
