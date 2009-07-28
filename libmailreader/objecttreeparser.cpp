@@ -51,6 +51,7 @@
 #include "kleojobexecutor.h"
 #include "stringutil.h"
 #include "nodehelper.h"
+#include "iconnamecache.h"
 
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -2837,11 +2838,11 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     // Cache Icons
     if ( mCollapseIcon.isEmpty() ) {
       mCollapseIcon= LinkLocator::pngToDataUrl(
-          KIconLoader::global()->iconPath( "quotecollapse",0 ));
+          KMail::IconNameCache::instance()->iconPath( "quotecollapse", 0 ));
     }
     if ( mExpandIcon.isEmpty() )
       mExpandIcon= LinkLocator::pngToDataUrl(
-          KIconLoader::global()->iconPath( "quoteexpand",0 ));
+          KMail::IconNameCache::instance()->iconPath( "quoteexpand", 0 ));
   }
 
   while (beg<length)
