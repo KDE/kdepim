@@ -4,6 +4,7 @@ Comment=This conduit syncs the handheld keyring database with a database stored 
 Comment[da]=Denne kanal synkroniserer den håndholdte nøglering, med en database lagret på pc'en.
 Comment[de]=Abgleich der Schlüsselbund-Datenbanken von Taschencomputer und PC.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με το βιβλίο διευθύνσεων του pc.
+Comment[es]=Este conducto sincroniza la base de datos del anillo de claves de la agenda electrónica con la base de datos almacenada en el equipo.
 Comment[et]=See kanal sünkroniseerib pihuarvuti võtmerõnga andmebaasi ja PC-s leiduva andmebaasi.
 Comment[ga]=Sioncrónaíonn an seoladán seo fáinní eochracha an ríomhaire boise le bunachar sonraí ar an ríomhaire deisce.
 Comment[gl]=Este conduto sincroniza o base de datos do chaveiro dun aparello portátil cunha base de datos almacenada no computador.
