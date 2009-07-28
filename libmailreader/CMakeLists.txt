@@ -29,6 +29,7 @@ spamheaderanalyzer.cpp
 antispamconfig.cpp
 globalsettings.cpp
 configurewidget.cpp
+htmlquotecolorer.cpp
  )
 
 

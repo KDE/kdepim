@@ -52,6 +52,7 @@
 #include "stringutil.h"
 #include "nodehelper.h"
 #include "iconnamecache.h"
+#include "htmlquotecolorer.h"
 
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -909,7 +910,10 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
     {
       if ( mReader->htmlMail() ) {
 
-        // Strip <html>, <head>, and <body>, so we don't end up having those tags
+        HTMLQuoteColorer colorer( cssHelper() );
+        bodyText = colorer.process( bodyText );
+
+         // Strip <html>, <head>, and <body>, so we don't end up having those tags
         // twice, which confuses KHTML (especially with a signed
         // multipart/alternative message, the signature bars get rendered at the
         // wrong place)
