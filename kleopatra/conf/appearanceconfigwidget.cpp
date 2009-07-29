@@ -183,13 +183,13 @@ static void erase_if_allowed( QListWidgetItem * item, int role, int allowRole ) 
         item->setData( role, QVariant() );
 }
 
+#if 0
 static void erase_if_allowed( QListWidgetItem * item, const int role[], size_t numRoles, int allowRole ) {
     if ( item && item->data( allowRole ).toBool() )
         for ( unsigned int i = 0 ; i < numRoles ; ++i )
             item->setData( role[i], QVariant() );
 }
 
-#if 0
 static void erase_if_allowed( QListWidgetItem * item, int role, const int allowRole[], size_t numAllowRoles ) {
     if ( !item )
         return;
@@ -216,7 +216,7 @@ static void set_default_appearance( QListWidgetItem * item ) {
     erase_if_allowed( item, Qt::ForegroundRole, MayChangeForegroundRole );
     erase_if_allowed( item, Qt::BackgroundRole, MayChangeBackgroundRole );
     static const int iconRoles[] = { Qt::DecorationRole, MayChangeIconRole };
-    erase_if_allowed( item, iconRoles, size( iconRoles ), MayChangeIconRole );
+    erase_if_allowed( item, Qt::DecorationRole, MayChangeIconRole );
     static const int fontRoles[] = { Qt::FontRole, HasFontRole };
     static const int fontAllowRoles[] = {
         MayChangeFontRole,
