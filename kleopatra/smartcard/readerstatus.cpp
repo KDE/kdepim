@@ -326,7 +326,7 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
         return ci;
     klc->setKeyListMode( Ephemeral );
 
-    if ( kdtools::any( keyPairInfos, bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
+    if ( kdtools::any( keyPairInfos, !bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
         ci.status = ReaderStatus::CardCanLearnKeys;
 
     qDebug() << "get_more_detailed_status: ci.status " << prettyFlags[ci.status];
