@@ -310,25 +310,25 @@ bool Scheduler::acceptAdd(IncidenceBase *incidence,ScheduleMessage::Status /* st
 
 bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /* status */)
 {
-  bool ret = false;
   const IncidenceBase *toDelete = mCalendar->incidenceFromSchedulingID( incidence->uid() );
-  if ( !toDelete ) {
-      KMessageBox::error( 0,
-              i18n("The event, task or journal to be canceled could not be found. "
-                  "Maybe it has already been deleted, or the calendar that "
-                  "contains it is disabled." ) );
-  } else {
-    Event *even = mCalendar->event(toDelete->uid());
-    if (even) {
-      mCalendar->deleteEvent(even);
-      ret = true;
-    } else {
-      Todo *todo = mCalendar->todo(toDelete->uid());
-      if (todo) {
-        mCalendar->deleteTodo(todo);
-        ret = true;
-      }
+
+  bool ret = true;
+  if ( toDelete ) {
+    if ( toDelete->type() == "Event" ) {
+      Event *event = mCalendar->event( toDelete->uid() );
+      ret = ( event && mCalendar->deleteEvent( event ) );
+    } else if ( toDelete->type() == "Todo" ) {
+      Todo *todo = mCalendar->todo( toDelete->uid() );
+      ret = ( todo && mCalendar->deleteTodo( todo ) );
     }
+  }
+
+  if ( !ret ) {
+    KMessageBox::error(
+      0,
+      i18n( "The event or task to be canceled could not be removed from your calendar. "
+            "Maybe it has already been deleted, or the calendar that "
+            "contains it is disabled." ) );
   }
   deleteTransaction(incidence);
   return ret;
