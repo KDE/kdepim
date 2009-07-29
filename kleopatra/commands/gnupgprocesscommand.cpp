@@ -119,6 +119,10 @@ bool GnuPGProcessCommand::preStartHook( QWidget * ) const {
     return true;
 }
 
+void GnuPGProcessCommand::postSuccessHook( QWidget * ) {
+
+}
+
 void GnuPGProcessCommand::doStart() {
 
     if ( !preStartHook( d->parentWidgetOrView() ) ) {
@@ -155,9 +159,10 @@ void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::Exit
             KMessageBox::error( parentWidgetOrView(), q->crashExitMessage( arguments ), q->errorCaption() );
         else if ( code )
             KMessageBox::error( parentWidgetOrView(), q->errorExitMessage( arguments ), q->errorCaption() );
-        else
-            KMessageBox::information( parentWidgetOrView(), q->successMessage( arguments ), q->successCaption() 
-);
+        else {
+            q->postSuccessHook( parentWidgetOrView() );
+            KMessageBox::information( parentWidgetOrView(), q->successMessage( arguments ), q->successCaption() );
+        }
     finished();
 }
 
