@@ -41,6 +41,7 @@
 #include <commands/signclipboardcommand.h>
 #include <commands/decryptverifyclipboardcommand.h>
 #include <commands/setinitialpincommand.h>
+#include <commands/learncardkeyscommand.h>
 
 #include <conf/configuredialog.h>
 
@@ -67,30 +68,6 @@
 using namespace boost;
 using namespace Kleo;
 using namespace Kleo::Commands;
-
-namespace {
-    class LearnCertificatesCommand : public Kleo::Command {
-    public:
-        explicit LearnCertificatesCommand( KeyListController * ctrl )
-            : Kleo::Command( ctrl ), m_dialog( 0 ) {}
-
-        void doStart() {
-            emit finished();
-        }
-        void doCancel() {}
-
-        QDialog * dialog() {
-            if ( !m_dialog ) {
-                m_dialog = new QDialog;
-                m_dialog->setAttribute( Qt::WA_DeleteOnClose );
-                m_dialog->setWindowTitle( i18n("Learn Keys") );
-                m_dialog->show();
-            }
-            return m_dialog;
-        }
-        QDialog * m_dialog;
-    };
-}
 
 class SysTrayIcon::Private {
     friend class ::SysTrayIcon;
@@ -156,8 +133,7 @@ private:
     }
 
     void slotLearnCertificates() {
-        LearnCertificatesCommand * cmd = new LearnCertificatesCommand( 0 );
-        q->setAttentionWindow( cmd->dialog() );
+        LearnCardKeysCommand * cmd = new LearnCardKeysCommand( GpgME::CMS );
         startCommand( cmd );
     }
 
