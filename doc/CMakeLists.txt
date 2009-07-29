@@ -2,9 +2,10 @@ if(BUILD_akregator)
   add_subdirectory(akregator)
 endif(BUILD_akregator)
 
-if(BUILD_kabcclient)
+if(BUILD_console)
   add_subdirectory(kabcclient)
-endif(BUILD_kabcclient)
+  add_subdirectory(konsolekalendar)
+endif(BUILD_console)
 
 if(BUILD_kaddressbook)
   add_subdirectory(kaddressbook)
@@ -40,10 +41,6 @@ endif(BUILD_knode)
 if(BUILD_knotes)
   add_subdirectory(knotes)
 endif(BUILD_knotes)
-
-if(BUILD_konsolekalendar)
-  add_subdirectory(konsolekalendar)
-endif(BUILD_konsolekalendar)
 
 if(BUILD_kontact)
   add_subdirectory(kontact)
