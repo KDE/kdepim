@@ -274,6 +274,12 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
   }
 }
 
+static bool is_card_key( const Key & key ) {
+    const std::vector<Subkey> sks = key.subkeys();
+    return std::find_if( sks.begin(), sks.end(),
+                         mem_fn( &Subkey::isCardKey ) ) != sks.end() ;
+}
+
 bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const {
   if ( !( mMatchContexts & contexts ) )
     return false;
@@ -294,15 +300,10 @@ bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const
   CAN_MATCH( Certify );
   CAN_MATCH( Authenticate );
   IS_MATCH( Qualified );
-  if ( mCardKey != DoesNotMatter ) {
-      const std::vector<Subkey> sks = key.subkeys();
-      const std::vector<Subkey>::const_iterator it
-          = std::find_if( sks.begin(), sks.end(),
-                          mem_fn( &Subkey::isCardKey ) );
-      if ( mCardKey == Set    && it == sks.end() ||
-           mCardKey != NotSet && it != sks.end() )
+  if ( mCardKey != DoesNotMatter )
+      if ( mCardKey == Set    && !is_card_key( key ) ||
+           mCardKey == NotSet &&  is_card_key( key ) )
           return false;
-  }
   MATCH( mHasSecret, hasSecret );
 #undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&
