@@ -451,6 +451,7 @@ void AppearanceConfigWidget::Private::slotIconClicked() {
 
     item->setIcon( KIcon( iconName ) );
     item->setData( IconNameRole, iconName );
+    emit q->changed();
 }
 
 void AppearanceConfigWidget::Private::slotForegroundClicked() {
