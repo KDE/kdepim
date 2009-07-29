@@ -1616,6 +1616,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
                 arg( ea->statusStr() );
       }
       rsvpReq = false;
+    } else if ( msg->method() == Scheduler::Cancel ) {
+      html += i18n( "Declined the invitation" );
+    } else if ( msg->method() == Scheduler::Add ) {
+      html += i18n( "Accepted the invitation" );
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
