@@ -37,6 +37,7 @@
 
 #include <utils/kdsignalblocker.h>
 
+#include <commands/importcertificatefromclipboardcommand.h>
 #include <commands/encryptclipboardcommand.h>
 #include <commands/signclipboardcommand.h>
 #include <commands/decryptverifyclipboardcommand.h>
@@ -94,6 +95,7 @@ private:
         //triggering slotEnableDisableActions again
         const KDSignalBlocker blocker( QApplication::clipboard() );
         openCertificateManagerAction.setEnabled( !q->mainWindow() || !q->mainWindow()->isVisible() );
+        importClipboardAction.setEnabled( ImportCertificateFromClipboardCommand::canImportCurrentClipboard() );
         encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
         openPGPSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
         smimeSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
@@ -108,6 +110,10 @@ private:
         assert( cmd );
         cmd->setParent( q->mainWindow() );
         cmd->start();
+    }
+
+    void slotImportClipboard() {
+        startCommand( new ImportCertificateFromClipboardCommand( 0 ) );
     }
 
     void slotEncryptClipboard() {
@@ -165,6 +171,7 @@ private:
     QAction aboutAction;
     QAction quitAction;
     QMenu clipboardMenu;
+    QAction importClipboardAction;
     QAction encryptClipboardAction;
     QAction smimeSignClipboardAction;
     QAction openPGPSignClipboardAction;
@@ -189,13 +196,14 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
       clipboardMenu( i18n("Clipboard" ) ),
+      importClipboardAction( i18n("Certificate Import"), q ),
       encryptClipboardAction( i18n("Encrypt..."), q ),
       smimeSignClipboardAction( i18n("S/MIME-Sign..."), q ),
       openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
       decryptVerifyClipboardAction( i18n("Decrypt/Verify..."), q ),
       cardMenu( i18n("SmartCard") ),
       setInitialPinAction( i18n("Set Initial PIN..."), q ),
-      learnCertificatesAction( i18n("Learn Card Certificates..."), q ),
+      learnCertificatesAction( i18n("Learn Card Certificates"), q ),
       aboutDialog(),
       mainWindowPreviousGeometry()
 {
@@ -208,6 +216,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( quitAction );
     KDAB_SET_OBJECT_NAME( clipboardMenu );
+    KDAB_SET_OBJECT_NAME( importClipboardAction );
     KDAB_SET_OBJECT_NAME( encryptClipboardAction );
     KDAB_SET_OBJECT_NAME( smimeSignClipboardAction );
     KDAB_SET_OBJECT_NAME( openPGPSignClipboardAction );
@@ -220,6 +229,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     connect( &configureAction, SIGNAL(triggered()), q, SLOT(openOrRaiseConfigDialog()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
+    connect( &importClipboardAction, SIGNAL(triggered()), q, SLOT(slotImportClipboard()) );
     connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
     connect( &smimeSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotSMIMESignClipboard()) );
     connect( &openPGPSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotOpenPGPSignClipboard()) );
@@ -235,6 +245,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     menu.addAction( &aboutAction );
     menu.addSeparator();
     menu.addMenu( &clipboardMenu );
+    clipboardMenu.addAction( &importClipboardAction );
     clipboardMenu.addAction( &encryptClipboardAction );
     clipboardMenu.addAction( &smimeSignClipboardAction );
     clipboardMenu.addAction( &openPGPSignClipboardAction );
