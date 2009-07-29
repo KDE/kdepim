@@ -92,6 +92,7 @@ void                viewAlarm(const KAEvent*, QWidget* parent = 0);
 void                editNewTemplate(EditAlarmDlg::Type, QWidget* parent = 0);
 void                editNewTemplate(const KAEvent* preset, QWidget* parent = 0);
 void                editTemplate(KAEvent*, QWidget* parent = 0);
+void                execNewAlarmDlg(EditAlarmDlg*, bool alreadyExecuted = false);
 /** Create a "New From Template" QAction */
 TemplateMenuAction* createNewFromTemplateAction(const QString& label, KActionCollection*, const QString& name);
 KToggleAction*      createAlarmEnableAction(QObject* parent);
@@ -137,7 +138,7 @@ void                purgeArchive(int purgeDays);    // must only be called from 
 void                displayUpdateError(QWidget* parent, UpdateStatus, UpdateError, int nAlarms, int nKOrgAlarms = 1, bool showKOrgError = true);
 void                displayKOrgUpdateError(QWidget* parent, UpdateError, UpdateStatus korgError, int nAlarms);
 
-bool                convTimeString(const QByteArray& timeString, KDateTime& dateTime, const KDateTime& defaultDt = KDateTime(), bool allowTZ = true);
+bool                convertTimeString(const QByteArray& timeString, KDateTime& dateTime, const KDateTime& defaultDt = KDateTime(), bool allowTZ = true);
 KDateTime           applyTimeZone(const QString& tzstring, const QDate& date, const QTime& time,
                                   bool haveTime, const KDateTime& defaultDt = KDateTime());
 bool                isWorkingTime(const KDateTime&, const KAEvent*);
