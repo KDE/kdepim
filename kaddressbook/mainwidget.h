@@ -27,7 +27,6 @@
 
 namespace Akonadi {
 class Collection;
-class CollectionFilterProxyModel;
 class DescendantsProxyModel;
 class EntityFilterProxyModel;
 class EntityTreeView;
@@ -41,7 +40,6 @@ class StandardContactActionManager;
 class ContactSwitcher;
 class KActionCollection;
 class KXMLGUIClient;
-class QItemSelection;
 class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;

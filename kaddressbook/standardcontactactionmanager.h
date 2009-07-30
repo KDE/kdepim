@@ -28,7 +28,6 @@
 
 class KAction;
 class KActionCollection;
-class KLocalizedString;
 class QItemSelectionModel;
 class QWidget;
 
