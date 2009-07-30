@@ -115,6 +115,11 @@ namespace KMail {
                       KMail::CSSHelper * cssHelper=0 );
     virtual ~ObjectTreeParser();
 
+    void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
+    bool allowAsync() const { return mAllowAsync; }
+
+    bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
+
     QByteArray rawReplyString() const { return mRawReplyString; }
 
     /*! @return the text of the message, ie. what would appear in the
@@ -212,6 +217,7 @@ namespace KMail {
                         bool showWarning,
                         bool& passphraseError,
                         bool& actuallyEncrypted,
+                        bool& decryptionStarted,
                         QString& aErrorText,
                         GpgME::Error & auditLogError,
                         QString& auditLog );
@@ -302,6 +308,8 @@ namespace KMail {
     bool mShowOnlyOneMimePart;
     bool mKeepEncryptions;
     bool mIncludeSignatures;
+    bool mHasPendingAsyncJobs;
+    bool mAllowAsync;
     const KMail::AttachmentStrategy * mAttachmentStrategy;
     KMail::HtmlWriter * mHtmlWriter;
     KMail::CSSHelper * mCSSHelper;

@@ -13,6 +13,7 @@ attachmentstrategy.cpp
 kmmsgpartdlg.cpp
 csshelper.cpp
 util.cpp
+objecttreeparser_p.cpp
 objecttreeparser.cpp
 kleojobexecutor.cpp
 bodypartformatter.cpp

@@ -40,7 +40,6 @@
 #include <QString>
 #include <QPointer>
 
-#include "isubject.h"
 #include "interfaces/bodypart.h"
 
 namespace Kleo {
@@ -56,17 +55,17 @@ namespace KMail {
 
   class DecryptVerifyBodyPartMemento
     : public QObject,
-      public KMail::Interface::BodyPartMemento,
-      public KMail::ISubject
+      public KMail::Interface::BodyPartMemento
   {
     Q_OBJECT
   public:
     DecryptVerifyBodyPartMemento( Kleo::DecryptVerifyJob * job, const QByteArray & cipherText );
     ~DecryptVerifyBodyPartMemento();
 
-    /* reimp */ Interface::Observer   * asObserver()   { return 0;    }
-    /* reimp */ Interface::Observable * asObservable() { return this; }
-
+/*FIXME(Andras) review, port
+     Interface::Observer   * asObserver()   { return 0;    }
+    Interface::Observable * asObservable() { return this; }
+*/
     bool start();
     void exec();
 
@@ -82,10 +81,11 @@ namespace KMail {
     void slotResult( const GpgME::DecryptionResult & dr,
                      const GpgME::VerificationResult & vr,
                      const QByteArray & plainText );
+/*FIXME(Andras) review, port
     void notify() {
       ISubject::notify();
     }
-
+*/
   private:
     void saveResult( const GpgME::DecryptionResult &,
                      const GpgME::VerificationResult &,
@@ -106,8 +106,7 @@ namespace KMail {
 
   class VerifyDetachedBodyPartMemento
     : public QObject,
-      public KMail::Interface::BodyPartMemento,
-      public KMail::ISubject
+      public KMail::Interface::BodyPartMemento
   {
     Q_OBJECT
   public:
@@ -116,10 +115,11 @@ namespace KMail {
                                    const QByteArray & signature,
                                    const QByteArray & plainText );
     ~VerifyDetachedBodyPartMemento();
+/*FIXME(Andras) review, port
 
-    /* reimp */ Interface::Observer   * asObserver()   { return 0;    }
-    /* reimp */ Interface::Observable * asObservable() { return this; }
-
+    Interface::Observer   * asObserver()   { return 0;    }
+    Interface::Observable * asObservable() { return this; }
+*/
     bool start();
     void exec();
 
@@ -134,10 +134,11 @@ namespace KMail {
     void slotResult( const GpgME::VerificationResult & vr );
     void slotKeyListJobDone();
     void slotNextKey( const GpgME::Key & );
+/*FIXME(Andras) review, port
     void notify() {
       ISubject::notify();
     }
-
+*/
   private:
     void saveResult( const GpgME::VerificationResult & );
     bool canStartKeyListJob() const;
@@ -160,8 +161,7 @@ namespace KMail {
 
   class VerifyOpaqueBodyPartMemento
     : public QObject,
-      public KMail::Interface::BodyPartMemento,
-      public KMail::ISubject
+      public KMail::Interface::BodyPartMemento
   {
     Q_OBJECT
   public:
@@ -169,10 +169,11 @@ namespace KMail {
                                  Kleo::KeyListJob * klj,
                                  const QByteArray & signature );
     ~VerifyOpaqueBodyPartMemento();
+/*FIXME(Andras) review, port
 
-    /* reimp */ Interface::Observer   * asObserver()   { return 0;    }
-    /* reimp */ Interface::Observable * asObservable() { return this; }
-
+    Interface::Observer   * asObserver()   { return 0;    }
+    Interface::Observable * asObservable() { return this; }
+*/
     bool start();
     void exec();
 
@@ -189,10 +190,11 @@ namespace KMail {
                      const QByteArray & plainText );
     void slotKeyListJobDone();
     void slotNextKey( const GpgME::Key & );
+/*FIXME(Andras) review, port
     void notify() {
       ISubject::notify();
     }
-
+*/
   private:
     void saveResult( const GpgME::VerificationResult &,
                      const QByteArray & );

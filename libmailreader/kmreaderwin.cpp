@@ -1415,6 +1415,7 @@ void KMReaderWin::parseMsg()
 
   // show message content
   ObjectTreeParser otp( this );
+  otp.setAllowAsync( true );
   otp.parseObjectTree( mMessage );
 
   bool emitReplaceMsgByUnencryptedVersion = false;
