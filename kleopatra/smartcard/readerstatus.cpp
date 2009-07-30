@@ -337,7 +337,7 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
 static CardInfo get_card_info( const QString & fileName, unsigned int idx, const shared_ptr<Context> & gpg_agent, ReaderStatus::Status oldStatus ) {
     qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldStatus] << ')';
     const ReaderStatus::Status st = read_status( fileName );
-    if ( st == ReaderStatus::CardUsable && st != oldStatus && gpg_agent )
+    if ( ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldStatus && gpg_agent )
         return get_more_detailed_status( fileName, idx, gpg_agent );
     else
         return CardInfo( fileName, st );
