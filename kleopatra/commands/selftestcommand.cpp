@@ -143,7 +143,9 @@ private:
         //emit q->info( i18n("Checking Ui Server connectivity...") );
         tests.push_back( makeUiServerConnectivitySelfTest() );
 #endif
+#ifndef Q_OS_WIN
         tests.push_back( makeGpgAgentConnectivitySelfTest() );
+#endif
 
         if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
             finished();
