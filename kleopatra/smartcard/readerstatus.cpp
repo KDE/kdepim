@@ -629,5 +629,9 @@ void ReaderStatus::startSimpleTransaction( const QByteArray & command, QObject *
     d->addTransaction( t );
 }
 
+void ReaderStatus::updateStatus() {
+    d->ping();
+}
+
 #include "moc_readerstatus.cpp"
 #include "readerstatus.moc"
