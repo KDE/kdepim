@@ -547,6 +547,8 @@ public:
     {
         KDAB_SET_OBJECT_NAME( watcher );
 
+        qRegisterMetaType<Status>( "Kleo::SmartCard::ReaderStatus::Status" );
+
         watcher.whitelistFiles( QStringList( QLatin1String( "reader_*.status" ) ) );
         watcher.addPath( Kleo::gnupgHomeDirectory() );
         watcher.setDelay( 100 );
