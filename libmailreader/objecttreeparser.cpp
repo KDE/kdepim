@@ -489,6 +489,7 @@ namespace KMail {
             VerifyDetachedBodyPartMemento * newM
               = new VerifyDetachedBodyPartMemento( job, cryptProto->keyListJob(), signaturetext, plainData );
             if ( allowAsync() ) {
+              QObject::connect(newM, SIGNAL(update(KMReaderWin::UpdateMode)), mReader, SLOT(update(KMReaderWin::UpdateMode)));
               if ( newM->start() ) {
                 messagePart.inProgress = true;
                 mHasPendingAsyncJobs = true;
@@ -525,6 +526,7 @@ namespace KMail {
             VerifyOpaqueBodyPartMemento * newM
               = new VerifyOpaqueBodyPartMemento( job, cryptProto->keyListJob(), signaturetext );
             if ( allowAsync() ) {
+              QObject::connect(newM, SIGNAL(update(KMReaderWin::UpdateMode)), mReader, SLOT(update(KMReaderWin::UpdateMode)));
               if ( newM->start() ) {
                 messagePart.inProgress = true;
                 mHasPendingAsyncJobs = true;
@@ -836,6 +838,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
         DecryptVerifyBodyPartMemento * newM
           = new DecryptVerifyBodyPartMemento( job, ciphertext );
         if ( allowAsync() ) {
+          QObject::connect(newM, SIGNAL(update(KMReaderWin::UpdateMode)), mReader, SLOT(update(KMReaderWin::UpdateMode)));
           if ( newM->start() ) {
             decryptionStarted = true;
             mHasPendingAsyncJobs = true;

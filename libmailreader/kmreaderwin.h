@@ -145,9 +145,6 @@ public:
       if you want to preserve the current view. */
   MAILVIEWER_EXPORT void saveRelativePosition();
 
-  /** Re-parse the current message. */
-  MAILVIEWER_EXPORT void update(UpdateMode updateMode = Delayed);
-
   /** Print message. */
   MAILVIEWER_EXPORT void printMessage(  KMime::Message* aMsg );
 
@@ -284,6 +281,8 @@ signals:
 
 public slots:
 
+  /** Re-parse the current message. */
+  MAILVIEWER_EXPORT void update(KMReaderWin::UpdateMode updateMode = Delayed);
 
   /** Select message body. */
   void selectAll();

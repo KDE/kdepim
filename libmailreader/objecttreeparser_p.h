@@ -41,6 +41,7 @@
 #include <QPointer>
 
 #include "interfaces/bodypart.h"
+#include "kmreaderwin.h"
 
 namespace Kleo {
   class DecryptVerifyJob;
@@ -62,10 +63,6 @@ namespace KMail {
     DecryptVerifyBodyPartMemento( Kleo::DecryptVerifyJob * job, const QByteArray & cipherText );
     ~DecryptVerifyBodyPartMemento();
 
-/*FIXME(Andras) review, port
-     Interface::Observer   * asObserver()   { return 0;    }
-    Interface::Observable * asObservable() { return this; }
-*/
     bool start();
     void exec();
 
@@ -81,11 +78,13 @@ namespace KMail {
     void slotResult( const GpgME::DecryptionResult & dr,
                      const GpgME::VerificationResult & vr,
                      const QByteArray & plainText );
-/*FIXME(Andras) review, port
     void notify() {
-      ISubject::notify();
+      emit update(KMReaderWin::Force);
     }
-*/
+
+  signals:
+    void update(KMReaderWin::UpdateMode);
+
   private:
     void saveResult( const GpgME::DecryptionResult &,
                      const GpgME::VerificationResult &,
@@ -115,11 +114,7 @@ namespace KMail {
                                    const QByteArray & signature,
                                    const QByteArray & plainText );
     ~VerifyDetachedBodyPartMemento();
-/*FIXME(Andras) review, port
 
-    Interface::Observer   * asObserver()   { return 0;    }
-    Interface::Observable * asObservable() { return this; }
-*/
     bool start();
     void exec();
 
@@ -134,11 +129,13 @@ namespace KMail {
     void slotResult( const GpgME::VerificationResult & vr );
     void slotKeyListJobDone();
     void slotNextKey( const GpgME::Key & );
-/*FIXME(Andras) review, port
     void notify() {
-      ISubject::notify();
+      emit update(KMReaderWin::Force);
     }
-*/
+
+  signals:
+    void update(KMReaderWin::UpdateMode);
+
   private:
     void saveResult( const GpgME::VerificationResult & );
     bool canStartKeyListJob() const;
@@ -169,11 +166,7 @@ namespace KMail {
                                  Kleo::KeyListJob * klj,
                                  const QByteArray & signature );
     ~VerifyOpaqueBodyPartMemento();
-/*FIXME(Andras) review, port
 
-    Interface::Observer   * asObserver()   { return 0;    }
-    Interface::Observable * asObservable() { return this; }
-*/
     bool start();
     void exec();
 
@@ -190,11 +183,13 @@ namespace KMail {
                      const QByteArray & plainText );
     void slotKeyListJobDone();
     void slotNextKey( const GpgME::Key & );
-/*FIXME(Andras) review, port
     void notify() {
-      ISubject::notify();
+      emit update(KMReaderWin::Force);
     }
-*/
+
+  signals:
+    void update(KMReaderWin::UpdateMode);
+
   private:
     void saveResult( const GpgME::VerificationResult &,
                      const QByteArray & );

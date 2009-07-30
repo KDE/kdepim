@@ -51,7 +51,6 @@ using namespace GpgME;
 DecryptVerifyBodyPartMemento::DecryptVerifyBodyPartMemento( DecryptVerifyJob * job, const QByteArray & cipherText )
   : QObject( 0 ),
     Interface::BodyPartMemento(),
-//FIXME(Andras)    ISubject(),
     m_cipherText( cipherText ),
     m_job( job ),
     m_running( false )
@@ -117,7 +116,6 @@ VerifyDetachedBodyPartMemento::VerifyDetachedBodyPartMemento( VerifyDetachedJob 
                                                               const QByteArray & plainText )
   : QObject( 0 ),
     Interface::BodyPartMemento(),
-//FIXME(Andras)    ISubject(),
     m_signature( signature ),
     m_plainText( plainText ),
     m_job( job ),
@@ -228,7 +226,6 @@ VerifyOpaqueBodyPartMemento::VerifyOpaqueBodyPartMemento( VerifyOpaqueJob * job,
                                                           const QByteArray & signature )
   : QObject( 0 ),
     Interface::BodyPartMemento(),
-//FIXME(Andras)    ISubject(),
     m_signature( signature ),
     m_job( job ),
     m_keylistjob( klj ),
