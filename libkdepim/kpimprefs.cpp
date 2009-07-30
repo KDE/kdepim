@@ -22,19 +22,10 @@
 
 #include "kpimprefs.h"
 
-#include <KDebug>
-#include <KGlobal>
-#include <KConfig>
-#include <KLocale>
-#include <KStandardDirs>
-#include <KSystemTimeZone>
+#include <KConfigGroup>
+#include <KConfigSkeleton>
 
 #include <QString>
-
-#include <time.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <limits.h>
 
 using namespace KPIM;
 
@@ -43,7 +34,7 @@ KPimPrefs::KPimPrefs( const QString &name )
 {
 }
 
-KPimPrefs::KPimPrefs(KPimPrefs const & other)
+KPimPrefs::KPimPrefs( KPimPrefs const &other )
   : KConfigSkeleton( other.objectName() )
   , mCustomCategories( other.mCustomCategories )
 {
@@ -68,32 +59,6 @@ void KPimPrefs::usrReadConfig()
   mCustomCategories.sort();
 }
 
-KDateTime::Spec KPimPrefs::timeSpec()
-{
-  KTimeZone zone;
-
-  // Read TimeZoneId from korganizerrc.
-  KConfig korgcfg( KStandardDirs::locate( "config", "korganizerrc" ) );
-  KConfigGroup group( &korgcfg, "Time & Date" );
-  QString tz( group.readEntry( "TimeZoneId" ) );
-  if ( !tz.isEmpty() ) {
-    zone = KSystemTimeZones::zone( tz );
-    //if ( zone.isValid() ) {
-    //  kDebug(5300) << "timezone from korganizerrc is" << tz;
-    //}
-  }
-
-  // If timezone not found in KOrg, use the system's default timezone.
-  if ( !zone.isValid() ) {
-    zone = KSystemTimeZones::local();
-    //if ( zone.isValid() ) {
-    //  kDebug(5300) << "system timezone is" << zone.name();
-    //}
-  }
-
-  return zone.isValid() ? KDateTime::Spec( zone ) : KDateTime::ClockTime;
-}
-
 void KPimPrefs::usrWriteConfig()
 {
   KConfigGroup group( config(), "General" );
@@ -102,4 +67,4 @@ void KPimPrefs::usrWriteConfig()
   KConfigSkeleton::usrWriteConfig();
 }
 
-const QString KPimPrefs::categorySeparator = ":";
+const QString KPimPrefs::categorySeparator( ":" );

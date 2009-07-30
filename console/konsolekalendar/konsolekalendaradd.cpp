@@ -40,13 +40,12 @@
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
+#include <ksystemtimezone.h>
 #include <klocale.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/calendar.h>
 #include <kcal/event.h>
-
-#include "libkdepim/kpimprefs.h"
 
 using namespace KCal;
 using namespace std;
@@ -123,7 +122,7 @@ bool KonsoleKalendarAdd::addImportedCalendar()
     fileName = m_variables->getCalendarFile();
   }
 
-  CalendarLocal *cal = new CalendarLocal( KPIM::KPimPrefs::timeSpec() );
+  CalendarLocal *cal = new CalendarLocal( KSystemTimeZones::local() );
   if ( !cal->load( fileName ) ||
        !cal->load( m_variables->getImportFile() ) ||
        !cal->save( fileName ) ) {

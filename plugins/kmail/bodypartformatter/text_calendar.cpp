@@ -45,8 +45,6 @@
 #include <kcal/incidence.h>
 #include <kcal/incidenceformatter.h>
 
-#include <kpimprefs.h> // for the time zone
-
 #include <kmail/callback.h>
 
 #include <kpimutils/email.h>
@@ -62,6 +60,7 @@
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kapplication.h>
+#include <ksystemtimezone.h>
 #include <ktemporaryfile.h>
 
 #include <QUrl>
@@ -89,7 +88,7 @@ class CalendarManager
 
 CalendarManager::CalendarManager()
 {
-  mCalendar = new CalendarResources( KPIM::KPimPrefs::timeSpec() );
+  mCalendar = new CalendarResources( KSystemTimeZones::local() );
   mCalendar->readConfig();
   mCalendar->load();
   bool multipleKolabResources = false;
@@ -146,7 +145,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       if ( !writer )
         // Guard against crashes in createReply()
         return Ok;
-      CalendarLocal cl( KPIM::KPimPrefs::timeSpec() );
+      CalendarLocal cl( KSystemTimeZones::local() );
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
       /* If the bodypart does not have a charset specified, we need to fall
@@ -177,7 +176,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     Incidence* icalToString( const QString& iCal ) const
     {
-      CalendarLocal calendar( KPIM::KPimPrefs::timeSpec() ) ;
+      CalendarLocal calendar( KSystemTimeZones::local() ) ;
       ICalFormat format;
       ScheduleMessage *message =
         format.parseScheduleMessage( &calendar, iCal );
@@ -285,7 +284,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       //status is accepted/tentative/declined
       ICalFormat format;
-      format.setTimeSpec( KPIM::KPimPrefs::timeSpec() );
+      format.setTimeSpec( KSystemTimeZones::local() );
       QString msg = format.createScheduleMessage( incidence, method );
       QString summary = incidence->summary();
       if ( summary.isEmpty() )
@@ -484,7 +483,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         incidence->addAttendee( delegate );
 
         ICalFormat format;
-        format.setTimeSpec( KPIM::KPimPrefs::timeSpec() );
+        format.setTimeSpec( KSystemTimeZones::local() );
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
