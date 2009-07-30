@@ -321,6 +321,13 @@ bool Scheduler::acceptCancel(IncidenceBase *incidence,ScheduleMessage::Status /*
       Todo *todo = mCalendar->todo( toDelete->uid() );
       ret = ( todo && mCalendar->deleteTodo( todo ) );
     }
+  } else {
+    // only complain if we failed to determine the toDelete incidence
+    // on non-initial request.
+    Incidence *inc = static_cast<Incidence *>( incidence );
+    if ( inc->revision() > 0 ) {
+      ret = false;
+    }
   }
 
   if ( !ret ) {
