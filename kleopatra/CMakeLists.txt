@@ -232,6 +232,7 @@ set( _kleopatra_SRCS
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
   commands/setinitialpincommand.cpp
+  commands/learncardkeyscommand.cpp
   
   ${_kleopatra_uiserver_files}
 
