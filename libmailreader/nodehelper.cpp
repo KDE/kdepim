@@ -19,6 +19,7 @@
 #include "nodehelper.h"
 #include "iconnamecache.h"
 #include "globalsettings.h"
+#include "interfaces/bodypart.h"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
@@ -139,7 +140,24 @@ void NodeHelper::clear()
   qDeleteAll(mUnencryptedMessages);
   mUnencryptedMessages.clear();
   mOverrideCodecs.clear();
+  for ( QMap<KMime::Content*, QMap< QByteArray, KMail::Interface::BodyPartMemento*> >::const_iterator
+        it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
+        it != end; ++it ) {
+    clearBodyPartMemento( it.value() );
+  }
+  mBodyPartMementoMap.clear();
 }
+
+void NodeHelper::clearBodyPartMemento(QMap<QByteArray, KMail::Interface::BodyPartMemento*> bodyPartMementoMap)
+{
+  for ( QMap<QByteArray, KMail::Interface::BodyPartMemento*>::const_iterator
+          it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
+        it != end; ++it ) {
+    delete it.value();
+  }
+  bodyPartMementoMap.clear();
+}
+
 
 void NodeHelper::setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state )
 {
@@ -442,6 +460,36 @@ QByteArray NodeHelper::path(const KMime::Content* node)
   }
   QString subpath;
   return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType(), const_cast<KMime::Content*>(node)->contentType()->subType(), nth ).toLocal8Bit();
+}
+
+
+//FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalBodyPartMemento replacement
+KMail::Interface::BodyPartMemento *NodeHelper::bodyPartMemento( KMime::Content *node,
+                                               const QByteArray &which ) const
+{
+  if ( !mBodyPartMementoMap.contains( node ) )
+    return 0;
+  const QMap<QByteArray,KMail::Interface::BodyPartMemento*>::const_iterator it =
+  mBodyPartMementoMap[node].find( which.toLower() );
+  return it != mBodyPartMementoMap[node].end() ? it.value() : 0 ;
+}
+
+ //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement
+void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &which, KMail::Interface::BodyPartMemento *memento )
+{
+  const QMap<QByteArray,KMail::Interface::BodyPartMemento*>::iterator it =
+    mBodyPartMementoMap[node].lowerBound( which.toLower() );
+
+  if ( it != mBodyPartMementoMap[node].end() && it.key() == which.toLower() ) {
+    delete it.value();
+    if ( memento ) {
+      it.value() = memento;
+    } else {
+      mBodyPartMementoMap[node].erase( it );
+    }
+  } else {
+    mBodyPartMementoMap[node].insert( which.toLower(), memento );
+  }
 }
 
 }

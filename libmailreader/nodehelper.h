@@ -32,6 +32,10 @@ namespace KMime {
 }
 
 namespace KMail {
+  namespace Interface {
+    class BodyPartMemento;
+  }
+
 /**
   @author Andras Mantia <andras@kdab.net>
 */
@@ -119,6 +123,10 @@ public:
 
     static QByteArray path(const KMime::Content* node);
 
+    KMail::Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+
+    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, KMail::Interface::BodyPartMemento *memento );
+
 private:
     NodeHelper();
 
@@ -131,7 +139,7 @@ private:
     QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
                           const QString& newPrefix ) const;
 
-
+    void clearBodyPartMemento(QMap<QByteArray, KMail::Interface::BodyPartMemento*> bodyPartMementoMap);
 
     static NodeHelper * mSelf;
 
@@ -143,7 +151,7 @@ private:
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-
+    QMap<KMime::Content*, QMap<QByteArray,KMail::Interface::BodyPartMemento*> > mBodyPartMementoMap;
 };
 
 }

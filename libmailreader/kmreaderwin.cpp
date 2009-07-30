@@ -2749,24 +2749,24 @@ void KMReaderWin::setBodyPartMemento( const KMime::Content *node,
 {
   const QByteArray index = NodeHelper::path(node) + ':' + which.toLower();
 
-  const std::map<QByteArray,BodyPartMemento*>::iterator it =
-    mBodyPartMementoMap.lower_bound( index );
+  const QMap<QByteArray,BodyPartMemento*>::iterator it =
+    mBodyPartMementoMap.lowerBound( index );
 
-  if ( it != mBodyPartMementoMap.end() && it->first == index ) {
-    if ( memento && memento == it->second ) {
+  if ( it != mBodyPartMementoMap.end() && it.key() == index ) {
+    if ( memento && memento == it.value() ) {
       return;
     }
 
-    delete it->second;
+    delete it.value();
 
     if ( memento ) {
-      it->second = memento;
+      it.value() = memento;
     } else {
       mBodyPartMementoMap.erase( it );
     }
   } else {
     if ( memento ) {
-      mBodyPartMementoMap.insert( it, std::make_pair( index, memento ) );
+      mBodyPartMementoMap.insert( index, memento );
     }
   }
 /*FIXME(Andras) review, port
@@ -2780,22 +2780,22 @@ BodyPartMemento *KMReaderWin::bodyPartMemento( const KMime::Content *node,
                                                const QByteArray &which ) const
 {
   const QByteArray index = NodeHelper::path(node) + ':' + which.toLower();
-  const std::map<QByteArray,BodyPartMemento*>::const_iterator it =
+  const QMap<QByteArray,BodyPartMemento*>::const_iterator it =
     mBodyPartMementoMap.find( index );
 
   if ( it == mBodyPartMementoMap.end() ) {
     return 0;
   } else {
-    return it->second;
+    return it.value();
   }
 }
 
 void KMReaderWin::clearBodyPartMementos()
 {
-  for ( std::map<QByteArray,BodyPartMemento*>::const_iterator
+  for ( QMap<QByteArray,BodyPartMemento*>::const_iterator
           it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
         it != end; ++it ) {
-    delete it->second;
+    delete it.value();
   }
   mBodyPartMementoMap.clear();
 }

@@ -33,6 +33,7 @@
 
 
 #include "partnodebodypart.h"
+#include "nodehelper.h"
 
 #include <kurl.h>
 
@@ -86,16 +87,16 @@ bool KMail::PartNodeBodyPart::hasCompleteBody() const {
 }
 
 KMail::Interface::BodyPartMemento * KMail::PartNodeBodyPart::memento() const {
- /*FIXME(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
-  return mPartNode.bodyPartMemento();
-  */
-  return 0;
+ /*TODO(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
+  Also review if the reader's bodyPartMemento should be returned or the NodeHelper's one
+ */
+  return NodeHelper::instance()->bodyPartMemento( mContent, "__plugin__" );
 }
 
 void KMail::PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
-/*FIXME(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
-  mPartNode.setBodyPartMemento( memento );
-  */
+/*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
+Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
+  NodeHelper::instance()->setBodyPartMemento( mContent, "__plugin__" , memento );
 }
 
 KMail::Interface::BodyPart::Display KMail::PartNodeBodyPart::defaultDisplay() const {

@@ -28,13 +28,13 @@
 #include <QCloseEvent>
 #include <QEvent>
 #include <QList>
+#include <QMap>
 #include <QResizeEvent>
 #include <kurl.h>
 #include <kservice.h>
 #include "libkdepim/messagestatus.h"
 using KPIM::MessageStatus;
 #include <kvbox.h>
-#include <map>
 
 //Akonadi includes
 #include <akonadi/item.h>
@@ -608,7 +608,7 @@ private:
   /** Used only to be able to connect and disconnect finished() signal
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */
   QPointer<KMail::KHtmlPartHtmlWriter> mPartHtmlWriter;
-  std::map<QByteArray,KMail::Interface::BodyPartMemento*> mBodyPartMementoMap;
+  QMap<QByteArray, KMail::Interface::BodyPartMemento*> mBodyPartMementoMap;
 
   int mChoice;
   unsigned long mWaitingForSerNum;
