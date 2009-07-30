@@ -35,13 +35,11 @@
 #include <kprocess.h>
 #include <kabc/addresslineedit.h>
 
-class QGroupBox;
 
 class KSelectAction;
 class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
-class KComboBox;
 class QComboBox;
 namespace KPIM {
 class KMeditor;
