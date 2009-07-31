@@ -324,10 +324,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( iface.isValid() ) {
           iface.call( "newInstance" );
           QDBusReply<bool> r = iface.call( "load" );
-          if ( !r.isValid() || !r.value() )
+          if ( !r.isValid() || !r.value() ) {
             kWarning() << "Loading korganizer failed: " << iface.lastError().message();
-        } else
+          }
+        } else {
           kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
+        }
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
@@ -675,19 +677,20 @@ class Plugin : public KMail::Interface::BodyPartFormatterPlugin
   public:
     const KMail::Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
     {
-      if ( idx == 0 ) return new Formatter();
+      if ( idx == 0 || idx == 1 ) return new Formatter();
       else return 0;
     }
 
     const char *type( int idx ) const
     {
-      if ( idx == 0 ) return "text";
+      if ( idx == 0 || idx == 1 ) return "text";
       else return 0;
     }
 
     const char *subtype( int idx ) const
     {
       if ( idx == 0 ) return "calendar";
+      if ( idx == 1 ) return "x-vcalendar";
       else return 0;
     }
 
