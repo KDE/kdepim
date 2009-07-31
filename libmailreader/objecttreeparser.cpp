@@ -1048,7 +1048,11 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                                   "<a href=\"kmail:showHTML\">by clicking here</a>.") );
         htmlWriter()->queue( "</div><br><br>" );
       }
+      // Make sure the body is relative, so that nothing is painted over above "Note: ..."
+      // if a malicious message uses absolute positioning. #137643
+      htmlWriter()->queue( "<div style=\"position: relative\">\n" );
       htmlWriter()->queue( bodyText );
+      htmlWriter()->queue( "</div>\n" );
       mReader->mColorBar->setHtmlMode();
       return true;
     }
