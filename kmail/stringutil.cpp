@@ -34,6 +34,7 @@
 #include <kascii.h>
 #include <KConfigGroup>
 #include <KDebug>
+#include <KUrl>
 #include <kuser.h>
 
 #include <QHostInfo>
@@ -994,6 +995,18 @@ QString smartQuote( const QString & msg, int maxLineLength )
   return result;
 }
 
+#ifndef KMAIL_UNITTESTS
+void parseMailtoUrl ( const KUrl& url, QString& to, QString& cc, QString& subject, QString& body )
+{
+  to = decodeMailtoUrl( url.path() );
+  body = url.queryItem( "body" );
+  subject = url.queryItem( "subject" );
+  kDebug() << url.pathOrUrl();
+  cc = url.queryItem( "cc" );
+}
+#endif
+
 }
 
 }
+

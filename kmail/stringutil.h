@@ -21,6 +21,7 @@
 
 #include <QString>
 
+class KUrl;
 namespace KMime
 {
   class CharFreq;
@@ -154,6 +155,12 @@ namespace StringUtil
    *    linefeeds at word boundaries to make it fit.
    */
   QString smartQuote( const QString &msg, int maxLineLength );
+
+  /**
+   * Parses a mailto: url and extracts the information about to, cc, subject and body out into
+   * the QStrings given as argument.
+   */
+  void parseMailtoUrl( const KUrl &url, QString &to, QString &cc, QString &subject, QString &body );
 }
 
 }
