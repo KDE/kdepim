@@ -37,6 +37,7 @@
 #include <QScrollArea>
 #include <QSignalMapper>
 #include <QDesktopWidget>
+#include <QModelIndex>
 
 #include "kcursorsaver.h"
 #include "vcardviewer.h"
@@ -338,6 +339,9 @@ void KMReaderWin::createWidgets() {
   mMimePartTree->setObjectName( "mMimePartTree" );
   mMimePartModel = new MimeTreeModel( mMimePartTree );
   mMimePartTree->setModel( mMimePartModel );
+  mMimePartTree->setSelectionMode( QAbstractItemView::SingleSelection );
+  mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
+  connect(mMimePartTree, SIGNAL( clicked( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
   mBox = new KHBox( mSplitter );
   setStyleDependantFrameWidth();
   mBox->setFrameStyle( mMimePartTree->frameStyle() );
@@ -2802,6 +2806,14 @@ void KMReaderWin::clearBodyPartMementos()
   mBodyPartMementoMap.clear();
 }
 
+void KMReaderWin::slotMimePartSelected( const QModelIndex &index )
+{
+  KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+  if ( !mMimePartModel->parent(index).isValid() && index.row() == 0 ) {
+   update(Force);
+  } else
+    setMessagePart( content );
+}
 
 #include "kmreaderwin.moc"
 

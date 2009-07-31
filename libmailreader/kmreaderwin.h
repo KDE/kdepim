@@ -47,6 +47,7 @@ class QTreeWidgetItem;
 class QString;
 class QTextCodec;
 class QTreeView;
+class QModelIndex;
 
 class KActionCollection;
 class KAction;
@@ -351,6 +352,8 @@ public slots:
    * correct attachment ID.
    */
   void slotHandleAttachment( int action );
+
+  void slotMimePartSelected( const QModelIndex &index );
 
 protected slots:
   void slotCycleHeaderStyles();
