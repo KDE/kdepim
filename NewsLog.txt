@@ -1,3 +1,19 @@
+Friday, July 31th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3722: Make dragging mails to existing appointments work
+* kolab/issue3759: Don't enable the Apply button in the to-do editor when opened from KMail
+* kolab/issue3719: Don't remove linebreaks from the comments on invitations
+* kolab/issue3780: Allow declining an invitation without getting an error message
+* kolab/issue3777: Fix crash when creating a new folder in KMail
+* kolab/issue3724: Possible fix a problem that when multiple persons have write access to a folder,
+                   things were confused for other users
+* kolab/issue3725: When forwarding an encrypted mail, don't ask for the passphrase twice
+* kolab/issue3781: Allow to delete an accepted appointment without notifing the organizer
+
+
 Friday, July 24th 2009
 
 Problems addressed
