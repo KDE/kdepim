@@ -747,7 +747,7 @@ bool FolderDialogGeneralTab::save()
   folder->setPutRepliesInSameFolder( mKeepRepliesInSameFolderCheckBox->isChecked() );
 
   QString fldName, oldFldName;
-  if ( !mIsLocalSystemFolder )
+  if ( !mIsLocalSystemFolder || mIsResourceFolder )
   {
     QString acctName;
     oldFldName = mDlg->folder()->name();
