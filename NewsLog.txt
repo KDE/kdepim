@@ -1,3 +1,34 @@
+Friday, July 31th 2009
+
+Problems addressed
+------------------
+
+* Remove the ability to set the timezone in KOrganizer. Instead, use the system timezone.
+* More work on the timezone backend on Windows
+* More work on SmartCard support in Kleopatra, it now allows to learn keys from SmartCards
+* Allow importing certificates from the clipboard in Kleopatra
+* Make KMail crash less on Windows, which was caused by too many open files
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Don't show a progress window when opening a HTTPS link from KMail (KDE bug 198671)
+      - Fix problem with incorrect content-disposition when forwarding certain mails (KDE bug 78712)
+      - Use the correct colors in Kontact's summary (KDE bug 201218)
+      - In KMail, enable searching by status again
+
+* Merges from enterprise35 branch:
+      - kolab/issue3759: Don't enable the Apply button in the to-do editor when opened from KMail
+      - kolab/issue3719: Don't remove linebreaks from the comments on invitations
+      - kolab/issue3780: Allow declining an invitation without getting an error message
+      - kolab/issue3777: Fix crash when creating a new folder in KMail
+      - kolab/issue3724: Possible fix a problem that when multiple persons have write access to a folder,
+                         things were confused for other users
+      - kolab/issue3725: When forwarding an encrypted mail, don't ask for the passphrase twice
+      - kolab/issue3781: Allow to delete an accepted appointment without notifing the organizer
+
+
 Friday, July 24th 2009
 
 Problems addressed
