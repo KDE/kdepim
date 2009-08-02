@@ -1,3 +1,5 @@
+include_directories( ${QT_QTWEBKIT_INCLUDE_DIR} )
+
 set(akonablog_bin_SRCS
     main.cpp
     mainwidget.cpp
