@@ -37,6 +37,8 @@
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
 
+using namespace KRss;
+
 namespace {
 
 enum TextMode {
@@ -219,47 +221,27 @@ static void writeItemHeaders( const KRss::RssItem& item, QXmlStreamWriter& write
 {
     Elements::instance.title.write( item.title(), writer, Html );
     writeLink( item.link(), writer );
-    Elements::instance.language.write( item.language(), writer );
     Elements::instance.guid.write( item.guid(), writer );
 
     const KDateTime updated = item.dateUpdated();
     const KDateTime published = item.datePublished();
     Elements::instance.published.write( published.toString( KDateTime::ISODate ), writer );
     if ( updated.isValid() && updated != published )
-    {
         Elements::instance.updated.write( updated.toString( KDateTime::ISODate ), writer );
-    }
 
-    Elements::instance.commentsFeed.write( item.commentsFeed(), writer );
-    Elements::instance.commentPostUri.write( item.commentPostUri(), writer );
-    Elements::instance.commentsCount.write( item.commentsCount(), writer );
-    Elements::instance.commentsLink.write( item.commentsLink(), writer );
-
-    Q_FOREACH( const KRss::Category i, item.categories() )
-    {
+    Q_FOREACH( const KRss::Category& i, item.categories() )
         writeCategory( i, writer );
-    }
-    Q_FOREACH( const KRss::Person i, item.authors() )
-    {
+
+    Q_FOREACH( const KRss::Person& i, item.authors() )
         writeAuthor( i, writer );
-    }
-    Q_FOREACH( const KRss::Enclosure i, item.enclosures() )
-    {
+
+    Q_FOREACH( const KRss::Enclosure& i, item.enclosures() )
         writeEnclosure( i, writer );
-    }
 
     Elements::instance.hash.write( item.hash(), writer );
     Elements::instance.guidIsHash.write( item.guidIsHash(), writer );
     Elements::instance.sourceFeedId.write( item.sourceFeedId(), writer );
 
-    const QHash<QString, QString> props = item.customProperties();
-    Q_FOREACH ( const QString i, props.keys() )
-    {
-        Elements::instance.customProperty.writeStartElement( writer );
-        Elements::instance.key.write( i, writer );
-        Elements::instance.value.write( props[i], writer );
-        writer.writeEndElement();
-    }
 }
 
 static void writeItemContent( const KRss::RssItem& item, QXmlStreamWriter& writer )
@@ -269,6 +251,21 @@ static void writeItemContent( const KRss::RssItem& item, QXmlStreamWriter& write
     const QString content = item.content();
     if ( content != description )
         Elements::instance.content.write( content, writer, Html );
+    Elements::instance.language.write( item.language(), writer );
+    Elements::instance.commentsFeed.write( item.commentsFeed(), writer );
+    Elements::instance.commentPostUri.write( item.commentPostUri(), writer );
+    Elements::instance.commentsCount.write( item.commentsCount(), writer );
+    Elements::instance.commentsLink.write( item.commentsLink(), writer );
+    const QHash<QString, QString> props = item.customProperties();
+    QHash<QString, QString>::const_iterator it = props.constBegin();
+    while ( it != props.constEnd() )
+    {
+        Elements::instance.customProperty.writeStartElement( writer );
+        Elements::instance.key.write( it.key(), writer );
+        Elements::instance.value.write( it.value(), writer );
+        writer.writeEndElement();
+        ++it;
+    }
 }
 
 static void writeItem( const KRss::RssItem& item, QXmlStreamWriter& writer, KRss::RssItemSerializer::ItemPart part )
@@ -282,20 +279,10 @@ static void writeItem( const KRss::RssItem& item, QXmlStreamWriter& writer, KRss
     writer.writeNamespace( Syndication::itunesNamespace(), "itunes" );
 
     Elements::instance.entry.writeStartElement( writer );
-    switch ( part ) {
-        case KRss::RssItemSerializer::Headers:
-            writeItemHeaders( item, writer );
-            break;
-        case KRss::RssItemSerializer::Content:
-            writeItemContent( item, writer );
-            break;
-        case KRss::RssItemSerializer::Full:
-            writeItemHeaders( item, writer );
-            writeItemContent( item, writer );
-            break;
-        default:
-            break;
-    }
+    if ( ( part & RssItemSerializer::Headers ) != 0 )
+        writeItemHeaders( item, writer );
+    if ( ( part & RssItemSerializer::Content ) != 0 )
+        writeItemContent( item, writer );
 
     writer.writeEndElement();   // Entry
 }
@@ -400,8 +387,8 @@ bool KRss::RssItemSerializer::deserialize( KRss::RssItem& item, const QByteArray
     QXmlStreamReader reader( array );
     reader.setNamespaceProcessing( true );
 
-    const bool readHeaders = part == Full || part == Headers;
-    const bool readContent = part == Full || part == Content;
+    const bool readHeaders = ( part & Headers ) != 0;
+    const bool readContent = ( part & Content ) != 0;
 
     if ( readHeaders )
         item.setHeadersLoaded( true );
@@ -419,20 +406,8 @@ bool KRss::RssItemSerializer::deserialize( KRss::RssItem& item, const QByteArray
                     item.setDescription( reader.readElementText() );
                 else if ( Elements::instance.content.isNextIn( reader ) )
                     item.setContent( reader.readElementText() );
-            }
-            if ( readHeaders ) {
-                if ( Elements::instance.title.isNextIn( reader ) )
-                    item.setTitle( reader.readElementText() );
                 else if ( Elements::instance.language.isNextIn( reader ) )
                     item.setLanguage( reader.readElementText() );
-                else if ( Elements::instance.guid.isNextIn( reader ) )
-                    item.setGuid( reader.readElementText() );
-                else if ( Elements::instance.hash.isNextIn( reader ) )
-                    item.setHash( reader.readElementText().toInt() );
-                else if ( Elements::instance.guidIsHash.isNextIn( reader ) )
-                    item.setGuidIsHash( QVariant( reader.readElementText() ).toBool() );
-                else if ( Elements::instance.sourceFeedId.isNextIn( reader ) )
-                    item.setSourceFeedId( reader.readElementText().toInt() );
                 else if ( Elements::instance.commentsLink.isNextIn( reader ) )
                     item.setCommentsLink( reader.readElementText() );
                 else if ( Elements::instance.commentPostUri.isNextIn( reader ) )
@@ -441,6 +416,20 @@ bool KRss::RssItemSerializer::deserialize( KRss::RssItem& item, const QByteArray
                     item.setCommentsCount( reader.readElementText().toInt() );
                 else if ( Elements::instance.commentsFeed.isNextIn( reader ) )
                     item.setCommentsFeed( reader.readElementText() );
+                else if ( Elements::instance.customProperty.isNextIn( reader ) )
+                    ::readCustomProperty( item, reader );
+            }
+            if ( readHeaders ) {
+                if ( Elements::instance.title.isNextIn( reader ) )
+                    item.setTitle( reader.readElementText() );
+                else if ( Elements::instance.guid.isNextIn( reader ) )
+                    item.setGuid( reader.readElementText() );
+                else if ( Elements::instance.hash.isNextIn( reader ) )
+                    item.setHash( reader.readElementText().toInt() );
+                else if ( Elements::instance.guidIsHash.isNextIn( reader ) )
+                    item.setGuidIsHash( QVariant( reader.readElementText() ).toBool() );
+                else if ( Elements::instance.sourceFeedId.isNextIn( reader ) )
+                    item.setSourceFeedId( reader.readElementText().toInt() );
                 else if ( Elements::instance.link.isNextIn( reader ) )
                     ::readLink( item, reader );
                 else if ( Elements::instance.author.isNextIn( reader ) )
@@ -451,8 +440,6 @@ bool KRss::RssItemSerializer::deserialize( KRss::RssItem& item, const QByteArray
                     item.setDatePublished( KDateTime::fromString( reader.readElementText(), KDateTime::ISODate ) );
                 else if ( Elements::instance.updated.isNextIn( reader ) )
                     item.setDateUpdated( KDateTime::fromString( reader.readElementText(), KDateTime::ISODate ) );
-                else if ( Elements::instance.customProperty.isNextIn( reader ) )
-                    ::readCustomProperty( item, reader );
             }
         }
     }
