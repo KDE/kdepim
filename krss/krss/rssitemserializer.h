@@ -37,9 +37,9 @@ class KRSS_EXPORT RssItemSerializer
 public:
 
     enum ItemPart {
-        Headers,
-        Content,
-        Full
+        Headers=0x01,
+        Content=0x02,
+        Full=Headers|Content
     };
 
     static void serialize( const KRss::RssItem& item, QByteArray& array, ItemPart part = Full );
