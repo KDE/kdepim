@@ -54,10 +54,12 @@ public:
 private:
     void syncItems( const Akonadi::Item::List& items );
     void cleanupAndEmitResult();
+    void startImport();
 
 private Q_SLOTS:
     void doStart();
     void slotCollectionRetrieved( KJob *job );
+    void slotItemsFetched( KJob* job );
     void readBatch();
     void syncDone( KJob* );
 
@@ -68,7 +70,9 @@ private:
     Akonadi::Collection m_collection;
     QString m_fileName;
     QFile m_file;
+    QList<Akonadi::Item> m_existingItems;
     ItemImportReader* m_reader;
+    int m_pendingCreateJobs;
 };
 
 } // namespace KRssResource

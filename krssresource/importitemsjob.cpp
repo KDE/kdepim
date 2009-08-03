@@ -18,15 +18,23 @@
 #include "importitemsjob.h"
 #include "rssitemsync.h"
 #include "rssresourcebasejobs.h"
+#include "krss/rssitem.h"
+
+#include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemFetchJob>
 
 #include <KLocalizedString>
 #include <QFile>
 #include <QString>
 
+#include <algorithm>
+
+using KRss::RssItem;
 using namespace KRssResource;
 
 ImportItemsJob::ImportItemsJob( const QString& xmlUrl, QObject *parent )
-    : KJob( parent ), m_xmlUrl( xmlUrl ), m_flagsSynchronizable( false ), m_reader( 0 ) {
+    : KJob( parent ), m_xmlUrl( xmlUrl ), m_flagsSynchronizable( false ), m_reader( 0 ), m_pendingCreateJobs( 0 ) {
 
 }
 
@@ -94,6 +102,35 @@ void ImportItemsJob::slotCollectionRetrieved( KJob *job ) {
         return;
     }
 
+    Akonadi::ItemFetchJob* itemJob = new Akonadi::ItemFetchJob( m_collection, this );
+    //TODO set fetch scope
+    connect( itemJob, SIGNAL(result(KJob*)), this, SLOT(slotItemsFetched(KJob*)) );
+}
+
+static bool lessByRemoteId( const Akonadi::Item& lhs, const Akonadi::Item& rhs ) {
+    return lhs.remoteId() < rhs.remoteId();
+}
+
+static bool equalByRemoteId( const Akonadi::Item& lhs, const Akonadi::Item& rhs ) {
+    return lhs.remoteId() == rhs.remoteId();
+}
+
+void ImportItemsJob::slotItemsFetched( KJob* j ) {
+    const Akonadi::ItemFetchJob* const job = qobject_cast<const Akonadi::ItemFetchJob*>( j );
+    assert( job );
+    if ( job->error() ) {
+        setError( ItemSyncFailed );
+        setErrorText( i18n( "No not retrieve existing icons for syncing: %1", job->errorString() ) );
+        cleanupAndEmitResult();
+        return;
+    }
+
+    m_existingItems = job->items();
+    std::sort( m_existingItems.begin(), m_existingItems.end(), lessByRemoteId );
+    startImport();
+}
+
+void ImportItemsJob::startImport() {
     m_file.setFileName( m_fileName );
     if ( !m_file.open( QIODevice::ReadOnly ) ) {
         setError( CouldNotOpenFile );
@@ -125,11 +162,53 @@ void ImportItemsJob::readBatch() {
     syncItems( items );
 }
 
-void ImportItemsJob::syncItems( const Akonadi::Item::List& items ) {
-    RssItemSync *syncer = new RssItemSync( m_collection, this );
-    syncer->setSynchronizeFlags( m_flagsSynchronizable );
-    QObject::connect( syncer, SIGNAL( result( KJob* ) ), this, SLOT( syncDone( KJob* ) ) );
-    syncer->setIncrementalSyncItems( items, Akonadi::Item::List() );
+void ImportItemsJob::syncItems( const Akonadi::Item::List& items_ ) {
+    Akonadi::Item::List items = items_;
+    std::sort( items.begin(), items.end(), lessByRemoteId );
+
+    //split into existing items (must be merged) and new items (will be just added)
+    Akonadi::Item::List toMerge;
+    Akonadi::Item::List toAdd;
+
+    Akonadi::Item::List::const_iterator itRead = items.constBegin();
+
+    if ( m_existingItems.isEmpty() )
+        toAdd = items;
+    else {
+        Akonadi::Item::List::const_iterator itExisting = m_existingItems.constBegin();
+        bool foundLast = false;
+        for ( ; itRead != items.constEnd(); ++itRead ) {
+            if ( foundLast ) {
+                toAdd.push_back( *itRead );
+                continue;
+            }
+            itExisting = std::lower_bound( itExisting, m_existingItems.constEnd(), *itRead, lessByRemoteId );
+            foundLast = itExisting == items.constEnd();
+            if ( foundLast ) {
+                toAdd.push_back( *itRead );
+                continue;
+            }
+
+            if ( equalByRemoteId( *itExisting, *itRead ) )
+                toMerge.push_back( *itRead );
+            else
+                toAdd.push_back( *itRead );
+        }
+    }
+
+    //TODO: merge flags etc. for existing items
+
+    if ( toAdd.isEmpty() ) {
+        QMetaObject::invokeMethod( this, "readBatch", Qt::QueuedConnection );
+        return;
+    }
+
+    Q_FOREACH( const Akonadi::Item& item, toAdd ) {
+        Akonadi::ItemCreateJob* const job = new Akonadi::ItemCreateJob( item, m_collection );
+        ++m_pendingCreateJobs;
+        QObject::connect(job, SIGNAL(result(KJob*)), this, SLOT(syncDone(KJob*)) );
+        job->start();
+    }
 }
 
 void ImportItemsJob::syncDone( KJob* job ) {
@@ -139,5 +218,8 @@ void ImportItemsJob::syncDone( KJob* job ) {
         cleanupAndEmitResult();
         return;
     }
-   readBatch();
+    assert( m_pendingCreateJobs > 0 );
+    --m_pendingCreateJobs;
+    if ( m_pendingCreateJobs == 0 )
+       readBatch();
 }
