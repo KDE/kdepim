@@ -139,7 +139,7 @@ void KMeditorPrivate::startExternalEditor()
   }
 
   mExtEditorTempFile->write( q->textOrHtml().toUtf8() );
-  mExtEditorTempFile->flush();
+  mExtEditorTempFile->close();
 
   mExtEditorProcess = new KProcess();
     // construct command line...
@@ -171,10 +171,14 @@ void KMeditorPrivate::startExternalEditor()
 void KMeditorPrivate::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
 {
   if ( exitStatus == QProcess::NormalExit ) {
-    mExtEditorTempFile->flush();
-    mExtEditorTempFile->seek( 0 );
-    QByteArray f = mExtEditorTempFile->readAll();
-    q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
+    // the external editor could have renamed the original file and recreated a new file
+    // with the given filename, so we need to reopen the file after the editor exited
+    QFile localFile(mExtEditorTempFile->fileName());
+    if ( localFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+      QByteArray f = localFile.readAll();
+      q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
+      localFile.close();
+    }
   }
 
   q->killExternalEditor();   // cleanup...
