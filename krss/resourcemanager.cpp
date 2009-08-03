@@ -34,8 +34,9 @@
 #include <QtCore/QHash>
 #include <boost/shared_ptr.hpp>
 
+using namespace Akonadi;
 using namespace KRss;
-using boost::shared_ptr;
+using namespace boost;
 
 namespace KRss {
 
@@ -56,14 +57,23 @@ ResourceManager* ResourceManager::self()
 ResourceManager::ResourceManager()
     : d( new ResourceManagerPrivate() )
 {
-    QList<Akonadi::AgentInstance> instances = Akonadi::AgentManager::self()->instances();
-    Q_FOREACH( const Akonadi::AgentInstance& instance, instances ) {
-        kDebug() << "Instance:" << instance.identifier();
-        kDebug() << "Capabilities:" << instance.type().capabilities();
-        if ( instance.type().capabilities().contains( "RssResource" ) ) {
-            NetResource* const resource = new NetResource( instance.identifier(), instance.name() );
-            d->m_resources.insert( instance.identifier(), shared_ptr<NetResource>( resource ) );
-        }
+    forceUpdate();
+}
+
+void ResourceManager::forceUpdate()
+{
+    const QHash<QString, shared_ptr<NetResource> > old = d->m_resources;
+
+    d->m_resources.clear();
+
+    const QList<AgentInstance> instances = AgentManager::self()->instances();
+    Q_FOREACH( const AgentInstance& instance, instances ) {
+        if ( !instance.type().capabilities().contains( "RssResource" ) )
+            continue;
+        shared_ptr<NetResource> res = old.value( instance.identifier() );
+        if ( !res )
+            res = shared_ptr<NetResource>( new NetResource( instance.identifier(), instance.name() ) );
+        d->m_resources.insert( instance.identifier(), res );
     }
 }
 
@@ -98,11 +108,11 @@ QList<shared_ptr<NetResource> > ResourceManager::netResources() const
 
 void ResourceManager::registerAttributes()
 {
-    Akonadi::AttributeFactory::registerAttribute<TagIdsAttribute>();
-    Akonadi::AttributeFactory::registerAttribute<SubscriptionLabelsCollectionAttribute>();
-    Akonadi::AttributeFactory::registerAttribute<FeedPropertiesCollectionAttribute>();
+    AttributeFactory::registerAttribute<TagIdsAttribute>();
+    AttributeFactory::registerAttribute<SubscriptionLabelsCollectionAttribute>();
+    AttributeFactory::registerAttribute<FeedPropertiesCollectionAttribute>();
 #ifndef HAVE_NEPOMUK
-    Akonadi::AttributeFactory::registerAttribute<TagPropertiesAttribute>();
+    AttributeFactory::registerAttribute<TagPropertiesAttribute>();
 #endif
 }
 
