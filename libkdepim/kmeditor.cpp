@@ -129,6 +129,9 @@ void KMeditorPrivate::startExternalEditor()
       ( *it ).replace( QRegExp( "%f" ), mExtEditorTempFile->fileName() );
       filenameAdded = true;
     }
+    else if ( ( *it ).contains( "%l" ) ) {
+      ( *it ).replace( QRegExp( "%l" ), QString::number(q->textCursor().blockNumber() + 1) );  // line number
+    }
     ( *mExtEditorProcess ) << ( *it );
   }
   if ( !filenameAdded ) { // no %f in the editor command
