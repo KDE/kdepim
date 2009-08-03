@@ -20,7 +20,6 @@
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
-class KNCollectionViewItem;
 
 class QContextMenuEvent;
 class QDropEvent;

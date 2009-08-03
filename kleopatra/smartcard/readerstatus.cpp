@@ -42,6 +42,8 @@
 #include <gpgme++/context.h>
 #include <gpgme++/assuanresult.h>
 #include <gpgme++/defaultassuantransaction.h>
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
 
 #include <QFileSystemWatcher>
 #include <QStringList>
@@ -250,6 +252,27 @@ static const std::string gpgagent_data( const shared_ptr<Context> & gpgAgent, co
         return std::string();
 }
 
+static std::string parse_keypairinfo( const std::string & kpi ) {
+    static const char hexchars[] = "0123456789abcdefABCDEF";
+    return '&' + kpi.substr( 0, kpi.find_first_not_of( hexchars ) );
+}
+
+static bool parse_keypairinfo_and_lookup_key( Context * ctx, const std::string & kpi ) {
+    if ( !ctx )
+        return false;
+    const std::string pattern = parse_keypairinfo( kpi );
+    qDebug() << "parse_keypairinfo_and_lookup_key: pattern=" << pattern.c_str();
+    if ( const Error err = ctx->startKeyListing( pattern.c_str() ) ) {
+        qDebug() << "parse_keypairinfo_and_lookup_key: startKeyListing failed:" << err.asString();
+        return false;
+    }
+    Error e;
+    const Key key = ctx->nextKey( e );
+    ctx->endKeyListing();
+    qDebug() << "parse_keypairinfo_and_lookup_key: e=" << e.code() << "; key.isNull()" << key.isNull();
+    return !e && !key.isNull();
+}
+
 static CardInfo get_more_detailed_status( const QString & fileName, unsigned int idx, const shared_ptr<Context> & gpg_agent ) {
     qDebug() << "get_more_detailed_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
     CardInfo ci( fileName, ReaderStatus::CardUsable );
@@ -289,14 +312,32 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
         return ci;
     }
 
-    // PENDING(marc) check for keys to learn
-    return CardInfo( fileName, ReaderStatus::CardUsable );
+    // check for keys to learn:
+    const std::auto_ptr<DefaultAssuanTransaction> result = gpgagent_transact( gpg_agent, "SCD LEARN --keypairinfo", err );
+    if ( err.code() || !result.get() )
+        return ci;
+    const std::vector<std::string> keyPairInfos = result->statusLine( "KEYPAIRINFO" );
+    if ( keyPairInfos.empty() )
+        return ci;
+
+    // check that any of the 
+    const std::auto_ptr<Context> klc( Context::createForProtocol( CMS ) ); // what about OpenPGP?
+    if ( !klc.get() )
+        return ci;
+    klc->setKeyListMode( Ephemeral );
+
+    if ( kdtools::any( keyPairInfos, !bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
+        ci.status = ReaderStatus::CardCanLearnKeys;
+
+    qDebug() << "get_more_detailed_status: ci.status " << prettyFlags[ci.status];
+
+    return ci;
 }
 
 static CardInfo get_card_info( const QString & fileName, unsigned int idx, const shared_ptr<Context> & gpg_agent, ReaderStatus::Status oldStatus ) {
     qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldStatus] << ')';
     const ReaderStatus::Status st = read_status( fileName );
-    if ( st == ReaderStatus::CardUsable && st != oldStatus && gpg_agent )
+    if ( ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldStatus && gpg_agent )
         return get_more_detailed_status( fileName, idx, gpg_agent );
     else
         return CardInfo( fileName, st );
@@ -506,6 +547,8 @@ public:
     {
         KDAB_SET_OBJECT_NAME( watcher );
 
+        qRegisterMetaType<Status>( "Kleo::SmartCard::ReaderStatus::Status" );
+
         watcher.whitelistFiles( QStringList( QLatin1String( "reader_*.status" ) ) );
         watcher.addPath( Kleo::gnupgHomeDirectory() );
         watcher.setDelay( 100 );
@@ -584,6 +627,10 @@ std::vector<ReaderStatus::PinState> ReaderStatus::pinStates( unsigned int slot )
 void ReaderStatus::startSimpleTransaction( const QByteArray & command, QObject * receiver, const char * slot ) {
     const Transaction t = { command, receiver, slot, Error() };
     d->addTransaction( t );
+}
+
+void ReaderStatus::updateStatus() {
+    d->ping();
 }
 
 #include "moc_readerstatus.cpp"

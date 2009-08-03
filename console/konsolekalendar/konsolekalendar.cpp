@@ -46,6 +46,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <ksystemtimezone.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/resourcecalendar.h>
@@ -54,8 +55,6 @@
 #include <kcal/event.h>
 #include <kcal/htmlexport.h>
 #include <kcal/htmlexportsettings.h>
-
-#include "libkdepim/kpimprefs.h"
 
 using namespace KCal;
 using namespace std;
@@ -80,7 +79,7 @@ bool KonsoleKalendar::importCalendar()
 bool KonsoleKalendar::createCalendar()
 {
   bool status = false;
-  CalendarLocal newCalendar( KPIM::KPimPrefs::timeSpec() );
+  CalendarLocal newCalendar( KSystemTimeZones::local() );
 
   if ( m_variables->isDryRun() ) {
     cout << i18n( "Create Calendar &lt;Dry Run&gt;: %1",

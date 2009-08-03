@@ -262,7 +262,7 @@ void GroupItem::engine( const QSync::SyncEngineUpdate &update )
       mStatus->setText( i18n( "Connected" ) );
       mProgressBar->setValue( 0 );
       mSynchronizing = true;
-      mSyncAction->setText( i18n("Abort Synchronization") );
+      mSyncAction->setText( i18n("Cancel Synchronization") );
       break;
     case QSync::SyncEngineUpdate::Read:
       mStatus->setText( i18n( "Data read" ) );

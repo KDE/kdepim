@@ -74,8 +74,9 @@ bool MailerService::start()
   mEventLoop->deleteLater();
   mEventLoop = 0;
 
-  if ( !mSuccess )
+  if ( !mSuccess ) {
     kWarning() << "Could not start Mailer Service!";
+  }
 
   return mSuccess;
 }

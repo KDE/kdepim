@@ -436,8 +436,14 @@ void AddresseeEditorWidget::save()
     mAddressee.removeCustom( "KADDRESSBOOK", "BlogFeed" );
 
   mAddressee.setNote( tab2.mNoteEdit->toPlainText() );
-  if ( tab2.mBirthdayPicker->date().isValid() )
-    mAddressee.setBirthday( QDateTime( tab2.mBirthdayPicker->date() ) );
+  if ( tab2.mBirthdayPicker->date().isValid() ) {
+    QDateTime date( tab2.mBirthdayPicker->date() );
+    // Only the date is taken, therefore
+    // explicitely invalidate the time as the above ctor sets the time to 00:00
+    // instead of keeping it invalid.
+    date.setTime( QTime() );
+    mAddressee.setBirthday( date );
+  }
   else
     mAddressee.setBirthday( QDateTime() );
 

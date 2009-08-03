@@ -53,6 +53,7 @@ namespace SmartCard {
         static ReaderStatus * mutableInstance();
 
         void startSimpleTransaction( const QByteArray & cmd, QObject * receiver, const char * slot );
+        void updateStatus();
 
         enum AppType {
             UnknownApplication,

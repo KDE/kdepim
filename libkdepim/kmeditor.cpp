@@ -21,35 +21,20 @@
  */
 
 #include "kmeditor.h"
-#include "utils.h"
-#include "maillistdrag.h"
 
-#include <kpimidentities/signature.h>
-
-#include <KCharsets>
-#include <KComboBox>
-#include <KCursor>
-#include <KDebug>
-#include <KDirWatch>
 #include <KEncodingFileDialog>
 #include <KLocale>
-#include <KMenu>
 #include <KMessageBox>
-#include <KPushButton>
 #include <KProcess>
+#include <KPushButton>
 #include <KTemporaryFile>
-#include <KToolBar>
-#include <KWindowSystem>
 
 #include <QApplication>
 #include <QClipboard>
-#include <QShortcut>
-#include <QTextCodec>
-#include <QAction>
+#include <QPointer>
 #include <QProcess>
+#include <QShortcut>
 #include <QTimer>
-
-#include <assert.h>
 
 using namespace KPIMTextEdit;
 
@@ -94,9 +79,9 @@ class KMeditorPrivate
                                 const KPIMIdentities::Signature &sig );
 
     /**
-     * Returns a list of all occurences of the given signature.
-     * The list contains pairs which consists of the starting position and the end
-     * of the signature.
+     * Returns a list of all occurrences of the given signature.
+     * The list contains pairs which consists of the starting position and
+     * the end of the signature.
      *
      * @param sig this signature will be searched for
      * @return a list of pairs of start and end positions of the signature
@@ -142,15 +127,16 @@ void KMeditorPrivate::startExternalEditor()
   for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
     if ( ( *it ).contains( "%f" ) ) {
       ( *it ).replace( QRegExp( "%f" ), mExtEditorTempFile->fileName() );
-      filenameAdded=true;
+      filenameAdded = true;
     }
     ( *mExtEditorProcess ) << ( *it );
   }
-  if ( !filenameAdded )    // no %f in the editor command
+  if ( !filenameAdded ) { // no %f in the editor command
     ( *mExtEditorProcess ) << mExtEditorTempFile->fileName();
+  }
 
-  QObject::connect( mExtEditorProcess, SIGNAL( finished ( int, QProcess::ExitStatus ) ),
-                    q, SLOT( slotEditorFinished( int, QProcess::ExitStatus ) ) );
+  QObject::connect( mExtEditorProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
+                    q, SLOT(slotEditorFinished(int,QProcess::ExitStatus)) );
   mExtEditorProcess->start();
   if ( !mExtEditorProcess->waitForStarted() ) {
     //TODO: messagebox
@@ -162,7 +148,7 @@ void KMeditorPrivate::startExternalEditor()
   }
 }
 
-void KMeditorPrivate::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
+void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::NormalExit ) {
     mExtEditorTempFile->flush();
@@ -174,13 +160,12 @@ void KMeditorPrivate::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
   q->killExternalEditor();   // cleanup...
 }
 
-
 void KMeditorPrivate::ensureCursorVisibleDelayed()
 {
   static_cast<KPIMTextEdit::TextEdit*>( q )->ensureCursorVisible();
 }
 
-void KMeditor::keyPressEvent ( QKeyEvent * e )
+void KMeditor::keyPressEvent ( QKeyEvent *e )
 {
   if ( d->useExtEditor ) {
     if ( !d->mExtEditorProcess ) {
@@ -191,23 +176,18 @@ void KMeditor::keyPressEvent ( QKeyEvent * e )
 
   if ( e->key() == Qt::Key_Up && e->modifiers() != Qt::ShiftModifier &&
        textCursor().block().position() == 0 &&
-       textCursor().position() < textCursor().block().layout()->lineAt( 0 ).textLength() )
-  {
+       textCursor().position() < textCursor().block().layout()->lineAt( 0 ).textLength() ) {
     textCursor().clearSelection();
     emit focusUp();
-  }
-  else if ( e->key() == Qt::Key_Backtab && e->modifiers() == Qt::ShiftModifier )
-  {
+  } else if ( e->key() == Qt::Key_Backtab && e->modifiers() == Qt::ShiftModifier ) {
     textCursor().clearSelection();
     emit focusUp();
-  }
-  else
-  {
+  } else {
     TextEdit::keyPressEvent( e );
   }
 }
 
-KMeditor::KMeditor( const QString& text, QWidget *parent )
+KMeditor::KMeditor( const QString &text, QWidget *parent )
  : TextEdit( text, parent ), d( new KMeditorPrivate( this ) )
 {
   d->init();
@@ -227,8 +207,8 @@ KMeditor::~KMeditor()
 void KMeditorPrivate::init()
 {
   QShortcut * insertMode = new QShortcut( QKeySequence( Qt::Key_Insert ), q );
-  q->connect( insertMode, SIGNAL( activated() ),
-              q, SLOT( slotChangeInsertMode() ) );
+  q->connect( insertMode, SIGNAL(activated()),
+              q, SLOT(slotChangeInsertMode()) );
 }
 
 void KMeditor::slotChangeInsertMode()
@@ -242,7 +222,7 @@ void KMeditor::setUseExternalEditor( bool use )
   d->useExtEditor = use;
 }
 
-void KMeditor::setExternalEditorPath( const QString & path )
+void KMeditor::setExternalEditorPath( const QString &path )
 {
   d->extEditorPath = path;
 }
@@ -259,17 +239,19 @@ void KMeditor::setFontForWholeText( const QFont &font )
 
 KUrl KMeditor::insertFile()
 {
-  KEncodingFileDialog fdlg( QString(), QString(),  QString(), QString(),
-                            KFileDialog::Opening, this );
-  fdlg.okButton()->setText( i18n( "&Insert" ) );
-  fdlg.setCaption( i18n( "Insert File" ) );
-  if ( !fdlg.exec() )
-    return KUrl();
-  else {
-    KUrl url = fdlg.selectedUrl();
-    url.setFileEncoding( fdlg.selectedEncoding() );
-    return url;
+  QPointer<KEncodingFileDialog> fdlg =
+    new KEncodingFileDialog( QString(), QString(),  QString(), QString(),
+                             KFileDialog::Opening, this );
+  fdlg->okButton()->setText( i18nc( "@action:button", "&Insert" ) );
+  fdlg->setCaption( i18nc( "@title:window", "Insert File" ) );
+
+  KUrl url;
+  if ( fdlg->exec() ) {
+    url = fdlg->selectedUrl();
+    url.setFileEncoding( fdlg->selectedEncoding() );
   }
+  delete fdlg;
+  return url;
 }
 
 void KMeditor::enableWordWrap( int wrapColumn )
@@ -298,8 +280,9 @@ void KMeditor::slotRemoveQuotes()
 {
   QTextCursor cursor = textCursor();
   cursor.beginEditBlock();
-  if ( !cursor.hasSelection() )
+  if ( !cursor.hasSelection() ) {
     cursor.select( QTextCursor::Document );
+  }
 
   QTextBlock block = document()->findBlock( cursor.selectionStart() );
   int selectionEnd = cursor.selectionEnd();
@@ -321,8 +304,9 @@ void KMeditor::slotAddQuotes()
 {
   QTextCursor cursor = textCursor();
   cursor.beginEditBlock();
-  if ( !cursor.hasSelection() )
+  if ( !cursor.hasSelection() ) {
     cursor.select( QTextCursor::Document );
+  }
 
   QTextBlock block = document()->findBlock( cursor.selectionStart() );
   int selectionEnd = cursor.selectionEnd();
@@ -348,21 +332,29 @@ QString KMeditorPrivate::addQuotesToText( const QString &inputText )
   return q->smartQuote( answer );
 }
 
-QString KMeditor::smartQuote( const QString & msg )
+QString KMeditor::smartQuote( const QString &msg )
 {
   return msg;
 }
 
 bool KMeditor::checkExternalEditorFinished()
 {
-  if ( !d->mExtEditorProcess )
+  if ( !d->mExtEditorProcess ) {
     return true;
-  switch ( KMessageBox::warningYesNoCancel( topLevelWidget(),
-           i18n("The external editor is still running.\n"
-                "Abort the external editor or leave it open?"),
-           i18n("External Editor"),
-           KGuiItem( i18n("Abort Editor") ),
-           KGuiItem( i18n("Leave Editor Open") ) ) ) {
+  }
+
+  int ret = KMessageBox::warningYesNoCancel(
+    topLevelWidget(),
+    i18nc( "@info",
+           "The external editor is still running.<nl>"
+           "Do you want to stop the editor or keep it running?</nl>"
+           "<warning>Stopping the editor will cause all your "
+           "unsaved changes to be lost!</warning>" ),
+    i18nc( "@title:window", "External Editor Running" ),
+    KGuiItem( i18nc( "@action:button", "Stop Editor" ) ),
+    KGuiItem( i18nc( "@action:button", "Keep Editor Running" ) ) );
+
+  switch( ret ) {
   case KMessageBox::Yes:
     killExternalEditor();
     return true;
@@ -375,8 +367,9 @@ bool KMeditor::checkExternalEditorFinished()
 
 void KMeditor::killExternalEditor()
 {
-  if ( d->mExtEditorProcess )
+  if ( d->mExtEditorProcess ) {
     d->mExtEditorProcess->deleteLater();
+  }
   d->mExtEditorProcess = 0;
   delete d->mExtEditorTempFile;
   d->mExtEditorTempFile = 0;
@@ -384,8 +377,7 @@ void KMeditor::killExternalEditor()
 
 void KMeditor::setCursorPositionFromStart( unsigned int pos )
 {
-  if ( pos > 0 )
-  {
+  if ( pos > 0 ) {
     QTextCursor cursor = textCursor();
     cursor.setPosition( pos );
     setTextCursor( cursor );
@@ -396,17 +388,18 @@ void KMeditor::setCursorPositionFromStart( unsigned int pos )
 int KMeditor::linePosition()
 {
   const QTextCursor cursor = textCursor();
-  const QTextDocument* doc = document();
+  const QTextDocument *doc = document();
   QTextBlock block = doc->begin();
   int lineCount = 0;
 
   // Simply using cursor.block.blockNumber() would not work since that does not
-  // take word-wrapping into account, i.e. it is possible to have more than one line
-  // in a block.
+  // take word-wrapping into account, i.e. it is possible to have more than one
+  // line in a block.
   //
-  // What we have to do therefore is to iterate over the blocks and count the lines
-  // in them. Once we have reached the block where the cursor is, we have to iterate
-  // over each line in it, to find the exact line in the block where the cursor is.
+  // What we have to do therefore is to iterate over the blocks and count the
+  // lines in them. Once we have reached the block where the cursor is, we have
+  // to iterate over each line in it, to find the exact line in the block where
+  // the cursor is.
   while ( block.isValid() ) {
     const QTextLayout *layout = block.layout();
 
@@ -415,23 +408,24 @@ int KMeditor::linePosition()
 
       // Special case: Cursor at end of single non-wrapped line, exit early
       // in this case as the logic below can't handle it
-      if ( block.lineCount() == layout->lineCount() )
+      if ( block.lineCount() == layout->lineCount() ) {
         return lineCount;
+      }
 
       const int cursorBasePosition = cursor.position() - block.position();
       for ( int i = 0; i < layout->lineCount(); i++ ) {
         QTextLine line = layout->lineAt( i );
         if ( cursorBasePosition >= line.textStart() &&
-             cursorBasePosition < line.textStart() + line.textLength() )
+             cursorBasePosition < line.textStart() + line.textLength() ) {
           break;
+        }
         lineCount++;
       }
       return lineCount;
-    }
-
-    // No, cursor is not in the current block
-    else
+    } else {
+      // No, cursor is not in the current block
       lineCount += layout->lineCount();
+    }
 
     block = block.next();
   }
@@ -473,8 +467,9 @@ void KMeditorPrivate::cleanWhitespaceHelper( const QRegExp &regExp,
     QString text = q->document()->toPlainText();
     int currentMatch = regExp.indexIn( text, currentSearchPosition );
     currentSearchPosition = currentMatch;
-    if ( currentMatch == -1 )
+    if ( currentMatch == -1 ) {
       break;
+    }
 
     // Select the text
     QTextCursor cursor( q->document() );
@@ -492,10 +487,11 @@ void KMeditorPrivate::cleanWhitespaceHelper( const QRegExp &regExp,
     bool insideSignature = false;
     QList< QPair<int,int> > sigPositions = signaturePositions( sig );
     QPair<int,int> position;
-    foreach( position, sigPositions ) { //krazy:exclude=foreach
+    foreach ( position, sigPositions ) { //krazy:exclude=foreach
       if ( cursor.position() >= position.first &&
-           cursor.position() <= position.second )
+           cursor.position() <= position.second ) {
         insideSignature = true;
+      }
     }
     if ( insideSignature ) {
       currentSearchPosition += regExp.matchedLength();
@@ -533,7 +529,8 @@ void KMeditor::cleanWhitespace( const KPIMIdentities::Signature &sig )
   cursor.endEditBlock();
 }
 
-QList< QPair<int,int> > KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) const
+QList< QPair<int,int> >
+KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) const
 {
   QList< QPair<int,int> > signaturePositions;
   if ( !sig.rawText().isEmpty() ) {
@@ -547,8 +544,9 @@ QList< QPair<int,int> > KMeditorPrivate::signaturePositions( const KPIMIdentitie
       QString text = q->document()->toPlainText();
       int currentMatch = text.indexOf( sigText, currentSearchPosition );
       currentSearchPosition = currentMatch + sigText.length();
-      if ( currentMatch == -1 )
+      if ( currentMatch == -1 ) {
         break;
+      }
 
       signaturePositions.append( QPair<int,int>( currentMatch,
                                  currentMatch + sigText.length() ) );
@@ -572,8 +570,9 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     QString text = document()->toPlainText();
     int currentMatch = text.indexOf( oldSigText, currentSearchPosition );
     currentSearchPosition = currentMatch;
-    if ( currentMatch == -1 )
+    if ( currentMatch == -1 ) {
       break;
+    }
 
     // Select the signature
     QTextCursor cursor( document() );
@@ -591,7 +590,6 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor,
                          oldSigText.length() + additionalMove );
 
-
     // Skip quoted signatures
     if ( isLineQuoted( cursor.block().text() ) ) {
       currentSearchPosition += oldSig.plainText().length();
@@ -604,9 +602,9 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
          newSig.type() == KPIMIdentities::Signature::Inlined ) {
       cursor.insertHtml( newSig.rawText() );
       enableRichTextMode();
-    }
-    else
+    } else {
       cursor.insertText( newSig.rawText() );
+    }
 
     currentSearchPosition += newSig.plainText().length();
   }

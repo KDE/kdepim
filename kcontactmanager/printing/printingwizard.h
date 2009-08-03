@@ -38,7 +38,6 @@
 
 
 class QPrinter;
-class QVBoxLayout;
 
 namespace Akonadi {
   class EntityTreeView;

@@ -64,6 +64,7 @@ private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
     Q_PRIVATE_SLOT( d, void slotAbout() )
+    Q_PRIVATE_SLOT( d, void slotImportClipboard() )
     Q_PRIVATE_SLOT( d, void slotEncryptClipboard() )
     Q_PRIVATE_SLOT( d, void slotOpenPGPSignClipboard() )
     Q_PRIVATE_SLOT( d, void slotSMIMESignClipboard() )

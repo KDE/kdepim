@@ -208,6 +208,7 @@ set( _kleopatra_SRCS
   commands/exportcertificatecommand.cpp
   commands/importcertificatescommand.cpp
   commands/importcertificatefromfilecommand.cpp
+  commands/importcertificatefromclipboardcommand.cpp
   commands/lookupcertificatescommand.cpp
   commands/reloadkeyscommand.cpp
   commands/refreshx509certscommand.cpp
@@ -232,6 +233,7 @@ set( _kleopatra_SRCS
   commands/adduseridcommand.cpp
   commands/newcertificatecommand.cpp
   commands/setinitialpincommand.cpp
+  commands/learncardkeyscommand.cpp
   
   ${_kleopatra_uiserver_files}
 

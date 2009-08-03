@@ -739,7 +739,7 @@ void KNArticleFactory::processJob(KNJobData *j)
     if(art->collection()!=knGlobals.folderManager()->outbox())
       knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->outbox());
 
-    KMessageBox::information(knGlobals.topWidget, i18n("You have aborted the posting of articles. The unsent articles are stored in the \"Outbox\" folder."));
+    KMessageBox::information(knGlobals.topWidget, i18n("You canceled the article posting. The unsent articles are stored in the \"Outbox\" folder."));
 
     return;
   }

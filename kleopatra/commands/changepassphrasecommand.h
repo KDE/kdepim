@@ -49,8 +49,6 @@ namespace Commands {
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|NeedSecretKey; }
 
     private:
-        //* reimp */ bool preStartHook( QWidget * ) const;
-
         /* reimp */ QStringList arguments() const;
 
         /* reimp */ QString errorCaption() const;
