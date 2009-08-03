@@ -1659,7 +1659,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Refresh:
     case Scheduler::Add:
     {
-      if ( !existingIncidence && !rsvpReq ) {
+      if ( inc && inc->revision() > 0 && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
           html += "<td colspan=\"9\">";
           html += helper->makeLink( "reply", i18n( "[Record invitation to my task list]" ) );
@@ -1693,7 +1693,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
           html += "</td><td> &nbsp; </td><td>";
         }
 
-        if ( !existingIncidence && !rsvpReq ) {
+        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
           // Delegate
           html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
           html += "</td><td> &nbsp; </td><td>";
