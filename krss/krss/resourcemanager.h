@@ -47,6 +47,8 @@ public:
     QList<boost::shared_ptr<NetResource> > netResources() const;
     //QList<boost::shared_ptr<SearchResource> > searchResources();
 
+    void forceUpdate();
+
     // TODO: use a static initializer to register the attributes
     // automatically on library load?
     static void registerAttributes();
