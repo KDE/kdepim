@@ -40,6 +40,7 @@ class StandardContactActionManager;
 class ContactSwitcher;
 class KActionCollection;
 class KXMLGUIClient;
+class ModelColumnManager;
 class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;
@@ -94,6 +95,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     Akonadi::StandardContactActionManager *mActionManager;
 
     XXPortManager *mXXPortManager;
+    ModelColumnManager *mModelColumnManager;
 };
 
 #endif

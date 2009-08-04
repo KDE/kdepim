@@ -64,6 +64,7 @@
 #include "kcontactmanageradaptor.h"
 #include "modelcolumnmanager.h"
 #include "quicksearchwidget.h"
+#include "settings.h"
 #include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
@@ -190,12 +191,15 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   new MainWidgetAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/KContactManager", this, QDBusConnection::ExportAdaptors );
 
-  ModelColumnManager *manager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
-  manager->setWidget( mItemView->header() );
+  mModelColumnManager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
+  mModelColumnManager->setWidget( mItemView->header() );
+  mModelColumnManager->load();
 }
 
 MainWidget::~MainWidget()
 {
+  mModelColumnManager->store();
+  Settings::self()->writeConfig();
 }
 
 void MainWidget::setupGui()
