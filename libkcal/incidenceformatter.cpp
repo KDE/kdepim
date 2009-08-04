@@ -1713,12 +1713,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
     case Scheduler::Cancel:
       // Remove invitation
-      if ( inc && existingIncidence ) {
-        if ( inc->type() == "Todo" ) {
-          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
-        } else {
-          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
-        }
+      if ( inc->type() == "Todo" ) {
+        html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
+      } else {
+        html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
       }
       break;
 
