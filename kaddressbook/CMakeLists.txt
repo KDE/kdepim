@@ -87,8 +87,6 @@ set( kaddressbook_LIB_SRCS
   ${kaddressbook_printing_SRCS}
 )
 
-qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS org.kde.KAddressBook.MainWidget.xml mainwidget.h MainWidget kaddressbookadaptor )
-
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
 target_link_libraries(kaddressbookprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)

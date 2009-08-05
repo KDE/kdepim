@@ -61,7 +61,6 @@
 #include "contactstreemodel.h"
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
-#include "kaddressbookadaptor.h"
 #include "modelcolumnmanager.h"
 #include "quicksearchwidget.h"
 #include "settings.h"
@@ -186,10 +185,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
            this, SLOT( newGroup() ) );
   connect( mActionManager, SIGNAL( editItem( const Akonadi::Item& ) ),
            this, SLOT( editItem( const Akonadi::Item& ) ) );
-
-  // create the dbus adaptor
-  new MainWidgetAdaptor( this );
-  QDBusConnection::sessionBus().registerObject( "/KAddressBook", this, QDBusConnection::ExportAdaptors );
 
   mModelColumnManager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
   mModelColumnManager->setWidget( mItemView->header() );
