@@ -188,7 +188,6 @@ set(libkdgantt1_SRCS
 
   macro_optional_add_subdirectory(akregator)
   macro_optional_add_subdirectory(console)
-  macro_optional_add_subdirectory(kaddressbook)
   macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)

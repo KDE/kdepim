@@ -7,10 +7,6 @@ if(BUILD_console)
   add_subdirectory(konsolekalendar)
 endif(BUILD_console)
 
-if(BUILD_kaddressbook)
-  add_subdirectory(kaddressbook)
-endif(BUILD_kaddressbook)
-
 if(BUILD_kalarm)
   add_subdirectory(kalarm)
 endif(BUILD_kalarm)
