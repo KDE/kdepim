@@ -108,6 +108,8 @@ AgentProgressMonitor::AgentProgressMonitor( const AgentInstance &agent,
       this, SLOT(abort()) );
 
   // TODO what about usesCrypto?
+
+  // TODO handle offline case
 }
 
 AgentProgressMonitor::~AgentProgressMonitor()

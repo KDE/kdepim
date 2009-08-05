@@ -41,7 +41,7 @@ class KEMailQuotingHighlighter;
  *
  * It offers sevaral additional functions of a KRichTextWidget:
  *
- * @li The ability to us an external editor
+ * @li The ability to use an external editor
  * @li Utility functions like removing whitespace, inserting a file,
  *     adding quotes or rot13'ing the text
  */
