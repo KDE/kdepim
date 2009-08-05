@@ -610,12 +610,13 @@ QString KMMessage::asQuotedString( const QString& aIndentStr,
 
   const QString indentStr = formatString( aIndentStr );
 
+  if ( s->smartQuote && s->wordWrap )
+    content = StringUtil::smartQuote( content, s->wrapCol - indentStr.length() );
+
   content.replace( '\n', '\n' + indentStr );
   content.prepend( indentStr );
   content += '\n';
 
-  if ( s->smartQuote && s->wordWrap )
-    return StringUtil::smartQuote( content, s->wrapCol );
   return content;
 }
 
