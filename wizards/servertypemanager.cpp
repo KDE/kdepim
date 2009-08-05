@@ -20,7 +20,6 @@
 */
 
 #include "servertypemanager.h"
-#include "egroupwarehandler.h"
 
 #include <k3staticdeleter.h>
 
@@ -83,9 +82,6 @@ void ServerTypeManager::loadPlugins()
 {
   mServerTypeMap.clear();
   mServerTypeFactoryMap.clear();
-
-  ServerTypeFactory *factory = new EGroupwareHandlerFactory();
-  mServerTypeFactoryMap.insert( factory->identifier(), factory );
 }
 
 #include "servertypemanager.moc"

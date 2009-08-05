@@ -33,7 +33,6 @@ class OverViewPage : public QWidget
     ~OverViewPage();
 
   private slots:
-    void showWizardEGroupware();
     void showWizardKolab();
     void showWizardSlox();
     void showWizardGroupwise();
