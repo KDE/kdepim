@@ -274,6 +274,7 @@ void KMeditorPrivate::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
     if ( localFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
       QByteArray f = localFile.readAll();
       q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
+      q->document()->setModified( true );
       localFile.close();
     }
   }
