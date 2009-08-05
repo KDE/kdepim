@@ -343,7 +343,15 @@ void KMeditor::insertFromMimeData( const QMimeData * source )
 
 void KMeditor::keyPressEvent ( QKeyEvent * e )
 {
-  if ( d->useExtEditor ) {
+  if ( d->useExtEditor &&
+       ( e->key() != Qt::Key_Shift ) &&
+       ( e->key() != Qt::Key_Control ) &&
+       ( e->key() != Qt::Key_Meta ) &&
+       ( e->key() != Qt::Key_CapsLock ) &&
+       ( e->key() != Qt::Key_NumLock ) &&
+       ( e->key() != Qt::Key_ScrollLock ) &&
+       ( e->key() != Qt::Key_Alt ) &&
+       ( e->key() != Qt::Key_AltGr ) ) {
     if ( !d->mExtEditorProcess ) {
       d->startExternalEditor();
     }
