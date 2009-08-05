@@ -61,6 +61,8 @@ namespace Commands {
         virtual QString errorExitMessage( const QStringList & args ) const = 0;
         virtual QString successMessage( const QStringList & args ) const = 0;
 
+        virtual void postSuccessHook( QWidget * parentWidget );
+
     protected:
         QString errorString() const;
 
