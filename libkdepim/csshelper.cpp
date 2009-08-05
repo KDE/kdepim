@@ -639,4 +639,9 @@ namespace KPIM {
     mPrintFont = font;
   }
 
+  QColor CSSHelper::pgpWarnColor() const
+  {
+    return cPgpWarnH;
+  }
+
 } // namespace KPIM
