@@ -1,0 +1,37 @@
+How Content-Transfer-Encoding (CTE) is handled:
+--------------------------------------------
+(see RFC2045)
+* For text body and text attachments:
+  1) 7bit if text fits.
+  2) 8bit if text fits and transport supports it.
+  3) quoted-printable or base 64 otherwise, depending on which is most space-efficient.
+* For binary attachments:
+  1) base64
+* For multipart/* (except signed/encrypted):
+  1) 7bit if everything fits.
+  2) 8bit if allowed by transport.
+* For message/rfc822 (encapsulated messages):
+  1) 7bit if everything fits.
+  2) 8bit if allowed by transport.
+  TODO what if encapsulated message is 8bit but our transport is 7bit???
+* For multipart/signed (see RFC3156):
+  1) 7bit if everything fits
+  2) quoted-printable or base64 if:
+     - has trailing whitespace
+     - a line starts with 'From '
+* For multipart/encrypted (but not signed):
+  Same as for multipart/*.
+
+
+
+References:
+--------------
+RFC5322: Internet Message Format (P. Resnick, Ed., October 2008)
+RFC2045: Multipurpose Internet Mail Extensions (MIME) Part One: Format of Internet Message Bodies
+         (N. Freed, N. Borenstein, November 1996)
+RFC2046: Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types
+         (N. Freed N. Borenstein, November 1996)
+RFC2047: MIME (Multipurpose Internet Mail Extensions) Part Three: Message Header Extensions for
+         Non-ASCII Text (K. Moore, November 1996)
+RFC3156: MIME Security with OpenPGP (M. Elkins, D. Del Torto, R. Levien, T. Roessler, August 2001)
+
