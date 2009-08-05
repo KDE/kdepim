@@ -24,12 +24,12 @@
 
 #include <QtCore/QList>
 
+#include <kmime/kmime_headers.h>
+
 class KUrl;
 
 namespace MessageComposer {
 
-/** setOverrideTransferEncoding for an AttachmentPart means setting the CTE for the sub-Content
-  representing this attachment */
 class MESSAGECOMPOSER_EXPORT AttachmentPart : public MessagePart
 {
   Q_OBJECT
@@ -40,13 +40,37 @@ class MESSAGECOMPOSER_EXPORT AttachmentPart : public MessagePart
     explicit AttachmentPart( QObject *parent = 0 );
     virtual ~AttachmentPart();
 
-    KUrl url() const;
-    void setUrl( const KUrl &url );
-    
-    bool isDataLoaded() const;
-    bool loadData();
+    /// the name= in Content-Type
+    QString name() const;
+    void setName( const QString &name );
+    /// the filename= in Content-Disposition
+    QString fileName() const;
+    void setFileName( const QString &name );
+    QString description() const;
+    void setDescription( const QString &description );
+    // otherwise "attachment"
+    bool isInline() const;  // Perhaps rename to autoDisplay, since the users of
+                            // this class aren't supposed to know MIME?
+    void setInline( bool inl );
+    // default true
+    bool isAutoEncoding() const;
+    void setAutoEncoding( bool enabled );
+    // only if isAutoEncoding false
+    KMime::Headers::contentEncoding encoding() const;
+    void setEncoding( KMime::Headers::contentEncoding encoding );
+    QByteArray mimeType() const;
+    void setMimeType( const QByteArray &mimeType );
+    bool isCompressed() const;
+    void setCompressed( bool compressed );
+    bool isEncrypted() const;
+    void setEncrypted( bool encrypted );
+    bool isSigned() const;
+    void setSigned( bool sign );
+    QByteArray data() const;
+    void setData( const QByteArray &data );
+    qint64 size() const;
 
-    // TODO handle mime type; charset for textual types, etc.
+    // TODO outlook-compatible names...
 
   private:
     class Private;
@@ -55,4 +79,4 @@ class MESSAGECOMPOSER_EXPORT AttachmentPart : public MessagePart
 
 } // namespace MessageComposer
 
-#endif // MESSAGECOMPOSER_INFOPART_H
+#endif

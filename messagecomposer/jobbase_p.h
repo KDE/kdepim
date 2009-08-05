@@ -17,45 +17,29 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
+#ifndef MESSAGECOMPOSER_JOBBASE_P_H
+#define MESSAGECOMPOSER_JOBBASE_P_H
 
 #include "jobbase.h"
-#include "messagecomposer_export.h"
-
-namespace KMime {
-  class Message;
-}
 
 namespace MessageComposer {
 
-class SkeletonMessageJobPrivate;
-class InfoPart;
-
-/**
-  A message containing only the headers...
-*/
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+class JobBasePrivate
 {
-  Q_OBJECT
-
   public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
+    JobBasePrivate( JobBase *qq )
+      : q_ptr( qq )
+    {
+    }
 
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
+    virtual ~JobBasePrivate()
+    {
+    }
 
-    KMime::Message *message() const;
-
-    virtual void start();
-
-  private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
-
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
+    JobBase *q_ptr;
+    Q_DECLARE_PUBLIC( JobBase )
 };
 
-} // namespace MessageComposer
+}
 
 #endif

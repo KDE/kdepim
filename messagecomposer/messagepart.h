@@ -20,7 +20,6 @@
 #ifndef MESSAGECOMPOSER_MESSAGEPART_H
 #define MESSAGECOMPOSER_MESSAGEPART_H
 
-#include "behaviour.h"
 #include "messagecomposer_export.h"
 
 #include <QtCore/QObject>
@@ -40,10 +39,6 @@ class MESSAGECOMPOSER_EXPORT MessagePart : public QObject
   public:
     MessagePart( QObject *parent = 0 );
     virtual ~MessagePart();
-
-    bool isAutoTransferEncoding() const;
-    KMime::Headers::contentEncoding overrideTransferEncoding() const;
-    void setOverrideTransferEncoding( KMime::Headers::contentEncoding cte );
 
   private:
     class Private;

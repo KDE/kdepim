@@ -17,49 +17,53 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_CONTENTJOB_H
-#define MESSAGECOMPOSER_CONTENTJOB_H
+#ifndef MESSAGECOMPOSER_JOBBASE_H
+#define MESSAGECOMPOSER_JOBBASE_H
 
-#include "job.h"
 #include "messagecomposer_export.h"
 
-namespace KMime {
-  namespace Headers {
-    class ContentDisposition;
-    class ContentTransferEncoding;
-    class ContentType;
-  }
-}
+#include <QtCore/QList>
+
+#include <KDE/KCompositeJob>
 
 namespace MessageComposer {
 
-class ContentJobPrivate;
+class GlobalPart;
+class JobBasePrivate;
 
 /**
+  A dummy abstract class defining some errors pertaining to the Composer.
+  It is meant to be subclassed.
 */
-class MESSAGECOMPOSER_EXPORT ContentJob : public Job
+class MESSAGECOMPOSER_EXPORT JobBase : public KCompositeJob
 {
   Q_OBJECT
 
   public:
-    ContentJob( QObject *parent = 0 );
-    virtual ~ContentJob();
+    typedef QList<JobBase*> List;
 
-    QByteArray data() const;
-    void setData( const QByteArray &data );
+    enum Error
+    {
+      BugError = UserDefinedError + 1,
+      IncompleteError,
+      UserCancelledError,
+      UserError = UserDefinedError + 42
+    };
 
-    /// created on first call. delete them if you don't use the content
-    KMime::Headers::ContentDisposition *contentDisposition();
-    KMime::Headers::ContentTransferEncoding *contentTransferEncoding();
-    KMime::Headers::ContentType *contentType();
+    explicit JobBase( QObject *parent = 0 );
+    virtual ~JobBase();
 
-  protected Q_SLOTS:
-    virtual void process();
+    // asserts if no Composer parent
+    GlobalPart *globalPart();
+
+  protected:
+    JobBasePrivate *const d_ptr;
+    JobBase( JobBasePrivate &dd, QObject *parent );
 
   private:
-    Q_DECLARE_PRIVATE( ContentJob )
+    Q_DECLARE_PRIVATE( JobBase )
 };
 
-}
+} // namespace MessageComposer
 
 #endif

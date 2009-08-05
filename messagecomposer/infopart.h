@@ -29,7 +29,6 @@
 
 namespace MessageComposer {
 
-/** setOverrideTransferEncoding for an InfoPart has no effect */
 class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
 {
   Q_OBJECT

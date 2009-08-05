@@ -17,41 +17,40 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
+#ifndef MESSAGECOMPOSER_ATTACHMENTCOMPRESSJOB_H
+#define MESSAGECOMPOSER_ATTACHMENTCOMPRESSJOB_H
 
 #include "jobbase.h"
 #include "messagecomposer_export.h"
 
-namespace KMime {
-  class Message;
-}
-
 namespace MessageComposer {
 
-class SkeletonMessageJobPrivate;
-class InfoPart;
+class AttachmentCompressJobPrivate;
+class AttachmentPart;
 
 /**
-  A message containing only the headers...
 */
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+class MESSAGECOMPOSER_EXPORT AttachmentCompressJob : public JobBase
 {
   Q_OBJECT
 
   public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
-
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
-
-    KMime::Message *message() const;
+    explicit AttachmentCompressJob( const AttachmentPart *part, QObject *parent = 0 );
+    virtual ~AttachmentCompressJob();
 
     virtual void start();
 
+    const AttachmentPart *originalPart() const;
+    void setOriginalPart( const AttachmentPart *part );
+    /// does not delete it unless it failed...
+    AttachmentPart *compressedPart() const;
+
+    // default true
+    bool warnCompressedSizeLarger() const;
+    void setWarnCompressedSizeLarger( bool warn );
+
   private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
+    Q_DECLARE_PRIVATE( AttachmentCompressJob )
 
     Q_PRIVATE_SLOT( d_func(), void doStart() )
 };

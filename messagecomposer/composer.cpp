@@ -21,7 +21,9 @@
 
 #include "attachmentpart.h"
 #include "finalmessage_p.h"
+#include "globalpart.h"
 #include "infopart.h"
+#include "jobbase_p.h"
 #include "textpart.h"
 #include "maintextjob.h"
 #include "multipartjob.h"
@@ -34,16 +36,16 @@
 using namespace MessageComposer;
 using namespace KMime;
 
-class Composer::Private
+class MessageComposer::ComposerPrivate : public JobBasePrivate
 {
   public:
-    Private( Composer *qq )
-      : q( qq )
+    ComposerPrivate( Composer *qq )
+      : JobBasePrivate( qq )
       , started( false )
       , finished( false )
-      , parentWidget( 0 )
-      , infoPart( new InfoPart( q ) )
-      , textPart( new TextPart( q ) )
+      , globalPart( 0 )
+      , infoPart( 0 )
+      , textPart( 0 )
       , skeletonMessage( 0 )
       , contentBeforeCrypto( 0 )
 #if 0
@@ -52,6 +54,7 @@ class Composer::Private
     {
     }
 
+    void init();
     void doStart(); // slot
     void composeStep1();
     void splitAttachmentsIntoEarlyLate();
@@ -61,14 +64,12 @@ class Composer::Private
     void composeStep3();
     FinalMessage *createFinalMessage( Content *content );
 
-    Composer *q;
-    Behaviour behaviour;
     bool started;
     bool finished;
     FinalMessage::List messages;
 
     // Stuff that the application plays with.
-    QWidget *parentWidget;
+    GlobalPart *globalPart;
     InfoPart *infoPart;
     TextPart *textPart;
     AttachmentPart::List attachmentParts;
@@ -86,34 +87,51 @@ class Composer::Private
     int pendingCryptoJobs;
     QList<Content*> contentsAfterCrypto;
 #endif
+
+    Q_DECLARE_PUBLIC( Composer )
 };
 
-void Composer::Private::doStart()
+void ComposerPrivate::init()
+{
+  Q_Q( Composer );
+  globalPart = new GlobalPart( q );
+  infoPart = new InfoPart( q );
+  textPart = new TextPart( q );
+  // FIXME: If I do these in ComposerPrivate's constructor, I get weird
+  // "Cannot create children for a parent that is in a different thread"
+  // errors. WTF? Something to do with construction order... I think q is
+  // not fully constructed by the time it is passed as a parent for these
+  // part QObjects.
+}
+
+void ComposerPrivate::doStart()
 {
   Q_ASSERT( !started );
   started = true;
   composeStep1();
 }
 
-void Composer::Private::composeStep1()
+void ComposerPrivate::composeStep1()
 {
+  Q_Q( Composer );
+
   // Split the attachments into early and late.  (see DESIGN)
   splitAttachmentsIntoEarlyLate();
 
   // Create skeleton message (containing headers only; no content).
   SkeletonMessageJob *skeletonJob = new SkeletonMessageJob( infoPart, q );
-  connect( skeletonJob, SIGNAL(finished(KJob*)), q, SLOT(skeletonJobFinished(KJob*)) );
+  QObject::connect( skeletonJob, SIGNAL(finished(KJob*)), q, SLOT(skeletonJobFinished(KJob*)) );
   q->addSubjob( skeletonJob );
   skeletonJob->start();
 }
 
-void Composer::Private::splitAttachmentsIntoEarlyLate()
+void ComposerPrivate::splitAttachmentsIntoEarlyLate()
 {
   // TODO
   earlyAttachments = attachmentParts;
 }
 
-void Composer::Private::skeletonJobFinished( KJob *job )
+void ComposerPrivate::skeletonJobFinished( KJob *job )
 {
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
@@ -131,9 +149,11 @@ void Composer::Private::skeletonJobFinished( KJob *job )
   composeStep2();
 }
 
-void Composer::Private::composeStep2()
+void ComposerPrivate::composeStep2()
 {
-  Job *beforeCryptoJob = 0;
+  Q_Q( Composer );
+
+  ContentJobBase *beforeCryptoJob = 0;
   // Create contentBeforeCrypto from the main text part and early attachments.
   if( earlyAttachments.isEmpty() ) {
     // We have no attachments.  Use whatever content the textPart gives us.
@@ -151,27 +171,29 @@ void Composer::Private::composeStep2()
     }
 #endif
   }
-  connect( beforeCryptoJob, SIGNAL(finished(KJob*)), q, SLOT(beforeCryptoJobFinished(KJob*)) );
+  QObject::connect( beforeCryptoJob, SIGNAL(finished(KJob*)), q, SLOT(beforeCryptoJobFinished(KJob*)) );
   q->addSubjob( beforeCryptoJob );
   beforeCryptoJob->start();
 }
 
-void Composer::Private::beforeCryptoJobFinished( KJob *job )
+void ComposerPrivate::beforeCryptoJobFinished( KJob *job )
 {
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
   }
 
-  Q_ASSERT( dynamic_cast<Job*>( job ) );
-  Job *cjob = static_cast<Job*>( job );
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
   contentBeforeCrypto = cjob->content();
   contentBeforeCrypto->assemble();
 
   composeStep3();
 }
 
-void Composer::Private::composeStep3()
+void ComposerPrivate::composeStep3()
 {
+  Q_Q( Composer );
+
   // (temporary until crypto) Compose final message.
   FinalMessage *msg = createFinalMessage( contentBeforeCrypto );
   delete contentBeforeCrypto;
@@ -193,7 +215,7 @@ void Composer::Private::composeStep3()
 }
 
 #if 0
-void Composer::Private::afterCryptoJobFinished( KJob *job )
+void ComposerPrivate::afterCryptoJobFinished( KJob *job )
 {
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
@@ -210,7 +232,7 @@ void Composer::Private::afterCryptoJobFinished( KJob *job )
 }
 #endif
 
-FinalMessage *Composer::Private::createFinalMessage( Content *content )
+FinalMessage *ComposerPrivate::createFinalMessage( Content *content )
 {
   Q_ASSERT( skeletonMessage );
   Message *message = new Message;
@@ -218,6 +240,7 @@ FinalMessage *Composer::Private::createFinalMessage( Content *content )
   // of beforeCryptoJobFinished.  FIXME HACK There should be a better way.
   QByteArray allData = skeletonMessage->head() + content->encodedContent();
   message->setContent( allData );
+  message->parse();
 #if 0 // this was the second attempt
   QByteArray head = skeletonMessage->head() + content->head();
   kDebug() << "head" << head;
@@ -273,7 +296,7 @@ FinalMessage *Composer::Private::createFinalMessage( Content *content )
     }
   }
 #endif
-  message->assemble();
+  //message->assemble();
   kDebug() << "encoded message after assembly" << message->encodedContent();
   FinalMessage *finalMessage = new FinalMessage( message );
   finalMessage->d->hasCustomHeaders = false; // TODO save those if not sending...
@@ -291,67 +314,60 @@ FinalMessage *Composer::Private::createFinalMessage( Content *content )
 
 
 Composer::Composer( QObject *parent )
-  : KCompositeJob( parent )
-  , d( new Private( this ) )
+  : JobBase( *new ComposerPrivate( this ), parent )
 {
+  Q_D( Composer );
+  d->init();
 }
 
 Composer::~Composer()
 {
-  delete d;
-}
-
-Behaviour &Composer::behaviour()
-{
-  return d->behaviour;
-}
-
-void Composer::setBehaviour( const Behaviour &beh )
-{
-  d->behaviour = beh;
-}
-
-QWidget *Composer::parentWidget() const
-{
-  return d->parentWidget;
-}
-
-void Composer::setParentWidget( QWidget *widget )
-{
-  d->parentWidget = widget;
 }
 
 FinalMessage::List Composer::messages() const
 {
+  Q_D( const Composer );
   Q_ASSERT( d->finished );
   Q_ASSERT( !error() );
   return d->messages;
 }
 
+GlobalPart *Composer::globalPart()
+{
+  Q_D( Composer );
+  return d->globalPart;
+}
+
 InfoPart *Composer::infoPart()
 {
+  Q_D( Composer );
   return d->infoPart;
 }
 
 TextPart *Composer::textPart()
 {
+  Q_D( Composer );
   return d->textPart;
 }
 
 QList<AttachmentPart*> Composer::attachmentParts()
 {
+  Q_D( Composer );
   return d->attachmentParts;
 }
 
 void Composer::addAttachmentPart( AttachmentPart *part )
 {
+  Q_D( Composer );
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
   d->attachmentParts.append( part );
+  part->setParent( this );
 }
 
 void Composer::removeAttachmentPart( AttachmentPart *part, bool del )
 {
+  Q_D( Composer );
   Q_ASSERT( !d->started );
   if( d->attachmentParts.contains( part ) ) {
     d->attachmentParts.removeAll( part );
@@ -363,6 +379,8 @@ void Composer::removeAttachmentPart( AttachmentPart *part, bool del )
 
   if( del ) {
     delete part;
+  } else {
+    part->setParent( 0 );
   }
 }
 

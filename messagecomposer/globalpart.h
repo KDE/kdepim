@@ -17,43 +17,41 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
+#ifndef MESSAGECOMPOSER_GLOBALPART_H
+#define MESSAGECOMPOSER_GLOBALPART_H
 
-#include "jobbase.h"
-#include "messagecomposer_export.h"
+#include "messagepart.h"
 
-namespace KMime {
-  class Message;
-}
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 
 namespace MessageComposer {
 
-class SkeletonMessageJobPrivate;
-class InfoPart;
-
-/**
-  A message containing only the headers...
-*/
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+class MESSAGECOMPOSER_EXPORT GlobalPart : public MessagePart
 {
   Q_OBJECT
 
   public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
+    explicit GlobalPart( QObject *parent = 0 );
+    virtual ~GlobalPart();
 
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
+    // default true
+    bool isGuiEnabled() const;
+    void setGuiEnabled( bool enabled );
+    QWidget* parentWidgetForGui() const;
+    void setParentWidgetForGui( QWidget *widget );
 
-    KMime::Message *message() const;
+    bool isFallbackCharsetEnabled() const;
+    void setFallbackCharsetEnabled( bool enabled );
+    QList<QByteArray> charsets( bool forceFallback = false ) const;
+    void setCharsets( const QList<QByteArray> &charsets );
 
-    virtual void start();
+    bool is8BitAllowed() const;
+    void set8BitAllowed( bool allowed );
 
   private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
-
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
+    class Private;
+    Private *const d;
 };
 
 } // namespace MessageComposer

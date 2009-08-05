@@ -20,7 +20,7 @@
 #ifndef MESSAGECOMPOSER_MULTIPARTJOB_H
 #define MESSAGECOMPOSER_MULTIPARTJOB_H
 
-#include "job.h"
+#include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
 namespace MessageComposer {
@@ -29,7 +29,7 @@ class MultipartJobPrivate;
 
 /**
 */
-class MESSAGECOMPOSER_EXPORT MultipartJob : public Job
+class MESSAGECOMPOSER_EXPORT MultipartJob : public ContentJobBase
 {
   Q_OBJECT
 

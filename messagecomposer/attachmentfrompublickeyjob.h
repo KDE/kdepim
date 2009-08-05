@@ -17,43 +17,41 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
+#ifndef MESSAGECOMPOSER_ATTACHMENTFROMPUBLICKEY_H
+#define MESSAGECOMPOSER_ATTACHMENTFROMPUBLICKEY_H
 
 #include "jobbase.h"
 #include "messagecomposer_export.h"
 
-namespace KMime {
-  class Message;
-}
-
 namespace MessageComposer {
 
-class SkeletonMessageJobPrivate;
-class InfoPart;
+class AttachmentFromPublicKeyJobPrivate;
+class AttachmentPart;
 
 /**
-  A message containing only the headers...
 */
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+// TODO I have no idea how to test this.  Have a fake keyring???
+class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public JobBase
 {
   Q_OBJECT
 
   public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
-
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
-
-    KMime::Message *message() const;
+    explicit AttachmentFromPublicKeyJob( const QString &fingerprint, QObject *parent = 0 );
+    virtual ~AttachmentFromPublicKeyJob();
 
     virtual void start();
 
+    QString fingerprint() const;
+    void setFingerprint( const QString &fingerprint );
+
+    /// does not delete it unless it failed...
+    AttachmentPart *attachmentPart() const;
+
   private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
+    Q_DECLARE_PRIVATE( AttachmentFromPublicKeyJob )
 
     Q_PRIVATE_SLOT( d_func(), void doStart() )
+    Q_PRIVATE_SLOT( d_func(), void exportResult( GpgME::Error, QByteArray ) )
 };
 
 } // namespace MessageComposer

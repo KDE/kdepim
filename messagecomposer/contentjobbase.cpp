@@ -17,41 +17,31 @@
   02110-1301, USA.
 */
 
-#include "job.h"
-#include "job_p.h"
-
-#include "composer.h"
+#include "contentjobbase.h"
+#include "contentjobbase_p.h"
 
 #include <QTimer>
 
 #include <KDebug>
+#include <KLocalizedString>
 
 #include <kmime/kmime_content.h>
 
 using namespace MessageComposer;
 using namespace KMime;
 
-void JobPrivate::init( QObject *parent )
+void ContentJobBasePrivate::init( QObject *parent )
 {
-  Composer *parentComposer = dynamic_cast<Composer*>( parent );
-  if( parentComposer ) {
-    composer = parentComposer;
-    return;
-  }
-
-  Job *parentJob = dynamic_cast<Job*>( parent );
+  Q_Q( ContentJobBase );
+  ContentJobBase *parentJob = dynamic_cast<ContentJobBase*>( parent );
   if( parentJob ) {
-    composer = parentJob->d_ptr->composer;
-    parentJob->addSubjob( q_ptr );
-    return;
+    parentJob->appendSubjob( q );
   }
-
-  composer = 0;
 }
 
-void JobPrivate::doNextSubjob()
+void ContentJobBasePrivate::doNextSubjob()
 {
-  Q_Q( Job );
+  Q_Q( ContentJobBase );
   if( q->hasSubjobs() ) {
     q->subjobs().first()->start();
   } else {
@@ -62,64 +52,72 @@ void JobPrivate::doNextSubjob()
 
 
 
-Job::Job( QObject *parent )
-  : KCompositeJob( parent )
-  , d_ptr( new JobPrivate( this ) )
+ContentJobBase::ContentJobBase( QObject *parent )
+  : JobBase( *new ContentJobBasePrivate( this ), parent )
 {
-  d_ptr->init( parent );
+  Q_D( ContentJobBase );
+  d->init( parent );
 }
 
-Job::Job( JobPrivate &dd, QObject *parent )
-  : KCompositeJob( parent )
-  , d_ptr( &dd )
+ContentJobBase::ContentJobBase( ContentJobBasePrivate &dd, QObject *parent )
+  : JobBase( dd, parent )
 {
-  d_ptr->init( parent );
+  Q_D( ContentJobBase );
+  d->init( parent );
 }
 
-Job::~Job()
+ContentJobBase::~ContentJobBase()
 {
-  delete d_ptr;
 }
 
-void Job::start()
+void ContentJobBase::start()
 {
   QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
-Content *Job::content() const
+Content *ContentJobBase::content() const
 {
-  Q_D( const Job );
-  //Q_ASSERT( !hasSubjobs() ); // Finished. // KCompositeJob::hasSubjobs is not const :-/
+  Q_D( const ContentJobBase );
+  //Q_ASSERT( !hasSubjobs() ); // Finished. // JobBase::hasSubjobs is not const :-/ TODO const_cast??
   Q_ASSERT( d->resultContent ); // process() should do something.
   return d->resultContent;
 }
 
-void Job::doStart()
+bool ContentJobBase::appendSubjob( ContentJobBase *job )
 {
-  Q_D( Job );
+  job->setParent( this );
+  return KCompositeJob::addSubjob( job );
+}
+
+bool ContentJobBase::addSubjob( KJob *job )
+{
+  Q_UNUSED( job );
+  kError() << "Use appendJob() instead.";
+  Q_ASSERT( false );
+  return false;
+}
+
+void ContentJobBase::doStart()
+{
+  Q_D( ContentJobBase );
   Q_ASSERT( d->resultContent == 0 && d->subjobContents.isEmpty() ); // Not started.
-  Q_ASSERT( !error() ); // Jobs emitting an error in doStart should not call Job::doStart().
+  Q_ASSERT( !error() ); // Jobs emitting an error in doStart should not call ContentJobBase::doStart().
   d->doNextSubjob();
 }
 
-void Job::slotResult( KJob *job )
+void ContentJobBase::slotResult( KJob *job )
 {
-  Q_D( Job );
+  Q_D( ContentJobBase );
   KCompositeJob::slotResult( job ); // Handles errors and removes subjob.
   kDebug() << "A subjob finished." << subjobs().count() << "more to go.";
   if( error() ) {
     return;
   }
 
-  Q_ASSERT( dynamic_cast<Job*>( job ) );
-  Job *cjob = static_cast<Job*>( job );
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
   d->subjobContents.append( cjob->content() );
   d->doNextSubjob();
 }
 
-void Job::setComposer( Composer *composer )
-{
-  d_ptr->composer = composer;
-}
-
-#include "job.moc"
+#include "contentjobbase.moc"

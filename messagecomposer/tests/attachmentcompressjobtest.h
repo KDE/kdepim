@@ -17,45 +17,17 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
+#ifndef ATTACHMENTCOMPRESSJOBTEST_H
+#define ATTACHMENTCOMPRESSJOBTEST_H
 
-#include "jobbase.h"
-#include "messagecomposer_export.h"
+#include <QtCore/QObject>
 
-namespace KMime {
-  class Message;
-}
-
-namespace MessageComposer {
-
-class SkeletonMessageJobPrivate;
-class InfoPart;
-
-/**
-  A message containing only the headers...
-*/
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+class AttachmentCompressJobTest : public QObject
 {
   Q_OBJECT
-
-  public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
-
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
-
-    KMime::Message *message() const;
-
-    virtual void start();
-
-  private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
-
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
+  private Q_SLOTS:
+    void testCompress();
+    void testCompressedSizeLarger();
 };
-
-} // namespace MessageComposer
 
 #endif

@@ -17,16 +17,17 @@
   02110-1301, USA.
 */
 
-#ifndef BEHAVIOURTEST_H
-#define BEHAVIOURTEST_H
+#ifndef ATTACHMENTFROMMIMECONTENTJOBTEST_H
+#define ATTACHMENTFROMMIMECONTENTJOBTEST_H
 
 #include <QtCore/QObject>
 
-class BehaviourTest : public QObject
+// 33-byte class names say I suck?
+class AttachmentFromMimeContentJobTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void testApi();
+    void testAttachment();
 };
 
 #endif

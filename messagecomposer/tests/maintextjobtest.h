@@ -36,8 +36,9 @@ class MainTextJobTest : public QObject
     void testBadCharset();
     void testFallbackCharset();
 
-    // Content-Transfer-Encoding tests:
-    void testOverrideCTE();
+    // html tests:
+    void testHtml();
+    void testHtmlWithImages();
 };
 
 #endif

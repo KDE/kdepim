@@ -17,42 +17,45 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_JOB_P_H
-#define MESSAGECOMPOSER_JOB_P_H
+#ifndef MESSAGECOMPOSER_ATTACHMENTFROMMIMECONTENT_H
+#define MESSAGECOMPOSER_ATTACHMENTFROMMIMECONTENT_H
 
-#include "job.h"
+#include "jobbase.h"
+#include "messagecomposer_export.h"
 
-#include <kmime/kmime_content.h>
+namespace KMime {
+  class Content;
+}
 
 namespace MessageComposer {
 
-class Composer;
+class AttachmentFromMimeContentJobPrivate;
+class AttachmentPart;
 
-class JobPrivate
+/**
+*/
+class MESSAGECOMPOSER_EXPORT AttachmentFromMimeContentJob : public JobBase
 {
+  Q_OBJECT
+
   public:
-    JobPrivate( Job *qq )
-      : composer( 0 )
-      , resultContent( 0 )
-      , q_ptr( qq )
-    {
-    }
+    explicit AttachmentFromMimeContentJob( const KMime::Content *content, QObject *parent = 0 );
+    virtual ~AttachmentFromMimeContentJob();
 
-    virtual ~JobPrivate()
-    {
-    }
+    virtual void start();
 
-    void init( QObject *parent );
-    void doNextSubjob();
+    const KMime::Content *mimeContent() const;
+    void setMimeContent( const KMime::Content *content );
 
-    Composer *composer;
-    KMime::Content *resultContent;
-    KMime::Content::List subjobContents;
+    /// does not delete it unless it failed...
+    AttachmentPart *attachmentPart() const;
 
-    Job *q_ptr;
-    Q_DECLARE_PUBLIC( Job )
+  private:
+    Q_DECLARE_PRIVATE( AttachmentFromMimeContentJob )
+
+    Q_PRIVATE_SLOT( d_func(), void doStart() )
 };
 
-}
+} // namespace MessageComposer
 
 #endif

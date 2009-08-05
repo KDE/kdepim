@@ -17,10 +17,16 @@ Questions:
 * Disable copy constructors of jobs...
 * Should drafts be encrypted to self?
 * Figure out if MessagePart & family need to be qobjects at all...
-* MessageComposer::Job and Akonadi::Job collide...
-* The errors are defined in Job and Composer does not inherit that.  I don't want
-  to make it inherit Job because it is really different from a Job (it doesn't
-  create a content, for starters).  But then apps need to compare with
-  Job::SomeError instead of Composer::SomeError, and need to include job.h just for
-  that :-(
+* copyright of composer is 1997, can I just say 'KMail authors'?
+* rethink error reporting (and write DESIGN). There is KJobUiDelegate too!
+* explain "outlook-compatible attachment names"...
+
+Random:
 * Think of where shared_ptrs should be used.
+* Probably make us-ascii *and* utf-8 be "fallback" charsets.
+* Plain text should still be 7bit if possible, even if html part has to be qupr.
+* Consider adding a GlobalPart and JobBase::globalPart() that would return the composer's
+  GlobalPart.  For things like charset, which are needed in MainTextJob for the texts,
+  SkeletonMessageJob for encoding the subject, and AttachmentJob for encoding things like
+  attachment names.  Perhaps share the GUI stuff in JobBase the same way.
+* The whole dummyComposer thing for jobs really annoys me :-/

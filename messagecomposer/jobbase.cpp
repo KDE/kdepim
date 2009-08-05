@@ -17,45 +17,43 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-
 #include "jobbase.h"
-#include "messagecomposer_export.h"
 
-namespace KMime {
-  class Message;
+#include "composer.h"
+#include "jobbase_p.h"
+
+#include <KDebug>
+
+using namespace MessageComposer;
+
+JobBase::JobBase( QObject *parent )
+  : KCompositeJob( parent )
+  , d_ptr( new JobBasePrivate( this ) )
+{
 }
 
-namespace MessageComposer {
-
-class SkeletonMessageJobPrivate;
-class InfoPart;
-
-/**
-  A message containing only the headers...
-*/
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+JobBase::JobBase( JobBasePrivate &dd, QObject *parent )
+  : KCompositeJob( parent )
+  , d_ptr( &dd )
 {
-  Q_OBJECT
+}
 
-  public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
+JobBase::~JobBase()
+{
+  delete d_ptr;
+}
 
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
+GlobalPart *JobBase::globalPart()
+{
+  for( QObject *obj = this; obj != 0; obj = obj->parent() ) {
+    Composer *composer = qobject_cast<Composer*>( obj );
+    if( composer ) {
+      return composer->globalPart();
+    }
+  }
 
-    KMime::Message *message() const;
+  kFatal() << "Job is not part of a Composer.";
+  return 0;
+}
 
-    virtual void start();
-
-  private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
-
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
-};
-
-} // namespace MessageComposer
-
-#endif
+#include "jobbase.moc"

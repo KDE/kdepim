@@ -19,23 +19,26 @@
 
 #include "textpart.h"
 
+using namespace KPIMTextEdit;
 using namespace MessageComposer;
 
 class TextPart::Private
 {
   public:
+    bool wordWrappingEnabled;
+    bool warnBadCharset;
     QString cleanPlainText;
     QString wrappedPlainText;
     QString cleanHtml;
-    QList<QByteArray> charsets;
-
-    // TODO related images
+    ImageList embeddedImages;
 };
 
 TextPart::TextPart( QObject *parent )
   : MessagePart( parent )
   , d( new Private )
 {
+  d->wordWrappingEnabled = true;
+  d->warnBadCharset = true;
 }
 
 TextPart::~TextPart()
@@ -43,14 +46,24 @@ TextPart::~TextPart()
   delete d;
 }
 
-QList<QByteArray> TextPart::charsets() const
+bool TextPart::isWordWrappingEnabled() const
 {
-  return d->charsets;
+  return d->wordWrappingEnabled;
 }
 
-void TextPart::setCharsets( const QList<QByteArray> &charsets )
+void TextPart::setWordWrappingEnabled( bool enabled )
 {
-  d->charsets = charsets;
+  d->wordWrappingEnabled = enabled;
+}
+
+bool TextPart::warnBadCharset() const
+{
+  return d->warnBadCharset;
+}
+
+void TextPart::setWarnBadCharset( bool warn )
+{
+  d->warnBadCharset = warn;
 }
 
 QString TextPart::cleanPlainText() const
@@ -75,8 +88,7 @@ void TextPart::setWrappedPlainText( const QString &text )
 
 bool TextPart::isHtmlUsed() const
 {
-  // TODO
-  return false;
+  return !d->cleanHtml.isEmpty();
 }
 
 QString TextPart::cleanHtml() const
@@ -87,6 +99,21 @@ QString TextPart::cleanHtml() const
 void TextPart::setCleanHtml( const QString &text )
 {
   d->cleanHtml = text;
+}
+
+bool TextPart::hasEmbeddedImages() const
+{
+  return !d->embeddedImages.isEmpty();
+}
+
+ImageList TextPart::embeddedImages() const
+{
+  return d->embeddedImages;
+}
+
+void TextPart::setEmbeddedImages( const ImageList &images )
+{
+  d->embeddedImages = images;
 }
 
 #include "textpart.moc"

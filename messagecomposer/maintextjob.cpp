@@ -19,10 +19,12 @@
 
 #include "maintextjob.h"
 
-#include "composer.h"
-#include "contentjob.h"
-#include "job_p.h"
+#include "contentjobbase_p.h"
+#include "globalpart.h"
+#include "multipartjob.h"
+#include "singlepartjob.h"
 #include "textpart.h"
+#include "util.h"
 
 #include <QTextCodec>
 
@@ -33,16 +35,17 @@
 #include <KMessageBox>
 
 #include <kmime/kmime_content.h>
-#include <kmime/kmime_util.h>
+
+#include <kpimtextedit/textedit.h>
 
 using namespace MessageComposer;
 using namespace KMime;
 
-class MessageComposer::MainTextJobPrivate : public JobPrivate
+class MessageComposer::MainTextJobPrivate : public ContentJobBasePrivate
 {
   public:
     MainTextJobPrivate( MainTextJob *qq )
-      : JobPrivate( qq )
+      : ContentJobBasePrivate( qq )
       , textPart( 0 )
     {
     }
@@ -50,16 +53,16 @@ class MessageComposer::MainTextJobPrivate : public JobPrivate
     bool chooseSourcePlainText();
     bool chooseCharsetAndEncode();
     bool chooseCharset();
-    void encodeTexts();
+    bool encodeTexts();
+    SinglepartJob *createPlainTextJob();
+    SinglepartJob *createHtmlJob();
+    SinglepartJob *createImageJob( const QSharedPointer<KPIMTextEdit::EmbeddedImage> &image );
 
     TextPart *textPart;
-    QList<QByteArray> charsets;
     QByteArray chosenCharset;
     QString sourcePlainText;
     QByteArray encodedPlainText;
     QByteArray encodedHtml;
-
-    // TODO related images
 
     Q_DECLARE_PUBLIC( MainTextJob )
 };
@@ -67,13 +70,12 @@ class MessageComposer::MainTextJobPrivate : public JobPrivate
 bool MainTextJobPrivate::chooseSourcePlainText()
 {
   Q_Q( MainTextJob );
-  Q_ASSERT( composer );
   Q_ASSERT( textPart );
-  if( composer->behaviour().isActionEnabled( Behaviour::UseWrapping ) ) {
+  if( textPart->isWordWrappingEnabled() ) {
     sourcePlainText = textPart->wrappedPlainText();
     if( sourcePlainText.isEmpty() &&
         !textPart->cleanPlainText().isEmpty() ) {
-      q->setError( Job::BugError );
+      q->setError( JobBase::BugError );
       q->setErrorText( i18n( "Asked to use word wrapping, but given no wrapped plain text." ) );
       return false;
     }
@@ -81,7 +83,7 @@ bool MainTextJobPrivate::chooseSourcePlainText()
     sourcePlainText = textPart->cleanPlainText();
     if( sourcePlainText.isEmpty() &&
         !textPart->wrappedPlainText().isEmpty() ) {
-      q->setError( Job::BugError );
+      q->setError( JobBase::BugError );
       q->setErrorText( i18n( "Asked not to use word wrapping, but given no clean plain text." ) );
       return false;
     }
@@ -92,36 +94,29 @@ bool MainTextJobPrivate::chooseSourcePlainText()
 bool MainTextJobPrivate::chooseCharsetAndEncode()
 {
   Q_Q( MainTextJob );
-  Q_ASSERT( composer );
-  const Behaviour &beh = composer->behaviour();
 
-  Q_ASSERT( textPart );
-  charsets = textPart->charsets();
-  foreach( const QByteArray &name, textPart->charsets() ) {
-    charsets << name.toLower();
-  }
-  if( beh.isActionEnabled( Behaviour::UseFallbackCharset ) ) {
-    charsets << "utf-8";
-    // TODO somehow save the chosen charset in a custom header if behaviour allows it...
-  }
+  const QList<QByteArray> charsets = q->globalPart()->charsets();
   if( charsets.isEmpty() ) {
-    q->setError( Job::BugError );
-    q->setErrorText( i18n( "No charsets were available for encoding,"
-                           " and the fallback charset was disabled." ) );
+    q->setError( JobBase::BugError );
+    q->setErrorText( i18n( "No charsets were available for encoding." ) );
     return false;
   }
 
-  if( chooseCharset() ) {
-    // Good, one of the charsets can encode the data without loss.
-    encodeTexts();
-    return true;
+  Q_ASSERT( textPart );
+  QString toTry = sourcePlainText;
+  if( textPart->isHtmlUsed() ) {
+    toTry = textPart->cleanHtml();
+  }
+  chosenCharset = selectCharset( charsets, toTry );
+  if( !chosenCharset.isEmpty() ) {
+    // Good, found a charset that encodes the data without loss.
+    return encodeTexts();
   } else {
     // No good charset was found.
-    if( beh.isActionEnabled( Behaviour::UseGui ) &&
-        beh.isActionEnabled( Behaviour::WarnBadCharset ) ) {
+    if( q->globalPart()->isGuiEnabled() && textPart->warnBadCharset() ) {
       // Warn the user and give them a chance to go back.
       int result = KMessageBox::warningYesNo(
-          composer->parentWidget(),
+          q->globalPart()->parentWidgetForGui(),
           i18n( "Encoding the message with %1 will lose some characters.\n"
                 "Do you want to continue?", QString::fromLatin1( charsets.first() ) ),
           i18n( "Some Characters Will Be Lost" ),
@@ -129,26 +124,24 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
           KGuiItem( i18n("Change Encoding") )
         );
       if( result == KMessageBox::No ) {
-        q->setError( Job::UserCancelledError );
+        q->setError( JobBase::UserCancelledError );
         q->setErrorText( i18n( "User decided to change the encoding." ) );
         return false;
       } else {
         chosenCharset = charsets.first();
-        encodeTexts();
-        return true;
+        return encodeTexts();
       }
-    } else if( beh.isActionEnabled( Behaviour::WarnBadCharset ) ) {
+    } else if( textPart->warnBadCharset() ) {
       // Should warn user but no Gui available.
-      kDebug() << "WarnBadCharset but not UseGui.";
-      q->setError( Job::UserError );
+      kDebug() << "warnBadCharset but Gui is disabled.";
+      q->setError( JobBase::UserError );
       q->setErrorText( i18n( "The selected encoding (%1) cannot fully encode the message.",
                              QString::fromLatin1( charsets.first() ) ) );
       return false;
     } else {
       // OK to go ahead with a bad charset.
       chosenCharset = charsets.first();
-      encodeTexts();
-      return true;
+      return encodeTexts();
 
       // FIXME: This is based on the assumption that QTextCodec will replace
       // unknown characters with '?' or some other meaningful thing.  The code in
@@ -161,55 +154,64 @@ bool MainTextJobPrivate::chooseCharsetAndEncode()
   return false;
 }
 
-bool MainTextJobPrivate::chooseCharset()
-{
-  Q_ASSERT( !charsets.isEmpty() );
-  Q_ASSERT( textPart );
-  QString toTry = sourcePlainText;
-  if( textPart->isHtmlUsed() ) {
-    toTry = textPart->cleanHtml();
-  }
-  foreach( const QByteArray &name, charsets ) {
-    // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
-    // the former knows us-ascii is latin1.
-    QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( name ) );
-    if( !codec ) {
-      kWarning() << "Could not get text codec for charset" << name;
-      continue;
-    }
-    if( codec->canEncode( toTry ) ) {
-      // Special check for us-ascii (needed because us-ascii is not exactly latin1).
-      if( name == "us-ascii" && !isUsAscii( toTry ) ) {
-        continue;
-      }
-      kDebug() << "Chosen charset" << name;
-      chosenCharset = name;
-      return true;
-    }
-  }
-  kDebug() << "No appropriate charset found.";
-  return false;
-}
-
-void MainTextJobPrivate::encodeTexts()
+bool MainTextJobPrivate::encodeTexts()
 {
   Q_Q( MainTextJob );
   QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( chosenCharset ) );
   if( !codec ) {
     kError() << "Could not get text codec for charset" << chosenCharset;
-    q->setError( Job::BugError );
+    q->setError( JobBase::BugError );
     q->setErrorText( i18n( "Could not get text codec for charset \"%1\".", QString::fromLatin1( chosenCharset ) ) );
-    return;
+    return false;
   }
   encodedPlainText = codec->fromUnicode( sourcePlainText );
   encodedHtml = codec->fromUnicode( textPart->cleanHtml() );
   kDebug() << "Done.";
+  return true;
 }
 
+SinglepartJob *MainTextJobPrivate::createPlainTextJob()
+{
+  SinglepartJob *cjob = new SinglepartJob; // No parent.
+  cjob->contentType()->setMimeType( "text/plain" );
+  cjob->contentType()->setCharset( chosenCharset );
+  cjob->setData( encodedPlainText );
+  // TODO standard recommends Content-ID.
+  return cjob;
+}
 
+SinglepartJob *MainTextJobPrivate::createHtmlJob()
+{
+  SinglepartJob *cjob = new SinglepartJob; // No parent.
+  cjob->contentType()->setMimeType( "text/html" );
+  cjob->contentType()->setCharset( chosenCharset );
+  QByteArray data = KPIMTextEdit::TextEdit::imageNamesToContentIds( encodedHtml,
+      textPart->embeddedImages() );
+  cjob->setData( data );
+  // TODO standard recommends Content-ID.
+  return cjob;
+}
+
+SinglepartJob *MainTextJobPrivate::createImageJob( const QSharedPointer<KPIMTextEdit::EmbeddedImage> &image )
+{
+  Q_Q( MainTextJob );
+
+  // The image is a PNG encoded with base64.
+  SinglepartJob *cjob = new SinglepartJob; // No parent.
+  cjob->contentType()->setMimeType( "image/png" );
+  const QByteArray charset = selectCharset( q->globalPart()->charsets( true ), image->imageName );
+  Q_ASSERT( !charset.isEmpty() );
+  cjob->contentType()->setName( image->imageName, charset );
+  cjob->contentTransferEncoding()->setEncoding( Headers::CEbase64 );
+  cjob->contentTransferEncoding()->setDecoded( false ); // It is already encoded.
+  cjob->contentID()->setIdentifier( image->contentID.toLatin1() );
+  kDebug() << "cid" << cjob->contentID()->identifier();
+  cjob->setData( image->image );
+  return cjob;
+}
 
 MainTextJob::MainTextJob( TextPart *textPart, QObject *parent )
-  : Job( *new MainTextJobPrivate( this ), parent )
+  : ContentJobBase( *new MainTextJobPrivate( this ), parent )
 {
   Q_D( MainTextJob );
   d->textPart = textPart;
@@ -235,7 +237,6 @@ void MainTextJob::doStart()
 {
   Q_D( MainTextJob );
   Q_ASSERT( d->textPart );
-  Q_ASSERT( d->composer );
 
   // Word wrapping.
   if( !d->chooseSourcePlainText() ) {
@@ -254,21 +255,33 @@ void MainTextJob::doStart()
   }
 
   // Assemble the Content.
+  SinglepartJob *plainJob = d->createPlainTextJob();
   if( d->encodedHtml.isEmpty() ) {
     kDebug() << "Making text/plain";
     // Content is text/plain.
-    ContentJob *cjob = new ContentJob( this );
-    cjob->contentType()->setMimeType( "text/plain" );
-    cjob->contentType()->setCharset( d->chosenCharset );
-    cjob->setData( d->encodedPlainText );
-    if( !d->textPart->isAutoTransferEncoding() ) {
-      cjob->contentTransferEncoding()->setEncoding( d->textPart->overrideTransferEncoding() );
-    }
+    appendSubjob( plainJob );
   } else {
-    // TODO Handle multipart/alternative and multipart/related.
-    Q_ASSERT( false );
+    MultipartJob *alternativeJob = new MultipartJob;
+    alternativeJob->setMultipartSubtype( "alternative" );
+    alternativeJob->appendSubjob( plainJob ); // text/plain first.
+    alternativeJob->appendSubjob( d->createHtmlJob() ); // text/html second.
+    if( !d->textPart->hasEmbeddedImages() ) {
+      kDebug() << "Have no images.  Making multipart/alternative.";
+      // Content is multipart/alternative.
+      appendSubjob( alternativeJob );
+    } else {
+      kDebug() << "Have related images.  Making multipart/related.";
+      // Content is multipart/related with a multipart/alternative sub-Content.
+      MultipartJob *multipartJob = new MultipartJob;
+      multipartJob->setMultipartSubtype( "related" );
+      multipartJob->appendSubjob( alternativeJob );
+      foreach( const QSharedPointer<KPIMTextEdit::EmbeddedImage> &image, d->textPart->embeddedImages() ) {
+        multipartJob->appendSubjob( d->createImageJob( image ) );
+      }
+      appendSubjob( multipartJob );
+    }
   }
-  Job::doStart();
+  ContentJobBase::doStart();
 }
 
 void MainTextJob::process()

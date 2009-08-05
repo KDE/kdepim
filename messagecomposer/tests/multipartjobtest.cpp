@@ -26,7 +26,8 @@
 using namespace KMime;
 
 #include <messagecomposer/composer.h>
-#include <messagecomposer/contentjob.h>
+#include <messagecomposer/globalpart.h>
+#include <messagecomposer/singlepartjob.h>
 #include <messagecomposer/multipartjob.h>
 using namespace MessageComposer;
 
@@ -44,13 +45,13 @@ void MultipartJobTest::testMultipartMixed()
   QByteArray type2( "application/x-mors-ontologica" );
   
   {
-    ContentJob *cjob = new ContentJob( mjob );
+    SinglepartJob *cjob = new SinglepartJob( mjob );
     cjob->setData( data1 );
     cjob->contentType()->setMimeType( type1 );
   }
 
   {
-    ContentJob *cjob = new ContentJob( mjob );
+    SinglepartJob *cjob = new SinglepartJob( mjob );
     cjob->setData( data2 );
     cjob->contentType()->setMimeType( type2 );
   }
@@ -84,12 +85,12 @@ void MultipartJobTest::test8BitPropagation()
   // If a subpart is 8bit, its parent must be 8bit too.
 
   Composer *composer = new Composer;
-  composer->behaviour().enableAction( Behaviour::EightBitTransport );
+  composer->globalPart()->set8BitAllowed( true );
   MultipartJob *mjob = new MultipartJob( composer );
   mjob->setMultipartSubtype( "mixed" );
   MultipartJob *mjob2 = new MultipartJob( mjob );
   mjob2->setMultipartSubtype( "mixed" );
-  ContentJob *cjob = new ContentJob( mjob2 );
+  SinglepartJob *cjob = new SinglepartJob( mjob2 );
   QByteArray data( "time is so short and I'm sure there must be something more" );
   cjob->setData( data );
   cjob->contentTransferEncoding()->setEncoding( Headers::CE8Bit );

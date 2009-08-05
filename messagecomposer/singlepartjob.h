@@ -17,45 +17,51 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
-#define MESSAGECOMPOSER_SKELETONMESSAGEJOB_H
+#ifndef MESSAGECOMPOSER_SINGLEPARTJOB_H
+#define MESSAGECOMPOSER_SINGLEPARTJOB_H
 
-#include "jobbase.h"
+#include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
 namespace KMime {
-  class Message;
+  namespace Headers {
+    class ContentDisposition;
+    class ContentID;
+    class ContentTransferEncoding;
+    class ContentType;
+  }
 }
 
 namespace MessageComposer {
 
-class SkeletonMessageJobPrivate;
-class InfoPart;
+class SinglepartJobPrivate;
 
 /**
-  A message containing only the headers...
 */
-class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
+class MESSAGECOMPOSER_EXPORT SinglepartJob : public ContentJobBase
 {
   Q_OBJECT
 
   public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
-    virtual ~SkeletonMessageJob();
+    SinglepartJob( QObject *parent = 0 );
+    virtual ~SinglepartJob();
 
-    InfoPart *infoPart() const;
-    void setInfoPart( InfoPart *part );
+    QByteArray data() const;
+    void setData( const QByteArray &data );
 
-    KMime::Message *message() const;
+    /// created on first call. delete them if you don't use the content
+    KMime::Headers::ContentDisposition *contentDisposition();
+    KMime::Headers::ContentID *contentID();
+    KMime::Headers::ContentTransferEncoding *contentTransferEncoding();
+    KMime::Headers::ContentType *contentType();
 
-    virtual void start();
+  protected Q_SLOTS:
+    virtual void process();
 
   private:
-    Q_DECLARE_PRIVATE( SkeletonMessageJob )
-
-    Q_PRIVATE_SLOT( d_func(), void doStart() )
+    Q_DECLARE_PRIVATE( SinglepartJob )
 };
 
-} // namespace MessageComposer
+}
 
 #endif

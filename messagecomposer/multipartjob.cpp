@@ -18,7 +18,7 @@
 */
 
 #include "multipartjob.h"
-#include "job_p.h"
+#include "contentjobbase_p.h"
 
 #include <KDebug>
 
@@ -27,11 +27,11 @@
 using namespace MessageComposer;
 using namespace KMime;
 
-class MessageComposer::MultipartJobPrivate : public JobPrivate
+class MessageComposer::MultipartJobPrivate : public ContentJobBasePrivate
 {
   public:
     MultipartJobPrivate( MultipartJob *qq )
-      : JobPrivate( qq )
+      : ContentJobBasePrivate( qq )
     {
     }
 
@@ -40,7 +40,7 @@ class MessageComposer::MultipartJobPrivate : public JobPrivate
 };
 
 MultipartJob::MultipartJob( QObject *parent )
-  : Job( *new MultipartJobPrivate( this ), parent )
+  : ContentJobBase( *new MultipartJobPrivate( this ), parent )
 {
 }
 
@@ -73,6 +73,7 @@ void MultipartJob::process()
     d->resultContent->addContent( c );
     if( c->contentTransferEncoding()->encoding() == Headers::CE8Bit ) {
       d->resultContent->contentTransferEncoding()->setEncoding( Headers::CE8Bit );
+      break;
     }
   }
   kDebug() << "Created" << d->resultContent->contentType()->name() << "content with"

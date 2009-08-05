@@ -26,6 +26,7 @@
 using namespace KMime;
 
 #include <messagecomposer/composer.h>
+#include <messagecomposer/globalpart.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
 using namespace MessageComposer;
@@ -37,7 +38,7 @@ void ComposerTest::testCTEErrors()
   // First test that the composer succeeds at all.
   {
     Composer *composer = new Composer;
-    composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+    composer->globalPart()->setFallbackCharsetEnabled( true );
     composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
     composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
     composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
@@ -46,31 +47,33 @@ void ComposerTest::testCTEErrors()
     kDebug() << composer->messages().first()->message()->encodedContent();
   }
 
+#if 0 // test with attachments
   // unsupported CTE -> error.
   {
     Composer *composer = new Composer;
-    composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
+    composer->globalPart()->setFallbackCharsetEnabled( true );
     composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
     composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
     composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
-    composer->textPart()->setOverrideTransferEncoding( Headers::CEbinary );
+    composer->textPart()->setOverrideTransferEncoding( Headers::CEbinary ); // DEAD DEAD DEAD
     QVERIFY( !composer->exec() );
     QCOMPARE( composer->error(), int( Job::BugError ) );
     kDebug() << composer->errorString();
   }
 
-  // 8bit part when not EightBitTransport -> error.
+  // 8bit part when is8BitAllowed false -> error.
   {
     Composer *composer = new Composer;
     composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
     composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
     composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
     composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
-    composer->textPart()->setOverrideTransferEncoding( Headers::CE8Bit );
+    composer->textPart()->setOverrideTransferEncoding( Headers::CE8Bit ); // DEAD DEAD DEAD
     QVERIFY( !composer->exec() );
     QCOMPARE( composer->error(), int( Job::BugError ) );
     kDebug() << composer->errorString();
   }
+#endif
 }
 
 #include "composertest.moc"

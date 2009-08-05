@@ -25,10 +25,10 @@
 #include "messagecomposer_export.h"
 #include "messagepart.h"
 
+#include <kpimtextedit/textedit.h>
+
 namespace MessageComposer {
 
-/** setOverrideTransferEncoding for a textPart means setting it for the plain text part,
-  and possibly for the html part. */
 class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
 {
   Q_OBJECT
@@ -37,8 +37,12 @@ class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
     explicit TextPart( QObject *parent = 0 );
     virtual ~TextPart();
 
-    QList<QByteArray> charsets() const;
-    void setCharsets( const QList<QByteArray> &charsets );
+    // default true
+    bool isWordWrappingEnabled() const;
+    void setWordWrappingEnabled( bool enabled );
+    // default true
+    bool warnBadCharset() const;
+    void setWarnBadCharset( bool warn );
 
     QString cleanPlainText() const;
     void setCleanPlainText( const QString &text );
@@ -48,6 +52,10 @@ class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
     bool isHtmlUsed() const;
     QString cleanHtml() const;
     void setCleanHtml( const QString &text );
+
+    bool hasEmbeddedImages() const;
+    KPIMTextEdit::ImageList embeddedImages() const;
+    void setEmbeddedImages( const KPIMTextEdit::ImageList &images );
 
   private:
     class Private;

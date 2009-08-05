@@ -17,28 +17,29 @@
   02110-1301, USA.
 */
 
-#include "contentjob.h"
+#include "singlepartjob.h"
 
 #include "composer.h"
-#include "job_p.h"
+#include "contentjobbase_p.h"
+#include "globalpart.h"
 #include "util.h"
 
 #include <KDebug>
 #include <KLocalizedString>
 
-#include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
 
 using namespace MessageComposer;
 using namespace KMime;
 
-class MessageComposer::ContentJobPrivate : public JobPrivate
+class MessageComposer::SinglepartJobPrivate : public ContentJobBasePrivate
 {
   public:
-    ContentJobPrivate( ContentJob *qq )
-      : JobPrivate( qq )
+    SinglepartJobPrivate( SinglepartJob *qq )
+      : ContentJobBasePrivate( qq )
       , contentDisposition( 0 )
+      , contentID( 0 )
       , contentTransferEncoding( 0 )
       , contentType( 0 )
     {
@@ -48,46 +49,21 @@ class MessageComposer::ContentJobPrivate : public JobPrivate
 
     QByteArray data;
     Headers::ContentDisposition *contentDisposition;
+    Headers::ContentID *contentID;
     Headers::ContentTransferEncoding *contentTransferEncoding;
     Headers::ContentType *contentType;
 
-    Q_DECLARE_PUBLIC( ContentJob )
+    Q_DECLARE_PUBLIC( SinglepartJob )
 };
 
-bool ContentJobPrivate::chooseCTE()
+bool SinglepartJobPrivate::chooseCTE()
 {
-  // Based on KMail code by:
-  // Copyright 2009 Thomas McGuire <mcguire@kde.org>
+  Q_Q( SinglepartJob );
 
-  Q_Q( ContentJob );
-  Q_ASSERT( composer );
-  QList<Headers::contentEncoding> allowed;
-  CharFreq cf( data );
+  QList<Headers::contentEncoding> allowed = encodingsForData( data );
 
-  switch ( cf.type() ) {
-    case CharFreq::SevenBitText:
-      allowed << Headers::CE7Bit;
-    case CharFreq::EightBitText:
-      if ( composer->behaviour().isActionEnabled( Behaviour::EightBitTransport ) )
-        allowed << Headers::CE8Bit;
-    case CharFreq::SevenBitData:
-      if ( cf.printableRatio() > 5.0/6.0 ) {
-        // let n the length of data and p the number of printable chars.
-        // Then base64 \approx 4n/3; qp \approx p + 3(n-p)
-        // => qp < base64 iff p > 5n/6.
-        allowed << Headers::CEquPr;
-        allowed << Headers::CEbase64;
-      } else {
-        allowed << Headers::CEbase64;
-        allowed << Headers::CEquPr;
-      }
-      break;
-    case CharFreq::EightBitData:
-      allowed << Headers::CEbase64;
-      break;
-    case CharFreq::None:
-    default:
-      Q_ASSERT( false );
+  if( !q->globalPart()->is8BitAllowed() ) {
+    allowed.removeAll( Headers::CE8Bit );
   }
 
 #if 0 //TODO signing
@@ -105,7 +81,7 @@ bool ContentJobPrivate::chooseCTE()
   if( contentTransferEncoding ) {
     // Specific CTE set.  Check that our data fits in it.
     if( !allowed.contains( contentTransferEncoding->encoding() ) ) {
-      q->setError( Job::BugError );
+      q->setError( JobBase::BugError );
       q->setErrorText( i18n( "%1 Content-Transfer-Encoding cannot correctly encode this message.",
           nameForEncoding( contentTransferEncoding->encoding() ) ) );
       return false;
@@ -120,57 +96,66 @@ bool ContentJobPrivate::chooseCTE()
   return true;
 }
 
-ContentJob::ContentJob( QObject *parent )
-  : Job( *new ContentJobPrivate( this ), parent )
+SinglepartJob::SinglepartJob( QObject *parent )
+  : ContentJobBase( *new SinglepartJobPrivate( this ), parent )
 {
 }
 
-ContentJob::~ContentJob()
+SinglepartJob::~SinglepartJob()
 {
 }
 
-QByteArray ContentJob::data() const
+QByteArray SinglepartJob::data() const
 {
-  Q_D( const ContentJob );
+  Q_D( const SinglepartJob );
   return d->data;
 }
 
-void ContentJob::setData( const QByteArray &data )
+void SinglepartJob::setData( const QByteArray &data )
 {
-  Q_D( ContentJob );
+  Q_D( SinglepartJob );
   d->data = data;
 }
 
-Headers::ContentDisposition *ContentJob::contentDisposition()
+Headers::ContentDisposition *SinglepartJob::contentDisposition()
 {
-  Q_D( ContentJob );
+  Q_D( SinglepartJob );
   if( !d->contentDisposition ) {
     d->contentDisposition = new Headers::ContentDisposition;
   }
   return d->contentDisposition;
 }
 
-Headers::ContentTransferEncoding *ContentJob::contentTransferEncoding()
+Headers::ContentID *SinglepartJob::contentID()
 {
-  Q_D( ContentJob );
+  Q_D( SinglepartJob );
+  if( !d->contentID ) {
+    d->contentID = new Headers::ContentID;
+  }
+  return d->contentID;
+}
+
+Headers::ContentTransferEncoding *SinglepartJob::contentTransferEncoding()
+{
+  Q_D( SinglepartJob );
   if( !d->contentTransferEncoding ) {
     d->contentTransferEncoding = new Headers::ContentTransferEncoding;
   }
   return d->contentTransferEncoding;
 }
 
-Headers::ContentType *ContentJob::contentType()
+Headers::ContentType *SinglepartJob::contentType()
 {
-  Q_D( ContentJob );
+  Q_D( SinglepartJob );
   if( !d->contentType ) {
     d->contentType = new Headers::ContentType;
   }
   return d->contentType;
 }
 
-void ContentJob::process()
+void SinglepartJob::process()
 {
-  Q_D( ContentJob );
+  Q_D( SinglepartJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
   d->resultContent = new Content;
 
@@ -184,6 +169,10 @@ void ContentJob::process()
   if( d->contentDisposition ) {
     d->resultContent->setHeader( d->contentDisposition );
     d->contentDisposition->setParent( d->resultContent );
+  }
+  if( d->contentID ) {
+    d->resultContent->setHeader( d->contentID );
+    d->contentID->setParent( d->resultContent );
   }
   Q_ASSERT( d->contentTransferEncoding ); // chooseCTE() created it if it didn't exist.
   {
@@ -206,4 +195,4 @@ void ContentJob::process()
   emitResult();
 }
 
-#include "contentjob.moc"
+#include "singlepartjob.moc"

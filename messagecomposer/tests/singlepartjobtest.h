@@ -17,17 +17,18 @@
   02110-1301, USA.
 */
 
-#ifndef CONTENTJOBTEST_H
-#define CONTENTJOBTEST_H
+#ifndef SINGLEPARTJOBTEST_H
+#define SINGLEPARTJOBTEST_H
 
 #include <QtCore/QObject>
 
-class ContentJobTest : public QObject
+class SinglepartJobTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
     void testContent();
     void testContentDisposition();
+    void testContentID();
     void testContentType();
     void testContentTransferEncoding();
 };

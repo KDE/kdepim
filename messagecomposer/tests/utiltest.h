@@ -17,17 +17,16 @@
   02110-1301, USA.
 */
 
-#include <QtCore/QSharedData>
+#ifndef UTILTEST_H
+#define UTILTEST_H
 
-#ifndef MESSAGECOMPOSER_BEHAVIOUR_P_H
-#define MESSAGECOMPOSER_BEHAVIOUR_P_H
+#include <QtCore/QObject>
 
-namespace MessageComposer {
-
-/**
-  @internal
-*/
-
-}
+class UtilTest : public QObject
+{
+  Q_OBJECT
+  private Q_SLOTS:
+    void testSelectCharset();
+};
 
 #endif

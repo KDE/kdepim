@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+
   Based on ideas by Stephen Kelly.
 
   This library is free software; you can redistribute it and/or modify it
@@ -18,14 +19,11 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_JOB_H
-#define MESSAGECOMPOSER_JOB_H
+#ifndef MESSAGECOMPOSER_CONTENTJOBBASE_H
+#define MESSAGECOMPOSER_CONTENTJOBBASE_H
 
+#include "jobbase.h"
 #include "messagecomposer_export.h"
-
-#include <QtCore/QList>
-
-#include <KDE/KCompositeJob>
 
 namespace KMime {
   class Content;
@@ -33,29 +31,18 @@ namespace KMime {
 
 namespace MessageComposer {
 
-class Composer;
-class JobPrivate;
+class ContentJobBasePrivate;
 
-class MESSAGECOMPOSER_EXPORT Job : public KCompositeJob
+class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
 {
   Q_OBJECT
 
   public:
-    typedef QList<Job*> List;
-
-    enum Error
-    {
-      BugError = UserDefinedError + 1,
-      IncompleteError,
-      UserCancelledError,
-      UserError = UserDefinedError + 42
-    };
-
-    explicit Job( QObject *parent = 0 );
-    virtual ~Job();
+    explicit ContentJobBase( QObject *parent = 0 );
+    virtual ~ContentJobBase();
 
     /**
-      Starts processing this Job asynchronously.  
+      Starts processing this ContentJobBase asynchronously.  
       This processes all children in order first, then calls process().
       Emits finished() after all processing is done, and the
       content is reachable through content().
@@ -63,14 +50,23 @@ class MESSAGECOMPOSER_EXPORT Job : public KCompositeJob
     virtual void start();
 
     /**
-      Get the resulting KMime::Content that the Job has generated.
+      Get the resulting KMime::Content that the ContentJobBase has generated.
       Jobs never delete their content.
     */
     KMime::Content *content() const;
 
+    /**
+      This is meant to be used instead of KCompositeJob::addSubjob(), making
+      it possible to add subjobs from the outside.
+      Transfers ownership of the @p job to this object.
+    */
+    bool appendSubjob( ContentJobBase *job );
+
   protected:
-    JobPrivate *const d_ptr;
-    Job( JobPrivate &dd, QObject *parent );
+    ContentJobBase( ContentJobBasePrivate &dd, QObject *parent );
+
+    /** Use appendSubjob() instead. */
+    virtual bool addSubjob( KJob *job );
 
   protected Q_SLOTS:
     /**
@@ -91,10 +87,7 @@ class MESSAGECOMPOSER_EXPORT Job : public KCompositeJob
     virtual void slotResult( KJob *job );
 
   private:
-    friend class Composer;
-    void setComposer( Composer *composer );
-
-    Q_DECLARE_PRIVATE( Job )
+    Q_DECLARE_PRIVATE( ContentJobBase )
 };
 
 } // namespace MessageComposer

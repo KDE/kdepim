@@ -21,61 +21,51 @@
 #define MESSAGECOMPOSER_COMPOSER_H
 
 #include "attachmentpart.h"
-#include "behaviour.h"
 #include "finalmessage.h"
-#include "job.h"
+#include "jobbase.h"
 #include "messagecomposer_export.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 
-#include <KDE/KCompositeJob>
-
 namespace MessageComposer {
 
+class ComposerPrivate;
+class GlobalPart;
 class InfoPart;
 class TextPart;
 
 /**
   The message composer.
 */
-class MESSAGECOMPOSER_EXPORT Composer : public KCompositeJob
+class MESSAGECOMPOSER_EXPORT Composer : public JobBase
 {
   Q_OBJECT
 
   public:
-    // TODO figure out how to share Job::Error (See PLAN).
-
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
-    Behaviour &behaviour();
-    void setBehaviour( const Behaviour &beh );
-    QWidget *parentWidget() const; // TODO make this part of Behaviour??
-    void setParentWidget( QWidget *widget );
     FinalMessage::List messages() const;
 
+    GlobalPart *globalPart();
     InfoPart *infoPart();
-    //void setInfoPart( InfoPart *part, bool delOldPart = true );
     TextPart *textPart();
-    //void setTextPart( TextPart *part, bool delOldPart = true );
-    // TODO figure out how to make this extensible...
-    // and how to handle d->composer in MessagePart...
     AttachmentPart::List attachmentParts();
+    // takes ownership
     void addAttachmentPart( AttachmentPart *part );
+    // sets parent to 0
     void removeAttachmentPart( AttachmentPart *part, bool del = true );
 
   public Q_SLOTS:
     virtual void start();
 
   private:
-    class Private;
-    friend class Private;
-    Private *const d;
+    Q_DECLARE_PRIVATE( Composer )
 
-    Q_PRIVATE_SLOT( d, void doStart() )
-    Q_PRIVATE_SLOT( d, void skeletonJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d, void beforeCryptoJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void doStart() )
+    Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void beforeCryptoJobFinished(KJob*) )
 };
 
 }

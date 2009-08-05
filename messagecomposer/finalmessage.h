@@ -31,6 +31,7 @@
 namespace MessageComposer {
 
 class Composer;
+class ComposerPrivate;
 
 /**
 */
@@ -50,6 +51,7 @@ class MESSAGECOMPOSER_EXPORT FinalMessage
   private:
     // Only used by our friend the Composer.
     friend class Composer;
+    friend class ComposerPrivate; // FIXME better ideas?
     explicit FinalMessage( KMime::Message *message = 0 );
     virtual ~FinalMessage();
 

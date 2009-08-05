@@ -20,10 +20,10 @@
 #include "skeletonmessagejob.h"
 
 #include "infopart.h"
-#include "job_p.h"
-#include "textpart.h"
+#include "jobbase_p.h"
 
 #include <QTextCodec>
+#include <QTimer>
 
 #include <KCharsets>
 #include <KDebug>
@@ -34,22 +34,88 @@
 using namespace MessageComposer;
 using namespace KMime;
 
-class MessageComposer::SkeletonMessageJobPrivate : public JobPrivate
+class MessageComposer::SkeletonMessageJobPrivate : public JobBasePrivate
 {
   public:
     SkeletonMessageJobPrivate( SkeletonMessageJob *qq )
-      : JobPrivate( qq )
+      : JobBasePrivate( qq )
       , infoPart( 0 )
+      , message( 0 )
     {
     }
 
+    void doStart(); // slot
+
     InfoPart *infoPart;
+    Message *message;
+
+    Q_DECLARE_PUBLIC( SkeletonMessageJob )
 };
 
+void SkeletonMessageJobPrivate::doStart()
+{
+  Q_Q( SkeletonMessageJob );
+
+  Q_ASSERT( infoPart );
+  Q_ASSERT( message == 0 );
+  message = new Message;
+
+  // From:
+  {
+    Headers::From *from = new Headers::From( message );
+    Types::Mailbox address;
+    address.fromUnicodeString( infoPart->from() );
+    from->addAddress( address );
+    message->setHeader( from );
+  }
+  
+  // To:
+  {
+    Headers::To *to = new Headers::To( message );
+    foreach( const QString &a, infoPart->to() ) {
+      Types::Mailbox address;
+      address.fromUnicodeString( a );
+      to->addAddress( address );
+    }
+    message->setHeader( to );
+  }
+
+  // Cc:
+  {
+    Headers::Cc *cc = new Headers::Cc( message );
+    foreach( const QString &a, infoPart->cc() ) {
+      Types::Mailbox address;
+      address.fromUnicodeString( a );
+      cc->addAddress( address );
+    }
+    message->setHeader( cc );
+  }
+
+  // Bcc:
+  {
+    Headers::Bcc *bcc = new Headers::Bcc( message );
+    foreach( const QString &a, infoPart->bcc() ) {
+      Types::Mailbox address;
+      address.fromUnicodeString( a );
+      bcc->addAddress( address );
+    }
+    message->setHeader( bcc );
+  }
+
+  // Subject:
+  {
+    Headers::Subject *subject = new Headers::Subject( message );
+    subject->fromUnicodeString( infoPart->subject(), "utf-8" );
+    // TODO should we be more specific about the charset?
+    message->setHeader( subject );
+  }
+
+  q->emitResult(); // Success.
+}
 
 
 SkeletonMessageJob::SkeletonMessageJob( InfoPart *infoPart, QObject *parent )
-  : Job( *new SkeletonMessageJobPrivate( this ), parent )
+  : JobBase( *new SkeletonMessageJobPrivate( this ), parent )
 {
   Q_D( SkeletonMessageJob );
   d->infoPart = infoPart;
@@ -74,69 +140,12 @@ void SkeletonMessageJob::setInfoPart( InfoPart *part )
 Message *SkeletonMessageJob::message() const
 {
   Q_D( const SkeletonMessageJob );
-  Q_ASSERT( d->resultContent );
-  Q_ASSERT( dynamic_cast<Message*>( d->resultContent ) );
-  return static_cast<Message*>( d->resultContent );
+  return d->message;
 }
 
-void SkeletonMessageJob::process()
+void SkeletonMessageJob::start()
 {
-  Q_D( SkeletonMessageJob );
-  Q_ASSERT( d->infoPart );
-  Q_ASSERT( d->subjobContents.isEmpty() ); // Cannot have subjobs.
-  Message *message = new Message;
-
-  // From:
-  {
-    Headers::From *from = new Headers::From( message );
-    Types::Mailbox address;
-    address.fromUnicodeString( d->infoPart->from() );
-    from->addAddress( address );
-    message->setHeader( from );
-  }
-  
-  // To:
-  {
-    Headers::To *to = new Headers::To( message );
-    foreach( const QString &a, d->infoPart->to() ) {
-      Types::Mailbox address;
-      address.fromUnicodeString( a );
-      to->addAddress( address );
-    }
-    message->setHeader( to );
-  }
-
-  // Cc:
-  {
-    Headers::Cc *cc = new Headers::Cc( message );
-    foreach( const QString &a, d->infoPart->cc() ) {
-      Types::Mailbox address;
-      address.fromUnicodeString( a );
-      cc->addAddress( address );
-    }
-    message->setHeader( cc );
-  }
-
-  // Bcc:
-  {
-    Headers::Bcc *bcc = new Headers::Bcc( message );
-    foreach( const QString &a, d->infoPart->bcc() ) {
-      Types::Mailbox address;
-      address.fromUnicodeString( a );
-      bcc->addAddress( address );
-    }
-    message->setHeader( bcc );
-  }
-
-  // Subject:
-  {
-    Headers::Subject *subject = new Headers::Subject( message );
-    subject->fromUnicodeString( d->infoPart->subject(), QByteArray() ); // TODO charset??
-    message->setHeader( subject );
-  }
-
-  d->resultContent = message;
-  emitResult();
+  QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
 #include "skeletonmessagejob.moc"

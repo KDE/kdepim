@@ -1,6 +1,5 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
-  Based on ideas by Stephen Kelly.
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -21,7 +20,7 @@
 #ifndef MESSAGECOMPOSER_MAINTEXTJOB_H
 #define MESSAGECOMPOSER_MAINTEXTJOB_H
 
-#include "job.h"
+#include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
 namespace MessageComposer {
@@ -29,7 +28,7 @@ namespace MessageComposer {
 class MainTextJobPrivate;
 class TextPart;
 
-class MESSAGECOMPOSER_EXPORT MainTextJob : public Job
+class MESSAGECOMPOSER_EXPORT MainTextJob : public ContentJobBase
 {
   Q_OBJECT
 
