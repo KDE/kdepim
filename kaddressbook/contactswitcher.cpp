@@ -108,7 +108,7 @@ void ContactSwitcher::updateStatus()
   mPreviousButton->setEnabled( row != 0 );
   mNextButton->setEnabled( row != (mView->model()->rowCount() - 1) );
 
-  mStatusLabel->setText( i18n( "%1 out of %2" ).arg( row + 1 ).arg( mView->model()->rowCount() ) );
+  mStatusLabel->setText( i18n( "%1 out of %2", row + 1,  mView->model()->rowCount() ) );
 }
 
 #include "contactswitcher.moc"
