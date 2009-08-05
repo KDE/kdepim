@@ -35,7 +35,7 @@ include_directories(
 )
 
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
-target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} kleo kmime kpimtextedit )
+target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} kleo ${QGPGME_LIBRARIES} )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )

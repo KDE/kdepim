@@ -67,7 +67,7 @@ void AttachmentFromUrlJobTest::testAttachments()
   ljob = 0;
 
   QCOMPARE( part->name(), filename );
-  QCOMPARE( part->filename(), filename );
+  QCOMPARE( part->fileName(), filename );
   QVERIFY( !part->isInline() );
   QCOMPARE( part->mimeType(), mimetype );
   QCOMPARE( part->data(), data );

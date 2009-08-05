@@ -73,7 +73,7 @@ void AttachmentFromMimeContentJobPrivate::doStart()
     part->setEncoding( content->contentTransferEncoding()->encoding() );
   }
   if( content->contentDisposition( false ) ) {
-    //part->setFileName( content->contentDisposition()->filename() ); TODO support filename
+    part->setFileName( content->contentDisposition()->filename() );
     part->setInline( content->contentDisposition()->disposition() == KMime::Headers::CDinline );
   }
   if( content->contentDescription( false ) ) {

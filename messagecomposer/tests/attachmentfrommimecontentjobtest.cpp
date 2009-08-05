@@ -20,7 +20,12 @@
 #include "attachmentfrommimecontentjobtest.h"
 #include "qtest_messagecomposer.h"
 
+#include <KDebug>
 #include <qtest_kde.h>
+
+#include "kmime/kmime_content.h"
+#include "kmime/kmime_headers.h"
+using namespace KMime;
 
 #include <messagecomposer/attachmentfrommimecontentjob.h>
 #include <messagecomposer/composer.h>
@@ -32,23 +37,26 @@ QTEST_KDEMAIN( AttachmentFromMimeContentJobTest, NoGUI )
 void AttachmentFromMimeContentJobTest::testAttachment()
 {
   const QByteArray mimeType( "x-some/x-type" );
-  const QString name( "name abcd" );
-  const QString description( "description" );
-  const QString charset( "utf-8" );
-  const QString fileName( "filename abcd" );
+  const QString name = QString::fromLatin1( "name abcd" );
+  const QString description = QString::fromLatin1( "description" );
+  const QByteArray charset( "utf-8" );
+  const QString fileName = QString::fromLatin1( "filename abcd" );
   const Headers::contentEncoding encoding = Headers::CEquPr;
   const Headers::contentDisposition disposition = Headers::CDinline;
   const QByteArray data( "ocean soul" );
 
-  KMime::Content *content = new KMime::Content;
+  Content *content = new Content;
   content->contentType()->setMimeType( mimeType );
-  content->contentType()->setName( name );
+  content->contentType()->setName( name, charset );
   content->contentType()->setCharset( charset );
   content->contentTransferEncoding()->setEncoding( encoding );
   content->contentDisposition()->setDisposition( disposition );
-  content->contentDisposition()->setFileName( fileName );
-  content->contentDescription()->setDescription( description, charset );
+  content->contentDisposition()->setFilename( fileName );
+  content->contentDescription()->fromUnicodeString( description, charset );
+  content->setBody( data );
   content->assemble();
+  //kDebug() << "Encoded content:" << content->encodedContent();
+  //kDebug() << "Decoded content:" << content->decodedContent();
 
   Composer *composer = new Composer;
   composer->globalPart()->setGuiEnabled( false );
