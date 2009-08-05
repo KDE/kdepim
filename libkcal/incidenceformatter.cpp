@@ -1629,15 +1629,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec ) {
-      if ( inc && inc->revision() == 0 ) {
-        html += i18n( "Your response has already been recorded [%1]" ).
-                arg( ea->statusStr() );
-      }
-      if ( inc && inc->revision() > 0 ) {
-        html += i18n( "Your response to the update has already been recorded [%1]" ).
-                arg( ea->statusStr() );
-      }
+    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
+      html += i18n( "Your response has already been recorded [%1]" ).
+              arg( ea->statusStr() );
       rsvpReq = false;
     } else if ( msg->method() == Scheduler::Cancel ) {
       html += i18n( "This invitation was declined" );
