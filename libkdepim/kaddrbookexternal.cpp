@@ -18,7 +18,6 @@
 */
 
 #include "kaddrbookexternal.h"
-#include "kaddressbookcore_interface.h"
 
 #include <kabc/distributionlist.h>
 #include <kabc/resource.h>
@@ -46,6 +45,7 @@ using namespace KPIM;
 
 //-----------------------------------------------------------------------------
 void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QWidget *) {
+/* FIXME: use an external editor and native akonadi calls instead
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   KABC::Addressee::List addresseeList = addressBook->findByEmail(email);
 
@@ -69,6 +69,7 @@ void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QW
   } else {
     interface.addEmail( addr );
   }
+*/
 }
 
 //-----------------------------------------------------------------------------
@@ -113,11 +114,13 @@ void KAddrBookExternal::openAddressBook( QWidget * )
 
 void KAddrBookExternal::addNewAddressee( QWidget * )
 {
+/* FIXME: use an external editor and native akonadi calls instead
   KToolInvocation::startServiceByDesktopName( "kaddressbook" );
   OrgKdeKAddressbookCoreInterface interface( "org.kde.kaddressbook",
                                              "/KAddressBook",
                                              QDBusConnection::sessionBus() );
   interface.newContact();
+*/
 }
 
 bool KAddrBookExternal::addVCard( const KABC::Addressee &addressee, QWidget *parent )

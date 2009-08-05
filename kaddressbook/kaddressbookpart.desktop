@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Service
+Name=KAddressBook
+Name[de]=Kontaktverwaltung
+Name[pa]=ਕੇ-ਸੰਪਰਕ-ਮੈਨੇਜਰ
+Name[ro]=KGestionarContacte
+Name[sv]=Kcontactmanager
+Name[x-test]=xxKAddressBookxx
+Name[zh_TW]=Kontact 管理員
+Icon=kaddressbook
+X-DocPath=kaddressbook/index.html
+MimeType=text/directory;text/x-ldif;
+X-KDE-ServiceTypes=KParts/ReadOnlyPart,Browser/View
+X-KDE-Library=kaddressbookpart

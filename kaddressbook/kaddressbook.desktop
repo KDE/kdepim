@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=KAddressBook
+Name[de]=Kontaktverwaltung
+Name[x-test]=xxKAddressBookxx
+GenericName=Contact Manager
+GenericName[x-test]=xxContact Managerxx
+Exec=kaddressbook %u
+Icon=office-address-book
+Type=Application
+X-DocPath=kaddressbook/index.html
+Terminal=false
+X-KDE-StartupNotify=true
+Categories=Qt;KDE;Office;ContactManagement;

@@ -32,7 +32,6 @@
 #include <QCheckBox>
 #include <QIntValidator>
 
-#include <kabprefs.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <krestrictedline.h>
@@ -66,7 +65,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
   topLayout->addWidget( mUseCategories, 3, 0, 1, 2 );
-
+/*
   KABPrefs *prefs = KABPrefs::instance();
   mCategoryView = new KPIM::CategorySelectWidget(this,prefs);
   mCategoryView->setCategories(prefs->customCategories());
@@ -77,6 +76,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   connect( mUseCategories, SIGNAL( toggled( bool ) ),
            mCategoryView, SLOT( setEnabled( bool ) ) );
+*/
 
   mAlarmTimeEdit->setDisabled(true);
   mALabel->setDisabled(true);
@@ -99,7 +99,7 @@ void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
     mALabel->setEnabled( res->alarm() );
 
     const QStringList categories = res->categories();
-    mCategoryView->setSelected(categories);
+//    mCategoryView->setSelected(categories);
     mUseCategories->setChecked( res->useCategories() );
   } else {
     kDebug(5700) <<"ERROR: ResourceKABCConfig::loadSettings(): no ResourceKABC, cast failed";
@@ -116,7 +116,7 @@ void ResourceKABCConfig::saveSettings( KRES::Resource *resource )
 
     QStringList categories;
     QString categoriesStr;
-    categories = mCategoryView->selectedCategories(categoriesStr);
+//    categories = mCategoryView->selectedCategories(categoriesStr);
     res->setCategories( categories );
     res->setUseCategories( mUseCategories->isChecked() );
   } else {
