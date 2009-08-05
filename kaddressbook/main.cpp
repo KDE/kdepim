@@ -40,6 +40,8 @@ int main( int argc, char **argv )
     exit( 0 );
 
   KUniqueApplication app;
+  KGlobal::locale()->insertCatalog( "libkdepim" );
+  KGlobal::locale()->insertCatalog( "kabc" );
 
   MainWindow *window = new MainWindow;
   window->show();
