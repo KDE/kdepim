@@ -31,6 +31,7 @@
 #include "icalformat.h"
 #include "calendar.h"
 #include "freebusycache.h"
+#include "assignmentvisitor.h"
 
 #include "scheduler.h"
 
@@ -188,24 +189,25 @@ bool Scheduler::acceptPublish( IncidenceBase *newIncBase,
 
   bool res = false;
   kdDebug(5800) << "Scheduler::acceptPublish, status="
-            << ScheduleMessage::statusName( status ) << endl;
+                << ScheduleMessage::statusName( status ) << endl;
   Incidence *newInc = static_cast<Incidence *>( newIncBase );
   Incidence *calInc = mCalendar->incidence( newIncBase->uid() );
   switch ( status ) {
     case ScheduleMessage::Unknown:
     case ScheduleMessage::PublishNew:
     case ScheduleMessage::PublishUpdate:
-      res = true;
-      if ( calInc ) {
+      if ( calInc && newInc ) {
         if ( (newInc->revision() > calInc->revision()) ||
              (newInc->revision() == calInc->revision() &&
                newInc->lastModified() > calInc->lastModified() ) ) {
-          mCalendar->deleteIncidence( calInc );
-        } else
-          res = false;
+          AssignmentVisitor visitor;
+          if ( !visitor.assign( calInc, newInc ) ) {
+            kdError(5800) << "assigning different incidence types" << endl;
+          } else {
+            res = true;
+          }
+        }
       }
-      if ( res )
-        mCalendar->addIncidence( newInc );
       break;
     case ScheduleMessage::Obsolete:
       res = true;
@@ -272,8 +274,14 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
           return false;
         }
         kdDebug(5800) << "replacing existing incidence " << i->uid() << endl;
-        mCalendar->deleteIncidence( i );
-        break; // replacing one is enough
+        bool res = true;
+        AssignmentVisitor visitor;
+        if ( !visitor.assign( i, inc ) ) {
+          kdError(5800) << "assigning different incidence types" << endl;
+          res = false;
+        }
+        deleteTransaction( i );
+        return res;
       }
     } else {
       // This isn't an update - the found incidence has a bigger revision number
