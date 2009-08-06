@@ -222,3 +222,12 @@ void FreeBusy::merge( FreeBusy *freeBusy )
   for ( it = periods.begin(); it != periods.end(); ++it )
     addPeriod( (*it).start(), (*it).end() );
 }
+
+bool FreeBusy::operator==( const FreeBusy &freebusy ) const
+{
+  return
+    static_cast<const IncidenceBase &>( *this ) == static_cast<const IncidenceBase &>( freebusy ) &&
+    dtEnd() == freebusy.dtEnd() &&
+    mCalendar == freebusy.mCalendar &&
+    mBusyPeriods == freebusy.mBusyPeriods;
+}

@@ -40,9 +40,12 @@
 #include "calendarlocal.h"
 #include "incidence.h"
 #include "event.h"
+#include "freebusy.h"
 #include "todo.h"
 #include "journal.h"
 #include "filestorage.h"
+#include "assignmentvisitor_p.h"
+#include "comparisonvisitor_p.h"
 
 #include <kresources/configwidget.h>
 
@@ -128,7 +131,7 @@ bool ResourceLocalDir::doLoad()
   QString dirName = mURL.path();
 
   if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + "/") ) ) {
-    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName 
+    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName
                   << "' doesn't exist yet. Creating it..." << endl;
     // Create the directory. Use 0775 to allow group-writable if the umask
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
@@ -139,7 +142,7 @@ bool ResourceLocalDir::doLoad()
   // The directory exists. Now try to open (the files in) it.
   kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
   QFileInfo dirInfo( dirName );
-  if ( !( dirInfo.isDir() && dirInfo.isReadable() && 
+  if ( !( dirInfo.isDir() && dirInfo.isReadable() &&
           ( dirInfo.isWritable() || readOnly() ) ) )
     return false;
 
@@ -272,6 +275,180 @@ bool ResourceLocalDir::deleteIncidenceFile(Incidence *incidence)
   bool removed = file.remove();
   mDirWatch.startScan();
   return removed;
+}
+
+class AssignmentVisitor::Private
+{
+  public:
+    Private() : mSource( 0 ) {}
+
+  public:
+    const IncidenceBase *mSource;
+};
+
+AssignmentVisitor::AssignmentVisitor() : d( new Private() )
+{
+}
+
+AssignmentVisitor::~AssignmentVisitor()
+{
+  delete d;
+}
+
+bool AssignmentVisitor::assign( IncidenceBase *target, const IncidenceBase *source )
+{
+  Q_ASSERT( target != 0 );
+  Q_ASSERT( source != 0 );
+
+  d->mSource = source;
+
+  bool result = target->accept( *this );
+
+  d->mSource = 0;
+
+  return result;
+}
+
+bool AssignmentVisitor::visit( Event *event )
+{
+  Q_ASSERT( event != 0 );
+
+  const Event *source = dynamic_cast<const Event*>( d->mSource );
+  if ( source == 0 ) {
+    kdError(5800) << "Type mismatch: source is" << d->mSource->type()
+                  << "target is" << event->type();
+    return false;
+  }
+
+  *event = *source;
+  return true;
+}
+
+bool AssignmentVisitor::visit( Todo *todo )
+{
+  Q_ASSERT( todo != 0 );
+
+  const Todo *source = dynamic_cast<const Todo*>( d->mSource );
+
+  if ( source == 0 ) {
+    kdError(5800) << "Type mismatch: source is" << d->mSource->type()
+                  << "target is" << todo->type();
+    return false;
+  }
+
+  *todo = *source;
+  return true;
+}
+
+bool AssignmentVisitor::visit( Journal *journal )
+{
+  Q_ASSERT( journal != 0 );
+
+  const Journal *source = dynamic_cast<const Journal*>( d->mSource );
+  if ( source == 0 ) {
+    kdError(5800) << "Type mismatch: source is" << d->mSource->type()
+                  << "target is" << journal->type();
+    return false;
+  }
+
+  *journal = *source;
+  return true;
+}
+
+bool AssignmentVisitor::visit( FreeBusy *freebusy )
+{
+  Q_ASSERT( freebusy != 0 );
+
+  const FreeBusy *source = dynamic_cast<const FreeBusy*>( d->mSource );
+  if ( source == 0 ) {
+    kdError(5800) << "Type mismatch: source is" << d->mSource->type()
+                  << "target is" << freebusy->type();
+    return false;
+  }
+
+  *freebusy = *source;
+  return true;
+}
+
+class ComparisonVisitor::Private
+{
+  public:
+    Private() : mReference( 0 ) {}
+
+  public:
+    const IncidenceBase *mReference;
+};
+
+ComparisonVisitor::ComparisonVisitor() : d( new Private() )
+{
+}
+
+ComparisonVisitor::~ComparisonVisitor()
+{
+  delete d;
+}
+
+bool ComparisonVisitor::compare( IncidenceBase *incidence, const IncidenceBase *reference )
+{
+  d->mReference = reference;
+
+  const bool result = incidence ? incidence->accept( *this ) : reference == 0;
+
+  d->mReference = 0;
+
+  return result;
+}
+
+bool ComparisonVisitor::visit( Event *event )
+{
+  Q_ASSERT( event != 0 );
+
+  const Event *refEvent = dynamic_cast<const Event*>( d->mReference );
+  if ( refEvent ) {
+    return *event == *refEvent;
+  } else {
+    // refEvent is no Event and thus cannot be equal to event
+    return false;
+  }
+}
+
+bool ComparisonVisitor::visit( Todo *todo )
+{
+  Q_ASSERT( todo != 0 );
+
+  const Todo *refTodo = dynamic_cast<const Todo*>( d->mReference );
+  if ( refTodo ) {
+    return *todo == *refTodo;
+  } else {
+    // refTodo is no Todo and thus cannot be equal to todo
+    return false;
+  }
+}
+
+bool ComparisonVisitor::visit( Journal *journal )
+{
+  Q_ASSERT( journal != 0 );
+
+  const Journal *refJournal = dynamic_cast<const Journal*>( d->mReference );
+  if ( refJournal ) {
+    return *journal == *refJournal;
+  } else {
+    // refJournal is no Journal and thus cannot be equal to journal
+    return false;
+  }
+}
+
+bool ComparisonVisitor::visit( FreeBusy *freebusy )
+{
+  Q_ASSERT( freebusy != 0 );
+
+  const FreeBusy *refFreeBusy = dynamic_cast<const FreeBusy*>( d->mReference );
+  if ( refFreeBusy ) {
+    return *freebusy == *refFreeBusy;
+  } else {
+    // refFreeBusy is no FreeBusy and thus cannot be equal to freebusy
+    return false;
+  }
 }
 
 #include "resourcelocaldir.moc"
