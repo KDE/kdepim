@@ -23,10 +23,8 @@ Questions:
 
 Random:
 * Think of where shared_ptrs should be used.
-* Probably make us-ascii *and* utf-8 be "fallback" charsets.
 * Plain text should still be 7bit if possible, even if html part has to be qupr.
-* Consider adding a GlobalPart and JobBase::globalPart() that would return the composer's
-  GlobalPart.  For things like charset, which are needed in MainTextJob for the texts,
-  SkeletonMessageJob for encoding the subject, and AttachmentJob for encoding things like
-  attachment names.  Perhaps share the GUI stuff in JobBase the same way.
-* The whole dummyComposer thing for jobs really annoys me :-/
+* Consider using a JobUiDelegate for errors...
+* Think of a nice macro / template for:
+  Q_ASSERT( dynamic_cast<Something*>( obj ) );
+  Something *needed = static_cast<Something*>( obj );

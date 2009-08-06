@@ -38,13 +38,15 @@ void AttachmentCompressJobTest::testCompress()
   for( int i = 0; i < 100; i++ ) {
     data += "This is some highly compressible text...\n";
   }
-  const QString name = QString::fromLatin1( "name.txt" );
+  const QString name = QString::fromLatin1( "name" );
+  const QString fileName = QString::fromLatin1( "name.txt" );
   const QString description = QString::fromLatin1( "description" );
 
   // Create the original part.
   Composer *composer = new Composer;
   AttachmentPart *origPart = new AttachmentPart( composer );
   origPart->setName( name );
+  origPart->setFileName( fileName );
   origPart->setDescription( description );
   origPart->setMimeType( "text/plain" );
   origPart->setEncoding( KMime::Headers::CE7Bit );
@@ -62,6 +64,7 @@ void AttachmentCompressJobTest::testCompress()
   QVERIFY( zipPart->isAutoEncoding() );
   QVERIFY( zipPart->isCompressed() );
   QCOMPARE( zipPart->name(), name + QString::fromLatin1( ".zip" ) );
+  QCOMPARE( zipPart->fileName(), fileName + QString::fromLatin1( ".zip" ) );
   QCOMPARE( zipPart->description(), description );
   QCOMPARE( zipPart->mimeType(), QByteArray( "application/zip" ) );
 
