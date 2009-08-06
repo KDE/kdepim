@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
-    Copyright (C) 1999 Don Sanders <sanders@kde.org>
+
+    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -12,115 +13,40 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <QtCore/QString>
-
-#include <kabc/stdaddressbook.h>
-#include <kaboutdata.h>
+#include "aboutdata.h"
 #include <kcmdlineargs.h>
-#include <kcrash.h>
-#include <kdebug.h>
 #include <klocale.h>
-#include <kstartupinfo.h>
-#include <kwindowsystem.h>
-#include <libkdepim/pimapplication.h>
+#include <kuniqueapplication.h>
+#include <akonadi/control.h>
 
-#include "kabcore.h"
-#include "kaddressbookmain.h"
-#include "kaddressbook_options.h"
+#include "mainwindow.h"
 
-class KAddressBookApp : public KPIM::PimApplication {
-  public:
-    KAddressBookApp() : mMainWin( 0 ), mDefaultIsOpen( false ) {}
-    ~KAddressBookApp() {}
-
-    int newInstance();
-
-  private:
-    KAddressBookMain *mMainWin;
-    bool mDefaultIsOpen;
-};
-
-int KAddressBookApp::newInstance()
+int main( int argc, char **argv )
 {
-  if ( isSessionRestored() ) {
-    // There can only be one main window
-    if ( KMainWindow::canBeRestored( 1 ) ) {
-      mMainWin = new KAddressBookMain;
-      mMainWin->show();
-      mMainWin->restore( 1 );
-    }
-  } else {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+  AboutData about;
 
-    if ( args->isSet( "editor-only" ) ) {
-        if ( !mMainWin ) {
-          mMainWin = new KAddressBookMain;
-          mMainWin->hide();
-        }
-        // otherwise, leave the window like it is (hidden or shown)
-        KStartupInfo::appStarted();
-    } else {
-      QString file;
-      if ( args->isSet( "document" ) ) {
-         file = args->getOption( "document" );
-      }
-      if ( !( file.isEmpty() && mDefaultIsOpen ) ) {
-        if ( !mMainWin ) {
-          mMainWin = new KAddressBookMain( file );
-          mMainWin->show();
-        } else {
-          KAddressBookMain *m = new KAddressBookMain( file );
-          m->show();
-        }
-        if ( file.isEmpty() ) mDefaultIsOpen = true;
-      }
-    }
-
-    mMainWin->handleCommandLine();
-  }
-
-  // Handle startup notification and window activation
-  // We do it ourselves instead of calling KUniqueApplication::newInstance
-  // to avoid the show() call there.
-#if defined Q_WS_X11 && ! defined K_WS_QTONLY
-  static bool firstInstance = true;
-
-  if ( !firstInstance )
-    KStartupInfo::setNewStartupId( mMainWin, kapp->startupId() );
-
-  firstInstance = false;
-#endif
-
-  return 0;
-}
-
-int main( int argc, char *argv[] )
-{
-  KAboutData about = KABCore::createAboutData();
   KCmdLineArgs::init( argc, argv, &about );
-  KCmdLineArgs::addCmdLineOptions( kaddressbook_options() );
+
+  KCmdLineOptions options;
+  KCmdLineArgs::addCmdLineOptions( options );
   KUniqueApplication::addCmdLineOptions();
 
-  if ( !KAddressBookApp::start() )
-    return 0;
+  if ( !KUniqueApplication::start() )
+    exit( 0 );
 
-  KAddressBookApp app;
+  KUniqueApplication app;
   KGlobal::locale()->insertCatalog( "libkdepim" );
   KGlobal::locale()->insertCatalog( "kabc" );
-  bool ret = app.exec();
-  qDeleteAll( KMainWindow::memberList() );
 
-  return ret;
+  MainWindow *window = new MainWindow;
+  window->show();
+
+  Akonadi::Control::start( window );
+
+  return app.exec();
 }

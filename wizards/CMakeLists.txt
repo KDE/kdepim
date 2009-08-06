@@ -10,13 +10,12 @@ if(KDEPIM_BUILD_EVERYTHING)
   ########### next target ###############
 
   set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp
-#      egroupwarewizard.cpp
       groupwisewizard.cpp
       sloxwizard.cpp
       kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp
   )
 
-  kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc groupwiseconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
+  kde4_add_kcfg_files(groupwarewizard_SRCS groupwiseconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
 
   # todo: more appropriate icon?
   kde4_add_app_icon(groupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
@@ -34,22 +33,6 @@ if(KDEPIM_BUILD_EVERYTHING)
   )
 
   install(TARGETS groupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-
-  ########### next target ###############
-
-#  set(egroupwarewizard_SRCS ${libknotesresources_SRCS} egroupwarewizard.cpp egroupwaremain.cpp)
-
-#  kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
-
-  # todo: more appropriate icon?
-#  kde4_add_app_icon(egroupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
-
-#  kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
-
-#  target_link_libraries(egroupwarewizard ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDEPIMLIBS_KCAL_LIBS} kdepim  )
-
-#  install(TARGETS egroupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
   ########### next target ###############
@@ -132,5 +115,5 @@ install( FILES kolab.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
 if(KDEPIM_BUILD_EVERYTHING)
   install(FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-  install(FILES egroupware.kcfg slox.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+  install(FILES slox.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 endif(KDEPIM_BUILD_EVERYTHING)

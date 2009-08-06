@@ -20,7 +20,6 @@
 */
 
 #include "overviewpage.h"
-#include "egroupwarewizard.h"
 #include "kolabwizard.h"
 #include "sloxwizard.h"
 #include "groupwisewizard.h"
@@ -62,13 +61,9 @@ OverViewPage::OverViewPage( QWidget *parent )
   label = new QLabel( i18n( "Select the type of server you would like Kontact to connect to:" ), this );
   layout->addWidget( label, 2, 0, 1, 4 );
 
-  QPushButton *button = new QPushButton( i18n("eGroupware"), this );
-  layout->addWidget( button, 3, 0, 1, 4 );
-  connect( button, SIGNAL( clicked() ), SLOT( showWizardEGroupware() ) );
-
   // FIXME: Maybe hyperlinks would be better than buttons.
 
-  button = new QPushButton( i18n("Kolab"), this );
+  QPushButton* button = new QPushButton( i18n("Kolab"), this );
   layout->addWidget( button, 4, 0, 1, 4 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );
 
@@ -97,13 +92,6 @@ OverViewPage::OverViewPage( QWidget *parent )
 
 OverViewPage::~OverViewPage()
 {
-}
-
-void OverViewPage::showWizardEGroupware()
-{
-// FIXME: disabled as egroupware is disabled due to a kaddressbook dependency
-/*  EGroupwareWizard wizard;
-  wizard.exec();*/
 }
 
 void OverViewPage::showWizardKolab()

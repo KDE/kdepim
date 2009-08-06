@@ -26,7 +26,6 @@ add_subdirectory( remote )
 add_subdirectory( kolab )
 
 if(KDEPIM_BUILD_EVERYTHING)
-  #add_subdirectory( egroupware )
   add_subdirectory( scalix )
   add_subdirectory( slox )
   add_subdirectory( groupdav )

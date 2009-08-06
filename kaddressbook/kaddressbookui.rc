@@ -1,112 +1,91 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="395">
+<kpartgui name="kaddressbook" version="1">
+
   <MenuBar>
-    <Menu name="file" noMerge="1"><text>&amp;File</text>
-      <Menu name="file_new_actions_menu"><text>New</text>
-  	    <Action name="file_new_contact"/>
-	    <Action name="file_new_distributionlist"/>
-	  </Menu>
-      <Separator/>
-      <Action name="file_sync"/>
-      <Menu name="file_import"><text>&amp;Import</text>
+    <Menu name="file"><text>&amp;File</text>
+      <Menu name="file_new">
+        <text>&amp;New</text>
+        <Action name="akonadi_contact_create"/>
+        <Action name="akonadi_contact_group_create"/>
+        <Separator/>
+        <Action name="akonadi_addressbook_create"/>
       </Menu>
-      <Menu name="file_export"><text>&amp;Export</text>
+      <Separator/>
+      <Menu name="file_import">
+        <text>&amp;Import</text>
+        <Action name="file_import_vcard"/>
+        <Action name="file_import_csv"/>
+        <Action name="file_import_ldif"/>
+        <Action name="file_import_ldap"/>
+        <Action name="file_import_gmx"/>
+      </Menu>
+      <Menu name="file_export">
+        <text>&amp;Export</text>
+        <Action name="file_export_vcard30"/>
+        <Action name="file_export_vcard21"/>
+        <Action name="file_export_csv"/>
+        <Action name="file_export_ldif"/>
+        <Action name="file_export_gmx"/>
       </Menu>
       <Separator/>
       <Action name="file_print"/>
-      <Action name="file_mail"/>
-      <Action name="file_mail_vcard"/>
-      <Action name="file_chat"/>
       <Separator/>
       <Action name="file_quit"/>
     </Menu>
 
     <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
-      <Action name="edit_undo"/>
-      <Action name="edit_redo"/>
+      <Action name="akonadi_contact_item_edit" append="edit_edit_merge"/>
+      <Action name="akonadi_paste" append="edit_paste_merge"/>
+      <Action name="akonadi_item_copy" append="edit_copy_merge"/>
       <Separator/>
-      <Action name="edit_cut"/>
-      <Action name="edit_copy"/>
-      <Action name="edit_paste"/>
-      <Action name="copy_contact_to"/>
-      <Action name="move_contact_to"/>
+      <Action name="akonadi_item_delete" append="edit_delete_merge"/>
       <Separator/>
-      <Action name="edit_delete" append="edit_paste_merge"/>
-      <Separator/>
-      <Action name="edit_select_all"/>
-      <Separator/>
-      <Action name="edit_merge"/>
-      <Action name="edit_set_categories"/>
-      <Action name="edit_set_personal"/>
+      <Action name="akonadi_addressbook_delete"/>
     </Menu>
 
-    <Menu name="view" noMerge="1"><text>&amp;View</text>
-      <Action name="select_view"/>
-      <Action name="view_add"/>
-      <Action name="view_modify"/>
-      <Action name="view_delete"/>
-      <Separator/>
-      <ActionList name="extensions_list"/>
-      <Separator/>
-      <Action name="view_refresh"/>
-    </Menu>
-
-    <Menu name="tools" noMerge="1"><text>&amp;Tools</text>
-      <Action name="ldap_lookup"/>
-    </Menu>
-
-    <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
-      <Merge name="StandardToolBarMenuHandler" />
-      <Action name="options_show_jump_bar"/>
-      <Action name="options_show_details"/>
-      <Action name="options_show_statusbar"/>
-      <Merge name="show_merge"/>
-      <Separator/>
-      <Merge/>
-      <Action name="options_edit_filters"/>
-      <Separator/>
+    <Menu name="settings"><text>&amp;Settings</text>
+      <Action name="options_show_simplegui"/>
+<!--      <Action name="options_show_collectionview"/>
+      <Action name="options_show_itemview"/>
+      <Action name="options_show_detailsview"/> -->
       <Action name="options_configure_keybinding"/>
       <Action name="options_configure_toolbars"/>
       <Action name="options_configure"/>
-      <Merge name="configure_merge"/>
     </Menu>
 
   </MenuBar>
 
-  <Menu name="RMBPopup">
-    <Action name="file_properties"/>
-    <Action name="file_new_contact"/>
+  <Menu name="akonadi_collectionview_contextmenu">
+    <Action name="akonadi_collection_create"/>
     <Separator/>
-    <Action name="edit_cut"/>
-    <Action name="edit_copy"/>
-    <Action name="edit_paste"/>
-    <Action name="copy_contact_to"/>
-    <Action name="move_contact_to"/>
+    <Action name="akonadi_collection_copy"/>
+    <Action name="akonadi_paste"/>
     <Separator/>
-    <Action name="edit_delete"/>
+    <Action name="akonadi_collection_delete"/>
     <Separator/>
-    <Action name="file_mail"/>
-    <Action name="file_mail_vcard"/>
-    <Action name="file_chat"/>
+    <Action name="akonadi_collection_sync"/>
+    <Separator/>
+    <Action name="akonadi_collection_properties"/>
+    <Separator/>
+    <Action name="akonadi_addressbook_create"/>
+    <Action name="akonadi_addressbook_delete"/>
+  </Menu>
+
+  <Menu name="akonadi_itemview_contextmenu">
+    <Action name="akonadi_contact_item_edit"/>
+    <Action name="akonadi_contact_create"/>
+    <Action name="akonadi_contact_group_create"/>
+    <Separator/>
+    <Action name="akonadi_item_copy"/>
+    <Action name="akonadi_paste"/>
+    <Separator/>
+    <Action name="akonadi_item_delete"/>
   </Menu>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
-    <Action name="file_new_contact"/>
-    <Action name="file_new_distributionlist"/>
-    <Action name="file_properties"/>
-    <Separator/>
-    <Action name="file_sync" />
-    <Separator/>
-    <Action name="edit_cut"/>
-    <Action name="edit_copy"/>
-    <Action name="edit_paste"/>
-    <Separator/>
-    <Action name="edit_undo"/>
-    <Action name="edit_redo"/>
-    <Separator/>
-    <Action name="edit_delete"/>
-    <Separator/>
-    <Action name="ldap_lookup"/>
+    <Action name="akonadi_contact_create"/>
+    <Action name="akonadi_contact_group_create"/>
+    <Action name="quick_search"/>
   </ToolBar>
 
 </kpartgui>

@@ -36,6 +36,7 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
+#include "contactfields.h"
 
 using namespace KABPrinting;
 
@@ -159,15 +160,14 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
 
   // now the fields, in two halves
   painter.setFont( font );
-
-  KABC::Field::List fields = wizard()->addressBook()->fields();
-  int numFields = fields.count();
+  ContactFields::Fields fieldList = ContactFields::allFields();
+  int numFields = fieldList.count();
   QString label;
   QString value;
 
   for ( int i = 0; i < numFields / 2; ++i ) {
-    label = fields[ i ]->label();
-    value = trimString( fields[ i ]->value( addr ), (width - 10) / 4, fm );
+    label = ContactFields::label( fieldList[ i ]);
+    value = trimString( ContactFields::value(fieldList[ i ], addr ), (width - 10) / 4, fm );
 
     yPos += fm.height();
     painter.drawText( xPos, yPos, label + ':' );
@@ -182,8 +182,8 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
   yPos = bfm.height() + 2 * mFieldSpacingHint;
   xPos = margin + width / 2;
   for ( int i = numFields / 2; i < numFields; ++i ) {
-    label = fields[ i ]->label();
-    value = value = trimString( fields[ i ]->value( addr ), (width - 10) / 4, fm );
+    label = ContactFields::label(fieldList[ i ]);
+    value = value = trimString( ContactFields::value(fieldList[ i ], addr ), (width - 10) / 4, fm );
 
     yPos += fm.height();
     painter.drawText( xPos, yPos, label + ':' );
@@ -214,28 +214,26 @@ int MikesStyle::calcHeight( const KABC::Addressee &addr,
   QFontMetrics bfm( bFont );
 
   int height = 0;
-
   // get the fields
-  KABC::Field::List fieldList = wizard()->addressBook()->fields();
+  ContactFields::Fields fieldList = ContactFields::allFields();
   int numFields = fieldList.count();
   int halfHeight = 0;
 
   // Determine which half of the fields is higher
   for ( int i = 0; i < numFields / 2; ++i )
-    halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
+    halfHeight += fm.height() * (ContactFields::value(fieldList[i] ,addr ).count( '\n' ) + 1);
 
   height = halfHeight;
 
   // now the second half
   halfHeight = 0;
   for ( int i = numFields / 2; i < numFields; ++i )
-    halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
+    halfHeight += fm.height() * (ContactFields::value(fieldList[i], addr ).count( '\n' ) + 1);
 
   height = qMax( height, halfHeight );
 
   // Add the title and the spacing
   height += bfm.height() + ((numFields / 2 + 3) * mFieldSpacingHint);
-
   return height;
 }
 

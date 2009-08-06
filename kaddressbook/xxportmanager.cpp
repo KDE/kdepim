@@ -1,6 +1,7 @@
 /*
-    This file is part of KAddressbook.
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+    This file is part of KAddressBook.
+
+    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -12,143 +13,125 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "xxportmanager.h"
-
-#include <kabc/addressbook.h>
-#include <kabc/resource.h>
-#include <kapplication.h>
-#include <kdebug.h>
-#include <klocale.h>
 #include <kmessagebox.h>
-#include <kservicetypetrader.h>
+#include <klocale.h>
 
-#include "core.h"
-#include "kablock.h"
-#include "undocmds.h"
-#include "xxportselectdialog.h"
+#include "collectionselectiondialog.h"
 
-KUrl XXPortManager::importURL = KUrl();
-QString XXPortManager::importData = QString();
+#include <akonadi/collection.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
 
-XXPortManager::XXPortManager( KAB::Core *core, QObject *parent, const char *name )
-  : QObject( parent ), mCore( core )
+#include <QtCore/QSignalMapper>
+#include <QtGui/QAction>
+#include <QtGui/QItemSelectionModel>
+#include <QtGui/QWidget>
+
+#include "akonadi_next/entitytreeview.h"
+
+
+XXPortManager::XXPortManager( QWidget *parent )
+  : QObject( parent ), mCollectionModel( 0 ), mSelectionModel( 0 ), mParentWidget( parent )
 {
-  setObjectName( name );
-  loadPlugins();
+  mImportMapper = new QSignalMapper( this );
+  mExportMapper = new QSignalMapper( this );
+
+  connect( mImportMapper, SIGNAL( mapped( const QString& ) ),
+           this, SLOT( slotImport( const QString& ) ) );
+  connect( mExportMapper, SIGNAL( mapped( const QString& ) ),
+           this, SLOT( slotExport( const QString& ) ) );
 }
 
 XXPortManager::~XXPortManager()
 {
 }
 
-void XXPortManager::restoreSettings()
+void XXPortManager::addImportAction( QAction *action, const QString &identifier )
 {
+  mImportMapper->setMapping( action, identifier );
+  connect( action, SIGNAL( triggered( bool ) ), mImportMapper, SLOT( map() ) );
 }
 
-void XXPortManager::saveSettings()
+void XXPortManager::addExportAction( QAction *action, const QString &identifier )
 {
+  mExportMapper->setMapping( action, identifier );
+  connect( action, SIGNAL( triggered( bool ) ), mExportMapper, SLOT( map() ) );
 }
 
-void XXPortManager::importVCard( const KUrl &url )
+void XXPortManager::setCollectionModel( QAbstractItemModel *collectionModel )
 {
-  importURL = url;
-  slotImport( "vcard", "<empty>" );
-  importURL = KUrl();
+  mCollectionModel = collectionModel;
 }
 
-void XXPortManager::importVCardFromData( const QString &vCard )
+void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
 {
-  importData = vCard;
-  slotImport( "vcard", "<empty>" );
-  importData = "";
+  mSelectionModel = selectionModel;
 }
 
-void XXPortManager::slotImport( const QString &identifier, const QString &data )
+void XXPortManager::slotImport( const QString &identifier )
 {
-  KAB::XXPort *obj = mXXPortObjects[ identifier ];
-  if ( !obj ) {
-    KMessageBox::error( mCore->widget(), i18n( "<qt>No import plugin available for <b>%1</b>.</qt>", identifier ) );
-    return;
-  }
-
-  KABC::Resource *resource = mCore->requestResource( mCore->widget() );
-  if ( !resource )
+  if ( !mCollectionModel )
     return;
 
-  KABC::Addressee::List list = obj->importContacts( data );
-  KABC::Addressee::List::Iterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
-    (*it).setResource( resource );
+  const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
+  if( !xxport )
+    return;
 
-  if ( !list.isEmpty() ) {
-    NewCommand *command = new NewCommand( mCore->addressBook(), list );
-    mCore->commandHistory()->push( command );
-    emit modified();
+  const KABC::Addressee::List contacts = xxport->importContacts();
+
+  delete xxport;
+
+  if ( contacts.isEmpty() ) // nothing to import
+    return;
+
+  CollectionSelectionDialog dlg( mCollectionModel, mParentWidget );
+  if ( !dlg.exec() )
+    return;
+
+  const Akonadi::Collection collection = dlg.selectedCollection();
+
+  for ( int i = 0; i < contacts.count(); ++i ) {
+    Akonadi::Item item;
+    item.setPayload<KABC::Addressee>( contacts.at( i ) );
+    item.setMimeType( KABC::Addressee::mimeType() );
+
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+    job->exec();
   }
 }
 
-void XXPortManager::slotExport( const QString &identifier, const QString &data )
+void XXPortManager::slotExport( const QString &identifier )
 {
-  KAB::XXPort *obj = mXXPortObjects[ identifier ];
-  if ( !obj ) {
-    KMessageBox::error( mCore->widget(), i18n( "<qt>No export plugin available for <b>%1</b>.</qt>", identifier ) );
+  if ( !mSelectionModel )
     return;
+
+  const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
+  if ( !xxport )
+    return;
+
+  KABC::AddresseeList contacts;
+
+  foreach ( const QModelIndex &index, mSelectionModel->selectedRows() ) {
+    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    Q_ASSERT( item.isValid() );
+    const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    contacts.append( contact );
   }
 
-  KABC::AddresseeList addrList;
-  XXPortSelectDialog dlg( mCore, obj->requiresSorting(), mCore->widget() );
-  if ( dlg.exec() )
-    addrList = dlg.contacts();
+  if ( !contacts.isEmpty() )
+    xxport->exportContacts( contacts );
   else
-    return;
+    KMessageBox::sorry( 0, i18n( "Any contact selected" ) );
 
-  if ( !obj->exportContacts( addrList, data ) )
-    KMessageBox::error( mCore->widget(), i18n( "Unable to export contacts." ) );
-}
-
-void XXPortManager::loadPlugins()
-{
-  mXXPortObjects.clear();
-
-  const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/XXPort",
-    QString( "[X-KDE-KAddressBook-XXPortPluginVersion] == %1" ).arg( KAB_XXPORT_PLUGIN_VERSION ) );
-  foreach ( KService::Ptr pluginService, plugins ) {
-    KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
-    if ( !factory ) {
-      kDebug(5720) <<"XXPortManager::loadExtensions(): Factory creation failed";
-      continue;
-    }
-
-    KAB::XXPortFactory *xxportFactory = qobject_cast<KAB::XXPortFactory*>( factory );
-
-    if ( !xxportFactory ) {
-      kDebug(5720) <<"XXPortManager::loadExtensions(): Cast failed";
-      continue;
-    }
-
-    KAB::XXPort *obj = xxportFactory->xxportObject( mCore->addressBook(), mCore->widget() );
-    if ( obj ) {
-      if ( mCore->guiClient() )
-        mCore->guiClient()->insertChildClient( obj );
-
-      mXXPortObjects.insert( obj->identifier(), obj );
-      connect( obj, SIGNAL( exportActivated( const QString&, const QString& ) ),
-               this, SLOT( slotExport( const QString&, const QString& ) ) );
-      connect( obj, SIGNAL( importActivated( const QString&, const QString& ) ),
-               this, SLOT( slotImport( const QString&, const QString& ) ) );
-
-      obj->setKApplication( kapp );
-    }
-  }
+  delete xxport;
 }
 
 #include "xxportmanager.moc"

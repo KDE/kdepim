@@ -118,7 +118,7 @@ void KMeditorPrivate::startExternalEditor()
   }
 
   mExtEditorTempFile->write( q->textOrHtml().toUtf8() );
-  mExtEditorTempFile->flush();
+  mExtEditorTempFile->close();
 
   mExtEditorProcess = new KProcess();
     // construct command line...
@@ -128,6 +128,9 @@ void KMeditorPrivate::startExternalEditor()
     if ( ( *it ).contains( "%f" ) ) {
       ( *it ).replace( QRegExp( "%f" ), mExtEditorTempFile->fileName() );
       filenameAdded = true;
+    }
+    else if ( ( *it ).contains( "%l" ) ) {
+      ( *it ).replace( QRegExp( "%l" ), QString::number(q->textCursor().blockNumber() + 1) );  // line number
     }
     ( *mExtEditorProcess ) << ( *it );
   }
@@ -151,10 +154,15 @@ void KMeditorPrivate::startExternalEditor()
 void KMeditorPrivate::slotEditorFinished( int, QProcess::ExitStatus exitStatus )
 {
   if ( exitStatus == QProcess::NormalExit ) {
-    mExtEditorTempFile->flush();
-    mExtEditorTempFile->seek( 0 );
-    QByteArray f = mExtEditorTempFile->readAll();
-    q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
+    // the external editor could have renamed the original file and recreated a new file
+    // with the given filename, so we need to reopen the file after the editor exited
+    QFile localFile(mExtEditorTempFile->fileName());
+    if ( localFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+      QByteArray f = localFile.readAll();
+      q->setTextOrHtml( QString::fromUtf8( f.data(), f.size() ) );
+      q->document()->setModified( true );
+      localFile.close();
+    }
   }
 
   q->killExternalEditor();   // cleanup...
@@ -167,7 +175,15 @@ void KMeditorPrivate::ensureCursorVisibleDelayed()
 
 void KMeditor::keyPressEvent ( QKeyEvent *e )
 {
-  if ( d->useExtEditor ) {
+  if ( d->useExtEditor &&
+       ( e->key() != Qt::Key_Shift ) &&
+       ( e->key() != Qt::Key_Control ) &&
+       ( e->key() != Qt::Key_Meta ) &&
+       ( e->key() != Qt::Key_CapsLock ) &&
+       ( e->key() != Qt::Key_NumLock ) &&
+       ( e->key() != Qt::Key_ScrollLock ) &&
+       ( e->key() != Qt::Key_Alt ) &&
+       ( e->key() != Qt::Key_AltGr ) ) {
     if ( !d->mExtEditorProcess ) {
       d->startExternalEditor();
     }

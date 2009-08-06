@@ -21,7 +21,6 @@ install(TARGETS kmail_bodypartformatter_text_vcard  DESTINATION ${PLUGIN_INSTALL
 set(kmail_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp)
 
 qt4_add_dbus_interfaces(kmail_bodypartformatter_text_calendar_PART_SRCS
-  ${CMAKE_SOURCE_DIR}/kaddressbook/org.kde.KAddressbook.Core.xml
   ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
 )
 

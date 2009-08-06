@@ -68,7 +68,6 @@
 #include <QTextStream>
 
 #include <kdemacros.h>
-#include <coreinterface.h>
 #include "calendarinterface.h"
 
 using namespace KCal;
