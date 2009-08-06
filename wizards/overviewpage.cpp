@@ -32,10 +32,8 @@
 #include <kpushbutton.h>
 #include <KStandardGuiItem>
 
-#include <QButtonGroup>
 #include <QLabel>
-#include <QLayout>
-#include <QRadioButton>
+#include <QGridLayout>
 
 OverViewPage::OverViewPage( QWidget *parent )
   : QWidget( parent )

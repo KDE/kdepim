@@ -26,7 +26,7 @@
 #include <kicon.h>
 
 #include <QApplication>
-#include <QLayout>
+#include <QVBoxLayout>
 
 GroupwareWizard::GroupwareWizard( QWidget *parent)
   : QWidget( parent )
