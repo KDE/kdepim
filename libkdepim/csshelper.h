@@ -68,6 +68,8 @@ class KDEPIM_EXPORT CSSHelper {
     void setBodyFont( const QFont& font );
     void setPrintFont( const QFont& font );
 
+    QColor pgpWarnColor() const;
+
   protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */
