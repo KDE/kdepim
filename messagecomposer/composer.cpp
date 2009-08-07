@@ -365,6 +365,13 @@ void Composer::addAttachmentPart( AttachmentPart *part )
   part->setParent( this );
 }
 
+void Composer::addAttachmentParts( const AttachmentPart::List &parts )
+{
+  foreach( AttachmentPart *part, parts ) {
+    addAttachmentPart( part );
+  }
+}
+
 void Composer::removeAttachmentPart( AttachmentPart *part, bool del )
 {
   Q_D( Composer );

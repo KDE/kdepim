@@ -54,6 +54,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     AttachmentPart::List attachmentParts();
     // takes ownership
     void addAttachmentPart( AttachmentPart *part );
+    void addAttachmentParts( const QList<AttachmentPart*> &parts );
     // sets parent to 0
     void removeAttachmentPart( AttachmentPart *part, bool del = true );
 
