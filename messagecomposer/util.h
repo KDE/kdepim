@@ -34,12 +34,6 @@ namespace MessageComposer {
 MESSAGECOMPOSER_EXPORT QByteArray selectCharset( const QList<QByteArray> &charsets,
                                                  const QString &text );
 
-MESSAGECOMPOSER_EXPORT QList<KMime::Headers::contentEncoding> encodingsForData(
-                                          const QByteArray &data );
-
-MESSAGECOMPOSER_EXPORT qint64 sizeWithEncoding( const QByteArray &data,
-                                                KMime::Headers::contentEncoding encoding );
-
 }
 
 #endif
