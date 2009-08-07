@@ -1,3 +1,38 @@
+Friday, August 7th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Correctly display some newsletters where KMail would show both the text and the HTML part before (KDE bug 187989)
+      - Support all aspects of mailto URLs when passing them from the command line
+      - Use better icons in the filter dialog
+      - Don't show the 'Advanced' reminder button unless reminders are checked-on
+      - Initally put the focus on the interval spinbox in the alarm editor (KDE bug 143197)
+      - Several fixes for external editor support in the composer (KDE bugs 169092 and 172362)
+      - Correctly add the default domain to the mail address when sending (KDE bug 136407)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3685: Make it possible again to enter the update mail of a moved event into the calendar
+      - kolab/issue3789: Show again the buttons for the 'Delegate', 'Forward' and 'Look into Calendar' actions
+      - kolab/issue3780: Allow declining an invitation without getting an error message
+      - kolab/issue3234: Put optional participants of events into the CC field of the invitation mails, not into
+                         the To field, to make Outlook happy
+      - kolab/issue3779: Always allow an attendee to remove invitation events from his calendar
+      - kolab/issue3788: Make the default time and time unit for new reminders configurable
+      - kolab/issue3742: Allow to specify the groupware type of local folders again
+      - kolab/issue3375: When using 'Scroll To' on attachments, mark the scrolled-to attachment with a yellow border
+      - kolab/issue3740: When displaying encapsulated messages in a seperate window, make deleting attachments work
+                         correctly
+      - When dragging email messages as attachments, try to use the mail subject as the
+        attachment name in the KOrganizer attachment editor.
+      - Fix a problem that attachments in encapsulated messages could not be deleted
+      - Don't erroneously display the text part of encapsulated messages as attachment in the quick attachment list
+
+
 Friday, July 31th 2009
 
 Problems addressed
