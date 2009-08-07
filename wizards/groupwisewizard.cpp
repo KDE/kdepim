@@ -36,9 +36,9 @@
 
 #include <QCheckBox>
 #include <QLabel>
-#include <QLayout>
 #include <QSpinBox>
 #include <QGroupBox>
+#include <QGridLayout>
 
 QString serverUrl()
 {

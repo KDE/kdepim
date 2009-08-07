@@ -43,6 +43,7 @@ int main( int argc, char **argv )
   KGlobal::locale()->insertCatalog( "libkdepim" );
   KGlobal::locale()->insertCatalog( "kabc" );
   KGlobal::locale()->insertCatalog( "libakonadi" );
+  KGlobal::locale()->insertCatalog( "kabcakonadi" );
 
   MainWindow *window = new MainWindow;
   window->show();

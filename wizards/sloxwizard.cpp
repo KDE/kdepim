@@ -33,10 +33,9 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <QLayout>
 #include <QCheckBox>
 #include <QLabel>
-
+#include <QGridLayout>
 
 QString sloxUrl()
 {
