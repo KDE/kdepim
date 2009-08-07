@@ -8,3 +8,9 @@ KConfigPropagator:
 KConfigWizard:
 
 - More pretty changes view.
+
+Attachment*:
+(cberzan)
+
+- Stabilize API and move to kdepimlibs/kpimutils.
+- Find shorter names.......

@@ -81,3 +81,22 @@ kde4_add_executable(testkincidencechooser TEST ${testkincidencechooser_SRCS})
 
 target_link_libraries(testkincidencechooser  kdepim ${KDE4_KDEUI_LIBS} )
 
+
+############ attachment stuff #########
+
+# Location of the attachments to test.
+set( attachments_root "QLatin1String( \"${CMAKE_CURRENT_SOURCE_DIR}/attachments/\" )" )
+add_definitions( -DPATH_ATTACHMENTS='${attachments_root}' )
+
+# Convenience macro to add unit tests.
+macro( add_libkdepim_test _source )
+  set( _test ${_source} )
+  get_filename_component( _name ${_source} NAME_WE )
+  kde4_add_unit_test( ${_name} TESTNAME kdepim-${_name} ${_test} )
+  target_link_libraries( ${_name} kmime kdepim ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} )
+endmacro( add_libkdepim_test )
+
+# Attachment tests.
+add_libkdepim_test( attachmentcompressjobtest.cpp )
+add_libkdepim_test( attachmentfrommimecontentjobtest.cpp )
+add_libkdepim_test( attachmentfromurljobtest.cpp )

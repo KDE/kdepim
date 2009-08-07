@@ -1,3 +1,4 @@
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_definitions(-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
@@ -75,6 +76,11 @@ set(kdepim_LIB_SRCS
    uistatesaver.cpp
    distributionlistconverter.cpp
    pimapplication.cpp
+   attachmentpart.cpp
+   attachmentcompressjob.cpp
+   attachmentloadjob.cpp
+   attachmentfromurljob.cpp
+   attachmentfrommimecontentjob.cpp
 )
 
 QT4_ADD_DBUS_INTERFACE(kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml korganizer_korgac_interface )
@@ -96,6 +102,7 @@ target_link_libraries(kdepim
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDE4_AKONADI_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
