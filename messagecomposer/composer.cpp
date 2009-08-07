@@ -19,7 +19,6 @@
 
 #include "composer.h"
 
-#include "attachmentpart.h"
 #include "finalmessage_p.h"
 #include "globalpart.h"
 #include "infopart.h"
@@ -35,6 +34,7 @@
 
 using namespace MessageComposer;
 using namespace KMime;
+using KPIM::AttachmentPart;
 
 class MessageComposer::ComposerPrivate : public JobBasePrivate
 {
@@ -350,29 +350,28 @@ TextPart *Composer::textPart()
   return d->textPart;
 }
 
-QList<AttachmentPart*> Composer::attachmentParts()
+AttachmentPart::List Composer::attachmentParts()
 {
   Q_D( Composer );
   return d->attachmentParts;
 }
 
-void Composer::addAttachmentPart( AttachmentPart *part )
+void Composer::addAttachmentPart( AttachmentPart::Ptr part )
 {
   Q_D( Composer );
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
   d->attachmentParts.append( part );
-  part->setParent( this );
 }
 
 void Composer::addAttachmentParts( const AttachmentPart::List &parts )
 {
-  foreach( AttachmentPart *part, parts ) {
+  foreach( AttachmentPart::Ptr part, parts ) {
     addAttachmentPart( part );
   }
 }
 
-void Composer::removeAttachmentPart( AttachmentPart *part, bool del )
+void Composer::removeAttachmentPart( AttachmentPart::Ptr part )
 {
   Q_D( Composer );
   Q_ASSERT( !d->started );
@@ -382,12 +381,6 @@ void Composer::removeAttachmentPart( AttachmentPart *part, bool del )
     kWarning() << "Unknown attachment part" << part;
     Q_ASSERT( false );
     return;
-  }
-
-  if( del ) {
-    delete part;
-  } else {
-    part->setParent( 0 );
   }
 }
 

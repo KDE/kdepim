@@ -4,10 +4,6 @@ include_directories (
     ${Boost_INCLUDE_DIR}
 )
 
-# Location of the attachments to test.
-set( attachments_root "QLatin1String( \"${CMAKE_CURRENT_SOURCE_DIR}/attachments/\" )" )
-add_definitions( -DPATH_ATTACHMENTS='${attachments_root}' )
-
 # Convenience macro to add messagecomposer unit tests.
 macro( add_messagecomposer_test _source )
   set( _test ${_source} )
@@ -24,9 +20,6 @@ add_messagecomposer_test( utiltest.cpp )
 
 # Non-content jobs.
 add_messagecomposer_test( skeletonmessagejobtest.cpp )
-add_messagecomposer_test( attachmentfrommimecontentjobtest.cpp )
-add_messagecomposer_test( attachmentfromurljobtest.cpp )
-add_messagecomposer_test( attachmentcompressjobtest.cpp )
 
 # Basic content jobs.
 add_messagecomposer_test( singlepartjobtest.cpp )

@@ -20,13 +20,14 @@
 #ifndef MESSAGECOMPOSER_COMPOSER_H
 #define MESSAGECOMPOSER_COMPOSER_H
 
-#include "attachmentpart.h"
 #include "finalmessage.h"
 #include "jobbase.h"
 #include "messagecomposer_export.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
+
+#include <libkdepim/attachmentpart.h>
 
 namespace MessageComposer {
 
@@ -51,12 +52,11 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     GlobalPart *globalPart();
     InfoPart *infoPart();
     TextPart *textPart();
-    AttachmentPart::List attachmentParts();
+    KPIM::AttachmentPart::List attachmentParts();
     // takes ownership
-    void addAttachmentPart( AttachmentPart *part );
-    void addAttachmentParts( const QList<AttachmentPart*> &parts );
-    // sets parent to 0
-    void removeAttachmentPart( AttachmentPart *part, bool del = true );
+    void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
+    void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
+    void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
 
   public Q_SLOTS:
     virtual void start();

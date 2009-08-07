@@ -12,7 +12,6 @@ set( messagecomposer_src
      util.cpp
 
      messagepart.cpp
-     attachmentpart.cpp
      globalpart.cpp
      infopart.cpp
      textpart.cpp
@@ -23,10 +22,6 @@ set( messagecomposer_src
      multipartjob.cpp
      maintextjob.cpp
 
-     attachmentcompressjob.cpp
-     attachmentfrommimecontentjob.cpp
-     attachmentfrompublickeyjob.cpp
-     attachmentfromurljob.cpp
      skeletonmessagejob.cpp
 )
 
@@ -43,7 +38,6 @@ install( FILES
          messagecomposer_export.h
           
          composer.h
-         attachmentpart.h
          finalmessage.h
          globalpart.h
          infopart.h
@@ -56,10 +50,6 @@ install( FILES
          multipartjob.h
          maintextjob.h
 
-         attachmentcompressjob.h
-         attachmentfrommimecontentjob.h
-         attachmentfrompublickeyjob.h
-         attachmentfromurljob.h
          skeletonmessagejob.h
 
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagecomposer COMPONENT Devel )
