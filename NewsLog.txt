@@ -14,11 +14,11 @@ Problems addressed
 * kolab/issue3776: Don't ask for the storage location on invitation updates
 * kolab/issue3740: When displaying encapsulated messages in a seperate window, make deleting attachments work
                    correctly
+* kolab/issue3722: When dragging email messages as attachments, try to use the mail subject
+                   as the attachment name in the KOrganizer attachment editor.
 * Fix a problem that attachments in encapsulated messages could not be deleted
 * Don't erroneously display the text part of encapsulated messages as attachment in the quick attachment list
 * Add nicer icon for the organizer, replacing the old 'tux' icon
-* When dragging email messages as attachments, try to use the mail subject as the
-  attachment name in the KOrganizer attachment editor.
 
 Friday, July 31th 2009
 
