@@ -1,3 +1,25 @@
+Friday, August 7th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3685: Make it possible again to enter the update mail of a moved event into the calendar
+* kolab/issue3789: Show again the buttons for the 'Delegate', 'Forward' and 'Look into Calendar' actions
+* kolab/issue3234: Put optional participants of events into the CC field of the invitation mails, not into 
+                   the To field, to make Outlook happy
+* kolab/issue3779: Always allow an attendee to remove invitation events from his calendar
+* kolab/issue3788: Make the default time and time unit for new reminders configurable
+* kolab/issue3742: Allow to specify the groupware type of local folders again
+* kolab/issue3375: When using 'Scroll To' on attachments, mark the scrolled-to attachment with a yellow border
+* kolab/issue3776: Don't ask for the storage location on invitation updates
+* kolab/issue3740: When displaying encapsulated messages in a seperate window, make deleting attachments work
+                   correctly
+* Fix a problem that attachments in encapsulated messages could not be deleted
+* Don't erroneously display the text part of encapsulated messages as attachment in the quick attachment list
+* Add nicer icon for the organizer, replacing the old 'tux' icon
+* When dragging email messages as attachments, try to use the mail subject as the
+  attachment name in the KOrganizer attachment editor.
+
 Friday, July 31th 2009
 
 Problems addressed
