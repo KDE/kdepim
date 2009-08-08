@@ -157,3 +157,18 @@ bool KMail::Util::checkTransport( QWidget *w )
 
 }
 
+KMail::Util::RecursionPreventer::RecursionPreventer( int &counter )
+  : mCounter( counter )
+{
+  mCounter++;
+}
+
+KMail::Util::RecursionPreventer::~RecursionPreventer()
+{
+  mCounter--;
+}
+
+bool KMail::Util::RecursionPreventer::isRecursive() const
+{
+  return mCounter > 1;
+}
