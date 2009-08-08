@@ -81,11 +81,17 @@ set(kdepim_LIB_SRCS
    attachmentloadjob.cpp
    attachmentfromurljob.cpp
    attachmentfrommimecontentjob.cpp
+   attachmentpropertiesdialog.cpp
 )
 
 QT4_ADD_DBUS_INTERFACE(kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml korganizer_korgac_interface )
 
-kde4_add_ui_files(kdepim_LIB_SRCS categoryselectdialog_base.ui categoryeditdialog_base.ui addresspicker.ui)
+kde4_add_ui_files(kdepim_LIB_SRCS
+  categoryselectdialog_base.ui
+  categoryeditdialog_base.ui
+  addresspicker.ui
+  attachmentpropertiesdialog.ui
+)
 
 kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
 
