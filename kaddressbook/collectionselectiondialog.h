@@ -38,7 +38,7 @@ class CollectionComboBox;
 class CollectionSelectionDialog : public KDialog
 {
   public:
-    CollectionSelectionDialog( QAbstractItemModel *collectionModel, QWidget *parent = 0 );
+    explicit CollectionSelectionDialog( QAbstractItemModel *collectionModel, QWidget *parent = 0 );
     ~CollectionSelectionDialog();
 
     Akonadi::Collection selectedCollection() const;
