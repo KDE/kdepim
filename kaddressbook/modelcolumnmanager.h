@@ -38,6 +38,7 @@ class QWidget;
  */
 class ModelColumnManager : public QObject
 {
+  Q_OBJECT
   public:
     /**
      * Creates a new model column manager.
@@ -45,7 +46,7 @@ class ModelColumnManager : public QObject
      * @param model The model that shall be managed.
      * @param parent The parent object.
      */
-    ModelColumnManager( Akonadi::ContactsTreeModel *model, QObject *parent = 0 );
+    explicit ModelColumnManager( Akonadi::ContactsTreeModel *model, QObject *parent = 0 );
 
     /**
      * Loads the user configuration and applies it to the model.
