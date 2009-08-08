@@ -50,9 +50,11 @@ class EmailAddressList : public QList<KCal::Person>
 		EmailAddressList(const QList<KCal::Person>& list)  { operator=(list); }
 		EmailAddressList& operator=(const QList<KCal::Person>&);
 		operator QStringList() const;
-		QString join(const QString& separator) const;
+		QString     join(const QString& separator) const;
+		QStringList pureAddresses() const;
+		QString     pureAddresses(const QString& separator) const;
 	private:
-		QString address(int index) const;
+		QString     address(int index) const;
 };
 
 
@@ -68,6 +70,8 @@ class KAAlarmEventBase
 		uint               emailFromId() const         { return mEmailFromIdentity; }
 		const EmailAddressList& emailAddresses() const { return mEmailAddresses; }
 		QString            emailAddresses(const QString& sep) const  { return mEmailAddresses.join(sep); }
+		QStringList        emailPureAddresses() const  { return mEmailAddresses.pureAddresses(); }
+		QString            emailPureAddresses(const QString& sep) const  { return mEmailAddresses.pureAddresses(sep); }
 		const QString&     emailSubject() const        { return mEmailSubject; }
 		const QStringList& emailAttachments() const    { return mEmailAttachments; }
 		QString            emailAttachments(const QString& sep) const  { return mEmailAttachments.join(sep); }
@@ -510,7 +514,7 @@ class KAEvent : public KAAlarmEventBase
 		DateTime           mDisplayingTime;   // date/time shown in the alarm currently being displayed
 		int                mDisplayingFlags;  // type of alarm which is currently being displayed
 		int                mReminderMinutes;  // how long in advance reminder is to be, or 0 if none
-		int                mArchiveReminderMinutes;  // original reminder period if now expired, or 0 if none
+		int                mArchiveReminderMinutes; // original reminder period if now expired, or for restoration after next recurrence, or 0 if none
 		int                mDeferDefaultMinutes; // default number of minutes for deferral dialog, or 0 to select time control
 		int                mRevision;         // SEQUENCE: revision number of the original alarm, or 0
 		KARecurrence*      mRecurrence;       // RECUR: recurrence specification, or 0 if none
