@@ -81,6 +81,9 @@ class KDEPIM_EXPORT AttachmentPart
     Private *const d;
 };
 
+// FIXME I don't understand why this doesn't work if I put it outside namespace KPIM.
+KDEPIM_EXPORT uint qHash( const boost::shared_ptr<KPIM::AttachmentPart> &ptr );
+
 } // namespace KPIM
 
 #endif

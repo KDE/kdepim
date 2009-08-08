@@ -19,6 +19,8 @@
 
 #include "attachmentpart.h"
 
+#include <boost/shared_ptr.hpp>
+
 #include <KDebug>
 #include <KUrl>
 
@@ -26,6 +28,11 @@
 #include <kmime/kmime_util.h>
 
 using namespace KPIM;
+
+uint KPIM::qHash( const KPIM::AttachmentPart::Ptr &ptr )
+{
+  return ::qHash( ptr.get() );
+}
 
 // TODO move to kmime_util?
 static qint64 sizeWithEncoding( const QByteArray &data,
@@ -197,5 +204,3 @@ qint64 AttachmentPart::size() const
 {
   return d->size;
 }
-
-#include "attachmentpart.moc"
