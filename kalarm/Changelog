@@ -1,9 +1,10 @@
 KAlarm Change Log
 
-=== Version 2.2.7 --- 8 August 2009 ===
+=== Version 2.2.7 --- 9 August 2009 ===
 - Shift-Delete now deletes alarms without showing confirmation prompt.
 - Command line options: validate better, and remove unnecessary restrictions.
 - Fix bad addresses when sending email alarms.
+- Install action icons into kalarm directory, not system directory.
 
 === Version 2.2.6 (KDE 4.3.0) --- 26 July 2009 ===
 - Use new setting after "prompt for calendar to store in" selection changes.

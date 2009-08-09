@@ -12,6 +12,7 @@ include_directories(
 ) 
 
 add_subdirectory( resources ) 
+add_subdirectory( appicons ) 
 add_subdirectory( pixmaps ) 
 add_subdirectory( autostart ) 
 
@@ -109,8 +110,7 @@ qt4_add_dbus_interfaces(kalarm_bin_SRCS ${KDE4_DBUS_INTERFACES_DIR}/org.kde.KSpe
 kde4_add_kcfg_files(kalarm_bin_SRCS GENERATE_MOC kalarmconfig.kcfgc)
 
 #if (UNIX)
-# todo: move to Oxygen icon
-kde4_add_app_icon(kalarm_bin_SRCS "ox*-app-kalarm.png")
+kde4_add_app_icon(kalarm_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/appicons/ox*-app-kalarm.png")
 kde4_add_executable(kalarm_bin ${kalarm_bin_SRCS})
 if (KMAIL_SUPPORTED)
    add_dependencies(kalarm_bin kmail_xml)
@@ -133,5 +133,3 @@ install( FILES kalarmui.rc DESTINATION ${DATA_INSTALL_DIR}/kalarm )
 install( FILES org.kde.kalarm.kalarm.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR} )
 install( FILES kalarm.upd DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
 install( PROGRAMS kalarm-version.pl kalarm-1.2.1-general.pl kalarm-1.9.5-defaults.pl kalarm-2.0.2-general.pl kalarm-2.1.5-general.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
-
-kde4_install_icons( ${ICON_INSTALL_DIR} )
