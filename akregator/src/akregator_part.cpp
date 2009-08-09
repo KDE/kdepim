@@ -46,6 +46,7 @@
 #include <knotifyconfigwidget.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
+#include <KCmdLineArgs>
 #include <kconfig.h>
 #include <kconfigdialog.h>
 #include <kfiledialog.h>
@@ -658,7 +659,25 @@ void Part::initFonts()
             underline = konq.readEntry("UnderlineLinks", false);
         Settings::setUnderlineLinks(underline);
     }
+}
 
+bool Part::handleCommandLine() {
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QString addFeedGroup = !args->getOption("group").isEmpty() ?
+         args->getOption("group")
+         : i18n("Imported Folder");
+
+    QStringList feedsToAdd = args->getOptionList("addfeed");
+
+    if (feedsToAdd.isEmpty() && args->count() > 0) {
+        QString url = args->url(0).url();
+        if(!url.isEmpty())
+            feedsToAdd.append(url);
+    }
+
+    if (!feedsToAdd.isEmpty())
+        addFeedsToGroup( feedsToAdd, addFeedGroup );
+    return true;
 }
 
 } // namespace Akregator

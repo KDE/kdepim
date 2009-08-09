@@ -157,6 +157,7 @@ int AkregatorUniqueAppHandler::newInstance()
   org::kde::akregator::part akregator(
     "org.kde.akregator", "/Akregator", QDBusConnection::sessionBus() );
   akregator.openStandardFeedList();
+  akregator.handleCommandLine();
 
   return Kontact::UniqueAppHandler::newInstance();
 }
