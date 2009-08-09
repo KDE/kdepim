@@ -41,7 +41,7 @@
 
 #include "globalcontactmodel.h"
 #include "contactstreemodel.h"
-#include "entitytreeview.h"
+#include <akonadi_next/entitytreeview.h>
 
 // including the styles
 #include "detailledstyle.h"
