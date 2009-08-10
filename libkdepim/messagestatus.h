@@ -29,6 +29,8 @@
 #ifndef KDEPIM_MESSAGESTATUS_H
 #define KDEPIM_MESSAGESTATUS_H
 
+#include <QtCore/QSet>
+
 #include "kdepim_export.h"
 
 class QString;
@@ -293,6 +295,16 @@ class KDEPIM_EXPORT MessageStatus
                 which allows a predefined sorting by status.
     */
     QString getSortRank() const;
+
+    /** Get the status as a whole e.g. for storage as IMAP flags.
+        @return The status encoded in flags.
+    */
+    QSet<QByteArray> getStatusFlags() const;
+
+    /** Set the status as a whole e.g. for reading from IMAP flags.
+        @param status The status encoded in bits to be set in this instance.
+    */
+    void setStatusFromFlags( const QSet<QByteArray> &flags );
 
     /* ----- static accessors to simple states --------------------------- */
 
