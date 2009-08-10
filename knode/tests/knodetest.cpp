@@ -58,7 +58,7 @@ void KNodeTest::testUtilitiesLocale()
   kcharsetVsMime.insert( "IBM850", "IBM850" );
   kcharsetVsMime.insert( "IBM866", "IBM866" );
   kcharsetVsMime.insert( "IBM874", "IBM874" );
-  kcharsetVsMime.insert( "ISO 10646-UCS-2", "UTF-16" );  // "ISO 10646-UCS-2" and "UTF-16" have different MIBenum, but it's fine
+  kcharsetVsMime.insert( "ISO 10646-UCS-2", "UTF-8" );
   kcharsetVsMime.insert( "ISO 8859-11", "TIS-620" ); // correct ??
   kcharsetVsMime.insert( "ISO 8859-13", "ISO-8859-13" );
   kcharsetVsMime.insert( "ISO 8859-14", "ISO-8859-14" );
@@ -80,7 +80,7 @@ void KNodeTest::testUtilitiesLocale()
   kcharsetVsMime.insert( "sjis", "SHIFT_JIS" );
   kcharsetVsMime.insert( "TIS620", "TIS-620" );
   kcharsetVsMime.insert( "TSCII", "TSCII" );
-  kcharsetVsMime.insert( "ucs2", "UTF-16" ); // wondering what it the difference bet "ucs2" and "ISO 10646-UCS-2" above
+  kcharsetVsMime.insert( "ucs2", "UTF-8" ); // wondering what is the difference between "ucs2" and "ISO 10646-UCS-2" above
   kcharsetVsMime.insert( "UTF-16", "UTF-16" );
   kcharsetVsMime.insert( "utf7", "UTF-8" ); // KGlobal::charsets()->codecForName() do not returns a valid codec for "utf7" so "UTF-8" is returned.
   kcharsetVsMime.insert( "UTF-8", "UTF-8" );
@@ -96,6 +96,7 @@ void KNodeTest::testUtilitiesLocale()
 
   // Check that the convertion in Locale::toMimeCharset() is correct for these
   foreach ( const QString &encName, KGlobal::charsets()->availableEncodingNames() ) {
+    qDebug() << "Current encoding:" << encName;
     QCOMPARE( Locale::toMimeCharset( encName ), kcharsetVsMime.value( encName ) );
   }
 

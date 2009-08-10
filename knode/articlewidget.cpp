@@ -11,6 +11,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "articlewidget.h"
+
+#include "utils/locale.h"
+
+
 #include <QBuffer>
 #include <QClipboard>
 #include <QDir>
@@ -55,7 +60,6 @@
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
 
-#include "articlewidget.h"
 #include "csshelper.h"
 #include "knarticle.h"
 #include "knarticlecollection.h"
@@ -73,6 +77,7 @@
 #include "knsourceviewwindow.h"
 #include "nntpjobs.h"
 #include "settings.h"
+
 #include "libkdepim/utils.h"
 
 using namespace KNode;
@@ -232,7 +237,7 @@ void ArticleWidget::initActions()
   mCharsetSelect = mActionCollection->add<KSelectAction>("set_charset");
   mCharsetSelect->setText(i18n("Chars&et"));
   mCharsetSelect->setShortcutConfigurable( false );
-  QStringList cs = KGlobal::charsets()->descriptiveEncodingNames();
+  QStringList cs = Utilities::Locale::encodings();
   cs.prepend( i18n("Automatic") );
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );

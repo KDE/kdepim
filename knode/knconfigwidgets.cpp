@@ -29,6 +29,7 @@
 #include "ui_readnewsnavigationwidget_base.h"
 #include "ui_readnewsviewerwidget_base.h"
 #include "settings.h"
+#include "utils/locale.h"
 
 
 #include <QPainter>
@@ -1524,7 +1525,7 @@ KNode::PostNewsTechnicalWidget::PostNewsTechnicalWidget( const KComponentData &i
 {
   setupUi( this );
 
-  mCharset->addItems( KGlobal::charsets()->availableEncodingNames() );
+  mCharset->addItems( KNode::Utilities::Locale::encodings() );
   mEncoding->addItem( i18n("Allow 8-bit") );
   mEncoding->addItem( i18n("7-bit (Quoted-Printable)") );
 
@@ -1546,8 +1547,8 @@ void KNode::PostNewsTechnicalWidget::load()
 {
   KCModule::load();
 
-  kDebug(5003) << knGlobals.settings()->charset();
-  mCharset->setCurrentIndex( mCharset->findText( knGlobals.settings()->charset() ) );
+  QString charsetDesc = KGlobal::charsets()->descriptionForEncoding( knGlobals.settings()->charset() );
+  mCharset->setCurrentIndex( mCharset->findText( charsetDesc ) );
   mEncoding->setCurrentIndex( knGlobals.settings()->allow8BitBody() ? 0 : 1 );
 
   mHeaderList->clear();
@@ -1559,7 +1560,8 @@ void KNode::PostNewsTechnicalWidget::load()
 
 void KNode::PostNewsTechnicalWidget::save()
 {
-  knGlobals.settings()->setCharset( mCharset->currentText() );
+  QString charset = KGlobal::charsets()->encodingForName( mCharset->currentText() );
+  knGlobals.settings()->setCharset( charset );
   knGlobals.settings()->setAllow8BitBody( mEncoding->currentIndex() == 0 );
 
   XHeader::List list;

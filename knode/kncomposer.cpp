@@ -72,6 +72,8 @@ using KPIM::RecentAddresses;
 #include "kncomposereditor.h"
 #include "utils/locale.h"
 
+using namespace KNode::Utilities;
+
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
                         QWidget *parent )
@@ -303,7 +305,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctSetCharset = actionCollection()->add<KSelectAction>("set_charset");
   a_ctSetCharset->setText(i18n("Set &Charset"));
-  a_ctSetCharset->setItems( KGlobal::charsets()->availableEncodingNames() );
+  a_ctSetCharset->setItems( Locale::encodings() );
   a_ctSetCharset->setShortcutConfigurable(false);
   connect(a_ctSetCharset, SIGNAL(triggered(const QString&)),
   this, SLOT(slotSetCharset(const QString&)));
@@ -932,7 +934,8 @@ bool KNComposer::applyChanges()
 
 void KNComposer::setCharset( const QString &charset )
 {
-  mCharset = KNode::Utilities::Locale::toMimeCharset( charset );
+  mCharset = Locale::toMimeCharset( charset );
+  slotUpdateStatusBar();
 }
 
 
@@ -1003,7 +1006,8 @@ void KNComposer::initData(const QString &text)
     setCharset( knGlobals.settings()->charset() );
   }
 
-  a_ctSetCharset->setCurrentItem( a_ctSetCharset->items().indexOf( mCharset ) );
+  QString charsetDesc = KGlobal::charsets()->descriptionForEncoding( mCharset );
+  a_ctSetCharset->setCurrentItem( a_ctSetCharset->items().indexOf( charsetDesc ) );
 
   // initialize the message type select action
   if (a_rticle->doPost() && a_rticle->doMail())
@@ -1273,9 +1277,8 @@ void KNComposer::slotSetCharset(const QString &s)
   if(s.isEmpty())
     return;
 
-  setCharset( s );
-
-  setConfig(true); //adjust fonts
+  QString charset = KGlobal::charsets()->encodingForName( s );
+  setCharset( charset );
 }
 
 
@@ -1284,7 +1287,8 @@ void KNComposer::slotSetCharsetKeyboard()
   int newCS = KNHelper::selectDialog(this, i18n("Select Charset"), a_ctSetCharset->items(), a_ctSetCharset->currentItem());
   if (newCS != -1) {
     a_ctSetCharset->setCurrentItem(newCS);
-    slotSetCharset( a_ctSetCharset->items()[newCS] );
+    QString charset = KGlobal::charsets()->encodingForName( a_ctSetCharset->items()[ newCS ] );
+    setCharset( charset );
   }
 }
 
