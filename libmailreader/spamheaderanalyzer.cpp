@@ -160,20 +160,26 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message* message ) {
     QString confidenceString = "-2.0";
     bool confidenceValid = false;
     // Do we have the needed confidence field for this agent?
-    KMime::Headers::Base *cHeader = message->headerByType( (*it).confidenceHeader() );
+    QByteArray confidenceHeaderName = (*it).confidenceHeader();
     QString mCField;
-    if ( cHeader )
-      mCField = cHeader->asUnicodeString();
-    if ( ! mCField.isEmpty() ) {
-      // Can we extract the confidence?
-      QRegExp cScorePattern = (*it).confidencePattern();
-      if ( cScorePattern.indexIn( mCField ) != -1 ) {
-        confidenceString = cScorePattern.cap( 1 );
-      }
-      confidence = confidenceString.toFloat( &confidenceValid );
-      if( !confidenceValid) {
-        kDebug() <<"Unable to convert confidence to float:" << confidenceString;
-        confidence = -3.0;
+    if( !confidenceHeaderName.isEmpty() )
+    {
+      KMime::Headers::Base *cHeader = message->headerByType( confidenceHeaderName );
+      if ( cHeader )
+      {
+        mCField = cHeader->asUnicodeString();
+        if ( ! mCField.isEmpty() ) {
+          // Can we extract the confidence?
+          QRegExp cScorePattern = (*it).confidencePattern();
+          if ( cScorePattern.indexIn( mCField ) != -1 ) {
+            confidenceString = cScorePattern.cap( 1 );
+          }
+          confidence = confidenceString.toFloat( &confidenceValid );
+          if( !confidenceValid) {
+            kDebug() <<"Unable to convert confidence to float:" << confidenceString;
+            confidence = -3.0;
+          }
+        }
       }
     }
     scores.append( SpamScore( (*it).name(), score, ( confidence < 0.0 ) ? confidence : confidence*100, mField, mCField ) );
