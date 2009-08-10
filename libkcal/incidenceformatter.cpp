@@ -1364,19 +1364,15 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
     return tmpStr;
   }
 
-  tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
-  tmpStr += "<br/>";
-
-  int count=0;
   Attachment::List attachments = incidence->attachments();
   if ( !attachments.isEmpty() ) {
+    tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
+    tmpStr += "<br/>";
+    tmpStr += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" columns=\"1\">";
+
     Attachment::List::ConstIterator it;
     for( it = attachments.begin(); it != attachments.end(); ++it ) {
       Attachment *a = *it;
-      count++;
-      if ( count == 1 ) {
-        tmpStr += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" columns=\"1\">";
-      }
       tmpStr += "<tr><td>";
       // Attachment icon
       KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
@@ -1397,8 +1393,6 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       tmpStr += "</td>";
       tmpStr += "</tr>";
     }
-  }
-  if ( count ) {
     tmpStr += "</table>";
   }
 
