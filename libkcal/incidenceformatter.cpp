@@ -45,10 +45,12 @@
 #include <kemailsettings.h>
 // #include <kdebug.h>
 
+#include <kio/netaccess.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kcalendarsystem.h>
+#include <kmimetype.h>
 
 #include <qbuffer.h>
 #include <qstylesheet.h>
@@ -1355,6 +1357,54 @@ static QString invitationAttendees( Incidence *incidence )
   return tmpStr;
 }
 
+static QString invitationAttachments( InvitationFormatterHelper *helper, Incidence *incidence )
+{
+  QString tmpStr;
+  if ( !incidence ) {
+    return tmpStr;
+  }
+
+  tmpStr += "<u>" + i18n( "Attached documents" ) + "</u>";
+  tmpStr += "<br/>";
+
+  int count=0;
+  Attachment::List attachments = incidence->attachments();
+  if ( !attachments.isEmpty() ) {
+    Attachment::List::ConstIterator it;
+    for( it = attachments.begin(); it != attachments.end(); ++it ) {
+      Attachment *a = *it;
+      count++;
+      if ( count == 1 ) {
+        tmpStr += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"0\" columns=\"1\">";
+      }
+      tmpStr += "<tr><td>";
+      // Attachment icon
+      KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
+      QString iconStr = mimeType->icon( a->uri(), false );
+      QString iconPath = KGlobal::iconLoader()->iconPath( iconStr, KIcon::Small );
+      if ( !iconPath.isEmpty() ) {
+        tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
+      }
+      if ( a->isUri() ) {
+        if ( KIO::NetAccess::exists( a->uri() ) ) {
+          tmpStr += "<a href=\"" + a->uri() + "\">" + a->label() + "</a>";
+        } else {
+          tmpStr += i18n( "%1 (inaccessible link)" ).arg( a->label() );
+        }
+      } else {
+        tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
+      }
+      tmpStr += "</td>";
+      tmpStr += "</tr>";
+    }
+  }
+  if ( count ) {
+    tmpStr += "</table>";
+  }
+
+  return tmpStr;
+}
+
 class IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
 {
   public:
@@ -1643,9 +1693,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     html += "</u></i><br>";
   }
 
-  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
-
   // Add groupware links
+
+  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
 
   switch ( msg->method() ) {
     case Scheduler::Publish:
@@ -1763,7 +1813,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   // Add the attendee list if I am the organizer
   if ( myInc && helper->calendar() ) {
     html += invitationAttendees( helper->calendar()->incidence( inc->uid() ) );
- }
+  }
+
+    // Add the attachment list
+  html += invitationAttachments( helper, inc );
 
   // close the top-level table
   html += "</td></tr></table><br></div>";

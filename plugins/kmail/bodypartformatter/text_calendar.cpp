@@ -38,6 +38,8 @@
 #include <interfaces/bodyparturlhandler.h>
 #include <khtmlparthtmlwriter.h>
 
+#include <libkdepim/kfileio.h>
+
 #include <libkcal/calendarlocal.h>
 #include <libkcal/calendarresources.h>
 #include <libkcal/icalformat.h>
@@ -65,6 +67,9 @@
 #include <kstandarddirs.h>
 #include <kapplication.h>
 #include <ktempfile.h>
+#include <kmdcodec.h>
+#include <kmimetype.h>
+#include <krun.h>
 
 #include <qurl.h>
 #include <qdir.h>
@@ -532,6 +537,52 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return ok;
     }
 
+    bool handleAttachment( const QString &name, const QString &iCal ) const
+    {
+      // get comment for tentative acceptance
+      Incidence *incidence = icalToString( iCal );
+
+      // get the attachment by name from the incidence
+      Attachment::List as = incidence->attachments();
+      Attachment *a = 0;
+      if ( as.count() > 0 ) {
+        Attachment::List::ConstIterator it;
+        for ( it = as.begin(); it != as.end(); ++it ) {
+          if ( (*it)->label() == name ) {
+            a = *it;
+            break;
+          }
+        }
+      }
+
+      if ( !a ) {
+        KMessageBox::error(
+          0,
+          i18n("No attachment named \"%1\" found in the invitation.").arg( name ) );
+        return false;
+      }
+
+      // put the attachment in a temporary file and launch it
+      KTempFile *file;
+      QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+      if ( !patterns.empty() ) {
+        file = new KTempFile( QString::null,
+                              QString( patterns.first() ).remove( '*' ),0600 );
+      } else {
+        file = new KTempFile( QString::null, QString::null, 0600 );
+      }
+      QByteArray encoded;
+      encoded.duplicate( a->data(), strlen(a->data()) );
+      QByteArray decoded;
+      KCodecs::base64Decode( encoded, decoded );
+      KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
+      file->close();
+
+      bool stat = KRun::runURL( KURL( file->name() ), a->mimeType(), 0, true );
+      delete file;
+      return stat;
+    }
+
     void showCalendar( const QDate &date ) const
     {
       ensureKorganizerRunning();
@@ -667,6 +718,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           result = true;
         }
       }
+      if ( path.startsWith( "ATTACH:" ) ) {
+        QString name = path;
+        name.remove( QRegExp( "^ATTACH:" ) );
+        result = handleAttachment( name, iCal );
+      }
+
       if ( result )
         c.closeIfSecondaryWindow();
       return result;
@@ -707,6 +764,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n( "Forward invitation" );
         if ( path == "cancel" )
           return i18n( "Remove invitation from my calendar" );
+        if ( path.startsWith( "ATTACH:" ) ) {
+          QString name = path;
+          return i18n( "Open attachment \"%1\"" ).arg( name.remove( QRegExp( "^ATTACH:" ) ) );
+        }
       }
 
       return QString::null;
