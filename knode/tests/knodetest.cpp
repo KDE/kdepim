@@ -107,11 +107,11 @@ void KNodeTest::testUtilitiesLocale()
   QCOMPARE( Locale::toMimeCharset( "us-ascii" ), QString( "US-ASCII" ) );
 
   // Idempotency
-  foreach ( const QString &encName, kcharsetVsMime.keys() ) {
+  kcharsetNames = kcharsetVsMime.keys();
+  foreach ( const QString &encName, kcharsetNames ) {
     const QString res = Locale::toMimeCharset( encName );
     QCOMPARE( res, Locale::toMimeCharset( res ) );
   }
-
 }
 
 

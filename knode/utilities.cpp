@@ -179,7 +179,8 @@ int KNHelper::selectDialog(QWidget *parent, const QString &caption, const QStrin
   QString s;
   for ( QStringList::ConstIterator it = options.begin(); it != options.end(); ++it ) {
     s = (*it);
-    s.replace(QRegExp("&"),"");   // remove accelerators
+    // remove accelerators
+    s.replace( QRegExp( "&" ), "" ); // krazy:exclude=doublequote_chars
     list->addItem( s );
   }
 

@@ -71,7 +71,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, 
   topL->setMargin(5);
 
   n_ame=new KLineEdit(this);
-  QLabel *l=new QLabel(i18n("&Name:"),this);
+  QLabel *l = new QLabel( i18nc( "@label:textbox Name of the user in a message", "&Name:" ), this );
   l->setBuddy(n_ame);
   topL->addWidget(l, 0,0);
   topL->addWidget(n_ame, 0, 1, 1,2);
@@ -123,7 +123,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, 
   connect( m_ailCopiesTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
 
   s_igningKey = new Kpgp::SecretKeyRequester(this);
-  s_igningKey->dialogButton()->setText(i18n("Chan&ge..."));
+  s_igningKey->dialogButton()->setText( i18nc( "@action:button Change signing key", "Chan&ge..." ) );
   s_igningKey->setDialogCaption(i18n("Your OpenPGP Key"));
   s_igningKey->setDialogMessage(i18n("Select the OpenPGP key which should be "
       "used for signing articles."));
@@ -160,11 +160,11 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, 
   f_ileName->setWhatsThis( msg );
   s_ig->setWhatsThis( msg );
 
-  c_hooseBtn = new QPushButton( i18n("Choo&se..."), this);
+  c_hooseBtn = new QPushButton( i18nc( "@action:button Choose a file that contains a signature for messages", "Choo&se..." ), this );
   connect(c_hooseBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureChoose()));
   topL->addWidget(c_hooseBtn, 7, 2 );
-  e_ditBtn = new QPushButton( i18n("&Edit File"), this);
+  e_ditBtn = new QPushButton( i18nc("@action:button Launch the edit of the signature file", "&Edit File" ), this );
   connect(e_ditBtn, SIGNAL(clicked()),
           this, SLOT(slotSignatureEdit()));
   topL->addWidget(e_ditBtn, 8, 2);
@@ -658,7 +658,7 @@ KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *
   topL->addWidget( c_olorCB, 0, 0, 1, 3 );
   connect(c_olorCB, SIGNAL(toggled(bool)), this, SLOT(slotColCheckBoxToggled(bool)));
 
-  c_olChngBtn=new QPushButton(i18n("Cha&nge..."), this);
+  c_olChngBtn = new QPushButton( i18nc( "@action:button Run a color selection dialog", "Cha&nge..." ), this );
   connect(c_olChngBtn, SIGNAL(clicked()), this, SLOT(slotColChangeBtnClicked()));
   topL->addWidget( c_olChngBtn, 1, 2, 1, 1 );
 
@@ -673,7 +673,7 @@ KNode::AppearanceWidget::AppearanceWidget( const KComponentData &inst, QWidget *
   topL->addWidget(f_ontCB , 4, 0, 1, 3 );
   connect(f_ontCB, SIGNAL(toggled(bool)), this, SLOT(slotFontCheckBoxToggled(bool)));
 
-  f_ntChngBtn=new QPushButton(i18n("Chang&e..."), this);
+  f_ntChngBtn = new QPushButton( i18nc( "@action:button Run a font selection dialog", "Chang&e..."), this);
   connect(f_ntChngBtn, SIGNAL(clicked()), this, SLOT(slotFontChangeBtnClicked()));
   topL->addWidget( f_ntChngBtn, 5, 2, 1, 1 );
 
@@ -918,11 +918,11 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, cons
   topL->addWidget( mHeaderList, 0, 0, 7, 1);
 
   // buttons
-  a_ddBtn=new QPushButton(i18n("&Add..."), this);
+  a_ddBtn = new QPushButton( i18nc( "@action:button Add a new message header field (open dialog)", "&Add..." ), this );
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn, 0,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  d_elBtn = new QPushButton( i18nc( "@action:button Delete a message header field", "&Delete" ), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn, 1,1);
 
@@ -930,11 +930,11 @@ KNode::DisplayedHeadersWidget::DisplayedHeadersWidget( DisplayedHeaders *d, cons
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn, 2,1);
 
-  u_pBtn=new QPushButton(i18n("&Up"), this);
+  u_pBtn = new QPushButton( i18nc( "@action:button Move an element of a list up", "&Up" ), this );
   connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
   topL->addWidget(u_pBtn, 4,1);
 
-  d_ownBtn=new QPushButton(i18n("Do&wn"), this);
+  d_ownBtn = new QPushButton( i18nc( "@action:button Move an element of a list down", "Do&wn" ), this );
   connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
   topL->addWidget(d_ownBtn, 5,1);
 
@@ -973,8 +973,9 @@ KNode::DisplayedHeadersWidget::HdrItem* KNode::DisplayedHeadersWidget::generateI
   if(h->hasName()) {
     text=h->translatedName();
     text+=": <";
-  } else
-    text="<";
+  } else {
+    text = '<';
+  }
   text+=h->header();
   text+='>';
   return new HdrItem(text,h);
@@ -1101,7 +1102,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   h_drC=new KComboBox(true, nameW);
   h_drC->lineEdit()->setMaxLength(64);
   connect(h_drC, SIGNAL(activated(int)), this, SLOT(slotActivated(int)));
-  QLabel *label=new QLabel(i18n("H&eader:"),nameW);
+  QLabel *label = new QLabel( i18nc( "@label:textbox Edition of a message header name", "H&eader:" ), nameW );
   label->setBuddy(h_drC);
   nameL->addWidget(label,0,0);
   nameL->addWidget(h_drC,0,1);
@@ -1109,7 +1110,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   n_ameE=new KLineEdit(nameW);
 
   n_ameE->setMaxLength(64);
-  label=new QLabel(i18n("Displayed na&me:"),nameW);
+  label = new QLabel( i18nc( "@label:textbox Edition of the displayed name in the UI of a message header", "Displayed na&me:" ), nameW );
   label->setBuddy(n_ameE);
   nameL->addWidget(label,1,0);
   nameL->addWidget(n_ameE,1,1);
@@ -1117,7 +1118,7 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
 
   topL->addWidget(nameW,0,0, 1, 2 );
 
-  QGroupBox *ngb=new QGroupBox(i18n("Name"), page);
+  QGroupBox *ngb = new QGroupBox(i18n("Name"), page);
   // ### hide style settings for now, the new viewer doesn't support this yet
   ngb->hide();
   QVBoxLayout *ngbL = new QVBoxLayout(ngb);
@@ -1256,7 +1257,7 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   // == Filters =================================================
 
   mFilterList = new QListWidget( this );
-  QLabel *label=new QLabel(i18n("&Filters:"), this );
+  QLabel *label = new QLabel( i18nc("@title", "&Filters:" ), this );
   label->setBuddy(mFilterList);
   topL->addWidget( label, 0, 0 );
 
@@ -1264,7 +1265,7 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   connect( mFilterList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
   topL->addWidget( mFilterList, 1, 0, 5, 1);
 
-  a_ddBtn=new QPushButton(i18n("&Add..."), this);
+  a_ddBtn = new QPushButton( i18nc("@action:button Add a new filter", "&Add..." ), this );
   connect(a_ddBtn, SIGNAL(clicked()), this, SLOT(slotAddBtnClicked()));
   topL->addWidget(a_ddBtn,1,1);
 
@@ -1272,37 +1273,37 @@ KNode::FilterListWidget::FilterListWidget( const KComponentData &inst, QWidget *
   connect(e_ditBtn, SIGNAL(clicked()), this, SLOT(slotEditBtnClicked()));
   topL->addWidget(e_ditBtn,2,1);
 
-  c_opyBtn=new QPushButton(i18n("Co&py..."), this);
+  c_opyBtn = new QPushButton( i18nc( "@action:button Copy a filter", "Co&py..."), this);
   connect(c_opyBtn, SIGNAL(clicked()), this, SLOT(slotCopyBtnClicked()));
   topL->addWidget(c_opyBtn,3,1);
 
-  d_elBtn=new QPushButton(i18n("&Delete"), this);
+  d_elBtn = new QPushButton( i18nc( "@action:button Delete a filter", "&Delete"), this);
   connect(d_elBtn, SIGNAL(clicked()), this, SLOT(slotDelBtnClicked()));
   topL->addWidget(d_elBtn,4,1);
 
   // == Menu ====================================================
 
   mMenuList = new QListWidget( this );
-  label=new QLabel( i18n("&Menu:"), this );
+  label = new QLabel( i18nc( "@title", "&Menu:"), this );
   label->setBuddy(mMenuList);
   topL->addWidget( label, 6, 0 );
 
   connect( mMenuList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChangedMenu() ) );
   topL->addWidget( mMenuList, 7, 0, 5, 1);
 
-  u_pBtn=new QPushButton(i18n("&Up"), this);
+  u_pBtn = new QPushButton( i18nc( "@action:button move something up in a list", "&Up"), this );
   connect(u_pBtn, SIGNAL(clicked()), this, SLOT(slotUpBtnClicked()));
   topL->addWidget(u_pBtn,7,1);
 
-  d_ownBtn=new QPushButton(i18n("Do&wn"), this);
+  d_ownBtn = new QPushButton( i18nc( "@action:button move something down in a list", "Do&wn"), this );
   connect(d_ownBtn, SIGNAL(clicked()), this, SLOT(slotDownBtnClicked()));
   topL->addWidget(d_ownBtn,8,1);
 
-  s_epAddBtn=new QPushButton(i18n("Add\n&Separator"), this);
+  s_epAddBtn = new QPushButton( i18nc( "@action:button", "Add\n&Separator" ), this );
   connect(s_epAddBtn, SIGNAL(clicked()), this, SLOT(slotSepAddBtnClicked()));
   topL->addWidget(s_epAddBtn,9,1);
 
-  s_epRemBtn=new QPushButton(i18n("&Remove\nSeparator"), this);
+  s_epRemBtn = new QPushButton( i18nc( "@action:button", "&Remove\nSeparator" ), this );
   connect(s_epRemBtn, SIGNAL(clicked()), this, SLOT(slotSepRemBtnClicked()));
   topL->addWidget(s_epRemBtn,10,1);
 
