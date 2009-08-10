@@ -235,15 +235,15 @@ void ArticleWidget::initActions()
   mAttachmentStyleMenu->addAction( ra );
 
   mCharsetSelect = mActionCollection->add<KSelectAction>("set_charset");
-  mCharsetSelect->setText(i18n("Chars&et"));
+  mCharsetSelect->setText( i18n( "Set chars&et" ) );
   mCharsetSelect->setShortcutConfigurable( false );
   QStringList cs = Utilities::Locale::encodings();
-  cs.prepend( i18n("Automatic") );
+  cs.prepend( i18nc( "@item default character set", "Default") );
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );
   connect( mCharsetSelect, SIGNAL(triggered(const QString&)),SLOT(slotSetCharset(const QString&)) );
   mCharsetSelectKeyb = mActionCollection->addAction("set_charset_keyboard");
-  mCharsetSelectKeyb->setText(i18n("Charset"));
+  mCharsetSelectKeyb->setText( i18n( "Set charset" ) );
   connect(mCharsetSelectKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
   mCharsetSelectKeyb->setShortcut(QKeySequence(Qt::Key_C));
 
@@ -1413,7 +1413,7 @@ void ArticleWidget::slotSetCharset( const QString &charset )
   if ( charset.isEmpty() )
     return;
 
-  if ( charset == i18n("Automatic") ) {
+  if ( charset == i18nc( "@item default character set", "Default") ) {
     mForceCharset = false;
     mOverrideCharset = KMime::Headers::Latin1;
   } else {
