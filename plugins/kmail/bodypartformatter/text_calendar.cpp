@@ -70,6 +70,7 @@
 #include <kmdcodec.h>
 #include <kmimetype.h>
 #include <krun.h>
+#include <kio/netaccess.h>
 
 #include <qurl.h>
 #include <qdir.h>
@@ -562,25 +563,40 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
-      // put the attachment in a temporary file and launch it
-      KTempFile *file;
-      QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-      if ( !patterns.empty() ) {
-        file = new KTempFile( QString::null,
-                              QString( patterns.first() ).remove( '*' ),0600 );
+      if ( a->isUri() ) {
+        if ( !KIO::NetAccess::exists( a->uri(), true, 0 ) ) {
+          KMessageBox::information(
+            0,
+            i18n( "The invitation attachment \"%1\" is a web link that "
+                  "is inaccessible from this computer. Please ask the event "
+                  "organizer to resend the invitation with this attachment "
+                  "stored inline instead of a link." ).arg( a->uri() ) );
+          return false;
+        } else {
+          kapp->invokeBrowser( a->uri() );
+        }
       } else {
-        file = new KTempFile( QString::null, QString::null, 0600 );
-      }
-      QByteArray encoded;
-      encoded.duplicate( a->data(), strlen(a->data()) );
-      QByteArray decoded;
-      KCodecs::base64Decode( encoded, decoded );
-      KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
-      file->close();
+        // put the attachment in a temporary file and launch it
+        KTempFile *file;
+        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+        if ( !patterns.empty() ) {
+          file = new KTempFile( QString::null,
+                                QString( patterns.first() ).remove( '*' ),0600 );
+        } else {
+          file = new KTempFile( QString::null, QString::null, 0600 );
+        }
+        QByteArray encoded;
+        encoded.duplicate( a->data(), strlen(a->data()) );
+        QByteArray decoded;
+        KCodecs::base64Decode( encoded, decoded );
+        KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
+        file->close();
 
-      bool stat = KRun::runURL( KURL( file->name() ), a->mimeType(), 0, true );
-      delete file;
-      return stat;
+        bool stat = KRun::runURL( KURL( file->name() ), a->mimeType(), 0, true );
+        delete file;
+        return stat;
+      }
+      return true;
     }
 
     void showCalendar( const QDate &date ) const
