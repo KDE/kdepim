@@ -11,6 +11,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "articlewidget.h"
+
+#include "utils/locale.h"
+
+
 #include <QBuffer>
 #include <QClipboard>
 #include <QDir>
@@ -55,7 +60,6 @@
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
 
-#include "articlewidget.h"
 #include "csshelper.h"
 #include "knarticle.h"
 #include "knarticlecollection.h"
@@ -73,6 +77,7 @@
 #include "knsourceviewwindow.h"
 #include "nntpjobs.h"
 #include "settings.h"
+
 #include "libkdepim/utils.h"
 
 using namespace KNode;
@@ -230,15 +235,15 @@ void ArticleWidget::initActions()
   mAttachmentStyleMenu->addAction( ra );
 
   mCharsetSelect = mActionCollection->add<KSelectAction>("set_charset");
-  mCharsetSelect->setText(i18n("Chars&et"));
+  mCharsetSelect->setText( i18n( "Set chars&et" ) );
   mCharsetSelect->setShortcutConfigurable( false );
-  QStringList cs = KGlobal::charsets()->descriptiveEncodingNames();
-  cs.prepend( i18n("Automatic") );
+  QStringList cs = Utilities::Locale::encodings();
+  cs.prepend( i18nc( "@item default character set", "Default") );
   mCharsetSelect->setItems( cs );
   mCharsetSelect->setCurrentItem( 0 );
   connect( mCharsetSelect, SIGNAL(triggered(const QString&)),SLOT(slotSetCharset(const QString&)) );
   mCharsetSelectKeyb = mActionCollection->addAction("set_charset_keyboard");
-  mCharsetSelectKeyb->setText(i18n("Charset"));
+  mCharsetSelectKeyb->setText( i18n( "Set charset" ) );
   connect(mCharsetSelectKeyb, SIGNAL(triggered(bool) ), SLOT(slotSetCharsetKeyboard()));
   mCharsetSelectKeyb->setShortcut(QKeySequence(Qt::Key_C));
 
@@ -1408,7 +1413,7 @@ void ArticleWidget::slotSetCharset( const QString &charset )
   if ( charset.isEmpty() )
     return;
 
-  if ( charset == i18n("Automatic") ) {
+  if ( charset == i18nc( "@item default character set", "Default") ) {
     mForceCharset = false;
     mOverrideCharset = KMime::Headers::Latin1;
   } else {

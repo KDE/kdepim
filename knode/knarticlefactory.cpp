@@ -550,10 +550,10 @@ void KNArticleFactory::sendMailExternal(const QString &address, const QString &s
     queries.append("body="+KUrl::toPercentEncoding(body));
 
   if (queries.count() > 0) {
-    query = "?";
+    query = '?';
     for ( QStringList::Iterator it = queries.begin(); it != queries.end(); ++it ) {
       if (it != queries.begin())
-        query.append("&");
+        query.append( '&' );
       query.append((*it));
     }
   }

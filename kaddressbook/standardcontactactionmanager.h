@@ -20,7 +20,8 @@
 #ifndef AKONADI_STANDARDCONTACTACTIONMANAGER_H
 #define AKONADI_STANDARDCONTACTACTIONMANAGER_H
 
-#include <akonadi/akonadi_export.h>
+#include "kaddressbook_export.h"
+
 #include <akonadi/item.h>
 #include <akonadi/standardactionmanager.h>
 
@@ -38,7 +39,7 @@ namespace Akonadi {
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADI_EXPORT StandardContactActionManager : public QObject
+class KADDRESSBOOK_EXPORT StandardContactActionManager : public QObject
 {
   Q_OBJECT
 

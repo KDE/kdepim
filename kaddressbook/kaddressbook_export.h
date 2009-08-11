@@ -24,11 +24,11 @@
 #include <kdemacros.h>
 
 #ifndef KADDRESSBOOK_EXPORT
-# if defined(MAKE_LIBKADDRESSBOOKPRIVATE_LIB)
-   /* We are building this library */ 
+# if defined(MAKE_KADDRESSBOOKPRIVATE_LIB)
+   /* We are building this library */
 #  define KADDRESSBOOK_EXPORT KDE_EXPORT
 # else
-   /* We are using this library */ 
+   /* We are using this library */
 #  define KADDRESSBOOK_EXPORT KDE_IMPORT
 # endif
 #endif

@@ -273,7 +273,7 @@ class KNLocalArticle : public KNArticle {
     bool filterResult()                { return f_lags.get(8); }
     void setFilterResult(bool b=true)  { f_lags.set(8, b); }
 
-    //MBOX infos
+    //MBOX information
     int startOffset() const             { return s_Offset; }
     void setStartOffset(int so)   { s_Offset=so; }
     int endOffset() const              { return e_Offset; }

@@ -28,6 +28,7 @@
 class KNGroup;
 class QByteArray;
 class QString;
+class QStringList;
 
 namespace KNode {
 
@@ -101,6 +102,17 @@ class KNODE_EXPORT Locale {
     */
     static void encodeTo7Bit( const QByteArray &raw, const QByteArray &charset, QByteArray &result );
 
+
+    // KCharsets overload
+    /**
+      Returns a list of encodings along with a description.
+
+      Use KCharsets::encodingForName() to get the encodings back.
+
+      @returns a list of encodings that do have valid MIME-compliant counter-parts
+      taken out of KCharsets::availableEncodingNames().
+    */
+    static QStringList encodings();
 };
 
 } // namespace Utilities

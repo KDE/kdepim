@@ -1047,7 +1047,7 @@ void KNGroup::updateThreadInfo()
   }
 
   if(brokenThread) {
-    kWarning(5003) <<"KNGroup::updateThreadInfo() : Found broken threading infos! Restoring ...";
+    kWarning(5003) <<"KNGroup::updateThreadInfo() : Found broken threading information! Restoring ...";
     reorganize();
     updateThreadInfo();
   }

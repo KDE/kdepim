@@ -44,9 +44,8 @@ QString Locale::toMimeCharset( const QString &charset )
   // First, get the user preferred encoding
   if ( c.isEmpty() ) {
     c = KGlobal::locale()->encoding();
-    if ( c.isEmpty() ) {
-      // To be really sure...
-      c = "UTF-8";
+    if ( c.isEmpty() ) { // Let's test to be really sure...
+      return "UTF-8";
     }
   }
 
@@ -56,7 +55,7 @@ QString Locale::toMimeCharset( const QString &charset )
   if ( ok && !codec->name().isEmpty() ) {
     c = codec->name();
   } else {
-    c = "UTF-8";
+    return "UTF-8";
   }
 
   // special logic for japanese users:
@@ -118,5 +117,32 @@ void Locale::encodeTo7Bit( const QByteArray &raw, const QByteArray &charset, QBy
 }
 
 
+QStringList Locale::encodings()
+{
+  QStringList encodings = KGlobal::charsets()->availableEncodingNames();
+  QStringList ret;
+  QStringList seenEncs;
 
+  // Blacklist 'UTF-16' which gives garbage (bug #168327).
+  seenEncs << "UTF-16";
+
+  foreach ( const QString &enc, encodings ) {
+    // Valid codec only
+    bool ok;
+    QTextCodec *codec = KGlobal::charsets()->codecForName( enc, ok );
+    if ( !ok ) {
+      continue;
+    }
+
+    // One encoding description per MIME-charset
+    QString mimeEnc = toMimeCharset( enc );
+    if ( !seenEncs.contains( mimeEnc ) ) {
+      seenEncs << mimeEnc;
+      ret << KGlobal::charsets()->descriptionForEncoding( enc );
+    }
+  }
+
+  ret.sort();
+  return ret;
+}
 

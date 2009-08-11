@@ -123,7 +123,9 @@ void PrintingWizard::slotStyleSelected( int index )
   //setFinishEnabled( page( pageCount() - 1 ), true );
 
   if ( mStyle->preferredSortField() != 0 ) {
+#ifdef __GNUC__
 #warning "port me"
+#endif
     mStylePage->setSortField( mStyle->preferredSortField() );
 #if 0
     mStylePage->setSortAscending( mStyle->preferredSortType() );
