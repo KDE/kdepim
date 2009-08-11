@@ -61,11 +61,12 @@
 #include <kdbusservicestarter.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
-#include <kapplication.h>
 #include <ksystemtimezone.h>
 #include <ktemporaryfile.h>
 #include <kmimetype.h>
 #include <krun.h>
+#include <ktoolinvocation.h>
+#include <kio/netaccess.h>
 
 #include <QUrl>
 #include <QDir>
@@ -526,20 +527,35 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
-      // put the attachment in a temporary file and launch it
-      KTemporaryFile *file = new KTemporaryFile();
-      QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-      if ( !patterns.empty() ) {
-        file->setSuffix( QString( patterns.first() ).remove( '*' ) );
-      }
-      file->open();
-      file->setPermissions( QFile::ReadUser );
-      file->write( QByteArray::fromBase64( a->data() ) );
-      file->close();
+      if ( a->isUri() ) {
+        if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, 0 ) ) {
+          KMessageBox::information(
+            0,
+            i18n( "The invitation attachment \"%1\" is a web link that "
+                  "is inaccessible from this computer. Please ask the event "
+                  "organizer to resend the invitation with this attachment "
+                  "stored inline instead of a link.", a->uri() ) );
+          return false;
+        } else {
+          KToolInvocation::invokeBrowser( a->uri() );
+        }
+      } else {
+        // put the attachment in a temporary file and launch it
+        KTemporaryFile *file = new KTemporaryFile();
+        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+        if ( !patterns.empty() ) {
+          file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+        }
+        file->open();
+        file->setPermissions( QFile::ReadUser );
+        file->write( QByteArray::fromBase64( a->data() ) );
+        file->close();
 
-      bool stat = KRun::runUrl( KUrl( file->fileName() ), a->mimeType(), 0, true );
-      delete file;
-      return stat;
+        bool stat = KRun::runUrl( KUrl( file->fileName() ), a->mimeType(), 0, true );
+        delete file;
+        return stat;
+      }
+      return true;
     }
 
     void showCalendar( const QDate &date ) const
