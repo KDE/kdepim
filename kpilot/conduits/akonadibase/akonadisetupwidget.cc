@@ -31,10 +31,13 @@
 
 #include <akonadi/control.h>
 #include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionmodel.h>
+#include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi/entitytreeviewstatesaver.h>
+#include <akonadi/monitor.h>
+#include <akonadi/session.h>
 
-#include <akonadi/collectionview.h>
+#include <akonadi/akonadi_next/entitytreeview.h>
 #include "options.h"
 
 using namespace Akonadi;
@@ -45,31 +48,54 @@ public:
 	Private() 
 		: fCollectionFilterModel( 0L )
 		, fCollections( 0L )
+		, fSession( 0L )
+		, fMonitor( 0L )
+		, fSaver( 0L )
+		, fConduitConfig( 0L )
 	{
 	}
 	
 	Ui::AkonadiWidget fUi;
 	Akonadi::CollectionFilterProxyModel* fCollectionFilterModel;
-	CollectionView* fCollections;
+	EntityTreeView* fCollections;
 	Entity::Id fConfiguredCollection;
 	bool fCollectionModified;
+	Akonadi::Session* fSession;
+	Akonadi::Monitor* fMonitor;
+	Akonadi::EntityTreeViewStateSaver* fSaver;
+	KConfig* fConduitConfig;
 };
 
-AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
+AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent, KConfig* config )
 	: QWidget( parent ), d( new AkonadiSetupWidget::Private )
 {
 	FUNCTIONSETUP;
 	
 	d->fUi.setupUi( this );
+
+	d->fSession = new Akonadi::Session( "KPilot Configuration Session"  );
+	d->fMonitor = new Akonadi::Monitor( this );
+	d->fMonitor->setCollectionMonitored( Collection::root() );
+	d->fMonitor->setAllMonitored();
 	
-	Akonadi::CollectionModel* collectionModel = new Akonadi::CollectionModel( this );
+	Akonadi::EntityTreeModel* collectionModel = new Akonadi::EntityTreeModel( d->fSession, d->fMonitor, this );
+	collectionModel->setItemPopulationStrategy(Akonadi::EntityTreeModel::NoItemPopulation);
 	
 	d->fCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
 	d->fCollectionFilterModel->setSourceModel( collectionModel );
 	
-	d->fCollections = new CollectionView( this );
+	d->fCollections = new EntityTreeView( this );
 	d->fCollections->setModel( d->fCollectionFilterModel );
+
+	d->fSaver = new Akonadi::EntityTreeViewStateSaver(d->fCollections);
 	
+	DEBUGKPILOT << "Restoring State";
+	d->fConduitConfig = config;
+	if (config){
+		KConfigGroup configGroup(config, "treeViewState");
+		d->fSaver->restoreState(configGroup);
+	}
+
 	connect( d->fCollections, SIGNAL( currentChanged( const Akonadi::Collection& ) )
 			,this , SLOT( changeCollection( const Akonadi::Collection& ) ) );
 	
@@ -116,6 +142,10 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 
 Akonadi::Item::Id AkonadiSetupWidget::collection() const
 {
+	if (d->fConduitConfig){
+		KConfigGroup configGroup(d->fConduitConfig, "treeViewState");
+		d->fSaver->saveState(configGroup);
+	}
 	return selectedId;
 }
 
@@ -157,7 +187,7 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 		d->fUi.fWarnIcon1->setVisible( false );
 		d->fUi.fSelectionWarnLabel->setVisible( false );
 
-		QModelIndexList result = d->fCollections->model()->match( d->fCollections->model()->index( 0, 0 ), CollectionModel::CollectionIdRole, id );
+		QModelIndexList result = d->fCollections->model()->match( d->fCollections->model()->index( 0, 0 ), EntityTreeModel::CollectionIdRole, id );
   		selectedId = id;
   		if( !result.isEmpty() ) {
     			d->fCollections->setCurrentIndex( result.first());
@@ -176,5 +206,6 @@ void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )
 {
 	d->fCollectionFilterModel->clearFilters();
 	d->fCollectionFilterModel->addMimeTypeFilters( mimeTypes );
+	d->fCollectionFilterModel->addMimeTypeFilter( "inode/directory" );
 }
 

@@ -5,6 +5,7 @@ include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}/../../lib
 	${CMAKE_CURRENT_BINARY_DIR}
 	${Boost_INCLUDE_DIRS}
+	akonadi_next
 )
 
 message(STATUS "Boost includes ${Boost_INCLUDE_DIRS}")
@@ -23,6 +24,7 @@ target_link_libraries(kpilot_akonadibase
 	kpilot_conduit_base kpilot
 	${KDE4_KDEUI_LIBS}
 	${KDEPIMLIBS_AKONADI_LIBS}
+	akonadi_next
 )
 
 install(TARGETS kpilot_akonadibase LIBRARY ${INSTALL_TARGETS_DEFAULT_ARGS})
