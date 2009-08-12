@@ -52,13 +52,13 @@ class ContactEditorWidget : public Akonadi::AbstractContactEditorWidget
      * Initializes the fields of the contact editor
      * with the values from a @p contact.
      */
-    void loadContact( const KABC::Addressee &contact );
+    void loadContact( const KABC::Addressee &contact, const Akonadi::ContactMetaData& );
 
     /**
      * Stores back the fields of the contact editor
      * into the given @p contact.
      */
-    void storeContact( KABC::Addressee &contact ) const;
+    void storeContact( KABC::Addressee &contact, Akonadi::ContactMetaData& ) const;
 
   private:
     class Private;

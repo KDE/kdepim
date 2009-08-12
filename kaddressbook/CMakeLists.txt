@@ -39,7 +39,6 @@ set( kaddressbook_LIB_SRCS
   aboutdata.cpp
   contactfields.cpp
   contactfiltermodel.cpp
-  contactmetadata.cpp
   contactstreemodel.cpp
   contactswitcher.cpp
   collectionselectiondialog.cpp

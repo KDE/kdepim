@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
@@ -18,13 +18,15 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-
-#ifndef CONTACTMETADATA_H
-#define CONTACTMETADATA_H
-
-#include <kabc/addressee.h>
+#ifndef AKONADI_CONTACTMETADATA_H
+#define AKONADI_CONTACTMETADATA_H
 
 #include <QtCore/QStringList>
+
+namespace Akonadi
+{
+
+class Item;
 
 /**
  * @short A helper class for storing contact specific settings.
@@ -33,10 +35,24 @@ class ContactMetaData
 {
   public:
     /**
-     * Creates a contact meta data object, that is associated
-     * with the given @p contact.
+     * Creates a contact meta data object.
      */
-    ContactMetaData( const KABC::Addressee &contact );
+    ContactMetaData();
+
+    /**
+     * Destroys the contact meta data object.
+     */
+    ~ContactMetaData();
+
+    /**
+     * Loads the meta data for the given @p contact.
+     */
+    void load( const Akonadi::Item &contact );
+
+    /**
+     * Stores the meta data to the given @p contact.
+     */
+    void store( Akonadi::Item &contact );
 
     /**
      * Sets the mode that is used for the display
@@ -50,13 +66,15 @@ class ContactMetaData
      */
     int displayNameMode() const;
 
-    /**
-     * Removes all meta data for that contact.
-     */
-    void remove();
-
   private:
-    KABC::Addressee mContact;
+    //@cond PRIVATE
+    Q_DISABLE_COPY( ContactMetaData )
+
+    class Private;
+    Private* const d;
+    //@endcond
 };
+
+}
 
 #endif
