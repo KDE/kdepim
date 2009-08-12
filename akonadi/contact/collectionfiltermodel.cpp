@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "collectionfiltermodel.h"
+#include "collectionfiltermodel_p.h"
 
 #include <akonadi/entitytreemodel.h>
 
@@ -58,4 +58,4 @@ bool CollectionFilterModel::filterAcceptsRow( int row, const QModelIndex &parent
   return accepted;
 }
 
-#include "collectionfiltermodel.moc"
+#include "collectionfiltermodel_p.moc"

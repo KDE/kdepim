@@ -20,7 +20,7 @@
 
 #include "collectionselectiondialog.h"
 
-#include "collectioncombobox.h"
+#include "akonadi/contact/collectioncombobox.h"
 
 #include <akonadi/descendantsproxymodel.h>
 #include <akonadi/entityfilterproxymodel.h>
@@ -54,7 +54,7 @@ CollectionSelectionDialog::CollectionSelectionDialog( QAbstractItemModel *collec
   filterModel->setSourceModel( collectionModel );
 */
 
-  mCollectionCombo = new KABC::CollectionComboBox( mainWidget );
+  mCollectionCombo = new Akonadi::CollectionComboBox( mainWidget );
   mCollectionCombo->setModel( descendantModel );
 
   layout->addWidget( new QLabel( i18n( "Select the address book" ) ) );

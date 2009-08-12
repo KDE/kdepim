@@ -54,10 +54,10 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
+#include "akonadi/contact/contacteditordialog.h"
+#include "akonadi/contact/contactgroupeditordialog.h"
 #include "akonadi_next/entitytreeview.h"
-#include "contacteditordialog.h"
 #include "contactfiltermodel.h"
-#include "contactgroupeditordialog.h"
 #include "contactstreemodel.h"
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
@@ -352,13 +352,13 @@ void MainWidget::print()
 
 void MainWidget::newContact()
 {
-  ContactEditorDialog dlg( ContactEditorDialog::CreateMode, mCollectionTree, this );
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, mCollectionTree, this );
   dlg.exec();
 }
 
 void MainWidget::newGroup()
 {
-  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::CreateMode, mCollectionTree, this );
+  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, mCollectionTree, this );
 
   dlg.setCompletionModel( contactCompletionModel() );
 
@@ -432,14 +432,14 @@ void MainWidget::setSimpleGuiMode( bool on )
 
 void MainWidget::editContact( const Akonadi::Item &contact )
 {
-  ContactEditorDialog dlg( ContactEditorDialog::EditMode, mCollectionTree, this );
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mCollectionTree, this );
   dlg.setContact( contact );
   dlg.exec();
 }
 
 void MainWidget::editGroup( const Akonadi::Item &group )
 {
-  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::EditMode, mCollectionTree, this );
+  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, mCollectionTree, this );
   dlg.setCompletionModel( contactCompletionModel() );
   dlg.setContactGroup( group );
   dlg.exec();

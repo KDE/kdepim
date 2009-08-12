@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
@@ -19,23 +19,27 @@
     02110-1301, USA.
 */
 
-#ifndef CONTACTITEMEDITOR_H
-#define CONTACTITEMEDITOR_H
+#ifndef AKONADI_CONTACTEDITOR_H
+#define AKONADI_CONTACTEDITOR_H
 
-#include "abstractcontacteditorwidget.h"
+#include "akonadi-contact_export.h"
 
 #include <QtGui/QWidget>
 
 namespace Akonadi {
+
+class AbstractContactEditorWidget;
 class Collection;
 class Item;
-}
 
-class ContactItemEditor : public QWidget
+class AKONADI_CONTACT_EXPORT ContactEditor : public QWidget
 {
   Q_OBJECT
 
   public:
+    /**
+     * Describes the mode of the editor.
+     */
     enum Mode
     {
       CreateMode, ///< Creates a new contact
@@ -43,18 +47,27 @@ class ContactItemEditor : public QWidget
     };
 
     /**
-     * Creates a new contact item editor.
+     * Creates a new contact editor with the standard editor widget.
      *
      * @param mode The mode of the editor.
      * @param editorWidget The contact editor widget that shall be used for editing.
      * @param parent The parent widget of the editor.
      */
-    explicit ContactItemEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
+    explicit ContactEditor( Mode mode, QWidget *parent = 0 );
 
     /**
-     * Destroys the contact item editor.
+     * Creates a new contact editor with a custom editor widget.
+     *
+     * @param mode The mode of the editor.
+     * @param editorWidget The contact editor widget that shall be used for editing.
+     * @param parent The parent widget of the editor.
      */
-    virtual ~ContactItemEditor();
+    explicit ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
+
+    /**
+     * Destroys the contact editor.
+     */
+    virtual ~ContactEditor();
 
   public Q_SLOTS:
     /**
@@ -88,12 +101,16 @@ class ContactItemEditor : public QWidget
     void error( const QString &errorMsg );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void fetchDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void storeDone( KJob* ) )
     Q_PRIVATE_SLOT( d, void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
+    //@endcond PRIVATE
 };
+
+}
 
 #endif

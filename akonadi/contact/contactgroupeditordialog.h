@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
@@ -18,19 +18,21 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CONTACTGROUPEDITORDIALOG_H
-#define CONTACTGROUPEDITORDIALOG_H
+#ifndef AKONADI_CONTACTGROUPEDITORDIALOG_H
+#define AKONADI_CONTACTGROUPEDITORDIALOG_H
+
+#include "akonadi-contact_export.h"
 
 #include <kdialog.h>
 
-namespace Akonadi {
-  class Item;
-  class ContactGroupEditor;
-}
-
 class QAbstractItemModel;
 
-class ContactGroupEditorDialog : public KDialog
+namespace Akonadi {
+
+class Item;
+class ContactGroupEditor;
+
+class AKONADI_CONTACT_EXPORT ContactGroupEditorDialog : public KDialog
 {
   Q_OBJECT
 
@@ -79,5 +81,7 @@ class ContactGroupEditorDialog : public KDialog
   private:
     Akonadi::ContactGroupEditor *mEditor;
 };
+
+}
 
 #endif

@@ -2,8 +2,8 @@ project(kaddressbook)
 include_directories(
     ${CMAKE_SOURCE_DIR}/akonadi
     ${CMAKE_SOURCE_DIR}/akonadi/akonadi_next
+    ${CMAKE_SOURCE_DIR}/akonadi/contact
     ${CMAKE_SOURCE_DIR}/libkdepim
-    ${CMAKE_CURRENT_SOURCE_DIR}/editor
     ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
     ${QT_QTDBUS_INCLUDE_DIR}
     ${Boost_INCLUDE_DIR}
@@ -35,33 +35,13 @@ kde4_add_ui_files(kaddressbook_printing_SRCS
   printing/ds_appearance.ui
 )
 
-set( kaddressbook_editor_SRCS
-  editor/addresseditwidget.cpp
-  editor/contacteditor.cpp
-  editor/dateeditwidget.cpp
-  editor/displaynameeditwidget.cpp
-  editor/emaileditwidget.cpp
-  editor/freebusyeditwidget.cpp
-  editor/imagewidget.cpp
-  editor/imeditwidget.cpp
-  editor/nameeditwidget.cpp
-  editor/phoneeditwidget.cpp
-  editor/secrecyeditwidget.cpp
-  editor/soundeditwidget.cpp
-)
-
 set( kaddressbook_LIB_SRCS
   aboutdata.cpp
   contactfields.cpp
-  contacteditordialog.cpp
   contactfiltermodel.cpp
-  contactgroupeditordialog.cpp
-  contactitemeditor.cpp
   contactmetadata.cpp
   contactstreemodel.cpp
   contactswitcher.cpp
-  collectioncombobox.cpp
-  collectionfiltermodel.cpp
   collectionselectiondialog.cpp
   globalcontactmodel.cpp
   mainwidget.cpp
@@ -83,13 +63,12 @@ set( kaddressbook_LIB_SRCS
   xxport/vcard/vcard_xxport.cpp 
   xxport/xxportfactory.cpp
   xxportmanager.cpp
-  ${kaddressbook_editor_SRCS}
   ${kaddressbook_printing_SRCS}
 )
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
-target_link_libraries(kaddressbookprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
+target_link_libraries(kaddressbookprivate kdepim ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next akonadi-contact)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})

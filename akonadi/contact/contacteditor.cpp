@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
@@ -19,25 +19,28 @@
     02110-1301, USA.
 */
 
-#include "contactitemeditor.h"
+#include "contacteditor.h"
 
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QMessageBox>
+#include "abstractcontacteditorwidget.h"
 
-#include <kabc/addressee.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
-
+#include <kabc/addressee.h>
 #include <klocale.h>
 
-class ContactItemEditor::Private
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QMessageBox>
+
+using namespace Akonadi;
+
+class ContactEditor::Private
 {
   public:
-    Private( ContactItemEditor *parent )
+    Private( ContactEditor *parent )
       : mParent( parent ), mMonitor( 0 )
     {
     }
@@ -55,15 +58,15 @@ class ContactItemEditor::Private
     void storeContact( KABC::Addressee &addr );
     void setupMonitor();
 
-    ContactItemEditor *mParent;
-    ContactItemEditor::Mode mMode;
+    ContactEditor *mParent;
+    ContactEditor::Mode mMode;
     Akonadi::Item mItem;
     Akonadi::Monitor *mMonitor;
     Akonadi::Collection mDefaultCollection;
     AbstractContactEditorWidget *mEditorWidget;
 };
 
-void ContactItemEditor::Private::fetchDone( KJob *job )
+void ContactEditor::Private::fetchDone( KJob *job )
 {
   if ( job->error() != KJob::NoError )
     return;
@@ -81,7 +84,7 @@ void ContactItemEditor::Private::fetchDone( KJob *job )
   loadContact( addr );
 }
 
-void ContactItemEditor::Private::storeDone( KJob *job )
+void ContactEditor::Private::storeDone( KJob *job )
 {
   if ( job->error() != KJob::NoError ) {
     emit mParent->error( job->errorString() );
@@ -94,7 +97,7 @@ void ContactItemEditor::Private::storeDone( KJob *job )
     emit mParent->contactStored( static_cast<Akonadi::ItemCreateJob*>( job )->item() );
 }
 
-void ContactItemEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )
+void ContactEditor::Private::itemChanged( const Akonadi::Item&, const QSet<QByteArray>& )
 {
   QMessageBox dlg( mParent );
 
@@ -110,17 +113,17 @@ void ContactItemEditor::Private::itemChanged( const Akonadi::Item&, const QSet<Q
   }
 }
 
-void ContactItemEditor::Private::loadContact( const KABC::Addressee &addr )
+void ContactEditor::Private::loadContact( const KABC::Addressee &addr )
 {
   mEditorWidget->loadContact( addr );
 }
 
-void ContactItemEditor::Private::storeContact( KABC::Addressee &addr )
+void ContactEditor::Private::storeContact( KABC::Addressee &addr )
 {
   mEditorWidget->storeContact( addr );
 }
 
-void ContactItemEditor::Private::setupMonitor()
+void ContactEditor::Private::setupMonitor()
 {
   delete mMonitor;
   mMonitor = new Akonadi::Monitor;
@@ -131,7 +134,7 @@ void ContactItemEditor::Private::setupMonitor()
 }
 
 
-ContactItemEditor::ContactItemEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
+ContactEditor::ContactEditor( Mode mode, AbstractContactEditorWidget *editorWidget, QWidget *parent )
   : QWidget( parent ), d( new Private( this ) )
 {
   d->mMode = mode;
@@ -143,16 +146,15 @@ ContactItemEditor::ContactItemEditor( Mode mode, AbstractContactEditorWidget *ed
   layout->addWidget( d->mEditorWidget );
 }
 
-
-ContactItemEditor::~ContactItemEditor()
+ContactEditor::~ContactEditor()
 {
   delete d;
 }
 
-void ContactItemEditor::loadContact( const Akonadi::Item &item )
+void ContactEditor::loadContact( const Akonadi::Item &item )
 {
   if ( d->mMode == CreateMode )
-    Q_ASSERT_X( false, "ContactItemEditor::loadContact", "You are calling loadContact in CreateMode!" );
+    Q_ASSERT_X( false, "ContactEditor::loadContact", "You are calling loadContact in CreateMode!" );
 
   Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( item );
   job->fetchScope().fetchFullPayload();
@@ -163,7 +165,7 @@ void ContactItemEditor::loadContact( const Akonadi::Item &item )
   d->mMonitor->setItemMonitored( item );
 }
 
-void ContactItemEditor::saveContact()
+void ContactEditor::saveContact()
 {
   if ( d->mMode == EditMode ) {
     if ( !d->mItem.isValid() )
@@ -178,7 +180,7 @@ void ContactItemEditor::saveContact()
     Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mItem );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
-    Q_ASSERT_X( d->mDefaultCollection.isValid(), "ContactItemEditor::saveContact", "Using invalid default collection for saving!" );
+    Q_ASSERT_X( d->mDefaultCollection.isValid(), "ContactEditor::saveContact", "Using invalid default collection for saving!" );
 
     KABC::Addressee addr;
     d->storeContact( addr );
@@ -192,9 +194,9 @@ void ContactItemEditor::saveContact()
   }
 }
 
-void ContactItemEditor::setDefaultCollection( const Akonadi::Collection &collection )
+void ContactEditor::setDefaultCollection( const Akonadi::Collection &collection )
 {
   d->mDefaultCollection = collection;
 }
 
-#include "contactitemeditor.moc"
+#include "contacteditor.moc"

@@ -28,10 +28,6 @@ class QAbstractItemModel;
 namespace Akonadi
 {
 class Collection;
-}
-
-namespace KABC
-{
 class CollectionComboBox;
 }
 
@@ -44,7 +40,7 @@ class CollectionSelectionDialog : public KDialog
     Akonadi::Collection selectedCollection() const;
 
   private:
-    KABC::CollectionComboBox *mCollectionCombo;
+    Akonadi::CollectionComboBox *mCollectionCombo;
 };
 
 #endif

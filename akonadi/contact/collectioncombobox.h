@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007-2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,8 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef COLLECTIONCOMBOBOX_H
-#define COLLECTIONCOMBOBOX_H
+#ifndef AKONADI_COLLECTIONCOMBOBOX_H
+#define AKONADI_COLLECTIONCOMBOBOX_H
+
+#include "akonadi-contact_export.h"
 
 #include <QtGui/QWidget>
 
@@ -26,14 +28,14 @@
 
 class QAbstractItemModel;
 
-namespace KABC {
+namespace Akonadi {
 
 /**
- * This class provides a combobox for selecting a collection.
+ * @short A combobox for selecting an Akonadi collection.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class CollectionComboBox : public QWidget
+class AKONADI_CONTACT_EXPORT CollectionComboBox : public QWidget
 {
   Q_OBJECT
 
@@ -69,10 +71,12 @@ class CollectionComboBox : public QWidget
     void selectionChanged( const Akonadi::Collection &identifier );
 
   private:
+    //@cond PRIVATE
     class Private;
     Private* const d;
 
     Q_PRIVATE_SLOT( d, void activated( int ) )
+    //@endcond
 };
 
 }

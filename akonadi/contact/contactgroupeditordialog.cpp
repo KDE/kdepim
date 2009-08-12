@@ -1,7 +1,7 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2007-2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
 
 #include "contactgroupeditordialog.h"
 
-#include "kabc/contactgroupeditor.h"
+#include "contactgroupeditor.h"
 
 #include "collectioncombobox.h"
-#include "collectionfiltermodel.h"
+#include "collectionfiltermodel_p.h"
 #include <akonadi/descendantsproxymodel.h>
 #include <akonadi/item.h>
 
@@ -32,6 +32,8 @@
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
+
+using namespace Akonadi;
 
 ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent )
   : KDialog( parent )
@@ -60,7 +62,7 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
     filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
     filterModel->setSourceModel( descendantModel );
 
-    KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );
+    CollectionComboBox *box = new CollectionComboBox( mainWidget );
     box->setModel( filterModel );
 
     layout->addWidget( label, 0, 0 );

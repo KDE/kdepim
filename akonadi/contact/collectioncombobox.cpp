@@ -26,7 +26,6 @@
 #include <akonadi/entitytreemodel.h>
 
 using namespace Akonadi;
-using namespace KABC;
 
 class CollectionComboBox::Private
 {

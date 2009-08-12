@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
 
@@ -18,23 +18,28 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CONTACTEDITORDIALOG_H
-#define CONTACTEDITORDIALOG_H
+#ifndef AKONADI_CONTACTEDITORDIALOG_H
+#define AKONADI_CONTACTEDITORDIALOG_H
+
+#include "akonadi-contact_export.h"
 
 #include <kdialog.h>
 
-namespace Akonadi {
-  class Item;
-}
-
-class ContactItemEditor;
 class QAbstractItemModel;
 
-class ContactEditorDialog : public KDialog
+namespace Akonadi {
+
+class AbstractContactEditorWidget;
+class Item;
+
+class AKONADI_CONTACT_EXPORT ContactEditorDialog : public KDialog
 {
   Q_OBJECT
 
   public:
+    /**
+     * Describes the mode of the editor dialog.
+     */
     enum Mode
     {
       CreateMode, ///< Creates a new contact
@@ -42,13 +47,24 @@ class ContactEditorDialog : public KDialog
     };
 
     /**
-     * Creates a new contact editor dialog.
+     * Creates a new contact editor dialog with the standard editor widget.
      *
      * @param mode The mode of the dialog.
      * @param collectionModel The collection model.
      * @param parent The parent widget of the dialog.
      */
     ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel, QWidget *parent = 0 );
+
+    /**
+     * Creates a new contact editor dialog with a custom editor widget.
+     *
+     * @param mode The mode of the dialog.
+     * @param collectionModel The collection model.
+     * @param editorWidget The contact editor widget that shall be used for editing.
+     * @param parent The parent widget of the dialog.
+     */
+    ContactEditorDialog( Mode mode, QAbstractItemModel *collectionModel,
+                         AbstractContactEditorWidget *editorWidget, QWidget *parent = 0 );
 
     /**
      * Destroys the contact editor dialog.
@@ -68,12 +84,16 @@ class ContactEditorDialog : public KDialog
      */
     void contactStored( const Akonadi::Item &contact );
 
-  private Q_SLOTS:
-    void slotOkClicked();
-    void slotCancelClicked();
-
   private:
-    ContactItemEditor *mEditor;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotOkClicked() )
+    Q_PRIVATE_SLOT( d, void slotCancelClicked() )
+    //@endcond PRIVATE
 };
+
+}
 
 #endif
