@@ -1,4 +1,6 @@
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 add_definitions(-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
@@ -9,7 +11,6 @@ add_subdirectory(kpartsdesignerplugin)
 add_subdirectory(about)
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
-
 
 
 ########### next target ###############
@@ -94,6 +95,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  akonadi-contact
 )
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
@@ -106,6 +108,7 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  akonadi-contact
 )
 
 if(MINGW)

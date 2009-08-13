@@ -19,14 +19,15 @@
 
 #include "kaddrbookexternal.h"
 
-#include <kabc/distributionlist.h>
-#include <kabc/resource.h>
-#include <kabc/stdaddressbook.h>
-#include <kabc/vcardconverter.h>
-#include <kabc/errorhandler.h>
-#include <kresources/selectdialog.h>
+#include "akonadi/contact/addressbookselectiondialog.h"
+#include "akonadi/contact/contacteditordialog.h"
+#include "akonadi/contact/contactsearchjob.h"
 
-#include <kdefakes.h> // usleep
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+#include <akonadi/itemcreatejob.h>
+#include <kabc/distributionlist.h>
+
 #include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
@@ -36,75 +37,96 @@
 #include <QEventLoop>
 #include <QList>
 #include <QRegExp>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusConnection>
-
-#include <unistd.h>
 
 using namespace KPIM;
 
-//-----------------------------------------------------------------------------
-void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QWidget *) {
-/* FIXME: use an external editor and native akonadi calls instead
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  KABC::Addressee::List addresseeList = addressBook->findByEmail(email);
+void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QWidget *parentWidget )
+{
+  Akonadi::Item item;
+  Akonadi::Item::List items;
 
-  // If KAddressbook is running, talk to it, otherwise start it.
-  QDBusInterface abinterface( "org.kde.kaddressbook", "/kaddressbook_PimApplication",
-                              "org.kde.KUniqueApplication" );
+  // search whether contact with that email address already exists
+  Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob;
+  searchJob->setQuery( Akonadi::ContactSearchJob::Email, email );
+  if ( searchJob->exec() )
+    items = searchJob->items();
 
-  if ( abinterface.isValid() ) {
-    //make sure kaddressbook is loaded, otherwise showContactEditor
-    //won't work as desired, see bug #87233
-    abinterface.call("newInstance", QByteArray(), QByteArray());
+  if ( items.isEmpty() ) { // if not...
+
+    // ask user in which address book the new contact shall be stored
+    Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly );
+    if ( !dlg.exec() )
+      return;
+
+    const Akonadi::Collection addressBook = dlg.selectedAddressBook();
+    if ( !addressBook.isValid() )
+      return;
+
+    // create the new contact
+    QString email;
+    QString name;
+
+    KABC::Addressee::parseEmailAddress( addr, name, email );
+    KABC::Addressee contact;
+    contact.setNameFromString( name );
+    contact.insertEmail( email, true );
+
+    // create the new item
+    Akonadi::Item item;
+    item.setMimeType( KABC::Addressee::mimeType() );
+    item.setPayload<KABC::Addressee>( contact );
+
+    // save the item in akonadi storage
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, addressBook );
+    if ( !job->exec() )
+      return;
+
+    // the new item is the matching item
+    item = job->item();
   } else {
-    KToolInvocation::startServiceByDesktopName( "kaddressbook" );
+
+    // the found item is the matching item
+    item = items.first();
   }
 
-  OrgKdeKAddressbookCoreInterface interface( "org.kde.kaddressbook",
-                                             "/KAddressBook",
-                                             QDBusConnection::sessionBus() );
-  if( !addresseeList.isEmpty() ) {
-    interface.showContactEditor( addresseeList.first().uid() );
-  } else {
-    interface.addEmail( addr );
-  }
-*/
+  // open the editor with the matching item
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, parentWidget );
+  dlg.setContact( item );
+  dlg.exec();
 }
 
-//-----------------------------------------------------------------------------
 void KAddrBookExternal::addEmail( const QString &addr, QWidget *parent )
 {
+  // extract name and email from email address string
   QString email;
   QString name;
 
   KABC::Addressee::parseEmailAddress( addr, name, email );
-  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
-  ab->setErrorHandler( new KABC::GuiErrorHandler( parent ) );
 
-  // force a reload of the address book file so that changes that were made
-  // by other programs are loaded
-  ab->asyncLoad();
+  KABC::Addressee::List contacts;
 
-  KABC::Addressee::List addressees = ab->findByEmail( email );
+  // search whether a contact with the same email exists already
+  Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob;
+  searchJob->setQuery( Akonadi::ContactSearchJob::Email, email );
+  if ( searchJob->exec() )
+    contacts = searchJob->contacts();
 
-  if ( addressees.isEmpty() ) {
-    KABC::Addressee a;
-    a.setNameFromString( name );
-    a.insertEmail( email, true );
+  if ( contacts.isEmpty() ) { // if not, add a new one
+    KABC::Addressee contact;
+    contact.setNameFromString( name );
+    contact.insertEmail( email, true );
 
-    if ( KAddrBookExternal::addAddressee( a ) ) {
+    if ( KAddrBookExternal::addAddressee( contact ) ) {
       QString text = i18n( "<qt>The email address <b>%1</b> was added to your "
                            "address book; you can add more information to this "
                            "entry by opening the address book.</qt>", addr );
       KMessageBox::information( parent, text, QString(), "addedtokabc" );
     }
-  } else {
+  } else { // inform the user otherwise
     QString text =
       i18n( "<qt>The email address <b>%1</b> is already in your address book.</qt>", addr );
     KMessageBox::information( parent, text, QString(), "alreadyInAddressBook" );
   }
-  ab->setErrorHandler( 0 );
 }
 
 void KAddrBookExternal::openAddressBook( QWidget * )
@@ -112,28 +134,25 @@ void KAddrBookExternal::openAddressBook( QWidget * )
   KToolInvocation::startServiceByDesktopName( "kaddressbook" );
 }
 
-void KAddrBookExternal::addNewAddressee( QWidget * )
+void KAddrBookExternal::addNewAddressee( QWidget *parentWidget )
 {
-/* FIXME: use an external editor and native akonadi calls instead
-  KToolInvocation::startServiceByDesktopName( "kaddressbook" );
-  OrgKdeKAddressbookCoreInterface interface( "org.kde.kaddressbook",
-                                             "/KAddressBook",
-                                             QDBusConnection::sessionBus() );
-  interface.newContact();
-*/
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, parentWidget );
+  dlg.exec();
 }
 
 bool KAddrBookExternal::addVCard( const KABC::Addressee &addressee, QWidget *parent )
 {
-  KABC::AddressBook *ab = KABC::StdAddressBook::self( true );
   bool inserted = false;
 
-  ab->setErrorHandler( new KABC::GuiErrorHandler( parent ) );
+  KABC::Addressee::List contacts;
 
-  KABC::Addressee::List addressees =
-    ab->findByEmail( addressee.preferredEmail() );
+  // check whether a contact with the same email address exists already
+  Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob;
+  searchJob->setQuery( Akonadi::ContactSearchJob::Email, addressee.preferredEmail() );
+  if ( searchJob->exec() )
+    contacts = searchJob->contacts();
 
-  if ( addressees.isEmpty() ) {
+  if ( contacts.isEmpty() ) { // if not, add a new one
     if ( KAddrBookExternal::addAddressee( addressee ) ) {
       QString text = i18n( "The VCard was added to your address book; "
                            "you can add more information to this "
@@ -141,7 +160,7 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee &addressee, QWidget *par
       KMessageBox::information( parent, text, QString(), "addedtokabc" );
       inserted = true;
     }
-  } else {
+  } else { // inform the user otherwise
     QString text = i18n( "The VCard's primary email address is already in "
                          "your address book; however, you may save the VCard "
                          "into a file and import it into the address book manually." );
@@ -149,51 +168,36 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee &addressee, QWidget *par
     inserted = true;
   }
 
-  ab->setErrorHandler( 0 );
   return inserted;
 }
 
 bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
 {
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-
-  // Select a resource
-  QList<KABC::Resource*> kabcResources = addressBook->resources();
-  QList<KRES::Resource*> kresResources;
-  QListIterator<KABC::Resource*> resIt( kabcResources );
-  KABC::Resource *kabcResource;
-  while ( resIt.hasNext() ) {
-    kabcResource = resIt.next();
-    if ( !kabcResource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( kabcResource );
-      if ( res ) {
-        kresResources.append( res );
-      }
-    }
-  }
-  kabcResource =
-    static_cast<KABC::Resource*>( KRES::SelectDialog::getResource( kresResources, 0 ) );
-  if( !kabcResource )
+  // ask user in which address book the new contact shall be stored
+  Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly );
+  if ( !dlg.exec() )
     return false;
-  KABC::Ticket *ticket = addressBook->requestSaveTicket( kabcResource );
-  bool saved = false;
-  if ( ticket ) {
-    KABC::Addressee addressee( addr );
-    addressee.setResource( kabcResource );
-    addressBook->insertAddressee( addressee );
-    saved = addressBook->save( ticket );
-    if ( !saved ) {
-      addressBook->releaseSaveTicket( ticket );
-    }
-  }
 
-  addressBook->emitAddressBookChanged();
+  const Akonadi::Collection addressBook = dlg.selectedAddressBook();
+  if ( !addressBook.isValid() )
+    return false;
 
-  return saved;
+  // create the new item
+  Akonadi::Item item;
+  item.setMimeType( KABC::Addressee::mimeType() );
+  item.setPayload<KABC::Addressee>( addr );
+
+  // save the new item in akonadi storage
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, addressBook );
+  if ( !job->exec() )
+    return false;
+
+  return true;
 }
 
 QString KAddrBookExternal::expandDistributionList( const QString &listName,bool &emptyList )
 {
+/*
   emptyList = false;
   if ( listName.isEmpty() ) {
     return QString();
@@ -207,5 +211,6 @@ QString KAddrBookExternal::expandDistributionList( const QString &listName,bool 
     emptyList = listOfEmails.isEmpty();
     return listOfEmails;
   }
+  */
   return QString();
 }
