@@ -306,6 +306,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           break;
       }
 
+      // Set the organizer to the sender, if the ORGANIZER hasn't been set.
+      if ( incidence->organizer().isEmpty() ) {
+        QString tname, temail;
+        KPIMUtils::extractEmailAddressAndName( callback.sender(), temail, tname );
+        incidence->setOrganizer( Person( tname, temail ) );
+      }
+
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
