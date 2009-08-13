@@ -14,6 +14,9 @@ endmacro( add_messagecomposer_test )
 
 
 
+# Location of the attachments to test.
+set( attachments_root "QLatin1String( \"${CMAKE_CURRENT_SOURCE_DIR}/attachments/\" )" )
+add_definitions( -DPATH_ATTACHMENTS='${attachments_root}' )
 
 # Utility stuff.
 add_messagecomposer_test( utiltest.cpp )
@@ -26,6 +29,7 @@ add_messagecomposer_test( singlepartjobtest.cpp )
 add_messagecomposer_test( multipartjobtest.cpp )
 
 # More complex content jobs.
+add_messagecomposer_test( attachmentjobtest.cpp )
 add_messagecomposer_test( maintextjobtest.cpp )
 
 # Composer.

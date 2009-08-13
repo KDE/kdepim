@@ -44,20 +44,16 @@ class MessageComposer::AttachmentJobPrivate : public ContentJobBasePrivate
     {
     }
 
-    QByteArray detectCharset( const QByteArray &data );
+    //QByteArray detectCharset( const QByteArray &data );
 
     AttachmentPart::Ptr part;
 
     Q_DECLARE_PUBLIC( AttachmentJob )
 };
 
+#if 0
 QByteArray AttachmentJobPrivate::detectCharset( const QByteArray &data )
 {
-  // NOTE: The old code could also could determine the charset from the url
-  // of the file that was loaded as attachment (url.fileEncoding()).  If we
-  // really want that, we can store the chareset in AttachmentPart and make
-  // AttachmentFromUrlJob set it.
-
   KEncodingProber prober;
   prober.feed( data );
   kDebug() << "Autodetected charset" << prober.encoding() << "with confidence" << prober.confidence();
@@ -73,6 +69,7 @@ QByteArray AttachmentJobPrivate::detectCharset( const QByteArray &data )
     return QByteArray( "utf-8" );
   }
 }
+#endif
 
 
 
@@ -115,11 +112,21 @@ void AttachmentJob::doStart()
   // Set up the headers.
   sjob->contentTransferEncoding()->setEncoding( d->part->encoding() );
 
+  sjob->contentType()->setMimeType( d->part->mimeType() ); // setMimeType() clears all other params.
   sjob->contentType()->setName( d->part->name(), charset );
-  sjob->contentType()->setMimeType( d->part->mimeType() );
   if( sjob->contentType()->isText() ) {
     // If it is a text file, detect its charset.
-    sjob->contentType()->setCharset( d->detectCharset( d->part->data() ) );
+    //sjob->contentType()->setCharset( d->detectCharset( d->part->data() ) );
+
+    // From my few tests, this is *very* unreliable.
+    // Therefore, if we do not know which charset to use, just use UTF-8.
+    // (cberzan)
+    QByteArray textCharset = d->part->charset();
+    if( textCharset.isEmpty() ) {
+      kWarning() << "No charset specified. Using UTF-8.";
+      textCharset = "utf-8";
+    }
+    sjob->contentType()->setCharset( textCharset );
   }
 
   sjob->contentDescription()->fromUnicodeString( d->part->description(), charset );

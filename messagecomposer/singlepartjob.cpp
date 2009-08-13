@@ -87,6 +87,7 @@ bool SinglepartJobPrivate::chooseCTE()
       q->setErrorText( i18n( "%1 Content-Transfer-Encoding cannot correctly encode this message.",
           nameForEncoding( contentTransferEncoding->encoding() ) ) );
       return false;
+      // TODO improve error message in case 8bit is requested but not allowed.
     }
   } else {
     // No specific CTE set.  Choose the best one.
