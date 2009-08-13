@@ -128,10 +128,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
-  // hide all columns except the first one
-  for ( int column = 1; column < mCollectionTree->columnCount( QModelIndex() ); ++column )
-    mCollectionView->setColumnHidden( column, true );
-
   Akonadi::SelectionProxyModel *selectionProxyModel = new Akonadi::SelectionProxyModel( mCollectionView->selectionModel(),
                                                                                         this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
