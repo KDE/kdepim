@@ -22,7 +22,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
-#include "collectionselectiondialog.h"
+#include "addressbookselectiondialog.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
@@ -92,11 +92,11 @@ void XXPortManager::slotImport( const QString &identifier )
   if ( contacts.isEmpty() ) // nothing to import
     return;
 
-  CollectionSelectionDialog dlg( mCollectionModel, mParentWidget );
+  Akonadi::AddressBookSelectionDialog dlg( mParentWidget );
   if ( !dlg.exec() )
     return;
 
-  const Akonadi::Collection collection = dlg.selectedCollection();
+  const Akonadi::Collection collection = dlg.selectedAddressBook();
 
   for ( int i = 0; i < contacts.count(); ++i ) {
     Akonadi::Item item;

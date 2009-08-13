@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
@@ -18,22 +18,26 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "collectionselectiondialog.h"
+#include "addressbookselectiondialog.h"
 
-#include "akonadi/contact/collectioncombobox.h"
+#include "addressbookcombobox.h"
 
-#include <akonadi/descendantsproxymodel.h>
-#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/item.h>
-
-#include <kabc/addressee.h>
 #include <klocale.h>
 
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 
-CollectionSelectionDialog::CollectionSelectionDialog( QAbstractItemModel *collectionModel, QWidget *parent )
-  : KDialog( parent )
+using namespace Akonadi;
+
+class AddressBookSelectionDialog::Private
+{
+  public:
+    AddressBookComboBox *mCollectionCombo;
+};
+
+AddressBookSelectionDialog::AddressBookSelectionDialog( QWidget *parent )
+  : KDialog( parent ), d( new Private )
 {
   setCaption( i18n( "Select Address Book" ) );
   setButtons( Ok | Cancel );
@@ -43,29 +47,18 @@ CollectionSelectionDialog::CollectionSelectionDialog( QAbstractItemModel *collec
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
-  // flatten the collection tree structure to a collection list
-  Akonadi::DescendantsProxyModel *descendantModel = new Akonadi::DescendantsProxyModel( this );
-  descendantModel->setSourceModel( collectionModel );
-
-/*
-  Akonadi::CollectionFilterProxyModel *filterModel = new Akonadi::CollectionFilterProxyModel( this );
-
-  filterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
-  filterModel->setSourceModel( collectionModel );
-*/
-
-  mCollectionCombo = new Akonadi::CollectionComboBox( mainWidget );
-  mCollectionCombo->setModel( descendantModel );
+  d->mCollectionCombo = new Akonadi::AddressBookComboBox;
 
   layout->addWidget( new QLabel( i18n( "Select the address book" ) ) );
-  layout->addWidget( mCollectionCombo );
+  layout->addWidget( d->mCollectionCombo );
 }
 
-CollectionSelectionDialog::~CollectionSelectionDialog()
+AddressBookSelectionDialog::~AddressBookSelectionDialog()
 {
+  delete d;
 }
 
-Akonadi::Collection CollectionSelectionDialog::selectedCollection() const
+Akonadi::Collection AddressBookSelectionDialog::selectedAddressBook() const
 {
-  return mCollectionCombo->selectedCollection();
+  return d->mCollectionCombo->selectedAddressBook();
 }

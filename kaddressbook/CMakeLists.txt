@@ -41,7 +41,6 @@ set( kaddressbook_LIB_SRCS
   contactfiltermodel.cpp
   contactstreemodel.cpp
   contactswitcher.cpp
-  collectionselectiondialog.cpp
   globalcontactmodel.cpp
   mainwidget.cpp
   modelcolumnmanager.cpp
