@@ -29,6 +29,7 @@ class AttachmentFromUrlJobTest : public QObject
     void testAttachments_data();
     void testAttachments();
     void testAttachmentTooBig();
+    void testAttachmentCharset();
 };
 
 #endif

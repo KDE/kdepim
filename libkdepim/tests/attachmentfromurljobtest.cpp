@@ -82,4 +82,22 @@ void AttachmentFromUrlJobTest::testAttachmentTooBig()
   QVERIFY( !ljob->exec() );
 }
 
+void AttachmentFromUrlJobTest::testAttachmentCharset()
+{
+  const QByteArray charset( "iso-8859-2" );
+  const QString filename = QString::fromLatin1( "file.txt" );
+  KUrl url = KUrl::fromPath( PATH_ATTACHMENTS + filename );
+  url.setFileEncoding( charset );
+
+  AttachmentFromUrlJob *ljob = new AttachmentFromUrlJob( url, this );
+  VERIFYEXEC( ljob );
+  AttachmentPart::Ptr part = ljob->attachmentPart();
+  delete ljob;
+  ljob = 0;
+
+  QCOMPARE( part->name(), filename );
+  QCOMPARE( part->fileName(), filename );
+  QCOMPARE( part->charset(), charset );
+}
+
 #include "attachmentfromurljobtest.moc"

@@ -26,8 +26,6 @@
 
 #include <kmime/kmime_headers.h>
 
-class KUrl;
-
 namespace boost {
   template <typename T> class shared_ptr;
 }
@@ -62,6 +60,8 @@ class KDEPIM_EXPORT AttachmentPart
     // only if isAutoEncoding false
     KMime::Headers::contentEncoding encoding() const;
     void setEncoding( KMime::Headers::contentEncoding encoding );
+    QByteArray charset() const;
+    void setCharset( const QByteArray &charset );
     QByteArray mimeType() const;
     void setMimeType( const QByteArray &mimeType );
     bool isCompressed() const;

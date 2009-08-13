@@ -55,6 +55,7 @@ class KPIM::AttachmentPart::Private
     bool isInline;
     bool autoEncoding;
     KMime::Headers::contentEncoding encoding;
+    QByteArray charset;
     QByteArray mimeType;
     bool compressed;
     bool toEncrypt;
@@ -144,6 +145,16 @@ void AttachmentPart::setEncoding( KMime::Headers::contentEncoding encoding )
   d->autoEncoding = false;
   d->encoding = encoding;
   d->size = sizeWithEncoding( d->data, d->encoding );
+}
+
+QByteArray AttachmentPart::charset() const
+{
+  return d->charset;
+}
+
+void AttachmentPart::setCharset( const QByteArray &charset )
+{
+  d->charset = charset;
 }
 
 QByteArray AttachmentPart::mimeType() const

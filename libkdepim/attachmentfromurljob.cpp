@@ -86,6 +86,7 @@ void AttachmentFromUrlJob::Private::transferJobResult( KJob *job )
   // Create the AttachmentPart.
   Q_ASSERT( q->attachmentPart() == 0 ); // Not created before.
   AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
+  part->setCharset( url.fileEncoding().toLatin1() );
   part->setMimeType( mimeType.toLatin1() );
   part->setName( filename );
   part->setFileName( filename );
