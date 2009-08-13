@@ -27,13 +27,13 @@
 
 namespace Akonadi {
 class Collection;
+class ContactGroupBrowser;
+class ContactViewer;
 class DescendantsProxyModel;
 class EntityFilterProxyModel;
 class EntityTreeView;
-class ContactGroupBrowser;
 class Item;
 class ItemView;
-class KABCItemBrowser;
 class StandardContactActionManager;
 }
 
@@ -90,7 +90,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     QStackedWidget *mDetailsViewStack;
     ContactSwitcher *mContactSwitcher;
 
-    Akonadi::KABCItemBrowser *mContactDetails;
+    Akonadi::ContactViewer *mContactDetails;
     Akonadi::ContactGroupBrowser *mContactGroupDetails;
     Akonadi::StandardContactActionManager *mActionManager;
 

@@ -46,7 +46,6 @@
 #include <kabc/contactgroupbrowser.h>
 #include <kabc/contactlineedit.h>
 #include <kabc/kabcmodel.h>
-#include <kabc/kabcitembrowser.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -56,6 +55,7 @@
 
 #include "akonadi/contact/contacteditordialog.h"
 #include "akonadi/contact/contactgroupeditordialog.h"
+#include "akonadi/contact/contactviewer.h"
 #include "akonadi_next/entitytreeview.h"
 #include "contactfiltermodel.h"
 #include "contactstreemodel.h"
@@ -231,7 +231,7 @@ void MainWidget::setupGui()
   detailsPaneLayout->addWidget( mDetailsViewStack );
 
   // the details widget for contacts
-  mContactDetails = new Akonadi::KABCItemBrowser( mDetailsViewStack );
+  mContactDetails = new Akonadi::ContactViewer( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactDetails );
 
   // the details widget for contact groups
@@ -383,7 +383,7 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
 {
   if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactDetails );
-    mContactDetails->setItem( item );
+    mContactDetails->setContact( item );
   } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
     mContactGroupDetails->setItem( item );
