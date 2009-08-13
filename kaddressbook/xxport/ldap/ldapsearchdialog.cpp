@@ -20,12 +20,9 @@
 
 #include "ldapsearchdialog.h"
 
-#include "akonadi/contact/addressbookselectiondialog.h"
-#include "akonadi/contact/contactsearchjob.h"
 #include "ldapoptionswidget.h"
 
 #include <QtCore/QPair>
-#include <QtCore/QPointer>
 #include <QtGui/QApplication>
 #include <QtGui/QCheckBox>
 #include <QtGui/QCloseEvent>
@@ -38,7 +35,6 @@
 #include <QtGui/QTableView>
 #include <QtGui/QVBoxLayout>
 
-#include <addresseelineedit.h>
 #include <akonadi/collection.h>
 #include <akonadi/itemcreatejob.h>
 #include <kabc/distributionlist.h>
@@ -49,12 +45,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <krandom.h>
 #include <ktoolinvocation.h>
-
-#if 0 //sebsauer
-#include "distributionlistpicker.h"
-#endif
 
 static QString asUtf8( const QByteArray &val )
 {
