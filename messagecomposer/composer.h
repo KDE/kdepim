@@ -20,14 +20,19 @@
 #ifndef MESSAGECOMPOSER_COMPOSER_H
 #define MESSAGECOMPOSER_COMPOSER_H
 
-#include "finalmessage.h"
 #include "jobbase.h"
 #include "messagecomposer_export.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 
+#include <kmime/kmime_message.h>
+
 #include <libkdepim/attachmentpart.h>
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
 
 namespace MessageComposer {
 
@@ -47,7 +52,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
-    FinalMessage::List messages() const;
+    KMime::Message::Ptr resultMessage() const;
 
     GlobalPart *globalPart();
     InfoPart *infoPart();

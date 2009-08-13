@@ -8,7 +8,6 @@ add_subdirectory( tests )
 set( messagecomposer_src
 
      composer.cpp
-     finalmessage.cpp
      util.cpp
 
      messagepart.cpp
@@ -38,7 +37,6 @@ install( FILES
          messagecomposer_export.h
           
          composer.h
-         finalmessage.h
          globalpart.h
          infopart.h
          messagepart.h

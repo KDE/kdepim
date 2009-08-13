@@ -43,8 +43,7 @@ void ComposerTest::testCTEErrors()
     composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
     composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
     QVERIFY( composer->exec() );
-    QCOMPARE( composer->messages().count(), 1 );
-    kDebug() << composer->messages().first()->message()->encodedContent();
+    kDebug() << composer->resultMessage()->encodedContent();
   }
 
 #if 0 // test with attachments

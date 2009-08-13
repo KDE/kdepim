@@ -17,6 +17,8 @@
   02110-1301, USA.
 */
 
+#error "This file belongs in the crypto composer, not here. Move it."
+
 #ifndef MESSAGECOMPOSER_FINALMESSAGE_H
 #define MESSAGECOMPOSER_FINALMESSAGE_H
 

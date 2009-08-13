@@ -19,7 +19,6 @@
 
 #include "composer.h"
 
-#include "finalmessage_p.h"
 #include "globalpart.h"
 #include "infopart.h"
 #include "jobbase_p.h"
@@ -58,11 +57,10 @@ class MessageComposer::ComposerPrivate : public JobBasePrivate
     void composeStep2();
     void contentJobFinished( KJob *job ); // slot
     void composeStep3();
-    FinalMessage *createFinalMessage( Content *content );
 
     bool started;
     bool finished;
-    FinalMessage::List messages;
+    KMime::Message::Ptr resultMessage;
 
     // Stuff that the application plays with.
     GlobalPart *globalPart;
@@ -168,39 +166,16 @@ void ComposerPrivate::composeStep3()
 {
   Q_Q( Composer );
 
-  // (temporary until crypto) Compose final message.
-  FinalMessage *msg = createFinalMessage( resultContent );
+  // Compose the final resulting message.
+  QByteArray allData = skeletonMessage->head() + resultContent->encodedContent();
+  resultMessage = Message::Ptr( new Message );
+  resultMessage->setContent( allData );
+  resultMessage->parse(); // Not strictly necessary.
   delete resultContent;
   resultContent = 0;
-  messages << msg;
-  kDebug() << "Finished composing the single lousy unencrypted message.";
+  kDebug() << "Finished composing the message.";
   finished = true;
   q->emitResult();
-
-}
-
-FinalMessage *ComposerPrivate::createFinalMessage( Content *content )
-{
-  Q_ASSERT( skeletonMessage );
-  Message *message = new Message;
-  // Merge the headers from skeletonMessage with the headers + content
-  // of resultContent.
-  QByteArray allData = skeletonMessage->head() + content->encodedContent();
-  message->setContent( allData );
-  message->parse();
-
-  // Assemble the FinalMessage.
-  kDebug() << "encoded message after assembly" << message->encodedContent();
-  FinalMessage *finalMessage = new FinalMessage( message );
-  finalMessage->d->hasCustomHeaders = false; // TODO save those if not sending...
-  finalMessage->d->transportId = infoPart->transportId();
-
-  finalMessage->d->from = infoPart->from();
-  finalMessage->d->to = infoPart->to();
-  finalMessage->d->cc = infoPart->cc();
-  finalMessage->d->bcc = infoPart->bcc();
-
-  return finalMessage;
 }
 
 
@@ -216,12 +191,12 @@ Composer::~Composer()
 {
 }
 
-FinalMessage::List Composer::messages() const
+Message::Ptr Composer::resultMessage() const
 {
   Q_D( const Composer );
   Q_ASSERT( d->finished );
   Q_ASSERT( !error() );
-  return d->messages;
+  return d->resultMessage;
 }
 
 GlobalPart *Composer::globalPart()
