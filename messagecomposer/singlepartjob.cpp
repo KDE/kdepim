@@ -38,6 +38,7 @@ class MessageComposer::SinglepartJobPrivate : public ContentJobBasePrivate
   public:
     SinglepartJobPrivate( SinglepartJob *qq )
       : ContentJobBasePrivate( qq )
+      , contentDescription( 0 )
       , contentDisposition( 0 )
       , contentID( 0 )
       , contentTransferEncoding( 0 )
@@ -48,6 +49,7 @@ class MessageComposer::SinglepartJobPrivate : public ContentJobBasePrivate
     bool chooseCTE();
 
     QByteArray data;
+    Headers::ContentDescription *contentDescription;
     Headers::ContentDisposition *contentDisposition;
     Headers::ContentID *contentID;
     Headers::ContentTransferEncoding *contentTransferEncoding;
@@ -117,6 +119,15 @@ void SinglepartJob::setData( const QByteArray &data )
   d->data = data;
 }
 
+Headers::ContentDescription *SinglepartJob::contentDescription()
+{
+  Q_D( SinglepartJob );
+  if( !d->contentDescription ) {
+    d->contentDescription = new Headers::ContentDescription;
+  }
+  return d->contentDescription;
+}
+
 Headers::ContentDisposition *SinglepartJob::contentDisposition()
 {
   Q_D( SinglepartJob );
@@ -166,6 +177,10 @@ void SinglepartJob::process()
   }
   
   // Set headers.
+  if( d->contentDescription ) {
+    d->resultContent->setHeader( d->contentDescription );
+    d->contentDescription->setParent( d->resultContent );
+  }
   if( d->contentDisposition ) {
     d->resultContent->setHeader( d->contentDisposition );
     d->contentDisposition->setParent( d->resultContent );

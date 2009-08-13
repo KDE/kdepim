@@ -17,6 +17,7 @@ set( messagecomposer_src
 
      jobbase.cpp
      contentjobbase.cpp
+     attachmentjob.cpp
      singlepartjob.cpp
      multipartjob.cpp
      maintextjob.cpp
@@ -29,7 +30,7 @@ include_directories(
 )
 
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
-target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} kleo ${QGPGME_LIBRARIES} )
+target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} kdepim ${QGPGME_LIBRARIES} )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
@@ -44,6 +45,7 @@ install( FILES
 
          jobbase.h
          contentjobbase.h
+         attachmentjob.h
          singlepartjob.h
          multipartjob.h
          maintextjob.h

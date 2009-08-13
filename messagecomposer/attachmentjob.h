@@ -17,19 +17,43 @@
   02110-1301, USA.
 */
 
-#ifndef COMPOSERTEST_H
-#define COMPOSERTEST_H
+#ifndef MESSAGECOMPOSER_ATTACHMENTJOB_H
+#define MESSAGECOMPOSER_ATTACHMENTJOB_H
 
-#include <QtCore/QObject>
+#include "contentjobbase.h"
+#include "messagecomposer_export.h"
 
-class ComposerTest : public QObject
+#include <libkdepim/attachmentpart.h>
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
+namespace MessageComposer {
+
+class AttachmentJobPrivate;
+
+/**
+*/
+class MESSAGECOMPOSER_EXPORT AttachmentJob : public ContentJobBase
 {
   Q_OBJECT
-  private Q_SLOTS:
-    void testAttachments();
 
-    // TODO test the code for autodetecting the charset of a text attachment.
-    // TODO figure out what CTE testing has to be done.
+  public:
+    AttachmentJob( KPIM::AttachmentPart::Ptr part, QObject *parent = 0 );
+    virtual ~AttachmentJob();
+
+    KPIM::AttachmentPart::Ptr attachmentPart() const;
+    void setAttachmentPart( KPIM::AttachmentPart::Ptr part );
+
+  protected Q_SLOTS:
+    virtual void doStart();
+    virtual void process();
+
+  private:
+    Q_DECLARE_PRIVATE( AttachmentJob )
 };
+
+}
 
 #endif

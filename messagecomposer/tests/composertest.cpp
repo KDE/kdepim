@@ -31,48 +31,49 @@ using namespace KMime;
 #include <messagecomposer/textpart.h>
 using namespace MessageComposer;
 
+#include <libkdepim/attachmentpart.h>
+#include <boost/shared_ptr.hpp>
+using KPIM::AttachmentPart;
+
 QTEST_KDEMAIN( ComposerTest, NoGUI )
 
-void ComposerTest::testCTEErrors()
+void ComposerTest::testAttachments()
 {
-  // First test that the composer succeeds at all.
-  {
-    Composer *composer = new Composer;
-    composer->globalPart()->setFallbackCharsetEnabled( true );
-    composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
-    composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
-    composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
-    QVERIFY( composer->exec() );
-    kDebug() << composer->resultMessage()->encodedContent();
-  }
+  Composer *composer = new Composer;
+  composer->globalPart()->setFallbackCharsetEnabled( true );
+  composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
+  composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
+  composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
 
-#if 0 // test with attachments
-  // unsupported CTE -> error.
-  {
-    Composer *composer = new Composer;
-    composer->globalPart()->setFallbackCharsetEnabled( true );
-    composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
-    composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
-    composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
-    composer->textPart()->setOverrideTransferEncoding( Headers::CEbinary ); // DEAD DEAD DEAD
-    QVERIFY( !composer->exec() );
-    QCOMPARE( composer->error(), int( Job::BugError ) );
-    kDebug() << composer->errorString();
-  }
+  AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
+  attachment->setData( "abc" );
+  attachment->setMimeType( "x-some/x-type" );
+  composer->addAttachmentPart( attachment );
 
-  // 8bit part when is8BitAllowed false -> error.
+  QVERIFY( composer->exec() );
+  Message::Ptr message = composer->resultMessage();
+  kDebug() << message->encodedContent();
+  delete composer;
+  composer = 0;
+
+  // multipart/mixed
   {
-    Composer *composer = new Composer;
-    composer->behaviour().enableAction( Behaviour::UseFallbackCharset );
-    composer->infoPart()->setFrom( QString::fromLatin1( "me@me.me" ) );
-    composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
-    composer->textPart()->setWrappedPlainText( QString::fromLatin1( "sample content" ) );
-    composer->textPart()->setOverrideTransferEncoding( Headers::CE8Bit ); // DEAD DEAD DEAD
-    QVERIFY( !composer->exec() );
-    QCOMPARE( composer->error(), int( Job::BugError ) );
-    kDebug() << composer->errorString();
+    QVERIFY( message->contentType( false ) );
+    QCOMPARE( message->contentType()->mimeType(), QByteArray( "multipart/mixed" ) );
+    QCOMPARE( message->contents().count(), 2 );
+    // text/plain
+    {
+      Content *plain = message->contents().at( 0 );
+      QVERIFY( plain->contentType( false ) );
+      QCOMPARE( plain->contentType()->mimeType(), QByteArray( "text/plain" ) );
+    }
+    // x-some/x-type (attachment)
+    {
+      Content *plain = message->contents().at( 1 );
+      QVERIFY( plain->contentType( false ) );
+      QCOMPARE( plain->contentType()->mimeType(), QByteArray( "x-some/x-type" ) );
+    }
   }
-#endif
 }
 
 #include "composertest.moc"

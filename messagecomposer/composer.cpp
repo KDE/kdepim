@@ -19,6 +19,7 @@
 
 #include "composer.h"
 
+#include "attachmentjob.h"
 #include "globalpart.h"
 #include "infopart.h"
 #include "jobbase_p.h"
@@ -136,11 +137,9 @@ void ComposerPrivate::composeStep2()
     MultipartJob *multipartJob = new MultipartJob( q );
     multipartJob->setMultipartSubtype( "mixed" );
     multipartJob->appendSubjob( mainTextJob );
-#if 0
     foreach( AttachmentPart::Ptr part, attachmentParts ) {
       multipartJob->appendSubjob( new AttachmentJob( part ) );
     }
-#endif
     mainJob = multipartJob;
   }
   q->addSubjob( mainJob );
