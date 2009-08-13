@@ -541,7 +541,7 @@ void Kleo::KeySelectionDialog::slotStartCertificateManager( const QString &query
                               "please check your installation." ),
                         i18n( "Certificate Manager Error" ) );
   else
-    kDebug(5006) <<"\nslotStartCertManager(): certificate manager started.";
+    kDebug(5150) <<"\nslotStartCertManager(): certificate manager started.";
 }
 
 #ifndef __KLEO_UI_SHOW_KEY_LIST_ERROR_H__

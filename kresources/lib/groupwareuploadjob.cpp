@@ -421,7 +421,7 @@ kDebug()<<"Found it in the list!";
 
 void GroupwareUploadJob::slotItemUploadNewError( const QString &/*localID*/, const QString &remoteURL )
 {
-  kDebug(5006) <<"GroupwareUploadJob::slotItemUploadNewError, removal not successful:"<< remoteURL;
+  kDebug(5650) <<"GroupwareUploadJob::slotItemUploadNewError, removal not successful:"<< remoteURL;
   KPIM::GroupwareUploadItem::List allit( mAddedItems );
   allit += mItemsUploading;
   allit += mItemsUploaded;
