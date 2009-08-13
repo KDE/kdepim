@@ -3237,8 +3237,6 @@ Model::ViewItemJobResult Model::viewItemJobStepInternalForJobPass1Update( ViewIt
   // The end index of our work.
   int endIndex = job->endIndex();
 
-  bool viewportNeedsUpdate = false;
-
   while( curIndex <= endIndex )
   {
     // Get the underlying storage message data...
@@ -3269,6 +3267,8 @@ Model::ViewItemJobResult Model::viewItemJobStepInternalForJobPass1Update( ViewIt
 
     // Do update
     mStorageModel->updateMessageItemData( message, row );
+    QModelIndex idx = index( message, 0 );
+    emit dataChanged( idx, idx );
 
     // Reinsert the item to the cache, if needed
     if( mAggregation->threading() == Aggregation::PerfectReferencesAndSubject )
@@ -3289,22 +3289,6 @@ Model::ViewItemJobResult Model::viewItemJobStepInternalForJobPass1Update( ViewIt
     if ( propertyChangeMask )
     {
       // Some message data has changed
-      // We could emit dataChanged() so the viewport would be updated...
-      // but this is AGAIN a huge performance cost. Since we don't actually
-      // use the standard painting code nothing will screw up if we don't
-      // emit this signal (I hope.. :D). We just set a flag that will cause
-      // us to update the viewport on exit instead.
-      //
-      // ... hm.. now that I think of it.. what the heck is the meaning of
-      // topLeft and bottomRight parameters of dataChanged() in a tree ?
-      // I guess that it should be always topLeft == bottomRight == itemIndex...
-      // But anyway, the view jumps like crazy when this signal is emitted.
-
-      // QModelIndex idx = index( message, 0 );
-      // emit dataChanged( idx, idx );
-
-      viewportNeedsUpdate = true;
-
       // now we need to handle the changes that might cause re-grouping/re-sorting
       // and propagate them to the parents.
 
@@ -3374,16 +3358,12 @@ Model::ViewItemJobResult Model::viewItemJobStepInternalForJobPass1Update( ViewIt
         if ( curIndex <= endIndex )
         {
           job->setCurrentIndex( curIndex );
-          if ( viewportNeedsUpdate )
-            mView->viewport()->update();
           return ViewItemJobInterrupted;
         }
       }
     }
   }
 
-  if ( viewportNeedsUpdate )
-    mView->viewport()->update();
   return ViewItemJobCompleted;
 }
 

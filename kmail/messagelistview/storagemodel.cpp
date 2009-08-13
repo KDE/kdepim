@@ -154,6 +154,21 @@ StorageModel::StorageModel( KMFolder * folder, QObject * parent )
     mColorToDoMessage = config.readEntry( "TodoMessage", mColorToDoMessage );
   }
 
+  if ( GlobalSettings::self()->useDefaultFonts() )
+  {
+    mFont = mFontImportantMessage = mFontNewMessage = mFontUnreadMessage =
+      mFontToDoMessage = KGlobalSettings::generalFont();
+  }
+  else
+  {
+    KConfigGroup fonts( KMKernel::config(), "Fonts" );
+    mFont = fonts.readEntry( "list-font",  KGlobalSettings::generalFont() );
+
+    mFontImportantMessage = fonts.readEntry( "list-important-font", mFont );
+    mFontNewMessage       = fonts.readEntry( "list-new-font",       mFont );
+    mFontUnreadMessage    = fonts.readEntry( "list-unread-font",    mFont );
+    mFontToDoMessage      = fonts.readEntry( "list-toact-font",     mFont );
+  }
 }
 
 StorageModel::~StorageModel()
@@ -290,6 +305,94 @@ bool StorageModel::containsOutboundMessages() const
   return mFolder->whoField().toLower() == "to";
 }
 
+/**
+ * Uses the KMMsgBase to fill a list of tags. It also picks out
+ * the colors the message should use.
+ */
+QList< Core::MessageItem::Tag * > * fillTagList( KMMsgBase * msg,
+    QColor & textColor, QColor & backgroundColor )
+{
+  // FIXME: Tags should be sorted by priority!
+  QList< Core::MessageItem::Tag * > * tagList = 0;
+
+  if ( msg->tagList() )
+  {
+    if ( !msg->tagList()->isEmpty() )
+    {
+      int bestPriority = -0xfffff;
+
+      tagList = new QList< Core::MessageItem::Tag * >();
+      for ( KMMessageTagList::Iterator it = msg->tagList()->begin(); it != msg->tagList()->end(); ++it )
+      {
+        const KMMessageTagDescription * description = kmkernel->msgTagMgr()->find( *it );
+        if ( description )
+        {
+          if ( ( bestPriority < description->priority() ) || ( !textColor.isValid() ) )
+          {
+            textColor = description->textColor();
+            backgroundColor = description->backgroundColor();
+            bestPriority = description->priority();
+          }
+
+          Core::MessageItem::Tag * tag;
+          if ( description->toolbarIconName().isEmpty() )
+            tag = new Core::MessageItem::Tag( SmallIcon( "feed-subscribe" ), description->name(), *it );
+          else
+            tag = new Core::MessageItem::Tag( SmallIcon( description->toolbarIconName() ), description->name(), *it );
+          tagList->append( tag );
+        }
+      }
+      if ( tagList->isEmpty() )
+      {
+        delete tagList;
+        tagList = 0;
+      }
+    }
+  }
+
+  return tagList;
+}
+
+static void setMessageItemEncryptionState( Core::MessageItem * mi, KMMsgBase * msg )
+{
+  switch ( msg->encryptionState() )
+  {
+    case KMMsgFullyEncrypted:
+      mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
+    break;
+    case KMMsgPartiallyEncrypted:
+      mi->setEncryptionState( Core::MessageItem::PartiallyEncrypted );
+    break;
+    case KMMsgEncryptionStateUnknown:
+    case KMMsgEncryptionProblematic:
+      mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
+    break;
+    default:
+      mi->setEncryptionState( Core::MessageItem::NotEncrypted );
+    break;
+  }
+}
+
+static void setMessageItemSignatureState( Core::MessageItem * mi, KMMsgBase * msg )
+{
+  switch ( msg->signatureState() )
+  {
+    case KMMsgFullySigned:
+      mi->setSignatureState( Core::MessageItem::FullySigned );
+    break;
+    case KMMsgPartiallySigned:
+      mi->setSignatureState( Core::MessageItem::PartiallySigned );
+    break;
+    case KMMsgSignatureStateUnknown:
+    case KMMsgSignatureProblematic:
+      mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
+    break;
+    default:
+      mi->setSignatureState( Core::MessageItem::NotSigned );
+    break;
+  }
+}
+
 bool StorageModel::initializeMessageItem( Core::MessageItem * mi, int row, bool bUseReceiver ) const
 {
   KMMsgBase * msg = mFolder->getMsgBase( row );
@@ -322,96 +425,9 @@ bool StorageModel::initializeMessageItem( Core::MessageItem * mi, int row, bool 
   QString subject = msg->subject();
   if ( subject.isEmpty() )
     subject = '(' + noSubject + ')';
-  mi->setSubjectAndStatus(
-      subject,
-      stat
-    );
+  mi->setSubjectAndStatus( subject, stat );
 
-  QColor clr;
-
-  // FIXME: Tags should be sorted by priority!
-
-  if ( msg->tagList() )
-  {
-    if ( !msg->tagList()->isEmpty() )
-    {
-      int bestPriority = -0xfffff;
-
-      QList< Core::MessageItem::Tag * > * tagList = new QList< Core::MessageItem::Tag * >();
-      for ( KMMessageTagList::Iterator it = msg->tagList()->begin(); it != msg->tagList()->end(); ++it )
-      {
-        const KMMessageTagDescription * description = kmkernel->msgTagMgr()->find( *it );
-        if ( description )
-        {
-          if ( ( bestPriority < description->priority() ) || ( !clr.isValid() ) )
-          {
-            clr = description->textColor();
-            bestPriority = description->priority();
-          }
-
-          Core::MessageItem::Tag * tag;
-          if ( description->toolbarIconName().isEmpty() )
-            tag = new Core::MessageItem::Tag( SmallIcon( "feed-subscribe" ), description->name(), *it );
-          else
-            tag = new Core::MessageItem::Tag( SmallIcon( description->toolbarIconName() ), description->name(), *it );
-          tagList->append( tag );
-        }
-      }
-      if ( tagList->isEmpty() )
-        delete tagList;
-      else
-        mi->setTagList( tagList );
-    }
-  }
-
-
-
-  switch ( msg->encryptionState() )
-  {
-    case KMMsgFullyEncrypted:
-      mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
-    break;
-    case KMMsgPartiallyEncrypted:
-      mi->setEncryptionState( Core::MessageItem::PartiallyEncrypted );
-    break;
-    case KMMsgEncryptionStateUnknown:
-      mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
-    break;
-    default:
-      mi->setEncryptionState( Core::MessageItem::NotEncrypted );
-    break;
-  }
-
-  switch ( msg->signatureState() )
-  {
-    case KMMsgFullySigned:
-      mi->setSignatureState( Core::MessageItem::FullySigned );
-    break;
-    case KMMsgPartiallySigned:
-      mi->setSignatureState( Core::MessageItem::PartiallySigned );
-    break;
-    case KMMsgSignatureStateUnknown:
-      mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
-    break;
-    default:
-      mi->setSignatureState( Core::MessageItem::NotSigned );
-    break;
-  }
-
-  if ( !clr.isValid() )
-  {
-    if ( stat.isNew() )
-      clr = mColorNewMessage;
-    else if ( stat.isUnread() )
-      clr = mColorUnreadMessage;
-    else if ( stat.isImportant() )
-      clr = mColorImportantMessage;
-    else if ( stat.isToAct() )
-      clr = mColorToDoMessage;
-  }
-
-  if ( clr.isValid() )
-    mi->setTextColor( clr );
+  setMessageItemData( mi, msg );
 
   return true;
 }
@@ -429,99 +445,53 @@ void StorageModel::updateMessageItemData( Core::MessageItem * mi, int row ) cons
     mi->recomputeMaxDate();
   }
 
-  QColor clr;
-
   KPIM::MessageStatus stat = msg->messageStatus();
 
   mi->setStatus( stat );
 
-  switch ( msg->encryptionState() )
-  {
-    case KMMsgFullyEncrypted:
-      mi->setEncryptionState( Core::MessageItem::FullyEncrypted );
-    break;
-    case KMMsgPartiallyEncrypted:
-      mi->setEncryptionState( Core::MessageItem::PartiallyEncrypted );
-    break;
-    case KMMsgEncryptionStateUnknown:
-    case KMMsgEncryptionProblematic:
-      mi->setEncryptionState( Core::MessageItem::EncryptionStateUnknown );
-    break;
-    default:
-      mi->setEncryptionState( Core::MessageItem::NotEncrypted );
-    break;
-  }
+  setMessageItemData( mi, msg );
+}
 
-  switch ( msg->signatureState() )
-  {
-    case KMMsgFullySigned:
-      mi->setSignatureState( Core::MessageItem::FullySigned );
-    break;
-    case KMMsgPartiallySigned:
-      mi->setSignatureState( Core::MessageItem::PartiallySigned );
-    break;
-    case KMMsgSignatureStateUnknown:
-    case KMMsgSignatureProblematic:
-      mi->setSignatureState( Core::MessageItem::SignatureStateUnknown );
-    break;
-    default:
-      mi->setSignatureState( Core::MessageItem::NotSigned );
-    break;
-  }
+void StorageModel::setMessageItemData( Core::MessageItem * mi, KMMsgBase * msg ) const
+{
+  setMessageItemEncryptionState( mi, msg );
+  setMessageItemSignatureState( mi, msg );
 
-  QList< Core::MessageItem::Tag * > * tagList = 0;
-
-  if ( msg->tagList() )
-  {
-    if ( !msg->tagList()->isEmpty() )
-    {
-      int bestPriority = -0xfffff;
-
-      tagList = new QList< Core::MessageItem::Tag * >();
-      for ( KMMessageTagList::Iterator it = msg->tagList()->begin(); it != msg->tagList()->end(); ++it )
-      {
-        const KMMessageTagDescription * description = kmkernel->msgTagMgr()->find( *it );
-        if ( description )
-        {
-          if ( ( bestPriority < description->priority() ) || ( !clr.isValid() ) )
-          {
-            clr = description->textColor();
-            bestPriority = description->priority();
-          }
-
-          Core::MessageItem::Tag * tag;
-          if ( description->toolbarIconName().isEmpty() )
-            tag = new Core::MessageItem::Tag( SmallIcon( "feed-subscribe" ), description->name(), *it );
-          else
-            tag = new Core::MessageItem::Tag( SmallIcon( description->toolbarIconName() ), description->name(), *it );
-          tagList->append( tag );
-        }
-      }
-      if ( tagList->isEmpty() )
-      {
-        delete tagList;
-        tagList = 0;
-      }
-    }
-  }
-
+  QColor clr;
+  QColor backClr;
+  QList< Core::MessageItem::Tag * > * tagList;
+  tagList = fillTagList( msg, clr, backClr );
   mi->setTagList( tagList );
+
+  KPIM::MessageStatus stat = msg->messageStatus();
 
   if ( !clr.isValid() )
   {
-    if ( stat.isNew() )
+    // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
+    if ( stat.isImportant() )
+      clr = mColorImportantMessage;
+    else if ( stat.isNew() )
       clr = mColorNewMessage;
     else if ( stat.isUnread() )
       clr = mColorUnreadMessage;
-    else if ( stat.isImportant() )
-      clr = mColorImportantMessage;
     else if ( stat.isToAct() )
       clr = mColorToDoMessage;
   }
 
   mi->setTextColor( clr ); // set even if invalid (->default color)
+  mi->setBackgroundColor( backClr );
 
-  // FIXME: Handle MDN State ?
+  // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
+  if ( stat.isImportant() )
+    mi->setFont( mFontImportantMessage );
+  else if ( stat.isNew() )
+    mi->setFont( mFontNewMessage );
+  else if ( stat.isUnread() )
+    mi->setFont( mFontUnreadMessage );
+  else if ( stat.isToAct() )
+    mi->setFont( mFontToDoMessage );
+  else
+    mi->setFont( mFont );
 }
 
 void StorageModel::fillMessageItemThreadingData( Core::MessageItem * mi, int row, ThreadingDataSubset subset ) const
