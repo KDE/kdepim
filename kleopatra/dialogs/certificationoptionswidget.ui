@@ -27,7 +27,7 @@
        <item>
         <widget class="QLabel" name="label_7" >
          <property name="text" >
-          <string>Choose which of your keys to sign with:</string>
+          <string>Choose which of your certificates to sign with:</string>
          </property>
         </widget>
        </item>

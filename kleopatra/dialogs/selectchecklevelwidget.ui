@@ -13,7 +13,7 @@
    <item row="0" column="0" colspan="2" >
     <widget class="QLabel" name="label_2" >
      <property name="text" >
-      <string>&lt;b>Step 2:&lt;/b> How thoroughly have you checked that this key actually belongs to the person it claims it's from?</string>
+      <string>&lt;b>Step 2:&lt;/b> How thoroughly have you checked that this certificate actually belongs to the person it claims it's from?</string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>
