@@ -174,11 +174,11 @@ static QString signatureSummaryToString( int summary )
     else if ( summary & Signature::KeyExpired )
         return i18n( "Signing certificate expired" );
         else if ( summary & Signature::KeyMissing )
-        return i18n( "No public key to verify the signature" );
+        return i18n( "No public certificate to verify the signature" );
     else if ( summary & Signature::SigExpired )
         return i18n( "Signature expired" );
     else if ( summary & Signature::KeyMissing )
-        return i18n( "Key missing" );
+        return i18n( "Certificate missing" );
     else if ( summary & Signature::CrlMissing )
         return i18n( "CRL missing" );
     else if ( summary & Signature::CrlTooOld )
@@ -222,13 +222,13 @@ static QString renderKeyLink( const QString & fpr, const QString & text ) {
 
 static QString renderKey( const Key & key ) {
     if ( key.isNull() )
-        return i18n( "Unknown key" );
+        return i18n( "Unknown certificate" );
     return renderKeyLink( key.primaryFingerprint(), Formatting::prettyName( key ) );
 }
 
 static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
     if ( key.isNull() )
-        return i18n( "Unknown key" );
+        return i18n( "Unknown certificate" );
     const QString email = Formatting::prettyEMail( key );
     const QString user = !email.isEmpty() ? email : Formatting::prettyName( key );
     return renderKeyLink( key.primaryFingerprint(), user );
@@ -247,9 +247,9 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
     const bool haveDate = dt.isValid();
     if ( !haveKey )
         if ( haveDate )
-            return i18n( "Signed on %1 with unknown key %2.", formatDate( dt ), renderFingerprint( sig.fingerprint() ) );
+            return i18n( "Signed on %1 with unknown certificate %2.", formatDate( dt ), renderFingerprint( sig.fingerprint() ) );
         else
-            return i18n( "Signed with unknown key %1.", renderFingerprint( sig.fingerprint() ) );
+            return i18n( "Signed with unknown certificate %1.", renderFingerprint( sig.fingerprint() ) );
     if ( haveSigner )
         if ( haveDate )
             return i18nc( "date, key owner, key ID",
@@ -258,10 +258,10 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
                           signer,
                           renderFingerprint( key.keyID() ) );
         else
-            return i18n( "Signed by %1 with key %2.", signer, renderKey( key ) );
+            return i18n( "Signed by %1 with certificate %2.", signer, renderKey( key ) );
     if ( haveDate )
-        return i18n( "Signed on %1 with key %2.", formatDate( dt ), renderKey( key ) );
-    return i18n( "Signed with key %1.", renderKey( key ) );
+        return i18n( "Signed on %1 with certificate %2.", formatDate( dt ), renderKey( key ) );
+    return i18n( "Signed with certificate %1.", renderKey( key ) );
 
 }
 

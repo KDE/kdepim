@@ -85,7 +85,7 @@
       <bool>false</bool>
      </property>
      <property name="text" >
-      <string>Choose this if you know the person, and have asked him whether this was his key, but you have not verified he is actually in posession of the secret key.</string>
+      <string>Choose this if you know the person, and have asked him whether this was his certificate, but you have not verified he is actually in posession of the secret certificate.</string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>

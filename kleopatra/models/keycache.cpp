@@ -899,8 +899,8 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, K
                  q, SLOT(secretKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
 
     const QString label = protocol == Kleo::CryptoBackendFactory::instance()->smime()
-        ? type == PublicKeys ? i18n("Listing public X.509 keys") : i18n("Listing private X.509 keys")
-        : type == PublicKeys ? i18n("Listing public OpenPGP keys") : i18n("Listing private OpenPGP keys") ;
+        ? type == PublicKeys ? i18n("Listing public X.509 certificates") : i18n("Listing private X.509 certificates")
+        : type == PublicKeys ? i18n("Listing public OpenPGP certificates") : i18n("Listing private OpenPGP certificates") ;
     (void)ProgressManager::createForJob( job, label );
 
     connect( q, SIGNAL(canceled()),

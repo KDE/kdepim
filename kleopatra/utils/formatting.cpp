@@ -212,7 +212,7 @@ namespace {
     QString format_keytype( const Key & key ) {
 	const Subkey subkey = key.subkey( 0 );
 	if ( key.hasSecret() )
-	    return i18n( "%1-bit %2 (secret key available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
+	    return i18n( "%1-bit %2 (secret certificate available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
 	else
 	    return i18n( "%1-bit %2", subkey.length(), subkey.publicKeyAlgorithmAsString() );
     }
@@ -460,7 +460,7 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     case UserID::Signature::GeneralError:
 	return i18n("invalid");
     case UserID::Signature::SigExpired:   return i18n("expired");
-    case UserID::Signature::KeyExpired:   return i18n("key expired");
+    case UserID::Signature::KeyExpired:   return i18n("certificate expired");
     case UserID::Signature::BadSignature: return i18nc("fake/invalid signature", "bad");
     case UserID::Signature::NoPublicKey:  return QString();
     }
@@ -520,27 +520,27 @@ QString Formatting::signatureToString( const Signature & sig, const Key & key )
     if ( red )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Bad signature by unknown certificate %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
             else
-                return i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Bad signature by an unknown certificate: %1", QString::fromLocal8Bit( sig.status().asString() ) );
         else
             return i18n("Bad signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 
     else if ( valid )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
+                return i18n("Good signature by unknown certificate %1.", QString::fromLatin1( fpr ) );
             else
-                return i18n("Good signature by an unknown key.");
+                return i18n("Good signature by an unknown certificate.");
         else
             return i18n("Good signature by %1.", keyToString( key ) );
 
     else
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Invalid signature by unknown certificate %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
             else
-                return i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+                return i18n("Invalid signature by an unknown certificate: %1", QString::fromLocal8Bit( sig.status().asString() ) );
         else
             return i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 }

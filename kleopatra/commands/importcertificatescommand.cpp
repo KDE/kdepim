@@ -268,17 +268,17 @@ static QString make_report( const std::vector<ImportResult> & res, const QString
         lines.push_back( normalLine.subs( i18n("Unchanged:") )
                          .subs( n ).toString() );
     if ( const int n = SUM(numSecretKeysConsidered) )
-        lines.push_back( normalLine.subs( i18n("Secret keys processed:") )
+        lines.push_back( normalLine.subs( i18n("Secret certificates processed:") )
                          .subs( n ).toString() );
     if ( const int n = SUM(numSecretKeysImported) )
-        lines.push_back( normalLine.subs( i18n("Secret keys imported:") )
+        lines.push_back( normalLine.subs( i18n("Secret certificates imported:") )
                          .subs( n ).toString() );
     if ( const int n = SUM(numSecretKeysConsidered) - SUM(numSecretKeysImported) - SUM(numSecretKeysUnchanged) )
         if ( n > 0 )
-        lines.push_back( boldLine.subs( i18n("Secret keys <em>not</em> imported:") )
+        lines.push_back( boldLine.subs( i18n("Secret certificates <em>not</em> imported:") )
                          .subs( n ).toString() );
     if ( const int n = SUM(numSecretKeysUnchanged) )
-        lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
+        lines.push_back( normalLine.subs( i18n("Secret certificates unchanged:") )
                          .subs( n ).toString() );
 
 #undef sum
