@@ -23,8 +23,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef LDI_XXPORT_H
-#define LD_XXPORT_H
+#ifndef LDAP_XXPORT_H
+#define LDAP_XXPORT_H
 
 #include "xxport.h"
 

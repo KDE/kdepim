@@ -19,6 +19,9 @@
  */
 
 #include "ldapsearchdialog.h"
+
+#include "akonadi/contact/addressbookselectiondialog.h"
+#include "akonadi/contact/contactsearchjob.h"
 #include "ldapoptionswidget.h"
 
 #include <QtCore/QPair>
@@ -36,6 +39,8 @@
 #include <QtGui/QVBoxLayout>
 
 #include <addresseelineedit.h>
+#include <akonadi/collection.h>
+#include <akonadi/itemcreatejob.h>
 #include <kabc/distributionlist.h>
 #include <kcombobox.h>
 #include <kconfig.h>
@@ -49,8 +54,6 @@
 
 #if 0 //sebsauer
 #include "distributionlistpicker.h"
-#include "kabcore.h"
-#include "kablock.h"
 #endif
 
 static QString asUtf8( const QByteArray &val )
@@ -269,10 +272,9 @@ QList< QPair<KLDAP::LdapAttrMap, QString> > LDAPSearchDialog::Private::selectedI
   return contacts;
 }
 
-LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
-                                    QWidget* parent )
+LDAPSearchDialog::LDAPSearchDialog( QWidget* parent )
   : KDialog( parent ),
-    mAddressBook( ab ), mCore( core ), mModel( 0 ),
+    mModel( 0 ),
     d( new Private )
 {
   setCaption( i18n( "Import Contacts from LDAP" ) );
@@ -353,7 +355,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setButtonText( User2, i18n( "Configure LDAP Servers..." ) );
 
   mNumHosts = 0;
-  mIsOK = false;
+  mIsConfigured = false;
 
   connect( mRecursiveCheckbox, SIGNAL( toggled( bool ) ),
            this, SLOT( slotSetScope( bool ) ) );
@@ -376,18 +378,23 @@ LDAPSearchDialog::~LDAPSearchDialog()
   delete d;
 }
 
+KABC::Addressee::List LDAPSearchDialog::selectedContacts() const
+{
+  return mSelectedContacts;
+}
+
 void LDAPSearchDialog::restoreSettings()
 {
   // Create one KPIM::LdapClient per selected server and configure it.
 
   // First clean the list to make sure it is empty at
   // the beginning of the process
-  qDeleteAll(mLdapClientList);
+  qDeleteAll( mLdapClientList) ;
   mLdapClientList.clear();
 
-  KConfig _kabConfig( "kaddressbookrc" );
-  KConfigGroup kabConfig(&_kabConfig, "LDAPSearch" );
-  mSearchType->setCurrentIndex( kabConfig.readEntry( "SearchType", 0 ) );
+  KConfig kabConfig( "kaddressbookrc" );
+  KConfigGroup kabGroup( &kabConfig, "LDAPSearch" );
+  mSearchType->setCurrentIndex( kabGroup.readEntry( "SearchType", 0 ) );
 
   // then read the config file and register all selected
   // server in the list
@@ -395,9 +402,9 @@ void LDAPSearchDialog::restoreSettings()
   KConfigGroup group( config, "LDAP" );
   mNumHosts = group.readEntry( "NumSelectedHosts", 0 );
   if ( !mNumHosts ) {
-    mIsOK = false;
+    mIsConfigured = false;
   } else {
-    mIsOK = true;
+    mIsConfigured = true;
     for ( int j = 0; j < mNumHosts; ++j ) {
       KLDAP::LdapServer ldapServer;
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
@@ -426,10 +433,10 @@ void LDAPSearchDialog::restoreSettings()
 
 void LDAPSearchDialog::saveSettings()
 {
-  KConfig _config( "kaddressbookrc" );
-  KConfigGroup config(&_config, "LDAPSearch" );
-  config.writeEntry( "SearchType", mSearchType->currentIndex() );
-  config.sync();
+  KConfig config( "kaddressbookrc" );
+  KConfigGroup group( &config, "LDAPSearch" );
+  group.writeEntry( "SearchType", mSearchType->currentIndex() );
+  group.sync();
 }
 
 void LDAPSearchDialog::cancelQuery()
@@ -455,7 +462,7 @@ void LDAPSearchDialog::slotSetScope( bool rec )
 }
 
 QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
-                                      bool startsWith )
+                                      bool startsWith ) const
 {
   /* The reasoning behind this filter is:
    * If it's a person, or a distlist, show it, even if it doesn't have an email address.
@@ -493,7 +500,7 @@ void LDAPSearchDialog::slotStartSearch()
 {
   cancelQuery();
 
-  if ( ! isOK() ) {
+  if ( !mIsConfigured ) {
     KMessageBox::error( this, i18n( "You must select a LDAP server before searching." ) );
     slotUser2();
     return;
@@ -552,30 +559,6 @@ void LDAPSearchDialog::closeEvent( QCloseEvent* e )
 {
   slotStopSearch();
   e->accept();
-}
-
-/*!
- * Returns a ", " separated list of email addresses that were
- * checked by the user
- */
-QString LDAPSearchDialog::selectedEMails() const
-{
-  QStringList result;
-
-  const QModelIndexList selected = mResultView->selectionModel()->selectedIndexes();
-  for ( int i = 0; i < selected.count(); ++i ) {
-    QString email = mModel->email( selected.at( i ) );
-    if ( !email.isEmpty() ) {
-      QString name = mModel->fullName( selected.at( i ) );
-      if ( name.isEmpty() ) {
-        result << email;
-      } else {
-        result << name + " <" + email + '>';
-      }
-    }
-  }
-
-  return result.join( ", " );
 }
 
 void LDAPSearchDialog::slotHelp()
@@ -673,85 +656,50 @@ KABC::DistributionList *LDAPSearchDialog::selectDistributionList()
 }
 #endif
 
-KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QList< QPair<KLDAP::LdapAttrMap, QString> >& selectedItems,
-                                                                       KABC::Resource * const resource )
-{
-    const QDateTime now = QDateTime::currentDateTime();
-    QStringList importedAddrs;
-    KABC::Addressee::List localAddrs;
-
-#if 0 //sebsauer
-    KABLock::self( mCore->addressBook() )->lock( resource );
-#endif
-
-    for ( int i = 0; i < selectedItems.count(); ++i ) {
-      KABC::Addressee addr = convertLdapAttributesToAddressee( selectedItems.at( i ).first );
-
-#if 0 //sebsauer
-      const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
-      if ( existing.isEmpty() ) {
-#endif
-        addr.setUid( KRandom::randomString( 10 ) );
-        addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2",
-                             selectedItems.at( i ).second, KGlobal::locale()->formatDateTime( now ) ) );
-        addr.setResource( resource );
-#if 0 //sebsauer
-        mCore->addressBook()->insertAddressee( addr );
-#endif
-        importedAddrs.append( addr.fullEmail() );
-        localAddrs.append( addr );
-#if 0 //sebsauer
-      } else {
-        localAddrs.append( existing.first() );
-      }
-#endif
-    }
-
-#if 0 //sebsauer
-    KABLock::self( mCore->addressBook() )->unlock( resource );
-#endif
-
-    if ( !importedAddrs.isEmpty() ) {
-      KMessageBox::informationList( this, i18np( "The following contact was imported into your address book:",
-                                    "The following %1 contacts were imported into your address book:", importedAddrs.count() ),
-                                    importedAddrs );
-      emit addresseesAdded();
-    }
-    return localAddrs;
-}
-
 void LDAPSearchDialog::slotUser1()
 {
-#if 0 //sebsauer
-    KABC::Resource *resource = mCore->requestResource( this );
+  // Import selected items
 
-    if ( !resource )
-      return;
-#else
-    KABC::Resource *resource = 0;
-#endif
+  mSelectedContacts.clear();
 
-    if ( !d->selectedItems( mResultView ).isEmpty() ) {
-      m_result = importContactsUnlessTheyExist( d->selectedItems( mResultView ), resource );
+  const QList< QPair<KLDAP::LdapAttrMap, QString> >& selectedItems = d->selectedItems( mResultView );
+
+  if ( !selectedItems.isEmpty() ) {
+    const QDateTime now = QDateTime::currentDateTime();
+
+    for ( int i = 0; i < selectedItems.count(); ++i ) {
+      KABC::Addressee contact = convertLdapAttributesToAddressee( selectedItems.at( i ).first );
+
+      // set a comment where the contact came from
+      contact.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2",
+                              selectedItems.at( i ).second, KGlobal::locale()->formatDateTime( now ) ) );
+
+      mSelectedContacts.append( contact );
     }
+  }
+
+  accept();
 }
 
 void LDAPSearchDialog::slotUser2()
 {
-    KDialog *dialog = new KDialog( this );
-    dialog->setCaption( i18n("Configure the Address Book LDAP Settings") );
-    dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
-    LDAPOptionsWidget *widget = new LDAPOptionsWidget( dialog );
-    widget->restoreSettings();
-    dialog->setModal(true);
-    dialog->setMainWidget( widget );
-    connect( dialog, SIGNAL( applyClicked() ), widget, SLOT( saveSettings() ) );
-    connect( dialog, SIGNAL( okClicked() ), widget, SLOT( saveSettings() ) );
-    connect( widget, SIGNAL( changed( bool ) ), dialog, SLOT( enableButtonApply( bool ) ) );
-    dialog->enableButtonApply( false );
-    if (dialog->exec() == QDialog::Accepted) {
-        restoreSettings();
-    }
+  // Configure LDAP servers
+
+  KDialog dialog( this );
+  dialog.setCaption( i18n("Configure the Address Book LDAP Settings") );
+  dialog.setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+
+  LDAPOptionsWidget *widget = new LDAPOptionsWidget( &dialog );
+  widget->restoreSettings();
+  dialog.setMainWidget( widget );
+
+  connect( &dialog, SIGNAL( applyClicked() ), widget, SLOT( saveSettings() ) );
+  connect( &dialog, SIGNAL( okClicked() ), widget, SLOT( saveSettings() ) );
+  connect( widget, SIGNAL( changed( bool ) ), &dialog, SLOT( enableButtonApply( bool ) ) );
+  dialog.enableButtonApply( false );
+
+  if (dialog.exec())
+    restoreSettings();
 }
 
 #include "ldapsearchdialog.moc"

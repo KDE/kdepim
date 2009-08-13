@@ -33,72 +33,53 @@ class KLineEdit;
 class QCheckBox;
 class QPushButton;
 class QTableView;
-class KABCore;
 class ContactListModel;
-
-namespace KABC {
-  class AddressBook;
-  class DistributionList;
-  class Resource;
-}
 
 class LDAPSearchDialog : public KDialog
 {
   Q_OBJECT
 
   public:
-    LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core, QWidget* parent );
+    LDAPSearchDialog( QWidget* parent = 0 );
     ~LDAPSearchDialog();
 
-    bool isOK() const { return mIsOK; }
-
-    void restoreSettings();
-
-  Q_SIGNALS:
-    void addresseesAdded();
+    KABC::Addressee::List selectedContacts() const;
 
   protected Q_SLOTS:
+    virtual void slotHelp();
+    virtual void slotUser1();
+    virtual void slotUser2();
+
+  protected:
+    virtual void closeEvent( QCloseEvent* );
+
+  private Q_SLOTS:
     void slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj );
     void slotSetScope( bool rec );
     void slotStartSearch();
     void slotStopSearch();
     void slotSearchDone();
     void slotError( const QString& );
-    virtual void slotHelp();
-    virtual void slotUser1();
-    virtual void slotUser2();
-
     void slotSelectAll();
     void slotUnselectAll();
-    KABC::Addressee::List importContactsUnlessTheyExist( const QList< QPair<KLDAP::LdapAttrMap, QString> >& items, KABC::Resource * const resource );
-
-#if 1 //sebsauer
-  public:
-    KABC::Addressee::List m_result;
-#endif
-
-  protected:
-    QString selectedEMails() const;
-
-    virtual void closeEvent( QCloseEvent* );
 
   private:
     void saveSettings();
+    void restoreSettings();
+    void cancelQuery();
+
+    QString makeFilter( const QString& query, const QString& attr, bool startsWith ) const;
+
     static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMap& attrs );
 
 #if 0 //sbesauer
     KABC::DistributionList *selectDistributionList();
 #endif
 
-    QString makeFilter( const QString& query, const QString& attr, bool startsWith );
-
-    void cancelQuery();
-
     int mNumHosts;
     QList<KPIM::LdapClient*> mLdapClientList;
-    bool mIsOK;
-    KABC::AddressBook *mAddressBook;
-    KABCore *mCore;
+    bool mIsConfigured;
+    KABC::Addressee::List mSelectedContacts;
 
     KComboBox* mFilterCombo;
     KComboBox* mSearchType;
@@ -108,6 +89,7 @@ class LDAPSearchDialog : public KDialog
     QTableView* mResultView;
     QPushButton* mSearchButton;
     ContactListModel* mModel;
+
     class Private;
     Private* const d;
 };
