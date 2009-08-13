@@ -71,6 +71,8 @@ class KDEPIM_EXPORT CSSHelper {
     /** @return the quote color for the given level, where level ranges from 0 to 2 **/
     QColor quoteColor( int level );
 
+    QColor pgpWarnColor() const;
+
   protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */

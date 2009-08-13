@@ -647,4 +647,9 @@ namespace KPIM {
     return mQuoteColor[actualLevel];
   }
 
+  QColor CSSHelper::pgpWarnColor() const
+  {
+    return cPgpWarnH;
+  }
+
 } // namespace KPIM
