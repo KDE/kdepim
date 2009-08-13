@@ -43,7 +43,6 @@
 #include <kactioncollection.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kabc/contactgroupbrowser.h>
 #include <kabc/contactlineedit.h>
 #include <kabc/kabcmodel.h>
 #include <kicon.h>
@@ -55,6 +54,7 @@
 
 #include "akonadi/contact/contacteditordialog.h"
 #include "akonadi/contact/contactgroupeditordialog.h"
+#include "akonadi/contact/contactgroupviewer.h"
 #include "akonadi/contact/contactviewer.h"
 #include "akonadi_next/entitytreeview.h"
 #include "contactfiltermodel.h"
@@ -235,7 +235,7 @@ void MainWidget::setupGui()
   mDetailsViewStack->addWidget( mContactDetails );
 
   // the details widget for contact groups
-  mContactGroupDetails = new Akonadi::ContactGroupBrowser( mDetailsViewStack );
+  mContactGroupDetails = new Akonadi::ContactGroupViewer( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactGroupDetails );
 
   // the contact switcher for the simple gui mode
@@ -386,7 +386,7 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
     mContactDetails->setContact( item );
   } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
-    mContactGroupDetails->setItem( item );
+    mContactGroupDetails->setContactGroup( item );
   }
 }
 
