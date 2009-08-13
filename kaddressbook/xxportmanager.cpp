@@ -92,7 +92,7 @@ void XXPortManager::slotImport( const QString &identifier )
   if ( contacts.isEmpty() ) // nothing to import
     return;
 
-  Akonadi::AddressBookSelectionDialog dlg( mParentWidget );
+  Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly, mParentWidget );
   if ( !dlg.exec() )
     return;
 
