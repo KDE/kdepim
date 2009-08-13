@@ -352,13 +352,13 @@ void MainWidget::print()
 
 void MainWidget::newContact()
 {
-  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, mCollectionTree, this );
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
   dlg.exec();
 }
 
 void MainWidget::newGroup()
 {
-  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, mCollectionTree, this );
+  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
 
   dlg.setCompletionModel( contactCompletionModel() );
 
@@ -432,14 +432,14 @@ void MainWidget::setSimpleGuiMode( bool on )
 
 void MainWidget::editContact( const Akonadi::Item &contact )
 {
-  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, mCollectionTree, this );
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, this );
   dlg.setContact( contact );
   dlg.exec();
 }
 
 void MainWidget::editGroup( const Akonadi::Item &group )
 {
-  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, mCollectionTree, this );
+  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
   dlg.setCompletionModel( contactCompletionModel() );
   dlg.setContactGroup( group );
   dlg.exec();
