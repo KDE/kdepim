@@ -53,7 +53,6 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     InfoPart *infoPart();
     TextPart *textPart();
     KPIM::AttachmentPart::List attachmentParts();
-    // takes ownership
     void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
     void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
     void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
@@ -66,7 +65,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
 
     Q_PRIVATE_SLOT( d_func(), void doStart() )
     Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void beforeCryptoJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
 };
 
 }
