@@ -76,7 +76,7 @@ void MultipartJob::process()
       break;
     }
   }
-  kDebug() << "Created" << d->resultContent->contentType()->name() << "content with"
+  kDebug() << "Created" << d->resultContent->contentType()->mimeType() << "content with"
     << d->resultContent->contents().count() << "subjobContents.";
   emitResult();
 }
