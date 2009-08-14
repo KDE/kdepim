@@ -49,14 +49,14 @@ class ScheduleMessage
     */
     enum Status { PublishNew, PublishUpdate, Obsolete, RequestNew,
                   RequestUpdate, Unknown };
-  
+
     /**
       Create a scheduling message with method as defined in Scheduler::Method
       and a status.
     */
     ScheduleMessage( IncidenceBase *, int method, Status status );
     ~ScheduleMessage() {};
-    
+
     /**
       Return event associated with this message.
     */
@@ -102,13 +102,13 @@ class LIBKCAL_EXPORT Scheduler
     */
     enum Method { Publish,Request,Refresh,Cancel,Add,Reply,Counter,
                   Declinecounter,NoMethod };
-  
+
     /**
       Create scheduler for calendar specified as argument.
     */
     Scheduler( Calendar *calendar );
     virtual ~Scheduler();
-    
+
     /**
       iTIP publish action
     */
@@ -121,8 +121,8 @@ class LIBKCAL_EXPORT Scheduler
     virtual bool performTransaction( IncidenceBase *incidence,
                                      Method method ) = 0;
     /**
-      Perform iTIP transaction on incidence to specified recipient(s). The 
-      method is specified as the method argumanet and can be any valid iTIP 
+      Perform iTIP transaction on incidence to specified recipient(s). The
+      method is specified as the method argumanet and can be any valid iTIP
       method.
     */
     virtual bool performTransaction( IncidenceBase *incidence, Method method,
@@ -153,7 +153,7 @@ class LIBKCAL_EXPORT Scheduler
     static QString translatedMethodName( Method );
 
     virtual bool deleteTransaction( IncidenceBase *incidence );
-    
+
     /**
       Returns the directory where the free-busy information is stored.
     */
@@ -174,7 +174,9 @@ class LIBKCAL_EXPORT Scheduler
     bool acceptRequest( IncidenceBase *, ScheduleMessage::Status status,
                         const QString & attendee );
     bool acceptAdd( IncidenceBase *, ScheduleMessage::Status status );
-    bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
+    KDE_DEPRECATED bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status );
+    bool acceptCancel( IncidenceBase *, ScheduleMessage::Status status,
+                       const QString & attendee );
     bool acceptDeclineCounter( IncidenceBase *,
                                ScheduleMessage::Status status );
     bool acceptReply( IncidenceBase *, ScheduleMessage::Status status,
