@@ -11,6 +11,8 @@ Problems addressed
                    normal attachments
 * kolab/issue3776: Show the 'Record into my calendar' button on updated invitations when sharing
                    a calendar with others who have access rights
+* kolab/issue3811: The appointments of an organizer vanish, when an attendee has the calendar
+                   shared and rejects
 
 
 Friday, August 7th 2009
