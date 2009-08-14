@@ -21,22 +21,18 @@
 
 #include "akonadi/contact/addressbookselectiondialog.h"
 #include "akonadi/contact/contacteditordialog.h"
+#include "akonadi/contact/contactgroupexpandjob.h"
+#include "akonadi/contact/contactgroupsearchjob.h"
 #include "akonadi/contact/contactsearchjob.h"
 
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
-#include <kabc/distributionlist.h>
+#include <kabc/contactgroup.h>
 
-#include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
 #include <KToolInvocation>
-
-#include <QApplication>
-#include <QEventLoop>
-#include <QList>
-#include <QRegExp>
 
 using namespace KPIM;
 
@@ -195,22 +191,29 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
   return true;
 }
 
-QString KAddrBookExternal::expandDistributionList( const QString &listName,bool &emptyList )
+QString KAddrBookExternal::expandDistributionList( const QString &listName, bool &emptyList )
 {
-/*
   emptyList = false;
-  if ( listName.isEmpty() ) {
+  if ( listName.isEmpty() )
     return QString();
-  }
 
-  const QString lowerListName = listName.toLower();
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  KABC::DistributionList* list = addressBook->findDistributionListByName( listName, Qt::CaseInsensitive );
-  if ( list ) {
-    const QString listOfEmails = list->emails().join( ", " );
-    emptyList = listOfEmails.isEmpty();
-    return listOfEmails;
-  }
-  */
-  return QString();
+  // search the contact group by name
+  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob;
+  job->setQuery( Akonadi::ContactGroupSearchJob::Name, listName );
+  if ( !job->exec() )
+    return QString();
+
+  const KABC::ContactGroup::List groups = job->contactGroups();
+  if ( groups.isEmpty() )
+    return QString();
+
+  // expand the contact group to a list of email addresses
+  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
+  if ( !expandJob->exec() )
+    return QString();
+
+  const QString listOfEmails = expandJob->emailAddresses().join( ", " );
+  emptyList = listOfEmails.isEmpty();
+
+  return listOfEmails;
 }
