@@ -398,6 +398,10 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
 
   mDeleteMessage = false;
 
+  mHtmlOverride = false;
+  mHtmlLoadExtOverride = false;
+  mHtmlLoadExternal = false;
+
   Global::instance()->setConfig( config );
   GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
   GlobalSettings::self()->readConfig(); //need to re-read the config as the config object might be different than the default mailviewerrc
@@ -421,10 +425,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   createActions();
   initHtmlWidget();
   readConfig();
-
-  mHtmlOverride = false;
-  mHtmlLoadExtOverride = false;
-  mHtmlLoadExternal = false;
 
   mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
   mLevelQuote = 1;
