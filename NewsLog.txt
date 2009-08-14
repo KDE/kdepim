@@ -1,3 +1,18 @@
+Friday, August 14th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue1536: Default to the sender as organizer when it is not set
+* kolab/issue3717: Add support for attachments in invitations
+* kolab/issue3802: When updating incidences, preserve the UIDs so that the update is correctly registered
+* kolab/issue3808: Rename 'Dismiss' into 'Dismiss Reminder' in the reminder dialog
+* kolab/issue3375: Make the attachment overview less confusing by making a difference between embedded and
+                   normal attachments
+* kolab/issue3776: Show the 'Record into my calendar]' button on updated invitations when sharing
+                   a calendar with others who have access rights
+
+
 Friday, August 7th 2009
 
 Problems addressed
@@ -19,6 +34,7 @@ Problems addressed
 * Fix a problem that attachments in encapsulated messages could not be deleted
 * Don't erroneously display the text part of encapsulated messages as attachment in the quick attachment list
 * Add nicer icon for the organizer, replacing the old 'tux' icon
+
 
 Friday, July 31th 2009
 
