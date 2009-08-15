@@ -2,6 +2,7 @@ KAlarm Change Log
 
 === Version 2.2.7 --- 15 August 2009 ===
 - Shift-Delete now deletes alarms without showing confirmation prompt.
+- Disable edit alarm dialogue OK button if no changes have been made.
 - Command line options: validate better, and remove unnecessary restrictions.
 - Fix bad addresses when sending email alarms.
 - Install action icons into kalarm directory, not system directory.
