@@ -5,6 +5,7 @@ KAlarm Change Log
 - Disable edit alarm dialogue OK button if no changes have been made.
 - Command line options: validate better, and remove unnecessary restrictions.
 - Fix bad addresses when sending email alarms.
+- Fix volume when playing audio files.
 - Install action icons into kalarm directory, not system directory.
 - Fix KMail not starting minimised when adding mail to a KMail folder.
 - Fix use of wrong time zone if cancel and then reinstate a deferral.
