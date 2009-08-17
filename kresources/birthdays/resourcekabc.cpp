@@ -227,7 +227,8 @@ bool ResourceKABC::doLoad()
       bool found = false;
       for ( addrIt = anniversaries.begin(); addrIt != anniversaries.end(); ++addrIt ) {
         if ( name == (*addrIt).realName() ) {
-          QDateTime spouseAnniversary = QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
+          QDate spouseAnniversary =
+            QDate::fromString( (*addrIt).custom( "KADDRESSBOOK", "X-Anniversary" ), Qt::ISODate );
           if ( anniversary == spouseAnniversary ) {
             found = true;
             break;
@@ -262,11 +263,17 @@ bool ResourceKABC::doLoad()
       uid_2 = spouse.uid();
       email_2 = spouse.fullEmail();
       name_2 = spouse.nickName();
-      if ( name_2.isEmpty() )
+      if ( name_2.isEmpty() ) {
         name_2 = spouse.givenName();
-      summary = i18n("insert names of both spouses", "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
+      }
+      if ( name_2.isEmpty() ) {
+        name_2 = spouseName;
+      }
+      summary = i18n("insert names of both spouses",
+                     "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
     } else {
-      summary = i18n("only one spouse in addressbook, insert the name", "%1's anniversary").arg( name_1 );
+      summary = i18n("only one spouse in addressbook, insert the name",
+                     "%1's anniversary").arg( name_1 );
     }
 
     Event *ev = new Event();
