@@ -1780,21 +1780,20 @@ void setTestModeConditions()
 {
 	const QByteArray newTime = qgetenv("KALARM_TIME");
 	if (!newTime.isEmpty())
-		setSimulatedSystemTime(newTime);
+	{
+		KDateTime dt;
+		if (convertTimeString(newTime, dt, KDateTime::realCurrentLocalDateTime(), true))
+			setSimulatedSystemTime(dt);
+	}
 }
 
 /******************************************************************************
-* Set the simulated system time (format [[[yyyy-]mm-]dd-]hh:mm [TZ]).
+* Set the simulated system time.
 */
-bool setSimulatedSystemTime(const QByteArray& timeString)
+void setSimulatedSystemTime(const KDateTime& dt)
 {
-	KDateTime dt;
-	if (!convertTimeString(timeString, dt, KDateTime::realCurrentLocalDateTime(), true))
-		return false;
 	KDateTime::setSimulatedSystemTime(dt);
-	KDateTime now = KDateTime::currentLocalDateTime();
-	kDebug() << "New time=" << qPrintable(KDateTime::currentLocalDateTime().dateTime().toString("yyyy-MM-dd hh:mm")) << KSystemTimeZones::local().name();
-	return true;
+	kDebug() << "New time =" << qPrintable(KDateTime::currentLocalDateTime().toString("%Y-%m-%d %H:%M %:Z"));
 }
 #endif
 

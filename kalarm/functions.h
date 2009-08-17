@@ -158,7 +158,7 @@ inline int          localeDayInWeek_to_weekDay(int index)  { return (index + loc
 
 #ifndef NDEBUG
 void                setTestModeConditions();
-bool                setSimulatedSystemTime(const QByteArray& timeString);
+void                setSimulatedSystemTime(const KDateTime&);
 #endif
 
 } // namespace KAlarm
