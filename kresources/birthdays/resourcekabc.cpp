@@ -262,6 +262,9 @@ bool ResourceKABC::doLoad( bool syncCache )
       if ( name_2.isEmpty() ) {
         name_2 = spouse.givenName();
       }
+      if ( name_2.isEmpty() ) {
+        name_2 = spouseName;
+      }
       summary = i18nc( "insert names of both spouses",
                        "%1's & %2's anniversary", name_1, name_2 );
     } else {
