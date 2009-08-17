@@ -195,7 +195,7 @@ QString KAddrBookExternal::expandDistributionList( const QString &listName, bool
 {
   // begin hack
   // FIXME: Until searching works correctly we disable the functionality of expanding distribution lists
-  emptyList = true;
+  emptyList = false;
   return QString();
   // end hack
 
