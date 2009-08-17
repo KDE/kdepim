@@ -30,57 +30,60 @@
 #include <QtCore/QStringList>
 
 #include <kassistantdialog.h>
-#include <kabc/addressbook.h>
 
 #include "printstyle.h"
 #include "selectionpage.h"
 #include "stylepage.h"
 
-
+class QAbstractItemView;
 class QPrinter;
-
-namespace Akonadi {
-  class EntityTreeView;
-}
 
 namespace KABPrinting {
 
 /**
-  The PrintingWizard combines pages common for all print styles
-  and those provided by the respective style.
-*/
+ * The PrintingWizard combines pages common for all print styles
+ * and those provided by the respective style.
+ */
 class PrintingWizard : public KAssistantDialog
 {
   Q_OBJECT
 
   public:
     /**
-      Construct a printing wizard. Give the addressbook instance to print.
+     * Creates a new printing wizard.
+     *
+     * @param printer The configured printer.
+     * @param itemView The item view to get the selection from.
+     * @param parent The parent widget.
      */
     PrintingWizard( QPrinter *printer,
-                    Akonadi::EntityTreeView *itemView,
+                    QAbstractItemView *itemView,
                     QWidget *parent = 0 );
+
+    /**
+     * Destroys the printing wizard.
+     */
     ~PrintingWizard();
 
     /**
-      Modify this method to add a new PrintStyle.
+     * Registers all available printing styles.
      */
     void registerStyles();
 
     /**
-      Perform the actual printing.
+     * Performs the actual printing.
      */
     void print();
 
     /**
-      Retrieve the printer to be used.
+     * Returns the printer to use for printing.
      */
     QPrinter* printer();
 
   protected Q_SLOTS:
     /**
-      A print style has been selected. The argument is the index
-      in the cbStyle combo and in styles.
+     * A print style has been selected. The argument is the index
+     * in the cbStyle combo and in styles.
      */
     void slotStyleSelected(int);
 
@@ -88,18 +91,18 @@ class PrintingWizard : public KAssistantDialog
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;
     QPrinter *mPrinter;
-    Akonadi::EntityTreeView *mItemView;
+    QAbstractItemView *mItemView;
     PrintStyle *mStyle;
 
     StylePage *mStylePage;
     SelectionPage *mSelectionPage;
 
     /**
-      Overloaded accept slot. This is used to do the actual
-      printing without having the wizard disappearing
-      before. What happens is actually up to the print style,
-      since it does the printing. It could display a progress
-      window, for example (hint, hint).
+     * Overloaded accept slot. This is used to do the actual
+     * printing without having the wizard disappearing
+     * before. What happens is actually up to the print style,
+     * since it does the printing. It could display a progress
+     * window, for example (hint, hint).
      */
     void accept();
 };
