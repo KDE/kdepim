@@ -70,7 +70,7 @@
 #include "printing/printingwizard.h"
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
-  : QWidget( parent ), mContactCompletionModel( 0 )
+  : QWidget( parent )
 {
   mXXPortManager = new XXPortManager( this );
 
@@ -92,13 +92,13 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                             mDescendantTree
    *                                   ^
    *                                   |
-   *      mCollectionView  ->  selectionProxyModel  mContactCompletionModel
-   *            ^                      ^                      ^
-   *            |                      |                      |
-   *      mCollectionTree              |                      |
-   *            ^                      |                  descModel
-   *            |                      |     ________________/
-   *             \                    /    /
+   *      mCollectionView  ->  selectionProxyModel
+   *            ^                      ^
+   *            |                      |
+   *      mCollectionTree              |
+   *            ^                      |
+   *            |                      |
+   *             \                    /
    *            GlobalContactModel::instance()
    *
    *
@@ -355,9 +355,6 @@ void MainWidget::newContact()
 void MainWidget::newGroup()
 {
   Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
-
-  dlg.setCompletionModel( contactCompletionModel() );
-
   dlg.exec();
 }
 
@@ -436,24 +433,8 @@ void MainWidget::editContact( const Akonadi::Item &contact )
 void MainWidget::editGroup( const Akonadi::Item &group )
 {
   Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
-  dlg.setCompletionModel( contactCompletionModel() );
   dlg.setContactGroup( group );
   dlg.exec();
-}
-
-Akonadi::EntityFilterProxyModel* MainWidget::contactCompletionModel()
-{
-  if ( !mContactCompletionModel ) {
-    Akonadi::DescendantsProxyModel *descModel = new Akonadi::DescendantsProxyModel( this );
-    descModel->setSourceModel( GlobalContactModel::instance()->model() );
-
-    mContactCompletionModel = new Akonadi::EntityFilterProxyModel( this );
-    mContactCompletionModel->setSourceModel( descModel );
-    mContactCompletionModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-    mContactCompletionModel->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
-  }
-
-  return mContactCompletionModel;
 }
 
 #include "mainwidget.moc"

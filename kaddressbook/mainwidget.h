@@ -76,12 +76,9 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void editContact( const Akonadi::Item& );
     void editGroup( const Akonadi::Item& );
 
-    Akonadi::EntityFilterProxyModel* contactCompletionModel();
-
     Akonadi::EntityFilterProxyModel *mCollectionTree;
     Akonadi::EntityFilterProxyModel *mItemTree;
     Akonadi::DescendantsProxyModel *mDescendantTree;
-    Akonadi::EntityFilterProxyModel *mContactCompletionModel;
 
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;
