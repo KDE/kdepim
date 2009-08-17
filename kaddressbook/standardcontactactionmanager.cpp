@@ -105,9 +105,8 @@ class StandardContactActionManager::Private
         }
       }
 
-      if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
+      if ( mActions.contains( StandardContactActionManager::EditItem ) )
         mActions.value( StandardContactActionManager::EditItem )->setEnabled( itemCount == 1 );
-      }
 
       emit mParent->actionStateUpdated();
     }
@@ -257,6 +256,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "document-edit" ) );
       action->setText( i18n( "Edit Contact..." ) );
+      action->setEnabled( false );
       d->mActions.insert( EditItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( editTriggered() ) );
