@@ -1247,7 +1247,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
     QString app = (*it).app.isEmpty() ? QString::fromLatin1( "KADDRESSBOOK" ) : (*it).app;
     addressee->insertCustom( app, (*it).name, (*it).value );
   }
-  //kDebug(5006) << addressee->customs();
+  //kDebug(5650) << addressee->customs();
 }
 
 QImage Contact::loadPictureFromKMail( const QString& attachmentName, KABC::ResourceKolab* resource, const QString& subResource, quint32 sernum )

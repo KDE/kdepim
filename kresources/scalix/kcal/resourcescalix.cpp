@@ -454,7 +454,7 @@ bool ResourceScalix::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const 
       data = mFormat.createScheduleMessage( static_cast<KCal::Journal *>(incidencebase),
           iTIPPublish );
   } else {
-    kWarning(5006) <<"Can't happen: unhandled type=" << type;
+    kWarning(5650) <<"Can't happen: unhandled type=" << type;
   }
 
 //  kDebug() <<"Data string:" << data;
@@ -878,7 +878,7 @@ void ResourceScalix::fromKMailRefresh( const QString& type,
   else if ( type == "Journal" )
     loadAllJournals();
   else
-    kWarning(5006) <<"KCal Kolab resource: fromKMailRefresh: unknown type" << type;
+    kWarning(5650) <<"KCal Scalix resource: fromKMailRefresh: unknown type" << type;
   mResourceChangedTimer.start( 100 );
 }
 

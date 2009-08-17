@@ -33,6 +33,8 @@
 #include "shellprocess.h"
 #include "synchtimer.h"
 
+#include "kspeechinterface.h"
+
 #include <kstandarddirs.h>
 #include <kaction.h>
 #include <kstandardguiitem.h>
@@ -51,7 +53,6 @@
 #include <kio/netaccess.h>
 #include <knotification.h>
 #include <kpushbutton.h>
-#include <kspeechinterface.h>
 #include <phonon/mediaobject.h>
 #include <phonon/audiooutput.h>
 #include <phonon/volumefadereffect.h>
@@ -1301,13 +1302,14 @@ void AudioThread::run()
 	mAudioObject = new Phonon::MediaObject();
 	mAudioObject->setCurrentSource(source);
 	Phonon::AudioOutput* output = new Phonon::AudioOutput(Phonon::NotificationCategory, mAudioObject);
-	output->setVolume(mVolume);
 	mPath = Phonon::createPath(mAudioObject, output);
+	float maxvol = qMax(mVolume, mFadeVolume);
+	output->setVolume(maxvol);
 	if (mFadeVolume >= 0  &&  mFadeSeconds > 0)
 	{
 		Phonon::VolumeFaderEffect* fader = new Phonon::VolumeFaderEffect(mAudioObject);
-		fader->setVolume(mFadeVolume);
-		fader->fadeIn(mFadeSeconds);
+		fader->setVolume(mFadeVolume / maxvol);
+		fader->fadeTo(mVolume / maxvol, mFadeSeconds * 1000);
 		mPath.insertEffect(fader);
 	}
 	connect(mAudioObject, SIGNAL(stateChanged(Phonon::State, Phonon::State)), SLOT(playStateChanged(Phonon::State)), Qt::DirectConnection);

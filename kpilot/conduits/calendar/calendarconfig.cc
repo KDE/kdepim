@@ -70,7 +70,7 @@ CalendarConfig::CalendarConfig( QWidget* w, const QVariantList& ) : ConduitConfi
 	QStringList mimeTypes;
 	mimeTypes << "text/calendar" << "application/x-vnd.akonadi.calendar.event";
 		
-	fAkonadiWidget = new AkonadiSetupWidget( akonadiTab );
+	fAkonadiWidget = new AkonadiSetupWidget( akonadiTab, CalendarSettings::self()->config() );
 	fAkonadiWidget->setCollectionLabel( i18n( "Select Calendar: " ) );
 	fAkonadiWidget->setMimeTypes( mimeTypes );
 	

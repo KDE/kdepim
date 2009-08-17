@@ -118,6 +118,8 @@ class EditAlarmDlg : public KDialog
 		virtual void    slotHelp();      // Load Template
 		virtual void    slotDefault();   // More/Less Options
 		virtual void    slotButtonClicked(int button);
+		void            contentsChanged();
+
 	private slots:
 		void            slotRecurTypeChange(int repeatType);
 		void            slotRecurFrequencyChange();
@@ -197,6 +199,7 @@ class EditAlarmDlg : public KDialog
 		int                 mSavedTemplateAfterTime;// mTemplateAfterTime value
 		QString             mSavedTextFileCommandMessage;  // mTextMessageEdit/mFileMessageEdit/mCmdCommandEdit/mEmailMessageEdit value
 		KDateTime           mSavedDateTime;         // mTimeWidget value
+		KDateTime           mSavedDeferTime;        // mDeferDateTime value
 		int                 mSavedRecurrenceType;   // RecurrenceEdit::RepeatType value
 		int                 mSavedLateCancel;       // mLateCancel value
 		bool                mSavedShowInKorganizer; // mShowInKorganizer status

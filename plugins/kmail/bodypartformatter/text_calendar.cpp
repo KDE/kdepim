@@ -59,9 +59,12 @@
 #include <kdbusservicestarter.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
-#include <kapplication.h>
 #include <ksystemtimezone.h>
 #include <ktemporaryfile.h>
+#include <kmimetype.h>
+#include <krun.h>
+#include <ktoolinvocation.h>
+#include <kio/netaccess.h>
 
 #include <QUrl>
 #include <QDir>
@@ -304,6 +307,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           break;
       }
 
+      // Set the organizer to the sender, if the ORGANIZER hasn't been set.
+      if ( incidence->organizer().isEmpty() ) {
+        QString tname, temail;
+        KPIMUtils::extractEmailAddressAndName( callback.sender(), temail, tname );
+        incidence->setOrganizer( Person( tname, temail ) );
+      }
+
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
@@ -491,6 +501,62 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return ok;
     }
 
+    bool handleAttachment( const QString &name, const QString &iCal ) const
+    {
+      // get comment for tentative acceptance
+      Incidence *incidence = icalToString( iCal );
+
+      // get the attachment by name from the incidence
+      Attachment::List as = incidence->attachments();
+      Attachment *a = 0;
+      if ( as.count() > 0 ) {
+        Attachment::List::ConstIterator it;
+        for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
+          if ( (*it)->label() == name ) {
+            a = *it;
+            break;
+          }
+        }
+      }
+
+      if ( !a ) {
+        KMessageBox::error(
+          0,
+          i18n("No attachment named \"%1\" found in the invitation.", name ) );
+        return false;
+      }
+
+      if ( a->isUri() ) {
+        if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, 0 ) ) {
+          KMessageBox::information(
+            0,
+            i18n( "The invitation attachment \"%1\" is a web link that "
+                  "is inaccessible from this computer. Please ask the event "
+                  "organizer to resend the invitation with this attachment "
+                  "stored inline instead of a link.", a->uri() ) );
+          return false;
+        } else {
+          KToolInvocation::invokeBrowser( a->uri() );
+        }
+      } else {
+        // put the attachment in a temporary file and launch it
+        KTemporaryFile *file = new KTemporaryFile();
+        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+        if ( !patterns.empty() ) {
+          file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+        }
+        file->open();
+        file->setPermissions( QFile::ReadUser );
+        file->write( QByteArray::fromBase64( a->data() ) );
+        file->close();
+
+        bool stat = KRun::runUrl( KUrl( file->fileName() ), a->mimeType(), 0, true );
+        delete file;
+        return stat;
+      }
+      return true;
+    }
+
     void showCalendar( const QDate &date ) const
     {
       ensureKorganizerRunning();
@@ -624,6 +690,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           result = true;
         }
       }
+      if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+        QString name = path;
+        name.remove( QRegExp( "^ATTACH:" ) );
+        result = handleAttachment( name, iCal );
+      }
+
       if ( result )
         c.closeIfSecondaryWindow();
       return result;
@@ -664,6 +736,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n( "Forward invitation" );
         if ( path == "cancel" )
           return i18n( "Remove invitation from my calendar" );
+        if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
+          QString name = path;
+          return i18n( "Open attachment \"%1\"", name.remove( QRegExp( "^ATTACH:" ) ) );
+        }
       }
 
       return QString();

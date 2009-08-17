@@ -43,10 +43,8 @@
 #include <kactioncollection.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kabc/contactgroupbrowser.h>
 #include <kabc/contactlineedit.h>
 #include <kabc/kabcmodel.h>
-#include <kabc/kabcitembrowser.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -54,10 +52,12 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
+#include "akonadi/contact/contacteditordialog.h"
+#include "akonadi/contact/contactgroupeditordialog.h"
+#include "akonadi/contact/contactgroupviewer.h"
+#include "akonadi/contact/contactviewer.h"
 #include "akonadi_next/entitytreeview.h"
-#include "contacteditordialog.h"
 #include "contactfiltermodel.h"
-#include "contactgroupeditordialog.h"
 #include "contactstreemodel.h"
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
@@ -127,10 +127,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->setXmlGuiClient( guiClient );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
-
-  // hide all columns except the first one
-  for ( int column = 1; column < mCollectionTree->columnCount( QModelIndex() ); ++column )
-    mCollectionView->setColumnHidden( column, true );
 
   Akonadi::SelectionProxyModel *selectionProxyModel = new Akonadi::SelectionProxyModel( mCollectionView->selectionModel(),
                                                                                         this );
@@ -231,11 +227,11 @@ void MainWidget::setupGui()
   detailsPaneLayout->addWidget( mDetailsViewStack );
 
   // the details widget for contacts
-  mContactDetails = new Akonadi::KABCItemBrowser( mDetailsViewStack );
+  mContactDetails = new Akonadi::ContactViewer( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactDetails );
 
   // the details widget for contact groups
-  mContactGroupDetails = new Akonadi::ContactGroupBrowser( mDetailsViewStack );
+  mContactGroupDetails = new Akonadi::ContactGroupViewer( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactGroupDetails );
 
   // the contact switcher for the simple gui mode
@@ -352,13 +348,13 @@ void MainWidget::print()
 
 void MainWidget::newContact()
 {
-  ContactEditorDialog dlg( ContactEditorDialog::CreateMode, mCollectionTree, this );
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
   dlg.exec();
 }
 
 void MainWidget::newGroup()
 {
-  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::CreateMode, mCollectionTree, this );
+  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
 
   dlg.setCompletionModel( contactCompletionModel() );
 
@@ -383,10 +379,10 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
 {
   if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactDetails );
-    mContactDetails->setItem( item );
+    mContactDetails->setContact( item );
   } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
-    mContactGroupDetails->setItem( item );
+    mContactGroupDetails->setContactGroup( item );
   }
 }
 
@@ -432,14 +428,14 @@ void MainWidget::setSimpleGuiMode( bool on )
 
 void MainWidget::editContact( const Akonadi::Item &contact )
 {
-  ContactEditorDialog dlg( ContactEditorDialog::EditMode, mCollectionTree, this );
+  Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::EditMode, this );
   dlg.setContact( contact );
   dlg.exec();
 }
 
 void MainWidget::editGroup( const Akonadi::Item &group )
 {
-  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::EditMode, mCollectionTree, this );
+  Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
   dlg.setCompletionModel( contactCompletionModel() );
   dlg.setContactGroup( group );
   dlg.exec();

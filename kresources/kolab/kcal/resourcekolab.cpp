@@ -490,7 +490,7 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
           iTIPRequest );
     }
   } else {
-    kWarning(5006) <<"Can't happen: unhandled type=" << type;
+    kWarning(5650) <<"Can't happen: unhandled type=" << type;
   }
 
 //  kDebug() <<"Data string:" << data;
@@ -960,7 +960,7 @@ void ResourceKolab::fromKMailRefresh( const QString& type,
   else if ( type == "Journal" )
     loadAllJournals();
   else
-    kWarning(5006) <<"KCal Kolab resource: fromKMailRefresh: unknown type" << type;
+    kWarning(5650) <<"KCal Kolab resource: fromKMailRefresh: unknown type" << type;
   mResourceChangedTimer.start( 100 );
 }
 

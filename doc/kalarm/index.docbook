@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2009-05-25</date>
-<releaseinfo>2.02.00</releaseinfo>
+<date>2009-08-13</date>
+<releaseinfo>2.03.01</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -423,20 +423,24 @@ dialog</link>.</para>
 <sect2>
 <title>Deleting/Reactivating an Alarm</title>
 
-<para>To delete existing alarms, do one of the following:</para>
+<para>To delete existing alarms, select one or more by clicking on
+their entries in the alarm list. Then do one of the following:</para>
 
 <itemizedlist>
 <listitem>
-<para>Select one or more alarms by clicking on their entries in the
-alarm list. Then choose <menuchoice>
+<para>Choose <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Delete</guimenuitem>
 </menuchoice>.</para>
 </listitem>
 <listitem>
-<para><mousebutton>Right</mousebutton> click on the desired entries in
-the alarm list and choose
+<para><mousebutton>Right</mousebutton> click on the selected entries
+and choose
 <menuchoice><guimenuitem>Delete</guimenuitem></menuchoice>
 from the context menu.</para>
+</listitem>
+<listitem>
+<para>To delete them without a confirmation prompt, type
+&Shift;-<keycap>Delete</keycap>.</para>
 </listitem>
 </itemizedlist>
 
@@ -1921,7 +1925,9 @@ shortcut key for this action.</para>
 <para>&kalarm; by default displays an icon in the system tray. The icon
 provides both control and an alarm monitoring status indication. A
 normal &kalarm; icon indicates that alarms are being monitored, while
-a gray icon indicates that alarms are not being monitored.</para>
+a gray icon indicates that alarms are not being monitored. If some
+individual alarms are disabled, a small cross is overlaid on the
+icon.</para>
 
 <para>If you hover the mouse cursor over the system tray icon, a
 summary of the first few message alarms due in the next 24 hours are
@@ -2833,7 +2839,7 @@ time.</para>
   <replaceable>period</replaceable></option></entry>
   <entry>Cancel the alarm if it cannot be triggered within the
   specified <replaceable>period</replaceable> after the correct
-  time. The <replaceable>period</replaceable> period is specified in
+  time. The <replaceable>period</replaceable> is specified in
   the same format as described for <option>--reminder</option>.
   The default value of <replaceable>period</replaceable> is 1
   minute.</entry>

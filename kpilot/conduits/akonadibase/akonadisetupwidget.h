@@ -40,7 +40,7 @@ class KPILOT_EXPORT AkonadiSetupWidget : public QWidget
 Q_OBJECT
 
 public:
-	AkonadiSetupWidget( QWidget* parent = 0 );
+	AkonadiSetupWidget( QWidget* parent = 0, KConfig* config = 0 );
 
 	~AkonadiSetupWidget();
 

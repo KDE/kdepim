@@ -103,15 +103,15 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
 
   // Set creation-time and last-modification-time
   const QString creationString = addressee->custom( "KOLAB", "CreationDate" );
-  kDebug(5006) <<"Creation time string:" << creationString;
+  kDebug(5650) <<"Creation time string:" << creationString;
   KDateTime creationDate;
   if ( creationString.isEmpty() ) {
     creationDate = KDateTime::currentDateTime(KDateTime::Spec( mTimeZone ) );
-    kDebug(5006) <<"Creation date set to current time";
+    kDebug(5650) <<"Creation date set to current time";
   }
   else {
     creationDate = stringToDateTime( creationString );
-    kDebug(5006) <<"Creation date loaded";
+    kDebug(5650) <<"Creation date loaded";
   }
   KDateTime modified = KDateTime( addressee->revision(), mTimeZone );
   if ( !modified.isValid() )
@@ -120,7 +120,7 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
   if ( modified < creationDate ) {
     // It's not possible that the modification date is earlier than creation
     creationDate = modified;
-    kDebug(5006) <<"Creation date set to modification date";
+    kDebug(5650) <<"Creation date set to modification date";
   }
   setCreationDate( creationDate );
   const QString newCreationDate = dateTimeToString( creationDate );
@@ -128,7 +128,7 @@ void KolabBase::setFields( const KABC::Addressee* addressee )
     // We modified the creation date, so store it for future reference
     const_cast<KABC::Addressee*>( addressee )
       ->insertCustom( "KOLAB", "CreationDate", newCreationDate );
-    kDebug(5006) <<"Creation date modified. New one:" << newCreationDate;
+    kDebug(5650) <<"Creation date modified. New one:" << newCreationDate;
   }
 
   switch( addressee->secrecy().type() ) {

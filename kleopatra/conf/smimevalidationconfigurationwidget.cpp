@@ -350,11 +350,11 @@ CryptoConfigEntry * SMIMECryptoConfigEntries::configEntry( const char * componen
 {
     CryptoConfigEntry * const entry = mConfig->entry( componentName, groupName, entryName );
     if ( !entry ) {
-        kWarning(5006) << QString("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName );
+        kWarning(5151) << QString("Backend error: gpgconf doesn't seem to know the entry for %1/%2/%3" ).arg( componentName, groupName, entryName );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
-        kWarning(5006) << QString("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() );
+        kWarning(5151) << QString("Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5" ).arg( componentName, groupName, entryName ).arg( entry->argType() ).arg( entry->isList() );
         return 0;
     }
     return entry;
