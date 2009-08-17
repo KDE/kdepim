@@ -570,7 +570,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             i18n( "The invitation attachment \"%1\" is a web link that "
                   "is inaccessible from this computer. Please ask the event "
                   "organizer to resend the invitation with this attachment "
-                  "stored inline instead of a link." ).arg( a->uri() ) );
+                  "stored inline instead of a link." ).arg( KURL::decode_string( a->uri() ) ) );
           return false;
         } else {
           kapp->invokeBrowser( a->uri() );
@@ -782,7 +782,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n( "Remove invitation from my calendar" );
         if ( path.startsWith( "ATTACH:" ) ) {
           QString name = path;
-          return i18n( "Open attachment \"%1\"" ).arg( name.remove( QRegExp( "^ATTACH:" ) ) );
+          return i18n( "Open attachment \"%1\"" ).
+            arg( QString::fromUtf8( name.remove( QRegExp( "^ATTACH:" ) ).latin1() ) );
         }
       }
 
