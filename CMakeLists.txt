@@ -226,3 +226,5 @@ macro_display_feature_log()
 
 add_subdirectory(libmailreader)
 add_subdirectory(mailreader)
+add_subdirectory(messagelist)
+
