@@ -36,6 +36,7 @@
 #include <kabc/addressee.h>
 #include <libkcal/journal.h>
 #include <libkdepim/kpimprefs.h>
+#include <libemailfunctions/email.h>
 #include <kdebug.h>
 #include <qfile.h>
 
@@ -257,8 +258,16 @@ bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
       QDomElement e = n.toElement();
       const QString tagName = e.tagName();
 
-      if ( tagName == "display-name" )
-        email.displayName = e.text();
+      if ( tagName == "display-name" ) {
+        // Quote the text in case it contains commas or other quotable chars.
+        QString tusername = KPIM::quoteNameIfNecessary( e.text() );
+
+        QString tname, temail;
+        // ignore the return value because it will always be false since
+        // tusername does not contain "@domain".
+        KPIM::getNameAndMail( tusername, tname, temail );
+        email.displayName = tname;
+      }
       else if ( tagName == "smtp-address" )
         email.smtpAddress = e.text();
       else
