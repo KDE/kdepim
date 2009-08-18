@@ -614,13 +614,8 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
     // Remove the old and instert the new signature
     cursor.removeSelectedText();
-    if ( newSig.isInlinedHtml() &&
-         newSig.type() == KPIMIdentities::Signature::Inlined ) {
-      cursor.insertHtml( newSig.rawText() );
-      enableRichTextMode();
-    } else {
-      cursor.insertText( newSig.rawText() );
-    }
+    setTextCursor( cursor );
+    newSig.insertIntoTextEdit( this, KPIMIdentities::Signature::AtCursor, false );
 
     currentSearchPosition += newSig.plainText().length();
   }
