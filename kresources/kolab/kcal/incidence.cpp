@@ -39,6 +39,9 @@
 
 #include <kcal/journal.h>
 #include <korganizer/version.h>
+
+#include <kpimutils/email.h>
+
 #include <kdebug.h>
 #include <kurl.h>
 #include <kio/netaccess.h>
@@ -182,8 +185,16 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
       QDomElement e = n.toElement();
       QString tagName = e.tagName();
 
-      if ( tagName == "display-name" )
-        attendee.displayName = e.text();
+      if ( tagName == "display-name" ) {
+        // Quote the text in case it contains commas or other quotable chars.
+        QString tusername = KPIMUtils::quoteNameIfNecessary( e.text() );
+
+        QString tname, temail;
+        // ignore the return value because it will always be false since
+        // tusername does not contain "@domain".
+        KPIMUtils::extractEmailAddressAndName( tusername, temail, tname );
+        attendee.displayName = tname;
+      }
       else if ( tagName == "smtp-address" )
         attendee.smtpAddress = e.text();
       else if ( tagName == "status" )
