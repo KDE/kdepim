@@ -23,6 +23,7 @@
 #include "kdepim_export.h"
 
 #include <QtCore/QList>
+#include <QtCore/QMetaType>
 
 #include <kmime/kmime_headers.h>
 
@@ -85,5 +86,7 @@ class KDEPIM_EXPORT AttachmentPart
 KDEPIM_EXPORT uint qHash( const boost::shared_ptr<KPIM::AttachmentPart> &ptr );
 
 } // namespace KPIM
+
+Q_DECLARE_METATYPE( KPIM::AttachmentPart::Ptr )
 
 #endif

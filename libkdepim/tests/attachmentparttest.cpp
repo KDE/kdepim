@@ -36,16 +36,16 @@ void AttachmentPartTest::testApi()
   const QString str = QString::fromLatin1( "test" );
   AttachmentPart::Ptr part = AttachmentPart::Ptr( new AttachmentPart );
 
+  // Test that an AttachmentPart::Ptr can be put in a QHash.
   QHash<AttachmentPart::Ptr, QString> hash;
   hash[ part ] = str;
   QVERIFY( hash.contains( part ) );
 
-#if 0
-  FuckThis obj;
-  QHash<FuckThis, QString> hash;
-  hash[ obj ] = str;
-  QVERIFY( hash.contains( obj ) );
-#endif
+  // Test that an AttachmentPart::Ptr can be put in a QVariant.
+  QVariant variant = QVariant::fromValue( part );
+  QVERIFY( variant.isValid() );
+  QVERIFY( variant.canConvert<AttachmentPart::Ptr>() );
+  QVERIFY( variant.value<AttachmentPart::Ptr>() == part );
 }
 
 #include "attachmentparttest.moc"
