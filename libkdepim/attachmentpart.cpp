@@ -19,8 +19,6 @@
 
 #include "attachmentpart.h"
 
-#include <boost/shared_ptr.hpp>
-
 #include <KDebug>
 #include <KUrl>
 

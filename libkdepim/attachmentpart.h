@@ -22,14 +22,12 @@
 
 #include "kdepim_export.h"
 
+#include <boost/shared_ptr.hpp>
+
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
 
 #include <kmime/kmime_headers.h>
-
-namespace boost {
-  template <typename T> class shared_ptr;
-}
 
 namespace KPIM {
 
