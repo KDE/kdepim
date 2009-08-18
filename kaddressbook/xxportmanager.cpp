@@ -122,14 +122,14 @@ void XXPortManager::slotExport( const QString &identifier )
   foreach ( const QModelIndex &index, mSelectionModel->selectedRows() ) {
     const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     Q_ASSERT( item.isValid() );
-    const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    contacts.append( contact );
+    if ( item.hasPayload<KABC::Addressee>() )
+      contacts.append( item.payload<KABC::Addressee>() );
   }
 
   if ( !contacts.isEmpty() )
     xxport->exportContacts( contacts );
   else
-    KMessageBox::sorry( 0, i18n( "Any contact selected" ) );
+    KMessageBox::sorry( 0, i18n( "You have not selected any contact to export!" ) );
 
   delete xxport;
 }

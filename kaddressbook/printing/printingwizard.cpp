@@ -54,19 +54,18 @@
 
 using namespace KABPrinting;
 
-PrintingWizard::PrintingWizard( QPrinter *printer, Akonadi::EntityTreeView *itemView, QWidget *parent )
-  : KAssistantDialog( parent ), mPrinter( printer ), mItemView(itemView), mStyle( 0 )
+PrintingWizard::PrintingWizard( QPrinter *printer, QAbstractItemView *itemView, QWidget *parent )
+  : KAssistantDialog( parent ), mPrinter( printer ), mItemView( itemView ), mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );
   mSelectionPage->setUseSelection( mItemView->selectionModel()->hasSelection() );
-  KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
+  KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n( "Choose Contacts to Print" ) );
   addPage( mSelectionPageItem );
 
   setAppropriate( mSelectionPageItem, true );
 
-
   mStylePage = new StylePage( this );
-  connect( mStylePage, SIGNAL( styleChanged(int) ), SLOT( slotStyleSelected(int) ) );
+  connect( mStylePage, SIGNAL( styleChanged( int ) ), SLOT( slotStyleSelected( int ) ) );
   addPage( mStylePage, i18n("Choose Printing Style") );
 
   registerStyles();
@@ -123,13 +122,8 @@ void PrintingWizard::slotStyleSelected( int index )
   //setFinishEnabled( page( pageCount() - 1 ), true );
 
   if ( mStyle->preferredSortField() != 0 ) {
-#ifdef __GNUC__
-#warning "port me"
-#endif
     mStylePage->setSortField( mStyle->preferredSortField() );
-#if 0
     mStylePage->setSortAscending( mStyle->preferredSortType() );
-#endif
   }
 }
 
