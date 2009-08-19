@@ -2294,15 +2294,6 @@ void FolderView::dragEnterEvent( QDragEnterEvent *e )
       e->mimeData()->hasFormat( KPIM::MailList::mimeDataType() )
     )
   {
-    // show all the items (we might want to drop anywhere)
-    QTreeWidgetItemIterator it( this );
-    while ( *it )
-    {
-      if ( ( *it )->isHidden() )
-        ( *it )->setHidden( false );
-      ++it;
-    }
-
     e->acceptProposedAction();
   } else
     e->ignore();
