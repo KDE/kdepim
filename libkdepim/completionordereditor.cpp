@@ -27,6 +27,7 @@
  *  you do not wish to do so, delete this exception statement from
  *  your version.
  */
+#include <config.h> // FOR KDEPIM_NEW_DISTRLISTS
 
 #include "completionordereditor.h"
 #include "ldapclient.h"

@@ -24,6 +24,8 @@
 #ifndef KABCORE_H
 #define KABCORE_H
 
+#include <config.h> // FOR KDEPIM_NEW_DISTRLISTS
+
 #include <kabc/field.h>
 
 #include <qdict.h>
