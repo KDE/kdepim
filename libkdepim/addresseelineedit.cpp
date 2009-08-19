@@ -72,7 +72,7 @@ AddresseeLineEdit* AddresseeLineEdit::s_LDAPLineEdit = 0L;
 
 // The weights associated with the completion sources in s_completionSources.
 // Both are maintained by addCompletionSource(), don't attempt to modifiy those yourself.
-QMap<QString,int>* s_completionSourceWeights;
+QMap<QString,int>* s_completionSourceWeights = 0;
 
 static KStaticDeleter<KMailCompletion> completionDeleter;
 static KStaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
