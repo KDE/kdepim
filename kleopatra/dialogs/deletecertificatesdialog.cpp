@@ -215,7 +215,7 @@ void DeleteCertificatesDialog::accept() {
                         "not be deleted.",
 
                         secret ),
-                i18n("Secret Key Deletion"),
+                i18n("Secret Certificate Deletion"),
                 KStandardGuiItem::guiItem( KStandardGuiItem::Delete ),
                 KStandardGuiItem::cancel(), QString(), KMessageBox::Notify|KMessageBox::Dangerous );
 

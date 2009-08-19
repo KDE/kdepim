@@ -91,9 +91,9 @@ int main( int argc, char * argv[] ) {
     KCmdLineArgs::init( argc, argv, &aboutData );
 
     KCmdLineOptions options;
-    options.add( "flat",         ki18n("Perform flat key listing") );
-    options.add( "hierarchical", ki18n("Perform hierarchical key listing") );
-    options.add( "disable-smime", ki18n("Do not list SMIME keys") );
+    options.add( "flat",         ki18n("Perform flat certificate listing") );
+    options.add( "hierarchical", ki18n("Perform hierarchical certificate listing") );
+    options.add( "disable-smime", ki18n("Do not list SMIME certificates") );
 
     KCmdLineArgs::addCmdLineOptions( options );
 

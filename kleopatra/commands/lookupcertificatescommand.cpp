@@ -305,7 +305,7 @@ void LookupCertificatesCommand::Private::showError( QWidget * parent, const KeyL
     if ( !result.error() )
         return;
     KMessageBox::information( parent, i18nc( "@info",
-                                             "Failed to search on keyserver. The error returned was:\n%1",
+                                             "Failed to search on certificate server. The error returned was:\n%1",
                                              QString::fromLocal8Bit( result.error().asString() ) ) );
 }
 
