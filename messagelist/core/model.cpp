@@ -63,10 +63,7 @@
 #include <KIcon>
 #include <KDebug>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -252,6 +249,11 @@ public:
     { return mDisconnectUI; };
 };
 
+} // namespace Core
+
+} // namespace MessageList
+
+using namespace MessageList::Core;
 
 Model::Model( View *pParent )
   : QAbstractItemModel( pParent ),
@@ -827,7 +829,7 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
 
 void Model::checkIfDateChanged()
 {
-  // This function is called by MessageListView::Core::Manager once in a while (every 1 minute or sth).
+  // This function is called by MessageList::Core::Manager once in a while (every 1 minute or sth).
   // It is used to check if the current date has changed (with respect to mTodayDate).
   //
   // Our message items cache the formatted dates (as formatting them
@@ -4620,8 +4622,3 @@ void Model::deletePersistentSet( MessageItemSetReference ref )
   }
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

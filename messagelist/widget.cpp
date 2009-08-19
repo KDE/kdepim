@@ -41,13 +41,13 @@
 #include <KDE/KLocale>
 #include <KDE/KMenu>
 
-using namespace Akonadi::MessageListView;
-using namespace KMail::MessageListView;
+using namespace MessageList;
+using namespace Akonadi;
 
 struct DragPayload
 {
-  QList<Akonadi::Collection::Id> sourceCollections;
-  QList<Akonadi::Item::Id> items;
+  QList<Collection::Id> sourceCollections;
+  QList<Item::Id> items;
   bool readOnly;
 
   DragPayload() : readOnly( false ) { }
@@ -88,14 +88,14 @@ Widget::~Widget()
 
 bool Widget::canAcceptDrag( const QDragMoveEvent * e )
 {
-  Akonadi::Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
 
   if ( collections.size()!=1 )
     return false; // no folder here or too many (in case we can't decide where the drop will end)
 
-  Akonadi::Collection c = collections.first();
+  Collection c = collections.first();
 
-  if ( ( c.rights() & Akonadi::Collection::CanCreateItem ) == 0 )
+  if ( ( c.rights() & Collection::CanCreateItem ) == 0 )
     return false; // no way to drag into
 
   if ( !e->mimeData()->hasFormat( DragPayload::mimeType() ) )
@@ -105,7 +105,7 @@ bool Widget::canAcceptDrag( const QDragMoveEvent * e )
   QDataStream stream( e->mimeData()->data( DragPayload::mimeType() ) );
   stream >> payload;
 
-  foreach ( Akonadi::Collection::Id id, payload.sourceCollections ) {
+  foreach ( Collection::Id id, payload.sourceCollections ) {
     if ( id == c.id() ) {
       return false;
     }
@@ -114,7 +114,7 @@ bool Widget::canAcceptDrag( const QDragMoveEvent * e )
   return true;
 }
 
-void Widget::viewMessageSelected( KMail::MessageListView::Core::MessageItem *msg )
+void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )
 {
   int row = -1;
   if ( msg ) {
@@ -134,7 +134,7 @@ void Widget::viewMessageSelected( KMail::MessageListView::Core::MessageItem *msg
   emit messageSelected( itemForRow( row ) ); // this MAY be null
 }
 
-void Widget::viewMessageActivated( KMail::MessageListView::Core::MessageItem *msg )
+void Widget::viewMessageActivated( MessageList::Core::MessageItem *msg )
 {
   Q_ASSERT( msg ); // must not be null
   Q_ASSERT( storageModel() );
@@ -171,13 +171,13 @@ void Widget::viewSelectionChanged()
   }
 }
 
-void Widget::viewMessageListContextPopupRequest( const QList< KMail::MessageListView::Core::MessageItem * > &selectedItems, const QPoint &globalPos )
+void Widget::viewMessageListContextPopupRequest( const QList< MessageList::Core::MessageItem * > &selectedItems, const QPoint &globalPos )
 {
   //FIXME: To implement once the other infrastructure is ready for a KMail independent implementation
   kWarning() << "Needs to be reimplemented";
 }
 
-void Widget::viewMessageStatusChangeRequest( KMail::MessageListView::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
+void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
 {
   Q_ASSERT( msg ); // must not be null
   Q_ASSERT( storageModel() );
@@ -195,7 +195,7 @@ void Widget::viewMessageStatusChangeRequest( KMail::MessageListView::Core::Messa
   emit messageStatusChangeRequest( item, set, clear );
 }
 
-void Widget::viewGroupHeaderContextPopupRequest( KMail::MessageListView::Core::GroupHeaderItem *ghi, const QPoint &globalPos )
+void Widget::viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderItem *ghi, const QPoint &globalPos )
 {
   Q_UNUSED( ghi );
 
@@ -245,7 +245,7 @@ enum DragMode
 
 void Widget::viewDropEvent( QDropEvent *e )
 {
-  Akonadi::Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
 
   if ( collections.size()!=1 || !e->mimeData()->hasFormat( DragPayload::mimeType() ) ) {
     // no folder here or too many (in case we can't decide where the drop will end), or we can't decode
@@ -296,10 +296,10 @@ void Widget::viewDropEvent( QDropEvent *e )
     }
   }
 
-  Akonadi::Collection target = collections.first();
+  Collection target = collections.first();
   Item::List items;
-  foreach ( Akonadi::Item::Id id, payload.items ) {
-    items << Akonadi::Item( id );
+  foreach ( Item::Id id, payload.items ) {
+    items << Item( id );
   }
 
   if ( action == DragCopy ) {
@@ -312,27 +312,27 @@ void Widget::viewDropEvent( QDropEvent *e )
 
 void Widget::viewStartDragRequest()
 {
-  Akonadi::Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
 
   if ( collections.isEmpty() )
     return; // no folder here
 
-  QList<Akonadi::Item> items = selectionAsItems();
+  QList<Item> items = selectionAsItems();
   if ( items.isEmpty() )
     return;
 
   DragPayload payload;
 
-  foreach ( const Akonadi::Collection c, collections ) {
+  foreach ( const Collection c, collections ) {
     payload.sourceCollections << c.id();
     // We won't be able to remove items from this collection
-    if ( ( c.rights() & Akonadi::Collection::CanDeleteItem ) == 0 ) {
+    if ( ( c.rights() & Collection::CanDeleteItem ) == 0 ) {
       // So the drag will be read-only
       payload.readOnly = true;
     }
   }
 
-  foreach ( const Akonadi::Item i, items ) {
+  foreach ( const Item i, items ) {
     payload.items << i.id();
   }
 
@@ -368,7 +368,7 @@ void Widget::viewStartDragRequest()
     drag->exec( Qt::CopyAction | Qt::MoveAction );
 }
 
-Akonadi::Item::List Widget::selectionAsItems() const
+Item::List Widget::selectionAsItems() const
 {
   Item::List res;
   QList<Core::MessageItem *> selection = view()->selectionAsMessageItemList();
@@ -382,7 +382,7 @@ Akonadi::Item::List Widget::selectionAsItems() const
   return res;
 }
 
-Akonadi::Item Widget::itemForRow( int row ) const
+Item Widget::itemForRow( int row ) const
 {
   return static_cast<const StorageModel*>( storageModel() )->itemForRow( row );
 }

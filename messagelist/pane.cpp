@@ -31,7 +31,7 @@
 #include "storagemodel.h"
 #include "widget.h"
 
-using namespace Akonadi::MessageListView;
+using namespace MessageList;
 
 
 Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
@@ -197,7 +197,7 @@ void Pane::createNewTab()
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
 
   QItemSelectionModel *s = new QItemSelectionModel( mModel, w );
-  MessageListView::StorageModel *m = new MessageListView::StorageModel( mModel, s, w );
+  MessageList::StorageModel *m = new MessageList::StorageModel( mModel, s, w );
   w->setStorageModel( m );
 
   mWidgetSelectionHash[w] = s;

@@ -24,14 +24,7 @@
 
 #include <klocale.h>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 static const int gAggregationCurrentVersion = 0x1009; // increase if you add new fields of change the meaning of some
 
@@ -277,8 +270,3 @@ QList< QPair< QString, int > > Aggregation::enumerateFillViewStrategyOptions()
   return ret;
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

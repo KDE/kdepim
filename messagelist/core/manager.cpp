@@ -41,14 +41,7 @@
 #include <KApplication>
 #include <KLocale>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 Manager * Manager::mInstance = 0;
 
@@ -193,7 +186,7 @@ void Manager::unregisterWidget( Widget *pWidget )
 {
   if ( !mInstance )
   {
-    qWarning("ERROR: MessageListView::Manager::unregisterWidget() called when Manager::mInstance is 0");
+    qWarning("ERROR: MessageList::Manager::unregisterWidget() called when Manager::mInstance is 0");
     return;
   }
 
@@ -1036,8 +1029,3 @@ void Manager::saveConfiguration()
   }
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

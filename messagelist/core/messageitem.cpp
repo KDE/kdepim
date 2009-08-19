@@ -20,14 +20,7 @@
 
 #include "core/messageitem.h"
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 MessageItem::MessageItem()
   : Item( Message ), ModelInvariantIndex(),
@@ -111,8 +104,3 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
   }
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

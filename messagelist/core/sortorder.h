@@ -17,17 +17,14 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  *
  *******************************************************************************/
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_SORTORDER_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_SORTORDER_H__
+#ifndef __MESSAGELIST_CORE_SORTORDER_H__
+#define __MESSAGELIST_CORE_SORTORDER_H__
 
 #include <messagelist/core/aggregation.h>
 
 #include <KConfigGroup>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -240,8 +237,6 @@ class SortOrder
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif // __KMAIL_MESSAGELISTVIEW_CORE_SORTORDER_H__
+#endif // __MESSAGELIST_CORE_SORTORDER_H__

@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_AGGREGATION_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_AGGREGATION_H__
+#ifndef __MESSAGELIST_CORE_AGGREGATION_H__
+#define __MESSAGELIST_CORE_AGGREGATION_H__
 
 class QDataStream;
 
@@ -29,17 +29,14 @@ class QDataStream;
 
 #include <messagelist/core/optionset.h>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
 {
 
 /**
- * A set of aggregation options that can be applied to the MessageListView::Model in a single shot.
+ * A set of aggregation options that can be applied to the MessageList::Model in a single shot.
  * The set defines the behaviours related to the population of the model, threading
  * of messages and grouping.
  */
@@ -291,8 +288,6 @@ public:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_AGGREGATION_H__
+#endif //!__MESSAGELIST_CORE_AGGREGATION_H__

@@ -47,14 +47,7 @@
 #include <KGlobalSettings>
 #include <KIcon>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 View::View( Widget *pParent )
   : QTreeView( pParent ),
@@ -2563,67 +2556,4 @@ void View::slotExpandAllGroups()
 {
   setAllGroupsExpanded( true );
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
-
-
-#if 0
-
-void KMHeaders::setFolder( KMFolder *aFolder, bool forceJumpToUnread )
-{
-    if (mFolder) {
-      disconnect(mFolder, SIGNAL(numUnreadMsgsChanged(KMFolder*)),
-          this, SLOT(setFolderInfoStatus()));
-      disconnect(mFolder, SIGNAL(changed()),
-                 this, SLOT(msgChanged()));
-      disconnect( mFolder, SIGNAL( statusMsg( const QString& ) ),
-                  BroadcastStatus::instance(), SLOT( setStatusMsg( const QString& ) ) );
-      disconnect(mFolder, SIGNAL(viewConfigChanged()), this, SLOT(reset()));
-    }
-
-    mOwner->useAction()->setEnabled( mFolder ?
-                         ( kmkernel->folderIsTemplates( mFolder ) ) : false );
-    mOwner->messageActions()->replyListAction()->setEnabled( mFolder ?
-                         mFolder->isMailingListEnabled() : false );
-    if (mFolder)
-    {
-      connect(mFolder, SIGNAL(changed()),
-              this, SLOT(msgChanged()));
-      connect(mFolder, SIGNAL(statusMsg(const QString&)),
-              BroadcastStatus::instance(), SLOT( setStatusMsg( const QString& ) ) );
-      connect(mFolder, SIGNAL(numUnreadMsgsChanged(KMFolder*)),
-          this, SLOT(setFolderInfoStatus()));
-      connect(mFolder, SIGNAL(viewConfigChanged()), this, SLOT(reset()));
-    }
-
-    colText = i18n( "Date" );
-    if (mPaintInfo.orderOfArrival)
-      colText = i18n( "Date (Order of Arrival)" );
-    setColumnText( mPaintInfo.dateCol, colText);
-  }
-}
-
-void KMHeaders::setFolderInfoStatus ()
-{
-  if ( !mFolder ) return;
-  QString str;
-  const int unread = mFolder->countUnread();
-  if ( static_cast<KMFolder*>(mFolder) == kmkernel->outboxFolder() )
-    str = unread ? i18ncp( "Number of unsent messages", "1 unsent", "%1 unsent", unread ) : i18n( "0 unsent" );
-  else
-    str = unread ? i18ncp( "Number of unread messages", "1 unread", "%1 unread", unread )
-      : i18nc( "No unread messages", "0 unread" );
-  const int count = mFolder->count();
-  str = count ? i18ncp( "Number of unread messages", "1 message, %2.", "%1 messages, %2.", count, str )
-              : i18nc( "No unread messages", "0 messages" ); // no need for "0 unread" to be added here
-  if ( mFolder->isReadOnly() )
-    str = i18nc("%1 = n messages, m unread.", "%1 Folder is read-only.", str );
-  BroadcastStatus::instance()->setStatusMsg(str);
-}
-
-#endif
 

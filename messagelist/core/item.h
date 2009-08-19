@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_ITEM_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_ITEM_H__
+#ifndef __MESSAGELIST_CORE_ITEM_H__
+#define __MESSAGELIST_CORE_ITEM_H__
 
 #include <QList>
 #include <QString>
@@ -34,7 +34,7 @@
 #include <messagelist/core/model.h>
 #include <messagelist/messagelist_export.h>
 
-// See the MessageListView::Item::insertChildItem() function below for an explaination of this macro.
+// See the MessageList::Item::insertChildItem() function below for an explaination of this macro.
 #if __GNUC__ >= 3
   #define GCC_DONT_INLINE_THIS __attribute__((noinline))
 #else
@@ -42,17 +42,14 @@
 #endif
 
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
 {
 
 /**
- * A single item of the MessageListView tree managed by MessageListView::Model.
+ * A single item of the MessageList tree managed by MessageList::Model.
  *
  * This class stores basic information needed in all the subclasses which
  * at the moment of writing are MessageItem and GroupHeaderItem.
@@ -105,7 +102,7 @@ private:
 protected:
 
   /**
-   * Creates an Item. Only derived classes and MessageListView::Model should access this.
+   * Creates an Item. Only derived classes and MessageList::Model should access this.
    */
   Item( Type type )
     : mType( type ), mChildItems( 0 ), mParent( 0 ), mThisItemIndexGuess( 0 ),
@@ -232,7 +229,7 @@ public:
     { return childItemCount() > 0; };
 
   /**
-   * A structure used with MessageListView::Item::childItemStats().
+   * A structure used with MessageList::Item::childItemStats().
    * Contains counts of total, new and unread messages in a subtree.
    */
   class ChildItemStats
@@ -361,7 +358,7 @@ public:
 
   /**
    * Returns the maximum date in the subtree originating from this item.
-   * This is kept up-to-date by MessageListView::Model.
+   * This is kept up-to-date by MessageList::Model.
    */
   time_t maxDate() const
     { return mMaxDate; };
@@ -501,16 +498,16 @@ public:
    * This is what gcc reports with -Winline:
    *
    * /home/pragma/kmail-soc/kmail/messagelistview/item.h:352: warning: inlining failed in call to
-   *   'static bool KMail::MessageListView::ItemSubjectComparator::firstGreaterOrEqual(KMail::MessageListView::Item*, KMail::MessageListView::Item*)':
+   *   'static bool MessageList::ItemSubjectComparator::firstGreaterOrEqual(MessageList::Item*, MessageList::Item*)':
    *    --param large-function-growth limit reached while inlining the caller
    * /home/pragma/kmail-soc/kmail/messagelistview/model.cpp:239: warning: called from here
    *
    * The comparison functions then appear in the symbol table:
    *
    * etherea kmail # nm /usr/kde/4.0/lib/libkmailprivate.so | grep Comparator
-   * 00000000005d2c10 W _ZN5KMail15MessageListView18ItemDateComparator19firstGreaterOrEqualEPNS0_4ItemES3_
-   * 00000000005d2cb0 W _ZN5KMail15MessageListView20ItemSenderComparator19firstGreaterOrEqualEPNS0_4ItemES3_
-   * 00000000005d2c50 W _ZN5KMail15MessageListView21ItemSubjectComparator19firstGreaterOrEqualEPNS0_4ItemES3_
+   * 00000000005d2c10 W _ZN5KMail15MessageList18ItemDateComparator19firstGreaterOrEqualEPNS0_4ItemES3_
+   * 00000000005d2cb0 W _ZN5KMail15MessageList20ItemSenderComparator19firstGreaterOrEqualEPNS0_4ItemES3_
+   * 00000000005d2c50 W _ZN5KMail15MessageList21ItemSubjectComparator19firstGreaterOrEqualEPNS0_4ItemES3_
    * ...
    *
    * With this attribute, instead, gcc doesn't complain at all and the inner comparisons
@@ -659,7 +656,7 @@ public:
 
   /**
    * Kills all the child items without emitting any signal, recursively.
-   * It should be used only when MessageListView::Model is reset() afterwards.
+   * It should be used only when MessageList::Model is reset() afterwards.
    */
   void killAllChildItems();
 private:
@@ -671,8 +668,8 @@ private:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemSizeComparator
 {
@@ -689,8 +686,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemDateComparator
 {
@@ -709,8 +706,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemMaxDateComparator
 {
@@ -726,8 +723,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemSubjectComparator
 {
@@ -746,8 +743,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemSenderComparator
 {
@@ -765,8 +762,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemReceiverComparator
 {
@@ -784,8 +781,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemSenderOrReceiverComparator
 {
@@ -803,8 +800,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemActionItemStatusComparator
 {
@@ -824,8 +821,8 @@ public:
 };
 
 /**
- * A helper class used with MessageListView::Item::childItemNeedsReSorting() and
- * MessageListView::Item::insertChildItem().
+ * A helper class used with MessageList::Item::childItemNeedsReSorting() and
+ * MessageList::Item::insertChildItem().
  */
 class ItemNewUnreadStatusComparator
 {
@@ -860,8 +857,6 @@ public:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_ITEM_H__
+#endif //!__MESSAGELIST_CORE_ITEM_H__

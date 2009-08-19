@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_CONFIGURETHEMESDIALOG_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_CONFIGURETHEMESDIALOG_H__
+#ifndef __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_H__
+#define __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_H__
 
 #include <KDialog>
 
@@ -29,10 +29,7 @@
 
 class QPushButton;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -101,8 +98,6 @@ private slots:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_CONFIGURESKINSDIALOG_H__
+#endif //!__MESSAGELIST_CORE_CONFIGURESKINSDIALOG_H__

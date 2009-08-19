@@ -26,14 +26,7 @@
 #include <KGlobalSettings>
 #include <KDebug>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 //
 // Theme versioning
@@ -860,10 +853,4 @@ void Theme::save( QDataStream &stream ) const
     col->save( stream );
   }
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

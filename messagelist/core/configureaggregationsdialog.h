@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
+#ifndef __MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
+#define __MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
 
 #include <KDialog>
 
@@ -29,10 +29,7 @@
 
 class QPushButton;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -64,9 +61,9 @@ public:
 
 
 /**
- * The dialog used for configuring MessageListView::Aggregation sets.
+ * The dialog used for configuring MessageList::Aggregation sets.
  *
- * This is managed by MessageListView::Manager. Take a look at it first
+ * This is managed by MessageList::Manager. Take a look at it first
  * if you want to display this dialog.
  */
 class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public KDialog
@@ -88,13 +85,13 @@ private:
 
 protected:
   /**
-   * Called by MessageListView::Manager to display an instance of this dialog.
+   * Called by MessageList::Manager to display an instance of this dialog.
    * If an instance is already existing (and maybe visible) it will be just activated.
    */
   static void display( QWidget * parent, const QString &preselectAggregationId = QString() );
 
   /**
-   * This is called when MessageListView::Manager is being destroyed: kill
+   * This is called when MessageList::Manager is being destroyed: kill
    * the dialog if it's still there.
    */
   static void cleanup();
@@ -103,7 +100,7 @@ public:
   /**
    * The one and only ConfigureAggregationsDialog. May be 0.
    *
-   * See MessageListView::Manager if you want to display this dialog.
+   * See MessageList::Manager if you want to display this dialog.
    */
   static ConfigureAggregationsDialog * instance()
     { return mInstance; };
@@ -134,8 +131,6 @@ private slots:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
+#endif //!__MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_H__

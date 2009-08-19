@@ -27,14 +27,7 @@
 
 #include <KLocale>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 Item::~Item()
 {
@@ -434,8 +427,3 @@ void Item::childItemDead( Item *child )
   mChildItems->removeOne( child ); // since we always have ONE (if we not, it's a bug)
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

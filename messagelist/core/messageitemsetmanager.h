@@ -18,16 +18,13 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_MESSAGEITEMSETMANAGER_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_MESSAGEITEMSETMANAGER_H__
+#ifndef __MESSAGELIST_CORE_MESSAGEITEMSETMANAGER_H__
+#define __MESSAGELIST_CORE_MESSAGEITEMSETMANAGER_H__
 
 #include <QHash>
 #include <QList>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -70,8 +67,6 @@ public:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_MESSAGEITEMSETMANAGER_H__
+#endif //!__MESSAGELIST_CORE_MESSAGEITEMSETMANAGER_H__

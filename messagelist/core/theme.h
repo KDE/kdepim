@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_THEME_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_THEME_H__
+#ifndef __MESSAGELIST_CORE_THEME_H__
+#define __MESSAGELIST_CORE_THEME_H__
 
 #include <QList>
 #include <QPair>
@@ -34,17 +34,14 @@
 
 class QPaintDevice;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
 {
 
 /**
- * The Theme class defines the visual appearance of the MessageListView.
+ * The Theme class defines the visual appearance of the MessageList.
  *
  * The core structure of the theme is made up of Column objects which
  * are mapped to View (QTreeView) columns. Each theme must provide at least one column.
@@ -1044,9 +1041,7 @@ protected:
 
 } // namespace Core
 
-} // namespace MessageListView
-
-} // namespace KMail
+} // namespace MessageList
 
 
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_SKIN_H__
+#endif //!__MESSAGELIST_CORE_SKIN_H__

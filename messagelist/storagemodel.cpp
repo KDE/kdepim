@@ -37,8 +37,8 @@
 #include <QtCore/QAtomicInt>
 #include <QtGui/QItemSelectionModel>
 
-using namespace Akonadi::MessageListView;
-using namespace KMail::MessageListView;
+using namespace Akonadi;
+using namespace MessageList;
 
 static QAtomicInt _k_attributeInitialized;
 
@@ -106,13 +106,13 @@ StorageModel::~StorageModel()
 {
 }
 
-Akonadi::Collection::List StorageModel::displayedCollections() const
+Collection::List StorageModel::displayedCollections() const
 {
-  Akonadi::Collection::List collections;
+  Collection::List collections;
   QModelIndexList indexes = mSelectionModel->selectedRows();
 
   foreach ( const QModelIndex &index, indexes ) {
-    Akonadi::Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
     if ( c.isValid() ) {
       collections << c;
     }
@@ -169,7 +169,7 @@ int StorageModel::initialUnreadRowCountGuess() const
   return unreadCount;
 }
 
-bool StorageModel::initializeMessageItem( KMail::MessageListView::Core::MessageItem *mi,
+bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                                           int row, bool bUseReceiver ) const
 {
   Item item = itemForRow( row );
@@ -218,7 +218,7 @@ static QString md5Encode( const QString &str )
   return md5.base64Digest().left( Base64EncodedMD5Len );
 }
 
-void StorageModel::fillMessageItemThreadingData( KMail::MessageListView::Core::MessageItem *mi,
+void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
                                                  int row, ThreadingDataSubset subset ) const
 {
   const MessagePtr mail = messageForRow( row );
@@ -246,7 +246,7 @@ void StorageModel::fillMessageItemThreadingData( KMail::MessageListView::Core::M
   }
 }
 
-void StorageModel::updateMessageItemData( KMail::MessageListView::Core::MessageItem *mi,
+void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
   Item item = itemForRow( row );
@@ -311,12 +311,12 @@ void StorageModel::updateMessageItemData( KMail::MessageListView::Core::MessageI
   }
 }
 
-void StorageModel::setMessageItemStatus( KMail::MessageListView::Core::MessageItem *mi,
+void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
                                          int row, const KPIM::MessageStatus &status )
 {
   Item item = itemForRow( row );
   item.setFlags( status.getStatusFlags() );
-  new Akonadi::ItemModifyJob( item, this );
+  new ItemModifyJob( item, this );
 }
 
 QVariant StorageModel::data( const QModelIndex &index, int role ) const
@@ -379,7 +379,7 @@ void StorageModel::onSelectionChanged()
   emit headerDataChanged( Qt::Horizontal, 0, columnCount()-1 );
 }
 
-Akonadi::Item StorageModel::itemForRow( int row ) const
+Item StorageModel::itemForRow( int row ) const
 {
   return mModel->data( mModel->index( row, 0 ), EntityTreeModel::ItemRole ).value<Item>();
 }

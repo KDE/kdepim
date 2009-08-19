@@ -34,14 +34,7 @@
 #include <KLocale>
 #include <KTextEdit>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 AggregationEditor::AggregationEditor( QWidget *parent )
   : OptionSetEditor( parent )
@@ -240,10 +233,4 @@ void AggregationEditor::fillFillViewStrategyCombo()
       Aggregation::enumerateFillViewStrategyOptions()
     );
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

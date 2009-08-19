@@ -21,14 +21,7 @@
 #include "core/modelinvariantindex.h"
 #include "core/modelinvariantrowmapper.h"
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 ModelInvariantIndex::~ModelInvariantIndex()
 {
@@ -42,10 +35,4 @@ int ModelInvariantIndex::currentModelIndexRow()
     return -1;
   return mRowMapper->modelInvariantIndexToModelIndexRow( this );
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

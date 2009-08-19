@@ -29,14 +29,7 @@ static const int gOptionSetFinalMarker = 0xbabe; // don't change
 
 static const int gOptionSetCurrentVersion = 0x1001; // increase if you add new fields of change the meaning of some
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 OptionSet::OptionSet()
 {
@@ -127,10 +120,4 @@ bool OptionSet::loadFromString( QString &data )
 
   return true;
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

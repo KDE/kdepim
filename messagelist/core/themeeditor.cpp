@@ -57,14 +57,7 @@
 
 #include <time.h> // for time_t
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 static const char * gThemeContentItemTypeDndMimeDataFormat = "application/x-kmail-messagelistview-theme-contentitem-type";
 
@@ -1552,10 +1545,4 @@ void ThemeEditor::slotIconSizeSpinBoxValueChanged( int val )
 
   mPreviewWidget->setTheme( mCurrentTheme ); // will trigger a cache reset and a view update
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

@@ -20,14 +20,7 @@
 
 #include "core/storagemodelbase.h"
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 StorageModel::StorageModel( QObject * parent )
   : QAbstractItemModel( parent )
@@ -42,10 +35,4 @@ int StorageModel::initialUnreadRowCountGuess() const
 {
   return rowCount( QModelIndex() );
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

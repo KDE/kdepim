@@ -33,14 +33,7 @@
 #include <KColorScheme>
 #include <KGlobalSettings>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 static const int gGroupHeaderOuterVerticalMargin = 1;
 static const int gGroupHeaderOuterHorizontalMargin = 1;
@@ -1602,10 +1595,4 @@ QFont ThemeDelegate::itemFont( const Theme::ContentItem *ci, const Item *item )
 
   return KGlobalSettings::generalFont();
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

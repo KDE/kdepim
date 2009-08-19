@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_STORAGEMODELBASE_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_STORAGEMODELBASE_H__
+#ifndef __MESSAGELIST_CORE_STORAGEMODELBASE_H__
+#define __MESSAGELIST_CORE_STORAGEMODELBASE_H__
 
 #include <QAbstractItemModel>
 
@@ -30,10 +30,7 @@ namespace KPIM
 	class MessageStatus;
 }
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -43,7 +40,7 @@ class MessageItem;
 
 /**
  * The QAbstractItemModel based interface that you need
- * to provide for your storage to work with MessageListView.
+ * to provide for your storage to work with MessageList.
  */
 class MESSAGELIST_EXPORT StorageModel : public QAbstractItemModel
 {
@@ -95,14 +92,14 @@ public:
   /**
    * This method should use the inner model implementation to fill in the specified subset of
    * threading data for the specified MessageItem from the underlying storage slot at
-   * the specified row index. 
+   * the specified row index.
    */
   virtual void fillMessageItemThreadingData( MessageItem * mi, int row, ThreadingDataSubset subset ) const  = 0;
 
   /**
    * This method should use the inner model implementation to re-fill the date, the status,
    * the encryption state, the signature state and eventually update the min/max dates
-   * for the specified MessageItem from the underlying storage slot at the specified row index. 
+   * for the specified MessageItem from the underlying storage slot at the specified row index.
    */
   virtual void updateMessageItemData( MessageItem * mi, int row ) const = 0;
 
@@ -122,8 +119,6 @@ public:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_STORAGEMODEL_H__
+#endif //!__MESSAGELIST_CORE_STORAGEMODEL_H__

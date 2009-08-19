@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_WIDGETBASE_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_WIDGETBASE_H__
+#ifndef __MESSAGELIST_CORE_WIDGETBASE_H__
+#define __MESSAGELIST_CORE_WIDGETBASE_H__
 
 #include <QWidget>
 #include <QString>
@@ -40,10 +40,7 @@ namespace KPIM
   class MessageStatus;
 }
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -81,7 +78,7 @@ private:
   KComboBox * mStatusFilterCombo;
 
   StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
-                                         ///  is owned by MessageListView::Widget.
+                                         ///  is owned by MessageList::Widget.
   Aggregation * mAggregation;            ///< The currently set aggregation mode, a deep copy
   Theme * mTheme;                        ///< The currently set theme, a deep copy
   SortOrder mSortOrder;                  ///< The currently set sort order
@@ -290,10 +287,8 @@ private:
 
 } // namespace Core
 
-} // namespace MessageListView
-
-} // namespace KMail
+} // namespace MessageList
 
 
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_WIDGET_H__
+#endif //!__MESSAGELIST_CORE_WIDGET_H__
 

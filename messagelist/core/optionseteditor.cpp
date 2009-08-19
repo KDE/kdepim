@@ -29,14 +29,7 @@
 #include <KLocale>
 #include <KTextEdit>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 OptionSetEditor::OptionSetEditor( QWidget *parent )
   : KTabWidget( parent )
@@ -70,10 +63,4 @@ OptionSetEditor::OptionSetEditor( QWidget *parent )
 OptionSetEditor::~OptionSetEditor()
 {
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

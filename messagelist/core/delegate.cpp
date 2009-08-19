@@ -23,15 +23,7 @@
 #include "core/messageitem.h"
 #include "core/view.h"
 
-
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 Delegate::Delegate( View *pParent )
   : ThemeDelegate( pParent )
@@ -47,8 +39,3 @@ Item * Delegate::itemFromIndex( const QModelIndex &index ) const
   return static_cast< Item * >( index.internalPointer() );
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

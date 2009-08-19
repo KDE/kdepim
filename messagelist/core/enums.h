@@ -19,13 +19,10 @@
  *******************************************************************************/
 
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_ENUMS_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_ENUMS_H__
+#ifndef __MESSAGELIST_CORE_ENUMS_H__
+#define __MESSAGELIST_CORE_ENUMS_H__
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -81,6 +78,4 @@ namespace Core
 
 }
 
-}
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_ENUMS_H__
+#endif //!__MESSAGELIST_CORE_ENUMS_H__

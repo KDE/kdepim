@@ -23,14 +23,7 @@
 
 #include <QMetaEnum>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 SortOrder::SortOrder()
   : mMessageSorting( SortMessagesByDateTime ),
@@ -329,11 +322,5 @@ SortOrder::GroupSorting SortOrder::groupSortingForName( const QString& name )
   return static_cast<GroupSorting>( staticMetaObject.enumerator( index ).keyToValue(
                               name.toLatin1().constData() ) );
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 
 #include "sortorder.moc"

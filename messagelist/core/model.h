@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_MODEL_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_MODEL_H__
+#ifndef __MESSAGELIST_CORE_MODEL_H__
+#define __MESSAGELIST_CORE_MODEL_H__
 
 #include <QAbstractItemModel>
 #include <QList>
@@ -38,10 +38,7 @@
 
 class QTime;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -64,7 +61,7 @@ class View;
 /**
  * This class manages the huge tree of displayable objects: GroupHeaderItems and MessageItems.
  * The tree is exposed via a 'hacked' QAbstractItemModel interface to a QTreeView
- * subclass (which is MessageListView::View).
+ * subclass (which is MessageList::View).
  *
  * The keypoint in this class is that it has to be non-blocking in manipulating the tree:
  * fill, cleanup and update operations are performed in timed chunks. Perfect non-blocking
@@ -316,7 +313,7 @@ private:
   /**
    * The Unique Id of the message item to pre-select when mPreSelectionMode
    * is PreSelectLastSelected. This message is "caught" when it "pops up" during
-   * the loading process. This unique id is stored by MessageListView::Manager.
+   * the loading process. This unique id is stored by MessageList::Manager.
    *
    * See also setStorageModel() and abortMessagePreSelection()
    */
@@ -490,7 +487,7 @@ protected:
   void fillView();
 
   /**
-   * This is called by MessageListView::Manager once in a while.
+   * This is called by MessageList::Manager once in a while.
    * It is a good place to check if the date has changed and
    * trigger a view reload.
    */
@@ -633,8 +630,6 @@ protected slots:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_MODEL_H__
+#endif //!__MESSAGELIST_CORE_MODEL_H__

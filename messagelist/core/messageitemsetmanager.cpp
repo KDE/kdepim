@@ -21,14 +21,7 @@
 #include "core/messageitemsetmanager.h"
 #include "core/messageitem.h"
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 MessageItemSetManager::MessageItemSetManager()
 {
@@ -119,10 +112,4 @@ bool MessageItemSetManager::addMessageItem( MessageItemSetReference ref, Message
 
   return true;
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

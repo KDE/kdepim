@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_MANAGER_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_MANAGER_H__
+#ifndef __MESSAGELIST_CORE_MANAGER_H__
+#define __MESSAGELIST_CORE_MANAGER_H__
 
 #include <messagelist/core/sortorder.h>
 #include <ksharedconfig.h>
@@ -37,10 +37,7 @@ namespace KMime
   class DateFormatter;
 }
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -52,20 +49,20 @@ class StorageModel;
 class Widget;
 
 /**
- * @brief: The manager for all the existing MessageListView::Widget objects.
+ * @brief: The manager for all the existing MessageList::Widget objects.
  *
- * This class is the "central" object of the whole MessageListView framework.
+ * This class is the "central" object of the whole MessageList framework.
  * It's a singleton that can be accessed only by the means of static methods,
- * is created automatically when the first MessageListView::Widget object is created
- * and destroyed automatically when the last MessageListView::Widget object is destroyed.
+ * is created automatically when the first MessageList::Widget object is created
+ * and destroyed automatically when the last MessageList::Widget object is destroyed.
  *
  * This class takes care of loading/storing/mantaining the settings for the
- * whole MessageListView framework. It also keeps track of all the existing
- * MessageListView::Widget objects and takes care of uptdating them when settings change.
+ * whole MessageList framework. It also keeps track of all the existing
+ * MessageList::Widget objects and takes care of uptdating them when settings change.
  *
  * This object relies on KMKernel existence for its whole lifetime (and in particular
  * for loading and saving settings) thus you must make sure that KMKernel is created
- * before the first MessageListView::Widget and destroyed after the last MessageListView::Widget.
+ * before the first MessageList::Widget and destroyed after the last MessageList::Widget.
  * But in KMail this is always the case :)
  */
 class MESSAGELIST_EXPORT Manager : public QObject
@@ -263,7 +260,7 @@ public:
 
   /**
    * Reloads the global configuration from the config files (so we assume it has changed)
-   * The settings private to MessageListView (like Themes or Aggregations) aren't reloaded.
+   * The settings private to MessageList (like Themes or Aggregations) aren't reloaded.
    * If the global configuration has changed then all the views are reloaded.
    */
   void reloadGlobalConfiguration();
@@ -296,8 +293,6 @@ private:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_MANAGER_H__
+#endif //!__MESSAGELIST_CORE_MANAGER_H__

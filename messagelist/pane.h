@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef __AKONADI_MESSAGELISTVIEW_PANE_H__
-#define __AKONADI_MESSAGELISTVIEW_PANE_H__
+#ifndef __MESSAGELIST_PANE_H__
+#define __MESSAGELIST_PANE_H__
 
 #include <QtCore/QHash>
 #include <QtGui/QTabWidget>
@@ -37,17 +37,17 @@ namespace KPIM
 
 namespace Akonadi
 {
+  class Item;
+}
 
-class Item;
-
-namespace MessageListView
+namespace MessageList
 {
 
 class Widget;
 
 /**
- * This is the main MessageListView panel for Akonadi applications.
- * It contains multiple MessageListView::Widget tabs
+ * This is the main MessageList panel for Akonadi applications.
+ * It contains multiple MessageList::Widget tabs
  * so it can actually display multiple folder sets at once.
  */
 class MESSAGELIST_EXPORT Pane : public QTabWidget
@@ -112,8 +112,6 @@ private:
   QToolButton *mCloseTabButton;
 };
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace Akonadi
-
-#endif //!__AKONADI_MESSAGELISTVIEW_PANE_H__
+#endif //!__MESSAGELIST_PANE_H__

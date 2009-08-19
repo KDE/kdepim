@@ -34,10 +34,7 @@
 #include <KIconLoader>
 #include <KMessageBox>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -65,6 +62,12 @@ public:
   void forgetTheme()
     { mTheme = 0; };
 };
+
+} // namespace Core
+
+} // namespace MessageList
+
+using namespace MessageList::Core;
 
 ConfigureThemesDialog * ConfigureThemesDialog::mInstance = 0;
 
@@ -360,10 +363,4 @@ void ConfigureThemesDialog::deleteThemeButtonClicked()
 
   delete item; // this will trigger themeListCurrentItemChanged()
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

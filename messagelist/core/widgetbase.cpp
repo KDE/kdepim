@@ -48,14 +48,7 @@
 
 #include <libkdepim/messagestatus.h>
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 Widget::Widget( QWidget *pParent )
   : QWidget( pParent ),
@@ -195,7 +188,7 @@ void Widget::populateStatusFilterCombo()
            this, SLOT( statusSelected( int ) ) );
 }
 
-Core::MessageItem * Widget::currentMessageItem() const
+MessageItem *Widget::currentMessageItem() const
 {
   return view()->currentMessageItem();
 }
@@ -1077,8 +1070,3 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const KPIM::Messa
   Q_UNUSED( clear );
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

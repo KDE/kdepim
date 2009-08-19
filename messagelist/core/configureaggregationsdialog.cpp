@@ -34,10 +34,7 @@
 #include <KIconLoader>
 #include <KMessageBox>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -65,6 +62,12 @@ public:
   void forgetAggregation()
     { mAggregation = 0; };
 };
+
+} // namespace Core
+
+} // namespace MessageList
+
+using namespace MessageList::Core;
 
 ConfigureAggregationsDialog * ConfigureAggregationsDialog::mInstance = 0;
 
@@ -346,10 +349,4 @@ void ConfigureAggregationsDialog::deleteAggregationButtonClicked()
 
   delete item; // this will trigger aggregationListCurrentItemChanged()
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

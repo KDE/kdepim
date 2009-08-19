@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_VIEW_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_VIEW_H__
+#ifndef __MESSAGELIST_CORE_VIEW_H__
+#define __MESSAGELIST_CORE_VIEW_H__
 
 #include <QTreeView>
 #include <QList>
@@ -37,10 +37,7 @@ namespace KPIM
   class MessageStatus;
 }
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -59,7 +56,7 @@ class StorageModel;
 class Widget;
 
 /**
- * The MessageListView::View is the real display of the message list. It is
+ * The MessageList::View is the real display of the message list. It is
  * based on QTreeView, has a Model that manipulates the underlying message storage
  * and a Delegate that is responsable of painting the items.
  */
@@ -286,8 +283,8 @@ public:
    * If loop is true then the "next" algorithm will restart from the beginning
    * of the list if the end is reached, otherwise it will just stop returning false.
    *
-   * \sa MessageListView::Core::MessageTypeFilter
-   * \sa MessageListView::Core::ExistingSelectionBehaviour
+   * \sa MessageList::Core::MessageTypeFilter
+   * \sa MessageList::Core::ExistingSelectionBehaviour
    */
   bool selectNextMessageItem(
       MessageTypeFilter messageTypeFilter,
@@ -310,8 +307,8 @@ public:
    * If loop is true then the "previous" algorithm will restart from the end
    * of the list if the beginning is reached, otherwise it will just stop returning false.
    *
-   * \sa MessageListView::Core::MessageTypeFilter
-   * \sa MessageListView::Core::ExistingSelectionBehaviour
+   * \sa MessageList::Core::MessageTypeFilter
+   * \sa MessageList::Core::ExistingSelectionBehaviour
    */
   bool selectPreviousMessageItem(
       MessageTypeFilter messageTypeFilter,
@@ -635,10 +632,8 @@ private slots:
 
 } // namespace Core
 
-} // namespace MessageListView
-
-} // namespace KMail
+} // namespace MessageList
 
 
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_VIEW_H__
+#endif //!__MESSAGELIST_CORE_VIEW_H__
 

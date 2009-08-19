@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_AGGREGATIONEDITOR_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_AGGREGATIONEDITOR_H__
+#ifndef __MESSAGELIST_CORE_AGGREGATIONEDITOR_H__
+#define __MESSAGELIST_CORE_AGGREGATIONEDITOR_H__
 
 #include <messagelist/core/optionseteditor.h>
 
@@ -27,10 +27,7 @@
 
 class KComboBox;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -40,7 +37,7 @@ class Aggregation;
 
 
 /**
- * A widget that allows editing a single MessageListView::Aggregation.
+ * A widget that allows editing a single MessageList::Aggregation.
  *
  * Used by ConfigureAggregationsDialog.
  */
@@ -114,8 +111,6 @@ private slots:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_AGGREGATIONEDITOR_H__
+#endif //!__MESSAGELIST_CORE_AGGREGATIONEDITOR_H__

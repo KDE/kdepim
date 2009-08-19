@@ -18,17 +18,14 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_MODELINVARIANTINDEX_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_MODELINVARIANTINDEX_H__
+#ifndef __MESSAGELIST_CORE_MODELINVARIANTINDEX_H__
+#define __MESSAGELIST_CORE_MODELINVARIANTINDEX_H__
 
 #include <qglobal.h> // defines uint, at least.
 
 #include <messagelist/messagelist_export.h>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -97,9 +94,7 @@ protected:
 
 } // namespace Core
 
-} // namespace MessageListView
-
-} // namespace KMail
+} // namespace MessageList
 
 
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_MODELINVARIANTINDEX_H__
+#endif //!__MESSAGELIST_CORE_MODELINVARIANTINDEX_H__

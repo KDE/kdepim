@@ -18,18 +18,15 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_COMBOBOXUTILS_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_COMBOBOXUTILS_H__
+#ifndef __MESSAGELIST_CORE_COMBOBOXUTILS_H__
+#define __MESSAGELIST_CORE_COMBOBOXUTILS_H__
 
 #include <QList>
 #include <QPair>
 
 class KComboBox;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -63,8 +60,6 @@ namespace ComboBoxUtils
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_COMBOBOXUTILS_H__
+#endif //!__MESSAGELIST_CORE_COMBOBOXUTILS_H__

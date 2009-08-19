@@ -25,10 +25,7 @@
 
 #include <KDebug>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -55,7 +52,11 @@ public:
   }
 };
 
+} // namespace Core
 
+} // namespace MessageList
+
+using namespace MessageList::Core;
 
 ModelInvariantRowMapper::ModelInvariantRowMapper()
 {
@@ -633,10 +634,4 @@ void ModelInvariantRowMapper::slotPerformLazyUpdate()
 
   // if we're here then no more work needs to be done.
 }
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

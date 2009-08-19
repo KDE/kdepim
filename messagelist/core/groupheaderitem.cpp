@@ -20,14 +20,7 @@
 
 #include "core/groupheaderitem.h"
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 GroupHeaderItem::GroupHeaderItem( const QString &label )
   : Item( GroupHeader ), mLabel( label )
@@ -38,8 +31,3 @@ GroupHeaderItem::~GroupHeaderItem()
 {
 }
 
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail

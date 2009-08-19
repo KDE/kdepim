@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_MESSAGEITEM_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_MESSAGEITEM_H__
+#ifndef __MESSAGELIST_CORE_MESSAGEITEM_H__
+#define __MESSAGELIST_CORE_MESSAGEITEM_H__
 
 #include <messagelist/core/item.h>
 #include <messagelist/core/modelinvariantindex.h>
@@ -30,10 +30,7 @@
 
 #include <messagelist/messagelist_export.h>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -220,8 +217,6 @@ public:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_MESSAGEITEM_H__
+#endif //!__MESSAGELIST_CORE_MESSAGEITEM_H__

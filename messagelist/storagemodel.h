@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef __AKONADI_MESSAGELISTVIEW_STORAGEMODEL_H__
-#define __AKONADI_MESSAGELISTVIEW_STORAGEMODEL_H__
+#ifndef __MESSAGELIST_STORAGEMODEL_H__
+#define __MESSAGELIST_STORAGEMODEL_H__
 
 #include <messagelist/core/storagemodelbase.h>
 
@@ -36,19 +36,13 @@ class QItemSelectionModel;
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
-namespace KMail
+namespace MessageList
 {
+
 namespace Core
 {
   class MessageItem;
 }
-}
-
-namespace Akonadi
-{
-
-namespace MessageListView
-{
 
 /**
  * The KMail specific implementation of the Core::StorageModel.
@@ -56,7 +50,7 @@ namespace MessageListView
  * Provides an interface over a KMFolder. In the future
  * it's expected to wrap Akonadi::MessageModel.
  */
-class MESSAGELIST_EXPORT StorageModel : public KMail::MessageListView::Core::StorageModel
+class MESSAGELIST_EXPORT StorageModel : public MessageList::Core::StorageModel
 {
   Q_OBJECT
 
@@ -67,15 +61,15 @@ public:
   explicit StorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent = 0 );
   ~StorageModel();
 
-  Collection::List displayedCollections() const;
+  Akonadi::Collection::List displayedCollections() const;
 
   virtual QString id() const;
   virtual bool containsOutboundMessages() const;
   virtual int initialUnreadRowCountGuess() const;
-  virtual bool initializeMessageItem( KMail::MessageListView::Core::MessageItem *mi, int row, bool bUseReceiver ) const;
-  virtual void fillMessageItemThreadingData( KMail::MessageListView::Core::MessageItem *mi, int row, ThreadingDataSubset subset ) const;
-  virtual void updateMessageItemData( KMail::MessageListView::Core::MessageItem *mi, int row ) const;
-  virtual void setMessageItemStatus( KMail::MessageListView::Core::MessageItem *mi, int row, const KPIM::MessageStatus &status );
+  virtual bool initializeMessageItem( MessageList::Core::MessageItem *mi, int row, bool bUseReceiver ) const;
+  virtual void fillMessageItemThreadingData( MessageList::Core::MessageItem *mi, int row, ThreadingDataSubset subset ) const;
+  virtual void updateMessageItemData( MessageList::Core::MessageItem *mi, int row ) const;
+  virtual void setMessageItemStatus( MessageList::Core::MessageItem *mi, int row, const KPIM::MessageStatus &status );
 
   virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const;
   virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
@@ -85,7 +79,7 @@ public:
 
   virtual void prepareForScan();
 
-  Item itemForRow( int row ) const;
+  Akonadi::Item itemForRow( int row ) const;
   MessagePtr messageForRow( int row ) const;
 
 private slots:
@@ -102,8 +96,6 @@ private:
   QColor mColorToDoMessage;
 };
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace Akonadi
-
-#endif //!__AKONADI_MESSAGELISTVIEW_STORAGEMODEL_H__
+#endif //!__MESSAGELIST_STORAGEMODEL_H__

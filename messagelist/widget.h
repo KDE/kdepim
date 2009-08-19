@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef __AKONADI_MESSAGELISTVIEW_WIDGET_H__
-#define __AKONADI_MESSAGELISTVIEW_WIDGET_H__
+#ifndef __MESSAGELIST_WIDGET_H__
+#define __MESSAGELIST_WIDGET_H__
 
 #include <messagelist/core/widgetbase.h>
 
@@ -27,10 +27,7 @@
 
 class QWidget;
 
-namespace Akonadi
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 /**
@@ -39,7 +36,7 @@ namespace MessageListView
  * Provides an interface over a KMFolder. In the future
  * it's expected to wrap Akonadi::MessageModel.
  */
-class MESSAGELIST_EXPORT Widget : public KMail::MessageListView::Core::Widget
+class MESSAGELIST_EXPORT Widget : public MessageList::Core::Widget
 {
   Q_OBJECT
 
@@ -57,54 +54,54 @@ public:
 
 protected:
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
-  virtual void viewMessageSelected( KMail::MessageListView::Core::MessageItem *msg );
+  virtual void viewMessageSelected( MessageList::Core::MessageItem *msg );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
-  virtual void viewMessageActivated( KMail::MessageListView::Core::MessageItem *msg );
+  virtual void viewMessageActivated( MessageList::Core::MessageItem *msg );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
   virtual void viewSelectionChanged();
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
-  virtual void viewMessageListContextPopupRequest( const QList< KMail::MessageListView::Core::MessageItem * > &selectedItems, const QPoint &globalPos );
+  virtual void viewMessageListContextPopupRequest( const QList< MessageList::Core::MessageItem * > &selectedItems, const QPoint &globalPos );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
-  virtual void viewGroupHeaderContextPopupRequest( KMail::MessageListView::Core::GroupHeaderItem *group, const QPoint &globalPos );
+  virtual void viewGroupHeaderContextPopupRequest( MessageList::Core::GroupHeaderItem *group, const QPoint &globalPos );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
   virtual void viewDragEnterEvent( QDragEnterEvent * e );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
   virtual void viewDragMoveEvent( QDragMoveEvent * e );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
   virtual void viewDropEvent( QDropEvent * e );
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
   virtual void viewStartDragRequest();
 
   /**
-   * Reimplemented from MessageListView::Core::Widget
+   * Reimplemented from MessageList::Core::Widget
    */
-  virtual void viewMessageStatusChangeRequest( KMail::MessageListView::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
+  virtual void viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
 
 signals:
   /**
@@ -135,14 +132,12 @@ signals:
   void messageStatusChangeRequest( const Akonadi::Item &item, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
 
 private:
-  Item::List selectionAsItems() const;
-  Item itemForRow( int row ) const;
+  Akonadi::Item::List selectionAsItems() const;
+  Akonadi::Item itemForRow( int row ) const;
 
   int mLastSelectedMessage;
 };
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace Akonadi
-
-#endif //!__AKONADI_MESSAGELISTVIEW_WIDGET_H__
+#endif //!__MESSAGELIST_WIDGET_H__

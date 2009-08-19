@@ -24,19 +24,9 @@
 
 #include <KComboBox>
 
-namespace KMail
-{
+using namespace MessageList::Core;
 
-namespace MessageListView
-{
-
-namespace Core
-{
-
-namespace ComboBoxUtils
-{
-
-void fillIntegerOptionCombo( KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors )
+void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors )
 {
   int val = getIntegerOptionComboValue( combo, -1 );
   combo->clear();
@@ -63,7 +53,7 @@ void fillIntegerOptionCombo( KComboBox *combo, const QList< QPair< QString, int 
   }
 }
 
-void setIntegerOptionComboValue( KComboBox *combo, int value )
+void ComboBoxUtils::setIntegerOptionComboValue( KComboBox *combo, int value )
 {
   if ( !combo->isEnabled() )
     return;
@@ -89,7 +79,7 @@ void setIntegerOptionComboValue( KComboBox *combo, int value )
   combo->setCurrentIndex( 0 ); // default
 }
 
-int getIntegerOptionComboValue( KComboBox *combo, int defaultValue )
+int ComboBoxUtils::getIntegerOptionComboValue( KComboBox *combo, int defaultValue )
 {
   int idx = combo->currentIndex();
   if ( idx < 0 )
@@ -102,12 +92,4 @@ int getIntegerOptionComboValue( KComboBox *combo, int defaultValue )
     return defaultValue;
   return val;
 }
-
-} // namespace ComboBoxUtils
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
 

@@ -18,24 +18,21 @@
  *
  *******************************************************************************/
 
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_OPTIONSET_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_OPTIONSET_H__
+#ifndef __MESSAGELIST_CORE_OPTIONSET_H__
+#define __MESSAGELIST_CORE_OPTIONSET_H__
 
 #include <QString>
 
 class QDataStream;
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
 {
 
 /**
- * A set of options that can be applied to the MessageListView in one shot.
+ * A set of options that can be applied to the MessageList in one shot.
  * In the sources and in the user interface you can find this set of options
  * referred also as "View Mode" or "Preset".
  *
@@ -134,8 +131,6 @@ protected:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_OPTIONSET_H__
+#endif //!__MESSAGELIST_CORE_OPTIONSET_H__

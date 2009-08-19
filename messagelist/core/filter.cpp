@@ -21,14 +21,7 @@
 #include "core/filter.h"
 #include "core/messageitem.h"
 
-namespace KMail
-{
-
-namespace MessageListView
-{
-
-namespace Core
-{
+using namespace MessageList::Core;
 
 Filter::Filter()
   : mStatusMask( 0 )
@@ -86,9 +79,3 @@ void Filter::clear()
   mTagId.clear();
 }
 
-
-} // namespace Core
-
-} // namespace MessageListView
-
-} // namespace KMail
