@@ -8,6 +8,8 @@ include_directories(
 
 set(libmessagelist_SRCS
     core/aggregation.cpp
+    core/aggregationcombobox.cpp
+    core/aggregationconfigbutton.cpp
     core/aggregationeditor.cpp
     core/comboboxutils.cpp
     core/configureaggregationsdialog.cpp
@@ -26,6 +28,8 @@ set(libmessagelist_SRCS
     core/optionseteditor.cpp
     core/theme.cpp
     core/themedelegate.cpp
+    core/themecombobox.cpp
+    core/themeconfigbutton.cpp
     core/themeeditor.cpp
     core/storagemodelbase.cpp
     core/sortorder.cpp
