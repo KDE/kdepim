@@ -99,11 +99,11 @@ private:
 
 void LDAPCompletionItem::save( CompletionOrderEditor* )
 {
-  KConfig config( "kabldaprc" );
-  config.setGroup( "LDAP" );
-  config.writeEntry( QString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
-                     mWeight );
-  config.sync();
+  KConfig * config = LdapSearch::config();
+  config->setGroup( "LDAP" );
+  config->writeEntry( QString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
+                      mWeight );
+  config->sync();
 }
 
 // A simple item saved into kpimcompletionorder (no subresources, just name/identifier/weight)
