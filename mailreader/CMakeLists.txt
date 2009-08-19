@@ -7,6 +7,7 @@ set(mailreader_SRCS
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/libmailreader
+    ${CMAKE_SOURCE_DIR}/akonadi
     ${Boost_INCLUDE_DIRS}
 )
 
@@ -16,7 +17,7 @@ kde4_add_kcfg_files(mailreader_SRCS settings.kcfgc )
 
 kde4_add_executable(akonadimailreader ${mailreader_SRCS})
 
-target_link_libraries(akonadimailreader mailreader kdepim kpgp kleo akonadi-kde ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}    ${KDE4_KTNEF_LIBRARY}
+target_link_libraries(akonadimailreader mailreader messagelist kdepim kpgp kleo akonadi-kde akonadi_next ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}    ${KDE4_KTNEF_LIBRARY}
  ${QGPGME_LIBRARIES}
 )
 
