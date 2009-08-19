@@ -48,7 +48,7 @@ void mailreaderView::settingsChanged()
 {
 }
 
-void mailreaderView::showItem(Akonadi::Item& item)
+void mailreaderView::showItem(const Akonadi::Item& item)
 {
   kDebug() << "Show item with ID: " << item.id();
   m_readerWin->enableMessageDisplay();

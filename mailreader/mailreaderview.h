@@ -42,7 +42,7 @@ public:
      */
     virtual ~mailreaderView();
 
-    void showItem(Akonadi::Item& item);
+    void showItem(const Akonadi::Item& item);
     void showAboutPage();
 
 private:
