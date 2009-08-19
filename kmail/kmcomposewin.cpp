@@ -1801,6 +1801,8 @@ void KMComposeWin::collectImages( partNode *root )
           kDebug() << "found image in multipart/related : " << node->msgPart().name();
           QImage img;
           img.loadFromData( KMime::Codec::codecForName( "base64" )->decode( node->msgPart().body() )); // create image from the base64 encoded one
+
+          QSet<int> cursorPositionsToSkip;
           QTextBlock currentBlock = mEditor->document()->begin();
           QTextBlock::iterator it;
           while ( currentBlock.isValid() ) {
@@ -1812,12 +1814,19 @@ void KMComposeWin::collectImages( partNode *root )
                      imageFormat.name() == "cid:" + node->msgPart().contentId() ) {
                   kDebug() << "newImageFormat.Name="<< imageFormat.name();
                   int pos = fragment.position();
-                  QTextCursor cursor( mEditor->document() );
-                  cursor.setPosition( pos );
-                  cursor.setPosition( pos + 1, QTextCursor::KeepAnchor );
-                  cursor.removeSelectedText();
-                  mEditor->document()->addResource( QTextDocument::ImageResource, QUrl( node->msgPart().name() ), QVariant( img ) );
-                  cursor.insertImage( node->msgPart().name() );
+                  if ( !cursorPositionsToSkip.contains( pos ) ) {
+                    QTextCursor cursor( mEditor->document() );
+                    cursor.setPosition( pos );
+                    cursor.setPosition( pos + 1, QTextCursor::KeepAnchor );
+                    cursor.removeSelectedText();
+                    mEditor->document()->addResource( QTextDocument::ImageResource, QUrl( node->msgPart().name() ), QVariant( img ) );
+                    cursor.insertImage( node->msgPart().name() );
+
+                    // The textfragment iterator is now invalid, restart from the beginning
+                    // Take care not to replace the same fragment again, or we would be in an infinite loop.
+                    cursorPositionsToSkip.insert( pos );
+                    it = currentBlock.begin();
+                  }
                 }
               }
             }
