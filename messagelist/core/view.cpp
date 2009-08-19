@@ -487,7 +487,9 @@ void View::applyThemeColumns()
     idx++;
   }
 
-  setHeaderHidden( mTheme->viewHeaderPolicy() == Theme::NeverShowHeader );
+  //FIXME: For now ignore this otherwise you can't switch to another theme
+  //the context menu being available only there.
+  //setHeaderHidden( mTheme->viewHeaderPolicy() == Theme::NeverShowHeader );
 
   mSaveThemeColumnStateOnSectionResize = oldSave;
   mNeedToApplyThemeColumns = false;
