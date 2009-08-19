@@ -25,7 +25,7 @@
 
 #include <klocale.h>
 
-using namespace KMail::MessageListView::Core;
+using namespace MessageList::Core;
 
 ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
 : KPushButton( i18n( "Configure..." ), parent ),

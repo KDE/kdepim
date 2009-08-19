@@ -16,16 +16,13 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __KMAIL_MESSAGELISTVIEW_CORE_AGGREGATIONCONFIGBUTTON_H__
-#define __KMAIL_MESSAGELISTVIEW_CORE_AGGREGATIONCONFIGBUTTON_H__
+#ifndef __MESSAGELIST_CORE_AGGREGATIONCONFIGBUTTON_H__
+#define __MESSAGELIST_CORE_AGGREGATIONCONFIGBUTTON_H__
 
 #include <messagelist/messagelist_export.h>
 #include <KPushButton>
 
-namespace KMail
-{
-
-namespace MessageListView
+namespace MessageList
 {
 
 namespace Core
@@ -64,9 +61,7 @@ private:
 
 } // namespace Core
 
-} // namespace MessageListView
+} // namespace MessageList
 
-} // namespace KMail
-
-#endif //!__KMAIL_MESSAGELISTVIEW_CORE_AGGREGATIONCONFIGBUTTON_H__
+#endif //!__MESSAGELIST_CORE_AGGREGATIONCONFIGBUTTON_H__
 

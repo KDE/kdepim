@@ -21,7 +21,7 @@
 #include "messagelist/core/manager.h"
 #include "messagelist/core/theme.h"
 
-using namespace KMail::MessageListView::Core;
+using namespace MessageList::Core;
 
 ThemeComboBox::ThemeComboBox( QWidget * parent )
 : KComboBox( parent )

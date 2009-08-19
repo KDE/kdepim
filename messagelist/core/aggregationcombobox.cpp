@@ -21,7 +21,7 @@
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"
 
-using namespace KMail::MessageListView::Core;
+using namespace MessageList::Core;
 
 AggregationComboBox::AggregationComboBox( QWidget * parent )
 : KComboBox( parent )

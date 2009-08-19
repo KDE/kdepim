@@ -24,7 +24,7 @@
 
 #include <klocale.h>
 
-using namespace KMail::MessageListView::Core;
+using namespace MessageList::Core;
 
 AggregationConfigButton::AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox )
 : KPushButton( i18n( "Configure..." ), parent ),
