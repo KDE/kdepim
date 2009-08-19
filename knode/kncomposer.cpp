@@ -1135,7 +1135,7 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotAppendSig()
 {
-  KPIMIdentities::Signature::insertPlainSignatureIntoTextEdit( s_ignature, v_iew->e_dit );
+  KPIMIdentities::Signature::insertPlainSignatureIntoTextEdit( s_ignature, v_iew->e_dit,KPIMIdentities::Signature::End,false,  true );
 }
 
 
