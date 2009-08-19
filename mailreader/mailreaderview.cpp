@@ -64,20 +64,12 @@ void mailreaderView::showAboutPage()
 void mailreaderView::displayAboutPage()
 {
   KLocalizedString info =
-    ki18nc("%1: Mailreader version; %2: help:// URL; %3: homepage URL; "
-         "%4: generated list of new features; "
-         "%5: First-time user text (only shown on first start); "
-         "%6: generated list of important changes; "
-         "--- end of comment ---",
-         "<h2 style='margin-top: 0px;'>Welcome to Mailreader %1</h2><p>Mailread is the proof of concept reader for the K "
-         "Desktop Environment using the Akonadi/KMime framework."
-         "</p>\n"
-         "<p style='margin-bottom: 0px'>&nbsp; &nbsp; <a href='http://pim.kde.org/akonadi'>The Akonadi Team</a></p>")
-           .subs( "0.1" /*FIXME KMAIL_VERSION*/ ) // KMail version
-           .subs( "help:/kmail/index.html" ) // KMail help:// URL
-           .subs( "http://kontact.kde.org/kmail/" ); // KMail homepage URL
-
-  info = info.subs( QString() ); // remove the place holder
+    ki18nc("%1: Mailreader version;"
+           "--- end of comment ---",
+           "<h2 style='margin-top: 0px;'>Welcome to Mailreader %1</h2>"
+           "<p>Mailread is a proof of concept reader for the Akonadi/KMime framework.</p>\n"
+           "<p style='margin-bottom: 0px'>&nbsp; &nbsp; <a href='http://pim.kde.org/akonadi'>The Akonadi Team</a></p>")
+    .subs( "0.1" ); // Akonadi Mail Reader version
 
    m_readerWin->displaySplashPage( info.toString() );
 }
