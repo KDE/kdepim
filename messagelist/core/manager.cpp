@@ -28,6 +28,7 @@
 #include "core/widgetbase.h"
 #include "core/storagemodelbase.h"
 #include "core/model.h"
+#include "settings.h"
 
 #include <QPixmap>
 #include <QTimer>
@@ -49,8 +50,6 @@ Manager::Manager()
   : QObject()
 {
   mInstance = this;
-
-  mConfig = KSharedConfig::openConfig( "kmailrc" );
 
   mDateFormatter = new KMime::DateFormatter();
 
@@ -201,7 +200,7 @@ void Manager::unregisterWidget( Widget *pWidget )
 
 unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *storageModel )
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelSelectedMessages" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelSelectedMessages" );
 
   // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
   qulonglong defValue = 0;
@@ -211,7 +210,7 @@ unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *st
 
 void Manager::savePreSelectedMessageForStorageModel( const StorageModel * storageModel, unsigned long uniqueIdOfMessage )
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelSelectedMessages" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelSelectedMessages" );
 
 
   if ( uniqueIdOfMessage )
@@ -235,7 +234,7 @@ const Aggregation * Manager::aggregation( const QString &id )
 
 const Aggregation * Manager::defaultAggregation()
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelAggregations" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelAggregations" );
 
   QString aggregationId = conf.readEntry( QString( "DefaultSet" ), "" );
 
@@ -261,7 +260,7 @@ const Aggregation * Manager::defaultAggregation()
 
 void Manager::saveAggregationForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateAggregation )
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelAggregations" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelAggregations" );
 
   if ( storageUsesPrivateAggregation )
     conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
@@ -282,7 +281,7 @@ const Aggregation * Manager::aggregationForStorageModel( const StorageModel *sto
   if ( !storageModel )
     return defaultAggregation();
 
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelAggregations" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelAggregations" );
 
   QString aggregationId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
 
@@ -484,7 +483,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
   if ( !storageModel )
     return SortOrder();
 
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelSortOrder" );
   SortOrder ret;
   ret.readConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
   return ret;
@@ -493,7 +492,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
 void Manager::saveSortOrderForStorageModel( const StorageModel *storageModel,
                                             const SortOrder& order, bool storageUsesPrivateSortOrder )
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelSortOrder" );
   order.writeConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
 }
 
@@ -508,7 +507,7 @@ const Theme * Manager::theme( const QString &id )
 
 const Theme * Manager::defaultTheme()
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelThemes" );
 
   QString themeId = conf.readEntry( QString( "DefaultSet" ), "" );
 
@@ -537,7 +536,7 @@ const Theme * Manager::defaultTheme()
 
 void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateTheme )
 {
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelThemes" );
 
   if ( storageUsesPrivateTheme )
     conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
@@ -558,7 +557,7 @@ const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, b
   if ( !storageModel )
     return defaultTheme();
 
-  KConfigGroup conf( mConfig, "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( KGlobal::config(), "MessageListView::StorageModelThemes" );
   QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
 
   Theme * opt = 0;
@@ -896,7 +895,7 @@ void Manager::reloadGlobalConfiguration()
 void Manager::loadGlobalConfiguration()
 {
   // Load the date format
-  KConfigGroup config( mConfig, "General" );
+  KConfigGroup config( KGlobal::config(), "General" );
 
   KMime::DateFormatter::FormatType t = (KMime::DateFormatter::FormatType) config.readEntry(
       "dateFormat",
@@ -905,8 +904,7 @@ void Manager::loadGlobalConfiguration()
   mDateFormatter->setCustomFormat( config.readEntry( "customDateFormat", QString() ) );
   mDateFormatter->setFormat( t );
 
-  config = KConfigGroup(  mConfig, "MessageListView" );
-  mDisplayMessageToolTips = config.readEntry( "DisplayMessageToolTips", true );
+  mDisplayMessageToolTips = Settings::self()->messageToolTipEnabled();
 }
 
 void Manager::loadConfiguration()
@@ -916,7 +914,7 @@ void Manager::loadConfiguration()
   {
     // load Aggregations
 
-    KConfigGroup conf( mConfig, "MessageListView::Aggregations" );
+    KConfigGroup conf( KGlobal::config(), "MessageListView::Aggregations" );
 
     mAggregations.clear();
 
@@ -951,7 +949,7 @@ void Manager::loadConfiguration()
   {
     // load Themes
 
-    KConfigGroup conf( mConfig, "MessageListView::Themes" );
+    KConfigGroup conf( KGlobal::config(), "MessageListView::Themes" );
 
     mThemes.clear();
 
@@ -988,8 +986,8 @@ void Manager::loadConfiguration()
 
 void Manager::saveGlobalConfiguration()
 {
-  KConfigGroup config( mConfig, "MessageListView" );
-  config.writeEntry( "DisplayMessageToolTips", mDisplayMessageToolTips );
+  Settings::self()->setMessageToolTipEnabled( mDisplayMessageToolTips );
+  Settings::self()->writeConfig();
 }
 
 void Manager::saveConfiguration()
@@ -999,7 +997,7 @@ void Manager::saveConfiguration()
   {
     // store aggregations
 
-    KConfigGroup conf( mConfig, "MessageListView::Aggregations" );
+    KConfigGroup conf( KGlobal::config(), "MessageListView::Aggregations" );
     //conf.clear();
 
     conf.writeEntry( "Count", mAggregations.count() );
@@ -1015,7 +1013,7 @@ void Manager::saveConfiguration()
   {
     // store themes
 
-    KConfigGroup conf( mConfig, "MessageListView::Themes" );
+    KConfigGroup conf( KGlobal::config(), "MessageListView::Themes" );
     //conf.clear();
 
     conf.writeEntry( "Count", mThemes.count() );
@@ -1027,5 +1025,7 @@ void Manager::saveConfiguration()
       idx++;
     }
   }
+
+  KGlobal::config()->sync();
 }
 

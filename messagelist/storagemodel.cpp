@@ -32,6 +32,7 @@
 #include <KDE/KLocale>
 
 #include "core/messageitem.h"
+#include "settings.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -62,19 +63,12 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   mModel = itemFilter;
 
   // Custom/System colors
-  KConfigGroup config( KSharedConfig::openConfig( "kmailrc" ), "Reader" );
+  Settings *settings = Settings::self();
 
-  mColorNewMessage = QColor( "red" );
-  mColorUnreadMessage = QColor( "blue" );
-  mColorImportantMessage = QColor( 0x00, 0x7f, 0x00 );
-  mColorToDoMessage = QColor( 0x00, 0x98, 0x00 );
-
-  if ( !config.readEntry( "defaultColors", true ) ) {
-    mColorNewMessage = config.readEntry( "NewMessage", mColorNewMessage );
-    mColorUnreadMessage = config.readEntry( "UnreadMessage", mColorUnreadMessage );
-    mColorImportantMessage = config.readEntry( "FlagMessage", mColorImportantMessage );
-    mColorToDoMessage = config.readEntry( "TodoMessage", mColorToDoMessage );
-  }
+  mColorNewMessage = settings->newMessageColor();
+  mColorUnreadMessage = settings->unreadMessageColor();
+  mColorImportantMessage = settings->importantMessageColor();
+  mColorToDoMessage = settings->todoMessageColor();
 
   connect( mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );

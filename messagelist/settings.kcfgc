@@ -1,0 +1,9 @@
+File=settings.kcfg
+ClassName=Settings
+NameSpace=MessageList
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=qapplication.h
+

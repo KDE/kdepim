@@ -22,7 +22,6 @@
 #define __MESSAGELIST_CORE_MANAGER_H__
 
 #include <messagelist/core/sortorder.h>
-#include <ksharedconfig.h>
 #include <QList>
 #include <QHash>
 #include <QObject>
@@ -74,7 +73,6 @@ protected:
 
 private:
   static Manager * mInstance;
-  KSharedConfig::Ptr mConfig;
   QList< Widget * > mWidgetList;
   QHash< QString, Aggregation * > mAggregations;
   QHash< QString, Theme * > mThemes;

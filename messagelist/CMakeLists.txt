@@ -47,9 +47,9 @@ set(libmessagelist_HEADERS
     widget.h
 )
 
-# kde4_add_kcfg_files(libmessagelist_SRCS
-#     globalsettings_base.kcfgc
-# )
+kde4_add_kcfg_files(libmessagelist_SRCS
+    settings.kcfgc
+)
 
 kde4_add_library(messagelist SHARED ${libmessagelist_SRCS})
 target_link_libraries(messagelist
