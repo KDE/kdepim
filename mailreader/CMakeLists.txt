@@ -11,9 +11,10 @@ include_directories(
     ${Boost_INCLUDE_DIRS}
 )
 
-kde4_add_ui_files(mailreader_SRCS mailreaderview.ui prefs_base.ui)
+kde4_add_ui_files(mailreader_SRCS mailreaderview.ui prefs_base.ui prefs_messagelist.ui)
 
 kde4_add_kcfg_files(mailreader_SRCS settings.kcfgc )
+kde4_add_kcfg_files(mailreader_SRCS ../messagelist/messagelist_settings.kcfgc )
 
 kde4_add_executable(akonadimailreader ${mailreader_SRCS})
 

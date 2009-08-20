@@ -16,6 +16,8 @@
 #include <KApplication>
 
 #include <akonadi/item.h>
+#include "messagelist_settings.h"
+#include "ui_prefs_messagelist.h"
 
 mailreaderView::mailreaderView(QWidget *parent)
 {
@@ -86,6 +88,15 @@ void mailreaderView::slotConfigure()
   KConfigDialog *dialog = new KConfigDialog( this, "mailviewersettings", m_readerWin->configObject() );
   QWidget* widget = m_readerWin->configWidget();
   dialog->addPage( widget, i18n("Viewer"), "kmail");
+
+  QWidget *messageListConfig = new QWidget(dialog);
+  Ui::MessageListConfig ui;
+  ui.setupUi(messageListConfig);
+  dialog->addPage(messageListConfig,
+                  MessageList::Settings::self(),
+                  i18n("Message List"),
+                  "kmail");
+
   connect( dialog, SIGNAL(settingsChanged(const QString& )),
          widget, SLOT(slotSettingsChanged()) );
   dialog->setAttribute( Qt::WA_DeleteOnClose );
