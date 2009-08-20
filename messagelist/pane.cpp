@@ -89,6 +89,85 @@ Pane::~Pane()
 {
 }
 
+bool Pane::selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
+                                    MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                    bool centerItem,
+                                    bool loop )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    return w->selectNextMessageItem( messageTypeFilter, existingSelectionBehaviour, centerItem, loop );
+  } else {
+    return false;
+  }
+}
+
+bool Pane::selectPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
+                                        MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                        bool centerItem,
+                                        bool loop )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    return w->selectPreviousMessageItem( messageTypeFilter, existingSelectionBehaviour, centerItem, loop );
+  } else {
+    return false;
+  }
+}
+
+bool Pane::focusNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    return w->focusNextMessageItem( messageTypeFilter, centerItem, loop );
+  } else {
+    return false;
+  }
+}
+
+bool Pane::focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    return w->focusNextMessageItem( messageTypeFilter, centerItem, loop );
+  } else {
+    return false;
+  }
+}
+
+void Pane::selectFocusedMessageItem( bool centerItem )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->selectFocusedMessageItem( centerItem );
+  }
+}
+
+bool Pane::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    return w->selectFirstMessageItem( messageTypeFilter, centerItem );
+  } else {
+    return false;
+  }
+}
+
+void Pane::selectAll()
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->selectAll();
+  }
+}
+
 void Pane::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );

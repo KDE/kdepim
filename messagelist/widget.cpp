@@ -114,6 +114,48 @@ bool Widget::canAcceptDrag( const QDragMoveEvent * e )
   return true;
 }
 
+bool Widget::selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
+                                    MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                    bool centerItem,
+                                    bool loop )
+{
+  return view()->selectNextMessageItem( messageTypeFilter, existingSelectionBehaviour, centerItem, loop );
+}
+
+bool Widget::selectPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
+                                        MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                        bool centerItem,
+                                        bool loop )
+{
+  return view()->selectPreviousMessageItem( messageTypeFilter, existingSelectionBehaviour, centerItem, loop );
+}
+
+bool Widget::focusNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop )
+{
+  return view()->focusNextMessageItem( messageTypeFilter, centerItem, loop );
+}
+
+bool Widget::focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop )
+{
+  return view()->focusNextMessageItem( messageTypeFilter, centerItem, loop );
+}
+
+void Widget::selectFocusedMessageItem( bool centerItem )
+{
+  view()->selectFocusedMessageItem( centerItem );
+}
+
+bool Widget::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem )
+{
+  return view()->selectFirstMessageItem( messageTypeFilter, centerItem );
+}
+
+void Widget::selectAll()
+{
+  view()->setAllGroupsExpanded( true );
+  view()->selectAll();
+}
+
 void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )
 {
   int row = -1;

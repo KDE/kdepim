@@ -19,6 +19,8 @@
 #ifndef __MESSAGELIST_PANE_H__
 #define __MESSAGELIST_PANE_H__
 
+#include <messagelist/core/enums.h>
+
 #include <QtCore/QHash>
 #include <QtGui/QTabWidget>
 
@@ -60,6 +62,96 @@ public:
    */
   explicit Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
   ~Pane();
+
+  /**
+   * Selects the next message item in the view.
+   *
+   * messageTypeFilter can be used to restrict the selection to only certain message types.
+   *
+   * existingSelectionBehaviour specifies how the existing selection
+   * is manipulated. It may be cleared, expanded or grown/shrinked.
+   *
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   * If loop is true then the "next" algorithm will restart from the beginning
+   * of the list if the end is reached, otherwise it will just stop returning false.
+   */
+  bool selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
+                              MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                              bool centerItem,
+                              bool loop );
+
+  /**
+   * Selects the previous message item in the view.
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   *
+   * messageTypeFilter can be used to restrict the selection to only certain message types.
+   *
+   * existingSelectionBehaviour specifies how the existing selection
+   * is manipulated. It may be cleared, expanded or grown/shrinked.
+   *
+   * If loop is true then the "previous" algorithm will restart from the end
+   * of the list if the beginning is reached, otherwise it will just stop returning false.
+   */
+  bool selectPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
+                                  MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                  bool centerItem,
+                                  bool loop );
+
+  /**
+   * Focuses the next message item in the view without actually selecting it.
+   *
+   * messageTypeFilter can be used to restrict the selection to only certain message types.
+   *
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   * If loop is true then the "next" algorithm will restart from the beginning
+   * of the list if the end is reached, otherwise it will just stop returning false.
+   */
+  bool focusNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop );
+
+  /**
+   * Focuses the previous message item in the view without actually selecting it.
+   *
+   * messageTypeFilter can be used to restrict the selection to only certain message types.
+   *
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   * If loop is true then the "previous" algorithm will restart from the end
+   * of the list if the beginning is reached, otherwise it will just stop returning false.
+   */
+  bool focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop );
+
+  /**
+   * Selects the currently focused message item. May do nothing if the
+   * focused message item is already selected (which is very likely).
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   */
+  void selectFocusedMessageItem( bool centerItem );
+
+  /**
+   * Selects the first message item in the view that matches the specified Core::MessageTypeFilter.
+   * If centerItem is true then the specified item will be positioned
+   * at the center of the view, if possible.
+   *
+   * If the current view is already loaded then the request will
+   * be satisfied immediately (well... if an unread message exists at all).
+   * If the current view is still loading then the selection of the first
+   * message will be scheduled to be executed when loading terminates.
+   *
+   * So this function doesn't actually guarantee that an unread or new message
+   * was selected when the call returns. Take care :)
+   *
+   * The function returns true if a message was selected and false otherwise.
+   */
+  bool selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem );
+
+  /**
+   * Selects all the items in the current folder.
+   */
+  void selectAll();
 
 signals:
   /**
