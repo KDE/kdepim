@@ -70,12 +70,17 @@ KPIM::LdapSearch* AddresseeLineEdit::s_LDAPSearch = 0L;
 QString* AddresseeLineEdit::s_LDAPText = 0L;
 AddresseeLineEdit* AddresseeLineEdit::s_LDAPLineEdit = 0L;
 
+// The weights associated with the completion sources in s_completionSources.
+// Both are maintained by addCompletionSource(), don't attempt to modifiy those yourself.
+QMap<QString,int>* s_completionSourceWeights;
+
 static KStaticDeleter<KMailCompletion> completionDeleter;
 static KStaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
 static KStaticDeleter<QTimer> ldapTimerDeleter;
 static KStaticDeleter<KPIM::LdapSearch> ldapSearchDeleter;
 static KStaticDeleter<QString> ldapTextDeleter;
 static KStaticDeleter<QStringList> completionSourcesDeleter;
+static KStaticDeleter<QMap<QString,int> > completionSourceWeightsDeleter;
 
 // needs to be unique, but the actual name doesn't matter much
 static QCString newLineEditDCOPObjectName()
@@ -114,6 +119,16 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
     s_addressesDirty = true;
 }
 
+void AddresseeLineEdit::updateLDAPWeights()
+{
+  /* Add completion sources for all ldap server, 0 to n. Added first so
+   * that they map to the ldapclient::clientNumber() */
+  s_LDAPSearch->updateCompletionWeights();
+  QValueList< LdapClient* > clients =  s_LDAPSearch->clients();
+  for ( QValueList<LdapClient*>::iterator it = clients.begin(); it != clients.end(); ++it ) {
+    addCompletionSource( "LDAP server: " + (*it)->server().host(), (*it)->completionWeight() );
+  }
+}
 
 void AddresseeLineEdit::init()
 {
@@ -124,8 +139,8 @@ void AddresseeLineEdit::init()
 
     completionItemsDeleter.setObject( s_completionItemMap, new KPIM::CompletionItemsMap() );
     completionSourcesDeleter.setObject( s_completionSources, new QStringList() );
+    completionSourceWeightsDeleter.setObject( s_completionSourceWeights, new QMap<QString,int> );
   }
-
 //  connect( s_completion, SIGNAL( match( const QString& ) ),
 //           this, SLOT( slotMatched( const QString& ) ) );
 
@@ -134,14 +149,10 @@ void AddresseeLineEdit::init()
       ldapTimerDeleter.setObject( s_LDAPTimer, new QTimer( 0, "ldapTimerDeleter" ) );
       ldapSearchDeleter.setObject( s_LDAPSearch, new KPIM::LdapSearch );
       ldapTextDeleter.setObject( s_LDAPText, new QString );
-
-      /* Add completion sources for all ldap server, 0 to n. Added first so
-       * that they map to the ldapclient::clientNumber() */
-      QValueList< LdapClient* > clients =  s_LDAPSearch->clients();
-      for ( QValueList<LdapClient*>::iterator it = clients.begin(); it != clients.end(); ++it ) {
-        addCompletionSource( "LDAP server: " + (*it)->server().host() );
-      }
     }
+
+    updateLDAPWeights();
+
     if ( !m_completionInitialized ) {
       setCompletionObject( s_completion, false );
       connect( this, SIGNAL( completion( const QString& ) ),
@@ -526,21 +537,19 @@ void AddresseeLineEdit::loadContacts()
         QString uid = (*it).uid();
         QMap<QString, QString>::const_iterator wit = uidToResourceMap.find( uid );
         const QString subresourceLabel = resabc->subresourceLabel( *wit );
-        int idx = s_completionSources->findIndex( subresourceLabel );
-        if ( idx == -1 ) {
-          s_completionSources->append( subresourceLabel );
-          idx = s_completionSources->size() -1;
-        }
-        int weight = ( wit != uidToResourceMap.end() ) ? resabc->subresourceCompletionWeight( *wit ) : 80;
+        const int weight = ( wit != uidToResourceMap.end() ) ? resabc->subresourceCompletionWeight( *wit ) : 80;
+        const int idx = addCompletionSource( subresourceLabel, weight );
+
         //kdDebug(5300) << (*it).fullEmail() << " subres=" << *wit << " weight=" << weight << endl;
         addContact( *it, weight, idx );
       }
     } else { // KABC non-imap resource
       int weight = config.readNumEntry( resource->identifier(), 60 );
-      s_completionSources->append( resource->resourceName() );
+      int sourceIndex = addCompletionSource( resource->resourceName(), weight );
       KABC::Resource::Iterator it;
-      for ( it = resource->begin(); it != resource->end(); ++it )
-        addContact( *it, weight, s_completionSources->size()-1 );
+      for ( it = resource->begin(); it != resource->end(); ++it ) {
+        addContact( *it, weight, sourceIndex );
+      }
     }
   }
 
@@ -880,6 +889,10 @@ void AddresseeLineEdit::slotEditCompletionOrder()
   init(); // for s_LDAPSearch
   CompletionOrderEditor editor( s_LDAPSearch, this );
   editor.exec();
+  if ( m_useCompletion ) {
+    updateLDAPWeights();
+    s_addressesDirty = true;
+  }
 }
 
 void KPIM::AddresseeLineEdit::slotIMAPCompletionOrderChanged()
@@ -953,10 +966,21 @@ KCompletion::CompOrder KPIM::AddresseeLineEdit::completionOrder()
     return KCompletion::Sorted;
 }
 
-int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source )
+int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int weight )
 {
-  s_completionSources->append( source );
-  return s_completionSources->size()-1;
+  QMap<QString,int>::iterator it = s_completionSourceWeights->find( source );
+  if ( it == s_completionSourceWeights->end() )
+    s_completionSourceWeights->insert( source, weight );
+  else
+    (*s_completionSourceWeights)[source] = weight;
+
+  int sourceIndex = s_completionSources->findIndex( source );
+  if ( sourceIndex == -1 ) {
+    s_completionSources->append( source );
+    return s_completionSources->size() - 1;
+  }
+  else
+    return sourceIndex;
 }
 
 bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
@@ -1093,20 +1117,49 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
   return ClickLineEdit::eventFilter( obj, e );
 }
 
+class SourceWithWeight {
+  public:
+    int weight;           // the weight of the source
+    QString sourceName;   // the name of the source, e.g. "LDAP Server"
+    int index;            // index into s_completionSources
+
+    bool operator< ( const SourceWithWeight &other ) {
+      if ( weight > other.weight )
+        return true;
+      if ( weight < other.weight )
+        return false;
+      return sourceName < other.sourceName;
+    }
+};
+
 const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool fullSearch )
 {
   QStringList items = fullSearch ?
     s_completion->allMatches( m_searchString )
     : s_completion->substringCompletion( m_searchString );
 
+  // For weighted mode, the algorithm is the following:
+  // In the first loop, we add each item to its section (there is one section per completion source)
+  // We also add spaces in front of the items.
+  // The sections are appended to the items list.
+  // In the second loop, we then walk through the sections and add all the items in there to the
+  // sorted item list, which is the final result.
+  //
+  // The algo for non-weighted mode is different.
+
   int lastSourceIndex = -1;
   unsigned int i = 0;
+
+  // Maps indices of the items list, which are section headers/source items,
+  // to a QStringList which are the items of that section/source.
   QMap<int, QStringList> sections;
   QStringList sortedItems;
   for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
     CompletionItemsMap::const_iterator cit = s_completionItemMap->find(*it);
-    if ( cit == s_completionItemMap->end() )continue;
+    if ( cit == s_completionItemMap->end() )
+      continue;
     int idx = (*cit).second;
+
     if ( s_completion->order() == KCompletion::Weighted ) {
       if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
         const QString sourceLabel(  (*s_completionSources)[idx] );
@@ -1125,11 +1178,30 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
       sortedItems.append( *it );
     }
   }
+
   if ( s_completion->order() == KCompletion::Weighted ) {
-    for ( QMap<int, QStringList>::Iterator it( sections.begin() ), end( sections.end() ); it != end; ++it ) {
-      sortedItems.append( (*s_completionSources)[it.key()] );
-      for ( QStringList::Iterator sit( (*it).begin() ), send( (*it).end() ); sit != send; ++sit ) {
-        sortedItems.append( *sit );
+
+    // Sort the sections
+    QValueList<SourceWithWeight> sourcesAndWeights;
+    for ( uint i = 0; i < s_completionSources->size(); i++ ) {
+      SourceWithWeight sww;
+      sww.sourceName = (*s_completionSources)[i];
+      sww.weight = (*s_completionSourceWeights)[sww.sourceName];
+      sww.index = i;
+      sourcesAndWeights.append( sww );
+    }
+    qHeapSort( sourcesAndWeights );
+
+    // Add the sections and their items to the final sortedItems result list
+    for( uint i = 0; i < sourcesAndWeights.size(); i++ ) {
+      QStringList sectionItems = sections[sourcesAndWeights[i].index];
+      if ( !sectionItems.isEmpty() ) {
+        sortedItems.append( sourcesAndWeights[i].sourceName );
+        QStringList sectionItems = sections[sourcesAndWeights[i].index];
+        for ( QStringList::Iterator sit( sectionItems.begin() ), send( sectionItems.end() );
+              sit != send; ++sit ) {
+          sortedItems.append( *sit );
+        }
       }
     }
   } else {
