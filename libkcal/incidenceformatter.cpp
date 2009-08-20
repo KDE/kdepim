@@ -1382,7 +1382,7 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       if ( !iconPath.isEmpty() ) {
         tmpStr += "<img src=\"" + iconPath + "\" align=\"top\">";
       }
-      tmpStr += helper->makeLink( "ATTACH:" + a->label(), QString::fromUtf8( a->label().latin1() ) );
+      tmpStr += helper->makeLink( "ATTACH:" + a->label(), a->label() );
       tmpStr += "</li>";
     }
     tmpStr += "</ol>";
