@@ -37,6 +37,7 @@
 #include <kcal/incidence.h>
 #include <kcal/journal.h>
 #include <libkdepim/kpimprefs.h>
+#include <kpimutils/email.h>
 #include <ksystemtimezone.h>
 #include <kdebug.h>
 #include <QFile>
@@ -269,8 +270,16 @@ bool KolabBase::loadEmailAttribute( QDomElement& element, Email& email )
       QDomElement e = n.toElement();
       const QString tagName = e.tagName();
 
-      if ( tagName == "display-name" )
-        email.displayName = e.text();
+      if ( tagName == "display-name" ) {
+        // Quote the text in case it contains commas or other quotable chars.
+        QString tusername = KPIMUtils::quoteNameIfNecessary( e.text() );
+
+        QString tname, temail;
+        // ignore the return value because it will always be false since
+        // tusername does not contain "@domain".
+        KPIMUtils::extractEmailAddressAndName( tusername, temail, tname );
+        email.displayName = tname;
+      }
       else if ( tagName == "smtp-address" )
         email.smtpAddress = e.text();
       else

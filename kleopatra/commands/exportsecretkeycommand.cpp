@@ -126,29 +126,29 @@ QStringList ExportSecretKeyCommand::arguments() const {
 }
 
 QString ExportSecretKeyCommand::errorCaption() const {
-    return i18nc( "@title:window", "Secret Key Export Error" );
+    return i18nc( "@title:window", "Secret Certificate Export Error" );
 }
 
 QString ExportSecretKeyCommand::successCaption() const {
-    return i18nc( "@title:window", "Secret Key Export Finished" );
+    return i18nc( "@title:window", "Secret Certificate Export Finished" );
 }
 
 QString ExportSecretKeyCommand::crashExitMessage( const QStringList & args ) const {
     return i18nc("@info",
-                 "<para>The GPG or GpgSM process that tried to export the secret key "
+                 "<para>The GPG or GpgSM process that tried to export the secret certificate "
                  "ended prematurely because of an unexpected error.</para>"
                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
 }
 
 QString ExportSecretKeyCommand::errorExitMessage( const QStringList & args ) const {
     return i18nc("@info",
-                 "<para>An error occurred while trying to export the secret key.</para> "
+                 "<para>An error occurred while trying to export the secret certificate.</para> "
                  "<para>The output from <command>%1</command> was: <message>%2</message></para>",
                  args[0], errorString() );
 }
 
 QString ExportSecretKeyCommand::successMessage( const QStringList & ) const {
-    return i18nc( "@info", "Secret key successfully exported." );
+    return i18nc( "@info", "Secret certificate successfully exported." );
 }
 
 #include "moc_exportsecretkeycommand.cpp"
