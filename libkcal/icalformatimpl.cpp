@@ -1263,7 +1263,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
   while (p) {
    if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
-     attachment->setLabel( icalparameter_get_xvalue(p) );
+     attachment->setLabel( QString::fromUtf8( icalparameter_get_xvalue(p) ) );
     p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
   }
 
