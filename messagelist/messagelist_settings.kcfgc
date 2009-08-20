@@ -1,4 +1,4 @@
-File=settings.kcfg
+File=messagelist_settings.kcfg
 ClassName=Settings
 NameSpace=MessageList
 Mutators=true

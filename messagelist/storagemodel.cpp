@@ -32,7 +32,7 @@
 #include <KDE/KLocale>
 
 #include "core/messageitem.h"
-#include "settings.h"
+#include "messagelist_settings.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>

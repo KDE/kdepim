@@ -30,7 +30,7 @@
 
 #include "storagemodel.h"
 #include "widget.h"
-#include "settings.h"
+#include "messagelist_settings.h"
 
 using namespace MessageList;
 
