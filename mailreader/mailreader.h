@@ -18,6 +18,10 @@ class KUrl;
 class KComboBox;
 class KAction;
 
+namespace MessageList
+{
+    class Pane;
+}
 
 /**
  * This class serves as the main window for mailreader.  It handles the
@@ -52,6 +56,7 @@ private:
 
 private:
     mailreaderView *m_view;
+    MessageList::Pane *m_messagePane;
 
     KAction *m_nextMessage;
     KAction *m_previousMessage;

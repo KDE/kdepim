@@ -99,13 +99,13 @@ void mailreader::setupDocks()
   collectionView->setModel( sortModel );
 
   // Now make the message list multi-tab pane
-  MessageList::Pane *messagePane = new MessageList::Pane( entityModel, collectionView->selectionModel(), this );
-  connect( messagePane, SIGNAL(messageSelected(Akonadi::Item)),
+  m_messagePane = new MessageList::Pane( entityModel, collectionView->selectionModel(), this );
+  connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
            this, SLOT(slotMessageSelected(Akonadi::Item)) );
 
   // Dock the message list view
   QDockWidget *messageListDock = new QDockWidget( i18n("Messages"), this );
-  messageListDock->setWidget( messagePane );
+  messageListDock->setWidget( m_messagePane );
   messageListDock->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
   addDockWidget( Qt::TopDockWidgetArea, messageListDock );
 
@@ -134,8 +134,6 @@ void mailreader::setupActions()
     m_nextMessage = new KAction("Next Message", this);
     actionCollection()->addAction("next_message", m_nextMessage);
     connect(m_nextMessage, SIGNAL(triggered( bool )), SLOT(slotNextMessage()));
-    m_nextMessage->setEnabled(false);
-    m_previousMessage->setEnabled(false);
 }
 
 void mailreader::slotMessageSelected( const Akonadi::Item &item )
@@ -145,12 +143,16 @@ void mailreader::slotMessageSelected( const Akonadi::Item &item )
 
 void mailreader::slotPreviousMessage()
 {
-  //FIXME ask the message list to go to previous item
+  m_messagePane->selectPreviousMessageItem( MessageList::Core::MessageTypeAny,
+                                            MessageList::Core::ClearExistingSelection,
+                                            true, true );
 }
 
 void mailreader::slotNextMessage()
 {
-  //FIXME ask the message list to go to next item
+  m_messagePane->selectNextMessageItem( MessageList::Core::MessageTypeAny,
+                                        MessageList::Core::ClearExistingSelection,
+                                        true, true );
 }
 
 #include "mailreader.moc"
