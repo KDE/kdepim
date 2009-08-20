@@ -128,6 +128,14 @@ void mailreader::setupActions()
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
     KStandardAction::preferences(m_view, SLOT(slotConfigure()), actionCollection());
 
+    KAction *createTab = new KAction(KIcon("tab-new"),
+                                      i18n("Open a new tab"),
+                                      this);
+    actionCollection()->addAction("new_tab", createTab);
+    connect(createTab, SIGNAL(triggered(bool)),
+            m_messagePane, SLOT(createNewTab()));
+
+
     m_previousMessage = new KAction("Previous Message", this);
     actionCollection()->addAction("previous_message", m_previousMessage);
     connect(m_previousMessage, SIGNAL(triggered( bool )), SLOT(slotPreviousMessage()));
