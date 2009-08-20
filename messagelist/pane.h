@@ -148,10 +148,16 @@ public:
    */
   bool selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem );
 
+public slots:
   /**
    * Selects all the items in the current folder.
    */
   void selectAll();
+
+  /**
+   * Add a new tab to the Pane and select it.
+   */
+  void createNewTab();
 
 signals:
   /**
@@ -189,7 +195,6 @@ private slots:
   void onTabContextMenuRequest( const QPoint &pos );
 
 private:
-  void createNewTab();
   QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
   QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
   void updateTabControls();
