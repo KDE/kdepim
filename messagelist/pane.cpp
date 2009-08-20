@@ -30,6 +30,7 @@
 
 #include "storagemodel.h"
 #include "widget.h"
+#include "settings.h"
 
 using namespace MessageList;
 
@@ -322,4 +323,10 @@ QItemSelection Pane::mapSelectionFromSource( const QItemSelection &selection ) c
 void Pane::updateTabControls()
 {
   mCloseTabButton->setEnabled( count()>1 );
+
+  if ( Settings::self()->autoHideTabBarWithSingleTab() ) {
+    tabBar()->setVisible( count()>1 );
+  } else {
+    tabBar()->setVisible( true );
+  }
 }
