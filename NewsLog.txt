@@ -1,3 +1,18 @@
+Friday, August 21th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3811: Rejecting an invitation, with the event existing and writable by someone else,
+                   Kontact will delete the event without question (rt#5803)
+* kolab/issue3722: Dragging emails to an existing appointment or tasks does not work (rt#5806)
+* kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
+* kolab/issue3608: Lastname of an attendee is missing (rt#5802)
+* kolab/issue3814: Completion order configuration for emails broken (rt#5856)
+* kolab/issue3819: Calendar Birthday resource: Anniversary day handling has small problems
+* kolab/issue3717: The attachment of an invitation isn't displayed
+
+
 Friday, August 14th 2009
 
 Problems addressed
