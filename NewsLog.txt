@@ -1,3 +1,30 @@
+Friday, August 21th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Correctly display multipart/digest mail
+      - Correctly display old-style mailman messages (KDE bug 53668)
+      - Make undo work again (KDE bug 203197)
+      - Exported ics calendar files are incompatible with Mozilla Sunbird/Lightning (KDE bug 203227)
+      - Fix crash when purging to-dos while filter in place (KDE bug 195282)
+      - Fix crash when applying template in KOrganizer (KDE bug 204063)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3722: Dragging emails to an existing appointment or tasks does not work (rt#5806)
+      - kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
+      - kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
+      - kolab/issue3717: The attachment of an invitation isn't displayed
+      - kolab/issue3608: Lastname of an attendee is missing (rt#5802)
+      - kolab/issue3814: Completion order configuration for emails broken (rt#5856)
+      - kolab/issue3811: Rejecting an invitation, with the event existing and writable by someone else,
+                         Kontact will delete the event without question (rt#5803)
+
+
 Friday, August 14th 2009
 
 Problems addressed
