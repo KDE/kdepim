@@ -246,7 +246,7 @@ int ParseRfc822Date(const char *str, struct tm *tms, int *z)
     case 'O':
     case 'o':
         /* Oct */
-        if ((str[pos+1] == 'c' || str[pos+1] == 'c')
+        if ((str[pos+1] == 'c' || str[pos+1] == 'C')
             && (str[pos+2] == 't' || str[pos+2] == 'T')) {
             n = 9;
             pos += 3;
