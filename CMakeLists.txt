@@ -110,6 +110,7 @@ else(KDEPIM_ONLY_KLEO)
 ############### Needed commands before building anything ###############
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
+
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
 
 
@@ -185,9 +186,12 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
+
   if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(akonadi)
+    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
   endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
+
   macro_optional_add_subdirectory(kaddressbook)
   if(Q_WS_X11)
     macro_optional_add_subdirectory(ktimetracker)
