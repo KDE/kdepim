@@ -37,7 +37,7 @@
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
-#include <akonadi/akonadi_next/entitytreeview.h>
+#include <akonadi_next/entitytreeview.h>
 #include "options.h"
 
 using namespace Akonadi;
