@@ -57,7 +57,5 @@ set(kpilotinclude_HEADERS
 
 install(TARGETS kpilot LIBRARY ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install(FILES ${kpilotinclude_HEADERS} DESTINATION ${INCLUDE_INSTALL_DIR}/kpilot)
-
 install(FILES kpilotlib.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
