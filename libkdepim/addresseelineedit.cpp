@@ -344,15 +344,15 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       bool mailtoURL = false;
       // append the mailto URLs
       for ( KUrl::List::Iterator it = uriList.begin(); it != uriList.end(); ++it ) {
-        if ( !contents.isEmpty() ) {
-          contents.append( ", " );
-        }
         KUrl u( *it );
         if ( u.protocol() == "mailto" ) {
           mailtoURL = true;
           QString address;
           address = KUrl::fromPercentEncoding( u.path().toLatin1() );
           address = KMime::decodeRFC2047String( address.toAscii() );
+          if ( !contents.isEmpty() ) {
+            contents.append( ", " );
+          }
           contents.append( address );
         }
       }
