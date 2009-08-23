@@ -1,14 +1,15 @@
 KAlarm Change Log
 
-=== Version 2.2.7 --- 18 August 2009 ===
+=== Version 2.2.7 --- 19 August 2009 ===
 - Shift-Delete now deletes alarms without showing confirmation prompt.
 - Disable edit alarm dialogue OK button if no changes have been made.
 - Command line options: validate better, and remove unnecessary restrictions.
 - Fix crash when restoring alarm with invalid type.
 - Fix bad addresses when sending email alarms.
-- Fix volume when playing audio files.
+- Fix volume settings being ignored when playing audio files.
 - Install action icons into kalarm directory, not system directory.
 - Fix KMail not starting minimised when adding mail to a KMail folder.
+- Fix KMail dependent functions not being included in build.
 - Fix use of wrong time zone if deferral is cancelled and then reinstated.
 
 === Version 2.2.6 (KDE 4.3.0) --- 26 July 2009 ===
