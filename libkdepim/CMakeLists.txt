@@ -94,6 +94,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
+  ${KDE4_KMIME_LIBRARY}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   akonadi-contact
   akonadi-kde
