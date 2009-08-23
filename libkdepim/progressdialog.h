@@ -85,7 +85,11 @@ public:
 
   void setProgress( int progress );
   void setLabel( const QString& );
+
+  // the given text is interpreted as RichText, so you might need to
+  // Qt::escape() it before passing
   void setStatus( const QString& );
+
   void setCrypto( bool );
 
   ProgressItem* item() const { return mItem; }

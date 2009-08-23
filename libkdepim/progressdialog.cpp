@@ -185,7 +185,9 @@ TransactionItem::TransactionItem( QWidget* parent,
   mSSLLabel = new SSLLabel( h );
   mSSLLabel->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
   h->layout()->addWidget( mSSLLabel );
-  mItemStatus = new QLabel( fontMetrics().elidedText( item->status(), Qt::ElideRight, MAX_LABEL_WIDTH ), h );
+  mItemStatus = new QLabel( h );
+  mItemStatus->setTextFormat( Qt::RichText );
+  mItemStatus->setText( fontMetrics().elidedText( item->status(), Qt::ElideRight, MAX_LABEL_WIDTH ) );
   h->layout()->addWidget( mItemStatus );
   setCrypto( item->usesCrypto() );
   if( first ) hideHLine();
