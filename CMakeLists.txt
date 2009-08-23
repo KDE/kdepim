@@ -167,7 +167,7 @@ set(libkdgantt1_SRCS
       macro_optional_add_subdirectory(kleopatra)
     endif(Boost_TOPOLOGICAL_SORT_DIR)
     add_subdirectory(wizards)
-    # The following components depends on QGpgME.
+    # The following components depend on QGpgME.
     macro_optional_add_subdirectory(kmail)
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
     macro_bool_to_01(BUILD_kmail KMAIL_SUPPORTED)
@@ -200,11 +200,10 @@ set(libkdgantt1_SRCS
 
   # Kpilot won't build on Windows
   if(NOT WIN32)
-    macro_optional_add_subdirectory(kpilot)
-
-    #if(OPENSYNC_FOUND AND GLIB2_FOUND)
-    #  macro_optional_add_subdirectory(kitchensync)
-    #endif(OPENSYNC_FOUND AND GLIB2_FOUND)
+    # And it depends on akonadi_next
+    if (BUILD_akonadi)
+      macro_optional_add_subdirectory(kpilot)
+    endif (BUILD_akonadi)
   endif(NOT WIN32)
 
   # These targets depend on optional applications
