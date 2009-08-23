@@ -642,7 +642,13 @@ void KNGroupManager::processJob(KNJobData *j)
         knGlobals.scheduler()->cancelJobs( KNJobData::JTfetchNewHeaders );
         ArticleListJob *lj = static_cast<ArticleListJob*>( j );
         if ( !lj->silent() ) {
-          KMessageBox::error(knGlobals.topWidget, j->errorString());
+          QString errorMsg = j->errorString();
+          if( j->error() == KIO::ERR_DOES_NOT_EXIST ) {
+            errorMsg = i18n( "The group %1 does not appear to exist anymore on the server.\n"
+                             "You may unsubscribe.",
+                             group->name() );
+          }
+          KMessageBox::error( knGlobals.topWidget, errorMsg );
         }
       }
     }
