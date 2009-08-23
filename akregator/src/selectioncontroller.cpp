@@ -89,6 +89,11 @@ Akregator::SelectionController::SelectionController( QObject* parent )
 {
 }
 
+Akregator::SelectionController::~SelectionController()
+{
+    delete m_articleModel;
+}
+
 
 void Akregator::SelectionController::setFeedSelector( QAbstractItemView* feedSelector )
 {
