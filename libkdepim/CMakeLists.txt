@@ -96,8 +96,8 @@ target_link_libraries(kdepim
   ${KDE4_KPARTS_LIBS}
   ${KDE4_KMIME_LIBRARY}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   akonadi-contact
-  akonadi-kde
 )
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
@@ -110,8 +110,8 @@ target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   akonadi-contact
-  akonadi-kde
 )
 
 if(MINGW)
