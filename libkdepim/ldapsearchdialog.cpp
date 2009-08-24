@@ -394,7 +394,7 @@ void LdapSearchDialog::slotStartSearch()
 {
   cancelQuery();
 
-  QApplication::setOverrideCursor( Qt::waitCursor );
+  QApplication::setOverrideCursor( Qt::WaitCursor );
   mSearchButton->setText( i18n( "Stop" ) );
 
   disconnect( mSearchButton, SIGNAL(clicked()),

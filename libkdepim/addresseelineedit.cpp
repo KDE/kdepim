@@ -202,9 +202,15 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
     }
   }
 
+  const QString oldContent = text();
   if ( !accept ) {
     KLineEdit::keyPressEvent( e );
   }
+
+  // if the text didn't change (eg. because a cursor navigation key was pressed)
+  // we don't need to trigger a new search
+  if ( oldContent == text() )
+    return;
 
   if ( e->isAccepted() ) {
     updateSearchString();
@@ -247,7 +253,7 @@ void AddresseeLineEdit::insert( const QString &t )
   }
   newText = lines.join( ", " );
 
-  if ( newText.startsWith( "mailto:" ) ) {
+  if ( newText.startsWith( QLatin1String( "mailto:" ) ) ) {
     KUrl url( newText );
     newText = url.path();
   } else if ( newText.indexOf( " at " ) != -1 ) {
@@ -805,6 +811,16 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList &adrs )
 
     addContact( addr, (*it).completionWeight, (*it ).clientNumber );
   }
+  if ( ( hasFocus() || completionBox()->hasFocus() ) &&
+       completionMode() != KGlobalSettings::CompletionNone &&
+       completionMode() != KGlobalSettings::CompletionShell ) {
+    setText( m_previousAddresses + m_searchString );
+    // only complete again if the user didn't change the selection while
+    // we were waiting; otherwise the completion box will be closed
+    if ( m_searchString.trimmed() != completionBox()->currentItem()->text().trimmed() ) {
+      doCompletion( m_lastSearchMode );
+    }
+  }
 }
 
 void AddresseeLineEdit::setCompletedItems( const QStringList &items, bool autoSuggest )
@@ -1023,7 +1039,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
     int currentIndex = completionBox()->currentRow();
     if ( ke->key() == Qt::Key_Up ) {
-      //kDebug() <<"EVENTFILTER: Key_Up currentIndex=" << currentIndex;
+      //kDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
       QListWidgetItem *itemAbove = completionBox()->item( currentIndex - 1 );
@@ -1031,7 +1047,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
         // there is a header above is, check if there is even further up
         // and if so go one up, so it'll be selected
         if ( currentIndex > 1 && completionBox()->item( currentIndex - 2 ) ) {
-          //kDebug() <<"EVENTFILTER: Key_Up -> skipping" << currentIndex - 1;
+          //kDebug() <<"EVENTFILTER: Qt::Key_Up -> skipping" << currentIndex - 1;
           completionBox()->setCurrentRow( currentIndex -2 );
           completionBox()->item( currentIndex - 2 )->setSelected( true );
         } else if ( currentIndex == 1 ) {
@@ -1048,11 +1064,11 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
       }
     } else if ( ke->key() == Qt::Key_Down ) {
       // same strategy for downwards
-      //kDebug() <<"EVENTFILTER: Key_Down. currentIndex=" << currentIndex;
+      //kDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
       QListWidgetItem *itemBelow = completionBox()->item( currentIndex + 1 );
       if ( itemBelow && itemIsHeader( itemBelow ) ) {
         if ( completionBox()->item( currentIndex + 2 ) ) {
-          //kDebug() <<"EVENTFILTER: Key_Down -> skipping" << currentIndex+1;
+          //kDebug() <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
           completionBox()->setCurrentRow( currentIndex + 2 );
           completionBox()->item( currentIndex + 2 )->setSelected( true );
         } else {
@@ -1086,7 +1102,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
       }
       Q_ASSERT( myHeader ); // we should always be able to find a header
 
-      // find the next header (searching backwards, for Key_Backtab
+      // find the next header (searching backwards, for Qt::Key_Backtab
       QListWidgetItem *nextHeader = 0;
       const int iterationstep = ke->key() == Qt::Key_Tab ?  1 : -1;
       // when iterating forward, start at the currentindex, when backwards,
