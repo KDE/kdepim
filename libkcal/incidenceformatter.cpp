@@ -293,14 +293,14 @@ static QString eventViewerFormatEvent( Event *event )
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), true ) ).
-                arg( IncidenceFormatter::dateToString( event->dtEnd(), true ) ) +
+                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
+                arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
                 "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), true ) ) +
+                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
                 "</td>";
     }
   } else {
@@ -308,8 +308,8 @@ static QString eventViewerFormatEvent( Event *event )
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), true ) ).
-                arg( IncidenceFormatter::dateToString( event->dtEnd(), true ) ) +
+                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
+                arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
                 "</td>";
     } else {
       tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
@@ -328,7 +328,7 @@ static QString eventViewerFormatEvent( Event *event )
       tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), true ) ) +
+                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
                 "</td>";
     }
   }
@@ -416,7 +416,7 @@ static QString eventViewerFormatTodo( Todo *todo )
     tmpStr += "<td align=\"right\"><b>" + i18n( "Due on" ) + "</b></td>";
     tmpStr += "<td>" +
               IncidenceFormatter::dateTimeToString( todo->dtDue(),
-                                                    todo->doesFloat(), true ) +
+                                                    todo->doesFloat(), false ) +
               "</td>";
     tmpStr += "</tr>";
   }
@@ -2358,7 +2358,7 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
   } else {
 
     ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1").
-           arg( IncidenceFormatter::dateToString( event->dtStart(), true ).replace(" ", "&nbsp;") );
+           arg( IncidenceFormatter::dateToString( event->dtStart(), false ).replace(" ", "&nbsp;") );
     if ( !event->doesFloat() ) {
       const QString dtStartTime =
         IncidenceFormatter::timeToString( event->dtStart(), true ).replace( " ", "&nbsp;" );
@@ -2390,12 +2390,12 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo*todo )
     // italics here :)
     ret += "<br>" + i18n("<i>Start:</i>&nbsp;%1").arg(
       (floats)
-      ?(IncidenceFormatter::dateToString( todo->dtStart( false ), true ).replace(" ", "&nbsp;"))
+      ?(IncidenceFormatter::dateToString( todo->dtStart( false ), false ).replace(" ", "&nbsp;"))
         :(todo->dtStartStr( false ).replace(" ", "&nbsp;")) ) ;
   if ( todo->hasDueDate() && todo->dtDue().isValid() )
     ret += "<br>" +
            i18n("<i>Due:</i>&nbsp;%1").
-           arg( IncidenceFormatter::dateTimeToString( todo->dtDue(), floats, true ).replace(" ", "&nbsp;"));
+           arg( IncidenceFormatter::dateTimeToString( todo->dtDue(), floats, false ).replace(" ", "&nbsp;"));
 
   if (todo->isCompleted())
     ret += "<br>" + i18n("<i>Completed:</i>&nbsp;%1").arg( todo->completedStr().replace(" ", "&nbsp;") );
