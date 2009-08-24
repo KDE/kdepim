@@ -22,7 +22,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
-#include "addressbookselectiondialog.h"
+#include <akonadi/contact/addressbookselectiondialog.h>
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>

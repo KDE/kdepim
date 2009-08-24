@@ -109,6 +109,7 @@ else(KDEPIM_ONLY_KLEO)
 ############### Needed commands before building anything ###############
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
+
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
 
 
@@ -166,7 +167,7 @@ set(libkdgantt1_SRCS
       macro_optional_add_subdirectory(kleopatra)
     endif(Boost_TOPOLOGICAL_SORT_DIR)
     add_subdirectory(wizards)
-    # The following components depends on QGpgME.
+    # The following components depend on QGpgME.
     macro_optional_add_subdirectory(messagecomposer)
     macro_optional_add_subdirectory(kmail)
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
@@ -186,9 +187,12 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
+
   if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(akonadi)
+    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
   endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
+
   macro_optional_add_subdirectory(kaddressbook)
   if(Q_WS_X11)
     macro_optional_add_subdirectory(ktimetracker)
@@ -197,11 +201,10 @@ set(libkdgantt1_SRCS
 
   # Kpilot won't build on Windows
   if(NOT WIN32)
-    macro_optional_add_subdirectory(kpilot)
-
-    #if(OPENSYNC_FOUND AND GLIB2_FOUND)
-    #  macro_optional_add_subdirectory(kitchensync)
-    #endif(OPENSYNC_FOUND AND GLIB2_FOUND)
+    # And it depends on akonadi_next
+    if (BUILD_akonadi)
+      macro_optional_add_subdirectory(kpilot)
+    endif (BUILD_akonadi)
   endif(NOT WIN32)
 
   # These targets depend on optional applications

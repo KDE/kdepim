@@ -5,10 +5,7 @@ include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}/../../lib
 	${CMAKE_CURRENT_BINARY_DIR}
 	${Boost_INCLUDE_DIRS}
-	akonadi_next
 )
-
-message(STATUS "Boost includes ${Boost_INCLUDE_DIRS}")
 
 set(akonadibase_SRCS
 	akonadirecord.cc

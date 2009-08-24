@@ -39,7 +39,7 @@ class QString;
 
 namespace KSieve {
 
-  class KSIEVE_EXPORT Error;
+  class Error;
 
   class KSIEVE_EXPORT Lexer {
   public:
@@ -95,7 +95,7 @@ namespace KSieve {
 
     void save();
     void restore();
-      
+
     class Impl;
   private:
     Impl * i;
