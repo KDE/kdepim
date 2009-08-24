@@ -25,6 +25,7 @@
 #include <akonadi/item.h>
 
 #include <QtGui/QColor>
+#include <QtGui/QFont>
 
 #include <boost/shared_ptr.hpp>
 #include <kmime/kmime_message.h>
@@ -94,6 +95,12 @@ private:
   QColor mColorUnreadMessage;
   QColor mColorImportantMessage;
   QColor mColorToDoMessage;
+
+  QFont mFont;
+  QFont mFontNewMessage;
+  QFont mFontUnreadMessage;
+  QFont mFontImportantMessage;
+  QFont mFontToDoMessage;
 };
 
 } // namespace MessageList

@@ -65,10 +65,32 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   // Custom/System colors
   Settings *settings = Settings::self();
 
-  mColorNewMessage = settings->newMessageColor();
-  mColorUnreadMessage = settings->unreadMessageColor();
-  mColorImportantMessage = settings->importantMessageColor();
-  mColorToDoMessage = settings->todoMessageColor();
+  if ( settings->useDefaultColors() ) {
+    mColorNewMessage = QColor("red");
+    mColorUnreadMessage = QColor("blue");
+    mColorImportantMessage = QColor(0x0, 0x7F, 0x0);
+    mColorToDoMessage = QColor(0x0, 0x98, 0x0);
+  } else {
+    mColorNewMessage = settings->newMessageColor();
+    mColorUnreadMessage = settings->unreadMessageColor();
+    mColorImportantMessage = settings->importantMessageColor();
+    mColorToDoMessage = settings->todoMessageColor();
+  }
+
+
+  if ( settings->useDefaultFonts() ) {
+    mFont = KGlobalSettings::generalFont();
+    mFontNewMessage = KGlobalSettings::generalFont();
+    mFontUnreadMessage = KGlobalSettings::generalFont();
+    mFontImportantMessage = KGlobalSettings::generalFont();
+    mFontToDoMessage = KGlobalSettings::generalFont();
+  } else {
+    mFont = settings->messageListFont();
+    mFontNewMessage = settings->newMessageFont();
+    mFontUnreadMessage = settings->unreadMessageFont();
+    mFontImportantMessage = settings->importantMessageFont();
+    mFontToDoMessage = settings->todoMessageFont();
+  }
 
   connect( mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
@@ -302,6 +324,19 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   }
   if ( backClr.isValid() ) {
     mi->setBackgroundColor( backClr );
+  }
+
+  // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
+  if ( stat.isImportant() ) {
+    mi->setFont( mFontImportantMessage );
+  } else if ( stat.isNew() ) {
+    mi->setFont( mFontNewMessage );
+  } else if ( stat.isUnread() ) {
+    mi->setFont( mFontUnreadMessage );
+  } else if ( stat.isToAct() ) {
+    mi->setFont( mFontToDoMessage );
+  } else {
+    mi->setFont( mFont );
   }
 }
 

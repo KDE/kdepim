@@ -35,4 +35,25 @@
     </entry>
   </group>
 
+  <group name="MessageListView::Fonts">
+    <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
+      <default>true</default>
+    </entry>
+    <entry name="MessageListFont" type="Font">
+      <default>KGlobalSettings::generalFont()</default>
+    </entry>
+    <entry name="NewMessageFont" type="Font">
+      <default>KGlobalSettings::generalFont()</default>
+    </entry>
+    <entry name="UnreadMessageFont" type="Font">
+      <default>KGlobalSettings::generalFont()</default>
+    </entry>
+    <entry name="ImportantMessageFont" type="Font">
+      <default>KGlobalSettings::generalFont()</default>
+    </entry>
+    <entry name="TodoMessageFont" type="Font">
+      <default>KGlobalSettings::generalFont()</default>
+    </entry>
+  </group>
+
 </kcfg>
