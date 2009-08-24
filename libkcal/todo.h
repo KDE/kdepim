@@ -66,21 +66,26 @@ class LIBKCAL_EXPORT Todo : public Incidence
     /**
       Returns due time as string formatted according to the users locale
       settings.
+      @deprecated use IncidenceFormatter::timeToString()
     */
-    QString dtDueTimeStr() const;
+    KDE_DEPRECATED QString dtDueTimeStr() const;
+
     /**
       Returns due date as string formatted according to the users locale
       settings.
 
       @param shortfmt If set to true, use short date format, if set to false use
                       long format.
+      @deprecated use IncidenceFormatter::dateToString()
     */
-    QString dtDueDateStr( bool shortfmt = true ) const;
+    KDE_DEPRECATED QString dtDueDateStr( bool shortfmt = true ) const;
+
     /**
       Returns due date and time as string formatted according to the users locale
       settings.
+      @deprecated use IncidenceFormatter::dateTimeToString()
     */
-    QString dtDueStr() const;
+    KDE_DEPRECATED QString dtDueStr() const;
 
     /**
       Returns true if the todo has a due date, otherwise return false.

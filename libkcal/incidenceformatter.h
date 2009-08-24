@@ -22,9 +22,10 @@
 #ifndef KCAL_INCIDENCEFORMATTER_H
 #define KCAL_INCIDENCEFORMATTER_H
 
-#include <qstring.h>
-
 #include "libkcal_export.h"
+
+#include <qstring.h>
+class QDateTime;
 
 namespace KCal {
 class Calendar;
@@ -63,6 +64,15 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString msTNEFToVPart( const QByteArray& tnef );
 
     static QString recurrenceString( Incidence *incidence );
+
+    static QString timeToString( const QDateTime &date, bool shortfmt = true );
+
+    static QString dateToString( const QDateTime &date, bool shortfmt = true );
+
+    static QString dateTimeToString( const QDateTime &date,
+                                     bool dateOnly = false,
+                                     bool shortfmt = true );
+
   private:
     class EventViewerVisitor;
     class ScheduleMessageVisitor;

@@ -131,16 +131,28 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
     /** for setting the event's starting date/time with a QDateTime. */
     virtual void setDtStart( const QDateTime &dtStart );
     /** returns an event's starting date/time as a QDateTime. */
+
     virtual QDateTime dtStart() const;
-    /** returns an event's starting time as a string formatted according to the
-     users locale settings */
-    virtual QString dtStartTimeStr() const;
-    /** returns an event's starting date as a string formatted according to the
-     users locale settings */
-    virtual QString dtStartDateStr( bool shortfmt = true ) const;
-    /** returns an event's starting date and time as a string formatted according
-     to the users locale settings */
-    virtual QString dtStartStr() const;
+
+    /**
+      returns an event's starting time as a string formatted according to the
+      users locale settings.
+      @deprecated use IncidenceFormatter::timeToString()
+    */
+    virtual KDE_DEPRECATED QString dtStartTimeStr() const;
+
+    /**
+      returns an event's starting date as a string formatted according to the
+      users locale settings
+      @deprecated use IncidenceFormatter::dateToString()
+    */
+    virtual KDE_DEPRECATED QString dtStartDateStr( bool shortfmt = true ) const;
+    /**
+      returns an event's starting date and time as a string formatted according
+      to the users locale settings
+      @deprecated use IncidenceFormatter::dateTimeToString()
+    */
+    virtual KDE_DEPRECATED QString dtStartStr() const;
 
     virtual void setDuration( int seconds );
     int duration() const;
