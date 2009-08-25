@@ -55,11 +55,11 @@ Several items are used in addresseelineedit's completion object:
   LDAP servers, KABC resources (imap and non-imap), Recent addresses (in kmail only).
 
 The default completion weights are as follow:
+  Recent addresses (kmail) : 10  (see kmail/kmlineeditspell.cpp)
   LDAP: 50, 49, 48 etc.          (see ldapclient.cpp)
   KABC non-imap resources: 60    (see addresseelineedit.cpp and SimpleCompletionItem here)
   Distribution lists: 60         (see addresseelineedit.cpp and SimpleCompletionItem here)
   KABC imap resources: 80        (see kresources/imap/kabc/resourceimap.cpp)
-  Recent addresses (kmail) : 120 (see kmail/kmcomposewin.cpp)
 
 This dialog allows to change those weights, by showing one item per:
  - LDAP server
@@ -204,6 +204,8 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
   // Add an item for distribution lists
   mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ) );
 #endif
+
+  mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses" ) );
 
   // Now sort the items, then create the GUI
   mItems.sort();
