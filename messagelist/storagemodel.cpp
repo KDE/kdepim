@@ -32,7 +32,7 @@
 #include <KDE/KLocale>
 
 #include "core/messageitem.h"
-#include "messagelist_settings.h"
+#include "core/settings.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -63,7 +63,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   mModel = itemFilter;
 
   // Custom/System colors
-  Settings *settings = Settings::self();
+  Core::Settings *settings = Core::Settings::self();
 
   if ( settings->useDefaultColors() ) {
     mColorNewMessage = QColor("red");

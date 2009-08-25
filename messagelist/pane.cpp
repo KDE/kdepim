@@ -30,7 +30,7 @@
 
 #include "storagemodel.h"
 #include "widget.h"
-#include "messagelist_settings.h"
+#include "core/settings.h"
 
 using namespace MessageList;
 
@@ -324,7 +324,7 @@ void Pane::updateTabControls()
 {
   mCloseTabButton->setEnabled( count()>1 );
 
-  if ( Settings::self()->autoHideTabBarWithSingleTab() ) {
+  if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
     tabBar()->setVisible( count()>1 );
   } else {
     tabBar()->setVisible( true );

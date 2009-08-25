@@ -4,6 +4,7 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(libmessagelist_SRCS
@@ -48,7 +49,7 @@ set(libmessagelist_HEADERS
 )
 
 kde4_add_kcfg_files(libmessagelist_SRCS
-    messagelist_settings.kcfgc
+    core/settings.kcfgc
 )
 
 kde4_add_library(messagelist SHARED ${libmessagelist_SRCS})
@@ -64,5 +65,8 @@ target_link_libraries(messagelist
 install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES ${libmessagelist_HEADERS}
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist
+         COMPONENT devel)
+install( FILES ${CMAKE_CURRENT_BINARY_DIR}/core/settings.h
+         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/core
          COMPONENT devel)
 

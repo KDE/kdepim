@@ -28,7 +28,7 @@
 #include "core/widgetbase.h"
 #include "core/storagemodelbase.h"
 #include "core/model.h"
-#include "messagelist_settings.h"
+#include "core/settings.h"
 
 #include <QPixmap>
 #include <QTimer>
