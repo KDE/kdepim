@@ -16,7 +16,7 @@
 #include <KApplication>
 
 #include <akonadi/item.h>
-#include "messagelist_settings.h"
+#include "messagelist/core/settings.h"
 #include "ui_prefs_messagelist.h"
 
 mailreaderView::mailreaderView(QWidget *parent)
@@ -93,7 +93,7 @@ void mailreaderView::slotConfigure()
   Ui::MessageListConfig ui;
   ui.setupUi(messageListConfig);
   dialog->addPage(messageListConfig,
-                  MessageList::Settings::self(),
+                  MessageList::Core::Settings::self(),
                   i18n("Message List"),
                   "kmail");
 
