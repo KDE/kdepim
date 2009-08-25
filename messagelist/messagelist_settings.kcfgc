@@ -1,9 +1,11 @@
 File=messagelist_settings.kcfg
 ClassName=Settings
+Visibility=MESSAGELIST_EXPORT
 NameSpace=MessageList
+MemberVariables=dpointer
 Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=qapplication.h, kglobalsettings.h
+IncludeFiles=qapplication.h, kglobalsettings.h, messagelist_export.h
 
