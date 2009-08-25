@@ -156,14 +156,14 @@ static QString eventViewerFormatAttendees( Incidence *event )
   if ( attendees.count() ) {
 
     // Add organizer link
-    tmpStr += eventViewerAddTag( "i", i18n("Organizer") );
+    tmpStr += eventViewerAddTag( "i", i18n("Organizer:") );
     tmpStr += "<ul>";
     tmpStr += linkPerson( event->organizer().email(),
                           event->organizer().name(), QString::null );
     tmpStr += "</ul>";
 
     // Add attendees links
-    tmpStr += eventViewerAddTag( "i", i18n("Attendees") );
+    tmpStr += eventViewerAddTag( "i", i18n("Attendees:") );
     tmpStr += "<ul>";
     Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
@@ -290,14 +290,14 @@ static QString eventViewerFormatEvent( Event *event )
   tmpStr += "<tr>";
   if ( event->doesFloat() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
                 arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
@@ -305,14 +305,14 @@ static QString eventViewerFormatEvent( Event *event )
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
                 arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd()) {
         tmpStr += "<td>" +
                   i18n("<beginTime> - <endTime>","%1 - %2").
@@ -325,7 +325,7 @@ static QString eventViewerFormatEvent( Event *event )
                   "</td>";
       }
       tmpStr += "</tr><tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date" ) + "</b></td>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
@@ -356,7 +356,7 @@ static QString eventViewerFormatEvent( Event *event )
 
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Location" ) + "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
     tmpStr += "<td>" + event->location() + "</td>";
     tmpStr += "</tr>";
   }
@@ -430,7 +430,7 @@ static QString eventViewerFormatTodo( Todo *todo )
 
   if ( !todo->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Location" ) + "</b></td>";
+    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
     tmpStr += "<td>" + todo->location() + "</td>";
     tmpStr += "</tr>";
   }
