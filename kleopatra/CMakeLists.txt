@@ -272,9 +272,9 @@ kde4_add_ui_files( _kleopatra_SRCS
   newcertificatewizard/advancedsettingsdialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS
-  ${CMAKE_CURRENT_SOURCE_DIR}/kcfg/tooltippreferences.kcfgc
-  ${CMAKE_CURRENT_SOURCE_DIR}/kcfg/emailoperationspreferences.kcfgc
-  ${CMAKE_CURRENT_SOURCE_DIR}/kcfg/smimevalidationpreferences.kcfgc
+  kcfg/tooltippreferences.kcfgc
+  kcfg/emailoperationspreferences.kcfgc
+  kcfg/smimevalidationpreferences.kcfgc
   )
 
 
