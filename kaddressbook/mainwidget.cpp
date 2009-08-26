@@ -33,11 +33,9 @@
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/control.h>
-#include <akonadi/descendantsproxymodel.h>
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
-#include <akonadi/selectionproxymodel.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -45,9 +43,11 @@
 #include <kabc/contactgroup.h>
 #include <kabc/contactlineedit.h>
 #include <kabc/kabcmodel.h>
+#include <kdescendantsproxymodel.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <kselectionproxymodel.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
@@ -128,11 +128,12 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
-  Akonadi::SelectionProxyModel *selectionProxyModel = new Akonadi::SelectionProxyModel( mCollectionView->selectionModel(),
+  KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( mCollectionView->selectionModel(),
                                                                                         this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
 
-  mDescendantTree = new Akonadi::DescendantsProxyModel( this );
+  mDescendantTree = new KDescendantsProxyModel( this );
+
   mDescendantTree->setSourceModel( selectionProxyModel );
 
   mItemTree = new Akonadi::EntityFilterProxyModel( this );

@@ -34,8 +34,8 @@
 #include <kdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kdescendantsproxymodel.h>
 
-#include <akonadi/descendantsproxymodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entityfilterproxymodel.h>
 
@@ -175,7 +175,7 @@ void PrintingWizard::print()
     } else {
       Akonadi::ContactsTreeModel *contactsModel = GlobalContactModel::instance()->model();
 
-      Akonadi::DescendantsProxyModel *descendantTree = new Akonadi::DescendantsProxyModel( this );
+      KDescendantsProxyModel *descendantTree = new KDescendantsProxyModel( this );
       descendantTree->setSourceModel( contactsModel );
 
       Akonadi::EntityFilterProxyModel *allContacts = new Akonadi::EntityFilterProxyModel( this );
