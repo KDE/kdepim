@@ -32,6 +32,7 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
+#include <kmime/kmime_util.h>
 
 #include <KCompletionBox>
 #include <KDebug>
@@ -365,7 +366,10 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
         KUrl u( *it );
         if ( u.protocol() == "mailto" ) {
           mailtoURL = true;
-          contents.append( (*it).path() );
+          QString address;
+          address = KUrl::fromPercentEncoding( u.path().toLatin1() );
+          address = KMime::decodeRFC2047String( address.toAscii() );
+          contents.append( address );
         }
       }
       if ( mailtoURL ) {
