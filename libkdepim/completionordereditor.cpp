@@ -111,10 +111,10 @@ void LDAPCompletionItem::save( CompletionOrderEditor* )
 class SimpleCompletionItem : public CompletionItem
 {
 public:
-  SimpleCompletionItem( CompletionOrderEditor* editor, const QString& label, const QString& identifier )
+  SimpleCompletionItem( CompletionOrderEditor* editor, const QString& label, const QString& identifier, int weight )
     : mLabel( label ), mIdentifier( identifier ) {
       KConfigGroup group( editor->configFile(), "CompletionWeights" );
-      mWeight = group.readNumEntry( mIdentifier, 60 );
+      mWeight = group.readNumEntry( mIdentifier, weight );
     }
   virtual QString label() const { return mLabel; }
   virtual int completionWeight() const { return mWeight; }
@@ -196,16 +196,16 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
       }
     } else { // non-IMAP KABC resource
       mItems.append( new SimpleCompletionItem( this, (*resit)->resourceName(),
-                                               (*resit)->identifier() ) );
+                                               (*resit)->identifier(), 60 ) );
     }
   }
 
 #ifndef KDEPIM_NEW_DISTRLISTS // new distr lists are normal contact, so no separate item if using them
   // Add an item for distribution lists
-  mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ) );
+  mItems.append( new SimpleCompletionItem( this, i18n( "Distribution Lists" ), "DistributionLists" ), 60 );
 #endif
 
-  mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses" ) );
+  mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses", 10 ) );
 
   // Now sort the items, then create the GUI
   mItems.sort();
