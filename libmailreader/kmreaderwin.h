@@ -454,6 +454,8 @@ private slots:
   void slotSetEncoding();
   void injectAttachments();
   void slotSettingsChanged();
+  void slotMimeTreeContextMenuRequested( const QPoint& pos );
+  void slotAttachmentOpenWith();
 
 private:
 
@@ -521,6 +523,8 @@ private:
   void createWidgets();
   void createActions();
   void saveSplitterSizes( KConfigGroup & c ) const;
+
+  void showContextMenu( KMime::Content* content, const QPoint& point);
 
   KToggleAction * actionForHeaderStyle( const KMail::HeaderStyle *,
                                        const KMail::HeaderStrategy * );

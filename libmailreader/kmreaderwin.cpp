@@ -341,7 +341,9 @@ void KMReaderWin::createWidgets() {
   mMimePartTree->setModel( mMimePartModel );
   mMimePartTree->setSelectionMode( QAbstractItemView::SingleSelection );
   mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
-  connect(mMimePartTree, SIGNAL( clicked( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
+  connect(mMimePartTree, SIGNAL( activated( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
+  mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
+  connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mBox = new KHBox( mSplitter );
   setStyleDependantFrameWidth();
   mBox->setFrameStyle( mMimePartTree->frameStyle() );
@@ -2813,6 +2815,78 @@ void KMReaderWin::slotMimePartSelected( const QModelIndex &index )
    update(Force);
   } else
     setMessagePart( content );
+}
+
+void KMReaderWin::slotMimeTreeContextMenuRequested( const QPoint& pos )
+{
+  QModelIndex index = mMimePartTree->indexAt( pos );
+  if ( index.isValid() ) {
+     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+     showContextMenu( content, pos );
+  }
+}  
+
+void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
+{
+  if ( !content )
+    return;
+  const bool isAttachment = !content->contentType()->isMultipart() && !content->isTopLevel();
+  const bool isRoot = (content == mMessage);
+
+  KMenu popup;
+
+  if ( !isRoot ) {
+    popup.addAction( SmallIcon( "document-save-as" ), i18n( "Save &As..." ),
+                     this, SLOT( slotSaveAs() ) );
+
+    if ( isAttachment ) {
+      popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
+                       this, SLOT( slotOpen() ) );
+      popup.addAction( i18n( "Open With..." ), this, SLOT( slotAttachmentOpenWith() ) );
+      popup.addAction( i18nc( "to view something", "View" ), this, SLOT( slotView() ) );
+    }
+  }
+
+  /*
+   * FIXME make optional?
+  popup.addAction( i18n( "Save as &Encoded..." ), this,
+                   SLOT( slotSaveAsEncoded() ) );
+  */
+
+  popup.addAction( i18n( "Save All Attachments..." ), this,
+                   SLOT( slotSaveAll() ) );
+
+  // edit + delete only for attachments
+  if ( !isRoot ) {
+    if ( isAttachment ) {
+      popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
+                       this, SLOT( slotCopy() ) );
+      if ( GlobalSettings::self()->allowAttachmentDeletion() )
+        popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
+                         this, SLOT( slotDelete() ) );
+      if ( GlobalSettings::self()->allowAttachmentEditing() )
+        popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
+                         this, SLOT( slotEdit() ) );
+    }
+
+    if ( !content->isTopLevel() )
+      popup.addAction( i18n( "Properties" ), this, SLOT( slotProperties() ) );
+  }
+  popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
+ 
+}
+
+void KMReaderWin::slotAttachmentOpenWith()
+{
+  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
+  QModelIndexList selectedRows = selectionModel->selectedRows();
+
+  Q_FOREACH(QModelIndex index, selectedRows)
+  {
+     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+     QString name = tempFileUrlFromNode( content ).toLocalFile();
+     kDebug() << "Open with attachment " << name;
+  }
 }
 
 #include "kmreaderwin.moc"
