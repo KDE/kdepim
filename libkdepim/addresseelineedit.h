@@ -107,8 +107,10 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Adds the name of a completion source to the internal list of
      * such sources and returns its index, such that that can be used
      * for insertion of items associated with that source.
+     * 
+     * If the source already exists, the weight will be updated.
      */
-    int addCompletionSource( const QString & );
+    int addCompletionSource( const QString &, int weight );
 
     /** return whether we are using sorted or weighted display */
     static KCompletion::CompOrder completionOrder();
@@ -127,6 +129,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void init();
     void startLoadingLDAPEntries();
     void stopLDAPLookup();
+    void updateLDAPWeights();
 
     void setCompletedItems( const QStringList &items, bool autoSuggest );
     void addCompletionItem( const QString &string, int weight, int source,

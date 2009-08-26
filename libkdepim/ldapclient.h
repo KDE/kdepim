@@ -163,6 +163,7 @@ class KDEPIM_EXPORT LdapSearch : public QObject
     void startSearch( const QString& txt );
     void cancelSearch();
     bool isAvailable() const;
+    void updateCompletionWeights();
 
     QList< LdapClient* > clients() const { return mClients; }
 
@@ -189,6 +190,7 @@ class KDEPIM_EXPORT LdapSearch : public QObject
       KLDAP::LdapObject object;
     };
 
+    void readWeighForClient( LdapClient *client, const KConfigGroup &config, int clientNumber );
     void readConfig();
     void finish();
     void makeSearchData( QStringList& ret, LdapResultList& resList );
