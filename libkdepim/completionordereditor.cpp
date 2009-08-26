@@ -114,10 +114,10 @@ void LDAPCompletionItem::save( CompletionOrderEditor* )
 class SimpleCompletionItem : public CompletionItem
 {
 public:
-  SimpleCompletionItem( CompletionOrderEditor* editor, const QString& label, const QString& identifier )
+  SimpleCompletionItem( CompletionOrderEditor* editor, const QString& label, const QString& identifier, int weight )
     : mLabel( label ), mIdentifier( identifier ) {
       KConfigGroup group( editor->configFile(), "CompletionWeights" );
-      mWeight = group.readEntry( mIdentifier, 60 );
+      mWeight = group.readEntry( mIdentifier, weight );
     }
   virtual QString label() const { return mLabel; }
   virtual int completionWeight() const { return mWeight; }
@@ -214,11 +214,11 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
       }
     } else { // non-IMAP KABC resource
       mItems.append( new SimpleCompletionItem( this, resource->resourceName(),
-                                               resource->identifier() ) );
+                                               resource->identifier(), 60 ) );
     }
   }
 
-  mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses" ) );
+  mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses", 10 ) );
 
   // Now sort the items, then create the GUI
   qSort( mItems.begin(), mItems.end(), completionLessThan );
