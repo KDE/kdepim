@@ -48,7 +48,7 @@ set(libmessagelist_HEADERS
     widget.h
 )
 
-kde4_add_kcfg_files(libmessagelist_SRCS
+kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
     core/settings.kcfgc
 )
 
