@@ -38,6 +38,7 @@
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
 #include <akonadi/selectionproxymodel.h>
+#include <akonadi/entitytreeviewstatesaver.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -185,11 +186,20 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager = new ModelColumnManager( GlobalContactModel::instance()->model(), this );
   mModelColumnManager->setWidget( mItemView->header() );
   mModelColumnManager->load();
+
+  // restore previous state
+  const KConfigGroup cfg( Settings::self()->config(), "CollectionViewState" );
+  Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mCollectionView );
+  restorer->restoreState( cfg );
 }
 
 MainWidget::~MainWidget()
 {
   mModelColumnManager->store();
+  KConfigGroup cfg( Settings::self()->config(), "CollectionViewState" );
+  Akonadi::EntityTreeViewStateSaver saver( mCollectionView );
+  saver.saveState( cfg );
+  cfg.sync();
   Settings::self()->writeConfig();
 }
 
