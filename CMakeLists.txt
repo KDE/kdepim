@@ -114,6 +114,22 @@ add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
 include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
 
 
+############### Macros ###############
+
+# generates a D-Bus interface description from a KConfigXT file
+macro(kcfg_generate_dbus_interface _kcfg _name)
+  add_custom_command(
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+    COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
+    ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
+    ${_kcfg}
+    > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+    DEPENDS ${KDEPIMLIBS_DATA_DIR}/akonadi-kde/kcfg2dbus.xsl
+    ${_kcfg}
+    )
+endmacro(kcfg_generate_dbus_interface)
+
+
 ############### Code used in several places ###############
 # TODO Remove from the top CMakeLists.
 
