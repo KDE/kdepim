@@ -134,6 +134,7 @@ QModelIndex MimeTreeModel::parent(const QModelIndex & index) const
   KMime::Content *currentContent = static_cast<KMime::Content*>( index.internalPointer() );
   if ( !currentContent )
     return QModelIndex();
+
   KMime::ContentIndex currentIndex = d->root->indexForContent( currentContent );
   if ( !currentIndex.isValid() )
     return QModelIndex();
@@ -142,7 +143,8 @@ QModelIndex MimeTreeModel::parent(const QModelIndex & index) const
   int row = 0;
   if ( currentIndex.isValid() )
     row = d->contentIndexUp( currentIndex ) - 1; // 1 based -> 0 based
-  return createIndex( row, index.column(), parentContent );
+
+  return createIndex( row, 0, parentContent );
 }
 
 int MimeTreeModel::rowCount(const QModelIndex & parent) const
