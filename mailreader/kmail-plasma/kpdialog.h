@@ -51,6 +51,11 @@ namespace Akonadi
     class EntityTreeView;
 }
 
+namespace MessageList
+{
+    class Pane;
+}
+
 namespace KP
 {
   /**
@@ -90,11 +95,14 @@ namespace KP
         void buildDialog();
         void setupPane();
         Plasma::TabBar* m_tabs;
-        QGraphicsProxyWidget *m_collectionProxyWidget;
-        QWidget *m_widget;
+        QGraphicsProxyWidget *m_folderListProxyWidget;
+        QGraphicsProxyWidget *m_messageListProxyWidget;
+        QWidget *m_folderListWidget;
+        QWidget *m_messageListWidget;
         KPushButton * m_button;
-        //MessageList::Pane *m_messagePane;
-        Akonadi::EntityTreeView *m_collectionView;
+        MessageList::Pane *m_messagePane;
+        Akonadi::EntityTreeView *m_folderListView;
+        Akonadi::EntityTreeView *m_messageListView;
         KPApplet * m_applet;
   };
 }

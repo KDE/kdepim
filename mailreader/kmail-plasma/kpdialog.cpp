@@ -59,11 +59,11 @@ using namespace Plasma;
 
 KPDialog::KPDialog(KPApplet * kpapplet, QGraphicsWidget *parent)
     : QGraphicsWidget(parent),
-      m_widget(0),
-      m_applet(kpapplet),
-      m_tabs(0)
+      m_tabs(0),
+      m_folderListWidget(0),
+      m_applet(kpapplet)
 {
-    buildDialog();
+    (void)dialog();
     setMinimumSize(300, 400);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
@@ -80,93 +80,134 @@ QGraphicsWidget * KPDialog::dialog()
         //m_tabs->setMinimumSize(150, 200);
         //m_tabs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-        m_collectionProxyWidget = new QGraphicsProxyWidget(m_tabs);
-        m_collectionProxyWidget->setWidget(m_widget);
+        m_folderListWidget = new QWidget();
+        QVBoxLayout *f_layout = new QVBoxLayout(m_folderListWidget);
+        m_folderListProxyWidget = new QGraphicsProxyWidget(m_tabs);
 
-        m_tabs->addTab(i18n("Folders"), m_collectionProxyWidget);
+        m_messageListWidget = new QWidget();
+        QVBoxLayout *m_layout = new QVBoxLayout(m_messageListWidget);
+        m_messageListProxyWidget = new QGraphicsProxyWidget(m_tabs);
 
+        f_layout->setSpacing(0);
+        f_layout->setMargin(0);
+
+        setupPane();
+        f_layout->addWidget(m_folderListView);
+
+        m_folderListProxyWidget->setWidget(m_folderListWidget);
+        m_tabs->addTab(i18n("Folders"), m_folderListProxyWidget);
+
+        m_messageListProxyWidget->setWidget(m_messageListWidget);
+        m_layout->setSpacing(0);
+        m_layout->setMargin(0);
+        m_layout->addWidget(m_messagePane);
+
+        m_tabs->addTab(i18n("Messages"), m_messageListProxyWidget);
+
+        connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
+        updateColors();
     }
     return m_tabs;
 }
 
-void KPDialog::buildDialog()
-{
-    m_widget = new QWidget();
-
-    QVBoxLayout *l_layout = new QVBoxLayout(m_widget);
-    l_layout->setSpacing(0);
-    l_layout->setMargin(0);
-
-    //m_button = new KPushButton(m_widget);
-    //m_button->setIcon(KIcon("kmail"));
-    //m_button->setText("kmail!");
-    //l_layout->addWidget(m_button);
-    kDebug() << "Setting up pane ...";
-    setupPane();
-    l_layout->addWidget(m_collectionView);
-    connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
-    updateColors();
-}
-
 void KPDialog::updateColors()
 {
-    QPalette p = m_widget->palette();
+    QPalette p = m_folderListWidget->palette();
     p.setColor(QPalette::Window, Qt::transparent);
     p.setColor(QPalette::Base, Qt::transparent);
     //p.setColor(QPalette::Window, Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor));
     p.setColor(QPalette::WindowText, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
-    m_widget->setPalette(p);
-    m_collectionView->setPalette(p);
-    m_collectionView->setAttribute(Qt::WA_NoSystemBackground);
-    m_widget->setAttribute(Qt::WA_NoSystemBackground);
+    m_folderListWidget->setPalette(p);
+    m_folderListView->setPalette(p);
+    m_folderListView->setAttribute(Qt::WA_NoSystemBackground);
+    m_folderListWidget->setAttribute(Qt::WA_NoSystemBackground);
+    m_messageListWidget->setAttribute(Qt::WA_NoSystemBackground);
+    m_messageListView->setAttribute(Qt::WA_NoSystemBackground);
+    m_messageListView->setPalette(p);
+    m_messageListWidget->setPalette(p);
 }
 
 void KPDialog::setupPane()
 {
     kDebug() << "Setting up";
     // Setup the core model
-    Akonadi::Session *session = new Akonadi::Session( "KPApplet", m_widget );
+    Akonadi::Session *session = new Akonadi::Session( "KPApplet", m_folderListWidget );
 
-    Akonadi::Monitor *monitor = new Akonadi::Monitor( m_widget );
+    Akonadi::Monitor *monitor = new Akonadi::Monitor( m_folderListWidget );
     monitor->setCollectionMonitored( Akonadi::Collection::root() );
     monitor->fetchCollection( true );
     monitor->setMimeTypeMonitored( "message/rfc822", true );
     monitor->itemFetchScope().fetchFullPayload(true);
 
-    Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, m_widget );
-    entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+    {
+      Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, m_folderListWidget );
+      entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
-    // Create the collection view
-    m_collectionView = new Akonadi::EntityTreeView( 0, m_widget );
-    m_collectionView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+      // Create the collection view
+      m_folderListView = new Akonadi::EntityTreeView( 0, m_folderListWidget );
+      m_folderListView->setSelectionMode( QAbstractItemView::ExtendedSelection );
 
 
-    // Setup the message folders collection...
-    Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( m_widget );
-    collectionFilter->setSourceModel( entityModel );
-    //collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
-    collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-    collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-    // ... with statistics...
-    Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( m_widget );
-    statisticsProxyModel->setSourceModel( collectionFilter );
+      // Setup the message folders collection...
+      Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( m_folderListWidget );
+      collectionFilter->setSourceModel( entityModel );
+      //collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
+      collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+      collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-    // ... and sortable
-    QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( m_widget );
-    sortModel->setDynamicSortFilter( true );
-    sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-    sortModel->setSourceModel( statisticsProxyModel );
-    // Use the model
-    m_collectionView->setModel( sortModel );
-    //entityModel->setRootCollection(Akonadi::Collection(12));
-    entityModel->setRootCollection(Akonadi::Collection::root());
+      // ... with statistics...
+      Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( m_folderListWidget );
+      statisticsProxyModel->setSourceModel( collectionFilter );
 
-    /*
-    // Now make the message list multi-tab pane
-    m_messagePane = new MessageList::Pane( entityModel, collectionView->selectionModel(), m_widget );
-    connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
-           this, SLOT(slotMessageSelected(Akonadi::Item)) );
-    */
+      // ... and sortable
+      QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( m_folderListWidget );
+      sortModel->setDynamicSortFilter( true );
+      sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+      sortModel->setSourceModel( statisticsProxyModel );
+      // Use the model
+      m_folderListView->setModel( sortModel );
+      entityModel->setRootCollection(Akonadi::Collection(12));
+      entityModel->setRootCollection(Akonadi::Collection::root());
+    }
+
+    {
+      Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, m_messageListWidget );
+      entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+
+      // Create the collection view
+      m_messageListView = new Akonadi::EntityTreeView( 0, m_messageListWidget );
+      m_messageListView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+      m_messageListView->hide();
+
+
+
+      // Setup the message folders collection...
+      Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( m_messageListWidget );
+      collectionFilter->setSourceModel( entityModel );
+      collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
+      collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+      collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+
+      // ... with statistics...
+      Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( m_folderListWidget );
+      statisticsProxyModel->setSourceModel( collectionFilter );
+
+      // ... and sortable
+      QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( m_messageListWidget );
+      sortModel->setDynamicSortFilter( true );
+      sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+      sortModel->setSourceModel( statisticsProxyModel );
+      // Use the model
+      m_messageListView->setModel( sortModel );
+      entityModel->setRootCollection(Akonadi::Collection(61));
+      entityModel->setRootCollection(Akonadi::Collection::root());
+
+      // Now make the message list multi-tab pane
+      m_messagePane = new MessageList::Pane( entityModel, m_messageListView->selectionModel(), m_messageListWidget );
+      //connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
+      //       this, SLOT(slotMessageSelected(Akonadi::Item)) );
+
+    }
 }
 #include "kpdialog.moc"
