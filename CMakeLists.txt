@@ -198,7 +198,6 @@ set(libkdgantt1_SRCS
 
   macro_optional_add_subdirectory(akregator)
   macro_optional_add_subdirectory(console)
-  macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
@@ -212,15 +211,19 @@ set(libkdgantt1_SRCS
   if(Q_WS_X11)
     macro_optional_add_subdirectory(ktimetracker)
   endif(Q_WS_X11)
+
+  # Kpilot and Kalarm depend on kdepim/akonadi.
+  # that means these app won't compile for packagers. Disable them for anything else than a svn checkout.
+    if (BUILD_akonadi)
+      macro_optional_add_subdirectory(kalarm)
+      # Kpilot won't build on Windows.
+      if(NOT WIN32)
+        macro_optional_add_subdirectory(kpilot)
+      endif(NOT WIN32)
+    endif (BUILD_akonadi)
+
   macro_optional_add_subdirectory(kontact) # must be the last one.
 
-  # Kpilot won't build on Windows
-  if(NOT WIN32)
-    # And it depends on akonadi_next
-    if (BUILD_akonadi)
-      macro_optional_add_subdirectory(kpilot)
-    endif (BUILD_akonadi)
-  endif(NOT WIN32)
 
   # These targets depend on optional applications
   add_subdirectory(kresources) # Must be after KAddressbook
