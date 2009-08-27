@@ -1141,6 +1141,8 @@ void Widget::searchEditClearButtonClicked()
   mStatusFilterButton->setIcon( SmallIcon( "system-run" ) );
 
   mView->model()->setFilter( mFilter );
+
+  mView->scrollTo( mView->currentIndex(), QAbstractItemView::PositionAtCenter );
 }
 
 
