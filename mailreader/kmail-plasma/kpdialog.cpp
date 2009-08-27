@@ -122,8 +122,6 @@ void KPDialog::updateColors()
     m_folderListView->setAttribute(Qt::WA_NoSystemBackground);
     m_folderListWidget->setAttribute(Qt::WA_NoSystemBackground);
     m_messageListWidget->setAttribute(Qt::WA_NoSystemBackground);
-    m_messageListView->setAttribute(Qt::WA_NoSystemBackground);
-    m_messageListView->setPalette(p);
     m_messageListWidget->setPalette(p);
 }
 
@@ -133,7 +131,6 @@ void KPDialog::setupPane()
     // Setup the core model
     Akonadi::Session *session = new Akonadi::Session( "KPApplet", m_folderListWidget );
 
-    {
       Akonadi::Monitor *monitor = new Akonadi::Monitor( m_folderListWidget );
       monitor->setCollectionMonitored( Akonadi::Collection::root() );
       monitor->fetchCollection( true );
@@ -167,53 +164,12 @@ void KPDialog::setupPane()
       sortModel->setSourceModel( statisticsProxyModel );
       // Use the model
       m_folderListView->setModel( sortModel );
-      entityModel->setRootCollection(Akonadi::Collection(12));
       entityModel->setRootCollection(Akonadi::Collection::root());
-    }
-
-    {
-      Akonadi::Monitor *monitor = new Akonadi::Monitor( m_messageListWidget );
-      monitor->setCollectionMonitored( Akonadi::Collection(61) );
-      monitor->fetchCollection( true );
-      //monitor->setMimeTypeMonitored( "message/rfc822", true );
-      monitor->itemFetchScope().fetchFullPayload(true);
-
-
-      Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, m_messageListWidget );
-      entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
-
-      // Create the collection view
-      m_messageListView = new Akonadi::EntityTreeView( 0, m_messageListWidget );
-      m_messageListView->setSelectionMode( QAbstractItemView::ExtendedSelection );
-      m_messageListView->hide();
-
-
-
-      // Setup the message folders collection...
-      Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( m_messageListWidget );
-      collectionFilter->setSourceModel( entityModel );
-      collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
-      collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
-
-      // ... with statistics...
-      Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( m_folderListWidget );
-      statisticsProxyModel->setSourceModel( collectionFilter );
-
-      // ... and sortable
-      QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( m_messageListWidget );
-      sortModel->setDynamicSortFilter( true );
-      sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-      sortModel->setSourceModel( statisticsProxyModel );
-      // Use the model
-      m_messageListView->setModel( sortModel );
-      entityModel->setRootCollection(Akonadi::Collection(61));
-      //entityModel->setRootCollection(Akonadi::Collection::root());
-
+      
       // Now make the message list multi-tab pane
-      m_messagePane = new MessageList::Pane( entityModel, m_messageListView->selectionModel(), m_messageListWidget );
+      m_messagePane = new MessageList::Pane( entityModel, m_folderListView->selectionModel(), m_messageListWidget );
       //connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
       //       this, SLOT(slotMessageSelected(Akonadi::Item)) );
 
-    }
 }
 #include "kpdialog.moc"

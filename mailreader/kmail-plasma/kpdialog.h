@@ -102,7 +102,6 @@ namespace KP
         KPushButton * m_button;
         MessageList::Pane *m_messagePane;
         Akonadi::EntityTreeView *m_folderListView;
-        Akonadi::EntityTreeView *m_messageListView;
         KPApplet * m_applet;
   };
 }
