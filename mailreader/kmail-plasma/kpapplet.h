@@ -48,7 +48,7 @@ class KPApplet : public Plasma::PopupApplet
         KPApplet(QObject *parent, const QVariantList &args);
         ~KPApplet();
         void init();
-        QWidget *widget();
+        QGraphicsWidget *graphicsWidget();
         void updateToolTip(const int emails);
 
     protected:

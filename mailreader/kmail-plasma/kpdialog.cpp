@@ -44,6 +44,7 @@
 
 //plasma
 #include <Plasma/Dialog>
+#include <Plasma/TabBar>
 #include <Plasma/Theme>
 
 
@@ -56,21 +57,36 @@ using namespace KP;
 using namespace Plasma;
 
 
-KPDialog::KPDialog(KPApplet * kpapplet,QObject *parent)
-    : QObject(parent),
+KPDialog::KPDialog(KPApplet * kpapplet, QGraphicsWidget *parent)
+    : QGraphicsWidget(parent),
       m_widget(0),
-      m_applet(kpapplet)
+      m_applet(kpapplet),
+      m_tabs(0)
 {
     buildDialog();
+    setMinimumSize(300, 400);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 KPDialog::~KPDialog()
 {
 }
 
-QWidget * KPDialog::dialog()
+QGraphicsWidget * KPDialog::dialog()
 {
-    return m_widget;
+    if (!m_tabs) {
+        m_tabs = new Plasma::TabBar(this);
+        //m_tabs->setPreferredSize(300, 400);
+        //m_tabs->setMinimumSize(150, 200);
+        //m_tabs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
+        m_collectionProxyWidget = new QGraphicsProxyWidget(m_tabs);
+        m_collectionProxyWidget->setWidget(m_widget);
+
+        m_tabs->addTab(i18n("Folders"), m_collectionProxyWidget);
+
+    }
+    return m_tabs;
 }
 
 void KPDialog::buildDialog()

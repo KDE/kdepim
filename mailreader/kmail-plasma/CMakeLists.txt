@@ -13,8 +13,6 @@ include_directories(
   ${PROJECT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/libmailreader
   ${CMAKE_SOURCE_DIR}/akonadi
-  /home/sebas/kdesvn/src/akonadi-ports/kdepim/akonadi
-  /home/sebas/kdesvn/src/akonadi-ports/kdepim
   ${Boost_INCLUDE_DIRS}
 
 )

@@ -25,6 +25,8 @@
 #include <akonadi/item.h>
 
 //Qt
+#include <QGraphicsWidget>
+#include <QGraphicsProxyWidget>
 #include <QLabel>
 #include <QStringList>
 
@@ -41,6 +43,7 @@ namespace Plasma
 {
     class Icon;
     class Dialog;
+    class TabBar;
 }
 
 namespace Akonadi
@@ -54,7 +57,7 @@ namespace KP
   * @short KMail's message list in a popup applet
   *
   */
-  class KPDialog : public QObject
+  class KPDialog : public QGraphicsWidget
   {
   Q_OBJECT
 
@@ -64,14 +67,14 @@ namespace KP
         * @param kpapplet the KPApplet attached to this dialog
         * @param parent the parent of this object
         **/
-        KPDialog(KPApplet * kpapplet, QObject *parent = 0);
+        KPDialog(KPApplet * kpapplet, QGraphicsWidget *parent = 0);
 
         virtual ~KPDialog();
 
         /**
         * Returns the related QWidget.
         **/
-        QWidget * dialog();
+        QGraphicsWidget * dialog();
 
     private Q_SLOTS:
         /**
@@ -86,6 +89,8 @@ namespace KP
         **/
         void buildDialog();
         void setupPane();
+        Plasma::TabBar* m_tabs;
+        QGraphicsProxyWidget *m_collectionProxyWidget;
         QWidget *m_widget;
         KPushButton * m_button;
         //MessageList::Pane *m_messagePane;

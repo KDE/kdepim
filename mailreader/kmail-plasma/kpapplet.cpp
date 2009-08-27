@@ -79,7 +79,7 @@ void KPApplet::init()
     updateToolTip(1337);
 }
 
-QWidget* KPApplet::widget()
+QGraphicsWidget* KPApplet::graphicsWidget()
 {
     if (!m_dialog) {
         m_dialog = new KPDialog(this);
