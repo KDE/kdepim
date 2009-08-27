@@ -18,21 +18,36 @@
  *
  *******************************************************************************/
 
+#include "modelinvariantindex.h"
 #include "core/modelinvariantindex.h"
+#include "core/modelinvariantindex_p.h"
 #include "core/modelinvariantrowmapper.h"
+#include "core/modelinvariantrowmapper_p.h"
 
 using namespace MessageList::Core;
 
+ModelInvariantIndex::ModelInvariantIndex()
+  : d( new Private )
+{
+  d->mRowMapper = 0;
+}
+
 ModelInvariantIndex::~ModelInvariantIndex()
 {
-  if ( mRowMapper )
-    mRowMapper->indexDead( this );
+  if ( d->mRowMapper )
+    d->mRowMapper->d->indexDead( this );
+
+  delete d;
+}
+
+bool ModelInvariantIndex::isValid() const
+{
+  return d->mRowMapper != 0;
 }
 
 int ModelInvariantIndex::currentModelIndexRow()
 {
-  if ( !mRowMapper )
+  if ( !d->mRowMapper )
     return -1;
-  return mRowMapper->modelInvariantIndexToModelIndexRow( this );
+  return d->mRowMapper->modelInvariantIndexToModelIndexRow( this );
 }
-

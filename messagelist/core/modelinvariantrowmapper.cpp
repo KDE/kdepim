@@ -18,7 +18,10 @@
  *
  *******************************************************************************/
 
+#include "modelinvariantrowmapper.h"
 #include "core/modelinvariantrowmapper.h"
+#include "core/modelinvariantrowmapper_p.h"
+#include "core/modelinvariantindex_p.h"
 
 #include <QTimer>
 #include <QTime>
@@ -47,7 +50,7 @@ public:
   ~RowShift()
   {
     for ( QHash< int, ModelInvariantIndex * >::Iterator it = mInvariantHash->begin(); it != mInvariantHash->end(); ++it )
-      ( *it )->setRowMapper( 0 );
+      ( *it )->d->setRowMapper( 0 );
     delete mInvariantHash;
   }
 };
@@ -59,39 +62,42 @@ public:
 using namespace MessageList::Core;
 
 ModelInvariantRowMapper::ModelInvariantRowMapper()
+  : d( new Private( this ) )
 {
-  mRowShiftList = new QList< RowShift * >();
-  mCurrentShiftSerial = 0;
-  mCurrentInvariantHash = new QHash< int, ModelInvariantIndex * >();
-  mUpdateTimer = new QTimer( this );
-  mUpdateTimer->setSingleShot( true );
-  mLazyUpdateChunkInterval = 50;
-  mLazyUpdateIdleInterval = 50;
+  d->mRowShiftList = new QList< RowShift * >();
+  d->mCurrentShiftSerial = 0;
+  d->mCurrentInvariantHash = new QHash< int, ModelInvariantIndex * >();
+  d->mUpdateTimer = new QTimer( this );
+  d->mUpdateTimer->setSingleShot( true );
+  d->mLazyUpdateChunkInterval = 50;
+  d->mLazyUpdateIdleInterval = 50;
 
-  connect( mUpdateTimer, SIGNAL( timeout() ),
+  connect( d->mUpdateTimer, SIGNAL( timeout() ),
            SLOT( slotPerformLazyUpdate() ) );
 }
 
 ModelInvariantRowMapper::~ModelInvariantRowMapper()
 {
-  if ( mUpdateTimer->isActive() )
-    mUpdateTimer->stop();
+  if ( d->mUpdateTimer->isActive() )
+    d->mUpdateTimer->stop();
 
   // FIXME: optimize this (it CAN be optimized)
-  for ( QHash< int, ModelInvariantIndex * >::Iterator it = mCurrentInvariantHash->begin(); it != mCurrentInvariantHash->end(); ++it )
-    ( *it )->setRowMapper( 0 );
-  delete mCurrentInvariantHash;
+  for ( QHash< int, ModelInvariantIndex * >::Iterator it = d->mCurrentInvariantHash->begin(); it != d->mCurrentInvariantHash->end(); ++it )
+    ( *it )->d->setRowMapper( 0 );
+  delete d->mCurrentInvariantHash;
 
-  if ( mRowShiftList )
+  if ( d->mRowShiftList )
   {
-    while ( !mRowShiftList->isEmpty() )
-      delete mRowShiftList->takeFirst();
+    while ( !d->mRowShiftList->isEmpty() )
+      delete d->mRowShiftList->takeFirst();
 
-    delete mRowShiftList;
+    delete d->mRowShiftList;
   }
+
+  delete d;
 }
 
-void ModelInvariantRowMapper::killFirstRowShift()
+void ModelInvariantRowMapper::Private::killFirstRowShift()
 {
   RowShift * shift = mRowShiftList->at( 0 );
 
@@ -107,22 +113,22 @@ void ModelInvariantRowMapper::killFirstRowShift()
   }
 }
 
-void ModelInvariantRowMapper::indexDead( ModelInvariantIndex * invariant )
+void ModelInvariantRowMapper::Private::indexDead( ModelInvariantIndex * invariant )
 {
-  Q_ASSERT( invariant->rowMapper() == this );
+  Q_ASSERT( invariant->d->rowMapper() == q );
 
-  if ( invariant->rowMapperSerial() == mCurrentShiftSerial )
+  if ( invariant->d->rowMapperSerial() == mCurrentShiftSerial )
   {
-    int count = mCurrentInvariantHash->remove( invariant->modelIndexRow() );
+    int count = mCurrentInvariantHash->remove( invariant->d->modelIndexRow() );
     Q_ASSERT( count > 0 );
     return;
   }
 
-  Q_ASSERT( invariant->rowMapperSerial() < mCurrentShiftSerial );
+  Q_ASSERT( invariant->d->rowMapperSerial() < mCurrentShiftSerial );
 
   Q_ASSERT( mRowShiftList ); // index has no current serial: we _must_ have a shift for it
 
-  uint invariantShiftIndex = invariant->rowMapperSerial() - mRemovedShiftCount;
+  uint invariantShiftIndex = invariant->d->rowMapperSerial() - mRemovedShiftCount;
 
   Q_ASSERT( invariantShiftIndex < static_cast< uint >( mRowShiftList->count() ) );
 
@@ -130,40 +136,40 @@ void ModelInvariantRowMapper::indexDead( ModelInvariantIndex * invariant )
 
   Q_ASSERT( shift );
 
-  int removed = shift->mInvariantHash->remove( invariant->modelIndexRow() );
+  int removed = shift->mInvariantHash->remove( invariant->d->modelIndexRow() );
 
   Q_ASSERT( removed > 0 );
 
   if ( ( shift->mInvariantHash->isEmpty() ) && ( invariantShiftIndex == 0 ) )
   {
-    // no more invariants with serial <= invariant->rowMapperSerial()
+    // no more invariants with serial <= invariant->d->rowMapperSerial()
     killFirstRowShift();
   }
 }
 
-void ModelInvariantRowMapper::updateModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill )
+void ModelInvariantRowMapper::Private::updateModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill )
 {
   // Here the invariant already belongs to this mapper. We ASSUME that it's somewhere
   // in the history and not in the hash belonging to the current serial.
   // modelIndexRow is the CURRENT model index row.
-  Q_ASSERT( invariantToFill->rowMapper() == this );
+  Q_ASSERT( invariantToFill->d->rowMapper() == q );
 
-  uint invariantShiftIndex = invariantToFill->rowMapperSerial() - mRemovedShiftCount;
+  uint invariantShiftIndex = invariantToFill->d->rowMapperSerial() - mRemovedShiftCount;
 
   Q_ASSERT( invariantShiftIndex < static_cast< uint >( mRowShiftList->count() ) );
 
   RowShift * shift = mRowShiftList->at( invariantShiftIndex );
 
-  int count = shift->mInvariantHash->remove( invariantToFill->modelIndexRow() );
+  int count = shift->mInvariantHash->remove( invariantToFill->d->modelIndexRow() );
 
   Q_ASSERT( count > 0 );
 
   // update and make it belong to the current serial
-  invariantToFill->setModelIndexRowAndRowMapperSerial( modelIndexRow, mCurrentShiftSerial );
+  invariantToFill->d->setModelIndexRowAndRowMapperSerial( modelIndexRow, mCurrentShiftSerial );
 
-  Q_ASSERT( !mCurrentInvariantHash->contains( invariantToFill->modelIndexRow() ) );
+  Q_ASSERT( !mCurrentInvariantHash->contains( invariantToFill->d->modelIndexRow() ) );
 
-  mCurrentInvariantHash->insert( invariantToFill->modelIndexRow(), invariantToFill );
+  mCurrentInvariantHash->insert( invariantToFill->d->modelIndexRow(), invariantToFill );
 
   if ( ( shift->mInvariantHash->isEmpty() ) && ( invariantShiftIndex == 0 ) )
   {
@@ -172,7 +178,7 @@ void ModelInvariantRowMapper::updateModelInvariantIndex( int modelIndexRow, Mode
   }
 }
 
-ModelInvariantIndex * ModelInvariantRowMapper::modelIndexRowToModelInvariantIndexInternal( int modelIndexRow, bool updateIfNeeded )
+ModelInvariantIndex * ModelInvariantRowMapper::Private::modelIndexRowToModelInvariantIndexInternal( int modelIndexRow, bool updateIfNeeded )
 {
   // First of all look it up in the current hash
   ModelInvariantIndex * invariant = mCurrentInvariantHash->value( modelIndexRow, 0 );
@@ -232,6 +238,16 @@ ModelInvariantIndex * ModelInvariantRowMapper::modelIndexRowToModelInvariantInde
   return 0; // not found in history
 }
 
+void ModelInvariantRowMapper::setLazyUpdateChunkInterval( int chunkInterval )
+{
+  d->mLazyUpdateChunkInterval = chunkInterval;
+}
+
+void ModelInvariantRowMapper::setLazyUpdateIdleInterval( int idleInterval )
+{
+  d->mLazyUpdateIdleInterval = idleInterval;
+}
+
 int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantIndex * invariant )
 {
   // the invariant shift serial is the serial this mapper
@@ -239,13 +255,13 @@ int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantI
   // mRowShiftList at that time had at most invariantShiftSerial items.
   Q_ASSERT( invariant );
 
-  if ( invariant->rowMapper() != this )
+  if ( invariant->d->rowMapper() != this )
     return -1;
 
-  if ( invariant->rowMapperSerial() == mCurrentShiftSerial )
+  if ( invariant->d->rowMapperSerial() == d->mCurrentShiftSerial )
   {
-    Q_ASSERT( mCurrentInvariantHash->value( invariant->modelIndexRow() ) == invariant );
-    return invariant->modelIndexRow(); // this invariant was emitted very recently and isn't affected by any change
+    Q_ASSERT( d->mCurrentInvariantHash->value( invariant->d->modelIndexRow() ) == invariant );
+    return invariant->d->modelIndexRow(); // this invariant was emitted very recently and isn't affected by any change
   }
 
   // If RowShift elements weren't removed from the list then
@@ -298,37 +314,56 @@ int ModelInvariantRowMapper::modelInvariantIndexToModelIndexRow( ModelInvariantI
   // To find the starting index of the RowShifts that apply to this
   // serial we need to offset them by the removed rows.
 
-  uint invariantShiftIndex = invariant->rowMapperSerial() - mRemovedShiftCount;
+  uint invariantShiftIndex = invariant->d->rowMapperSerial() - d->mRemovedShiftCount;
 
-  Q_ASSERT( mRowShiftList );
+  Q_ASSERT( d->mRowShiftList );
 
   // For the reasoning above invariantShiftIndex is surely < than mRowShiftList.count()
 
-  uint count = static_cast< uint >( mRowShiftList->count() );
+  uint count = static_cast< uint >( d->mRowShiftList->count() );
 
   Q_ASSERT( invariantShiftIndex < count );
 
-  int modelIndexRow = invariant->modelIndexRow();
+  int modelIndexRow = invariant->d->modelIndexRow();
 
   // apply shifts
   for ( uint idx = invariantShiftIndex; idx < count; idx++ )
   {
-    RowShift * shift = mRowShiftList->at( idx );
+    RowShift * shift = d->mRowShiftList->at( idx );
     if ( modelIndexRow >= shift->mMinimumRowIndex )
       modelIndexRow += shift->mShift;
   }
 
   // Update the invariant on-the-fly too...
-  updateModelInvariantIndex( modelIndexRow, invariant );
+  d->updateModelInvariantIndex( modelIndexRow, invariant );
 
   return modelIndexRow;
 }
 
+void ModelInvariantRowMapper::createModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill )
+{
+  // The user is athemeg for the invariant of the item that is at the CURRENT modelIndexRow.
+  Q_ASSERT( invariantToFill->d->rowMapper() == 0 );
+
+  // Plain new invariant. Fill it and add to the current hash.
+  invariantToFill->d->setModelIndexRowAndRowMapperSerial( modelIndexRow, d->mCurrentShiftSerial );
+  invariantToFill->d->setRowMapper( this );
+
+  Q_ASSERT( !d->mCurrentInvariantHash->contains( modelIndexRow ) );
+
+  d->mCurrentInvariantHash->insert( modelIndexRow, invariantToFill );
+}
+
+ModelInvariantIndex *ModelInvariantRowMapper::modelIndexRowToModelInvariantIndex( int modelIndexRow )
+{
+  return d->modelIndexRowToModelInvariantIndexInternal( modelIndexRow, false );
+}
+
 QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelIndexRowRangeToModelInvariantIndexList( int startIndexRow, int count )
 {
-  if ( !mRowShiftList )
+  if ( !d->mRowShiftList )
   {
-    if ( mCurrentInvariantHash->isEmpty() )
+    if ( d->mCurrentInvariantHash->isEmpty() )
       return 0; // no invariants emitted, even if rows are changed, no invariant is affected.
   }
 
@@ -340,7 +375,7 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelIndexRowRangeToMo
   int end = startIndexRow + count;
   for ( int idx = startIndexRow; idx < end; idx++ )
   {
-    ModelInvariantIndex * invariant = modelIndexRowToModelInvariantIndexInternal( idx, true );
+    ModelInvariantIndex * invariant = d->modelIndexRowToModelInvariantIndexInternal( idx, true );
     if ( invariant )
       invariantList->append( invariant );
   }
@@ -363,24 +398,24 @@ void ModelInvariantRowMapper::modelRowsInserted( int modelIndexRowPosition, int 
   //        But maybe we can consider the end being the greatest row
   //        index emitted until now...
 
-  if ( !mRowShiftList )
+  if ( !d->mRowShiftList )
   {
-    if ( mCurrentInvariantHash->isEmpty() )
+    if ( d->mCurrentInvariantHash->isEmpty() )
       return; // no invariants emitted, even if rows are changed, no invariant is affected.
     // some invariants might be affected
-    mRowShiftList = new QList< RowShift * >();
+    d->mRowShiftList = new QList< RowShift * >();
   }
 
   RowShift * shift;
 
-  if ( mCurrentInvariantHash->isEmpty() )
+  if ( d->mCurrentInvariantHash->isEmpty() )
   {
     // No invariants updated (all existing are outdated)
 
-    Q_ASSERT( mRowShiftList->count() > 0 ); // must be true since it's not null
+    Q_ASSERT( d->mRowShiftList->count() > 0 ); // must be true since it's not null
 
     // Check if we can attach to the last existing shift (very common for consecutive row additions)
-    shift = mRowShiftList->at( mRowShiftList->count() - 1 );
+    shift = d->mRowShiftList->at( d->mRowShiftList->count() - 1 );
     Q_ASSERT( shift );
 
     if ( shift->mShift > 0 ) // the shift was positive (addition)
@@ -389,7 +424,7 @@ void ModelInvariantRowMapper::modelRowsInserted( int modelIndexRowPosition, int 
       {
         // Inserting contiguous blocks of rows, just extend this shift
         shift->mShift += count;
-        Q_ASSERT( mUpdateTimer->isActive() );
+        Q_ASSERT( d->mUpdateTimer->isActive() );
         return;
       }
     }
@@ -397,26 +432,26 @@ void ModelInvariantRowMapper::modelRowsInserted( int modelIndexRowPosition, int 
 
   // FIXME: If we have few items, we can just shift the indexes now.
 
-  shift = new RowShift( modelIndexRowPosition, count, mCurrentInvariantHash );
-  mRowShiftList->append( shift );
+  shift = new RowShift( modelIndexRowPosition, count, d->mCurrentInvariantHash );
+  d->mRowShiftList->append( shift );
 
-  mCurrentShiftSerial++;
-  mCurrentInvariantHash = new QHash< int, ModelInvariantIndex * >();
+  d->mCurrentShiftSerial++;
+  d->mCurrentInvariantHash = new QHash< int, ModelInvariantIndex * >();
 
-  if ( mRowShiftList->count() > 7 ) // 7 is heuristic
+  if ( d->mRowShiftList->count() > 7 ) // 7 is heuristic
   {
     // We start loosing performance as the stack is growing too much.
     // Start updating NOW and hope we can get it in few sweeps.
 
-    if ( mUpdateTimer->isActive() )
-      mUpdateTimer->stop();
+    if ( d->mUpdateTimer->isActive() )
+      d->mUpdateTimer->stop();
 
-    slotPerformLazyUpdate();
+    d->slotPerformLazyUpdate();
 
   } else {
     // Make sure we'll get a lazy update somewhere in the future
-    if ( !mUpdateTimer->isActive() )
-      mUpdateTimer->start( mLazyUpdateIdleInterval );
+    if ( !d->mUpdateTimer->isActive() )
+      d->mUpdateTimer->start( d->mLazyUpdateIdleInterval );
   }
 }
 
@@ -429,9 +464,9 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
   //        But maybe we can consider the end being the greatest row
   //        index emitted until now...
 
-  if ( !mRowShiftList )
+  if ( !d->mRowShiftList )
   {
-    if ( mCurrentInvariantHash->isEmpty() )
+    if ( d->mCurrentInvariantHash->isEmpty() )
       return 0; // no invariants emitted, even if rows are changed, no invariant is affected.
     // some invariants might be affected
   }
@@ -472,11 +507,11 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
   {
     // FIXME: One could optimize this by joining the retrieval and destruction functions
     //        that is by making a special indexDead( int modelIndex )..
-    ModelInvariantIndex * dyingInvariant = modelIndexRowToModelInvariantIndexInternal( idx, false );
+    ModelInvariantIndex * dyingInvariant = d->modelIndexRowToModelInvariantIndexInternal( idx, false );
     if ( dyingInvariant )
     {
-      indexDead( dyingInvariant ); // will remove from this mapper hashes
-      dyingInvariant->setRowMapper( 0 ); // invalidate!
+      d->indexDead( dyingInvariant ); // will remove from this mapper hashes
+      dyingInvariant->d->setRowMapper( 0 ); // invalidate!
       deadInvariants->append( dyingInvariant );
     } else {
       // got no dying invariant
@@ -484,10 +519,10 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
     }
   }
 
-  if ( !mRowShiftList )
+  if ( !d->mRowShiftList )
   {
     // have no pending shifts, look if we are keeping other invariants
-    if ( mCurrentInvariantHash->isEmpty() )
+    if ( d->mCurrentInvariantHash->isEmpty() )
     {
        // no more invariants in this mapper, even if rows are changed, no invariant is affected.
        if ( deadInvariants->isEmpty() )
@@ -499,32 +534,32 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
        return deadInvariants;
     }
     // still have some invariants inside, must add a shift for them
-    mRowShiftList = new QList< RowShift * >();
+    d->mRowShiftList = new QList< RowShift * >();
   } // else already have shifts
 
   // add a shift for this row removal
-  RowShift * shift = new RowShift( modelIndexRowPosition + count, -count, mCurrentInvariantHash );
-  mRowShiftList->append( shift );
+  RowShift * shift = new RowShift( modelIndexRowPosition + count, -count, d->mCurrentInvariantHash );
+  d->mRowShiftList->append( shift );
 
-  mCurrentShiftSerial++;
-  mCurrentInvariantHash = new QHash< int, ModelInvariantIndex * >();
+  d->mCurrentShiftSerial++;
+  d->mCurrentInvariantHash = new QHash< int, ModelInvariantIndex * >();
 
 
   // trigger updates
-  if ( mRowShiftList->count() > 7 ) // 7 is heuristic
+  if ( d->mRowShiftList->count() > 7 ) // 7 is heuristic
   {
     // We start loosing performance as the stack is growing too much.
     // Start updating NOW and hope we can get it in few sweeps.
 
-    if ( mUpdateTimer->isActive() )
-      mUpdateTimer->stop();
+    if ( d->mUpdateTimer->isActive() )
+      d->mUpdateTimer->stop();
 
-    slotPerformLazyUpdate();
+    d->slotPerformLazyUpdate();
 
   } else {
     // Make sure we'll get a lazy update somewhere in the future
-    if ( !mUpdateTimer->isActive() )
-      mUpdateTimer->start( mLazyUpdateIdleInterval );
+    if ( !d->mUpdateTimer->isActive() )
+      d->mUpdateTimer->start( d->mLazyUpdateIdleInterval );
   }
 
   if ( deadInvariants->isEmpty() )
@@ -540,24 +575,24 @@ QList< ModelInvariantIndex * > * ModelInvariantRowMapper::modelRowsRemoved( int 
 void ModelInvariantRowMapper::modelReset()
 {
   // FIXME: optimize this (it probably can be optimized by providing a more complex user interface)
-  for ( QHash< int, ModelInvariantIndex * >::Iterator it = mCurrentInvariantHash->begin(); it != mCurrentInvariantHash->end(); ++it )
-    ( *it )->setRowMapper( 0 );
-  mCurrentInvariantHash->clear();
+  for ( QHash< int, ModelInvariantIndex * >::Iterator it = d->mCurrentInvariantHash->begin(); it != d->mCurrentInvariantHash->end(); ++it )
+    ( *it )->d->setRowMapper( 0 );
+  d->mCurrentInvariantHash->clear();
 
-  if ( mRowShiftList )
+  if ( d->mRowShiftList )
   {
-    while ( !mRowShiftList->isEmpty() )
-      delete mRowShiftList->takeFirst();
+    while ( !d->mRowShiftList->isEmpty() )
+      delete d->mRowShiftList->takeFirst();
 
-    delete mRowShiftList;
-    mRowShiftList = 0;
+    delete d->mRowShiftList;
+    d->mRowShiftList = 0;
   }
 
-  mCurrentShiftSerial = 0;
-  mRemovedShiftCount = 0;
+  d->mCurrentShiftSerial = 0;
+  d->mRemovedShiftCount = 0;
 }
 
-void ModelInvariantRowMapper::slotPerformLazyUpdate()
+void ModelInvariantRowMapper::Private::slotPerformLazyUpdate()
 {
   // The drawback here is that when one row is removed from the middle (say position 500 of 1000)
   // then we require ALL the items to be updated...but:
@@ -594,7 +629,7 @@ void ModelInvariantRowMapper::slotPerformLazyUpdate()
       shift->mInvariantHash->erase( it );
 
       // apply shifts
-      int modelIndexRow = invariant->modelIndexRow();
+      int modelIndexRow = invariant->d->modelIndexRow();
 
       for ( uint idx = 0; idx < count; idx++ )
       {
@@ -604,7 +639,7 @@ void ModelInvariantRowMapper::slotPerformLazyUpdate()
       }
 
       // update and make it belong to the current serial
-      invariant->setModelIndexRowAndRowMapperSerial( modelIndexRow, mCurrentShiftSerial );
+      invariant->d->setModelIndexRowAndRowMapperSerial( modelIndexRow, mCurrentShiftSerial );
 
       mCurrentInvariantHash->insert( modelIndexRow, invariant );
 
@@ -635,3 +670,4 @@ void ModelInvariantRowMapper::slotPerformLazyUpdate()
   // if we're here then no more work needs to be done.
 }
 
+#include "modelinvariantrowmapper.moc"

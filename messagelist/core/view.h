@@ -68,36 +68,17 @@ public:
   View( Widget *parent );
   ~View();
 
-private:
-  Widget *mWidget;
-  Model *mModel;
-  Delegate *mDelegate;
-
-  const Aggregation *mAggregation;          ///< The Aggregation we're using now, shallow pointer
-  Theme *mTheme;                            ///< The Theme we're using now, shallow pointer
-  bool mNeedToApplyThemeColumns;            ///< Flag signaling a pending application of theme columns
-  Item *mLastCurrentItem;
-  QPoint mMousePressPosition;
-  bool mFirstShow;
-  bool mSaveThemeColumnStateOnSectionResize;      ///< This is used to filter out programmatic column resizes in slotSectionResized().
-  QTimer * mSaveThemeColumnStateTimer;            ///< Used to trigger a delayed "save theme state"
-  QTimer * mApplyThemeColumnsTimer;               ///< Used to trigger a delayed "apply theme columns"
-  bool mIgnoreUpdateGeometries;                   ///< Shall we ignore the "update geometries" calls ?
-public:
-
   /**
    * Returns the Model attacched to this View. You probably never need to manipulate
    * it directly.
    */
-  Model * model() const
-    { return mModel; };
+  Model * model() const;
 
   /**
    * Returns the Delegate attacched to this View. You probably never need to manipulate
    * it directly. Model uses it to obtain size hints.
    */
-  Delegate * delegate() const
-    { return mDelegate; };
+  Delegate * delegate() const;
 
   /**
    * Sets the StorageModel to be displayed in this view. The StorageModel may be 0 (so no content is displayed).
@@ -624,10 +605,13 @@ protected slots:
    */
   void applyThemeColumns();
 
-private slots:
+private:
   /// expand the whole thread (including all child messages)
-  void expandFullThread( const QModelIndex & );
+  Q_PRIVATE_SLOT(d, void expandFullThread( const QModelIndex& ))
 
+  class Private;
+  friend class Private;
+  Private * const d;
 }; // class View
 
 } // namespace Core

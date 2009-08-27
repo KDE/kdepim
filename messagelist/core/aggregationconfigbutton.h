@@ -45,6 +45,7 @@ public:
    * with changes made by the configure dialog.
    */
   explicit AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox = 0 );
+  ~AggregationConfigButton();
 
 signals:
   /**
@@ -52,11 +53,11 @@ signals:
    */
   void configureDialogCompleted();
 
-private slots:
-  void slotConfigureAggregations();
-
 private:
-  const AggregationComboBox * mAggregationComboBox;
+  Q_PRIVATE_SLOT(d, void slotConfigureAggregations())
+
+  class Private;
+  Private * const d;
 };
 
 } // namespace Core

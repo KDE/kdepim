@@ -18,6 +18,7 @@
  *
  *******************************************************************************/
 
+#include "widgetbase.h"
 #include "core/widgetbase.h"
 
 #include "core/aggregation.h"
@@ -50,15 +51,67 @@
 
 using namespace MessageList::Core;
 
+class Widget::Private
+{
+public:
+  Private( Widget *owner )
+    : q( owner ), mView( 0 ), mSearchEdit( 0 ),
+      mSearchTimer( 0 ), mStatusFilterCombo( 0 ),
+      mStorageModel( 0 ), mAggregation( 0 ),
+      mTheme( 0 ), mFilter( 0 ),
+      mStorageUsesPrivateTheme( false ),
+      mStorageUsesPrivateAggregation( false ),
+      mStorageUsesPrivateSortOrder( false ),
+      mFirstTagInComboIndex( -1 ) { }
+
+
+  /**
+   * Small helper for switching SortOrder::MessageSorting and SortOrder::SortDirection
+   * on the fly.
+   * After doing this, the sort indicator in the header is updated.
+   */
+  void switchMessageSorting( SortOrder::MessageSorting messageSorting,
+                             SortOrder::SortDirection sortDirection,
+                             int logicalHeaderColumnIndex );
+
+  /**
+   * Check if our sort order can still be used with this aggregation.
+   * This can happen if the global aggregation changed, for example we can now
+   * have "most recent in subtree" sorting with an aggregation without threading.
+   * If this happens, reset to the default sort order and don't use the global sort
+   * order.
+   */
+  void checkSortOrder( const StorageModel *storageModel );
+
+  void setDefaultAggregationForStorageModel( const StorageModel * storageModel );
+  void setDefaultThemeForStorageModel( const StorageModel * storageModel );
+  void setDefaultSortOrderForStorageModel( const StorageModel * storageModel );
+  void applyFilter();
+
+  Widget * const q;
+
+  View *mView;
+  QString mLastAggregationId;
+  QString mLastThemeId;
+  KLineEdit * mSearchEdit;
+  QTimer * mSearchTimer;
+  KComboBox * mStatusFilterCombo;
+
+  StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
+                                         ///  is owned by MessageList::Widget.
+  Aggregation * mAggregation;            ///< The currently set aggregation mode, a deep copy
+  Theme * mTheme;                        ///< The currently set theme, a deep copy
+  SortOrder mSortOrder;                  ///< The currently set sort order
+  Filter * mFilter;                      ///< The currently applied filter, owned by us.
+  bool mStorageUsesPrivateTheme;         ///< true if the current folder does not use the global theme
+  bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
+  bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
+  int mFirstTagInComboIndex;             ///< the index of the combobox where the first tag starts
+
+};
+
 Widget::Widget( QWidget *pParent )
-  : QWidget( pParent ),
-    mStorageModel( 0 ),
-    mAggregation( 0 ),
-    mTheme( 0 ),
-    mFilter( 0 ),
-    mStorageUsesPrivateTheme( false ),
-    mStorageUsesPrivateAggregation( false ),
-    mStorageUsesPrivateSortOrder( false )
+  : QWidget( pParent ), d( new Private( this ) )
 {
   Manager::registerWidget( this );
 
@@ -69,22 +122,22 @@ Widget::Widget( QWidget *pParent )
   g->setMargin( 2 ); // use a smaller default
   g->setSpacing( 2 );
 
-  mSearchEdit = new KLineEdit( this );
-  mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
-  mSearchEdit->setObjectName( "quicksearch" );
-  mSearchEdit->setClearButtonShown( true );
+  d->mSearchEdit = new KLineEdit( this );
+  d->mSearchEdit->setClickMessage( i18nc( "Search for messages.", "Search" ) );
+  d->mSearchEdit->setObjectName( "quicksearch" );
+  d->mSearchEdit->setClearButtonShown( true );
 
-  connect( mSearchEdit, SIGNAL( textEdited( const QString & ) ),
+  connect( d->mSearchEdit, SIGNAL( textEdited( const QString & ) ),
            SLOT( searchEditTextEdited( const QString & ) ) );
 
-  connect( mSearchEdit, SIGNAL( clearButtonClicked() ),
+  connect( d->mSearchEdit, SIGNAL( clearButtonClicked() ),
            SLOT( searchEditClearButtonClicked() ) );
 
-  g->addWidget( mSearchEdit, 0, 0 );
+  g->addWidget( d->mSearchEdit, 0, 0 );
 
   // The status filter button. Will be populated later, as populateStatusFilterCombo() is virtual
-  mStatusFilterCombo = new KComboBox( this ) ;
-  g->addWidget( mStatusFilterCombo, 0, 1 );
+  d->mStatusFilterCombo = new KComboBox( this ) ;
+  g->addWidget( d->mStatusFilterCombo, 0, 1 );
 
   // The "Open Full Search" button
   QToolButton * tb = new QToolButton( this );
@@ -97,94 +150,96 @@ Widget::Widget( QWidget *pParent )
            this, SIGNAL( fullSearchRequest() ) );
 
 
-  mView = new View( this );
-  mView->setSortOrder( &mSortOrder );
-  mView->setObjectName( "messagealistview" );
-  g->addWidget( mView, 1, 0, 1, 6 );
+  d->mView = new View( this );
+  d->mView->setSortOrder( &d->mSortOrder );
+  d->mView->setObjectName( "messagealistview" );
+  g->addWidget( d->mView, 1, 0, 1, 6 );
 
-  connect( mView->header(), SIGNAL( sectionClicked( int ) ),
+  connect( d->mView->header(), SIGNAL( sectionClicked( int ) ),
            SLOT( slotViewHeaderSectionClicked( int ) ) );
 
   g->setRowStretch( 1, 1 );
   g->setColumnStretch( 0, 1 );
 
-  mSearchEdit->setEnabled( false );
-  mStatusFilterCombo->setEnabled( false );
+  d->mSearchEdit->setEnabled( false );
+  d->mStatusFilterCombo->setEnabled( false );
 
-  mSearchTimer = 0;
+  d->mSearchTimer = 0;
 }
 
 Widget::~Widget()
 {
-  mView->setStorageModel( 0 );
+  d->mView->setStorageModel( 0 );
 
   Manager::unregisterWidget( this );
 
-  delete mSearchTimer;
-  delete mTheme;
-  delete mAggregation;
-  delete mFilter;
-  delete mStorageModel;
+  delete d->mSearchTimer;
+  delete d->mTheme;
+  delete d->mAggregation;
+  delete d->mFilter;
+  delete d->mStorageModel;
+
+  delete d;
 }
 
 void Widget::populateStatusFilterCombo()
 {
-  mStatusFilterCombo->clear();
+  d->mStatusFilterCombo->clear();
 
-  mStatusFilterCombo->addItem( i18n( "Any Status" ) );
-  mStatusFilterCombo->setItemIcon( 0, SmallIcon("system-run") );
-  mStatusFilterCombo->setItemData( 0, QVariant( static_cast< int >( 0 ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Any Status" ) );
+  d->mStatusFilterCombo->setItemIcon( 0, SmallIcon("system-run") );
+  d->mStatusFilterCombo->setItemData( 0, QVariant( static_cast< int >( 0 ) ) );
 
-  mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "New" ) );
-  mStatusFilterCombo->setItemIcon( 1, SmallIcon("mail-unread-new") );
-  mStatusFilterCombo->setItemData( 1, QVariant( static_cast< int >( KPIM::MessageStatus::statusNew().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "New" ) );
+  d->mStatusFilterCombo->setItemIcon( 1, SmallIcon("mail-unread-new") );
+  d->mStatusFilterCombo->setItemData( 1, QVariant( static_cast< int >( KPIM::MessageStatus::statusNew().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Unread" ) );
-  mStatusFilterCombo->setItemIcon( 2, SmallIcon("mail-unread") );
-  mStatusFilterCombo->setItemData( 2, QVariant( static_cast< int >( KPIM::MessageStatus::statusUnread().toQInt32() | KPIM::MessageStatus::statusNew().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Unread" ) );
+  d->mStatusFilterCombo->setItemIcon( 2, SmallIcon("mail-unread") );
+  d->mStatusFilterCombo->setItemData( 2, QVariant( static_cast< int >( KPIM::MessageStatus::statusUnread().toQInt32() | KPIM::MessageStatus::statusNew().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Replied" ) );
-  mStatusFilterCombo->setItemIcon( 3, SmallIcon("mail-replied") );
-  mStatusFilterCombo->setItemData( 3, QVariant( static_cast< int >( KPIM::MessageStatus::statusReplied().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Replied" ) );
+  d->mStatusFilterCombo->setItemIcon( 3, SmallIcon("mail-replied") );
+  d->mStatusFilterCombo->setItemData( 3, QVariant( static_cast< int >( KPIM::MessageStatus::statusReplied().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Forwarded" ) );
-  mStatusFilterCombo->setItemIcon( 4, SmallIcon("mail-forwarded") );
-  mStatusFilterCombo->setItemData( 4, QVariant( static_cast< int >( KPIM::MessageStatus::statusForwarded().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Forwarded" ) );
+  d->mStatusFilterCombo->setItemIcon( 4, SmallIcon("mail-forwarded") );
+  d->mStatusFilterCombo->setItemData( 4, QVariant( static_cast< int >( KPIM::MessageStatus::statusForwarded().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Important") );
-  mStatusFilterCombo->setItemIcon( 5, SmallIcon("emblem-important") );
-  mStatusFilterCombo->setItemData( 5, QVariant( static_cast< int >( KPIM::MessageStatus::statusImportant().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18nc( "@action:inmenu Status of a message", "Important") );
+  d->mStatusFilterCombo->setItemIcon( 5, SmallIcon("emblem-important") );
+  d->mStatusFilterCombo->setItemData( 5, QVariant( static_cast< int >( KPIM::MessageStatus::statusImportant().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18n( "Action Item" ) );
-  mStatusFilterCombo->setItemIcon( 6, SmallIcon("mail-task") );
-  mStatusFilterCombo->setItemData( 6, QVariant( static_cast< int >( KPIM::MessageStatus::statusToAct().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Action Item" ) );
+  d->mStatusFilterCombo->setItemIcon( 6, SmallIcon("mail-task") );
+  d->mStatusFilterCombo->setItemData( 6, QVariant( static_cast< int >( KPIM::MessageStatus::statusToAct().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18n( "Watched" ) );
-  mStatusFilterCombo->setItemIcon( 7, SmallIcon("mail-thread-watch") );
-  mStatusFilterCombo->setItemData( 7, QVariant( static_cast< int >( KPIM::MessageStatus::statusWatched().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Watched" ) );
+  d->mStatusFilterCombo->setItemIcon( 7, SmallIcon("mail-thread-watch") );
+  d->mStatusFilterCombo->setItemData( 7, QVariant( static_cast< int >( KPIM::MessageStatus::statusWatched().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18n( "Ignored" ) );
-  mStatusFilterCombo->setItemIcon( 8, SmallIcon("mail-thread-ignored") );
-  mStatusFilterCombo->setItemData( 8, QVariant( static_cast< int >( KPIM::MessageStatus::statusIgnored().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Ignored" ) );
+  d->mStatusFilterCombo->setItemIcon( 8, SmallIcon("mail-thread-ignored") );
+  d->mStatusFilterCombo->setItemData( 8, QVariant( static_cast< int >( KPIM::MessageStatus::statusIgnored().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18n( "Has Attachment" ) );
-  mStatusFilterCombo->setItemIcon( 9, SmallIcon("mail-attachment") );
-  mStatusFilterCombo->setItemData( 9, QVariant( static_cast< int >( KPIM::MessageStatus::statusHasAttachment().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Has Attachment" ) );
+  d->mStatusFilterCombo->setItemIcon( 9, SmallIcon("mail-attachment") );
+  d->mStatusFilterCombo->setItemData( 9, QVariant( static_cast< int >( KPIM::MessageStatus::statusHasAttachment().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18n( "Spam" ) );
-  mStatusFilterCombo->setItemIcon( 10, SmallIcon("mail-mark-junk") );
-  mStatusFilterCombo->setItemData( 10, QVariant( static_cast< int >( KPIM::MessageStatus::statusSpam().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Spam" ) );
+  d->mStatusFilterCombo->setItemIcon( 10, SmallIcon("mail-mark-junk") );
+  d->mStatusFilterCombo->setItemData( 10, QVariant( static_cast< int >( KPIM::MessageStatus::statusSpam().toQInt32() ) ) );
 
-  mStatusFilterCombo->addItem( i18n( "Ham" ) );
-  mStatusFilterCombo->setItemIcon( 11, SmallIcon("mail-mark-notjunk") );
-  mStatusFilterCombo->setItemData( 11, QVariant( static_cast< int >( KPIM::MessageStatus::statusHam().toQInt32() ) ) );
+  d->mStatusFilterCombo->addItem( i18n( "Ham" ) );
+  d->mStatusFilterCombo->setItemIcon( 11, SmallIcon("mail-mark-notjunk") );
+  d->mStatusFilterCombo->setItemData( 11, QVariant( static_cast< int >( KPIM::MessageStatus::statusHam().toQInt32() ) ) );
 
-  mFirstTagInComboIndex = mStatusFilterCombo->count();
-  fillMessageTagCombo( mStatusFilterCombo );
+  d->mFirstTagInComboIndex = d->mStatusFilterCombo->count();
+  fillMessageTagCombo( d->mStatusFilterCombo );
 
-  disconnect( mStatusFilterCombo, SIGNAL( currentIndexChanged( int ) ),
+  disconnect( d->mStatusFilterCombo, SIGNAL( currentIndexChanged( int ) ),
              this, SLOT( statusSelected( int ) ) );
-  connect( mStatusFilterCombo, SIGNAL( currentIndexChanged( int ) ),
+  connect( d->mStatusFilterCombo, SIGNAL( currentIndexChanged( int ) ),
            this, SLOT( statusSelected( int ) ) );
 }
 
@@ -195,31 +250,31 @@ MessageItem *Widget::currentMessageItem() const
 
 KPIM::MessageStatus Widget::currentFilterStatus() const
 {
-  if ( !mFilter )
+  if ( !d->mFilter )
     return KPIM::MessageStatus();
 
   KPIM::MessageStatus ret;
-  ret.fromQInt32( mFilter->statusMask() );
+  ret.fromQInt32( d->mFilter->statusMask() );
   return ret;
 }
 
 QString Widget::currentFilterSearchString() const
 {
-  if ( !mFilter )
+  if ( !d->mFilter )
     return QString();
 
-  return mFilter->searchString();
+  return d->mFilter->searchString();
 }
 
 QString Widget::currentFilterTagId() const
 {
-  if ( !mFilter )
+  if ( !d->mFilter )
     return QString();
 
-  return mFilter->tagId();
+  return d->mFilter->tagId();
 }
 
-void Widget::setDefaultAggregationForStorageModel( const StorageModel * storageModel )
+void Widget::Private::setDefaultAggregationForStorageModel( const StorageModel * storageModel )
 {
   const Aggregation * opt = Manager::instance()->aggregationForStorageModel( storageModel, &mStorageUsesPrivateAggregation );
 
@@ -233,7 +288,7 @@ void Widget::setDefaultAggregationForStorageModel( const StorageModel * storageM
   mLastAggregationId = opt->id();
 }
 
-void Widget::setDefaultThemeForStorageModel( const StorageModel * storageModel )
+void Widget::Private::setDefaultThemeForStorageModel( const StorageModel * storageModel )
 {
   const Theme * opt = Manager::instance()->themeForStorageModel( storageModel, &mStorageUsesPrivateTheme );
 
@@ -247,7 +302,7 @@ void Widget::setDefaultThemeForStorageModel( const StorageModel * storageModel )
   mLastThemeId = opt->id();
 }
 
-void Widget::checkSortOrder( const StorageModel *storageModel )
+void Widget::Private::checkSortOrder( const StorageModel *storageModel )
 {
   if ( storageModel && mAggregation && !mSortOrder.validForAggregation( mAggregation ) ) {
     kDebug() << "Could not restore sort order for folder" << storageModel->id();
@@ -266,7 +321,7 @@ void Widget::checkSortOrder( const StorageModel *storageModel )
 
 }
 
-void Widget::setDefaultSortOrderForStorageModel( const StorageModel * storageModel )
+void Widget::Private::setDefaultSortOrderForStorageModel( const StorageModel * storageModel )
 {
   // Load the sort order from config and update column headers
   mSortOrder = Manager::instance()->sortOrderForStorageModel( storageModel, &mStorageUsesPrivateSortOrder );
@@ -276,41 +331,56 @@ void Widget::setDefaultSortOrderForStorageModel( const StorageModel * storageMod
 
 void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preSelectionMode )
 {
-  if ( storageModel == mStorageModel )
+  if ( storageModel == d->mStorageModel )
     return; // nuthin to do here
 
-  setDefaultAggregationForStorageModel( storageModel );
-  setDefaultThemeForStorageModel( storageModel );
-  setDefaultSortOrderForStorageModel( storageModel );
+  d->setDefaultAggregationForStorageModel( storageModel );
+  d->setDefaultThemeForStorageModel( storageModel );
+  d->setDefaultSortOrderForStorageModel( storageModel );
 
-  if ( mSearchTimer )
+  if ( d->mSearchTimer )
   {
-    mSearchTimer->stop();
-    delete mSearchTimer;
-    mSearchTimer = 0;
+    d->mSearchTimer->stop();
+    delete d->mSearchTimer;
+    d->mSearchTimer = 0;
   }
 
-  mSearchEdit->setText( QString() );
+  d->mSearchEdit->setText( QString() );
 
-  if ( mFilter ) {
+  if ( d->mFilter ) {
     resetFilter();
   }
 
-  StorageModel * oldModel = mStorageModel;
+  StorageModel * oldModel = d->mStorageModel;
 
-  mStorageModel = storageModel;
+  d->mStorageModel = storageModel;
 
-  mView->setStorageModel( mStorageModel, preSelectionMode );
+  d->mView->setStorageModel( d->mStorageModel, preSelectionMode );
 
   delete oldModel;
 
-  mStatusFilterCombo->setEnabled( mStorageModel );
-  mSearchEdit->setEnabled( mStorageModel );
+  d->mStatusFilterCombo->setEnabled( d->mStorageModel );
+  d->mSearchEdit->setEnabled( d->mStorageModel );
+}
+
+StorageModel *Widget::storageModel() const
+{
+  return d->mStorageModel;
+}
+
+KLineEdit *Widget::quickSearch() const
+{
+  return d->mSearchEdit;
+}
+
+View *Widget::view() const
+{
+  return d->mView;
 }
 
 void Widget::themeMenuAboutToShow()
 {
-  if ( !mStorageModel )
+  if ( !d->mStorageModel )
     return;
 
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
@@ -352,7 +422,7 @@ void Widget::themeMenuAboutToShow()
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
     grp->addAction( act );
-    act->setChecked( mLastThemeId == ( *it )->id() );
+    act->setChecked( d->mLastThemeId == ( *it )->id() );
     act->setData( QVariant( ( *it )->id() ) );
     connect( act, SIGNAL( triggered( bool ) ),
              SLOT( themeSelected( bool ) ) );
@@ -362,7 +432,7 @@ void Widget::themeMenuAboutToShow()
 
   act = menu->addAction( i18n( "Folder Always Uses This Theme" ) );
   act->setCheckable( true );
-  act->setChecked( mStorageUsesPrivateTheme );
+  act->setChecked( d->mStorageUsesPrivateTheme );
   connect( act, SIGNAL( triggered( bool ) ),
            SLOT( setPrivateThemeForStorage() ) );
 
@@ -375,36 +445,36 @@ void Widget::themeMenuAboutToShow()
 
 void Widget::setPrivateThemeForStorage()
 {
-  if ( !mStorageModel )
+  if ( !d->mStorageModel )
     return;
 
-  Q_ASSERT( mTheme );
+  Q_ASSERT( d->mTheme );
 
-  mStorageUsesPrivateTheme = !mStorageUsesPrivateTheme;
+  d->mStorageUsesPrivateTheme = !d->mStorageUsesPrivateTheme;
 
-  Manager::instance()->saveThemeForStorageModel( mStorageModel, mTheme->id(), mStorageUsesPrivateTheme );
+  Manager::instance()->saveThemeForStorageModel( d->mStorageModel, d->mTheme->id(), d->mStorageUsesPrivateTheme );
 }
 
 void Widget::setPrivateSortOrderForStorage()
 {
-  if ( !mStorageModel )
+  if ( !d->mStorageModel )
     return;
 
-  mStorageUsesPrivateSortOrder = !mStorageUsesPrivateSortOrder;
+  d->mStorageUsesPrivateSortOrder = !d->mStorageUsesPrivateSortOrder;
 
-  Manager::instance()->saveSortOrderForStorageModel( mStorageModel, mSortOrder,
-                                                     mStorageUsesPrivateSortOrder );
+  Manager::instance()->saveSortOrderForStorageModel( d->mStorageModel, d->mSortOrder,
+                                                     d->mStorageUsesPrivateSortOrder );
 }
 
 void Widget::configureThemes()
 {
   // Show customization dialog
-  Manager::instance()->showConfigureThemesDialog( this, mLastThemeId );
+  Manager::instance()->showConfigureThemesDialog( this, d->mLastThemeId );
 }
 
 void Widget::themeSelected( bool )
 {
-  if ( !mStorageModel )
+  if ( !d->mStorageModel )
     return; // nuthin to do
 
   QAction * act = dynamic_cast< QAction * >( sender() );
@@ -419,18 +489,18 @@ void Widget::themeSelected( bool )
 
   const Theme * opt = Manager::instance()->theme( id );
 
-  delete mTheme;
-  mTheme = new Theme( *opt );
+  delete d->mTheme;
+  d->mTheme = new Theme( *opt );
 
-  mView->setTheme( mTheme );
+  d->mView->setTheme( d->mTheme );
 
-  mLastThemeId = opt->id();
+  d->mLastThemeId = opt->id();
 
   //mStorageUsesPrivateTheme = false;
 
-  Manager::instance()->saveThemeForStorageModel( mStorageModel, opt->id(), mStorageUsesPrivateTheme );
+  Manager::instance()->saveThemeForStorageModel( d->mStorageModel, opt->id(), d->mStorageUsesPrivateTheme );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
@@ -475,7 +545,7 @@ void Widget::aggregationMenuAboutToShow()
     act = menu->addAction( ( *it )->name() );
     act->setCheckable( true );
     grp->addAction( act );
-    act->setChecked( mLastAggregationId == ( *it )->id() );
+    act->setChecked( d->mLastAggregationId == ( *it )->id() );
     act->setData( QVariant( ( *it )->id() ) );
     connect( act, SIGNAL( triggered( bool ) ),
              SLOT( aggregationSelected( bool ) ) );
@@ -485,7 +555,7 @@ void Widget::aggregationMenuAboutToShow()
 
   act = menu->addAction( i18n( "Folder Always Uses This Aggregation" ) );
   act->setCheckable( true );
-  act->setChecked( mStorageUsesPrivateAggregation );
+  act->setChecked( d->mStorageUsesPrivateAggregation );
   connect( act, SIGNAL( triggered( bool ) ),
            SLOT( setPrivateAggregationForStorage() ) );
 
@@ -500,14 +570,14 @@ void Widget::aggregationMenuAboutToShow()
 
 void Widget::setPrivateAggregationForStorage()
 {
-  if ( !mStorageModel )
+  if ( !d->mStorageModel )
     return;
 
-  Q_ASSERT( mAggregation );
+  Q_ASSERT( d->mAggregation );
 
-  mStorageUsesPrivateAggregation = !mStorageUsesPrivateAggregation;
+  d->mStorageUsesPrivateAggregation = !d->mStorageUsesPrivateAggregation;
 
-  Manager::instance()->saveAggregationForStorageModel( mStorageModel, mAggregation->id(), mStorageUsesPrivateAggregation );
+  Manager::instance()->saveAggregationForStorageModel( d->mStorageModel, d->mAggregation->id(), d->mStorageUsesPrivateAggregation );
 }
 
 
@@ -523,36 +593,36 @@ void Widget::aggregationSelected( bool )
   if ( id.isEmpty() )
   {
     // Show customization dialog
-    Manager::instance()->showConfigureAggregationsDialog( this, mLastAggregationId );
+    Manager::instance()->showConfigureAggregationsDialog( this, d->mLastAggregationId );
     return;
   }
 
-  if ( !mStorageModel )
+  if ( !d->mStorageModel )
     return; // nuthin to do
 
   const Aggregation * opt = Manager::instance()->aggregation( id );
 
-  delete mAggregation;
-  mAggregation = new Aggregation( *opt );
+  delete d->mAggregation;
+  d->mAggregation = new Aggregation( *opt );
 
-  mView->setAggregation( mAggregation );
+  d->mView->setAggregation( d->mAggregation );
 
-  mLastAggregationId = opt->id();
+  d->mLastAggregationId = opt->id();
 
   //mStorageUsesPrivateAggregation = false;
 
-  Manager::instance()->saveAggregationForStorageModel( mStorageModel, opt->id(), mStorageUsesPrivateAggregation );
+  Manager::instance()->saveAggregationForStorageModel( d->mStorageModel, opt->id(), d->mStorageUsesPrivateAggregation );
 
   // The sort order might not be valid anymore for this aggregation
-  checkSortOrder( mStorageModel );
+  d->checkSortOrder( d->mStorageModel );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
 void Widget::sortOrderMenuAboutToShow()
 {
-  if ( !mAggregation )
+  if ( !d->mAggregation )
     return;
 
   KMenu * menu = dynamic_cast< KMenu * >( sender() );
@@ -570,21 +640,21 @@ void Widget::sortOrderMenuAboutToShow()
 
   grp = new QActionGroup( menu );
 
-  options = SortOrder::enumerateMessageSortingOptions( mAggregation->threading() );
+  options = SortOrder::enumerateMessageSortingOptions( d->mAggregation->threading() );
 
   for ( it = options.constBegin(); it != options.constEnd(); ++it )
   {
     act = menu->addAction( ( *it ).first );
     act->setCheckable( true );
     grp->addAction( act );
-    act->setChecked( mSortOrder.messageSorting() == ( *it ).second );
+    act->setChecked( d->mSortOrder.messageSorting() == ( *it ).second );
     act->setData( QVariant( ( *it ).second ) );
   }
 
   connect( grp, SIGNAL( triggered( QAction * ) ),
            SLOT( messageSortingSelected( QAction * ) ) );
 
-  options = SortOrder::enumerateMessageSortDirectionOptions( mSortOrder.messageSorting() );
+  options = SortOrder::enumerateMessageSortDirectionOptions( d->mSortOrder.messageSorting() );
 
   if ( options.size() >= 2 )
   {
@@ -597,7 +667,7 @@ void Widget::sortOrderMenuAboutToShow()
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
-      act->setChecked( mSortOrder.messageSortDirection() == ( *it ).second );
+      act->setChecked( d->mSortOrder.messageSortDirection() == ( *it ).second );
       act->setData( QVariant( ( *it ).second ) );
     }
 
@@ -605,7 +675,7 @@ void Widget::sortOrderMenuAboutToShow()
              SLOT( messageSortDirectionSelected( QAction * ) ) );
   }
 
-  options = SortOrder::enumerateGroupSortingOptions( mAggregation->grouping() );
+  options = SortOrder::enumerateGroupSortingOptions( d->mAggregation->grouping() );
 
   if ( options.size() >= 2 )
   {
@@ -618,7 +688,7 @@ void Widget::sortOrderMenuAboutToShow()
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
-      act->setChecked( mSortOrder.groupSorting() == ( *it ).second );
+      act->setChecked( d->mSortOrder.groupSorting() == ( *it ).second );
       act->setData( QVariant( ( *it ).second ) );
     }
 
@@ -626,8 +696,8 @@ void Widget::sortOrderMenuAboutToShow()
              SLOT( groupSortingSelected( QAction * ) ) );
   }
 
-  options = SortOrder::enumerateGroupSortDirectionOptions( mAggregation->grouping(),
-                                                           mSortOrder.groupSorting() );
+  options = SortOrder::enumerateGroupSortDirectionOptions( d->mAggregation->grouping(),
+                                                           d->mSortOrder.groupSorting() );
 
   if ( options.size() >= 2 )
   {
@@ -640,7 +710,7 @@ void Widget::sortOrderMenuAboutToShow()
       act = menu->addAction( ( *it ).first );
       act->setCheckable( true );
       grp->addAction( act );
-      act->setChecked( mSortOrder.groupSortDirection() == ( *it ).second );
+      act->setChecked( d->mSortOrder.groupSortDirection() == ( *it ).second );
       act->setData( QVariant( ( *it ).second ) );
     }
 
@@ -651,14 +721,14 @@ void Widget::sortOrderMenuAboutToShow()
   menu->addSeparator();
   act = menu->addAction( i18n( "Folder Always Uses This Sort Order" ) );
   act->setCheckable( true );
-  act->setChecked( mStorageUsesPrivateSortOrder );
+  act->setChecked( d->mStorageUsesPrivateSortOrder );
   connect( act, SIGNAL( triggered( bool ) ),
            SLOT( setPrivateSortOrderForStorage() ) );
 }
 
-void Widget::switchMessageSorting( SortOrder::MessageSorting messageSorting,
-                                   SortOrder::SortDirection sortDirection,
-                                   int logicalHeaderColumnIndex )
+void Widget::Private::switchMessageSorting( SortOrder::MessageSorting messageSorting,
+                                            SortOrder::SortDirection sortDirection,
+                                            int logicalHeaderColumnIndex )
 {
   mSortOrder.setMessageSorting( messageSorting );
   mSortOrder.setMessageSortDirection( sortDirection );
@@ -737,7 +807,7 @@ void Widget::switchMessageSorting( SortOrder::MessageSorting messageSorting,
 
 void Widget::messageSortingSelected( QAction *action )
 {
-  if ( !mAggregation )
+  if ( !d->mAggregation )
     return;
   if ( !action )
     return;
@@ -748,17 +818,17 @@ void Widget::messageSortingSelected( QAction *action )
   if ( !ok )
     return;
 
-  switchMessageSorting( ord, mSortOrder.messageSortDirection(), -1 );
-  Manager::instance()->saveSortOrderForStorageModel( mStorageModel, mSortOrder,
-                                                     mStorageUsesPrivateSortOrder );
+  d->switchMessageSorting( ord, d->mSortOrder.messageSortDirection(), -1 );
+  Manager::instance()->saveSortOrderForStorageModel( d->mStorageModel, d->mSortOrder,
+                                                     d->mStorageUsesPrivateSortOrder );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
 void Widget::messageSortDirectionSelected( QAction *action )
 {
-  if ( !mAggregation )
+  if ( !d->mAggregation )
     return;
   if ( !action )
     return;
@@ -769,17 +839,17 @@ void Widget::messageSortDirectionSelected( QAction *action )
   if ( !ok )
     return;
 
-  switchMessageSorting( mSortOrder.messageSorting(), ord, -1 );
-  Manager::instance()->saveSortOrderForStorageModel( mStorageModel, mSortOrder,
-                                                     mStorageUsesPrivateSortOrder );
+  d->switchMessageSorting( d->mSortOrder.messageSorting(), ord, -1 );
+  Manager::instance()->saveSortOrderForStorageModel( d->mStorageModel, d->mSortOrder,
+                                                     d->mStorageUsesPrivateSortOrder );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
 void Widget::groupSortingSelected( QAction *action )
 {
-  if ( !mAggregation )
+  if ( !d->mAggregation )
     return;
   if ( !action )
     return;
@@ -790,17 +860,17 @@ void Widget::groupSortingSelected( QAction *action )
   if ( !ok )
     return;
 
-  mSortOrder.setGroupSorting( ord );
-  Manager::instance()->saveSortOrderForStorageModel( mStorageModel, mSortOrder,
-                                                     mStorageUsesPrivateSortOrder );
+  d->mSortOrder.setGroupSorting( ord );
+  Manager::instance()->saveSortOrderForStorageModel( d->mStorageModel, d->mSortOrder,
+                                                     d->mStorageUsesPrivateSortOrder );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
 void Widget::groupSortDirectionSelected( QAction *action )
 {
-  if ( !mAggregation )
+  if ( !d->mAggregation )
     return;
   if ( !action )
     return;
@@ -811,34 +881,34 @@ void Widget::groupSortDirectionSelected( QAction *action )
   if ( !ok )
     return;
 
-  mSortOrder.setGroupSortDirection( ord );
-  Manager::instance()->saveSortOrderForStorageModel( mStorageModel, mSortOrder,
-                                                     mStorageUsesPrivateSortOrder );
+  d->mSortOrder.setGroupSortDirection( ord );
+  Manager::instance()->saveSortOrderForStorageModel( d->mStorageModel, d->mSortOrder,
+                                                     d->mStorageUsesPrivateSortOrder );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
 void Widget::resetFilter()
 {
-  delete mFilter;
-  mFilter = 0;
-  mView->model()->setFilter( 0 );
-  mStatusFilterCombo->setCurrentIndex( 0 );
+  delete d->mFilter;
+  d->mFilter = 0;
+  d->mView->model()->setFilter( 0 );
+  d->mStatusFilterCombo->setCurrentIndex( 0 );
 }
 
 void Widget::slotViewHeaderSectionClicked( int logicalIndex )
 {
-  if ( !mTheme )
+  if ( !d->mTheme )
     return;
 
-  if ( !mAggregation )
+  if ( !d->mAggregation )
     return;
 
-  if ( logicalIndex >= mTheme->columns().count() )
+  if ( logicalIndex >= d->mTheme->columns().count() )
     return;
 
-  const Theme::Column * column = mTheme->column( logicalIndex );
+  const Theme::Column * column = d->mTheme->column( logicalIndex );
   if ( !column )
     return; // should never happen...
 
@@ -846,37 +916,37 @@ void Widget::slotViewHeaderSectionClicked( int logicalIndex )
     return; // this is a null op.
 
 
-  if ( mSortOrder.messageSorting() == column->messageSorting() )
+  if ( d->mSortOrder.messageSorting() == column->messageSorting() )
   {
     // switch sort direction
-    if ( mSortOrder.messageSortDirection() == SortOrder::Ascending )
-      switchMessageSorting( mSortOrder.messageSorting(), SortOrder::Descending, logicalIndex );
+    if ( d->mSortOrder.messageSortDirection() == SortOrder::Ascending )
+      d->switchMessageSorting( d->mSortOrder.messageSorting(), SortOrder::Descending, logicalIndex );
     else
-      switchMessageSorting( mSortOrder.messageSorting(), SortOrder::Ascending, logicalIndex );
+      d->switchMessageSorting( d->mSortOrder.messageSorting(), SortOrder::Ascending, logicalIndex );
   } else {
     // keep sort direction but switch sort order
-    switchMessageSorting( column->messageSorting(), mSortOrder.messageSortDirection(), logicalIndex );
+    d->switchMessageSorting( column->messageSorting(), d->mSortOrder.messageSortDirection(), logicalIndex );
   }
-  Manager::instance()->saveSortOrderForStorageModel( mStorageModel, mSortOrder,
-                                                     mStorageUsesPrivateSortOrder );
+  Manager::instance()->saveSortOrderForStorageModel( d->mStorageModel, d->mSortOrder,
+                                                     d->mStorageUsesPrivateSortOrder );
 
-  mView->reload();
+  d->mView->reload();
 
 }
 
 void Widget::themesChanged()
 {
-  setDefaultThemeForStorageModel( mStorageModel );
+  d->setDefaultThemeForStorageModel( d->mStorageModel );
 
-  mView->reload();
+  d->mView->reload();
 }
 
 void Widget::aggregationsChanged()
 {
-  setDefaultAggregationForStorageModel( mStorageModel );
-  checkSortOrder( mStorageModel );
+  d->setDefaultAggregationForStorageModel( d->mStorageModel );
+  d->checkSortOrder( d->mStorageModel );
 
-  mView->reload();
+  d->mView->reload();
 }
 
 void Widget::fillMessageTagCombo( KComboBox* /*combo*/ )
@@ -891,36 +961,36 @@ void Widget::tagIdSelected( QVariant data )
   // Here we arbitrairly set the status to 0, though we *could* allow filtering
   // by status AND tag...
 
-  if ( mFilter )
-    mFilter->setStatusMask( 0 );
+  if ( d->mFilter )
+    d->mFilter->setStatusMask( 0 );
 
   if ( tagId.isEmpty() )
   {
-    if ( mFilter )
+    if ( d->mFilter )
     {
-      if ( mFilter->isEmpty() ) {
+      if ( d->mFilter->isEmpty() ) {
         resetFilter();
         return;
       }
     }
   } else {
-    if ( !mFilter )
-      mFilter = new Filter();
-    mFilter->setTagId( tagId );
+    if ( !d->mFilter )
+      d->mFilter = new Filter();
+    d->mFilter->setTagId( tagId );
   }
 
-  mView->model()->setFilter( mFilter );
+  d->mView->model()->setFilter( d->mFilter );
 }
 
 void Widget::statusSelected( int index )
 {
-  if ( index >= mFirstTagInComboIndex ) {
-    tagIdSelected( mStatusFilterCombo->itemData( index ) );
+  if ( index >= d->mFirstTagInComboIndex ) {
+    tagIdSelected( d->mStatusFilterCombo->itemData( index ) );
     return;
   }
 
   bool ok;
-  qint32 additionalStatusMask = static_cast< qint32 >( mStatusFilterCombo->itemData( index ).toInt( &ok ) );
+  qint32 additionalStatusMask = static_cast< qint32 >( d->mStatusFilterCombo->itemData( index ).toInt( &ok ) );
   if ( !ok )
     return;
 
@@ -932,15 +1002,15 @@ void Widget::statusSelected( int index )
 
   // We also arbitrairly set tagId to an empty string, though we *could* allow filtering
   // by status AND tag...
-  if ( mFilter )
-    mFilter->setTagId( QString() );
+  if ( d->mFilter )
+    d->mFilter->setTagId( QString() );
 
   if ( additionalStatusMask == 0)
   {
-    if ( mFilter )
+    if ( d->mFilter )
     {
-      mFilter->setStatusMask( 0 );
-      if ( mFilter->isEmpty() ) {
+      d->mFilter->setStatusMask( 0 );
+      if ( d->mFilter->isEmpty() ) {
         resetFilter();
         return;
       }
@@ -949,23 +1019,23 @@ void Widget::statusSelected( int index )
     if ( statusMask & additionalStatusMask )
     {
       // already have this status bit (this actually never happens because of the override above)
-      if ( mFilter )
+      if ( d->mFilter )
       {
-        mFilter->setStatusMask( statusMask & ~additionalStatusMask );
-        if ( mFilter->isEmpty() ) {
+        d->mFilter->setStatusMask( statusMask & ~additionalStatusMask );
+        if ( d->mFilter->isEmpty() ) {
           resetFilter();
           return;
         }
       } // else nothing to remove (but something weird happened in the code above...)
     } else {
       // don't have this status bit
-      if ( !mFilter )
-        mFilter = new Filter();
-      mFilter->setStatusMask( statusMask | additionalStatusMask );
+      if ( !d->mFilter )
+        d->mFilter = new Filter();
+      d->mFilter->setStatusMask( statusMask | additionalStatusMask );
     }
   }
 
-  mView->model()->setFilter( mFilter );
+  d->mView->model()->setFilter( d->mFilter );
 }
 
 void Widget::searchEditTextEdited( const QString & )
@@ -975,17 +1045,17 @@ void Widget::searchEditTextEdited( const QString & )
   // so we start the real search after a short delay in order to catch
   // multiple textEdited() signals.
 
-  if ( !mSearchTimer )
+  if ( !d->mSearchTimer )
   {
-    mSearchTimer = new QTimer( this );
-    connect( mSearchTimer, SIGNAL( timeout() ),
+    d->mSearchTimer = new QTimer( this );
+    connect( d->mSearchTimer, SIGNAL( timeout() ),
              SLOT( searchTimerFired() ) );
   } else {
-    mSearchTimer->stop(); // eventually
+    d->mSearchTimer->stop(); // eventually
   }
 
-  mSearchTimer->setSingleShot( true );
-  mSearchTimer->start( 1000 );
+  d->mSearchTimer->setSingleShot( true );
+  d->mSearchTimer->start( 1000 );
 
 }
 
@@ -993,26 +1063,26 @@ void Widget::searchTimerFired()
 {
   // A search is pending.
 
-  if ( mSearchTimer )
-    mSearchTimer->stop();
+  if ( d->mSearchTimer )
+    d->mSearchTimer->stop();
 
-  if ( !mFilter )
-    mFilter = new Filter();
+  if ( !d->mFilter )
+    d->mFilter = new Filter();
 
-  QString text = mSearchEdit->text();
+  QString text = d->mSearchEdit->text();
 
-  mFilter->setSearchString( text );
-  if ( mFilter->isEmpty() ) {
+  d->mFilter->setSearchString( text );
+  if ( d->mFilter->isEmpty() ) {
     resetFilter();
     return;
   }
 
-  mView->model()->setFilter( mFilter );
+  d->mView->model()->setFilter( d->mFilter );
 }
 
 void Widget::searchEditClearButtonClicked()
 {
-  if ( !mFilter )
+  if ( !d->mFilter )
     return;
 
   resetFilter();

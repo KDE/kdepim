@@ -23,10 +23,29 @@
 
 using namespace MessageList::Core;
 
-AggregationComboBox::AggregationComboBox( QWidget * parent )
-: KComboBox( parent )
+class AggregationComboBox::Private
 {
-  slotLoadAggregations();
+public:
+  Private( AggregationComboBox *owner )
+    : q( owner ) { }
+
+  AggregationComboBox * const q;
+
+  /**
+   * Refresh list of aggregations in the combobox.
+   */
+  void slotLoadAggregations();
+};
+
+AggregationComboBox::AggregationComboBox( QWidget * parent )
+: KComboBox( parent ), d( new Private( this ) )
+{
+  d->slotLoadAggregations();
+}
+
+AggregationComboBox::~AggregationComboBox()
+{
+  delete d;
 }
 
 static bool aggregationNameLessThan( const Aggregation * lhs, const Aggregation * rhs )
@@ -34,9 +53,9 @@ static bool aggregationNameLessThan( const Aggregation * lhs, const Aggregation 
   return lhs->name() < rhs->name();
 }
 
-void AggregationComboBox::slotLoadAggregations()
+void AggregationComboBox::Private::slotLoadAggregations()
 {
-  clear();
+  q->clear();
 
   // Get all message list aggregations and sort them into alphabetical order.
   QList< Aggregation * > aggregations = Manager::instance()->aggregations().values();
@@ -44,7 +63,7 @@ void AggregationComboBox::slotLoadAggregations()
 
   foreach( const Aggregation * aggregation, aggregations )
   {
-    addItem( aggregation->name(), QVariant( aggregation->id() ) );
+    q->addItem( aggregation->name(), QVariant( aggregation->id() ) );
   }
 }
 
@@ -64,3 +83,4 @@ const Aggregation * AggregationComboBox::currentAggregation() const
   return Manager::instance()->aggregation( currentAggregationID );
 }
 
+#include "aggregationcombobox.moc"

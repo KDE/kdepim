@@ -27,27 +27,46 @@
 
 using namespace MessageList::Core;
 
-ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
-: KPushButton( i18n( "Configure..." ), parent ),
-  mThemeComboBox( themeComboBox )
+class ThemeConfigButton::Private
 {
+public:
+  Private( ThemeConfigButton *owner )
+    : q( owner ) { }
+
+  ThemeConfigButton * const q;
+
+  const ThemeComboBox * mThemeComboBox;
+
+  void slotConfigureThemes();
+};
+
+ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
+: KPushButton( i18n( "Configure..." ), parent ), d( new Private( this ) )
+{
+  d->mThemeComboBox = themeComboBox;
   connect( this, SIGNAL( pressed() ),
            this, SLOT( slotConfigureThemes() ) );
 
   //Keep theme combo up-to-date with any changes made in the configure dialog.
-  if ( mThemeComboBox != 0 )
+  if ( d->mThemeComboBox != 0 )
     connect( this, SIGNAL( configureDialogCompleted() ),
-             mThemeComboBox, SLOT( slotLoadThemes() ) );
+             d->mThemeComboBox, SLOT( slotLoadThemes() ) );
 }
 
-void ThemeConfigButton::slotConfigureThemes()
+ThemeConfigButton::~ThemeConfigButton()
+{
+  delete d;
+}
+
+void ThemeConfigButton::Private::slotConfigureThemes()
 {
   QString currentThemeID;
   if ( mThemeComboBox != 0 )
     currentThemeID = mThemeComboBox->currentTheme()->id();
-  Manager::instance()->showConfigureThemesDialog( static_cast< QWidget * >( parent() ), currentThemeID );
+  Manager::instance()->showConfigureThemesDialog( static_cast< QWidget * >( q->parent() ), currentThemeID );
 
   connect( ConfigureThemesDialog::instance(), SIGNAL( okClicked() ),
-           this, SIGNAL( configureDialogCompleted() ) );
+           q, SIGNAL( configureDialogCompleted() ) );
 }
 
+#include "themeconfigbutton.moc"

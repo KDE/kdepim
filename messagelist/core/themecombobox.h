@@ -39,15 +39,16 @@ class MESSAGELIST_EXPORT ThemeComboBox : public KComboBox
 
 public:
   explicit ThemeComboBox( QWidget * parent);
+  ~ThemeComboBox();
 
   void setCurrentTheme( const Theme * theme );
   const Theme * currentTheme() const;
 
-public slots:
-  /**
-   * Refresh list of themes in the combobox.
-   */
-  void slotLoadThemes();
+private:
+  Q_PRIVATE_SLOT(d, void slotLoadThemes())
+
+  class Private;
+  Private * const d;
 };
 
 } // namespace Core

@@ -83,24 +83,13 @@ public:
   Akonadi::Item itemForRow( int row ) const;
   MessagePtr messageForRow( int row ) const;
 
-private slots:
-  void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
-  void onSelectionChanged();
-
 private:
-  QAbstractItemModel *mModel;
-  QItemSelectionModel *mSelectionModel;
+  Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))
+  Q_PRIVATE_SLOT(d, void onSelectionChanged())
 
-  QColor mColorNewMessage;
-  QColor mColorUnreadMessage;
-  QColor mColorImportantMessage;
-  QColor mColorToDoMessage;
-
-  QFont mFont;
-  QFont mFontNewMessage;
-  QFont mFontUnreadMessage;
-  QFont mFontImportantMessage;
-  QFont mFontToDoMessage;
+  class Private;
+  friend class Private;
+  Private * const d;
 };
 
 } // namespace MessageList

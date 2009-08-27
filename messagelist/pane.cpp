@@ -32,51 +32,88 @@
 #include "widget.h"
 #include "core/settings.h"
 
+namespace MessageList
+{
+
+class Pane::Private
+{
+public:
+  Private( Pane *owner )
+    : q( owner ) { }
+
+  void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+  void onNewTabClicked();
+  void onCloseTabClicked();
+  void onCurrentTabChanged();
+  void onTabContextMenuRequest( const QPoint &pos );
+
+  QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
+  QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
+  void updateTabControls();
+
+  Pane * const q;
+
+  QAbstractItemModel *mModel;
+  QItemSelectionModel *mSelectionModel;
+
+  QHash<Widget*, QItemSelectionModel*> mWidgetSelectionHash;
+  QList<const QAbstractProxyModel*> mProxyStack;
+
+  QToolButton *mNewTabButton;
+  QToolButton *mCloseTabButton;
+
+};
+
+} // namespace MessageList
+
 using namespace MessageList;
 
 
 Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent )
-  : QTabWidget( parent ), mModel( model ), mSelectionModel( selectionModel )
+  : QTabWidget( parent ), d( new Private( this ) )
 {
+  d->mModel = model;
+  d->mSelectionModel = selectionModel;
+
   // Build the proxy stack
-  const QAbstractProxyModel *proxyModel = qobject_cast<const QAbstractProxyModel*>( mSelectionModel->model() );
+  const QAbstractProxyModel *proxyModel = qobject_cast<const QAbstractProxyModel*>( d->mSelectionModel->model() );
 
   while (proxyModel) {
-    if (static_cast<const QAbstractItemModel*>(proxyModel) == mModel) {
+    if (static_cast<const QAbstractItemModel*>(proxyModel) == d->mModel) {
       break;
     }
 
-    mProxyStack << proxyModel;
+    d->mProxyStack << proxyModel;
     const QAbstractProxyModel *nextProxyModel = qobject_cast<const QAbstractProxyModel*>(proxyModel->sourceModel());
 
     if (!nextProxyModel) {
       // It's the final model in the chain, so it is necessarily the sourceModel.
-      Q_ASSERT(qobject_cast<const QAbstractItemModel*>(proxyModel->sourceModel()) == mModel);
+      Q_ASSERT(qobject_cast<const QAbstractItemModel*>(proxyModel->sourceModel()) == d->mModel);
       break;
     }
     proxyModel = nextProxyModel;
   } // Proxy stack done
 
-  mNewTabButton = new QToolButton( this );
-  mNewTabButton->setIcon( KIcon( "tab-new" ) );
-  mNewTabButton->adjustSize();
-  mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
-  setCornerWidget( mNewTabButton, Qt::TopLeftCorner );
-  connect( mNewTabButton, SIGNAL( clicked() ),
+  d->mNewTabButton = new QToolButton( this );
+  d->mNewTabButton->setIcon( KIcon( "tab-new" ) );
+  d->mNewTabButton->adjustSize();
+  d->mNewTabButton->setToolTip( i18nc("@info:tooltip", "Open a new tab"));
+  setCornerWidget( d->mNewTabButton, Qt::TopLeftCorner );
+  connect( d->mNewTabButton, SIGNAL( clicked() ),
            SLOT( onNewTabClicked() ) );
 
-  mCloseTabButton = new QToolButton( this );
-  mCloseTabButton->setIcon( KIcon( "tab-close" ) );
-  mCloseTabButton->adjustSize();
-  mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
-  setCornerWidget( mCloseTabButton, Qt::TopRightCorner );
-  connect( mCloseTabButton, SIGNAL( clicked() ),
+  d->mCloseTabButton = new QToolButton( this );
+  d->mCloseTabButton->setIcon( KIcon( "tab-close" ) );
+  d->mCloseTabButton->adjustSize();
+  d->mCloseTabButton->setToolTip( i18nc("@info:tooltip", "Close the current tab"));
+  setCornerWidget( d->mCloseTabButton, Qt::TopRightCorner );
+  connect( d->mCloseTabButton, SIGNAL( clicked() ),
            SLOT( onCloseTabClicked() ) );
 
   createNewTab();
   setMovable( true );
 
-  connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
            this, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
   connect( this, SIGNAL(currentChanged(int)),
            this, SLOT(onCurrentTabChanged()) );
@@ -88,12 +125,13 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 
 Pane::~Pane()
 {
+  delete d;
 }
 
 bool Pane::selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
-                                    MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
-                                    bool centerItem,
-                                    bool loop )
+                                  MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                  bool centerItem,
+                                  bool loop )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
 
@@ -105,9 +143,9 @@ bool Pane::selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTy
 }
 
 bool Pane::selectPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
-                                        MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
-                                        bool centerItem,
-                                        bool loop )
+                                      MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+                                      bool centerItem,
+                                      bool loop )
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
 
@@ -169,9 +207,9 @@ void Pane::selectAll()
   }
 }
 
-void Pane::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
+void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  Widget *w = static_cast<Widget*>( currentWidget() );
+  Widget *w = static_cast<Widget*>( q->currentWidget() );
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
   s->select( mapSelectionToSource( selected ), QItemSelectionModel::Select );
@@ -191,21 +229,21 @@ void Pane::onSelectionChanged( const QItemSelection &selected, const QItemSelect
     icon = s->selectedRows().first().data( Qt::DecorationRole ).value<QIcon>();
   }
 
-  int index = indexOf( w );
-  setTabText( index, label );
-  setTabIcon( index, icon );
+  int index = q->indexOf( w );
+  q->setTabText( index, label );
+  q->setTabIcon( index, icon );
 }
 
-void Pane::onNewTabClicked()
+void Pane::Private::onNewTabClicked()
 {
-  createNewTab();
+  q->createNewTab();
   updateTabControls();
 }
 
-void Pane::onCloseTabClicked()
+void Pane::Private::onCloseTabClicked()
 {
-  Widget *w = static_cast<Widget*>( currentWidget() );
-  if ( !w || (count() < 2) ) {
+  Widget *w = static_cast<Widget*>( q->currentWidget() );
+  if ( !w || (q->count() < 2) ) {
     return;
   }
 
@@ -213,53 +251,53 @@ void Pane::onCloseTabClicked()
   updateTabControls();
 }
 
-void Pane::onCurrentTabChanged()
+void Pane::Private::onCurrentTabChanged()
 {
-  Widget *w = static_cast<Widget*>( currentWidget() );
+  Widget *w = static_cast<Widget*>( q->currentWidget() );
   QItemSelectionModel *s = mWidgetSelectionHash[w];
 
   disconnect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-              this, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
+              q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
 
   mSelectionModel->select( mapSelectionFromSource( s->selection() ),
                            QItemSelectionModel::ClearAndSelect );
 
   connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-           this, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
+           q, SLOT(onSelectionChanged(QItemSelection, QItemSelection)) );
 }
 
-void Pane::onTabContextMenuRequest( const QPoint &pos )
+void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 {
-  QTabBar *bar = tabBar();
-  int index = bar->tabAt( bar->mapFrom( this, pos ) );
+  QTabBar *bar = q->tabBar();
+  int index = bar->tabAt( bar->mapFrom( q, pos ) );
   if ( index == -1 ) return;
 
-  Widget *w = qobject_cast<Widget *>( widget( index ) );
+  Widget *w = qobject_cast<Widget *>( q->widget( index ) );
   if ( !w ) return;
 
-  KMenu menu( this );
+  KMenu menu( q );
   QAction *action;
 
   action = menu.addAction( i18nc( "@action:inmenu", "Close Tab" ) );
-  action->setEnabled( count() > 1 );
+  action->setEnabled( q->count() > 1 );
   action->setIcon( KIcon( "tab-close" ) );
   connect( action, SIGNAL(triggered(bool)),
-           this, SLOT(onCloseTabClicked()) ); // Reuse the logic...
+           q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-  action->setEnabled( count() > 1 );
+  action->setEnabled( q->count() > 1 );
   action->setIcon( KIcon( "tab-close-other" ) );
 
-  action = menu.exec( mapToGlobal( pos ) );
+  action = menu.exec( q->mapToGlobal( pos ) );
 
   if ( action == allOther ) { // Close all other tabs
     QList<Widget *> widgets;
-    int index = indexOf( w );
+    int index = q->indexOf( w );
 
-    for ( int i=0; i<count(); i++ ) {
+    for ( int i=0; i<q->count(); i++ ) {
       if ( i==index) continue; // Skip the current one
 
-      Widget *other = qobject_cast<Widget *>( widget( i ) );
+      Widget *other = qobject_cast<Widget *>( q->widget( i ) );
       widgets << other;
     }
 
@@ -276,11 +314,11 @@ void Pane::createNewTab()
   Widget * w = new Widget( this );
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
 
-  QItemSelectionModel *s = new QItemSelectionModel( mModel, w );
-  MessageList::StorageModel *m = new MessageList::StorageModel( mModel, s, w );
+  QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
+  MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
   w->setStorageModel( m );
 
-  mWidgetSelectionHash[w] = s;
+  d->mWidgetSelectionHash[w] = s;
 
   connect( w, SIGNAL(messageSelected(Akonadi::Item)),
            this, SIGNAL(messageSelected(Akonadi::Item)) );
@@ -291,11 +329,11 @@ void Pane::createNewTab()
   connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)),
            this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)) );
 
-  updateTabControls();
+  d->updateTabControls();
   setCurrentWidget( w );
 }
 
-QItemSelection Pane::mapSelectionToSource( const QItemSelection &selection ) const
+QItemSelection Pane::Private::mapSelectionToSource( const QItemSelection &selection ) const
 {
   QItemSelection result = selection;
 
@@ -306,7 +344,7 @@ QItemSelection Pane::mapSelectionToSource( const QItemSelection &selection ) con
   return result;
 }
 
-QItemSelection Pane::mapSelectionFromSource( const QItemSelection &selection ) const
+QItemSelection Pane::Private::mapSelectionFromSource( const QItemSelection &selection ) const
 {
   QItemSelection result = selection;
 
@@ -320,13 +358,15 @@ QItemSelection Pane::mapSelectionFromSource( const QItemSelection &selection ) c
   return result;
 }
 
-void Pane::updateTabControls()
+void Pane::Private::updateTabControls()
 {
-  mCloseTabButton->setEnabled( count()>1 );
+  mCloseTabButton->setEnabled( q->count()>1 );
 
   if ( Core::Settings::self()->autoHideTabBarWithSingleTab() ) {
-    tabBar()->setVisible( count()>1 );
+    q->tabBar()->setVisible( q->count()>1 );
   } else {
-    tabBar()->setVisible( true );
+    q->tabBar()->setVisible( true );
   }
 }
+
+#include "pane.moc"

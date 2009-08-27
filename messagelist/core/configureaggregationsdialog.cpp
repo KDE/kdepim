@@ -19,6 +19,7 @@
  *******************************************************************************/
 
 #include "core/configureaggregationsdialog.h"
+#include "core/configureaggregationsdialog_p.h"
 
 #include "core/aggregationeditor.h"
 #include "core/aggregation.h"
@@ -63,18 +64,36 @@ public:
     { mAggregation = 0; };
 };
 
+/**
+ * The widget that lists the available Aggregations.
+ *
+ * At the moment of writing, derived from QListWidget only to override sizeHint().
+ */
+class AggregationListWidget : public QListWidget
+{
+public:
+  AggregationListWidget( QWidget * parent )
+    : QListWidget( parent )
+    {};
+public:
+
+  // need a larger but shorter QListWidget
+  QSize sizeHint() const
+    { return QSize( 450, 128 ); };
+};
+
 } // namespace Core
 
 } // namespace MessageList
 
 using namespace MessageList::Core;
 
-ConfigureAggregationsDialog * ConfigureAggregationsDialog::mInstance = 0;
+ConfigureAggregationsDialog *ConfigureAggregationsDialog::Private::mInstance = 0;
 
 ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( new Private( this ) )
 {
-  mInstance = this;
+  Private::mInstance = this;
   setAttribute( Qt::WA_DeleteOnClose );
   setWindowModality( Qt::ApplicationModal ); // FIXME: Sure ?
   setButtons( Ok | Cancel );
@@ -85,27 +104,27 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
 
   QGridLayout * g = new QGridLayout( base );
 
-  mAggregationList = new AggregationListWidget( base );
-  mAggregationList->setSortingEnabled( true );
-  g->addWidget( mAggregationList, 0, 0, 5, 1 );
+  d->mAggregationList = new AggregationListWidget( base );
+  d->mAggregationList->setSortingEnabled( true );
+  g->addWidget( d->mAggregationList, 0, 0, 5, 1 );
 
-  connect( mAggregationList, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
+  connect( d->mAggregationList, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
            SLOT( aggregationListCurrentItemChanged( QListWidgetItem *, QListWidgetItem * ) ) );
 
-  mNewAggregationButton = new QPushButton( i18n( "New Aggregation" ), base );
-  mNewAggregationButton->setIcon( KIcon( "document-new" ) );
-  mNewAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( mNewAggregationButton, 0, 1 );
+  d->mNewAggregationButton = new QPushButton( i18n( "New Aggregation" ), base );
+  d->mNewAggregationButton->setIcon( KIcon( "document-new" ) );
+  d->mNewAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  g->addWidget( d->mNewAggregationButton, 0, 1 );
 
-  connect( mNewAggregationButton, SIGNAL( clicked() ),
+  connect( d->mNewAggregationButton, SIGNAL( clicked() ),
            SLOT( newAggregationButtonClicked() ) );
 
-  mCloneAggregationButton = new QPushButton( i18n( "Clone Aggregation" ), base );
-  mCloneAggregationButton->setIcon( KIcon( "edit-copy" ) );
-  mCloneAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( mCloneAggregationButton, 1, 1 );
+  d->mCloneAggregationButton = new QPushButton( i18n( "Clone Aggregation" ), base );
+  d->mCloneAggregationButton->setIcon( KIcon( "edit-copy" ) );
+  d->mCloneAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  g->addWidget( d->mCloneAggregationButton, 1, 1 );
 
-  connect( mCloneAggregationButton, SIGNAL( clicked() ),
+  connect( d->mCloneAggregationButton, SIGNAL( clicked() ),
            SLOT( cloneAggregationButtonClicked() ) );
 
   QFrame * f = new QFrame( base );
@@ -113,18 +132,18 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   f->setMinimumHeight( 24 );
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
-  mDeleteAggregationButton = new QPushButton( i18n( "Delete Aggregation" ), base );
-  mDeleteAggregationButton->setIcon( KIcon( "edit-delete" ) );
-  mDeleteAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( mDeleteAggregationButton, 3, 1 );
+  d->mDeleteAggregationButton = new QPushButton( i18n( "Delete Aggregation" ), base );
+  d->mDeleteAggregationButton->setIcon( KIcon( "edit-delete" ) );
+  d->mDeleteAggregationButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  g->addWidget( d->mDeleteAggregationButton, 3, 1 );
 
-  connect( mDeleteAggregationButton, SIGNAL( clicked() ),
+  connect( d->mDeleteAggregationButton, SIGNAL( clicked() ),
            SLOT( deleteAggregationButtonClicked() ) );
 
-  mEditor = new AggregationEditor( base );
-  g->addWidget( mEditor, 5, 0, 1, 2 );
+  d->mEditor = new AggregationEditor( base );
+  g->addWidget( d->mEditor, 5, 0, 1, 2 );
 
-  connect( mEditor, SIGNAL( aggregationNameChanged() ),
+  connect( d->mEditor, SIGNAL( aggregationNameChanged() ),
            SLOT( editedAggregationNameChanged() ) );
 
   g->setColumnStretch( 0, 1 );
@@ -133,24 +152,30 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   connect( this, SIGNAL( okClicked() ),
            SLOT( okButtonClicked() ) );
 
-  fillAggregationList();
+  d->fillAggregationList();
 }
 
 ConfigureAggregationsDialog::~ConfigureAggregationsDialog()
 {
-  mInstance = 0;
+  d->mInstance = 0;
+  delete d;
 }
 
-void ConfigureAggregationsDialog::display( QWidget *parent, const QString &preselectAggregationId )
+ConfigureAggregationsDialog *ConfigureAggregationsDialog::instance()
+{
+  return Private::mInstance;
+}
+
+void ConfigureAggregationsDialog::Private::display( QWidget *parent, const QString &preselectAggregationId )
 {
   if ( mInstance )
     return; // FIXME: reparent if needed ?
   mInstance = new ConfigureAggregationsDialog( parent );
-  mInstance->selectAggregationById( preselectAggregationId );
+  mInstance->d->selectAggregationById( preselectAggregationId );
   mInstance->show();
 }
 
-void ConfigureAggregationsDialog::cleanup()
+void ConfigureAggregationsDialog::Private::cleanup()
 {
   if ( !mInstance )
     return;
@@ -158,7 +183,7 @@ void ConfigureAggregationsDialog::cleanup()
   mInstance = 0;
 }
 
-void ConfigureAggregationsDialog::selectAggregationById( const QString &aggregationId )
+void ConfigureAggregationsDialog::Private::selectAggregationById( const QString &aggregationId )
 {
   AggregationListWidgetItem * item = findAggregationItemById( aggregationId );
   if ( !item )
@@ -166,7 +191,7 @@ void ConfigureAggregationsDialog::selectAggregationById( const QString &aggregat
   mAggregationList->setCurrentItem( item );
 }
 
-void ConfigureAggregationsDialog::okButtonClicked()
+void ConfigureAggregationsDialog::Private::okButtonClicked()
 {
   commitEditor();
 
@@ -187,10 +212,10 @@ void ConfigureAggregationsDialog::okButtonClicked()
 
   Manager::instance()->aggregationsConfigurationCompleted();
 
-  close(); // this will delete too
+  q->close(); // this will delete too
 }
 
-void ConfigureAggregationsDialog::commitEditor()
+void ConfigureAggregationsDialog::Private::commitEditor()
 {
   Aggregation * editedAggregation = mEditor->editedAggregation();
   if ( !editedAggregation )
@@ -206,7 +231,7 @@ void ConfigureAggregationsDialog::commitEditor()
   editedItem->setText( goodName );
 }
 
-void ConfigureAggregationsDialog::editedAggregationNameChanged()
+void ConfigureAggregationsDialog::Private::editedAggregationNameChanged()
 {
   Aggregation * set = mEditor->editedAggregation();
   if ( !set )
@@ -221,14 +246,14 @@ void ConfigureAggregationsDialog::editedAggregationNameChanged()
   it->setText( goodName );
 }
 
-void ConfigureAggregationsDialog::fillAggregationList()
+void ConfigureAggregationsDialog::Private::fillAggregationList()
 {
   const QHash< QString, Aggregation * > & sets = Manager::instance()->aggregations();
   for( QHash< QString, Aggregation * >::ConstIterator it = sets.begin(); it != sets.end(); ++it )
     (void)new AggregationListWidgetItem( mAggregationList, *( *it ) );
 }
 
-void ConfigureAggregationsDialog::aggregationListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
+void ConfigureAggregationsDialog::Private::aggregationListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
 {
   commitEditor();
 
@@ -240,7 +265,7 @@ void ConfigureAggregationsDialog::aggregationListCurrentItemChanged( QListWidget
     item->setSelected( true ); // make sure it's true
 }
 
-AggregationListWidgetItem * ConfigureAggregationsDialog::findAggregationItemByName( const QString &name, Aggregation * skipAggregation )
+AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregationItemByName( const QString &name, Aggregation * skipAggregation )
 {
   int c = mAggregationList->count();
   int i = 0;
@@ -260,7 +285,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::findAggregationItemByNa
   return 0;
 }
 
-AggregationListWidgetItem * ConfigureAggregationsDialog::findAggregationItemById( const QString &aggregationId )
+AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregationItemById( const QString &aggregationId )
 {
   int c = mAggregationList->count();
   int i = 0;
@@ -277,7 +302,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::findAggregationItemById
   return 0;
 }
 
-AggregationListWidgetItem * ConfigureAggregationsDialog::findAggregationItemByAggregation( Aggregation * set )
+AggregationListWidgetItem * ConfigureAggregationsDialog::Private::findAggregationItemByAggregation( Aggregation * set )
 {
   int c = mAggregationList->count();
   int i = 0;
@@ -295,7 +320,7 @@ AggregationListWidgetItem * ConfigureAggregationsDialog::findAggregationItemByAg
 }
 
 
-QString ConfigureAggregationsDialog::uniqueNameForAggregation( QString baseName, Aggregation * skipAggregation )
+QString ConfigureAggregationsDialog::Private::uniqueNameForAggregation( QString baseName, Aggregation * skipAggregation )
 {
   QString ret = baseName;
   if( ret.isEmpty() )
@@ -313,7 +338,7 @@ QString ConfigureAggregationsDialog::uniqueNameForAggregation( QString baseName,
   return ret;
 }
 
-void ConfigureAggregationsDialog::newAggregationButtonClicked()
+void ConfigureAggregationsDialog::Private::newAggregationButtonClicked()
 {
   Aggregation emptyAggregation;
   emptyAggregation.setName( uniqueNameForAggregation( i18n( "New Aggregation" ) ) );
@@ -322,7 +347,7 @@ void ConfigureAggregationsDialog::newAggregationButtonClicked()
   mAggregationList->setCurrentItem( item );
 }
 
-void ConfigureAggregationsDialog::cloneAggregationButtonClicked()
+void ConfigureAggregationsDialog::Private::cloneAggregationButtonClicked()
 {
   AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
   if ( !item )
@@ -337,7 +362,7 @@ void ConfigureAggregationsDialog::cloneAggregationButtonClicked()
 
 }
 
-void ConfigureAggregationsDialog::deleteAggregationButtonClicked()
+void ConfigureAggregationsDialog::Private::deleteAggregationButtonClicked()
 {
   AggregationListWidgetItem * item = dynamic_cast< AggregationListWidgetItem * >( mAggregationList->currentItem() );
   if ( !item )
@@ -350,3 +375,4 @@ void ConfigureAggregationsDialog::deleteAggregationButtonClicked()
   delete item; // this will trigger aggregationListCurrentItemChanged()
 }
 
+#include "configureaggregationsdialog.moc"

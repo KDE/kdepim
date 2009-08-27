@@ -187,26 +187,15 @@ signals:
    */
   void messageStatusChangeRequest( const Akonadi::Item &item, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
 
-private slots:
-  void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
-  void onNewTabClicked();
-  void onCloseTabClicked();
-  void onCurrentTabChanged();
-  void onTabContextMenuRequest( const QPoint &pos );
-
 private:
-  QItemSelection mapSelectionToSource( const QItemSelection &selection ) const;
-  QItemSelection mapSelectionFromSource( const QItemSelection &selection ) const;
-  void updateTabControls();
+  Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))
+  Q_PRIVATE_SLOT(d, void onNewTabClicked())
+  Q_PRIVATE_SLOT(d, void onCloseTabClicked())
+  Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
+  Q_PRIVATE_SLOT(d, void onTabContextMenuRequest( const QPoint& ))
 
-  QAbstractItemModel *mModel;
-  QItemSelectionModel *mSelectionModel;
-
-  QHash<Widget*, QItemSelectionModel*> mWidgetSelectionHash;
-  QList<const QAbstractProxyModel*> mProxyStack;
-
-  QToolButton *mNewTabButton;
-  QToolButton *mCloseTabButton;
+  class Private;
+  Private * const d;
 };
 
 } // namespace MessageList

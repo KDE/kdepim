@@ -95,57 +95,17 @@ class MESSAGELIST_EXPORT ModelInvariantRowMapper : public QObject
 
   Q_OBJECT
 
-private:
-  QList< RowShift * > * mRowShiftList;  ///< The ordered list of RowShifts, most recent at the end
-  QHash< int, ModelInvariantIndex * > * mCurrentInvariantHash; ///< The up-to-date invariants
-  uint mCurrentShiftSerial;             ///< Current model change serial: FIXME: it explodes at 2^32 :D
-  uint mRemovedShiftCount;              ///< The number of shifts that we have completely processed
-  int mLazyUpdateChunkInterval;         ///< Msecs: how much time we spend inside a lazy update chunk
-  int mLazyUpdateIdleInterval;          ///< Msecs: how much time we idle between lazy update chunks
-  QTimer * mUpdateTimer;                ///< Background lazy update timer
-
 public:
   ModelInvariantRowMapper();
   virtual ~ModelInvariantRowMapper();
 
-private:
-  /**
-   * Internal. Don't look a this :)
-   */
-  void updateModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill );
-
-  /**
-   * Internal. Don't look a this :)
-   */
-  ModelInvariantIndex * modelIndexRowToModelInvariantIndexInternal( int modelIndexRow, bool updateIfNeeded );
-
-  /**
-   * Internal: Removes the first RowShift from the list.
-   */
-  void killFirstRowShift();
-
-protected:
-  /**
-   * This is called from the ModelInvariantIndex destructor.
-   * You don't need to care.
-   */
-  void indexDead( ModelInvariantIndex * index );
-
-protected slots:
-  /**
-   * Internal: Performs a lazy update step.
-   */
-  void slotPerformLazyUpdate();
-
-public:
   /**
    * Sets the maximum time we can spend inside a single lazy update step.
    * The larger this time, the more resources we consume and leave less to UI processing
    * but also larger the update throughput (that is, we update more items per second).
    * This is 50 msec by default.
    */
-  void setLazyUpdateChunkInterval( int chunkInterval )
-    { mLazyUpdateChunkInterval = chunkInterval; };
+  void setLazyUpdateChunkInterval( int chunkInterval );
 
   /**
    * Sets the idle time between two lazy updates in milliseconds.
@@ -153,8 +113,7 @@ public:
    * but also smaller the update throughput (that is, we update less items per second).
    * This is 50 msec by default.
    */
-  void setLazyUpdateIdleInterval( int idleInterval )
-    { mLazyUpdateIdleInterval = idleInterval; };
+  void setLazyUpdateIdleInterval( int idleInterval );
 
   /**
    * Maps a ModelInvariantIndex to the CURRENT associated row index in the model.
@@ -175,27 +134,14 @@ public:
    *
    * This function ASSUMES that invariantToFill is a newly allocated ModelInvariantIndex.
    */
-  void createModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill )
-  {
-    // The user is athemeg for the invariant of the item that is at the CURRENT modelIndexRow.
-    Q_ASSERT( invariantToFill->rowMapper() == 0 );
-
-    // Plain new invariant. Fill it and add to the current hash.
-    invariantToFill->setModelIndexRowAndRowMapperSerial( modelIndexRow, mCurrentShiftSerial );
-    invariantToFill->setRowMapper( this );
-
-    Q_ASSERT( !mCurrentInvariantHash->contains( modelIndexRow ) );
-
-    mCurrentInvariantHash->insert( modelIndexRow, invariantToFill );
-  };
+  void createModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill );
 
   /**
    * Finds the existing ModelInvariantIndex that belongs to the specified CURRENT modelIndexRow.
    * Returns the ModelInvariantIndex found or 0 if such an invariant wasn't yet
    * created (by the means of createModelInvariantIndex()).
    */
-  ModelInvariantIndex * modelIndexRowToModelInvariantIndex( int modelIndexRow )
-    { return modelIndexRowToModelInvariantIndexInternal( modelIndexRow, false ); };
+  ModelInvariantIndex * modelIndexRowToModelInvariantIndex( int modelIndexRow );
 
   /**
    * This basically applies modelIndexRowToModelInvariantIndex() to a range of elements.
@@ -240,6 +186,12 @@ public:
    */
   void modelReset();
 
+private:
+  Q_PRIVATE_SLOT(d, void slotPerformLazyUpdate())
+
+  class Private;
+  friend class Private;
+  Private * const d;
 };
 
 } // namespace Core

@@ -39,15 +39,16 @@ class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
 
 public:
   explicit AggregationComboBox( QWidget * parent );
+  ~AggregationComboBox();
 
   void setCurrentAggregation( const Aggregation * aggregation );
   const Aggregation * currentAggregation() const;
 
-public slots:
-  /**
-   * Refresh list of aggregations in the combobox.
-   */
-  void slotLoadAggregations();
+private:
+  Q_PRIVATE_SLOT(d, void slotLoadAggregations())
+
+  class Private;
+  Private * const d;
 };
 
 } // namespace Core

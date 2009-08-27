@@ -18,16 +18,10 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_H__
-#define __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_H__
+#ifndef __MESSAGELIST_CORE_MODELINVARIANTINDEX_P_H__
+#define __MESSAGELIST_CORE_MODELINVARIANTINDEX_P_H__
 
-#include <KDialog>
-
-#include <QListWidget>
-
-#include <messagelist/messagelist_export.h>
-
-class QPushButton;
+#include "core/modelinvariantindex.h"
 
 namespace MessageList
 {
@@ -35,34 +29,28 @@ namespace MessageList
 namespace Core
 {
 
-class Manager;
-
-class MESSAGELIST_EXPORT ConfigureThemesDialog : public KDialog
+class ModelInvariantIndex::Private
 {
-  friend class Manager;
-
-  Q_OBJECT
-protected:
-  ConfigureThemesDialog( QWidget *parent = 0 );
-  ~ConfigureThemesDialog();
-
 public:
-  static ConfigureThemesDialog * instance();
+  int mModelIndexRow;                   ///< The row that this index referenced at the time it was emitted
+  uint mRowMapperSerial;                ///< The serial that was current in the RowMapper at the time the invariant index was emitted
+  ModelInvariantRowMapper * mRowMapper; ///< The mapper that this invariant index is attached to
 
-private:
-  Q_PRIVATE_SLOT(d, void themeListCurrentItemChanged( QListWidgetItem*, QListWidgetItem* ))
-  Q_PRIVATE_SLOT(d, void newThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void cloneThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void deleteThemeButtonClicked())
-  Q_PRIVATE_SLOT(d, void editedThemeNameChanged())
-  Q_PRIVATE_SLOT(d, void okButtonClicked())
-
-  class Private;
-  Private * const d;
+  int modelIndexRow() const
+    { return mModelIndexRow; };
+  uint rowMapperSerial() const
+    { return mRowMapperSerial; };
+  void setModelIndexRowAndRowMapperSerial( int modelIndexRow, uint rowMapperSerial )
+    { mModelIndexRow = modelIndexRow; mRowMapperSerial = rowMapperSerial; };
+  ModelInvariantRowMapper * rowMapper() const
+    { return mRowMapper; };
+  void setRowMapper( ModelInvariantRowMapper * mapper )
+    { mRowMapper = mapper; };
 };
 
 } // namespace Core
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_CONFIGURESKINSDIALOG_H__
+
+#endif //!__MESSAGELIST_CORE_MODELINVARIANTINDEX_P_H__

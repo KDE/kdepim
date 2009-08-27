@@ -45,6 +45,7 @@ public:
    * with changes made by the configure dialog.
    */
   explicit ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox = 0 );
+  ~ThemeConfigButton();
 
 signals:
   /**
@@ -52,11 +53,11 @@ signals:
    */
   void configureDialogCompleted();
 
-private slots:
-  void slotConfigureThemes();
-
 private:
-  const ThemeComboBox * mThemeComboBox;
+  Q_PRIVATE_SLOT(d, void slotConfigureThemes())
+
+  class Private;
+  Private * const d;
 };
 
 } // namespace Core

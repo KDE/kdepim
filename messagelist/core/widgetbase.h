@@ -46,12 +46,8 @@ namespace MessageList
 namespace Core
 {
 
-class Aggregation;
-class Filter;
 class GroupHeaderItem;
-class Manager;
 class MessageItem;
-class Theme;
 class StorageModel;
 class View;
 
@@ -69,25 +65,6 @@ public:
   Widget( QWidget *parent );
   ~Widget();
 
-private:
-  View *mView;
-  QString mLastAggregationId;
-  QString mLastThemeId;
-  KLineEdit * mSearchEdit;
-  QTimer * mSearchTimer;
-  KComboBox * mStatusFilterCombo;
-
-  StorageModel * mStorageModel;          ///< The currently displayed storage. The storage itself
-                                         ///  is owned by MessageList::Widget.
-  Aggregation * mAggregation;            ///< The currently set aggregation mode, a deep copy
-  Theme * mTheme;                        ///< The currently set theme, a deep copy
-  SortOrder mSortOrder;                  ///< The currently set sort order
-  Filter * mFilter;                      ///< The currently applied filter, owned by us.
-  bool mStorageUsesPrivateTheme;         ///< true if the current folder does not use the global theme
-  bool mStorageUsesPrivateAggregation;   ///< true if the current folder does not use the global aggregation
-  bool mStorageUsesPrivateSortOrder;     ///< true if the current folder does not use the global sort order
-  int mFirstTagInComboIndex;             ///< the index of the combobox where the first tag starts
-public:
   /**
    * Sets the storage model for this Widget.
    *
@@ -99,21 +76,18 @@ public:
   /**
    * Returns the StorageModel currently set. May be 0.
    */
-  StorageModel * storageModel() const
-    { return mStorageModel; };
+  StorageModel *storageModel() const;
 
   /**
    * Returns the search line of this widget. Can be 0 if the quick search
    * is disabled in the global configuration.
    */
-  KLineEdit *quickSearch() const
-    { return mSearchEdit; }
+  KLineEdit *quickSearch() const;
 
   /**
    * Returns the View attached to this Widget. Never 0.
    */
-  View * view() const
-    { return mView; };
+  View *view() const;
 
   /**
    * Returns the current MessageItem in the current folder.
@@ -260,29 +234,9 @@ protected slots:
   void slotViewHeaderSectionClicked( int logicalIndex );
 
 private:
-
-  /**
-   * Small helper for switching SortOrder::MessageSorting and SortOrder::SortDirection
-   * on the fly.
-   * After doing this, the sort indicator in the header is updated.
-   */
-  void switchMessageSorting( SortOrder::MessageSorting messageSorting,
-                             SortOrder::SortDirection sortDirection,
-                             int logicalHeaderColumnIndex );
-
-  /**
-   * Check if our sort order can still be used with this aggregation.
-   * This can happen if the global aggregation changed, for example we can now
-   * have "most recent in subtree" sorting with an aggregation without threading.
-   * If this happens, reset to the default sort order and don't use the global sort
-   * order.
-   */
-  void checkSortOrder( const StorageModel *storageModel );
-
-  void setDefaultAggregationForStorageModel( const StorageModel * storageModel );
-  void setDefaultThemeForStorageModel( const StorageModel * storageModel );
-  void setDefaultSortOrderForStorageModel( const StorageModel * storageModel );
-  void applyFilter();
+  class Private;
+  friend class Private;
+  Private * const d;
 };
 
 } // namespace Core

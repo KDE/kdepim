@@ -45,17 +45,8 @@ class MESSAGELIST_EXPORT ModelInvariantIndex
   friend class ModelInvariantRowMapper;
   friend class RowShift;
 
-private:
-  int mModelIndexRow;                   ///< The row that this index referenced at the time it was emitted
-  uint mRowMapperSerial;                ///< The serial that was current in the RowMapper at the time the invariant index was emitted
-  ModelInvariantRowMapper * mRowMapper; ///< The mapper that this invariant index is attached to
-
 public:
-  ModelInvariantIndex()
-    : mRowMapper( 0 )
-  {
-  };
-
+  ModelInvariantIndex();
   virtual ~ModelInvariantIndex();
 
 public:
@@ -64,8 +55,7 @@ public:
    * to a ModelInvariantRowMapper. Returns false otherwise.
    * An invalid index will always map to the current row -1 (which is invalid as QModelIndex row).
    */
-  bool isValid() const
-    { return mRowMapper != 0; };
+  bool isValid() const;
 
   /**
    * Returns the current model index row for this invariant index. This function
@@ -78,18 +68,10 @@ public:
    */
   int currentModelIndexRow();
 
-protected:
-  int modelIndexRow() const
-    { return mModelIndexRow; };
-  uint rowMapperSerial() const
-    { return mRowMapperSerial; };
-  void setModelIndexRowAndRowMapperSerial( int modelIndexRow, uint rowMapperSerial )
-    { mModelIndexRow = modelIndexRow; mRowMapperSerial = rowMapperSerial; };
-  ModelInvariantRowMapper * rowMapper() const
-    { return mRowMapper; };
-  void setRowMapper( ModelInvariantRowMapper * mapper )
-    { mRowMapper = mapper; };
-
+private:
+  class Private;
+  friend class Private;
+  Private * const d;
 };
 
 } // namespace Core

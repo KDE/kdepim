@@ -22,12 +22,15 @@
 
 #include "core/aggregation.h"
 #include "core/configureaggregationsdialog.h"
+#include "core/configureaggregationsdialog_p.h"
 #include "core/theme.h"
 #include "core/view.h"
 #include "core/configurethemesdialog.h"
+#include "core/configurethemesdialog_p.h"
 #include "core/widgetbase.h"
 #include "core/storagemodelbase.h"
 #include "core/model.h"
+#include "core/model_p.h"
 #include "core/settings.h"
 
 #include <QPixmap>
@@ -143,8 +146,8 @@ Manager::~Manager()
 
   delete mDateFormatter;
 
-  ConfigureAggregationsDialog::cleanup(); // make sure it's dead
-  ConfigureThemesDialog::cleanup(); // make sure it's dead
+  ConfigureAggregationsDialog::Private::cleanup(); // make sure it's dead
+  ConfigureThemesDialog::Private::cleanup(); // make sure it's dead
 
   mInstance = 0;
 }
@@ -158,18 +161,18 @@ void Manager::slotHeartBeat()
       continue;
     if ( !( *it )->view()->model() )
       continue;
-    ( *it )->view()->model()->checkIfDateChanged();
+    ( *it )->view()->model()->d->checkIfDateChanged();
   }
 }
 
 void Manager::showConfigureAggregationsDialog( QWidget *requester, const QString &preselectAggregationId )
 {
-  ConfigureAggregationsDialog::display( requester ? requester->window() : 0, preselectAggregationId );
+  ConfigureAggregationsDialog::Private::display( requester ? requester->window() : 0, preselectAggregationId );
 }
 
 void Manager::showConfigureThemesDialog( QWidget *requester, const QString &preselectThemeId )
 {
-  ConfigureThemesDialog::display( requester ? requester->window() : 0, preselectThemeId );
+  ConfigureThemesDialog::Private::display( requester ? requester->window() : 0, preselectThemeId );
 }
 
 

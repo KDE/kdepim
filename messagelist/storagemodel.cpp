@@ -38,19 +38,53 @@
 #include <QtCore/QAtomicInt>
 #include <QtGui/QItemSelectionModel>
 
+namespace MessageList
+{
+
+class StorageModel::Private
+{
+public:
+  Private( StorageModel *owner )
+    : q( owner ) { }
+
+  void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
+  void onSelectionChanged();
+
+  StorageModel * const q;
+
+  QAbstractItemModel *mModel;
+  QItemSelectionModel *mSelectionModel;
+
+  QColor mColorNewMessage;
+  QColor mColorUnreadMessage;
+  QColor mColorImportantMessage;
+  QColor mColorToDoMessage;
+
+  QFont mFont;
+  QFont mFontNewMessage;
+  QFont mFontUnreadMessage;
+  QFont mFontImportantMessage;
+  QFont mFontToDoMessage;
+};
+
+} // namespace MessageList
+
 using namespace Akonadi;
 using namespace MessageList;
 
 static QAtomicInt _k_attributeInitialized;
 
 StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QObject *parent )
-  : Core::StorageModel( parent ), mModel( 0 ), mSelectionModel( selectionModel )
+  : Core::StorageModel( parent ), d( new Private( this ) )
 {
+  d->mModel = 0;
+  d->mSelectionModel = selectionModel;
+
   if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
     AttributeFactory::registerAttribute<MessageFolderAttribute>();
   }
 
-  SelectionProxyModel *childrenFilter = new SelectionProxyModel( mSelectionModel, this );
+  SelectionProxyModel *childrenFilter = new SelectionProxyModel( d->mSelectionModel, this );
   childrenFilter->setSourceModel( model );
   childrenFilter->setFilterBehavior( SelectionProxyModel::OnlySelectedChildren );
 
@@ -60,72 +94,73 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
   itemFilter->setHeaderSet( EntityTreeModel::ItemListHeaders );
 
-  mModel = itemFilter;
+  d->mModel = itemFilter;
 
   // Custom/System colors
   Core::Settings *settings = Core::Settings::self();
 
   if ( settings->useDefaultColors() ) {
-    mColorNewMessage = QColor("red");
-    mColorUnreadMessage = QColor("blue");
-    mColorImportantMessage = QColor(0x0, 0x7F, 0x0);
-    mColorToDoMessage = QColor(0x0, 0x98, 0x0);
+    d->mColorNewMessage = QColor("red");
+    d->mColorUnreadMessage = QColor("blue");
+    d->mColorImportantMessage = QColor(0x0, 0x7F, 0x0);
+    d->mColorToDoMessage = QColor(0x0, 0x98, 0x0);
   } else {
-    mColorNewMessage = settings->newMessageColor();
-    mColorUnreadMessage = settings->unreadMessageColor();
-    mColorImportantMessage = settings->importantMessageColor();
-    mColorToDoMessage = settings->todoMessageColor();
+    d->mColorNewMessage = settings->newMessageColor();
+    d->mColorUnreadMessage = settings->unreadMessageColor();
+    d->mColorImportantMessage = settings->importantMessageColor();
+    d->mColorToDoMessage = settings->todoMessageColor();
   }
 
 
   if ( settings->useDefaultFonts() ) {
-    mFont = KGlobalSettings::generalFont();
-    mFontNewMessage = KGlobalSettings::generalFont();
-    mFontUnreadMessage = KGlobalSettings::generalFont();
-    mFontImportantMessage = KGlobalSettings::generalFont();
-    mFontToDoMessage = KGlobalSettings::generalFont();
+    d->mFont = KGlobalSettings::generalFont();
+    d->mFontNewMessage = KGlobalSettings::generalFont();
+    d->mFontUnreadMessage = KGlobalSettings::generalFont();
+    d->mFontImportantMessage = KGlobalSettings::generalFont();
+    d->mFontToDoMessage = KGlobalSettings::generalFont();
   } else {
-    mFont = settings->messageListFont();
-    mFontNewMessage = settings->newMessageFont();
-    mFontUnreadMessage = settings->unreadMessageFont();
-    mFontImportantMessage = settings->importantMessageFont();
-    mFontToDoMessage = settings->todoMessageFont();
+    d->mFont = settings->messageListFont();
+    d->mFontNewMessage = settings->newMessageFont();
+    d->mFontUnreadMessage = settings->unreadMessageFont();
+    d->mFontImportantMessage = settings->importantMessageFont();
+    d->mFontToDoMessage = settings->todoMessageFont();
   }
 
-  connect( mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+  connect( d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
 
-  connect( mModel, SIGNAL(layoutAboutToBeChanged()),
+  connect( d->mModel, SIGNAL(layoutAboutToBeChanged()),
            this, SIGNAL(layoutAboutToBeChanged()) );
-  connect( mModel, SIGNAL(layoutChanged()),
+  connect( d->mModel, SIGNAL(layoutChanged()),
            this, SIGNAL(layoutChanged()) );
-  connect( mModel, SIGNAL(modelAboutToBeReset()),
+  connect( d->mModel, SIGNAL(modelAboutToBeReset()),
            this, SIGNAL(modelAboutToBeReset()) );
-  connect( mModel, SIGNAL(modelReset()),
+  connect( d->mModel, SIGNAL(modelReset()),
            this, SIGNAL(modelReset()) );
 
   //Here we assume we'll always get QModelIndex() in the parameters
-  connect( mModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
+  connect( d->mModel, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
            this, SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)) );
-  connect( mModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
+  connect( d->mModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
            this, SIGNAL(rowsInserted(QModelIndex, int, int)) );
-  connect( mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+  connect( d->mModel, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
            this, SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)) );
-  connect( mModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
+  connect( d->mModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
            this, SIGNAL(rowsRemoved(QModelIndex, int, int)) );
 
-  connect( mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
+  connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
            this, SLOT(onSelectionChanged()) );
 }
 
 StorageModel::~StorageModel()
 {
+  delete d;
 }
 
 Collection::List StorageModel::displayedCollections() const
 {
   Collection::List collections;
-  QModelIndexList indexes = mSelectionModel->selectedRows();
+  QModelIndexList indexes = d->mSelectionModel->selectedRows();
 
   foreach ( const QModelIndex &index, indexes ) {
     Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
@@ -140,7 +175,7 @@ Collection::List StorageModel::displayedCollections() const
 QString StorageModel::id() const
 {
   QStringList ids;
-  QModelIndexList indexes = mSelectionModel->selectedRows();
+  QModelIndexList indexes = d->mSelectionModel->selectedRows();
 
   foreach ( const QModelIndex &index, indexes ) {
     Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
@@ -155,7 +190,7 @@ QString StorageModel::id() const
 
 bool StorageModel::containsOutboundMessages() const
 {
-  QModelIndexList indexes = mSelectionModel->selectedRows();
+  QModelIndexList indexes = d->mSelectionModel->selectedRows();
 
   foreach ( const QModelIndex &index, indexes ) {
     Collection c = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
@@ -171,7 +206,7 @@ bool StorageModel::containsOutboundMessages() const
 
 int StorageModel::initialUnreadRowCountGuess() const
 {
-  QModelIndexList indexes = mSelectionModel->selectedRows();
+  QModelIndexList indexes = d->mSelectionModel->selectedRows();
 
   int unreadCount = 0;
 
@@ -309,13 +344,13 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 
   if ( !clr.isValid() ) {
     if ( stat.isNew() ) {
-      clr = mColorNewMessage;
+      clr = d->mColorNewMessage;
     } else if ( stat.isUnread() ) {
-      clr = mColorUnreadMessage;
+      clr = d->mColorUnreadMessage;
     } else if ( stat.isImportant() ) {
-      clr = mColorImportantMessage;
+      clr = d->mColorImportantMessage;
     } else if ( stat.isToAct() ) {
-      clr = mColorToDoMessage;
+      clr = d->mColorToDoMessage;
     }
   }
 
@@ -328,15 +363,15 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
   if ( stat.isImportant() ) {
-    mi->setFont( mFontImportantMessage );
+    mi->setFont( d->mFontImportantMessage );
   } else if ( stat.isNew() ) {
-    mi->setFont( mFontNewMessage );
+    mi->setFont( d->mFontNewMessage );
   } else if ( stat.isUnread() ) {
-    mi->setFont( mFontUnreadMessage );
+    mi->setFont( d->mFontUnreadMessage );
   } else if ( stat.isToAct() ) {
-    mi->setFont( mFontToDoMessage );
+    mi->setFont( d->mFontToDoMessage );
   } else {
-    mi->setFont( mFont );
+    mi->setFont( d->mFont );
   }
 }
 
@@ -388,7 +423,7 @@ QModelIndex StorageModel::parent( const QModelIndex &index ) const
 int StorageModel::rowCount( const QModelIndex &parent ) const
 {
   if ( !parent.isValid() )
-    return mModel->rowCount();
+    return d->mModel->rowCount();
   return 0; // this model is flat.
 }
 
@@ -397,20 +432,20 @@ void StorageModel::prepareForScan()
 
 }
 
-void StorageModel::onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
+void StorageModel::Private::onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
 {
-  emit dataChanged( index( topLeft.row(), 0 ),
-                    index( bottomRight.row(), 0 ) );
+  emit q->dataChanged( q->index( topLeft.row(), 0 ),
+                       q->index( bottomRight.row(), 0 ) );
 }
 
-void StorageModel::onSelectionChanged()
+void StorageModel::Private::onSelectionChanged()
 {
-  emit headerDataChanged( Qt::Horizontal, 0, columnCount()-1 );
+  emit q->headerDataChanged( Qt::Horizontal, 0, q->columnCount()-1 );
 }
 
 Item StorageModel::itemForRow( int row ) const
 {
-  return mModel->data( mModel->index( row, 0 ), EntityTreeModel::ItemRole ).value<Item>();
+  return d->mModel->data( d->mModel->index( row, 0 ), EntityTreeModel::ItemRole ).value<Item>();
 }
 
 MessagePtr StorageModel::messageForRow( int row ) const
@@ -424,3 +459,5 @@ MessagePtr StorageModel::messageForRow( int row ) const
 
   return item.payload<MessagePtr>();
 }
+
+#include "storagemodel.moc"

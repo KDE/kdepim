@@ -50,8 +50,6 @@ public:
   StorageModel( QObject * parent = 0 );
   ~StorageModel();
 
-public:
-
   /**
    * Returns an unique id for this Storage collection.
    * FIXME: This could be embedded in "name()" ?
@@ -114,7 +112,6 @@ public:
    * Called by Model just before this StorageModel is attacched to it.
    */
   virtual void prepareForScan() = 0;
-
 };
 
 } // namespace Core

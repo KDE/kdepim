@@ -26,27 +26,46 @@
 
 using namespace MessageList::Core;
 
-AggregationConfigButton::AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox )
-: KPushButton( i18n( "Configure..." ), parent ),
-  mAggregationComboBox( aggregationComboBox )
+class AggregationConfigButton::Private
 {
+public:
+  Private( AggregationConfigButton *owner )
+    : q( owner ) { }
+
+  AggregationConfigButton * const q;
+
+  const AggregationComboBox * mAggregationComboBox;
+
+  void slotConfigureAggregations();
+};
+
+AggregationConfigButton::AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox )
+: KPushButton( i18n( "Configure..." ), parent ), d( new Private( this ) )
+{
+  d->mAggregationComboBox = aggregationComboBox;
   connect( this, SIGNAL( pressed() ),
            this, SLOT( slotConfigureAggregations() ) );
 
   // Keep aggregation combo up-to-date with any changes made in the configure dialog.
-  if ( mAggregationComboBox != 0 )
+  if ( d->mAggregationComboBox != 0 )
     connect( this, SIGNAL( configureDialogCompleted() ),
-             mAggregationComboBox, SLOT( slotLoadAggregations() ) );
+             d->mAggregationComboBox, SLOT( slotLoadAggregations() ) );
 }
 
-void AggregationConfigButton::slotConfigureAggregations()
+AggregationConfigButton::~AggregationConfigButton()
+{
+  delete d;
+}
+
+void AggregationConfigButton::Private::slotConfigureAggregations()
 {
   QString currentAggregationID;
   if ( mAggregationComboBox != 0 )
     currentAggregationID = mAggregationComboBox->currentAggregation()->id();
-  Manager::instance()->showConfigureAggregationsDialog( static_cast< QWidget * >( parent() ), currentAggregationID );
+  Manager::instance()->showConfigureAggregationsDialog( static_cast< QWidget * >( q->parent() ), currentAggregationID );
 
   connect( ConfigureAggregationsDialog::instance(), SIGNAL( okClicked() ),
-           this, SIGNAL( configureDialogCompleted() ) );
+           q, SIGNAL( configureDialogCompleted() ) );
 }
 
+#include "aggregationconfigbutton.moc"

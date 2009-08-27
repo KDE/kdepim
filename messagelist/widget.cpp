@@ -41,6 +41,25 @@
 #include <KDE/KLocale>
 #include <KDE/KMenu>
 
+namespace MessageList
+{
+
+class Widget::Private
+{
+public:
+  Private( Widget *owner )
+    : q( owner ) { }
+
+  Akonadi::Item::List selectionAsItems() const;
+  Akonadi::Item itemForRow( int row ) const;
+
+  Widget * const q;
+
+  int mLastSelectedMessage;
+};
+
+} // namespace MessageList
+
 using namespace MessageList;
 using namespace Akonadi;
 
@@ -77,7 +96,7 @@ QDataStream &operator>>(QDataStream &stream, DragPayload &payload)
 }
 
 Widget::Widget( QWidget *parent )
-  : Core::Widget( parent )
+  : Core::Widget( parent ), d( new Private( this ) )
 {
   QTimer::singleShot( 0, this, SLOT( populateStatusFilterCombo() ) );
 }
@@ -164,16 +183,16 @@ void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )
   }
 
   if ( !msg || !msg->isValid() || !storageModel() ) {
-    mLastSelectedMessage = -1;
+    d->mLastSelectedMessage = -1;
     emit messageSelected( Item() );
     return;
   }
 
   Q_ASSERT( row >= 0 );
 
-  mLastSelectedMessage = row;
+  d->mLastSelectedMessage = row;
 
-  emit messageSelected( itemForRow( row ) ); // this MAY be null
+  emit messageSelected( d->itemForRow( row ) ); // this MAY be null
 }
 
 void Widget::viewMessageActivated( MessageList::Core::MessageItem *msg )
@@ -190,9 +209,9 @@ void Widget::viewMessageActivated( MessageList::Core::MessageItem *msg )
 
   // The assert below may fail when quickly opening and closing a non-selected thread.
   // This will actually activate the item without selecting it...
-  //Q_ASSERT( mLastSelectedMessage == row );
+  //Q_ASSERT( d->mLastSelectedMessage == row );
 
-  if ( mLastSelectedMessage != row ) {
+  if ( d->mLastSelectedMessage != row ) {
     // Very ugly. We are activating a non selected message.
     // This is very likely a double click on the plus sign near a thread leader.
     // Dealing with mLastSelectedMessage here would be expensive: it would involve releasing the last selected,
@@ -202,7 +221,7 @@ void Widget::viewMessageActivated( MessageList::Core::MessageItem *msg )
     return;
   }
 
-  emit messageActivated( itemForRow( row ) ); // this MAY be null
+  emit messageActivated( d->itemForRow( row ) ); // this MAY be null
 }
 
 void Widget::viewSelectionChanged()
@@ -231,7 +250,7 @@ void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg
   int row = msg->currentModelIndexRow();
   Q_ASSERT( row >= 0 );
 
-  Item item = itemForRow( row );
+  Item item = d->itemForRow( row );
   Q_ASSERT( item.isValid() );
 
   emit messageStatusChangeRequest( item, set, clear );
@@ -359,7 +378,7 @@ void Widget::viewStartDragRequest()
   if ( collections.isEmpty() )
     return; // no folder here
 
-  QList<Item> items = selectionAsItems();
+  QList<Item> items = d->selectionAsItems();
   if ( items.isEmpty() )
     return;
 
@@ -410,10 +429,10 @@ void Widget::viewStartDragRequest()
     drag->exec( Qt::CopyAction | Qt::MoveAction );
 }
 
-Item::List Widget::selectionAsItems() const
+Item::List Widget::Private::selectionAsItems() const
 {
   Item::List res;
-  QList<Core::MessageItem *> selection = view()->selectionAsMessageItemList();
+  QList<Core::MessageItem *> selection = q->view()->selectionAsMessageItemList();
 
   foreach ( Core::MessageItem *mi, selection ) {
     Item i = itemForRow( mi->currentModelIndexRow() );
@@ -424,7 +443,7 @@ Item::List Widget::selectionAsItems() const
   return res;
 }
 
-Item Widget::itemForRow( int row ) const
+Item Widget::Private::itemForRow( int row ) const
 {
-  return static_cast<const StorageModel*>( storageModel() )->itemForRow( row );
+  return static_cast<const StorageModel*>( q->storageModel() )->itemForRow( row );
 }

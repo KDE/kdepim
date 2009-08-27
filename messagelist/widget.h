@@ -222,10 +222,8 @@ signals:
   void messageStatusChangeRequest( const Akonadi::Item &item, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
 
 private:
-  Akonadi::Item::List selectionAsItems() const;
-  Akonadi::Item itemForRow( int row ) const;
-
-  int mLastSelectedMessage;
+  class Private;
+  Private * const d;
 };
 
 } // namespace MessageList

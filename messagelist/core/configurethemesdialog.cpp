@@ -19,6 +19,7 @@
  *******************************************************************************/
 
 #include "core/configurethemesdialog.h"
+#include "core/configurethemesdialog_p.h"
 
 #include "core/themeeditor.h"
 #include "core/theme.h"
@@ -63,18 +64,30 @@ public:
     { mTheme = 0; };
 };
 
+class ThemeListWidget : public QListWidget
+{
+public:
+  ThemeListWidget( QWidget * parent )
+    : QListWidget( parent )
+    {};
+public:
+  // need a larger but shorter QListWidget
+  QSize sizeHint() const
+    { return QSize( 450, 128 ); };
+};
+
 } // namespace Core
 
 } // namespace MessageList
 
 using namespace MessageList::Core;
 
-ConfigureThemesDialog * ConfigureThemesDialog::mInstance = 0;
+ConfigureThemesDialog * ConfigureThemesDialog::Private::mInstance = 0;
 
 ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
-  : KDialog( parent )
+  : KDialog( parent ), d( new Private( this ) )
 {
-  mInstance = this;
+  Private::mInstance = this;
   setAttribute( Qt::WA_DeleteOnClose );
   setWindowModality( Qt::ApplicationModal ); // FIXME: Sure ?
   setButtons( Ok | Cancel );
@@ -85,27 +98,27 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
 
   QGridLayout * g = new QGridLayout( base );
 
-  mThemeList = new ThemeListWidget( base );
-  mThemeList->setSortingEnabled( true );
-  g->addWidget( mThemeList, 0, 0, 5, 1 );
+  d->mThemeList = new ThemeListWidget( base );
+  d->mThemeList->setSortingEnabled( true );
+  g->addWidget( d->mThemeList, 0, 0, 5, 1 );
 
-  connect( mThemeList, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
+  connect( d->mThemeList, SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
            SLOT( themeListCurrentItemChanged( QListWidgetItem *, QListWidgetItem * ) ) );
 
-  mNewThemeButton = new QPushButton( i18n( "New Theme" ), base );
-  mNewThemeButton->setIcon( KIcon( "document-new" ) );
-  mNewThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( mNewThemeButton, 0, 1 );
+  d->mNewThemeButton = new QPushButton( i18n( "New Theme" ), base );
+  d->mNewThemeButton->setIcon( KIcon( "document-new" ) );
+  d->mNewThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  g->addWidget( d->mNewThemeButton, 0, 1 );
 
-  connect( mNewThemeButton, SIGNAL( clicked() ),
+  connect( d->mNewThemeButton, SIGNAL( clicked() ),
            SLOT( newThemeButtonClicked() ) );
 
-  mCloneThemeButton = new QPushButton( i18n( "Clone Theme" ), base );
-  mCloneThemeButton->setIcon( KIcon( "edit-copy" ) );
-  mCloneThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( mCloneThemeButton, 1, 1 );
+  d->mCloneThemeButton = new QPushButton( i18n( "Clone Theme" ), base );
+  d->mCloneThemeButton->setIcon( KIcon( "edit-copy" ) );
+  d->mCloneThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  g->addWidget( d->mCloneThemeButton, 1, 1 );
 
-  connect( mCloneThemeButton, SIGNAL( clicked() ),
+  connect( d->mCloneThemeButton, SIGNAL( clicked() ),
            SLOT( cloneThemeButtonClicked() ) );
 
   QFrame * f = new QFrame( base );
@@ -113,18 +126,18 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   f->setMinimumHeight( 24 );
   g->addWidget( f, 2, 1, Qt::AlignVCenter );
 
-  mDeleteThemeButton = new QPushButton( i18n( "Delete Theme" ), base );
-  mDeleteThemeButton->setIcon( KIcon( "edit-delete" ) );
-  mDeleteThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
-  g->addWidget( mDeleteThemeButton, 3, 1 );
+  d->mDeleteThemeButton = new QPushButton( i18n( "Delete Theme" ), base );
+  d->mDeleteThemeButton->setIcon( KIcon( "edit-delete" ) );
+  d->mDeleteThemeButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
+  g->addWidget( d->mDeleteThemeButton, 3, 1 );
 
-  connect( mDeleteThemeButton, SIGNAL( clicked() ),
+  connect( d->mDeleteThemeButton, SIGNAL( clicked() ),
            SLOT( deleteThemeButtonClicked() ) );
 
-  mEditor = new ThemeEditor( base );
-  g->addWidget( mEditor, 5, 0, 1, 2 );
+  d->mEditor = new ThemeEditor( base );
+  g->addWidget( d->mEditor, 5, 0, 1, 2 );
 
-  connect( mEditor, SIGNAL( themeNameChanged() ),
+  connect( d->mEditor, SIGNAL( themeNameChanged() ),
            SLOT( editedThemeNameChanged() ) );
 
   g->setColumnStretch( 0, 1 );
@@ -133,24 +146,30 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   connect( this, SIGNAL( okClicked() ),
            SLOT( okButtonClicked() ) );
 
-  fillThemeList();
+  d->fillThemeList();
 }
 
 ConfigureThemesDialog::~ConfigureThemesDialog()
 {
-  mInstance = 0;
+  Private::mInstance = 0;
+  delete d;
 }
 
-void ConfigureThemesDialog::display( QWidget *parent, const QString &preselectThemeId )
+ConfigureThemesDialog * MessageList::Core::ConfigureThemesDialog::instance()
+{
+  return Private::mInstance;
+}
+
+void ConfigureThemesDialog::Private::display( QWidget *parent, const QString &preselectThemeId )
 {
   if ( mInstance )
     return; // FIXME: reparent if needed ?
   mInstance = new ConfigureThemesDialog( parent );
-  mInstance->selectThemeById( preselectThemeId );
+  mInstance->d->selectThemeById( preselectThemeId );
   mInstance->show();
 }
 
-void ConfigureThemesDialog::cleanup()
+void ConfigureThemesDialog::Private::cleanup()
 {
   if ( !mInstance )
     return;
@@ -158,7 +177,7 @@ void ConfigureThemesDialog::cleanup()
   mInstance = 0;
 }
 
-void ConfigureThemesDialog::selectThemeById( const QString &themeId )
+void ConfigureThemesDialog::Private::selectThemeById( const QString &themeId )
 {
   ThemeListWidgetItem * item = findThemeItemById( themeId );
   if ( !item )
@@ -166,7 +185,7 @@ void ConfigureThemesDialog::selectThemeById( const QString &themeId )
   mThemeList->setCurrentItem( item );
 }
 
-void ConfigureThemesDialog::okButtonClicked()
+void ConfigureThemesDialog::Private::okButtonClicked()
 {
   commitEditor();
 
@@ -187,10 +206,10 @@ void ConfigureThemesDialog::okButtonClicked()
 
   Manager::instance()->themesConfigurationCompleted();
 
-  close(); // this will delete too
+  q->close(); // this will delete too
 }
 
-void ConfigureThemesDialog::commitEditor()
+void ConfigureThemesDialog::Private::commitEditor()
 {
   Theme * editedTheme = mEditor->editedTheme();
   if ( !editedTheme )
@@ -211,7 +230,7 @@ void ConfigureThemesDialog::commitEditor()
   editedItem->setText( goodName );
 }
 
-void ConfigureThemesDialog::editedThemeNameChanged()
+void ConfigureThemesDialog::Private::editedThemeNameChanged()
 {
   Theme * set = mEditor->editedTheme();
   if ( !set )
@@ -226,14 +245,14 @@ void ConfigureThemesDialog::editedThemeNameChanged()
   it->setText( goodName );
 }
 
-void ConfigureThemesDialog::fillThemeList()
+void ConfigureThemesDialog::Private::fillThemeList()
 {
   const QHash< QString, Theme * > & sets = Manager::instance()->themes();
   for( QHash< QString, Theme * >::ConstIterator it = sets.begin(); it != sets.end(); ++it )
     (void)new ThemeListWidgetItem( mThemeList, *( *it ) );
 }
 
-void ConfigureThemesDialog::themeListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
+void ConfigureThemesDialog::Private::themeListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * )
 {
   commitEditor();
 
@@ -246,7 +265,7 @@ void ConfigureThemesDialog::themeListCurrentItemChanged( QListWidgetItem * cur, 
     item->setSelected( true ); // make sure it's true
 }
 
-ThemeListWidgetItem * ConfigureThemesDialog::findThemeItemById( const QString &themeId )
+ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemById( const QString &themeId )
 {
   int c = mThemeList->count();
   int i = 0;
@@ -264,7 +283,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::findThemeItemById( const QString &t
 }
 
 
-ThemeListWidgetItem * ConfigureThemesDialog::findThemeItemByName( const QString &name, Theme * skipTheme )
+ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByName( const QString &name, Theme * skipTheme )
 {
   int c = mThemeList->count();
   int i = 0;
@@ -284,7 +303,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::findThemeItemByName( const QString 
   return 0;
 }
 
-ThemeListWidgetItem * ConfigureThemesDialog::findThemeItemByTheme( Theme * set )
+ThemeListWidgetItem * ConfigureThemesDialog::Private::findThemeItemByTheme( Theme * set )
 {
   int c = mThemeList->count();
   int i = 0;
@@ -302,7 +321,7 @@ ThemeListWidgetItem * ConfigureThemesDialog::findThemeItemByTheme( Theme * set )
 }
 
 
-QString ConfigureThemesDialog::uniqueNameForTheme( QString baseName, Theme * skipTheme )
+QString ConfigureThemesDialog::Private::uniqueNameForTheme( QString baseName, Theme * skipTheme )
 {
   QString ret = baseName;
   if( ret.isEmpty() )
@@ -320,7 +339,7 @@ QString ConfigureThemesDialog::uniqueNameForTheme( QString baseName, Theme * ski
   return ret;
 }
 
-void ConfigureThemesDialog::newThemeButtonClicked()
+void ConfigureThemesDialog::Private::newThemeButtonClicked()
 {
   Theme emptyTheme;
   emptyTheme.setName( uniqueNameForTheme( i18n( "New Theme" ) ) );
@@ -335,7 +354,7 @@ void ConfigureThemesDialog::newThemeButtonClicked()
   mThemeList->setCurrentItem( item );
 }
 
-void ConfigureThemesDialog::cloneThemeButtonClicked()
+void ConfigureThemesDialog::Private::cloneThemeButtonClicked()
 {
   ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( mThemeList->currentItem() );
   if ( !item )
@@ -351,7 +370,7 @@ void ConfigureThemesDialog::cloneThemeButtonClicked()
 
 }
 
-void ConfigureThemesDialog::deleteThemeButtonClicked()
+void ConfigureThemesDialog::Private::deleteThemeButtonClicked()
 {
   ThemeListWidgetItem * item = dynamic_cast< ThemeListWidgetItem * >( mThemeList->currentItem() );
   if ( !item )
@@ -364,3 +383,4 @@ void ConfigureThemesDialog::deleteThemeButtonClicked()
   delete item; // this will trigger themeListCurrentItemChanged()
 }
 
+#include "configurethemesdialog.moc"

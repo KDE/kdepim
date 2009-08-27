@@ -18,7 +18,9 @@
  *
  *******************************************************************************/
 
+#include "item.h"
 #include "core/item.h"
+#include "core/item_p.h"
 #include "core/model.h"
 #include "core/manager.h"
 
@@ -29,74 +31,107 @@
 
 using namespace MessageList::Core;
 
+Item::Item( Type type )
+  : d( new Private( this ) )
+{
+  d->mType = type;
+  d->mChildItems = 0;
+  d->mParent = 0;
+  d->mThisItemIndexGuess = 0;
+  d->mIsViewable = false;
+  d->mInitialExpandStatus = NoExpandNeeded;
+}
+
 Item::~Item()
 {
   killAllChildItems();
 
-  if ( mParent )
-    mParent->childItemDead( this );
+  if ( d->mParent )
+    d->mParent->d->childItemDead( this );
+
+  delete d;
 }
 
 void Item::childItemStats( ChildItemStats &stats ) const
 {
-  Q_ASSERT( mChildItems );
+  Q_ASSERT( d->mChildItems );
 
-  stats.mTotalChildCount += mChildItems->count();
-  for( QList< Item * >::Iterator it = mChildItems->begin(); it != mChildItems->end(); ++it )
+  stats.mTotalChildCount += d->mChildItems->count();
+  for( QList< Item * >::Iterator it = d->mChildItems->begin(); it != d->mChildItems->end(); ++it )
   {
     if ( ( *it )->status().isNew() )
       stats.mNewChildCount++;
     else if ( ( *it )->status().isUnread() )
       stats.mUnreadChildCount++;
-    if ( ( *it )->mChildItems )
+    if ( ( *it )->d->mChildItems )
       ( *it )->childItemStats( stats );
   }
 }
 
+QList< Item * > *Item::childItems() const
+{
+  return d->mChildItems;
+}
+
+Item *Item::childItem( int idx ) const
+{
+  if ( idx < 0 )
+    return 0;
+  if ( !d->mChildItems )
+    return 0;
+  if ( d->mChildItems->count() <= idx )
+    return 0;
+  return d->mChildItems->at( idx );
+}
+
+Item * Item::firstChildItem() const
+{
+  return d->mChildItems ? ( d->mChildItems->count() > 0 ? d->mChildItems->at( 0 ) : 0 ) : 0;
+}
 
 Item * Item::itemBelowChild( Item * child )
 {
-  Q_ASSERT( mChildItems );
+  Q_ASSERT( d->mChildItems );
 
   int idx = child->indexGuess();
   if ( !childItemHasIndex( child, idx ) )
   {
-    idx = mChildItems->indexOf( child );
+    idx = d->mChildItems->indexOf( child );
     child->setIndexGuess( idx );
   }
   Q_ASSERT( idx >= 0 );
 
   idx++;
 
-  if ( idx < mChildItems->count() )
-    return mChildItems->at( idx );
+  if ( idx < d->mChildItems->count() )
+    return d->mChildItems->at( idx );
 
-  if ( !mParent )
+  if ( !d->mParent )
     return 0;
 
-  return mParent->itemBelowChild( this );
+  return d->mParent->itemBelowChild( this );
 }
 
 Item * Item::itemBelow()
 {
-  if ( mChildItems )
+  if ( d->mChildItems )
   {
-    if ( mChildItems->count() > 0 )
-      return mChildItems->at( 0 );
+    if ( d->mChildItems->count() > 0 )
+      return d->mChildItems->at( 0 );
   }
 
-  if ( !mParent )
+  if ( !d->mParent )
     return 0;
 
-  return mParent->itemBelowChild( this );
+  return d->mParent->itemBelowChild( this );
 }
 
 Item * Item::deepestItem()
 {
-  if ( mChildItems )
+  if ( d->mChildItems )
   {
-    if ( mChildItems->count() > 0 )
-      return mChildItems->at( mChildItems->count() - 1 )->deepestItem();
+    if ( d->mChildItems->count() > 0 )
+      return d->mChildItems->at( d->mChildItems->count() - 1 )->deepestItem();
   }
 
   return this;
@@ -104,19 +139,19 @@ Item * Item::deepestItem()
 
 Item * Item::itemAboveChild( Item * child )
 {
-  if ( mChildItems )
+  if ( d->mChildItems )
   {
     int idx = child->indexGuess();
     if ( !childItemHasIndex( child, idx ) )
     {
-      idx = mChildItems->indexOf( child );
+      idx = d->mChildItems->indexOf( child );
       child->setIndexGuess( idx );
     }
     Q_ASSERT( idx >= 0 );
     idx--;
 
     if ( idx >= 0 )
-      return mChildItems->at( idx );
+      return d->mChildItems->at( idx );
   }
 
   return this;
@@ -124,30 +159,60 @@ Item * Item::itemAboveChild( Item * child )
 
 Item * Item::itemAbove()
 {
-  if ( !mParent )
+  if ( !d->mParent )
     return 0;
 
-  Item *siblingAbove = mParent->itemAboveChild( this );
-  if ( siblingAbove && siblingAbove != this && siblingAbove != mParent &&
+  Item *siblingAbove = d->mParent->itemAboveChild( this );
+  if ( siblingAbove && siblingAbove != this && siblingAbove != d->mParent &&
        siblingAbove->childItemCount() > 0 )
   {
     return siblingAbove->deepestItem();
   }
 
-  return mParent->itemAboveChild( this );
+  return d->mParent->itemAboveChild( this );
+}
+
+int Item::childItemCount() const
+{
+  return d->mChildItems ? d->mChildItems->count() : 0;
+}
+
+bool Item::hasChildren() const
+{
+  return childItemCount() > 0;
+}
+
+int Item::indexOfChildItem( Item *item ) const
+{
+  return d->mChildItems ? d->mChildItems->indexOf( item ) : -1;
+}
+
+int Item::indexGuess() const
+{
+  return d->mThisItemIndexGuess;
+}
+
+void Item::setIndexGuess( int index )
+{
+  d->mThisItemIndexGuess = index;
+}
+
+bool Item::childItemHasIndex( const Item *item, int idx ) const
+{
+  return d->mChildItems ? ( ( d->mChildItems->count() > idx ) ? ( d->mChildItems->at( idx ) == item ) : false ) : false;
 }
 
 Item * Item::topmostNonRoot()
 {
-  Q_ASSERT( mType != InvisibleRoot );
+  Q_ASSERT( d->mType != InvisibleRoot );
 
-  if ( !mParent )
+  if ( !d->mParent )
     return this;
 
-  if ( mParent->type() == InvisibleRoot )
+  if ( d->mParent->type() == InvisibleRoot )
     return this;
 
-  return mParent->topmostNonRoot();
+  return d->mParent->topmostNonRoot();
 }
 
 
@@ -203,49 +268,49 @@ QString Item::statusDescription() const
 
 const QString & Item::formattedSize()
 {
-  if ( mFormattedSize.isEmpty() )
-    mFormattedSize = KIO::convertSize( ( KIO::filesize_t ) size() );
-  return mFormattedSize;
+  if ( d->mFormattedSize.isEmpty() )
+    d->mFormattedSize = KIO::convertSize( ( KIO::filesize_t ) size() );
+  return d->mFormattedSize;
 }
 
 const QString & Item::formattedDate()
 {
-  if ( mFormattedDate.isEmpty() )
+  if ( d->mFormattedDate.isEmpty() )
   {
     if ( static_cast< uint >( date() ) == static_cast< uint >( -1 ) )
-      mFormattedDate = Manager::instance()->cachedLocalizedUnknownText();
+      d->mFormattedDate = Manager::instance()->cachedLocalizedUnknownText();
     else
-      mFormattedDate = Manager::instance()->dateFormatter()->dateString( date() );
+      d->mFormattedDate = Manager::instance()->dateFormatter()->dateString( date() );
   }
-  return mFormattedDate;
+  return d->mFormattedDate;
 }
 
 const QString & Item::formattedMaxDate()
 {
-  if ( mFormattedMaxDate.isEmpty() )
+  if ( d->mFormattedMaxDate.isEmpty() )
   {
     if ( static_cast< uint >( maxDate() ) == static_cast< uint >( -1 ) )
-      mFormattedMaxDate = Manager::instance()->cachedLocalizedUnknownText();
+      d->mFormattedMaxDate = Manager::instance()->cachedLocalizedUnknownText();
     else
-      mFormattedMaxDate = Manager::instance()->dateFormatter()->dateString( maxDate() );
+      d->mFormattedMaxDate = Manager::instance()->dateFormatter()->dateString( maxDate() );
   }
-  return mFormattedMaxDate;
+  return d->mFormattedMaxDate;
 }
 
 bool Item::recomputeMaxDate()
 {
-  time_t newMaxDate = mDate;
+  time_t newMaxDate = d->mDate;
 
-  if ( mChildItems )
+  if ( d->mChildItems )
   {
-    for ( QList< Item * >::ConstIterator it = mChildItems->constBegin(); it != mChildItems->constEnd(); ++it )
+    for ( QList< Item * >::ConstIterator it = d->mChildItems->constBegin(); it != d->mChildItems->constEnd(); ++it )
     {
-      if ( ( *it )->mMaxDate > newMaxDate )
-        newMaxDate = ( *it )->mMaxDate;
+      if ( ( *it )->d->mMaxDate > newMaxDate )
+        newMaxDate = ( *it )->d->mMaxDate;
     }
   }
 
-  if ( newMaxDate != mMaxDate )
+  if ( newMaxDate != d->mMaxDate )
   {
     setMaxDate( newMaxDate );
     return true;
@@ -253,20 +318,46 @@ bool Item::recomputeMaxDate()
   return false;
 }
 
+
+Item::Type Item::type() const
+{
+  return d->mType;
+}
+
+Item::InitialExpandStatus Item::initialExpandStatus() const
+{
+  return d->mInitialExpandStatus;
+}
+
+void Item::setInitialExpandStatus( InitialExpandStatus initialExpandStatus )
+{
+  d->mInitialExpandStatus = initialExpandStatus;
+}
+
+bool Item::isViewable() const
+{
+  return d->mIsViewable;
+}
+
+bool Item::hasAncestor( const Item * it ) const
+{
+  return d->mParent ? ( d->mParent == it ? true : d->mParent->hasAncestor( it ) ) : false;
+}
+
 void Item::setViewable( Model *model,bool bViewable )
 {
-  if ( mIsViewable == bViewable )
+  if ( d->mIsViewable == bViewable )
     return;
 
-  if ( !mChildItems )
+  if ( !d->mChildItems )
   {
-    mIsViewable = bViewable;
+    d->mIsViewable = bViewable;
     return;
   }
 
-  if ( mChildItems->count() < 1 )
+  if ( d->mChildItems->count() < 1 )
   {
-    mIsViewable = bViewable;
+    d->mIsViewable = bViewable;
     return;
   }
 
@@ -275,21 +366,21 @@ void Item::setViewable( Model *model,bool bViewable )
     if ( model )
     {
       // fake having no children, for a second
-      QList< Item * > * tmp = mChildItems;
-      mChildItems = 0;
+      QList< Item * > * tmp = d->mChildItems;
+      d->mChildItems = 0;
       //qDebug("BEGIN INSERT ROWS FOR PARENT %x: from %d to %d, (will) have %d children",this,0,tmp->count()-1,tmp->count());
       model->beginInsertRows( model->index( this, 0 ), 0, tmp->count() - 1 );
-      mChildItems = tmp;
-      mIsViewable = true;
+      d->mChildItems = tmp;
+      d->mIsViewable = true;
       model->endInsertRows();
     } else {
-      mIsViewable = true;
+      d->mIsViewable = true;
     }
 
-    for ( QList< Item * >::Iterator it = mChildItems->begin(); it != mChildItems->end() ;++it )
+    for ( QList< Item * >::Iterator it = d->mChildItems->begin(); it != d->mChildItems->end() ;++it )
      ( *it )->setViewable( model, bViewable );
   } else {
-    for ( QList< Item * >::Iterator it = mChildItems->begin(); it != mChildItems->end() ;++it )
+    for ( QList< Item * >::Iterator it = d->mChildItems->begin(); it != d->mChildItems->end() ;++it )
       ( *it )->setViewable( model, bViewable );
 
     // It seems that we can avoid removing child items here since the parent has been removed: this is a hack tough
@@ -298,55 +389,168 @@ void Item::setViewable( Model *model,bool bViewable )
     if ( model )
     {
       // fake having no children, for a second
-      model->beginRemoveRows( model->index( this, 0 ), 0, mChildItems->count() - 1 );
-      QList< Item * > * tmp = mChildItems;
-      mChildItems = 0;
-      mIsViewable = false;
+      model->beginRemoveRows( model->index( this, 0 ), 0, d->mChildItems->count() - 1 );
+      QList< Item * > * tmp = d->mChildItems;
+      d->mChildItems = 0;
+      d->mIsViewable = false;
       model->endRemoveRows();
-      mChildItems = tmp;
+      d->mChildItems = tmp;
     } else {
-      mIsViewable = false;
+      d->mIsViewable = false;
     }
   }
 }
 
 void Item::killAllChildItems()
 {
-  if ( !mChildItems )
+  if ( !d->mChildItems )
     return;
 
-  while( !mChildItems->isEmpty() )
-    delete mChildItems->first(); // this will call childDead() which will remove the child from the list
+  while( !d->mChildItems->isEmpty() )
+    delete d->mChildItems->first(); // this will call childDead() which will remove the child from the list
 
-  delete mChildItems;
-  mChildItems = 0;
+  delete d->mChildItems;
+  d->mChildItems = 0;
+}
+
+Item * Item::parent() const
+{
+  return d->mParent;
+}
+
+void Item::setParent( Item *pParent )
+{
+  d->mParent = pParent;
+}
+
+const KPIM::MessageStatus &Item::status() const
+{
+  return d->mStatus;
+}
+
+void Item::setStatus( const KPIM::MessageStatus &status )
+{
+  d->mStatus = status;
+}
+
+size_t Item::size() const
+{
+  return d->mSize;
+}
+
+void Item::setSize( size_t size )
+{
+  d->mSize = size;
+  d->mFormattedSize.clear();
+}
+
+time_t Item::date() const
+{
+  return d->mDate;
+}
+
+void Item::setDate( time_t date )
+{
+  d->mDate = date;
+  d->mFormattedDate.clear();
+}
+
+time_t Item::maxDate() const
+{
+  return d->mMaxDate;
+}
+
+void Item::setMaxDate( time_t date )
+{
+  d->mMaxDate = date;
+  d->mFormattedMaxDate.clear();
+}
+
+const QString &Item::sender() const
+{
+  return d->mSender;
+}
+
+void Item::setSender( const QString &sender )
+{
+  d->mSender = sender;
+}
+
+const QString &Item::receiver() const
+{
+  return d->mReceiver;
+}
+
+void Item::setReceiver( const QString &receiver )
+{
+  d->mReceiver = receiver;
+}
+
+const QString &Item::senderOrReceiver() const
+{
+  return d->mSenderOrReceiver;
+}
+
+void Item::setSenderOrReceiver( const QString &senderOrReceiver )
+{
+  d->mSenderOrReceiver = senderOrReceiver;
+}
+
+const QString &Item::subject() const
+{
+  return d->mSubject;
+}
+
+void Item::setSubject( const QString &subject )
+{
+  d->mSubject = subject;
+}
+
+void MessageList::Core::Item::initialSetup( time_t date, size_t size,
+                                            const QString &sender,
+                                            const QString &receiver,
+                                            const QString &senderOrReceiver )
+{
+  d->mDate = date;
+  d->mMaxDate = date;
+  d->mSize = size;
+  d->mSender = sender;
+  d->mReceiver = receiver;
+  d->mSenderOrReceiver = senderOrReceiver;
+}
+
+void MessageList::Core::Item::setSubjectAndStatus(const QString &subject,
+                                                  const KPIM::MessageStatus &status)
+{
+  d->mSubject = subject;
+  d->mStatus = status;
 }
 
 // FIXME: Try to "cache item insertions" and call beginInsertRows() and endInsertRows() in a chunked fashion...
 
 void Item::rawAppendChildItem( Item * child )
 {
-  if ( !mChildItems )
-    mChildItems = new QList< Item * >();
-  mChildItems->append( child );
+  if ( !d->mChildItems )
+    d->mChildItems = new QList< Item * >();
+  d->mChildItems->append( child );
 }
 
 int Item::appendChildItem( Model *model, Item *child )
 {
-  if ( !mChildItems )
-    mChildItems = new QList< Item * >();
-  int idx = mChildItems->count();
-  if ( mIsViewable )
+  if ( !d->mChildItems )
+    d->mChildItems = new QList< Item * >();
+  int idx = d->mChildItems->count();
+  if ( d->mIsViewable )
   {
     if ( model )
       model->beginInsertRows( model->index( this, 0 ), idx, idx ); // THIS IS EXTREMELY UGLY, BUT IT'S THE ONLY POSSIBLE WAY WITH QT4 AT THE TIME OF WRITING
-    mChildItems->append( child );
+    d->mChildItems->append( child );
     child->setIndexGuess( idx );
     if ( model )
       model->endInsertRows(); // THIS IS EXTREMELY UGLY, BUT IT'S THE ONLY POSSIBLE WAY WITH QT4 AT THE TIME OF WRITING
     child->setViewable( model, true );
   } else {
-    mChildItems->append( child );
+    d->mChildItems->append( child );
     child->setIndexGuess( idx );
   }
   return idx;
@@ -355,35 +559,35 @@ int Item::appendChildItem( Model *model, Item *child )
 
 void Item::dump( const QString &prefix )
 {
-  QString out = QString("%1 %x VIEWABLE:%2").arg(prefix).arg(mIsViewable ? "yes" : "no");
+  QString out = QString("%1 %x VIEWABLE:%2").arg(prefix).arg(d->mIsViewable ? "yes" : "no");
   qDebug( out.toUtf8().data(),this );
 
   QString nPrefix = prefix;
   nPrefix += QString("  ");
 
-  if (!mChildItems )
+  if (!d->mChildItems )
     return;
 
-  for ( QList< Item * >::Iterator it = mChildItems->begin(); it != mChildItems->end() ;++it )
+  for ( QList< Item * >::Iterator it = d->mChildItems->begin(); it != d->mChildItems->end() ;++it )
     (*it)->dump(nPrefix);
 }
 
 void Item::takeChildItem( Model *model, Item *child )
 {
-  if ( !mChildItems )
+  if ( !d->mChildItems )
     return; // Ugh... not our child ?
 
-  if ( !mIsViewable )
+  if ( !d->mIsViewable )
   {
     //qDebug("TAKING NON VIEWABLE CHILD ITEM %x",child);
     // We can highly optimize this case
-    mChildItems->removeOne( child );
+    d->mChildItems->removeOne( child );
 #if 0
     // This *could* be done, but we optimize and avoid it.
-    if ( mChildItems->count() < 1 )
+    if ( d->mChildItems->count() < 1 )
     {
-      delete mChildItems;
-      mChildItems = 0;
+      delete d->mChildItems;
+      d->mChildItems = 0;
     }
 #endif
     child->setParent( 0 );
@@ -392,12 +596,12 @@ void Item::takeChildItem( Model *model, Item *child )
 
   // Can't optimize: must call the model functions
   int idx = child->indexGuess();
-  if ( mChildItems->count() > idx )
+  if ( d->mChildItems->count() > idx )
   {
-    if ( mChildItems->at( idx ) != child ) // bad guess :/
-      idx = mChildItems->indexOf( child );
+    if ( d->mChildItems->at( idx ) != child ) // bad guess :/
+      idx = d->mChildItems->indexOf( child );
   } else
-    idx = mChildItems->indexOf( child ); // bad guess :/
+    idx = d->mChildItems->indexOf( child ); // bad guess :/
 
   if ( idx < 0 )
     return; // Aaargh... not our child ?
@@ -406,24 +610,23 @@ void Item::takeChildItem( Model *model, Item *child )
   if ( model )
     model->beginRemoveRows( model->index( this, 0 ), idx, idx );
   child->setParent( 0 );
-  mChildItems->removeAt( idx );
+  d->mChildItems->removeAt( idx );
   if ( model )
     model->endRemoveRows();
 
 #if 0
   // This *could* be done, but we optimize and avoid it.
-  if ( mChildItems->count() < 1 )
+  if ( d->mChildItems->count() < 1 )
   {
-    delete mChildItems;
-    mChildItems = 0;
+    delete d->mChildItems;
+    d->mChildItems = 0;
   }
 #endif
 }
 
 
-void Item::childItemDead( Item *child )
+void Item::Private::childItemDead( Item *child )
 {
   // mChildItems MUST be non zero here, if it's not then it's a bug in THIS FILE
   mChildItems->removeOne( child ); // since we always have ONE (if we not, it's a bug)
 }
-

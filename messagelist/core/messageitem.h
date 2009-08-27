@@ -44,20 +44,16 @@ class MESSAGELIST_EXPORT MessageItem : public Item, public ModelInvariantIndex
 public:
   class Tag
   {
-  protected:
-    QPixmap mPixmap;      ///< The pixmap associated to this tag
-    QString mName;        ///< The name of this tag
-    QString mId;          ///< The unique id of this tag
   public:
-    Tag( const QPixmap &pix, const QString &tagName, const QString &tagId )
-      : mPixmap( pix ), mName( tagName ), mId( tagId )
-      {};
-    const QPixmap & pixmap() const
-      { return mPixmap; };
-    const QString & name() const
-      { return mName; };
-    const QString & id() const
-      { return mId; };
+    Tag( const QPixmap &pix, const QString &tagName, const QString &tagId );
+    ~Tag();
+    QPixmap pixmap() const;
+    QString name() const;
+    QString id() const;
+
+  private:
+    class Private;
+    Private * const d;
   };
 
   enum ThreadingStatus
@@ -84,38 +80,12 @@ public:
     SignatureStateUnknown
   };
 
-protected:
+private:
   MessageItem();
   virtual ~MessageItem();
 
-
-private:
-  ThreadingStatus mThreadingStatus;
-  QString mMessageIdMD5;            ///< always set
-  QString mInReplyToIdMD5;          ///< set only if we're doing threading
-  QString mReferencesIdMD5;         ///< set only if we're doing threading
-  QString mStrippedSubjectMD5;      ///< set only if we're doing threading
-  bool mSubjectIsPrefixed;          ///< set only if we're doing subject based threading
-  EncryptionState mEncryptionState;
-  SignatureState mSignatureState;
-  QList< Tag * > * mTagList;        ///< Usually 0....
-  QColor mTextColor;                ///< If invalid, use default text color
-  QColor mBackgroundColor;          ///< If invalid, use default background color
-  QFont  mFont;
-  unsigned long mUniqueId;          ///< The unique id of this message (serial number of KMMsgBase at the moment of writing)
-
-  bool mAboutToBeRemoved;           ///< Set to true when this item is going to be deleted and shouldn't be selectable
-protected:
-  /**
-   * Linear search in the list of tags. The lists of tags
-   * associated to a message are supposed to be very short (c'mon.. you won't add more than a couple of tags to a single msg).
-   * so a linear search is better than a hash lookup in most cases.
-   */
-  Tag * findTagInternal( const QString &szTagId ) const;
-
 public:
-  QList< Tag * > * tagList() const
-    { return mTagList; };
+  QList< Tag * > * tagList() const;
 
   void setTagList( QList< Tag * > * list );
 
@@ -123,88 +93,61 @@ public:
    * Returns Tag associated to this message that has the specified id or 0
    * if no such tag exists. mTagList will be 0 in 99% of the cases.
    */
-  Tag * findTag( const QString &szTagId ) const
-    { return mTagList ? findTagInternal( szTagId ) : 0; };
+  Tag * findTag( const QString &szTagId ) const;
 
   QString tagListDescription() const;
 
-  const QColor & textColor() const
-    { return mTextColor; };
+  QColor textColor() const;
 
-  const QColor & backgroundColor() const
-    { return mBackgroundColor; };
+  QColor backgroundColor() const;
 
-  const QFont &font() const
-    { return mFont; }
+  QFont font() const;
 
-  void setTextColor( const QColor &clr )
-    { mTextColor = clr; };
+  void setTextColor( const QColor &clr );
 
-  void setBackgroundColor( const QColor &clr )
-    { mBackgroundColor = clr; };
+  void setBackgroundColor( const QColor &clr );
 
-  void setFont( const QFont &f )
-    { mFont = f; }
+  void setFont( const QFont &f );
 
-  SignatureState signatureState() const
-    { return mSignatureState; };
+  SignatureState signatureState() const;
 
-  void setSignatureState( SignatureState state )
-    { mSignatureState = state; };
+  void setSignatureState( SignatureState state );
 
-  EncryptionState encryptionState() const
-    { return mEncryptionState; };
+  EncryptionState encryptionState() const;
 
-  void setEncryptionState( EncryptionState state )
-    { mEncryptionState = state; };
+  void setEncryptionState( EncryptionState state );
 
-  const QString & messageIdMD5() const
-    { return mMessageIdMD5; };
+  QString messageIdMD5() const;
 
-  void setMessageIdMD5( const QString &md5 )
-    { mMessageIdMD5 = md5; };
+  void setMessageIdMD5( const QString &md5 );
 
-  const QString & inReplyToIdMD5() const
-    { return mInReplyToIdMD5; };
+  QString inReplyToIdMD5() const;
 
-  void setInReplyToIdMD5( const QString &md5 )
-    { mInReplyToIdMD5 = md5; };
+  void setInReplyToIdMD5( const QString &md5 );
 
-  const QString & referencesIdMD5() const
-    { return mReferencesIdMD5; };
+  QString referencesIdMD5() const;
 
-  void setReferencesIdMD5( const QString &md5 )
-    { mReferencesIdMD5 = md5; };
+  void setReferencesIdMD5( const QString &md5 );
 
-  void setSubjectIsPrefixed( bool subjectIsPrefixed )
-    { mSubjectIsPrefixed = subjectIsPrefixed; };
+  void setSubjectIsPrefixed( bool subjectIsPrefixed );
 
-  bool subjectIsPrefixed() const
-    { return mSubjectIsPrefixed; };
+  bool subjectIsPrefixed() const;
 
-  const QString & strippedSubjectMD5() const
-    { return mStrippedSubjectMD5; };
+  QString strippedSubjectMD5() const;
 
-  void setStrippedSubjectMD5( const QString &md5 )
-    { mStrippedSubjectMD5 = md5; };
+  void setStrippedSubjectMD5( const QString &md5 );
 
-  bool aboutToBeRemoved() const
-    { return mAboutToBeRemoved; };
+  bool aboutToBeRemoved() const;
 
-  void setAboutToBeRemoved( bool aboutToBeRemoved )
-    { mAboutToBeRemoved = aboutToBeRemoved; };
+  void setAboutToBeRemoved( bool aboutToBeRemoved );
 
-  ThreadingStatus threadingStatus() const
-    { return mThreadingStatus; };
+  ThreadingStatus threadingStatus() const;
 
-  void setThreadingStatus( ThreadingStatus threadingStatus )
-    { mThreadingStatus = threadingStatus; };
+  void setThreadingStatus( ThreadingStatus threadingStatus );
 
-  unsigned long uniqueId() const
-    { return mUniqueId; };
+  unsigned long uniqueId() const;
 
-  void setUniqueId(unsigned long uniqueId)
-    { mUniqueId = uniqueId; };
+  void setUniqueId(unsigned long uniqueId);
 
   MessageItem * topmostMessage();
 
@@ -213,6 +156,10 @@ public:
    * to the specified list. This item is included!
    */
   void subTreeToList( QList< MessageItem * > &list );
+
+private:
+  class Private;
+  Private * const d;
 };
 
 } // namespace Core

@@ -23,10 +23,29 @@
 
 using namespace MessageList::Core;
 
-ThemeComboBox::ThemeComboBox( QWidget * parent )
-: KComboBox( parent )
+class ThemeComboBox::Private
 {
-  slotLoadThemes();
+public:
+  Private( ThemeComboBox *owner )
+    : q( owner ) { }
+
+  ThemeComboBox * const q;
+
+  /**
+   * Refresh list of themes in the combobox.
+   */
+  void slotLoadThemes();
+};
+
+ThemeComboBox::ThemeComboBox( QWidget * parent )
+: KComboBox( parent ), d( new Private( this ) )
+{
+  d->slotLoadThemes();
+}
+
+ThemeComboBox::~ThemeComboBox()
+{
+  delete d;
 }
 
 static bool themeNameLessThan( const Theme * lhs, const Theme * rhs )
@@ -34,9 +53,9 @@ static bool themeNameLessThan( const Theme * lhs, const Theme * rhs )
   return lhs->name() < rhs->name();
 }
 
-void ThemeComboBox::slotLoadThemes()
+void ThemeComboBox::Private::slotLoadThemes()
 {
-  clear();
+  q->clear();
 
   // Get all message list themes and sort them into alphabetical order.
   QList< Theme * > themes = Manager::instance()->themes().values();
@@ -44,7 +63,7 @@ void ThemeComboBox::slotLoadThemes()
 
   foreach( const Theme * theme, themes )
   {
-    addItem( theme->name(), QVariant( theme->id() ) );
+    q->addItem( theme->name(), QVariant( theme->id() ) );
   }
 }
 
@@ -64,3 +83,4 @@ const Theme * ThemeComboBox::currentTheme() const
   return Manager::instance()->theme( currentThemeID );
 }
 
+#include "themecombobox.moc"
