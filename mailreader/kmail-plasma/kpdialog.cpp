@@ -81,11 +81,11 @@ void KPDialog::buildDialog()
     l_layout->setSpacing(0);
     l_layout->setMargin(0);
 
-    m_button = new KPushButton(m_widget);
-    m_button->setIcon(KIcon("kmail"));
-    m_button->setText("kmail!");
-    l_layout->addWidget(m_button);
-
+    //m_button = new KPushButton(m_widget);
+    //m_button->setIcon(KIcon("kmail"));
+    //m_button->setText("kmail!");
+    //l_layout->addWidget(m_button);
+    kDebug() << "Setting up pane ...";
     setupPane();
     l_layout->addWidget(m_collectionView);
     connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(updateColors()));
@@ -95,13 +95,19 @@ void KPDialog::buildDialog()
 void KPDialog::updateColors()
 {
     QPalette p = m_widget->palette();
-    p.setColor(QPalette::Window, Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor));
+    p.setColor(QPalette::Window, Qt::transparent);
+    p.setColor(QPalette::Base, Qt::transparent);
+    //p.setColor(QPalette::Window, Plasma::Theme::defaultTheme()->color(Plasma::Theme::BackgroundColor));
+    p.setColor(QPalette::WindowText, Plasma::Theme::defaultTheme()->color(Plasma::Theme::TextColor));
     m_widget->setPalette(p);
-    m_button->setPalette(p);
+    m_collectionView->setPalette(p);
+    m_collectionView->setAttribute(Qt::WA_NoSystemBackground);
+    m_widget->setAttribute(Qt::WA_NoSystemBackground);
 }
 
 void KPDialog::setupPane()
 {
+    kDebug() << "Setting up";
     // Setup the core model
     Akonadi::Session *session = new Akonadi::Session( "KPApplet", m_widget );
 
@@ -122,7 +128,7 @@ void KPDialog::setupPane()
     // Setup the message folders collection...
     Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( m_widget );
     collectionFilter->setSourceModel( entityModel );
-    collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
+    //collectionFilter->addMimeTypeInclusionFilter( "message/rfc822" );
     collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
     collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
@@ -137,7 +143,8 @@ void KPDialog::setupPane()
     sortModel->setSourceModel( statisticsProxyModel );
     // Use the model
     m_collectionView->setModel( sortModel );
-    entityModel->setRootCollection(Akonadi::Collection(12));
+    //entityModel->setRootCollection(Akonadi::Collection(12));
+    entityModel->setRootCollection(Akonadi::Collection::root());
 
     /*
     // Now make the message list multi-tab pane
