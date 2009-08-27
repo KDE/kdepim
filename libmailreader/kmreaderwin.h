@@ -371,7 +371,7 @@ protected slots:
   void slotHideAttachments();
 
   /** Some attachment operations. */
-  void slotAtmView( int id, const QString& name );
+  void slotAtmView( KMime::Content *atmNode );
   void slotDelayedResize();
 
   /** Print message. Called on as a response of finished() signal of mPartHtmlWriter
@@ -456,6 +456,8 @@ private slots:
   void slotSettingsChanged();
   void slotMimeTreeContextMenuRequested( const QPoint& pos );
   void slotAttachmentOpenWith();
+  void slotAttachmentOpen();
+
 
 private:
 
@@ -558,6 +560,10 @@ private:
    * @param usAscii if true, US-Ascii encoding will be prepended to the list.
    */
   static QStringList supportedEncodings( bool usAscii );
+
+  QString createAtmFileLink( const QString& atmFileName ) const;
+  KService::Ptr getServiceOffer( KMime::Content *content);
+
 
 private:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;

@@ -2126,35 +2126,30 @@ void KMReaderWin::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
 
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::slotAtmView( int id, const QString& name )
+void KMReaderWin::slotAtmView( KMime::Content *atmNode )
 {
-/*FIXME(Andras) port it
-  partNode* node = mMessage ? mMessage->findId( id ) : 0;
-  if( node ) {
-    mAtmCurrent = id;
-    mAtmCurrentName = name;
-    if ( mAtmCurrentName.isEmpty() )
-      mAtmCurrentName = tempFileUrlFromNode( node ).toLocalFile();
+  if ( atmNode ) {
+    QString fileName = tempFileUrlFromNode( atmNode).toLocalFile();
 
-    KMMessagePart& msgPart = node->msgPart();
-    QString pname = msgPart.fileName();
-    if (pname.isEmpty()) pname=msgPart.name();
-    if (pname.isEmpty()) pname=msgPart.contentDescription();
-    if (pname.isEmpty()) pname="unnamed";
+    QString pname = atmNode->contentDisposition()->filename();
+    if (pname.isEmpty()) pname = atmNode->contentType()->name();
+    if (pname.isEmpty()) pname = atmNode->contentDescription()->asUnicodeString();
+    if (pname.isEmpty()) pname = "unnamed";
     // image Attachment is saved already
-    if (kasciistricmp(msgPart.typeStr(), "message")==0) {
-      atmViewMsg(&msgPart);
-    } else if ((kasciistricmp(msgPart.typeStr(), "text")==0) &&
-               ( (kasciistricmp(msgPart.subtypeStr(), "x-vcard")==0) ||
-                 (kasciistricmp(msgPart.subtypeStr(), "directory")==0) )) {
-      setMsgPart( &msgPart, htmlMail(), name, pname );
+    if (kasciistricmp(atmNode->contentType()->mediaType(), "message")==0) {
+      atmViewMsg( atmNode );
+    } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
+               ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
+                 (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {
+      setMessagePart( atmNode, htmlMail(), fileName, pname );
     } else {
+      /*TODO(Andras) port
       KMReaderMainWin *win = new KMReaderMainWin(&msgPart, htmlMail(),
           name, pname, overrideEncoding() );
       win->show();
+      */
     }
   }
-  */
 }
 
 //-----------------------------------------------------------------------------
@@ -2824,7 +2819,7 @@ void KMReaderWin::slotMimeTreeContextMenuRequested( const QPoint& pos )
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
      showContextMenu( content, pos );
   }
-}  
+}
 
 void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
 {
@@ -2841,7 +2836,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
-                       this, SLOT( slotOpen() ) );
+                       this, SLOT( slotAttachmentOpen() ) );
       popup.addAction( i18n( "Open With..." ), this, SLOT( slotAttachmentOpenWith() ) );
       popup.addAction( i18nc( "to view something", "View" ), this, SLOT( slotView() ) );
     }
@@ -2873,7 +2868,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
       popup.addAction( i18n( "Properties" ), this, SLOT( slotProperties() ) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
- 
+
 }
 
 void KMReaderWin::slotAttachmentOpenWith()
@@ -2884,10 +2879,106 @@ void KMReaderWin::slotAttachmentOpenWith()
   Q_FOREACH(QModelIndex index, selectedRows)
   {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-     QString name = tempFileUrlFromNode( content ).toLocalFile();
-     kDebug() << "Open with attachment " << name;
+     QString name = writeMessagePartToTempFile( content );
+     QString linkName = createAtmFileLink( name );
+     KUrl::List lst;
+     KUrl url;
+     bool autoDelete = true;
+
+     if ( linkName.isEmpty() ) {
+      autoDelete = false;
+      linkName = name;
+     }
+
+     url.setPath( linkName );
+     lst.append( url );
+     if ( (! KRun::displayOpenWithDialog(lst, this, autoDelete)) && autoDelete ) {
+       QFile::remove( url.toLocalFile() );
+     }
+ }
+}
+
+void KMReaderWin::slotAttachmentOpen()
+{
+
+  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
+  QModelIndexList selectedRows = selectionModel->selectedRows();
+
+  Q_FOREACH(QModelIndex index, selectedRows)
+  {
+    KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+    KService::Ptr offer(0);
+    offer = getServiceOffer( content );
+    if ( !offer ) {
+      kDebug() << "got no offer";
+      continue;
+    }
+    QString name = writeMessagePartToTempFile( content );
+    KUrl::List lst;
+    KUrl url;
+    bool autoDelete = true;
+    QString fname = createAtmFileLink( name );
+
+    if ( fname.isNull() ) {
+      autoDelete = false;
+      fname = name;
+    }
+
+    url.setPath( fname );
+    lst.append( url );
+    if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
+        QFile::remove(url.toLocalFile());
+    }
   }
 }
+
+
+QString KMReaderWin::createAtmFileLink( const QString& atmFileName ) const
+{
+  QFileInfo atmFileInfo( atmFileName );
+
+  KTemporaryFile *linkFile = new KTemporaryFile();
+  linkFile->setPrefix( atmFileInfo.fileName() +"_[" );
+  linkFile->setSuffix( "]." + KMimeType::extractKnownExtension( atmFileInfo.fileName() ) );
+  linkFile->open();
+  QString linkName = linkFile->fileName();
+  delete linkFile;
+
+  if ( ::link(QFile::encodeName( atmFileName ), QFile::encodeName( linkName )) == 0 ) {
+    return linkName; // success
+  }
+  return QString();
+}
+
+KService::Ptr KMReaderWin::getServiceOffer( KMime::Content *content)
+{
+  QString fileName = writeMessagePartToTempFile( content );
+
+  const QString contentTypeStr = content->contentType()->mimeType();
+  
+  // determine the MIME type of the attachment
+  KMimeType::Ptr mimetype;
+  // prefer the value of the Content-Type header
+  mimetype = KMimeType::mimeType( contentTypeStr, KMimeType::ResolveAliases );
+
+  if ( !mimetype.isNull() && mimetype->is( KABC::Addressee::mimeType() ) ) {
+    slotAtmView( content );
+    return KService::Ptr( 0 );
+  }
+
+  if ( mimetype.isNull() ) {
+    // consider the filename if mimetype can not be found by content-type
+    mimetype = KMimeType::findByPath( fileName, 0, true /* no disk access */ );
+  }
+  if ( ( mimetype->name() == "application/octet-stream" )
+    /*TODO(Andris) port when on-demand loading is done   && msgPart.isComplete() */) {
+    // consider the attachment's contents if neither the Content-Type header
+    // nor the filename give us a clue
+    mimetype = KMimeType::findByFileContent( fileName );
+  }
+  return KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
+}
+
 
 #include "kmreaderwin.moc"
 
