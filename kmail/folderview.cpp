@@ -954,6 +954,9 @@ void FolderView::slotFolderRemoved( KMFolder *folder )
 
 void FolderView::setCurrentFolder( KMFolder *folder )
 {
+  if ( folder == currentFolder() )
+    return;
+
   FolderViewItem * fvi;
 
   if ( !folder )
