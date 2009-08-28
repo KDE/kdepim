@@ -2796,7 +2796,7 @@ BodyPartMemento *KMReaderWin::bodyPartMemento( const KMime::Content *node,
 
 void KMReaderWin::clearBodyPartMementos()
 {
-  for ( QMap<QByteArray,BodyPartMemento*>::const_iterator
+  for ( QMap<QByteArray,BodyPartMemento*>::iterator
           it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
         it != end; ++it ) {
     delete it.value();

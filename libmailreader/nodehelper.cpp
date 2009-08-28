@@ -140,7 +140,7 @@ void NodeHelper::clear()
   qDeleteAll(mUnencryptedMessages);
   mUnencryptedMessages.clear();
   mOverrideCodecs.clear();
-  for ( QMap<KMime::Content*, QMap< QByteArray, KMail::Interface::BodyPartMemento*> >::const_iterator
+  for ( QMap<KMime::Content*, QMap< QByteArray, KMail::Interface::BodyPartMemento*> >::iterator
         it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
         it != end; ++it ) {
     clearBodyPartMemento( it.value() );
@@ -150,7 +150,7 @@ void NodeHelper::clear()
 
 void NodeHelper::clearBodyPartMemento(QMap<QByteArray, KMail::Interface::BodyPartMemento*> bodyPartMementoMap)
 {
-  for ( QMap<QByteArray, KMail::Interface::BodyPartMemento*>::const_iterator
+  for ( QMap<QByteArray, KMail::Interface::BodyPartMemento*>::iterator
           it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
         it != end; ++it ) {
     delete it.value();
