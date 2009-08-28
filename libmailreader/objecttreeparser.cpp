@@ -3230,4 +3230,21 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       return 0;
   }
 
+  KMime::Content* ObjectTreeParser::findTypeNot( KMime::Content * content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide )
+  {
+      if( ( !content->contentType()->isEmpty() )
+            && (  mediaType.isEmpty() || content->contentType()->mediaType() != mediaType )
+            && ( subType.isEmpty() || content->contentType()->subType() != subType )
+            )
+          return content;
+      KMime::Content *child = NodeHelper::firstChild( content );
+      if ( child && deep )
+          return findTypeNot( child, mediaType, subType, deep, wide );
+
+      KMime::Content *next = NodeHelper::nextSibling( content );
+      if ( next && wide )
+          return findTypeNot( next,  mediaType, subType, deep, wide );
+      return 0;
+  }
+
 } // namespace KMail

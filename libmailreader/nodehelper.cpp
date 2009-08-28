@@ -169,7 +169,7 @@ KMMsgEncryptionState NodeHelper::encryptionState( KMime::Content *node ) const
   if ( mEncryptionState.contains( node ) )
     return mEncryptionState[node];
 
-  return KMMsgEncryptionStateUnknown;
+  return KMMsgNotEncrypted;
 }
 
 void NodeHelper::setSignatureState( KMime::Content* node, const KMMsgSignatureState state )
@@ -182,7 +182,7 @@ KMMsgSignatureState NodeHelper::signatureState( KMime::Content *node ) const
   if ( mSignatureState.contains( node ) )
     return mSignatureState[node];
 
-  return KMMsgSignatureStateUnknown;
+  return KMMsgNotSigned;
 }
 
 KMime::Content *NodeHelper::firstChild( const KMime::Content* node )

@@ -36,6 +36,8 @@
 using KPIM::MessageStatus;
 #include <kvbox.h>
 
+#include <kmime/kmime_content.h>
+
 //Akonadi includes
 #include <akonadi/item.h>
 
@@ -66,7 +68,6 @@ namespace MailViewer {
 
 namespace KMime {
     class Message;
-    class Content;
 }
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
@@ -457,7 +458,8 @@ private slots:
   void slotMimeTreeContextMenuRequested( const QPoint& pos );
   void slotAttachmentOpenWith();
   void slotAttachmentOpen();
-
+  void slotAttachmentSaveAs();
+  void slotAttachmentView();
 
 private:
 
@@ -563,6 +565,9 @@ private:
 
   QString createAtmFileLink( const QString& atmFileName ) const;
   KService::Ptr getServiceOffer( KMime::Content *content);
+  bool saveContent( KMime::Content* content, const KUrl& url, bool encoded );
+  void saveAttachments( const KMime::Content::List & contents );
+
 
 
 private:

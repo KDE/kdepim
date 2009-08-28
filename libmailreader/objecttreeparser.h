@@ -280,6 +280,8 @@ namespace KMail {
                        const QTextCodec * aCodec,
                        const QString & fromAddress );
     static KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
+    static KMime::Content* findTypeNot( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep=true, bool wide=true );
+
 
   private:
     /** Change the string to `quoted' html (meaning, that the quoted

@@ -116,6 +116,7 @@
 #include <kactioncollection.h>
 #include <KColorScheme>
 #include <KApplication>
+#include <kio/netaccess.h>
 
 #include <QClipboard>
 #include <QCursor>
@@ -2832,13 +2833,13 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
 
   if ( !isRoot ) {
     popup.addAction( SmallIcon( "document-save-as" ), i18n( "Save &As..." ),
-                     this, SLOT( slotSaveAs() ) );
+                     this, SLOT( slotAttachmentSaveAs() ) );
 
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "document-open" ), i18nc( "to open", "Open" ),
                        this, SLOT( slotAttachmentOpen() ) );
       popup.addAction( i18n( "Open With..." ), this, SLOT( slotAttachmentOpenWith() ) );
-      popup.addAction( i18nc( "to view something", "View" ), this, SLOT( slotView() ) );
+      popup.addAction( i18nc( "to view something", "View" ), this, SLOT( slotAttachmentView() ) );
     }
   }
 
@@ -2930,6 +2931,268 @@ void KMReaderWin::slotAttachmentOpen()
         QFile::remove(url.toLocalFile());
     }
   }
+}
+
+void KMReaderWin::slotAttachmentSaveAs()
+{
+  KMime::Content::List contents;
+  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
+  QModelIndexList selectedRows = selectionModel->selectedRows();
+
+  Q_FOREACH(QModelIndex index, selectedRows)
+  {
+     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+     if ( content )
+       contents.append( content );
+  }
+
+  if ( contents.isEmpty() )
+     return;
+
+  saveAttachments( contents );
+}
+
+void KMReaderWin::saveAttachments( const KMime::Content::List & contents )
+{
+  KUrl url, dirUrl;
+  if ( contents.size() > 1 ) {
+    dirUrl = KFileDialog::getExistingDirectoryUrl( KUrl( "kfiledialog:///saveAttachment" ),
+                                                   this,
+                                                   i18n( "Save Attachments To" ) );
+    if ( !dirUrl.isValid() ) {
+      return;
+    }
+    // we may not get a slash-terminated url out of KFileDialog
+    dirUrl.adjustPath( KUrl::AddTrailingSlash );
+  } else {
+    // only one item, get the desired filename
+    KMime::Content *content = contents[0];
+    // replace all ':' with '_' because ':' isn't allowed on FAT volumes
+    QString s = content->contentDisposition()->filename().trimmed().replace( ':', '_' );
+    if ( s.isEmpty() )
+      s = content->contentType()->name().trimmed().replace( ':', '_' );
+    if ( s.isEmpty() )
+      s = i18nc("filename for an unnamed attachment", "attachment.1");
+    url = KFileDialog::getSaveUrl( KUrl( "kfiledialog:///saveAttachment/" + s ),
+                                   QString(),
+                                   this,
+                                   i18n( "Save Attachment" ) );
+    if ( url.isEmpty() ) {
+      return;
+    }
+  }
+
+  QMap< QString, int > renameNumbering;
+
+  int unnamedAtmCount = 0;
+  bool overwriteAll = false;
+  for ( KMime::Content::List::const_iterator it = contents.constBegin();
+        it != contents.constEnd();
+        ++it ) {
+    KMime::Content *content = *it;
+    KUrl curUrl;
+    if ( !dirUrl.isEmpty() ) {
+      curUrl = dirUrl;
+      QString s = content->contentDisposition()->filename();
+      if ( s.isEmpty() )
+        s = content->contentType()->name().trimmed().replace( ':', '_' );
+      if ( s.isEmpty() ) {
+        ++unnamedAtmCount;
+        s = i18nc("filename for the %1-th unnamed attachment",
+                 "attachment.%1",
+              unnamedAtmCount );
+      }
+      curUrl.setFileName( s );
+    } else {
+      curUrl = url;
+    }
+
+    if ( !curUrl.isEmpty() ) {
+
+     // Rename the file if we have already saved one with the same name:
+     // try appending a number before extension (e.g. "pic.jpg" => "pic_2.jpg")
+     QString origFile = curUrl.fileName();
+     QString file = origFile;
+
+     while ( renameNumbering.contains(file) ) {
+       file = origFile;
+       int num = renameNumbering[file] + 1;
+       int dotIdx = file.lastIndexOf('.');
+       file = file.insert( (dotIdx>=0) ? dotIdx : file.length(), QString("_") + QString::number(num) );
+     }
+     curUrl.setFileName(file);
+
+     // Increment the counter for both the old and the new filename
+     if ( !renameNumbering.contains(origFile))
+         renameNumbering[origFile] = 1;
+     else
+         renameNumbering[origFile]++;
+
+     if ( file != origFile ) {
+        if ( !renameNumbering.contains(file))
+            renameNumbering[file] = 1;
+        else
+            renameNumbering[file]++;
+     }
+
+
+      if ( !overwriteAll && KIO::NetAccess::exists( curUrl, KIO::NetAccess::DestinationSide, this ) ) {
+        if ( contents.count() == 1 ) {
+          if ( KMessageBox::warningContinueCancel( this,
+                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
+                  curUrl.fileName() ),
+                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")) ) == KMessageBox::Cancel) {
+            continue;
+          }
+        }
+        else {
+          int button = KMessageBox::warningYesNoCancel(
+                this,
+                i18n( "A file named <br><filename>%1</filename><br>already exists.<br><br>Do you want to overwrite it?",
+                  curUrl.fileName() ),
+                i18n( "File Already Exists" ), KGuiItem(i18n("&Overwrite")),
+                KGuiItem(i18n("Overwrite &All")) );
+          if ( button == KMessageBox::Cancel )
+            continue;
+          else if ( button == KMessageBox::No )
+            overwriteAll = true;
+        }
+      }
+      // save
+      saveContent( content, curUrl, false );
+    }
+  }
+}
+
+bool KMReaderWin::saveContent( KMime::Content* content, const KUrl& url, bool encoded )
+{
+  KMime::Content *topContent  = content->topLevel();
+  bool bSaveEncrypted = false;
+
+  bool bEncryptedParts = NodeHelper::instance()->encryptionState( content ) != KMMsgNotEncrypted;
+  if( bEncryptedParts )
+    if( KMessageBox::questionYesNo( this,
+          i18n( "The part %1 of the message is encrypted. Do you want to keep the encryption when saving?",
+           url.fileName() ),
+          i18n( "KMail Question" ), KGuiItem(i18n("Keep Encryption")), KGuiItem(i18n("Do Not Keep")) ) ==
+        KMessageBox::Yes )
+      bSaveEncrypted = true;
+
+  bool bSaveWithSig = true;
+  if( NodeHelper::instance()->signatureState( content ) != KMMsgNotSigned )
+    if( KMessageBox::questionYesNo( this,
+          i18n( "The part %1 of the message is signed. Do you want to keep the signature when saving?",
+           url.fileName() ),
+          i18n( "KMail Question" ), KGuiItem(i18n("Keep Signature")), KGuiItem(i18n("Do Not Keep")) ) !=
+        KMessageBox::Yes )
+      bSaveWithSig = false;
+
+  QByteArray data;
+  if ( encoded )
+  {
+    // This does not decode the Message Content-Transfer-Encoding
+    // but saves the _original_ content of the message part
+    data = content->encodedContent();
+  }
+  else
+  {
+    if( bSaveEncrypted || !bEncryptedParts) {
+      KMime::Content *dataNode = content;
+      QByteArray rawReplyString;
+      bool gotRawReplyString = false;
+      if ( !bSaveWithSig ) {
+        if ( topContent->contentType()->mimeType() == "multipart/signed" )  {
+          // carefully look for the part that is *not* the signature part:
+          if ( ObjectTreeParser::findType( topContent, "application/pgp-signature", true, false ) ) {
+            dataNode = ObjectTreeParser::findTypeNot( topContent, "application", "pgp-signature", true, false );
+          } else if ( ObjectTreeParser::findType( topContent, "application/pkcs7-mime" , true, false ) ) {
+            dataNode = ObjectTreeParser::findTypeNot( topContent, "application", "pkcs7-mime", true, false );
+          } else {
+            dataNode = ObjectTreeParser::findTypeNot( topContent, "multipart", "", true, false );
+          }
+        } else {
+          ObjectTreeParser otp( 0, 0, false, false, false );
+
+          // process this node and all it's siblings and descendants
+          NodeHelper::instance()->setNodeUnprocessed( dataNode, true );
+          otp.parseObjectTree( dataNode );
+
+          rawReplyString = otp.rawReplyString();
+          gotRawReplyString = true;
+        }
+      }
+      QByteArray cstr = gotRawReplyString
+                         ? rawReplyString
+                         : dataNode->decodedContent();
+      data = KMime::CRLFtoLF( cstr );
+    }
+  }
+  QDataStream ds;
+  QFile file;
+  KTemporaryFile tf;
+  if ( url.isLocalFile() )
+  {
+    // save directly
+    file.setFileName( url.toLocalFile() );
+    if ( !file.open( QIODevice::WriteOnly ) )
+    {
+      KMessageBox::error( this,
+                          i18nc( "1 = file name, 2 = error string",
+                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                                 file.fileName(),
+                                 QString::fromLocal8Bit( strerror( errno ) ) ),
+                          i18n( "Error saving attachment" ) );
+      return false;
+    }
+
+/*FIXME(Andras) port it
+    // #79685 by default use the umask the user defined, but let it be configurable
+    if ( GlobalSettings::self()->disregardUmask() )
+      fchmod( file.handle(), S_IRUSR | S_IWUSR );
+*/
+    ds.setDevice( &file );
+  } else
+  {
+    // tmp file for upload
+    tf.open();
+    ds.setDevice( &tf );
+  }
+
+  if ( ds.writeRawData( data.data(), data.size() ) == -1)
+  {
+    QFile *f = static_cast<QFile *>( ds.device() );
+    KMessageBox::error( this,
+                        i18nc( "1 = file name, 2 = error string",
+                               "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                               f->fileName(),
+                               f->errorString() ),
+                        i18n( "Error saving attachment" ) );
+    return false;
+  }
+
+  if ( !url.isLocalFile() )
+  {
+    // QTemporaryFile::fileName() is only defined while the file is open
+    QString tfName = tf.fileName();
+    tf.close();
+    if ( !KIO::NetAccess::upload( tfName, url, this ) )
+    {
+      KMessageBox::error( this,
+                          i18nc( "1 = file name, 2 = error string",
+                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                                 url.prettyUrl(),
+                                 KIO::NetAccess::lastErrorString() ),
+                          i18n( "Error saving attachment" ) );
+      return false;
+    }
+  } else
+    file.close();
+  return true;
+}
+
+void KMReaderWin::slotAttachmentView()
+{
+  
 }
 
 
