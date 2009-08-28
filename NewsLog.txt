@@ -1,3 +1,23 @@
+Friday, August 28th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3359: LDAP Search result not coming in later, if user typed too fast in email completion (rt#5853)
+* kolab/issue3815: event view: dates are displayed without weekday (rt#5855)
+* kolab/issue3808: Reminder: small problems (rt#5845)
+* kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
+* kolab/issue3804: Configuration of Address completion order: Missing last-used addresses (rt#5856)
+* kolab/issue3821: [regression] kmail reader: cannot drag attachment icon anymore
+* kolab/issue3792: Local Folder for Groupware: Type setting partly lost by restart.
+* kolab/issue3822: Configuration of Address completion order: last-used-addresses by default shown one but last, though sorted last (rt#5856)
+* kolab/issue3671: Calendar: To Today button doesn't display a workweek right (rt#5769)
+* kolab/issue3254: printed mail cut at the left side
+* kolab/issue3812: Recent addresses of addresses with comma are displayed with backslash and quote
+* Fix regressions that images were not shown in the reader in KMail
+* Fix regression that shift-clicking an attachment in KMail wouldn't open it anymore
+
+
 Friday, August 21th 2009
 
 Problems addressed
