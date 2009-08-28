@@ -1,3 +1,39 @@
+Friday, August 28th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Add back the missing forward actions in KMail's main menu
+      - Don't remove spaces when displaying mails (KDE bug 204101)
+      - Fix crash in free/busy handling and invalid calendars (KDE bug 186597)
+      - Also detect URLs with brackets in KMail's reader (KDE bug 202445)
+      - Fix shift+arrow key handling in the composer's edit fields (KDE bug 150759)
+      - Properly detect some special dates in mails (KDE bug 150620)
+      - Don't show HTML code in the progress popups (KDE bug 204765)
+      - Decode mailto URLs correctly when dropping them into the composer's edit fields
+      - Use the correct font when printing mails (KDE bug 166922)
+      - Fix a possible crash when editing a to-do (KDE bug 205067)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3359: LDAP Search result not coming in later, if user typed too fast in email completion (rt#5853)
+      - kolab/issue3815: event view: dates are displayed without weekday (rt#5855)
+      - kolab/issue3808: Reminder: small problems (rt#5845)
+      - kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
+      - kolab/issue3804: Configuration of Address completion order: Missing last-used addresses (rt#5856)
+      - kolab/issue3792: Local Folder for Groupware: Type setting partly lost by restart.
+      - kolab/issue3821: [regression] kmail reader: cannot drag attachment icon anymore
+      - kolab/issue3822: Configuration of Address completion order: last-used-addresses by default shown one but last, though sorted last (rt#5856)
+      - kolab/issue3671: Calendar: To Today button doesn't display a workweek right (rt#5769)
+      - kolab/issue3254: printed mail cut at the left side
+      - kolab/issue3812: Recent addresses of addresses with comma are displayed with backslash and quote
+      - Fix regressions that images were not shown in the reader in KMail
+      - Fix regression that shift-clicking an attachment in KMail wouldn't open it anymore
+
+
 Friday, August 21th 2009
 
 Problems addressed
