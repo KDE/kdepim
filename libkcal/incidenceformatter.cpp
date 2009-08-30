@@ -211,7 +211,8 @@ static QString displayViewFormatAttendees( Incidence *incidence )
   Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
     Attendee *a = *it;
-    if ( iamAttendee( a ) && iamOrganizer( incidence ) ) {
+    if ( a->email() == incidence->organizer().email() ) {
+      // skip attendee that is also the organizer
       continue;
     }
     tmpStr += displayViewLinkPerson( a->email(), a->name(), a->uid() );
@@ -272,25 +273,28 @@ static QString displayViewFormatCreationDate( Incidence *incidence )
 
 static QString displayViewFormatBirthday( Event *event )
 {
-  if ( !event) return  QString::null;
-  if ( event->customProperty("KABC","BIRTHDAY") != "YES" ) return QString::null;
+  if ( !event ) {
+    return  QString::null;
+  }
+  if ( event->customProperty("KABC","BIRTHDAY") != "YES" ) {
+    return QString::null;
+  }
 
   QString uid = event->customProperty("KABC","UID-1");
   QString name = event->customProperty("KABC","NAME-1");
   QString email= event->customProperty("KABC","EMAIL-1");
 
-  QString tmpString = "<ul>";
-  tmpString += displayViewLinkPerson( email, name, uid );
+  QString tmpStr = displayViewLinkPerson( email, name, uid );
 
   if ( event->customProperty( "KABC", "ANNIVERSARY") == "YES" ) {
     uid = event->customProperty("KABC","UID-2");
     name = event->customProperty("KABC","NAME-2");
     email= event->customProperty("KABC","EMAIL-2");
-    tmpString += displayViewLinkPerson( email, name, uid );
+    tmpStr += "<br>";
+    tmpStr += displayViewLinkPerson( email, name, uid );
   }
 
-  tmpString += "</ul>";
-  return tmpString;
+  return tmpStr;
 }
 
 static QString displayViewFormatHeader( Incidence *incidence )
