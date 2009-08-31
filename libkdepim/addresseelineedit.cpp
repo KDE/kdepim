@@ -1195,28 +1195,10 @@ const QStringList KPIM::AddresseeLineEdit::getAdjustedCompletionItems( bool full
   }
 
   if ( s_completion->order() == KCompletion::Weighted ) {
-
-    // Sort the sections
-    QValueList<SourceWithWeight> sourcesAndWeights;
-    for ( uint i = 0; i < s_completionSources->size(); i++ ) {
-      SourceWithWeight sww;
-      sww.sourceName = (*s_completionSources)[i];
-      sww.weight = (*s_completionSourceWeights)[sww.sourceName];
-      sww.index = i;
-      sourcesAndWeights.append( sww );
-    }
-    qHeapSort( sourcesAndWeights );
-
-    // Add the sections and their items to the final sortedItems result list
-    for( uint i = 0; i < sourcesAndWeights.size(); i++ ) {
-      QStringList sectionItems = sections[sourcesAndWeights[i].index];
-      if ( !sectionItems.isEmpty() ) {
-        sortedItems.append( sourcesAndWeights[i].sourceName );
-        QStringList sectionItems = sections[sourcesAndWeights[i].index];
-        for ( QStringList::Iterator sit( sectionItems.begin() ), send( sectionItems.end() );
-              sit != send; ++sit ) {
-          sortedItems.append( *sit );
-        }
+    for ( QMap<int, QStringList>::Iterator it( sections.begin() ), end( sections.end() ); it != end; ++it ) {
+      sortedItems.append( (*s_completionSources)[it.key()] );
+      for ( QStringList::Iterator sit( (*it).begin() ), send( (*it).end() ); sit != send; ++sit ) {
+        sortedItems.append( *sit );
       }
     }
   } else {
