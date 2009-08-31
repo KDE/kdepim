@@ -59,6 +59,7 @@
 
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
+#include "libkdepim/attachmentpropertiesdialog.h"
 
 #include <kmime/kmime_mdn.h>
 #ifdef KMAIL_READER_HTML_DEBUG
@@ -340,7 +341,7 @@ void KMReaderWin::createWidgets() {
   mMimePartTree->setObjectName( "mMimePartTree" );
   mMimePartModel = new MimeTreeModel( mMimePartTree );
   mMimePartTree->setModel( mMimePartModel );
-  mMimePartTree->setSelectionMode( QAbstractItemView::SingleSelection );
+  mMimePartTree->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mMimePartTree->setSelectionBehavior( QAbstractItemView::SelectRows );
   connect(mMimePartTree, SIGNAL( activated( const QModelIndex& ) ), this, SLOT( slotMimePartSelected( const QModelIndex& ) ) );
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -2866,7 +2867,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
     }
 
     if ( !content->isTopLevel() )
-      popup.addAction( i18n( "Properties" ), this, SLOT( slotProperties() ) );
+      popup.addAction( i18n( "Properties" ), this, SLOT( slotAttachmentProperties() ) );
   }
   popup.exec( mMimePartTree->viewport()->mapToGlobal( pos ) );
 
@@ -3297,6 +3298,29 @@ void KMReaderWin::slotAttachmentSaveAll()
 
   saveAttachments( contents );
   
+}
+
+void KMReaderWin::slotAttachmentProperties()
+{
+  KMime::Content::List contents;
+  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
+  QModelIndexList selectedRows = selectionModel->selectedRows();
+
+  Q_FOREACH(QModelIndex index, selectedRows)
+  {
+     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+     if ( content )
+       contents.append( content );
+  }
+
+  if ( contents.isEmpty() )
+     return;
+
+  Q_FOREACH( KMime::Content *content, contents ) {
+    KPIM::AttachmentPropertiesDialog *dialog = new KPIM::AttachmentPropertiesDialog( content, this );
+    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    dialog->show();
+  }
 }
 
 #include "kmreaderwin.moc"

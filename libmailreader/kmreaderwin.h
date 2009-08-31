@@ -461,6 +461,7 @@ private slots:
   void slotAttachmentSaveAs();
   void slotAttachmentView();
   void slotAttachmentSaveAll();
+  void slotAttachmentProperties();
 
 private:
 
