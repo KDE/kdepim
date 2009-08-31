@@ -1,0 +1,26 @@
+This doc describes the state of the composer when my (cberzan) GSoC project
+ended and I could no longer dedicate full time to this.
+
+Things that should be rethought a little and refactored:
+* All GUI bits should move out of the jobs. Currently this is only the
+  MainTextJob's ugly KMessageBox that warns the user if a charset is not good
+  for their message.
+* Some jobs (the MainTextJob, AttachmentJob at least) need to know what
+  charset(s) the user has chosen and whether 8bit encoding is allowed. This is
+  currently stored in the GlobalPart, and it sucks horribly that each job
+  might need access to this GlobalPart. The globalPart is currently obtained
+  by checking all ancestors if they are a Composer, and calling
+  thatAncestor->globalPart(). This has the nasty side effect that jobs require
+  a Composer grandparent, and can't be used independently. I haven't found a
+  good way to solve this without duplication. :-/
+* Related to the above: it should be possible to use any of these jobs outside
+  of a composer, especially that the TemplateParser and KJots might need them.
+  It should also be easy to make have something like MyComposer in an
+  application, extending upon Composer.
+
+Things that are still TODO:
+The crypto composer. Currently the plan is to have this simple composer LGPL,
+and have another GPL crypto composer that would use this, and be used in KMail.
+Whereas this Composer outputs a single KMime::Message, the crypto composer
+should probably output a list of Akonadi::Items, and store things that are not
+part of the sendable message (such as Bcc) as item attributes.

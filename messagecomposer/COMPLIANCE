@@ -1,3 +1,9 @@
+NOTE: This document is outdated.  It shows mostly what was planned to be done,
+but 8bit encoding is mostly untested at this time.  There is no way currently
+to find out if a MailTransport::Transport supports 8bit or not.
+
+
+
 How Content-Transfer-Encoding (CTE) is handled:
 --------------------------------------------
 (see RFC2045)
