@@ -342,7 +342,7 @@ public slots:
   void slotLevelQuote( int l );
   void slotTouchMessage();
 
-  void slotDeleteAttachment( KMime::Content* node );
+  void slotDeleteAttachment( KMime::Content* node, bool showWarning = true );
   void slotEditAttachment( KMime::Content* node );
 
   /**
@@ -463,6 +463,7 @@ private slots:
   void slotAttachmentSaveAll();
   void slotAttachmentProperties();
   void slotAttachmentCopy();
+  void slotAttachmentDelete();
 
 private:
 

@@ -73,6 +73,7 @@
 
 //Akonadi includes
 #include <akonadi/item.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include "kleo/specialjob.h"
 #include "kleo/cryptobackend.h"
@@ -2500,19 +2501,29 @@ bool KMReaderWin::eventFilter( QObject *, QEvent *e )
   return false;
 }
 
-void KMReaderWin::slotDeleteAttachment(KMime::Content * node)
+void KMReaderWin::slotDeleteAttachment(KMime::Content * node, bool showWarning)
 {
-  if ( KMessageBox::warningContinueCancel( this,
+  if ( !node )
+    return;
+  KMime::Content *parent = node->parent();
+  if ( !parent )
+    return;
+  
+  if ( showWarning && KMessageBox::warningContinueCancel( this,
        i18n("Deleting an attachment might invalidate any digital signature on this message."),
        i18n("Delete Attachment"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
        "DeleteAttachmentSignatureWarning" )
      != KMessageBox::Continue ) {
     return;
   }
-  /*FIXME(Andras) port to akonadi
-  KMDeleteAttachmentCommand* command = new KMDeleteAttachmentCommand( node, message(), this );
-  command->start();
-  */
+
+  mMimePartModel->setRoot( 0 );
+  parent->removeContent( node, true );
+  mMimePartModel->setRoot( mMessage );
+
+  mMessageItem.setPayloadFromData( mMessage->encodedContent() );
+  Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
+//TODO(Andras) error checking?   connect( job, SIGNAL(result(KJob*)), SLOT(imapItemUpdateResult(KJob*)) );
 }
 
 void KMReaderWin::slotEditAttachment(KMime::Content * node)
@@ -2860,7 +2871,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
                        this, SLOT( slotAttachmentCopy() ) );
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
-                         this, SLOT( slotDelete() ) );
+                         this, SLOT( slotAttachmentDelete() ) );
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT( slotEdit() ) );
@@ -3323,6 +3334,19 @@ void KMReaderWin::slotAttachmentCopy()
   QMimeData *mimeData = new QMimeData;
   mimeData->setUrls( urls );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
+}
+
+void KMReaderWin::slotAttachmentDelete()
+{
+  KMime::Content::List contents = selectedContents();
+  if ( contents.isEmpty() )
+    return;
+
+  bool showWarning = true;
+  Q_FOREACH( KMime::Content *content, contents ) {
+    slotDeleteAttachment( content, showWarning );
+    showWarning = false;
+  }
 }
 
 KMime::Content::List KMReaderWin::selectedContents()
