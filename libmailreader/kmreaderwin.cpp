@@ -56,6 +56,7 @@
 #include "global.h"
 #include "configurewidget.h"
 #include "interfaces/bodypart.h"
+#include "editorwatcher.h"
 
 #include <kicon.h>
 #include "libkdepim/broadcaststatus.h"
@@ -2501,43 +2502,87 @@ bool KMReaderWin::eventFilter( QObject *, QEvent *e )
   return false;
 }
 
-void KMReaderWin::slotDeleteAttachment(KMime::Content * node, bool showWarning)
+bool KMReaderWin::slotDeleteAttachment(KMime::Content * node, bool showWarning)
 {
   if ( !node )
-    return;
+    return true;
   KMime::Content *parent = node->parent();
   if ( !parent )
-    return;
+    return true;
   
   if ( showWarning && KMessageBox::warningContinueCancel( this,
        i18n("Deleting an attachment might invalidate any digital signature on this message."),
        i18n("Delete Attachment"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
        "DeleteAttachmentSignatureWarning" )
      != KMessageBox::Continue ) {
-    return;
+    return false; //cancelled
   }
 
-  mMimePartModel->setRoot( 0 );
+  mMimePartModel->setRoot( 0 ); //don't confuse the model
   parent->removeContent( node, true );
   mMimePartModel->setRoot( mMessage );
 
   mMessageItem.setPayloadFromData( mMessage->encodedContent() );
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
 //TODO(Andras) error checking?   connect( job, SIGNAL(result(KJob*)), SLOT(imapItemUpdateResult(KJob*)) );
+
+  return true;
 }
 
-void KMReaderWin::slotEditAttachment(KMime::Content * node)
+bool KMReaderWin::slotEditAttachment( KMime::Content * node, bool showWarning )
 {
-  if ( KMessageBox::warningContinueCancel( this,
+  //FIXME(Andras) just that I don't forget...handle the case when the user starts editing and switches to another message meantime
+  if ( showWarning && KMessageBox::warningContinueCancel( this,
         i18n("Modifying an attachment might invalidate any digital signature on this message."),
         i18n("Edit Attachment"), KGuiItem( i18n("Edit"), "document-properties" ), KStandardGuiItem::cancel(),
         "EditAttachmentSignatureWarning" )
         != KMessageBox::Continue ) {
-    return;
+    return false;
   }
+
+  KTemporaryFile file;
+  file.setAutoRemove( false );
+  if ( !file.open() ) {
+    kWarning() << "Edit Attachment: Unable to open temp file.";
+    return true;
+  }
+  file.write( node->decodedContent() );
+  file.flush();
+
+  KMail::EditorWatcher *watcher =
+      new KMail::EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
+                                false, this, this );
+  mEditorWatchers[ watcher ] = node;
+
+  connect( watcher, SIGNAL(editDone(KMail::EditorWatcher*)), SLOT(slotAttachmentEditDone(KMail::EditorWatcher*)) );
+  if ( !watcher->start() ) {
+    QFile::remove( file.fileName() );
+  }
+  
+  return true;
+  
 /*FIXME(Andras) port to akonadi  KMEditAttachmentCommand* command = new KMEditAttachmentCommand( node, message(), this );
   command->start();
   */
+}
+
+void KMReaderWin::slotAttachmentEditDone(KMail::EditorWatcher* editorWatcher)
+{
+  QString name = editorWatcher->url().fileName();
+  if ( editorWatcher->fileChanged() ) {
+    QFile file( name );
+    if ( file.open( QIODevice::ReadOnly ) ) {
+      QByteArray data = file.readAll();
+      KMime::Content *node = mEditorWatchers[editorWatcher];
+      node->setBody( data );
+      file.close();
+
+      mMessageItem.setPayloadFromData( mMessage->encodedContent() );
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );     
+    }
+  }
+  mEditorWatchers.remove( editorWatcher );
+  QFile::remove( name );
 }
 
 KMail::CSSHelper* KMReaderWin::cssHelper() const
@@ -3344,7 +3389,22 @@ void KMReaderWin::slotAttachmentDelete()
 
   bool showWarning = true;
   Q_FOREACH( KMime::Content *content, contents ) {
-    slotDeleteAttachment( content, showWarning );
+    if ( !slotDeleteAttachment( content, showWarning ) )
+      return;
+    showWarning = false;
+  }
+}
+
+void KMReaderWin::slotAttachmentEdit()
+{
+  KMime::Content::List contents = selectedContents();
+  if ( contents.isEmpty() )
+    return;
+
+  bool showWarning = true;
+  Q_FOREACH( KMime::Content *content, contents ) {
+    if (! slotEditAttachment( content, showWarning ) )
+      return;
     showWarning = false;
   }
 }

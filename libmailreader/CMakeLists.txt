@@ -31,6 +31,8 @@ antispamconfig.cpp
 globalsettings.cpp
 configurewidget.cpp
 htmlquotecolorer.cpp
+editorwatcher.cpp
+
  )
 
 

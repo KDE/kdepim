@@ -19,8 +19,6 @@
 #include "editorwatcher.h"
 #include "autoqpointer.h"
 
-#include <config-kmail.h>
-
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>

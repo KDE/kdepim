@@ -83,6 +83,7 @@ namespace KMail {
   namespace Interface {
     class BodyPartMemento;
   }
+  class EditorWatcher;
 }
 
 namespace KParts {
@@ -342,8 +343,14 @@ public slots:
   void slotLevelQuote( int l );
   void slotTouchMessage();
 
-  void slotDeleteAttachment( KMime::Content* node, bool showWarning = true );
-  void slotEditAttachment( KMime::Content* node );
+  /** Delete the attachment the @param node points to. Returns false if the user
+  cancelled the deletion, true in all other cases (including failure to delete
+  the attachment!) */
+  bool slotDeleteAttachment( KMime::Content* node, bool showWarning = true );
+
+  /** Edit the attachment the @param node points to. Returns false if the user
+  cancelled the editing, true in all other cases! */
+  bool slotEditAttachment( KMime::Content* node, bool showWarning = true );
 
   /**
    * Does an action for the current attachment.
@@ -464,6 +471,8 @@ private slots:
   void slotAttachmentProperties();
   void slotAttachmentCopy();
   void slotAttachmentDelete();
+  void slotAttachmentEdit();
+  void slotAttachmentEditDone(KMail::EditorWatcher* editorWatcher);
 
 private:
 
@@ -640,6 +649,7 @@ private:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
+  QMap<KMail::EditorWatcher*, KMime::Content*> mEditorWatchers;
 };
 
 
