@@ -9,3 +9,9 @@ kde4_add_executable(test_boyermor TEST ${test_boyermor_SRCS})
 
 target_link_libraries(test_boyermor  ${KDE4_KDECORE_LIBS} mimelib )
 
+########### next target ###############
+set(testdateparser testdateparser.cpp )
+
+kde4_add_unit_test(testdateparser TESTNAME mime-testdateparser  ${testdateparser})
+
+target_link_libraries(testdateparser ${KDE4_KDECORE_LIBS} mimelib ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})

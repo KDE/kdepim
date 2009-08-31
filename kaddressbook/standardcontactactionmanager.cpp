@@ -167,12 +167,6 @@ class StandardContactActionManager::Private
       if ( job->error() ) {
         KMessageBox::error( mParentWidget, i18n( "Could not add address book: %1", job->errorString() ),
                             i18n( "Adding Address Book failed" ) );
-      } else {
-        const AgentInstanceCreateJob *createJob = static_cast<AgentInstanceCreateJob*>( job );
-
-        AgentInstance instance = createJob->instance();
-        if ( instance.isValid() )
-          instance.synchronize();
       }
     }
 

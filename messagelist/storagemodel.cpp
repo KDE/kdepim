@@ -23,13 +23,13 @@
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/selectionproxymodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/kmime/messagefolderattribute.h>
 
 #include <KDE/KCodecs>
 #include <KDE/KLocale>
+#include <kselectionproxymodel.h>
 
 #include "core/messageitem.h"
 #include "core/settings.h"
@@ -84,9 +84,9 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
     AttributeFactory::registerAttribute<MessageFolderAttribute>();
   }
 
-  SelectionProxyModel *childrenFilter = new SelectionProxyModel( d->mSelectionModel, this );
+  KSelectionProxyModel *childrenFilter = new KSelectionProxyModel( d->mSelectionModel, this );
   childrenFilter->setSourceModel( model );
-  childrenFilter->setFilterBehavior( SelectionProxyModel::OnlySelectedChildren );
+  childrenFilter->setFilterBehavior( KSelectionProxyModel::OnlySelectedChildren );
 
   EntityFilterProxyModel *itemFilter = new EntityFilterProxyModel( this );
   itemFilter->setSourceModel( childrenFilter );
