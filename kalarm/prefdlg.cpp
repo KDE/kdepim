@@ -32,6 +32,7 @@
 #include "identities.h"
 #include "itembox.h"
 #include "kalarmapp.h"
+#include "kalocale.h"
 #include "kamail.h"
 #include "label.h"
 #include "latecancel.h"

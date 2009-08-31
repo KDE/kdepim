@@ -1562,36 +1562,6 @@ bool isWorkingTime(const KDateTime& dt, const KAEvent* event)
 }
 
 /******************************************************************************
-*  Return the first day of the week for the user's locale.
-*  Reply = 1 (Mon) .. 7 (Sun).
-*/
-int localeFirstDayOfWeek()
-{
-	static int firstDay = 0;
-	if (!firstDay)
-		firstDay = KGlobal::locale()->weekStartDay();
-	return firstDay;
-}
-
-/******************************************************************************
-* Return the week day name (Monday = 1).
-*/
-QString weekDayName(int day, const KLocale* locale)
-{
-	switch (day)
-	{
-		case 1: return ki18nc("@option Name of the weekday", "Monday").toString(locale);
-		case 2: return ki18nc("@option Name of the weekday", "Tuesday").toString(locale);
-		case 3: return ki18nc("@option Name of the weekday", "Wednesday").toString(locale);
-		case 4: return ki18nc("@option Name of the weekday", "Thursday").toString(locale);
-		case 5: return ki18nc("@option Name of the weekday", "Friday").toString(locale);
-		case 6: return ki18nc("@option Name of the weekday", "Saturday").toString(locale);
-		case 7: return ki18nc("@option Name of the weekday", "Sunday").toString(locale);
-	}
-	return QString();
-}
-
-/******************************************************************************
 * Convert a date/time specification string into a local date/time or date value.
 * Parameters:
 *   timeString  = in the form [[[yyyy-]mm-]dd-]hh:mm [TZ] or yyyy-mm-dd [TZ].

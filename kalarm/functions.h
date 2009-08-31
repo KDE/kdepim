@@ -141,20 +141,6 @@ bool                convertTimeString(const QByteArray& timeString, KDateTime& d
 KDateTime           applyTimeZone(const QString& tzstring, const QDate& date, const QTime& time,
                                   bool haveTime, const KDateTime& defaultDt = KDateTime());
 bool                isWorkingTime(const KDateTime&, const KAEvent*);
-int                 localeFirstDayOfWeek();
-QString             weekDayName(int day, const KLocale*);
-
-/* Given a standard KDE day number, return the day number in the week for the user's locale.
- * Standard day number = 1 (Mon) .. 7 (Sun)
- * Locale day number in week = 0 .. 6
- */
-inline int          weekDay_to_localeDayInWeek(int weekDay)  { return (weekDay + 7 - localeFirstDayOfWeek()) % 7; }
-
-/* Given a day number in the week for the user's locale, return the standard KDE day number.
- * 'index' = 0 .. 6
- * Standard day number = 1 (Mon) .. 7 (Sun)
- */
-inline int          localeDayInWeek_to_weekDay(int index)  { return (index + localeFirstDayOfWeek() - 1) % 7 + 1; }
 
 #ifndef NDEBUG
 void                setTestModeConditions();

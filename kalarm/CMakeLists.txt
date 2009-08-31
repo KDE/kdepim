@@ -30,6 +30,7 @@ set(libkalarm_SRCS
 	lib/identities.cpp
 	lib/itembox.cpp
 	lib/label.cpp 
+	lib/kalocale.cpp
 	lib/messagebox.cpp 
 	lib/packedlayout.cpp 
 	lib/pushbutton.cpp 

@@ -50,6 +50,7 @@
 #include "dateedit.h"
 #include "functions.h"
 #include "kalarmapp.h"
+#include "kalocale.h"
 #include "karecurrence.h"
 #include "preferences.h"
 #include "radiobutton.h"

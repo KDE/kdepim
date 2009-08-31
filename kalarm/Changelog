@@ -1,5 +1,8 @@
 KAlarm Change Log
 
+=== Version 2.2.8 --- 19 August 2009 ===
+- Use KDE system settings to determine default working days in the week.
+
 === Version 2.2.7 (KDE 4.3.1) --- 19 August 2009 ===
 - Shift-Delete now deletes alarms without showing confirmation prompt.
 - Disable edit alarm dialogue OK button if no changes have been made.
