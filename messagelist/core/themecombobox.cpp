@@ -16,26 +16,16 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "themecombobox.h"
 #include "messagelist/core/themecombobox.h"
+#include "messagelist/core/themecombobox_p.h"
 
 #include "messagelist/core/manager.h"
 #include "messagelist/core/theme.h"
 
+#include <KDE/KGlobal>
+
 using namespace MessageList::Core;
-
-class ThemeComboBox::Private
-{
-public:
-  Private( ThemeComboBox *owner )
-    : q( owner ) { }
-
-  ThemeComboBox * const q;
-
-  /**
-   * Refresh list of themes in the combobox.
-   */
-  void slotLoadThemes();
-};
 
 ThemeComboBox::ThemeComboBox( QWidget * parent )
 : KComboBox( parent ), d( new Private( this ) )
@@ -46,6 +36,40 @@ ThemeComboBox::ThemeComboBox( QWidget * parent )
 ThemeComboBox::~ThemeComboBox()
 {
   delete d;
+}
+
+void ThemeComboBox::writeDefaultConfig() const
+{
+  KConfigGroup group( KGlobal::config(), "MessageListView::StorageModelThemes" );
+
+  const QString themeID = d->currentTheme()->id();
+  group.writeEntry( QString( "DefaultSet" ), themeID );
+
+  Manager::instance()->themesConfigurationCompleted();
+}
+
+void ThemeComboBox::writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const
+{
+  QString themeID;
+  if ( isPrivateSetting ) {
+    themeID = d->currentTheme()->id();
+  } else { // explicitly use default theme id when using default theme.
+    themeID = Manager::instance()->defaultTheme()->id();
+  }
+  Manager::instance()->saveThemeForStorageModel( storageModel, themeID, isPrivateSetting );
+  Manager::instance()->themesConfigurationCompleted();
+}
+
+void ThemeComboBox::readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting )
+{
+  const Theme *theme = Manager::instance()->themeForStorageModel( storageModel, &isPrivateSetting );
+  d->setCurrentTheme( theme );
+}
+
+void ThemeComboBox::selectDefault()
+{
+  const Theme *defaultTheme = Manager::instance()->defaultTheme();
+  d->setCurrentTheme( defaultTheme );
 }
 
 static bool themeNameLessThan( const Theme * lhs, const Theme * rhs )
@@ -67,18 +91,18 @@ void ThemeComboBox::Private::slotLoadThemes()
   }
 }
 
-void ThemeComboBox::setCurrentTheme( const Theme * theme )
+void ThemeComboBox::Private::setCurrentTheme( const Theme *theme )
 {
   Q_ASSERT( theme != 0 );
 
   const QString themeID = theme->id();
-  const int themeIndex = findData( QVariant( themeID ) );
-  setCurrentIndex( themeIndex );
+  const int themeIndex = q->findData( QVariant( themeID ) );
+  q->setCurrentIndex( themeIndex );
 }
 
-const Theme * ThemeComboBox::currentTheme() const
+const Theme *ThemeComboBox::Private::currentTheme() const
 {
-  const QVariant currentThemeVariant = itemData( currentIndex() );
+  const QVariant currentThemeVariant = q->itemData( q->currentIndex() );
   const QString currentThemeID = currentThemeVariant.toString();
   return Manager::instance()->theme( currentThemeID );
 }

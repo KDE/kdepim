@@ -16,11 +16,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
-#define __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
-
-#include <messagelist/messagelist_export.h>
-#include <KComboBox>
+#ifndef __MESSAGELIST_CORE_THEMECOMBOBOX_P_H__
+#define __MESSAGELIST_CORE_THEMECOMBOBOX_P_H__
 
 namespace MessageList
 {
@@ -28,39 +25,28 @@ namespace MessageList
 namespace Core
 {
 
-class Aggregation;
-class StorageModel;
+class Theme;
+class ThemeComboBox;
 
-/**
- * A specialized KComboBox that lists all message list aggregations.
- */
-class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
+class ThemeComboBox::Private
 {
-  Q_OBJECT
-  friend class AggregationConfigButton;
-
 public:
-  explicit AggregationComboBox( QWidget * parent );
-  ~AggregationComboBox();
+  Private( ThemeComboBox *owner )
+    : q( owner ) { }
 
-  void writeDefaultConfig() const;
+  ThemeComboBox * const q;
 
-  void writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const;
-  void readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting );
+  /**
+   * Refresh list of themes in the combobox.
+   */
+  void slotLoadThemes();
 
-public Q_SLOTS:
-  void selectDefault();
-
-private:
-  Q_PRIVATE_SLOT(d, void slotLoadAggregations())
-
-  class Private;
-  Private * const d;
+  void setCurrentTheme( const Theme *theme );
+  const Theme *currentTheme() const;
 };
 
 } // namespace Core
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
-
+#endif //!__MESSAGELIST_CORE_THEMECOMBOBOX_P_H__

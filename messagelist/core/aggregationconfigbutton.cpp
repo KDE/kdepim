@@ -19,6 +19,7 @@
 #include "messagelist/core/aggregationconfigbutton.h"
 
 #include "messagelist/core/aggregationcombobox.h"
+#include "messagelist/core/aggregationcombobox_p.h"
 #include "messagelist/core/configureaggregationsdialog.h"
 #include "messagelist/core/manager.h"
 
@@ -60,8 +61,9 @@ AggregationConfigButton::~AggregationConfigButton()
 void AggregationConfigButton::Private::slotConfigureAggregations()
 {
   QString currentAggregationID;
-  if ( mAggregationComboBox != 0 )
-    currentAggregationID = mAggregationComboBox->currentAggregation()->id();
+  if ( mAggregationComboBox != 0 ) {
+    currentAggregationID = mAggregationComboBox->d->currentAggregation()->id();
+  }
   Manager::instance()->showConfigureAggregationsDialog( static_cast< QWidget * >( q->parent() ), currentAggregationID );
 
   connect( ConfigureAggregationsDialog::instance(), SIGNAL( okClicked() ),

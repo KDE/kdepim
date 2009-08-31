@@ -20,6 +20,7 @@
 
 #include "messagelist/core/theme.h"
 #include "messagelist/core/themecombobox.h"
+#include "messagelist/core/themecombobox_p.h"
 #include "messagelist/core/configurethemesdialog.h"
 #include "messagelist/core/manager.h"
 
@@ -62,7 +63,7 @@ void ThemeConfigButton::Private::slotConfigureThemes()
 {
   QString currentThemeID;
   if ( mThemeComboBox != 0 )
-    currentThemeID = mThemeComboBox->currentTheme()->id();
+    currentThemeID = mThemeComboBox->d->currentTheme()->id();
   Manager::instance()->showConfigureThemesDialog( static_cast< QWidget * >( q->parent() ), currentThemeID );
 
   connect( ConfigureThemesDialog::instance(), SIGNAL( okClicked() ),

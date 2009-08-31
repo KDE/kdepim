@@ -16,26 +16,16 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "aggregationcombobox.h"
 #include "messagelist/core/aggregationcombobox.h"
+#include "messagelist/core/aggregationcombobox_p.h"
 
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"
 
+#include <KDE/KGlobal>
+
 using namespace MessageList::Core;
-
-class AggregationComboBox::Private
-{
-public:
-  Private( AggregationComboBox *owner )
-    : q( owner ) { }
-
-  AggregationComboBox * const q;
-
-  /**
-   * Refresh list of aggregations in the combobox.
-   */
-  void slotLoadAggregations();
-};
 
 AggregationComboBox::AggregationComboBox( QWidget * parent )
 : KComboBox( parent ), d( new Private( this ) )
@@ -46,6 +36,41 @@ AggregationComboBox::AggregationComboBox( QWidget * parent )
 AggregationComboBox::~AggregationComboBox()
 {
   delete d;
+}
+
+void AggregationComboBox::writeDefaultConfig() const
+{
+  KConfigGroup group( KGlobal::config(), "MessageListView::StorageModelAggregations" );
+
+  const QString aggregationID = d->currentAggregation()->id();
+  group.writeEntry( QString( "DefaultSet" ), aggregationID );
+
+  Manager::instance()->aggregationsConfigurationCompleted();
+}
+
+void AggregationComboBox::writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const
+{
+  // message list aggregation
+  QString aggregationID;
+  if ( isPrivateSetting ) {
+    aggregationID = d->currentAggregation()->id();
+  } else { // explicitly use default aggregation id when using default aggregation.
+    aggregationID = Manager::instance()->defaultAggregation()->id();
+  }
+  Manager::instance()->saveAggregationForStorageModel( storageModel, aggregationID, isPrivateSetting );
+  Manager::instance()->aggregationsConfigurationCompleted();
+}
+
+void AggregationComboBox::readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting )
+{
+  const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( storageModel, &isPrivateSetting );
+  d->setCurrentAggregation( aggregation );
+}
+
+void AggregationComboBox::selectDefault()
+{
+  const Aggregation *defaultAggregation = Manager::instance()->defaultAggregation();
+  d->setCurrentAggregation( defaultAggregation );
 }
 
 static bool aggregationNameLessThan( const Aggregation * lhs, const Aggregation * rhs )
@@ -67,18 +92,18 @@ void AggregationComboBox::Private::slotLoadAggregations()
   }
 }
 
-void AggregationComboBox::setCurrentAggregation( const Aggregation * aggregation )
+void AggregationComboBox::Private::setCurrentAggregation( const Aggregation *aggregation )
 {
   Q_ASSERT( aggregation != 0 );
 
   const QString aggregationID = aggregation->id();
-  const int aggregationIndex = findData( QVariant( aggregationID ) );
-  setCurrentIndex( aggregationIndex );
+  const int aggregationIndex = q->findData( QVariant( aggregationID ) );
+  q->setCurrentIndex( aggregationIndex );
 }
 
-const Aggregation * AggregationComboBox::currentAggregation() const
+const Aggregation *AggregationComboBox::Private::currentAggregation() const
 {
-  const QVariant currentAggregationVariant = itemData( currentIndex() );
+  const QVariant currentAggregationVariant = q->itemData( q->currentIndex() );
   const QString currentAggregationID = currentAggregationVariant.toString();
   return Manager::instance()->aggregation( currentAggregationID );
 }

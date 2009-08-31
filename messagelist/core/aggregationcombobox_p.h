@@ -16,8 +16,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
-#define __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
+#ifndef __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_P_H__
+#define __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_P_H__
 
 #include <messagelist/messagelist_export.h>
 #include <KComboBox>
@@ -29,38 +29,28 @@ namespace Core
 {
 
 class Aggregation;
-class StorageModel;
+class AggregationComboBox;
 
-/**
- * A specialized KComboBox that lists all message list aggregations.
- */
-class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
+class AggregationComboBox::Private
 {
-  Q_OBJECT
-  friend class AggregationConfigButton;
-
 public:
-  explicit AggregationComboBox( QWidget * parent );
-  ~AggregationComboBox();
+  Private( AggregationComboBox *owner )
+    : q( owner ) { }
 
-  void writeDefaultConfig() const;
+  AggregationComboBox * const q;
 
-  void writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const;
-  void readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting );
+  /**
+   * Refresh list of aggregations in the combobox.
+   */
+  void slotLoadAggregations();
 
-public Q_SLOTS:
-  void selectDefault();
-
-private:
-  Q_PRIVATE_SLOT(d, void slotLoadAggregations())
-
-  class Private;
-  Private * const d;
+  void setCurrentAggregation( const Aggregation *aggregation );
+  const Aggregation *currentAggregation() const;
 };
 
 } // namespace Core
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
+#endif //!__MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_P_H__
 

@@ -28,6 +28,7 @@ namespace MessageList
 namespace Core
 {
 
+class StorageModel;
 class Theme;
 
 /**
@@ -36,13 +37,19 @@ class Theme;
 class MESSAGELIST_EXPORT ThemeComboBox : public KComboBox
 {
   Q_OBJECT
+  friend class ThemeConfigButton;
 
 public:
   explicit ThemeComboBox( QWidget * parent);
   ~ThemeComboBox();
 
-  void setCurrentTheme( const Theme * theme );
-  const Theme * currentTheme() const;
+  void writeDefaultConfig() const;
+
+  void writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const;
+  void readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting );
+
+public Q_SLOTS:
+  void selectDefault();
 
 private:
   Q_PRIVATE_SLOT(d, void slotLoadThemes())

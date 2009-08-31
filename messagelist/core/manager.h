@@ -64,7 +64,7 @@ class Widget;
  * before the first MessageList::Widget and destroyed after the last MessageList::Widget.
  * But in KMail this is always the case :)
  */
-class MESSAGELIST_EXPORT Manager : public QObject
+class Manager : public QObject
 {
   Q_OBJECT
 protected:
