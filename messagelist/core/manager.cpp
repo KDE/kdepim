@@ -103,6 +103,8 @@ Manager::Manager()
   mHeartBeatTimer->start(60000); // 1 minute
 
   loadConfiguration();
+  connect( Settings::self(), SIGNAL(configChanged()),
+           this, SLOT(reloadGlobalConfiguration()) );
 }
 
 Manager::~Manager()

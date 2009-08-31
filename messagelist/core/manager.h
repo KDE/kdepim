@@ -256,6 +256,7 @@ public:
    */
   void themesConfigurationCompleted();
 
+protected slots:
   /**
    * Reloads the global configuration from the config files (so we assume it has changed)
    * The settings private to MessageList (like Themes or Aggregations) aren't reloaded.
@@ -268,7 +269,6 @@ public:
    */
   void reloadAllWidgets();
 
-protected slots:
   /**
    * This slot is connected to a very slow timer (1 minute).
    * It actually sweeps through the registered models calling

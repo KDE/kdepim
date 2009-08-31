@@ -121,6 +121,9 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
   setContextMenuPolicy( Qt::CustomContextMenu );
   connect( this, SIGNAL(customContextMenuRequested(QPoint)),
            this, SLOT(onTabContextMenuRequest(QPoint)) );
+
+  connect( Core::Settings::self(), SIGNAL(configChanged()),
+           this, SLOT(updateTabControls()) );
 }
 
 Pane::~Pane()

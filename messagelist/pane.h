@@ -193,6 +193,7 @@ private:
   Q_PRIVATE_SLOT(d, void onCloseTabClicked())
   Q_PRIVATE_SLOT(d, void onCurrentTabChanged())
   Q_PRIVATE_SLOT(d, void onTabContextMenuRequest( const QPoint& ))
+  Q_PRIVATE_SLOT(d, void updateTabControls())
 
   class Private;
   Private * const d;

@@ -49,6 +49,7 @@ public:
 
   void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onSelectionChanged();
+  void loadSettings();
 
   StorageModel * const q;
 
@@ -96,36 +97,6 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 
   d->mModel = itemFilter;
 
-  // Custom/System colors
-  Core::Settings *settings = Core::Settings::self();
-
-  if ( settings->useDefaultColors() ) {
-    d->mColorNewMessage = QColor("red");
-    d->mColorUnreadMessage = QColor("blue");
-    d->mColorImportantMessage = QColor(0x0, 0x7F, 0x0);
-    d->mColorToDoMessage = QColor(0x0, 0x98, 0x0);
-  } else {
-    d->mColorNewMessage = settings->newMessageColor();
-    d->mColorUnreadMessage = settings->unreadMessageColor();
-    d->mColorImportantMessage = settings->importantMessageColor();
-    d->mColorToDoMessage = settings->todoMessageColor();
-  }
-
-
-  if ( settings->useDefaultFonts() ) {
-    d->mFont = KGlobalSettings::generalFont();
-    d->mFontNewMessage = KGlobalSettings::generalFont();
-    d->mFontUnreadMessage = KGlobalSettings::generalFont();
-    d->mFontImportantMessage = KGlobalSettings::generalFont();
-    d->mFontToDoMessage = KGlobalSettings::generalFont();
-  } else {
-    d->mFont = settings->messageListFont();
-    d->mFontNewMessage = settings->newMessageFont();
-    d->mFontUnreadMessage = settings->unreadMessageFont();
-    d->mFontImportantMessage = settings->importantMessageFont();
-    d->mFontToDoMessage = settings->todoMessageFont();
-  }
-
   connect( d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
 
@@ -150,6 +121,11 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 
   connect( d->mSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
            this, SLOT(onSelectionChanged()) );
+
+  d->loadSettings();
+  connect( Core::Settings::self(), SIGNAL(configChanged()),
+           this, SLOT(loadSettings()) );
+
 }
 
 StorageModel::~StorageModel()
@@ -441,6 +417,41 @@ void StorageModel::Private::onSourceDataChanged( const QModelIndex &topLeft, con
 void StorageModel::Private::onSelectionChanged()
 {
   emit q->headerDataChanged( Qt::Horizontal, 0, q->columnCount()-1 );
+}
+
+void StorageModel::Private::loadSettings()
+{
+  // Custom/System colors
+  Core::Settings *settings = Core::Settings::self();
+
+  if ( settings->useDefaultColors() ) {
+    mColorNewMessage = QColor("red");
+    mColorUnreadMessage = QColor("blue");
+    mColorImportantMessage = QColor(0x0, 0x7F, 0x0);
+    mColorToDoMessage = QColor(0x0, 0x98, 0x0);
+  } else {
+    mColorNewMessage = settings->newMessageColor();
+    mColorUnreadMessage = settings->unreadMessageColor();
+    mColorImportantMessage = settings->importantMessageColor();
+    mColorToDoMessage = settings->todoMessageColor();
+  }
+
+
+  if ( settings->useDefaultFonts() ) {
+    mFont = KGlobalSettings::generalFont();
+    mFontNewMessage = KGlobalSettings::generalFont();
+    mFontUnreadMessage = KGlobalSettings::generalFont();
+    mFontImportantMessage = KGlobalSettings::generalFont();
+    mFontToDoMessage = KGlobalSettings::generalFont();
+  } else {
+    mFont = settings->messageListFont();
+    mFontNewMessage = settings->newMessageFont();
+    mFontUnreadMessage = settings->unreadMessageFont();
+    mFontImportantMessage = settings->importantMessageFont();
+    mFontToDoMessage = settings->todoMessageFont();
+  }
+
+  q->reset();
 }
 
 Item StorageModel::itemForRow( int row ) const
