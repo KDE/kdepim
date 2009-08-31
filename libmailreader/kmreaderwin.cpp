@@ -3192,7 +3192,17 @@ bool KMReaderWin::saveContent( KMime::Content* content, const KUrl& url, bool en
 
 void KMReaderWin::slotAttachmentView()
 {
-  
+  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
+  QModelIndexList selectedRows = selectionModel->selectedRows();
+
+  Q_FOREACH(QModelIndex index, selectedRows)
+  {
+     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
+     if ( content ) {
+       slotAtmView( content );
+     }
+  }
+
 }
 
 
