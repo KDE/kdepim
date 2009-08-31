@@ -3308,17 +3308,17 @@ void KMReaderWin::slotAttachmentCopy()
   if ( contents.isEmpty() )
     return;
 
-  if ( contents.size() != 1 ) {
-    kWarning() << "Cannot copy more than one attachment to the clipboard";
-    return;
+  QList<QUrl> urls;
+  Q_FOREACH( KMime::Content *content, contents) {
+    KUrl kUrl = writeMessagePartToTempFile( content );
+    QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
+    if ( !url.isValid() )
+      continue;
+    urls.append( url );
   }
 
-  KUrl kUrl = writeMessagePartToTempFile( contents[0] );
-  QList<QUrl> urls;
-  QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
-  if ( !url.isValid() )
+  if ( urls.isEmpty() )
     return;
-  urls.append( url );
 
   QMimeData *mimeData = new QMimeData;
   mimeData->setUrls( urls );
