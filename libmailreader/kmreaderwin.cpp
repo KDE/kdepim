@@ -2857,7 +2857,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
   if ( !isRoot ) {
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
-                       this, SLOT( slotCopy() ) );
+                       this, SLOT( slotAttachmentCopy() ) );
       if ( GlobalSettings::self()->allowAttachmentDeletion() )
         popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT( slotDelete() ) );
@@ -2936,16 +2936,7 @@ void KMReaderWin::slotAttachmentOpen()
 
 void KMReaderWin::slotAttachmentSaveAs()
 {
-  KMime::Content::List contents;
-  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
-  QModelIndexList selectedRows = selectionModel->selectedRows();
-
-  Q_FOREACH(QModelIndex index, selectedRows)
-  {
-     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-     if ( content )
-       contents.append( content );
-  }
+  KMime::Content::List contents = selectedContents();
 
   if ( contents.isEmpty() )
      return;
@@ -3193,15 +3184,11 @@ bool KMReaderWin::saveContent( KMime::Content* content, const KUrl& url, bool en
 
 void KMReaderWin::slotAttachmentView()
 {
-  QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
-  QModelIndexList selectedRows = selectionModel->selectedRows();
+  KMime::Content::List contents = selectedContents();
 
-  Q_FOREACH(QModelIndex index, selectedRows)
+  Q_FOREACH(KMime::Content *content, contents)
   {
-     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-     if ( content ) {
-       slotAtmView( content );
-     }
+    slotAtmView( content );
   }
 
 }
@@ -3302,6 +3289,44 @@ void KMReaderWin::slotAttachmentSaveAll()
 
 void KMReaderWin::slotAttachmentProperties()
 {
+  KMime::Content::List contents = selectedContents();
+
+  if ( contents.isEmpty() )
+     return;
+
+  Q_FOREACH( KMime::Content *content, contents ) {
+    KPIM::AttachmentPropertiesDialog *dialog = new KPIM::AttachmentPropertiesDialog( content, this );
+    dialog->setAttribute( Qt::WA_DeleteOnClose );
+    dialog->show();
+  }
+}
+
+void KMReaderWin::slotAttachmentCopy()
+{
+  KMime::Content::List contents = selectedContents();
+
+  if ( contents.isEmpty() )
+    return;
+
+  if ( contents.size() != 1 ) {
+    kWarning() << "Cannot copy more than one attachment to the clipboard";
+    return;
+  }
+
+  KUrl kUrl = writeMessagePartToTempFile( contents[0] );
+  QList<QUrl> urls;
+  QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
+  if ( !url.isValid() )
+    return;
+  urls.append( url );
+
+  QMimeData *mimeData = new QMimeData;
+  mimeData->setUrls( urls );
+  QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
+}
+
+KMime::Content::List KMReaderWin::selectedContents()
+{
   KMime::Content::List contents;
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
@@ -3313,14 +3338,7 @@ void KMReaderWin::slotAttachmentProperties()
        contents.append( content );
   }
 
-  if ( contents.isEmpty() )
-     return;
-
-  Q_FOREACH( KMime::Content *content, contents ) {
-    KPIM::AttachmentPropertiesDialog *dialog = new KPIM::AttachmentPropertiesDialog( content, this );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->show();
-  }
+  return contents;
 }
 
 #include "kmreaderwin.moc"

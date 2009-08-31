@@ -462,6 +462,7 @@ private slots:
   void slotAttachmentView();
   void slotAttachmentSaveAll();
   void slotAttachmentProperties();
+  void slotAttachmentCopy();
 
 private:
 
@@ -570,7 +571,7 @@ private:
   bool saveContent( KMime::Content* content, const KUrl& url, bool encoded );
   void saveAttachments( const KMime::Content::List & contents );
   KMime::Content::List allContents( KMime::Content * content );
-
+  KMime::Content::List selectedContents();
 
 
 private:
