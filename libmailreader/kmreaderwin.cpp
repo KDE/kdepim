@@ -2850,7 +2850,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
   */
 
   popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT( slotSaveAll() ) );
+                   SLOT( slotAttachmentSaveAll() ) );
 
   // edit + delete only for attachments
   if ( !isRoot ) {
@@ -3252,6 +3252,52 @@ KService::Ptr KMReaderWin::getServiceOffer( KMime::Content *content)
   return KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 }
 
+KMime::Content::List KMReaderWin::allContents( KMime::Content * content )
+{
+  KMime::Content::List result;
+  KMime::Content *child = NodeHelper::firstChild( content );
+  if ( child ) {
+    result += child;
+    result += allContents( child );
+  }
+  KMime::Content *next = NodeHelper::nextSibling( content );
+  if ( next ) {
+    result += next;
+    result += allContents( next );
+  }
+
+  return result;
+}
+
+void KMReaderWin::slotAttachmentSaveAll()
+{
+  KMime::Content::List contents = allContents( mMessage );
+
+  for ( KMime::Content::List::iterator it = contents.begin();
+        it != contents.end(); ) {
+    // only body parts which have a filename or a name parameter (except for
+    // the root node for which name is set to the message's subject) are
+    // considered attachments
+    KMime::Content* content = *it;
+    if ( content->contentDisposition()->filename().trimmed().isEmpty() &&
+          ( content->contentType()->name().trimmed().isEmpty() ||
+            content == mMessage ) ) {
+      KMime::Content::List::iterator delIt = it;
+      ++it;
+      contents.erase( delIt );
+    } else {
+      ++it;
+    }
+  }
+  
+  if ( contents.isEmpty() ) {
+    KMessageBox::information( this, i18n("Found no attachments to save.") );
+    return;
+  }
+
+  saveAttachments( contents );
+  
+}
 
 #include "kmreaderwin.moc"
 

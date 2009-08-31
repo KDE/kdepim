@@ -460,6 +460,7 @@ private slots:
   void slotAttachmentOpen();
   void slotAttachmentSaveAs();
   void slotAttachmentView();
+  void slotAttachmentSaveAll();
 
 private:
 
@@ -567,6 +568,7 @@ private:
   KService::Ptr getServiceOffer( KMime::Content *content);
   bool saveContent( KMime::Content* content, const KUrl& url, bool encoded );
   void saveAttachments( const KMime::Content::List & contents );
+  KMime::Content::List allContents( KMime::Content * content );
 
 
 
