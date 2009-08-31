@@ -2,7 +2,6 @@ project(kaddressbook)
 include_directories(
     ${CMAKE_SOURCE_DIR}/akonadi
     ${CMAKE_SOURCE_DIR}/akonadi/akonadi_next
-    ${CMAKE_SOURCE_DIR}/akonadi/contact
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
     ${QT_QTDBUS_INCLUDE_DIR}
