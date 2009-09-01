@@ -19,13 +19,12 @@
 
 #include "kaddrbookexternal.h"
 
-#include "akonadi/contact/addressbookselectiondialog.h"
-#include "akonadi/contact/contacteditordialog.h"
-#include "akonadi/contact/contactgroupexpandjob.h"
-#include "akonadi/contact/contactgroupsearchjob.h"
-#include "akonadi/contact/contactsearchjob.h"
-
 #include <akonadi/collection.h>
+#include <akonadi/contact/addressbookselectiondialog.h>
+#include <akonadi/contact/contacteditordialog.h>
+#include <akonadi/contact/contactgroupexpandjob.h>
+#include <akonadi/contact/contactgroupsearchjob.h>
+#include <akonadi/contact/contactsearchjob.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <kabc/contactgroup.h>

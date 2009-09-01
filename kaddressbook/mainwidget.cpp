@@ -32,6 +32,10 @@
 
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
+#include <akonadi/contact/contacteditordialog.h>
+#include <akonadi/contact/contactgroupeditordialog.h>
+#include <akonadi/contact/contactgroupviewer.h>
+#include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/itemview.h>
@@ -53,10 +57,6 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
-#include "akonadi/contact/contacteditordialog.h"
-#include "akonadi/contact/contactgroupeditordialog.h"
-#include "akonadi/contact/contactgroupviewer.h"
-#include "akonadi/contact/contactviewer.h"
 #include "akonadi_next/entitytreeview.h"
 #include "contactfiltermodel.h"
 #include "contactstreemodel.h"
