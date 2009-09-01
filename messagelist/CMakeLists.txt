@@ -9,12 +9,6 @@ include_directories(
 
 set(libmessagelist_SRCS
     core/aggregation.cpp
-    core/aggregationcombobox.cpp
-    core/aggregationconfigbutton.cpp
-    core/aggregationeditor.cpp
-    core/comboboxutils.cpp
-    core/configureaggregationsdialog.cpp
-    core/configurethemesdialog.cpp
     core/delegate.cpp
     core/filter.cpp
     core/item.cpp
@@ -26,16 +20,23 @@ set(libmessagelist_SRCS
     core/modelinvariantindex.cpp
     core/modelinvariantrowmapper.cpp
     core/optionset.cpp
-    core/optionseteditor.cpp
     core/theme.cpp
     core/themedelegate.cpp
-    core/themecombobox.cpp
-    core/themeconfigbutton.cpp
-    core/themeeditor.cpp
     core/storagemodelbase.cpp
     core/sortorder.cpp
     core/view.cpp
     core/widgetbase.cpp
+
+    utils/aggregationcombobox.cpp
+    utils/aggregationconfigbutton.cpp
+    utils/aggregationeditor.cpp
+    utils/comboboxutils.cpp
+    utils/configureaggregationsdialog.cpp
+    utils/configurethemesdialog.cpp
+    utils/optionseteditor.cpp
+    utils/themecombobox.cpp
+    utils/themeconfigbutton.cpp
+    utils/themeeditor.cpp
 
     pane.cpp
     storagemodel.cpp

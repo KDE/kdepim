@@ -16,17 +16,18 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "messagelist/core/themeconfigbutton.h"
+#include "messagelist/utils/themeconfigbutton.h"
 
 #include "messagelist/core/theme.h"
-#include "messagelist/core/themecombobox.h"
-#include "messagelist/core/themecombobox_p.h"
-#include "messagelist/core/configurethemesdialog.h"
+#include "messagelist/utils/themecombobox.h"
+#include "messagelist/utils/themecombobox_p.h"
+#include "messagelist/utils/configurethemesdialog.h"
 #include "messagelist/core/manager.h"
 
 #include <klocale.h>
 
 using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 class ThemeConfigButton::Private
 {

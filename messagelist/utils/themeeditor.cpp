@@ -18,13 +18,13 @@
  *
  *******************************************************************************/
 
-#include "core/themeeditor.h"
+#include "utils/themeeditor.h"
 #include "core/theme.h"
 #include "core/groupheaderitem.h"
 #include "core/messageitem.h"
 #include "core/modelinvariantrowmapper.h"
 #include "core/manager.h"
-#include "core/comboboxutils.h"
+#include "utils/comboboxutils.h"
 
 #include <libkdepim/messagestatus.h>
 
@@ -57,6 +57,7 @@
 
 #include <time.h> // for time_t
 
+using namespace MessageList::Utils;
 using namespace MessageList::Core;
 
 static const char * gThemeContentItemTypeDndMimeDataFormat = "application/x-kmail-messagelistview-theme-contentitem-type";

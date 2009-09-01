@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_H__
-#define __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_H__
+#ifndef __MESSAGELIST_UTILS_CONFIGURETHEMESDIALOG_H__
+#define __MESSAGELIST_UTILS_CONFIGURETHEMESDIALOG_H__
 
 #include <KDialog>
 
@@ -37,9 +37,14 @@ namespace Core
 
 class Manager;
 
+} // namespace Core
+
+namespace Utils
+{
+
 class MESSAGELIST_EXPORT ConfigureThemesDialog : public KDialog
 {
-  friend class Manager;
+  friend class Core::Manager;
 
   Q_OBJECT
 protected:
@@ -61,8 +66,8 @@ private:
   Private * const d;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_CONFIGURESKINSDIALOG_H__
+#endif //!__MESSAGELIST_UTILS_CONFIGURESKINSDIALOG_H__

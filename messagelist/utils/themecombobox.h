@@ -16,8 +16,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_CORE_THEMECOMBOBOX_H__
-#define __MESSAGELIST_CORE_THEMECOMBOBOX_H__
+#ifndef __MESSAGELIST_UTILS_THEMECOMBOBOX_H__
+#define __MESSAGELIST_UTILS_THEMECOMBOBOX_H__
 
 #include <messagelist/messagelist_export.h>
 #include <KComboBox>
@@ -30,6 +30,11 @@ namespace Core
 
 class StorageModel;
 class Theme;
+
+} // namespace Core
+
+namespace Utils
+{
 
 /**
  * A specialized KComboBox that lists all message list themes.
@@ -45,8 +50,8 @@ public:
 
   void writeDefaultConfig() const;
 
-  void writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const;
-  void readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting );
+  void writeStorageModelConfig( Core::StorageModel *storageModel, bool isPrivateSetting ) const;
+  void readStorageModelConfig( Core::StorageModel *storageModel, bool &isPrivateSetting );
 
 public Q_SLOTS:
   void selectDefault();
@@ -58,8 +63,8 @@ private:
   Private * const d;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_THEMECOMBOBOX_H__
+#endif //!__MESSAGELIST_UTILS_THEMECOMBOBOX_H__

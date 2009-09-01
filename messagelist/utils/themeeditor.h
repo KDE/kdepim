@@ -18,10 +18,10 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_THEMEEDITOR_H__
-#define __MESSAGELIST_CORE_THEMEEDITOR_H__
+#ifndef __MESSAGELIST_UTILS_THEMEEDITOR_H__
+#define __MESSAGELIST_UTILS_THEMEEDITOR_H__
 
-#include <messagelist/core/optionseteditor.h>
+#include <messagelist/utils/optionseteditor.h>
 #include <messagelist/core/themedelegate.h>
 #include <messagelist/core/theme.h>
 
@@ -49,14 +49,19 @@ class GroupHeaderItem;
 class MessageItem;
 class ModelInvariantRowMapper;
 
+} // namespace Core
+
+namespace Utils
+{
+
 class ThemeColumnPropertiesDialog : public KDialog
 {
   Q_OBJECT
 public:
-  ThemeColumnPropertiesDialog( QWidget * parent, Theme::Column * column, const QString &title );
+  ThemeColumnPropertiesDialog( QWidget * parent, Core::Theme::Column * column, const QString &title );
 
 protected:
-  Theme::Column * mColumn;
+  Core::Theme::Column * mColumn;
   KLineEdit * mNameEdit;
   QCheckBox * mVisibleByDefaultCheck;
   QCheckBox * mIsSenderOrReceiverCheck;
@@ -66,7 +71,7 @@ protected slots:
   void slotOkButtonClicked();
 };
 
-class ThemePreviewDelegate : public ThemeDelegate
+class ThemePreviewDelegate : public Core::ThemeDelegate
 {
   Q_OBJECT
 public:
@@ -74,11 +79,11 @@ public:
   ~ThemePreviewDelegate();
 
 private:
-  GroupHeaderItem * mSampleGroupHeaderItem;
-  MessageItem * mSampleMessageItem;
-  ModelInvariantRowMapper * mRowMapper; // needed for the MessageItem above to be valid
+  Core::GroupHeaderItem * mSampleGroupHeaderItem;
+  Core::MessageItem * mSampleMessageItem;
+  Core::ModelInvariantRowMapper * mRowMapper; // needed for the MessageItem above to be valid
 public:
-  virtual Item * itemFromIndex( const QModelIndex &index ) const;
+  virtual Core::Item * itemFromIndex( const QModelIndex &index ) const;
 };
 
 class ThemePreviewWidget : public QTreeWidget
@@ -118,10 +123,10 @@ private:
   ThemePreviewDelegate * mDelegate;
   QTreeWidgetItem * mGroupHeaderSampleItem;
   QRect mThemeSelectedContentItemRect;
-  Theme::ContentItem * mSelectedThemeContentItem;
-  Theme::Column * mSelectedThemeColumn;
+  Core::Theme::ContentItem * mSelectedThemeContentItem;
+  Core::Theme::Column * mSelectedThemeColumn;
   QPoint mMouseDownPoint;
-  Theme * mTheme;
+  Core::Theme * mTheme;
   RowInsertPosition mRowInsertPosition;
   ItemInsertPosition mItemInsertPosition;
   QPoint mDropIndicatorPoint1;
@@ -129,7 +134,7 @@ private:
   bool mFirstShow;
 public:
   QSize sizeHint() const;
-  void setTheme( Theme * theme );
+  void setTheme( Core::Theme * theme );
 
 protected:
   virtual void dragMoveEvent( QDragMoveEvent * e );
@@ -150,7 +155,7 @@ private:
    * false otherwise. Sets mRowInsertPosition, mItemInsertPosition,
    * mDropIndicatorPoint1 ,mDropIndicatorPoint2.
    */
-  bool computeContentItemInsertPosition( const QPoint &pos, Theme::ContentItem::Type type );
+  bool computeContentItemInsertPosition( const QPoint &pos, Core::Theme::ContentItem::Type type );
 
   void applyThemeColumnWidths();
 
@@ -171,13 +176,13 @@ class ThemeContentItemSourceLabel : public QLabel
 {
   Q_OBJECT
 public:
-  ThemeContentItemSourceLabel( QWidget * parent, Theme::ContentItem::Type type );
+  ThemeContentItemSourceLabel( QWidget * parent, Core::Theme::ContentItem::Type type );
   ~ThemeContentItemSourceLabel();
 private:
-  Theme::ContentItem::Type mType;
+  Core::Theme::ContentItem::Type mType;
   QPoint mMousePressPoint;
 public:
-  Theme::ContentItem::Type type() const
+  Core::Theme::ContentItem::Type type() const
     { return mType; };
   void startDrag();
 protected:
@@ -194,7 +199,7 @@ public:
   ~ThemeEditor();
 
 private:
-  Theme * mCurrentTheme; // shallow, may be null!
+  Core::Theme * mCurrentTheme; // shallow, may be null!
 
   // Appearance tab
   ThemePreviewWidget * mPreviewWidget;
@@ -208,9 +213,9 @@ public:
    * Saves and forgets any previously option set that was being edited.
    * The set parameter may be 0: in this case the editor is simply disabled.
    */
-  void editTheme( Theme *set );
+  void editTheme( Core::Theme *set );
 
-  Theme * editedTheme() const
+  Core::Theme * editedTheme() const
     { return mCurrentTheme; };
 
   void commit();
@@ -225,8 +230,8 @@ protected slots:
   void slotIconSizeSpinBoxValueChanged( int val );
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_SKINEDITOR_H__
+#endif //!__MESSAGELIST_UTILS_SKINEDITOR_H__

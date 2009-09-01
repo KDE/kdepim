@@ -18,13 +18,13 @@
  *
  *******************************************************************************/
 
-#include "core/comboboxutils.h"
+#include "utils/comboboxutils.h"
 
 #include <QVariant>
 
 #include <KComboBox>
 
-using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 void ComboBoxUtils::fillIntegerOptionCombo( KComboBox *combo, const QList< QPair< QString, int > > &optionDescriptors )
 {

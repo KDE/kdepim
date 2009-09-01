@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_COMBOBOXUTILS_H__
-#define __MESSAGELIST_CORE_COMBOBOXUTILS_H__
+#ifndef __MESSAGELIST_UTILS_COMBOBOXUTILS_H__
+#define __MESSAGELIST_UTILS_COMBOBOXUTILS_H__
 
 #include <QList>
 #include <QPair>
@@ -29,7 +29,7 @@ class KComboBox;
 namespace MessageList
 {
 
-namespace Core
+namespace Utils
 {
 
 /**
@@ -58,8 +58,8 @@ namespace ComboBoxUtils
 
 } // namespace ComboBoxUtils
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_COMBOBOXUTILS_H__
+#endif //!__MESSAGELIST_UTILS_COMBOBOXUTILS_H__

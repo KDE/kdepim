@@ -18,10 +18,10 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_P_H__
-#define __MESSAGELIST_CORE_CONFIGURETHEMESDIALOG_P_H__
+#ifndef __MESSAGELIST_UTILS_CONFIGURETHEMESDIALOG_P_H__
+#define __MESSAGELIST_UTILS_CONFIGURETHEMESDIALOG_P_H__
 
-#include "core/configurethemesdialog.h"
+#include "utils/configurethemesdialog.h"
 
 namespace MessageList
 {
@@ -29,8 +29,14 @@ namespace MessageList
 namespace Core
 {
 
-class ThemeEditor;
 class Theme;
+
+}
+
+namespace Utils
+{
+
+class ThemeEditor;
 class ThemeListWidget;
 class ThemeListWidgetItem;
 
@@ -44,9 +50,9 @@ public:
   static void cleanup();
 
   void fillThemeList();
-  QString uniqueNameForTheme( QString baseName, Theme * skipTheme = 0 );
-  ThemeListWidgetItem * findThemeItemByName( const QString &name, Theme * skipTheme = 0 );
-  ThemeListWidgetItem * findThemeItemByTheme( Theme * set );
+  QString uniqueNameForTheme( QString baseName, Core::Theme * skipTheme = 0 );
+  ThemeListWidgetItem * findThemeItemByName( const QString &name, Core::Theme * skipTheme = 0 );
+  ThemeListWidgetItem * findThemeItemByTheme( Core::Theme * set );
   ThemeListWidgetItem * findThemeItemById( const QString &themeId );
   void selectThemeById( const QString &themeId );
   void commitEditor();
@@ -68,8 +74,8 @@ public:
   QPushButton *mDeleteThemeButton;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_CONFIGURESKINSDIALOG_P_H__
+#endif //!__MESSAGELIST_UTILS_CONFIGURESKINSDIALOG_P_H__

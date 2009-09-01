@@ -16,11 +16,11 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_CORE_THEMECONFIGBUTTON_H__
-#define __MESSAGELIST_CORE_THEMECONFIGBUTTON_H__
+#ifndef __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
+#define __MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
 
 #include <messagelist/messagelist_export.h>
-#include <KPushButton>
+#include <KComboBox>
 
 namespace MessageList
 {
@@ -28,40 +28,34 @@ namespace MessageList
 namespace Core
 {
 
-class ThemeComboBox;
-
-/**
- * A specialized KPushButton that displays the theme
- * configure dialog when pressed.
- */
-class MESSAGELIST_EXPORT ThemeConfigButton : public KPushButton
-{
-  Q_OBJECT
-
-public:
-  /** Constructor.
-   * @param parent The parent widget for the button.
-   * @param themeComboBox Optional ThemeComboBox to be kept in sync
-   * with changes made by the configure dialog.
-   */
-  explicit ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox = 0 );
-  ~ThemeConfigButton();
-
-signals:
-  /**
-   * A signal emitted when configure dialog has been successfully completed.
-   */
-  void configureDialogCompleted();
-
-private:
-  Q_PRIVATE_SLOT(d, void slotConfigureThemes())
-
-  class Private;
-  Private * const d;
-};
+class Aggregation;
 
 } // namespace Core
 
+namespace Utils
+{
+class AggregationComboBox;
+
+class AggregationComboBox::Private
+{
+public:
+  Private( AggregationComboBox *owner )
+    : q( owner ) { }
+
+  AggregationComboBox * const q;
+
+  /**
+   * Refresh list of aggregations in the combobox.
+   */
+  void slotLoadAggregations();
+
+  void setCurrentAggregation( const Core::Aggregation *aggregation );
+  const Core::Aggregation *currentAggregation() const;
+};
+
+} // namespace Utils
+
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_THEMECONFIGBUTTON_H__
+#endif //!__MESSAGELIST_UTILS_AGGREGATIONCOMBOBOX_P_H__
+

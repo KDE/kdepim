@@ -18,10 +18,10 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_AGGREGATIONEDITOR_H__
-#define __MESSAGELIST_CORE_AGGREGATIONEDITOR_H__
+#ifndef __MESSAGELIST_UTILS_AGGREGATIONEDITOR_H__
+#define __MESSAGELIST_UTILS_AGGREGATIONEDITOR_H__
 
-#include <messagelist/core/optionseteditor.h>
+#include <messagelist/utils/optionseteditor.h>
 
 #include <QTreeWidget>
 
@@ -35,6 +35,10 @@ namespace Core
 
 class Aggregation;
 
+} // namespace Core
+
+namespace Utils
+{
 
 /**
  * A widget that allows editing a single MessageList::Aggregation.
@@ -49,7 +53,7 @@ public:
   ~AggregationEditor();
 
 private:
-  Aggregation * mCurrentAggregation; // shallow, may be null!
+  Core::Aggregation * mCurrentAggregation; // shallow, may be null!
 
   // Grouping, Threading and Sorting tab
   KComboBox * mGroupingCombo;
@@ -66,13 +70,13 @@ public:
    * Saves and forgets any previously Aggregation that was being edited.
    * The set parameter may be 0: in this case the editor is simply disabled.
    */
-  void editAggregation( Aggregation *set );
+  void editAggregation( Core::Aggregation *set );
 
   /**
    * Returns the Aggregation currently edited by this AggregationEditor.
    * May be 0.
    */
-  Aggregation * editedAggregation() const
+  Core::Aggregation * editedAggregation() const
     { return mCurrentAggregation; };
 
   /**
@@ -109,8 +113,8 @@ private slots:
 
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_AGGREGATIONEDITOR_H__
+#endif //!__MESSAGELIST_UTILS_AGGREGATIONEDITOR_H__

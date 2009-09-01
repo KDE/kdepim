@@ -17,8 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "themecombobox.h"
-#include "messagelist/core/themecombobox.h"
-#include "messagelist/core/themecombobox_p.h"
+#include "messagelist/utils/themecombobox.h"
+#include "messagelist/utils/themecombobox_p.h"
 
 #include "messagelist/core/manager.h"
 #include "messagelist/core/theme.h"
@@ -26,6 +26,7 @@
 #include <KDE/KGlobal>
 
 using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 ThemeComboBox::ThemeComboBox( QWidget * parent )
 : KComboBox( parent ), d( new Private( this ) )

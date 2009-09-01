@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
-#define __MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
+#ifndef __MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_H__
+#define __MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_H__
 
 #include <KDialog>
 
@@ -37,6 +37,11 @@ namespace Core
 
 class Manager;
 
+} // namespace Core
+
+namespace Utils
+{
+
 /**
  * The dialog used for configuring MessageList::Aggregation sets.
  *
@@ -45,7 +50,7 @@ class Manager;
  */
 class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public KDialog
 {
-  friend class Manager;
+  friend class Core::Manager;
 
   Q_OBJECT
 protected:
@@ -72,8 +77,8 @@ private:
   Private * const d;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_H__
+#endif //!__MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_H__

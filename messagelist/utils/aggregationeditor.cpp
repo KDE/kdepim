@@ -18,9 +18,9 @@
  *
  *******************************************************************************/
 
-#include "core/aggregationeditor.h"
+#include "utils/aggregationeditor.h"
 #include "core/aggregation.h"
-#include "core/comboboxutils.h"
+#include "utils/comboboxutils.h"
 
 #include <QLabel>
 #include <QGridLayout>
@@ -34,6 +34,7 @@
 #include <KLocale>
 #include <KTextEdit>
 
+using namespace MessageList::Utils;
 using namespace MessageList::Core;
 
 AggregationEditor::AggregationEditor( QWidget *parent )

@@ -16,8 +16,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_CORE_THEMECOMBOBOX_P_H__
-#define __MESSAGELIST_CORE_THEMECOMBOBOX_P_H__
+#ifndef __MESSAGELIST_UTILS_THEMECOMBOBOX_P_H__
+#define __MESSAGELIST_UTILS_THEMECOMBOBOX_P_H__
 
 namespace MessageList
 {
@@ -26,7 +26,14 @@ namespace Core
 {
 
 class Theme;
+
+} // namespace Core
+
+namespace Utils
+{
 class ThemeComboBox;
+
+
 
 class ThemeComboBox::Private
 {
@@ -41,12 +48,12 @@ public:
    */
   void slotLoadThemes();
 
-  void setCurrentTheme( const Theme *theme );
-  const Theme *currentTheme() const;
+  void setCurrentTheme( const Core::Theme *theme );
+  const Core::Theme *currentTheme() const;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_THEMECOMBOBOX_P_H__
+#endif //!__MESSAGELIST_UTILS_THEMECOMBOBOX_P_H__

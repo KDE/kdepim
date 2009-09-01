@@ -18,10 +18,10 @@
  *
  *******************************************************************************/
 
-#include "core/configurethemesdialog.h"
-#include "core/configurethemesdialog_p.h"
+#include "utils/configurethemesdialog.h"
+#include "utils/configurethemesdialog_p.h"
 
-#include "core/themeeditor.h"
+#include "utils/themeeditor.h"
 #include "core/theme.h"
 
 #include "core/manager.h"
@@ -38,19 +38,19 @@
 namespace MessageList
 {
 
-namespace Core
+namespace Utils
 {
 
 class ThemeListWidgetItem : public QListWidgetItem
 {
 private:
-  Theme * mTheme;
+  Core::Theme * mTheme;
 
 public:
-  ThemeListWidgetItem( QListWidget * par, const Theme &set )
+  ThemeListWidgetItem( QListWidget * par, const Core::Theme &set )
     : QListWidgetItem( set.name(), par )
   {
-    mTheme = new Theme( set );
+    mTheme = new Core::Theme( set );
   }
   ~ThemeListWidgetItem()
   {
@@ -58,7 +58,7 @@ public:
   }
 
 public:
-  Theme * theme() const
+  Core::Theme * theme() const
     { return mTheme; };
   void forgetTheme()
     { mTheme = 0; };
@@ -76,11 +76,12 @@ public:
     { return QSize( 450, 128 ); };
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
 using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 ConfigureThemesDialog * ConfigureThemesDialog::Private::mInstance = 0;
 
@@ -155,7 +156,7 @@ ConfigureThemesDialog::~ConfigureThemesDialog()
   delete d;
 }
 
-ConfigureThemesDialog * MessageList::Core::ConfigureThemesDialog::instance()
+ConfigureThemesDialog * ConfigureThemesDialog::instance()
 {
   return Private::mInstance;
 }

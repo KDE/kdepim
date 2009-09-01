@@ -18,7 +18,7 @@
  *
  *******************************************************************************/
 
-#include "core/optionseteditor.h"
+#include "utils/optionseteditor.h"
 #include "core/optionset.h"
 
 #include <QLabel>
@@ -29,6 +29,7 @@
 #include <KLocale>
 #include <KTextEdit>
 
+using namespace MessageList::Utils;
 using namespace MessageList::Core;
 
 OptionSetEditor::OptionSetEditor( QWidget *parent )

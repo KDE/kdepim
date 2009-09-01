@@ -16,16 +16,17 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "messagelist/core/aggregationconfigbutton.h"
+#include "messagelist/utils/aggregationconfigbutton.h"
 
-#include "messagelist/core/aggregationcombobox.h"
-#include "messagelist/core/aggregationcombobox_p.h"
-#include "messagelist/core/configureaggregationsdialog.h"
+#include "messagelist/utils/aggregationcombobox.h"
+#include "messagelist/utils/aggregationcombobox_p.h"
+#include "messagelist/utils/configureaggregationsdialog.h"
 #include "messagelist/core/manager.h"
 
 #include <klocale.h>
 
 using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 class AggregationConfigButton::Private
 {

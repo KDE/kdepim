@@ -33,13 +33,18 @@
 namespace MessageList
 {
 
+namespace Utils
+{
+  class ThemePreviewDelegate;
+} // namespace Utils
+
 namespace Core
 {
 
 class MESSAGELIST_EXPORT MessageItem : public Item, public ModelInvariantIndex
 {
   friend class Model;
-  friend class ThemePreviewDelegate;
+  friend class Utils::ThemePreviewDelegate;
 
 public:
   class Tag

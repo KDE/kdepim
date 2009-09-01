@@ -16,51 +16,53 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
-#define __MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
+#ifndef __MESSAGELIST_UTILS_AGGREGATIONCONFIGBUTTON_H__
+#define __MESSAGELIST_UTILS_AGGREGATIONCONFIGBUTTON_H__
 
 #include <messagelist/messagelist_export.h>
-#include <KComboBox>
+#include <KPushButton>
 
 namespace MessageList
 {
 
-namespace Core
+namespace Utils
 {
 
-class Aggregation;
-class StorageModel;
+class AggregationComboBox;
 
 /**
- * A specialized KComboBox that lists all message list aggregations.
+ * A specialized KPushButton that displays the aggregation
+ * configure dialog when pressed.
  */
-class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
+class MESSAGELIST_EXPORT AggregationConfigButton : public KPushButton
 {
   Q_OBJECT
-  friend class AggregationConfigButton;
 
 public:
-  explicit AggregationComboBox( QWidget * parent );
-  ~AggregationComboBox();
+  /** Constructor.
+   * @param parent The parent widget for the button.
+   * @param aggregationComboBox Optional AggregationComboBox to be kept in sync
+   * with changes made by the configure dialog.
+   */
+  explicit AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox = 0 );
+  ~AggregationConfigButton();
 
-  void writeDefaultConfig() const;
-
-  void writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const;
-  void readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting );
-
-public Q_SLOTS:
-  void selectDefault();
+signals:
+  /**
+   * A signal emitted when configure dialog has been successfully completed.
+   */
+  void configureDialogCompleted();
 
 private:
-  Q_PRIVATE_SLOT(d, void slotLoadAggregations())
+  Q_PRIVATE_SLOT(d, void slotConfigureAggregations())
 
   class Private;
   Private * const d;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_AGGREGATIONCOMBOBOX_H__
+#endif //!__MESSAGELIST_UTILS_AGGREGATIONCONFIGBUTTON_H__
 

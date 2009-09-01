@@ -18,8 +18,8 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_OPTIONSETEDITOR_H__
-#define __MESSAGELIST_CORE_OPTIONSETEDITOR_H__
+#ifndef __MESSAGELIST_UTILS_OPTIONSETEDITOR_H__
+#define __MESSAGELIST_UTILS_OPTIONSETEDITOR_H__
 
 #include <KTabWidget>
 
@@ -33,6 +33,11 @@ namespace Core
 {
 
 class OptionSet;
+
+} // namespace Core
+
+namespace Utils
+{
 
 /**
  * The base class for the OptionSet editors. Provides common functionality.
@@ -74,8 +79,8 @@ protected slots:
 
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_OPTIONSETEDITOR_H__
+#endif //!__MESSAGELIST_UTILS_OPTIONSETEDITOR_H__

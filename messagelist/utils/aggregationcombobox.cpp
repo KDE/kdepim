@@ -17,8 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "aggregationcombobox.h"
-#include "messagelist/core/aggregationcombobox.h"
-#include "messagelist/core/aggregationcombobox_p.h"
+#include "messagelist/utils/aggregationcombobox.h"
+#include "messagelist/utils/aggregationcombobox_p.h"
 
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"
@@ -26,6 +26,7 @@
 #include <KDE/KGlobal>
 
 using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 AggregationComboBox::AggregationComboBox( QWidget * parent )
 : KComboBox( parent ), d( new Private( this ) )

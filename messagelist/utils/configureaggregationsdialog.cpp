@@ -18,10 +18,10 @@
  *
  *******************************************************************************/
 
-#include "core/configureaggregationsdialog.h"
-#include "core/configureaggregationsdialog_p.h"
+#include "utils/configureaggregationsdialog.h"
+#include "utils/configureaggregationsdialog_p.h"
 
-#include "core/aggregationeditor.h"
+#include "utils/aggregationeditor.h"
 #include "core/aggregation.h"
 
 #include "core/manager.h"
@@ -38,19 +38,19 @@
 namespace MessageList
 {
 
-namespace Core
+namespace Utils
 {
 
 class AggregationListWidgetItem : public QListWidgetItem
 {
 private:
-  Aggregation * mAggregation;
+  Core::Aggregation * mAggregation;
 
 public:
-  AggregationListWidgetItem( QListWidget * par, const Aggregation &set )
+  AggregationListWidgetItem( QListWidget * par, const Core::Aggregation &set )
     : QListWidgetItem( set.name(), par )
   {
-    mAggregation = new Aggregation( set );
+    mAggregation = new Core::Aggregation( set );
   }
   ~AggregationListWidgetItem()
   {
@@ -58,7 +58,7 @@ public:
   }
 
 public:
-  Aggregation * aggregation() const
+  Core::Aggregation * aggregation() const
     { return mAggregation; };
   void forgetAggregation()
     { mAggregation = 0; };
@@ -82,11 +82,12 @@ public:
     { return QSize( 450, 128 ); };
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
 using namespace MessageList::Core;
+using namespace MessageList::Utils;
 
 ConfigureAggregationsDialog *ConfigureAggregationsDialog::Private::mInstance = 0;
 

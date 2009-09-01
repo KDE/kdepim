@@ -18,10 +18,10 @@
  *
  *******************************************************************************/
 
-#ifndef __MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_P_H__
-#define __MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_P_H__
+#ifndef __MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_P_H__
+#define __MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_P_H__
 
-#include "core/configureaggregationsdialog.h"
+#include "utils/configureaggregationsdialog.h"
 
 namespace MessageList
 {
@@ -30,6 +30,12 @@ namespace Core
 {
 
 class Aggregation;
+
+} // namespace Core
+
+namespace Utils
+{
+
 class AggregationEditor;
 class AggregationListWidget;
 class AggregationListWidgetItem;
@@ -61,9 +67,9 @@ public:
   // Private implementation
 
   void fillAggregationList();
-  QString uniqueNameForAggregation( QString baseName, Aggregation * skipAggregation = 0 );
-  AggregationListWidgetItem * findAggregationItemByName( const QString &name, Aggregation * skipAggregation = 0 );
-  AggregationListWidgetItem * findAggregationItemByAggregation( Aggregation * set );
+  QString uniqueNameForAggregation( QString baseName, Core::Aggregation * skipAggregation = 0 );
+  AggregationListWidgetItem * findAggregationItemByName( const QString &name, Core::Aggregation * skipAggregation = 0 );
+  AggregationListWidgetItem * findAggregationItemByAggregation( Core::Aggregation * set );
   AggregationListWidgetItem * findAggregationItemById( const QString &aggregationId );
   void commitEditor();
   void selectAggregationById( const QString &aggregationId );
@@ -88,8 +94,8 @@ public:
   QPushButton *mDeleteAggregationButton;
 };
 
-} // namespace Core
+} // namespace Utils
 
 } // namespace MessageList
 
-#endif //!__MESSAGELIST_CORE_CONFIGUREAGGREGATIONSDIALOG_P_H__
+#endif //!__MESSAGELIST_UTILS_CONFIGUREAGGREGATIONSDIALOG_P_H__
