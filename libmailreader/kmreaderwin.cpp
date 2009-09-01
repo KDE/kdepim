@@ -2578,7 +2578,7 @@ void KMReaderWin::slotAttachmentEditDone(KMail::EditorWatcher* editorWatcher)
       file.close();
 
       mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );     
+      Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
     }
   }
   mEditorWatchers.remove( editorWatcher );
@@ -2919,7 +2919,7 @@ void KMReaderWin::showContextMenu( KMime::Content* content, const QPoint &pos )
                          this, SLOT( slotAttachmentDelete() ) );
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
-                         this, SLOT( slotEdit() ) );
+                         this, SLOT( slotAttachmentEdit() ) );
     }
 
     if ( !content->isTopLevel() )
