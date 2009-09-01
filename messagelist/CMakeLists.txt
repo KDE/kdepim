@@ -43,6 +43,27 @@ set(libmessagelist_SRCS
     widget.cpp
 )
 
+set(libmessagelist_core_HEADERS
+    core/item.h
+    core/messageitem.h
+    core/model.h
+    core/modelinvariantindex.h
+    core/modelinvariantrowmapper.h
+    ${CMAKE_CURRENT_BINARY_DIR}/core/settings.h
+    core/storagemodelbase.h
+    core/view.h
+    core/widgetbase.h
+)
+
+set(libmessagelist_utils_HEADERS
+    utils/aggregationcombobox.h
+    utils/aggregationconfigbutton.h
+    utils/configureaggregationsdialog.h
+    utils/configurethemesdialog.h
+    utils/themecombobox.h
+    utils/themeconfigbutton.h
+)
+
 set(libmessagelist_HEADERS
     pane.h
     storagemodel.h
@@ -67,7 +88,10 @@ install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES ${libmessagelist_HEADERS}
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist
          COMPONENT devel)
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/core/settings.h
+install( FILES ${libmessagelist_core_HEADERS}
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/core
+         COMPONENT devel)
+install( FILES ${libmessagelist_utils_HEADERS}
+         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/utils
          COMPONENT devel)
 
