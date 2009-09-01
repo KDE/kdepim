@@ -783,7 +783,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( path.startsWith( "ATTACH:" ) ) {
           QString name = path;
           return i18n( "Open attachment \"%1\"" ).
-            arg( QString::fromUtf8( name.remove( QRegExp( "^ATTACH:" ) ).latin1() ) );
+            arg( name.remove( QRegExp( "^ATTACH:" ) ) );
         }
       }
 
