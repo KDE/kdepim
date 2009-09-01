@@ -25,7 +25,7 @@ to the kolab wizard.
 
 KAddressBook:
 
-1. Start KDE Control Center and go to KDE Components, page KDE
+1. Start KDE Control Center (systemsettings) and go to KDE Components, page KDE
    Resources Configuration. Choose the contact resource. Add an
    IMAP resource and set it to standard.
    Optional: Delete others or set them to readonly.
