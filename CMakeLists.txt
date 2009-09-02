@@ -36,7 +36,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.2.87 REQUIRED)
+find_package(KdepimLibs 4.3.64 REQUIRED)
 
 
 ############### search Boost ###############
@@ -244,3 +244,4 @@ if(NOT QGPGME_FOUND)
 endif(NOT QGPGME_FOUND)
 # All done, let's display what we found...
 macro_display_feature_log()
+
