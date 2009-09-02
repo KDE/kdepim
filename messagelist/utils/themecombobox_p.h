@@ -35,10 +35,10 @@ class ThemeComboBox;
 
 
 
-class ThemeComboBox::Private
+class ThemeComboBoxPrivate
 {
 public:
-  Private( ThemeComboBox *owner )
+  ThemeComboBoxPrivate( ThemeComboBox *owner )
     : q( owner ) { }
 
   ThemeComboBox * const q;

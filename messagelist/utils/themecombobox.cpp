@@ -29,7 +29,7 @@ using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
 ThemeComboBox::ThemeComboBox( QWidget * parent )
-: KComboBox( parent ), d( new Private( this ) )
+: KComboBox( parent ), d( new ThemeComboBoxPrivate( this ) )
 {
   d->slotLoadThemes();
 }
@@ -78,7 +78,7 @@ static bool themeNameLessThan( const Theme * lhs, const Theme * rhs )
   return lhs->name() < rhs->name();
 }
 
-void ThemeComboBox::Private::slotLoadThemes()
+void ThemeComboBoxPrivate::slotLoadThemes()
 {
   q->clear();
 
@@ -92,7 +92,7 @@ void ThemeComboBox::Private::slotLoadThemes()
   }
 }
 
-void ThemeComboBox::Private::setCurrentTheme( const Theme *theme )
+void ThemeComboBoxPrivate::setCurrentTheme( const Theme *theme )
 {
   Q_ASSERT( theme != 0 );
 
@@ -101,7 +101,7 @@ void ThemeComboBox::Private::setCurrentTheme( const Theme *theme )
   q->setCurrentIndex( themeIndex );
 }
 
-const Theme *ThemeComboBox::Private::currentTheme() const
+const Theme *ThemeComboBoxPrivate::currentTheme() const
 {
   const QVariant currentThemeVariant = q->itemData( q->currentIndex() );
   const QString currentThemeID = currentThemeVariant.toString();

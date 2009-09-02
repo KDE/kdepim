@@ -41,6 +41,8 @@ namespace MessageList
 namespace Core
 {
 
+class ItemPrivate;
+
 /**
  * A single item of the MessageList tree managed by MessageList::Model.
  *
@@ -50,6 +52,7 @@ namespace Core
 class MESSAGELIST_EXPORT Item
 {
   friend class Model;
+  friend class ModelPrivate;
 
 public:
   /**
@@ -401,8 +404,7 @@ public:
    */
   void killAllChildItems();
 private:
-  class Private;
-  Private * const d;
+  ItemPrivate * const d;
 };
 
 } // namespace Core

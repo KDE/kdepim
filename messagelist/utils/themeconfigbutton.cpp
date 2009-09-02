@@ -29,10 +29,10 @@
 using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
-class ThemeConfigButton::Private
+class MessageList::Utils::ThemeConfigButtonPrivate
 {
 public:
-  Private( ThemeConfigButton *owner )
+  ThemeConfigButtonPrivate( ThemeConfigButton *owner )
     : q( owner ) { }
 
   ThemeConfigButton * const q;
@@ -43,7 +43,7 @@ public:
 };
 
 ThemeConfigButton::ThemeConfigButton( QWidget * parent, const ThemeComboBox * themeComboBox )
-: KPushButton( i18n( "Configure..." ), parent ), d( new Private( this ) )
+: KPushButton( i18n( "Configure..." ), parent ), d( new ThemeConfigButtonPrivate( this ) )
 {
   d->mThemeComboBox = themeComboBox;
   connect( this, SIGNAL( pressed() ),
@@ -60,14 +60,14 @@ ThemeConfigButton::~ThemeConfigButton()
   delete d;
 }
 
-void ThemeConfigButton::Private::slotConfigureThemes()
+void ThemeConfigButtonPrivate::slotConfigureThemes()
 {
   QString currentThemeID;
   if ( mThemeComboBox != 0 )
     currentThemeID = mThemeComboBox->d->currentTheme()->id();
   Manager::instance()->showConfigureThemesDialog( static_cast< QWidget * >( q->parent() ), currentThemeID );
 
-  connect( ConfigureThemesDialog::instance(), SIGNAL( okClicked() ),
+  QObject::connect( ConfigureThemesDialog::instance(), SIGNAL( okClicked() ),
            q, SIGNAL( configureDialogCompleted() ) );
 }
 

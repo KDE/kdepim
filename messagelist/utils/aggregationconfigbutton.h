@@ -29,6 +29,7 @@ namespace Utils
 {
 
 class AggregationComboBox;
+class AggregationConfigButtonPrivate;
 
 /**
  * A specialized KPushButton that displays the aggregation
@@ -56,8 +57,7 @@ signals:
 private:
   Q_PRIVATE_SLOT(d, void slotConfigureAggregations())
 
-  class Private;
-  Private * const d;
+  AggregationConfigButtonPrivate * const d;
 };
 
 } // namespace Utils

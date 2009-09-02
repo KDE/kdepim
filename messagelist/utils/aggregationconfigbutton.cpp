@@ -28,10 +28,10 @@
 using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
-class AggregationConfigButton::Private
+class MessageList::Utils::AggregationConfigButtonPrivate
 {
 public:
-  Private( AggregationConfigButton *owner )
+  AggregationConfigButtonPrivate( AggregationConfigButton *owner )
     : q( owner ) { }
 
   AggregationConfigButton * const q;
@@ -42,7 +42,7 @@ public:
 };
 
 AggregationConfigButton::AggregationConfigButton( QWidget * parent, const AggregationComboBox * aggregationComboBox )
-: KPushButton( i18n( "Configure..." ), parent ), d( new Private( this ) )
+: KPushButton( i18n( "Configure..." ), parent ), d( new AggregationConfigButtonPrivate( this ) )
 {
   d->mAggregationComboBox = aggregationComboBox;
   connect( this, SIGNAL( pressed() ),
@@ -59,7 +59,7 @@ AggregationConfigButton::~AggregationConfigButton()
   delete d;
 }
 
-void AggregationConfigButton::Private::slotConfigureAggregations()
+void AggregationConfigButtonPrivate::slotConfigureAggregations()
 {
   QString currentAggregationID;
   if ( mAggregationComboBox != 0 ) {
@@ -67,8 +67,8 @@ void AggregationConfigButton::Private::slotConfigureAggregations()
   }
   Manager::instance()->showConfigureAggregationsDialog( static_cast< QWidget * >( q->parent() ), currentAggregationID );
 
-  connect( ConfigureAggregationsDialog::instance(), SIGNAL( okClicked() ),
-           q, SIGNAL( configureDialogCompleted() ) );
+  QObject::connect( ConfigureAggregationsDialog::instance(), SIGNAL( okClicked() ),
+                    q, SIGNAL( configureDialogCompleted() ) );
 }
 
 #include "aggregationconfigbutton.moc"

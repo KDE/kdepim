@@ -63,6 +63,7 @@ class Widget;
 class MESSAGELIST_EXPORT View : public QTreeView
 {
   friend class Model;
+  friend class ModelPrivate;
   Q_OBJECT
 public:
   View( Widget *parent );

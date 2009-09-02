@@ -23,7 +23,7 @@
 
 #include "core/item.h"
 
-// See the MessageList::Item::Private::insertChildItem() function below for an explaination of this macro.
+// See the MessageList::ItemPrivate::insertChildItem() function below for an explaination of this macro.
 #if __GNUC__ >= 3
   #define GCC_DONT_INLINE_THIS __attribute__((noinline))
 #else
@@ -36,10 +36,10 @@ namespace MessageList
 namespace Core
 {
 
-class Item::Private
+class ItemPrivate
 {
 public:
-  Private( Item *owner )
+  ItemPrivate( Item *owner )
     : q( owner ) { }
 
   /**
@@ -226,7 +226,7 @@ public:
 
   Item * const q;
 
-  Type mType;                                 ///< The type of this item
+  Item::Type mType;                                 ///< The type of this item
   QList< Item * > *mChildItems;               ///< List of children, may be 0
   Item * mParent;                             ///< The parent view item
   time_t mMaxDate;                            ///< The maximum date in the subtree
@@ -238,7 +238,7 @@ public:
   int mThisItemIndexGuess;                    ///< The guess for the index in the parent's child list
   QString mSubject;                           ///< The subject of the message (or group subject)
   bool mIsViewable;                           ///< Is this item attacched to the viewable root ?
-  InitialExpandStatus mInitialExpandStatus;   ///< The expand status we have to honor when we attach to the viewable root
+  Item::InitialExpandStatus mInitialExpandStatus;   ///< The expand status we have to honor when we attach to the viewable root
   QString mFormattedSize;                     ///< The size above formatted as string, this is done only on request
   QString mFormattedDate;                     ///< The formatted date of the message, formatting takes time so it is done only on request
   QString mFormattedMaxDate;                  ///< The maximum date above formatted (lazily)

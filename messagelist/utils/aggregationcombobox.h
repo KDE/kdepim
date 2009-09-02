@@ -36,6 +36,7 @@ class StorageModel;
 namespace Utils
 {
 
+class AggregationComboBoxPrivate;
 /**
  * A specialized KComboBox that lists all message list aggregations.
  */
@@ -43,6 +44,7 @@ class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
 {
   Q_OBJECT
   friend class AggregationConfigButton;
+  friend class AggregationConfigButtonPrivate;
 
 public:
   explicit AggregationComboBox( QWidget * parent );
@@ -59,8 +61,7 @@ public Q_SLOTS:
 private:
   Q_PRIVATE_SLOT(d, void slotLoadAggregations())
 
-  class Private;
-  Private * const d;
+  AggregationComboBoxPrivate * const d;
 };
 
 } // namespace Utils

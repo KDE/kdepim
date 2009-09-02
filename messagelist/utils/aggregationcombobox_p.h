@@ -36,10 +36,10 @@ namespace Utils
 {
 class AggregationComboBox;
 
-class AggregationComboBox::Private
+class AggregationComboBoxPrivate
 {
 public:
-  Private( AggregationComboBox *owner )
+  AggregationComboBoxPrivate( AggregationComboBox *owner )
     : q( owner ) { }
 
   AggregationComboBox * const q;

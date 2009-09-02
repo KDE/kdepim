@@ -36,6 +36,7 @@ namespace Core
 {
 
 class ModelInvariantRowMapper;
+class ModelInvariantRowMapperPrivate;
 class RowShift;
 
 /**
@@ -189,9 +190,8 @@ public:
 private:
   Q_PRIVATE_SLOT(d, void slotPerformLazyUpdate())
 
-  class Private;
-  friend class Private;
-  Private * const d;
+  friend class ModelInvariantRowMapperPrivate;
+  ModelInvariantRowMapperPrivate * const d;
 };
 
 } // namespace Core

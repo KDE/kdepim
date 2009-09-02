@@ -32,7 +32,7 @@
 using namespace MessageList::Core;
 
 Item::Item( Type type )
-  : d( new Private( this ) )
+  : d( new ItemPrivate( this ) )
 {
   d->mType = type;
   d->mChildItems = 0;
@@ -625,7 +625,7 @@ void Item::takeChildItem( Model *model, Item *child )
 }
 
 
-void Item::Private::childItemDead( Item *child )
+void ItemPrivate::childItemDead( Item *child )
 {
   // mChildItems MUST be non zero here, if it's not then it's a bug in THIS FILE
   mChildItems->removeOne( child ); // since we always have ONE (if we not, it's a bug)

@@ -36,6 +36,8 @@ class Theme;
 namespace Utils
 {
 
+class ThemeComboBoxPrivate;
+
 /**
  * A specialized KComboBox that lists all message list themes.
  */
@@ -43,6 +45,7 @@ class MESSAGELIST_EXPORT ThemeComboBox : public KComboBox
 {
   Q_OBJECT
   friend class ThemeConfigButton;
+  friend class ThemeConfigButtonPrivate;
 
 public:
   explicit ThemeComboBox( QWidget * parent);
@@ -58,9 +61,7 @@ public Q_SLOTS:
 
 private:
   Q_PRIVATE_SLOT(d, void slotLoadThemes())
-
-  class Private;
-  Private * const d;
+  ThemeComboBoxPrivate * const d;
 };
 
 } // namespace Utils

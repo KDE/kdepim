@@ -57,6 +57,7 @@ class StorageModel;
 class ModelInvariantRowMapper;
 class MessageItemSetManager;
 class View;
+class ModelPrivate;
 
 /**
  * This class manages the huge tree of displayable objects: GroupHeaderItems and MessageItems.
@@ -76,6 +77,7 @@ class View;
 class MESSAGELIST_EXPORT Model : public QAbstractItemModel
 {
   friend class Item;
+  friend class ItemPrivate;
   friend class Manager;
 
   Q_OBJECT
@@ -232,9 +234,8 @@ private:
   Q_PRIVATE_SLOT(d, void slotStorageModelHeaderDataChanged( Qt::Orientation, int, int ))
   Q_PRIVATE_SLOT(d, void slotStorageModelLayoutChanged())
 
-  class Private;
-  friend class Private;
-  Private * const d;
+  friend class ModelPrivate;
+  ModelPrivate * const d;
 };
 
 } // namespace Core

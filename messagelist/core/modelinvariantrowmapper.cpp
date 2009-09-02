@@ -62,7 +62,7 @@ public:
 using namespace MessageList::Core;
 
 ModelInvariantRowMapper::ModelInvariantRowMapper()
-  : d( new Private( this ) )
+  : d( new ModelInvariantRowMapperPrivate( this ) )
 {
   d->mRowShiftList = new QList< RowShift * >();
   d->mCurrentShiftSerial = 0;
@@ -97,7 +97,7 @@ ModelInvariantRowMapper::~ModelInvariantRowMapper()
   delete d;
 }
 
-void ModelInvariantRowMapper::Private::killFirstRowShift()
+void ModelInvariantRowMapperPrivate::killFirstRowShift()
 {
   RowShift * shift = mRowShiftList->at( 0 );
 
@@ -113,7 +113,7 @@ void ModelInvariantRowMapper::Private::killFirstRowShift()
   }
 }
 
-void ModelInvariantRowMapper::Private::indexDead( ModelInvariantIndex * invariant )
+void ModelInvariantRowMapperPrivate::indexDead( ModelInvariantIndex * invariant )
 {
   Q_ASSERT( invariant->d->rowMapper() == q );
 
@@ -147,7 +147,7 @@ void ModelInvariantRowMapper::Private::indexDead( ModelInvariantIndex * invarian
   }
 }
 
-void ModelInvariantRowMapper::Private::updateModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill )
+void ModelInvariantRowMapperPrivate::updateModelInvariantIndex( int modelIndexRow, ModelInvariantIndex * invariantToFill )
 {
   // Here the invariant already belongs to this mapper. We ASSUME that it's somewhere
   // in the history and not in the hash belonging to the current serial.
@@ -178,7 +178,7 @@ void ModelInvariantRowMapper::Private::updateModelInvariantIndex( int modelIndex
   }
 }
 
-ModelInvariantIndex * ModelInvariantRowMapper::Private::modelIndexRowToModelInvariantIndexInternal( int modelIndexRow, bool updateIfNeeded )
+ModelInvariantIndex * ModelInvariantRowMapperPrivate::modelIndexRowToModelInvariantIndexInternal( int modelIndexRow, bool updateIfNeeded )
 {
   // First of all look it up in the current hash
   ModelInvariantIndex * invariant = mCurrentInvariantHash->value( modelIndexRow, 0 );
@@ -592,7 +592,7 @@ void ModelInvariantRowMapper::modelReset()
   d->mRemovedShiftCount = 0;
 }
 
-void ModelInvariantRowMapper::Private::slotPerformLazyUpdate()
+void ModelInvariantRowMapperPrivate::slotPerformLazyUpdate()
 {
   // The drawback here is that when one row is removed from the middle (say position 500 of 1000)
   // then we require ALL the items to be updated...but:

@@ -259,7 +259,7 @@ public:
 using namespace MessageList::Core;
 
 Model::Model( View *pParent )
-  : QAbstractItemModel( pParent ), d( new Private( this ) )
+  : QAbstractItemModel( pParent ), d( new ModelPrivate( this ) )
 {
   d->mRecursionCounterForReset = 0;
   d->mStorageModel = 0;
@@ -347,7 +347,7 @@ void Model::setFilter( const Filter *filter )
   QApplication::restoreOverrideCursor();
 }
 
-bool Model::Private::applyFilterToSubtree( Item * item, const QModelIndex &parentIndex )
+bool ModelPrivate::applyFilterToSubtree( Item * item, const QModelIndex &parentIndex )
 {
   // This function applies the current filter (eventually empty)
   // to a message tree starting at "item".
@@ -838,7 +838,7 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   d->viewItemJobStep();
 }
 
-void Model::Private::checkIfDateChanged()
+void ModelPrivate::checkIfDateChanged()
 {
   // This function is called by MessageList::Core::Manager once in a while (every 1 minute or sth).
   // It is used to check if the current date has changed (with respect to mTodayDate).
@@ -933,7 +933,7 @@ void Model::applyMessagePreSelection( PreSelectionMode preSelectionMode )
 // - Be interruptible: user must be able to abort the execution and just switch to another folder in the middle
 //
 
-void Model::Private::clearUnassignedMessageLists()
+void ModelPrivate::clearUnassignedMessageLists()
 {
   // This is a bit tricky...
   // The three unassigned message lists contain messages that have been created
@@ -1051,13 +1051,13 @@ void Model::Private::clearUnassignedMessageLists()
   }
 }
 
-void Model::Private::clearThreadingCacheMessageSubjectMD5ToMessageItem()
+void ModelPrivate::clearThreadingCacheMessageSubjectMD5ToMessageItem()
 {
   qDeleteAll( mThreadingCacheMessageSubjectMD5ToMessageItem );
   mThreadingCacheMessageSubjectMD5ToMessageItem.clear();
 }
 
-void Model::Private::clearOrphanChildrenHash()
+void ModelPrivate::clearOrphanChildrenHash()
 {
   for ( QHash< MessageItem *, MessageItem * >::Iterator it = mOrphanChildrenHash.begin();
         it != mOrphanChildrenHash.end(); ++it )
@@ -1068,7 +1068,7 @@ void Model::Private::clearOrphanChildrenHash()
   mOrphanChildrenHash.clear();
 }
 
-void Model::Private::clearJobList()
+void ModelPrivate::clearJobList()
 {
   if ( mViewItemJobs.isEmpty() )
     return;
@@ -1088,7 +1088,7 @@ void Model::Private::clearJobList()
 }
 
 
-void Model::Private::attachGroup( GroupHeaderItem *ghi )
+void ModelPrivate::attachGroup( GroupHeaderItem *ghi )
 {
   if ( ghi->parent() )
   {
@@ -1163,7 +1163,7 @@ void Model::Private::attachGroup( GroupHeaderItem *ghi )
   }
 }
 
-void Model::Private::saveExpandedStateOfSubtree( Item *root )
+void ModelPrivate::saveExpandedStateOfSubtree( Item *root )
 {
   Q_ASSERT( mModelForItemFunctions ); // UI must be NOT disconnected here
   Q_ASSERT( root );
@@ -1185,7 +1185,7 @@ void Model::Private::saveExpandedStateOfSubtree( Item *root )
   }
 }
 
-void Model::Private::syncExpandedStateOfSubtree( Item *root )
+void ModelPrivate::syncExpandedStateOfSubtree( Item *root )
 {
   Q_ASSERT( mModelForItemFunctions ); // UI must be NOT disconnected here
 
@@ -1242,7 +1242,7 @@ static inline QString get_capitalized_month_name( int month )
   return copy;
 }
 
-void Model::Private::attachMessageToGroupHeader( MessageItem *mi )
+void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
 {
   QString groupLabel;
   time_t date;
@@ -1483,7 +1483,7 @@ void Model::Private::attachMessageToGroupHeader( MessageItem *mi )
   }
 }
 
-MessageItem * Model::Private::findMessageParent( MessageItem * mi )
+MessageItem * ModelPrivate::findMessageParent( MessageItem * mi )
 {
   Q_ASSERT( mAggregation->threading() != Aggregation::NoThreading ); // caller must take care of this
 
@@ -1647,7 +1647,7 @@ public:
   }
 };
 
-void Model::Private::addMessageToSubjectBasedThreadingCache( MessageItem * mi )
+void ModelPrivate::addMessageToSubjectBasedThreadingCache( MessageItem * mi )
 {
   // Messages in this cache are sorted by date, and if dates are equal then they are sorted by pointer value.
   // Sorting by date is used to optimize the parent lookup in guessMessageParent() below.
@@ -1677,7 +1677,7 @@ void Model::Private::addMessageToSubjectBasedThreadingCache( MessageItem * mi )
   messagesWithTheSameStrippedSubject->insert( it, mi );
 }
 
-void Model::Private::removeMessageFromSubjectBasedThreadingCache( MessageItem * mi )
+void ModelPrivate::removeMessageFromSubjectBasedThreadingCache( MessageItem * mi )
 {
   // We assume that the caller knows what he is doing and the message is actually in the cache.
   // If the message isn't in the cache then we should be called at all.
@@ -1710,7 +1710,7 @@ void Model::Private::removeMessageFromSubjectBasedThreadingCache( MessageItem * 
   }
 }
 
-MessageItem * Model::Private::guessMessageParent( MessageItem * mi )
+MessageItem * ModelPrivate::guessMessageParent( MessageItem * mi )
 {
   // This function implements subject based threading
   // It attempts to guess a thread parent for the item "mi"
@@ -1811,7 +1811,7 @@ MessageItem * Model::Private::guessMessageParent( MessageItem * mi )
 // is very useful since re-sorting is an expensive operation.
 //
 template< class ItemComparator > static bool messageItemNeedsReSorting( SortOrder::SortDirection messageSortDirection,
-                                                                        Item::Private *parent, MessageItem *messageItem )
+                                                                        ItemPrivate *parent, MessageItem *messageItem )
 {
   if ( ( messageSortDirection == SortOrder::Ascending )
     || ( parent->mType == Item::Message ) )
@@ -1821,7 +1821,7 @@ template< class ItemComparator > static bool messageItemNeedsReSorting( SortOrde
   return parent->childItemNeedsReSorting< ItemComparator, false >( messageItem );
 }
 
-bool Model::Private::handleItemPropertyChanges( int propertyChangeMask, Item * parent, Item * item )
+bool ModelPrivate::handleItemPropertyChanges( int propertyChangeMask, Item * parent, Item * item )
 {
   // The facts:
   //
@@ -1984,7 +1984,7 @@ bool Model::Private::handleItemPropertyChanges( int propertyChangeMask, Item * p
   return true; // parent might be affected too.
 }
 
-void Model::Private::messageDetachedUpdateParentProperties( Item *oldParent, MessageItem *mi )
+void ModelPrivate::messageDetachedUpdateParentProperties( Item *oldParent, MessageItem *mi )
 {
   Q_ASSERT( oldParent );
   Q_ASSERT( mi );
@@ -2034,7 +2034,7 @@ void Model::Private::messageDetachedUpdateParentProperties( Item *oldParent, Mes
   }
 }
 
-void Model::Private::propagateItemPropertiesToParent( Item * item )
+void ModelPrivate::propagateItemPropertiesToParent( Item * item )
 {
   Item * pParent = item->parent();
   Q_ASSERT( pParent );
@@ -2079,7 +2079,7 @@ void Model::Private::propagateItemPropertiesToParent( Item * item )
 }
 
 
-void Model::Private::attachMessageToParent( Item *pParent, MessageItem *mi )
+void ModelPrivate::attachMessageToParent( Item *pParent, MessageItem *mi )
 {
   Q_ASSERT( pParent );
   Q_ASSERT( mi );
@@ -2387,7 +2387,7 @@ void Model::Private::attachMessageToParent( Item *pParent, MessageItem *mi )
 //
 // When messages are added, mark it as dirty only (?)
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass5( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass5( ViewItemJob *job, const QTime &tStart )
 {
   // In this pass we scan the group headers that are in mGroupHeadersThatNeedUpdate.
   // Empty groups get deleted while the other ones are re-sorted.
@@ -2495,7 +2495,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
 
 
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass4( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass4( ViewItemJob *job, const QTime &tStart )
 {
   // In this pass we scan mUnassignedMessageListForPass4 which now
   // contains both items with parents and items without parents.
@@ -2544,7 +2544,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
   return ViewItemJobCompleted;
 }
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass3( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass3( ViewItemJob *job, const QTime &tStart )
 {
   // In this pass we scan the mUnassignedMessageListForPass3 and try to do construct the threads
   // by using subject based threading. If subject based threading is not in effect then
@@ -2637,7 +2637,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
   return ViewItemJobCompleted;
 }
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass2( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass2( ViewItemJob *job, const QTime &tStart )
 {
   // In this pass we scan the mUnassignedMessageList and try to do construct the threads.
   // If some thread leader message got attacched to the viewable tree in Pass1Fill then
@@ -2747,7 +2747,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
   return ViewItemJobCompleted;
 }
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass1Fill( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1Fill( ViewItemJob *job, const QTime &tStart )
 {
   // In this pass we scan the a contiguous region of the underlying storage (that is
   // assumed to be FLAT) and create the corresponding MessageItem objects.
@@ -3013,7 +3013,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
   return ViewItemJobCompleted;
 }
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass1Cleanup( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1Cleanup( ViewItemJob *job, const QTime &tStart )
 {
   Q_ASSERT( mModelForItemFunctions ); // UI must be not disconnected here
   // In this pass we remove the MessageItem objects that are present in the job
@@ -3258,7 +3258,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
 }
 
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobPass1Update( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1Update( ViewItemJob *job, const QTime &tStart )
 {
   Q_ASSERT( mModelForItemFunctions ); // UI must be not disconnected here
 
@@ -3409,7 +3409,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJobP
 }
 
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternalForJob( ViewItemJob *job, const QTime &tStart )
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJob( ViewItemJob *job, const QTime &tStart )
 {
   // This function does a timed chunk of work for a single Fill View job.
   // It attempts to process messages until a timeout forces it to return to the caller.
@@ -3671,7 +3671,7 @@ static void resetStats()
 
 } // namespace Stats
 
-void Model::Private::printStatistics()
+void ModelPrivate::printStatistics()
 {
   using namespace Stats;
   int totalTotalTime = 0;
@@ -3742,7 +3742,7 @@ void Model::Private::printStatistics()
 
 #endif
 
-Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternal()
+ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
 {
   // This function does a timed chunk of work in our View Fill operation.
   // It attempts to do processing until it either runs out of jobs
@@ -3934,7 +3934,7 @@ Model::Private::ViewItemJobResult Model::Private::viewItemJobStepInternal()
 }
 
 
-void Model::Private::viewItemJobStep()
+void ModelPrivate::viewItemJobStep()
 {
   // A single step in the View Fill operation.
   // This function wraps viewItemJobStepInternal() which does the step job
@@ -4225,7 +4225,7 @@ void Model::Private::viewItemJobStep()
   }
 }
 
-void Model::Private::slotStorageModelRowsInserted( const QModelIndex &parent, int from, int to )
+void ModelPrivate::slotStorageModelRowsInserted( const QModelIndex &parent, int from, int to )
 {
   if ( parent.isValid() )
     return; // ugh... should never happen
@@ -4343,7 +4343,7 @@ void Model::Private::slotStorageModelRowsInserted( const QModelIndex &parent, in
     mFillStepTimer.start( mViewItemJobStepIdleInterval );
 }
 
-void Model::Private::slotStorageModelRowsRemoved( const QModelIndex &parent, int from, int to )
+void ModelPrivate::slotStorageModelRowsRemoved( const QModelIndex &parent, int from, int to )
 {
   // This is called when the underlying StorageModel emits the rowsRemoved signal.
 
@@ -4489,7 +4489,7 @@ void Model::Private::slotStorageModelRowsRemoved( const QModelIndex &parent, int
   }
 }
 
-void Model::Private::slotStorageModelLayoutChanged()
+void ModelPrivate::slotStorageModelLayoutChanged()
 {
   kDebug() << "Storage model layout changed";
   // need to reset everything...
@@ -4497,7 +4497,7 @@ void Model::Private::slotStorageModelLayoutChanged()
   kDebug() << "Storage model layout changed done";
 }
 
-void Model::Private::slotStorageModelDataChanged( const QModelIndex &fromIndex, const QModelIndex &toIndex )
+void ModelPrivate::slotStorageModelDataChanged( const QModelIndex &fromIndex, const QModelIndex &toIndex )
 {
   Q_ASSERT( mStorageModel ); // must exist (and be the sender of the signal connected to this slot)
 
@@ -4551,7 +4551,7 @@ void Model::Private::slotStorageModelDataChanged( const QModelIndex &fromIndex, 
 
 }
 
-void Model::Private::slotStorageModelHeaderDataChanged( Qt::Orientation, int, int )
+void ModelPrivate::slotStorageModelHeaderDataChanged( Qt::Orientation, int, int )
 {
   if ( mStorageModelContainsOutboundMessages!=mStorageModel->containsOutboundMessages() ) {
     mStorageModelContainsOutboundMessages = mStorageModel->containsOutboundMessages();

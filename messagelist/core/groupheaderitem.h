@@ -39,6 +39,7 @@ namespace Core
 class GroupHeaderItem : public Item
 {
   friend class Model;
+  friend class ModelPrivate;
   friend class Utils::ThemePreviewDelegate;
 
 protected:

@@ -29,10 +29,10 @@ namespace MessageList
 namespace Core
 {
 
-class Model::Private
+class ModelPrivate
 {
 public:
-  Private( Model *owner ) : q( owner ) { }
+  ModelPrivate( Model *owner ) : q( owner ) { }
 
   void fillView();
 

@@ -29,6 +29,7 @@ namespace Utils
 {
 
 class ThemeComboBox;
+class ThemeConfigButtonPrivate;
 
 /**
  * A specialized KPushButton that displays the theme
@@ -37,6 +38,7 @@ class ThemeComboBox;
 class MESSAGELIST_EXPORT ThemeConfigButton : public KPushButton
 {
   Q_OBJECT
+  friend class ThemeComboBox;
 
 public:
   /** Constructor.
@@ -56,8 +58,7 @@ signals:
 private:
   Q_PRIVATE_SLOT(d, void slotConfigureThemes())
 
-  class Private;
-  Private * const d;
+  ThemeConfigButtonPrivate * const d;
 };
 
 } // namespace Utils

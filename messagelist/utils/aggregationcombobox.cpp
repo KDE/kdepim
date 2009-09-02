@@ -29,7 +29,7 @@ using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
 AggregationComboBox::AggregationComboBox( QWidget * parent )
-: KComboBox( parent ), d( new Private( this ) )
+: KComboBox( parent ), d( new AggregationComboBoxPrivate( this ) )
 {
   d->slotLoadAggregations();
 }
@@ -79,7 +79,7 @@ static bool aggregationNameLessThan( const Aggregation * lhs, const Aggregation 
   return lhs->name() < rhs->name();
 }
 
-void AggregationComboBox::Private::slotLoadAggregations()
+void AggregationComboBoxPrivate::slotLoadAggregations()
 {
   q->clear();
 
@@ -93,7 +93,7 @@ void AggregationComboBox::Private::slotLoadAggregations()
   }
 }
 
-void AggregationComboBox::Private::setCurrentAggregation( const Aggregation *aggregation )
+void AggregationComboBoxPrivate::setCurrentAggregation( const Aggregation *aggregation )
 {
   Q_ASSERT( aggregation != 0 );
 
@@ -102,7 +102,7 @@ void AggregationComboBox::Private::setCurrentAggregation( const Aggregation *agg
   q->setCurrentIndex( aggregationIndex );
 }
 
-const Aggregation *AggregationComboBox::Private::currentAggregation() const
+const Aggregation *AggregationComboBoxPrivate::currentAggregation() const
 {
   const QVariant currentAggregationVariant = q->itemData( q->currentIndex() );
   const QString currentAggregationID = currentAggregationVariant.toString();

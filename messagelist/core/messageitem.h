@@ -44,6 +44,7 @@ namespace Core
 class MESSAGELIST_EXPORT MessageItem : public Item, public ModelInvariantIndex
 {
   friend class Model;
+  friend class ModelPrivate;
   friend class Utils::ThemePreviewDelegate;
 
 public:

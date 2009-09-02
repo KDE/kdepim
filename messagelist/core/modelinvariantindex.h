@@ -32,6 +32,7 @@ namespace Core
 {
 
 class ModelInvariantRowMapper;
+class ModelInvariantRowMapperPrivate;
 class RowShift;
 
 /**
@@ -43,6 +44,7 @@ class RowShift;
 class MESSAGELIST_EXPORT ModelInvariantIndex
 {
   friend class ModelInvariantRowMapper;
+  friend class ModelInvariantRowMapperPrivate;
   friend class RowShift;
 
 public:

@@ -34,10 +34,10 @@ namespace MessageList
 namespace Core
 {
 
-class ModelInvariantRowMapper::Private
+class ModelInvariantRowMapperPrivate
 {
 public:
-  Private( ModelInvariantRowMapper *owner ) : q( owner ) { }
+  ModelInvariantRowMapperPrivate( ModelInvariantRowMapper *owner ) : q( owner ) { }
 
   /**
    * Internal. Don't look a this :)
