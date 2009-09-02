@@ -65,7 +65,7 @@ set( kaddressbook_LIB_SRCS
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
-target_link_libraries(kaddressbookprivate kdepim ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KUTILS_LIBS} akonadi_next akonadi-contact)
+target_link_libraries(kaddressbookprivate kdepim ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KUTILS_LIBS} akonadi_next)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
