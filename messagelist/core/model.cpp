@@ -72,6 +72,8 @@ namespace MessageList
 namespace Core
 {
 
+K_GLOBAL_STATIC( QTimer, _k_heartBeatTimer )
+
 /**
  * A job in a "View Fill" or "View Cleanup" or "View Update" task.
  *
@@ -295,6 +297,13 @@ Model::Model( View *pParent )
   d->mCachedWatchedOrIgnoredStatusBits = KPIM::MessageStatus::statusIgnored().toQInt32() | KPIM::MessageStatus::statusWatched().toQInt32();
   d->mCachedNewStatusBits = KPIM::MessageStatus::statusNew().toQInt32();
   d->mCachedNewOrUnreadStatusBits = KPIM::MessageStatus::statusNew().toQInt32() | KPIM::MessageStatus::statusUnread().toQInt32();
+
+  connect( _k_heartBeatTimer, SIGNAL(timeout()),
+           this, SLOT(checkIfDateChanged()) );
+
+  if ( !_k_heartBeatTimer->isActive() ) { // First model starts it
+    _k_heartBeatTimer->start( 60000 ); // 1 minute
+  }
 }
 
 Model::~Model()

@@ -95,14 +95,6 @@ Manager::Manager()
 
   mCachedLocalizedUnknownText = i18nc( "Unknown date", "Unknown" ) ;
 
-  mHeartBeatTimer = new QTimer(this);
-  QObject::connect(
-      mHeartBeatTimer,SIGNAL(timeout()),
-      this,SLOT(slotHeartBeat())
-    );
-
-  mHeartBeatTimer->start(60000); // 1 minute
-
   loadConfiguration();
   connect( Settings::self(), SIGNAL(configChanged()),
            this, SLOT(reloadGlobalConfiguration()) );
@@ -150,19 +142,6 @@ Manager::~Manager()
   delete mDateFormatter;
 
   mInstance = 0;
-}
-
-void Manager::slotHeartBeat()
-{
-  // sweep through all the models asking them to check their dates
-  for( QList< Widget * >::Iterator it = mWidgetList.begin(); it != mWidgetList.end(); ++it )
-  {
-    if ( !( *it )->view() )
-      continue;
-    if ( !( *it )->view()->model() )
-      continue;
-    ( *it )->view()->model()->d->checkIfDateChanged();
-  }
 }
 
 void Manager::registerWidget( Widget *pWidget )

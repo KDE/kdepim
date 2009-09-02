@@ -78,7 +78,6 @@ class MESSAGELIST_EXPORT Model : public QAbstractItemModel
 {
   friend class Item;
   friend class ItemPrivate;
-  friend class Manager;
 
   Q_OBJECT
 public:
@@ -240,6 +239,7 @@ public:
   virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
 private:
+  Q_PRIVATE_SLOT(d, void checkIfDateChanged())
   Q_PRIVATE_SLOT(d, void viewItemJobStep())
   Q_PRIVATE_SLOT(d, void slotStorageModelRowsInserted( const QModelIndex &, int, int ))
   Q_PRIVATE_SLOT(d, void slotStorageModelRowsRemoved( const QModelIndex &, int, int ))

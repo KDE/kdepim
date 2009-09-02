@@ -265,14 +265,6 @@ protected slots:
    */
   void reloadAllWidgets();
 
-  /**
-   * This slot is connected to a very slow timer (1 minute).
-   * It actually sweeps through the registered models calling
-   * checkIfDateChanged() in order to fix date displays.
-   * Later we could find other uses for the heartbeat.
-   */
-  void slotHeartBeat();
-
 private:
   // internal configuration stuff
   void loadConfiguration();
