@@ -436,8 +436,7 @@ void Manager::aggregationsConfigurationCompleted()
   saveConfiguration(); // just to be sure :)
 
   // notify all the widgets that they should reload the option set combos
-  for( QList< Widget * >::Iterator it = mWidgetList.begin(); it != mWidgetList.end(); ++it )
-    ( *it )->aggregationsChanged();
+  emit aggregationsChanged();
 }
 
 const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateSortOrder )
@@ -827,8 +826,7 @@ void Manager::themesConfigurationCompleted()
   saveConfiguration(); // just to be sure :)
 
   // notify all the widgets that they should reload the option set combos
-  for( QList< Widget * >::Iterator it = mWidgetList.begin(); it != mWidgetList.end(); ++it )
-    ( *it )->themesChanged();
+  emit themesChanged();
 }
 
 void Manager::reloadAllWidgets()

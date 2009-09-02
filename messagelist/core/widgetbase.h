@@ -58,7 +58,6 @@ class View;
 class MESSAGELIST_EXPORT Widget : public QWidget
 {
   friend class View;
-  friend class Manager;
 
   Q_OBJECT
 public:
@@ -118,16 +117,6 @@ public slots:
   void populateStatusFilterCombo();
 
 protected:
-  /**
-   * This is called by Manager when the option sets stored within have changed.
-   */
-  void aggregationsChanged();
-
-  /**
-   * This is called by Manager when the option sets stored within have changed.
-   */
-  void themesChanged();
-
   /**
    * Called when the "Message Status/Tag" filter menu is opened by the user.
    * You may override this function in order to add some "custom tag" entries
@@ -208,6 +197,16 @@ signals:
   void fullSearchRequest();
 
 protected slots:
+  /**
+   * This is called by Manager when the option sets stored within have changed.
+   */
+  void aggregationsChanged();
+
+  /**
+   * This is called by Manager when the option sets stored within have changed.
+   */
+  void themesChanged();
+
 
   void themeMenuAboutToShow();
   void aggregationMenuAboutToShow();

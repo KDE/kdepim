@@ -263,6 +263,10 @@ protected slots:
    */
   void reloadAllWidgets();
 
+signals:
+  void aggregationsChanged();
+  void themesChanged();
+
 private:
   // internal configuration stuff
   void loadConfiguration();

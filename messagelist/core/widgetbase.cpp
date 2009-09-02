@@ -117,6 +117,10 @@ Widget::Widget( QWidget *pParent )
   : QWidget( pParent ), d( new Private( this ) )
 {
   Manager::registerWidget( this );
+  connect( Manager::instance(), SIGNAL(aggregationsChanged()),
+           this, SLOT(aggregationsChanged() ) );
+  connect( Manager::instance(), SIGNAL(themesChanged()),
+           this, SLOT(themesChanged() ) );
 
   setAutoFillBackground( true );
   setObjectName( "messagelistwidget" );
