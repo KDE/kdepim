@@ -1568,6 +1568,8 @@ QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
     fileName = "unnamed";
   fname += '/' + fileName;
 
+  kDebug() << "Create temp file: " << fname;
+
   QByteArray data = aMsgPart->decodedContent();
   if ( aMsgPart->contentType()->isText() && data.size() > 0 ) {
     // convert CRLF to LF before writing text attachments to disk
@@ -2421,24 +2423,27 @@ void KMReaderWin::slotUrlSave()
 }
 
 //-----------------------------------------------------------------------------
-KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )
+KMime::Content * KMReaderWin::nodeFromUrl( const KUrl & url )
 {
-    /*FIXME(Andras) port to akonadi
-  return mMessage ? mMessage->findId( msgPartFromUrl( url ) ) : 0 ;
-  */
-  kWarning() << "FIXME PORT KMime::Content * KMReaderWin::partNodeFromUrl( const KUrl & url )";
+  if ( url.isEmpty() )
+    return 0;
+  if ( !url.isLocalFile() )
+    return 0;
 
-  return 0;
+  QString path = url.toLocalFile();
+  uint right = path.lastIndexOf( '/' );
+  uint left = path.lastIndexOf( '.', right );
+
+  KMime::ContentIndex index(path.mid( left + 1, right - left - 1 ));
+  KMime::Content *node = mMessage->content( index );
+  
+  return node;
 }
 
-KMime::Content * KMReaderWin::partNodeForId( int id ) {
-    /*FIXME(Andras) port to akonadi
-  return mMessage ? mMessage->findId( id ) : 0 ;
-  */
-  kWarning() << "FIXME PORT KMime::Content * KMReaderWin::partNodeForId( int id )";
-  return 0;
+KMime::Content* KMReaderWin::nodeForContentIndex( const KMime::ContentIndex& index )
+{
+  return  mMessage->content( index );
 }
-
 
 KUrl KMReaderWin::tempFileUrlFromNode( const KMime::Content *node )
 {
@@ -2458,17 +2463,6 @@ KUrl KMReaderWin::tempFileUrlFromNode( const KMime::Content *node )
       return KUrl( path );
   }
   return KUrl();
-}
-
-//-----------------------------------------------------------------------------
-void KMReaderWin::slotSaveAttachments()
-{
-  /*FIXME(Andras) port to akonadi
-    mAtmUpdate = true;
-  KMSaveAttachmentsCommand *saveCommand = new KMSaveAttachmentsCommand( mMainWindow,
-                                                                        message() );
-  saveCommand->start();
-    */
 }
 
 //-----------------------------------------------------------------------------

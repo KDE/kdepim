@@ -208,12 +208,9 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, KMReaderWin * w
   const QStringList urlParts = urlPath.mid( 10 ).split( '/' );
   if ( urlParts.size() != 3 )
     return 0;
-  bool ok = false;
-  const int part_id = urlParts[1].toInt( &ok );
-  if ( !ok )
-    return 0;
+  KMime::ContentIndex index( urlParts[1] );
   *path = KUrl::fromPercentEncoding( urlParts[2].toLatin1() );
-  return w->partNodeForId( part_id );
+  return w->nodeForContentIndex( index );
 }
 
 bool KMail::URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, KMReaderWin * w ) const {
@@ -537,7 +534,7 @@ namespace {
   QString AttachmentURLHandler::statusBarMessage( const KUrl & url, KMReaderWin * w ) const {
     if ( !w || !w->message() )
       return QString();
-    KMime::Content * node = w->partNodeFromUrl( url );
+    KMime::Content * node = w->nodeFromUrl( url );
     if ( !node )
       return QString();
     QString name = node->contentDisposition()->filename();

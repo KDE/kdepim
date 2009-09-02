@@ -191,9 +191,9 @@ public:
                                  int recCount = 0 );
 
   /** Returns message part from given URL or null if invalid. */
-  KMime::Content* partNodeFromUrl(const KUrl &url);
+  KMime::Content* nodeFromUrl(const KUrl &url);
 
-  KMime::Content * partNodeForId( int id );
+  KMime::Content* nodeForContentIndex( const KMime::ContentIndex& index );
 
   /** Returns id of message part from given URL or -1 if invalid. */
   static int msgPartFromUrl(const KUrl &url);
@@ -336,7 +336,6 @@ public slots:
   /** Save the page to a file */
   void slotUrlSave();
   void slotSaveMsg();
-  void slotSaveAttachments();
 
   void slotMessageArrived( KMime::Message *msg );
 
