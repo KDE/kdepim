@@ -123,6 +123,17 @@ public:
   void abortMessagePreSelection();
 
   /**
+   * Attempt to select the message with the specified unique id AND storage row as soon
+   * as possible (either now or when the view finishes loading). Please note that BOTH the uniqueId
+   * and the storage row are needed in order to perform the operation in all cases.
+   *
+   * This is a very special function. It can be called ONLY when the model is actually
+   * loading: it will assert if you do otherwise. This call is actually the only
+   * way to select an item that hasn't been read from the storage yet.
+   */
+  void activateMessageAfterLoading( unsigned long uniqueIdOfMessage, int row );
+
+  /**
    * This function attempts to apply the specified pre-selection mode in any model state.
    * This isn't always possible so you should specify the pre-selection mode in setStorageModel()
    * if possible. However, this function is useful to implement coherent behaviour when navigating
@@ -152,7 +163,9 @@ public:
 
   /**
    * Returns the message item that is at the _current_ storage row index
-   * or zero if no such storage item is found.
+   * or zero if no such storage item is found. Please note that this may return 0
+   * also if the specified storage row hasn't been actually read yet. This may happen
+   * if isLoading() returns true. In this case the only thing you can do is to retry in a while.
    */
   MessageItem * messageItemByStorageRow( int row ) const;
 
