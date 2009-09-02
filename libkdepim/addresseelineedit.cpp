@@ -785,7 +785,7 @@ void AddresseeLineEdit::startLoadingLDAPEntries()
 
 void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
 {
-  if ( s_LDAPLineEdit != this )
+  if ( adrs.isEmpty() || s_LDAPLineEdit != this )
     return;
 
   for ( KPIM::LdapResultList::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
