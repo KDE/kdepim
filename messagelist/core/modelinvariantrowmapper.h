@@ -190,7 +190,6 @@ public:
 private:
   Q_PRIVATE_SLOT(d, void slotPerformLazyUpdate())
 
-  friend class ModelInvariantRowMapperPrivate;
   ModelInvariantRowMapperPrivate * const d;
 };
 

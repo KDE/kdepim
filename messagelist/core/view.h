@@ -611,7 +611,6 @@ private:
   Q_PRIVATE_SLOT(d, void expandFullThread( const QModelIndex& ))
 
   class Private;
-  friend class Private;
   Private * const d;
 }; // class View
 
