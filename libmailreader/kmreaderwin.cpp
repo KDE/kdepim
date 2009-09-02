@@ -596,6 +596,11 @@ void KMReaderWin::createActions()
   connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotShowMsgSrc()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
+  KAction *saveMessageAction = new KAction(i18n("&Save message"), this);
+  ac->addAction("save_message", saveMessageAction);
+  connect(saveMessageAction, SIGNAL(triggered(bool) ), SLOT(slotSaveMsg()));
+  saveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+
   //
   // Scroll actions
   //
@@ -2468,14 +2473,78 @@ KUrl KMReaderWin::tempFileUrlFromNode( const KMime::Content *node )
 //-----------------------------------------------------------------------------
 void KMReaderWin::slotSaveMsg()
 {
-    /*FIXME(Andras) port to akonadi
-  KMSaveMsgCommand *saveCommand = new KMSaveMsgCommand( mMainWindow, message() );
+   KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( mMessage->subject()->asUnicodeString().trimmed()
+                                  .replace( QDir::separator(), '_' ) ),
+                                  "*.mbox", this );
 
-  if (saveCommand->url().isEmpty())
-    delete saveCommand;
-  else
-    saveCommand->start();
-    */
+   if ( url.isEmpty() )
+     return;
+
+  QByteArray data( mMessage->encodedContent() );
+  QDataStream ds;
+  QFile file;
+  KTemporaryFile tf;
+  if ( url.isLocalFile() )
+  {
+    // save directly
+    file.setFileName( url.toLocalFile() );
+    if ( !file.open( QIODevice::WriteOnly ) )
+    {
+      KMessageBox::error( this,
+                          i18nc( "1 = file name, 2 = error string",
+                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                                 file.fileName(),
+                                 QString::fromLocal8Bit( strerror( errno ) ) ),
+                          i18n( "Error saving attachment" ) );
+      return;
+    }
+
+    //TODO handle huge attachment (and on demand attachment loading), especially saving them to
+    //remote destination
+
+/*FIXME(Andras) port it
+    // #79685 by default use the umask the user defined, but let it be configurable
+    if ( GlobalSettings::self()->disregardUmask() )
+      fchmod( file.handle(), S_IRUSR | S_IWUSR );
+*/
+    ds.setDevice( &file );
+  } else
+  {
+    // tmp file for upload
+    tf.open();
+    ds.setDevice( &tf );
+  }
+
+  if ( ds.writeRawData( data.data(), data.size() ) == -1)
+  {
+    QFile *f = static_cast<QFile *>( ds.device() );
+    KMessageBox::error( this,
+                        i18nc( "1 = file name, 2 = error string",
+                               "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                               f->fileName(),
+                               f->errorString() ),
+                        i18n( "Error saving attachment" ) );
+    return;
+  }
+
+  if ( !url.isLocalFile() )
+  {
+    // QTemporaryFile::fileName() is only defined while the file is open
+    QString tfName = tf.fileName();
+    tf.close();
+    if ( !KIO::NetAccess::upload( tfName, url, this ) )
+    {
+      KMessageBox::error( this,
+                          i18nc( "1 = file name, 2 = error string",
+                                 "<qt>Could not write to the file<br><filename>%1</filename><br><br>%2",
+                                 url.prettyUrl(),
+                                 KIO::NetAccess::lastErrorString() ),
+                          i18n( "Error saving attachment" ) );
+      return;
+    }
+  } else
+    file.close();
+  return;
 }
 
 //-----------------------------------------------------------------------------
