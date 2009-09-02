@@ -592,7 +592,7 @@ void KMReaderWin::createActions()
 
   mViewSourceAction  = new KAction(i18n("&View Source"), this);
   ac->addAction("view_source", mViewSourceAction );
-  connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotShowMsgSrc()));
+  connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotShowMessageSource()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
   mSaveMessageAction = new KAction(i18n("&Save message"), this);
@@ -1924,7 +1924,7 @@ void KMReaderWin::slotToggleFixedFont()
   update( Force );
 }
 
-void KMReaderWin::slotShowMsgSrc()
+void KMReaderWin::slotShowMessageSource()
 {
 /* FIXME(Andras)
   if ( msg->isComplete() && !mMsgWasComplete ) {

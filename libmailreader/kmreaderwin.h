@@ -332,24 +332,6 @@ public slots:
   void slotDocumentDone();
   void slotTextSelected(bool);
 
-  /** An URL has been activate with a click. */
-  void slotUrlOpen(const KUrl &url, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &);
-
-  /** The mouse has moved on or off an URL. */
-  void slotUrlOn(const QString &url);
-
-  /** The user presses the right mouse button on an URL. */
-  void slotUrlPopup(const QString &, const QPoint& mousePos);
-
-  /** The user selected "Find" from the menu. */
-  void slotFind();
-
-  /** The user toggled the "Fixed Font" flag from the view menu. */
-  void slotToggleFixedFont();
-
-  /** Show the message source */
-  void slotShowMsgSrc();
-
   /** Copy the selected text to the clipboard */
   void slotCopySelectedText();
 
@@ -389,6 +371,24 @@ public slots:
 
 
 private slots:
+  /** An URL has been activate with a click. */
+  void slotUrlOpen(const KUrl &url, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &);
+
+  /** The mouse has moved on or off an URL. */
+  void slotUrlOn(const QString &url);
+
+  /** The user presses the right mouse button on an URL. */
+  void slotUrlPopup(const QString &, const QPoint& mousePos);
+
+  /** The user selected "Find" from the menu. */
+  void slotFind();
+
+  /** The user toggled the "Fixed Font" flag from the view menu. */
+  void slotToggleFixedFont();
+
+  /** Show the message source */
+  void slotShowMessageSource();
+
   /** Refresh the reader window */
   void updateReaderWin();
 
