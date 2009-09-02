@@ -89,12 +89,9 @@ public:
 using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
-ConfigureAggregationsDialog *ConfigureAggregationsDialog::Private::mInstance = 0;
-
 ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
   : KDialog( parent ), d( new Private( this ) )
 {
-  Private::mInstance = this;
   setAttribute( Qt::WA_DeleteOnClose );
   setWindowModality( Qt::ApplicationModal ); // FIXME: Sure ?
   setButtons( Ok | Cancel );
@@ -158,38 +155,15 @@ ConfigureAggregationsDialog::ConfigureAggregationsDialog( QWidget *parent )
 
 ConfigureAggregationsDialog::~ConfigureAggregationsDialog()
 {
-  d->mInstance = 0;
   delete d;
 }
 
-ConfigureAggregationsDialog *ConfigureAggregationsDialog::instance()
+void ConfigureAggregationsDialog::selectAggregation( const QString &aggregationId )
 {
-  return Private::mInstance;
-}
-
-void ConfigureAggregationsDialog::Private::display( QWidget *parent, const QString &preselectAggregationId )
-{
-  if ( mInstance )
-    return; // FIXME: reparent if needed ?
-  mInstance = new ConfigureAggregationsDialog( parent );
-  mInstance->d->selectAggregationById( preselectAggregationId );
-  mInstance->show();
-}
-
-void ConfigureAggregationsDialog::Private::cleanup()
-{
-  if ( !mInstance )
-    return;
-  delete mInstance;
-  mInstance = 0;
-}
-
-void ConfigureAggregationsDialog::Private::selectAggregationById( const QString &aggregationId )
-{
-  AggregationListWidgetItem * item = findAggregationItemById( aggregationId );
+  AggregationListWidgetItem *item = d->findAggregationItemById( aggregationId );
   if ( !item )
     return;
-  mAggregationList->setCurrentItem( item );
+  d->mAggregationList->setCurrentItem( item );
 }
 
 void ConfigureAggregationsDialog::Private::okButtonClicked()

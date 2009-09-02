@@ -83,12 +83,9 @@ public:
 using namespace MessageList::Core;
 using namespace MessageList::Utils;
 
-ConfigureThemesDialog * ConfigureThemesDialog::Private::mInstance = 0;
-
 ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
   : KDialog( parent ), d( new Private( this ) )
 {
-  Private::mInstance = this;
   setAttribute( Qt::WA_DeleteOnClose );
   setWindowModality( Qt::ApplicationModal ); // FIXME: Sure ?
   setButtons( Ok | Cancel );
@@ -152,38 +149,15 @@ ConfigureThemesDialog::ConfigureThemesDialog( QWidget *parent )
 
 ConfigureThemesDialog::~ConfigureThemesDialog()
 {
-  Private::mInstance = 0;
   delete d;
 }
 
-ConfigureThemesDialog * ConfigureThemesDialog::instance()
+void ConfigureThemesDialog::selectTheme( const QString &themeId )
 {
-  return Private::mInstance;
-}
-
-void ConfigureThemesDialog::Private::display( QWidget *parent, const QString &preselectThemeId )
-{
-  if ( mInstance )
-    return; // FIXME: reparent if needed ?
-  mInstance = new ConfigureThemesDialog( parent );
-  mInstance->d->selectThemeById( preselectThemeId );
-  mInstance->show();
-}
-
-void ConfigureThemesDialog::Private::cleanup()
-{
-  if ( !mInstance )
-    return;
-  delete mInstance;
-  mInstance = 0;
-}
-
-void ConfigureThemesDialog::Private::selectThemeById( const QString &themeId )
-{
-  ThemeListWidgetItem * item = findThemeItemById( themeId );
+  ThemeListWidgetItem * item = d->findThemeItemById( themeId );
   if ( !item )
     return;
-  mThemeList->setCurrentItem( item );
+  d->mThemeList->setCurrentItem( item );
 }
 
 void ConfigureThemesDialog::Private::okButtonClicked()

@@ -64,11 +64,15 @@ void ThemeConfigButtonPrivate::slotConfigureThemes()
 {
   QString currentThemeID;
   if ( mThemeComboBox != 0 )
-    currentThemeID = mThemeComboBox->d->currentTheme()->id();
-  Manager::instance()->showConfigureThemesDialog( static_cast< QWidget * >( q->parent() ), currentThemeID );
+    currentThemeID = mThemeComboBox->currentTheme();
 
-  QObject::connect( ConfigureThemesDialog::instance(), SIGNAL( okClicked() ),
-           q, SIGNAL( configureDialogCompleted() ) );
+  ConfigureThemesDialog *dialog = new ConfigureThemesDialog( q->window() );
+  dialog->selectTheme( currentThemeID );
+
+  QObject::connect( dialog, SIGNAL( okClicked() ),
+                    q, SIGNAL( configureDialogCompleted() ) );
+
+  dialog->show();
 }
 
 #include "themeconfigbutton.moc"

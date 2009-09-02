@@ -50,7 +50,6 @@ public:
   void slotLoadAggregations();
 
   void setCurrentAggregation( const Core::Aggregation *aggregation );
-  const Core::Aggregation *currentAggregation() const;
 };
 
 } // namespace Utils

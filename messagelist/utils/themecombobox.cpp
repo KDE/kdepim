@@ -39,11 +39,16 @@ ThemeComboBox::~ThemeComboBox()
   delete d;
 }
 
+QString ThemeComboBox::currentTheme() const
+{
+  return itemData( currentIndex() ).toString();
+}
+
 void ThemeComboBox::writeDefaultConfig() const
 {
   KConfigGroup group( KGlobal::config(), "MessageListView::StorageModelThemes" );
 
-  const QString themeID = d->currentTheme()->id();
+  const QString themeID = currentTheme();
   group.writeEntry( QString( "DefaultSet" ), themeID );
 
   Manager::instance()->themesConfigurationCompleted();
@@ -53,7 +58,7 @@ void ThemeComboBox::writeStorageModelConfig( StorageModel *storageModel, bool is
 {
   QString themeID;
   if ( isPrivateSetting ) {
-    themeID = d->currentTheme()->id();
+    themeID = currentTheme();
   } else { // explicitly use default theme id when using default theme.
     themeID = Manager::instance()->defaultTheme()->id();
   }
@@ -99,13 +104,6 @@ void ThemeComboBoxPrivate::setCurrentTheme( const Theme *theme )
   const QString themeID = theme->id();
   const int themeIndex = q->findData( QVariant( themeID ) );
   q->setCurrentIndex( themeIndex );
-}
-
-const Theme *ThemeComboBoxPrivate::currentTheme() const
-{
-  const QVariant currentThemeVariant = q->itemData( q->currentIndex() );
-  const QString currentThemeID = currentThemeVariant.toString();
-  return Manager::instance()->theme( currentThemeID );
 }
 
 #include "themecombobox.moc"

@@ -38,7 +38,6 @@ class ThemeConfigButtonPrivate;
 class MESSAGELIST_EXPORT ThemeConfigButton : public KPushButton
 {
   Q_OBJECT
-  friend class ThemeComboBox;
 
 public:
   /** Constructor.

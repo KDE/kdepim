@@ -63,12 +63,16 @@ void AggregationConfigButtonPrivate::slotConfigureAggregations()
 {
   QString currentAggregationID;
   if ( mAggregationComboBox != 0 ) {
-    currentAggregationID = mAggregationComboBox->d->currentAggregation()->id();
+    currentAggregationID = mAggregationComboBox->currentAggregation();
   }
-  Manager::instance()->showConfigureAggregationsDialog( static_cast< QWidget * >( q->parent() ), currentAggregationID );
 
-  QObject::connect( ConfigureAggregationsDialog::instance(), SIGNAL( okClicked() ),
+  ConfigureAggregationsDialog *dialog = new ConfigureAggregationsDialog( q->window() );
+  dialog->selectAggregation( currentAggregationID );
+
+  QObject::connect( dialog, SIGNAL( okClicked() ),
                     q, SIGNAL( configureDialogCompleted() ) );
+
+  dialog->show();
 }
 
 #include "aggregationconfigbutton.moc"

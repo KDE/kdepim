@@ -39,11 +39,16 @@ AggregationComboBox::~AggregationComboBox()
   delete d;
 }
 
+QString AggregationComboBox::currentAggregation() const
+{
+  return itemData( currentIndex() ).toString();
+}
+
 void AggregationComboBox::writeDefaultConfig() const
 {
   KConfigGroup group( KGlobal::config(), "MessageListView::StorageModelAggregations" );
 
-  const QString aggregationID = d->currentAggregation()->id();
+  const QString aggregationID = currentAggregation();
   group.writeEntry( QString( "DefaultSet" ), aggregationID );
 
   Manager::instance()->aggregationsConfigurationCompleted();
@@ -54,7 +59,7 @@ void AggregationComboBox::writeStorageModelConfig( StorageModel *storageModel, b
   // message list aggregation
   QString aggregationID;
   if ( isPrivateSetting ) {
-    aggregationID = d->currentAggregation()->id();
+    aggregationID = currentAggregation();
   } else { // explicitly use default aggregation id when using default aggregation.
     aggregationID = Manager::instance()->defaultAggregation()->id();
   }
@@ -100,13 +105,6 @@ void AggregationComboBoxPrivate::setCurrentAggregation( const Aggregation *aggre
   const QString aggregationID = aggregation->id();
   const int aggregationIndex = q->findData( QVariant( aggregationID ) );
   q->setCurrentIndex( aggregationIndex );
-}
-
-const Aggregation *AggregationComboBoxPrivate::currentAggregation() const
-{
-  const QVariant currentAggregationVariant = q->itemData( q->currentIndex() );
-  const QString currentAggregationID = currentAggregationVariant.toString();
-  return Manager::instance()->aggregation( currentAggregationID );
 }
 
 #include "aggregationcombobox.moc"

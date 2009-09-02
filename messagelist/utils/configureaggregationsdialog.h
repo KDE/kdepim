@@ -50,20 +50,13 @@ namespace Utils
  */
 class MESSAGELIST_EXPORT ConfigureAggregationsDialog : public KDialog
 {
-  friend class Core::Manager;
-
   Q_OBJECT
-protected:
+
+public:
   ConfigureAggregationsDialog( QWidget *parent = 0 );
   ~ConfigureAggregationsDialog();
 
-public:
-  /**
-   * The one and only ConfigureAggregationsDialog. May be 0.
-   *
-   * See MessageList::Manager if you want to display this dialog.
-   */
-  static ConfigureAggregationsDialog * instance();
+  void selectAggregation( const QString &aggregationId );
 
 private:
   Q_PRIVATE_SLOT(d, void aggregationListCurrentItemChanged( QListWidgetItem*, QListWidgetItem* ))

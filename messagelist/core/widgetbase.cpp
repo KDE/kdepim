@@ -31,6 +31,9 @@
 #include "core/messageitem.h"
 #include "core/storagemodelbase.h"
 
+#include "utils/configureaggregationsdialog.h"
+#include "utils/configurethemesdialog.h"
+
 #include <QGridLayout>
 #include <QVariant>
 #include <QToolButton>
@@ -468,8 +471,9 @@ void Widget::setPrivateSortOrderForStorage()
 
 void Widget::configureThemes()
 {
-  // Show customization dialog
-  Manager::instance()->showConfigureThemesDialog( this, d->mLastThemeId );
+  Utils::ConfigureThemesDialog *dialog = new Utils::ConfigureThemesDialog( window() );
+  dialog->selectTheme( d->mLastThemeId );
+  dialog->show();
 }
 
 void Widget::themeSelected( bool )
@@ -590,10 +594,10 @@ void Widget::aggregationSelected( bool )
   QVariant v = act->data();
   QString id = v.toString();
 
-  if ( id.isEmpty() )
-  {
-    // Show customization dialog
-    Manager::instance()->showConfigureAggregationsDialog( this, d->mLastAggregationId );
+  if ( id.isEmpty() ) {
+    Utils::ConfigureAggregationsDialog *dialog = new Utils::ConfigureAggregationsDialog( window() );
+    dialog->selectAggregation( d->mLastAggregationId );
+    dialog->show();
     return;
   }
 

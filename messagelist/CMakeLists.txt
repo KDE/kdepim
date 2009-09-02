@@ -44,6 +44,7 @@ set(libmessagelist_SRCS
 )
 
 set(libmessagelist_core_HEADERS
+    core/enums.h
     core/item.h
     core/messageitem.h
     core/model.h

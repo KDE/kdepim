@@ -46,15 +46,11 @@ public:
   Private( ConfigureThemesDialog *owner )
     : q( owner ) { }
 
-  static void display( QWidget * parent, const QString &preselectThemeId = QString() );
-  static void cleanup();
-
   void fillThemeList();
   QString uniqueNameForTheme( QString baseName, Core::Theme * skipTheme = 0 );
   ThemeListWidgetItem * findThemeItemByName( const QString &name, Core::Theme * skipTheme = 0 );
   ThemeListWidgetItem * findThemeItemByTheme( Core::Theme * set );
   ThemeListWidgetItem * findThemeItemById( const QString &themeId );
-  void selectThemeById( const QString &themeId );
   void commitEditor();
 
   void themeListCurrentItemChanged( QListWidgetItem * cur, QListWidgetItem * prev );
@@ -66,7 +62,6 @@ public:
 
   ConfigureThemesDialog * const q;
 
-  static ConfigureThemesDialog * mInstance;
   ThemeListWidget *mThemeList;
   ThemeEditor *mEditor;
   QPushButton *mNewThemeButton;

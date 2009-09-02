@@ -43,12 +43,12 @@ class AggregationComboBoxPrivate;
 class MESSAGELIST_EXPORT AggregationComboBox : public KComboBox
 {
   Q_OBJECT
-  friend class AggregationConfigButton;
-  friend class AggregationConfigButtonPrivate;
 
 public:
   explicit AggregationComboBox( QWidget * parent );
   ~AggregationComboBox();
+
+  QString currentAggregation() const;
 
   void writeDefaultConfig() const;
 

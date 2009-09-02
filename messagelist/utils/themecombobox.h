@@ -44,12 +44,12 @@ class ThemeComboBoxPrivate;
 class MESSAGELIST_EXPORT ThemeComboBox : public KComboBox
 {
   Q_OBJECT
-  friend class ThemeConfigButton;
-  friend class ThemeConfigButtonPrivate;
 
 public:
   explicit ThemeComboBox( QWidget * parent);
   ~ThemeComboBox();
+
+  QString currentTheme() const;
 
   void writeDefaultConfig() const;
 

@@ -49,7 +49,6 @@ public:
   void slotLoadThemes();
 
   void setCurrentTheme( const Core::Theme *theme );
-  const Core::Theme *currentTheme() const;
 };
 
 } // namespace Utils

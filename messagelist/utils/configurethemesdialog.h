@@ -44,15 +44,13 @@ namespace Utils
 
 class MESSAGELIST_EXPORT ConfigureThemesDialog : public KDialog
 {
-  friend class Core::Manager;
-
   Q_OBJECT
-protected:
+
+public:
   ConfigureThemesDialog( QWidget *parent = 0 );
   ~ConfigureThemesDialog();
 
-public:
-  static ConfigureThemesDialog * instance();
+  void selectTheme( const QString &themeId );
 
 private:
   Q_PRIVATE_SLOT(d, void themeListCurrentItemChanged( QListWidgetItem*, QListWidgetItem* ))

@@ -52,18 +52,6 @@ public:
   Private( ConfigureAggregationsDialog *owner )
     : q( owner ) { }
 
-  /**
-   * Called by MessageList::Manager to display an instance of this dialog.
-   * If an instance is already existing (and maybe visible) it will be just activated.
-   */
-  static void display( QWidget * parent, const QString &preselectAggregationId = QString() );
-
-  /**
-   * This is called when MessageList::Manager is being destroyed: kill
-   * the dialog if it's still there.
-   */
-  static void cleanup();
-
   // Private implementation
 
   void fillAggregationList();
@@ -72,7 +60,6 @@ public:
   AggregationListWidgetItem * findAggregationItemByAggregation( Core::Aggregation * set );
   AggregationListWidgetItem * findAggregationItemById( const QString &aggregationId );
   void commitEditor();
-  void selectAggregationById( const QString &aggregationId );
 
   // Private slots
 
@@ -86,7 +73,6 @@ public:
 
   ConfigureAggregationsDialog * const q;
 
-  static ConfigureAggregationsDialog * mInstance;
   AggregationListWidget *mAggregationList;
   AggregationEditor *mEditor;
   QPushButton *mNewAggregationButton;

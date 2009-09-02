@@ -149,9 +149,6 @@ Manager::~Manager()
 
   delete mDateFormatter;
 
-  Utils::ConfigureAggregationsDialog::Private::cleanup(); // make sure it's dead
-  Utils::ConfigureThemesDialog::Private::cleanup(); // make sure it's dead
-
   mInstance = 0;
 }
 
@@ -167,17 +164,6 @@ void Manager::slotHeartBeat()
     ( *it )->view()->model()->d->checkIfDateChanged();
   }
 }
-
-void Manager::showConfigureAggregationsDialog( QWidget *requester, const QString &preselectAggregationId )
-{
-  Utils::ConfigureAggregationsDialog::Private::display( requester ? requester->window() : 0, preselectAggregationId );
-}
-
-void Manager::showConfigureThemesDialog( QWidget *requester, const QString &preselectThemeId )
-{
-  Utils::ConfigureThemesDialog::Private::display( requester ? requester->window() : 0, preselectThemeId );
-}
-
 
 void Manager::registerWidget( Widget *pWidget )
 {
