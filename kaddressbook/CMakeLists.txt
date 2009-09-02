@@ -89,7 +89,7 @@ kde4_add_executable(kaddressbook RUN_UNINSTALLED ${kaddressbook_SRCS})
 
 target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
                               ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
-target_link_libraries(kaddressbook ${KDEPIMLIBS_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} kaddressbookprivate)
+target_link_libraries(kaddressbook ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} kaddressbookprivate)
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbook ${QGPGME_LIBRARIES})
