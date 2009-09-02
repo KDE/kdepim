@@ -29,7 +29,6 @@
 #include <messagelist/messagelist_export.h>
 
 class QPixmap;
-class QTimer;
 
 namespace KMime
 {
@@ -79,7 +78,6 @@ private:
   KMime::DateFormatter * mDateFormatter;
   bool mDisplayMessageToolTips;
   QString mCachedLocalizedUnknownText;
-  QTimer * mHeartBeatTimer;
 
   // pixmaps, never null
 

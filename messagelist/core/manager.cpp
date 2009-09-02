@@ -35,7 +35,6 @@
 #include "utils/configurethemesdialog_p.h"
 
 #include <QPixmap>
-#include <QTimer>
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
 
@@ -102,13 +101,9 @@ Manager::Manager()
 
 Manager::~Manager()
 {
-  mHeartBeatTimer->stop();
-
   saveConfiguration();
   removeAllAggregations();
   removeAllThemes();
-
-  delete mHeartBeatTimer;
 
   delete mPixmapMessageNew;
   delete mPixmapMessageUnread;
