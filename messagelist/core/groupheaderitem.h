@@ -28,21 +28,12 @@
 namespace MessageList
 {
 
-namespace Utils
-{
-  class ThemePreviewDelegate;
-} // namespace Utils
-
 namespace Core
 {
 
 class GroupHeaderItem : public Item
 {
-  friend class Model;
-  friend class ModelPrivate;
-  friend class Utils::ThemePreviewDelegate;
-
-protected:
+public:
   GroupHeaderItem( const QString &label );
   virtual ~GroupHeaderItem();
 
