@@ -89,7 +89,6 @@ private:
   Q_PRIVATE_SLOT(d, void loadSettings())
 
   class Private;
-  friend class Private;
   Private * const d;
 };
 
