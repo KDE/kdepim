@@ -37,7 +37,7 @@
 
 #include <map>
 #include <qstring.h>
-namespace KMail {
+namespace MailViewer {
 
   namespace Interface {
     class BodyPartFormatter;
@@ -50,12 +50,12 @@ namespace KMail {
       }
     };
 
-    typedef std::map<const char*, const KMail::Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
+    typedef std::map<const char*, const MailViewer::Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
     typedef std::map<const char*, SubtypeRegistry, ltstr> TypeRegistry;
 
     // defined in bodypartformatters.cpp
     extern void kmail_create_builtin_bodypart_formatters( TypeRegistry * );
   }
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_BODYPARTFORMATTERFACTORY_P_H__

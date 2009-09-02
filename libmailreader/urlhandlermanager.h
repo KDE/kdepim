@@ -40,7 +40,7 @@ class QString;
 class QPoint;
 class KMReaderWin;
 
-namespace KMail {
+namespace MailViewer {
 
   class URLHandler;
 
@@ -82,7 +82,7 @@ namespace KMail {
     BodyPartURLHandlerManager * mBodyPartURLHandlerManager;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_URLHANDLERMANAGER_H__
 

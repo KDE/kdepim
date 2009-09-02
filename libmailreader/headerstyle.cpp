@@ -66,9 +66,8 @@ using namespace KPIM;
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 
-using namespace MailViewer;
 
-namespace KMail {
+namespace MailViewer {
 
   //
   // Convenience functions:
@@ -89,7 +88,7 @@ namespace KMail {
   //
 
   class BriefHeaderStyle : public HeaderStyle {
-    friend class ::KMail::HeaderStyle;
+    friend class ::MailViewer::HeaderStyle;
   protected:
     BriefHeaderStyle() : HeaderStyle() {}
     virtual ~BriefHeaderStyle() {}
@@ -154,17 +153,17 @@ namespace KMail {
       if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
         fromStr = message->fromStrip(); // let's use that
 */
-      QString fromPart = KMail::StringUtil::emailAddrAsAnchor( fromStr, true );
+      QString fromPart = MailViewer::StringUtil::emailAddrAsAnchor( fromStr, true );
       if ( !vCardName.isEmpty() )
         fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\">" + i18n("[vCard]") + "</a>";
       headerParts << fromPart;
     }
 
     if ( strategy->showHeader( "cc" ) && message->cc(false) )
-      headerParts << i18n("CC: ") + KMail::StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true );
+      headerParts << i18n("CC: ") + MailViewer::StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true );
 
     if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
-      headerParts << i18n("BCC: ") + KMail::StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true );
+      headerParts << i18n("BCC: ") + MailViewer::StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true );
 
     if ( strategy->showHeader( "date" ) )
       headerParts << strToHtml(dateShortStr(message->date()->dateTime()));
@@ -186,7 +185,7 @@ namespace KMail {
   //
 
   class PlainHeaderStyle : public HeaderStyle {
-    friend class ::KMail::HeaderStyle;
+    friend class ::MailViewer::HeaderStyle;
   protected:
     PlainHeaderStyle() : HeaderStyle() {}
     virtual ~PlainHeaderStyle() {}
@@ -268,7 +267,7 @@ namespace KMail {
         fromStr = message->fromStrip(); // let's use that
 */
       headerStr.append( i18n("From: ") +
-                        KMail::StringUtil::emailAddrAsAnchor( fromStr, false, "", true ) );
+                        MailViewer::StringUtil::emailAddrAsAnchor( fromStr, false, "", true ) );
       if ( !vCardName.isEmpty() )
         headerStr.append("&nbsp;&nbsp;<a href=\"" + vCardName +
               "\">" + i18n("[vCard]") + "</a>" );
@@ -282,19 +281,19 @@ namespace KMail {
 
     if ( strategy->showHeader( "to" ) )
       headerStr.append(i18nc("To-field of the mailheader.", "To: ")+
-                       KMail::StringUtil::emailAddrAsAnchor(message->to()->asUnicodeString(),false) + "<br/>\n");
+                       MailViewer::StringUtil::emailAddrAsAnchor(message->to()->asUnicodeString(),false) + "<br/>\n");
 
     if ( strategy->showHeader( "cc" ) && message->cc(false) )
       headerStr.append(i18n("CC: ")+
-                       KMail::StringUtil::emailAddrAsAnchor(message->cc()->asUnicodeString(),false) + "<br/>\n");
+                       MailViewer::StringUtil::emailAddrAsAnchor(message->cc()->asUnicodeString(),false) + "<br/>\n");
 
     if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
       headerStr.append(i18n("BCC: ")+
-                       KMail::StringUtil::emailAddrAsAnchor(message->bcc()->asUnicodeString(),false) + "<br/>\n");
+                       MailViewer::StringUtil::emailAddrAsAnchor(message->bcc()->asUnicodeString(),false) + "<br/>\n");
 
     if ( strategy->showHeader( "reply-to" ) && message->replyTo(false))
       headerStr.append(i18n("Reply to: ")+
-                     KMail::StringUtil::emailAddrAsAnchor(message->replyTo()->asUnicodeString(),false) + "<br/>\n");
+                     MailViewer::StringUtil::emailAddrAsAnchor(message->replyTo()->asUnicodeString(),false) + "<br/>\n");
 
     headerStr += "</div>\n";
 
@@ -321,7 +320,7 @@ namespace KMail {
   //
 
   class FancyHeaderStyle : public HeaderStyle {
-    friend class ::KMail::HeaderStyle;
+    friend class ::MailViewer::HeaderStyle;
   protected:
     FancyHeaderStyle() : HeaderStyle() {}
     virtual ~FancyHeaderStyle() {}
@@ -583,10 +582,10 @@ namespace KMail {
       headerStr += QString("<tr><th>%1</th>\n"
                            "<td>")
                            .arg(i18n("From: "))
-                 + KMail::StringUtil::emailAddrAsAnchor( fromStr, false )
+                 + MailViewer::StringUtil::emailAddrAsAnchor( fromStr, false )
                  + ( message->headerByType( "Resent-From" ) ? "&nbsp;"
                                 + i18n("(resent from %1)",
-                                    KMail::StringUtil::emailAddrAsAnchor(
+                                    MailViewer::StringUtil::emailAddrAsAnchor(
                                     message->headerByType( "Resent-From" )->asUnicodeString(),false) )
                               : QString("") )
                  + ( !vCardName.isEmpty() ? "&nbsp;&nbsp;<a href=\"" + vCardName + "\">"
@@ -604,21 +603,21 @@ namespace KMail {
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td>%2</td></tr>\n")
                             .arg(i18nc("To-field of the mail header.","To: "))
-                            .arg(KMail::StringUtil::emailAddrAsAnchor(message->to()->asUnicodeString(),false)));
+                            .arg(MailViewer::StringUtil::emailAddrAsAnchor(message->to()->asUnicodeString(),false)));
 
     // cc line, if any
     if ( strategy->showHeader( "cc" ) && message->cc(false))
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td>%2</td></tr>\n")
                               .arg(i18n("CC: "))
-                              .arg(KMail::StringUtil::emailAddrAsAnchor(message->cc()->asUnicodeString(),false)));
+                              .arg(MailViewer::StringUtil::emailAddrAsAnchor(message->cc()->asUnicodeString(),false)));
 
     // Bcc line, if any
     if ( strategy->showHeader( "bcc" ) && message->bcc(false))
       headerStr.append(QString("<tr><th>%1</th>\n"
                    "<td>%2</td></tr>\n")
                               .arg(i18n("BCC: "))
-                              .arg(KMail::StringUtil::emailAddrAsAnchor(message->bcc()->asUnicodeString(),false)));
+                              .arg(MailViewer::StringUtil::emailAddrAsAnchor(message->bcc()->asUnicodeString(),false)));
 
     if ( strategy->showHeader( "date" ) )
       headerStr.append(QString("<tr><th>%1</th>\n"
@@ -670,7 +669,7 @@ namespace KMail {
 // #####################
 
   class EnterpriseHeaderStyle : public HeaderStyle {
-    friend class ::KMail::HeaderStyle;
+    friend class ::MailViewer::HeaderStyle;
   protected:
     EnterpriseHeaderStyle() : HeaderStyle() {}
     virtual ~EnterpriseHeaderStyle() {}
@@ -728,15 +727,15 @@ namespace KMail {
 //TODO(Andras) this looks like  duplicate code, try to factor out!
     QStringList headerParts;
     if ( strategy->showHeader( "to" ) ) {
-      headerParts << KMail::StringUtil::emailAddrAsAnchor( message->to()->asUnicodeString(), false, linkColor );
+      headerParts << MailViewer::StringUtil::emailAddrAsAnchor( message->to()->asUnicodeString(), false, linkColor );
     }
 
     if ( strategy->showHeader( "cc" ) && message->cc(false) ) {
-      headerParts << i18n("CC: ") + KMail::StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true, linkColor );
+      headerParts << i18n("CC: ") + MailViewer::StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true, linkColor );
     }
 
     if ( strategy->showHeader( "bcc" ) && message->bcc(false) ) {
-      headerParts << i18n("BCC: ") + KMail::StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true, linkColor );
+      headerParts << i18n("BCC: ") + MailViewer::StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true, linkColor );
     }
 
     // remove all empty (modulo whitespace) entries and joins them via ", \n"
@@ -798,7 +797,7 @@ namespace KMail {
         fromStr = message->fromStrip(); // let's use that
         */
       // TODO vcard
-      QString fromPart = KMail::StringUtil::emailAddrAsAnchor( fromStr, true, linkColor );
+      QString fromPart = MailViewer::StringUtil::emailAddrAsAnchor( fromStr, true, linkColor );
       if ( !vCardName.isEmpty() )
         fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" "+linkColor+">" + i18n("[vCard]") + "</a>";
       //TDDO strategy date
@@ -948,4 +947,4 @@ namespace KMail {
     }
 
 
-} // namespace KMail
+} // namespace MailViewer

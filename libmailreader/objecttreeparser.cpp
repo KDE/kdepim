@@ -116,7 +116,7 @@ using KPIMUtils::LinkLocator;
 
 using namespace MailViewer;
 
-namespace KMail {
+namespace MailViewer {
 
   // A small class that eases temporary CryptPlugWrapper changes:
   class ObjectTreeParser::CryptoProtocolSaver {
@@ -141,8 +141,8 @@ namespace KMail {
                                       bool showOnlyOneMimePart, bool keepEncryptions,
                                       bool includeSignatures,
                                       const AttachmentStrategy * strategy,
-                                      HtmlWriter * htmlWriter,
-                                      CSSHelper * cssHelper )
+                                      MailViewer::HtmlWriter * htmlWriter,
+                                      MailViewer::CSSHelper * cssHelper )
     : mReader( reader ),
       mCryptoProtocol( protocol ),
       mShowOnlyOneMimePart( showOnlyOneMimePart ),
@@ -265,8 +265,8 @@ namespace KMail {
            = BodyPartFormatterFactory::instance()->createFor( c->contentType()->mediaType(), c->contentType()->subType() ) ) {
         PartNodeBodyPart part( c, codecFor( c ) );
         // Set the default display strategy for this body part relying on the
-        // identity of KMail::Interface::BodyPart::Display and AttachmentStrategy::Display
-        part.setDefaultDisplay( (KMail::Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
+        // identity of MailViewer::Interface::BodyPart::Display and AttachmentStrategy::Display
+        part.setDefaultDisplay( (MailViewer::Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
         const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
         switch ( result ) {
         case Interface::BodyPartFormatter::AsIcon:
@@ -1058,7 +1058,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
     }
     return false;
   }
-} // namespace KMail
+} // namespace MailViewer
 
 static bool isMailmanMessage( KMime::Content * curNode ) {
   if ( !curNode || curNode->head().isEmpty() )
@@ -1073,7 +1073,7 @@ static bool isMailmanMessage( KMime::Content * curNode ) {
   return false;
 }
 
-namespace KMail {
+namespace MailViewer {
 
   bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
     const QString str = QString::fromLatin1( curNode->decodedContent() );
@@ -1203,9 +1203,7 @@ namespace KMail {
       mTextualContentCharset = curNode->defaultCharset();
     }
 
-    QString label = curNode->contentDisposition()->filename().trimmed();
-    if ( label.isEmpty() )
-      label = curNode->contentType()->name().trimmed();
+    QString label = NodeHelper::fileName( curNode );
 
     const bool bDrawFrame = !isFirstTextPart
                           && !showOnlyOneMimePart()
@@ -1985,9 +1983,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
   }
 
   if ( !showOnlyOneMimePart() ) {
-    QString label = node->contentDisposition()->filename().trimmed();
-    if ( label.isEmpty() )
-      label = node->contentType()->name().trimmed();
+    QString label = NodeHelper::fileName( node );
     label = StringUtil::quoteHtmlChars( label, true );
     const QString comment = StringUtil::quoteHtmlChars( node->contentDescription()->asUnicodeString(), true );
     const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
@@ -2051,9 +2047,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
     if ( !mReader || !msgPart )
       return;
 
-    QString label = msgPart->contentDisposition()->filename();
-    if ( label.isEmpty() )
-      label = msgPart->contentType()->name();//TODO(Andras) check it!
+    QString label = NodeHelper::fileName( msgPart );
     if ( label.isEmpty() )
       label = i18nc( "display name for an unnamed attachment", "Unnamed" );
     label = StringUtil::quoteHtmlChars( label, true );
@@ -2982,11 +2976,11 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     // Cache Icons
     if ( mCollapseIcon.isEmpty() ) {
       mCollapseIcon= LinkLocator::pngToDataUrl(
-          KMail::IconNameCache::instance()->iconPath( "quotecollapse", 0 ));
+          MailViewer::IconNameCache::instance()->iconPath( "quotecollapse", 0 ));
     }
     if ( mExpandIcon.isEmpty() )
       mExpandIcon= LinkLocator::pngToDataUrl(
-          KMail::IconNameCache::instance()->iconPath( "quoteexpand", 0 ));
+          MailViewer::IconNameCache::instance()->iconPath( "quoteexpand", 0 ));
   }
 
   while (beg<length)
@@ -3247,4 +3241,4 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
       return 0;
   }
 
-} // namespace KMail
+} // namespace MailViewer

@@ -149,7 +149,6 @@
 #endif
 
 using namespace MailViewer;
-using namespace KMail;
 using namespace KMime;
 
 // This function returns the complete data that were in this
@@ -397,7 +396,8 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
     mSavedRelativePosition( 0 ),
     mDecrytMessageOverwrite( false ),
     mShowSignatureDetails( false ),
-    mShowAttachmentQuicklist( true )
+    mShowAttachmentQuicklist( true ),
+    mMessage( 0 )
 {
   if ( !mainWindow )
     mainWindow = aParent;
@@ -421,7 +421,6 @@ KMReaderWin::KMReaderWin(QWidget *aParent,
   mMimeTreeAtBottom = true;
   mLastSerNum = 0;
   mWaitingForSerNum = 0;
-  mMessage = 0;
   mLastStatus.clear();
   mMsgDisplay = true;
   mPrinting = false;
@@ -596,10 +595,10 @@ void KMReaderWin::createActions()
   connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotShowMsgSrc()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
 
-  KAction *saveMessageAction = new KAction(i18n("&Save message"), this);
-  ac->addAction("save_message", saveMessageAction);
-  connect(saveMessageAction, SIGNAL(triggered(bool) ), SLOT(slotSaveMsg()));
-  saveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+  mSaveMessageAction = new KAction(i18n("&Save message"), this);
+  ac->addAction("save_message", mSaveMessageAction);
+  connect(mSaveMessageAction, SIGNAL(triggered(bool) ), SLOT(slotSaveMessage()));
+  mSaveMessageAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 
   //
   // Scroll actions
@@ -832,7 +831,7 @@ bool KMReaderWin::event(QEvent *e)
   if (e->type() == QEvent::PaletteChange)
   {
     delete mCSSHelper;
-    mCSSHelper = new KMail::CSSHelper( mViewer->view() );
+    mCSSHelper = new MailViewer::CSSHelper( mViewer->view() );
 /*FIXME(Andras) port it
     if (message())
       message()->readConfig();
@@ -851,7 +850,7 @@ void KMReaderWin::readConfig()
   KConfigGroup reader(Global::instance()->config(), "Reader");
 
   delete mCSSHelper;
-  mCSSHelper = new KMail::CSSHelper( mViewer->view() );
+  mCSSHelper = new MailViewer::CSSHelper( mViewer->view() );
 
   mNoMDNsWhenEncrypted = mdnGroup.readEntry( "not-send-when-encrypted", true );
 
@@ -1107,12 +1106,12 @@ void KMReaderWin::readGlobalOverrideCodec()
 
 void KMReaderWin::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
 {
-  if ( mMessage && !KMail::NodeHelper::instance()->nodeProcessed( mMessage ) ) {
+  if ( mMessage && !NodeHelper::instance()->nodeProcessed( mMessage ) ) {
     kWarning() << "The root node is not yet processed! Danger!";
     return;
   }
 
-  if ( mMessage && KMail::NodeHelper::instance()->nodeBeingProcessed( mMessage ) ) {
+  if ( mMessage && NodeHelper::instance()->nodeBeingProcessed( mMessage ) ) {
     kWarning() << "The root node is not yet fully processed! Danger!";
     return;
   }
@@ -1122,13 +1121,13 @@ void KMReaderWin::setMessageItem(const Akonadi::Item &item, UpdateMode updateMod
       delete mMessage;
       mMessage = 0;
     }
-    KMail::NodeHelper::instance()->clear();
+    NodeHelper::instance()->clear();
     mMimePartModel->setRoot( 0 );
 
     mMessage = 0; //forget the old message if it was set
     mMessageItem = item;
 
-    if ( !mMessageItem.hasPayload<MessagePtr>() ) {
+    if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
       kWarning() << "Payload is not a MessagePtr!";
       return;
     }
@@ -1156,7 +1155,7 @@ void KMReaderWin::setMessage(KMime::Message* aMsg, UpdateMode updateMode, Owners
     delete mMessage;
     mMessage = 0;
   }
-  KMail::NodeHelper::instance()->clear();
+  NodeHelper::instance()->clear();
   mMimePartModel->setRoot( 0 );
 
 
@@ -1555,11 +1554,7 @@ QString KMReaderWin::writeMessagePartToTempFile(KMime::Content* aMsgPart)
     return existingFileName.toLocalFile();
   }
 
-  QString fileName = aMsgPart->contentDisposition()->filename();
-
-  if ( fileName.isEmpty() )
-    fileName = aMsgPart->contentType()->name();
-
+  QString fileName = NodeHelper::fileName( aMsgPart );
 
   QString fname = createTempDir( aMsgPart->index().toString() );
   if ( fname.isEmpty() )
@@ -1638,23 +1633,6 @@ void KMReaderWin::slotPrintMsg()
   mViewer->view()->print();
   deleteLater();
 }
-
-
-//-----------------------------------------------------------------------------
-int KMReaderWin::msgPartFromUrl( const KUrl &aUrl )
-{
-  if ( aUrl.isEmpty() ) return -1;
-  if ( !aUrl.isLocalFile() ) return -1;
-
-  QString path = aUrl.toLocalFile();
-  uint right = path.lastIndexOf( '/' );
-  uint left = path.lastIndexOf( '.', right );
-
-  bool ok;
-  int res = path.mid( left + 1, right - left - 1 ).toInt( &ok );
-  return ( ok ) ? res : -1;
-}
-
 
 //-----------------------------------------------------------------------------
 void KMReaderWin::resizeEvent( QResizeEvent * )
@@ -1816,8 +1794,10 @@ void KMReaderWin::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
 //-----------------------------------------------------------------------------
 void KMReaderWin::prepareHandleAttachment( int id, const QString& fileName )
 {
+  /*TODO(Andras) remove the whole method
   mAtmCurrent = id;
   mAtmCurrentName = fileName;
+  */
 }
 
 //-----------------------------------------------------------------------------
@@ -2142,8 +2122,7 @@ void KMReaderWin::slotAtmView( KMime::Content *atmNode )
   if ( atmNode ) {
     QString fileName = tempFileUrlFromNode( atmNode).toLocalFile();
 
-    QString pname = atmNode->contentDisposition()->filename();
-    if (pname.isEmpty()) pname = atmNode->contentType()->name();
+    QString pname = NodeHelper::fileName( atmNode );
     if (pname.isEmpty()) pname = atmNode->contentDescription()->asUnicodeString();
     if (pname.isEmpty()) pname = "unnamed";
     // image Attachment is saved already
@@ -2164,52 +2143,44 @@ void KMReaderWin::slotAtmView( KMime::Content *atmNode )
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::openAttachment( int id, const QString & name )
+void KMReaderWin::openAttachment( KMime::Content* node, const QString & name )
 {
-/*FIXME(Andras) port it!
-  mAtmCurrentName = name;
-  mAtmCurrent = id;
+  if( !node ) {
+    return;
+  }
 
+  QString atmName = name;
   QString str, pname, cmd, fileName;
 
-  partNode* node = mMessage ? mMessage->findId( id ) : 0;
-  if( !node ) {
-    kWarning() << "Could not find node" << id;
-    return;
-  }
-  if ( mAtmCurrentName.isEmpty() )
-    mAtmCurrentName = tempFileUrlFromNode( node ).toLocalFile();
+  if ( name.isEmpty() )
+    atmName = tempFileUrlFromNode( node ).toLocalFile();
 
-  KMMessagePart& msgPart = node->msgPart();
-  if (kasciistricmp(msgPart.typeStr(), "message")==0)
+  if ( node->contentType()->mediaType() == "message" )
   {
-    atmViewMsg(&msgPart);
+    atmViewMsg( node );
     return;
   }
-
-  QByteArray contentTypeStr( msgPart.typeStr() + '/' + msgPart.subtypeStr() );
-  kAsciiToLower( contentTypeStr.data() );
 
   // determine the MIME type of the attachment
   KMimeType::Ptr mimetype;
   // prefer the value of the Content-Type header
-  mimetype = KMimeType::mimeType( QString::fromLatin1( contentTypeStr ), KMimeType::ResolveAliases );
+  mimetype = KMimeType::mimeType( QString::fromLatin1( node->contentType()->mimeType().toLower() ), KMimeType::ResolveAliases );
   if ( !mimetype.isNull() && mimetype->is( KABC::Addressee::mimeType() ) ) {
-    showVCard( &msgPart );
+    showVCard( node );
     return;
   }
 
   // special case treatment on mac
-  if ( KMail::Util::handleUrlOnMac( mAtmCurrentName ) )
+  if ( MailViewer::Util::handleUrlOnMac( atmName ) )
     return;
 
   if ( mimetype.isNull() ) {
     // consider the filename if mimetype can not be found by content-type
-    mimetype = KMimeType::findByPath( name, 0, true /* no disk access */ /*FIXME(Andras) );
+    mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
 
   }
   if ( ( mimetype->name() == "application/octet-stream" )
-       && msgPart.isComplete() ) {
+      /*FIXME(Andras) port it && msgPart.isComplete() */) {
     // consider the attachment's contents if neither the Content-Type header
     // nor the filename give us a clue
     mimetype = KMimeType::findByFileContent( name );
@@ -2219,9 +2190,8 @@ void KMReaderWin::openAttachment( int id, const QString & name )
       KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 
   QString open_text;
-  QString filenameText = msgPart.fileName();
-  if ( filenameText.isEmpty() )
-    filenameText = msgPart.name();
+  QString filenameText = NodeHelper::fileName( node );
+
   if ( offer ) {
     open_text = i18n("&Open with '%1'", offer->name() );
   } else {
@@ -2237,27 +2207,18 @@ void KMReaderWin::openAttachment( int id, const QString & name )
       QString::fromLatin1("askSave") + mimetype->name() );
 
   if( choice == KMessageBox::Yes ) { // Save
-    mAtmUpdate = true;
-    KMHandleAttachmentCommand* command = new KMHandleAttachmentCommand( node,
-        message(), mAtmCurrent, mAtmCurrentName, KMHandleAttachmentCommand::Save,
-        offer, this );
-    connect( command, SIGNAL( showAttachment( int, const QString& ) ),
-        this, SLOT( slotAtmView( int, const QString& ) ) );
-    command->start();
+    saveAttachments( KMime::Content::List() << node );
   }
   else if( choice == KMessageBox::No ) { // Open
-    KMHandleAttachmentCommand::AttachmentAction action = ( offer ?
-        KMHandleAttachmentCommand::Open : KMHandleAttachmentCommand::OpenWith );
-    mAtmUpdate = true;
-    KMHandleAttachmentCommand* command = new KMHandleAttachmentCommand( node,
-        message(), mAtmCurrent, mAtmCurrentName, action, offer, this );
-    connect( command, SIGNAL( showAttachment( int, const QString& ) ),
-        this, SLOT( slotAtmView( int, const QString& ) ) );
-    command->start();
+    if ( offer ) {
+      attachmentOpen( node );
+    } else {
+      attachmentOpenWith( node );
+    }
   } else { // Cancel
     kDebug() <<"Canceled opening attachment";
   }
-  */
+  
 }
 
 //-----------------------------------------------------------------------------
@@ -2471,7 +2432,7 @@ KUrl KMReaderWin::tempFileUrlFromNode( const KMime::Content *node )
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::slotSaveMsg()
+void KMReaderWin::slotSaveMessage()
 {
    KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( mMessage->subject()->asUnicodeString().trimmed()
                                   .replace( QDir::separator(), '_' ) ),
@@ -2554,10 +2515,10 @@ bool KMReaderWin::eventFilter( QObject *, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>(e);
     if ( me->button() == Qt::LeftButton && ( me->modifiers() & Qt::ShiftModifier ) ) {
       // special processing for shift+click
-      mAtmCurrent = msgPartFromUrl( mUrlClicked );
-      if ( mAtmCurrent < 0 ) return false; // not an attachment
-      mAtmCurrentName = mUrlClicked.toLocalFile();
-//FIXME(Andras) port to akonadi      slotHandleAttachment( KMHandleAttachmentCommand::Save ); // save
+      KMime::Content *node = nodeFromUrl( mUrlClicked );
+      if ( node ) {
+        saveAttachments( KMime::Content::List() << node);
+      }
       return true; // eat event
     }
   }
@@ -2612,12 +2573,12 @@ bool KMReaderWin::slotEditAttachment( KMime::Content * node, bool showWarning )
   file.write( node->decodedContent() );
   file.flush();
 
-  KMail::EditorWatcher *watcher =
-      new KMail::EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
+  EditorWatcher *watcher =
+      new EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
                                 false, this, this );
   mEditorWatchers[ watcher ] = node;
 
-  connect( watcher, SIGNAL(editDone(KMail::EditorWatcher*)), SLOT(slotAttachmentEditDone(KMail::EditorWatcher*)) );
+  connect( watcher, SIGNAL(editDone(EditorWatcher*)), SLOT(slotAttachmentEditDone(EditorWatcher*)) );
   if ( !watcher->start() ) {
     QFile::remove( file.fileName() );
   }
@@ -2629,7 +2590,7 @@ bool KMReaderWin::slotEditAttachment( KMime::Content * node, bool showWarning )
   */
 }
 
-void KMReaderWin::slotAttachmentEditDone(KMail::EditorWatcher* editorWatcher)
+void KMReaderWin::slotAttachmentEditDone( MailViewer::EditorWatcher* editorWatcher )
 {
   QString name = editorWatcher->url().fileName();
   if ( editorWatcher->fileChanged() ) {
@@ -2648,7 +2609,7 @@ void KMReaderWin::slotAttachmentEditDone(KMail::EditorWatcher* editorWatcher)
   QFile::remove( name );
 }
 
-KMail::CSSHelper* KMReaderWin::cssHelper() const
+MailViewer::CSSHelper* KMReaderWin::cssHelper() const
 {
   return mCSSHelper;
 }
@@ -2741,11 +2702,11 @@ QString KMReaderWin::renderAttachments(KMime::Content * node, const QColor &bgCo
     QString label, icon;
     icon = NodeHelper::instance()->iconName( node, KIconLoader::Small );
     label = node->contentDescription()->asUnicodeString();
-    if( label.isEmpty() )
-      label = node->contentType()->name().trimmed();
-    if( label.isEmpty() )
-      label = node->contentDisposition()->filename();
-    bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
+    if( label.isEmpty() ) {
+      label = NodeHelper::fileName( node );
+    }
+
+bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
     if ( !typeBlacklisted && node->contentType()->mediaType() == "application" ) {
       typeBlacklisted = node->contentType()->subType() == "pgp-encrypted"
                      || node->contentType()->subType() == "pgp-signature"
@@ -2865,7 +2826,7 @@ KConfigSkeleton *KMReaderWin::configObject()
   return GlobalSettings::self();
 }
 
-using namespace KMail::Interface;
+using namespace MailViewer::Interface;
 
 void KMReaderWin::setBodyPartMemento( const KMime::Content *node,
                                       const QByteArray &which,
@@ -3000,23 +2961,54 @@ void KMReaderWin::slotAttachmentOpenWith()
   Q_FOREACH(QModelIndex index, selectedRows)
   {
      KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-     QString name = writeMessagePartToTempFile( content );
-     QString linkName = createAtmFileLink( name );
-     KUrl::List lst;
-     KUrl url;
-     bool autoDelete = true;
-
-     if ( linkName.isEmpty() ) {
-      autoDelete = false;
-      linkName = name;
-     }
-
-     url.setPath( linkName );
-     lst.append( url );
-     if ( (! KRun::displayOpenWithDialog(lst, this, autoDelete)) && autoDelete ) {
-       QFile::remove( url.toLocalFile() );
-     }
+     attachmentOpenWith( content );
  }
+}
+
+void KMReaderWin::attachmentOpenWith( KMime::Content *node )
+{
+  QString name = writeMessagePartToTempFile( node );
+  QString linkName = createAtmFileLink( name );
+  KUrl::List lst;
+  KUrl url;
+  bool autoDelete = true;
+
+  if ( linkName.isEmpty() ) {
+  autoDelete = false;
+  linkName = name;
+  }
+
+  url.setPath( linkName );
+  lst.append( url );
+  if ( (! KRun::displayOpenWithDialog(lst, this, autoDelete)) && autoDelete ) {
+    QFile::remove( url.toLocalFile() );
+  }
+}
+
+void KMReaderWin::attachmentOpen( KMime::Content *node )
+{
+  KService::Ptr offer(0);
+  offer = getServiceOffer( node );
+  if ( !offer ) {
+    kDebug() << "got no offer";
+    return;
+  }
+  QString name = writeMessagePartToTempFile( node );
+  KUrl::List lst;
+  KUrl url;
+  bool autoDelete = true;
+  QString fname = createAtmFileLink( name );
+
+  if ( fname.isNull() ) {
+    autoDelete = false;
+    fname = name;
+  }
+
+  url.setPath( fname );
+  lst.append( url );
+  if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
+      QFile::remove(url.toLocalFile());
+  }
 }
 
 void KMReaderWin::slotAttachmentOpen()
@@ -3028,28 +3020,7 @@ void KMReaderWin::slotAttachmentOpen()
   Q_FOREACH(QModelIndex index, selectedRows)
   {
     KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
-    KService::Ptr offer(0);
-    offer = getServiceOffer( content );
-    if ( !offer ) {
-      kDebug() << "got no offer";
-      continue;
-    }
-    QString name = writeMessagePartToTempFile( content );
-    KUrl::List lst;
-    KUrl url;
-    bool autoDelete = true;
-    QString fname = createAtmFileLink( name );
-
-    if ( fname.isNull() ) {
-      autoDelete = false;
-      fname = name;
-    }
-
-    url.setPath( fname );
-    lst.append( url );
-    if ( (!KRun::run( *offer, lst, 0, autoDelete )) && autoDelete ) {
-        QFile::remove(url.toLocalFile());
-    }
+    attachmentOpen( content );
   }
 }
 

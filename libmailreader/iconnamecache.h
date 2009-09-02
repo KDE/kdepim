@@ -22,7 +22,7 @@
 #include <QMap>
 #include <QString>
 
-namespace KMail
+namespace MailViewer
 {
 
 /**

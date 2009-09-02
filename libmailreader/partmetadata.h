@@ -24,7 +24,7 @@
 #include <QString>
 #include <qdatetime.h>
 
-namespace KMail {
+namespace MailViewer {
 
   class PartMetaData {
   public:
@@ -61,7 +61,7 @@ namespace KMail {
     bool isEncapsulatedRfc822Message : 1;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // _KMAIL_PARTMETADATA_H_
 

@@ -23,7 +23,7 @@
 #include <dom/html_document.h>
 #include <dom/dom_element.h>
 
-namespace KMail {
+namespace MailViewer {
 
 HTMLQuoteColorer::HTMLQuoteColorer( KPIM::CSSHelper *cssHelper )
   : mCSSHelper( cssHelper )

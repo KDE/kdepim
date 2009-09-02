@@ -37,7 +37,7 @@
 class QByteArray;
 class QString;
 
-namespace KMail {
+namespace MailViewer {
   namespace Interface {
 
 /*FIXME(Andras) review, port
@@ -53,7 +53,7 @@ namespace KMail {
 #if 0
 /*FIXME(Andras) review, port
       /** If your BodyPartMemento implementation also implements the
-	  KMail::Observer interface, simply implement these as
+	  MailViewer::Observer interface, simply implement these as
 	  <code>return this;</code>, else as <code>return
 	  0;</code>. This is needed to avoid forcing a dependency of
 	  plugins on internal KMail classes.
@@ -61,7 +61,7 @@ namespace KMail {
       virtual Observer * asObserver() = 0;
 
       /** If your BodyPartMemento implementation also implements the
-	  KMail::Observable interface, simply implement these as
+	  MailViewer::Observable interface, simply implement these as
 	  <code>return this;</code>, else as <code>return
 	  0;</code>. This is needed to avoid forcing a dependency of
 	  plugins on internal KMail classes.
@@ -161,6 +161,6 @@ namespace KMail {
 
   } // namespace Interface
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_INTERFACES_BODYPART_H__

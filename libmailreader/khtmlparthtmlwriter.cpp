@@ -44,7 +44,7 @@
 #include <cassert>
 #include <QByteArray>
 
-namespace KMail {
+namespace MailViewer {
 
   KHtmlPartHtmlWriter::KHtmlPartHtmlWriter( KHTMLPart * part,
                                             QObject * parent, const char * name )
@@ -152,6 +152,6 @@ namespace KMail {
     }
   }
 
-} // namespace KMail
+} // namespace MailViewer
 
 #include "khtmlparthtmlwriter.moc"

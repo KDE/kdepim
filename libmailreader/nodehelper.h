@@ -31,10 +31,13 @@ namespace KMime {
   class Message;
 }
 
-namespace KMail {
+namespace MailViewer {
   namespace Interface {
     class BodyPartMemento;
   }
+}
+
+namespace MailViewer {
 
 /**
   @author Andras Mantia <andras@kdab.net>
@@ -123,9 +126,14 @@ public:
 
     static QByteArray path(const KMime::Content* node);
 
-    KMail::Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+    /** Returns a usable filename for a node, that can be the filename from the
+    * content disposition header, or if that one is empty, the name from the
+    * content type header. */
+    static QString fileName(const KMime::Content* node);
 
-    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, KMail::Interface::BodyPartMemento *memento );
+    MailViewer::Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+
+    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, MailViewer::Interface::BodyPartMemento *memento );
 
 private:
     NodeHelper();
@@ -139,7 +147,7 @@ private:
     QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
                           const QString& newPrefix ) const;
 
-    void clearBodyPartMemento(QMap<QByteArray, KMail::Interface::BodyPartMemento*> bodyPartMementoMap);
+    void clearBodyPartMemento(QMap<QByteArray, MailViewer::Interface::BodyPartMemento*> bodyPartMementoMap);
 
     static NodeHelper * mSelf;
 
@@ -151,7 +159,7 @@ private:
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-    QMap<KMime::Content*, QMap<QByteArray,KMail::Interface::BodyPartMemento*> > mBodyPartMementoMap;
+    QMap<KMime::Content*, QMap<QByteArray,MailViewer::Interface::BodyPartMemento*> > mBodyPartMementoMap;
 };
 
 }

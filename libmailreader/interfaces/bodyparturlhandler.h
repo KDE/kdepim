@@ -36,7 +36,7 @@
 class QString;
 class QPoint;
 
-namespace KMail {
+namespace MailViewer {
   class Callback;
 
   namespace Interface {
@@ -99,7 +99,7 @@ namespace KMail {
 
   } // namespace Interface
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_INTERFACES_BODYPARTURLHANDLER_H__
 

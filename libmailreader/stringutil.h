@@ -33,7 +33,7 @@ namespace KMime
   }
 }
 
-namespace KMail
+namespace MailViewer
 {
 
 /**

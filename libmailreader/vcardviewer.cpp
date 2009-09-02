@@ -33,7 +33,7 @@ using KABC::Addressee;
 
 #include <QString>
 
-KMail::VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
+MailViewer::VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
   : KDialog( parent )
 {
   setCaption( i18n("VCard Viewer") );
@@ -71,16 +71,16 @@ KMail::VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
   resize(300,400);
 }
 
-KMail::VCardViewer::~VCardViewer()
+MailViewer::VCardViewer::~VCardViewer()
 {
 }
 
-void KMail::VCardViewer::slotUser1()
+void MailViewer::VCardViewer::slotUser1()
 {
   KPIM::KAddrBookExternal::addVCard( *itAddresseeList, this );
 }
 
-void KMail::VCardViewer::slotUser2()
+void MailViewer::VCardViewer::slotUser2()
 {
   // next vcard
   mAddresseeView->setAddressee( *(++itAddresseeList) );
@@ -89,7 +89,7 @@ void KMail::VCardViewer::slotUser2()
   enableButton(User3, true);
 }
 
-void KMail::VCardViewer::slotUser3()
+void MailViewer::VCardViewer::slotUser3()
 {
   // previous vcard
   mAddresseeView->setAddressee( *(--itAddresseeList) );

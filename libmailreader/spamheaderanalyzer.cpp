@@ -41,7 +41,6 @@
 
 #include <kdebug.h>
 
-using namespace KMail; //for AntiSpamConfig
 using namespace MailViewer;
 
 // static

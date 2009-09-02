@@ -26,7 +26,7 @@ namespace KPIM
   class CSSHelper;
 }
 
-namespace KMail
+namespace MailViewer
 {
 
 /**

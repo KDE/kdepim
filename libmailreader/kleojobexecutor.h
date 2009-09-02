@@ -36,7 +36,7 @@ namespace Kleo {
   class VerifyOpaqueJob;
 }
 
-namespace KMail {
+namespace MailViewer {
 
 /**
   Helper class for synchronous execution of Kleo crypto jobs.

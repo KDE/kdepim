@@ -40,10 +40,10 @@
 
 #include <QStringList>
 
-using namespace KMail;
+using namespace MailViewer;
 
 
-namespace KMail {
+namespace MailViewer {
   class AntiSpamConfigSingletonProvider
   {
     public:

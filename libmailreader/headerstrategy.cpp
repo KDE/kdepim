@@ -36,9 +36,8 @@
 #include <kdebug.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-using namespace MailViewer;
 
-namespace KMail {
+namespace MailViewer {
 
   //
   // Header tables:
@@ -80,7 +79,7 @@ namespace KMail {
   //
 
   class AllHeaderStrategy : public HeaderStrategy {
-    friend class ::KMail::HeaderStrategy;
+    friend class ::MailViewer::HeaderStrategy;
   protected:
     AllHeaderStrategy() : HeaderStrategy() {}
     virtual ~AllHeaderStrategy() {}
@@ -103,7 +102,7 @@ namespace KMail {
   //
 
   class RichHeaderStrategy : public HeaderStrategy {
-    friend class ::KMail::HeaderStrategy;
+    friend class ::MailViewer::HeaderStrategy;
   protected:
     RichHeaderStrategy()
       : HeaderStrategy(),
@@ -128,7 +127,7 @@ namespace KMail {
   //
 
   class StandardHeaderStrategy : public HeaderStrategy {
-    friend class ::KMail::HeaderStrategy;
+    friend class ::MailViewer::HeaderStrategy;
   protected:
     StandardHeaderStrategy()
       : HeaderStrategy(),
@@ -153,7 +152,7 @@ namespace KMail {
   //
 
   class BriefHeaderStrategy : public HeaderStrategy {
-    friend class ::KMail::HeaderStrategy;
+    friend class ::MailViewer::HeaderStrategy;
   protected:
     BriefHeaderStrategy()
       : HeaderStrategy(),
@@ -179,7 +178,7 @@ namespace KMail {
   //
 
   class CustomHeaderStrategy : public HeaderStrategy {
-    friend class ::KMail::HeaderStrategy;
+    friend class ::MailViewer::HeaderStrategy;
   protected:
     CustomHeaderStrategy();
     virtual ~CustomHeaderStrategy() {}
@@ -307,4 +306,4 @@ namespace KMail {
     return customStrategy;
   }
 
-} // namespace KMail
+} // namespace MailViewer

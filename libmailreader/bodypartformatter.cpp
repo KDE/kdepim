@@ -43,20 +43,20 @@
 
 namespace {
   class AnyTypeBodyPartFormatter
-    : public KMail::BodyPartFormatter,
-      public KMail::Interface::BodyPartFormatter {
+    : public MailViewer::BodyPartFormatter,
+      public MailViewer::Interface::BodyPartFormatter {
     static const AnyTypeBodyPartFormatter * self;
   public:
-    Result format( KMail::Interface::BodyPart *, KMail::HtmlWriter * ) const {
-      kDebug() << "Acting as a KMail::Interface::BodyPartFormatter!";
+    Result format( MailViewer::Interface::BodyPart *, MailViewer::HtmlWriter * ) const {
+      kDebug() << "Acting as a MailViewer::Interface::BodyPartFormatter!";
       return AsIcon;
     }
 
-    bool process( KMail::ObjectTreeParser *, KMime::Content *, KMail::ProcessResult & result ) const {
+    bool process( MailViewer::ObjectTreeParser *, KMime::Content *, MailViewer::ProcessResult & result ) const {
       result.setNeverDisplayInline( true );
       return false;
     }
-    static const KMail::BodyPartFormatter * create() {
+    static const MailViewer::BodyPartFormatter * create() {
       if ( !self )
 	self = new AnyTypeBodyPartFormatter();
       return self;
@@ -66,14 +66,14 @@ namespace {
   const AnyTypeBodyPartFormatter * AnyTypeBodyPartFormatter::self = 0;
 
 
-  class ImageTypeBodyPartFormatter : public KMail::BodyPartFormatter {
+  class ImageTypeBodyPartFormatter : public MailViewer::BodyPartFormatter {
     static const ImageTypeBodyPartFormatter * self;
   public:
-    bool process( KMail::ObjectTreeParser *, KMime::Content *, KMail::ProcessResult & result ) const {
+    bool process( MailViewer::ObjectTreeParser *, KMime::Content *, MailViewer::ProcessResult & result ) const {
       result.setIsImage( true );
       return false;
     }
-    static const KMail::BodyPartFormatter * create() {
+    static const MailViewer::BodyPartFormatter * create() {
       if ( !self )
 	self = new ImageTypeBodyPartFormatter();
       return self;
@@ -83,11 +83,11 @@ namespace {
   const ImageTypeBodyPartFormatter * ImageTypeBodyPartFormatter::self = 0;
 
 #define CREATE_BODY_PART_FORMATTER(subtype) \
-  class subtype##BodyPartFormatter : public KMail::BodyPartFormatter { \
+  class subtype##BodyPartFormatter : public MailViewer::BodyPartFormatter { \
     static const subtype##BodyPartFormatter * self; \
   public: \
-    bool process( KMail::ObjectTreeParser *, KMime::Content *, KMail::ProcessResult & ) const; \
-    static const KMail::BodyPartFormatter * create() { \
+    bool process( MailViewer::ObjectTreeParser *, KMime::Content *, MailViewer::ProcessResult & ) const; \
+    static const MailViewer::BodyPartFormatter * create() { \
       if ( !self ) \
 	self = new subtype##BodyPartFormatter(); \
       return self; \
@@ -96,7 +96,7 @@ namespace {
   \
   const subtype##BodyPartFormatter * subtype##BodyPartFormatter::self; \
   \
-  bool subtype##BodyPartFormatter::process( KMail::ObjectTreeParser * otp, KMime::Content * node, KMail::ProcessResult & result ) const { \
+  bool subtype##BodyPartFormatter::process( MailViewer::ObjectTreeParser * otp, KMime::Content * node, MailViewer::ProcessResult & result ) const { \
     return otp->process##subtype##Subtype( node, result ); \
   }
 
@@ -124,13 +124,13 @@ namespace {
 #undef CREATE_BODY_PART_FORMATTER
 } // anon namespace
 
-// FIXME: port some more KMail::BodyPartFormatters to KMail::Interface::BodyPartFormatters
-void KMail::BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters( KMail::BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
+// FIXME: port some more MailViewer::BodyPartFormatters to MailViewer::Interface::BodyPartFormatters
+void MailViewer::BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters( MailViewer::BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
   if ( !reg ) return;
   (*reg)["application"]["octet-stream"] = new AnyTypeBodyPartFormatter();
 }
 
-typedef const KMail::BodyPartFormatter * (*BodyPartFormatterCreator)();
+typedef const MailViewer::BodyPartFormatter * (*BodyPartFormatterCreator)();
 
 struct SubtypeBuiltin {
   const char * subtype;
@@ -201,7 +201,7 @@ static const struct {
 
 #undef DIM
 
-static const KMail::BodyPartFormatter * createForText( const char * subtype ) {
+static const MailViewer::BodyPartFormatter * createForText( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {
     case 'h':
@@ -227,17 +227,17 @@ static const KMail::BodyPartFormatter * createForText( const char * subtype ) {
   return TextPlainBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForImage( const char * ) {
+static const MailViewer::BodyPartFormatter * createForImage( const char * ) {
   return ImageTypeBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForMessage( const char * subtype ) {
+static const MailViewer::BodyPartFormatter * createForMessage( const char * subtype ) {
   if ( kasciistricmp( subtype, "rfc822" ) == 0 )
     return MessageRfc822BodyPartFormatter::create();
   return AnyTypeBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForMultiPart( const char * subtype ) {
+static const MailViewer::BodyPartFormatter * createForMultiPart( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {
     case 'a':
@@ -260,7 +260,7 @@ static const KMail::BodyPartFormatter * createForMultiPart( const char * subtype
   return MultiPartMixedBodyPartFormatter::create();
 }
 
-static const KMail::BodyPartFormatter * createForApplication( const char * subtype ) {
+static const MailViewer::BodyPartFormatter * createForApplication( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {
     case 'p':
@@ -290,7 +290,7 @@ static const KMail::BodyPartFormatter * createForApplication( const char * subty
 }
 
 // OK, replace this with a factory with plugin support later on...
-const KMail::BodyPartFormatter * KMail::BodyPartFormatter::createFor( const char * type, const char * subtype ) {
+const MailViewer::BodyPartFormatter * MailViewer::BodyPartFormatter::createFor( const char * type, const char * subtype ) {
   if ( type && *type )
     switch ( type[0] ) {
     case 'a': // application

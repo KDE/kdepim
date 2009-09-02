@@ -51,12 +51,15 @@ namespace GpgME {
   class Error;
 }
 
-namespace KMail {
+namespace MailViewer {
+ class PartMetaData;
+ class HtmlWriter;
+ class CSSHelper;
+ class AttachmentStrategy;
+}
 
-  class AttachmentStrategy;
-  class HtmlWriter;
-  class PartMetaData;
-  class CSSHelper;
+namespace MailViewer {
+
 
   class ProcessResult {
   public:
@@ -110,9 +113,9 @@ namespace KMail {
     explicit ObjectTreeParser( KMReaderWin * reader=0, const Kleo::CryptoBackend::Protocol * protocol=0,
                       bool showOneMimePart=false, bool keepEncryptions=false,
                       bool includeSignatures=true,
-                      const KMail::AttachmentStrategy * attachmentStrategy=0,
-                      KMail::HtmlWriter * htmlWriter=0,
-                      KMail::CSSHelper * cssHelper=0 );
+                      const MailViewer::AttachmentStrategy * attachmentStrategy=0,
+                      MailViewer::HtmlWriter * htmlWriter=0,
+                      MailViewer::CSSHelper * cssHelper=0 );
     virtual ~ObjectTreeParser();
 
     void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
@@ -150,13 +153,13 @@ namespace KMail {
       mIncludeSignatures = include;
     }
 
-    const KMail::AttachmentStrategy * attachmentStrategy() const {
+    const MailViewer::AttachmentStrategy * attachmentStrategy() const {
       return mAttachmentStrategy;
     }
 
-    KMail::HtmlWriter * htmlWriter() const { return mHtmlWriter; }
+    MailViewer::HtmlWriter * htmlWriter() const { return mHtmlWriter; }
 
-    KMail::CSSHelper * cssHelper() const { return mCSSHelper; }
+    MailViewer::CSSHelper * cssHelper() const { return mCSSHelper; }
 
     /** Parse beginning at a given node and recursively parsing
         the children of that node and it's next sibling. */
@@ -263,11 +266,11 @@ namespace KMail {
                                GpgME::Signature::Summary summary,
                                int & frameColor,
                                bool & showKeyInfos );
-    QString writeSigstatHeader( KMail::PartMetaData & part,
+    QString writeSigstatHeader( MailViewer::PartMetaData & part,
                                 const Kleo::CryptoBackend::Protocol * cryptProto,
                                 const QString & fromAddress,
                                 const QString & filename = QString() );
-    QString writeSigstatFooter( KMail::PartMetaData & part );
+    QString writeSigstatFooter( MailViewer::PartMetaData & part );
 
     void writeBodyStr( const QByteArray & bodyString,
                        const QTextCodec * aCodec,
@@ -312,16 +315,16 @@ namespace KMail {
     bool mIncludeSignatures;
     bool mHasPendingAsyncJobs;
     bool mAllowAsync;
-    const KMail::AttachmentStrategy * mAttachmentStrategy;
-    KMail::HtmlWriter * mHtmlWriter;
-    KMail::CSSHelper * mCSSHelper;
+    const MailViewer::AttachmentStrategy * mAttachmentStrategy;
+    MailViewer::HtmlWriter * mHtmlWriter;
+    MailViewer::CSSHelper * mCSSHelper;
     // DataUrl Icons cache
     QString mCollapseIcon;
     QString mExpandIcon;
 
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // _KMAIL_OBJECTTREEPARSER_H_
 

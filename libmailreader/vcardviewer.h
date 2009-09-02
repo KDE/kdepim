@@ -27,7 +27,7 @@ namespace KPIM {
   class AddresseeView;
 }
 
-namespace KMail {
+namespace MailViewer {
 
   class VCardViewer : public KDialog
   {

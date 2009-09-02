@@ -45,7 +45,7 @@
 
 using namespace MailViewer;
 
-namespace KMail {
+namespace MailViewer {
 
   CSSHelper::CSSHelper( const QPaintDevice *pd ) :
     KPIM::CSSHelper( pd )
@@ -103,5 +103,5 @@ namespace KMail {
 
     recalculatePGPColors();
   }
-} // namespace KMail
+} // namespace MailViewer
 

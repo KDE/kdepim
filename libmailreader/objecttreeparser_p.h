@@ -52,11 +52,11 @@ namespace Kleo {
 
 class QStringList;
 
-namespace KMail {
+namespace MailViewer {
 
   class DecryptVerifyBodyPartMemento
     : public QObject,
-      public KMail::Interface::BodyPartMemento
+      public MailViewer::Interface::BodyPartMemento
   {
     Q_OBJECT
   public:
@@ -105,7 +105,7 @@ namespace KMail {
 
   class VerifyDetachedBodyPartMemento
     : public QObject,
-      public KMail::Interface::BodyPartMemento
+      public MailViewer::Interface::BodyPartMemento
   {
     Q_OBJECT
   public:
@@ -158,7 +158,7 @@ namespace KMail {
 
   class VerifyOpaqueBodyPartMemento
     : public QObject,
-      public KMail::Interface::BodyPartMemento
+      public MailViewer::Interface::BodyPartMemento
   {
     Q_OBJECT
   public:
@@ -211,6 +211,6 @@ namespace KMail {
   };
 
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // _KMAIL_OBJECTTREEPARSER_H_

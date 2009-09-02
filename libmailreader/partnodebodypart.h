@@ -42,7 +42,7 @@ namespace KMime {
   class Content;
 }
 
-namespace KMail {
+namespace MailViewer {
 
   /**
      @short an implementation of the BodyPart interface using partNodes
@@ -71,6 +71,6 @@ namespace KMail {
     BodyPart::Display mDefaultDisplay;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_PARTNODEBODYPART_H_

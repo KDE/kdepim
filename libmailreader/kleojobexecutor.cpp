@@ -30,7 +30,7 @@
 
 #include <cassert>
 
-using namespace KMail;
+using namespace MailViewer;
 using namespace Kleo;
 using namespace GpgME;
 using boost::shared_ptr;

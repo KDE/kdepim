@@ -40,7 +40,7 @@ namespace KMime {
     class Message;
 }
 
-namespace KMail {
+namespace MailViewer {
 
   class HeaderStrategy;
 
@@ -83,7 +83,7 @@ namespace KMail {
     // HeaderStyle interface:
     //
     virtual QString format( KMime::Message * message,
-			    const KMail::HeaderStrategy * strategy,
+			    const MailViewer::HeaderStrategy * strategy,
 			    const QString & vCardName,
 			    bool printing = false, bool topLevel = false ) const = 0;
 
@@ -92,6 +92,6 @@ namespace KMail {
 
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_HEADERSTYLE_H__

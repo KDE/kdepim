@@ -37,7 +37,7 @@ namespace KMime {
   class Content;
 }
 
-namespace KMail {
+namespace MailViewer {
 
   class AttachmentStrategy {
   protected:
@@ -76,6 +76,6 @@ namespace KMail {
     virtual Display defaultDisplay( KMime::Content * node ) const = 0;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_ATTACHMENTSTRATEGY_H__

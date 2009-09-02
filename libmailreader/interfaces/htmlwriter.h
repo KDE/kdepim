@@ -36,7 +36,7 @@
 class QByteArray;
 class QString;
 
-namespace KMail {
+namespace MailViewer {
 
   /**
    * @short An interface for HTML sinks.
@@ -114,7 +114,7 @@ namespace KMail {
     virtual void embedPart( const QByteArray & contentId, const QString & url ) = 0;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_INTERFACES_HTMLWRITER_H__
 

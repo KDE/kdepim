@@ -27,7 +27,7 @@
 
 class KProcess;
 
-namespace KMail {
+namespace MailViewer {
 
 /**
   Starts an editor for the given URL and emits an signal when
@@ -54,7 +54,7 @@ class EditorWatcher : public QObject
     bool fileChanged() const { return mFileModified; }
     KUrl url() { return mUrl;}
   signals:
-    void editDone( KMail::EditorWatcher* watcher );
+    void editDone( MailViewer::EditorWatcher* watcher );
 
   private slots:
     void editorExited();

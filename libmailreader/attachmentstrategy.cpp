@@ -37,7 +37,7 @@
 #include <kdebug.h>
 
 
-namespace KMail {
+namespace MailViewer {
 
 
   //
@@ -46,7 +46,7 @@ namespace KMail {
   //
 
   class IconicAttachmentStrategy : public AttachmentStrategy {
-    friend class ::KMail::AttachmentStrategy;
+    friend class ::MailViewer::AttachmentStrategy;
   protected:
     IconicAttachmentStrategy() : AttachmentStrategy() {}
     virtual ~IconicAttachmentStrategy() {}
@@ -75,7 +75,7 @@ namespace KMail {
   //
 
   class SmartAttachmentStrategy : public AttachmentStrategy {
-    friend class ::KMail::AttachmentStrategy;
+    friend class ::MailViewer::AttachmentStrategy;
   protected:
     SmartAttachmentStrategy() : AttachmentStrategy() {}
     virtual ~SmartAttachmentStrategy() {}
@@ -108,7 +108,7 @@ namespace KMail {
   //
 
   class InlinedAttachmentStrategy : public AttachmentStrategy {
-    friend class ::KMail::AttachmentStrategy;
+    friend class ::MailViewer::AttachmentStrategy;
   protected:
     InlinedAttachmentStrategy() : AttachmentStrategy() {}
     virtual ~InlinedAttachmentStrategy() {}
@@ -128,7 +128,7 @@ namespace KMail {
   //
 
   class HiddenAttachmentStrategy : public AttachmentStrategy {
-    friend class ::KMail::AttachmentStrategy;
+    friend class ::MailViewer::AttachmentStrategy;
   protected:
     HiddenAttachmentStrategy() : AttachmentStrategy() {}
     virtual ~HiddenAttachmentStrategy() {}
@@ -219,4 +219,4 @@ namespace KMail {
     return hiddenStrategy;
   }
 
-} // namespace KMail
+} // namespace MailViewer

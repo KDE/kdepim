@@ -38,7 +38,7 @@
 #include <QList>
 class QString;
 
-namespace KMail {
+namespace MailViewer {
 
   /// Valid types of SpamAgent
   typedef enum {
@@ -118,6 +118,6 @@ namespace KMail {
     void readConfig();
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_ANTISPAMCONFIG_H__

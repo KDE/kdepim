@@ -35,7 +35,7 @@
 class QString;
 class QStringList;
 
-namespace KMail {
+namespace MailViewer {
 
   class HeaderStrategy {
   protected:
@@ -75,6 +75,6 @@ namespace KMail {
     virtual bool showHeader( const QString & header ) const;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_HEADERSTRATEGY_H__

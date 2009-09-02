@@ -45,7 +45,7 @@
 
 using namespace MailViewer;
 
-KMail::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
+MailViewer::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
   : QLabel( parent, f ),
     mMode( Normal )
 {
@@ -57,9 +57,9 @@ KMail::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WF
   update();
 }
 
-KMail::HtmlStatusBar::~HtmlStatusBar() {}
+MailViewer::HtmlStatusBar::~HtmlStatusBar() {}
 
-void KMail::HtmlStatusBar::update() {
+void MailViewer::HtmlStatusBar::update() {
   QPalette pal = palette();
   pal.setColor( backgroundRole(), bgColor() );
   pal.setColor( foregroundRole(), fgColor() );
@@ -67,26 +67,26 @@ void KMail::HtmlStatusBar::update() {
   setText( message() );
 }
 
-void KMail::HtmlStatusBar::setNormalMode() {
+void MailViewer::HtmlStatusBar::setNormalMode() {
   setMode( Normal );
 }
 
-void KMail::HtmlStatusBar::setHtmlMode() {
+void MailViewer::HtmlStatusBar::setHtmlMode() {
   setMode( Html );
 }
 
-void KMail::HtmlStatusBar::setNeutralMode() {
+void MailViewer::HtmlStatusBar::setNeutralMode() {
   setMode( Neutral );
 }
 
-void KMail::HtmlStatusBar::setMode( Mode m ) {
+void MailViewer::HtmlStatusBar::setMode( Mode m ) {
   if ( m == mode() )
     return;
   mMode = m;
   update();
 }
 
-QString KMail::HtmlStatusBar::message() const {
+QString MailViewer::HtmlStatusBar::message() const {
   switch ( mode() ) {
   case Html: // bold: "HTML Message"
     return i18n( "<qt><b><br />H<br />T<br />M<br />L<br /> "
@@ -102,7 +102,7 @@ QString KMail::HtmlStatusBar::message() const {
 }
 
 
-QColor KMail::HtmlStatusBar::fgColor() const {
+QColor MailViewer::HtmlStatusBar::fgColor() const {
   KConfigGroup conf( Global::instance()->config(), "Reader" );
   QColor defaultColor, color;
   switch ( mode() ) {
@@ -126,7 +126,7 @@ QColor KMail::HtmlStatusBar::fgColor() const {
   }
 }
 
-QColor KMail::HtmlStatusBar::bgColor() const {
+QColor MailViewer::HtmlStatusBar::bgColor() const {
   KConfigGroup conf( Global::instance()->config(), "Reader" );
 
   QColor defaultColor, color;

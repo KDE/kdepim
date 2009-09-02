@@ -37,7 +37,7 @@
 class QString;
 class QColor;
 
-namespace KMail {
+namespace MailViewer {
 
   /**
    * @short The HTML statusbar widget for use with the reader.
@@ -97,6 +97,6 @@ namespace KMail {
     Mode mMode;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // _KMAIL_HTMLSTATUSBAR_H_

@@ -21,7 +21,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 
-namespace KMail {
+namespace MailViewer {
 
 K_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
 

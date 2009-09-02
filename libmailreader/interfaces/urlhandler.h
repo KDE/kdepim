@@ -38,7 +38,7 @@ class QString;
 class QPoint;
 class KMReaderWin;
 
-namespace KMail {
+namespace MailViewer {
   /**
    * @short An interface to reader link handlers
    * @author Marc Mutz <mutz@kde.org>
@@ -78,7 +78,7 @@ namespace KMail {
     virtual QString statusBarMessage( const KUrl & url, KMReaderWin * w ) const = 0;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_INTERFACES_URLHANDLER_H__
 

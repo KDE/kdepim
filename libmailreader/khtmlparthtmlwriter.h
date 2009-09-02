@@ -43,7 +43,7 @@
 class QString;
 class KHTMLPart;
 
-namespace KMail {
+namespace MailViewer {
 
   class KHtmlPartHtmlWriter : public QObject, public HtmlWriter {
     Q_OBJECT
@@ -83,6 +83,6 @@ namespace KMail {
     EmbeddedPartMap mEmbeddedPartMap;
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_KHTMLPARTHTMLWRITER_H__

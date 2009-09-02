@@ -49,9 +49,7 @@ using namespace KMime::HeaderParsing;
 
 #endif
 
-using namespace MailViewer;
-
-namespace KMail
+namespace MailViewer
 {
 
 namespace StringUtil

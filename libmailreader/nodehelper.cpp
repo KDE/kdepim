@@ -31,11 +31,11 @@
 
 #include <QTextCodec>
 
-KMail::NodeHelper * KMail::NodeHelper::mSelf = 0;
+MailViewer::NodeHelper * MailViewer::NodeHelper::mSelf = 0;
 
-namespace KMail {
+namespace MailViewer {
 
-NodeHelper * KMail::NodeHelper::instance()
+NodeHelper * MailViewer::NodeHelper::instance()
 {
   if ( !mSelf )
     mSelf = new NodeHelper();
@@ -140,7 +140,7 @@ void NodeHelper::clear()
   qDeleteAll(mUnencryptedMessages);
   mUnencryptedMessages.clear();
   mOverrideCodecs.clear();
-  for ( QMap<KMime::Content*, QMap< QByteArray, KMail::Interface::BodyPartMemento*> >::iterator
+  for ( QMap<KMime::Content*, QMap< QByteArray, MailViewer::Interface::BodyPartMemento*> >::iterator
         it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
         it != end; ++it ) {
     clearBodyPartMemento( it.value() );
@@ -148,9 +148,9 @@ void NodeHelper::clear()
   mBodyPartMementoMap.clear();
 }
 
-void NodeHelper::clearBodyPartMemento(QMap<QByteArray, KMail::Interface::BodyPartMemento*> bodyPartMementoMap)
+void NodeHelper::clearBodyPartMemento(QMap<QByteArray, MailViewer::Interface::BodyPartMemento*> bodyPartMementoMap)
 {
-  for ( QMap<QByteArray, KMail::Interface::BodyPartMemento*>::iterator
+  for ( QMap<QByteArray, MailViewer::Interface::BodyPartMemento*>::iterator
           it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
         it != end; ++it ) {
     delete it.value();
@@ -462,22 +462,31 @@ QByteArray NodeHelper::path(const KMime::Content* node)
   return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType(), const_cast<KMime::Content*>(node)->contentType()->subType(), nth ).toLocal8Bit();
 }
 
+QString NodeHelper::fileName(const KMime::Content* node)
+{
+  QString name = const_cast<KMime::Content*>(node)->contentDisposition()->filename();
+  if ( name.isEmpty() )
+      name = const_cast<KMime::Content*>(node)->contentType()->name();;
+
+  name = name.trimmed();
+  return name; 
+}
 
 //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalBodyPartMemento replacement
-KMail::Interface::BodyPartMemento *NodeHelper::bodyPartMemento( KMime::Content *node,
+MailViewer::Interface::BodyPartMemento *NodeHelper::bodyPartMemento( KMime::Content *node,
                                                const QByteArray &which ) const
 {
   if ( !mBodyPartMementoMap.contains( node ) )
     return 0;
-  const QMap<QByteArray,KMail::Interface::BodyPartMemento*>::const_iterator it =
+  const QMap<QByteArray,MailViewer::Interface::BodyPartMemento*>::const_iterator it =
   mBodyPartMementoMap[node].find( which.toLower() );
   return it != mBodyPartMementoMap[node].end() ? it.value() : 0 ;
 }
 
  //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement
-void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &which, KMail::Interface::BodyPartMemento *memento )
+void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &which, MailViewer::Interface::BodyPartMemento *memento )
 {
-  const QMap<QByteArray,KMail::Interface::BodyPartMemento*>::iterator it =
+  const QMap<QByteArray,MailViewer::Interface::BodyPartMemento*>::iterator it =
     mBodyPartMementoMap[node].lowerBound( which.toLower() );
 
   if ( it != mBodyPartMementoMap[node].end() && it.key() == which.toLower() ) {

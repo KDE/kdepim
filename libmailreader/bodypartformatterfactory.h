@@ -36,7 +36,7 @@
 
 class QString;
 #include <QByteArray>
-namespace KMail {
+namespace MailViewer {
 
   namespace Interface {
     class BodyPartFormatter;
@@ -44,7 +44,7 @@ namespace KMail {
 
   class BodyPartFormatterFactory {
     class gcc_shut_up;
-    friend class ::KMail::BodyPartFormatterFactory::gcc_shut_up;
+    friend class ::MailViewer::BodyPartFormatterFactory::gcc_shut_up;
   public:
     ~BodyPartFormatterFactory();
 
@@ -66,6 +66,6 @@ namespace KMail {
     BodyPartFormatterFactory( const BodyPartFormatterFactory & );
   };
 
-} // namespace KMail
+} // namespace MailViewer
 
 #endif // __KMAIL_BODYPARTFORMATTERFACTORY_H__
