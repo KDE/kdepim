@@ -78,6 +78,12 @@ namespace MailViewer {
   }
 }
 
+namespace {
+  class AttachmentURLHandler;
+  class FallBackURLHandler;
+  class HtmlAnchorHandler;
+}
+
 namespace KParts {
   struct BrowserArguments;
   class OpenUrlArguments;
@@ -91,8 +97,12 @@ namespace KParts {
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 class KMReaderWin: public QWidget {
   Q_OBJECT
+  //TODO try to get rid of the friendship
   friend class MailViewer::ObjectTreeParser;
   friend class MailViewer::KHtmlPartHtmlWriter;
+  friend class ::AttachmentURLHandler;
+  friend class ::FallBackURLHandler;
+  friend class ::HtmlAnchorHandler;
 
 public:
   /**
@@ -195,40 +205,12 @@ public:
   MAILVIEWER_EXPORT KAction *urlOpenAction() { return mUrlOpenAction; }
   MAILVIEWER_EXPORT KAction *saveMessageAction() { return mSaveMessageAction; }
 
-  /** Returns message part from given URL or null if invalid. */
-  KMime::Content* nodeFromUrl(const KUrl &url);
-
-  /** Returns the message part for a given content index. */
-  KMime::Content* nodeForContentIndex( const KMime::ContentIndex& index );
-
-  /** Access to the KHTMLPart used for the viewer. Use with
-      care! */
-  MAILVIEWER_EXPORT KHTMLPart *htmlPart() const { return mViewer; }
-
-  MAILVIEWER_EXPORT void openAttachment( KMime::Content *node, const QString & name );
-
-  MAILVIEWER_EXPORT void emitUrlClicked( const KUrl & url, int button ) {
-    emit urlClicked( url, button );
-  }
-
-  void emitPopupMenu( const KUrl & url, const QPoint & p ) {
-    if ( message() )
-      emit popupMenu( *message(), url, p );
-  }
-
-  /**
-   * Sets the current attachment ID and the current attachment temporary filename
-   * to the given values.
-   * Call this so that slotHandleAttachment() knows which attachment to handle.
-   */
-  void prepareHandleAttachment( int id, const QString& fileName );
-
-  void showAttachmentPopup( int id, const QString & name, const QPoint & p );
-
+/*FIXME(Andras) port it - remove?
   /** Set the serial number of the message this reader window is currently
-   *  waiting for. Used to discard updates for already deselected messages. */
+   *  waiting for. Used to discard updates for already deselected messages. 
   void setWaitingForSerNum( unsigned long serNum ) { mWaitingForSerNum = serNum; }
-
+*/
+  
   QWidget* mainWindow() { return mMainWindow; }
 
   /** Enforce message decryption. */
@@ -258,22 +240,60 @@ public:
   MAILVIEWER_EXPORT KConfigSkeleton *configObject();
 
 
-/* retrieve BodyPartMemento of id \a which for partNode \a node */
+  /** Returns the message part for a given content index. */
+  KMime::Content* nodeForContentIndex( const KMime::ContentIndex& index );
+  
+protected:
+//Below are the members that are called by friend classes
+    /** Returns message part from given URL or null if invalid. */
+  KMime::Content* nodeFromUrl(const KUrl &url);
+
+  /** Open the attachment pointed to the node.
+   * @param fileName - if not empty, use this file to load the attachment content
+  */
+  void openAttachment( KMime::Content *node, const QString & fileName );
+
+  void emitUrlClicked( const KUrl & url, int button ) {
+    emit urlClicked( url, button );
+  }
+
+  void emitPopupMenu( const KUrl & url, const QPoint & p ) {
+    if ( mMessage )
+      emit popupMenu( *mMessage, url, p );
+  }
+
+  /** Access to the KHTMLPart used for the viewer. Use with
+      care! */
+  KHTMLPart *htmlPart() const { return mViewer; }
+
+  void showAttachmentPopup( int id, const QString & name, const QPoint & p );
+  
+  /** retrieve BodyPartMemento of id \a which for partNode \a node */
    MailViewer::Interface::BodyPartMemento * bodyPartMemento( const KMime::Content * node, const QByteArray & which ) const;
 
-   /* set/replace BodyPartMemento \a memento of id \a which for
+   /** set/replace BodyPartMemento \a memento of id \a which for
       partNode \a node. If there was a BodyPartMemento registered
       already, replaces (deletes) that one. */
    void setBodyPartMemento( const KMime::Content * node, const QByteArray & which, MailViewer::Interface::BodyPartMemento * memento );
 
+
 private:
-   /* deletes all BodyPartMementos. Use this when skipping to another
+    /**
+   * Sets the current attachment ID and the current attachment temporary filename
+   * to the given values.
+   * Call this so that slotHandleAttachment() knows which attachment to handle.
+   */
+  void prepareHandleAttachment( int id, const QString& fileName );
+
+   /** deletes all BodyPartMementos. Use this when skipping to another
       message (as opposed to re-loading the same one again). */
    void clearBodyPartMementos();
-  // This function returns the complete data that were in this
-  // message parts - *after* all encryption has been removed that
-  // could be removed.
-  // - This is used to store the message in decrypted form.
+   
+  /** This function returns the complete data that were in this
+  * message parts - *after* all encryption has been removed that
+  * could be removed.
+  * - This is used to store the message in decrypted form.
+  */
   void objectTreeToDecryptedMsg( KMime::Content* node,
                                  QByteArray& resultingData,
                                  KMime::Message& theMessage,
@@ -301,12 +321,6 @@ public slots:
 
   /** Select message body. */
   void selectAll();
-
-  /** Force update even if message is the same */
-  void clearCache();
-
-  /** Refresh the reader window */
-  void updateReaderWin();
 
   /** HTML Widget scrollbar and layout handling. */
   void slotScrollUp();
@@ -373,9 +387,13 @@ public slots:
    */
   void slotHandleAttachment( int action );
 
+
+private slots:
+  /** Refresh the reader window */
+  void updateReaderWin();
+
   void slotMimePartSelected( const QModelIndex &index );
 
-protected slots:
   void slotCycleHeaderStyles();
   void slotBriefHeaders();
   void slotFancyHeaders();
@@ -400,8 +418,22 @@ protected slots:
       for the purpose of rendering. */
   void slotPrintMsg();
 
-protected:
-//TODO(Andras) These were public, but made protected as only ObjectTreeParser uses them. Make public if needed
+  void slotSetEncoding();
+  void injectAttachments();
+  void slotSettingsChanged();
+  void slotMimeTreeContextMenuRequested( const QPoint& pos );
+  void slotAttachmentOpenWith();
+  void slotAttachmentOpen();
+  void slotAttachmentSaveAs();
+  void slotAttachmentView();
+  void slotAttachmentSaveAll();
+  void slotAttachmentProperties();
+  void slotAttachmentCopy();
+  void slotAttachmentDelete();
+  void slotAttachmentEdit();
+  void slotAttachmentEditDone(MailViewer::EditorWatcher* editorWatcher);
+
+private:
   /** Is html mail to be supported? Takes into account override */
   bool htmlMail();
 
@@ -470,26 +502,6 @@ protected:
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
 
-private slots:
-  void slotSetEncoding();
-  void injectAttachments();
-  void slotSettingsChanged();
-  void slotMimeTreeContextMenuRequested( const QPoint& pos );
-  void slotAttachmentOpenWith();
-  void slotAttachmentOpen();
-  void slotAttachmentSaveAs();
-  void slotAttachmentView();
-  void slotAttachmentSaveAll();
-  void slotAttachmentProperties();
-  void slotAttachmentCopy();
-  void slotAttachmentDelete();
-  void slotAttachmentEdit();
-  void slotAttachmentEditDone(MailViewer::EditorWatcher* editorWatcher);
-
-private:
-
-//TODO(Andras) these methods were moved from public to private to keep the public API clean. In case there is a need from them,
-//we can reconsider making them public again
   /** Read settings from app's config file. */
   void readConfig();
 
@@ -546,8 +558,6 @@ private:
 
   KUrl tempFileUrlFromNode( const KMime::Content *node );
 
-//(Andras) end of moved methods
-
   void adjustLayout();
   void createWidgets();
   void createActions();
@@ -597,8 +607,6 @@ private:
   void attachmentOpenWith( KMime::Content *node );
   void attachmentOpen( KMime::Content *node );
 
-
-private:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   KMime::Message *mMessage; //the current message, if it was set manually
   Akonadi::Item mMessageItem; //the message item from Akonadi

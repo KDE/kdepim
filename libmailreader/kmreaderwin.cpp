@@ -1251,17 +1251,6 @@ void KMReaderWin::setMessage(KMime::Message* aMsg, UpdateMode updateMode, Owners
 }
 
 //-----------------------------------------------------------------------------
-void KMReaderWin::clearCache()
-{
-  mUpdateReaderWinTimer.stop();
-  clear();
-  mDelayedMarkTimer.stop();
-  mLastSerNum = 0;
-  mWaitingForSerNum = 0;
-  mMessage = 0;
-}
-
-//-----------------------------------------------------------------------------
 void KMReaderWin::displaySplashPage( const QString &info )
 {
   mMsgDisplay = false;
