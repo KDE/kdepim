@@ -69,6 +69,11 @@ AddresseeLineEdit *AddresseeLineEdit::s_LDAPLineEdit = 0;
 // Both are maintained by addCompletionSource(), don't attempt to modifiy those yourself.
 QMap<QString,int>* s_completionSourceWeights = 0;
 
+// maps LDAP client indices to completion source indices
+// the assumption that they are always the first n indices in s_completion
+// does not hold when clients are added later on
+QMap<int, int>* AddresseeLineEdit::s_ldapClientToCompletionSourceMap = 0;
+
 static K3StaticDeleter<KMailCompletion> completionDeleter;
 static K3StaticDeleter<KPIM::CompletionItemsMap> completionItemsDeleter;
 static K3StaticDeleter<QTimer> ldapTimerDeleter;
@@ -76,6 +81,7 @@ static K3StaticDeleter<KPIM::LdapSearch> ldapSearchDeleter;
 static K3StaticDeleter<QString> ldapTextDeleter;
 static K3StaticDeleter<QStringList> completionSourcesDeleter;
 static K3StaticDeleter<QMap<QString,int> > completionSourceWeightsDeleter;
+static K3StaticDeleter<QMap<int, int> > ldapClientToCompletionSourceMapDeleter;
 
 // needs to be unique, but the actual name doesn't matter much
 static QByteArray newLineEditObjectName()
@@ -119,8 +125,12 @@ void AddresseeLineEdit::updateLDAPWeights()
   /* Add completion sources for all ldap server, 0 to n. Added first so
    * that they map to the ldapclient::clientNumber() */
   s_LDAPSearch->updateCompletionWeights();
-  foreach ( const LdapClient *client, s_LDAPSearch->clients() )
-    addCompletionSource( "LDAP server: " + client->server().host(), client->completionWeight() );
+  int clientIndex = 0;
+  foreach ( const LdapClient *client, s_LDAPSearch->clients() ) {
+    const int sourceIndex = addCompletionSource(
+      "LDAP server: " + client->server().host(), client->completionWeight() );
+    s_ldapClientToCompletionSourceMap->insert( clientIndex, sourceIndex );
+  }
 }
 
 void AddresseeLineEdit::init()
@@ -133,6 +143,7 @@ void AddresseeLineEdit::init()
     completionItemsDeleter.setObject( s_completionItemMap, new KPIM::CompletionItemsMap() );
     completionSourcesDeleter.setObject( s_completionSources, new QStringList() );
     completionSourceWeightsDeleter.setObject( s_completionSourceWeights, new QMap<QString,int> );
+    ldapClientToCompletionSourceMapDeleter.setObject( s_ldapClientToCompletionSourceMap, new QMap<int,int> );
   }
 //  connect( s_completion, SIGNAL(match(const QString&)),
 //           this, SLOT(slotMatched(const QString&)) );
@@ -268,7 +279,7 @@ void AddresseeLineEdit::insert( const QString &t )
   }
   newText = lines.join( ", " );
 
-  if ( newText.startsWith( "mailto:" ) ) {
+  if ( newText.startsWith( QLatin1String( "mailto:" ) ) ) {
     KUrl url( newText );
     newText = url.path();
   } else if ( newText.indexOf( " at " ) != -1 ) {
@@ -820,7 +831,10 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList &adrs )
     addr.setNameFromString( (*it).name );
     addr.setEmails( (*it).email );
 
-    addContact( addr, (*it).completionWeight, (*it ).clientNumber );
+    if ( !s_ldapClientToCompletionSourceMap->contains( (*it).clientNumber ) )
+      updateLDAPWeights(); // we got results from a new source, so update the completion sources
+
+    addContact( addr, (*it).completionWeight, (*s_ldapClientToCompletionSourceMap)[ (*it ).clientNumber ]  );
   }
   if ( ( hasFocus() || completionBox()->hasFocus() ) &&
        completionMode() != KGlobalSettings::CompletionNone &&

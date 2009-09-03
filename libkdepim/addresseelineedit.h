@@ -158,6 +158,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     static QString *s_LDAPText;
     static AddresseeLineEdit *s_LDAPLineEdit;
     static QStringList *s_completionSources;
+    static QMap<int,int> *s_ldapClientToCompletionSourceMap;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;
