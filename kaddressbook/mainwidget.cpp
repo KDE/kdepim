@@ -38,16 +38,14 @@
 #include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
 #include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitytreeviewstatesaver.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
-#include <akonadi/entitytreeviewstatesaver.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kabc/contactlineedit.h>
-#include <kabc/kabcmodel.h>
 #include <kdescendantsproxymodel.h>
 #include <kicon.h>
 #include <klineedit.h>
@@ -197,10 +195,12 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 MainWidget::~MainWidget()
 {
   mModelColumnManager->store();
+
   KConfigGroup cfg( Settings::self()->config(), "CollectionViewState" );
   Akonadi::EntityTreeViewStateSaver saver( mCollectionView );
   saver.saveState( cfg );
   cfg.sync();
+
   Settings::self()->writeConfig();
 }
 
