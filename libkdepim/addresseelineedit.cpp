@@ -828,7 +828,8 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList &adrs )
     setText( m_previousAddresses + m_searchString );
     // only complete again if the user didn't change the selection while
     // we were waiting; otherwise the completion box will be closed
-    if ( m_searchString.trimmed() != completionBox()->currentItem()->text().trimmed() ) {
+    QListWidgetItem *current = completionBox()->currentItem();
+    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
       doCompletion( m_lastSearchMode );
     }
   }
