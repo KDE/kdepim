@@ -98,10 +98,10 @@ url="http://www.kirchwitz.de/~amk/dni/hoeflichkeit">http://www.kirchwitz.de/~amk
 url="http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung">http://www.kirchwitz.de/~amk/dni/usenet-einfuehrung</ulink>
 (German)</member> 
 <member>Why should I take the rules seriously? <ulink
-url="http://www.kirchwitz.de/~amk/dni/warum-regel">http://www.kirchwitz.de/~amk/dni/warum-regel</ulink>
+url="http://www.kirchwitz.de/~amk/dni/warum-regeln">http://www.kirchwitz.de/~amk/dni/warum-regeln</ulink>
 (German)</member> 
 <member>The newsreader <acronym>FAQ</acronym>: <ulink
-url="http://www.crosswinds.net/~cgarbers/faq/newsreaderFAQ.htm">http://www.crosswinds.net/~cgarbers/faq/newsreaderFAQ.htm</ulink></member> 
+url="http://www.thomas-huehn.de/usenet/newsreaderFAQ.txt">http://www.thomas-huehn.de/usenet/newsreaderFAQ.txt</ulink> (German)</member> 
 <member>The correct quoting: <ulink
 url="http://www.afaik.de/usenet/faq/zitieren">http://www.afaik.de/usenet/faq/zitieren</ulink>
 (German)</member> 
@@ -122,13 +122,13 @@ connection to news, you should not miss the following
 <simplelist> 
 <member>Header entries: <ulink url="http://www.kirchwitz.de/~amk/dni/headerzeilen"> 
 http://www.kirchwitz.de/~amk/dni/headerzeilen</ulink> (German)</member> 
-<member>A very useful message-ID <acronym>FAQ</acronym>: <ulink url="http://www.qad.org/faq/faq-messageid.html"> 
-http://www.qad.org/faq/faq-messageid.html</ulink></member> 
+<member>A very useful message-ID <acronym>FAQ</acronym>: <ulink url="http://www.hanau.net/usenet/faq/messageid.php"> 
+http://www.hanau.net/usenet/faq/messageid.php (German)</ulink></member> 
 <member>A lot of links about newsreaders and related topics: <ulink
-url="http://www.leafnode.org/links">http://www.leafnode.org/links</ulink></member> 
+url="http://www.leafnode.org/links.shtml">http://www.leafnode.org/links.shtml</ulink></member> 
 <member><acronym>RFC</acronym>s, Drafts and documents for the technical
-interested: <ulink url="http://www.landfield.com/usefor/"> 
-http://www.landfield.com/usefor/</ulink></member> 
+interested: <ulink url="http://tools.ietf.org/wg/usefor/">
+http://tools.ietf.org/wg/usefor/</ulink></member> 
 </simplelist> 
 </sect1> 
 </chapter> 
