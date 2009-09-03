@@ -297,7 +297,7 @@ static QString displayViewFormatBirthday( Event *event )
   return tmpStr;
 }
 
-static QString displayViewFormatHeader( Incidence *incidence )
+static QString displayViewFormatHeader( Calendar *calendar, Incidence *incidence )
 {
   QString tmpStr = "<table><tr>";
 
@@ -343,18 +343,28 @@ static QString displayViewFormatHeader( Incidence *incidence )
   tmpStr += "<b><u>" + incidence->summary() + "</u></b>";
   tmpStr += "</td>";
 
+  if ( calendar ) {
+    QString calStr = IncidenceFormatter::resourceString( calendar, incidence );
+    if ( !calStr.isEmpty() ) {
+      tmpStr += "<tr>";
+      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td>" + calStr + "</td>";
+      tmpStr += "</tr>";
+    }
+  }
+
   tmpStr += "</tr></table>";
 
   return tmpStr;
 }
 
-static QString displayViewFormatEvent( Event *event )
+static QString displayViewFormatEvent( Calendar *calendar, Event *event )
 {
   if ( !event ) {
     return QString::null;
   }
 
-  QString tmpStr = displayViewFormatHeader( event );
+  QString tmpStr = displayViewFormatHeader( calendar, event );
 
   tmpStr += "<table>";
 
@@ -477,13 +487,13 @@ static QString displayViewFormatEvent( Event *event )
   return tmpStr;
 }
 
-static QString displayViewFormatTodo( Todo *todo )
+static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
 {
   if ( !todo ) {
     return QString::null;
   }
 
-  QString tmpStr = displayViewFormatHeader( todo );
+  QString tmpStr = displayViewFormatHeader( calendar, todo );
 
   tmpStr += "<table>";
   if ( !todo->location().isEmpty() ) {
@@ -584,13 +594,13 @@ static QString displayViewFormatTodo( Todo *todo )
   return tmpStr;
 }
 
-static QString displayViewFormatJournal( Journal *journal )
+static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
 {
   if ( !journal ) {
     return QString::null;
   }
 
-  QString tmpStr = displayViewFormatHeader( journal );
+  QString tmpStr = displayViewFormatHeader( calendar, journal );
 
   tmpStr += "<table>";
 
@@ -624,7 +634,7 @@ static QString displayViewFormatJournal( Journal *journal )
   return tmpStr;
 }
 
-static QString displayViewFormatFreeBusy( FreeBusy *fb )
+static QString displayViewFormatFreeBusy( Calendar * /*calendar*/, FreeBusy *fb )
 {
   if ( !fb ) return QString::null;
 
@@ -681,43 +691,62 @@ static QString displayViewFormatFreeBusy( FreeBusy *fb )
 class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
 {
   public:
-    EventViewerVisitor() { mResult = ""; }
-    bool act( IncidenceBase *incidence ) { return incidence->accept( *this ); }
+    EventViewerVisitor()
+      : mCalendar( 0 ), mResult( "" ) {}
+
+    bool act( Calendar *calendar, IncidenceBase *incidence )
+    {
+      mCalendar = calendar;
+      mResult = "";
+      return incidence->accept( *this );
+    }
     QString result() const { return mResult; }
+
   protected:
     bool visit( Event *event )
     {
-      mResult = displayViewFormatEvent( event );
+      mResult = displayViewFormatEvent( mCalendar, event );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = displayViewFormatTodo( todo );
+      mResult = displayViewFormatTodo( mCalendar, todo );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
     {
-      mResult = displayViewFormatJournal( journal );
+      mResult = displayViewFormatJournal( mCalendar, journal );
       return !mResult.isEmpty();
     }
     bool visit( FreeBusy *fb )
     {
-      mResult = displayViewFormatFreeBusy( fb );
+      mResult = displayViewFormatFreeBusy( mCalendar, fb );
       return !mResult.isEmpty();
     }
 
   protected:
+    Calendar *mCalendar;
     QString mResult;
 };
 
 QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
-  if ( !incidence ) return QString::null;
-  EventViewerVisitor v;
-  if ( v.act( incidence ) ) {
-    return v.result();
-  } else
+  return extensiveDisplayStr( 0, incidence );
+}
+
+QString IncidenceFormatter::extensiveDisplayStr( Calendar *calendar,
+                                                 IncidenceBase *incidence )
+{
+  if ( !incidence ) {
     return QString::null;
+  }
+
+  EventViewerVisitor v;
+  if ( v.act( calendar, incidence ) ) {
+    return v.result();
+  } else {
+    return QString::null;
+  }
 }
 
 /***********************************************************************
@@ -1570,8 +1599,9 @@ class IncidenceFormatter::IncidenceCompareVisitor :
 
     QString result() const
     {
-      if ( mChanges.isEmpty() )
-        return QString();
+      if ( mChanges.isEmpty() ) {
+        return QString::null;
+      }
       QString html = "<div align=\"left\"><ul><li>";
       html += mChanges.join( "</li><li>" );
       html += "</li><ul></div>";
@@ -2383,10 +2413,12 @@ QString IncidenceFormatter::formatTNEFInvitation( const QByteArray& tnef,
 class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 {
   public:
-    ToolTipVisitor() : mRichText( true ), mResult( "" ) {}
+    ToolTipVisitor()
+      : mCalendar( 0 ), mRichText( true ), mResult( "" ) {}
 
-    bool act( IncidenceBase *incidence, bool richText=true)
+    bool act( Calendar *calendar, IncidenceBase *incidence, bool richText=true)
     {
+      mCalendar = calendar;
       mRichText = richText;
       mResult = "";
       return incidence ? incidence->accept( *this ) : false;
@@ -2407,6 +2439,7 @@ class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
     QString generateToolTip( Incidence* incidence, QString dtRangeText );
 
   protected:
+    Calendar *mCalendar;
     bool mRichText;
     QString mResult;
 };
@@ -2535,10 +2568,16 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
 
   QString tmp = "<qt><b>"+ incidence->summary().replace("\n", "<br>")+"</b>";
 
+  if ( mCalendar ) {
+    QString calStr = IncidenceFormatter::resourceString( mCalendar, incidence );
+    if ( !calStr.isEmpty() ) {
+      tmp += "<br>" + i18n( "<i>Calendar:</i> %1" ).arg( calStr );
+    }
+  }
+
   tmp += dtRangeText;
 
   if (!incidence->location().isEmpty()) {
-    // Put Location: in italics
     tmp += "<br>"+i18n("<i>Location:</i>&nbsp;%1").
       arg( incidence->location().replace("\n", "<br>") );
   }
@@ -2555,15 +2594,20 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
 
 QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richText )
 {
-  ToolTipVisitor v;
-  if ( v.act( incidence, richText ) ) {
-    return v.result();
-  } else
-    return QString::null;
+  return toolTipStr( 0, incidence, richText );
 }
 
-
-
+QString IncidenceFormatter::toolTipStr( Calendar *calendar,
+                                        IncidenceBase *incidence,
+                                        bool richText )
+{
+  ToolTipVisitor v;
+  if ( v.act( calendar, incidence, richText ) ) {
+    return v.result();
+  } else {
+    return QString::null;
+  }
+}
 
 /*******************************************************************
  *  Helper functions for the Incidence tooltips
@@ -2715,6 +2759,10 @@ QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
   }
   return QString::null;
 }
+
+/************************************
+ *  More static formatting functions
+ ************************************/
 
 QString IncidenceFormatter::recurrenceString(Incidence * incidence)
 {
@@ -2868,4 +2916,27 @@ QString IncidenceFormatter::dateTimeToString( const QDateTime &date,
   }
 
   return  KGlobal::locale()->formatDateTime( date, shortfmt );
+}
+
+QString IncidenceFormatter::resourceString( Calendar *calendar, Incidence *incidence )
+{
+  CalendarResources *calendarResource = dynamic_cast<CalendarResources*>( calendar );
+  if ( !calendarResource || ! incidence ) {
+    return QString::null;
+  }
+
+  ResourceCalendar *resourceCalendar = calendarResource->resource( incidence );
+  if ( resourceCalendar ) {
+    if ( !resourceCalendar->subresources().isEmpty() ) {
+      QString subRes = resourceCalendar->subresourceIdentifier( incidence );
+      if ( subRes.isEmpty() ) {
+        return resourceCalendar->resourceName();
+      } else {
+        return resourceCalendar->labelForSubresource( subRes );
+      }
+    }
+    return resourceCalendar->resourceName();
+  }
+
+  return QString::null;
 }

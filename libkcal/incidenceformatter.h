@@ -50,9 +50,11 @@ class LIBKCAL_EXPORT InvitationFormatterHelper
 class LIBKCAL_EXPORT IncidenceFormatter
 {
   public:
-    static QString toolTipString( IncidenceBase *incidence, bool richText = true );
+    static QString KDE_DEPRECATED toolTipString( IncidenceBase *incidence, bool richText = true );
+    static QString toolTipStr( Calendar *calendar, IncidenceBase *incidence, bool richText = true );
     static QString mailBodyString( IncidenceBase *incidencebase );
-    static QString extensiveDisplayString( IncidenceBase *incidence );
+    static QString KDE_DEPRECATED extensiveDisplayString( IncidenceBase *incidence );
+    static QString extensiveDisplayStr( Calendar *calendar, IncidenceBase *incidence );
 
     static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                          InvitationFormatterHelper *helper );
@@ -72,6 +74,12 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString dateTimeToString( const QDateTime &date,
                                      bool dateOnly = false,
                                      bool shortfmt = true );
+    /**
+      Returns a Calendar Resource label name for the specified Incidence.
+      @param calendar is a pointer to the Calendar.
+      @param incidence is a pointer to the Incidence.
+    */
+    static QString resourceString( Calendar *calendar, Incidence *incidence );
 
   private:
     class EventViewerVisitor;
