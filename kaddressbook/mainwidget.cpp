@@ -360,6 +360,15 @@ void MainWidget::print()
 void MainWidget::newContact()
 {
   Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+
+  if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
+    const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole )
+                                                .value<Akonadi::Collection>();
+
+    dlg.setDefaultAddressBook( collection );
+  }
+
   dlg.exec();
 }
 
