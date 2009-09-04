@@ -36,27 +36,22 @@ namespace KMime {
   class Content;
 }
 
-namespace MailViewer {
-  class ObjectTreeParser;
-}
+class ObjectTreeParser;
 
-namespace MailViewer {
+class ProcessResult;
 
-  class ProcessResult;
+class BodyPartFormatter {
+  const BodyPartFormatter & operator=( const BodyPartFormatter & );
+  BodyPartFormatter( const BodyPartFormatter & );
+protected:
+  BodyPartFormatter() {}
+public:
+  virtual ~BodyPartFormatter() {}
 
-  class BodyPartFormatter {
-    const BodyPartFormatter & operator=( const BodyPartFormatter & );
-    BodyPartFormatter( const BodyPartFormatter & );
-  protected:
-    BodyPartFormatter() {}
-  public:
-    virtual ~BodyPartFormatter() {}
+  virtual bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const = 0;
 
-    virtual bool process( MailViewer::ObjectTreeParser *, KMime::Content *, ProcessResult & ) const = 0;
+  static const BodyPartFormatter * createFor( const char * type, const char * subtype );
+};
 
-    static const BodyPartFormatter * createFor( const char * type, const char * subtype );
-  };
-
-} // namespace MailViewer
 
 #endif // __KMAIL_BODYPARTFORMATTER_H__

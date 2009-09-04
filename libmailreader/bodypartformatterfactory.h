@@ -36,36 +36,33 @@
 
 class QString;
 #include <QByteArray>
-namespace MailViewer {
+namespace Interface {
+  class BodyPartFormatter;
+}
 
-  namespace Interface {
-    class BodyPartFormatter;
-  }
+class BodyPartFormatterFactory {
+  class gcc_shut_up;
+  friend class ::BodyPartFormatterFactory::gcc_shut_up;
+public:
+  ~BodyPartFormatterFactory();
 
-  class BodyPartFormatterFactory {
-    class gcc_shut_up;
-    friend class ::MailViewer::BodyPartFormatterFactory::gcc_shut_up;
-  public:
-    ~BodyPartFormatterFactory();
+  static const BodyPartFormatterFactory * instance();
 
-    static const BodyPartFormatterFactory * instance();
+  const Interface::BodyPartFormatter * createFor( const char * type, const char * subtype ) const;
+  const Interface::BodyPartFormatter * createFor( const QString & type, const QString & subtype ) const;
+  const Interface::BodyPartFormatter * createFor( const QByteArray & type, const QByteArray & subtype ) const;
 
-    const Interface::BodyPartFormatter * createFor( const char * type, const char * subtype ) const;
-    const Interface::BodyPartFormatter * createFor( const QString & type, const QString & subtype ) const;
-    const Interface::BodyPartFormatter * createFor( const QByteArray & type, const QByteArray & subtype ) const;
+  //
+  // Only boring stuff below:
+  //
+private:
+  BodyPartFormatterFactory();
+  static BodyPartFormatterFactory * mSelf;
+private:
+  // disabled
+  const BodyPartFormatterFactory & operator=( const BodyPartFormatterFactory & );
+  BodyPartFormatterFactory( const BodyPartFormatterFactory & );
+};
 
-    //
-    // Only boring stuff below:
-    //
-  private:
-    BodyPartFormatterFactory();
-    static BodyPartFormatterFactory * mSelf;
-  private:
-    // disabled
-    const BodyPartFormatterFactory & operator=( const BodyPartFormatterFactory & );
-    BodyPartFormatterFactory( const BodyPartFormatterFactory & );
-  };
-
-} // namespace MailViewer
 
 #endif // __KMAIL_BODYPARTFORMATTERFACTORY_H__

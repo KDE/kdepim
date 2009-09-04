@@ -28,7 +28,6 @@ Globally accesible methods and data structures.
 
 #include <ksharedconfig.h>
 
-namespace MailViewer {
 class Global{
 
 public:
@@ -45,7 +44,5 @@ private:
     static Global * mSelf;
     KSharedConfigPtr mConfig;
 };
-
-}
 
 #endif

@@ -27,8 +27,6 @@
 
 class KProcess;
 
-namespace MailViewer {
-
 /**
   Starts an editor for the given URL and emits an signal when
   editing has been finished. Both, the editor process as well
@@ -54,7 +52,7 @@ class EditorWatcher : public QObject
     bool fileChanged() const { return mFileModified; }
     KUrl url() { return mUrl;}
   signals:
-    void editDone( MailViewer::EditorWatcher* watcher );
+    void editDone( EditorWatcher* watcher );
 
   private slots:
     void editorExited();
@@ -83,7 +81,5 @@ class EditorWatcher : public QObject
     bool mError;
     bool mDone;
 };
-
-}
 
 #endif

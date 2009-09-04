@@ -21,7 +21,6 @@
 #include <KGlobal>
 #include <KIconLoader>
 
-namespace MailViewer {
 
 K_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
 
@@ -53,4 +52,3 @@ QString IconNameCache::iconPath( const QString &name, int size ) const
   return fileName;
 }
 
-}

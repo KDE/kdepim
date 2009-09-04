@@ -33,9 +33,6 @@ namespace KMime
   }
 }
 
-namespace MailViewer
-{
-
 /**
  * This namespace contain helper functions for string manipulation
  */
@@ -152,6 +149,5 @@ namespace StringUtil
   QString smartQuote( const QString &msg, int maxLineLength );
 }
 
-}
 
 #endif

@@ -22,9 +22,6 @@
 #include <QMap>
 #include <QString>
 
-namespace MailViewer
-{
-
 /**
  * This class is a replacement for KIconLoader::iconPath(), because the iconPath()
  * function can be slow for non-existing icons or icons that fall back to a generic icon.
@@ -52,7 +49,5 @@ class IconNameCache
 
     mutable QMap<Entry,QString> mCachedEntries;
 };
-
-}
 
 #endif

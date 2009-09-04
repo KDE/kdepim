@@ -41,8 +41,6 @@
 
 #include <kdebug.h>
 
-using namespace MailViewer;
-
 // static
 SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message* message ) {
   SpamScores scores;

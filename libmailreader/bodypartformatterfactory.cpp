@@ -34,7 +34,7 @@
 
 #include "bodypartformatterfactory.h"
 #include "bodypartformatterfactory_p.h"
-using namespace MailViewer::BodyPartFormatterFactoryPrivate;
+using namespace BodyPartFormatterFactoryPrivate;
 
 #include "interfaces/bodypartformatter.h"
 #include "urlhandlermanager.h"
@@ -54,32 +54,32 @@ using namespace MailViewer::BodyPartFormatterFactoryPrivate;
 namespace {
 
   KPIM_DEFINE_PLUGIN_LOADER( BodyPartFormatterPluginLoader,
-			     MailViewer::Interface::BodyPartFormatterPlugin,
+			     Interface::BodyPartFormatterPlugin,
 			     "create_bodypart_formatter_plugin",
 			     "kmail/plugins/bodypartformatter/*.desktop" )
 
 }
 
-MailViewer::BodyPartFormatterFactory * MailViewer::BodyPartFormatterFactory::mSelf = 0;
+BodyPartFormatterFactory * BodyPartFormatterFactory::mSelf = 0;
 
-const MailViewer::BodyPartFormatterFactory * MailViewer::BodyPartFormatterFactory::instance() {
+const BodyPartFormatterFactory * BodyPartFormatterFactory::instance() {
   if ( !mSelf )
     mSelf = new BodyPartFormatterFactory();
   return mSelf;
 }
 
-MailViewer::BodyPartFormatterFactory::BodyPartFormatterFactory() {
+BodyPartFormatterFactory::BodyPartFormatterFactory() {
   mSelf = this;
 }
 
-MailViewer::BodyPartFormatterFactory::~BodyPartFormatterFactory() {
+BodyPartFormatterFactory::~BodyPartFormatterFactory() {
   mSelf = 0;
 }
 
 static TypeRegistry * all = 0;
 
 static void insertBodyPartFormatter( const char * type, const char * subtype,
-				     const MailViewer::Interface::BodyPartFormatter * formatter ) {
+				     const Interface::BodyPartFormatter * formatter ) {
   if ( !type || !*type || !subtype || !*subtype || !formatter || !all )
     return;
 
@@ -111,12 +111,12 @@ static void loadPlugins() {
   const QStringList types = pl->types();
   kDebug() <<"BodyPartFormatterFactory: found" << types.size() <<" plugins.";
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
-    const MailViewer::Interface::BodyPartFormatterPlugin * plugin = pl->createForName( *it );
+    const Interface::BodyPartFormatterPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
       kWarning() <<"BodyPartFormatterFactory: plugin \"" << *it <<"\" is not valid!";
       continue;
     }
-    const MailViewer::Interface::BodyPartFormatter * bfp;
+    const Interface::BodyPartFormatter * bfp;
     for ( int i = 0 ; (bfp = plugin->bodyPartFormatter( i )) ; ++i ) {
       const char * type = plugin->type( i );
       if ( !type || !*type ) {
@@ -134,9 +134,9 @@ static void loadPlugins() {
       }
       insertBodyPartFormatter( type, subtype, bfp );
     }
-    const MailViewer::Interface::BodyPartURLHandler * handler;
+    const Interface::BodyPartURLHandler * handler;
     for ( int i = 0 ; (handler = plugin->urlHandler( i )) ; ++i )
-      MailViewer::URLHandlerManager::instance()->registerHandler( handler );
+      URLHandlerManager::instance()->registerHandler( handler );
   }
 }
 
@@ -148,7 +148,7 @@ static void setup() {
   }
 }
 
-const MailViewer::Interface::BodyPartFormatter * MailViewer::BodyPartFormatterFactory::createFor( const char * type, const char * subtype ) const {
+const Interface::BodyPartFormatter * BodyPartFormatterFactory::createFor( const char * type, const char * subtype ) const {
   if ( !type || !*type )
     type = "*"; //krazy:exclude=doublequote_chars
   if ( !subtype || !*subtype )
@@ -183,10 +183,10 @@ const MailViewer::Interface::BodyPartFormatter * MailViewer::BodyPartFormatterFa
   return (*subtype_it).second;
 }
 
-const MailViewer::Interface::BodyPartFormatter * MailViewer::BodyPartFormatterFactory::createFor( const QString & type, const QString & subtype ) const {
+const Interface::BodyPartFormatter * BodyPartFormatterFactory::createFor( const QString & type, const QString & subtype ) const {
   return createFor( type.toLatin1(), subtype.toLatin1() );
 }
 
-const MailViewer::Interface::BodyPartFormatter * MailViewer::BodyPartFormatterFactory::createFor( const QByteArray & type, const QByteArray & subtype ) const {
+const Interface::BodyPartFormatter * BodyPartFormatterFactory::createFor( const QByteArray & type, const QByteArray & subtype ) const {
   return createFor( type.data(), subtype.data() );
 }

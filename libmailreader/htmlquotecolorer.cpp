@@ -23,7 +23,6 @@
 #include <dom/html_document.h>
 #include <dom/dom_element.h>
 
-namespace MailViewer {
 
 HTMLQuoteColorer::HTMLQuoteColorer( KPIM::CSSHelper *cssHelper )
   : mCSSHelper( cssHelper )
@@ -108,4 +107,4 @@ int HTMLQuoteColorer::quoteLength( const QString &line ) const
   return 0;
 }
 
-}
+

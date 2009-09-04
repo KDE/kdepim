@@ -43,9 +43,7 @@
 #include <QString>
 #include <QLabel>
 
-using namespace MailViewer;
-
-MailViewer::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
+HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
   : QLabel( parent, f ),
     mMode( Normal )
 {
@@ -57,9 +55,9 @@ MailViewer::HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Q
   update();
 }
 
-MailViewer::HtmlStatusBar::~HtmlStatusBar() {}
+HtmlStatusBar::~HtmlStatusBar() {}
 
-void MailViewer::HtmlStatusBar::update() {
+void HtmlStatusBar::update() {
   QPalette pal = palette();
   pal.setColor( backgroundRole(), bgColor() );
   pal.setColor( foregroundRole(), fgColor() );
@@ -67,26 +65,26 @@ void MailViewer::HtmlStatusBar::update() {
   setText( message() );
 }
 
-void MailViewer::HtmlStatusBar::setNormalMode() {
+void HtmlStatusBar::setNormalMode() {
   setMode( Normal );
 }
 
-void MailViewer::HtmlStatusBar::setHtmlMode() {
+void HtmlStatusBar::setHtmlMode() {
   setMode( Html );
 }
 
-void MailViewer::HtmlStatusBar::setNeutralMode() {
+void HtmlStatusBar::setNeutralMode() {
   setMode( Neutral );
 }
 
-void MailViewer::HtmlStatusBar::setMode( Mode m ) {
+void HtmlStatusBar::setMode( Mode m ) {
   if ( m == mode() )
     return;
   mMode = m;
   update();
 }
 
-QString MailViewer::HtmlStatusBar::message() const {
+QString HtmlStatusBar::message() const {
   switch ( mode() ) {
   case Html: // bold: "HTML Message"
     return i18n( "<qt><b><br />H<br />T<br />M<br />L<br /> "
@@ -102,7 +100,7 @@ QString MailViewer::HtmlStatusBar::message() const {
 }
 
 
-QColor MailViewer::HtmlStatusBar::fgColor() const {
+QColor HtmlStatusBar::fgColor() const {
   KConfigGroup conf( Global::instance()->config(), "Reader" );
   QColor defaultColor, color;
   switch ( mode() ) {
@@ -126,7 +124,7 @@ QColor MailViewer::HtmlStatusBar::fgColor() const {
   }
 }
 
-QColor MailViewer::HtmlStatusBar::bgColor() const {
+QColor HtmlStatusBar::bgColor() const {
   KConfigGroup conf( Global::instance()->config(), "Reader" );
 
   QColor defaultColor, color;

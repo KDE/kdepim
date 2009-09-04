@@ -43,8 +43,6 @@ class QWidget;
 class QStringList;
 class QString;
 
-namespace MailViewer
-{
     /**
      * The Util namespace contains a collection of helper functions use in
      * various places.
@@ -80,7 +78,6 @@ namespace Util {
     * This function fixes this by replacing whitespace with a hyphen.
     */
     QString encodingForName( const QString &descriptiveName );
-}
 }
 
 #endif

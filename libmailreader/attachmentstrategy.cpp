@@ -37,186 +37,182 @@
 #include <kdebug.h>
 
 
-namespace MailViewer {
+//
+// IconicAttachmentStrategy:
+//   show everything but the first text/plain body as icons
+//
 
+class IconicAttachmentStrategy : public AttachmentStrategy {
+  friend class ::AttachmentStrategy;
+protected:
+  IconicAttachmentStrategy() : AttachmentStrategy() {}
+  virtual ~IconicAttachmentStrategy() {}
 
-  //
-  // IconicAttachmentStrategy:
-  //   show everything but the first text/plain body as icons
-  //
+public:
+  const char * name() const { return "iconic"; }
+  const AttachmentStrategy * next() const { return smart(); }
+  const AttachmentStrategy * prev() const { return hidden(); }
 
-  class IconicAttachmentStrategy : public AttachmentStrategy {
-    friend class ::MailViewer::AttachmentStrategy;
-  protected:
-    IconicAttachmentStrategy() : AttachmentStrategy() {}
-    virtual ~IconicAttachmentStrategy() {}
+  bool inlineNestedMessages() const { return false; }
+  Display defaultDisplay( KMime::Content * node ) const {
+    if ( node->contentType()->isText() &&
+          node->contentDisposition()->filename().trimmed().isEmpty() &&
+          node->contentType()->name().trimmed().isEmpty() )
+      // text/* w/o filename parameter:
+      return Inline;
+    return AsIcon;
+  }
+};
 
-  public:
-    const char * name() const { return "iconic"; }
-    const AttachmentStrategy * next() const { return smart(); }
-    const AttachmentStrategy * prev() const { return hidden(); }
+//
+// SmartAttachmentStrategy:
+//   in addition to Iconic, show all body parts
+//   with content-disposition == "inline" and
+//   all text parts without a filename or name parameter inline
+//
 
-    bool inlineNestedMessages() const { return false; }
-    Display defaultDisplay( KMime::Content * node ) const {
-      if ( node->contentType()->isText() &&
-           node->contentDisposition()->filename().trimmed().isEmpty() &&
-           node->contentType()->name().trimmed().isEmpty() )
-        // text/* w/o filename parameter:
-        return Inline;
+class SmartAttachmentStrategy : public AttachmentStrategy {
+  friend class ::AttachmentStrategy;
+protected:
+  SmartAttachmentStrategy() : AttachmentStrategy() {}
+  virtual ~SmartAttachmentStrategy() {}
+
+public:
+  const char * name() const { return "smart"; }
+  const AttachmentStrategy * next() const { return inlined(); }
+  const AttachmentStrategy * prev() const { return iconic(); }
+
+  bool inlineNestedMessages() const { return true; }
+  Display defaultDisplay( KMime::Content * node ) const {
+    if ( node->contentDisposition()->disposition() == KMime::Headers::CDinline )
+      // explict "inline" disposition:
+      return Inline;
+    if ( node->contentDisposition()->disposition() == KMime::Headers::CDattachment)
+      // explicit "attachment" disposition:
       return AsIcon;
-    }
-  };
-
-  //
-  // SmartAttachmentStrategy:
-  //   in addition to Iconic, show all body parts
-  //   with content-disposition == "inline" and
-  //   all text parts without a filename or name parameter inline
-  //
-
-  class SmartAttachmentStrategy : public AttachmentStrategy {
-    friend class ::MailViewer::AttachmentStrategy;
-  protected:
-    SmartAttachmentStrategy() : AttachmentStrategy() {}
-    virtual ~SmartAttachmentStrategy() {}
-
-  public:
-    const char * name() const { return "smart"; }
-    const AttachmentStrategy * next() const { return inlined(); }
-    const AttachmentStrategy * prev() const { return iconic(); }
-
-    bool inlineNestedMessages() const { return true; }
-    Display defaultDisplay( KMime::Content * node ) const {
-      if ( node->contentDisposition()->disposition() == KMime::Headers::CDinline )
-        // explict "inline" disposition:
-        return Inline;
-      if ( node->contentDisposition()->disposition() == KMime::Headers::CDattachment)
-        // explicit "attachment" disposition:
-        return AsIcon;
-      if ( node->contentType()->isText() &&
-           node->contentDisposition()->filename().trimmed().isEmpty() &&
-           node->contentType()->name().trimmed().isEmpty() )
-        // text/* w/o filename parameter:
-        return Inline;
-      return AsIcon;
-    }
-  };
-
-  //
-  // InlinedAttachmentStrategy:
-  //   show everything possible inline
-  //
-
-  class InlinedAttachmentStrategy : public AttachmentStrategy {
-    friend class ::MailViewer::AttachmentStrategy;
-  protected:
-    InlinedAttachmentStrategy() : AttachmentStrategy() {}
-    virtual ~InlinedAttachmentStrategy() {}
-
-  public:
-    const char * name() const { return "inlined"; }
-    const AttachmentStrategy * next() const { return hidden(); }
-    const AttachmentStrategy * prev() const { return smart(); }
-
-    bool inlineNestedMessages() const { return true; }
-    Display defaultDisplay( KMime::Content * ) const { return Inline; }
-  };
-
-  //
-  // HiddenAttachmentStrategy
-  //   show nothing except the first text/plain body part _at all_
-  //
-
-  class HiddenAttachmentStrategy : public AttachmentStrategy {
-    friend class ::MailViewer::AttachmentStrategy;
-  protected:
-    HiddenAttachmentStrategy() : AttachmentStrategy() {}
-    virtual ~HiddenAttachmentStrategy() {}
-
-  public:
-    const char * name() const { return "hidden"; }
-    const AttachmentStrategy * next() const { return iconic(); }
-    const AttachmentStrategy * prev() const { return inlined(); }
-
-    bool inlineNestedMessages() const { return false; }
-    Display defaultDisplay( KMime::Content * node ) const {
-      if ( node->contentType()->isText() &&
-           node->contentDisposition()->filename().trimmed().isEmpty() &&
-           node->contentType()->name().trimmed().isEmpty() )
-        // text/* w/o filename parameter:
-        return Inline;
-
-      if ( node->parent() && node->parent()->contentType()->isMultipart() &&
-           node->parent()->contentType()->subType() == "related" )
-        return Inline;
-
-      return None;
-    }
-  };
-
-
-  //
-  // AttachmentStrategy abstract base:
-  //
-
-  AttachmentStrategy::AttachmentStrategy() {
-
+    if ( node->contentType()->isText() &&
+          node->contentDisposition()->filename().trimmed().isEmpty() &&
+          node->contentType()->name().trimmed().isEmpty() )
+      // text/* w/o filename parameter:
+      return Inline;
+    return AsIcon;
   }
+};
 
-  AttachmentStrategy::~AttachmentStrategy() {
+//
+// InlinedAttachmentStrategy:
+//   show everything possible inline
+//
 
+class InlinedAttachmentStrategy : public AttachmentStrategy {
+  friend class ::AttachmentStrategy;
+protected:
+  InlinedAttachmentStrategy() : AttachmentStrategy() {}
+  virtual ~InlinedAttachmentStrategy() {}
+
+public:
+  const char * name() const { return "inlined"; }
+  const AttachmentStrategy * next() const { return hidden(); }
+  const AttachmentStrategy * prev() const { return smart(); }
+
+  bool inlineNestedMessages() const { return true; }
+  Display defaultDisplay( KMime::Content * ) const { return Inline; }
+};
+
+//
+// HiddenAttachmentStrategy
+//   show nothing except the first text/plain body part _at all_
+//
+
+class HiddenAttachmentStrategy : public AttachmentStrategy {
+  friend class ::AttachmentStrategy;
+protected:
+  HiddenAttachmentStrategy() : AttachmentStrategy() {}
+  virtual ~HiddenAttachmentStrategy() {}
+
+public:
+  const char * name() const { return "hidden"; }
+  const AttachmentStrategy * next() const { return iconic(); }
+  const AttachmentStrategy * prev() const { return inlined(); }
+
+  bool inlineNestedMessages() const { return false; }
+  Display defaultDisplay( KMime::Content * node ) const {
+    if ( node->contentType()->isText() &&
+          node->contentDisposition()->filename().trimmed().isEmpty() &&
+          node->contentType()->name().trimmed().isEmpty() )
+      // text/* w/o filename parameter:
+      return Inline;
+
+    if ( node->parent() && node->parent()->contentType()->isMultipart() &&
+          node->parent()->contentType()->subType() == "related" )
+      return Inline;
+
+    return None;
   }
+};
 
-  const AttachmentStrategy * AttachmentStrategy::create( Type type ) {
-    switch ( type ) {
-    case Iconic:  return iconic();
-    case Smart:   return smart();
-    case Inlined: return inlined();
-    case Hidden:  return hidden();
-    }
-    kFatal( 5006 ) << "Unknown attachment startegy ( type =="
-                   << (int)type << ") requested!";
-    return 0; // make compiler happy
+
+//
+// AttachmentStrategy abstract base:
+//
+
+AttachmentStrategy::AttachmentStrategy() {
+
+}
+
+AttachmentStrategy::~AttachmentStrategy() {
+
+}
+
+const AttachmentStrategy * AttachmentStrategy::create( Type type ) {
+  switch ( type ) {
+  case Iconic:  return iconic();
+  case Smart:   return smart();
+  case Inlined: return inlined();
+  case Hidden:  return hidden();
   }
+  kFatal( 5006 ) << "Unknown attachment startegy ( type =="
+                  << (int)type << ") requested!";
+  return 0; // make compiler happy
+}
 
-  const AttachmentStrategy * AttachmentStrategy::create( const QString & type ) {
-    QString lowerType = type.toLower();
-    if ( lowerType == "iconic" )  return iconic();
-    //if ( lowerType == "smart" )   return smart(); // not needed, see below
-    if ( lowerType == "inlined" ) return inlined();
-    if ( lowerType == "hidden" )  return hidden();
-    // don't kFatal here, b/c the strings are user-provided
-    // (KConfig), so fail gracefully to the default:
-    return smart();
-  }
+const AttachmentStrategy * AttachmentStrategy::create( const QString & type ) {
+  QString lowerType = type.toLower();
+  if ( lowerType == "iconic" )  return iconic();
+  //if ( lowerType == "smart" )   return smart(); // not needed, see below
+  if ( lowerType == "inlined" ) return inlined();
+  if ( lowerType == "hidden" )  return hidden();
+  // don't kFatal here, b/c the strings are user-provided
+  // (KConfig), so fail gracefully to the default:
+  return smart();
+}
 
-  static const AttachmentStrategy * iconicStrategy = 0;
-  static const AttachmentStrategy * smartStrategy = 0;
-  static const AttachmentStrategy * inlinedStrategy = 0;
-  static const AttachmentStrategy * hiddenStrategy = 0;
+static const AttachmentStrategy * iconicStrategy = 0;
+static const AttachmentStrategy * smartStrategy = 0;
+static const AttachmentStrategy * inlinedStrategy = 0;
+static const AttachmentStrategy * hiddenStrategy = 0;
 
-  const AttachmentStrategy * AttachmentStrategy::iconic() {
-    if ( !iconicStrategy )
-      iconicStrategy = new IconicAttachmentStrategy();
-    return iconicStrategy;
-  }
+const AttachmentStrategy * AttachmentStrategy::iconic() {
+  if ( !iconicStrategy )
+    iconicStrategy = new IconicAttachmentStrategy();
+  return iconicStrategy;
+}
 
-  const AttachmentStrategy * AttachmentStrategy::smart() {
-    if ( !smartStrategy )
-      smartStrategy = new SmartAttachmentStrategy();
-    return smartStrategy;
-  }
+const AttachmentStrategy * AttachmentStrategy::smart() {
+  if ( !smartStrategy )
+    smartStrategy = new SmartAttachmentStrategy();
+  return smartStrategy;
+}
 
-  const AttachmentStrategy * AttachmentStrategy::inlined() {
-    if ( !inlinedStrategy )
-      inlinedStrategy = new InlinedAttachmentStrategy();
-    return inlinedStrategy;
-  }
+const AttachmentStrategy * AttachmentStrategy::inlined() {
+  if ( !inlinedStrategy )
+    inlinedStrategy = new InlinedAttachmentStrategy();
+  return inlinedStrategy;
+}
 
-  const AttachmentStrategy * AttachmentStrategy::hidden() {
-    if ( !hiddenStrategy )
-      hiddenStrategy = new HiddenAttachmentStrategy();
-    return hiddenStrategy;
-  }
+const AttachmentStrategy * AttachmentStrategy::hidden() {
+  if ( !hiddenStrategy )
+    hiddenStrategy = new HiddenAttachmentStrategy();
+  return hiddenStrategy;
+}
 
-} // namespace MailViewer

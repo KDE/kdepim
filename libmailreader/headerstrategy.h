@@ -35,46 +35,43 @@
 class QString;
 class QStringList;
 
-namespace MailViewer {
+class HeaderStrategy {
+protected:
+  HeaderStrategy();
+  virtual ~HeaderStrategy();
 
-  class HeaderStrategy {
-  protected:
-    HeaderStrategy();
-    virtual ~HeaderStrategy();
+public:
+  //
+  // Factory methods:
+  //
+  enum Type { All, Rich, Standard, Brief, Custom };
 
-  public:
-    //
-    // Factory methods:
-    //
-    enum Type { All, Rich, Standard, Brief, Custom };
+  static const HeaderStrategy * create( Type type );
+  static const HeaderStrategy * create( const QString & type );
 
-    static const HeaderStrategy * create( Type type );
-    static const HeaderStrategy * create( const QString & type );
+  static const HeaderStrategy * all();
+  static const HeaderStrategy * rich();
+  static const HeaderStrategy * standard();
+  static const HeaderStrategy * brief();
+  static const HeaderStrategy * custom();
 
-    static const HeaderStrategy * all();
-    static const HeaderStrategy * rich();
-    static const HeaderStrategy * standard();
-    static const HeaderStrategy * brief();
-    static const HeaderStrategy * custom();
+  //
+  // Methods for handling the strategies:
+  //
+  virtual const char * name() const = 0;
+  virtual const HeaderStrategy * next() const = 0;
+  virtual const HeaderStrategy * prev() const = 0;
 
-    //
-    // Methods for handling the strategies:
-    //
-    virtual const char * name() const = 0;
-    virtual const HeaderStrategy * next() const = 0;
-    virtual const HeaderStrategy * prev() const = 0;
+  //
+  // HeaderStrategy interface:
+  //
+  enum DefaultPolicy { Display, Hide };
 
-    //
-    // HeaderStrategy interface:
-    //
-    enum DefaultPolicy { Display, Hide };
+  virtual QStringList headersToDisplay() const;
+  virtual QStringList headersToHide() const;
+  virtual DefaultPolicy defaultPolicy() const = 0;
+  virtual bool showHeader( const QString & header ) const;
+};
 
-    virtual QStringList headersToDisplay() const;
-    virtual QStringList headersToHide() const;
-    virtual DefaultPolicy defaultPolicy() const = 0;
-    virtual bool showHeader( const QString & header ) const;
-  };
-
-} // namespace MailViewer
 
 #endif // __KMAIL_HEADERSTRATEGY_H__

@@ -43,65 +43,61 @@
 #include <QFont>
 #include <QPalette>
 
-using namespace MailViewer;
 
-namespace MailViewer {
+CSSHelper::CSSHelper( const QPaintDevice *pd ) :
+  KPIM::CSSHelper( pd )
+{
+  KSharedConfigPtr config = Global::instance()->config();
 
-  CSSHelper::CSSHelper( const QPaintDevice *pd ) :
-    KPIM::CSSHelper( pd )
-  {
-    KSharedConfigPtr config = Global::instance()->config();
+  KConfigGroup reader( config, "Reader" );
+  KConfigGroup fonts( config, "Fonts" );
+  KConfigGroup pixmaps( config, "Pixmaps" );
 
-    KConfigGroup reader( config, "Reader" );
-    KConfigGroup fonts( config, "Fonts" );
-    KConfigGroup pixmaps( config, "Pixmaps" );
+  mRecycleQuoteColors = reader.readEntry( "RecycleQuoteColors", false );
 
-    mRecycleQuoteColors = reader.readEntry( "RecycleQuoteColors", false );
-
-    mForegroundColor = KColorScheme( QPalette::Active ).foreground().color();
-    mBackgroundColor = KColorScheme( QPalette::Active ).background().color();
-    if ( !reader.readEntry( "defaultColors", true ) ) {
-      mLinkColor =
-        reader.readEntry( "LinkColor", mLinkColor );
-      mVisitedLinkColor =
-        reader.readEntry( "FollowedColor", mVisitedLinkColor );
-      cPgpEncrH =
-        reader.readEntry( "PGPMessageEncr", cPgpEncrH );
-      cPgpOk1H  =
-        reader.readEntry( "PGPMessageOkKeyOk", cPgpOk1H );
-      cPgpOk0H  =
-        reader.readEntry( "PGPMessageOkKeyBad", cPgpOk0H );
-      cPgpWarnH =
-        reader.readEntry( "PGPMessageWarn", cPgpWarnH );
-      cPgpErrH  =
-        reader.readEntry( "PGPMessageErr", cPgpErrH );
-      cHtmlWarning =
-        reader.readEntry( "HTMLWarningColor", cHtmlWarning );
-      for ( int i = 0 ; i < 3 ; ++i ) {
-        const QString key = "QuotedText" + QString::number( i+1 );
-        mQuoteColor[i] = reader.readEntry( key, mQuoteColor[i] );
-      }
+  mForegroundColor = KColorScheme( QPalette::Active ).foreground().color();
+  mBackgroundColor = KColorScheme( QPalette::Active ).background().color();
+  if ( !reader.readEntry( "defaultColors", true ) ) {
+    mLinkColor =
+      reader.readEntry( "LinkColor", mLinkColor );
+    mVisitedLinkColor =
+      reader.readEntry( "FollowedColor", mVisitedLinkColor );
+    cPgpEncrH =
+      reader.readEntry( "PGPMessageEncr", cPgpEncrH );
+    cPgpOk1H  =
+      reader.readEntry( "PGPMessageOkKeyOk", cPgpOk1H );
+    cPgpOk0H  =
+      reader.readEntry( "PGPMessageOkKeyBad", cPgpOk0H );
+    cPgpWarnH =
+      reader.readEntry( "PGPMessageWarn", cPgpWarnH );
+    cPgpErrH  =
+      reader.readEntry( "PGPMessageErr", cPgpErrH );
+    cHtmlWarning =
+      reader.readEntry( "HTMLWarningColor", cHtmlWarning );
+    for ( int i = 0 ; i < 3 ; ++i ) {
+      const QString key = "QuotedText" + QString::number( i+1 );
+      mQuoteColor[i] = reader.readEntry( key, mQuoteColor[i] );
     }
-
-    if ( !fonts.readEntry( "defaultFonts", true ) ) {
-      mBodyFont = fonts.readEntry(  "body-font",  mBodyFont );
-      mPrintFont = fonts.readEntry( "print-font", mPrintFont );
-      mFixedFont = fonts.readEntry( "fixed-font", mFixedFont );
-      mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
-      QFont defaultFont = mBodyFont;
-      defaultFont.setItalic( true );
-      for ( int i = 0 ; i < 3 ; ++i ) {
-        const QString key = QString( "quote%1-font" ).arg( i+1 );
-        mQuoteFont[i] = fonts.readEntry( key, defaultFont );
-      }
-    }
-
-    mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
-
-    mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
-    mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
-
-    recalculatePGPColors();
   }
-} // namespace MailViewer
+
+  if ( !fonts.readEntry( "defaultFonts", true ) ) {
+    mBodyFont = fonts.readEntry(  "body-font",  mBodyFont );
+    mPrintFont = fonts.readEntry( "print-font", mPrintFont );
+    mFixedFont = fonts.readEntry( "fixed-font", mFixedFont );
+    mFixedPrintFont = mFixedFont; // FIXME when we have a separate fixed print font
+    QFont defaultFont = mBodyFont;
+    defaultFont.setItalic( true );
+    for ( int i = 0 ; i < 3 ; ++i ) {
+      const QString key = QString( "quote%1-font" ).arg( i+1 );
+      mQuoteFont[i] = fonts.readEntry( key, defaultFont );
+    }
+  }
+
+  mShrinkQuotes = GlobalSettings::self()->shrinkQuotes();
+
+  mBackingPixmapStr = pixmaps.readPathEntry("Readerwin", QString());
+  mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
+
+  recalculatePGPColors();
+}
 

@@ -43,22 +43,22 @@
 
 namespace {
   class AnyTypeBodyPartFormatter
-    : public MailViewer::BodyPartFormatter,
-      public MailViewer::Interface::BodyPartFormatter {
+    : public BodyPartFormatter,
+      public Interface::BodyPartFormatter {
     static const AnyTypeBodyPartFormatter * self;
   public:
-    Result format( MailViewer::Interface::BodyPart *, MailViewer::HtmlWriter * ) const {
-      kDebug() << "Acting as a MailViewer::Interface::BodyPartFormatter!";
+    Result format( Interface::BodyPart *, HtmlWriter * ) const {
+      kDebug() << "Acting as a Interface::BodyPartFormatter!";
       return AsIcon;
     }
 
-    bool process( MailViewer::ObjectTreeParser *, KMime::Content *, MailViewer::ProcessResult & result ) const {
+    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
       result.setNeverDisplayInline( true );
       return false;
     }
-    static const MailViewer::BodyPartFormatter * create() {
+    static const ::BodyPartFormatter * create() {
       if ( !self )
-	self = new AnyTypeBodyPartFormatter();
+        self = new AnyTypeBodyPartFormatter();
       return self;
     }
   };
@@ -66,14 +66,14 @@ namespace {
   const AnyTypeBodyPartFormatter * AnyTypeBodyPartFormatter::self = 0;
 
 
-  class ImageTypeBodyPartFormatter : public MailViewer::BodyPartFormatter {
+  class ImageTypeBodyPartFormatter : public BodyPartFormatter {
     static const ImageTypeBodyPartFormatter * self;
   public:
-    bool process( MailViewer::ObjectTreeParser *, KMime::Content *, MailViewer::ProcessResult & result ) const {
+    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
       result.setIsImage( true );
       return false;
     }
-    static const MailViewer::BodyPartFormatter * create() {
+    static const BodyPartFormatter * create() {
       if ( !self )
 	self = new ImageTypeBodyPartFormatter();
       return self;
@@ -83,11 +83,11 @@ namespace {
   const ImageTypeBodyPartFormatter * ImageTypeBodyPartFormatter::self = 0;
 
 #define CREATE_BODY_PART_FORMATTER(subtype) \
-  class subtype##BodyPartFormatter : public MailViewer::BodyPartFormatter { \
+  class subtype##BodyPartFormatter : public BodyPartFormatter { \
     static const subtype##BodyPartFormatter * self; \
   public: \
-    bool process( MailViewer::ObjectTreeParser *, KMime::Content *, MailViewer::ProcessResult & ) const; \
-    static const MailViewer::BodyPartFormatter * create() { \
+    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const; \
+    static const BodyPartFormatter * create() { \
       if ( !self ) \
 	self = new subtype##BodyPartFormatter(); \
       return self; \
@@ -96,7 +96,7 @@ namespace {
   \
   const subtype##BodyPartFormatter * subtype##BodyPartFormatter::self; \
   \
-  bool subtype##BodyPartFormatter::process( MailViewer::ObjectTreeParser * otp, KMime::Content * node, MailViewer::ProcessResult & result ) const { \
+  bool subtype##BodyPartFormatter::process( ObjectTreeParser * otp, KMime::Content * node, ProcessResult & result ) const { \
     return otp->process##subtype##Subtype( node, result ); \
   }
 
@@ -124,13 +124,13 @@ namespace {
 #undef CREATE_BODY_PART_FORMATTER
 } // anon namespace
 
-// FIXME: port some more MailViewer::BodyPartFormatters to MailViewer::Interface::BodyPartFormatters
-void MailViewer::BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters( MailViewer::BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
+// FIXME: port some more BodyPartFormatters to Interface::BodyPartFormatters
+void BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters( BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
   if ( !reg ) return;
   (*reg)["application"]["octet-stream"] = new AnyTypeBodyPartFormatter();
 }
 
-typedef const MailViewer::BodyPartFormatter * (*BodyPartFormatterCreator)();
+typedef const BodyPartFormatter * (*BodyPartFormatterCreator)();
 
 struct SubtypeBuiltin {
   const char * subtype;
@@ -201,7 +201,7 @@ static const struct {
 
 #undef DIM
 
-static const MailViewer::BodyPartFormatter * createForText( const char * subtype ) {
+static const BodyPartFormatter * createForText( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {
     case 'h':
@@ -227,17 +227,17 @@ static const MailViewer::BodyPartFormatter * createForText( const char * subtype
   return TextPlainBodyPartFormatter::create();
 }
 
-static const MailViewer::BodyPartFormatter * createForImage( const char * ) {
+static const BodyPartFormatter * createForImage( const char * ) {
   return ImageTypeBodyPartFormatter::create();
 }
 
-static const MailViewer::BodyPartFormatter * createForMessage( const char * subtype ) {
+static const BodyPartFormatter * createForMessage( const char * subtype ) {
   if ( kasciistricmp( subtype, "rfc822" ) == 0 )
     return MessageRfc822BodyPartFormatter::create();
   return AnyTypeBodyPartFormatter::create();
 }
 
-static const MailViewer::BodyPartFormatter * createForMultiPart( const char * subtype ) {
+static const BodyPartFormatter * createForMultiPart( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {
     case 'a':
@@ -260,7 +260,7 @@ static const MailViewer::BodyPartFormatter * createForMultiPart( const char * su
   return MultiPartMixedBodyPartFormatter::create();
 }
 
-static const MailViewer::BodyPartFormatter * createForApplication( const char * subtype ) {
+static const BodyPartFormatter * createForApplication( const char * subtype ) {
   if ( subtype && *subtype )
     switch ( subtype[0] ) {
     case 'p':
@@ -290,7 +290,7 @@ static const MailViewer::BodyPartFormatter * createForApplication( const char * 
 }
 
 // OK, replace this with a factory with plugin support later on...
-const MailViewer::BodyPartFormatter * MailViewer::BodyPartFormatter::createFor( const char * type, const char * subtype ) {
+const BodyPartFormatter * BodyPartFormatter::createFor( const char * type, const char * subtype ) {
   if ( type && *type )
     switch ( type[0] ) {
     case 'a': // application

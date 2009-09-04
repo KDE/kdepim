@@ -34,13 +34,9 @@
 
 #include <libkdepim/csshelper.h>
 
-namespace MailViewer {
-
-  class CSSHelper : public KPIM::CSSHelper {
-  public:
-    CSSHelper( const QPaintDevice *pd );
-  };
-
-} // namespace MailViewer
+class CSSHelper : public KPIM::CSSHelper {
+public:
+  CSSHelper( const QPaintDevice *pd );
+};
 
 #endif // __KMAIL_CSSHELPER_H__

@@ -18,11 +18,9 @@
 */
 
 #include "global.h"
-MailViewer::Global * MailViewer::Global::mSelf = 0;
+Global * Global::mSelf = 0;
 
-using namespace MailViewer;
-
-Global * MailViewer::Global::instance()
+Global * Global::instance()
 {
   if ( !mSelf )
     mSelf = new Global();

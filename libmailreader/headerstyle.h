@@ -40,58 +40,55 @@ namespace KMime {
     class Message;
 }
 
-namespace MailViewer {
+class HeaderStrategy;
 
-  class HeaderStrategy;
+/** This class encapsulates the visual appearance of message
+    headers. Together with HeaderStrategy, which determines
+    which of the headers present in the message be shown, it is
+    responsible for the formatting of message headers.
 
-  /** This class encapsulates the visual appearance of message
-      headers. Together with HeaderStrategy, which determines
-      which of the headers present in the message be shown, it is
-      responsible for the formatting of message headers.
+    @short Encapsulates visual appearance of message headers.
+    @author Marc Mutz <mutz@kde.org>
+    @see HeaderStrategy
+**/
+class HeaderStyle {
+protected:
+  HeaderStyle();
+  virtual ~HeaderStyle();
 
-      @short Encapsulates visual appearance of message headers.
-      @author Marc Mutz <mutz@kde.org>
-      @see HeaderStrategy
-  **/
-  class HeaderStyle {
-  protected:
-    HeaderStyle();
-    virtual ~HeaderStyle();
+public:
+  //
+  // Factory methods:
+  //
+  enum Type { Brief, Plain, Fancy, Enterprise };
 
-  public:
-    //
-    // Factory methods:
-    //
-    enum Type { Brief, Plain, Fancy, Enterprise };
+  static const HeaderStyle * create( Type type );
+  static const HeaderStyle * create( const QString & type );
 
-    static const HeaderStyle * create( Type type );
-    static const HeaderStyle * create( const QString & type );
+  static const HeaderStyle * brief();
+  static const HeaderStyle * plain();
+  static const HeaderStyle * fancy();
+  static const HeaderStyle * enterprise();
 
-    static const HeaderStyle * brief();
-    static const HeaderStyle * plain();
-    static const HeaderStyle * fancy();
-    static const HeaderStyle * enterprise();
+  //
+  // Methods for handling the styles:
+  //
+  virtual const char * name() const = 0;
+  virtual const HeaderStyle * next() const = 0;
+  virtual const HeaderStyle * prev() const = 0;
 
-    //
-    // Methods for handling the styles:
-    //
-    virtual const char * name() const = 0;
-    virtual const HeaderStyle * next() const = 0;
-    virtual const HeaderStyle * prev() const = 0;
+  //
+  // HeaderStyle interface:
+  //
+  virtual QString format( KMime::Message * message,
+        const HeaderStrategy * strategy,
+        const QString & vCardName,
+        bool printing = false, bool topLevel = false ) const = 0;
 
-    //
-    // HeaderStyle interface:
-    //
-    virtual QString format( KMime::Message * message,
-			    const MailViewer::HeaderStrategy * strategy,
-			    const QString & vCardName,
-			    bool printing = false, bool topLevel = false ) const = 0;
+  QString dateStr(const KDateTime &dateTime) const;
+  QByteArray dateShortStr(const KDateTime &dateTime) const;
 
-    QString dateStr(const KDateTime &dateTime) const;
-    QByteArray dateShortStr(const KDateTime &dateTime) const;
+};
 
-  };
-
-} // namespace MailViewer
 
 #endif // __KMAIL_HEADERSTYLE_H__

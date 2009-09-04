@@ -37,45 +37,41 @@ namespace KMime {
   class Content;
 }
 
-namespace MailViewer {
+class AttachmentStrategy {
+protected:
+  AttachmentStrategy();
+  virtual ~AttachmentStrategy();
 
-  class AttachmentStrategy {
-  protected:
-    AttachmentStrategy();
-    virtual ~AttachmentStrategy();
+public:
+  //
+  // Factory methods:
+  //
+  enum Type { Iconic, Smart, Inlined, Hidden };
 
-  public:
-    //
-    // Factory methods:
-    //
-    enum Type { Iconic, Smart, Inlined, Hidden };
+  static const AttachmentStrategy * create( Type type );
+  static const AttachmentStrategy * create( const QString & type );
 
-    static const AttachmentStrategy * create( Type type );
-    static const AttachmentStrategy * create( const QString & type );
+  static const AttachmentStrategy * iconic();
+  static const AttachmentStrategy * smart();
+  static const AttachmentStrategy * inlined();
+  static const AttachmentStrategy * hidden();
 
-    static const AttachmentStrategy * iconic();
-    static const AttachmentStrategy * smart();
-    static const AttachmentStrategy * inlined();
-    static const AttachmentStrategy * hidden();
+  //
+  // Navigation methods:
+  //
 
-    //
-    // Navigation methods:
-    //
+  virtual const char * name() const = 0;
+  virtual const AttachmentStrategy * next() const = 0;
+  virtual const AttachmentStrategy * prev() const = 0;
 
-    virtual const char * name() const = 0;
-    virtual const AttachmentStrategy * next() const = 0;
-    virtual const AttachmentStrategy * prev() const = 0;
+  //
+  // Bahavioural:
+  //
 
-    //
-    // Bahavioural:
-    //
+  enum Display { None, AsIcon, Inline };
 
-    enum Display { None, AsIcon, Inline };
-
-    virtual bool inlineNestedMessages() const = 0;
-    virtual Display defaultDisplay( KMime::Content * node ) const = 0;
-  };
-
-} // namespace MailViewer
+  virtual bool inlineNestedMessages() const = 0;
+  virtual Display defaultDisplay( KMime::Content * node ) const = 0;
+};
 
 #endif // __KMAIL_ATTACHMENTSTRATEGY_H__

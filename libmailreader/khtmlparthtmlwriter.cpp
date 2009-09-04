@@ -44,114 +44,111 @@
 #include <cassert>
 #include <QByteArray>
 
-namespace MailViewer {
+KHtmlPartHtmlWriter::KHtmlPartHtmlWriter( KHTMLPart * part,
+                                          QObject * parent, const char * name )
+  : QObject( parent ), HtmlWriter(),
+    mHtmlPart( part ), mState( Ended )
+{
+  setObjectName( name );
+  assert( part );
+  mHtmlTimer.setSingleShot( true );
+  connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
+}
 
-  KHtmlPartHtmlWriter::KHtmlPartHtmlWriter( KHTMLPart * part,
-                                            QObject * parent, const char * name )
-    : QObject( parent ), HtmlWriter(),
-      mHtmlPart( part ), mState( Ended )
-  {
-    setObjectName( name );
-    assert( part );
-    mHtmlTimer.setSingleShot( true );
-    connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
+KHtmlPartHtmlWriter::~KHtmlPartHtmlWriter() {
+
+}
+
+void KHtmlPartHtmlWriter::begin( const QString & css ) {
+  if ( mState != Ended ) {
+    kWarning() <<"KHtmlPartHtmlWriter: begin() called on non-ended session!";
+    reset();
   }
 
-  KHtmlPartHtmlWriter::~KHtmlPartHtmlWriter() {
+  mEmbeddedPartMap.clear();
 
-  }
+  // clear the widget:
+  mHtmlPart->view()->setUpdatesEnabled( false );
+  mHtmlPart->view()->viewport()->setUpdatesEnabled( false );
+  mHtmlPart->view()->ensureVisible( 0, 0 );
 
-  void KHtmlPartHtmlWriter::begin( const QString & css ) {
-    if ( mState != Ended ) {
-      kWarning() <<"KHtmlPartHtmlWriter: begin() called on non-ended session!";
-      reset();
-    }
+  mHtmlPart->begin( KUrl() );
+  if ( !css.isEmpty() )
+    mHtmlPart->setUserStyleSheet( css );
+  mState = Begun;
+}
 
-    mEmbeddedPartMap.clear();
+void KHtmlPartHtmlWriter::end() {
+  kWarning( mState != Begun, 5006 ) <<"KHtmlPartHtmlWriter: end() called on non-begun or queued session!";
+  mHtmlPart->end();
 
-    // clear the widget:
-    mHtmlPart->view()->setUpdatesEnabled( false );
-    mHtmlPart->view()->viewport()->setUpdatesEnabled( false );
-    mHtmlPart->view()->ensureVisible( 0, 0 );
+  resolveCidUrls();
 
-    mHtmlPart->begin( KUrl() );
-    if ( !css.isEmpty() )
-      mHtmlPart->setUserStyleSheet( css );
-    mState = Begun;
-  }
+  mHtmlPart->view()->viewport()->setUpdatesEnabled( true );
+  mHtmlPart->view()->setUpdatesEnabled( true );
+  mHtmlPart->view()->viewport()->repaint();
+  mState = Ended;
+  emit finished();
+}
 
-  void KHtmlPartHtmlWriter::end() {
-    kWarning( mState != Begun, 5006 ) <<"KHtmlPartHtmlWriter: end() called on non-begun or queued session!";
-    mHtmlPart->end();
-
-    resolveCidUrls();
-
-    mHtmlPart->view()->viewport()->setUpdatesEnabled( true );
-    mHtmlPart->view()->setUpdatesEnabled( true );
-    mHtmlPart->view()->viewport()->repaint();
+void KHtmlPartHtmlWriter::reset() {
+  if ( mState != Ended ) {
+    mHtmlTimer.stop();
+    mHtmlQueue.clear();
+    mState = Begun; // don't run into end()'s warning
+    end();
     mState = Ended;
-    emit finished();
   }
+}
 
-  void KHtmlPartHtmlWriter::reset() {
-    if ( mState != Ended ) {
-      mHtmlTimer.stop();
-      mHtmlQueue.clear();
-      mState = Begun; // don't run into end()'s warning
-      end();
-      mState = Ended;
-    }
+void KHtmlPartHtmlWriter::write( const QString & str ) {
+  kWarning( mState != Begun, 5006 ) <<"KHtmlPartHtmlWriter: write() called in Ended or Queued state!";
+  mHtmlPart->write( str );
+}
+
+void KHtmlPartHtmlWriter::queue( const QString & str ) {
+  static const uint chunksize = 16384;
+  for ( int pos = 0 ; pos < str.length() ; pos += chunksize )
+    mHtmlQueue.push_back( str.mid( pos, chunksize ) );
+  mState = Queued;
+}
+
+void KHtmlPartHtmlWriter::flush() {
+  slotWriteNextHtmlChunk();
+}
+
+void KHtmlPartHtmlWriter::slotWriteNextHtmlChunk() {
+  if ( mHtmlQueue.empty() ) {
+    mState = Begun; // don't run into end()'s warning
+    end();
+  } else {
+    mHtmlPart->write( mHtmlQueue.front() );
+    mHtmlQueue.pop_front();
+    mHtmlTimer.start( 0 );
   }
+}
 
-  void KHtmlPartHtmlWriter::write( const QString & str ) {
-    kWarning( mState != Begun, 5006 ) <<"KHtmlPartHtmlWriter: write() called in Ended or Queued state!";
-    mHtmlPart->write( str );
-  }
+void KHtmlPartHtmlWriter::embedPart( const QByteArray & contentId,
+                                      const QString & contentURL ) {
+  mEmbeddedPartMap[QString(contentId)] = contentURL;
+}
 
-  void KHtmlPartHtmlWriter::queue( const QString & str ) {
-    static const uint chunksize = 16384;
-    for ( int pos = 0 ; pos < str.length() ; pos += chunksize )
-      mHtmlQueue.push_back( str.mid( pos, chunksize ) );
-    mState = Queued;
-  }
-
-  void KHtmlPartHtmlWriter::flush() {
-    slotWriteNextHtmlChunk();
-  }
-
-  void KHtmlPartHtmlWriter::slotWriteNextHtmlChunk() {
-    if ( mHtmlQueue.empty() ) {
-      mState = Begun; // don't run into end()'s warning
-      end();
-    } else {
-      mHtmlPart->write( mHtmlQueue.front() );
-      mHtmlQueue.pop_front();
-      mHtmlTimer.start( 0 );
-    }
-  }
-
-  void KHtmlPartHtmlWriter::embedPart( const QByteArray & contentId,
-                                       const QString & contentURL ) {
-    mEmbeddedPartMap[QString(contentId)] = contentURL;
-  }
-
-  void KHtmlPartHtmlWriter::resolveCidUrls()
-  {
-    DOM::HTMLDocument document = mHtmlPart->htmlDocument();
-    DOM::HTMLCollection images = document.images();
-    for ( DOM::Node node = images.firstItem(); !node.isNull(); node = images.nextItem() ) {
-      DOM::HTMLImageElement image( node );
-      KUrl url( image.src().string() );
-      if ( url.protocol() == "cid" ) {
-        EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
-        if ( it != mEmbeddedPartMap.constEnd() ) {
-          kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();
-          image.setSrc( it.value() );
-        }
+void KHtmlPartHtmlWriter::resolveCidUrls()
+{
+  DOM::HTMLDocument document = mHtmlPart->htmlDocument();
+  DOM::HTMLCollection images = document.images();
+  for ( DOM::Node node = images.firstItem(); !node.isNull(); node = images.nextItem() ) {
+    DOM::HTMLImageElement image( node );
+    KUrl url( image.src().string() );
+    if ( url.protocol() == "cid" ) {
+      EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
+      if ( it != mEmbeddedPartMap.constEnd() ) {
+        kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();
+        image.setSrc( it.value() );
       }
     }
   }
+}
 
-} // namespace MailViewer
 
 #include "khtmlparthtmlwriter.moc"

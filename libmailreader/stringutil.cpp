@@ -49,8 +49,6 @@ using namespace KMime::HeaderParsing;
 
 #endif
 
-namespace MailViewer
-{
 
 namespace StringUtil
 {
@@ -958,4 +956,3 @@ QString smartQuote( const QString & msg, int maxLineLength )
 
 }
 
-}

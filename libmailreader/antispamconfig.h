@@ -38,86 +38,83 @@
 #include <QList>
 class QString;
 
-namespace MailViewer {
+/// Valid types of SpamAgent
+typedef enum {
+  SpamAgentNone,          //!< Invalid SpamAgent, skip this agent
+  SpamAgentBool,          //!< Simple Yes or No (Razor)
+  SpamAgentFloat,         //!< For straight percentages between 0.0 and 1.0 (BogoFilter)
+  SpamAgentFloatLarge,    //!< For straight percentages between 0.0 and 100.0
+  SpamAgentAdjustedFloat  //!< Use this when we need to compare against a threshold (SpamAssasssin)
+} SpamAgentTypes;
 
-  /// Valid types of SpamAgent
-  typedef enum {
-    SpamAgentNone,          //!< Invalid SpamAgent, skip this agent
-    SpamAgentBool,          //!< Simple Yes or No (Razor)
-    SpamAgentFloat,         //!< For straight percentages between 0.0 and 1.0 (BogoFilter)
-    SpamAgentFloatLarge,    //!< For straight percentages between 0.0 and 100.0
-    SpamAgentAdjustedFloat  //!< Use this when we need to compare against a threshold (SpamAssasssin)
-  } SpamAgentTypes;
+class SpamAgent {
+public:
+  SpamAgent() : mType( SpamAgentNone ) {}
+  SpamAgent( const QString & name, SpamAgentTypes type, const QByteArray & field, const QByteArray & cfield,
+              const QRegExp & score, const QRegExp & threshold, const QRegExp & confidence )
+    : mName( name ), mType( type ), mField( field ), mConfidenceField( cfield ),
+      mScore( score ), mThreshold( threshold ), mConfidence( confidence ) {}
 
-  class SpamAgent {
-  public:
-    SpamAgent() : mType( SpamAgentNone ) {}
-    SpamAgent( const QString & name, SpamAgentTypes type, const QByteArray & field, const QByteArray & cfield,
-               const QRegExp & score, const QRegExp & threshold, const QRegExp & confidence )
-      : mName( name ), mType( type ), mField( field ), mConfidenceField( cfield ),
-        mScore( score ), mThreshold( threshold ), mConfidence( confidence ) {}
+  QString name() const { return mName; }
+  SpamAgentTypes scoreType() const { return mType; }
+  QByteArray header() const { return mField; }
+  QByteArray confidenceHeader() const { return mConfidenceField; }
+  QRegExp scorePattern() const { return mScore; }
+  QRegExp thresholdPattern() const { return mThreshold; }
+  QRegExp confidencePattern() const { return mConfidence; }
 
-    QString name() const { return mName; }
-    SpamAgentTypes scoreType() const { return mType; }
-    QByteArray header() const { return mField; }
-    QByteArray confidenceHeader() const { return mConfidenceField; }
-    QRegExp scorePattern() const { return mScore; }
-    QRegExp thresholdPattern() const { return mThreshold; }
-    QRegExp confidencePattern() const { return mConfidence; }
+private:
+  QString mName;
+  SpamAgentTypes mType;
+  QByteArray mField;
+  QByteArray mConfidenceField;
+  QRegExp mScore;
+  QRegExp mThreshold;
+  QRegExp mConfidence;
+};
+typedef QList<SpamAgent> SpamAgents;
+typedef QList<SpamAgent>::Iterator SpamAgentsIterator;
 
-  private:
-    QString mName;
-    SpamAgentTypes mType;
-    QByteArray mField;
-    QByteArray mConfidenceField;
-    QRegExp mScore;
-    QRegExp mThreshold;
-    QRegExp mConfidence;
-  };
-  typedef QList<SpamAgent> SpamAgents;
-  typedef QList<SpamAgent>::Iterator SpamAgentsIterator;
+class AntiSpamConfigSingletonProvider;
 
-  class AntiSpamConfigSingletonProvider;
+/**
+    @short Singleton to manage loading the kmail.antispamrc file.
+    @author Patrick Audley <paudley@blackcat.ca>
+
+    Use of this config-manager class is straight forward.  Since it
+    is a singleton object, all you have to do is obtain an instance
+    by calling @p SpamConfig::instance() and use any of the
+    public member functions.
+  */
+class AntiSpamConfig {
+friend class AntiSpamConfigSingletonProvider;
+private:
+  AntiSpamConfig();
+
+public:
+  ~AntiSpamConfig() {}
+
+  static AntiSpamConfig * instance();
 
   /**
-     @short Singleton to manage loading the kmail.antispamrc file.
-     @author Patrick Audley <paudley@blackcat.ca>
+    * Returns a list of all agents found on the system. This
+    * might list SA twice, if both the C and the Perl version are present.
+    */
+  const SpamAgents agents() const { return mAgents; }
+  SpamAgents agents() { return mAgents; }
 
-     Use of this config-manager class is straight forward.  Since it
-     is a singleton object, all you have to do is obtain an instance
-     by calling @p SpamConfig::instance() and use any of the
-     public member functions.
-   */
-  class AntiSpamConfig {
-  friend class AntiSpamConfigSingletonProvider;
-  private:
-    AntiSpamConfig();
+  /**
+    * Returns a list of unique agents, found on the system. SpamAssassin will
+    * only be listed once, even if both the C and the Perl version are
+    * installed.
+    */
+  const SpamAgents uniqueAgents() const;
 
-  public:
-    ~AntiSpamConfig() {}
+private:
+  SpamAgents mAgents;
 
-    static AntiSpamConfig * instance();
+  void readConfig();
+};
 
-    /** 
-     * Returns a list of all agents found on the system. This
-     * might list SA twice, if both the C and the Perl version are present.
-     */
-    const SpamAgents agents() const { return mAgents; }
-    SpamAgents agents() { return mAgents; }
-
-    /** 
-     * Returns a list of unique agents, found on the system. SpamAssassin will
-     * only be listed once, even if both the C and the Perl version are
-     * installed.
-     */
-    const SpamAgents uniqueAgents() const;
-
-  private:
-    SpamAgents mAgents;
-
-    void readConfig();
-  };
-
-} // namespace MailViewer
 
 #endif // __KMAIL_ANTISPAMCONFIG_H__

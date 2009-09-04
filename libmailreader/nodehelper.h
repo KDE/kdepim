@@ -31,13 +31,10 @@ namespace KMime {
   class Message;
 }
 
-namespace MailViewer {
-  namespace Interface {
-    class BodyPartMemento;
-  }
+namespace Interface {
+  class BodyPartMemento;
 }
 
-namespace MailViewer {
 
 /**
   @author Andras Mantia <andras@kdab.net>
@@ -131,9 +128,9 @@ public:
     * content type header. */
     static QString fileName(const KMime::Content* node);
 
-    MailViewer::Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+    Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
 
-    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, MailViewer::Interface::BodyPartMemento *memento );
+    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, Interface::BodyPartMemento *memento );
 
 private:
     NodeHelper();
@@ -147,7 +144,7 @@ private:
     QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
                           const QString& newPrefix ) const;
 
-    void clearBodyPartMemento(QMap<QByteArray, MailViewer::Interface::BodyPartMemento*> bodyPartMementoMap);
+    void clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap);
 
     static NodeHelper * mSelf;
 
@@ -159,9 +156,8 @@ private:
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-    QMap<KMime::Content*, QMap<QByteArray,MailViewer::Interface::BodyPartMemento*> > mBodyPartMementoMap;
+    QMap<KMime::Content*, QMap<QByteArray,Interface::BodyPartMemento*> > mBodyPartMementoMap;
 };
 
-}
 
 #endif

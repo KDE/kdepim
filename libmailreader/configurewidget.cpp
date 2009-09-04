@@ -22,8 +22,6 @@
 #include "util.h"
 #include "globalsettings.h"
 
-namespace MailViewer {
-
 ConfigureWidget::ConfigureWidget( QWidget *parent )
  : QWidget(parent)
 {
@@ -118,7 +116,5 @@ void ConfigureWidget::slotSettingsChanged()
   emit settingsChanged();
 }
 
-
-}
 
 #include "configurewidget.moc"

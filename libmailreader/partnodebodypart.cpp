@@ -46,63 +46,63 @@
 
 static int serial = 0;
 
-MailViewer::PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, const QTextCodec * codec  )
-  : MailViewer::Interface::BodyPart(), mContent( content ), mCodec( codec ),
-    mDefaultDisplay( MailViewer::Interface::BodyPart::None )
+PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, const QTextCodec * codec  )
+  : Interface::BodyPart(), mContent( content ), mCodec( codec ),
+    mDefaultDisplay( Interface::BodyPart::None )
 {}
 
-QString MailViewer::PartNodeBodyPart::makeLink( const QString & path ) const {
+QString PartNodeBodyPart::makeLink( const QString & path ) const {
   // FIXME: use a PRNG for the first arg, instead of a serial number
   return QString( "x-kmail:/bodypart/%1/%2/%3" )
     .arg( serial++ ).arg( mContent->index().toString() )
     .arg( QString::fromLatin1( KUrl::toPercentEncoding( path, "/" ) ) );
 }
 
-QString MailViewer::PartNodeBodyPart::asText() const {
+QString PartNodeBodyPart::asText() const {
   if ( !mContent->contentType()->isText() )
     return QString();
   return mCodec->toUnicode( mContent->decodedContent() );
 }
 
-QByteArray MailViewer::PartNodeBodyPart::asBinary() const {
+QByteArray PartNodeBodyPart::asBinary() const {
   return mContent->decodedContent();
 }
 
-QString MailViewer::PartNodeBodyPart::contentTypeParameter( const char * param ) const {
+QString PartNodeBodyPart::contentTypeParameter( const char * param ) const {
   return mContent->contentType()->parameter( param );
 }
 
-QString MailViewer::PartNodeBodyPart::contentDescription() const {
+QString PartNodeBodyPart::contentDescription() const {
   return mContent->contentDescription()->asUnicodeString();
 }
 
-QString MailViewer::PartNodeBodyPart::contentDispositionParameter( const char * param ) const {
+QString PartNodeBodyPart::contentDispositionParameter( const char * param ) const {
   return mContent->contentDisposition()->parameter( param );
   return QString();
 }
 
-bool MailViewer::PartNodeBodyPart::hasCompleteBody() const {
+bool PartNodeBodyPart::hasCompleteBody() const {
   kWarning() << "Sorry, not yet implemented.";
   return true;
 }
 
-MailViewer::Interface::BodyPartMemento * MailViewer::PartNodeBodyPart::memento() const {
+Interface::BodyPartMemento * PartNodeBodyPart::memento() const {
  /*TODO(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
   Also review if the reader's bodyPartMemento should be returned or the NodeHelper's one
  */
   return NodeHelper::instance()->bodyPartMemento( mContent, "__plugin__" );
 }
 
-void MailViewer::PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
+void PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
 /*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
 Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
   NodeHelper::instance()->setBodyPartMemento( mContent, "__plugin__" , memento );
 }
 
-MailViewer::Interface::BodyPart::Display MailViewer::PartNodeBodyPart::defaultDisplay() const {
+Interface::BodyPart::Display PartNodeBodyPart::defaultDisplay() const {
   return mDefaultDisplay;
 }
 
-void MailViewer::PartNodeBodyPart::setDefaultDisplay( MailViewer::Interface::BodyPart::Display d ){
+void PartNodeBodyPart::setDefaultDisplay( Interface::BodyPart::Display d ){
   mDefaultDisplay = d;
 }

@@ -42,35 +42,31 @@ namespace KMime {
   class Content;
 }
 
-namespace MailViewer {
+/**
+    @short an implementation of the BodyPart interface using partNodes
+*/
+class PartNodeBodyPart : public Interface::BodyPart {
+public:
+  explicit PartNodeBodyPart( KMime::Content* content, const QTextCodec * codec=0 );
 
-  /**
-     @short an implementation of the BodyPart interface using partNodes
-  */
-  class PartNodeBodyPart : public Interface::BodyPart {
-  public:
-    explicit PartNodeBodyPart( KMime::Content* content, const QTextCodec * codec=0 );
+  QString makeLink( const QString & path ) const;
+  QString asText() const;
+  QByteArray asBinary() const;
+  QString contentTypeParameter( const char * param ) const;
+  QString contentDescription() const;
+  //int contentDisposition() const;
+  QString contentDispositionParameter( const char * param ) const;
+  bool hasCompleteBody() const;
 
-    QString makeLink( const QString & path ) const;
-    QString asText() const;
-    QByteArray asBinary() const;
-    QString contentTypeParameter( const char * param ) const;
-    QString contentDescription() const;
-    //int contentDisposition() const;
-    QString contentDispositionParameter( const char * param ) const;
-    bool hasCompleteBody() const;
+  Interface::BodyPartMemento * memento() const;
+  void setBodyPartMemento( Interface::BodyPartMemento * memento );
+  BodyPart::Display defaultDisplay() const;
+  void setDefaultDisplay( BodyPart::Display );
 
-    Interface::BodyPartMemento * memento() const;
-    void setBodyPartMemento( Interface::BodyPartMemento * memento );
-    BodyPart::Display defaultDisplay() const;
-    void setDefaultDisplay( BodyPart::Display );
-
-  private:
-    KMime::Content *mContent;
-    const QTextCodec * mCodec;
-    BodyPart::Display mDefaultDisplay;
-  };
-
-} // namespace MailViewer
+private:
+  KMime::Content *mContent;
+  const QTextCodec * mCodec;
+  BodyPart::Display mDefaultDisplay;
+};
 
 #endif // __KMAIL_PARTNODEBODYPART_H_

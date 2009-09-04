@@ -43,46 +43,43 @@
 class QString;
 class KHTMLPart;
 
-namespace MailViewer {
 
-  class KHtmlPartHtmlWriter : public QObject, public HtmlWriter {
-    Q_OBJECT
-  public:
-    // Key is Content-Id, value is URL
-    typedef QMap<QString, QString> EmbeddedPartMap;
-    explicit KHtmlPartHtmlWriter( KHTMLPart * part,
-                                  QObject * parent=0, const char * name = 0 );
-    virtual ~KHtmlPartHtmlWriter();
+class KHtmlPartHtmlWriter : public QObject, public HtmlWriter {
+  Q_OBJECT
+public:
+  // Key is Content-Id, value is URL
+  typedef QMap<QString, QString> EmbeddedPartMap;
+  explicit KHtmlPartHtmlWriter( KHTMLPart * part,
+                                QObject * parent=0, const char * name = 0 );
+  virtual ~KHtmlPartHtmlWriter();
 
-    void begin( const QString & cssDefs );
-    void end();
-    void reset();
-    void write( const QString & str );
-    void queue( const QString & str );
-    void flush();
-    void embedPart( const QByteArray & contentId, const QString & url );
+  void begin( const QString & cssDefs );
+  void end();
+  void reset();
+  void write( const QString & str );
+  void queue( const QString & str );
+  void flush();
+  void embedPart( const QByteArray & contentId, const QString & url );
 
-  signals:
-    void finished();
+signals:
+  void finished();
 
-  private slots:
-    void slotWriteNextHtmlChunk();
+private slots:
+  void slotWriteNextHtmlChunk();
 
-  private:
-    void resolveCidUrls();
+private:
+  void resolveCidUrls();
 
-  private:
-    KHTMLPart * mHtmlPart;
-    QStringList mHtmlQueue;
-    QTimer mHtmlTimer;
-    enum State {
-      Begun,
-      Queued,
-      Ended
-    } mState;
-    EmbeddedPartMap mEmbeddedPartMap;
-  };
-
-} // namespace MailViewer
+private:
+  KHTMLPart * mHtmlPart;
+  QStringList mHtmlQueue;
+  QTimer mHtmlTimer;
+  enum State {
+    Begun,
+    Queued,
+    Ended
+  } mState;
+  EmbeddedPartMap mEmbeddedPartMap;
+};
 
 #endif // __KMAIL_KHTMLPARTHTMLWRITER_H__

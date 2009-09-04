@@ -40,16 +40,11 @@
 
 #include <QStringList>
 
-using namespace MailViewer;
-
-
-namespace MailViewer {
-  class AntiSpamConfigSingletonProvider
-  {
-    public:
-      AntiSpamConfig instance;
-  };
-}
+class AntiSpamConfigSingletonProvider
+{
+  public:
+    AntiSpamConfig instance;
+};
 
 K_GLOBAL_STATIC( AntiSpamConfigSingletonProvider, theAntiSpamConfigSingletonProvider )
 

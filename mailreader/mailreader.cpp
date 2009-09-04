@@ -10,7 +10,6 @@
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/monitor.h>
-#include <akonadi/selectionproxymodel.h>
 #include <akonadi/session.h>
 #include <akonadi/statisticstooltipproxymodel.h>
 

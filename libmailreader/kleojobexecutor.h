@@ -36,8 +36,6 @@ namespace Kleo {
   class VerifyOpaqueJob;
 }
 
-namespace MailViewer {
-
 /**
   Helper class for synchronous execution of Kleo crypto jobs.
 */
@@ -78,7 +76,5 @@ class KleoJobExecutor : public QObject
     GpgME::Error mAuditLogError;
     QString mAuditLog;
 };
-
-}
 
 #endif

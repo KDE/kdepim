@@ -41,58 +41,55 @@ namespace KMime {
   class Message;
 }
 
-namespace MailViewer {
+/**
+    @short A simple tupel of agent, score, confidence and header.
 
-  /**
-     @short A simple tupel of agent, score, confidence and header.
+    The score returned is positive if no error has occurred.
+    Negative values indicate the following errors:
+      -1.0     Unintialized struct used
+      -2.0     Error extracing agent string
+      -3.0     Couldn't convert score to float
+      -4.0     Couldn't convert threshold to float or threshold is negative
+      -5.0     Couldn't find the score field
+      -6.0     Couldn't find the threshold field
+*/
+class SpamScore {
+public:
+  SpamScore() : mScore( -2.0 ), mConfidence( -2.0 ) {}
+  SpamScore( const QString & agent, float score, float confidence,
+      const QString & header, const QString & cheader )
+    : mAgent( agent ), mScore( score ), mConfidence( confidence ),
+        mHeader( header ), mConfidenceHeader( cheader ) {}
+  QString agent() const { return mAgent; }
+  float score() const { return mScore; }
+  float confidence() const { return mConfidence; }
+  QString spamHeader() const { return mHeader; }
+  QString confidenceHeader() const { return mConfidenceHeader; }
 
-     The score returned is positive if no error has occurred.
-     Negative values indicate the following errors:
-       -1.0     Unintialized struct used
-       -2.0     Error extracing agent string
-       -3.0     Couldn't convert score to float
-       -4.0     Couldn't convert threshold to float or threshold is negative
-       -5.0     Couldn't find the score field
-       -6.0     Couldn't find the threshold field
+private:
+  QString mAgent;
+  float mScore;
+  float mConfidence;
+  QString mHeader;
+  QString mConfidenceHeader;
+};
+typedef QList<SpamScore> SpamScores;
+typedef QList<SpamScore>::Iterator SpamScoresIterator;
+
+
+/**
+    @short Flyweight for analysing spam headers.
+    @author Patrick Audley <paudley@blackcat.ca>
   */
-  class SpamScore {
-  public:
-    SpamScore() : mScore( -2.0 ), mConfidence( -2.0 ) {}
-    SpamScore( const QString & agent, float score, float confidence,
-        const QString & header, const QString & cheader )
-      : mAgent( agent ), mScore( score ), mConfidence( confidence ),
-          mHeader( header ), mConfidenceHeader( cheader ) {}
-    QString agent() const { return mAgent; }
-    float score() const { return mScore; }
-    float confidence() const { return mConfidence; }
-    QString spamHeader() const { return mHeader; }
-    QString confidenceHeader() const { return mConfidenceHeader; }
-
-  private:
-    QString mAgent;
-    float mScore;
-    float mConfidence;
-    QString mHeader;
-    QString mConfidenceHeader;
-  };
-  typedef QList<SpamScore> SpamScores;
-  typedef QList<SpamScore>::Iterator SpamScoresIterator;
-
-
+class SpamHeaderAnalyzer {
+public:
   /**
-     @short Flyweight for analysing spam headers.
-     @author Patrick Audley <paudley@blackcat.ca>
-   */
-  class SpamHeaderAnalyzer {
-  public:
-    /**
-       @short Extract scores from known anti-spam headers
-       @param message A KMime::Message to examine
-       @return A list of detected scores. See SpamScore
-    */
-    static SpamScores getSpamScores( KMime::Message *message );
-  };
+      @short Extract scores from known anti-spam headers
+      @param message A KMime::Message to examine
+      @return A list of detected scores. See SpamScore
+  */
+  static SpamScores getSpamScores( KMime::Message *message );
+};
 
-} // namespace MailViewer
 
 #endif // __SPAMHEADERANALYZER_H__

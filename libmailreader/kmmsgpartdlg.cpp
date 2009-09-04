@@ -4,7 +4,6 @@
 // my includes:
 #include "kmmsgpartdlg.h"
 #include "nodehelper.h"
-using namespace MailViewer;
 
 // other KMail includes:
 #include "kcursorsaver.h"

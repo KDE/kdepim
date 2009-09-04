@@ -44,7 +44,6 @@
 
 #include <cassert>
 
-using namespace MailViewer;
 using namespace Kleo;
 using namespace GpgME;
 

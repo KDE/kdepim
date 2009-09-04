@@ -48,7 +48,7 @@
 #include <QTextCodec>
 #include <QWidget>
 
-bool MailViewer::Util::checkOverwrite( const KUrl &url, QWidget *w )
+bool Util::checkOverwrite( const KUrl &url, QWidget *w )
 {
   if ( KIO::NetAccess::exists( url, KIO::NetAccess::DestinationSide, w ) ) {
     if ( KMessageBox::Cancel == KMessageBox::warningContinueCancel(
@@ -66,7 +66,7 @@ bool MailViewer::Util::checkOverwrite( const KUrl &url, QWidget *w )
 #include <QDesktopServices>
 #endif
 
-bool MailViewer::Util::handleUrlOnMac( const KUrl& url )
+bool Util::handleUrlOnMac( const KUrl& url )
 {
 #ifdef Q_WS_MACX
   QDesktopServices::openUrl( url );
@@ -77,7 +77,7 @@ bool MailViewer::Util::handleUrlOnMac( const KUrl& url )
 #endif
 }
 
-QStringList MailViewer::Util::supportedEncodings(bool usAscii)
+QStringList Util::supportedEncodings(bool usAscii)
 {
   // cberzan: replaced by KCodecAction in CodecManager
   QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
@@ -103,7 +103,7 @@ QStringList MailViewer::Util::supportedEncodings(bool usAscii)
 }
 
 //-----------------------------------------------------------------------------
-QString MailViewer::Util::fixEncoding( const QString &encoding )
+QString Util::fixEncoding( const QString &encoding )
 {
   QString returnEncoding = encoding;
   // According to http://www.iana.org/assignments/character-sets, uppercase is
@@ -116,9 +116,9 @@ QString MailViewer::Util::fixEncoding( const QString &encoding )
 }
 
 //-----------------------------------------------------------------------------
-QString MailViewer::Util::encodingForName( const QString &descriptiveName )
+QString Util::encodingForName( const QString &descriptiveName )
 {
   QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
-  return MailViewer::Util::fixEncoding( encoding );
+  return Util::fixEncoding( encoding );
 }
 

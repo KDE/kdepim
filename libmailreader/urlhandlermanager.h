@@ -38,51 +38,48 @@ class KUrl;
 
 class QString;
 class QPoint;
-class KMReaderWin;
+class MailViewerPrivate;
 
-namespace MailViewer {
+class URLHandler;
 
-  class URLHandler;
+namespace Interface {
+  class BodyPartURLHandler;
+}
 
-  namespace Interface {
-    class BodyPartURLHandler;
+/**
+  * @short Singleton to manage the list of URLHandlers
+  * @author Marc Mutz <mutz@kde.org>
+  */
+class URLHandlerManager {
+  static URLHandlerManager * self;
+
+  URLHandlerManager();
+public:
+  ~URLHandlerManager();
+
+  static URLHandlerManager * instance() {
+    if ( !self )
+self = new URLHandlerManager();
+    return self;
   }
 
-  /**
-   * @short Singleton to manage the list of URLHandlers
-   * @author Marc Mutz <mutz@kde.org>
-   */
-  class URLHandlerManager {
-    static URLHandlerManager * self;
+  void registerHandler( const URLHandler * handler );
+  void unregisterHandler( const URLHandler * handler );
 
-    URLHandlerManager();
-  public:
-    ~URLHandlerManager();
+  void registerHandler( const Interface::BodyPartURLHandler * handler );
+  void unregisterHandler( const Interface::BodyPartURLHandler * handler );
 
-    static URLHandlerManager * instance() {
-      if ( !self )
-	self = new URLHandlerManager();
-      return self;
-    }
+  bool handleClick( const KUrl & url, MailViewerPrivate * w=0 ) const;
+  bool handleContextMenuRequest( const KUrl & url, const QPoint & p, MailViewerPrivate * w=0 ) const;
+  QString statusBarMessage( const KUrl & url, MailViewerPrivate* w=0 ) const;
 
-    void registerHandler( const URLHandler * handler );
-    void unregisterHandler( const URLHandler * handler );
+private:
+  typedef QVector<const URLHandler*> HandlerList;
+  HandlerList mHandlers;
+  class BodyPartURLHandlerManager;
+  BodyPartURLHandlerManager * mBodyPartURLHandlerManager;
+};
 
-    void registerHandler( const Interface::BodyPartURLHandler * handler );
-    void unregisterHandler( const Interface::BodyPartURLHandler * handler );
-
-    bool handleClick( const KUrl & url, KMReaderWin * w=0 ) const;
-    bool handleContextMenuRequest( const KUrl & url, const QPoint & p, KMReaderWin * w=0 ) const;
-    QString statusBarMessage( const KUrl & url, KMReaderWin * w=0 ) const;
-
-  private:
-    typedef QVector<const URLHandler*> HandlerList;
-    HandlerList mHandlers;
-    class BodyPartURLHandlerManager;
-    BodyPartURLHandlerManager * mBodyPartURLHandlerManager;
-  };
-
-} // namespace MailViewer
 
 #endif // __KMAIL_URLHANDLERMANAGER_H__
 

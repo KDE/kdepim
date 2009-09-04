@@ -26,9 +26,6 @@ namespace KPIM
   class CSSHelper;
 }
 
-namespace MailViewer
-{
-
 /**
  * Little helper class that takes a HTML source as input and finds all
  * lines that are quoted with '>' or '|'. The HTML text is then modified so
@@ -58,7 +55,5 @@ class HTMLQuoteColorer
     bool mIsFirstTextNodeInLine;
     int currentQuoteLength;
 };
-
-}
 
 #endif

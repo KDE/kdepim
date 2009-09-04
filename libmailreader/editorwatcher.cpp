@@ -39,7 +39,6 @@
 #include <sys/ioctl.h>
 #endif
 
-using namespace MailViewer;
 
 EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool openWith,
                               QObject * parent, QWidget *parentWidget ) :

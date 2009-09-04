@@ -25,7 +25,6 @@
 #include <QWidget>
 class Ui_Settings;
 
-namespace MailViewer {
 
 /**
 Configure widget that can be used in a KConfigDialog.
@@ -54,6 +53,6 @@ private:
 
 };
 
-}
+
 
 #endif

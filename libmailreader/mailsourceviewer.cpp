@@ -38,8 +38,6 @@
 #include <QShortcut>
 #include <kiconloader.h>
 
-namespace MailViewer {
-
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :
   const QRegExp regexp( "^([\\x21-9;-\\x7E]+:\\s)" );
@@ -100,4 +98,3 @@ MailSourceViewer::~MailSourceViewer()
   delete mSourceHighLighter; mSourceHighLighter = 0;
 }
 
-}
