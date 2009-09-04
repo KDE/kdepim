@@ -235,6 +235,8 @@ KABC::AddresseeList CSVImportDialog::contacts() const
         if ( field == ContactFields::Birthday )
           value = dateParser.parse( value ).toString( Qt::ISODate );
 
+        value.replace( "\\n", "\n" );
+
         ContactFields::setValue( field, value, contact );
       }
     }
