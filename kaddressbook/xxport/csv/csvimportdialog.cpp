@@ -25,6 +25,7 @@
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QThread>
+#include <QtCore/QUuid>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -477,8 +478,7 @@ void CSVImportDialog::applyTemplate()
   QStringList templates;
 
   // load all template files
-  const QStringList files = KGlobal::dirs()->findAllResources( "data" , QString( kapp->objectName() ) +
-                                                               "/csv-templates/*.desktop",
+  const QStringList files = KGlobal::dirs()->findAllResources( "data" , "kaddressbook/csv-templates/*.desktop",
                                                                KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
 
   for ( int i = 0; i < files.count(); ++i ) {
@@ -490,6 +490,11 @@ void CSVImportDialog::applyTemplate()
     KConfigGroup group( &config, "Misc" );
     templates.append( group.readEntry( "Name" ) );
     templateFileMap.insert( group.readEntry( "Name" ), files.at( i ) );
+  }
+
+  if ( templateFileMap.isEmpty() ) {
+    KMessageBox::sorry( this, i18n( "There are no templates available yet." ), i18n( "No templates available" ) );
+    return;
   }
 
   // let the user chose, what to take
@@ -507,7 +512,6 @@ void CSVImportDialog::applyTemplate()
   mDatePatternEdit->setText( generalGroup.readEntry( "DatePattern", "Y-M-D" ) );
   mDelimiterEdit->setText( generalGroup.readEntry( "DelimiterOther" ) );
 
-  const uint columns = generalGroup.readEntry( "Columns", 0 );
   const int delimiterButton = generalGroup.readEntry( "DelimiterType", 0 );
   const int quoteType = generalGroup.readEntry( "QuoteType", 0 );
   const bool skipFirstRow = generalGroup.readEntry( "SkipFirstRow", false );
@@ -548,21 +552,15 @@ void CSVImportDialog::finalizeApplyTemplate()
 
 void CSVImportDialog::saveTemplate()
 {
-  QString fileName = KFileDialog::getSaveFileName(
-                     KStandardDirs::locateLocal( "data", QString( kapp->objectName() ) + "/csv-templates/" ),
-                     "*.desktop", this );
-
-  if ( fileName.isEmpty() )
-    return;
-
-  if ( !fileName.contains( ".desktop" ) )
-    fileName += ".desktop";
-
-  QString name = KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
-                                        i18nc( "@info", "Please enter a name for the template:" ) );
+  const QString name = KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
+                                              i18nc( "@info", "Please enter a name for the template:" ) );
 
   if ( name.isEmpty() )
     return;
+
+  const QString fileName = KStandardDirs::locateLocal( "data", "kaddressbook/csv-templates/"
+                                                       + QUuid::createUuid()
+                                                       + ".desktop" );
 
   KConfig config( fileName  );
   KConfigGroup generalGroup( &config, "General" );
