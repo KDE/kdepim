@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2009-05-25</date>
-<releaseinfo>2.02.00</releaseinfo>
+<date>2008-09-25</date>
+<releaseinfo>2.2.7</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -437,6 +437,10 @@ alarm list. Then choose <menuchoice>
 the alarm list and choose
 <menuchoice><guimenuitem>Delete</guimenuitem></menuchoice>
 from the context menu.</para>
+</listitem>
+<listitem>
+<para>To delete them without a confirmation prompt, type
+&Shift;-<keycap>Delete</keycap>.</para>
 </listitem>
 </itemizedlist>
 
@@ -2833,7 +2837,7 @@ time.</para>
   <replaceable>period</replaceable></option></entry>
   <entry>Cancel the alarm if it cannot be triggered within the
   specified <replaceable>period</replaceable> after the correct
-  time. The <replaceable>period</replaceable> period is specified in
+  time. The <replaceable>period</replaceable> is specified in
   the same format as described for <option>--reminder</option>.
   The default value of <replaceable>period</replaceable> is 1
   minute.</entry>
