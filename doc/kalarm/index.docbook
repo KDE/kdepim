@@ -423,18 +423,18 @@ dialog</link>.</para>
 <sect2>
 <title>Deleting/Reactivating an Alarm</title>
 
-<para>To delete existing alarms, do one of the following:</para>
+<para>To delete existing alarms, select one or more by clicking on
+their entries in the alarm list. Then do one of the following:</para>
 
 <itemizedlist>
 <listitem>
-<para>Select one or more alarms by clicking on their entries in the
-alarm list. Then choose <menuchoice>
+<para>Choose <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Delete</guimenuitem>
 </menuchoice>.</para>
 </listitem>
 <listitem>
-<para><mousebutton>Right</mousebutton> click on the desired entries in
-the alarm list and choose
+<para><mousebutton>Right</mousebutton> click on the selected entries
+and choose
 <menuchoice><guimenuitem>Delete</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
