@@ -393,13 +393,13 @@ void CSVImportDialog::customDelimiterChanged()
     delimiterClicked( 4 );
 }
 
-void CSVImportDialog::customDelimiterChanged( const QString& )
+void CSVImportDialog::customDelimiterChanged( const QString&, bool reload )
 {
   mDelimiterGroup->button( 4 )->setChecked ( true );
-  delimiterClicked( 4 ); // other
+  delimiterClicked( 4, reload ); // other
 }
 
-void CSVImportDialog::delimiterClicked( int id )
+void CSVImportDialog::delimiterClicked( int id, bool reload )
 {
   switch ( id ) {
     case 0: // comma
@@ -420,29 +420,29 @@ void CSVImportDialog::delimiterClicked( int id )
       break;
   }
 
-  if ( mDevice )
+  if ( mDevice && reload )
     mModel->load( mDevice );
 }
 
-void CSVImportDialog::textQuoteChanged( const QString& mark )
+void CSVImportDialog::textQuoteChanged( const QString& mark, bool reload )
 {
   if ( mComboQuote->currentIndex() == 2 )
     mModel->setTextQuote( QChar() );
   else
     mModel->setTextQuote( mark.at( 0 ) );
 
-  if ( mDevice )
+  if ( mDevice && reload )
     mModel->load( mDevice );
 }
 
-void CSVImportDialog::skipFirstRowChanged( bool checked )
+void CSVImportDialog::skipFirstRowChanged( bool checked, bool reload )
 {
   if ( checked )
     mModel->setStartRow( 1 );
   else
     mModel->setStartRow( 0 );
 
-  if ( mDevice )
+  if ( mDevice && reload )
     mModel->load( mDevice );
 }
 
@@ -513,17 +513,29 @@ void CSVImportDialog::applyTemplate()
   const bool skipFirstRow = generalGroup.readEntry( "SkipFirstRow", false );
 
   mDelimiterGroup->button( delimiterButton )->setChecked( true );
-  delimiterClicked( delimiterButton );
+  delimiterClicked( delimiterButton, false );
 
   mComboQuote->setCurrentIndex( quoteType );
-  textQuoteChanged( mComboQuote->currentText() );
+  textQuoteChanged( mComboQuote->currentText(), false );
 
   mSkipFirstRow->setChecked( skipFirstRow );
-  skipFirstRowChanged( skipFirstRow );
+  skipFirstRowChanged( skipFirstRow, false );
 
-  QEventLoop waitLoop;
-  connect( mModel, SIGNAL( finishedLoading() ), &waitLoop, SLOT( quit() ) );
-  waitLoop.exec();
+  if ( mDevice )
+    mModel->load( mDevice );
+
+  setProperty( "TemplateFileName", templateFileMap[ selectedTemplate ] );
+  connect( mModel, SIGNAL( finishedLoading() ), this, SLOT( finalizeApplyTemplate() ) );
+}
+
+void CSVImportDialog::finalizeApplyTemplate()
+{
+  const QString templateFileName = property( "TemplateFileName" ).toString();
+
+  KConfig config( templateFileName, KConfig::SimpleConfig );
+
+  const KConfigGroup generalGroup( &config, "General" );
+  const uint columns = generalGroup.readEntry( "Columns", 0 );
 
   // create the column map
   const KConfigGroup columnMapGroup( &config, "csv column map" );
@@ -607,7 +619,7 @@ void CSVImportDialog::urlChanged( const QString &file )
   enableButton( User2, state );
 }
 
-void CSVImportDialog::codecChanged()
+void CSVImportDialog::codecChanged( bool reload )
 {
   const int code = mCodecCombo->currentIndex();
 
@@ -624,7 +636,8 @@ void CSVImportDialog::codecChanged()
   else
     mModel->setTextCodec( QTextCodec::codecForName( "UTF-8" ) );
 
-  mModel->load( mDevice );
+  if ( mDevice && reload )
+    mModel->load( mDevice );
 }
 
 void CSVImportDialog::modelFinishedLoading()
