@@ -71,8 +71,8 @@ public:
   }
 };
 
-DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent, const char *name )
-  : PrintStyle( parent, name ),
+DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
+  : PrintStyle( parent ),
     mPageAppearance( new AppearancePage( parent ) ),
     mPainter( 0 ),
     mPrintProgress( 0 )
@@ -280,15 +280,14 @@ bool DetailledPrintStyle::printEntries( const KABC::Addressee::List &contacts,
   return true;
 }
 
-DetailledPrintStyleFactory::DetailledPrintStyleFactory( PrintingWizard *parent,
-                                                        const char *name )
-  : PrintStyleFactory( parent, name )
+DetailledPrintStyleFactory::DetailledPrintStyleFactory( PrintingWizard *parent )
+  : PrintStyleFactory( parent )
 {
 }
 
 PrintStyle *DetailledPrintStyleFactory::create() const
 {
-  return new DetailledPrintStyle( mParent, mName );
+  return new DetailledPrintStyle( mParent );
 }
 
 QString DetailledPrintStyleFactory::description() const

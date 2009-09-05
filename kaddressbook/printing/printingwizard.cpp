@@ -123,10 +123,7 @@ void PrintingWizard::slotStyleSelected( int index )
 
   if ( mStyle->preferredSortField() != 0 ) {
     mStylePage->setSortField( mStyle->preferredSortField() );
-    if ( mStyle->preferredSortType() )
-      mStylePage->setSortOrder( Qt::AscendingOrder );
-    else
-      mStylePage->setSortOrder( Qt::DescendingOrder );
+    mStylePage->setSortOrder( mStyle->preferredSortOrder() );
   }
 }
 

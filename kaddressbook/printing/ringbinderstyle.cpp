@@ -97,8 +97,8 @@ void RingBinderStyleAppearanceForm::ungroupLetter()
 }
 
 
-RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent, const char* name )
-  : PrintStyle( parent, name ),
+RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent )
+  : PrintStyle( parent ),
     mPageAppearance( new RingBinderStyleAppearanceForm( parent ) ),
     mPrintProgress( 0 )
 {
@@ -508,15 +508,14 @@ QRect RingBinderPrintStyle::pageHeaderMetrics( const QRect& window, QPainter* )
 }
 
 
-RingBinderPrintStyleFactory::RingBinderPrintStyleFactory( PrintingWizard *parent,
-                                                          const char *name )
-  : PrintStyleFactory( parent, name )
+RingBinderPrintStyleFactory::RingBinderPrintStyleFactory( PrintingWizard *parent )
+  : PrintStyleFactory( parent )
 {
 }
 
 PrintStyle *RingBinderPrintStyleFactory::create() const
 {
-  return new RingBinderPrintStyle( mParent, mName );
+  return new RingBinderPrintStyle( mParent );
 }
 
 QString RingBinderPrintStyleFactory::description() const

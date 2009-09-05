@@ -38,7 +38,7 @@ class MikesStyle : public PrintStyle
   Q_OBJECT
 
   public:
-    MikesStyle( PrintingWizard *parent, const char *name );
+    MikesStyle( PrintingWizard *parent );
     ~MikesStyle();
 
     void print( const KABC::Addressee::List&, PrintProgress* );
@@ -54,7 +54,7 @@ class MikesStyle : public PrintStyle
 class MikesStyleFactory : public PrintStyleFactory
 {
   public:
-    explicit MikesStyleFactory( PrintingWizard *parent, const char *name = 0 );
+    explicit MikesStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;
     QString description() const;
