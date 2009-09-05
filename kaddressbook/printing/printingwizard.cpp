@@ -100,17 +100,16 @@ void PrintingWizard::slotStyleSelected( int index )
   if ( index < 0 || index >= mStyleFactories.count() )
     return;
 
-  //enableButton( KDialog::User1, false ); // finish button
-
   if ( mStyle )
     mStyle->hidePages();
 
   mStyle = mStyleList.value( index );
   if ( !mStyle ) {
     PrintStyleFactory *factory = mStyleFactories.at( index );
-    kDebug(5720) <<"PrintingWizardImpl::slotStyleSelected:"
-                  << "creating print style"
-                  << factory->description();
+    kDebug(5720) << "PrintingWizardImpl::slotStyleSelected:"
+                 << "creating print style"
+                 << factory->description();
+
     mStyle = factory->create();
     mStyleList.insert( index, mStyle );
   }
@@ -119,12 +118,8 @@ void PrintingWizard::slotStyleSelected( int index )
 
   mStylePage->setPreview( mStyle->preview() );
 
-  //setFinishEnabled( page( pageCount() - 1 ), true );
-
-  if ( mStyle->preferredSortField() != 0 ) {
-    mStylePage->setSortField( mStyle->preferredSortField() );
-    mStylePage->setSortOrder( mStyle->preferredSortOrder() );
-  }
+  mStylePage->setSortField( mStyle->preferredSortField() );
+  mStylePage->setSortOrder( mStyle->preferredSortOrder() );
 }
 
 QPrinter* PrintingWizard::printer()

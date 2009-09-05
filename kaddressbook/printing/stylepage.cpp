@@ -34,6 +34,12 @@
 #include <KDialog>
 #include <KLocale>
 
+// helper method to sort contact fields by field label
+static bool contactFieldsNameLesser( const ContactFields::Field &field, const ContactFields::Field &otherField )
+{
+  return ( QString::localeAwareCompare( ContactFields::label( field ), ContactFields::label( otherField ) ) < 0 );
+}
+
 StylePage::StylePage( QWidget* parent,  const char* name )
   : QWidget( parent )
 {
@@ -72,7 +78,7 @@ void StylePage::clearStyleNames()
 
 void StylePage::setSortField( ContactFields::Field field )
 {
-  mFieldCombo->setItemText( mFieldCombo->currentIndex(), ContactFields::label( field) );
+  mFieldCombo->setCurrentIndex( mFields.indexOf( field ) );
 }
 
 void StylePage::setSortOrder( Qt::SortOrder sortOrder )
@@ -86,7 +92,7 @@ void StylePage::setSortOrder( Qt::SortOrder sortOrder )
 ContactFields::Field StylePage::sortField() const
 {
   if ( mFieldCombo->currentIndex() == -1 )
-    return mFields[ 0 ];
+    return ContactFields::GivenName;
 
   return mFields[ mFieldCombo->currentIndex() ];
 }
@@ -101,9 +107,13 @@ void StylePage::initFieldCombo()
   mFieldCombo->clear();
 
   mFields = ContactFields::allFields();
+  mFields.remove( 0 ); // remove ContactFields::Undefined
+
+  qSort( mFields.begin(), mFields.end(), contactFieldsNameLesser );
+
   ContactFields::Fields::ConstIterator it;
   for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it )
-    mFieldCombo->addItem( ContactFields::label(*it) );
+    mFieldCombo->addItem( ContactFields::label( *it ) );
 }
 
 void StylePage::initGUI()
@@ -159,6 +169,7 @@ void StylePage::initGUI()
   styleLayout->addWidget( mPreview );
 
   topLayout->addWidget( group, 1, 1 );
+  topLayout->setRowStretch( 1, 1 );
 }
 
 #include "stylepage.moc"

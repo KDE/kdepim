@@ -37,6 +37,8 @@ using namespace KABPrinting;
 PrintStyle::PrintStyle( PrintingWizard* parent )
   : QObject( parent ), mWizard( parent )
 {
+  mSortField = ContactFields::GivenName;
+  mSortOrder = Qt::AscendingOrder;
 }
 
 PrintStyle::~PrintStyle()
