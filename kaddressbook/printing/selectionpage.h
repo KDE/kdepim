@@ -29,43 +29,21 @@
 class QGroupBox;
 class QRadioButton;
 
-class KComboBox;
-
-namespace KPIM {
-  class CategorySelectWidget;
-}
-
 class SelectionPage : public QWidget
 {
   Q_OBJECT
 
   public:
-    explicit SelectionPage( QWidget* parent = 0, const char* name = 0 );
+    explicit SelectionPage( QWidget* parent = 0 );
     ~SelectionPage();
-
-    void setFilters( const QStringList& );
-    QString filter() const;
-    bool useFilters() const;
-
-    void setCategories( const QStringList& );
-    QStringList categories() const;
-    bool useCategories();
 
     void setUseSelection( bool value );
     bool useSelection() const;
 
-  private Q_SLOTS:
-    void filterChanged();
-    void categoryChanged();
-
   private:
     QGroupBox* mButtonGroup;
-    QRadioButton* mUseCategories;
-    QRadioButton* mUseFilters;
     QRadioButton* mUseWholeBook;
     QRadioButton* mUseSelection;
-    KComboBox* mFiltersCombo;
-    KPIM::CategorySelectWidget* mCategoriesView;
 };
 
 #endif // SELECTIONPAGE_H

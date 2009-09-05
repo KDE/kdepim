@@ -24,26 +24,17 @@
 
 #include "selectionpage.h"
 
-#include <QtCore/QStringList>
-#include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
-#include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QVBoxLayout>
 
-#include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <libkdepim/categoryselectdialog.h>
-#include <libkdepim/autochecktreewidget.h>
-
-
-SelectionPage::SelectionPage( QWidget* parent, const char* name )
+SelectionPage::SelectionPage( QWidget* parent )
     : QWidget( parent )
 {
-  setObjectName( name );
   setWindowTitle( i18n( "Choose Which Contacts to Print" ) );
 
   QVBoxLayout *topLayout = new QVBoxLayout( this );
@@ -54,9 +45,8 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   topLayout->addWidget( label );
 
   mButtonGroup = new QGroupBox( this );
-  //mButtonGroup->setFrameShape( QFrame::NoFrame );
- // mButtonGroup->setColumnLayout( 0, Qt::Vertical );
-  QGridLayout *groupLayout = new QGridLayout();
+
+  QVBoxLayout *groupLayout = new QVBoxLayout();
   mButtonGroup->setLayout( groupLayout );
   mButtonGroup->layout()->setSpacing( KDialog::spacingHint() );
   mButtonGroup->layout()->setMargin( KDialog::marginHint() );
@@ -65,82 +55,20 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   mUseWholeBook = new QRadioButton( i18n( "&All contacts" ), mButtonGroup );
   mUseWholeBook->setChecked( true );
   mUseWholeBook->setWhatsThis( i18n( "Print the entire address book" ) );
-  groupLayout->addWidget( mUseWholeBook, 0, 0 );
+  groupLayout->addWidget( mUseWholeBook );
 
   mUseSelection = new QRadioButton( i18n( "&Selected contacts" ), mButtonGroup );
   mUseSelection->setWhatsThis( i18n( "Only print contacts selected in KAddressBook.\n"
-                                        "This option is disabled if no contacts are selected." ) );
-  groupLayout->addWidget( mUseSelection, 1, 0 );
+                                     "This option is disabled if no contacts are selected." ) );
+  groupLayout->addWidget( mUseSelection );
 
-  mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
-mUseFilters->setEnabled(false); //sebsauer
-  mUseFilters->setWhatsThis( i18n( "Only print contacts matching the selected filter.\n"
-                                     "This option is disabled if you have not defined any filters." ) );
-  groupLayout->addWidget( mUseFilters, 2, 0 );
 
-  mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
-mUseCategories->setEnabled(false); //sebsauer
-  mUseCategories->setWhatsThis( i18n( "Only print contacts who are members of a category that is checked on the list to the left.\n"
-                                       "This option is disabled if you have no categories." ) );
-  groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
-
-  mFiltersCombo = new KComboBox( mButtonGroup );
-  mFiltersCombo->setEditable( false );
-  mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to print." ) );
-  groupLayout->addWidget( mFiltersCombo, 2, 1 );
-#if 0
-  mCategoriesView = new KPIM::CategorySelectWidget( mButtonGroup, KABPrefs::instance() );
-  mCategoriesView->hideButton();
-  mCategoriesView->layout()->setMargin( 0 );
-  mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to print." ) );
-  groupLayout->addWidget( mCategoriesView, 3, 1 );
-#endif
   topLayout->addWidget( mButtonGroup );
-#if 0
-  connect( mFiltersCombo, SIGNAL( activated(int) ), SLOT( filterChanged() ) );
-  connect( mCategoriesView->listView(), 
-           SIGNAL( itemClicked( QTreeWidgetItem *, int ) ), 
-           SLOT( categoryChanged() ) );
-#endif
+  topLayout->addStretch( 1 );
 }
 
 SelectionPage::~SelectionPage()
 {
-}
-
-void SelectionPage::setFilters( const QStringList& filters )
-{
-  mFiltersCombo->clear();
-  mFiltersCombo->addItems( filters );
-
-  mUseFilters->setEnabled( filters.count() > 0 );
-}
-
-QString SelectionPage::filter() const
-{
-  return mFiltersCombo->currentText();
-}
-
-bool SelectionPage::useFilters() const
-{
-  return mUseFilters->isChecked();
-}
-
-void SelectionPage::setCategories( const QStringList& list )
-{
-  mCategoriesView->setCategories( list );
-  mUseCategories->setEnabled( list.count() > 0 );
-}
-
-QStringList SelectionPage::categories() const
-{
-  QString lst;
-  return mCategoriesView->selectedCategories( lst );
-}
-
-bool SelectionPage::useCategories()
-{
-  return mUseCategories->isChecked();
 }
 
 void SelectionPage::setUseSelection( bool value )
@@ -151,16 +79,6 @@ void SelectionPage::setUseSelection( bool value )
 bool SelectionPage::useSelection() const
 {
   return mUseSelection->isChecked();
-}
-
-void SelectionPage::filterChanged()
-{
-  mUseFilters->setChecked( true );
-}
-
-void SelectionPage::categoryChanged()
-{
-  mUseCategories->setChecked( true );
 }
 
 #include "selectionpage.moc"
