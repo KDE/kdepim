@@ -41,7 +41,7 @@ class XXPortManager : public QObject
     void addImportAction( QAction *action, const QString &identifier );
     void addExportAction( QAction *action, const QString &identifier );
 
-    void setCollectionModel( QAbstractItemModel *collectionModel );
+    void setItemModel( QAbstractItemModel *itemModel );
     void setSelectionModel( QItemSelectionModel *selectionModel );
 
   private Q_SLOTS:
@@ -49,7 +49,7 @@ class XXPortManager : public QObject
     void slotExport( const QString& );
 
   private:
-    QAbstractItemModel *mCollectionModel;
+    QAbstractItemModel *mItemModel;
     QItemSelectionModel *mSelectionModel;
     QWidget *mParentWidget;
     XXPortFactory mFactory;

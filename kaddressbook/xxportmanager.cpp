@@ -19,27 +19,25 @@
 */
 
 #include "xxportmanager.h"
-#include <kmessagebox.h>
-#include <klocale.h>
 
-#include <akonadi/contact/addressbookselectiondialog.h>
+#include "contactselectiondialog.h"
 
 #include <akonadi/collection.h>
+#include <akonadi/contact/addressbookselectiondialog.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
+#include <klocale.h>
+#include <kmessagebox.h>
 
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QWidget>
 
-#include "akonadi_next/entitytreeview.h"
-
 
 XXPortManager::XXPortManager( QWidget *parent )
-  : QObject( parent ), mCollectionModel( 0 ), mSelectionModel( 0 ), mParentWidget( parent )
+  : QObject( parent ), mItemModel( 0 ), mSelectionModel( 0 ), mParentWidget( parent )
 {
   mImportMapper = new QSignalMapper( this );
   mExportMapper = new QSignalMapper( this );
@@ -66,9 +64,9 @@ void XXPortManager::addExportAction( QAction *action, const QString &identifier 
   connect( action, SIGNAL( triggered( bool ) ), mExportMapper, SLOT( map() ) );
 }
 
-void XXPortManager::setCollectionModel( QAbstractItemModel *collectionModel )
+void XXPortManager::setItemModel( QAbstractItemModel *itemModel )
 {
-  mCollectionModel = collectionModel;
+  mItemModel = itemModel;
 }
 
 void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
@@ -78,9 +76,6 @@ void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
 
 void XXPortManager::slotImport( const QString &identifier )
 {
-  if ( !mCollectionModel )
-    return;
-
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
   if( !xxport )
     return;
@@ -110,26 +105,25 @@ void XXPortManager::slotImport( const QString &identifier )
 
 void XXPortManager::slotExport( const QString &identifier )
 {
-  if ( !mSelectionModel )
+  if ( !mItemModel || !mSelectionModel )
     return;
+
+  ContactSelectionDialog dlg( mItemModel, mSelectionModel, mParentWidget );
+  dlg.setMessageText( i18n( "Which contact do you want to export?" ) );
+  if ( !dlg.exec() )
+    return;
+
+  const KABC::AddresseeList contacts = dlg.selectedContacts();
+  if ( contacts.isEmpty() ) {
+    KMessageBox::sorry( 0, i18n( "You have not selected any contact to export!" ) );
+    return;
+  }
 
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
   if ( !xxport )
     return;
 
-  KABC::AddresseeList contacts;
-
-  foreach ( const QModelIndex &index, mSelectionModel->selectedRows() ) {
-    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    Q_ASSERT( item.isValid() );
-    if ( item.hasPayload<KABC::Addressee>() )
-      contacts.append( item.payload<KABC::Addressee>() );
-  }
-
-  if ( !contacts.isEmpty() )
-    xxport->exportContacts( contacts );
-  else
-    KMessageBox::sorry( 0, i18n( "You have not selected any contact to export!" ) );
+  xxport->exportContacts( contacts );
 
   delete xxport;
 }

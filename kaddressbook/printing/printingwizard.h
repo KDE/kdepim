@@ -29,16 +29,19 @@
 
 #include <QtCore/QStringList>
 
+#include <kabc/addressee.h>
 #include <kassistantdialog.h>
 
-class QAbstractItemView;
+class QAbstractItemModel;
+class QItemSelectionModel;
 class QPrinter;
 
-class SelectionPage;
+class ContactSelectionWidget;
 class StylePage;
 
 namespace KABPrinting {
 
+class PrintProgress;
 class PrintStyle;
 class PrintStyleFactory;
 
@@ -55,11 +58,13 @@ class PrintingWizard : public KAssistantDialog
      * Creates a new printing wizard.
      *
      * @param printer The configured printer.
-     * @param itemView The item view to get the selection from.
+     * @param itemModel The item model to get all contacts from.
+     * @param selectionModel The selection model to get the selected contacts from.
      * @param parent The parent widget.
      */
     PrintingWizard( QPrinter *printer,
-                    QAbstractItemView *itemView,
+                    QAbstractItemModel *itemModel,
+                    QItemSelectionModel *selectionModel,
                     QWidget *parent = 0 );
 
     /**
@@ -89,15 +94,18 @@ class PrintingWizard : public KAssistantDialog
      */
     void slotStyleSelected(int);
 
+  private Q_SLOTS:
+    void finalizePrinting( const KABC::Addressee::List& );
+
   protected:
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;
     QPrinter *mPrinter;
-    QAbstractItemView *mItemView;
     PrintStyle *mStyle;
+    PrintProgress *mProgress;
 
     StylePage *mStylePage;
-    SelectionPage *mSelectionPage;
+    ContactSelectionWidget *mSelectionPage;
 
     /**
      * Overloaded accept slot. This is used to do the actual
