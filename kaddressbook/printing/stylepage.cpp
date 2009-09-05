@@ -75,15 +75,15 @@ void StylePage::setSortField( ContactFields::Field field )
   mFieldCombo->setItemText( mFieldCombo->currentIndex(), ContactFields::label( field) );
 }
 
-void StylePage::setSortAscending( bool value )
+void StylePage::setSortOrder( Qt::SortOrder sortOrder )
 {
-  if ( value )
+  if ( sortOrder == Qt::AscendingOrder )
     mSortTypeCombo->setCurrentIndex( 0 );
   else
     mSortTypeCombo->setCurrentIndex( 1 );
 }
 
-ContactFields::Field StylePage::sortField()
+ContactFields::Field StylePage::sortField() const
 {
   if ( mFieldCombo->currentIndex() == -1 )
     return mFields[ 0 ];
@@ -91,9 +91,9 @@ ContactFields::Field StylePage::sortField()
   return mFields[ mFieldCombo->currentIndex() ];
 }
 
-bool StylePage::sortAscending()
+Qt::SortOrder StylePage::sortOrder() const
 {
-  return ( mSortTypeCombo->currentIndex() == 0 );
+  return ( mSortTypeCombo->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder );
 }
 
 void StylePage::initFieldCombo()

@@ -66,17 +66,17 @@ class StylePage : public QWidget
     /**
      * Returns the sort criterion field.
      */
-     ContactFields::Field sortField();
+    ContactFields::Field sortField() const;
 
     /**
-     * Set the sort type.
+     * Sets the sort order.
      */
-    void setSortAscending( bool value = true );
+    void setSortOrder( Qt::SortOrder sortOrder );
 
     /**
-     * Returns whether the sort type is ascending.
+     * Returns the sort order.
      */
-    bool sortAscending();
+    Qt::SortOrder sortOrder() const;
 
   Q_SIGNALS:
     /**

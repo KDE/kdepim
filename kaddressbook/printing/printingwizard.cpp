@@ -25,9 +25,22 @@
 
 #include "printingwizard.h"
 
-#include <QtGui/QPushButton>
-#include <QtGui/QPrinter>
+#include "contactsorter.h"
+#include "contactstreemodel.h"
+#include "globalcontactmodel.h"
+#include "printprogress.h"
+#include "printstyle.h"
+#include "selectionpage.h"
+#include "stylepage.h"
 
+// including the styles
+#include "detailledstyle.h"
+#include "mikesstyle.h"
+#include "ringbinderstyle.h"
+
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi_next/entitytreeview.h>
 #include <kabc/addresseelist.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -36,21 +49,8 @@
 #include <klocale.h>
 #include <kdescendantsproxymodel.h>
 
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entityfilterproxymodel.h>
-
-#include "globalcontactmodel.h"
-#include "contactstreemodel.h"
-#include <akonadi_next/entitytreeview.h>
-
-// including the styles
-#include "detailledstyle.h"
-#include "mikesstyle.h"
-#include "ringbinderstyle.h"
-
-#include "printprogress.h"
-#include "printstyle.h"
-#include "printsortmode.h"
+#include <QtGui/QPushButton>
+#include <QtGui/QPrinter>
 
 using namespace KABPrinting;
 
@@ -123,7 +123,10 @@ void PrintingWizard::slotStyleSelected( int index )
 
   if ( mStyle->preferredSortField() != 0 ) {
     mStylePage->setSortField( mStyle->preferredSortField() );
-    mStylePage->setSortAscending( mStyle->preferredSortType() );
+    if ( mStyle->preferredSortType() )
+      mStylePage->setSortOrder( Qt::AscendingOrder );
+    else
+      mStylePage->setSortOrder( Qt::DescendingOrder );
   }
 }
 
@@ -145,7 +148,7 @@ void PrintingWizard::print()
   QAbstractItemModel* model = mItemView->model();
   Q_ASSERT(model);
 
-  KABC::AddresseeList list;
+  KABC::Addressee::List list;
   if ( mStyle != 0 ) {
     if ( mSelectionPage->useSelection() ) {
       foreach ( const QModelIndex &index, mItemView->selectionModel()->selectedRows() ) {
@@ -155,24 +158,6 @@ void PrintingWizard::print()
         if ( item.hasPayload<KABC::Addressee>() )
           list.append( item.payload<KABC::Addressee>() );
       }
-    } else if ( mSelectionPage->useFilters() ) {
-      //TODO ? or remove it it's not necessary
-    } else if ( mSelectionPage->useCategories() ) {
-#if 0
-      QStringList categories = mSelectionPage->categories();
-      KABC::AddressBook::ConstIterator it;
-      for ( it = addressBook()->constBegin(); it != addressBook()->constEnd(); ++it ) {
-        const QStringList tmp( (*it).categories() );
-        QStringList::ConstIterator tmpIt;
-        for ( tmpIt = tmp.constBegin(); tmpIt != tmp.constEnd(); ++tmpIt )
-          if ( categories.contains( *tmpIt ) ) {
-            list.append( *it );
-            break;
-          }
-      }
-#else
-      Q_ASSERT(false);
-#endif
     } else {
       Akonadi::ContactsTreeModel *contactsModel = GlobalContactModel::instance()->model();
 
@@ -194,9 +179,8 @@ void PrintingWizard::print()
       }
     }
 
-    list.setReverseSorting( !mStylePage->sortAscending() );
-    PrintSortMode sortMode( mStylePage->sortField() );
-    list.sortByMode( &sortMode );
+    const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
+    sorter.sort( list );
   }
 
   kDebug(5720) <<"PrintingWizardImpl::print: printing"

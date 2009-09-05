@@ -31,14 +31,16 @@
 
 #include <kassistantdialog.h>
 
-#include "printstyle.h"
-#include "selectionpage.h"
-#include "stylepage.h"
-
 class QAbstractItemView;
 class QPrinter;
 
+class SelectionPage;
+class StylePage;
+
 namespace KABPrinting {
+
+class PrintStyle;
+class PrintStyleFactory;
 
 /**
  * The PrintingWizard combines pages common for all print styles
