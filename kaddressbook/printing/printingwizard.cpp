@@ -151,8 +151,9 @@ void PrintingWizard::print()
       foreach ( const QModelIndex &index, mItemView->selectionModel()->selectedRows() ) {
         const Akonadi::Item item = model->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         Q_ASSERT( item.isValid() );
-        const KABC::Addressee adr = item.payload<KABC::Addressee>();
-        list.append( adr );
+
+        if ( item.hasPayload<KABC::Addressee>() )
+          list.append( item.payload<KABC::Addressee>() );
       }
     } else if ( mSelectionPage->useFilters() ) {
       //TODO ? or remove it it's not necessary
@@ -187,8 +188,9 @@ void PrintingWizard::print()
         const QModelIndex index = allContacts->index( row, 0 );
         const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         Q_ASSERT( item.isValid() );
-        const KABC::Addressee contact = item.payload<KABC::Addressee>();
-        list.append( contact );
+
+        if ( item.hasPayload<KABC::Addressee>() )
+          list.append( item.payload<KABC::Addressee>() );
       }
     }
 
