@@ -16,6 +16,7 @@ add_definitions(${QT_QTDBUS_DEFINITIONS})
 ########### next target ###############
 
 set(kdepim_LIB_SRCS
+   kcheckcombobox.cpp
    ktimeedit.cpp
    reminderclient.cpp
    kprefsdialog.cpp
