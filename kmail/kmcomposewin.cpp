@@ -3527,7 +3527,7 @@ void KMComposeWin::doSend( KMail::MessageSender::SendMethod method,
                                     i18n("No Subject Specified"),
                                     KGuiItem(i18n("S&end as Is")),
                                     KGuiItem(i18n("&Specify the Subject")),
-                                    ":kmail_no_subject_specified" );
+                                    "no_subject_specified" );
       if ( rc == KMessageBox::No ) {
         return;
       }
