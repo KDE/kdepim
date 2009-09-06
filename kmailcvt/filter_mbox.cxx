@@ -112,10 +112,14 @@ void FilterMBox::import(FilterInfo *info)
                 * addMessage() == old function, need more time and check for duplicates
                 * addMessage_fastImport == new function, faster and no check for duplicates
                 */
-                if(info->removeDupMsg)
-                    addMessage( info, folderName, tmp.fileName(), x_status_flag );
+                if ( tmp.size() > 0 ) {
+                    if(info->removeDupMsg)
+                        addMessage( info, folderName, tmp.fileName(), x_status_flag );
+                    else
+                        addMessage_fastImport( info, folderName, tmp.fileName(), x_status_flag );
+                }
                 else
-                    addMessage_fastImport( info, folderName, tmp.fileName(), x_status_flag );
+                    kWarning() << "Message size is 0 bytes, not importing it.";
 
                 int currentPercentage = (int) ( ( (float) mbox.pos() / filenameInfo.size() ) * 100 );
                 info->setCurrent( currentPercentage );
