@@ -261,7 +261,7 @@ public:
 
 
   /** Print message. */
-  void printMessage(  KMime::Message* aMsg );
+  void printMessage( KMime::Message* message );
 
  
     /** Set the Akonadi item that will be displayed.

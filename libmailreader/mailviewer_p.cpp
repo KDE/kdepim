@@ -1579,11 +1579,11 @@ void MailViewerPrivate::setPrintFont( const QFont& font )
 }
 
 
-void MailViewerPrivate::printMessage( KMime::Message* aMsg )
+void MailViewerPrivate::printMessage( KMime::Message* message )
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  setMessage( aMsg, MailViewer::Force );
+  setMessage( message, MailViewer::Force );
 }
 
 
@@ -2735,7 +2735,6 @@ void MailViewerPrivate::slotPrintMsg()
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
   mViewer->view()->print();
-  deleteLater();
 }
 
 

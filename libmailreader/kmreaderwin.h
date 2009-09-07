@@ -103,6 +103,9 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
     Delayed
   };
 
+  /** Flag to indicate the owrnership of the message data pointer. Transfer means the ownership is taken
+  * by the MailViewer class, Keep means it the ownership is not taken.
+  */
   enum Ownership {
     Transfer= 0,
     Keep
@@ -111,9 +114,9 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
   /** Set the message that shall be shown.
   * @param msg - the message to be shown. If 0, an empty page is displayed.
   * @param updateMode - update the display immediately or not. See UpdateMode.
-  *  @param Ownership - Transfer means the ownership of the msg pointer is taken by the lib
+  * @param Ownership - Transfer means the ownership of the msg pointer is taken by the lib
   */
-  void setMessage(KMime::Message* msg, UpdateMode updateMode = Delayed, Ownership ownership = Keep);
+  void setMessage(KMime::Message* message, UpdateMode updateMode = Delayed, Ownership ownership = Keep);
 
   /** Set the Akonadi item that will be displayed.
   * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
@@ -122,17 +125,22 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
   */
   void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
-  /** Convenience method to clear the reader and discard the current message. Sets the internal message pointer to 0.
+  /** Convenience method to clear the reader and discard the current message. Sets the internal message pointer
+  * returned by message() to 0.
   * @param updateMode - update the display immediately or not. See UpdateMode.
   */
   void clear(UpdateMode updateMode = Delayed ) { setMessage(0, updateMode); }
 
+  /** Sets a message as the current one and print it immediately.
+  *   @param message the message to display and print
+  */
+  void printMessage( KMime::Message* message );
 
-  /** Print message. */
-  void printMessage(  KMime::Message* aMsg );
+  /** Print the currently displayed message */
+  void print();
 
   /** Return selected text */
-  QString copyText();
+  QString selectedText();
 
   /** Get the html override setting */
   bool htmlOverride() const;
@@ -155,7 +163,7 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
   /** Display a generic HTML splash page instead of a message.
   * @param info - the text to be displayed in HTML format
   */
-  void displaySplashPage( const QString &info );
+  void displaySplashPage( const QString& info );
 
   /** Enable the displaying of messages again after an splash (or other) page was displayed */
   void enableMessageDisplay();
@@ -248,7 +256,6 @@ protected:
   void styleChange( QStyle& oldStyle );
   /** Watch for palette changes */
   virtual bool event(QEvent *e);
-
 
   MailViewerPrivate* const d_ptr;
 };

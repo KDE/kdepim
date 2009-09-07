@@ -179,10 +179,10 @@ MailViewer::~MailViewer()
 }
 
 
-void MailViewer::setMessage(KMime::Message* msg, UpdateMode updateMode, Ownership ownership)
+void MailViewer::setMessage(KMime::Message* message, UpdateMode updateMode, Ownership ownership)
 {
   Q_D(MailViewer);
-  d->setMessage( msg, updateMode, ownership);
+  d->setMessage( message, updateMode, ownership);
 }
 
 
@@ -205,10 +205,18 @@ void MailViewer::enableMessageDisplay()
   d->enableMessageDisplay();
 }
 
-void MailViewer::printMessage( KMime::Message* aMsg )
+void MailViewer::printMessage( KMime::Message* message )
 {
    Q_D(MailViewer);
-   d->printMessage( aMsg );
+   d->printMessage( message );
+}
+
+void MailViewer::print()
+{
+  Q_D(MailViewer);
+  if ( !message() )
+    return;
+  d->mViewer->view()->print();
 }
 
 void MailViewer::resizeEvent( QResizeEvent * )
@@ -271,7 +279,7 @@ void MailViewer::slotScrollNext()
   view->scrollBy( 0, (int)(height() * 0.8 ) );
 }
 
-QString MailViewer::copyText()
+QString MailViewer::selectedText()
 {
   Q_D(MailViewer);
   QString temp = d->mViewer->selectedText();
