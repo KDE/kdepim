@@ -729,11 +729,11 @@ QString EnterpriseHeaderStyle::format( KMime::Message * message,
   }
 
   if ( strategy->showHeader( "cc" ) && message->cc(false) ) {
-    headerParts << i18n("CC: ") + StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true, linkColor );
+    headerParts << StringUtil::emailAddrAsAnchor( message->cc()->asUnicodeString(), true, linkColor );
   }
 
   if ( strategy->showHeader( "bcc" ) && message->bcc(false) ) {
-    headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true, linkColor );
+    headerParts << StringUtil::emailAddrAsAnchor( message->bcc()->asUnicodeString(), true, linkColor );
   }
 
   // remove all empty (modulo whitespace) entries and joins them via ", \n"
