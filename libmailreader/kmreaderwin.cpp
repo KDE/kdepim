@@ -269,14 +269,14 @@ void MailViewer::slotScrollPrior()
 {
   Q_D(MailViewer);
   KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, -(int)(height() * 0.8 ) );
+  view->scrollBy( 0, -(int)(d->mViewer->widget()->height() * 0.8 ) );
 }
 
 void MailViewer::slotScrollNext()
 {
   Q_D(MailViewer);
   KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, (int)(height() * 0.8 ) );
+  view->scrollBy( 0, (int)(d->mViewer->widget()->height() * 0.8 ) );
 }
 
 QString MailViewer::selectedText()
