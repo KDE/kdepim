@@ -69,7 +69,7 @@
 #include "printing/printingwizard.h"
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
-  : QWidget( parent )
+  : QWidget( parent ), mAllContactsModel( 0 )
 {
   mXXPortManager = new XXPortManager( this );
 
@@ -88,16 +88,16 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                               mItemTree
    *                                   ^
    *                                   |
-   *                             mDescendantTree
-   *                                   ^
-   *                                   |
-   *      mCollectionView  ->  selectionProxyModel
-   *            ^                      ^
-   *            |                      |
-   *      mCollectionTree              |
-   *            ^                      |
-   *            |                      |
-   *             \                    /
+   *                             mDescendantTree   mAllContactsModel
+   *                                   ^                  ^
+   *                                   |                  |
+   *      mCollectionView  ->  selectionProxyModel  descendantsModel
+   *            ^                      ^                  ^
+   *            |                      |                  |
+   *      mCollectionTree              |                  |
+   *            ^                      |                  |
+   *            |                      |   _______________/
+   *             \                    /  /
    *            GlobalContactModel::instance()
    *
    *
@@ -111,8 +111,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *              contactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
    *
-   *                       descModel:  Flattens the item/collection tree to a list
-   *         mContactCompletionModel:  Provides a list of all contacts that can be used for auto-completion
+   *                descendantsModel:  Flattens the item/collection tree to a list
+   *               mAllContactsModel:  Provides a list of all available contacts from all address books
    */
 
   mCollectionTree = new Akonadi::EntityFilterProxyModel( this );
@@ -120,7 +120,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   mCollectionTree->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
-  mXXPortManager->setCollectionModel( mCollectionTree );
+  mXXPortManager->setItemModel( allContactsModel() );
 
   mCollectionView->setModel( mCollectionTree );
   mCollectionView->setXmlGuiClient( guiClient );
@@ -353,13 +353,23 @@ void MainWidget::print()
   if ( !printDialog.exec() )
     return;
 
-  KABPrinting::PrintingWizard wizard( &printer, mItemView, this );
+  KABPrinting::PrintingWizard wizard( &printer, allContactsModel(),
+                                      mItemView->selectionModel(), this );
   wizard.exec();
 }
 
 void MainWidget::newContact()
 {
   Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
+
+  if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
+    const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole )
+                                                .value<Akonadi::Collection>();
+
+    dlg.setDefaultAddressBook( collection );
+  }
+
   dlg.exec();
 }
 
@@ -446,6 +456,21 @@ void MainWidget::editGroup( const Akonadi::Item &group )
   Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
   dlg.setContactGroup( group );
   dlg.exec();
+}
+
+QAbstractItemModel* MainWidget::allContactsModel()
+{
+  if ( !mAllContactsModel ) {
+    KDescendantsProxyModel *descendantsModel = new KDescendantsProxyModel( this );
+    descendantsModel->setSourceModel( GlobalContactModel::instance()->model() );
+
+    mAllContactsModel = new Akonadi::EntityFilterProxyModel( this );
+    mAllContactsModel->setSourceModel( descendantsModel );
+    mAllContactsModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+    mAllContactsModel->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+  }
+
+  return mAllContactsModel;
 }
 
 #include "mainwidget.moc"

@@ -17,6 +17,7 @@ include_directories( ${Boost_INCLUDE_DIR} )
 ########### next target ###############
 
 set(kdepim_LIB_SRCS
+   kcheckcombobox.cpp
    ktimeedit.cpp
    reminderclient.cpp
    kprefsdialog.cpp

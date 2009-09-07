@@ -25,6 +25,7 @@
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QThread>
+#include <QtCore/QUuid>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -235,6 +236,8 @@ KABC::AddresseeList CSVImportDialog::contacts() const
         if ( field == ContactFields::Birthday )
           value = dateParser.parse( value ).toString( Qt::ISODate );
 
+        value.replace( "\\n", "\n" );
+
         ContactFields::setValue( field, value, contact );
       }
     }
@@ -391,13 +394,13 @@ void CSVImportDialog::customDelimiterChanged()
     delimiterClicked( 4 );
 }
 
-void CSVImportDialog::customDelimiterChanged( const QString& )
+void CSVImportDialog::customDelimiterChanged( const QString&, bool reload )
 {
   mDelimiterGroup->button( 4 )->setChecked ( true );
-  delimiterClicked( 4 ); // other
+  delimiterClicked( 4, reload ); // other
 }
 
-void CSVImportDialog::delimiterClicked( int id )
+void CSVImportDialog::delimiterClicked( int id, bool reload )
 {
   switch ( id ) {
     case 0: // comma
@@ -418,29 +421,29 @@ void CSVImportDialog::delimiterClicked( int id )
       break;
   }
 
-  if ( mDevice )
+  if ( mDevice && reload )
     mModel->load( mDevice );
 }
 
-void CSVImportDialog::textQuoteChanged( const QString& mark )
+void CSVImportDialog::textQuoteChanged( const QString& mark, bool reload )
 {
   if ( mComboQuote->currentIndex() == 2 )
     mModel->setTextQuote( QChar() );
   else
     mModel->setTextQuote( mark.at( 0 ) );
 
-  if ( mDevice )
+  if ( mDevice && reload )
     mModel->load( mDevice );
 }
 
-void CSVImportDialog::skipFirstRowChanged( bool checked )
+void CSVImportDialog::skipFirstRowChanged( bool checked, bool reload )
 {
   if ( checked )
     mModel->setStartRow( 1 );
   else
     mModel->setStartRow( 0 );
 
-  if ( mDevice )
+  if ( mDevice && reload )
     mModel->load( mDevice );
 }
 
@@ -475,8 +478,7 @@ void CSVImportDialog::applyTemplate()
   QStringList templates;
 
   // load all template files
-  const QStringList files = KGlobal::dirs()->findAllResources( "data" , QString( kapp->objectName() ) +
-                                                               "/csv-templates/*.desktop",
+  const QStringList files = KGlobal::dirs()->findAllResources( "data" , "kaddressbook/csv-templates/*.desktop",
                                                                KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
 
   for ( int i = 0; i < files.count(); ++i ) {
@@ -488,6 +490,11 @@ void CSVImportDialog::applyTemplate()
     KConfigGroup group( &config, "Misc" );
     templates.append( group.readEntry( "Name" ) );
     templateFileMap.insert( group.readEntry( "Name" ), files.at( i ) );
+  }
+
+  if ( templateFileMap.isEmpty() ) {
+    KMessageBox::sorry( this, i18n( "There are no templates available yet." ), i18n( "No templates available" ) );
+    return;
   }
 
   // let the user chose, what to take
@@ -505,23 +512,34 @@ void CSVImportDialog::applyTemplate()
   mDatePatternEdit->setText( generalGroup.readEntry( "DatePattern", "Y-M-D" ) );
   mDelimiterEdit->setText( generalGroup.readEntry( "DelimiterOther" ) );
 
-  const uint columns = generalGroup.readEntry( "Columns", 0 );
   const int delimiterButton = generalGroup.readEntry( "DelimiterType", 0 );
   const int quoteType = generalGroup.readEntry( "QuoteType", 0 );
   const bool skipFirstRow = generalGroup.readEntry( "SkipFirstRow", false );
 
   mDelimiterGroup->button( delimiterButton )->setChecked( true );
-  delimiterClicked( delimiterButton );
+  delimiterClicked( delimiterButton, false );
 
   mComboQuote->setCurrentIndex( quoteType );
-  textQuoteChanged( mComboQuote->currentText() );
+  textQuoteChanged( mComboQuote->currentText(), false );
 
   mSkipFirstRow->setChecked( skipFirstRow );
-  skipFirstRowChanged( skipFirstRow );
+  skipFirstRowChanged( skipFirstRow, false );
 
-  QEventLoop waitLoop;
-  connect( mModel, SIGNAL( finishedLoading() ), &waitLoop, SLOT( quit() ) );
-  waitLoop.exec();
+  if ( mDevice )
+    mModel->load( mDevice );
+
+  setProperty( "TemplateFileName", templateFileMap[ selectedTemplate ] );
+  connect( mModel, SIGNAL( finishedLoading() ), this, SLOT( finalizeApplyTemplate() ) );
+}
+
+void CSVImportDialog::finalizeApplyTemplate()
+{
+  const QString templateFileName = property( "TemplateFileName" ).toString();
+
+  KConfig config( templateFileName, KConfig::SimpleConfig );
+
+  const KConfigGroup generalGroup( &config, "General" );
+  const uint columns = generalGroup.readEntry( "Columns", 0 );
 
   // create the column map
   const KConfigGroup columnMapGroup( &config, "csv column map" );
@@ -534,21 +552,15 @@ void CSVImportDialog::applyTemplate()
 
 void CSVImportDialog::saveTemplate()
 {
-  QString fileName = KFileDialog::getSaveFileName(
-                     KStandardDirs::locateLocal( "data", QString( kapp->objectName() ) + "/csv-templates/" ),
-                     "*.desktop", this );
-
-  if ( fileName.isEmpty() )
-    return;
-
-  if ( !fileName.contains( ".desktop" ) )
-    fileName += ".desktop";
-
-  QString name = KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
-                                        i18nc( "@info", "Please enter a name for the template:" ) );
+  const QString name = KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
+                                              i18nc( "@info", "Please enter a name for the template:" ) );
 
   if ( name.isEmpty() )
     return;
+
+  const QString fileName = KStandardDirs::locateLocal( "data", "kaddressbook/csv-templates/"
+                                                       + QUuid::createUuid()
+                                                       + ".desktop" );
 
   KConfig config( fileName  );
   KConfigGroup generalGroup( &config, "General" );
@@ -605,7 +617,7 @@ void CSVImportDialog::urlChanged( const QString &file )
   enableButton( User2, state );
 }
 
-void CSVImportDialog::codecChanged()
+void CSVImportDialog::codecChanged( bool reload )
 {
   const int code = mCodecCombo->currentIndex();
 
@@ -622,7 +634,8 @@ void CSVImportDialog::codecChanged()
   else
     mModel->setTextCodec( QTextCodec::codecForName( "UTF-8" ) );
 
-  mModel->load( mDevice );
+  if ( mDevice && reload )
+    mModel->load( mDevice );
 }
 
 void CSVImportDialog::modelFinishedLoading()

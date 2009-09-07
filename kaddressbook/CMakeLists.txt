@@ -22,10 +22,8 @@ set( kaddressbook_printing_SRCS
   printing/mikesstyle.cpp
   printing/printingwizard.cpp
   printing/printprogress.cpp
-  printing/printsortmode.cpp
   printing/printstyle.cpp
   printing/ringbinderstyle.cpp
-  printing/selectionpage.cpp
   printing/stylepage.cpp
 )
 
@@ -38,6 +36,9 @@ set( kaddressbook_LIB_SRCS
   aboutdata.cpp
   contactfields.cpp
   contactfiltermodel.cpp
+  contactselectiondialog.cpp
+  contactselectionwidget.cpp
+  contactsorter.cpp
   contactstreemodel.cpp
   contactswitcher.cpp
   globalcontactmodel.cpp

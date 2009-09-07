@@ -41,6 +41,7 @@ class KActionCollection;
 class KDescendantsProxyModel;
 class KXMLGUIClient;
 class ModelColumnManager;
+class QAbstractItemModel;
 class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;
@@ -76,8 +77,11 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void editContact( const Akonadi::Item& );
     void editGroup( const Akonadi::Item& );
 
+    QAbstractItemModel* allContactsModel();
+
     Akonadi::EntityFilterProxyModel *mCollectionTree;
     Akonadi::EntityFilterProxyModel *mItemTree;
+    Akonadi::EntityFilterProxyModel *mAllContactsModel;
     KDescendantsProxyModel *mDescendantTree;
 
     QuickSearchWidget *mQuickSearchWidget;

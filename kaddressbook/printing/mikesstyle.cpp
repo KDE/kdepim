@@ -42,8 +42,8 @@ using namespace KABPrinting;
 
 const int mFieldSpacingHint = 2;
 
-MikesStyle::MikesStyle( PrintingWizard *parent, const char *name )
-  : PrintStyle( parent, name )
+MikesStyle::MikesStyle( PrintingWizard *parent )
+  : PrintStyle( parent )
 {
   setPreview( "mike-style.png" );
 }
@@ -238,14 +238,14 @@ int MikesStyle::calcHeight( const KABC::Addressee &addr,
 }
 
 
-MikesStyleFactory::MikesStyleFactory( PrintingWizard *parent, const char *name )
-  : PrintStyleFactory( parent, name )
+MikesStyleFactory::MikesStyleFactory( PrintingWizard *parent )
+  : PrintStyleFactory( parent )
 {
 }
 
 PrintStyle *MikesStyleFactory::create() const
 {
-  return new MikesStyle( mParent, mName );
+  return new MikesStyle( mParent );
 }
 
 QString MikesStyleFactory::description() const

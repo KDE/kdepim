@@ -1,5 +1,5 @@
 /*
-  This file is part of KOrganizer.
+  This file is part of libkdepim.
 
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
 
@@ -27,6 +27,8 @@
 #include <QAbstractItemView>
 #include <QKeyEvent>
 #include <QLineEdit>
+
+using namespace KPIM;
 
 KCheckComboBox::KCheckComboBox( QWidget *parent ) : KComboBox( parent )
 {

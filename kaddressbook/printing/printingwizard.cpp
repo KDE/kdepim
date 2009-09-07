@@ -25,43 +25,39 @@
 
 #include "printingwizard.h"
 
-#include <QtGui/QPushButton>
-#include <QtGui/QPrinter>
-
-#include <kabc/addresseelist.h>
-#include <kapplication.h>
-#include <kdebug.h>
-#include <kdialog.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <kdescendantsproxymodel.h>
-
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/entityfilterproxymodel.h>
-
-#include "globalcontactmodel.h"
-#include "contactstreemodel.h"
-#include <akonadi_next/entitytreeview.h>
+#include "contactselectionwidget.h"
+#include "contactsorter.h"
+#include "printprogress.h"
+#include "printstyle.h"
+#include "stylepage.h"
 
 // including the styles
 #include "detailledstyle.h"
 #include "mikesstyle.h"
 #include "ringbinderstyle.h"
 
-#include "printprogress.h"
-#include "printstyle.h"
-#include "printsortmode.h"
+#include <kapplication.h>
+#include <kdebug.h>
+#include <kdialog.h>
+#include <kglobal.h>
+#include <klocale.h>
+
+#include <QtGui/QPushButton>
+#include <QtGui/QPrinter>
 
 using namespace KABPrinting;
 
-PrintingWizard::PrintingWizard( QPrinter *printer, QAbstractItemView *itemView, QWidget *parent )
-  : KAssistantDialog( parent ), mPrinter( printer ), mItemView( itemView ), mStyle( 0 )
+PrintingWizard::PrintingWizard( QPrinter *printer, QAbstractItemModel *itemModel,
+                                QItemSelectionModel *selectionModel, QWidget *parent )
+  : KAssistantDialog( parent ), mPrinter( printer ), mStyle( 0 )
 {
-  mSelectionPage = new SelectionPage( this );
-  mSelectionPage->setUseSelection( mItemView->selectionModel()->hasSelection() );
+  mSelectionPage = new ContactSelectionWidget( itemModel, selectionModel, this );
+  mSelectionPage->setMessageText( i18n( "Which contacts do you want to print?" ) );
+  connect( mSelectionPage, SIGNAL( selectedContacts( const KABC::Addressee::List& ) ),
+           this, SLOT( finalizePrinting( const KABC::Addressee::List& ) ) );
+
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n( "Choose Contacts to Print" ) );
   addPage( mSelectionPageItem );
-
   setAppropriate( mSelectionPageItem, true );
 
   mStylePage = new StylePage( this );
@@ -100,17 +96,16 @@ void PrintingWizard::slotStyleSelected( int index )
   if ( index < 0 || index >= mStyleFactories.count() )
     return;
 
-  //enableButton( KDialog::User1, false ); // finish button
-
   if ( mStyle )
     mStyle->hidePages();
 
   mStyle = mStyleList.value( index );
   if ( !mStyle ) {
     PrintStyleFactory *factory = mStyleFactories.at( index );
-    kDebug(5720) <<"PrintingWizardImpl::slotStyleSelected:"
-                  << "creating print style"
-                  << factory->description();
+    kDebug(5720) << "PrintingWizardImpl::slotStyleSelected:"
+                 << "creating print style"
+                 << factory->description();
+
     mStyle = factory->create();
     mStyleList.insert( index, mStyle );
   }
@@ -119,12 +114,8 @@ void PrintingWizard::slotStyleSelected( int index )
 
   mStylePage->setPreview( mStyle->preview() );
 
-  //setFinishEnabled( page( pageCount() - 1 ), true );
-
-  if ( mStyle->preferredSortField() != 0 ) {
-    mStylePage->setSortField( mStyle->preferredSortField() );
-    mStylePage->setSortAscending( mStyle->preferredSortType() );
-  }
+  mStylePage->setSortField( mStyle->preferredSortField() );
+  mStylePage->setSortOrder( mStyle->preferredSortOrder() );
 }
 
 QPrinter* PrintingWizard::printer()
@@ -135,74 +126,29 @@ QPrinter* PrintingWizard::printer()
 void PrintingWizard::print()
 {
   // create and show print progress widget:
-  PrintProgress *progress = new PrintProgress( this );
-  KPageWidgetItem *progressItem = new KPageWidgetItem( progress, i18n( "Print Progress" ) );
+  mProgress = new PrintProgress( this );
+  KPageWidgetItem *progressItem = new KPageWidgetItem( mProgress, i18n( "Print Progress" ) );
   addPage( progressItem );
   setCurrentPage( progressItem );
   kapp->processEvents();
 
-  // prepare list of contacts to print:
-  QAbstractItemModel* model = mItemView->model();
-  Q_ASSERT(model);
+  // this will call finalizePrinting via signal/slot
+  mSelectionPage->requestSelectedContacts();
+}
 
-  KABC::AddresseeList list;
-  if ( mStyle != 0 ) {
-    if ( mSelectionPage->useSelection() ) {
-      foreach ( const QModelIndex &index, mItemView->selectionModel()->selectedRows() ) {
-        const Akonadi::Item item = model->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-        Q_ASSERT( item.isValid() );
-        const KABC::Addressee adr = item.payload<KABC::Addressee>();
-        list.append( adr );
-      }
-    } else if ( mSelectionPage->useFilters() ) {
-      //TODO ? or remove it it's not necessary
-    } else if ( mSelectionPage->useCategories() ) {
-#if 0
-      QStringList categories = mSelectionPage->categories();
-      KABC::AddressBook::ConstIterator it;
-      for ( it = addressBook()->constBegin(); it != addressBook()->constEnd(); ++it ) {
-        const QStringList tmp( (*it).categories() );
-        QStringList::ConstIterator tmpIt;
-        for ( tmpIt = tmp.constBegin(); tmpIt != tmp.constEnd(); ++tmpIt )
-          if ( categories.contains( *tmpIt ) ) {
-            list.append( *it );
-            break;
-          }
-      }
-#else
-      Q_ASSERT(false);
-#endif
-    } else {
-      Akonadi::ContactsTreeModel *contactsModel = GlobalContactModel::instance()->model();
+void PrintingWizard::finalizePrinting( const KABC::Addressee::List &list )
+{
+  KABC::Addressee::List contacts( list );
 
-      KDescendantsProxyModel *descendantTree = new KDescendantsProxyModel( this );
-      descendantTree->setSourceModel( contactsModel );
-
-      Akonadi::EntityFilterProxyModel *allContacts = new Akonadi::EntityFilterProxyModel( this );
-      allContacts->setSourceModel( descendantTree );
-      allContacts->addMimeTypeInclusionFilter( KABC::Addressee::mimeType() );
-
-      // create a string list of all entries:
-      for ( int row = 0; row < allContacts->rowCount(); ++row ) {
-        const QModelIndex index = allContacts->index( row, 0 );
-        const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-        Q_ASSERT( item.isValid() );
-        const KABC::Addressee contact = item.payload<KABC::Addressee>();
-        list.append( contact );
-      }
-    }
-
-    list.setReverseSorting( !mStylePage->sortAscending() );
-    PrintSortMode sortMode( mStylePage->sortField() );
-    list.sortByMode( &sortMode );
-  }
+  const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
+  sorter.sort( contacts );
 
   kDebug(5720) <<"PrintingWizardImpl::print: printing"
-                << list.count() << "contacts.";
+                << contacts.count() << "contacts.";
   // ... print:
   enableButton( KDialog::User3, false ); // back button
   enableButton( KDialog::Cancel, false );
-  mStyle->print( list, progress );
+  mStyle->print( contacts, mProgress );
 }
 
 #include "printingwizard.moc"

@@ -53,13 +53,14 @@ class CSVImportDialog : public KDialog
     void urlChanged( const QString& );
 
     void customDelimiterChanged();
-    void customDelimiterChanged( const QString& );
-    void delimiterClicked( int );
-    void textQuoteChanged( const QString& );
-    void skipFirstRowChanged( bool );
-    void codecChanged();
+    void customDelimiterChanged( const QString&, bool reload = true );
+    void delimiterClicked( int, bool reload = true );
+    void textQuoteChanged( const QString&, bool reload = true );
+    void skipFirstRowChanged( bool, bool reload = true );
+    void codecChanged( bool reload = true );
 
     void modelFinishedLoading();
+    void finalizeApplyTemplate();
 
   private:
     void applyTemplate();

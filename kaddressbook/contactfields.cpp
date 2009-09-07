@@ -173,7 +173,7 @@ void ContactFields::setValue( Field field, const QString &value, KABC::Addressee
       contact.setOrganization( value );
       break;
     case ContactFields::Note:
-      contact.setNote( contact.note() );
+      contact.setNote( value );
       break;
     case ContactFields::HomePhone:
       {

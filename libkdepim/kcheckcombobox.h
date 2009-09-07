@@ -1,5 +1,5 @@
 /*
-  This file is part of KOrganizer.
+  This file is part of libkdepim.
 
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
 
@@ -25,10 +25,14 @@
 #ifndef KCHECKCOMBOBOX_H
 #define KCHECKCOMBOBOX_H
 
+#include "kdepim_export.h"
+
 #include <KComboBox>
 #include <QModelIndex>
 
-class KCheckComboBox : public KComboBox
+namespace KPIM {
+
+class KDEPIM_EXPORT KCheckComboBox : public KComboBox
 {
   Q_OBJECT
 
@@ -76,5 +80,7 @@ class KCheckComboBox : public KComboBox
     QString mDefaultText;
     bool mIgnoreHide;
 };
+
+}
 
 #endif // KCHECKCOMBOBOX_H

@@ -52,7 +52,7 @@ class RingBinderPrintStyle : public PrintStyle
   Q_OBJECT
 
   public:
-    explicit RingBinderPrintStyle( PrintingWizard* parent, const char* name = 0 );
+    explicit RingBinderPrintStyle( PrintingWizard* parent );
     ~RingBinderPrintStyle();
 
     void print( const KABC::Addressee::List &contacts, PrintProgress* );
@@ -81,7 +81,7 @@ class RingBinderPrintStyle : public PrintStyle
 class RingBinderPrintStyleFactory : public PrintStyleFactory
 {
   public:
-    explicit RingBinderPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
+    explicit RingBinderPrintStyleFactory( PrintingWizard *parent );
 
     PrintStyle *create() const;
     QString description() const;

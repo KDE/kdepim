@@ -34,6 +34,12 @@
 #include <KDialog>
 #include <KLocale>
 
+// helper method to sort contact fields by field label
+static bool contactFieldsNameLesser( const ContactFields::Field &field, const ContactFields::Field &otherField )
+{
+  return ( QString::localeAwareCompare( ContactFields::label( field ), ContactFields::label( otherField ) ) < 0 );
+}
+
 StylePage::StylePage( QWidget* parent,  const char* name )
   : QWidget( parent )
 {
@@ -72,28 +78,28 @@ void StylePage::clearStyleNames()
 
 void StylePage::setSortField( ContactFields::Field field )
 {
-  mFieldCombo->setItemText( mFieldCombo->currentIndex(), ContactFields::label( field) );
+  mFieldCombo->setCurrentIndex( mFields.indexOf( field ) );
 }
 
-void StylePage::setSortAscending( bool value )
+void StylePage::setSortOrder( Qt::SortOrder sortOrder )
 {
-  if ( value )
+  if ( sortOrder == Qt::AscendingOrder )
     mSortTypeCombo->setCurrentIndex( 0 );
   else
     mSortTypeCombo->setCurrentIndex( 1 );
 }
 
-ContactFields::Field StylePage::sortField()
+ContactFields::Field StylePage::sortField() const
 {
   if ( mFieldCombo->currentIndex() == -1 )
-    return mFields[ 0 ];
+    return ContactFields::GivenName;
 
   return mFields[ mFieldCombo->currentIndex() ];
 }
 
-bool StylePage::sortAscending()
+Qt::SortOrder StylePage::sortOrder() const
 {
-  return ( mSortTypeCombo->currentIndex() == 0 );
+  return ( mSortTypeCombo->currentIndex() == 0 ? Qt::AscendingOrder : Qt::DescendingOrder );
 }
 
 void StylePage::initFieldCombo()
@@ -101,9 +107,13 @@ void StylePage::initFieldCombo()
   mFieldCombo->clear();
 
   mFields = ContactFields::allFields();
+  mFields.remove( 0 ); // remove ContactFields::Undefined
+
+  qSort( mFields.begin(), mFields.end(), contactFieldsNameLesser );
+
   ContactFields::Fields::ConstIterator it;
   for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it )
-    mFieldCombo->addItem( ContactFields::label(*it) );
+    mFieldCombo->addItem( ContactFields::label( *it ) );
 }
 
 void StylePage::initGUI()
@@ -159,6 +169,7 @@ void StylePage::initGUI()
   styleLayout->addWidget( mPreview );
 
   topLayout->addWidget( group, 1, 1 );
+  topLayout->setRowStretch( 1, 1 );
 }
 
 #include "stylepage.moc"
