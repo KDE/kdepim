@@ -389,6 +389,12 @@ KMime::Message* MailViewer::message() const
   return d->mMessage;
 }
 
+void MailViewer::setPrintFont( const QFont& font )
+{
+  Q_D(MailViewer);
+  d->mCSSHelper->setPrintFont( font );
+}
+
 void MailViewer::styleChange( QStyle& oldStyle )
 {
   Q_D(MailViewer);

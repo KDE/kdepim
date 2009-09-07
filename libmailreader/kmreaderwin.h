@@ -222,6 +222,10 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
    */
   KConfigSkeleton *configObject();
 
+  /** Set the font used for printing.
+  * @param font the selected font
+  */
+  void setPrintFont( const QFont& font );
 
   
 signals:
