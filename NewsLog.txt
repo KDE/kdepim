@@ -1,3 +1,25 @@
+Monday, September 7th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Show UTC incidences in the local time zone in the event editor
+      - Obey Kiosk settings when reading the identities config
+
+* Merges from enterprise35 branch:
+      - kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
+      - kolab/issue3717: The attachment of an invitation isn't displayed.
+      - kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
+      - kolab/issue3827: Address completion ldap, missing results from some sources (rt#5853)
+      - kolab/issue3799: Freebusy authentication dialog appears in the background
+      - Don't print "CC:" and "BCC:" in the enterprise header.
+      - Fix crash when completing LDAP addresses
+
+
 Friday, August 28th 2009
 
 Problems addressed
