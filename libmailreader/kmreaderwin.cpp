@@ -413,6 +413,12 @@ bool MailViewer::event(QEvent *e)
   return QWidget::event(e);
 }
 
+void MailViewer::slotFind()
+{
+  Q_D(MailViewer);
+  d->mViewer->findText();
+}
+
 #include "kmreaderwin.moc"
 
 

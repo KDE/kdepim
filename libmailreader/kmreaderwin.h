@@ -246,6 +246,7 @@ public slots:
   void slotScrollPrior();
   void slotScrollNext();
   void slotJumpDown();
+  void slotFind();
 
 protected:
     /** Some necessary event handling. */
