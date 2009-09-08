@@ -1877,7 +1877,7 @@ KUrl MailViewerPrivate::tempFileUrlFromNode( const KMime::Content *node )
 
 
 void MailViewerPrivate::adjustLayout() {
-  if ( mMimeTreeAtBottom )
+  if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
     mSplitter->insertWidget( 0, mMimePartTree );
