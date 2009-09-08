@@ -845,15 +845,16 @@ QString expandAliases( const QString& recipients, QStringList &distributionListE
     }
 
     // check whether the address is missing the domain part
-    // FIXME: looking for '@' might be wrong
-    if ( !receiver.contains('@') ) {
+    QByteArray displayName, addrSpec, comment;
+    KPIMUtils::splitAddress( receiver.toLatin1(), displayName, addrSpec, comment );
+    if ( !addrSpec.contains('@') ) {
       KConfigGroup general( Global::instance()->config(), "General" );
       QString defaultdomain = general.readEntry( "Default domain" );
-      if( !defaultdomain.isEmpty() ) {
-        expandedRecipients += receiver + '@' + defaultdomain;
+      if ( !defaultdomain.isEmpty() ) {
+        expandedRecipients += KPIMUtils::normalizedAddress( displayName, addrSpec + '@' + defaultdomain, comment );
       }
       else {
-        expandedRecipients += guessEmailAddressFromLoginName( receiver );
+        expandedRecipients += guessEmailAddressFromLoginName( addrSpec );
       }
     }
     else
@@ -966,6 +967,66 @@ bool isCryptoPart( const QString &type, const QString &subType, const QString &f
                fileName.toLower() == "msg.asc" ) ) );
 }
 
+QString formatString( const QString &wildString, const QString &fromAddr )
+{
+  QString result;
+
+  if ( wildString.isEmpty() ) {
+    return wildString;
+  }
+
+  unsigned int strLength( wildString.length() );
+  for ( uint i=0; i<strLength; ) {
+    QChar ch = wildString[i++];
+    if ( ch == '%' && i<strLength ) {
+      ch = wildString[i++];
+      switch ( ch.toLatin1() ) {
+      case 'f': // sender's initals
+      {
+        QString str = stripEmailAddr( fromAddr );
+
+        uint j = 0;
+        for ( ; str[j]>' '; j++ )
+          ;
+        unsigned int strLength( str.length() );
+        for ( ; j < strLength && str[j] <= ' '; j++ )
+          ;
+        result += str[0];
+        if ( str[j] > ' ' ) {
+          result += str[j];
+        } else {
+          if ( str[1] > ' ' ) {
+            result += str[1];
+          }
+        }
+      }
+      break;
+      case '_':
+        result += ' ';
+        break;
+      case '%':
+        result += '%';
+        break;
+      default:
+        result += '%';
+        result += ch;
+        break;
+      }
+    } else {
+      result += ch;
+    }
+  }
+  return result;
+}
+
+void parseMailtoUrl ( const KUrl& url, QString& to, QString& cc, QString& subject, QString& body )
+{
+  to = decodeMailtoUrl( url.path() );
+  body = url.queryItem( "body" );
+  subject = url.queryItem( "subject" );
+  kDebug() << url.pathOrUrl();
+  cc = url.queryItem( "cc" );
+}
 
 
 }

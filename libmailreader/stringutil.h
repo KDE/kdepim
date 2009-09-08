@@ -21,6 +21,8 @@
 
 #include <QString>
 
+class KUrl;
+
 //TODO(Andras) this class probably can be shared between the reader and the composer
 
 namespace KMime
@@ -147,6 +149,19 @@ namespace StringUtil
    *    linefeeds at word boundaries to make it fit.
    */
   QString smartQuote( const QString &msg, int maxLineLength );
+
+  /**
+  * Convert wildcards into normal string
+  * @param wildString the string to be converted
+  * @fromAddr from email address to convert to displayable string
+  */
+  QString formatString( const QString &wildString, const QString &fromAddr = QString() );
+
+  /**
+  * Parses a mailto: url and extracts the information about to, cc, subject and body out into
+  * the QStrings given as argument.
+  */
+  void parseMailtoUrl( const KUrl &url, QString &to, QString &cc, QString &subject, QString &body );
 
   /**
    * Determines if the MIME part with the specified type and subtype is a crypto part.
