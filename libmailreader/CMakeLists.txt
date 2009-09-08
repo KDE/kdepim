@@ -33,7 +33,7 @@ globalsettings.cpp
 configurewidget.cpp
 htmlquotecolorer.cpp
 editorwatcher.cpp
-
+attachmentdialog.cpp
  )
 
 

@@ -79,6 +79,7 @@
 #include "libkdepim/attachmentpropertiesdialog.h"
 
 //own includes
+#include "attachmentdialog.h"
 #include "attachmentstrategy.h"
 #include "csshelper.h"
 #include "editorwatcher.h"
@@ -268,32 +269,19 @@ void MailViewerPrivate::openAttachment( KMime::Content* node, const QString & na
   KService::Ptr offer =
       KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 
-  QString open_text;
   QString filenameText = NodeHelper::fileName( node );
 
-  if ( offer ) {
-    open_text = i18n("&Open with '%1'", offer->name() );
-  } else {
-    open_text = i18n("&Open With...");
-  }
-  const QString text = i18n("Open attachment '%1'?\n"
-                            "Note that opening an attachment may compromise "
-                            "your system's security.",
-                         filenameText );
-  const int choice = KMessageBox::questionYesNoCancel( mMainWindow, text,
-      i18n("Open Attachment?"), KStandardGuiItem::saveAs(),
-      KGuiItem(open_text), KStandardGuiItem::cancel(),
-      QString::fromLatin1("askSave") + mimetype->name() );
+  AttachmentDialog dialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
+                                  QString::fromLatin1( "askSave_" ) + mimetype->name() );
+  const int choice = dialog.exec();
 
-  if( choice == KMessageBox::Yes ) { // Save
+  if ( choice == AttachmentDialog::Save ) {
     saveAttachments( KMime::Content::List() << node );
   }
-  else if( choice == KMessageBox::No ) { // Open
-    if ( offer ) {
+  else if ( choice == AttachmentDialog::Open ) { // Open
       attachmentOpen( node );
-    } else {
+  } else if ( choice == AttachmentDialog::OpenWith ) {
       attachmentOpenWith( node );
-    }
   } else { // Cancel
     kDebug() <<"Canceled opening attachment";
   }

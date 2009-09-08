@@ -23,8 +23,6 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
-namespace KMail
-{
 
 //---------------------------------------------------------------------
 
@@ -106,7 +104,5 @@ void AttachmentDialog::openWithClicked()
 }
 
 //---------------------------------------------------------------------
-
-}  // namespace
 
 #include "attachmentdialog.moc"

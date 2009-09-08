@@ -24,9 +24,6 @@
 
 class KDialog;
 
-namespace KMail
-{
-
 /** A class which handles the dialog used to present the user a choice what to do
     with an attachment.
 */
@@ -62,7 +59,5 @@ class AttachmentDialog : public QObject
     QString text, dontAskName;
     KDialog *dialog;
 };
-
-}
 
 #endif
