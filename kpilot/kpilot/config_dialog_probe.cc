@@ -314,7 +314,7 @@ void ProbeDialog::retrieveDBList()
 	char buff[7];
 	buff[0] = '[';
 
-	for ( KPilotLink::DBInfoList::ConstIterator i = dbs.begin(); i != dbs.end(); ++i )
+	for ( KPilotLink::DBInfoList::ConstIterator i = dbs.constBegin(); i != dbs.constEnd(); ++i )
 	{
 		set_long( &buff[1], (*i).creator );
 		buff[5] = ']';
