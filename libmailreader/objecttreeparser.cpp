@@ -337,6 +337,11 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     if ( const AttachmentStrategy * as = attachmentStrategy() )
       asIcon = as->defaultDisplay( node ) == AttachmentStrategy::AsIcon;
 
+   // Show it inline if showOnlyOneMimePart(), which means the user clicked the image
+   // in the message structure viewer manually, and therefore wants to see the full image
+   if ( result.isImage() && showOnlyOneMimePart() && !result.neverDisplayInline() )
+     asIcon = false;
+
   // neither image nor text -> show as icon
   if ( !result.isImage()
         && !node->contentType()->isText() )
@@ -351,8 +356,10 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
   if ( asIcon ) {
     if ( attachmentStrategy() != AttachmentStrategy::hidden()
           || showOnlyOneMimePart() )
+      // Write the node as icon only
       writePartIcon( node );
   } else if ( result.isImage() ) {
+    // Embed the image
     NodeHelper::instance()->setNodeDisplayedEmbedded( node, true );
     writePartIcon( node, true );
   } else {
