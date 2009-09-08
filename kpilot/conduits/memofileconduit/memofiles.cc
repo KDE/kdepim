@@ -68,7 +68,7 @@ void Memofiles::load (bool loadAll)
 	MemoCategoryMap::ConstIterator it;
 	int counter = -1;
 
-	for ( it = _categories.begin(); it != _categories.end(); ++it ) {
+	for ( it = _categories.constBegin(); it != _categories.constEnd(); ++it ) {
 		int category = it.key();
 		QString categoryName = it.value();
 		QString categoryDirname = _baseDirectory + QDir::separator() + categoryName;
