@@ -380,6 +380,7 @@ public:
   void emitNoDrag() {emit noDrag(); }
 
   void scrollToAttachment( const KMime::Content *node );
+  void setUseFixedFont( bool useFixedFont );
   
 public slots:
 

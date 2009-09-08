@@ -202,7 +202,7 @@ bool MailViewer::isFixedFont() const
 void MailViewer::setUseFixedFont( bool useFixedFont )
 {
   Q_D(MailViewer);
-  d->mUseFixedFont = useFixedFont;
+  d->setUseFixedFont( useFixedFont );
 }
 
 QWidget* MailViewer::mainWindow()

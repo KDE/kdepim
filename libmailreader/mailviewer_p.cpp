@@ -3253,5 +3253,14 @@ void MailViewerPrivate::scrollToAttachment( const KMime::Content *node )
   doc.updateRendering();
 }
 
+void MailViewerPrivate::setUseFixedFont( bool useFixedFont )
+{
+  mUseFixedFont = useFixedFont;
+  if ( mToggleFixFontAction )
+  {
+    mToggleFixFontAction->setChecked( mUseFixedFont );
+  }
+}
+
 
 #include "mailviewer_p.moc"
