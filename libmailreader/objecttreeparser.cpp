@@ -990,7 +990,9 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
   {
     if ( mReader->htmlMail() ) {
 
-      HTMLQuoteColorer colorer( cssHelper() );
+      HTMLQuoteColorer colorer;
+      for ( int i = 0; i < 2; i++ )
+        colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
       bodyText = colorer.process( bodyText );
 
         // Strip <html>, <head>, and <body>, so we don't end up having those tags
