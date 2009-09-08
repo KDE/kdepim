@@ -1825,7 +1825,7 @@ void MailViewerPrivate::showHideMimeTree( )
     mMimePartTree->show();
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
-     KConfigGroup reader( Global::instance()->config() , "Reader" );
+    KConfigGroup reader( Global::instance()->config() , "Reader" );
     saveSplitterSizes( reader );
     mMimePartTree->hide();
   }
@@ -3240,6 +3240,9 @@ void MailViewerPrivate::scrollToAttachment( const KMime::Content *node )
   // Now, color the div of the attachment in yellow, so that the user sees what happened.
   // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
   // find and modify that now.
+
+
+  kDebug() << "'ANDRIS::looking for " << QString( "attachmentDiv%1" ).arg( node->index().toString() );
   DOM::Element attachmentDiv = doc.getElementById( QString( "attachmentDiv%1" ).arg( node->index().toString() ) );
   if ( attachmentDiv.isNull() ) {
     kWarning() << "Could not find attachment div for attachment" << node->index().toString();
@@ -3251,6 +3254,7 @@ void MailViewerPrivate::scrollToAttachment( const KMime::Content *node )
   // Update rendering, otherwise the rendering is not updated when the user clicks on an attachment
   // that causes scrolling and the open attachment dialog
   doc.updateRendering();
+  q->update();
 }
 
 void MailViewerPrivate::setUseFixedFont( bool useFixedFont )

@@ -289,7 +289,7 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
         = BodyPartFormatter::createFor( c->contentType()->mediaType(), c->contentType()->subType() );
       kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
                             << c->contentType()->mediaType() << '/' << c->contentType()->subType() << ')';
-      writeAttachmentMarkHeader( node );
+      writeAttachmentMarkHeader( c );
       if ( bpf && !bpf->process( this, c, processResult ) )
         defaultHandling( c, processResult );
       writeAttachmentMarkFooter();
@@ -2787,6 +2787,7 @@ void ObjectTreeParser::writeAttachmentMarkHeader( KMime::Content *node )
     return;
 
   htmlWriter()->queue( QString( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() ) );
+  kDebug() <<  "ANDRIS: " << QString( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() );
 }
 
 //-----------------------------------------------------------------------------
