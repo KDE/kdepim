@@ -36,7 +36,6 @@
 #endif
 
 class DwAddressList;
-class DwMailboxList;
 
 //=============================================================================
 //+ Name DwAddress -- Abstract class representing an RFC-822 address
@@ -149,7 +148,7 @@ protected:
 
 inline DwBool DwAddress::IsValid() const
 {
-    return mIsValid;
+    return mIsValid != 0;
 }
 
 #endif

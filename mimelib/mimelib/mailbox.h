@@ -35,7 +35,6 @@
 #include <mimelib/address.h>
 #endif
 
-class DwGroup;
 
 //=============================================================================
 //+ Name DwMailbox -- Class representing an RFC-822 mailbox

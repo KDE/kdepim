@@ -399,7 +399,7 @@ DwString::DwString(const char* aCstr)
     mStart = 0;
     mLength = 0;
     if ( aCstr ) {
-        size_t len = (aCstr) ? strlen(aCstr) : 0;
+        size_t len = strlen(aCstr);
         _replace(0, mLength, aCstr, len);
     }
 }
