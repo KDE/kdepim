@@ -315,7 +315,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
 
   // always show images in multipart/related when showing in html, not with an additional icon
   if ( result.isImage() && node->parent() &&
-        node->parent()->contentType()->subType() == "related" && mReader->htmlMail() ) {
+        node->parent()->contentType()->subType() == "related" && mReader->htmlMail() && !showOnlyOneMimePart() ) {
     QString fileName = mReader->writeMessagePartToTempFile( node );
     QString href = "file:" + KUrl::toPercentEncoding( fileName );
     QByteArray cid = node->contentID()->as7BitString(false);
@@ -333,12 +333,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     return;
 
   bool asIcon = true;
-  if ( showOnlyOneMimePart() )
-    // ### (mmutz) this is wrong! If I click on an image part, I
-    // want the equivalent of "view...", except for the extra
-    // window!
-    asIcon = !node->contentDisposition()->disposition() == KMime::Headers::CDinline;
-  else if ( !result.neverDisplayInline() )
+  if ( !result.neverDisplayInline() )
     if ( const AttachmentStrategy * as = attachmentStrategy() )
       asIcon = as->defaultDisplay( node ) == AttachmentStrategy::AsIcon;
 
