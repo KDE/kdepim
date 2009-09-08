@@ -54,6 +54,7 @@ mailreader::mailreader()
     // mainwindow to automatically save settings if changed: window size,
     // toolbar position, icon size, etc.
     setupGUI();
+    
 }
 
 mailreader::~mailreader()
@@ -104,12 +105,14 @@ void mailreader::setupDocks()
 
   // Dock the message list view
   QDockWidget *messageListDock = new QDockWidget( i18n("Messages"), this );
+  messageListDock->setObjectName( "Messages" );
   messageListDock->setWidget( m_messagePane );
   messageListDock->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
   addDockWidget( Qt::TopDockWidgetArea, messageListDock );
 
   // Dock the folder tree view
   QDockWidget *folderDock = new QDockWidget( i18n("Folders"), this );
+  folderDock->setObjectName( "Folders" );
   folderDock->setWidget( collectionView );
   folderDock->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
   addDockWidget( Qt::LeftDockWidgetArea, folderDock );
