@@ -237,7 +237,7 @@ bool IDMappingXmlSource::saveMapping()
 	root.appendChild( pcElement );
 	
 	QMap<QString, QString>::const_iterator it;
-	for( it = d->fMappings.begin(); it != d->fMappings.end(); ++it )
+	for( it = d->fMappings.constBegin(); it != d->fMappings.constEnd(); ++it )
 	{
 		QDomElement mappingElement = doc.createElement( CSL1("mapping") );
 		mappingElement.setAttribute( CSL1("hh"), it.key() );

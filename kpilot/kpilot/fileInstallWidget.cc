@@ -134,7 +134,7 @@ void FileInstallWidget::dragEnterEvent( QDragEnterEvent *event )
 	KUrl::List::const_iterator it;
 	QString filename;
 
-	for ( it = urls.begin(); it != urls.end(); ++it )
+	for ( it = urls.constBegin(); it != urls.constEnd(); ++it )
 	{
 		filename = (*it).fileName();
 		if( !pdbOrPrc( filename ) )
@@ -165,7 +165,7 @@ void FileInstallWidget::dropEvent( QDropEvent * drop )
 	}
 
 	QStringList files;
-	for(KUrl::List::ConstIterator it = list.begin(); it != list.end(); ++it)
+	for(KUrl::List::ConstIterator it = list.constBegin(); it != list.constEnd(); ++it)
 	{
 	   if ((*it).isLocalFile())
 	      files << (*it).path();

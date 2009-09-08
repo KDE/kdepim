@@ -255,8 +255,8 @@ static inline void initNoBackup(QStringList &dbnames,
 	DEBUGKPILOT << "Will skip databases " << dbnames.join(CSL1(","));
 	QString creatorids;
 	char buf[5];
-	for (QList<unsigned long>::ConstIterator i = dbcreators.begin();
-		i != dbcreators.end(); ++i)
+	for (QList<unsigned long>::ConstIterator i = dbcreators.constBegin();
+		i != dbcreators.constEnd(); ++i)
 	{
 		unsigned long tag = *i;
 		pi_untag(buf,tag);
@@ -1010,7 +1010,7 @@ void RestoreAction::setDirectory( const QString &path )
 	}
 
 	fP->fDBIndex = 0;
-	fP->fDBIterator = fP->fDBList.begin();
+	fP->fDBIterator = fP->fDBList.constBegin();
 	fActionStatus = InstallingFiles;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),

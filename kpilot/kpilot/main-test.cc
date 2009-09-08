@@ -205,8 +205,8 @@ void listConduits()
         // sure that nothing gets listed in both.
         //
         //   
-        KService::List::ConstIterator e = offers.end();
-        for (KService::List::ConstIterator i = offers.begin(); i!=e; ++i)
+        KService::List::ConstIterator e = offers.constEnd();
+        for (KService::List::ConstIterator i = offers.constBegin(); i!=e; ++i)
         {
                 const KService::Ptr o = *i;
 
