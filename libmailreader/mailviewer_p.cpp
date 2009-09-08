@@ -122,6 +122,11 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
     mCopyURLAction( 0 ),
     mUrlOpenAction( 0 ),
     mSelectAllAction( 0 ),
+    mScrollUpAction( 0 ),
+    mScrollDownAction( 0 ),
+    mScrollUpMoreAction( 0 ),
+    mScrollDownMoreAction( 0 ),
+    mToggleMimePartTreeAction( 0 ),
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
     mHtmlWriter( 0 ),
@@ -149,14 +154,12 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
 
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
-  mMimeTreeMode = 1;
-  mMimeTreeAtBottom = true;
   mLastSerNum = 0;
   mWaitingForSerNum = 0;
   mLastStatus.clear();
   mMsgDisplay = true;
   mPrinting = false;
-  mShowColorbar = false;
+  mIsPlainText = false;
 
   createWidgets();
   createActions();
@@ -1086,8 +1089,8 @@ void MailViewerPrivate::displayMessage()
   mMimePartTree->clearAndResetSortOrder();
   */
   mMimePartModel->setRoot( mMessage );
-  showHideMimeTree( !mMessage || // treat no message as "text/plain"
-                    ( mMessage->contentType()->isPlainText() ) );
+  mIsPlainText = !mMessage || mMessage->contentType()->isPlainText();
+  showHideMimeTree();
 
   NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
 
@@ -1230,9 +1233,6 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
     }
     }
   }
-  // save current main Content-Type before deleting mMessage
-  const QByteArray rootNodeCntType = mMessage->contentType()->mediaType();
-  const QByteArray rootNodeCntSubtype = mMessage->contentType()->subType();
 
   // store message id to avoid endless recursions
 /*FIXME(Andras) port it
@@ -1242,8 +1242,8 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
     kDebug() << "Invoce saving in decrypted form:";
     emit replaceMsgByUnencryptedVersion(); //FIXME(Andras) actually connect and do the replacement on the server (see KMMainWidget::slotReplaceByUnencryptedVersion)
   } else {
-    showHideMimeTree( rootNodeCntType == "text" &&
-                      rootNodeCntSubtype == "plain" );
+    mIsPlainText = mMessage->contentType()->isPlainText();
+    showHideMimeTree();
   }
 /* FIXME(Andras) port it!
   aMsg->setIsBeingParsed( false );
@@ -1461,30 +1461,10 @@ void MailViewerPrivate::readConfig()
   if ( raction )
     raction->setChecked( true );
 
-//FIXME(Andras) with KConfigXT the default (false) value is not written back, so if Kpgp::Module::getKpgp()->usePGP() is true,
-//the option is enabled even if the user explicitely disabled it -> BAD. Disable this code for now.
-/*
-  // if the user uses OpenPGP then the color bar defaults to enabled
-  // else it defaults to disabled
-  mShowColorbar = reader.readEntry( "showColorbar", Kpgp::Module::getKpgp()->usePGP() ) ;
-  // if the value defaults to enabled and KMail (with color bar) is used for
-  // the first time the config dialog doesn't know this if we don't save the
-  // value now
-  GlobalSettings::self()->setShowColorBar( mShowColorbar );
-*/
-  mMimeTreeAtBottom = reader.readEntry( "MimeTreeLocation", "bottom" ) != "top";
-  const QString s = reader.readEntry( "MimeTreeMode", "smart" );
-  if ( s == "never" )
-    mMimeTreeMode = 0;
-  else if ( s == "always" )
-    mMimeTreeMode = 2;
-  else
-    mMimeTreeMode = 1;
-
   const int mimeH = reader.readEntry( "MimePaneHeight", 100 );
   const int messageH = reader.readEntry( "MessagePaneHeight", 180 );
   mSplitterSizes.clear();
-  if ( mMimeTreeAtBottom )
+  if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitterSizes << messageH << mimeH;
   else
     mSplitterSizes << mimeH << messageH;
@@ -1851,18 +1831,18 @@ void MailViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
 }
 
 
-void MailViewerPrivate::showHideMimeTree( bool isPlainTextTopLevel ) {
-  if ( mMimeTreeMode == 2 ||
-       ( mMimeTreeMode == 1 && !isPlainTextTopLevel ) ) {
-    mMimePartTree->expandToDepth( 3 );
+void MailViewerPrivate::showHideMimeTree( )
+{
+  if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
     mMimePartTree->show();
-  }
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
-      KConfigGroup reader( Global::instance()->config() , "Reader" );
+     KConfigGroup reader( Global::instance()->config() , "Reader" );
     saveSplitterSizes( reader );
     mMimePartTree->hide();
   }
+  if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != mMimePartTree->isVisible() ) )
+    mToggleMimePartTreeAction->setChecked( mMimePartTree->isVisible() );
 }
 
 
@@ -1915,26 +1895,29 @@ void MailViewerPrivate::adjustLayout() {
     mSplitter->insertWidget( 0, mMimePartTree );
   mSplitter->setSizes( mSplitterSizes );
 
-  if ( mMimeTreeMode == 2 && mMsgDisplay )
+  if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
+    mMsgDisplay )
     mMimePartTree->show();
   else
     mMimePartTree->hide();
 
-  if ( mShowColorbar && mMsgDisplay )
+  if (  GlobalSettings::self()->showColorBar() && mMsgDisplay )
     mColorBar->show();
   else
     mColorBar->hide();
 }
 
 
-void MailViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const {
+void MailViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
+{
   if ( !mSplitter || !mMimePartTree )
     return;
   if ( mMimePartTree->isHidden() )
     return; // don't rely on QSplitter maintaining sizes for hidden widgets.
 
-  c.writeEntry( "MimePaneHeight", mSplitter->sizes()[ mMimeTreeAtBottom ? 1 : 0 ] );
-  c.writeEntry( "MessagePaneHeight", mSplitter->sizes()[ mMimeTreeAtBottom ? 0 : 1 ] );
+  const bool mimeTreeAtBottom = GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom;
+  c.writeEntry( "MimePaneHeight", mSplitter->sizes()[ mimeTreeAtBottom ? 1 : 0 ] );
+  c.writeEntry( "MessagePaneHeight", mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ] );
 }
 
 void MailViewerPrivate::createWidgets() {
@@ -2111,6 +2094,12 @@ void MailViewerPrivate::createActions()
   ac->addAction( "toggle_fixedfont", mToggleFixFontAction );
   connect( mToggleFixFontAction, SIGNAL(triggered(bool)), SLOT(slotToggleFixedFont()) );
   mToggleFixFontAction->setShortcut( QKeySequence( Qt::Key_X ) );
+
+  // Show message structure viewer
+  mToggleMimePartTreeAction = new KToggleAction( i18n( "Show Message Structure" ), this );
+  ac->addAction( "toggle_mimeparttree", mToggleMimePartTreeAction );
+  connect( mToggleMimePartTreeAction, SIGNAL(toggled(bool)),
+           SLOT(slotToggleMimePartTree()));
 
   mViewSourceAction  = new KAction(i18n("&View Source"), this);
   ac->addAction("view_source", mViewSourceAction );
@@ -2499,6 +2488,16 @@ void MailViewerPrivate::slotToggleFixedFont()
   update( MailViewer::Force );
 }
 
+void MailViewerPrivate::slotToggleMimePartTree()
+{
+  if ( mToggleMimePartTreeAction->isChecked() )
+    GlobalSettings::self()->setMimeTreeMode( GlobalSettings::EnumMimeTreeMode::Always );
+  else
+    GlobalSettings::self()->setMimeTreeMode( GlobalSettings::EnumMimeTreeMode::Never );
+  showHideMimeTree();
+}
+
+
 void MailViewerPrivate::slotShowMessageSource()
 {
 /* FIXME(Andras)
@@ -2541,7 +2540,7 @@ void MailViewerPrivate::updateReaderWin()
   //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
   if ( mMessage )
   {
-    if ( mShowColorbar ) {
+    if ( GlobalSettings::self()->showColorBar() ) {
       mColorBar->show();
     } else {
       mColorBar->hide();

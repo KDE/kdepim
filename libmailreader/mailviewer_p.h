@@ -288,7 +288,7 @@ public:
 
   /** Show or hide the Mime Tree Viewer if configuration
       is set to smart mode.  */
-  void showHideMimeTree( bool isPlainTextTopLevel );
+  void showHideMimeTree();
 
   /** View message part of type message/RFC822 in extra viewer window. */
   void atmViewMsg(KMime::Content* msgPart);
@@ -399,6 +399,7 @@ public slots:
 
   /** The user toggled the "Fixed Font" flag from the view menu. */
   void slotToggleFixedFont();
+  void slotToggleMimePartTree();
 
   /** Show the message source */
   void slotShowMessageSource();
@@ -527,6 +528,7 @@ public:
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction, *mViewSourceAction, *mSaveMessageAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction;
+  KToggleAction *mToggleMimePartTreeAction;
   KUrl mUrlClicked;
   HtmlWriter * mHtmlWriter;
   /** Used only to be able to connect and disconnect finished() signal
@@ -542,6 +544,7 @@ public:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
+  bool mIsPlainText;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
 
   MailViewer *const q;
