@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Kontact Administration
+Icon=kontact
+Exec=kontact
+Categories=Qt;KDE;Office;ProjectManagement;
+X-DocPath=kontact-admin/index.html
+NoDisplay=true
+Terminal=false
