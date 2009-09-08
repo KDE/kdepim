@@ -22,6 +22,7 @@
 
 #include <QList>
 #include <QMap>
+#include <QSet>
 #include <kiconloader.h>
 
 class QTextCodec;
@@ -82,8 +83,6 @@ public:
     KMMsgSignatureState overallSignatureState( KMime::Content* node ) const;
     KMMsgEncryptionState overallEncryptionState( KMime::Content *node ) const;
 
-    static KMime::Content *nextSibling( const KMime::Content* node );
-    static KMime::Content *firstChild( const KMime::Content* node );
 
     QString iconName( KMime::Content *node, int size = KIconLoader::Desktop ) const;
   /** Set the 'Content-Type' by mime-magic from the contents of the body.
@@ -91,16 +90,6 @@ public:
     determination (this does not change the body itself). */
     void magicSetType( KMime::Content *node, bool autoDecode=true );
 
-  /** Check for prefixes @p prefixRegExps in @p str. If none
-      is found, @p newPrefix + ' ' is prepended to @p str and the
-      resulting string is returned. If @p replace is true, any
-      sequence of whitespace-delimited prefixes at the beginning of
-      @p str is replaced by @p newPrefix.
-  **/
-    static QString replacePrefixes( const QString& str,
-                                  const QStringList& prefixRegExps,
-                                  bool replace,
-                                  const QString& newPrefix );
 
   /** Return this mails subject, with all "forward" and "reply"
       prefixes removed */
@@ -117,8 +106,34 @@ public:
 
     const QTextCodec * localCodec() const { return mLocalCodec;}
 
-  /** Return a QTextCodec for the specified charset.
-   * This function is a bit more tolerant, than QTextCodec::codecForName */
+    Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+
+    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, Interface::BodyPartMemento *memento );
+
+    // A flag to remember if the node was embedded. This is useful for attachment nodes, the reader
+    // needs to know if they were displayed inline or not.
+    bool isNodeDisplayedEmbedded( KMime::Content* node ) const;
+    void setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded );
+
+//static methods
+    static KMime::Content *nextSibling( const KMime::Content* node );
+    
+    static KMime::Content *firstChild( const KMime::Content* node );
+
+   /** Check for prefixes @p prefixRegExps in @p str. If none
+      is found, @p newPrefix + ' ' is prepended to @p str and the
+      resulting string is returned. If @p replace is true, any
+      sequence of whitespace-delimited prefixes at the beginning of
+      @p str is replaced by @p newPrefix.
+   **/
+    static QString replacePrefixes( const QString& str,
+                                  const QStringList& prefixRegExps,
+                                  bool replace,
+                                  const QString& newPrefix );
+                                  
+   /** Return a QTextCodec for the specified charset.
+   * This function is a bit more tolerant, than QTextCodec::codecForName
+   **/
     static const QTextCodec* codecForName(const QByteArray& _str);
 
     static QByteArray path(const KMime::Content* node);
@@ -128,9 +143,10 @@ public:
     * content type header. */
     static QString fileName(const KMime::Content* node);
 
-    Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
+    // UrlHandlerManager.
+    static QString asHREF( const KMime::Content* node, const QString &place );
 
-    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, Interface::BodyPartMemento *memento );
 
 private:
     NodeHelper();
@@ -153,6 +169,7 @@ private:
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;
+    QSet<KMime::Content *> mDisplayEmbeddedNodes;
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;

@@ -173,12 +173,20 @@ private:
           found in 'cntDesc'.
       2. Make this node the child of 'node'.
       3. Insert the respective entries in the Mime Tree Viewer.
-      3. Parse the 'node' to display the content. */
+      3. Parse the 'node' to display the content.
+
+     @param addToTextualContent If true, this will add the textual content of the parsed node
+                                to the textual content of the current object tree parser.
+                                Setting this to false is useful for encapsulated messages, as we
+                                do not want the text in those to appear in the editor
+
+   */
   //  Function will be replaced once KMime is alive.
   void insertAndParseNewChildNode( KMime::Content & node,
                                     const char * content,
                                     const char * cntDesc,
-                                    bool append=false );
+                                    bool append=false,
+                                    bool addToTextualContent = true );
   /** if data is 0:
       Feeds the HTML widget with the contents of the opaque signed
           data found in partNode 'sign'.
@@ -264,8 +272,14 @@ private:
   QString writeSigstatHeader( PartMetaData & part,
                               const Kleo::CryptoBackend::Protocol * cryptProto,
                               const QString & fromAddress,
-                              const QString & filename = QString() );
+                              KMime::Content *node = 0);
   QString writeSigstatFooter( PartMetaData & part );
+
+  // The attachment mark is a div that is placed around the attchment. It is used for drawing
+  // a yellow border around the attachment when scrolling to it. When scrolling to it, the border
+  // color of the div is changed, see KMReaderWin::scrollToAttachment().
+  void writeAttachmentMarkHeader( KMime::Content *node );
+  void writeAttachmentMarkFooter();
 
   void writeBodyStr( const QByteArray & bodyString,
                       const QTextCodec * aCodec,

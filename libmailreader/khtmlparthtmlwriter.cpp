@@ -131,6 +131,7 @@ void KHtmlPartHtmlWriter::slotWriteNextHtmlChunk() {
 void KHtmlPartHtmlWriter::embedPart( const QByteArray & contentId,
                                       const QString & contentURL ) {
   mEmbeddedPartMap[QString(contentId)] = contentURL;
+      kDebug() << "ANDRIS contentId " << contentId;
 }
 
 void KHtmlPartHtmlWriter::resolveCidUrls()
@@ -141,6 +142,7 @@ void KHtmlPartHtmlWriter::resolveCidUrls()
     DOM::HTMLImageElement image( node );
     KUrl url( image.src().string() );
     if ( url.protocol() == "cid" ) {
+      kDebug() << "ANDRIS url " << url;
       EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
       if ( it != mEmbeddedPartMap.constEnd() ) {
         kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();

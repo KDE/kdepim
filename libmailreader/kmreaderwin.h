@@ -64,6 +64,7 @@ namespace {
   class HtmlAnchorHandler;
 }
 
+class AttachmentStrategy;
 
 class MailViewerPrivate;
 
@@ -226,6 +227,9 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
   * @param font the selected font
   */
   void setPrintFont( const QFont& font );
+  
+  const AttachmentStrategy * attachmentStrategy() const;
+  void setAttachmentStrategy( const AttachmentStrategy * strategy );
 
   
 signals:

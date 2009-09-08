@@ -62,4 +62,4 @@ include_directories(
 
 install(TARGETS mailreader ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install( FILES kmreaderwin.h  DESTINATION  ${INCLUDE_INSTALL_DIR}/mailreader COMPONENT devel)
+install( FILES kmreaderwin.h attachmentstrategy.h DESTINATION  ${INCLUDE_INSTALL_DIR}/mailreader COMPONENT devel)

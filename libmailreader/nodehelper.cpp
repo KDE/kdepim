@@ -144,6 +144,7 @@ void NodeHelper::clear()
     clearBodyPartMemento( it.value() );
   }
   mBodyPartMementoMap.clear();
+  mDisplayEmbeddedNodes.clear();
 }
 
 void NodeHelper::clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap)
@@ -497,5 +498,26 @@ void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &whi
   } else {
     mBodyPartMementoMap[node].insert( which.toLower(), memento );
   }
+}
+
+bool NodeHelper::isNodeDisplayedEmbedded( KMime::Content* node ) const
+{
+  return mDisplayEmbeddedNodes.contains( node );
+}
+
+void NodeHelper::setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded )
+{
+  if ( displayedEmbedded )
+    mDisplayEmbeddedNodes.insert( node );
+  else
+    mDisplayEmbeddedNodes.remove( node );
+}
+
+QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
+{
+  if ( !node )
+    return QString();
+  else
+    return QString( "attachment:%1?place=%2" ).arg( node->index().toString() ).arg( place );
 }
 

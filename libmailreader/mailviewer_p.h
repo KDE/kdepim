@@ -106,12 +106,12 @@ public:
   bool editAttachment( KMime::Content* node, bool showWarning = true );
 
   void emitUrlClicked( const KUrl & url, int button ) {
-    emit q->urlClicked( url, button );
+    emit urlClicked( url, button );
   }
 
   void emitPopupMenu( const KUrl & url, const QPoint & p ) {
     if ( mMessage )
-      emit q->popupMenu( *mMessage, url, p );
+      emit popupMenu( *mMessage, url, p );
   }
 
   /** Access to the KHTMLPart used for the viewer. Use with
@@ -155,7 +155,7 @@ public:
   KService::Ptr getServiceOffer( KMime::Content *content);
   bool saveContent( KMime::Content* content, const KUrl& url, bool encoded );
   void saveAttachments( const KMime::Content::List & contents );
-  KMime::Content::List allContents( KMime::Content * content );
+  KMime::Content::List allContents( const KMime::Content * content );
   KMime::Content::List selectedContents();
   void attachmentOpenWith( KMime::Content *node );
   void attachmentOpen( KMime::Content *node );
@@ -193,7 +193,7 @@ public:
 
   /** Creates a nice mail header depending on the current selected
     header style. */
-  QString writeMsgHeader( KMime::Message* aMsg, bool hasVCard = false, bool topLevel = false );
+  QString writeMsgHeader( KMime::Message* aMsg, KMime::Content* vCardNode = 0, bool topLevel = false );
 
   /** Writes the given message part to a temporary file and returns the
       name of this file or QString() if writing failed.
@@ -378,6 +378,8 @@ public:
   void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true );
 
   void emitNoDrag() {emit noDrag(); }
+
+  void scrollToAttachment( const KMime::Content *node );
   
 public slots:
 

@@ -180,7 +180,7 @@ ObjectTreeParser::~ObjectTreeParser() {}
 void ObjectTreeParser::insertAndParseNewChildNode( KMime::Content& startNode,
                                                     const char* content,
                                                     const char* cntDesc,
-                                                    bool append )
+                                                    bool append, bool addToTextualContent )
 {
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( content );
@@ -214,10 +214,12 @@ void ObjectTreeParser::insertAndParseNewChildNode( KMime::Content& startNode,
   }*/
   ObjectTreeParser otp( mReader, cryptoProtocol() );
   otp.parseObjectTree( newNode );
-  mRawReplyString += otp.rawReplyString();
-  mTextualContent += otp.textualContent();
-  if ( !otp.textualContentCharset().isEmpty() )
-    mTextualContentCharset = otp.textualContentCharset();
+  if ( addToTextualContent ) {
+    mRawReplyString += otp.rawReplyString();
+    mTextualContent += otp.textualContent();
+    if ( !otp.textualContentCharset().isEmpty() )
+      mTextualContentCharset = otp.textualContentCharset();
+  }
 }
 
 
@@ -264,8 +266,13 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
       // Set the default display strategy for this body part relying on the
       // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
       part.setDefaultDisplay( (Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
-      const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
-      switch ( result ) {
+
+     writeAttachmentMarkHeader( c );
+     NodeHelper::instance()->setNodeDisplayedEmbedded( c, true );    
+     const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
+     writeAttachmentMarkFooter();
+
+     switch ( result ) {
       case Interface::BodyPartFormatter::AsIcon:
         processResult.setNeverDisplayInline( true );
         // fall through:
@@ -282,9 +289,10 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
         = BodyPartFormatter::createFor( c->contentType()->mediaType(), c->contentType()->subType() );
       kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
                             << c->contentType()->mediaType() << '/' << c->contentType()->subType() << ')';
-
+      writeAttachmentMarkHeader( node );
       if ( bpf && !bpf->process( this, c, processResult ) )
         defaultHandling( c, processResult );
+      writeAttachmentMarkFooter();
     }
     NodeHelper::instance()->instance()->setNodeProcessed( c, false);
 
@@ -310,7 +318,12 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
         node->parent()->contentType()->subType() == "related" && mReader->htmlMail() ) {
     QString fileName = mReader->writeMessagePartToTempFile( node );
     QString href = "file:" + KUrl::toPercentEncoding( fileName );
-    htmlWriter()->embedPart( node->index().toString().toUtf8(), href);
+    QByteArray cid = node->contentID()->as7BitString(false);
+    if ( cid.startsWith('<') )
+      cid = cid.mid(1);
+    if ( cid.endsWith('>') )
+      cid = cid.left( cid.length() - 1 );
+    htmlWriter()->embedPart( cid, href );
     return;
   }
 
@@ -344,9 +357,11 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     if ( attachmentStrategy() != AttachmentStrategy::hidden()
           || showOnlyOneMimePart() )
       writePartIcon( node );
-  } else if ( result.isImage() )
-    writePartIcon( node );
-  else {
+  } else if ( result.isImage() ) {
+    NodeHelper::instance()->setNodeDisplayedEmbedded( node, true );
+    writePartIcon( node, true );
+  } else {
+    NodeHelper::instance()->setNodeDisplayedEmbedded( node, true );
     KMime::Message *topLevel = dynamic_cast<KMime::Message*>(node->topLevel());
     writeBodyString( node->decodedContent(),
                       topLevel ? topLevel->from()->asUnicodeString() : QString(),
@@ -994,6 +1009,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
       for ( int i = 0; i < 2; i++ )
         colorer.setQuoteColor( i, cssHelper()->quoteColor( i ) );
       bodyText = colorer.process( bodyText );
+      NodeHelper::instance()->setNodeDisplayedEmbedded( curNode, true );
 
         // Strip <html>, <head>, and <body>, so we don't end up having those tags
       // twice, which confuses KHTML (especially with a signed
@@ -1217,9 +1233,8 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
     QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
                 "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
     if ( !fileName.isEmpty() )
-      htmlStr += "<a href=\"" + QString("file:")
-        + KUrl::toPercentEncoding( fileName ) + "\">"
-        + label + "</a>";
+      htmlStr += "<a href=\"" +NodeHelper::asHREF( curNode, "body" ) + "\">"
+                  + label + "</a>";
     else
       htmlStr += label;
     if ( !comment.isEmpty() )
@@ -1231,9 +1246,11 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   // process old style not-multipart Mailman messages to
   // enable verification of the embedded messages' signatures
   if ( !isMailmanMessage( curNode ) ||
-        !processMailmanMessage( curNode ) )
+        !processMailmanMessage( curNode ) ) {
       writeBodyString( mRawReplyString, static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString(),
                       codecFor( curNode ), result, !bDrawFrame );
+      NodeHelper::instance()->setNodeDisplayedEmbedded( curNode, true );
+  }
   if ( bDrawFrame )
     htmlWriter()->queue( "</td></tr></table>" );
 
@@ -1521,7 +1538,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
     htmlWriter()->queue( writeSigstatHeader( messagePart,
                                               cryptoProtocol(),
                                               static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
-                                              filename ) );
+                                              node ) );
   }
   QByteArray rfc822messageStr( node->decodedContent() );
   // display the headers of the encapsulated message
@@ -1536,7 +1553,10 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
   // display the body of the encapsulated message
   insertAndParseNewChildNode( *node,
                               rfc822messageStr.constData(),
-                              "encapsulated message" );
+                              "encapsulated message", false /*append*/,
+                                false /*add to textual content*/  );
+  NodeHelper::instance()->setNodeDisplayedEmbedded( node, true );
+
   if ( mReader )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   return true;
@@ -1987,9 +2007,8 @@ if ( !showOnlyOneMimePart() ) {
   QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
               "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
   if ( !fileName.isEmpty() )
-    htmlStr += "<a href=\"" + QString("file:")
-      + KUrl::toPercentEncoding( fileName ) + "\">"
-      + label + "</a>";
+   htmlStr += "<a href=\"" +NodeHelper::asHREF( node, "body" ) + "\">"
+              + label + "</a>";
   else
     htmlStr += label;
   if ( !comment.isEmpty() )
@@ -2054,7 +2073,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
     comment.clear();
 
   QString fileName = mReader->writeMessagePartToTempFile( msgPart );
-  QString href = "file:" + KUrl::toPercentEncoding( fileName ) ;
+  QString href = QString( "attachment:%1?place=body" ).arg( msgPart->index().toString() );
 
   QString iconName;
   QByteArray contentId = msgPart->index().toString().toUtf8();
@@ -2072,7 +2091,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( inlineImage ) {
     // show the filename of the image below the embedded image
     htmlWriter()->queue( "<div><a href=\"" + href + "\">"
-                          "<img src=\"" + iconName + "\" border=\"0\" style=\"max-width: 100%\"></a>"
+                          "<img src=\"" + fileName + "\" border=\"0\" style=\"max-width: 100%\"></a>"
                           "</div>"
                           "<div><a href=\"" + href + "\">" + label + "</a>"
                           "</div>"
@@ -2338,7 +2357,7 @@ return html;
 QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                                             const Kleo::CryptoBackend::Protocol * cryptProto,
                                             const QString & fromAddress,
-                                            const QString & filename )
+                                            KMime::Content *node )
 {
   const bool isSMIME = cryptProto && ( cryptProto == Kleo::CryptoBackendFactory::instance()->smime() );
   QString signer = block.signer;
@@ -2351,9 +2370,8 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
   {
       htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"rfc822\">"
           "<tr class=\"rfc822H\"><td dir=\"" + dir + "\">";
-      if( !filename.isEmpty() ) {
-          htmlStr += "<a href=\"" + QString("file:")
-                    + KUrl::toPercentEncoding( filename ) + "\">"
+      if( node ) {
+          htmlStr += "<a href=\"" + NodeHelper::asHREF( node, "body" ) + "\">" 
                     + i18n("Encapsulated message") + "</a>";
       } else {
           htmlStr += i18n("Encapsulated message");
@@ -2757,6 +2775,29 @@ QString ObjectTreeParser::writeSigstatFooter( PartMetaData& block )
 
   return htmlStr;
 }
+
+
+//-----------------------------------------------------------------------------
+
+void ObjectTreeParser::writeAttachmentMarkHeader( KMime::Content *node )
+{
+  if ( !mReader )
+    return;
+
+  htmlWriter()->queue( QString( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() ) );
+}
+
+//-----------------------------------------------------------------------------
+
+void ObjectTreeParser::writeAttachmentMarkFooter()
+{
+  if ( !mReader )
+    return;
+
+  htmlWriter()->queue( QString( "</div>" ) );
+}
+
+
 
 //-----------------------------------------------------------------------------
 void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *aCodec,

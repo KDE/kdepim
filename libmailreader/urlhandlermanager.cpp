@@ -126,6 +126,9 @@ namespace {
     bool handleClick( const KUrl &, MailViewerPrivate * ) const;
     bool handleContextMenuRequest( const KUrl &, const QPoint &, MailViewerPrivate * ) const;
     QString statusBarMessage( const KUrl &, MailViewerPrivate * ) const;
+  private:
+    KMime::Content* nodeForUrl( const KUrl &url, MailViewerPrivate *w ) const;
+    bool attachmentIsInHeader( const KUrl &url ) const;
   };
 
   class ShowAuditLogURLHandler : public URLHandler {
@@ -549,34 +552,61 @@ namespace {
 }
 
 namespace {
-  bool AttachmentURLHandler::handleClick( const KUrl & url, MailViewerPrivate * w ) const {
-    if ( !w || !w->mMessage )
-      return false;
-    KMime::Content *node = w->nodeFromUrl( url );
+ KMime::Content* AttachmentURLHandler::nodeForUrl( const KUrl &url, MailViewerPrivate *w ) const
+ {
+   if ( !w || !w->mMessage )
+     return 0;
+   if ( url.protocol() != "attachment" )
+     return 0;
+
+   KMime::ContentIndex index( url.path() );
+   KMime::Content * node = w->nodeForContentIndex( index );
+   return node;
+ }
+
+ bool AttachmentURLHandler::attachmentIsInHeader( const KUrl &url ) const
+ {
+   bool inHeader = false;
+   const QString place = url.queryItem( "place" ).toLower();
+   if ( place != QString::null ) {
+     inHeader = ( place == "header" );
+   }
+   return inHeader;
+ }
+
+  bool AttachmentURLHandler::handleClick( const KUrl & url, MailViewerPrivate * w ) const
+  {
+    KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
-    // PENDING(romain_kdab) : replace with toLocalFile() ?
-    w->openAttachment( node, url.path() );
+    
+    const bool inHeader = attachmentIsInHeader( url );
+    const bool shouldShowDialog = !NodeHelper::instance()->isNodeDisplayedEmbedded( node ) || !inHeader;
+    if ( inHeader )
+      w->scrollToAttachment( node );
+    if ( shouldShowDialog )
+     // PENDING(romain_kdab) : replace with toLocalFile() ?
+     w->openAttachment( node, w->tempFileUrlFromNode( node ).path() );
+
     return true;
   }
 
-  bool AttachmentURLHandler::handleContextMenuRequest( const KUrl & url, const QPoint & p, MailViewerPrivate * w ) const {
-    if ( !w || !w->mMessage )
-      return false;
-    KMime::Content *node = w->nodeFromUrl( url );
+  bool AttachmentURLHandler::handleContextMenuRequest( const KUrl & url, const QPoint & p, MailViewerPrivate * w ) const
+  {
+    KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
+
     // PENDING(romain_kdab) : replace with toLocalFile() ?
     /*FIXME(Andras) port it
-    w->showAttachmentPopup( id, url.path(), p );
+    w->showAttachmentPopup( node->nodeId(), w->tempFileUrlFromPartNode( node ).path(), p );
     */
     return true;
   }
 
-  QString AttachmentURLHandler::statusBarMessage( const KUrl & url, MailViewerPrivate * w ) const {
-    if ( !w || !w->mMessage )
-      return QString();
-    KMime::Content * node = w->nodeFromUrl( url );
+  QString AttachmentURLHandler::statusBarMessage( const KUrl & url, MailViewerPrivate * w ) const
+  {
+    KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return QString();
     QString name = NodeHelper::fileName( node );

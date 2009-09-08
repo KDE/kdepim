@@ -425,6 +425,19 @@ void MailViewer::slotFind()
   d->mViewer->findText();
 }
 
+const AttachmentStrategy * MailViewer::attachmentStrategy() const
+{
+  Q_D(const MailViewer);
+  return d->attachmentStrategy();
+}
+
+void MailViewer::setAttachmentStrategy( const AttachmentStrategy * strategy )
+{
+  Q_D(MailViewer);
+  d->setAttachmentStrategy( strategy );
+}
+
+
 #include "kmreaderwin.moc"
 
 

@@ -929,7 +929,7 @@ void MailViewerPrivate::saveAttachments( const KMime::Content::List & contents )
   }
 }
 
-KMime::Content::List MailViewerPrivate::allContents( KMime::Content * content )
+KMime::Content::List MailViewerPrivate::allContents( const KMime::Content * content )
 {
   KMime::Content::List result;
   KMime::Content *child = NodeHelper::firstChild( content );
@@ -1151,7 +1151,7 @@ void MailViewerPrivate::parseMsg()
           writeMessagePartToTempFile( vCardContent );
       }
   }
-  htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard, true ) );
+  htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
 
   // show message content
   ObjectTreeParser otp( this );
@@ -1252,15 +1252,15 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
 }
 
 
-QString MailViewerPrivate::writeMsgHeader(KMime::Message* aMsg, bool hasVCard, bool topLevel)
+QString MailViewerPrivate::writeMsgHeader(KMime::Message* aMsg, KMime::Content* vCardNode, bool topLevel)
 {
   kFatal( !headerStyle(), 5006 )
     << "trying to writeMsgHeader() without a header style set!";
   kFatal( !headerStrategy(), 5006 )
     << "trying to writeMsgHeader() without a header strategy set!";
   QString href;
-  if (hasVCard)
-    href = QString("file:") + KUrl::toPercentEncoding( mTempFiles.last() );
+  if ( vCardNode )
+    href = NodeHelper::asHREF( vCardNode, "body" );
 
   return headerStyle()->format( aMsg, headerStrategy(), href, mPrinting, topLevel );
 }
@@ -2323,7 +2323,7 @@ QString MailViewerPrivate::renderAttachments(KMime::Content * node, const QColor
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
       QString fileName = writeMessagePartToTempFile( node );
-      QString href = "file:" + KUrl::toPercentEncoding( fileName ) ;
+      QString href = NodeHelper::asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
       html += "<img style=\"vertical-align:middle;\" src=\"" + icon + "\"/>&nbsp;";
@@ -3232,6 +3232,38 @@ bool MailViewerPrivate::showAttachmentQuicklist() const
 void MailViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 {
   mShowAttachmentQuicklist = showAttachmentQuicklist;
+}
+
+void MailViewerPrivate::scrollToAttachment( const KMime::Content *node )
+{
+  DOM::Document doc = mViewer->htmlDocument();
+
+  // The anchors for this are created in ObjectTreeParser::parseObjectTree()
+  mViewer->gotoAnchor( QString::fromLatin1( "att%1" ).arg( node->index().toString() ) );
+
+  // Remove any old color markings which might be there
+  const KMime::Content *root = node->topLevel();
+  int totalChildCount = allContents( root ).size();
+  for ( int i = 0; i <= totalChildCount + 1; i++ ) {
+    DOM::Element attachmentDiv = doc.getElementById( QString( "attachmentDiv%1" ).arg( i + 1 ) );
+    if ( !attachmentDiv.isNull() )
+      attachmentDiv.removeAttribute( "style" );
+  }
+
+  // Now, color the div of the attachment in yellow, so that the user sees what happened.
+  // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
+  // find and modify that now.
+  DOM::Element attachmentDiv = doc.getElementById( QString( "attachmentDiv%1" ).arg( node->index().toString() ) );
+  if ( attachmentDiv.isNull() ) {
+    kWarning() << "Could not find attachment div for attachment" << node->index().toString();
+    return;
+  }
+  attachmentDiv.setAttribute( "style", QString( "border:2px solid %1" )
+      .arg( cssHelper()->pgpWarnColor().name() ) );
+
+  // Update rendering, otherwise the rendering is not updated when the user clicks on an attachment
+  // that causes scrolling and the open attachment dialog
+  doc.updateRendering();
 }
 
 
