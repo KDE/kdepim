@@ -545,7 +545,6 @@ public:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
-  bool mIsPlainText;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
 
   MailViewer *const q;

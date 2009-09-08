@@ -160,7 +160,6 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
   mLastStatus.clear();
   mMsgDisplay = true;
   mPrinting = false;
-  mIsPlainText = false;
 
   createWidgets();
   createActions();
@@ -1077,7 +1076,6 @@ void MailViewerPrivate::displayMessage()
   mMimePartTree->clearAndResetSortOrder();
   */
   mMimePartModel->setRoot( mMessage );
-  mIsPlainText = !mMessage || mMessage->contentType()->isPlainText();
   showHideMimeTree();
 
   NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
@@ -1230,7 +1228,6 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
     kDebug() << "Invoce saving in decrypted form:";
     emit replaceMsgByUnencryptedVersion(); //FIXME(Andras) actually connect and do the replacement on the server (see KMMainWidget::slotReplaceByUnencryptedVersion)
   } else {
-    mIsPlainText = mMessage->contentType()->isPlainText();
     showHideMimeTree();
   }
 /* FIXME(Andras) port it!
