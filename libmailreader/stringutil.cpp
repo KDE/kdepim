@@ -954,5 +954,19 @@ QString smartQuote( const QString & msg, int maxLineLength )
   return result;
 }
 
+bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName )
+{
+  return ( type.toLower() == "application" &&
+           ( subType.toLower() == "pgp-encrypted" ||
+             subType.toLower() == "pgp-signature" ||
+             subType.toLower() == "pkcs7-mime" ||
+             subType.toLower() == "pkcs7-signature" ||
+             subType.toLower() == "x-pkcs7-signature" ||
+             ( subType.toLower() == "octet-stream" &&
+               fileName.toLower() == "msg.asc" ) ) );
+}
+
+
+
 }
 

@@ -92,6 +92,7 @@
 #include "mimetreemodel.h"
 #include "nodehelper.h"
 #include "objecttreeparser.h"
+#include "stringutil.h"
 #include "urlhandlermanager.h"
 #include "util.h"
 #include "vcardviewer.h"
@@ -2312,15 +2313,10 @@ QString MailViewerPrivate::renderAttachments(KMime::Content * node, const QColor
       label = NodeHelper::fileName( node );
     }
 
-bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
-    if ( !typeBlacklisted && node->contentType()->mediaType() == "application" ) {
-      typeBlacklisted = node->contentType()->subType() == "pgp-encrypted"
-                     || node->contentType()->subType() == "pgp-signature"
-                     || node->contentType()->subType() == "pkcs7-mime"
-                     || node->contentType()->subType() == "pkcs7-signature"
-                     || node->contentType()->subType() == "x-pkcs7-signature"
-                     || ( node->contentType()->subType() == "octet-stream" &&
-                          node->contentDisposition()->filename() == "msg.asc" );
+    bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
+    if ( !typeBlacklisted ) {
+      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
+                                                  node->contentDisposition()->filename() );
     }
     typeBlacklisted = typeBlacklisted || node == mMessage;
     if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
