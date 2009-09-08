@@ -360,6 +360,10 @@ void MailViewerPrivate::showAttachmentPopup( int id, const QString & name, const
   connect( attachmentMapper, SIGNAL( mapped( int ) ),
            this, SLOT( slotHandleAttachment( int ) ) );
 /*FIXME(Andras) port to akonadi
+  QSignalMapper *attachmentMapper = new QSignalMapper( menu );
+  connect( attachmentMapper, SIGNAL( mapped( int ) ),
+           this, SLOT( slotHandleAttachment( int ) ) );
+
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Open );
@@ -371,6 +375,14 @@ void MailViewerPrivate::showAttachmentPopup( int id, const QString & name, const
   action = menu->addAction(i18nc("to view something", "View") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, KMHandleAttachmentCommand::View );
+
+  const bool attachmentInHeader = hasParentDivWithId( mViewer->nodeUnderMouse(), "attachmentInjectionPoint" );
+  const bool hasScrollbar = mViewer->view()->verticalScrollBar()->isVisible();
+  if ( attachmentInHeader && hasScrollbar ) {
+    action = menu->addAction( i18n( "Scroll To" ) );
+    connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
+    attachmentMapper->setMapping( action, KMHandleAttachmentCommand::ScrollTo );
+  }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
@@ -2459,7 +2471,6 @@ void MailViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   }
 }
 
-
 void MailViewerPrivate::slotFind()
 {
   mViewer->findText();
@@ -2997,7 +3008,7 @@ void MailViewerPrivate::slotHandleAttachment( int choice )
 {
     /*FIXME(Andras) port to akonadi
   mAtmUpdate = true;
-  partNode* node = mMessage ? mMessage->findId( mAtmCurrent ) : 0;
+  partNode* node = mRootNode ? mRootNode->findId( mAtmCurrent ) : 0;
   if ( choice == KMHandleAttachmentCommand::Delete ) {
     slotDeleteAttachment( node );
   } else if ( choice == KMHandleAttachmentCommand::Edit ) {
@@ -3006,7 +3017,7 @@ void MailViewerPrivate::slotHandleAttachment( int choice )
     if ( !node )
       return;
     QList<QUrl> urls;
-    KUrl kUrl = tempFileUrlFromNode( node );
+    KUrl kUrl = tempFileUrlFromPartNode( node );
     QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
 
     if ( !url.isValid() )
@@ -3016,6 +3027,8 @@ void MailViewerPrivate::slotHandleAttachment( int choice )
     QMimeData *mimeData = new QMimeData;
     mimeData->setUrls( urls );
     QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
+  } else if ( choice == KMHandleAttachmentCommand::ScrollTo ) {
+    scrollToAttachment( node );
   }
   else {
     KMHandleAttachmentCommand* command = new KMHandleAttachmentCommand(
@@ -3261,6 +3274,26 @@ void MailViewerPrivate::setUseFixedFont( bool useFixedFont )
   {
     mToggleFixFontAction->setChecked( mUseFixedFont );
   }
+}
+
+// Checks if the given node has a parent node that is a DIV which has an ID attribute
+// with the value specified here
+bool MailViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &id )
+{
+  if ( start.isNull() )
+    return false;
+
+  if ( start.nodeName().string() == "div" ) {
+    for ( unsigned int i = 0; i < start.attributes().length(); i++ ) {
+      if ( start.attributes().item( i ).nodeName().string() == "id" &&
+           start.attributes().item( i ).nodeValue().string() == id )
+        return true;
+    }
+  }
+
+  if ( !start.parentNode().isNull() )
+    return hasParentDivWithId( start.parentNode(), id );
+  else return false;
 }
 
 

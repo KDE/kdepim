@@ -30,6 +30,7 @@
 
 #include <kmime/kmime_message.h>
 
+#include <dom/dom_node.h>
 
 #include "libkdepim/messagestatus.h"
 
@@ -474,6 +475,8 @@ public slots:
   void slotSaveMessage();
   /** Re-parse the current message. */
   void update(MailViewer::UpdateMode updateMode = MailViewer::Delayed);
+
+  bool hasParentDivWithId( const DOM::Node &start, const QString &id );
 
 signals:
   void replaceMsgByUnencryptedVersion();
