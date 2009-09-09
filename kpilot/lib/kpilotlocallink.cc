@@ -93,7 +93,7 @@ unsigned int KPilotLocalLink::findAvailableDatabases( KPilotLocalLink::Private &
 	unsigned int counter = 0;
 
 	QStringList dbs = d.entryList( QStringList() << CSL1("*.pdb"), QDir::Files | QDir::NoSymLinks | QDir::Readable );
-	for ( QStringList::ConstIterator i = dbs.begin(); i != dbs.end() ; ++i)
+	for ( QStringList::ConstIterator i = dbs.constBegin(); i != dbs.constEnd() ; ++i)
 	{
 		struct DBInfo dbi;
 
@@ -340,8 +340,8 @@ KPilotLink::DBInfoList KPilotLocalLink::getDBList( int, int )
 {
 	FUNCTIONSETUP;
 	DBInfoList l;
-	for ( DatabaseDescriptorList::ConstIterator i=d->fDBs.begin();
-		i != d->fDBs.end(); ++i)
+	for ( DatabaseDescriptorList::ConstIterator i=d->fDBs.constBegin();
+		i != d->fDBs.constEnd(); ++i)
 	{
 		l.append( (*i).second );
 	}

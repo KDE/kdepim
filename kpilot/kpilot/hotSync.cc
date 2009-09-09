@@ -229,8 +229,8 @@ static inline void initNoBackup(QStringList &dbnames,
 	dbcreators.clear();
 
 	QStringList configuredSkip = KPilotSettings::skipBackupDB();
-	QStringList::ConstIterator e = configuredSkip.end();
-	for (QStringList::ConstIterator i = configuredSkip.begin();
+	QStringList::ConstIterator e = configuredSkip.constEnd();
+	for (QStringList::ConstIterator i = configuredSkip.constBegin();
 		i!= e; ++i)
 	{
 		QString s = *i;
@@ -255,8 +255,8 @@ static inline void initNoBackup(QStringList &dbnames,
 	DEBUGKPILOT << "Will skip databases " << dbnames.join(CSL1(","));
 	QString creatorids;
 	char buf[5];
-	for (QList<unsigned long>::ConstIterator i = dbcreators.begin();
-		i != dbcreators.end(); ++i)
+	for (QList<unsigned long>::ConstIterator i = dbcreators.constBegin();
+		i != dbcreators.constEnd(); ++i)
 	{
 		unsigned long tag = *i;
 		pi_untag(buf,tag);
@@ -1010,7 +1010,7 @@ void RestoreAction::setDirectory( const QString &path )
 	}
 
 	fP->fDBIndex = 0;
-	fP->fDBIterator = fP->fDBList.begin();
+	fP->fDBIterator = fP->fDBList.constBegin();
 	fActionStatus = InstallingFiles;
 
 	QObject::connect(&(fP->fTimer), SIGNAL(timeout()),
@@ -1028,7 +1028,7 @@ void RestoreAction::setDirectory( const QString &path )
 	Q_ASSERT(fActionStatus == InstallingFiles);
 
 
-	if (fP->fDBIterator == fP->fDBList.end())
+	if (fP->fDBIterator == fP->fDBList.constEnd())
 	{
 		fP->fTimer.stop();
 

@@ -550,8 +550,8 @@ static void fillConduitNameMap()
 			new QString( i18n( "File Installer" ) ) );
 	}
 
-	QStringList::ConstIterator end = l.end();
-	for( QStringList::ConstIterator i = l.begin(); i != end; ++i )
+	QStringList::ConstIterator end = l.constEnd();
+	for( QStringList::ConstIterator i = l.constBegin(); i != end; ++i )
 	{
 		if( !conduitNameMap->value( *i ) )
 		{
@@ -577,9 +577,9 @@ QStringList PilotDaemon::configuredConduitList()
 	QStringList keys = conduitNameMap->keys();
 	keys.sort();
 
-	QStringList::ConstIterator end = keys.end();
+	QStringList::ConstIterator end = keys.constEnd();
 	QStringList result;
-	for( QStringList::ConstIterator i = keys.begin(); i != end; ++i )
+	for( QStringList::ConstIterator i = keys.constBegin(); i != end; ++i )
 	{
 		result << *(conduitNameMap->value(*i));
 	}

@@ -317,8 +317,8 @@ void ConduitConfigWidget::fillLists()
 
 	// Get all conduits installed on the system
 	KService::List offers = KServiceTypeTrader::self()->query( CSL1("KPilotConduit") );
-	KService::List::ConstIterator e = offers.end();
-	for (KService::List::ConstIterator i = offers.begin(); i!=e; ++i)
+	KService::List::ConstIterator e = offers.constEnd();
+	for (KService::List::ConstIterator i = offers.constBegin(); i!=e; ++i)
 	{
 		const KService::Ptr o = *i;
 		bool is_active;

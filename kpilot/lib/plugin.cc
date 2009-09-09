@@ -205,7 +205,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	QString comma = CSL1(", ");
 
 	int count=1;
-	for (i=pl.begin(); i!=pl.end(); ++i)
+	for (i=pl.constBegin(); i!=pl.constEnd(); ++i)
 	{
 		s.append(CSL1("%1 (<i>%2</i>)%3")
 			.arg((*i).name())
@@ -221,7 +221,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	{
 		count=1;
 		s.append(i18n("<b>Credits:</b> "));
-		for (i=pl.begin(); i!=pl.end(); ++i)
+		for (i=pl.constBegin(); i!=pl.constEnd(); ++i)
 		{
 			s.append(CSL1("%1 (<i>%2</i>)%3")
 				.arg((*i).name())
