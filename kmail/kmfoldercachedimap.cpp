@@ -1628,7 +1628,7 @@ QList<KMFolderCachedImap*> KMFolderCachedImap::findNewFolders()
 bool KMFolderCachedImap::deleteMessages()
 {
   /* Delete messages from cache that are gone from the server */
-  QList<KMMessage*> msgsForDeletion;
+  QList<KMMsgBase*> msgsForDeletion;
 
   /*
    * It is not possible to just go over all indices and remove
@@ -1641,7 +1641,7 @@ bool KMFolderCachedImap::deleteMessages()
     ulong uid ( it.key() );
     if ( uid != 0 && !uidsOnServer.contains( uid ) ) {
       uids << QString::number( uid );
-      msgsForDeletion.append( getMsg( *it ) );
+      msgsForDeletion.append( getMsgBase( *it ) );
     }
   }
 
