@@ -29,6 +29,8 @@ class QItemSelectionModel;
 class QLabel;
 class QRadioButton;
 
+class KJob;
+
 namespace Akonadi
 {
 class AddressBookComboBox;
@@ -70,6 +72,9 @@ class ContactSelectionWidget : public QWidget
      * are available.
      */
     void selectedContacts( const KABC::Addressee::List &contacts );
+
+  private Q_SLOTS:
+    void addressBookContactsFetched( KJob* );
 
   private:
     void initGui();

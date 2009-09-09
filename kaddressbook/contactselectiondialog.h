@@ -57,9 +57,11 @@ class ContactSelectionDialog : public KDialog
      */
     KABC::Addressee::List selectedContacts() const;
 
+  protected Q_SLOTS:
+    void slotButtonClicked( int button );
+
   private Q_SLOTS:
     void slotSelectedContacts( const KABC::Addressee::List& );
-    void slotOkClicked();
 
   private:
     ContactSelectionWidget *mSelectionWidget;
