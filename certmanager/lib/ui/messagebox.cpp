@@ -52,6 +52,7 @@
 #include <qtextstream.h>
 #include <qvbox.h>
 #include <qapplication.h>
+#include <qstylesheet.h>
 
 #include <gpg-error.h>
 
@@ -78,6 +79,7 @@ public:
     explicit AuditLogViewer( const QString & log, QWidget * parent=0, const char * name=0, WFlags f=0 )
         : KDialogBase( parent, name, false, i18n("View GnuPG Audit Log"),
                        Close|User1|User2, Close, false, KGuiItem_save(), KGuiItem_copy() ),
+          m_log( /* sic */ ),
           m_textEdit( new QTextEdit( this, "m_textEdit" ) )
     {
         setWFlags( f );
@@ -89,7 +91,10 @@ public:
     ~AuditLogViewer() {}
 
     void setAuditLog( const QString & log ) {
-        m_textEdit->setText( log );
+        if ( log == m_log )
+            return;
+        m_log = log;
+        m_textEdit->setText( "<qt>" + log + "</qt>" );
         const QRect rect = m_textEdit->paragraphRect( 0 );
         kdDebug() << "setAuditLog: rect = " << rect;
         if ( !rect.isValid() )
@@ -110,7 +115,12 @@ private:
         KSaveFile file( fileName );
 
         if ( QTextStream * const s = file.textStream() ) {
-            *s << m_textEdit->text() << endl;
+            *s << "<html><head>";
+            if ( !caption().isEmpty() )
+                *s << "\n<title>" << /*Qt*/QStyleSheet::escape( caption() ) << "</title>\n";
+            *s << "</head><body>\n"
+               << m_log
+               << "\n</body></html>" << endl;
             file.close();
         }
 
@@ -126,6 +136,7 @@ private:
     }
 
 private:
+    QString m_log;
     QTextEdit * m_textEdit;
 };
 
@@ -165,7 +176,7 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
 
 // static
 void MessageBox::auditLog( QWidget * parent, const QString & log, const QString & caption ) {
-    AuditLogViewer * const alv = new AuditLogViewer( "<qt>" + log + "</qt>", parent, "alv", Qt::WDestructiveClose );
+    AuditLogViewer * const alv = new AuditLogViewer( log, parent, "alv", Qt::WDestructiveClose );
     alv->setCaption( caption );
     alv->show();
 }
