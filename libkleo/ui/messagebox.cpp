@@ -78,6 +78,7 @@ static KGuiItem KGuiItem_showAuditLog() {
 
 AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::WindowFlags f )
     : KDialog( parent, f ),
+      m_log( /* sic */ ),
       m_textEdit( new QTextEdit( this ) )
 {
     setCaption( i18n("View GnuPG Audit Log") );
@@ -99,7 +100,10 @@ AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::Windo
 AuditLogViewer::~AuditLogViewer() {}
 
 void AuditLogViewer::setAuditLog( const QString & log ) {
-    m_textEdit->setHtml( log );
+  if ( log == m_log )
+    return;
+  m_log = log;
+  m_textEdit->setHtml( "<qt>" + log + "</qt>" );
 }
 
 void AuditLogViewer::slotUser1() {
@@ -116,7 +120,15 @@ void AuditLogViewer::slotUser1() {
 
     if ( file.open() ) {
         QTextStream s( &file );
-        s << m_textEdit->toPlainText() << endl;
+        s << "<html><head>";
+        if ( !windowTitle().isEmpty() ) {
+          s << "\n<title>"
+            << Qt::escape( windowTitle() )
+            << "</title>\n";
+        }
+        s << "</head><body>\n"
+          << m_log
+          << "\n</body></html>" << endl;
         s.flush();
         file.finalize();
     }
@@ -167,7 +179,7 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
 
 // static
 void MessageBox::auditLog( QWidget * parent, const QString & log, const QString & caption ) {
-    AuditLogViewer * const alv = new AuditLogViewer( "<qt>" + log + "</qt>", parent, Qt::WDestructiveClose );
+    AuditLogViewer * const alv = new AuditLogViewer( log, parent, Qt::WDestructiveClose );
     alv->setObjectName( "alv" );
     alv->setCaption( caption );
     alv->show();
