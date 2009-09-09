@@ -202,8 +202,13 @@ void KMLineEdit::loadContacts()
       int idx = addCompletionSource( i18n( "Recent Addresses" ) );
       for ( ; it != recent.end(); ++it ) {
         KABC::Addressee addr;
-        KPIMUtils::extractEmailAddressAndName(*it, email, name);
-        addr.setNameFromString( KPIMUtils::quoteNameIfNecessary( name ));
+        KPIMUtils::extractEmailAddressAndName( *it, email, name );
+        name = KPIMUtils::quoteNameIfNecessary( name );
+        if ( ( name[0] == '"' ) && ( name[name.length() - 1] == '"' ) ) {
+          name.remove( 0, 1 );
+          name.truncate( name.length() - 1 );
+        }
+        addr.setNameFromString( name );
         addr.insertEmail( email, true );
         addContact( addr, 120, idx ); // more weight than kabc entries and more than ldap results
       }
