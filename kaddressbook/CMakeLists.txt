@@ -45,6 +45,7 @@ set( kaddressbook_LIB_SRCS
   mainwidget.cpp
   modelcolumnmanager.cpp
   quicksearchwidget.cpp
+  recursiveitemfetchjob.cpp
   standardcontactactionmanager.cpp
   xxport/csv/csv_xxport.cpp
   xxport/csv/csvimportdialog.cpp

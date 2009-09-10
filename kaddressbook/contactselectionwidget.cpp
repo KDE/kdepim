@@ -19,8 +19,11 @@
 
 #include "contactselectionwidget.h"
 
+#include "recursiveitemfetchjob.h"
+
 #include <akonadi/contact/addressbookcombobox.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchscope.h>
 #include <klocale.h>
 
 #include <QtCore/QAbstractItemModel>
@@ -39,9 +42,6 @@ ContactSelectionWidget::ContactSelectionWidget( QAbstractItemModel *model, QItem
 
   mSelectedContactsButton->setEnabled( mSelectionModel->hasSelection() );
   mAddressBookSelection->setEnabled( false );
-
-  // disable until we can fetch a collection recursivly
-  mAddressBookContactsButton->setEnabled( false );
 
   connect( mAddressBookContactsButton, SIGNAL( toggled( bool ) ),
            mAddressBookSelection, SLOT( setEnabled( bool ) ) );
@@ -136,7 +136,35 @@ void ContactSelectionWidget::collectSelectedContacts()
 
 void ContactSelectionWidget::collectAddressBookContacts()
 {
+  const Akonadi::Collection collection = mAddressBookSelection->selectedAddressBook();
+  if ( !collection.isValid() ) {
+    emit selectedContacts( KABC::Addressee::List() );
+    return;
+  }
 
+  Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( collection, this );
+  job->fetchScope().fetchFullPayload();
+
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( addressBookContactsFetched( KJob* ) ) );
+  job->start();
+}
+
+void ContactSelectionWidget::addressBookContactsFetched( KJob *job )
+{
+  KABC::Addressee::List contacts;
+
+  if ( !job->error() ) {
+    Akonadi::RecursiveItemFetchJob *fetchJob = qobject_cast<Akonadi::RecursiveItemFetchJob*>( job );
+    const Akonadi::Item::List items = fetchJob->items();
+
+    foreach ( const Akonadi::Item &item, items ) {
+      if ( item.hasPayload<KABC::Addressee>() ) {
+        contacts.append( item.payload<KABC::Addressee>() );
+      }
+    }
+  }
+
+  emit selectedContacts( contacts );
 }
 
 #include "contactselectionwidget.moc"

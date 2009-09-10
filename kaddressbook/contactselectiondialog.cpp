@@ -55,10 +55,14 @@ void ContactSelectionDialog::slotSelectedContacts( const KABC::Addressee::List &
   accept();
 }
 
-void ContactSelectionDialog::slotOkClicked()
+void ContactSelectionDialog::slotButtonClicked( int button )
 {
-  // this will trigger slotSelectedContacts via signal/slot
-  mSelectionWidget->requestSelectedContacts();
+  if ( button == KDialog::Ok ) {
+    // this will trigger slotSelectedContacts via signal/slot
+    mSelectionWidget->requestSelectedContacts();
+  } else {
+    KDialog::slotButtonClicked( button );
+  }
 }
 
 #include "contactselectiondialog.moc"
