@@ -24,7 +24,7 @@ libkcal_la_SOURCES = \
 	freebusy.cpp attendee.cpp attachment.cpp recurrencerule.cpp recurrence.cpp alarm.cpp \
 	customproperties.cpp calendar.cpp calendarlocal.cpp \
 	calformat.cpp vcalformat.cpp icalformat.cpp icalformatimpl.cpp \
-	incidenceformatter.cpp \
+	incidenceformatter.cpp calhelper.cpp \
 	vcaldrag.cpp icaldrag.cpp \
 	exceptions.cpp \
 	scheduler.cpp imipscheduler.cpp dummyscheduler.cpp \
@@ -47,7 +47,8 @@ libkcalinclude_HEADERS = alarm.h attachment.h attendee.h calendar.h \
   calendarlocal.h calendarnull.h calendarresources.h calfilter.h calformat.h \
   calstorage.h customproperties.h dndfactory.h duration.h event.h \
   exceptions.h filestorage.h freebusy.h htmlexportsettings.h htmlexport.h icaldrag.h icalformat.h \
-  incidencebase.h incidence.h incidenceformatter.h journal.h kcalversion.h listbase.h period.h person.h \
+  incidencebase.h incidence.h incidenceformatter.h calhelper.h \
+  journal.h kcalversion.h listbase.h period.h person.h \
   qtopiaformat.h recurrencerule.h recurrence.h resourcecached.h resourcecalendar.h \
   resourcelocalconfig.h resourcelocaldirconfig.h resourcelocaldir.h \
   resourcelocal.h scheduler.h libkcal_export.h \

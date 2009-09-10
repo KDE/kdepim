@@ -1,0 +1,84 @@
+/*
+  This file is part of libkcal.
+
+  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
+
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
+*/
+/**
+  @file
+  This file is part of the API for handling calendar data and provides
+  static convenience functions for making decisions about calendar data.
+
+  @author Allen Winter \<allen@kdab.net\>
+*/
+
+#ifndef KCAL_CALENDARHELPER_H
+#define KCAL_CALENDARHELPER_H
+
+#include <qstring.h>
+
+namespace KCal {
+class Calendar;
+class Incidence;
+
+/**
+  @brief
+  Provides methods for making decisions about calendar data.
+*/
+namespace CalHelper {
+
+  /**
+    Determine if the specified incidence is likely a Kolab incidence
+    owned by the the user.
+
+    @param calendar is a pointer to a valid Calendar object.
+    @param incidence is a pointer to an Incidence object.
+
+    @return true if it is likely that the specified incidence belongs
+    to the user in their Kolab resource; false otherwise.
+  */
+  bool isMyKolabIncidence( Calendar *calendar, Incidence *incidence );
+
+  /**
+    Determine if the specified incidence is likely owned by the the user,
+    independent of the Resource type.
+
+    @param calendar is a pointer to a valid Calendar object.
+    @param incidence is a pointer to an Incidence object.
+
+    @return true if it is likely that the specified incidence belongs
+    to the user; false otherwise.
+  */
+  bool isMyCalendarIncidence( Calendar *calendar, Incidence *incidence );
+
+  /**
+    Searches for the specified Incidence by UID, returning an Incidence pointer
+    if and only if the found Incidence is owned by the user.
+
+    @param calendar is a pointer to a valid Calendar object.
+    @param Uid is a QString containing an Incidence UID.
+
+    @return a pointer to the Incidence found; 0 if the Incidence is not found
+    or the Incidence is found but is not owned by the user.
+  */
+  Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
+}
+
+}
+
+#endif
+
