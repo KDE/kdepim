@@ -26,8 +26,8 @@
   @author Allen Winter \<allen@kdab.net\>
 */
 
-#ifndef KCAL_CALENDARHELPER_H
-#define KCAL_CALENDARHELPER_H
+#ifndef KCAL_CALHELPER_H
+#define KCAL_CALHELPER_H
 
 #include <qstring.h>
 
