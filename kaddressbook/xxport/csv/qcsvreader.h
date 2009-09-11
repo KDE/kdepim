@@ -165,6 +165,11 @@ class QCsvReader : public QObject
      */
     QTextCodec *textCodec() const;
 
+    /**
+     * Terminates the parsing of the csv data.
+     */
+    void terminate();
+
   private:
     class Private;
     Private* const d;

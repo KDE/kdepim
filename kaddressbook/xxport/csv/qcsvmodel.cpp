@@ -180,7 +180,7 @@ void QCsvModel::setTextQuote( const QChar &textQuote )
   const bool isRunning = d->mParser->isRunning();
 
   if ( isRunning ) {
-    d->mParser->terminate();
+    d->mParser->reader()->terminate();
     d->mParser->wait();
   }
 
@@ -200,7 +200,7 @@ void QCsvModel::setDelimiter( const QChar &delimiter )
   const bool isRunning = d->mParser->isRunning();
 
   if ( isRunning ) {
-    d->mParser->terminate();
+    d->mParser->reader()->terminate();
     d->mParser->wait();
   }
 
@@ -220,7 +220,7 @@ void QCsvModel::setStartRow( uint startRow )
   const bool isRunning = d->mParser->isRunning();
 
   if ( isRunning ) {
-    d->mParser->terminate();
+    d->mParser->reader()->terminate();
     d->mParser->wait();
   }
 
@@ -240,7 +240,7 @@ void QCsvModel::setTextCodec( QTextCodec *textCodec )
   const bool isRunning = d->mParser->isRunning();
 
   if ( isRunning ) {
-    d->mParser->terminate();
+    d->mParser->reader()->terminate();
     d->mParser->wait();
   }
 
