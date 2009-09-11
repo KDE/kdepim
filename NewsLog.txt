@@ -1,3 +1,38 @@
+Friday, September 11th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Don't allow sending with mail addresses as recipients that end with a dot
+      - Be more tolerant when decoding header fields of mails with invalid encoding (KDE bug 206417)
+      - Make KMail more responsive when virtual folders are used (KDE bug 205448)
+      - Show UTC incidences in the local time zone (KDE bug 204059)
+      - Make sure that there are no directory delimiters when saving attachments from KMail (KDE bug 191455)
+      - Fix a potential crash in KOrganizer's todo view (KDE bug 206306)
+      - Fix a crash when executing precommands in KMail (KDE bug 196053)
+      - Fix scrolling to far in KMail (KDE bug 160990)
+      - Show a clear button in the edit fields for search and filters (KDE bug 204532)
+      - Obey the icon size in the POP filter dialog (KDE bug 205018)
+      - Try harder to find the annoyance-filter executable (KDE bug 140353)
+      - Fix crash when importing certain invalid mbox files
+      - Correctly show the attachment icon for attachment-only mails (KDE bug 143237)
+      - When saving an attachment, don't incorrectly strip some parts of the filename (KDE bug 185167)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3833: Mails will vanish, if a folder is renamed
+      - kolab/issue3853: Crash after renaming a folder
+      - kolab/issue3836: Saved auditlog contains some strange xml text
+      - kolab/issue3837: Reproducible crash when (not) decrypting s/mime message
+      - kolab/issue3577: [regression] S/MIME opaque signed and encrypted email without smime-type parameter suboptimal display
+      - kolab/issue3831: Forward inline: the header of the forwarded msg doesn't contain the CC
+                         field and the time after the date (rt#5862)
+      - Fix copying of an URL from KMail, which was a recent regression
+
+
 Monday, September 7th 2009
 
 Problems addressed
