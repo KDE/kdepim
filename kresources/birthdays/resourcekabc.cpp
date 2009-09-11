@@ -46,6 +46,8 @@
 #include "libkcal/filestorage.h"
 #include "libkcal/alarm.h"
 
+#include <libemailfunctions/email.h>
+
 #include <kresources/configwidget.h>
 
 #include "resourcekabcconfig.h"
@@ -256,28 +258,30 @@ bool ResourceKABC::doLoad()
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
     QString name_2,email_2,uid_2;
     if ( !spouseName.isEmpty() ) {
-      //TODO: find a KABC:Addressee of the spouse
-      //      Probably easiest would be to use a QMap (as the spouse's entry was already searched above!
+      QString tname, temail;
+      KPIM::getNameAndMail( spouseName, tname, temail );
+      tname = KPIM::quoteNameIfNecessary( tname );
+      if ( ( tname[0] == '"' ) && ( tname[tname.length() - 1] == '"' ) ) {
+        tname.remove( 0, 1 );
+        tname.truncate( tname.length() - 1 );
+      }
       KABC::Addressee spouse;
-      spouse.setNameFromString( spouseName );
+      spouse.setNameFromString( tname );
+      name_2 = spouse.nickName();
       uid_2 = spouse.uid();
       email_2 = spouse.fullEmail();
-      name_2 = spouse.nickName();
       if ( name_2.isEmpty() ) {
-        name_2 = spouse.givenName();
-      }
-      if ( name_2.isEmpty() ) {
-        name_2 = spouseName;
+        name_2 = spouse.realName();
       }
       summary = i18n("insert names of both spouses",
-                     "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
+                     "%1's & %2's anniversary").arg( name_1 ).arg( tname );
     } else {
       summary = i18n("only one spouse in addressbook, insert the name",
                      "%1's anniversary").arg( name_1 );
     }
 
     Event *ev = new Event();
-      ev->setUid( uid_1+"_KABC_Anniversary" );
+    ev->setUid( uid_1+"_KABC_Anniversary" );
 
     ev->setDtStart(anniversary);
     ev->setDtEnd(anniversary);
