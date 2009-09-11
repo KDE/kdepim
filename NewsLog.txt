@@ -1,3 +1,18 @@
+Friday, September 11th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3853: Crash after renaming a folder
+* kolab/issue3833: Mails will vanish, if a folder is renamed
+* kolab/issue3837: Reproducible crash when (not) decrypting s/mime message
+* kolab/issue3577: [regression] S/MIME opaque signed and encrypted email without smime-type parameter suboptimal display
+* kolab/issue3855: [regression] S/MIME opaque signed and encrypted email suboptimal display
+* kolab/issue3831: Forward inline: the header of the forwarded msg doesn't contain the CC
+                   field and the time after the date (rt#5862)
+* Fix copying of an URL from KMail, which was a recent regression
+
+
 Monday, September 7th 2009
 
 Problems addressed
