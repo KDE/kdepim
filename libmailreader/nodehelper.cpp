@@ -26,9 +26,13 @@
 #include <kmimetype.h>
 #include <kdebug.h>
 #include <kascii.h>
+#include <ktemporaryfile.h>
 #include <klocale.h>
 #include <kcharsets.h>
+#include <kde_file.h>
+#include <kpimutils/kfileio.h>
 
+#include <QDir>
 #include <QTextCodec>
 
 NodeHelper * NodeHelper::mSelf = 0;
@@ -183,6 +187,117 @@ KMMsgSignatureState NodeHelper::signatureState( KMime::Content *node ) const
 
   return KMMsgNotSigned;
 }
+
+
+QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
+{
+  // If the message part is already written to a file, no point in doing it again.
+  // This function is called twice actually, once from the rendering of the attachment
+  // in the body and once for the header.
+  KUrl existingFileName = tempFileUrlFromNode( node );
+  if ( !existingFileName.isEmpty() ) {
+    return existingFileName.toLocalFile();
+  }
+
+  QString fileName = NodeHelper::fileName( node );
+
+  QString fname = createTempDir( node->index().toString() );
+  if ( fname.isEmpty() )
+    return QString();
+
+  // strip off a leading path
+  int slashPos = fileName.lastIndexOf( '/' );
+  if( -1 != slashPos )
+    fileName = fileName.mid( slashPos + 1 );
+  if( fileName.isEmpty() )
+    fileName = "unnamed";
+  fname += '/' + fileName;
+
+  kDebug() << "Create temp file: " << fname;
+
+  QByteArray data = node->decodedContent();
+  if ( node->contentType()->isText() && data.size() > 0 ) {
+    // convert CRLF to LF before writing text attachments to disk
+    data = KMime::CRLFtoLF( data );
+  }
+  if( !KPIMUtils::kByteArrayToFile( data, fname, false, false, false ) )
+    return QString();
+
+  mTempFiles.append( fname );
+  // make file read-only so that nobody gets the impression that he might
+  // edit attached files (cf. bug #52813)
+  ::chmod( QFile::encodeName( fname ), S_IRUSR );
+
+  return fname;
+}
+
+
+
+KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
+{
+  if (!node)
+    return KUrl();
+
+  QString index = node->index().toString();
+
+  foreach ( const QString &path, mTempFiles ) {
+    int right = path.lastIndexOf( '/' );
+    int left = path.lastIndexOf( ".index.", right );
+    if (left != -1)
+        left += 7;
+
+    QString storedIndex = path.mid( left + 1, right - left - 1 );
+    if ( left != -1 && storedIndex == index )
+      return KUrl( path );
+  }
+  return KUrl();
+}
+
+
+QString NodeHelper::createTempDir( const QString &param )
+{
+  KTemporaryFile *tempFile = new KTemporaryFile();
+  tempFile->setSuffix( ".index." + param );
+  tempFile->open();
+  QString fname = tempFile->fileName();
+  delete tempFile;
+
+  if ( ::access( QFile::encodeName( fname ), W_OK ) != 0 ) {
+    // Not there or not writable
+    if( KDE_mkdir( QFile::encodeName( fname ), 0 ) != 0 ||
+        ::chmod( QFile::encodeName( fname ), S_IRWXU ) != 0 ) {
+      return QString(); //failed create
+    }
+  }
+
+  Q_ASSERT( !fname.isNull() );
+
+  mTempDirs.append( fname );
+  return fname;
+}
+
+
+void NodeHelper::removeTempFiles()
+{
+  for (QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end();
+    ++it)
+  {
+    QFile::remove(*it);
+  }
+  mTempFiles.clear();
+  for (QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end();
+    it++)
+  {
+    QDir(*it).rmdir(*it);
+  }
+  mTempDirs.clear();
+}
+
+void NodeHelper::addTempFile( const QString& file )
+{
+  mTempFiles.append( file );
+}
+
 
 KMime::Content *NodeHelper::firstChild( const KMime::Content* node )
 {

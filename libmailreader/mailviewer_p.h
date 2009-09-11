@@ -196,26 +196,11 @@ public:
     header style. */
   QString writeMsgHeader( KMime::Message* aMsg, KMime::Content* vCardNode = 0, bool topLevel = false );
 
-  /** Writes the given message part to a temporary file and returns the
-      name of this file or QString() if writing failed.
-  */
-  QString writeMessagePartToTempFile( KMime::Content* msgPart );
-
-  /**
-    Creates a temporary dir for saving attachments, etc.
-    Will be automatically deleted when another message is viewed.
-    @param param Optional part of the directory name.
-  */
-  QString createTempDir( const QString &param = QString() );
-
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
 
   /** HTML initialization. */
   virtual void initHtmlWidget(void);
-
-  /** Cleanup the attachment temp files */
-  virtual void removeTempFiles();
 
   /** Event filter */
   bool eventFilter( QObject *obj, QEvent *ev );
@@ -293,8 +278,6 @@ public:
 
   /** View message part of type message/RFC822 in extra viewer window. */
   void atmViewMsg(KMime::Content* msgPart);
-
-  KUrl tempFileUrlFromNode( const KMime::Content *node );
 
   void adjustLayout();
   void saveSplitterSizes( KConfigGroup & c ) const;
@@ -519,8 +502,6 @@ public:
   bool mPrinting;
   bool mShowColorbar;
   //bool mShowCompleteMessage;
-  QStringList mTempFiles;
-  QStringList mTempDirs;
   int mMimeTreeMode;
   bool mMimeTreeAtBottom;
   QList<int> mSplitterSizes;

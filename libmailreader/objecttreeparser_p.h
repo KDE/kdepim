@@ -127,9 +127,7 @@ private slots:
   void slotResult( const GpgME::VerificationResult & vr );
   void slotKeyListJobDone();
   void slotNextKey( const GpgME::Key & );
-  void notify() {
-    emit update(MailViewer::Force);
-  }
+  void notify();
 
 signals:
   void update(MailViewer::UpdateMode);

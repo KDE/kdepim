@@ -586,7 +586,7 @@ namespace {
       w->scrollToAttachment( node );
     if ( shouldShowDialog )
      // PENDING(romain_kdab) : replace with toLocalFile() ?
-     w->openAttachment( node, w->tempFileUrlFromNode( node ).path() );
+     w->openAttachment( node, NodeHelper::instance()->tempFileUrlFromNode( node ).path() );
 
     return true;
   }

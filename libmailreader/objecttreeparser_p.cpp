@@ -219,6 +219,11 @@ void VerifyDetachedBodyPartMemento::slotKeyListJobDone()
   QTimer::singleShot( 100, this, SLOT(notify()) );
 }
 
+void VerifyDetachedBodyPartMemento::notify()
+{
+ 
+    emit update(MailViewer::Force);
+}
 
 VerifyOpaqueBodyPartMemento::VerifyOpaqueBodyPartMemento( VerifyOpaqueJob * job,
                                                           KeyListJob *  klj,

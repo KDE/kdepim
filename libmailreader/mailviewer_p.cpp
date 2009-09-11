@@ -20,6 +20,8 @@
 
 #include "mailviewer_p.h"
 #include "kmreaderwin.h"
+#include "objecttreeemptysource.h"
+#include "objecttreeviewersource.h"
 
 #include <errno.h>
 
@@ -54,7 +56,6 @@
 #include <Akonadi/ItemModifyJob>
 
 #include <kpimutils/kfileio.h>
-#include <kde_file.h>
 
 #include <dom/html_element.h>
 #include <dom/html_block.h>
@@ -167,7 +168,6 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
   readConfig();
 
   mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin() - 1;
-  mLevelQuote = 1;
 
   mResizeTimer.setSingleShot( true );
   connect( &mResizeTimer, SIGNAL(timeout()),
@@ -193,7 +193,7 @@ MailViewerPrivate::~MailViewerPrivate()
   if ( mDeleteMessage )
     delete mMessage;
   mMessage = 0;
-  removeTempFiles();
+  NodeHelper::instance()->removeTempFiles();
 }
 
 
@@ -232,7 +232,7 @@ void MailViewerPrivate::openAttachment( KMime::Content* node, const QString & na
   QString str, pname, cmd, fileName;
 
   if ( name.isEmpty() )
-    atmName = tempFileUrlFromNode( node ).toLocalFile();
+    atmName = NodeHelper::instance()->tempFileUrlFromNode( node ).toLocalFile();
 
   if ( node->contentType()->mediaType() == "message" )
   {
@@ -665,7 +665,7 @@ QString MailViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 
 KService::Ptr MailViewerPrivate::getServiceOffer( KMime::Content *content)
 {
-  QString fileName = writeMessagePartToTempFile( content );
+  QString fileName = NodeHelper::instance()->writeNodeToTempFile( content );
 
   const QString contentTypeStr = content->contentType()->mimeType();
 
@@ -739,7 +739,8 @@ bool MailViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, b
             dataNode = ObjectTreeParser::findTypeNot( topContent, "multipart", "", true, false );
           }
         } else {
-          ObjectTreeParser otp( 0, 0, false, false, false );
+          EmptySource emptySource;
+          ObjectTreeParser otp( &emptySource, 0, false, false, false );
 
           // process this node and all it's siblings and descendants
           NodeHelper::instance()->setNodeUnprocessed( dataNode, true );
@@ -968,7 +969,7 @@ KMime::Content::List MailViewerPrivate::selectedContents()
 
 void MailViewerPrivate::attachmentOpenWith( KMime::Content *node )
 {
-  QString name = writeMessagePartToTempFile( node );
+  QString name = NodeHelper::instance()->writeNodeToTempFile( node );
   QString linkName = createAtmFileLink( name );
   KUrl::List lst;
   KUrl url;
@@ -994,7 +995,7 @@ void MailViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
-  QString name = writeMessagePartToTempFile( node );
+  QString name = NodeHelper::instance()->writeNodeToTempFile( node );
   KUrl::List lst;
   KUrl url;
   bool autoDelete = true;
@@ -1022,6 +1023,8 @@ bool MailViewerPrivate::decryptMessage() const
 {
   if ( !GlobalSettings::self()->alwaysDecrypt() )
     return mDecrytMessageOverwrite;
+  else
+    return true;
 }
 
 
@@ -1098,7 +1101,7 @@ void MailViewerPrivate::displayMessage()
   if ( !mMainWindow )
       q->setWindowTitle( mMessage->subject()->asUnicodeString() );
 
-  removeTempFiles();
+  NodeHelper::instance()->removeTempFiles();
 
   mColorBar->setNeutralMode();
 
@@ -1149,13 +1152,14 @@ void MailViewerPrivate::parseMsg()
       if ( !t.parseVCards( vCard ).isEmpty() ) {
           hasVCard = true;
           kDebug() <<"FOUND A VALID VCARD";
-          writeMessagePartToTempFile( vCardContent );
+          NodeHelper::instance()->writeNodeToTempFile( vCardContent );
       }
   }
   htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
 
   // show message content
-  ObjectTreeParser otp( this );
+  MailViewerSource otpSource( this );
+  ObjectTreeParser otp( &otpSource );
   otp.setAllowAsync( true );
   otp.parseObjectTree( mMessage );
 
@@ -1262,73 +1266,6 @@ QString MailViewerPrivate::writeMsgHeader(KMime::Message* aMsg, KMime::Content* 
   return headerStyle()->format( aMsg, headerStrategy(), href, mPrinting, topLevel );
 }
 
-
-QString MailViewerPrivate::writeMessagePartToTempFile(KMime::Content* aMsgPart)
-{
-  // If the message part is already written to a file, no point in doing it again.
-  // This function is called twice actually, once from the rendering of the attachment
-  // in the body and once for the header.
-  KUrl existingFileName = tempFileUrlFromNode( aMsgPart );
-  if ( !existingFileName.isEmpty() ) {
-    return existingFileName.toLocalFile();
-  }
-
-  QString fileName = NodeHelper::fileName( aMsgPart );
-
-  QString fname = createTempDir( aMsgPart->index().toString() );
-  if ( fname.isEmpty() )
-    return QString();
-
-  // strip off a leading path
-  int slashPos = fileName.lastIndexOf( '/' );
-  if( -1 != slashPos )
-    fileName = fileName.mid( slashPos + 1 );
-  if( fileName.isEmpty() )
-    fileName = "unnamed";
-  fname += '/' + fileName;
-
-  kDebug() << "Create temp file: " << fname;
-
-  QByteArray data = aMsgPart->decodedContent();
-  if ( aMsgPart->contentType()->isText() && data.size() > 0 ) {
-    // convert CRLF to LF before writing text attachments to disk
-    data = KMime::CRLFtoLF( data );
-  }
-  if( !KPIMUtils::kByteArrayToFile( data, fname, false, false, false ) )
-    return QString();
-
-  mTempFiles.append( fname );
-  // make file read-only so that nobody gets the impression that he might
-  // edit attached files (cf. bug #52813)
-  ::chmod( QFile::encodeName( fname ), S_IRUSR );
-
-  return fname;
-}
-
-
-QString MailViewerPrivate::createTempDir( const QString &param )
-{
-  KTemporaryFile *tempFile = new KTemporaryFile();
-  tempFile->setSuffix( ".index." + param );
-  tempFile->open();
-  QString fname = tempFile->fileName();
-  delete tempFile;
-
-  if ( ::access( QFile::encodeName( fname ), W_OK ) != 0 ) {
-    // Not there or not writable
-    if( KDE_mkdir( QFile::encodeName( fname ), 0 ) != 0 ||
-        ::chmod( QFile::encodeName( fname ), S_IRWXU ) != 0 ) {
-      return QString(); //failed create
-    }
-  }
-
-  assert( !fname.isNull() );
-
-  mTempDirs.append( fname );
-  return fname;
-}
-
-
 void MailViewerPrivate::showVCard( KMime::Content* msgPart ) {
   const QByteArray vCard = msgPart->decodedContent();
 
@@ -1394,25 +1331,6 @@ void MailViewerPrivate::initHtmlWidget(void)
   connect(mViewer,SIGNAL(popupMenu(const QString &, const QPoint &)),
           SLOT(slotUrlPopup(const QString &, const QPoint &)));
 }
-
-
-void MailViewerPrivate::removeTempFiles()
-{
-  for (QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end();
-    ++it)
-  {
-    QFile::remove(*it);
-  }
-  mTempFiles.clear();
-  for (QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end();
-    it++)
-  {
-    QDir(*it).rmdir(*it);
-  }
-  mTempDirs.clear();
-}
-
-
 
 bool MailViewerPrivate::eventFilter( QObject *, QEvent *e )
 {
@@ -1717,7 +1635,8 @@ void MailViewerPrivate::setMessagePart( KMime::Content * node )
   htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) );
   // end ###
   if ( node ) {
-    ObjectTreeParser otp( this, 0, true );
+    MailViewerSource otpSource( this );
+    ObjectTreeParser otp( &otpSource, 0, true );
     otp.parseObjectTree( node );
   }
   // ### this, too
@@ -1761,7 +1680,8 @@ void MailViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
         mColorBar->setHtmlMode();
       } else { // plain text
         const QByteArray str = aMsgPart->decodedContent();
-        ObjectTreeParser otp( this );
+        MailViewerSource otpSource( this );
+        ObjectTreeParser otp( &otpSource );
         otp.writeBodyStr( str,
                           overrideCodec() ? overrideCodec() : NodeHelper::instance()->codec( aMsgPart ),
                           mMessage ? mMessage->from()->asUnicodeString() : QString() );
@@ -1862,28 +1782,6 @@ void MailViewerPrivate::atmViewMsg(KMime::Content* aMsgPart)
   win->show();
  */
 }
-
-
-KUrl MailViewerPrivate::tempFileUrlFromNode( const KMime::Content *node )
-{
-  if (!node)
-    return KUrl();
-
-  QString index = node->index().toString();
-
-  foreach ( const QString &path, mTempFiles ) {
-    int right = path.lastIndexOf( '/' );
-    int left = path.lastIndexOf( ".index.", right );
-    if (left != -1)
-        left += 7;
-
-    QString storedIndex = path.mid( left + 1, right - left - 1 );
-    if ( left != -1 && storedIndex == index )
-      return KUrl( path );
-  }
-  return KUrl();
-}
-
 
 void MailViewerPrivate::adjustLayout() {
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
@@ -2308,7 +2206,7 @@ QString MailViewerPrivate::renderAttachments(KMime::Content * node, const QColor
     if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
-      QString fileName = writeMessagePartToTempFile( node );
+      QString fileName = NodeHelper::instance()->writeNodeToTempFile( node );
       QString href = NodeHelper::asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
@@ -2692,7 +2590,7 @@ void MailViewerPrivate::slotHideAttachments()
 void MailViewerPrivate::slotAtmView( KMime::Content *atmNode )
 {
   if ( atmNode ) {
-    QString fileName = tempFileUrlFromNode( atmNode).toLocalFile();
+    QString fileName = NodeHelper::instance()->tempFileUrlFromNode( atmNode ).toLocalFile();
 
     QString pname = NodeHelper::fileName( atmNode );
     if (pname.isEmpty()) pname = atmNode->contentDescription()->asUnicodeString();
@@ -2899,7 +2797,7 @@ void MailViewerPrivate::slotAttachmentCopy()
 
   QList<QUrl> urls;
   Q_FOREACH( KMime::Content *content, contents) {
-    KUrl kUrl = writeMessagePartToTempFile( content );
+    KUrl kUrl = NodeHelper::instance()->writeNodeToTempFile( content );
     QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
     if ( !url.isValid() )
       continue;

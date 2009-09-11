@@ -25,6 +25,7 @@
 #include <QSet>
 #include <kiconloader.h>
 
+class KUrl;
 class QTextCodec;
 
 namespace KMime {
@@ -115,7 +116,30 @@ public:
     bool isNodeDisplayedEmbedded( KMime::Content* node ) const;
     void setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded );
 
-//static methods
+    /** Writes the given message part to a temporary file and returns the
+        name of this file or QString() if writing failed.
+    */
+    QString writeNodeToTempFile( KMime::Content* node );
+
+    /** Returns the temporary file path and name where this node was saved, or an empty url
+    * if it wasn't saved yet with writeNodeToTempFile()
+    */
+    KUrl tempFileUrlFromNode( const KMime::Content *node );
+
+   /**
+      Creates a temporary dir for saving attachments, etc.
+      Will be automatically deleted when another message is viewed.
+      @param param Optional part of the directory name.
+    */
+    QString createTempDir( const QString &param = QString() );
+
+    /** Cleanup the attachment temp files */
+    void removeTempFiles();
+
+    /** Add a file to the list of managed temporary files */
+    void addTempFile( const QString& file );
+
+  //static methods
     static KMime::Content *nextSibling( const KMime::Content* node );
     
     static KMime::Content *firstChild( const KMime::Content* node );
@@ -174,6 +198,8 @@ private:
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
     QMap<KMime::Content*, QMap<QByteArray,Interface::BodyPartMemento*> > mBodyPartMementoMap;
+    QStringList mTempFiles;
+    QStringList mTempDirs;
 };
 
 

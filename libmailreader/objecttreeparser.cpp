@@ -33,6 +33,7 @@
 // my header file
 #include "objecttreeparser.h"
 #include "objecttreeparser_p.h"
+#include "objecttreesourceif.h"
 
 // other KMail headers
 #include "mailviewer_p.h"
@@ -134,13 +135,14 @@ public:
 };
 
 
-ObjectTreeParser::ObjectTreeParser( MailViewerPrivate * reader, const Kleo::CryptoBackend::Protocol * protocol,
+ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
+                                    const Kleo::CryptoBackend::Protocol * protocol,
                                     bool showOnlyOneMimePart, bool keepEncryptions,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy,
                                     HtmlWriter * htmlWriter,
                                     CSSHelper * cssHelper )
-  : mReader( reader ),
+  : mSource( source ),
     mCryptoProtocol( protocol ),
     mShowOnlyOneMimePart( showOnlyOneMimePart ),
     mKeepEncryptions( keepEncryptions ),
@@ -151,18 +153,17 @@ ObjectTreeParser::ObjectTreeParser( MailViewerPrivate * reader, const Kleo::Cryp
     mHtmlWriter( htmlWriter ),
     mCSSHelper( cssHelper )
 {
+  assert( source );
   if ( !attachmentStrategy() )
-    mAttachmentStrategy = reader ? reader->attachmentStrategy()
-                                  : AttachmentStrategy::smart();
-  if ( reader && !this->htmlWriter() )
-    mHtmlWriter = reader->htmlWriter();
-  if ( reader && !this->cssHelper() )
-    mCSSHelper = reader->mCSSHelper;
+    mAttachmentStrategy = source->attachmentStrategy();
+  if ( !this->htmlWriter() )
+    mHtmlWriter = source->htmlWriter();
+  if ( !this->cssHelper() )
+    mCSSHelper = source->cssHelper();
 }
 
 ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
-  : mReader( other.mReader ),
-    mCryptoProtocol( other.cryptoProtocol() ),
+  : mCryptoProtocol( other.cryptoProtocol() ),
     mShowOnlyOneMimePart( other.showOnlyOneMimePart() ),
     mKeepEncryptions( other.keepEncryptions() ),
     mIncludeSignatures( other.includeSignatures() ),
@@ -212,7 +213,7 @@ void ObjectTreeParser::insertAndParseNewChildNode( KMime::Content& startNode,
                                 QString(), QString(), QString(), 0,
                                 append );
   }*/
-  ObjectTreeParser otp( mReader, cryptoProtocol() );
+  ObjectTreeParser otp( mSource, cryptoProtocol() );
   otp.parseObjectTree( newNode );
   if ( addToTextualContent ) {
     mRawReplyString += otp.rawReplyString();
@@ -239,7 +240,7 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
     NodeHelper::instance()->setNodeUnprocessed( node, false );
     if ( KMime::Content* child = NodeHelper::firstChild( node ) )
         NodeHelper::instance()->setNodeUnprocessed( node, true );
-  } else if ( mReader && !node->parent() ) {
+  } else if ( !node->parent() ) {
     // ...this node and all it's siblings and descendants
     NodeHelper::instance()->setNodeUnprocessed( node, true );
   }
@@ -247,7 +248,7 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
   // Make sure the whole content is relative, so that nothing is painted over the header
   // if a malicious message uses absolute positioning.
   bool isRoot = node->isTopLevel();
-  if ( isRoot && mReader )
+  if ( isRoot && mHtmlWriter )
     htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
   KMime::Content::List contents = node->contents();
@@ -258,7 +259,7 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
       continue;
     ProcessResult processResult;
 
-    if ( mReader )
+    if ( mHtmlWriter )
       htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"/>").arg( node->indexForContent(c).toString() ) );
     if ( const Interface::BodyPartFormatter * formatter
           = BodyPartFormatterFactory::instance()->createFor( c->contentType()->mediaType(), c->contentType()->subType() ) ) {
@@ -303,20 +304,20 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
       break;
   }
 
-  if ( isRoot && mReader )
+  if ( isRoot && mHtmlWriter )
     htmlWriter()->queue( "</div>\n" );
 }
 
 void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & result ) {
   // ### (mmutz) default handling should go into the respective
   // ### bodypartformatters.
-  if ( !mReader )
+  if ( !mHtmlWriter )
     return;
 
   // always show images in multipart/related when showing in html, not with an additional icon
   if ( result.isImage() && node->parent() &&
-        node->parent()->contentType()->subType() == "related" && mReader->htmlMail() && !showOnlyOneMimePart() ) {
-    QString fileName = mReader->writeMessagePartToTempFile( node );
+        node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
+    QString fileName = NodeHelper::instance()->writeNodeToTempFile( node );
     QString href = "file:" + KUrl::toPercentEncoding( fileName );
     QByteArray cid = node->contentID()->as7BitString(false);
     if ( cid.startsWith('<') )
@@ -412,7 +413,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
                                                     const std::vector<GpgME::Signature> & paramSignatures,
                                                     bool hideErrors )
 {
-kDebug() << "DECRYPT" << mReader->mMessage;
+  kDebug() << "DECRYPT" << data;
   bool bIsOpaqueSigned = false;
   enum { NO_PLUGIN, NOT_INITIALIZED, CANT_VERIFY_SIGNATURES }
     cryptPlugError = NO_PLUGIN;
@@ -503,7 +504,7 @@ kDebug() << "DECRYPT" << mReader->mMessage;
           VerifyDetachedBodyPartMemento * newM
             = new VerifyDetachedBodyPartMemento( job, cryptProto->keyListJob(), signaturetext, plainData );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(MailViewer::UpdateMode)), mReader, SLOT(update(MailViewer::UpdateMode)));
+            QObject::connect(newM, SIGNAL(update(MailViewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MailViewer::UpdateMode)));
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -540,7 +541,7 @@ kDebug() << "DECRYPT" << mReader->mMessage;
           VerifyOpaqueBodyPartMemento * newM
             = new VerifyOpaqueBodyPartMemento( job, cryptProto->keyListJob(), signaturetext );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(MailViewer::UpdateMode)), mReader, SLOT(update(MailViewer::UpdateMode)));
+            QObject::connect(newM, SIGNAL(update(MailViewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MailViewer::UpdateMode)));
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -650,7 +651,7 @@ kDebug() << "DECRYPT" << mReader->mMessage;
 
   if ( !doCheck || !data ){
     if ( cleartextData || !cleartext.isEmpty() ) {
-      if ( mReader )
+      if ( mHtmlWriter )
         htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                   cryptProto,
                                                   fromAddress ) );
@@ -660,7 +661,7 @@ kDebug() << "DECRYPT" << mReader->mMessage;
       insertAndParseNewChildNode( sign, doCheck ? cleartext.data() : cleartextData->data(),
                                   "opaqued signed data" );
 
-      if ( mReader )
+      if ( mHtmlWriter )
         htmlWriter()->queue( writeSigstatFooter( messagePart ) );
 
     }
@@ -678,12 +679,12 @@ kDebug() << "DECRYPT" << mReader->mMessage;
       }
       else
         txt.append( i18nc("Status of message unknown.","(unknown)") );
-      if ( mReader )
+      if ( mHtmlWriter )
         htmlWriter()->queue(txt);
     }
   }
   else {
-    if ( mReader ) {
+    if ( mHtmlWriter ) {
       if ( !cryptProto ) {
         QString errorMsg;
         switch ( cryptPlugError ) {
@@ -711,74 +712,75 @@ kDebug() << "DECRYPT" << mReader->mMessage;
                                   errorMsg );
       }
 
-      if ( mReader )
-        htmlWriter()->queue( writeSigstatHeader( messagePart,
-                                                  cryptProto,
-                                                fromAddress ) );
+      htmlWriter()->queue( writeSigstatHeader( messagePart,
+                                               cryptProto,
+                                               fromAddress ) );
     }
 
-    ObjectTreeParser otp( mReader, cryptProto, true );
+    ObjectTreeParser otp( mSource, cryptProto, true );
     otp.parseObjectTree( data );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
       mTextualContentCharset = otp.textualContentCharset();
 
-    if ( mReader )
+    if ( mHtmlWriter )
       htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   }
 #ifdef DEBUG_SIGNATURE
   kDebug() << "done, returning" << ( bIsOpaqueSigned ? "TRUE" : "FALSE" );
 #endif
-kDebug() << "DECRYPTED" << mReader->mMessage;
+  kDebug() << "DECRYPTED" << data;
   return bIsOpaqueSigned;
 }
 
 void ObjectTreeParser::writeDeferredDecryptionBlock()
 {
-kDebug();
-assert( mReader );
-const QString iconName = KIconLoader::global()->iconPath( "document-decrypt",
-                                                          KIconLoader::Small );
-const QString decryptedData = "<div style=\"font-size:large; text-align:center;"
-      "padding-top:20pt;\">"
-      + i18n("This message is encrypted.")
-      + "</div>"
-      "<div style=\"text-align:center; padding-bottom:20pt;\">"
-      "<a href=\"kmail:decryptMessage\">"
-      "<img src=\"" + iconName.toUtf8() + "\"/>"
-      + i18n("Decrypt Message")
-      + "</a></div>";
-PartMetaData messagePart;
-messagePart.isDecryptable = true;
-messagePart.isEncrypted = true;
-messagePart.isSigned = false;
-mRawReplyString += decryptedData.toUtf8();
-htmlWriter()->queue( writeSigstatHeader( messagePart,
-                                          cryptoProtocol(),
-                                          QString() ) );
-htmlWriter()->queue( decryptedData );
-htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  const QString iconName = KIconLoader::global()->iconPath( "document-decrypt",
+                                                            KIconLoader::Small );
+  const QString decryptedData = "<div style=\"font-size:large; text-align:center;"
+        "padding-top:20pt;\">"
+        + i18n("This message is encrypted.")
+        + "</div>"
+        "<div style=\"text-align:center; padding-bottom:20pt;\">"
+        "<a href=\"kmail:decryptMessage\">"
+        "<img src=\"" + iconName.toUtf8() + "\"/>"
+        + i18n("Decrypt Message")
+        + "</a></div>";
+  PartMetaData messagePart;
+  messagePart.isDecryptable = true;
+  messagePart.isEncrypted = true;
+  messagePart.isSigned = false;
+  mRawReplyString += decryptedData.toUtf8();
+
+  if ( mHtmlWriter ) { //TODO: check if this check should be here or at the beginning of the method
+    htmlWriter()->queue( writeSigstatHeader( messagePart,
+                                              cryptoProtocol(),
+                                              QString() ) );
+    htmlWriter()->queue( decryptedData );
+    htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  }
 }
 
 
 void ObjectTreeParser::writeDecryptionInProgressBlock()
 {
-kDebug(5006) << k_funcinfo << endl;
-assert( mReader );
-// PENDING(marc) find an animated icon here:
-//const QString iconName = KGlobal::instance()->iconLoader()->iconPath( "decrypted", KIcon::Small );
-const QString decryptedData = i18n("Encrypted data not shown");
-PartMetaData messagePart;
-messagePart.isDecryptable = true;
-messagePart.isEncrypted = true;
-messagePart.isSigned = false;
-messagePart.inProgress = true;
-htmlWriter()->queue( writeSigstatHeader( messagePart,
-                                          cryptoProtocol(),
-                                          QString() ) );
-//htmlWriter()->queue( decryptedData );
-htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  kDebug(5006) << k_funcinfo << endl;
+  if ( !mHtmlWriter )
+    return;
+  // PENDING(marc) find an animated icon here:
+  //const QString iconName = KGlobal::instance()->iconLoader()->iconPath( "decrypted", KIcon::Small );
+  const QString decryptedData = i18n("Encrypted data not shown");
+  PartMetaData messagePart;
+  messagePart.isDecryptable = true;
+  messagePart.isEncrypted = true;
+  messagePart.isSigned = false;
+  messagePart.inProgress = true;
+  htmlWriter()->queue( writeSigstatHeader( messagePart,
+                                            cryptoProtocol(),
+                                            QString() ) );
+  //htmlWriter()->queue( decryptedData );
+  htmlWriter()->queue( writeSigstatFooter( messagePart ) );
 }
 
 bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
@@ -793,115 +795,114 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                                     GpgME::Error & auditLogError,
                                     QString& auditLog )
 {
-passphraseError = false;
-decryptionStarted = false;
-aErrorText.clear();
-auditLogError = GpgME::Error();
-auditLog.clear();
-bool bDecryptionOk = false;
-enum { NO_PLUGIN, NOT_INITIALIZED, CANT_DECRYPT }
-  cryptPlugError = NO_PLUGIN;
+  passphraseError = false;
+  decryptionStarted = false;
+  aErrorText.clear();
+  auditLogError = GpgME::Error();
+  auditLog.clear();
+  bool bDecryptionOk = false;
+  enum { NO_PLUGIN, NOT_INITIALIZED, CANT_DECRYPT }
+    cryptPlugError = NO_PLUGIN;
 
-const Kleo::CryptoBackend::Protocol* cryptProto = cryptoProtocol();
+  const Kleo::CryptoBackend::Protocol* cryptProto = cryptoProtocol();
 
-QString cryptPlugLibName;
-if ( cryptProto )
-  cryptPlugLibName = cryptProto->name();
+  QString cryptPlugLibName;
+  if ( cryptProto )
+    cryptPlugLibName = cryptProto->name();
 
-assert( !mReader || mReader->decryptMessage() );
+  assert( mSource->decryptMessage() );
 
-const QString errorMsg = i18n( "Could not decrypt the data." );
-if ( cryptProto /*FIXME(Andras) port to akonadi
-      && !kmkernel->contextMenuShown()*/ ) {
-  QByteArray ciphertext = data.decodedContent();
-#ifdef MARCS_DEBUG
-  QString cipherStr = QString::fromLatin1( ciphertext );
-  bool cipherIsBinary = ( !cipherStr.contains("BEGIN ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
-                        ( !cipherStr.contains("BEGIN PGP ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
-                        ( !cipherStr.contains("BEGIN PGP MESSAGE", Qt::CaseInsensitive ) );
+  const QString errorMsg = i18n( "Could not decrypt the data." );
+  if ( cryptProto /*FIXME(Andras) port to akonadi
+        && !kmkernel->contextMenuShown()*/ ) {
+    QByteArray ciphertext = data.decodedContent();
+  #ifdef MARCS_DEBUG
+    QString cipherStr = QString::fromLatin1( ciphertext );
+    bool cipherIsBinary = ( !cipherStr.contains("BEGIN ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
+                          ( !cipherStr.contains("BEGIN PGP ENCRYPTED MESSAGE", Qt::CaseInsensitive ) ) &&
+                          ( !cipherStr.contains("BEGIN PGP MESSAGE", Qt::CaseInsensitive ) );
 
-  dumpToFile( "dat_04_reader.encrypted", ciphertext.data(), ciphertext.size() );
+    dumpToFile( "dat_04_reader.encrypted", ciphertext.data(), ciphertext.size() );
 
-  QString deb;
-  deb =  "\n\nE N C R Y P T E D    D A T A = ";
-  if ( cipherIsBinary )
-    deb += "[binary data]";
-  else {
-    deb += "\"";
-    deb += cipherStr;
-    deb += "\"";
-  }
-  deb += "\n\n";
-  kDebug() << deb;
-#endif
+    QString deb;
+    deb =  "\n\nE N C R Y P T E D    D A T A = ";
+    if ( cipherIsBinary )
+      deb += "[binary data]";
+    else {
+      deb += "\"";
+      deb += cipherStr;
+      deb += "\"";
+    }
+    deb += "\n\n";
+    kDebug() << deb;
+  #endif
 
 
-  kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
-  if ( mReader )
-    mReader->emitNoDrag(); // in case pineentry pops up, don't let kmheaders start a drag afterwards
+    kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
+    mSource->emitNoDrag(); // in case pineentry pops up, don't let kmheaders start a drag afterwards
 
-  // Check whether the memento contains a result from last time:
-  const DecryptVerifyBodyPartMemento * m
-    = dynamic_cast<DecryptVerifyBodyPartMemento*>( NodeHelper::instance()->bodyPartMemento( &data, "decryptverify" ) );
-  if ( !m ) {
-    Kleo::DecryptVerifyJob * job = cryptProto->decryptVerifyJob();
-    if ( !job ) {
-      cryptPlugError = CANT_DECRYPT;
-      cryptProto = 0;
-    } else {
-      DecryptVerifyBodyPartMemento * newM
-        = new DecryptVerifyBodyPartMemento( job, ciphertext );
-      if ( allowAsync() ) {
-        QObject::connect(newM, SIGNAL(update(MailViewer::UpdateMode)), mReader, SLOT(update(MailViewer::UpdateMode)));
-        if ( newM->start() ) {
-          decryptionStarted = true;
-          mHasPendingAsyncJobs = true;
+    // Check whether the memento contains a result from last time:
+    const DecryptVerifyBodyPartMemento * m
+      = dynamic_cast<DecryptVerifyBodyPartMemento*>( NodeHelper::instance()->bodyPartMemento( &data, "decryptverify" ) );
+    if ( !m ) {
+      Kleo::DecryptVerifyJob * job = cryptProto->decryptVerifyJob();
+      if ( !job ) {
+        cryptPlugError = CANT_DECRYPT;
+        cryptProto = 0;
+      } else {
+        DecryptVerifyBodyPartMemento * newM
+          = new DecryptVerifyBodyPartMemento( job, ciphertext );
+        if ( allowAsync() ) {
+          QObject::connect(newM, SIGNAL(update(MailViewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MailViewer::UpdateMode)));
+          if ( newM->start() ) {
+            decryptionStarted = true;
+            mHasPendingAsyncJobs = true;
+          } else {
+            m = newM;
+          }
         } else {
+          newM->exec();
           m = newM;
         }
-      } else {
-        newM->exec();
-        m = newM;
+        NodeHelper::instance()->setBodyPartMemento( &data, "decryptverify", newM );
       }
-      NodeHelper::instance()->setBodyPartMemento( &data, "decryptverify", newM );
+    } else if ( m->isRunning() ) {
+      decryptionStarted = true;
+      mHasPendingAsyncJobs = true;
+      m = 0;
     }
-  } else if ( m->isRunning() ) {
-    decryptionStarted = true;
-    mHasPendingAsyncJobs = true;
-    m = 0;
-  }
 
-  if ( m ) {
-    const QByteArray & plainText = m->plainText();
-    const GpgME::DecryptionResult & decryptResult = m->decryptResult();
-    const GpgME::VerificationResult & verifyResult = m->verifyResult();
-    std::stringstream ss;
-    ss << decryptResult << '\n' << verifyResult;
-    kDebug() << ss.str().c_str();
-    signatureFound = verifyResult.signatures().size() > 0;
-    signatures = verifyResult.signatures();
-    bDecryptionOk = !decryptResult.error();
-    passphraseError =  decryptResult.error().isCanceled()
-      || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
-    actuallyEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-    aErrorText = QString::fromLocal8Bit( decryptResult.error().asString() );
-    auditLogError = m->auditLogError();
-    auditLog = m->auditLogAsHtml();
+    if ( m ) {
+      const QByteArray & plainText = m->plainText();
+      const GpgME::DecryptionResult & decryptResult = m->decryptResult();
+      const GpgME::VerificationResult & verifyResult = m->verifyResult();
+      std::stringstream ss;
+      ss << decryptResult << '\n' << verifyResult;
+      kDebug() << ss.str().c_str();
+      signatureFound = verifyResult.signatures().size() > 0;
+      signatures = verifyResult.signatures();
+      bDecryptionOk = !decryptResult.error();
+      passphraseError =  decryptResult.error().isCanceled()
+        || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
+      actuallyEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
+      aErrorText = QString::fromLocal8Bit( decryptResult.error().asString() );
+      auditLogError = m->auditLogError();
+      auditLog = m->auditLogAsHtml();
 
-    kDebug() << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
-    if ( bDecryptionOk )
-      decryptedData = plainText;
-    else if ( mReader && showWarning ) {
-      decryptedData = "<div style=\"font-size:x-large; text-align:center;"
-                      "padding:20pt;\">"
-                    + errorMsg.toUtf8()
-                    + "</div>";
-      if ( !passphraseError )
-        aErrorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName )
-                  + "<br />"
-                  + i18n("Error: %1", aErrorText );
+      kDebug() << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
+      if ( bDecryptionOk )
+        decryptedData = plainText;
+      else if ( mHtmlWriter && showWarning ) {
+        decryptedData = "<div style=\"font-size:x-large; text-align:center;"
+                        "padding:20pt;\">"
+                      + errorMsg.toUtf8()
+                      + "</div>";
+        if ( !passphraseError )
+          aErrorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName )
+                    + "<br />"
+                    + i18n("Error: %1", aErrorText );
+      }
     }
-  }
 }
 
 if ( !cryptProto ) {
@@ -993,11 +994,11 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
     mTextualContentCharset = curNode->defaultCharset();
   }
 
-  if ( !mReader )
+  if ( !mHtmlWriter )
     return true;
 
   QString bodyText;
-  if ( mReader->htmlMail() )
+  if ( mSource->htmlMail() )
     bodyText = codecFor( curNode )->toUnicode( partBody );
   else
     bodyText = StringUtil::html2source( partBody );
@@ -1005,7 +1006,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
   if ( curNode->topLevel()->textContent() == curNode  || attachmentStrategy()->defaultDisplay( curNode ) == AttachmentStrategy::Inline ||
         showOnlyOneMimePart() )
   {
-    if ( mReader->htmlMail() ) {
+    if ( mSource->htmlMail() ) {
 
       HTMLQuoteColorer colorer;
       for ( int i = 0; i < 2; i++ )
@@ -1044,7 +1045,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
       // messages where the external references are obfuscated the user won't
       // have an easy way to load them but that shouldn't be a problem
       // because only spam contains obfuscated external references.
-      if ( !mReader->htmlLoadExternal() &&
+      if ( !mSource->htmlLoadExternal() &&
             containsExternalReferences( bodyText ) ) {
         htmlWriter()->queue( "<div class=\"htmlWarn\">\n" );
         htmlWriter()->queue( i18n("<b>Note:</b> This HTML message may contain external "
@@ -1070,23 +1071,24 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
     htmlWriter()->queue( "<div style=\"position: relative\">\n" );
     htmlWriter()->queue( bodyText );
     htmlWriter()->queue( "</div>\n" );
-    mReader->mColorBar->setHtmlMode();
+    mSource->setHtmlMode( true );
     return true;
   }
   return false;
 }
 
-static bool isMailmanMessage( KMime::Content * curNode ) {
-if ( !curNode || curNode->head().isEmpty() )
+bool ObjectTreeParser::isMailmanMessage( KMime::Content * curNode )
+{
+  if ( !curNode || curNode->head().isEmpty() )
+    return false;
+  if ( curNode->hasHeader("X-Mailman-Version") )
+    return true;
+  if ( curNode->hasHeader("X-Mailer") ) {
+      KMime::Headers::Base *header = curNode->headerByType("X-Mailer");
+      if ( header->asUnicodeString().contains("MAILMAN", Qt::CaseInsensitive ) )
+        return true;
+  }
   return false;
-if ( curNode->hasHeader("X-Mailman-Version") )
-  return true;
-if ( curNode->hasHeader("X-Mailer") ) {
-    KMime::Headers::Base *header = curNode->headerByType("X-Mailer");
-    if ( header->asUnicodeString().contains("MAILMAN", Qt::CaseInsensitive ) )
-      return true;
-}
-return false;
 }
 
 bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
@@ -1198,7 +1200,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
 {
   bool isFirstTextPart = (curNode->topLevel()->textContent() == curNode);
 
-  if ( !mReader ) {
+  if ( !mHtmlWriter ) {
     mRawReplyString = curNode->decodedContent();
     if ( isFirstTextPart ) {
       mTextualContent += curNode->decodedText();
@@ -1229,7 +1231,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
       StringUtil::quoteHtmlChars( curNode->contentDescription()->asUnicodeString(), true );
 
     const QString fileName;
-    mReader->writeMessagePartToTempFile( curNode );
+    NodeHelper::instance()->writeNodeToTempFile( curNode );
     const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
 
     QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
@@ -1299,7 +1301,7 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
   }
   KMime::Content* dataPlain = findType( child, "text/plain", false, true );
 
-  if ( (mReader && mReader->htmlMail() && dataHtml) ||
+  if ( ( mSource->htmlMail() && dataHtml) ||
         (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
     if ( dataPlain )
       NodeHelper::instance()->setNodeProcessed( dataPlain, false);
@@ -1307,7 +1309,7 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     return true;
   }
 
-  if ( !mReader || (!mReader->htmlMail() && dataPlain) ) {
+  if ( !mHtmlWriter || (!mSource->htmlMail() && dataPlain) ) {
     NodeHelper::instance()->setNodeProcessed( dataHtml, false );
     stdChildHandling( dataPlain );
     return true;
@@ -1327,7 +1329,7 @@ bool ObjectTreeParser::processMultiPartParallelSubtype( KMime::Content * node, P
 
 bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & )
 {
-    KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = NodeHelper::firstChild( node );
   if ( node->contents().size() != 2 ) {
     kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
               << "processing as multipart/mixed";
@@ -1388,7 +1390,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   if ( keepEncryptions() ) {
     NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
     const QByteArray cstr = node->decodedContent();
-    if ( mReader )
+    if ( mHtmlWriter )
       writeBodyString( cstr, static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                         codecFor( node ), result, false );
     mRawReplyString += cstr;
@@ -1429,7 +1431,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
 
   NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
 
-  if ( mReader && !mReader->decryptMessage() ) {
+  if ( !mSource->decryptMessage() ) {
     writeDeferredDecryptionBlock();
     NodeHelper::instance()->setNodeProcessed( data, false );// Set the data node to done to prevent it from being processed
     return true;
@@ -1461,7 +1463,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   }
 
   // paint the frame
-  if ( mReader ) {
+  if ( mHtmlWriter ) {
     messagePart.isDecryptable = bOkDecrypt;
     messagePart.isEncrypted = true;
     messagePart.isSigned = false;
@@ -1499,14 +1501,14 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
     }
   } else {
     mRawReplyString += decryptedData;
-    if ( mReader ) {
+    if ( mHtmlWriter ) {
       // print the error message that was returned in decryptedData
       // (utf8-encoded)
       htmlWriter()->queue( QString::fromUtf8( decryptedData.data() ) );
     }
   }
 
-  if ( mReader )
+  if ( mHtmlWriter )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   NodeHelper::instance()->setNodeProcessed( data, false ); // Set the data node to done to prevent it from being processed
   return true;
@@ -1515,14 +1517,14 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
 
 bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, ProcessResult & )
 {
-  if ( mReader
+  if ( mHtmlWriter
         && !attachmentStrategy()->inlineNestedMessages()
         && !showOnlyOneMimePart() )
     return false;
 
   KMime::Content * child = NodeHelper::firstChild( node );
   if ( child ) {
-    ObjectTreeParser otp( mReader, cryptoProtocol() );
+    ObjectTreeParser otp( mSource, cryptoProtocol() );
     otp.parseObjectTree( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1532,11 +1534,11 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
   }
   // paint the frame
   PartMetaData messagePart;
-  if ( mReader ) {
+  if ( mHtmlWriter ) {
     messagePart.isEncrypted = false;
     messagePart.isSigned = false;
     messagePart.isEncapsulatedRfc822Message = true;
-    QString filename = mReader->writeMessagePartToTempFile( node );
+    QString filename = NodeHelper::instance()->writeNodeToTempFile( node );
     htmlWriter()->queue( writeSigstatHeader( messagePart,
                                               cryptoProtocol(),
                                               static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
@@ -1548,8 +1550,8 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
   rfc822message->setContent( rfc822messageStr );
   rfc822message->parse();
   static_cast<KMime::Message*>(node->topLevel())->from()->from7BitString( rfc822message->from()->as7BitString() );
-  if ( mReader )
-    htmlWriter()->queue( mReader->writeMsgHeader( rfc822message ) );
+  if ( mHtmlWriter )
+    htmlWriter()->queue( mSource->createMessageHeader( rfc822message ) );
   delete rfc822message;
     //mReader->parseMsgHeader( &rfc822message );
   // display the body of the encapsulated message
@@ -1559,7 +1561,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
                                 false /*add to textual content*/  );
   NodeHelper::instance()->setNodeDisplayedEmbedded( node, true );
 
-  if ( mReader )
+  if ( mHtmlWriter )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   return true;
 }
@@ -1569,7 +1571,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 {
   KMime::Content * child = NodeHelper::firstChild( node );
   if ( child ) {
-    ObjectTreeParser otp( mReader, cryptoProtocol() );
+    ObjectTreeParser otp( mSource, cryptoProtocol() );
     otp.parseObjectTree( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1584,11 +1586,11 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
     NodeHelper::instance()->setEncryptionState( node, KMMsgFullyEncrypted );
     if ( keepEncryptions() ) {
       const QByteArray cstr = node->decodedContent();
-      if ( mReader )
+      if ( mHtmlWriter )
         writeBodyString( cstr, static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
                           codecFor( node ), result, false );
       mRawReplyString += cstr;
-    } else if ( mReader && !mReader->decryptMessage() ) {
+    } else if ( !mSource->decryptMessage() ) {
       writeDeferredDecryptionBlock();
     } else {
       /*
@@ -1621,7 +1623,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
       }
 
       // paint the frame
-      if ( mReader ) {
+      if ( mHtmlWriter ) {
         messagePart.isDecryptable = bOkDecrypt;
         messagePart.isEncrypted = true;
         messagePart.isSigned = false;
@@ -1637,14 +1639,14 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
                                     "encrypted data" );
       } else {
         mRawReplyString += decryptedData;
-        if ( mReader ) {
+        if ( mHtmlWriter ) {
           // print the error message that was returned in decryptedData
           // (utf8-encoded)
           htmlWriter()->queue( QString::fromUtf8( decryptedData.data() ) );
         }
       }
 
-      if ( mReader )
+      if ( mHtmlWriter )
         htmlWriter()->queue( writeSigstatFooter( messagePart ) );
     }
     return true;
@@ -1657,7 +1659,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 {
   KMime::Content * child = NodeHelper::firstChild( node );
   if ( child ) {
-    ObjectTreeParser otp( mReader, cryptoProtocol() );
+    ObjectTreeParser otp( mSource, cryptoProtocol() );
     otp.parseObjectTree( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
@@ -1675,7 +1677,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 
   if ( smimeType == "certs-only" ) {
     result.setNeverDisplayInline( true );
-    if ( !smimeCrypto || !mReader )
+    if ( !smimeCrypto || !mHtmlWriter )
       return false;
 
     const KConfigGroup reader( Global::instance()->config(), "Reader" );
@@ -1775,7 +1777,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
     bool actuallyEncrypted = true;
     bool decryptionStarted;
 
-    if ( mReader && !mReader->decryptMessage() ) {
+    if ( !mSource->decryptMessage() ) {
       writeDeferredDecryptionBlock();
       isEncrypted = true;
     } else if ( okDecryptMIME( *node,
@@ -1798,14 +1800,14 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
       } else {
         // paint the frame
         messagePart.isDecryptable = true;
-        if ( mReader )
+        if ( mHtmlWriter )
           htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                     cryptoProtocol(),
                                                     static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
         insertAndParseNewChildNode( *node,
                                     &*decryptedData,
                                     "encrypted data" );
-        if ( mReader )
+        if ( mHtmlWriter )
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
       }
     } else {
@@ -1822,11 +1824,11 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
         kDebug() << "pkcs7 mime  -  ERROR: COULD NOT DECRYPT enveloped data !";
         // paint the frame
         messagePart.isDecryptable = false;
-        if ( mReader ) {
+        if ( mHtmlWriter ) {
           htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                     cryptoProtocol(),
                                                     static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
-          assert( mReader->decryptMessage() ); // handled above
+          assert( mSource->decryptMessage() ); // handled above
           writePartIcon( node );
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
         }
@@ -1871,186 +1873,189 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
 
 bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText )
 {
-const Kleo::CryptoBackend::Protocol * chiasmus =
-  Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" );
-Q_ASSERT( chiasmus );
-if ( !chiasmus )
-  return false;
+  const Kleo::CryptoBackend::Protocol * chiasmus =
+    Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" );
+  Q_ASSERT( chiasmus );
+  if ( !chiasmus )
+    return false;
 
-const std::auto_ptr<Kleo::SpecialJob> listjob( chiasmus->specialJob( "x-obtain-keys", QMap<QString,QVariant>() ) );
-if ( !listjob.get() ) {
-  errorText = i18n( "Chiasmus backend does not offer the "
-                    "\"x-obtain-keys\" function. Please report this bug." );
-  return false;
-}
+  const std::auto_ptr<Kleo::SpecialJob> listjob( chiasmus->specialJob( "x-obtain-keys", QMap<QString,QVariant>() ) );
+  if ( !listjob.get() ) {
+    errorText = i18n( "Chiasmus backend does not offer the "
+                      "\"x-obtain-keys\" function. Please report this bug." );
+    return false;
+  }
 
-if ( listjob->exec() ) {
-  errorText = i18n( "Chiasmus Backend Error" );
-  return false;
-}
+  if ( listjob->exec() ) {
+    errorText = i18n( "Chiasmus Backend Error" );
+    return false;
+  }
 
-const QVariant result = listjob->property( "result" );
-if ( result.type() != QVariant::StringList ) {
-  errorText = i18n( "Unexpected return value from Chiasmus backend: "
-                    "The \"x-obtain-keys\" function did not return a "
-                    "string list. Please report this bug." );
-  return false;
-}
+  const QVariant result = listjob->property( "result" );
+  if ( result.type() != QVariant::StringList ) {
+    errorText = i18n( "Unexpected return value from Chiasmus backend: "
+                      "The \"x-obtain-keys\" function did not return a "
+                      "string list. Please report this bug." );
+    return false;
+  }
 
-const QStringList keys = result.toStringList();
-if ( keys.empty() ) {
-  errorText = i18n( "No keys have been found. Please check that a "
-                    "valid key path has been set in the Chiasmus "
-                    "configuration." );
-  return false;
-}
+  const QStringList keys = result.toStringList();
+  if ( keys.empty() ) {
+    errorText = i18n( "No keys have been found. Please check that a "
+                      "valid key path has been set in the Chiasmus "
+                      "configuration." );
+    return false;
+  }
 
-mReader->emitNoDrag();
-/*FIXME(Andras) port to akonadi
-ChiasmusKeySelector selectorDlg( mReader, i18n( "Chiasmus Decryption Key Selection" ),
-                                  keys, GlobalSettings::chiasmusDecryptionKey(),
-                                  GlobalSettings::chiasmusDecryptionOptions() );
-if ( selectorDlg.exec() != KDialog::Accepted )
-  return false;
-GlobalSettings::setChiasmusDecryptionOptions( selectorDlg.options() );
-GlobalSettings::setChiasmusDecryptionKey( selectorDlg.key() );
-assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
-*/
+  mSource->emitNoDrag();
+  /*FIXME(Andras) port to akonadi
+  ChiasmusKeySelector selectorDlg( mReader, i18n( "Chiasmus Decryption Key Selection" ),
+                                    keys, GlobalSettings::chiasmusDecryptionKey(),
+                                    GlobalSettings::chiasmusDecryptionOptions() );
+  if ( selectorDlg.exec() != KDialog::Accepted )
+    return false;
+  GlobalSettings::setChiasmusDecryptionOptions( selectorDlg.options() );
+  GlobalSettings::setChiasmusDecryptionKey( selectorDlg.key() );
+  assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
+  */
 
-Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
-if ( !job ) {
-  errorText = i18n( "Chiasmus backend does not offer the "
-                    "\"x-decrypt\" function. Please report this bug." );
-  return false;
-}
+  Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
+  if ( !job ) {
+    errorText = i18n( "Chiasmus backend does not offer the "
+                      "\"x-decrypt\" function. Please report this bug." );
+    return false;
+  }
 
-if ( !job->setProperty( "key", GlobalSettings::chiasmusDecryptionKey() ) ||
-      !job->setProperty( "options", GlobalSettings::chiasmusDecryptionOptions() ) ||
-      !job->setProperty( "input", data ) ) {
-  errorText = i18n( "The \"x-decrypt\" function does not accept "
-                    "the expected parameters. Please report this bug." );
-  return false;
-}
+  if ( !job->setProperty( "key", GlobalSettings::chiasmusDecryptionKey() ) ||
+        !job->setProperty( "options", GlobalSettings::chiasmusDecryptionOptions() ) ||
+        !job->setProperty( "input", data ) ) {
+    errorText = i18n( "The \"x-decrypt\" function does not accept "
+                      "the expected parameters. Please report this bug." );
+    return false;
+  }
 
-if ( job->exec() ) {
-  errorText = i18n( "Chiasmus Decryption Error" );
-  return false;
-}
+  if ( job->exec() ) {
+    errorText = i18n( "Chiasmus Decryption Error" );
+    return false;
+  }
 
-const QVariant resultData = job->property( "result" );
-if ( resultData.type() != QVariant::ByteArray ) {
-  errorText = i18n( "Unexpected return value from Chiasmus backend: "
-                    "The \"x-decrypt\" function did not return a "
-                    "byte array. Please report this bug." );
-  return false;
-}
-bodyDecoded = resultData.toByteArray();
-return true;
-}
-
-bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * curNode, ProcessResult & result )
-{
-if ( !mReader ) {
-  mRawReplyString = curNode->decodedContent();
-  mTextualContent += curNode->decodedText();
-  mTextualContentCharset = curNode->defaultCharset();
+  const QVariant resultData = job->property( "result" );
+  if ( resultData.type() != QVariant::ByteArray ) {
+    errorText = i18n( "Unexpected return value from Chiasmus backend: "
+                      "The \"x-decrypt\" function did not return a "
+                      "byte array. Please report this bug." );
+    return false;
+  }
+  bodyDecoded = resultData.toByteArray();
   return true;
-}
+  }
 
-QByteArray decryptedBody;
-QString errorText;
-const QByteArray data = curNode->decodedContent();
-bool bOkDecrypt = decryptChiasmus( data, decryptedBody, errorText );
-PartMetaData messagePart;
-messagePart.isDecryptable = bOkDecrypt;
-messagePart.isEncrypted = true;
-messagePart.isSigned = false;
-messagePart.errorText = errorText;
-if ( mReader )
-  htmlWriter()->queue( writeSigstatHeader( messagePart,
-                                            0, //cryptPlugWrapper(),
-                                            static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString() ) );
-const QByteArray body = bOkDecrypt ? decryptedBody : data;
-const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
-const QTextCodec* aCodec = chiasmusCharset.isEmpty() ? codecFor( curNode )
-                            : NodeHelper::codecForName( chiasmusCharset.toAscii() );
-htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
-result.setInlineEncryptionState( KMMsgFullyEncrypted );
-if ( mReader )
-  htmlWriter()->queue( writeSigstatFooter( messagePart ) );
-return true;
+  bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * curNode, ProcessResult & result )
+  {
+  if ( !mHtmlWriter ) {
+    mRawReplyString = curNode->decodedContent();
+    mTextualContent += curNode->decodedText();
+    mTextualContentCharset = curNode->defaultCharset();
+    return true;
+  }
+
+  QByteArray decryptedBody;
+  QString errorText;
+  const QByteArray data = curNode->decodedContent();
+  bool bOkDecrypt = decryptChiasmus( data, decryptedBody, errorText );
+  PartMetaData messagePart;
+  messagePart.isDecryptable = bOkDecrypt;
+  messagePart.isEncrypted = true;
+  messagePart.isSigned = false;
+  messagePart.errorText = errorText;
+  if ( mHtmlWriter )
+    htmlWriter()->queue( writeSigstatHeader( messagePart,
+                                              0, //cryptPlugWrapper(),
+                                              static_cast<KMime::Message*>(curNode->topLevel())->from()->asUnicodeString() ) );
+  const QByteArray body = bOkDecrypt ? decryptedBody : data;
+  const QString chiasmusCharset = curNode->contentType()->parameter("chiasmus-charset");
+  const QTextCodec* aCodec = chiasmusCharset.isEmpty() ? codecFor( curNode )
+                              : NodeHelper::codecForName( chiasmusCharset.toAscii() );
+  htmlWriter()->queue( quotedHTML( aCodec->toUnicode( body ), false /*decorate*/ ) );
+  result.setInlineEncryptionState( KMMsgFullyEncrypted );
+  if ( mHtmlWriter )
+    htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  return true;
 }
 
 bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result )
 {
-Q_UNUSED( result );
-if ( !mReader )
-  return false;
+  Q_UNUSED( result );
+  if ( !mHtmlWriter )
+    return false;
 
-const QString fileName = mReader->writeMessagePartToTempFile( node );
-KTnef::KTNEFParser parser;
-if ( !parser.openFile( fileName ) || !parser.message()) {
-  kDebug() << "Could not parse" << fileName;
-  return false;
-}
+  const QString fileName = NodeHelper::instance()->writeNodeToTempFile( node );
+  KTnef::KTNEFParser parser;
+  if ( !parser.openFile( fileName ) || !parser.message()) {
+    kDebug() << "Could not parse" << fileName;
+    return false;
+  }
 
-QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
-if ( tnefatts.isEmpty() ) {
-  kDebug() << "No attachments found in" << fileName;
-  return false;
-}
+  QList<KTnef::KTNEFAttach*> tnefatts = parser.message()->attachmentList();
+  if ( tnefatts.isEmpty() ) {
+    kDebug() << "No attachments found in" << fileName;
+    return false;
+  }
 
-if ( !showOnlyOneMimePart() ) {
-  QString label = NodeHelper::fileName( node );
-  label = StringUtil::quoteHtmlChars( label, true );
-  const QString comment = StringUtil::quoteHtmlChars( node->contentDescription()->asUnicodeString(), true );
-  const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
+  if ( !showOnlyOneMimePart() ) {
+    QString label = NodeHelper::fileName( node );
+    label = StringUtil::quoteHtmlChars( label, true );
+    const QString comment = StringUtil::quoteHtmlChars( node->contentDescription()->asUnicodeString(), true );
+    const QString dir = QApplication::isRightToLeft() ? "rtl" : "ltr" ;
 
-  QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
-              "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
-  if ( !fileName.isEmpty() )
-   htmlStr += "<a href=\"" +NodeHelper::asHREF( node, "body" ) + "\">"
-              + label + "</a>";
-  else
-    htmlStr += label;
-  if ( !comment.isEmpty() )
-    htmlStr += "<br>" + comment;
-  htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
-  htmlWriter()->queue( htmlStr );
-}
+    QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
+                "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
+    if ( !fileName.isEmpty() )
+    htmlStr += "<a href=\"" +NodeHelper::asHREF( node, "body" ) + "\">"
+                + label + "</a>";
+    else
+      htmlStr += label;
+    if ( !comment.isEmpty() )
+      htmlStr += "<br>" + comment;
+    htmlStr += "</td></tr><tr class=\"textAtmB\"><td>";
+    htmlWriter()->queue( htmlStr );
+  }
 
-for ( int i = 0; i < tnefatts.count(); ++i ) {
-  KTnef::KTNEFAttach *att = tnefatts.at( i );
-  QString label = att->displayName();
-  if( label.isEmpty() )
-    label = att->name();
-  label = StringUtil::quoteHtmlChars( label, true );
+  for ( int i = 0; i < tnefatts.count(); ++i ) {
+    KTnef::KTNEFAttach *att = tnefatts.at( i );
+    QString label = att->displayName();
+    if( label.isEmpty() )
+      label = att->name();
+    label = StringUtil::quoteHtmlChars( label, true );
 
-  QString dir = mReader->createTempDir( "ktnef-" + QString::number( i ) );
-  parser.extractFileTo( att->name(), dir );
-  mReader->mTempFiles.append( dir + QDir::separator() + att->name() );
-  QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
+    QString dir = NodeHelper::instance()->createTempDir( "ktnef-" + QString::number( i ) );
+    parser.extractFileTo( att->name(), dir );
+    NodeHelper::instance()->addTempFile( dir + QDir::separator() + att->name() );
+    QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
 
-  KMimeType::Ptr mimeType = KMimeType::mimeType( att->mimeTag(), KMimeType::ResolveAliases );
-  QString iconName = KIconLoader::global()->iconPath( mimeType->iconName(), KIconLoader::Desktop );
+    KMimeType::Ptr mimeType = KMimeType::mimeType( att->mimeTag(), KMimeType::ResolveAliases );
+    QString iconName = KIconLoader::global()->iconPath( mimeType->iconName(), KIconLoader::Desktop );
 
-  htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
-                        iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
-                        "</a></div><br>" );
-}
+    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
+                          iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
+                          "</a></div><br>" );
+  }
 
-if ( !showOnlyOneMimePart() )
-  htmlWriter()->queue( "</td></tr></table>" );
+  if ( !showOnlyOneMimePart() )
+    htmlWriter()->queue( "</td></tr></table>" );
 
-return true;
+  return true;
 }
 
 void ObjectTreeParser::writeBodyString( const QByteArray & bodyString,
                                         const QString & fromAddress,
                                         const QTextCodec * codec,
                                         ProcessResult & result,
-                                        bool decorate ) {
-  assert( mReader ); assert( codec );
+                                        bool decorate )
+{
+  if ( !mHtmlWriter )
+    return;
+  assert( codec );
   KMMsgSignatureState inlineSignatureState = result.inlineSignatureState();
   KMMsgEncryptionState inlineEncryptionState = result.inlineEncryptionState();
   writeBodyStr( bodyString, codec, fromAddress,
@@ -2061,7 +2066,7 @@ void ObjectTreeParser::writeBodyString( const QByteArray & bodyString,
 
 void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage )
 {
-  if ( !mReader || !msgPart )
+  if ( !mHtmlWriter || !msgPart )
     return;
 
   QString label = NodeHelper::fileName( msgPart );
@@ -2074,7 +2079,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   if ( label == comment )
     comment.clear();
 
-  QString fileName = mReader->writeMessagePartToTempFile( msgPart );
+  QString fileName = NodeHelper::instance()->writeNodeToTempFile( msgPart );
   QString href = QString( "attachment:%1?place=body" ).arg( msgPart->index().toString() );
 
   QString iconName;
@@ -2744,7 +2749,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
       }
   }
 
-  if ( mReader->mShowSignatureDetails )
+  if ( mSource->showSignatureDetails() )
     return htmlStr;
   return simpleHtmlStr;
 }
@@ -2783,18 +2788,17 @@ QString ObjectTreeParser::writeSigstatFooter( PartMetaData& block )
 
 void ObjectTreeParser::writeAttachmentMarkHeader( KMime::Content *node )
 {
-  if ( !mReader )
+  if ( !mHtmlWriter )
     return;
 
   htmlWriter()->queue( QString( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() ) );
-  kDebug() <<  "ANDRIS: " << QString( "<div id=\"attachmentDiv%1\">\n" ).arg( node->index().toString() );
 }
 
 //-----------------------------------------------------------------------------
 
 void ObjectTreeParser::writeAttachmentMarkFooter()
 {
-  if ( !mReader )
+  if ( !mHtmlWriter )
     return;
 
   htmlWriter()->queue( QString( "</div>" ) );
@@ -2806,9 +2810,9 @@ void ObjectTreeParser::writeAttachmentMarkFooter()
 void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *aCodec,
                               const QString& fromAddress )
 {
-KMMsgSignatureState dummy1;
-KMMsgEncryptionState dummy2;
-writeBodyStr( aStr, aCodec, fromAddress, dummy1, dummy2, false );
+  KMMsgSignatureState dummy1;
+  KMMsgEncryptionState dummy2;
+  writeBodyStr( aStr, aCodec, fromAddress, dummy1, dummy2, false );
 }
 
 //-----------------------------------------------------------------------------
@@ -2818,342 +2822,341 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
                               KMMsgEncryptionState& inlineEncryptionState,
                               bool decorate )
 {
-bool goodSignature = false;
-Kpgp::Module* pgp = Kpgp::Module::getKpgp();
-assert(pgp != 0);
-bool isPgpMessage = false; // true if the message contains at least one
-                            // PGP MESSAGE or one PGP SIGNED MESSAGE block
-QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
-QString headerStr = QString("<div dir=\"%1\">").arg(dir);
+  bool goodSignature = false;
+  Kpgp::Module* pgp = Kpgp::Module::getKpgp();
+  assert(pgp != 0);
+  bool isPgpMessage = false; // true if the message contains at least one
+                              // PGP MESSAGE or one PGP SIGNED MESSAGE block
+  QString dir = ( QApplication::isRightToLeft() ? "rtl" : "ltr" );
+  QString headerStr = QString("<div dir=\"%1\">").arg(dir);
 
-inlineSignatureState  = KMMsgNotSigned;
-inlineEncryptionState = KMMsgNotEncrypted;
-QList<Kpgp::Block> pgpBlocks;
-QList<QByteArray> nonPgpBlocks;
-if( Kpgp::Module::prepareMessageForDecryption( aStr, pgpBlocks, nonPgpBlocks ) )
-{
-    bool isEncrypted = false, isSigned = false;
-    bool fullySignedOrEncrypted = true;
-    bool firstNonPgpBlock = true;
-    bool couldDecrypt = false;
-    QString signer;
-    QByteArray keyId;
-    QString decryptionError;
-    Kpgp::Validity keyTrust = Kpgp::KPGP_VALIDITY_FULL;
+  inlineSignatureState  = KMMsgNotSigned;
+  inlineEncryptionState = KMMsgNotEncrypted;
+  QList<Kpgp::Block> pgpBlocks;
+  QList<QByteArray> nonPgpBlocks;
+  if( Kpgp::Module::prepareMessageForDecryption( aStr, pgpBlocks, nonPgpBlocks ) )
+  {
+      bool isEncrypted = false, isSigned = false;
+      bool fullySignedOrEncrypted = true;
+      bool firstNonPgpBlock = true;
+      bool couldDecrypt = false;
+      QString signer;
+      QByteArray keyId;
+      QString decryptionError;
+      Kpgp::Validity keyTrust = Kpgp::KPGP_VALIDITY_FULL;
 
-    QList<Kpgp::Block>::iterator pbit =  pgpBlocks.begin();
-    QListIterator<QByteArray> npbit( nonPgpBlocks );
-    QString htmlStr;
-    for( ; pbit != pgpBlocks.end(); ++pbit )
-    {
-        // insert the next Non-OpenPGP block
-        QByteArray str( npbit.next() );
-        if( !str.isEmpty() ) {
-          htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
-          kDebug() << "Non-empty Non-OpenPGP block found: '" << str  << "'";
-          // treat messages with empty lines before the first clearsigned
-          // block as fully signed/encrypted
-          if( firstNonPgpBlock ) {
-            // check whether str only consists of \n
-            for( QByteArray::ConstIterator c = str.begin(); *c; ++c ) {
-              if( *c != '\n' ) {
-                fullySignedOrEncrypted = false;
-                break;
-              }
-            }
-          }
-          else {
-            fullySignedOrEncrypted = false;
-          }
-        }
-        firstNonPgpBlock = false;
-
-        //htmlStr += "<br>";
-
-        Kpgp::Block &block = *pbit;
-        if( ( block.type() == Kpgp::PgpMessageBlock /*FIXME(Andras) port to akonadi
-              &&
-              // ### Workaround for bug 56693
-              !kmkernel->contextMenuShown() */) ||
-            ( block.type() == Kpgp::ClearsignedBlock ) )
-        {
-            isPgpMessage = true;
-            if( block.type() == Kpgp::PgpMessageBlock )
-            {
-              if ( mReader )
-                mReader->emitNoDrag();
-              // try to decrypt this OpenPGP block
-              couldDecrypt = block.decrypt();
-              isEncrypted = block.isEncrypted();
-              if (!couldDecrypt) {
-                decryptionError = pgp->lastErrorMsg();
-              }
-            }
-            else
-            {
-                // try to verify this OpenPGP block
-                block.verify();
-            }
-
-            isSigned = block.isSigned();
-            if( isSigned )
-            {
-                keyId = block.signatureKeyId();
-                signer = block.signatureUserId();
-                if( !signer.isEmpty() )
-                {
-                    goodSignature = block.goodSignature();
-
-                    if( !keyId.isEmpty() ) {
-                      keyTrust = pgp->keyTrust( keyId );
-                      Kpgp::Key* key = pgp->publicKey( keyId );
-                      if ( key ) {
-                        // Use the user ID from the key because this one
-                        // is charset safe.
-                        signer = key->primaryUserID();
-                      }
-                    }
-                    else
-                      // This is needed for the PGP 6 support because PGP 6 doesn't
-                      // print the key id of the signing key if the key is known.
-                      keyTrust = pgp->keyTrust( signer );
+      QList<Kpgp::Block>::iterator pbit =  pgpBlocks.begin();
+      QListIterator<QByteArray> npbit( nonPgpBlocks );
+      QString htmlStr;
+      for( ; pbit != pgpBlocks.end(); ++pbit )
+      {
+          // insert the next Non-OpenPGP block
+          QByteArray str( npbit.next() );
+          if( !str.isEmpty() ) {
+            htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+            kDebug() << "Non-empty Non-OpenPGP block found: '" << str  << "'";
+            // treat messages with empty lines before the first clearsigned
+            // block as fully signed/encrypted
+            if( firstNonPgpBlock ) {
+              // check whether str only consists of \n
+              for( QByteArray::ConstIterator c = str.begin(); *c; ++c ) {
+                if( *c != '\n' ) {
+                  fullySignedOrEncrypted = false;
+                  break;
                 }
-            }
-
-            if( isSigned )
-              inlineSignatureState = KMMsgPartiallySigned;
-            if( isEncrypted )
-              inlineEncryptionState = KMMsgPartiallyEncrypted;
-
-            PartMetaData messagePart;
-
-            messagePart.isSigned = isSigned;
-            messagePart.technicalProblem = false;
-            messagePart.isGoodSignature = goodSignature;
-            messagePart.isEncrypted = isEncrypted;
-            messagePart.isDecryptable = couldDecrypt;
-            messagePart.decryptionError = decryptionError;
-            messagePart.signer = signer;
-            messagePart.keyId = keyId;
-            messagePart.keyTrust = keyTrust;
-            messagePart.auditLogError = GpgME::Error( GPG_ERR_NOT_IMPLEMENTED );
-
-            htmlStr += writeSigstatHeader( messagePart, 0, fromAddress );
-
-            if ( couldDecrypt || !isEncrypted ) {
-              htmlStr += quotedHTML( aCodec->toUnicode( block.text() ), decorate );
+              }
             }
             else {
-              htmlStr += QString( "<div align=\"center\">%1</div>" )
-                          .arg( i18n( "The message could not be decrypted.") );
+              fullySignedOrEncrypted = false;
             }
-            htmlStr += writeSigstatFooter( messagePart );
-        }
-        else // block is neither message block nor clearsigned block
-          htmlStr += quotedHTML( aCodec->toUnicode( block.text() ),
-                                  decorate );
-    }
+          }
+          firstNonPgpBlock = false;
 
-    // add the last Non-OpenPGP block
-    QByteArray str( nonPgpBlocks.last() );
-    if( !str.isEmpty() ) {
-      htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
-      // Even if the trailing Non-OpenPGP block isn't empty we still
-      // consider the message part fully signed/encrypted because else
-      // all inline signed mailing list messages would only be partially
-      // signed because of the footer which is often added by the mailing
-      // list software. IK, 2003-02-15
-    }
-    if( fullySignedOrEncrypted ) {
-      if( inlineSignatureState == KMMsgPartiallySigned )
-        inlineSignatureState = KMMsgFullySigned;
-      if( inlineEncryptionState == KMMsgPartiallyEncrypted )
-        inlineEncryptionState = KMMsgFullyEncrypted;
-    }
-    htmlWriter()->queue( htmlStr );
-}
-else
-  htmlWriter()->queue( quotedHTML( aCodec->toUnicode( aStr ), decorate ) );
+          //htmlStr += "<br>";
+
+          Kpgp::Block &block = *pbit;
+          if( ( block.type() == Kpgp::PgpMessageBlock /*FIXME(Andras) port to akonadi
+                &&
+                // ### Workaround for bug 56693
+                !kmkernel->contextMenuShown() */) ||
+              ( block.type() == Kpgp::ClearsignedBlock ) )
+          {
+              isPgpMessage = true;
+              if( block.type() == Kpgp::PgpMessageBlock )
+              {
+                mSource->emitNoDrag();
+                // try to decrypt this OpenPGP block
+                couldDecrypt = block.decrypt();
+                isEncrypted = block.isEncrypted();
+                if (!couldDecrypt) {
+                  decryptionError = pgp->lastErrorMsg();
+                }
+              }
+              else
+              {
+                  // try to verify this OpenPGP block
+                  block.verify();
+              }
+
+              isSigned = block.isSigned();
+              if( isSigned )
+              {
+                  keyId = block.signatureKeyId();
+                  signer = block.signatureUserId();
+                  if( !signer.isEmpty() )
+                  {
+                      goodSignature = block.goodSignature();
+
+                      if( !keyId.isEmpty() ) {
+                        keyTrust = pgp->keyTrust( keyId );
+                        Kpgp::Key* key = pgp->publicKey( keyId );
+                        if ( key ) {
+                          // Use the user ID from the key because this one
+                          // is charset safe.
+                          signer = key->primaryUserID();
+                        }
+                      }
+                      else
+                        // This is needed for the PGP 6 support because PGP 6 doesn't
+                        // print the key id of the signing key if the key is known.
+                        keyTrust = pgp->keyTrust( signer );
+                  }
+              }
+
+              if( isSigned )
+                inlineSignatureState = KMMsgPartiallySigned;
+              if( isEncrypted )
+                inlineEncryptionState = KMMsgPartiallyEncrypted;
+
+              PartMetaData messagePart;
+
+              messagePart.isSigned = isSigned;
+              messagePart.technicalProblem = false;
+              messagePart.isGoodSignature = goodSignature;
+              messagePart.isEncrypted = isEncrypted;
+              messagePart.isDecryptable = couldDecrypt;
+              messagePart.decryptionError = decryptionError;
+              messagePart.signer = signer;
+              messagePart.keyId = keyId;
+              messagePart.keyTrust = keyTrust;
+              messagePart.auditLogError = GpgME::Error( GPG_ERR_NOT_IMPLEMENTED );
+
+              htmlStr += writeSigstatHeader( messagePart, 0, fromAddress );
+
+              if ( couldDecrypt || !isEncrypted ) {
+                htmlStr += quotedHTML( aCodec->toUnicode( block.text() ), decorate );
+              }
+              else {
+                htmlStr += QString( "<div align=\"center\">%1</div>" )
+                            .arg( i18n( "The message could not be decrypted.") );
+              }
+              htmlStr += writeSigstatFooter( messagePart );
+          }
+          else // block is neither message block nor clearsigned block
+            htmlStr += quotedHTML( aCodec->toUnicode( block.text() ),
+                                    decorate );
+      }
+
+      // add the last Non-OpenPGP block
+      QByteArray str( nonPgpBlocks.last() );
+      if( !str.isEmpty() ) {
+        htmlStr += quotedHTML( aCodec->toUnicode( str ), decorate );
+        // Even if the trailing Non-OpenPGP block isn't empty we still
+        // consider the message part fully signed/encrypted because else
+        // all inline signed mailing list messages would only be partially
+        // signed because of the footer which is often added by the mailing
+        // list software. IK, 2003-02-15
+      }
+      if( fullySignedOrEncrypted ) {
+        if( inlineSignatureState == KMMsgPartiallySigned )
+          inlineSignatureState = KMMsgFullySigned;
+        if( inlineEncryptionState == KMMsgPartiallyEncrypted )
+          inlineEncryptionState = KMMsgFullyEncrypted;
+      }
+      htmlWriter()->queue( htmlStr );
+  }
+  else
+    htmlWriter()->queue( quotedHTML( aCodec->toUnicode( aStr ), decorate ) );
 }
 
 
 QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
 {
-assert( mReader );
-assert( cssHelper() );
+  assert( cssHelper() );
 
-int convertFlags = LinkLocator::PreserveSpaces | LinkLocator::HighlightText;
-if ( decorate && GlobalSettings::self()->showEmoticons() ) {
-  convertFlags |= LinkLocator::ReplaceSmileys;
-}
-QString htmlStr;
-const QString normalStartTag = cssHelper()->nonQuotedFontTag();
-QString quoteFontTag[3];
-QString deepQuoteFontTag[3];
-for ( int i = 0 ; i < 3 ; ++i ) {
-  quoteFontTag[i] = cssHelper()->quoteFontTag( i );
-  deepQuoteFontTag[i] = cssHelper()->quoteFontTag( i+3 );
-}
-const QString normalEndTag = "</div>";
-const QString quoteEnd = "</div>";
-
-const unsigned int length = s.length();
-bool paraIsRTL = false;
-bool startNewPara = true;
-unsigned int pos, beg;
-
-// skip leading empty lines
-for ( pos = 0; pos < length && s[pos] <= ' '; pos++ )
-  ;
-while (pos > 0 && (s[pos-1] == ' ' || s[pos-1] == '\t')) pos--;
-beg = pos;
-
-int currQuoteLevel = -2; // -2 == no previous lines
-bool curHidden = false; // no hide any block
-
-if ( GlobalSettings::self()->showExpandQuotesMark() )
-{
-  // Cache Icons
-  if ( mCollapseIcon.isEmpty() ) {
-    mCollapseIcon= LinkLocator::pngToDataUrl(
-        IconNameCache::instance()->iconPath( "quotecollapse", 0 ));
+  int convertFlags = LinkLocator::PreserveSpaces | LinkLocator::HighlightText;
+  if ( decorate && GlobalSettings::self()->showEmoticons() ) {
+    convertFlags |= LinkLocator::ReplaceSmileys;
   }
-  if ( mExpandIcon.isEmpty() )
-    mExpandIcon= LinkLocator::pngToDataUrl(
-        IconNameCache::instance()->iconPath( "quoteexpand", 0 ));
-}
+  QString htmlStr;
+  const QString normalStartTag = cssHelper()->nonQuotedFontTag();
+  QString quoteFontTag[3];
+  QString deepQuoteFontTag[3];
+  for ( int i = 0 ; i < 3 ; ++i ) {
+    quoteFontTag[i] = cssHelper()->quoteFontTag( i );
+    deepQuoteFontTag[i] = cssHelper()->quoteFontTag( i+3 );
+  }
+  const QString normalEndTag = "</div>";
+  const QString quoteEnd = "</div>";
 
-while (beg<length)
-{
-  QString line;
+  const unsigned int length = s.length();
+  bool paraIsRTL = false;
+  bool startNewPara = true;
+  unsigned int pos, beg;
 
-  /* search next occurrence of '\n' */
-  pos = s.indexOf('\n', beg, Qt::CaseInsensitive);
-  if (pos == (unsigned int)(-1))
-      pos = length;
+  // skip leading empty lines
+  for ( pos = 0; pos < length && s[pos] <= ' '; pos++ )
+    ;
+  while (pos > 0 && (s[pos-1] == ' ' || s[pos-1] == '\t')) pos--;
+  beg = pos;
 
-  line = s.mid(beg,pos-beg);
-  beg = pos+1;
+  int currQuoteLevel = -2; // -2 == no previous lines
+  bool curHidden = false; // no hide any block
 
-  /* calculate line's current quoting depth */
-  int actQuoteLevel = -1;
-
-  for (int p=0; p<line.length(); p++) {
-    switch (line[p].toLatin1()) {
-      case '>':
-      case '|':
-        actQuoteLevel++;
-        break;
-      case ' ':  // spaces and tabs are allowed between the quote markers
-      case '\t':
-      case '\r':
-        break;
-      default:  // stop quoting depth calculation
-        p = line.length();
-        break;
+  if ( GlobalSettings::self()->showExpandQuotesMark() )
+  {
+    // Cache Icons
+    if ( mCollapseIcon.isEmpty() ) {
+      mCollapseIcon= LinkLocator::pngToDataUrl(
+          IconNameCache::instance()->iconPath( "quotecollapse", 0 ));
     }
-  } /* for() */
+    if ( mExpandIcon.isEmpty() )
+      mExpandIcon= LinkLocator::pngToDataUrl(
+          IconNameCache::instance()->iconPath( "quoteexpand", 0 ));
+  }
 
-  bool actHidden = false;
-  QString textExpand;
+  while (beg<length)
+  {
+    QString line;
 
-  // This quoted line needs be hidden
-  if (GlobalSettings::self()->showExpandQuotesMark() && mReader->mLevelQuote >= 0
-      && mReader->mLevelQuote <= ( actQuoteLevel ) )
-    actHidden = true;
+    /* search next occurrence of '\n' */
+    pos = s.indexOf('\n', beg, Qt::CaseInsensitive);
+    if (pos == (unsigned int)(-1))
+        pos = length;
 
-  if ( actQuoteLevel != currQuoteLevel ) {
-    /* finish last quotelevel */
-    if (currQuoteLevel == -1)
-      htmlStr.append( normalEndTag );
-    else if ( currQuoteLevel >= 0 && !curHidden )
-      htmlStr.append( quoteEnd );
+    line = s.mid(beg,pos-beg);
+    beg = pos+1;
 
-    /* start new quotelevel */
-    if (actQuoteLevel == -1)
-      htmlStr += normalStartTag;
-    else
-    {
-    if ( GlobalSettings::self()->showExpandQuotesMark() )
-        if (true)
+    /* calculate line's current quoting depth */
+    int actQuoteLevel = -1;
+
+    for (int p=0; p<line.length(); p++) {
+      switch (line[p].toLatin1()) {
+        case '>':
+        case '|':
+          actQuoteLevel++;
+          break;
+        case ' ':  // spaces and tabs are allowed between the quote markers
+        case '\t':
+        case '\r':
+          break;
+        default:  // stop quoting depth calculation
+          p = line.length();
+          break;
+      }
+    } /* for() */
+
+    bool actHidden = false;
+    QString textExpand;
+
+    // This quoted line needs be hidden
+    if (GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
+        && mSource->levelQuote() <= ( actQuoteLevel ) )
+      actHidden = true;
+
+    if ( actQuoteLevel != currQuoteLevel ) {
+      /* finish last quotelevel */
+      if (currQuoteLevel == -1)
+        htmlStr.append( normalEndTag );
+      else if ( currQuoteLevel >= 0 && !curHidden )
+        htmlStr.append( quoteEnd );
+
+      /* start new quotelevel */
+      if (actQuoteLevel == -1)
+        htmlStr += normalStartTag;
+      else
       {
-        if (  actHidden )
+      if ( GlobalSettings::self()->showExpandQuotesMark() )
+          if (true)
         {
-          //only show the QuoteMark when is the first line of the level hidden
-          if ( !curHidden )
+          if (  actHidden )
           {
-            //Expand all quotes
+            //only show the QuoteMark when is the first line of the level hidden
+            if ( !curHidden )
+            {
+              //Expand all quotes
+              htmlStr += "<div class=\"quotelevelmark\" >" ;
+              htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
+                  "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
+                .arg(-1)
+                .arg( mExpandIcon );
+              htmlStr += "</div><br/>";
+              htmlStr += quoteEnd;
+            }
+          }else {
             htmlStr += "<div class=\"quotelevelmark\" >" ;
             htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
                 "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
-              .arg(-1)
-              .arg( mExpandIcon );
-            htmlStr += "</div><br/>";
-            htmlStr += quoteEnd;
+              .arg(actQuoteLevel)
+              .arg( mCollapseIcon);
+            htmlStr += "</div>";
+            if ( actQuoteLevel < 3 )
+              htmlStr += quoteFontTag[actQuoteLevel];
+            else
+              htmlStr += deepQuoteFontTag[actQuoteLevel%3];
           }
-        }else {
-          htmlStr += "<div class=\"quotelevelmark\" >" ;
-          htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
-              "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
-            .arg(actQuoteLevel)
-            .arg( mCollapseIcon);
-          htmlStr += "</div>";
-          if ( actQuoteLevel < 3 )
-            htmlStr += quoteFontTag[actQuoteLevel];
-          else
-            htmlStr += deepQuoteFontTag[actQuoteLevel%3];
-        }
-      } else
-          if ( actQuoteLevel < 3 )
-            htmlStr += quoteFontTag[actQuoteLevel];
-          else
-            htmlStr += deepQuoteFontTag[actQuoteLevel%3];
+        } else
+            if ( actQuoteLevel < 3 )
+              htmlStr += quoteFontTag[actQuoteLevel];
+            else
+              htmlStr += deepQuoteFontTag[actQuoteLevel%3];
+      }
+      currQuoteLevel = actQuoteLevel;
     }
-    currQuoteLevel = actQuoteLevel;
-  }
-  curHidden = actHidden;
+    curHidden = actHidden;
 
 
-  if ( !actHidden )
-  {
-    // don't write empty <div ...></div> blocks (they have zero height)
-    // ignore ^M DOS linebreaks
-    if( !line.remove( '\015' ).isEmpty() )
+    if ( !actHidden )
     {
-        if ( startNewPara )
-          paraIsRTL = line.isRightToLeft();
-        htmlStr += QString( "<div dir=\"%1\">" ).arg( paraIsRTL ? "rtl" : "ltr" );
-        htmlStr += LinkLocator::convertToHtml( line, convertFlags );
-        htmlStr += QString( "</div>" );
-        startNewPara = looksLikeParaBreak( s, pos );
+      // don't write empty <div ...></div> blocks (they have zero height)
+      // ignore ^M DOS linebreaks
+      if( !line.remove( '\015' ).isEmpty() )
+      {
+          if ( startNewPara )
+            paraIsRTL = line.isRightToLeft();
+          htmlStr += QString( "<div dir=\"%1\">" ).arg( paraIsRTL ? "rtl" : "ltr" );
+          htmlStr += LinkLocator::convertToHtml( line, convertFlags );
+          htmlStr += QString( "</div>" );
+          startNewPara = looksLikeParaBreak( s, pos );
+      }
+      else
+      {
+        htmlStr += "<br>";
+        // after an empty line, always start a new paragraph
+        startNewPara = true;
+      }
     }
-    else
-    {
-      htmlStr += "<br>";
-      // after an empty line, always start a new paragraph
-      startNewPara = true;
-    }
-  }
-} /* while() */
+  } /* while() */
 
-/* really finish the last quotelevel */
-if (currQuoteLevel == -1)
-    htmlStr.append( normalEndTag );
-else
-    htmlStr.append( quoteEnd );
+  /* really finish the last quotelevel */
+  if (currQuoteLevel == -1)
+      htmlStr.append( normalEndTag );
+  else
+      htmlStr.append( quoteEnd );
 
-//kDebug() << "========================================\n"
-//         << htmlStr
-//         << "\n======================================\n";
-return htmlStr;
+  //kDebug() << "========================================\n"
+  //         << htmlStr
+  //         << "\n======================================\n";
+  return htmlStr;
 }
 
 
 
-const QTextCodec * ObjectTreeParser::codecFor( KMime::Content * node ) const {
+const QTextCodec * ObjectTreeParser::codecFor( KMime::Content * node ) const
+{
   assert( node );
-  if ( mReader && mReader->overrideCodec() )
-    return mReader->overrideCodec();
+  if ( mSource->overrideCodec() )
+    return mSource->overrideCodec();
   return NodeHelper::instance()->codec( node );
 }
 

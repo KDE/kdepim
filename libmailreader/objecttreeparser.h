@@ -55,6 +55,7 @@ class PartMetaData;
 class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
+class ObjectTreeSourceIf;
 
 class ProcessResult {
 public:
@@ -100,16 +101,17 @@ private:
   bool mIsImage : 1;
 };
 
+
 class ObjectTreeParser {
   class CryptoProtocolSaver;
   /** Internal. Copies the context of @p other, but not it's rawReplyString() */
   ObjectTreeParser( const ObjectTreeParser & other );
 public:
-  explicit ObjectTreeParser( MailViewerPrivate * reader=0, const Kleo::CryptoBackend::Protocol * protocol=0,
+  explicit ObjectTreeParser( ObjectTreeSourceIf *source, const Kleo::CryptoBackend::Protocol * protocol=0,
                     bool showOneMimePart=false, bool keepEncryptions=false,
                     bool includeSignatures=true,
                     const AttachmentStrategy * attachmentStrategy=0,
-                    HtmlWriter * htmlWriter=0,
+                    HtmlWriter * htmlWriter=0,         
                     CSSHelper * cssHelper=0 );
   virtual ~ObjectTreeParser();
 
@@ -255,7 +257,6 @@ public:// (during refactoring)
   bool processApplicationChiasmusTextSubtype( KMime::Content * node, ProcessResult & result );
   bool processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result );
 
-private:
   bool decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText );
   void writeBodyString( const QByteArray & bodyString,
                         const QString & fromAddress,
@@ -287,6 +288,9 @@ private:
                       KMMsgSignatureState &  inlineSignatureState,
                       KMMsgEncryptionState & inlineEncryptionState,
                       bool decorate );
+
+  bool isMailmanMessage( KMime::Content * curNode );
+                        
 public: // KMReaderWin still needs this...
   void writeBodyStr( const QByteArray & bodyString,
                       const QTextCodec * aCodec,
@@ -314,7 +318,7 @@ private:
 #endif
 
 private:
-  MailViewerPrivate * mReader;
+  ObjectTreeSourceIf* mSource;
   QByteArray mRawReplyString;
   QByteArray mTextualContentCharset;
   QString mTextualContent;
@@ -342,7 +346,7 @@ private:
   // DataUrl Icons cache
   QString mCollapseIcon;
   QString mExpandIcon;
-
+  
 };
 
 
