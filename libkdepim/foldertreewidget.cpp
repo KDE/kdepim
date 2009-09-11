@@ -34,6 +34,7 @@
 #include <QStyle>
 #include <QPainter>
 #include <QFontMetrics>
+#include <QApplication>
 
 #define FOLDERTREEWIDGETITEM_TYPE ( QTreeWidgetItem::UserType + 0xcafe )
 
@@ -87,8 +88,6 @@ public:
     FolderTreeWidgetItem * item = static_cast<FolderTreeWidgetItem *>( index.internalPointer() );
     if ( !item )
       return; // ugh :/
-
-    // FIXME: opt->direction == Qt::RightToLeft ?
 
     // draw the labelText().
     QRect textRect = style->subElementRect( QStyle::SE_ItemViewItemText, &opt, mFolderTreeWidget );
@@ -164,7 +163,10 @@ public:
 
         painter->drawText( textRect, Qt::AlignLeft | Qt::TextSingleLine | Qt::AlignVCenter, label );
 
-        textRect.setLeft( textRect.left() + labelWidth + ITEM_LABEL_TO_UNREADCOUNT_SPACING );
+        if ( QApplication::isLeftToRight() )
+          textRect.setLeft( textRect.left() + labelWidth + ITEM_LABEL_TO_UNREADCOUNT_SPACING );
+        else
+          textRect.setRight( textRect.right() - labelWidth - ITEM_LABEL_TO_UNREADCOUNT_SPACING );
 
         if ( !( opt.state & QStyle::State_Selected ) ) {
           painter->setPen( QPen( mFolderTreeWidget->unreadCountColor(), 0 ) );
