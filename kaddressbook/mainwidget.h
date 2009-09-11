@@ -79,6 +79,13 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
     QAbstractItemModel* allContactsModel();
 
+    /**
+     * Returns the address book collection that is currently
+     * selected by the user or an invalid collection if no
+     * address book is selected.
+     */
+    Akonadi::Collection currentAddressBook() const;
+
     Akonadi::EntityFilterProxyModel *mCollectionTree;
     Akonadi::EntityFilterProxyModel *mItemTree;
     Akonadi::EntityFilterProxyModel *mAllContactsModel;

@@ -28,6 +28,11 @@ class ContactSelectionWidget;
 class QAbstractItemModel;
 class QItemSelectionModel;
 
+namespace Akonadi
+{
+class Collection;
+}
+
 /**
  * @short A dialog to select a group of contacts.
  *
@@ -51,6 +56,11 @@ class ContactSelectionDialog : public KDialog
      * Sets the @p message text.
      */
     void setMessageText( const QString &message );
+
+    /**
+     * Sets the default addressbook.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
 
     /**
      * Returns the list of selected contacts.

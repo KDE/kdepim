@@ -127,6 +127,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
+  connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
+           mXXPortManager, SLOT( setDefaultAddressBook( const Akonadi::Collection& ) ) );
+
   KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( mCollectionView->selectionModel(),
                                                                                         this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
@@ -355,20 +358,15 @@ void MainWidget::print()
 
   KABPrinting::PrintingWizard wizard( &printer, allContactsModel(),
                                       mItemView->selectionModel(), this );
+  wizard.setDefaultAddressBook( currentAddressBook() );
+
   wizard.exec();
 }
 
 void MainWidget::newContact()
 {
   Akonadi::ContactEditorDialog dlg( Akonadi::ContactEditorDialog::CreateMode, this );
-
-  if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
-    const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
-    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole )
-                                                .value<Akonadi::Collection>();
-
-    dlg.setDefaultAddressBook( collection );
-  }
+  dlg.setDefaultAddressBook( currentAddressBook() );
 
   dlg.exec();
 }
@@ -376,6 +374,8 @@ void MainWidget::newContact()
 void MainWidget::newGroup()
 {
   Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::CreateMode, this );
+  dlg.setDefaultAddressBook( currentAddressBook() );
+
   dlg.exec();
 }
 
@@ -456,6 +456,19 @@ void MainWidget::editGroup( const Akonadi::Item &group )
   Akonadi::ContactGroupEditorDialog dlg( Akonadi::ContactGroupEditorDialog::EditMode, this );
   dlg.setContactGroup( group );
   dlg.exec();
+}
+
+Akonadi::Collection MainWidget::currentAddressBook() const
+{
+  if ( mCollectionView->selectionModel() && mCollectionView->selectionModel()->hasSelection() ) {
+    const QModelIndex index = mCollectionView->selectionModel()->selectedIndexes().first();
+    const Akonadi::Collection collection = index.data( Akonadi::EntityTreeModel::CollectionRole )
+                                                .value<Akonadi::Collection>();
+
+    return collection;
+  }
+
+  return Akonadi::Collection();
 }
 
 QAbstractItemModel* MainWidget::allContactsModel()

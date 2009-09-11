@@ -74,6 +74,11 @@ void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
   mSelectionModel = selectionModel;
 }
 
+void XXPortManager::setDefaultAddressBook( const Akonadi::Collection &addressBook )
+{
+  mDefaultAddressBook = addressBook;
+}
+
 void XXPortManager::slotImport( const QString &identifier )
 {
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
@@ -110,6 +115,7 @@ void XXPortManager::slotExport( const QString &identifier )
 
   ContactSelectionDialog dlg( mItemModel, mSelectionModel, mParentWidget );
   dlg.setMessageText( i18n( "Which contact do you want to export?" ) );
+  dlg.setDefaultAddressBook( mDefaultAddressBook );
   if ( !dlg.exec() )
     return;
 
