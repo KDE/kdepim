@@ -269,7 +269,7 @@ bool ResourceKABC::doLoad( bool syncCache )
         name_2 = spouse.realName();
       }
       summary = i18nc( "insert names of both spouses",
-                       "%1's & %2's anniversary", name_1, tname );
+                       "%1's & %2's anniversary", name_1, name_2 );
     } else {
       summary = i18nc( "only one spouse in addressbook, insert the name",
                        "%1's anniversary", name_1 );
