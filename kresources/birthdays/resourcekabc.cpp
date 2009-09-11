@@ -274,7 +274,7 @@ bool ResourceKABC::doLoad()
         name_2 = spouse.realName();
       }
       summary = i18n("insert names of both spouses",
-                     "%1's & %2's anniversary").arg( name_1 ).arg( tname );
+                     "%1's & %2's anniversary").arg( name_1 ).arg( name_2 );
     } else {
       summary = i18n("only one spouse in addressbook, insert the name",
                      "%1's anniversary").arg( name_1 );
