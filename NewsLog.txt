@@ -4,6 +4,7 @@ Problems addressed
 ------------------
 
 * kolab/issue3853: Crash after renaming a folder
+* kolab/issue3836: Saved auditlog contains some strange xml text
 * kolab/issue3833: Mails will vanish, if a folder is renamed
 * kolab/issue3837: Reproducible crash when (not) decrypting s/mime message
 * kolab/issue3577: [regression] S/MIME opaque signed and encrypted email without smime-type parameter suboptimal display
