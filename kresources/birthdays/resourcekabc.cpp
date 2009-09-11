@@ -19,16 +19,9 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <typeinfo>
-#include <stdlib.h>
-
-#include <QString>
-
-#include <klocale.h>
-#include <kdebug.h>
-#include <kurl.h>
-#include <kconfiggroup.h>
-#include <kio/job.h>
+#include "resourcekabc.h"
+#include "resourcekabcconfig.h"
+#include "kresources_export.h"
 
 #include <kabc/stdaddressbook.h>
 #include <kabc/locknull.h>
@@ -38,14 +31,19 @@
 #include <kcal/todo.h>
 #include <kcal/journal.h>
 #include <kcal/alarm.h>
+using namespace KCal;
+
+#include <kpimutils/email.h>
 
 #include <kresources/configwidget.h>
 
-#include "resourcekabcconfig.h"
-#include "resourcekabc.h"
-#include "kresources_export.h"
+#include <kconfiggroup.h>
+#include <kdebug.h>
+#include <klocale.h>
+#include <kurl.h>
+#include <kio/job.h>
 
-using namespace KCal;
+#include <QString>
 
 EXPORT_KRESOURCES_PLUGIN2( ResourceKABC, ResourceKABCConfig, "kres_birthday", "libkcal" )
 
@@ -250,22 +248,23 @@ bool ResourceKABC::doLoad( bool syncCache )
     QString spouseName = (*addrIt).custom( "KADDRESSBOOK", "X-SpousesName" );
     QString name_2, email_2, uid_2;
     if ( !spouseName.isEmpty() ) {
-      //TODO: find a KABC:Addressee of the spouse
-      //Probably easiest would be to use a QMap (as the spouse's entry was
-      //already searched above!)
+      QString tname, temail;
+      KPIMUtils::extractEmailAddressAndName( spouseName, temail, tname );
+      tname = KPIMUtils::quoteNameIfNecessary( tname );
+      if ( ( tname[0] == '"' ) && ( tname[tname.length() - 1] == '"' ) ) {
+        tname.remove( 0, 1 );
+        tname.truncate( tname.length() - 1 );
+      }
       KABC::Addressee spouse;
-      spouse.setNameFromString( spouseName );
+      spouse.setNameFromString( tname );
+      name_2 = spouse.nickName();
       uid_2 = spouse.uid();
       email_2 = spouse.fullEmail();
-      name_2 = spouse.nickName();
       if ( name_2.isEmpty() ) {
-        name_2 = spouse.givenName();
-      }
-      if ( name_2.isEmpty() ) {
-        name_2 = spouseName;
+        name_2 = spouse.realName();
       }
       summary = i18nc( "insert names of both spouses",
-                       "%1's & %2's anniversary", name_1, name_2 );
+                       "%1's & %2's anniversary", name_1, tname );
     } else {
       summary = i18nc( "only one spouse in addressbook, insert the name",
                        "%1's anniversary", name_1 );
