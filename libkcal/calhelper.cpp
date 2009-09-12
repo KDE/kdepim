@@ -40,13 +40,14 @@ bool CalHelper::isMyKolabIncidence( Calendar *calendar, Incidence *incidence )
   if ( !cal || !incidence ) {
     return true;
   }
-  ResourceCalendar *res = cal->resource( incidence );
-  if ( !res ) {
-    return true;
-  }
-  const QString subRes = res->subresourceIdentifier( incidence );
-  if ( !subRes.contains( "/.INBOX.directory/" ) ) {
-    return false;
+
+  CalendarResourceManager *manager = cal->resourceManager();
+  CalendarResourceManager::Iterator it;
+  for ( it = manager->begin(); it != manager->end(); ++it ) {
+    QString subRes = (*it)->subresourceIdentifier( incidence );
+    if ( !subRes.isEmpty() && !subRes.contains( "/.INBOX.directory/" ) ) {
+      return false;
+    }
   }
   return true;
 }
@@ -55,7 +56,6 @@ bool CalHelper::isMyCalendarIncidence( Calendar *calendar, Incidence *incidence 
 {
   return isMyKolabIncidence( calendar, incidence );
 }
-
 
 Incidence *CalHelper::findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid )
 {
@@ -68,7 +68,7 @@ Incidence *CalHelper::findMyCalendarIncidenceByUid( Calendar *calendar, const QS
     }
     if ( !existingIncidence ) {
       const Incidence::List list = calendar->incidences();
-      for ( Incidence::List::ConstIterator it=list.begin(), end=list.end(); it!=end; ++it ) {
+      for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
         if ( (*it)->schedulingID() == uid && isMyCalendarIncidence( calendar, *it ) ) {
           existingIncidence = *it;
           break;

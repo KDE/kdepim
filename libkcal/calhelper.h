@@ -29,7 +29,7 @@
 #ifndef KCAL_CALHELPER_H
 #define KCAL_CALHELPER_H
 
-#include <qstring.h>
+class QString;
 
 namespace KCal {
 class Calendar;
