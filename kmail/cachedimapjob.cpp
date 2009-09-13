@@ -509,7 +509,7 @@ void CachedImapJob::slotPutMessageResult(KJob *job)
         bool b = kmkernel->iCalIface().isResourceQuiet();
         kmkernel->iCalIface().setResourceQuiet( true );
 
-        mFolder->takeTemporarily( i );
+        mFolder->take( i );
         mFolder->addMsgKeepUID( mMsg );
         mMsg->setTransferInProgress( false );
 
