@@ -115,7 +115,6 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
     mHeaderStyle( 0 ),
     mUpdateReaderWinTimer( 0 ),
     mResizeTimer( 0 ),
-    mDelayedMarkTimer( 0 ),
     mOldGlobalOverrideEncoding( "---" ), // init with dummy value
     mCSSHelper( 0 ),
     mMainWindow( mainWindow ),
@@ -151,13 +150,10 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
   GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
   GlobalSettings::self()->readConfig(); //need to re-read the config as the config object might be different than the default mailviewerrc
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
-  mDelayedMarkTimer.setObjectName( "mDelayedMarkTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
-  mLastSerNum = 0;
-  mWaitingForSerNum = 0;
   mLastStatus.clear();
   mMsgDisplay = true;
   mPrinting = false;
@@ -172,10 +168,6 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
   mResizeTimer.setSingleShot( true );
   connect( &mResizeTimer, SIGNAL(timeout()),
            this, SLOT(slotDelayedResize()) );
-
-  mDelayedMarkTimer.setSingleShot( true );
-  connect( &mDelayedMarkTimer, SIGNAL(timeout()),
-           this, SLOT(slotTouchMessage()) );
 
   mUpdateReaderWinTimer.setSingleShot( true );
   connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
@@ -258,8 +250,7 @@ void MailViewerPrivate::openAttachment( KMime::Content* node, const QString & na
     mimetype = KMimeType::findByPath( name, 0, true /* no disk access */  );
 
   }
-  if ( ( mimetype->name() == "application/octet-stream" )
-      /*FIXME(Andras) port it && msgPart.isComplete() */) {
+  if ( mimetype->name() == "application/octet-stream" ) {
     // consider the attachment's contents if neither the Content-Type header
     // nor the filename give us a clue
     mimetype = KMimeType::findByFileContent( name );
@@ -345,11 +336,9 @@ bool MailViewerPrivate::editAttachment( KMime::Content * node, bool showWarning 
   }
 
   return true;
-
-/*FIXME(Andras) port to akonadi  KMEditAttachmentCommand* command = new KMEditAttachmentCommand( node, message(), this );
-  command->start();
-  */
 }
+
+
 void MailViewerPrivate::showAttachmentPopup( int id, const QString & name, const QPoint &p )
 {
   prepareHandleAttachment( id, name );
@@ -460,11 +449,6 @@ void MailViewerPrivate::setBodyPartMemento( const KMime::Content *node,
       mBodyPartMementoMap.insert( index, memento );
     }
   }
-/*FIXME(Andras) review, port
-  if ( Observable * o = memento ? memento->asObservable() : 0 ) {
-    o->attach( this );
-  }
-  */
 }
 
 
@@ -1121,7 +1105,6 @@ void MailViewerPrivate::parseMsg()
 {
   assert( mMessage != 0 );
 
-  /* aMsg->setIsBeingParsed( true ); //FIXME(Andras) review and port */
   NodeHelper::instance()->setNodeBeingProcessed( mMessage, true );
 
   QString cntDesc = i18n("( body part )");
@@ -1246,9 +1229,6 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
   } else {
     showHideMimeTree();
   }
-/* FIXME(Andras) port it!
-  aMsg->setIsBeingParsed( false );
-  */
   NodeHelper::instance()->setNodeBeingProcessed( mMessage, false );
 }
 
@@ -1536,95 +1516,21 @@ void MailViewerPrivate::setMessage(KMime::Message* aMsg, MailViewer::UpdateMode 
   NodeHelper::instance()->clear();
   mMimePartModel->setRoot( 0 );
 
-
-
-  if ( aMsg ) {
-  /*FIXME(Andras) port to akonadi
-      kDebug() <<"(" << aMsg->getMsgSerNum() <<", last" << mLastSerNum <<")" << aMsg->subject()
-        << aMsg->fromStrip() << ", readyToShow" << (aMsg->readyToShow());
-
-// Reset message-transient state
-  if (aMsg && aMsg->getMsgSerNum() != mLastSerNum ){
-    mLevelQuote = GlobalSettings::self()->collapseQuoteLevelSpin()-1;
-    clearBodyPartMementos();
-  }
-  */
-  }
   if ( mPrinting )
     mLevelQuote = -1;
 
-  bool complete = true;
-  /*FIXME(Andras) port to akonadi
-  if ( aMsg &&
-       !aMsg->readyToShow() &&
-       (aMsg->getMsgSerNum() != mLastSerNum) &&
-       !aMsg->isComplete() )
-    complete = false;
-
-  // If not forced and there is aMsg and aMsg is same as mMsg then return
-  if (!force && aMsg && mLastSerNum != 0 && aMsg->getMsgSerNum() == mLastSerNum)
-    return;
-
-
-  // (de)register as observer
-  if (aMsg && message())
-    message()->detach( this );
-  if (aMsg)
-    aMsg->attach( this );
-  */
-
   // connect to the updates if we have hancy headers
 
-  mDelayedMarkTimer.stop();
-
-  if ( !aMsg ) {
-    mWaitingForSerNum = 0; // otherwise it has been set
-    mLastSerNum = 0;
-  } else {
-  /*FIXME(Andras) port to akonadi
-    mLastSerNum = aMsg->getMsgSerNum();
-    // Check if the serial number can be used to find the assoc KMMessage
-    // If so, keep only the serial number (and not mMessage), to avoid a dangling mMessage
-    // when going to another message in the mainwindow.
-    // Otherwise, keep only mMessage, this is fine for standalone KMReaderMainWins since
-    // we're working on a copy of the KMMessage, which we own.
-    */
-    mMessage = aMsg;
-    mDeleteMessage = (ownerShip == MailViewer::Transfer);
-    mLastSerNum = 0;
-  }
+  mMessage = aMsg;
+  mDeleteMessage = (ownerShip == MailViewer::Transfer);
 
   if ( mMessage ) {
     NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
-  /*FIXME(Andras) port to akonadi
-    aMsg->setDecodeHTML( htmlMail() );
-    mLastStatus = aMsg->status();
-    // FIXME: workaround to disable DND for IMAP load-on-demand
-    if ( !aMsg->isComplete() )
-      mViewer->setDNDEnabled( false );
-    else
-      mViewer->setDNDEnabled( true );
-  */
   } else {
     mLastStatus.clear();
   }
 
-  // only display the msg if it is complete
-  // otherwise we'll get flickering with progressively loaded messages
-  if ( complete )
-  {
-    update( updateMode );
-  }
-
-  /*FIXME(Andras) port to akonadi
-  if ( aMsg && (aMsg->status().isUnread() || aMsg->status().isNew())
-       && GlobalSettings::self()->delayedMarkAsRead() ) {
-    if ( GlobalSettings::self()->delayedMarkTime() != 0 )
-      mDelayedMarkTimer.start( GlobalSettings::self()->delayedMarkTime() * 1000 );
-    else
-      slotTouchMessage();
-  }
-  */
+  update( updateMode );
 }
 
 void MailViewerPrivate::setMessagePart( KMime::Content * node )
@@ -2394,11 +2300,6 @@ void MailViewerPrivate::slotToggleMimePartTree()
 
 void MailViewerPrivate::slotShowMessageSource()
 {
-/* FIXME(Andras)
-  if ( msg->isComplete() && !mMsgWasComplete ) {
-    msg->notify(); // notify observers as msg was transferred
-  }
-*/
   QString str = QString::fromAscii( mMessage->encodedContent() );
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
@@ -2871,36 +2772,6 @@ void MailViewerPrivate::slotLevelQuote( int l )
   update( MailViewer::Force );
 }
 
-void MailViewerPrivate::slotTouchMessage()
-{
-/*FIXME(Andras) port it
-  if ( !message() )
-    return;
-
-  if ( !message()->status().isNew() && !message()->status().isUnread() )
-    return;
-  SerNumList serNums;
-  serNums.append( message()->getMsgSerNum() );
-  KMCommand *command = new KMSetStatusCommand( MessageStatus::statusRead(), serNums );
-  command->start();
-  // should we send an MDN?
-  if ( mNoMDNsWhenEncrypted &&
-       message()->encryptionState() != KMMsgNotEncrypted &&
-       message()->encryptionState() != KMMsgEncryptionStateUnknown )
-    return;
-
-    KMFolder *folder = message()->parent();
-  if ( folder &&
-       ( folder->isOutbox() || folder->isSent() || folder->isTrash() ||
-         folder->isDrafts() || folder->isTemplates() ) )
-    return;
-    if ( KMMessage * receipt = message()->createMDN( MDN::ManualAction,
-                                                    MDN::Displayed,
-                                                    true  )//true == allow GUI
-          if ( !kmkernel->msgSender()->send( receipt ) ) // send or queue
-      KMessageBox::error( mMainWindow, i18n("Could not send MDN.") );
- */
-}
 
 void MailViewerPrivate::slotHandleAttachment( int choice )
 {

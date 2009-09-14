@@ -174,27 +174,7 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
 
   bool isFixedFont() const;
   void setUseFixedFont( bool useFixedFont );
-
-  //TODO: check if we want to keep the actions and expose them to the outside or
-  //provide public slots only and let the user create the actions.
-  
-  // Action to reply to a message
-  // but action( "some_name" ) some name could be used instead.
-  /*
-  KToggleAction *toggleFixFontAction() { return mToggleFixFontAction; }
-  KAction *copyAction() { return mCopyAction; }
-  KAction *selectAllAction() { return mSelectAllAction; }
-  KAction *copyURLAction() { return mCopyURLAction; }
-  KAction *urlOpenAction() { return mUrlOpenAction; }
-  KAction *saveMessageAction() { return mSaveMessageAction; }
-*/
-  
-/*FIXME(Andras) port it - remove?
-  /** Set the serial number of the message this reader window is currently
-   *  waiting for. Used to discard updates for already deselected messages. 
-  void setWaitingForSerNum( unsigned long serNum ) { mWaitingForSerNum = serNum; }
-*/
-  
+   
   QWidget* mainWindow();
 
   /** Enforce message decryption. */

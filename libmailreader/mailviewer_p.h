@@ -433,7 +433,6 @@ public slots:
   void slotAttachmentEdit();
   void slotAttachmentEditDone(EditorWatcher* editorWatcher);
   void slotLevelQuote( int l );
-  void slotTouchMessage();
 
   /**
    * Does an action for the current attachment.
@@ -489,12 +488,10 @@ public:
   static const int delay;
   QTimer mUpdateReaderWinTimer;
   QTimer mResizeTimer;
-  QTimer mDelayedMarkTimer;
   QString mOverrideEncoding;
   QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
   bool mMsgDisplay;
   bool mNoMDNsWhenEncrypted;
-  unsigned long mLastSerNum;
   MessageStatus mLastStatus;
 
   CSSHelper * mCSSHelper;
@@ -522,7 +519,6 @@ public:
   QMap<QByteArray, Interface::BodyPartMemento*> mBodyPartMementoMap;
 
   int mChoice;
-  unsigned long mWaitingForSerNum;
   float mSavedRelativePosition;
   int mLevelQuote;
   bool mDecrytMessageOverwrite;
