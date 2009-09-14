@@ -1003,7 +1003,6 @@ static QString invitationDetailsEvent( Event* event )
     return QString::null;
 
   QString html;
-  QString tmp;
 
   QString sSummary = i18n( "Summary unspecified" );
   if ( ! event->summary().isEmpty() ) {
@@ -1030,23 +1029,23 @@ static QString invitationDetailsEvent( Event* event )
                            IncidenceFormatter::dateToString( event->dtStart(), false ) );
     if ( !event->doesFloat() ) {
       html += invitationRow( i18n( "Time:" ),
-                             IncidenceFormatter::timeToString( event->dtStart(), false ) +
+                             IncidenceFormatter::timeToString( event->dtStart(), true ) +
                              " - " +
-                             IncidenceFormatter::timeToString( event->dtEnd(), false ) );
+                             IncidenceFormatter::timeToString( event->dtEnd(), true ) );
     }
   } else {
     html += invitationRow( i18n( "Starting date of an event", "From:" ),
                            IncidenceFormatter::dateToString( event->dtStart(), false ) );
     if ( !event->doesFloat() ) {
       html += invitationRow( i18n( "Starting time of an event", "At:" ),
-                             IncidenceFormatter::timeToString( event->dtStart(), false ) );
+                             IncidenceFormatter::timeToString( event->dtStart(), true ) );
     }
     if ( event->hasEndDate() ) {
       html += invitationRow( i18n( "Ending date of an event", "To:" ),
                              IncidenceFormatter::dateToString( event->dtEnd(), false ) );
       if ( !event->doesFloat() ) {
         html += invitationRow( i18n( "Starting time of an event", "At:" ),
-                               IncidenceFormatter::timeToString( event->dtEnd(), false ) );
+                               IncidenceFormatter::timeToString( event->dtEnd(), true ) );
       }
     } else {
       html += invitationRow( i18n( "Ending date of an event", "To:" ),
@@ -1056,17 +1055,23 @@ static QString invitationDetailsEvent( Event* event )
 
   // Invitation Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
-    tmp = QString::null;
+    QString tmp;
     QTime sDuration(0,0,0), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
-    t = sDuration.addSecs( secs );
-    if ( t.hour() > 0 ) {
-      tmp += i18n( "1 hour ", "%n hours ", t.hour() );
+    int days = secs / 86400;
+    if ( days > 0 ) {
+      tmp += i18n( "1 day ", "%n days ", days );
+      secs -= ( days * 86400 );
     }
-    if ( t.minute() > 0 ) {
-      tmp += i18n( "1 minute ", "%n minutes ",  t.minute() );
+    int hours = secs / 3600;
+    if ( hours > 0 ) {
+      tmp += i18n( "1 hour ", "%n hours ", hours );
+      secs -= ( hours * 3600 );
     }
-
+    int mins = secs / 60;
+    if ( mins > 0 ) {
+      tmp += i18n( "1 minute ", "%n minutes ",  mins );
+    }
     html += invitationRow( i18n( "Duration:" ), tmp );
   }
 
