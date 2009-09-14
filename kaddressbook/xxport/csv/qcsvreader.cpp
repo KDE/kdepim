@@ -31,7 +31,7 @@ class QCsvReader::Private
 {
   public:
     Private( QCsvBuilderInterface *builder )
-      : mBuilder( builder )
+      : mBuilder( builder ), mNotTerminated( true )
     {
       mTextQuote = QChar( '"' );
       mDelimiter = QChar( ' ' );
@@ -52,6 +52,7 @@ class QCsvReader::Private
 
     uint mStartRow;
     bool mIgnoreDuplicates;
+    bool mNotTerminated;
 };
 
 void QCsvReader::Private::emitBeginLine( uint row )
@@ -110,7 +111,7 @@ bool QCsvReader::read( QIODevice *device )
   inputStream.setCodec( d->mCodec );
 
   int maxColumn = 0;
-  while ( !inputStream.atEnd() ) {
+  while ( !inputStream.atEnd() && d->mNotTerminated ) {
     inputStream >> x; // read one char
 
     if ( x == '\r' ) inputStream >> x; // eat '\r', to handle DOS/LOSEDOWS files correctly
@@ -280,6 +281,10 @@ QTextCodec *QCsvReader::textCodec() const
   return d->mCodec;
 }
 
+void QCsvReader::terminate()
+{
+  d->mNotTerminated = false;
+}
 
 class QCsvStandardBuilder::Private
 {

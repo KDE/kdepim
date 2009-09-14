@@ -39,6 +39,11 @@ class QPrinter;
 class ContactSelectionWidget;
 class StylePage;
 
+namespace Akonadi
+{
+class Collection;
+}
+
 namespace KABPrinting {
 
 class PrintProgress;
@@ -71,6 +76,11 @@ class PrintingWizard : public KAssistantDialog
      * Destroys the printing wizard.
      */
     ~PrintingWizard();
+
+    /**
+     * Sets the default addressbook of the contact selection.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
 
     /**
      * Registers all available printing styles.

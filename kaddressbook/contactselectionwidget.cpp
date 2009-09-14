@@ -58,6 +58,11 @@ void ContactSelectionWidget::setMessageText( const QString &message )
   mMessageLabel->setText( message );
 }
 
+void ContactSelectionWidget::setDefaultAddressBook( const Akonadi::Collection &addressBook )
+{
+  mAddressBookSelection->setDefaultAddressBook( addressBook );
+}
+
 void ContactSelectionWidget::requestSelectedContacts()
 {
   if ( mAllContactsButton->isChecked() )

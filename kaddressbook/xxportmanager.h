@@ -23,6 +23,8 @@
 
 #include "xxport/xxportfactory.h"
 
+#include <akonadi/collection.h>
+
 #include <QtCore/QObject>
 
 class QAbstractItemModel;
@@ -30,19 +32,62 @@ class QAction;
 class QItemSelectionModel;
 class QSignalMapper;
 
+/**
+ * @short The class that manages import and export of contacts.
+ */
 class XXPortManager : public QObject
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new xxport manager.
+     *
+     * @param parent The widget that is used as parent for dialogs.
+     */
     XXPortManager( QWidget *parent = 0 );
+
+    /**
+     * Destroys the xxport manager.
+     */
     ~XXPortManager();
 
+    /**
+     * Adds a new action to import contacts.
+     *
+     * @param action The action object.
+     * @param identifier The identifier that will be passed to the xxport module.
+     */
     void addImportAction( QAction *action, const QString &identifier );
+
+    /**
+     * Adds a new action to export contacts.
+     *
+     * @param action The action object.
+     * @param identifier The identifier that will be passed to the xxport module.
+     */
     void addExportAction( QAction *action, const QString &identifier );
 
-    void setItemModel( QAbstractItemModel *itemModel );
-    void setSelectionModel( QItemSelectionModel *selectionModel );
+    /**
+     * Sets the @p model that contains a list of all contacts.
+     *
+     * @note This model is used by the ContactSelectionDialog.
+     */
+    void setItemModel( QAbstractItemModel *model );
+
+    /**
+     * Sets the @p model that contains the current selection.
+     *
+     * @note This model is used by the ContactSelectionDialog.
+     */
+    void setSelectionModel( QItemSelectionModel *model );
+
+  public Q_SLOTS:
+    /**
+     * Sets the @p addressBook that shall be preselected in the
+     * ContactSelectionDialog.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
 
   private Q_SLOTS:
     void slotImport( const QString& );
@@ -55,6 +100,7 @@ class XXPortManager : public QObject
     XXPortFactory mFactory;
     QSignalMapper *mImportMapper;
     QSignalMapper *mExportMapper;
+    Akonadi::Collection mDefaultAddressBook;
 };
 
 #endif

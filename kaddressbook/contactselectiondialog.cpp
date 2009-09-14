@@ -34,7 +34,6 @@ ContactSelectionDialog::ContactSelectionDialog( QAbstractItemModel *model, QItem
 
   connect( mSelectionWidget, SIGNAL( selectedContacts( const KABC::Addressee::List& ) ),
            this, SLOT( slotSelectedContacts( const KABC::Addressee::List& ) ) );
-  connect( this, SIGNAL( okClicked() ), this, SLOT( slotOkClicked() ) );
 
   setInitialSize( QSize( 450, 220 ) );
 }
@@ -42,6 +41,11 @@ ContactSelectionDialog::ContactSelectionDialog( QAbstractItemModel *model, QItem
 void ContactSelectionDialog::setMessageText( const QString &message )
 {
   mSelectionWidget->setMessageText( message );
+}
+
+void ContactSelectionDialog::setDefaultAddressBook( const Akonadi::Collection &addressBook )
+{
+  mSelectionWidget->setDefaultAddressBook( addressBook );
 }
 
 KABC::Addressee::List ContactSelectionDialog::selectedContacts() const

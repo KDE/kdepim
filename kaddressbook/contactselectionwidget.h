@@ -34,6 +34,7 @@ class KJob;
 namespace Akonadi
 {
 class AddressBookComboBox;
+class Collection;
 }
 
 /**
@@ -59,6 +60,11 @@ class ContactSelectionWidget : public QWidget
      * Sets the @p message text.
      */
     void setMessageText( const QString &message );
+
+    /**
+     * Sets the default addressbook.
+     */
+    void setDefaultAddressBook( const Akonadi::Collection &addressBook );
 
     /**
      * Requests the list of selected contacts.

@@ -74,6 +74,11 @@ PrintingWizard::~PrintingWizard()
 {
 }
 
+void PrintingWizard::setDefaultAddressBook( const Akonadi::Collection &addressBook )
+{
+  mSelectionPage->setDefaultAddressBook( addressBook );
+}
+
 void PrintingWizard::accept()
 {
   print();
