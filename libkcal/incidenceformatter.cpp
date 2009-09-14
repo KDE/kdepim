@@ -709,8 +709,8 @@ static QString displayViewFormatFreeBusy( Calendar * /*calendar*/, FreeBusy *fb 
       if ( per.start().date() == per.end().date() ) {
         text += i18n("date, fromTime - toTime ", "%1, %2 - %3").
                 arg( IncidenceFormatter::dateToString( per.start().date(), true ) ).
-                arg( IncidenceFormatter::timeToString( per.start(), false ) ).
-                arg( IncidenceFormatter::timeToString( per.end(), false ) );
+                arg( IncidenceFormatter::timeToString( per.start(), true ) ).
+                arg( IncidenceFormatter::timeToString( per.end(), true ) );
       } else {
         text += i18n("fromDateTime - toDateTime", "%1 - %2").
                 arg( IncidenceFormatter::dateTimeToString( per.start(), false, true ) ).
@@ -1056,7 +1056,6 @@ static QString invitationDetailsEvent( Event* event )
   // Invitation Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
     QString tmp;
-    QTime sDuration(0,0,0), t;
     int secs = event->dtStart().secsTo( event->dtEnd() );
     int days = secs / 86400;
     if ( days > 0 ) {
