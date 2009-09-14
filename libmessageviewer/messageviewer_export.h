@@ -1,5 +1,7 @@
 /*  This file is part of the KDE project
     Copyright (C) 2007 David Faure <faure@kde.org>
+    Copyright (C) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+    Copyright (c) 2009 Andras Mantia <andras@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
