@@ -32,7 +32,7 @@
 #ifndef __KMAIL_ATTACHMENTSTRATEGY_H__
 #define __KMAIL_ATTACHMENTSTRATEGY_H__
 
-#include "mailviewer_export.h"
+#include "messageviewer_export.h"
 
 class QString;
 namespace KMime {
@@ -41,7 +41,7 @@ namespace KMime {
 
 namespace Message {
 
-class MAILVIEWER_EXPORT AttachmentStrategy {
+class MESSAGEVIEWER_EXPORT AttachmentStrategy {
 protected:
   AttachmentStrategy();
   virtual ~AttachmentStrategy();

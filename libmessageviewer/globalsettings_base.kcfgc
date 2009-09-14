@@ -1,4 +1,4 @@
-File=mailviewer.kcfg
+File=messageviewer.kcfg
 ClassName=GlobalSettingsBase
 Mutators=true
 Singleton=true

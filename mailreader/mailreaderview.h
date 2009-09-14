@@ -12,7 +12,10 @@
 
 class QPainter;
 class KUrl;
-class MailViewer;
+
+namespace Message {
+  class Viewer;
+}
 
 namespace Akonadi {
   class Item;
@@ -49,7 +52,7 @@ private:
     void displayAboutPage();
 
     Ui::mailreaderview ui_mailreaderview;
-    MailViewer *m_readerWin;
+    Message::Viewer *m_readerWin;
 
 public slots:
     void slotConfigure();

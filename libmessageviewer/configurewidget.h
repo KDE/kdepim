@@ -20,7 +20,7 @@
 #ifndef MAILVIEWERCONFIGUREWIDGET_H
 #define MAILVIEWERCONFIGUREWIDGET_H
 
-#include "mailviewer_export.h"
+#include "messageviewer_export.h"
 
 #include <QWidget>
 class Ui_Settings;
@@ -31,7 +31,7 @@ Configure widget that can be used in a KConfigDialog.
 
 	@author Andras Mantia <andras@kdab.net>
 */
-class MAILVIEWER_EXPORT ConfigureWidget : public QWidget
+class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
 Q_OBJECT
 public:

@@ -36,7 +36,7 @@
 #include "interfaces/urlhandler.h"
 #include "interfaces/bodyparturlhandler.h"
 #include "partnodebodypart.h"
-#include "mailviewer_p.h"
+#include "viewer_p.h"
 #include "nodehelper.h"
 
 #include "stringutil.h"

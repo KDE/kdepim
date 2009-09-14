@@ -18,7 +18,7 @@
 */
 
 #include "objecttreeemptysource.h"
-#include "mailviewer_p.h"
+#include "viewer_p.h"
 
 #include "attachmentstrategy.h"
 

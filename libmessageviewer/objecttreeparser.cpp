@@ -36,7 +36,7 @@
 #include "objecttreesourceif.h"
 
 // other KMail headers
-#include "mailviewer_p.h"
+#include "viewer_p.h"
 #include <kpimutils/email.h>
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
@@ -505,7 +505,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           VerifyDetachedBodyPartMemento * newM
             = new VerifyDetachedBodyPartMemento( job, cryptProto->keyListJob(), signaturetext, plainData );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Viewer::UpdateMode)));
+            QObject::connect(newM, SIGNAL(update(Message::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Message::Viewer::UpdateMode)));
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -542,7 +542,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           VerifyOpaqueBodyPartMemento * newM
             = new VerifyOpaqueBodyPartMemento( job, cryptProto->keyListJob(), signaturetext );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Viewer::UpdateMode)));
+            QObject::connect(newM, SIGNAL(update(Message::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Message::Viewer::UpdateMode)));
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -854,7 +854,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
         DecryptVerifyBodyPartMemento * newM
           = new DecryptVerifyBodyPartMemento( job, ciphertext );
         if ( allowAsync() ) {
-          QObject::connect(newM, SIGNAL(update(Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Viewer::UpdateMode)));
+          QObject::connect(newM, SIGNAL(update(Message::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Message::Viewer::UpdateMode)));
           if ( newM->start() ) {
             decryptionStarted = true;
             mHasPendingAsyncJobs = true;

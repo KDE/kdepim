@@ -244,7 +244,7 @@ endif(NOT QGPGME_FOUND)
 # All done, let's display what we found...
 macro_display_feature_log()
 
-add_subdirectory(libmailreader)
+add_subdirectory(libmessageviewer)
 add_subdirectory(mailreader)
 add_subdirectory(messagelist)
 

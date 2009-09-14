@@ -18,7 +18,7 @@
 */
 
 #include "objecttreeviewersource.h"
-#include "mailviewer_p.h"
+#include "viewer_p.h"
 #include "htmlstatusbar.h"
 
 namespace Message {

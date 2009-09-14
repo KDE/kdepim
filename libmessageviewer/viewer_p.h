@@ -34,7 +34,7 @@
 
 #include "libkdepim/messagestatus.h"
 
-#include "kmreaderwin.h" //not so nice, it is actually for the enums from MailViewer
+#include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 
 using KPIM::MessageStatus;
 
@@ -462,7 +462,7 @@ public slots:
   void slotUrlSave();
   void slotSaveMessage();
   /** Re-parse the current message. */
-  void update(Viewer::UpdateMode updateMode = Viewer::Delayed);
+  void update(Message::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
   bool hasParentDivWithId( const DOM::Node &start, const QString &id );
 

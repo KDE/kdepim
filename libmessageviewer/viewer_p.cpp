@@ -18,8 +18,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "mailviewer_p.h"
-#include "kmreaderwin.h"
+#include "viewer_p.h"
+#include "viewer.h"
 #include "objecttreeemptysource.h"
 #include "objecttreeviewersource.h"
 
@@ -3067,4 +3067,4 @@ bool ViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &i
   else return false;
 }
 
-#include "mailviewer_p.moc"
+#include "viewer_p.moc"

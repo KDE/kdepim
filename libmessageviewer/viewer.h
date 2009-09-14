@@ -20,7 +20,7 @@
 #ifndef KMREADERWIN_H
 #define KMREADERWIN_H
 
-#include "mailviewer_export.h"
+#include "messageviewer_export.h"
 
 #include <QWidget>
 #include <QTimer>
@@ -77,7 +77,7 @@ namespace Message {
 namespace Message {
 
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
-class MAILVIEWER_EXPORT Viewer: public QWidget {
+class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   Q_OBJECT
   Q_DECLARE_PRIVATE(Viewer)
 

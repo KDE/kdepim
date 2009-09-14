@@ -41,7 +41,7 @@
 #include <QPointer>
 
 #include "interfaces/bodypart.h"
-#include "kmreaderwin.h"
+#include "viewer.h"
 
 namespace Kleo {
   class DecryptVerifyJob;

@@ -1,9 +1,9 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-set(libmailreader_SRCS
+set(libmessageviewer_SRCS
 
-mailviewer_p.cpp
-kmreaderwin.cpp
+viewer_p.cpp
+viewer.cpp
 khtmlparthtmlwriter.cpp
 htmlstatusbar.cpp
 headerstyle.cpp
@@ -36,21 +36,21 @@ editorwatcher.cpp
 attachmentdialog.cpp
 objecttreeviewersource.cpp
 objecttreeemptysource.cpp
- )
+)
 
 
-kde4_add_kcfg_files(libmailreader_SRCS
+kde4_add_kcfg_files(libmessageviewer_SRCS
   globalsettings_base.kcfgc
 )
 
-kde4_add_ui_files(libmailreader_SRCS
+kde4_add_ui_files(libmessageviewer_SRCS
   settings.ui
 )
 
-kde4_add_library(mailreader SHARED ${libmailreader_SRCS})
+kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})
 
 
-target_link_libraries(mailreader kdepim kpgp kleo akonadi-kde
+target_link_libraries(messageviewer kdepim kpgp kleo akonadi-kde
  ${KDEPIMLIBS_KMIME_LIBS}
  ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KTNEF_LIBRARY}
  ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
@@ -62,6 +62,6 @@ include_directories(
     ${GPGME_INCLUDES}
 )
 
-install(TARGETS mailreader ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install( FILES kmreaderwin.h attachmentstrategy.h headerstrategy.h DESTINATION  ${INCLUDE_INSTALL_DIR}/mailreader COMPONENT devel)
+install( FILES viewer.h attachmentstrategy.h headerstrategy.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)

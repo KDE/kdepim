@@ -20,7 +20,7 @@
 #ifndef MAILVIEWER_OBJECTTREESOURCE_IF_H
 #define MAILVIEWER_OBJECTTREESOURCE_IF_H
 
-#include "mailviewer_export.h"
+#include "messageviewer_export.h"
 
 namespace KMime {
   class Message;
@@ -39,7 +39,7 @@ namespace Message {
 /** @author Andras Mantia <amantia@kdab.net> */
 
 /** Interface for object tree sources.*/
-class MAILVIEWER_EXPORT ObjectTreeSourceIf  {
+class MESSAGEVIEWER_EXPORT ObjectTreeSourceIf  {
 
 public:
     ObjectTreeSourceIf() {};
