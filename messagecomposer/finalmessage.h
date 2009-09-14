@@ -30,7 +30,7 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-namespace MessageComposer {
+namespace Message {
 
 class Composer;
 class ComposerPrivate;

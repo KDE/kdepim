@@ -23,12 +23,11 @@
 #include <qtest_kde.h>
 
 #include <kmime/kmime_message.h>
-using namespace KMime;
 
 #include <messagecomposer/composer.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/skeletonmessagejob.h>
-using namespace MessageComposer;
+using namespace Message;
 
 QTEST_KDEMAIN( SkeletonMessageJobTest, NoGUI )
 
@@ -53,7 +52,7 @@ void SkeletonMessageJobTest::testSubject()
   infoPart->setSubject( subject );
   SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, composer );
   QVERIFY( sjob->exec() );
-  Message *message = sjob->message();
+  KMime::Message *message = sjob->message();
   QVERIFY( message->subject( false ) );
   kDebug() << message->subject()->asUnicodeString();
   QCOMPARE( subject, message->subject()->asUnicodeString() );
@@ -141,7 +140,7 @@ void SkeletonMessageJobTest::testAddresses()
   infoPart->setBcc( bcc );
   SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, composer );
   QVERIFY( sjob->exec() );
-  Message *message = sjob->message();
+  KMime::Message *message = sjob->message();
 
   {
     QVERIFY( message->from( false ) );

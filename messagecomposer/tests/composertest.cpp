@@ -29,7 +29,7 @@ using namespace KMime;
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
-using namespace MessageComposer;
+using namespace Message;
 
 #include <libkdepim/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
@@ -51,7 +51,7 @@ void ComposerTest::testAttachments()
   composer->addAttachmentPart( attachment );
 
   QVERIFY( composer->exec() );
-  Message::Ptr message = composer->resultMessage();
+  KMime::Message::Ptr message = composer->resultMessage();
   kDebug() << message->encodedContent();
   delete composer;
   composer = 0;

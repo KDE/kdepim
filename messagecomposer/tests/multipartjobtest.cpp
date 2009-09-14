@@ -29,7 +29,7 @@ using namespace KMime;
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/singlepartjob.h>
 #include <messagecomposer/multipartjob.h>
-using namespace MessageComposer;
+using namespace Message;
 
 QTEST_KDEMAIN( MultipartJobTest, NoGUI )
 

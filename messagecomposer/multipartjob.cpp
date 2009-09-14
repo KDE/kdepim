@@ -24,10 +24,10 @@
 
 #include <kmime/kmime_content.h>
 
-using namespace MessageComposer;
+using namespace Message;
 using namespace KMime;
 
-class MessageComposer::MultipartJobPrivate : public ContentJobBasePrivate
+class Message::MultipartJobPrivate : public ContentJobBasePrivate
 {
   public:
     MultipartJobPrivate( MultipartJob *qq )

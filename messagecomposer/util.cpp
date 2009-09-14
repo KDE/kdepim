@@ -31,9 +31,9 @@
 #include <kmime/kmime_util.h>
 
 using namespace KMime;
-using namespace MessageComposer;
+using namespace Message;
 
-QByteArray MessageComposer::selectCharset( const QList<QByteArray> &charsets, const QString &text )
+QByteArray Message::selectCharset( const QList<QByteArray> &charsets, const QString &text )
 {
   foreach( const QByteArray &name, charsets ) {
     // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because

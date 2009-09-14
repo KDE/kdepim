@@ -38,10 +38,10 @@
 
 #include <kpimtextedit/textedit.h>
 
-using namespace MessageComposer;
+using namespace Message;
 using namespace KMime;
 
-class MessageComposer::MainTextJobPrivate : public ContentJobBasePrivate
+class Message::MainTextJobPrivate : public ContentJobBasePrivate
 {
   public:
     MainTextJobPrivate( MainTextJob *qq )

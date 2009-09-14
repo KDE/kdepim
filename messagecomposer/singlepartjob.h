@@ -33,7 +33,7 @@ namespace KMime {
   }
 }
 
-namespace MessageComposer {
+namespace Message {
 
 class SinglepartJobPrivate;
 

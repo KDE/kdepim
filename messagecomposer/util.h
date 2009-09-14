@@ -26,7 +26,7 @@
 
 #include <kmime/kmime_headers.h>
  
-namespace MessageComposer {
+namespace Message {
 
 // TODO should these be exported?
 // They are used in the unit tests, but are they useful to the outside world?

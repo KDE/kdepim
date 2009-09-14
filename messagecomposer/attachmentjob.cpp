@@ -33,10 +33,10 @@
 
 #include <KDebug>
 
-using namespace MessageComposer;
+using namespace Message;
 using namespace KPIM;
 
-class MessageComposer::AttachmentJobPrivate : public ContentJobBasePrivate
+class Message::AttachmentJobPrivate : public ContentJobBasePrivate
 {
   public:
     AttachmentJobPrivate( AttachmentJob *qq )

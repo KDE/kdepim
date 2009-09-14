@@ -32,11 +32,10 @@
 
 #include <KDebug>
 
-using namespace MessageComposer;
-using namespace KMime;
+using namespace Message;
 using KPIM::AttachmentPart;
 
-class MessageComposer::ComposerPrivate : public JobBasePrivate
+class Message::ComposerPrivate : public JobBasePrivate
 {
   public:
     ComposerPrivate( Composer *qq )
@@ -70,8 +69,8 @@ class MessageComposer::ComposerPrivate : public JobBasePrivate
     AttachmentPart::List attachmentParts;
 
     // Stuff that we play with.
-    Message *skeletonMessage;
-    Content *resultContent;
+    KMime::Message *skeletonMessage;
+    KMime::Content *resultContent;
 
     Q_DECLARE_PUBLIC( Composer )
 };
@@ -167,7 +166,7 @@ void ComposerPrivate::composeStep3()
 
   // Compose the final resulting message.
   QByteArray allData = skeletonMessage->head() + resultContent->encodedContent();
-  resultMessage = Message::Ptr( new Message );
+  resultMessage = KMime::Message::Ptr( new KMime::Message );
   resultMessage->setContent( allData );
   resultMessage->parse(); // Not strictly necessary.
   delete resultContent;
@@ -190,7 +189,7 @@ Composer::~Composer()
 {
 }
 
-Message::Ptr Composer::resultMessage() const
+KMime::Message::Ptr Composer::resultMessage() const
 {
   Q_D( const Composer );
   Q_ASSERT( d->finished );

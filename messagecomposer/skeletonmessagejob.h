@@ -27,7 +27,7 @@ namespace KMime {
   class Message;
 }
 
-namespace MessageComposer {
+namespace Message {
 
 class SkeletonMessageJobPrivate;
 class InfoPart;

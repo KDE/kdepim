@@ -29,7 +29,7 @@ namespace boost {
   template <typename T> class shared_ptr;
 }
 
-namespace MessageComposer {
+namespace Message {
 
 class AttachmentJobPrivate;
 

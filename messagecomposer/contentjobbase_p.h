@@ -25,7 +25,7 @@
 
 #include <kmime/kmime_content.h>
 
-namespace MessageComposer {
+namespace Message {
 
 class ContentJobBasePrivate : public JobBasePrivate
 {

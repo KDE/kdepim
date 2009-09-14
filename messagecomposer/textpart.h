@@ -27,7 +27,7 @@
 
 #include <kpimtextedit/textedit.h>
 
-namespace MessageComposer {
+namespace Message {
 
 class MESSAGECOMPOSER_EXPORT TextPart : public MessagePart
 {
