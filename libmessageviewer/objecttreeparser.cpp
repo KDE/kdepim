@@ -164,7 +164,8 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
 }
 
 ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
-  : mCryptoProtocol( other.cryptoProtocol() ),
+  : mSource( other.mSource ),
+    mCryptoProtocol( other.cryptoProtocol() ),
     mShowOnlyOneMimePart( other.showOnlyOneMimePart() ),
     mKeepEncryptions( other.keepEncryptions() ),
     mIncludeSignatures( other.includeSignatures() ),
