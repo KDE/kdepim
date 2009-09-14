@@ -196,7 +196,7 @@ static QString displayViewFormatAttendees( Incidence *incidence )
 
   // Add organizer link
   tmpStr += "<tr>";
-  tmpStr += "<td align=\"right\"><b>" + i18n( "Organizer:" ) + "</b></td>";
+  tmpStr += "<td><b>" + i18n( "Organizer:" ) + "</b></td>";
   tmpStr += "<td>" +
             displayViewLinkPerson( incidence->organizer().email(),
                                    incidence->organizer().name(),
@@ -206,7 +206,7 @@ static QString displayViewFormatAttendees( Incidence *incidence )
 
   // Add attendees links
   tmpStr += "<tr>";
-  tmpStr += "<td align=\"right\"><b>" + i18n( "Attendees:" ) + "</b></td>";
+  tmpStr += "<td><b>" + i18n( "Attendees:" ) + "</b></td>";
   tmpStr += "<td>";
   Attendee::List::ConstIterator it;
   for( it = attendees.begin(); it != attendees.end(); ++it ) {
@@ -266,9 +266,8 @@ static QString displayViewFormatCategories( Incidence *incidence )
 
 static QString displayViewFormatCreationDate( Incidence *incidence )
 {
-  QDateTime qdt = incidence->created();
   return i18n( "Creation date: %1" ).
-    arg( KGlobal::locale()->formatDateTime( qdt, true ) );
+    arg( IncidenceFormatter::dateTimeToString( incidence->created(), false, true ) );
 }
 
 static QString displayViewFormatBirthday( Event *event )
@@ -357,12 +356,14 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   QString tmpStr = displayViewFormatHeader( event );
 
   tmpStr += "<table>";
+  tmpStr += "<col width=\"25%\"/>";
+  tmpStr += "<col width=\"75%\"/>";
 
   if ( calendar ) {
     QString calStr = IncidenceFormatter::resourceString( calendar, event );
     if ( !calStr.isEmpty() ) {
       tmpStr += "<tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Calendar:" ) + "</b></td>";
       tmpStr += "<td>" + calStr + "</td>";
       tmpStr += "</tr>";
     }
@@ -370,7 +371,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
 
   if ( !event->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Location:" ) + "</b></td>";
     tmpStr += "<td>" + event->location() + "</td>";
     tmpStr += "</tr>";
   }
@@ -378,14 +379,14 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   tmpStr += "<tr>";
   if ( event->doesFloat() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
                 arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
@@ -393,14 +394,14 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
                 arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
                 "</td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
       if ( event->hasEndDate() && event->dtStart() != event->dtEnd()) {
         tmpStr += "<td>" +
                   i18n("<beginTime> - <endTime>","%1 - %2").
@@ -413,7 +414,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
                   "</td>";
       }
       tmpStr += "</tr><tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
                 arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
@@ -425,9 +426,9 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   if ( event->customProperty("KABC","BIRTHDAY")== "YES" ) {
     tmpStr += "<tr>";
     if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Anniversary:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Anniversary:" ) + "</b></td>";
     } else {
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Birthday:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Birthday:" ) + "</b></td>";
     }
     tmpStr += "<td>" + displayViewFormatBirthday( event ) + "</td>";
     tmpStr += "</tr>";
@@ -437,7 +438,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
 
   if ( !event->description().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Description:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Description:" ) + "</b></td>";
     tmpStr += "<td>" + event->description() + "</td>";
     tmpStr += "</tr>";
   }
@@ -445,7 +446,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   int categoryCount = event->categories().count();
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" +
+    tmpStr += "<td><b>" +
               i18n( "Category:", "Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( event ) + "</td>";
@@ -456,7 +457,13 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
     QDateTime dt =
       event->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Next on" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Next:" ) + "</b></td>";
+    tmpStr += "<td>" +
+              ( dt.isValid() ?
+                IncidenceFormatter::dateTimeToString( dt, event->doesFloat(), false ) :
+                i18n( "no date", "none" ) ) +
+              "</td>";
+
     if ( !event->doesFloat() ) {
       tmpStr += "<td>" +
                 KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
@@ -474,7 +481,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   int attachmentCount = event->attachments().count();
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" +
+    tmpStr += "<td><b>" +
               i18n( "Attachment:", "Attachments:", attachmentCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatAttachments( event ) + "</td>";
@@ -496,12 +503,14 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
   QString tmpStr = displayViewFormatHeader( todo );
 
   tmpStr += "<table>";
+  tmpStr += "<col width=\"25%\"/>";
+  tmpStr += "<col width=\"75%\"/>";
 
   if ( calendar ) {
     QString calStr = IncidenceFormatter::resourceString( calendar, todo );
     if ( !calStr.isEmpty() ) {
       tmpStr += "<tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Calendar:" ) + "</b></td>";
       tmpStr += "<td>" + calStr + "</td>";
       tmpStr += "</tr>";
     }
@@ -509,14 +518,14 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
 
   if ( !todo->location().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Location:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Location:" ) + "</b></td>";
     tmpStr += "<td>" + todo->location() + "</td>";
     tmpStr += "</tr>";
   }
 
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Start:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Start:" ) + "</b></td>";
     tmpStr += "<td>" +
               IncidenceFormatter::dateTimeToString( todo->dtStart(),
                                                     todo->doesFloat(), false ) +
@@ -526,7 +535,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
 
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Due:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Due:" ) + "</b></td>";
     tmpStr += "<td>" +
               IncidenceFormatter::dateTimeToString( todo->dtDue(),
                                                     todo->doesFloat(), false ) +
@@ -536,7 +545,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
 
   if ( !todo->description().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Description:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Description:" ) + "</b></td>";
     tmpStr += "<td>" + todo->description() + "</td>";
     tmpStr += "</tr>";
   }
@@ -544,7 +553,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
   int categoryCount = todo->categories().count();
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" +
+    tmpStr += "<td><b>" +
               i18n( "Category:", "Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( todo ) + "</td>";
@@ -552,7 +561,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
   }
 
   tmpStr += "<tr>";
-  tmpStr += "<td align=\"right\"><b>" + i18n( "Priority:" ) + "</b></td>";
+  tmpStr += "<td><b>" + i18n( "Priority:" ) + "</b></td>";
   tmpStr += "<td>";
   if ( todo->priority() > 0 ) {
     tmpStr += QString::number( todo->priority() );
@@ -563,7 +572,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
   tmpStr += "</tr>";
 
   tmpStr += "<tr>";
-  tmpStr += "<td align=\"right\"><b>" + i18n( "Completed:" ) + "</b></td>";
+  tmpStr += "<td><b>" + i18n( "Completed:" ) + "</b></td>";
   tmpStr += "<td>" + i18n( "%1%" ).arg( todo->percentComplete() ) + "</td>";
   tmpStr += "</tr>";
 
@@ -571,8 +580,8 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
     QDateTime dt =
       todo->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" +
-              i18n( "Next Occurrence" ) +
+    tmpStr += "<td><b>" +
+              i18n( "Next:" ) +
               "</b></td>";
     if ( !todo->doesFloat() ) {
       tmpStr += "<td>" +
@@ -591,7 +600,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
   int attachmentCount = todo->attachments().count();
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" +
+    tmpStr += "<td><b>" +
               i18n( "Attachment:", "Attachments:", attachmentCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatAttachments( todo ) + "</td>";
@@ -614,19 +623,21 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
   QString tmpStr = displayViewFormatHeader( journal );
 
   tmpStr += "<table>";
+  tmpStr += "<col width=\"25%\"/>";
+  tmpStr += "<col width=\"75%\"/>";
 
   if ( calendar ) {
     QString calStr = IncidenceFormatter::resourceString( calendar, journal );
     if ( !calStr.isEmpty() ) {
       tmpStr += "<tr>";
-      tmpStr += "<td align=\"right\"><b>" + i18n( "Calendar:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Calendar:" ) + "</b></td>";
       tmpStr += "<td>" + calStr + "</td>";
       tmpStr += "</tr>";
     }
   }
 
   tmpStr += "<tr>";
-  tmpStr += "<td align=\"right\"><b>" + i18n( "Date:" ) + "</b></td>";
+  tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
   tmpStr += "<td>" +
             IncidenceFormatter::dateToString( journal->dtStart(), false ) +
             "</td>";
@@ -634,7 +645,7 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
 
   if ( !journal->description().isEmpty() ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" + i18n( "Description:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "Description:" ) + "</b></td>";
     tmpStr += "<td>" + journal->description() + "</td>";
     tmpStr += "</tr>";
   }
@@ -642,7 +653,7 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
   int categoryCount = journal->categories().count();
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
-    tmpStr += "<td align=\"right\"><b>" +
+    tmpStr += "<td><b>" +
               i18n( "Category:", "Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( journal ) + "</td>";
@@ -657,15 +668,18 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
 
 static QString displayViewFormatFreeBusy( Calendar * /*calendar*/, FreeBusy *fb )
 {
-  if ( !fb ) return QString::null;
+  if ( !fb ) {
+    return QString::null;
+  }
 
-  QString tmpStr =
-    htmlAddTag( "u",
-                       htmlAddTag( "b", i18n("Free/Busy information for %1")
-                                          .arg( fb->organizer().fullName() ) ) );
-  tmpStr += htmlAddTag( "i", i18n("Busy times in date range %1 - %2:")
-      .arg( KGlobal::locale()->formatDate( fb->dtStart().date(), true ) )
-      .arg( KGlobal::locale()->formatDate( fb->dtEnd().date(), true ) ) );
+  QString tmpStr = htmlAddTag( "h2",
+                               htmlAddTag( "b",
+                                           i18n("Free/Busy information for %1").
+                                           arg( fb->organizer().fullName() ) ) );
+
+  tmpStr += htmlAddTag( "h4", i18n("Busy times in date range %1 - %2:").
+                        arg( IncidenceFormatter::dateToString( fb->dtStart(), true ) ).
+                        arg( IncidenceFormatter::dateToString( fb->dtEnd(), true ) ) );
 
   QValueList<Period> periods = fb->busyPeriods();
 
@@ -687,20 +701,20 @@ static QString displayViewFormatFreeBusy( Calendar * /*calendar*/, FreeBusy *fb 
       if ( dur > 0 ) {
         cont += i18n("1 second", "%n seconds", dur);
       }
-      text += i18n("startDate for duration", "%1 for %2")
-          .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
-          .arg( cont );
+      text += i18n("startDate for duration", "%1 for %2").
+              arg( IncidenceFormatter::dateTimeToString( per.start(), false, true ) ).
+              arg( cont );
       text += "<br>";
     } else {
       if ( per.start().date() == per.end().date() ) {
-        text += i18n("date, fromTime - toTime ", "%1, %2 - %3")
-            .arg( KGlobal::locale()->formatDate( per.start().date() ) )
-            .arg( KGlobal::locale()->formatTime( per.start().time() ) )
-            .arg( KGlobal::locale()->formatTime( per.end().time() ) );
+        text += i18n("date, fromTime - toTime ", "%1, %2 - %3").
+                arg( IncidenceFormatter::dateToString( per.start().date(), true ) ).
+                arg( IncidenceFormatter::timeToString( per.start(), false ) ).
+                arg( IncidenceFormatter::timeToString( per.end(), false ) );
       } else {
-        text += i18n("fromDateTime - toDateTime", "%1 - %2")
-          .arg( KGlobal::locale()->formatDateTime( per.start(), false ) )
-          .arg( KGlobal::locale()->formatDateTime( per.end(), false ) );
+        text += i18n("fromDateTime - toDateTime", "%1 - %2").
+                arg( IncidenceFormatter::dateTimeToString( per.start(), false, true ) ).
+                arg( IncidenceFormatter::dateTimeToString( per.end(), false, true ) );
       }
       text += "<br>";
     }
