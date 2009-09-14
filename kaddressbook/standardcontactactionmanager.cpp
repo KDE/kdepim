@@ -49,12 +49,19 @@ class StandardContactActionManager::Private
       mGenericManager->createAllActions();
 
       mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book Folder..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setWhatsThis( i18n( "Add a new address book folder to the currently selected address book folder." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book Folder", "Copy %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis( i18n( "Copy the selected address book folders to the clipboard." ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book Folder" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis( i18n( "Delete the selected address book folders from the address book." ) );
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Reload" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections)->setWhatsThis( i18n( "Reloads the contacts from Akonadi and updates the address book view." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis( i18n( "Open a dialog to edit the properties of the selected address book folder." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis( i18n( "Copy the selected contacts to the clipboard." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected contacts from the address book." ) );
     }
 
     ~Private()
@@ -265,6 +272,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "document-edit" ) );
       action->setText( i18n( "Edit Contact..." ) );
+      action->setWhatsThis( i18n( "Edit the selected contact<p>You will be presented with a dialog where you can edit all data about a person, including addresses and phone numbers.</p>" ) );
       action->setEnabled( false );
       d->mActions.insert( EditItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
@@ -274,6 +282,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "folder-new" ) );
       action->setText( i18n( "Add &Address Book..." ) );
+      action->setWhatsThis( i18n( "Add a new address book<p>You will be presented with a dialog where you can select the type of the address book that shall be added.</p>" ) );
       d->mActions.insert( CreateAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_create" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( addAddressBookTriggered() ) );
@@ -282,6 +291,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "edit-delete" ) );
       action->setText( i18n( "&Delete Address Book" ) );
+      action->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book and all contained contacts and contact groups will be deleted.</p>" ) );
       action->setVisible( false );
       d->mActions.insert( DeleteAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );

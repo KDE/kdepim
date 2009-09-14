@@ -263,7 +263,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   KToggleAction *toggleAction = 0;
 
   action = KStandardAction::print( this, SLOT( print() ), collection );
-  action->setWhatsThis( i18n( "Print a special number of contacts." ) );
+  action->setWhatsThis( i18n( "Print the complete address book or a selected number of contacts." ) );
 
   action = collection->addAction( "quick_search" );
   action->setText( i18n( "Quick search" ) );
@@ -272,6 +272,7 @@ void MainWidget::setupActions( KActionCollection *collection )
   action = collection->addAction( "select_all" );
   action->setText( i18n( "Select All" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
+  action->setWhatsThis( i18n( "Select all contacts in the current address book view." ) );
   connect( action, SIGNAL( triggered( bool ) ), mItemView, SLOT( selectAll() ) );
 
   toggleAction = collection->add<KToggleAction>( "options_show_collectionview" );
@@ -297,51 +298,61 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
   toggleAction->setText( i18n( "Show Simple View" ) );
+  action->setWhatsThis( i18n( "Show a simple mode of the address book view." ) );
   connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setSimpleGuiMode( bool ) ) );
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
   action->setText( i18n( "Import vCard..." ) );
+  action->setWhatsThis( i18n( "Import contacts from a vCard file." ) );
   mXXPortManager->addImportAction( action, "vcard30" );
 
   action = collection->addAction( "file_import_csv" );
   action->setText( i18n( "Import CSV file..." ) );
+  action->setWhatsThis( i18n( "Import contacts from a file in comma separated value format." ) );
   mXXPortManager->addImportAction( action, "csv" );
 
   action = collection->addAction( "file_import_ldif" );
   action->setText( i18n( "Import LDIF file..." ) );
+  action->setWhatsThis( i18n( "Import contacts from a LDIF file." ) );
   mXXPortManager->addImportAction( action, "ldif" );
 
   action = collection->addAction( "file_import_ldap" );
   action->setText( i18n( "Import from LDAP server..." ) );
+  action->setWhatsThis( i18n( "Import contacts from a LDAP server." ) );
   mXXPortManager->addImportAction( action, "ldap" );
 
   action = collection->addAction( "file_import_gmx" );
   action->setText( i18n( "Import GMX file..." ) );
+  action->setWhatsThis( i18n( "Import contacts from a GMX address book file." ) );
   mXXPortManager->addImportAction( action, "gmx" );
 
 
   // export actions
   action = collection->addAction( "file_export_vcard30" );
   action->setText( i18n( "Export vCard 3.0..." ) );
+  action->setWhatsThis( i18n( "Export contacts to a vCard 3.0 file." ) );
   mXXPortManager->addExportAction( action, "vcard30" );
 
   action = collection->addAction( "file_export_vcard21" );
   action->setText( i18n( "Export vCard 2.1..." ) );
+  action->setWhatsThis( i18n( "Export contacts to a vCard 2.1 file." ) );
   mXXPortManager->addExportAction( action, "vcard21" );
 
   action = collection->addAction( "file_export_csv" );
   action->setText( i18n( "Export CSV file..." ) );
+  action->setWhatsThis( i18n( "Export contacts to a file in comma separated value format." ) );
   mXXPortManager->addExportAction( action, "csv" );
 
   action = collection->addAction( "file_export_ldif" );
   action->setText( i18n( "Export LDIF file..." ) );
+  action->setWhatsThis( i18n( "Export contacts to a LDIF file." ) );
   mXXPortManager->addExportAction( action, "ldif" );
 
   action = collection->addAction( "file_export_gmx" );
   action->setText( i18n( "Export GMX file..." ) );
+  action->setWhatsThis( i18n( "Export contacts to a GMX address book file." ) );
   mXXPortManager->addExportAction( action, "gmx" );
-
 }
 
 void MainWidget::print()
