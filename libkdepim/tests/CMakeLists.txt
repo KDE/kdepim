@@ -1,5 +1,18 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
+########### KTimeZoneComboBox unit test #############
+set(ktimezonecomboboxtest_SRCS ktimezonecomboboxtest.cpp)
+kde4_add_unit_test(ktimezonecomboboxtest TESTNAME ktimezonecomboboxtest ${ktimezonecomboboxtest_SRCS})
+
+target_link_libraries(
+  ktimezonecomboboxtest
+  kdepim
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDEPIMLIBS_KCAL_LIBS}
+)
+
 ########### next target ###############
 
 set(testwizard_SRCS testwizard.cpp )
