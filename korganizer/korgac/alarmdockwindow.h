@@ -30,8 +30,6 @@
 #include <QAction>
 #include <QIcon>
 
-using namespace Experimental;
-
 class AlarmDockWindow : public KNotificationItem
 {
   Q_OBJECT
