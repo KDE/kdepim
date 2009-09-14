@@ -24,12 +24,14 @@
 
 class QString;
 
-class MailViewerPrivate;
+namespace Message {
+  
+class ViewerPrivate;
 
 /** An ObjectTreeParser source working on a MailViewer object */
 class MailViewerSource : public ObjectTreeSourceIf {
  public:
-  MailViewerSource( MailViewerPrivate * viewer);
+  MailViewerSource( ViewerPrivate * viewer);
   ~MailViewerSource();
   bool htmlMail();
   bool decryptMessage();
@@ -46,8 +48,10 @@ class MailViewerSource : public ObjectTreeSourceIf {
   QObject *sourceObject();
 
   private:
-    MailViewerPrivate *mViewer;
+    ViewerPrivate *mViewer;
 };
+
+}
 
 #endif
 

@@ -43,6 +43,7 @@
 #include <QFont>
 #include <QPalette>
 
+namespace Message {
 
 CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   KPIM::CSSHelper( pd )
@@ -99,5 +100,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   mBackingPixmapOn = !mBackingPixmapStr.isEmpty();
 
   recalculatePGPColors();
+}
+
 }
 

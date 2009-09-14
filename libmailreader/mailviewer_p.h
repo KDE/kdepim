@@ -53,38 +53,44 @@ class QTreeView;
 
 class MimeTreeModel;
 class ConfigureWidget;
-class ObjectTreeParser;
-class AttachmentStrategy;
 class EditorWatcher;
 
 class HeaderStrategy;
 class HeaderStyle;
-class HtmlWriter;
 class KHtmlPartHtmlWriter;
 class HtmlStatusBar;
-class CSSHelper;
-namespace Interface {
-  class BodyPartMemento;
-}
 
 namespace KParts {
   struct BrowserArguments;
   class OpenUrlArguments;
 }
 
+namespace Message {
+
+  namespace Interface {
+    class BodyPartMemento;
+  }
+
+  class HtmlWriter;
+  class CSSHelper;
+  class AttachmentStrategy;
+  class ObjectTreeParser;
+}
+
+namespace Message {
 /** Private class for MailViewer.
 * @author andras@kdab.net
 */
-class MailViewerPrivate : public QObject {
+class ViewerPrivate : public QObject {
   Q_OBJECT
 public:
 
-  MailViewerPrivate(MailViewer *aParent,
+  ViewerPrivate(Viewer *aParent,
                     KSharedConfigPtr config,
                     QWidget *mainWindow,
                     KActionCollection* actionCollection);
 
-  virtual ~MailViewerPrivate();
+  virtual ~ViewerPrivate();
   
     /** Returns message part from given URL or null if invalid. */
   KMime::Content* nodeFromUrl(const KUrl &url);
@@ -255,7 +261,7 @@ public:
   *               an empty page is shown.
   * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
   */
-  void setMessageItem(const Akonadi::Item& item, MailViewer::UpdateMode updateMode = MailViewer::Delayed );
+  void setMessageItem(const Akonadi::Item& item, Viewer::UpdateMode updateMode = Viewer::Delayed );
 
 
   /** Set the message that shall be shown.
@@ -263,7 +269,7 @@ public:
   * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
   *  @param MailViewer::Ownership - Transfer means the ownership of the msg pointer is taken by the lib
   */
-  void setMessage(KMime::Message* msg, MailViewer::UpdateMode updateMode = MailViewer::Delayed, MailViewer::Ownership = MailViewer::Keep);
+  void setMessage(KMime::Message* msg, Viewer::UpdateMode updateMode = Viewer::Delayed, Viewer::Ownership = Viewer::Keep);
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
@@ -456,7 +462,7 @@ public slots:
   void slotUrlSave();
   void slotSaveMessage();
   /** Re-parse the current message. */
-  void update(MailViewer::UpdateMode updateMode = MailViewer::Delayed);
+  void update(Viewer::UpdateMode updateMode = Viewer::Delayed);
 
   bool hasParentDivWithId( const DOM::Node &start, const QString &id );
 
@@ -527,7 +533,9 @@ public:
   bool mExternalWindow;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
 
-  MailViewer *const q;
+  Viewer *const q;
 };
+
+}
 
 #endif

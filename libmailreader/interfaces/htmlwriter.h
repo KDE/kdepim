@@ -36,7 +36,7 @@
 class QByteArray;
 class QString;
 
-
+namespace Message {
 /**
   * @short An interface for HTML sinks.
   * @author Marc Mutz <mutz@kde.org>
@@ -112,6 +112,8 @@ public:
     */
   virtual void embedPart( const QByteArray & contentId, const QString & url ) = 0;
 };
+
+}
 
 
 #endif // __KMAIL_INTERFACES_HTMLWRITER_H__

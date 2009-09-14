@@ -28,10 +28,14 @@ namespace KMime {
 
 class QObject;
 class QTextCodec;
-class AttachmentStrategy;
-class HtmlWriter;
-class CSSHelper;
 
+namespace Message {
+  class HtmlWriter;
+  class CSSHelper;
+  class AttachmentStrategy;
+};
+
+namespace Message {
 /** @author Andras Mantia <amantia@kdab.net> */
 
 /** Interface for object tree sources.*/
@@ -79,5 +83,6 @@ public:
     /** The source object behind the interface. */    
     virtual QObject *sourceObject() = 0;
 };
+}
 
 #endif

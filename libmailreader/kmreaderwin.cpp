@@ -30,12 +30,14 @@
 #include <KHTMLPart>
 #include <KHTMLView>
 
-MailViewer::MailViewer(QWidget *aParent,
+namespace Message {
+
+Viewer::Viewer(QWidget *aParent,
                          KSharedConfigPtr config,
                          QWidget *mainWindow,
                          KActionCollection* actionCollection,
                          Qt::WindowFlags aFlags )
-  : QWidget(aParent, aFlags ), d_ptr(new MailViewerPrivate(this, config, mainWindow, actionCollection) )
+  : QWidget(aParent, aFlags ), d_ptr(new ViewerPrivate(this, config, mainWindow, actionCollection) )
 {
   connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ), SIGNAL( replaceMsgByUnencryptedVersion() ) );
   connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
@@ -44,55 +46,55 @@ MailViewer::MailViewer(QWidget *aParent,
   setMessage( 0, Delayed );
 }
 
-MailViewer::~MailViewer()
+Viewer::~Viewer()
 {
   //the d_ptr is automatically deleted
 }
 
 
-void MailViewer::setMessage(KMime::Message* message, UpdateMode updateMode, Ownership ownership)
+void Viewer::setMessage(KMime::Message* message, UpdateMode updateMode, Ownership ownership)
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setMessage( message, updateMode, ownership);
 }
 
 
-void MailViewer::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
+void Viewer::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setMessageItem( item, updateMode );
 }
 
-void MailViewer::displaySplashPage( const QString &info )
+void Viewer::displaySplashPage( const QString &info )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->displaySplashPage( info );
 }
 
 
-void MailViewer::enableMessageDisplay()
+void Viewer::enableMessageDisplay()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->enableMessageDisplay();
 }
 
-void MailViewer::printMessage( KMime::Message* message )
+void Viewer::printMessage( KMime::Message* message )
 {
-   Q_D(MailViewer);
+   Q_D(Viewer);
    d->printMessage( message );
 }
 
-void MailViewer::print()
+void Viewer::print()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   if ( !message() )
     return;
   d->mViewer->view()->print();
 }
 
-void MailViewer::resizeEvent( QResizeEvent * )
+void Viewer::resizeEvent( QResizeEvent * )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   if( !d->mResizeTimer.isActive() )
   {
     //
@@ -103,179 +105,179 @@ void MailViewer::resizeEvent( QResizeEvent * )
   }
 }
 
-void MailViewer::closeEvent( QCloseEvent *e )
+void Viewer::closeEvent( QCloseEvent *e )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   QWidget::closeEvent( e );
   d->writeConfig();
 }
 
-void MailViewer::slotScrollUp()
+void Viewer::slotScrollUp()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->mViewer->view()->scrollBy( 0, -10 );
 }
 
-void MailViewer::slotScrollDown()
+void Viewer::slotScrollDown()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->mViewer->view()->scrollBy( 0, 10 );
 }
 
-bool MailViewer::atBottom() const
+bool Viewer::atBottom() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   KHTMLView *view = d->mViewer->view();
   return view->contentsY() + view->visibleHeight() >= view->contentsHeight();
 }
 
-void MailViewer::slotJumpDown()
+void Viewer::slotJumpDown()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   KHTMLView *view = d->mViewer->view();
   view->scrollBy( 0, view->visibleHeight() );
 }
 
-void MailViewer::slotScrollPrior()
+void Viewer::slotScrollPrior()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   KHTMLView *view = d->mViewer->view();
   view->scrollBy( 0, -(int)(d->mViewer->widget()->height() * 0.8 ) );
 }
 
-void MailViewer::slotScrollNext()
+void Viewer::slotScrollNext()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   KHTMLView *view = d->mViewer->view();
   view->scrollBy( 0, (int)(d->mViewer->widget()->height() * 0.8 ) );
 }
 
-QString MailViewer::selectedText()
+QString Viewer::selectedText()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   QString temp = d->mViewer->selectedText();
   return temp;
 }
 
-void MailViewer::setHtmlOverride( bool override )
+void Viewer::setHtmlOverride( bool override )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setHtmlOverride( override );
 }
 
-bool MailViewer::htmlOverride() const
+bool Viewer::htmlOverride() const
 {
-  Q_D(const MailViewer);;
+  Q_D(const Viewer);;
   return d->htmlOverride();
 }
 
-void MailViewer::setHtmlLoadExtOverride( bool override )
+void Viewer::setHtmlLoadExtOverride( bool override )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setHtmlLoadExtOverride( override );
 }
 
-bool MailViewer::htmlLoadExtOverride() const
+bool Viewer::htmlLoadExtOverride() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   return d->htmlLoadExtOverride();
 }
 
-bool MailViewer::htmlMail() const
+bool Viewer::htmlMail() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   d->htmlMail();
 }
 
-bool MailViewer::htmlLoadExternal() const
+bool Viewer::htmlLoadExternal() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   d->htmlLoadExternal();
 }
 
-bool MailViewer::isFixedFont() const
+bool Viewer::isFixedFont() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   return d->mUseFixedFont;
 
 }
-void MailViewer::setUseFixedFont( bool useFixedFont )
+void Viewer::setUseFixedFont( bool useFixedFont )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setUseFixedFont( useFixedFont );
 }
 
-QWidget* MailViewer::mainWindow()
+QWidget* Viewer::mainWindow()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   return d->mMainWindow;
 }
 
-void MailViewer::setDecryptMessageOverwrite( bool overwrite )
+void Viewer::setDecryptMessageOverwrite( bool overwrite )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setDecryptMessageOverwrite( overwrite );
 }
 
-bool MailViewer::showSignatureDetails() const
+bool Viewer::showSignatureDetails() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   return d->showSignatureDetails();
 }
 
-void MailViewer::setShowSignatureDetails( bool showDetails )
+void Viewer::setShowSignatureDetails( bool showDetails )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setShowSignatureDetails( showDetails );
 }
 
-bool MailViewer::showAttachmentQuicklist() const
+bool Viewer::showAttachmentQuicklist() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   return d->showAttachmentQuicklist();
 }
 
-void MailViewer::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
+void Viewer::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setShowAttachmentQuicklist( showAttachmentQuicklist );
 }
 
-QWidget* MailViewer::configWidget()
+QWidget* Viewer::configWidget()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   ConfigureWidget *w = new ConfigureWidget();
   connect( w, SIGNAL( settingsChanged() ), d, SLOT( slotSettingsChanged() ) );
   return w;
 }
 
-KConfigSkeleton *MailViewer::configObject()
+KConfigSkeleton *Viewer::configObject()
 {
   return GlobalSettings::self();
 }
 
-KMime::Message* MailViewer::message() const
+KMime::Message* Viewer::message() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   return d->mMessage;
 }
 
-void MailViewer::setPrintFont( const QFont& font )
+void Viewer::setPrintFont( const QFont& font )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->mCSSHelper->setPrintFont( font );
 }
 
-void MailViewer::styleChange( QStyle& oldStyle )
+void Viewer::styleChange( QStyle& oldStyle )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setStyleDependantFrameWidth();
   QWidget::styleChange( oldStyle );
 }
 
-bool MailViewer::event(QEvent *e)
+bool Viewer::event(QEvent *e)
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   if (e->type() == QEvent::PaletteChange)
   {
     delete d->mCSSHelper;
@@ -284,30 +286,31 @@ bool MailViewer::event(QEvent *e)
     if (message())
       message()->readConfig();
 */
-    d->update( MailViewer::Force ); // Force update
+    d->update( Viewer::Force ); // Force update
     return true;
   }
   return QWidget::event(e);
 }
 
-void MailViewer::slotFind()
+void Viewer::slotFind()
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->mViewer->findText();
 }
 
-const AttachmentStrategy * MailViewer::attachmentStrategy() const
+const AttachmentStrategy * Viewer::attachmentStrategy() const
 {
-  Q_D(const MailViewer);
+  Q_D(const Viewer);
   return d->attachmentStrategy();
 }
 
-void MailViewer::setAttachmentStrategy( const AttachmentStrategy * strategy )
+void Viewer::setAttachmentStrategy( const AttachmentStrategy * strategy )
 {
-  Q_D(MailViewer);
+  Q_D(Viewer);
   d->setAttachmentStrategy( strategy );
 }
 
+}
 
 #include "kmreaderwin.moc"
 

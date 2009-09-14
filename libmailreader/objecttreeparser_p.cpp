@@ -46,6 +46,7 @@
 
 using namespace Kleo;
 using namespace GpgME;
+using namespace Message;
 
 DecryptVerifyBodyPartMemento::DecryptVerifyBodyPartMemento( DecryptVerifyJob * job, const QByteArray & cipherText )
   : QObject( 0 ),
@@ -222,7 +223,7 @@ void VerifyDetachedBodyPartMemento::slotKeyListJobDone()
 void VerifyDetachedBodyPartMemento::notify()
 {
  
-    emit update(MailViewer::Force);
+    emit update(Viewer::Force);
 }
 
 VerifyOpaqueBodyPartMemento::VerifyOpaqueBodyPartMemento( VerifyOpaqueJob * job,

@@ -33,10 +33,11 @@ namespace KMime {
   class Message;
 }
 
-namespace Interface {
-  class BodyPartMemento;
+namespace Message {
+  namespace Interface {
+    class BodyPartMemento;
+  }
 }
-
 
 /**
   @author Andras Mantia <andras@kdab.net>
@@ -107,9 +108,9 @@ public:
 
     const QTextCodec * localCodec() const { return mLocalCodec;}
 
-    Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+    Message::Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
 
-    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, Interface::BodyPartMemento *memento );
+    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, Message::Interface::BodyPartMemento *memento );
 
     // A flag to remember if the node was embedded. This is useful for attachment nodes, the reader
     // needs to know if they were displayed inline or not.
@@ -184,7 +185,7 @@ private:
     QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
                           const QString& newPrefix ) const;
 
-    void clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap);
+    void clearBodyPartMemento(QMap<QByteArray, Message::Interface::BodyPartMemento*> bodyPartMementoMap);
 
     static NodeHelper * mSelf;
 
@@ -197,7 +198,7 @@ private:
     QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-    QMap<KMime::Content*, QMap<QByteArray,Interface::BodyPartMemento*> > mBodyPartMementoMap;
+    QMap<KMime::Content*, QMap<QByteArray, Message::Interface::BodyPartMemento*> > mBodyPartMementoMap;
     QStringList mTempFiles;
     QStringList mTempDirs;
 };

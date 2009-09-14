@@ -24,6 +24,7 @@
 
 class QString;
 
+namespace Message {
 /** An ObjectTreeSource that does not work on anything */
 class EmptySource : public ObjectTreeSourceIf {
  public:
@@ -43,6 +44,8 @@ class EmptySource : public ObjectTreeSourceIf {
   CSSHelper* cssHelper();
   QObject *sourceObject();
 };
+
+}
 
 #endif
 

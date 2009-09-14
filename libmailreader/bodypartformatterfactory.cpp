@@ -51,6 +51,8 @@ using namespace BodyPartFormatterFactoryPrivate;
 
 #include <assert.h>
 
+using namespace Message;
+
 namespace {
 
   KPIM_DEFINE_PLUGIN_LOADER( BodyPartFormatterPluginLoader,

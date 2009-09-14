@@ -45,7 +45,7 @@ namespace KMime {
 /**
     @short an implementation of the BodyPart interface using partNodes
 */
-class PartNodeBodyPart : public Interface::BodyPart {
+class PartNodeBodyPart : public Message::Interface::BodyPart {
 public:
   explicit PartNodeBodyPart( KMime::Content* content, const QTextCodec * codec=0 );
 
@@ -58,8 +58,8 @@ public:
   QString contentDispositionParameter( const char * param ) const;
   bool hasCompleteBody() const;
 
-  Interface::BodyPartMemento * memento() const;
-  void setBodyPartMemento( Interface::BodyPartMemento * memento );
+  Message::Interface::BodyPartMemento * memento() const;
+  void setBodyPartMemento( Message::Interface::BodyPartMemento * memento );
   BodyPart::Display defaultDisplay() const;
   void setDefaultDisplay( BodyPart::Display );
 

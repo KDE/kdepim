@@ -38,6 +38,8 @@ class QPoint;
 
 class Callback;
 
+namespace Message {
+  
 namespace Interface {
 
   class BodyPart;
@@ -98,6 +100,7 @@ namespace Interface {
 
 } // namespace Interface
 
+}
 
 #endif // __KMAIL_INTERFACES_BODYPARTURLHANDLER_H__
 

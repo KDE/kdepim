@@ -54,7 +54,7 @@ class QStringList;
 
 class DecryptVerifyBodyPartMemento
   : public QObject,
-    public Interface::BodyPartMemento
+    public Message::Interface::BodyPartMemento
 {
   Q_OBJECT
 public:
@@ -77,11 +77,11 @@ private slots:
                     const GpgME::VerificationResult & vr,
                     const QByteArray & plainText );
   void notify() {
-    emit update(MailViewer::Force);
+    emit update(Message::Viewer::Force);
   }
 
 signals:
-  void update(MailViewer::UpdateMode);
+  void update(Message::Viewer::UpdateMode);
 
 private:
   void saveResult( const GpgME::DecryptionResult &,
@@ -103,7 +103,7 @@ private:
 
 class VerifyDetachedBodyPartMemento
   : public QObject,
-    public Interface::BodyPartMemento
+    public Message::Interface::BodyPartMemento
 {
   Q_OBJECT
 public:
@@ -130,7 +130,7 @@ private slots:
   void notify();
 
 signals:
-  void update(MailViewer::UpdateMode);
+  void update(Message::Viewer::UpdateMode);
 
 private:
   void saveResult( const GpgME::VerificationResult & );
@@ -154,7 +154,7 @@ private:
 
 class VerifyOpaqueBodyPartMemento
   : public QObject,
-    public Interface::BodyPartMemento
+    public Message::Interface::BodyPartMemento
 {
   Q_OBJECT
 public:
@@ -180,11 +180,11 @@ private slots:
   void slotKeyListJobDone();
   void slotNextKey( const GpgME::Key & );
   void notify() {
-    emit update(MailViewer::Force);
+    emit update(Message::Viewer::Force);
   }
 
 signals:
-  void update(MailViewer::UpdateMode);
+  void update(Message::Viewer::UpdateMode);
 
 private:
   void saveResult( const GpgME::VerificationResult &,

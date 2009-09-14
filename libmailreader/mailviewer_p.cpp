@@ -102,9 +102,11 @@
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
-const int MailViewerPrivate::delay = 150;
+using namespace Message;
 
-MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
+const int ViewerPrivate::delay = 150;
+
+ViewerPrivate::ViewerPrivate(Viewer *aParent,
                          KSharedConfigPtr config,
                          QWidget *mainWindow,
                          KActionCollection* actionCollection)
@@ -177,7 +179,7 @@ MailViewerPrivate::MailViewerPrivate(MailViewer *aParent,
           this, SLOT(slotUrlClicked()) );
 }
 
-MailViewerPrivate::~MailViewerPrivate()
+ViewerPrivate::~ViewerPrivate()
 {
   clearBodyPartMementos();
   delete mHtmlWriter; mHtmlWriter = 0;
@@ -191,7 +193,7 @@ MailViewerPrivate::~MailViewerPrivate()
 
 
 //-----------------------------------------------------------------------------
-KMime::Content * MailViewerPrivate::nodeFromUrl( const KUrl & url )
+KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
 {
   if ( url.isEmpty() )
     return 0;
@@ -208,13 +210,13 @@ KMime::Content * MailViewerPrivate::nodeFromUrl( const KUrl & url )
   return node;
 }
 
-KMime::Content* MailViewerPrivate::nodeForContentIndex( const KMime::ContentIndex& index )
+KMime::Content* ViewerPrivate::nodeForContentIndex( const KMime::ContentIndex& index )
 {
   return  mMessage->content( index );
 }
 
 
-void MailViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
+void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
 {
   if( !node ) {
     return;
@@ -278,7 +280,7 @@ void MailViewerPrivate::openAttachment( KMime::Content* node, const QString & na
 
 }
 
-bool MailViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
+bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
 {
   if ( !node )
     return true;
@@ -305,7 +307,7 @@ bool MailViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning
   return true;
 }
 
-bool MailViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
+bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
 {
   //FIXME(Andras) just that I don't forget...handle the case when the user starts editing and switches to another message meantime
   if ( showWarning && KMessageBox::warningContinueCancel( mMainWindow,
@@ -339,7 +341,7 @@ bool MailViewerPrivate::editAttachment( KMime::Content * node, bool showWarning 
 }
 
 
-void MailViewerPrivate::showAttachmentPopup( int id, const QString & name, const QPoint &p )
+void ViewerPrivate::showAttachmentPopup( int id, const QString & name, const QPoint &p )
 {
   prepareHandleAttachment( id, name );
   KMenu *menu = new KMenu();
@@ -409,7 +411,7 @@ void MailViewerPrivate::showAttachmentPopup( int id, const QString & name, const
   delete menu;
 }
 
-Interface::BodyPartMemento *MailViewerPrivate::bodyPartMemento( const KMime::Content *node,
+Interface::BodyPartMemento *ViewerPrivate::bodyPartMemento( const KMime::Content *node,
                                                const QByteArray &which ) const
 {
   const QByteArray index = NodeHelper::path(node) + ':' + which.toLower();
@@ -423,7 +425,7 @@ Interface::BodyPartMemento *MailViewerPrivate::bodyPartMemento( const KMime::Con
   }
 }
 
-void MailViewerPrivate::setBodyPartMemento( const KMime::Content *node,
+void ViewerPrivate::setBodyPartMemento( const KMime::Content *node,
                                       const QByteArray &which,
                                       Interface::BodyPartMemento *memento )
 {
@@ -452,7 +454,7 @@ void MailViewerPrivate::setBodyPartMemento( const KMime::Content *node,
 }
 
 
-void MailViewerPrivate::clearBodyPartMementos()
+void ViewerPrivate::clearBodyPartMementos()
 {
   for ( QMap<QByteArray,Interface::BodyPartMemento*>::iterator
           it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
@@ -462,7 +464,7 @@ void MailViewerPrivate::clearBodyPartMementos()
   mBodyPartMementoMap.clear();
 }
 
-void MailViewerPrivate::prepareHandleAttachment( int id, const QString& fileName )
+void ViewerPrivate::prepareHandleAttachment( int id, const QString& fileName )
 {
   /*TODO(Andras) remove the whole method
   mAtmCurrent = id;
@@ -474,7 +476,7 @@ void MailViewerPrivate::prepareHandleAttachment( int id, const QString& fileName
 // message parts - *after* all encryption has been removed that
 // could be removed.
 // - This is used to store the message in decrypted form.
-void MailViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
+void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
                                             QByteArray& resultingData,
                                             KMime::Message& theMessage,
                                             bool weAreReplacingTheRootNode,
@@ -630,7 +632,7 @@ void MailViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
 }
 
 
-QString MailViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
+QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 {
   QFileInfo atmFileInfo( atmFileName );
 
@@ -647,7 +649,7 @@ QString MailViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
   return QString();
 }
 
-KService::Ptr MailViewerPrivate::getServiceOffer( KMime::Content *content)
+KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
 {
   QString fileName = NodeHelper::instance()->writeNodeToTempFile( content );
 
@@ -676,7 +678,7 @@ KService::Ptr MailViewerPrivate::getServiceOffer( KMime::Content *content)
   return KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 }
 
-bool MailViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool encoded )
+bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool encoded )
 {
   KMime::Content *topContent  = content->topLevel();
   bool bSaveEncrypted = false;
@@ -804,7 +806,7 @@ bool MailViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, b
 }
 
 
-void MailViewerPrivate::saveAttachments( const KMime::Content::List & contents )
+void ViewerPrivate::saveAttachments( const KMime::Content::List & contents )
 {
   KUrl url, dirUrl;
   if ( contents.size() > 1 ) {
@@ -916,7 +918,7 @@ void MailViewerPrivate::saveAttachments( const KMime::Content::List & contents )
   }
 }
 
-KMime::Content::List MailViewerPrivate::allContents( const KMime::Content * content )
+KMime::Content::List ViewerPrivate::allContents( const KMime::Content * content )
 {
   KMime::Content::List result;
   KMime::Content *child = NodeHelper::firstChild( content );
@@ -934,7 +936,7 @@ KMime::Content::List MailViewerPrivate::allContents( const KMime::Content * cont
 }
 
 
-KMime::Content::List MailViewerPrivate::selectedContents()
+KMime::Content::List ViewerPrivate::selectedContents()
 {
   KMime::Content::List contents;
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
@@ -951,7 +953,7 @@ KMime::Content::List MailViewerPrivate::selectedContents()
 }
 
 
-void MailViewerPrivate::attachmentOpenWith( KMime::Content *node )
+void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
 {
   QString name = NodeHelper::instance()->writeNodeToTempFile( node );
   QString linkName = createAtmFileLink( name );
@@ -971,7 +973,7 @@ void MailViewerPrivate::attachmentOpenWith( KMime::Content *node )
   }
 }
 
-void MailViewerPrivate::attachmentOpen( KMime::Content *node )
+void ViewerPrivate::attachmentOpen( KMime::Content *node )
 {
   KService::Ptr offer(0);
   offer = getServiceOffer( node );
@@ -998,12 +1000,12 @@ void MailViewerPrivate::attachmentOpen( KMime::Content *node )
 }
 
 
-CSSHelper* MailViewerPrivate::cssHelper() const
+CSSHelper* ViewerPrivate::cssHelper() const
 {
   return mCSSHelper;
 }
 
-bool MailViewerPrivate::decryptMessage() const
+bool ViewerPrivate::decryptMessage() const
 {
   if ( !GlobalSettings::self()->alwaysDecrypt() )
     return mDecrytMessageOverwrite;
@@ -1012,7 +1014,7 @@ bool MailViewerPrivate::decryptMessage() const
 }
 
 
-void MailViewerPrivate::setStyleDependantFrameWidth()
+void ViewerPrivate::setStyleDependantFrameWidth()
 {
   if ( !mBox )
     return;
@@ -1031,12 +1033,12 @@ void MailViewerPrivate::setStyleDependantFrameWidth()
 }
 
 
-int MailViewerPrivate::pointsToPixel(int pointSize) const
+int ViewerPrivate::pointsToPixel(int pointSize) const
 {
   return (pointSize * mViewer->view()->logicalDpiY() + 36) / 72;
 }
 
-void MailViewerPrivate::displaySplashPage( const QString &info )
+void ViewerPrivate::displaySplashPage( const QString &info )
 {
   mMsgDisplay = false;
   adjustLayout();
@@ -1060,7 +1062,7 @@ void MailViewerPrivate::displaySplashPage( const QString &info )
   mViewer->end();
 }
 
-void MailViewerPrivate::enableMessageDisplay()
+void ViewerPrivate::enableMessageDisplay()
 {
   mMsgDisplay = true;
   adjustLayout();
@@ -1068,7 +1070,7 @@ void MailViewerPrivate::enableMessageDisplay()
 
 
 
-void MailViewerPrivate::displayMessage()
+void ViewerPrivate::displayMessage()
 {
 
   /*FIXME(Andras) port to Akonadi
@@ -1101,7 +1103,7 @@ void MailViewerPrivate::displayMessage()
 }
 
 
-void MailViewerPrivate::parseMsg()
+void ViewerPrivate::parseMsg()
 {
   assert( mMessage != 0 );
 
@@ -1233,7 +1235,7 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
 }
 
 
-QString MailViewerPrivate::writeMsgHeader(KMime::Message* aMsg, KMime::Content* vCardNode, bool topLevel)
+QString ViewerPrivate::writeMsgHeader(KMime::Message* aMsg, KMime::Content* vCardNode, bool topLevel)
 {
   kFatal( !headerStyle(), 5006 )
     << "trying to writeMsgHeader() without a header style set!";
@@ -1246,7 +1248,7 @@ QString MailViewerPrivate::writeMsgHeader(KMime::Message* aMsg, KMime::Content* 
   return headerStyle()->format( aMsg, headerStrategy(), href, mPrinting, topLevel );
 }
 
-void MailViewerPrivate::showVCard( KMime::Content* msgPart ) {
+void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
   const QByteArray vCard = msgPart->decodedContent();
 
   VCardViewer *vcv = new VCardViewer( mMainWindow, vCard );
@@ -1255,7 +1257,7 @@ void MailViewerPrivate::showVCard( KMime::Content* msgPart ) {
 }
 
 
-void MailViewerPrivate::initHtmlWidget(void)
+void ViewerPrivate::initHtmlWidget(void)
 {
   mViewer->widget()->setFocusPolicy(Qt::WheelFocus);
   // Let's better be paranoid and disable plugins (it defaults to enabled):
@@ -1312,7 +1314,7 @@ void MailViewerPrivate::initHtmlWidget(void)
           SLOT(slotUrlPopup(const QString &, const QPoint &)));
 }
 
-bool MailViewerPrivate::eventFilter( QObject *, QEvent *e )
+bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
 {
   if ( e->type() == QEvent::MouseButtonPress ) {
     QMouseEvent* me = static_cast<QMouseEvent*>(e);
@@ -1330,7 +1332,7 @@ bool MailViewerPrivate::eventFilter( QObject *, QEvent *e )
 }
 
 
-void MailViewerPrivate::readConfig()
+void ViewerPrivate::readConfig()
 {
   const KConfigGroup mdnGroup(Global::instance()->config(), "MDN");
   KConfigGroup reader(Global::instance()->config(), "Reader");
@@ -1382,7 +1384,7 @@ void MailViewerPrivate::readConfig()
 }
 
 
-void MailViewerPrivate::writeConfig( bool sync ) const
+void ViewerPrivate::writeConfig( bool sync ) const
 {
   KConfigGroup reader( Global::instance()->config() , "Reader" );
 
@@ -1402,21 +1404,21 @@ void MailViewerPrivate::writeConfig( bool sync ) const
 }
 
 
-void MailViewerPrivate::setHeaderStyleAndStrategy( const HeaderStyle * style,
+void ViewerPrivate::setHeaderStyleAndStrategy( const HeaderStyle * style,
                                              const HeaderStrategy * strategy ) {
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
-  update( MailViewer::Force );
+  update( Viewer::Force );
 }
 
 
-void MailViewerPrivate::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
+void ViewerPrivate::setAttachmentStrategy( const AttachmentStrategy * strategy ) {
   mAttachmentStrategy = strategy ? strategy : AttachmentStrategy::smart();
-  update( MailViewer::Force );
+  update( Viewer::Force );
 }
 
 
-void MailViewerPrivate::setOverrideEncoding( const QString & encoding )
+void ViewerPrivate::setOverrideEncoding( const QString & encoding )
 {
   if ( encoding == mOverrideEncoding )
     return;
@@ -1430,7 +1432,7 @@ void MailViewerPrivate::setOverrideEncoding( const QString & encoding )
       QStringList encodings = mSelectEncodingAction->items();
       int i = 0;
       for ( QStringList::const_iterator it = encodings.constBegin(), end = encodings.constEnd(); it != end; ++it, ++i ) {
-        if ( MailViewerPrivate::encodingForName( *it ) == encoding ) {
+        if ( ViewerPrivate::encodingForName( *it ) == encoding ) {
           mSelectEncodingAction->setCurrentItem( i );
           break;
         }
@@ -1444,26 +1446,26 @@ void MailViewerPrivate::setOverrideEncoding( const QString & encoding )
       }
     }
   }
-  update( MailViewer::Force );
+  update( Viewer::Force );
 }
 
 
-void MailViewerPrivate::setPrintFont( const QFont& font )
+void ViewerPrivate::setPrintFont( const QFont& font )
 {
 
   mCSSHelper->setPrintFont( font );
 }
 
 
-void MailViewerPrivate::printMessage( KMime::Message* message )
+void ViewerPrivate::printMessage( KMime::Message* message )
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
-  setMessage( message, MailViewer::Force );
+  setMessage( message, Viewer::Force );
 }
 
 
-void MailViewerPrivate::setMessageItem( const Akonadi::Item &item,  MailViewer::UpdateMode updateMode )
+void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
   if ( mMessage && !NodeHelper::instance()->nodeProcessed( mMessage ) ) {
     kWarning() << "The root node is not yet processed! Danger!";
@@ -1507,7 +1509,7 @@ void MailViewerPrivate::setMessageItem( const Akonadi::Item &item,  MailViewer::
 
 }
 
-void MailViewerPrivate::setMessage(KMime::Message* aMsg, MailViewer::UpdateMode updateMode, MailViewer::Ownership ownerShip)
+void ViewerPrivate::setMessage(KMime::Message* aMsg, Viewer::UpdateMode updateMode, Viewer::Ownership ownerShip)
 {
   if ( mDeleteMessage ) {
     delete mMessage;
@@ -1522,7 +1524,7 @@ void MailViewerPrivate::setMessage(KMime::Message* aMsg, MailViewer::UpdateMode 
   // connect to the updates if we have hancy headers
 
   mMessage = aMsg;
-  mDeleteMessage = (ownerShip == MailViewer::Transfer);
+  mDeleteMessage = (ownerShip == Viewer::Transfer);
 
   if ( mMessage ) {
     NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
@@ -1533,7 +1535,7 @@ void MailViewerPrivate::setMessage(KMime::Message* aMsg, MailViewer::UpdateMode 
   update( updateMode );
 }
 
-void MailViewerPrivate::setMessagePart( KMime::Content * node )
+void ViewerPrivate::setMessagePart( KMime::Content * node )
 {
   htmlWriter()->reset();
   mColorBar->hide();
@@ -1551,7 +1553,7 @@ void MailViewerPrivate::setMessagePart( KMime::Content * node )
 }
 
 
-void MailViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
+void ViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
                               const QString& aFileName, const QString& pname )
 {
   // Cancel scheduled updates of the reader window, as that would stop the
@@ -1569,7 +1571,7 @@ void MailViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
       msg->setContent(aMsgPart->decodedContent());
       msg->parse();
       mMainWindow->setWindowTitle( msg->subject()->asUnicodeString() );
-      setMessage( msg, MailViewer::Force );
+      setMessage( msg, Viewer::Force );
       mDeleteMessage = true;
   } else if ( aMsgPart->contentType()->mediaType() == "text" ) {
       if ( aMsgPart->contentType()->subType() == "x-vcard" ||
@@ -1654,7 +1656,7 @@ void MailViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
 }
 
 
-void MailViewerPrivate::showHideMimeTree( )
+void ViewerPrivate::showHideMimeTree( )
 {
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always )
     mMimePartTree->show();
@@ -1669,7 +1671,7 @@ void MailViewerPrivate::showHideMimeTree( )
 }
 
 
-void MailViewerPrivate::atmViewMsg(KMime::Content* aMsgPart)
+void ViewerPrivate::atmViewMsg(KMime::Content* aMsgPart)
 {
   assert(aMsgPart!=0);
   KMime::Content* msg = new KMime::Content( mMessage->parent() );
@@ -1689,7 +1691,7 @@ void MailViewerPrivate::atmViewMsg(KMime::Content* aMsgPart)
  */
 }
 
-void MailViewerPrivate::adjustLayout() {
+void ViewerPrivate::adjustLayout() {
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
@@ -1709,7 +1711,7 @@ void MailViewerPrivate::adjustLayout() {
 }
 
 
-void MailViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
+void ViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
 {
   if ( !mSplitter || !mMimePartTree )
     return;
@@ -1721,7 +1723,7 @@ void MailViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
   c.writeEntry( "MessagePaneHeight", mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ] );
 }
 
-void MailViewerPrivate::createWidgets() {
+void ViewerPrivate::createWidgets() {
   QVBoxLayout * vlay = new QVBoxLayout( q );
   vlay->setMargin( 0 );
   mSplitter = new QSplitter( Qt::Vertical, q );
@@ -1758,7 +1760,7 @@ void MailViewerPrivate::createWidgets() {
 }
 
 
-void MailViewerPrivate::createActions()
+void ViewerPrivate::createActions()
 {
   KActionCollection *ac = mActionCollection;
   if ( !ac ) {
@@ -1860,7 +1862,7 @@ void MailViewerPrivate::createActions()
   ac->addAction("encoding", mSelectEncodingAction );
   connect(mSelectEncodingAction,SIGNAL( triggered(int)),
           SLOT( slotSetEncoding() ));
-  QStringList encodings = MailViewerPrivate::supportedEncodings( false );
+  QStringList encodings = ViewerPrivate::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   mSelectEncodingAction->setItems( encodings );
   mSelectEncodingAction->setCurrentItem( 0 );
@@ -1941,7 +1943,7 @@ void MailViewerPrivate::createActions()
 }
 
 
-void MailViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
+void ViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &pos )
 {
   if ( !content )
     return;
@@ -1992,7 +1994,7 @@ void MailViewerPrivate::showContextMenu( KMime::Content* content, const QPoint &
 }
 
 
-KToggleAction *MailViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy ) {
+KToggleAction *ViewerPrivate::actionForHeaderStyle( const HeaderStyle * style, const HeaderStrategy * strategy ) {
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
@@ -2016,7 +2018,7 @@ KToggleAction *MailViewerPrivate::actionForHeaderStyle( const HeaderStyle * styl
     return 0;
 }
 
-KToggleAction *MailViewerPrivate::actionForAttachmentStrategy( const AttachmentStrategy * as ) {
+KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrategy * as ) {
   if ( !mActionCollection )
     return 0;
   const char * actionName = 0;
@@ -2036,7 +2038,7 @@ KToggleAction *MailViewerPrivate::actionForAttachmentStrategy( const AttachmentS
 }
 
 
-void MailViewerPrivate::readGlobalOverrideCodec()
+void ViewerPrivate::readGlobalOverrideCodec()
 {
   // if the global character encoding wasn't changed then there's nothing to do
  if ( GlobalSettings::self()->overrideCharacterEncoding() == mOldGlobalOverrideEncoding )
@@ -2047,12 +2049,12 @@ void MailViewerPrivate::readGlobalOverrideCodec()
 }
 
 
-const QTextCodec * MailViewerPrivate::overrideCodec() const
+const QTextCodec * ViewerPrivate::overrideCodec() const
 {
   if ( mOverrideEncoding.isEmpty() || mOverrideEncoding == "Auto" ) // Auto
     return 0;
   else
-    return MailViewerPrivate::codecForName( mOverrideEncoding.toLatin1() );
+    return ViewerPrivate::codecForName( mOverrideEncoding.toLatin1() );
 }
 
 
@@ -2063,7 +2065,7 @@ static QColor nextColor( const QColor & c )
   return QColor::fromHsv( (h + 50) % 360, qMax(s, 64), v );
 }
 
-QString MailViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bgColor )
+QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bgColor )
 {
 
   if ( !node )
@@ -2135,7 +2137,7 @@ QString MailViewerPrivate::renderAttachments(KMime::Content * node, const QColor
   return html;
 }
 
-KMime::Content* MailViewerPrivate::findContentByType(KMime::Content *content, const QByteArray &type)
+KMime::Content* ViewerPrivate::findContentByType(KMime::Content *content, const QByteArray &type)
 {
     KMime::Content::List list = content->contents();
     Q_FOREACH(KMime::Content *c, list)
@@ -2148,7 +2150,7 @@ KMime::Content* MailViewerPrivate::findContentByType(KMime::Content *content, co
 }
 
 
-QString MailViewerPrivate::fixEncoding( const QString &encoding )
+QString ViewerPrivate::fixEncoding( const QString &encoding )
 {
   QString returnEncoding = encoding;
   // According to http://www.iana.org/assignments/character-sets, uppercase is
@@ -2161,14 +2163,14 @@ QString MailViewerPrivate::fixEncoding( const QString &encoding )
 }
 
 //-----------------------------------------------------------------------------
-QString MailViewerPrivate::encodingForName( const QString &descriptiveName )
+QString ViewerPrivate::encodingForName( const QString &descriptiveName )
 {
   QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
-  return MailViewerPrivate::fixEncoding( encoding );
+  return ViewerPrivate::fixEncoding( encoding );
 }
 
 //-----------------------------------------------------------------------------
-const QTextCodec* MailViewerPrivate::codecForName(const QByteArray& _str)
+const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
 {
   if (_str.isEmpty())
     return 0;
@@ -2177,7 +2179,7 @@ const QTextCodec* MailViewerPrivate::codecForName(const QByteArray& _str)
   return KGlobal::charsets()->codecForName(codec);
 }
 
-QStringList MailViewerPrivate::supportedEncodings(bool usAscii)
+QStringList ViewerPrivate::supportedEncodings(bool usAscii)
 {
   QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
   QStringList encodings;
@@ -2200,10 +2202,10 @@ QStringList MailViewerPrivate::supportedEncodings(bool usAscii)
 }
 
 
-void MailViewerPrivate::update( MailViewer::UpdateMode updateMode )
+void ViewerPrivate::update( Viewer::UpdateMode updateMode )
 {
   // Avoid flicker, somewhat of a cludge
-  if ( updateMode == MailViewer::Force ) {
+  if ( updateMode == Viewer::Force ) {
     // stop the timer to avoid calling updateReaderWin twice
       mUpdateReaderWinTimer.stop();
       updateReaderWin();
@@ -2216,7 +2218,7 @@ void MailViewerPrivate::update( MailViewer::UpdateMode updateMode )
 }
 
 
-void MailViewerPrivate::slotUrlOpen( const KUrl &url )
+void ViewerPrivate::slotUrlOpen( const KUrl &url )
 {
   kDebug() << "slotUrlOpen " << url;
   if ( !url.isEmpty() ) {
@@ -2226,7 +2228,7 @@ void MailViewerPrivate::slotUrlOpen( const KUrl &url )
 }
 
 
-void MailViewerPrivate::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)
+void ViewerPrivate::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)
 {
   mUrlClicked = aUrl;
 
@@ -2238,7 +2240,7 @@ void MailViewerPrivate::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArgum
 }
 
 
-void MailViewerPrivate::slotUrlOn(const QString &aUrl)
+void ViewerPrivate::slotUrlOn(const QString &aUrl)
 {
   const KUrl url(aUrl);
   if ( url.protocol() == "kmail" || url.protocol() == "x-kmail"
@@ -2261,7 +2263,7 @@ void MailViewerPrivate::slotUrlOn(const QString &aUrl)
   KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );
 }
 
-void MailViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
+void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
 {
   const KUrl url( aUrl );
   mUrlClicked = url;
@@ -2275,20 +2277,20 @@ void MailViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   }
 }
 
-void MailViewerPrivate::slotFind()
+void ViewerPrivate::slotFind()
 {
   mViewer->findText();
 }
 
 
-void MailViewerPrivate::slotToggleFixedFont()
+void ViewerPrivate::slotToggleFixedFont()
 {
   mUseFixedFont = !mUseFixedFont;
   saveRelativePosition();
-  update( MailViewer::Force );
+  update( Viewer::Force );
 }
 
-void MailViewerPrivate::slotToggleMimePartTree()
+void ViewerPrivate::slotToggleMimePartTree()
 {
   if ( mToggleMimePartTreeAction->isChecked() )
     GlobalSettings::self()->setMimeTreeMode( GlobalSettings::EnumMimeTreeMode::Always );
@@ -2298,7 +2300,7 @@ void MailViewerPrivate::slotToggleMimePartTree()
 }
 
 
-void MailViewerPrivate::slotShowMessageSource()
+void ViewerPrivate::slotShowMessageSource()
 {
   QString str = QString::fromAscii( mMessage->encodedContent() );
 
@@ -2323,7 +2325,7 @@ void MailViewerPrivate::slotShowMessageSource()
   viewer->show();
 }
 
-void MailViewerPrivate::updateReaderWin()
+void ViewerPrivate::updateReaderWin()
 {
   if ( !mMsgDisplay ) {
     return;
@@ -2359,17 +2361,17 @@ void MailViewerPrivate::updateReaderWin()
 }
 
 
-void MailViewerPrivate::slotMimePartSelected( const QModelIndex &index )
+void ViewerPrivate::slotMimePartSelected( const QModelIndex &index )
 {
   KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
   if ( !mMimePartModel->parent(index).isValid() && index.row() == 0 ) {
-   update(MailViewer::Force);
+   update(Viewer::Force);
   } else
     setMessagePart( content );
 }
 
 
-void MailViewerPrivate::slotCycleHeaderStyles() {
+void ViewerPrivate::slotCycleHeaderStyles() {
   const HeaderStrategy * strategy = headerStrategy();
   const HeaderStyle * style = headerStyle();
 
@@ -2402,7 +2404,7 @@ void MailViewerPrivate::slotCycleHeaderStyles() {
 }
 
 
-void MailViewerPrivate::slotBriefHeaders()
+void ViewerPrivate::slotBriefHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::brief(),
                              HeaderStrategy::brief() );
@@ -2411,7 +2413,7 @@ void MailViewerPrivate::slotBriefHeaders()
 }
 
 
-void MailViewerPrivate::slotFancyHeaders()
+void ViewerPrivate::slotFancyHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::fancy(),
                              HeaderStrategy::rich() );
@@ -2420,7 +2422,7 @@ void MailViewerPrivate::slotFancyHeaders()
 }
 
 
-void MailViewerPrivate::slotEnterpriseHeaders()
+void ViewerPrivate::slotEnterpriseHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::enterprise(),
                              HeaderStrategy::rich() );
@@ -2429,7 +2431,7 @@ void MailViewerPrivate::slotEnterpriseHeaders()
 }
 
 
-void MailViewerPrivate::slotStandardHeaders()
+void ViewerPrivate::slotStandardHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::standard());
@@ -2437,7 +2439,7 @@ void MailViewerPrivate::slotStandardHeaders()
 }
 
 
-void MailViewerPrivate::slotLongHeaders()
+void ViewerPrivate::slotLongHeaders()
 {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::rich() );
@@ -2447,7 +2449,7 @@ void MailViewerPrivate::slotLongHeaders()
 
 
 
-void MailViewerPrivate::slotAllHeaders() {
+void ViewerPrivate::slotAllHeaders() {
   setHeaderStyleAndStrategy( HeaderStyle::plain(),
                              HeaderStrategy::all() );
   if( !mExternalWindow )
@@ -2455,7 +2457,7 @@ void MailViewerPrivate::slotAllHeaders() {
 }
 
 
-void MailViewerPrivate::slotCycleAttachmentStrategy()
+void ViewerPrivate::slotCycleAttachmentStrategy()
 {
   setAttachmentStrategy( attachmentStrategy()->next() );
   KToggleAction * action = actionForAttachmentStrategy( attachmentStrategy() );
@@ -2464,31 +2466,31 @@ void MailViewerPrivate::slotCycleAttachmentStrategy()
 }
 
 
-void MailViewerPrivate::slotIconicAttachments()
+void ViewerPrivate::slotIconicAttachments()
 {
   setAttachmentStrategy( AttachmentStrategy::iconic() );
 }
 
 
-void MailViewerPrivate::slotSmartAttachments()
+void ViewerPrivate::slotSmartAttachments()
 {
   setAttachmentStrategy( AttachmentStrategy::smart() );
 }
 
 
-void MailViewerPrivate::slotInlineAttachments()
+void ViewerPrivate::slotInlineAttachments()
 {
   setAttachmentStrategy( AttachmentStrategy::inlined() );
 }
 
 
-void MailViewerPrivate::slotHideAttachments()
+void ViewerPrivate::slotHideAttachments()
 {
   setAttachmentStrategy( AttachmentStrategy::hidden() );
 }
 
 
-void MailViewerPrivate::slotAtmView( KMime::Content *atmNode )
+void ViewerPrivate::slotAtmView( KMime::Content *atmNode )
 {
   if ( atmNode ) {
     QString fileName = NodeHelper::instance()->tempFileUrlFromNode( atmNode ).toLocalFile();
@@ -2514,13 +2516,13 @@ void MailViewerPrivate::slotAtmView( KMime::Content *atmNode )
 }
 
 
-void MailViewerPrivate::slotDelayedResize()
+void ViewerPrivate::slotDelayedResize()
 {
   mSplitter->setGeometry( 0, 0, q->width(), q->height() );
 }
 
 
-void MailViewerPrivate::slotPrintMsg()
+void ViewerPrivate::slotPrintMsg()
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
@@ -2528,16 +2530,16 @@ void MailViewerPrivate::slotPrintMsg()
 }
 
 
-void MailViewerPrivate::slotSetEncoding()
+void ViewerPrivate::slotSetEncoding()
 {
   if ( mSelectEncodingAction->currentItem() == 0 ) // Auto
     mOverrideEncoding.clear();
   else
-    mOverrideEncoding = MailViewerPrivate::encodingForName( mSelectEncodingAction->currentText() );
-  update( MailViewer::Force );
+    mOverrideEncoding = ViewerPrivate::encodingForName( mSelectEncodingAction->currentText() );
+  update( Viewer::Force );
 }
 
-void MailViewerPrivate::injectAttachments()
+void ViewerPrivate::injectAttachments()
 {
   // inject attachments in header view
   // we have to do that after the otp has run so we also see encrypted parts
@@ -2578,15 +2580,15 @@ void MailViewerPrivate::injectAttachments()
 }
 
 
-void MailViewerPrivate::slotSettingsChanged()
+void ViewerPrivate::slotSettingsChanged()
 {
   mShowColorbar = GlobalSettings::self()->showColorBar();
   saveRelativePosition();
-  update( MailViewer::Force );
+  update( Viewer::Force );
 }
 
 
-void MailViewerPrivate::slotMimeTreeContextMenuRequested( const QPoint& pos )
+void ViewerPrivate::slotMimeTreeContextMenuRequested( const QPoint& pos )
 {
   QModelIndex index = mMimePartTree->indexAt( pos );
   if ( index.isValid() ) {
@@ -2595,7 +2597,7 @@ void MailViewerPrivate::slotMimeTreeContextMenuRequested( const QPoint& pos )
   }
 }
 
-void MailViewerPrivate::slotAttachmentOpenWith()
+void ViewerPrivate::slotAttachmentOpenWith()
 {
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
   QModelIndexList selectedRows = selectionModel->selectedRows();
@@ -2607,7 +2609,7 @@ void MailViewerPrivate::slotAttachmentOpenWith()
  }
 }
 
-void MailViewerPrivate::slotAttachmentOpen()
+void ViewerPrivate::slotAttachmentOpen()
 {
 
   QItemSelectionModel *selectionModel = mMimePartTree->selectionModel();
@@ -2621,7 +2623,7 @@ void MailViewerPrivate::slotAttachmentOpen()
 }
 
 
-void MailViewerPrivate::slotAttachmentSaveAs()
+void ViewerPrivate::slotAttachmentSaveAs()
 {
   KMime::Content::List contents = selectedContents();
 
@@ -2632,7 +2634,7 @@ void MailViewerPrivate::slotAttachmentSaveAs()
 }
 
 
-void MailViewerPrivate::slotAttachmentSaveAll()
+void ViewerPrivate::slotAttachmentSaveAll()
 {
   KMime::Content::List contents = allContents( mMessage );
 
@@ -2663,7 +2665,7 @@ void MailViewerPrivate::slotAttachmentSaveAll()
 }
 
 
-void MailViewerPrivate::slotAttachmentView()
+void ViewerPrivate::slotAttachmentView()
 {
   KMime::Content::List contents = selectedContents();
 
@@ -2674,7 +2676,7 @@ void MailViewerPrivate::slotAttachmentView()
 
 }
 
-void MailViewerPrivate::slotAttachmentProperties()
+void ViewerPrivate::slotAttachmentProperties()
 {
   KMime::Content::List contents = selectedContents();
 
@@ -2689,7 +2691,7 @@ void MailViewerPrivate::slotAttachmentProperties()
 }
 
 
-void MailViewerPrivate::slotAttachmentCopy()
+void ViewerPrivate::slotAttachmentCopy()
 {
   KMime::Content::List contents = selectedContents();
 
@@ -2714,7 +2716,7 @@ void MailViewerPrivate::slotAttachmentCopy()
 }
 
 
-void MailViewerPrivate::slotAttachmentDelete()
+void ViewerPrivate::slotAttachmentDelete()
 {
   KMime::Content::List contents = selectedContents();
   if ( contents.isEmpty() )
@@ -2729,7 +2731,7 @@ void MailViewerPrivate::slotAttachmentDelete()
 }
 
 
-void MailViewerPrivate::slotAttachmentEdit()
+void ViewerPrivate::slotAttachmentEdit()
 {
   KMime::Content::List contents = selectedContents();
   if ( contents.isEmpty() )
@@ -2744,7 +2746,7 @@ void MailViewerPrivate::slotAttachmentEdit()
 }
 
 
-void MailViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
+void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
 {
   QString name = editorWatcher->url().fileName();
   if ( editorWatcher->fileChanged() ) {
@@ -2763,17 +2765,17 @@ void MailViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
   QFile::remove( name );
 }
 
-void MailViewerPrivate::slotLevelQuote( int l )
+void ViewerPrivate::slotLevelQuote( int l )
 {
   kDebug() << "Old Level:" << mLevelQuote << "New Level:" << l;
 
   mLevelQuote = l;
   saveRelativePosition();
-  update( MailViewer::Force );
+  update( Viewer::Force );
 }
 
 
-void MailViewerPrivate::slotHandleAttachment( int choice )
+void ViewerPrivate::slotHandleAttachment( int choice )
 {
     /*FIXME(Andras) port to akonadi
   mAtmUpdate = true;
@@ -2810,19 +2812,19 @@ void MailViewerPrivate::slotHandleAttachment( int choice )
    */
 }
 
-void MailViewerPrivate::slotCopySelectedText()
+void ViewerPrivate::slotCopySelectedText()
 {
   QString selection = mViewer->selectedText();
   selection.replace( QChar::Nbsp, ' ' );
   QApplication::clipboard()->setText( selection );
 }
 
-void MailViewerPrivate::selectAll()
+void ViewerPrivate::selectAll()
 {
   mViewer->selectAll();
 }
 
-void MailViewerPrivate::slotUrlClicked()
+void ViewerPrivate::slotUrlClicked()
 {
   kDebug() << "Clicked on " << mUrlClicked;
     /*FIXME Andras
@@ -2838,7 +2840,7 @@ void MailViewerPrivate::slotUrlClicked()
 }
 
 
-void MailViewerPrivate::slotUrlCopy()
+void ViewerPrivate::slotUrlCopy()
 {
   // we don't necessarily need a mainWidget for KMUrlCopyCommand so
   // it doesn't matter if the dynamic_cast fails.
@@ -2851,7 +2853,7 @@ void MailViewerPrivate::slotUrlCopy()
 }
 
 
-void MailViewerPrivate::slotUrlSave()
+void ViewerPrivate::slotUrlSave()
 {
     /*FIXME(Andras) port to akonadi
   KMCommand *command = new KMUrlSaveCommand( mUrlClicked, mMainWindow );
@@ -2859,7 +2861,7 @@ void MailViewerPrivate::slotUrlSave()
     */
 }
 
-void MailViewerPrivate::slotSaveMessage()
+void ViewerPrivate::slotSaveMessage()
 {
    KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( mMessage->subject()->asUnicodeString().trimmed()
                                   .replace( QDir::separator(), '_' ) ),
@@ -2936,7 +2938,7 @@ void MailViewerPrivate::slotSaveMessage()
 }
 
 
-void MailViewerPrivate::saveRelativePosition()
+void ViewerPrivate::saveRelativePosition()
 {
   const QScrollArea *scrollview = mViewer->view();
   mSavedRelativePosition = static_cast<float>( scrollview->widget()->pos().y() ) /
@@ -2944,63 +2946,63 @@ void MailViewerPrivate::saveRelativePosition()
 }
 
 //TODO(Andras) inline them
-bool MailViewerPrivate::htmlMail() const
+bool ViewerPrivate::htmlMail() const
 {
   return ((mHtmlMail && !mHtmlOverride) || (!mHtmlMail && mHtmlOverride));
 }
 
-bool MailViewerPrivate::htmlLoadExternal() const
+bool ViewerPrivate::htmlLoadExternal() const
 {
   return ((mHtmlLoadExternal && !mHtmlLoadExtOverride) ||
           (!mHtmlLoadExternal && mHtmlLoadExtOverride));
 }
 
-void MailViewerPrivate::setHtmlOverride( bool override )
+void ViewerPrivate::setHtmlOverride( bool override )
 {
   mHtmlOverride = override;
 }
 
-bool MailViewerPrivate::htmlOverride() const
+bool ViewerPrivate::htmlOverride() const
 {
   return mHtmlOverride;
 }
 
-void MailViewerPrivate::setHtmlLoadExtOverride( bool override )
+void ViewerPrivate::setHtmlLoadExtOverride( bool override )
 {
   mHtmlLoadExtOverride = override;
 }
 
-bool MailViewerPrivate::htmlLoadExtOverride() const
+bool ViewerPrivate::htmlLoadExtOverride() const
 {
   return mHtmlLoadExtOverride;
 }
 
-void MailViewerPrivate::setDecryptMessageOverwrite( bool overwrite )
+void ViewerPrivate::setDecryptMessageOverwrite( bool overwrite )
 {
   mDecrytMessageOverwrite = overwrite;
 }
 
-bool MailViewerPrivate::showSignatureDetails() const
+bool ViewerPrivate::showSignatureDetails() const
 {
   return mShowSignatureDetails;
 }
 
-void MailViewerPrivate::setShowSignatureDetails( bool showDetails )
+void ViewerPrivate::setShowSignatureDetails( bool showDetails )
 {
   mShowSignatureDetails = showDetails;
 }
 
-bool MailViewerPrivate::showAttachmentQuicklist() const
+bool ViewerPrivate::showAttachmentQuicklist() const
 {
   return mShowAttachmentQuicklist;
 }
 
-void MailViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
+void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 {
   mShowAttachmentQuicklist = showAttachmentQuicklist;
 }
 
-void MailViewerPrivate::scrollToAttachment( const KMime::Content *node )
+void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
 {
   DOM::Document doc = mViewer->htmlDocument();
 
@@ -3036,7 +3038,7 @@ void MailViewerPrivate::scrollToAttachment( const KMime::Content *node )
   q->update();
 }
 
-void MailViewerPrivate::setUseFixedFont( bool useFixedFont )
+void ViewerPrivate::setUseFixedFont( bool useFixedFont )
 {
   mUseFixedFont = useFixedFont;
   if ( mToggleFixFontAction )
@@ -3047,7 +3049,7 @@ void MailViewerPrivate::setUseFixedFont( bool useFixedFont )
 
 // Checks if the given node has a parent node that is a DIV which has an ID attribute
 // with the value specified here
-bool MailViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &id )
+bool ViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &id )
 {
   if ( start.isNull() )
     return false;
@@ -3064,6 +3066,5 @@ bool MailViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QStrin
     return hasParentDivWithId( start.parentNode(), id );
   else return false;
 }
-
 
 #include "mailviewer_p.moc"

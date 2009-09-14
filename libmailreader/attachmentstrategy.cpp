@@ -36,6 +36,7 @@
 #include <kmime/kmime_content.h>
 #include <kdebug.h>
 
+namespace Message {
 
 //
 // IconicAttachmentStrategy:
@@ -43,7 +44,7 @@
 //
 
 class IconicAttachmentStrategy : public AttachmentStrategy {
-  friend class ::AttachmentStrategy;
+  friend class AttachmentStrategy;
 protected:
   IconicAttachmentStrategy() : AttachmentStrategy() {}
   virtual ~IconicAttachmentStrategy() {}
@@ -72,7 +73,7 @@ public:
 //
 
 class SmartAttachmentStrategy : public AttachmentStrategy {
-  friend class ::AttachmentStrategy;
+  friend class AttachmentStrategy;
 protected:
   SmartAttachmentStrategy() : AttachmentStrategy() {}
   virtual ~SmartAttachmentStrategy() {}
@@ -105,7 +106,7 @@ public:
 //
 
 class InlinedAttachmentStrategy : public AttachmentStrategy {
-  friend class ::AttachmentStrategy;
+  friend class AttachmentStrategy;
 protected:
   InlinedAttachmentStrategy() : AttachmentStrategy() {}
   virtual ~InlinedAttachmentStrategy() {}
@@ -125,7 +126,7 @@ public:
 //
 
 class HiddenAttachmentStrategy : public AttachmentStrategy {
-  friend class ::AttachmentStrategy;
+  friend class AttachmentStrategy;
 protected:
   HiddenAttachmentStrategy() : AttachmentStrategy() {}
   virtual ~HiddenAttachmentStrategy() {}
@@ -216,3 +217,4 @@ const AttachmentStrategy * AttachmentStrategy::hidden() {
   return hiddenStrategy;
 }
 
+}

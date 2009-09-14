@@ -36,13 +36,16 @@
 
 class QString;
 #include <QByteArray>
+
+namespace Message {
+
 namespace Interface {
   class BodyPartFormatter;
 }
 
 class BodyPartFormatterFactory {
   class gcc_shut_up;
-  friend class ::BodyPartFormatterFactory::gcc_shut_up;
+  friend class BodyPartFormatterFactory::gcc_shut_up;
 public:
   ~BodyPartFormatterFactory();
 
@@ -64,5 +67,6 @@ private:
   BodyPartFormatterFactory( const BodyPartFormatterFactory & );
 };
 
+}
 
 #endif // __KMAIL_BODYPARTFORMATTERFACTORY_H__

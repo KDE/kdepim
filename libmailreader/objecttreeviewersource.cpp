@@ -21,7 +21,8 @@
 #include "mailviewer_p.h"
 #include "htmlstatusbar.h"
 
-MailViewerSource::MailViewerSource( MailViewerPrivate *viewer ) :
+namespace Message {
+MailViewerSource::MailViewerSource( ViewerPrivate *viewer ) :
   ObjectTreeSourceIf(), mViewer( viewer )
 {
 }
@@ -99,3 +100,4 @@ CSSHelper* MailViewerSource::cssHelper()
   return mViewer->cssHelper();
 }
 
+}

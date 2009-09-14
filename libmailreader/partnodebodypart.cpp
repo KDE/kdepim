@@ -44,6 +44,8 @@
 #include <QString>
 #include <QTextCodec>
 
+using namespace Message;
+
 static int serial = 0;
 
 PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, const QTextCodec * codec  )

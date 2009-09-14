@@ -22,6 +22,8 @@
 
 #include "attachmentstrategy.h"
 
+namespace Message {
+
 EmptySource::EmptySource() : ObjectTreeSourceIf()
 {
 }
@@ -93,5 +95,7 @@ HtmlWriter * EmptySource::htmlWriter()
 CSSHelper* EmptySource::cssHelper()
 {
   return 0;
+}
+
 }
 

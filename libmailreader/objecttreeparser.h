@@ -40,7 +40,6 @@
 
 #include "nodehelper.h"
 
-class MailViewerPrivate;
 class QString;
 
 namespace KMime {
@@ -52,10 +51,15 @@ namespace GpgME {
 }
 
 class PartMetaData;
+
+namespace Message {
+
+class ViewerPrivate;
 class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
 class ObjectTreeSourceIf;
+
 
 class ProcessResult {
 public:
@@ -349,6 +353,7 @@ private:
   
 };
 
+}
 
 #endif // _KMAIL_OBJECTTREEPARSER_H_
 

@@ -37,8 +37,11 @@
 
 #include <map>
 #include <qstring.h>
-namespace Interface {
-  class BodyPartFormatter;
+
+namespace Message {
+  namespace Interface {
+    class BodyPartFormatter;
+  }
 }
 
 namespace BodyPartFormatterFactoryPrivate {
@@ -48,7 +51,7 @@ return qstricmp( s1, s2 ) < 0;
     }
   };
 
-  typedef std::map<const char*, const Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
+  typedef std::map<const char*, const Message::Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
   typedef std::map<const char*, SubtypeRegistry, ltstr> TypeRegistry;
 
   // defined in bodypartformatters.cpp

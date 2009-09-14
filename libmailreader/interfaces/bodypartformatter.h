@@ -34,7 +34,9 @@
 #ifndef __KMAIL_INTERFACE_BODYPARTFORMATTER_H__
 #define __KMAIL_INTERFACE_BODYPARTFORMATTER_H__
 
-class HtmlWriter;
+namespace Message {
+
+  class HtmlWriter;
 
 namespace Interface {
 
@@ -88,5 +90,5 @@ namespace Interface {
 
 } // namespace Interface
 
-
+}
 #endif // __KMAIL_INTERFACE_BODYPARTFORMATTER_H__

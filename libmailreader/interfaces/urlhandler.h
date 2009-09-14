@@ -36,7 +36,10 @@ class KUrl;
 
 class QString;
 class QPoint;
-class MailViewerPrivate;
+
+namespace Message {
+
+class ViewerPrivate;
 
 /**
   * @short An interface to reader link handlers
@@ -56,7 +59,7 @@ public:
     * @return true if the click was handled by this URLHandler,
     *         false otherwise.
     */
-  virtual bool handleClick( const KUrl & url, MailViewerPrivate * w ) const = 0;
+  virtual bool handleClick( const KUrl & url, ViewerPrivate * w ) const = 0;
 
   /**
     * Called when RMB-clicking on a link in the reader. Should show
@@ -66,7 +69,7 @@ public:
     * @return true if the right-click was handled by this
     * URLHandler, false otherwise.
     */
-  virtual bool handleContextMenuRequest( const KUrl & url, const QPoint & p, MailViewerPrivate * w ) const = 0;
+  virtual bool handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w ) const = 0;
 
   /**
     * Called when hovering over a link.
@@ -74,9 +77,10 @@ public:
     * @return a string to be shown in the status bar while hoverin
     * over this link.
     */
-  virtual QString statusBarMessage( const KUrl & url, MailViewerPrivate * w ) const = 0;
+  virtual QString statusBarMessage( const KUrl & url, ViewerPrivate * w ) const = 0;
 };
 
+}
 
 #endif // __KMAIL_INTERFACES_URLHANDLER_H__
 

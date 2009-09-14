@@ -64,19 +64,22 @@ namespace {
   class HtmlAnchorHandler;
 }
 
-class AttachmentStrategy;
-
-class MailViewerPrivate;
+namespace Message {
+  class AttachmentStrategy;
+  class ViewerPrivate;
+}
 
 /**
    This class implements a "reader window", that is a window
    used for reading or viewing messages.
 */
 
+namespace Message {
+
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
-class MAILVIEWER_EXPORT MailViewer: public QWidget {
+class MAILVIEWER_EXPORT Viewer: public QWidget {
   Q_OBJECT
-  Q_DECLARE_PRIVATE(MailViewer)
+  Q_DECLARE_PRIVATE(Viewer)
 
   public:
   /**
@@ -87,9 +90,9 @@ class MAILVIEWER_EXPORT MailViewer: public QWidget {
    * @param actionCollection the action collection where the widget's actions will belong to
    * @param f window flags
    */
-  MailViewer( QWidget *parent,  KSharedConfigPtr config = KSharedConfigPtr(), QWidget *mainWindow = 0,
+  Viewer( QWidget *parent,  KSharedConfigPtr config = KSharedConfigPtr(), QWidget *mainWindow = 0,
                KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
-  virtual ~MailViewer();
+  virtual ~Viewer();
 
   /**
    * Returns the current message displayed in the viewer.
@@ -246,9 +249,10 @@ protected:
   /** Watch for palette changes */
   virtual bool event(QEvent *e);
 
-  MailViewerPrivate* const d_ptr;
+  ViewerPrivate* const d_ptr;
 };
 
+}
 
 #endif
 

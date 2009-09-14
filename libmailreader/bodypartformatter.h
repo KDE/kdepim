@@ -36,9 +36,11 @@ namespace KMime {
   class Content;
 }
 
-class ObjectTreeParser;
+namespace Message {
+  class ObjectTreeParser;
+  class ProcessResult;
+}
 
-class ProcessResult;
 
 class BodyPartFormatter {
   const BodyPartFormatter & operator=( const BodyPartFormatter & );
@@ -48,7 +50,7 @@ protected:
 public:
   virtual ~BodyPartFormatter() {}
 
-  virtual bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const = 0;
+  virtual bool process( Message::ObjectTreeParser *, KMime::Content *, Message::ProcessResult & ) const = 0;
 
   static const BodyPartFormatter * createFor( const char * type, const char * subtype );
 };

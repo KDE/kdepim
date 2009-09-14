@@ -37,6 +37,7 @@
 class QByteArray;
 class QString;
 
+namespace Message {
 namespace Interface {
 
 /*FIXME(Andras) review, port
@@ -160,5 +161,6 @@ namespace Interface {
 
 } // namespace Interface
 
+}
 
 #endif // __KMAIL_INTERFACES_BODYPART_H__

@@ -39,6 +39,8 @@ namespace KMime {
   class Content;
 }
 
+namespace Message {
+
 class MAILVIEWER_EXPORT AttachmentStrategy {
 protected:
   AttachmentStrategy();
@@ -75,5 +77,7 @@ public:
   virtual bool inlineNestedMessages() const = 0;
   virtual Display defaultDisplay( KMime::Content * node ) const = 0;
 };
+
+}
 
 #endif // __KMAIL_ATTACHMENTSTRATEGY_H__
