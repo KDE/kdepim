@@ -64,4 +64,4 @@ include_directories(
 
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install( FILES viewer.h attachmentstrategy.h headerstrategy.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
+#install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
