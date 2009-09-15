@@ -329,14 +329,18 @@ void CSVImportDialog::initGUI()
   layout->addWidget( label, 2, 2 );
 
   mDatePatternEdit = new KLineEdit( page );
-  mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 format as default
+  mDatePatternEdit->setText( "Y-M-DTH:I:S" ); // ISO 8601 date time format as default
   mDatePatternEdit->setToolTip( i18nc( "@info:tooltip",
                                          "<para><list><item>y: year with 2 digits</item>"
                                          "<item>Y: year with 4 digits</item>"
                                          "<item>m: month with 1 or 2 digits</item>"
                                          "<item>M: month with 2 digits</item>"
                                          "<item>d: day with 1 or 2 digits</item>"
-                                         "<item>D: day with 2 digits</item></list></para>" ) );
+                                         "<item>D: day with 2 digits</item>"
+                                         "<item>H: hours with 2 digits</item>"
+                                         "<item>I: minutes with 2 digits</item>"
+                                         "<item>S: seconds with 2 digits</item>"
+                                         "</list></para>" ) );
   layout->addWidget( mDatePatternEdit, 2, 3 );
 
   // text codec

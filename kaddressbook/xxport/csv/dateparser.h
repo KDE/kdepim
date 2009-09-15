@@ -20,19 +20,23 @@
 #ifndef DATEPARSER_H
 #define DATEPARSER_H
 
-#include <QtCore/QDate>
+#include <QtCore/QDateTime>
 #include <QtCore/QString>
 
 /**
-  This class parses the date out of a given string with the
+  This class parses the datetime out of a given string with the
   help of a pattern.
-  The pattern can contains the following key characters:
+
+  The pattern can contain the following place holders:
     y = year (e.g. 82)
     Y = year (e.g. 1982)
     m = month (e.g. 7, 07 or 12)
     M = month (e.g. 07 or 12)
     d = day (e.g. 3, 03 or 17)
-    D = day (e.g. 03 or 17 )
+    D = day (e.g. 03 or 17)
+    H = hour (e.g. 12)
+    I = minute (e.g. 56)
+    S = second (e.g. 30)
  */
 class DateParser
 {
@@ -40,7 +44,7 @@ class DateParser
     DateParser( const QString &pattern );
     ~DateParser();
 
-    QDate parse( const QString &dateStr ) const;
+    QDateTime parse( const QString &dateStr ) const;
 
   private:
     QString mPattern;
