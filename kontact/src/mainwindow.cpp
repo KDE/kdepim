@@ -1067,6 +1067,7 @@ void MainWindow::slotNewToolbarConfig()
     applyMainWindowSettings( KGlobal::config()->group(
                                QString( "MainWindow%1" ).arg( mCurrentPlugin->identifier() ) ) );
   }
+  updateShortcuts(); // for the plugActionList call
 }
 
 void MainWindow::slotOpenUrl( const KUrl &url )
