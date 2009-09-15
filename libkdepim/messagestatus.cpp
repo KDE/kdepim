@@ -29,6 +29,7 @@
 
 #include "messagestatus.h"
 
+#include <KDE/KDebug>
 #include <QString>
 
 using namespace KPIM;
@@ -603,6 +604,77 @@ QString MessageStatus::getSortRank() const
   }
 
   return sstr;
+}
+
+QSet<QByteArray> MessageStatus::getStatusFlags() const
+{
+  QSet<QByteArray> flags;
+
+  // Non handled status:
+  // * KMMsgStatusQueued
+  // * KMMsgStatusSent
+  // * KMMsgStatusSpam
+  // * KMMsgStatusHam
+  // * KMMsgStatusHasAttach
+
+  if ( mStatus & KMMsgStatusDeleted ) {
+    flags+= "\\DELETED";
+  } else {
+    if ( mStatus & ( KMMsgStatusOld | KMMsgStatusRead ) )
+      flags+= "\\SEEN ";
+    if ( mStatus & KMMsgStatusReplied )
+      flags+= "\\ANSWERED ";
+    if ( mStatus & KMMsgStatusFlag )
+      flags+= "\\FLAGGED ";
+    // non standard flags
+    if ( mStatus & KMMsgStatusForwarded )
+      flags+= "$FORWARDED ";
+    if ( mStatus & KMMsgStatusToAct )
+      flags+= "$TODO ";
+    if ( mStatus & KMMsgStatusWatched )
+      flags+= "$WATCHED ";
+    if ( mStatus & KMMsgStatusIgnored )
+      flags+= "$IGNORED ";
+  }
+
+  return flags;
+}
+
+void MessageStatus::setStatusFromFlags( const QSet<QByteArray> &flags )
+{
+  mStatus = KMMsgStatusUnknown;
+  setNew();
+
+  // Non handled status:
+  // * KMMsgStatusQueued
+  // * KMMsgStatusSent
+  // * KMMsgStatusSpam
+  // * KMMsgStatusHam
+  // * KMMsgStatusHasAttach
+
+  foreach ( const QByteArray &flag, flags ) {
+    if ( flag.toUpper() == QByteArray( "\\DELETED" ) ) {
+      setDeleted();
+    } else if ( flag.toUpper() == QByteArray( "\\SEEN" ) ) {
+      setRead();
+    } else if ( flag.toUpper() == QByteArray( "\\ANSWERED" ) ) {
+      setReplied();
+    } else if ( flag.toUpper() == QByteArray( "\\FLAGGED" ) ) {
+      setImportant();
+
+    // non standard flags
+    } else if ( flag.toUpper() == QByteArray( "$FORWARDED" ) ) {
+      setForwarded();
+    } else if ( flag.toUpper() == QByteArray( "$TODO" ) ) {
+      setToAct();
+    } else if ( flag.toUpper() == QByteArray( "$WATCHED" ) ) {
+      setWatched();
+    } else if ( flag.toUpper() == QByteArray( "$IGNORED" ) ) {
+      setIgnored();
+    } else {
+      kWarning() << "Unknown flag:" << flag;
+    }
+  }
 }
 
 MessageStatus MessageStatus::statusNew()
