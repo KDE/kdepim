@@ -325,7 +325,8 @@ Model::~Model()
 void Model::setAggregation( const Aggregation * aggregation )
 {
   d->mAggregation = aggregation;
-  d->mView->setRootIsDecorated( d->mAggregation->grouping() == Aggregation::NoGrouping );
+  d->mView->setRootIsDecorated( ( d->mAggregation->grouping() == Aggregation::NoGrouping ) &&
+                                ( d->mAggregation->threading() != Aggregation::NoThreading ) );
 }
 
 void Model::setTheme( const Theme * theme )
