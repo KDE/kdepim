@@ -104,9 +104,6 @@ class PrintingWizard : public KAssistantDialog
      */
     void slotStyleSelected(int);
 
-  private Q_SLOTS:
-    void finalizePrinting( const KABC::Addressee::List& );
-
   protected:
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;

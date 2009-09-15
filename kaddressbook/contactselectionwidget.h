@@ -67,27 +67,16 @@ class ContactSelectionWidget : public QWidget
     void setDefaultAddressBook( const Akonadi::Collection &addressBook );
 
     /**
-     * Requests the list of selected contacts.
-     * The list is made available via the selectedContacts() signal.
+     * Returns the list of selected contacts.
      */
-    void requestSelectedContacts();
-
-  Q_SIGNALS:
-    /**
-     * This signal is emitted when all contacts, the user has choosen,
-     * are available.
-     */
-    void selectedContacts( const KABC::Addressee::List &contacts );
-
-  private Q_SLOTS:
-    void addressBookContactsFetched( KJob* );
+    KABC::Addressee::List selectedContacts() const;
 
   private:
     void initGui();
 
-    void collectAllContacts();
-    void collectSelectedContacts();
-    void collectAddressBookContacts();
+    KABC::Addressee::List collectAllContacts() const;
+    KABC::Addressee::List collectSelectedContacts() const;
+    KABC::Addressee::List collectAddressBookContacts() const;
 
     QAbstractItemModel *mModel;
     QItemSelectionModel *mSelectionModel;
