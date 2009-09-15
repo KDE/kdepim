@@ -819,10 +819,12 @@ MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
 
 void View::setCurrentMessageItem( MessageItem * it )
 {
-  kDebug() << "Setting current message to" << it->subject();
-
   if ( it )
+  {
+    kDebug() << "Setting current message to" << it->subject();
+
     selectionModel()->setCurrentIndex( d->mModel->index( it, 0 ), QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
+  }
   else
     selectionModel()->setCurrentIndex( QModelIndex(), QItemSelectionModel::Current | QItemSelectionModel::Clear );
 }
