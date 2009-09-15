@@ -93,6 +93,7 @@ void XXPortManager::slotImport( const QString &identifier )
     return;
 
   Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly, mParentWidget );
+  dlg.setDefaultAddressBook( mDefaultAddressBook );
   if ( !dlg.exec() )
     return;
 
