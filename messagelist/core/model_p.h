@@ -333,6 +333,11 @@ public:
   QString mCachedFourWeeksAgoLabel;
 
   /**
+   * The label for the "Five Weeks Ago" group item, cached, so we don't translate it multiple times.
+   */
+  QString mCachedFiveWeeksAgoLabel;
+
+  /**
    * Cached bits that we use for fast status checks
    */
   qint32 mCachedWatchedOrIgnoredStatusBits;
