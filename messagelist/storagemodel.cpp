@@ -33,6 +33,7 @@
 
 #include "core/messageitem.h"
 #include "core/settings.h"
+#include "core/subjectutils_p.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -253,8 +254,8 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
 
   switch ( subset ) {
   case PerfectThreadingReferencesAndSubject:
-    mi->setStrippedSubjectMD5( md5Encode( mail->subject()->stripOffPrefixes() ) );
-    mi->setSubjectIsPrefixed( mail->subject()->asUnicodeString()!=mail->subject()->stripOffPrefixes() );
+    mi->setStrippedSubjectMD5( md5Encode( Core::SubjectUtils::stripOffPrefixes( mail->subject()->asUnicodeString() ) ) );
+    mi->setSubjectIsPrefixed( mail->subject()->asUnicodeString() != Core::SubjectUtils::stripOffPrefixes( mail->subject()->asUnicodeString() ) );
     // fall through
   case PerfectThreadingPlusReferences:
     if ( !mail->references()->identifiers().isEmpty() ) {

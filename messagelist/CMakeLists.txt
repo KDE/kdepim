@@ -24,6 +24,7 @@ set(libmessagelist_SRCS
     core/themedelegate.cpp
     core/storagemodelbase.cpp
     core/sortorder.cpp
+    core/subjectutils.cpp
     core/view.cpp
     core/widgetbase.cpp
 

@@ -22,6 +22,7 @@
 #define __MESSAGELIST_CORE_ITEM_P_H__
 
 #include "core/item.h"
+#include "core/subjectutils_p.h"
 
 // See the MessageList::ItemPrivate::insertChildItem() function below for an explaination of this macro.
 #if __GNUC__ >= 3
@@ -309,8 +310,8 @@ class ItemSubjectComparator
 public:
   static inline bool firstGreaterOrEqual( Item * first, Item * second )
   {
-    int ret = KMime::Headers::Subject::stripOffPrefixes( first->subject() ).
-                compare( KMime::Headers::Subject::stripOffPrefixes( second->subject() ), Qt::CaseInsensitive );
+    int ret = SubjectUtils::stripOffPrefixes( first->subject() ).
+                compare( SubjectUtils::stripOffPrefixes( second->subject() ), Qt::CaseInsensitive );
     if ( ret < 0 )
       return false;
     // compare by date when subjects are equal
