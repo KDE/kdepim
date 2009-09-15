@@ -33,7 +33,7 @@ namespace Message {
   class HtmlWriter;
   class CSSHelper;
   class AttachmentStrategy;
-};
+}
 
 namespace Message {
 /** @author Andras Mantia <amantia@kdab.net> */
