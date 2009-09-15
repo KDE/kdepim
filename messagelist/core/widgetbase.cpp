@@ -437,29 +437,9 @@ void Widget::themeMenuAboutToShow()
 
   menu->addSeparator();
 
-  act = menu->addAction( i18n( "Folder Always Uses This Theme" ) );
-  act->setCheckable( true );
-  act->setChecked( d->mStorageUsesPrivateTheme );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( setPrivateThemeForStorage() ) );
-
-  menu->addSeparator();
-
   act = menu->addAction( i18n( "Configure..." ) );
   connect( act, SIGNAL( triggered( bool ) ),
            SLOT( configureThemes() ) );
-}
-
-void Widget::setPrivateThemeForStorage()
-{
-  if ( !d->mStorageModel )
-    return;
-
-  Q_ASSERT( d->mTheme );
-
-  d->mStorageUsesPrivateTheme = !d->mStorageUsesPrivateTheme;
-
-  Manager::instance()->saveThemeForStorageModel( d->mStorageModel, d->mTheme->id(), d->mStorageUsesPrivateTheme );
 }
 
 void Widget::setPrivateSortOrderForStorage()
@@ -561,33 +541,11 @@ void Widget::aggregationMenuAboutToShow()
 
   menu->addSeparator();
 
-  act = menu->addAction( i18n( "Folder Always Uses This Aggregation" ) );
-  act->setCheckable( true );
-  act->setChecked( d->mStorageUsesPrivateAggregation );
-  connect( act, SIGNAL( triggered( bool ) ),
-           SLOT( setPrivateAggregationForStorage() ) );
-
-
-  menu->addSeparator();
-
   act = menu->addAction( i18n( "Configure..." ) );
   act->setData( QVariant( QString() ) );
   connect( act, SIGNAL( triggered( bool ) ),
            SLOT( aggregationSelected( bool ) ) );
 }
-
-void Widget::setPrivateAggregationForStorage()
-{
-  if ( !d->mStorageModel )
-    return;
-
-  Q_ASSERT( d->mAggregation );
-
-  d->mStorageUsesPrivateAggregation = !d->mStorageUsesPrivateAggregation;
-
-  Manager::instance()->saveAggregationForStorageModel( d->mStorageModel, d->mAggregation->id(), d->mStorageUsesPrivateAggregation );
-}
-
 
 void Widget::aggregationSelected( bool )
 {

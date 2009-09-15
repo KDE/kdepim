@@ -212,8 +212,6 @@ protected slots:
   void aggregationMenuAboutToShow();
   void themeSelected( bool );
   void configureThemes();
-  void setPrivateThemeForStorage();
-  void setPrivateAggregationForStorage();
   void setPrivateSortOrderForStorage();
   void aggregationSelected( bool );
   void statusSelected( int index );
