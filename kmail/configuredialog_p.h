@@ -68,16 +68,16 @@ class KIconButton;
 class KKeySequenceWidget;
 class KComboBox;
 
+namespace MessageList {
+  namespace Utils {
+    class AggregationComboBox;
+    class ThemeComboBox;
+  }
+}
 namespace KMail {
   class IdentityDialog;
   class IdentityListView;
   class IdentityListViewItem;
-  namespace MessageListView {
-    namespace Core {
-      class AggregationComboBox;
-      class ThemeComboBox;
-    }
-  }
 }
 namespace Kleo {
   class BackendConfigWidget;
@@ -427,8 +427,8 @@ private: // methods
 private: // data
   QCheckBox    *mDisplayMessageToolTips;
   QCheckBox    *mHideTabBarWithSingleTab;
-  KMail::MessageListView::Core::AggregationComboBox *mAggregationComboBox;
-  KMail::MessageListView::Core::ThemeComboBox *mThemeComboBox;
+  MessageList::Utils::AggregationComboBox *mAggregationComboBox;
+  MessageList::Utils::ThemeComboBox *mThemeComboBox;
   KButtonGroup *mDateDisplay;
   KLineEdit    *mCustomDateFormatEdit;
   QString       mCustomDateWhatsThis;

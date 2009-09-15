@@ -13,6 +13,8 @@ add_subdirectory(about)
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
 
+include_directories( ${Boost_INCLUDE_DIR} )
+
 ########### next target ###############
 
 set(kdepim_LIB_SRCS

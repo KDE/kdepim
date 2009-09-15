@@ -52,15 +52,16 @@ template <typename T> class QPointer;
 class TemplatesConfiguration;
 class KPushButton;
 
-namespace KMail {
-
-class MainFolderView;
-namespace MessageListView {
-  namespace Core {
+namespace MessageList {
+  namespace Utils {
     class AggregationComboBox;
     class ThemeComboBox;
   }
 }
+
+namespace KMail {
+
+class MainFolderView;
 
 /**
  * This is the base class for tabs in the folder dialog.
@@ -200,9 +201,9 @@ private:
   KIconButton *mUnreadIconButton;
   KComboBox *mShowSenderReceiverComboBox;
   QCheckBox *mUseDefaultAggregationCheckBox;
-  MessageListView::Core::AggregationComboBox *mAggregationComboBox;
+  MessageList::Utils::AggregationComboBox *mAggregationComboBox;
   QCheckBox *mUseDefaultThemeCheckBox;
-  MessageListView::Core::ThemeComboBox *mThemeComboBox;
+  MessageList::Utils::ThemeComboBox *mThemeComboBox;
 };
 
 

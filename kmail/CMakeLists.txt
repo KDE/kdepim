@@ -50,6 +50,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/libksieve
   ${CMAKE_SOURCE_DIR}/mimelib
   ${CMAKE_SOURCE_DIR}/libkleo
+  ${CMAKE_SOURCE_DIR}/messagelist
   ${GPGME_INCLUDES}
   ${Boost_INCLUDE_DIR}
  )
@@ -247,34 +248,6 @@ set(kmailprivate_LIB_SRCS
    messagelistview/pane.cpp
    messagelistview/storagemodel.cpp
    messagelistview/widget.cpp
-   messagelistview/core/aggregation.cpp
-   messagelistview/core/aggregationcombobox.cpp
-   messagelistview/core/aggregationconfigbutton.cpp
-   messagelistview/core/aggregationeditor.cpp
-   messagelistview/core/comboboxutils.cpp
-   messagelistview/core/configureaggregationsdialog.cpp
-   messagelistview/core/configurethemesdialog.cpp
-   messagelistview/core/delegate.cpp
-   messagelistview/core/filter.cpp
-   messagelistview/core/item.cpp
-   messagelistview/core/groupheaderitem.cpp
-   messagelistview/core/manager.cpp
-   messagelistview/core/messageitem.cpp
-   messagelistview/core/messageitemsetmanager.cpp
-   messagelistview/core/model.cpp
-   messagelistview/core/modelinvariantindex.cpp
-   messagelistview/core/modelinvariantrowmapper.cpp
-   messagelistview/core/optionset.cpp
-   messagelistview/core/optionseteditor.cpp
-   messagelistview/core/theme.cpp
-   messagelistview/core/themecombobox.cpp
-   messagelistview/core/themeconfigbutton.cpp
-   messagelistview/core/themedelegate.cpp
-   messagelistview/core/themeeditor.cpp
-   messagelistview/core/storagemodelbase.cpp
-   messagelistview/core/sortorder.cpp
-   messagelistview/core/view.cpp
-   messagelistview/core/widgetbase.cpp
 )
 
 qt4_add_dbus_adaptor(kmailprivate_LIB_SRCS
@@ -369,6 +342,7 @@ target_link_libraries(kmailprivate
   ${KDE4_KHTML_LIBRARY}
   ${KDE4_THREADWEAVER_LIBRARY}
   ${KDE4_KMIME_LIBRARY}
+  messagelist
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
   ${KDE4_PHONON_LIBRARY}
   ${KDE4_KNOTIFYCONFIG_LIBRARY}

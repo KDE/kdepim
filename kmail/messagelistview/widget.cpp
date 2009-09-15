@@ -22,8 +22,8 @@
 #include "messagelistview/pane.h"
 #include "messagelistview/storagemodel.h"
 
-#include "messagelistview/core/view.h"
-#include "messagelistview/core/messageitem.h"
+#include <messagelist/core/view.h>
+#include <messagelist/core/messageitem.h>
 
 #include "kmmessage.h"
 #include "kmfolder.h"
@@ -58,6 +58,8 @@ namespace KMail
 
 namespace MessageListView
 {
+
+using namespace MessageList;
 
 Widget::Widget( KMMainWidget *mainWidget, Pane *pPane )
   : Core::Widget( pPane ), mPane( pPane ), mMainWidget( mainWidget )
@@ -215,11 +217,6 @@ void Widget::viewMessageStatusChangeRequest( Core::MessageItem *msg, const KPIM:
 }
 
 
-Core::MessageItem * Widget::currentMessageItem() const
-{
-  return view()->currentMessageItem();
-}
-
 Core::MessageItem * Widget::messageItemFromMessage( KMMessage * msg ) const
 {
   return messageItemFromMsgBase( msg );
@@ -286,7 +283,7 @@ void Widget::activateMessageItemByMsgBase( KMMsgBase * msg )
   Core::MessageItem * mi = 0;
 
   // take care of current first
-  if ( currentMsgBase() != msg ) // this 
+  if ( currentMsgBase() != msg ) // this
   {
     mi = messageItemFromMsgBase( msg );
 
@@ -434,7 +431,7 @@ MessageTreeCollection * Widget::itemListToMessageTreeCollection( const QList< Co
 
     if ( !attached )
       collection->addTree( tree );
-  }  
+  }
 
   return collection;
 }
@@ -526,7 +523,7 @@ QList< KMMsgBase * > Widget::persistentSetContentsAsMsgBaseList( Core::MessageIt
     ret.append( msg );
   }
 
-  return ret;  
+  return ret;
 }
 
 void Widget::markPersistentSetAsAboutToBeRemoved( Core::MessageItemSetReference ref, bool bMark )
@@ -622,7 +619,7 @@ void Widget::viewMessageListContextPopupRequest( const QList< Core::MessageItem 
 
   Q_ASSERT( storageModel() );
 
-  mMainWidget->updateMessageMenu(); 
+  mMainWidget->updateMessageMenu();
   //mMainWidget->updateMessageActions(); <-- this is called by updateMessageMenu()
 
   KMenu menu( this );
@@ -864,7 +861,7 @@ void Widget::viewDropEvent( QDropEvent *e )
       // FIXME: This code is duplicated almost exactly in FolderView... shouldn't we share ?
       // FIXME: anybody sets this option to false ?
       if ( GlobalSettings::self()->showPopupAfterDnD() )
-      { 
+      {
         KMenu menu;
         QAction *moveAction = menu.addAction( KIcon( "go-jump"), i18n( "&Move Here" ) );
         QAction *copyAction = menu.addAction( KIcon( "edit-copy" ), i18n( "&Copy Here" ) );

@@ -24,7 +24,7 @@
 #include <KTabWidget>
 #include <QList>
 
-#include "messagelistview/core/enums.h"
+#include <messagelist/core/enums.h>
 
 class KMMessage;
 class KMMsgBase;
@@ -199,7 +199,7 @@ public:
    *
    * If includeCollapsedChildren is true then the children of the selected but
    * collapsed items are also added to the set.
-   * 
+   *
    * At any later stage you can retrieve the messages still contained in
    * the set. You are responsable of deleting the returned object when
    * you no longer need it. The returned pointer is in fact a QObject so you
@@ -211,7 +211,7 @@ public:
    * Creates a persistent message set from the current thread in the currently
    * active Widget. Returns 0 if there is no currently active widget
    * or if has no selected folder.
-   * 
+   *
    * At any later stage you can retrieve the messages still contained in
    * the set. You are responsable of deleting the returned object when
    * you no longer need it. The returned pointer is in fact a QObject so you
@@ -262,7 +262,7 @@ public:
   void setCurrentFolder(
       KMFolder *fld,
       bool preferEmptyTab = false,
-      Core::PreSelectionMode preSelectionMode = Core::PreSelectLastSelected,
+      MessageList::Core::PreSelectionMode preSelectionMode = MessageList::Core::PreSelectLastSelected,
       const QString &overrideLabel = QString()
     );
 
@@ -317,8 +317,8 @@ public:
    * of the list if the end is reached, otherwise it will just stop returning false.
    */
   bool selectNextMessageItem(
-      Core::MessageTypeFilter messageTypeFilter,
-      Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+      MessageList::Core::MessageTypeFilter messageTypeFilter,
+      MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
       bool centerItem,
       bool loop
     );
@@ -337,8 +337,8 @@ public:
    * of the list if the beginning is reached, otherwise it will just stop returning false.
    */
   bool selectPreviousMessageItem(
-      Core::MessageTypeFilter messageTypeFilter,
-      Core::ExistingSelectionBehaviour existingSelectionBehaviour,
+      MessageList::Core::MessageTypeFilter messageTypeFilter,
+      MessageList::Core::ExistingSelectionBehaviour existingSelectionBehaviour,
       bool centerItem,
       bool loop
     );
@@ -353,7 +353,7 @@ public:
    * If loop is true then the "next" algorithm will restart from the beginning
    * of the list if the end is reached, otherwise it will just stop returning false.
    */
-  bool focusNextMessageItem( Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop );
+  bool focusNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop );
 
   /**
    * Focuses the previous message item in the view without actually selecting it.
@@ -365,7 +365,7 @@ public:
    * If loop is true then the "previous" algorithm will restart from the end
    * of the list if the beginning is reached, otherwise it will just stop returning false.
    */
-  bool focusPreviousMessageItem( Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop );
+  bool focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem, bool loop );
 
   /**
    * Selects the currently focused message item. May do nothing if the
@@ -390,7 +390,7 @@ public:
    *
    * The function returns true if a message was selected and false otherwise.
    */
-  bool selectFirstMessage( Core::MessageTypeFilter messageTypeFilter, bool centerItem );
+  bool selectFirstMessage( MessageList::Core::MessageTypeFilter messageTypeFilter, bool centerItem );
 
   /**
    * Selects all the items in the current folder.
@@ -469,7 +469,7 @@ protected:
 
   /**
    * Returns the currently active Widget (tab).
-   * 
+   *
    * You shouldn't mess with this as we appear to KMMainWidget as a single folder view:
    * use the public wrappers above.
    */
@@ -523,6 +523,7 @@ protected:
    */
   void widgetIconChangeRequest( Widget * w, const QIcon &icon );
 
+protected slots:
   /**
    * Hides/shows the tab bar (if the proper global option is enabled).
    * Enables or disables the "close tab" button.

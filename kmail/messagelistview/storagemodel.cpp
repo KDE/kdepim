@@ -20,7 +20,7 @@
 
 #include "messagelistview/storagemodel.h"
 
-#include "messagelistview/core/messageitem.h"
+#include <messagelist/core/messageitem.h>
 
 #include <config-kmail.h>
 
@@ -42,6 +42,8 @@ namespace KMail
 
 namespace MessageListView
 {
+
+using namespace MessageList;
 
 StorageModel::StorageModel( KMFolder * folder, QObject * parent )
   : Core::StorageModel( parent ), mFolder( folder )
@@ -538,8 +540,10 @@ void StorageModel::fillMessageItemThreadingData( Core::MessageItem * mi, int row
   };  
 }
 
-void StorageModel::setMessageItemStatus( Core::MessageItem * mi, const KPIM::MessageStatus &status )
+void StorageModel::setMessageItemStatus( Core::MessageItem * mi, int row, const KPIM::MessageStatus &status )
 {
+  Q_UNUSED( row );
+
   KMMsgBase * msg = msgBase( mi );
   if ( !msg )
     return; // This can be called at a really later stage (with respect to the initial fill).

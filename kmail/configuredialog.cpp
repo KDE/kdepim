@@ -61,13 +61,10 @@ using KMail::ImapAccountBase;
 using KPIM::RecentAddresses;
 #include "completionordereditor.h"
 #include "ldapclient.h"
-#include "messagelistview/core/manager.h"
-#include "messagelistview/core/aggregation.h"
-#include "messagelistview/core/aggregationcombobox.h"
-#include "messagelistview/core/aggregationconfigbutton.h"
-#include "messagelistview/core/theme.h"
-#include "messagelistview/core/themecombobox.h"
-#include "messagelistview/core/themeconfigbutton.h"
+#include "messagelist/utils/aggregationcombobox.h"
+#include "messagelist/utils/aggregationconfigbutton.h"
+#include "messagelist/utils/themecombobox.h"
+#include "messagelist/utils/themeconfigbutton.h"
 
 #include "templatesconfiguration.h"
 #include "customtemplates.h"
@@ -247,12 +244,14 @@ ConfigureDialog::~ConfigureDialog()
 
 void ConfigureDialog::slotApply()
 {
+  slotApplyClicked();
   GlobalSettings::self()->writeConfig();
   emit configChanged();
 }
 
 void ConfigureDialog::slotOk()
 {
+  slotOkClicked();
   GlobalSettings::self()->writeConfig();
   emit configChanged();
 }
@@ -1585,13 +1584,13 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
            this, SLOT( slotEmitChanged( void ) ) );
 
   // "Aggregation"
-  using KMail::MessageListView::Core::AggregationComboBox;
+  using MessageList::Utils::AggregationComboBox;
   mAggregationComboBox = new AggregationComboBox( group );
 
   QLabel* aggregationLabel = new QLabel( i18n( "Default Aggregation:" ), group );
   aggregationLabel->setBuddy( mAggregationComboBox );
 
-  using KMail::MessageListView::Core::AggregationConfigButton;
+  using MessageList::Utils::AggregationConfigButton;
   AggregationConfigButton * aggregationConfigButton = new AggregationConfigButton( group, mAggregationComboBox );
 
   QHBoxLayout * aggregationLayout = new QHBoxLayout();
@@ -1606,14 +1605,14 @@ AppearancePageHeadersTab::AppearancePageHeadersTab( QWidget * parent )
            this, SLOT( slotEmitChanged() ) );
 
   // "Theme"
-  using KMail::MessageListView::Core::ThemeComboBox;
+  using MessageList::Utils::ThemeComboBox;
   mThemeComboBox = new ThemeComboBox( group );
 
   QLabel *themeLabel = new QLabel( i18n( "Default Theme:" ), group );
   themeLabel->setBuddy( mThemeComboBox );
 
-  using KMail::MessageListView::Core::ThemeConfigButton;
-  ThemeConfigButton * themeConfigButton = new ThemeConfigButton( group );
+  using MessageList::Utils::ThemeConfigButton;
+  ThemeConfigButton * themeConfigButton = new ThemeConfigButton( group, mThemeComboBox );
 
   QHBoxLayout * themeLayout = new QHBoxLayout();
   themeLayout->addWidget( themeLabel, 1 );
@@ -1716,20 +1715,14 @@ void AppearancePageHeadersTab::slotLinkClicked( const QString & link )
 
 void AppearancePage::HeadersTab::slotSelectDefaultAggregation()
 {
-  using namespace KMail::MessageListView::Core;
-
   // Select current default aggregation.
-  const Aggregation * defaultAggregation = Manager::instance()->defaultAggregation();
-  mAggregationComboBox->setCurrentAggregation( defaultAggregation );
+  mAggregationComboBox->selectDefault();
 }
 
 void AppearancePage::HeadersTab::slotSelectDefaultTheme()
 {
-  using namespace KMail::MessageListView::Core;
-
   // Select current default theme.
-  const Theme * defaultTheme = Manager::instance()->defaultTheme();
-  mThemeComboBox->setCurrentTheme( defaultTheme );
+  mThemeComboBox->selectDefault();
 }
 
 void AppearancePage::HeadersTab::doLoadOther()
@@ -1775,21 +1768,15 @@ void AppearancePage::HeadersTab::save()
 {
   KConfigGroup general( KMKernel::config(), "General" );
   KConfigGroup geometry( KMKernel::config(), "Geometry" );
-  KConfigGroup storageModelAggregations( KMKernel::config(), "MessageListView::StorageModelAggregations" );
-  KConfigGroup storageModelThemes( KMKernel::config(), "MessageListView::StorageModelThemes" );
 
   GlobalSettings::self()->setDisplayMessageToolTips( mDisplayMessageToolTips->isChecked() );
   GlobalSettings::self()->setHideTabBarWithSingleTab( mHideTabBarWithSingleTab->isChecked() );
 
   // "Aggregation"
-  const QString aggregationID = mAggregationComboBox->currentAggregation()->id();
-  storageModelAggregations.writeEntry( QString( "DefaultSet" ), aggregationID );
-  KMail::MessageListView::Core::Manager::instance()->aggregationsConfigurationCompleted();
+  mAggregationComboBox->writeDefaultConfig();
 
   // "Theme"
-  const QString themeID = mThemeComboBox->currentTheme()->id();;
-  storageModelThemes.writeEntry( QString( "DefaultSet" ), themeID );
-  KMail::MessageListView::Core::Manager::instance()->themesConfigurationCompleted();
+  mThemeComboBox->writeDefaultConfig();
 
   int dateDisplayID = mDateDisplay->selected();
   // check bounds:

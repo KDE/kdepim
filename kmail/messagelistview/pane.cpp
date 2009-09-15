@@ -22,8 +22,9 @@
 #include "messagelistview/messageset.h"
 #include "messagelistview/widget.h"
 
-#include "messagelistview/core/view.h"
-#include "messagelistview/core/manager.h"
+#include <messagelist/core/view.h>
+#include <messagelist/core/manager.h>
+#include <messagelist/core/settings.h>
 
 #include <KLineEdit>
 #include <KLocale>
@@ -49,6 +50,7 @@ namespace KMail
 namespace MessageListView
 {
 
+using namespace MessageList;
 
 Pane::Pane( KMMainWidget * mainWidget, QWidget *pParent, KActionCollection * actionCollection )
   : KTabWidget( pParent ), mMainWidget( mainWidget ), mCurrentWidget( 0 ),
@@ -121,12 +123,16 @@ Pane::Pane( KMMainWidget * mainWidget, QWidget *pParent, KActionCollection * act
 
   // We want to show "No Subject" and "Unknown sender/date/etc" again, otherwise a saved
   // empty draft message looks weird.
-  
+
 
   // We probably want to have a combobox in the config dialog to select the defailts
   i18n( "Default Theme" );
   i18n( "Default Aggregation" );
   i18n( "Default Sort Order" );
+
+  connect( Core::Settings::self(), SIGNAL(configChanged()),
+           this, SLOT(updateTabControls()) );
+  reloadGlobalConfiguration();
 }
 
 Pane::~Pane()
@@ -164,7 +170,7 @@ bool Pane::isFolderOpen( KMFolder * fld ) const
 void Pane::setCurrentFolder( KMFolder *fld, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
 {
   // This function is quite critical, mainly because of the "appearance"
-  // we want to expose to KMainWidget which is very sensible to folder changes.  
+  // we want to expose to KMainWidget which is very sensible to folder changes.
 
   Widget * w = messageListViewWidgetWithFolder( fld );
 
@@ -231,7 +237,7 @@ void Pane::setCurrentFolder( KMFolder *fld, bool preferEmptyTab, Core::PreSelect
     else if ( fld )
       setTabText( indexOf( w ), fld->label() );
     else
-      setTabText( indexOf( w ), i18nc( "@title:tab Empty messagelist", "Empty" ) ); 
+      setTabText( indexOf( w ), i18nc( "@title:tab Empty messagelist", "Empty" ) );
   }
 
   // activate it, if needed
@@ -306,7 +312,7 @@ void Pane::slotTabContextMenuRequest( QWidget * tab, const QPoint &pos )
   if ( !w )
     return; // sanity
 
-  
+
   QVariant data;
   data.setValue< void * >( static_cast< void * >( w ) );
 
@@ -415,7 +421,7 @@ void Pane::updateTabControls()
 
   mCloseTabButton->setEnabled( moreThanOneTab );
 
-  if ( GlobalSettings::self()->hideTabBarWithSingleTab() )
+  if ( Core::Settings::self()->autoHideTabBarWithSingleTab() )
     setTabBarHidden( !moreThanOneTab );
   else
     setTabBarHidden( false );
@@ -861,12 +867,16 @@ void Pane::messageSetDestroyed( MessageSet *set )
 
 void Pane::reloadGlobalConfiguration()
 {
-  if ( !Core::Manager::instance() )
-    return; // manager doesn't exist (yet or anymore)
+  // Synchronize both configurations
+  Core::Settings::self()->setMessageToolTipEnabled(
+    GlobalSettings::self()->displayMessageToolTips()
+  );
 
-  Core::Manager::instance()->reloadGlobalConfiguration();
+  Core::Settings::self()->setAutoHideTabBarWithSingleTab(
+    GlobalSettings::self()->hideTabBarWithSingleTab()
+  );
 
-  updateTabControls();
+  Core::Settings::self()->writeConfig();
 }
 
 void Pane::focusQuickSearch()
