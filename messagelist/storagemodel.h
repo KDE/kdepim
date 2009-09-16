@@ -46,10 +46,7 @@ namespace Core
 }
 
 /**
- * The KMail specific implementation of the Core::StorageModel.
- *
- * Provides an interface over a KMFolder. In the future
- * it's expected to wrap Akonadi::MessageModel.
+ * The Akonadi specific implementation of the Core::StorageModel.
  */
 class MESSAGELIST_EXPORT StorageModel : public MessageList::Core::StorageModel
 {
