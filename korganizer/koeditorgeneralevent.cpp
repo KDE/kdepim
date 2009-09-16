@@ -419,13 +419,7 @@ void KOEditorGeneralEvent::setDefaults( const QDateTime &from,
   KOEditorGeneral::setDefaults( allDay );
   mHasTimeCheckbox->setChecked( !allDay );
   setTimeEditorsEnabled( !allDay );
-
-  mTimeZoneComboStart->selectLocalTimeSpec();
-  mTimeZoneComboEnd->selectLocalTimeSpec();
-  mStartSpec = mTimeZoneComboStart->selectedTimeSpec();
-  mEndSpec = mTimeZoneComboEnd->selectedTimeSpec();
-
-  setDateTimes( from, to );
+  setDateTimes( KDateTime( from, mStartSpec ), KDateTime( to, mEndSpec ) );
 }
 
 void KOEditorGeneralEvent::readEvent( Event *event, bool isTemplate )

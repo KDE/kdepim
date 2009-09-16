@@ -53,8 +53,6 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QAbstractItemModel *itemModel
 {
   mSelectionPage = new ContactSelectionWidget( itemModel, selectionModel, this );
   mSelectionPage->setMessageText( i18n( "Which contacts do you want to print?" ) );
-  connect( mSelectionPage, SIGNAL( selectedContacts( const KABC::Addressee::List& ) ),
-           this, SLOT( finalizePrinting( const KABC::Addressee::List& ) ) );
 
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n( "Choose Contacts to Print" ) );
   addPage( mSelectionPageItem );
@@ -137,13 +135,7 @@ void PrintingWizard::print()
   setCurrentPage( progressItem );
   kapp->processEvents();
 
-  // this will call finalizePrinting via signal/slot
-  mSelectionPage->requestSelectedContacts();
-}
-
-void PrintingWizard::finalizePrinting( const KABC::Addressee::List &list )
-{
-  KABC::Addressee::List contacts( list );
+  KABC::Addressee::List contacts = mSelectionPage->selectedContacts();
 
   const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
   sorter.sort( contacts );

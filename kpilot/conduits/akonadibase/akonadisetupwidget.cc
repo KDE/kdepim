@@ -36,6 +36,7 @@
 #include <akonadi/entitytreeviewstatesaver.h>
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
+#include <akonadi/servermanager.h>
 
 #include <akonadi_next/entitytreeview.h>
 #include "options.h"
@@ -70,9 +71,20 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent, KConfig* config )
 	: QWidget( parent ), d( new AkonadiSetupWidget::Private )
 {
 	FUNCTIONSETUP;
-	
-	d->fUi.setupUi( this );
 
+	d->fUi.setupUi( this );
+  	Akonadi::Control::widgetNeedsAkonadi( this );
+
+	connect(Akonadi::ServerManager::self(), SIGNAL(Akonadi::ServerManager::started()), this, SLOT(initWidgets()));
+	d->fConduitConfig = config;
+	if (Akonadi::ServerManager::isRunning() || Akonadi::Control::start( this )){
+		initWidgets();
+	}
+
+}
+
+void AkonadiSetupWidget::initWidgets(){
+	FUNCTIONSETUP;
 	d->fSession = new Akonadi::Session( "KPilot Configuration Session"  );
 	d->fMonitor = new Akonadi::Monitor( this );
 	d->fMonitor->setCollectionMonitored( Collection::root() );
@@ -86,32 +98,29 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent, KConfig* config )
 	
 	d->fCollections = new EntityTreeView( this );
 	d->fCollections->setModel( d->fCollectionFilterModel );
-
-	d->fSaver = new Akonadi::EntityTreeViewStateSaver(d->fCollections);
 	
+	d->fSaver = new Akonadi::EntityTreeViewStateSaver(d->fCollections);
+		
 	DEBUGKPILOT << "Restoring State";
-	d->fConduitConfig = config;
-	if (config){
-		KConfigGroup configGroup(config, "treeViewState");
+	if (d->fConduitConfig){
+		KConfigGroup configGroup(d->fConduitConfig, "treeViewState");
 		d->fSaver->restoreState(configGroup);
 	}
-
+	
 	connect( d->fCollections, SIGNAL( currentChanged( const Akonadi::Collection& ) )
 			,this , SLOT( changeCollection( const Akonadi::Collection& ) ) );
-	
+		
 	d->fUi.fWarnIcon1->setPixmap(
 		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
 	d->fUi.fWarnIcon2->setPixmap( 
 		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
-  d->fUi.fErrorIcon->setPixmap(
-    KIcon( QLatin1String( "dialog-error" ) ).pixmap( 32 ) );
+	d->fUi.fErrorIcon->setPixmap(
+		KIcon( QLatin1String( "dialog-error" ) ).pixmap( 32 ) );
 
 	d->fUi.hboxLayout->addWidget( d->fCollections, 2 );
-
-  d->fUi.fErrorIcon->setVisible(true);
-  d->fUi.fNonExistingCollection->setVisible(true);
-
-  Akonadi::Control::widgetNeedsAkonadi( this );
+	
+	d->fUi.fErrorIcon->setVisible(true);
+	d->fUi.fNonExistingCollection->setVisible(true);
 }
 
 AkonadiSetupWidget::~AkonadiSetupWidget()
@@ -134,7 +143,7 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 
 		d->fUi.fWarnIcon1->setVisible( false );
 		d->fUi.fSelectionWarnLabel->setVisible( false );
-		
+
 		emit collectionChanged();
 	}
 	selectedId = col.id();
@@ -142,7 +151,7 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 
 Akonadi::Item::Id AkonadiSetupWidget::collection() const
 {
-	if (d->fConduitConfig){
+	if ((Akonadi::ServerManager::isRunning() || Akonadi::Control::start()) && d->fConduitConfig){
 		KConfigGroup configGroup(d->fConduitConfig, "treeViewState");
 		d->fSaver->saveState(configGroup);
 	}
@@ -160,40 +169,43 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 
 	DEBUGKPILOT << "request to set collection to id: " << id;
 
-	// This is a bit ugly but currently I see no other way how to fix this. We
-	// assume here that if the fetch job fails, the collection does not exist
-	// (anymore). The user probably has deleted the collection and created new
-	// ones, maybe even a new one for the same file. However in the latter case
-	// the resource gets a new ID so even though it is a resource for the same
-	// file the user has to update the configuration of KPilot.
-	// The CollectionModel loads asynchronous so checking if the collection model
-	// contains the id might fail even though the collection still exists.
-	// Therefore I use a synchronous fetchjob here to work around that problem and
-	// be a bit more sure that the collection actually does or does not exists.
-	CollectionFetchJob *job = new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base );
-	if ( !job->exec() ) {
-		DEBUGKPILOT << "The collection does not exist." << id;
-		// Make clear to the user that the configured collection does not exist
-		// anymore.
-		d->fUi.fErrorIcon->setVisible(true);
-		d->fUi.fNonExistingCollection->setVisible(true);
-	}
-	else
-	{
-		d->fConfiguredCollection = id;
-		d->fUi.fErrorIcon->setVisible(false);
-		d->fUi.fNonExistingCollection->setVisible(false);
-
-		d->fUi.fWarnIcon1->setVisible( false );
-		d->fUi.fSelectionWarnLabel->setVisible( false );
-
-		QModelIndexList result = d->fCollections->model()->match( d->fCollections->model()->index( 0, 0 ), EntityTreeModel::CollectionIdRole, id );
-  		selectedId = id;
-  		if( !result.isEmpty() ) {
-    			d->fCollections->setCurrentIndex( result.first());
-  		} else {
-    			DEBUGKPILOT << "invalid id requested.";
-  		}
+	if (Akonadi::ServerManager::isRunning() || Akonadi::Control::start( this )){
+	
+		// This is a bit ugly but currently I see no other way how to fix this. We
+		// assume here that if the fetch job fails, the collection does not exist
+		// (anymore). The user probably has deleted the collection and created new
+		// ones, maybe even a new one for the same file. However in the latter case
+		// the resource gets a new ID so even though it is a resource for the same
+		// file the user has to update the configuration of KPilot.
+		// The CollectionModel loads asynchronous so checking if the collection model
+		// contains the id might fail even though the collection still exists.
+		// Therefore I use a synchronous fetchjob here to work around that problem and
+		// be a bit more sure that the collection actually does or does not exists.
+		CollectionFetchJob *job = new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base );
+		if ( !job->exec() ) {
+			DEBUGKPILOT << "The collection does not exist." << id;
+			// Make clear to the user that the configured collection does not exist
+			// anymore.
+			d->fUi.fErrorIcon->setVisible(true);
+			d->fUi.fNonExistingCollection->setVisible(true);
+		}
+		else
+		{
+			d->fConfiguredCollection = id;
+			d->fUi.fErrorIcon->setVisible(false);
+			d->fUi.fNonExistingCollection->setVisible(false);
+	
+			d->fUi.fWarnIcon1->setVisible( false );
+			d->fUi.fSelectionWarnLabel->setVisible( false );
+	
+			QModelIndexList result = d->fCollections->model()->match( d->fCollections->model()->index( 0, 0 ), EntityTreeModel::CollectionIdRole, id );
+	  		selectedId = id;
+	  		if( !result.isEmpty() ) {
+    				d->fCollections->setCurrentIndex( result.first());
+	  		} else {
+    				DEBUGKPILOT << "invalid id requested.";
+  			}
+		}
 	}
 }
 
@@ -204,8 +216,10 @@ void AkonadiSetupWidget::setCollectionLabel( const QString& label )
 
 void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )
 {
-	d->fCollectionFilterModel->clearFilters();
-	d->fCollectionFilterModel->addMimeTypeFilters( mimeTypes );
-	d->fCollectionFilterModel->addMimeTypeFilter( "inode/directory" );
+	if (Akonadi::ServerManager::isRunning() || Akonadi::Control::start( this )){
+		d->fCollectionFilterModel->clearFilters();
+		d->fCollectionFilterModel->addMimeTypeFilters( mimeTypes );
+		d->fCollectionFilterModel->addMimeTypeFilter( "inode/directory" );
+	}
 }
 

@@ -28,10 +28,10 @@ DateParser::~DateParser()
 {
 }
 
-QDate DateParser::parse( const QString &dateStr ) const
+QDateTime DateParser::parse( const QString &dateStr ) const
 {
-  int year, month, day;
-  year = month = day = 0;
+  int year, month, day, hour, minute, second;
+  year = month = day = hour = minute = second = 0;
 
   int currPos = 0;
   for ( int i = 0; i < mPattern.length(); ++i ) {
@@ -40,13 +40,13 @@ QDate DateParser::parse( const QString &dateStr ) const
         year = 1900 + dateStr.mid( currPos, 2 ).toInt();
         currPos += 2;
       } else
-        return QDate();
+        return QDateTime();
     } else if ( mPattern[ i ] == 'Y' ) { // YYYY
       if ( currPos + 3 < dateStr.length() ) {
         year = dateStr.mid( currPos, 4 ).toInt();
         currPos += 4;
       } else
-        return QDate();
+        return QDateTime();
     } else if ( mPattern[ i ] == 'm' ) { // M or MM
       if ( currPos + 1 < dateStr.length() ) {
         if ( dateStr[ currPos ].isDigit() ) {
@@ -65,13 +65,13 @@ QDate DateParser::parse( const QString &dateStr ) const
         }
       }
 
-      return QDate();
+      return QDateTime();
     } else if ( mPattern[ i ] == 'M' ) { // 0M or MM
       if ( currPos + 1 < dateStr.length() ) {
         month = dateStr.mid( currPos, 2 ).toInt();
         currPos += 2;
       } else
-        return QDate();
+        return QDateTime();
     } else if ( mPattern[ i ] == 'd' ) { // D or DD
       if ( currPos + 1 < dateStr.length() ) {
         if ( dateStr[ currPos ].isDigit() ) {
@@ -90,17 +90,35 @@ QDate DateParser::parse( const QString &dateStr ) const
         }
       }
 
-      return QDate();
+      return QDateTime();
     } else if ( mPattern[ i ] == 'D' ) { // 0D or DD
       if ( currPos + 1 < dateStr.length() ) {
         day = dateStr.mid( currPos, 2 ).toInt();
         currPos += 2;
       } else
-        return QDate();
+        return QDateTime();
+    } else if ( mPattern[ i ] == 'H' ) { // 0H or HH
+      if ( currPos + 1 < dateStr.length() ) {
+        hour = dateStr.mid( currPos, 2 ).toInt();
+        currPos += 2;
+      } else
+        return QDateTime();
+    } else if ( mPattern[ i ] == 'I' ) { // 0I or II
+      if ( currPos + 1 < dateStr.length() ) {
+        minute = dateStr.mid( currPos, 2 ).toInt();
+        currPos += 2;
+      } else
+        return QDateTime();
+    } else if ( mPattern[ i ] == 'S' ) { // 0S or SS
+      if ( currPos + 1 < dateStr.length() ) {
+        second = dateStr.mid( currPos, 2 ).toInt();
+        currPos += 2;
+      } else
+        return QDateTime();
     } else {
       currPos++;
     }
   }
 
-  return QDate( year, month, day );
+  return QDateTime( QDate( year, month, day ), QTime( hour, minute, second ) );
 }

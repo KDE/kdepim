@@ -32,9 +32,6 @@ ContactSelectionDialog::ContactSelectionDialog( QAbstractItemModel *model, QItem
   mSelectionWidget = new ContactSelectionWidget( model, selectionModel, this );
   setMainWidget( mSelectionWidget );
 
-  connect( mSelectionWidget, SIGNAL( selectedContacts( const KABC::Addressee::List& ) ),
-           this, SLOT( slotSelectedContacts( const KABC::Addressee::List& ) ) );
-
   setInitialSize( QSize( 450, 220 ) );
 }
 
@@ -50,23 +47,7 @@ void ContactSelectionDialog::setDefaultAddressBook( const Akonadi::Collection &a
 
 KABC::Addressee::List ContactSelectionDialog::selectedContacts() const
 {
-  return mContacts;
-}
-
-void ContactSelectionDialog::slotSelectedContacts( const KABC::Addressee::List &contacts )
-{
-  mContacts = contacts;
-  accept();
-}
-
-void ContactSelectionDialog::slotButtonClicked( int button )
-{
-  if ( button == KDialog::Ok ) {
-    // this will trigger slotSelectedContacts via signal/slot
-    mSelectionWidget->requestSelectedContacts();
-  } else {
-    KDialog::slotButtonClicked( button );
-  }
+  return mSelectionWidget->selectedContacts();
 }
 
 #include "contactselectiondialog.moc"
