@@ -75,6 +75,7 @@ signals:
 
 private slots:
 	void changeCollection( const Akonadi::Collection& collection );
+	void initWidgets();
 
 private:
 	class Private;
