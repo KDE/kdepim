@@ -231,7 +231,9 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
   KConfigGroup config( KGlobal::config(), ConfigSectionName );
 
   mPageAppearance->kcbHeaderBGColor->setColor( config.readEntry( ContactHeaderBGColor, QColor( Qt::black ) ) );
+  mPageAppearance->kcbHeaderBGColor->setToolTip( i18n( "Click on the color button to change the header's background color." ) );
   mPageAppearance->kcbHeaderTextColor->setColor( config.readEntry( ContactHeaderForeColor, QColor( Qt::white ) ) );
+  mPageAppearance->kcbHeaderTextColor->setToolTip( i18n( "Click on the color button to change the header's text color." ) );
 
   mPageAppearance->layout()->setMargin( KDialog::marginHint() );
   mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );
