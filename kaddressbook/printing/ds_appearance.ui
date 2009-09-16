@@ -1,35 +1,34 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>AppearancePage_Base</class>
- <widget class="QWidget" name="AppearancePage_Base" >
-  <property name="geometry" >
+ <widget class="QWidget" name="AppearancePage_Base">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>597</width>
-    <height>437</height>
+    <width>500</width>
+    <height>208</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>Appearance Page</string>
   </property>
-  <layout class="QVBoxLayout" >
-   <property name="margin" >
-    <number>11</number>
-   </property>
-   <property name="spacing" >
+  <layout class="QVBoxLayout">
+   <property name="spacing">
     <number>6</number>
    </property>
+   <property name="margin">
+    <number>11</number>
+   </property>
    <item>
-    <widget class="QLabel" name="labelHeader" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>1</hsizetype>
-       <vsizetype>1</vsizetype>
+    <widget class="QLabel" name="labelHeader">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font" >
+     <property name="font">
       <font>
        <family>Sans Serif</family>
        <pointsize>8</pointsize>
@@ -40,276 +39,59 @@
        <strikeout>false</strikeout>
       </font>
      </property>
-     <property name="frameShape" >
+     <property name="frameShape">
       <enum>QFrame::Panel</enum>
      </property>
-     <property name="frameShadow" >
+     <property name="frameShadow">
       <enum>QFrame::Sunken</enum>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Detailed Print Style - Appearance</string>
      </property>
-     <property name="scaledContents" >
+     <property name="scaledContents">
       <bool>false</bool>
      </property>
-     <property name="alignment" >
+     <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="gbFont" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>7</hsizetype>
-       <vsizetype>3</vsizetype>
+    <widget class="QGroupBox" name="gbHeadline">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="title" >
-      <string>Font Settings</string>
-     </property>
-     <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>11</number>
-      </property>
-      <property name="spacing" >
-       <number>6</number>
-      </property>
-      <item>
-       <widget class="QCheckBox" name="cbStandardFonts" >
-        <property name="text" >
-         <string>Use standard KDE fonts</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="frameFonts" >
-        <property name="enabled" >
-         <bool>false</bool>
-        </property>
-        <layout class="QGridLayout" >
-         <property name="margin" >
-          <number>11</number>
-         </property>
-         <property name="spacing" >
-          <number>6</number>
-         </property>
-         <item row="3" column="0" >
-          <widget class="QLabel" name="labelDetailsFont" >
-           <property name="text" >
-            <string>Details font:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="2" >
-          <widget class="QLabel" name="labelDetailsFontSize" >
-           <property name="text" >
-            <string>Size:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" >
-          <widget class="QLabel" name="labelBodyFont" >
-           <property name="text" >
-            <string>Body font:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2" >
-          <widget class="QLabel" name="labelFixedFontSize" >
-           <property name="text" >
-            <string>Size:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" >
-          <widget class="QLabel" name="labelFixed" >
-           <property name="text" >
-            <string>Fixed font:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="3" >
-          <widget class="QSpinBox" name="kisbDetailsFontSize" />
-         </item>
-         <item row="4" column="3" >
-          <widget class="QSpinBox" name="kisbFixedFontSize" />
-         </item>
-         <item row="2" column="2" >
-          <widget class="QLabel" name="labelBodyFontSize" >
-           <property name="text" >
-            <string>Size:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1" >
-          <widget class="KFontComboBox" name="kfcBodyFont" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>7</hsizetype>
-             <vsizetype>0</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1" >
-          <widget class="KFontComboBox" name="kfcDetailsFont" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>7</hsizetype>
-             <vsizetype>0</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1" >
-          <widget class="KFontComboBox" name="kfcFixedFont" />
-         </item>
-         <item row="0" column="0" >
-          <widget class="QLabel" name="labelHeaderFont" >
-           <property name="text" >
-            <string>Contact header font:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1" >
-          <widget class="KFontComboBox" name="kfcHeaderFont" >
-           <property name="sizePolicy" >
-            <sizepolicy>
-             <hsizetype>7</hsizetype>
-             <vsizetype>0</vsizetype>
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1" >
-          <widget class="KFontComboBox" name="kfcHeadlineFont" />
-         </item>
-         <item row="0" column="2" >
-          <widget class="QLabel" name="labelHeaderFontSize" >
-           <property name="text" >
-            <string>Size:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="2" >
-          <widget class="QLabel" name="labelHeaderFontSize_2" >
-           <property name="text" >
-            <string>Size:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="3" >
-          <widget class="QSpinBox" name="kisbBodyFontSize" />
-         </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="labelHeadlines" >
-           <property name="text" >
-            <string>Headlines:</string>
-           </property>
-           <property name="alignment" >
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3" >
-          <widget class="QSpinBox" name="kisbHeaderFontSize" />
-         </item>
-         <item row="1" column="3" >
-          <widget class="QSpinBox" name="kisbHeadlineFontSize" />
-         </item>
-        </layout>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="gbHeadline" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>3</hsizetype>
-       <vsizetype>5</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title" >
+     <property name="title">
       <string>Contact Headers</string>
      </property>
-     <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>11</number>
-      </property>
-      <property name="spacing" >
+     <layout class="QVBoxLayout">
+      <property name="spacing">
        <number>6</number>
       </property>
+      <property name="margin">
+       <number>11</number>
+      </property>
       <item>
-       <widget class="QCheckBox" name="cbBackgroundColor" >
-        <property name="text" >
-         <string>Use colored contact headers</string>
-        </property>
-        <property name="checked" >
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="frameBGColor" >
-        <layout class="QGridLayout" >
-         <property name="margin" >
+       <widget class="QFrame" name="frameBGColor">
+        <layout class="QGridLayout">
+         <property name="margin">
           <number>11</number>
          </property>
-         <property name="spacing" >
+         <property name="spacing">
           <number>6</number>
          </property>
-         <item row="0" column="1" >
-          <widget class="KColorButton" name="kcbHeaderBGColor" >
-           <property name="enabled" >
+         <item row="0" column="1">
+          <widget class="KColorButton" name="kcbHeaderBGColor">
+           <property name="enabled">
             <bool>true</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
-           <property name="color" >
+           <property name="color">
             <color>
              <red>0</red>
              <green>0</green>
@@ -318,35 +100,35 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0" >
-          <widget class="QLabel" name="tlBackgroundColor" >
-           <property name="text" >
+         <item row="0" column="0">
+          <widget class="QLabel" name="tlBackgroundColor">
+           <property name="text">
             <string>Headline background color:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
-         <item row="1" column="0" >
-          <widget class="QLabel" name="tlHeaderColor" >
-           <property name="text" >
+         <item row="1" column="0">
+          <widget class="QLabel" name="tlHeaderColor">
+           <property name="text">
             <string>Headline text color:</string>
            </property>
-           <property name="alignment" >
+           <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
-         <item row="1" column="1" >
-          <widget class="KColorButton" name="kcbHeaderTextColor" >
-           <property name="enabled" >
+         <item row="1" column="1">
+          <widget class="KColorButton" name="kcbHeaderTextColor">
+           <property name="enabled">
             <bool>true</bool>
            </property>
-           <property name="text" >
+           <property name="text">
             <string/>
            </property>
-           <property name="color" >
+           <property name="color">
             <color>
              <red>255</red>
              <green>255</green>
@@ -355,15 +137,15 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="2" >
+         <item row="0" column="2">
           <spacer>
-           <property name="orientation" >
+           <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
-           <property name="sizeType" >
+           <property name="sizeType">
             <enum>QSizePolicy::Expanding</enum>
            </property>
-           <property name="sizeHint" >
+           <property name="sizeHint" stdset="0">
             <size>
              <width>0</width>
              <height>0</height>
@@ -379,13 +161,13 @@
    </item>
    <item>
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>0</width>
        <height>0</height>
@@ -398,45 +180,10 @@
  <customwidgets>
   <customwidget>
    <class>KColorButton</class>
-   <extends></extends>
+   <extends>QPushButton</extends>
    <header>kcolorbutton.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>cbStandardFonts</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>frameFonts</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbBackgroundColor</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>frameBGColor</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

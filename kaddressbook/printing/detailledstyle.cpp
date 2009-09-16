@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
     Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
+                       2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,8 +25,8 @@
 #include "detailledstyle.h"
 
 #include <QtGui/QCheckBox>
-#include <QtGui/QPainter>
 #include <QtGui/QPrinter>
+#include <QtGui/QTextDocument>
 
 #include <kapplication.h>
 #include <kcolorbutton.h>
@@ -33,9 +34,7 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kglobal.h>
-#include <kglobalsettings.h>
 #include <klocale.h>
-#include <knuminput.h>
 #include <kstandarddirs.h>
 
 #include "printingwizard.h"
@@ -46,25 +45,175 @@
 using namespace KABPrinting;
 
 const char *ConfigSectionName = "DetailedPrintStyle";
-const char *UseKDEFonts = "UseKDEFonts";
-const char *HeaderFont = "HeaderFont";
-const char *HeaderFontSize = "HeaderFontSize";
-const char *HeadlinesFont = "HeadlineFont";
-const char *HeadlinesFontSize = "HeadlineFontSize";
-const char *BodyFont = "BodyFont";
-const char *BodyFontSize = "BodyFontSize";
-const char *DetailsFont = "DetailsFont";
-const char *DetailsFontSize = "DetailsFontSize";
-const char *FixedFont = "FixedFont";
-const char *FixedFontSize = "FixedFontSize";
-const char *ColoredContactHeaders = "UseColoredContactHeaders";
 const char *ContactHeaderForeColor = "ContactHeaderForeColor";
 const char *ContactHeaderBGColor = "ContactHeaderBGColor";
 
+struct ContactBlock
+{
+    typedef QList<ContactBlock> List;
+
+    QString header;
+    QStringList entries;
+};
+
+struct ColorSettings
+{
+  QString headerTextColor;
+  QString headerBackgroundColor;
+};
+
+QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettings &settings )
+{
+  QString content;
+
+  content += "<html>\n";
+  content += " <head>\n";
+  content += "  <style type=\"text/css\">\n";
+  content += "    td.indented {\n";
+  content += "      padding-left: 20px;\n";
+  content += "      font-family: Fixed, monospace;\n";
+  content += "    }\n";
+  content += "  </style>\n";
+  content += " </head>\n";
+  content += " <body>\n";
+  content += "  <table style=\"border-width: 0px; border-spacing: 0px;\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
+  foreach ( const KABC::Addressee &contact, contacts ) {
+    const QString name = contact.givenName() + ' ' + contact.familyName();
+    const QString birthday = KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
+
+    ContactBlock::List blocks;
+
+    if ( !contact.emails().isEmpty() ) {
+      ContactBlock block;
+      block.header = (contact.emails().count() == 1 ? i18n( "Email address:" ) : i18n( "Email addresses:" ));
+      block.entries = contact.emails();
+
+      blocks.append( block );
+    }
+
+    if ( !contact.phoneNumbers().isEmpty() ) {
+      const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
+
+      ContactBlock block;
+      block.header = (numbers.count() == 1 ? i18n( "Telephone:" ) : i18n( "Telephones:" ));
+
+      foreach ( const KABC::PhoneNumber &number, numbers ) {
+        const QString line = number.typeLabel() + ": " + number.number();
+        block.entries.append( line );
+      }
+
+      blocks.append( block );
+    }
+
+    if ( contact.url().isValid() ) {
+      ContactBlock block;
+      block.header = i18n( "Web page:" );
+      block.entries.append( contact.url().prettyUrl() );
+
+      blocks.append( block );
+    }
+
+    if ( !contact.addresses().isEmpty() ) {
+      const KABC::Address::List addresses = contact.addresses();
+
+      foreach ( const KABC::Address &address, addresses ) {
+        ContactBlock block;
+
+        switch ( address.type() ) {
+          case KABC::Address::Dom:
+            block.header = i18n( "Domestic Address" );
+            break;
+          case KABC::Address::Intl:
+            block.header = i18n( "International Address" );
+            break;
+          case KABC::Address::Postal:
+            block.header = i18n( "Postal Address" );
+            break;
+          case KABC::Address::Parcel:
+            block.header = i18n( "Parcel Address" );
+            break;
+          case KABC::Address::Home:
+            block.header = i18n( "Home Address" );
+            break;
+          case KABC::Address::Work:
+            block.header = i18n( "Work Address" );
+            break;
+          case KABC::Address::Pref:
+          default:
+            block.header = i18n( "Preferred Address" );
+        }
+        block.header += ':';
+
+        block.entries = address.formattedAddress().split( '\n', QString::KeepEmptyParts );
+        blocks.append( block );
+      }
+    }
+
+    if ( !contact.note().isEmpty() ) {
+      ContactBlock block;
+      block.header = i18n( "Notes:" );
+      block.entries = contact.note().split( '\n', QString::KeepEmptyParts );
+
+      blocks.append( block );
+    }
+
+    // add header
+    content += "   <tr>\n";
+    content += "    <td style=\"color: " + settings.headerTextColor + ";\" bgcolor=\"" + settings.headerBackgroundColor + "\" style=\"padding-left: 20px\">" + name + "</td>\n";
+    content += "    <td style=\"color: " + settings.headerTextColor + ";\" align=\"right\" bgcolor=\"" + settings.headerBackgroundColor + "\" style=\"padding-right: 20px\">" + birthday + "</td>\n";
+    content += "   </tr>\n";
+
+    for ( int i = 0; i < blocks.count(); i += 2 ) {
+      // add empty line for spacing
+      content += "   <tr>\n";
+      content += "    <td>&nbsp;</td>\n";
+      content += "    <td>&nbsp;</td>\n";
+      content += "   </tr>\n";
+
+      // add real block data
+      const ContactBlock leftBlock = blocks.at( i );
+      const ContactBlock rightBlock = ((i + 1 < blocks.count()) ? blocks.at( i + 1 ) : ContactBlock());
+
+      content += "   <tr>\n";
+      content += "    <td>" + leftBlock.header + "</td>\n";
+      content += "    <td>" + rightBlock.header + "</td>\n";
+      content += "   </tr>\n";
+
+      const int maxLines = qMax( leftBlock.entries.count(), rightBlock.entries.count() );
+      for ( int j = 0; j < maxLines; ++j ) {
+        QString leftLine, rightLine;
+
+        if ( j < leftBlock.entries.count() )
+          leftLine = leftBlock.entries.at( j );
+
+        if ( j < rightBlock.entries.count() )
+          rightLine = rightBlock.entries.at( j );
+
+        content += "   <tr>\n";
+        content += "    <td class=\"indented\">" + leftLine + "</td>\n";
+        content += "    <td class=\"indented\">" + rightLine + "</td>\n";
+        content += "   </tr>\n";
+      }
+    }
+
+    // add empty line for spacing
+    content += "   <tr>\n";
+    content += "    <td>&nbsp;</td>\n";
+    content += "    <td>&nbsp;</td>\n";
+    content += "   </tr>\n";
+  }
+  content += "  </table>\n";
+  content += " </body>\n";
+  content += "</html>\n";
+
+  return content;
+}
+
 class KABPrinting::AppearancePage : public QWidget, public Ui::AppearancePage_Base
 {
-public:
-  AppearancePage( QWidget* parent ) : QWidget( parent )
+  public:
+    AppearancePage( QWidget* parent )
+      : QWidget( parent )
   {
     setupUi( this );
     setObjectName( "AppearancePage" );
@@ -73,52 +222,16 @@ public:
 
 DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
   : PrintStyle( parent ),
-    mPageAppearance( new AppearancePage( parent ) ),
-    mPainter( 0 ),
-    mPrintProgress( 0 )
+    mPageAppearance( new AppearancePage( parent ) )
 {
-  QFont font;
-  bool kdeFonts;
-  QFont standard = KGlobalSettings::generalFont();
-  QFont fixed = KGlobalSettings::fixedFont();
-
   setPreview( "detailed-style.png" );
 
   addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
 
-  KConfigGroup config(KGlobal::config(), ConfigSectionName );
+  KConfigGroup config( KGlobal::config(), ConfigSectionName );
 
-  kdeFonts = config.readEntry( UseKDEFonts, true );
-  mPageAppearance->cbStandardFonts->setChecked( kdeFonts );
-
-  font = config.readEntry( HeaderFont, standard );
-  mPageAppearance->kfcHeaderFont->setCurrentFont( font.family() );
-  mPageAppearance->kisbHeaderFontSize->setValue( font.pointSize() );
-
-  font = config.readEntry( HeadlinesFont, standard );
-  mPageAppearance->kfcHeadlineFont->setCurrentFont( font.family() );
-  mPageAppearance->kisbHeadlineFontSize->setValue( font.pointSize() );
-
-  font = config.readEntry( BodyFont, standard );
-  mPageAppearance->kfcBodyFont->setCurrentFont( font.family() );
-  mPageAppearance->kisbBodyFontSize->setValue( font.pointSize() );
-
-  font = config.readEntry( DetailsFont, standard );
-  mPageAppearance->kfcDetailsFont->setCurrentFont( font.family() );
-  mPageAppearance->kisbDetailsFontSize->setValue( font.pointSize() );
-
-  font = config.readEntry( FixedFont, fixed );
-  mPageAppearance->kfcFixedFont->setCurrentFont( font.family() );
-  mPageAppearance->kisbFixedFontSize->setValue( font.pointSize() );
-
-  mPageAppearance->cbBackgroundColor->setChecked(
-      config.readEntry( ColoredContactHeaders, true ) );
-  QColor col(Qt::black);
-  mPageAppearance->kcbHeaderBGColor->setColor(
-      config.readEntry( ContactHeaderBGColor, col ) );
-  col = QColor(Qt::white);
-  mPageAppearance->kcbHeaderTextColor->setColor(
-      config.readEntry( ContactHeaderForeColor, col ) );
+  mPageAppearance->kcbHeaderBGColor->setColor( config.readEntry( ContactHeaderBGColor, QColor( Qt::black ) ) );
+  mPageAppearance->kcbHeaderTextColor->setColor( config.readEntry( ContactHeaderForeColor, QColor( Qt::white ) ) );
 
   mPageAppearance->layout()->setMargin( KDialog::marginHint() );
   mPageAppearance->layout()->setSpacing( KDialog::spacingHint() );
@@ -126,158 +239,39 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
 
 DetailledPrintStyle::~DetailledPrintStyle()
 {
-  delete mPainter;
-  mPainter = 0;
 }
 
 void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
 {
-  mPrintProgress = progress;
-
-  progress->addMessage( i18n( "Setting up fonts and colors" ) );
+  progress->addMessage( i18n( "Setting up colors" ) );
   progress->setProgress( 0 );
 
-  bool useKDEFonts;
-  QFont font;
-  QColor foreColor = Qt::black;
-  QColor headerColor = Qt::white;
-  bool useHeaderColor = true;
-  QColor backColor = Qt::black;
-  bool useBGColor;
+  const QColor headerBackgroundColor = mPageAppearance->kcbHeaderBGColor->color();
+  const QColor headerForegroundColor = mPageAppearance->kcbHeaderTextColor->color();
 
-  // save, always available defaults:
-  QFont header = QFont("Helvetica", 12, QFont::Normal);
-  QFont headlines = QFont("Helvetica", 12, QFont::Normal, true);
-  QFont body = QFont("Helvetica", 12, QFont::Normal);
-  QFont fixed = QFont("Courier", 12, QFont::Normal);
-  QFont comment = QFont("Helvetica", 10, QFont::Normal);
+  KConfigGroup config( KGlobal::config(), ConfigSectionName );
+  config.writeEntry( ContactHeaderForeColor, headerForegroundColor );
+  config.writeEntry( ContactHeaderBGColor, headerBackgroundColor );
+  config.sync();
 
-  // store the configuration settings:
-  KConfigGroup config = KGlobal::config()->group(ConfigSectionName);
-  useKDEFonts = mPageAppearance->cbStandardFonts->isChecked();
-  config.writeEntry( UseKDEFonts, useKDEFonts );
-
-  // read the font and color selections from the wizard pages:
-  useBGColor=mPageAppearance->cbBackgroundColor->isChecked();
-  config.writeEntry( ColoredContactHeaders, useBGColor );
-
-  // use colored contact headers, otherwise use plain black and white):
-  if ( useBGColor ) {
-    headerColor = mPageAppearance->kcbHeaderTextColor->color();
-    backColor = mPageAppearance->kcbHeaderBGColor->color();
-    config.writeEntry( ContactHeaderForeColor, headerColor );
-    config.writeEntry( ContactHeaderBGColor, backColor );
-  }
-
-  if ( mPageAppearance->cbStandardFonts->isChecked() ) {
-    QFont standard = KGlobalSettings::generalFont();
-    header = standard;
-    headlines = standard;
-    body = standard;
-    fixed = KGlobalSettings::fixedFont();
-    comment = standard;
-  } else {
-    header.setFamily( mPageAppearance->kfcHeaderFont->currentText() );
-    header.setPointSize( mPageAppearance->kisbHeaderFontSize->value() );
-    config.writeEntry( HeaderFont, header );
-
-    // headlines:
-    headlines.setFamily( mPageAppearance->kfcHeadlineFont->currentText() );
-    headlines.setPointSize( mPageAppearance->kisbHeadlineFontSize->value() );
-    config.writeEntry( HeadlinesFont, headlines );
-
-    // body:
-    body.setFamily( mPageAppearance->kfcBodyFont->currentText() );
-    body.setPointSize( mPageAppearance->kisbBodyFontSize->value() );
-    config.writeEntry( BodyFont, body );
-
-    // details:
-    comment.setFamily( mPageAppearance->kfcDetailsFont->currentText() );
-    comment.setPointSize( mPageAppearance->kisbDetailsFontSize->value() );
-    config.writeEntry( DetailsFont, comment );
-
-    // fixed:
-    fixed.setFamily( mPageAppearance->kfcFixedFont->currentText() );
-    fixed.setPointSize( mPageAppearance->kisbFixedFontSize->value() );
-    config.writeEntry( FixedFont, fixed );
-  }
-
-  mPainter = new KABEntryPainter;
-  mPainter->setForegroundColor( foreColor );
-  mPainter->setHeaderColor( headerColor );
-  mPainter->setBackgroundColor( backColor );
-  mPainter->setUseHeaderColor( useHeaderColor );
-  mPainter->setHeaderFont( header );
-  mPainter->setHeadLineFont( headlines );
-  mPainter->setBodyFont( body );
-  mPainter->setFixedFont( fixed );
-  mPainter->setCommentFont( comment );
-  // Printing "Work Address:" / "Telephones:" headlines adds
-  // no interesting information and just take space.
-  // So I added this setter, but I leave it true by default because
-  // otherwise the indenting looks a bit weird -- ## TODO.
-  mPainter->setPrintHeadLines( true ); // TODO a checkbox for it
+  ColorSettings settings;
+  settings.headerBackgroundColor = headerBackgroundColor.name();
+  settings.headerTextColor = headerForegroundColor.name();
 
   QPrinter *printer = wizard()->printer();
 
-  progress->addMessage( i18n( "Setting up margins and spacing" ) );
-  int marginTop = 0,
-      marginLeft = 64, // to allow stapling, need refinement with two-side prints
-      marginRight = 0,
-      marginBottom = 0;
+  progress->addMessage( i18n( "Setting up document" ) );
 
-  register int left, top, width, height;
+  const QString html = contactsToHtml( contacts, settings );
 
-  QPainter painter( printer );
+  QTextDocument document;
+  document.setHtml( html );
 
-  left = qMax( printer->pageRect().left() - printer->paperRect().left(), marginLeft );
-  top = qMax( printer->pageRect().top() - printer->paperRect().top(), marginTop );
-  width = printer->width() - left - qMax( printer->paperRect().right() - printer->pageRect().right(), marginRight );
-  height = printer->height() - top - qMax( printer->paperRect().bottom() - printer->pageRect().bottom(), marginBottom );
-
-  printer->setFullPage( true ); // use whole page
-  painter.setViewport( left, top, width, height );
   progress->addMessage( i18n( "Printing" ) );
 
-  printEntries( contacts, printer, &painter,
-                QRect( 0, 0, printer->width(), printer->height() ) );
+  document.print( printer );
 
   progress->addMessage( i18n( "Done" ) );
-
-  config.sync();
-}
-
-bool DetailledPrintStyle::printEntries( const KABC::Addressee::List &contacts,
-                                        QPrinter *printer,
-                                        QPainter *painter,
-                                        const QRect &window)
-{
-  QRect brect;
-  int ypos = 0, count = 0;
-
-  KABC::Addressee::List::ConstIterator it;
-  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
-    if ( !(*it).isEmpty() ) {
-      // do a faked print to get the bounding rect:
-      if ( !mPainter->printAddressee( *it, window, painter, ypos, true, &brect) ) {
-        // it does not fit on the page beginning at ypos:
-        printer->newPage();
-
-        // WORK_TO_DO: this assumes the entry fits on the whole page
-        // (dunno how to fix this without being illogical)
-        ypos = 0;
-      }
-
-      mPainter->printAddressee( *it, window, painter, ypos, false, &brect );
-      ypos += brect.height();
-    }
-
-    mPrintProgress->setProgress( (count++ * 100) / contacts.count() );
-  }
-
-  mPrintProgress->setProgress( 100 );
-
-  return true;
 }
 
 DetailledPrintStyleFactory::DetailledPrintStyleFactory( PrintingWizard *parent )
