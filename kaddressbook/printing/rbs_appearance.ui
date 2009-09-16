@@ -20,65 +20,7 @@
    <property name="spacing">
     <number>6</number>
    </property>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="GroupBox3">
-     <property name="title">
-      <string comment="@title:group Print settings">Miscellaneous</string>
-     </property>
-     <layout class="QGridLayout">
-      <property name="margin">
-       <number>9</number>
-      </property>
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <item row="2" column="0">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="sbMinNumFill">
-        <property name="whatsThis">
-         <string>This is the minimum number of empty fields that have to be printed in addition to real entries; if this number is not reached on the first page, more pages with empty fields only may be appended.</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="sblabel">
-        <property name="whatsThis">
-         <string>If you often add contacts to your printout manually before entering them into the KDE address book, you should set this option to a value greater than 0: it determines how many empty address fields are to be printed; if this many do not fit onto the page, another page with only empty fields will be printed.</string>
-        </property>
-        <property name="text">
-         <string>Min. number of empty fields:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
-       <widget class="QCheckBox" name="cbFillEmpty">
-        <property name="whatsThis">
-         <string>If this option is turned on, behind the contacts on a page the remaining space will be filled with empty fields so you can add contacts manually later</string>
-        </property>
-        <property name="text">
-         <string>Fill pages with empty address fields</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="1">
+   <item row="0" column="0">
     <widget class="QGroupBox" name="GroupBox2">
      <property name="title">
       <string>Print Contact's Information</string>
@@ -113,7 +55,7 @@
       <item>
        <widget class="QCheckBox" name="cbStreetAddresses">
         <property name="text">
-         <string>Street addresses</string>
+         <string>Postal addresses</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -150,90 +92,8 @@
      </layout>
     </widget>
    </item>
-   <item row="0" column="0" rowspan="2">
-    <widget class="QGroupBox" name="GroupBox1">
-     <property name="font">
-      <font>
-       <family>Sans Serif</family>
-       <pointsize>8</pointsize>
-       <weight>50</weight>
-       <italic>false</italic>
-       <bold>false</bold>
-       <underline>false</underline>
-       <strikeout>false</strikeout>
-      </font>
-     </property>
-     <property name="title">
-      <string>Letter Groups</string>
-     </property>
-     <layout class="QGridLayout">
-      <property name="margin">
-       <number>11</number>
-      </property>
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <item row="0" column="0" colspan="2">
-       <widget class="QLabel" name="TextLabel1">
-        <property name="text">
-         <string>Here you can group letters together as they are grouped in your time planner. Press 'group letter' to combine the selected letter with the letter group above it, press 'ungroup letter' to remove the last letter from a selected group.</string>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0" rowspan="3">
-       <widget class="KListWidget" name="letterListBox"/>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="groupButton">
-        <property name="text">
-         <string>Group Letter</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="ungroupButton">
-        <property name="text">
-         <string>Ungroup Letter</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <spacer>
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeType">
-         <enum>QSizePolicy::Expanding</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>16</width>
-          <height>119</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </widget>
-   </item>
   </layout>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>KListWidget</class>
-   <extends>QListWidget</extends>
-   <header>klistwidget.h</header>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>
