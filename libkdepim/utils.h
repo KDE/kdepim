@@ -20,11 +20,13 @@
  * 02110-1301  USA
  */
 
+//TODO: Move this into kdepimlibs/kpimutils
+
 #ifndef KDEPIM_UTILS_H
 #define KDEPIM_UTILS_H
 
 #include "kdepim_export.h"
-#include <QString>
+class QString;
 
 namespace KPIM {
 
@@ -32,32 +34,6 @@ class KDEPIM_EXPORT Utils
 {
   public:
     static QString rot13( const QString &s );
-
-#ifdef Q_WS_WIN
-    /**
-     * Sets @a pids to a list of processes having name @a processName.
-     */
-    static void getProcessesIdForName( const QString& processName, QList<int>& pids );
-
-    /**
-     * @return true if one or more processes (other than the current process) exist for name @a processName.
-     */
-    static bool otherProcessesExist( const QString& processName );
-
-    /**
-     * Terminates or kills all processes with name @a processName.
-     * First, SIGTERM is sent to a process, then if that fails, we try with SIGKILL.
-     * @return true on successful termination of all processes or false if at least 
-     *         one process failed to terminate.
-     */
-    static bool killProcesses( const QString& processName );
-
-    /**
-     * Activates window for first found process with executable @a executableName 
-     * (without path and .exe extension)
-     */
-    static void activateWindowForProcess( const QString& executableName );
-#endif
 };
 
 }
