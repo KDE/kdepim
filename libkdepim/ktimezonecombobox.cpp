@@ -116,7 +116,16 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
 KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec()
 {
   KDateTime::Spec spec;
-  spec.setType( KSystemTimeZones::zone( d->mZones[currentIndex()] ) );
+  if ( currentIndex() == 0 ) { // Floating event
+    spec = KDateTime::Spec( KDateTime::ClockTime );
+  }
+  else if ( currentIndex() == 1 ) { // UTC
+    spec.setType( KDateTime::UTC );
+  }
+  else {
+    spec.setType( KSystemTimeZones::zone( d->mZones[currentIndex()] ) );
+  }
+
   return spec;
 }
 
