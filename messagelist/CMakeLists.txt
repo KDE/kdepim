@@ -79,6 +79,7 @@ kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
 kde4_add_library(messagelist SHARED ${libmessagelist_SRCS})
 target_link_libraries(messagelist
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
