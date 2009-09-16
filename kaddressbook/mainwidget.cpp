@@ -29,6 +29,7 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QSplitter>
 #include <QtGui/QStackedWidget>
+#include <QtGui/QTextBrowser>
 
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -164,6 +165,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
            this, SLOT( itemSelected( const Akonadi::Item& ) ) );
   connect( mItemView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
            this, SLOT( editItem( const Akonadi::Item& ) ) );
+  connect( mItemView->selectionModel(), SIGNAL( currentChanged( const QModelIndex&, const QModelIndex& ) ),
+           this, SLOT( itemSelectionChanged( const QModelIndex&, const QModelIndex& ) ) );
 
   // show the contact details view as default
   mDetailsViewStack->setCurrentWidget( mContactDetails );
@@ -247,6 +250,10 @@ void MainWidget::setupGui()
   // the details widget for contact groups
   mContactGroupDetails = new Akonadi::ContactGroupViewer( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactGroupDetails );
+
+  // the details widget for empty items
+  mEmptyDetails = new QTextBrowser( mDetailsViewStack );
+  mDetailsViewStack->addWidget( mEmptyDetails );
 
   // the contact switcher for the simple gui mode
   mContactSwitcher = new ContactSwitcher;
@@ -413,6 +420,16 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
     mContactGroupDetails->setContactGroup( item );
   }
+}
+
+/**
+ * Catch when the selection has gone ( e.g. an empty address book has been selected )
+ * clear the details view in this case.
+ */
+void MainWidget::itemSelectionChanged( const QModelIndex &current, const QModelIndex& )
+{
+  if ( !current.isValid() )
+    mDetailsViewStack->setCurrentWidget( mEmptyDetails );
 }
 
 void MainWidget::selectFirstItem()
