@@ -10,6 +10,7 @@ Name[cy]=Calendr mewn Ffeil Pell
 Name[da]=Kalender i ekstern fil
 Name[de]=Datei-Kalender auf Fremdrechner
 Name[el]=Ημερολόγιο σε απομακρυσμένο αρχείο
+Name[en_GB]=Calendar in Remote File
 Name[es]=Calendario en un archivo remoto
 Name[et]=Kalender võrgufailis
 Name[eu]=Egutegia urruneko fitxategi batean
@@ -58,6 +59,7 @@ Comment[ca]=Proporciona l'accés a un calendari en un fitxer remot usant la infr
 Comment[da]=Giver adgang til en kalender i en ekstern fil med brug af KDE's netværks-framework KIO
 Comment[de]=Ermöglicht den Zugriff auf einen entfernten Kalender über KDEs Netzwerk-Zugriffsystem KIO.
 Comment[el]=Προσφέρει πρόσβαση ημερολογίου σε ένα απομακρυσμένο αρχείου με τη χρήση του  συστήματος KIO του KDE
+Comment[en_GB]=Provides access to a calendar in a remote file using KDE's network framework KIO
 Comment[es]=Provee acceso a un calendario en un archivo remoto utilizando la infraestructura KIO de red de KDE 
 Comment[et]=Võimaldab kasutada võrgufaili salvestatud kalendrit KDE võrguraamistiku KIO abil
 Comment[fr]=Fourni l'accès à un calendrier dans un fichier distant en utilisant les composants réseaux KIO de KDE
