@@ -2,6 +2,7 @@
     This file is part of KAddressBook.
     Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
                        2002 Mike Pilone <mpilone@slac.com>
+                       2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -24,23 +25,87 @@
 
 #include "mikesstyle.h"
 
-#include <QtGui/QPainter>
 #include <QtGui/QPrinter>
+#include <QtGui/QTextDocument>
 
 #include <kabc/addressee.h>
-#include <kapplication.h>
 #include <kdebug.h>
-#include <kglobal.h>
 #include <klocale.h>
 
+#include "contactfields.h"
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
-#include "contactfields.h"
 
 using namespace KABPrinting;
 
-const int mFieldSpacingHint = 2;
+static QString contactsToHtml( const KABC::Addressee::List &contacts )
+{
+  QString content;
+
+  ContactFields::Fields leftFields, rightFields;
+  ContactFields::Fields allFields = ContactFields::allFields();
+  allFields.remove( 0 ); // drop 'Undefined' field
+
+  const int middle = allFields.count() / 2;
+
+  for ( int i = 0; i < middle; ++i )
+    leftFields.append( allFields.at( i ) );
+
+  for ( int i = middle; i < allFields.count(); ++i )
+    rightFields.append( allFields.at( i ) );
+
+  int counter = 0;
+  content += "<html>\n";
+  content += " <body>\n";
+  foreach ( const KABC::Addressee &contact, contacts ) {
+    const int max = qMax( leftFields.count(), rightFields.count() );
+
+    const QString name = contact.givenName() + ' ' + contact.familyName();
+
+    if ( counter % 2 )
+      content += "  <br/><br/>\n";
+
+    // start a new page after every second table
+    const QString pageBreak = ( counter % 2 ? "page-break-after: always;" : QString() );
+
+    content += "  <table style=\"border-width: 0px; " + pageBreak + "\" width=\"100%\">\n";
+    content += "   <tr>\n";
+    content += "    <th align=\"left\" style=\"color: black;\" bgcolor=\"gray\" style=\"padding-left: 20px\" colspan=\"4\">" + name + "</th>\n";
+    content += "   </tr>\n";
+
+    for ( int i = 0; i < max; i ++ ) {
+      QString leftTitle, leftValue, rightTitle, rightValue;
+
+      if ( i < leftFields.count() ) {
+        leftTitle = ContactFields::label( leftFields.at( i ) ) + ':';
+        leftTitle = leftTitle.replace( ' ', "&nbsp;" );
+        leftValue = ContactFields::value( leftFields.at( i ), contact );
+      }
+
+      if ( i < rightFields.count() ) {
+        rightTitle = ContactFields::label( rightFields.at( i ) ) + ':';
+        rightTitle = rightTitle.replace( ' ', "&nbsp;" );
+        rightValue = ContactFields::value( rightFields.at( i ), contact );
+      }
+
+      content += "   <tr>\n";
+      content += "    <td>" + leftTitle + "</td>\n";
+      content += "    <td>" + leftValue + "</td>\n";
+      content += "    <td>" + rightTitle + "</td>\n";
+      content += "    <td>" + rightValue + "</td>\n";
+      content += "   </tr>\n";
+    }
+    content += "  </table>\n";
+
+    counter++;
+  }
+  content += " </body>\n";
+  content += "</html>\n";
+
+  return content;
+}
+
 
 MikesStyle::MikesStyle( PrintingWizard *parent )
   : PrintStyle( parent )
@@ -54,187 +119,21 @@ MikesStyle::~MikesStyle()
 
 void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *progress )
 {
-  QFont mFont;
-  QFont mBoldFont;
-  QPainter p;
+  QPrinter *printer = wizard()->printer();
+  printer->setPageMargins( 20, 20, 20, 20, QPrinter::DevicePixel );
 
-  p.begin( wizard()->printer() );
-  int yPos = 0, count = 0;
-  int spacingHint = 10;
+  progress->addMessage( i18n( "Setting up document" ) );
 
-  // Now do the actual printing
-  mFont = p.font();
-  mBoldFont = p.font();
-  mBoldFont.setBold( true );
-  QFontMetrics fm( mFont );
+  const QString html = contactsToHtml( contacts );
 
-  int height = 0;
-  KABC::Addressee::List::ConstIterator it;
+  QTextDocument document;
+  document.setHtml( html );
 
-  progress->addMessage( i18n( "Preparing" ) );
   progress->addMessage( i18n( "Printing" ) );
 
-  for ( it = contacts.begin(); it != contacts.end(); ++it ) {
-    progress->setProgress( (count++ * 100) / contacts.count() );
-    kapp->processEvents();
-
-    // Get the total height so we know if it will fit on the current page
-    height = calcHeight( *it, mFont, mBoldFont );
-    if ( (yPos + spacingHint + height) > (p.device()->height() - fm.height() - 5) ) {
-      p.save();
-      p.translate( 0, p.device()->height() - fm.height() - 5 );
-      paintTagLine( p, mFont );
-      p.restore();
-
-      wizard()->printer()->newPage();
-      yPos = 0;
-    }
-
-    // Move the painter to the proper position and then paint the addressee
-    yPos += spacingHint;
-    p.save();
-    p.translate( 0, yPos );
-    doPaint( p, *it, height, mFont, mBoldFont );
-    p.restore();
-
-    yPos += height;
-  }
+  document.print( printer );
 
   progress->addMessage( i18n( "Done" ) );
-
-  // print the tag line on the last page
-  p.save();
-  p.translate( 0, p.device()->height() - fm.height() - 5 );
-  paintTagLine( p, mFont );
-  p.restore();
-
-  // send to the printer
-  p.end();
-}
-
-QString MikesStyle::trimString( const QString &text, int width, QFontMetrics &fm )
-{
-  if ( fm.width( text ) <= width )
-    return text;
-
-  QString dots = "...";
-  int dotWidth = fm.width( dots );
-  QString trimmed;
-  int charNum = 0;
-
-  while ( fm.width( trimmed ) + dotWidth < width ) {
-    trimmed += text[ charNum ];
-    charNum++;
-  }
-
-  // Now trim the last char, since it put the width over the top
-  trimmed = trimmed.left( trimmed.length() - 1 );
-  trimmed += dots;
-
-  return trimmed;
-}
-
-void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
-                          int maxHeight, const QFont &font, const QFont &bFont )
-{
-  QFontMetrics fm( font );
-  QFontMetrics bfm( bFont );
-  int margin = 10;
-  int width = painter.device()->width() - 10;
-  int xPos = 5;
-  int yPos = 0;
-  QBrush brush( Qt::lightGray );
-
-  painter.setPen( Qt::black );
-  painter.drawRect( xPos, yPos, width, maxHeight );
-
-  // The header
-  painter.fillRect( xPos + 1, yPos + 1, width - 2,
-                    bfm.height() + 2 * mFieldSpacingHint - 2, brush );
-  painter.setFont( bFont );
-  xPos += mFieldSpacingHint;
-  painter.drawText( xPos, yPos + bfm.height(), addr.formattedName() );
-
-  yPos += bfm.height() + 2 * mFieldSpacingHint;
-  xPos = margin;
-
-  // now the fields, in two halves
-  painter.setFont( font );
-  ContactFields::Fields fieldList = ContactFields::allFields();
-  int numFields = fieldList.count();
-  QString label;
-  QString value;
-
-  for ( int i = 0; i < numFields / 2; ++i ) {
-    label = ContactFields::label( fieldList[ i ]);
-    value = trimString( ContactFields::value(fieldList[ i ], addr ), (width - 10) / 4, fm );
-
-    yPos += fm.height();
-    painter.drawText( xPos, yPos, label + ':' );
-
-    xPos += (width - (2 * margin)) / 4;
-    painter.drawText( xPos, yPos, value );
-
-    yPos += mFieldSpacingHint;
-    xPos = margin;
-  }
-
-  yPos = bfm.height() + 2 * mFieldSpacingHint;
-  xPos = margin + width / 2;
-  for ( int i = numFields / 2; i < numFields; ++i ) {
-    label = ContactFields::label(fieldList[ i ]);
-    value = value = trimString( ContactFields::value(fieldList[ i ], addr ), (width - 10) / 4, fm );
-
-    yPos += fm.height();
-    painter.drawText( xPos, yPos, label + ':' );
-
-    xPos += (width - (2 * margin)) / 4;
-    painter.drawText( xPos, yPos, value );
-
-    yPos += mFieldSpacingHint;
-    xPos = margin + width / 2;
-  }
-}
-
-void MikesStyle::paintTagLine( QPainter &p, const QFont &font )
-{
-  QFontMetrics fm( font );
-
-  QString text = i18n( "Printed on %1 by KAddressBook (http://www.kde.org)" ,
-                   KGlobal::locale()->formatDateTime( QDateTime::currentDateTime() ) );
-
-  p.setPen( Qt::black );
-  p.drawText( 0, fm.height(), text );
-}
-
-int MikesStyle::calcHeight( const KABC::Addressee &addr,
-                            const QFont &font, const QFont &bFont )
-{
-  QFontMetrics fm( font );
-  QFontMetrics bfm( bFont );
-
-  int height = 0;
-  // get the fields
-  ContactFields::Fields fieldList = ContactFields::allFields();
-  int numFields = fieldList.count();
-  int halfHeight = 0;
-
-  // Determine which half of the fields is higher
-  for ( int i = 0; i < numFields / 2; ++i )
-    halfHeight += fm.height() * (ContactFields::value(fieldList[i] ,addr ).count( '\n' ) + 1);
-
-  height = halfHeight;
-
-  // now the second half
-  halfHeight = 0;
-  for ( int i = numFields / 2; i < numFields; ++i )
-    halfHeight += fm.height() * (ContactFields::value(fieldList[i], addr ).count( '\n' ) + 1);
-
-  height = qMax( height, halfHeight );
-
-  // Add the title and the spacing
-  height += bfm.height() + ((numFields / 2 + 3) * mFieldSpacingHint);
-  return height;
 }
 
 
