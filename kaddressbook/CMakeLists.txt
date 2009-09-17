@@ -18,7 +18,6 @@ endif(QGPGME_FOUND)
 
 set( kaddressbook_printing_SRCS
   printing/detailledstyle.cpp
-  printing/kabentrypainter.cpp
   printing/mikesstyle.cpp
   printing/printingwizard.cpp
   printing/printprogress.cpp

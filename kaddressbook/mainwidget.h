@@ -42,7 +42,9 @@ class KDescendantsProxyModel;
 class KXMLGUIClient;
 class ModelColumnManager;
 class QAbstractItemModel;
+class QModelIndex;
 class QStackedWidget;
+class QTextBrowser;
 class QuickSearchWidget;
 class XXPortManager;
 
@@ -62,6 +64,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
   private Q_SLOTS:
     void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
+    void itemSelectionChanged( const QModelIndex&, const QModelIndex& );
     void selectFirstItem();
 
     void setDetailsViewVisible( bool visible );
@@ -100,6 +103,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
 
     Akonadi::ContactViewer *mContactDetails;
     Akonadi::ContactGroupViewer *mContactGroupDetails;
+    QTextBrowser *mEmptyDetails;
     Akonadi::StandardContactActionManager *mActionManager;
 
     XXPortManager *mXXPortManager;

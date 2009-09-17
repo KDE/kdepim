@@ -27,7 +27,6 @@
 #include <kabc/addressee.h>
 
 #include "printstyle.h"
-#include "kabentrypainter.h"
 
 class QPrinter;
 
@@ -45,15 +44,8 @@ class DetailledPrintStyle : public PrintStyle
 
     void print( const KABC::Addressee::List &contacts, PrintProgress* );
 
-  protected:
-    bool printEntries( const KABC::Addressee::List &contacts, QPrinter *printer,
-                       QPainter *painter, const QRect &window );
-    bool printEntry( const KABC::Addressee &contact, const QRect &window,
-                     QPainter *painter, int top, bool fake, QRect *brect );
   private:
     AppearancePage *mPageAppearance;
-    KABEntryPainter *mPainter;
-    PrintProgress *mPrintProgress;
 };
 
 class DetailledPrintStyleFactory : public PrintStyleFactory

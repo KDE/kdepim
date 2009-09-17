@@ -79,13 +79,14 @@ kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
 kde4_add_library(messagelist SHARED ${libmessagelist_SRCS})
 target_link_libraries(messagelist
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     kdepim
 )
 
-
+set_target_properties(messagelist PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES ${libmessagelist_HEADERS}
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist

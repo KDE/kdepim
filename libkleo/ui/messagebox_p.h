@@ -55,6 +55,7 @@ namespace Private {
         void slotUser2();
 
     private:
+        QString m_log;
         QTextEdit * m_textEdit;
     };
 
