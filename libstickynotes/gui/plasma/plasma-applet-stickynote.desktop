@@ -1,0 +1,18 @@
+[Desktop Entry]
+Name=StickyNote
+Comment=Connect to your libstickynotes powered backend!
+Type=Service
+Icon=knotes
+ServiceTypes=Plasma/Applet
+ 
+X-KDE-Library=plasma_applet_stickynote
+X-KDE-PluginInfo-Author=Guillermo Antonio Amaral Bastidas
+X-KDE-PluginInfo-Email=gamaral@amaral.com.mx
+X-KDE-PluginInfo-Name=stickynote
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Category=PIM
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+
