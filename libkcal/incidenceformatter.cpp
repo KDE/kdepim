@@ -305,9 +305,18 @@ static QString displayViewFormatHeader( Incidence *incidence )
     tmpStr += "<td>";
 
     if ( incidence->type() == "Event" ) {
-      tmpStr += "<img valign=\"top\" src=\"" +
-                KGlobal::iconLoader()->iconPath( "appointment", KIcon::Small ) +
-                "\">";
+      QString iconPath;
+      if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
+        if ( incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
+          iconPath =
+            KGlobal::iconLoader()->iconPath( "calendaranniversary", KIcon::Small );
+        } else {
+          iconPath = KGlobal::iconLoader()->iconPath( "calendarbirthday", KIcon::Small );
+        }
+      } else {
+        iconPath = KGlobal::iconLoader()->iconPath( "appointment", KIcon::Small );
+      }
+      tmpStr += "<img valign=\"top\" src=\"" + iconPath + "\">";
     }
     if ( incidence->type() == "Todo" ) {
       tmpStr += "<img valign=\"top\" src=\"" +
