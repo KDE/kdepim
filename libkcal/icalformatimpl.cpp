@@ -1240,31 +1240,70 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
 {
   Attachment *attachment = 0;
 
-  icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(attach));
+  const char *p;
+  icalvalue *value = icalproperty_get_value( attach );
 
-  if ( value_kind == ICAL_ATTACH_VALUE || value_kind == ICAL_BINARY_VALUE ) {
-    icalattach *a = icalproperty_get_attach(attach);
-
-    int isurl = icalattach_get_is_url (a);
-    if (isurl == 0)
-      attachment = new Attachment((const char*)icalattach_get_data(a));
-    else {
-      attachment = new Attachment(QString::fromUtf8(icalattach_get_url(a)));
+  switch( icalvalue_isa( value ) ) {
+  case ICAL_ATTACH_VALUE:
+  {
+    icalattach *a = icalproperty_get_attach( attach );
+    if ( !icalattach_get_is_url( a ) ) {
+      p = (const char *)icalattach_get_data( a );
+      if ( p ) {
+        attachment = new Attachment( p );
+      }
+    } else {
+      p = icalattach_get_url( a );
+      if ( p ) {
+        attachment = new Attachment( QString::fromUtf8( p ) );
+      }
     }
+    break;
   }
-  else if ( value_kind == ICAL_URI_VALUE ) {
-    attachment = new Attachment(QString::fromUtf8(icalvalue_get_uri(icalproperty_get_value(attach))));
+  case ICAL_BINARY_VALUE:
+  {
+    icalattach *a = icalproperty_get_attach( attach );
+    p = (const char *)icalattach_get_data( a );
+    if ( p ) {
+      attachment = new Attachment( p );
+    }
+    break;
+  }
+  case ICAL_URI_VALUE:
+    p = icalvalue_get_uri( value );
+    attachment = new Attachment( QString::fromUtf8( p ) );
+    break;
+  default:
+    break;
   }
 
-  icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
-  if (p && attachment)
-    attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
+ if ( attachment ) {
+    icalparameter *p =
+      icalproperty_get_first_parameter( attach, ICAL_FMTTYPE_PARAMETER );
+    if ( p ) {
+      attachment->setMimeType( QString( icalparameter_get_fmttype( p ) ) );
+    }
 
-  p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
-  while (p) {
-   if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
-     attachment->setLabel( QString::fromUtf8( icalparameter_get_xvalue(p) ) );
-    p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
+    p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+    while ( p ) {
+      QString xname = QString( icalparameter_get_xname( p ) ).upper();
+      QString xvalue = QString::fromUtf8( icalparameter_get_xvalue( p ) );
+      if ( xname == "X-CONTENT-DISPOSITION" ) {
+        attachment->setShowInline( xvalue.lower() == "inline" );
+      }
+      if ( xname == "X-LABEL" ) {
+        attachment->setLabel( xvalue );
+      }
+      p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+    }
+
+    p = icalproperty_get_first_parameter( attach, ICAL_X_PARAMETER );
+    while ( p ) {
+      if ( strncmp( icalparameter_get_xname( p ), "X-LABEL", 7 ) == 0 ) {
+        attachment->setLabel( QString::fromUtf8( icalparameter_get_xvalue( p ) ) );
+      }
+      p = icalproperty_get_next_parameter( attach, ICAL_X_PARAMETER );
+    }
   }
 
   return attachment;
