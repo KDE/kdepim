@@ -10,16 +10,19 @@ INCLUDE_DIRECTORIES(BEFORE SYSTEM ${KDE4_INCLUDES}
 
 
 SET(PLASMANOTE_SRCS	stickynote.cpp
+			stickynoteconnection.cpp
 			stickynoteeditor.cpp
 			stickynoteitem.cpp
 			stickynotewidget.cpp)
 
 SET(PLASMANOTE_HDRS	stickynote.h
+			stickynoteconnection.h
 			stickynoteeditor.h
 			stickynoteitem.h
 			stickynotewidget.h)
 
 SET(PLASMANOTE_MOC_HDRS		stickynote.h
+				stickynoteconnection.h
 				stickynoteeditor.h
 				stickynoteitem.h
 				stickynotewidget.h)

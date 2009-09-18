@@ -19,34 +19,39 @@
  * 
  */
  
-#ifndef PLASMA_APPLET_STICKYNOTE_H
-#define PLASMA_APPLET_STICKYNOTE_H
+#ifndef PLASMA_APPLET_STICKYNOTECONNECTION_H
+#define PLASMA_APPLET_STICKYNOTECONNECTION_H
 
-#include <Plasma/Applet>
+#include <QObject>
 
 #include <QAbstractSocket>
 
-class QTcpServer;
+namespace StickyNotes {
+	class BaseNoteItem;
+	class RemoteNoteController;
+	class RemoteNoteItem;
+}
 
-class StickyNote : public Plasma::Applet
+class StickyNote;
+class QTcpSocket;
+
+class StickyNoteConnection : public QObject
 {
 Q_OBJECT
 
 public:
-	StickyNote(QObject *_parent, const QVariantList &_args);
-	virtual ~StickyNote(void);
-
-	virtual void init(void);
-	virtual void paintInterface(QPainter *_painter,
-	    const QStyleOptionGraphicsItem *_option,
-	    const QRect& _rect);
+	StickyNoteConnection(StickyNote &_parent, QTcpSocket &_socket);
+	virtual ~StickyNoteConnection(void);
 
 private slots:
-	void on_server_newConnection(void);
+	void on_controller_createdItem(StickyNotes::RemoteNoteItem &_item);
+	void on_socket_error(QAbstractSocket::SocketError _error);
 
 private:
-	QTcpServer *m_server;
+	StickyNotes::RemoteNoteController *m_controller;
+	StickyNote &m_parent;
+	QSet<StickyNotes::BaseNoteItem *> m_roots;
 };
  
-#endif // ! PLASMA_APPLET_STICKYNOTE_H
+#endif // ! PLASMA_APPLET_STICKYNOTECONNECTION_H
 
