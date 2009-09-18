@@ -1,6 +1,6 @@
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
-                     ${QT_INCLUDE_DIR} ${QT_QTDBUS_INCLUDE_DIR}
-                     ${LIBKNOTIFICATIONITEM-1_INCLUDE_DIR} )
+                     ${QT_INCLUDE_DIR} ${QT_QTDBUS_INCLUDE_DIR} )
+include_directories( BEFORE ${LIBKNOTIFICATIONITEM-1_INCLUDE_DIR} )
 
 set(tray_sources main.cpp dock.cpp backup.cpp backupassistant.cpp restore.cpp restoreassistant.cpp global.cpp)
 
