@@ -1,3 +1,29 @@
+Friday, September 18th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Fix memory leak when syncing a disconnected IMAP account
+      - Fix restoring of the POP "download later" option (Novell bug 471760)
+      - Fix regression that all day events would disappear in KOrganizer after editing
+      - Don't break Kontact's navigator toolbar when editing another toolbar (KDE bug 207299)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3855: [regression] S/MIME opaque signed and encrypted email suboptimal display
+      - kolab/issue2974: Anniversary event has broken title
+      - kolab/issue3864: An invitation of a long event shows a wrong duration
+      - kolab/issue3863: Kontact: VCalendar elements should not contain TZID times
+      - kolab/issue3853: Crash after renaming a folder
+      - kolab/issue2069: Kontact rewrites custom folder types
+      - kolab/issue3865: Crash while syncing, automatic event archival enabled, in EventArchiver::archiveIncidences
+      - kolab/issue3830: Mail: Setting option properties->share unread state with all users on an inbox doesn't have an effect
+      - Add new KOrganizer icons for anniversary, birthday, holiday and special occassion
+
+
 Friday, September 11th 2009
 
 Problems addressed
