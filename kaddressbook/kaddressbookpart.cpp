@@ -47,10 +47,20 @@ KAddressBookPart::KAddressBookPart( QWidget *parentWidget, QObject *parent,
   setWidget( canvas );
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
-  MainWidget *mMainWidget = new MainWidget( this, canvas );
+  mMainWidget = new MainWidget( this, canvas );
 
   topLayout->addWidget( mMainWidget );
   topLayout->setMargin(0);
+}
+
+void KAddressBookPart::newContact()
+{
+  mMainWidget->newContact();
+}
+
+void KAddressBookPart::newGroup()
+{
+  mMainWidget->newGroup();
 }
 
 KAddressBookPart::~KAddressBookPart()
