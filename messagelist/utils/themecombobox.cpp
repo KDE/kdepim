@@ -17,11 +17,13 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "themecombobox.h"
+
 #include "messagelist/utils/themecombobox.h"
 #include "messagelist/utils/themecombobox_p.h"
 
 #include "messagelist/core/manager.h"
 #include "messagelist/core/theme.h"
+#include "messagelist/core/configprovider.h"
 
 #include <KDE/KGlobal>
 
@@ -46,7 +48,7 @@ QString ThemeComboBox::currentTheme() const
 
 void ThemeComboBox::writeDefaultConfig() const
 {
-  KConfigGroup group( KGlobal::config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup group( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
 
   const QString themeID = currentTheme();
   group.writeEntry( QString( "DefaultSet" ), themeID );
