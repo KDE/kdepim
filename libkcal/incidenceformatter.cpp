@@ -466,7 +466,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
     QDateTime dt =
       event->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
     tmpStr += "<tr>";
-    tmpStr += "<td><b>" + i18n( "Next:" ) + "</b></td>";
+    tmpStr += "<td><b>" + i18n( "next recurrence", "Next:" ) + "</b></td>";
     tmpStr += "<td>" +
               ( dt.isValid() ?
                 IncidenceFormatter::dateTimeToString( dt, event->doesFloat(), false ) :
@@ -590,7 +590,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
       todo->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
-              i18n( "Next:" ) +
+              i18n( "next recurrence", "Next:" ) +
               "</b></td>";
     if ( !todo->doesFloat() ) {
       tmpStr += "<td>" +
