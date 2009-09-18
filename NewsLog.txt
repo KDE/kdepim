@@ -1,3 +1,18 @@
+Friday, September 18th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue2974: Anniversary event has broken title
+* kolab/issue3865: Crash while syncing, automatic event archival enabled, in EventArchiver::archiveIncidences
+* kolab/issue3864: An invitation of a long event shows a wrong duration
+* kolab/issue3863: Kontact: VCalendar elements should not contain TZID times
+* kolab/issue3853: Crash after renaming a folder
+* kolab/issue2069: Kontact rewrites custom folder types
+* kolab/issue3830: Mail: Setting option properties->share unread state with all users on an inbox doesn't have an effect
+* Add new KOrganizer icons for anniversary, birthday, holiday and special occassion
+
+
 Friday, September 11th 2009
 
 Problems addressed
