@@ -61,7 +61,7 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent ): QObject( parent )
 //     QString blogDir = tempBlog.url().host();
 //     kDebug() << blogDir;
 //     mCachePath = KStandardDirs::locateLocal( "data", "bilbo/" + blogDir + '/' , true );
-    QString url = QString( "bilbo/%1/" ).arg( blogid );
+    QString url = QString( "blogilo/%1/" ).arg( blogid );
     mCachePath = KStandardDirs::locateLocal( "data", url , true );
     generateRandomPostStrings();
     mParent = qobject_cast< QWidget* >( parent );
@@ -108,7 +108,7 @@ QString StyleGetter::styledHtml( const int blogid,
 //
 //     QString blogDir = tempBlog.url().host();
     //QString url = QString( "bilbo/%1/" ).arg( blogid );
-    QString url = QString( "bilbo/%1/" ).arg( blogid );
+    QString url = QString( "blogilo/%1/" ).arg( blogid );
     url = KStandardDirs::locateLocal( "data", url , true );
     KUrl dest( url );
     dest.addPath("style.html");

@@ -289,7 +289,7 @@ void AddEditBlog::handleFetchAPITimeout()
     mFetchAPITimer = 0;
     hideWaitWidget();
     ui.txtId->setEnabled( true );
-    KMessageBox::sorry( this, i18n( "Sorry, Bilbo cannot get API type automatically,\
+    KMessageBox::sorry( this, i18n( "Sorry, Blogilo cannot guess API type automatically,\
 please check your internet connection, otherwise you have to set API type on advanced tab manually." ),
                         i18n( "AutoConfiguration Failed" ) );
 }
@@ -430,7 +430,7 @@ void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
     QString yesText = i18n( "Yes" );
     QString noStyle = "QLabel{color: red;}";
     QString noText = i18n( "No, API doesn't support" );
-    QString notYetText = i18n( "No, Bilbo doesn't support yet" );
+    QString notYetText = i18n( "No, Blogilo doesn't support yet" );
 
     ui.featureCreatePost->setText( yesText );
     ui.featureCreatePost->setStyleSheet( yesStyle );

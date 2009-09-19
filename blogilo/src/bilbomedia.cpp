@@ -143,4 +143,4 @@ void BilboMedia::setCheckSum( quint16 sum )
     mChecksum = sum;
 }
 
-#include <bilbomedia.moc>
+#include "bilbomedia.moc"

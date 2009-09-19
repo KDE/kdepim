@@ -38,7 +38,7 @@ class KPushButton;
 class KStatusBar;
 
 /**
-* Implements a simple browser widget for use in bilbo Post Preview.
+* Implements a simple browser widget for use in blogilo Post Preview.
 * In addition to normal browsing tools, it has a button for fetching blog styles
 * from the web.
     @author Mehrdad Momeny <mehrdad.momeny@gmail.com>

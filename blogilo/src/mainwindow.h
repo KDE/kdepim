@@ -42,7 +42,7 @@ class BilboMedia;
 class UploadMediaDialog;
 
 /**
-Main window of bilbo blogger implementation...
+Main window of blogilo...
 
  @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
  @author Golnaz Nilieh <g382nilieh@gmail.com>

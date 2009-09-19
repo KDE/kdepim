@@ -66,7 +66,7 @@ public:
     ~StyleGetter();
 
     /**
-     * Looks for a file named style.html for the requested blog in bilbo data
+     * Looks for a file named style.html for the requested blog in blogilo data
      * directory, then writes the file content into a buffer, inserts given post 
      * title and content in the buffer, and returns it.
      * @param blogid the id of the requested blog

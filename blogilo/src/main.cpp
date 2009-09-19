@@ -37,7 +37,7 @@ int main( int argc, char *argv[] )
 {
     qDebug()<<APPNAME<<' '<<VERSION;
     KAboutData about( "blogilo", 0, ki18n( APPNAME ), VERSION, ki18n( description ),
-                      KAboutData::License_GPL_V3, ki18n( "(C) 2008-2009 Bilbo Developers" ),
+                      KAboutData::License_GPL_V3, ki18n( "(C) 2008-2009 Blogilo Developers" ),
                       KLocalizedString(), "http://blogilo.gnufolks.org" );
     about.addAuthor( ki18n( "Mehrdad Momeny" ), ki18n( "Core Developer" ), "mehrdad.momeny@gmail.com" );
     about.addAuthor( ki18n( "Golnaz Nilieh" ), ki18n( "Core Developer" ), "g382nilieh@gmail.com" );

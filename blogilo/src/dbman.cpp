@@ -40,9 +40,9 @@ DBMan::DBMan()
     mWallet = KWallet::Wallet::openWallet( KWallet::Wallet::LocalWallet(), 0 );
     if ( mWallet ) {
         useWallet = true;
-        if ( !mWallet->setFolder( "bilbo" ) ) {
-            mWallet->createFolder( "bilbo" );
-            mWallet->setFolder( "bilbo" );
+        if ( !mWallet->setFolder( "blogilo" ) ) {
+            mWallet->createFolder( "blogilo" );
+            mWallet->setFolder( "blogilo" );
         }
         kDebug() << "Wallet successfully opened.";
     } else {
@@ -327,7 +327,7 @@ bool DBMan::removeBlog( int blog_id )
         kDebug() << q.lastError().text();
         return res;
     }
-    QString path = KStandardDirs::locateLocal( "data", QString( "bilbo/%1/" ).arg( blog_id ) , false );
+    QString path = KStandardDirs::locateLocal( "data", QString( "blogilo/%1/" ).arg( blog_id ) , false );
     KIO::del(KUrl(path), KIO::HideProgressInfo);
     reloadBlogList();
     return res;

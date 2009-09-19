@@ -68,7 +68,7 @@ MainWindow::MainWindow()
     systemTray = 0;
     busyNumber = 0;
     progress = 0;
-    this->setWindowTitle( i18n("Bilbo Blogger") );
+    this->setWindowTitle( i18n("Blogilo") );
 
     tabPosts = new KTabWidget( this );
     tabPosts->setElideMode( Qt::ElideRight );///TODO make this Optional!

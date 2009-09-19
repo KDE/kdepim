@@ -160,7 +160,7 @@ void Backend::publishPost( const BilboPost &post )
     BilboPost tmpPost = post;
     if( Settings::addPoweredBy() ) {
         QString poweredStr = "<p>=-=-=-=-=<br/>"
-        "<i>Powered by <b><a href='http://bilbo.gnufolks.org/'>Bilbo Blogger</a></b></i></p>";
+        "<i>Powered by <b><a href='http://blogilo.gnufolks.org/'>Blogilo</a></b></i></p>";
         tmpPost.setContent(post.content() + poweredStr);
     }
     KBlog::BlogPost *bp = preparePost( tmpPost );
