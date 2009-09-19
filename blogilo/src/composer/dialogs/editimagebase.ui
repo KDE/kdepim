@@ -1,0 +1,140 @@
+<ui version="4.0" >
+ <class>EditImageBase</class>
+ <widget class="QWidget" name="EditImageBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>390</width>
+    <height>141</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string comment="verb, to modify selected image attributes." >Edit image properties</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout" >
+   <item row="0" column="0" >
+    <widget class="QLabel" name="labelWidth" >
+     <property name="text" >
+      <string comment="noun, with of the image in pixels." >Image width:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="KIntSpinBox" name="spinboxWidth" >
+     <property name="buttonSymbols" >
+      <enum>QAbstractSpinBox::UpDownArrows</enum>
+     </property>
+     <property name="suffix" >
+      <string> pixel</string>
+     </property>
+     <property name="maximum" >
+      <number>2000</number>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="3" >
+    <widget class="KIntSpinBox" name="spinboxHeight" >
+     <property name="suffix" >
+      <string> pixel</string>
+     </property>
+     <property name="prefix" >
+      <string/>
+     </property>
+     <property name="maximum" >
+      <number>2000</number>
+     </property>
+     <property name="singleStep" >
+      <number>1</number>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" >
+    <widget class="QLabel" name="labelTitle" >
+     <property name="text" >
+      <string>Image Title:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" >
+    <widget class="QLabel" name="labelHeight" >
+     <property name="text" >
+      <string comment="noun, height of the image in pixels." >Image height:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" colspan="3" >
+    <widget class="KLineEdit" name="txtTitle" >
+     <property name="showClearButton" stdset="0" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" >
+    <widget class="QLabel" name="labelAltText" >
+     <property name="text" >
+      <string comment="the alternative text which is displayed to the user, if the image can not be loaded." >Alternative text:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="1" colspan="3" >
+    <widget class="KLineEdit" name="txtAltText" >
+     <property name="showClearButton" stdset="0" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0" >
+    <widget class="QLabel" name="labelLink" >
+     <property name="text" >
+      <string>Image Link To:</string>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1" colspan="3" >
+    <widget class="KLineEdit" name="txtLink" >
+     <property name="showClearButton" stdset="0" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="4" >
+    <widget class="KSeparator" name="kseparator" />
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
