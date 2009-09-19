@@ -55,7 +55,7 @@ public:
         HtmlHeading = 0x100040, //zero if block is not in heading format, 1 for Heading 1, and so on.
         IsBlockQuote = 0x100041,
 
-        IsHtmlTagSign = 0x100042,
+        IsHtmlTagSign = 0x100042
     };
 
 };
