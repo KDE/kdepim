@@ -210,9 +210,9 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
     }
-    KMessageBox::information(this, "Program could no guess API of your blog, \
+    KMessageBox::information(this, i18n("Program could no guess API of your blog, \
 But have found an XMLRPC inteface and trying to use it.\
-\nWe assume MovableType API for now, Choose another API if you know the server support it.");
+\nWe assume MovableType API for now, Choose another API if you know the server support it."));
     ui.comboApi->setCurrentIndex( 2 );
     ui.txtUrl->setText( ui.txtUrl->text() + "/xmlrpc.php" );
     fetchBlogId();

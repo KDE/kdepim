@@ -61,7 +61,7 @@ void BilboBrowser::createUi( QWidget *parent )
     btnGetStyle->setText( i18n( "Get blog style" ) );
     connect( btnGetStyle, SIGNAL( clicked( bool ) ), this, SLOT( sltGetBlogStyle() ) );
 
-    viewInBlogStyle = new QCheckBox( "View post in the blog style", this );
+    viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
     connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT( 
             sltViewModeChanged() ) );
