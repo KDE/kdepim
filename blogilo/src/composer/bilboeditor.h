@@ -48,7 +48,6 @@ class KSelectAction;
 class MultiLineTextEdit;
 class AddEditLink;
 class BilboMedia;
-class BilboPost;
 class BilboBrowser;
 
 

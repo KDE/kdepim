@@ -32,7 +32,6 @@
 #include "bilbopost.h"
 
 
-class KUrl;
 class BilboBlog;
 class BilboPost;
 class BilboMedia;

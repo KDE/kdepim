@@ -28,14 +28,12 @@
 #include <QObject>
 #include <QString>
 
-class KAction;
 namespace KTextEditor 
 {
     class Editor;
     class View;
 }
 class QWidget;
-class QMenu;
 class HtmlEditorPrivate;
 
 /**

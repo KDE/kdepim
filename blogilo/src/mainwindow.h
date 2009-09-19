@@ -30,16 +30,12 @@
 #include "bilboblog.h"
 
 class KTabWidget;
-class KAction;
-class KToggleAction;
 class QProgressBar;
 class QToolButton;
 class Toolbox;
 class KSelectAction;
 class PostEntry;
 class KSystemTrayIcon;
-class BilboMedia;
-class UploadMediaDialog;
 
 /**
 Main window of blogilo...

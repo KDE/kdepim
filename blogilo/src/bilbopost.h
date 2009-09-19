@@ -34,8 +34,6 @@
 #include "category.h"
 class QUrl;
 class QDateTime;
-class KUrl;
-class KDateTime;
 // class KBlog::BlogPost;
 
 /**

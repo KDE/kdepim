@@ -32,10 +32,8 @@
 #include "ui_toolboxbase.h"
 
 class KStatusBar;
-class QRadioButton;
 class QButtonGroup;
 class BilboPost;
-class AddEditBlog;
 class BilboBlog;
 // class BlogRadioButton;
 class CatCheckBox;
