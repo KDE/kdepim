@@ -22,11 +22,8 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include <QtGui>
-#include <QImage>
 #include <QTextCharFormat>
-// #include <QWebView>
-
+// 
 #include <klocalizedstring.h>
 #include <ktoolbar.h>
 #include <kselectaction.h>

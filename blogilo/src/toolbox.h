@@ -25,8 +25,6 @@
 #ifndef TOOLBOX_H
 #define TOOLBOX_H
 
-#include <QDockWidget>
-#include <QtGui>
 #include <QDir>
 #include "category.h"
 #include "ui_toolboxbase.h"

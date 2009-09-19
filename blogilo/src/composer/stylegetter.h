@@ -31,7 +31,6 @@
 #ifndef STYLEGETTER_H
 #define STYLEGETTER_H
 #include <QObject>
-#include <QByteArray>
 #include <QString>
 
 

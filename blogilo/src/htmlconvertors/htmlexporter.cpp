@@ -30,7 +30,6 @@
 
 #include <QString>
 #include <QTextDocument>
-#include <QTextDocumentFragment>
 #include <QTextFrame>
 #include <QTextBlock>
 #include <QTextList>

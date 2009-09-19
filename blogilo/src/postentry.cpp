@@ -22,7 +22,6 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include <QtGui>
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <klineedit.h>
@@ -38,6 +37,8 @@
 #include "settings.h"
 #include "bilboblog.h"
 #include "syncuploader.h"
+#include <QProgressBar>
+#include <QLabel>
 
 #define MINUTE 60000
 

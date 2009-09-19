@@ -26,10 +26,8 @@
 #include <kdebug.h>
 #include <kxmlguiwindow.h>
 #include <kmessagebox.h>
-#include <QButtonGroup>
 #include <kdatetime.h>
 #include <kurl.h>
-#include <QDir>
 
 #include "toolbox.h"
 #include "dbman.h"
@@ -44,6 +42,7 @@
 #include <KAction>
 #include <KToolInvocation>
 #include <settings.h>
+#include <QClipboard>
 
 Toolbox::Toolbox( QWidget *parent )
         : QWidget( parent )

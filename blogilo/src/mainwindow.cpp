@@ -50,10 +50,11 @@
 #include <kmessagebox.h>
 #include <KDE/KLocale>
 #include <QDir>
-#include <QFile>
+#include <QMenu>
+#include <QDockWidget>
+#include <QProgressBar>
 #include <KSelectAction>
 #include <kimagefilepreview.h>
-#include <KDialog>
 #include "uploadmediadialog.h"
 
 
