@@ -103,6 +103,6 @@ install( TARGETS blogilo DESTINATION ${BIN_INSTALL_DIR} )
 
 ########### install files ###############
 
-install( FILES blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
+install( FILES ../blogilo.desktop  DESTINATION  ${XDG_APPS_INSTALL_DIR} )
 install( FILES blogilo.kcfg  DESTINATION  ${KCFG_INSTALL_DIR} )
 install( FILES blogiloui.rc  DESTINATION  ${DATA_INSTALL_DIR}/blogilo )
