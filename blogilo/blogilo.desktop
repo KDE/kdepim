@@ -4,8 +4,7 @@ Name[x-test]=xxBlogiloxx
 Exec=blogilo %i -caption "%c"
 Icon=blogilo
 Type=Application
-Categories=Network;Internet
+Categories=Qt;KDE;Network;Internet
 GenericName=A KDE Blogging Client
 Terminal=false
 
-X-Ubuntu-Gettext-Domain=desktop_kdesdk
