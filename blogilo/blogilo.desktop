@@ -1,6 +1,5 @@
 [Desktop Entry]
 Name=Blogilo
-Name[x-test]=xxBlogiloxx
 Exec=blogilo %i -caption "%c"
 Icon=blogilo
 Type=Application
