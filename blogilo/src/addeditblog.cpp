@@ -427,10 +427,10 @@ AddEditBlog::~AddEditBlog()
 void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
 {
     QString yesStyle = "QLabel{color: green;}";
-    QString yesText = i18n( "Yes" );
+    QString yesText = i18nc( "Supported feature or Not", "Yes" );
     QString noStyle = "QLabel{color: red;}";
-    QString noText = i18n( "No, API doesn't support" );
-    QString notYetText = i18n( "No, Blogilo doesn't support yet" );
+    QString noText = i18nc( "Supported feature or Not", "No, API doesn't support" );
+    QString notYetText = i18nc( "Supported feature or Not", "No, Blogilo doesn't support yet" );
 
     ui.featureCreatePost->setText( yesText );
     ui.featureCreatePost->setStyleSheet( yesStyle );

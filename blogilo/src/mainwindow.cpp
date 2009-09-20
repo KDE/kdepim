@@ -294,10 +294,10 @@ void MainWindow::optionsPreferences()
 
 //     QWidget *htmlEditorSettings = HtmlEditor::self()->configPage( 0, dialog );
 //     dialog->addPage( htmlEditorSettings, i18n( "HTML Editor" ), "configure" );
-    dialog->addPage( generalSettingsDlg, i18n( "General" ), "configure" );
-    dialog->addPage( blogSettingsDlg, i18n( "Blogs" ), "document-properties");
-    dialog->addPage( editorSettingsDlg, i18n( "Editor" ), "accessories-text-editor" );
-    dialog->addPage( advancedSettingsDlg, i18n( "Advanced" ), "applications-utilities");
+    dialog->addPage( generalSettingsDlg, i18nc( "Configure Page", "General" ), "configure" );
+    dialog->addPage( blogSettingsDlg, i18nc( "Configure Page", "Blogs" ), "document-properties");
+    dialog->addPage( editorSettingsDlg, i18nc( "Configure Page", "Editor" ), "accessories-text-editor" );
+    dialog->addPage( advancedSettingsDlg, i18nc( "Configure Page", "Advanced" ), "applications-utilities");
     connect( dialog, SIGNAL( settingsChanged( const QString& ) ), this, SIGNAL( settingsChanged() ) );
     connect( dialog, SIGNAL(settingsChanged(const QString& )), this, SLOT(slotSettingsChanged()) );
     connect( dialog, SIGNAL(destroyed(QObject*)), this, SLOT(slotDialogDestroyed(QObject*)));

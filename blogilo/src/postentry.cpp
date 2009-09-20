@@ -227,7 +227,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
                 BilboMedia *media = it.value();
                 SyncUploader *uploader = new SyncUploader(this);
                 if( !uploader->uploadMedia( backend, media ) ){
-                    QString err = i18n( "Uploading the media file %1 failed.\n%3", media->name(), uploader->errorMessage());
+                    QString err = i18n( "Uploading the media file %1 failed.\n%2", media->name(), uploader->errorMessage());
                     emit postPublishingDone( true, err );
                     uploader->deleteLater();
                     result = false;
@@ -269,7 +269,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
     bool isNew = false;
     if(mCurrentPost.status() == BilboPost::New)
         isNew = true;
-    SendToBlogDialog *dia = new SendToBlogDialog( isNew, mCurrentPost.isPrivate(), this);
+    QPointer<SendToBlogDialog> dia = new SendToBlogDialog( isNew, mCurrentPost.isPrivate(), this);
     dia->setAttribute(Qt::WA_DeleteOnClose, false);
     if( dia->exec() == KDialog::Accepted ) {
         this->setCursor( Qt::BusyCursor );

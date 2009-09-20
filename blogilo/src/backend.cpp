@@ -145,8 +145,8 @@ void Backend::entriesListed( const QList< KBlog::BlogPost > & posts )
     for ( int i = 0; i < posts.count(); i++ ) {
         BilboPost tempPost( posts[i] );
         if(Settings::changeNToBreak()) {
-            tempPost.setContent( tempPost.content().replace( "\n", "<br/>" ) );
-            tempPost.setAdditionalContent( tempPost.additionalContent().replace( "\n", "<br/>" ) );
+            tempPost.setContent( tempPost.content().replace( '\n', "<br/>" ) );
+            tempPost.setAdditionalContent( tempPost.additionalContent().replace( '\n', "<br/>" ) );
         }
         DBMan::self()->addPost( tempPost, mBBlog->id() );
     }
@@ -174,7 +174,7 @@ void Backend::postPublished( KBlog::BlogPost *post )
     kDebug() << "Blog Id: " << mBBlog->id();
     if ( post->status() == KBlog::BlogPost::Error ) {
         kDebug() << "Publishing/Modifying Failed";
-        const QString tmp( i18n( "Publishing/Modifying post failed: %1" ).arg( post->error() ) );
+        const QString tmp( i18n( "Publishing/Modifying post failed: %1", post->error() ) );
         kDebug() << "Emitting sigError...";
         Q_EMIT sigError( tmp );
         return;

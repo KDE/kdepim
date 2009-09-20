@@ -141,7 +141,7 @@ you have to select a blog from Blogs page before asking for Entries list" ) );
     if(count == 0) {
         count = Settings::updateEntriesCount();
         if( Settings::showUpdateEntriesDialog() ) {
-            EntriesCountDialog *dia = new EntriesCountDialog( this );
+            QPointer<EntriesCountDialog> dia = new EntriesCountDialog( this );
             dia->setAttribute( Qt::WA_DeleteOnClose, false );
             if( dia->exec() == 0 )
                 return;
@@ -226,7 +226,7 @@ void Toolbox::sltRemoveSelectedEntryFromServer()
 
 void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
 {
-    KMessageBox::information( this, i18n( "Post with title \"%1\" removed from \"%2\".",
+    KMessageBox::information( this, i18nc( "Post removed from Blog", "Post with title \"%1\" removed from \"%2\".",
                                           post.title(), DBMan::self()->blogList().value(blog_id)->title() ) );
     sltLoadEntriesFromDB( blog_id );
     statusbar->showMessage( i18n( "Post removed" ), STATUSTIMEOUT );
