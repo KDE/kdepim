@@ -22,6 +22,8 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
+#include "addmediadialog.h"
+
 #ifdef WIN32
 #include <QFileDialog>
 #else
@@ -33,9 +35,7 @@
 #include <kmimetype.h>
 #include <kdebug.h>
 #include <kio/job.h>
-// #include <kio/jobuidelegate.h>
 
-#include "addmediadialog.h"
 #include "bilbomedia.h"
 #include "settings.h"
 
@@ -68,7 +68,7 @@ void AddMediaDialog::slotSelectLocalFile()
 {
     QString path;
 #ifdef WIN32
-    path = QFileDialog::getOpenFileName( this, i18n("Choose a file") );
+    path = QFileDialog::getOpenFileName( this, i18n("Choose a file") );//krazy:exclude=qclasses KFileDialog has problem on WIN32 now
 #else
     path = KFileDialog::getOpenFileName( KUrl(),
                                          QString(), this,

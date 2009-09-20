@@ -22,6 +22,8 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
+#include "addimagedialog.h"
+
 #ifdef WIN32
 #include <QFileDialog>
 #else
@@ -31,7 +33,6 @@
 #include <kmessagebox.h>
 #include <kdebug.h>
 
-#include "addimagedialog.h"
 #include "bilbomedia.h"
 
 AddImageDialog::AddImageDialog(QWidget* parent): AddMediaDialog(parent)
@@ -61,8 +62,7 @@ void AddImageDialog::slotSelectLocalFile()
 {
     QString path;
 #ifdef WIN32
-    path = QFileDialog::getOpenFileName( this, i18n("Choose a file"),
-                                           QString(), i18n("Images (*.png *.gif *.jpg)" ) );
+    path = QFileDialog::getOpenFileName( this, i18n("Choose a file"), QString(), i18n("Images (*.png *.gif *.jpg)" ) );//krazy:exclude=qclasses KFileDialog has problem on WIN32 now
 #else
     path = KFileDialog::getImageOpenUrl( KUrl(), this, i18n("Choose a file") ).path();
 #endif
