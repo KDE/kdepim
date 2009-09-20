@@ -211,7 +211,7 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
         return;
     }
     KMessageBox::information(this, i18n("Program could no guess API of your blog, \
-But have found an XMLRPC inteface and trying to use it.\
+But have found an XMLRPC interface and trying to use it.\
 \nWe assume MovableType API for now, Choose another API if you know the server support it."));
     ui.comboApi->setCurrentIndex( 2 );
     ui.txtUrl->setText( ui.txtUrl->text() + "/xmlrpc.php" );
@@ -299,7 +299,7 @@ void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString &
     kDebug() << " ErrorType: " << type;
     ui.txtId->setEnabled( true );
     hideWaitWidget();
-    KMessageBox::detailedError( this, i18n( "Fetching BlogID Faild!\nplease check your internet connection." ), errorMsg );
+    KMessageBox::detailedError( this, i18n( "Fetching BlogID Failed!\nPlease check your Internet connection." ), errorMsg );
 }
 
 void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & list )
@@ -512,7 +512,7 @@ void AddEditBlog::slotButtonClicked( int button )
     if ( button == KDialog::Ok ) {
         if ( bBlog->blogid().isEmpty() && ui.txtId->text().isEmpty() ) {
             KMessageBox::sorry( this, i18n( "Sorry, BlogId not retrieved yet,\
-\nYou can fetch blog ID by clicking on \"Auto Configure\" Or \"Fetch ID\" button. otherwise you have\
+\nYou can fetch blog ID by clicking on \"Auto Configure\" or \"Fetch ID\" button. otherwise you have\
  to insert your Blog Id manually." )
                                             );
             return;

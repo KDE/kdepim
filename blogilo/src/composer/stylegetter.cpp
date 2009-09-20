@@ -242,7 +242,7 @@ void StyleGetter::sltError( const QString & errMsg )
 {
     kDebug();
 //     QString err = i18n( "An Error occurred on latest transaction.\n%1", errMsg );
-    KMessageBox::detailedError( mParent, i18n( "An error ocurred on latest transaction " ), errMsg );
+    KMessageBox::detailedError( mParent, i18n( "An error occurred on latest transaction " ), errMsg );
 //     KMessageBox::error( mParent, err );
     b->deleteLater();
 }

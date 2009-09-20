@@ -236,7 +236,7 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
 
 void Toolbox::slotError(const QString& errorMessage)
 {
-    KMessageBox::detailedError( this, i18n( "An error ocurred on latest transaction" ), errorMessage );
+    KMessageBox::detailedError( this, i18n( "An error occurred on latest transaction" ), errorMessage );
     statusbar->showMessage( i18n( "Failed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }

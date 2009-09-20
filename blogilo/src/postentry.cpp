@@ -287,7 +287,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
 
         QString statusMsg;
         if(dia->isNew()) {
-            statusMsg = i18n("Submiting new %1...", msgType);
+            statusMsg = i18n("Submitting new %1...", msgType);
             isNewPost = true;
         } else {
             statusMsg = i18n("Modifying %1...", msgType);

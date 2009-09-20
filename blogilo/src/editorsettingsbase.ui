@@ -27,7 +27,7 @@
    <item row="4" column="1">
     <widget class="KIntSpinBox" name="kcfg_autosaveInterval">
      <property name="specialValueText">
-      <string>Disbaled</string>
+      <string>Disabled</string>
      </property><!-- TODO: Make the string plural/singular aware -->
      <property name="suffix">
       <string> minutes</string>
@@ -43,7 +43,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_addPoweredBy">
      <property name="text">
-      <string>Automatically insert &quot;Powered by Bilbo Blogger&quot;</string>
+      <string>Automatically insert &quot;Powered by Blogilo&quot;</string>
      </property>
     </widget>
    </item>

@@ -376,7 +376,7 @@ void MainWindow::setupSystemTray()
         if ( !systemTray ) {
             systemTray = new KSystemTrayIcon( this );
             systemTray->setIcon(this->windowIcon());
-            systemTray->setToolTip( i18n("Bilbo Blogger") );
+            systemTray->setToolTip( i18n("Blogilo") );
             systemTray->contextMenu()->addAction( actionCollection()->action("new_post") );
             systemTray->show();
         }
@@ -499,7 +499,7 @@ void MainWindow::sltSavePostLocally()
 void MainWindow::sltError( const QString & errorMessage )
 {
     kDebug() << "Error message: " << errorMessage;
-    KMessageBox::detailedError( this, i18n( "An error ocurred on the last transaction." ), errorMessage );
+    KMessageBox::detailedError( this, i18n( "An error occurred on the last transaction." ), errorMessage );
     statusBar()->clearMessage();
     slotBusy(false);
 }
@@ -546,7 +546,7 @@ void MainWindow::postManipulationDone( bool isError, const QString &customMessag
 {
     kDebug();
     if(isError){
-        KMessageBox::detailedError(this, i18n("Submiting post failed"), customMessage);
+        KMessageBox::detailedError(this, i18n("Submitting post failed"), customMessage);
     } else {
         PostEntry *entry = qobject_cast<PostEntry*>(sender());
         if(entry && KMessageBox::questionYesNo(this, i18n("%1\nDo you want to keep the post open?", customMessage),
