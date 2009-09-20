@@ -42,9 +42,8 @@ public:
         BLOGGER1_API = 0, METAWEBLOG_API, MOVABLETYPE_API, WORDPRESSBUGGY_API, GDATA_API
     };
 
-//     BilboBlog(KUrl& server, QObject *parent=0);
-    BilboBlog( QObject *parent = 0 );
-    BilboBlog( const BilboBlog &, QObject *parent = 0);
+    explicit BilboBlog( QObject *parent = 0 );
+    explicit BilboBlog( const BilboBlog &, QObject *parent = 0);
     ~BilboBlog();
 
     /**
