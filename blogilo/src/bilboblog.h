@@ -37,6 +37,7 @@ Blog definition class!
 */
 class BilboBlog : public QObject
 {
+    Q_OBJECT
 public:
     enum ApiType {
         BLOGGER1_API = 0, METAWEBLOG_API, MOVABLETYPE_API, WORDPRESSBUGGY_API, GDATA_API

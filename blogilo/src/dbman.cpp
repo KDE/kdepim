@@ -217,7 +217,7 @@ bool DBMan::createDB()
         mLastErrorText = q.lastError().text();
     }
 
-    ///delete related informations on DB, On removing a post or a blog
+    ///delete related information on DB, On removing a post or a blog
     q.exec( "CREATE TRIGGER delete_post AFTER DELETE ON post\
     BEGIN\
     DELETE FROM post_cat WHERE post_cat.postId=OLD.postid;\

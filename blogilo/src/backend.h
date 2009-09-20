@@ -151,7 +151,7 @@ Q_SIGNALS:
     void sigPostFetched( BilboPost *post );
 
     /**
-     * this signal emitted when an error occured on current transaction.
+     * this signal emitted when an error occurred on current transaction.
      * @param type type of error
      * @param errorMessage error message.
      */

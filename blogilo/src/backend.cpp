@@ -295,7 +295,7 @@ void Backend::mediaUploaded( KBlog::BlogMedia * media )
     quint16 newChecksum = qChecksum( media->data().data(), media->data().count() );
     if ( newChecksum != m->checksum() ) {
         kError() << "Check sum error: checksum of sent file: " << m->checksum() <<
-                " Checksum of recived file: " << newChecksum << "Error: " << media->error() << endl;
+                " Checksum of received file: " << newChecksum << "Error: " << media->error() << endl;
         const QString tmp( i18n( "Uploading media failed: Checksum error. Returned error: %1",
                            media->error() ) );
         kDebug() << "Emitting sigMediaError ...";
@@ -363,40 +363,6 @@ void Backend::error( KBlog::Blog::ErrorType type, const QString & errorMessage )
     kDebug() << "Emitting sigError";
     Q_EMIT sigError( errType );
 }
-
-/*
-void Backend::setPostCategories( const QString postId, const QMap< QString, bool > & categoriesList )
-{
-    kDebug() << "Categories to be set for post: " << categoriesList.keys();
-    int count = categoriesList.count();
-    if ( count < 1 ) {
-        kDebug() << "Category list is empty.";
-        return;
-    }
-    if ( mBBlog->api() == BilboBlog::MOVABLETYPE_API || mBBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
-        KBlog::MovableType *mt = qobject_cast<KBlog::MovableType*>( mKBlog );
-        connect( mt, SIGNAL( settedPostCategories( const QString & ) ),
-                 this, SLOT( postCategoriesSetted( const QString& ) ) );
-        mt->setPostCategories( postId, categoriesList );
-    } else {
-        kDebug() << "Blog API doesn't support setting post categories the api type is: " << mBBlog->api();
-        QString err = i18n( "The registred blog API does not support setting categories for a post." );
-        error(KBlog::Blog::NotSupported, err);
-    }
-}
-
-void Backend::postCategoriesSetted( const QString &postId )
-{
-    kDebug();
-    KBlog::BlogPost *post = mSetPostCategoriesMap[ postId ];
-    mSubmitPostStatusMap[ post ] = post->status();
-    connect( mKBlog, SIGNAL( fetchedPost(KBlog::BlogPost*)),
-             this, SLOT( savePostInDbAndEmitResult(KBlog::BlogPost*)) );
-    mKBlog->fetchPost( post );
-    mSetPostCategoriesMap.remove( postId );
-
-}
-*/
 
 void Backend::sltMediaError( KBlog::Blog::ErrorType type, const QString & errorMessage, KBlog::BlogMedia * media )
 {

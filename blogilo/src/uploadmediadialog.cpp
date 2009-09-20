@@ -93,7 +93,7 @@ bool UploadMediaDialog::selectNewFile()
 {
     QString mediaPath;
 #ifdef WIN32
-    mediaPath = QFileDialog::getOpenFileName( this, i18n("Select Media to Upload") );
+    mediaPath = QFileDialog::getOpenFileName( this, i18n("Select Media to Upload") );//krazy:exclude=qclasses KFileDialog has problem on WIN32 now
 #else
     mediaPath = KFileDialog::getOpenFileName( KUrl("kfiledialog:///image?global"),
                                                       QString(), this,

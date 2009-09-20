@@ -277,7 +277,7 @@ void AddEditBlog::handleFetchIDTimeout()
     ui.txtId->setText( QString() );
     ui.txtId->setEnabled( true );
     hideWaitWidget();
-    KMessageBox::error( this, i18n( "Fetching the blog id timed out. Check your internet connection,\
+    KMessageBox::error( this, i18n( "Fetching the blog id timed out. Check your Internet connection,\
 and your homepage Url, username or password!\nnote that the url has to contain \"http://\"\
 \nIf you are using a self hosted Wordpress blog, you have to enable Remote Publishing on its configurations" ) );
 }
@@ -289,9 +289,9 @@ void AddEditBlog::handleFetchAPITimeout()
     mFetchAPITimer = 0;
     hideWaitWidget();
     ui.txtId->setEnabled( true );
-    KMessageBox::sorry( this, i18n( "Sorry, Blogilo cannot guess API type automatically,\
-please check your internet connection, otherwise you have to set API type on advanced tab manually." ),
-                        i18n( "AutoConfiguration Failed" ) );
+    KMessageBox::sorry( this, i18n( "Sorry, API guess function have failed,\
+please check your Internet connection, otherwise you have to set API type on advanced tab manually." ),
+                        i18n( "Auto Configuration Failed" ) );
 }
 
 void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString & errorMsg )
