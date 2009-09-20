@@ -23,6 +23,7 @@
 */
 
 #include "bilboblog.h"
+#include <QApplication>
 
 BilboBlog::BilboBlog( QObject *parent )
         : QObject( parent )
@@ -31,8 +32,8 @@ BilboBlog::BilboBlog( QObject *parent )
     setApi(BLOGGER1_API);
 }
 
-BilboBlog::BilboBlog( const BilboBlog &blog, QObject *parent )
-        : QObject( parent )
+BilboBlog::BilboBlog( const BilboBlog &blog)
+        : QObject( qApp )
 {
     mUrl = blog.url();
     mBlogUrl = blog.blogUrl();

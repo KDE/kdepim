@@ -22,11 +22,11 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
+#include "postentry.h"
 #include <kdebug.h>
 #include <klocalizedstring.h>
 #include <klineedit.h>
 #include <KMessageBox>
-#include "postentry.h"
 #include "composer/bilboeditor.h"
 #include "bilbomedia.h"
 #include "backend.h"
@@ -39,6 +39,7 @@
 #include "syncuploader.h"
 #include <QProgressBar>
 #include <QLabel>
+#include <QTimer>
 
 #define MINUTE 60000
 

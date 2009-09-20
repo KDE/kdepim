@@ -1872,7 +1872,7 @@ static void parseShorthandBackgroundProperty( const QVector<Value> &values, QBru
         QString *image, Repeat *repeat, Qt::Alignment *alignment )
 {
     *brush = QBrush();
-    *image = QString();
+    image->clear();
     *repeat = Repeat_XY;
     *alignment = ( Qt::AlignTop | Qt::AlignLeft );
 
@@ -1882,7 +1882,7 @@ static void parseShorthandBackgroundProperty( const QVector<Value> &values, QBru
             *image = v.variant.toString();
             continue;
         } else if (( v.type == Value::KnownIdentifier ) && ( v.variant.toInt() == Value_None ) ) {
-            *image = QString();
+            image->clear();
             continue;
         }
 
@@ -2256,7 +2256,7 @@ QRect Declaration::rectValue() const
     QStringList func = v.variant.toStringList();
     if (( func.count() != 2 ) || ( func.first().compare( QLatin1String( "rect" ) ) != 0 ) )
         return QRect();
-    QStringList args = func[1].split( " ", QString::SkipEmptyParts );
+    QStringList args = func[1].split( ' ', QString::SkipEmptyParts );
     if ( args.count() != 4 )
         return QRect();
     return QRect( args[0].toInt(), args[1].toInt(), args[2].toInt(), args[3].toInt() );

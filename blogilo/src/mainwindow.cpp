@@ -56,7 +56,7 @@
 #include <KSelectAction>
 #include <kimagefilepreview.h>
 #include "uploadmediadialog.h"
-
+#include <QTimer>
 
 #define TIMEOUT 5000
 

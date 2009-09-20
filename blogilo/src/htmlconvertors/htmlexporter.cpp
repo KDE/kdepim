@@ -66,7 +66,7 @@ QString HtmlExporter::toHtml( const QTextDocument* document )
 //  emitBlock(doc->rootFrame()->begin().currentBlock());
     //sanitizeHtml();
     html.replace( QRegExp( "<br[\\s]*/>" ), "<br />\n" );
-    if ( html.endsWith( ">\n" ) ) {
+    if ( html.endsWith( QLatin1String( ">\n") ) ) {
         html.remove( html.length() - 1, 1 );
     }
     return html;

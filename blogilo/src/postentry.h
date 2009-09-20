@@ -29,18 +29,17 @@
 #include "bilbopost.h"
 
 class BilboEditor;
-class QWidget;
 class QGridLayout;
 class QLabel;
 class QHBoxLayout;
 class KLineEdit;
 class BilboMedia;
 class QProgressBar;
-class QTimer;
 class Backend;
+
 /**
- * Post Entry Widget
- * contains Editor, and Title box.
+  Post Entry Widget
+  contains Editor, and Title box.
  @author Mehrdad Momeny \<mehrdad.momeny@gmail.com\>
  @author Golnaz Nilieh \<g382nilieh@gmail.com\>
  */

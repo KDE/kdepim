@@ -24,7 +24,7 @@
 
 #ifndef DBMAN_H
 #define DBMAN_H
-#include <QtSql>
+#include <QSqlDatabase>
 #include "bilbomedia.h"
 #include "constants.h"
 #include "category.h"

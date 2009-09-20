@@ -22,6 +22,7 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
+#include "addeditblog.h"
 
 #include <kblog/gdata.h>
 #include <kblog/blogger1.h>
@@ -36,9 +37,9 @@
 
 #include "waitwidget.h"
 #include "bilboblog.h"
-#include "addeditblog.h"
 #include "dbman.h"
 #include <QTableWidget>
+#include <QTimer>
 
 static const int TIMEOUT = 45000;
 

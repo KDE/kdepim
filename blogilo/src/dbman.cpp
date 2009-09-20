@@ -30,9 +30,11 @@
 #include <KDE/KLocale>
 #include <kdatetime.h>
 #include <kurl.h>
-#include <kmessagebox.h>
 #include <kwallet.h>
 #include <kio/deletejob.h>
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QFile>
 
 DBMan::DBMan()
 {

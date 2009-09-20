@@ -33,7 +33,6 @@
 
 
 class BilboBlog;
-class BilboPost;
 class BilboMedia;
 // class KBlog::BlogMedia;
 /**

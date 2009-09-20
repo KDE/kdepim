@@ -22,6 +22,8 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
+#include "toolbox.h"
+
 #include <kstatusbar.h>
 #include <kdebug.h>
 #include <kxmlguiwindow.h>
@@ -29,7 +31,6 @@
 #include <kdatetime.h>
 #include <kurl.h>
 
-#include "toolbox.h"
 #include "dbman.h"
 #include "entriescountdialog.h"
 #include "addeditblog.h"
@@ -43,6 +44,7 @@
 #include <KToolInvocation>
 #include <settings.h>
 #include <QClipboard>
+#include <QTimer>
 
 Toolbox::Toolbox( QWidget *parent )
         : QWidget( parent )
@@ -237,7 +239,7 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
 void Toolbox::slotError(const QString& errorMessage)
 {
     KMessageBox::detailedError( this, i18n( "An error occurred on latest transaction" ), errorMessage );
-    statusbar->showMessage( i18n( "Failed" ), STATUSTIMEOUT );
+    statusbar->showMessage( i18nc( "Operation failed", "Failed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }
 

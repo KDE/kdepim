@@ -44,7 +44,7 @@ public:
     };
 
     explicit BilboBlog( QObject *parent = 0 );
-    explicit BilboBlog( const BilboBlog &, QObject *parent = 0);
+    BilboBlog( const BilboBlog & );
     ~BilboBlog();
 
     /**
