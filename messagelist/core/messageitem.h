@@ -39,7 +39,7 @@ namespace Core
 class MESSAGELIST_EXPORT MessageItem : public Item, public ModelInvariantIndex
 {
 public:
-  class Tag
+  class MESSAGELIST_EXPORT Tag
   {
   public:
     Tag( const QPixmap &pix, const QString &tagName, const QString &tagId );
