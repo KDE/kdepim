@@ -23,10 +23,7 @@
 */
 
 #include "multilinetextedit.h"
-#include <QtGui>
-// #include <QNetworkAccessManager>
-// #include <QNetworkRequest>
-// #include <QNetworkReply>
+
 #include <kdebug.h>
 #include <kurl.h>
 #include <kio/job.h>
@@ -38,6 +35,8 @@
 
 #include "constants.h"
 #include "bilbomedia.h"
+#include <QKeyEvent>
+#include <QFile>
 
 QMap <QString, bool> MultiLineTextEdit::downloadFinished;
 MultiLineTextEdit::MultiLineTextEdit( QWidget *parent ) : KRichTextEdit( parent )

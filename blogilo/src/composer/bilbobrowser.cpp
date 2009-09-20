@@ -24,7 +24,9 @@
 
 #include "bilbobrowser.h"
 
-#include <QtGui>
+#include <QWidget>
+#include <QProgressBar>
+#include <QTimer>
 
 #include <khtml_part.h>
 #include <khtmlview.h>
@@ -38,6 +40,8 @@
 #include "stylegetter.h"
 #include "global.h"
 #include "settings.h"
+#include <QCheckBox>
+#include <QVBoxLayout>
 
 BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 {

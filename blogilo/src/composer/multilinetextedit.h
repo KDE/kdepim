@@ -33,7 +33,7 @@ class BilboMedia;
 
 /**
 * Class MultiLineTextEdit Implements a TextEdit widget that supports new line 
-* charachters, and loading images from the web.
+* characters, and loading images from the web.
 * @author Mehrdad Momeny <mehrdad.momeny@gmail.com>
 * @author Golnaz Nilieh <g382nilieh@gmail.com>
 */
@@ -79,7 +79,7 @@ Q_SIGNALS:
     /**
      * When loadResource() function is called for a media file, which is not
      * inserted in the editor media-list before, it tries to determine the media
-     * mimetype. if successfull, it creates a BilboMedia object for that media,
+     * mimetype. if successful, it creates a BilboMedia object for that media,
      * then emits this signal.
      * @param media is the created BilboMedia object.
      * @sa loadResource().

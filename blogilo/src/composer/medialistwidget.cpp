@@ -63,7 +63,7 @@ void MediaListWidget::contextMenuEvent( QContextMenuEvent *event )
 void MediaListWidget::sltEditProperties()
 {
 //     QWidget *temp = new QWidget( this );
-    KDialog *dialog = new KDialog( this );
+    QPointer<KDialog> dialog = new KDialog( this );
     QWidget *temp = new QWidget( dialog );
     //ui.setupUi(dialog);
     ui.setupUi( temp );
@@ -74,7 +74,7 @@ void MediaListWidget::sltEditProperties()
 //     dialog->setAttribute( Qt::WA_DeleteOnClose );
     connect( dialog, SIGNAL( okClicked() ), this, SLOT( sltSetProperties() ) );
     ui.spinboxWidth->setFocus();
-    
+
     dialog->exec();
     dialog->deleteLater();
 }

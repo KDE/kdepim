@@ -22,23 +22,23 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
+#include "bilboeditor.h"
+
 #include <QTextCharFormat>
-// 
 #include <klocalizedstring.h>
 #include <ktoolbar.h>
 #include <kselectaction.h>
-// #include <kactioncollection.h>
+
 #include <kicon.h>
 #include <kcolordialog.h>
 #include <kdebug.h>
-// #include <kmessagebox.h>
+
 #include <kseparator.h>
 #include <ktexteditor/view.h>
 #include <ktexteditor/document.h>
 
-// #include "dbman.h"
+
 #include "bilbomedia.h"
-// #include "global.h"
 #include "bilboblog.h"
 #include "bilbopost.h"
 
@@ -51,7 +51,6 @@
 #else
 #include "bilbobrowser.h"
 #endif
-#include "bilboeditor.h"
 
 #include "dialogs/addeditlink.h"
 #include "dialogs/addimagedialog.h"
@@ -575,10 +574,10 @@ void BilboEditor::sltChangeLayoutDirection()
 
 void BilboEditor::sltAddImage()
 {
-    AddImageDialog *imageDialog = new AddImageDialog( this );
+    QPointer<AddImageDialog> imageDialog = new AddImageDialog( this );
 //     imageDialog->setAttribute( Qt::WA_DeleteOnClose );
     imageDialog->setWindowModality( Qt::WindowModal );
-    
+
     connect( imageDialog, SIGNAL( sigAddImage( BilboMedia *, const int, const int, 
              const QString, const QString, const QString ) ), this, SLOT( sltSetImage( BilboMedia *, 
              const int, const int, const QString, const QString, const QString ) ) );

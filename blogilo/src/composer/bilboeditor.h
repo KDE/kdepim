@@ -28,6 +28,7 @@
 #include <QTextFormat>
 
 #include <ktabwidget.h>
+#include <KUrl>
 
 class QTextCharFormat;
 // class QProgressBar;
@@ -108,7 +109,7 @@ public:
      * Parses the content of htmlEditor tab, to replace media local paths with remote
      * addresses. It's used after uploading media files, for updating html content of the
      * post before being published.
-     * @return true if successfull, and false otherwise.
+     * @return true if successful, and false otherwise.
      */
     bool updateMediaPaths();
 

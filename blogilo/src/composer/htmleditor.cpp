@@ -22,9 +22,9 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#include <QMenu>
-
 #include "htmleditor.h"
+
+#include <QMenu>
 
 #include <kglobal.h>
 #include <ktexteditor/editor.h>
