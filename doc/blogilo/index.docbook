@@ -1,0 +1,430 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+  <!-- Define an entity for your application if it is not part of KDE
+       CVS -->
+  <!ENTITY kapplication "<application>Blogilo</application>">
+  <!ENTITY kappname "&kapplication;">
+  <!ENTITY package "playground/pim">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE"> 
+]>
+<book lang="&language;">
+
+<bookinfo>
+<title>The &kapplication; Handbook</title>
+
+<authorgroup>
+<author>
+&Mehrdad.Momeny;&Mehrdad.Momeny.mail;
+</author>
+<author>
+&Golnaz.Nilieh;&Golnaz.Nilieh.mail;
+</author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+</authorgroup>
+
+<copyright>
+<year>2009</year>
+<holder>&Mehrdad.Momeny;</holder>
+</copyright>
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<date>2009-09-21</date>
+<releaseinfo>1.0</releaseinfo>
+
+<abstract>
+<para>
+&kapplication; is a blogging client for &kde;.
+</para>
+</abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>blog</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>&kapplication; Blogilo is a blogging client.</para>
+<para>A blog client (also called blog software or blogware) is a software designed to simplify the creation and maintenance of weblogs. As specialized content management systems, weblog applications support the authoring, editing, and publishing of blog posts and comments, with special functions for image management, web syndication, and moderation of posts and comments.</para>
+</chapter>
+
+<chapter id="using-kapp">
+<title>Using &kapplication;</title>
+
+<sect1 id="getting-started">
+<title>Getting started</title>
+<para>In Blogilo main window, User can create new posts, modify previous ones, remove them from server, Also upload media files to servers. And he can save posts locally for later use.</para>
+<para>All of these will be available when user configures at least one blog on &kapplication;.</para>
+<para>Without any configured blog you can write and save some posts locally for later use.</para>
+<screenshot>
+<screeninfo>Here's a screenshot of &kapplication;</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="mainwindow.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Main Window</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</sect1>
+
+<sect1 id="configuring-a-blog">
+<title>Configuring a blog</title>
+<para>Blog management is available in the <guilabel>Configure &kapplication;o</guilabel> dialog, and is accessible via Settings → Configure &kapplication;... menu, Also there is a shortcut for it in main window you can access it via Blog → Add Blog... menu.</para>
+<screenshot>
+<screeninfo>Add a new blog - <guilabel>Basic</guilabel> tab</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="add-blog-1.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Add a new blog - <guilabel>Basic</guilabel> tab</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>
+To add a blog, simply you have to insert your blog address, username and password, in desired places, and then click Auto Configure button, for most famous blogging servers such as Wordpress, It will guess your blog, and api, and the will fetch your BlogId.</para>
+<para>And if It fails, you can select your blog's API type in Advanced tab and click Fetch ID to fetch id, or enter Blog id, if you know it. And If you are using a “right to left” language, select Right To Left in next combo box.</para>
+<screenshot>
+<screeninfo>Add a new blog - <guilabel>Advanced</guilabel> tab</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="add-blog-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Add a new blog - <guilabel>Advanced</guilabel> tab</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>
+And after all, you can see what &kapplication; supports for your blog now, in Supported Features tab.</para>
+</sect1>
+
+<sect1 id="creating-new-post">
+<title>Creating a new Post</title>
+<para>To create a new post, in main window, you can click on New Post toolbar button or under Post menu, or simply press Ctrl+N (its shortcut).</para>
+<para>Then a new/empty post is created, and you can write, and configure it, and then submit it to your blog.</para>
+<para>The &kapplication; main window is divided into two sections, Composer and Toolbox.</para>
+
+<sect2><title>Composer</title>
+<para>In the Composer section, you have a text field with label Title, that you can write the title of this post there. Below it, you have 3 tabs, first is Visual Editor, where you have a WYSWIG editor, next tab is Html Editor, where you have a text editor to edit HTML code of your post, with a syntax highlighted editor. And on last tab, you can view your post with your blog style, before submit it to server.</para>
+</sect2>
+
+<sect2>
+<title>Toolbox</title>
+<para>The Toolbox has four sections:</para>
+<orderedlist>
+<listitem>
+<para>Blog Posts</para>
+<screenshot>
+<screeninfo>Blog Posts</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="toolbox-1.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Blog Posts</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>In this section, you can fetch the latest posts from the server.</para>
+<para>Double click on a post entry to load it into composer and modify it or remove a post from the server.</para>
+</listitem>
+
+<listitem>
+<para>Post Categories</para>
+<screenshot>
+<screeninfo>Post Categories</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="toolbox-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Post Categories</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>In this section you can select categories and tags for your post. Tags must be comma separated.</para>
+</listitem>
+
+<listitem>
+<para>Post Options</para>
+<screenshot>
+<screeninfo>Post Options</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="toolbox-3.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Post Options</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>Here you can select some options for current active post in the composer.</para>
+<para>Such as Feedback options, that if visitors can leave a comment for this post or not.</para>
+<para>Select publish date, or title to use for permalink of post. (For wordpress blogs only).</para>
+</listitem>
+
+<listitem>
+<para>Local Entries</para>
+<screenshot>
+<screeninfo>Local Entries</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="toolbox-4.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Local Entries</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>And in Local Entries section, you can double click on an entry to load it into composer, or remove it from disk.</para>
+</listitem>
+
+</orderedlist>
+</sect2>
+
+</sect1>
+
+<sect1 id="uploading">
+<title>Uploading a Media file to server</title>
+<para>To upload a file to server, from Blog menu, select Upload Media... then you have to select a file from disk, And then the media upload dialog will ready to upload it:</para>
+<screenshot>
+<screeninfo>Upload Media</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="media-upload.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase>Upload Media</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+<para>
+If your blog API supports media uploading, you have 2 options here, and if not, there is just one and it's FTP server.</para>
+<para>You can preview your desired file here (If it has any way to preview), and select it's name on server. And then Upload</para>
+<para>If you want to upload to a ftp server, Server directory absolute path is required. And you have to enter a URL to use for guessing link of file on server.</para>
+</sect1>
+
+</chapter>
+
+<chapter id="menu-reference">
+<title>Menu Reference</title>
+
+<sect1 id="file-menu">
+<title>The <guimenu>File</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>Q</keycap></keycombo>
+</shortcut>
+<guimenu>File</guimenu>
+<guimenuitem>Quit</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Quit</action> &kapplication;</para></listitem>
+</varlistentry>
+</variablelist>
+
+</sect1>
+
+<sect1 id="blog-menu">
+<title>The <guimenu>Blog</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<guimenu>Blog</guimenu>
+<guimenuitem>Add Blog...</guimenuitem>
+</menuchoice></term>
+<listitem><para>A quick way to add a new blog.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Blog</guimenu>
+<guimenuitem>Upload Media...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Open Media uploader, to upload files such as Images to blog or FTP server.</para>
+<note><para>Only MetaWeblog and MovableType and Wordpress APIs support media uploading function.</para></note>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+
+<sect1 id="post-menu">
+<title>The <guimenu>Post</guimenu> Menu</title>
+
+<variablelist>
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
+</shortcut>
+<guimenu>Post</guimenu>
+<guimenuitem>New Post</guimenuitem>
+</menuchoice></term>
+<listitem><para>Create a new and empty post.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>S</keycap></keycombo>
+</shortcut>
+<guimenu>Post</guimenu>
+<guimenuitem>Save Locally</guimenuitem>
+</menuchoice></term>
+<listitem><para>Save current post locally.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Post</guimenu>
+<guimenuitem>Submit...</guimenuitem>
+</menuchoice></term>
+<listitem><para>Open Submit post dialog, to submit current active post, to current selected blog.</para>
+<para>In submit post, you can select if this post should submit as a draft or not. 
+And additionally as an edit of current, or as a new post.</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect1>
+
+<sect1 id="settings-menu">
+<title>The <guimenu>Settings</guimenu> Menu</title>
+
+<variablelist>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Clear Cached Images</guimenuitem>
+</menuchoice></term>
+<listitem><para>Clear current image cache.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<shortcut>
+<keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo>
+</shortcut>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Toolbox</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Toggle</action> the toolbox on/off.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Show Statusbar</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Toggle</action> the statusbar.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Shortcuts...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action><action>Configure</action> the keyboard shortcuts used
+by &kapplication;.
+</action>
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure Toolbars...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Configure</action> the items you want to put in the
+toolbar.
+</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Settings</guimenu>
+<guimenuitem>Configure &kapplication;...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Display</action> the &kapplication; settings dialog.
+</para></listitem>
+</varlistentry>
+</variablelist>
+</sect1>
+
+<sect1>
+<title>The <guimenu>Help</guimenu> Menu</title>
+&help.menu.documentation;
+</sect1>
+
+</chapter>
+
+<chapter id="credits">
+
+<title>Credits and License</title>
+
+<para>&kapplication;</para>
+<para>
+Program copyright 2008-2009 &Mehrdad.Momeny;&Mehrdad.Momeny.mail; and 
+&Golnaz.Nilieh;&Golnaz.Nilieh.mail;
+</para>
+<para>
+Documentation Copyright &copy; 2009 &Mehrdad.Momeny;&Mehrdad.Momeny.mail;
+</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+
+&underFDL;               <!-- FDL: do not remove -->
+&underGPL;        	 <!-- GPL License -->
+</chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="getting-blogilo">
+<title>How to obtain &kapplication;</title>
+
+&install.intro.documentation;
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and Installation</title>
+
+&install.compile.documentation;
+
+</sect1>
+
+</appendix>
+
+&documentation.index;
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->
