@@ -290,7 +290,7 @@ void AddEditBlog::handleFetchAPITimeout()
     mFetchAPITimer = 0;
     hideWaitWidget();
     ui.txtId->setEnabled( true );
-    KMessageBox::sorry( this, i18n( "Sorry, API guess function have failed,\
+    KMessageBox::sorry( this, i18n( "Sorry, API guess function have failed, \
 please check your Internet connection, otherwise you have to set API type on advanced tab manually." ),
                         i18n( "Auto Configuration Failed" ) );
 }
