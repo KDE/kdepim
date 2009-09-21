@@ -57,11 +57,6 @@ class Widget;
  * This class takes care of loading/storing/mantaining the settings for the
  * whole MessageList framework. It also keeps track of all the existing
  * MessageList::Widget objects and takes care of uptdating them when settings change.
- *
- * This object relies on KMKernel existence for its whole lifetime (and in particular
- * for loading and saving settings) thus you must make sure that KMKernel is created
- * before the first MessageList::Widget and destroyed after the last MessageList::Widget.
- * But in KMail this is always the case :)
  */
 class Manager : public QObject
 {

@@ -22,6 +22,7 @@
 
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"
+#include "messagelist/core/configprovider.h"
 
 #include <KDE/KGlobal>
 
@@ -46,7 +47,7 @@ QString AggregationComboBox::currentAggregation() const
 
 void AggregationComboBox::writeDefaultConfig() const
 {
-  KConfigGroup group( KGlobal::config(), "MessageListView::StorageModelAggregations" );
+  KConfigGroup group( ConfigProvider::self()->config(), "MessageListView::StorageModelAggregations" );
 
   const QString aggregationID = currentAggregation();
   group.writeEntry( QString( "DefaultSet" ), aggregationID );

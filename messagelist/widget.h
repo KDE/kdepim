@@ -31,10 +31,7 @@ namespace MessageList
 {
 
 /**
- * The KMail specific implementation of the Core::Widget.
- *
- * Provides an interface over a KMFolder. In the future
- * it's expected to wrap Akonadi::MessageModel.
+ * The Akonadi specific implementation of the Core::Widget.
  */
 class MESSAGELIST_EXPORT Widget : public MessageList::Core::Widget
 {

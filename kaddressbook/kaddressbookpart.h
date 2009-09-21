@@ -24,6 +24,8 @@
 #include <kparts/event.h>
 #include <kparts/part.h>
 
+class MainWidget;
+
 class KAddressBookPart: public KParts::ReadOnlyPart
 {
   Q_OBJECT
@@ -32,9 +34,16 @@ class KAddressBookPart: public KParts::ReadOnlyPart
     KAddressBookPart( QWidget *parentWidget, QObject *parent, const QVariantList& );
     virtual ~KAddressBookPart();
 
+  public Q_SLOTS:
+    void newContact();
+    void newGroup();
+
   protected:
     virtual bool openFile();
     virtual void guiActivateEvent( KParts::GUIActivateEvent* );
+
+  private:
+    MainWidget *mMainWidget;
 };
 
 #endif
