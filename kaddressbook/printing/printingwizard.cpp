@@ -51,6 +51,8 @@ PrintingWizard::PrintingWizard( QPrinter *printer, QAbstractItemModel *itemModel
                                 QItemSelectionModel *selectionModel, QWidget *parent )
   : KAssistantDialog( parent ), mPrinter( printer ), mStyle( 0 )
 {
+  setCaption( i18n( "Print Contacts" ) );
+
   mSelectionPage = new ContactSelectionWidget( itemModel, selectionModel, this );
   mSelectionPage->setMessageText( i18n( "Which contacts do you want to print?" ) );
 
