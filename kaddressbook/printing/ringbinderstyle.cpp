@@ -43,6 +43,7 @@ const char* ShowEmailAddresses = "ShowEmailAddresses";
 const char* ShowStreetAddresses = "ShowStreetAddresses";
 const char* ShowOrganization = "ShowOrganization";
 const char* ShowBirthday = "ShowBirthday";
+const char* ShowNote = "ShowNote";
 
 enum PrintField
 {
@@ -50,7 +51,8 @@ enum PrintField
   Emails = 2,
   Addresses = 4,
   Organization = 8,
-  Birthday = 16
+  Birthday = 16,
+  Note = 32
 };
 
 static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields )
@@ -84,6 +86,13 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts, int fields
       const QStringList emails = contact.emails();
       foreach ( const QString &email, emails )
         rightBlock.append( email );
+    }
+    if ( fields & Note ) {
+      if ( !contact.note().isEmpty() ) {
+        const QString note = QLatin1String( "Note: " ) + contact.note().replace( '\n', "<br/>" );
+
+        rightBlock.append( note );
+      }
     }
     if ( fields & Addresses ) {
       const KABC::Address::List addresses = contact.addresses();
@@ -139,6 +148,7 @@ RingBinderPrintStyle::RingBinderPrintStyle( PrintingWizard* parent )
   mPageAppearance->cbStreetAddresses->setChecked( config.readEntry( ShowStreetAddresses, true ) );
   mPageAppearance->cbOrganization->setChecked( config.readEntry( ShowOrganization, true ) );
   mPageAppearance->cbBirthday->setChecked( config.readEntry( ShowBirthday, false ) );
+  mPageAppearance->cbNote->setChecked( config.readEntry( ShowNote, false ) );
 }
 
 RingBinderPrintStyle::~RingBinderPrintStyle()
@@ -157,6 +167,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   config.writeEntry( ShowStreetAddresses, mPageAppearance->cbStreetAddresses->isChecked() );
   config.writeEntry( ShowOrganization, mPageAppearance->cbOrganization->isChecked() );
   config.writeEntry( ShowBirthday, mPageAppearance->cbBirthday->isChecked() );
+  config.writeEntry( ShowNote, mPageAppearance->cbNote->isChecked() );
   config.sync();
 
   QPrinter *printer = wizard()->printer();
@@ -174,11 +185,15 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
 
   if ( mPageAppearance->cbStreetAddresses->isChecked() )
     fields |= Addresses;
+
   if ( mPageAppearance->cbOrganization->isChecked() )
     fields |= Organization;
 
   if ( mPageAppearance->cbBirthday->isChecked() )
     fields |= Birthday;
+
+  if ( mPageAppearance->cbNote->isChecked() )
+    fields |= Note;
 
   const QString html = contactsToHtml( contacts, fields );
 
