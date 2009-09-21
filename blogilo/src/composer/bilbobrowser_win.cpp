@@ -36,6 +36,9 @@
 #include <klocalizedstring.h>
 #include <dbman.h>
 #include <bilboblog.h>
+#include <qcheckbox.h>
+#include <QVBoxLayout>
+#include <QTimer>
 
 BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 {
