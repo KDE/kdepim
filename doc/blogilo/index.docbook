@@ -50,7 +50,7 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&kapplication; Blogilo is a blogging client.</para>
+<para>&kapplication; is a blogging client.</para>
 <para>A blog client (also called blog software or blogware) is a software designed to simplify the creation and maintenance of weblogs. As specialized content management systems, weblog applications support the authoring, editing, and publishing of blog posts and comments, with special functions for image management, web syndication, and moderation of posts and comments.</para>
 </chapter>
 
@@ -59,7 +59,7 @@
 
 <sect1 id="getting-started">
 <title>Getting started</title>
-<para>In Blogilo main window, User can create new posts, modify previous ones, remove them from server, Also upload media files to servers. And he can save posts locally for later use.</para>
+<para>In &kapplication; main window, User can create new posts, modify previous ones, remove them from server, Also upload media files to servers. And he can save posts locally for later use.</para>
 <para>All of these will be available when user configures at least one blog on &kapplication;.</para>
 <para>Without any configured blog you can write and save some posts locally for later use.</para>
 <screenshot>
@@ -114,7 +114,7 @@ And after all, you can see what &kapplication; supports for your blog now, in Su
 <para>The &kapplication; main window is divided into two sections, Composer and Toolbox.</para>
 
 <sect2><title>Composer</title>
-<para>In the Composer section, you have a text field with label Title, that you can write the title of this post there. Below it, you have 3 tabs, first is Visual Editor, where you have a WYSWIG editor, next tab is Html Editor, where you have a text editor to edit HTML code of your post, with a syntax highlighted editor. And on last tab, you can view your post with your blog style, before submit it to server.</para>
+<para>In the Composer section, you have a text field with label Title, that you can write the title of this post there. Below it, you have 3 tabs, first is Visual Editor, where you have a WYSIWYG editor, next tab is Html Editor, where you have a text editor to edit HTML code of your post, with a syntax highlighted editor. And on last tab, you can view your post with your blog style, before submit it to server.</para>
 </sect2>
 
 <sect2>
@@ -169,7 +169,7 @@ And after all, you can see what &kapplication; supports for your blog now, in Su
 </screenshot>
 <para>Here you can select some options for current active post in the composer.</para>
 <para>Such as Feedback options, that if visitors can leave a comment for this post or not.</para>
-<para>Select publish date, or title to use for permalink of post. (For wordpress blogs only).</para>
+<para>Select publish date, or title to use for permalink of post. (For Wordpress blogs only).</para>
 </listitem>
 
 <listitem>
@@ -209,7 +209,7 @@ And after all, you can see what &kapplication; supports for your blog now, in Su
 </screenshot>
 <para>
 If your blog API supports media uploading, you have 2 options here, and if not, there is just one and it's FTP server.</para>
-<para>You can preview your desired file here (If it has any way to preview), and select it's name on server. And then Upload</para>
+<para>You can preview your desired file here (if it has any way to preview), and select it's name on server. And then Upload</para>
 <para>If you want to upload to a ftp server, Server directory absolute path is required. And you have to enter a URL to use for guessing link of file on server.</para>
 </sect1>
 
@@ -253,7 +253,7 @@ If your blog API supports media uploading, you have 2 options here, and if not, 
 <guimenu>Blog</guimenu>
 <guimenuitem>Upload Media...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Open Media uploader, to upload files such as Images to blog or FTP server.</para>
+<listitem><para>Open Media uploader, to upload files such as images to blog or FTP server.</para>
 <note><para>Only MetaWeblog and MovableType and Wordpress APIs support media uploading function.</para></note>
 </listitem>
 </varlistentry>
