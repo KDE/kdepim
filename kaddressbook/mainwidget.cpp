@@ -33,6 +33,7 @@
 
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
+#include <akonadi/contact/contactdefaultactions.h>
 #include <akonadi/contact/contacteditordialog.h>
 #include <akonadi/contact/contactgroupeditordialog.h>
 #include <akonadi/contact/contactgroupviewer.h>
@@ -262,6 +263,10 @@ void MainWidget::setupGui()
 
   // the quick search widget which is embedded in the toolbar action
   mQuickSearchWidget = new QuickSearchWidget;
+
+  // setup the default actions
+  Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
+  actions->connectToView( mContactDetails );
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
