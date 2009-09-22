@@ -77,7 +77,11 @@
 
 <sect1 id="configuring-a-blog">
 <title>Configuring a blog</title>
-<para>Blog management is available in the <guilabel>Configure &kapplication;o</guilabel> dialog, and is accessible via Settings → Configure &kapplication;... menu, Also there is a shortcut for it in main window you can access it via Blog → Add Blog... menu.</para>
+<para>Blog management is available in the <guilabel>Configure &kapplication;</guilabel> dialog, 
+and is accessible via <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
+&kapplication;...</guimenuitem></menuchoice> menu. Also there is a shortcut for it 
+in main window you can access it via <menuchoice>
+<guimenu>Blog</guimenu><guimenuitem>Add Blog...</guimenuitem></menuchoice> menu.</para>
 <screenshot>
 <screeninfo>Add a new blog - <guilabel>Basic</guilabel> tab</screeninfo>
   <mediaobject>
@@ -90,8 +94,12 @@
   </mediaobject>
 </screenshot>
 <para>
-To add a blog, simply you have to insert your blog address, username and password, in desired places, and then click Auto Configure button, for most famous blogging servers such as Wordpress, It will guess your blog, and api, and the will fetch your BlogId.</para>
-<para>And if It fails, you can select your blog's API type in Advanced tab and click Fetch ID to fetch id, or enter Blog id, if you know it. And If you are using a “right to left” language, select Right To Left in next combo box.</para>
+To add a blog, simply you have to insert your blog address, username and password, in desired places, 
+and then click <guibutton>Auto Configure</guibutton> button, for most famous blogging servers such as Wordpress, 
+It will guess your blog, and api, and the will fetch your BlogId.</para>
+<para>And if It fails, you can select your blog's API type in the <guilabel>Advanced</guilabel> tab 
+and click <guibutton>Fetch ID</guibutton> to fetch id, or enter Blog id, if you know it
+. And If you are using a “right to left” language, select <guilabel>Right To Left</guilabel> in next combo box.</para>
 <screenshot>
 <screeninfo>Add a new blog - <guilabel>Advanced</guilabel> tab</screeninfo>
   <mediaobject>
@@ -109,12 +117,14 @@ And after all, you can see what &kapplication; supports for your blog now, in Su
 
 <sect1 id="creating-new-post">
 <title>Creating a new Post</title>
-<para>To create a new post, in main window, you can click on New Post toolbar button or under Post menu, or simply press Ctrl+N (its shortcut).</para>
+<para>To create a new post, in main window, you can click on <guibutton>New Post</guibutton> toolbar 
+button or under <guimenu>Post</guimenu> menu, or simply press 
+<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> (its shortcut).</para>
 <para>Then a new/empty post is created, and you can write, and configure it, and then submit it to your blog.</para>
 <para>The &kapplication; main window is divided into two sections, Composer and Toolbox.</para>
 
 <sect2><title>Composer</title>
-<para>In the Composer section, you have a text field with label Title, that you can write the title of this post there. Below it, you have 3 tabs, first is Visual Editor, where you have a WYSIWYG editor, next tab is Html Editor, where you have a text editor to edit HTML code of your post, with a syntax highlighted editor. And on last tab, you can view your post with your blog style, before submit it to server.</para>
+<para>In the Composer section, you have a text field with label Title, that you can write the title of this post there. Below it, you have 3 tabs, first is Visual Editor, where you have a WYSWIG editor, next tab is &HTML; editor, where you have a text editor to edit &HTML; code of your post, with a syntax highlighted editor. And on last tab, you can view your post with your blog style, before submit it to server.</para>
 </sect2>
 
 <sect2>
@@ -208,9 +218,9 @@ And after all, you can see what &kapplication; supports for your blog now, in Su
   </mediaobject>
 </screenshot>
 <para>
-If your blog API supports media uploading, you have 2 options here, and if not, there is just one and it's FTP server.</para>
+If your blog API supports media uploading, you have 2 options here, and if not, there is just one and it's &FTP; server.</para>
 <para>You can preview your desired file here (if it has any way to preview), and select it's name on server. And then Upload</para>
-<para>If you want to upload to a ftp server, Server directory absolute path is required. And you have to enter a URL to use for guessing link of file on server.</para>
+<para>If you want to upload to a &FTP; server, the absolute path of the folder is required. And you have to enter a &URL; to use for guessing link of file on server.</para>
 </sect1>
 
 </chapter>
@@ -253,7 +263,7 @@ If your blog API supports media uploading, you have 2 options here, and if not, 
 <guimenu>Blog</guimenu>
 <guimenuitem>Upload Media...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Open Media uploader, to upload files such as images to blog or FTP server.</para>
+<listitem><para>Open Media uploader, to upload files such as images to blog or &FTP; server.</para>
 <note><para>Only MetaWeblog and MovableType and Wordpress APIs support media uploading function.</para></note>
 </listitem>
 </varlistentry>
