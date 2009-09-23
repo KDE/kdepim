@@ -56,6 +56,7 @@
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
+#include <libkdepim/uistatesaver.h>
 
 #include "akonadi_next/entitytreeview.h"
 #include "contactfiltermodel.h"
@@ -193,6 +194,15 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager->setWidget( mItemView->header() );
   mModelColumnManager->load();
 
+  {
+    const KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
+    KPIM::UiStateSaver::restoreState( mMainWidgetSplitter, group );
+  }
+  {
+    const KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
+    KPIM::UiStateSaver::restoreState( mItemView, group );
+  }
+
   // restore previous state
   const KConfigGroup cfg( Settings::self()->config(), "CollectionViewState" );
   Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mCollectionView );
@@ -208,6 +218,15 @@ MainWidget::~MainWidget()
   saver.saveState( cfg );
   cfg.sync();
 
+  {
+    KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
+    KPIM::UiStateSaver::saveState( mMainWidgetSplitter, group );
+  }
+  {
+    KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
+    KPIM::UiStateSaver::saveState( mItemView, group );
+  }
+
   Settings::self()->writeConfig();
 }
 
@@ -222,20 +241,23 @@ void MainWidget::setupGui()
   //   - details pane on the right, that contains
   //       - details view stack on the top
   //       - contact switcher at the bottom
-  QSplitter *splitter = new QSplitter;
-  layout->addWidget( splitter );
+  mMainWidgetSplitter = new QSplitter;
+  mMainWidgetSplitter->setObjectName( "MainWidgetSplitter" );
+
+  layout->addWidget( mMainWidgetSplitter );
 
   // the collection view
   mCollectionView = new Akonadi::EntityTreeView();
-  splitter->addWidget( mCollectionView );
+  mMainWidgetSplitter->addWidget( mCollectionView );
 
   // the items view
   mItemView = new Akonadi::EntityTreeView();
-  splitter->addWidget( mItemView );
+  mItemView->setObjectName( "ContactView" );
+  mMainWidgetSplitter->addWidget( mItemView );
 
   // the details pane that contains the details view stack and contact switcher
   mDetailsPane = new QWidget;
-  splitter->addWidget( mDetailsPane );
+  mMainWidgetSplitter->addWidget( mDetailsPane );
 
   QVBoxLayout *detailsPaneLayout = new QVBoxLayout( mDetailsPane );
   detailsPaneLayout->setMargin( 0 );
