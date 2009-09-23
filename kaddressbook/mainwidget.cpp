@@ -194,6 +194,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mModelColumnManager->setWidget( mItemView->header() );
   mModelColumnManager->load();
 
+  // restore previous state
   {
     const KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
     KPIM::UiStateSaver::restoreState( mMainWidgetSplitter, group );
@@ -202,25 +203,44 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
     const KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
     KPIM::UiStateSaver::restoreState( mItemView, group );
   }
+  {
+    const KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
+    Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mCollectionView );
+    restorer->restoreState( group );
+  }
+  {
+    const KConfigGroup group( Settings::self()->config(), "ItemViewState" );
+    Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mItemView );
+    restorer->restoreState( group );
+  }
 
-  // restore previous state
-  const KConfigGroup cfg( Settings::self()->config(), "CollectionViewState" );
-  Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mCollectionView );
-  restorer->restoreState( cfg );
+  guiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
 }
 
 MainWidget::~MainWidget()
 {
   mModelColumnManager->store();
 
-  KConfigGroup cfg( Settings::self()->config(), "CollectionViewState" );
-  Akonadi::EntityTreeViewStateSaver saver( mCollectionView );
-  saver.saveState( cfg );
-  cfg.sync();
-
   {
-    KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
-    KPIM::UiStateSaver::saveState( mMainWidgetSplitter, group );
+    KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
+    Akonadi::EntityTreeViewStateSaver saver( mCollectionView );
+    saver.saveState( group );
+    group.sync();
+  }
+  {
+    KConfigGroup group( Settings::self()->config(), "ItemViewState" );
+    Akonadi::EntityTreeViewStateSaver saver( mItemView );
+    saver.saveState( group );
+    group.sync();
+  }
+  {
+    if ( !Settings::self()->useSimpleMode() ) {
+      // Do not save the splitter values when in simple mode, because we can't
+      // restore them correctly when switching back to normal mode
+
+      KConfigGroup group( Settings::self()->config(), "UiState_MainWidgetSplitter" );
+      KPIM::UiStateSaver::saveState( mMainWidgetSplitter, group );
+    }
   }
   {
     KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
@@ -497,6 +517,8 @@ void MainWidget::setSimpleGuiMode( bool on )
 
   if ( mItemView->model() )
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
+
+  Settings::self()->setUseSimpleMode( on );
 }
 
 void MainWidget::editContact( const Akonadi::Item &contact )
