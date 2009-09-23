@@ -57,8 +57,8 @@ QString _detail::audit_log_as_html( Context * ctx, GpgME::Error & err ) {
   assert( !data.isNull() );
   if ( ( err = ctx->getAuditLog( data, GetAuditLogFlags ) ) )
     return QString::fromLocal8Bit( err.asString() );
-  else
-    return QString::fromUtf8( dp.data().data() );
+  const QByteArray ba = dp.data();
+  return QString::fromUtf8( ba.data(), ba.size() );
 }
 
 static QList<QByteArray> from_sl( const QStringList & sl ) {
