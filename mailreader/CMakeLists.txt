@@ -1,3 +1,4 @@
+project(mailreader)
 
 set(mailreader_SRCS
    mailreader.cpp
