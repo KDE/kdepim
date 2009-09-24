@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
+
+    Copyright (c) 2003 - 2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -15,34 +16,29 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
-
-    As a special exception, permission is given to link this program
-    with any edition of Qt, and distribute the resulting executable,
-    without including the source code for Qt in the source distribution.
 */
 
-#ifndef LDAPOPTIONSWIDGET_H
-#define LDAPOPTIONSWIDGET_H
+#ifndef KCMLDAP_H
+#define KCMLDAP_H
 
-#include <QtGui/QWidget>
+#include <kcmodule.h>
 
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
 class QToolButton;
 
-class LDAPOptionsWidget : public QWidget
+class KCMLdap : public KCModule
 {
   Q_OBJECT
 
   public:
-    explicit LDAPOptionsWidget( QWidget* parent = 0, const char* name = 0 );
-    ~LDAPOptionsWidget();
+    explicit KCMLdap( QWidget* parent, const QVariantList &args );
+    ~KCMLdap();
 
-  public Q_SLOTS:
-    void restoreSettings();
-    void saveSettings();
-    void defaults();
+    virtual void load();
+    virtual void save();
+    virtual void defaults();
 
   Q_SIGNALS:
     void changed( bool );

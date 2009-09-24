@@ -67,6 +67,7 @@ void MainWindow::configure()
 {
   KCMultiDialog dlg( this );
   dlg.addModule( "akonadicontact_actions.desktop" );
+  dlg.addModule( "kcmldap.desktop" );
 
   dlg.exec();
 }

@@ -20,8 +20,6 @@
 
 #include "ldapsearchdialog.h"
 
-#include "ldapoptionswidget.h"
-
 #include <QtCore/QPair>
 #include <QtGui/QApplication>
 #include <QtGui/QCheckBox>
@@ -41,6 +39,7 @@
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <kcmultidialog.h>
 #include <kdialogbuttonbox.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -676,20 +675,11 @@ void LDAPSearchDialog::slotUser2()
 {
   // Configure LDAP servers
 
-  KDialog dialog( this );
+  KCMultiDialog dialog( this );
   dialog.setCaption( i18n("Configure the Address Book LDAP Settings") );
-  dialog.setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+  dialog.addModule( "kcmldap.desktop" );
 
-  LDAPOptionsWidget *widget = new LDAPOptionsWidget( &dialog );
-  widget->restoreSettings();
-  dialog.setMainWidget( widget );
-
-  connect( &dialog, SIGNAL( applyClicked() ), widget, SLOT( saveSettings() ) );
-  connect( &dialog, SIGNAL( okClicked() ), widget, SLOT( saveSettings() ) );
-  connect( widget, SIGNAL( changed( bool ) ), &dialog, SLOT( enableButtonApply( bool ) ) );
-  dialog.enableButtonApply( false );
-
-  if (dialog.exec())
+  if ( dialog.exec() )
     restoreSettings();
 }
 
