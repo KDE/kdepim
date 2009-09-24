@@ -138,10 +138,10 @@ void mailreader::setupActions()
             m_messagePane, SLOT(createNewTab()));
 
 
-    m_previousMessage = new KAction("Previous Message", this);
+    m_previousMessage = new KAction(i18n("Previous Message"), this);
     actionCollection()->addAction("previous_message", m_previousMessage);
     connect(m_previousMessage, SIGNAL(triggered( bool )), SLOT(slotPreviousMessage()));
-    m_nextMessage = new KAction("Next Message", this);
+    m_nextMessage = new KAction(i18n("Next Message"), this);
     actionCollection()->addAction("next_message", m_nextMessage);
     connect(m_nextMessage, SIGNAL(triggered( bool )), SLOT(slotNextMessage()));
 }
