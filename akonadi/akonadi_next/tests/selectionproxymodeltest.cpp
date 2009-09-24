@@ -202,6 +202,6 @@ private:
 };
 
 
-QTEST_KDEMAIN(SelectionProxyModelTest, GUI)
+QTEST_KDEMAIN_CORE(SelectionProxyModelTest)
 #include "selectionproxymodeltest.moc"
 

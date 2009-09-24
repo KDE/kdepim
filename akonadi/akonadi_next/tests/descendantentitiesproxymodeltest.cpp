@@ -465,5 +465,5 @@ void DescendantEntitiesProxyModelTest::testInsertionWithDescendants()
 }
 
 
-QTEST_KDEMAIN(DescendantEntitiesProxyModelTest, GUI)
+QTEST_KDEMAIN_CORE(DescendantEntitiesProxyModelTest)
 #include "descendantentitiesproxymodeltest.moc"
