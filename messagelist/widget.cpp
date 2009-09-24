@@ -103,6 +103,7 @@ Widget::Widget( QWidget *parent )
 
 Widget::~Widget()
 {
+  delete d;
 }
 
 bool Widget::canAcceptDrag( const QDragMoveEvent * e )
