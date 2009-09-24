@@ -32,5 +32,5 @@ target_link_libraries(krssresource krss ${KDEPIMLIBS_SYNDICATION_LIBS} ${KDE4_KD
                       ${KDEPIMLIBS_AKONADI_LIBS})
 
 set_target_properties(krssresource PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS krssresource DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS krssresource ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES ${krssresource_LIB_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/krssresource)
