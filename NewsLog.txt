@@ -3,6 +3,16 @@ Friday, September 18th 2009
 Problems addressed
 ------------------
 
+* kolab/issue3806: The sorting of mails in the mailview changes after opening a configuration dialog (rt#5852)
+* kolab/issue3812: Replies to invitations always sent with default outgoing transport
+* kolab/issue3876: regression: New Message To: doesn't fill in To: field in composer
+
+
+Friday, September 18th 2009
+
+Problems addressed
+------------------
+
 * kolab/issue2974: Anniversary event has broken title
 * kolab/issue3865: Crash while syncing, automatic event archival enabled, in EventArchiver::archiveIncidences
 * kolab/issue3853: Crash after renaming a folder
