@@ -53,6 +53,7 @@ class KADDRESSBOOK_EXPORT StandardContactActionManager : public QObject
       EditItem,                                            ///< Edits the selected contact resp. contact group
       CreateAddressBook,                                   ///< Creates a new address book
       DeleteAddressBook,                                   ///< Deletes the selected address book.
+      ConfigureAddressBook,                                ///< Opens the configuration dialog of the address book.
       LastType                                             ///< Marks last action
     };
 
@@ -125,6 +126,7 @@ class KADDRESSBOOK_EXPORT StandardContactActionManager : public QObject
     Q_PRIVATE_SLOT( d, void addAddressBookTriggered() )
     Q_PRIVATE_SLOT( d, void addAddressBookResult( KJob* ) )
     Q_PRIVATE_SLOT( d, void deleteAddressBookTriggered() )
+    Q_PRIVATE_SLOT( d, void configureAddressBookTriggered() )
     //@endcond
 };
 

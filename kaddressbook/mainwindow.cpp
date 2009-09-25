@@ -20,7 +20,11 @@
 
 #include "mainwindow.h"
 
+#include <kaction.h>
 #include <kactioncollection.h>
+#include <kcmultidialog.h>
+#include <kedittoolbar.h>
+#include <kshortcutsdialog.h>
 #include <kstandardaction.h>
 #include <ktoolbar.h>
 
@@ -37,7 +41,7 @@ MainWindow::MainWindow()
 
   setStandardToolBarMenuEnabled( true );
 
-  setupGUI( Keys /*| ToolBar | StatusBar*/ | Save | Create, "kaddressbookui.rc" );
+  setupGUI( Keys | Save | Create, "kaddressbookui.rc" );
 
   toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
@@ -51,4 +55,42 @@ MainWindow::~MainWindow()
 void MainWindow::initActions()
 {
   KStandardAction::quit( this, SLOT( close() ), actionCollection() );
+
+  KAction *action = KStandardAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
+  action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
+
+  KStandardAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
+  KStandardAction::preferences( this, SLOT( configure() ), actionCollection() );
 }
+
+void MainWindow::configure()
+{
+  KCMultiDialog dlg( this );
+  dlg.addModule( "akonadicontact_actions.desktop" );
+  dlg.addModule( "kcmldap.desktop" );
+
+  dlg.exec();
+}
+
+void MainWindow::configureKeyBindings()
+{
+  KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
+}
+
+void MainWindow::configureToolbars()
+{
+  saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+
+  KEditToolBar dlg( factory() );
+  connect( &dlg, SIGNAL( newToolbarConfig() ), this, SLOT( newToolbarConfig() ) );
+  dlg.exec();
+}
+
+void MainWindow::newToolbarConfig()
+{
+  createGUI( "kaddressbookui.rc" );
+
+  applyMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );
+}
+
+#include "mainwindow.moc"

@@ -1,6 +1,7 @@
 /*
     This file is part of KAddressBook.
-    Copyright (c) 2002 Tobias Koenig <tokoe@kde.org>
+
+    Copyright (c) 2002-2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,7 +22,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "ldapoptionswidget.h"
+#include "kcmldap.h"
 
 #include <QtCore/QString>
 #include <QtGui/QGroupBox>
@@ -32,10 +33,15 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 
+#include <kaboutdata.h>
 #include <kapplication.h>
+#include <kcomponentdata.h>
+#include <kconfigdialogmanager.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
-#include <KDialogButtonBox>
+#include <kdemacros.h>
+#include <kdialogbuttonbox.h>
+#include <kgenericfactory.h>
 #include <khbox.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -43,6 +49,9 @@
 #include <libkdepim/ldapclient.h>
 
 #include "addhostdialog.h"
+
+K_PLUGIN_FACTORY( KCMLdapFactory, registerPlugin<KCMLdap>(); )
+K_EXPORT_PLUGIN( KCMLdapFactory( "kcmldap" ) )
 
 class LDAPItem : public QListWidgetItem
 {
@@ -73,10 +82,18 @@ class LDAPItem : public QListWidgetItem
     bool mIsActive;
 };
 
-LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
-  : QWidget( parent )
+KCMLdap::KCMLdap( QWidget* parent, const QVariantList& )
+  : KCModule( KCMLdapFactory::componentData(), parent )
 {
-  setObjectName( name );
+  KAboutData *about = new KAboutData( I18N_NOOP( "kcmldap" ), 0,
+                                      ki18n( "LDAP Server Settings" ),
+                                      0, KLocalizedString(), KAboutData::License_LGPL,
+                                      ki18n( "(c) 2009 Tobias Koenig" ) );
+
+  about->addAuthor( ki18n( "Tobias Koenig" ), KLocalizedString(), "tokoe@kde.org" );
+
+  setAboutData( about );
+
   initGUI();
 
   connect( mHostListView, SIGNAL( currentItemChanged( QListWidgetItem*, QListWidgetItem* ) ),
@@ -90,11 +107,11 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
 }
 
-LDAPOptionsWidget::~LDAPOptionsWidget()
+KCMLdap::~KCMLdap()
 {
 }
 
-void LDAPOptionsWidget::slotSelectionChanged( QListWidgetItem *item )
+void KCMLdap::slotSelectionChanged( QListWidgetItem *item )
 {
   bool state = ( item != 0 );
   mEditButton->setEnabled( state );
@@ -103,7 +120,7 @@ void LDAPOptionsWidget::slotSelectionChanged( QListWidgetItem *item )
   mUpButton->setEnabled( item && (mHostListView->row( item ) != 0) );
 }
 
-void LDAPOptionsWidget::slotItemClicked( QListWidgetItem *item )
+void KCMLdap::slotItemClicked( QListWidgetItem *item )
 {
   LDAPItem *ldapItem = dynamic_cast<LDAPItem*>( item );
   if ( !ldapItem )
@@ -115,7 +132,7 @@ void LDAPOptionsWidget::slotItemClicked( QListWidgetItem *item )
   }
 }
 
-void LDAPOptionsWidget::slotAddHost()
+void KCMLdap::slotAddHost()
 {
   KLDAP::LdapServer server;
   AddHostDialog dlg( &server, this );
@@ -127,7 +144,7 @@ void LDAPOptionsWidget::slotAddHost()
   }
 }
 
-void LDAPOptionsWidget::slotEditHost()
+void KCMLdap::slotEditHost()
 {
   LDAPItem *item = dynamic_cast<LDAPItem*>( mHostListView->currentItem() );
   if ( !item )
@@ -144,7 +161,7 @@ void LDAPOptionsWidget::slotEditHost()
   }
 }
 
-void LDAPOptionsWidget::slotRemoveHost()
+void KCMLdap::slotRemoveHost()
 {
   QListWidgetItem *item = mHostListView->takeItem( mHostListView->currentRow() );
   if ( !item )
@@ -169,7 +186,7 @@ static void swapItems( LDAPItem *item, LDAPItem *other )
   other->setCheckState( isActive ? Qt::Checked : Qt::Unchecked );
 }
 
-void LDAPOptionsWidget::slotMoveUp()
+void KCMLdap::slotMoveUp()
 {
   const QList<QListWidgetItem*> selectedItems = mHostListView->selectedItems();
   if ( selectedItems.count() == 0 )
@@ -191,7 +208,7 @@ void LDAPOptionsWidget::slotMoveUp()
   emit changed( true );
 }
 
-void LDAPOptionsWidget::slotMoveDown()
+void KCMLdap::slotMoveDown()
 {
   const QList<QListWidgetItem*> selectedItems = mHostListView->selectedItems();
   if ( selectedItems.count() == 0 )
@@ -213,7 +230,7 @@ void LDAPOptionsWidget::slotMoveDown()
   emit changed( true );
 }
 
-void LDAPOptionsWidget::restoreSettings()
+void KCMLdap::load()
 {
   mHostListView->clear();
   KConfig *config = KPIM::LdapSearch::config();
@@ -239,7 +256,7 @@ void LDAPOptionsWidget::restoreSettings()
   emit changed( false );
 }
 
-void LDAPOptionsWidget::saveSettings()
+void KCMLdap::save()
 {
   KConfig *config = KPIM::LdapSearch::config();
   config->deleteGroup( "LDAP" );
@@ -269,12 +286,12 @@ void LDAPOptionsWidget::saveSettings()
   emit changed( false );
 }
 
-void LDAPOptionsWidget::defaults()
+void KCMLdap::defaults()
 {
   // add default configuration here
 }
 
-void LDAPOptionsWidget::initGUI()
+void KCMLdap::initGUI()
 {
   QVBoxLayout *layout = new QVBoxLayout;
   layout->setSpacing( KDialog::spacingHint() );
@@ -285,8 +302,8 @@ void LDAPOptionsWidget::initGUI()
   QVBoxLayout *mainLayout = new QVBoxLayout( groupBox );
 
   // Contents of the QVGroupBox: label and hbox
-  QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ));
-  mainLayout->addWidget(label);
+  QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ) );
+  mainLayout->addWidget( label );
 
   KHBox* hBox = new KHBox;
   hBox->setSpacing( 6 );
@@ -325,4 +342,4 @@ void LDAPOptionsWidget::initGUI()
   resize( QSize( 460, 300 ).expandedTo( sizeHint() ) );
 }
 
-#include "ldapoptionswidget.moc"
+#include "kcmldap.moc"

@@ -31,6 +31,21 @@ kde4_add_ui_files(kaddressbook_printing_SRCS
   printing/ds_appearance.ui
 )
 
+set( kaddressbook_xxport_SRCS
+  xxport/csv/csv_xxport.cpp
+  xxport/csv/csvimportdialog.cpp
+  xxport/csv/dateparser.cpp
+  xxport/csv/qcsvmodel.cpp
+  xxport/csv/qcsvreader.cpp
+  xxport/ldif/ldif_xxport.cpp
+  xxport/ldap/ldap_xxport.cpp
+  xxport/ldap/ldapsearchdialog.cpp
+  xxport/gmx/gmx_xxport.cpp
+  xxport/shared/xxport.cpp
+  xxport/vcard/vcard_xxport.cpp 
+  xxport/xxportfactory.cpp
+)
+
 set( kaddressbook_LIB_SRCS
   aboutdata.cpp
   contactfields.cpp
@@ -46,22 +61,9 @@ set( kaddressbook_LIB_SRCS
   quicksearchwidget.cpp
   recursiveitemfetchjob.cpp
   standardcontactactionmanager.cpp
-  xxport/csv/csv_xxport.cpp
-  xxport/csv/csvimportdialog.cpp
-  xxport/csv/dateparser.cpp
-  xxport/csv/qcsvmodel.cpp
-  xxport/csv/qcsvreader.cpp
-  xxport/ldif/ldif_xxport.cpp
-  xxport/ldap/ldap_xxport.cpp
-  xxport/ldap/ldapsearchdialog.cpp
-  xxport/ldap/addhostdialog.cpp
-  xxport/ldap/ldapoptionswidget.cpp
-  xxport/gmx/gmx_xxport.cpp
-  xxport/shared/xxport.cpp
-  xxport/vcard/vcard_xxport.cpp 
-  xxport/xxportfactory.cpp
   xxportmanager.cpp
   ${kaddressbook_printing_SRCS}
+  ${kaddressbook_xxport_SRCS}
 )
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
@@ -106,3 +108,20 @@ kde4_add_plugin(kaddressbookpart ${kaddressbook_PART_SRCS})
 target_link_libraries(kaddressbookpart ${KDE4_KPARTS_LIBS} kaddressbookprivate )
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+
+########### next target ###############
+
+set( kcm_ldap_SRCS
+     xxport/ldap/addhostdialog.cpp
+     xxport/ldap/kcmldap.cpp
+)
+
+kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
+
+target_link_libraries(kcm_ldap kdepim ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KLDAP_LIBS})
+
+install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
+
+########### install files ###############
+
+install(FILES xxport/ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})

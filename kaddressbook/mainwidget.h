@@ -43,6 +43,7 @@ class KXMLGUIClient;
 class ModelColumnManager;
 class QAbstractItemModel;
 class QModelIndex;
+class QSplitter;
 class QStackedWidget;
 class QTextBrowser;
 class QuickSearchWidget;
@@ -101,6 +102,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     QStackedWidget *mDetailsViewStack;
     ContactSwitcher *mContactSwitcher;
 
+    QSplitter *mMainWidgetSplitter;
     Akonadi::ContactViewer *mContactDetails;
     Akonadi::ContactGroupViewer *mContactGroupDetails;
     QTextBrowser *mEmptyDetails;

@@ -27,9 +27,17 @@ class MainWidget;
 
 class MainWindow : public KXmlGuiWindow
 {
+  Q_OBJECT
+
   public:
     MainWindow();
     ~MainWindow();
+
+  private Q_SLOTS:
+    void configure();
+    void configureKeyBindings();
+    void configureToolbars();
+    void newToolbarConfig();
 
   private:
     void initActions();

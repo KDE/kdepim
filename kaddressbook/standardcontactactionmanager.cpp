@@ -54,7 +54,7 @@ class StandardContactActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis( i18n( "Copy the selected address book folders to the clipboard." ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book Folder" ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis( i18n( "Delete the selected address book folders from the address book." ) );
-      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis( i18n( "Open a dialog to edit the properties of the selected address book folder." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis( i18n( "Copy the selected contacts to the clipboard." ) );
@@ -105,6 +105,8 @@ class StandardContactActionManager::Private
               bool isVisible = (collection.parentCollection() == Collection::root());
               if ( mActions.contains( StandardContactActionManager::DeleteAddressBook ) )
                 mActions[ StandardContactActionManager::DeleteAddressBook ]->setVisible( isVisible );
+              if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
+                mActions[ StandardContactActionManager::ConfigureAddressBook ]->setVisible( isVisible );
             }
           }
         }
@@ -201,6 +203,28 @@ class StandardContactActionManager::Private
       AgentManager::self()->removeInstance( instance );
     }
 
+    void configureAddressBookTriggered()
+    {
+      if ( !mCollectionSelectionModel )
+        return;
+
+      const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
+      if ( !index.isValid() )
+        return;
+
+      const Collection collection = index.data( EntityTreeModel::CollectionRole).value<Collection>();
+      if ( !collection.isValid() )
+        return;
+
+      const QString identifier = collection.resource();
+
+      AgentInstance instance = AgentManager::self()->instance( identifier );
+      if ( !instance.isValid() )
+        return;
+
+      instance.configure();
+    }
+
     KActionCollection *mActionCollection;
     QWidget *mParentWidget;
     StandardActionManager *mGenericManager;
@@ -295,6 +319,16 @@ KAction* StandardContactActionManager::createAction( Type type )
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( deleteAddressBookTriggered() ) );
       break;
+    case ConfigureAddressBook:
+      action = new KAction( d->mParentWidget );
+      action->setIcon( KIcon( "configure" ) );
+      action->setText( i18n( "Address Book Properties..." ) );
+      action->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
+      action->setVisible( false );
+      d->mActions.insert( ConfigureAddressBook, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_properties" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( configureAddressBookTriggered() ) );
+      break;
     default:
       Q_ASSERT( false ); // should never happen
       break;
@@ -310,6 +344,7 @@ void StandardContactActionManager::createAllActions()
   createAction( EditItem );
   createAction( CreateAddressBook );
   createAction( DeleteAddressBook );
+  createAction( ConfigureAddressBook );
 
   d->mGenericManager->createAllActions();
 }
