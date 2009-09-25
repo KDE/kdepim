@@ -10,7 +10,5 @@ X-KDE-CfgDlgHierarchy=KAddressBook
 X-KDE-Weight=200
 
 Name=LDAP Server Settings
-Name[x-test]=xxLDAP Server Settingsxx
 Comment=Configure the available LDAP servers
-Comment[x-test]=xxConfigure the available LDAP serversxx
 X-KDE-Keywords=kaddressbook, configure, settings, LDAP
