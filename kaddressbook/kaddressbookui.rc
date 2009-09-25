@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="2">
+<kpartgui name="kaddressbook" version="3">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
