@@ -1,3 +1,23 @@
+Friday, September 25th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Fix a crash when exiting Kontact when using nested todos
+      - Fix a source of many crashes in KMail, especially with online IMAP (KDE bug 163071 and 200137)
+      - Fix crash in Akregator when loading a page (KDE bug 185597)
+      - Fix a problem that strange and invalid URLs would disappear in plain text mails
+
+* Merges from enterprise35 branch:
+      - Use the new icons in more places
+      - kolab/issue3806: The sorting of mails in the mailview changes after opening a configuration dialog (rt#5852)
+      - kolab/issue3876: regression: New Message To: doesn't fill in To: field in composer
+
+
 Friday, September 18th 2009
 
 Problems addressed
