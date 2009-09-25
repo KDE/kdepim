@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>SettingsBlogsBase</class>
- <widget class="QWidget" name="SettingsBlogsBase" >
-  <property name="geometry" >
+ <widget class="QWidget" name="SettingsBlogsBase">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,59 +10,59 @@
     <height>182</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout" >
-   <property name="margin" >
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
     <number>1</number>
    </property>
-   <property name="spacing" >
+   <property name="spacing">
     <number>1</number>
    </property>
-   <item row="0" column="0" >
-    <widget class="QTableWidget" name="blogsTable" >
-     <property name="editTriggers" >
+   <item row="0" column="0">
+    <widget class="QTableWidget" name="blogsTable">
+     <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>
-     <property name="showDropIndicator" stdset="0" >
+     <property name="showDropIndicator" stdset="0">
       <bool>false</bool>
      </property>
-     <property name="dragDropOverwriteMode" >
+     <property name="dragDropOverwriteMode">
       <bool>false</bool>
      </property>
-     <property name="alternatingRowColors" >
+     <property name="alternatingRowColors">
       <bool>true</bool>
      </property>
-     <property name="selectionMode" >
+     <property name="selectionMode">
       <enum>QAbstractItemView::SingleSelection</enum>
      </property>
-     <property name="selectionBehavior" >
+     <property name="selectionBehavior">
       <enum>QAbstractItemView::SelectRows</enum>
      </property>
-     <property name="columnCount" >
+     <property name="columnCount">
       <number>2</number>
      </property>
      <column>
-      <property name="text" >
-       <string>Title</string>
+      <property name="text">
+       <string comment="Blog Title">Title</string>
       </property>
      </column>
      <column>
-      <property name="text" >
-       <string>URL</string>
+      <property name="text">
+       <string comment="Blog URL">URL</string>
       </property>
      </column>
     </widget>
    </item>
-   <item row="0" column="1" >
-    <layout class="QVBoxLayout" name="verticalLayout" >
-     <property name="spacing" >
+   <item row="0" column="1">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
       <number>6</number>
      </property>
      <item>
-      <spacer name="verticalSpacer_2" >
-       <property name="orientation" >
+      <spacer name="verticalSpacer_2">
+       <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
          <height>40</height>
@@ -70,38 +71,38 @@
       </spacer>
      </item>
      <item>
-      <widget class="KPushButton" name="btnAdd" >
-       <property name="text" >
+      <widget class="KPushButton" name="btnAdd">
+       <property name="text">
         <string>&amp;Add...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="btnEdit" >
-       <property name="enabled" >
+      <widget class="KPushButton" name="btnEdit">
+       <property name="enabled">
         <bool>false</bool>
        </property>
-       <property name="text" >
+       <property name="text">
         <string>&amp;Modify...</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="btnRemove" >
-       <property name="enabled" >
+      <widget class="KPushButton" name="btnRemove">
+       <property name="enabled">
         <bool>false</bool>
        </property>
-       <property name="text" >
+       <property name="text">
         <string>&amp;Remove</string>
        </property>
       </widget>
      </item>
      <item>
-      <spacer name="verticalSpacer" >
-       <property name="orientation" >
+      <spacer name="verticalSpacer">
+       <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
-       <property name="sizeHint" stdset="0" >
+       <property name="sizeHint" stdset="0">
         <size>
          <width>20</width>
          <height>40</height>

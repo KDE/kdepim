@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>AddEditBlogBase</class>
- <widget class="KTabWidget" name="AddEditBlogBase" >
-  <property name="geometry" >
+ <widget class="KTabWidget" name="AddEditBlogBase">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,157 +10,160 @@
     <height>335</height>
    </rect>
   </property>
-  <property name="currentIndex" >
+  <property name="currentIndex">
    <number>0</number>
   </property>
-  <widget class="QWidget" name="tabBasic" >
-   <attribute name="title" >
-    <string>Basic</string>
+  <widget class="QWidget" name="tabBasic">
+   <attribute name="title">
+    <string comment="Basic configurations">Basic</string>
    </attribute>
-   <layout class="QGridLayout" name="gridLayout_2" >
-    <item row="0" column="0" colspan="3" >
-     <widget class="QLabel" name="label_18" >
-      <property name="font" >
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="0" column="0" colspan="3">
+     <widget class="QLabel" name="label_18">
+      <property name="font">
        <font>
         <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
-      <property name="text" >
+      <property name="text">
        <string>Configuring your blog account...</string>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtUrl</cstring>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" colspan="3" >
-     <widget class="QLabel" name="label_4" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
+    <item row="2" column="0" colspan="3">
+     <widget class="QLabel" name="label_4">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="text" >
-       <string>Please fill in these fields, and click the "AutoConfigure" button to program guess your blog settings.
+      <property name="text">
+       <string>Please fill in these fields, and click the &quot;AutoConfigure&quot; button to program guess your blog settings.
 You can set more options on Advanced tab.</string>
       </property>
-      <property name="scaledContents" >
+      <property name="scaledContents">
        <bool>false</bool>
       </property>
-      <property name="wordWrap" >
+      <property name="wordWrap">
        <bool>true</bool>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtUrl</cstring>
       </property>
      </widget>
     </item>
-    <item row="3" column="0" colspan="3" >
-     <widget class="KSeparator" name="kseparator" />
+    <item row="3" column="0" colspan="3">
+     <widget class="KSeparator" name="kseparator"/>
     </item>
-    <item row="4" column="0" >
-     <widget class="QLabel" name="label_9" >
-      <property name="text" >
-       <string>Title:</string>
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_9">
+      <property name="text">
+       <string comment="Blog Title">Title:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+      <property name="buddy">
+       <cstring>txtTitle</cstring>
       </property>
      </widget>
     </item>
-    <item row="5" column="0" >
-     <widget class="QLabel" name="label" >
-      <property name="text" >
+    <item row="5" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
        <string>Blog/Homepage URL:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtUrl</cstring>
       </property>
      </widget>
     </item>
-    <item row="5" column="1" colspan="2" >
-     <widget class="KLineEdit" name="txtUrl" >
-      <property name="text" >
+    <item row="5" column="1" colspan="2">
+     <widget class="KLineEdit" name="txtUrl">
+      <property name="text">
        <string>http://</string>
       </property>
-      <property name="clickMessage" >
+      <property name="clickMessage">
        <string>http://YourHomePage.com</string>
       </property>
-      <property name="showClearButton" stdset="0" >
+      <property name="showClearButton" stdset="0">
        <bool>true</bool>
       </property>
      </widget>
     </item>
-    <item row="6" column="1" colspan="2" >
-     <widget class="QLabel" name="label_17" >
-      <property name="font" >
+    <item row="6" column="1" colspan="2">
+     <widget class="QLabel" name="label_17">
+      <property name="font">
        <font>
         <pointsize>8</pointsize>
         <weight>50</weight>
         <bold>false</bold>
        </font>
       </property>
-      <property name="text" >
+      <property name="text">
        <string>e.g. : http://domain.com/blog/</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0" >
-     <widget class="QLabel" name="label_2" >
-      <property name="text" >
-       <string>Username:</string>
+    <item row="7" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string comment="Blog account Username">Username:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtUser</cstring>
       </property>
      </widget>
     </item>
-    <item row="7" column="1" colspan="2" >
-     <widget class="KLineEdit" name="txtUser" />
+    <item row="7" column="1" colspan="2">
+     <widget class="KLineEdit" name="txtUser"/>
     </item>
-    <item row="8" column="0" >
-     <widget class="QLabel" name="label_3" >
-      <property name="text" >
+    <item row="8" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
        <string>Password:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtPass</cstring>
       </property>
      </widget>
     </item>
-    <item row="8" column="1" colspan="2" >
-     <widget class="KLineEdit" name="txtPass" >
-      <property name="echoMode" >
+    <item row="8" column="1" colspan="2">
+     <widget class="KLineEdit" name="txtPass">
+      <property name="echoMode">
        <enum>QLineEdit::Password</enum>
       </property>
-      <property name="urlDropsEnabled" >
+      <property name="urlDropsEnabled">
        <bool>false</bool>
       </property>
-      <property name="showClearButton" stdset="0" >
+      <property name="showClearButton" stdset="0">
        <bool>true</bool>
       </property>
-      <property name="passwordMode" >
+      <property name="passwordMode">
        <bool>true</bool>
       </property>
      </widget>
     </item>
-    <item row="9" column="0" colspan="2" >
-     <spacer name="horizontalSpacer_2" >
-      <property name="orientation" >
+    <item row="9" column="0" colspan="2">
+     <spacer name="horizontalSpacer_2">
+      <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <property name="sizeHint" stdset="0" >
+      <property name="sizeHint" stdset="0">
        <size>
         <width>40</width>
         <height>20</height>
@@ -167,25 +171,25 @@ You can set more options on Advanced tab.</string>
       </property>
      </spacer>
     </item>
-    <item row="9" column="2" >
-     <widget class="KPushButton" name="btnAutoConf" >
-      <property name="enabled" >
+    <item row="9" column="2">
+     <widget class="KPushButton" name="btnAutoConf">
+      <property name="enabled">
        <bool>false</bool>
       </property>
-      <property name="text" >
+      <property name="text">
        <string>Auto Configure</string>
       </property>
      </widget>
     </item>
-    <item row="10" column="0" colspan="3" >
-     <spacer name="verticalSpacer_2" >
-      <property name="orientation" >
+    <item row="10" column="0" colspan="3">
+     <spacer name="verticalSpacer_2">
+      <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="sizeType" >
+      <property name="sizeType">
        <enum>QSizePolicy::Expanding</enum>
       </property>
-      <property name="sizeHint" stdset="0" >
+      <property name="sizeHint" stdset="0">
        <size>
         <width>0</width>
         <height>0</height>
@@ -193,86 +197,86 @@ You can set more options on Advanced tab.</string>
       </property>
      </spacer>
     </item>
-    <item row="1" column="0" colspan="3" >
-     <widget class="KSeparator" name="kseparator_4" />
+    <item row="1" column="0" colspan="3">
+     <widget class="KSeparator" name="kseparator_4"/>
     </item>
-    <item row="4" column="1" colspan="2" >
-     <widget class="KLineEdit" name="txtTitle" />
+    <item row="4" column="1" colspan="2">
+     <widget class="KLineEdit" name="txtTitle"/>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="tabAdvanced" >
-   <attribute name="title" >
-    <string>Advanced</string>
+  <widget class="QWidget" name="tabAdvanced">
+   <attribute name="title">
+    <string comment="Advanced configurations">Advanced</string>
    </attribute>
-   <layout class="QGridLayout" name="gridLayout_3" >
-    <item row="0" column="0" colspan="3" >
-     <widget class="QLabel" name="label_5" >
-      <property name="font" >
+   <layout class="QGridLayout" name="gridLayout_3">
+    <item row="0" column="0" colspan="3">
+     <widget class="QLabel" name="label_5">
+      <property name="font">
        <font>
         <weight>75</weight>
         <bold>true</bold>
        </font>
       </property>
-      <property name="text" >
+      <property name="text">
        <string>Configuring your blog account...</string>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtUrl</cstring>
       </property>
      </widget>
     </item>
-    <item row="2" column="0" >
-     <widget class="QLabel" name="label_6" >
-      <property name="text" >
-       <string comment="Name of the API which is used to communicate with Blog" >API:</string>
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_6">
+      <property name="text">
+       <string comment="Name of the API which is used to communicate with Blog">API:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>comboApi</cstring>
       </property>
      </widget>
     </item>
-    <item row="2" column="1" >
-     <widget class="KComboBox" name="comboApi" >
+    <item row="2" column="1">
+     <widget class="KComboBox" name="comboApi">
       <item>
-       <property name="text" >
+       <property name="text">
         <string>Blogger 1.0 API</string>
        </property>
       </item>
       <item>
-       <property name="text" >
+       <property name="text">
         <string>MetaWeblog API</string>
        </property>
       </item>
       <item>
-       <property name="text" >
+       <property name="text">
         <string>MovableType API</string>
        </property>
       </item>
       <item>
-       <property name="text" >
+       <property name="text">
         <string>Wordpress</string>
        </property>
       </item>
       <item>
-       <property name="text" >
+       <property name="text">
         <string>Blogspot.com</string>
        </property>
       </item>
      </widget>
     </item>
-    <item row="2" column="2" >
-     <spacer name="horizontalSpacer" >
-      <property name="orientation" >
+    <item row="2" column="2">
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <property name="sizeType" >
+      <property name="sizeType">
        <enum>QSizePolicy::Preferred</enum>
       </property>
-      <property name="sizeHint" stdset="0" >
+      <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
         <height>20</height>
@@ -280,47 +284,47 @@ You can set more options on Advanced tab.</string>
       </property>
      </spacer>
     </item>
-    <item row="3" column="0" >
-     <widget class="QLabel" name="label_7" >
-      <property name="text" >
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_7">
+      <property name="text">
        <string>Blog ID:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>txtId</cstring>
       </property>
      </widget>
     </item>
-    <item row="3" column="1" >
-     <widget class="KLineEdit" name="txtId" />
+    <item row="3" column="1">
+     <widget class="KLineEdit" name="txtId"/>
     </item>
-    <item row="3" column="2" >
-     <widget class="KPushButton" name="btnFetch" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+    <item row="3" column="2">
+     <widget class="KPushButton" name="btnFetch">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
-      <property name="maximumSize" >
+      <property name="maximumSize">
        <size>
         <width>100</width>
         <height>16777215</height>
        </size>
       </property>
-      <property name="text" >
-       <string comment="verb, fetch the blog id from the web" >Fetch ID</string>
+      <property name="text">
+       <string comment="verb, fetch the blog id from the web">Fetch ID</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="0" colspan="3" >
-     <spacer name="verticalSpacer" >
-      <property name="orientation" >
+    <item row="5" column="0" colspan="3">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="sizeHint" stdset="0" >
+      <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
         <height>0</height>
@@ -328,72 +332,68 @@ You can set more options on Advanced tab.</string>
       </property>
      </spacer>
     </item>
-    <item row="4" column="0" >
-     <widget class="QLabel" name="label_8" >
-      <property name="lineWidth" >
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_8">
+      <property name="lineWidth">
        <number>1</number>
       </property>
-      <property name="text" >
-       <string comment="Default direction of text in the blog" >Default text direction:</string>
+      <property name="text">
+       <string comment="Default direction of text in the blog">Default text direction:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
-      <property name="buddy" >
+      <property name="buddy">
        <cstring>comboDir</cstring>
       </property>
      </widget>
     </item>
-    <item row="4" column="1" >
-     <widget class="KComboBox" name="comboDir" >
+    <item row="4" column="1">
+     <widget class="KComboBox" name="comboDir">
       <item>
-       <property name="text" >
+       <property name="text">
         <string>Left to right</string>
        </property>
       </item>
       <item>
-       <property name="text" >
+       <property name="text">
         <string>Right to left</string>
        </property>
       </item>
      </widget>
     </item>
-    <item row="1" column="0" colspan="3" >
-     <widget class="KSeparator" name="kseparator_2" />
+    <item row="1" column="0" colspan="3">
+     <widget class="KSeparator" name="kseparator_2"/>
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="tab" >
-   <attribute name="title" >
+  <widget class="QWidget" name="tab">
+   <attribute name="title">
     <string>Supported Features</string>
    </attribute>
-   <layout class="QGridLayout" name="gridLayout" >
-    <item row="2" column="0" >
-     <widget class="QLabel" name="label_11" >
-      <property name="text" >
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_11">
+      <property name="text">
        <string>Create/Modify post:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="2" column="1" >
-     <widget class="QLabel" name="featureCreatePost" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="2" column="1">
+     <widget class="QLabel" name="featureCreatePost"/>
     </item>
-    <item row="17" column="0" colspan="2" >
-     <spacer name="verticalSpacer_3" >
-      <property name="orientation" >
+    <item row="17" column="0" colspan="2">
+     <spacer name="verticalSpacer_3">
+      <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
-      <property name="sizeType" >
+      <property name="sizeType">
        <enum>QSizePolicy::Expanding</enum>
       </property>
-      <property name="sizeHint" stdset="0" >
+      <property name="sizeHint" stdset="0">
        <size>
         <width>20</width>
         <height>0</height>
@@ -401,146 +401,118 @@ You can set more options on Advanced tab.</string>
       </property>
      </spacer>
     </item>
-    <item row="9" column="0" >
-     <widget class="QLabel" name="label_14" >
-      <property name="text" >
+    <item row="9" column="0">
+     <widget class="QLabel" name="label_14">
+      <property name="text">
        <string>Support categories:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="10" column="0" >
-     <widget class="QLabel" name="label_16" >
-      <property name="text" >
+    <item row="10" column="0">
+     <widget class="QLabel" name="label_16">
+      <property name="text">
        <string>Support tags:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="9" column="1" >
-     <widget class="QLabel" name="featureCategories" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="9" column="1">
+     <widget class="QLabel" name="featureCategories"/>
     </item>
-    <item row="10" column="1" >
-     <widget class="QLabel" name="featureTags" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="10" column="1">
+     <widget class="QLabel" name="featureTags"/>
     </item>
-    <item row="3" column="0" >
-     <widget class="QLabel" name="label_22" >
-      <property name="text" >
+    <item row="3" column="0">
+     <widget class="QLabel" name="label_22">
+      <property name="text">
        <string>Remove post:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="3" column="1" >
-     <widget class="QLabel" name="featureRemovePost" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="3" column="1">
+     <widget class="QLabel" name="featureRemovePost"/>
     </item>
-    <item row="4" column="0" >
-     <widget class="QLabel" name="label_12" >
-      <property name="text" >
+    <item row="4" column="0">
+     <widget class="QLabel" name="label_12">
+      <property name="text">
        <string>Fetch recent posts:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="4" column="1" >
-     <widget class="QLabel" name="featurRecentPosts" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="4" column="1">
+     <widget class="QLabel" name="featurRecentPosts"/>
     </item>
-    <item row="5" column="0" >
-     <widget class="QLabel" name="label_20" >
-      <property name="text" >
+    <item row="5" column="0">
+     <widget class="QLabel" name="label_20">
+      <property name="text">
        <string>Multipaged post:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="5" column="1" >
-     <widget class="QLabel" name="featureMultipagedPosts" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="5" column="1">
+     <widget class="QLabel" name="featureMultipagedPosts"/>
     </item>
-    <item row="0" column="0" colspan="2" >
-     <widget class="QLabel" name="label_10" >
-      <property name="text" >
+    <item row="0" column="0" colspan="2">
+     <widget class="QLabel" name="label_10">
+      <property name="text">
        <string>Note: You can see list of supported features for your blog after configuration!</string>
       </property>
-      <property name="wordWrap" >
+      <property name="wordWrap">
        <bool>true</bool>
       </property>
      </widget>
     </item>
-    <item row="15" column="0" >
-     <widget class="QLabel" name="label_13" >
-      <property name="text" >
+    <item row="15" column="0">
+     <widget class="QLabel" name="label_13">
+      <property name="text">
        <string>Upload media:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="15" column="1" >
-     <widget class="QLabel" name="featureUploadMedia" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="15" column="1">
+     <widget class="QLabel" name="featureUploadMedia"/>
     </item>
-    <item row="16" column="0" >
-     <widget class="QLabel" name="label_15" >
-      <property name="text" >
+    <item row="16" column="0">
+     <widget class="QLabel" name="label_15">
+      <property name="text">
        <string>Create new category:</string>
       </property>
-      <property name="alignment" >
+      <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
       </property>
      </widget>
     </item>
-    <item row="16" column="1" >
-     <widget class="QLabel" name="featureCreateCategory" >
-      <property name="text" >
-       <string>Unknown</string>
-      </property>
-     </widget>
+    <item row="16" column="1">
+     <widget class="QLabel" name="featureCreateCategory"/>
     </item>
-    <item row="1" column="0" colspan="2" >
-     <widget class="KSeparator" name="kseparator_3" />
+    <item row="1" column="0" colspan="2">
+     <widget class="KSeparator" name="kseparator_3"/>
     </item>
    </layout>
   </widget>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
    <class>KLineEdit</class>
@@ -548,20 +520,20 @@ You can set more options on Advanced tab.</string>
    <header>klineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KPushButton</class>
-   <extends>QPushButton</extends>
-   <header>kpushbutton.h</header>
-  </customwidget>
-  <customwidget>
-   <class>KSeparator</class>
-   <extends>QFrame</extends>
-   <header>kseparator.h</header>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
   </customwidget>
   <customwidget>
    <class>KTabWidget</class>
    <extends>QTabWidget</extends>
    <header>ktabwidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

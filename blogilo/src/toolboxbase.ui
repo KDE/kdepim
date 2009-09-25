@@ -75,22 +75,9 @@
             </spacer>
            </item>
            <item>
-            <widget class="KPushButton" name="btnEntriesReload">
-             <property name="toolTip">
-              <string>Reload entries list</string>
-             </property>
-             <property name="text">
-              <string>Reload</string>
-             </property>
-            </widget>
-           </item>
-           <item>
             <widget class="KPushButton" name="btnEntriesUpdate">
              <property name="toolTip">
               <string>Update entries list</string>
-             </property>
-             <property name="text">
-              <string>Update...</string>
              </property>
             </widget>
            </item>
@@ -98,9 +85,6 @@
             <widget class="KPushButton" name="btnEntriesClear">
              <property name="toolTip">
               <string>Clear entries list</string>
-             </property>
-             <property name="text">
-              <string>Clear</string>
              </property>
             </widget>
            </item>
@@ -115,9 +99,6 @@
             <widget class="KPushButton" name="btnEntriesRemove">
              <property name="toolTip">
               <string>Remove selected entry from server</string>
-             </property>
-             <property name="text">
-              <string>Remove</string>
              </property>
             </widget>
            </item>
@@ -145,8 +126,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>220</width>
-          <height>135</height>
+          <width>343</width>
+          <height>437</height>
          </rect>
         </property>
         <attribute name="label">
@@ -172,8 +153,8 @@
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>94</width>
-              <height>24</height>
+              <width>333</width>
+              <height>362</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -206,18 +187,12 @@
                <property name="toolTip">
                 <string>Reload categories list</string>
                </property>
-               <property name="text">
-                <string>Reload</string>
-               </property>
               </widget>
              </item>
              <item>
               <widget class="KPushButton" name="btnCatAdd">
                <property name="toolTip">
                 <string>Add a new category to selected blog</string>
-               </property>
-               <property name="text">
-                <string>Add Category...</string>
                </property>
               </widget>
              </item>
@@ -262,8 +237,8 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>269</width>
-          <height>386</height>
+          <width>343</width>
+          <height>437</height>
          </rect>
         </property>
         <attribute name="label">
@@ -563,7 +538,7 @@
            </property>
            <column>
             <property name="text">
-             <string>Title</string>
+             <string comment="Post title">Title</string>
             </property>
            </column>
            <column>
@@ -595,9 +570,6 @@
             <widget class="KPushButton" name="btnLocalRemove">
              <property name="toolTip">
               <string>Remove selected entry</string>
-             </property>
-             <property name="text">
-              <string>Remove</string>
              </property>
             </widget>
            </item>

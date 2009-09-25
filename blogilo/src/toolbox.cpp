@@ -86,7 +86,6 @@ Toolbox::Toolbox( QWidget *parent )
     lblOptionsTrackBack->setVisible( false );
     txtOptionsTrackback->setVisible( false );
     btnCatAdd->setVisible( false );
-    btnEntriesReload->setVisible(false);
 
     lstEntriesList->setContextMenuPolicy( Qt::CustomContextMenu );
     connect( lstEntriesList, SIGNAL( customContextMenuRequested( const QPoint & ) ),
@@ -452,29 +451,21 @@ void Toolbox::unCheckCatList()
 
 void Toolbox::setButtonsIcon()
 {
-//     btnBlogAdd->setIcon( KIcon( "list-add" ) );
-//     btnBlogEdit->setIcon( KIcon( "document-edit" ) );
-//     btnBlogRemove->setIcon( KIcon( "list-remove" ) );
-    btnEntriesReload->setIcon( KIcon( "view-refresh" ) );
+//     btnEntriesReload->setIcon( KIcon( "view-refresh" ) );
     btnEntriesUpdate->setIcon( KIcon( "arrow-down" ) );
-//     btnEntriesCopyUrl->setIcon( KIcon( "edit-copy" ) );
     btnEntriesRemove->setIcon( KIcon( "list-remove" ) );
     btnEntriesClear->setIcon( KIcon( "edit-clear" ) );
     btnCatReload->setIcon( KIcon( "view-refresh" ) );
     btnCatAdd->setIcon( KIcon( "list-add" ) );
     btnLocalRemove->setIcon( KIcon( "list-remove" ) );
     ///TODO Add option for selecting only text or only Icon for Toolbox buttons!
-//     btnBlogAdd->setText( QString() );
-//     btnBlogEdit->setText( QString() );
-//     btnBlogRemove->setText( QString() );
-    btnEntriesReload->setText( QString() );
-    btnEntriesUpdate->setText( QString() );
-//     btnEntriesCopyUrl->setText( QString() );
-    btnEntriesRemove->setText( QString() );
-    btnEntriesClear->setText( QString() );
-    btnCatReload->setText( QString() );
-    btnCatAdd->setText( QString() );
-    btnLocalRemove->setText( QString() );
+//     btnEntriesReload->setText( QString() );
+//     btnEntriesUpdate->setText( QString() );
+//     btnEntriesRemove->setText( QString() );
+//     btnEntriesClear->setText( QString() );
+//     btnCatReload->setText( QString() );
+//     btnCatAdd->setText( QString() );
+//     btnLocalRemove->setText( QString() );
 }
 
 void Toolbox::reloadLocalPosts()
