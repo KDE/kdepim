@@ -22,8 +22,8 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#ifndef POSTENTRIY_H
-#define POSTENTRIY_H
+#ifndef POSTENTRY_H
+#define POSTENTRY_H
 
 #include <QFrame>
 #include "bilbopost.h"

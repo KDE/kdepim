@@ -22,8 +22,8 @@
     along with this program; if not, see http://www.gnu.org/licenses/
 */
 
-#ifndef BILBOENGINE_H
-#define BILBOENGINE_H
+#ifndef BACKEND_H
+#define BACKEND_H
 
 #include <QObject>
 #include <QMap>
