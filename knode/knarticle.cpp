@@ -94,11 +94,10 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
    c_olor(knGlobals.settings()->unreadThreadColor()),
    u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
 {
-  m_essageID.setParent(this);
-  f_rom.setParent(this);
-  r_eferences.setParent(this);
-
   setDefaultCharset( Locale::defaultCharset( g ) );
+
+  // Remote article are read-only
+  setFrozen( true );
 }
 
 
@@ -110,13 +109,12 @@ void KNRemoteArticle::parse()
 {
   KNArticle::parse();
   QByteArray raw;
-  if( !(raw=rawHeader(m_essageID.type())).isEmpty() )
-    m_essageID.from7BitString(raw);
 
-  if( !(raw=rawHeader(f_rom.type())).isEmpty() ) {
-    QByteArray from;
-    Locale::encodeTo7Bit( raw, defaultCharset(), from );
-    f_rom.from7BitString( from );
+  raw = rawHeader( from()->type() );
+  if ( !raw.isEmpty() ) {
+    QByteArray f;
+    Locale::encodeTo7Bit( raw, defaultCharset(), f );
+    from()->from7BitString( f );
   }
 
   raw = rawHeader( subject()->type() );
@@ -125,74 +123,6 @@ void KNRemoteArticle::parse()
     Locale::encodeTo7Bit( raw, defaultCharset(), subjectStr );
     subject()->from7BitString( subjectStr );
   }
-
-  if( !(raw=rawHeader(r_eferences.type())).isEmpty() )
-    r_eferences.from7BitString(raw);
-}
-
-
-void KNRemoteArticle::clear()
-{
-  m_essageID.clear();
-  f_rom.clear();
-  r_eferences.clear();
-  KNArticle::clear();
-}
-
-
-Headers::Base* KNRemoteArticle::headerByType(const char *type)
-{
-  if(strcasecmp("Message-ID", type)==0) {
-    if(m_essageID.isEmpty()) return 0;
-    else return &m_essageID;
-  }
-  else if(strcasecmp("From", type)==0) {
-    if(f_rom.isEmpty()) return 0;
-    else return &f_rom;
-  }
-  else if(strcasecmp("References", type)==0) {
-    if(r_eferences.isEmpty()) return 0;
-    else return &r_eferences;
-  }
-  else
-    return KNArticle::headerByType(type);
-}
-
-
-void KNRemoteArticle::setHeader(Headers::Base *h)
-{
-  bool del=true;
-  if(h->is("Message-ID"))
-    m_essageID.from7BitString(h->as7BitString(false));
-  else if(h->is("From")) {
-    foreach ( const KMime::Types::Mailbox &mbox, static_cast<Headers::From*>( h )->mailboxes() ) {
-      f_rom.addAddress( mbox );
-    }
-  }
-  else if(h->is("References")) {
-    r_eferences.from7BitString(h->as7BitString(false));
-  }
-  else {
-    del=false;
-    KNArticle::setHeader(h);
-  }
-
-  if(del) delete h;
-}
-
-
-bool KNRemoteArticle::removeHeader(const char *type)
-{
-  if(strcasecmp("Message-ID", type)==0)
-    m_essageID.clear();
-  else if(strcasecmp("From", type)==0)
-    f_rom.clear();
-  else if(strcasecmp("References", type)==0)
-    r_eferences.clear();
-  else
-     return KNArticle::removeHeader(type);
-
-  return true;
 }
 
 
@@ -201,8 +131,9 @@ void KNRemoteArticle::initListItem()
   if(!i_tem) return;
 
   KMime::Types::Mailbox mbox;
-  if ( !f_rom.isEmpty() )
-    mbox = f_rom.mailboxes().first();
+  if ( !from()->isEmpty() ) {
+    mbox = from()->mailboxes().first();
+  }
   if ( mbox.hasName() )
     i_tem->setText( 1, mbox.name() );
   else
@@ -318,75 +249,12 @@ void KNRemoteArticle::propagateThreadChangedDate()
 KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
   : KNArticle(c), s_Offset(0), e_Offset(0), s_erverId(-1)
 {
-  n_ewsgroups.setParent(this);
-  t_o.setParent(this);
   setDefaultCharset( Locale::defaultCharset() );
 }
 
 
 KNLocalArticle::~KNLocalArticle()
 {}
-
-
-void KNLocalArticle::parse()
-{
-  KNArticle::parse();
-  QByteArray raw;
-
-  if( !(raw=rawHeader(n_ewsgroups.type())).isEmpty() )
-    n_ewsgroups.from7BitString(raw);
-
-  if( !(raw=rawHeader(t_o.type())).isEmpty() )
-    t_o.from7BitString(raw);
-}
-
-
-void KNLocalArticle::clear()
-{
-  KNArticle::clear();
-  n_ewsgroups.clear();
-  t_o.clear();
-}
-
-
-Headers::Base* KNLocalArticle::headerByType(const char *type)
-{
-  if(strcasecmp("Newsgroups", type)==0)
-    return newsgroups(false);
-  else if(strcasecmp("To", type)==0)
-    return to(false);
-  else
-    return KNArticle::headerByType(type);
-}
-
-
-void KNLocalArticle::setHeader(Headers::Base *h)
-{
-  bool del=true;
-  if(h->is("To"))
-    t_o.from7BitString(h->as7BitString(false));
-  else if(h->is("Newsgroups"))
-    n_ewsgroups.from7BitString(h->as7BitString(false));
-  else {
-    del=false;
-    KNArticle::setHeader(h);
-  }
-
-  if(del) delete h;
-}
-
-
-bool KNLocalArticle::removeHeader(const char *type)
-{
-  if(strcasecmp("To", type)==0)
-    t_o.clear();
-  else if(strcasecmp("Newsgroups", type)==0)
-    n_ewsgroups.clear();
-  else
-     return KNArticle::removeHeader(type);
-
-  return true;
-}
 
 
 void KNLocalArticle::updateListItem()
@@ -400,15 +268,18 @@ void KNLocalArticle::updateListItem()
 
   if(isSavedRemoteArticle()) {
     i_tem->setPixmap(0, app->icon(KNode::Appearance::savedRemote));
-    if (!n_ewsgroups.isEmpty())
-      tmp=n_ewsgroups.asUnicodeString();
-    else
-      tmp=t_o.asUnicodeString();
-  }
-  else {
-
+    Headers::Newsgroups *hdrNewsgroup = newsgroups( false );
+    if ( hdrNewsgroup && !hdrNewsgroup->isEmpty() ) {
+      tmp = hdrNewsgroup->asUnicodeString();
+    } else {
+      Headers::To *hdrTo = to( false );
+      if ( hdrTo && !hdrTo->isEmpty() ) {
+        tmp = hdrTo->asUnicodeString();
+      }
+    }
+  } else {
     if(doPost()) {
-      tmp+=n_ewsgroups.asUnicodeString();
+      tmp += newsgroups()->asUnicodeString();
       if(canceled())
         i_tem->setPixmap(idx++, app->icon(KNode::Appearance::canceledPosting));
       else
@@ -419,9 +290,8 @@ void KNLocalArticle::updateListItem()
       i_tem->setPixmap(idx++, app->icon(KNode::Appearance::mail));
       if(doPost())
         tmp+=" / ";
-      tmp+=t_o.asUnicodeString();
+      tmp += to()->asUnicodeString();
     }
-
   }
 
   i_tem->setText(1, tmp);
