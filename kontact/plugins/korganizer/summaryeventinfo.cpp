@@ -107,7 +107,8 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
   events.setAutoDelete( true );
   KDateTime qdt;
   KDateTime::Spec spec = KPIM::KPimPrefs::timeSpec();
-  QDate currentDate = QDate::currentDate();
+  KDateTime currentDateTime = KDateTime::currentDateTime( spec );
+  QDate currentDate = currentDateTime.date();
 
   // prevent implicitely sharing while finding recurring events
   // replacing the QDate with the currentDate
@@ -167,6 +168,10 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
     // only make a print for the first day of the event.
     if ( ev->isMultiDay() && ev->allDay() &&
          ( currentDate > ev->dtStart().date() || !firstDayOfMultiday ) ) {
+      continue;
+    }
+    // If the event is already over, then it isn't upcoming. so don't print it.
+    if ( !ev->allDay() && currentDateTime > ev->dtEnd() ) {
       continue;
     }
 
