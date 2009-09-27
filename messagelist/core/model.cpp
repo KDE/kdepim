@@ -550,10 +550,8 @@ QModelIndex Model::parent( const QModelIndex &modelIndex ) const
 {
   Q_ASSERT( d->mModelForItemFunctions ); // should be never called with disconnected UI
 
-#ifdef READD_THIS_IF_YOU_WANT_TO_PASS_MODEL_TEST
   if ( !modelIndex.isValid() )
     return QModelIndex(); // should never happen
-#endif
   Item *item = static_cast< Item * >( modelIndex.internalPointer() );
   if ( !item )
     return QModelIndex();
