@@ -112,7 +112,7 @@ password, in desired places,
 and then click the <guibutton>Auto Configure</guibutton> button, for most famous
 blogging servers such as Wordpress, 
 It will guess your blog, and api, and then will fetch your BlogId.</para>
-<para>And if tt fails, you can manually select your blog's API type in the
+<para>And if it fails, you can manually select your blog's API type in the
 <guilabel>Advanced</guilabel> tab and click <guibutton>Fetch ID</guibutton> to
 fetch id, or enter Blog id, if you
 know it. And if you are using a “right to left” language, select <guilabel>Right
