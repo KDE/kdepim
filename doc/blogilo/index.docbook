@@ -203,9 +203,9 @@ must be comma separated.</para>
   </mediaobject>
 </screenshot>
 <para>Here you can select some options for the currently active post in the
-composer such as <guilabel>Feedback</guilabel> options (for example if visitors can leave a comment
-for this post or not), select a publish date, or a title to use for permalink of
-the post (for Wordpress blogs only).</para>
+composer such as <guilabel>Feedback</guilabel> options (for example if visitors
+can leave a comment for this post or not), select a publish date, or a title to
+use for permalink of the post (for Wordpress blogs only).</para>
 </listitem>
 
 <listitem>
@@ -221,7 +221,8 @@ the post (for Wordpress blogs only).</para>
     </textobject>
   </mediaobject>
 </screenshot>
-<para>And in the <guilabel>Local Entries</guilabel> section, you can double click on an entry to load it
+<para>And in the <guilabel>Local Entries</guilabel> section, you can double
+click on an entry to load it
 into composer, or remove it from disk.</para>
 </listitem>
 
@@ -232,8 +233,9 @@ into composer, or remove it from disk.</para>
 
 <sect1 id="uploading">
 <title>Uploading a Media file to the server</title>
-<para>To upload a file to the server, from Blog menu, select Upload Media... then
-you are asked to select a file from your disk. Then the media upload dialog will be ready
+<para>To upload a file to the server, use <menuchoice><guimenu>Blog</guimenu>
+<guimenuitem>Upload Media...</guimenuitem></menuchoice> then you are asked to
+select a file from your disk. Then the media upload dialog will be ready
 to upload it:</para>
 <screenshot>
 <screeninfo>Upload Media</screeninfo>
@@ -250,10 +252,12 @@ to upload it:</para>
 If your blog API supports media uploading, you have 2 options here, and if not,
 there is just one and it's &FTP; server.</para>
 <para>You can preview your desired file here (if it has any way to preview), and
-select its name on server. And then Upload</para>
+select its name on the server. And then click
+<guibutton>Upload</guibutton>.</para>
 <para>If you want to upload to a &FTP; server, the absolute path of the folder
-is required. And you have to enter a &URL; to use for guessing link of file on
-server.</para>
+is required. And you have to enter a &URL; to use for guessing the link of the
+file on
+the server.</para>
 </sect1>
 
 </chapter>
