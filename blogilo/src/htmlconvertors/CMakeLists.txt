@@ -1,4 +1,3 @@
-include_directories( ${KDE4_INCLUDES} )
 
 set(htmlconvertor_SRCS
  bilbocssparser.cpp

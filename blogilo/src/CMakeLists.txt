@@ -1,7 +1,5 @@
-include (KDE4Defaults)
-include_directories( ${QT_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIR} ${KDE4_INCLUDES} ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 
-SET(QT_USE_QTSQL 1)
+include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 
 add_subdirectory(htmlconvertors)
 
@@ -36,7 +34,8 @@ set(blogilo_SRCS
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addimagedialog.cpp
 )
-ELSE(WIN32)
+
+else(WIN32)
 set(blogilo_SRCS
  main.cpp
  mainwindow.cpp
@@ -67,7 +66,7 @@ set(blogilo_SRCS
  composer/dialogs/addmediadialog.cpp
  composer/dialogs/addimagedialog.cpp
 )
-ENDIF(WIN32)
+endif(WIN32)
 
 kde4_add_ui_files(
    blogilo_SRCS
