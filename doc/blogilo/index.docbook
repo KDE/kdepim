@@ -18,10 +18,6 @@
 <author>
 &Mehrdad.Momeny;&Mehrdad.Momeny.mail;
 </author>
-<author>
-&Golnaz.Nilieh;&Golnaz.Nilieh.mail;
-</author>
-
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
@@ -53,8 +49,10 @@
 
 <para>&kapplication; is a blogging client.</para>
 <para>A blog client (also called blog software or blogware) is a software
-designed to simplify the creation and maintenance of weblogs. As specialized
-content management systems, weblog applications support the authoring, editing,
+designed to simplify the creation and maintenance of weblogs. As other
+specialized
+content management systems do, weblog applications support the authoring,
+editing,
 and publishing of blog posts and comments, with special functions for image
 management, web syndication, and moderation of posts and comments.</para>
 </chapter>
@@ -65,11 +63,12 @@ management, web syndication, and moderation of posts and comments.</para>
 <sect1 id="getting-started">
 <title>Getting started</title>
 <para>In &kapplication; main window, you can create new posts, modify previous
-ones, remove them from server as well as upload media files to servers. And you
-can
-save posts locally for later use.</para>
-<para>All of these will be available when you configure at least one blog on
-&kapplication;.</para>
+ones, remove them from the server as well as upload media files to the server.
+You
+can also save posts locally for later use.</para>
+<note><para>All of these will be available after you configure at least one blog
+in
+&kapplication;.</para></note>
 <para>Without any configured blog you can write and save some posts locally for
 later use.</para>
 <screenshot>
@@ -88,11 +87,10 @@ later use.</para>
 <sect1 id="configuring-a-blog">
 <title>Configuring a blog</title>
 <para>Blog management is available in the <guilabel>Configure
-&kapplication;</guilabel> dialog, 
-and is accessible via
+&kapplication;</guilabel> dialog, and is accessible via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure 
 &kapplication;...</guimenuitem></menuchoice> menu. Also there is a shortcut for
-it in main window you can access it via <menuchoice>
+it in the main window in <menuchoice>
 <guimenu>Blog</guimenu><guimenuitem>Add Blog...</guimenuitem></menuchoice>
 menu.</para>
 <screenshot>
@@ -108,16 +106,16 @@ menu.</para>
 </screenshot>
 <para>
 To add a blog, you simply have to insert your blog address, username and
-password, in desired places, 
-and then click the <guibutton>Auto Configure</guibutton> button, for most famous
+password in teh corresponding fields 
+and then click the <guibutton>Auto Configure</guibutton> button for the most
+famous
 blogging servers such as Wordpress, 
 It will guess your blog, and api, and then will fetch your BlogId.</para>
 <para>And if it fails, you can manually select your blog's API type in the
 <guilabel>Advanced</guilabel> tab and click <guibutton>Fetch ID</guibutton> to
-fetch id, or enter Blog id, if you
-know it. And if you are using a “right to left” language, select <guilabel>Right
-To
-Left</guilabel> in next combo box.</para>
+fetch id, or enter your Blog id, if you know it. And if you are using a “right
+to left” language, select <guilabel>Right To Left</guilabel> in next combo
+box.</para>
 <screenshot>
 <screeninfo>Add a new blog - <guilabel>Advanced</guilabel> tab</screeninfo>
   <mediaobject>
@@ -137,9 +135,8 @@ the <guilabel>Supported Features</guilabel> tab.</para>
 <sect1 id="creating-new-post">
 <title>Creating a new Post</title>
 <para>To create a new post, in main window, you can click on <guibutton>New
-Post</guibutton> toolbar 
-button or under <guimenu>Post</guimenu> menu, or simply press 
-<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> (its
+Post</guibutton> toolbar button or under <guimenu>Post</guimenu> menu, or simply
+press <keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo> (its
 shortcut).</para>
 <para>Then a new/empty post is created, and you can write, and configure it, and
 then submit it to your blog.</para>
@@ -346,11 +343,11 @@ uploading function.</para></note>
 <guimenu>Post</guimenu>
 <guimenuitem>Submit...</guimenuitem>
 </menuchoice></term>
-<listitem><para>Open Submit post dialog, to submit current active post, to
-current selected blog.</para>
+<listitem><para>Open the Submit post dialog, to submit the current active post
+to
+the current blog.</para>
 <para>In submit post, you can select if this post should submit as a draft or
-not. 
-And additionally as an edit of current, or as a new post.</para>
+not. And additionally as an edit of current, or as a new post.</para>
 </listitem>
 </varlistentry>
 
