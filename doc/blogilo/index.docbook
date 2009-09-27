@@ -50,11 +50,10 @@
 <para>&kapplication; is a blogging client.</para>
 <para>A blog client (also called blog software or blogware) is a software
 designed to simplify the creation and maintenance of weblogs. As other
-specialized
-content management systems do, weblog applications support the authoring,
-editing,
-and publishing of blog posts and comments, with special functions for image
-management, web syndication, and moderation of posts and comments.</para>
+specialized content management systems do, weblog applications support the
+authoring, editing, and publishing of blog posts and comments, with special
+functions for image management, web syndication, and moderation of posts and
+comments.</para>
 </chapter>
 
 <chapter id="using-kapp">
@@ -64,8 +63,7 @@ management, web syndication, and moderation of posts and comments.</para>
 <title>Getting started</title>
 <para>In &kapplication; main window, you can create new posts, modify previous
 ones, remove them from the server as well as upload media files to the server.
-You
-can also save posts locally for later use.</para>
+You can also save posts locally for later use.</para>
 <note><para>All of these will be available after you configure at least one blog
 in
 &kapplication;.</para></note>
@@ -106,10 +104,10 @@ menu.</para>
 </screenshot>
 <para>
 To add a blog, you simply have to insert your blog address, username and
-password in the corresponding fields 
-and then click the <guibutton>Auto Configure</guibutton> button for the most
-famous blogging servers such as Wordpress. It will guess your blog, and api, and
-then will fetch your BlogId.</para>
+password in the corresponding fields and then click the <guibutton>Auto
+Configure</guibutton> button for the most famous blogging servers such as
+Wordpress. It will guess your blog, and api, and then will fetch your
+BlogId.</para>
 <para>And if it fails, you can manually select your blog's API type in the
 <guilabel>Advanced</guilabel> tab and click <guibutton>Fetch ID</guibutton> to
 fetch id, or enter your Blog id, if you know it. And if you are using a “right
@@ -143,12 +141,13 @@ then submit it to your blog.</para>
 Toolbox.</para>
 
 <sect2><title>Composer</title>
-<para>In the Composer section, you have a text field with label Title, that you
-can write the title of this post there. Below it, you have 3 tabs, first is
-Visual Editor, where you have a WYSWIG editor, next tab is &HTML; editor, where
-you have a text editor to edit &HTML; code of your post, with a syntax
-highlighted editor. And on last tab, you can view your post with your blog
-style, before submit it to server.</para>
+<para>In the Composer section, you have a text field with the label
+<guilabel>Title</guilabel>, where you can write the title of the post. Below it,
+you have 3 tabs to edit your post in several ways. The first is a Visual Editor:
+it is a WYSWIG editor and you only need to use the icons to format your text.
+Next tab is a &HTML; editor, where you have a text editor to edit &HTML; code of
+your post, with a syntax highlighted editor. And on last tab, you can view your
+post with your blog style, before submitting it to the server.</para>
 </sect2>
 
 <sect2>
@@ -169,7 +168,7 @@ style, before submit it to server.</para>
   </mediaobject>
 </screenshot>
 <para>In this section, you can fetch the latest posts from the server.</para>
-<para>Double click on a post entry to load it into composer and modify it or
+<para>Double click on a post entry to load it into the composer and modify it or
 remove a post from the server.</para>
 </listitem>
 
@@ -203,12 +202,10 @@ must be comma separated.</para>
     </textobject>
   </mediaobject>
 </screenshot>
-<para>Here you can select some options for current active post in the
-composer.</para>
-<para>Such as Feedback options, that if visitors can leave a comment for this
-post or not.</para>
-<para>Select publish date, or title to use for permalink of post. (For Wordpress
-blogs only).</para>
+<para>Here you can select some options for the currently active post in the
+composer such as <guilabel>Feedback</guilabel> options (for example if visitors can leave a comment
+for this post or not), select a publish date, or a title to use for permalink of
+the post (for Wordpress blogs only).</para>
 </listitem>
 
 <listitem>
@@ -224,7 +221,7 @@ blogs only).</para>
     </textobject>
   </mediaobject>
 </screenshot>
-<para>And in Local Entries section, you can double click on an entry to load it
+<para>And in the <guilabel>Local Entries</guilabel> section, you can double click on an entry to load it
 into composer, or remove it from disk.</para>
 </listitem>
 
@@ -234,9 +231,9 @@ into composer, or remove it from disk.</para>
 </sect1>
 
 <sect1 id="uploading">
-<title>Uploading a Media file to server</title>
-<para>To upload a file to server, from Blog menu, select Upload Media... then
-you have to select a file from disk, And then the media upload dialog will ready
+<title>Uploading a Media file to the server</title>
+<para>To upload a file to the server, from Blog menu, select Upload Media... then
+you are asked to select a file from your disk. Then the media upload dialog will be ready
 to upload it:</para>
 <screenshot>
 <screeninfo>Upload Media</screeninfo>
