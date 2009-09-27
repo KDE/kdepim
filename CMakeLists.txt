@@ -36,7 +36,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.3.65 REQUIRED)
+find_package(KdepimLibs 4.3.66 REQUIRED)
 
 
 ############### search Boost ###############
