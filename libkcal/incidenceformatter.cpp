@@ -3,6 +3,7 @@
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -356,7 +357,8 @@ static QString displayViewFormatHeader( Incidence *incidence )
   return tmpStr;
 }
 
-static QString displayViewFormatEvent( Calendar *calendar, Event *event )
+static QString displayViewFormatEvent( Calendar *calendar, Event *event,
+                                       const QDate &date )
 {
   if ( !event ) {
     return QString::null;
@@ -386,19 +388,36 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   }
 
   tmpStr += "<tr>";
+  QDateTime startDt = event->dtStart();
+  QDateTime endDt = event->dtEnd();
+  if ( event->doesRecur() ) {
+    if ( date.isValid() ) {
+      QDateTime dt( date, QTime( 0, 0, 0 ) );
+      int diffDays = startDt.daysTo( dt );
+      dt = dt.addSecs( -1 );
+      startDt.setDate( event->recurrence()->getNextDateTime( dt ).date() );
+      if ( event->hasEndDate() ) {
+        endDt = endDt.addDays( diffDays );
+        if ( startDt > endDt ) {
+          startDt.setDate( event->recurrence()->getPreviousDateTime( dt ).date() );
+          endDt = startDt.addDays( event->dtStart().daysTo( event->dtEnd() ) );
+        }
+      }
+    }
+  }
   if ( event->doesFloat() ) {
     if ( event->isMultiDay() ) {
       tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
-                arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
+                arg( IncidenceFormatter::dateToString( startDt, false ) ).
+                arg( IncidenceFormatter::dateToString( endDt, false ) ) +
                 "</td>";
     } else {
       tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
+                arg( IncidenceFormatter::dateToString( startDt, false ) ) +
                 "</td>";
     }
   } else {
@@ -406,27 +425,27 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
       tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("<beginTime> - <endTime>","%1 - %2").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ).
-                arg( IncidenceFormatter::dateToString( event->dtEnd(), false ) ) +
+                arg( IncidenceFormatter::dateToString( startDt, false ) ).
+                arg( IncidenceFormatter::dateToString( endDt, false ) ) +
                 "</td>";
     } else {
       tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
-      if ( event->hasEndDate() && event->dtStart() != event->dtEnd()) {
+      if ( event->hasEndDate() && startDt != endDt ) {
         tmpStr += "<td>" +
                   i18n("<beginTime> - <endTime>","%1 - %2").
-                  arg( IncidenceFormatter::timeToString( event->dtStart(), true ) ).
-                  arg( IncidenceFormatter::timeToString( event->dtEnd(), true ) ) +
+                  arg( IncidenceFormatter::timeToString( startDt, true ) ).
+                  arg( IncidenceFormatter::timeToString( endDt, true ) ) +
                   "</td>";
       } else {
         tmpStr += "<td>" +
-                  IncidenceFormatter::timeToString( event->dtStart(), true ) +
+                  IncidenceFormatter::timeToString( startDt, true ) +
                   "</td>";
       }
       tmpStr += "</tr><tr>";
       tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
                 i18n("date as string","%1").
-                arg( IncidenceFormatter::dateToString( event->dtStart(), false ) ) +
+                arg( IncidenceFormatter::dateToString( startDt, false ) ) +
                 "</td>";
     }
   }
@@ -503,7 +522,8 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event )
   return tmpStr;
 }
 
-static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
+static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
+                                      const QDate &date )
 {
   if ( !todo ) {
     return QString::null;
@@ -533,20 +553,32 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo )
   }
 
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
+    QDateTime startDt = todo->dtStart();
+    if ( todo->doesRecur() ) {
+      if ( date.isValid() ) {
+        startDt.setDate( date );
+      }
+    }
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Start:" ) + "</b></td>";
     tmpStr += "<td>" +
-              IncidenceFormatter::dateTimeToString( todo->dtStart(),
+              IncidenceFormatter::dateTimeToString( startDt,
                                                     todo->doesFloat(), false ) +
               "</td>";
     tmpStr += "</tr>";
   }
 
   if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
+    QDateTime dueDt = todo->dtDue();
+    if ( todo->doesRecur() ) {
+      if ( date.isValid() ) {
+        dueDt.addDays( todo->dtDue().date().daysTo( date ) );
+      }
+    }
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Due:" ) + "</b></td>";
     tmpStr += "<td>" +
-              IncidenceFormatter::dateTimeToString( todo->dtDue(),
+              IncidenceFormatter::dateTimeToString( dueDt,
                                                     todo->doesFloat(), false ) +
               "</td>";
     tmpStr += "</tr>";
@@ -738,9 +770,10 @@ class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
     EventViewerVisitor()
       : mCalendar( 0 ), mResult( "" ) {}
 
-    bool act( Calendar *calendar, IncidenceBase *incidence )
+    bool act( Calendar *calendar, IncidenceBase *incidence, const QDate &date )
     {
       mCalendar = calendar;
+      mDate = date;
       mResult = "";
       return incidence->accept( *this );
     }
@@ -749,12 +782,12 @@ class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
   protected:
     bool visit( Event *event )
     {
-      mResult = displayViewFormatEvent( mCalendar, event );
+      mResult = displayViewFormatEvent( mCalendar, event, mDate );
       return !mResult.isEmpty();
     }
     bool visit( Todo *todo )
     {
-      mResult = displayViewFormatTodo( mCalendar, todo );
+      mResult = displayViewFormatTodo( mCalendar, todo, mDate );
       return !mResult.isEmpty();
     }
     bool visit( Journal *journal )
@@ -770,23 +803,25 @@ class IncidenceFormatter::EventViewerVisitor : public IncidenceBase::Visitor
 
   protected:
     Calendar *mCalendar;
+    QDate mDate;
     QString mResult;
 };
 
 QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 {
-  return extensiveDisplayStr( 0, incidence );
+  return extensiveDisplayStr( 0, incidence, QDate() );
 }
 
 QString IncidenceFormatter::extensiveDisplayStr( Calendar *calendar,
-                                                 IncidenceBase *incidence )
+                                                 IncidenceBase *incidence,
+                                                 const QDate &date )
 {
   if ( !incidence ) {
     return QString::null;
   }
 
   EventViewerVisitor v;
-  if ( v.act( calendar, incidence ) ) {
+  if ( v.act( calendar, incidence, date ) ) {
     return v.result();
   } else {
     return QString::null;
@@ -2464,9 +2499,11 @@ class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
     ToolTipVisitor()
       : mCalendar( 0 ), mRichText( true ), mResult( "" ) {}
 
-    bool act( Calendar *calendar, IncidenceBase *incidence, bool richText=true)
+    bool act( Calendar *calendar, IncidenceBase *incidence,
+              const QDate &date=QDate(), bool richText=true )
     {
       mCalendar = calendar;
+      mDate = date;
       mRichText = richText;
       mResult = "";
       return incidence ? incidence->accept( *this ) : false;
@@ -2479,8 +2516,8 @@ class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
     bool visit( Journal *journal );
     bool visit( FreeBusy *fb );
 
-    QString dateRangeText( Event*event );
-    QString dateRangeText( Todo *todo );
+    QString dateRangeText( Event *event, const QDate &date );
+    QString dateRangeText( Todo *todo, const QDate &date );
     QString dateRangeText( Journal *journal );
     QString dateRangeText( FreeBusy *fb );
 
@@ -2488,37 +2525,56 @@ class IncidenceFormatter::ToolTipVisitor : public IncidenceBase::Visitor
 
   protected:
     Calendar *mCalendar;
+    QDate mDate;
     bool mRichText;
     QString mResult;
 };
 
-QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
+QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event *event, const QDate &date )
 {
   QString ret;
   QString tmp;
+
+  QDateTime startDt = event->dtStart();
+  QDateTime endDt = event->dtEnd();
+  if ( event->doesRecur() ) {
+    if ( date.isValid() ) {
+      QDateTime dt( date, QTime( 0, 0, 0 ) );
+      int diffDays = startDt.daysTo( dt );
+      dt = dt.addSecs( -1 );
+      startDt.setDate( event->recurrence()->getNextDateTime( dt ).date() );
+      if ( event->hasEndDate() ) {
+        endDt = endDt.addDays( diffDays );
+        if ( startDt > endDt ) {
+          startDt.setDate( event->recurrence()->getPreviousDateTime( dt ).date() );
+          endDt = startDt.addDays( event->dtStart().daysTo( event->dtEnd() ) );
+        }
+      }
+    }
+  }
   if ( event->isMultiDay() ) {
 
     tmp = "<br>" + i18n("Event start", "<i>From:</i>&nbsp;%1");
     if (event->doesFloat())
-      ret += tmp.arg( IncidenceFormatter::dateToString( event->dtStart(), false ).replace(" ", "&nbsp;") );
+      ret += tmp.arg( IncidenceFormatter::dateToString( startDt, false ).replace(" ", "&nbsp;") );
     else
-      ret += tmp.arg( IncidenceFormatter::dateToString( event->dtStart() ).replace(" ", "&nbsp;") );
+      ret += tmp.arg( IncidenceFormatter::dateToString( startDt ).replace(" ", "&nbsp;") );
 
     tmp = "<br>" + i18n("Event end","<i>To:</i>&nbsp;%1");
     if (event->doesFloat())
-      ret += tmp.arg( IncidenceFormatter::dateToString( event->dtEnd(), false ).replace(" ", "&nbsp;") );
+      ret += tmp.arg( IncidenceFormatter::dateToString( endDt, false ).replace(" ", "&nbsp;") );
     else
-      ret += tmp.arg( IncidenceFormatter::dateToString( event->dtEnd() ).replace(" ", "&nbsp;") );
+      ret += tmp.arg( IncidenceFormatter::dateToString( endDt ).replace(" ", "&nbsp;") );
 
   } else {
 
     ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1").
-           arg( IncidenceFormatter::dateToString( event->dtStart(), false ).replace(" ", "&nbsp;") );
+           arg( IncidenceFormatter::dateToString( startDt, false ).replace(" ", "&nbsp;") );
     if ( !event->doesFloat() ) {
       const QString dtStartTime =
-        IncidenceFormatter::timeToString( event->dtStart(), true ).replace( " ", "&nbsp;" );
+        IncidenceFormatter::timeToString( startDt, true ).replace( " ", "&nbsp;" );
       const QString dtEndTime =
-        IncidenceFormatter::timeToString( event->dtEnd(), true ).replace( " ", "&nbsp;" );
+        IncidenceFormatter::timeToString( endDt, true ).replace( " ", "&nbsp;" );
       if ( dtStartTime == dtEndTime ) { // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" + i18n("time for event, &nbsp; to prevent ugly line breaks",
         "<i>Time:</i>&nbsp;%1").
@@ -2535,27 +2591,45 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
   return ret;
 }
 
-QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo*todo )
+QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo, const QDate &date )
 {
   QString ret;
   bool floats( todo->doesFloat() );
-  if ( todo->hasStartDate() && todo->dtStart().isValid() )
-    // No need to add <i> here. This is separated issue and each line
-    // is very visible on its own. On the other hand... Yes, I like it
-    // italics here :)
-    ret += "<br>" + i18n("<i>Start:</i>&nbsp;%1").arg(
-      (floats)
-      ?(IncidenceFormatter::dateToString( todo->dtStart( false ), false ).replace(" ", "&nbsp;"))
-        :(todo->dtStartStr( false ).replace(" ", "&nbsp;")) ) ;
-  if ( todo->hasDueDate() && todo->dtDue().isValid() )
+
+  if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
+    QDateTime startDt = todo->dtStart();
+    if ( todo->doesRecur() ) {
+      if ( date.isValid() ) {
+        startDt.setDate( date );
+      }
+    }
+    ret += "<br>" +
+           i18n("<i>Start:</i>&nbsp;%1").
+           arg( IncidenceFormatter::dateTimeToString( startDt, floats, false ).
+                replace( " ", "&nbsp;" ) );
+  }
+
+  if ( todo->hasDueDate() && todo->dtDue().isValid() ) {
+    QDateTime dueDt = todo->dtDue();
+    if ( todo->doesRecur() ) {
+      if ( date.isValid() ) {
+        dueDt.addDays( todo->dtDue().date().daysTo( date ) );
+      }
+    }
     ret += "<br>" +
            i18n("<i>Due:</i>&nbsp;%1").
-           arg( IncidenceFormatter::dateTimeToString( todo->dtDue(), floats, false ).replace(" ", "&nbsp;"));
+           arg( IncidenceFormatter::dateTimeToString( todo->dtDue(), floats, false ).
+                replace( " ", "&nbsp;" ) );
+  }
 
-  if (todo->isCompleted())
-    ret += "<br>" + i18n("<i>Completed:</i>&nbsp;%1").arg( todo->completedStr().replace(" ", "&nbsp;") );
-  else
-    ret += "<br>" + i18n("%1% completed").arg(todo->percentComplete());
+  if ( todo->isCompleted() ) {
+    ret += "<br>" +
+           i18n("<i>Completed:</i>&nbsp;%1").
+           arg( todo->completedStr().replace( " ", "&nbsp;" ) );
+  } else {
+    ret += "<br>" +
+           i18n( "%1% completed" ).arg(todo->percentComplete() );
+  }
 
   return ret;
 }
@@ -2584,13 +2658,13 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( FreeBusy *fb )
 
 bool IncidenceFormatter::ToolTipVisitor::visit( Event *event )
 {
-  mResult = generateToolTip( event, dateRangeText( event ) );
+  mResult = generateToolTip( event, dateRangeText( event, mDate ) );
   return !mResult.isEmpty();
 }
 
 bool IncidenceFormatter::ToolTipVisitor::visit( Todo *todo )
 {
-  mResult = generateToolTip( todo, dateRangeText( todo ) );
+  mResult = generateToolTip( todo, dateRangeText( todo, mDate ) );
   return !mResult.isEmpty();
 }
 
@@ -2642,15 +2716,16 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
 
 QString IncidenceFormatter::toolTipString( IncidenceBase *incidence, bool richText )
 {
-  return toolTipStr( 0, incidence, richText );
+  return toolTipStr( 0, incidence, QDate(), richText );
 }
 
 QString IncidenceFormatter::toolTipStr( Calendar *calendar,
                                         IncidenceBase *incidence,
+                                        const QDate &date,
                                         bool richText )
 {
   ToolTipVisitor v;
-  if ( v.act( calendar, incidence, richText ) ) {
+  if ( v.act( calendar, incidence, date, richText ) ) {
     return v.result();
   } else {
     return QString::null;

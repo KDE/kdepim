@@ -3,6 +3,7 @@
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -24,8 +25,8 @@
 
 #include "libkcal_export.h"
 
+#include <qdatetime.h>
 #include <qstring.h>
-class QDateTime;
 
 namespace KCal {
 class Calendar;
@@ -51,10 +52,15 @@ class LIBKCAL_EXPORT IncidenceFormatter
 {
   public:
     static QString KDE_DEPRECATED toolTipString( IncidenceBase *incidence, bool richText = true );
-    static QString toolTipStr( Calendar *calendar, IncidenceBase *incidence, bool richText = true );
+    static QString toolTipStr( Calendar *calendar,
+                               IncidenceBase *incidence,
+                               const QDate &date=QDate(),
+                               bool richText = true );
     static QString mailBodyString( IncidenceBase *incidencebase );
     static QString KDE_DEPRECATED extensiveDisplayString( IncidenceBase *incidence );
-    static QString extensiveDisplayStr( Calendar *calendar, IncidenceBase *incidence );
+    static QString extensiveDisplayStr( Calendar *calendar,
+                                        IncidenceBase *incidence,
+                                        const QDate &date=QDate() );
 
     static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                          InvitationFormatterHelper *helper );
