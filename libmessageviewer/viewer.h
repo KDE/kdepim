@@ -19,8 +19,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMREADERWIN_H
-#define KMREADERWIN_H
+#ifndef MESSAGEVIEWER_H
+#define MESSAGEVIEWER_H
 
 #include "messageviewer_export.h"
 
@@ -177,7 +177,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   bool isFixedFont() const;
   void setUseFixedFont( bool useFixedFont );
-   
+
   QWidget* mainWindow();
 
   /** Enforce message decryption. */
@@ -210,11 +210,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   * @param font the selected font
   */
   void setPrintFont( const QFont& font );
-  
+
   const AttachmentStrategy * attachmentStrategy() const;
   void setAttachmentStrategy( const AttachmentStrategy * strategy );
 
-  
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */

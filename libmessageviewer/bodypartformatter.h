@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef __KMAIL_BODYPARTFORMATTER_H__
-#define __KMAIL_BODYPARTFORMATTER_H__
+#ifndef __MESSAGEVIEWER_BODYPARTFORMATTER_H__
+#define __MESSAGEVIEWER_BODYPARTFORMATTER_H__
 
 namespace KMime {
   class Content;
@@ -56,4 +56,4 @@ public:
 };
 
 
-#endif // __KMAIL_BODYPARTFORMATTER_H__
+#endif // __MESSAGEVIEWER_BODYPARTFORMATTER_H__

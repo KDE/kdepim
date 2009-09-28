@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef __KMAIL_ANTISPAMCONFIG_H__
-#define __KMAIL_ANTISPAMCONFIG_H__
+#ifndef __MESSAGEVIEWER_ANTISPAMCONFIG_H__
+#define __MESSAGEVIEWER_ANTISPAMCONFIG_H__
 
 #include <QRegExp>
 #include <QList>
@@ -117,4 +117,4 @@ private:
 };
 
 
-#endif // __KMAIL_ANTISPAMCONFIG_H__
+#endif // __MESSAGEVIEWER_ANTISPAMCONFIG_H__

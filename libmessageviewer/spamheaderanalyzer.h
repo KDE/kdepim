@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef __SPAMHEADERANALYZER_H__
-#define __SPAMHEADERANALYZER_H__
+#ifndef __MESSAGEVIEWER_SPAMHEADERANALYZER_H__
+#define __MESSAGEVIEWER_SPAMHEADERANALYZER_H__
 
 #include <QString>
 #include <QList>

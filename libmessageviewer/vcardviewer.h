@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
  */
 
-#ifndef VCARDVIEWER_H
-#define VCARDVIEWER_H
+#ifndef MESSAGEVIEWER_VCARDVIEWER_H
+#define MESSAGEVIEWER_VCARDVIEWER_H
 
 #include <kdialog.h>
 #include <kabc/addressee.h>

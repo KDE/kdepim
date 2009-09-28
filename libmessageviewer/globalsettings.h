@@ -21,8 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef KMAIL_GLOBALSETTINGS_H
-#define KMAIL_GLOBALSETTINGS_H
+#ifndef MESSAGEVIEWER_GLOBALSETTINGS_H
+#define MESSAGEVIEWER_GLOBALSETTINGS_H
 
 #include "globalsettings_base.h"
 

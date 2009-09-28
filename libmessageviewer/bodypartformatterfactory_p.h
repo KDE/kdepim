@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef __KMAIL_BODYPARTFORMATTERFACTORY_P_H__
-#define __KMAIL_BODYPARTFORMATTERFACTORY_P_H__
+#ifndef __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__
+#define __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__
 
 
 #include <map>
@@ -58,4 +58,4 @@ return qstricmp( s1, s2 ) < 0;
   extern void kmail_create_builtin_bodypart_formatters( TypeRegistry * );
 }
 
-#endif // __KMAIL_BODYPARTFORMATTERFACTORY_P_H__
+#endif // __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__

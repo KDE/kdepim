@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef __KMAIL_ATTACHMENTSTRATEGY_H__
-#define __KMAIL_ATTACHMENTSTRATEGY_H__
+#ifndef __MESSAGEVIEWER_ATTACHMENTSTRATEGY_H__
+#define __MESSAGEVIEWER_ATTACHMENTSTRATEGY_H__
 
 #include "messageviewer_export.h"
 
@@ -82,4 +82,4 @@ public:
 
 }
 
-#endif // __KMAIL_ATTACHMENTSTRATEGY_H__
+#endif // __MESSAGEVIEWER_ATTACHMENTSTRATEGY_H__

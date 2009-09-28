@@ -17,8 +17,8 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef ATTACHMENTDIALOG_H
-#define ATTACHMENTDIALOG_H
+#ifndef MESSAGEVIEWERT_ATTACHMENTDIALOG_H
+#define MESSAGEVIEWERT_ATTACHMENTDIALOG_H
 
 #include <QObject>
 

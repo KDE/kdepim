@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef __KMAIL_HEADERSTYLE_H__
-#define __KMAIL_HEADERSTYLE_H__
+#ifndef __MESSAGEVIEWER_HEADERSTYLE_H__
+#define __MESSAGEVIEWER_HEADERSTYLE_H__
 
 class QByteArray;
 class QString;
@@ -91,4 +91,4 @@ public:
 };
 
 
-#endif // __KMAIL_HEADERSTYLE_H__
+#endif // __MESSAGEVIEWER_HEADERSTYLE_H__

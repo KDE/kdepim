@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef __KMAIL_KHTMLPARTHTMLWRITER_H__
-#define __KMAIL_KHTMLPARTHTMLWRITER_H__
+#ifndef __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__
+#define __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__
 
 #include "interfaces/htmlwriter.h"
 #include <QObject>
@@ -82,4 +82,4 @@ private:
   EmbeddedPartMap mEmbeddedPartMap;
 };
 
-#endif // __KMAIL_KHTMLPARTHTMLWRITER_H__
+#endif // __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__

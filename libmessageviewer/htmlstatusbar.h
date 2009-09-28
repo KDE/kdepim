@@ -29,8 +29,8 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-#ifndef _KMAIL_HTMLSTATUSBAR_H_
-#define _KMAIL_HTMLSTATUSBAR_H_
+#ifndef _MESSAGEVIEWER_HTMLSTATUSBAR_H_
+#define _MESSAGEVIEWER_HTMLSTATUSBAR_H_
 
 #include <QLabel>
 

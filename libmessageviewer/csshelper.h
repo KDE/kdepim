@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef __KMAIL_CSSHELPER_H__
-#define __KMAIL_CSSHELPER_H__
+#ifndef __MESSAGEVIEWER_CSSHELPER_H__
+#define __MESSAGEVIEWER_CSSHELPER_H__
 
 #include <libkdepim/csshelper.h>
 
@@ -43,4 +43,4 @@ public:
 
 }
 
-#endif // __KMAIL_CSSHELPER_H__
+#endif // __MESSAGEVIEWER_CSSHELPER_H__

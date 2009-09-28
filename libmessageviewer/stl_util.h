@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef __KDEPIM__KMAIL__STL_UTIL_H__
-#define __KDEPIM__KMAIL__STL_UTIL_H__
+#ifndef __KDEPIM__MESSAGEVIEWER__STL_UTIL_H__
+#define __KDEPIM__MESSAGEVIEWER__STL_UTIL_H__
 
 template <typename T>
 struct DeleteAndSetToZero {
@@ -44,4 +44,4 @@ static inline void deleteAll( T & c ) {
   }
 }
 
-#endif // __KDEPIM__KMAIL__STL_UTIL_H__
+#endif // __KDEPIM__MESSAGEVIEWER__STL_UTIL_H__

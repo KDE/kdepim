@@ -29,8 +29,8 @@
     your version.
 */
 
-#ifndef __KMAIL_HEADERSTRATEGY_H__
-#define __KMAIL_HEADERSTRATEGY_H__
+#ifndef __MESSAGEVIEWER_HEADERSTRATEGY_H__
+#define __MESSAGEVIEWER_HEADERSTRATEGY_H__
 
 class QString;
 class QStringList;
@@ -74,4 +74,4 @@ public:
 };
 
 
-#endif // __KMAIL_HEADERSTRATEGY_H__
+#endif // __MESSAGEVIEWER_HEADERSTRATEGY_H__

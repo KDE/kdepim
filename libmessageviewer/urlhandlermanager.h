@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef __KMAIL_URLHANDLERMANAGER_H__
-#define __KMAIL_URLHANDLERMANAGER_H__
+#ifndef __MESSAGEVIEWER_URLHANDLERMANAGER_H__
+#define __MESSAGEVIEWER_URLHANDLERMANAGER_H__
 
 
 #include <QVector>
@@ -87,5 +87,5 @@ private:
 };
 }
 
-#endif // __KMAIL_URLHANDLERMANAGER_H__
+#endif // __MESSAGEVIEWER_URLHANDLERMANAGER_H__
 

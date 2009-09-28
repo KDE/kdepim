@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef __KMAIL_PARTNODEBODYPART_H_
-#define __KMAIL_PARTNODEBODYPART_H_
+#ifndef __MESSAGEVIEWER_PARTNODEBODYPART_H_
+#define __MESSAGEVIEWER_PARTNODEBODYPART_H_
 
 #include "interfaces/bodypart.h"
 
@@ -69,4 +69,4 @@ private:
   BodyPart::Display mDefaultDisplay;
 };
 
-#endif // __KMAIL_PARTNODEBODYPART_H_
+#endif // __MESSAGEVIEWER_PARTNODEBODYPART_H_
