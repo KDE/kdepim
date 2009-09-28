@@ -1,0 +1,40 @@
+<ui version="4.0" >
+ <class>AdvancedSettingsBase</class>
+ <widget class="QWidget" name="AdvancedSettingsBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>354</width>
+    <height>86</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QCheckBox" name="kcfg_changeNToBreak" >
+     <property name="toolTip" >
+      <string>It could be useful on some blogs like Wordpress that do not store posts as HTML</string>
+     </property>
+     <property name="text" >
+      <string>Change \n to &lt;br/> On posts retrieved from server</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

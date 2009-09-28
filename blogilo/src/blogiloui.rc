@@ -1,0 +1,26 @@
+<!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
+<kpartgui name="blogilo" version="8">
+<MenuBar>
+  <Menu name="blog"><text>Blog</text>
+    <Action name="add_blog" />
+    <Action name="upload_media" />
+  </Menu>
+  <Menu name="post"><text>Post</text>
+    <Action name="new_post" />
+    <Action name="save_locally" />
+    <Action name="publish_post" />
+  </Menu>
+  <Menu name="settings"><text>Settings</text>
+    <Action name="clear_image_cache" />
+    <Action name="toggle_toolbox" />
+  </Menu>
+</MenuBar>
+<Toolbar name="postToolbar">
+    <text>Toolbar</text>
+    <Action name="new_post" />
+    <Action name="save_locally" />
+    <Action name="publish_post" />
+    <Separator />
+    <Action name="blogs_list" />
+</Toolbar>
+</kpartgui>

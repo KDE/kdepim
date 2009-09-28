@@ -36,7 +36,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.3.65 REQUIRED)
+find_package(KdepimLibs 4.3.66 REQUIRED)
 
 
 ############### search Boost ###############
@@ -195,6 +195,7 @@ set(libkdgantt1_SRCS
   endif(KDEPIM_BUILD_EVERYTHING)
 
   macro_optional_add_subdirectory(akregator)
+  macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)

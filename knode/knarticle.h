@@ -112,16 +112,6 @@ class KNRemoteArticle : public KNArticle {
 
     // content handling
     virtual void parse();
-    virtual void assemble() {} //assembling is disabled for remote articles
-    virtual void clear();
-
-    // header access
-    KMime::Headers::Base* headerByType(const char *type);
-    void setHeader(KMime::Headers::Base *h);
-    bool removeHeader(const char *type);
-    KMime::Headers::MessageID* messageID(bool create=true)   { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
-    KMime::Headers::From* from(bool create=true)             { if(!create && f_rom.isEmpty()) return 0; return &f_rom; }
-    KMime::Headers::References* references(bool create=true) { if(!create && r_eferences.isEmpty()) return 0; return &r_eferences; }
 
     // article number
     int articleNumber() const                 { return a_rticleNumber; }
@@ -193,11 +183,6 @@ class KNRemoteArticle : public KNArticle {
     void propagateThreadChangedDate();
 
   protected:
-    // hardcoded headers
-    KMime::Headers::MessageID m_essageID;
-    KMime::Headers::From f_rom;
-    KMime::Headers::References r_eferences;
-
     int a_rticleNumber;
     int i_dRef;                      // id of a reference-article (0 == none)
     KNRemoteArticle *d_ref;          // displayed reference-article (may differ from i_dRef)
@@ -229,23 +214,6 @@ class KNLocalArticle : public KNArticle {
 
     //type
     articleType type() const { return ATlocal; }
-
-    //content handling
-    void parse();
-    void clear();
-
-    // header access
-    KMime::Headers::Base* headerByType(const char *type);
-    void setHeader(KMime::Headers::Base *h);
-    bool removeHeader(const char *type);
-    KMime::Headers::Newsgroups* newsgroups(bool create=true)     { if ( (!create && n_ewsgroups.isEmpty()) ||
-                                                                   (!create && !isSavedRemoteArticle() && !doPost()) )
-                                                                return 0;
-                                                              return &n_ewsgroups; }
-    KMime::Headers::To* to(bool create=true)                     { if ( (!create && t_o.isEmpty()) ||
-                                                                   (!create && !isSavedRemoteArticle() && !doMail()) )
-                                                                return 0;
-                                                              return &t_o; }
 
     //send article as mail
     bool doMail()                 { return f_lags.get(2); }
@@ -289,9 +257,6 @@ class KNLocalArticle : public KNArticle {
     virtual void setForceDefaultCharset(bool b);
 
     protected:
-      //hardcoded headers
-      KMime::Headers::Newsgroups n_ewsgroups;
-      KMime::Headers::To t_o;
       int s_Offset, //position in mbox-file : start
           e_Offset, //position in mbox-file : end
           s_erverId; //id of the nntp-server this article is posted to

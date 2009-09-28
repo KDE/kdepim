@@ -815,15 +815,20 @@ bool KNComposer::applyChanges()
   if (m_ode != mail) {
     a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text().remove(QRegExp("\\s")), KMime::Headers::Latin1);
     a_rticle->setDoPost(true);
-  } else
+  } else {
     a_rticle->setDoPost(false);
+    a_rticle->removeHeader( "Newsgroups" );
+  }
 
   //To
   if (m_ode != news) {
     a_rticle->to()->fromUnicodeString( v_iew->t_o->text(), mCharset.toLatin1() );
     a_rticle->setDoMail(true);
-  } else
+  } else {
     a_rticle->setDoMail(false);
+    a_rticle->removeHeader( "To" );
+    a_rticle->removeHeader( "Cc" );
+  }
 
   //Followup-To
   if( a_rticle->doPost() && !v_iew->f_up2->currentText().isEmpty())
@@ -978,10 +983,16 @@ void KNComposer::initData(const QString &text)
     v_iew->s_ubject->setText(a_rticle->subject()->asUnicodeString());
 
   //Newsgroups
-  v_iew->g_roups->setText(a_rticle->newsgroups()->asUnicodeString());
+  KMime::Headers::Newsgroups *hNewsgroup = a_rticle->newsgroups( false );
+  if ( hNewsgroup && !hNewsgroup->isEmpty() ) {
+    v_iew->g_roups->setText( hNewsgroup->asUnicodeString());
+  }
 
   //To
-  v_iew->t_o->setText(a_rticle->to()->asUnicodeString());
+  KMime::Headers::To *hTo = a_rticle->to( false );
+  if ( hTo && !hTo->isEmpty() ) {
+    v_iew->t_o->setText( hTo->asUnicodeString() );
+  }
 
   //Followup-To
   KMime::Headers::FollowUpTo *fup2=a_rticle->followUpTo(false);

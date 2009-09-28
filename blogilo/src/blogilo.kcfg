@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="blogilorc"/>
+  <group name="Preferences">
+    <entry name="enableSysTrayIcon" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="CopyMediaUrl" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="showToolboxOnStart" hidden="true" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="configWindowSize" hidden="true" type="Size">
+        <default>QSize(500,400)</default>
+    </entry>
+    <entry name="uploadMediaDialogSize" hidden="true" type="Size">
+    <default>QSize(500,400)</default>
+    </entry>
+    <entry name="updateEntriesCount" type="Int">
+        <default>20</default>
+    </entry>
+  </group>
+  <group name="Editor">
+    <entry name="autosaveInterval" type="Int">
+        <default>5</default>
+    </entry>
+    <entry name="addPoweredBy" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="enableCheckSpelling" type="Bool">
+        <default>false</default>
+    </entry>
+    <entry name="previewInBlogStyle" type="Bool">
+        <default>true</default>
+    </entry>
+    <entry name="urlCachingEnabled" type="Bool">
+        <default>true</default>
+    </entry>
+  </group>
+  <group name="Advanced">
+    <entry name="changeNToBreak" type="Bool">
+        <default>false</default>
+    </entry>
+  </group>
+  <group name="Ftp">
+    <entry name="ftpServerPath" type="String"/>
+    <entry name="httpUrl" type="String" />
+  </group>
+  <group name="Notification Messages">
+    <entry name="showUpdateEntriesDialog" type="Bool">
+        <default>true</default>
+    </entry>
+  </group>
+</kcfg>

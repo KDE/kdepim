@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>UploadMediaBase</class>
+ <widget class="QWidget" name="UploadMediaBase">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>450</width>
+    <height>400</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="title">
+      <string>Select media to upload</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="0" colspan="4">
+       <widget class="KImageFilePreview" name="kcfg_previewer"/>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>From your computer:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_urlLineEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+       <widget class="QLabel" name="label_7">
+        <property name="text">
+         <string>Name on server:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_Name</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2" colspan="2">
+       <widget class="KLineEdit" name="kcfg_Name"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="KPushButton" name="kcfg_urlBrowser">
+        <property name="maximumSize">
+         <size>
+          <width>25</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="toolTip">
+         <string>Browse</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="KLineEdit" name="kcfg_urlLineEdit"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Upload via:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_uploadType</cstring>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KComboBox" name="kcfg_uploadType"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="kcfg_ftpBox">
+     <property name="title">
+      <string>FTP Configurations</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="margin">
+       <number>2</number>
+      </property>
+      <item row="3" column="1" colspan="3">
+       <widget class="KLineEdit" name="kcfg_httpUrl">
+        <property name="toolTip">
+         <string>Will use for direct link generation</string>
+        </property>
+        <property name="text">
+         <string>http://</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="text">
+         <string>Url to path:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_httpUrl</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" colspan="3">
+       <widget class="KLineEdit" name="kcfg_FtpPath">
+        <property name="toolTip">
+         <string>Will use for upload</string>
+        </property>
+        <property name="text">
+         <string>ftp://</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>(s)Ftp path:</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="buddy">
+         <cstring>kcfg_FtpPath</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="3">
+       <widget class="QLabel" name="label_3">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>e.g. sftp://domain.com/user/images/</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" colspan="3">
+       <widget class="QLabel" name="label_5">
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>e.g. http://domain.com/images/</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KImageFilePreview</class>
+   <extends>QWidget</extends>
+   <header>kimagefilepreview.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KComboBox</class>
+   <extends>QComboBox</extends>
+   <header>kcombobox.h</header>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>kcfg_urlLineEdit</tabstop>
+  <tabstop>kcfg_urlBrowser</tabstop>
+  <tabstop>kcfg_Name</tabstop>
+  <tabstop>kcfg_uploadType</tabstop>
+  <tabstop>kcfg_FtpPath</tabstop>
+  <tabstop>kcfg_httpUrl</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

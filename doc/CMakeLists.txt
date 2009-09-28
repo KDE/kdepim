@@ -2,6 +2,10 @@ if(BUILD_akregator)
   add_subdirectory(akregator)
 endif(BUILD_akregator)
 
+if(BUILD_blogilo)
+  add_subdirectory(blogilo)
+endif(BUILD_blogilo)
+
 if(BUILD_console)
   add_subdirectory(kabcclient)
   add_subdirectory(konsolekalendar)
