@@ -188,13 +188,13 @@ bool Viewer::htmlLoadExtOverride() const
 bool Viewer::htmlMail() const
 {
   Q_D(const Viewer);
-  d->htmlMail();
+  return d->htmlMail();
 }
 
 bool Viewer::htmlLoadExternal() const
 {
   Q_D(const Viewer);
-  d->htmlLoadExternal();
+  return d->htmlLoadExternal();
 }
 
 bool Viewer::isFixedFont() const
@@ -330,6 +330,13 @@ void Viewer::setOverrideEncoding( const QString &encoding )
   d->setOverrideEncoding( encoding );
 
 }
+
+Message::CSSHelper* Viewer::cssHelper() const
+{
+  Q_D( const Viewer );
+  return d->cssHelper();
+}
+
 }
 
 #include "viewer.moc"

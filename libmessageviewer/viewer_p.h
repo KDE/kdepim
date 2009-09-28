@@ -92,7 +92,7 @@ public:
                     KActionCollection* actionCollection);
 
   virtual ~ViewerPrivate();
-  
+
     /** Returns message part from given URL or null if invalid. */
   KMime::Content* nodeFromUrl(const KUrl &url);
 
@@ -135,7 +135,7 @@ public:
       partNode \a node. If there was a BodyPartMemento registered
       already, replaces (deletes) that one. */
    void setBodyPartMemento( const KMime::Content * node, const QByteArray & which, Interface::BodyPartMemento * memento );
-   
+
    /** deletes all BodyPartMementos. Use this when skipping to another
       message (as opposed to re-loading the same one again). */
    void clearBodyPartMementos();
@@ -167,7 +167,7 @@ public:
   KMime::Content::List selectedContents();
   void attachmentOpenWith( KMime::Content *node );
   void attachmentOpen( KMime::Content *node );
-                                 
+
 
   /** Return the HtmlWriter connected to the KHTMLPart we use */
   HtmlWriter * htmlWriter() { return mHtmlWriter; }
@@ -256,7 +256,7 @@ public:
   /** Print message. */
   void printMessage( KMime::Message* message );
 
- 
+
     /** Set the Akonadi item that will be displayed.
   * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
   *               an empty page is shown.
@@ -372,7 +372,7 @@ public:
 
   void scrollToAttachment( const KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
-  
+
 public slots:
 
   void slotUrlOpen( const KUrl &url = KUrl() );
@@ -489,7 +489,6 @@ public:
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
   const HeaderStyle * mHeaderStyle;
-  bool mAutoDelete;
   /** where did the user save the attachment last time */
   QString mSaveAttachDir;
   static const int delay;

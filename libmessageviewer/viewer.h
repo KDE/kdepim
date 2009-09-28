@@ -67,6 +67,7 @@ namespace {
 namespace Message {
   class AttachmentStrategy;
   class ViewerPrivate;
+  class CSSHelper;
 }
 
 /**
@@ -219,6 +220,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   QString overrideEncoding() const;
   void setOverrideEncoding( const QString &encoding );
+  CSSHelper* cssHelper() const;
 
 signals:
   /** Emitted after parsing of a message to have it stored
