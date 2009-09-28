@@ -121,7 +121,10 @@ void DwDateTime::Init()
         DwUint32 t_local = my_inv_gmtime(&local);
         DwUint32 t_utc = my_inv_gmtime(&utc);
         sDefaultZone = (int) (t_local - t_utc)/60;
-        sIsDefaultZoneSet = 1;
+
+        // do not flag this as it would never check the zone again, which
+        // would lead to wrong timediff on the DST/non-DST day change
+        //sIsDefaultZoneSet = 1;
     }
     // Set the time zone from the default time zone
     mZone = sDefaultZone;
