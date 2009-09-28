@@ -491,14 +491,6 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
                 IncidenceFormatter::dateTimeToString( dt, event->doesFloat(), false ) :
                 i18n( "no date", "none" ) ) +
               "</td>";
-
-    if ( !event->doesFloat() ) {
-      tmpStr += "<td>" +
-                KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
-    } else {
-      tmpStr += "<td>" +
-                KGlobal::locale()->formatDate( dt.date(), true ) + "</td>";
-    }
     tmpStr += "</tr>";
   }
 
@@ -624,13 +616,10 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     tmpStr += "<td><b>" +
               i18n( "next recurrence", "Next:" ) +
               "</b></td>";
-    if ( !todo->doesFloat() ) {
-      tmpStr += "<td>" +
-                KGlobal::locale()->formatDateTime( dt, true ) + "</td>";
-    } else {
-      tmpStr += "<td>" +
-                KGlobal::locale()->formatDate( dt.date(), true ) + "</td>";
-    }
+    tmpStr += ( dt.isValid() ?
+                IncidenceFormatter::dateTimeToString( dt, todo->doesFloat(), false ) :
+                i18n( "no date", "none" ) ) +
+              "</td>";
     tmpStr += "</tr>";
   }
 
