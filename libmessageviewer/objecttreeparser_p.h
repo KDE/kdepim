@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef _KMAIL_OBJECTTREEPARSER_P_H_
-#define _KMAIL_OBJECTTREEPARSER_P_H_
+#ifndef _MESSAGEVIEWER_OBJECTTREEPARSER_P_H_
+#define _MESSAGEVIEWER_OBJECTTREEPARSER_P_H_
 
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/decryptionresult.h>

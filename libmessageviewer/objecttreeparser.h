@@ -31,8 +31,8 @@
     your version.
 */
 
-#ifndef _KMAIL_OBJECTTREEPARSER_H_
-#define _KMAIL_OBJECTTREEPARSER_H_
+#ifndef _MESSAGEVIEWER_OBJECTTREEPARSER_H_
+#define _MESSAGEVIEWER_OBJECTTREEPARSER_H_
 
 #include <kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>

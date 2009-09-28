@@ -16,8 +16,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KMAIL_EDITORWATCHER_H
-#define KMAIL_EDITORWATCHER_H
+#ifndef MESSAGEVIEWER_EDITORWATCHER_H
+#define MESSAGEVIEWER_EDITORWATCHER_H
 
 #include <kurl.h>
 

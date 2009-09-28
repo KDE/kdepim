@@ -16,8 +16,8 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef KMAIL_STRINGUTIL_H
-#define KMAIL_STRINGUTIL_H
+#ifndef _MESSAGEVIEWER_STRINGUTIL_H
+#define _MESSAGEVIEWER_STRINGUTIL_H
 
 #include <QString>
 

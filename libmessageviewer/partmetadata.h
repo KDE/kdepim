@@ -14,8 +14,8 @@
 */
 
 
-#ifndef _KMAIL_PARTMETADATA_H_
-#define _KMAIL_PARTMETADATA_H_
+#ifndef _MESSAGEVIEWER_PARTMETADATA_H_
+#define _MESSAGEVIEWER_PARTMETADATA_H_
 
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/context.h>
