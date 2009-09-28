@@ -96,7 +96,7 @@ public:
         m_log = log;
         m_textEdit->setText( "<qt>" + log + "</qt>" );
         const QRect rect = m_textEdit->paragraphRect( 0 );
-        kdDebug() << "setAuditLog: rect = " << rect;
+        kdDebug() << "setAuditLog: rect = " << rect << endl;
         if ( !rect.isValid() )
             return;
         QSize maxSize = qApp->desktop()->screenGeometry( this ).size() * 2 / 3 ;
