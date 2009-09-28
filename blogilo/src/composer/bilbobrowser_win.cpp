@@ -25,6 +25,7 @@
 #include "bilbobrowser_win.h"
 
 #include <QWebView>
+#include <QProgressBar>
 #include <kstatusbar.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
