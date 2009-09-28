@@ -23,7 +23,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 add_subdirectory( lib )
 add_subdirectory( blog )
 add_subdirectory( remote )
-add_subdirectory( kolab )
 
 if(KDEPIM_BUILD_EVERYTHING)
   add_subdirectory( scalix )
