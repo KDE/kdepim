@@ -183,6 +183,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   /** Enforce message decryption. */
   void setDecryptMessageOverwrite( bool overwrite = true );
 
+  /** Returns whether the message should be decryted. */
+  bool decryptMessage() const;
+
   /** Show signature details. */
   bool showSignatureDetails() const;
 

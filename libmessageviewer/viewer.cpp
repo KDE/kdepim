@@ -221,6 +221,12 @@ void Viewer::setDecryptMessageOverwrite( bool overwrite )
   d->setDecryptMessageOverwrite( overwrite );
 }
 
+bool Viewer::decryptMessage() const
+{
+  Q_D(const Viewer);
+  return d->decryptMessage();
+}
+
 bool Viewer::showSignatureDetails() const
 {
   Q_D(const Viewer);
