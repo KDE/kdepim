@@ -1,7 +1,8 @@
 KAlarm Change Log
 
-=== Version 2.2.8 --- 19 August 2009 ===
+=== Version 2.2.8 --- 28 September 2009 ===
 - Use KDE system settings to determine default working days in the week.
+- Provide 'any time' option in Defer Alarm dialogue, for date-only alarms.
 
 === Version 2.2.7 (KDE 4.3.1) --- 19 August 2009 ===
 - Shift-Delete now deletes alarms without showing confirmation prompt.
