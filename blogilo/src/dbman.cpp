@@ -21,6 +21,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
+//krazy:excludeall=crashy to skip false positives due to QSqlQuery.exec() usage
 
 #include "dbman.h"
 #include <kmessagebox.h>

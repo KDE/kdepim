@@ -21,6 +21,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
+//krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "bilbobrowser.h"
 
@@ -55,16 +56,16 @@ BilboBrowser::BilboBrowser( QWidget *parent ) : QWidget( parent )
 
     KParts::BrowserExtension *browserExtension = browserPart->browserExtension();
     if ( browserExtension ) {
-        connect( browserExtension, SIGNAL( loadingProgress( int ) ), 
+        connect( browserExtension, SIGNAL( loadingProgress( int ) ),
                 browserProgress, SLOT( setValue( int ) ) );
-        connect( browserExtension, SIGNAL( openUrlRequestDelayed( const KUrl &, 
-                                          const KParts::OpenUrlArguments &, 
-                                          const KParts::BrowserArguments & ) ), 
+        connect( browserExtension, SIGNAL( openUrlRequestDelayed( const KUrl &,
+                                          const KParts::OpenUrlArguments &,
+                                          const KParts::BrowserArguments & ) ),
                 this, SLOT( sltOpenRequested( const KUrl & ) ) );
     }
 
     connect( browserPart, SIGNAL( completed() ), this, SLOT( sltCompleted() ) );
-    connect( browserPart, SIGNAL( canceled( const QString& ) ), this, SLOT( 
+    connect( browserPart, SIGNAL( canceled( const QString& ) ), this, SLOT(
             sltCanceled( const QString& ) ) );
     connect( browserPart, SIGNAL( setStatusBarText( const QString& ) ), this,
             SLOT( sltSetStatusBarText( const QString& ) ) );
@@ -83,7 +84,7 @@ void BilboBrowser::createUi( QWidget *parent )
 
     viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
-    connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT( 
+    connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT(
             sltViewModeChanged() ) );
 
     QSpacerItem *horizontalSpacer = new QSpacerItem( 40, 20,
@@ -125,7 +126,7 @@ void BilboBrowser::setHtml( const QString& title, const QString& content )
     if ( viewInBlogStyle->isChecked() ) {
         browserPart->write( StyleGetter::styledHtml( __currentBlogId, title, content ) );
     } else {
-        browserPart->write( 
+        browserPart->write(
               "<html><body><h2 align='center'>" + title + "</h2>" + content + "</html>" );
     }
     browserPart->end();
@@ -147,7 +148,7 @@ void BilboBrowser::sltGetBlogStyle()
     int blogid = __currentBlogId;
     if ( blogid < 0 ) {
         KMessageBox::information( this,
-               i18n( "Please select a blog, then try again." ), 
+               i18n( "Please select a blog, then try again." ),
                i18n( "Select a blog" ) );
         return;
     }
