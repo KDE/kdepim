@@ -318,6 +318,18 @@ void Viewer::setAttachmentStrategy( const AttachmentStrategy * strategy )
   d->setAttachmentStrategy( strategy );
 }
 
+QString Viewer::overrideEncoding() const
+{
+  Q_D( const Viewer );
+  return d->overrideEncoding();
+}
+
+void Viewer::setOverrideEncoding( const QString &encoding )
+{
+  Q_D( Viewer );
+  d->setOverrideEncoding( encoding );
+
+}
 }
 
 #include "viewer.moc"

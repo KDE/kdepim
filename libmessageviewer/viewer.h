@@ -217,6 +217,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   const AttachmentStrategy * attachmentStrategy() const;
   void setAttachmentStrategy( const AttachmentStrategy * strategy );
 
+  QString overrideEncoding() const;
+  void setOverrideEncoding( const QString &encoding );
 
 signals:
   /** Emitted after parsing of a message to have it stored
