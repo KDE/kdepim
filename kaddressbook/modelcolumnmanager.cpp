@@ -74,6 +74,7 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
       QAction *fullNameAction = menu.addAction( i18n( "Full Name" ) );
       fullNameAction->setCheckable( true );
       fullNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::FullName ) );
+      fullNameAction->setEnabled( false );
 
       QAction *shortNameAction = menu.addAction( i18n( "Short Name" ) );
       shortNameAction->setCheckable( true );
