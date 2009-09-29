@@ -33,7 +33,7 @@
 #define _MESSAGEVIEWER_HTMLSTATUSBAR_H_
 
 #include <QLabel>
-
+#include "messageviewer_export.h"
 class QString;
 class QColor;
 
@@ -57,7 +57,8 @@ class QColor;
   *
   * @author Ingo Kloecker <kloecker@kde.org>, Marc Mutz <mutz@kde.org>
   **/
-class HtmlStatusBar : public QLabel {
+//Laurent remove export when we remove old code in kmail (temporary)
+class MESSAGEVIEWER_EXPORT HtmlStatusBar : public QLabel {
   Q_OBJECT
 public:
   explicit HtmlStatusBar( QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
