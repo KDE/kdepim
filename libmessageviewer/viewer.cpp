@@ -356,6 +356,12 @@ KAction *Viewer::selectAllAction()
   return d->mSelectAllAction;
 }
 
+const HeaderStrategy * Viewer::headerStrategy() const
+{
+  Q_D( const Viewer );
+  return d->headerStrategy();
+}
+
 }
 
 #include "viewer.moc"

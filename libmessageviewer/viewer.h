@@ -57,7 +57,7 @@ class KToggleAction;
 class KHTMLPart;
 class KUrl;
 class KConfigSkeleton;
-
+class HeaderStrategy;
 namespace {
   class AttachmentURLHandler;
   class FallBackURLHandler;
@@ -76,7 +76,6 @@ namespace Message {
 */
 
 namespace Message {
-
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   Q_OBJECT
@@ -227,6 +226,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   KToggleAction *toggleMimePartTreeAction();
 
   KAction *selectAllAction();
+  const HeaderStrategy * headerStrategy() const;
 
 signals:
   /** Emitted after parsing of a message to have it stored

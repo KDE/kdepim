@@ -32,10 +32,12 @@
 #ifndef __MESSAGEVIEWER_HEADERSTRATEGY_H__
 #define __MESSAGEVIEWER_HEADERSTRATEGY_H__
 
+#include "messageviewer_export.h"
+
 class QString;
 class QStringList;
 
-class HeaderStrategy {
+class MESSAGEVIEWER_EXPORT HeaderStrategy {
 protected:
   HeaderStrategy();
   virtual ~HeaderStrategy();
