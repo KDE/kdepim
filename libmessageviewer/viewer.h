@@ -226,6 +226,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   KToggleAction *toggleMimePartTreeAction();
 
+  KAction *selectAllAction();
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */

@@ -350,6 +350,12 @@ KToggleAction *Viewer::toggleMimePartTreeAction()
   return d->mToggleMimePartTreeAction;
 }
 
+KAction *Viewer::selectAllAction()
+{
+  Q_D( Viewer );
+  return d->mSelectAllAction;
+}
+
 }
 
 #include "viewer.moc"
