@@ -273,6 +273,11 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action->setText(i18n("Copy Link Address"));
     // connected to protected slot in bookshelf.cpp
 
+
+    action = actionCollection->addAction("paste_plain_text");
+    action->setText(i18nc("@action Paste the text in the clipboard without rich text formatting.", "Paste Plain Text"));
+    connect(action, SIGNAL(triggered()), editor, SLOT(pastePlainText()));
+
     KStandardAction::preferences(this, SLOT(configure()), actionCollection);
 
     bookmarkMenu = actionCollection->add<KActionMenu>("bookmarks");
