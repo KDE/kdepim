@@ -3,14 +3,14 @@
 
 #include <QCursor>
 #include <QApplication>
-
+#include "messageviewer_export.h"
 /**
  * @short sets a cursor and makes sure it's restored on destruction
  * Create a KCursorSaver object when you want to set the cursor.
  * As soon as it gets out of scope, it will restore the original
  * cursor.
  */
-class KCursorSaver 
+class MESSAGEVIEWER_EXPORT KCursorSaver
 {
 public:
     /// constructor taking QCursor shapes
