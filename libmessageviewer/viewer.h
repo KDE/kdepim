@@ -57,8 +57,6 @@ class KToggleAction;
 class KHTMLPart;
 class KUrl;
 class KConfigSkeleton;
-class HeaderStrategy;
-class HeaderStyle;
 
 namespace {
   class AttachmentURLHandler;
@@ -70,6 +68,8 @@ namespace Message {
   class AttachmentStrategy;
   class ViewerPrivate;
   class CSSHelper;
+  class HeaderStrategy;
+  class HeaderStyle;
 }
 
 /**

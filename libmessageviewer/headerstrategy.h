@@ -36,7 +36,7 @@
 
 class QString;
 class QStringList;
-
+namespace Message {
 class MESSAGEVIEWER_EXPORT HeaderStrategy {
 protected:
   HeaderStrategy();
@@ -75,5 +75,5 @@ public:
   virtual bool showHeader( const QString & header ) const;
 };
 
-
+}
 #endif // __MESSAGEVIEWER_HEADERSTRATEGY_H__

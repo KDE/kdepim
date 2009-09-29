@@ -56,8 +56,6 @@ class MimeTreeModel;
 class ConfigureWidget;
 class EditorWatcher;
 
-class HeaderStrategy;
-class HeaderStyle;
 class KHtmlPartHtmlWriter;
 class HtmlStatusBar;
 
@@ -76,6 +74,8 @@ namespace Message {
   class CSSHelper;
   class AttachmentStrategy;
   class ObjectTreeParser;
+  class HeaderStrategy;
+  class HeaderStyle;
 }
 
 namespace Message {

@@ -40,6 +40,8 @@ namespace KMime {
     class Message;
 }
 
+namespace Message {
+
 class HeaderStrategy;
 
 /** This class encapsulates the visual appearance of message
@@ -89,6 +91,6 @@ public:
   QByteArray dateShortStr(const KDateTime &dateTime) const;
 
 };
-
+}
 
 #endif // __MESSAGEVIEWER_HEADERSTYLE_H__
