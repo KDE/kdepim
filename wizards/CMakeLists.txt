@@ -12,7 +12,7 @@ if(KDEPIM_BUILD_EVERYTHING)
   set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp
       groupwisewizard.cpp
       sloxwizard.cpp
-      kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp
+      kmailchanges.cpp
   )
 
   kde4_add_kcfg_files(groupwarewizard_SRCS groupwiseconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
@@ -27,8 +27,7 @@ if(KDEPIM_BUILD_EVERYTHING)
   target_link_libraries(groupwarewizard ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS}
   kabcgroupwise kcalgroupwise
   kcal_slox kabc_slox
-  kabckolab knoteskolab
-  kcalkolab kresources
+  kresources
   kabc kcal kdepim ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   )
 
@@ -91,22 +90,22 @@ endif(KDEPIM_BUILD_EVERYTHING)
 
 ########### next target ###############
 
-set(kolabwizard_SRCS ${libknotesresources_SRCS} 
-   kolabwizard.cpp 
-   kmailchanges.cpp 
-   kolabkmailchanges.cpp 
-   kolabmain.cpp)
+#set(kolabwizard_SRCS ${libknotesresources_SRCS} 
+#   kolabwizard.cpp 
+#   kmailchanges.cpp 
+#   kolabkmailchanges.cpp 
+#   kolabmain.cpp)
 
-kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
+#kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
 
 # todo: more appropriate icon?
-kde4_add_app_icon(kolabwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
+#kde4_add_app_icon(kolabwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
 
-kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
+#kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
-target_link_libraries(kolabwizard ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim )
+#target_link_libraries(kolabwizard ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim )
 
-install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+#install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############
