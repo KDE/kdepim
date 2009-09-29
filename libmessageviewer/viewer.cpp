@@ -368,6 +368,12 @@ const HeaderStyle * Viewer::headerStyle() const {
   return d->headerStyle();
 }
 
+void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
+                                        const HeaderStrategy * strategy )
+{
+  Q_D( Viewer );
+  d->setHeaderStyleAndStrategy( style, strategy );
+}
 }
 
 #include "viewer.moc"

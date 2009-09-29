@@ -231,6 +231,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   const HeaderStrategy * headerStrategy() const;
 
   const HeaderStyle * headerStyle() const;
+
+  void setHeaderStyleAndStrategy( const HeaderStyle * style,
+                                  const HeaderStrategy * strategy );
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
