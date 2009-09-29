@@ -374,6 +374,12 @@ void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
   Q_D( Viewer );
   d->setHeaderStyleAndStrategy( style, strategy );
 }
+
+int Viewer::pointsToPixel(int pointSize) const
+{
+  Q_D( const Viewer );
+  return d->pointsToPixel( pointSize );
+}
 }
 
 #include "viewer.moc"
