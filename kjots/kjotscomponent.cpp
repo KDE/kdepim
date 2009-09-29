@@ -1259,7 +1259,7 @@ void KJotsComponent::copySelection()
     if ( !newTitle.isEmpty() ) {
         KJotsEntry* entry = dynamic_cast<KJotsEntry*>(bookshelf->currentItem());
         if ( entry ) {
-            entry->setTitle(newTitle);
+            entry->setTitle(newTitle.simplified());
             entry->topLevelBook()->setDirty(true);
         }
     }
