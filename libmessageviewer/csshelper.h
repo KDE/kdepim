@@ -37,7 +37,6 @@
 #include "messageviewer_export.h"
 
 namespace Message {
-//TODO (laurent) look at after porting if it's always necessary to export it  
 class MESSAGEVIEWER_EXPORT CSSHelper : public KPIM::CSSHelper {
 public:
   CSSHelper( const QPaintDevice *pd );
