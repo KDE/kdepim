@@ -42,6 +42,7 @@ class ContactFields
       NickName,
 
       Birthday,
+      Anniversary,
 
       HomeAddressStreet,
       HomeAddressLocality,

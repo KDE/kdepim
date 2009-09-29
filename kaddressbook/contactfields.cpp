@@ -34,6 +34,7 @@ QString ContactFields::label( Field field )
     case Suffix: return KABC::Addressee::suffixLabel(); break;
     case NickName: return KABC::Addressee::nickNameLabel(); break;
     case Birthday: return KABC::Addressee::birthdayLabel(); break;
+    case Anniversary: return i18n( "Anniversary" ); break;
     case HomeAddressStreet: return KABC::Addressee::homeAddressStreetLabel(); break;
     case HomeAddressLocality: return KABC::Addressee::homeAddressLocalityLabel(); break;
     case HomeAddressRegion: return KABC::Addressee::homeAddressRegionLabel(); break;
@@ -82,6 +83,7 @@ ContactFields::Fields ContactFields::allFields()
          << Suffix
          << NickName
          << Birthday
+         << Anniversary
          << PreferredEmail
          << Email2
          << Email3
@@ -144,6 +146,9 @@ void ContactFields::setValue( Field field, const QString &value, KABC::Addressee
       break;
     case ContactFields::Birthday:
       contact.setBirthday( QDateTime::fromString( value, Qt::ISODate ) );
+      break;
+    case ContactFields::Anniversary:
+      contact.insertCustom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ), value );
       break;
     case ContactFields::PreferredEmail:
       contact.insertEmail( value, true );
@@ -341,6 +346,7 @@ QString ContactFields::value( Field field, const KABC::Addressee &contact )
           return QString();
       }
       break;
+    case Anniversary: return contact.custom( QLatin1String( "KADDRESSBOOK" ), QLatin1String( "X-Anniversary" ) ); break;
     case HomeAddressStreet:
       {
         const KABC::Address address = contact.address( KABC::Address::Home );
