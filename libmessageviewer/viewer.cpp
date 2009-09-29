@@ -337,6 +337,19 @@ Message::CSSHelper* Viewer::cssHelper() const
   return d->cssHelper();
 }
 
+
+KToggleAction *Viewer::toggleFixFontAction()
+{
+  Q_D( Viewer );
+  return d->mToggleFixFontAction;
+}
+
+KToggleAction *Viewer::toggleMimePartTreeAction()
+{
+  Q_D( Viewer );
+  return d->mToggleMimePartTreeAction;
+}
+
 }
 
 #include "viewer.moc"

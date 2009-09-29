@@ -222,6 +222,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   void setOverrideEncoding( const QString &encoding );
   CSSHelper* cssHelper() const;
 
+  KToggleAction *toggleFixFontAction();
+
+  KToggleAction *toggleMimePartTreeAction();
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
