@@ -67,6 +67,9 @@ class ModelColumnManager : public QObject
   protected:
     virtual bool eventFilter( QObject *watched, QEvent* event );
 
+  private Q_SLOTS:
+    void adaptHeaderView();
+
   private:
     Akonadi::ContactsTreeModel *mModel;
     Akonadi::ContactsTreeModel::Columns mColumns;

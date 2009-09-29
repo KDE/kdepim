@@ -21,10 +21,12 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
+//krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "bilbobrowser_win.h"
 
 #include <QWebView>
+#include <QProgressBar>
 #include <kstatusbar.h>
 #include <kmessagebox.h>
 #include <kseparator.h>
@@ -66,7 +68,7 @@ void BilboBrowser::createUi( QWidget *parent )
 
     viewInBlogStyle = new QCheckBox( i18n("View post in the blog style"), this );
     viewInBlogStyle->setChecked( Settings::previewInBlogStyle() );
-    connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT( 
+    connect( viewInBlogStyle, SIGNAL( toggled( bool ) ), this, SLOT(
             sltViewModeChanged() ) );
 
     QSpacerItem *horizontalSpacer = new QSpacerItem( 40, 20,
@@ -122,7 +124,7 @@ void BilboBrowser::sltGetBlogStyle()
     int blogid = __currentBlogId;
     if ( blogid < 0 ) {
         KMessageBox::information( this,
-               i18n( "Please select a blog, then try again." ), 
+               i18n( "Please select a blog, then try again." ),
                i18n( "Select a blog" ) );
         return;
     }

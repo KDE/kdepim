@@ -21,6 +21,7 @@
     You should have received a copy of the GNU General Public License
     along with this program; if not, see http://www.gnu.org/licenses/
 */
+//krazy:excludeall=qmethods due to use of KStatusBar::showMessage()
 
 #include "toolbox.h"
 
@@ -507,7 +508,7 @@ void Toolbox::sltRemoveLocalEntry()
     kDebug();
     if(localEntriesTable->selectedItems().count() > 0) {
         int local_id = localEntriesTable->item(localEntriesTable->currentRow(), 0)->data(32).toInt();
-        if( KMessageBox::warningYesNo(this, i18n("Are you sure of removing selected local entry?")) 
+        if( KMessageBox::warningYesNo(this, i18n("Are you sure of removing selected local entry?"))
             == KMessageBox::No )
             return;
 

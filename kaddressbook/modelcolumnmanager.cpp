@@ -26,7 +26,9 @@
 #include <klocale.h>
 
 #include <QtCore/QEvent>
+#include <QtCore/QTimer>
 #include <QtGui/QContextMenuEvent>
+#include <QtGui/QHeaderView>
 #include <QtGui/QMenu>
 #include <QtGui/QWidget>
 
@@ -74,6 +76,7 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
       QAction *fullNameAction = menu.addAction( i18n( "Full Name" ) );
       fullNameAction->setCheckable( true );
       fullNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::FullName ) );
+      fullNameAction->setEnabled( false );
 
       QAction *shortNameAction = menu.addAction( i18n( "Short Name" ) );
       shortNameAction->setCheckable( true );
@@ -142,6 +145,7 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
           columns << Akonadi::ContactsTreeModel::Note;
 
         mModel->setColumns( columns );
+        QTimer::singleShot( 0, this, SLOT( adaptHeaderView() ) );
       }
 
       return true;
@@ -150,4 +154,11 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
   }
 
   return false;
+}
+
+void ModelColumnManager::adaptHeaderView()
+{
+  QHeaderView *view = qobject_cast<QHeaderView*>( mWidget );
+  if ( view )
+    view->resizeSections( QHeaderView::Stretch );
 }
