@@ -58,6 +58,8 @@ class KHTMLPart;
 class KUrl;
 class KConfigSkeleton;
 class HeaderStrategy;
+class HeaderStyle;
+
 namespace {
   class AttachmentURLHandler;
   class FallBackURLHandler;
@@ -228,6 +230,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   KAction *selectAllAction();
   const HeaderStrategy * headerStrategy() const;
 
+  const HeaderStyle * headerStyle() const;
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */

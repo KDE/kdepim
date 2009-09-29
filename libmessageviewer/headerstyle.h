@@ -31,7 +31,7 @@
 
 #ifndef __MESSAGEVIEWER_HEADERSTYLE_H__
 #define __MESSAGEVIEWER_HEADERSTYLE_H__
-
+#include "messageviewer_export.h"
 class QByteArray;
 class QString;
 class KDateTime;
@@ -51,7 +51,7 @@ class HeaderStrategy;
     @author Marc Mutz <mutz@kde.org>
     @see HeaderStrategy
 **/
-class HeaderStyle {
+class MESSAGEVIEWER_EXPORT HeaderStyle {
 protected:
   HeaderStyle();
   virtual ~HeaderStyle();
