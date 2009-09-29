@@ -234,7 +234,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   void setHeaderStyleAndStrategy( const HeaderStyle * style,
                                   const HeaderStrategy * strategy );
-  int pointsToPixel(int pointSize) const;
 
 signals:
   /** Emitted after parsing of a message to have it stored
