@@ -415,6 +415,7 @@ void MainWidget::print()
   printer.setDocName( i18n( "Address Book" ) );
   printer.setOutputFileName( "addressbook.pdf" );
   printer.setOutputFormat( QPrinter::PdfFormat );
+  printer.setCollateCopies( true );
 
   QPrintDialog printDialog( &printer, this );
   printDialog.setWindowTitle( i18n( "Print Contacts" ) );
