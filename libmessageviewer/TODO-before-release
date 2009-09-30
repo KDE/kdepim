@@ -1,1 +1,2 @@
 Remove export from htmlstatusbar.h when we remove old code in kmail
+remove export from vcardviewer.h when we remove old code in kmail

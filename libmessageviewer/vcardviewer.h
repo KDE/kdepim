@@ -19,15 +19,15 @@
 
 #ifndef MESSAGEVIEWER_VCARDVIEWER_H
 #define MESSAGEVIEWER_VCARDVIEWER_H
-
+#include "messageviewer_export.h"
 #include <kdialog.h>
 #include <kabc/addressee.h>
 
 namespace KPIM {
   class AddresseeView;
 }
-
-class VCardViewer : public KDialog
+//(laurent) temporary export until we remove old code in kmail
+class MESSAGEVIEWER_EXPORT VCardViewer : public KDialog
 {
     Q_OBJECT
     public:
