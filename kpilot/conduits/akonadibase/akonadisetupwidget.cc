@@ -29,12 +29,12 @@
 
 #include "akonadisetupwidget.h"
 
+#include <akonadi/changerecorder.h>
 #include <akonadi/control.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/entitytreeviewstatesaver.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include <akonadi/servermanager.h>
 
@@ -62,7 +62,7 @@ public:
 	Entity::Id fConfiguredCollection;
 	bool fCollectionModified;
 	Akonadi::Session* fSession;
-	Akonadi::Monitor* fMonitor;
+	Akonadi::ChangeRecorder* fMonitor;
 	Akonadi::EntityTreeViewStateSaver* fSaver;
 	KConfig* fConduitConfig;
 };
@@ -86,7 +86,7 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent, KConfig* config )
 void AkonadiSetupWidget::initWidgets(){
 	FUNCTIONSETUP;
 	d->fSession = new Akonadi::Session( "KPilot Configuration Session"  );
-	d->fMonitor = new Akonadi::Monitor( this );
+	d->fMonitor = new Akonadi::ChangeRecorder( this );
 	d->fMonitor->setCollectionMonitored( Collection::root() );
 	d->fMonitor->setAllMonitored();
 	

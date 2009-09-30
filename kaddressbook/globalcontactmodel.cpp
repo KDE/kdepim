@@ -22,9 +22,9 @@
 
 #include "contactstreemodel.h"
 
+#include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -40,7 +40,7 @@ GlobalContactModel::GlobalContactModel()
   scope.fetchFullPayload( true );
   scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
-  mMonitor = new Akonadi::Monitor;
+  mMonitor = new Akonadi::ChangeRecorder;
   mMonitor->fetchCollection( true );
   mMonitor->setItemFetchScope( scope );
   mMonitor->setCollectionMonitored( Akonadi::Collection::root() );
