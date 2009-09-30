@@ -375,6 +375,12 @@ void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
   d->setHeaderStyleAndStrategy( style, strategy );
 }
 
+KHTMLPart *Viewer::htmlPart() const
+{
+  Q_D( const Viewer );
+  return d->htmlPart();
+}
+
 }
 
 #include "viewer.moc"
