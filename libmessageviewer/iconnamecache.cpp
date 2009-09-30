@@ -21,7 +21,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 
-
+namespace Message {
 K_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
 
 IconNameCache* IconNameCache::instance()
@@ -51,4 +51,4 @@ QString IconNameCache::iconPath( const QString &name, int size ) const
   mCachedEntries.insert( entry, fileName );
   return fileName;
 }
-
+}

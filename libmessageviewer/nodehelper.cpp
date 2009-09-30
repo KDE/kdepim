@@ -449,7 +449,7 @@ QString NodeHelper::iconName( KMime::Content *node, int size ) const
     }
   }
 
-  return IconNameCache::instance()->iconPath( fileName, size );
+  return Message::IconNameCache::instance()->iconPath( fileName, size );
 }
 
 void NodeHelper::magicSetType( KMime::Content* node, bool aAutoDecode )
