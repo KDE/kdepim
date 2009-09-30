@@ -59,6 +59,8 @@ protected slots:
     void addCheckmark( void );
     void onAutoDecimal( void );
     void DecimalList( void );
+    void pastePlainText( void );
+
 private:
     void disableEditing ( void );
     void createAutoDecimalList();

@@ -742,6 +742,10 @@ void KJotsPage::rename()
     QDomElement text = doc.createElement( "Text" );
 
     QString saveText = document.toHtml("UTF-8");
+
+    // Remove extra style information for now.
+    saveText.remove( " style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"" );
+
     text.appendChild( doc.createCDATASection( saveText ));
     page.appendChild( text );
 

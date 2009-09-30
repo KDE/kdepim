@@ -31,10 +31,12 @@
 #include <QUrl>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QClipboard>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <krun.h>
+#include <KApplication>
 
 #include "kjotsentry.h"
 #include "kjotslinkdialog.h"
@@ -67,6 +69,11 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
     popup->addSeparator();
     popup->addAction(actionCollection->action("copyIntoTitle"));
     popup->addAction(actionCollection->action("insert_checkmark"));
+
+    if (!KApplication::kApplication()->clipboard()->text().isEmpty())
+    {
+        popup->addAction(actionCollection->action("paste_plain_text"));
+    }
 
     popup->exec( event->globalPos() );
 
@@ -316,6 +323,14 @@ void KJotsEdit::mouseReleaseEvent(QMouseEvent *event)
     KTextEdit::mouseReleaseEvent(event);
 }
 
+void KJotsEdit::pastePlainText()
+{
+    QString text = KApplication::kApplication()->clipboard()->text();
+    if (!text.isEmpty())
+    {
+        insertPlainText(text);
+    }
+}
 
 #include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */

@@ -1,9 +1,13 @@
 [Desktop Entry]
 Name=Blogilo
+Name[uk]=Blogilo
+Name[x-test]=xxBlogiloxx
 Exec=blogilo %i -caption "%c"
 Icon=blogilo
 Type=Application
 Categories=Qt;KDE;Network;
 GenericName=A KDE Blogging Client
+GenericName[uk]=Клієнт ведення блогів для KDE
+GenericName[x-test]=xxA KDE Blogging Clientxx
 Terminal=false
 
