@@ -24,7 +24,7 @@
 
 #include <Plasma/Applet>
 
-namespace Plasma { class Label; };
+namespace Plasma { class Label; }
 
 class QGraphicsLinearLayout;
 class StickyNoteItem;
