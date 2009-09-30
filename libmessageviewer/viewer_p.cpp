@@ -2554,10 +2554,10 @@ void ViewerPrivate::injectAttachments()
   QString imgSrc;
   if( !mShowAttachmentQuicklist ) {
     urlHandle.append( "kmail:showAttachmentQuicklist" );
-    imgSrc.append( "attachmentQuicklistClosed.png" );
+    imgSrc.append( "quicklistClosed.png" );
   } else {
     urlHandle.append( "kmail:hideAttachmentQuicklist" );
-    imgSrc.append( "attachmentQuicklistOpened.png" );
+    imgSrc.append( "quicklistOpened.png" );
   }
 
   QColor background = KColorScheme( QPalette::Active, KColorScheme::View ).background().color();
