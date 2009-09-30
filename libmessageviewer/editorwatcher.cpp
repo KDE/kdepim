@@ -39,7 +39,7 @@
 #include <sys/ioctl.h>
 #endif
 
-
+namespace Message {
 EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool openWith,
                               QObject * parent, QWidget *parentWidget ) :
     QObject( parent ),
@@ -162,5 +162,5 @@ void EditorWatcher::checkEditDone()
   emit editDone( this );
   deleteLater();
 }
-
+}
 #include "editorwatcher.moc"

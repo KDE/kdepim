@@ -19,6 +19,7 @@
 #ifndef MESSAGEVIEWER_EDITORWATCHER_H
 #define MESSAGEVIEWER_EDITORWATCHER_H
 
+#include "messageviewer_export.h"
 #include <kurl.h>
 
 #include <qdatetime.h>
@@ -33,7 +34,8 @@ class KProcess;
   as the edited file are watched to work with as many as possible
   editors.
 */
-class EditorWatcher : public QObject
+namespace Message {
+class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
 {
   Q_OBJECT
   public:
@@ -81,5 +83,5 @@ class EditorWatcher : public QObject
     bool mError;
     bool mDone;
 };
-
+}
 #endif

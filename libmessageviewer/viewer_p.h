@@ -54,7 +54,6 @@ class QTreeView;
 
 class MimeTreeModel;
 class ConfigureWidget;
-class EditorWatcher;
 
 class KHtmlPartHtmlWriter;
 class HtmlStatusBar;
@@ -69,7 +68,7 @@ namespace Message {
   namespace Interface {
     class BodyPartMemento;
   }
-
+  class EditorWatcher;
   class HtmlWriter;
   class CSSHelper;
   class AttachmentStrategy;
@@ -438,7 +437,7 @@ public slots:
   void slotAttachmentCopy();
   void slotAttachmentDelete();
   void slotAttachmentEdit();
-  void slotAttachmentEditDone(EditorWatcher* editorWatcher);
+  void slotAttachmentEditDone(Message::EditorWatcher* editorWatcher);
   void slotLevelQuote( int l );
 
   /**
@@ -531,7 +530,7 @@ public:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
-  QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
+  QMap<Message::EditorWatcher*, KMime::Content*> mEditorWatchers;
 
   Viewer *const q;
 };
