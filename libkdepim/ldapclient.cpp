@@ -62,6 +62,7 @@ LdapClient::~LdapClient()
 void LdapClient::setAttrs( const QStringList& attrs )
 {
   mAttrs = attrs;
+  mAttrs << "objectClass"; // via objectClass we detect distribution lists
 }
 
 void LdapClient::startQuery( const QString& filter )
