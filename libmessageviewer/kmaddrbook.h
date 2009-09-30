@@ -20,12 +20,13 @@
 #ifndef KMAddrBook_h
 #define KMAddrBook_h
 
+#include "messageviewer_export.h"
 #include <QStringList>
 
 #include <kabc/addressee.h>
 
 
-class KabcBridge {
+class MESSAGEVIEWER_EXPORT KabcBridge {
 public:
   static QStringList addresses();
   static void addresses(QStringList& result);
