@@ -80,7 +80,6 @@ QString PartNodeBodyPart::contentDescription() const {
 
 QString PartNodeBodyPart::contentDispositionParameter( const char * param ) const {
   return mContent->contentDisposition()->parameter( param );
-  return QString();
 }
 
 bool PartNodeBodyPart::hasCompleteBody() const {
