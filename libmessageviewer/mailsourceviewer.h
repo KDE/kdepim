@@ -32,6 +32,8 @@
 #ifndef MAILSOURCEVIEWER_H
 #define MAILSOURCEVIEWER_H
 
+#include "messageviewer_export.h"
+
 #include <QSyntaxHighlighter>
 
 #include <KTextBrowser>
@@ -44,7 +46,7 @@
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-
+namespace Message {
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:
@@ -56,7 +58,7 @@ protected:
 };
 
 
-class MailSourceViewer : public KTextBrowser
+class MESSAGEVIEWER_EXPORT MailSourceViewer : public KTextBrowser
 {
 public:
   MailSourceViewer( QWidget *parent = 0 );
@@ -66,4 +68,5 @@ private:
   MailSourceHighlighter *mSourceHighLighter;
 };
 
+}
 #endif // MAILSOURCEVIEWER_H
