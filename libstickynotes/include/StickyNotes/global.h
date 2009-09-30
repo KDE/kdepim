@@ -22,7 +22,7 @@
 #ifndef LSN_GLOBAL_H
 #define LSN_GLOBAL_H
 
-#include <StickyNotes/config.h>
+#include <StickyNotes/config-stickynotes.h>
 
 #include <qglobal.h>
 

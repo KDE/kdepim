@@ -35,7 +35,7 @@ ELSE(BUILD_GUI)
 	UNSET(BUILD_PLASMA_GUI CACHE)
 ENDIF(BUILD_GUI)
 
-CONFIGURE_FILE(config.h.in include/StickyNotes/config.h)
+CONFIGURE_FILE(config-stickynotes.h.cmake include/StickyNotes/config-stickynotes.h)
 
 
 SET(STICKYNOTES_SRCS	src/basenoteitem.cpp
