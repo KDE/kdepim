@@ -465,7 +465,7 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
 
     QString details;
     if ( !recipients.empty() ) {
-        details += i18np( "Recipients:", "Recipients:", res.numRecipients() );
+        details += i18np( "Recipient:", "Recipients:", res.numRecipients() );
         if ( res.numRecipients() == 1 )
             return details + renderKey( recipients.front() );
 
