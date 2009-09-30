@@ -10,6 +10,7 @@ X-KDE-CfgDlgHierarchy=KAddressBook
 X-KDE-Weight=200
 
 Name=LDAP Server Settings
+Name[gl]=Configuración do servidor de LDAP
 Name[nds]=LDAP-Server instellen
 Name[pt]=Configuração do Servidor de LDAP
 Name[pt_BR]=Configurações do servidor LDAP
@@ -17,6 +18,7 @@ Name[sv]=LDAP-serverinställningar
 Name[uk]=Параметри серверів LDAP
 Name[x-test]=xxLDAP Server Settingsxx
 Comment=Configure the available LDAP servers
+Comment[gl]=Configurar os servidores de LDAP disponíbeis
 Comment[nds]=De verföögboren LDAP-Servers instellen
 Comment[pt]=Configurar os servidores de LDAP disponíveis
 Comment[pt_BR]=Configura os servidores LDAP disponíveis
