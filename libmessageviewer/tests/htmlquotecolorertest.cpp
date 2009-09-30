@@ -22,7 +22,6 @@
 
 #include "qtest_kde.h"
 
-using namespace KMail;
 
 QTEST_KDEMAIN( HTMLQuoteColorerTester, GUI )
 
