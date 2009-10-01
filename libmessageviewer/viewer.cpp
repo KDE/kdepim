@@ -399,6 +399,12 @@ KAction *Viewer::urlOpenAction()
   return d->mUrlOpenAction;
 }
 
+void Viewer::setPrinting(bool enable)
+{
+  Q_D( Viewer );
+  d->setPrinting( enable );
+}
+
 }
 
 #include "viewer.moc"

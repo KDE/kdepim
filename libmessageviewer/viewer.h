@@ -222,6 +222,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   QString overrideEncoding() const;
   void setOverrideEncoding( const QString &encoding );
   CSSHelper* cssHelper() const;
+  void setPrinting(bool enable);
 
   KToggleAction *toggleFixFontAction();
 
