@@ -98,7 +98,7 @@ class ContactsTreeModel : public EntityTreeModel
     };
     typedef QList<Column> Columns;
 
-    ContactsTreeModel( Session *session, Monitor *monitor, QObject *parent = 0 );
+    ContactsTreeModel( Session *session, ChangeRecorder *monitor, QObject *parent = 0 );
     virtual ~ContactsTreeModel();
 
     void setColumns( const Columns &columns );

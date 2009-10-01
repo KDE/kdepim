@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-ContactsTreeModel::ContactsTreeModel( Session *session, Monitor *monitor, QObject *parent )
+ContactsTreeModel::ContactsTreeModel( Session *session, ChangeRecorder *monitor, QObject *parent )
   : EntityTreeModel( session, monitor, parent ), mColumns( Columns() << FullName )
 {
 }

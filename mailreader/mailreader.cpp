@@ -9,7 +9,7 @@
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/session.h>
 #include <akonadi/statisticstooltipproxymodel.h>
 
@@ -66,7 +66,7 @@ void mailreader::setupDocks()
   // Setup the core model
   Akonadi::Session *session = new Akonadi::Session( "AkonadiMailReader", this );
 
-  Akonadi::Monitor *monitor = new Akonadi::Monitor( this );
+  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setMimeTypeMonitored( "message/rfc822", true );

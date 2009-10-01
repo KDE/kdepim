@@ -23,6 +23,7 @@
 
 namespace Akonadi
 {
+  class ChangeRecorder;
   class ContactsTreeModel;
   class Monitor;
   class Session;
@@ -58,7 +59,7 @@ class GlobalContactModel
     static GlobalContactModel *mInstance;
 
     Akonadi::Session *mSession;
-    Akonadi::Monitor *mMonitor;
+    Akonadi::ChangeRecorder *mMonitor;
     Akonadi::ContactsTreeModel *mModel;
 };
 
