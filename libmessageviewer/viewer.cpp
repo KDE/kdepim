@@ -387,6 +387,18 @@ KAction *Viewer::copyURLAction()
   return d->mCopyURLAction;
 }
 
+KAction *Viewer::copyAction()
+{
+  Q_D( Viewer );
+  return d->mCopyAction;
+}
+
+KAction *Viewer::urlOpenAction()
+{
+  Q_D( Viewer );
+  return d->mUrlOpenAction;
+}
+
 }
 
 #include "viewer.moc"
