@@ -43,7 +43,7 @@
 #include <QFont>
 #include <QPalette>
 
-namespace Message {
+namespace MessageViewer {
 
 CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   KPIM::CSSHelper( pd )

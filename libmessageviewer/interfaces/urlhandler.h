@@ -37,7 +37,7 @@ class KUrl;
 class QString;
 class QPoint;
 
-namespace Message {
+namespace MessageViewer {
 
 class ViewerPrivate;
 

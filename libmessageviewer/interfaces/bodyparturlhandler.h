@@ -38,7 +38,7 @@ class QPoint;
 
 class Callback;
 
-namespace Message {
+namespace MessageViewer {
   
 namespace Interface {
 

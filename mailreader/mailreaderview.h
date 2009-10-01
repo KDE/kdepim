@@ -13,7 +13,7 @@
 class QPainter;
 class KUrl;
 
-namespace Message {
+namespace MessageViewer {
   class Viewer;
 }
 
@@ -52,7 +52,7 @@ private:
     void displayAboutPage();
 
     Ui::mailreaderview ui_mailreaderview;
-    Message::Viewer *m_readerWin;
+    MessageViewer::Viewer *m_readerWin;
 
 public slots:
     void slotConfigure();

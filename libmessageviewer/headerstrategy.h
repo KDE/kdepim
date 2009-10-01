@@ -36,7 +36,7 @@
 
 class QString;
 class QStringList;
-namespace Message {
+namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT HeaderStrategy {
 protected:
   HeaderStrategy();

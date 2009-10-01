@@ -44,7 +44,7 @@
 #include <QString>
 #include <QTextCodec>
 
-using namespace Message;
+using namespace MessageViewer;
 
 static int serial = 0;
 

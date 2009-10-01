@@ -22,7 +22,7 @@
 
 #include "attachmentstrategy.h"
 
-namespace Message {
+namespace MessageViewer {
 
 EmptySource::EmptySource() : ObjectTreeSourceIf()
 {

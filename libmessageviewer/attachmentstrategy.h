@@ -41,7 +41,7 @@ namespace KMime {
   class Content;
 }
 
-namespace Message {
+namespace MessageViewer {
 
 class MESSAGEVIEWER_EXPORT AttachmentStrategy {
 protected:

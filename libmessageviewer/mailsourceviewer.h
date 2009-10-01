@@ -46,7 +46,7 @@
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-namespace Message {
+namespace MessageViewer {
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:

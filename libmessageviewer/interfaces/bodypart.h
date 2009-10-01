@@ -37,7 +37,7 @@
 class QByteArray;
 class QString;
 
-namespace Message {
+namespace MessageViewer {
 namespace Interface {
 
 /*FIXME(Andras) review, port

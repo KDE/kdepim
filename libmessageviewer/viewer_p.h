@@ -63,7 +63,7 @@ namespace KParts {
   class OpenUrlArguments;
 }
 
-namespace Message {
+namespace MessageViewer {
 
   namespace Interface {
     class BodyPartMemento;
@@ -77,7 +77,7 @@ namespace Message {
   class HeaderStyle;
 }
 
-namespace Message {
+namespace MessageViewer {
 /** Private class for MailViewer.
 * @author andras@kdab.net
 */
@@ -437,7 +437,7 @@ public slots:
   void slotAttachmentCopy();
   void slotAttachmentDelete();
   void slotAttachmentEdit();
-  void slotAttachmentEditDone(Message::EditorWatcher* editorWatcher);
+  void slotAttachmentEditDone(MessageViewer::EditorWatcher* editorWatcher);
   void slotLevelQuote( int l );
 
   /**
@@ -462,7 +462,7 @@ public slots:
   void slotUrlSave();
   void slotSaveMessage();
   /** Re-parse the current message. */
-  void update(Message::Viewer::UpdateMode updateMode = Viewer::Delayed);
+  void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
   bool hasParentDivWithId( const DOM::Node &start, const QString &id );
 
@@ -530,7 +530,7 @@ public:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
-  QMap<Message::EditorWatcher*, KMime::Content*> mEditorWatchers;
+  QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
 
   Viewer *const q;
 };

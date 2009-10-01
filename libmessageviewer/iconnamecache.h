@@ -30,7 +30,7 @@
  *
  * The IconNameCache caches the result of iconPath() in a map and solves the slowness.
  */
-namespace Message {
+namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT IconNameCache
 {
   public:

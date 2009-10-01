@@ -34,7 +34,7 @@ class KProcess;
   as the edited file are watched to work with as many as possible
   editors.
 */
-namespace Message {
+namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
 {
   Q_OBJECT

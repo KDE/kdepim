@@ -36,7 +36,7 @@
 class QByteArray;
 class QString;
 
-namespace Message {
+namespace MessageViewer {
 /**
   * @short An interface for HTML sinks.
   * @author Marc Mutz <mutz@kde.org>

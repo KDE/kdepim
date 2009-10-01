@@ -41,7 +41,7 @@ class KUrl;
 class QString;
 class QPoint;
 
-namespace Message {
+namespace MessageViewer {
   namespace Interface {
     class BodyPartURLHandler;
   }
@@ -50,7 +50,7 @@ namespace Message {
   class URLHandler;
 }
 
-namespace Message {
+namespace MessageViewer {
 
 /**
   * @short Singleton to manage the list of URLHandlers
@@ -72,12 +72,12 @@ self = new URLHandlerManager();
   void registerHandler( const URLHandler * handler );
   void unregisterHandler( const URLHandler * handler );
 
-  void registerHandler( const Message::Interface::BodyPartURLHandler * handler );
-  void unregisterHandler( const Message::Interface::BodyPartURLHandler * handler );
+  void registerHandler( const MessageViewer::Interface::BodyPartURLHandler * handler );
+  void unregisterHandler( const MessageViewer::Interface::BodyPartURLHandler * handler );
 
-  bool handleClick( const KUrl & url, Message::ViewerPrivate * w=0 ) const;
-  bool handleContextMenuRequest( const KUrl & url, const QPoint & p, Message::ViewerPrivate * w=0 ) const;
-  QString statusBarMessage( const KUrl & url, Message::ViewerPrivate* w=0 ) const;
+  bool handleClick( const KUrl & url, MessageViewer::ViewerPrivate * w=0 ) const;
+  bool handleContextMenuRequest( const KUrl & url, const QPoint & p, MessageViewer::ViewerPrivate * w=0 ) const;
+  QString statusBarMessage( const KUrl & url, MessageViewer::ViewerPrivate* w=0 ) const;
 
 private:
   typedef QVector<const URLHandler*> HandlerList;

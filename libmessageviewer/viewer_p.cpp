@@ -102,7 +102,7 @@
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
-using namespace Message;
+using namespace MessageViewer;
 
 const int ViewerPrivate::delay = 150;
 
@@ -327,12 +327,12 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   file.write( node->decodedContent() );
   file.flush();
 
-  Message::EditorWatcher *watcher =
-    new Message::EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
+  MessageViewer::EditorWatcher *watcher =
+    new MessageViewer::EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
                                 false, this, mMainWindow );
   mEditorWatchers[ watcher ] = node;
 
-  connect( watcher, SIGNAL(editDone(Message::EditorWatcher*)), SLOT(slotAttachmentEditDone(Message::EditorWatcher*)) );
+  connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)) );
   if ( !watcher->start() ) {
     QFile::remove( file.fileName() );
   }
@@ -2746,7 +2746,7 @@ void ViewerPrivate::slotAttachmentEdit()
 }
 
 
-void ViewerPrivate::slotAttachmentEditDone( Message::EditorWatcher* editorWatcher )
+void ViewerPrivate::slotAttachmentEditDone( MessageViewer::EditorWatcher* editorWatcher )
 {
   QString name = editorWatcher->url().fileName();
   if ( editorWatcher->fileChanged() ) {

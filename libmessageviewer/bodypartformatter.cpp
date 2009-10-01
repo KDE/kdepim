@@ -41,12 +41,12 @@
 #include <kdebug.h>
 #include <kascii.h>
 
-using namespace Message;
+using namespace MessageViewer;
 
 namespace {
   class AnyTypeBodyPartFormatter
     : public BodyPartFormatter,
-      public Message::Interface::BodyPartFormatter {
+      public MessageViewer::Interface::BodyPartFormatter {
     static const AnyTypeBodyPartFormatter * self;
   public:
     Result format( Interface::BodyPart *, HtmlWriter * ) const {

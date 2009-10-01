@@ -29,13 +29,13 @@ namespace KMime {
 class QObject;
 class QTextCodec;
 
-namespace Message {
+namespace MessageViewer {
   class HtmlWriter;
   class CSSHelper;
   class AttachmentStrategy;
 }
 
-namespace Message {
+namespace MessageViewer {
 /** @author Andras Mantia <amantia@kdab.net> */
 
 /** Interface for object tree sources.*/

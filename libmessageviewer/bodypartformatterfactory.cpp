@@ -51,7 +51,7 @@ using namespace BodyPartFormatterFactoryPrivate;
 
 #include <assert.h>
 
-using namespace Message;
+using namespace MessageViewer;
 
 namespace {
 

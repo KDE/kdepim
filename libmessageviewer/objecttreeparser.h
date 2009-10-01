@@ -53,7 +53,7 @@ namespace GpgME {
 
 class PartMetaData;
 
-namespace Message {
+namespace MessageViewer {
 
 class ViewerPrivate;
 class HtmlWriter;

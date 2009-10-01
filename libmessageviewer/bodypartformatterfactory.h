@@ -37,7 +37,7 @@
 class QString;
 #include <QByteArray>
 
-namespace Message {
+namespace MessageViewer {
 
 namespace Interface {
   class BodyPartFormatter;

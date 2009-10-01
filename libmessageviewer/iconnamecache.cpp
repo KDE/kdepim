@@ -21,7 +21,7 @@
 #include <KGlobal>
 #include <KIconLoader>
 
-namespace Message {
+namespace MessageViewer {
 K_GLOBAL_STATIC( IconNameCache, s_iconNameCache )
 
 IconNameCache* IconNameCache::instance()

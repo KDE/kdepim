@@ -40,7 +40,7 @@ namespace KMime {
     class Message;
 }
 
-namespace Message {
+namespace MessageViewer {
 
 class HeaderStrategy;
 

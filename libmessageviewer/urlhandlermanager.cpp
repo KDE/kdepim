@@ -54,7 +54,7 @@
 using std::for_each;
 using std::remove;
 using std::find;
-using namespace Message;
+using namespace MessageViewer;
 
 URLHandlerManager * URLHandlerManager::self = 0;
 

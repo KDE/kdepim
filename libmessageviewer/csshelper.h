@@ -36,7 +36,7 @@
 
 #include "messageviewer_export.h"
 
-namespace Message {
+namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT CSSHelper : public KPIM::CSSHelper {
 public:
   CSSHelper( const QPaintDevice *pd );

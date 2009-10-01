@@ -34,7 +34,7 @@
 #ifndef __KMAIL_INTERFACE_BODYPARTFORMATTER_H__
 #define __KMAIL_INTERFACE_BODYPARTFORMATTER_H__
 
-namespace Message {
+namespace MessageViewer {
 
   class HtmlWriter;
 

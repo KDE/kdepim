@@ -37,7 +37,7 @@
 #include <QRegExp>
 #include <QShortcut>
 #include <kiconloader.h>
-namespace Message {
+namespace MessageViewer {
 
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   // all visible ascii except space and :

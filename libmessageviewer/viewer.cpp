@@ -32,7 +32,7 @@
 #include <KHTMLPart>
 #include <KHTMLView>
 
-namespace Message {
+namespace MessageViewer {
 
 Viewer::Viewer(QWidget *aParent,
                          KSharedConfigPtr config,
@@ -331,7 +331,7 @@ void Viewer::setOverrideEncoding( const QString &encoding )
 
 }
 
-Message::CSSHelper* Viewer::cssHelper() const
+MessageViewer::CSSHelper* Viewer::cssHelper() const
 {
   Q_D( const Viewer );
   return d->cssHelper();

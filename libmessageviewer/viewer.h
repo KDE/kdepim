@@ -64,7 +64,7 @@ namespace {
   class HtmlAnchorHandler;
 }
 
-namespace Message {
+namespace MessageViewer {
   class AttachmentStrategy;
   class ViewerPrivate;
   class CSSHelper;
@@ -77,7 +77,7 @@ namespace Message {
    used for reading or viewing messages.
 */
 
-namespace Message {
+namespace MessageViewer {
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   Q_OBJECT

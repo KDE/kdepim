@@ -39,7 +39,7 @@
 #include <sys/ioctl.h>
 #endif
 
-namespace Message {
+namespace MessageViewer {
 EditorWatcher::EditorWatcher( const KUrl & url, const QString &mimeType, bool openWith,
                               QObject * parent, QWidget *parentWidget ) :
     QObject( parent ),

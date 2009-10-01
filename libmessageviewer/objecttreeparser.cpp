@@ -116,7 +116,7 @@ using KPIMUtils::LinkLocator;
 
 #include <kmime/kmime_message.h>
 
-using namespace Message;
+using namespace MessageViewer;
 
 // A small class that eases temporary CryptPlugWrapper changes:
 class ObjectTreeParser::CryptoProtocolSaver {
@@ -507,7 +507,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           VerifyDetachedBodyPartMemento * newM
             = new VerifyDetachedBodyPartMemento( job, cryptProto->keyListJob(), signaturetext, plainData );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(Message::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Message::Viewer::UpdateMode)));
+            QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -544,7 +544,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
           VerifyOpaqueBodyPartMemento * newM
             = new VerifyOpaqueBodyPartMemento( job, cryptProto->keyListJob(), signaturetext );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(Message::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Message::Viewer::UpdateMode)));
+            QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -856,7 +856,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
         DecryptVerifyBodyPartMemento * newM
           = new DecryptVerifyBodyPartMemento( job, ciphertext );
         if ( allowAsync() ) {
-          QObject::connect(newM, SIGNAL(update(Message::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(Message::Viewer::UpdateMode)));
+          QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
           if ( newM->start() ) {
             decryptionStarted = true;
             mHasPendingAsyncJobs = true;

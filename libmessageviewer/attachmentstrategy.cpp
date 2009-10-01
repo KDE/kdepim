@@ -38,7 +38,7 @@
 #include <kmime/kmime_content.h>
 #include <kdebug.h>
 
-namespace Message {
+namespace MessageViewer {
 
 //
 // IconicAttachmentStrategy:

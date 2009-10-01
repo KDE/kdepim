@@ -142,7 +142,7 @@ void NodeHelper::clear()
   qDeleteAll(mUnencryptedMessages);
   mUnencryptedMessages.clear();
   mOverrideCodecs.clear();
-  for ( QMap<KMime::Content*, QMap< QByteArray, Message::Interface::BodyPartMemento*> >::iterator
+  for ( QMap<KMime::Content*, QMap< QByteArray, MessageViewer::Interface::BodyPartMemento*> >::iterator
         it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
         it != end; ++it ) {
     clearBodyPartMemento( it.value() );
@@ -151,9 +151,9 @@ void NodeHelper::clear()
   mDisplayEmbeddedNodes.clear();
 }
 
-void NodeHelper::clearBodyPartMemento(QMap<QByteArray, Message::Interface::BodyPartMemento*> bodyPartMementoMap)
+void NodeHelper::clearBodyPartMemento(QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> bodyPartMementoMap)
 {
-  for ( QMap<QByteArray, Message::Interface::BodyPartMemento*>::iterator
+  for ( QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*>::iterator
           it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
         it != end; ++it ) {
     delete it.value();
@@ -449,7 +449,7 @@ QString NodeHelper::iconName( KMime::Content *node, int size ) const
     }
   }
 
-  return Message::IconNameCache::instance()->iconPath( fileName, size );
+  return MessageViewer::IconNameCache::instance()->iconPath( fileName, size );
 }
 
 void NodeHelper::magicSetType( KMime::Content* node, bool aAutoDecode )
@@ -587,20 +587,20 @@ QString NodeHelper::fileName(const KMime::Content* node)
 }
 
 //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalBodyPartMemento replacement
-Message::Interface::BodyPartMemento *NodeHelper::bodyPartMemento( KMime::Content *node,
+MessageViewer::Interface::BodyPartMemento *NodeHelper::bodyPartMemento( KMime::Content *node,
                                                const QByteArray &which ) const
 {
   if ( !mBodyPartMementoMap.contains( node ) )
     return 0;
-  const QMap<QByteArray,Message::Interface::BodyPartMemento*>::const_iterator it =
+  const QMap<QByteArray,MessageViewer::Interface::BodyPartMemento*>::const_iterator it =
   mBodyPartMementoMap[node].find( which.toLower() );
   return it != mBodyPartMementoMap[node].end() ? it.value() : 0 ;
 }
 
  //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalSetBodyPartMemento replacement
-void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &which, Message::Interface::BodyPartMemento *memento )
+void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &which, MessageViewer::Interface::BodyPartMemento *memento )
 {
-  const QMap<QByteArray,Message::Interface::BodyPartMemento*>::iterator it =
+  const QMap<QByteArray,MessageViewer::Interface::BodyPartMemento*>::iterator it =
     mBodyPartMementoMap[node].lowerBound( which.toLower() );
 
   if ( it != mBodyPartMementoMap[node].end() && it.key() == which.toLower() ) {

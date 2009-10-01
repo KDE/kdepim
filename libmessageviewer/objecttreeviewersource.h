@@ -24,7 +24,7 @@
 
 class QString;
 
-namespace Message {
+namespace MessageViewer {
   
 class ViewerPrivate;
 

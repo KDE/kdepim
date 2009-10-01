@@ -48,7 +48,7 @@
 
 using namespace Kleo;
 using namespace GpgME;
-using namespace Message;
+using namespace MessageViewer;
 
 DecryptVerifyBodyPartMemento::DecryptVerifyBodyPartMemento( DecryptVerifyJob * job, const QByteArray & cipherText )
   : QObject( 0 ),

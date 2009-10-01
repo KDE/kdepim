@@ -40,7 +40,7 @@
 //
 // Header tables:
 //
-namespace Message {
+namespace MessageViewer {
 static const char * briefHeaders[] = {
   "subject", "from", "cc", "bcc", "date"
 };
@@ -77,7 +77,7 @@ static QStringList stringList( const char * headers[], int numHeaders ) {
 //
 
 class AllHeaderStrategy : public HeaderStrategy {
-  friend class Message::HeaderStrategy;
+  friend class MessageViewer::HeaderStrategy;
 protected:
   AllHeaderStrategy() : HeaderStrategy() {}
   virtual ~AllHeaderStrategy() {}
@@ -100,7 +100,7 @@ public:
 //
 
 class RichHeaderStrategy : public HeaderStrategy {
-  friend class Message::HeaderStrategy;
+  friend class MessageViewer::HeaderStrategy;
 protected:
   RichHeaderStrategy()
     : HeaderStrategy(),
@@ -125,7 +125,7 @@ private:
 //
 
 class StandardHeaderStrategy : public HeaderStrategy {
-  friend class Message::HeaderStrategy;
+  friend class MessageViewer::HeaderStrategy;
 protected:
   StandardHeaderStrategy()
     : HeaderStrategy(),
@@ -150,7 +150,7 @@ private:
 //
 
 class BriefHeaderStrategy : public HeaderStrategy {
-  friend class Message::HeaderStrategy;
+  friend class MessageViewer::HeaderStrategy;
 protected:
   BriefHeaderStrategy()
     : HeaderStrategy(),
@@ -176,7 +176,7 @@ private:
 //
 
 class CustomHeaderStrategy : public HeaderStrategy {
-  friend class Message::HeaderStrategy;
+  friend class MessageViewer::HeaderStrategy;
 protected:
   CustomHeaderStrategy();
   virtual ~CustomHeaderStrategy() {}
