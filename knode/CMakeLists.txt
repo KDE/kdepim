@@ -139,7 +139,7 @@ kde4_add_app_icon(knode_SRCS "hi*-app-knode2.png")
 
 kde4_add_executable(knode ${knode_SRCS})
 
-target_link_libraries(knode ${KDE4_KDECORE_LIBS} kdepim knodecommon)
+target_link_libraries(knode ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} kdepim knodecommon)
 
 install(TARGETS knode  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
