@@ -94,6 +94,10 @@ bool KHolidays::parseFile( const QDate &date )
 
 QList<KHoliday> KHolidays::getHolidays( const QDate &date )
 {
+  if ( !date.isValid() ) {
+    return;
+  }
+
   QList<KHoliday> list;
   if ( !parseFile( date ) ) {
     return list;
