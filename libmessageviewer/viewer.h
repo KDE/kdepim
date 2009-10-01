@@ -228,6 +228,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   KToggleAction *toggleMimePartTreeAction();
 
   KAction *selectAllAction();
+  KAction *copyURLAction();
+
   const HeaderStrategy * headerStrategy() const;
 
   const HeaderStyle * headerStyle() const;

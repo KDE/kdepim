@@ -362,9 +362,9 @@ const HeaderStrategy * Viewer::headerStrategy() const
   return d->headerStrategy();
 }
 
-const HeaderStyle * Viewer::headerStyle() const {
+const HeaderStyle * Viewer::headerStyle() const
+{
   Q_D( const Viewer );
-
   return d->headerStyle();
 }
 
@@ -379,6 +379,12 @@ KHTMLPart *Viewer::htmlPart() const
 {
   Q_D( const Viewer );
   return d->htmlPart();
+}
+
+KAction *Viewer::copyURLAction()
+{
+  Q_D( Viewer );
+  return d->mCopyURLAction;
 }
 
 }
