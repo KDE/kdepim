@@ -88,7 +88,7 @@ set( kaddressbook_SRCS
 # todo: more appropriate icon?
 kde4_add_app_icon(kaddressbook_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-pim-contacts.png")
 
-kde4_add_executable(kaddressbook RUN_UNINSTALLED ${kaddressbook_SRCS})
+kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
 
 target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
                               ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
