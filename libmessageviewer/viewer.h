@@ -240,6 +240,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   void setHeaderStyleAndStrategy( const HeaderStyle * style,
                                   const HeaderStrategy * strategy );
   KHTMLPart *htmlPart() const;
+
+
+  void writeConfig( bool withSync=true ) const;
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -263,6 +267,7 @@ public slots:
   void slotScrollNext();
   void slotJumpDown();
   void slotFind();
+  void slotUrlClicked();
 
 protected:
     /** Some necessary event handling. */

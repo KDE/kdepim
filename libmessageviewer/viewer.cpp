@@ -405,6 +405,18 @@ void Viewer::setPrinting(bool enable)
   d->setPrinting( enable );
 }
 
+void Viewer::writeConfig( bool force ) const
+{
+  Q_D( const Viewer );
+  d->writeConfig( force );
+}
+
+void Viewer::slotUrlClicked()
+{
+  Q_D( Viewer );
+  d->slotUrlClicked();
+
+}
 }
 
 #include "viewer.moc"
