@@ -4,7 +4,7 @@ Problems addressed
 ------------------
 
 * kolab/issue3806: The sorting of mails in the mailview changes after opening a configuration dialog (rt#5852)
-* kolab/issue3812: Replies to invitations always sent with default outgoing transport
+* kolab/issue3182: Replies to invitations always sent with default outgoing transport
 * kolab/issue3876: regression: New Message To: doesn't fill in To: field in composer
 
 
