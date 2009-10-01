@@ -398,7 +398,7 @@ MonthViewCell::MonthViewCell( KOMonthView *parent)
   mItemList->setLineWidth( 1 );
 
   new KOMonthCellToolTip( mItemList->viewport(),
-                          mCalendar,
+                          monthView()->calendar(),
                           static_cast<KNoScrollListBox *>( mItemList ) );
 
   topLayout->addWidget( mItemList );
@@ -634,7 +634,7 @@ void MonthViewCell::addIncidence( Incidence *incidence, CreateItemVisitor& v, in
       item->setAlarm( incidence->isAlarmEnabled() );
       item->setRecur( incidence->recurrenceType() );
 
-      QColor resourceColor = KOHelper::resourceColor( mCalendar, incidence );
+      QColor resourceColor = KOHelper::resourceColor( monthView()->calendar(), incidence );
       if ( !resourceColor.isValid() )
         resourceColor = KOPrefs::instance()->unsetCategoryColor();
       item->setResourceColor( resourceColor );
@@ -851,7 +851,6 @@ KOMonthView::KOMonthView( Calendar *calendar, QWidget *parent, const char *name 
   for( row = 0; row < mNumWeeks; ++row ) {
     for( col = 0; col < mDaysPerWeek; ++col ) {
       MonthViewCell *cell = new MonthViewCell( this );
-      cell->setCalendar(calendar);
       mCells.insert( row * mDaysPerWeek + col, cell );
       dayLayout->addWidget( cell, row + 2, col );
 
