@@ -94,11 +94,11 @@ bool KHolidays::parseFile( const QDate &date )
 
 QList<KHoliday> KHolidays::getHolidays( const QDate &date )
 {
+  QList<KHoliday> list;
   if ( !date.isValid() ) {
-    return;
+    return list;
   }
 
-  QList<KHoliday> list;
   if ( !parseFile( date ) ) {
     return list;
   }
