@@ -90,7 +90,7 @@ QString KHolidays::location() const
 QString KHolidays::shortText( const QDate &date )
 {
   QValueList<KHoliday> lst = getHolidays( date );
-  if ( !lst.isEmpty() ) 
+  if ( !lst.isEmpty() )
     return lst.first().text;
   else return QString::null;
 }
@@ -116,13 +116,17 @@ bool KHolidays::parseFile( const QDate &date )
 QString KHolidays::getHoliday( const QDate &date )
 {
   QValueList<KHoliday> lst = getHolidays( date );
-  if ( !lst.isEmpty() ) 
+  if ( !lst.isEmpty() )
     return lst.first().text;
   else return QString::null;
 }
 
 QValueList<KHoliday> KHolidays::getHolidays( const QDate &date )
 {
+  if ( !date.isValid() ) {
+    return list;
+  }
+
   QValueList<KHoliday> list;
   if ( !parseFile( date ) ) return list;
   struct holiday *hd = &holidays[date.dayOfYear()-1];
