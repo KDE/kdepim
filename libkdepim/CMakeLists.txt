@@ -77,7 +77,6 @@ set(kdepim_LIB_SRCS
    colorlistbox.cpp
    uistatesaver.cpp
    distributionlistconverter.cpp
-   pimapplication.cpp
 )
 
 QT4_ADD_DBUS_INTERFACE(kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml korganizer_korgac_interface )

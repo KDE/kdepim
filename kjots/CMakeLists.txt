@@ -6,7 +6,7 @@ if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   include(MacroLibrary)
   include(CheckIncludeFiles)
 
-  include_directories( ${KDE4_INCLUDES} )
+  include_directories( ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS})
 
   set(KJOTS_BUILD_KONTACT_PLUGIN FALSE)
 else("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -17,8 +17,6 @@ set(kjotsLibs ${KDE4_KIO_LIBS})
 
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   add_definitions(-DKJOTSKONTACTPLUGIN)
-  # Make sure libkdepim/pimapplication.h can be found.
-  include_directories( ${kdepim_BINARY_DIR} ${kdepim_SOURCE_DIR} )
   set(kjotsLibs ${kjotsLibs} kdepim)
   
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
@@ -76,6 +74,10 @@ set(kjots_SRCS
 kde4_add_executable(kjots ${kjots_SRCS})
 
 target_link_libraries(kjots ${kjotsLibs} ${KDE4_KUTILS_LIBS})
+if(KJOTS_BUILD_KONTACT_PLUGIN)
+  target_link_libraries(kjots ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} )
+endif(KJOTS_BUILD_KONTACT_PLUGIN)
+
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
