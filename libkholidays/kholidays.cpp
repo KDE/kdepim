@@ -123,11 +123,11 @@ QString KHolidays::getHoliday( const QDate &date )
 
 QValueList<KHoliday> KHolidays::getHolidays( const QDate &date )
 {
+  QValueList<KHoliday> list;
   if ( !date.isValid() ) {
     return list;
   }
 
-  QValueList<KHoliday> list;
   if ( !parseFile( date ) ) return list;
   struct holiday *hd = &holidays[date.dayOfYear()-1];
   while ( hd ) {
