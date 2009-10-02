@@ -3,3 +3,5 @@ if(KMAIL_SUPPORTED)
 endif(KMAIL_SUPPORTED)
 
 add_subdirectory( ktexteditor )
+
+add_subdirectory( kaddressbook )
