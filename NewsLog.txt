@@ -1,3 +1,27 @@
+Friday, October 2th 2009
+
+Problems addressed
+------------------
+
+* Fix problem that distribution lists didn't get their domain name appended, in the LDAP
+  search dialog. Related to kolab/issue1499
+* Don't crash when selecting an entry from the LDAP search dialog that doesn't contain a mail address
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Fix progress bar being too big when fetching feeds in Kontact
+
+* Merges from enterprise35 branch:
+      - kolab/issue3182: Replies to invitations always sent with default outgoing transport
+      - kolab/issue3813: reccuring events show wrong dates (rt#5855)
+      - kolab/issue3823: mimetreeviewer doesn't show structure of forward-as-attachment message #n where #n > 1
+      - kolab/issue3867: Save S/MIME encrypted mails unencrypted after reading them
+      - kolab/issue3889: Kontact crahes if opening/changing calendar view (rt#5868)
+      - Also use new icons in the special dates summary, for birthday, anniversary and holiday
+
+
 Friday, September 25th 2009
 
 Problems addressed
