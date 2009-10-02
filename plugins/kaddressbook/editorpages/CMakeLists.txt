@@ -1,4 +1,4 @@
-include_directories( ${KDE4_INCLUDE_DIR} ${GPGME_INCLUDES} ${AKONADI_INCLUDE_DIR}/contact ${CMAKE_SOURCE_DIR}/libkleo ${QT_INCLUDES} ${Boost_INCLUDE_DIR} )
+include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} )
 
 ########### next target ###############
 
