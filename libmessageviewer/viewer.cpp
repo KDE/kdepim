@@ -415,8 +415,14 @@ void Viewer::slotUrlClicked()
 {
   Q_D( Viewer );
   d->slotUrlClicked();
-
 }
+
+void Viewer::saveRelativePosition()
+{
+  Q_D( Viewer );
+  d->saveRelativePosition();
+}
+
 }
 
 #include "viewer.moc"
