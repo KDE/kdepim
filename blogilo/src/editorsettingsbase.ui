@@ -43,7 +43,7 @@
    <item row="0" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_addPoweredBy">
      <property name="text">
-      <string>Automatically insert &quot;Powered by Blogilo&quot;</string>
+      <string>Automatically add &quot;Powered by Blogilo&quot; to every post</string>
      </property>
     </widget>
    </item>
@@ -63,14 +63,14 @@
    <item row="2" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_previewInBlogStyle">
      <property name="text">
-      <string>Enable preview posts in blog style, if available</string>
+      <string>Enable post preview in blog style, if available</string>
      </property>
     </widget>
    </item>
    <item row="3" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_urlCachingEnabled">
      <property name="text">
-      <string>Enable URL caching on add link dialog</string>
+      <string>Enable URL caching in the "Add Link" dialog</string>
      </property>
     </widget>
    </item>

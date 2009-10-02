@@ -27,7 +27,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Configuring your blog account...</string>
+       <string>Blog Account Configuration</string>
       </property>
       <property name="buddy">
        <cstring>txtUrl</cstring>
@@ -43,8 +43,8 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Please fill in these fields, and click the &quot;AutoConfigure&quot; button to program guess your blog settings.
-You can set more options on Advanced tab.</string>
+       <string>Please fill in these fields and click on the &quot;Auto-Configure&quot; button to let Blogilo configure your blog account.
+You can set more options in the Advanced tab.</string>
       </property>
       <property name="scaledContents">
        <bool>false</bool>
@@ -109,7 +109,7 @@ You can set more options on Advanced tab.</string>
        </font>
       </property>
       <property name="text">
-       <string>e.g. : http://domain.com/blog/</string>
+       <string>e.g.: http://domain.com/blog/</string>
       </property>
      </widget>
     </item>
@@ -177,7 +177,7 @@ You can set more options on Advanced tab.</string>
        <bool>false</bool>
       </property>
       <property name="text">
-       <string>Auto Configure</string>
+       <string>Auto-Configure</string>
       </property>
      </widget>
     </item>
@@ -219,7 +219,7 @@ You can set more options on Advanced tab.</string>
        </font>
       </property>
       <property name="text">
-       <string>Configuring your blog account...</string>
+       <string>Blog Account Configuration</string>
       </property>
       <property name="buddy">
        <cstring>txtUrl</cstring>
@@ -315,7 +315,7 @@ You can set more options on Advanced tab.</string>
        </size>
       </property>
       <property name="text">
-       <string comment="verb, fetch the blog id from the web">Fetch ID</string>
+       <string comment="verb, fetch the blog ID from the web">Fetch ID</string>
       </property>
      </widget>
     </item>
@@ -352,12 +352,12 @@ You can set more options on Advanced tab.</string>
      <widget class="KComboBox" name="comboDir">
       <item>
        <property name="text">
-        <string>Left to right</string>
+        <string>Left to Right</string>
        </property>
       </item>
       <item>
        <property name="text">
-        <string>Right to left</string>
+        <string>Right to Left</string>
        </property>
       </item>
      </widget>
@@ -375,7 +375,7 @@ You can set more options on Advanced tab.</string>
     <item row="2" column="0">
      <widget class="QLabel" name="label_11">
       <property name="text">
-       <string>Create/Modify post:</string>
+       <string>Create/Modify posts:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -404,7 +404,7 @@ You can set more options on Advanced tab.</string>
     <item row="9" column="0">
      <widget class="QLabel" name="label_14">
       <property name="text">
-       <string>Support categories:</string>
+       <string>Support for categories:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -414,7 +414,7 @@ You can set more options on Advanced tab.</string>
     <item row="10" column="0">
      <widget class="QLabel" name="label_16">
       <property name="text">
-       <string>Support tags:</string>
+       <string>Support for tags:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -430,7 +430,7 @@ You can set more options on Advanced tab.</string>
     <item row="3" column="0">
      <widget class="QLabel" name="label_22">
       <property name="text">
-       <string>Remove post:</string>
+       <string>Remove posts:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -456,7 +456,7 @@ You can set more options on Advanced tab.</string>
     <item row="5" column="0">
      <widget class="QLabel" name="label_20">
       <property name="text">
-       <string>Multipaged post:</string>
+       <string>Multipaged posts:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -469,7 +469,7 @@ You can set more options on Advanced tab.</string>
     <item row="0" column="0" colspan="2">
      <widget class="QLabel" name="label_10">
       <property name="text">
-       <string>Note: You can see list of supported features for your blog after configuration!</string>
+       <string>Note: You can see a list of supported features for your blog after configuring it.</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
@@ -492,7 +492,7 @@ You can set more options on Advanced tab.</string>
     <item row="16" column="0">
      <widget class="QLabel" name="label_15">
       <property name="text">
-       <string>Create new category:</string>
+       <string>Create new categories:</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

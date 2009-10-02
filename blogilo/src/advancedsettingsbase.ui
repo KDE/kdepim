@@ -13,10 +13,10 @@
    <item>
     <widget class="QCheckBox" name="kcfg_changeNToBreak" >
      <property name="toolTip" >
-      <string>It could be useful on some blogs like Wordpress that do not store posts as HTML</string>
+      <string>This can be useful for some blogs, like Wordpress, that do not store posts as HTML</string>
      </property>
      <property name="text" >
-      <string>Change \n to &lt;br/> On posts retrieved from server</string>
+      <string>Change \n to &lt;br/> on posts retrieved from server</string>
      </property>
     </widget>
    </item>

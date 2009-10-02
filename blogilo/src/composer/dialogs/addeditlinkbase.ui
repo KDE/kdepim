@@ -26,7 +26,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string comment="the web address of the link">Link &amp;Address :</string>
+      <string comment="the web address of the link">Link &amp;address:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -45,7 +45,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string comment="the word which is showed as a link">Link &amp;Title :</string>
+      <string comment="the word which is showed as a link">Link &amp;title:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -102,7 +102,7 @@
       </size>
      </property>
      <property name="toolTip">
-      <string>Clear Link Cache</string>
+      <string>Clear link cache</string>
      </property>
     </widget>
    </item>
@@ -134,7 +134,7 @@
       </sizepolicy>
      </property>
      <property name="text">
-      <string>&amp;Target :</string>
+      <string>&amp;Target:</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

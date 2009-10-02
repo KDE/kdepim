@@ -192,7 +192,7 @@
              <item>
               <widget class="KPushButton" name="btnCatAdd">
                <property name="toolTip">
-                <string>Add a new category to selected blog</string>
+                <string>Add a new category to the selected blog</string>
                </property>
               </widget>
              </item>
@@ -216,7 +216,7 @@
              <item>
               <widget class="QLabel" name="lblCatTags">
                <property name="text">
-                <string>&amp;Tags :</string>
+                <string>&amp;Tags:</string>
                </property>
                <property name="buddy">
                 <cstring>txtCatTags</cstring>
@@ -259,7 +259,7 @@
               </sizepolicy>
              </property>
              <property name="text">
-              <string comment="Status of the current post">Status :</string>
+              <string comment="Status of the current post">Status:</string>
              </property>
             </widget>
            </item>
@@ -324,7 +324,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Feedback: </string>
+              <string>Feedback:</string>
              </property>
             </widget>
            </item>
@@ -454,7 +454,7 @@
          <item>
           <widget class="QLabel" name="label_4">
            <property name="text">
-            <string>Permalink (wordpress) :</string>
+            <string>Permalink (Wordpress):</string>
            </property>
           </widget>
          </item>
@@ -464,7 +464,7 @@
          <item>
           <widget class="QLabel" name="lblOptionsTrackBack">
            <property name="text">
-            <string>&amp;Trackback URLs :</string>
+            <string>&amp;Trackback URLs:</string>
            </property>
            <property name="buddy">
             <cstring>txtOptionsTrackback</cstring>
@@ -477,7 +477,7 @@
          <item>
           <widget class="QLabel" name="label_2">
            <property name="text">
-            <string>Summary :</string>
+            <string>Summary:</string>
            </property>
           </widget>
          </item>

@@ -10,13 +10,13 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string comment="verb, to modify selected image attributes." >Edit image properties</string>
+   <string comment="verb, to modify selected image attributes" >Edit Image Properties</string>
   </property>
   <layout class="QGridLayout" name="gridLayout" >
    <item row="0" column="0" >
     <widget class="QLabel" name="labelWidth" >
      <property name="text" >
-      <string comment="noun, with of the image in pixels." >Image width:</string>
+      <string comment="noun, width of the image in pixels" >Image width:</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -65,7 +65,7 @@
    <item row="0" column="2" >
     <widget class="QLabel" name="labelHeight" >
      <property name="text" >
-      <string comment="noun, height of the image in pixels." >Image height:</string>
+      <string comment="noun, height of the image in pixels" >Image height:</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -99,7 +99,7 @@
    <item row="5" column="0" >
     <widget class="QLabel" name="labelLink" >
      <property name="text" >
-      <string>Image Link To:</string>
+      <string>Image links to:</string>
      </property>
      <property name="alignment" >
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
