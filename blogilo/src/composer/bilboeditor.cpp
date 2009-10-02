@@ -936,8 +936,9 @@ void BilboEditor::sltSyncEditors( int index )
             goto SyncEnd;
         }
         doc->clear();
-//         BilboTextHtmlImporter( doc, htmlEditor->toPlainText() ).import();
         BilboTextHtmlImporter( doc, htmlEditor->document()->text() ).import();
+        editor->document()->setUndoRedoEnabled(false);//To clear undo/redo history!
+        editor->document()->setUndoRedoEnabled(true);
         editor->setTextCursor( QTextCursor( doc ) );
     } else if ( index == 1 ) {
         if ( prev_index == 2 ) {
@@ -949,8 +950,9 @@ void BilboEditor::sltSyncEditors( int index )
     } else {
         if ( prev_index == 1 ) {
             doc->clear();
-//             BilboTextHtmlImporter( doc, htmlEditor->toPlainText() ).import();
             BilboTextHtmlImporter( doc, htmlEditor->document()->text() ).import();
+            editor->document()->setUndoRedoEnabled(false);//To clear undo/redo history!
+            editor->document()->setUndoRedoEnabled(true);
         } else {
 //             htmlEditor->setPlainText( htmlExp->toHtml( doc ) );
             htmlEditor->document()->setText( htmlExp->toHtml( doc ) );
@@ -1006,6 +1008,9 @@ void BilboEditor::setHtmlContent( const QString & content )
     this->editor->setTextCursor( QTextCursor( doc ) );
 //     this->htmlEditor->setPlainText( content );
     this->htmlEditor->document()->setText( content );
+
+    editor->document()->setUndoRedoEnabled(false);//To clear undo/redo history!
+    editor->document()->setUndoRedoEnabled(true);
 }
 
 void BilboEditor::setMediaList( QMap <QString, BilboMedia*> * list )
@@ -1099,8 +1104,8 @@ bool BilboEditor::updateMediaPaths()
             htmlEditor->document()->setText( htmlContent );
         }
     }
+    editor->document()->setUndoRedoEnabled(false);//To clear undo/redo history!
     editor->document()->setUndoRedoEnabled( true );
-
     return true;
 }
 
