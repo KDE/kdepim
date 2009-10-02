@@ -16,8 +16,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef _HTMLQUOTECOLERER_H
-#define _HTMLQUOTECOLERER_H
+#ifndef HTMLQUOTECOLORER_H
+#define HTMLQUOTECOLORER_H
 
 #include <dom/dom_node.h>
 #include "messageviewer_export.h"

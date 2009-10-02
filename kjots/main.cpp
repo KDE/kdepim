@@ -27,7 +27,7 @@
 #include "aboutdata.h"
 
 #ifdef KJOTSKONTACTPLUGIN
-#include <libkdepim/pimapplication.h>
+#include <kontactinterface/pimuniqueapplication.h>
 #else
 #include <kuniqueapplication.h>
 #endif
@@ -45,12 +45,12 @@ int main( int argc, char **argv )
     KCmdLineArgs::init(argc, argv, &aboutData);
 
 #ifdef KJOTSKONTACTPLUGIN
-    KPIM::PimApplication::addCmdLineOptions();
-    if (!KPIM::PimApplication::start()) {
+    KontactInterface::PimUniqueApplication::addCmdLineOptions();
+    if (!KontactInterface::PimUniqueApplication::start()) {
         kWarning() << "kjots is already running!";
         exit(0);
     }
-    KPIM::PimApplication a;
+    KontactInterface::PimUniqueApplication a;
 #else
     
     KUniqueApplication::addCmdLineOptions();

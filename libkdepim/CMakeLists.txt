@@ -77,7 +77,6 @@ set(kdepim_LIB_SRCS
    colorlistbox.cpp
    uistatesaver.cpp
    distributionlistconverter.cpp
-   pimapplication.cpp
    attachmentpart.cpp
    attachmentcompressjob.cpp
    attachmentloadjob.cpp

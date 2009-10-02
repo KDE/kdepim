@@ -15,14 +15,14 @@
 #ifndef KNAPPLICATION_H
 #define KNAPPLICATION_H
 
-#include <libkdepim/pimapplication.h>
+#include <kontactinterface/pimuniqueapplication.h>
 
 /** Conversion of old settings and session restoration. */
-class KNApplication : public KPIM::PimApplication
+class KNApplication : public KontactInterface::PimUniqueApplication
 {
     Q_OBJECT
   public:
-    KNApplication() : KPIM::PimApplication() { }
+    KNApplication() : KontactInterface::PimUniqueApplication() { }
 
 
     /** Create new instance of KNode. Make the existing
