@@ -33,12 +33,12 @@
 #include <akonadi/control.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/entitytreeview.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/entitytreeviewstatesaver.h>
 #include <akonadi/session.h>
 #include <akonadi/servermanager.h>
 
-#include <akonadi_next/entitytreeview.h>
 #include "options.h"
 
 using namespace Akonadi;
