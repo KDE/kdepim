@@ -104,7 +104,15 @@ QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) co
           }
           break;
         case PhoneNumbers:
-          return QString();
+          {
+            QStringList values;
+
+            const KABC::PhoneNumber::List numbers = contact.phoneNumbers();
+            foreach ( const KABC::PhoneNumber &number, numbers )
+              values += number.number();
+
+            return values.join( "\n" );
+          }
           break;
         case PreferredEmail:
           return contact.preferredEmail();
