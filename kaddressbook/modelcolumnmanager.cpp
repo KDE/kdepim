@@ -98,11 +98,11 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
       phoneNumbersAction->setCheckable( true );
       phoneNumbersAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::PhoneNumbers ) );
 
-      QAction *preferredEmailAction = menu.addAction( KABC::Addressee::emailLabel() );
+      QAction *preferredEmailAction = menu.addAction( i18n( "Preferred EMail" ) );
       preferredEmailAction->setCheckable( true );
       preferredEmailAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::PreferredEmail ) );
 
-      QAction *allEmailsAction = menu.addAction( i18n( "EMails" ) );
+      QAction *allEmailsAction = menu.addAction( i18n( "All EMails" ) );
       allEmailsAction->setCheckable( true );
       allEmailsAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::AllEmails ) );
 

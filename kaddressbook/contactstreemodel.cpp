@@ -225,10 +225,10 @@ QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientat
             return i18nc( "@title:column, phone numbers of a person", "Phone Numbers" );
             break;
           case PreferredEmail:
-            return KABC::Addressee::emailLabel();
+            return i18nc( "@title:column, the preferred email addresses of a person", "Preferred EMail" );
             break;
           case AllEmails:
-            return i18nc( "@title:column, all email addresses of a person", "EMails" );
+            return i18nc( "@title:column, all email addresses of a person", "All EMails" );
             break;
           case Organization:
             return KABC::Addressee::organizationLabel();
