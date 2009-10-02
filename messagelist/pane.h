@@ -187,6 +187,11 @@ signals:
    */
   void messageStatusChangeRequest( const Akonadi::Item &item, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
 
+  /**
+   * Emitted when a full search is requested.
+   */
+  void fullSearchRequest();
+
 private:
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))
   Q_PRIVATE_SLOT(d, void onNewTabClicked())
