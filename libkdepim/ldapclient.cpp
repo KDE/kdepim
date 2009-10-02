@@ -369,8 +369,7 @@ void LdapSearch::readConfig()
       readWeighForClient( ldapClient, config, j );
 
       QStringList attrs;
-      // note: we need "objectClass" to detect distribution lists
-      attrs << "cn" << "mail" << "givenname" << "sn" << "objectClass";
+      attrs << "cn" << "mail" << "givenname" << "sn";
       ldapClient->setAttrs( attrs );
 
       connect( ldapClient, SIGNAL( result( const KPIM::LdapClient&, const KLDAP::LdapObject& ) ),
