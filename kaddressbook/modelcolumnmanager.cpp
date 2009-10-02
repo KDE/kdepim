@@ -159,6 +159,9 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
 void ModelColumnManager::adaptHeaderView()
 {
   QHeaderView *view = qobject_cast<QHeaderView*>( mWidget );
-  if ( view )
+  if ( view ) {
     view->resizeSections( QHeaderView::Stretch );
+
+    view->setDefaultAlignment( mModel->columns().count() == 1 ? Qt::AlignCenter : Qt::AlignLeft );
+  }
 }
