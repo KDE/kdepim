@@ -176,6 +176,22 @@ void Widget::selectAll()
   view()->selectAll();
 }
 
+void Widget::setCurrentThreadExpanded( bool expand )
+{
+  view()->setCurrentThreadExpanded(expand );
+}
+
+void Widget::setAllThreadsExpanded( bool expand )
+{
+  view()->setAllThreadsExpanded( expand );
+}
+
+void Widget::setAllGroupsExpanded( bool expand )
+{
+  view()->setAllGroupsExpanded(expand);
+}
+
+
 void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )
 {
   int row = -1;

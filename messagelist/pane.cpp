@@ -210,6 +210,35 @@ void Pane::selectAll()
   }
 }
 
+
+void Pane::setCurrentThreadExpanded( bool expand )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->setCurrentThreadExpanded(expand );
+  }
+}
+
+void Pane::setAllThreadsExpanded( bool expand )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->setAllThreadsExpanded( expand );
+  }
+}
+
+void Pane::setAllGroupsExpanded( bool expand )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->setAllGroupsExpanded(expand);
+  }
+}
+
+
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
   Widget *w = static_cast<Widget*>( q->currentWidget() );
