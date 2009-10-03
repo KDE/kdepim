@@ -233,7 +233,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
         const ContactFields::Field field = (ContactFields::Field)mModel->data( mModel->index( 0, column ) ).toUInt();
 
         // convert the custom date format to ISO format
-        if ( field == ContactFields::Birthday )
+        if ( field == ContactFields::Birthday || field == ContactFields::Anniversary )
           value = dateParser.parse( value ).toString( Qt::ISODate );
 
         value.replace( "\\n", "\n" );
