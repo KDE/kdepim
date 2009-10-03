@@ -432,23 +432,7 @@ void Planner::initEventList( const QDate &date )
   mEvents.clear();
   mEvents.setAutoDelete( false );
 
-//   KCal::Event *ev;
-/*  KCal::Event::List events_orig = mCalendar->events( date );
-  KCal::Event::List::ConstIterator it = events_orig.begin();*/
-  KDateTime kdt;
-
-  // prevent implicitely sharing while finding recurring events
-  // replacing the QDate with the currentDate
-
-//   for ( ; it != events_orig.end(); ++it ) {
-//     ev = ( *it )->clone();
-
   Q_FOREACH ( KCal::Event *ev, mCalendar->events( date, mCalendar->timeSpec() ) ) {
-    if ( ev->recursOn( date, mCalendar->timeSpec() ) ) {
-      kdt = ev->dtStart();
-      kdt.setDate( date );
-      ev->setDtStart( kdt );
-    }
     mEvents.append( ev );
   }
 
