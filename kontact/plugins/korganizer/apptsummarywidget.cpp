@@ -108,6 +108,7 @@ void ApptSummaryWidget::updateView()
   KIconLoader loader( "korganizer" );
   QPixmap pm = loader.loadIcon( "view-calendar-day", KIconLoader::Small );
 
+  QStringList uidList;
   SummaryEventInfo::setShowSpecialEvents( mShowBirthdaysFromCal,
                                           mShowAnniversariesFromCal );
   QDate currentDate = QDate::currentDate();
@@ -120,6 +121,15 @@ void ApptSummaryWidget::updateView()
         SummaryEventInfo::eventsForDate( dt, mCalendar );
 
     foreach ( SummaryEventInfo *event, events ) {
+
+      Event *ev = event->ev;
+      // print the first of the recurring event series only
+      if ( ev->recurs() ) {
+        if ( uidList.contains( ev->uid() ) ) {
+          continue;
+        }
+        uidList.append( ev->uid() );
+      }
 
       // Icon label
       label = new QLabel( this );
