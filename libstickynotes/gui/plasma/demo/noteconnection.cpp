@@ -10,7 +10,7 @@
 
 #include "noteserver.h"
 
-NoteConnection::NoteConnection(NoteServer &_parent, QTcpSocket &_socket)
+NoteConnection::NoteConnection(const NoteServer &_parent, QTcpSocket &_socket)
 {
 	m_controller = new StickyNotes::RemoteNoteController(_socket);
 	m_controller->startListening();

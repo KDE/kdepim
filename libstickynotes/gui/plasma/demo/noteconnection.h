@@ -22,7 +22,7 @@ class NoteConnection : public QObject
 Q_OBJECT
 
 public:
-	NoteConnection(NoteServer &_parent, QTcpSocket &_socket);
+	NoteConnection(const NoteServer &_parent, QTcpSocket &_socket);
 	virtual ~NoteConnection(void);
 
 private:
