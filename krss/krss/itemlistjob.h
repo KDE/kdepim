@@ -45,6 +45,8 @@ namespace KRss {
         virtual Akonadi::ItemFetchScope &fetchScope() = 0;
 
         virtual QList<KRss::Item> items() const = 0;
+    protected:
+        /* reimp */ bool doKill() = 0;
     };
 
     class KRSS_EXPORT CompositeItemListJob : public ItemListJob {
@@ -67,6 +69,8 @@ namespace KRss {
 
         void setFilter( const boost::function1<bool, const Item&>& filter );
         void clearFilter();
+    protected:
+        /* reimp */ bool doKill();
 
     private:
         class Private;

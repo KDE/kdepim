@@ -24,10 +24,12 @@
 #include "feedcollection.h"
 
 #include <Akonadi/Item>
-#include <akonadi/itemfetchscope.h>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 
 #include <QtGui/QIcon>
 #include <QtCore/QList>
+#include <QtCore/QPointer>
 
 namespace Akonadi {
     class ItemFetchJob;
@@ -81,6 +83,8 @@ public:
     /* reimp */  QList<KRss::Item> items() const { return m_items; }
 
     /* reimp */ void start();
+protected:
+    /* reimp */ bool doKill();
 
 private Q_SLOTS:
     void doStart();
@@ -89,7 +93,7 @@ private Q_SLOTS:
 
 private:
     const Feed* m_feed;
-    Akonadi::ItemFetchJob* m_job;
+    QPointer<Akonadi::ItemFetchJob> m_job;
     QList<KRss::Item> m_items;
     Akonadi::ItemFetchScope m_fetchScope;
 };
