@@ -28,6 +28,7 @@ class KConfigGroup;
 
 namespace KRss {
 
+class Tag;
 class TreeNode;
 
 class KRSS_EXPORT FeedListView : public QTreeView
@@ -43,6 +44,8 @@ public:
 
     KConfigGroup configGroup() const;
     void setConfigGroup( const KConfigGroup& group);
+
+    void scrollToTag( const Tag& tag, QAbstractItemView::ScrollHint hint=EnsureVisible );
 
 public Q_SLOTS:
     void slotPrevFeed();
