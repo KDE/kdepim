@@ -80,6 +80,43 @@ void FeedListPrivate::appendFeedCollection( const FeedCollection& collection,
                       q, SIGNAL( feedChanged( const KRss::Feed::Id& ) ) );
     QObject::connect( feed.get(), SIGNAL( removed( const KRss::Feed::Id& ) ),
                       q, SLOT( slotFeedRemoved( const KRss::Feed::Id& ) ) );
+    emitItemCounts();
+}
+
+void FeedListPrivate::emitItemCounts()
+{
+    if ( !m_emitItemCountTimer.isActive() )
+        m_emitItemCountTimer.start();
+}
+
+void FeedListPrivate::slotEmitItemCountsDelayed()
+{
+    int total = 0;
+    int unread = 0;
+    QHash<Feed::Id, shared_ptr<Feed> >::ConstIterator it = m_feeds.constBegin();
+    const QHash<Feed::Id, shared_ptr<Feed> >::ConstIterator end = m_feeds.constEnd();
+
+    while ( it != end ) {
+        total += it.value()->total();
+        unread += it.value()->unread();
+        ++it;
+    }
+    m_totalCount = total;
+    m_unreadCount = unread;
+    emit q->unreadCountChanged( unread );
+    emit q->totalCountChanged( total );
+}
+
+void FeedListPrivate::slotUnreadCountChanged( const Feed::Id& id, int count )
+{
+   emit q->unreadCountChanged( id, count );
+   emitItemCounts();
+}
+
+void FeedListPrivate::slotTotalCountChanged( const Feed::Id& id, int count )
+{
+   emit q->totalCountChanged( id, count );
+   emitItemCounts();
 }
 
 void FeedListPrivate::slotFeedAdded( const QString& resourceId, const KRss::Feed::Id& id )
@@ -97,8 +134,10 @@ void FeedListPrivate::slotFeedAdded( const QString& resourceId, const KRss::Feed
 
 void FeedListPrivate::slotFeedRemoved( const KRss::Feed::Id& id )
 {
-    Q_UNUSED( id )
-    //TODO: implement
+    // TODO handle races (removed before collection loaded
+    m_feeds.value( id )->disconnect( q );
+    m_feeds.remove( id );
+    emitItemCounts();
 }
 
 void FeedListPrivate::slotCollectionLoadDone( KJob *job )
@@ -129,6 +168,16 @@ FeedList::FeedList( QObject* parent )
 FeedList::~FeedList()
 {
     delete d;
+}
+
+int FeedList::unreadCount() const
+{
+    return d->m_unreadCount;
+}
+
+int FeedList::totalCount() const
+{
+    return d->m_totalCount;
 }
 
 QList<shared_ptr<Feed> > FeedList::feeds() const

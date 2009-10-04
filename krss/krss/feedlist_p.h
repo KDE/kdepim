@@ -25,6 +25,7 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QHash>
+#include <QtCore/QTimer>
 #include <boost/shared_ptr.hpp>
 
 class KJob;
@@ -39,22 +40,33 @@ class FeedListPrivate
 {
 public:
     explicit FeedListPrivate( FeedList *qq )
-        : q( qq ) {}
+        : q( qq ), m_totalCount( 0 ), m_unreadCount( 0 ) {
+        m_emitItemCountTimer.setSingleShot( true );
+        m_emitItemCountTimer.setInterval( 400 );
+        q->connect( &m_emitItemCountTimer, SIGNAL(timeout()), q, SLOT(slotEmitItemCountsDelayed()) );
+    }
 
     void appendResourceCollections( const QList<Akonadi::Collection>& collections,
                                     const boost::shared_ptr<Resource>& resource );
     void appendFeedCollection( const FeedCollection& feedCollection,
                                const boost::shared_ptr<Resource>& resource );
 
-    void slotFeedAdded( const QString& resourceId, const KRss::Feed::Id& id );
-    void slotFeedRemoved( const KRss::Feed::Id& id );
+    void slotFeedAdded( const QString& resourceId, const Feed::Id& id );
+    void slotFeedRemoved( const Feed::Id& id );
+    void slotUnreadCountChanged( const Feed::Id& id, int count );
+    void slotTotalCountChanged( const Feed::Id& id, int count );
     void slotCollectionLoadDone( KJob *job );
+    void emitItemCounts();
+    void slotEmitItemCountsDelayed();
 
 public:
     FeedList * const q;
     QHash<Feed::Id, boost::shared_ptr<Feed> > m_feeds;
     QHash<QString, boost::shared_ptr<Resource> > m_resources;
     QHash<const KJob*, QString> m_pendingJobs;
+    int m_totalCount;
+    int m_unreadCount;
+    QTimer m_emitItemCountTimer;
 };
 
 } // namespace KRss

@@ -64,14 +64,18 @@ public:
     QList<boost::shared_ptr<Feed> > feedByTitle( const QString& title ) const;
     QList<boost::shared_ptr<const Feed> > constFeedByTitle( const QString& title ) const;
 
+    int unreadCount() const;
+    int totalCount() const;
+
 Q_SIGNALS:
 
     void feedAdded( const KRss::Feed::Id& id );
     void feedChanged( const KRss::Feed::Id& id );
     void feedRemoved( const KRss::Feed::Id& id );
     void totalCountChanged( const KRss::Feed::Id& id, int count );
+    void totalCountChanged( int count );
     void unreadCountChanged( const KRss::Feed::Id& id, int count );
-
+    void unreadCountChanged( int count );
     void fetchStarted( const KRss::Feed::Id& id );
     void fetchPercent( const KRss::Feed::Id& id, uint percent );
     void fetchFinished( const KRss::Feed::Id& id );
@@ -83,9 +87,11 @@ private:
     Q_DISABLE_COPY( FeedList )
     Q_PRIVATE_SLOT( d, void slotFeedAdded( const QString& resourceId, const KRss::Feed::Id& id ) )
     Q_PRIVATE_SLOT( d, void slotFeedRemoved( const KRss::Feed::Id& id ) )
+    Q_PRIVATE_SLOT( d, void slotTotalCountChanged( const KRss::Feed::Id&, int ) )
+    Q_PRIVATE_SLOT( d, void slotUnreadCountChanged( const KRss::Feed::Id&, int ) )
     Q_PRIVATE_SLOT( d, void slotCollectionLoadDone( KJob *job ) )
+    Q_PRIVATE_SLOT( d, void slotEmitItemCountsDelayed() )
 };
-
 
 
 class KRSS_EXPORT RetrieveFeedListJob : public KJob
