@@ -101,10 +101,14 @@ void FeedListPrivate::slotEmitItemCountsDelayed()
         unread += it.value()->unread();
         ++it;
     }
-    m_totalCount = total;
-    m_unreadCount = unread;
-    emit q->unreadCountChanged( unread );
-    emit q->totalCountChanged( total );
+    if ( m_totalCount != total ) {
+        m_totalCount = total;
+        emit q->totalCountChanged( total );
+    }
+    if ( m_unreadCount != unread ) {
+        m_unreadCount = unread;
+        emit q->unreadCountChanged( unread );
+    }
 }
 
 void FeedListPrivate::slotUnreadCountChanged( const Feed::Id& id, int count )
