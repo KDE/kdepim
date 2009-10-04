@@ -15,25 +15,12 @@ SET(PLASMANOTE_SRCS	stickynote.cpp
 			stickynoteitem.cpp
 			stickynotewidget.cpp)
 
-SET(PLASMANOTE_HDRS	stickynote.h
-			stickynoteconnection.h
-			stickynoteeditor.h
-			stickynoteitem.h
-			stickynotewidget.h)
-
-SET(PLASMANOTE_MOC_HDRS		stickynote.h
-				stickynoteconnection.h
-				stickynoteeditor.h
-				stickynoteitem.h
-				stickynotewidget.h)
-
 SET(PLASMANOTE_UIS	stickynoteeditor.ui)
 
 SET(PLASMANOTE_RCS	stickynoteeditor.qrc)
 
 QT4_ADD_RESOURCES(PLASMANOTE_RC_SRCS ${PLASMANOTE_RCS})
-QT4_WRAP_CPP(PLASMANOTE_MOC_SRCS ${PLASMANOTE_MOC_HDRS})
-QT4_WRAP_UI(PLASMANOTE_UI_HDRS ${PLASMANOTE_UIS})
+kde4_add_ui_files(PLASMANOTE_SRCS ${PLASMANOTE_UIS})
 ADD_CUSTOM_TARGET(stickynote_qt4 DEPENDS	${PLASMANOTE_MOC_SRCS}
 						${PLASMANOTE_UI_HDRS})
 
