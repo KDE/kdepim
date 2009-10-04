@@ -301,11 +301,16 @@ void ItemListJobImpl::doStart() {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( m_feed->d->m_feedCollection, this );
     if ( !m_fetchScope.isEmpty() )
         job->setFetchScope( m_fetchScope );
-    connect( job, SIGNAL( itemsReceived( const Akonadi::Item::List& ) ),
-             this, SLOT( slotItemsReceived( const Akonadi::Item::List& ) ) );
+    connect( job, SIGNAL(itemsReceived(Akonadi::Item::List)),
+             this, SLOT(slotItemsReceived(Akonadi::Item::List)) );
     connect(job, SIGNAL(finished(KJob*)), this, SLOT(jobDone(KJob*)) );
     m_job = job;
     job->start();
+}
+
+bool ItemListJobImpl::doKill() {
+     delete m_job;
+    return true;
 }
 
 StatusModifyJobImpl::StatusModifyJobImpl( Feed *parent )

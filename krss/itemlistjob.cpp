@@ -21,6 +21,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <KDebug>
 #include <QHash>
+#include <QPointer>
 
 #include <boost/bind.hpp>
 
@@ -31,7 +32,9 @@
 using namespace boost;
 using namespace KRss;
 
-ItemListJob::ItemListJob( QObject* parent ) : KJob( parent ) {}
+ItemListJob::ItemListJob( QObject* parent ) : KJob( parent ) {
+    setCapabilities( capabilities() | KJob::Killable );
+}
 
 ItemListJob::~ItemListJob() {
 }
@@ -41,7 +44,7 @@ class CompositeItemListJob::Private {
 public:
 
     explicit Private( CompositeItemListJob* qq ) : q( qq ), haveFilter( false ) {}
-    QList<ItemListJob*> jobs;
+    QList<QPointer<ItemListJob> > jobs;
     QList<KRss::Item> items;
     Akonadi::ItemFetchScope scope;
     QHash<KJob*,unsigned long> percentages;
@@ -146,6 +149,14 @@ void CompositeItemListJob::Private::doStart() {
     Q_FOREACH( ItemListJob* const i, jobs )
         i->start();
 }
+
+bool CompositeItemListJob::doKill() {
+    Q_FOREACH( const QPointer<ItemListJob>& i, d->jobs )
+        if ( i )
+            i->kill();
+    return true;
+}
+
 
 void CompositeItemListJob::Private::jobDone( KJob* j ) {
     ItemListJob* job = qobject_cast<ItemListJob*>( j );
