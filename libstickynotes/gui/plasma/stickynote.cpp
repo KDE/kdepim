@@ -32,7 +32,7 @@ StickyNote::init(void)
 	// TODO: make address and port customizable
 	if (!m_server->listen(QHostAddress::LocalHost, 12345))
 		setFailedToLaunch(true,
-		    "Failed, You might already have a StickyNotes plasmoid running.");
+		    i18n("Failed, You might already have a StickyNotes plasmoid running."));
 }
  
 void
