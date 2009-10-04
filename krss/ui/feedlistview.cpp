@@ -321,4 +321,10 @@ void FeedListView::slotNextUnreadFeed()
         setCurrentIndex( next );
 }
 
+void FeedListView::scrollToTag( const Tag& tag, QAbstractItemView::ScrollHint hint ) {
+    Q_UNUSED( tag )
+    Q_UNUSED( hint )
+    //TODO
+}
+
 #include "feedlistview.moc"
