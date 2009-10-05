@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui SYSTEM "kpartgui.dtd">
-<kpartgui name="blogilo" version="8">
+<kpartgui name="blogilo" version="9">
 <MenuBar>
   <Menu name="blog"><text>Blog</text>
     <Action name="add_blog" />
@@ -22,5 +22,6 @@
     <Action name="publish_post" />
     <Separator />
     <Action name="blogs_list" />
+    <Action name="open_blog_in_browser" />
 </Toolbar>
 </kpartgui>

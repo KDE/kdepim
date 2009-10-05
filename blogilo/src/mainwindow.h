@@ -58,6 +58,7 @@ signals:
     void settingsChanged();
 
 protected slots:
+    void slotOpenCurrentBlogInBrowser();
     void slotSettingsChanged();
     void sltCreateNewPost();
     void addBlog();

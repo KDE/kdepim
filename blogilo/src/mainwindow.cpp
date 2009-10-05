@@ -59,6 +59,7 @@
 #include <QTimer>
 
 #define TIMEOUT 5000
+#include <KToolInvocation>
 
 MainWindow::MainWindow()
     : KXmlGuiWindow(), mCurrentBlogId(__currentBlogId)
@@ -182,6 +183,11 @@ void MainWindow::setupActions()
 
     blogs = new KSelectAction( this );
     actionCollection()->addAction( QLatin1String( "blogs_list" ), blogs );
+
+    KAction *actOpenBlog = new KAction(KIcon("applications-internet"), i18n("Open in browser"), this);
+    actionCollection()->addAction( QLatin1String("open_blog_in_browser"), actOpenBlog);
+    actOpenBlog->setToolTip(i18n("Open current blog in browser"));
+    connect( actOpenBlog, SIGNAL(triggered(bool)), this, SLOT(slotOpenCurrentBlogInBrowser()) );
 }
 
 void MainWindow::loadTempPosts()
@@ -639,6 +645,15 @@ void MainWindow::uploadMediaObject()
         uploadDlg->init( 0 );
     else
         uploadDlg->init( &DBMan::self()->blog(mCurrentBlogId) );
+}
+
+void MainWindow::slotOpenCurrentBlogInBrowser()
+{
+    KUrl url( DBMan::self()->blog( mCurrentBlogId ).blogUrl() );
+    if(url.isValid())
+        KToolInvocation::invokeBrowser(url.url());
+    else
+        KMessageBox::sorry(this, i18n("Cannot find current blog URL."));
 }
 
 #include "mainwindow.moc"
