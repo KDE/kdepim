@@ -40,6 +40,7 @@
 #include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
 #include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitytreeview.h>
 #include <akonadi/entitytreeviewstatesaver.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
@@ -58,7 +59,6 @@
 #include <kxmlguiwindow.h>
 #include <libkdepim/uistatesaver.h>
 
-#include "akonadi_next/entitytreeview.h"
 #include "contactfiltermodel.h"
 #include "contactstreemodel.h"
 #include "contactswitcher.h"

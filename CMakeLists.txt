@@ -185,6 +185,7 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(kmail)
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
     macro_bool_to_01(BUILD_kmail KMAIL_SUPPORTED)
+    add_definitions(-DKMAIL_SUPPORTED)
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
@@ -211,18 +212,18 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ktimetracker)
   endif(Q_WS_X11)
 
-  # Kpilot and Kalarm depend on kdepim/akonadi.
+  # Kpilot won't build on Windows.
+  if(NOT WIN32)
+    macro_optional_add_subdirectory(kpilot)
+  endif(NOT WIN32)
+
+  # Kalarm depend on kdepim/akonadi.
   # that means these app won't compile for packagers. Disable them for anything else than a svn checkout.
     if (BUILD_akonadi)
       macro_optional_add_subdirectory(kalarm)
-      # Kpilot won't build on Windows.
-      if(NOT WIN32)
-        macro_optional_add_subdirectory(kpilot)
-      endif(NOT WIN32)
     endif (BUILD_akonadi)
 
   macro_optional_add_subdirectory(kontact) # must be the last one.
-
 
   # These targets depend on optional applications
   add_subdirectory(kresources) # Must be after KAddressbook

@@ -23,7 +23,7 @@
       <item row="1" column="0" colspan="2">
        <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>From your computer:</string>
+         <string>File:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -126,7 +126,7 @@
       <item row="3" column="1" colspan="3">
        <widget class="KLineEdit" name="kcfg_httpUrl">
         <property name="toolTip">
-         <string>Will use for direct link generation</string>
+         <string>This is going to be used for the direct link generation.</string>
         </property>
         <property name="text">
          <string>http://</string>
@@ -136,7 +136,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>Url to path:</string>
+         <string>URL to path:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -149,7 +149,7 @@
       <item row="0" column="1" colspan="3">
        <widget class="KLineEdit" name="kcfg_FtpPath">
         <property name="toolTip">
-         <string>Will use for upload</string>
+         <string>This is going to be used for the upload.</string>
         </property>
         <property name="text">
          <string>ftp://</string>
@@ -159,7 +159,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>(s)Ftp path:</string>
+         <string>(S)FTP path:</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

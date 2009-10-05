@@ -5,7 +5,7 @@
  */
 #include "mailreader.h"
 
-#include "akonadi_next/entitytreeview.h"
+#include <akonadi/entitytreeview.h>
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
