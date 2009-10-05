@@ -1495,10 +1495,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
     //Note: if I use MessagePtr for mMessage all over, I get a crash in the destructor
     mMessage = new KMime::Message;
     kDebug() << "START SHOWING" << mMessage;
-  /*
-  mMessage->setContent(mMessageItem.payloadData());
-  mMessage->parse();*/
-
+    
     mMessage ->setContent( mMessageItem.payloadData() );
     mMessage ->parse();
     mDeleteMessage = true;
