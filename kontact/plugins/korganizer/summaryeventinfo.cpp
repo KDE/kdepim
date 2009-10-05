@@ -29,6 +29,9 @@
 #include <libkdepim/kpimprefs.h>
 #include <korganizer/stdcalendar.h>
 #include <kcal/incidenceformatter.h>
+using namespace KCal;
+
+#include <KSystemTimeZones>
 
 #include <QDate>
 #include <QStringList>
@@ -103,11 +106,8 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
   KCal::Event::List events = calendar->events( date, calendar->timeSpec() );
   KCal::Event::List::ConstIterator it = events.constBegin();
 
-  KCal::Event::List events;
-  events.setAutoDelete( true );
-
   KDateTime qdt;
-  KDateTime::Spec spec = KPIM::KPimPrefs::timeSpec();
+  KDateTime::Spec spec = KSystemTimeZones::local();
   KDateTime currentDateTime = KDateTime::currentDateTime( spec );
   QDate currentDate = currentDateTime.date();
 
@@ -175,6 +175,9 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
     SummaryEventInfo *summaryEvent = new SummaryEventInfo();
     eventInfoList.append( summaryEvent );
 
+    // Event
+    summaryEvent->ev = ev;
+
     // Start date label
     QString str = "";
     QDate sD = QDate( date.year(), date.month(), date.day() );
@@ -193,9 +196,9 @@ SummaryEventInfo::List SummaryEventInfo::eventsForDate( const QDate &date,
     // Print the date span for multiday, floating events, for the
     // first day of the event only.
     if ( ev->isMultiDay() && ev->allDay() && firstDayOfMultiday && span > 1 ) {
-      str = ev->dtStartDateStr( false, spec ) +
+      str = IncidenceFormatter::dateToString( ev->dtStart(), false, spec ) +
             " -\n " +
-            ev->dtEndDateStr( false, spec );
+            IncidenceFormatter::dateToString( ev->dtEnd(), false, spec );
     }
     summaryEvent->dateSpan = str;
 

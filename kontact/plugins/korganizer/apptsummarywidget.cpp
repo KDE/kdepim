@@ -122,7 +122,7 @@ void ApptSummaryWidget::updateView()
 
     foreach ( SummaryEventInfo *event, events ) {
 
-      Event *ev = event->ev;
+      KCal::Event *ev = event->ev;
       // print the first of the recurring event series only
       if ( ev->recurs() ) {
         if ( uidList.contains( ev->uid() ) ) {
