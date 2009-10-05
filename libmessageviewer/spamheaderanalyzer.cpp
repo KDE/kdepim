@@ -40,7 +40,7 @@
 #include <kmime/kmime_headers.h>
 
 #include <kdebug.h>
-
+using namespace MessageViewer;
 // static
 SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message* message ) {
   SpamScores scores;

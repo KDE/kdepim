@@ -36,7 +36,9 @@
 
 #include <QRegExp>
 #include <QList>
+#include "messageviewer_export.h"
 class QString;
+namespace MessageViewer {
 
 /// Valid types of SpamAgent
 typedef enum {
@@ -86,7 +88,7 @@ class AntiSpamConfigSingletonProvider;
     by calling @p SpamConfig::instance() and use any of the
     public member functions.
   */
-class AntiSpamConfig {
+class MESSAGEVIEWER_EXPORT AntiSpamConfig {
 friend class AntiSpamConfigSingletonProvider;
 private:
   AntiSpamConfig();
@@ -115,6 +117,6 @@ private:
 
   void readConfig();
 };
-
+}
 
 #endif // __MESSAGEVIEWER_ANTISPAMCONFIG_H__
