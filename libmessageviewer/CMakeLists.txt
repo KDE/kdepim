@@ -38,6 +38,8 @@ editorwatcher.cpp
 attachmentdialog.cpp
 objecttreeviewersource.cpp
 objecttreeemptysource.cpp
+filehtmlwriter.cpp
+teehtmlwriter.cpp
 )
 
 

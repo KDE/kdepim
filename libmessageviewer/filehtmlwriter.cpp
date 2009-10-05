@@ -36,7 +36,7 @@
 #include <QTextStream>
 
 
-namespace KMail {
+namespace MessageViewer {
 
   FileHtmlWriter::FileHtmlWriter( const QString & filename )
     : HtmlWriter(),

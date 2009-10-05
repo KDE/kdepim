@@ -1,5 +1,5 @@
 /*  -*- c++ -*-
-    teehtmlwriter.h
+    filehtmlwriter.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
@@ -29,31 +29,23 @@
     your version.
 */
 
-#ifndef __KMAIL_TEEHTMLWRITER_H__
-#define __KMAIL_TEEHTMLWRITER_H__
+#ifndef __MESSAGEVIEWER_FILEHTMLWRITER_H__
+#define __MESSAGEVIEWER_FILEHTMLWRITER_H__
 
 #include "interfaces/htmlwriter.h"
 
-#include <QList>
+#include <QFile>
+#include <QTextStream>
 
 class QString;
 
-namespace KMail {
+namespace MessageViewer {
 
-  /** @short A HtmlWriter that dispatches all calls to a list of other HtmlWriters
-      @author Marc Mutz <mutz@kde.org>
-  **/
-  class TeeHtmlWriter : public KMail::HtmlWriter {
+  class FileHtmlWriter : public MessageViewer::HtmlWriter {
   public:
-    explicit TeeHtmlWriter( KMail::HtmlWriter * writer1=0,
-                            KMail::HtmlWriter * writer2=0  );
-    virtual ~TeeHtmlWriter();
+    FileHtmlWriter( const QString & filename );
+    virtual ~FileHtmlWriter();
 
-    void addHtmlWriter( KMail::HtmlWriter * writer );
-
-    //
-    // HtmlWriter Interface
-    //
     void begin( const QString & cssDefs );
     void end();
     void reset();
@@ -63,10 +55,13 @@ namespace KMail {
     void embedPart( const QByteArray & contentId, const QString & url );
 
   private:
-    /** We own the HtmlWriters added to us! */
-    QList<KMail::HtmlWriter*> mWriters;
+    void openOrWarn();
+
+  private:
+    QFile mFile;
+    QTextStream mStream;
   };
 
-} // namespace KMail
+} // namespace MessageViewer
 
-#endif // __KMAIL_TEEHTMLWRITER_H__
+#endif // __MESSAGEVIEWER_FILEHTMLWRITER_H__

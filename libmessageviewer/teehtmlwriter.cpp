@@ -36,7 +36,7 @@
 
 
 
-namespace KMail {
+namespace MessageViewer {
 
   TeeHtmlWriter::TeeHtmlWriter( HtmlWriter * writer1, HtmlWriter * writer2 )
     : HtmlWriter()

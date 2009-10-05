@@ -17,12 +17,18 @@
   with this program; if not, write to the Free Software Foundation, Inc.,
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
-
+//#define MESSAGEVIEWER_READER_HTML_DEBUG 1
 #include "viewer_p.h"
 #include "viewer.h"
 #include "objecttreeemptysource.h"
 #include "objecttreeviewersource.h"
 
+#ifdef MESSAGEVIEWER_READER_HTML_DEBUG
+#include "filehtmlwriter.h"
+using MessageViewer::FileHtmlWriter;
+#include "teehtmlwriter.h"
+using MessageViewer::TeeHtmlWriter;
+#endif
 #include <errno.h>
 
 //KDE includes
@@ -1273,7 +1279,7 @@ void ViewerPrivate::initHtmlWidget(void)
 
   if ( !htmlWriter() ) {
     mPartHtmlWriter = new KHtmlPartHtmlWriter( mViewer, 0 );
-#ifdef KMAIL_READER_HTML_DEBUG
+#ifdef MESSAGEVIEWER_READER_HTML_DEBUG
     mHtmlWriter = new TeeHtmlWriter( new FileHtmlWriter( QString() ),
                                      mPartHtmlWriter );
 #else
@@ -1495,7 +1501,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
     //Note: if I use MessagePtr for mMessage all over, I get a crash in the destructor
     mMessage = new KMime::Message;
     kDebug() << "START SHOWING" << mMessage;
-    
+
     mMessage ->setContent( mMessageItem.payloadData() );
     mMessage ->parse();
     mDeleteMessage = true;
