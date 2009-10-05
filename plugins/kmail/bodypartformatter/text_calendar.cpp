@@ -36,7 +36,7 @@
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
 #include <interfaces/bodyparturlhandler.h>
-#include <khtmlparthtmlwriter.h>
+#include <libmessageviewer/khtmlparthtmlwriter.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/calendarresources.h>
@@ -142,7 +142,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
 {
   public:
     Result format( KMail::Interface::BodyPart *bodyPart,
-                   KMail::HtmlWriter *writer ) const
+                   MessageViewer::HtmlWriter *writer ) const
     {
       if ( !writer )
         // Guard against crashes in createReply()

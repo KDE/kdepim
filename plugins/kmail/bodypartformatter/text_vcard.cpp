@@ -45,7 +45,7 @@
 #include "interfaces/bodypart.h"
 using KMail::Interface::BodyPart;
 #include "interfaces/bodyparturlhandler.h"
-#include "khtmlparthtmlwriter.h"
+#include "libmessageviewer/khtmlparthtmlwriter.h"
 #include <kimproxy.h>
 
 #include <kabc/vcardconverter.h>
@@ -67,7 +67,7 @@ namespace {
       //mKIMProxy = ::KIMProxy::instance( kapp->dcopClient() );
     }
 
-    Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
+    Result format( BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
 
        if ( !writer ) return AsIcon;
 

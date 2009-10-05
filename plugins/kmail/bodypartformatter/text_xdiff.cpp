@@ -32,7 +32,7 @@
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
 #include <interfaces/bodyparturlhandler.h>
-#include <khtmlparthtmlwriter.h>
+#include <libmessageviewer/khtmlparthtmlwriter.h>
 
 #include <kmail/callback.h>
 #include <kmail/kmmessage.h>
@@ -61,7 +61,7 @@ namespace {
 
   class Formatter : public KMail::Interface::BodyPartFormatter {
   public:
-    Result format( KMail::Interface::BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
+    Result format( KMail::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
 
       if ( !writer ) return Ok;
 
