@@ -133,7 +133,7 @@
              <bool>true</bool>
             </property>
             <property name="text" >
-             <string>+ ElGamal</string>
+             <string>+ Elgamal</string>
             </property>
            </widget>
           </item>
