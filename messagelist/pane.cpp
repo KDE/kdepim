@@ -361,6 +361,9 @@ void Pane::createNewTab()
   connect( w, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)),
            this, SIGNAL(messageStatusChangeRequest(Akonadi::Item, KPIM::MessageStatus, KPIM::MessageStatus)) );
 
+  connect( w, SIGNAL(statusMessage(QString)),
+           this, SIGNAL(statusMessage(QString)) );
+
   connect( w, SIGNAL( fullSearchRequest() ), this, SIGNAL( fullSearchRequest() ) );
   d->updateTabControls();
   setCurrentWidget( w );
