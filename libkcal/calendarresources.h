@@ -685,6 +685,7 @@ class LIBKCAL_EXPORT CalendarResources :
     DestinationPolicy *mDestinationPolicy;
     StandardDestinationPolicy *mStandardPolicy;
     AskDestinationPolicy *mAskPolicy;
+    bool mPendingDeleteFromResourceMap;
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;

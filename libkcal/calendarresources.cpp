@@ -117,6 +117,7 @@ void CalendarResources::init( const QString &family )
   mStandardPolicy = new StandardDestinationPolicy( mManager );
   mAskPolicy = new AskDestinationPolicy( mManager );
   mDestinationPolicy = mStandardPolicy;
+  mPendingDeleteFromResourceMap = false;
 }
 
 CalendarResources::~CalendarResources()
@@ -327,7 +328,7 @@ bool CalendarResources::deleteEvent( Event *event )
   if ( mResourceMap.find( event ) != mResourceMap.end() ) {
     status = mResourceMap[event]->deleteEvent( event );
     if ( status )
-      mResourceMap.remove( event );
+      mPendingDeleteFromResourceMap = true;
   } else {
     status = false;
     CalendarResourceManager::ActiveIterator it;
@@ -378,7 +379,7 @@ bool CalendarResources::deleteTodo( Todo *todo )
   if ( mResourceMap.find( todo ) != mResourceMap.end() ) {
     status = mResourceMap[todo]->deleteTodo( todo );
     if ( status )
-      mResourceMap.remove( todo );
+      mPendingDeleteFromResourceMap = true;
   } else {
     CalendarResourceManager::ActiveIterator it;
     status = false;
@@ -564,7 +565,7 @@ bool CalendarResources::deleteJournal( Journal *journal )
   if ( mResourceMap.find( journal ) != mResourceMap.end() ) {
     status = mResourceMap[journal]->deleteJournal( journal );
     if ( status )
-      mResourceMap.remove( journal );
+      mPendingDeleteFromResourceMap = true;
   } else {
     CalendarResourceManager::ActiveIterator it;
     status = false;
@@ -755,6 +756,7 @@ bool CalendarResources::beginChange( Incidence *incidence )
     }
     mResourceMap[ incidence ] = r;
   }
+  mPendingDeleteFromResourceMap = false;
 
   int count = incrementChangeCount( r );
   if ( count == 1 ) {
@@ -781,6 +783,11 @@ bool CalendarResources::endChange( Incidence *incidence )
     return false;
 
   int count = decrementChangeCount( r );
+
+  if ( mPendingDeleteFromResourceMap ) {
+    mResourceMap.remove( incidence );
+    mPendingDeleteFromResourceMap = false;
+  }
 
   if ( count == 0 ) {
     bool ok = save( mTickets[ r ], incidence );
