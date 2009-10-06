@@ -46,7 +46,7 @@ public:
     FeedPrivate( const FeedCollection& feedCollection, const boost::shared_ptr<const Resource>& resource,
                  Feed *qq )
         : q( qq ), m_feedCollection( feedCollection ), m_resource( resource ),
-          m_unreadCount( 0 ), m_totalCount( 0 ), m_fetching( false )
+          m_unreadCount( 0 ), m_totalCount( 0 ), m_fetching( false ), m_error( Feed::NoError)
     {
     }
 
@@ -69,6 +69,8 @@ public:
     int m_totalCount;
     bool m_fetching;
     QIcon m_icon;
+    QString m_errorString;
+    Feed::FetchError m_error;
 };
 
 class ItemListJobImpl : public ItemListJob {

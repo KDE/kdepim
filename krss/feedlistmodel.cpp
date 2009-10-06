@@ -108,11 +108,44 @@ namespace {
 
         void visit( const boost::shared_ptr<const FeedNode>& feedNode ) {
             const boost::shared_ptr<const Feed> feed = m_feedList->constFeedById( feedNode->feedId() );
-            m_icon = feed->icon().pixmap( KIconLoader::SizeSmall, feed->isFetching() ? QIcon::Active : QIcon::Normal );
+            if ( feed->isFetching() ) {
+                m_icon = feed->icon().pixmap( KIconLoader::SizeSmall, QIcon::Active );
+            } else {
+                if ( !feed->hasError() )
+                    m_icon = feed->icon().pixmap( KIconLoader::SizeSmall, QIcon::Normal );
+                else
+                    m_icon = KIcon( "dialog-warning" ).pixmap( KIconLoader::SizeSmall );
+            }
         }
 
         const shared_ptr<const FeedList> m_feedList;
         QPixmap m_icon;
+    };
+
+    class ToolTipVisitor : public ConstTreeNodeVisitor
+    {
+    public:
+        ToolTipVisitor( const shared_ptr<const FeedList> feedList )
+            : m_feedList( feedList ) {}
+
+        void visit( const boost::shared_ptr<const RootNode>& r ) {
+            m_toolTip = r->title( m_feedList );
+        }
+
+        void visit( const boost::shared_ptr<const TagNode>& tagNode ) {
+            m_toolTip = tagNode->title( m_feedList );
+        }
+
+        void visit( const boost::shared_ptr<const FeedNode>& feedNode ) {
+            const boost::shared_ptr<const Feed> feed = m_feedList->constFeedById( feedNode->feedId() );
+            if ( feed->isFetching() || !feed->hasError() )
+                m_toolTip = feed->title();
+            else
+                m_toolTip = feed->errorString();
+        }
+
+        const shared_ptr<const FeedList> m_feedList;
+        QString m_toolTip;
     };
 
     class CreateChildIndexVisitor : public TreeNodeVisitor
@@ -503,7 +536,15 @@ QVariant FeedListModel::data(const QModelIndex &index, int role ) const
             treeNode->accept( &visitor );
             return visitor.m_icon;
         }
-        case Qt::ToolTipRole:   return treeNode->title( d->m_feedList );
+        case Qt::ToolTipRole:
+        {
+            if ( index.column() != TitleColumn )
+                return QVariant();
+
+            ToolTipVisitor visitor( d->m_feedList );
+            treeNode->accept( &visitor );
+            return visitor.m_toolTip;
+        }
         case HasUnreadRole:     return treeNode->unreadCount( d->m_feedList ) > 0;
         case TreeNodeRole:      return QVariant::fromValue( treeNode );
         case IsTagRole:         return treeNode->tier() == TreeNode::TagTier;
