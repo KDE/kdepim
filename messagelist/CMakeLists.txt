@@ -85,7 +85,6 @@ target_link_libraries(messagelist
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     messagecore
-    kdepim
 )
 
 set_target_properties(messagelist PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
