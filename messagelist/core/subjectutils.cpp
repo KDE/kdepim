@@ -20,17 +20,30 @@
 
 #include "subjectutils_p.h"
 
+#include <KConfigGroup>
 #include <KDebug>
 
 #include <QRegExp>
 #include <QStringList>
 
+#include "configprovider.h"
+
 QString MessageList::Core::SubjectUtils::stripOffPrefixes( const QString &subject )
 {
+  KConfigGroup composerGroup( ConfigProvider::self()->config(), "Composer" );
+
+  QStringList replyPrefixes = composerGroup.readEntry( "reply-prefixes", QStringList() );
+  if ( replyPrefixes.isEmpty() ) {
+    replyPrefixes << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:";
+  }
+
+  QStringList forwardPrefixes = composerGroup.readEntry( "forward-prefixes", QStringList() );
+  if ( forwardPrefixes.isEmpty() ) {
+    forwardPrefixes << "Fwd:" << "FW:";
+  }
+
   QString str = subject;
-  QStringList prefixRegExps;
-  prefixRegExps << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:"
-                << "Fwd:" << "FW:";
+  const QStringList prefixRegExps = replyPrefixes + forwardPrefixes;
 
   // construct a big regexp that
   // 1. is anchored to the beginning of str (sans whitespace)
