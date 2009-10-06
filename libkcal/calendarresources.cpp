@@ -335,6 +335,10 @@ bool CalendarResources::deleteEvent( Event *event )
     }
   }
 
+  if ( status ) {
+    notifyIncidenceDeleted( event );
+  }
+
   setModified( status );
   return status;
 }
