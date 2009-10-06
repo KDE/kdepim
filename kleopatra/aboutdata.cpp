@@ -34,13 +34,19 @@
 
 #include "aboutdata.h"
 
+#include <utils/gnupg-helper.h>
+
 #include <klocale.h>
 #include <kiconloader.h>
 
 #include <QPixmap>
 #include <QVariant>
+#include <QProcess>
+#include <QTextStream>
 
 #include <cassert>
+
+using namespace Kleo;
 
 static const char kleopatra_version[] = KLEOPATRA_VERSION_STRING;
 static const char description[] = I18N_NOOP("Certificate Manager and Unified Crypto GUI");
@@ -100,7 +106,25 @@ static const char gpg4win_description[] = I18N_NOOP( "Gpg4win is an installer pa
                                                      "Both relevant cryptography standards are supported, OpenPGP "
                                                      "and S/MIME. Gpg4win and the software included with Gpg4win "
                                                      "are Free Software.");
-static const char gpg4win_version[] = "2.0.0"; // ### make this better come from somewhere...
+
+static const char gpg4win_version_guessed[] = "2.0.1";
+
+static QString gpg4win_version() {
+
+    QProcess p;
+    p.setReadChannelMode( QProcess::MergedChannels );
+    p.start( gpgConfPath(), QStringList( QLatin1String( "--version" ) ) );
+    if ( !p.waitForFinished() )
+        return QString::fromLatin1( "%1 (%2)" ).arg( QLatin1String( gpg4win_version_guessed ),
+                                                     i18nc("Version string is a guess","guessed") );
+    const QString output = QTextStream( &p ).readAll() ;
+    QRegExp rx( QLatin1String( "\\(Gpg4win\\s+([^\\s)])+\\)" ) );
+    if ( rx.indexIn( output ) != -1 )
+        return rx.cap(1);
+    else
+        return QString::fromLatin1( "%1 (%2)" ).arg( QLatin1String( gpg4win_version_guessed ),
+                                                     i18nc("Version string is a guess","guessed") );
+}
 
 
 static QPixmap UserIcon_nocached2( const char * name ) {
@@ -116,7 +140,7 @@ static QPixmap UserIcon_nocached2( const char * name ) {
 
 AboutGpg4WinData::AboutGpg4WinData()
     : KAboutData( "gpg4win", 0, ki18n("Gpg4win"),
-                  gpg4win_version, ki18n(gpg4win_description),
+                  gpg4win_version().toLatin1(), ki18n(gpg4win_description),
                   License_GPL, KLocalizedString(), KLocalizedString(), "http://www.gpg4win.de" )
 {
     addAuthor( ki18n("Intevation GmbH (Project Management)"), KLocalizedString(), 0, "http://www.intevation.de" );
