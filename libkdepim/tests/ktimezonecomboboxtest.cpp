@@ -32,7 +32,7 @@ QTEST_KDEMAIN( KTimeZoneComboBoxTest, GUI )
 void KTimeZoneComboBoxTest::test_timeSpec()
 {
   KCal::CalendarLocal cal( KDateTime().timeSpec() );
-  KPIM::KTimeZoneComboBox combo( &cal );
+  KPIM::KTimeZoneComboBox combo( cal.timeZones() );
   KDateTime::Spec spec;
 
   spec.setType( KDateTime::UTC );

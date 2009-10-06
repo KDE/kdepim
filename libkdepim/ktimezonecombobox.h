@@ -32,7 +32,7 @@
 #include <KDateTime>
 
 namespace KCal {
-  class Calendar;
+  class ICalTimeZones;
 }
 
 namespace KPIM {
@@ -46,14 +46,16 @@ namespace KPIM {
 class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
 {
   public:
-    explicit KTimeZoneComboBox( KCal::Calendar *calendar, QWidget *parent = 0 );
+    explicit KTimeZoneComboBox( QWidget *parent = 0 );
+    explicit KTimeZoneComboBox( const KCal::ICalTimeZones* additionalZones, QWidget *parent = 0 );
     ~KTimeZoneComboBox();
 
     /**
-     * Sets the associated calendar.
-     * @param calendar is a pointer to a Calendar instance.
+     * sets additional timezones (usually from a calendar) which should be displayed additionally
+     * to the system timezones
+     * @param zones the timezones to show
      */
-    void setCalendar( KCal::Calendar *calendar );
+    void setAdditionalTimeZones( const KCal::ICalTimeZones* zones );
 
     /**
      * Selects the item in the combobox corresponding to the given @p spec.
