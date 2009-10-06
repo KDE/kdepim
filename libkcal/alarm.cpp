@@ -304,19 +304,22 @@ void Alarm::setTime(const QDateTime &alarmTime)
 
 QDateTime Alarm::time() const
 {
-  if ( hasTime() )
+  if ( hasTime() ) {
     return mAlarmTime;
-  else if ( mParent ) 
-  {
-    if (mParent->type()=="Todo") {
-      Todo *t = static_cast<Todo*>(mParent);
-      return mOffset.end( t->dtDue() );
-    } else if (mEndOffset) {
-      return mOffset.end( mParent->dtEnd() );
+  } else if ( mParent ) {
+    if ( mEndOffset ) {
+      if ( mParent->type() == "Todo" ) {
+        Todo *t = static_cast<Todo*>( mParent );
+        return mOffset.end( t->dtDue() );
+      } else {
+        return mOffset.end( mParent->dtEnd() );
+      }
     } else {
       return mOffset.end( mParent->dtStart() );
     }
-  } else return QDateTime();
+  } else {
+    return QDateTime();
+  }
 }
 
 bool Alarm::hasTime() const
