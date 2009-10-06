@@ -292,7 +292,8 @@ bool Todo::recurTodo()
 
       while ( !recursAt( nextDate ) || nextDate <= QDateTime::currentDateTime() ) {
 
-        if ( !nextDate.isValid() || nextDate > endDateTime ) {
+        if ( !nextDate.isValid() ||
+             ( nextDate > endDateTime && r->duration() != -1 ) ) {
           return false;
         }
 
