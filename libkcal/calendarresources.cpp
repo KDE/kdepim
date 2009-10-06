@@ -175,6 +175,7 @@ void CalendarResources::load()
   }
 
   mOpen = true;
+  emit calendarLoaded();
 }
 
 bool CalendarResources::reload( const QString &tz )
