@@ -15,6 +15,7 @@ set(messagecore_LIB_SRCS
    attachmentfromurljob.cpp
    attachmentfrommimecontentjob.cpp
    attachmentpropertiesdialog.cpp
+   messagestatus.cpp
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS

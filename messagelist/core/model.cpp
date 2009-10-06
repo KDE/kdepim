@@ -54,7 +54,7 @@
 #include "core/messageitemsetmanager.h"
 
 #include <libkdepim/broadcaststatus.h> // KPIM::BroadcastStatus
-#include <libkdepim/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 #include <QApplication>
 #include <QTimer>

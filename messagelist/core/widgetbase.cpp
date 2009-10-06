@@ -50,7 +50,7 @@
 #include <KLocale>
 #include <KComboBox>
 
-#include <libkdepim/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 using namespace MessageList::Core;
 

@@ -69,7 +69,6 @@ set(kdepim_LIB_SRCS
    distributionlist.cpp
    sendsmsdialog.cpp
    categoryhierarchyreader.cpp
-   messagestatus.cpp
    kmailcompletion.cpp
    kmeditor.cpp
    autochecktreewidget.cpp

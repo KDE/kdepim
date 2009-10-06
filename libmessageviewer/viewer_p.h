@@ -33,7 +33,7 @@
 
 #include <dom/dom_node.h>
 
-#include "libkdepim/messagestatus.h"
+#include <messagecore/messagestatus.h>
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 
