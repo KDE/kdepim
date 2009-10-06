@@ -423,6 +423,13 @@ void Viewer::saveRelativePosition()
   d->saveRelativePosition();
 }
 
+KUrl Viewer::urlClicked() const
+{
+  Q_D( const Viewer );
+  return d->mUrlClicked;
+}
+
+
 }
 
 #include "viewer.moc"
