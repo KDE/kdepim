@@ -47,7 +47,7 @@ public:
   /**
    * Returns true if this drag can be accepted by the underlying view
    */
-  bool canAcceptDrag( const QDragMoveEvent *e );
+  bool canAcceptDrag( const QDropEvent *e );
 
   /**
    * Selects the next message item in the view.

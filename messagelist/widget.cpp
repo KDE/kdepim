@@ -63,38 +63,6 @@ public:
 using namespace MessageList;
 using namespace Akonadi;
 
-struct DragPayload
-{
-  QList<Collection::Id> sourceCollections;
-  QList<Item::Id> items;
-  bool readOnly;
-
-  DragPayload() : readOnly( false ) { }
-
-  static QString mimeType()
-  {
-    return "x-akonadi-drag/message-list";
-  }
-};
-
-QDataStream &operator<<(QDataStream &stream, const DragPayload &payload)
-{
-  stream << payload.sourceCollections;
-  stream << payload.items;
-  stream << payload.readOnly;
-
-  return stream;
-}
-
-QDataStream &operator>>(QDataStream &stream, DragPayload &payload)
-{
-  stream >> payload.sourceCollections;
-  stream >> payload.items;
-  stream >> payload.readOnly;
-
-  return stream;
-}
-
 Widget::Widget( QWidget *parent )
   : Core::Widget( parent ), d( new Private( this ) )
 {
@@ -106,28 +74,28 @@ Widget::~Widget()
   delete d;
 }
 
-bool Widget::canAcceptDrag( const QDragMoveEvent * e )
+bool Widget::canAcceptDrag( const QDropEvent * e )
 {
   Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
 
   if ( collections.size()!=1 )
     return false; // no folder here or too many (in case we can't decide where the drop will end)
 
-  Collection c = collections.first();
+  const Collection target = collections.first();
 
-  if ( ( c.rights() & Collection::CanCreateItem ) == 0 )
+  if ( ( target.rights() & Collection::CanCreateItem ) == 0 )
     return false; // no way to drag into
 
-  if ( !e->mimeData()->hasFormat( DragPayload::mimeType() ) )
-    return false; // no way to decode it
-
-  DragPayload payload;
-  QDataStream stream( e->mimeData()->data( DragPayload::mimeType() ) );
-  stream >> payload;
-
-  foreach ( Collection::Id id, payload.sourceCollections ) {
-    if ( id == c.id() ) {
+  const KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
+  foreach ( const KUrl &url, urls ) {
+    const Collection collection = Collection::fromUrl( url );
+    if ( collection.isValid() ) { // You're not supposed to drop collections here
       return false;
+    } else { // Yay, this is an item!
+      const QString type = url.queryItems()["type"]; // But does it have the right type?
+      if ( !target.contentMimeTypes().contains( type ) ) {
+        return false;
+      }
     }
   }
 
@@ -327,19 +295,13 @@ enum DragMode
 
 void Widget::viewDropEvent( QDropEvent *e )
 {
-  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
-
-  if ( collections.size()!=1 || !e->mimeData()->hasFormat( DragPayload::mimeType() ) ) {
-    // no folder here or too many (in case we can't decide where the drop will end), or we can't decode
+  if ( !canAcceptDrag( e ) ) {
     e->ignore();
     return;
   }
 
-  DragPayload payload;
-  QDataStream stream( e->mimeData()->data( DragPayload::mimeType() ) );
-  stream >> payload;
-
-  if ( payload.items.isEmpty() ) {
+  KUrl::List urls = KUrl::List::fromMimeData( e->mimeData() );
+  if ( urls.isEmpty() ) {
     kWarning() << "Could not decode drag data!";
     e->ignore();
     return;
@@ -348,7 +310,7 @@ void Widget::viewDropEvent( QDropEvent *e )
   e->accept();
 
   int action;
-  if ( payload.readOnly ) {
+  if ( ( e->possibleActions() & Qt::MoveAction ) == 0 ) { // We can't move anyway
     action = DragCopy;
   } else {
     action = DragCancel;
@@ -378,10 +340,11 @@ void Widget::viewDropEvent( QDropEvent *e )
     }
   }
 
+  Collection::List collections = static_cast<const StorageModel*>( storageModel() )->displayedCollections();
   Collection target = collections.first();
   Item::List items;
-  foreach ( Item::Id id, payload.items ) {
-    items << Item( id );
+  foreach ( const KUrl &url, urls ) {
+    items << Item::fromUrl( url );
   }
 
   if ( action == DragCopy ) {
@@ -403,29 +366,23 @@ void Widget::viewStartDragRequest()
   if ( items.isEmpty() )
     return;
 
-  DragPayload payload;
+  bool readOnly = false;
 
   foreach ( const Collection c, collections ) {
-    payload.sourceCollections << c.id();
     // We won't be able to remove items from this collection
     if ( ( c.rights() & Collection::CanDeleteItem ) == 0 ) {
       // So the drag will be read-only
-      payload.readOnly = true;
+      readOnly = true;
     }
   }
 
+  KUrl::List urls;
   foreach ( const Item i, items ) {
-    payload.items << i.id();
-  }
-
-  QByteArray data;
-  {
-    QDataStream stream( &data, QIODevice::WriteOnly );
-    stream << payload;
+    urls << i.url( Item::UrlWithMimeType );
   }
 
   QMimeData *mimeData = new QMimeData;
-  mimeData->setData( DragPayload::mimeType(), data );
+  urls.populateMimeData( mimeData );
 
   QDrag *drag = new QDrag( view()->viewport() );
   drag->setMimeData( mimeData );
@@ -444,7 +401,7 @@ void Widget::viewStartDragRequest()
     drag->setPixmap( pixmap );
   }
 
-  if ( payload.readOnly )
+  if ( readOnly )
     drag->exec( Qt::CopyAction );
   else
     drag->exec( Qt::CopyAction | Qt::MoveAction );
