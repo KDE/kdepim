@@ -169,6 +169,10 @@ public:
    */
   void setAllGroupsExpanded( bool expand );
 
+  /**
+   * Sets the focus on the quick search line of the currently active tab.
+   */
+  void focusQuickSearch();
 
 public slots:
   /**

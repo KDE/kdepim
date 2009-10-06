@@ -1108,3 +1108,11 @@ void Widget::viewMessageStatusChangeRequest( MessageItem *msg, const KPIM::Messa
   Q_UNUSED( clear );
 }
 
+void Widget::focusQuickSearch()
+{
+  if ( d->mSearchEdit )
+  {
+    d->mSearchEdit->setFocus();
+  }
+}
+
