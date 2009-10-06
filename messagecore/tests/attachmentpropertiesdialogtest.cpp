@@ -18,7 +18,7 @@
 */
 
 #include "attachmentpropertiesdialogtest.h"
-#include "qtest_libkdepim.h"
+#include "qtest_messagecore.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -32,8 +32,8 @@
 #include <kmime/kmime_content.h>
 using namespace KMime;
 
-#include <libkdepim/attachmentpart.h>
-#include <libkdepim/attachmentpropertiesdialog.h>
+#include <messagecore/attachmentpart.h>
+#include <messagecore/attachmentpropertiesdialog.h>
 using namespace KPIM;
 
 QTEST_KDEMAIN( AttachmentPropertiesDialogTest, GUI )

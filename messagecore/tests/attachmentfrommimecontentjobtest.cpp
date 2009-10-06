@@ -18,7 +18,7 @@
 */
 
 #include "attachmentfrommimecontentjobtest.h"
-#include "qtest_libkdepim.h"
+#include "qtest_messagecore.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -29,7 +29,7 @@
 #include <kmime/kmime_headers.h>
 using namespace KMime;
 
-#include <libkdepim/attachmentfrommimecontentjob.h>
+#include <messagecore/attachmentfrommimecontentjob.h>
 using namespace KPIM;
 
 QTEST_KDEMAIN( AttachmentFromMimeContentJobTest, NoGUI )

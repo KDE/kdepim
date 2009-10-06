@@ -18,14 +18,14 @@
 */
 
 #include "attachmentparttest.h"
-#include "qtest_libkdepim.h"
+#include "qtest_messagecore.h"
 
 #include <QHash>
 
 #include <KDebug>
 #include <qtest_kde.h>
 
-#include <libkdepim/attachmentpart.h>
+#include <messagecore/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
 using namespace KPIM;
 

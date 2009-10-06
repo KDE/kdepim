@@ -18,13 +18,13 @@
 */
 
 #include "attachmentfromurljobtest.h"
-#include "qtest_libkdepim.h"
+#include "qtest_messagecore.h"
 
 #include <boost/shared_ptr.hpp>
 
 #include <qtest_kde.h>
 
-#include <libkdepim/attachmentfromurljob.h>
+#include <messagecore/attachmentfromurljob.h>
 using namespace KPIM;
 
 QTEST_KDEMAIN( AttachmentFromUrlJobTest, NoGUI )

@@ -83,7 +83,7 @@ using MessageViewer::TeeHtmlWriter;
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
-#include "libkdepim/attachmentpropertiesdialog.h"
+#include <messagecore/attachmentpropertiesdialog.h>
 
 //own includes
 #include "attachmentdialog.h"

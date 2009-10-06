@@ -174,6 +174,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(kdgantt1)
   add_subdirectory(krss)
   add_subdirectory(icons)
+  add_subdirectory(messagecore)
 
   if(QGPGME_FOUND)
     if (Boost_TOPOLOGICAL_SORT_DIR)

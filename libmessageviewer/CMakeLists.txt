@@ -54,8 +54,8 @@ kde4_add_ui_files(libmessageviewer_SRCS
 kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})
 
 
-target_link_libraries(messageviewer kdepim kpgp kleo akonadi-kde
- ${KDEPIMLIBS_KMIME_LIBS}
+target_link_libraries(messageviewer messagecore kdepim kpgp kleo
+ ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIIBS}
  ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KTNEF_LIBRARY}
  ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
 )

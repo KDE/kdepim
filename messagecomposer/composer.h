@@ -28,7 +28,7 @@
 
 #include <kmime/kmime_message.h>
 
-#include <libkdepim/attachmentpart.h>
+#include <messagecore/attachmentpart.h>
 
 namespace boost {
   template <typename T> class shared_ptr;

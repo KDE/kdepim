@@ -33,7 +33,6 @@
 #include "core/widgetbase.h"
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
-#include <libkdepim/maillistdrag.h>
 
 #include <QHelpEvent>
 #include <QToolTip>

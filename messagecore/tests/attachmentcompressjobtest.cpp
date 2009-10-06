@@ -18,7 +18,7 @@
 */
 
 #include "attachmentcompressjobtest.h"
-#include "qtest_libkdepim.h"
+#include "qtest_messagecore.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -26,7 +26,7 @@
 #include <KZip>
 #include <qtest_kde.h>
 
-#include <libkdepim/attachmentcompressjob.h>
+#include <messagecore/attachmentcompressjob.h>
 using namespace KPIM;
 
 QTEST_KDEMAIN( AttachmentCompressJobTest, NoGUI )
