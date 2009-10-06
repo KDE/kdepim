@@ -34,7 +34,8 @@ class CollectionStatistics;
 }
 
 namespace KRss {
-
+class FeedModifyJobPrivate;
+class FeedDeleteJobPrivate;
 class ConstFeedVisitor;
 class Resource;
 class FeedCollection;
@@ -52,6 +53,11 @@ class KRSS_EXPORT Feed : public QObject, public boost::enable_shared_from_this<F
     Q_OBJECT
 public:
     typedef qint64 Id;
+
+    enum FetchError {
+        NoError=0,
+        SomeError //TODO be more specific :)
+    };
 
     virtual ~Feed();
 
@@ -90,6 +96,15 @@ public:
 
     bool isFetching() const;
 
+    /**
+     * returns a human-readable error message if the last fetch try resulted in an error,
+     * or an empty string otherwise.
+     */
+    QString errorString() const;
+
+    bool hasError() const;
+    FetchError error() const;
+
 public Q_SLOTS:
     virtual void fetch() const;
     virtual void abortFetch() const;
@@ -98,7 +113,7 @@ Q_SIGNALS:
     void fetchStarted( const KRss::Feed::Id& feedId );
     void fetchPercent( const KRss::Feed::Id& feedId, uint percentage );
     void fetchFinished( const KRss::Feed::Id& feedId );
-    void fetchFailed( const KRss::Feed::Id& feedId, const QString &errorMessage );
+    void fetchFailed( const KRss::Feed::Id& feedId );
     void fetchAborted( const KRss::Feed::Id& feedId );
 
     void changed( const KRss::Feed::Id& feedId );
@@ -118,7 +133,7 @@ private:
     void triggerFetchStarted();
     void triggerFetchPercent( uint percentage );
     void triggerFetchFinished();
-    void triggerFetchFailed( const QString& errorMessage );
+    void triggerFetchFailed( FetchError error, const QString& errorMessage );
     void triggerFetchAborted();
 
 protected:
@@ -127,8 +142,8 @@ protected:
 
     friend class ::KRss::Resource; // for trigger*Something
     friend class ::KRss::FeedListPrivate;
-    friend class FeedModifyJobPrivate;
-    friend class FeedDeleteJobPrivate;
+    friend class ::KRss::FeedModifyJobPrivate;
+    friend class ::KRss::FeedDeleteJobPrivate;
     friend class ::KRss::FeedPrivate;
     friend class ::KRss::ItemListJobImpl;
     friend class ::KRss::StatusModifyJobImpl;

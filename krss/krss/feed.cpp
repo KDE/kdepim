@@ -89,6 +89,21 @@ Feed::Feed( const FeedCollection& feedCollection, const shared_ptr<Resource>& re
     job->start();
 }
 
+Feed::FetchError Feed::error() const
+{
+    return d->m_error;
+}
+
+bool Feed::hasError() const
+{
+    return d->m_error != NoError;
+}
+
+QString Feed::errorString() const
+{
+    return d->m_errorString;
+}
+
 Feed::~Feed()
 {
     delete d;
@@ -250,18 +265,24 @@ void Feed::triggerFetchPercent( uint percentage )
 
 void Feed::triggerFetchFinished()
 {
+    d->m_error = NoError;
+    d->m_errorString.clear();
     d->m_fetching = false;
     emit fetchFinished( d->m_feedCollection.feedId() );
 }
 
-void Feed::triggerFetchFailed( const QString& errorMessage )
+void Feed::triggerFetchFailed( FetchError error, const QString& errorMessage )
 {
+    d->m_error = error;
+    d->m_errorString = errorMessage;
     d->m_fetching = false;
-    emit fetchFailed( d->m_feedCollection.feedId(), errorMessage );
+    emit fetchFailed( d->m_feedCollection.feedId() );
 }
 
 void Feed::triggerFetchAborted()
 {
+    d->m_error = NoError;
+    d->m_errorString.clear();
     d->m_fetching = false;
     emit fetchAborted( d->m_feedCollection.feedId() );
 }

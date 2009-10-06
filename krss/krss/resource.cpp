@@ -113,7 +113,7 @@ void Resource::triggerFetchFailed( const KRss::Feed::Id& feedId, const QString &
     emit fetchFailed( d_ptr->m_id, feedId, errorMessage );
     const QPointer<Feed> feed = d_ptr->m_feeds.value( feedId );
     if ( feed )
-        feed->triggerFetchFailed( errorMessage );
+        feed->triggerFetchFailed( Feed::SomeError, errorMessage );
 }
 
 void Resource::triggerFetchAborted( const KRss::Feed::Id& feedId )
