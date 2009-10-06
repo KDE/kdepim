@@ -55,12 +55,13 @@ void KPIM::KTimeZoneComboBox::Private::fillComboBox()
   mZones.sort();
 
   // Prepend the list of additional timezones
-  const ICalTimeZones::ZoneMap calzones = mAdditionalZones->zones();
-  for ( ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin(); it != calzones.end(); ++it ) {
-    kDebug() << "Prepend timezone " << it.key().toUtf8();
-    mZones.prepend( it.key().toUtf8() );
+  if ( mAdditionalZones ) {
+    const ICalTimeZones::ZoneMap calzones = mAdditionalZones->zones();
+    for ( ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin(); it != calzones.end(); ++it ) {
+      kDebug() << "Prepend timezone " << it.key().toUtf8();
+      mZones.prepend( it.key().toUtf8() );
+    }
   }
-
   // Prepend UTC and Floating, for convenience
   mZones.prepend( "UTC" );      // do not use i18n here
   mZones.prepend( "Floating" ); // do not use i18n here
