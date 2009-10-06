@@ -406,27 +406,27 @@ FeedListModel::FeedListModel( const shared_ptr<const FeedList>& feedList,
     : QAbstractItemModel( parent ), d( new FeedListModelPrivate( feedList, tagProvider, this ) )
 {
     if ( d->m_feedList ) {
-        connect( d->m_feedList.get(), SIGNAL( feedAdded( const KRss::Feed::Id& ) ),
-                    this, SLOT( slotFeedAdded( const KRss::Feed::Id& ) ) );
-        connect( d->m_feedList.get(), SIGNAL( feedChanged( const KRss::Feed::Id& ) ),
-                    this, SLOT( slotFeedChanged( const KRss::Feed::Id& ) ) );
-        connect( d->m_feedList.get(), SIGNAL( feedRemoved( const KRss::Feed::Id& ) ),
-                    this, SLOT( slotFeedRemoved( const KRss::Feed::Id& ) ) );
-        connect( d->m_feedList.get(), SIGNAL( unreadCountChanged( const KRss::Feed::Id&, int ) ),
-                    this, SLOT( slotFeedItemCountChanged( const KRss::Feed::Id&, int ) ) );
-        connect( d->m_feedList.get(), SIGNAL( totalCountChanged( const KRss::Feed::Id&, int ) ),
-                    this, SLOT( slotFeedItemCountChanged( const KRss::Feed::Id&, int ) ) );
+        connect( d->m_feedList.get(), SIGNAL(feedAdded(KRss::Feed::Id)),
+                    this, SLOT(slotFeedAdded(KRss::Feed::Id)) );
+        connect( d->m_feedList.get(), SIGNAL(feedChanged( KRss::Feed::Id)),
+                    this, SLOT(slotFeedChanged(KRss::Feed::Id)) );
+        connect( d->m_feedList.get(), SIGNAL(feedRemoved(KRss::Feed::Id)),
+                    this, SLOT(slotFeedRemoved(KRss::Feed::Id)) );
+        connect( d->m_feedList.get(), SIGNAL(unreadCountChanged(KRss::Feed::Id,int)),
+                    this, SLOT(slotFeedItemCountChanged(KRss::Feed::Id,int)) );
+        connect( d->m_feedList.get(), SIGNAL(totalCountChanged(KRss::Feed::Id,int)),
+                    this, SLOT(slotFeedItemCountChanged(KRss::Feed::Id,int)) );
 
         Q_FOREACH( const Feed::Id& feedId, d->m_feedList->feedIds() )
             d->addFeed( feedId );
     }
 
-    connect( d->m_tagProvider.get(), SIGNAL( tagCreated( const KRss::Tag& ) ),
-             this, SLOT( slotTagCreated( const KRss::Tag& ) ) );
-    connect( d->m_tagProvider.get(), SIGNAL( tagModified( const KRss::Tag& ) ),
-             this, SLOT( slotTagModified( const KRss::Tag& ) ) );
-    connect( d->m_tagProvider.get(), SIGNAL( tagDeleted( const KRss::TagId& ) ),
-             this, SLOT( slotTagDeleted( const KRss::TagId& ) ) );
+    connect( d->m_tagProvider.get(), SIGNAL(tagCreated(KRss::Tag)),
+             this, SLOT(slotTagCreated(KRss::Tag)) );
+    connect( d->m_tagProvider.get(), SIGNAL(tagModified(KRss::Tag)),
+             this, SLOT(slotTagModified(KRss::Tag)) );
+    connect( d->m_tagProvider.get(), SIGNAL(tagDeleted(KRss::TagId)),
+             this, SLOT(slotTagDeleted(KRss::TagId)) );
 }
 
 FeedListModel::~FeedListModel()
