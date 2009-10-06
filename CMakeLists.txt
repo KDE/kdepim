@@ -184,8 +184,11 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(messagecomposer)
     macro_optional_add_subdirectory(kmail)
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
-    macro_bool_to_01(BUILD_kmail KMAIL_SUPPORTED)
-    add_definitions(-DKMAIL_SUPPORTED)
+    if(BUILD_kmail)
+      set(KMAIL_SUPPORTED TRUE)
+      add_definitions(-DKMAIL_SUPPORTED)
+    endif(BUILD_kmail)
+
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
