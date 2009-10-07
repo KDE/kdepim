@@ -465,8 +465,7 @@ class KAEvent : public KAAlarmEventBase
 #endif
 		static int         calVersion();
 		static QString     calVersionString();
-		static bool        adjustStartOfDay(const KCal::Event::List&);
-		static bool        convertKCalEvents(KCal::CalendarLocal&, int version, bool adjustSummerTime);
+		static bool        convertKCalEvents(KCal::CalendarLocal&, int calendarVersion, bool adjustSummerTime);
 //		static bool        convertRepetitions(KCal::CalendarLocal&);
 
 	private:
@@ -488,6 +487,7 @@ class KAEvent : public KAAlarmEventBase
 		void               calcTriggerTimes() const;
 		void               calcNextWorkingTime(const DateTime& nextTrigger) const;
 		DateTime           nextWorkingTime() const;
+		static bool        convertStartOfDay(KCal::Event*);
 		static bool        convertRepetition(KCal::Event*);
 		KCal::Alarm*       initKCalAlarm(KCal::Event*, const DateTime&, const QStringList& types, KAAlarm::Type = KAAlarm::INVALID_ALARM) const;
 		KCal::Alarm*       initKCalAlarm(KCal::Event*, int startOffsetSecs, const QStringList& types, KAAlarm::Type = KAAlarm::INVALID_ALARM) const;

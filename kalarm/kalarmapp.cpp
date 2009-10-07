@@ -128,7 +128,7 @@ KAlarmApp::KAlarmApp()
 	Preferences::self()->readConfig();
 	Preferences::setAutoStart(true);
 	Preferences::self()->writeConfig();
-	Preferences::connect(SIGNAL(startOfDayChanged(const QTime&, const QTime&)), this, SLOT(changeStartOfDay()));
+	Preferences::connect(SIGNAL(startOfDayChanged(const QTime&)), this, SLOT(changeStartOfDay()));
 	Preferences::connect(SIGNAL(feb29TypeChanged(Feb29Type)), this, SLOT(slotFeb29TypeChanged(Feb29Type)));
 	Preferences::connect(SIGNAL(showInSystemTrayChanged(bool)), this, SLOT(slotShowInSystemTrayChanged()));
 	Preferences::connect(SIGNAL(archivedKeepDaysChanged(int)), this, SLOT(setArchivePurgeDays()));
@@ -143,10 +143,7 @@ KAlarmApp::KAlarmApp()
 		KConfigGroup config(KGlobal::config(), "General");
 		mNoSystemTray        = config.readEntry("NoSystemTray", false);
 		mOldShowInSystemTray = wantShowInSystemTray();
-		mStartOfDay          = Preferences::startOfDay();
-		if (Preferences::hasStartOfDayChanged())
-			mStartOfDay.setHMS(100,0,0);    // start of day time has changed: flag it as invalid
-		DateTime::setStartOfDay(mStartOfDay);
+		DateTime::setStartOfDay(Preferences::startOfDay());
 		mPrefsArchivedColour = Preferences::archivedColour();
 	}
 
@@ -832,14 +829,8 @@ void KAlarmApp::slotShowInSystemTrayChanged()
 */
 void KAlarmApp::changeStartOfDay()
 {
-	QTime sod = Preferences::startOfDay();
-	DateTime::setStartOfDay(sod);
-	AlarmCalendar* cal = AlarmCalendar::resources();
-	if (KAEvent::adjustStartOfDay(cal->kcalEvents(KCalEvent::ACTIVE)))
-		cal->save();
+	DateTime::setStartOfDay(Preferences::startOfDay());
 	AlarmCalendar::resources()->adjustStartOfDay();
-	Preferences::updateStartOfDayCheck(sod);  // now that calendar is updated, set OK flag in config file
-	mStartOfDay = sod;
 }
 
 /******************************************************************************
@@ -1848,8 +1839,6 @@ bool KAlarmApp::initCheck(bool calendarOnly)
 	if (firstTime)
 	{
 		kDebug() << "first time";
-		if (!mStartOfDay.isValid())
-			changeStartOfDay();     // start of day time has changed, so adjust date-only alarms
 
 		/* Need to open the display calendar now, since otherwise if display
 		 * alarms are immediately due, they will often be processed while
