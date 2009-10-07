@@ -78,3 +78,21 @@ Incidence *CalHelper::findMyCalendarIncidenceByUid( Calendar *calendar, const QS
   }
   return existingIncidence;
 }
+
+bool CalHelper::usingGroupware( Calendar *calendar )
+{
+  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal ) {
+    return true;
+  }
+
+  CalendarResourceManager *manager = cal->resourceManager();
+  CalendarResourceManager::Iterator it;
+  for ( it = manager->begin(); it != manager->end(); ++it ) {
+    QString res = (*it)->type();
+    if ( res == "imap" ) {
+      return true;
+    }
+  }
+  return false;
+}

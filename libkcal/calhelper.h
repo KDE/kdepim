@@ -76,6 +76,16 @@ namespace CalHelper {
     or the Incidence is found but is not owned by the user.
   */
   Incidence *findMyCalendarIncidenceByUid( Calendar *calendar, const QString &uid );
+
+  /**
+    Determines if the Calendar is using a Groupware resource type.
+    @param calendar is a pointer to a valid Calendar object.
+
+    @return true if the Calendar is using a known Groupware resource type;
+    false otherwise.
+    @since 4.4
+  */
+  bool usingGroupware( Calendar *calendar );
 }
 
 }
