@@ -242,20 +242,20 @@ bool KNotesLegacy::convertKNotes2Config( Journal *journal, QDir &noteDir,
   
   // update the config
   KConfig config( configFile );
-  KConfigGroup grp( &config, "Data" );
+  KConfigGroup cfggrp( &config, "Data" );
   journal->setSummary( grp.readEntry( "name" ) );
   config.deleteGroup( "Data", KConfig::Localized );
-  KConfigGroup grp2(&config, "General" ); // XXX right?
-  grp2.writeEntry( "version", KNOTES_VERSION );
-  KConfigGroup grp3(&config, "WindowDisplay" ); // XXX right?
+  KConfigGroup cfggrp2(&config, "General" ); // XXX right?
+  cfggrp2.writeEntry( "version", KNOTES_VERSION );
+  KConfigGroup cfggrp3(&config, "WindowDisplay" ); // XXX right?
 #ifdef Q_WS_X11
-  uint state = grp3.readEntry( "state", uint( NET::SkipTaskbar ) );
-  grp3.writeEntry( "ShowInTaskbar", 
+  uint state = cfggrp3.readEntry( "state", uint( NET::SkipTaskbar ) );
+  cfggrp3.writeEntry( "ShowInTaskbar", 
                      ( state & NET::SkipTaskbar ) ? false : true );
-  grp3.writeEntry( "KeepAbove", 
+  cfggrp3.writeEntry( "KeepAbove", 
                       ( state & NET::KeepAbove ) ? true : false );
 #endif
-  grp3.deleteEntry( "state" );
+  cfggrp3.deleteEntry( "state" );
   
   // load the saved text and put it in the journal
   QFile infile( noteDir.absoluteFilePath( '.' + file + "_data" ) );
