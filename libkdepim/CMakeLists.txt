@@ -19,7 +19,6 @@ include_directories( ${Boost_INCLUDE_DIR} )
 set(kdepim_LIB_SRCS
    kcheckcombobox.cpp
    ktimeedit.cpp
-   reminderclient.cpp
    kprefsdialog.cpp
    kpimprefs.cpp
    categoryselectdialog.cpp
@@ -77,11 +76,6 @@ set(kdepim_LIB_SRCS
    uistatesaver.cpp
    distributionlistconverter.cpp
 )
-
-QT4_ADD_DBUS_INTERFACE( kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml korganizer_korgac_interface )
-qt4_add_dbus_interfaces( kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
-qt4_add_dbus_interfaces( kdepim_LIB_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml)
-qt4_add_dbus_interfaces( kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/knode/org.kde.knode.xml)
 
 kde4_add_ui_files(kdepim_LIB_SRCS
   categoryselectdialog_base.ui
