@@ -21,7 +21,7 @@
 */
 
 #include "reminderclient.h"
-#include "korganizer_korgac_interface.h"
+#include "korgacinterface.h"
 
 #include <KDebug>
 #include <KStandardDirs>
