@@ -21,7 +21,7 @@
 #ifndef KDEPIM_REMINDERCLIENT_H
 #define KDEPIM_REMINDERCLIENT_H
 
-#include "kdepim_export.h"
+#include "kdepimdbusinterfaces_export.h"
 
 namespace KPIM {
 
@@ -29,7 +29,7 @@ namespace KPIM {
   This class provides the interface for communicating with the reminder daemon.
   It can be subclassed for specific daemons.
 */
-class KDEPIM_EXPORT ReminderClient
+class KDEPIMDBUSINTERFACES_EXPORT ReminderClient
 {
   public:
     ReminderClient();

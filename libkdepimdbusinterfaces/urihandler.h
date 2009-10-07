@@ -24,10 +24,10 @@
 #ifndef URIHANDLER_H
 #define URIHANDLER_H
 
-#include "kdepim_export.h"
+#include "kdepimdbusinterfaces_export.h"
 class QString;
 
-class KDEPIM_EXPORT UriHandler
+class KDEPIMDBUSINTERFACES_EXPORT UriHandler
 {
   public:
     /**
