@@ -429,6 +429,17 @@ KUrl Viewer::urlClicked() const
   return d->mUrlClicked;
 }
 
+bool Viewer::autoDelete(void) const
+{
+  Q_D( const Viewer );
+  return d->mDeleteMessage;
+}
+
+void Viewer::setAutoDelete(bool f)
+{
+  Q_D( Viewer );
+  d->mDeleteMessage = f;
+}
 
 }
 
