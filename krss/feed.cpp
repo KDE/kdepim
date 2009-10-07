@@ -276,7 +276,7 @@ void Feed::triggerFetchFailed( FetchError error, const QString& errorMessage )
     d->m_error = error;
     d->m_errorString = errorMessage;
     d->m_fetching = false;
-    emit fetchFailed( d->m_feedCollection.feedId() );
+    emit fetchFailed( d->m_feedCollection.feedId(), errorMessage );
 }
 
 void Feed::triggerFetchAborted()
