@@ -11,11 +11,6 @@ set(kdepimdbusinterfaces_LIB_SRCS
     reminderclient.cpp
 )
 
-qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml)
-qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/org.kde.korganizer.Korganizer.xml)
-qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml)
-qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/knode/org.kde.knode.xml)
-
 kde4_add_library(kdepimdbusinterfaces SHARED ${kdepimdbusinterfaces_LIB_SRCS})
 
 target_link_libraries(kdepimdbusinterfaces
