@@ -66,6 +66,7 @@ public:
 
 } // namespace MessageList
 
+using namespace Akonadi;
 using namespace MessageList;
 
 
@@ -411,6 +412,28 @@ void Pane::Private::updateTabControls()
   } else {
     q->tabBar()->setVisible( true );
   }
+}
+
+Item MessageList::Pane::currentItem() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w == 0 ) {
+    return Item();
+  }
+
+  return w->currentItem();
+}
+
+MessagePtr MessageList::Pane::currentMessage() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w == 0 ) {
+    return MessagePtr();
+  }
+
+  return w->currentMessage();
 }
 
 #include "pane.moc"

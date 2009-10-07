@@ -24,13 +24,18 @@
 #include <QtCore/QHash>
 #include <QtGui/QTabWidget>
 
+#include <boost/shared_ptr.hpp>
+#include <kmime/kmime_message.h>
+
+#include <messagelist/messagelist_export.h>
+
 class QAbstractItemModel;
 class QAbstractProxyModel;
 class QItemSelectionModel;
 class QItemSelection;
 class QToolButton;
 
-#include <messagelist/messagelist_export.h>
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace KPIM
 {
@@ -62,6 +67,19 @@ public:
    */
   explicit Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
   ~Pane();
+
+  /**
+   * Returns the current message for the list as Akonadi::Item.
+   * May return an invalid Item if there is no current message or no current folder.
+   */
+  Akonadi::Item currentItem() const;
+
+  /**
+   * Returns the current message for the list as MessagePtr.
+   * May return 0 if there is no current message or no current folder.
+   */
+  MessagePtr currentMessage() const;
+
 
   /**
    * Selects the next message item in the view.
