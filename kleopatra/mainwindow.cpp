@@ -293,7 +293,7 @@ public:
     }
 
     void aboutGpg4Win() {
-        ( new KAboutApplicationDialog( aboutGpg4WinData(), q ) )->show();
+        ( new KAboutApplicationDialog( aboutGpg4WinData(), KAboutApplicationDialog::HideKdeVersion|KAboutApplicationDialog::HideTranslators, q ) )->show();
     }
 
 private:
