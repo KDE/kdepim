@@ -113,7 +113,7 @@ Q_SIGNALS:
     void fetchStarted( const KRss::Feed::Id& feedId );
     void fetchPercent( const KRss::Feed::Id& feedId, uint percentage );
     void fetchFinished( const KRss::Feed::Id& feedId );
-    void fetchFailed( const KRss::Feed::Id& feedId );
+    void fetchFailed( const KRss::Feed::Id& feedId, const QString& errorMessage );
     void fetchAborted( const KRss::Feed::Id& feedId );
 
     void changed( const KRss::Feed::Id& feedId );
