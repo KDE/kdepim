@@ -27,15 +27,12 @@
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 
-#include <boost/shared_ptr.hpp>
 #include <kmime/kmime_message.h>
 
 #include <messagelist/messagelist_export.h>
 
 class QAbstractItemModel;
 class QItemSelectionModel;
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace MessageList
 {
@@ -78,7 +75,7 @@ public:
   virtual void prepareForScan();
 
   Akonadi::Item itemForRow( int row ) const;
-  MessagePtr messageForRow( int row ) const;
+  KMime::Message::Ptr messageForRow( int row ) const;
 
 private:
   Q_PRIVATE_SLOT(d, void onSourceDataChanged( const QModelIndex&, const QModelIndex& ))

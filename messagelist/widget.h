@@ -23,15 +23,12 @@
 
 #include <akonadi/item.h>
 
-#include <boost/shared_ptr.hpp>
 #include <kmime/kmime_message.h>
 
 #include <messagelist/messagelist_export.h>
 
 class KXMLGUIClient;
 class QWidget;
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace MessageList
 {
@@ -72,10 +69,10 @@ public:
   Akonadi::Item currentItem() const;
 
   /**
-   * Returns the current message for the list as MessagePtr.
+   * Returns the current message for the list as KMime::Message::Ptr.
    * May return 0 if there is no current message or no current folder.
    */
-  MessagePtr currentMessage() const;
+  KMime::Message::Ptr currentMessage() const;
 
 
   /**

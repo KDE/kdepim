@@ -438,12 +438,12 @@ Item Pane::currentItem() const
   return w->currentItem();
 }
 
-MessagePtr Pane::currentMessage() const
+KMime::Message::Ptr Pane::currentMessage() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w == 0 ) {
-    return MessagePtr();
+    return KMime::Message::Ptr();
   }
 
   return w->currentMessage();

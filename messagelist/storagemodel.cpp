@@ -201,7 +201,7 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
                                           int row, bool bUseReceiver ) const
 {
   Item item = itemForRow( row );
-  const MessagePtr mail = messageForRow( row );
+  const KMime::Message::Ptr mail = messageForRow( row );
   if ( !mail ) return false;
 
   QString sender = mail->from()->asUnicodeString();
@@ -249,7 +249,7 @@ static QString md5Encode( const QString &str )
 void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem *mi,
                                                  int row, ThreadingDataSubset subset ) const
 {
-  const MessagePtr mail = messageForRow( row );
+  const KMime::Message::Ptr mail = messageForRow( row );
   Q_ASSERT( mail ); // We ASSUME that initializeMessageItem has been called successfully...
 
   switch ( subset ) {
@@ -278,7 +278,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
   Item item = itemForRow( row );
-  const MessagePtr mail = messageForRow( row );
+  const KMime::Message::Ptr mail = messageForRow( row );
   Q_ASSERT( mail );
 
   KPIM::MessageStatus stat;
@@ -460,16 +460,16 @@ Item StorageModel::itemForRow( int row ) const
   return d->mModel->data( d->mModel->index( row, 0 ), EntityTreeModel::ItemRole ).value<Item>();
 }
 
-MessagePtr StorageModel::messageForRow( int row ) const
+KMime::Message::Ptr StorageModel::messageForRow( int row ) const
 {
   Item item = itemForRow( row );
 
-  if ( !item.hasPayload<MessagePtr>() ) {
+  if ( !item.hasPayload<KMime::Message::Ptr>() ) {
     kWarning() << "Not a message" << item.id() << item.remoteId() << item.mimeType();
-    return MessagePtr();
+    return KMime::Message::Ptr();
   }
 
-  return item.payload<MessagePtr>();
+  return item.payload<KMime::Message::Ptr>();
 }
 
 #include "storagemodel.moc"

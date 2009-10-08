@@ -24,7 +24,6 @@
 #include <QtCore/QHash>
 #include <QtGui/QTabWidget>
 
-#include <boost/shared_ptr.hpp>
 #include <kmime/kmime_message.h>
 
 #include <messagelist/messagelist_export.h>
@@ -35,8 +34,6 @@ class QAbstractProxyModel;
 class QItemSelectionModel;
 class QItemSelection;
 class QToolButton;
-
-typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace KPIM
 {
@@ -91,10 +88,10 @@ public:
   Akonadi::Item currentItem() const;
 
   /**
-   * Returns the current message for the list as MessagePtr.
+   * Returns the current message for the list as KMime::Message::Ptr.
    * May return 0 if there is no current message or no current folder.
    */
-  MessagePtr currentMessage() const;
+  KMime::Message::Ptr currentMessage() const;
 
 
   /**
