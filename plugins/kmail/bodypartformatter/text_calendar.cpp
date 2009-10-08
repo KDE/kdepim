@@ -36,7 +36,7 @@
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
 #include <interfaces/bodyparturlhandler.h>
-#include <libmessageviewer/khtmlparthtmlwriter.h>
+#include <messageviewer/khtmlparthtmlwriter.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/calendarresources.h>

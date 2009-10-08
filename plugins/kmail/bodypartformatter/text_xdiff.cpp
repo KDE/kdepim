@@ -32,7 +32,7 @@
 #include <interfaces/bodypartformatter.h>
 #include <interfaces/bodypart.h>
 #include <interfaces/bodyparturlhandler.h>
-#include <libmessageviewer/khtmlparthtmlwriter.h>
+#include <messageviewer/khtmlparthtmlwriter.h>
 
 #include <kmail/callback.h>
 #include <kmail/kmmessage.h>

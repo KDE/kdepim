@@ -45,7 +45,7 @@
 #include "interfaces/bodypart.h"
 using KMail::Interface::BodyPart;
 #include "interfaces/bodyparturlhandler.h"
-#include "libmessageviewer/khtmlparthtmlwriter.h"
+#include "messageviewer/khtmlparthtmlwriter.h"
 #include <kimproxy.h>
 
 #include <kabc/vcardconverter.h>
