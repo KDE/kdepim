@@ -23,9 +23,14 @@
 
 #include <akonadi/item.h>
 
+#include <boost/shared_ptr.hpp>
+#include <kmime/kmime_message.h>
+
 #include <messagelist/messagelist_export.h>
 
 class QWidget;
+
+typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 namespace MessageList
 {
@@ -43,6 +48,19 @@ public:
    */
   explicit Widget( QWidget *parent );
   ~Widget();
+
+  /**
+   * Returns the current message for the list as Akonadi::Item.
+   * May return an invalid Item if there is no current message or no current folder.
+   */
+  Akonadi::Item currentItem() const;
+
+  /**
+   * Returns the current message for the list as MessagePtr.
+   * May return 0 if there is no current message or no current folder.
+   */
+  MessagePtr currentMessage() const;
+
 
   /**
    * Returns true if this drag can be accepted by the underlying view
