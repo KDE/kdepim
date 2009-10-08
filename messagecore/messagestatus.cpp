@@ -491,7 +491,7 @@ QString MessageStatus::getStatusStr() const
   return sstr;
 }
 
-void MessageStatus::setStatusFromStr( QString aStr )
+void MessageStatus::setStatusFromStr( const QString& aStr )
 {
   mStatus = KMMsgStatusUnknown;
 

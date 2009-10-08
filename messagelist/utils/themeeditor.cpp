@@ -26,7 +26,7 @@
 #include "core/manager.h"
 #include "utils/comboboxutils.h"
 
-#include <libkdepim/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 #include <QActionGroup>
 #include <QCheckBox>

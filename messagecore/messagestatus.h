@@ -288,7 +288,7 @@ class KDEPIM_EXPORT MessageStatus
                     Normally it is a string obtained using
                     getStatusStr().
     */
-    void setStatusFromStr( QString aStr );
+    void setStatusFromStr( const QString &aStr );
 
     /** Convert the status to a string for sorting.
         @return A string containing coded lowercase letters

@@ -173,6 +173,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(mimelib)
   add_subdirectory(kdgantt1)
   add_subdirectory(icons)
+  add_subdirectory(messagecore)
   add_subdirectory(messagelist)
 
   if(QGPGME_FOUND)

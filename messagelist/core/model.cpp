@@ -53,7 +53,7 @@
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
 
-#include <libkdepim/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 #include <QApplication>
 #include <QTimer>

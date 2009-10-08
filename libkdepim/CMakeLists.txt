@@ -1,3 +1,4 @@
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
@@ -69,7 +70,6 @@ set(kdepim_LIB_SRCS
    distributionlist.cpp
    sendsmsdialog.cpp
    categoryhierarchyreader.cpp
-   messagestatus.cpp
    kmailcompletion.cpp
    kmeditor.cpp
    autochecktreewidget.cpp
@@ -81,7 +81,11 @@ set(kdepim_LIB_SRCS
 
 QT4_ADD_DBUS_INTERFACE(kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml korganizer_korgac_interface )
 
-kde4_add_ui_files(kdepim_LIB_SRCS categoryselectdialog_base.ui categoryeditdialog_base.ui addresspicker.ui)
+kde4_add_ui_files(kdepim_LIB_SRCS
+  categoryselectdialog_base.ui
+  categoryeditdialog_base.ui
+  addresspicker.ui
+)
 
 kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
 
@@ -100,6 +104,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES

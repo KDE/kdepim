@@ -29,7 +29,7 @@
 
 #include <kmime/kmime_headers.h>
 
-#include <libkdepim/messagestatus.h>
+#include <messagecore/messagestatus.h>
 
 #include <messagelist/core/model.h>
 #include <messagelist/messagelist_export.h>
