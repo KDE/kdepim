@@ -138,6 +138,25 @@ public:
    * Selects all the items in the current folder.
    */
   void selectAll();
+  /**
+   * If expand is true then it expands the current thread, otherwise
+   * collapses it.
+   */
+  void setCurrentThreadExpanded( bool expand );
+
+  /**
+   * If expand is true then it expands all the threads, otherwise
+   * collapses them.
+   */
+  void setAllThreadsExpanded( bool expand );
+
+  /**
+   * If expand is true then it expands all the groups (only the toplevel
+   * group item: inner threads are NOT expanded). If expand is false
+   * then it collapses all the groups. If no grouping is in effect
+   * then this function does nothing.
+   */
+  void setAllGroupsExpanded( bool expand );
 
 protected:
   /**
