@@ -21,7 +21,7 @@
 #define KDEPIM_ATTACHMENTFROMMIMECONTENTJOB_H
 
 #include "attachmentloadjob.h"
-#include "kdepim_export.h"
+#include "messagecore_export.h"
 
 namespace KMime {
   class Content;
@@ -31,7 +31,7 @@ namespace KPIM {
 
 /**
 */
-class KDEPIM_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
+class MESSAGECORE_EXPORT AttachmentFromMimeContentJob : public AttachmentLoadJob
 {
   Q_OBJECT
 

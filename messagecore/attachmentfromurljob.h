@@ -21,7 +21,7 @@
 #define KDEPIM_ATTACHMENTFROMURLJOB_H
 
 #include "attachmentloadjob.h"
-#include "kdepim_export.h"
+#include "messagecore_export.h"
 
 #include <KDE/KUrl>
 
@@ -29,7 +29,7 @@ namespace KPIM {
 
 /**
 */
-class KDEPIM_EXPORT AttachmentFromUrlJob : public AttachmentLoadJob
+class MESSAGECORE_EXPORT AttachmentFromUrlJob : public AttachmentLoadJob
 {
   Q_OBJECT
 

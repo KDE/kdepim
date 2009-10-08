@@ -23,13 +23,13 @@
 #define KDEPIM_ATTACHMENTPROPERTIESDIALOG_H
 
 #include "attachmentpart.h"
-#include "kdepim_export.h"
+#include "messagecore_export.h"
 
 #include <KDE/KDialog>
 
 namespace KPIM {
 
-class KDEPIM_EXPORT AttachmentPropertiesDialog: public KDialog
+class MESSAGECORE_EXPORT AttachmentPropertiesDialog: public KDialog
 {
   Q_OBJECT
 
