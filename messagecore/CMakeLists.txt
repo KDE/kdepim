@@ -25,20 +25,16 @@ kde4_add_ui_files(messagecore_LIB_SRCS
 kde4_add_library(messagecore SHARED ${messagecore_LIB_SRCS})
 
 target_link_libraries(messagecore
-  ${KDEPIMLIBS_KMIME_LIBS}
-  ${QT_QTGUI_LIBRARY}
-  ${QT_QTCORE_LIBRARY} 
+  ${KDEPIMLIBS_KMIME_LIBS} 
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
   ${KDEPIMLIBS_KMIME_LIBS}
-  ${QT_QTGUI_LIBRARY}
-  ${QT_QTCORE_LIBRARY}
   ${KDE4_KDEUI_LIBS}
+  ${KDE4_KIO_LIBS}
 )
 
 set_target_properties(messagecore PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS messagecore ${INSTALL_TARGETS_DEFAULT_ARGS})
-
