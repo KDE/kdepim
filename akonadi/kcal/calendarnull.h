@@ -25,11 +25,11 @@
 
   @author Cornelius Schumacher \<schumacher@kde.org\>
 */
-#ifndef KCAL_CALENDARNULL_H
-#define KCAL_CALENDARNULL_H
+#ifndef AKONADI_KCAL_CALENDARNULL_H
+#define AKONADI_KCAL_CALENDARNULL_H
 
 #include "calendarbase.h"
-#include "korganizer_export.h"
+#include "akonadi-kcal_export.h"
 
 namespace KOrg {
 
@@ -45,7 +45,7 @@ namespace KOrg {
    pass a CalendarNull object instead of passing a 0 pointer and checking
    for 0 with each access.
 */
-class KORGANIZER_INTERFACES_EXPORT CalendarNull : public CalendarBase
+class AKONADI_KCAL_EXPORT CalendarNull : public CalendarBase
 {
   public:
     /**

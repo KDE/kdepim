@@ -32,10 +32,10 @@
   @author David Jarvie \<software@astrojar.org.uk\>
  */
 
-#ifndef KORGANIZER_CALENDAR_H
-#define KORGANIZER_CALENDAR_H
+#ifndef AKONADI_KCAL_CALENDARBASE_H
+#define AKONADI_KCAL_CALENDARBASE_H
 
-#include "korganizer/korganizer_export.h"
+#include "akonadi-kcal_export.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -122,8 +122,8 @@ enum JournalSortField {
   visible in the Calendar.  Do <em>Not</em> attempt to 'delete' any KCal::Incidence
   object you get from Calendar -- use the delete...() methods.
 */
-class KCAL_EXPORT CalendarBase : public QObject, public KCal::CustomProperties,
-                                                  public KCal::IncidenceBase::IncidenceObserver
+class AKONADI_KCAL_EXPORT CalendarBase : public QObject, public KCal::CustomProperties,
+                                                         public KCal::IncidenceBase::IncidenceObserver
 {
   Q_OBJECT
 

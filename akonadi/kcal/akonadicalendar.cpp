@@ -201,7 +201,7 @@ bool AkonadiCalendar::endChange( Incidence *incidence )
 bool AkonadiCalendar::endChangeFORAKONADI( const Item &item )
 {
   Q_ASSERT( item.isValid() );
-  const Incidence::Ptr incidence = KOHelper::incidence( item );
+  const Incidence::Ptr incidence = Akonadi::incidence( item );
   Q_ASSERT( incidence );
 
   const bool isModification = d->m_changes.removeAll( incidence->uid() ) >= 1;
@@ -284,7 +284,7 @@ void AkonadiCalendar::close()
 bool AkonadiCalendar::addAgent( const KUrl &url )
 {
   kDebug()<< url;
-  Akonadi::AgentType type = Akonadi::AgentManager::self()->type( "akonadi_ical_resource" );
+  Akonadi::AgentType type = Akonadi::AgentManager::self()->type( QLatin1String("akonadi_ical_resource") );
   Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type, d->m_session );
   job->setProperty("path", url.path());
   connect( job, SIGNAL( result( KJob * ) ), d, SLOT( agentCreated( KJob * ) ) );
@@ -367,13 +367,13 @@ Event *AkonadiCalendar::event( const QString &uid )
   if( !d->m_uidToItemId.contains( uid ) )
     return 0;
   Akonadi::Item aci = d->itemForUid( uid );
-  return KOHelper::event( aci ).get();
+  return Akonadi::event( aci ).get();
 }
 
 Item AkonadiCalendar::eventFORAKONADI( const Item::Id &id )
 {
   const Akonadi::Item item = d->m_itemMap.value( id );
-  if ( KOHelper::event( item ) )
+  if ( Akonadi::event( item ) )
     return item;
   else
     return Akonadi::Item();
@@ -461,13 +461,13 @@ Todo *AkonadiCalendar::todo( const QString &uid )
   if( ! d->m_uidToItemId.contains( uid ) )
     return 0;
   Akonadi::Item aci = d->itemForUid( uid );
-  return KOHelper::todo( aci ).get();
+  return Akonadi::todo( aci ).get();
 }
 
 Item AkonadiCalendar::todoFORAKONADI( const Item::Id &id )
 {
   const Akonadi::Item item = d->m_itemMap.value( id );
-  if ( KOHelper::todo( item ) )
+  if ( Akonadi::todo( item ) )
     return item;
   else
     return Akonadi::Item();
@@ -480,7 +480,7 @@ Todo::List AkonadiCalendar::rawTodos( TodoSortField sortField, SortDirection sor
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Todo::Ptr todo = KOHelper::todo( i.value() ) )
+    if( Todo::Ptr todo = Akonadi::todo( i.value() ) )
       todoList.append( todo.get() );
   }
   return sortTodos( &todoList, sortField, sortDirection );
@@ -493,7 +493,7 @@ Item::List AkonadiCalendar::rawTodosFORAKONADI( TodoSortField sortField, SortDir
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( KOHelper::todo( i.value() ) )
+    if( Akonadi::todo( i.value() ) )
       todoList.append( i.value() );
   }
   return sortTodosFORAKONADI( todoList, sortField, sortDirection );
@@ -521,7 +521,7 @@ Item::List AkonadiCalendar::rawTodosForDateFORAKONADI( const QDate &date )
   QString dateStr = date.toString();
   QMultiHash<QString, Akonadi::Item>::const_iterator it = d->m_itemsForDate.constFind( dateStr );
   while ( it != d->m_itemsForDate.constEnd() && it.key() == dateStr ) {
-    if( KOHelper::todo( it.value() ) )
+    if( Akonadi::todo( it.value() ) )
       todoList.append( it.value() );
     ++it;
   }
@@ -584,7 +584,7 @@ Event::List AkonadiCalendar::rawEventsForDate( const QDate &date, const KDateTim
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Event::Ptr ev = KOHelper::event( i.value() ) ) {
+    if( Event::Ptr ev = Akonadi::event( i.value() ) ) {
       if ( ev->recurs() ) {
         if ( ev->isMultiDay() ) {
           int extraDays = ev->dtStart().date().daysTo( ev->dtEnd().date() );
@@ -620,7 +620,7 @@ Item::List AkonadiCalendar::rawEventsForDateFORAKONADI( const QDate &date, const
   KDateTime::Spec ts = timespec.isValid() ? timespec : timeSpec();
   KDateTime kdt( date, ts );
   while ( it != d->m_itemsForDate.constEnd() && it.key() == dateStr ) {
-    if( Event::Ptr ev = KOHelper::event( it.value() ) ) {
+    if( Event::Ptr ev = Akonadi::event( it.value() ) ) {
       KDateTime end( ev->dtEnd().toTimeSpec( ev->dtStart() ) );
       if ( ev->allDay() )
         end.setDateOnly( true ); else end = end.addSecs( -1 );
@@ -633,7 +633,7 @@ Item::List AkonadiCalendar::rawEventsForDateFORAKONADI( const QDate &date, const
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Event::Ptr ev = KOHelper::event( i.value() ) ) {
+    if( Event::Ptr ev = Akonadi::event( i.value() ) ) {
       if ( ev->recurs() ) {
         if ( ev->isMultiDay() ) {
           int extraDays = ev->dtStart().date().daysTo( ev->dtEnd().date() );
@@ -670,7 +670,7 @@ Event::List AkonadiCalendar::rawEvents( const QDate &start, const QDate &end, co
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Event::Ptr event = KOHelper::event( i.value() ) ) {
+    if( Event::Ptr event = Akonadi::event( i.value() ) ) {
       KDateTime rStart = event->dtStart();
       if ( nd < rStart ) continue;
       if ( inclusive && rStart < st ) continue;
@@ -710,7 +710,7 @@ Item::List AkonadiCalendar::rawEventsFORAKONADI( const QDate &start, const QDate
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Event::Ptr event = KOHelper::event( i.value() ) ) {
+    if( Event::Ptr event = Akonadi::event( i.value() ) ) {
       KDateTime rStart = event->dtStart();
       if ( nd < rStart ) continue;
       if ( inclusive && rStart < st ) continue;
@@ -757,7 +757,7 @@ Event::List AkonadiCalendar::rawEvents( EventSortField sortField, SortDirection 
   QHashIterator<Akonadi::Item::Id, Akonadi::Item>i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Event::Ptr event = KOHelper::event( i.value() ) )
+    if( Event::Ptr event = Akonadi::event( i.value() ) )
       eventList.append( event.get() );
   }
   return sortEvents( &eventList, sortField, sortDirection );
@@ -770,7 +770,7 @@ Item::List AkonadiCalendar::rawEventsFORAKONADI( EventSortField sortField, SortD
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( KOHelper::event( i.value() ) )
+    if( Akonadi::event( i.value() ) )
       eventList.append( i.value() );
   }
   return sortEventsFORAKONADI( eventList, sortField, sortDirection );
@@ -807,14 +807,14 @@ Journal *AkonadiCalendar::journal( const QString &uid )
   if( ! d->m_uidToItemId.contains( uid ) )
     return 0;
   Akonadi::Item aci = d->itemForUid( uid );
-  return KOHelper::journal( aci ).get();
+  return Akonadi::journal( aci ).get();
 }
 
 
 Item AkonadiCalendar::journalFORAKONADI( const Item::Id &id )
 {
   const Akonadi::Item item = d->m_itemMap.value( id );
-  if ( KOHelper::journal( item ) )
+  if ( Akonadi::journal( item ) )
     return item;
   else
     return Akonadi::Item();
@@ -827,7 +827,7 @@ Journal::List AkonadiCalendar::rawJournals( JournalSortField sortField, SortDire
   QHashIterator<Akonadi::Item::Id, Akonadi::Item>i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( Journal::Ptr journal = KOHelper::journal( i.value() ) )
+    if( Journal::Ptr journal = Akonadi::journal( i.value() ) )
       journalList.append( journal.get() );
   }
   return sortJournals( &journalList, sortField, sortDirection );
@@ -840,7 +840,7 @@ Item::List AkonadiCalendar::rawJournalsFORAKONADI( JournalSortField sortField, S
   QHashIterator<Akonadi::Item::Id, Akonadi::Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
     i.next();
-    if( KOHelper::journal( i.value() ) )
+    if( Akonadi::journal( i.value() ) )
       journalList.append( i.value() );
   }
   return sortJournalsFORAKONADI( journalList, sortField, sortDirection );
@@ -868,7 +868,7 @@ Item::List AkonadiCalendar::rawJournalsForDateFORAKONADI( const QDate &date )
   QString dateStr = date.toString();
   QMultiHash<QString, Akonadi::Item>::const_iterator it = d->m_itemsForDate.constFind( dateStr );
   while ( it != d->m_itemsForDate.constEnd() && it.key() == dateStr ) {
-    if( KOHelper::journal( it.value() ) )
+    if( Akonadi::journal( it.value() ) )
       journalList.append( it.value() );
     ++it;
   }

@@ -20,10 +20,10 @@
     USA.
 */
 
-#ifndef AKONADICALENDAR_H
-#define AKONADICALENDAR_H
+#ifndef AKONADI_KCAL_AKONADICALENDAR_H
+#define AKONADI_KCAL_AKONADICALENDAR_H
 
-#include "korganizer/korganizer_export.h"
+#include "akonadi-kcal_export.h"
 #include "calendarbase.h"
 
 namespace Akonadi {
@@ -40,7 +40,7 @@ namespace KOrg {
 /**
  * Implements a KCal::Calendar that uses Akonadi as backend.
  */
-class KORGANIZER_INTERFACES_EXPORT AkonadiCalendar : public CalendarBase
+class AKONADI_KCAL_EXPORT AkonadiCalendar : public CalendarBase
 {
     Q_OBJECT
   public:

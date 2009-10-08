@@ -25,7 +25,7 @@
 #define AKONADICALENDAR_P_H
 
 #include "akonadicalendar.h"
-#include "kohelper.h"
+#include "utils.h"
 
 #include <QObject>
 #include <QCoreApplication>
@@ -51,6 +51,8 @@
 #include <akonadi/session.h>
 
 #include <KCal/Incidence>
+
+#include <KLocalizedString>
 
 using namespace boost;
 using namespace KCal;
@@ -160,7 +162,7 @@ class KOrg::AkonadiCalendar::Private : public QObject
 
       Akonadi::Item item;
       //the sub-mimetype of text/calendar as defined at kdepim/akonadi/kcal/kcalmimetypevisitor.cpp
-      item.setMimeType( QString("application/x-vnd.akonadi.calendar.%1").arg(QString(incidence->type().toLower())) );
+      item.setMimeType( QString::fromLatin1("application/x-vnd.akonadi.calendar.%1").arg(QLatin1String(incidence->type().toLower())) );
       KCal::Incidence::Ptr incidencePtr( incidence ); //no clone() needed
       item.setPayload<KCal::Incidence::Ptr>( incidencePtr );
       Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection, m_session );
@@ -172,7 +174,7 @@ class KOrg::AkonadiCalendar::Private : public QObject
     {
       kDebug();
       Akonadi::Item item = item_;
-      const Incidence::Ptr incidence = KOHelper::incidence( item );
+      const Incidence::Ptr incidence = Akonadi::incidence( item );
       Akonadi::CollectionDialog dlg( 0 ); //PENDING(AKONADI_PORT) we really need a parent here
       dlg.setMimeTypeFilter( QStringList() << QString::fromLatin1( "text/calendar" ) );
       if ( ! dlg.exec() ) {
@@ -205,7 +207,7 @@ class KOrg::AkonadiCalendar::Private : public QObject
     bool deleteIncidenceFORAKONADI( const Akonadi::Item &item )
     {
       kDebug();
-      Incidence::Ptr incidence = KOHelper::incidence( item );
+      Incidence::Ptr incidence = Akonadi::incidence( item );
       if ( !incidence )
         return false;
       m_changes.removeAll( incidence->uid() ); //abort changes to this incidence cause we will just delete it
@@ -287,15 +289,15 @@ class KOrg::AkonadiCalendar::Private : public QObject
         }
         Akonadi::AgentInstance instance = createjob->instance();
         //instance.setName( CalendarName );
-        QDBusInterface iface("org.freedesktop.Akonadi.Resource." + instance.identifier(), "/Settings");
+        QDBusInterface iface( QString::fromLatin1("org.freedesktop.Akonadi.Resource.%1").arg( instance.identifier() ), QLatin1String("/Settings") );
         if( ! iface.isValid() ) {
             kWarning( 5250 ) << "Failed to obtain D-Bus interface for remote configuration.";
-            emit q->signalErrorMessage( "Failed to obtain D-Bus interface for remote configuration." );
+            emit q->signalErrorMessage( i18n("Failed to obtain D-Bus interface for remote configuration.") );
             return;
         }
-        QString path = createjob->property("path").toString();
+        QString path = createjob->property( "path" ).toString();
         Q_ASSERT( ! path.isEmpty() );
-        iface.call("setPath", path);
+        iface.call(QLatin1String("setPath"), path);
         instance.reconfigure();
     }
 

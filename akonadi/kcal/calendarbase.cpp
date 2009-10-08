@@ -36,7 +36,7 @@
 */
 
 #include "calendarbase.h"
-#include "kohelper.h"
+#include "utils.h"
 
 #include <kcal/exceptions.h>
 #include <kcal/calfilter.h>
@@ -432,7 +432,7 @@ Item::List CalendarBase::sortEventsFORAKONADI( const Item::List &eventList_,
   case EventSortStartDate:
     alphaList = sortEventsFORAKONADI( eventList, EventSortSummary, sortDirection );
     for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit) {
-      Event::Ptr e = KOHelper::event( *eit );
+      Event::Ptr e = Akonadi::event( *eit );
       Q_ASSERT( e );
       if ( e->dtStart().isDateOnly() ) {
         tempList.append( *eit );
@@ -441,12 +441,12 @@ Item::List CalendarBase::sortEventsFORAKONADI( const Item::List &eventList_,
       sortIt = eventListSorted.begin();
       if ( sortDirection == SortDirectionAscending ) {
         while ( sortIt != eventListSorted.end() &&
-                e->dtStart() >= KOHelper::event(*sortIt)->dtStart() ) {
+                e->dtStart() >= Akonadi::event(*sortIt)->dtStart() ) {
           ++sortIt;
         }
       } else {
         while ( sortIt != eventListSorted.end() &&
-                e->dtStart() < KOHelper::event(*sortIt)->dtStart() ) {
+                e->dtStart() < Akonadi::event(*sortIt)->dtStart() ) {
           ++sortIt;
         }
       }
@@ -465,18 +465,18 @@ Item::List CalendarBase::sortEventsFORAKONADI( const Item::List &eventList_,
   case EventSortEndDate:
     alphaList = sortEventsFORAKONADI( eventList, EventSortSummary, sortDirection );
     for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
-      Event::Ptr e = KOHelper::event( *eit );
+      Event::Ptr e = Akonadi::event( *eit );
       Q_ASSERT( e );
       if ( e->hasEndDate() ) {
         sortIt = eventListSorted.begin();
         if ( sortDirection == SortDirectionAscending ) {
           while ( sortIt != eventListSorted.end() &&
-                  e->dtEnd() >= KOHelper::event(*sortIt)->dtEnd() ) {
+                  e->dtEnd() >= Akonadi::event(*sortIt)->dtEnd() ) {
             ++sortIt;
           }
         } else {
           while ( sortIt != eventListSorted.end() &&
-                  e->dtEnd() < KOHelper::event(*sortIt)->dtEnd() ) {
+                  e->dtEnd() < Akonadi::event(*sortIt)->dtEnd() ) {
             ++sortIt;
           }
         }
@@ -498,17 +498,17 @@ Item::List CalendarBase::sortEventsFORAKONADI( const Item::List &eventList_,
 
   case EventSortSummary:
     for ( eit = eventList.begin(); eit != eventList.end(); ++eit ) {
-      Event::Ptr e = KOHelper::event( *eit );
+      Event::Ptr e = Akonadi::event( *eit );
       Q_ASSERT( e );
       sortIt = eventListSorted.begin();
       if ( sortDirection == SortDirectionAscending ) {
         while ( sortIt != eventListSorted.end() &&
-                e->summary() >= KOHelper::event(*sortIt)->summary() ) {
+                e->summary() >= Akonadi::event(*sortIt)->summary() ) {
           ++sortIt;
         }
       } else {
         while ( sortIt != eventListSorted.end() &&
-                e->summary() < KOHelper::event(*sortIt)->summary() ) {
+                e->summary() < Akonadi::event(*sortIt)->summary() ) {
           ++sortIt;
         }
       }
@@ -849,7 +849,7 @@ Item::List CalendarBase::incidencesFromSchedulingIDFORAKONADI( const QString &si
   const Item::List incidences = rawIncidencesFORAKONADI();
   Item::List::const_iterator it = incidences.begin();
   for ( ; it != incidences.end(); ++it ) {
-    if ( KOHelper::incidence(*it)->schedulingID() == sid ) {
+    if ( Akonadi::incidence(*it)->schedulingID() == sid ) {
       result.append( *it );
     }
   }
@@ -875,7 +875,7 @@ Item CalendarBase::incidenceFromSchedulingIDFORAKONADI( const QString &UID )
   const Item::List incidences = rawIncidencesFORAKONADI();
   Item::List::const_iterator it = incidences.begin();
   for ( ; it != incidences.end(); ++it ) {
-    if ( KOHelper::incidence(*it)->schedulingID() == UID ) {
+    if ( Akonadi::incidence(*it)->schedulingID() == UID ) {
       // Touchdown, and the crowd goes wild
       return *it;
     }
