@@ -12,7 +12,10 @@
 
 class QPainter;
 class KUrl;
-class KMReaderWin;
+
+namespace MessageViewer {
+  class Viewer;
+}
 
 namespace Akonadi {
   class Item;
@@ -42,12 +45,17 @@ public:
      */
     virtual ~mailreaderView();
 
-    void showItem(Akonadi::Item& item);
+    void showItem(const Akonadi::Item& item);
     void showAboutPage();
 
 private:
+    void displayAboutPage();
+
     Ui::mailreaderview ui_mailreaderview;
-    KMReaderWin *m_readerWin;
+    MessageViewer::Viewer *m_readerWin;
+
+public slots:
+    void slotConfigure();
 
 signals:
     /**
@@ -63,6 +71,7 @@ signals:
 private slots:
     void switchColors();
     void settingsChanged();
+    void urlClicked( const KUrl& url, int button);
 };
 
 #endif // mailreaderVIEW_H

@@ -182,7 +182,9 @@ set(libkdgantt1_SRCS
     endif(Boost_TOPOLOGICAL_SORT_DIR)
     add_subdirectory(wizards)
     # The following components depend on QGpgME.
+    add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(kmail)
+    macro_optional_add_subdirectory(mailreader)
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
     if(BUILD_kmail)
       set(KMAIL_SUPPORTED TRUE)

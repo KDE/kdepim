@@ -18,6 +18,10 @@ class KUrl;
 class KComboBox;
 class KAction;
 
+namespace MessageList
+{
+    class Pane;
+}
 
 /**
  * This class serves as the main window for mailreader.  It handles the
@@ -42,25 +46,20 @@ public:
     virtual ~mailreader();
 
 private slots:
-    void slotCollectionsReceived(const Akonadi::Collection::List &);
-    void slotCollectionSelected(int index);
-    void slotCollectionFecthDone();
-    void slotItemsReceived(const Akonadi::Item::List &items);
-    void slotItemReceived(const Akonadi::Item::List &items);
+    void slotMessageSelected(const Akonadi::Item &item);
     void slotPreviousMessage();
     void slotNextMessage();
 
 private:
+    void setupDocks();
     void setupActions();
 
 private:
     mailreaderView *m_view;
+    MessageList::Pane *m_messagePane;
 
-    KComboBox *m_collectionCombo;
     KAction *m_nextMessage;
     KAction *m_previousMessage;
-    Akonadi::Item::List m_items;
-    int m_itemIndex;
 };
 
 #endif // _MAILREADER_H_

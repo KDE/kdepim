@@ -4,34 +4,43 @@
  * Copyright (C) 2008 Andras Mantia <amantia@kde.org>
  */
 #include "mailreader.h"
+
+#include <akonadi/entitytreeview.h>
+#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/changerecorder.h>
+#include <akonadi/session.h>
+#include <akonadi/statisticstooltipproxymodel.h>
+
+#include <KDE/KAction>
+#include <KDE/KConfigDialog>
+#include <KDE/KActionCollection>
+#include <KDE/KLocale>
+#include <KDE/KStandardAction>
+#include <KDE/KStatusBar>
+
+#include <QtGui/QDockWidget>
+#include <QtGui/QSortFilterProxyModel>
+
+#include <messagelist/pane.h>
+
+
 #include "mailreaderview.h"
 #include "settings.h"
 
-#include <kconfigdialog.h>
-#include <kstatusbar.h>
-
-#include <kaction.h>
-#include <kactioncollection.h>
-#include <kstandardaction.h>
-#include <KComboBox>
-#include <KToolBar>
-
-#include <KDE/KLocale>
-
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
 
 mailreader::mailreader()
     : KXmlGuiWindow(),
-      m_view(new mailreaderView(this)),
-      m_itemIndex(0)
+      m_view(new mailreaderView(this))
 {
     // accept dnd
     setAcceptDrops(true);
 
     // tell the KXmlGuiWindow that this is indeed the main widget
     setCentralWidget(m_view);
+
+    setupDocks();
 
     // then, setup our actions
     setupActions();
@@ -45,118 +54,115 @@ mailreader::mailreader()
     // mainwindow to automatically save settings if changed: window size,
     // toolbar position, icon size, etc.
     setupGUI();
-
-    m_collectionCombo = new KComboBox(this);
-    m_collectionCombo->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
-    m_collectionCombo->addItem("Select mailbox", -1);
-    toolBar("naviToolbar")->insertWidget(m_previousMessage, m_collectionCombo);
-    connect(m_collectionCombo, SIGNAL(currentIndexChanged(int)), SLOT(slotCollectionSelected(int)));
-
-    Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob( Akonadi::Collection::root(), Akonadi::CollectionFetchJob::Recursive );
-    connect(job, SIGNAL(collectionsReceived(const Akonadi::Collection::List &)), SLOT(slotCollectionsReceived(const Akonadi::Collection::List &)));
-
+    
 }
 
 mailreader::~mailreader()
 {
 }
 
+void mailreader::setupDocks()
+{
+  // Setup the core model
+  Akonadi::Session *session = new Akonadi::Session( "AkonadiMailReader", this );
+
+  Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
+  monitor->setCollectionMonitored( Akonadi::Collection::root() );
+  monitor->fetchCollection( true );
+  monitor->setMimeTypeMonitored( "message/rfc822", true );
+  monitor->itemFetchScope().fetchFullPayload(true);
+
+  Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, this );
+  entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+
+  // Create the collection view
+  Akonadi::EntityTreeView *collectionView = new Akonadi::EntityTreeView( 0, this );
+  collectionView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+
+  // Setup the message folders collection...
+  Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( this );
+  collectionFilter->setSourceModel( entityModel );
+  collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+
+  // ... with statistics...
+  Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( this );
+  statisticsProxyModel->setSourceModel( collectionFilter );
+
+  // ... and sortable
+  QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
+  sortModel->setDynamicSortFilter( true );
+  sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
+  sortModel->setSourceModel( statisticsProxyModel );
+
+  // Use the model
+  collectionView->setModel( sortModel );
+
+  // Now make the message list multi-tab pane
+  m_messagePane = new MessageList::Pane( entityModel, collectionView->selectionModel(), this );
+  connect( m_messagePane, SIGNAL(messageSelected(Akonadi::Item)),
+           this, SLOT(slotMessageSelected(Akonadi::Item)) );
+
+  // Dock the message list view
+  QDockWidget *messageListDock = new QDockWidget( i18n("Messages"), this );
+  messageListDock->setObjectName( "Messages" );
+  messageListDock->setWidget( m_messagePane );
+  messageListDock->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
+  addDockWidget( Qt::TopDockWidgetArea, messageListDock );
+
+  // Dock the folder tree view
+  QDockWidget *folderDock = new QDockWidget( i18n("Folders"), this );
+  folderDock->setObjectName( "Folders" );
+  folderDock->setWidget( collectionView );
+  folderDock->setFeatures( QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable );
+  addDockWidget( Qt::LeftDockWidgetArea, folderDock );
+
+  // Fine tuning on the dock policy (nesting + corners)
+  setDockNestingEnabled( true );
+  setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
+  setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
+  setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
+  setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
+}
+
 void mailreader::setupActions()
 {
     KStandardAction::quit(qApp, SLOT(closeAllWindows()), actionCollection());
+    KStandardAction::preferences(m_view, SLOT(slotConfigure()), actionCollection());
 
-    m_previousMessage = new KAction("Previous message", this);
+    KAction *createTab = new KAction(KIcon("tab-new"),
+                                      i18n("Open a new tab"),
+                                      this);
+    actionCollection()->addAction("new_tab", createTab);
+    connect(createTab, SIGNAL(triggered(bool)),
+            m_messagePane, SLOT(createNewTab()));
+
+
+    m_previousMessage = new KAction(i18n("Previous Message"), this);
     actionCollection()->addAction("previous_message", m_previousMessage);
     connect(m_previousMessage, SIGNAL(triggered( bool )), SLOT(slotPreviousMessage()));
-    m_nextMessage = new KAction("Next message", this);
+    m_nextMessage = new KAction(i18n("Next Message"), this);
     actionCollection()->addAction("next_message", m_nextMessage);
     connect(m_nextMessage, SIGNAL(triggered( bool )), SLOT(slotNextMessage()));
-    m_nextMessage->setEnabled(false);
-    m_previousMessage->setEnabled(false);
 }
 
-void mailreader::slotCollectionsReceived(const Akonadi::Collection::List &collections)
+void mailreader::slotMessageSelected( const Akonadi::Item &item )
 {
- Q_FOREACH(Akonadi::Collection collection, collections) {
-    if (collection.contentMimeTypes().contains("message/rfc822")) {
-      m_collectionCombo->addItem(collection.name(), collection.id());
-    }
-  }
+  m_view->showItem( item );
 }
-
-void mailreader::slotCollectionSelected(int index)
-{
-  m_nextMessage->setEnabled(false);
-  m_previousMessage->setEnabled(false);
-  qint64 id = m_collectionCombo->itemData(index).toLongLong();
-  if ( id == -1 ) {
-    m_view->showAboutPage();
-  }
-  m_items.clear();
-  Akonadi::Collection c(id);
-  Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(c);
-  connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemsReceived(const Akonadi::Item::List &)));
-  connect(job, SIGNAL(result(KJob*)), SLOT(slotCollectionFecthDone()));
-}
-
-void mailreader::slotItemsReceived(const Akonadi::Item::List &items)
-{
-  m_items = items;
-  m_itemIndex = 0;
-  if (!m_items.isEmpty()) {
-    if (m_items.size() > 1)
-      m_nextMessage->setEnabled(true);
-    Akonadi::Item item = m_items.at(0);
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
-    job->fetchScope().fetchFullPayload();
-    connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
-  }
-}
-
-void mailreader::slotCollectionFecthDone()
-{
-  if (m_items.isEmpty()) {
-    m_view->showAboutPage();
-  }
-}
-
-void mailreader::slotItemReceived(const Akonadi::Item::List &items)
-{
-  if (!items.isEmpty()) {
-    Akonadi::Item item = items.at(0);
-    m_view->showItem(item);
-  }
-}
-
 
 void mailreader::slotPreviousMessage()
 {
-  if (m_itemIndex > 0 && !m_items.isEmpty()) {
-    m_nextMessage->setEnabled(true);
-    m_itemIndex--;
-    if (m_itemIndex < 1)
-      m_previousMessage->setEnabled(false);
-    Akonadi::Item item = m_items.at(m_itemIndex);
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
-    job->fetchScope().fetchFullPayload();
-    connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
-  }
-
+  m_messagePane->selectPreviousMessageItem( MessageList::Core::MessageTypeAny,
+                                            MessageList::Core::ClearExistingSelection,
+                                            true, true );
 }
 
 void mailreader::slotNextMessage()
 {
-  if (m_itemIndex + 1 < m_items.size() && !m_items.isEmpty()) {
-    m_previousMessage->setEnabled(true);
-    m_itemIndex++;
-    if (m_itemIndex + 1 >= m_items.size())
-      m_nextMessage->setEnabled(false);
-    Akonadi::Item item = m_items.at(m_itemIndex);
-    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(item);
-    job->fetchScope().fetchFullPayload();
-    connect(job, SIGNAL(itemsReceived(const Akonadi::Item::List &)), SLOT(slotItemReceived(const Akonadi::Item::List &)));
-  }
-
+  m_messagePane->selectNextMessageItem( MessageList::Core::MessageTypeAny,
+                                        MessageList::Core::ClearExistingSelection,
+                                        true, true );
 }
 
 #include "mailreader.moc"

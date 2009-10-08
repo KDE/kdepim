@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MessageListConfig</class>
+ <widget class="QWidget" name="MessageListConfig">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>573</width>
+    <height>565</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2">
+   <item>
+    <widget class="QGroupBox" name="mainGroup">
+     <property name="title">
+      <string>General</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QCheckBox" name="kcfg_MessageToolTipEnabled">
+        <property name="text">
+         <string>Display tooltips for messages and group headers</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_AutoHideTabBarWithSingleTab">
+        <property name="text">
+         <string>Hide tab bar when only one tab is open</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="colorGroup">
+     <property name="title">
+      <string>Colors</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="kcfg_UseDefaultColors">
+          <property name="text">
+           <string>Use default colors</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>New messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KColorButton" name="kcfg_NewMessageColor"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Unread messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="KColorButton" name="kcfg_UnreadMessageColor"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Important messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="KColorButton" name="kcfg_ImportantMessageColor"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Action messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="KColorButton" name="kcfg_TodoMessageColor"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="fontGroup">
+     <property name="title">
+      <string>Fonts</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <layout class="QFormLayout" name="formLayout_2">
+        <property name="fieldGrowthPolicy">
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
+        <item row="0" column="0">
+         <widget class="QCheckBox" name="kcfg_UseDefaultFonts">
+          <property name="text">
+           <string>Use default fonts</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Message list:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>New messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="text">
+           <string>Unread messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Important messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="label_8">
+          <property name="text">
+           <string>Action messages:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="KFontRequester" name="kcfg_MessageListFont"/>
+        </item>
+        <item row="2" column="1">
+         <widget class="KFontRequester" name="kcfg_NewMessageFont"/>
+        </item>
+        <item row="3" column="1">
+         <widget class="KFontRequester" name="kcfg_UnreadMessageFont"/>
+        </item>
+        <item row="4" column="1">
+         <widget class="KFontRequester" name="kcfg_ImportantMessageFont"/>
+        </item>
+        <item row="5" column="1">
+         <widget class="KFontRequester" name="kcfg_TodoMessageFont"/>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KFontRequester</class>
+   <extends>QWidget</extends>
+   <header>kfontrequester.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KColorButton</class>
+   <extends>QPushButton</extends>
+   <header>kcolorbutton.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>kcfg_UseDefaultColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_NewMessageColor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>66</x>
+     <y>141</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>177</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_UnreadMessageColor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>37</x>
+     <y>141</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>163</x>
+     <y>205</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ImportantMessageColor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>107</x>
+     <y>143</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>158</x>
+     <y>231</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultColors</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_TodoMessageColor</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>83</x>
+     <y>147</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>159</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultFonts</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_MessageListFont</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>75</x>
+     <y>373</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>186</x>
+     <y>405</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultFonts</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_NewMessageFont</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>158</x>
+     <y>434</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultFonts</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_UnreadMessageFont</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>35</x>
+     <y>379</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>462</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultFonts</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_ImportantMessageFont</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>21</x>
+     <y>376</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>158</x>
+     <y>492</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>kcfg_UseDefaultFonts</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>kcfg_TodoMessageFont</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>94</x>
+     <y>374</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>155</x>
+     <y>517</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
