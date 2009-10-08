@@ -98,7 +98,7 @@ QDataStream &operator>>(QDataStream &stream, DragPayload &payload)
 Widget::Widget( QWidget *parent )
   : Core::Widget( parent ), d( new Private( this ) )
 {
-  QTimer::singleShot( 0, this, SLOT( populateStatusFilterCombo() ) );
+  populateStatusFilterCombo();
 }
 
 Widget::~Widget()
