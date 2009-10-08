@@ -109,6 +109,12 @@ public:
    */
   QString currentFilterTagId() const;
 
+  /**
+   * Sets the focus on the quick search line of the currently active tab.
+   */
+  void focusQuickSearch();
+
+
 public slots:
 
   /**

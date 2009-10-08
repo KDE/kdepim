@@ -191,6 +191,10 @@ void Widget::setAllGroupsExpanded( bool expand )
   view()->setAllGroupsExpanded(expand);
 }
 
+void Widget::focusQuickSearch()
+{
+  view()->focusQuickSearch();
+}
 
 void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )
 {

@@ -2597,4 +2597,9 @@ void View::slotExpandAllGroups()
   setAllGroupsExpanded( true );
 }
 
+void View::focusQuickSearch()
+{
+  d->mWidget->focusQuickSearch();
+}
+
 #include "view.moc"

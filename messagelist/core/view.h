@@ -342,6 +342,10 @@ public:
    */
   void fillViewMenu( KMenu * menu );
 
+  /**
+   * Sets the focus on the quick search line of the currently active tab.
+   */
+  void focusQuickSearch();
 protected:
   /**
    * Reimplemented in order to catch QHelpEvent

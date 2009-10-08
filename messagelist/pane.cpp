@@ -238,6 +238,14 @@ void Pane::setAllGroupsExpanded( bool expand )
   }
 }
 
+void Pane::focusQuickSearch()
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    w->focusQuickSearch();
+  }
+}
 
 void Pane::Private::onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
