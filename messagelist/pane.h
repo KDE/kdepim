@@ -214,6 +214,12 @@ signals:
    */
   void fullSearchRequest();
 
+  /**
+   * Notify the outside when updating the status bar with a message
+   * could be useful
+   */
+  void statusMessage( const QString &message );
+
 private:
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))
   Q_PRIVATE_SLOT(d, void onNewTabClicked())

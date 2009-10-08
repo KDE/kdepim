@@ -238,6 +238,13 @@ public:
   virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const;
   virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
 
+Q_SIGNALS:
+  /**
+   * Notify the outside when updating the status bar with a message
+   * could be useful
+   */
+  void statusMessage( const QString &message );
+
 private:
   Q_PRIVATE_SLOT(d, void checkIfDateChanged())
   Q_PRIVATE_SLOT(d, void viewItemJobStep())

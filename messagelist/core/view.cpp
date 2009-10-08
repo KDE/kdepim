@@ -114,6 +114,9 @@ View::View( Widget *pParent )
   d->mModel = new Model( this );
   setModel( d->mModel );
 
+  connect( d->mModel, SIGNAL( statusMessage( const QString & ) ),
+           pParent, SIGNAL( statusMessage( const QString & ) ) );
+
   //connect( selectionModel(), SIGNAL( currentChanged( const QModelIndex &, const QModelIndex & ) ),
   //         this, SLOT( slotCurrentIndexChanged( const QModelIndex &, const QModelIndex & ) ) );
   connect( selectionModel(), SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),

@@ -53,7 +53,6 @@
 #include "core/manager.h"
 #include "core/messageitemsetmanager.h"
 
-#include <libkdepim/broadcaststatus.h> // KPIM::BroadcastStatus
 #include <libkdepim/messagestatus.h>
 
 #include <QApplication>
@@ -3844,19 +3843,34 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
           case ViewItemJob::Pass1Fill:
           case ViewItemJob::Pass1Cleanup:
           case ViewItemJob::Pass1Update:
-            KPIM::BroadcastStatus::instance()->setStatusMsg( i18np("Processed 1 Message of %2", "Processed %1 Messages of %2", job->currentIndex() - job->startIndex(), ( job->endIndex() - job->startIndex() ) + 1 ) );
+            emit q->statusMessage( i18np( "Processed 1 Message of %2",
+                                          "Processed %1 Messages of %2",
+                                          job->currentIndex() - job->startIndex(),
+                                          job->endIndex() - job->startIndex() + 1 ) );
           break;
           case ViewItemJob::Pass2:
-            KPIM::BroadcastStatus::instance()->setStatusMsg( i18np("Threaded 1 Message of %2", "Threaded %1 Messages of %2", job->currentIndex() - job->startIndex(), ( job->endIndex() - job->startIndex() ) + 1 ) );
+            emit q->statusMessage( i18np( "Threaded 1 Message of %2",
+                                          "Threaded %1 Messages of %2",
+                                          job->currentIndex() - job->startIndex(),
+                                          job->endIndex() - job->startIndex() + 1 ) );
           break;
           case ViewItemJob::Pass3:
-            KPIM::BroadcastStatus::instance()->setStatusMsg( i18np("Threaded 1 Message of %2", "Threaded %1 Messages of %2", job->currentIndex() - job->startIndex(), ( job->endIndex() - job->startIndex() ) + 1 ) );
+            emit q->statusMessage( i18np( "Threaded 1 Message of %2",
+                                          "Threaded %1 Messages of %2",
+                                          job->currentIndex() - job->startIndex(),
+                                          job->endIndex() - job->startIndex() + 1 ) );
           break;
           case ViewItemJob::Pass4:
-            KPIM::BroadcastStatus::instance()->setStatusMsg( i18np("Grouped 1 Thread of %2", "Grouped %1 Threads of %2", job->currentIndex() - job->startIndex(), ( job->endIndex() - job->startIndex() ) + 1 ) );
+            emit q->statusMessage( i18np( "Grouped 1 Thread of %2",
+                                          "Grouped %1 Threads of %2",
+                                          job->currentIndex() - job->startIndex(),
+                                          job->endIndex() - job->startIndex() + 1 ) );
           break;
           case ViewItemJob::Pass5:
-            KPIM::BroadcastStatus::instance()->setStatusMsg( i18np("Updated 1 Group of %2", "Updated %1 Groups of %2", job->currentIndex() - job->startIndex(), ( job->endIndex() - job->startIndex() ) + 1 ) );
+            emit q->statusMessage( i18np( "Updated 1 Group of %2",
+                                          "Updated %1 Groups of %2",
+                                          job->currentIndex() - job->startIndex(),
+                                          job->endIndex() - job->startIndex() + 1 ) );
           break;
           default: break;
         }
@@ -3949,7 +3963,7 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternal()
 
   // no more jobs
 
-  KPIM::BroadcastStatus::instance()->setStatusMsg( i18nc( "@info:status Finished view fill", "Ready" ) );
+  emit q->statusMessage( i18nc( "@info:status Finished view fill", "Ready" ) );
 
   return ViewItemJobCompleted;
 }
