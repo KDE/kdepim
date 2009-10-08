@@ -256,5 +256,5 @@ StandaloneNoteWidget::on_item_bound(void)
 	setVisible(!d->item->attribute("hidden").toBool());
 }
 
-#include "moc_standalonenotewidget.cxx"
+#include "include/standalonenotewidget.moc"
 

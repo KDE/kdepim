@@ -78,5 +78,5 @@ StandaloneNoteItem::edit(void)
 	d_func()->editor->open();
 }
 
-#include "moc_standalonenoteitem.cxx"
+#include "include/standalonenoteitem.moc"
 

@@ -86,5 +86,5 @@ HookNoteItem::applySubject(BaseNoteItem * const _sender,
 	return (true);
 }
 
-#include "moc_hooknoteitem.cxx"
+#include "../include/hooknoteitem.moc"
 

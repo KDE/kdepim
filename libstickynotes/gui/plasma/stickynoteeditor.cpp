@@ -124,3 +124,5 @@ StickyNoteEditor::on_underlineBtn_clicked(void)
 	contentEdit->setFontUnderline(!contentEdit->fontUnderline());
 }
 
+#include "stickynoteeditor.moc"
+

@@ -2,7 +2,7 @@ PROJECT(stickynotes)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-SET(QT_USE_QTGUI FALSE)
+#SET(QT_USE_QTGUI FALSE)
 
 SET(BUILD_SHARED_LIBS TRUE CACHE BOOL "Make library shared")
 SET(BUILD_GUI TRUE CACHE BOOL "Build graphical user interfaces")
@@ -66,38 +66,31 @@ SET(STICKYNOTES_HDRS	include/StickyNotes/AbstractNoteItem
 			include/remotenoteitem.h
 			include/remotenotemessage.h
 			include/remoteservicemessage.h
-			${CMAKE_BINARY_DIR}/include/StickyNotes/config.h)
+			${CMAKE_BINARY_DIR}/include/StickyNotes/config-stickynotes.h)
 
 SET(STICKYNOTES_MOC_HDRS	include/hooknoteitem.h
 				include/remotenotecontroller.h)
 
 
 SET(QT_USE_QTNETWORK TRUE)
-
 FIND_PACKAGE(Qt4 REQUIRED)
-
 INCLUDE(${QT_USE_FILE})
 
-ADD_DEFINITIONS(-Wall ${QT_DEFINITIONS})
+SET(KDE_MIN_VERSION "4.3.0")
+FIND_PACKAGE(KDE4 4.3.60 REQUIRED)
+INCLUDE(KDE4Defaults)
+
+#ADD_DEFINITIONS(-Wall ${QT_DEFINITIONS})
 
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM   ${CMAKE_BINARY_DIR}
 				    ${CMAKE_BINARY_DIR}/include
 				    ${CMAKE_SOURCE_DIR}/include)
 
+KDE4_ADD_LIBRARY(stickynotes	${STICKYNOTES_SRCS}
+				${STICKYNOTES_RC_SRCS})
 
-QT4_WRAP_CPP(STICKYNOTES_MOC_SRCS ${STICKYNOTES_MOC_HDRS})
-
-ADD_CUSTOM_TARGET(stickynotes_qt4 DEPENDS ${STICKYNOTES_MOC_SRCS})
-
-
-ADD_LIBRARY(stickynotes	${STICKYNOTES_SRCS}
-			${STICKYNOTES_RC_SRCS})
-
-ADD_DEPENDENCIES(stickynotes stickynotes_qt4)
-
-TARGET_LINK_LIBRARIES(stickynotes   ${QT_QTCORE_LIBRARY}
-				    ${QT_QTNETWORK_LIBRARY})
+TARGET_LINK_LIBRARIES(stickynotes   ${QT_LIBRARIES})
 
 
 INSTALL(TARGETS stickynotes 

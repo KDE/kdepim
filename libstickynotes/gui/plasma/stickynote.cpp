@@ -53,3 +53,5 @@ StickyNote::on_server_newConnection(void)
 		new StickyNoteConnection(*this, *client);
 }
 
+#include "stickynote.moc"
+

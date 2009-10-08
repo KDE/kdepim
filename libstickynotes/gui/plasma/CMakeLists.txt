@@ -20,16 +20,11 @@ SET(PLASMANOTE_UIS	stickynoteeditor.ui)
 SET(PLASMANOTE_RCS	stickynoteeditor.qrc)
 
 QT4_ADD_RESOURCES(PLASMANOTE_RC_SRCS ${PLASMANOTE_RCS})
-kde4_add_ui_files(PLASMANOTE_SRCS ${PLASMANOTE_UIS})
-ADD_CUSTOM_TARGET(stickynote_qt4 DEPENDS	${PLASMANOTE_MOC_SRCS}
-						${PLASMANOTE_UI_HDRS})
-
-
+kde4_add_ui_files(PLASMANOTE_UI_SRCS ${PLASMANOTE_UIS})
 
 KDE4_ADD_PLUGIN(plasma_applet_stickynote	${PLASMANOTE_SRCS}
-						${PLASMANOTE_RC_SRCS})
-
-ADD_DEPENDENCIES(plasma_applet_stickynote stickynote_qt4)
+						${PLASMANOTE_RC_SRCS}
+						${PLASMANOTE_UI_SRCS})
 
 
 TARGET_LINK_LIBRARIES(plasma_applet_stickynote	stickynotes

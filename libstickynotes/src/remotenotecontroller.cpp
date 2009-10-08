@@ -236,5 +236,5 @@ RemoteNoteController::on_device_readyRead(void)
 	}
 }
 
-#include "moc_remotenotecontroller.cxx"
+#include "../include/remotenotecontroller.moc"
 

@@ -195,3 +195,5 @@ StickyNoteWidget::on_item_unbound(void)
 	hide();
 }
 
+#include "stickynotewidget.moc"
+

@@ -181,5 +181,5 @@ StandaloneNoteEditor::on_underlineBtn_clicked(void)
 	d->ui->contentEdit->setFontUnderline(!d->ui->contentEdit->fontUnderline());
 }
 
-#include "moc_standalonenoteeditor.cxx"
+#include "include/standalonenoteeditor.moc"
 
