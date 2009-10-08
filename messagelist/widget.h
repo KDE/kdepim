@@ -28,6 +28,7 @@
 
 #include <messagelist/messagelist_export.h>
 
+class KXMLGUIClient;
 class QWidget;
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
@@ -37,6 +38,11 @@ namespace MessageList
 
 /**
  * The Akonadi specific implementation of the Core::Widget.
+ *
+ * When a KXmlGuiWindow is passed to setXmlGuiClient, the XMLGUI
+ * defined context menu @c akonadi_messagelist_contextmenu is
+ * used if available.
+ *
  */
 class MESSAGELIST_EXPORT Widget : public MessageList::Core::Widget
 {
@@ -44,10 +50,20 @@ class MESSAGELIST_EXPORT Widget : public MessageList::Core::Widget
 
 public:
   /**
-   * Create a Widget wrapping the specified folder.
+   * Create a new message list widget.
    */
   explicit Widget( QWidget *parent );
   ~Widget();
+
+  /**
+   * Sets the XML GUI client which the view is used in.
+   *
+   * This is needed if you want to use the built-in context menu.
+   * Passing 0 is ok and will disable the builtin context menu.
+   *
+   * @param xmlGuiClient The KXMLGUIClient the view is used in.
+   */
+  void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
   /**
    * Returns the current message for the list as Akonadi::Item.

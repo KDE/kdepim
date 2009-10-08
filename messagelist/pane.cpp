@@ -39,7 +39,7 @@ class Pane::Private
 {
 public:
   Private( Pane *owner )
-    : q( owner ) { }
+    : q( owner ), mXmlGuiClient( 0 ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
@@ -52,6 +52,8 @@ public:
   void updateTabControls();
 
   Pane * const q;
+
+  KXMLGUIClient *mXmlGuiClient;
 
   QAbstractItemModel *mModel;
   QItemSelectionModel *mSelectionModel;
@@ -130,6 +132,16 @@ Pane::Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWid
 Pane::~Pane()
 {
   delete d;
+}
+
+void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
+{
+  d->mXmlGuiClient = xmlGuiClient;
+
+  for ( int i=0; i<count(); i++ ) {
+    Widget *w = qobject_cast<Widget *>( widget( i ) );
+    w->setXmlGuiClient( d->mXmlGuiClient );
+  }
 }
 
 bool Pane::selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTypeFilter,
@@ -353,6 +365,7 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
 void Pane::createNewTab()
 {
   Widget * w = new Widget( this );
+  w->setXmlGuiClient( d->mXmlGuiClient );
   addTab( w, i18nc( "@title:tab Empty messagelist", "Empty" ) );
 
   QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
@@ -414,7 +427,7 @@ void Pane::Private::updateTabControls()
   }
 }
 
-Item MessageList::Pane::currentItem() const
+Item Pane::currentItem() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
 
@@ -425,7 +438,7 @@ Item MessageList::Pane::currentItem() const
   return w->currentItem();
 }
 
-MessagePtr MessageList::Pane::currentMessage() const
+MessagePtr Pane::currentMessage() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
 

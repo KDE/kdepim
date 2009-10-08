@@ -29,6 +29,7 @@
 
 #include <messagelist/messagelist_export.h>
 
+class KXMLGUIClient;
 class QAbstractItemModel;
 class QAbstractProxyModel;
 class QItemSelectionModel;
@@ -56,6 +57,11 @@ class Widget;
  * This is the main MessageList panel for Akonadi applications.
  * It contains multiple MessageList::Widget tabs
  * so it can actually display multiple folder sets at once.
+ *
+ * When a KXmlGuiWindow is passed to setXmlGuiClient, the XMLGUI
+ * defined context menu @c akonadi_messagelist_contextmenu is
+ * used if available.
+ *
  */
 class MESSAGELIST_EXPORT Pane : public QTabWidget
 {
@@ -67,6 +73,16 @@ public:
    */
   explicit Pane( QAbstractItemModel *model, QItemSelectionModel *selectionModel, QWidget *parent = 0 );
   ~Pane();
+
+  /**
+   * Sets the XML GUI client which the pane is used in.
+   *
+   * This is needed if you want to use the built-in context menu.
+   * Passing 0 is ok and will disable the builtin context menu.
+   *
+   * @param xmlGuiClient The KXMLGUIClient the view is used in.
+   */
+  void setXmlGuiClient( KXMLGUIClient *xmlGuiClient );
 
   /**
    * Returns the current message for the list as Akonadi::Item.

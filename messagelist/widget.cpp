@@ -40,6 +40,8 @@
 #include <KDE/KIconLoader>
 #include <KDE/KLocale>
 #include <KDE/KMenu>
+#include <KDE/KXMLGUIClient>
+#include <KDE/KXMLGUIFactory>
 
 namespace MessageList
 {
@@ -48,7 +50,7 @@ class Widget::Private
 {
 public:
   Private( Widget *owner )
-    : q( owner ) { }
+    : q( owner ), mXmlGuiClient( 0 ) { }
 
   Akonadi::Item::List selectionAsItems() const;
   Akonadi::Item itemForRow( int row ) const;
@@ -57,6 +59,7 @@ public:
   Widget * const q;
 
   int mLastSelectedMessage;
+  KXMLGUIClient *mXmlGuiClient;
 };
 
 } // namespace MessageList
@@ -73,6 +76,11 @@ Widget::Widget( QWidget *parent )
 Widget::~Widget()
 {
   delete d;
+}
+
+void Widget::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
+{
+  d->mXmlGuiClient = xmlGuiClient;
 }
 
 bool Widget::canAcceptDrag( const QDropEvent * e )
@@ -222,10 +230,18 @@ void Widget::viewSelectionChanged()
   }
 }
 
-void Widget::viewMessageListContextPopupRequest( const QList< MessageList::Core::MessageItem * > &selectedItems, const QPoint &globalPos )
+void Widget::viewMessageListContextPopupRequest( const QList< MessageList::Core::MessageItem * > &selectedItems,
+                                                 const QPoint &globalPos )
 {
-  //FIXME: To implement once the other infrastructure is ready for a KMail independent implementation
-  kWarning() << "Needs to be reimplemented";
+  if ( !d->mXmlGuiClient )
+    return;
+
+  QMenu *popup = static_cast<QMenu*>( d->mXmlGuiClient->factory()->container(
+                                        QLatin1String( "akonadi_messagelist_contextmenu" ),
+                                        d->mXmlGuiClient ) );
+  if ( popup ) {
+    popup->exec( globalPos );
+  }
 }
 
 void Widget::viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear )
@@ -432,7 +448,7 @@ MessagePtr Widget::Private::messageForRow( int row ) const
   return static_cast<const StorageModel*>( q->storageModel() )->messageForRow( row );
 }
 
-Item MessageList::Widget::currentItem() const
+Item Widget::currentItem() const
 {
   Core::MessageItem *mi = view()->currentMessageItem();
 
@@ -443,7 +459,7 @@ Item MessageList::Widget::currentItem() const
   return d->itemForRow( mi->currentModelIndexRow() );
 }
 
-MessagePtr MessageList::Widget::currentMessage() const
+MessagePtr Widget::currentMessage() const
 {
   Core::MessageItem *mi = view()->currentMessageItem();
 
