@@ -243,7 +243,7 @@ bool KNotesLegacy::convertKNotes2Config( Journal *journal, QDir &noteDir,
   // update the config
   KConfig config( configFile );
   KConfigGroup cfggrp( &config, "Data" );
-  journal->setSummary( grp.readEntry( "name" ) );
+  journal->setSummary( cfggrp.readEntry( "name" ) );
   config.deleteGroup( "Data", KConfig::Localized );
   KConfigGroup cfggrp2(&config, "General" ); // XXX right?
   cfggrp2.writeEntry( "version", KNOTES_VERSION );
