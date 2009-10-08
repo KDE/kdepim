@@ -68,9 +68,6 @@ SET(STICKYNOTES_HDRS	include/StickyNotes/AbstractNoteItem
 			include/remoteservicemessage.h
 			${CMAKE_BINARY_DIR}/include/StickyNotes/config-stickynotes.h)
 
-SET(STICKYNOTES_MOC_HDRS	include/hooknoteitem.h
-				include/remotenotecontroller.h)
-
 
 SET(QT_USE_QTNETWORK TRUE)
 FIND_PACKAGE(Qt4 REQUIRED)
@@ -80,17 +77,14 @@ SET(KDE_MIN_VERSION "4.3.0")
 FIND_PACKAGE(KDE4 4.3.60 REQUIRED)
 INCLUDE(KDE4Defaults)
 
-#ADD_DEFINITIONS(-Wall ${QT_DEFINITIONS})
-
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM   ${CMAKE_BINARY_DIR}
 				    ${CMAKE_BINARY_DIR}/include
 				    ${CMAKE_SOURCE_DIR}/include)
 
 KDE4_ADD_LIBRARY(stickynotes	${STICKYNOTES_SRCS}
+				${STICKYNOTES_MOC_HDRS}
 				${STICKYNOTES_RC_SRCS})
-
-TARGET_LINK_LIBRARIES(stickynotes   ${QT_LIBRARIES})
 
 
 INSTALL(TARGETS stickynotes 

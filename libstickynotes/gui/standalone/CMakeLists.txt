@@ -27,6 +27,7 @@ KDE4_ADD_LIBRARY(stickynotes-standalone	${STANDALONE_SRCS}
 
 TARGET_LINK_LIBRARIES(stickynotes-standalone	stickynotes
 						${KDE4_KDECORE_LIBS}
+						${QT_QTCORE_LIBRARY}
 						${QT_QTGUI_LIBRARY}
 						${QT_QTSVG_LIBRARY}
 						${QT_QTXML_LIBRARY})

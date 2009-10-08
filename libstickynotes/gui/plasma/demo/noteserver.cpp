@@ -59,5 +59,3 @@ NoteServer::on_server_newConnection(void)
 	new NoteConnection(*this, *sock);
 }
 
-#include "noteserver.moc"
-

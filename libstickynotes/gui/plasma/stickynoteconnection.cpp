@@ -66,5 +66,3 @@ StickyNoteConnection::on_socket_error(QAbstractSocket::SocketError _error)
 	QTimer::singleShot(0, this, SLOT(deleteLater()));
 }
 
-#include "stickynoteconnection.moc"
-

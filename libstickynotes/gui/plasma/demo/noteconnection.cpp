@@ -30,5 +30,3 @@ NoteConnection::~NoteConnection(void)
 	delete m_controller;
 }
 
-#include "noteconnection.moc"
-

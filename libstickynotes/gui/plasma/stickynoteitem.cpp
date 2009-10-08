@@ -53,5 +53,3 @@ StickyNoteItem::edit(void)
 	m_editor->open();
 }
 
-#include "stickynoteitem.moc"
-
