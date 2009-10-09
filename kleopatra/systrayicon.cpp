@@ -102,6 +102,7 @@ private:
         decryptVerifyClipboardAction.setEnabled( DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() );
         setInitialPinAction.setEnabled( anyCardHasNullPin );
         learnCertificatesAction.setEnabled( anyCardCanLearnKeys );
+        cardMenu.setEnabled( anyCardHasNullPin || anyCardCanLearnKeys );
 
         q->setAttentionWanted( ( anyCardHasNullPin || anyCardCanLearnKeys ) && !q->attentionWindow() );
     }
