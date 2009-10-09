@@ -106,7 +106,13 @@ class ContactListItem : public QTreeWidgetItem
   public:
     ContactListItem( QTreeWidget *parent, const KLDAP::LdapAttrMap &attrs )
       : QTreeWidgetItem( parent ), mAttrs( attrs )
-    { }
+    {
+      const KLDAP::LdapAttrValue &mailAttrs = attrs[ "mail" ];
+      if ( mailAttrs.isEmpty() ) {
+        setCheckState( 0, Qt::Unchecked );
+        setFlags( flags() & ~Qt::ItemIsSelectable );
+      }
+    }
 
     KLDAP::LdapAttrMap mAttrs;
 
