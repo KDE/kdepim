@@ -462,13 +462,19 @@ QString LdapSearchDialog::selectedEMails() const
   for ( int i = 0; i < mResultListView->topLevelItemCount(); i++ ) {
     ContactListItem *cli = static_cast<ContactListItem *>( mResultListView->topLevelItem( i ) );
     if ( cli->isSelected() ) {
-      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).trimmed();
-      if ( !email.isEmpty() ) {
-        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).trimmed();
-        if ( name.isEmpty() ) {
-          result << email;
-        } else {
-          result << name + " <" + email + '>';
+      const KLDAP::LdapAttrValue &mailAttrs = cli->mAttrs[ "mail" ];
+      if ( mailAttrs.size() >= 1 ) {
+        QString email = asUtf8( mailAttrs.first() ).trimmed();
+        if ( !email.isEmpty() ) {
+          const KLDAP::LdapAttrValue &nameAttrs = cli->mAttrs[ "cn" ];
+          if ( nameAttrs.size() > 1 ) {
+            QString name = asUtf8( nameAttrs.first() ).trimmed();
+            if ( name.isEmpty() ) {
+              result << email;
+            } else {
+              result << name + " <" + email + '>';
+            }
+          }
         }
       }
     }
