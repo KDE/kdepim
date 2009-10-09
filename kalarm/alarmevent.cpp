@@ -1068,9 +1068,9 @@ void KAEvent::calcTriggerTimes() const
 		return;
 	}
 	mChanged = false;
-	if (!mTemplateName.isEmpty())
+	if (mCategory == KCalEvent::ARCHIVED  ||  !mTemplateName.isEmpty())
 	{
-		// It's a template
+		// It's a template or archived
 		mAllTrigger = mMainTrigger = mAllWorkTrigger = mMainWorkTrigger = KDateTime();
 	}
 	else if (mDeferral > 0  &&  mDeferral != REMINDER_DEFERRAL)
