@@ -99,7 +99,13 @@ class ContactListItem : public QListViewItem
   public:
     ContactListItem( QListView* parent, const KPIM::LdapAttrMap& attrs )
       : QListViewItem( parent ), mAttrs( attrs )
-    { }
+    {
+      const KPIM::LdapAttrValue &mailAttrs = attrs[ "mail" ];
+      if ( mailAttrs.isEmpty() ) {
+        setSelectable( false );
+        setEnabled( false );
+      }
+    }
 
     KPIM::LdapAttrMap mAttrs;
 
