@@ -20,7 +20,7 @@
 #ifndef KDEPIM_ATTACHMENTPART_H
 #define KDEPIM_ATTACHMENTPART_H
 
-#include "kdepim_export.h"
+#include "messagecore_export.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -31,7 +31,7 @@
 
 namespace KPIM {
 
-class KDEPIM_EXPORT AttachmentPart
+class MESSAGECORE_EXPORT AttachmentPart
 {
   public:
     //typedef QList<AttachmentPart*> List;
@@ -81,7 +81,7 @@ class KDEPIM_EXPORT AttachmentPart
 };
 
 // FIXME I don't understand why this doesn't work if I put it outside namespace KPIM.
-KDEPIM_EXPORT uint qHash( const boost::shared_ptr<KPIM::AttachmentPart> &ptr );
+MESSAGECORE_EXPORT uint qHash( const boost::shared_ptr<KPIM::AttachmentPart> &ptr );
 
 } // namespace KPIM
 

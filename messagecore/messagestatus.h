@@ -31,7 +31,7 @@
 
 #include <QtCore/QSet>
 
-#include "kdepim_export.h"
+#include "messagecore_export.h"
 
 class QString;
 
@@ -52,7 +52,7 @@ namespace KPIM {
 
   The stati New/Unread/Read/Old are mutually exclusive.
 */
-class KDEPIM_EXPORT MessageStatus
+class MESSAGECORE_EXPORT MessageStatus
 {
   public:
     /** Constructor - sets status initially to unknown. */

@@ -21,7 +21,7 @@
 #define KDEPIM_ATTACHMENTLOADJOB_H
 
 #include "attachmentpart.h"
-#include "kdepim_export.h"
+#include "messagecore_export.h"
 
 #include <KDE/KJob>
 
@@ -29,7 +29,7 @@ namespace KPIM {
 
 /**
 */
-class KDEPIM_EXPORT AttachmentLoadJob : public KJob
+class MESSAGECORE_EXPORT AttachmentLoadJob : public KJob
 {
   Q_OBJECT
 
