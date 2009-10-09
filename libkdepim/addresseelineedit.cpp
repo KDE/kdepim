@@ -1013,9 +1013,10 @@ int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int wei
 bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
 {
   if ( obj == completionBox() ) {
-    if ( e->type() == QEvent::MouseButtonPress
-      || e->type() == QEvent::MouseMove
-      || e->type() == QEvent::MouseButtonRelease ) {
+    if ( e->type() == QEvent::MouseButtonPress ||
+         e->type() == QEvent::MouseMove ||
+         e->type() == QEvent::MouseButtonRelease ||
+         e->type() == QEvent::MouseButtonDblClick ) {
       QMouseEvent* me = static_cast<QMouseEvent*>( e );
       // find list box item at the event position
       QListBoxItem *item = completionBox()->itemAt( me->pos() );
@@ -1053,27 +1054,30 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
     }
   }
   if ( ( obj == this ) &&
-      ( e->type() == QEvent::KeyPress ) &&
-      completionBox()->isVisible() ) {
+       ( e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease ) &&
+       completionBox()->isVisible() ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
     unsigned int currentIndex = completionBox()->currentItem();
     if ( ke->key() == Key_Up ) {
       //kdDebug() << "EVENTFILTER: Key_Up currentIndex=" << currentIndex << endl;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
-      QListBoxItem *itemAbove = completionBox()->item( currentIndex - 1 );
+      QListBoxItem *itemAbove = completionBox()->item( currentIndex );
       if ( itemAbove && itemIsHeader(itemAbove) ) {
         // there is a header above us, check if there is even further up
         // and if so go one up, so it'll be selected
-        if ( currentIndex > 1 && completionBox()->item( currentIndex - 2 ) ) {
+        if ( currentIndex > 0 && completionBox()->item( currentIndex - 1 ) ) {
           //kdDebug() << "EVENTFILTER: Key_Up -> skipping " << currentIndex - 1 << endl;
           completionBox()->setCurrentItem( itemAbove->prev() );
-          completionBox()->setSelected( currentIndex - 2, true );
-        } else if ( currentIndex == 1 ) {
+          completionBox()->setSelected( currentIndex - 1, true );
+        } else if ( currentIndex == 0 ) {
             // nothing to skip to, let's stay where we are, but make sure the
             // first header becomes visible, if we are the first real entry
             completionBox()->ensureVisible( 0, 0 );
             //Kolab issue 2941: be sure to add email even if it's the only element.
+            if ( itemIsHeader( completionBox()->item( currentIndex ) ) ) {
+              currentIndex++;
+            }
             completionBox()->setCurrentItem( itemAbove );
             completionBox()->setSelected( currentIndex, true );
         }
@@ -1082,14 +1086,15 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
     } else if ( ke->key() == Key_Down  ) {
       // same strategy for downwards
       //kdDebug() << "EVENTFILTER: Key_Down. currentIndex=" << currentIndex << endl;
-      QListBoxItem *itemBelow = completionBox()->item( currentIndex + 1 );
+      QListBoxItem *itemBelow = completionBox()->item( currentIndex );
       if ( itemBelow && itemIsHeader( itemBelow ) ) {
-        if ( completionBox()->item( currentIndex + 2 ) ) {
+        if ( completionBox()->item( currentIndex + 1 ) ) {
           //kdDebug() << "EVENTFILTER: Key_Down -> skipping " << currentIndex+1 << endl;
           completionBox()->setCurrentItem( itemBelow->next() );
-          completionBox()->setSelected( currentIndex + 2, true );
+          completionBox()->setSelected( currentIndex + 1, true );
         } else {
           // nothing to skip to, let's stay where we are
+          completionBox()->setCurrentItem( itemBelow );
           completionBox()->setSelected( currentIndex, true );
         }
         return true;
@@ -1106,7 +1111,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
         completionBox()->setSelected( currentIndex, true );
       }
     } else if ( ke->key() == Key_Tab || ke->key() == Key_Backtab ) {
-      /// first, find the header of teh current section
+      /// first, find the header of the current section
       QListBoxItem *myHeader = 0;
       int i = currentIndex;
       while ( i>=0 ) {
