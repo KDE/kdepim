@@ -1,3 +1,18 @@
+Friday, October 9th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3899: Selecting of an event and try to print the day of the event leads to crash
+* kolab/issue3065: Crash in KOAgendaItem::paintEvent
+* kolab/issue3667: Attachment icon is missing in use with OL/toltec (rt#5786)
+* kolab/issue1499: using the result of an ldap query from the address selection dialog for setting folder
+                   rights might fail (rt#5298)
+* kolab/issue3900: confirm dialog will be empty, if a contact without email address is added from the lookup
+* kolab/issue3879: It is possible to select the separators by arrow keys when doing address completion the
+                   first time (rt#5853)
+
+
 Friday, October 2th 2009
 
 Problems addressed
