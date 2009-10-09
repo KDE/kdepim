@@ -77,7 +77,7 @@ namespace KPIM {
    *
    **/
   template< typename T, typename T_config >
-  class KDE_EXPORT PluginLoader : public PluginLoaderBase {
+  class PluginLoader : public PluginLoaderBase {
   protected:
     PluginLoader() : PluginLoaderBase() {}
 
