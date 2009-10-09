@@ -203,8 +203,8 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
       decryptVerifyClipboardAction( i18n("Decrypt/Verify..."), q ),
       cardMenu( i18n("SmartCard") ),
-      setInitialPinAction( i18n("Set Initial PIN..."), q ),
-      learnCertificatesAction( i18n("Learn Card Certificates"), q ),
+      setInitialPinAction( i18n("Set NetKey v3 Initial PIN..."), q ),
+      learnCertificatesAction( i18n("Learn NetKey v3 Card Certificates"), q ),
       aboutDialog(),
       mainWindowPreviousGeometry()
 {
