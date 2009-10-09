@@ -1,3 +1,29 @@
+Friday, October 9th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3875: Kontact hangs when opening file open dialog of KMail
+* kolab/issue3493: Kontact creates events with the wrong time
+* Improve the about dialogs in Kleopatra
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Improve the information about events in the Kontact summary
+      - Start Kontact by default, instead of KMail, when an application accesses an IMAP addressbook
+      - Allow trailing dots in email addresses (KDE bug 139477)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3667: Attachment icon is missing in use with OL/toltec (rt#5786)
+      - kolab/issue3900: confirm dialog will be empty, if a contact without email address is added from the lookup
+      - kolab/issue1499: using the result of an ldap query from the address selection dialog for setting folder
+                         rights might fail (rt#5298)
+      - kolab/issue3879: It is possible to select the separators by arrow keys when doing address completion the
+                         first time (rt#5853)
+
+
 Friday, October 2th 2009
 
 Problems addressed
