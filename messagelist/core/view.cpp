@@ -2606,4 +2606,10 @@ KPIM::MessageStatus View::currentFilterStatus() const
   return d->mWidget->currentFilterStatus();
 }
 
+
+QString View::currentFilterSearchString() const
+{
+  return d->mWidget->currentFilterSearchString();
+}
+
 #include "view.moc"

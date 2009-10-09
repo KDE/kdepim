@@ -503,3 +503,8 @@ KPIM::MessageStatus Widget::currentFilterStatus() const
   return view()->currentFilterStatus();
 }
 
+QString Widget::currentFilterSearchString() const
+{
+  return view()->currentFilterSearchString();
+}
+

@@ -225,6 +225,11 @@ public:
    */
   KPIM::MessageStatus currentFilterStatus() const;
 
+  /**
+   * Returns the search term in the current quicksearch field.
+   */
+  QString currentFilterSearchString() const;
+
 protected:
   /**
    * Reimplemented from MessageList::Core::Widget

@@ -235,6 +235,11 @@ public:
    */
   KPIM::MessageStatus currentFilterStatus() const;
 
+  /**
+   * Returns the search term in the current quicksearch field.
+   */
+  QString currentFilterSearchString() const;
+
 public slots:
   /**
    * Selects all the items in the current folder.

@@ -476,4 +476,12 @@ KPIM::MessageStatus Pane::currentFilterStatus() const
   return w->currentFilterStatus();
 }
 
+QString Pane::currentFilterSearchString() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QString();
+  }
+  return w->currentFilterSearchString();
+}
 #include "pane.moc"
