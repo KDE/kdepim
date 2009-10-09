@@ -101,6 +101,8 @@ static QMap<QString, QString> &adrbookattr2ldap()
   return keys;
 }
 
+namespace KPIM {
+
 class ContactListItem : public QTreeWidgetItem
 {
   public:
@@ -118,6 +120,8 @@ class ContactListItem : public QTreeWidgetItem
 
 
 };
+
+}
 
 LdapSearchDialog::LdapSearchDialog( QWidget *parent, const char *name )
   : KDialog( parent )
