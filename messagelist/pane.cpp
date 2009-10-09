@@ -449,4 +449,22 @@ KMime::Message::Ptr Pane::currentMessage() const
   return w->currentMessage();
 }
 
+QList<KMime::Message::Ptr > Pane::selectionAsMessageList( bool includeCollapsedChildren ) const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QList<KMime::Message::Ptr>();
+  }
+  return w->selectionAsMessageList( includeCollapsedChildren );
+}
+
+QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChildren ) const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QList<Akonadi::Item>();
+  }
+  return w->selectionAsMessageItemList( includeCollapsedChildren );
+}
+
 #include "pane.moc"
