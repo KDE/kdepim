@@ -94,6 +94,8 @@ static QMap<QString, QString>& adrbookattr2ldap()
   return keys;
 }
 
+namespace KPIM {
+
 class ContactListItem : public QListViewItem
 {
   public:
@@ -117,6 +119,8 @@ class ContactListItem : public QListViewItem
       return join( mAttrs[ ldapAttrName ], ", " );
     }
 };
+
+}
 
 LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
   : KDialogBase( Plain, i18n( "Search for Addresses in Directory" ), Help | User1 |
