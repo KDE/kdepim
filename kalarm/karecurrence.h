@@ -1,7 +1,7 @@
 /*
  *  karecurrence.h  -  recurrence with special yearly February 29th handling
  *  Program:  kalarm
- *  Copyright © 2005-2007 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2005-2007,2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,6 +59,8 @@ class KARecurrence : public KCal::Recurrence
 		                        { return init(t, freq, count, f29, start, end); }
 		void        fix();
 		void        writeRecurrence(KCal::Recurrence&) const;
+		void        setStartDateTime(const KDateTime& dt, bool dateOnly)
+					{ KCal::Recurrence::setStartDateTime(dt);  if (dateOnly) KCal::Recurrence::setAllDay(true); }
 		KDateTime   endDateTime() const;
 		QDate       endDate() const;
 		bool        recursOn(const QDate&, const KDateTime::Spec&) const;
@@ -74,6 +76,9 @@ class KARecurrence : public KCal::Recurrence
 		static void setDefaultFeb29Type(Preferences::Feb29Type t)  { mDefaultFeb29 = t; }
 
 	private:
+		/** Prevent public use: KARecurrence::setStartDateTime() handles all-day setting. */
+		void        setAllDay(bool);
+
 		bool        set(Type, int freq, int count, int feb29Type, const KDateTime& start, const KDateTime& end);
 		bool        init(KCal::RecurrenceRule::PeriodType, int freq, int count, int feb29Type, const KDateTime& start, const KDateTime& end);
 		int         combineDurations(const KCal::RecurrenceRule*, const KCal::RecurrenceRule*, QDate& end) const;
