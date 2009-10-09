@@ -252,6 +252,5 @@ endif(NOT QGPGME_FOUND)
 macro_display_feature_log()
 
 add_subdirectory(messageviewer)
-add_subdirectory(mailreader)
 add_subdirectory(messagelist)
 
