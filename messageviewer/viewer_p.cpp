@@ -29,6 +29,7 @@ using MessageViewer::FileHtmlWriter;
 #include "teehtmlwriter.h"
 using MessageViewer::TeeHtmlWriter;
 #endif
+#include <unistd.h> // link()
 #include <errno.h>
 
 //KDE includes
