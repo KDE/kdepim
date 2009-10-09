@@ -127,7 +127,11 @@ void BilboEditor::createUi()
 
     connect( editor, SIGNAL( checkSpellingChanged( bool ) ), this, SLOT( sltSyncSpellCheckingButton( bool ) ) );
 
-    connect( editor, SIGNAL( cursorPositionChanged() ), this, SLOT( sltSyncToolbar() ) );
+    connect( editor, SIGNAL(currentBlockFormatChanged(QTextBlockFormat)),
+             this, SLOT(slotCurrentBlockFormatChanged(QTextBlockFormat)) );
+    connect( editor, SIGNAL(currentCharFormatChanged(QTextCharFormat)),
+             this, SLOT(slotCurrentCharFormantChanged(QTextCharFormat)) );
+//     connect( editor, SIGNAL( cursorPositionChanged() ), this, SLOT( sltSyncToolbar() ) );
 
     ///htmlEditor:
     htmlEditor = HtmlEditor::self()->createView( tabHtml );
@@ -667,36 +671,6 @@ void BilboEditor::sltReloadImage( const KUrl imagePath )
     editor->document()->setUndoRedoEnabled( true );
 }
 
-// void BilboEditor::sltAddMedia()
-// {
-//     AddMediaDialog *mediaDialog = new AddMediaDialog( this );
-// //     mediaDialog->setAttribute( Qt::WA_DeleteOnClose );
-//     mediaDialog->setWindowModality( Qt::WindowModal );
-//     
-//     connect( mediaDialog, SIGNAL( sigAddMedia( BilboMedia * ) ), this, SLOT( sltSetMedia( BilboMedia * ) ) );
-//     connect( mediaDialog, SIGNAL( sigMediaTypeFound( BilboMedia * ) ), this, 
-//              SLOT( sltMediaTypeFound( BilboMedia * ) ) );
-//     mediaDialog->exec();
-//     mediaDialog->deleteLater();
-// }
-
-// void BilboEditor::sltSetMedia( BilboMedia *media )
-// {
-//     QTextCharFormat f;
-//     QString url = media->remoteUrl().url();
-// 
-//     f.setAnchor( true );
-//     f.setAnchorHref( url );
-//     editor->textCursor().insertText( media->name(), f );
-// //     editor->document()->addResource( QTextDocument::UserResource, 
-// //                                      QUrl( url ), QVariant( url ) );
-// 
-//     editor->document()->setUndoRedoEnabled( false );
-//     editor->document()->setUndoRedoEnabled( true );
-// 
-//     editor->setFocus( Qt::OtherFocusReason );
-// }
-
 void BilboEditor::sltSetImageProperties( const int index, const int width,
                     const int height, const QString title, const QString link,
                     const QString Alt_text )
@@ -878,47 +852,40 @@ void BilboEditor::sltAddPostSplitter()
     editor->textCursor().insertBlock( f1 );
 }
 
-void BilboEditor::sltSyncToolbar()
+void BilboEditor::slotCurrentCharFormantChanged(const QTextCharFormat &charFormat)
 {
-    if ( this->editor->textCursor().charFormat() != lastCharFormat ) {
-        lastCharFormat = this->editor->textCursor().charFormat();
-        
-        if ( lastCharFormat.fontWeight() == QFont::Bold ) {
-            this->actBold->setChecked( true );
-        } else {
-            this->actBold->setChecked( false );
-        }
-        this->actItalic->setChecked( lastCharFormat.fontItalic() );
-        this->actUnderline->setChecked( lastCharFormat.fontUnderline() );
-        this->actStrikeout->setChecked( lastCharFormat.fontStrikeOut() );
-        if ( lastCharFormat.hasProperty( BilboTextFormat::HasCodeStyle ) && 
-             lastCharFormat.boolProperty( BilboTextFormat::HasCodeStyle ) ) {
-            this->actCode->setChecked( true );
-        } else {
-            this->actCode->setChecked( false );
-        }
+    if ( charFormat.fontWeight() == QFont::Bold ) {
+        this->actBold->setChecked( true );
+    } else {
+        this->actBold->setChecked( false );
     }
-    if ( this->editor->textCursor().blockFormat() != lastBlockFormat ) {
-        lastBlockFormat = this->editor->textCursor().blockFormat();
-        
-        if ( lastBlockFormat.layoutDirection() == Qt::RightToLeft ) {
+    this->actItalic->setChecked( charFormat.fontItalic() );
+    this->actUnderline->setChecked( charFormat.fontUnderline() );
+    this->actStrikeout->setChecked( charFormat.fontStrikeOut() );
+    if ( charFormat.hasProperty( BilboTextFormat::HasCodeStyle ) &&
+            charFormat.boolProperty( BilboTextFormat::HasCodeStyle ) ) {
+        this->actCode->setChecked( true );
+    } else {
+        this->actCode->setChecked( false );
+    }
+}
+
+void BilboEditor::slotCurrentBlockFormatChanged(const QTextBlockFormat& blockFormat)
+{
+        if ( blockFormat.layoutDirection() == Qt::RightToLeft ) {
             this->actRightToLeft->setChecked( true );
         } else {
             this->actRightToLeft->setChecked( false );
         }
-        if ( !lastBlockFormat.hasProperty( BilboTextFormat::HtmlHeading ) ) {
+        if ( !blockFormat.hasProperty( BilboTextFormat::HtmlHeading ) ) {
             this->actFormatType->setCurrentItem( 0 );
         } else {
-            this->actFormatType->setCurrentItem( lastBlockFormat.intProperty(
+            this->actFormatType->setCurrentItem( blockFormat.intProperty(
                                                  BilboTextFormat::HtmlHeading ) );
         }
-        if ( lastBlockFormat.hasProperty( BilboTextFormat::IsBlockQuote ) &&
-             lastBlockFormat.boolProperty( BilboTextFormat::IsBlockQuote ) ) {
-            this->actBlockQuote->setChecked( true );
-        } else {
-            this->actBlockQuote->setChecked( false );
+        if ( blockFormat.hasProperty( BilboTextFormat::IsBlockQuote ) ){
+            this->actBlockQuote->setChecked( blockFormat.boolProperty( BilboTextFormat::IsBlockQuote ) );
         }
-    }
 }
 
 void BilboEditor::sltSyncEditors( int index )
@@ -965,19 +932,6 @@ SyncEnd:
     delete htmlExp;
 //     doc->deleteLater();
 }
-
-// QString BilboEditor::htmlToRichtext( const QString& html )
-// {
-//     QString richText = html;
-// 
-//     richText.remove( QChar( '\n' ) );
-// 
-//     richText.replace( QRegExp( "<del>(.*)</del>" ), "<s>\\1</s>" );
-// 
-//     QString h;
-//     h = "<html><head></head><body><p>" + richText + "</p></body></html>";
-//     return h;
-// }
 
 QString BilboEditor::htmlContent()
 {

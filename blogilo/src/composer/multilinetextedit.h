@@ -86,6 +86,11 @@ Q_SIGNALS:
      */
     void sigMediaTypeFound( BilboMedia *media );
 
+    /**
+     * Emitted when current Text Block format changed!
+     */
+    void currentBlockFormatChanged(const QTextBlockFormat &);
+
 protected:
 
     /*!
@@ -107,31 +112,14 @@ protected:
      */
     virtual QVariant loadResource( int type, const QUrl & name );
 
-// private:
-//     QNetworkAccessManager *netManager;
-//     
 private Q_SLOTS:
-
     void sltRemoteFileCopied(KJob * job);
+    void slotCursorPositionChanged();
 
 private:
     static QMap <QString, bool> downloadFinished;
     QMap <QString, BilboMedia*> *mMediaList;
+    QTextBlockFormat lastBlockFormat;
 };
-
-// class GetImageThread : public QThread
-// {
-//     
-// public:
-//     GetImageThread( KRichTextEdit *parent = 0, const KUrl & image);
-// //     ~GetImageThread();
-//     
-// protected:
-//     virtual void run();
-//     
-// private:
-//     KUrl imageUrl;
-//     QTextCursor cursor;
-// };
 
 #endif
