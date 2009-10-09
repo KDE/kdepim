@@ -219,6 +219,12 @@ public:
    * this set of messages at a later stage then take a look at createPersistentSet().
    */
   QList<Akonadi::Item> selectionAsMessageItemList( bool includeCollapsedChildren = true ) const;
+
+  /**
+   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   */
+  KPIM::MessageStatus currentFilterStatus() const;
+
 protected:
   /**
    * Reimplemented from MessageList::Core::Widget
@@ -269,6 +275,9 @@ protected:
    * Reimplemented from MessageList::Core::Widget
    */
   virtual void viewMessageStatusChangeRequest( MessageList::Core::MessageItem *msg, const KPIM::MessageStatus &set, const KPIM::MessageStatus &clear );
+
+
+
 
 signals:
   /**

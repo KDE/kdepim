@@ -2601,4 +2601,9 @@ void View::focusQuickSearch()
   d->mWidget->focusQuickSearch();
 }
 
+KPIM::MessageStatus View::currentFilterStatus() const
+{
+  return d->mWidget->currentFilterStatus();
+}
+
 #include "view.moc"

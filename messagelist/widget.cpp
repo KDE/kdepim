@@ -497,3 +497,9 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedCh
   return lstMiPtr;
 }
 
+
+KPIM::MessageStatus Widget::currentFilterStatus() const
+{
+  return view()->currentFilterStatus();
+}
+

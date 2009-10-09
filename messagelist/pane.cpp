@@ -31,7 +31,7 @@
 #include "storagemodel.h"
 #include "widget.h"
 #include "core/settings.h"
-
+#include "messagecore/messagestatus.h"
 namespace MessageList
 {
 
@@ -465,6 +465,15 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChil
     return QList<Akonadi::Item>();
   }
   return w->selectionAsMessageItemList( includeCollapsedChildren );
+}
+
+KPIM::MessageStatus Pane::currentFilterStatus() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return KPIM::MessageStatus();
+  }
+  return w->currentFilterStatus();
 }
 
 #include "pane.moc"

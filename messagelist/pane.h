@@ -230,6 +230,11 @@ public:
    */
   void focusQuickSearch();
 
+  /**
+   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   */
+  KPIM::MessageStatus currentFilterStatus() const;
+
 public slots:
   /**
    * Selects all the items in the current folder.
