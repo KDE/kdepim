@@ -680,7 +680,14 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
                              selectedItems.at( i ).second, KGlobal::locale()->formatDateTime( now ) ) );
         addr.setResource( resource );
         mCore->addressBook()->insertAddressee( addr );
-        importedAddrs.append( addr.fullEmail() );
+        QString displayString;
+        if ( !addr.fullEmail().isEmpty() ) {
+          displayString = addr.fullEmail();
+        }
+        else {
+          displayString = addr.formattedName();
+        }
+        importedAddrs.append( displayString );
         localAddrs.append( addr );
       } else {
         localAddrs.append( existing.first() );
