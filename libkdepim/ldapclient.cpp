@@ -62,6 +62,7 @@ LdapClient::~LdapClient()
 void LdapClient::setAttrs( const QStringList& attrs )
 {
   mAttrs = attrs;
+  mAttrs << "objectClass"; // via objectClass we detect distribution lists
 }
 
 void LdapClient::startQuery( const QString& filter )
@@ -355,8 +356,7 @@ void LdapSearch::readConfig()
         ldapClient->setCompletionWeight( completionWeight );
 
       QStringList attrs;
-      // note: we need "objectClass" to detect distribution lists
-      attrs << "cn" << "mail" << "givenname" << "sn" << "objectClass";
+      attrs << "cn" << "mail" << "givenname" << "sn";
       ldapClient->setAttrs( attrs );
 
       connect( ldapClient, SIGNAL( result( const KPIM::LdapClient&, const KLDAP::LdapObject& ) ),
