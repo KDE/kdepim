@@ -576,7 +576,14 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QVa
         addr.setNote( i18n( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
         addr.setResource( resource );
         mCore->addressBook()->insertAddressee( addr );
-        importedAddrs.append( addr.fullEmail() );
+        QString displayString;
+        if ( !addr.fullEmail().isEmpty() ) {
+          displayString = addr.fullEmail();
+        }
+        else {
+          displayString = addr.formattedName();
+        }
+        importedAddrs.append( displayString );
         localAddrs.append( addr );
       } else {
         localAddrs.append( existing.first() );
