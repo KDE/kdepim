@@ -26,7 +26,7 @@
 #include <kdemacros.h>
 
 #ifndef MESSAGEVIEWER_EXPORT
-# if defined(MAKE_KMAILPRIVATE_LIB)
+# if defined(MAKE_MESSAGEVIEWER_LIB)
    /* We are building this library */
 #  define MESSAGEVIEWER_EXPORT KDE_EXPORT
 # else
