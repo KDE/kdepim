@@ -221,18 +221,8 @@ void KMReaderWin::objectTreeToDecryptedMsg( partNode* node,
             kDebug() <<"signed";
             break;
           case DwMime::kSubtypeEncrypted: {
-              kDebug() <<"encrypted";
-              if ( child ) {
-                /*
-                    ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
-                */
-                partNode* data =
-                  child->findType( DwMime::kTypeApplication, DwMime::kSubtypeOctetStream, false, true );
-                if ( !data )
-                  data = child->findType( DwMime::kTypeApplication, DwMime::kSubtypePkcs7Mime, false, true );
-                if ( data && data->firstChild() )
-                  dataNode = data;
-              }
+              if ( child )
+                dataNode = child;
             }
             break;
           default :
