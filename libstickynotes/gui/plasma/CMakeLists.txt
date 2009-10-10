@@ -25,7 +25,8 @@ KDE4_ADD_PLUGIN(plasma_applet_stickynote	${PLASMANOTE_SRCS}
 
 TARGET_LINK_LIBRARIES(plasma_applet_stickynote	stickynotes
 						${KDE4_PLASMA_LIBS}
-						${KDE4_KDEUI_LIBS})
+						${KDE4_KDEUI_LIBS}
+						${QT_QTNETWORK_LIBRARY})
 
 
 INSTALL(TARGETS plasma_applet_stickynote

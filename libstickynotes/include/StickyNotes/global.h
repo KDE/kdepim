@@ -24,15 +24,22 @@
 
 #include <StickyNotes/config-stickynotes.h>
 
-#include <qglobal.h>
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
+#include <kdemacros.h>
 
 #ifndef LSN_EXPORT
-# define LSN_EXPORT
+# if defined(MAKE_LIBSTICKYNOTES_LIB)
+   /* We are building this library */
+#  define LSN_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define LSN_EXPORT KDE_IMPORT
+# endif
 #endif
 
-#ifndef LSN_IMPORT
-# define LSN_IMPORT
-#endif
+# ifndef LSN_EXPORT_DEPRECATED
+#  define LSN_EXPORT_DEPRECATED KDE_DEPRECATED LSN_EXPORT
+# endif
 
 #endif // !LSN_GLOBAL_H
 

@@ -22,9 +22,6 @@
 #ifndef LSN_CONFIG_H
 #define LSN_CONFIG_H
 
-#define LSN_EXPORT @LSN_EXPORT@
-#define LSN_IMPORT @LSN_IMPORT@
-
 #cmakedefine LSN_STANDALONE_GUI_AVAILABLE
 #cmakedefine LSN_PLASMA_GUI_AVAILABLE
 
