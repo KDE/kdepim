@@ -122,7 +122,7 @@ void XXPortManager::slotExport( const QString &identifier )
 
   const KABC::AddresseeList contacts = dlg.selectedContacts();
   if ( contacts.isEmpty() ) {
-    KMessageBox::sorry( 0, i18n( "You have not selected any contact to export!" ) );
+    KMessageBox::sorry( 0, i18n( "You have not selected any contacts to export." ) );
     return;
   }
 

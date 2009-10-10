@@ -432,7 +432,7 @@ void KIncidenceChooser::showIncidence2()
   textBrowser->setHtml( IncidenceFormatter::extensiveDisplayStr( 0, mInc2 ) );
   textBrowser->setToolTip( i18nc( "@info:tooltip", "Incidence details" ) );
   textBrowser->setWhatsThis( i18nc( "@info:whatsthis",
-                                    "This area shows the incidencedetails" ) );
+                                    "This area shows the incidence details" ) );
   mTbN->setMinimumSize( 400, 400 );
   mShowDetails2->setText( i18nc( "@label", "Hide Details" ) );
   mTbN->show();
