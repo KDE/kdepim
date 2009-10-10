@@ -32,11 +32,7 @@ TARGET_LINK_LIBRARIES(stickynotes-standalone	stickynotes
 						${QT_QTSVG_LIBRARY}
 						${QT_QTXML_LIBRARY})
 
-
-INSTALL(TARGETS stickynotes-standalone 
-	RUNTIME DESTINATION bin
-	LIBRARY DESTINATION lib
-	ARCHIVE	DESTINATION lib)
+install(TARGETS stickynotes-standalone ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 INSTALL(FILES ${STANDALONE_HDRS}
 	DESTINATION include/StickyNotes)
