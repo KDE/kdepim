@@ -35,7 +35,7 @@ TARGET_LINK_LIBRARIES(stickynotes-standalone	stickynotes
 install(TARGETS stickynotes-standalone ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 INSTALL(FILES ${STANDALONE_HDRS}
-	DESTINATION include/StickyNotes)
+	DESTINATION ${INCLUDE_INSTALL_DIR}/StickyNotes)
 
 
 ADD_SUBDIRECTORY(demo)

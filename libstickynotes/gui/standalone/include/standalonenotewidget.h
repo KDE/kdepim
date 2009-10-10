@@ -63,10 +63,6 @@ private slots:
 	void on_item_appliedSubject(const QString &_subject);
 	void on_item_bound(void);
 
-protected:
-	/*! Scaling factor: Height is X times Weight. */
-	static const float d_scaleFactor = 1.00;
-
 private:
 	StandaloneNoteWidgetPrivate *d_ptr;
 };

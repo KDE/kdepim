@@ -59,6 +59,8 @@ private:
 
 } // namespace StickyNotes
 
+static float d_scaleFactor = 1.00;
+
 StandaloneNoteWidgetPrivate::StandaloneNoteWidgetPrivate(StandaloneNoteWidget *_q)
 : q_ptr(_q), _dragging(false), _readonly(false), _stretching(false),
     content(0), item(0), subject(0)
