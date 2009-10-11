@@ -74,6 +74,8 @@ private:
     Q_PRIVATE_SLOT( d_func(), void slotFetchFailed( qlonglong id, const QString& errorMessage ) )
     Q_PRIVATE_SLOT( d_func(), void slotFetchAborted( qlonglong id ) )
     Q_PRIVATE_SLOT( d_func(), void slotRootCollectionRetrieved( KJob* ) )
+    Q_PRIVATE_SLOT( d_func(), void slotFetchQueueStarted() )
+    Q_PRIVATE_SLOT( d_func(), void slotFetchQueueFinished() )
 };
 
 } // namespace KRss

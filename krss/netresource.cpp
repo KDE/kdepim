@@ -58,6 +58,8 @@ public:
     void slotFetchFinished( qlonglong id );
     void slotFetchFailed( qlonglong id, const QString& errorMessage );
     void slotFetchAborted( qlonglong id );
+    void slotFetchQueueStarted();
+    void slotFetchQueueFinished();
     void slotRootCollectionRetrieved( KJob* );
 
     org::kde::krss* m_interface;
@@ -115,6 +117,14 @@ void NetResourcePrivate::slotFetchAborted( qlonglong id )
     q->triggerFetchAborted( FeedCollection::feedIdFromAkonadi( id ) );
 }
 
+void NetResourcePrivate::slotFetchQueueStarted() {
+  emit q->fetchQueueStarted( q->id() );
+}
+
+void NetResourcePrivate::slotFetchQueueFinished() {
+  emit q->fetchQueueFinished( q->id() );
+}
+
 void NetResourcePrivate::slotRootCollectionRetrieved( KJob* j )
 {
     const CollectionFetchJob* const job = qobject_cast<CollectionFetchJob*>( j );
@@ -166,9 +176,9 @@ NetResource::NetResource( const QString& resourceId, const QString& name, QObjec
     connect( d->m_interface, SIGNAL( fetchAborted( qlonglong ) ),
              this, SLOT( slotFetchAborted( qlonglong ) ) );
     connect( d->m_interface, SIGNAL( fetchQueueStarted() ),
-             this, SIGNAL( fetchQueueStarted() ) );
+             this, SLOT( slotFetchQueueStarted() ) );
     connect( d->m_interface, SIGNAL( fetchQueueFinished() ),
-             this, SIGNAL( fetchQueueFinished() ) );
+             this, SLOT( slotFetchQueueFinished() ) );
 
     CollectionFetchJob* const job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
     job->setResource( d->m_id );
