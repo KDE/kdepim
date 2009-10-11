@@ -29,7 +29,7 @@ NetFeed::NetFeed( const FeedCollection& feedCollection, const shared_ptr<Resourc
                   QObject* parent )
     : Feed( feedCollection, resource, parent )
 {
-    setIcon( KIcon("application-rss+xml") );
+    setIcon( KIcon(QLatin1String("application-rss+xml")) );
 }
 
 void NetFeed::accept( FeedVisitor* v )

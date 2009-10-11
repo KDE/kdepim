@@ -43,10 +43,10 @@ TagPropertiesAttribute* TagPropertiesAttribute::clone() const
 QByteArray TagPropertiesAttribute::serialized() const
 {
     QStringList props;
-    props << "Label=" + m_label;
-    props << "Description=" + m_description;
-    props << "Icon=" + m_icon;
-    return props.join( ";" ).toUtf8();
+    props << QLatin1String("Label=") + m_label;
+    props << QLatin1String("Description=") + m_description;
+    props << QLatin1String("Icon=") + m_icon;
+    return props.join( QLatin1String(";") ).toUtf8();
 }
 
 void TagPropertiesAttribute::deserialize( const QByteArray& data )
@@ -55,10 +55,10 @@ void TagPropertiesAttribute::deserialize( const QByteArray& data )
         return;
 
     // so ugly, am i missing something?
-    QStringList props = QString::fromUtf8( data.constData(), data.size() ).split( ';' );
-    m_label = props[0].split( '=' )[1];
-    m_description = props[1].split( '=' )[1];
-    m_icon = props[2].split( '=' )[1];
+    const QStringList props = QString::fromUtf8( data.constData(), data.size() ).split( QLatin1Char(';') );
+    m_label = props[0].split( QLatin1Char('=') )[1];
+    m_description = props[1].split( QLatin1Char('=') )[1];
+    m_icon = props[2].split( QLatin1Char('=') )[1];
 }
 
 QString TagPropertiesAttribute::label() const

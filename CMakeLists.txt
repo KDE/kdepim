@@ -8,8 +8,7 @@ endif (KRSS_ENABLE_PROTOBUF_SERIALIZER)
 
 include_directories( ${Boost_INCLUDE_DIR} ${QT_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII" )
 add_subdirectory(krss)
 add_subdirectory(krssresource)
 add_subdirectory(plugin)

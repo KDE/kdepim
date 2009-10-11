@@ -48,14 +48,14 @@ void ImportOpmlJobTest::initTestCase()
 
 void ImportOpmlJobTest::testGoodOpml()
 {
-    const QString defaultTag = "Imported";
-    const QString kdehome = qgetenv( "KDEHOME" );
-    org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0",
-                                                    "/KRss", QDBusConnection::sessionBus(), this );
+    const QString defaultTag = QLatin1String("Imported");
+    const QString kdehome = QString::fromLocal8Bit( qgetenv( "KDEHOME" ) );
+    org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0"),
+                                                    QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
-    QDBusReply<QVariantMap> reply = interface->call( "importOpml", kdehome + "/to-import.opml", defaultTag );
+    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), kdehome + QLatin1String("/to-import.opml"), defaultTag );
     QVERIFY( reply.isValid() );
-    QVERIFY( reply.value().value( "error" ).toInt() == 0 );
+    QVERIFY( reply.value().value( QLatin1String("error") ).toInt() == 0 );
 
     TagProviderRetrieveJob *tjob = new TagProviderRetrieveJob();
     QVERIFY( tjob->exec() );
@@ -68,10 +68,10 @@ void ImportOpmlJobTest::testGoodOpml()
         it.next();
         tagLabels.append( it.value().label() );
     }
-    compareLists( tagLabels, QStringList() << "Imported" << "Linux" << "Planets" << "Ubuntu" << "News" << "Technology" );
+    compareLists( tagLabels, QStringList() << QLatin1String("Imported") << QLatin1String("Linux") << QLatin1String("Planets") << QLatin1String("Ubuntu") << QLatin1String("News") << QLatin1String("Technology") );
 
     CollectionFetchJob * job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-    job->setResource( "akonadi_opml_rss_resource_0" );
+    job->setResource( QLatin1String("akonadi_opml_rss_resource_0") );
     QVERIFY( job->exec() );
     const QList<Collection> feeds = job->collections();
     QVERIFY( feeds.count() == 7 );
@@ -82,15 +82,15 @@ void ImportOpmlJobTest::testGoodOpml()
         if ( feed.parent() == Collection::root().id() ) {
             // skip
         }
-        else if ( feed.xmlUrl() == "unittestenv/kdehome/planetkde_org_rss20.xml" ) {
+        else if ( feed.xmlUrl() == QLatin1String("unittestenv/kdehome/planetkde_org_rss20.xml") ) {
             // skip
         }
         // basic test
-        else if ( feed.xmlUrl() == "http://planet.freedesktop.org/rss20.xml" ) {
-            QCOMPARE( feed.title(), QString( "planet.freedesktop.org" ) );
-            QCOMPARE( feed.htmlUrl(), QString( "http://planet.freedesktop.org" ) );
-            QCOMPARE( feed.description(), QString( "planet.freedesktop.org - http://planet.freedesktop.org" ) );
-            QCOMPARE( feed.feedType(), QString( "rss" ) );
+        else if ( feed.xmlUrl() == QLatin1String("http://planet.freedesktop.org/rss20.xml") ) {
+            QCOMPARE( feed.title(), QLatin1String( "planet.freedesktop.org" ) );
+            QCOMPARE( feed.htmlUrl(), QLatin1String( "http://planet.freedesktop.org" ) );
+            QCOMPARE( feed.description(), QLatin1String( "planet.freedesktop.org - http://planet.freedesktop.org" ) );
+            QCOMPARE( feed.feedType(), QLatin1String( "rss" ) );
             const QList<TagId> tagIds = feed.tags();
             QCOMPARE( tagIds.count(), 3 );
             QStringList tagLabels;
@@ -98,15 +98,15 @@ void ImportOpmlJobTest::testGoodOpml()
                 QVERIFY( allTags.contains( tagId ) );
                 tagLabels.append( allTags.value( tagId ).label() );
             }
-            compareLists( tagLabels, QStringList() << "Imported" << "Linux" << "Planets" );
+            compareLists( tagLabels, QStringList() << QLatin1String("Imported") << QLatin1String("Linux") << QLatin1String("Planets") );
         }
         // verifies that 'category=Linux,Ubuntu' is parsed correctly and
         // tag 'Linux' is set only once
-        else if ( feed.xmlUrl() == "http://planet.ubuntu.com/rss20.xml" ) {
-            QCOMPARE( feed.title(), QString( "Planet Ubuntu" ) );
-            QCOMPARE( feed.htmlUrl(), QString( "http://planet.ubuntu.com/" ) );
-            QCOMPARE( feed.description(), QString( "Planet Ubuntu - http://planet.ubuntu.com/" ) );
-            QCOMPARE( feed.feedType(), QString( "rss" ) );
+        else if ( feed.xmlUrl() == QLatin1String("http://planet.ubuntu.com/rss20.xml") ) {
+            QCOMPARE( feed.title(), QLatin1String( "Planet Ubuntu" ) );
+            QCOMPARE( feed.htmlUrl(), QLatin1String( "http://planet.ubuntu.com/" ) );
+            QCOMPARE( feed.description(), QLatin1String( "Planet Ubuntu - http://planet.ubuntu.com/" ) );
+            QCOMPARE( feed.feedType(), QLatin1String( "rss" ) );
             const QList<TagId> tagIds = feed.tags();
             QCOMPARE( tagIds.count(), 4 );
             QStringList tagLabels;
@@ -114,14 +114,14 @@ void ImportOpmlJobTest::testGoodOpml()
                 QVERIFY( allTags.contains( tagId ) );
                 tagLabels.append( allTags.value( tagId ).label() );
             }
-            compareLists( tagLabels, QStringList() << "Imported" << "Linux" << "Planets" << "Ubuntu" );
+            compareLists( tagLabels, QStringList() << QLatin1String("Imported") << QLatin1String("Linux") << QLatin1String("Planets") << QLatin1String("Ubuntu") );
         }
         // this time without any tags except the defaultTag
-        else if ( feed.xmlUrl() == "http://www.jwz.org/cheesegrater/RSS/apod.rss" ) {
-            QCOMPARE( feed.title(), QString( "Astronomy Picture of the Day" ) );
-            QCOMPARE( feed.htmlUrl(), QString( "http://antwrp.gsfc.nasa.gov/apod/" ) );
-            QCOMPARE( feed.description(), QString( "A different image or photograph of our fascinating universe" ) );
-            QCOMPARE( feed.feedType(), QString( "rss" ) );
+        else if ( feed.xmlUrl() == QLatin1String("http://www.jwz.org/cheesegrater/RSS/apod.rss") ) {
+            QCOMPARE( feed.title(), QLatin1String( "Astronomy Picture of the Day" ) );
+            QCOMPARE( feed.htmlUrl(), QLatin1String( "http://antwrp.gsfc.nasa.gov/apod/" ) );
+            QCOMPARE( feed.description(), QLatin1String( "A different image or photograph of our fascinating universe" ) );
+            QCOMPARE( feed.feedType(), QLatin1String( "rss" ) );
             const QList<TagId> tagIds = feed.tags();
             QCOMPARE( tagIds.count(), 1 );
             QStringList tagLabels;
@@ -129,14 +129,14 @@ void ImportOpmlJobTest::testGoodOpml()
                 QVERIFY( allTags.contains( tagId ) );
                 tagLabels.append( allTags.value( tagId ).label() );
             }
-            compareLists( tagLabels, QStringList() << "Imported" );
+            compareLists( tagLabels, QStringList() << QLatin1String( "Imported") );
         }
         // verify that category="/Linux/News,/Technology" is parsed correctly
-        else if ( feed.xmlUrl() == "http://lwn.net/headlines/newrss" ) {
-            QCOMPARE( feed.title(), QString( "LWN.net" ) );
-            QCOMPARE( feed.htmlUrl(), QString( "http://lwn.net" ) );
-            QCOMPARE( feed.description(), QString( "LWN.net is a comprehensive source of news and opinions from and about the Linux community" ) );
-            QCOMPARE( feed.feedType(), QString( "rss" ) );
+        else if ( feed.xmlUrl() == QLatin1String( "http://lwn.net/headlines/newrss") ) {
+            QCOMPARE( feed.title(), QLatin1String( "LWN.net" ) );
+            QCOMPARE( feed.htmlUrl(), QLatin1String( "http://lwn.net" ) );
+            QCOMPARE( feed.description(), QLatin1String( "LWN.net is a comprehensive source of news and opinions from and about the Linux community" ) );
+            QCOMPARE( feed.feedType(), QLatin1String( "rss" ) );
             const QList<TagId> tagIds = feed.tags();
             QCOMPARE( tagIds.count(), 4 );
             QStringList tagLabels;
@@ -144,14 +144,14 @@ void ImportOpmlJobTest::testGoodOpml()
                 QVERIFY( allTags.contains( tagId ) );
                 tagLabels.append( allTags.value( tagId ).label() );
             }
-            compareLists( tagLabels, QStringList() << "Imported" << "Linux" << "News" << "Technology" );
+            compareLists( tagLabels, QStringList() << QLatin1String("Imported") << QLatin1String("Linux") << QLatin1String("News") << QLatin1String("Technology") );
         }
         // make sure that a single tag in category=/News is parsed correctly
-        else if ( feed.xmlUrl() == "http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml" ) {
-            QCOMPARE( feed.title(), QString( "BBC News | News Front Page | World Edition" ) );
-            QCOMPARE( feed.htmlUrl(), QString( "http://news.bbc.co.uk/go/rss/-/2/hi/default.stm" ) );
-            QCOMPARE( feed.description(), QString( "Visit BBC News for up-to-the-minute news" ) );
-            QCOMPARE( feed.feedType(), QString( "rss" ) );
+        else if ( feed.xmlUrl() == QLatin1String("http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml") ) {
+            QCOMPARE( feed.title(), QLatin1String( "BBC News | News Front Page | World Edition" ) );
+            QCOMPARE( feed.htmlUrl(), QLatin1String( "http://news.bbc.co.uk/go/rss/-/2/hi/default.stm" ) );
+            QCOMPARE( feed.description(), QLatin1String( "Visit BBC News for up-to-the-minute news" ) );
+            QCOMPARE( feed.feedType(), QLatin1String( "rss" ) );
             const QList<TagId> tagIds = feed.tags();
             QCOMPARE( tagIds.count(), 2 );
             QStringList tagLabels;
@@ -159,7 +159,7 @@ void ImportOpmlJobTest::testGoodOpml()
                 QVERIFY( allTags.contains( tagId ) );
                 tagLabels.append( allTags.value( tagId ).label() );
             }
-            compareLists( tagLabels, QStringList() << "Imported" << "News" );
+            compareLists( tagLabels, QStringList() << QLatin1String("Imported") << QLatin1String("News") );
         }
         else {
             QFAIL( "I didn't expect to see this feed in the test data" );
@@ -169,15 +169,15 @@ void ImportOpmlJobTest::testGoodOpml()
 
 void ImportOpmlJobTest::testImportDuplicates()
 {
-    const QString defaultTag = "Imported-dups";
-    const QString kdehome = qgetenv( "KDEHOME" );
-    org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0",
-                                                    "/KRss", QDBusConnection::sessionBus(), this );
+    const QString defaultTag = QLatin1String("Imported-dups");
+    const QString kdehome = QString::fromLocal8Bit( qgetenv( "KDEHOME" ) );
+    org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0"),
+                                                    QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
-    QDBusReply<QVariantMap> reply = interface->call( "importOpml", kdehome + "/to-import-duplicates.opml",
+    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), kdehome + QLatin1String("/to-import-duplicates.opml"),
                                                      defaultTag );
     QVERIFY( reply.isValid() );
-    QVERIFY( reply.value().value( "error" ).toInt() == 0 );
+    QVERIFY( reply.value().value( QLatin1String("error") ).toInt() == 0 );
 
     // test that 'Imported-dups' and 'OSS' tags were created correctly
     // and 'Linux' was not created
@@ -194,7 +194,7 @@ void ImportOpmlJobTest::testImportDuplicates()
     //                                       << "Technology" << "Imported-dups" << "OSS" );
 
     CollectionFetchJob * job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive, this );
-    job->setResource( "akonadi_opml_rss_resource_0" );
+    job->setResource( QLatin1String("akonadi_opml_rss_resource_0") );
     QVERIFY( job->exec() );
     const QList<Collection> feeds = job->collections();
     QVERIFY( feeds.count() == 8 );
@@ -202,7 +202,7 @@ void ImportOpmlJobTest::testImportDuplicates()
     // check that the feed was added
     bool freedesktopDupFound = false;
     Q_FOREACH( const FeedCollection &feed, feeds ) {
-        if ( feed.xmlUrl() == "http://planet.freedesktop.org/rss20.xml" && feed.id() != m_freedesktopId ) {
+        if ( feed.xmlUrl() == QLatin1String("http://planet.freedesktop.org/rss20.xml") && feed.id() != m_freedesktopId ) {
             freedesktopDupFound = true;
         }
     }
@@ -212,14 +212,14 @@ void ImportOpmlJobTest::testImportDuplicates()
 
 void ImportOpmlJobTest::testBrokenOpml()
 {
-    const QString defaultTag = "Imported";
-    const QString kdehome = qgetenv( "KDEHOME" );
-    org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0",
-                                                    "/KRss", QDBusConnection::sessionBus(), this );
+    const QString defaultTag = QLatin1String("Imported");
+    const QString kdehome = QString::fromLocal8Bit( qgetenv( "KDEHOME" ) );
+    org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Resource.akonadi_opml_rss_resource_0"),
+                                                    QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
-    QDBusReply<QVariantMap> reply = interface->call( "importOpml", kdehome + "/to-import-broken.opml", defaultTag );
+    QDBusReply<QVariantMap> reply = interface->call( QLatin1String("importOpml"), kdehome + QLatin1String("/to-import-broken.opml"), defaultTag );
     QVERIFY( reply.isValid() );
-    QVERIFY( reply.value().value( "error" ).toInt() != 0 );
+    QVERIFY( reply.value().value( QLatin1String("error") ).toInt() != 0 );
 }
 
 #include "importopmljobtest.moc"

@@ -43,7 +43,7 @@ QByteArray TagIdsAttribute::serialized() const
         rawIds.append( Tag::idToString( tagId ) );
     }
 
-    return rawIds.join( ";" ).toUtf8();
+    return rawIds.join( QLatin1String(";") ).toUtf8();
 }
 
 void TagIdsAttribute::deserialize( const QByteArray& data )
@@ -52,7 +52,7 @@ void TagIdsAttribute::deserialize( const QByteArray& data )
         return;
 
     // so ugly, am i missing something?
-    const QStringList rawIds = QString::fromUtf8( data.constData(), data.size() ).split( ';' );
+    const QStringList rawIds = QString::fromUtf8( data.constData(), data.size() ).split( QLatin1Char(';') );
     Q_FOREACH( const QString& rawId, rawIds ) {
         m_tagIds.append( Tag::idFromString( rawId ) );
     }

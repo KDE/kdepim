@@ -54,7 +54,7 @@ KRss::RssItem KRssResource::fromSyndicationItem( const Syndication::ItemPtr& syn
     rssItem.setHeadersLoaded( true );
     rssItem.setContentLoaded( true );
 
-    rssItem.setGuidIsHash( syndItem->id().startsWith( "hash:" ) );
+    rssItem.setGuidIsHash( syndItem->id().startsWith( QLatin1String("hash:") ) );
     //rssItem.setSourceFeedId(currentCollection().remoteId().toInt());
     rssItem.setTitle( syndItem->title() );
     rssItem.setLink( syndItem->link() );
@@ -141,5 +141,5 @@ QString KRssResource::generateCollectionName( const Akonadi::Collection& collect
         return collection.remoteId();
     }
 
-    return static_cast<KRss::FeedCollection>( collection ).title() + QChar( '-' ) + collection.remoteId();
+    return static_cast<KRss::FeedCollection>( collection ).title() + QLatin1Char( '-' ) + collection.remoteId();
 }

@@ -128,8 +128,8 @@ void ImportOpmlJob::slotOpmlRead( KJob *job )
             break;
     }
 
-    if ( reader.name().toString().toLower() == "opml" ) {
-        kDebug() << "OPML version" << reader.attributes().value( "version" ).toString();
+    if ( reader.name().toString().toLower() == QLatin1String("opml") ) {
+        kDebug() << "OPML version" << reader.attributes().value( QLatin1String("version") ).toString();
         m_opmlReader.readOpml( reader );
     }
     else {

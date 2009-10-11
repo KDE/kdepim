@@ -118,11 +118,11 @@ void NetResourcePrivate::slotFetchAborted( qlonglong id )
 }
 
 void NetResourcePrivate::slotFetchQueueStarted() {
-  emit q->fetchQueueStarted( q->id() );
+    emit q->fetchQueueStarted( q->id() );
 }
 
 void NetResourcePrivate::slotFetchQueueFinished() {
-  emit q->fetchQueueFinished( q->id() );
+    emit q->fetchQueueFinished( q->id() );
 }
 
 void NetResourcePrivate::slotRootCollectionRetrieved( KJob* j )
@@ -162,8 +162,8 @@ NetResource::NetResource( const QString& resourceId, const QString& name, QObjec
     : Resource( *new NetResourcePrivate( resourceId, name, this ), parent )
 {
     Q_D( NetResource );
-    d->m_interface = new org::kde::krss( "org.freedesktop.Akonadi.Agent." + d->m_id,
-                                         "/KRss", QDBusConnection::sessionBus(), this );
+    d->m_interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Agent.") + d->m_id,
+                                         QLatin1String("/KRss"), QDBusConnection::sessionBus(), this );
 
     connect( d->m_interface, SIGNAL( fetchStarted( qlonglong ) ),
              this, SLOT( slotFetchStarted( qlonglong ) ) );

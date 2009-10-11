@@ -40,19 +40,19 @@ void SoapRequest::setHeaderNamespace( const QString& headerNamespace )
 void SoapRequest::writeRequestStart()
 {
     writeStartDocument();
-    writeStartElement( "soap12:Envelope" );
-    writeNamespace( "http://www.w3.org/2001/XMLSchema-instance", "xsi" );
-    writeNamespace( "http://www.w3.org/2001/XMLSchema", "xsd" );
-    writeNamespace( "http://www.w3.org/2003/05/soap-envelope", "soap12" );
-    writeStartElement( "soap12:Header" );
-    writeStartElement( "NGAPIToken" );
+    writeStartElement( QLatin1String("soap12:Envelope") );
+    writeNamespace( QLatin1String("http://www.w3.org/2001/XMLSchema-instance"), QLatin1String("xsi") );
+    writeNamespace( QLatin1String("http://www.w3.org/2001/XMLSchema"), QLatin1String("xsd") );
+    writeNamespace( QLatin1String("http://www.w3.org/2003/05/soap-envelope"), QLatin1String("soap12") );
+    writeStartElement( QLatin1String("soap12:Header") );
+    writeStartElement( QLatin1String("NGAPIToken") );
     writeDefaultNamespace( m_headerNamespace );
-    writeTextElement( "Token", m_apiToken );
-    writeTextElement( "OrgCode", "KDE" );
-    writeTextElement( "EnableCompression", "false" );
+    writeTextElement( QLatin1String("Token"), m_apiToken );
+    writeTextElement( QLatin1String("OrgCode"), QLatin1String("KDE") );
+    writeTextElement( QLatin1String("EnableCompression"), QLatin1String("false") );
     writeEndElement();   // NGAPIToken
     writeEndElement();   // soap12:Header
-    writeStartElement( "soap12:Body" );
+    writeStartElement( QLatin1String("soap12:Body") );
 }
 
 void SoapRequest::writeRequestEnd()
@@ -104,7 +104,7 @@ void SoapMessage::parse()
         m_reader.readNext();
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "Envelope" ) {
+            if ( m_reader.name() == QLatin1String("Envelope") ) {
                 readSoapEnvelope();
             }
             else {
@@ -132,7 +132,7 @@ void SoapMessage::readUnknownElement()
 
 void SoapMessage::readSoapEnvelope()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "Envelope" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("Envelope") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -141,7 +141,7 @@ void SoapMessage::readSoapEnvelope()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "Body" ) {
+            if ( m_reader.name() == QLatin1String("Body") ) {
                 readSoapBody();
             }
             else {
@@ -154,7 +154,7 @@ void SoapMessage::readSoapEnvelope()
 
 void SoapMessage::readSoapBody()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "Body" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("Body") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -163,11 +163,11 @@ void SoapMessage::readSoapBody()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "Fault" ) {
+            if ( m_reader.name() == QLatin1String("Fault") ) {
                 m_messageType = Fault;
                 readSoapFault();
             }
-            else if ( m_reader.name().toString().endsWith( "Response" ) ) {
+            else if ( m_reader.name().toString().endsWith( QLatin1String("Response") ) ) {
                 m_messageType = Response;
                 readResponse();
             }
@@ -181,7 +181,7 @@ void SoapMessage::readSoapBody()
 
 void SoapMessage::readSoapFault()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "Fault" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("Fault") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -190,11 +190,11 @@ void SoapMessage::readSoapFault()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "Code" ) {
+            if ( m_reader.name() == QLatin1String("Code") ) {
                 // skip Code, Value, SubCode etc
                 readUnknownElement();
             }
-            else if ( m_reader.name() == "Reason" ) {
+            else if ( m_reader.name() == QLatin1String("Reason") ) {
                 readSoapFaultReason();
             }
             else {
@@ -207,7 +207,7 @@ void SoapMessage::readSoapFault()
 
 void SoapMessage::readSoapFaultReason()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "Reason" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("Reason") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -216,7 +216,7 @@ void SoapMessage::readSoapFaultReason()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "Text" ) {
+            if ( m_reader.name() == QLatin1String("Text") ) {
                 m_soapErrorString = m_reader.readElementText();
             }
             else {
@@ -258,7 +258,7 @@ void LocationsResponse::readResponse()
 {
     Q_ASSERT( m_reader.isStartElement() );
 
-    if ( m_reader.name() != "GetLocationsResponse" ) {
+    if ( m_reader.name() != QLatin1String("GetLocationsResponse") ) {
         m_reader.raiseError( i18n( "The document doesn't contain a GetLocationsResponse element" ) );
         return;
     }
@@ -270,7 +270,7 @@ void LocationsResponse::readResponse()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "GetLocationsResult" ) {
+            if ( m_reader.name() == QLatin1String("GetLocationsResult") ) {
                 readResult();
             }
             else {
@@ -283,7 +283,7 @@ void LocationsResponse::readResponse()
 
 void LocationsResponse::readResult()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "GetLocationsResult" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("GetLocationsResult") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -292,7 +292,7 @@ void LocationsResponse::readResult()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "Location" ) {
+            if ( m_reader.name() == QLatin1String("Location") ) {
                 readLocation();
             }
             else {
@@ -305,7 +305,7 @@ void LocationsResponse::readResult()
 
 void LocationsResponse::readLocation()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "Location" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("Location") );
 
     Location location;
 
@@ -316,23 +316,23 @@ void LocationsResponse::readLocation()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "id" ) {
+            if ( m_reader.name() == QLatin1String("id") ) {
                 location.id = m_reader.readElementText().toInt();
             }
-            else if ( m_reader.name() == "name" ) {
+            else if ( m_reader.name() == QLatin1String("name") ) {
                 location.name = m_reader.readElementText();
             }
-            else if ( m_reader.name() == "isPublic" ) {
-                location.isPublic = m_reader.readElementText().contains( "true", Qt::CaseInsensitive );
+            else if ( m_reader.name() == QLatin1String("isPublic") ) {
+                location.isPublic = m_reader.readElementText().contains( QLatin1String("true"), Qt::CaseInsensitive );
             }
-            else if ( m_reader.name() == "isApmlPublic" ) {
-                location.isApmlPublic = m_reader.readElementText().contains( "true", Qt::CaseInsensitive );
+            else if ( m_reader.name() == QLatin1String("isApmlPublic") ) {
+                location.isApmlPublic = m_reader.readElementText().contains( QLatin1String("true"), Qt::CaseInsensitive );
             }
-            else if ( m_reader.name() == "contentOnline" ) {
-                location.contentOnline = m_reader.readElementText().contains( "true", Qt::CaseInsensitive );
+            else if ( m_reader.name() == QLatin1String("contentOnline") ) {
+                location.contentOnline = m_reader.readElementText().contains( QLatin1String("true"), Qt::CaseInsensitive );
             }
-            else if ( m_reader.name() == "autoAddSubs" ) {
-                location.autoAddSubs = m_reader.readElementText().contains( "true", Qt::CaseInsensitive );
+            else if ( m_reader.name() == QLatin1String("autoAddSubs") ) {
+                location.autoAddSubs = m_reader.readElementText().contains( QLatin1String("true"), Qt::CaseInsensitive );
             }
             else {
                 readUnknownElement();
@@ -375,7 +375,7 @@ void SubscriptionsResponse::readResponse()
 {
     Q_ASSERT( m_reader.isStartElement() );
 
-    if ( m_reader.name() != "GetSubscriptionListResponse" ) {
+    if ( m_reader.name() != QLatin1String("GetSubscriptionListResponse") ) {
         m_reader.raiseError( i18n( "The document doesn't contain a GetSubscriptionListResponse element" ) );
         return;
     }
@@ -387,7 +387,7 @@ void SubscriptionsResponse::readResponse()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "GetSubscriptionListResult" ) {
+            if ( m_reader.name() == QLatin1String("GetSubscriptionListResult") ) {
                 readResult();
             }
             else {
@@ -400,7 +400,7 @@ void SubscriptionsResponse::readResponse()
 
 void SubscriptionsResponse::readResult()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "GetSubscriptionListResult" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("GetSubscriptionListResult") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -409,7 +409,7 @@ void SubscriptionsResponse::readResult()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name().toString().toLower() == "opml" ) {
+            if ( m_reader.name().toString().toLower() == QLatin1String("opml") ) {
                 readOpml();
             }
             else {
@@ -422,7 +422,7 @@ void SubscriptionsResponse::readResult()
 
 void SubscriptionsResponse::readOpml()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name().toString().toLower() == "opml" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name().toString().toLower() == QLatin1String("opml") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -431,10 +431,10 @@ void SubscriptionsResponse::readOpml()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name().toString().toLower() == "head" ) {
+            if ( m_reader.name().toString().toLower() == QLatin1String("head") ) {
                 readUnknownElement();
             }
-            else if ( m_reader.name().toString().toLower() == "body" ) {
+            else if ( m_reader.name().toString().toLower() == QLatin1String("body") ) {
                 readBody();
             }
             else {
@@ -446,7 +446,7 @@ void SubscriptionsResponse::readOpml()
 
 void SubscriptionsResponse::readBody()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name().toString().toLower() == "body" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name().toString().toLower() == QLatin1String("body") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -455,7 +455,7 @@ void SubscriptionsResponse::readBody()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name().toString().toLower() == "outline" ) {
+            if ( m_reader.name().toString().toLower() == QLatin1String("outline") ) {
                 QStringList tags;
                 readOutline( tags );
             }
@@ -468,13 +468,13 @@ void SubscriptionsResponse::readBody()
 
 void SubscriptionsResponse::readOutline( QStringList &tags )
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name().toString().toLower() == "outline" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name().toString().toLower() == QLatin1String("outline") );
 
     bool isFolder = false;
-    const QString xmlUrl = attributeValue( m_reader.attributes(), "xmlurl" ).toString();
+    const QString xmlUrl = attributeValue( m_reader.attributes(), QLatin1String("xmlurl") ).toString();
 
     if ( xmlUrl.isEmpty() ) {
-        const QStringRef textAttribute = attributeValue( m_reader.attributes(), "text" );
+        const QStringRef textAttribute = attributeValue( m_reader.attributes(), QLatin1String("text") );
         if ( !textAttribute.isEmpty() ) {
             // this attribute seem to represent a folder
             isFolder = true;
@@ -498,20 +498,20 @@ void SubscriptionsResponse::readOutline( QStringList &tags )
         ParsedFeed feed;
         const QXmlStreamAttributes attrs = m_reader.attributes();
         Q_FOREACH( const QXmlStreamAttribute& attr, attrs ) {
-            if ( attr.name().toString().toLower() == "title" )
+            if ( attr.name().toString().toLower() == QLatin1String("title") )
                 feed.title = attr.value().toString();
-            else if ( attr.name().toString().toLower() == "text" && feed.title.isEmpty() )
+            else if ( attr.name().toString().toLower() == QLatin1String("text") && feed.title.isEmpty() )
                 feed.title = attr.value().toString();
-            else if ( attr.name().toString().toLower() == "htmlurl" )
+            else if ( attr.name().toString().toLower() == QLatin1String("htmlurl") )
                 feed.htmlUrl = attr.value().toString();
-            else if ( attr.name().toString().toLower() == "xmlurl" )
+            else if ( attr.name().toString().toLower() == QLatin1String("xmlurl") )
                 feed.xmlUrl = attr.value().toString();
-            else if ( attr.name().toString().toLower() == "description" )
+            else if ( attr.name().toString().toLower() == QLatin1String("description") )
                 feed.description = attr.value().toString();
-            else if ( attr.name().toString().toLower() == "type" )
+            else if ( attr.name().toString().toLower() == QLatin1String("type") )
                 feed.type = attr.value().toString();
-            else if ( attr.name().toString().toLower() == "category" ) {
-                const QStringList categories = attr.value().toString().split( QRegExp( "[,/]" ), QString::SkipEmptyParts );
+            else if ( attr.name().toString().toLower() == QLatin1String("category") ) {
+                const QStringList categories = attr.value().toString().split( QRegExp( QLatin1String("[,/]") ), QString::SkipEmptyParts );
                 Q_FOREACH( const QString& category, categories ) {
                     if ( !tags.contains( category ) )
                         tags.append( category );
@@ -526,7 +526,7 @@ void SubscriptionsResponse::readOutline( QStringList &tags )
             feed.title = xmlUrl;
 
         if ( feed.type.isEmpty() )
-            feed.type = "rss";
+            feed.type = QLatin1String("rss");
 
         // everything is parsed
         m_feeds[ m_currentId ] = feed;
@@ -543,7 +543,7 @@ void SubscriptionsResponse::readOutline( QStringList &tags )
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name().toString().toLower() == "outline" && isFolder )
+            if ( m_reader.name().toString().toLower() == QLatin1String("outline") && isFolder )
                 readOutline( tags );
             else
                 readUnknownElement();
@@ -572,7 +572,7 @@ void AddSubscriptionResponse::readResponse()
 {
     Q_ASSERT( m_reader.isStartElement() );
 
-    if ( m_reader.name() != "AddSubscriptionResponse" ) {
+    if ( m_reader.name() != QLatin1String("AddSubscriptionResponse") ) {
         m_reader.raiseError( i18n( "The document doesn't contain a AddSubscriptionResponse element" ) );
         return;
     }
@@ -584,7 +584,7 @@ void AddSubscriptionResponse::readResponse()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "AddSubscriptionResult" ) {
+            if ( m_reader.name() == QLatin1String("AddSubscriptionResult") ) {
                 m_subscriptionId = m_reader.readElementText().toInt();
             }
             else {
@@ -606,7 +606,7 @@ void RenameSubscriptionResponse::readResponse()
 {
     Q_ASSERT( m_reader.isStartElement() );
 
-    if ( m_reader.name() != "RenameSubscriptionResponse" ) {
+    if ( m_reader.name() != QLatin1String("RenameSubscriptionResponse") ) {
         m_reader.raiseError( i18n( "The document doesn't contain a RenameSubscriptionResponse element" ) );
         return;
     }
@@ -639,7 +639,7 @@ void DeleteSubscriptionResponse::readResponse()
 {
     Q_ASSERT( m_reader.isStartElement() );
 
-    if ( m_reader.name() != "DeleteSubscriptionsResponse" ) {
+    if ( m_reader.name() != QLatin1String("DeleteSubscriptionsResponse") ) {
         m_reader.raiseError( i18n( "The document doesn't contain a DeleteSubscriptionsResponse element" ) );
         return;
     }
@@ -651,7 +651,7 @@ void DeleteSubscriptionResponse::readResponse()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "DeleteSubscriptionsResult" ) {
+            if ( m_reader.name() == QLatin1String("DeleteSubscriptionsResult") ) {
                 readResult();
             }
             else {
@@ -664,7 +664,7 @@ void DeleteSubscriptionResponse::readResponse()
 
 void DeleteSubscriptionResponse::readResult()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "DeleteSubscriptionsResult" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("DeleteSubscriptionsResult") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -673,7 +673,7 @@ void DeleteSubscriptionResponse::readResult()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "ResultType" ) {
+            if ( m_reader.name() == QLatin1String("ResultType") ) {
                 readResultType();
             }
             else {
@@ -686,7 +686,7 @@ void DeleteSubscriptionResponse::readResult()
 
 void DeleteSubscriptionResponse::readResultType()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "ResultType" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("ResultType") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();
@@ -695,10 +695,10 @@ void DeleteSubscriptionResponse::readResultType()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "ResourceId" ) {
+            if ( m_reader.name() == QLatin1String("ResourceId") ) {
                 kDebug() << "ResourceId:" << m_reader.readElementText();
             }
-            else if ( m_reader.name() == "StatusCode" ) {
+            else if ( m_reader.name() == QLatin1String("StatusCode") ) {
                 m_statusCode = m_reader.readElementText().toInt();
                 kDebug() << "StatusCode:" << m_statusCode;
             }
@@ -721,7 +721,7 @@ void UpdatePostResponse::readResponse()
 {
     Q_ASSERT( m_reader.isStartElement() );
 
-    if ( m_reader.name() != "UpdatePostMetadatav3Response" ) {
+    if ( m_reader.name() != QLatin1String("UpdatePostMetadatav3Response") ) {
         m_reader.raiseError( i18n( "The document doesn't contain a UpdatePostMetadatav3Response element" ) );
         return;
     }
@@ -733,7 +733,7 @@ void UpdatePostResponse::readResponse()
             break;
 
         if ( m_reader.isStartElement() ) {
-            if ( m_reader.name() == "UpdatePostMetadatav3Result" ) {
+            if ( m_reader.name() == QLatin1String("UpdatePostMetadatav3Result") ) {
                 readResult();
             }
         }
@@ -742,7 +742,7 @@ void UpdatePostResponse::readResponse()
 
 void UpdatePostResponse::readResult()
 {
-    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == "UpdatePostMetadatav3Result" );
+    Q_ASSERT( m_reader.isStartElement() && m_reader.name() == QLatin1String("UpdatePostMetadatav3Result") );
 
     while ( !m_reader.atEnd() ) {
         m_reader.readNext();

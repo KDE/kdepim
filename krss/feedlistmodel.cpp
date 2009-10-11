@@ -103,7 +103,7 @@ namespace {
         }
 
         void visit( const boost::shared_ptr<const TagNode>& tagNode ) {
-            m_icon = KIcon( "folder" ).pixmap( KIconLoader::SizeSmall );
+            m_icon = KIcon( QLatin1String("folder") ).pixmap( KIconLoader::SizeSmall );
         }
 
         void visit( const boost::shared_ptr<const FeedNode>& feedNode ) {
@@ -114,7 +114,7 @@ namespace {
                 if ( !feed->hasError() )
                     m_icon = feed->icon().pixmap( KIconLoader::SizeSmall, QIcon::Normal );
                 else
-                    m_icon = KIcon( "dialog-warning" ).pixmap( KIconLoader::SizeSmall );
+                    m_icon = KIcon( QLatin1String("dialog-warning") ).pixmap( KIconLoader::SizeSmall );
             }
         }
 
@@ -606,7 +606,7 @@ Qt::ItemFlags FeedListModel::flags( const QModelIndex& index ) const
 QStringList FeedListModel::mimeTypes() const
 {
     QStringList types;
-    types << "text/uri-list" << KRSS_TREENODE_MIMETYPE;
+    types << QLatin1String("text/uri-list") << QLatin1String(KRSS_TREENODE_MIMETYPE);
     return types;
 }
 
@@ -635,7 +635,7 @@ QMimeData* FeedListModel::mimeData( const QModelIndexList& indexes ) const
     }
 
     mimeData->setUrls( urls );
-    mimeData->setData( KRSS_TREENODE_MIMETYPE, idList );
+    mimeData->setData( QLatin1String(KRSS_TREENODE_MIMETYPE), idList );
     return mimeData;
 }
 
@@ -649,7 +649,7 @@ bool FeedListModel::dropMimeData( const QMimeData* data, Qt::DropAction action, 
     if ( action == Qt::IgnoreAction )
         return true;
 
-    if ( !data->hasFormat( KRSS_TREENODE_MIMETYPE ) )
+    if ( !data->hasFormat( QLatin1String(KRSS_TREENODE_MIMETYPE) ) )
         return false;
 
     const shared_ptr<const TreeNode> droppedOnNode = FeedListModel::data( parent, FeedListModel::TreeNodeRole )
@@ -665,8 +665,8 @@ bool FeedListModel::dropMimeData( const QMimeData* data, Qt::DropAction action, 
     if ( droppedOnTag->tag() == d->m_allFeedsTag )
         return false;
 
-    QByteArray idData = data->data( KRSS_TREENODE_MIMETYPE );
-    QDataStream stream( &idData, QIODevice::ReadOnly );
+    QByteArray idData = data->data( QLatin1String(KRSS_TREENODE_MIMETYPE) );
+    QDataStream stream( idData );
     while ( !stream.atEnd() ) {
         KRss::Feed::Id id;
         stream >> id;

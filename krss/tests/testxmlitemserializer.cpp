@@ -87,13 +87,13 @@ void TestXmlItemSerializer::testDates()
 void TestXmlItemSerializer::testSimpleItems()
 {
     RssItem item;
-    item.setTitle( "Some title" );
-    item.setDescription( "Some description" );
-    item.setLink( "http://akregator.kde.org" );
-    item.setContent( "Content makes the world go round" );
-    item.setGuid( "http://uniqueid" );
+    item.setTitle( QLatin1String("Some title") );
+    item.setDescription( QLatin1String("Some description") );
+    item.setLink( QLatin1String("http://akregator.kde.org") );
+    item.setContent( QLatin1String("Content makes the world go round") );
+    item.setGuid( QLatin1String("http://uniqueid") );
     item.setGuidIsHash( true );
-    item.setLanguage( "en" );
+    item.setLanguage( QLatin1String("en") );
     item.setHash( 5 );
     ::testItem( item );
     item.setHash( 0 );
@@ -118,24 +118,24 @@ void TestXmlItemSerializer::testStatus()
 void TestXmlItemSerializer::testCustomProperties()
 {
     RssItem item;
-    item.setGuid( "http://uniqueid" );
-    item.setTitle( "Some title" );
-    item.setDescription( "Some description" );
-    item.setLink( "http://akregator.kde.org" );
-    item.setCustomProperty( "foo", "bar" );
-    item.setCustomProperty( "bar", "foo" );
-    item.setCustomProperty( "foobar", QString() );
+    item.setGuid( QLatin1String("http://uniqueid") );
+    item.setTitle( QLatin1String("Some title") );
+    item.setDescription( QLatin1String("Some description") );
+    item.setLink( QLatin1String("http://akregator.kde.org") );
+    item.setCustomProperty( QLatin1String("foo"), QLatin1String("bar") );
+    item.setCustomProperty( QLatin1String("bar"), QLatin1String("foo") );
+    item.setCustomProperty( QLatin1String("foobar"), QString() );
     ::testItem( item );
 }
 
 void TestXmlItemSerializer::testEnclosures()
 {
     RssItem item;
-    item.setLink( "http://akregator.kde.org" );
+    item.setLink( QLatin1String("http://akregator.kde.org") );
     Enclosure enc;
-    enc.setUrl( "http://akregator.kde.org/some.mp3" );
-    enc.setType( "audio/mpeg" );
-    enc.setTitle( "This is an enclosure!" );
+    enc.setUrl( QLatin1String("http://akregator.kde.org/some.mp3") );
+    enc.setType( QLatin1String("audio/mpeg") );
+    enc.setTitle( QLatin1String("This is an enclosure!") );
     enc.setLength( 123456789 );
     Enclosure enc2 = enc;
     enc.setDuration( 60 );
@@ -149,12 +149,12 @@ void TestXmlItemSerializer::testEnclosures()
 void TestXmlItemSerializer::testCategories()
 {
     Category cat;
-    cat.setTerm( "term1" );
-    cat.setScheme( "http://Blabla#" );
-    cat.setLabel( "Term 1" );
+    cat.setTerm( QLatin1String("term1") );
+    cat.setScheme( QLatin1String("http://Blabla#") );
+    cat.setLabel( QLatin1String("Term 1") );
     Category cat2;
-    cat2.setTerm( "Term2" );
-    cat2.setLabel( "Tada" );
+    cat2.setTerm( QLatin1String("Term2") );
+    cat2.setLabel( QLatin1String("Tada") );
     QList<Category> cats;
     cats.append( cat );
     cats.append( cat2 );
@@ -167,11 +167,11 @@ void TestXmlItemSerializer::testCategories()
 void TestXmlItemSerializer::testAuthors()
 {
     Person a1;
-    a1.setName( "John Doe" );
+    a1.setName( QLatin1String("John Doe") );
     Person a2;
-    a2.setName( "John Doe" );
-    a2.setUri( "http://doeweb.net/John" );
-    a2.setEmail( "joe@doeweb.net" );
+    a2.setName( QLatin1String("John Doe") );
+    a2.setUri( QLatin1String("http://doeweb.net/John") );
+    a2.setEmail( QLatin1String("joe@doeweb.net") );
     Person a3;
     QList<Person> authors;
     authors.append( a1 );
@@ -186,9 +186,9 @@ void TestXmlItemSerializer::testComments()
 {
     RssItem item;
     item.setCommentsCount( 10 );
-    item.setCommentsLink( "http://heyho#comment" );
-    item.setCommentsFeed( "http://heyho/comments.rss" );
-    item.setCommentPostUri( "http://whatever" );
+    item.setCommentsLink( QLatin1String("http://heyho#comment") );
+    item.setCommentsFeed( QLatin1String("http://heyho/comments.rss") );
+    item.setCommentPostUri( QLatin1String("http://whatever") );
     ::testItem( item );
 }
 

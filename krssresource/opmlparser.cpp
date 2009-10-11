@@ -171,14 +171,14 @@ void ParsedFeed::setAttributes( const QHash<QString, QString>& attributes )
 Akonadi::Collection ParsedFeed::toAkonadiCollection() const
 {
     KRss::FeedCollection feed;
-    feed.setRemoteId( d->attributes.value( "remoteid" ) );
+    feed.setRemoteId( d->attributes.value( QLatin1String("remoteid") ) );
     feed.setTitle( d->title );
     feed.setXmlUrl( d->xmlUrl );
     feed.setHtmlUrl( d->htmlUrl );
     feed.setDescription( d->description );
     feed.setFeedType( d->type );
     feed.setName( d->title );
-    feed.setContentMimeTypes( QStringList( "application/rss+xml" ) );
+    feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
     return feed;
 }
 
@@ -191,7 +191,7 @@ ParsedFeed ParsedFeed::fromAkonadiCollection( const Akonadi::Collection& collect
     parsedFeed.d->htmlUrl = feedCollection.htmlUrl();
     parsedFeed.d->description = feedCollection.description();
     parsedFeed.d->type = feedCollection.feedType();
-    parsedFeed.d->attributes.insert( "remoteid", feedCollection.remoteId() );
+    parsedFeed.d->attributes.insert( QLatin1String("remoteid"), feedCollection.remoteId() );
     return parsedFeed;
 }
 
@@ -223,7 +223,7 @@ QStringRef OpmlReader::Private::attributeValue( const QXmlStreamAttributes& attr
 
 void OpmlReader::Private::readBody( QXmlStreamReader& reader )
 {
-    Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == "body" );
+    Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == QLatin1String("body") );
 
     while ( !reader.atEnd() ) {
         reader.readNext();
@@ -232,7 +232,7 @@ void OpmlReader::Private::readBody( QXmlStreamReader& reader )
             break;
 
         if ( reader.isStartElement() ) {
-            if ( reader.name().toString().toLower() == "outline" ) {
+            if ( reader.name().toString().toLower() == QLatin1String("outline") ) {
                 QStringList currentTags;
                 readOutline( reader, currentTags );
             }
@@ -245,13 +245,13 @@ void OpmlReader::Private::readBody( QXmlStreamReader& reader )
 
 void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& currentTags )
 {
-    Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == "outline" );
+    Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == QLatin1String("outline") );
 
     bool isFolder = false;
-    const QString xmlUrl = attributeValue( reader.attributes(), "xmlurl" ).toString();
+    const QString xmlUrl = attributeValue( reader.attributes(), QLatin1String("xmlurl") ).toString();
 
     if ( xmlUrl.isEmpty() ) {
-        const QStringRef textAttribute = attributeValue( reader.attributes(), "text" );
+        const QStringRef textAttribute = attributeValue( reader.attributes(), QLatin1String("text") );
         if ( !textAttribute.isEmpty() ) {
             // this attribute seem to represent a folder
             isFolder = true;
@@ -275,20 +275,20 @@ void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& cu
         ParsedFeed feed;
         const QXmlStreamAttributes attrs = reader.attributes();
         Q_FOREACH( const QXmlStreamAttribute& attr, attrs ) {
-            if ( attr.name().toString().toLower() == "title" )
+            if ( attr.name().toString().toLower() == QLatin1String("title") )
                 feed.setTitle( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == "text" && feed.title().isEmpty() )
+            else if ( attr.name().toString().toLower() == QLatin1String("text") && feed.title().isEmpty() )
                 feed.setTitle( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == "htmlurl" )
+            else if ( attr.name().toString().toLower() == QLatin1String("htmlurl") )
                 feed.setHtmlUrl( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == "xmlurl" )
+            else if ( attr.name().toString().toLower() == QLatin1String("xmlurl") )
                 feed.setXmlUrl( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == "description" )
+            else if ( attr.name().toString().toLower() == QLatin1String("description") )
                 feed.setDescription( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == "type" )
+            else if ( attr.name().toString().toLower() == QLatin1String("type") )
                 feed.setType( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == "category" ) {
-                const QStringList categories = attr.value().toString().split( QRegExp( "[,/]" ), QString::SkipEmptyParts );
+            else if ( attr.name().toString().toLower() == QLatin1String("category") ) {
+                const QStringList categories = attr.value().toString().split( QRegExp( QLatin1String("[,/]") ), QString::SkipEmptyParts );
                 Q_FOREACH( const QString& category, categories ) {
                     if ( !currentTags.contains( category ) )
                         currentTags.append( category );
@@ -303,7 +303,7 @@ void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& cu
             feed.setTitle( xmlUrl );
 
         if ( feed.type().isEmpty() )
-            feed.setType( "rss" );
+            feed.setType( QLatin1String("rss") );
 
         // everything is parsed
         QList<int> currentTagIds;
@@ -327,7 +327,7 @@ void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& cu
             break;
 
         if ( reader.isStartElement() ) {
-            if ( reader.name().toString().toLower() == "outline" && isFolder )
+            if ( reader.name().toString().toLower() == QLatin1String("outline") && isFolder )
                 readOutline( reader, currentTags );
             else
                 readUnknownElement( reader );
@@ -382,7 +382,7 @@ QHash<int, QList<int> > OpmlReader::tagsForFeeds() const
 
 void OpmlReader::readOpml( QXmlStreamReader& reader )
 {
-    Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == "opml" );
+    Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == QLatin1String("opml") );
 
     while ( !reader.atEnd() ) {
         reader.readNext();
@@ -391,10 +391,10 @@ void OpmlReader::readOpml( QXmlStreamReader& reader )
             break;
 
         if ( reader.isStartElement() ) {
-            if ( reader.name().toString().toLower() == "head" ) {
+            if ( reader.name().toString().toLower() == QLatin1String("head") ) {
                 d->readUnknownElement( reader );
             }
-            else if ( reader.name().toString().toLower() == "body" ) {
+            else if ( reader.name().toString().toLower() == QLatin1String("body") ) {
                 d->readBody( reader );
             }
             else {
@@ -406,10 +406,10 @@ void OpmlReader::readOpml( QXmlStreamReader& reader )
 
 void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<ParsedFeed>& feeds )
 {
-    writer.writeStartElement( "opml" );
-    writer.writeAttribute( "version", "2.0" );
-    writer.writeEmptyElement( "head" );
-    writer.writeStartElement( "body" );
+    writer.writeStartElement( QLatin1String("opml") );
+    writer.writeAttribute( QLatin1String("version"), QLatin1String("2.0") );
+    writer.writeEmptyElement( QLatin1String("head") );
+    writer.writeStartElement( QLatin1String("body") );
     Q_FOREACH( const ParsedFeed& feed, feeds ) {
         writeOutline( writer, feed );
     }
@@ -419,12 +419,12 @@ void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<ParsedFeed>& f
 
 void OpmlWriter::writeOutline( QXmlStreamWriter& writer, const ParsedFeed& feed )
 {
-    writer.writeStartElement( "outline" );
-    writer.writeAttribute( "text", feed.title() );
-    writer.writeAttribute( "title", feed.title() );
-    writer.writeAttribute( "description", feed.description() );
-    writer.writeAttribute( "htmlUrl", feed.htmlUrl() );
-    writer.writeAttribute( "xmlUrl", feed.xmlUrl() );
+    writer.writeStartElement( QLatin1String("outline") );
+    writer.writeAttribute( QLatin1String("text"), feed.title() );
+    writer.writeAttribute( QLatin1String("title"), feed.title() );
+    writer.writeAttribute( QLatin1String("description"), feed.description() );
+    writer.writeAttribute( QLatin1String("htmlUrl"), feed.htmlUrl() );
+    writer.writeAttribute( QLatin1String("xmlUrl"), feed.xmlUrl() );
     QHashIterator<QString, QString> it( feed.attributes() );
     while ( it.hasNext() ) {
         it.next();

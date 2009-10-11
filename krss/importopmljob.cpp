@@ -54,9 +54,9 @@ public:
 ImportOpmlJob::Private::Private( const QString& dbusService, ImportOpmlJob* qq )
   : q( qq )
   , interface( new org::kde::krss( dbusService,
-                                   "/KRss",
-                                    QDBusConnection::sessionBus(),
-                                    q ) )
+                                   QLatin1String("/KRss"),
+                                   QDBusConnection::sessionBus(),
+                                   q ) )
 {
 }
 
@@ -81,7 +81,7 @@ void ImportOpmlJob::start() {
 }
 
 void ImportOpmlJob::Private::doStart() {
-    if ( !interface->callWithCallback( "importOpml", QList<QVariant>() << url.url() << QString(), q, SLOT(importFinished(QVariantMap)) ) ) {
+    if ( !interface->callWithCallback( QLatin1String("importOpml"), QList<QVariant>() << url.url() << QString(), q, SLOT(importFinished(QVariantMap)) ) ) {
         q->setError( ImportOpmlJob::ImportFailedError );
         q->setErrorText( i18n( "Could not start import." ) );
         q->emitResult();
@@ -89,13 +89,13 @@ void ImportOpmlJob::Private::doStart() {
 }
 
 void ImportOpmlJob::Private::importFinished( const QVariantMap& map ) {
-    const int error = map.value( "error" ).toInt();
+    const int error = map.value( QLatin1String("error") ).toInt();
     if ( error != 0 ) {
         q->setError( ImportOpmlJob::ImportFailedError );
-        q->setErrorText( i18n( "Import into RSS resource failed: %1", map.value( "errorString" ).toString() ) );
+        q->setErrorText( i18n( "Import into RSS resource failed: %1", map.value( QLatin1String("errorString") ).toString() ) );
     }
-    const QStringList feedUrls = map.value( "feedUrls" ).toStringList();
-    const QStringList feedTitles = map.value( "feedTitles" ).toStringList();
+    const QStringList feedUrls = map.value( QLatin1String("feedUrls") ).toStringList();
+    const QStringList feedTitles = map.value( QLatin1String("feedTitles") ).toStringList();
 
     assert( feedUrls.size() == feedTitles.size() );
     for ( int i = 0; i < feedUrls.size(); ++i ) {

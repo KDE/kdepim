@@ -37,13 +37,13 @@ OpmlRssResource::OpmlRssResource( const QString& id )
 void OpmlRssResource::configure( WId windowId )
 {
     Q_UNUSED( windowId )
-    const KUrl path = KFileDialog::getOpenUrl( KUrl(), "*.opml|" + i18n( "OPML Document (*.opml)" ),
+    const KUrl path = KFileDialog::getOpenUrl( KUrl(), QLatin1String("*.opml|") + i18n( "OPML Document (*.opml)" ),
                                               0, i18n( "Select an OPML Document" ) );
 
     if ( !path.url().isEmpty() )
         m_path = path;
     else
-        m_path = KStandardDirs::locateLocal( "appdata", "feeds.opml" );
+        m_path = KStandardDirs::locateLocal( "appdata", QLatin1String("feeds.opml") );
 
     Settings::setPath( m_path.url() );
     Settings::self()->writeConfig();
@@ -60,7 +60,7 @@ void OpmlRssResource::loadConfiguration()
 {
     m_path = KUrl( Settings::path() );
     if ( m_path.isEmpty() ) {
-        m_path = KStandardDirs::locateLocal( "appdata", "feeds.opml" );
+        m_path = KStandardDirs::locateLocal( "appdata", QLatin1String("feeds.opml") );
         Settings::setPath( m_path.url() );
         Settings::self()->writeConfig();
     }

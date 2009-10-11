@@ -68,7 +68,7 @@ void ResourceManager::forceUpdate()
 
     const QList<AgentInstance> instances = AgentManager::self()->instances();
     Q_FOREACH( const AgentInstance& instance, instances ) {
-        if ( !instance.type().capabilities().contains( "RssResource" ) )
+        if ( !instance.type().capabilities().contains( QLatin1String("RssResource") ) )
             continue;
         shared_ptr<NetResource> res = old.value( instance.identifier() );
         if ( !res )
