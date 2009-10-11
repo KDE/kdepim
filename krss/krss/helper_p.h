@@ -19,28 +19,20 @@
  * Boston, MA 02110-1301, USA.
  *
  */
-#ifndef KRSS_DBUSHELPER_H
-#define KRSS_DBUSHELPER_H
+#ifndef KRSS_HELPER_P_H
+#define KRSS_HELPER_P_H
 
-#include <climits>
-
-class QDBusAbstractInterface;
-class QObject;
+class QByteArray;
 class QString;
+class QStringList;
 
-template <typename T> class QList;
-class QVariant;
+template <typename K, typename V> class QHash;
 
 namespace KRss {
-
-    namespace DBusHelper {
-        enum Timeout {
-            DefaultTimeout=-1,
-            NoTimeout=INT_MAX
-        };
-
-        bool callWithCallback( QDBusAbstractInterface* iface, const QString& method, const QList<QVariant>& args, QObject* receiver, const char* slot, const char* errorMethod, Timeout timeout=DefaultTimeout );
-    }
+  QByteArray encodeProperties( const QHash<QString, QString>& properties );
+  QHash<QString, QString> decodeProperties( const QByteArray& data );
+  QByteArray encodeStringList( const QStringList& list );
+  QStringList decodeStringList( const QByteArray& data );
 }
 
-#endif // KRSS_DBUSHELPER_H
+#endif // KRSS_HELPER_P_H

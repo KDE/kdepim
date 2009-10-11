@@ -20,6 +20,7 @@
 
 #include <akonadi/attribute.h>
 
+#include <QtCore/QHash>
 #include <QtCore/QString>
 
 namespace KRss {
@@ -42,10 +43,7 @@ public:
     void setIcon( const QString& icon );
 
 private:
-
-    QString m_label;
-    QString m_description;
-    QString m_icon;
+    QHash<QString, QString> m_properties;
 };
 
 } // namespace KRss

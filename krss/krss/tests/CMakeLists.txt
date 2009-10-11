@@ -38,6 +38,7 @@ add_simple_test(testitem testitem.cpp)
 add_simple_test(testcategory testcategory.cpp)
 add_simple_test(testperson testperson.cpp)
 add_simple_test(testenclosure testenclosure.cpp)
+add_simple_test(testhelper testhelper.cpp ${CMAKE_SOURCE_DIR}/krss/krss/helper.cpp)
 add_akonadi_isolated_test(tagprovidertest tagprovidertest.cpp)
 
 kde4_add_executable(itemimporter itemimporter.cpp)

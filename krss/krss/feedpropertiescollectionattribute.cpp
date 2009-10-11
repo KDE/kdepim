@@ -16,6 +16,7 @@
 */
 
 #include "feedpropertiescollectionattribute.h"
+#include "helper_p.h"
 
 #include <QtCore/QStringList>
 
@@ -36,56 +37,14 @@ FeedPropertiesCollectionAttribute* FeedPropertiesCollectionAttribute::clone() co
     return new FeedPropertiesCollectionAttribute( *this );
 }
 
-namespace {
-    static QByteArray encode( const QString& str ) {
-        QByteArray ba = str.toUtf8();
-        ba.replace( '\\', "\\\\" );
-        ba.replace( ';', "\\;" );
-        ba.replace( '=', "\\=" );
-        return ba;
-    }
-}
-
 QByteArray FeedPropertiesCollectionAttribute::serialized() const
 {
-    QByteArray ba;
-    Q_FOREACH( const QString& i, m_properties.keys() ) {
-        if ( !ba.isEmpty() )
-            ba += ";";
-        ba += encode( i ) + "=" + encode( m_properties.value( i ) );
-    }
-    return ba;
-
+    return encodeProperties( m_properties );
 }
 
 void FeedPropertiesCollectionAttribute::deserialize( const QByteArray &data )
 {
-    QByteArray key;
-    QByteArray value;
-    bool isEscaped = false;
-    bool isKey = true;
-    for ( int i=0; i < data.size(); ++i ) {
-        const char ch = data[i];
-        if ( isEscaped ) {
-            ( isKey ? key : value ) += ch;
-            isEscaped = false;
-        } else {
-            if ( ch == '\\' )
-                isEscaped = true;
-            else if ( ch == ';' ) {
-                m_properties.insert( QString::fromUtf8( key ), QString::fromUtf8( value ) );
-                key.clear();
-                value.clear();
-                isKey = true;
-            }
-            else if ( ch == '=' )
-                isKey = false;
-            else
-                ( isKey ? key : value ) += ch;
-        }
-    }
-    if ( !key.isEmpty() )
-        m_properties.insert( QString::fromUtf8( key ), QString::fromUtf8( value ) );
+    m_properties = decodeProperties( data );
 }
 
 QString FeedPropertiesCollectionAttribute::name() const
