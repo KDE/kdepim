@@ -1,5 +1,5 @@
 /*
- * This file is part of the krss library
+ * This file is part of the kfeed library
  *
  * Copyright (C) 2009 Frank Osterfeld <osterfeld@kde.org>
  *
@@ -19,28 +19,17 @@
  * Boston, MA 02110-1301, USA.
  *
  */
-#ifndef KRSS_DBUSHELPER_H
-#define KRSS_DBUSHELPER_H
 
-#include <climits>
+#ifndef TESTHELPER_H
+#define TESTHELPER_H
 
-class QDBusAbstractInterface;
-class QObject;
-class QString;
+#include <QObject>
 
-template <typename T> class QList;
-class QVariant;
+class TestHelper : public QObject
+{
+Q_OBJECT
+private Q_SLOTS:
+    void testAttributeSerialization();
+};
 
-namespace KRss {
-
-    namespace DBusHelper {
-        enum Timeout {
-            DefaultTimeout=-1,
-            NoTimeout=INT_MAX
-        };
-
-        bool callWithCallback( QDBusAbstractInterface* iface, const QString& method, const QList<QVariant>& args, QObject* receiver, const char* slot, const char* errorMethod, Timeout timeout=DefaultTimeout );
-    }
-}
-
-#endif // KRSS_DBUSHELPER_H
+#endif // TESTHELPER_H

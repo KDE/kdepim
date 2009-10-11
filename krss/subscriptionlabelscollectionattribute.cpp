@@ -16,6 +16,7 @@
 */
 
 #include "subscriptionlabelscollectionattribute.h"
+#include "helper_p.h"
 
 using namespace KRss;
 
@@ -37,16 +38,12 @@ SubscriptionLabelsCollectionAttribute* SubscriptionLabelsCollectionAttribute::cl
 
 QByteArray SubscriptionLabelsCollectionAttribute::serialized() const
 {
-        return m_subscriptionLabels.join( QLatin1String(";") ).toUtf8();
+        return encodeStringList( m_subscriptionLabels );
 }
 
 void SubscriptionLabelsCollectionAttribute::deserialize( const QByteArray &data )
 {
-        if ( data.isEmpty() )
-                return;
-
-        // so ugly, am i missing something?
-        m_subscriptionLabels = QString::fromUtf8( data.constData(), data.size() ).split( QLatin1Char(';') );
+        m_subscriptionLabels = decodeStringList( data );
 }
 
 QStringList SubscriptionLabelsCollectionAttribute::subscriptionLabels() const

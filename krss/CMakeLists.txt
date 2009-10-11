@@ -38,6 +38,7 @@ set(krss_LIB_SRCS
    netfeed.cpp
    feedlist.cpp
    dbushelper.cpp
+   helper.cpp
    itemmodel.cpp
    treenode.cpp
    treenodevisitor.cpp

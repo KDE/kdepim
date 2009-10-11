@@ -16,6 +16,7 @@
 */
 
 #include "tagpropertiesattribute.h"
+#include "helper_p.h"
 
 #include <QtCore/QStringList>
 
@@ -34,59 +35,46 @@ QByteArray TagPropertiesAttribute::type() const
 TagPropertiesAttribute* TagPropertiesAttribute::clone() const
 {
     TagPropertiesAttribute *attr = new TagPropertiesAttribute();
-    attr->setLabel( m_label );
-    attr->setDescription( m_description );
-    attr->setIcon( m_icon );
+    attr->m_properties = m_properties;
     return attr;
 }
 
 QByteArray TagPropertiesAttribute::serialized() const
 {
-    QStringList props;
-    props << QLatin1String("Label=") + m_label;
-    props << QLatin1String("Description=") + m_description;
-    props << QLatin1String("Icon=") + m_icon;
-    return props.join( QLatin1String(";") ).toUtf8();
+    return encodeProperties( m_properties );
 }
 
 void TagPropertiesAttribute::deserialize( const QByteArray& data )
 {
-    if ( data.isEmpty() )
-        return;
-
-    // so ugly, am i missing something?
-    const QStringList props = QString::fromUtf8( data.constData(), data.size() ).split( QLatin1Char(';') );
-    m_label = props[0].split( QLatin1Char('=') )[1];
-    m_description = props[1].split( QLatin1Char('=') )[1];
-    m_icon = props[2].split( QLatin1Char('=') )[1];
+    m_properties = decodeProperties( data );
 }
 
 QString TagPropertiesAttribute::label() const
 {
-    return m_label;
+    return m_properties.value( QLatin1String("Label") );
 }
 
 void TagPropertiesAttribute::setLabel( const QString& label )
 {
-    m_label = label;
+    m_properties.insert( QLatin1String("Label"), label );
 }
 
 QString TagPropertiesAttribute::description() const
 {
-    return m_description;
+    return m_properties.value( QLatin1String("Description") );
 }
 
 void TagPropertiesAttribute::setDescription( const QString& description )
 {
-    m_description = description;
+    m_properties.insert( QLatin1String("Description"), description );
 }
 
 QString TagPropertiesAttribute::icon() const
 {
-    return m_icon;
+    return m_properties.value( QLatin1String("Icon") );
 }
 
 void TagPropertiesAttribute::setIcon( const QString& icon )
 {
-    m_icon = icon;
+    m_properties.insert( QLatin1String("Icon"), icon );
 }
