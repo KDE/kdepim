@@ -37,16 +37,16 @@ void FeedCollectionTest::testSimpleProperties()
 {
     FeedCollection feed;
 
-    feed.setTitle( "Planet KDE" );
-    QCOMPARE( feed.title(), QString( "Planet KDE" ) );
-    feed.setXmlUrl( "http://planetkde.org/rss20.xml" );
-    QCOMPARE( feed.xmlUrl(), QString( "http://planetkde.org/rss20.xml" ) );
-    feed.setHtmlUrl( "http://planetkde.org" );
-    QCOMPARE( feed.htmlUrl(), QString( "http://planetkde.org" ) );
-    feed.setDescription( "Planet KDE blogs" );
-    QCOMPARE( feed.description(), QString( "Planet KDE blogs" ) );
-    feed.setFeedType( "RSS" );
-    QCOMPARE( feed.feedType(), QString( "RSS" ) );
+    feed.setTitle( QLatin1String("Planet KDE") );
+    QCOMPARE( feed.title(), QLatin1String( "Planet KDE" ) );
+    feed.setXmlUrl( QLatin1String("http://planetkde.org/rss20.xml") );
+    QCOMPARE( feed.xmlUrl(), QLatin1String( "http://planetkde.org/rss20.xml" ) );
+    feed.setHtmlUrl( QLatin1String("http://planetkde.org") );
+    QCOMPARE( feed.htmlUrl(), QLatin1String( "http://planetkde.org" ) );
+    feed.setDescription( QLatin1String("Planet KDE blogs") );
+    QCOMPARE( feed.description(), QLatin1String( "Planet KDE blogs" ) );
+    feed.setFeedType( QLatin1String("RSS") );
+    QCOMPARE( feed.feedType(), QLatin1String( "RSS" ) );
 }
 
 // TODO(dmitry): proper tag handling
@@ -75,21 +75,21 @@ void FeedCollectionTest::testSubscriptionLabels()
 {
     FeedCollection feed;
 
-    feed.setSubscriptionLabels( QStringList() << "Label 1" << "Label 2" );
-    compareLists( feed.subscriptionLabels(), QStringList() << "Label 1" << "Label 2" );
-    feed.addSubscriptionLabel( "Label 3" );
-    compareLists( feed.subscriptionLabels(), QStringList() << "Label 1" << "Label 2" << "Label 3" );
-    feed.removeSubscriptionLabel( "Label 3" );
-    compareLists( feed.subscriptionLabels(), QStringList() << "Label 1" << "Label 2" );
+    feed.setSubscriptionLabels( QStringList() << QLatin1String("Label 1") << QLatin1String("Label 2") );
+    compareLists( feed.subscriptionLabels(), QStringList() << QLatin1String("Label 1") << QLatin1String("Label 2") );
+    feed.addSubscriptionLabel( QLatin1String("Label 3") );
+    compareLists( feed.subscriptionLabels(), QStringList() << QLatin1String("Label 1") << QLatin1String("Label 2") << QLatin1String("Label 3") );
+    feed.removeSubscriptionLabel( QLatin1String("Label 3") );
+    compareLists( feed.subscriptionLabels(), QStringList() << QLatin1String("Label 1") << QLatin1String("Label 2") );
 
     // check that FeedCollection doesn't produce dupes
-    feed.addSubscriptionLabel( "Label 1" );
-    compareLists( feed.subscriptionLabels(), QStringList() << "Label 1" << "Label 2" );
+    feed.addSubscriptionLabel( QLatin1String("Label 1") );
+    compareLists( feed.subscriptionLabels(), QStringList() << QLatin1String("Label 1") << QLatin1String("Label 2") );
 
     // check that FeedCollection doesn't do weird things when
     // removing non-existing label
-    feed.removeSubscriptionLabel( "Empty label" );
-    compareLists( feed.subscriptionLabels(), QStringList() << "Label 1" << "Label 2" );
+    feed.removeSubscriptionLabel( QLatin1String("Empty label") );
+    compareLists( feed.subscriptionLabels(), QStringList() << QLatin1String("Label 1") << QLatin1String("Label 2") );
 }
 
 void FeedCollectionTest::testCachePolicy()

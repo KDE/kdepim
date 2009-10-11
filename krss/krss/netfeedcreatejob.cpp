@@ -124,31 +124,31 @@ void NetFeedCreateJobPrivate::doStart()
     }
 
     m_sharedResource = m_resource.lock();
-    org::kde::krss *interface = new org::kde::krss( "org.freedesktop.Akonadi.Agent." + m_sharedResource->id(),
-                                                    "/KRss", QDBusConnection::sessionBus(), q );
+    org::kde::krss *interface = new org::kde::krss( QLatin1String("org.freedesktop.Akonadi.Agent.") + m_sharedResource->id(),
+                                                    QLatin1String("/KRss"), QDBusConnection::sessionBus(), q );
 
     // don't block, set callbacks instead
     QList<QVariant> argumentList;
     argumentList << qVariantFromValue( m_xmlUrl ) << qVariantFromValue( m_subscriptionLabel );
-    if ( !interface->callWithCallback( QLatin1String( "addFeed" ), argumentList,
+    if ( !interface->callWithCallback( QLatin1String("addFeed"), argumentList,
                             q, SLOT( slotCallFinished(QVariantMap) ) ) ) {
         q->setError( NetFeedCreateJob::CouldNotCreateFeed );
-        q->setErrorText( "Failed to place a D-Bus call");
+        q->setErrorText( i18n( "Failed to place a D-Bus call" ) );
         q->emitResult();
     }
 }
 
 void NetFeedCreateJobPrivate::slotCallFinished( const QVariantMap& res )
 {
-    const int error = res.value( "error" ).toInt();
+    const int error = res.value( QLatin1String("error") ).toInt();
     if ( error ) {
-        const QString errorString = res.value( "errorString" ).toString();
+        const QString errorString = res.value( QLatin1String("errorString") ).toString();
         q->setError( NetFeedCreateJob::CouldNotCreateFeed );
         q->setErrorText( errorString );
         q->emitResult();
         return;
     }
-    m_id = res.value( "feedId" ).toLongLong();
+    m_id = res.value( QLatin1String("feedId") ).toLongLong();
 
     if ( m_feedList.expired() ) {
         q->emitResult();

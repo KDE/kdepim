@@ -37,7 +37,7 @@ SubscriptionLabelsCollectionAttribute* SubscriptionLabelsCollectionAttribute::cl
 
 QByteArray SubscriptionLabelsCollectionAttribute::serialized() const
 {
-        return m_subscriptionLabels.join( ";" ).toUtf8();
+        return m_subscriptionLabels.join( QLatin1String(";") ).toUtf8();
 }
 
 void SubscriptionLabelsCollectionAttribute::deserialize( const QByteArray &data )
@@ -46,7 +46,7 @@ void SubscriptionLabelsCollectionAttribute::deserialize( const QByteArray &data 
                 return;
 
         // so ugly, am i missing something?
-        m_subscriptionLabels = QString::fromUtf8( data.constData(), data.size() ).split( ';' );
+        m_subscriptionLabels = QString::fromUtf8( data.constData(), data.size() ).split( QLatin1Char(';') );
 }
 
 QStringList SubscriptionLabelsCollectionAttribute::subscriptionLabels() const

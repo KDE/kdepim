@@ -29,7 +29,7 @@
 using namespace KRss;
 using namespace KRssResource;
 
-const QString NewsgatorJob::m_apiToken = "E52FEFD1432342698B507EB2DDACF2DF";
+const QString NewsgatorJob::m_apiToken = QLatin1String("E52FEFD1432342698B507EB2DDACF2DF");
 static const char separator = '@';
 
 void NewsgatorJob::setUserName( const QString& userName )
@@ -109,8 +109,8 @@ void NewsgatorTransferJob::start()
     url.setPass( m_password );
     KIO::TransferJob* job = KIO::http_post( url, m_requestData, KIO::HideProgressInfo );
 
-    job->addMetaData( "UserAgent", "Akonadi Newsgator RSS resource" );
-    job->addMetaData( "content-type", "Content-Type: application/soap+xml; charset=utf-8" );
+    job->addMetaData( QLatin1String("UserAgent"), QLatin1String("Akonadi Newsgator RSS resource") );
+    job->addMetaData( QLatin1String("content-type"), QLatin1String("Content-Type: application/soap+xml; charset=utf-8") );
 
     connect( job, SIGNAL( data( KIO::Job*, const QByteArray& ) ),
              this, SLOT( slotData( KIO::Job*, const QByteArray& ) ) );
@@ -164,10 +164,10 @@ void NewsgatorDataRetriever::retrieveData( const KUrl& url )
     KUrl u = url;
     u.setUser( m_userName );
     u.setPass( m_password );
-    u.addQueryItem( "unread", "False" );
+    u.addQueryItem( QLatin1String("unread"), QLatin1String("False") );
     KIO::StoredTransferJob * const job = KIO::storedGet( u, KIO::NoReload, KIO::HideProgressInfo );
-    job->addMetaData( "UserAgent", "Akonadi Newsgator RSS resource" );
-    job->addMetaData( "customHTTPHeader", QString( "X-NGAPIToken: %1" ).arg( m_apiToken ) );
+    job->addMetaData( QLatin1String("UserAgent"), QLatin1String("Akonadi Newsgator RSS resource") );
+    job->addMetaData( QLatin1String("customHTTPHeader"), QString::fromLatin1( "X-NGAPIToken: %1" ).arg( m_apiToken ) );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
     job->start();
 }
@@ -237,9 +237,9 @@ void NewsgatorLocationsRetrieveJob::start()
     QByteArray requestData;
     SoapRequest request( &requestData );
     request.setApiToken( m_apiToken );
-    request.setHeaderNamespace( "http://services.newsgator.com/svc/Location.asmx" );
+    request.setHeaderNamespace( QLatin1String("http://services.newsgator.com/svc/Location.asmx") );
     request.writeRequestStart();
-    request.writeEmptyElement( "http://services.newsgator.com/svc/Location.asmx", "GetLocations" );
+    request.writeEmptyElement( QLatin1String("http://services.newsgator.com/svc/Location.asmx"), QLatin1String("GetLocations") );
     request.writeRequestEnd();
 
     kDebug() << "Request data:" << requestData;
@@ -247,7 +247,7 @@ void NewsgatorLocationsRetrieveJob::start()
     NewsgatorTransferJob *job = new NewsgatorTransferJob();
     job->setUserName( m_userName );
     job->setPassword( m_password );
-    job->setEndpoint( "http://services.newsgator.com/ngws/svc/Location.asmx" );
+    job->setEndpoint( QLatin1String("http://services.newsgator.com/ngws/svc/Location.asmx") );
     job->setRequestData( requestData );
     job->setSoapMessage( new LocationsResponse() );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
@@ -310,13 +310,13 @@ void NewsgatorFeedsRetrieveJob::start()
     QByteArray requestData;
     SoapRequest request( &requestData );
     request.setApiToken( m_apiToken );
-    request.setHeaderNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
+    request.setHeaderNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
     request.writeRequestStart();
-    request.writeStartElement( "GetSubscriptionList" );
-    request.writeDefaultNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
-    request.writeTextElement( "location", m_location.name );
-    request.writeEmptyElement( "syncToken" );
-    request.writeTextElement( "getScores", "false" );
+    request.writeStartElement( QLatin1String("GetSubscriptionList") );
+    request.writeDefaultNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
+    request.writeTextElement( QLatin1String("location"), m_location.name );
+    request.writeEmptyElement( QLatin1String("syncToken") );
+    request.writeTextElement( QLatin1String("getScores"), QLatin1String("false") );
     request.writeEndElement(); // GetSubscriptionList
     request.writeRequestEnd();
 
@@ -325,7 +325,7 @@ void NewsgatorFeedsRetrieveJob::start()
     NewsgatorTransferJob *job = new NewsgatorTransferJob();
     job->setUserName( m_userName );
     job->setPassword( m_password );
-    job->setEndpoint( "http://services.newsgator.com/ngws/svc/Subscription.asmx" );
+    job->setEndpoint( QLatin1String("http://services.newsgator.com/ngws/svc/Subscription.asmx") );
     job->setRequestData( requestData );
     job->setSoapMessage( new SubscriptionsResponse() );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
@@ -349,7 +349,7 @@ void NewsgatorFeedsRetrieveJob::slotResult( KJob *job )
 
     // create a top-level collection representing the requested NewsGator location
     Akonadi::Collection loc;
-    loc.setRemoteId( m_userName + QChar( '-' ) + m_location.name );
+    loc.setRemoteId( m_userName + QLatin1Char( '-' ) + m_location.name );
     loc.setName( loc.remoteId() );
     loc.setParent( Akonadi::Collection::root() );
     loc.setContentMimeTypes( QStringList( Akonadi::Collection::mimeType() ) );
@@ -364,14 +364,14 @@ void NewsgatorFeedsRetrieveJob::slotResult( KJob *job )
         FeedCollection feed;
 
         feed.setTitle( parsed.title );
-        feed.setXmlUrl( parsed.attributes.value( "syncXmlUrl" ) );
+        feed.setXmlUrl( parsed.attributes.value( QLatin1String("syncXmlUrl") ) );
         feed.setHtmlUrl( parsed.htmlUrl );
         feed.setDescription( parsed.description );
         feed.setFeedType( parsed.type );
-        feed.setRemoteId( parsed.attributes.value( "id" ) );
-        feed.setName( feed.title() + QChar( '-' ) + feed.remoteId() );
+        feed.setRemoteId( parsed.attributes.value( QLatin1String("id") ) );
+        feed.setName( feed.title() + QLatin1Char( '-' ) + feed.remoteId() );
         feed.setParent( loc );
-        feed.setContentMimeTypes( QStringList( "application/rss+xml" ) );
+        feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
         m_feeds.append( feed );
     }
 
@@ -426,16 +426,16 @@ void NewsgatorFeedCreateJob::start()
     QByteArray requestData;
     SoapRequest request( &requestData );
     request.setApiToken( m_apiToken );
-    request.setHeaderNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
+    request.setHeaderNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
     request.writeRequestStart();
-    request.writeStartElement( "AddSubscription" );
-    request.writeDefaultNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
-    request.writeTextElement( "xmlUrl", m_xmlUrl );
-    request.writeTextElement( "folderId", "0" );
-    request.writeEmptyElement( "cred" );
-    request.writeEmptyElement( "customTitle" );
-    request.writeTextElement( "markRead", "false" );
-    request.writeTextElement( "locationId", QString::number( m_location.id ) );
+    request.writeStartElement( QLatin1String("AddSubscription") );
+    request.writeDefaultNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
+    request.writeTextElement( QLatin1String("xmlUrl"), m_xmlUrl );
+    request.writeTextElement( QLatin1String("folderId"), QLatin1String("0") );
+    request.writeEmptyElement( QLatin1String("cred") );
+    request.writeEmptyElement( QLatin1String("customTitle") );
+    request.writeTextElement( QLatin1String("markRead"), QLatin1String("false") );
+    request.writeTextElement( QLatin1String("locationId"), QString::number( m_location.id ) );
     request.writeEndElement(); // AddSubscription
     request.writeRequestEnd();
 
@@ -444,7 +444,7 @@ void NewsgatorFeedCreateJob::start()
     NewsgatorTransferJob *job = new NewsgatorTransferJob();
     job->setUserName( m_userName );
     job->setPassword( m_password );
-    job->setEndpoint( "http://services.newsgator.com/ngws/svc/Subscription.asmx" );
+    job->setEndpoint( QLatin1String("http://services.newsgator.com/ngws/svc/Subscription.asmx") );
     job->setRequestData( requestData );
     job->setSoapMessage( new AddSubscriptionResponse() );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
@@ -551,13 +551,13 @@ void NewsgatorFeedModifyJob::start()
     QByteArray requestData;
     SoapRequest request( &requestData );
     request.setApiToken( m_apiToken );
-    request.setHeaderNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
+    request.setHeaderNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
     request.writeRequestStart();
-    request.writeStartElement( "RenameSubscription" );
-    request.writeDefaultNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
-    request.writeTextElement( "subscriptionId", m_feed.remoteId() );
-    request.writeTextElement( "newName", m_feed.title() );
-    request.writeTextElement( "locationId", QString::number( m_location.id ) );
+    request.writeStartElement( QLatin1String("RenameSubscription") );
+    request.writeDefaultNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
+    request.writeTextElement( QLatin1String("subscriptionId"), m_feed.remoteId() );
+    request.writeTextElement( QLatin1String("newName"), m_feed.title() );
+    request.writeTextElement( QLatin1String("locationId"), QString::number( m_location.id ) );
     request.writeEndElement(); // RenameSubscription
     request.writeRequestEnd();
 
@@ -566,7 +566,7 @@ void NewsgatorFeedModifyJob::start()
     NewsgatorTransferJob *job = new NewsgatorTransferJob();
     job->setUserName( m_userName );
     job->setPassword( m_password );
-    job->setEndpoint( "http://services.newsgator.com/ngws/svc/Subscription.asmx" );
+    job->setEndpoint( QLatin1String("http://services.newsgator.com/ngws/svc/Subscription.asmx") );
     job->setRequestData( requestData );
     job->setSoapMessage( new RenameSubscriptionResponse() );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
@@ -628,14 +628,14 @@ void NewsgatorFeedDeleteJob::start()
     QByteArray requestData;
     SoapRequest request( &requestData );
     request.setApiToken( m_apiToken );
-    request.setHeaderNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
+    request.setHeaderNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
     request.writeRequestStart();
-    request.writeStartElement( "DeleteSubscriptions" );
-    request.writeDefaultNamespace( "http://services.newsgator.com/svc/Subscription.asmx" );
-    request.writeStartElement( "subscriptionList" );
-    request.writeTextElement( "int", m_feed.remoteId() );
+    request.writeStartElement( QLatin1String("DeleteSubscriptions") );
+    request.writeDefaultNamespace( QLatin1String("http://services.newsgator.com/svc/Subscription.asmx") );
+    request.writeStartElement( QLatin1String("subscriptionList") );
+    request.writeTextElement( QLatin1String("int"), m_feed.remoteId() );
     request.writeEndElement(); // subscriptionList
-    request.writeTextElement( "locationId", QString::number( m_location.id ) );
+    request.writeTextElement( QLatin1String("locationId"), QString::number( m_location.id ) );
     request.writeEndElement(); // RenameSubscription
     request.writeRequestEnd();
 
@@ -644,7 +644,7 @@ void NewsgatorFeedDeleteJob::start()
     NewsgatorTransferJob *job = new NewsgatorTransferJob();
     job->setUserName( m_userName );
     job->setPassword( m_password );
-    job->setEndpoint( "http://services.newsgator.com/ngws/svc/Subscription.asmx" );
+    job->setEndpoint( QLatin1String("http://services.newsgator.com/ngws/svc/Subscription.asmx") );
     job->setRequestData( requestData );
     job->setSoapMessage( new DeleteSubscriptionResponse() );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );
@@ -745,18 +745,18 @@ void NewsgatorFeedFetchJob::slotFeedFetched( Syndication::Loader *loader, Syndic
             Akonadi::Item item;
             KRss::RssItem rssItem = KRssResource::fromSyndicationItem( syndItem );
             item.setPayload<KRss::RssItem>( rssItem );
-            item.setRemoteId( rssItem.customProperty( "http://newsgator.com/schema/extensionspostId" ) +
-                              QChar( separator ) + m_feed.remoteId() );
+            item.setRemoteId( rssItem.customProperty( QLatin1String("http://newsgator.com/schema/extensionspostId") ) +
+                              QLatin1Char( separator ) + m_feed.remoteId() );
             item.setMimeType( KRss::Item::mimeType() );
 
             // handle the item's flags
-            if ( rssItem.customProperty( "http://newsgator.com/schema/extensionsread" ) == "False" ) {
+            if ( rssItem.customProperty( QLatin1String("http://newsgator.com/schema/extensionsread") ) == QLatin1String("False") ) {
                 item.setFlag( KRss::RssItem::flagNew() );
             } else {
                 item.setFlag( KRss::RssItem::flagRead() );
             }
 
-            if ( rssItem.customProperties().contains( "http://newsgator.com/schema/extensionsflagState" ) ) {
+            if ( rssItem.customProperties().contains( QLatin1String("http://newsgator.com/schema/extensionsflagState") ) ) {
                 item.setFlag( KRss::RssItem::flagImportant() );
             }
 
@@ -840,25 +840,25 @@ QString NewsgatorItemModifyJob::errorString() const
 
 void NewsgatorItemModifyJob::start()
 {
-    const QStringList ids = m_item.remoteId().split( QChar( separator ) );
+    const QStringList ids = m_item.remoteId().split( QLatin1Char( separator ) );
 
     QByteArray requestData;
     SoapRequest request( &requestData );
     request.setApiToken( m_apiToken );
-    request.setHeaderNamespace( "http://services.newsgator.com/ngws/svc/PostItem.asmx" );
+    request.setHeaderNamespace( QLatin1String("http://services.newsgator.com/ngws/svc/PostItem.asmx") );
     request.writeRequestStart();
-    request.writeStartElement( "UpdatePostMetadatav3" );
-    request.writeDefaultNamespace( "http://services.newsgator.com/ngws/svc/PostItem.asmx" );
-    request.writeTextElement( "locationName", m_location.name );
-    request.writeTextElement( "updateRelevanceScores", "false" );
-    request.writeStartElement( "newStates" );
-    request.writeStartElement( "FeedMetadata" );
-    request.writeTextElement( "FeedID", ids.at( 1 ) );
-    request.writeStartElement( "PostMetadata" );
-    request.writeStartElement( "PostMetadata" );
-    request.writeTextElement( "PostID", ids.at( 0 ) );
-    request.writeTextElement( "State", m_item.hasFlag( KRss::RssItem::flagRead() ) ? "1" : "0" );
-    request.writeTextElement( "FlagState", m_item.hasFlag( KRss::RssItem::flagImportant() ) ? "1" : "0" );
+    request.writeStartElement( QLatin1String("UpdatePostMetadatav3") );
+    request.writeDefaultNamespace( QLatin1String("http://services.newsgator.com/ngws/svc/PostItem.asmx") );
+    request.writeTextElement( QLatin1String("locationName"), m_location.name );
+    request.writeTextElement( QLatin1String("updateRelevanceScores"), QLatin1String("false") );
+    request.writeStartElement( QLatin1String("newStates") );
+    request.writeStartElement( QLatin1String("FeedMetadata") );
+    request.writeTextElement( QLatin1String("FeedID"), ids.at( 1 ) );
+    request.writeStartElement( QLatin1String("PostMetadata") );
+    request.writeStartElement( QLatin1String("PostMetadata") );
+    request.writeTextElement( QLatin1String("PostID"), ids.at( 0 ) );
+    request.writeTextElement( QLatin1String("State"), m_item.hasFlag( KRss::RssItem::flagRead() ) ? QLatin1String("1") : QLatin1String("0") );
+    request.writeTextElement( QLatin1String("FlagState"), m_item.hasFlag( KRss::RssItem::flagImportant() ) ? QLatin1String("1") : QLatin1String("0") );
     request.writeEndElement();  // PostMetadata
     request.writeEndElement();  // PostMetadata
     request.writeEndElement();  // FeedMetadata
@@ -871,7 +871,7 @@ void NewsgatorItemModifyJob::start()
     NewsgatorTransferJob *job = new NewsgatorTransferJob();
     job->setUserName( m_userName );
     job->setPassword( m_password );
-    job->setEndpoint( "http://services.newsgator.com/ngws/svc/PostItem.asmx" );
+    job->setEndpoint( QLatin1String("http://services.newsgator.com/ngws/svc/PostItem.asmx") );
     job->setRequestData( requestData );
     job->setSoapMessage( new UpdatePostResponse() );
     connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotResult( KJob* ) ) );

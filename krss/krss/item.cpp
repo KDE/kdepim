@@ -42,7 +42,7 @@ const char* Item::ContentPart = "RssContent";
 // static
 QString Item::mimeType()
 {
-    return "application/rss+xml";
+    return QLatin1String("application/rss+xml");
 }
 
 Item::Item() : d( new Private )

@@ -273,8 +273,8 @@ QVariantMap RssResourceBase::importOpml( const QString &path, const QString &def
     if ( !backendJob ) {
         emit warning( i18n( "Importing feeds: not implemented" ) );
         QVariantMap result;
-        result.insert( "error", 1 );
-        result.insert( "errorString", i18n( "Not implemented" ) );
+        result.insert( QLatin1String("error"), 1 );
+        result.insert( QLatin1String("errorString"), i18n( "Not implemented" ) );
         return result;
     }
 
@@ -429,13 +429,13 @@ void RssResourceBase::slotFeedAdded( KJob *job )
     QVariantMap res;
     if ( job->error() ) {
         kWarning() << "Failed to create a new feed: "<< job->errorString();
-        res.insert( "feedId", Feed::Id() );
-        res.insert( "errorString", job->errorString() );
-        res.insert( "error", job->error() );
+        res.insert( QLatin1String("feedId"), Feed::Id() );
+        res.insert( QLatin1String("errorString"), job->errorString() );
+        res.insert( QLatin1String("error"), job->error() );
     } else {
         const FeedCollectionCreateJob * const cjob = qobject_cast<const FeedCollectionCreateJob*>( job );
         Q_ASSERT( cjob );
-        res.insert( "feedId", cjob->feedCollection().id() );
+        res.insert( QLatin1String("feedId"), cjob->feedCollection().id() );
     }
     replyMessage << res;
     QDBusConnection::sessionBus().send( replyMessage );
@@ -559,10 +559,10 @@ void RssResourceBase::slotOpmlImported( KJob *job )
         feedUrls.append( feed.xmlUrl() );
         feedTitles.append( feed.title() );
     }
-    result.insert( "error", ijob->error() );
-    result.insert( "errorString", ijob->errorString() );
-    result.insert( "feedUrls", feedUrls );
-    result.insert( "feedTitles", feedTitles );
+    result.insert( QLatin1String("error"), ijob->error() );
+    result.insert( QLatin1String("errorString"), ijob->errorString() );
+    result.insert( QLatin1String("feedUrls"), feedUrls );
+    result.insert( QLatin1String("feedTitles"), feedTitles );
     replyMessage << result;
     QDBusConnection::sessionBus().send( replyMessage );
 }
@@ -580,8 +580,8 @@ void RssResourceBase::slotOpmlExported( KJob *job )
 
     QDBusMessage replyMessage = d->m_replies.take( job );
     QVariantMap result;
-    result.insert( "error", ejob->error() );
-    result.insert( "errorString", ejob->errorString() );
+    result.insert( QLatin1String("error"), ejob->error() );
+    result.insert( QLatin1String("errorString"), ejob->errorString() );
     replyMessage << result;
     QDBusConnection::sessionBus().send( replyMessage );
 }
@@ -595,8 +595,8 @@ void RssResourceBase::slotItemsImported( KJob *job )
     Q_ASSERT( d->m_replies.contains( job ) );
     QDBusMessage replyMessage = d->m_replies.take( job );
     QVariantMap result;
-    result.insert( "error", job->error() );
-    result.insert( "errorString", job->errorString() );
+    result.insert( QLatin1String("error"), job->error() );
+    result.insert( QLatin1String("errorString"), job->errorString() );
     replyMessage << result;
     QDBusConnection::sessionBus().send( replyMessage );
 }

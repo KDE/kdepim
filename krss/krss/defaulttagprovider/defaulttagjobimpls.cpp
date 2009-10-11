@@ -1,4 +1,4 @@
-/*
+    /*
     Copyright (C) 2008    Frank Osterfeld <osterfeld@kde.org>
     Copyright (C) 2009    Dmitry Ivanov <vonami@gmail.com>
 
@@ -108,7 +108,7 @@ void DefaultTagCreateJob::doStart()
     }
 
     // generate a pseudo unique URI
-    const QString remoteId = "rss-tag-" + KRandom::randomString( 10 );
+    const QString remoteId = QLatin1String("rss-tag-") + KRandom::randomString( 10 );
     TagPrivate::tag_d( m_tag )->m_collection.setRemoteId( remoteId );
     const Collection col = TagPrivate::tag_d( m_tag )->m_collection;
     SearchCreateJob *sjob = new SearchCreateJob( col.name(), col.remoteId() );

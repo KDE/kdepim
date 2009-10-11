@@ -115,18 +115,18 @@ void ExportOpmlJob::slotTagProviderRetrieved( KJob *job )
     QXmlStreamWriter writer( &data );
     writer.setAutoFormatting( true );
     writer.writeStartDocument();
-    writer.writeStartElement( "opml" );
-    writer.writeAttribute( "version", "2.0" );
-    writer.writeEmptyElement( "head" );
-    writer.writeStartElement( "body" );
+    writer.writeStartElement( QLatin1String("opml") );
+    writer.writeAttribute( QLatin1String("version"), QLatin1String("2.0") );
+    writer.writeEmptyElement( QLatin1String("head") );
+    writer.writeStartElement( QLatin1String("body") );
     Q_FOREACH( const KRss::FeedCollection& feed, feeds ) {
-        writer.writeStartElement( "outline" );
-        writer.writeAttribute( "remoteid", feed.remoteId() );
-        writer.writeAttribute( "text", feed.title() );
-        writer.writeAttribute( "title", feed.title() );
-        writer.writeAttribute( "description", feed.description() );
-        writer.writeAttribute( "htmlUrl", feed.htmlUrl() );
-        writer.writeAttribute( "xmlUrl", feed.xmlUrl() );
+        writer.writeStartElement( QLatin1String("outline") );
+        writer.writeAttribute( QLatin1String("remoteid"), feed.remoteId() );
+        writer.writeAttribute( QLatin1String("text"), feed.title() );
+        writer.writeAttribute( QLatin1String("title"), feed.title() );
+        writer.writeAttribute( QLatin1String("description"), feed.description() );
+        writer.writeAttribute( QLatin1String("htmlUrl"), feed.htmlUrl() );
+        writer.writeAttribute( QLatin1String("xmlUrl"), feed.xmlUrl() );
 
         if ( !feed.tags().isEmpty() ) {
             const QList<KRss::TagId> tagIds = feed.tags();
@@ -134,7 +134,7 @@ void ExportOpmlJob::slotTagProviderRetrieved( KJob *job )
             Q_FOREACH( const KRss::TagId& tagId, tagIds ) {
                 tagLabels.append( tagProvider->tag( tagId ).label() );
             }
-            writer.writeAttribute( "category", tagLabels.join( "," ) );
+            writer.writeAttribute( QLatin1String("category"), tagLabels.join( QLatin1String(",") ) );
         }
 
         writer.writeEndElement();

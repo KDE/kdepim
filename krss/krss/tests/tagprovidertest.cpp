@@ -48,8 +48,8 @@ void TagProviderTest::initTestCase()
 void TagProviderTest::createTagTest()
 {
     Tag tag;
-    tag.setLabel( "Test tag" );
-    tag.setDescription( "This is a test tag" );
+    tag.setLabel( QLatin1String("Test tag") );
+    tag.setDescription( QLatin1String("This is a test tag") );
 
     QSignalSpy spyCreateTag( m_tagProvider.get(), SIGNAL( tagCreated( const KRss::Tag& ) ) );
     QVERIFY( spyCreateTag.isValid() );
@@ -80,8 +80,8 @@ void TagProviderTest::createTagTest()
 void TagProviderTest::createExistingTag()
 {
     Tag tag;
-    tag.setLabel( "Test tag" );
-    tag.setDescription( "This is a test tag" );
+    tag.setLabel( QLatin1String("Test tag") );
+    tag.setDescription( QLatin1String("This is a test tag") );
 
     QSignalSpy spyCreateTag( m_tagProvider.get(), SIGNAL( tagCreated( const KRss::Tag& ) ) );
     QVERIFY( spyCreateTag.isValid() );
@@ -99,8 +99,8 @@ void TagProviderTest::createExistingTag()
 
 void TagProviderTest::modifyTagTest()
 {
-    m_tag.setLabel( "Modified test tag" );
-    m_tag.setDescription( "This was a test tag" );
+    m_tag.setLabel( QLatin1String("Modified test tag") );
+    m_tag.setDescription( QLatin1String("This was a test tag") );
 
     QSignalSpy spyModifyTag( m_tagProvider.get(), SIGNAL( tagModified( const KRss::Tag& ) ) );
     QVERIFY( spyModifyTag.isValid() );

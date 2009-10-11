@@ -1,4 +1,4 @@
-/*
+    /*
     Copyright (C) 2009    Dmitry Ivanov <vonami@gmail.com>
 
     This program is free software; you can redistribute it and/or modify
@@ -131,8 +131,8 @@ void OpmlFeedsRetrieveJob::slotGetFinished( KJob *job )
         reader.readNext();
 
         if ( reader.isStartElement() ) {
-            if ( reader.name().toString().toLower() == "opml" ) {
-                kDebug() << "OPML version" << reader.attributes().value( "version" ).toString();
+            if ( reader.name().toString().toLower() == QLatin1String("opml") ) {
+                kDebug() << "OPML version" << reader.attributes().value( QLatin1String("version") ).toString();
                 opmlReader.readOpml( reader );
             }
             else {
@@ -377,7 +377,7 @@ void OpmlFeedCreateJob::slotFeedFetched( Syndication::Loader *loader, Syndicatio
     }
 
     m_feed.setRemoteId( QUuid::createUuid().toString() );
-    m_feed.setFeedType( "rss" );
+    m_feed.setFeedType( QLatin1String("rss") );
     m_feed.setXmlUrl( m_xmlUrl.url() );
 
     if ( status == Syndication::Success ) {

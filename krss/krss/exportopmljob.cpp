@@ -53,9 +53,9 @@ public:
 ExportOpmlJob::Private::Private( const QString& dbusService, ExportOpmlJob* qq )
   : q( qq )
   , interface( new org::kde::krss( dbusService,
-                                   "/KRss",
-                                    QDBusConnection::sessionBus(),
-                                    q ) )
+                                   QLatin1String("/KRss"),
+                                   QDBusConnection::sessionBus(),
+                                   q ) )
 {
 }
 
@@ -76,7 +76,7 @@ void ExportOpmlJob::start() {
 }
 
 void ExportOpmlJob::Private::doStart() {
-    if ( !interface->callWithCallback( "exportOpml", QList<QVariant>() << url.url(), q, SLOT(exportFinished(QVariantMap)) ) ) {
+    if ( !interface->callWithCallback( QLatin1String("exportOpml"), QList<QVariant>() << url.url(), q, SLOT(exportFinished(QVariantMap)) ) ) {
         q->setError( ExportOpmlJob::ExportFailedError );
         q->setErrorText( i18n( "Could not start export." ) );
         q->emitResult();
@@ -84,10 +84,10 @@ void ExportOpmlJob::Private::doStart() {
 }
 
 void ExportOpmlJob::Private::exportFinished( const QVariantMap& map ) {
-    const int error = map.value( "error" ).toInt();
+    const int error = map.value( QLatin1String("error") ).toInt();
     if ( error != 0 ) {
         q->setError( ExportOpmlJob::ExportFailedError );
-        q->setErrorText( i18n( "Export from RSS resource failed: %1", map.value( "errorString" ).toString() ) );
+        q->setErrorText( i18n( "Export from RSS resource failed: %1", map.value( QLatin1String("errorString") ).toString() ) );
     }
 
     q->emitResult();

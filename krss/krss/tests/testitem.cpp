@@ -67,9 +67,9 @@ void TestItem::testSingleNullDates()
 void TestItem::testContentAndDescription()
 {
     // content() must return description() if no content is set
-    const QString desc1 = "Hello! I'm a description!";
-    const QString desc2 = "Hello! I'm another description!";
-    const QString content = "Hi there. Content is king!";
+    const QString desc1 = QLatin1String("Hello! I'm a description!");
+    const QString desc2 = QLatin1String("Hello! I'm another description!");
+    const QString content = QLatin1String("Hi there. Content is king!");
     Item item;
     item.setDescription( desc1 );
     QCOMPARE( item.description(), desc1 );

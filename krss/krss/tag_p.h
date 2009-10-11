@@ -170,7 +170,7 @@ public:
     void setLabel( const QString& label )
     {
         m_collection.attribute<TagPropertiesAttribute>( Collection::AddIfMissing )->setLabel( label );
-        m_collection.setName( "rss-tag-" + label );
+        m_collection.setName( QLatin1String("rss-tag-") + label );
     }
 
     QString description() const

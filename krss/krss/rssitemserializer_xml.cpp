@@ -48,13 +48,13 @@ enum TextMode {
 
 static QString krssNamespace()
 {
-    return "http://akregator.kde.org/krss#";
+    return QLatin1String("http://akregator.kde.org/krss#");
 }
 
 class Element
 {
 public:
-    Element( const QString& ns_, const QString& name_, const QVariant& defaultValue_ = QVariant() ) : ns( ns_ ), name( name_ ), qualifiedName( ns + ':' + name ), defaultValue( defaultValue_ )
+    Element( const QString& ns_, const QString& name_, const QVariant& defaultValue_ = QVariant() ) : ns( ns_ ), name( name_ ), qualifiedName( ns + QLatin1Char(':') + name ), defaultValue( defaultValue_ )
     {
     }
 
@@ -87,7 +87,7 @@ public:
             writer.writeStartElement( ns, name );
         if ( mode == Html )
         {
-            writer.writeAttribute( "type", "html" );
+            writer.writeAttribute( QLatin1String("type"), QLatin1String("html") );
         }
         const QVariant qv( value );
         Q_ASSERT( qv.canConvert( QVariant::String ) );
@@ -101,30 +101,30 @@ struct Elements
     Elements() : atomNS( Syndication::Atom::atom1Namespace() ),
                  krssNS( krssNamespace() ),
                  commentNS( Syndication::commentApiNamespace() ),
-                 title( atomNS, "title", QString() ),
-                 summary( atomNS, "summary", QString() ),
-                 content( atomNS, "content", QString() ),
-                 link( atomNS, "link", QString() ),
-                 language( atomNS, "language", QString() ),
-                 guid( atomNS, "id", QString() ),
-                 published( atomNS, "published", KDateTime().toString( KDateTime::ISODate ) ),
-                 updated( atomNS, "updated", KDateTime().toString( KDateTime::ISODate ) ),
-                 commentsCount( Syndication::slashNamespace(), "comments", -1 ),
-                 commentsFeed( commentNS, "commentRss", QString() ),
-                 commentPostUri( commentNS, "comment", QString() ),
-                 commentsLink( krssNS, "commentsLink", QString() ),
-                 hash( krssNS, "hash", 0 ),
-                 guidIsHash( krssNS, "idIsHash", false ),
-                 sourceFeedId( krssNS, "sourceFeedId", -1 ),
-                 name( atomNS, "name", QString() ),
-                 uri( atomNS, "uri", QString() ),
-                 email( atomNS, "email", QString() ),
-                 author( atomNS, "author", QString() ),
-                 category( atomNS, "category", QString() ),
-                 customProperty( krssNS, "customProperty", QString() ),
-                 key( krssNS, "key", QString() ),
-                 value( krssNS, "value", QString() ),
-                 entry( atomNS, "entry", QString() )
+                 title( atomNS, QLatin1String("title"), QString() ),
+                 summary( atomNS, QLatin1String("summary"), QString() ),
+                 content( atomNS, QLatin1String("content"), QString() ),
+                 link( atomNS, QLatin1String("link"), QString() ),
+                 language( atomNS, QLatin1String("language"), QString() ),
+                 guid( atomNS, QLatin1String("id"), QString() ),
+                 published( atomNS, QLatin1String("published"), KDateTime().toString( KDateTime::ISODate ) ),
+                 updated( atomNS, QLatin1String("updated"), KDateTime().toString( KDateTime::ISODate ) ),
+                 commentsCount( Syndication::slashNamespace(), QLatin1String("comments"), -1 ),
+                 commentsFeed( commentNS, QLatin1String("commentRss"), QString() ),
+                 commentPostUri( commentNS, QLatin1String("comment"), QString() ),
+                 commentsLink( krssNS, QLatin1String("commentsLink"), QString() ),
+                 hash( krssNS, QLatin1String("hash"), 0 ),
+                 guidIsHash( krssNS, QLatin1String("idIsHash"), false ),
+                 sourceFeedId( krssNS, QLatin1String("sourceFeedId"), -1 ),
+                 name( atomNS, QLatin1String("name"), QString() ),
+                 uri( atomNS, QLatin1String("uri"), QString() ),
+                 email( atomNS, QLatin1String("email"), QString() ),
+                 author( atomNS, QLatin1String("author"), QString() ),
+                 category( atomNS, QLatin1String("category"), QString() ),
+                 customProperty( krssNS, QLatin1String("customProperty"), QString() ),
+                 key( krssNS, QLatin1String("key"), QString() ),
+                 value( krssNS, QLatin1String("value"), QString() ),
+                 entry( atomNS, QLatin1String("entry"), QString() )
 {}
     const QString atomNS;
     const QString krssNS;
@@ -179,17 +179,17 @@ static void writeLink( const QString& url, QXmlStreamWriter& writer )
     if ( url.isEmpty() )
         return;
     Elements::instance.link.writeStartElement( writer );
-    writer.writeAttribute( "rel", "alternate" );
-    writeAttributeIfNotEmpty( "href", url, writer );
+    writer.writeAttribute( QLatin1String("rel"), QLatin1String("alternate") );
+    writeAttributeIfNotEmpty( QLatin1String("href"), url, writer );
     writer.writeEndElement();
 }
 
 static void writeCategory( const KRss::Category& category, QXmlStreamWriter& writer )
 {
     Elements::instance.category.writeStartElement( writer );
-    writeAttributeIfNotEmpty( "term", category.term(), writer );
-    writeAttributeIfNotEmpty( "scheme", category.scheme(), writer );
-    writeAttributeIfNotEmpty( "label", category.label(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("term"), category.term(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("scheme"), category.scheme(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("label"), category.label(), writer );
     writer.writeEndElement();
 }
 
@@ -206,14 +206,14 @@ static void writeAuthor( const KRss::Person& person, QXmlStreamWriter& writer )
 static void writeEnclosure( const KRss::Enclosure& enclosure, QXmlStreamWriter& writer )
 {
     Elements::instance.link.writeStartElement( writer );
-    writeAttributeIfNotEmpty( "rel", "enclosure", writer );
-    writeAttributeIfNotEmpty( "href", enclosure.url(), writer );
-    writeAttributeIfNotEmpty( "title", enclosure.title(), writer );
-    writeAttributeIfNotEmpty( "length", enclosure.length(), writer );
-    writeAttributeIfNotEmpty( "type", enclosure.type(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("rel"), QLatin1String("enclosure"), writer );
+    writeAttributeIfNotEmpty( QLatin1String("href"), enclosure.url(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("title"), enclosure.title(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("length"), enclosure.length(), writer );
+    writeAttributeIfNotEmpty( QLatin1String("type"), enclosure.type(), writer );
     const uint duration = enclosure.duration();
     if ( duration != 0 )
-        writer.writeAttribute( Syndication::itunesNamespace(), "duration", QString::number( duration ) );
+        writer.writeAttribute( Syndication::itunesNamespace(), QLatin1String("duration"), QString::number( duration ) );
     writer.writeEndElement();
 }
 
@@ -274,9 +274,9 @@ static void writeItem( const KRss::RssItem& item, QXmlStreamWriter& writer, KRss
     const QString commentNS = Syndication::commentApiNamespace();
     const QString krssNS = krssNamespace();
     writer.writeDefaultNamespace( atomNS );
-    writer.writeNamespace( commentNS, "comment" );
-    writer.writeNamespace( krssNS, "krss" );
-    writer.writeNamespace( Syndication::itunesNamespace(), "itunes" );
+    writer.writeNamespace( commentNS, QLatin1String("comment") );
+    writer.writeNamespace( krssNS, QLatin1String("krss") );
+    writer.writeNamespace( Syndication::itunesNamespace(), QLatin1String("itunes") );
 
     Elements::instance.entry.writeStartElement( writer );
     if ( ( part & RssItemSerializer::Headers ) != 0 )
@@ -290,22 +290,22 @@ static void writeItem( const KRss::RssItem& item, QXmlStreamWriter& writer, KRss
 static void readLink( KRss::RssItem& item, QXmlStreamReader& reader )
 {
     const QXmlStreamAttributes attrs = reader.attributes();
-    const QString rel = attrs.value( QString(), "rel" ).toString();
-    if (  rel == "alternate" )
+    const QString rel = attrs.value( QString(), QLatin1String("rel") ).toString();
+    if (  rel == QLatin1String("alternate") )
     {
-        item.setLink( attrs.value( QString(), "href" ).toString() );
+        item.setLink( attrs.value( QString(), QLatin1String("href") ).toString() );
     }
-    else if ( rel == "enclosure" )
+    else if ( rel == QLatin1String("enclosure") )
     {
         KRss::Enclosure enc;
-        enc.setUrl( attrs.value( QString(), "href" ).toString() );
-        enc.setType( attrs.value( QString(), "type" ).toString() );
-        enc.setTitle( attrs.value( QString(), "title" ).toString() );
+        enc.setUrl( attrs.value( QString(), QLatin1String("href") ).toString() );
+        enc.setType( attrs.value( QString(), QLatin1String("type") ).toString() );
+        enc.setTitle( attrs.value( QString(), QLatin1String("title") ).toString() );
         bool ok;
-        const uint length = attrs.value( QString(), "length" ).toString().toUInt( &ok );
+        const uint length = attrs.value( QString(), QLatin1String("length") ).toString().toUInt( &ok );
         if ( ok )
             enc.setLength( length );
-        const uint duration = attrs.value( Syndication::itunesNamespace(), "duration" ).toString().toUInt( &ok );
+        const uint duration = attrs.value( Syndication::itunesNamespace(), QLatin1String("duration") ).toString().toUInt( &ok );
         if ( ok )
             enc.setDuration( duration );
         QList<KRss::Enclosure> encs = item.enclosures();
@@ -343,9 +343,9 @@ static void readCategory( KRss::RssItem& item, QXmlStreamReader& reader )
 {
     const QXmlStreamAttributes attrs = reader.attributes();
     KRss::Category cat;
-    cat.setTerm( attrs.value( QString(), "term" ).toString() );
-    cat.setScheme( attrs.value( QString(), "scheme" ).toString() );
-    cat.setLabel( attrs.value( QString(), "label" ).toString() );
+    cat.setTerm( attrs.value( QString(), QLatin1String("term") ).toString() );
+    cat.setScheme( attrs.value( QString(), QLatin1String("scheme") ).toString() );
+    cat.setLabel( attrs.value( QString(), QLatin1String("label") ).toString() );
     QList<KRss::Category> cats = item.categories();
     cats.append( cat );
     item.setCategories( cats );

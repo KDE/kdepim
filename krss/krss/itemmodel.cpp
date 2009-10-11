@@ -68,7 +68,7 @@ public:
 };
 
 ItemModelPrivate::ItemModelPrivate( const shared_ptr<ItemListing>& items_, ItemModel* qq )
-    : q( qq ), items( items_ ), m_importantIcon( KIcon( "mail-mark-important" ) )
+    : q( qq ), items( items_ ), m_importantIcon( KIcon( QLatin1String("mail-mark-important") ) )
 {
     items->addListener( this );
 }
@@ -129,7 +129,7 @@ QVariant ItemModel::data( const QModelIndex &index, int role ) const
                 return item.titleAsPlainText();
             case AuthorsColumn:
                 Q_FOREACH( const KRss::Person &person, item.authors() ) {
-                    authors += person.name() + ';';
+                    authors += person.name() + QLatin1Char(';');
                 }
                 authors.remove( authors.length() - 1, 1 );
                 return authors;

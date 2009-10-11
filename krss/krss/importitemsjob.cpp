@@ -48,9 +48,9 @@ public:
 ImportItemsJob::Private::Private( const QString& dbusService, ImportItemsJob* qq )
   : q( qq )
   , interface( new org::kde::krss( dbusService,
-                                   "/KRss",
-                                    QDBusConnection::sessionBus(),
-                                    q ) )
+                                   QLatin1String("/KRss"),
+                                   QDBusConnection::sessionBus(),
+                                   q ) )
 {
 }
 
@@ -76,7 +76,7 @@ void ImportItemsJob::start() {
 }
 
 void ImportItemsJob::Private::doStart() {
-    if ( !DBusHelper::callWithCallback( interface, "importItems", QList<QVariant>() << url << sourceFile, q, SLOT(importFinished(QVariantMap)), SLOT(importError(QDBusError)), DBusHelper::NoTimeout ) ) {
+    if ( !DBusHelper::callWithCallback( interface, QLatin1String("importItems"), QList<QVariant>() << url << sourceFile, q, SLOT(importFinished(QVariantMap)), SLOT(importError(QDBusError)), DBusHelper::NoTimeout ) ) {
         q->setError( ImportItemsJob::ImportFailedError );
         q->setErrorText( i18n( "Could not start import." ) );
         q->emitResult();
@@ -84,9 +84,9 @@ void ImportItemsJob::Private::doStart() {
 }
 
 void ImportItemsJob::Private::importFinished( const QVariantMap& map ) {
-    if ( map.value( "error" ).toInt() != 0 ) {
+    if ( map.value( QLatin1String("error") ).toInt() != 0 ) {
         q->setError( ImportItemsJob::ImportFailedError );
-        q->setErrorText( map.value( "errorString" ).toString() );
+        q->setErrorText( map.value( QLatin1String("errorString") ).toString() );
     }
     q->emitResult();
 }
