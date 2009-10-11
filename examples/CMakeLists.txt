@@ -1,0 +1,2 @@
+macro_optional_add_subdirectory(akonablog)
+macro_optional_add_subdirectory(mailreader)
