@@ -53,9 +53,40 @@ namespace Kleo {
 
 class QStringList;
 
-class DecryptVerifyBodyPartMemento
+class CryptoBodyPartMemento
   : public QObject,
     public MessageViewer::Interface::BodyPartMemento
+{
+  Q_OBJECT
+public:
+  CryptoBodyPartMemento();
+  ~CryptoBodyPartMemento();
+
+  bool isRunning() const { return m_running; }
+
+  const QString & auditLogAsHtml() const { return m_auditLog; }
+  GpgME::Error auditLogError() const { return m_auditLogError; }
+
+signals:
+  void update(MessageViewer::Viewer::UpdateMode);
+
+protected slots:
+  void notify() {
+    emit update(MessageViewer::Viewer::Force);
+  }
+
+protected:
+  void setAuditLog( const GpgME::Error & err, const QString & log );
+  void setRunning( bool running );
+
+private:
+  bool m_running;
+  QString m_auditLog;
+  GpgME::Error m_auditLogError;
+};
+
+class DecryptVerifyBodyPartMemento
+  : public CryptoBodyPartMemento
 {
   Q_OBJECT
 public:
@@ -65,24 +96,14 @@ public:
   bool start();
   void exec();
 
-  bool isRunning() const { return m_running; }
-
   const QByteArray & plainText() const { return m_plainText; }
   const GpgME::DecryptionResult & decryptResult() const { return m_dr; }
   const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-  const QString & auditLogAsHtml() const { return m_auditLog; }
-  GpgME::Error auditLogError() const { return m_auditLogError; }
 
 private slots:
   void slotResult( const GpgME::DecryptionResult & dr,
                     const GpgME::VerificationResult & vr,
                     const QByteArray & plainText );
-  void notify() {
-    emit update(MessageViewer::Viewer::Force);
-  }
-
-signals:
-  void update(MessageViewer::Viewer::UpdateMode);
 
 private:
   void saveResult( const GpgME::DecryptionResult &,
@@ -92,19 +113,15 @@ private:
   // input:
   const QByteArray m_cipherText;
   QPointer<Kleo::DecryptVerifyJob> m_job;
-  bool m_running;
   // output:
   GpgME::DecryptionResult m_dr;
   GpgME::VerificationResult m_vr;
   QByteArray m_plainText;
-  QString m_auditLog;
-  GpgME::Error m_auditLogError;
 };
 
 
 class VerifyDetachedBodyPartMemento
-  : public QObject,
-    public MessageViewer::Interface::BodyPartMemento
+  : public CryptoBodyPartMemento
 {
   Q_OBJECT
 public:
@@ -117,21 +134,13 @@ public:
   bool start();
   void exec();
 
-  bool isRunning() const { return m_running; }
-
   const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-  const QString & auditLogAsHtml() const { return m_auditLog; }
-  GpgME::Error auditLogError() const { return m_auditLogError; }
   const GpgME::Key & signingKey() const { return m_key; }
 
 private slots:
   void slotResult( const GpgME::VerificationResult & vr );
   void slotKeyListJobDone();
   void slotNextKey( const GpgME::Key & );
-  void notify();
-
-signals:
-  void update(MessageViewer::Viewer::UpdateMode);
 
 private:
   void saveResult( const GpgME::VerificationResult & );
@@ -144,18 +153,14 @@ private:
   const QByteArray m_plainText;
   QPointer<Kleo::VerifyDetachedJob> m_job;
   QPointer<Kleo::KeyListJob> m_keylistjob;
-  bool m_running;
   // output:
   GpgME::VerificationResult m_vr;
-  QString m_auditLog;
-  GpgME::Error m_auditLogError;
   GpgME::Key m_key;
 };
 
 
 class VerifyOpaqueBodyPartMemento
-  : public QObject,
-    public MessageViewer::Interface::BodyPartMemento
+  : public CryptoBodyPartMemento
 {
   Q_OBJECT
 public:
@@ -167,12 +172,8 @@ public:
   bool start();
   void exec();
 
-  bool isRunning() const { return m_running; }
-
   const QByteArray & plainText() const { return m_plainText; }
   const GpgME::VerificationResult & verifyResult() const { return m_vr; }
-  const QString & auditLogAsHtml() const { return m_auditLog; }
-  GpgME::Error auditLogError() const { return m_auditLogError; }
   const GpgME::Key & signingKey() const { return m_key; }
 
 private slots:
@@ -180,12 +181,6 @@ private slots:
                     const QByteArray & plainText );
   void slotKeyListJobDone();
   void slotNextKey( const GpgME::Key & );
-  void notify() {
-    emit update(MessageViewer::Viewer::Force);
-  }
-
-signals:
-  void update(MessageViewer::Viewer::UpdateMode);
 
 private:
   void saveResult( const GpgME::VerificationResult &,
@@ -198,12 +193,9 @@ private:
   const QByteArray m_signature;
   QPointer<Kleo::VerifyOpaqueJob> m_job;
   QPointer<Kleo::KeyListJob> m_keylistjob;
-  bool m_running;
   // output:
   GpgME::VerificationResult m_vr;
   QByteArray m_plainText;
-  QString m_auditLog;
-  GpgME::Error m_auditLogError;
   GpgME::Key m_key;
 };
 

@@ -189,6 +189,13 @@ void ObjectTreeParser::insertAndParseNewChildNode( KMime::Content& startNode,
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( content );
   newNode->parse();
+
+/* TODO see below
+  // Build the object tree of the new node before setting the parent, as otherwise
+  // buildObjectTree() would erronously modify the parents as well
+  newNode->buildObjectTree( false );
+*/
+
 /*TODO (Andras) port it
   if ( ( !myBody->Body().FirstBodyPart() ||
           myBody->body().length() == 0 ) &&
@@ -209,7 +216,7 @@ void ObjectTreeParser::insertAndParseNewChildNode( KMime::Content& startNode,
   startNode.addContent( newNode, !append );
 
 /*TODO(Andras) check what should we do here:
-  newNode->buildObjectTree( false );
+  newNode->buildObjectTree( false ); // <-- that was moved up there ^ as part of a merge
 
   if ( startNode.mimePartTreeItem() ) {
     newNode->fillMimePartTree( startNode.mimePartTreeItem(), 0,
