@@ -497,7 +497,6 @@ public:
   QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
   bool mMsgDisplay;
   bool mNoMDNsWhenEncrypted;
-  MessageStatus mLastStatus;
 
   CSSHelper * mCSSHelper;
   bool mUseFixedFont;

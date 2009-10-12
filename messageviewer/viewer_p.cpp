@@ -163,7 +163,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
 
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
-  mLastStatus.clear();
   mMsgDisplay = true;
   mPrinting = false;
 
@@ -1196,9 +1195,6 @@ void ViewerPrivate::parseMsg()
     //       something different than 'curNode'.
 
 
-    kDebug() <<"   mLastStatus.isOfUnknownStatus() =" << mLastStatus.isOfUnknownStatus();
-    kDebug() <<"|| mLastStatus.isNew() ="             << mLastStatus.isNew();
-    kDebug() <<"|| mLastStatus.isUnread) ="           << mLastStatus.isUnread();
     //FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
 //     kDebug() << "aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() = " << (aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder());
 //     kDebug() << "message_was_saved_decrypted_before( aMsg ) = " << message_was_saved_decrypted_before( aMsg );
@@ -1546,8 +1542,6 @@ void ViewerPrivate::setMessage(KMime::Message* aMsg, Viewer::UpdateMode updateMo
 
   if ( mMessage ) {
     NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
-  } else {
-    mLastStatus.clear();
   }
 
   update( updateMode );
