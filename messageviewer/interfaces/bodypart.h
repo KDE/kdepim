@@ -51,7 +51,7 @@ namespace Interface {
   public:
     virtual ~BodyPartMemento() {}
 #if 0
-/*FIXME(Andras) review, port
+//FIXME(Andras) review, port
     /** If your BodyPartMemento implementation also implements the
   Observer interface, simply implement these as
   <code>return this;</code>, else as <code>return
@@ -67,7 +67,6 @@ namespace Interface {
   plugins on internal KMail classes.
     */
     virtual Observable * asObservable() = 0;
-*/
 #endif
   };
 
