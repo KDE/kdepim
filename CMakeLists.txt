@@ -184,7 +184,7 @@ set(libkdgantt1_SRCS
     # The following components depend on QGpgME.
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(kmail)
-    #macro_optional_add_subdirectory(examples)
+    macro_optional_add_subdirectory(examples)
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
     if(BUILD_kmail)
       set(KMAIL_SUPPORTED TRUE)
