@@ -469,3 +469,42 @@ KMime::Message::Ptr Widget::currentMessage() const
 
   return d->messageForRow( mi->currentModelIndexRow() );
 }
+
+
+QList<KMime::Message::Ptr > Widget::selectionAsMessageList( bool includeCollapsedChildren ) const
+{
+  QList<KMime::Message::Ptr> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList( includeCollapsedChildren );
+  if ( lstMi.isEmpty() ) {
+     return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->messageForRow( it->currentModelIndexRow() ) );
+  }
+  return lstMiPtr;
+}
+
+QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedChildren ) const
+{
+  QList<Item> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList( includeCollapsedChildren );
+  if ( lstMi.isEmpty() ) {
+     return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->itemForRow( it->currentModelIndexRow() ) );
+  }
+  return lstMiPtr;
+}
+
+
+KPIM::MessageStatus Widget::currentFilterStatus() const
+{
+  return view()->currentFilterStatus();
+}
+
+QString Widget::currentFilterSearchString() const
+{
+  return view()->currentFilterSearchString();
+}
+

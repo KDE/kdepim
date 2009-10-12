@@ -346,6 +346,17 @@ public:
    * Sets the focus on the quick search line of the currently active tab.
    */
   void focusQuickSearch();
+
+  /**
+   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   */
+  KPIM::MessageStatus currentFilterStatus() const;
+
+  /**
+   * Returns the search term in the current quicksearch field.
+   */
+  QString currentFilterSearchString() const;
+
 protected:
   /**
    * Reimplemented in order to catch QHelpEvent

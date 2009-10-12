@@ -95,6 +95,31 @@ public:
 
 
   /**
+   * Returns the currently selected KMime::Message::Ptr (bound to current StorageModel).
+   * The list may be empty if there are no selected messages or no StorageModel.
+   *
+   * If includeCollapsedChildren is true then the children of the selected but
+   * collapsed items are also added to the list.
+   *
+   * The returned list is guaranteed to be valid only until you return control
+   * to the main even loop. Don't store it for any longer. If you need to reference
+   * this set of messages at a later stage then take a look at createPersistentSet().
+   */
+  QList<KMime::Message::Ptr > selectionAsMessageList( bool includeCollapsedChildren = true ) const;
+
+  /**
+   * Returns the currently selected Items (bound to current StorageModel).
+   * The list may be empty if there are no selected messages or no StorageModel.
+   *
+   * If includeCollapsedChildren is true then the children of the selected but
+   * collapsed items are also added to the list.
+   *
+   * The returned list is guaranteed to be valid only until you return control
+   * to the main even loop. Don't store it for any longer. If you need to reference
+   * this set of messages at a later stage then take a look at createPersistentSet().
+   */
+  QList<Akonadi::Item> selectionAsMessageItemList( bool includeCollapsedChildren = true ) const;
+  /**
    * Selects the next message item in the view.
    *
    * messageTypeFilter can be used to restrict the selection to only certain message types.
@@ -204,6 +229,16 @@ public:
    * Sets the focus on the quick search line of the currently active tab.
    */
   void focusQuickSearch();
+
+  /**
+   * Returns the KPIM::MessageStatus in the current quicksearch field.
+   */
+  KPIM::MessageStatus currentFilterStatus() const;
+
+  /**
+   * Returns the search term in the current quicksearch field.
+   */
+  QString currentFilterSearchString() const;
 
 public slots:
   /**
