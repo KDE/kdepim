@@ -1113,6 +1113,13 @@ void ViewerPrivate::displayMessage()
   QTimer::singleShot( 1, this, SLOT(injectAttachments()) );
 }
 
+static bool message_was_saved_decrypted_before( KMime::Message * msg )
+{
+  if ( !msg )
+    return false;
+  kDebug() << "msgId =" << msg->messageID()->asUnicodeString();
+  return msg->messageID()->asUnicodeString().trimmed().startsWith( "<DecryptedMsg." );
+}
 
 void ViewerPrivate::parseMsg()
 {
@@ -1176,59 +1183,62 @@ void ViewerPrivate::parseMsg()
   const KConfigGroup reader( Global::instance()->config(), "Reader" );
   if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
 
-  // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
-  // of german government:
-  // --> All received encrypted messages *must* be stored in unencrypted form
-  //     after they have been decrypted once the user has read them.
-  //     ( "Aufhebung der Verschluesselung nach dem Lesen" )
-  //
-  // note: Since there is no configuration option for this, we do that for
-  //       all kinds of encryption now - *not* just for S/MIME.
-  //       This could be changed in the objectTreeToDecryptedMsg() function
-  //       by deciding when (or when not, resp.) to set the 'dataNode' to
-  //       something different than 'curNode'.
+    // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
+    // of german government:
+    // --> All received encrypted messages *must* be stored in unencrypted form
+    //     after they have been decrypted once the user has read them.
+    //     ( "Aufhebung der Verschluesselung nach dem Lesen" )
+    //
+    // note: Since there is no configuration option for this, we do that for
+    //       all kinds of encryption now - *not* just for S/MIME.
+    //       This could be changed in the objectTreeToDecryptedMsg() function
+    //       by deciding when (or when not, resp.) to set the 'dataNode' to
+    //       something different than 'curNode'.
 
 
-kDebug() <<"\n\n\nSpecial post-encryption handling:\n1.";
-//FIXME(Andras) do we need it? kDebug() <<"(aMsg == msg) ="                      << (aMsg == message());
-kDebug() <<"   mLastStatus.isOfUnknownStatus() =" << mLastStatus.isOfUnknownStatus();
-kDebug() <<"|| mLastStatus.isNew() ="             << mLastStatus.isNew();
-kDebug() <<"|| mLastStatus.isUnread) ="           << mLastStatus.isUnread();
-//FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
-kDebug() <<"   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
-kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
+    kDebug() <<"   mLastStatus.isOfUnknownStatus() =" << mLastStatus.isOfUnknownStatus();
+    kDebug() <<"|| mLastStatus.isNew() ="             << mLastStatus.isNew();
+    kDebug() <<"|| mLastStatus.isUnread) ="           << mLastStatus.isUnread();
+    //FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
+//     kDebug() << "aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() = " << (aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder());
+//     kDebug() << "message_was_saved_decrypted_before( aMsg ) = " << message_was_saved_decrypted_before( aMsg );
+    kDebug() << "this->decryptMessage() = " << decryptMessage();
+    kDebug() << "otp.hasPendingAsyncJobs() = " << otp.hasPendingAsyncJobs();
+    kDebug() <<"   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
+    kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
-  if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
-         // only proceed if this message was not saved encryptedly before
-         // to make sure only *new* messages are saved in decrypted form
-      && (    mLastStatus.isOfUnknownStatus()
-           || mLastStatus.isNew()
-           || mLastStatus.isUnread() )
-         // avoid endless recursions
-//FIXME(Andras)      && (mIdOfLastViewedMessage != aMsg->msgId())
-         // only proceed if this message is (at least partially) encrypted
-      && (    (KMMsgFullyEncrypted == encryptionState)
-           || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
+    if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
+          // don't remove encryption in the outbox folder :)
+//FIXME(Andras)      && ( aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() )
+          // only proceed if this message was not saved encryptedly before
+//FIXME(Andras)      && !message_was_saved_decrypted_before( aMsg )
+          // only proceed if the message has actually been decrypted
+        && decryptMessage()
+          // only proceed if no pending async jobs are running:
+        && !otp.hasPendingAsyncJobs()
+          // only proceed if this message is (at least partially) encrypted
+        && (    (KMMsgFullyEncrypted == encryptionState)
+            || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
 
-    kDebug() <<"Calling objectTreeToDecryptedMsg()";
+      kDebug() << "Calling objectTreeToDecryptedMsg()";
 
-    KMime::Message *unencryptedMessage = new KMime::Message;
-    QByteArray decryptedData;
-    // note: The following call may change the message's headers.
-    objectTreeToDecryptedMsg( mMessage, decryptedData, *unencryptedMessage );
-    kDebug() << "Resulting data:" << decryptedData;
+      KMime::Message *unencryptedMessage = new KMime::Message;
+      QByteArray decryptedData;
+      // note: The following call may change the message's headers.
+      objectTreeToDecryptedMsg( mMessage, decryptedData, *unencryptedMessage );
+      kDebug() << "Resulting data:" << decryptedData;
 
-    if( !decryptedData.isEmpty() ) {
-      kDebug() <<"Composing unencrypted message";
-      unencryptedMessage->setBody( decryptedData );
-     //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
-      kDebug() << "Attach unencrypted message to aMsg";
+      if( !decryptedData.isEmpty() ) {
+        kDebug() <<"Composing unencrypted message";
+        unencryptedMessage->setBody( decryptedData );
+      //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
+        kDebug() << "Attach unencrypted message to aMsg";
 
-      NodeHelper::instance()->attachUnencryptedMessage( mMessage, unencryptedMessage );
+        NodeHelper::instance()->attachUnencryptedMessage( mMessage, unencryptedMessage );
 
-      emitReplaceMsgByUnencryptedVersion = true;
-    }
+        emitReplaceMsgByUnencryptedVersion = true;
+      }
     }
   }
 
