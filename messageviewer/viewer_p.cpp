@@ -496,6 +496,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
     KMime::Content* dataNode = curNode;
     KMime::Content * child = NodeHelper::firstChild( node );
     bool bIsMultipart = false;
+    bool bKeepPartAsIs = false;
 
     QString type = curNode->contentType()->mediaType();
     QString subType = curNode->contentType()->subType();
@@ -506,7 +507,9 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         kDebug() <<"* multipart *";
         kDebug() << subType;
         bIsMultipart = true;
-        if ( subType == "encrypted" ) {
+        if ( subType == "signed" ) {
+            bKeepPartAsIs = true;
+        } else if ( subType == "encrypted" ) {
            if ( child )                                                                                                         
                dataNode = child;                                                                                                
         }
@@ -521,6 +524,10 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
           if ( subType == "octet-stream" ) {
               if ( child )
                 dataNode = child;
+          } else if ( subType == "pkcs7-signature" ) {
+              // note: subtype Pkcs7Signature specifies a signature part
+              //       which we do NOT want to remove!                  
+              bKeepPartAsIs = true;                                     
           } else if ( subType == "pkcs7-mime" ) {
               // note: subtype Pkcs7Mime can also be signed
               //       and we do NOT want to remove the signature!
@@ -575,6 +582,10 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         }
       }
 
+      if ( bKeepPartAsIs ) {                                            
+          resultingData += dataNode->encodedContent();
+      } else {                                                          
+                                                                        
       // B) Store the body of this part.
       if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
         kDebug() <<"is valid Multipart, processing children:";
@@ -609,6 +620,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         // store simple part
         kDebug() <<"is Simple part or invalid Multipart, storing body data .. DONE";
         resultingData += dataNode->body();
+      }
       }
     } else {
       kDebug() <<"dataNode != curNode:  Replace curNode by dataNode.";
