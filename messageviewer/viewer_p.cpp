@@ -507,16 +507,8 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         kDebug() << subType;
         bIsMultipart = true;
         if ( subType == "encrypted" ) {
-            if ( child ) {
-              /*
-                  ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
-              */
-              KMime::Content* data =
-                ObjectTreeParser::findType( child, "application/octet-stream", false, true );
-              if ( !data )
-                data = ObjectTreeParser::findType( child, "application/pkcs7-mime", false, true );
-              dataNode = NodeHelper::firstChild( data );
-            }
+           if ( child )                                                                                                         
+               dataNode = child;                                                                                                
         }
     } else if ( type == "message" ) {
         if ( subType == "rfc822") {
