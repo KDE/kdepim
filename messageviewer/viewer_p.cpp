@@ -510,8 +510,8 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         if ( subType == "signed" ) {
             bKeepPartAsIs = true;
         } else if ( subType == "encrypted" ) {
-           if ( child )                                                                                                         
-               dataNode = child;                                                                                                
+          if ( child )
+            dataNode = child;
         }
     } else if ( type == "message" ) {
         if ( subType == "rfc822") {
@@ -586,41 +586,41 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
           resultingData += dataNode->encodedContent();
       } else {                                                          
                                                                         
-      // B) Store the body of this part.
-      if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
-        kDebug() <<"is valid Multipart, processing children:";
-        QByteArray boundary = headerContent->contentType()->boundary();
-        curNode = NodeHelper::firstChild( dataNode );
-        // store children of multipart
-        while( curNode ) {
-          kDebug() <<"--boundary";
-          if( resultingData.size() &&
-              ( '\n' != resultingData.at( resultingData.size()-1 ) ) )
+        // B) Store the body of this part.
+        if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
+          kDebug() <<"is valid Multipart, processing children:";
+          QByteArray boundary = headerContent->contentType()->boundary();
+          curNode = NodeHelper::firstChild( dataNode );
+          // store children of multipart
+          while( curNode ) {
+            kDebug() <<"--boundary";
+            if( resultingData.size() &&
+                ( '\n' != resultingData.at( resultingData.size()-1 ) ) )
+              resultingData += '\n';
             resultingData += '\n';
-          resultingData += '\n';
-          resultingData += "--";
+            resultingData += "--";
+            resultingData += boundary;
+            resultingData += '\n';
+            // note: We are processing a harmless multipart that is *not*
+            //       to be replaced by one of it's children, therefor
+            //       we set their doStoreHeaders to true.
+            objectTreeToDecryptedMsg( curNode,
+                                      resultingData,
+                                      theMessage,
+                                      false,
+                                      recCount + 1 );
+            curNode = NodeHelper::nextSibling( curNode );
+          }
+          kDebug() <<"--boundary--";
+          resultingData += "\n--";
           resultingData += boundary;
-          resultingData += '\n';
-          // note: We are processing a harmless multipart that is *not*
-          //       to be replaced by one of it's children, therefor
-          //       we set their doStoreHeaders to true.
-          objectTreeToDecryptedMsg( curNode,
-                                    resultingData,
-                                    theMessage,
-                                    false,
-                                    recCount + 1 );
-          curNode = NodeHelper::nextSibling( curNode );
+          resultingData += "--\n\n";
+          kDebug() <<"Multipart processing children - DONE";
+        } else {
+          // store simple part
+          kDebug() <<"is Simple part or invalid Multipart, storing body data .. DONE";
+          resultingData += dataNode->body();
         }
-        kDebug() <<"--boundary--";
-        resultingData += "\n--";
-        resultingData += boundary;
-        resultingData += "--\n\n";
-        kDebug() <<"Multipart processing children - DONE";
-      } else {
-        // store simple part
-        kDebug() <<"is Simple part or invalid Multipart, storing body data .. DONE";
-        resultingData += dataNode->body();
-      }
       }
     } else {
       kDebug() <<"dataNode != curNode:  Replace curNode by dataNode.";
