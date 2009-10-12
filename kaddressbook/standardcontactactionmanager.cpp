@@ -277,7 +277,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setIcon( KIcon( "contact-new" ) );
       action->setText( i18n( "New &Contact..." ) );
       action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-      action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
+      action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add data about a person, including addresses and phone numbers.</p>" ) );
       d->mActions.insert( CreateContact, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_create" ), action );
       break;
@@ -294,7 +294,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "document-edit" ) );
       action->setText( i18n( "Edit Contact..." ) );
-      action->setWhatsThis( i18n( "Edit the selected contact<p>You will be presented with a dialog where you can edit all data about a person, including addresses and phone numbers.</p>" ) );
+      action->setWhatsThis( i18n( "Edit the selected contact<p>You will be presented with a dialog where you can edit the data stored about a person, including addresses and phone numbers.</p>" ) );
       action->setEnabled( false );
       d->mActions.insert( EditItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
@@ -313,7 +313,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "edit-delete" ) );
       action->setText( i18n( "&Delete Address Book" ) );
-      action->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book and all contained contacts and contact groups will be deleted.</p>" ) );
+      action->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
       action->setVisible( false );
       d->mActions.insert( DeleteAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );

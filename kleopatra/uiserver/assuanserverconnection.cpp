@@ -343,7 +343,7 @@ private:
             if ( ok && id <= std::numeric_limits<unsigned int>::max() ) {
                 conn.sessionId = id;
             } else {
-                static const QString errorString = i18n("Parse error: numerial session id too large");
+                static const QString errorString = i18n("Parse error: numeric session id too large");
                 return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_SYNTAX ), errorString );
             }
         }

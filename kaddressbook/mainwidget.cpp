@@ -368,12 +368,12 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   action = collection->addAction( "file_import_ldif" );
   action->setText( i18n( "Import LDIF file..." ) );
-  action->setWhatsThis( i18n( "Import contacts from a LDIF file." ) );
+  action->setWhatsThis( i18n( "Import contacts from an LDIF file." ) );
   mXXPortManager->addImportAction( action, "ldif" );
 
   action = collection->addAction( "file_import_ldap" );
   action->setText( i18n( "Import from LDAP server..." ) );
-  action->setWhatsThis( i18n( "Import contacts from a LDAP server." ) );
+  action->setWhatsThis( i18n( "Import contacts from an LDAP server." ) );
   mXXPortManager->addImportAction( action, "ldap" );
 
   action = collection->addAction( "file_import_gmx" );
@@ -400,7 +400,7 @@ void MainWidget::setupActions( KActionCollection *collection )
 
   action = collection->addAction( "file_export_ldif" );
   action->setText( i18n( "Export LDIF file..." ) );
-  action->setWhatsThis( i18n( "Export contacts to a LDIF file." ) );
+  action->setWhatsThis( i18n( "Export contacts to an LDIF file." ) );
   mXXPortManager->addExportAction( action, "ldif" );
 
   action = collection->addAction( "file_export_gmx" );

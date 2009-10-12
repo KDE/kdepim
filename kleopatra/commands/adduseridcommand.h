@@ -46,7 +46,7 @@ namespace Commands {
         explicit AddUserIDCommand( const GpgME::Key & key );
         ~AddUserIDCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|NeedSecretKey; }
 
         void setName( const QString & name );
         const QString & name() const;

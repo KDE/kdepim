@@ -377,9 +377,9 @@ namespace {
               m_unselectPB( i18n("Remove"), this ),
               m_selectedKTV( this )
         {
-            setTitle( i18nc("@title","Whom do you want to encrypt to?") );
+            setTitle( i18nc("@title","For whom do you want to encrypt?") );
             setSubTitle( i18nc("@title",
-                               "Please select whom you want the files to be encrypted to. "
+                               "Please select for whom you want the files to be encrypted. "
                                "Do not forget to pick one of your own certificates.") );
             // the button may be there or not, the _text_ is static, though:
             setButtonText( QWizard::CommitButton, i18nc("@action","Encrypt") );

@@ -365,7 +365,7 @@ bool KMeditor::checkExternalEditorFinished()
            "The external editor is still running.<nl>"
            "Do you want to stop the editor or keep it running?</nl>"
            "<warning>Stopping the editor will cause all your "
-           "unsaved changes to be lost!</warning>" ),
+           "unsaved changes to be lost.</warning>" ),
     i18nc( "@title:window", "External Editor Running" ),
     KGuiItem( i18nc( "@action:button", "Stop Editor" ) ),
     KGuiItem( i18nc( "@action:button", "Keep Editor Running" ) ) );

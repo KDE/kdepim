@@ -39,11 +39,12 @@
 #include <QFile>
 
 QMap <QString, bool> MultiLineTextEdit::downloadFinished;
-MultiLineTextEdit::MultiLineTextEdit( QWidget *parent ) : KRichTextEdit( parent )
+
+MultiLineTextEdit::MultiLineTextEdit( QWidget *parent )
+    : KRichTextEdit( parent )
 {
-//     netManager = new QNetworkAccessManager( this );
-//     connect( manager, SIGNAL( finished( QNetworkReply* ) ), this, 
-//              SLOT( sltReplyFinished( QNetworkReply* ) ) );
+    connect( this, SIGNAL(cursorPositionChanged()),
+            this, SLOT(slotCursorPositionChanged()) );
 }
 
 MultiLineTextEdit::~MultiLineTextEdit()
@@ -177,6 +178,15 @@ void MultiLineTextEdit::sltRemoteFileCopied( KJob * job )
 void MultiLineTextEdit::setMediaList( QMap <QString, BilboMedia*> * list )
 {
     mMediaList = list;
+}
+
+void MultiLineTextEdit::slotCursorPositionChanged()
+{
+    QTextBlockFormat tmpBlock = textCursor().blockFormat();
+    if( tmpBlock != lastBlockFormat){
+        lastBlockFormat = tmpBlock;
+        emit currentBlockFormatChanged( tmpBlock );
+    }
 }
 
 

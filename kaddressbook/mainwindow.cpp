@@ -57,7 +57,7 @@ void MainWindow::initActions()
   KStandardAction::quit( this, SLOT( close() ), actionCollection() );
 
   KAction *action = KStandardAction::keyBindings( this, SLOT( configureKeyBindings() ), actionCollection() );
-  action->setWhatsThis( i18n( "You will be presented with a dialog, where you can configure the application wide shortcuts." ) );
+  action->setWhatsThis( i18n( "You will be presented with a dialog where you can configure the application-wide shortcuts." ) );
 
   KStandardAction::configureToolbars( this, SLOT( configureToolbars() ), actionCollection() );
   KStandardAction::preferences( this, SLOT( configure() ), actionCollection() );

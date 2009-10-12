@@ -97,7 +97,7 @@ static QString format_error( const Error & err ) {
                      "There was an error setting the PIN: <message>%1</message>.",
                      Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
     else
-        return i18nc("@info","PIN set sucessfully.");
+        return i18nc("@info","PIN set successfully.");
 }
 
 class SetInitialPinDialog::Private {

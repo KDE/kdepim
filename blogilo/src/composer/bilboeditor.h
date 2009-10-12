@@ -245,9 +245,9 @@ protected Q_SLOTS:
      * @param media is a BilboMedia object, which contains media path, mimetype and other needed information about it.
      */
 //     void sltSetMedia( BilboMedia *media );
-    
+
     void sltRemoveMedia( const int index );
-    
+
     void sltMediaTypeFound( BilboMedia *media );
 
     void sltAddOrderedList();
@@ -258,7 +258,8 @@ protected Q_SLOTS:
 
     void sltAddPostSplitter();
 
-    void sltSyncToolbar();
+    void slotCurrentCharFormantChanged(const QTextCharFormat &);
+    void slotCurrentBlockFormatChanged(const QTextBlockFormat &);
 
     /*!
     Sets the content of the current tab  as other tabs' contents, to apply recent
@@ -343,8 +344,8 @@ private:
     
     QTextCharFormat defaultCharFormat;
     QTextBlockFormat defaultBlockFormat;
-    QTextCharFormat lastCharFormat;
-    QTextBlockFormat lastBlockFormat;
+//     QTextCharFormat lastCharFormat;
+//     QTextBlockFormat lastBlockFormat;
     
     QMap <QString, BilboMedia*> *mMediaList;
 

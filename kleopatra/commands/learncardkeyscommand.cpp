@@ -63,7 +63,7 @@ Protocol LearnCardKeysCommand::protocol() const {
 
 QStringList LearnCardKeysCommand::arguments() const {
     if ( protocol() == OpenPGP )
-        return QStringList() << gpgPath() << "--learn-card" << "-v";
+        return QStringList() << gpgPath() << "--batch" << "--card-status" << "-v";
     else
         return QStringList() << gpgSmPath() << "--learn-card" << "-v";
 }
