@@ -54,7 +54,7 @@ public:
 
   Akonadi::Item::List selectionAsItems() const;
   Akonadi::Item itemForRow( int row ) const;
-  MessagePtr messageForRow( int row ) const;
+  KMime::Message::Ptr messageForRow( int row ) const;
 
   Widget * const q;
 
@@ -443,7 +443,7 @@ Item Widget::Private::itemForRow( int row ) const
   return static_cast<const StorageModel*>( q->storageModel() )->itemForRow( row );
 }
 
-MessagePtr Widget::Private::messageForRow( int row ) const
+KMime::Message::Ptr Widget::Private::messageForRow( int row ) const
 {
   return static_cast<const StorageModel*>( q->storageModel() )->messageForRow( row );
 }
@@ -459,12 +459,12 @@ Item Widget::currentItem() const
   return d->itemForRow( mi->currentModelIndexRow() );
 }
 
-MessagePtr Widget::currentMessage() const
+KMime::Message::Ptr Widget::currentMessage() const
 {
   Core::MessageItem *mi = view()->currentMessageItem();
 
   if ( mi == 0 ) {
-    return MessagePtr();
+    return KMime::Message::Ptr();
   }
 
   return d->messageForRow( mi->currentModelIndexRow() );
