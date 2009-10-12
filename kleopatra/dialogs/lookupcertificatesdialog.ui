@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Certificateserver Certificate Lookup</string>
+   <string>Certificate Server Certificate Lookup</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
