@@ -1,19 +1,6 @@
 PROJECT(stickynotes)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
-
-SET(QT_USE_QTNETWORK TRUE)
-FIND_PACKAGE(Qt4 REQUIRED)
-INCLUDE(${QT_USE_FILE})
-
-SET(KDE_MIN_VERSION "4.3.0")
-FIND_PACKAGE(KDE4 4.3.60 REQUIRED)
-INCLUDE(KDE4Defaults)
-
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} )
-
-
-include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} )
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_BINARY_DIR}/include)
 
 
 SET(BUILD_SHARED_LIBS TRUE CACHE BOOL "Make library shared")
@@ -47,7 +34,7 @@ ELSE(BUILD_GUI)
 	UNSET(BUILD_PLASMA_GUI CACHE)
 ENDIF(BUILD_GUI)
 
-CONFIGURE_FILE(config-stickynotes.h.cmake include/StickyNotes/config-stickynotes.h)
+CONFIGURE_FILE(config-stickynotes.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/include/StickyNotes/config-stickynotes.h)
 
 
 SET(STICKYNOTES_SRCS	src/basenoteitem.cpp
