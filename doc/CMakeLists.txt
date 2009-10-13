@@ -7,10 +7,6 @@ add_subdirectory(akregator)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
 
-if (Q_WS_X11)
-  add_subdirectory(ktimetracker)
-endif (Q_WS_X11)
-
 if(BUILD_EVERYTHING)
   add_subdirectory(knode)
 endif(BUILD_EVERYTHING)

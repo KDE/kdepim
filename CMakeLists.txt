@@ -87,10 +87,6 @@ else ( ONLY_KLEO )
   find_package(Strigi REQUIRED)
   find_package(QGpgme)
 
-  if(Q_WS_X11)
-    macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
-  endif(Q_WS_X11)
-
   macro_optional_find_package(GNOKII)
   macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
   macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
@@ -172,16 +168,6 @@ else ( ONLY_KLEO )
 
   macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(kaddressbook)
-
-  if(Q_WS_X11)
-    set(KTIMETRACKER_SUPPORTED TRUE)
-    add_definitions(-DKTIMETRACKER_SUPPORTED)
-    message(STATUS "KTimeTracker support enabled.")
-    macro_optional_add_subdirectory(ktimetracker)
-  else(Q_WS_X11)
-    set(KTIMETRACKER_SUPPORTED FALSE)
-    message(STATUS "KTimeTracker support DISABLED (non-X11 target).")
-  endif (Q_WS_X11)
 
   add_subdirectory(kdgantt1)
   macro_optional_add_subdirectory(strigi-analyzer)
