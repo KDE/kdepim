@@ -101,12 +101,12 @@ class StandardContactActionManager::Private
           if ( index.isValid() ) {
             const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
             if ( collection.isValid() ) {
-              // action is only visible if the collection is a resource collection
-              bool isVisible = (collection.parentCollection() == Collection::root());
+              // action is only enabled if the collection is a resource collection
+              bool isEnabled = (collection.parentCollection() == Collection::root());
               if ( mActions.contains( StandardContactActionManager::DeleteAddressBook ) )
-                mActions[ StandardContactActionManager::DeleteAddressBook ]->setVisible( isVisible );
+                mActions[ StandardContactActionManager::DeleteAddressBook ]->setEnabled( isEnabled );
               if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
-                mActions[ StandardContactActionManager::ConfigureAddressBook ]->setVisible( isVisible );
+                mActions[ StandardContactActionManager::ConfigureAddressBook ]->setEnabled( isEnabled );
             }
           }
         }
@@ -314,7 +314,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setIcon( KIcon( "edit-delete" ) );
       action->setText( i18n( "&Delete Address Book" ) );
       action->setWhatsThis( i18n( "Delete the selected address book<p>The currently selected address book will be deleted, along with all the contacts and contact groups it contains.</p>" ) );
-      action->setVisible( false );
+      action->setEnabled( false );
       d->mActions.insert( DeleteAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( deleteAddressBookTriggered() ) );
@@ -324,7 +324,7 @@ KAction* StandardContactActionManager::createAction( Type type )
       action->setIcon( KIcon( "configure" ) );
       action->setText( i18n( "Address Book Properties..." ) );
       action->setWhatsThis( i18n( "Open a dialog to edit properties of the selected address book." ) );
-      action->setVisible( false );
+      action->setEnabled( false );
       d->mActions.insert( ConfigureAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_properties" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( configureAddressBookTriggered() ) );
