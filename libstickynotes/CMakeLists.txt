@@ -65,12 +65,8 @@ SET(STICKYNOTES_HDRS	include/StickyNotes/AbstractNoteItem
 			include/remotenoteitem.h
 			include/remotenotemessage.h
 			include/remoteservicemessage.h
-			${CMAKE_BINARY_DIR}/include/StickyNotes/config-stickynotes.h)
+			${CMAKE_CURRENT_BINARY_DIR}/include/StickyNotes/config-stickynotes.h)
 
-
-INCLUDE_DIRECTORIES(BEFORE SYSTEM   ${CMAKE_BINARY_DIR}
-				    ${CMAKE_BINARY_DIR}/include
-				    ${CMAKE_SOURCE_DIR}/include)
 
 KDE4_ADD_LIBRARY(stickynotes	${STICKYNOTES_SRCS}
 				${STICKYNOTES_RC_SRCS})
@@ -80,7 +76,7 @@ target_link_libraries(stickynotes ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS stickynotes ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-INSTALL(FILES ${STICKYNOTES_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/StickyNotes)
+#INSTALL(FILES ${STICKYNOTES_HDRS} DESTINATION ${INCLUDE_INSTALL_DIR}/StickyNotes)
 
 ADD_SUBDIRECTORY(demo)
 
