@@ -7,7 +7,7 @@ Problems addressed
 * kolab/issue1499: using the result of an ldap query from the address selection dialog for setting folder
                    rights might fail (rt#5298)
 * kolab/issue3900: confirm dialog will be empty, if a contact without email address is added from the lookup
-
+* kolab/issue3667: attachment icon is missing in use with OL/toltec (rt#5786)
 
 Friday, October 2th 2009
 
