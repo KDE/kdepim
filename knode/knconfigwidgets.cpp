@@ -499,6 +499,7 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
 
   mIntervalChecking->setChecked( a->intervalChecking() );
   mInterval->setValue( a->checkInterval() );
+  mInterval->setSuffix(ki18np(" minute", " minutes"));
 
   // identity tab
   mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.componentData(), this );
@@ -1766,30 +1767,30 @@ KNode::GroupCleanupWidget::GroupCleanupWidget( Cleanup *data, QWidget *parent )
   connect( mExpEnabled, SIGNAL(toggled(bool)), SIGNAL(changed()) );
 
   mExpDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
+  mExpDays->setSuffix(ki18np(" day", " days"));
   QLabel *label = new QLabel( i18n("&Purge groups every:"), mExpGroup );
   label->setBuddy( mExpDays );
   grid->addWidget( label, 2, 0 );
   grid->addWidget( mExpDays, 2, 1, Qt::AlignRight );
   connect( mExpDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
-  connect( mExpDays, SIGNAL(valueChanged(int)), SLOT(expDaysChanged(int)) );
   connect( mExpEnabled, SIGNAL(toggled(bool)), label, SLOT(setEnabled(bool)) );
   connect( mExpEnabled, SIGNAL(toggled(bool)), mExpDays, SLOT(setEnabled(bool)) );
 
   mExpReadDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
+  mExpReadDays->setSuffix(ki18np(" day", " days"));
   label = new QLabel( i18n("&Keep read articles:"), mExpGroup );
   label->setBuddy( mExpReadDays );
   grid->addWidget( label, 3, 0 );
   grid->addWidget( mExpReadDays, 3, 1, Qt::AlignRight );
   connect( mExpReadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
-  connect( mExpReadDays, SIGNAL(valueChanged(int)), SLOT(expReadDaysChanged(int)) );
 
   mExpUnreadDays = new KIntSpinBox( 0, 99999, 1, 0, mExpGroup );
+  mExpUnreadDays->setSuffix(ki18np(" day", " days"));
   label = new QLabel( i18n("Keep u&nread articles:"), mExpGroup );
   label->setBuddy( mExpUnreadDays );
   grid->addWidget( label, 4, 0 );
   grid->addWidget( mExpUnreadDays, 4, 1, Qt::AlignRight );
   connect( mExpUnreadDays, SIGNAL(valueChanged(int)), SIGNAL(changed()) );
-  connect( mExpUnreadDays, SIGNAL(valueChanged(int)), SLOT(expUnreadDaysChanged(int)) );
 
   mExpUnavailable = new QCheckBox( i18n("&Remove articles that are not available on the server"), mExpGroup );
   grid->addWidget( mExpUnavailable, 5, 0, 1, 2 );
@@ -1838,22 +1839,6 @@ void KNode::GroupCleanupWidget::slotDefaultToggled( bool state )
 }
 
 
-void KNode::GroupCleanupWidget::expDaysChanged(int value)
-{
-  mExpDays->setSuffix( i18np(" day", " days", value) );
-}
-
-void KNode::GroupCleanupWidget::expReadDaysChanged(int value)
-{
-  mExpReadDays->setSuffix( i18np(" day", " days", value) );
-}
-
-void KNode::GroupCleanupWidget::expUnreadDaysChanged(int value)
-{
-  mExpUnreadDays->setSuffix( i18np(" day", " days", value) );
-}
-
-
 KNode::CleanupWidget::CleanupWidget( const KComponentData &inst,QWidget *parent ) :
   KCModule(inst, parent ),
   d_ata( knGlobals.configManager()->cleanup() )
@@ -1880,12 +1865,12 @@ KNode::CleanupWidget::CleanupWidget( const KComponentData &inst,QWidget *parent 
   foldersL->addWidget(f_olderCB,1,0, 1, 2 );
 
   f_olderDays=new KIntSpinBox( 0, 99999, 1, 0, foldersB );
+  f_olderDays->setSuffix(ki18np(" day", " days"));
   f_olderDaysL=new QLabel(i18n("P&urge folders every:"),foldersB);
   f_olderDaysL->setBuddy(f_olderDays);
   foldersL->addWidget(f_olderDaysL,2,0);
   foldersL->addWidget(f_olderDays,2,1,Qt::AlignRight);
   connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(changed()));
-  connect(f_olderDays, SIGNAL(valueChanged(int)), SLOT(slotFolderDaysChanged(int)));
 
   foldersL->setColumnStretch(1,1);
 
@@ -1925,11 +1910,6 @@ void KNode::CleanupWidget::slotFolderCBtoggled(bool b)
   f_olderDaysL->setEnabled(b);
   f_olderDays->setEnabled(b);
   emit changed(true);
-}
-
-void KNode::CleanupWidget::slotFolderDaysChanged(int value)
-{
-  f_olderDays->setSuffix(i18np(" day", " days", value));
 }
 
 //END: Cleanup configuration widgets -----------------------------------------

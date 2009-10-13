@@ -40,10 +40,10 @@
 #include <klocale.h>
 #include <kconfig.h>
 #include <kglobal.h>
+#include <knuminput.h>
 
 #include <QLayout>
 #include <QLabel>
-#include <QSpinBox>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QPushButton>
@@ -140,10 +140,10 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   row = -1;
 
   ++row;
-  mLoglenSB = new QSpinBox( group );
+  mLoglenSB = new KIntSpinBox( group );
   mLoglenSB->setRange( 0, 1000000 );
   mLoglenSB->setSingleStep( 100 );
-  mLoglenSB->setSuffix( i18nc("history size spinbox suffix"," lines") );
+  mLoglenSB->setSuffix( ki18ncp("history size spinbox suffix", " line", " lines") );
   mLoglenSB->setSpecialValueText( i18n("unlimited") );
   label = new QLabel( i18n("&History size:"), group );
   label->setBuddy( mLoglenSB );
