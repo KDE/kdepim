@@ -1,5 +1,4 @@
 include_directories(
-  ${kdepim-runtime_SOURCE_DIR}
   ${Boost_INCLUDE_DIR}
 )
 
