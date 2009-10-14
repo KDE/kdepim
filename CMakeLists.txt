@@ -103,7 +103,7 @@ else(KDEPIM_ONLY_KLEO)
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
-  macro_optional_add_subdirectory(Grantlee)
+  macro_optional_find_package(Grantlee)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
 
 
