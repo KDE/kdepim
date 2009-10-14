@@ -12,6 +12,7 @@ Type=Application
 X-DocPath=mailreader/index.html
 GenericName=A KDE4 Application
 GenericName[en_GB]=A KDE4 Application
+GenericName[nl]=Een KDE4-programma
 GenericName[pt]=Uma Aplicação do KDE4
 GenericName[pt_BR]=Um aplicativo do KDE4
 GenericName[sv]=Ett KDE 4-program

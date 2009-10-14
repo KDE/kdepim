@@ -6,6 +6,9 @@ set(akonablog_bin_SRCS
     microblogdelegate.cpp
     akonaditabbar.cpp
 )
+include_directories(
+  ${Boost_INCLUDE_DIR}
+)
 
 kde4_add_app_icon(akonablog_bin_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/email.png")
 

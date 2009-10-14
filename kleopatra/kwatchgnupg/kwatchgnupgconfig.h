@@ -37,7 +37,7 @@
 
 class QCheckBox;
 class QComboBox;
-class QSpinBox;
+class KIntSpinBox;
 class KUrlRequester;
 
 namespace Kleo {
@@ -65,7 +65,7 @@ private:
   Kleo::FileNameRequester* mExeED;
   Kleo::FileNameRequester* mSocketED;
   QComboBox* mLogLevelCB;
-  QSpinBox* mLoglenSB;
+  KIntSpinBox* mLoglenSB;
   QCheckBox* mWordWrapCB;
 };
 

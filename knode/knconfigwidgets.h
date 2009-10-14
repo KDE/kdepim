@@ -615,9 +615,6 @@ class KNODE_EXPORT GroupCleanupWidget : public QWidget {
 
   private slots:
     void slotDefaultToggled( bool state );
-    void expDaysChanged( int value );
-    void expReadDaysChanged( int value );
-    void expUnreadDaysChanged( int value );
 };
 
 
@@ -643,7 +640,6 @@ class KNODE_EXPORT CleanupWidget : public KCModule {
 
   protected slots:
     void slotFolderCBtoggled(bool b);
-    void slotFolderDaysChanged(int value);
 
   private:
     GroupCleanupWidget *mGroupCleanup;

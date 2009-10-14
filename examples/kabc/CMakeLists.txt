@@ -1,4 +1,6 @@
-include_directories( ${kdepim-runtime_SOURCE_DIR} )
+include_directories(
+  ${Boost_INCLUDE_DIR}
+)
 
 set(kabcviewer_bin_SRCS
   kabcviewer.cpp
