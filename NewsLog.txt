@@ -41,7 +41,7 @@ Merges
 
 * Merges from enterprise35 branch:
       - kolab/issue3182: Replies to invitations always sent with default outgoing transport
-      - kolab/issue3813: reccuring events show wrong dates (rt#5855)
+      - kolab/issue3813: Partial fix: reccuring events show wrong dates (rt#5855)
       - kolab/issue3823: mimetreeviewer doesn't show structure of forward-as-attachment message #n where #n > 1
       - kolab/issue3867: Save S/MIME encrypted mails unencrypted after reading them
       - kolab/issue3889: Kontact crahes if opening/changing calendar view (rt#5868)
