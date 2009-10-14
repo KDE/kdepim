@@ -18,7 +18,7 @@ set(kjotsLibs ${KDE4_KIO_LIBS})
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   add_definitions(-DKJOTSKONTACTPLUGIN)
   set(kjotsLibs ${kjotsLibs} kdepim)
-  
+
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
 
 add_subdirectory( icons )
@@ -117,7 +117,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
   ###########################################################################
   set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
 
-  kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS}) 
+  kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS})
 
   target_link_libraries(kcm_kjots  ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
 
