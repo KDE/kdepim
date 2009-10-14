@@ -30,10 +30,10 @@
 #include <KLineEdit>
 
 #include "KJotsSettings.h"
-#include "flatcollectionproxymodel.h"
 #include "kjotsbookshelfentryvalidator.h"
 #include "kjotsentry.h"
 #include "bookshelf.h"
+#include <kdescendantsproxymodel.h>
 
 KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
         KDialog(parent)
@@ -45,9 +45,8 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     showButtonSeparator(true);
     mBookshelf = bookshelf;
 
-    FlatCollectionProxyModel* proxyModel = new FlatCollectionProxyModel( this );
+    KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( this );
     proxyModel->setSourceModel( mBookshelf->model() );
-    proxyModel->setRolesToFlatten( QList< int >() << Qt::DisplayRole << Qt::EditRole );
     proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
 
     QWidget *entries = new QWidget(this);
