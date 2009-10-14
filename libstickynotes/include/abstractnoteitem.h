@@ -30,6 +30,8 @@ namespace StickyNotes {
 
 struct LSN_EXPORT AbstractNoteItem
 {
+        virtual ~AbstractNoteItem() {}
+
 	/*! Get an attribute value.
 	 * \param _name Attribute name
 	 * \return Attribute value
