@@ -194,6 +194,12 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
+
+    if( Nepomuk_FOUND AND SOPRANO_PLUGIN_RAPTORPARSER_FOUND )
+      include( SopranoAddOntology )
+      add_subdirectory( ontologies )
+      add_subdirectory( nepomuk_email_feeder )
+    endif( Nepomuk_FOUND AND SOPRANO_PLUGIN_RAPTORPARSER_FOUND )
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
