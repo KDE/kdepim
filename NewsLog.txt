@@ -237,16 +237,13 @@ Merges
       - Bring back some missing encodings to KMail's composer (KDE bug 202294)
 
 * Merges from enterprise35 branch:
-      - kolab/issue3776: Show the 'Record into my calendar]' button on updated invitations when sharing
+      - kolab/issue3776: Show the 'Record into my calendar' button on updated invitations when sharing
                          a calendar with others who have access rights
       - kolab/issue1536: Default to the sender as organizer when it is not set
-      - kolab/issue3717: Add support for attachments in invitations
       - kolab/issue3808: Rename 'Dismiss' into 'Dismiss Reminder' in the reminder dialog
       - kolab/issue3802: When updating incidences, preserve the UIDs so that the update is correctly registered
       - kolab/issue3375: Make the attachment overview less confusing by making a difference between embedded and
                          normal attachments
-      - kolab/issue3776: Show the 'Record into my calendar' button on updated invitations when sharing
-                         a calendar with others who have access rights
 
 
 Friday, August 7th 2009
