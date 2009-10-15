@@ -46,8 +46,6 @@
 #include <Soprano/QueryResultIterator>
 #include <Soprano/Vocabulary/NAO>
 
-// #include <boost/shared_ptr.hpp>
-
 MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri, NepomukFeederAgentBase* parent) :
   QObject( parent ),
   m_parent( parent ),
@@ -67,27 +65,36 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 
     if ( Settings::self()->indexEncryptedContent() /* TODO != Settings::NoIndexing */ == Settings::CleartextIndex ) {
       m_otp = new MessageViewer::ObjectTreeParser( this );
-      m_otp->setAllowAsync( false ); // FIXME: make async
+      m_otp->setAllowAsync( true );
       m_otp->parseObjectTree( msg.get() );
     }
 
-    // before we walk the part node tree, let's see if there is a main plain text body, so we don't interpret that as an attachment later on
-    m_mainBodyPart = msg->mainBodyPart( "text/plain" );
-    if ( m_mainBodyPart ) {
-      const QString text = m_mainBodyPart->decodedText( true, true );
-      if ( !text.isEmpty() )
-        m_email.setPlainTextMessageContents( QStringList( text ) );
-    }
+    if ( !m_otp || !m_otp->hasPendingAsyncJobs() )
+      processContent( msg );
 
-    processPart( msg.get() );
+  } else {
+    deleteLater();
   }
-
-  deleteLater();
 }
 
 MessageAnalyzer::~MessageAnalyzer()
 {
   delete m_otp;
+}
+
+
+void MessageAnalyzer::processContent(const KMime::Message::Ptr& msg)
+{
+  // before we walk the part node tree, let's see if there is a main plain text body, so we don't interpret that as an attachment later on
+  m_mainBodyPart = msg->mainBodyPart( "text/plain" );
+  if ( m_mainBodyPart ) {
+    const QString text = m_mainBodyPart->decodedText( true, true );
+    if ( !text.isEmpty() )
+      m_email.setPlainTextMessageContents( QStringList( text ) );
+  }
+
+  processPart( msg.get() );
+  deleteLater();
 }
 
 void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
@@ -208,7 +215,11 @@ void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLa
 
 void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
 {
-  kDebug() << mode;
+  kDebug() << m_otp->hasPendingAsyncJobs();
+  const KMime::Message::Ptr msg = m_item.payload<KMime::Message::Ptr>();
+  m_otp->parseObjectTree( msg.get() );
+  if ( !m_otp->hasPendingAsyncJobs() )
+    processContent( msg );
 }
 
 #include "messageanalyzer.moc"
