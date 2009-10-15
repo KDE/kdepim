@@ -28,18 +28,24 @@
 #include <nmo.h>
 #include <mailboxdataobject.h>
 
+#include <messagecore/messagestatus.h>
+
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>
 
+#include <klocalizedstring.h>
+
 #include <Nepomuk/Resource>
 #include <Nepomuk/ResourceManager>
 #include <Nepomuk/Variant>
+#include <Nepomuk/Tag>
 
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
+#include <Soprano/Vocabulary/NAO>
 
-#include <boost/shared_ptr.hpp>
+// #include <boost/shared_ptr.hpp>
 
 MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri, NepomukFeederAgentBase* parent) :
   QObject( parent ),
@@ -51,10 +57,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 {
   NepomukFeederAgentBase::setParent( m_email, item );
 
-  // the \Seen flag is in MailboxDataObject instead of Email...
-  NepomukFast::MailboxDataObject mdb( item.url(), graphUri );
-  mdb.setIsReads( QList<bool>() << item.flags().contains( "\\Seen" ) );
-
+  processFlags( item.flags() );
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   processHeaders( msg );
 
@@ -167,5 +170,32 @@ QList< NepomukFast::Contact > MessageAnalyzer::extractContactsFromMailboxes(cons
 
   return contacts;
 }
+
+void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
+{
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags( flags );
+
+  // the \Seen flag is in MailboxDataObject instead of Email...
+  NepomukFast::MailboxDataObject mdb( m_item.url(), graphUri() );
+  mdb.setIsReads( QList<bool>() << status.isRead() );
+
+  if ( status.isImportant() )
+    addTranslatedTag( "important", i18n("Important") );
+  if ( status.isToAct() )
+    addTranslatedTag( "todo", i18n("To Do") );
+  if ( status.isWatched() )
+    addTranslatedTag( "watched", i18n("Watched") );
+}
+
+
+void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLabel)
+{
+ Nepomuk::Tag tag( QString::fromLatin1( tagName ) );
+ if ( tag.label().isEmpty() )
+    tag.setLabel( tagLabel );
+  m_email.addProperty( Soprano::Vocabulary::NAO::hasTag(), tag.resourceUri() );
+}
+
 
 #include "messageanalyzer.moc"
