@@ -114,6 +114,12 @@ public:
    */
   void focusQuickSearch();
 
+  /**
+   * Returns true if the current Aggregation is threaded, false otherwise
+   * (or if there is no current Aggregation).
+   */
+  bool isThreaded() const;
+
 
 public slots:
 

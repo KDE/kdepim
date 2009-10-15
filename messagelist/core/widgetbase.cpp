@@ -1116,3 +1116,7 @@ void Widget::focusQuickSearch()
   }
 }
 
+bool Widget::isThreaded() const
+{
+  return d->mView->isThreaded();
+}

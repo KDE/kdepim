@@ -240,6 +240,14 @@ public:
    */
   QString currentFilterSearchString() const;
 
+
+  /**
+   * Returns true if the current Aggregation is threaded, false otherwise
+   * (or if there is no current Aggregation).
+   */
+  bool isThreaded() const;
+
+
 public slots:
   /**
    * Selects all the items in the current folder.

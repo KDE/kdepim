@@ -508,3 +508,8 @@ QString Widget::currentFilterSearchString() const
   return view()->currentFilterSearchString();
 }
 
+
+bool Widget::isThreaded() const
+{
+  return view()->isThreaded();
+}

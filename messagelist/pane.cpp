@@ -484,4 +484,15 @@ QString Pane::currentFilterSearchString() const
   }
   return w->currentFilterSearchString();
 }
+
+bool Pane::isThreaded() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return false;
+  }
+  return w->isThreaded();
+}
+
+
 #include "pane.moc"
