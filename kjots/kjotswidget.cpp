@@ -1,7 +1,7 @@
 /*
     This file is part of KJots.
 
-    Copyright (c) 2008 Stephen Kelly <steveire@gmail.com>
+    Copyright (c) 2008-2009 Stephen Kelly <steveire@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -21,57 +21,48 @@
 
 #include "kjotswidget.h"
 
+// Qt
 #include <QHBoxLayout>
+#include <QInputDialog>
 #include <QSplitter>
 #include <QStackedWidget>
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <QTextBrowser>
-#include <QInputDialog>
 
-#include <QDirModel>
-#include <QColumnView>
-
-#include <QSortFilterProxyModel>
-
-#include <akonadi/agentinstancecreatejob.h>
-#include <akonadi/agentmanager.h>
-#include <akonadi/agenttype.h>
-#include <akonadi/changerecorder.h>
+// Akonadi
 #include <akonadi/control.h>
-#include "collectionchildorderattribute.h"
-#include <akonadi/collectionfetchjob.h>
-#include <akonadi/collectionmodel.h>
-#include <kdescendantsproxymodel.h>
+#include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entityfilterproxymodel.h>
-#include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <akonadi/monitor.h>
 #include <akonadi/session.h>
-#include <kselectionproxymodel.h>
-// #include <akonadi/partfetcher.h>
 
+// Grantlee
 #include <grantlee/template.h>
 #include <grantlee/engine.h>
 #include <grantlee/context.h>
 
-#include <KTextEdit>
-#include <KLocale>
+// KDE
+#include <kdescendantsproxymodel.h>
 #include <KFileDialog>
+#include <KLocale>
 #include <KMessageBox>
+#include <kselectionproxymodel.h>
 #include <KStandardDirs>
+#include <KTextEdit>
+
+// KMime
 #include <KMime/KMimeMessage>
 
-#include "kjotspage.h"
+// KJots
 #include "kjotsmodel.h"
 
 #include <kdebug.h>
-#include "modeltest.h"
 
 #include <memory>
 
@@ -82,65 +73,27 @@ KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
     : QWidget( parent, f )
 {
 
+  Akonadi::Control::widgetNeedsAkonadi( this );
+  Akonadi::Control::start( this );
+
+
   QSplitter *splitter = new QSplitter( this );
   QHBoxLayout *layout = new QHBoxLayout( this );
 
   KStandardDirs KStd;
   Engine *engine = Engine::instance();
-  engine->setPluginDirs(KStd.findDirs("lib", QLatin1String( "grantlee" ) ) );
+  engine->setPluginDirs( KStd.findDirs( "lib", QLatin1String( "grantlee" ) ) );
 
   m_loader = FileSystemTemplateLoader::Ptr( new FileSystemTemplateLoader() );
-  m_loader->setTemplateDirs(KStd.findDirs("data", QLatin1String("kjotsrewrite/themes")));
+  m_loader->setTemplateDirs( KStd.findDirs( "data", QLatin1String( "kjotsrewrite/themes" ) ) );
   m_loader->setTheme( QLatin1String( "default" ) );
 
   engine->addTemplateLoader( m_loader );
 
   treeview = new EntityTreeView( splitter );
-//   treeview = new QColumnView(splitter);
-//   treeview->setSortingEnabled(false);
-
-  if ( !Akonadi::Control::start() ) {
-    kFatal() << "Unable to start Akonadi server, exit application";
-    return;
-  }
-
-  // TODO: Tell akonadi to load the "akonadi_kjots_resource" if it's not already loaded.
-  // This can't be done synchronously, but the monitor will notify the model that it has new collections
-  // when the job is done.
-
-  // Check  Akonadi::AgentManager::self()->instances() if it contains one, if it doesn't create one and report errors
-  // if necessary.
-
-//   Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
-//
-//   Akonadi::AgentType::List types = manager->types();
-//   foreach( const Akonadi::AgentType &type, types ) {
-//     qDebug() << "Type:" << type.name() << type.description() << type.identifier();
-//     Akonadi::AgentInstance instance = manager->instance(type.identifier());
-// // //     kDebug() << "instance:" << instance.identifier() << instance.name();
-// // //     instance.setIsOnline(true);
-//     instance.synchronize();
-// //     Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob( type );
-// //     job->start();
-//   }
-// //   kFatal();
-
-//   kDebug() << "ins";
-//   foreach( Akonadi::AgentInstance instance, manager->instances() ) {
-//     qDebug() << "Type:" << instance.name() << instance.identifier();
-//     instance.setIsOnline(true);
-//     instance.synchronize();
-// //     Akonadi::AgentInstance instance = m
-//   }
-//   kDebug() << "ins done";
-
-  // Use Collection::root as the top level 'bookshelf'
-  Collection rootCollection = Collection::root();
 
   ItemFetchScope scope;
-//   scope.fetchPayloadPart( "title" );
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
-//   scope.fetchAttribute< CollectionChildOrderAttribute >();
   scope.fetchAttribute< EntityDisplayAttribute >();
 
   ChangeRecorder *monitor = new ChangeRecorder( this );
@@ -148,51 +101,21 @@ KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
   monitor->setItemFetchScope( scope );
   monitor->setCollectionMonitored( Collection::root() );
   monitor->setMimeTypeMonitored( QLatin1String( "text/x-vnd.akonadi.note" ) );
-//   monitor->setCollectionMonitored( rootCollection );
-//   monitor->fetchCollectionStatistics( false );
 
   Session *session = new Session( QByteArray( "EntityTreeModel-" ) + QByteArray::number( qrand() ), this );
 
-  etm = new KJotsModel(session, monitor, this);
-//   etm->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
-//   etm->setItemPopulationStrategy(EntityTreeModel::LazyPopulation);
-//   etm->setIncludeRootCollection(true);
-//   etm->setRootCollectionDisplayName("[All]");
+  m_kjotsModel = new KJotsModel(session, monitor, this);
 
-//   DescendantEntitiesProxyModel *demp = new DescendantEntitiesProxyModel( //QModelIndex(),
-//   this );
-//   demp->setSourceModel(etm);
-//   demp->setRootIndex(QModelIndex());
+  treeview->setModel( m_kjotsModel );
+  treeview->setSelectionMode( QAbstractItemView::ExtendedSelection );
 
-//   demp->setDisplayAncestorData(true, QString(" / "));
-
-//   EntityFilterProxyModel *proxy = new EntityFilterProxyModel();
-//   proxy->setSourceModel(etm);
-//   proxy->addMimeTypeInclusionFilter( Collection::mimeType() );
-
-//   new ModelTest(proxy, this);
-//   new ModelTest( etm, this );
-//   new ModelTest( dem, this );
-//   new ModelTest( demp, this );
-
-//   treeview->setModel(proxy);
-//   treeview->setModel( dem );
-//   treeview->setModel( demp );
-//   treeview->setModel( fcp );
-
-//   QDirModel *dm = new QDirModel(this);
-//   treeview->setModel( dm );
-//   treeview->setModel( proxy );
-  treeview->setModel( etm );
-  treeview->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-  selProxy = new KSelectionProxyModel(treeview->selectionModel(), this);
-  selProxy->setSourceModel(etm);
+  selProxy = new KSelectionProxyModel( treeview->selectionModel(), this );
+  selProxy->setSourceModel( m_kjotsModel );
 
   // TODO: Write a QAbstractItemView subclass to render kjots selection.
-  connect(selProxy, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()));
-  connect(selProxy, SIGNAL(rowsInserted(const QModelIndex &, int, int)), SLOT(renderSelection()));
-  connect(selProxy, SIGNAL(rowsRemoved(const QModelIndex &, int, int)), SLOT(renderSelection()));
+  connect( selProxy, SIGNAL( dataChanged(QModelIndex,QModelIndex)), SLOT(renderSelection()) );
+  connect( selProxy, SIGNAL( rowsInserted(const QModelIndex &, int, int)), SLOT(renderSelection()) );
+  connect( selProxy, SIGNAL( rowsRemoved(const QModelIndex &, int, int)), SLOT(renderSelection()) );
 
   stackedWidget = new QStackedWidget( splitter );
 
@@ -205,26 +128,6 @@ KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
 }
-
-void KJotsWidget::itemActivated(const QModelIndex& index )
-{
-  return;
-}
-
-void KJotsWidget::partFetched(const QModelIndex& index, Item item, const QByteArray& partName)
-{
-  disconnect (sender(), SIGNAL(partFetched(QModelIndex,Item,QByteArray)), this, SLOT(partFetched(QModelIndex,Item,QByteArray)));
-  disconnect (sender(), SIGNAL(invalidated()), this, SLOT(invalidated()));
-
-  delete sender();
-}
-
-void KJotsWidget::invalidated()
-{
-  kDebug() << sender() << "invalidated";
-}
-
-
 
 KJotsWidget::~KJotsWidget()
 {
@@ -270,15 +173,6 @@ QString KJotsWidget::renderSelectionToHtml()
   {
     QModelIndex idx = selProxy->index(row, column, QModelIndex());
 
-//     PartFetcher *fetcher = new PartFetcher(this);
-//     connect (fetcher, SIGNAL(partFetched(QModelIndex,Item,QByteArray)), SLOT(partFetched(QModelIndex,Item,QByteArray)));
-//     connect (fetcher, SIGNAL(invalidated()), SLOT(invalidated()));
-//     if (!fetcher->fetchPart(idx, "content"))
-//     {
-//       disconnect (fetcher, SIGNAL(partFetched(QModelIndex,Item,QByteArray)), this, SLOT(partFetched(QModelIndex,Item,QByteArray)));
-//       disconnect (fetcher, SIGNAL(invalidated()), this, SLOT(invalidated()));
-//     }
-
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
     objectList << QVariant::fromValue(obj);
   }
@@ -302,15 +196,6 @@ void KJotsWidget::renderSelection()
   if (rows == 1)
   {
     QModelIndex idx = selProxy->index( 0, 0, QModelIndex());
-
-//     PartFetcher *fetcher = new PartFetcher(this);
-//     connect (fetcher, SIGNAL(partFetched(QModelIndex,Item,QByteArray)), SLOT(partFetched(QModelIndex,Item,QByteArray)));
-//     connect (fetcher, SIGNAL(invalidated()), SLOT(invalidated()));
-//     if (!fetcher->fetchPart(idx, "content"))
-//     {
-//       disconnect (fetcher, SIGNAL(partFetched(QModelIndex,Item,QByteArray)), this, SLOT(partFetched(QModelIndex,Item,QByteArray)));
-//       disconnect (fetcher, SIGNAL(invalidated()), this, SLOT(invalidated()));
-//     }
 
     Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
     if (item.isValid())
@@ -346,7 +231,6 @@ QString KJotsWidget::getThemeFromUser()
   }
 
   return text;
-
 }
 
 
