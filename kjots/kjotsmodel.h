@@ -72,6 +72,8 @@ public:
     GrantleeObjectRole = EntityTreeModel::UserRole
   };
 
+  // We don't reimplement the Collection overload.
+  using EntityTreeModel::getData;
   virtual QVariant getData( const Akonadi::Item& item, int column, int role = Qt::DisplayRole ) const;
 
   QVariant data(const QModelIndex &index, int role) const;

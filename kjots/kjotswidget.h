@@ -27,6 +27,7 @@
 #include <akonadi/item.h>
 
 #include <grantlee/templateloader.h>
+#include <QItemSelection>
 
 class QTextBrowser;
 class QTextCursor;
@@ -43,7 +44,7 @@ class EntityTreeView;
 }
 
 
-class KJOTS_COMMON_EXPORT KJotsWidget : public QWidget
+class KJotsWidget : public QWidget
 {
   Q_OBJECT
 
@@ -51,16 +52,37 @@ public:
   KJotsWidget( QWidget *parent = 0, Qt::WindowFlags f = 0 );
   ~KJotsWidget();
 
+public slots:
+  void prevPage();
+  void nextPage();
+  void prevBook();
+  void nextBook();
+  bool canGoNextPage() const;
+  bool canGoPreviousPage() const;
+  bool canGoNextBook() const;
+  bool canGoPreviousBook() const;
+
+signals:
+  void canGoNextPageChanged( bool );
+  void canGoPreviousPageChanged( bool );
+  void canGoNextBookChanged( bool );
+  void canGoPreviousBookChanged( bool );
+
 protected:
   QString renderSelectionToHtml();
   QString getThemeFromUser();
+
+  void selectNext( int role, int step );
 
 protected slots:
   void renderSelection();
   void changeTheme();
   void exportSelection();
   void savePage( const QModelIndex &, int, int );
-  void itemActivated( const QModelIndex & );
+
+private slots:
+  void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+  bool canGo( int role, int step ) const;
 
 private:
   KTextEdit      *editor;

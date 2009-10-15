@@ -117,6 +117,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
   connect( selProxy, SIGNAL( rowsInserted(const QModelIndex &, int, int)), SLOT(renderSelection()) );
   connect( selProxy, SIGNAL( rowsRemoved(const QModelIndex &, int, int)), SLOT(renderSelection()) );
 
+  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+
   stackedWidget = new QStackedWidget( splitter );
 
   editor = new KTextEdit( stackedWidget );
@@ -169,9 +171,9 @@ QString KJotsWidget::renderSelectionToHtml()
 
   const int rows = selProxy->rowCount();
   const int column = 0;
-  for (int row = 0; row < rows; ++row)
+  for ( int row = 0; row < rows; ++row )
   {
-    QModelIndex idx = selProxy->index(row, column, QModelIndex());
+    QModelIndex idx = selProxy->index( row, column, QModelIndex() );
 
     QObject *obj = idx.data(KJotsModel::GrantleeObjectRole).value<QObject*>();
     objectList << QVariant::fromValue(obj);
@@ -264,6 +266,108 @@ void KJotsWidget::exportSelection()
     exportFile.close();
   }
   m_loader->setTheme(currentTheme);
+}
+
+
+void KJotsWidget::selectNext( int role, int step )
+{
+  QModelIndexList list = treeview->selectionModel()->selectedRows();
+  Q_ASSERT( list.size() == 1 );
+
+  QModelIndex idx = list.at( 0 );
+
+  const int column = idx.column();
+
+  QModelIndex sibling = idx.sibling( idx.row() + step, column );
+  while ( sibling.isValid() )
+  {
+    if ( sibling.data( role ).toInt() >= 0 )
+    {
+      treeview->selectionModel()->select( sibling, QItemSelectionModel::SelectCurrent );
+      return;
+    }
+    sibling = sibling.sibling( sibling.row() + step, column );
+  }
+  kWarning( "No valid selection" );
+}
+
+void KJotsWidget::nextBook()
+{
+  return selectNext( EntityTreeModel::CollectionIdRole, 1 );
+}
+
+void KJotsWidget::nextPage()
+{
+  return selectNext( EntityTreeModel::ItemIdRole, 1 );
+}
+
+void KJotsWidget::prevBook()
+{
+  return selectNext( EntityTreeModel::CollectionIdRole, -1 );
+}
+
+void KJotsWidget::prevPage()
+{
+  return selectNext( EntityTreeModel::ItemIdRole, -1 );
+}
+
+bool KJotsWidget::canGo( int role, int step ) const
+{
+  QModelIndexList list = treeview->selectionModel()->selectedRows();
+  if ( list.size() != 1 )
+  {
+    return false;
+  }
+
+  QModelIndex currentIdx = list.at( 0 );
+
+  const int column = currentIdx.column();
+
+  Q_ASSERT( currentIdx.isValid() );
+
+  QModelIndex sibling = currentIdx.sibling( currentIdx.row() + step, column );
+
+  while ( sibling.isValid() && sibling != currentIdx )
+  {
+    kDebug() << sibling << sibling.data() << sibling.data( role ).toInt();
+    if ( sibling.data( role ).toInt() >= 0 )
+      return true;
+
+    sibling = sibling.sibling( sibling.row() + step, column );
+  }
+
+  return false;
+}
+
+bool KJotsWidget::canGoNextPage() const
+{
+  return canGo( EntityTreeModel::ItemIdRole, 1 );
+}
+
+bool KJotsWidget::canGoPreviousPage() const
+{
+  return canGo( EntityTreeModel::ItemIdRole, -1 );
+}
+
+bool KJotsWidget::canGoNextBook() const
+{
+  return canGo( EntityTreeModel::CollectionIdRole, 1 );
+}
+
+bool KJotsWidget::canGoPreviousBook() const
+{
+  return canGo( EntityTreeModel::CollectionIdRole, -1 );
+}
+
+void KJotsWidget::selectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
+{
+  Q_UNUSED( selected );
+  Q_UNUSED( deselected );
+
+  emit canGoNextBookChanged( canGoPreviousBook() );
+  emit canGoNextPageChanged( canGoNextPage() );
+  emit canGoPreviousBookChanged( canGoPreviousBook() );
+  emit canGoPreviousPageChanged( canGoPreviousPage() );
 }
 
 
