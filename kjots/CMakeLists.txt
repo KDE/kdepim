@@ -1,5 +1,8 @@
 project(kjots)
 
+
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(KDE4 REQUIRED)
   include(KDE4Defaults)
@@ -18,7 +21,6 @@ set(kjotsLibs ${KDE4_KIO_LIBS})
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   add_definitions(-DKJOTSKONTACTPLUGIN)
   set(kjotsLibs ${kjotsLibs} kdepim)
-
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
 
 add_subdirectory( icons )
@@ -45,6 +47,8 @@ set (kjots_common_SRCS
      bookshelf.cpp
      kjotscomponent.cpp
      kjotsreplacenextdialog.cpp
+     kjotsmodel.cpp
+     kjotswidget.cpp
      kjotsbrowser.cpp
      kjotslinkdialog.cpp
      kjotsbookshelfentryvalidator.cpp
@@ -72,7 +76,14 @@ set(kjots_SRCS
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
-target_link_libraries(kjots ${kjotsLibs} ${KDE4_KUTILS_LIBS})
+target_link_libraries(kjots
+  ${kjotsLibs}
+  ${KDE4_KUTILS_LIBS}
+  ${KDE4_AKONADI_LIBS}
+  ${KDE4_AKONADI_KMIME_LIBS}
+  grantlee_core_library
+)
+
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   target_link_libraries(kjots ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} )
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
@@ -106,7 +117,15 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
   )
 
 
-  target_link_libraries(kjotspart ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS} kdepim)
+  target_link_libraries(kjotspart
+    ${KDE4_KUTILS_LIBS}
+    ${KDE4_KPARTS_LIBS}
+    kdepim
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDE4_AKONADI_LIBS}
+    ${KDE4_AKONADI_KMIME_LIBS}
+    grantlee_core_library
+  )
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
   install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
