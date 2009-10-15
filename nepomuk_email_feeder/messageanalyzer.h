@@ -24,6 +24,9 @@
 #include <contact.h>
 #include <email.h>
 
+#include <messageviewer/objecttreeemptysource.h>
+#include <messageviewer/viewer.h>
+
 #include <akonadi/item.h>
 
 #include <kmime/kmime_headers.h>
@@ -32,6 +35,10 @@
 #include <KDE/KUrl>
 #include <QtCore/QObject>
 
+namespace MessageViewer {
+class ObjectTreeParser;
+}
+
 class NepomukFeederAgentBase;
 
 /**
@@ -39,16 +46,26 @@ class NepomukFeederAgentBase;
   operations in the OTP, so we need to isolate state in case multiple items are processed at the same time.
   Also gives us the possibility to parallelizer this later on.
 */
-class MessageAnalyzer : public QObject
+class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
 {
   Q_OBJECT
   public:
     MessageAnalyzer( const Akonadi::Item &item, const QUrl &graphUri, NepomukFeederAgentBase* parent = 0 );
+    ~MessageAnalyzer();
 
     inline QUrl graphUri() const { return m_graphUri; }
 
+    /* reimpl from EmptySource */
+    virtual QObject* sourceObject() { return this; }
+
+  public slots:
+    // needed in EmptySource::sourceObject()
+    void update( MessageViewer::Viewer::UpdateMode mode );
+
   private:
     QList<NepomukFast::Contact> extractContactsFromMailboxes( const KMime::Types::Mailbox::List& mbs, const QUrl&graphUri );
+    void addTranslatedTag( const char* tagName, const QString &tagLabel );
+    void processFlags( const Akonadi::Item::Flags &flags );
     void processHeaders( const KMime::Message::Ptr &msg );
     void processPart( KMime::Content *content );
 
@@ -58,6 +75,7 @@ class MessageAnalyzer : public QObject
     NepomukFast::Email m_email;
     QUrl m_graphUri;
     KMime::Content *m_mainBodyPart;
+    MessageViewer::ObjectTreeParser *m_otp;
 };
 
 #endif

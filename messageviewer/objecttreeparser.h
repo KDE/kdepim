@@ -40,6 +40,7 @@
 #include <QList>
 
 #include "nodehelper.h"
+#include "messageviewer_export.h"
 
 class QString;
 
@@ -107,7 +108,7 @@ private:
 };
 
 
-class ObjectTreeParser {
+class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   class CryptoProtocolSaver;
   /** Internal. Copies the context of @p other, but not it's rawReplyString() */
   ObjectTreeParser( const ObjectTreeParser & other );

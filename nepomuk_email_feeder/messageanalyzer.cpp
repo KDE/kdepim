@@ -28,18 +28,25 @@
 #include <nmo.h>
 #include <mailboxdataobject.h>
 
+#include <messagecore/messagestatus.h>
+#include <messageviewer/objecttreeparser.h>
+
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>
 
+#include <klocalizedstring.h>
+
 #include <Nepomuk/Resource>
 #include <Nepomuk/ResourceManager>
 #include <Nepomuk/Variant>
+#include <Nepomuk/Tag>
 
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
+#include <Soprano/Vocabulary/NAO>
 
-#include <boost/shared_ptr.hpp>
+// #include <boost/shared_ptr.hpp>
 
 MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri, NepomukFeederAgentBase* parent) :
   QObject( parent ),
@@ -47,21 +54,21 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_item( item ),
   m_email( item.url(), graphUri ),
   m_graphUri( graphUri ),
-  m_mainBodyPart( 0 )
+  m_mainBodyPart( 0 ),
+  m_otp( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
 
-  // the \Seen flag is in MailboxDataObject instead of Email...
-  NepomukFast::MailboxDataObject mdb( item.url(), graphUri );
-  mdb.setIsReads( QList<bool>() << item.flags().contains( "\\Seen" ) );
-
+  processFlags( item.flags() );
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   processHeaders( msg );
 
   if ( !msg->body().isEmpty() || !msg->contents().isEmpty() ) {
 
-    if ( Settings::self()->indexEncryptedContent() != Settings::NoIndexing ) {
-      // TODO: run OTP for decryption
+    if ( Settings::self()->indexEncryptedContent() /* TODO != Settings::NoIndexing */ == Settings::CleartextIndex ) {
+      m_otp = new MessageViewer::ObjectTreeParser( this );
+      m_otp->setAllowAsync( false ); // FIXME: make async
+      m_otp->parseObjectTree( msg.get() );
     }
 
     // before we walk the part node tree, let's see if there is a main plain text body, so we don't interpret that as an attachment later on
@@ -76,6 +83,11 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   }
 
   deleteLater();
+}
+
+MessageAnalyzer::~MessageAnalyzer()
+{
+  delete m_otp;
 }
 
 void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
@@ -166,6 +178,37 @@ QList< NepomukFast::Contact > MessageAnalyzer::extractContactsFromMailboxes(cons
   }
 
   return contacts;
+}
+
+void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
+{
+  KPIM::MessageStatus status;
+  status.setStatusFromFlags( flags );
+
+  // the \Seen flag is in MailboxDataObject instead of Email...
+  NepomukFast::MailboxDataObject mdb( m_item.url(), graphUri() );
+  mdb.setIsReads( QList<bool>() << status.isRead() );
+
+  if ( status.isImportant() )
+    addTranslatedTag( "important", i18n("Important") );
+  if ( status.isToAct() )
+    addTranslatedTag( "todo", i18n("To Do") );
+  if ( status.isWatched() )
+    addTranslatedTag( "watched", i18n("Watched") );
+}
+
+
+void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLabel)
+{
+ Nepomuk::Tag tag( QString::fromLatin1( tagName ) );
+ if ( tag.label().isEmpty() )
+    tag.setLabel( tagLabel );
+  m_email.addProperty( Soprano::Vocabulary::NAO::hasTag(), tag.resourceUri() );
+}
+
+void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
+{
+  kDebug() << mode;
 }
 
 #include "messageanalyzer.moc"
