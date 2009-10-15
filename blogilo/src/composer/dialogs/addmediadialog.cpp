@@ -114,7 +114,7 @@ void AddMediaDialog::sltOkClicked()
                 addOtherMediaAttributes();
             }
         } else {
-            KMessageBox::error( this, i18n( "The selected media address is an invalid url." ) );
+            KMessageBox::error( this, i18n( "The selected media address is an invalid URL." ) );
         }
     }
 }

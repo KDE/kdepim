@@ -52,7 +52,7 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent ): QObject( parent )
     kDebug();
     BilboBlog tempBlog = DBMan::self()->blog( blogid );
     if ( tempBlog.isError() ) {
-        KMessageBox::detailedError( mParent, i18n( "Can not fetch the selected blog style."),
+        KMessageBox::detailedError( mParent, i18n( "Cannot fetch the selected blog style."),
                             DBMan::self()->lastErrorText()  );
         return;
     }
@@ -242,7 +242,7 @@ void StyleGetter::sltError( const QString & errMsg )
 {
     kDebug();
 //     QString err = i18n( "An Error occurred on latest transaction.\n%1", errMsg );
-    KMessageBox::detailedError( mParent, i18n( "An error occurred on latest transaction " ), errMsg );
+    KMessageBox::detailedError( mParent, i18n( "An error occurred in the latest transaction." ), errMsg );
 //     KMessageBox::error( mParent, err );
     b->deleteLater();
 }

@@ -449,7 +449,7 @@ void MainWindow::sltPublishPost()
         return;
     }
     if( !activePost || tabPosts->currentIndex() == -1) {
-        KMessageBox::sorry( this, i18n( "There is no open post to submit!" ) );
+        KMessageBox::sorry( this, i18n( "There is no open post to submit." ) );
         kDebug() << "There isn't any post";
         return;
     }
@@ -505,7 +505,7 @@ void MainWindow::sltSavePostLocally()
 void MainWindow::sltError( const QString & errorMessage )
 {
     kDebug() << "Error message: " << errorMessage;
-    KMessageBox::detailedError( this, i18n( "An error occurred on the last transaction." ), errorMessage );
+    KMessageBox::detailedError( this, i18n( "An error occurred in the last transaction." ), errorMessage );
     statusBar()->clearMessage();
     slotBusy(false);
 }

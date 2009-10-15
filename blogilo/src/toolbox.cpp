@@ -117,8 +117,8 @@ void Toolbox::sltReloadCategoryList()
     kDebug();
 //     QAbstractButton *btn = listBlogRadioButtons.checkedButton();
     if ( mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "There isn't any selected blog, \
-you have to select a blog from Blogs page before asking for Category list" ) );
+        KMessageBox::sorry( this, i18n( "No blog has been selected: \
+you have to select a blog from the Blogs page before asking for the list of categories." ) );
         return;
     }
 
@@ -126,7 +126,7 @@ you have to select a blog from Blogs page before asking for Category list" ) );
     b->getCategoryListFromServer();
     connect( b, SIGNAL( sigCategoryListFetched( int ) ), this, SLOT( sltLoadCategoryListFromDB( int ) ) );
     connect( b, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
-    statusbar->showMessage( i18n( "Requesting category list..." ) );
+    statusbar->showMessage( i18n( "Requesting list of categories..." ) );
     this->setCursor( Qt::BusyCursor );
     emit sigBusy( true );
 }
@@ -135,8 +135,8 @@ void Toolbox::sltUpdateEntries(int count)
 {
     kDebug();
     if ( mCurrentBlogId == -1 ) {
-        KMessageBox::sorry( this, i18n( "There isn't any selected blog, \
-you have to select a blog from Blogs page before asking for Entries list" ) );
+        KMessageBox::sorry( this, i18n( "No blog has been selected: \
+you have to select a blog from the Blogs page before asking for the list of entries." ) );
         kDebug() << "There isn't any selected blog.";
         return;
     }
@@ -155,7 +155,7 @@ you have to select a blog from Blogs page before asking for Entries list" ) );
     entryB->getEntriesListFromServer( count );
     connect( entryB, SIGNAL( sigEntriesListFetched( int ) ), this, SLOT( sltLoadEntriesFromDB( int ) ) );
     connect( entryB, SIGNAL( sigError( const QString& ) ), this, SIGNAL( sigError( const QString& ) ) );
-    statusbar->showMessage( i18n( "Requesting Entries list..." ) );
+    statusbar->showMessage( i18n( "Requesting list of entries..." ) );
     this->setCursor( Qt::BusyCursor );
     emit sigBusy( true );
 }
@@ -181,7 +181,7 @@ void Toolbox::sltLoadEntriesFromDB( int blog_id )
         lstItem->setData( 32, listEntries[i].value("id").toInt() );
         lstEntriesList->addItem( lstItem );
     }
-    statusbar->showMessage( i18n( "Entries list received." ), STATUSTIMEOUT );
+    statusbar->showMessage( i18n( "List of entries received." ), STATUSTIMEOUT );
     this->unsetCursor();
     emit sigBusy( false );
 }
@@ -205,7 +205,7 @@ void Toolbox::sltLoadCategoryListFromDB( int blog_id )
         listCategoryCheckBoxes.append( cb );
         frameCat->layout()->addWidget( cb );
     }
-    statusbar->showMessage( i18n( "Category list received." ), STATUSTIMEOUT );
+    statusbar->showMessage( i18n( "List of categories received." ), STATUSTIMEOUT );
     this->unsetCursor();
     emit sigBusy( false );
 }
@@ -214,8 +214,8 @@ void Toolbox::sltRemoveSelectedEntryFromServer()
 {
     if(lstEntriesList->selectedItems().count() < 1)
         return;
-    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog is not undoable!\
-\nAre you sure of removing post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
+    if( KMessageBox::warningYesNoCancel(this, i18n( "Removing a post from your blog cannot be undone.\
+\nAre you sure you want to remove the post with title \"%1\" from your blog?", lstEntriesList->currentItem()->text() ))
     == KMessageBox::Yes) {
         BilboPost post = DBMan::self()->getPostInfo( lstEntriesList->currentItem()->data(32).toInt() );
         Backend *b = new Backend( mCurrentBlogId, this);
@@ -238,7 +238,7 @@ void Toolbox::slotPostRemoved( int blog_id, const BilboPost &post )
 
 void Toolbox::slotError(const QString& errorMessage)
 {
-    KMessageBox::detailedError( this, i18n( "An error occurred on latest transaction" ), errorMessage );
+    KMessageBox::detailedError( this, i18n( "An error occurred in the latest transaction." ), errorMessage );
     statusbar->showMessage( i18nc( "Operation failed", "Failed" ), STATUSTIMEOUT );
     sender()->deleteLater();
 }
@@ -434,7 +434,7 @@ void Toolbox::sltEntriesCopyUrl()
     else if ( !post.link().isEmpty() )
         QApplication::clipboard()->setText( post.link().prettyUrl() );
     else
-        KMessageBox::sorry(this, i18n( "Sorry, There isn't any link field available for this entry on Database." ) );
+        KMessageBox::sorry(this, i18n( "No link field is available in the database for this entry." ) );
 }
 
 Toolbox::~Toolbox()
@@ -508,14 +508,14 @@ void Toolbox::sltRemoveLocalEntry()
     kDebug();
     if(localEntriesTable->selectedItems().count() > 0) {
         int local_id = localEntriesTable->item(localEntriesTable->currentRow(), 0)->data(32).toInt();
-        if( KMessageBox::warningYesNo(this, i18n("Are you sure of removing selected local entry?"))
+        if( KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected local entry?"))
             == KMessageBox::No )
             return;
 
         if( DBMan::self()->removeLocalEntry(local_id) ) {
             localEntriesTable->removeRow(localEntriesTable->currentRow());
         } else {
-            KMessageBox::detailedError(this, i18n("Cannot remove selected local entry!"),
+            KMessageBox::detailedError(this, i18n("Cannot remove selected local entry."),
                                        DBMan::self()->lastErrorText());
         }
     } else {
@@ -528,13 +528,13 @@ void Toolbox::clearEntries()
     kDebug();
     if( mCurrentBlogId == -1 )
         return;
-    if ( KMessageBox::warningContinueCancel(this, i18n("Are you sure of clearing entries list?")) ==
+    if ( KMessageBox::warningContinueCancel(this, i18n("Are you sure you want to clear the list of entries?")) ==
          KMessageBox::Cancel )
         return;
     if ( DBMan::self()->clearPosts( mCurrentBlogId ) )
         lstEntriesList->clear();
     else
-        KMessageBox::detailedSorry(this, i18n( "Can not clear entries list." ) , DBMan::self()->lastErrorText());
+        KMessageBox::detailedSorry(this, i18n( "Cannot clear the list of entries." ) , DBMan::self()->lastErrorText());
 }
 
 void Toolbox::setDateTimeNow()
