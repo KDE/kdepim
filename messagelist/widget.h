@@ -236,6 +236,12 @@ public:
    */
   bool isThreaded() const;
 
+  /**
+   * Fast function that determines if the selection is empty
+   */
+  bool selectionEmpty() const;
+
+
 protected:
   /**
    * Reimplemented from MessageList::Core::Widget

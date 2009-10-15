@@ -513,3 +513,9 @@ bool Widget::isThreaded() const
 {
   return view()->isThreaded();
 }
+
+bool Widget::selectionEmpty() const
+{
+  return view()->selectionEmpty();
+}
+

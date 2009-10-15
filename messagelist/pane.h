@@ -247,6 +247,10 @@ public:
    */
   bool isThreaded() const;
 
+  /**
+   * Fast function that determines if the selection is empty
+   */
+  bool selectionEmpty() const;
 
 public slots:
   /**
@@ -297,6 +301,7 @@ signals:
    * could be useful
    */
   void statusMessage( const QString &message );
+
 
 private:
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))

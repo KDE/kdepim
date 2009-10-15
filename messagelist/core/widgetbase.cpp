@@ -1120,3 +1120,9 @@ bool Widget::isThreaded() const
 {
   return d->mView->isThreaded();
 }
+
+bool Widget::selectionEmpty() const
+{
+  return d->mView->selectionEmpty();
+}
+

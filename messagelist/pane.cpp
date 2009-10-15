@@ -494,5 +494,14 @@ bool Pane::isThreaded() const
   return w->isThreaded();
 }
 
+bool Pane::selectionEmpty() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return false;
+  }
+  return w->selectionEmpty();
+}
+
 
 #include "pane.moc"
