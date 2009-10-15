@@ -85,7 +85,6 @@ Merges
 * Merges from enterprise35 branch:
       - kolab/issue3855: [regression] S/MIME opaque signed and encrypted email suboptimal display
       - kolab/issue2974: Anniversary event has broken title
-      - kolab/issue3864: An invitation of a long event shows a wrong duration
       - kolab/issue3863: Kontact: VCalendar elements should not contain TZID times
       - kolab/issue3853: Crash after renaming a folder
       - kolab/issue2069: Kontact rewrites custom folder types
@@ -143,10 +142,8 @@ Merges
 
 * Merges from enterprise35 branch:
       - kolab/issue3816: event view: some topics miss the colon after the topic name (rt#5855)
-      - kolab/issue3717: The attachment of an invitation isn't displayed.
       - kolab/issue3788: Calendar: A default for the reminder option should be configurable (rt#5841)
       - kolab/issue3827: Address completion ldap, missing results from some sources (rt#5853)
-      - kolab/issue3799: Freebusy authentication dialog appears in the background
       - Don't print "CC:" and "BCC:" in the enterprise header.
       - Fix crash when completing LDAP addresses
 
@@ -278,9 +275,6 @@ Merges
       - kolab/issue3779: Always allow an attendee to remove invitation events from his calendar
       - kolab/issue3788: Make the default time and time unit for new reminders configurable
       - kolab/issue3742: Allow to specify the groupware type of local folders again
-      - kolab/issue3375: When using 'Scroll To' on attachments, mark the scrolled-to attachment with a yellow border
-      - kolab/issue3740: When displaying encapsulated messages in a seperate window, make deleting attachments work
-                         correctly
       - kolab/issue3722: When dragging email messages as attachments, try to use the mail subject as the
                          attachment name in the KOrganizer attachment editor.
       - Fix a problem that attachments in encapsulated messages could not be deleted
@@ -312,8 +306,6 @@ Merges
       - kolab/issue3719: Don't remove linebreaks from the comments on invitations
       - kolab/issue3780: Allow declining an invitation without getting an error message
       - kolab/issue3777: Fix crash when creating a new folder in KMail
-      - kolab/issue3724: Possible fix a problem that when multiple persons have write access to a folder,
-                         things were confused for other users
       - kolab/issue3725: When forwarding an encrypted mail, don't ask for the passphrase twice
       - kolab/issue3781: Allow to delete an accepted appointment without notifing the organizer
 
@@ -351,8 +343,6 @@ Merges
       - kolab/issue3683: Fix the webpage export in KOrganizer not showing the right events
       - kolab/issue3742: Don't show the combo box that changes the folder type for online IMAP folders, since
                          that is not supported there
-      - kolab/issue3724: Fix various issues with invitations if you have access to a calendar of another
-                         person that is also invited
 
 
 Friday, July 17th 2009
@@ -361,8 +351,6 @@ Merges
 ------
 
 * Merges from the KDE 4.3 branch
-      - kolab/issue3707: Fix sent UTF-16 mails being broken
-      - kolab/issue3645: Don't use UNIX end of lines when exporting a calendar to HTML.
       - kolab/issue3696: Don't disable the button that removes phone number fields in KAddressbook
       - kolab/issue3631: Fix mouse clicks not being accepted in the address completer on Windows
       - Fix problems with applications using the wallet getting stuck when the D-Bus daemon dies.
