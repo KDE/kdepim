@@ -29,6 +29,7 @@
 #include <mailboxdataobject.h>
 
 #include <messagecore/messagestatus.h>
+#include <messageviewer/objecttreeparser.h>
 
 #include <akonadi/item.h>
 
@@ -53,7 +54,8 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_item( item ),
   m_email( item.url(), graphUri ),
   m_graphUri( graphUri ),
-  m_mainBodyPart( 0 )
+  m_mainBodyPart( 0 ),
+  m_otp( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
 
@@ -63,8 +65,10 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 
   if ( !msg->body().isEmpty() || !msg->contents().isEmpty() ) {
 
-    if ( Settings::self()->indexEncryptedContent() != Settings::NoIndexing ) {
-      // TODO: run OTP for decryption
+    if ( Settings::self()->indexEncryptedContent() /* TODO != Settings::NoIndexing */ == Settings::CleartextIndex ) {
+      m_otp = new MessageViewer::ObjectTreeParser( this );
+      m_otp->setAllowAsync( false ); // FIXME: make async
+      m_otp->parseObjectTree( msg.get() );
     }
 
     // before we walk the part node tree, let's see if there is a main plain text body, so we don't interpret that as an attachment later on
@@ -79,6 +83,11 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   }
 
   deleteLater();
+}
+
+MessageAnalyzer::~MessageAnalyzer()
+{
+  delete m_otp;
 }
 
 void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
@@ -197,5 +206,9 @@ void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLa
   m_email.addProperty( Soprano::Vocabulary::NAO::hasTag(), tag.resourceUri() );
 }
 
+void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
+{
+  kDebug() << mode;
+}
 
 #include "messageanalyzer.moc"

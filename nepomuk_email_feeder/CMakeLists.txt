@@ -28,6 +28,7 @@ kde4_add_executable(akonadi_nepomuk_email_feeder ${akonadi_nepomuk_email_feeder_
 target_link_libraries(akonadi_nepomuk_email_feeder
   niefast_apps
   messagecore
+  messageviewer
   ${SOPRANO_LIBRARIES}
   ${KDE4_KDEUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
