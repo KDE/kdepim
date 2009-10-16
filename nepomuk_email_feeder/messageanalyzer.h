@@ -64,7 +64,7 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
 
   private:
     QList<NepomukFast::Contact> extractContactsFromMailboxes( const KMime::Types::Mailbox::List& mbs, const QUrl&graphUri );
-    void addTranslatedTag( const char* tagName, const QString &tagLabel );
+    void addTranslatedTag( const char* tagName, const QString &tagLabel, const QString &icon = QString() );
 
     void processContent( const KMime::Message::Ptr &msg );
     void processFlags( const Akonadi::Item::Flags &flags );

@@ -56,6 +56,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_otp( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
+  m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
 
   processFlags( item.flags() );
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
@@ -162,6 +163,7 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     kDebug() << attachmentUrl;
     NepomukFast::Attachment attachment( attachmentUrl, graphUri() );
     attachment.addProperty( Vocabulary::NIE::isPartOf(), m_email.uri() );
+    attachment.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "mail-attachment" ) );
     if ( !content->contentType()->name().isEmpty() )
       attachment.setLabel( content->contentType()->name() );
     else if ( content->contentDisposition( false ) && !content->contentDisposition()->filename().isEmpty() )
@@ -197,19 +199,21 @@ void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
   mdb.setIsReads( QList<bool>() << status.isRead() );
 
   if ( status.isImportant() )
-    addTranslatedTag( "important", i18n("Important") );
+    addTranslatedTag( "important", i18n("Important"), "mail-mark-important" );
   if ( status.isToAct() )
-    addTranslatedTag( "todo", i18n("To Do") );
+    addTranslatedTag( "todo", i18n("To Do"), "mail-mark-task" );
   if ( status.isWatched() )
     addTranslatedTag( "watched", i18n("Watched") );
 }
 
 
-void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLabel)
+void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLabel, const QString &icon )
 {
  Nepomuk::Tag tag( QString::fromLatin1( tagName ) );
  if ( tag.label().isEmpty() )
-    tag.setLabel( tagLabel );
+   tag.setLabel( tagLabel );
+ if ( tag.symbols().isEmpty() && !icon.isEmpty() )
+   tag.addSymbol( icon );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasTag(), tag.resourceUri() );
 }
 
