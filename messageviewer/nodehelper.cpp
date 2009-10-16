@@ -35,21 +35,16 @@
 #include <QDir>
 #include <QTextCodec>
 
-NodeHelper * NodeHelper::mSelf = 0;
 
-NodeHelper * NodeHelper::instance()
-{
-  if ( !mSelf )
-    mSelf = new NodeHelper();
-  return mSelf;
-}
+
+namespace MessageViewer {
+
+QStringList replySubjPrefixes(QStringList() << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:");
+QStringList forwardSubjPrefixes( QStringList() << "Fwd:" << "FW:");
 
 NodeHelper::NodeHelper()
 {
-  mSelf = this;
   //TODO(Andras) add methods to modify these prefixes
-  mReplySubjPrefixes << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:";
-  mForwardSubjPrefixes << "Fwd:" << "FW:";
 
   mLocalCodec = QTextCodec::codecForName( KGlobal::locale()->encoding() );
 
@@ -77,7 +72,6 @@ NodeHelper::NodeHelper()
 
 NodeHelper::~NodeHelper()
 {
-  mSelf = 0;
 }
 
 void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
@@ -85,6 +79,7 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.append( node );
+  kDebug() << "Node processed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -99,6 +94,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.removeAll( node );
+kDebug() << "Node UNprocessed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -494,15 +490,15 @@ QString NodeHelper::replacePrefixes( const QString& str,
     return str;
 }
 
-QString NodeHelper::cleanSubject( KMime::Message* message ) const
+QString NodeHelper::cleanSubject( KMime::Message* message )
 {
-  return cleanSubject( message, mReplySubjPrefixes + mForwardSubjPrefixes,
+  return cleanSubject( message, replySubjPrefixes + forwardSubjPrefixes,
            true, QString() ).trimmed();
 }
 
 QString NodeHelper::cleanSubject( KMime::Message* message, const QStringList & prefixRegExps,
                                  bool replace,
-                                 const QString & newPrefix ) const
+                                 const QString & newPrefix )
 {
   return NodeHelper::replacePrefixes( message->subject()->asUnicodeString(), prefixRegExps, replace,
                                      newPrefix );
@@ -634,5 +630,6 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
     return QString();
   else
     return QString( "attachment:%1?place=%2" ).arg( node->index().toString() ).arg( place );
+}
 }
 

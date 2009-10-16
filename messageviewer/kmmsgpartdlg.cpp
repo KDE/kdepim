@@ -35,7 +35,7 @@
 
 // other includes:
 #include <assert.h>
-
+#if 0
 static const struct {
   KMMsgPartDialog::Encoding encoding;
   const char * displayName;
@@ -594,6 +594,7 @@ QByteArray toUsAscii(const QString& _str, bool *ok)
 }
 
 
-
 //-----------------------------------------------------------------------------
 #include "kmmsgpartdlg.moc"
+
+#endif

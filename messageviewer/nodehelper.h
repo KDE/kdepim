@@ -25,6 +25,8 @@
 #include <QSet>
 #include <kiconloader.h>
 
+#include "messageviewer_export.h"
+
 class KUrl;
 class QTextCodec;
 
@@ -42,6 +44,8 @@ namespace MessageViewer {
 /**
   @author Andras Mantia <andras@kdab.net>
 */
+
+namespace MessageViewer {
 
 /** Flags for the encryption state. */
 typedef enum
@@ -63,9 +67,9 @@ typedef enum
     KMMsgSignatureProblematic='X'
 } KMMsgSignatureState;
 
-class NodeHelper{
+class MESSAGEVIEWER_EXPORT NodeHelper {
 public:
-    static NodeHelper * instance();
+    NodeHelper();
 
     ~NodeHelper();
 
@@ -95,7 +99,7 @@ public:
 
   /** Return this mails subject, with all "forward" and "reply"
       prefixes removed */
-    QString cleanSubject( KMime::Message* message ) const;
+    static QString cleanSubject( KMime::Message* message );
 
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted);
@@ -172,9 +176,7 @@ public:
     // UrlHandlerManager.
     static QString asHREF( const KMime::Content* node, const QString &place );
 
-
 private:
-    NodeHelper();
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
         is found, @p newPrefix + ' ' is prepended to the subject and the
@@ -182,12 +184,10 @@ private:
         sequence of whitespace-delimited prefixes at the beginning of
         #subject() is replaced by @p newPrefix
     **/
-    QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
-                          const QString& newPrefix ) const;
+    static QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
+                          const QString& newPrefix );
 
     void clearBodyPartMemento(QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> bodyPartMementoMap);
-
-    static NodeHelper * mSelf;
 
     QList<KMime::Content*> mProcessedNodes;
     QList<KMime::Content*> mNodesUnderProcess;
@@ -195,7 +195,6 @@ private:
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
-    QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
     QMap<KMime::Content*, QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> > mBodyPartMementoMap;
@@ -203,5 +202,6 @@ private:
     QStringList mTempDirs;
 };
 
+}
 
 #endif

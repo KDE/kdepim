@@ -65,7 +65,7 @@ public:
 
   static URLHandlerManager * instance() {
     if ( !self )
-self = new URLHandlerManager();
+      self = new URLHandlerManager();
     return self;
   }
 

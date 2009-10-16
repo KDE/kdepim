@@ -75,6 +75,7 @@ namespace MessageViewer {
   class ObjectTreeParser;
   class HeaderStrategy;
   class HeaderStyle;
+  class NodeHelper;
 }
 
 namespace MessageViewer {
@@ -172,6 +173,8 @@ public:
   HtmlWriter * htmlWriter() { return mHtmlWriter; }
 
   CSSHelper* cssHelper() const;
+
+  NodeHelper* nodeHelper() { return mNodeHelper; }
 
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;
@@ -473,6 +476,7 @@ signals:
   void noDrag();
 
 public:
+  NodeHelper* mNodeHelper;
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   KMime::Message *mMessage; //the current message, if it was set manually
   Akonadi::Item mMessageItem; //the message item from Akonadi
