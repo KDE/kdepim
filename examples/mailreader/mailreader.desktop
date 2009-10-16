@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=mailreader
 Name[en_GB]=mailreader
+Name[gl]=lector de noticias
 Name[pt]=mailreader
 Name[pt_BR]=mailreader
 Name[sv]=e-postläsare
@@ -13,6 +14,7 @@ Type=Application
 X-DocPath=mailreader/index.html
 GenericName=A KDE4 Application
 GenericName[en_GB]=A KDE4 Application
+GenericName[gl]=Unha aplicación de KDE4
 GenericName[nl]=Een KDE4-programma
 GenericName[pt]=Uma Aplicação do KDE4
 GenericName[pt_BR]=Um aplicativo do KDE4
