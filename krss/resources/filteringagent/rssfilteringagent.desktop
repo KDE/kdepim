@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Filters RSS items in Akonadi
+Type=AkonadiAgent
+Exec=akonadi_rss_filtering_agent
+Icon=akregator
+
+X-Akonadi-MimeTypes=application/rss+xml
+X-Akonadi-Capabilities=Agent
+X-Akonadi-Identifier=akonadi_rss_filtering_agent
