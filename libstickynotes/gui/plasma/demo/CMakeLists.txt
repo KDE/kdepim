@@ -9,5 +9,8 @@ KDE4_ADD_EXECUTABLE(plasma_demo ${PLASMADEMO_SRCS})
 ADD_DEPENDENCIES(plasma_demo plasma_demo_qt4)
 
 TARGET_LINK_LIBRARIES(plasma_demo   stickynotes
-				    ${QT_LIBRARIES})
+				    ${QT_QTCORE_LIBRARY}
+				    ${QT_QTGUI_LIBRARY}
+				    ${QT_QTNETWORK_LIBRARY}
+                                    )
 
