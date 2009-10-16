@@ -25,8 +25,10 @@ set(krss_LIB_SRCS
    tag.cpp
    feedpropertiescollectionattribute.cpp
    subscriptionlabelscollectionattribute.cpp
+   virtualfeedpropertiesattribute.cpp
    tagidsattribute.cpp
    feedcollection.cpp
+   virtualfeedcollection.cpp
    resourcemanager.cpp
    resource.cpp
    netresource.cpp

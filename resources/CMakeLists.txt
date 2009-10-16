@@ -1,2 +1,3 @@
 add_subdirectory(newsgatorresource)
 add_subdirectory(opmlresource)
+add_subdirectory(filteringagent)

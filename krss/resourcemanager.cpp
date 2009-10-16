@@ -20,6 +20,7 @@
 #include "tagidsattribute.h"
 #include "subscriptionlabelscollectionattribute.h"
 #include "feedpropertiescollectionattribute.h"
+#include "virtualfeedpropertiesattribute.h"
 #include "config-nepomuk.h"
 
 #ifndef HAVE_NEPOMUK
@@ -111,6 +112,7 @@ void ResourceManager::registerAttributes()
     AttributeFactory::registerAttribute<TagIdsAttribute>();
     AttributeFactory::registerAttribute<SubscriptionLabelsCollectionAttribute>();
     AttributeFactory::registerAttribute<FeedPropertiesCollectionAttribute>();
+    AttributeFactory::registerAttribute<VirtualFeedPropertiesAttribute>();
 #ifndef HAVE_NEPOMUK
     AttributeFactory::registerAttribute<TagPropertiesAttribute>();
 #endif
