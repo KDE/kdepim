@@ -51,7 +51,7 @@ public:
     };
 
     enum Role {
-        ItemRole = Qt::UserRole,
+        ItemRole =EntityTreeModel::UserRole,
         SortRole,
         IsNewRole,
         IsUnreadRole,
