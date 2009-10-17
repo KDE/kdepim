@@ -182,7 +182,7 @@ void Item::setDatePublished( const KDateTime& datePublished )
 KDateTime Item::dateUpdated() const
 {
     const RssItem payload = d->akonadiItem.payload<RssItem>();
-    return payload.dateUpdated().isValid() ? payload.dateUpdated() : payload.datePublished();
+    return payload.dateUpdated();
 }
 
 void Item::setDateUpdated( const KDateTime& dateUpdated )
