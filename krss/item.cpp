@@ -116,9 +116,7 @@ QString Item::title() const
 
 QString Item::titleAsPlainText() const
 {
-    if ( d->titleAsPlainText.isNull() )
-        d->titleAsPlainText = Syndication::htmlToPlainText( title() );
-    return d->titleAsPlainText;
+    return d->akonadiItem.payload<RssItem>().titleAsPlainText();
 }
 
 void Item::setTitle( const QString& title )
@@ -126,7 +124,6 @@ void Item::setTitle( const QString& title )
     RssItem payload = d->akonadiItem.payload<RssItem>();
     payload.setTitle( title );
     d->akonadiItem.setPayload<RssItem>( payload );
-    d->titleAsPlainText.clear();
 }
 
 QString Item::description() const
@@ -348,27 +345,27 @@ Item::Status Item::status() const
 
 bool Item::isImportant() const
 {
-    return d->akonadiItem.hasFlag( RssItem::flagImportant() );
+    return RssItem::isImportant( d->akonadiItem );
 }
 
 bool Item::isRead() const
 {
-    return d->akonadiItem.hasFlag( RssItem::flagRead() );
+    return RssItem::isRead( d->akonadiItem );
 }
 
 bool Item::isUnread() const
 {
-    return !isRead();
+    return RssItem::isUnread( d->akonadiItem );
 }
 
 bool Item::isNew() const
 {
-    return d->akonadiItem.hasFlag( RssItem::flagNew() );
+    return RssItem::isNew( d->akonadiItem );
 }
 
 bool Item::isDeleted() const
 {
-    return d->akonadiItem.hasFlag( RssItem::flagDeleted() );
+    return RssItem::isDeleted( d->akonadiItem );
 }
 
 void Item::setStatus( const Item::Status& stat )
