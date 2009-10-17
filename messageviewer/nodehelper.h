@@ -144,7 +144,7 @@ public:
     /** Add a file to the list of managed temporary files */
     void addTempFile( const QString& file );
 
-  //static methods
+  //static methods - TODO factor out in a separate namespace ? 
     static KMime::Content *nextSibling( const KMime::Content* node );
     
     static KMime::Content *firstChild( const KMime::Content* node );

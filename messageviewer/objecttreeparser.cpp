@@ -3293,6 +3293,24 @@ KMime::Content* ObjectTreeParser::findType( KMime::Content* content, const QByte
     return 0;
 }
 
+KMime::Content* ObjectTreeParser::findType( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide )
+{
+    if ( !content->contentType()->isEmpty() ) {
+      if ( ( mediaType.isEmpty()  ||  mediaType == content->contentType()->mediaType() )
+        && ( subType.isEmpty()  ||  subType == content->contentType()->subType() ) )
+        return content;
+    }
+    KMime::Content *child = NodeHelper::firstChild( content );
+    if ( child && deep ) //first child
+        return findType( child, mediaType, subType, deep, wide );
+
+    KMime::Content *next = NodeHelper::nextSibling( content );
+    if (next &&  wide ) //next on the same level
+      return findType( next, mediaType, subType, deep, wide );
+
+    return 0;
+}
+
 KMime::Content* ObjectTreeParser::findTypeNot( KMime::Content * content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide )
 {
     if( ( !content->contentType()->isEmpty() )
