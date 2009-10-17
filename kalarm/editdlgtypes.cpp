@@ -711,6 +711,12 @@ bool EditDisplayAlarmDlg::checkText(QString& result, bool showErrorMessage) cons
 			}
 			if (err  &&  showErrorMessage)
 			{
+				// If file is a local file, remove "file://" from name
+				QString file = alarmtext;
+				QRegExp f("^file://*");
+				if (f.indexIn(file) >= 0)
+					file = file.mid(f.matchedLength() - 1);
+
 				mFileMessageEdit->setFocus();
 				QString errmsg;
 				switch (err)
@@ -718,10 +724,12 @@ bool EditDisplayAlarmDlg::checkText(QString& result, bool showErrorMessage) cons
 					case BLANK:
 						KMessageBox::sorry(const_cast<EditDisplayAlarmDlg*>(this), i18nc("@info", "Please select a file to display"));
 						return false;
-					case NONEXISTENT:     errmsg = i18nc("@info", "<filename>%1</filename> not found", alarmtext);  break;
-					case DIRECTORY:       errmsg = i18nc("@info", "<filename>%1</filename> is a folder", alarmtext);  break;
-					case UNREADABLE:      errmsg = i18nc("@info", "<filename>%1</filename> is not readable", alarmtext);  break;
-					case NOT_TEXT_IMAGE:  errmsg = i18nc("@info", "<filename>%1</filename> appears not to be a text or image file", alarmtext);  break;
+					case DIRECTORY:
+						KMessageBox::sorry(const_cast<EditDisplayAlarmDlg*>(this), i18nc("@info", "<filename>%1</filename> is a folder", file));
+						return false;
+					case NONEXISTENT:     errmsg = i18nc("@info", "<filename>%1</filename> not found", file);  break;
+					case UNREADABLE:      errmsg = i18nc("@info", "<filename>%1</filename> is not readable", file);  break;
+					case NOT_TEXT_IMAGE:  errmsg = i18nc("@info", "<filename>%1</filename> appears not to be a text or image file", file);  break;
 					case NONE:
 					default:
 						break;
