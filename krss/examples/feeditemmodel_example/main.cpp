@@ -11,6 +11,7 @@
 
 #include <QApplication>
 #include <QByteArray>
+#include <QSortFilterProxyModel>
 #include <QTreeView>
 
 using namespace Akonadi;
@@ -35,8 +36,12 @@ int main( int argc, char** argv ) {
     recorder.setMimeTypeMonitored( QLatin1String( "application/rss+xml" ) );
 
     FeedItemModel model( &session, &recorder );
+    QSortFilterProxyModel sortModel;
+    sortModel.setSourceModel( &model );
+    sortModel.setSortRole( FeedItemModel::SortRole );
     QTreeView view;
-    view.setModel( &model );
+    view.setSortingEnabled( true );
+    view.setModel( &sortModel );
     view.show();
 
     return app.exec();
