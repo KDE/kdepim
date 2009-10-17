@@ -121,7 +121,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionTree = new Akonadi::MimeTypeFilterProxyModel( this );
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  mCollectionTree->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   mXXPortManager->setItemModel( allContactsModel() );
 
@@ -144,7 +144,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree = new Akonadi::MimeTypeFilterProxyModel( this );
   mItemTree->setSourceModel( mDescendantTree );
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+  mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
   ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
   contactFilterModel->setSourceModel( mItemTree );
@@ -558,7 +558,7 @@ QAbstractItemModel* MainWidget::allContactsModel()
     mAllContactsModel = new Akonadi::MimeTypeFilterProxyModel( this );
     mAllContactsModel->setSourceModel( descendantsModel );
     mAllContactsModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-    mAllContactsModel->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+    mAllContactsModel->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   }
 
   return mAllContactsModel;
