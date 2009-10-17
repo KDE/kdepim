@@ -108,7 +108,7 @@ void AddEditBlog::autoConfigure()
     kDebug();
     if ( ui.txtUrl->text().isEmpty() || ui.txtUser->text().isEmpty() || ui.txtPass->text().isEmpty() ) {
         kDebug() << "Username, Password or Url doesn't set!";
-        KMessageBox::sorry( this, i18n( "You have to set the username, password and url of your blog or website." ),
+        KMessageBox::sorry( this, i18n( "You have to set the username, password and URL of your blog or website." ),
                             i18n( "Incomplete fields" ) );
         return;
     }
@@ -211,9 +211,9 @@ void AddEditBlog::gotXmlRpcTest( KJob *job )
         KMessageBox::sorry(this, i18n("Auto configuration failed. You have to set Blog API on Advanced tab manually."));
         return;
     }
-    KMessageBox::information(this, i18n("Program could no guess API of your blog, \
-But have found an XMLRPC interface and trying to use it.\
-\nWe assume MovableType API for now, Choose another API if you know the server support it."));
+    KMessageBox::information(this, i18n("The program could not guess the API of your blog, \
+but has found an XMLRPC interface and is trying to use it.\
+\nThe MovableType API is assumed for now; choose another API if you know the server supports it."));
     ui.comboApi->setCurrentIndex( 2 );
     ui.txtUrl->setText( ui.txtUrl->text() + "/xmlrpc.php" );
     fetchBlogId();
@@ -279,8 +279,8 @@ void AddEditBlog::handleFetchIDTimeout()
     ui.txtId->setEnabled( true );
     hideWaitWidget();
     KMessageBox::error( this, i18n( "Fetching the blog id timed out. Check your Internet connection,\
-and your homepage Url, username or password!\nnote that the url has to contain \"http://\"\
-\nIf you are using a self hosted Wordpress blog, you have to enable Remote Publishing on its configurations" ) );
+and your homepage URL, username or password.\nNote that the URL has to contain \"http://\"\
+\nIf you are using a self-hosted Wordpress blog, you have to enable Remote Publishing in its configuration." ) );
 }
 
 void AddEditBlog::handleFetchAPITimeout()
@@ -290,8 +290,8 @@ void AddEditBlog::handleFetchAPITimeout()
     mFetchAPITimer = 0;
     hideWaitWidget();
     ui.txtId->setEnabled( true );
-    KMessageBox::sorry( this, i18n( "Sorry, API guess function have failed, \
-please check your Internet connection, otherwise you have to set API type on advanced tab manually." ),
+    KMessageBox::sorry( this, i18n( "The API guess function has failed, \
+please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab." ),
                         i18n( "Auto Configuration Failed" ) );
 }
 
@@ -300,7 +300,7 @@ void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString &
     kDebug() << " ErrorType: " << type;
     ui.txtId->setEnabled( true );
     hideWaitWidget();
-    KMessageBox::detailedError( this, i18n( "Fetching BlogID Failed!\nPlease check your Internet connection." ), errorMsg );
+    KMessageBox::detailedError( this, i18n( "Fetching BlogID Failed.\nPlease check your Internet connection." ), errorMsg );
 }
 
 void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & list )
@@ -430,8 +430,8 @@ void AddEditBlog::setSupportedFeatures( BilboBlog::ApiType api )
     QString yesStyle = "QLabel{color: green;}";
     QString yesText = i18nc( "Supported feature or Not", "Yes" );
     QString noStyle = "QLabel{color: red;}";
-    QString noText = i18nc( "Supported feature or Not", "No, API doesn't support" );
-    QString notYetText = i18nc( "Supported feature or Not", "No, Blogilo doesn't support yet" );
+    QString noText = i18nc( "Supported feature or Not", "No, API does not support it" );
+    QString notYetText = i18nc( "Supported feature or Not", "No, Blogilo does not yet support it" );
 
     ui.featureCreatePost->setText( yesText );
     ui.featureCreatePost->setStyleSheet( yesStyle );
@@ -512,9 +512,9 @@ void AddEditBlog::slotButtonClicked( int button )
     kDebug();
     if ( button == KDialog::Ok ) {
         if ( bBlog->blogid().isEmpty() && ui.txtId->text().isEmpty() ) {
-            KMessageBox::sorry( this, i18n( "Sorry, BlogId not retrieved yet,\
-\nYou can fetch blog ID by clicking on \"Auto Configure\" or \"Fetch ID\" button. otherwise you have\
- to insert your Blog Id manually." )
+            KMessageBox::sorry( this, i18n( "Blog ID has not yet been retrieved.\
+\nYou can fetch the blog ID by clicking on \"Auto Configure\" or the \"Fetch ID\" button; otherwise, you have\
+ to insert your blog ID manually." )
                                             );
             return;
         }

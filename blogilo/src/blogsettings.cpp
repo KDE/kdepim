@@ -98,7 +98,7 @@ void BlogSettings::removeBlog()
     kDebug();
     if( blogsTable->selectedItems().count() <= 0 )
         return;
-    if(KMessageBox::warningYesNo(this, i18n("Are you sure of removing selected blog?")) 
+    if(KMessageBox::warningYesNo(this, i18n("Are you sure you want to remove the selected blog?")) 
         == KMessageBox::No)
         return;
     int blog_id = blogsTable->item( blogsTable->currentRow(), 0 )->data( 32 ).toInt();

@@ -77,14 +77,14 @@
            <item>
             <widget class="KPushButton" name="btnEntriesUpdate">
              <property name="toolTip">
-              <string>Update entries list</string>
+              <string>Update list of entries</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="KPushButton" name="btnEntriesClear">
              <property name="toolTip">
-              <string>Clear entries list</string>
+              <string>Clear list of entries</string>
              </property>
             </widget>
            </item>
@@ -185,7 +185,7 @@
              <item>
               <widget class="KPushButton" name="btnCatReload">
                <property name="toolTip">
-                <string>Reload categories list</string>
+                <string>Reload list of categories</string>
                </property>
               </widget>
              </item>

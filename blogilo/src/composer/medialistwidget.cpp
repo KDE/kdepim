@@ -37,7 +37,7 @@ MediaListWidget::MediaListWidget( QWidget *parent ): KListWidget( parent )
 {
     actEdit = new KAction( i18n( "Edit properties" ), this );
     connect( actEdit, SIGNAL( triggered( bool ) ), this, SLOT( sltEditProperties() ) );
-    actCopyUrl = new KAction( i18n( "Copy Url" ), this );
+    actCopyUrl = new KAction( i18n( "Copy URL" ), this );
     connect( actCopyUrl, SIGNAL( triggered( bool ) ), this, SLOT( sltCopyUrl() ) );
     actRemove = new KAction( i18n( "Remove media" ), this );
     connect( actRemove, SIGNAL( triggered( bool ) ), this, SLOT( sltRemoveMedia() ) );

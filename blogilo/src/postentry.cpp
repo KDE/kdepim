@@ -251,7 +251,7 @@ bool PostEntry::uploadMediaFiles( Backend *backend )
 void PostEntry::sltError( const QString & errMsg )
 {
     kDebug();
-    QString err = i18n( "An error occurred on the last transaction.\n%1", errMsg );
+    QString err = i18n( "An error occurred in the last transaction.\n%1", errMsg );
     emit postPublishingDone( true, err );
     deleteProgressBar();
     sender()->deleteLater();
@@ -263,7 +263,7 @@ void PostEntry::submitPost( int blogId, const BilboPost &postData )
     setCurrentPostFromEditor();
     if ( mCurrentPost.content().isEmpty() || mCurrentPost.title().isEmpty() ) {
         if ( KMessageBox::warningContinueCancel( this,
-            i18n( "Your post title or body is empty!\nAre you sure you want to submit this post?" )
+            i18n( "Your post title or body is empty.\nAre you sure you want to submit this post?" )
             ) == KMessageBox::Cancel )
             return;
     }

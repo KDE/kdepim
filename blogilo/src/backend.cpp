@@ -267,7 +267,7 @@ void Backend::uploadMedia( BilboMedia * media )
             break;
     }
     kError() << "Api type isn't set correctly!";
-    tmp = i18n( "API type is not set correctly!" );
+    tmp = i18n( "API type is not set correctly." );
     Q_EMIT sigError( tmp );
 }
 

@@ -46,8 +46,6 @@
 #include <Soprano/QueryResultIterator>
 #include <Soprano/Vocabulary/NAO>
 
-// #include <boost/shared_ptr.hpp>
-
 MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri, NepomukFeederAgentBase* parent) :
   QObject( parent ),
   m_parent( parent ),
@@ -58,6 +56,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_otp( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
+  m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
 
   processFlags( item.flags() );
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
@@ -67,27 +66,36 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 
     if ( Settings::self()->indexEncryptedContent() /* TODO != Settings::NoIndexing */ == Settings::CleartextIndex ) {
       m_otp = new MessageViewer::ObjectTreeParser( this );
-      m_otp->setAllowAsync( false ); // FIXME: make async
+      m_otp->setAllowAsync( true );
       m_otp->parseObjectTree( msg.get() );
     }
 
-    // before we walk the part node tree, let's see if there is a main plain text body, so we don't interpret that as an attachment later on
-    m_mainBodyPart = msg->mainBodyPart( "text/plain" );
-    if ( m_mainBodyPart ) {
-      const QString text = m_mainBodyPart->decodedText( true, true );
-      if ( !text.isEmpty() )
-        m_email.setPlainTextMessageContents( QStringList( text ) );
-    }
+    if ( !m_otp || !m_otp->hasPendingAsyncJobs() )
+      processContent( msg );
 
-    processPart( msg.get() );
+  } else {
+    deleteLater();
   }
-
-  deleteLater();
 }
 
 MessageAnalyzer::~MessageAnalyzer()
 {
   delete m_otp;
+}
+
+
+void MessageAnalyzer::processContent(const KMime::Message::Ptr& msg)
+{
+  // before we walk the part node tree, let's see if there is a main plain text body, so we don't interpret that as an attachment later on
+  m_mainBodyPart = msg->mainBodyPart( "text/plain" );
+  if ( m_mainBodyPart ) {
+    const QString text = m_mainBodyPart->decodedText( true, true );
+    if ( !text.isEmpty() )
+      m_email.setPlainTextMessageContents( QStringList( text ) );
+  }
+
+  processPart( msg.get() );
+  deleteLater();
 }
 
 void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
@@ -155,6 +163,7 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     kDebug() << attachmentUrl;
     NepomukFast::Attachment attachment( attachmentUrl, graphUri() );
     attachment.addProperty( Vocabulary::NIE::isPartOf(), m_email.uri() );
+    attachment.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "mail-attachment" ) );
     if ( !content->contentType()->name().isEmpty() )
       attachment.setLabel( content->contentType()->name() );
     else if ( content->contentDisposition( false ) && !content->contentDisposition()->filename().isEmpty() )
@@ -190,25 +199,31 @@ void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
   mdb.setIsReads( QList<bool>() << status.isRead() );
 
   if ( status.isImportant() )
-    addTranslatedTag( "important", i18n("Important") );
+    addTranslatedTag( "important", i18n("Important"), "mail-mark-important" );
   if ( status.isToAct() )
-    addTranslatedTag( "todo", i18n("To Do") );
+    addTranslatedTag( "todo", i18n("To Do"), "mail-mark-task" );
   if ( status.isWatched() )
     addTranslatedTag( "watched", i18n("Watched") );
 }
 
 
-void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLabel)
+void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLabel, const QString &icon )
 {
  Nepomuk::Tag tag( QString::fromLatin1( tagName ) );
  if ( tag.label().isEmpty() )
-    tag.setLabel( tagLabel );
+   tag.setLabel( tagLabel );
+ if ( tag.symbols().isEmpty() && !icon.isEmpty() )
+   tag.addSymbol( icon );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasTag(), tag.resourceUri() );
 }
 
 void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
 {
-  kDebug() << mode;
+  kDebug() << m_otp->hasPendingAsyncJobs();
+  const KMime::Message::Ptr msg = m_item.payload<KMime::Message::Ptr>();
+  m_otp->parseObjectTree( msg.get() );
+  if ( !m_otp->hasPendingAsyncJobs() )
+    processContent( msg );
 }
 
 #include "messageanalyzer.moc"

@@ -48,7 +48,7 @@ class AgentProgressMonitor::Private
 
 void AgentProgressMonitor::Private::abort()
 {
-  agent.abort();
+  agent.abortCurrentTask();
 }
 
 void AgentProgressMonitor::Private::instanceProgressChanged( const AgentInstance &instance )
