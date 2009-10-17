@@ -217,7 +217,13 @@ QString KAddrBookExternal::expandDistributionList( const QString &listName, bool
   if ( !expandJob->exec() )
     return QString();
 
-  const QString listOfEmails = expandJob->emailAddresses().join( ", " );
+  const KABC::Addressee::List contacts = expandJob->contacts();
+
+  QStringList emails;
+  foreach ( const KABC::Addressee &contact, contacts )
+    emails.append( contact.fullEmail() );
+
+  const QString listOfEmails = emails.join( ", " );
   emptyList = listOfEmails.isEmpty();
 
   return listOfEmails;
