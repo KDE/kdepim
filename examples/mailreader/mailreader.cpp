@@ -5,11 +5,11 @@
  */
 #include "mailreader.h"
 
-#include <akonadi/entitytreeview.h>
-#include <akonadi/entityfilterproxymodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchscope.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entitytreeview.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/mimetypefilterproxymodel.h>
 #include <akonadi/session.h>
 #include <akonadi/statisticstooltipproxymodel.h>
 
@@ -80,7 +80,7 @@ void mailreader::setupDocks()
   collectionView->setSelectionMode( QAbstractItemView::ExtendedSelection );
 
   // Setup the message folders collection...
-  Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( this );
+  Akonadi::MimeTypeFilterProxyModel *collectionFilter = new Akonadi::MimeTypeFilterProxyModel( this );
   collectionFilter->setSourceModel( entityModel );
   collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );

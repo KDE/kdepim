@@ -21,10 +21,10 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionstatistics.h>
-#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemmodifyjob.h>
+#include <akonadi/mimetypefilterproxymodel.h>
 #include <akonadi/kmime/messagefolderattribute.h>
 
 #include <KDE/KCodecs>
@@ -90,7 +90,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   childrenFilter->setSourceModel( model );
   childrenFilter->setFilterBehavior( KSelectionProxyModel::OnlySelectedChildren );
 
-  EntityFilterProxyModel *itemFilter = new EntityFilterProxyModel( this );
+  MimeTypeFilterProxyModel *itemFilter = new MimeTypeFilterProxyModel( this );
   itemFilter->setSourceModel( childrenFilter );
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
   itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
