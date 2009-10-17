@@ -33,8 +33,8 @@ class KJob;
 
 namespace Akonadi
 {
-class AddressBookComboBox;
 class Collection;
+class CollectionComboBox;
 }
 
 /**
@@ -85,7 +85,7 @@ class ContactSelectionWidget : public QWidget
     QRadioButton *mAllContactsButton;
     QRadioButton *mSelectedContactsButton;
     QRadioButton *mAddressBookContactsButton;
-    Akonadi::AddressBookComboBox *mAddressBookSelection;
+    Akonadi::CollectionComboBox *mAddressBookSelection;
 };
 
 #endif

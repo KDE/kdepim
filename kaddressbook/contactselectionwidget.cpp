@@ -21,7 +21,7 @@
 
 #include "recursiveitemfetchjob.h"
 
-#include <akonadi/contact/addressbookcombobox.h>
+#include <akonadi/collectioncombobox.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <klocale.h>
@@ -60,7 +60,7 @@ void ContactSelectionWidget::setMessageText( const QString &message )
 
 void ContactSelectionWidget::setDefaultAddressBook( const Akonadi::Collection &addressBook )
 {
-  mAddressBookSelection->setDefaultAddressBook( addressBook );
+  mAddressBookSelection->setDefaultCollection( addressBook );
 }
 
 KABC::Addressee::List ContactSelectionWidget::selectedContacts() const
@@ -92,8 +92,9 @@ void ContactSelectionWidget::initGui()
   mAllContactsButton = new QRadioButton( i18n( "All contacts" ) );
   mSelectedContactsButton = new QRadioButton( i18n( "Selected contacts" ) );
   mAddressBookContactsButton = new QRadioButton( i18n( "All contacts from:" ) );
-  mAddressBookSelection = new Akonadi::AddressBookComboBox( Akonadi::AddressBookComboBox::ContactsOnly,
-                                                            Akonadi::AddressBookComboBox::Readable );
+  mAddressBookSelection = new Akonadi::CollectionComboBox;
+  mAddressBookSelection->setContentMimeTypesFilter( QStringList() << KABC::Addressee::mimeType() );
+  mAddressBookSelection->setAccessRightsFilter( Akonadi::CollectionComboBox::Readable );
 
   group->addButton( mAllContactsButton );
   group->addButton( mSelectedContactsButton );
@@ -145,7 +146,7 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
 {
   KABC::Addressee::List contacts;
 
-  const Akonadi::Collection collection = mAddressBookSelection->selectedAddressBook();
+  const Akonadi::Collection collection = mAddressBookSelection->currentCollection();
   if ( !collection.isValid() ) {
     return contacts;
   }
