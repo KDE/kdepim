@@ -292,7 +292,7 @@ void RssItem::setDatePublished( const KDateTime& datePublished )
 
 KDateTime RssItem::dateUpdated() const
 {
-    return d->dateUpdated;
+    return d->dateUpdated.isValid() ? d->dateUpdated : d->datePublished;
 }
 
 void RssItem::setDateUpdated( const KDateTime& dateUpdated )
