@@ -221,6 +221,18 @@ public:
   QList<Akonadi::Item> selectionAsMessageItemList( bool includeCollapsedChildren = true ) const;
 
   /**
+   * Returns the Akonadi::Item bound to the current StorageModel that
+   * are part of the current thread. The current thread is the thread
+   * that contains currentMessageItem().
+   * The list may be empty if there is no currentMessageItem() or no StorageModel.
+   *
+   * The returned list is guaranteed to be valid only until you return control
+   * to the main even loop. Don't store it for any longer. If you need to reference
+   * this set of messages at a later stage then take a look at createPersistentSet().
+   */
+  QList<Akonadi::Item> currentThreadAsMessageList() const;
+
+  /**
    * Returns the KPIM::MessageStatus in the current quicksearch field.
    */
   KPIM::MessageStatus currentFilterStatus() const;

@@ -497,6 +497,19 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedCh
   return lstMiPtr;
 }
 
+QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
+{
+  QList<Item> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
+  if ( lstMiPtr.isEmpty() ) {
+    return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->itemForRow( it->currentModelIndexRow() ) );
+  }
+  return lstMiPtr;
+}
+
 
 KPIM::MessageStatus Widget::currentFilterStatus() const
 {

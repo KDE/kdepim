@@ -467,6 +467,16 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChil
   return w->selectionAsMessageItemList( includeCollapsedChildren );
 }
 
+
+QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QList<Akonadi::Item>();
+  }
+  return w->currentThreadAsMessageList();
+}
+
 KPIM::MessageStatus Pane::currentFilterStatus() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
