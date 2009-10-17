@@ -137,6 +137,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   */
   void clear(UpdateMode updateMode = Delayed ) { setMessage(0, updateMode); }
 
+  void update(UpdateMode updateMode = Delayed );
+
   /** Sets a message as the current one and print it immediately.
   *   @param message the message to display and print
   */

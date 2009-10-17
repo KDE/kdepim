@@ -441,6 +441,12 @@ void Viewer::setAutoDelete(bool f)
   d->mDeleteMessage = f;
 }
 
+void Viewer::update( Viewer::UpdateMode updateMode )
+{
+  Q_D( Viewer );
+  d->update( updateMode );
+}
+
 }
 
 #include "viewer.moc"
