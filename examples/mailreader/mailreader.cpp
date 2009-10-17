@@ -83,7 +83,7 @@ void mailreader::setupDocks()
   Akonadi::MimeTypeFilterProxyModel *collectionFilter = new Akonadi::MimeTypeFilterProxyModel( this );
   collectionFilter->setSourceModel( entityModel );
   collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   // ... with statistics...
   Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( this );
