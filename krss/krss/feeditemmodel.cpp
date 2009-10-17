@@ -58,12 +58,14 @@ QVariant FeedItemModel::getData( const Akonadi::Item &akonadiItem, int column, i
     if ( role == IsDeletedRole )
         return false;
 
+
     if ( role == Qt::DisplayRole || role == SortRole ) {
         switch ( column ) {
             case ItemTitleColumn:
                 return item.titleAsPlainText();
             case AuthorsColumn:
             {
+#if 0 //TODO: we probably want to cache this
                 QString authors;
                 Q_FOREACH( const KRss::Person &person, item.authors() ) {
                     if ( !authors.isEmpty() )
@@ -71,10 +73,15 @@ QVariant FeedItemModel::getData( const Akonadi::Item &akonadiItem, int column, i
                     authors += person.name();
                 }
                 return authors;
+#endif
+                return QVariant();
             }
             case DateColumn:
-                return KGlobal::locale()->formatDateTime( item.dateUpdated(),
-                                                          KLocale::FancyShortDate );
+                if ( role == SortRole )
+                    return item.dateUpdated().toTime_t();
+                else
+                    return KGlobal::locale()->formatDateTime( item.dateUpdated(),
+                                                              KLocale::FancyShortDate );
             case FeedTitleForItemColumn:
 #ifdef TEMPORARILY_REMOVED
                return d->m_feed->title();
