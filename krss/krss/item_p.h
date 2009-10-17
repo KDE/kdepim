@@ -60,7 +60,6 @@ public:
     }
 
     Akonadi::Item akonadiItem;
-    mutable QString titleAsPlainText;
 };
 
 } // namespace KRss

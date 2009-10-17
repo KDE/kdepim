@@ -63,6 +63,12 @@ public:
     bool operator==( const RssItem& other ) const;
     bool operator!=( const RssItem& other ) const;
 
+    static bool isImportant( const Akonadi::Item& );
+    static bool isRead( const Akonadi::Item& );
+    static bool isUnread( const Akonadi::Item& );
+    static bool isNew( const Akonadi::Item& );
+    static bool isDeleted( const Akonadi::Item& );
+
     bool headersLoaded() const;
     void setHeadersLoaded( bool headersLoaded );
     bool contentLoaded() const;
@@ -75,6 +81,7 @@ public:
     int sourceFeedId() const;
     void setSourceFeedId( int id );
     QString title() const;
+    QString titleAsPlainText() const;
     void setTitle( const QString& title );
     QString link() const;
     void setLink( const QString& link );

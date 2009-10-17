@@ -25,6 +25,8 @@
 #include "enclosure.h"
 #include "person.h"
 
+#include <Syndication/Tools>
+
 #include <KDateTime>
 
 #include <QtCore/QHash>
@@ -94,6 +96,7 @@ public:
     int feedId;
     bool headersLoaded;
     bool contentLoaded;
+    mutable QString titleAsPlainText;
 };
 
 RssItem::Private::Private( const Private& other )
@@ -139,6 +142,32 @@ QByteArray RssItem::flagImportant()
 QByteArray RssItem::flagDeleted()
 {
     return "\\Deleted";
+}
+
+
+bool RssItem::isImportant( const Akonadi::Item& item )
+{
+    return item.hasFlag( flagImportant() );
+}
+
+bool RssItem::isRead( const Akonadi::Item& item )
+{
+    return item.hasFlag( flagRead() );
+}
+
+bool RssItem::isUnread( const Akonadi::Item& item )
+{
+    return !item.hasFlag( flagRead() );
+}
+
+bool RssItem::isNew( const Akonadi::Item& item )
+{
+    return item.hasFlag( flagNew() );
+}
+
+bool RssItem::isDeleted( const Akonadi::Item& item )
+{
+    return item.hasFlag( flagDeleted() );
 }
 
 ItemId RssItem::itemIdFromAkonadi( const Akonadi::Item::Id& id )
@@ -208,6 +237,12 @@ void RssItem::setContentLoaded( bool contentLoaded )
 QString RssItem::title() const
 {
     return d->title;
+}
+
+QString RssItem::titleAsPlainText() const {
+    if ( d->titleAsPlainText.isNull() )
+        d->titleAsPlainText = Syndication::htmlToPlainText( title() );
+    return d->titleAsPlainText;
 }
 
 void RssItem::setTitle( const QString& title )
