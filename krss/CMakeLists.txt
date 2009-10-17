@@ -42,6 +42,7 @@ set(krss_LIB_SRCS
    dbushelper.cpp
    helper.cpp
    itemmodel.cpp
+   feeditemmodel.cpp
    treenode.cpp
    treenodevisitor.cpp
    feedlistmodel.cpp
@@ -133,6 +134,7 @@ set(krss_LIB_HDRS
    feedlist.h
    itemlisting.h
    itemlistjob.h
+   feeditemmodel.h 
    itemmodel.h
    importitemsjob.h
    importopmljob.h
