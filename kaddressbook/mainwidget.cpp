@@ -309,6 +309,7 @@ void MainWidget::setupGui()
   // setup the default actions
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
+  actions->connectToView( mContactGroupDetails );
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
