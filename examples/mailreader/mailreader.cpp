@@ -11,7 +11,7 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/mimetypefilterproxymodel.h>
 #include <akonadi/session.h>
-#include <akonadi/statisticstooltipproxymodel.h>
+#include <akonadi/statisticsproxymodel.h>
 
 #include <KDE/KAction>
 #include <KDE/KConfigDialog>
@@ -86,7 +86,9 @@ void mailreader::setupDocks()
   collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   // ... with statistics...
-  Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( this );
+  Akonadi::StatisticsProxyModel *statisticsProxyModel = new Akonadi::StatisticsProxyModel( this );
+  statisticsProxyModel->setToolTipEnabled( true );
+  statisticsProxyModel->setExtraColumnsEnabled( false );
   statisticsProxyModel->setSourceModel( collectionFilter );
 
   // ... and sortable
