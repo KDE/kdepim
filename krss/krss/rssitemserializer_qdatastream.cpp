@@ -34,34 +34,40 @@ using namespace KRss;
 
 void RssItemSerializer::serialize( const RssItem& item, QByteArray& ba, ItemPart part ) {
     QDataStream stream( &ba, QIODevice::WriteOnly );
-    stream << static_cast<qint64>( item.hash() )
-           << item.guidIsHash()
-           << item.title()
-           << item.link()
-           << item.description()
-           << item.content()
-           << item.language()
-           << item.datePublished().toString()
-           << item.dateUpdated().toString()
-           << item.guid()
-           << static_cast<qint32>( item.commentsCount() )
-           << item.commentPostUri()
-           << item.commentsFeed()
-           << item.commentsLink();
-    stream << static_cast<quint32>( item.enclosures().count() );
-    Q_FOREACH( const Enclosure& i, item.enclosures() )
-        stream << static_cast<qint32>( i.duration() ) << static_cast<qint32>( i.length() ) << i.title() << i.type() << i.url();
-    stream << static_cast<quint32>( item.categories().count() );
-    Q_FOREACH( const Category& i, item.categories() )
-        stream << i.label() << i.scheme() << i.term();
-    stream << static_cast<quint32>( item.authors().count() );
-    Q_FOREACH( const Person& i, item.authors() )
-        stream << i.email() << i.name() << i.uri();
-    const QHash<QString, QString> ap = item.customProperties();
-    stream << static_cast<quint32>( ap.size() );
-    Q_FOREACH( const QString& key, ap.keys() )
-            stream << key << ap.value( key );
+    const bool writeHeaders = ( part & Headers ) != 0;
+    const bool writeContent = ( part & Content ) != 0;
 
+    if ( writeHeaders ) {
+        stream << static_cast<qint64>( item.hash() )
+               << item.guidIsHash()
+               << item.title()
+               << item.datePublished().toString()
+               << item.dateUpdated().toString()
+               << item.guid()
+        stream << static_cast<quint32>( item.authors().count() );
+        Q_FOREACH( const Person& i, item.authors() )
+            stream << i.email() << i.name() << i.uri();
+    }
+    if ( writeContent ) {
+        stream << item.content()
+               << item.description()
+               << item.link()
+                << item.language()
+               << static_cast<qint32>( item.commentsCount() )
+               << item.commentPostUri()
+               << item.commentsFeed()
+               << item.commentsLink();
+        stream << static_cast<quint32>( item.enclosures().count() );
+        Q_FOREACH( const Enclosure& i, item.enclosures() )
+            stream << static_cast<qint32>( i.duration() ) << static_cast<qint32>( i.length() ) << i.title() << i.type() << i.url();
+        stream << static_cast<quint32>( item.categories().count() );
+        Q_FOREACH( const Category& i, item.categories() )
+            stream << i.label() << i.scheme() << i.term();
+        const QHash<QString, QString> ap = item.customProperties();
+        stream << static_cast<quint32>( ap.size() );
+        Q_FOREACH( const QString& key, ap.keys() )
+            stream << key << ap.value( key );
+    }
 }
 
 #define READSTRING(name) QString name; stream >> name; item.set##name( name );
@@ -71,71 +77,85 @@ void RssItemSerializer::serialize( const RssItem& item, QByteArray& ba, ItemPart
 #define READDATE(name) QString name; stream >> name; item.set##name( KDateTime::fromString( name ) );
 
 bool RssItemSerializer::deserialize( RssItem& itemOut, const QByteArray& ba, ItemPart part ) {
+    const bool readHeaders = ( part & Headers ) != 0;
+    const bool readContent = ( part & Content ) != 0;
+
     QDataStream stream( ba );
     RssItem item;
-    READ(qint64,Hash)
-    READ(bool,GuidIsHash)
-    READSTRING(Title)
-    READSTRING(Link)
-    READSTRING(Description)
-    READSTRING(Content)
-    READSTRING(Language)
-    READDATE(DatePublished)
-    READDATE(DateUpdated)
-    READSTRING(Guid)
-    READ(qint32,CommentsCount)
-    READSTRING(CommentPostUri)
-    READSTRING(CommentsFeed)
-    READSTRING(CommentsLink)
-    quint32 encCount;
-    stream >> encCount;
-    QList<Enclosure> enclosures;
-    for ( quint32 i = 0; i < encCount; ++i ) {
-        Enclosure enc;
-        READ2(qint32, Duration, enc)
-        READ2(qint32, Length, enc)
-        READSTRING2(Title, enc)
-        READSTRING2(Type, enc)
-        READSTRING2(Url, enc)
-        enclosures.append( enc );
+    if ( readHeaders ) {
+        READ(qint64,Hash)
+        READ(bool,GuidIsHash)
+        READSTRING(Title)
+        READDATE(DatePublished)
+        READDATE(DateUpdated)
+        READSTRING(Guid)
+        quint32 authorCount;
+        stream >> authorCount;
+        QList<Person> authors;
+        for ( quint32 i = 0; i < authorCount; ++i ) {
+            Person auth;
+            READSTRING2(Email, auth)
+            READSTRING2(Name, auth)
+            READSTRING2(Uri, auth)
+            authors.append( auth );
+        }
+        item.setAuthors( authors );
     }
-    item.setEnclosures( enclosures );
+    if ( readContent ) {
+        READSTRING(Content)
+        READSTRING(Description)
+        READSTRING(Link)
 
-    quint32 catCount = 0;
-    stream >> catCount;
-    QList<Category> categories;
-    for ( quint32 i = 0; i < catCount; ++i ) {
-        Category cat;
-        READSTRING2(Label, cat)
-        READSTRING2(Scheme, cat)
-        READSTRING2(Term, cat)
-        categories.append( cat );
+        READSTRING(Language)
+        READ(qint32,CommentsCount)
+        READSTRING(CommentPostUri)
+        READSTRING(CommentsFeed)
+        READSTRING(CommentsLink)
+        quint32 encCount;
+        stream >> encCount;
+        QList<Enclosure> enclosures;
+        for ( quint32 i = 0; i < encCount; ++i ) {
+            Enclosure enc;
+            READ2(qint32, Duration, enc)
+            READ2(qint32, Length, enc)
+            READSTRING2(Title, enc)
+            READSTRING2(Type, enc)
+            READSTRING2(Url, enc)
+            enclosures.append( enc );
+        }
+        item.setEnclosures( enclosures );
+
+        quint32 catCount = 0;
+        stream >> catCount;
+        QList<Category> categories;
+        for ( quint32 i = 0; i < catCount; ++i ) {
+            Category cat;
+            READSTRING2(Label, cat)
+            READSTRING2(Scheme, cat)
+            READSTRING2(Term, cat)
+            categories.append( cat );
+        }
+        item.setCategories( categories );
+
+
+        quint32 apCount;
+        stream >> apCount;
+        for ( quint32 i = 0; i < apCount; ++i ) {
+            QString key;
+            stream >> key;
+            QString value;
+            stream >> value;
+            item.setCustomProperty( key, value );
+        }
     }
-    item.setCategories( categories );
-
-    quint32 authorCount;
-    stream >> authorCount;
-    QList<Person> authors;
-    for ( quint32 i = 0; i < authorCount; ++i ) {
-        Person auth;
-        READSTRING2(Email, auth)
-        READSTRING2(Name, auth)
-        READSTRING2(Uri, auth)
-        authors.append( auth );
-    }
-    item.setAuthors( authors );
-
-    quint32 apCount;
-    stream >> apCount;
-    for ( quint32 i = 0; i < apCount; ++i ) {
-        QString key;
-        stream >> key;
-        QString value;
-        stream >> value;
-        item.setCustomProperty( key, value );
-    }
-
     itemOut = item;
+
+    if ( readHeaders )
+        item.setHeadersLoaded( true );
+
+    if ( readContent )
+        item.setContentLoaded( true );
+
     return true;
 }
 
