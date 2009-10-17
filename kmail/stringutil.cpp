@@ -999,11 +999,13 @@ QString smartQuote( const QString & msg, int maxLineLength )
 #ifndef KMAIL_UNITTESTS
 void parseMailtoUrl ( const KUrl& url, QString& to, QString& cc, QString& subject, QString& body )
 {
-  to = decodeMailtoUrl( url.path() );
-  body = url.queryItem( "body" );
-  subject = url.queryItem( "subject" );
   kDebug() << url.pathOrUrl();
-  cc = url.queryItem( "cc" );
+  to = decodeMailtoUrl( url.path() );
+  QMap<QString, QString> values = url.queryItems( KUrl::CaseInsensitiveKeys );
+  to += ", " + values.value( "to" );
+  body = values.value( "body" );
+  subject = values.value( "subject" );
+  cc = values.value( "cc" );
 }
 #endif
 
