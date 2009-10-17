@@ -22,12 +22,13 @@
 #include <krss/feeditemmodel.h>
 #include <krss/tagprovider.h>
 
-#include <QSplitter>
 #include <QTreeView>
+
+class QItemSelectionModel;
 
 class KJob;
 
-class MainWidget : public QSplitter {
+class MainWidget : public QWidget {
     Q_OBJECT
 public:
     explicit MainWidget( QWidget* parent=0 );
@@ -42,10 +43,11 @@ private:
 private:
     boost::shared_ptr<KRss::TagProvider> m_tagProvider;
     boost::shared_ptr<KRss::FeedList> m_feedList;
-    KRss::FeedListModel* m_feedModel;
+    //KRss::FeedListModel* m_feedModel;
     KRss::FeedItemModel* m_itemModel;
     QTreeView* m_feedView;
     QTreeView* m_itemView;
+    QItemSelectionModel* m_selection;
 };
 
 #endif // FEEDITEMMODEL_EXAMPLE_H

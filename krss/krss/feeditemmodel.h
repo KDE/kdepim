@@ -39,8 +39,15 @@ public:
         ItemTitleColumn = 0,
         AuthorsColumn,
         DateColumn,
-        FeedTitleColumn,
+        FeedTitleForItemColumn,
         ItemColumnCount
+    };
+
+    enum FeedColumn {
+        FeedTitleColumn=0,
+        UnreadCountColumn,
+        TotalCountColumn,
+        FeedColumnCount
     };
 
     enum Role {
@@ -63,7 +70,7 @@ public:
 
     /* reimp */ QVariant getData( const Akonadi::Collection& collection, int column, int role=Qt::DisplayRole ) const;
 
-    /* reimp */ int columnCount( const QModelIndex& index = QModelIndex() ) const;
+    /* reimp */ int getColumnCount( int headerSet ) const;
 
     /* reimp */ QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
 

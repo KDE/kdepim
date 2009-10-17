@@ -22,49 +22,54 @@
 #include "krss/resourcemanager.h"
 
 #include <Akonadi/ChangeRecorder>
+#include <Akonadi/Control>
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
+#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitytreeview.h>
 
 #include <KAboutData>
 #include <KApplication>
 #include <KCmdLineArgs>
 #include <KMessageBox>
+#include <kselectionproxymodel.h>
 
 #include <QApplication>
 #include <QByteArray>
 #include <QSortFilterProxyModel>
 #include <QSplitter>
-#include <QTreeView>
+#include <QVBoxLayout>
 
 using namespace Akonadi;
 using namespace KRss;
 
-MainWidget::MainWidget( QWidget* parent ) : QSplitter( parent ), m_feedModel( 0 ) {
-    m_feedView = new QTreeView;
-    addWidget( m_feedView );
-    m_itemView = new QTreeView;
-    addWidget( m_itemView );
+MainWidget::MainWidget( QWidget* parent ) : QWidget( parent ) /*, m_feedModel( 0 ) */ {
+    m_feedView = new EntityTreeView( this );
+    m_feedView->setSelectionMode( QAbstractItemView::ExtendedSelection );
+    m_feedView->setSelectionBehavior( QAbstractItemView::SelectRows );
+    QVBoxLayout* layout = new QVBoxLayout( this );
+    QSplitter* splitter = new QSplitter;
+    layout->addWidget( splitter );
+    splitter->setOrientation( Qt::Horizontal );
+    splitter->addWidget( m_feedView );
+    Control::widgetNeedsAkonadi( splitter );
 
     ItemFetchScope scope;
     scope.fetchFullPayload( true );
     scope.fetchAttribute<EntityDisplayAttribute>();
 
     Session* session = new Session( QByteArray( "FeedReaderApplication-" ) + QByteArray::number( qrand() ) );
-
     ChangeRecorder* recorder = new ChangeRecorder;
     recorder->fetchCollection( true );
     recorder->setItemFetchScope( scope );
     recorder->setCollectionMonitored( Collection::root() );
     recorder->setMimeTypeMonitored( QLatin1String( "application/rss+xml" ) );
-
     m_itemModel = new FeedItemModel( session, recorder );
-    QSortFilterProxyModel* sortModel = new QSortFilterProxyModel;
-    sortModel->setSourceModel( m_itemModel );
-    sortModel->setSortRole( FeedItemModel::SortRole );
-    m_itemView->setSortingEnabled( true );
-    m_itemView->setModel( sortModel );
 
+    m_itemView = new EntityTreeView( this );
+    splitter->addWidget( m_itemView );
+    m_itemView->setSortingEnabled( true );
 }
 
 void MainWidget::feedListRetrieved( KJob* j ) {
@@ -88,8 +93,25 @@ void MainWidget::tagProviderRetrieved( KJob* j ) {
 void MainWidget::init() {
     if ( !m_tagProvider || !m_feedList )
         return;
+#if 0
     m_feedModel = new FeedListModel( m_feedList, m_tagProvider );
     m_feedView->setModel( m_feedModel );
+#endif
+    EntityFilterProxyModel* filterProxy = new EntityFilterProxyModel;
+    filterProxy->setHeaderSet( EntityTreeModel::CollectionTreeHeaders );
+    filterProxy->setSourceModel( m_itemModel );
+    m_feedView->setModel( m_itemModel );
+
+    KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedView->selectionModel() );
+    selectionProxy->setFilterBehavior( KSelectionProxyModel::SelectedBranchesChildren );
+    selectionProxy->setSourceModel( m_itemModel );
+    EntityFilterProxyModel* filterProxy2 = new EntityFilterProxyModel;
+
+    filterProxy2->setHeaderSet( EntityTreeModel::ItemListHeaders );
+    filterProxy2->setSourceModel( selectionProxy );
+    filterProxy2->setSortRole( FeedItemModel::SortRole );
+    m_itemView->setModel( filterProxy2 );
+
 }
 
 int main( int argc, char** argv ) {
@@ -101,9 +123,11 @@ int main( int argc, char** argv ) {
 
     ResourceManager::registerAttributes();
 
-    MainWidget mainWidget;
-    mainWidget.setOrientation( Qt::Horizontal );
-    mainWidget.show();
+    QWidget window;
+    QVBoxLayout layout( &window );
+    MainWidget mainWidget( &window );
+    layout.addWidget( &mainWidget );
+
     RetrieveFeedListJob * const fjob = new RetrieveFeedListJob;
     fjob->setResources( ResourceManager::self()->resources() );
     fjob->connect( fjob, SIGNAL(result(KJob*)), &mainWidget, SLOT(feedListRetrieved(KJob*)) );
@@ -112,6 +136,7 @@ int main( int argc, char** argv ) {
     TagProviderRetrieveJob * const tjob = new TagProviderRetrieveJob;
     tjob->connect( tjob, SIGNAL(result(KJob*)), &mainWidget, SLOT(tagProviderRetrieved(KJob*)) );
     tjob->start();
+    window.show();
     return app.exec();
 }
 
