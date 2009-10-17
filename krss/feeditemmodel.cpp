@@ -59,20 +59,23 @@ QVariant FeedItemModel::getData( const Akonadi::Item &akonadiItem, int column, i
         return false;
 
     if ( role == Qt::DisplayRole || role == SortRole ) {
-        QString authors;
         switch ( column ) {
             case ItemTitleColumn:
                 return item.titleAsPlainText();
             case AuthorsColumn:
+            {
+                QString authors;
                 Q_FOREACH( const KRss::Person &person, item.authors() ) {
-                    authors += person.name() + QLatin1Char(';');
+                    if ( !authors.isEmpty() )
+                        authors.append( QLatin1Char(';') );
+                    authors += person.name();
                 }
-                authors.remove( authors.length() - 1, 1 );
                 return authors;
+            }
             case DateColumn:
                 return KGlobal::locale()->formatDateTime( item.dateUpdated(),
                                                           KLocale::FancyShortDate );
-            case FeedTitleColumn:
+            case FeedTitleForItemColumn:
 #ifdef TEMPORARILY_REMOVED
                return d->m_feed->title();
 #endif
@@ -122,28 +125,48 @@ QVariant FeedItemModel::getData( const Collection &collection, int column, int r
     return EntityTreeModel::getData( collection, column, role );
 }
 
-int FeedItemModel::columnCount( const QModelIndex& index ) const {
-    Q_UNUSED( index );
-    return ItemColumnCount;
+int FeedItemModel::getColumnCount( int headerSet ) const {
+    if ( headerSet == ItemListHeaders )
+        return ItemColumnCount;
+    else
+        return FeedColumnCount;
 }
 
 QVariant FeedItemModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const {
+    Q_ASSERT( section >= 0 );
     if ( orientation != Qt::Horizontal )
         return QVariant();
     if ( role != Qt::DisplayRole )
         return QVariant();
-    if ( headerSet == ItemListHeaders ) {
-        if ( section >= ItemColumnCount )
-            return QVariant();
-        switch ( section ) {
-        case ItemTitleColumn:
-            return i18n("Title");
-        case AuthorsColumn:
-            return i18n("Author");
-        case DateColumn:
-            return i18n("Date");
-        case FeedTitleColumn:
-            return i18n("Feed");
+    switch ( headerSet ) {
+        case ItemListHeaders:
+        {
+            if ( section >= ItemColumnCount )
+                return QVariant();
+            switch ( section ) {
+            case ItemTitleColumn:
+                return i18n("Title");
+            case AuthorsColumn:
+                return i18n("Author");
+            case DateColumn:
+                return i18n("Date");
+            case FeedTitleForItemColumn:
+                return i18n("Feed");
+            }
+        }
+
+        case CollectionTreeHeaders:
+        {
+            if ( section >= FeedColumnCount )
+                return QVariant();
+            switch ( section ) {
+            case FeedTitleColumn:
+                return i18n("Title");
+            case UnreadCountColumn:
+                return i18n("Unread");
+            case TotalCountColumn:
+                return i18n("Total");
+            }
         }
     }
     return QVariant();
