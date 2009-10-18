@@ -1,7 +1,7 @@
 include_directories(
   ${kdepim-runtime_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi/agents/nepomukfeeder
-  ${CMAKE_BINARY_DIR}/akonadi/agents/nie_fast
+  ${CMAKE_BINARY_DIR}/akonadi/agents/ontologies
   ${Boost_INCLUDE_DIR}
   )
 
