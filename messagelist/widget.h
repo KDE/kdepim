@@ -253,7 +253,21 @@ public:
    */
   bool selectionEmpty() const;
 
+  /**
+   * Fills the lists of the selected message serial numbers and of the selected+visible ones.
+   * Returns true if the returned stats are valid (there is a current folder after all)
+   * and false otherwise. This is called by KMMainWidget in a single place so we optimize by
+   * making it a single sweep on the selection.
+   *
+   * If includeCollapsedChildren is true then the children of the selected but
+   * collapsed items are also included in the stats
+   */
 
+  bool getSelectionStats( QList< quint32 > &selectedSernums,
+                          QList< quint32 > &selectedVisibleSernums,
+                          bool * allSelectedBelongToSameThread,
+                          bool includeCollapsedChildren = true ) const;
+  
 protected:
   /**
    * Reimplemented from MessageList::Core::Widget

@@ -513,5 +513,22 @@ bool Pane::selectionEmpty() const
   return w->selectionEmpty();
 }
 
+bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
+                              QList< quint32 > &selectedVisibleSernums,
+                              bool * allSelectedBelongToSameThread,
+                              bool includeCollapsedChildren ) const
+{
+  Widget * w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return false;
+  }
+
+  return w->getSelectionStats(
+      selectedSernums, selectedVisibleSernums,
+      allSelectedBelongToSameThread, includeCollapsedChildren
+    );
+}
+
+
 
 #include "pane.moc"
