@@ -176,6 +176,27 @@ public:
     // UrlHandlerManager.
     static QString asHREF( const KMime::Content* node, const QString &place );
 
+    /**
+   * Fixes an encoding received by a KDE function and returns the proper,
+   * MIME-compilant encoding name instead.
+   * @see encodingForName
+   */
+  static QString fixEncoding( const QString &encoding ); //TODO(Andras) move to a utility class?
+
+  /**
+   * Drop-in replacement for KCharsets::encodingForName(). The problem with
+   * the KCharsets function is that it returns "human-readable" encoding names
+   * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
+   * This function fixes this by replacing whitespace with a hyphen.
+   */
+  static QString encodingForName( const QString &descriptiveName ); //TODO(Andras) move to a utility class?
+
+  /**
+   * Return a list of the supported encodings
+   * @param usAscii if true, US-Ascii encoding will be prepended to the list.
+   */
+  static QStringList supportedEncodings( bool usAscii ); //TODO(Andras) move to a utility class?
+
 private:
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none

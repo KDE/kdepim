@@ -631,5 +631,49 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
   else
     return QString( "attachment:%1?place=%2" ).arg( node->index().toString() ).arg( place );
 }
+
+QString NodeHelper::fixEncoding( const QString &encoding )
+{
+  QString returnEncoding = encoding;
+  // According to http://www.iana.org/assignments/character-sets, uppercase is
+  // preferred in MIME headers
+  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
+    returnEncoding = returnEncoding.toUpper();
+    returnEncoding.replace( "ISO ", "ISO-" );
+  }
+  return returnEncoding;
+}
+
+
+//-----------------------------------------------------------------------------
+QString NodeHelper::encodingForName( const QString &descriptiveName )
+{
+  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
+  return NodeHelper::fixEncoding( encoding );
+}
+
+QStringList NodeHelper::supportedEncodings(bool usAscii)
+{
+  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
+  QStringList encodings;
+  QMap<QString,bool> mimeNames;
+  for (QStringList::Iterator it = encodingNames.begin();
+    it != encodingNames.end(); ++it)
+  {
+    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
+    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
+    if (!mimeNames.contains(mimeName) )
+    {
+      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
+      mimeNames.insert( mimeName, true );
+    }
+  }
+  encodings.sort();
+  if (usAscii)
+    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
+  return encodings;
+}
+
+
 }
 

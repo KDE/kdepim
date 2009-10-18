@@ -1451,7 +1451,7 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
       QStringList encodings = mSelectEncodingAction->items();
       int i = 0;
       for ( QStringList::const_iterator it = encodings.constBegin(), end = encodings.constEnd(); it != end; ++it, ++i ) {
-        if ( ViewerPrivate::encodingForName( *it ) == encoding ) {
+        if ( NodeHelper::encodingForName( *it ) == encoding ) {
           mSelectEncodingAction->setCurrentItem( i );
           break;
         }
@@ -1876,7 +1876,7 @@ void ViewerPrivate::createActions()
   ac->addAction("encoding", mSelectEncodingAction );
   connect(mSelectEncodingAction,SIGNAL( triggered(int)),
           SLOT( slotSetEncoding() ));
-  QStringList encodings = ViewerPrivate::supportedEncodings( false );
+  QStringList encodings = NodeHelper::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   mSelectEncodingAction->setItems( encodings );
   mSelectEncodingAction->setCurrentItem( 0 );
@@ -2164,25 +2164,6 @@ KMime::Content* ViewerPrivate::findContentByType(KMime::Content *content, const 
 }
 
 
-QString ViewerPrivate::fixEncoding( const QString &encoding )
-{
-  QString returnEncoding = encoding;
-  // According to http://www.iana.org/assignments/character-sets, uppercase is
-  // preferred in MIME headers
-  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
-    returnEncoding = returnEncoding.toUpper();
-    returnEncoding.replace( "ISO ", "ISO-" );
-  }
-  return returnEncoding;
-}
-
-//-----------------------------------------------------------------------------
-QString ViewerPrivate::encodingForName( const QString &descriptiveName )
-{
-  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
-  return ViewerPrivate::fixEncoding( encoding );
-}
-
 //-----------------------------------------------------------------------------
 const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
 {
@@ -2191,28 +2172,6 @@ const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
   QByteArray codec = _str;
   kAsciiToLower(codec.data());
   return KGlobal::charsets()->codecForName(codec);
-}
-
-QStringList ViewerPrivate::supportedEncodings(bool usAscii)
-{
-  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
-  QStringList encodings;
-  QMap<QString,bool> mimeNames;
-  for (QStringList::Iterator it = encodingNames.begin();
-    it != encodingNames.end(); ++it)
-  {
-    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
-    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
-    if (!mimeNames.contains(mimeName) )
-    {
-      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
-      mimeNames.insert( mimeName, true );
-    }
-  }
-  encodings.sort();
-  if (usAscii)
-    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
-  return encodings;
 }
 
 
@@ -2549,7 +2508,7 @@ void ViewerPrivate::slotSetEncoding()
   if ( mSelectEncodingAction->currentItem() == 0 ) // Auto
     mOverrideEncoding.clear();
   else
-    mOverrideEncoding = ViewerPrivate::encodingForName( mSelectEncodingAction->currentText() );
+    mOverrideEncoding = NodeHelper::encodingForName( mSelectEncodingAction->currentText() );
   update( Viewer::Force );
 }
 

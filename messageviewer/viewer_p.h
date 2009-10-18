@@ -309,29 +309,10 @@ public:
   QString renderAttachments( KMime::Content *node, const QColor &bgColor );
 
   KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type); //TODO(Andras) move to NodeHelper
-    /**
-   * Fixes an encoding received by a KDE function and returns the proper,
-   * MIME-compilant encoding name instead.
-   * @see encodingForName
-   */
-  static QString fixEncoding( const QString &encoding ); //TODO(Andras) move to a utility class?
-
-  /**
-   * Drop-in replacement for KCharsets::encodingForName(). The problem with
-   * the KCharsets function is that it returns "human-readable" encoding names
-   * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
-   * This function fixes this by replacing whitespace with a hyphen.
-   */
-  static QString encodingForName( const QString &descriptiveName ); //TODO(Andras) move to a utility class?
 
   /** Return a QTextCodec for the specified charset.
    * This function is a bit more tolerant, than QTextCodec::codecForName */
   static const QTextCodec* codecForName(const QByteArray& _str); //TODO(Andras) move to a utility class?
-  /**
-   * Return a list of the supported encodings
-   * @param usAscii if true, US-Ascii encoding will be prepended to the list.
-   */
-  static QStringList supportedEncodings( bool usAscii ); //TODO(Andras) move to a utility class?
 
   /** Saves the relative position of the scroll view. Call this before calling update()
       if you want to preserve the current view. */
