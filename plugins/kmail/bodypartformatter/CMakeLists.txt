@@ -17,7 +17,7 @@ install(TARGETS kmail_bodypartformatter_text_vcard  DESTINATION ${PLUGIN_INSTALL
 
 
 ########### next target ###############
-
+MESSAGE(STATUS "Port kmail plugins text calendar")
 #set(kmail_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp)
 
 #qt4_add_dbus_interfaces(kmail_bodypartformatter_text_calendar_PART_SRCS
