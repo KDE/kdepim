@@ -579,7 +579,7 @@ QString NodeHelper::fileName(const KMime::Content* node)
       name = const_cast<KMime::Content*>(node)->contentType()->name();;
 
   name = name.trimmed();
-  return name; 
+  return name;
 }
 
 //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalBodyPartMemento replacement
@@ -674,6 +674,62 @@ QStringList NodeHelper::supportedEncodings(bool usAscii)
   return encodings;
 }
 
+
+QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text)
+{
+    QStringList charsets = encodingList;
+    if (!_encoding.isEmpty())
+    {
+       QString currentCharset = QString::fromLatin1(_encoding);
+       charsets.removeAll(currentCharset);
+       charsets.prepend(currentCharset);
+    }
+
+    QStringList::ConstIterator it = charsets.constBegin();
+    for (; it != charsets.constEnd(); ++it)
+    {
+       QByteArray encoding = (*it).toLatin1();
+       if (encoding == "locale")
+       {
+         encoding = QTextCodec::codecForName( KGlobal::locale()->encoding() )->name();
+         kAsciiToLower(encoding.data());
+       }
+       if (text.isEmpty())
+         return encoding;
+       if (encoding == "us-ascii") {
+         bool ok;
+         (void) toUsAscii(text, &ok);
+         if (ok)
+            return encoding;
+       }
+       else
+       {
+         const QTextCodec *codec = codecForName(encoding);
+         if (!codec) {
+           kDebug() <<"Auto-Charset: Something is wrong and I can not get a codec. [" << encoding <<"]";
+         } else {
+           if (codec->canEncode(text))
+              return encoding;
+         }
+       }
+    }
+    return 0;
+}
+
+QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
+{
+  bool all_ok =true;
+  QString result = _str;
+  int len = result.length();
+  for (int i = 0; i < len; i++)
+    if (result.at(i).unicode() >= 128) {
+      result[i] = '?';
+      all_ok = false;
+    }
+  if (ok)
+    *ok = all_ok;
+  return result.toLatin1();
+}
 
 }
 

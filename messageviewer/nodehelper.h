@@ -144,9 +144,9 @@ public:
     /** Add a file to the list of managed temporary files */
     void addTempFile( const QString& file );
 
-  //static methods - TODO factor out in a separate namespace ? 
+  //static methods - TODO factor out in a separate namespace ?
     static KMime::Content *nextSibling( const KMime::Content* node );
-    
+
     static KMime::Content *firstChild( const KMime::Content* node );
 
    /** Check for prefixes @p prefixRegExps in @p str. If none
@@ -159,7 +159,7 @@ public:
                                   const QStringList& prefixRegExps,
                                   bool replace,
                                   const QString& newPrefix );
-                                  
+
    /** Return a QTextCodec for the specified charset.
    * This function is a bit more tolerant, than QTextCodec::codecForName
    **/
@@ -197,6 +197,8 @@ public:
    */
   static QStringList supportedEncodings( bool usAscii ); //TODO(Andras) move to a utility class?
 
+  static QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
+  static QByteArray toUsAscii(const QString& _str, bool *ok);
 private:
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
