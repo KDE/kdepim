@@ -23,7 +23,7 @@
 #include "contactselectiondialog.h"
 
 #include <akonadi/collection.h>
-#include <akonadi/contact/addressbookselectiondialog.h>
+#include <akonadi/collectiondialog.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
@@ -92,12 +92,16 @@ void XXPortManager::slotImport( const QString &identifier )
   if ( contacts.isEmpty() ) // nothing to import
     return;
 
-  Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly, mParentWidget );
-  dlg.setDefaultAddressBook( mDefaultAddressBook );
+  const QStringList mimeTypes( KABC::Addressee::mimeType() );
+  Akonadi::CollectionDialog dlg( mParentWidget );
+  dlg.setMimeTypeFilter( mimeTypes );
+  dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg.setDefaultCollection( mDefaultAddressBook );
+
   if ( !dlg.exec() )
     return;
 
-  const Akonadi::Collection collection = dlg.selectedAddressBook();
+  const Akonadi::Collection collection = dlg.selectedCollection();
 
   for ( int i = 0; i < contacts.count(); ++i ) {
     Akonadi::Item item;
