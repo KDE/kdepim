@@ -172,9 +172,9 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     void updateContents();
 
     /** stores the given attachment into a temporary file
-     *  @returns the filename the attachment has been stored to
+     *  @returns an URL which reprensents the filename the attachment has been stored to
      */
-    QString writeAttachmentToTempFile( KMime::Content *att, int partNum );
+    KUrl writeAttachmentToTempFile( KMime::Content *att, int partNum );
     /// removes all temporary files
     void removeTempFiles();
 
