@@ -93,7 +93,7 @@ kde4_add_executable( blogilo ${blogilo_SRCS})
 IF(WIN32)
 target_link_libraries( blogilo ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${QT_QTWEBKIT_LIBRARY} ${KDE4_KBLOG_LIBRARY} htmlconvertors )
 ELSE(WIN32)
-target_link_libraries( blogilo ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KBLOG_LIBS} htmlconvertors )
+target_link_libraries( blogilo ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTEXTEDITOR_LIBS} ${KDE4_KHTML_LIBS} ${KDEPIMLIBS_KBLOG_LIBS} htmlconvertors )
 ENDIF(WIN32)
 
 
