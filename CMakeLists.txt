@@ -215,7 +215,6 @@ set(libkdgantt1_SRCS
 
   if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(akonadi)
-    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
   endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
 
   macro_optional_add_subdirectory(kaddressbook)
@@ -228,11 +227,13 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(kpilot)
   endif(NOT WIN32)
 
-  # Kalarm depend on kdepim/akonadi.
-  # that means these app won't compile for packagers. Disable them for anything else than a svn checkout.
-    if (BUILD_akonadi)
-      macro_optional_add_subdirectory(kalarm)
-    endif (BUILD_akonadi)
+  if (BUILD_akonadi)
+    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
+
+    # Kalarm depend on kdepim/akonadi.
+    # that means these app won't compile for packagers. Disable them for anything else than a svn checkout.
+    macro_optional_add_subdirectory(kalarm)
+  endif (BUILD_akonadi)
 
   macro_optional_add_subdirectory(kontact) # must be the last one.
 
