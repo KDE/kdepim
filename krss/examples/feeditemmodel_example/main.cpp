@@ -103,7 +103,7 @@ void MainWidget::init() {
     m_feedView->setModel( m_itemModel );
 
     KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedView->selectionModel() );
-    selectionProxy->setFilterBehavior( KSelectionProxyModel::SelectedBranchesChildren );
+    selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxy->setSourceModel( m_itemModel );
     EntityFilterProxyModel* filterProxy2 = new EntityFilterProxyModel;
 
