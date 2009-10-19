@@ -50,7 +50,7 @@ ContactsTreeModel::Columns ContactsTreeModel::columns() const
   return mColumns;
 }
 
-QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) const
+QVariant ContactsTreeModel::entityData( const Item &item, int column, int role ) const
 {
   if ( item.mimeType() == KABC::Addressee::mimeType() ) {
     if ( !item.hasPayload<KABC::Addressee>() ) {
@@ -178,7 +178,7 @@ QVariant ContactsTreeModel::entityData( const Collection &collection, int column
   return EntityTreeModel::entityData( collection, column, role );
 }
 
-int ContactsTreeModel::getColumnCount( HeaderGroup headerGroup ) const
+int ContactsTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
 {
   if ( headerGroup == EntityTreeModel::CollectionTreeHeaders ) {
     return 1;
@@ -189,7 +189,7 @@ int ContactsTreeModel::getColumnCount( HeaderGroup headerGroup ) const
   }
 }
 
-QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const
+QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const
 {
   if ( role == Qt::DisplayRole ) {
     if ( orientation == Qt::Horizontal ) {
