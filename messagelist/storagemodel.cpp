@@ -88,7 +88,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 
   KSelectionProxyModel *childrenFilter = new KSelectionProxyModel( d->mSelectionModel, this );
   childrenFilter->setSourceModel( model );
-  childrenFilter->setFilterBehavior( KSelectionProxyModel::OnlySelectedChildren );
+  childrenFilter->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
   EntityMimeTypeFilterModel *itemFilter = new EntityMimeTypeFilterModel( this );
   itemFilter->setSourceModel( childrenFilter );
