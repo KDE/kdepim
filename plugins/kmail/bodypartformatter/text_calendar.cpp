@@ -773,8 +773,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
 
       KMenu *menu = new KMenu();
-      QAction *open = menu->addAction( i18n( "Open Attachment" ) );
-      QAction *saveas = menu->addAction( i18n( "Save Attachment As..." ) );
+      QAction *open =
+        menu->addAction( KIcon( "document-open" ), i18n( "Open Attachment" ) );
+      QAction *saveas =
+        menu->addAction( KIcon( "document-save-as" ), i18n( "Save Attachment As..." ) );
 
       QAction *a = menu->exec( point, 0 );
       if ( a == open ) {
