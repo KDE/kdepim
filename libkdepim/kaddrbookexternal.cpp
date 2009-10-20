@@ -53,6 +53,8 @@ void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QW
     Akonadi::CollectionDialog dlg;
     dlg.setMimeTypeFilter( mimeTypes );
     dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+    dlg.setCaption( i18n( "Select Address Book" ) );
+    dlg.setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
     if ( !dlg.exec() )
       return;
 
@@ -176,6 +178,8 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
   Akonadi::CollectionDialog dlg;
   dlg.setMimeTypeFilter( mimeTypes );
   dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg.setCaption( i18n( "Select Address Book" ) );
+  dlg.setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
 
   if ( !dlg.exec() )
     return false;

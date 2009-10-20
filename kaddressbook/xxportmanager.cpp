@@ -96,6 +96,8 @@ void XXPortManager::slotImport( const QString &identifier )
   Akonadi::CollectionDialog dlg( mParentWidget );
   dlg.setMimeTypeFilter( mimeTypes );
   dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg.setCaption( i18n( "Select Address Book" ) );
+  dlg.setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
   dlg.setDefaultCollection( mDefaultAddressBook );
 
   if ( !dlg.exec() )
