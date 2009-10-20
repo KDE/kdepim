@@ -467,6 +467,16 @@ QList<Akonadi::Item> Pane::selectionAsMessageItemList( bool includeCollapsedChil
   return w->selectionAsMessageItemList( includeCollapsedChildren );
 }
 
+
+QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QList<Akonadi::Item>();
+  }
+  return w->currentThreadAsMessageList();
+}
+
 KPIM::MessageStatus Pane::currentFilterStatus() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
@@ -484,4 +494,41 @@ QString Pane::currentFilterSearchString() const
   }
   return w->currentFilterSearchString();
 }
+
+bool Pane::isThreaded() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return false;
+  }
+  return w->isThreaded();
+}
+
+bool Pane::selectionEmpty() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return false;
+  }
+  return w->selectionEmpty();
+}
+
+bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
+                              QList< quint32 > &selectedVisibleSernums,
+                              bool * allSelectedBelongToSameThread,
+                              bool includeCollapsedChildren ) const
+{
+  Widget * w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return false;
+  }
+
+  return w->getSelectionStats(
+      selectedSernums, selectedVisibleSernums,
+      allSelectedBelongToSameThread, includeCollapsedChildren
+    );
+}
+
+
+
 #include "pane.moc"

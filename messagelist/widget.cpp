@@ -497,6 +497,19 @@ QList<Akonadi::Item> Widget::selectionAsMessageItemList( bool includeCollapsedCh
   return lstMiPtr;
 }
 
+QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
+{
+  QList<Item> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
+  if ( lstMiPtr.isEmpty() ) {
+    return lstMiPtr;
+  }
+  foreach( Core::MessageItem *it, lstMi ) {
+    lstMiPtr.append( d->itemForRow( it->currentModelIndexRow() ) );
+  }
+  return lstMiPtr;
+}
+
 
 KPIM::MessageStatus Widget::currentFilterStatus() const
 {
@@ -508,3 +521,46 @@ QString Widget::currentFilterSearchString() const
   return view()->currentFilterSearchString();
 }
 
+
+bool Widget::isThreaded() const
+{
+  return view()->isThreaded();
+}
+
+bool Widget::selectionEmpty() const
+{
+  return view()->selectionEmpty();
+}
+
+bool Widget::getSelectionStats(
+  QList< quint32 > &selectedSernums,
+  QList< quint32 > &selectedVisibleSernums,
+  bool * allSelectedBelongToSameThread,
+  bool includeCollapsedChildren ) const
+{
+  if ( !storageModel() )
+    return false;
+
+  selectedSernums.clear();
+  selectedVisibleSernums.clear();
+
+  QList< Core::MessageItem * > selected = view()->selectionAsMessageItemList( includeCollapsedChildren );
+
+  Core::MessageItem * topmost = 0;
+
+  *allSelectedBelongToSameThread = true;
+
+  foreach( Core::MessageItem *it, selected ) {
+    Item item = d->itemForRow( it->currentModelIndexRow() );
+    selectedSernums.append( item.id() );
+    if ( view()->isDisplayedWithParentsExpanded( it ) )
+      selectedVisibleSernums.append( item.id() );
+    if ( topmost == 0 )
+      topmost = ( *it ).topmostMessage();
+    else {
+      if ( topmost != ( *it ).topmostMessage() )
+        *allSelectedBelongToSameThread = false;
+    }
+  }
+  return true;
+}

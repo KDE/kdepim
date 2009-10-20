@@ -119,6 +119,20 @@ public:
    * this set of messages at a later stage then take a look at createPersistentSet().
    */
   QList<Akonadi::Item> selectionAsMessageItemList( bool includeCollapsedChildren = true ) const;
+
+  /**
+   * Returns the Akonadi::Item bound to the current StorageModel that
+   * are part of the current thread. The current thread is the thread
+   * that contains currentMessageItem().
+   * The list may be empty if there is no currentMessageItem() or no StorageModel.
+   *
+   * The returned list is guaranteed to be valid only until you return control
+   * to the main even loop. Don't store it for any longer. If you need to reference
+   * this set of messages at a later stage then take a look at createPersistentSet().
+   */
+  QList<Akonadi::Item> currentThreadAsMessageList() const;
+
+
   /**
    * Selects the next message item in the view.
    *
@@ -240,6 +254,31 @@ public:
    */
   QString currentFilterSearchString() const;
 
+
+  /**
+   * Returns true if the current Aggregation is threaded, false otherwise
+   * (or if there is no current Aggregation).
+   */
+  bool isThreaded() const;
+
+  /**
+   * Fast function that determines if the selection is empty
+   */
+  bool selectionEmpty() const;
+  /**
+   * Fills the lists of the selected message serial numbers and of the selected+visible ones.
+   * Returns true if the returned stats are valid (there is a current folder after all)
+   * and false otherwise. This is called by KMMainWidget in a single place so we optimize by
+   * making it a single sweep on the selection.
+   *
+   * If includeCollapsedChildren is true then the children of the selected but
+   * collapsed items are also included in the stats
+   */
+  bool getSelectionStats( QList< quint32 > &selectedSernums,
+                          QList< quint32 > &selectedVisibleSernums,
+                          bool * allSelectedBelongToSameThread,
+                          bool includeCollapsedChildren = true) const;
+
 public slots:
   /**
    * Selects all the items in the current folder.
@@ -289,6 +328,7 @@ signals:
    * could be useful
    */
   void statusMessage( const QString &message );
+
 
 private:
   Q_PRIVATE_SLOT(d, void onSelectionChanged( const QItemSelection&, const QItemSelection& ))

@@ -114,6 +114,15 @@ public:
    */
   void focusQuickSearch();
 
+  /**
+   * Returns true if the current Aggregation is threaded, false otherwise
+   * (or if there is no current Aggregation).
+   */
+  bool isThreaded() const;
+  /**
+   * Fast function that determines if the selection is empty
+   */
+  bool selectionEmpty() const;
 
 public slots:
 
