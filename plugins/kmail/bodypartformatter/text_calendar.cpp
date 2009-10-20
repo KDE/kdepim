@@ -52,6 +52,7 @@
 #include <kpimutils/email.h>
 
 #include <kglobal.h>
+#include <kfiledialog.h>
 #include <kinputdialog.h>
 #include <klocale.h>
 #include <kstringhandler.h>
@@ -64,6 +65,7 @@
 #include <ksystemtimezone.h>
 #include <ktemporaryfile.h>
 #include <kmimetype.h>
+#include <kmenu.h>
 #include <krun.h>
 #include <ktoolinvocation.h>
 #include <kio/netaccess.h>
@@ -171,6 +173,18 @@ class Formatter : public KMail::Interface::BodyPartFormatter
     }
 };
 
+static Incidence *icalToString( const QString& iCal )
+{
+  CalendarLocal calendar( KSystemTimeZones::local() ) ;
+  ICalFormat format;
+  ScheduleMessage *message =
+    format.parseScheduleMessage( &calendar, iCal );
+  if ( !message )
+    //TODO: Error message?
+    return 0;
+  return dynamic_cast<Incidence*>( message->event() );
+}
+
 class UrlHandler : public KMail::Interface::BodyPartURLHandler
 {
   public:
@@ -178,19 +192,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       kDebug() <<"UrlHandler() (iCalendar)";
     }
-
-    Incidence* icalToString( const QString& iCal ) const
-    {
-      CalendarLocal calendar( KSystemTimeZones::local() ) ;
-      ICalFormat format;
-      ScheduleMessage *message =
-        format.parseScheduleMessage( &calendar, iCal );
-      if ( !message )
-        //TODO: Error message?
-        return 0;
-      return dynamic_cast<Incidence*>( message->event() );
-    }
-
 
     Attendee *findMyself( Incidence* incidence, const QString& receiver ) const
     {
@@ -246,6 +247,45 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       return role;
 
+    }
+
+    static Attachment *findAttachment( const QString &name, const QString &iCal )
+    {
+      Incidence *incidence = icalToString( iCal );
+
+      // get the attachment by name from the incidence
+      Attachment::List as = incidence->attachments();
+      Attachment *a = 0;
+      if ( as.count() > 0 ) {
+        Attachment::List::ConstIterator it;
+        for ( it = as.begin(); it != as.end(); ++it ) {
+          if ( (*it)->label() == name ) {
+            a = *it;
+            break;
+          }
+        }
+      }
+
+      if ( !a ) {
+        KMessageBox::error(
+          0,
+          i18n("No attachment named \"%1\" found in the invitation.").arg( name ) );
+        return 0;
+      }
+
+      if ( a->isUri() ) {
+        if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, 0 ) ) {
+          KMessageBox::information(
+            0,
+            i18n( "The invitation attachment \"%1\" is a web link that "
+                  "is inaccessible from this computer. Please ask the event "
+                  "organizer to resend the invitation with this attachment "
+                  "stored inline instead of a link.",
+                  KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
+          return 0;
+        }
+      }
+      return a;
     }
 
     Attendee* setStatusOnMyself( Incidence* incidence, Attendee* myself,
@@ -502,44 +542,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return ok;
     }
 
-    bool handleAttachment( const QString &name, const QString &iCal ) const
+    bool openAttachment( const QString &name, const QString &iCal ) const
     {
-      // get comment for tentative acceptance
-      Incidence *incidence = icalToString( iCal );
-
-      // get the attachment by name from the incidence
-      Attachment::List as = incidence->attachments();
-      Attachment *a = 0;
-      if ( as.count() > 0 ) {
-        Attachment::List::ConstIterator it;
-        for ( it = as.begin(); it != as.end(); ++it ) {
-          if ( (*it)->label() == name ) {
-            a = *it;
-            break;
-          }
-        }
-      }
-
+      Attachment *a = findAttachment( name, iCal );
       if ( !a ) {
-        KMessageBox::error(
-          0,
-          i18n("No attachment named \"%1\" found in the invitation.", name ) );
         return false;
       }
 
       if ( a->isUri() ) {
-        if ( !KIO::NetAccess::exists( a->uri(), KIO::NetAccess::SourceSide, 0 ) ) {
-          KMessageBox::information(
-            0,
-            i18n( "The invitation attachment \"%1\" is a web link that "
-                  "is inaccessible from this computer. Please ask the event "
-                  "organizer to resend the invitation with this attachment "
-                  "stored inline instead of a link.",
-                  KUrl::fromPercentEncoding( a->uri().toLatin1() ) ) );
-          return false;
-        } else {
-          KToolInvocation::invokeBrowser( a->uri() );
-        }
+        KToolInvocation::invokeBrowser( a->uri() );
       } else {
         // put the attachment in a temporary file and launch it
         KTemporaryFile *file = new KTemporaryFile();
@@ -557,6 +568,46 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return stat;
       }
       return true;
+    }
+
+    bool saveAsAttachment( const QString &name, const QString &iCal ) const
+    {
+      Attachment *a = findAttachment( name, iCal );
+      if ( !a ) {
+        return false;
+      }
+
+      // put the attachment in a temporary file and save it
+      KTemporaryFile *file = new KTemporaryFile();
+      QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+      if ( !patterns.empty() ) {
+        file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+      }
+      file->open();
+      file->setPermissions( QFile::ReadUser );
+      file->write( QByteArray::fromBase64( a->data() ) );
+      file->close();
+
+      QString saveAsFile =
+        KFileDialog::getSaveFileName( KUrl(), QString(), 0,
+                                      i18n( "Save Invitation Attachment" ));
+      bool stat = false;
+      if ( !saveAsFile.isEmpty() ) {
+        if ( QFile( saveAsFile ).exists() ) {
+          if ( KMessageBox::warningContinueCancel(
+                 0,
+                 i18nc( "@info",
+                        "File <filename>%1</filename> exists.<nl/> Do you want to replace it?",
+                        saveAsFile ) ) != KMessageBox::Continue ) {
+            delete file;
+            return stat;
+          }
+        }
+
+        stat = KIO::NetAccess::file_copy( KUrl( file->fileName() ), KUrl( saveAsFile ) );
+      }
+      delete file;
+      return stat;
     }
 
     void showCalendar( const QDate &date ) const
@@ -695,7 +746,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         QString name = path;
         name.remove( QRegExp( "^ATTACH:" ) );
-        result = handleAttachment( name, iCal );
+        result = openAttachment( name, iCal );
       }
 
       if ( result )
@@ -703,11 +754,36 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return result;
     }
 
-    bool handleContextMenuRequest( KMail::Interface::BodyPart *,
-                                   const QString &,
-                                   const QPoint & ) const
+    bool handleContextMenuRequest( KMail::Interface::BodyPart *part,
+                                   const QString &path,
+                                   const QPoint &point ) const
     {
-      return false;
+      QString name = path;
+      if ( path.startsWith( "ATTACH:" ) ) {
+        name.remove( QRegExp( "^ATTACH:" ) );
+      } else {
+        return false; //because it isn't an attachment inviation
+      }
+
+      QString iCal;
+      if ( part->contentTypeParameter( "charset").isEmpty() ) {
+        const QByteArray &ba = part->asBinary();
+        iCal = QString::fromUtf8( ba );
+      } else {
+        iCal = part->asText();
+      }
+
+      KMenu *menu = new KMenu();
+      QAction *open = menu->addAction( i18n( "Open Attachment" ) );
+      QAction *saveas = menu->addAction( i18n( "Save Attachment As..." ) );
+
+      QAction *a = menu->exec( point, 0 );
+      if ( a == open ) {
+        openAttachment( name, iCal );
+      } else if ( a == saveas ) {
+        saveAsAttachment( name, iCal );
+      }
+      return true;
     }
 
     QString statusBarMessage( KMail::Interface::BodyPart *,
