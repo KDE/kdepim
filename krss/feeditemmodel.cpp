@@ -47,7 +47,7 @@ FeedItemModel::~FeedItemModel() {
     delete d;
 }
 
-QVariant FeedItemModel::getData( const Akonadi::Item &akonadiItem, int column, int role ) const {
+QVariant FeedItemModel::entityData( const Akonadi::Item &akonadiItem, int column, int role ) const {
     if ( !akonadiItem.hasPayload<RssItem>() )
         return QVariant();
 
@@ -128,18 +128,18 @@ QVariant FeedItemModel::getData( const Akonadi::Item &akonadiItem, int column, i
     return QVariant();
 }
 
-QVariant FeedItemModel::getData( const Collection &collection, int column, int role ) const {
-    return EntityTreeModel::getData( collection, column, role );
+QVariant FeedItemModel::entityData( const Collection &collection, int column, int role ) const {
+    return EntityTreeModel::entityData( collection, column, role );
 }
 
-int FeedItemModel::getColumnCount( int headerSet ) const {
+int FeedItemModel::entityColumnCount( int headerSet ) const {
     if ( headerSet == ItemListHeaders )
         return ItemColumnCount;
     else
         return FeedColumnCount;
 }
 
-QVariant FeedItemModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const {
+QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const {
     Q_ASSERT( section >= 0 );
     if ( orientation != Qt::Horizontal )
         return QVariant();

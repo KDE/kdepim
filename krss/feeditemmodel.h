@@ -66,13 +66,13 @@ public:
     explicit FeedItemModel( Akonadi::Session *session, Akonadi::ChangeRecorder* monitor, QObject* parent = 0 );
     ~FeedItemModel();
 
-    /* reimp */ QVariant getData( const Akonadi::Item& item, int column, int role=Qt::DisplayRole ) const;
+    /* reimp */ QVariant entityData( const Akonadi::Item& item, int column, int role=Qt::DisplayRole ) const;
 
-    /* reimp */ QVariant getData( const Akonadi::Collection& collection, int column, int role=Qt::DisplayRole ) const;
+    /* reimp */ QVariant entityData( const Akonadi::Collection& collection, int column, int role=Qt::DisplayRole ) const;
 
-    /* reimp */ int getColumnCount( int headerSet ) const;
+    /* reimp */ int entityColumnCount( int headerSet ) const;
 
-    /* reimp */ QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
+    /* reimp */ QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
 
 private:
     friend class ::KRss::FeedItemModelPrivate;
