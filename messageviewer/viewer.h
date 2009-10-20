@@ -131,6 +131,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   */
   void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
+  /** Instead of settings a message to be shown sets a message part
+      to be shown */
+  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
+                   const QString& aFileName, const QString& pname );
+
   /** Convenience method to clear the reader and discard the current message. Sets the internal message pointer
   * returned by message() to 0.
   * @param updateMode - update the display immediately or not. See UpdateMode.

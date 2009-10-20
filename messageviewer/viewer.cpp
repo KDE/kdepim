@@ -447,6 +447,13 @@ void Viewer::update( Viewer::UpdateMode updateMode )
   d->update( updateMode );
 }
 
+void Viewer::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
+                              const QString& aFileName, const QString& pname )
+{
+  Q_D( Viewer );
+  d->setMessagePart( aMsgPart, aHTML, aFileName, pname );
+}
+
 }
 
 #include "viewer.moc"
