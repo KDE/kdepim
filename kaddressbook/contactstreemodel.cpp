@@ -50,7 +50,7 @@ ContactsTreeModel::Columns ContactsTreeModel::columns() const
   return mColumns;
 }
 
-QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) const
+QVariant ContactsTreeModel::entityData( const Item &item, int column, int role ) const
 {
   if ( item.mimeType() == KABC::Addressee::mimeType() ) {
     if ( !item.hasPayload<KABC::Addressee>() ) {
@@ -161,39 +161,39 @@ QVariant ContactsTreeModel::getData( const Item &item, int column, int role ) co
     }
   }
 
-  return EntityTreeModel::getData( item, column, role );
+  return EntityTreeModel::entityData( item, column, role );
 }
 
-QVariant ContactsTreeModel::getData( const Collection &collection, int column, int role ) const
+QVariant ContactsTreeModel::entityData( const Collection &collection, int column, int role ) const
 {
   if ( role == Qt::DisplayRole ) {
     switch ( column ) {
       case 0:
-        return EntityTreeModel::getData( collection, column, role );
+        return EntityTreeModel::entityData( collection, column, role );
       default:
         return QString(); // pass model test
     }
   }
 
-  return EntityTreeModel::getData( collection, column, role );
+  return EntityTreeModel::entityData( collection, column, role );
 }
 
-int ContactsTreeModel::getColumnCount( int headerSet ) const
+int ContactsTreeModel::entityColumnCount( HeaderGroup headerGroup ) const
 {
-  if ( headerSet == EntityTreeModel::CollectionTreeHeaders ) {
+  if ( headerGroup == EntityTreeModel::CollectionTreeHeaders ) {
     return 1;
-  } else if ( headerSet == EntityTreeModel::ItemListHeaders ) {
+  } else if ( headerGroup == EntityTreeModel::ItemListHeaders ) {
     return mColumns.count();
   } else {
-    return EntityTreeModel::getColumnCount( headerSet );
+    return EntityTreeModel::entityColumnCount( headerGroup );
   }
 }
 
-QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const
+QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const
 {
   if ( role == Qt::DisplayRole ) {
     if ( orientation == Qt::Horizontal ) {
-      if ( headerSet == EntityTreeModel::CollectionTreeHeaders ) {
+      if ( headerGroup == EntityTreeModel::CollectionTreeHeaders ) {
 
         if ( section >= 1 )
           return QVariant();
@@ -203,7 +203,7 @@ QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientat
             return i18nc( "@title:column, address books overview", "Address Books" );
             break;
         }
-      } else if ( headerSet == EntityTreeModel::ItemListHeaders ) {
+      } else if ( headerGroup == EntityTreeModel::ItemListHeaders ) {
         if ( section < 0 || section >= mColumns.count() )
           return QVariant();
 
@@ -244,7 +244,7 @@ QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientat
     }
   }
 
-  return EntityTreeModel::getHeaderData( section, orientation, role, headerSet );
+return EntityTreeModel::entityHeaderData( section, orientation, role, headerGroup );
 }
 
 #include "contactstreemodel.moc"

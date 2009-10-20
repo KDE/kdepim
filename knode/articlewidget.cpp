@@ -887,18 +887,18 @@ void ArticleWidget::displayAttachment( KMime::Content *att, int partNum )
   comment = toHtmlString( comment, ParseURL | FancyFormatting );
 
   QString href;
-  QString fileName = writeAttachmentToTempFile( att, partNum );
-  if ( fileName.isEmpty() ) {
+  KUrl file = writeAttachmentToTempFile( att, partNum );
+  if ( file.isEmpty() ) {
     href = "part://" + QString::number( partNum );
   } else {
-    href = "file:" + KUrl::toPercentEncoding( fileName );
-    mAttachementMap[fileName] = partNum;
+    href = file.url();
+    mAttachementMap[ file.path() ] = partNum;
   }
 
   if ( mAttachmentStyle == "inline" && inlinePossible( att ) ) {
     if ( ct->isImage() ) {
       html += "<div><a href=\"" + href + "\">"
-              "<img src=\"" + fileName + "\" border=\"0\"></a>"
+              "<img src=\"" + href + "\" border=\"0\"></a>"
               "</div><div><a href=\"" + href + "\">" + label + "</a>"
               "</div><div>" + comment + "</div><br>";
     } else { //text
@@ -1015,24 +1015,24 @@ void ArticleWidget::updateContents()
 
 
 
-QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partNum )
+KUrl ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partNum )
 {
   // more or less KMail code
   KTemporaryFile *tempFile = new KTemporaryFile();
   tempFile->setSuffix( '.' + QString::number( partNum ) );
   tempFile->open();
-  QString fname = tempFile->fileName();
+  KUrl file = KUrl( tempFile->fileName() );
   delete tempFile;
 
-  if( ::access( QFile::encodeName( fname ), W_OK ) != 0 )
+  if( ::access( QFile::encodeName( file.path() ), W_OK ) != 0 )
     // Not there or not writable
-    if( KDE_mkdir( QFile::encodeName( fname ), 0 ) != 0 ||
-        ::chmod( QFile::encodeName( fname ), S_IRWXU ) != 0 )
-      return QString(); //failed create
+    if( KDE_mkdir( QFile::encodeName( file.path() ), 0 ) != 0 ||
+        ::chmod( QFile::encodeName( file.path() ), S_IRWXU ) != 0 )
+      return KUrl(); //failed create
 
-  Q_ASSERT( !fname.isNull() );
+  Q_ASSERT( !file.fileName().isNull() );
 
-  mTempDirs.append( fname );
+  mTempDirs.append( file.path() );
   // strip off a leading path
   KMime::Headers::ContentType* ct = att->contentType();
   QString attName = ct->name();
@@ -1041,19 +1041,19 @@ QString ArticleWidget::writeAttachmentToTempFile( KMime::Content *att, int partN
     attName = attName.mid( slashPos + 1 );
   if( attName.isEmpty() )
     attName = "unnamed";
-  fname += '/' + attName;
+  file.addPath( attName );
 
   QByteArray data = att->decodedContent();
   // ### KMail does crlf2lf conversion here before writing the file
-  if( !KPIMUtils::kByteArrayToFile( data, fname, false, false, false ) )
-    return QString();
+  if( !KPIMUtils::kByteArrayToFile( data, file.toLocalFile(), false, false, false ) )
+    return KUrl();
 
-  mTempFiles.append( fname );
+  mTempFiles.append( file.toLocalFile() );
   // make file read-only so that nobody gets the impression that he might
   // edit attached files
-  ::chmod( QFile::encodeName( fname ), S_IRUSR );
+  ::chmod( QFile::encodeName( file.toLocalFile() ), S_IRUSR );
 
-  return fname;
+  return file;
 }
 
 

@@ -21,7 +21,7 @@
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionstatistics.h>
-#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemmodifyjob.h>
@@ -90,11 +90,11 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   childrenFilter->setSourceModel( model );
   childrenFilter->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
-  EntityFilterProxyModel *itemFilter = new EntityFilterProxyModel( this );
+  EntityMimeTypeFilterModel *itemFilter = new EntityMimeTypeFilterModel( this );
   itemFilter->setSourceModel( childrenFilter );
   itemFilter->addMimeTypeExclusionFilter( Collection::mimeType() );
   itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
-  itemFilter->setHeaderSet( EntityTreeModel::ItemListHeaders );
+  itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
   d->mModel = itemFilter;
 

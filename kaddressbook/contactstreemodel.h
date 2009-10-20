@@ -104,10 +104,10 @@ class ContactsTreeModel : public EntityTreeModel
     void setColumns( const Columns &columns );
     Columns columns() const;
 
-    virtual QVariant getData( const Item &item, int column, int role = Qt::DisplayRole ) const;
-    virtual QVariant getData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
-    virtual QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
-    virtual int getColumnCount( int headerSet ) const;
+    virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityData( const Collection &collection, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, HeaderGroup headerGroup ) const;
+    virtual int entityColumnCount( HeaderGroup headerGroup ) const;
 
   private:
     Columns mColumns;

@@ -26,7 +26,7 @@
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
-#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreeview.h>
 
 #include <KAboutData>
@@ -97,17 +97,17 @@ void MainWidget::init() {
     m_feedModel = new FeedListModel( m_feedList, m_tagProvider );
     m_feedView->setModel( m_feedModel );
 #endif
-    EntityFilterProxyModel* filterProxy = new EntityFilterProxyModel;
-    filterProxy->setHeaderSet( EntityTreeModel::CollectionTreeHeaders );
+    EntityMimeTypeFilterModel* filterProxy = new EntityMimeTypeFilterModel;
+    filterProxy->setHeaderGroup( EntityTreeModel::CollectionTreeHeaders );
     filterProxy->setSourceModel( m_itemModel );
     m_feedView->setModel( m_itemModel );
 
     KSelectionProxyModel* selectionProxy = new KSelectionProxyModel( m_feedView->selectionModel() );
     selectionProxy->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
     selectionProxy->setSourceModel( m_itemModel );
-    EntityFilterProxyModel* filterProxy2 = new EntityFilterProxyModel;
+    EntityMimeTypeFilterModel* filterProxy2 = new EntityMimeTypeFilterModel;
 
-    filterProxy2->setHeaderSet( EntityTreeModel::ItemListHeaders );
+    filterProxy2->setHeaderGroup( EntityTreeModel::ItemListHeaders );
     filterProxy2->setSourceModel( selectionProxy );
     filterProxy2->setSortRole( FeedItemModel::SortRole );
     m_itemView->setModel( filterProxy2 );

@@ -5,13 +5,13 @@
  */
 #include "mailreader.h"
 
-#include <akonadi/entitytreeview.h>
-#include <akonadi/entityfilterproxymodel.h>
-#include <akonadi/entitytreemodel.h>
-#include <akonadi/itemfetchscope.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entitytreeview.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/session.h>
-#include <akonadi/statisticstooltipproxymodel.h>
+#include <akonadi/statisticsproxymodel.h>
 
 #include <KDE/KAction>
 #include <KDE/KConfigDialog>
@@ -80,13 +80,15 @@ void mailreader::setupDocks()
   collectionView->setSelectionMode( QAbstractItemView::ExtendedSelection );
 
   // Setup the message folders collection...
-  Akonadi::EntityFilterProxyModel *collectionFilter = new Akonadi::EntityFilterProxyModel( this );
+  Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
   collectionFilter->setSourceModel( entityModel );
   collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  collectionFilter->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   // ... with statistics...
-  Akonadi::StatisticsToolTipProxyModel *statisticsProxyModel = new Akonadi::StatisticsToolTipProxyModel( this );
+  Akonadi::StatisticsProxyModel *statisticsProxyModel = new Akonadi::StatisticsProxyModel( this );
+  statisticsProxyModel->setToolTipEnabled( true );
+  statisticsProxyModel->setExtraColumnsEnabled( false );
   statisticsProxyModel->setSourceModel( collectionFilter );
 
   // ... and sortable

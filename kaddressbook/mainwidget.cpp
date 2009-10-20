@@ -39,7 +39,7 @@
 #include <akonadi/contact/contactgroupviewer.h>
 #include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
-#include <akonadi/entityfilterproxymodel.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/entitytreeviewstatesaver.h>
 #include <akonadi/itemview.h>
@@ -118,10 +118,10 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *               mAllContactsModel:  Provides a list of all available contacts from all address books
    */
 
-  mCollectionTree = new Akonadi::EntityFilterProxyModel( this );
+  mCollectionTree = new Akonadi::EntityMimeTypeFilterModel( this );
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  mCollectionTree->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  mCollectionTree->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   mXXPortManager->setItemModel( allContactsModel() );
 
@@ -141,10 +141,10 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   mDescendantTree->setSourceModel( selectionProxyModel );
 
-  mItemTree = new Akonadi::EntityFilterProxyModel( this );
+  mItemTree = new Akonadi::EntityMimeTypeFilterModel( this );
   mItemTree->setSourceModel( mDescendantTree );
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-  mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+  mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
   ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
   contactFilterModel->setSourceModel( mItemTree );
@@ -309,6 +309,7 @@ void MainWidget::setupGui()
   // setup the default actions
   Akonadi::ContactDefaultActions *actions = new Akonadi::ContactDefaultActions( this );
   actions->connectToView( mContactDetails );
+  actions->connectToView( mContactGroupDetails );
 }
 
 void MainWidget::setupActions( KActionCollection *collection )
@@ -555,10 +556,10 @@ QAbstractItemModel* MainWidget::allContactsModel()
     KDescendantsProxyModel *descendantsModel = new KDescendantsProxyModel( this );
     descendantsModel->setSourceModel( GlobalContactModel::instance()->model() );
 
-    mAllContactsModel = new Akonadi::EntityFilterProxyModel( this );
+    mAllContactsModel = new Akonadi::EntityMimeTypeFilterModel( this );
     mAllContactsModel->setSourceModel( descendantsModel );
     mAllContactsModel->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-    mAllContactsModel->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+    mAllContactsModel->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   }
 
   return mAllContactsModel;

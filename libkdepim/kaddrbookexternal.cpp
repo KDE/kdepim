@@ -20,7 +20,7 @@
 #include "kaddrbookexternal.h"
 
 #include <akonadi/collection.h>
-#include <akonadi/contact/addressbookselectiondialog.h>
+#include <akonadi/collectiondialog.h>
 #include <akonadi/contact/contacteditordialog.h>
 #include <akonadi/contact/contactgroupexpandjob.h>
 #include <akonadi/contact/contactgroupsearchjob.h>
@@ -49,11 +49,16 @@ void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QW
   if ( items.isEmpty() ) { // if not...
 
     // ask user in which address book the new contact shall be stored
-    Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly );
+    const QStringList mimeTypes( KABC::Addressee::mimeType() );
+    Akonadi::CollectionDialog dlg;
+    dlg.setMimeTypeFilter( mimeTypes );
+    dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+    dlg.setCaption( i18n( "Select Address Book" ) );
+    dlg.setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
     if ( !dlg.exec() )
       return;
 
-    const Akonadi::Collection addressBook = dlg.selectedAddressBook();
+    const Akonadi::Collection addressBook = dlg.selectedCollection();
     if ( !addressBook.isValid() )
       return;
 
@@ -169,11 +174,17 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee &addressee, QWidget *par
 bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
 {
   // ask user in which address book the new contact shall be stored
-  Akonadi::AddressBookSelectionDialog dlg( Akonadi::AddressBookSelectionDialog::ContactsOnly );
+  const QStringList mimeTypes( KABC::Addressee::mimeType() );
+  Akonadi::CollectionDialog dlg;
+  dlg.setMimeTypeFilter( mimeTypes );
+  dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg.setCaption( i18n( "Select Address Book" ) );
+  dlg.setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
+
   if ( !dlg.exec() )
     return false;
 
-  const Akonadi::Collection addressBook = dlg.selectedAddressBook();
+  const Akonadi::Collection addressBook = dlg.selectedCollection();
   if ( !addressBook.isValid() )
     return false;
 
@@ -220,7 +231,13 @@ QString KAddrBookExternal::expandDistributionList( const QString &listName, bool
   if ( !expandJob->exec() )
     return QString();
 
-  const QString listOfEmails = expandJob->emailAddresses().join( ", " );
+  const KABC::Addressee::List contacts = expandJob->contacts();
+
+  QStringList emails;
+  foreach ( const KABC::Addressee &contact, contacts )
+    emails.append( contact.fullEmail() );
+
+  const QString listOfEmails = emails.join( ", " );
   emptyList = listOfEmails.isEmpty();
 
   return listOfEmails;
