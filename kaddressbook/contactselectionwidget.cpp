@@ -93,8 +93,8 @@ void ContactSelectionWidget::initGui()
   mSelectedContactsButton = new QRadioButton( i18n( "Selected contacts" ) );
   mAddressBookContactsButton = new QRadioButton( i18n( "All contacts from:" ) );
   mAddressBookSelection = new Akonadi::CollectionComboBox;
-  mAddressBookSelection->setContentMimeTypesFilter( QStringList() << KABC::Addressee::mimeType() );
-  mAddressBookSelection->setAccessRightsFilter( Akonadi::CollectionComboBox::Readable );
+  mAddressBookSelection->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
+  mAddressBookSelection->setAccessRightsFilter( Akonadi::Collection::ReadOnly );
 
   group->addButton( mAllContactsButton );
   group->addButton( mSelectedContactsButton );
