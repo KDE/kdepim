@@ -269,7 +269,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( !a ) {
         KMessageBox::error(
           0,
-          i18n("No attachment named \"%1\" found in the invitation.").arg( name ) );
+          i18n( "No attachment named \"%1\" found in the invitation.", name ) );
         return 0;
       }
 
@@ -759,7 +759,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                    const QPoint &point ) const
     {
       QString name = path;
-      if ( path.startsWith( "ATTACH:" ) ) {
+      if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         name.remove( QRegExp( "^ATTACH:" ) );
       } else {
         return false; //because it isn't an attachment inviation
