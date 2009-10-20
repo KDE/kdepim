@@ -184,7 +184,8 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
     mAttachmentStrategy( other.attachmentStrategy() ),
     mHtmlWriter( other.htmlWriter() ),
     mCSSHelper( other.cssHelper() ),
-    mNodeHelper( other.nodeHelper() ) //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
+    mNodeHelper( other.nodeHelper() ), //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
+    mDeleteNodeHelper( false ) // TODO see above
 {
 
 }
