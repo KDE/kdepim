@@ -90,19 +90,19 @@ RssFilteringAgent::RssFilteringAgent( const QString& id )
     }
 }
 
-Akonadi::PreprocessorBase::ProcessingResult RssFilteringAgent::processItem( Akonadi::Item::Id itemId,
-                                                                            Akonadi::Collection::Id collectionId,
-                                                                            const QString& mimeType )
+Akonadi::PreprocessorBase::ProcessingResult RssFilteringAgent::processItem( const Akonadi::Item &item,
+                                                                            const Akonadi::Collection &collection )
 {
-    kDebug() << "Item id:" << itemId << ", collection id:" << collectionId << ", mimeType:" << mimeType;
+    kDebug() << "Item id:" << item.id() << ", collection id:" << collection.id() << ", mimeType:" << item.mimeType();
 
-    const KRss::Feed::Id feedId = KRss::FeedCollection::feedIdFromAkonadi( collectionId );
+    const KRss::Feed::Id feedId = KRss::FeedCollection::feedIdFromAkonadi( collection.id() );
     if ( !m_programs.contains( feedId ) ) {
         kDebug() << "I don't care about this collection";
         return Akonadi::PreprocessorBase::ProcessingFailed;
     }
 
-    Akonadi::ItemFetchJob* const ijob = new Akonadi::ItemFetchJob( Akonadi::Item( itemId ) );
+    // TODO: remove once base class allows to set a fetch scope
+    Akonadi::ItemFetchJob* const ijob = new Akonadi::ItemFetchJob( item );
     ijob->fetchScope().fetchAllAttributes();
     ijob->fetchScope().fetchFullPayload();
     if ( !ijob->exec() ) {
