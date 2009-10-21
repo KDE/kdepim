@@ -64,26 +64,6 @@ if(KDEPIM_BUILD_EVERYTHING)
 
   install(TARGETS sloxwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-
-  ########### next target ###############
-
-  set(scalixwizard_SRCS ${libknotesresources_SRCS}
-    scalixwizard.cpp
-    kmailchanges.cpp
-    scalixkmailchanges.cpp
-    scalixmain.cpp)
-
-  kde4_add_kcfg_files(scalixwizard_SRCS scalixconfig.kcfgc)
-
-  # todo: more appropriate icon?
-  kde4_add_app_icon(scalixwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
-
-  kde4_add_executable(scalixwizard ${scalixwizard_SRCS})
-
-  target_link_libraries(scalixwizard ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} kabcscalix knotesscalix kcalscalix kdepim  )
-
-  install(TARGETS scalixwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 endif(KDEPIM_BUILD_EVERYTHING)
 
 
@@ -113,5 +93,5 @@ install( FILES kolab.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
 if(KDEPIM_BUILD_EVERYTHING)
   install(FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-  install(FILES slox.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+  install(FILES slox.kcfg groupwise.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 endif(KDEPIM_BUILD_EVERYTHING)
