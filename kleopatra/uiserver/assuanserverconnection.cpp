@@ -40,6 +40,7 @@
 
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
+#include "sessiondata.h"
 
 #include <models/keycache.h> // :(
 
@@ -298,6 +299,8 @@ private:
     }
 
     void bottomHalfDeletion() {
+        if ( sessionId )
+            SessionDataHandler::instance()->exitSession( sessionId );
         cleanup();
         const QPointer<Private> that = this;
         emit q->closed( q );
@@ -340,6 +343,7 @@ private:
         bool ok = false;
         if ( const qulonglong id = rx.cap( 1 ).toULongLong( &ok ) ) {
             if ( ok && id <= std::numeric_limits<unsigned int>::max() ) {
+                SessionDataHandler::instance()->enterSession( id );
                 conn.sessionId = id;
             } else {
                 static const QString errorString = i18n("Parse error: numerial session id too large");
@@ -1081,10 +1085,20 @@ const std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > & AssuanCommand
 }
 
 bool AssuanCommand::hasMemento( const QByteArray & tag ) const {
-    return mementos().count( tag );
+    if ( const unsigned int id = sessionId() )
+        return SessionDataHandler::instance()->sessionData(id)->mementos.count( tag ) || mementos().count( tag ) ;
+    else
+        return mementos().count( tag );
 }
 
 shared_ptr<AssuanCommand::Memento> AssuanCommand::memento( const QByteArray & tag ) const {
+    if ( const unsigned int id = sessionId() ) {
+        const shared_ptr<SessionDataHandler> sdh = SessionDataHandler::instance();
+        const shared_ptr<SessionData> sd = sdh->sessionData(id);
+        const std::map< QByteArray, shared_ptr<Memento> >::const_iterator it = sd->mementos.find( tag );
+        if ( it != sd->mementos.end() )
+            return it->second;
+    }
     const std::map< QByteArray, shared_ptr<Memento> >::const_iterator it = mementos().find( tag );
     if ( it == mementos().end() )
         return shared_ptr<Memento>();
@@ -1102,7 +1116,10 @@ QByteArray AssuanCommand::registerMemento( const QByteArray & tag, const shared_
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
 
-    conn.mementos[tag] = mem;
+    if ( const unsigned int id = sessionId() )
+        SessionDataHandler::instance()->sessionData(id)->mementos[tag] = mem;
+    else
+        conn.mementos[tag] = mem;
     return tag;
 }
 
@@ -1112,6 +1129,8 @@ void AssuanCommand::removeMemento( const QByteArray & tag ) {
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
 
     conn.mementos.erase( tag );
+    if ( const unsigned int id = sessionId() )
+        SessionDataHandler::instance()->sessionData(id)->mementos.erase( tag );
 }
 
 const std::vector< shared_ptr<Input> > & AssuanCommand::inputs() const {

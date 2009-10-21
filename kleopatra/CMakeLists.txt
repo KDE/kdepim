@@ -65,6 +65,7 @@ endif ( WIN32 )
 if ( USABLE_ASSUAN_FOUND )
   add_definitions ( -DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy -DKLEOPATRACLIENTCORE_EXPORT= )
   set(_kleopatra_uiserver_SRCS
+    uiserver/sessiondata.cpp
     uiserver/uiserver.cpp
     ${_kleopatra_extra_uiserver_SRCS}
     uiserver/assuanserverconnection.cpp
