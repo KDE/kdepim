@@ -18,6 +18,8 @@ qt4_add_dbus_interfaces( kdepimdbusinterfaces_LIB_SRCS ${CMAKE_SOURCE_DIR}/knode
 
 kde4_add_library(kdepimdbusinterfaces SHARED ${kdepimdbusinterfaces_LIB_SRCS})
 
+add_dependencies(kdepimdbusinterfaces kmail_xml)
+
 target_link_libraries(kdepimdbusinterfaces
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
