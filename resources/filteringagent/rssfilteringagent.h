@@ -36,8 +36,7 @@ class RssFilteringAgent : public Akonadi::PreprocessorBase
 public:
     explicit RssFilteringAgent( const QString& id );
 
-    ProcessingResult processItem( Akonadi::Item::Id itemId, Akonadi::Collection::Id collectionId,
-                                  const QString& mimeType );
+    ProcessingResult processItem( const Akonadi::Item &item, const Akonadi::Collection &collection );
     void configure( WId windowId );
 
 private:
