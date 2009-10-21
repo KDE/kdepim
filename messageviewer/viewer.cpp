@@ -466,6 +466,12 @@ void Viewer::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
   d->setMessagePart( aMsgPart, aHTML, aFileName, pname );
 }
 
+void Viewer::slotShowMessageSource()
+{
+  Q_D( Viewer );
+  d->slotShowMessageSource();
+}
+
 }
 
 #include "viewer.moc"

@@ -284,6 +284,7 @@ public slots:
   void slotUrlClicked();
   void slotSaveMessage();
   void slotAttachmentSaveAs();
+  void slotShowMessageSource();
 
 protected:
     /** Some necessary event handling. */
