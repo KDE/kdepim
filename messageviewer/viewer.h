@@ -282,6 +282,8 @@ public slots:
   void slotJumpDown();
   void slotFind();
   void slotUrlClicked();
+  void slotSaveMessage();
+  void slotAttachmentSaveAs();
 
 protected:
     /** Some necessary event handling. */

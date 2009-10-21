@@ -114,6 +114,18 @@ void Viewer::closeEvent( QCloseEvent *e )
   d->writeConfig();
 }
 
+void Viewer::slotAttachmentSaveAs()
+{
+  Q_D( Viewer );
+  d->slotAttachmentSaveAs();
+}
+
+void Viewer::slotSaveMessage()
+{
+  Q_D( Viewer );
+  d->slotSaveMessage();
+}
+
 void Viewer::slotScrollUp()
 {
   Q_D(Viewer);
