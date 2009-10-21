@@ -255,7 +255,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attachment *a = 0;
       if ( as.count() > 0 ) {
         Attachment::List::ConstIterator it;
-        for ( it = as.begin(); it != as.end(); ++it ) {
+        for ( it = as.constBegin(); it != as.constEnd(); ++it ) {
           if ( (*it)->label() == name ) {
             a = *it;
             break;
