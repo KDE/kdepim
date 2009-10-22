@@ -20,11 +20,12 @@
     USA.
 */
 
-#ifndef AKONADI_KCAL_AKONADICALENDARADAPTOR_H
-#define AKONADI_KCAL_AKONADICALENDARADAPTOR_H
+#ifndef AKONADICALENDARADAPTOR_H
+#define AKONADICALENDARADAPTOR_H
 
-#include "akonadi-kcal_export.h"
-#include "akonadicalendar.h"
+#include "incidencechangerbase.h"
+
+#include <akonadi/kcal/akonadicalendar.h>
 
 #include <KCal/CalendarResources>
 #include <KCal/CalFilter>
@@ -55,14 +56,15 @@ template<class T> inline Akonadi::Item incidenceToItem(T* incidence) {
   return item;
 }
 
-class AKONADI_KCAL_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
+class KORGANIZER_INTERFACES_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
 {
   public:
-    explicit AkonadiCalendarAdaptor(KOrg::CalendarBase *calendar)
+    explicit AkonadiCalendarAdaptor(AkonadiCalendar *calendar, IncidenceChangerBase* changer)
       : KCal::Calendar( KOPrefs::instance()->timeSpec() )
-      , mCalendar( dynamic_cast<AkonadiCalendar*>(calendar) )
+      , mCalendar( calendar ), mChanger( changer )
     {
       Q_ASSERT(mCalendar);
+      Q_ASSERT(mChanger);
     }
 
     virtual ~AkonadiCalendarAdaptor() {}
@@ -73,7 +75,7 @@ class AKONADI_KCAL_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
     
     virtual bool addEvent( Event *event )
     {
-      return mCalendar->addEvent( Event::Ptr(event->clone()) );
+      return mChanger->addIncidence( Incidence::Ptr( event->clone() ) );
     }
     
     virtual bool deleteEvent( Event *event )
@@ -110,7 +112,7 @@ class AKONADI_KCAL_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
     
     virtual bool addTodo( Todo *todo )
     {
-      return mCalendar->addTodo( Todo::Ptr(todo->clone()) );
+      return mChanger->addIncidence( Incidence::Ptr( todo->clone() ) );
     }
     
     virtual bool deleteTodo( Todo *todo )
@@ -137,7 +139,7 @@ class AKONADI_KCAL_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
     
     virtual bool addJournal( Journal *journal )
     {
-      return mCalendar->addJournal( Journal::Ptr(journal->clone()) );
+      return mChanger->addIncidence( Incidence::Ptr( journal->clone() ) );
     }
     
     virtual bool deleteJournal( Journal *journal )
@@ -169,6 +171,7 @@ class AKONADI_KCAL_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
 
   private:
     AkonadiCalendar *mCalendar;
+    IncidenceChangerBase *mChanger;
 };
 
 }
