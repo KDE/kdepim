@@ -74,7 +74,7 @@ kde4_add_app_icon(kaddressbook_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-ap
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
 set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
-kdepim4_link_unique_libraries(kaddressbook_bin  kaddressbookprivate ${KDE4_KHTML_LIBS} kdepim)
+kdepim4_link_unique_libraries(kaddressbook_bin  kaddressbookprivate kabinterfaces ${KDE4_KHTML_LIBS} kdepim)
 
 install(TARGETS kaddressbook_bin  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
@@ -90,7 +90,7 @@ kde4_add_plugin(kaddressbookpart ${kaddressbookpart_PART_SRCS})
 
 
 
-kdepim4_link_unique_libraries(kaddressbookpart  ${KDE4_KIO_LIBS} kaddressbookprivate ${KDE4_KPARTS_LIBS} ${KDE4_KAB_LIBS} kabcommon)
+kdepim4_link_unique_libraries(kaddressbookpart  ${KDE4_KIO_LIBS} kaddressbookprivate kabinterfaces ${KDE4_KPARTS_LIBS} ${KDE4_KAB_LIBS} kabcommon)
 
 install(TARGETS kaddressbookpart  DESTINATION ${PLUGIN_INSTALL_DIR})
 

@@ -26,7 +26,7 @@ kde4_add_plugin(kabc_kolab ${kabc_kolab_PART_SRCS})
 
 
 
-target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS})
+target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kabckolab)
 
 install(TARGETS kabc_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 
