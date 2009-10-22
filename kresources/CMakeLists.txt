@@ -25,7 +25,6 @@ add_subdirectory( blog )
 add_subdirectory( remote )
 
 if(KDEPIM_BUILD_EVERYTHING)
-  add_subdirectory( scalix )
   add_subdirectory( slox )
   add_subdirectory( groupdav )
   add_subdirectory( groupwise )
