@@ -90,12 +90,11 @@ RssFilteringAgent::RssFilteringAgent( const QString& id )
     }
 }
 
-Akonadi::PreprocessorBase::ProcessingResult RssFilteringAgent::processItem( const Akonadi::Item &item,
-                                                                            const Akonadi::Collection &collection )
+Akonadi::PreprocessorBase::ProcessingResult RssFilteringAgent::processItem( const Akonadi::Item &item )
 {
-    kDebug() << "Item id:" << item.id() << ", collection id:" << collection.id() << ", mimeType:" << item.mimeType();
+    kDebug() << "Item id:" << item.id() << ", collection id:" << item.parentCollection().id() << ", mimeType:" << item.mimeType();
 
-    const KRss::Feed::Id feedId = KRss::FeedCollection::feedIdFromAkonadi( collection.id() );
+    const KRss::Feed::Id feedId = KRss::FeedCollection::feedIdFromAkonadi( item.parentCollection().id() );
     if ( !m_programs.contains( feedId ) ) {
         kDebug() << "I don't care about this collection";
         return Akonadi::PreprocessorBase::ProcessingFailed;
