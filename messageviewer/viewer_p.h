@@ -356,6 +356,9 @@ public:
   void scrollToAttachment( const KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
 
+
+  bool noMDNsWhenEncrypted() const { return mNoMDNsWhenEncrypted; }
+
 public slots:
 
   void slotUrlOpen( const KUrl &url = KUrl() );

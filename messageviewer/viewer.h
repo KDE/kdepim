@@ -258,6 +258,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   bool autoDelete(void) const;
   void setAutoDelete(bool f);
 
+  bool noMDNsWhenEncrypted() const;
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
