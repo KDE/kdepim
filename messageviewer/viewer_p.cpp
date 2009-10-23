@@ -527,8 +527,8 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
                 dataNode = child;
           } else if ( subType == "pkcs7-signature" ) {
               // note: subtype Pkcs7Signature specifies a signature part
-              //       which we do NOT want to remove!                  
-              bKeepPartAsIs = true;                                     
+              //       which we do NOT want to remove!
+              bKeepPartAsIs = true;
           } else if ( subType == "pkcs7-mime" ) {
               // note: subtype Pkcs7Mime can also be signed
               //       and we do NOT want to remove the signature!
@@ -583,10 +583,10 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         }
       }
 
-      if ( bKeepPartAsIs ) {                                            
+      if ( bKeepPartAsIs ) {
           resultingData += dataNode->encodedContent();
-      } else {                                                          
-                                                                        
+      } else {
+
         // B) Store the body of this part.
         if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
           kDebug() <<"is valid Multipart, processing children:";
@@ -2247,6 +2247,10 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   if ( mMessage ) {
     kWarning() << "Unhandled URL right-click!";
     emit popupMenu( *mMessage, url, aPos );
+  }
+  if ( mMessageItem.isValid() ) {
+    kWarning() << "Unhandled URL right-click!";
+    emit popupMenu( mMessageItem, url, aPos );
   }
 }
 

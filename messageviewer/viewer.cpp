@@ -43,6 +43,7 @@ Viewer::Viewer(QWidget *aParent,
 {
   connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ), SIGNAL( replaceMsgByUnencryptedVersion() ) );
   connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
+  connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( urlClicked(const KUrl&, int ) ), SIGNAL( urlClicked(const KUrl&, int ) ) );
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
   setMessage( 0, Delayed );

@@ -267,6 +267,9 @@ signals:
 
   /** The user presses the right mouse button. 'url' may be 0. */
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
+  /** The user presses the right mouse button. 'url' may be 0. */
+  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
+
 
   /** The user has clicked onto an URL that is no attachment. */
   void urlClicked(const KUrl &url, int button);
