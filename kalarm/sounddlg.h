@@ -1,7 +1,7 @@
 /*
  *  sounddlg.h  -  sound file selection and configuration dialog
  *  Program:  kalarm
- *  Copyright (c) 2005-2007 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright © 2005-2007,2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -58,7 +58,7 @@ class SoundDlg : public KDialog
 		virtual void   resizeEvent(QResizeEvent*);
 
 	protected slots:
-		virtual void   slotOk();
+		virtual void   slotButtonClicked(int button);
 
 	private slots:
 		void           slotPickFile();

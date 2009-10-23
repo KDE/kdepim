@@ -260,15 +260,19 @@ void SoundDlg::showEvent(QShowEvent* se)
 }
 
 /******************************************************************************
-*  Called when the OK button is clicked.
+*  Called when the OK or Cancel button is clicked.
 */
-void SoundDlg::slotOk()
+void SoundDlg::slotButtonClicked(int button)
 {
-	if (mReadOnly)
-		reject();
-	if (!checkFile())
-		return;
-	accept();
+	if (button == Ok)
+	{
+		if (mReadOnly)
+			reject();
+		else if (checkFile())
+			accept();
+	}
+	else
+		KDialog::slotButtonClicked(button);
 }
 
 /******************************************************************************
