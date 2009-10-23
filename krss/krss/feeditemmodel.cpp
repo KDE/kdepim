@@ -132,14 +132,14 @@ QVariant FeedItemModel::entityData( const Collection &collection, int column, in
     return EntityTreeModel::entityData( collection, column, role );
 }
 
-int FeedItemModel::entityColumnCount( int headerSet ) const {
+int FeedItemModel::entityColumnCount( EntityTreeModel::HeaderGroup headerSet ) const {
     if ( headerSet == ItemListHeaders )
         return ItemColumnCount;
     else
         return FeedColumnCount;
 }
 
-QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const {
+QVariant FeedItemModel::entityHeaderData( int section, Qt::Orientation orientation, int role, EntityTreeModel::HeaderGroup headerSet ) const {
     Q_ASSERT( section >= 0 );
     if ( orientation != Qt::Horizontal )
         return QVariant();
