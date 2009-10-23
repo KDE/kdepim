@@ -70,9 +70,9 @@ public:
 
     /* reimp */ QVariant entityData( const Akonadi::Collection& collection, int column, int role=Qt::DisplayRole ) const;
 
-    /* reimp */ int entityColumnCount( int headerSet ) const;
+    /* reimp */ int entityColumnCount( EntityTreeModel::HeaderGroup headerSet ) const;
 
-    /* reimp */ QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
+    /* reimp */ QVariant entityHeaderData( int section, Qt::Orientation orientation, int role, EntityTreeModel::HeaderGroup headerSet ) const;
 
 private:
     friend class ::KRss::FeedItemModelPrivate;
