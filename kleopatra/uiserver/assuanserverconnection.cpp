@@ -47,6 +47,7 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/gnupg-helper.h>
+#include <utils/path-helper.h>
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>
@@ -1432,26 +1433,8 @@ WId AssuanCommand::parentWId() const {
     return wid_from_string( option("window-id").toString() );
 }
 
-static QString commonPrefix( const QString & s1, const QString & s2 ) {
-    return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
-}
-
-static QString longestCommonPrefix( const QStringList & sl ) {
-    if ( sl.empty() )
-        return QString();
-    QString result = sl.front();
-    Q_FOREACH( const QString & s, sl )
-        result = commonPrefix( s, result );
-    return result;
-}
-
 QString AssuanCommand::heuristicBaseDirectory() const {
-    const QString candidate = longestCommonPrefix( fileNames() );
-    const QFileInfo fi( candidate );
-    if ( fi.isDir() )
-        return candidate;
-    else
-        return fi.absolutePath();
+    return Kleo::heuristicBaseDirectory( fileNames() );
 }
 
 #include "assuanserverconnection.moc"
