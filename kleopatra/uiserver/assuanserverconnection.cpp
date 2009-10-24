@@ -478,8 +478,8 @@ private:
                 const QFileInfo fi( filePath );
                 if ( !fi.isAbsolute() )
                     throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-                if ( fi.isDir() )
-                    io = Input_or_Output<in>::type::createFromDir( fi.absoluteFilePath() );
+                if ( !fi.isFile() )
+                    throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only files are allowed in INPUT/OUTPUT FILE") );
                 else
                     io = Input_or_Output<in>::type::createFromFile( fi.absoluteFilePath(), true );
 
