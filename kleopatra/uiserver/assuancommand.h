@@ -295,9 +295,7 @@ namespace Kleo {
         const std::vector< boost::shared_ptr<Output> > & outputs() const;
 
         QStringList fileNames() const;
-        std::vector< boost::shared_ptr<QFile> > files() const;
         unsigned int numFiles() const;
-        void releaseFiles();
 
         void sendStatus( const char * keyword, const QString & text );
         void sendStatusEncoded( const char * keyword, const std::string & text );

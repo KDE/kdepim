@@ -110,20 +110,6 @@
 using namespace Kleo;
 using namespace boost;
 
-namespace {
-    struct IOF {
-        QString fileName;
-        shared_ptr<QFile> file;
-    };
-
-    static void close_all( const std::vector<IOF> & ios ) {
-        Q_FOREACH( const IOF & io, ios )
-            if ( io.file && io.file->isOpen() )
-                io.file->close();
-    }
-
-}
-
 static const unsigned int INIT_SOCKET_FLAGS = 3; // says info assuan...
 //static int(*USE_DEFAULT_HANDLER)(assuan_context_t,char*) = 0;
 static const int FOR_READING = 0;
@@ -531,26 +517,18 @@ private:
             const QFileInfo fi( QFile::decodeName( hexdecode( line ).c_str() ) );
             if ( !fi.isAbsolute() )
                 throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-            const QString filePath = fi.absoluteFilePath();
-
-            if ( fi.exists() && fi.isDir() ) {
-                if ( !fi.isReadable() || !fi.isExecutable() )
-                    throw Exception( gpg_error( GPG_ERR_INV_ARG  ), i18n("Could not access directory \"%1\" for reading", filePath ) );
-                conn.dirs.push_back( filePath );
-                return assuan_process_done( conn.ctx.get(), 0 );
-            }
-
-            const shared_ptr<QFile> file( new QFile( filePath ) );
-            if ( !file->open( QIODevice::ReadOnly ) )
-                throw Exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
-            const IOF io = {
-                filePath, file
-            };
-            conn.files.push_back( io );
+            if ( !fi.exists() )
+                throw gpg_error( GPG_ERR_ENOENT );
+            if ( !fi.isReadable() || fi.isDir() && !fi.isExecutable() )
+                throw gpg_error( GPG_ERR_EPERM );
+            
+            conn.files.push_back( fi.absoluteFilePath() );
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const Exception & e ) {
             return assuan_process_done_msg( conn.ctx.get(), e.error().encodedError(), e.message().toUtf8().constData() );
+        } catch ( const gpg_error_t e ) {
+            return assuan_process_done( conn.ctx.get(), e );
         } catch ( ... ) {
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("unknown exception caught").toUtf8().constData() );
         }
@@ -731,10 +709,7 @@ private:
     }
 
     QByteArray dumpFiles() const {
-        QStringList sl;
-        std::transform( files.begin(), files.end(), std::back_inserter( sl ),
-                        bind( &IOF::fileName, _1 ) );
-        return dumpStringList( sl );
+        return dumpStringList( kdtools::copy<QStringList>( files ) );
     }
 
     void cleanup();
@@ -747,7 +722,6 @@ private:
         sessionTitle.clear();
         sessionId = 0;
         mementos.clear();
-        close_all( files );
         files.clear();
         std::for_each( inputs.begin(), inputs.end(),
                        bind( &Input::finalize, _1 ) );
@@ -780,8 +754,7 @@ private:
     std::vector<KMime::Types::Mailbox> senders, recipients;
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
-    std::vector<IOF> files;
-    QStringList dirs;
+    std::vector<QString> files;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
 
@@ -993,7 +966,7 @@ public:
     std::map<std::string,QVariant> options;
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
-    std::vector<IOF> files;
+    std::vector<QString> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
     bool informativeRecipients, informativeSenders;
     GpgME::Protocol bias;
@@ -1146,25 +1119,20 @@ const std::vector< shared_ptr<Output> > & AssuanCommand::outputs() const {
 }
 
 QStringList AssuanCommand::fileNames() const {
-    QStringList result;
-    Q_FOREACH( const IOF & io, d->files )
-        result.push_back( io.fileName );
-    return result;
+    return kdtools::copy<QStringList>( d->files );
 }
 
+#if 0
 std::vector< shared_ptr<QFile> > AssuanCommand::files() const {
     std::vector< shared_ptr<QFile> > result;
     Q_FOREACH( const IOF & io, d->files )
         result.push_back( io.file );
     return result;
 }
+#endif
 
 unsigned int AssuanCommand::numFiles() const {
     return d->files.size();
-}
-
-void AssuanCommand::releaseFiles() {
-    d->files.clear();
 }
 
 #if 0
@@ -1283,7 +1251,6 @@ void AssuanCommand::done( const GpgME::Error& err ) {
     d->messages.clear();
     d->inputs.clear();
     d->outputs.clear();
-    close_all( d->files ); // ### ???
     d->files.clear();
 
     // oh, hack :(
