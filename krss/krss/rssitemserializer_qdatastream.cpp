@@ -43,7 +43,7 @@ void RssItemSerializer::serialize( const RssItem& item, QByteArray& ba, ItemPart
                << item.title()
                << item.datePublished().toString()
                << item.dateUpdated().toString()
-               << item.guid()
+               << item.guid();
         stream << static_cast<quint32>( item.authors().count() );
         Q_FOREACH( const Person& i, item.authors() )
             stream << i.email() << i.name() << i.uri();
