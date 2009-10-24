@@ -130,6 +130,7 @@ set( _kleopatra_SRCS
   utils/log.cpp
   utils/action_data.cpp
   utils/types.cpp
+  utils/archivedefinition.cpp
 
   selftest/selftest.cpp
   selftest/enginecheck.cpp
