@@ -329,7 +329,7 @@ void CSVImportDialog::initGUI()
   layout->addWidget( label, 2, 2 );
 
   mDatePatternEdit = new KLineEdit( page );
-  mDatePatternEdit->setText( "Y-M-DTH:I:S" ); // ISO 8601 date time format as default
+  mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 date format as default
   mDatePatternEdit->setToolTip( i18nc( "@info:tooltip",
                                          "<para><list><item>y: year with 2 digits</item>"
                                          "<item>Y: year with 4 digits</item>"
@@ -361,6 +361,7 @@ void CSVImportDialog::initGUI()
   mTable->horizontalHeader()->hide();
   mTable->verticalHeader()->hide();
   mTable->setEditTriggers( QAbstractItemView::CurrentChanged );
+  mTable->setHorizontalScrollMode( QAbstractItemView::ScrollPerPixel );
   layout->addWidget( mTable, 5, 0, 1, 5 );
 
   setButtonText( User1, i18nc( "@action:button", "Apply Template..." ) );

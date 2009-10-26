@@ -106,7 +106,17 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
       if ( !first )
         stream << ",";
 
-      stream << '\"' << ContactFields::value( fields.at( j ), contact ).replace( '\n', "\\n" ) << '\"';
+      QString content;
+      if ( fields.at( j ) == ContactFields::Birthday ||
+           fields.at( j ) == ContactFields::Anniversary ) {
+        const QDateTime dateTime = QDateTime::fromString( ContactFields::value( fields.at( j ), contact ), Qt::ISODate );
+        if ( dateTime.isValid() )
+          content = dateTime.date().toString( Qt::ISODate );
+      } else {
+        content = ContactFields::value( fields.at( j ), contact ).replace( '\n', "\\n" );
+      }
+
+      stream << '\"' << content << '\"';
       first = false;
     }
 
