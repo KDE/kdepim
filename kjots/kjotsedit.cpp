@@ -32,6 +32,7 @@
 #include <QMenu>
 #include <QContextMenuEvent>
 #include <QClipboard>
+#include <QItemSelectionModel>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -42,10 +43,19 @@
 #include "kjotslinkdialog.h"
 #include "bookshelf.h"
 
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/item.h>
+
+#include <KMime/Message>
+
 #include <kdebug.h>
 
-KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent),
-  allowAutoDecimal(false)
+using namespace Akonadi;
+
+KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
+  : KRichTextWidget(parent),
+    allowAutoDecimal(false),
+    m_selectionModel( selectionModel )
 {
     setAcceptRichText(true);
     setWordWrapMode(QTextOption::WordWrap);
@@ -54,6 +64,8 @@ KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent),
             | SupportAlignment
             | SupportRuleLine
             | SupportFormatPainting );
+
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 KJotsEdit::~KJotsEdit()
@@ -331,6 +343,40 @@ void KJotsEdit::pastePlainText()
         insertPlainText(text);
     }
 }
+
+void KJotsEdit::focusOutEvent( QFocusEvent* event )
+{
+    QModelIndexList rows = m_selectionModel->selectedRows();
+
+    if (rows.size() != 1)
+      return;
+
+    QModelIndex index = rows.at( 0 );
+
+    Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+    if ( !item.isValid() )
+      return;
+
+    if (!item.hasPayload<KMime::Message::Ptr>())
+      return;
+
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+    KMime::Content* c =msg->mainBodyPart();
+    c->fromUnicodeString( toPlainText() );
+    msg->assemble();
+
+    item.setPayload( msg );
+
+    QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
+
+    model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
+
+    KJotsEdit::focusOutEvent(event);
+}
+
+
 
 #include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */

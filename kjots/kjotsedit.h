@@ -28,6 +28,7 @@
 #include <KRichTextWidget>
 #include <QPointer>
 
+class QItemSelectionModel;
 
 class KActionCollection;
 class Bookshelf;
@@ -38,7 +39,7 @@ class KJotsEdit : public KRichTextWidget
 {
 Q_OBJECT
 public:
-    explicit KJotsEdit ( QWidget* );
+    explicit KJotsEdit ( QItemSelectionModel *selectionModel, QWidget* );
     virtual ~KJotsEdit ();
 
     void DelayedInitialization ( KActionCollection*, Bookshelf* );
@@ -50,6 +51,8 @@ protected:
 
     /** Override to make ctrl+click follow links */
     virtual void mouseReleaseEvent(QMouseEvent *);
+
+    virtual void focusOutEvent(QFocusEvent* );
 
 protected slots:
     void onBookshelfSelection ( void );
@@ -68,6 +71,7 @@ private:
     QPointer<KJotsPage> currentPage;
     KActionCollection *actionCollection;
     bool allowAutoDecimal;
+    QItemSelectionModel *m_selectionModel;
 
 };
 
