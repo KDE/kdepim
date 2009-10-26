@@ -38,6 +38,7 @@ class KSelectionProxyModel;
 class KTextEdit;
 class KActionCollection;
 class KJob;
+class KXMLGUIClient;
 
 namespace Akonadi
 {
@@ -51,7 +52,7 @@ class KJotsWidget : public QWidget
   Q_OBJECT
 
 public:
-  KJotsWidget( QWidget *parent = 0, Qt::WindowFlags f = 0 );
+  KJotsWidget( QWidget *parent, KXMLGUIClient *xmlGuiclient, Qt::WindowFlags f = 0 );
   ~KJotsWidget();
 
 public slots:

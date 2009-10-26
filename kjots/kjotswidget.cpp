@@ -59,6 +59,7 @@
 #include <KGlobalSettings>
 #include <KAction>
 #include <KActionCollection>
+#include <KXMLGUIClient>
 
 // KMime
 #include <KMime/KMimeMessage>
@@ -73,7 +74,7 @@
 using namespace Akonadi;
 using namespace Grantlee;
 
-KJotsWidget::KJotsWidget( QWidget * parent, KActionCollection *actionCollection, Qt::WindowFlags f )
+KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::WindowFlags f )
     : QWidget( parent, f )
 {
 
@@ -98,7 +99,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KActionCollection *actionCollection,
 
   engine->addTemplateLoader( m_loader );
 
-  treeview = new EntityTreeView( splitter );
+  treeview = new EntityTreeView( xmlGuiclient, splitter );
 
   ItemFetchScope scope;
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
@@ -137,6 +138,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KActionCollection *actionCollection,
   browser = new QTextBrowser( stackedWidget );
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
+
+  KActionCollection *actionCollection = xmlGuiclient->actionCollection();
 
   KAction *action;
   action = actionCollection->addAction( "new_page" );
