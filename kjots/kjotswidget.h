@@ -46,6 +46,7 @@ class EntityTreeModel;
 class EntityTreeView;
 }
 
+class KJotsEdit;
 
 class KJotsWidget : public QWidget
 {
@@ -97,7 +98,7 @@ private slots:
   void newBookResult( KJob *job );
 
 private:
-  KTextEdit      *editor;
+  KJotsEdit      *editor;
   QTextBrowser   *browser;
   QStackedWidget *stackedWidget;
   Akonadi::EntityTreeModel *m_kjotsModel;

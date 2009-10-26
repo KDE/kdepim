@@ -69,6 +69,7 @@
 
 // KJots
 #include "kjotsmodel.h"
+#include "kjotsedit.h"
 
 #include <kdebug.h>
 
@@ -133,7 +134,10 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
 
   stackedWidget = new QStackedWidget( splitter );
 
-  editor = new KTextEdit( stackedWidget );
+  KActionCollection *actionCollection = xmlGuiclient->actionCollection();
+
+  editor = new KJotsEdit( treeview->selectionModel(), stackedWidget );
+  editor->createActions( actionCollection );
   stackedWidget->addWidget( editor );
 
   layout->addWidget( splitter );
@@ -142,7 +146,6 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
 
-  KActionCollection *actionCollection = xmlGuiclient->actionCollection();
 
   KAction *action;
   action = actionCollection->addAction( "new_page" );
