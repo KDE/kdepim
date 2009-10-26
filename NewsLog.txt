@@ -1,3 +1,21 @@
+Monday, October 26th 2009
+
+Problems addressed
+------------------ 
+
+* kolab/issue3065: Crash in KOAgendaItem::paintEvent
+* kolab/issue3902: Delete a folder while syncing leads to crash
+* kolab/issue3903: Kontact hangs when switching to calendar view (rt#5870)
+* kolab/issue3908: Mail view and print layout problem if description of attachment is to long (rt#5872)
+* kolab/issue3807: Reminder: None of the buttons should be the default (rt#5845)
+* kolab/issue3809: Reminder: sorting in look&feel of kontact (rt#5846)
+* kolab/issue3813: reccuring events show wrong dates (rt#5855)
+* kolab/issue3923: Save as of an attachment of an invitation doesn't work
+* kolab/issue3922: Decline an updated event throws error message
+* Don't check for forgotten attachments in invitation mails
+* Better context-aware messages when asking to send mail for adding/changing/removing invitations
+
+
 Friday, October 9th 2009
 
 Problems addressed
