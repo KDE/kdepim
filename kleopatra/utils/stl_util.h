@@ -249,13 +249,25 @@ namespace kdtools {
     /*! Versions of std algorithms that take ranges */
 
     template <typename C, typename V>
+    typename boost::range_iterator<C>::type
+    find( C & c, const V & v ) {
+        return std::find( boost::begin( c ), boost::end( c ), v );
+    }
+
+    template <typename C, typename P>
+    typename boost::range_iterator<C>::type
+    find_if( C & c, P p ) {
+        return std::find_if( boost::begin( c ), boost::end( c ), p );
+    }
+
+    template <typename C, typename V>
     bool contains( const C & c, const V & v ) {
-        return std::find( boost::begin( c ), boost::end( c ), v ) != boost::end( c ) ;
+        return find( c, v ) != boost::end( c ) ;
     }
 
     template <typename C, typename P>
     bool contains_if( const C & c, P p ) {
-        return std::find_if( boost::begin( c ), boost::end( c ), p ) != boost::end( c );
+        return find_if( c, p ) != boost::end( c );
     }
 
     template <typename C, typename V>
