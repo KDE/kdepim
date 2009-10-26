@@ -46,6 +46,7 @@
 #include <models/predicates.h>
 #include <models/keylistmodel.h>
 
+#include <utils/archivedefinition.h>
 #include <utils/stl_util.h>
 
 #include <KLocale>
@@ -62,6 +63,7 @@
 #include <QTreeView>
 #include <QListWidget>
 #include <QLayout>
+#include <QComboBox>
 
 #include <QVariant>
 #include <QPointer>
@@ -76,6 +78,8 @@ using namespace boost;
 using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
+
+Q_DECLARE_METATYPE( boost::shared_ptr<Kleo::ArchiveDefinition> )
 
 enum Page {
     OperationPageId,
@@ -244,6 +248,10 @@ namespace {
 
         }
 
+        bool isArchiveRequested() const {
+            return field("archive").toBool();
+        }
+
         bool isRemoveUnencryptedFilesEnabled() const {
             return field("remove").toBool();
         }
@@ -299,11 +307,14 @@ namespace {
         explicit OperationPage( QWidget * parent=0 )
             : WizardPage( parent ),
               m_objectsLabel( this ),
+              m_archiveCB( i18n("Archive files with:"), this ),
+              m_archive( this ),
               m_signencrypt( i18n("Sign and Encrypt (OpenPGP only)"), this ),
               m_encrypt( i18n("Encrypt"), this ),
               m_sign( i18n("Sign"), this ),
               m_armor( i18n("Text output (ASCII armor)"), this ),
-              m_removeSource( i18n("Remove unencrypted original file when done"), this )
+              m_removeSource( i18n("Remove unencrypted original file when done"), this ),
+              m_archiveDefinitions( ArchiveDefinition::getArchiveDefinitions() )
         {
             setTitle( i18nc("@title","What do you want to do?") );
             setSubTitle( i18nc("@title",
@@ -312,11 +323,18 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_signencrypt );
             KDAB_SET_OBJECT_NAME( m_encrypt );
             KDAB_SET_OBJECT_NAME( m_sign );
+            KDAB_SET_OBJECT_NAME( m_archiveCB );
+            KDAB_SET_OBJECT_NAME( m_archive );
             KDAB_SET_OBJECT_NAME( m_armor );
             KDAB_SET_OBJECT_NAME( m_removeSource );
 
+            QHBoxLayout * hlay = new QHBoxLayout;
+            hlay->addWidget( &m_archiveCB );
+            hlay->addWidget( &m_archive, 1 );
+
             QVBoxLayout * vlay = new QVBoxLayout( this );
             vlay->addWidget( &m_objectsLabel );
+            vlay->addLayout( hlay );
             vlay->addWidget( &m_signencrypt );
             vlay->addWidget( &m_encrypt );
             vlay->addWidget( &m_sign );
@@ -325,6 +343,10 @@ namespace {
             vlay->addWidget( &m_removeSource );
 
             m_armor.setChecked( false );
+            m_archive.setEnabled( false );
+
+            Q_FOREACH( const shared_ptr<ArchiveDefinition> & ad, m_archiveDefinitions )
+                m_archive.addItem( ad->label(), qVariantFromValue( ad ) );
 
             registerField( "files", &m_objectsLabel, "files" );
 
@@ -335,12 +357,17 @@ namespace {
             registerField( "armor", &m_armor );
             registerField( "remove", &m_removeSource );
 
+            registerField( "archive", &m_archiveCB );
+            registerField( "archive-id", &m_archive );
+
             connect( &m_signencrypt, SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_encrypt,     SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_sign,        SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
 
             connect( &m_sign, SIGNAL(toggled(bool)),
                      &m_removeSource, SLOT(setDisabled(bool)) );
+            connect( &m_archiveCB, SIGNAL(toggled(bool)),
+                     &m_archive, SLOT(setEnabled(bool)) );
         }
 
         /* reimp */ bool isComplete() const {
@@ -358,10 +385,28 @@ namespace {
                 really_check( m_signencrypt, false );
         }
 
+        shared_ptr<ArchiveDefinition> archiveDefinition() const {
+            return m_archive.itemData( m_archive.currentIndex() ).value< shared_ptr<ArchiveDefinition> >();
+        }
+
+        void setArchiveDefinition( const shared_ptr<ArchiveDefinition> & ad ) {
+            m_archive.setCurrentIndex( m_archive.findData( qVariantFromValue( ad ) ) );
+        }
+
+        void setArchiveDefinition( const QString & adName ) {
+            const std::vector< shared_ptr<ArchiveDefinition> >::const_iterator
+                it = kdtools::find_if( m_archiveDefinitions, bind( &ArchiveDefinition::id, _1 ) == adName );
+            if ( it != m_archiveDefinitions.end() )
+                m_archive.setCurrentIndex( it - m_archiveDefinitions.begin() );
+        }
+
     private:
         ObjectsLabel m_objectsLabel;
+        QCheckBox m_archiveCB;
+        QComboBox m_archive;
         QRadioButton m_signencrypt, m_encrypt, m_sign;
         QCheckBox m_armor, m_removeSource;
+        std::vector< shared_ptr<ArchiveDefinition> > m_archiveDefinitions;
     };
 
 
@@ -704,6 +749,8 @@ public:
           recipientsPage( new RecipientsPage( q ) ),
           signerPage( new SignerPage( q ) ),
           resultPage( new ResultPage( q ) ),
+          createArchivePreset( false ),
+          createArchiveUserMutable( true ),
           signingPreset( true ),
           signingUserMutable( true ),
           encryptionPreset( true ),
@@ -746,6 +793,8 @@ private:
     SignerPage     * signerPage;
     ResultPage     * resultPage;
 
+    bool createArchivePreset      : 1;
+    bool createArchiveUserMutable : 1;
     bool signingPreset         : 1;
     bool signingUserMutable    : 1;
     bool encryptionPreset      : 1;
@@ -765,6 +814,25 @@ void NewSignEncryptFilesWizard::setPresetProtocol( Protocol proto ) {
     d->operationPage->setPresetProtocol( proto );
     d->recipientsPage->setPresetProtocol( proto );
     d->signerPage->setPresetProtocol( proto );
+}
+
+void NewSignEncryptFilesWizard::setCreateArchivePreset( bool preset ) {
+    if ( preset == d->createArchivePreset && preset == isCreateArchiveSelected() )
+        return;
+    d->createArchivePreset = preset;
+    d->updateStartId();
+    setField( "archive", preset );
+}
+
+void NewSignEncryptFilesWizard::setCreateArchiveUserMutable( bool mut ) {
+    if ( mut == d->createArchiveUserMutable )
+        return;
+    d->createArchiveUserMutable = true;
+    d->updateStartId();
+}
+
+void NewSignEncryptFilesWizard::setArchiveDefinitionId( const QString & id ) {
+    d->operationPage->setArchiveDefinition( id );
 }
 
 void NewSignEncryptFilesWizard::setSigningPreset( bool preset ) {
@@ -822,6 +890,14 @@ bool NewSignEncryptFilesWizard::isAsciiArmorEnabled() const {
 
 bool NewSignEncryptFilesWizard::isRemoveUnencryptedFilesEnabled() const {
     return isEncryptionSelected() && field("remove").toBool();
+}
+
+bool NewSignEncryptFilesWizard::isCreateArchiveSelected() const {
+    return field("archive").toBool();
+}
+
+shared_ptr<ArchiveDefinition> NewSignEncryptFilesWizard::selectedArchiveDefinition() const {
+    return d->operationPage->archiveDefinition();
 }
 
 const std::vector<Key> & NewSignEncryptFilesWizard::resolvedRecipients() const {
