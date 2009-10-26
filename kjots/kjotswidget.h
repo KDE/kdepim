@@ -36,6 +36,8 @@ class QModelIndex;
 
 class KSelectionProxyModel;
 class KTextEdit;
+class KActionCollection;
+class KJob;
 
 namespace Akonadi
 {
@@ -62,6 +64,8 @@ public slots:
   bool canGoNextBook() const;
   bool canGoPreviousBook() const;
 
+  void newPage();
+
 signals:
   void canGoNextPageChanged( bool );
   void canGoPreviousPageChanged( bool );
@@ -83,6 +87,8 @@ protected slots:
 private slots:
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   bool canGo( int role, int step ) const;
+
+  void newPageResult( KJob *job );
 
 private:
   KTextEdit      *editor;

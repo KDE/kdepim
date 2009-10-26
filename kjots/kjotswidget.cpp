@@ -38,6 +38,7 @@
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/item.h>
+#include <Akonadi/ItemCreateJob>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
@@ -55,6 +56,9 @@
 #include <kselectionproxymodel.h>
 #include <KStandardDirs>
 #include <KTextEdit>
+#include <KGlobalSettings>
+#include <KAction>
+#include <KActionCollection>
 
 // KMime
 #include <KMime/KMimeMessage>
@@ -69,7 +73,7 @@
 using namespace Akonadi;
 using namespace Grantlee;
 
-KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
+KJotsWidget::KJotsWidget( QWidget * parent, KActionCollection *actionCollection, Qt::WindowFlags f )
     : QWidget( parent, f )
 {
 
@@ -78,6 +82,10 @@ KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
 
 
   QSplitter *splitter = new QSplitter( this );
+
+  splitter->setStretchFactor(1, 1);
+  splitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
+
   QHBoxLayout *layout = new QHBoxLayout( this );
 
   KStandardDirs KStd;
@@ -129,6 +137,14 @@ KJotsWidget::KJotsWidget( QWidget * parent, Qt::WindowFlags f )
   browser = new QTextBrowser( stackedWidget );
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
+
+  KAction *action;
+  action = actionCollection->addAction( "new_page" );
+  action->setText( i18n( "&New Page" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
+  action->setIcon( KIcon( "document-new" ) );
+  connect( action, SIGNAL(triggered()), SLOT(newPage()) );
+  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), action, SLOT(selectionChanged()) );
 }
 
 KJotsWidget::~KJotsWidget()
@@ -136,6 +152,56 @@ KJotsWidget::~KJotsWidget()
 
 }
 
+void KJotsWidget::newPage()
+{
+  QModelIndexList selectedRows = treeview->selectionModel()->selectedRows();
+
+  if ( selectedRows.size() != 1 )
+    return;
+
+  Item item = selectedRows.at( 0 ).data( EntityTreeModel::ItemRole ).value<Item>();
+
+  Collection col;
+  if ( item.isValid() )
+  {
+    col = selectedRows.at( 0 ).data( EntityTreeModel::ParentCollectionRole ).value<Collection>();
+  } else {
+    col = selectedRows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+  }
+
+  if ( !col.isValid() )
+    return;
+
+  Item newItem;
+  newItem.setMimeType( QLatin1String( "text/x-vnd.akonadi.note" ) );
+
+  KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
+
+  QString title = i18nc( "The default name for new pages.", "New Page" );
+  QByteArray encoding( "utf-8" );
+
+  newPage->subject( true )->fromUnicodeString( title, encoding );
+  newPage->contentType( true )->setMimeType( "text/plain" );
+  newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+  newPage->from( true )->fromUnicodeString( "Kjots", "utf-8" );
+
+  newPage->assemble();
+
+  KMime::Message::Ptr m = KMime::Message::Ptr( new KMime::Message() );
+  m->setContent( newPage->encodedContent() );
+  m->parse();
+
+  newItem.setPayload( newPage );
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
+
+}
+
+void KJotsWidget::newPageResult( KJob* job )
+{
+  if ( job->error() )
+    kDebug() << job->errorString();
+}
 
 void KJotsWidget::savePage(const QModelIndex &parent, int start, int end)
 {
