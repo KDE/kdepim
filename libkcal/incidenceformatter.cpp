@@ -1092,17 +1092,20 @@ static QString invitationDetailsEvent( Event* event )
     int secs = event->dtStart().secsTo( event->dtEnd() );
     int days = secs / 86400;
     if ( days > 0 ) {
-      tmp += i18n( "1 day ", "%n days ", days );
+      tmp += i18n( "1 day", "%n days", days );
+      tmp += ' ';
       secs -= ( days * 86400 );
     }
     int hours = secs / 3600;
     if ( hours > 0 ) {
-      tmp += i18n( "1 hour ", "%n hours ", hours );
+      tmp += i18n( "1 hour", "%n hours", hours );
+      tmp += ' ';
       secs -= ( hours * 3600 );
     }
     int mins = secs / 60;
     if ( mins > 0 ) {
-      tmp += i18n( "1 minute ", "%n minutes ",  mins );
+      tmp += i18n( "1 minute", "%n minutes",  mins );
+      tmp += ' ';
     }
     html += invitationRow( i18n( "Duration:" ), tmp );
   }
