@@ -148,6 +148,35 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
 
 
   KAction *action;
+
+  action = actionCollection->addAction( "go_next_book" );
+  action->setText( i18n( "Next Book" ) );
+  action->setIcon( KIcon( "go-down" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_D ) );
+  connect( action, SIGNAL(triggered()), SLOT(nextBook()) );
+  connect( this, SIGNAL(canGoNextBookChanged(bool)), action, SLOT(setEnabled(bool)) );
+
+  action = actionCollection->addAction( "go_prev_book" );
+  action->setText( i18n( "Previous Book" ) );
+  action->setIcon( KIcon( "go-up" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_D ) );
+  connect( action, SIGNAL(triggered()), SLOT(prevBook()) );
+  connect( this, SIGNAL(canGoPreviousBookChanged(bool)), action, SLOT(setEnabled(bool)) );
+
+  action = actionCollection->addAction( "go_next_page" );
+  action->setText( i18n( "Next Page" ) );
+  action->setIcon( KIcon( "go-next" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageDown ) );
+  connect( action, SIGNAL(triggered()), SLOT(nextPage()));
+  connect( this, SIGNAL(canGoNextPageChanged(bool)), action, SLOT(setEnabled(bool)) );
+
+  action = actionCollection->addAction( "go_prev_page" );
+  action->setText( i18n( "Previous Page" ) );
+  action->setIcon( KIcon( "go-previous" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_PageUp ) );
+  connect( action, SIGNAL(triggered()), SLOT(prevPage()) );
+  connect( this, SIGNAL(canGoPreviousPageChanged(bool)), action, SLOT(setEnabled(bool)) );
+
   action = actionCollection->addAction( "new_page" );
   action->setText( i18n( "&New Page" ) );
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
