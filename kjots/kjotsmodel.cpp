@@ -66,7 +66,7 @@ bool KJotsEntity::isBook()
 
   if (col.isValid())
   {
-    return col.contentMimeTypes().contains(KMime::Message::mimeType());
+    return col.contentMimeTypes().contains("text/x-vnd.akonadi.note");
   }
   return false;
 }
