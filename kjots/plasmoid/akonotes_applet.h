@@ -49,6 +49,7 @@ protected:
 
 protected slots:
   void itemsAdded( const QModelIndex &parent, int start, int end );
+  void itemsRemoved( const QModelIndex &parent, int start, int end );
   void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
 
 private:

@@ -76,6 +76,7 @@ AkonotesMasterApplet::AkonotesMasterApplet( QObject *parent, const QVariantList 
   m_model = filter;
 
   connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(itemsAdded(QModelIndex,int,int)) );
+  connect( m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), SLOT(itemsRemoved(QModelIndex,int,int)) );
   connect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)) );
 
 }
@@ -182,6 +183,27 @@ Plasma::ExtenderItem* AkonotesMasterApplet::extenderItemForItem( const Item &ite
 QString AkonotesMasterApplet::nameForItem( const Akonadi::Item &item )
 {
     return QString::fromLatin1( "item_%1" ).arg( item.id() );
+}
+
+void AkonotesMasterApplet::itemsRemoved( const QModelIndex &parent, int start, int end )
+{
+  const int column = 0;
+  for(int row = start; row <= end; ++row)
+  {
+    QModelIndex idx = m_model->index( row, column, parent );
+
+    Q_ASSERT( idx.isValid() );
+
+    Akonadi::Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
+
+    Q_ASSERT( item.isValid() );
+
+    Plasma::ExtenderItem *extenderItem = extenderItemForItem(item);
+
+    extenderItem->destroy();
+
+  }
+
 }
 
 #include "akonotes_applet.moc"
