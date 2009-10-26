@@ -13,6 +13,7 @@ Problems addressed
 * kolab/issue3923: Save as of an attachment of an invitation doesn't work
 * kolab/issue3922: Decline an updated event throws error message
 * kolab/issue3864: An invitation of a long event shows a wrong duration.
+* kolab/issue3926: Start khelpcenter instead of webbrowser help: from the introduction/welcome screen (rt#5881)
 * Don't check for forgotten attachments in invitation mails
 * Better context-aware messages when asking to send mail for adding/changing/removing invitations
 
