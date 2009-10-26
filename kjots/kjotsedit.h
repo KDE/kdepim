@@ -52,7 +52,9 @@ protected:
     /** Override to make ctrl+click follow links */
     virtual void mouseReleaseEvent(QMouseEvent *);
 
-    virtual void focusOutEvent(QFocusEvent* );
+    virtual void focusOutEvent( QFocusEvent* );
+
+    virtual bool event( QEvent *event );
 
 protected slots:
     void onBookshelfSelection ( void );
@@ -62,6 +64,8 @@ protected slots:
     void onAutoDecimal( void );
     void DecimalList( void );
     void pastePlainText( void );
+
+    void savePage();
 
 private:
     void disableEditing ( void );

@@ -331,8 +331,26 @@ void KJotsEdit::pastePlainText()
     }
 }
 
+bool KJotsEdit::event( QEvent *event )
+{
+    if ( event->type() == QEvent::WindowDeactivate )
+    {
+        savePage();
+    }
+    return KRichTextWidget::event( event );
+}
+
 void KJotsEdit::focusOutEvent( QFocusEvent* event )
 {
+    savePage();
+    KRichTextWidget::focusOutEvent(event);
+}
+
+void KJotsEdit::savePage()
+{
+    if ( !document()->isModified() )
+      return;
+
     QModelIndexList rows = m_selectionModel->selectedRows();
 
     if (rows.size() != 1)
@@ -358,9 +376,8 @@ void KJotsEdit::focusOutEvent( QFocusEvent* event )
 
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
 
+    kDebug() << "saving";
     model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
-
-    KRichTextWidget::focusOutEvent(event);
 }
 
 
