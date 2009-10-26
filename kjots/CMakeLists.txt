@@ -97,6 +97,10 @@ install( FILES Kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kjots.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES kjotsui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
+# TODO Figure out how to exclude the .svn dirs.
+install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXCLUDE )
+
+
 
 
 # If building kontact plugin:

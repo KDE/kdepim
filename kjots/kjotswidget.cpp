@@ -98,7 +98,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
   engine->setPluginDirs( KStd.findDirs( "lib", QLatin1String( "grantlee" ) ) );
 
   m_loader = FileSystemTemplateLoader::Ptr( new FileSystemTemplateLoader() );
-  m_loader->setTemplateDirs( KStd.findDirs( "data", QLatin1String( "kjotsrewrite/themes" ) ) );
+  m_loader->setTemplateDirs( KStd.findDirs( "data", QLatin1String( "kjots/themes" ) ) );
   m_loader->setTheme( QLatin1String( "default" ) );
 
   engine->addTemplateLoader( m_loader );
