@@ -57,7 +57,8 @@ using namespace boost;
 static const QLatin1String ID_ENTRY( "id" );
 static const QLatin1String NAME_ENTRY( "name" );
 static const QLatin1String COMMAND_ENTRY( "pack-command" );
-static const QLatin1String FILE_PLACEHOLDER( "%" );
+static const QLatin1String EXTENSIONS_ENTRY( "extensions" );
+static const QLatin1String FILE_PLACEHOLDER( "%f" );
 
 namespace {
 
@@ -79,8 +80,11 @@ namespace {
     public:
         explicit KConfigBasedArchiveDefinition( const KConfigGroup & group )
             : ArchiveDefinition( group.readEntryUntranslated( ID_ENTRY ),
-                                 group.readEntry( NAME_ENTRY ) )
+                                 group.readEntry( NAME_ENTRY ),
+                                 group.readEntry( EXTENSIONS_ENTRY, QStringList() ) )
         {
+            if ( extensions().empty() )
+                throw ArchiveDefinitionError( id(), i18n("'extensions' entry is empty/missing") );
             const QStringList l = group.readEntry( COMMAND_ENTRY ).split( QLatin1Char(' '), QString::SkipEmptyParts );
             qDebug() << "ArchiveDefinition[" << id() << ']' << l;
             if ( l.empty() )
@@ -110,8 +114,8 @@ namespace {
 
 }
 
-ArchiveDefinition::ArchiveDefinition( const QString & id, const QString & label )
-    : m_id( id ), m_label( label )
+ArchiveDefinition::ArchiveDefinition( const QString & id, const QString & label, const QStringList & extensions )
+    : m_id( id ), m_label( label ), m_extensions( extensions )
 {
 
 }
