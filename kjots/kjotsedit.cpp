@@ -360,7 +360,7 @@ void KJotsEdit::focusOutEvent( QFocusEvent* event )
 
     model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
 
-    KJotsEdit::focusOutEvent(event);
+    KRichTextWidget::focusOutEvent(event);
 }
 
 
