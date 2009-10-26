@@ -56,7 +56,6 @@ protected:
 
 protected slots:
     void onBookshelfSelection ( void );
-    void onTextChanged ( void );
     void onAutoBullet ( void );
     void onLinkify ( void );
     void addCheckmark( void );

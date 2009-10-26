@@ -94,18 +94,12 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
 
 void KJotsEdit::DelayedInitialization ( KActionCollection *collection, Bookshelf *shelf )
 {
-    bookshelf = shelf;
     actionCollection = collection;
 
     connect(actionCollection->action("auto_bullet"), SIGNAL(triggered()), SLOT(onAutoBullet()));
     connect(actionCollection->action("auto_decimal"), SIGNAL(triggered()), SLOT(onAutoDecimal())); //auto decimal list
     connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
     connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
-
-    connect(bookshelf, SIGNAL(itemSelectionChanged()), SLOT(onBookshelfSelection()));
-    connect(this, SIGNAL(textChanged()), SLOT(onTextChanged()));
-
-
 }
 
 void KJotsEdit::disableEditing ( void )
@@ -250,13 +244,6 @@ void KJotsEdit::addCheckmark( void )
     static const QChar unicode[] = {0x2713};
     int size = sizeof(unicode) / sizeof(QChar);
     cursor.insertText( QString::fromRawData(unicode, size) );
-}
-
-void KJotsEdit::onTextChanged ( void )
-{
-    if ( currentPage ) {
-        currentPage->parentBook()->setDirty(true);
-    }
 }
 
 bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const
