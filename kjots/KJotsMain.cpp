@@ -71,6 +71,7 @@
 #include "kjotsbrowser.h"
 #include "kjotsentry.h"
 #include "bookshelf.h"
+#include "kjotswidget.h"
 
 
 //----------------------------------------------------------------------
@@ -84,7 +85,7 @@ KJotsMain::KJotsMain()
 
     KStandardAction::quit(this, SLOT(onQuit()), actionCollection());
 
-    component = new KJotsComponent(this, actionCollection());
+    component = new KJotsWidget(this, this );
 
     setCentralWidget(component);
     statusBar()->insertItem(QString(), 0, 1);
@@ -118,12 +119,12 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 
 bool KJotsMain::queryClose()
 {
-    return component->queryClose();
+//     return component->queryClose();
 }
 
 void KJotsMain::onQuit()
 {
-    component->queryClose();
+//     component->queryClose();
     deleteLater();
     KApplication::kApplication()->quit();
 }

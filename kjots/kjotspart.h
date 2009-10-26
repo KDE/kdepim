@@ -31,7 +31,7 @@
 class QWidget;
 class QTextEdit;
 class KAboutData;
-class KJotsComponent;
+class KJotsWidget;
 
 /**
  * This is a "Part".  It that does all the real work in a KPart
@@ -68,7 +68,7 @@ protected Q_SLOTS:
     void activeAnchorChanged(const QString &, const QString &);
 
 private:
-    KJotsComponent *component;
+    KJotsWidget *component;
     KParts::StatusBarExtension *mStatusBar;
     QTextEdit* m_widget;
 };

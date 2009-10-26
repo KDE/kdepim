@@ -45,7 +45,6 @@ set (kjots_common_SRCS
      kjotsedit.cpp
      kjotsbookmarks.cpp
      bookshelf.cpp
-     kjotscomponent.cpp
      kjotsreplacenextdialog.cpp
      kjotsmodel.cpp
      kjotswidget.cpp

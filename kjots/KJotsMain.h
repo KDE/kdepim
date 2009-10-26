@@ -27,7 +27,7 @@
 
 #include <kxmlguiwindow.h>
 
-class KJotsComponent;
+class KJotsWidget;
 
 class KJotsMain : public KXmlGuiWindow
 {
@@ -46,7 +46,7 @@ class KJotsMain : public KXmlGuiWindow
         bool queryClose();
 
 private:
-    KJotsComponent* component;
+    KJotsWidget* component;
 
 };
 
