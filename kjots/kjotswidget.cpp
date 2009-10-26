@@ -33,12 +33,15 @@
 
 // Akonadi
 #include <akonadi/control.h>
+#include <akonadi/collectiondeletejob.h>
+#include <akonadi/collectioncreatejob.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/item.h>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemDeleteJob>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
@@ -148,11 +151,85 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
   action->setIcon( KIcon( "document-new" ) );
   connect( action, SIGNAL(triggered()), SLOT(newPage()) );
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), action, SLOT(selectionChanged()) );
+
+  action = actionCollection->addAction("new_book");
+  action->setText( i18n( "New &Book..." ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_N ) );
+  action->setIcon( KIcon( "address-book-new" ) );
+  connect( action, SIGNAL(triggered()), SLOT(newBook()) );
+
+  action = actionCollection->addAction( "del_page" );
+  action->setText( i18n( "&Delete Page" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_Delete ) );
+  action->setIcon( KIcon( "edit-delete-page" ) );
+  connect( action, SIGNAL(triggered()), SLOT(deletePage()) );
+
+  action = actionCollection->addAction( "del_folder" );
+  action->setText( i18n( "Delete Boo&k" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_Delete ) );
+  action->setIcon( KIcon( "edit-delete" ) );
+  connect( action, SIGNAL(triggered()), SLOT(deleteBook()) );
+
 }
 
 KJotsWidget::~KJotsWidget()
 {
 
+}
+
+void KJotsWidget::deletePage()
+{
+  QModelIndexList selectedRows = treeview->selectionModel()->selectedRows();
+
+  if ( selectedRows.size() != 1 )
+    return;
+
+  Item item = selectedRows.at( 0 ).data( EntityTreeModel::ItemRole ).value<Item>();
+
+  if ( !item.isValid() )
+    return;
+
+  (void) new Akonadi::ItemDeleteJob( item, this );
+
+}
+
+void KJotsWidget::deleteBook()
+{
+  QModelIndexList selectedRows = treeview->selectionModel()->selectedRows();
+
+  if ( selectedRows.size() != 1 )
+    return;
+
+  Collection col = selectedRows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+
+  if ( !col.isValid() )
+    return;
+
+  (void) new Akonadi::CollectionDeleteJob( col, this );
+
+}
+
+void KJotsWidget::newBook()
+{
+  QModelIndexList selectedRows = treeview->selectionModel()->selectedRows();
+
+  if ( selectedRows.size() != 1 )
+    return;
+
+  Collection col = selectedRows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
+
+  if ( !col.isValid() )
+    return;
+
+  Collection newCollection;
+  newCollection.setParent( col );
+
+  QString title = i18nc( "The default name for new books.", "New Book" );
+  newCollection.setName( title );
+  newCollection.setContentMimeTypes( QStringList( "text/x-vnd.akonadi.note" ) );
+
+  Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( newCollection );
+  connect( job, SIGNAL(result(KJob*)), this, SLOT(newBookResult(KJob*)) );
 }
 
 void KJotsWidget::newPage()
@@ -201,6 +278,12 @@ void KJotsWidget::newPage()
 }
 
 void KJotsWidget::newPageResult( KJob* job )
+{
+  if ( job->error() )
+    kDebug() << job->errorString();
+}
+
+void KJotsWidget::newBookResult( KJob* job )
 {
   if ( job->error() )
     kDebug() << job->errorString();

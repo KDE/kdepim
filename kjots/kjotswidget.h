@@ -66,6 +66,7 @@ public slots:
   bool canGoPreviousBook() const;
 
   void newPage();
+  void newBook();
 
 signals:
   void canGoNextPageChanged( bool );
@@ -85,11 +86,15 @@ protected slots:
   void exportSelection();
   void savePage( const QModelIndex &, int, int );
 
+  void deletePage();
+  void deleteBook();
+
 private slots:
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   bool canGo( int role, int step ) const;
 
   void newPageResult( KJob *job );
+  void newBookResult( KJob *job );
 
 private:
   KTextEdit      *editor;
