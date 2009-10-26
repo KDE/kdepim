@@ -24,6 +24,7 @@ if(KJOTS_BUILD_KONTACT_PLUGIN)
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
 
 add_subdirectory( icons )
+add_subdirectory( plasmoid )
 
 
 #########################################################################

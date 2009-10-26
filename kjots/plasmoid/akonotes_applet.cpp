@@ -22,6 +22,7 @@
 #include <plasma/svg.h>
 #include <plasma/widgets/textedit.h>
 #include <plasma/extenderitem.h>
+#include <plasma/extender.h>
 
 #include <QtGui/QPainter>
 
@@ -75,6 +76,7 @@ AkonotesMasterApplet::AkonotesMasterApplet( QObject *parent, const QVariantList 
   m_model = filter;
 
   connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(itemsAdded(QModelIndex,int,int)) );
+  connect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(dataChanged(QModelIndex,QModelIndex)) );
 
 }
 
@@ -127,15 +129,59 @@ void AkonotesMasterApplet::itemsAdded(const QModelIndex &parent, int start, int 
   const int column = 0;
   for(int row = start; row <= end; ++row)
   {
-    if ((row-start) > 1)
-      return;
-    kDebug() << "creating";
-    Plasma::ExtenderItem *item = new Plasma::ExtenderItem(extender());
+    Plasma::ExtenderItem *extenderItem = new Plasma::ExtenderItem(extender());
     QModelIndex idx = m_model->index(row, column, parent);
     Q_ASSERT( idx.isValid() );
-    initExtenderItem(item, idx);
-    // TODO: Give it a name
+    initExtenderItem(extenderItem, idx);
+
+    Akonadi::Item item = idx.data(EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+    extenderItem->setName( nameForItem( item ) );
+
   }
+}
+
+void AkonotesMasterApplet::updateItem( const Item &item )
+{
+    Plasma::ExtenderItem *extenderItem = extenderItemForItem(item);
+
+    if (!extenderItem)
+      return;
+
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+      return;
+
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+    Plasma::TextEdit *te = dynamic_cast<Plasma::TextEdit*>( extenderItem->widget() );
+
+    if (!te)
+      return;
+
+    te->setText( msg->mainBodyPart()->decodedText() );
+}
+
+void AkonotesMasterApplet::dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
+{
+  QModelIndex idx = topLeft;
+  QModelIndex bottomIndex = bottomRight.sibling(bottomRight.row(), 0 );
+
+  while ( ( idx < bottomIndex || idx == bottomIndex ) && idx.isValid() )
+  {
+    Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
+    updateItem(item);
+    idx = idx.sibling( idx.row() + 1, idx.column() );
+  }
+}
+
+Plasma::ExtenderItem* AkonotesMasterApplet::extenderItemForItem( const Item &item )
+{
+  return extender()->item( QString::fromLatin1( "item_%1" ).arg( item.id() ) );
+}
+
+QString AkonotesMasterApplet::nameForItem( const Akonadi::Item &item )
+{
+    return QString::fromLatin1( "item_%1" ).arg( item.id() );
 }
 
 #include "akonotes_applet.moc"

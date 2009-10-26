@@ -25,6 +25,11 @@
 class QAbstractItemModel;
 class QModelIndex;
 
+namespace Akonadi
+{
+class Item;
+}
+
 class AkonotesMasterApplet : public Plasma::PopupApplet
 {
   Q_OBJECT
@@ -40,14 +45,19 @@ public:
 
 protected:
   void initExtenderItem( Plasma::ExtenderItem *item, const QModelIndex &idx );
+  void updateItem( const Akonadi::Item &item );
 
 protected slots:
   void itemsAdded( const QModelIndex &parent, int start, int end );
+  void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
 
 private:
   Plasma::Svg m_svg;
 
   QAbstractItemModel *m_model;
+
+  QString nameForItem( const Akonadi::Item &item );
+  Plasma::ExtenderItem* extenderItemForItem( const Akonadi::Item &item );
 
 //   virtual QWidget *widget();
 
