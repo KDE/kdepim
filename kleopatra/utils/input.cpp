@@ -87,20 +87,19 @@ namespace {
         shared_ptr<QIODevice> m_io;
     };
 
-    class DirInput : public InputImplBase {
+    class ProcessStdOutInput : public InputImplBase {
     public:
-        explicit DirInput( const QString & path );
+        explicit ProcessStdOutInput( const QString & cmd, const QStringList & args, const QDir & wd );
 
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_proc; }
-        /* reimp */ unsigned int classification() const;
+        /* reimp */ unsigned int classification() const { return 0U; } // plain text
         /* reimp */ unsigned long long size() const { return 0; }
-        /* reimp */ QString label() const {
-            return m_proc ? QFileInfo( m_path ).fileName() : InputImplBase::label();
-        }
+        /* reimp */ QString label() const;
 
     private:
-        QString m_path;
-        shared_ptr<QProcess> m_proc;
+        const QString m_command;
+        const QStringList m_arguments;
+        const shared_ptr<QProcess> m_proc;
     };
 
     class FileInput : public InputImplBase {
@@ -206,34 +205,40 @@ unsigned int FileInput::classification() const {
 }
 
 
-shared_ptr<Input> Input::createFromDir( const QString & path ) {
-    return shared_ptr<DirInput>( new DirInput( path ) );
+shared_ptr<Input> Input::createFromProcessStdOut( const QString & command ) {
+    return shared_ptr<Input>( new ProcessStdOutInput( command, QStringList(), QDir::current() ) );
 }
 
-DirInput::DirInput( const QString & path )
+shared_ptr<Input> Input::createFromProcessStdOut( const QString & command, const QStringList & args ) {
+    return shared_ptr<Input>( new ProcessStdOutInput( command, args, QDir::current() ) );
+}
+
+shared_ptr<Input> Input::createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & wd ) {
+    return shared_ptr<Input>( new ProcessStdOutInput( command, args, wd ) );
+}
+
+ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList & args, const QDir & wd )
     : InputImplBase(),
-      m_path( path ),
-      m_proc() {
-    if ( !QFileInfo( path ).isDir() )
-        throw Exception( gpg_error( GPG_ERR_EIO ),
-                         i18n( "\"%1\" is not a valid directory", path ) );
-
-    m_proc.reset( new QProcess );
-    QDir parentDir( path );
-    if ( !parentDir.cdUp() )
-        throw Exception( gpg_error( GPG_ERR_EIO ),
-                         i18n( "Could not determine parent directory of \"%1\"", path ) );
-
-    m_proc->setWorkingDirectory( parentDir.absolutePath() );
-    m_proc->start( "zip", QStringList() << "-r" << "-" << QFileInfo( path ).fileName(), QIODevice::ReadOnly );
+      m_command( cmd ),
+      m_arguments( args ),
+      m_proc( new QProcess )
+{
+    m_proc->setWorkingDirectory( wd.absolutePath() );
+    m_proc->start( cmd, args, QIODevice::ReadOnly );
     if ( !m_proc->waitForStarted() )
         throw Exception( gpg_error( GPG_ERR_EIO ),
-                         i18n( "Could not start zip process" ) );
+                         i18n( "Could not start %1 process: %2" ).arg( cmd, m_proc->errorString() ) );
 }
 
-unsigned int DirInput::classification() const {
-    notImplemented();
-    return 0;
+QString ProcessStdOutInput::label() const {
+    if ( !m_proc )
+        return InputImplBase::label();
+    // output max. 3 arguments
+    const QString cmdline = ( QStringList( m_command ) + m_arguments.mid(0,3) ).join( " " );
+    if ( m_arguments.size() > 3 )
+        return i18nc( "e.g. \"Output of tar xf - file1 ...\"", "Output of %1 ...", cmdline );
+    else
+        return i18nc( "e.g. \"Output of tar xf - file\"",      "Output of %1",     cmdline );
 }
 
 shared_ptr<Input> Input::createFromClipboard() {
