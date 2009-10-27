@@ -477,13 +477,14 @@ QString LdapSearchDialog::selectedEMails() const
         QString email = asUtf8( mailAttrs.first() ).trimmed();
         if ( !email.isEmpty() ) {
           const KLDAP::LdapAttrValue &nameAttrs = cli->mAttrs[ "cn" ];
+          QString name;
           if ( nameAttrs.size() > 1 ) {
-            QString name = asUtf8( nameAttrs.first() ).trimmed();
-            if ( name.isEmpty() ) {
-              result << email;
-            } else {
-              result << name + " <" + email + '>';
-            }
+            name = asUtf8( nameAttrs.first() ).trimmed();
+          }
+          if ( name.isEmpty() ) {
+            result << email;
+          } else {
+            result << name + " <" + email + '>';
           }
         }
       }
