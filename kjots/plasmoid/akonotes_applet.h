@@ -22,6 +22,10 @@
 
 #include <Plasma/PopupApplet>
 
+#include <Akonadi/Collection>
+
+#include "ui_akonotes_applet.h"
+
 class QAbstractItemModel;
 class QModelIndex;
 
@@ -47,13 +51,20 @@ protected:
   void initExtenderItem( Plasma::ExtenderItem *item, const QModelIndex &idx );
   void updateItem( const Akonadi::Item &item );
 
+  void createConfigurationInterface (KConfigDialog *parent);
+
 protected slots:
   void itemsAdded( const QModelIndex &parent, int start, int end );
   void itemsRemoved( const QModelIndex &parent, int start, int end );
   void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
 
+  void configAccepted();
+
 private:
   Plasma::Svg m_svg;
+  Akonadi::Collection::Id m_rootCollectionId;
+
+  Ui::AkonotesConfig ui;
 
   QAbstractItemModel *m_model;
 

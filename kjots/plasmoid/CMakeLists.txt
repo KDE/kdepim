@@ -6,6 +6,7 @@ set(akonotes_plasmoid_SRCS
     akonotes_applet.cpp
 )
 
+kde4_add_ui_files(akonotes_plasmoid_SRCS akonotes_applet.ui )
 kde4_add_plugin(plasma_applet_akonotes ${akonotes_plasmoid_SRCS})
 
 include_directories(
