@@ -81,6 +81,12 @@ void Viewer::enableMessageDisplay()
   d->enableMessageDisplay();
 }
 
+void Viewer::printMessage( const Akonadi::Item &msg )
+{
+  Q_D( Viewer );
+  d->printMessage( msg );
+}
+
 void Viewer::printMessage( KMime::Message* message )
 {
    Q_D(Viewer);

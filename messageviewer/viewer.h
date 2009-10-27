@@ -148,6 +148,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   *   @param message the message to display and print
   */
   void printMessage( KMime::Message* message );
+  void printMessage( const Akonadi::Item &msg );
 
   /** Print the currently displayed message */
   void print();

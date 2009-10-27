@@ -1476,6 +1476,13 @@ void ViewerPrivate::setPrintFont( const QFont& font )
 }
 
 
+void ViewerPrivate::printMessage( const Akonadi::Item &message )
+{
+  disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
+  setMessageItem( message, Viewer::Force );
+}
+
 void ViewerPrivate::printMessage( KMime::Message* message )
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
