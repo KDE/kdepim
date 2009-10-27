@@ -69,7 +69,7 @@ class DecryptVerifyFilesController::Private {
 public:
 
     static QString heuristicBaseDirectory( const QStringList& fileNames );
-    static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy );
+    static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const QString & fileName, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy );
 
     explicit Private( DecryptVerifyFilesController* qq );
 
@@ -77,8 +77,8 @@ public:
     void slotWizardCanceled();
     void schedule();
 
-    std::vector< shared_ptr<QFile> > prepareWizardFromPassedFiles();
-    std::vector<shared_ptr<Task> > buildTasks( const std::vector<shared_ptr<QFile> > &, const shared_ptr<OverwritePolicy> & );
+    QStringList prepareWizardFromPassedFiles();
+    std::vector<shared_ptr<Task> > buildTasks( const QStringList &, const shared_ptr<OverwritePolicy> & );
 
     QString heuristicBaseDirectory() const;
 
@@ -89,7 +89,7 @@ public:
     }
     void cancelAllTasks();
 
-    std::vector<shared_ptr<QFile> > m_passedFiles, m_filesAfterPreparation;
+    QStringList m_passedFiles, m_filesAfterPreparation;
     QPointer<DecryptVerifyFilesWizard> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<Task> > m_runnableTasks, m_completedTasks;
@@ -99,7 +99,7 @@ public:
 };
 
 // static
-shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy ) {
+shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const QString & fileName, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy ) {
 
     kleo_assert( w );
 
@@ -110,31 +110,31 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     {
 
         shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
-        t->setInput( Input::createFromFile( file ) );
+        t->setInput( Input::createFromFile( fileName ) );
         t->setSignedData( Input::createFromFile( w->signedDataFileName() ) );
         task = t;
 
-        kleo_assert( file->fileName() == w->inputFileName() );
+        kleo_assert( fileName == w->inputFileName() );
     }
     break;
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignedData:
     {
         shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
         t->setInput( Input::createFromFile( w->inputFileName() ) );
-        t->setSignedData( Input::createFromFile( file ) );
+        t->setSignedData( Input::createFromFile( fileName ) );
         task = t;
 
-        kleo_assert( file->fileName() == w->signedDataFileName() );
+        kleo_assert( fileName == w->signedDataFileName() );
     }
     break;
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
     {
         shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
-        t->setInput( Input::createFromFile( file ) );
-        t->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), overwritePolicy ) );
+        t->setInput( Input::createFromFile( fileName ) );
+        t->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy ) );
         task = t;
 
-        kleo_assert( file->fileName() == w->inputFileName() );
+        kleo_assert( fileName == w->inputFileName() );
     }
     break;
     }
@@ -233,17 +233,13 @@ void DecryptVerifyFilesController::Private::ensureWizardCreated()
 }
 
 
-std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles()
+QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles()
 {
     ensureWizardCreated();
 
-    std::vector< shared_ptr<QFile> > files;
+    QStringList fileNames;
     unsigned int counter = 0;
-    Q_FOREACH( const shared_ptr<QFile> & file, m_passedFiles ) {
-
-        kleo_assert( file );
-
-        const QString fname = file->fileName();
+    Q_FOREACH( const QString & fname, m_passedFiles ) {
 
         kleo_assert( !fname.isEmpty() );
 
@@ -271,7 +267,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
             op->setInputFileName( fname );
             op->setSignedDataFileName( signedDataFileName );
 
-            files.push_back( file );
+            fileNames.push_back( fname );
 
         } else {
 
@@ -287,7 +283,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
                 kleo_assert( op != 0 );
                 op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
                 op->setInputFileName( fname );
-                files.push_back( file );
+                fileNames.push_back( fname );
             } else {
 
                 Q_FOREACH( const QString & s, signatures ) {
@@ -298,23 +294,23 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
                     op->setInputFileName( s );
                     op->setSignedDataFileName( fname );
 
-                    files.push_back( file );
+                    fileNames.push_back( fname );
                 }
 
             }
         }
     }
 
-    kleo_assert( counter == files.size() );
+    kleo_assert( counter == static_cast<unsigned>( fileNames.size() ) );
 
     if ( !counter )
         throw Kleo::Exception( makeGnuPGError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
 
     m_wizard->setOutputDirectory( heuristicBaseDirectory() );
-    return files;
+    return fileNames;
 }
 
-std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > & files, const shared_ptr<OverwritePolicy> & overwritePolicy )
+std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTasks( const QStringList & fileNames, const shared_ptr<OverwritePolicy> & overwritePolicy )
 {
     const bool useOutDir = m_wizard->useOutputDirectory();
     const QFileInfo outDirInfo( m_wizard->outputDirectory() );
@@ -325,19 +321,19 @@ std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTask
     kleo_assert( !useOutDir || outDir.exists() );
 
     std::vector<shared_ptr<Task> > tasks;
-    for ( unsigned int i = 0 ; i < files.size(); ++i )
+    for ( unsigned int i = 0, end  = fileNames.size() ; i != end ; ++i )
         try {
-            const QDir fileDir = QFileInfo( *files[i] ).absoluteDir();
+            const QDir fileDir = QFileInfo( fileNames[i] ).absoluteDir();
             kleo_assert( fileDir.exists() );
-            tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], useOutDir ? outDir : fileDir, overwritePolicy ) );
+            tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), fileNames[i], useOutDir ? outDir : fileDir, overwritePolicy ) );
         } catch ( const GpgME::Exception & e ) {
-            tasks.push_back( Task::makeErrorTask( e.error().code(), QString::fromLocal8Bit( e.what() ), QFileInfo( *files[i] ).fileName() ) );
+            tasks.push_back( Task::makeErrorTask( e.error().code(), QString::fromLocal8Bit( e.what() ), fileNames[i] ) );
         }
 
     return tasks;
 }
 
-void DecryptVerifyFilesController::setFiles( const std::vector<boost::shared_ptr<QFile> >& files )
+void DecryptVerifyFilesController::setFiles( const QStringList & files )
 {
     d->m_passedFiles = files;
 }
@@ -379,10 +375,7 @@ static QString longestCommonPrefix( const QStringList & sl ) {
 }
 
 QString DecryptVerifyFilesController::Private::heuristicBaseDirectory() const {
-    QStringList fileNames;
-    Q_FOREACH ( const shared_ptr<QFile> & i, m_passedFiles )
-        fileNames.push_back( i->fileName() );
-    return heuristicBaseDirectory( fileNames );
+    return heuristicBaseDirectory( m_passedFiles );
 }
 
 

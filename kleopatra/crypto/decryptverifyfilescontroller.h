@@ -62,7 +62,7 @@ public:
 
     ~DecryptVerifyFilesController();
 
-    void setFiles( const std::vector<boost::shared_ptr<QFile> >& files );
+    void setFiles( const QStringList & files );
     void setOperation( DecryptVerifyOperation op );
     DecryptVerifyOperation operation() const;
     void start();

@@ -46,6 +46,7 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
+#include <utils/stl_util.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -53,6 +54,8 @@
 #include <gpgme++/decryptionresult.h>
 
 #include <KLocalizedString>
+
+#include <QFileInfo>
 
 #include <gpg-error.h>
 
@@ -111,7 +114,7 @@ int DecryptVerifyCommandFilesBase::doStart() {
     d->controller.reset( new DecryptVerifyFilesController( shared_from_this() ) );
 
     d->controller->setOperation( operation() );
-    d->controller->setFiles( files() );
+    d->controller->setFiles( fileNames() );
 
     QObject::connect( d->controller.get(), SIGNAL(done()),
                       d.get(), SLOT(slotDone()), Qt::QueuedConnection );
@@ -123,6 +126,16 @@ int DecryptVerifyCommandFilesBase::doStart() {
     d->controller->start();
 
     return 0;
+}
+
+namespace {
+
+    struct is_file : std::unary_function<QString,bool> {
+        bool operator()( const QString & file ) const {
+            return QFileInfo( file ).isFile();
+        }
+    };
+
 }
 
 void DecryptVerifyCommandFilesBase::Private::checkForErrors() const
@@ -145,9 +158,13 @@ void DecryptVerifyCommandFilesBase::Private::checkForErrors() const
           throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("MESSAGE present") );
       if ( numOutputs )
           throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("OUTPUT present") );
-      if ( q->files().empty() )
+      const QStringList fileNames = q->fileNames();
+      if ( fileNames.empty() )
           throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
                            i18n( "At least one FILE must be present" ) );
+      if ( !kdtools::all( fileNames, is_file() ) )
+          throw Exception( makeError( GPG_ERR_INV_ARG ),
+                           i18n( "DECRYPT/VERIFY_FILES cannot use directories as input" ) );
 
 }
   

@@ -154,11 +154,7 @@ void DecryptVerifyFilesCommand::doStart() {
             d->finished();
             return;
         }
-        std::vector<shared_ptr<QFile> > files;
-        files.reserve( d->files.size() );
-        Q_FOREACH( const QString & i, d->files )
-            files.push_back( shared_ptr<QFile>( new QFile( i ) ) );
-        d->controller.setFiles( files );
+        d->controller.setFiles( d->files );
         d->controller.start();
 
     } catch ( const std::exception & e ) {
