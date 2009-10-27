@@ -56,10 +56,13 @@ QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( Context * context )
 
 QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {}
 
-static QGpgMEVerifyOpaqueJob::result_type verify_opaque( Context * ctx, const weak_ptr<QIODevice> & signedData_, const weak_ptr<QIODevice> & plainText_ ) {
+static QGpgMEVerifyOpaqueJob::result_type verify_opaque( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & signedData_, const weak_ptr<QIODevice> & plainText_ ) {
 
   const shared_ptr<QIODevice> plainText = plainText_.lock();
   const shared_ptr<QIODevice> signedData = signedData_.lock();
+
+  const _detail::ToThreadMover ptMover( plainText,  thread );
+  const _detail::ToThreadMover sdMover( signedData, thread );
 
   QGpgME::QIODeviceDataProvider in( signedData );
   const Data indata( &in );
@@ -89,7 +92,7 @@ static QGpgMEVerifyOpaqueJob::result_type verify_opaque_qba( Context * ctx, cons
   buffer->setData( signedData );
   if ( !buffer->open( QIODevice::ReadOnly ) )
     assert( !"This should never happen: QBuffer::open() failed" );
-  return verify_opaque( ctx, buffer, shared_ptr<QIODevice>() );
+  return verify_opaque( ctx, 0, buffer, shared_ptr<QIODevice>() );
 }
 
 Error QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
@@ -98,11 +101,7 @@ Error QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
 }
 
 void QGpgMEVerifyOpaqueJob::start( const shared_ptr<QIODevice> & signedData, const shared_ptr<QIODevice> & plainText ) {
-  // the arguments passed here to the functor are stored in a QFuture, and are not
-  // necessarily destroyed (living outside the UI thread) at the time the result signal
-  // is emitted and the signal receiver wants to clean up IO devices.
-  // To avoid such races, we pass weak_ptr's to the functor.
-  run( bind( &verify_opaque, _1, weak_ptr<QIODevice>( signedData ), weak_ptr<QIODevice>( plainText ) ) );
+  run( bind( &verify_opaque, _1, _2, _3, _4 ), signedData, plainText );
 }
 
 GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {

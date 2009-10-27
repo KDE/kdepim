@@ -56,9 +56,12 @@ QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( Context * context )
 
 QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {}
 
-static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, const weak_ptr<QIODevice> & signature_, const weak_ptr<QIODevice> & signedData_ ) {
+static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & signature_, const weak_ptr<QIODevice> & signedData_ ) {
   const shared_ptr<QIODevice> signature = signature_.lock();
   const shared_ptr<QIODevice> signedData = signedData_.lock();
+
+  const _detail::ToThreadMover sgMover( signature,  thread );
+  const _detail::ToThreadMover sdMover( signedData, thread );
 
   QGpgME::QIODeviceDataProvider sigDP( signature );
   Data sig( &sigDP );
@@ -94,11 +97,7 @@ Error QGpgMEVerifyDetachedJob::start( const QByteArray & signature, const QByteA
 }
 
 void QGpgMEVerifyDetachedJob::start( const shared_ptr<QIODevice> & signature, const shared_ptr<QIODevice> & signedData ) {
-  // the arguments passed here to the functor are stored in a QFuture, and are not
-  // necessarily destroyed (living outside the UI thread) at the time the result signal
-  // is emitted and the signal receiver wants to clean up IO devices.
-  // To avoid such races, we pass weak_ptr's to the functor.
-  run( bind( &verify_detached, _1, weak_ptr<QIODevice>( signature ), weak_ptr<QIODevice>( signedData ) ) );
+  run( bind( &verify_detached, _1, _2, _3, _4 ), signature, signedData );
 }
 
 GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray & signature,

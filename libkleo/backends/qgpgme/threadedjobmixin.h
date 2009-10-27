@@ -35,16 +35,19 @@
 
 #include "qgpgmeprogresstokenmapper.h"
 
-#include <QFutureWatcher>
-#include <QFuture>
-#include <QtConcurrentRun>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QThread>
 #include <QString>
+#include <QIODevice>
 
 #include <gpgme++/context.h>
 #include <gpgme++/interfaces/progressprovider.h>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -67,6 +70,42 @@ namespace _detail {
     ~PatternConverter();
 
     const char ** patterns() const;
+  };
+
+  class ToThreadMover {
+      QObject * const m_object;
+      QThread * const m_thread;
+  public:
+      ToThreadMover( QObject * o, QThread * t ) : m_object( o ), m_thread( t ) {}
+      ToThreadMover( QObject & o, QThread * t ) : m_object( &o ), m_thread( t ) {}
+      ToThreadMover( const boost::shared_ptr<QObject> & o, QThread * t ) : m_object( o.get() ), m_thread( t ) {}
+      ~ToThreadMover() { if ( m_object && m_thread ) m_object->moveToThread( m_thread ); }
+  };
+
+  template <typename T_result>
+  class Thread : public QThread {
+  public:
+      explicit Thread( QObject * parent=0 ) : QThread( parent ) {}
+
+      void setFunction( const boost::function<T_result()> & function ) {
+          const QMutexLocker locker( &m_mutex );
+          m_function = function;
+      }
+
+      T_result result() const {
+          const QMutexLocker locker( &m_mutex );
+          return m_result;
+      }
+
+  private:
+      /* reimp */ void run() {
+          const QMutexLocker locker( &m_mutex );
+          m_result = m_function();
+      }
+  private:
+      mutable QMutex m_mutex;
+      boost::function<T_result()> m_function;
+      T_result m_result;
   };
 
   template <typename T_base, typename T_result=boost::tuple<GpgME::Error,QString,GpgME::Error> >
@@ -97,27 +136,49 @@ namespace _detail {
     ));
 
     explicit ThreadedJobMixin( GpgME::Context * ctx )
-      : T_base( 0 ), m_ctx( ctx ), m_watcher(), m_auditLog(), m_auditLogError()
+      : T_base( 0 ), m_ctx( ctx ), m_thread(), m_auditLog(), m_auditLogError()
     {
 
     }
 
     void lateInitialization() {
       assert( m_ctx );
-      connect( &m_watcher, SIGNAL(finished()), this, SLOT(slotFinished()) );
+      connect( &m_thread, SIGNAL(finished()), this, SLOT(slotFinished()) );
       m_ctx->setProgressProvider( this );
     }
 
     template <typename T_binder>
     void run( const T_binder & func ) {
-      m_watcher.setFuture( QtConcurrent::run( boost::bind( func, m_ctx.get() ) ) );
+      m_thread.setFunction( boost::bind( func, this->context() ) );
+      m_thread.start();
+    }
+    template <typename T_binder>
+    void run( const T_binder & func, const boost::shared_ptr<QIODevice> & io ) {
+      if ( io ) io->moveToThread( &m_thread );
+      // the arguments passed here to the functor are stored in a QThread, and are not
+      // necessarily destroyed (living outside the UI thread) at the time the result signal
+      // is emitted and the signal receiver wants to clean up IO devices.
+      // To avoid such races, we pass weak_ptr's to the functor.
+      m_thread.setFunction( boost::bind( func, this->context(), this->thread(), boost::weak_ptr<QIODevice>( io ) ) );
+      m_thread.start();
+    }
+    template <typename T_binder>
+    void run( const T_binder & func, const boost::shared_ptr<QIODevice> & io1, const boost::shared_ptr<QIODevice> & io2 ) {
+      if ( io1 ) io1->moveToThread( &m_thread );
+      if ( io2 ) io2->moveToThread( &m_thread );
+      // the arguments passed here to the functor are stored in a QThread, and are not
+      // necessarily destroyed (living outside the UI thread) at the time the result signal
+      // is emitted and the signal receiver wants to clean up IO devices.
+      // To avoid such races, we pass weak_ptr's to the functor.
+      m_thread.setFunction( boost::bind( func, this->context(), this->thread(), boost::weak_ptr<QIODevice>( io1 ), boost::weak_ptr<QIODevice>( io2 ) ) );
+      m_thread.start();
     }
     GpgME::Context * context() const { return m_ctx.get(); }
 
     virtual void resultHook( const result_type & ) {}
 
     void slotFinished() {
-      const T_result r = m_watcher.result();
+      const T_result r = m_thread.result();
       m_auditLog = boost::get<boost::tuples::length<T_result>::value-2>( r );
       m_auditLogError = boost::get<boost::tuples::length<T_result>::value-1>( r );
       resultHook( r );
@@ -163,7 +224,7 @@ namespace _detail {
 
   private:
     boost::shared_ptr<GpgME::Context> m_ctx;
-    QFutureWatcher<T_result> m_watcher;
+    Thread<T_result> m_thread;
     QString m_auditLog;
     GpgME::Error m_auditLogError;
   };

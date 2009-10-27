@@ -67,10 +67,12 @@ static QGpgMEDownloadJob::result_type download_qsl( Context * ctx, const QString
   return make_tuple( err, dp.data(), log, ae );
 }
 
-static QGpgMEDownloadJob::result_type download( Context * ctx, const QByteArray & fpr, const weak_ptr<QIODevice> & keyData_ ) {
+static QGpgMEDownloadJob::result_type download( Context * ctx, QThread * thread, const QByteArray & fpr, const weak_ptr<QIODevice> & keyData_ ) {
   const shared_ptr<QIODevice> keyData = keyData_.lock();
   if ( !keyData )
     return download_qsl( ctx, QStringList( QString::fromUtf8( fpr ) ) );
+
+  const _detail::ToThreadMover kdMover( keyData, thread );
 
   QGpgME::QIODeviceDataProvider dp( keyData );
   Data data( &dp );
@@ -89,11 +91,7 @@ Error QGpgMEDownloadJob::start( const QStringList & pats ) {
 }
 
 Error QGpgMEDownloadJob::start( const QByteArray & fpr, const boost::shared_ptr<QIODevice> & keyData ) {
-  // the arguments passed here to the functor are stored in a QFuture, and are not
-  // necessarily destroyed (living outside the UI thread) at the time the result signal
-  // is emitted and the signal receiver wants to clean up IO devices.
-  // To avoid such races, we pass weak_ptr's to the functor.
-  run( bind( &download, _1, fpr, weak_ptr<QIODevice>( keyData ) ) );
+  run( bind( &download, _1, _2, fpr, _3 ), keyData );
   return Error();
 }
 
