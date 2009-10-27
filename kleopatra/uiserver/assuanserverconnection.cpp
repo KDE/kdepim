@@ -1123,58 +1123,9 @@ QStringList AssuanCommand::fileNames() const {
     return kdtools::copy<QStringList>( d->files );
 }
 
-#if 0
-std::vector< shared_ptr<QFile> > AssuanCommand::files() const {
-    std::vector< shared_ptr<QFile> > result;
-    Q_FOREACH( const IOF & io, d->files )
-        result.push_back( io.file );
-    return result;
-}
-#endif
-
 unsigned int AssuanCommand::numFiles() const {
     return d->files.size();
 }
-
-#if 0
-QString AssuanCommand::bulkInputDeviceFileName( unsigned int idx ) const {
-    return d->inputs.at( idx ).fileName;
-}
-
-shared_ptr<QIODevice> AssuanCommand::bulkInputDevice( unsigned int idx ) const {
-    return d->inputs.at( idx ).iodev;
-}
-
-unsigned int AssuanCommand::numBulkInputDevices() const {
-    return d->inputs.size();
-}
-
-
-QString AssuanCommand::bulkMessageDeviceFileName( unsigned int idx ) const {
-    return d->messages.at( idx ).fileName;
-}
-
-shared_ptr<QIODevice> AssuanCommand::bulkMessageDevice( unsigned int idx ) const {
-    return d->messages.at( idx ).iodev;
-}
-
-unsigned int AssuanCommand::numBulkMessageDevices() const {
-    return d->messages.size();
-}
-
-
-QString AssuanCommand::bulkOutputDeviceFileName( unsigned int idx ) const {
-    return d->outputs.at( idx ).fileName;
-}
-
-shared_ptr<QIODevice> AssuanCommand::bulkOutputDevice( unsigned int idx ) const {
-    return d->outputs.at( idx ).iodev;
-}
-
-unsigned int AssuanCommand::numBulkOutputDevices() const {
-    return d->outputs.size();
-}
-#endif
 
 void AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
     sendStatusEncoded( keyword, text.toUtf8().constData() );
