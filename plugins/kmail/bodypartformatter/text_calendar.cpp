@@ -577,36 +577,42 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
-      // put the attachment in a temporary file and save it
-      KTemporaryFile *file = new KTemporaryFile();
-      QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-      if ( !patterns.empty() ) {
-        file->setSuffix( QString( patterns.first() ).remove( '*' ) );
-      }
-      file->open();
-      file->setPermissions( QFile::ReadUser );
-      file->write( QByteArray::fromBase64( a->data() ) );
-      file->close();
-
+      // get the saveas file name
       QString saveAsFile =
-        KFileDialog::getSaveFileName( KUrl(), QString(), 0,
+        KFileDialog::getSaveFileName( name,
+                                      QString(), 0,
                                       i18n( "Save Invitation Attachment" ));
+
+      if ( saveAsFile.isEmpty() ||
+           ( QFile( saveAsFile ).exists() &&
+             ( KMessageBox::warningContinueCancel(
+               0,
+               i18nc( "@info",
+                      "File <filename>%1</filename> exists.<nl/> Do you want to replace it?",
+                      saveAsFile ) ) != KMessageBox::Continue ) ) ) {
+        return false;
+      }
+
       bool stat = false;
-      if ( !saveAsFile.isEmpty() ) {
-        if ( QFile( saveAsFile ).exists() ) {
-          if ( KMessageBox::warningContinueCancel(
-                 0,
-                 i18nc( "@info",
-                        "File <filename>%1</filename> exists.<nl/> Do you want to replace it?",
-                        saveAsFile ) ) != KMessageBox::Continue ) {
-            delete file;
-            return stat;
-          }
+      if ( a->isUri() ) {
+        // save the attachment url
+        stat = KIO::NetAccess::file_copy( a->uri(), KUrl( saveAsFile ) );
+      } else {
+        // put the attachment in a temporary file and save it
+        KTemporaryFile *file = new KTemporaryFile();
+        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+        if ( !patterns.empty() ) {
+          file->setSuffix( QString( patterns.first() ).remove( '*' ) );
         }
+        file->open();
+        file->setPermissions( QFile::ReadUser );
+        file->write( QByteArray::fromBase64( a->data() ) );
+        file->close();
 
         stat = KIO::NetAccess::file_copy( KUrl( file->fileName() ), KUrl( saveAsFile ) );
+
+        delete file;
       }
-      delete file;
       return stat;
     }
 
