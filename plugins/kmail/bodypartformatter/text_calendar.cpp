@@ -617,40 +617,45 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
-      // put the attachment in a temporary file and save it
-      KTempFile *file;
-      QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
-      if ( !patterns.empty() ) {
-        file = new KTempFile( QString::null,
-                              QString( patterns.first() ).remove( '*' ),0600 );
-      } else {
-        file = new KTempFile( QString::null, QString::null, 0600 );
-      }
-      QByteArray encoded;
-      encoded.duplicate( a->data(), strlen(a->data()) );
-      QByteArray decoded;
-      KCodecs::base64Decode( encoded, decoded );
-      KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
-      file->close();
-
+      // get the saveas file name
       QString saveAsFile =
-        KFileDialog::getSaveFileName( QString::null, QString::null, 0,
+        KFileDialog::getSaveFileName( name,
+                                      QString::null, 0,
                                       i18n( "Save Invitation Attachment" ));
+      if ( saveAsFile.isEmpty() ||
+           ( QFile( saveAsFile ).exists() &&
+             ( KMessageBox::warningYesNo(
+               0,
+               i18n( "%1 already exists. Do you want to overwrite it?").
+               arg( saveAsFile ) ) == KMessageBox::No ) ) ) {
+        return false;
+      }
+
       bool stat = false;
-      if ( !saveAsFile.isEmpty() ) {
-        if ( QFile( saveAsFile ).exists() ) {
-          if ( KMessageBox::warningYesNo(
-                 0,
-                 i18n( "%1 already exists. Do you want to overwrite it?").
-                 arg( saveAsFile ) ) == KMessageBox::No ) {
-            delete file;
-            return stat;
-          }
+      if ( a->isUri() ) {
+        // save the attachment url
+        stat = KIO::NetAccess::file_copy( a->uri(), KURL( saveAsFile ), -1, true );
+      } else {
+        // put the attachment in a temporary file and save it
+        KTempFile *file;
+        QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
+        if ( !patterns.empty() ) {
+          file = new KTempFile( QString::null,
+                                QString( patterns.first() ).remove( '*' ),0600 );
+        } else {
+          file = new KTempFile( QString::null, QString::null, 0600 );
         }
+        QByteArray encoded;
+        encoded.duplicate( a->data(), strlen(a->data()) );
+        QByteArray decoded;
+        KCodecs::base64Decode( encoded, decoded );
+        KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
+        file->close();
 
         stat = KIO::NetAccess::file_copy( KURL( file->name() ), KURL( saveAsFile ), -1, true );
+
+        delete file;
       }
-      delete file;
       return stat;
     }
 
