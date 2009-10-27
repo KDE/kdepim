@@ -267,6 +267,7 @@ void AkonotesMasterApplet::updateItem( const Item &item )
     if (!te)
       return;
 
+    extenderItem->setTitle( msg->subject()->asUnicodeString() );
     te->setText( msg->mainBodyPart()->decodedText() );
 }
 
