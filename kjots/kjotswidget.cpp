@@ -37,7 +37,6 @@
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
-#include <akonadi/entityfilterproxymodel.h>
 #include <akonadi/entitytreeview.h>
 #include <akonadi/item.h>
 #include <Akonadi/ItemCreateJob>
