@@ -501,7 +501,7 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 {
   QList<Item> lstMiPtr;
   QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
-  if ( lstMiPtr.isEmpty() ) {
+  if ( lstMi.isEmpty() ) {
     return lstMiPtr;
   }
   foreach( Core::MessageItem *it, lstMi ) {
