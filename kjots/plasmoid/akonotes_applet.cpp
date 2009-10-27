@@ -178,6 +178,18 @@ void AkonotesMasterApplet::configAccepted()
     disconnect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
   }
 
+  QList<Plasma::ExtenderItem *> extenderList = extender()->items();
+  QList<Plasma::ExtenderItem *>::iterator it;
+  QList<Plasma::ExtenderItem *>::iterator item;
+  const QList<Plasma::ExtenderItem *>::iterator end = extenderList.end();
+
+  for ( it = extenderList.begin(); it != end; )
+  {
+    item = it;
+    it = extenderList.erase(it);
+    ( *item )->destroy();
+  }
+
   m_model = itemModel;
 
   connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(itemsAdded(QModelIndex,int,int)) );
