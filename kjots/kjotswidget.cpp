@@ -120,6 +120,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
 
   treeview->setModel( m_kjotsModel );
   treeview->setSelectionMode( QAbstractItemView::ExtendedSelection );
+  treeview->setEditTriggers( QAbstractItemView::DoubleClicked );
 
   selProxy = new KSelectionProxyModel( treeview->selectionModel(), this );
   selProxy->setSourceModel( m_kjotsModel );
