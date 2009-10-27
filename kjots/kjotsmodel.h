@@ -77,6 +77,9 @@ public:
   virtual QVariant entityData( const Akonadi::Item& item, int column, int role = Qt::DisplayRole ) const;
 
   QVariant data(const QModelIndex &index, int role) const;
+
+  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+
 };
 
 #endif

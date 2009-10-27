@@ -294,15 +294,13 @@ void KJotsWidget::newPage()
   newPage->subject( true )->fromUnicodeString( title, encoding );
   newPage->contentType( true )->setMimeType( "text/plain" );
   newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-  newPage->from( true )->fromUnicodeString( "Kjots", "utf-8" );
+  newPage->from( true )->fromUnicodeString( "Kjots@kde4", encoding );
+  newPage->to( true )->fromUnicodeString( "user@kde4", encoding );
 
   newPage->assemble();
 
-  KMime::Message::Ptr m = KMime::Message::Ptr( new KMime::Message() );
-  m->setContent( newPage->encodedContent() );
-  m->parse();
-
   newItem.setPayload( newPage );
+
   Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( newItem, col, this );
   connect( job, SIGNAL( result( KJob* ) ), SLOT(newPageResult( KJob* )) );
 

@@ -22,6 +22,7 @@
 #include "kjotsmodel.h"
 
 #include <akonadi/changerecorder.h>
+#include <akonadi/entitydisplayattribute.h>
 
 #include <kdebug.h>
 #include <KMime/KMimeMessage>
@@ -107,6 +108,29 @@ KJotsModel::~KJotsModel()
 
 }
 
+
+bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+  if ( role == Qt::EditRole )
+  {
+    Item item = index.data(ItemRole).value<Item>();
+    KMime::Message::Ptr m = item.payload<KMime::Message::Ptr>();
+
+    m->subject( true )->fromUnicodeString( value.toString(), "utf-8" );
+    m->assemble();
+    item.setPayload<KMime::Message::Ptr>( m );
+
+    if ( item.hasAttribute<EntityDisplayAttribute>() ) {
+      EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>( Entity::AddIfMissing );
+      displayAttribute->setDisplayName( value.toString() );
+      item.addAttribute( displayAttribute );
+    }
+    return EntityTreeModel::setData(index, QVariant::fromValue<Item>( item ), ItemRole);
+  }
+
+  return EntityTreeModel::setData(index, value, role);
+}
+
 QVariant KJotsModel::data(const QModelIndex &index, int role) const
 {
   if (GrantleeObjectRole == role)
@@ -119,7 +143,7 @@ QVariant KJotsModel::data(const QModelIndex &index, int role) const
 
 QVariant KJotsModel::entityData( const Akonadi::Item& item, int column, int role) const
 {
-  if ( role == Qt::DisplayRole && item.hasPayload<KMime::Message::Ptr>() )
+  if ( ( role == Qt::EditRole || role == Qt::DisplayRole ) && item.hasPayload<KMime::Message::Ptr>() )
   {
     KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
     return page->subject()->asUnicodeString();
