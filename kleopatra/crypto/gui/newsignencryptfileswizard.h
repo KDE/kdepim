@@ -54,6 +54,10 @@ namespace GpgME {
 }
 
 namespace Kleo {
+    class ArchiveDefinition;
+}
+
+namespace Kleo {
 namespace Crypto {
     class TaskCollection;
 }
@@ -73,6 +77,11 @@ namespace Gui {
 
         void setPresetProtocol( GpgME::Protocol proto );
 
+        void setCreateArchivePreset( bool preset );
+        void setCreateArchiveUserMutable( bool mut );
+
+        void setArchiveDefinitionId( const QString & id );
+
         void setSigningPreset( bool preset );
         void setSigningUserMutable( bool mut );
 
@@ -82,6 +91,9 @@ namespace Gui {
         void setFiles( const QStringList & files );
 
         // Outputs
+
+        bool isCreateArchiveSelected() const;
+        boost::shared_ptr<ArchiveDefinition> selectedArchiveDefinition() const;
 
         bool isSigningSelected() const;
         bool isEncryptionSelected() const;
