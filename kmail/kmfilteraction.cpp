@@ -1816,6 +1816,7 @@ void KMFilterActionExtFilter::processAsync(KMMessage* aMsg) const
   KTemporaryFile *inFile = new KTemporaryFile;
   inFile->setAutoRemove(false);
   if ( !inFile->open() ) {
+    delete inFile;
     handler->actionMessage( ErrorButGoOn );
     return;
   }
@@ -1826,6 +1827,8 @@ void KMFilterActionExtFilter::processAsync(KMMessage* aMsg) const
   QString commandLine = substituteCommandLineArgsFor( aMsg, atmList );
   if ( commandLine.isEmpty() ) {
     handler->actionMessage( ErrorButGoOn );
+    qDeleteAll( atmList );
+    atmList.clear();
     return;
   }
 
