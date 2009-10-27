@@ -17,7 +17,14 @@ set(kcal_blog_PART_SRCS resourceblog_plugin.cpp )
 
 kde4_add_plugin(kcal_blog ${kcal_blog_PART_SRCS})
 
-target_link_libraries(kcal_blog ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} kcal_resourceblog kdepim )
+target_link_libraries(kcal_blog
+  ${KDE4_KDECORE_LIBS}
+  ${KDEPIMLIBS_KCAL_LIBS}
+  ${KDEPIMLIBS_KRESOURCES_LIBS}
+  ${QT_QTGUI_LIBRARY}
+  kcal_resourceblog
+  kdepim
+)
 
 install(TARGETS kcal_blog  DESTINATION ${PLUGIN_INSTALL_DIR})
 

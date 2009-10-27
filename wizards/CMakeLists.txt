@@ -82,7 +82,16 @@ kde4_add_app_icon(kolabwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wiza
 
 kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
-target_link_libraries(kolabwizard ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim )
+target_link_libraries(kolabwizard
+  ${QT_QT3SUPPORT_LIBRARY}
+  ${KDEPIMLIBS_KCAL_LIBS}
+  ${KDEPIMLIBS_KABC_LIBS}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  kabckolab
+  knoteskolab
+  kcalkolab
+  kdepim
+)
 
 install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
