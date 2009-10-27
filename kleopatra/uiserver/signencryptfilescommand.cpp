@@ -118,7 +118,13 @@ int SignEncryptFilesCommand::doStart() {
     d->controller.reset( new SignEncryptFilesController( shared_from_this() ) );
 
     d->controller->setProtocol( checkProtocol( FileManager ) );
-    d->controller->setOperationMode( operation() );
+
+    unsigned int op = operation();
+    if ( hasOption( "archive" ) )
+        op |= SignEncryptFilesController::ArchiveForced;
+    else
+        op |= SignEncryptFilesController::ArchiveAllowed;
+    d->controller->setOperationMode( op );
     d->controller->setFiles( fileNames() );
 
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
