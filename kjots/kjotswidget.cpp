@@ -253,7 +253,7 @@ void KJotsWidget::newBook()
     return;
 
   Collection newCollection;
-  newCollection.setParent( col );
+  newCollection.setParentCollection( col );
 
   QString title = i18nc( "The default name for new books.", "New Book" );
   newCollection.setName( title );
