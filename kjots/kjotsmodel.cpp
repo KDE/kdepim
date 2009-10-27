@@ -114,6 +114,13 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
   if ( role == Qt::EditRole )
   {
     Item item = index.data(ItemRole).value<Item>();
+
+    if ( !item.isValid() )
+    {
+      Collection col = index.data(CollectionRole).value<Collection>();
+      col.setName( value.toString() );
+      return EntityTreeModel::setData(index, QVariant::fromValue( col ), CollectionRole );
+    }
     KMime::Message::Ptr m = item.payload<KMime::Message::Ptr>();
 
     m->subject( true )->fromUnicodeString( value.toString(), "utf-8" );
