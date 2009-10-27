@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "decryptverifyfilescontroller.h"
+
 #include <crypto/gui/decryptverifyoperationwidget.h>
 #include <crypto/gui/decryptverifyfileswizard.h>
 #include <crypto/decryptverifytask.h>
@@ -40,6 +41,7 @@
 
 #include <utils/classify.h>
 #include <utils/gnupg-helper.h>
+#include <utils/path-helper.h>
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
@@ -68,7 +70,6 @@ class DecryptVerifyFilesController::Private {
     DecryptVerifyFilesController* const q;
 public:
 
-    static QString heuristicBaseDirectory( const QStringList& fileNames );
     static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const QString & fileName, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy );
 
     explicit Private( DecryptVerifyFilesController* qq );
@@ -79,8 +80,6 @@ public:
 
     QStringList prepareWizardFromPassedFiles();
     std::vector<shared_ptr<Task> > buildTasks( const QStringList &, const shared_ptr<OverwritePolicy> & );
-
-    QString heuristicBaseDirectory() const;
 
     void ensureWizardCreated();
     void ensureWizardVisible();
@@ -306,7 +305,7 @@ QStringList DecryptVerifyFilesController::Private::prepareWizardFromPassedFiles(
     if ( !counter )
         throw Kleo::Exception( makeGnuPGError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
 
-    m_wizard->setOutputDirectory( heuristicBaseDirectory() );
+    m_wizard->setOutputDirectory( heuristicBaseDirectory( m_passedFiles ) );
     return fileNames;
 }
 
@@ -359,33 +358,6 @@ void DecryptVerifyFilesController::start()
 {
     d->m_filesAfterPreparation = d->prepareWizardFromPassedFiles();
     d->ensureWizardVisible();
-}
-
-static QString commonPrefix( const QString & s1, const QString & s2 ) {
-    return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
-}
-
-static QString longestCommonPrefix( const QStringList & sl ) {
-    if ( sl.empty() )
-        return QString();
-    QString result = sl.front();
-    Q_FOREACH( const QString & s, sl )
-        result = commonPrefix( s, result );
-    return result;
-}
-
-QString DecryptVerifyFilesController::Private::heuristicBaseDirectory() const {
-    return heuristicBaseDirectory( m_passedFiles );
-}
-
-
-QString DecryptVerifyFilesController::Private::heuristicBaseDirectory( const QStringList& fileNames ) {
-    const QString candidate = longestCommonPrefix( fileNames );
-    const QFileInfo fi( candidate );
-    if ( fi.isDir() )
-        return candidate;
-    else
-        return fi.absolutePath();
 }
 
 void DecryptVerifyFilesController::setOperation( DecryptVerifyOperation op )

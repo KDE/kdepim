@@ -119,6 +119,7 @@ set( _kleopatra_SRCS
   utils/systemtrayicon.cpp
 
   utils/hex.cpp
+  utils/path-helper.cpp
   utils/input.cpp
   utils/output.cpp
   utils/exception.cpp
