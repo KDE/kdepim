@@ -48,7 +48,7 @@ public:
   void init();
 
 protected:
-  void initExtenderItem( Plasma::ExtenderItem *item, const QModelIndex &idx );
+  void initExtenderItem( Plasma::ExtenderItem *item );
   void updateItem( const Akonadi::Item &item );
 
   void createConfigurationInterface (KConfigDialog *parent);

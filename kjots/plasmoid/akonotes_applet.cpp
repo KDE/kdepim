@@ -201,24 +201,9 @@ void AkonotesMasterApplet::configAccepted()
   emit configNeedsSaving();
 }
 
-void AkonotesMasterApplet::initExtenderItem( Plasma::ExtenderItem *item, const QModelIndex &idx )
+void AkonotesMasterApplet::initExtenderItem( Plasma::ExtenderItem *item )
 {
-    Plasma::TextEdit *textEdit = new Plasma::TextEdit( item );
-
-    Item akonadiItem = idx.data( ItemModel::ItemRole ).value<Akonadi::Item>();
-//     Item akonadiItem = idx.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-    Q_ASSERT( akonadiItem.isValid() );
-
-    if (!akonadiItem.hasPayload<KMime::Message::Ptr>())
-      return;
-
-    KMime::Message::Ptr msg = akonadiItem.payload<KMime::Message::Ptr>();
-
-    textEdit->setText( msg->mainBodyPart()->decodedText() );
-
-    item->setTitle( msg->subject()->asUnicodeString() );
-
-    item->setWidget( textEdit );
+  item->destroy();
 }
 
 void AkonotesMasterApplet::paintInterface(QPainter *p,
@@ -240,10 +225,24 @@ void AkonotesMasterApplet::itemsAdded(const QModelIndex &parent, int start, int 
     Plasma::ExtenderItem *extenderItem = new Plasma::ExtenderItem(extender());
     QModelIndex idx = m_model->index(row, column, parent);
     Q_ASSERT( idx.isValid() );
-    initExtenderItem(extenderItem, idx);
+
+    Plasma::TextEdit *textEdit = new Plasma::TextEdit( extenderItem );
+
+    extenderItem->setWidget( textEdit );
+
+    Item akonadiItem = idx.data( ItemModel::ItemRole ).value<Akonadi::Item>();
+    //     Item akonadiItem = idx.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    Q_ASSERT( akonadiItem.isValid() );
+
+    if (!akonadiItem.hasPayload<KMime::Message::Ptr>())
+      return;
+
+    KMime::Message::Ptr msg = akonadiItem.payload<KMime::Message::Ptr>();
+
+    extenderItem->setTitle( msg->subject()->asUnicodeString() );
+    textEdit->setText( msg->mainBodyPart()->decodedText() );
 
     Akonadi::Item item = idx.data(ItemModel::ItemRole ).value<Akonadi::Item>();
-    kDebug() << item.isValid() << item.id();
 
     extenderItem->setName( nameForItem( item ) );
 
