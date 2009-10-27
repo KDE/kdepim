@@ -88,7 +88,7 @@ AlarmDialog::AlarmDialog( QWidget *parent )
   setCaption( i18nc( "@title:window", "Reminders" ) );
   setWindowIcon( KIcon( "korgac" ) );
   setButtons( Ok | User1 | User2 | User3 );
-  setDefaultButton( User3 );
+  setDefaultButton( NoDefault );
   setButtonText( Ok, i18nc( "@action:button", "Dismiss" ) );
   setButtonToolTip( Ok, i18nc( "@info:tooltip",
                                "Dismiss the reminders for the selected incidences" ) );
@@ -345,6 +345,9 @@ void AlarmDialog::show()
   mIncidenceTree->resizeColumnToContents( 0 );
   mIncidenceTree->resizeColumnToContents( 1 );
   mIncidenceTree->resizeColumnToContents( 2 );
+
+  // make sure no items are selected so pressing <enter> cannot do anything.
+  mIncidenceTree->setItemSelected( mIncidenceTree->topLevelItem( 0 ), false );
 
   KDialog::show();
   if ( !mPos.isNull() ) {
