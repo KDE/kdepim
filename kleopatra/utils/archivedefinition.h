@@ -34,11 +34,9 @@
 #define __KLEOPATRA_UTILS_ARCHIVEDEFINITION_H__
 
 #include <QString>
+#include <QStringList>
 
 #include <vector>
-
-class QProcess;
-class QStringList;
 
 namespace boost {
     template <typename T> class shared_ptr;
@@ -52,12 +50,14 @@ namespace Kleo {
 
     class ArchiveDefinition {
     protected:
-        ArchiveDefinition( const QString & id, const QString & label );
+        ArchiveDefinition( const QString & id, const QString & label, const QStringList & extensions );
     public:
         virtual ~ArchiveDefinition();
 
         QString id() const { return m_id; }
         QString label() const { return m_label; }
+
+        const QStringList & extensions() const { return m_extensions; }
 
         boost::shared_ptr<Input> createInput( const QStringList & files ) const;
 
@@ -69,6 +69,7 @@ namespace Kleo {
     private:
         const QString m_id;
         const QString m_label;
+        const QStringList m_extensions;
     };
         
 }
