@@ -74,11 +74,11 @@ namespace StringUtil
 
   /** Encodes an email address as mailto URL
    */
-  QString encodeMailtoUrl( const QString& str );
+  MESSAGEVIEWER_EXPORT QString encodeMailtoUrl( const QString& str );
 
   /** Decodes a mailto URL
    */
-  QString decodeMailtoUrl( const QString& url );
+  MESSAGEVIEWER_EXPORT QString decodeMailtoUrl( const QString& url );
 
   /**
    * This function generates a displayable string from a list of email
@@ -100,7 +100,7 @@ namespace StringUtil
    * @p removeLineBreaks is false. If @p removeLineBreaks is true, then
    * '\\n' is removed. Last but not least '\\r' is removed.
    */
-  QString quoteHtmlChars( const QString& str,
+  MESSAGEVIEWER_EXPORT QString quoteHtmlChars( const QString& str,
                           bool removeLineBreaks = false );
 
   /**
