@@ -71,6 +71,7 @@
 #include "kjotsmodel.h"
 #include "kjotsedit.h"
 #include "kjotstreeview.h"
+#include "kjotsconfigdlg.h"
 
 #include <kdebug.h>
 
@@ -273,6 +274,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setText(i18nc("@action Paste the text in the clipboard without rich text formatting.", "Paste Plain Text"));
   connect(action, SIGNAL(triggered()), editor, SLOT(pastePlainText()));
 
+  KStandardAction::preferences(this, SLOT(configure()), actionCollection);
+
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 }
 
@@ -282,6 +285,13 @@ void KJotsWidget::delayedInitialization()
     editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
 }
 
+void KJotsWidget::configure()
+{
+  // create a new preferences dialog...
+  KJotsConfigDlg *dialog = new KJotsConfigDlg( i18n( "Settings" ), this );
+  connect( dialog, SIGNAL(configCommitted()), SLOT(updateConfiguration()) );
+  dialog->show();
+}
 
 void KJotsWidget::copySelectionToTitle()
 {

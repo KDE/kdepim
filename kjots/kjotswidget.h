@@ -100,6 +100,7 @@ private slots:
   void newBookResult( KJob *job );
 
   void copySelectionToTitle();
+  void configure();
 
 private:
   KXMLGUIClient  *m_xmlGuiClient;
