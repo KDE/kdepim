@@ -204,15 +204,34 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setIcon( KIcon( "edit-delete" ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteBook()) );
 
-  action = actionCollection->addAction("del_mult");
-  action->setText(i18n("Delete Selected"));
-  action->setIcon(KIcon("edit-delete"));
-  connect(action, SIGNAL(triggered()), SLOT(deleteMultiple()));
+  action = actionCollection->addAction( "del_mult" );
+  action->setText( i18n( "Delete Selected" ) );
+  action->setIcon( KIcon( "edit-delete" ) );
+  connect( action, SIGNAL(triggered()), SLOT(deleteMultiple()) );
 
-  action = actionCollection->addAction("manual_save");
-  action->setText(i18n("Manual Save"));
-  action->setIcon(KIcon("document-save"));
-  action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+  action = actionCollection->addAction( "manual_save" );
+  action->setText( i18n( "Manual Save" ) );
+  action->setIcon( KIcon( "document-save" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_S ) );
+
+  action = actionCollection->addAction( "auto_bullet" );
+  action->setText( i18n( "Auto Bullets" ) );
+  action->setIcon( KIcon( "format-list-unordered" ) );
+  action->setCheckable( true );
+
+  action = actionCollection->addAction( "auto_decimal" );
+  action->setText( i18n( "Auto Decimal List" ) );
+  action->setIcon( KIcon( "format-list-ordered" ) );
+  action->setCheckable( true );
+
+  action = actionCollection->addAction( "manage_link" );
+  action->setText( i18n( "Link" ) );
+  action->setIcon( KIcon( "insert-link" ) );
+
+  action = actionCollection->addAction( "insert_checkmark" );
+  action->setText( i18n( "Insert Checkmark" ) );
+  action->setIcon( KIcon( "checkmark" ) );
+  action->setEnabled( false );
 
   QTimer::singleShot(0, this, SLOT(delayedInitialization()));
 }
