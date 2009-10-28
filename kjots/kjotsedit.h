@@ -66,6 +66,7 @@ protected slots:
     void pastePlainText( void );
 
     void savePage();
+    void insertDate();
 
 private:
     void disableEditing ( void );

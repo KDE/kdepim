@@ -21,11 +21,18 @@
 
 #include "kjotstreeview.h"
 
-#include <QMenu>
+#include <QApplication>
+#include <QClipboard>
 #include <QContextMenuEvent>
+#include <QMenu>
 
 #include <KActionCollection>
 #include <KXMLGUIClient>
+#include <KColorDialog>
+#include <KInputDialog>
+#include <KLocale>
+
+#include <KMime/KMimeMessage>
 
 #include "kjotsmodel.h"
 
@@ -78,4 +85,81 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
 
     delete popup;
 }
+
+void KJotsTreeView::delayedInitialization()
+{
+  connect(m_xmlGuiClient->actionCollection()->action("rename_entry"), SIGNAL(triggered()),
+      this, SLOT(renameEntry()));
+  connect(m_xmlGuiClient->actionCollection()->action("copy_link_address"), SIGNAL(triggered()),
+      this, SLOT(copyLinkAddress()));
+  connect(m_xmlGuiClient->actionCollection()->action("change_color"), SIGNAL(triggered()),
+      this, SLOT(changeColor()));
+}
+
+void KJotsTreeView::renameEntry()
+{
+  QModelIndexList rows = selectionModel()->selectedRows();
+
+  if ( rows.size() != 1 )
+    return;
+
+  QModelIndex idx = rows.at( 0 );
+
+  Item item = idx.data( KJotsModel::ItemRole ).value<Item>();
+
+  KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+  QString title = msg->subject()->asUnicodeString();
+
+  bool ok;
+  QString name = KInputDialog::getText(i18n( "Rename Book" ),
+      i18n( "Book name:" ), title, &ok, this);
+
+  if (ok)
+    model()->setData( idx, name, Qt::EditRole );
+}
+
+void KJotsTreeView::copyLinkAddress()
+{
+  QModelIndexList rows = selectionModel()->selectedRows();
+
+  if ( rows.size() != 1 )
+    return;
+
+  Item item = rows.at( 0 ).data( KJotsModel::ItemRole ).value<Item>();
+
+  KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+  QString title = msg->subject()->asUnicodeString();
+
+  QMimeData *mimeData = new QMimeData();
+
+  QString link = QString( "<a href=\"%1\">%2</a>" ).arg( item.url().url() ).arg( title );
+
+  mimeData->setData( "kjots/internal_link", link.toUtf8() );
+  mimeData->setText( title );
+  QApplication::clipboard()->setMimeData( mimeData );
+  return;
+}
+
+void KJotsTreeView::changeColor()
+{
+  QColor myColor;
+  int result = KColorDialog::getColor( myColor );
+
+  if ( result != KColorDialog::Accepted )
+    return;
+
+  QModelIndexList rows = selectionModel()->selectedRows();
+
+  foreach ( const QModelIndex &idx, rows )
+  {
+    model()->setData(idx, myColor, Qt::BackgroundColorRole );
+  }
+}
+
+
+
+
+
 

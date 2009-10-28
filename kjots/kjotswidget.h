@@ -43,11 +43,11 @@ class KXMLGUIClient;
 namespace Akonadi
 {
 class EntityTreeModel;
-class EntityTreeView;
 class Session;
 }
 
 class KJotsEdit;
+class KJotsTreeView;
 
 class KJotsWidget : public QWidget
 {
@@ -107,7 +107,7 @@ private:
   Akonadi::EntityTreeModel *m_kjotsModel;
   KSelectionProxyModel *selProxy;
   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
-  Akonadi::EntityTreeView *treeview;
+  KJotsTreeView *treeview;
   Akonadi::Session *m_session;
 };
 

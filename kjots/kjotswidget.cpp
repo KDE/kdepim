@@ -233,11 +233,29 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setIcon( KIcon( "checkmark" ) );
   action->setEnabled( false );
 
-  QTimer::singleShot(0, this, SLOT(delayedInitialization()));
+  action = actionCollection->addAction( "rename_entry" );
+  action->setText( i18n( "Rename..." ) );
+  action->setIcon( KIcon( "edit-rename" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_M ) );
+
+  action = actionCollection->addAction( "insert_date" );
+  action->setText( i18n( "Insert Date" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_I ) );
+  action->setIcon( KIcon( "view-calendar-time-spent" ) );
+
+  action = actionCollection->addAction( "change_color" );
+  action->setIcon( KIcon( "format-fill-color" ) );
+  action->setText( i18n( "Change Color..." ) );
+
+  action = actionCollection->addAction( "copy_link_address" );
+  action->setText( i18n( "Copy Link Address" ) );
+
+  QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 }
 
 void KJotsWidget::delayedInitialization()
 {
+    treeview->delayedInitialization();
     editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
 }
 

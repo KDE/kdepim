@@ -21,6 +21,8 @@
 
 #include "kjotsmodel.h"
 
+#include <QColor>
+
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 
@@ -135,6 +137,19 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
     return EntityTreeModel::setData(index, QVariant::fromValue<Item>( item ), ItemRole);
   }
 
+  if ( role == Qt::BackgroundColorRole )
+  {
+    // Set as attribute instead.
+
+    Item item = index.data(ItemRole).value<Item>();
+
+    if ( item.isValid() )
+    {
+      m_colors[ item.id() ] = value.value<QColor>();
+      return true;
+    }
+  }
+
   return EntityTreeModel::setData(index, value, role);
 }
 
@@ -145,6 +160,14 @@ QVariant KJotsModel::data(const QModelIndex &index, int role) const
     QObject *obj = new KJotsEntity(index);
     return QVariant::fromValue(obj);
   }
+
+  if ( role == Qt::BackgroundColorRole )
+  {
+    Item item = EntityTreeModel::data(index, ItemRole).value<Item>();
+    if ( item.isValid() && m_colors.contains( item.id() ) )
+      return m_colors.value( item.id() );
+  }
+
   return EntityTreeModel::data(index, role);
 }
 

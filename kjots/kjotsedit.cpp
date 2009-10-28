@@ -38,6 +38,7 @@
 #include <kactioncollection.h>
 #include <krun.h>
 #include <KApplication>
+#include <KLocale>
 
 #include "kjotsentry.h"
 #include "kjotslinkdialog.h"
@@ -101,6 +102,12 @@ void KJotsEdit::delayedInitialization ( KActionCollection *collection )
     connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
     connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
     connect(actionCollection->action("manual_save"), SIGNAL(triggered()), SLOT(savePage()));
+    connect(actionCollection->action("insert_date"), SIGNAL(triggered()), SLOT(insertDate()));
+}
+
+void KJotsEdit::insertDate()
+{
+  insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + ' ');
 }
 
 void KJotsEdit::disableEditing ( void )

@@ -32,8 +32,15 @@ class KJotsTreeView : public Akonadi::EntityTreeView
 public:
   KJotsTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
+  void delayedInitialization();
+
 protected:
   virtual void contextMenuEvent( QContextMenuEvent *event );
+
+protected slots:
+  void renameEntry();
+  void copyLinkAddress();
+  void changeColor();
 
 private:
   KXMLGUIClient *m_xmlGuiClient;
