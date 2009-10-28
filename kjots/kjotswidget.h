@@ -99,6 +99,8 @@ private slots:
   void newPageResult( KJob *job );
   void newBookResult( KJob *job );
 
+  void copySelectionToTitle();
+
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;

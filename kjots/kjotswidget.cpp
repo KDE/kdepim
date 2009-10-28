@@ -250,6 +250,29 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action = actionCollection->addAction( "copy_link_address" );
   action->setText( i18n( "Copy Link Address" ) );
 
+  action = KStandardAction::cut( editor, SLOT(cut()), actionCollection );
+  connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
+  action->setEnabled( false );
+
+  action = KStandardAction::copy( editor, SLOT(copy()), actionCollection );
+  connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
+  connect( browser, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
+  action->setEnabled( false );
+
+  KStandardAction::pasteText( editor, SLOT(paste()), actionCollection );
+
+  action = actionCollection->addAction( "copyIntoTitle" );
+  action->setText( i18n( "Copy &into Page Title" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_T ) );
+  action->setIcon( KIcon( "edit-copy" ) );
+  connect( action, SIGNAL(triggered()), SLOT(copySelectionToTitle()) );
+  connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
+  action->setEnabled( false );
+
+  action = actionCollection->addAction("paste_plain_text");
+  action->setText(i18nc("@action Paste the text in the clipboard without rich text formatting.", "Paste Plain Text"));
+  connect(action, SIGNAL(triggered()), editor, SLOT(pastePlainText()));
+
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 }
 
@@ -257,6 +280,24 @@ void KJotsWidget::delayedInitialization()
 {
     treeview->delayedInitialization();
     editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
+}
+
+
+void KJotsWidget::copySelectionToTitle()
+{
+  QString newTitle( editor->textCursor().selectedText() );
+
+  if ( !newTitle.isEmpty() ) {
+
+    QModelIndexList rows = treeview->selectionModel()->selectedRows();
+
+    if ( rows.size() != 1 )
+      return;
+
+    QModelIndex idx = rows.at( 0 );
+
+    treeview->model()->setData( idx, newTitle );
+  }
 }
 
 KJotsWidget::~KJotsWidget()
