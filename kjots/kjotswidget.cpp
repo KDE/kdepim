@@ -208,7 +208,10 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
   action->setIcon(KIcon("edit-delete"));
   connect(action, SIGNAL(triggered()), SLOT(deleteMultiple()));
 
-
+  action = actionCollection->addAction("manual_save");
+  action->setText(i18n("Manual Save"));
+  action->setIcon(KIcon("document-save"));
+  action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
 }
 
 KJotsWidget::~KJotsWidget()
@@ -351,32 +354,6 @@ void KJotsWidget::newBookResult( KJob* job )
 {
   if ( job->error() )
     kDebug() << job->errorString();
-}
-
-void KJotsWidget::savePage(const QModelIndex &parent, int start, int end)
-{
-  // Disable this for now.
-  return;
-
-  if(parent.isValid() || start != 0 || end != 0)
-    return;
-
-  const int column = 0;
-  QModelIndex idx = selProxy->index(start, column, parent);
-  Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
-  if (!item.isValid())
-    return;
-
-  if (!item.hasPayload<KMime::Message::Ptr>())
-    return;
-
-  KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
-
-
-
-//   page.setContent(editor->toPlainText());
-  item.setPayload(page);
-  selProxy->setData(idx, QVariant::fromValue(item), EntityTreeModel::ItemRole );
 }
 
 QString KJotsWidget::renderSelectionToHtml()

@@ -100,6 +100,7 @@ void KJotsEdit::DelayedInitialization ( KActionCollection *collection, Bookshelf
     connect(actionCollection->action("auto_decimal"), SIGNAL(triggered()), SLOT(onAutoDecimal())); //auto decimal list
     connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
     connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
+    connect(actionCollection->action("manual_save"), SIGNAL(triggered()), SLOT(savePage()));
 }
 
 void KJotsEdit::disableEditing ( void )
