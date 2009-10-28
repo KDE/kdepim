@@ -1,13 +1,15 @@
 KAlarm Change Log
 
-=== Version 2.2.9 --- 18 October 2009 ===
+=== Version 2.2.9 --- 27 October 2009 ===
 - Fix recurring date-only alarm triggering repeatedly and eating up CPU, if the
   start-of-day time is after midnight and the alarm is due, but current UTC time
   of day is earlier than the start-of-day time of day in the alarm's time zone.
 - Update date-only alarm trigger times when user changes the start-of-day time.
 - Don't write start-of-day time into calendar, to avoid clashes if it is shared.
 - Don't waste processing time calculating next trigger time for archived alarms.
+- Disable 'New Alarm from Template' action when no alarm templates exist.
 - Interpret '~' properly in entered file names.
+- Prevent sound file configuration dialogue closing after showing error message.
 - Fix crash when calendars are updated at login, during session restoration.
 
 === Version 2.2.8 (KDE 4.3.2) --- 28 September 2009 ===

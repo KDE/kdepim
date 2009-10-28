@@ -85,10 +85,14 @@ class EventListModel : public QAbstractTableModel
 		KAEvent*              event(int row) const;
 		static KAEvent*       event(const QModelIndex&);
 		void                  updateCommandError(const QString& eventId);
+		bool                  haveEvents() const                   { return mHaveEvents; }
 		static void           resourceStatusChanged(AlarmResource*, AlarmResources::Change);
 
 	public slots:
 		void                  reload();
+
+	signals:
+		void                  haveEventsStatus(bool have);
 
 	private slots:
 		void     slotUpdateTimeTo();
@@ -104,6 +108,7 @@ class EventListModel : public QAbstractTableModel
 		bool     updateEvent(int row);
 		void     removeEvent(int row);
 		int      findEvent(const QString& eventId) const;
+		void     updateHaveEvents(bool have)        { mHaveEvents = have;  emit haveEventsStatus(have); }
 		QString  alarmTimeText(const DateTime&) const;
 		QString  timeToAlarmText(const DateTime&) const;
 		QString  repeatText(const KAEvent*) const;
@@ -122,6 +127,7 @@ class EventListModel : public QAbstractTableModel
 
 		KAEvent::List       mEvents;
 		KCalEvent::Status   mStatus;    // types of events contained in this model
+		bool                mHaveEvents;// there are events in this model
 
 		using QObject::event;   // prevent "hidden" warning
 };
