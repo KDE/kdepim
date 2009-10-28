@@ -92,7 +92,7 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
     delete popup;
 }
 
-void KJotsEdit::DelayedInitialization ( KActionCollection *collection, Bookshelf *shelf )
+void KJotsEdit::delayedInitialization ( KActionCollection *collection )
 {
     actionCollection = collection;
 

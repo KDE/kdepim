@@ -92,6 +92,7 @@ protected slots:
   void deleteMultiple();
 
 private slots:
+  void delayedInitialization();
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   bool canGo( int role, int step ) const;
 
@@ -99,6 +100,7 @@ private slots:
   void newBookResult( KJob *job );
 
 private:
+  KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
   QTextBrowser   *browser;
   QStackedWidget *stackedWidget;

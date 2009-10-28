@@ -42,7 +42,7 @@ public:
     explicit KJotsEdit ( QItemSelectionModel *selectionModel, QWidget* );
     virtual ~KJotsEdit ();
 
-    void DelayedInitialization ( KActionCollection*, Bookshelf* );
+    void delayedInitialization ( KActionCollection* );
     virtual bool canInsertFromMimeData ( const QMimeData *) const;
     virtual void insertFromMimeData ( const QMimeData *);
 

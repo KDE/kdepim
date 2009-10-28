@@ -30,6 +30,7 @@
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <QTextBrowser>
+#include <QTimer>
 
 // Akonadi
 #include <akonadi/control.h>
@@ -78,8 +79,8 @@
 using namespace Akonadi;
 using namespace Grantlee;
 
-KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::WindowFlags f )
-    : QWidget( parent, f )
+KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::WindowFlags f )
+    : QWidget( parent, f ), m_xmlGuiClient( xmlGuiClient )
 {
 
   Akonadi::Control::widgetNeedsAkonadi( this );
@@ -103,7 +104,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
 
   engine->addTemplateLoader( m_loader );
 
-  treeview = new KJotsTreeView( xmlGuiclient, splitter );
+  treeview = new KJotsTreeView( xmlGuiClient, splitter );
 
   ItemFetchScope scope;
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
@@ -135,7 +136,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
 
   stackedWidget = new QStackedWidget( splitter );
 
-  KActionCollection *actionCollection = xmlGuiclient->actionCollection();
+  KActionCollection *actionCollection = xmlGuiClient->actionCollection();
 
   editor = new KJotsEdit( treeview->selectionModel(), stackedWidget );
   editor->createActions( actionCollection );
@@ -212,6 +213,13 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
   action->setText(i18n("Manual Save"));
   action->setIcon(KIcon("document-save"));
   action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
+
+  QTimer::singleShot(0, this, SLOT(delayedInitialization()));
+}
+
+void KJotsWidget::delayedInitialization()
+{
+    editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
 }
 
 KJotsWidget::~KJotsWidget()
