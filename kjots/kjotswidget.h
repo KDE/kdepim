@@ -44,6 +44,7 @@ namespace Akonadi
 {
 class EntityTreeModel;
 class EntityTreeView;
+class Session;
 }
 
 class KJotsEdit;
@@ -89,6 +90,7 @@ protected slots:
 
   void deletePage();
   void deleteBook();
+  void deleteMultiple();
 
 private slots:
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
@@ -105,6 +107,7 @@ private:
   KSelectionProxyModel *selProxy;
   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
   Akonadi::EntityTreeView *treeview;
+  Akonadi::Session *m_session;
 };
 
 #endif

@@ -203,11 +203,44 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
   action->setIcon( KIcon( "edit-delete" ) );
   connect( action, SIGNAL(triggered()), SLOT(deleteBook()) );
 
+  action = actionCollection->addAction("del_mult");
+  action->setText(i18n("Delete Selected"));
+  action->setIcon(KIcon("edit-delete"));
+  connect(action, SIGNAL(triggered()), SLOT(deleteMultiple()));
+
+
 }
 
 KJotsWidget::~KJotsWidget()
 {
 
+}
+
+void KJotsWidget::deleteMultiple()
+{
+  QModelIndexList selectedRows = treeview->selectionModel()->selectedRows();
+
+  if ( KMessageBox::questionYesNo( this,
+        i18n( "Do you really want to delete all selected books and pages?" ),
+        i18n("Delete?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+        QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
+    return;
+
+  foreach ( const QModelIndex &index, selectedRows ) {
+    bool ok;
+    qlonglong id = index.data( EntityTreeModel::ItemIdRole ).toLongLong(&ok);
+    Q_ASSERT(ok);
+    if ( id >= 0 )
+    {
+      new ItemDeleteJob( Item( id ), this );
+    }
+    else {
+      id = index.data( EntityTreeModel::CollectionIdRole ).toLongLong(&ok);
+      Q_ASSERT(ok);
+      if ( id >= 0 )
+        new CollectionDeleteJob( Collection( id ), this );
+    }
+  }
 }
 
 void KJotsWidget::deletePage()
