@@ -20,7 +20,7 @@
 #define _MESSAGEVIEWER_STRINGUTIL_H
 
 #include <QString>
-
+#include "messageviewer_export.h"
 class KUrl;
 
 //TODO(Andras) this class probably can be shared between the reader and the composer
@@ -148,7 +148,7 @@ namespace StringUtil
    *  @param maxLineLength reformat text to be this amount of columns at maximum, adding
    *    linefeeds at word boundaries to make it fit.
    */
-  QString smartQuote( const QString &msg, int maxLineLength );
+  MESSAGEVIEWER_EXPORT QString smartQuote( const QString &msg, int maxLineLength );
 
   /**
   * Convert wildcards into normal string
