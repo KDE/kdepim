@@ -577,16 +577,6 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   if( mFillStepTimer.isActive() )
     mFillStepTimer.stop();
 
-  if ( mStorageModel )
-  {
-    // Save the current selection
-    MessageItem * lastSelectedMessageItem = mView->currentMessageItem( false );
-    Manager::instance()->savePreSelectedMessageForStorageModel(
-        mStorageModel,
-        lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
-      );
-  }
-
   // Kill pre-selection at this stage
   mPreSelectionMode = PreSelectNone;
   mUniqueIdOfLastSelectedMessageInFolder = 0;

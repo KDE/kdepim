@@ -278,6 +278,16 @@ void Widget::setStorageModel( StorageModel * storageModel, PreSelectionMode preS
   if ( storageModel == mStorageModel )
     return; // nuthin to do here
 
+  if ( mStorageModel )
+  {
+    // Save the current selection
+    MessageItem * lastSelectedMessageItem = mView->currentMessageItem( false );
+    Manager::instance()->savePreSelectedMessageForStorageModel(
+        mStorageModel,
+        lastSelectedMessageItem ? lastSelectedMessageItem->uniqueId() : 0
+      );
+  }
+
   setDefaultAggregationForStorageModel( storageModel );
   setDefaultThemeForStorageModel( storageModel );
   setDefaultSortOrderForStorageModel( storageModel );
