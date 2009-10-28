@@ -34,9 +34,6 @@
 #include <interfaces/bodyparturlhandler.h>
 #include <messageviewer/khtmlparthtmlwriter.h>
 
-//#include <kmail/callback.h>
-#include <kmail/kmmessage.h>
-
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstringhandler.h>
