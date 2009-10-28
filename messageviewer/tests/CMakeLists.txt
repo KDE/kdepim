@@ -16,3 +16,15 @@ target_link_libraries(htmlquotecolorertest
   messageviewer
 )
 
+########### stringutiltest ###############
+
+set(stringutiltest_SRCS stringutiltest.cpp ../stringutil.cpp)
+add_definitions(-DKMAIL_UNITTESTS=YES)
+kde4_add_unit_test(stringutiltest TESTNAME kmail-stringutiltest ${stringutiltest_SRCS})
+target_link_libraries(stringutiltest messageviewer
+  ${QT_QTTEST_LIBRARY}
+  ${QT_QTCORE_LIBRARY}
+  ${KDE4_KIO_LIBS}
+)
+
+

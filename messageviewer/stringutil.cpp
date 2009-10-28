@@ -18,7 +18,8 @@
 */
 #include "stringutil.h"
 #include "global.h"
-
+#include <KUrl>
+#include <KDebug>
 #ifndef KMAIL_UNITTESTS
 
 #include "kmaddrbook.h"
