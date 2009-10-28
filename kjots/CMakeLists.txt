@@ -44,6 +44,7 @@ set (kjots_common_SRCS
      aboutdata.cpp
      kjotsentry.cpp
      kjotsedit.cpp
+     kjotstreeview.cpp
      kjotsbookmarks.cpp
      bookshelf.cpp
      kjotsreplacenextdialog.cpp

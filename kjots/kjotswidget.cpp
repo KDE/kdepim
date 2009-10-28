@@ -69,6 +69,7 @@
 // KJots
 #include "kjotsmodel.h"
 #include "kjotsedit.h"
+#include "kjotstreeview.h"
 
 #include <kdebug.h>
 
@@ -102,7 +103,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiclient, Qt::Win
 
   engine->addTemplateLoader( m_loader );
 
-  treeview = new EntityTreeView( xmlGuiclient, splitter );
+  treeview = new KJotsTreeView( xmlGuiclient, splitter );
 
   ItemFetchScope scope;
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
