@@ -49,7 +49,7 @@ namespace StringUtil
    all trailing whitespace is removed. Therefore the signature
    separator loses the trailing space.
    */
-  QString stripSignature ( const QString & msg, bool clearSigned );
+  MESSAGEVIEWER_EXPORT QString stripSignature ( const QString & msg, bool clearSigned );
 
   /**
    * Splits the given address list into separate addresses.
@@ -87,12 +87,12 @@ namespace StringUtil
    * Output: comma separated list of display name resp. comment resp.
    *         address
    */
-  QByteArray stripEmailAddr( const QByteArray& emailAddr );
+  MESSAGEVIEWER_EXPORT QByteArray stripEmailAddr( const QByteArray& emailAddr );
 
   /**
    * Does the same as the above function. Shouldn't be used.
    */
-  QString stripEmailAddr( const QString& emailAddr );
+  MESSAGEVIEWER_EXPORT QString stripEmailAddr( const QString& emailAddr );
 
   /**
    * Quotes the following characters which have a special meaning in HTML:
@@ -135,7 +135,7 @@ namespace StringUtil
    * Expands aliases (distribution lists and nick names) and appends a
    * domain part to all email addresses which are missing the domain part.
    */
-  QString expandAliases( const QString& recipients,QStringList &distributionListIsEmpty );
+  MESSAGEVIEWER_EXPORT QString expandAliases( const QString& recipients,QStringList &distributionListIsEmpty );
 
   /**
    * Uses the hostname as domain part and tries to determine the real name
