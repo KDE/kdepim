@@ -2128,7 +2128,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
 
     bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
     if ( !typeBlacklisted ) {
-      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
+      typeBlacklisted = MessageViewer::StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
                                                   node->contentDisposition()->filename() );
     }
     typeBlacklisted = typeBlacklisted || node == mMessage;

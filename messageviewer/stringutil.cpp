@@ -49,7 +49,8 @@ using namespace KMime::HeaderParsing;
 
 #endif
 
-
+namespace MessageViewer
+{
 namespace StringUtil
 {
 
@@ -1031,3 +1032,5 @@ void parseMailtoUrl ( const KUrl& url, QString& to, QString& cc, QString& subjec
 
 }
 
+
+}

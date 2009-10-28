@@ -34,7 +34,8 @@ namespace KMime
     typedef QList<Address> AddressList;
   }
 }
-
+namespace MessageViewer
+{
 /**
  * This namespace contain helper functions for string manipulation
  */
@@ -115,19 +116,19 @@ namespace StringUtil
    * Strips an address from an address list. This is for example used
    * when replying to all.
    */
-  QStringList stripAddressFromAddressList( const QString& address,
+  MESSAGEVIEWER_EXPORT QStringList stripAddressFromAddressList( const QString& address,
                                            const QStringList& addresses );
 
   /**
    * Strips all the user's addresses from an address list. This is used
    * when replying.
    */
-  QStringList stripMyAddressesFromAddressList( const QStringList& list );
+  MESSAGEVIEWER_EXPORT QStringList stripMyAddressesFromAddressList( const QStringList& list );
 
   /**
    * Returns true if the given address is contained in the given address list.
    */
-  bool addressIsInAddressList( const QString& address,
+  MESSAGEVIEWER_EXPORT bool addressIsInAddressList( const QString& address,
                                const QStringList& addresses );
 
   /**
@@ -140,7 +141,7 @@ namespace StringUtil
    * Uses the hostname as domain part and tries to determine the real name
    * from the entries in the password file.
    */
-  QString guessEmailAddressFromLoginName( const QString& userName );
+  MESSAGEVIEWER_EXPORT QString guessEmailAddressFromLoginName( const QString& userName );
 
   /**
    *  Given argument msg add quoting characters and relayout for max width maxLength
@@ -155,7 +156,7 @@ namespace StringUtil
   * @param wildString the string to be converted
   * @fromAddr from email address to convert to displayable string
   */
-  QString formatString( const QString &wildString, const QString &fromAddr = QString() );
+  MESSAGEVIEWER_EXPORT QString formatString( const QString &wildString, const QString &fromAddr = QString() );
 
   /**
   * Parses a mailto: url and extracts the information about to, cc, subject and body out into
@@ -174,6 +175,6 @@ namespace StringUtil
    */
   bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName );
 }
-
+}
 
 #endif
