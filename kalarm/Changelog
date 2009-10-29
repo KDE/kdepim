@@ -1,6 +1,6 @@
 KAlarm Change Log
 
-=== Version 2.2.9 --- 27 October 2009 ===
+=== Version 2.2.9 (KDE 4.3.3) --- 29 October 2009 ===
 - Fix recurring date-only alarm triggering repeatedly and eating up CPU, if the
   start-of-day time is after midnight and the alarm is due, but current UTC time
   of day is earlier than the start-of-day time of day in the alarm's time zone.
@@ -11,6 +11,7 @@ KAlarm Change Log
 - Interpret '~' properly in entered file names.
 - Prevent sound file configuration dialogue closing after showing error message.
 - Fix crash if calendar formats are updated at login, during session restoration.
+- If dual screens, show alarm in other screen if active window is full screen.
 
 === Version 2.2.8 (KDE 4.3.2) --- 28 September 2009 ===
 - Use KDE system settings to determine default working days in the week.
