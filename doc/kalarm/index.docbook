@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2009-08-13</date>
-<releaseinfo>2.03.01</releaseinfo>
+<date>2009-10-29</date>
+<releaseinfo>2.04.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -154,6 +154,11 @@ you can type in. Nothing is displayed unless an error occurs.</para>
 <listitem>
 <para>Email alarms send a email. Nothing is displayed unless an error
 occurs.</para>
+</listitem>
+
+<listitem>
+<para>Audio alarms play an audio file. Nothing is displayed unless an
+error occurs.</para>
 </listitem>
 </itemizedlist>
 
@@ -286,6 +291,10 @@ searched.</para>
 <para>Email alarms: in addition to the subject and body of the email,
 the recipients and the URLs of attachments are searched.</para>
 </listitem>
+
+<listitem>
+<para>Audio alarms: the file path/&URL; is searched.</para>
+</listitem>
 </itemizedlist>
 
 <note><para>Only alarms currently shown in the alarm list can be
@@ -307,7 +316,7 @@ you configure the alarm.</para>
 
 <itemizedlist>
 <listitem>
-<para>Select <menuchoice><guimenu>Actions</guimenu>
+<para>Select <menuchoice><guimenu>File</guimenu>
 <guimenuitem>New</guimenuitem></menuchoice>.</para>
 </listitem>
 
@@ -338,7 +347,7 @@ section.</para>
 <listitem>
 <para>To base your new alarm on an existing one, highlight the existing
 alarm in the list and select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
+<guimenu>File</guimenu><guimenuitem>Copy</guimenuitem></menuchoice>.
 This opens the <link linkend="alarm-edit-dlg">Alarm Edit dialog</link>
 already filled in with a copy of the selected alarm's details.</para>
 </listitem>
@@ -374,8 +383,15 @@ dialog</link> and sets the alarm text.</para>
 </listitem>
 
 <listitem>
-<para>To create a file display alarm, drag a file &URL; onto &kalarm;'s
-main window or system tray icon. This opens the
+<para>To create a file display alarm, drag a text or image file &URL;
+onto &kalarm;'s main window or system tray icon. This opens the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> and sets the
+file name.</para>
+</listitem>
+
+<listitem>
+<para>To create an audio alarm, drag an audio file &URL; onto
+&kalarm;'s main window or system tray icon. This opens the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> and sets the
 file name.</para>
 </listitem>
@@ -403,7 +419,7 @@ amended), do one of the following:</para>
 
 <listitem>
 <para>Select it by clicking on its entry in the alarm list. Then
-choose <menuchoice><guimenu>Actions</guimenu>
+choose <menuchoice><guimenu>Edit</guimenu>
 <guimenuitem>Edit</guimenuitem></menuchoice>.</para>
 </listitem>
 
@@ -429,7 +445,7 @@ their entries in the alarm list. Then do one of the following:</para>
 <itemizedlist>
 <listitem>
 <para>Choose <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Delete</guimenuitem>
+<guimenu>Edit</guimenu><guimenuitem>Delete</guimenuitem>
 </menuchoice>.</para>
 </listitem>
 <listitem>
@@ -513,7 +529,7 @@ the template details:</para>
 <itemizedlist>
 <listitem>
 <para>Select the <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>New From Template</guimenuitem>
+<guimenu>File</guimenu><guimenuitem>New From Template</guimenuitem>
 </menuchoice> menu item, and then select the desired template.</para>
 </listitem>
 
@@ -561,7 +577,7 @@ details.</para>
 
 <listitem>
 <para>Highlight an alarm in the alarm list and select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Create Template...</guimenuitem>
+<guimenu>File</guimenu><guimenuitem>Create Template...</guimenuitem>
 </menuchoice>. This opens the Template Edit dialog already filled in
 with a copy of the selected alarm's details.</para>
 </listitem>
@@ -1411,6 +1427,51 @@ Settings.</para>
 </itemizedlist>
 
 </sect3>
+
+<sect3>
+<title>Audio Alarms</title>
+
+<para>Audio alarms play an audio file without displaying any alarm
+message.</para>
+
+<para>Set the following options:</para>
+
+<itemizedlist>
+<listitem>
+<para>Enter the sound file path, or use the button beside the
+edit box to display a file selection dialog.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Repeat</guilabel> to continually repeat the
+audio file until the <guilabel>Stop Play</guilabel> option is
+selected. To stop playing the file, select the
+<menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Stop Play</guimenuitem></menuchoice> menu option, or
+<mousebutton>Right</mousebutton> click on the system tray icon
+and choose
+<menuchoice><guimenuitem>Stop Play</guimenuitem></menuchoice>
+from the context menu. If you wish, you can set up a global
+shortcut key for this action.</para>
+</listitem>
+
+<listitem>
+<para>Check <guilabel>Volume</guilabel> and adjust the slider
+control if you want to adjust the volume at which the audio file is
+played.</para>
+</listitem>
+
+<listitem>
+<para>If you wish, you can fade the volume. Fading means to start
+playing the audio file at one volume and gradually change to the final
+volume, over a specified time interval. The final volume is that
+entered in <guilabel>Volume</guilabel> above. To enable fade, check
+<guilabel>Fade</guilabel>, and then enter the fade period in seconds
+in the <guilabel>Fade time</guilabel> field, and adjust the
+<guilabel>Initial volume</guilabel> slider.</para>
+</listitem>
+</itemizedlist>
+</sect3>
 </sect2>
 
 <sect2>
@@ -1770,7 +1831,9 @@ if it had been scheduled in the normal way.</para>
 
 <para>Press the <guibutton>OK</guibutton> button
 when all details are correct, to add the alarm to the scheduled
-list.</para>
+list. Note that when editing an existing alarm, the
+<guibutton>OK</guibutton> button is disabled while no changes have
+been made.</para>
 
 </sect2>
 </sect1>
@@ -1964,6 +2027,20 @@ alarm.</action></para>
 <listitem><para><action>Displays the list of alarm templates in a
 menu. When you select one, the Alarm Edit dialog is opened, preset
 with that template's details.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Stop Play</guimenuitem></menuchoice></term>
+<listitem><para><action>Halts playback of the audio file currently
+playing.</action></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice><guimenuitem>Spread Windows</guimenuitem></menuchoice></term>
+<listitem><para><action>Spreads alarm and error message windows across
+the screen, or groups them together again.</action></para>
 </listitem>
 </varlistentry>
 
@@ -2340,6 +2417,11 @@ at which you start work each day.</para>
 at which you finish work each day.</para>
 </listitem>
 </itemizedlist>
+</listitem>
+
+<listitem><para><guilabel>KOrganizer event duration</guilabel>: Enter
+the event duration to set in KOrganizer for alarms which are copied to
+KOrganizer. The default duration is zero.</para>
 </listitem>
 
 </itemizedlist>
@@ -2793,10 +2875,7 @@ time.</para>
   option in &kalarm;'s command line. All subsequent command parameters
   and options  are interpreted as forming the command line to execute.
   <option>--exec</option>, <option>--file</option> and
-  <option>--mail</option> cannot be specified with this option.
-  <option>--ack-confirm</option>, <option>--beep</option>,
-  <option>--color</option> and <option>--colorfg</option> are ignored
-  with this option.</entry>
+  <option>--mail</option> cannot be specified with this option.</entry>
 </row>
 <row>
   <entry><option>-f</option>, <option>--file <replaceable>URL</replaceable></option></entry>
@@ -2864,8 +2943,8 @@ time.</para>
 </row>
 <row>
   <entry><option>-p</option>, <option>--play <replaceable>URL</replaceable></option></entry>
-  <entry>Specify the path or &URL; of an audio file to be played once
-  when the alarm message is displayed. 
+  <entry>Specify the path or &URL; of an audio file to be played once,
+  either as an audio alarm or when the alarm message is displayed. 
   <option>--play-repeat</option>, <option>--beep</option> and
   <option>--speak</option> cannot be specified with this
   option.</entry>
@@ -2873,7 +2952,8 @@ time.</para>
 <row>
   <entry><option>-P</option>, <option>--play-repeat <replaceable>URL</replaceable></option></entry>
   <entry>Specify the path or &URL; of an audio file to be played
-  repeatedly for as long as the alarm message is displayed.
+  repeatedly, either until <guilabel>Stop Play</guilabel> is used, or
+  for as long as the alarm message is displayed.
   <option>--play</option>, <option>--beep</option> and
   <option>--speak</option> cannot be specified with this
   option.</entry>
@@ -2982,7 +3062,8 @@ time.</para>
 </informaltable>
 
 <para>Either a message text, <option>--file</option>,
-<option>--exec</option> or <option>--exec-display</option> must be
+<option>--exec</option>, <option>--exec-display</option>,
+<option>--play</option> or <option>--play-repeat</option> must be
 specified; except as noted above, all the options are optional.</para>
 
 <para>Two alternative examples which display a multi-line message with
@@ -3016,6 +3097,11 @@ a red background at 10 p.m. on the 27th of this month are:</para>
   <entry><option>--edit <replaceable>eventID</replaceable></option></entry>
   <entry>Display the Alarm Edit dialog to edit the alarm with the
   specified event ID.</entry>
+</row>
+<row>
+  <entry><option>--edit-new-audio</option></entry>
+  <entry>Display the Alarm Edit dialog, in order to edit a new audio
+  alarm.</entry>
 </row>
 <row>
   <entry><option>--edit-new-command</option></entry>
@@ -4094,6 +4180,198 @@ identical to
 </refsect1>
 </refentry>
 
+
+<refentry id="scheduleAudio">
+<refmeta>
+<refentrytitle>scheduleAudio</refentrytitle>
+</refmeta>
+<refnamediv>
+<refname>scheduleAudio</refname>
+<refpurpose>schedule a new alarm which executes a shell
+command.</refpurpose>
+</refnamediv>
+<refsynopsisdiv>
+<synopsis>
+bool scheduleAudio(const QString&amp; <replaceable>audioURL</replaceable>,
+                   int <replaceable>volumePercent</replaceable>,
+                   const QString&amp; <replaceable>startDateTime</replaceable>,
+                   int <replaceable>lateCancel</replaceable>,
+                   unsigned <replaceable>flags</replaceable>,
+                   const QString&amp; <replaceable>recurrence</replaceable>,
+                   int <replaceable>subRepeatInterval</replaceable>, 
+                   int <replaceable>subRepeatCount</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleAudio(const QString&amp; <replaceable>audioURL</replaceable>,
+                   int <replaceable>volumePercent</replaceable>,
+                   const QString&amp; <replaceable>startDateTime</replaceable>,
+                   int <replaceable>lateCancel</replaceable>,
+                   unsigned <replaceable>flags</replaceable>,
+                   int <replaceable>recurType</replaceable>,
+                   int <replaceable>recurInterval</replaceable>,
+                   int <replaceable>recurCount</replaceable>)
+</synopsis>
+<synopsis>
+bool scheduleAudio(const QString&amp; <replaceable>audioURL</replaceable>,
+                   int <replaceable>volumePercent</replaceable>,
+                   const QString&amp; <replaceable>startDateTime</replaceable>,
+                   int <replaceable>lateCancel</replaceable>,
+                   unsigned <replaceable>flags</replaceable>,
+                   int <replaceable>recurType</replaceable>,
+                   int <replaceable>recurInterval</replaceable>,
+                   const QString&amp; <replaceable>endDateTime</replaceable>)
+</synopsis>
+
+<refsect2>
+<title>Parameters</title>
+<variablelist>
+<varlistentry>
+<term><parameter>audioURL</parameter></term>
+<listitem>
+<para>Specifies the audio file which is to be played.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>volumePercent</parameter></term>
+<listitem>
+<para>Specifies the volume level to use, as a percentage of full
+volume. Specify -1 to use the default volume.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>startDateTime</parameter></term>
+<listitem>
+<para>Specifies the scheduled date, or date and time, at which the
+message should be displayed. For a date-only alarm, the string should
+be in the format <replaceable>YYYY-MM-DD [TZ]</replaceable> (as
+returned by <methodname>QDate::toString(Qt::ISODate)</methodname>). For
+an alarm with a date and time, the string should be in the format
+<replaceable>YYYY-MM-DDTHH:MM[:SS] [TZ]</replaceable> (as returned by
+<methodname>QDateTime::toString(Qt::ISODate)</methodname>) or
+<replaceable>HH:MM[:SS] [Clock]</replaceable> (as returned by
+<methodname>QTime::toString(Qt::ISODate)</methodname>). If no date is
+specified, today's date is used. Note that any seconds value is
+ignored.</para>
+
+<para>If no time zone is specified, the local system time zone is
+assumed. If a time zone specifier <replaceable>TZ</replaceable> is
+present, it may be the name of a system time zone (&eg;
+<userinput>Europe/London</userinput>), <userinput>UTC</userinput>
+representing the UTC time zone, or <userinput>Clock</userinput> to use
+the local computer clock and ignore time zones.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>lateCancel</parameter></term>
+<listitem>
+<para>Causes the alarm to be canceled if it cannot be triggered within
+the specified number of minutes after the alarm's scheduled time. If
+the value is 0, the alarm will not be canceled no matter how late it
+is triggered.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>flags</parameter></term>
+<listitem>
+<para>Specifies the logical OR of the desired alarm flags. The flag
+bits are those defined in class <classname>KAlarmIface</classname> in
+<filename>kalarmiface.h</filename>. Note that not all flag bits are
+applicable to command alarms.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>recurrence</parameter></term>
+<listitem>
+<para>Specifies a regular recurrence for the alarm, using iCalendar
+syntax as defined in
+<ulink url="http://www.w3.org/2002/12/cal/rfc2445.html">RFC2445</ulink>.
+For example, <quote>FREQ=MONTHLY;COUNT=4;INTERVAL=3;BYDAY=-1MO</quote>
+would specify 4 repetitions at 3-monthly intervals on the last Monday
+of the month. For a non-recurring alarm, specify an empty
+string.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>recurType</parameter></term>
+<listitem>
+<para>Specifies the recurrence type for the alarm. The permissible
+values are MINUTELY, DAILY, WEEKLY, MONTHLY, YEARLY. These
+are defined in class <classname>KAlarmIface</classname> in
+<filename>kalarmiface.h</filename>. Monthly recurrences are of the
+day of the month type, and yearly recurrences are of the date in
+the year type, with the date in both cases taken from the
+<parameter>startDateTime</parameter> parameter.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>recurInterval</parameter></term>
+<listitem>
+<para>Specifies the number of periods
+(minutes/days/weeks/months/years as specified by
+<parameter>recurType</parameter>) between recurrences of the
+alarm.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>recurCount</parameter></term>
+<listitem>
+<para>Specifies the number of times that the alarm should be
+repeated. Specify -1 to repeat the alarm indefinitely.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>endDateTime</parameter></term>
+<listitem>
+<para>Specifies the end date, or date and time, for recurrences of the
+alarm. If <parameter>startDateTime</parameter> includes a time, this
+parameter must also include a time; if <parameter>startDateTime</parameter>
+contains only a date, this parameter must also contain only a
+date. It must not contain a time zone specifier; the same time zone as
+for <parameter>startDateTime</parameter> is used to interpret this
+parameter's value.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>subRepeatInterval</parameter></term>
+<listitem>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><parameter>subRepeatCount</parameter></term>
+<listitem>
+<para>Specifies the number of sub-repetitions of the alarm,
+including the initial occurrence.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</refsect2>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+<para><function>scheduleAudio()</function> is a D-Bus call to
+schedule the specified audio file to be played at the specified date
+and time. Apart from specifying a volume and omitting the message
+color and font parameters, its usage is identical to
+<link linkend="scheduleMessage-descrip"><function>scheduleMessage</function></link>
+- see the description of that function for further details.</para>
+</refsect1>
+</refentry>
+
 <refentry id="dbus_edit">
 <refmeta>
 <refentrytitle>edit</refentrytitle>
@@ -4162,7 +4440,7 @@ bool editNew(const QString&amp; <replaceable>templateName</replaceable>)
 <term><parameter>type</parameter></term>
 <listitem>
 <para>Specifies the alarm type. The permissible values are DISPLAY,
-COMMAND, EMAIL. These are defined in class
+COMMAND, EMAIL, AUDIO. These are defined in class
 <classname>KAlarmIface</classname> in
 <filename>kalarmiface.h</filename>.</para>
 </listitem>
@@ -4420,8 +4698,9 @@ application, which has been available for &kde; 2 onwards.
 
 &install.intro.documentation;
 
-<para>&kalarm; is available for &kde; 2 and as a standalone package for
-&kde; 3 from <ulink url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>
+<para>&kalarm; is available for &kde; 2 and as standalone packages for
+&kde; 3 and &kde; 4 from
+<ulink url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>
 </para>
 
 </sect1>
@@ -4450,7 +4729,7 @@ alarm messages when they are displayed.</para>
 depending on your platform and configuration.</para>
 
 <para>You can find a list of changes in the
-<filename>ChangeLog</filename> file, or at <ulink
+<filename>Changelog</filename> file, or at <ulink
 url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>.</para>
 </sect1>
 
