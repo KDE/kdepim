@@ -52,6 +52,9 @@
 #include <grantlee/context.h>
 
 // KDE
+#include <KAction>
+#include <KActionCollection>
+#include <KBookmarkMenu>
 #include <kdescendantsproxymodel.h>
 #include <KFileDialog>
 #include <KLocale>
@@ -60,14 +63,13 @@
 #include <KStandardDirs>
 #include <KTextEdit>
 #include <KGlobalSettings>
-#include <KAction>
-#include <KActionCollection>
 #include <KXMLGUIClient>
 
 // KMime
 #include <KMime/KMimeMessage>
 
 // KJots
+#include "kjotsbookmarks.h"
 #include "kjotsmodel.h"
 #include "kjotsedit.h"
 #include "kjotstreeview.h"
@@ -270,11 +272,18 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
   action->setEnabled( false );
 
-  action = actionCollection->addAction("paste_plain_text");
-  action->setText(i18nc("@action Paste the text in the clipboard without rich text formatting.", "Paste Plain Text"));
-  connect(action, SIGNAL(triggered()), editor, SLOT(pastePlainText()));
+  action = actionCollection->addAction( "paste_plain_text" );
+  action->setText( i18nc( "@action Paste the text in the clipboard without rich text formatting.", "Paste Plain Text" ) );
+  connect( action, SIGNAL(triggered()), editor, SLOT(pastePlainText()) );
 
-  KStandardAction::preferences(this, SLOT(configure()), actionCollection);
+  KStandardAction::preferences( this, SLOT(configure()), actionCollection );
+
+  bookmarkMenu = actionCollection->add<KActionMenu>( "bookmarks" );
+  bookmarkMenu->setText( i18n( "&Bookmarks" ) );
+  KJotsBookmarks* bookmarks = new KJotsBookmarks( treeview );
+  /*KBookmarkMenu *bmm =*/ new KBookmarkMenu(
+      KBookmarkManager::managerForFile( KStandardDirs::locateLocal( "data","kjots/bookmarks.xml" ), "kjots" ),
+      bookmarks, bookmarkMenu->menu(), actionCollection );
 
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 }

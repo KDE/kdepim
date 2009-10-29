@@ -33,6 +33,7 @@ public:
   KJotsTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
   void delayedInitialization();
+  QString captionForSelection( const QString &sep ) const;
 
 protected:
   virtual void contextMenuEvent( QContextMenuEvent *event );

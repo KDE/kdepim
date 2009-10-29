@@ -96,6 +96,31 @@ void KJotsTreeView::delayedInitialization()
       this, SLOT(changeColor()));
 }
 
+QString KJotsTreeView::captionForSelection( const QString &sep ) const
+{
+  QString caption;
+
+  QModelIndexList selection = selectionModel()->selectedRows();
+
+  int selectionSize = selection.size();
+  if ( selectionSize > 1 ) {
+    caption = i18n("Multiple selections");
+  } else if ( selectionSize == 1 ) {
+    QModelIndex index = selection.at( 0 );
+    while ( index.isValid() ) {
+      QModelIndex parentBook = index.parent();
+
+      if ( parentBook.isValid() ) {
+        caption = sep + index.data().toString() + caption;
+      } else {
+        caption = index.data().toString() + caption;
+      }
+      index = parentBook;
+    }
+  }
+  return caption;
+}
+
 void KJotsTreeView::renameEntry()
 {
   QModelIndexList rows = selectionModel()->selectedRows();

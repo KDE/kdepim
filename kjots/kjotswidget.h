@@ -34,10 +34,11 @@ class QTextCursor;
 class QStackedWidget;
 class QModelIndex;
 
+class KActionCollection;
+class KActionMenu;
+class KJob;
 class KSelectionProxyModel;
 class KTextEdit;
-class KActionCollection;
-class KJob;
 class KXMLGUIClient;
 
 namespace Akonadi
@@ -107,6 +108,7 @@ private:
   KJotsEdit      *editor;
   QTextBrowser   *browser;
   QStackedWidget *stackedWidget;
+  KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;
   KSelectionProxyModel *selProxy;
   Grantlee::FileSystemTemplateLoader::Ptr m_loader;

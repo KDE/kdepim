@@ -26,22 +26,22 @@
 
 #include <kbookmarkmanager.h>
 
-class Bookshelf;
+class KJotsTreeView;
 
 class KJotsBookmarks : public QObject, public KBookmarkOwner
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-    explicit KJotsBookmarks(Bookshelf* shelf);
+    explicit KJotsBookmarks( KJotsTreeView *treeView );
     ~KJotsBookmarks();
 
     virtual QString currentUrl() const;
     virtual QString currentTitle() const;
-    virtual void openBookmark(const KBookmark & bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km);
+    virtual void openBookmark( const KBookmark & bm, Qt::MouseButtons mb, Qt::KeyboardModifiers km );
 
 private:
-    Bookshelf *bookshelf;
+    KJotsTreeView *m_treeView;
 };
 
 #endif
