@@ -38,6 +38,8 @@
 #include <utils/input.h>
 #include <utils/path-helper.h>
 
+#include <kleo/cryptobackendfactory.h>
+
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KGlobal>
@@ -137,7 +139,7 @@ shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) co
 // static
 std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefinitions() {
     std::vector< shared_ptr<ArchiveDefinition> > result;
-    if ( const KSharedConfigPtr config = KGlobal::config() ) {
+    if ( KConfig * config = CryptoBackendFactory::instance()->configObject() ) {
         const QStringList groups = config->groupList().filter( QRegExp(QLatin1String("^Archive Definition #")) );
         result.reserve( groups.size() );
         Q_FOREACH( const QString & group, groups )
