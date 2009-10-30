@@ -31,6 +31,7 @@
 
 class QTextBrowser;
 class QTextCursor;
+class QTextEdit;
 class QStackedWidget;
 class QModelIndex;
 
@@ -57,6 +58,8 @@ class KJotsWidget : public QWidget
 public:
   KJotsWidget( QWidget *parent, KXMLGUIClient *xmlGuiclient, Qt::WindowFlags f = 0 );
   ~KJotsWidget();
+
+  QTextEdit* activeEditor();
 
 public slots:
   void prevPage();
@@ -101,6 +104,7 @@ private slots:
   void newBookResult( KJob *job );
 
   void copySelectionToTitle();
+  void copy();
   void configure();
 
 private:

@@ -257,7 +257,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
   action->setEnabled( false );
 
-  action = KStandardAction::copy( editor, SLOT(copy()), actionCollection );
+  action = KStandardAction::copy( this, SLOT(copy()), actionCollection );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
   connect( browser, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
   action->setEnabled( false );
@@ -292,6 +292,18 @@ void KJotsWidget::delayedInitialization()
 {
     treeview->delayedInitialization();
     editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
+}
+
+inline QTextEdit* KJotsWidget::activeEditor() {
+  if ( browser->isVisible() ) {
+    return browser;
+  } else {
+    return editor;
+  }
+}
+
+void KJotsWidget::copy() {
+  activeEditor()->copy();
 }
 
 void KJotsWidget::configure()
