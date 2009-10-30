@@ -92,7 +92,7 @@ SignEncryptFilesCommand::Private::Private( SignEncryptFilesCommand * qq, KeyList
       shared_qq( qq, kdtools::nodelete() ),
       controller()
 {
-    controller.setOperationMode( SignEncryptFilesController::SignAllowed | SignEncryptFilesController::EncryptAllowed );
+    controller.setOperationMode( SignEncryptFilesController::SignAllowed | SignEncryptFilesController::EncryptAllowed | SignEncryptFilesController::ArchiveAllowed );
 }
 
 SignEncryptFilesCommand::Private::~Private() { kDebug(); }
