@@ -124,7 +124,9 @@ ArchiveDefinition::~ArchiveDefinition() {}
 
 shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) const {
     const QString base = heuristicBaseDirectory( files );
+    qDebug() << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo( base, files );
+    qDebug() << "relative" << relative;
     return Input::createFromProcessStdOut( doGetCommand(),
                                            doGetArguments( relative ),
                                            QDir( base ) );

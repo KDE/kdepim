@@ -52,6 +52,7 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QProcess>
+#include <QDebug>
 
 #include <errno.h>
 
@@ -223,6 +224,9 @@ ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList &
       m_arguments( args ),
       m_proc( new QProcess )
 {
+    qDebug() << "ProcessStdOutInput:" << "\n"
+        "cd" << wd.absolutePath() << "\n" <<
+        cmd << args;
     m_proc->setWorkingDirectory( wd.absolutePath() );
     m_proc->start( cmd, args, QIODevice::ReadOnly );
     if ( !m_proc->waitForStarted() )
