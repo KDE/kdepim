@@ -135,6 +135,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   treeview->setSelectionMode( QAbstractItemView::ExtendedSelection );
   treeview->setEditTriggers( QAbstractItemView::DoubleClicked );
 
+  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+
   selProxy = new KSelectionProxyModel( treeview->selectionModel(), this );
   selProxy->setSourceModel( m_kjotsModel );
 
@@ -143,7 +145,6 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( selProxy, SIGNAL( rowsInserted(const QModelIndex &, int, int)), SLOT(renderSelection()) );
   connect( selProxy, SIGNAL( rowsRemoved(const QModelIndex &, int, int)), SLOT(renderSelection()) );
 
-  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
 
   stackedWidget = new QStackedWidget( splitter );
 
@@ -669,8 +670,13 @@ void KJotsWidget::renderSelection()
         return;
 
       KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
+      editor->clear();
       editor->setText( page->mainBodyPart()->decodedText() );
+      QTextCursor textCursor = editor->textCursor();
+      textCursor.setPosition( idx.data( KJotsModel::DocumentCursorPositionRole ).toInt() );
+      editor->setTextCursor( textCursor );
       stackedWidget->setCurrentWidget( editor );
+      editor->setFocus();
       return;
     }
   }
@@ -824,13 +830,16 @@ bool KJotsWidget::canGoPreviousBook() const
 
 void KJotsWidget::selectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-  Q_UNUSED( selected );
-  Q_UNUSED( deselected );
+//   Q_UNUSED( selected );
+//   Q_UNUSED( deselected );
 
   emit canGoNextBookChanged( canGoPreviousBook() );
   emit canGoNextPageChanged( canGoNextPage() );
   emit canGoPreviousBookChanged( canGoPreviousBook() );
   emit canGoPreviousPageChanged( canGoPreviousPage() );
+
+  if ( deselected.size() == 1 )
+    treeview->model()->setData( deselected.indexes().first(), editor->textCursor().position(), KJotsModel::DocumentCursorPositionRole );
 }
 
 /*!

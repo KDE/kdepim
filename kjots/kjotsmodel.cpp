@@ -115,11 +115,11 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
 {
   if ( role == Qt::EditRole )
   {
-    Item item = index.data(ItemRole).value<Item>();
+    Item item = index.data( ItemRole ).value<Item>();
 
     if ( !item.isValid() )
     {
-      Collection col = index.data(CollectionRole).value<Collection>();
+      Collection col = index.data( CollectionRole ).value<Collection>();
       col.setName( value.toString() );
       return EntityTreeModel::setData(index, QVariant::fromValue( col ), CollectionRole );
     }
@@ -141,13 +141,19 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
   {
     // Set as attribute instead.
 
-    Item item = index.data(ItemRole).value<Item>();
+    Item item = index.data( ItemRole ).value<Item>();
 
     if ( item.isValid() )
     {
       m_colors[ item.id() ] = value.value<QColor>();
       return true;
     }
+  }
+
+  if ( role == KJotsModel::DocumentCursorPositionRole )
+  {
+    Item item = index.data( ItemRole ).value<Item>();
+    m_cursorPositions.insert( item.id(), value.toInt() );
   }
 
   return EntityTreeModel::setData(index, value, role);
@@ -166,6 +172,18 @@ QVariant KJotsModel::data(const QModelIndex &index, int role) const
     Item item = EntityTreeModel::data(index, ItemRole).value<Item>();
     if ( item.isValid() && m_colors.contains( item.id() ) )
       return m_colors.value( item.id() );
+  }
+
+  if ( role == KJotsModel::DocumentCursorPositionRole )
+  {
+    Item item = EntityTreeModel::data(index, EntityTreeModel::ItemRole).value<Item>();
+    if (!item.isValid())
+      return 0;
+
+    if ( m_cursorPositions.contains( item.id() ) )
+      return m_cursorPositions.value( item.id() );
+
+    return 0;
   }
 
   return EntityTreeModel::data(index, role);
