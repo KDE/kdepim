@@ -30,6 +30,7 @@ set( messagecomposer_src
 
 include_directories(
     ${Boost_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/libkleo
 )
 
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
