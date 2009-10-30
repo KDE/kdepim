@@ -73,7 +73,6 @@
 
 using namespace GpgME;
 using namespace Kleo;
-using namespace boost;
 
 /****************************************************************************
 **
@@ -674,7 +673,7 @@ namespace {
     // sorts 'keys' such that parent always come before their children:
     std::vector<Key> topological_sort( const std::vector<Key> & keys ) {
 
-        adjacency_list<> graph( keys.size() );
+        boost::adjacency_list<> graph( keys.size() );
 
         // add edges from children to parents:
         for ( unsigned int i = 0, end = keys.size() ; i != end ; ++i ) {
