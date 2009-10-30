@@ -243,7 +243,7 @@ class StandardContactActionManager::Private
 };
 
 StandardContactActionManager::StandardContactActionManager( KActionCollection *actionCollection, QWidget *parent )
-  : d( new Private( actionCollection, parent, this ) )
+  : QObject( parent ), d( new Private( actionCollection, parent, this ) )
 {
 }
 
