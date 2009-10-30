@@ -47,7 +47,6 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/gnupg-helper.h>
-#include <utils/path-helper.h>
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>
@@ -1431,10 +1430,6 @@ void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
 
 WId AssuanCommand::parentWId() const {
     return wid_from_string( option("window-id").toString() );
-}
-
-QString AssuanCommand::heuristicBaseDirectory() const {
-    return Kleo::heuristicBaseDirectory( fileNames() );
 }
 
 #include "assuanserverconnection.moc"
