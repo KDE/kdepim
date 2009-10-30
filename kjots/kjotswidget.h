@@ -29,6 +29,7 @@
 #include <grantlee/templateloader.h>
 #include <QItemSelection>
 
+class QCheckBox;
 class QTextBrowser;
 class QTextCursor;
 class QTextEdit;
@@ -37,7 +38,9 @@ class QModelIndex;
 
 class KActionCollection;
 class KActionMenu;
+class KFindDialog;
 class KJob;
+class KReplaceDialog;
 class KSelectionProxyModel;
 class KTextEdit;
 class KXMLGUIClient;
@@ -85,6 +88,7 @@ protected:
   QString getThemeFromUser();
 
   void selectNext( int role, int step );
+  int search( bool );
 
 protected slots:
   void renderSelection();
@@ -107,6 +111,19 @@ private slots:
   void copy();
   void configure();
 
+  void onShowSearch();
+  void onUpdateSearch();
+  void onStartSearch();
+  void onRepeatSearch();
+  void onEndSearch();
+
+  void onShowReplace();
+  void onUpdateReplace();
+  void onStartReplace();
+  void onRepeatReplace();
+  void onEndReplace();
+
+
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
@@ -118,6 +135,18 @@ private:
   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
+
+  KFindDialog *searchDialog;
+  QStringList searchHistory;
+  int searchBeginPos, searchEndPos, searchPos;
+  QCheckBox *searchAllPages;
+
+  KReplaceDialog *replaceDialog;
+  QStringList replaceHistory;
+  int replaceBeginPos, replaceEndPos, replacePos;
+  QCheckBox *replaceAllPages;
+  // Or Item?
+  QModelIndex replaceStartPage;
 };
 
 #endif
