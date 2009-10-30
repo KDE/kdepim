@@ -22,6 +22,7 @@
 
 #include "jobbase.h"
 #include "messagecomposer_export.h"
+#include "kleo/enum.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
@@ -29,6 +30,9 @@
 #include <kmime/kmime_message.h>
 
 #include <messagecore/attachmentpart.h>
+
+#include <vector>
+#include <gpgme++/key.h>
 
 namespace boost {
   template <typename T> class shared_ptr;
@@ -61,6 +65,11 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
     void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
     void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
+    
+    void setSignAndEncrypt( const bool doSign, const bool doEncrypt );
+    void setMessageCryptoFormat( Kleo::CryptoMessageFormat format );
+    void setSigningKeys( std::vector<GpgME::Key>& signers );
+    void setEncryptionKeys( QStringList recipients, std::vector<GpgME::Key> keys );
 
   public Q_SLOTS:
     virtual void start();
@@ -71,6 +80,8 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     Q_PRIVATE_SLOT( d_func(), void doStart() )
     Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void contentJobPreSignFinished(KJob*) )
+    
 };
 
 }

@@ -26,6 +26,7 @@
 #include "textpart.h"
 #include "maintextjob.h"
 #include "multipartjob.h"
+#include "cryptojob.h"
 #include "skeletonmessagejob.h"
 
 #include <QTimer>
@@ -42,6 +43,8 @@ class Message::ComposerPrivate : public JobBasePrivate
       : JobBasePrivate( qq )
       , started( false )
       , finished( false )
+      , sign( false )
+      , encrypt( false )
       , globalPart( 0 )
       , infoPart( 0 )
       , textPart( 0 )
@@ -56,10 +59,22 @@ class Message::ComposerPrivate : public JobBasePrivate
     void skeletonJobFinished( KJob *job ); // slot
     void composeStep2();
     void contentJobFinished( KJob *job ); // slot
+    void contentJobPreSignFinished( KJob *job ); // slot
     void composeStep3();
 
     bool started;
     bool finished;
+    bool sign;
+    bool encrypt;
+
+    Kleo::CryptoMessageFormat format;
+    std::vector<GpgME::Key> signers;
+    QStringList encRecipients;
+    std::vector<GpgME::Key> encKeys;
+    
+    // if some of the attachments have a different
+    // sign/encrypt policy than the message itself
+    bool attachmentsWithDifferentPolicy;
     KMime::Message::Ptr resultMessage;
 
     // Stuff that the application plays with.
@@ -67,6 +82,7 @@ class Message::ComposerPrivate : public JobBasePrivate
     InfoPart *infoPart;
     TextPart *textPart;
     AttachmentPart::List attachmentParts;
+
 
     // Stuff that we play with.
     KMime::Message *skeletonMessage;
@@ -131,6 +147,11 @@ void ComposerPrivate::composeStep2()
   if( attachmentParts.isEmpty() ) {
     // We have no attachments.  Use the content given by the MainTextJob.
     mainJob = mainTextJob;
+    if( sign || encrypt ) {
+        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreSignFinished(KJob*)) );
+    } else {
+        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
+    }
   } else {
     // We have attachments.  Create a multipart/mixed content.
     MultipartJob *multipartJob = new MultipartJob( q );
@@ -138,12 +159,33 @@ void ComposerPrivate::composeStep2()
     multipartJob->appendSubjob( mainTextJob );
     foreach( AttachmentPart::Ptr part, attachmentParts ) {
       multipartJob->appendSubjob( new AttachmentJob( part ) );
-    }
-    mainJob = multipartJob;
+    } // TODO sign and encrypt each attachment potentially differently
+    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
+
   }
   q->addSubjob( mainJob );
-  QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
   mainJob->start();
+}
+
+void ComposerPrivate::contentJobPreSignFinished( KJob *job )
+{
+  Q_Q( Composer );
+
+  // we're signing or encrypting, so add an additional job to the process
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
+
+  kDebug() << "composer is about to start sign/encrypt job!";
+  CryptoJob* seJob = new CryptoJob( q );
+  seJob->setSignEncrypt( sign, encrypt );
+  seJob->setContent( cjob->content() );
+  seJob->setSigningKeys( signers );
+  seJob->setEncryptionItems( encRecipients, encKeys );
+  seJob->setCryptoMessageFormat( format );
+
+  q->addSubjob( seJob );
+  seJob->start();
+  QObject::connect( seJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
 }
 
 void ComposerPrivate::contentJobFinished( KJob *job )
@@ -159,6 +201,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
 
   composeStep3();
 }
+
 
 void ComposerPrivate::composeStep3()
 {
@@ -203,7 +246,7 @@ GlobalPart *Composer::globalPart()
   return d->globalPart;
 }
 
-InfoPart *Composer::infoPart()
+InfoPart* Composer::infoPart()
 {
   Q_D( Composer );
   return d->infoPart;
@@ -249,6 +292,37 @@ void Composer::removeAttachmentPart( AttachmentPart::Ptr part )
   }
 }
 
+void Composer::setSignAndEncrypt( const bool doSign, const bool doEncrypt )
+{
+  Q_D( Composer );
+  d->sign = doSign;
+  d->encrypt = doEncrypt;
+}
+
+
+void Composer::setMessageCryptoFormat( Kleo::CryptoMessageFormat format )
+{
+  Q_D( Composer );
+
+  d->format = format;
+}
+
+void Composer::setSigningKeys( std::vector<GpgME::Key>& signers )
+{
+  Q_D( Composer );
+
+  d->signers = signers;
+}
+
+void Composer::setEncryptionKeys( QStringList recipients, std::vector<GpgME::Key> keys )
+{
+  Q_D( Composer );
+  
+  d->encRecipients = recipients;
+  d->encKeys = keys;
+}
+
+    
 void Composer::start()
 {
   QTimer::singleShot( 0, this, SLOT(doStart()) );
