@@ -1331,7 +1331,7 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     // here.
     // Do this only when prefering HTML mail, though, since otherwise the attachments are hidden
     // when displaying plain text.
-    if ( !dataHtmli && mReader->htmlMail() ) {
+    if ( !dataHtml && mSource->htmlMail() ) {
       dataHtml = findType( child, "multipart/mixed", false, true );
     }
 
