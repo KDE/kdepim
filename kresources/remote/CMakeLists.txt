@@ -24,7 +24,14 @@ kde4_add_plugin(kcal_remote ${kcal_remote_PART_SRCS})
 
 
 
-target_link_libraries(kcal_remote  ${KDE4_KDECORE_LIBS} kcal_resourceremote ${KDEPIMLIBS_KRESOURCES_LIBS} kdepim )
+target_link_libraries(kcal_remote
+  ${QT_QTGUI_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDEPIMLIBS_KCAL_LIBS}
+  ${KDEPIMLIBS_KRESOURCES_LIBS}
+  kcal_resourceremote
+  kdepim
+)
 
 install(TARGETS kcal_remote  DESTINATION ${PLUGIN_INSTALL_DIR})
 

@@ -1325,6 +1325,16 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node
     // immediate children of this multipart/alternative node.
     // In this case, the HTML node is a child of multipart/related.
     dataHtml = findType( child, "multipart/related", false, true );
+
+    // Still not found? Stupid apple mail actually puts the attachments inside of the
+    // multipart/alternative, which is wrong. Therefore we also have to look for multipart/mixed
+    // here.
+    // Do this only when prefering HTML mail, though, since otherwise the attachments are hidden
+    // when displaying plain text.
+    if ( !dataHtmli && mReader->htmlMail() ) {
+      dataHtml = findType( child, "multipart/mixed", false, true );
+    }
+
   }
   KMime::Content* dataPlain = findType( child, "text/plain", false, true );
 

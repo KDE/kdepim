@@ -59,12 +59,15 @@ QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( Context * context )
 
 QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {}
 
-static QGpgMEDecryptVerifyJob::result_type decrypt_verify( Context * ctx, const weak_ptr<QIODevice> & cipherText_, const weak_ptr<QIODevice> & plainText_ ) {
+static QGpgMEDecryptVerifyJob::result_type decrypt_verify( Context * ctx, QThread * thread, const weak_ptr<QIODevice> & cipherText_, const weak_ptr<QIODevice> & plainText_ ) {
 
   kDebug();
 
   const shared_ptr<QIODevice> cipherText = cipherText_.lock();
   const shared_ptr<QIODevice> plainText = plainText_.lock();
+
+  const _detail::ToThreadMover ctMover( cipherText, thread );
+  const _detail::ToThreadMover ptMover( plainText,  thread );
 
   QGpgME::QIODeviceDataProvider in( cipherText );
   const Data indata( &in );
@@ -96,7 +99,7 @@ static QGpgMEDecryptVerifyJob::result_type decrypt_verify_qba( Context * ctx, co
   buffer->setData( cipherText );
   if ( !buffer->open( QIODevice::ReadOnly ) )
     assert( !"This should never happen: QBuffer::open() failed" );
-  return decrypt_verify( ctx, buffer, shared_ptr<QIODevice>() );
+  return decrypt_verify( ctx, 0, buffer, shared_ptr<QIODevice>() );
 }
 
 Error QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
@@ -105,11 +108,7 @@ Error QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
 }
 
 void QGpgMEDecryptVerifyJob::start( const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-  // the arguments passed here to the functor are stored in a QFuture, and are not
-  // necessarily destroyed (living outside the UI thread) at the time the result signal
-  // is emitted and the signal receiver wants to clean up IO devices.
-  // To avoid such races, we pass weak_ptr's to the functor.
-  run( bind( &decrypt_verify, _1, weak_ptr<QIODevice>( cipherText ), weak_ptr<QIODevice>( plainText ) ) );
+  run( bind( &decrypt_verify, _1, _2, _3, _4 ), cipherText, plainText );
 }
 
 std::pair<GpgME::DecryptionResult,GpgME::VerificationResult>

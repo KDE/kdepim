@@ -11,6 +11,7 @@ X-KDE-Weight=200
 
 Name=LDAP Server Settings
 Name[en_GB]=LDAP Server Settings
+Name[es]=Configuración del servidor LDAP
 Name[et]=LDAP serveri seadistused
 Name[gl]=Configuración do servidor de LDAP
 Name[nb]=LDAP tjenerinnstillinger
@@ -24,6 +25,7 @@ Name[uk]=Параметри серверів LDAP
 Name[x-test]=xxLDAP Server Settingsxx
 Comment=Configure the available LDAP servers
 Comment[en_GB]=Configure the available LDAP servers
+Comment[es]=Configurar los servidores LDAP disponibles
 Comment[et]=Saadaolevate LDAP serverite seadistamine
 Comment[gl]=Configurar os servidores de LDAP dispoñíbeis
 Comment[nb]=Sett opp de tilgjengelige LDAP-tjenerne

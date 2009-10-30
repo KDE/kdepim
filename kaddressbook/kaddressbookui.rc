@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="4">
+<kpartgui name="kaddressbook" version="6">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -35,8 +35,9 @@
 
     <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
       <Action name="akonadi_contact_item_edit" append="edit_edit_merge"/>
-      <Action name="akonadi_paste" append="edit_paste_merge"/>
+      <Action name="akonadi_item_cut" append="edit_cut_merge"/>
       <Action name="akonadi_item_copy" append="edit_copy_merge"/>
+      <Action name="akonadi_paste" append="edit_paste_merge"/>
       <Separator/>
       <Action name="akonadi_item_delete" append="edit_delete_merge"/>
       <Separator/>
@@ -53,6 +54,7 @@
     <Action name="akonadi_collection_create"/>
     <Action name="akonadi_collection_delete"/>
     <Separator/>
+    <Action name="akonadi_collection_cut"/>
     <Action name="akonadi_collection_copy"/>
     <Action name="akonadi_paste"/>
     <Separator/>
@@ -68,6 +70,7 @@
     <Action name="akonadi_contact_group_create"/>
     <Action name="akonadi_contact_item_edit"/>
     <Separator/>
+    <Action name="akonadi_item_cut"/>
     <Action name="akonadi_item_copy"/>
     <Action name="akonadi_paste"/>
     <Separator/>

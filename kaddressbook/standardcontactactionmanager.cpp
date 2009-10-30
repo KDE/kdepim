@@ -54,12 +54,16 @@ class StandardContactActionManager::Private
       mGenericManager->action( Akonadi::StandardActionManager::CopyCollections )->setWhatsThis( i18n( "Copy the selected address book folders to the clipboard." ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book Folder" ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setWhatsThis( i18n( "Delete the selected address book folders from the address book." ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutCollections, ki18np( "Cut Address Book Folder", "Cut %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CutCollections )->setWhatsThis( i18n( "Cut the selected address book folders from the address book." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Folder Properties..." ) );
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties)->setWhatsThis( i18n( "Open a dialog to edit the properties of the selected address book folder." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CopyItems )->setWhatsThis( i18n( "Copy the selected contacts to the clipboard." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
       mGenericManager->action( Akonadi::StandardActionManager::DeleteItems )->setWhatsThis( i18n( "Delete the selected contacts from the address book." ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems, ki18np( "Cut Contact", "Cut %1 Contacts" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CutItems )->setWhatsThis( i18n( "Cut the selected contacts from the address book." ) );
     }
 
     ~Private()
@@ -81,6 +85,8 @@ class StandardContactActionManager::Private
                                               ki18np( "Copy Contact", "Copy %1 Contacts" ) );
               mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                               ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+              mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                              ki18np( "Cut Contact", "Cut %1 Contacts" ) );
               if ( mActions.contains( StandardContactActionManager::EditItem ) )
                 mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Contact..." ) );
             } else if ( mimeType == KABC::ContactGroup::mimeType() ) {
@@ -88,6 +94,8 @@ class StandardContactActionManager::Private
                                               ki18np( "Copy Group", "Copy %1 Groups" ) );
               mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems,
                                               ki18np( "Delete Group", "Delete %1 Groups" ) );
+              mGenericManager->setActionText( Akonadi::StandardActionManager::CutItems,
+                                              ki18np( "Cut Group", "Cut %1 Groups" ) );
               if ( mActions.contains( StandardContactActionManager::EditItem ) )
                 mActions.value( StandardContactActionManager::EditItem )->setText( i18n( "Edit Group..." ) );
             }

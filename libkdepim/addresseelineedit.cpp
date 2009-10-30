@@ -1075,7 +1075,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
     }
   }
   if ( ( obj == this ) &&
-      ( e->type() == QEvent::KeyPress ) &&
+      ( e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease ) &&
       completionBox()->isVisible() ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
     int currentIndex = completionBox()->currentRow();
@@ -1083,20 +1083,24 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
       //kDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
-      QListWidgetItem *itemAbove = completionBox()->item( currentIndex - 1 );
-      if ( itemAbove && itemIsHeader(itemAbove) ) {
+      QListWidgetItem *itemAbove = completionBox()->item( currentIndex );
+      if ( itemAbove && itemIsHeader( itemAbove ) ) {
         // there is a header above is, check if there is even further up
         // and if so go one up, so it'll be selected
-        if ( currentIndex > 1 && completionBox()->item( currentIndex - 2 ) ) {
+        if ( currentIndex > 0 && completionBox()->item( currentIndex - 1 ) ) {
           //kDebug() <<"EVENTFILTER: Qt::Key_Up -> skipping" << currentIndex - 1;
-          completionBox()->setCurrentRow( currentIndex -2 );
-          completionBox()->item( currentIndex - 2 )->setSelected( true );
-        } else if ( currentIndex == 1 ) {
+          completionBox()->setCurrentRow( currentIndex - 1 );
+          completionBox()->item( currentIndex - 1 )->setSelected( true );
+        } else if ( currentIndex == 0 ) {
           // nothing to skip to, let's stay where we are, but make sure the
           // first header becomes visible, if we are the first real entry
           completionBox()->scrollToItem( completionBox()->item( 0 ) );
           QListWidgetItem *i = completionBox()->item( currentIndex );
           if ( i ) {
+            if ( itemIsHeader( i ) ) {
+              currentIndex++;
+              i = completionBox()->item( currentIndex );
+            }
             completionBox()->setCurrentItem( i );
             i->setSelected( true );
           }
@@ -1106,12 +1110,12 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
     } else if ( ke->key() == Qt::Key_Down ) {
       // same strategy for downwards
       //kDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
-      QListWidgetItem *itemBelow = completionBox()->item( currentIndex + 1 );
+      QListWidgetItem *itemBelow = completionBox()->item( currentIndex );
       if ( itemBelow && itemIsHeader( itemBelow ) ) {
-        if ( completionBox()->item( currentIndex + 2 ) ) {
+        if ( completionBox()->item( currentIndex + 1 ) ) {
           //kDebug() <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
-          completionBox()->setCurrentRow( currentIndex + 2 );
-          completionBox()->item( currentIndex + 2 )->setSelected( true );
+          completionBox()->setCurrentRow( currentIndex + 1 );
+          completionBox()->item( currentIndex + 1 )->setSelected( true );
         } else {
           // nothing to skip to, let's stay where we are
           QListWidgetItem *i = completionBox()->item( currentIndex );

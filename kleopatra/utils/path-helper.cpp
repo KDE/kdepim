@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/importfilescommand.cpp
+    utils/path-helper.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,73 +32,55 @@
 
 #include <config-kleopatra.h>
 
-#include "importfilescommand.h"
+#include "path-helper.h"
 
-#include <commands/importcertificatefromfilecommand.h>
+#include <utils/stl_util.h>
 
-#include <utils/exception.h>
+#include <QString>
+#include <QStringList>
+#include <QFileInfo>
+#include <QDir>
 
-#include <gpgme++/key.h>
+#include <boost/bind.hpp>
 
-#include <gpg-error.h>
-
-#include <KLocale>
-
-#include <QVariant>
-#include <QByteArray>
-#include <QIODevice>
-#include <QList>
-#include <QPointer>
-
-#include <string>
 #include <algorithm>
 
 using namespace Kleo;
 using namespace boost;
 
-class ImportFilesCommand::Private {
-    friend class ::Kleo::ImportFilesCommand;
-    ImportFilesCommand * const q;
-public:
-    Private( ImportFilesCommand * qq ) :
-        q( qq ),
-        command( 0 )
-    {
-        KDAB_SET_OBJECT_NAME( command );
-        command.setAutoDelete( false );
-
-        connect( &command, SIGNAL(finished()), q, SLOT(slotCommandFinished()) );
-        connect( &command, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()) );
-    }
-
-private:
-    void slotCommandFinished() {
-        q->done();
-    }
-    void slotCommandCanceled() {
-        q->done( makeError( GPG_ERR_CANCELED ) );
-    }
-
-private:
-    ImportCertificateFromFileCommand command;
-};
-
-ImportFilesCommand::ImportFilesCommand()
-    : QObject(), AssuanCommandMixin<ImportFilesCommand>(), d( new Private( this ) ) {}
-
-ImportFilesCommand::~ImportFilesCommand() {}
-
-int ImportFilesCommand::doStart() {
-
-    d->command.setParentWId( parentWId() );
-    d->command.setFiles( fileNames() );
-    d->command.start();
-
-    return 0;
+static QString commonPrefix( const QString & s1, const QString & s2 ) {
+    return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
 }
 
-void ImportFilesCommand::doCanceled() {
-    d->command.cancel();
+static QString longestCommonPrefix( const QStringList & sl ) {
+    if ( sl.empty() )
+        return QString();
+    QString result = sl.front();
+    Q_FOREACH( const QString & s, sl )
+        result = commonPrefix( s, result );
+    return result;
 }
 
-#include "moc_importfilescommand.cpp"
+QString Kleo::heuristicBaseDirectory( const QStringList & fileNames ) {
+    const QString candidate = longestCommonPrefix( fileNames );
+    const QFileInfo fi( candidate );
+    if ( fi.isDir() )
+        return candidate;
+    else
+        return fi.absolutePath();
+}
+
+QStringList Kleo::makeRelativeTo( const QString & base, const QStringList & fileNames ) {
+
+    if ( base.isEmpty() )
+        return fileNames;
+    else
+        return makeRelativeTo( QDir( base ), fileNames );
+
+}
+
+QStringList Kleo::makeRelativeTo( const QDir & baseDir, const QStringList & fileNames ) {
+    return kdtools::transform<QStringList>
+        ( fileNames,
+          bind( &QDir::relativeFilePath, &baseDir, _1 ) );
+}

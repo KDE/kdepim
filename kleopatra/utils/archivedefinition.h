@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    decryptverifyfilescontroller.h
+    utils/archivedefinition.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,63 +30,49 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_DECRYPTVERIFYFILESCONTROLLER_H__
-#define __KLEOPATRA_CRYPTO_DECRYPTVERIFYFILESCONTROLLER_H__
+#ifndef __KLEOPATRA_UTILS_ARCHIVEDEFINITION_H__
+#define __KLEOPATRA_UTILS_ARCHIVEDEFINITION_H__
 
-#include <crypto/controller.h>
-
-#include <utils/types.h>
-
-#include <QMetaType>
-
-#include<boost/shared_ptr.hpp>
+#include <QString>
+#include <QStringList>
 
 #include <vector>
 
-class QFile;
-
-namespace GpgME {
-    class VerificationResult;
+namespace boost {
+    template <typename T> class shared_ptr;
 }
 
 namespace Kleo {
-namespace Crypto {
-
-class DecryptVerifyResult;
-
-class DecryptVerifyFilesController : public Controller {
-    Q_OBJECT
-public:
-    explicit DecryptVerifyFilesController( QObject* parent = 0 );
-    explicit DecryptVerifyFilesController( const boost::shared_ptr<const ExecutionContext> & ctx, QObject * parent = 0 );
-
-    ~DecryptVerifyFilesController();
-
-    void setFiles( const QStringList & files );
-    void setOperation( DecryptVerifyOperation op );
-    DecryptVerifyOperation operation() const;
-    void start();
-
-public Q_SLOTS:
-    void cancel();
-
-Q_SIGNALS:
-    void verificationResult( const GpgME::VerificationResult & );
-
-private:
-    /* reimp */ void doTaskDone( const Task * task, const boost::shared_ptr<const Task::Result> & );
-
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotWizardOperationPrepared() )
-    Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-    Q_PRIVATE_SLOT( d, void schedule() )
-};
-
-}
+    class Input;
 }
 
-Q_DECLARE_METATYPE( GpgME::VerificationResult )
+namespace Kleo {
 
-#endif // __KLEOPATRA_CRYPTO_DECRYPTVERIFYFILESCONTROLLER_H__
+    class ArchiveDefinition {
+    protected:
+        ArchiveDefinition( const QString & id, const QString & label, const QStringList & extensions );
+    public:
+        virtual ~ArchiveDefinition();
+
+        QString id() const { return m_id; }
+        QString label() const { return m_label; }
+
+        const QStringList & extensions() const { return m_extensions; }
+
+        boost::shared_ptr<Input> createInput( const QStringList & files ) const;
+
+        static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions();
+
+    private:
+        virtual QString doGetCommand() const = 0;
+        virtual QStringList doGetArguments( const QStringList & files ) const = 0;
+    private:
+        const QString m_id;
+        const QString m_label;
+        const QStringList m_extensions;
+    };
+        
+}
+
+#endif /* __KLEOPATRA_UTILS_ARCHIVEDEFINITION_H__ */
+

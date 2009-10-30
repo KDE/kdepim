@@ -220,7 +220,8 @@ private:
 private:
     shared_ptr<Input> input;
     shared_ptr<Output> output;
-    QString inputFileName, outputFileName;
+    QStringList inputFileNames;
+    QString outputFileName;
     std::vector<Key> signers;
     std::vector<Key> recipients;
 
@@ -237,7 +238,7 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
     : q( qq ),
       input(),
       output(),
-      inputFileName(),
+      inputFileNames(),
       outputFileName(),
       signers(),
       recipients(),
@@ -267,7 +268,19 @@ SignEncryptFilesTask::~SignEncryptFilesTask() {}
 void SignEncryptFilesTask::setInputFileName( const QString & fileName ) {
     kleo_assert( !d->job );
     kleo_assert( !fileName.isEmpty() );
-    d->inputFileName = fileName;
+    d->inputFileNames = QStringList( fileName );
+}
+
+void SignEncryptFilesTask::setInputFileNames( const QStringList & fileNames ) {
+    kleo_assert( !d->job );
+    kleo_assert( !fileNames.empty() );
+    d->inputFileNames = fileNames;
+}
+
+void SignEncryptFilesTask::setInput( const shared_ptr<Input> & input ) {
+    kleo_assert( !d->job );
+    kleo_assert( input );
+    d->input = input;
 }
 
 void SignEncryptFilesTask::setOutputFileName( const QString & fileName ) {
@@ -336,7 +349,7 @@ QString SignEncryptFilesTask::tag() const {
 
 unsigned long long SignEncryptFilesTask::inputSize() const
 {
-    return QFileInfo( d->inputFileName ).size();
+    return d->input ? d->input->size() : 0U ;
 }
 
 void SignEncryptFilesTask::doStart() {
@@ -345,7 +358,7 @@ void SignEncryptFilesTask::doStart() {
         kleo_assert( !d->signers.empty() );
     }
 
-    d->input = Input::createFromFile( d->inputFileName );
+    kleo_assert( d->input );
     d->output = Output::createFromFile( d->outputFileName, d->m_overwritePolicy );
 
     if ( d->encrypt )
@@ -434,9 +447,9 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
             output->finalize();
             outputCreated = true;
             input->finalize();
-            if ( removeInput ) {
-                inputRemoved = QFile::remove( inputFileName );
-            }
+            if ( removeInput )
+                Q_FOREACH( const QString & inputFileName, inputFileNames )
+                    inputRemoved |= QFile::remove( inputFileName );
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
@@ -459,9 +472,9 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
             output->finalize();
             outputCreated = true;
             input->finalize();
-            if ( removeInput ) {
-                inputRemoved = QFile::remove( inputFileName );
-            }
+            if ( removeInput )
+                Q_FOREACH( const QString & inputFileName, inputFileNames )
+                    inputRemoved |= QFile::remove( inputFileName );
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
@@ -484,9 +497,9 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
             output->finalize();
             outputCreated = true;
             input->finalize();
-            if ( removeInput ) {
-                inputRemoved = QFile::remove( inputFileName );
-            }
+            if ( removeInput )
+                Q_FOREACH( const QString & inputFileName, inputFileNames )
+                    inputRemoved |= QFile::remove( inputFileName );
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;

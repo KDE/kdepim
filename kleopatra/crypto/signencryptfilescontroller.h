@@ -69,7 +69,13 @@ namespace Crypto {
             EncryptAllowed = 4,
             EncryptForced = 8,
 
-            EncryptMask = EncryptAllowed|EncryptForced
+            EncryptMask = EncryptAllowed|EncryptForced,
+
+            ArchiveDisallowed = 0,
+            ArchiveAllowed = 16,
+            ArchiveForced = 32,
+
+            ArchiveMask = ArchiveAllowed|ArchiveForced
         };
         void setOperationMode( unsigned int mode );
         unsigned int operationMode() const;

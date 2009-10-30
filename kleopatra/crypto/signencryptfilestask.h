@@ -39,8 +39,6 @@
 
 #include <gpgme++/global.h>
 
-#include <boost/shared_ptr.hpp>
-
 #include <vector>
 
 class QString;
@@ -51,6 +49,14 @@ namespace GpgME {
 
 namespace Kleo {
     class OverwritePolicy;
+    class Input;
+}
+
+namespace boost {
+    template <typename T> class shared_ptr;
+}
+
+namespace Kleo {
 namespace Crypto {
 
     class SignEncryptFilesTask : public Task {
@@ -60,6 +66,8 @@ namespace Crypto {
         ~SignEncryptFilesTask();
 
         void setInputFileName( const QString & fileName );
+        void setInputFileNames( const QStringList & fileNames );
+        void setInput( const boost::shared_ptr<Input> & input );
         void setOutputFileName( const QString & fileName );
         void setSigners( const std::vector<GpgME::Key> & singners );
         void setRecipients( const std::vector<GpgME::Key> & recipients );

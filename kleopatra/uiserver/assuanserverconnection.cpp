@@ -41,12 +41,14 @@
 
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
+#include "sessiondata.h"
 
 #include <models/keycache.h> // :(
 
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/gnupg-helper.h>
+#include <utils/path-helper.h>
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>
@@ -109,20 +111,6 @@
 
 using namespace Kleo;
 using namespace boost;
-
-namespace {
-    struct IOF {
-        QString fileName;
-        shared_ptr<QFile> file;
-    };
-
-    static void close_all( const std::vector<IOF> & ios ) {
-        Q_FOREACH( const IOF & io, ios )
-            if ( io.file && io.file->isOpen() )
-                io.file->close();
-    }
-
-}
 
 static const unsigned int INIT_SOCKET_FLAGS = 3; // says info assuan...
 //static int(*USE_DEFAULT_HANDLER)(assuan_context_t,char*) = 0;
@@ -299,6 +287,8 @@ private:
     }
 
     void bottomHalfDeletion() {
+        if ( sessionId )
+            SessionDataHandler::instance()->exitSession( sessionId );
         cleanup();
         const QPointer<Private> that = this;
         emit q->closed( q );
@@ -341,6 +331,7 @@ private:
         bool ok = false;
         if ( const qulonglong id = rx.cap( 1 ).toULongLong( &ok ) ) {
             if ( ok && id <= std::numeric_limits<unsigned int>::max() ) {
+                SessionDataHandler::instance()->enterSession( id );
                 conn.sessionId = id;
             } else {
                 static const QString errorString = i18n("Parse error: numeric session id too large");
@@ -475,8 +466,8 @@ private:
                 const QFileInfo fi( filePath );
                 if ( !fi.isAbsolute() )
                     throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-                if ( fi.isDir() )
-                    io = Input_or_Output<in>::type::createFromDir( fi.absoluteFilePath() );
+                if ( !fi.isFile() )
+                    throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only files are allowed in INPUT/OUTPUT FILE") );
                 else
                     io = Input_or_Output<in>::type::createFromFile( fi.absoluteFilePath(), true );
 
@@ -528,26 +519,18 @@ private:
             const QFileInfo fi( QFile::decodeName( hexdecode( line ).c_str() ) );
             if ( !fi.isAbsolute() )
                 throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-            const QString filePath = fi.absoluteFilePath();
-
-            if ( fi.exists() && fi.isDir() ) {
-                if ( !fi.isReadable() || !fi.isExecutable() )
-                    throw Exception( gpg_error( GPG_ERR_INV_ARG  ), i18n("Could not access directory \"%1\" for reading", filePath ) );
-                conn.dirs.push_back( filePath );
-                return assuan_process_done( conn.ctx.get(), 0 );
-            }
-
-            const shared_ptr<QFile> file( new QFile( filePath ) );
-            if ( !file->open( QIODevice::ReadOnly ) )
-                throw Exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
-            const IOF io = {
-                filePath, file
-            };
-            conn.files.push_back( io );
+            if ( !fi.exists() )
+                throw gpg_error( GPG_ERR_ENOENT );
+            if ( !fi.isReadable() || fi.isDir() && !fi.isExecutable() )
+                throw gpg_error( GPG_ERR_EPERM );
+            
+            conn.files.push_back( fi.absoluteFilePath() );
 
             return assuan_process_done( conn.ctx.get(), 0 );
         } catch ( const Exception & e ) {
             return assuan_process_done_msg( conn.ctx.get(), e.error().encodedError(), e.message().toUtf8().constData() );
+        } catch ( const gpg_error_t e ) {
+            return assuan_process_done( conn.ctx.get(), e );
         } catch ( ... ) {
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("unknown exception caught").toUtf8().constData() );
         }
@@ -728,10 +711,7 @@ private:
     }
 
     QByteArray dumpFiles() const {
-        QStringList sl;
-        std::transform( files.begin(), files.end(), std::back_inserter( sl ),
-                        bind( &IOF::fileName, _1 ) );
-        return dumpStringList( sl );
+        return dumpStringList( kdtools::copy<QStringList>( files ) );
     }
 
     void cleanup();
@@ -744,7 +724,6 @@ private:
         sessionTitle.clear();
         sessionId = 0;
         mementos.clear();
-        close_all( files );
         files.clear();
         std::for_each( inputs.begin(), inputs.end(),
                        bind( &Input::finalize, _1 ) );
@@ -777,8 +756,7 @@ private:
     std::vector<KMime::Types::Mailbox> senders, recipients;
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
-    std::vector<IOF> files;
-    QStringList dirs;
+    std::vector<QString> files;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
 
@@ -990,7 +968,7 @@ public:
     std::map<std::string,QVariant> options;
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
-    std::vector<IOF> files;
+    std::vector<QString> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
     bool informativeRecipients, informativeSenders;
     GpgME::Protocol bias;
@@ -1082,10 +1060,20 @@ const std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > & AssuanCommand
 }
 
 bool AssuanCommand::hasMemento( const QByteArray & tag ) const {
-    return mementos().count( tag );
+    if ( const unsigned int id = sessionId() )
+        return SessionDataHandler::instance()->sessionData(id)->mementos.count( tag ) || mementos().count( tag ) ;
+    else
+        return mementos().count( tag );
 }
 
 shared_ptr<AssuanCommand::Memento> AssuanCommand::memento( const QByteArray & tag ) const {
+    if ( const unsigned int id = sessionId() ) {
+        const shared_ptr<SessionDataHandler> sdh = SessionDataHandler::instance();
+        const shared_ptr<SessionData> sd = sdh->sessionData(id);
+        const std::map< QByteArray, shared_ptr<Memento> >::const_iterator it = sd->mementos.find( tag );
+        if ( it != sd->mementos.end() )
+            return it->second;
+    }
     const std::map< QByteArray, shared_ptr<Memento> >::const_iterator it = mementos().find( tag );
     if ( it == mementos().end() )
         return shared_ptr<Memento>();
@@ -1103,7 +1091,10 @@ QByteArray AssuanCommand::registerMemento( const QByteArray & tag, const shared_
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
 
-    conn.mementos[tag] = mem;
+    if ( const unsigned int id = sessionId() )
+        SessionDataHandler::instance()->sessionData(id)->mementos[tag] = mem;
+    else
+        conn.mementos[tag] = mem;
     return tag;
 }
 
@@ -1113,6 +1104,8 @@ void AssuanCommand::removeMemento( const QByteArray & tag ) {
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
 
     conn.mementos.erase( tag );
+    if ( const unsigned int id = sessionId() )
+        SessionDataHandler::instance()->sessionData(id)->mementos.erase( tag );
 }
 
 const std::vector< shared_ptr<Input> > & AssuanCommand::inputs() const {
@@ -1128,66 +1121,12 @@ const std::vector< shared_ptr<Output> > & AssuanCommand::outputs() const {
 }
 
 QStringList AssuanCommand::fileNames() const {
-    QStringList result;
-    Q_FOREACH( const IOF & io, d->files )
-        result.push_back( io.fileName );
-    return result;
-}
-
-std::vector< shared_ptr<QFile> > AssuanCommand::files() const {
-    std::vector< shared_ptr<QFile> > result;
-    Q_FOREACH( const IOF & io, d->files )
-        result.push_back( io.file );
-    return result;
+    return kdtools::copy<QStringList>( d->files );
 }
 
 unsigned int AssuanCommand::numFiles() const {
     return d->files.size();
 }
-
-void AssuanCommand::releaseFiles() {
-    d->files.clear();
-}
-
-#if 0
-QString AssuanCommand::bulkInputDeviceFileName( unsigned int idx ) const {
-    return d->inputs.at( idx ).fileName;
-}
-
-shared_ptr<QIODevice> AssuanCommand::bulkInputDevice( unsigned int idx ) const {
-    return d->inputs.at( idx ).iodev;
-}
-
-unsigned int AssuanCommand::numBulkInputDevices() const {
-    return d->inputs.size();
-}
-
-
-QString AssuanCommand::bulkMessageDeviceFileName( unsigned int idx ) const {
-    return d->messages.at( idx ).fileName;
-}
-
-shared_ptr<QIODevice> AssuanCommand::bulkMessageDevice( unsigned int idx ) const {
-    return d->messages.at( idx ).iodev;
-}
-
-unsigned int AssuanCommand::numBulkMessageDevices() const {
-    return d->messages.size();
-}
-
-
-QString AssuanCommand::bulkOutputDeviceFileName( unsigned int idx ) const {
-    return d->outputs.at( idx ).fileName;
-}
-
-shared_ptr<QIODevice> AssuanCommand::bulkOutputDevice( unsigned int idx ) const {
-    return d->outputs.at( idx ).iodev;
-}
-
-unsigned int AssuanCommand::numBulkOutputDevices() const {
-    return d->outputs.size();
-}
-#endif
 
 void AssuanCommand::sendStatus( const char * keyword, const QString & text ) {
     sendStatusEncoded( keyword, text.toUtf8().constData() );
@@ -1265,7 +1204,6 @@ void AssuanCommand::done( const GpgME::Error& err ) {
     d->messages.clear();
     d->inputs.clear();
     d->outputs.clear();
-    close_all( d->files ); // ### ???
     d->files.clear();
 
     // oh, hack :(
@@ -1496,26 +1434,8 @@ WId AssuanCommand::parentWId() const {
     return wid_from_string( option("window-id").toString() );
 }
 
-static QString commonPrefix( const QString & s1, const QString & s2 ) {
-    return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
-}
-
-static QString longestCommonPrefix( const QStringList & sl ) {
-    if ( sl.empty() )
-        return QString();
-    QString result = sl.front();
-    Q_FOREACH( const QString & s, sl )
-        result = commonPrefix( s, result );
-    return result;
-}
-
 QString AssuanCommand::heuristicBaseDirectory() const {
-    const QString candidate = longestCommonPrefix( fileNames() );
-    const QFileInfo fi( candidate );
-    if ( fi.isDir() )
-        return candidate;
-    else
-        return fi.absolutePath();
+    return Kleo::heuristicBaseDirectory( fileNames() );
 }
 
 #include "assuanserverconnection.moc"

@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/input.h
+    utils/path-helper.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,41 +30,18 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UTILS_INPUT_H__
-#define __KLEOPATRA_UTILS_INPUT_H__
+#ifndef __KLEOPATRA_UTILS_PATH_HELPER_H__
+#define __KLEOPATRA_UTILS_PATH_HELPER_H__
 
-#include <kleo-assuan.h> // for assuan_fd_t
-
-#include <boost/shared_ptr.hpp>
-
-class QIODevice;
 class QString;
 class QStringList;
-class QFile;
 class QDir;
 
 namespace Kleo {
 
-    class Input {
-    public:
-        virtual ~Input();
-
-        virtual QString label() const = 0;
-        virtual void setLabel( const QString & label ) = 0;
-        virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
-        virtual unsigned int classification() const = 0;
-        virtual unsigned long long size() const = 0;
-        void finalize(); // equivalent to ioDevice()->close();
-
-        static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
-        static boost::shared_ptr<Input> createFromFile( const QString & filename, bool dummy=false );
-        static boost::shared_ptr<Input> createFromFile( const boost::shared_ptr<QFile> & file );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory );
-        static boost::shared_ptr<Input> createFromClipboard();
-    };
+    QString heuristicBaseDirectory( const QStringList & files );
+    QStringList makeRelativeTo( const QDir & dir, const QStringList & files );
+    QStringList makeRelativeTo( const QString & dir, const QStringList & files );
 }
 
-#endif /* __KLEOPATRA_UTILS_INPUT_H__ */
-
+#endif /* __KLEOPATRA_UTILS_PATH_HELPER_H__ */

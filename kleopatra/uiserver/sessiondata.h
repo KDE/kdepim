@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/input.h
+    uiserver/sessiondata.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,41 +30,57 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UTILS_INPUT_H__
-#define __KLEOPATRA_UTILS_INPUT_H__
+#ifndef __KLEOPATRA_UISERVER_SESSIONDATA_H__
+#define __KLEOPATRA_UISERVER_SESSIONDATA_H__
 
-#include <kleo-assuan.h> // for assuan_fd_t
+#include <QObject>
+
+#include "assuancommand.h"
+
+#include <QTimer>
 
 #include <boost/shared_ptr.hpp>
 
-class QIODevice;
-class QString;
-class QStringList;
-class QFile;
-class QDir;
+#include <map>
 
 namespace Kleo {
 
-    class Input {
+    class SessionDataHandler;
+
+    class SessionData {
     public:
-        virtual ~Input();
 
-        virtual QString label() const = 0;
-        virtual void setLabel( const QString & label ) = 0;
-        virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
-        virtual unsigned int classification() const = 0;
-        virtual unsigned long long size() const = 0;
-        void finalize(); // equivalent to ioDevice()->close();
+        std::map< QByteArray, boost::shared_ptr<AssuanCommand::Memento> > mementos;
 
-        static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
-        static boost::shared_ptr<Input> createFromFile( const QString & filename, bool dummy=false );
-        static boost::shared_ptr<Input> createFromFile( const boost::shared_ptr<QFile> & file );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory );
-        static boost::shared_ptr<Input> createFromClipboard();
+    private:
+        friend class ::Kleo::SessionDataHandler;
+        SessionData();
+        int ref;
+        bool ripe;
     };
+
+    class SessionDataHandler : public QObject {
+    public:
+
+        static boost::shared_ptr<SessionDataHandler> instance();
+
+        void enterSession( unsigned int id );
+        void exitSession( unsigned int id );
+
+        boost::shared_ptr<SessionData> sessionData( unsigned int ) const;
+
+    private Q_SLOTS:
+        void slotCollectGarbage();
+
+    private:
+        mutable std::map< unsigned int, boost::shared_ptr<SessionData> > data;
+        QTimer timer;
+
+    private:
+        boost::shared_ptr<SessionData> sessionDataInternal( unsigned int ) const;
+        SessionDataHandler();
+    };
+
 }
 
-#endif /* __KLEOPATRA_UTILS_INPUT_H__ */
-
+#endif /* __KLEOPATRA_UISERVER_SESSIONDATA_H__ */

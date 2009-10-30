@@ -83,7 +83,16 @@ endif(KDEPIM_BUILD_EVERYTHING)
 
 #kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
-#target_link_libraries(kolabwizard ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim )
+#target_link_libraries(kolabwizard
+#  ${QT_QT3SUPPORT_LIBRARY}
+#  ${KDEPIMLIBS_KCAL_LIBS}
+#  ${KDEPIMLIBS_KABC_LIBS}
+#  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+#  kabckolab
+#  knoteskolab
+#  kcalkolab
+#  kdepim
+#)
 
 #install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 

@@ -275,7 +275,6 @@ namespace Kleo {
         boost::shared_ptr<T> mementoAs( const QByteArray & tag ) const {
             return boost::dynamic_pointer_cast<T>( this->memento( tag ) );
         }
-        const std::map< QByteArray, boost::shared_ptr<Memento> > & mementos() const;
         QByteArray registerMemento( const boost::shared_ptr<Memento> & mem );
         QByteArray registerMemento( const QByteArray & tag, const boost::shared_ptr<Memento> & mem );
         void removeMemento( const QByteArray & tag );
@@ -296,9 +295,7 @@ namespace Kleo {
         const std::vector< boost::shared_ptr<Output> > & outputs() const;
 
         QStringList fileNames() const;
-        std::vector< boost::shared_ptr<QFile> > files() const;
         unsigned int numFiles() const;
-        void releaseFiles();
 
         void sendStatus( const char * keyword, const QString & text );
         void sendStatusEncoded( const char * keyword, const std::string & text );
@@ -317,6 +314,9 @@ namespace Kleo {
 
     private:
         void doApplyWindowID( QWidget * w ) const;
+
+    private:
+        const std::map< QByteArray, boost::shared_ptr<Memento> > & mementos() const;
 
     private:
         friend class ::Kleo::AssuanCommandFactory;

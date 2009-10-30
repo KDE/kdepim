@@ -118,9 +118,14 @@ int SignEncryptFilesCommand::doStart() {
     d->controller.reset( new SignEncryptFilesController( shared_from_this() ) );
 
     d->controller->setProtocol( checkProtocol( FileManager ) );
-    d->controller->setOperationMode( operation() );
+
+    unsigned int op = operation();
+    if ( hasOption( "archive" ) )
+        op |= SignEncryptFilesController::ArchiveForced;
+    else
+        op |= SignEncryptFilesController::ArchiveAllowed;
+    d->controller->setOperationMode( op );
     d->controller->setFiles( fileNames() );
-    releaseFiles(); //as we use the filenames and (re-)open the files, delete QFile's opened by the connection (otherwise input deletion fails on windows)
 
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
