@@ -78,6 +78,7 @@ public slots:
   bool canGoNextBook() const;
   bool canGoPreviousBook() const;
 
+  void updateCaption();
   void updateMenu();
 
   void newPage();
@@ -88,6 +89,8 @@ signals:
   void canGoPreviousPageChanged( bool );
   void canGoNextBookChanged( bool );
   void canGoPreviousBookChanged( bool );
+
+  void captionChanged( const QString &newCaption );
 
 protected:
   QString renderSelectionToHtml();
@@ -108,6 +111,8 @@ protected slots:
 private slots:
   void delayedInitialization();
   void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+  void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight );
+
   bool canGo( int role, int step ) const;
 
   void newPageResult( KJob *job );

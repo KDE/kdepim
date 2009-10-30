@@ -300,6 +300,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateMenu()) );
+  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateCaption()) );
 }
 
 void KJotsWidget::delayedInitialization()
@@ -1246,5 +1247,24 @@ int KJotsWidget::search( bool replacing )
   return rc;
 }
 
+
+void KJotsWidget::updateCaption()
+{
+  emit captionChanged( treeview->captionForSelection( " / " ) );
+}
+
+void KJotsWidget::dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
+{
+  QModelIndexList rows = treeview->selectionModel()->selectedRows();
+
+  if ( rows.size() != 1 )
+    return;
+
+  QItemSelection changed( topLeft, bottomRight );
+  if ( changed.contains( rows.first() ) )
+  {
+    emit captionChanged( treeview->captionForSelection( " / " ) );
+  }
+}
 
 #include "kjotswidget.moc"
