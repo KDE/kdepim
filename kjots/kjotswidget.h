@@ -78,6 +78,8 @@ public slots:
   bool canGoNextBook() const;
   bool canGoPreviousBook() const;
 
+  void updateMenu();
+
   void newPage();
   void newBook();
 
@@ -149,8 +151,9 @@ private:
   QStringList replaceHistory;
   int replaceBeginPos, replaceEndPos, replacePos;
   QCheckBox *replaceAllPages;
-  // Or Item?
   QModelIndex replaceStartPage;
+
+  QSet<QAction*> entryActions, pageActions, bookActions, multiselectionActions;
 };
 
 #endif

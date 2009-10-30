@@ -195,7 +195,6 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
   action->setIcon( KIcon( "document-new" ) );
   connect( action, SIGNAL(triggered()), SLOT(newPage()) );
-  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), action, SLOT(selectionChanged()) );
 
   action = actionCollection->addAction("new_book");
   action->setText( i18n( "New &Book..." ) );
@@ -298,8 +297,9 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setEnabled(false);
   KStandardAction::replace( this, SLOT( onShowReplace() ), actionCollection );
 
-
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
+
+  connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateMenu()) );
 }
 
 void KJotsWidget::delayedInitialization()
@@ -314,7 +314,7 @@ void KJotsWidget::delayedInitialization()
 
   connect(searchDialog, SIGNAL(okClicked()), this, SLOT(onStartSearch()) );
   connect(searchDialog, SIGNAL(cancelClicked()), this, SLOT(onEndSearch()) );
-  connect(treeview->selectionModel(), SIGNAL(selectionChanged()), SLOT(onUpdateSearch()) );
+  connect(treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(onUpdateSearch()) );
   connect(searchDialog, SIGNAL(optionsChanged()), SLOT(onUpdateSearch()) );
   connect(searchAllPages, SIGNAL(stateChanged(int)), SLOT(onUpdateSearch()) );
 
@@ -329,8 +329,61 @@ void KJotsWidget::delayedInitialization()
   connect(replaceDialog, SIGNAL(optionsChanged()), SLOT(onUpdateReplace()) );
   connect(replaceAllPages, SIGNAL(stateChanged(int)), SLOT(onUpdateReplace()) );
 
+  // Actions are enabled or disabled based on whether the selection is a single page, a single book
+  // multiple selections, or no selection.
+  //
+  // The entryActions are enabled for all single pages and single books, and the multiselectionActions
+  // are enabled when the user has made multiple selections.
+  //
+  // Some actions are in neither (eg, new book) and are available even when there is no selection.
+  //
+  // Some actions are in both, so that they are available for valid selections, but not available
+  // for invalid selections (eg, print/find are disabled when there is no selection)
+
+  KActionCollection *actionCollection = m_xmlGuiClient->actionCollection();
+
+  // Actions for a single item selection.
+  entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
+//   entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)) );
+  entryActions.insert( actionCollection->action("rename_entry") );
+  entryActions.insert( actionCollection->action("change_color") );
+//   entryActions.insert( actionCollection->action("save_to") );
+  entryActions.insert( actionCollection->action("copy_link_address") );
+
+  // Actions that are used only when a page is selected.
+  pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Cut)) );
+  pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Paste)) );
+  pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Replace)) );
+  pageActions.insert( actionCollection->action("del_page") );
+  pageActions.insert( actionCollection->action("insert_date") );
+  pageActions.insert( actionCollection->action("auto_bullet") );
+  pageActions.insert( actionCollection->action("auto_decimal") );
+  pageActions.insert( actionCollection->action("manage_link") );
+  pageActions.insert( actionCollection->action("insert_checkmark") );
+
+  // Actions that are used only when a book is selected.
+//   bookActions.insert( actionCollection->action("save_to_book") );
+  bookActions.insert( actionCollection->action("del_folder") );
+
+  // Actions that are used when multiple items are selected.
+  multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
+//   multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)));
+  multiselectionActions.insert( actionCollection->action("del_mult") );
+//   multiselectionActions.insert( actionCollection->action("save_to") );
+  multiselectionActions.insert( actionCollection->action("change_color") );
+
+
   treeview->delayedInitialization();
   editor->delayedInitialization( m_xmlGuiClient->actionCollection() );
+//   browser->delayedInitialization( m_xmlGuiClient->actionCollection() );
+
+
+  connect( treeview->itemDelegate(), SIGNAL(closeEditor(QWidget *,QAbstractItemDelegate::EndEditHint) ),
+      SLOT(bookshelfEditItemFinished(QWidget *,QAbstractItemDelegate::EndEditHint)) );
+
+  connect( editor, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
+      SLOT(currentCharFormatChanged(const QTextCharFormat &)) );
+  updateMenu();
 }
 
 inline QTextEdit* KJotsWidget::activeEditor() {
@@ -338,6 +391,66 @@ inline QTextEdit* KJotsWidget::activeEditor() {
     return browser;
   } else {
     return editor;
+  }
+}
+
+void KJotsWidget::updateMenu()
+{
+  QModelIndexList selection = treeview->selectionModel()->selectedRows();
+  int selectionSize = selection.size();
+
+  if ( !selectionSize ) {
+    // no (meaningful?) selection
+    foreach ( QAction* action, multiselectionActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, entryActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, bookActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, pageActions )
+      action->setEnabled(false);
+    editor->setActionsEnabled( false );
+  } else if ( selectionSize > 1 ) {
+    foreach ( QAction* action, entryActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, bookActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, pageActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, multiselectionActions )
+      action->setEnabled(true);
+
+    editor->setActionsEnabled( false );
+  } else {
+
+    foreach ( QAction* action, multiselectionActions )
+      action->setEnabled(false);
+    foreach ( QAction* action, entryActions )
+      action->setEnabled(true);
+
+    QModelIndex idx = selection.at( 0 );
+
+    Collection col = idx.data( KJotsModel::CollectionRole ).value<Collection>();
+
+    if ( col.isValid() ) {
+      foreach ( QAction* action, pageActions )
+        action->setEnabled(false);
+      foreach ( QAction* action, bookActions )
+        action->setEnabled(true);
+
+      editor->setActionsEnabled( false );
+    } else {
+      foreach ( QAction* action, pageActions ) {
+        if (action->objectName() == name( KStandardAction::Cut ) ) {
+          action->setEnabled( activeEditor()->textCursor().hasSelection() );
+        } else {
+          action->setEnabled( true );
+        }
+      }
+      foreach ( QAction* action, bookActions )
+        action->setEnabled( false );
+      editor->setActionsEnabled( true );
+    }
   }
 }
 
