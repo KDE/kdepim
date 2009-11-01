@@ -32,7 +32,7 @@ kde_ctest_setup("${CMAKE_CURRENT_LIST_FILE}")
 
 # now actually do the Nightly
 ctest_empty_binary_directory("${CTEST_BINARY_DIRECTORY}")
-ctest_start(Experimental) # Nightly)
+ctest_start(Nightly)
 ctest_update(SOURCE "${CTEST_SOURCE_DIRECTORY}" )
 
 # read some settings
