@@ -10,7 +10,9 @@ kde4_add_executable(example_feeditemmodel ${feeditemmodel_example_SRCS} )
 
 target_link_libraries(example_feeditemmodel
                       krss
+                      ${KDE4_KDEUI_LIBRARY}
                       ${KDEPIMLIBS_SYNDICATION_LIBS}
+                      ${KDEPIMLIBS_AKONADI_LIBRARY}
                       ${QT_QTCORE_LIBRARY}
                       ${QT_QTGUI_LIBRARY}
 )
