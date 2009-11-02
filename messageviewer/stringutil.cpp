@@ -781,24 +781,6 @@ QStringList stripAddressFromAddressList( const QString& address,
   return addresses;
 }
 
-QStringList stripMyAddressesFromAddressList( const QStringList& list )
-{
-  QStringList addresses = list;
-  for( QStringList::Iterator it = addresses.begin();
-       it != addresses.end(); ) {
-    kDebug() << "Check whether" << *it <<"is one of my addresses";
-    /*FIXME(Andras) port to akonadi
-    if( kmkernel->identityManager()->thatIsMe( KPIMUtils::extractEmailAddress( *it ) ) ) {
-      kDebug() << "Removing" << *it <<"from the address list";
-      it = addresses.erase( it );
-    }
-    else
-    */
-      ++it;
-  }
-  return addresses;
-}
-
 bool addressIsInAddressList( const QString& address,
                              const QStringList& addresses )
 {

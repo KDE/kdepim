@@ -120,12 +120,6 @@ namespace StringUtil
                                            const QStringList& addresses );
 
   /**
-   * Strips all the user's addresses from an address list. This is used
-   * when replying.
-   */
-  MESSAGEVIEWER_EXPORT QStringList stripMyAddressesFromAddressList( const QStringList& list );
-
-  /**
    * Returns true if the given address is contained in the given address list.
    */
   MESSAGEVIEWER_EXPORT bool addressIsInAddressList( const QString& address,
