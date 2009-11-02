@@ -28,7 +28,7 @@
 #include <kdemacros.h>
 
 #ifndef LSN_EXPORT
-# if defined(MAKE_LIBSTICKYNOTES_LIB)
+# if defined(MAKE_STICKYNOTES_LIB)
    /* We are building this library */
 #  define LSN_EXPORT KDE_EXPORT
 # else
