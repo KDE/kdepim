@@ -501,7 +501,7 @@ QList<Akonadi::Item> Widget::currentThreadAsMessageList() const
 {
   QList<Item> lstMiPtr;
   QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
-  if ( lstMiPtr.isEmpty() ) {
+  if ( lstMi.isEmpty() ) {
     return lstMiPtr;
   }
   foreach( Core::MessageItem *it, lstMi ) {
@@ -563,4 +563,48 @@ bool Widget::getSelectionStats(
     }
   }
   return true;
+}
+
+void Widget::deletePersistentSet( MessageList::Core::MessageItemSetReference ref )
+{
+  view()->deletePersistentSet( ref );
+}
+
+void Widget::markMessageItemsAsAboutToBeRemoved( MessageList::Core::MessageItemSetReference ref, bool bMark )
+{
+  QList< Core::MessageItem * > lstPersistent = view()->persistentSetCurrentMessageItemList( ref );
+  if ( !lstPersistent.isEmpty() )
+    view()->markMessageItemsAsAboutToBeRemoved( lstPersistent, bMark );
+}
+
+QList<Akonadi::Item> Widget::itemListFromPersistentSet( MessageList::Core::MessageItemSetReference ref )
+{
+  QList<Akonadi::Item> lstItem;
+  QList< Core::MessageItem * > refList = view()->persistentSetCurrentMessageItemList( ref );
+  if ( !refList.isEmpty() ) {
+    foreach( Core::MessageItem *it, refList ) {
+      lstItem.append( d->itemForRow( it->currentModelIndexRow() ) );
+    }
+  }
+  return lstItem;
+}
+
+
+MessageList::Core::MessageItemSetReference Widget::selectionAsPersistentSet( bool includeCollapsedChildren ) const
+{
+  QList<Core::MessageItem *> lstMi = view()->selectionAsMessageItemList( includeCollapsedChildren );
+  if ( lstMi.isEmpty() ) {
+     return -1;
+  }
+  return view()->createPersistentSet( lstMi );
+}
+
+MessageList::Core::MessageItemSetReference Widget::currentThreadAsPersistentSet() const
+{
+  QList<Item> lstMiPtr;
+  QList<Core::MessageItem *> lstMi = view()->currentThreadAsMessageItemList();
+  if ( lstMi.isEmpty() ) {
+    return -1;
+  }
+  return view()->createPersistentSet( lstMi );
 }

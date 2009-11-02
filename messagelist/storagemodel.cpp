@@ -81,7 +81,6 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
 {
   d->mModel = 0;
   d->mSelectionModel = selectionModel;
-
   if ( _k_attributeInitialized.testAndSetAcquire( 0, 1 ) ) {
     AttributeFactory::registerAttribute<MessageFolderAttribute>();
   }
@@ -319,24 +318,19 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
   mi->setTagList( tagList );
 #endif
 
-  if ( !clr.isValid() ) {
-    if ( stat.isNew() ) {
-      clr = d->mColorNewMessage;
-    } else if ( stat.isUnread() ) {
-      clr = d->mColorUnreadMessage;
-    } else if ( stat.isImportant() ) {
-      clr = d->mColorImportantMessage;
-    } else if ( stat.isToAct() ) {
-      clr = d->mColorToDoMessage;
-    }
+  if ( stat.isNew() ) {
+    clr = d->mColorNewMessage;
+  } else if ( stat.isUnread() ) {
+    clr = d->mColorUnreadMessage;
+  } else if ( stat.isImportant() ) {
+    clr = d->mColorImportantMessage;
+  } else if ( stat.isToAct() ) {
+    clr = d->mColorToDoMessage;
   }
 
-  if ( clr.isValid() ) {
-    mi->setTextColor( clr );
-  }
-  if ( backClr.isValid() ) {
-    mi->setBackgroundColor( backClr );
-  }
+  mi->setTextColor( clr ); // same invalid => default color. Otherwise we can't change color when status is Read.
+
+  mi->setBackgroundColor( backClr );
 
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
   if ( stat.isImportant() ) {
@@ -436,7 +430,6 @@ void StorageModel::Private::loadSettings()
     mColorImportantMessage = settings->importantMessageColor();
     mColorToDoMessage = settings->todoMessageColor();
   }
-
 
   if ( settings->useDefaultFonts() ) {
     mFont = KGlobalSettings::generalFont();

@@ -477,6 +477,32 @@ QList<Akonadi::Item> Pane::currentThreadAsMessageList() const
   return w->currentThreadAsMessageList();
 }
 
+QList<Akonadi::Item> Pane::itemListFromPersistentSet( MessageList::Core::MessageItemSetReference ref )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 ) {
+    return QList<Akonadi::Item>();
+  }
+  return w->itemListFromPersistentSet(ref);
+
+}
+
+void Pane::deletePersistentSet( MessageList::Core::MessageItemSetReference ref )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w ) {
+    w->deletePersistentSet( ref );
+  }
+}
+
+void Pane::markMessageItemsAsAboutToBeRemoved( MessageList::Core::MessageItemSetReference ref, bool bMark )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w ) {
+    w->markMessageItemsAsAboutToBeRemoved( ref, bMark );
+  }
+}
+
 KPIM::MessageStatus Pane::currentFilterStatus() const
 {
   Widget *w = static_cast<Widget*>( currentWidget() );
@@ -529,6 +555,21 @@ bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
     );
 }
 
+MessageList::Core::MessageItemSetReference Pane::selectionAsPersistentSet( bool includeCollapsedChildren ) const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 )
+    return -1;
+  return w->selectionAsPersistentSet( includeCollapsedChildren );
+}
+
+MessageList::Core::MessageItemSetReference Pane::currentThreadAsPersistentSet() const
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w == 0 )
+    return -1;
+  return w->currentThreadAsPersistentSet();
+}
 
 
 #include "pane.moc"

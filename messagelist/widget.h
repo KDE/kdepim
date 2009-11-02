@@ -20,7 +20,7 @@
 #define __MESSAGELIST_WIDGET_H__
 
 #include <messagelist/core/widgetbase.h>
-
+#include <messagelist/core/view.h>
 #include <akonadi/item.h>
 
 #include <kmime/kmime_message.h>
@@ -267,7 +267,36 @@ public:
                           QList< quint32 > &selectedVisibleSernums,
                           bool * allSelectedBelongToSameThread,
                           bool includeCollapsedChildren = true ) const;
-  
+  /**
+   * Deletes the persistent set pointed by the specified reference.
+   * If the set does not exist anymore, nothing happens.
+   */
+  void deletePersistentSet( MessageList::Core::MessageItemSetReference ref );
+
+  /**
+   * If bMark is true this function marks the messages as "about to be removed"
+   * so they appear dimmer and aren't selectable in the view.
+   * If bMark is false then this function clears the "about to be removed" state
+   * for the specified MessageItems.
+   */
+  void markMessageItemsAsAboutToBeRemoved( MessageList::Core::MessageItemSetReference ref, bool bMark );
+
+  /**
+   * Return Akonadi::Item from messageItemReference
+   */
+  QList<Akonadi::Item> itemListFromPersistentSet( MessageList::Core::MessageItemSetReference ref );
+
+  /**
+   * Return a persistent set from current selection
+   */
+  MessageList::Core::MessageItemSetReference selectionAsPersistentSet( bool includeCollapsedChildren = true ) const;
+
+  /**
+   * Return a persistent set from current thread
+   */
+  MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
+
+
 protected:
   /**
    * Reimplemented from MessageList::Core::Widget
