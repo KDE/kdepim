@@ -19,8 +19,6 @@
 #ifndef _MESSAGEVIEWER_KLEOJOBEXECUTOR_H
 #define _MESSAGEVIEWER_KLEOJOBEXECUTOR_H
 
-#include "messageviewer_export.h"
-
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/verificationresult.h>
@@ -41,7 +39,7 @@ namespace Kleo {
 /**
   Helper class for synchronous execution of Kleo crypto jobs.
 */
-class MESSAGEVIEWER_EXPORT KleoJobExecutor : public QObject
+class KleoJobExecutor : public QObject
 {
   Q_OBJECT
   public:

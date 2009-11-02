@@ -1,3 +1,0 @@
-Look at if mailsourceviewer.h is necessary to be shared. For the moment it used in kmcommand in kmail and perhaps when we convert to akonadi command it will not necessary.
-remove export from attachmentdialog.h when we remove old code in kmail
-remove export from kleojobexecutor.h when we remove old code in kmail
