@@ -738,7 +738,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
           }
         } else {
           EmptySource emptySource;
-          ObjectTreeParser otp( &emptySource, 0, false, false, false );
+          ObjectTreeParser otp( &emptySource, 0, 0,false, false, false );
 
           // process this node and all it's siblings and descendants
           mNodeHelper->setNodeUnprocessed( dataNode, true );
