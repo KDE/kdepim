@@ -60,6 +60,8 @@ class MESSAGECOMPOSER_EXPORT SignJob : public ContentJobBase
     void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
     void setSigningKeys( std::vector<GpgME::Key>& signers );
 
+    KMime::Content* origContent();
+
   protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();

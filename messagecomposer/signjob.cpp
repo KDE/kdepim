@@ -25,10 +25,12 @@
 #include "kleo/cryptobackend.h"
 #include "kleo/enum.h"
 #include "kleo/signjob.h"
+#include "util.h"
 
 #include <kdebug.h>
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
+#include <kmime/kmime_util.h>
 #include <QBuffer>
 
 #include <gpgme++/global.h>
@@ -113,6 +115,14 @@ void SignJob::setSigningKeys( std::vector<GpgME::Key>& signers )
   d->signers = signers;
 }
 
+KMime::Content* SignJob::origContent()
+{
+  Q_D( SignJob );
+
+  return d->content;
+
+}
+
 void SignJob::process()
 {
   Q_D( SignJob );
@@ -136,8 +146,14 @@ void SignJob::process()
   kDebug() << "using signin mode:" << d->signingMode( d->format );
   // for now just do the main recipients
   QByteArray signature;
+
+  // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
+  // according to RfC 2633, 3.1.1 Canonicalization
+  d->content->assemble();
+  QByteArray content = KMime::LFtoCRLF( d->content->head() + "\n" + d->content->body() );
+  kDebug() << "signing content:" << content;
   GpgME::SigningResult res = job->exec( d->signers,
-                                        d->content->body(),
+                                        content,
                                         d->signingMode( d->format ),
                                         signature );
 
@@ -146,10 +162,8 @@ void SignJob::process()
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
   }
 
-  kDebug() << "got sig:" <<  signature;
-
-  d->resultContent->setBody( signature );
-
+  d->resultContent = Message::Util::composeHeadersAndBody( d->content, signature, d->format, true );
+//  d->resultContent->setBody( signature );
   emitResult();
 }
 

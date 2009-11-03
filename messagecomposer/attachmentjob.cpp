@@ -107,7 +107,7 @@ void AttachmentJob::doStart()
 
   // Figure out a charset to encode parts of the headers with.
   const QString dataToEncode = d->part->name() + d->part->description() + d->part->fileName();
-  const QByteArray charset = selectCharset( globalPart()->charsets( true ), dataToEncode );
+  const QByteArray charset = Util::selectCharset( globalPart()->charsets( true ), dataToEncode );
 
   // Set up the headers.
   sjob->contentTransferEncoding()->setEncoding( d->part->encoding() );

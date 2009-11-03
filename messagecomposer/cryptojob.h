@@ -45,23 +45,23 @@ namespace Message {
 class CryptoJobPrivate;
 
 /**
-  Signs and encrypts a message contents.
-  Subjob should be set to main message contents job.
+  Composes the signed and/or encrypted parts of a message.
 */
 class MESSAGECOMPOSER_EXPORT CryptoJob : public ContentJobBase
 {
   Q_OBJECT
 
   public:
-    CryptoJob( QObject *parent = 0 );
+    explicit CryptoJob( QObject *parent = 0 );
     virtual ~CryptoJob();
 
     void setInfoPart( InfoPart* part );
     void setContent( KMime::Content* content );
     void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
     void setSignEncrypt( bool sign, bool encrypt );
-    void setEncryptionItems( QStringList recipients, std::vector<GpgME::Key> keys );
-    void setSigningKeys( std::vector<GpgME::Key>& signers );
+    void setRecipients( QStringList rec );
+
+    QStringList recipients();
 
   protected Q_SLOTS:
     virtual void doStart();

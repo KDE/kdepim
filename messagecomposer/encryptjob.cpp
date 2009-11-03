@@ -23,6 +23,7 @@
 #include "contentjobbase_p.h"
 #include "kleo/cryptobackendfactory.h"
 #include "kleo/cryptobackend.h"
+#include "kleo/encryptjob.h"
 #include "kleo/enum.h"
 
 #include <kdebug.h>
@@ -47,7 +48,7 @@ class Message::EncryptJobPrivate : public ContentJobBasePrivate
     }
 
     KMime::Content* content;
-    GpgME::Key key;
+    std::vector<GpgME::Key> keys;
     Kleo::CryptoMessageFormat format;
 
 
@@ -99,6 +100,7 @@ void EncryptJob::setContent( KMime::Content* content )
   Q_D( EncryptJob );
 
   d->content = content;
+  d->content->assemble();
 }
 
 void EncryptJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
@@ -108,11 +110,11 @@ void EncryptJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
   d->format = format;
 }
 
-void EncryptJob::setEncryptionKey( GpgME::Key key )
+void EncryptJob::setEncryptionKeys( std::vector<GpgME::Key> keys )
 {
   Q_D( EncryptJob );
 
-  d->key = key;
+  d->keys = keys;
 }
 
 void EncryptJob::process()
@@ -131,29 +133,23 @@ void EncryptJob::process()
   Q_ASSERT( proto );
 
   kDebug() << "got backend, starting job";
-/*
-  Kleo::SignEncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
+
+  Kleo::EncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
 
   // for now just do the main recipients
-  kDebug() << "about to encrypt body";
   QByteArray encryptedBody;
-  const std::pair<GpgME::SigningResult,GpgME::EncryptionResult> res = seJob->exec( d->signers,
-                                                                                   d->encKeys,
-                                                                                   d->content->body(),
+  const GpgME::EncryptionResult res = seJob->exec( d->keys,
+                                                                                   d->content->encodedContent(),
                                                                                    false,
                                                                                    encryptedBody );
 
-  if ( res.first.error() ) {
-    kDebug() << "sign failed:" << res.first.error().asString();
-    //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
-  }
-  if ( res.second.error() ) {
-    kDebug() << "encrypt failed:" << res.second.error().asString();
+  if ( res.error() ) {
+    kDebug() << "encrypt failed:" << res.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
   }
   kDebug() << "got encrypted body:" << encryptedBody;
   d->resultContent->setBody( encryptedBody );
-*/
+
   emitResult();
   return;
 

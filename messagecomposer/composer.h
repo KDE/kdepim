@@ -21,9 +21,9 @@
 #define MESSAGECOMPOSER_COMPOSER_H
 
 #include "jobbase.h"
-#include "messagecomposer_export.h"
 #include "kleo/enum.h"
 
+#include "messagecomposer_export.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 
@@ -56,7 +56,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
-    KMime::Message::Ptr resultMessage() const;
+    KMime::Message::List resultMessages() const;
 
     GlobalPart *globalPart();
     InfoPart *infoPart();
@@ -69,7 +69,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     void setSignAndEncrypt( const bool doSign, const bool doEncrypt );
     void setMessageCryptoFormat( Kleo::CryptoMessageFormat format );
     void setSigningKeys( std::vector<GpgME::Key>& signers );
-    void setEncryptionKeys( QStringList recipients, std::vector<GpgME::Key> keys );
+    void setEncryptionKeys(QList<QPair<QStringList, std::vector<GpgME::Key> > > data );
 
   public Q_SLOTS:
     virtual void start();
@@ -80,7 +80,8 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     Q_PRIVATE_SLOT( d_func(), void doStart() )
     Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
     Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void contentJobPreSignFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void contentJobPreCryptFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void signBeforeEncryptJobFinished(KJob*) )
     
 };
 

@@ -45,7 +45,7 @@ namespace Message {
 class EncryptJobPrivate;
 
 /**
-  Encrypt the contents of a message to one recipient.
+  Encrypt the contents of a message .
   Used as a subjob of CryptoMessage
 */
 class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase
@@ -53,12 +53,12 @@ class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase
   Q_OBJECT
 
   public:
-    EncryptJob( QObject *parent = 0 );
+    explicit EncryptJob( QObject *parent = 0 );
     virtual ~EncryptJob();
 
     void setContent( KMime::Content* content );
     void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
-    void setEncryptionKey( GpgME::Key key );
+    void setEncryptionKeys( std::vector<GpgME::Key> keys );
 
   protected Q_SLOTS:
     //virtual void doStart();

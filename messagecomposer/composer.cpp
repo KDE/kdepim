@@ -27,6 +27,8 @@
 #include "maintextjob.h"
 #include "multipartjob.h"
 #include "cryptojob.h"
+#include "signjob.h"
+#include "encryptjob.h"
 #include "skeletonmessagejob.h"
 
 #include <QTimer>
@@ -59,9 +61,10 @@ class Message::ComposerPrivate : public JobBasePrivate
     void skeletonJobFinished( KJob *job ); // slot
     void composeStep2();
     void contentJobFinished( KJob *job ); // slot
-    void contentJobPreSignFinished( KJob *job ); // slot
-    void composeStep3();
-
+    void contentJobPreCryptFinished( KJob *job ); // slot
+    void signBeforeEncryptJobFinished( KJob *job ); // slot
+    void startEncryptJobs( KMime::Content* content );
+    
     bool started;
     bool finished;
     bool sign;
@@ -69,13 +72,12 @@ class Message::ComposerPrivate : public JobBasePrivate
 
     Kleo::CryptoMessageFormat format;
     std::vector<GpgME::Key> signers;
-    QStringList encRecipients;
-    std::vector<GpgME::Key> encKeys;
+    QList<QPair<QStringList, std::vector<GpgME::Key> > > encData;
     
     // if some of the attachments have a different
     // sign/encrypt policy than the message itself
     bool attachmentsWithDifferentPolicy;
-    KMime::Message::Ptr resultMessage;
+    KMime::Message::List resultMessages;
 
     // Stuff that the application plays with.
     GlobalPart *globalPart;
@@ -148,7 +150,7 @@ void ComposerPrivate::composeStep2()
     // We have no attachments.  Use the content given by the MainTextJob.
     mainJob = mainTextJob;
     if( sign || encrypt ) {
-        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreSignFinished(KJob*)) );
+        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreCryptFinished(KJob*)) );
     } else {
         QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
     }
@@ -161,65 +163,137 @@ void ComposerPrivate::composeStep2()
       multipartJob->appendSubjob( new AttachmentJob( part ) );
     } // TODO sign and encrypt each attachment potentially differently
     QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
-
   }
   q->addSubjob( mainJob );
   mainJob->start();
 }
 
-void ComposerPrivate::contentJobPreSignFinished( KJob *job )
+void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
 {
   Q_Q( Composer );
 
-  // we're signing or encrypting, so add an additional job to the process
+  // we're signing or encrypting or both, so add an additional job to the process
   Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
   ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
 
-  kDebug() << "composer is about to start sign/encrypt job!";
-  CryptoJob* seJob = new CryptoJob( q );
-  seJob->setSignEncrypt( sign, encrypt );
-  seJob->setContent( cjob->content() );
-  seJob->setSigningKeys( signers );
-  seJob->setEncryptionItems( encRecipients, encKeys );
-  seJob->setCryptoMessageFormat( format );
+  
+  if( sign ) {
+    SignJob* sJob = new SignJob( q );
+    sJob->setContent( cjob->content() );
+    sJob->setCryptoMessageFormat( format );
+    sJob->setSigningKeys( signers );
 
-  q->addSubjob( seJob );
-  seJob->start();
-  QObject::connect( seJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+    if( encrypt ) {
+      QObject::connect( sJob, SIGNAL( finished( KJob* ) ), q, SLOT( signBeforeEncryptJobFinished( KJob* ) ) );
+    } else {
+      QObject::connect( sJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+    }
+    q->addSubjob( sJob );
+    sJob->start();
+    
+  } else if( encrypt ) {
+    // just encrypting, so setup the jobs directly
+    startEncryptJobs( cjob->content() );
+  }
+  
+    
 }
 
-void ComposerPrivate::contentJobFinished( KJob *job )
+void ComposerPrivate::signBeforeEncryptJobFinished( KJob* job )
 {
+  Q_Q( Composer );
+  
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
   }
 
   Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
   ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
-  resultContent = cjob->content();
-  resultContent->assemble();
 
-  composeStep3();
+  // cjob holds the signed content, now we encrypt per recipient
+  startEncryptJobs( cjob->content() );
+         
 }
 
-
-void ComposerPrivate::composeStep3()
-{
+void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   Q_Q( Composer );
 
-  // Compose the final resulting message.
-  QByteArray allData = skeletonMessage->head() + resultContent->encodedContent();
-  resultMessage = KMime::Message::Ptr( new KMime::Message );
-  resultMessage->setContent( allData );
-  resultMessage->parse(); // Not strictly necessary.
-  delete resultContent;
-  resultContent = 0;
-  kDebug() << "Finished composing the message.";
-  finished = true;
-  q->emitResult();
+  // each SplitInfo holds a list of recipients/keys, if there is more than
+  // one item in it then it means there are secondary recipients that need
+  // different messages w/ clean headers
+  for( int i = 0; i < encData.size(); ++i ) {
+    QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
+    EncryptJob* eJob = new EncryptJob( q );
+    eJob->setContent( content );
+    eJob->setCryptoMessageFormat( format );
+    eJob->setEncryptionKeys( recipients.second );
+
+    CryptoJob* makeJob = new CryptoJob( q );
+
+    makeJob->setCryptoMessageFormat( format );
+    makeJob->setSignEncrypt( sign, encrypt );
+    makeJob->appendSubjob( eJob );
+    // old msg is where headers, ct, cte, etc come from
+    makeJob->setContent( content );
+    makeJob->setRecipients( recipients.first );
+
+    QObject::connect( makeJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+
+    q->addSubjob( makeJob );
+    makeJob->start();
+  }
+
 }
 
+void ComposerPrivate::contentJobFinished( KJob *job )
+{
+  Q_Q( Composer );
+  
+  if( job->error() ) {
+    return; // KCompositeJob takes care of the error.
+  }
+  kDebug() << "composing final message";
 
+  KMime::Message* headers;
+  KMime::Content* resultContent;
+  
+  CryptoJob *cjob = dynamic_cast<CryptoJob*>( job );
+  if( cjob && encData.size() > 1 ) { // crypto job, need to set custom recipients
+
+    resultContent = cjob->content();
+    headers = new KMime::Message;
+    headers->setHeader( skeletonMessage->from() );
+    headers->setHeader( skeletonMessage->subject() );
+
+    KMime::Headers::To *to = new KMime::Headers::To( headers );
+    foreach( const QString &a, cjob->recipients() ) {
+      KMime::Types::Mailbox address;
+      address.fromUnicodeString( a );
+      to->addAddress( address );
+    }
+    headers->setHeader( to );
+  } else { // just use the saved headers from before
+    headers = skeletonMessage;
+    
+    Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+    ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
+
+    resultContent = contentJob->content();
+  }
+  
+  QByteArray allData = headers->head() + resultContent->encodedContent();
+  KMime::Message* resultMessage =  new KMime::Message;
+  resultMessage->setContent( allData );
+  resultMessage->parse(); // Not strictly necessary.
+  resultMessages.append( resultMessage );
+
+  q->removeSubjob( job );
+  kDebug() << "still have subjobs:" << q->hasSubjobs() << "num:" << q->subjobs().size();
+  if( !q->hasSubjobs() ) {
+    finished = true;
+    q->emitResult();
+  }
+}
 
 Composer::Composer( QObject *parent )
   : JobBase( *new ComposerPrivate( this ), parent )
@@ -232,12 +306,13 @@ Composer::~Composer()
 {
 }
 
-KMime::Message::Ptr Composer::resultMessage() const
+KMime::Message::List Composer::resultMessages() const
 {
   Q_D( const Composer );
   Q_ASSERT( d->finished );
   Q_ASSERT( !error() );
-  return d->resultMessage;
+  KMime::Message::List results = d->resultMessages;
+  return results;
 }
 
 GlobalPart *Composer::globalPart()
@@ -314,12 +389,11 @@ void Composer::setSigningKeys( std::vector<GpgME::Key>& signers )
   d->signers = signers;
 }
 
-void Composer::setEncryptionKeys( QStringList recipients, std::vector<GpgME::Key> keys )
+void Composer::setEncryptionKeys( QList<QPair<QStringList, std::vector<GpgME::Key> > > encData )
 {
   Q_D( Composer );
   
-  d->encRecipients = recipients;
-  d->encKeys = keys;
+  d->encData = encData;
 }
 
     

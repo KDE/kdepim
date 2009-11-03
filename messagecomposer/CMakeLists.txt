@@ -54,6 +54,10 @@ install( FILES
          multipartjob.h
          maintextjob.h
 
+	 signjob.h
+	 encryptjob.h
+	 cryptojob.h
+
          skeletonmessagejob.h
 
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagecomposer COMPONENT Devel )

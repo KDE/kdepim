@@ -1,5 +1,7 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (C) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   Parts based on KMail code by:
 
@@ -30,10 +32,187 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
 
-using namespace KMime;
-using namespace Message;
+KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign )
+{
 
-QByteArray Message::selectCharset( const QList<QByteArray> &charsets, const QString &text )
+  KMime::Content* result = new KMime::Content;
+
+  if( !( format & Kleo::InlineOpenPGPFormat ) ) { // make a MIME message
+    // make headers and CE+CTE
+    kDebug() << "making MIME message";
+    makeToplevelContentType( result, format, sign );
+    const QByteArray boundary = KMime::multiPartBoundary();
+
+    if( makeMultiMime( format, sign ) ) {
+      result->contentType()->setBoundary( boundary );
+    }
+
+    if( format & Kleo::SMIMEOpaqueFormat ) {
+      result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+      result->contentDisposition()->setFilename( QString::fromAscii( "smime.p7m" ) );
+    }
+
+    if( !makeMultiMime( format, sign ) && format & Kleo::AnySMIME ) {
+      result->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
+    } else {
+      result->contentTransferEncoding()->setEncoding( orig->contentTransferEncoding()->encoding() );
+
+    }
+
+    result->assemble();
+    kDebug() << "processed header:" << result->head();
+    // now make the body
+    if( !makeMultiMime( format, sign ) ) {
+      // set body to be body + encoded
+      result->setBody( orig->body() + "\n" + encodedBody );
+    } else {
+      // Build the encapsulated MIME parts.
+      // Build a MIME part holding the version information
+      // taking the body contents returned in
+      // structuring.data.bodyTextVersion.
+      KMime::Content* vers = 0;
+      if( !sign && format == Kleo::OpenPGPMIMEFormat ) {
+        vers = new KMime::Content;
+        vers->contentType()->setMimeType( "application/pgp-encrypted" );
+        vers->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+        vers->setBody( "Version: 1" );
+
+      }
+
+      // Build a MIME part holding the code information
+      // taking the body contents returned in ciphertext.
+      KMime::Content* code = new KMime::Content;
+      setNestedContentType( code, format, sign );
+      setNestedContentDisposition( code, format, sign );
+
+      if( format & Kleo::AnySMIME ) {
+        code->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
+        code->contentTransferEncoding()->needToEncode();
+      }
+      code->setBody( encodedBody );
+
+      // compose the multi-part message
+      if( sign && makeMultiMime( format, true ) )
+        result->addContent( orig );
+      if( vers )
+        result->addContent( vers );
+      result->addContent( code );
+    }
+  } else { // not MIME, just plain message
+    result->setHead( orig->head() );
+
+    QByteArray resultingBody;
+    if( sign && makeMultiMime( format, true ) )
+      resultingBody += orig->body();
+    if( !encodedBody.isEmpty() )
+      resultingBody += encodedBody;
+    else {
+      kDebug() << "Got no encoded payload trying to save as plaintext inline pgp!";
+      // TODO handle gracefully
+    }
+
+    result->setBody( resultingBody );
+  }
+  result->assemble();
+  return result;
+
+}
+
+// set the correct top-level ContentType on the message
+void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
+{
+  switch ( format ) {
+    default:
+    case Kleo::InlineOpenPGPFormat:
+    case Kleo::OpenPGPMIMEFormat:
+      if( sign ) {
+        content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
+        content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pgp-signature" ) );
+        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "pgp-sha1" ) );
+
+      } else {
+        content->contentType()->setMimeType( QByteArray( "multipart/encrypted" ) );
+        content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pgp-encrypted" ) );
+      }
+      return;
+    case Kleo::SMIMEFormat:
+      if ( sign ) {
+        kDebug() << "setting headers for SMIME";
+        content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
+        content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pkcs7-signature" ) );
+        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "sha1" ) );// FIXME: obtain this parameter from gpgme!
+        return;
+      }
+      // fall through (for encryption, there's no difference between
+      // SMIME and SMIMEOpaque, since there is no mp/encrypted for
+      // S/MIME)
+    case Kleo::SMIMEOpaqueFormat:
+
+        kDebug() << "setting headers for SMIME/opaque";
+      content->contentType()->setMimeType( QByteArray( "application/pkcs7-mime" ) );
+      content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "smime.p7m" ) );
+
+      if( sign ) {
+        content->contentType()->setParameter( QString::fromAscii( "smime-type" ), QString::fromAscii( "signed-data" ) );
+      } else {
+        content->contentType()->setParameter( QString::fromAscii( "smime-type" ), QString::fromAscii( "enveloped-data" ) );
+      }
+  }
+}
+
+
+void Message::Util::setNestedContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
+{
+  switch( format ){
+    case Kleo::OpenPGPMIMEFormat:
+      if( sign ) {
+        content->contentType()->setMimeType( QByteArray( "application/pgp-signature" ) );
+        content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "signature.asc" ) );
+        content->contentDescription()->from7BitString( "This is a digitally signed message part." );
+      } else {
+        content->contentType()->setMimeType( QByteArray( "application/octet-stream" ) );
+      }
+      return;
+    case Kleo::SMIMEFormat:
+      if ( sign ) {
+        content->contentType()->setMimeType( QByteArray( "application/pkcs7-signature" ) );
+        content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "smime.p7s" ) );
+        return;
+      }
+      // fall through:
+    default:
+    case Kleo::InlineOpenPGPFormat:
+    case Kleo::SMIMEOpaqueFormat:
+      ;
+  }
+}
+
+
+void Message::Util::setNestedContentDisposition( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
+{
+  if ( !sign && format & Kleo::OpenPGPMIMEFormat ) {
+    content->contentDisposition()->setDisposition( KMime::Headers::CDinline );
+    content->contentDisposition()->setFilename( QString::fromAscii( "msg.asc" ) );
+  } else if ( sign && format & Kleo::SMIMEFormat ) {
+    content->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
+    content->contentDisposition()->setFilename( QString::fromAscii( "smime.p7s" ) );
+  }
+}
+
+
+bool Message::Util::makeMultiMime( Kleo::CryptoMessageFormat format, bool sign )
+{
+  switch ( format ) {
+    default:
+    case Kleo::InlineOpenPGPFormat:
+    case Kleo::SMIMEOpaqueFormat:   return false;
+    case Kleo::OpenPGPMIMEFormat:   return true;
+    case Kleo::SMIMEFormat:         return sign; // only on sign - there's no mp/encrypted for S/MIME
+  }
+}
+
+
+QByteArray Message::Util::selectCharset( const QList<QByteArray> &charsets, const QString &text )
 {
   foreach( const QByteArray &name, charsets ) {
     // We use KCharsets::codecForName() instead of QTextCodec::codecForName() here, because
@@ -45,7 +224,7 @@ QByteArray Message::selectCharset( const QList<QByteArray> &charsets, const QStr
     }
     if( codec->canEncode( text ) ) {
       // Special check for us-ascii (needed because us-ascii is not exactly latin1).
-      if( name == "us-ascii" && !isUsAscii( text ) ) {
+      if( name == "us-ascii" && !KMime::isUsAscii( text ) ) {
         continue;
       }
       kDebug() << "Chosen charset" << name;
