@@ -38,6 +38,7 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/stl_util.h>
+#include <utils/path-helper.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
 
@@ -446,8 +447,10 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
             outputCreated = true;
             input->finalize();
             if ( removeInput )
-                Q_FOREACH( const QString & inputFileName, inputFileNames )
-                    inputRemoved |= QFile::remove( inputFileName );
+                try {
+                    kdtools::for_each( inputFileNames, recursivelyRemovePath );
+                    inputRemoved = true;
+                } catch ( ... ) {}
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
@@ -471,8 +474,10 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
             outputCreated = true;
             input->finalize();
             if ( removeInput )
-                Q_FOREACH( const QString & inputFileName, inputFileNames )
-                    inputRemoved |= QFile::remove( inputFileName );
+                try {
+                    kdtools::for_each( inputFileNames, recursivelyRemovePath );
+                    inputRemoved = true;
+                } catch ( ... ) {}
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
@@ -496,8 +501,10 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
             outputCreated = true;
             input->finalize();
             if ( removeInput )
-                Q_FOREACH( const QString & inputFileName, inputFileNames )
-                    inputRemoved |= QFile::remove( inputFileName );
+                try {
+                    kdtools::for_each( inputFileNames, recursivelyRemovePath );
+                    inputRemoved = true;
+                } catch ( ... ) {}
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
