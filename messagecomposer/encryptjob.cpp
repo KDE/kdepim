@@ -25,6 +25,7 @@
 #include "kleo/cryptobackend.h"
 #include "kleo/encryptjob.h"
 #include "kleo/enum.h"
+#include "util.h"
 
 #include <kdebug.h>
 #include <kmime/kmime_message.h>
@@ -50,7 +51,7 @@ class Message::EncryptJobPrivate : public ContentJobBasePrivate
     KMime::Content* content;
     std::vector<GpgME::Key> keys;
     Kleo::CryptoMessageFormat format;
-
+    QStringList recipients;
 
     // copied from messagecomposer.cpp
     bool binaryHint( Kleo::CryptoMessageFormat f )
@@ -117,6 +118,19 @@ void EncryptJob::setEncryptionKeys( std::vector<GpgME::Key> keys )
   d->keys = keys;
 }
 
+void EncryptJob::setRecipients( QStringList recipients ) {
+  Q_D( EncryptJob );
+
+  d->recipients = recipients;
+}
+
+QStringList EncryptJob::recipients() {
+  Q_D( EncryptJob );
+
+  return d->recipients;
+}
+
+
 void EncryptJob::process()
 {
   Q_D( EncryptJob );
@@ -148,7 +162,8 @@ void EncryptJob::process()
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
   }
   kDebug() << "got encrypted body:" << encryptedBody;
-  d->resultContent->setBody( encryptedBody );
+
+  d->resultContent = Message::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
 
   emitResult();
   return;

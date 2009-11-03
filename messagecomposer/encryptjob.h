@@ -59,7 +59,10 @@ class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase
     void setContent( KMime::Content* content );
     void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
     void setEncryptionKeys( std::vector<GpgME::Key> keys );
+    void setRecipients( QStringList rec );
 
+    QStringList recipients();
+    
   protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();

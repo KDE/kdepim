@@ -26,7 +26,6 @@
 #include "textpart.h"
 #include "maintextjob.h"
 #include "multipartjob.h"
-#include "cryptojob.h"
 #include "signjob.h"
 #include "encryptjob.h"
 #include "skeletonmessagejob.h"
@@ -227,20 +226,12 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
     eJob->setContent( content );
     eJob->setCryptoMessageFormat( format );
     eJob->setEncryptionKeys( recipients.second );
+    eJob->setRecipients( recipients.first );
+    
+    QObject::connect( eJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
 
-    CryptoJob* makeJob = new CryptoJob( q );
-
-    makeJob->setCryptoMessageFormat( format );
-    makeJob->setSignEncrypt( sign, encrypt );
-    makeJob->appendSubjob( eJob );
-    // old msg is where headers, ct, cte, etc come from
-    makeJob->setContent( content );
-    makeJob->setRecipients( recipients.first );
-
-    QObject::connect( makeJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
-
-    q->addSubjob( makeJob );
-    makeJob->start();
+    q->addSubjob( eJob );
+    eJob->start();
   }
 
 }
@@ -256,17 +247,21 @@ void ComposerPrivate::contentJobFinished( KJob *job )
 
   KMime::Message* headers;
   KMime::Content* resultContent;
-  
-  CryptoJob *cjob = dynamic_cast<CryptoJob*>( job );
-  if( cjob && encData.size() > 1 ) { // crypto job, need to set custom recipients
 
-    resultContent = cjob->content();
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
+
+  if( encData.size() > 1 ) { // crypto job, need to set custom recipients
+    Q_ASSERT( dynamic_cast<EncryptJob*>( job ) ); // we need to get the recipients for this job
+    EncryptJob* eJob = dynamic_cast<EncryptJob*>( job );
+    
+    resultContent = eJob->content();
     headers = new KMime::Message;
     headers->setHeader( skeletonMessage->from() );
     headers->setHeader( skeletonMessage->subject() );
 
     KMime::Headers::To *to = new KMime::Headers::To( headers );
-    foreach( const QString &a, cjob->recipients() ) {
+    foreach( const QString &a, eJob->recipients() ) {
       KMime::Types::Mailbox address;
       address.fromUnicodeString( a );
       to->addAddress( address );
@@ -275,9 +270,6 @@ void ComposerPrivate::contentJobFinished( KJob *job )
   } else { // just use the saved headers from before
     headers = skeletonMessage;
     
-    Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
-    ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
-
     resultContent = contentJob->content();
   }
   
