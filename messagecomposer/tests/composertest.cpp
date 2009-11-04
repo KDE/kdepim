@@ -51,7 +51,8 @@ void ComposerTest::testAttachments()
   composer->addAttachmentPart( attachment );
 
   QVERIFY( composer->exec() );
-  KMime::Message::Ptr message = composer->resultMessage();
+  QCOMPARE( composer->resultMessages().size(), 1 );
+  KMime::Message* message = composer->resultMessages().first();
   kDebug() << message->encodedContent();
   delete composer;
   composer = 0;
