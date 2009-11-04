@@ -2847,6 +2847,8 @@ void ViewerPrivate::slotUrlSave()
 
 void ViewerPrivate::slotSaveMessage()
 {
+   if(!mMessage) return;
+
    KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( mMessage->subject()->asUnicodeString().trimmed()
                                   .replace( QDir::separator(), '_' ) ),
                                   "*.mbox", mMainWindow );
