@@ -251,7 +251,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
   Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
   ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
 
-  if( encData.size() > 1 ) { // crypto job, need to set custom recipients
+  if( encData.size() > 1 ) { // crypto job with secondary recipients..
     Q_ASSERT( dynamic_cast<EncryptJob*>( job ) ); // we need to get the recipients for this job
     EncryptJob* eJob = dynamic_cast<EncryptJob*>( job );
     
@@ -266,7 +266,10 @@ void ComposerPrivate::contentJobFinished( KJob *job )
       address.fromUnicodeString( a );
       to->addAddress( address );
     }
+
+    kDebug() << "got one of multiple messages sending to:" << to->asUnicodeString();
     headers->setHeader( to );
+    headers->assemble();
   } else { // just use the saved headers from before
     headers = skeletonMessage;
     
@@ -279,6 +282,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
   resultMessage->parse(); // Not strictly necessary.
   resultMessages.append( resultMessage );
 
+  kDebug() << "sending message:" << allData;
   q->removeSubjob( job );
   kDebug() << "still have subjobs:" << q->hasSubjobs() << "num:" << q->subjobs().size();
   if( !q->hasSubjobs() ) {
