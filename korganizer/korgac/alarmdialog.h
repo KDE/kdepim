@@ -46,6 +46,7 @@ class QVBoxLayout;
 
 class AlarmDialog : public KDialog
 {
+
   Q_OBJECT
   public:
     AlarmDialog( QWidget *parent = 0 );
@@ -80,6 +81,7 @@ class AlarmDialog : public KDialog
   private:
     bool startKOrganizer();
     void setTimer();
+    void dismiss( QList<ReminderListItem *> selections );
     int activeCount();
     QList<ReminderListItem *> selectedItems() const;
     void updateButtons();
