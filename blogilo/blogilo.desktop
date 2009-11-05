@@ -9,6 +9,7 @@ Name[nds]=Blogilo
 Name[pt]=Blogilo
 Name[pt_BR]=Blogilo
 Name[sv]=Blogilo
+Name[tr]=Blogilo
 Name[uk]=Blogilo
 Name[x-test]=xxBlogiloxx
 Exec=blogilo %i -caption "%c"
