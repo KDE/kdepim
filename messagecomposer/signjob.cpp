@@ -150,7 +150,13 @@ void SignJob::process()
   // replace simple LFs by CRLFs for all MIME supporting CryptPlugs
   // according to RfC 2633, 3.1.1 Canonicalization
   d->content->assemble();
-  QByteArray content = KMime::LFtoCRLF( d->content->head() + "\n" + d->content->body() );
+  QByteArray content;
+  if( d->format & Kleo::InlineOpenPGPFormat ) {
+    content = KMime::LFtoCRLF( d->content->body() );
+  } else {
+    content = KMime::LFtoCRLF( d->content->head() + "\n" + d->content->body() );
+  }
+  
   kDebug() << "signing content:" << content;
   GpgME::SigningResult res = job->exec( d->signers,
                                         content,
