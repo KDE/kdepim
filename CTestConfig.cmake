@@ -13,3 +13,4 @@ set(CTEST_DROP_LOCATION "/submit.php?project=kdepim")
 set(CTEST_DROP_SITE_CDASH TRUE)
 
 set(CTEST_CUSTOM_MAXIMUM_NUMBER_OF_WARNINGS 2000)
+set(CTEST_CUSTOM_WARNING_EXCEPTION "groupwise/soap" "mk4storage")
