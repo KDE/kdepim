@@ -17,6 +17,8 @@
 #ifndef _MESSAGEVIEWER_PARTMETADATA_H_
 #define _MESSAGEVIEWER_PARTMETADATA_H_
 
+#include "messageviewer_export.h"
+
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/context.h>
 
@@ -24,7 +26,9 @@
 #include <QString>
 #include <qdatetime.h>
 
-class PartMetaData {
+namespace MessageViewer {
+
+class MESSAGEVIEWER_EXPORT PartMetaData {
 public:
   PartMetaData()
     : sigSummary( GpgME::Signature::None ),
@@ -59,6 +63,7 @@ public:
   bool isEncapsulatedRfc822Message : 1;
 };
 
+}
 
 #endif // _KMAIL_PARTMETADATA_H_
 

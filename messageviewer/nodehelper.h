@@ -36,6 +36,7 @@ namespace KMime {
 }
 
 namespace MessageViewer {
+  class PartMetaData;
   namespace Interface {
     class BodyPartMemento;
   }
@@ -89,6 +90,8 @@ public:
     KMMsgSignatureState overallSignatureState( KMime::Content* node ) const;
     KMMsgEncryptionState overallEncryptionState( KMime::Content *node ) const;
 
+    void setPartMetaData( KMime::Content* node, const PartMetaData &metaData );
+    PartMetaData partMetaData( KMime::Content* node );
 
     QString iconName( KMime::Content *node, int size = KIconLoader::Desktop ) const;
   /** Set the 'Content-Type' by mime-magic from the contents of the body.
@@ -223,6 +226,7 @@ private:
     QMap<KMime::Content*, QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> > mBodyPartMementoMap;
     QStringList mTempFiles;
     QStringList mTempDirs;
+    QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
 };
 
 }

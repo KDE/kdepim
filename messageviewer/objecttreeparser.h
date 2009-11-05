@@ -52,10 +52,10 @@ namespace GpgME {
   class Error;
 }
 
-class PartMetaData;
 
 namespace MessageViewer {
 
+class PartMetaData;
 class ViewerPrivate;
 class HtmlWriter;
 class CSSHelper;
@@ -238,9 +238,7 @@ private:
                       bool& passphraseError,
                       bool& actuallyEncrypted,
                       bool& decryptionStarted,
-                      QString& aErrorText,
-                      GpgME::Error & auditLogError,
-                      QString& auditLog );
+                      PartMetaData &partMetaData );
 
   bool processMailmanMessage( KMime::Content* node );
 

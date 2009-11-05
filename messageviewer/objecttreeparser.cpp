@@ -818,15 +818,13 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                                     bool& passphraseError,
                                     bool& actuallyEncrypted,
                                     bool& decryptionStarted,
-                                    QString& aErrorText,
-                                    GpgME::Error & auditLogError,
-                                    QString& auditLog )
+                                    PartMetaData &partMetaData )
 {
   passphraseError = false;
   decryptionStarted = false;
-  aErrorText.clear();
-  auditLogError = GpgME::Error();
-  auditLog.clear();
+  partMetaData.errorText.clear();
+  partMetaData.auditLogError = GpgME::Error();
+  partMetaData.auditLog.clear();
   bool bDecryptionOk = false;
   enum { NO_PLUGIN, NOT_INITIALIZED, CANT_DECRYPT }
     cryptPlugError = NO_PLUGIN;
@@ -912,9 +910,12 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
       passphraseError =  decryptResult.error().isCanceled()
         || decryptResult.error().code() == GPG_ERR_NO_SECKEY;
       actuallyEncrypted = decryptResult.error().code() != GPG_ERR_NO_DATA;
-      aErrorText = QString::fromLocal8Bit( decryptResult.error().asString() );
-      auditLogError = m->auditLogError();
-      auditLog = m->auditLogAsHtml();
+      partMetaData.errorText = QString::fromLocal8Bit( decryptResult.error().asString() );
+      partMetaData.auditLogError = m->auditLogError();
+      partMetaData.auditLog = m->auditLogAsHtml();
+      partMetaData.isEncrypted = actuallyEncrypted;
+      if ( actuallyEncrypted && decryptResult.numRecipients() > 0 )
+        partMetaData.keyId = decryptResult.recipient( 0 ).keyID();
 
       kDebug() << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG";
       if ( bDecryptionOk )
@@ -925,9 +926,9 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
                       + errorMsg.toUtf8()
                       + "</div>";
         if ( !passphraseError )
-          aErrorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName )
+          partMetaData.errorText = i18n("Crypto plug-in \"%1\" could not decrypt the data.", cryptPlugLibName )
                     + "<br />"
-                    + i18n("Error: %1", aErrorText );
+                    + i18n("Error: %1", partMetaData.errorText );
       }
     }
 }
@@ -938,15 +939,15 @@ if ( !cryptProto ) {
                 + "</div>";
   switch ( cryptPlugError ) {
   case NOT_INITIALIZED:
-    aErrorText = i18n( "Crypto plug-in \"%1\" is not initialized.",
+    partMetaData.errorText = i18n( "Crypto plug-in \"%1\" is not initialized.",
                       cryptPlugLibName );
     break;
   case CANT_DECRYPT:
-    aErrorText = i18n( "Crypto plug-in \"%1\" cannot decrypt messages.",
+    partMetaData.errorText = i18n( "Crypto plug-in \"%1\" cannot decrypt messages.",
                       cryptPlugLibName );
     break;
   case NO_PLUGIN:
-    aErrorText = i18n( "No appropriate crypto plug-in was found." );
+    partMetaData.errorText = i18n( "No appropriate crypto plug-in was found." );
     break;
   }
 } else if (/*FIXME(Andras) port to akonadi
@@ -1490,9 +1491,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
                                     passphraseError,
                                     actuallyEncrypted,
                                     decryptionStarted,
-                                    messagePart.errorText,
-                                    messagePart.auditLogError,
-                                    messagePart.auditLog );
+                                    messagePart );
 
   if ( decryptionStarted ) {
     writeDecryptionInProgressBlock();
@@ -1548,6 +1547,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, 
   if ( mHtmlWriter )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   mNodeHelper->setNodeProcessed( data, false ); // Set the data node to done to prevent it from being processed
+  mNodeHelper->setPartMetaData( node, messagePart );
   return true;
 }
 
@@ -1600,6 +1600,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
 
   if ( mHtmlWriter )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  mNodeHelper->setPartMetaData( node, messagePart );
   return true;
 }
 
@@ -1650,9 +1651,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
                                         passphraseError,
                                         actuallyEncrypted,
                                         decryptionStarted,
-                                        messagePart.errorText,
-                                        messagePart.auditLogError,
-                                        messagePart.auditLog );
+                                        messagePart );
 
       if ( decryptionStarted ) {
         writeDecryptionInProgressBlock();
@@ -1685,6 +1684,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * no
 
       if ( mHtmlWriter )
         htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+      mNodeHelper->setPartMetaData( node, messagePart );
     }
     return true;
   }
@@ -1825,9 +1825,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
                         passphraseError,
                         actuallyEncrypted,
                         decryptionStarted,
-                        messagePart.errorText,
-                        messagePart.auditLogError,
-                        messagePart.auditLog ) ) {
+                        messagePart ) ) {
       kDebug() << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
       isEncrypted = true;
       mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
@@ -1875,6 +1873,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
     }
     if ( isEncrypted )
       mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
+    mNodeHelper->setPartMetaData( node, messagePart );
   }
 
   // We now try signature verification if necessarry.
@@ -2017,6 +2016,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   result.setInlineEncryptionState( KMMsgFullyEncrypted );
   if ( mHtmlWriter )
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  mNodeHelper->setPartMetaData( curNode, messagePart );
   return true;
 }
 
