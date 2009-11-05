@@ -42,12 +42,16 @@ namespace KMime {
   class Content;
 }
 
+namespace MessageViewer {
+  class NodeHelper;
+}
+
 /**
     @short an implementation of the BodyPart interface using partNodes
 */
 class PartNodeBodyPart : public MessageViewer::Interface::BodyPart {
 public:
-  explicit PartNodeBodyPart( KMime::Content* content, const QTextCodec * codec=0 );
+  explicit PartNodeBodyPart( KMime::Content* content, MessageViewer::NodeHelper *nodeHelper, const QTextCodec * codec=0 );
 
   QString makeLink( const QString & path ) const;
   QString asText() const;
@@ -67,6 +71,7 @@ private:
   KMime::Content *mContent;
   const QTextCodec * mCodec;
   BodyPart::Display mDefaultDisplay;
+  MessageViewer::NodeHelper *mNodeHelper;
 };
 
 #endif // __MESSAGEVIEWER_PARTNODEBODYPART_H_

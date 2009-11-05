@@ -131,16 +131,24 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   */
   void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
+  /** Instead of settings a message to be shown sets a message part
+      to be shown */
+  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
+                   const QString& aFileName, const QString& pname );
+
   /** Convenience method to clear the reader and discard the current message. Sets the internal message pointer
   * returned by message() to 0.
   * @param updateMode - update the display immediately or not. See UpdateMode.
   */
   void clear(UpdateMode updateMode = Delayed ) { setMessage(0, updateMode); }
 
+  void update(UpdateMode updateMode = Delayed );
+
   /** Sets a message as the current one and print it immediately.
   *   @param message the message to display and print
   */
   void printMessage( KMime::Message* message );
+  void printMessage( const Akonadi::Item &msg );
 
   /** Print the currently displayed message */
   void print();
@@ -251,6 +259,8 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   bool autoDelete(void) const;
   void setAutoDelete(bool f);
 
+  bool noMDNsWhenEncrypted() const;
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -258,6 +268,9 @@ signals:
 
   /** The user presses the right mouse button. 'url' may be 0. */
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
+  /** The user presses the right mouse button. 'url' may be 0. */
+  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
+
 
   /** The user has clicked onto an URL that is no attachment. */
   void urlClicked(const KUrl &url, int button);
@@ -275,6 +288,9 @@ public slots:
   void slotJumpDown();
   void slotFind();
   void slotUrlClicked();
+  void slotSaveMessage();
+  void slotAttachmentSaveAs();
+  void slotShowMessageSource();
 
 protected:
     /** Some necessary event handling. */

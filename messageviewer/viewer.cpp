@@ -43,6 +43,7 @@ Viewer::Viewer(QWidget *aParent,
 {
   connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ), SIGNAL( replaceMsgByUnencryptedVersion() ) );
   connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
+  connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( urlClicked(const KUrl&, int ) ), SIGNAL( urlClicked(const KUrl&, int ) ) );
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
   setMessage( 0, Delayed );
@@ -80,6 +81,12 @@ void Viewer::enableMessageDisplay()
   d->enableMessageDisplay();
 }
 
+void Viewer::printMessage( const Akonadi::Item &msg )
+{
+  Q_D( Viewer );
+  d->printMessage( msg );
+}
+
 void Viewer::printMessage( KMime::Message* message )
 {
    Q_D(Viewer);
@@ -112,6 +119,18 @@ void Viewer::closeEvent( QCloseEvent *e )
   Q_D(Viewer);
   QWidget::closeEvent( e );
   d->writeConfig();
+}
+
+void Viewer::slotAttachmentSaveAs()
+{
+  Q_D( Viewer );
+  d->slotAttachmentSaveAs();
+}
+
+void Viewer::slotSaveMessage()
+{
+  Q_D( Viewer );
+  d->slotSaveMessage();
 }
 
 void Viewer::slotScrollUp()
@@ -439,6 +458,31 @@ void Viewer::setAutoDelete(bool f)
 {
   Q_D( Viewer );
   d->mDeleteMessage = f;
+}
+
+void Viewer::update( Viewer::UpdateMode updateMode )
+{
+  Q_D( Viewer );
+  d->update( updateMode );
+}
+
+void Viewer::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
+                              const QString& aFileName, const QString& pname )
+{
+  Q_D( Viewer );
+  d->setMessagePart( aMsgPart, aHTML, aFileName, pname );
+}
+
+void Viewer::slotShowMessageSource()
+{
+  Q_D( Viewer );
+  d->slotShowMessageSource();
+}
+
+bool Viewer::noMDNsWhenEncrypted() const
+{
+  Q_D( const Viewer );
+  return d->noMDNsWhenEncrypted();
 }
 
 }

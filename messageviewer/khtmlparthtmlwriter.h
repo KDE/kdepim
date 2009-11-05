@@ -33,7 +33,6 @@
 #define __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__
 
 #include "interfaces/htmlwriter.h"
-#include "messageviewer_export.h"
 #include <QObject>
 
 #include <QStringList>
@@ -44,8 +43,7 @@
 class QString;
 class KHTMLPart;
 
-//Laurent remove export when we remove old code
-class MESSAGEVIEWER_EXPORT KHtmlPartHtmlWriter : public QObject, public MessageViewer::HtmlWriter {
+class KHtmlPartHtmlWriter : public QObject, public MessageViewer::HtmlWriter {
   Q_OBJECT
 public:
   // Key is Content-Id, value is URL

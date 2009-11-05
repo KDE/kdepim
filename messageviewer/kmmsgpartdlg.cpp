@@ -35,7 +35,7 @@
 
 // other includes:
 #include <assert.h>
-
+#if 0
 static const struct {
   KMMsgPartDialog::Encoding encoding;
   const char * displayName;
@@ -51,7 +51,6 @@ static const int numEncodingTypes =
 QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
 QByteArray encodeRFC2231String( const QString& _str, const QByteArray& charset );
 const QTextCodec* codecForName(const QByteArray& _str);
-QByteArray toUsAscii(const QString& _str, bool *ok = 0);
 
 KMMsgPartDialog::KMMsgPartDialog( const QString & caption,
                                   QWidget * parent )
@@ -409,7 +408,7 @@ void KMMsgPartDialogCompat::applyChanges()
   QString name = fileName();
   if ( !name.isEmpty() || !mMsgPart->contentType()->name().isEmpty()) {
     mMsgPart->contentType()->setName( name, mMsgPart->contentType()->charset()); //FIXME(Andras) check if the second arg is ok
-    QByteArray encoding = autoDetectCharset( mMsgPart->contentType()->charset(), QStringList()
+    QByteArray encoding = MessageViewer::NodeHelper::autoDetectCharset( mMsgPart->contentType()->charset(), QStringList()
       /*KMMessage::preferredCharsets()*/, name ); //FIXME(Andras) read the pref charset
     if ( encoding.isEmpty() ) encoding = "utf-8";
     QByteArray encName = encodeRFC2231String( name, encoding );
@@ -464,46 +463,6 @@ void KMMsgPartDialogCompat::slotOk()
   applyChanges();
 }
 
-QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text)
-{
-    QStringList charsets = encodingList;
-    if (!_encoding.isEmpty())
-    {
-       QString currentCharset = QString::fromLatin1(_encoding);
-       charsets.removeAll(currentCharset);
-       charsets.prepend(currentCharset);
-    }
-
-    QStringList::ConstIterator it = charsets.constBegin();
-    for (; it != charsets.constEnd(); ++it)
-    {
-       QByteArray encoding = (*it).toLatin1();
-       if (encoding == "locale")
-       {
-         encoding = NodeHelper::instance()->localCodec()->name();
-         kAsciiToLower(encoding.data());
-       }
-       if (text.isEmpty())
-         return encoding;
-       if (encoding == "us-ascii") {
-         bool ok;
-         (void) toUsAscii(text, &ok);
-         if (ok)
-            return encoding;
-       }
-       else
-       {
-         const QTextCodec *codec = codecForName(encoding);
-         if (!codec) {
-           kDebug() <<"Auto-Charset: Something is wrong and I can not get a codec. [" << encoding <<"]";
-         } else {
-           if (codec->canEncode(text))
-              return encoding;
-         }
-       }
-    }
-    return 0;
-}
 
 QByteArray encodeRFC2231String( const QString& _str,
                                          const QByteArray& charset )
@@ -524,7 +483,7 @@ QByteArray encodeRFC2231String( const QString& _str,
   const QTextCodec *codec = codecForName( cset );
   QByteArray latin;
   if ( charset == "us-ascii" )
-    latin = toUsAscii( _str );
+    latin = NodeHelper::toUsAscii( _str );
   else if ( codec )
     latin = codec->fromUnicode( _str );
   else
@@ -578,22 +537,9 @@ const QTextCodec* codecForName(const QByteArray& _str)
   return KGlobal::charsets()->codecForName(codec);
 }
 
-QByteArray toUsAscii(const QString& _str, bool *ok)
-{
-  bool all_ok =true;
-  QString result = _str;
-  int len = result.length();
-  for (int i = 0; i < len; i++)
-    if (result.at(i).unicode() >= 128) {
-      result[i] = '?';
-      all_ok = false;
-    }
-  if (ok)
-    *ok = all_ok;
-  return result.toLatin1();
-}
-
 
 
 //-----------------------------------------------------------------------------
 #include "kmmsgpartdlg.moc"
+
+#endif

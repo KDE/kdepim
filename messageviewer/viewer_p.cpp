@@ -118,6 +118,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
                          QWidget *mainWindow,
                          KActionCollection* actionCollection)
   : QObject(aParent),
+    mNodeHelper( new NodeHelper ),
     mMessage( 0 ),
     mAttachmentStrategy( 0 ),
     mHeaderStrategy( 0 ),
@@ -136,9 +137,9 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mScrollDownAction( 0 ),
     mScrollUpMoreAction( 0 ),
     mScrollDownMoreAction( 0 ),
-    mToggleMimePartTreeAction( 0 ),
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
+    mToggleMimePartTreeAction( 0 ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
     mDecrytMessageOverwrite( false ),
@@ -163,7 +164,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
 
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
-  mLastStatus.clear();
   mMsgDisplay = true;
   mPrinting = false;
 
@@ -194,7 +194,8 @@ ViewerPrivate::~ViewerPrivate()
   if ( mDeleteMessage )
     delete mMessage;
   mMessage = 0;
-  NodeHelper::instance()->removeTempFiles();
+  mNodeHelper->removeTempFiles();
+  delete mNodeHelper;
 }
 
 
@@ -233,7 +234,7 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
   QString str, pname, cmd, fileName;
 
   if ( name.isEmpty() )
-    atmName = NodeHelper::instance()->tempFileUrlFromNode( node ).toLocalFile();
+    atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
 
   if ( node->contentType()->mediaType() == "message" )
   {
@@ -496,6 +497,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
     KMime::Content* dataNode = curNode;
     KMime::Content * child = NodeHelper::firstChild( node );
     bool bIsMultipart = false;
+    bool bKeepPartAsIs = false;
 
     QString type = curNode->contentType()->mediaType();
     QString subType = curNode->contentType()->subType();
@@ -506,17 +508,11 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         kDebug() <<"* multipart *";
         kDebug() << subType;
         bIsMultipart = true;
-        if ( subType == "encrypted" ) {
-            if ( child ) {
-              /*
-                  ATTENTION: This code is to be replaced by the new 'auto-detect' feature. --------------------------------------
-              */
-              KMime::Content* data =
-                ObjectTreeParser::findType( child, "application/octet-stream", false, true );
-              if ( !data )
-                data = ObjectTreeParser::findType( child, "application/pkcs7-mime", false, true );
-              dataNode = NodeHelper::firstChild( data );
-            }
+        if ( subType == "signed" ) {
+            bKeepPartAsIs = true;
+        } else if ( subType == "encrypted" ) {
+          if ( child )
+            dataNode = child;
         }
     } else if ( type == "message" ) {
         if ( subType == "rfc822") {
@@ -529,10 +525,14 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
           if ( subType == "octet-stream" ) {
               if ( child )
                 dataNode = child;
+          } else if ( subType == "pkcs7-signature" ) {
+              // note: subtype Pkcs7Signature specifies a signature part
+              //       which we do NOT want to remove!
+              bKeepPartAsIs = true;
           } else if ( subType == "pkcs7-mime" ) {
               // note: subtype Pkcs7Mime can also be signed
               //       and we do NOT want to remove the signature!
-              if ( child && NodeHelper::instance()->encryptionState( curNode ) != KMMsgNotEncrypted ) {
+              if ( child && mNodeHelper->encryptionState( curNode ) != KMMsgNotEncrypted ) {
                 dataNode = child;
             }
           }
@@ -583,40 +583,45 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         }
       }
 
-      // B) Store the body of this part.
-      if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
-        kDebug() <<"is valid Multipart, processing children:";
-        QByteArray boundary = headerContent->contentType()->boundary();
-        curNode = NodeHelper::firstChild( dataNode );
-        // store children of multipart
-        while( curNode ) {
-          kDebug() <<"--boundary";
-          if( resultingData.size() &&
-              ( '\n' != resultingData.at( resultingData.size()-1 ) ) )
-            resultingData += '\n';
-          resultingData += '\n';
-          resultingData += "--";
-          resultingData += boundary;
-          resultingData += '\n';
-          // note: We are processing a harmless multipart that is *not*
-          //       to be replaced by one of it's children, therefor
-          //       we set their doStoreHeaders to true.
-          objectTreeToDecryptedMsg( curNode,
-                                    resultingData,
-                                    theMessage,
-                                    false,
-                                    recCount + 1 );
-          curNode = NodeHelper::nextSibling( curNode );
-        }
-        kDebug() <<"--boundary--";
-        resultingData += "\n--";
-        resultingData += boundary;
-        resultingData += "--\n\n";
-        kDebug() <<"Multipart processing children - DONE";
+      if ( bKeepPartAsIs ) {
+          resultingData += dataNode->encodedContent();
       } else {
-        // store simple part
-        kDebug() <<"is Simple part or invalid Multipart, storing body data .. DONE";
-        resultingData += dataNode->body();
+
+        // B) Store the body of this part.
+        if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
+          kDebug() <<"is valid Multipart, processing children:";
+          QByteArray boundary = headerContent->contentType()->boundary();
+          curNode = NodeHelper::firstChild( dataNode );
+          // store children of multipart
+          while( curNode ) {
+            kDebug() <<"--boundary";
+            if( resultingData.size() &&
+                ( '\n' != resultingData.at( resultingData.size()-1 ) ) )
+              resultingData += '\n';
+            resultingData += '\n';
+            resultingData += "--";
+            resultingData += boundary;
+            resultingData += '\n';
+            // note: We are processing a harmless multipart that is *not*
+            //       to be replaced by one of it's children, therefor
+            //       we set their doStoreHeaders to true.
+            objectTreeToDecryptedMsg( curNode,
+                                      resultingData,
+                                      theMessage,
+                                      false,
+                                      recCount + 1 );
+            curNode = NodeHelper::nextSibling( curNode );
+          }
+          kDebug() <<"--boundary--";
+          resultingData += "\n--";
+          resultingData += boundary;
+          resultingData += "--\n\n";
+          kDebug() <<"Multipart processing children - DONE";
+        } else {
+          // store simple part
+          kDebug() <<"is Simple part or invalid Multipart, storing body data .. DONE";
+          resultingData += dataNode->body();
+        }
       }
     } else {
       kDebug() <<"dataNode != curNode:  Replace curNode by dataNode.";
@@ -658,7 +663,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
 
 KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
 {
-  QString fileName = NodeHelper::instance()->writeNodeToTempFile( content );
+  QString fileName = mNodeHelper->writeNodeToTempFile( content );
 
   const QString contentTypeStr = content->contentType()->mimeType();
 
@@ -690,7 +695,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
   KMime::Content *topContent  = content->topLevel();
   bool bSaveEncrypted = false;
 
-  bool bEncryptedParts = NodeHelper::instance()->encryptionState( content ) != KMMsgNotEncrypted;
+  bool bEncryptedParts = mNodeHelper->encryptionState( content ) != KMMsgNotEncrypted;
   if( bEncryptedParts )
     if( KMessageBox::questionYesNo( mMainWindow,
           i18n( "The part %1 of the message is encrypted. Do you want to keep the encryption when saving?",
@@ -700,7 +705,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
       bSaveEncrypted = true;
 
   bool bSaveWithSig = true;
-  if( NodeHelper::instance()->signatureState( content ) != KMMsgNotSigned )
+  if( mNodeHelper->signatureState( content ) != KMMsgNotSigned )
     if( KMessageBox::questionYesNo( mMainWindow,
           i18n( "The part %1 of the message is signed. Do you want to keep the signature when saving?",
            url.fileName() ),
@@ -733,10 +738,10 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
           }
         } else {
           EmptySource emptySource;
-          ObjectTreeParser otp( &emptySource, 0, false, false, false );
+          ObjectTreeParser otp( &emptySource, 0, 0,false, false, false );
 
           // process this node and all it's siblings and descendants
-          NodeHelper::instance()->setNodeUnprocessed( dataNode, true );
+          mNodeHelper->setNodeUnprocessed( dataNode, true );
           otp.parseObjectTree( dataNode );
 
           rawReplyString = otp.rawReplyString();
@@ -962,7 +967,7 @@ KMime::Content::List ViewerPrivate::selectedContents()
 
 void ViewerPrivate::attachmentOpenWith( KMime::Content *node )
 {
-  QString name = NodeHelper::instance()->writeNodeToTempFile( node );
+  QString name = mNodeHelper->writeNodeToTempFile( node );
   QString linkName = createAtmFileLink( name );
   KUrl::List lst;
   KUrl url;
@@ -988,7 +993,7 @@ void ViewerPrivate::attachmentOpen( KMime::Content *node )
     kDebug() << "got no offer";
     return;
   }
-  QString name = NodeHelper::instance()->writeNodeToTempFile( node );
+  QString name = mNodeHelper->writeNodeToTempFile( node );
   KUrl::List lst;
   KUrl url;
   bool autoDelete = true;
@@ -1086,7 +1091,7 @@ void ViewerPrivate::displayMessage()
   mMimePartModel->setRoot( mMessage );
   showHideMimeTree();
 
-  NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
+  mNodeHelper->setOverrideCodec( mMessage, overrideCodec() );
 
   htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont ) );
   htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
@@ -1094,7 +1099,7 @@ void ViewerPrivate::displayMessage()
   if ( !mMainWindow )
       q->setWindowTitle( mMessage->subject()->asUnicodeString() );
 
-  NodeHelper::instance()->removeTempFiles();
+  mNodeHelper->removeTempFiles();
 
   mColorBar->setNeutralMode();
 
@@ -1109,12 +1114,19 @@ void ViewerPrivate::displayMessage()
   QTimer::singleShot( 1, this, SLOT(injectAttachments()) );
 }
 
+static bool message_was_saved_decrypted_before( KMime::Message * msg )
+{
+  if ( !msg )
+    return false;
+  kDebug() << "msgId =" << msg->messageID()->asUnicodeString();
+  return msg->messageID()->asUnicodeString().trimmed().startsWith( "<DecryptedMsg." );
+}
 
 void ViewerPrivate::parseMsg()
 {
   assert( mMessage != 0 );
 
-  NodeHelper::instance()->setNodeBeingProcessed( mMessage, true );
+  mNodeHelper->setNodeBeingProcessed( mMessage, true );
 
   QString cntDesc = i18n("( body part )");
 
@@ -1144,14 +1156,14 @@ void ViewerPrivate::parseMsg()
       if ( !t.parseVCards( vCard ).isEmpty() ) {
           hasVCard = true;
           kDebug() <<"FOUND A VALID VCARD";
-          NodeHelper::instance()->writeNodeToTempFile( vCardContent );
+          mNodeHelper->writeNodeToTempFile( vCardContent );
       }
   }
   htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
 
   // show message content
   MailViewerSource otpSource( this );
-  ObjectTreeParser otp( &otpSource );
+  ObjectTreeParser otp( &otpSource, mNodeHelper );
   otp.setAllowAsync( true );
   otp.parseObjectTree( mMessage );
 
@@ -1159,72 +1171,72 @@ void ViewerPrivate::parseMsg()
 
   // store encrypted/signed status information in the KMMessage
   //  - this can only be done *after* calling parseObjectTree()
-  KMMsgEncryptionState encryptionState = NodeHelper::instance()->overallEncryptionState( mMessage );
-  KMMsgSignatureState  signatureState  = NodeHelper::instance()->overallSignatureState( mMessage );
-  NodeHelper::instance()->setEncryptionState( mMessage, encryptionState );
+  KMMsgEncryptionState encryptionState = mNodeHelper->overallEncryptionState( mMessage );
+  KMMsgSignatureState  signatureState  = mNodeHelper->overallSignatureState( mMessage );
+  mNodeHelper->setEncryptionState( mMessage, encryptionState );
   // Don't reset the signature state to "not signed" (e.g. if one canceled the
   // decryption of a signed messages which has already been decrypted before).
   if ( signatureState != KMMsgNotSigned ||
-       NodeHelper::instance()->signatureState( mMessage ) == KMMsgSignatureStateUnknown ) {
-    NodeHelper::instance()->setSignatureState( mMessage, signatureState );
+       mNodeHelper->signatureState( mMessage ) == KMMsgSignatureStateUnknown ) {
+    mNodeHelper->setSignatureState( mMessage, signatureState );
   }
 
   const KConfigGroup reader( Global::instance()->config(), "Reader" );
   if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
 
-  // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
-  // of german government:
-  // --> All received encrypted messages *must* be stored in unencrypted form
-  //     after they have been decrypted once the user has read them.
-  //     ( "Aufhebung der Verschluesselung nach dem Lesen" )
-  //
-  // note: Since there is no configuration option for this, we do that for
-  //       all kinds of encryption now - *not* just for S/MIME.
-  //       This could be changed in the objectTreeToDecryptedMsg() function
-  //       by deciding when (or when not, resp.) to set the 'dataNode' to
-  //       something different than 'curNode'.
+    // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
+    // of german government:
+    // --> All received encrypted messages *must* be stored in unencrypted form
+    //     after they have been decrypted once the user has read them.
+    //     ( "Aufhebung der Verschluesselung nach dem Lesen" )
+    //
+    // note: Since there is no configuration option for this, we do that for
+    //       all kinds of encryption now - *not* just for S/MIME.
+    //       This could be changed in the objectTreeToDecryptedMsg() function
+    //       by deciding when (or when not, resp.) to set the 'dataNode' to
+    //       something different than 'curNode'.
 
 
-kDebug() <<"\n\n\nSpecial post-encryption handling:\n1.";
-//FIXME(Andras) do we need it? kDebug() <<"(aMsg == msg) ="                      << (aMsg == message());
-kDebug() <<"   mLastStatus.isOfUnknownStatus() =" << mLastStatus.isOfUnknownStatus();
-kDebug() <<"|| mLastStatus.isNew() ="             << mLastStatus.isNew();
-kDebug() <<"|| mLastStatus.isUnread) ="           << mLastStatus.isUnread();
-//FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
-kDebug() <<"   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
-kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
+    //FIXME(Andras) kDebug() <<"(mIdOfLastViewedMessage != aMsg->msgId()) ="       << (mIdOfLastViewedMessage != aMsg->msgId());
+//     kDebug() << "aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() = " << (aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder());
+//     kDebug() << "message_was_saved_decrypted_before( aMsg ) = " << message_was_saved_decrypted_before( aMsg );
+    kDebug() << "this->decryptMessage() = " << decryptMessage();
+    kDebug() << "otp.hasPendingAsyncJobs() = " << otp.hasPendingAsyncJobs();
+    kDebug() <<"   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
+    kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
-  if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
-         // only proceed if this message was not saved encryptedly before
-         // to make sure only *new* messages are saved in decrypted form
-      && (    mLastStatus.isOfUnknownStatus()
-           || mLastStatus.isNew()
-           || mLastStatus.isUnread() )
-         // avoid endless recursions
-//FIXME(Andras)      && (mIdOfLastViewedMessage != aMsg->msgId())
-         // only proceed if this message is (at least partially) encrypted
-      && (    (KMMsgFullyEncrypted == encryptionState)
-           || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
+    if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
+          // don't remove encryption in the outbox folder :)
+//FIXME(Andras)      && ( aMsg->parent() && aMsg->parent() != kmkernel->outboxFolder() )
+          // only proceed if this message was not saved encryptedly before
+//FIXME(Andras)      && !message_was_saved_decrypted_before( aMsg )
+          // only proceed if the message has actually been decrypted
+        && decryptMessage()
+          // only proceed if no pending async jobs are running:
+        && !otp.hasPendingAsyncJobs()
+          // only proceed if this message is (at least partially) encrypted
+        && (    (KMMsgFullyEncrypted == encryptionState)
+            || (KMMsgPartiallyEncrypted == encryptionState) ) ) {
 
-    kDebug() <<"Calling objectTreeToDecryptedMsg()";
+      kDebug() << "Calling objectTreeToDecryptedMsg()";
 
-    KMime::Message *unencryptedMessage = new KMime::Message;
-    QByteArray decryptedData;
-    // note: The following call may change the message's headers.
-    objectTreeToDecryptedMsg( mMessage, decryptedData, *unencryptedMessage );
-    kDebug() << "Resulting data:" << decryptedData;
+      KMime::Message *unencryptedMessage = new KMime::Message;
+      QByteArray decryptedData;
+      // note: The following call may change the message's headers.
+      objectTreeToDecryptedMsg( mMessage, decryptedData, *unencryptedMessage );
+      kDebug() << "Resulting data:" << decryptedData;
 
-    if( !decryptedData.isEmpty() ) {
-      kDebug() <<"Composing unencrypted message";
-      unencryptedMessage->setBody( decryptedData );
-     //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
-      kDebug() << "Attach unencrypted message to aMsg";
+      if( !decryptedData.isEmpty() ) {
+        kDebug() <<"Composing unencrypted message";
+        unencryptedMessage->setBody( decryptedData );
+      //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
+        kDebug() << "Attach unencrypted message to aMsg";
 
-      NodeHelper::instance()->attachUnencryptedMessage( mMessage, unencryptedMessage );
+        mNodeHelper->attachUnencryptedMessage( mMessage, unencryptedMessage );
 
-      emitReplaceMsgByUnencryptedVersion = true;
-    }
+        emitReplaceMsgByUnencryptedVersion = true;
+      }
     }
   }
 
@@ -1238,7 +1250,7 @@ kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiall
   } else {
     showHideMimeTree();
   }
-  NodeHelper::instance()->setNodeBeingProcessed( mMessage, false );
+  mNodeHelper->setNodeBeingProcessed( mMessage, false );
 }
 
 
@@ -1439,7 +1451,7 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
       QStringList encodings = mSelectEncodingAction->items();
       int i = 0;
       for ( QStringList::const_iterator it = encodings.constBegin(), end = encodings.constEnd(); it != end; ++it, ++i ) {
-        if ( ViewerPrivate::encodingForName( *it ) == encoding ) {
+        if ( NodeHelper::encodingForName( *it ) == encoding ) {
           mSelectEncodingAction->setCurrentItem( i );
           break;
         }
@@ -1464,6 +1476,13 @@ void ViewerPrivate::setPrintFont( const QFont& font )
 }
 
 
+void ViewerPrivate::printMessage( const Akonadi::Item &message )
+{
+  disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
+  setMessageItem( message, Viewer::Force );
+}
+
 void ViewerPrivate::printMessage( KMime::Message* message )
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
@@ -1474,12 +1493,12 @@ void ViewerPrivate::printMessage( KMime::Message* message )
 
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
-  if ( mMessage && !NodeHelper::instance()->nodeProcessed( mMessage ) ) {
+  if ( mMessage && !mNodeHelper->nodeProcessed( mMessage ) ) {
     kWarning() << "The root node is not yet processed! Danger!";
     return;
   }
 
-  if ( mMessage && NodeHelper::instance()->nodeBeingProcessed( mMessage ) ) {
+  if ( mMessage && mNodeHelper->nodeBeingProcessed( mMessage ) ) {
     kWarning() << "The root node is not yet fully processed! Danger!";
     return;
   }
@@ -1489,7 +1508,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
       delete mMessage;
       mMessage = 0;
     }
-    NodeHelper::instance()->clear();
+    mNodeHelper->clear();
     mMimePartModel->setRoot( 0 );
 
     mMessage = 0; //forget the old message if it was set
@@ -1519,7 +1538,7 @@ void ViewerPrivate::setMessage(KMime::Message* aMsg, Viewer::UpdateMode updateMo
     delete mMessage;
     mMessage = 0;
   }
-  NodeHelper::instance()->clear();
+  mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
 
   if ( mPrinting )
@@ -1531,9 +1550,7 @@ void ViewerPrivate::setMessage(KMime::Message* aMsg, Viewer::UpdateMode updateMo
   mDeleteMessage = (ownerShip == Viewer::Transfer);
 
   if ( mMessage ) {
-    NodeHelper::instance()->setOverrideCodec( mMessage, overrideCodec() );
-  } else {
-    mLastStatus.clear();
+    mNodeHelper->setOverrideCodec( mMessage, overrideCodec() );
   }
 
   update( updateMode );
@@ -1548,7 +1565,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
   // end ###
   if ( node ) {
     MailViewerSource otpSource( this );
-    ObjectTreeParser otp( &otpSource, 0, true );
+    ObjectTreeParser otp( &otpSource, mNodeHelper, 0, true );
     otp.parseObjectTree( node );
   }
   // ### this, too
@@ -1593,9 +1610,9 @@ void ViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
       } else { // plain text
         const QByteArray str = aMsgPart->decodedContent();
         MailViewerSource otpSource( this );
-        ObjectTreeParser otp( &otpSource );
+        ObjectTreeParser otp( &otpSource, mNodeHelper );
         otp.writeBodyStr( str,
-                          overrideCodec() ? overrideCodec() : NodeHelper::instance()->codec( aMsgPart ),
+                          overrideCodec() ? overrideCodec() : mNodeHelper->codec( aMsgPart ),
                           mMessage ? mMessage->from()->asUnicodeString() : QString() );
       }
       htmlWriter()->queue("</body></html>");
@@ -1866,7 +1883,7 @@ void ViewerPrivate::createActions()
   ac->addAction("encoding", mSelectEncodingAction );
   connect(mSelectEncodingAction,SIGNAL( triggered(int)),
           SLOT( slotSetEncoding() ));
-  QStringList encodings = ViewerPrivate::supportedEncodings( false );
+  QStringList encodings = NodeHelper::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   mSelectEncodingAction->setItems( encodings );
   mSelectEncodingAction->setCurrentItem( 0 );
@@ -2103,7 +2120,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
     }
   } else {
     QString label, icon;
-    icon = NodeHelper::instance()->iconName( node, KIconLoader::Small );
+    icon = mNodeHelper->iconName( node, KIconLoader::Small );
     label = node->contentDescription()->asUnicodeString();
     if( label.isEmpty() ) {
       label = NodeHelper::fileName( node );
@@ -2111,14 +2128,14 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
 
     bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
     if ( !typeBlacklisted ) {
-      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
+      typeBlacklisted = MessageViewer::StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
                                                   node->contentDisposition()->filename() );
     }
     typeBlacklisted = typeBlacklisted || node == mMessage;
     if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
-      QString fileName = NodeHelper::instance()->writeNodeToTempFile( node );
+      QString fileName = mNodeHelper->writeNodeToTempFile( node );
       QString href = NodeHelper::asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
@@ -2154,25 +2171,6 @@ KMime::Content* ViewerPrivate::findContentByType(KMime::Content *content, const 
 }
 
 
-QString ViewerPrivate::fixEncoding( const QString &encoding )
-{
-  QString returnEncoding = encoding;
-  // According to http://www.iana.org/assignments/character-sets, uppercase is
-  // preferred in MIME headers
-  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
-    returnEncoding = returnEncoding.toUpper();
-    returnEncoding.replace( "ISO ", "ISO-" );
-  }
-  return returnEncoding;
-}
-
-//-----------------------------------------------------------------------------
-QString ViewerPrivate::encodingForName( const QString &descriptiveName )
-{
-  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
-  return ViewerPrivate::fixEncoding( encoding );
-}
-
 //-----------------------------------------------------------------------------
 const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
 {
@@ -2181,28 +2179,6 @@ const QTextCodec* ViewerPrivate::codecForName(const QByteArray& _str)
   QByteArray codec = _str;
   kAsciiToLower(codec.data());
   return KGlobal::charsets()->codecForName(codec);
-}
-
-QStringList ViewerPrivate::supportedEncodings(bool usAscii)
-{
-  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
-  QStringList encodings;
-  QMap<QString,bool> mimeNames;
-  for (QStringList::Iterator it = encodingNames.begin();
-    it != encodingNames.end(); ++it)
-  {
-    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
-    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
-    if (!mimeNames.contains(mimeName) )
-    {
-      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
-      mimeNames.insert( mimeName, true );
-    }
-  }
-  encodings.sort();
-  if (usAscii)
-    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
-  return encodings;
 }
 
 
@@ -2278,6 +2254,10 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
   if ( mMessage ) {
     kWarning() << "Unhandled URL right-click!";
     emit popupMenu( *mMessage, url, aPos );
+  }
+  if ( mMessageItem.isValid() ) {
+    kWarning() << "Unhandled URL right-click!";
+    emit popupMenu( mMessageItem, url, aPos );
   }
 }
 
@@ -2497,7 +2477,7 @@ void ViewerPrivate::slotHideAttachments()
 void ViewerPrivate::slotAtmView( KMime::Content *atmNode )
 {
   if ( atmNode ) {
-    QString fileName = NodeHelper::instance()->tempFileUrlFromNode( atmNode ).toLocalFile();
+    QString fileName = mNodeHelper->tempFileUrlFromNode( atmNode ).toLocalFile();
 
     QString pname = NodeHelper::fileName( atmNode );
     if (pname.isEmpty()) pname = atmNode->contentDescription()->asUnicodeString();
@@ -2539,7 +2519,7 @@ void ViewerPrivate::slotSetEncoding()
   if ( mSelectEncodingAction->currentItem() == 0 ) // Auto
     mOverrideEncoding.clear();
   else
-    mOverrideEncoding = ViewerPrivate::encodingForName( mSelectEncodingAction->currentText() );
+    mOverrideEncoding = NodeHelper::encodingForName( mSelectEncodingAction->currentText() );
   update( Viewer::Force );
 }
 
@@ -2704,7 +2684,7 @@ void ViewerPrivate::slotAttachmentCopy()
 
   QList<QUrl> urls;
   Q_FOREACH( KMime::Content *content, contents) {
-    KUrl kUrl = NodeHelper::instance()->writeNodeToTempFile( content );
+    KUrl kUrl = mNodeHelper->writeNodeToTempFile( content );
     QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
     if ( !url.isValid() )
       continue;
@@ -2867,6 +2847,8 @@ void ViewerPrivate::slotUrlSave()
 
 void ViewerPrivate::slotSaveMessage()
 {
+   if(!mMessage) return;
+
    KUrl url = KFileDialog::getSaveUrl( KUrl::fromPath( mMessage->subject()->asUnicodeString().trimmed()
                                   .replace( QDir::separator(), '_' ) ),
                                   "*.mbox", mMainWindow );

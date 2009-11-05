@@ -25,6 +25,8 @@
 #include <QSet>
 #include <kiconloader.h>
 
+#include "messageviewer_export.h"
+
 class KUrl;
 class QTextCodec;
 
@@ -42,6 +44,8 @@ namespace MessageViewer {
 /**
   @author Andras Mantia <andras@kdab.net>
 */
+
+namespace MessageViewer {
 
 /** Flags for the encryption state. */
 typedef enum
@@ -63,9 +67,9 @@ typedef enum
     KMMsgSignatureProblematic='X'
 } KMMsgSignatureState;
 
-class NodeHelper{
+class MESSAGEVIEWER_EXPORT NodeHelper {
 public:
-    static NodeHelper * instance();
+    NodeHelper();
 
     ~NodeHelper();
 
@@ -95,7 +99,7 @@ public:
 
   /** Return this mails subject, with all "forward" and "reply"
       prefixes removed */
-    QString cleanSubject( KMime::Message* message ) const;
+    static QString cleanSubject( KMime::Message* message );
 
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted);
@@ -140,9 +144,9 @@ public:
     /** Add a file to the list of managed temporary files */
     void addTempFile( const QString& file );
 
-  //static methods
+  //static methods - TODO factor out in a separate namespace ?
     static KMime::Content *nextSibling( const KMime::Content* node );
-    
+
     static KMime::Content *firstChild( const KMime::Content* node );
 
    /** Check for prefixes @p prefixRegExps in @p str. If none
@@ -155,7 +159,7 @@ public:
                                   const QStringList& prefixRegExps,
                                   bool replace,
                                   const QString& newPrefix );
-                                  
+
    /** Return a QTextCodec for the specified charset.
    * This function is a bit more tolerant, than QTextCodec::codecForName
    **/
@@ -172,9 +176,30 @@ public:
     // UrlHandlerManager.
     static QString asHREF( const KMime::Content* node, const QString &place );
 
+    /**
+   * Fixes an encoding received by a KDE function and returns the proper,
+   * MIME-compilant encoding name instead.
+   * @see encodingForName
+   */
+  static QString fixEncoding( const QString &encoding ); //TODO(Andras) move to a utility class?
 
+  /**
+   * Drop-in replacement for KCharsets::encodingForName(). The problem with
+   * the KCharsets function is that it returns "human-readable" encoding names
+   * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
+   * This function fixes this by replacing whitespace with a hyphen.
+   */
+  static QString encodingForName( const QString &descriptiveName ); //TODO(Andras) move to a utility class?
+
+  /**
+   * Return a list of the supported encodings
+   * @param usAscii if true, US-Ascii encoding will be prepended to the list.
+   */
+  static QStringList supportedEncodings( bool usAscii ); //TODO(Andras) move to a utility class?
+
+  static QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
+  static QByteArray toUsAscii(const QString& _str, bool *ok);
 private:
-    NodeHelper();
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
         is found, @p newPrefix + ' ' is prepended to the subject and the
@@ -182,12 +207,10 @@ private:
         sequence of whitespace-delimited prefixes at the beginning of
         #subject() is replaced by @p newPrefix
     **/
-    QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
-                          const QString& newPrefix ) const;
+    static QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
+                          const QString& newPrefix );
 
     void clearBodyPartMemento(QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> bodyPartMementoMap);
-
-    static NodeHelper * mSelf;
 
     QList<KMime::Content*> mProcessedNodes;
     QList<KMime::Content*> mNodesUnderProcess;
@@ -195,7 +218,6 @@ private:
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
     QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
-    QStringList mReplySubjPrefixes, mForwardSubjPrefixes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
     QMap<KMime::Content*, QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> > mBodyPartMementoMap;
@@ -203,5 +225,6 @@ private:
     QStringList mTempDirs;
 };
 
+}
 
 #endif

@@ -244,7 +244,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest( con
   if ( !node )
     return false;
 
-  PartNodeBodyPart part( node, w->overrideCodec() );
+  PartNodeBodyPart part( node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
     if ( (*it)->handleContextMenuRequest( &part, path, p ) )
       return true;
@@ -257,7 +257,7 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage( const KU
   if ( !node )
     return QString();
 
-  PartNodeBodyPart part( node, w->overrideCodec() );
+  PartNodeBodyPart part( node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
     const QString msg = (*it)->statusBarMessage( &part, path );
     if ( !msg.isEmpty() )
@@ -583,12 +583,12 @@ namespace {
       return false;
     
     const bool inHeader = attachmentIsInHeader( url );
-    const bool shouldShowDialog = !NodeHelper::instance()->isNodeDisplayedEmbedded( node ) || !inHeader;
+    const bool shouldShowDialog = !w->nodeHelper()->isNodeDisplayedEmbedded( node ) || !inHeader;
     if ( inHeader )
       w->scrollToAttachment( node );
     if ( shouldShowDialog )
      // PENDING(romain_kdab) : replace with toLocalFile() ?
-     w->openAttachment( node, NodeHelper::instance()->tempFileUrlFromNode( node ).path() );
+     w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
 
     return true;
   }

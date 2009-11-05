@@ -20,15 +20,13 @@
 #define HTMLQUOTECOLORER_H
 
 #include <dom/dom_node.h>
-#include "messageviewer_export.h"
 #include <QColor>
-//(laurent) remove export when we remove old kmail code
 /**
  * Little helper class that takes a HTML source as input and finds all
  * lines that are quoted with '>' or '|'. The HTML text is then modified so
  * that the quoted lines appear in the defined quote colors.
  */
-class MESSAGEVIEWER_EXPORT HTMLQuoteColorer
+class HTMLQuoteColorer
 {
   public:
 

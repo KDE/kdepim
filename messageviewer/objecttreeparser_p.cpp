@@ -50,12 +50,29 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace MessageViewer;
 
-DecryptVerifyBodyPartMemento::DecryptVerifyBodyPartMemento( DecryptVerifyJob * job, const QByteArray & cipherText )
+CryptoBodyPartMemento::CryptoBodyPartMemento()
   : QObject( 0 ),
     Interface::BodyPartMemento(),
-    m_cipherText( cipherText ),
-    m_job( job ),
     m_running( false )
+{
+
+}
+
+CryptoBodyPartMemento::~CryptoBodyPartMemento() {}
+
+void CryptoBodyPartMemento::setAuditLog( const Error & err, const QString & log ) {
+  m_auditLogError = err;
+  m_auditLog = log;
+}
+
+void CryptoBodyPartMemento::setRunning( bool running ) {
+  m_running = running;
+}
+
+DecryptVerifyBodyPartMemento::DecryptVerifyBodyPartMemento( DecryptVerifyJob * job, const QByteArray & cipherText )
+  : CryptoBodyPartMemento(),
+    m_cipherText( cipherText ),
+    m_job( job )
 {
   assert( m_job );
 }
@@ -73,14 +90,14 @@ bool DecryptVerifyBodyPartMemento::start() {
   }
   connect( m_job, SIGNAL(result(const GpgME::DecryptionResult&,const GpgME::VerificationResult&,const QByteArray&)),
            this, SLOT(slotResult(const GpgME::DecryptionResult&,const GpgME::VerificationResult&,const QByteArray&)) );
-  m_running = true;
+  setRunning( true );
   return true;
 }
 
 void DecryptVerifyBodyPartMemento::exec() {
   assert( m_job );
   QByteArray plainText;
-  m_running = true;
+  setRunning( true );
   const std::pair<DecryptionResult,VerificationResult> p = m_job->exec( m_cipherText, plainText );
   saveResult( p.first, p.second, plainText );
   m_job->deleteLater(); // exec'ed jobs don't delete themselves
@@ -92,12 +109,11 @@ void DecryptVerifyBodyPartMemento::saveResult( const DecryptionResult & dr,
                                                const QByteArray & plainText )
 {
   assert( m_job );
-  m_running = false;
+  setRunning( false );
   m_dr = dr;
   m_vr = vr;
   m_plainText = plainText;
-  m_auditLog = m_job->auditLogAsHtml();
-  m_auditLogError = m_job->auditLogError();
+  setAuditLog( m_job->auditLogError(), m_job->auditLogAsHtml() );
 }
 
 void DecryptVerifyBodyPartMemento::slotResult( const DecryptionResult & dr,
@@ -106,7 +122,7 @@ void DecryptVerifyBodyPartMemento::slotResult( const DecryptionResult & dr,
 {
   saveResult( dr, vr, plainText );
   m_job = 0;
-  QTimer::singleShot( 100, this, SLOT(notify()) );
+  notify();
 }
 
 
@@ -116,13 +132,11 @@ VerifyDetachedBodyPartMemento::VerifyDetachedBodyPartMemento( VerifyDetachedJob 
                                                               KeyListJob * klj,
                                                               const QByteArray & signature,
                                                               const QByteArray & plainText )
-  : QObject( 0 ),
-    Interface::BodyPartMemento(),
+  : CryptoBodyPartMemento(),
     m_signature( signature ),
     m_plainText( plainText ),
     m_job( job ),
-    m_keylistjob( klj ),
-    m_running( false )
+    m_keylistjob( klj )
 {
   assert( m_job );
 }
@@ -142,13 +156,13 @@ bool VerifyDetachedBodyPartMemento::start() {
   }
   connect( m_job, SIGNAL(result(const GpgME::VerificationResult&)),
            this, SLOT(slotResult(const GpgME::VerificationResult&)) );
-  m_running = true;
+  setRunning( true );
   return true;
 }
 
 void VerifyDetachedBodyPartMemento::exec() {
   assert( m_job );
-  m_running = true;
+  setRunning( true );
   saveResult( m_job->exec( m_signature, m_plainText ) );
   m_job->deleteLater(); // exec'ed jobs don't delete themselves
   m_job = 0;
@@ -161,7 +175,7 @@ void VerifyDetachedBodyPartMemento::exec() {
   if ( m_keylistjob )
     m_keylistjob->deleteLater(); // exec'ed jobs don't delete themselves
   m_keylistjob = 0;
-  m_running = false;
+  setRunning( false );
 }
 
 bool VerifyDetachedBodyPartMemento::canStartKeyListJob() const
@@ -182,8 +196,7 @@ void VerifyDetachedBodyPartMemento::saveResult( const VerificationResult & vr )
 {
   assert( m_job );
   m_vr = vr;
-  m_auditLog = m_job->auditLogAsHtml();
-  m_auditLogError = m_job->auditLogError();
+  setAuditLog( m_job->auditLogError(), m_job->auditLogAsHtml() );
 }
 
 void VerifyDetachedBodyPartMemento::slotResult( const VerificationResult & vr )
@@ -195,8 +208,8 @@ void VerifyDetachedBodyPartMemento::slotResult( const VerificationResult & vr )
   if ( m_keylistjob )
     m_keylistjob->deleteLater();
   m_keylistjob = 0;
-  m_running = false;
-  QTimer::singleShot( 100, this, SLOT(notify()) );
+  setRunning( false );
+  notify();
 }
 
 bool VerifyDetachedBodyPartMemento::startKeyListJob()
@@ -218,25 +231,17 @@ void VerifyDetachedBodyPartMemento::slotNextKey( const GpgME::Key & key )
 void VerifyDetachedBodyPartMemento::slotKeyListJobDone()
 {
   m_keylistjob = 0;
-  m_running = false;
-  QTimer::singleShot( 100, this, SLOT(notify()) );
-}
-
-void VerifyDetachedBodyPartMemento::notify()
-{
- 
-    emit update(Viewer::Force);
+  setRunning( false );
+  notify();
 }
 
 VerifyOpaqueBodyPartMemento::VerifyOpaqueBodyPartMemento( VerifyOpaqueJob * job,
                                                           KeyListJob *  klj,
                                                           const QByteArray & signature )
-  : QObject( 0 ),
-    Interface::BodyPartMemento(),
+  : CryptoBodyPartMemento(),
     m_signature( signature ),
     m_job( job ),
-    m_keylistjob( klj ),
-    m_running( false )
+    m_keylistjob( klj )
 {
   assert( m_job );
 }
@@ -256,13 +261,13 @@ bool VerifyOpaqueBodyPartMemento::start() {
   }
   connect( m_job, SIGNAL(result(const GpgME::VerificationResult&,const QByteArray&)),
            this, SLOT(slotResult(const GpgME::VerificationResult&,const QByteArray&)) );
-  m_running = true;
+  setRunning( true );
   return true;
 }
 
 void VerifyOpaqueBodyPartMemento::exec() {
   assert( m_job );
-  m_running = true;
+  setRunning( true );
   QByteArray plainText;
   saveResult( m_job->exec( m_signature, plainText ), plainText );
   m_job->deleteLater(); // exec'ed jobs don't delete themselves
@@ -276,7 +281,7 @@ void VerifyOpaqueBodyPartMemento::exec() {
   if ( m_keylistjob )
     m_keylistjob->deleteLater(); // exec'ed jobs don't delete themselves
   m_keylistjob = 0;
-  m_running = false;
+  setRunning( false );
 }
 
 bool VerifyOpaqueBodyPartMemento::canStartKeyListJob() const
@@ -299,8 +304,7 @@ void VerifyOpaqueBodyPartMemento::saveResult( const VerificationResult & vr,
   assert( m_job );
   m_vr = vr;
   m_plainText = plainText;
-  m_auditLog = m_job->auditLogAsHtml();
-  m_auditLogError = m_job->auditLogError();
+  setAuditLog( m_job->auditLogError(), m_job->auditLogAsHtml() );
 }
 
 void VerifyOpaqueBodyPartMemento::slotResult( const VerificationResult & vr,
@@ -313,8 +317,8 @@ void VerifyOpaqueBodyPartMemento::slotResult( const VerificationResult & vr,
   if ( m_keylistjob )
     m_keylistjob->deleteLater();
   m_keylistjob = 0;
-  m_running = false;
-  QTimer::singleShot( 100, this, SLOT(notify()) );
+  setRunning( false );
+  notify();
 }
 
 bool VerifyOpaqueBodyPartMemento::startKeyListJob()
@@ -336,8 +340,8 @@ void VerifyOpaqueBodyPartMemento::slotNextKey( const GpgME::Key & key )
 void VerifyOpaqueBodyPartMemento::slotKeyListJobDone()
 {
   m_keylistjob = 0;
-  m_running = false;
-  QTimer::singleShot( 100, this, SLOT(notify()) );
+  setRunning( false );
+  notify();
 }
 
 

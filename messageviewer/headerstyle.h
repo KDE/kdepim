@@ -43,6 +43,7 @@ namespace KMime {
 namespace MessageViewer {
 
 class HeaderStrategy;
+class NodeHelper;
 
 /** This class encapsulates the visual appearance of message
     headers. Together with HeaderStrategy, which determines

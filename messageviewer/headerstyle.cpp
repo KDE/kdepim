@@ -121,7 +121,7 @@ QString BriefHeaderStyle::format( KMime::Message * message,
 
   QString subjectDir;
   if ( message->subject(false) )
-    subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
+    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
   else
     subjectDir = directionOf( i18n("No Subject") );
 
@@ -221,7 +221,7 @@ QString PlainHeaderStyle::format( KMime::Message * message,
 
   QString subjectDir;
   if (message->subject(false))
-    subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
+    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
   else
     subjectDir = directionOf( i18n("No Subject") );
 
@@ -460,7 +460,7 @@ QString FancyHeaderStyle::format( KMime::Message * message,
 
   QString subjectDir;
   if ( message->subject(false) )
-    subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
+    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
   else
     subjectDir = directionOf( i18n("No Subject") );
 
@@ -740,7 +740,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message * message,
 //TODO(Andras) this is duplicate code, try to factor out!
   QString subjectDir;
   if (message->subject(false))
-    subjectDir = directionOf( NodeHelper::instance()->cleanSubject( message ) );
+    subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
   else
     subjectDir = directionOf( i18n("No Subject") );
 

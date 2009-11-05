@@ -61,18 +61,20 @@ class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
 class ObjectTreeSourceIf;
+class NodeHelper;
 
 
 class ProcessResult {
 public:
-  explicit ProcessResult( KMMsgSignatureState  inlineSignatureState  = KMMsgNotSigned,
+  explicit ProcessResult( NodeHelper *nodeHelper, KMMsgSignatureState  inlineSignatureState  = KMMsgNotSigned,
                   KMMsgEncryptionState inlineEncryptionState = KMMsgNotEncrypted,
             bool neverDisplayInline = false,
             bool isImage = false )
     : mInlineSignatureState( inlineSignatureState ),
       mInlineEncryptionState( inlineEncryptionState ),
       mNeverDisplayInline( neverDisplayInline ),
-      mIsImage( isImage ) {}
+      mIsImage( isImage ),
+      mNodeHelper( nodeHelper ) {}
 
   KMMsgSignatureState inlineSignatureState() const {
     return mInlineSignatureState;
@@ -105,6 +107,7 @@ private:
   KMMsgEncryptionState mInlineEncryptionState;
   bool mNeverDisplayInline : 1;
   bool mIsImage : 1;
+  NodeHelper* mNodeHelper;
 };
 
 
@@ -113,7 +116,8 @@ class MESSAGEVIEWER_EXPORT ObjectTreeParser {
   /** Internal. Copies the context of @p other, but not it's rawReplyString() */
   ObjectTreeParser( const ObjectTreeParser & other );
 public:
-  explicit ObjectTreeParser( ObjectTreeSourceIf *source, const Kleo::CryptoBackend::Protocol * protocol=0,
+  explicit ObjectTreeParser( ObjectTreeSourceIf *source, NodeHelper *nodeHelper = 0,
+                    const Kleo::CryptoBackend::Protocol * protocol=0,
                     bool showOneMimePart=false, bool keepEncryptions=false,
                     bool includeSignatures=true,
                     const AttachmentStrategy * attachmentStrategy=0,
@@ -163,6 +167,8 @@ public:
   HtmlWriter * htmlWriter() const { return mHtmlWriter; }
 
   CSSHelper * cssHelper() const { return mCSSHelper; }
+
+  NodeHelper * nodeHelper() const { return mNodeHelper; }
 
   /** Parse beginning at a given node and recursively parsing
       the children of that node and it's next sibling. */
@@ -302,6 +308,9 @@ public: // KMReaderWin still needs this...
                       const QTextCodec * aCodec,
                       const QString & fromAddress );
   static KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
+ 
+  static KMime::Content* findType( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide );
+
   static KMime::Content* findTypeNot( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep=true, bool wide=true );
 
 
@@ -325,6 +334,7 @@ private:
 
 private:
   ObjectTreeSourceIf* mSource;
+  NodeHelper* mNodeHelper;
   QByteArray mRawReplyString;
   QByteArray mTextualContentCharset;
   QString mTextualContent;
@@ -352,6 +362,7 @@ private:
   // DataUrl Icons cache
   QString mCollapseIcon;
   QString mExpandIcon;
+  bool mDeleteNodeHelper;
   
 };
 

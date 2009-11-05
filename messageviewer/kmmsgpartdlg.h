@@ -33,7 +33,8 @@ class QCheckBox;
 class QLabel;
 
 #undef None
-
+//TODO(Andras) remove? Where is it used?
+#if 0
 /** @short GUI for KMMsgPartDialog
     @author Marc Mutz <mutz@kde.org>
 */
@@ -160,5 +161,5 @@ protected:
 
   KMime::Content *mMsgPart;
 };
-
+#endif 
 #endif /*kmmsgpartdlg_h*/

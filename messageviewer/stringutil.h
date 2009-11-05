@@ -20,7 +20,7 @@
 #define _MESSAGEVIEWER_STRINGUTIL_H
 
 #include <QString>
-
+#include "messageviewer_export.h"
 class KUrl;
 
 //TODO(Andras) this class probably can be shared between the reader and the composer
@@ -34,7 +34,8 @@ namespace KMime
     typedef QList<Address> AddressList;
   }
 }
-
+namespace MessageViewer
+{
 /**
  * This namespace contain helper functions for string manipulation
  */
@@ -48,19 +49,19 @@ namespace StringUtil
    all trailing whitespace is removed. Therefore the signature
    separator loses the trailing space.
    */
-  QString stripSignature ( const QString & msg, bool clearSigned );
+  MESSAGEVIEWER_EXPORT QString stripSignature ( const QString & msg, bool clearSigned );
 
   /**
    * Splits the given address list into separate addresses.
    */
-  KMime::Types::AddressList splitAddrField( const QByteArray & str );
+  MESSAGEVIEWER_EXPORT KMime::Types::AddressList splitAddrField( const QByteArray & str );
 
   /**
    * Generates the Message-Id. It uses either the Message-Id suffix
    * defined by the user or the given email address as suffix. The address
    * must be given as addr-spec as defined in RFC 2822.
    */
-  QString generateMessageId( const QString& addr );
+  MESSAGEVIEWER_EXPORT QString generateMessageId( const QString& addr );
 
   /**
    * Convert '<' into "&lt;" resp. '>' into "&gt;" in order to
@@ -68,16 +69,16 @@ namespace StringUtil
    * Does *not* use the Qt replace function but runs a very fast C code
    * the same way as lf2crlf() does.
    */
-  QByteArray html2source( const QByteArray & src );
+  MESSAGEVIEWER_EXPORT QByteArray html2source( const QByteArray & src );
 
 
   /** Encodes an email address as mailto URL
    */
-  QString encodeMailtoUrl( const QString& str );
+  MESSAGEVIEWER_EXPORT QString encodeMailtoUrl( const QString& str );
 
   /** Decodes a mailto URL
    */
-  QString decodeMailtoUrl( const QString& url );
+  MESSAGEVIEWER_EXPORT QString decodeMailtoUrl( const QString& url );
 
   /**
    * This function generates a displayable string from a list of email
@@ -86,12 +87,12 @@ namespace StringUtil
    * Output: comma separated list of display name resp. comment resp.
    *         address
    */
-  QByteArray stripEmailAddr( const QByteArray& emailAddr );
+  MESSAGEVIEWER_EXPORT QByteArray stripEmailAddr( const QByteArray& emailAddr );
 
   /**
    * Does the same as the above function. Shouldn't be used.
    */
-  QString stripEmailAddr( const QString& emailAddr );
+  MESSAGEVIEWER_EXPORT QString stripEmailAddr( const QString& emailAddr );
 
   /**
    * Quotes the following characters which have a special meaning in HTML:
@@ -99,7 +100,7 @@ namespace StringUtil
    * @p removeLineBreaks is false. If @p removeLineBreaks is true, then
    * '\\n' is removed. Last but not least '\\r' is removed.
    */
-  QString quoteHtmlChars( const QString& str,
+  MESSAGEVIEWER_EXPORT QString quoteHtmlChars( const QString& str,
                           bool removeLineBreaks = false );
 
   /**
@@ -115,32 +116,26 @@ namespace StringUtil
    * Strips an address from an address list. This is for example used
    * when replying to all.
    */
-  QStringList stripAddressFromAddressList( const QString& address,
+  MESSAGEVIEWER_EXPORT QStringList stripAddressFromAddressList( const QString& address,
                                            const QStringList& addresses );
-
-  /**
-   * Strips all the user's addresses from an address list. This is used
-   * when replying.
-   */
-  QStringList stripMyAddressesFromAddressList( const QStringList& list );
 
   /**
    * Returns true if the given address is contained in the given address list.
    */
-  bool addressIsInAddressList( const QString& address,
+  MESSAGEVIEWER_EXPORT bool addressIsInAddressList( const QString& address,
                                const QStringList& addresses );
 
   /**
    * Expands aliases (distribution lists and nick names) and appends a
    * domain part to all email addresses which are missing the domain part.
    */
-  QString expandAliases( const QString& recipients,QStringList &distributionListIsEmpty );
+  MESSAGEVIEWER_EXPORT QString expandAliases( const QString& recipients,QStringList &distributionListIsEmpty );
 
   /**
    * Uses the hostname as domain part and tries to determine the real name
    * from the entries in the password file.
    */
-  QString guessEmailAddressFromLoginName( const QString& userName );
+  MESSAGEVIEWER_EXPORT QString guessEmailAddressFromLoginName( const QString& userName );
 
   /**
    *  Given argument msg add quoting characters and relayout for max width maxLength
@@ -148,14 +143,14 @@ namespace StringUtil
    *  @param maxLineLength reformat text to be this amount of columns at maximum, adding
    *    linefeeds at word boundaries to make it fit.
    */
-  QString smartQuote( const QString &msg, int maxLineLength );
+  MESSAGEVIEWER_EXPORT QString smartQuote( const QString &msg, int maxLineLength );
 
   /**
   * Convert wildcards into normal string
   * @param wildString the string to be converted
   * @fromAddr from email address to convert to displayable string
   */
-  QString formatString( const QString &wildString, const QString &fromAddr = QString() );
+  MESSAGEVIEWER_EXPORT QString formatString( const QString &wildString, const QString &fromAddr = QString() );
 
   /**
   * Parses a mailto: url and extracts the information about to, cc, subject and body out into
@@ -174,6 +169,6 @@ namespace StringUtil
    */
   bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName );
 }
-
+}
 
 #endif

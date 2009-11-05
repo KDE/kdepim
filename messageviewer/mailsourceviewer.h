@@ -32,8 +32,6 @@
 #ifndef MAILSOURCEVIEWER_H
 #define MAILSOURCEVIEWER_H
 
-#include "messageviewer_export.h"
-
 #include <QSyntaxHighlighter>
 
 #include <KTextBrowser>
@@ -58,7 +56,7 @@ protected:
 };
 
 
-class MESSAGEVIEWER_EXPORT MailSourceViewer : public KTextBrowser
+class MailSourceViewer : public KTextBrowser
 {
 public:
   MailSourceViewer( QWidget *parent = 0 );

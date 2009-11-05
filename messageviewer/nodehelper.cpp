@@ -35,21 +35,16 @@
 #include <QDir>
 #include <QTextCodec>
 
-NodeHelper * NodeHelper::mSelf = 0;
 
-NodeHelper * NodeHelper::instance()
-{
-  if ( !mSelf )
-    mSelf = new NodeHelper();
-  return mSelf;
-}
+
+namespace MessageViewer {
+
+QStringList replySubjPrefixes(QStringList() << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:");
+QStringList forwardSubjPrefixes( QStringList() << "Fwd:" << "FW:");
 
 NodeHelper::NodeHelper()
 {
-  mSelf = this;
   //TODO(Andras) add methods to modify these prefixes
-  mReplySubjPrefixes << "Re\\s*:" << "Re\\[\\d+\\]:" << "Re\\d+:";
-  mForwardSubjPrefixes << "Fwd:" << "FW:";
 
   mLocalCodec = QTextCodec::codecForName( KGlobal::locale()->encoding() );
 
@@ -77,7 +72,6 @@ NodeHelper::NodeHelper()
 
 NodeHelper::~NodeHelper()
 {
-  mSelf = 0;
 }
 
 void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
@@ -85,6 +79,7 @@ void NodeHelper::setNodeProcessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.append( node );
+  kDebug() << "Node processed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -99,6 +94,7 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.removeAll( node );
+kDebug() << "Node UNprocessed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -494,15 +490,15 @@ QString NodeHelper::replacePrefixes( const QString& str,
     return str;
 }
 
-QString NodeHelper::cleanSubject( KMime::Message* message ) const
+QString NodeHelper::cleanSubject( KMime::Message* message )
 {
-  return cleanSubject( message, mReplySubjPrefixes + mForwardSubjPrefixes,
+  return cleanSubject( message, replySubjPrefixes + forwardSubjPrefixes,
            true, QString() ).trimmed();
 }
 
 QString NodeHelper::cleanSubject( KMime::Message* message, const QStringList & prefixRegExps,
                                  bool replace,
-                                 const QString & newPrefix ) const
+                                 const QString & newPrefix )
 {
   return NodeHelper::replacePrefixes( message->subject()->asUnicodeString(), prefixRegExps, replace,
                                      newPrefix );
@@ -573,7 +569,7 @@ QByteArray NodeHelper::path(const KMime::Content* node)
     }
   }
   QString subpath;
-  return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType(), const_cast<KMime::Content*>(node)->contentType()->subType(), nth ).toLocal8Bit();
+  return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
 }
 
 QString NodeHelper::fileName(const KMime::Content* node)
@@ -583,7 +579,7 @@ QString NodeHelper::fileName(const KMime::Content* node)
       name = const_cast<KMime::Content*>(node)->contentType()->name();;
 
   name = name.trimmed();
-  return name; 
+  return name;
 }
 
 //FIXME(Andras) review it (by Marc?) to see if I got it right. This is supposed to be the partNode::internalBodyPartMemento replacement
@@ -634,5 +630,106 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
     return QString();
   else
     return QString( "attachment:%1?place=%2" ).arg( node->index().toString() ).arg( place );
+}
+
+QString NodeHelper::fixEncoding( const QString &encoding )
+{
+  QString returnEncoding = encoding;
+  // According to http://www.iana.org/assignments/character-sets, uppercase is
+  // preferred in MIME headers
+  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
+    returnEncoding = returnEncoding.toUpper();
+    returnEncoding.replace( "ISO ", "ISO-" );
+  }
+  return returnEncoding;
+}
+
+
+//-----------------------------------------------------------------------------
+QString NodeHelper::encodingForName( const QString &descriptiveName )
+{
+  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
+  return NodeHelper::fixEncoding( encoding );
+}
+
+QStringList NodeHelper::supportedEncodings(bool usAscii)
+{
+  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
+  QStringList encodings;
+  QMap<QString,bool> mimeNames;
+  for (QStringList::Iterator it = encodingNames.begin();
+    it != encodingNames.end(); ++it)
+  {
+    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
+    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
+    if (!mimeNames.contains(mimeName) )
+    {
+      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
+      mimeNames.insert( mimeName, true );
+    }
+  }
+  encodings.sort();
+  if (usAscii)
+    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
+  return encodings;
+}
+
+
+QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text)
+{
+    QStringList charsets = encodingList;
+    if (!_encoding.isEmpty())
+    {
+       QString currentCharset = QString::fromLatin1(_encoding);
+       charsets.removeAll(currentCharset);
+       charsets.prepend(currentCharset);
+    }
+
+    QStringList::ConstIterator it = charsets.constBegin();
+    for (; it != charsets.constEnd(); ++it)
+    {
+       QByteArray encoding = (*it).toLatin1();
+       if (encoding == "locale")
+       {
+         encoding = QTextCodec::codecForName( KGlobal::locale()->encoding() )->name();
+         kAsciiToLower(encoding.data());
+       }
+       if (text.isEmpty())
+         return encoding;
+       if (encoding == "us-ascii") {
+         bool ok;
+         (void) toUsAscii(text, &ok);
+         if (ok)
+            return encoding;
+       }
+       else
+       {
+         const QTextCodec *codec = codecForName(encoding);
+         if (!codec) {
+           kDebug() <<"Auto-Charset: Something is wrong and I can not get a codec. [" << encoding <<"]";
+         } else {
+           if (codec->canEncode(text))
+              return encoding;
+         }
+       }
+    }
+    return 0;
+}
+
+QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
+{
+  bool all_ok =true;
+  QString result = _str;
+  int len = result.length();
+  for (int i = 0; i < len; i++)
+    if (result.at(i).unicode() >= 128) {
+      result[i] = '?';
+      all_ok = false;
+    }
+  if (ok)
+    *ok = all_ok;
+  return result.toLatin1();
+}
+
 }
 

@@ -75,6 +75,7 @@ namespace MessageViewer {
   class ObjectTreeParser;
   class HeaderStrategy;
   class HeaderStyle;
+  class NodeHelper;
 }
 
 namespace MessageViewer {
@@ -119,6 +120,8 @@ public:
   void emitPopupMenu( const KUrl & url, const QPoint & p ) {
     if ( mMessage )
       emit popupMenu( *mMessage, url, p );
+    if ( mMessageItem.isValid() )
+      emit popupMenu( mMessageItem, url, p );
   }
 
   /** Access to the KHTMLPart used for the viewer. Use with
@@ -172,6 +175,8 @@ public:
   HtmlWriter * htmlWriter() { return mHtmlWriter; }
 
   CSSHelper* cssHelper() const;
+
+  NodeHelper* nodeHelper() { return mNodeHelper; }
 
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;
@@ -254,7 +259,7 @@ public:
 
   /** Print message. */
   void printMessage( KMime::Message* message );
-
+  void printMessage( const Akonadi::Item &msg );
 
     /** Set the Akonadi item that will be displayed.
   * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
@@ -306,29 +311,10 @@ public:
   QString renderAttachments( KMime::Content *node, const QColor &bgColor );
 
   KMime::Content* findContentByType(KMime::Content *content, const QByteArray &type); //TODO(Andras) move to NodeHelper
-    /**
-   * Fixes an encoding received by a KDE function and returns the proper,
-   * MIME-compilant encoding name instead.
-   * @see encodingForName
-   */
-  static QString fixEncoding( const QString &encoding ); //TODO(Andras) move to a utility class?
-
-  /**
-   * Drop-in replacement for KCharsets::encodingForName(). The problem with
-   * the KCharsets function is that it returns "human-readable" encoding names
-   * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
-   * This function fixes this by replacing whitespace with a hyphen.
-   */
-  static QString encodingForName( const QString &descriptiveName ); //TODO(Andras) move to a utility class?
 
   /** Return a QTextCodec for the specified charset.
    * This function is a bit more tolerant, than QTextCodec::codecForName */
   static const QTextCodec* codecForName(const QByteArray& _str); //TODO(Andras) move to a utility class?
-  /**
-   * Return a list of the supported encodings
-   * @param usAscii if true, US-Ascii encoding will be prepended to the list.
-   */
-  static QStringList supportedEncodings( bool usAscii ); //TODO(Andras) move to a utility class?
 
   /** Saves the relative position of the scroll view. Call this before calling update()
       if you want to preserve the current view. */
@@ -371,6 +357,9 @@ public:
 
   void scrollToAttachment( const KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
+
+
+  bool noMDNsWhenEncrypted() const { return mNoMDNsWhenEncrypted; }
 
 public slots:
 
@@ -469,10 +458,12 @@ public slots:
 signals:
   void replaceMsgByUnencryptedVersion();
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
+  void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
   void urlClicked(const KUrl &url, int button);
   void noDrag();
 
 public:
+  NodeHelper* mNodeHelper;
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   KMime::Message *mMessage; //the current message, if it was set manually
   Akonadi::Item mMessageItem; //the message item from Akonadi
@@ -497,7 +488,6 @@ public:
   QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
   bool mMsgDisplay;
   bool mNoMDNsWhenEncrypted;
-  MessageStatus mLastStatus;
 
   CSSHelper * mCSSHelper;
   bool mUseFixedFont;

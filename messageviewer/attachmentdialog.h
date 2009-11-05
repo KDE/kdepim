@@ -20,7 +20,6 @@
 #ifndef MESSAGEVIEWERT_ATTACHMENTDIALOG_H
 #define MESSAGEVIEWERT_ATTACHMENTDIALOG_H
 
-#include "messageviewer_export.h"
 #include <QObject>
 
 class KDialog;
@@ -29,7 +28,7 @@ class KDialog;
     with an attachment.
 */
 
-class MESSAGEVIEWER_EXPORT AttachmentDialog : public QObject
+class AttachmentDialog : public QObject
 {
   Q_OBJECT
 

@@ -48,9 +48,9 @@ using namespace MessageViewer;
 
 static int serial = 0;
 
-PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, const QTextCodec * codec  )
+PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, NodeHelper *nodeHelper, const QTextCodec * codec  )
   : Interface::BodyPart(), mContent( content ), mCodec( codec ),
-    mDefaultDisplay( Interface::BodyPart::None )
+    mDefaultDisplay( Interface::BodyPart::None ), mNodeHelper( nodeHelper )
 {}
 
 QString PartNodeBodyPart::makeLink( const QString & path ) const {
@@ -91,13 +91,13 @@ Interface::BodyPartMemento * PartNodeBodyPart::memento() const {
  /*TODO(Andras) Volker suggests to use a ContentIndex->Mememnto mapping
   Also review if the reader's bodyPartMemento should be returned or the NodeHelper's one
  */
-  return NodeHelper::instance()->bodyPartMemento( mContent, "__plugin__" );
+  return mNodeHelper->bodyPartMemento( mContent, "__plugin__" );
 }
 
 void PartNodeBodyPart::setBodyPartMemento( Interface::BodyPartMemento * memento ) {
 /*TODO(Andras) Volker suggests to use a ContentIndex->Memento mapping
 Also review if the reader's bodyPartMemento should be set or the NodeHelper's one */
-  NodeHelper::instance()->setBodyPartMemento( mContent, "__plugin__" , memento );
+  mNodeHelper->setBodyPartMemento( mContent, "__plugin__" , memento );
 }
 
 Interface::BodyPart::Display PartNodeBodyPart::defaultDisplay() const {
