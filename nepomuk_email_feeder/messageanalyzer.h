@@ -35,7 +35,12 @@
 #include <KDE/KUrl>
 #include <QtCore/QObject>
 
+namespace Soprano {
+class Model;
+}
+
 namespace MessageViewer {
+class NodeHelper;
 class ObjectTreeParser;
 }
 
@@ -77,7 +82,9 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     NepomukFast::Email m_email;
     QUrl m_graphUri;
     KMime::Content *m_mainBodyPart;
+    MessageViewer::NodeHelper *m_nodeHelper;
     MessageViewer::ObjectTreeParser *m_otp;
+    Soprano::Model* m_mainModel;
 };
 
 #endif

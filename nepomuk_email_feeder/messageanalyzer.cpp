@@ -30,6 +30,8 @@
 
 #include <messagecore/messagestatus.h>
 #include <messageviewer/objecttreeparser.h>
+#include <messageviewer/nodehelper.h>
+#include <messageviewer/partmetadata.h>
 
 #include <akonadi/item.h>
 
@@ -42,6 +44,8 @@
 #include <Nepomuk/Variant>
 #include <Nepomuk/Tag>
 
+#include <Soprano/Client/DBusClient>
+#include <Soprano/Client/DBusModel>
 #include <Soprano/Model>
 #include <Soprano/QueryResultIterator>
 #include <Soprano/Vocabulary/NAO>
@@ -53,7 +57,9 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_email( item.url(), graphUri ),
   m_graphUri( graphUri ),
   m_mainBodyPart( 0 ),
-  m_otp( 0 )
+  m_nodeHelper( new MessageViewer::NodeHelper ),
+  m_otp( 0 ),
+  m_mainModel( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
@@ -64,8 +70,8 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 
   if ( !msg->body().isEmpty() || !msg->contents().isEmpty() ) {
 
-    if ( Settings::self()->indexEncryptedContent() /* TODO != Settings::NoIndexing */ == Settings::CleartextIndex ) {
-      m_otp = new MessageViewer::ObjectTreeParser( this );
+    if ( Settings::self()->indexEncryptedContent() != Settings::NoIndexing ) {
+      m_otp = new MessageViewer::ObjectTreeParser( this, m_nodeHelper );
       m_otp->setAllowAsync( true );
       m_otp->parseObjectTree( msg.get() );
     }
@@ -135,6 +141,23 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
 
 void MessageAnalyzer::processPart(KMime::Content* content)
 {
+  bool resetModel = false;
+  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !m_mainModel ) {
+    const MessageViewer::PartMetaData metaData = m_nodeHelper->partMetaData( content );
+    kDebug() << content << metaData.isEncrypted << metaData.keyId;
+    if ( metaData.isEncrypted && !metaData.keyId.isEmpty() ) {
+      Soprano::Client::DBusClient dbusClient( "org.kde.nepomuk.services.nepomukstorage" );
+      Soprano::Model* cryptoModel = dbusClient.createModel( metaData.keyId );
+      if ( cryptoModel ) {
+        m_mainModel = Nepomuk::ResourceManager::instance()->mainModel();
+        Nepomuk::ResourceManager::instance()->setOverrideMainModel( cryptoModel );
+        resetModel = true;
+      } else {
+        kWarning() << "Could not obtain cryto index model";
+      }
+    }
+  }
+
   // multipart -> recurse
   if ( content->contentType()->isMultipart() ) {
     if ( content->contentType()->isSubtype( "encrypted" ) && Settings::self()->indexEncryptedContent() == Settings::NoIndexing )
@@ -146,7 +169,6 @@ void MessageAnalyzer::processPart(KMime::Content* content)
 
   // plain text main body part, we already dealt with that
   else if ( content == m_mainBodyPart ) {
-    return;
   }
 
   // non plain text main body part, let strigi figure out what to do about that
@@ -172,6 +194,11 @@ void MessageAnalyzer::processPart(KMime::Content* content)
       attachment.addProperty( Vocabulary::NIE::description(), Soprano::LiteralValue( content->contentDescription()->asUnicodeString() ) );
     m_email.addAttachment( attachment );
     m_parent->indexData( attachmentUrl, content->decodedContent(), m_item.modificationTime() );
+  }
+
+  if ( resetModel ) {
+    Nepomuk::ResourceManager::instance()->setOverrideMainModel( 0 );
+    m_mainModel = 0;
   }
 }
 
