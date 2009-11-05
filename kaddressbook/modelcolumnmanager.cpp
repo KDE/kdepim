@@ -78,10 +78,6 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
       fullNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::FullName ) );
       fullNameAction->setEnabled( false );
 
-      QAction *shortNameAction = menu.addAction( i18n( "Short Name" ) );
-      shortNameAction->setCheckable( true );
-      shortNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::ShortName ) );
-
       QAction *birthdayAction = menu.addAction( KABC::Addressee::birthdayLabel() );
       birthdayAction->setCheckable( true );
       birthdayAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Birthday ) );
@@ -123,8 +119,6 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
 
         if ( fullNameAction->isChecked() )
           columns << Akonadi::ContactsTreeModel::FullName;
-        if ( shortNameAction->isChecked() )
-          columns << Akonadi::ContactsTreeModel::ShortName;
         if ( birthdayAction->isChecked() )
           columns << Akonadi::ContactsTreeModel::Birthday;
         if ( homeAddressAction->isChecked() )

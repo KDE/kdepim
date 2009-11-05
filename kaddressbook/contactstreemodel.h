@@ -47,11 +47,6 @@ class ContactsTreeModel : public EntityTreeModel
       FullName,
 
       /**
-       * Shows only given and family name.
-       */
-      ShortName,
-
-      /**
        * Shows the birthday.
        */
       Birthday,

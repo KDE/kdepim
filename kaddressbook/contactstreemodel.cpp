@@ -76,14 +76,8 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
       return QVariant();
     } else if ( (role == Qt::DisplayRole) || (role == Qt::EditRole) ) {
       switch ( mColumns.at( column ) ) {
-        case FullName:  // fallthrough
-          if ( !contact.formattedName().isEmpty() )
-            return contact.formattedName();
-          else
-            return contact.assembledName();
-          break;
-        case ShortName:
-          return QString( "%1 %2" ).arg( contact.givenName() ).arg( contact.familyName() );
+        case FullName:
+          return contact.realName();
           break;
         case Birthday:
           if ( contact.birthday().isValid() )
@@ -148,8 +142,7 @@ QVariant ContactsTreeModel::entityData( const Item &item, int column, int role )
         return QVariant();
     } else if ( (role == Qt::DisplayRole) || (role == Qt::EditRole) ) {
       switch ( mColumns.at( column ) ) {
-        case FullName:    // fallthrough
-        case ShortName:
+        case FullName:
           {
             const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
             return group.name();
@@ -208,8 +201,7 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
           return QVariant();
 
         switch ( mColumns.at( section ) ) {
-          case FullName:  // fallthrough
-          case ShortName:
+          case FullName:
             return i18nc( "@title:column, name of a person", "Name" );
             break;
           case Birthday:

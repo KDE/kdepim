@@ -27,9 +27,14 @@
 
 XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentWidget ) const
 {
-  if ( identifier == "vcard21" || identifier == "vcard30" )
-    return new VCardXXPort( parentWidget );
-  else if ( identifier == "csv" )
+  if ( identifier == "vcard21" || identifier == "vcard30" ) {
+    XXPort *xxport = new VCardXXPort( parentWidget );
+
+    if ( identifier == "vcard21" )
+      xxport->setOption( "version", "v21" );
+
+    return xxport;
+  } else if ( identifier == "csv" )
     return new CsvXXPort( parentWidget );
   else if ( identifier == "ldif" )
     return new LDIFXXPort( parentWidget );
