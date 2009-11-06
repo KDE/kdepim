@@ -82,6 +82,7 @@
 #include "kjotstreeview.h"
 #include "kjotsconfigdlg.h"
 #include "kjotsreplacenextdialog.h"
+#include "note.h"
 
 #include <kdebug.h>
 
@@ -125,7 +126,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   monitor->fetchCollection( true );
   monitor->setItemFetchScope( scope );
   monitor->setCollectionMonitored( Collection::root() );
-  monitor->setMimeTypeMonitored( QLatin1String( "text/x-vnd.akonadi.note" ) );
+  monitor->setMimeTypeMonitored( Note::mimeType() );
 
   Session *session = new Session( QByteArray( "EntityTreeModel-" ) + QByteArray::number( qrand() ), this );
 
@@ -566,7 +567,7 @@ void KJotsWidget::newBook()
 
   QString title = i18nc( "The default name for new books.", "New Book" );
   newCollection.setName( title );
-  newCollection.setContentMimeTypes( QStringList( "text/x-vnd.akonadi.note" ) );
+  newCollection.setContentMimeTypes( QStringList() << Note::mimeType() );
 
   Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob( newCollection );
   connect( job, SIGNAL(result(KJob*)), this, SLOT(newBookResult(KJob*)) );
@@ -593,7 +594,7 @@ void KJotsWidget::newPage()
     return;
 
   Item newItem;
-  newItem.setMimeType( QLatin1String( "text/x-vnd.akonadi.note" ) );
+  newItem.setMimeType( Note::mimeType() );
 
   KMime::Message::Ptr newPage = KMime::Message::Ptr( new KMime::Message() );
 

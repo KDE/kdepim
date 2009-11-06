@@ -29,6 +29,8 @@
 #include <kdebug.h>
 #include <KMime/KMimeMessage>
 
+#include "note.h"
+
 KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
   : QObject(parent)
 {
@@ -69,7 +71,7 @@ bool KJotsEntity::isBook()
 
   if (col.isValid())
   {
-    return col.contentMimeTypes().contains("text/x-vnd.akonadi.note");
+    return col.contentMimeTypes().contains( Note::mimeType() );
   }
   return false;
 }
@@ -176,7 +178,7 @@ QVariant KJotsModel::data(const QModelIndex &index, int role) const
 
   if ( role == KJotsModel::DocumentCursorPositionRole )
   {
-    Item item = EntityTreeModel::data(index, EntityTreeModel::ItemRole).value<Item>();
+    Item item = EntityTreeModel::data( index, EntityTreeModel::ItemRole ).value<Item>();
     if (!item.isValid())
       return 0;
 

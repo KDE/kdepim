@@ -53,6 +53,7 @@ set (kjots_common_SRCS
      kjotsbrowser.cpp
      kjotslinkdialog.cpp
      kjotsbookshelfentryvalidator.cpp
+     note.cpp
      knowitimporter.cpp ${kjots_config_SRCS}
 )
 
