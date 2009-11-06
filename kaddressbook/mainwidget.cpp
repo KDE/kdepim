@@ -85,14 +85,14 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                               mItemView
    *                                   ^
    *                                   |
-   *                           contactFilterModel
+   *                           mContactFilterModel
    *                                   ^
    *                                   |
    *                               mItemTree
    *                                   ^
    *                                   |
-   *                             mDescendantTree   mAllContactsModel
-   *                                   ^                  ^
+   *                                   |           mAllContactsModel
+   *                                   |                  ^
    *                                   |                  |
    *      mCollectionView  ->  selectionProxyModel  descendantsModel
    *            ^                      ^                  ^
@@ -109,9 +109,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                 mCollectionView:  Shows the collections (address books) in a view
    *             selectionProxyModel:  Filters out all collections and items that are no children
    *                                   of the collection currently selected in mCollectionView
-   *                 mDescendantTree:  Flattens the item/collection tree to a list
    *                       mItemTree:  Filters out all collections
-   *              contactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
+   *             mContactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
    *
    *                descendantsModel:  Flattens the item/collection tree to a list
@@ -136,26 +135,23 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( mCollectionView->selectionModel(),
                                                                                         this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
-
-  mDescendantTree = new KDescendantsProxyModel( this );
-
-  mDescendantTree->setSourceModel( selectionProxyModel );
+  selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
   mItemTree = new Akonadi::EntityMimeTypeFilterModel( this );
-  mItemTree->setSourceModel( mDescendantTree );
+  mItemTree->setSourceModel( selectionProxyModel );
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
-  ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
-  contactFilterModel->setSourceModel( mItemTree );
+  mContactFilterModel = new ContactFilterModel( this );
+  mContactFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
-           contactFilterModel, SLOT( setFilterString( const QString& ) ) );
+           mContactFilterModel, SLOT( setFilterString( const QString& ) ) );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            this, SLOT( selectFirstItem() ) );
   connect( mQuickSearchWidget, SIGNAL( arrowDownKeyPressed() ),
            mItemView, SLOT( setFocus() ) );
 
-  mItemView->setModel( contactFilterModel );
+  mItemView->setModel( mContactFilterModel );
   mItemView->setXmlGuiClient( guiClient );
   mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );
@@ -513,6 +509,14 @@ void MainWidget::setSimpleGuiMode( bool on )
   mItemView->setVisible( !on );
   mDetailsPane->setVisible( true );
   mContactSwitcher->setVisible( on );
+
+  // If simple mode is on, we use a model that provides all available contacts
+  // in a list, otherwise we use the model that provides all contacts of the
+  // currently selected collection.
+  if ( on )
+    mContactFilterModel->setSourceModel( allContactsModel() );
+  else
+    mContactFilterModel->setSourceModel( mItemTree );
 
   if ( mCollectionView->model() )
     mCollectionView->setCurrentIndex( mCollectionView->model()->index( 0, 0 ) );
