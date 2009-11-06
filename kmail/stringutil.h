@@ -20,6 +20,7 @@
 #define KMAIL_STRINGUTIL_H
 
 #include <QString>
+#include <QMap>
 
 class KUrl;
 namespace KMime
@@ -157,10 +158,9 @@ namespace StringUtil
   QString smartQuote( const QString &msg, int maxLineLength );
 
   /**
-   * Parses a mailto: url and extracts the information about to, cc, subject and body out into
-   * the QStrings given as argument.
+   * Parses a mailto: url and extracts the information in the QMap (field name as key).
    */
-  void parseMailtoUrl( const KUrl &url, QString &to, QString &cc, QString &subject, QString &body );
+  QMap<QString, QString> parseMailtoUrl( const KUrl &url );
 }
 
 }
