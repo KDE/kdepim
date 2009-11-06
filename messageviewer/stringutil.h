@@ -153,12 +153,6 @@ namespace StringUtil
   MESSAGEVIEWER_EXPORT QString formatString( const QString &wildString, const QString &fromAddr = QString() );
 
   /**
-  * Parses a mailto: url and extracts the information about to, cc, subject and body out into
-  * the QStrings given as argument.
-  */
-  void parseMailtoUrl( const KUrl &url, QString &to, QString &cc, QString &subject, QString &body );
-
-  /**
    * Determines if the MIME part with the specified type and subtype is a crypto part.
    * For example, this function returns true for type "application" and subtype "pgp-encrypted".
    * The filename is needed if the part is named "msg.asc", in which case it is also a crypto part.

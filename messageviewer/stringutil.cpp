@@ -1003,15 +1003,6 @@ QString formatString( const QString &wildString, const QString &fromAddr )
   return result;
 }
 
-void parseMailtoUrl ( const KUrl& url, QString& to, QString& cc, QString& subject, QString& body )
-{
-  to = decodeMailtoUrl( url.path() );
-  body = url.queryItem( "body" );
-  subject = url.queryItem( "subject" );
-  kDebug() << url.pathOrUrl();
-  cc = url.queryItem( "cc" );
-}
-
 
 }
 
