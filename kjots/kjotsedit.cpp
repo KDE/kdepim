@@ -384,7 +384,7 @@ void KJotsEdit::savePage()
 
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
 
-    kDebug() << "saving";
+    document()->setModified( false );
     model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
 }
 
