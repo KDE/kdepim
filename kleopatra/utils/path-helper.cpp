@@ -40,6 +40,7 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QDir>
+#include <QDebug>
 
 #include <boost/bind.hpp>
 
@@ -62,12 +63,13 @@ static QString longestCommonPrefix( const QStringList & sl ) {
 }
 
 QString Kleo::heuristicBaseDirectory( const QStringList & fileNames ) {
-    const QString candidate = longestCommonPrefix( fileNames );
-    const QFileInfo fi( candidate );
-    if ( fi.isDir() )
-        return candidate;
-    else
-        return fi.absolutePath();
+    QStringList dirs;
+    Q_FOREACH( const QString & fileName, fileNames )
+        dirs.push_back( QFileInfo( fileName ).path() + QLatin1Char( '/' ) );
+    qDebug() << "dirs" << dirs;
+    const QString candidate = longestCommonPrefix( dirs );
+    const int idx = candidate.lastIndexOf( QLatin1Char( '/' ) );
+    return candidate.left( idx );
 }
 
 QStringList Kleo::makeRelativeTo( const QString & base, const QStringList & fileNames ) {

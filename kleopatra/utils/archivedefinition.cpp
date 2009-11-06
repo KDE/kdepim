@@ -124,6 +124,8 @@ ArchiveDefinition::~ArchiveDefinition() {}
 
 shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) const {
     const QString base = heuristicBaseDirectory( files );
+    if ( base.isEmpty() )
+        throw Kleo::Exception( GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join( "\n" ) ) );
     qDebug() << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo( base, files );
     qDebug() << "relative" << relative;
