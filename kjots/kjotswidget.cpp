@@ -672,9 +672,16 @@ void KJotsWidget::renderSelection()
 
       KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
       editor->clear();
-      editor->setText( page->mainBodyPart()->decodedText() );
+      QTextDocument *doc = new QTextDocument( editor );
+      doc->setPlainText( page->mainBodyPart()->decodedText() );
+
+      // TODO: Store textcursor separately?
+      editor->setDocument( doc );
+      editor->document()->setModified( false );
+
       QTextCursor textCursor = editor->textCursor();
       textCursor.setPosition( idx.data( KJotsModel::DocumentCursorPositionRole ).toInt() );
+
       editor->setTextCursor( textCursor );
       stackedWidget->setCurrentWidget( editor );
       editor->setFocus();
