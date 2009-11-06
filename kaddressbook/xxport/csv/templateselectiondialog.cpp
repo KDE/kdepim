@@ -21,6 +21,7 @@
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtGui/QLabel>
 #include <QtGui/QListView>
 #include <QtGui/QMouseEvent>
@@ -32,6 +33,12 @@
 #include <kpushbutton.h>
 #include <kstandarddirs.h>
 #include <kvbox.h>
+
+typedef struct {
+  QString displayName;
+  QString fileName;
+  bool isDeletable;
+} TemplateInfo;
 
 class TemplatesModel : public QAbstractTableModel
 {
@@ -65,10 +72,13 @@ class TemplatesModel : public QAbstractTableModel
 
       if ( role == Qt::DisplayRole ) {
         if ( index.column() == 0 )
-          return mTemplates[ index.row() ].first;
+          return mTemplates[ index.row() ].displayName;
         else
-          return mTemplates[ index.row() ].second;
+          return mTemplates[ index.row() ].fileName;
       }
+
+      if ( role == Qt::UserRole )
+        return mTemplates[ index.row() ].isDeletable;
 
       return QVariant();
     }
@@ -80,7 +90,8 @@ class TemplatesModel : public QAbstractTableModel
 
       beginRemoveRows( parent, row, row + count - 1 );
       for ( int i = 0; i < count; ++i ) {
-        QFile::remove( mTemplates[ row ].second );
+        if ( !QFile::remove( mTemplates[ row ].fileName ) )
+          return false;
         mTemplates.removeAt( row );
       }
 
@@ -101,7 +112,14 @@ class TemplatesModel : public QAbstractTableModel
           continue;
 
         KConfigGroup group( &config, "Misc" );
-        mTemplates.append( qMakePair( group.readEntry( "Name" ), files.at( i ) ) );
+        TemplateInfo info;
+        info.displayName = group.readEntry( "Name" );
+        info.fileName = files.at( i );
+
+        const QFileInfo fileInfo( info.fileName );
+        info.isDeletable = QFileInfo( fileInfo.absolutePath() ).isWritable();
+
+        mTemplates.append( info );
       }
       endResetModel();
     }
@@ -112,7 +130,7 @@ class TemplatesModel : public QAbstractTableModel
     }
 
   private:
-    QList<QPair<QString, QString> > mTemplates;
+    QList<TemplateInfo> mTemplates;
 };
 
 class TemplateSelectionDelegate : public QStyledItemDelegate
@@ -127,20 +145,23 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
     {
       QStyledItemDelegate::paint( painter, option, index );
 
-      mIcon.paint( painter, option.rect, Qt::AlignRight );
+      if ( index.data( Qt::UserRole ).toBool() )
+        mIcon.paint( painter, option.rect, Qt::AlignRight );
     }
 
     QSize sizeHint( const QStyleOptionViewItem& option, const QModelIndex& index ) const
     {
       QSize hint = QStyledItemDelegate::sizeHint( option, index );
-      hint.setWidth( hint.width() + 16 );
+
+      if ( index.data( Qt::UserRole ).toBool() )
+        hint.setWidth( hint.width() + 16 );
 
       return hint;
     }
 
     virtual bool editorEvent( QEvent *event, QAbstractItemModel *model, const QStyleOptionViewItem &option, const QModelIndex &index )
     {
-      if ( event->type() == QEvent::MouseButtonRelease ) {
+      if ( event->type() == QEvent::MouseButtonRelease && index.data( Qt::UserRole ).toBool() ) {
         const QMouseEvent *mouseEvent = static_cast<QMouseEvent*>( event );
         QRect buttonRect = option.rect;
         buttonRect.setLeft( buttonRect.right() - 16 );
