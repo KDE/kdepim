@@ -156,6 +156,7 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
   {
     Item item = index.data( ItemRole ).value<Item>();
     m_cursorPositions.insert( item.id(), value.toInt() );
+    return true;
   }
 
   return EntityTreeModel::setData(index, value, role);
