@@ -77,7 +77,7 @@ QString contactsToHtml( const KABC::Addressee::List &contacts, const ColorSettin
   content += " </head>\n";
   content += " <body>\n";
   foreach ( const KABC::Addressee &contact, contacts ) {
-    const QString name = contact.givenName() + ' ' + contact.familyName();
+    const QString name = contact.realName();
     const QString birthday = KGlobal::locale()->formatDate( contact.birthday().date(), KLocale::ShortDate );
 
     ContactBlock::List blocks;
@@ -225,6 +225,7 @@ DetailledPrintStyle::DetailledPrintStyle( PrintingWizard *parent )
     mPageAppearance( new AppearancePage( parent ) )
 {
   setPreview( "detailed-style.png" );
+  setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 
   addPage( mPageAppearance, i18n( "Detailed Print Style - Appearance" ) );
 
