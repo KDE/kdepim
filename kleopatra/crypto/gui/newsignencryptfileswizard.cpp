@@ -48,6 +48,7 @@
 
 #include <utils/archivedefinition.h>
 #include <utils/path-helper.h>
+#include <utils/gui-helper.h>
 #include <utils/stl_util.h>
 
 #include <ui/filenamerequester.h>
@@ -92,21 +93,6 @@ enum Page {
 
     NumPages
 };
-
-static void really_check( QAbstractButton & b, bool on ) {
-    const bool excl = b.autoExclusive();
-    b.setAutoExclusive( false );
-    b.setChecked( on );
-    b.setAutoExclusive( excl );
-}
-
-static bool xconnect( const QObject * a, const char * signal,
-                      const QObject * b, const char * slot )
-{
-    return
-        QObject::connect( a, signal, b, slot ) &&
-        QObject::connect( b, signal, a, slot ) ;
-}
 
 static void enable_disable( QAbstractButton & button, const QAbstractItemView * view ) {
     const QItemSelectionModel * ism = view ? view->selectionModel() : 0 ;
