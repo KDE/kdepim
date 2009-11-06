@@ -604,7 +604,8 @@ void KJotsWidget::newPage()
   newPage->contentType( true )->setMimeType( "text/plain" );
   newPage->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
   newPage->from( true )->fromUnicodeString( "Kjots@kde4", encoding );
-  newPage->to( true )->fromUnicodeString( "user@kde4", encoding );
+  // Need a non-empty body part so that the serializer regards this as a valid message.
+  newPage->mainBodyPart()->fromUnicodeString( " " );
 
   newPage->assemble();
 
