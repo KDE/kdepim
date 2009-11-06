@@ -278,12 +278,12 @@ void SignEncryptFilesController::start() {
     d->ensureWizardVisible();
 }
 
-static const char * extension( bool pgp, bool sign, bool encrypt, bool ascii ) {
+static const char * extension( bool pgp, bool sign, bool encrypt, bool ascii, bool detached ) {
     unsigned int cls = pgp ? Class::OpenPGP : Class::CMS ;
     if ( encrypt )
         cls |= Class::CipherText;
     else if ( sign )
-        cls |= Class::DetachedSignature;
+        cls |= detached ? Class::DetachedSignature : Class::OpaqueSignature ;
     cls |= ascii ? Class::Ascii : Class::Binary ;
     if ( const char * const ext = outputFileExtension( cls ) )
         return ext;
@@ -309,7 +309,7 @@ createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, boo
     task->setInputFileName( input );
     task->setInput( Input::createFromFile( input ) );
 
-    const char * const ext = extension( pgp, sign, encrypt, ascii );
+    const char * const ext = extension( pgp, sign, encrypt, ascii, true );
     kleo_assert( ext );
 
     const QString output = input + '.' + ext;
@@ -325,9 +325,9 @@ createArchiveSignEncryptTaskForFiles( const QStringList & files, const QString &
     task->setEncrypt( encrypt );
     task->setAsciiArmor( ascii );
     task->setRemoveInputFileOnSuccess( removeUnencrypted );
-    if ( task ) {
+    if ( sign ) {
         task->setSigners( signers );
-        task->setDetachedSignature( true );
+        task->setDetachedSignature( false );
     }
     if ( encrypt )
         task->setRecipients( recipients );
@@ -337,7 +337,7 @@ createArchiveSignEncryptTaskForFiles( const QStringList & files, const QString &
     task->setInputFileNames( files );
     task->setInput( ad->createInput( files ) );
 
-    const char * const ext = extension( pgp, sign, encrypt, ascii );
+    const char * const ext = extension( pgp, sign, encrypt, ascii, false );
     kleo_assert( ext );
     kleo_assert( !ad->extensions().empty() );
 
