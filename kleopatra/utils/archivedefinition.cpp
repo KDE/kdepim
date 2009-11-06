@@ -57,7 +57,7 @@ using namespace Kleo;
 using namespace boost;
 
 static const QLatin1String ID_ENTRY( "id" );
-static const QLatin1String NAME_ENTRY( "name" );
+static const QLatin1String NAME_ENTRY( "Name" );
 static const QLatin1String COMMAND_ENTRY( "pack-command" );
 static const QLatin1String EXTENSIONS_ENTRY( "extensions" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
