@@ -1,3 +1,24 @@
+[Archive Definition #0]
+extensions=tar
+id=tar
+Name=TAR (PGP®-compatible)
+Name[de]=TAR (PGP®-kompatibel)
+pack-command=tar cf -
+
+[Archive Definition #1]
+extensions=zip
+id=zip
+Name=ZIP
+Name[de]=ZIP
+pack-command=zip  -r - %f
+
+[Archive Definition #3]
+extensions=tar.bz2,tbz2
+id=bzip2
+Name=TAR (with bzip2 compression)
+Name[de]=TAR (mit bzip2-Kompression)
+pack-command=tar cfj -
+
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key
