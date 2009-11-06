@@ -359,6 +359,7 @@ namespace {
 
             registerField( "archive", &m_archiveCB );
             registerField( "archive-id", &m_archive );
+            registerField( "archive-user-mutable", &m_archiveCB, "enabled" );
 
             connect( &m_signencrypt, SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_encrypt,     SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
@@ -829,6 +830,7 @@ void NewSignEncryptFilesWizard::setCreateArchiveUserMutable( bool mut ) {
         return;
     d->createArchiveUserMutable = true;
     d->updateStartId();
+    setField( "archive-user-mutable", mut );
 }
 
 void NewSignEncryptFilesWizard::setArchiveDefinitionId( const QString & id ) {
