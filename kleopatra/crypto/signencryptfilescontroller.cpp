@@ -431,8 +431,6 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         if ( !archive )
             tasks.reserve( files.size() );
 
-        ensureWizardCreated();
-
         if ( archive )
             tasks = createArchiveSignEncryptTasksForFiles( files,
                                                            wizard->archiveFileName(),
