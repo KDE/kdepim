@@ -23,6 +23,8 @@
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
+#include "contactfields.h"
+
 #include <QtCore/QList>
 
 class KComboBox;
@@ -86,6 +88,7 @@ class CSVImportDialog : public KDialog
     QString mDelimiter;
     QMap<QString, uint> mTypeMap;
     QIODevice *mDevice;
+    ContactFields::Fields mFieldSelection;
 };
 
 #endif

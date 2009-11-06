@@ -19,7 +19,6 @@
 
 #include "csvimportdialog.h"
 
-#include "contactfields.h"
 #include "dateparser.h"
 #include "qcsvmodel.h"
 
@@ -443,6 +442,10 @@ void CSVImportDialog::textQuoteChanged( const QString& mark, bool reload )
 
 void CSVImportDialog::skipFirstRowChanged( bool checked, bool reload )
 {
+  mFieldSelection.clear();
+  for ( int column = 0; column < mModel->columnCount(); ++column )
+    mFieldSelection.append( (ContactFields::Field)mModel->data( mModel->index( 0, column ) ).toInt() );
+
   if ( checked )
     mModel->setStartRow( 1 );
   else
@@ -651,6 +654,10 @@ void CSVImportDialog::modelFinishedLoading()
 
   for ( int i = 0; i < mModel->columnCount(); ++i )
     mTable->setColumnWidth( i, preferredWidth );
+
+  for ( int column = 0; column < mFieldSelection.count(); ++column )
+    mModel->setData( mModel->index( 0, column ), mFieldSelection.at( column ), Qt::EditRole );
+  mFieldSelection.clear();
 }
 
 #include <csvimportdialog.moc>

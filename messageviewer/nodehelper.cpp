@@ -19,6 +19,7 @@
 #include "nodehelper.h"
 #include "iconnamecache.h"
 #include "globalsettings.h"
+#include "partmetadata.h"
 #include "interfaces/bodypart.h"
 
 #include <kmime/kmime_content.h>
@@ -184,6 +185,15 @@ KMMsgSignatureState NodeHelper::signatureState( KMime::Content *node ) const
   return KMMsgNotSigned;
 }
 
+PartMetaData NodeHelper::partMetaData(KMime::Content* node)
+{
+  return mPartMetaDatas.value( node );
+}
+
+void NodeHelper::setPartMetaData(KMime::Content* node, const PartMetaData& metaData)
+{
+  mPartMetaDatas.insert( node, metaData );
+}
 
 QString NodeHelper::writeNodeToTempFile(KMime::Content* node)
 {
