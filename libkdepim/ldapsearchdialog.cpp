@@ -111,8 +111,8 @@ class ContactListItem : public QTreeWidgetItem
     {
       const KLDAP::LdapAttrValue &mailAttrs = attrs[ "mail" ];
       if ( mailAttrs.isEmpty() ) {
-        setCheckState( 0, Qt::Unchecked );
         setFlags( flags() & ~Qt::ItemIsSelectable );
+        setFlags( flags() & ~Qt::ItemIsEnabled );
       }
     }
 
