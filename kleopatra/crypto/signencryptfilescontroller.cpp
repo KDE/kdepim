@@ -432,7 +432,6 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             tasks.reserve( files.size() );
 
         ensureWizardCreated();
-        const shared_ptr<OverwritePolicy> overwritePolicy( new OverwritePolicy( wizard ) );
 
         if ( archive )
             tasks = createArchiveSignEncryptTasksForFiles( files,
@@ -444,10 +443,12 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             Q_FOREACH( const QString & file, files ) {
                 const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
                     createSignEncryptTasksForFileInfo( QFileInfo( file ), sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
-                Q_FOREACH( const shared_ptr<SignEncryptFilesTask> & i, created )
-                    i->setOverwritePolicy( overwritePolicy );
                 tasks.insert( tasks.end(), created.begin(), created.end() );
             }
+
+        const shared_ptr<OverwritePolicy> overwritePolicy( new OverwritePolicy( wizard ) );
+        Q_FOREACH( const shared_ptr<SignEncryptFilesTask> & i, tasks )
+            i->setOverwritePolicy( overwritePolicy );
 
         kleo_assert( runnable.empty() );
 
