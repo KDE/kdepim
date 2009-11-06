@@ -2,11 +2,6 @@ project(akonotesplasmoid)
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
-set(akonotes_plasmoid_SRCS
-    akonotes_applet.cpp
-    akonote_extenderitem.cpp
-)
-
 set(akonotes_note_plasmoid_SRCS
     akonotes_noteapplet.cpp
     ../note.cpp
@@ -19,8 +14,7 @@ set(akonotes_noteslist_plasmoid_SRCS
     plasmatreeview.cpp
 )
 
-kde4_add_ui_files(akonotes_plasmoid_SRCS akonotes_applet.ui )
-kde4_add_plugin(plasma_applet_akonotes ${akonotes_plasmoid_SRCS})
+kde4_add_ui_files(akonotes_noteslist_plasmoid_SRCS akonotes_applet.ui )
 
 kde4_add_plugin(plasma_applet_akonotes_note ${akonotes_note_plasmoid_SRCS})
 kde4_add_plugin(plasma_applet_akonotes_list ${akonotes_noteslist_plasmoid_SRCS})
@@ -29,14 +23,6 @@ include_directories(
                       ${CMAKE_CURRENT_SOURCE_DIR}/..
                       ${KDEPIMLIBS_INCLUDE_DIRS}
                       )
-
-target_link_libraries(plasma_applet_akonotes
-                      ${KDE4_PLASMA_LIBS}
-                      ${KDE4_KIO_LIBS}
-                      ${KDE4_AKONADI_LIBS}
-                      ${KDE4_AKONADI_KMIME_LIBS}
-                      ${KDE4_KMIME_LIBS}
-)
 
 target_link_libraries(plasma_applet_akonotes_note
                       ${KDE4_PLASMA_LIBS}
@@ -53,12 +39,6 @@ target_link_libraries(plasma_applet_akonotes_list
                       ${KDE4_AKONADI_KMIME_LIBS}
                       ${KDE4_KMIME_LIBS}
 )
-
-install(TARGETS plasma_applet_akonotes
-        DESTINATION ${PLUGIN_INSTALL_DIR})
-
-install(FILES akonotes.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR})
 
 install(TARGETS plasma_applet_akonotes_note
         DESTINATION ${PLUGIN_INSTALL_DIR})
