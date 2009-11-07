@@ -130,11 +130,30 @@ QStringList EncryptJob::recipients() {
   return d->recipients;
 }
 
+std::vector<GpgME::Key> EncryptJob::encryptionKeys() {
+  Q_D( EncryptJob );
+
+  return d->keys;
+}
 
 void EncryptJob::process()
 {
   Q_D( EncryptJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
+
+  if( d->keys.size() == 0 ) { // not good
+    kDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
+    // TODO handle gracefully
+    return;
+  }
+  
+  // if setContent hasn't been called, we assume that a subjob was added
+  // and we want to use that
+  if( !d->content || !d->content->hasContent() ) {
+    Q_ASSERT( d->subjobContents.size() == 1 );
+    d->content = d->subjobContents.first();
+  }
+
   d->resultContent = new KMime::Content;
 
   const Kleo::CryptoBackend::Protocol *proto = 0;

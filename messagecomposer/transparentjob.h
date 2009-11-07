@@ -18,58 +18,36 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_ENCRYPTJOB_H
-#define MESSAGECOMPOSER_ENCRYPTJOB_H
+#ifndef MESSAGECOMPOSER_TRANSPARENTJOB_H
+#define MESSAGECOMPOSER_TRANSPARENTJOB_H
 
 
 #include "contentjobbase.h"
-#include "infopart.h"
 #include "messagecomposer_export.h"
-#include "kleo/enum.h"
 
-#include <gpgme++/key.h>
-#include <vector>
-
-namespace KMime {
-  class Content;
-
-}
-
-namespace GpgME {
-  class Error;
-}
 
 
 namespace Message {
 
-class EncryptJobPrivate;
+class TransparentJobPrivate;
 
 /**
-  Encrypt the contents of a message .
-  Used as a subjob of CryptoMessage
-*/
-class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase
+  A job that just wraps some KMime::Content into a job object
+  for use as a subjob in another job.
+ */
+class MESSAGECOMPOSER_EXPORT TransparentJob : public ContentJobBase
 {
   Q_OBJECT
 
   public:
-    explicit EncryptJob( QObject *parent = 0 );
-    virtual ~EncryptJob();
+    explicit TransparentJob( QObject *parent = 0 );
+    virtual ~TransparentJob();
 
     void setContent( KMime::Content* content );
-    void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
-    void setEncryptionKeys( std::vector<GpgME::Key> keys );
-    void setRecipients( QStringList rec );
+    void process();
     
-    std::vector<GpgME::Key> encryptionKeys();
-    QStringList recipients();
-    
-  protected Q_SLOTS:
-    //virtual void doStart();
-    virtual void process();
-
   private:
-    Q_DECLARE_PRIVATE( EncryptJob )
+    Q_DECLARE_PRIVATE( TransparentJob )
 };
 
 }

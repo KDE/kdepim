@@ -29,6 +29,7 @@
 #include "signjob.h"
 #include "encryptjob.h"
 #include "skeletonmessagejob.h"
+#include "transparentjob.h"
 
 #include <QTimer>
 
@@ -63,7 +64,10 @@ class Message::ComposerPrivate : public JobBasePrivate
     void contentJobPreCryptFinished( KJob *job ); // slot
     void signBeforeEncryptJobFinished( KJob *job ); // slot
     void startEncryptJobs( KMime::Content* content );
-    
+    void composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients );
+    void attachmentsFinished( KJob* job ); // slot
+
+    void composeFinalStep( KMime::Message* headers, KMime::Content* content );
     bool started;
     bool finished;
     bool sign;
@@ -73,9 +77,6 @@ class Message::ComposerPrivate : public JobBasePrivate
     std::vector<GpgME::Key> signers;
     QList<QPair<QStringList, std::vector<GpgME::Key> > > encData;
     
-    // if some of the attachments have a different
-    // sign/encrypt policy than the message itself
-    bool attachmentsWithDifferentPolicy;
     KMime::Message::List resultMessages;
 
     // Stuff that the application plays with.
@@ -83,11 +84,16 @@ class Message::ComposerPrivate : public JobBasePrivate
     InfoPart *infoPart;
     TextPart *textPart;
     AttachmentPart::List attachmentParts;
+    // attachments with different sign/encrypt settings from
+    // main message body. added at the end of the process
+    AttachmentPart::List lateAttachmentParts; 
 
 
     // Stuff that we play with.
     KMime::Message *skeletonMessage;
     KMime::Content *resultContent;
+    // need to save headers 
+    KMime::Message *savedHeaders;
 
     Q_DECLARE_PUBLIC( Composer )
 };
@@ -148,19 +154,29 @@ void ComposerPrivate::composeStep2()
   if( attachmentParts.isEmpty() ) {
     // We have no attachments.  Use the content given by the MainTextJob.
     mainJob = mainTextJob;
-    if( sign || encrypt ) {
-        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreCryptFinished(KJob*)) );
-    } else {
-        QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
-    }
   } else {
     // We have attachments.  Create a multipart/mixed content.
+    QMutableListIterator<AttachmentPart::Ptr> iter( attachmentParts );
+    while( iter.hasNext() ) {
+      AttachmentPart::Ptr part = iter.next();
+      kDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
+      if( sign != part->isSigned() || encrypt != part->isEncrypted() ) { // different policy
+        kDebug() << "got attachment with different crypto policy!";
+        lateAttachmentParts.append( part );
+        iter.remove();
+      }
+    }
     MultipartJob *multipartJob = new MultipartJob( q );
     multipartJob->setMultipartSubtype( "mixed" );
     multipartJob->appendSubjob( mainTextJob );
     foreach( AttachmentPart::Ptr part, attachmentParts ) {
       multipartJob->appendSubjob( new AttachmentJob( part ) );
-    } // TODO sign and encrypt each attachment potentially differently
+    }
+    mainJob = multipartJob;
+  }
+  if( sign || encrypt ) {
+    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreCryptFinished(KJob*)) );
+  } else {
     QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
   }
   q->addSubjob( mainJob );
@@ -200,7 +216,6 @@ void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
 
 void ComposerPrivate::signBeforeEncryptJobFinished( KJob* job )
 {
-  Q_Q( Composer );
   
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
@@ -220,8 +235,10 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   // each SplitInfo holds a list of recipients/keys, if there is more than
   // one item in it then it means there are secondary recipients that need
   // different messages w/ clean headers
+  kDebug() << "startin enc gjobs";
   for( int i = 0; i < encData.size(); ++i ) {
     QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
+    kDebug() << "got first list of recipients:" << recipients.first;
     EncryptJob* eJob = new EncryptJob( q );
     eJob->setContent( content );
     eJob->setCryptoMessageFormat( format );
@@ -247,13 +264,20 @@ void ComposerPrivate::contentJobFinished( KJob *job )
 
   KMime::Message* headers;
   KMime::Content* resultContent;
+  std::vector<GpgME::Key> keys;
+  QStringList recipients;
 
   Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
   ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
 
+  // create the final headers and body,
+  // taking into account secondary recipients for encryption
   if( encData.size() > 1 ) { // crypto job with secondary recipients..
     Q_ASSERT( dynamic_cast<EncryptJob*>( job ) ); // we need to get the recipients for this job
     EncryptJob* eJob = dynamic_cast<EncryptJob*>( job );
+
+    keys = eJob->encryptionKeys();
+    recipients = eJob->recipients();
     
     resultContent = eJob->content();
     headers = new KMime::Message;
@@ -271,19 +295,121 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     headers->setHeader( to );
     headers->assemble();
   } else { // just use the saved headers from before
-    headers = skeletonMessage;
+    // TODO HACK what to do if you encrypt attachments only with BCC recipients? wtf
+    if( encData.size() > 0 ) {
+      kDebug() << "setting enc data:" << encData[ 0 ].first << "with num keys:" << encData[ 0 ].second.size();
+      keys = encData[ 0 ].second;
+      recipients = encData[ 0 ].first;
+    }
     
+    headers = skeletonMessage;
     resultContent = contentJob->content();
   }
+  // manually remove the subjob so we can check if we have any left later
+  q->removeSubjob( job );
   
-  QByteArray allData = headers->head() + resultContent->encodedContent();
+  if( lateAttachmentParts.isEmpty() ) {
+    composeFinalStep( headers, resultContent );
+  } else {
+    composeWithLateAttachments( headers, resultContent, lateAttachmentParts, keys, recipients );
+  }
+  
+}
+
+void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients ) 
+{
+  Q_Q( Composer );
+
+  MultipartJob* multiJob = new MultipartJob( q );
+  multiJob->setMultipartSubtype( "mixed" );
+
+  // wrap the content into a job for the multijob to handle it
+  TransparentJob* tJob = new TransparentJob( q );
+  tJob->setContent( content );
+  multiJob->appendSubjob( tJob );
+
+  kDebug() << "attaachment encr key size:" << keys.size() << recipients;
+
+  // save for slot to use
+  savedHeaders = headers;
+  // operate correctly on each attachment that has a different crypto policy than body.
+  foreach( AttachmentPart::Ptr attachment, parts ) {
+    AttachmentJob* attachJob = new AttachmentJob( attachment, q );
+
+    kDebug() << "got a late attachment";
+    if( attachment->isSigned() ) {
+      kDebug() << "adding signjob for late attachment";
+      SignJob* sJob = new SignJob( q );
+      sJob->setCryptoMessageFormat( format );
+      sJob->setSigningKeys( signers );
+
+      sJob->appendSubjob( attachJob );
+      if( attachment->isEncrypted() ) {
+        kDebug() << "adding sign + encrypt job for late attachment";
+        EncryptJob* eJob = new EncryptJob( q );
+        eJob->setCryptoMessageFormat( format );
+        eJob->setEncryptionKeys( keys );
+        eJob->setRecipients( recipients );
+
+        eJob->appendSubjob( sJob );
+
+        multiJob->appendSubjob( eJob );
+      } else {
+        kDebug() << "Just signing late attachment";
+        multiJob->appendSubjob( sJob );
+      }
+    } else if( attachment->isEncrypted() ) { // only encryption
+      kDebug() << "just encrypting late attachment";
+      EncryptJob* eJob = new EncryptJob( q );
+      eJob->setCryptoMessageFormat( format );
+      eJob->setEncryptionKeys( keys );
+      eJob->setRecipients( recipients );
+
+      eJob->appendSubjob( attachJob );
+      multiJob->appendSubjob( eJob );
+    } else {
+      kDebug() << "attaching plain non-crypto attachment";
+      AttachmentJob* attachJob = new AttachmentJob( attachment, q );
+      multiJob->appendSubjob( attachJob );
+    }
+  }
+
+  QObject::connect( multiJob, SIGNAL( finished( KJob* ) ), q, SLOT( attachmentsFinished( KJob* ) ) );
+
+  q->addSubjob( multiJob );
+  multiJob->start();
+}
+
+void ComposerPrivate::attachmentsFinished( KJob* job ) {
+  Q_Q( Composer );
+
+  if( job->error() ) {
+    return; // KCompositeJob takes care of the error.
+  }
+  kDebug() << "composing final message with late attachments";
+
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
+
+  KMime::Content* content = contentJob->content();
+
+  q->removeSubjob( job );
+  composeFinalStep( savedHeaders, content );
+  
+}
+
+void ComposerPrivate::composeFinalStep( KMime::Message* headers, KMime::Content* content )
+{
+  Q_Q( Composer );
+
+  content->assemble();
+  QByteArray allData = headers->head() + content->encodedContent();
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( allData );
   resultMessage->parse(); // Not strictly necessary.
   resultMessages.append( resultMessage );
 
   kDebug() << "sending message:" << allData;
-  q->removeSubjob( job );
   kDebug() << "still have subjobs:" << q->hasSubjobs() << "num:" << q->subjobs().size();
   if( !q->hasSubjobs() ) {
     finished = true;
@@ -388,7 +514,7 @@ void Composer::setSigningKeys( std::vector<GpgME::Key>& signers )
 void Composer::setEncryptionKeys( QList<QPair<QStringList, std::vector<GpgME::Key> > > encData )
 {
   Q_D( Composer );
-  
+
   d->encData = encData;
 }
 

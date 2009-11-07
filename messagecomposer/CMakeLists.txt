@@ -23,6 +23,7 @@ set( messagecomposer_src
      maintextjob.cpp
      signjob.cpp
      encryptjob.cpp
+     transparentjob.cpp
 
      skeletonmessagejob.cpp
 )
@@ -55,6 +56,7 @@ install( FILES
 
 	 signjob.h
 	 encryptjob.h
+         transparentjob.h
 
          skeletonmessagejob.h
 

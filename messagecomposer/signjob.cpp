@@ -127,6 +127,14 @@ void SignJob::process()
 {
   Q_D( SignJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
+
+  // if setContent hasn't been called, we assume that a subjob was added
+  // and we want to use that
+  if( !d->content || !d->content->hasContent() ) {
+    Q_ASSERT( d->subjobContents.size() == 1 );
+    d->content = d->subjobContents.first();
+  }
+  
   d->resultContent = new KMime::Content;
 
   const Kleo::CryptoBackend::Protocol *proto = 0;
@@ -138,12 +146,9 @@ void SignJob::process()
 
   Q_ASSERT( proto );
 
-  kDebug() << "got backend, starting job";
 
   kDebug() << "creating signJob from:" << proto->name() << proto->displayName();
   std::auto_ptr<Kleo::SignJob> job( proto->signJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat ) );
-  kDebug() << "got signjob, now asking for sig";
-  kDebug() << "using signin mode:" << d->signingMode( d->format );
   // for now just do the main recipients
   QByteArray signature;
 
@@ -152,9 +157,9 @@ void SignJob::process()
   d->content->assemble();
   QByteArray content;
   if( d->format & Kleo::InlineOpenPGPFormat ) {
-    content = KMime::LFtoCRLF( d->content->body() );
+    content = KMime::LFtoCRLF( d->content->body() ); // TODO is this right?
   } else {
-    content = KMime::LFtoCRLF( d->content->head() + "\n" + d->content->body() );
+    content = KMime::LFtoCRLF( d->content->encodedContent() );
   }
   
   kDebug() << "signing content:" << content;
