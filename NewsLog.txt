@@ -1,3 +1,23 @@
+Friday, November 6th 2009
+
+Problems addressed
+------------------
+
+* Work on the archive function in Kleopatra
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Fix jumping of items in the monthview
+      - Deal better with broken HTML mails from Apple Mail
+      - Fix a possible crash when exiting KMail (KDE bug 199375)
+      - Always show the mail source left-to-right (KDE bug 212087)
+
+* Merges from enterprise35 branch:
+      - Start of an archive function in KMail (kolab/issue3747)
+
+      
 Friday, October 30th 2009
 
 Problems addressed
