@@ -1,3 +1,12 @@
+Friday, November 7th 2009
+
+Problems addressed
+------------------ 
+
+* Work on the archiving function (kolab/issue3747). Disabled from the GUI at the moment,
+  until it is completed.
+
+
 Friday, October 30th 2009
 
 Problems addressed
