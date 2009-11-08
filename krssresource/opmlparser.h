@@ -24,28 +24,60 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QHash>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/QStringList>
 #include <QtCore/QXmlStreamReader>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+
+#include <boost/weak_ptr.hpp>
 
 class QXmlStreamWriter;
 class QXmlStreamAttributes;
 
 namespace KRssResource {
 
-class KRSSRESOURCE_EXPORT ParsedFeed
+class ParsedFeed;
+class ParsedFolder;
+
+class KRSSRESOURCE_EXPORT ParsedNode : public boost::enable_shared_from_this<ParsedNode>
+{
+public:
+    ParsedNode();
+    virtual ~ParsedNode();
+
+    boost::weak_ptr<ParsedFolder> parent() const;
+    void setParent( const boost::weak_ptr<ParsedFolder>& parent );
+
+    virtual bool isFolder() const = 0;
+    virtual QList<boost::shared_ptr<const ParsedFeed> > feeds() const = 0;
+    virtual QList<boost::shared_ptr<const ParsedFolder> > folders() const = 0;
+    QString title() const;
+    void setTitle( const QString& title );
+
+    QString attribute( const QString& key ) const;
+    QHash<QString, QString> attributes() const;
+    void setAttribute( const QString& key, const QString& value );
+    void setAttributes( const QHash<QString, QString>& attributes );
+
+    QStringList parentFolderTitles() const;
+
+private:
+    Q_DISABLE_COPY(ParsedNode);
+    class Private;
+    Private* const d;
+};
+
+class KRSSRESOURCE_EXPORT ParsedFeed : public ParsedNode
 {
 public:
     ParsedFeed();
-    ParsedFeed( const ParsedFeed& other );
     ~ParsedFeed();
 
-    void swap( ParsedFeed& other );
-    ParsedFeed& operator=( const ParsedFeed& other );
-    bool operator==( const ParsedFeed& other ) const;
-    bool operator!=( const ParsedFeed& other ) const;
+    /* reimp */ bool isFolder() const;
+    /* reimp */ QList<boost::shared_ptr<const ParsedFeed> > feeds() const;
+    /* reimp */ QList<boost::shared_ptr<const ParsedFolder> > folders() const;
 
-    QString title() const;
-    void setTitle( const QString& title );
     QString xmlUrl() const;
     void setXmlUrl( const QString& xmlUrl );
     QString htmlUrl() const;
@@ -54,16 +86,33 @@ public:
     void setDescription( const QString& description );
     QString type() const;
     void setType( const QString& type );
-    QHash<QString, QString> attributes() const;
-    void setAttribute( const QString& key, const QString& value );
-    void setAttributes( const QHash<QString, QString>& attributes );
 
     Akonadi::Collection toAkonadiCollection() const;
-    static ParsedFeed fromAkonadiCollection( const Akonadi::Collection& collection );
+    static boost::shared_ptr<ParsedFeed> fromAkonadiCollection( const Akonadi::Collection& collection );
+
+private:
+    Q_DISABLE_COPY(ParsedFeed);
+    class Private;
+    Private* const d;
+};
+
+class KRSSRESOURCE_EXPORT ParsedFolder : public ParsedNode
+{
+public:
+    ParsedFolder();
+    ~ParsedFolder();
+
+    /* reimp */ bool isFolder() const;
+    /* reimp */ QList<boost::shared_ptr<const ParsedFeed> > feeds() const;
+    /* reimp */ QList<boost::shared_ptr<const ParsedFolder> > folders() const;
+
+    QList<boost::shared_ptr<ParsedNode> > children() const;
+    void setChildren( const QList<boost::shared_ptr<ParsedNode> >& children );
+    void addChild( const boost::shared_ptr<ParsedNode>& child );
 
 private:
     class Private;
-    QSharedDataPointer<Private> d;
+    Private* const d;
 };
 
 class KRSSRESOURCE_EXPORT OpmlReader
@@ -74,9 +123,10 @@ public:
 
     void readOpml( QXmlStreamReader& reader );
 
-    QList<ParsedFeed> feeds() const;
-    QList<QString> tags() const;
-    QHash<int, QList<int> > tagsForFeeds() const;
+    QList<boost::shared_ptr<const ParsedFeed> > feeds() const;
+    QList<boost::shared_ptr<const ParsedNode> > topLevelNodes() const;
+
+    QStringList tags() const;
 
 private:
     class Private;
@@ -87,8 +137,8 @@ private:
 class KRSSRESOURCE_EXPORT OpmlWriter
 {
 public:
-    static void writeOpml( QXmlStreamWriter& writer, const QList<ParsedFeed>& feeds );
-    static void writeOutline( QXmlStreamWriter& writer, const ParsedFeed& feed );
+    static void writeOpml( QXmlStreamWriter& writer, const QList<boost::shared_ptr<ParsedFeed> >& feeds );
+    static void writeOutline( QXmlStreamWriter& writer, const boost::shared_ptr<ParsedFeed>& feed );
 };
 
 } //namespace KRssResource

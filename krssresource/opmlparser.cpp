@@ -26,48 +26,78 @@
 #include <QtXml/QXmlAttributes>
 #include <memory>
 
+using namespace boost;
 using namespace KRssResource;
 
-class ParsedFeed::Private : public QSharedData
+class ParsedNode::Private {
+public:
+    QString title;
+    QHash<QString, QString> attributes;
+    weak_ptr<ParsedFolder> parent;
+};
+
+ParsedNode::ParsedNode() : d( new Private ) {
+}
+
+weak_ptr<ParsedFolder> ParsedNode::parent() const {
+    return d->parent;
+}
+
+void ParsedNode::setParent( const weak_ptr<ParsedFolder>& parent ) {
+    d->parent = parent;
+}
+
+ParsedNode::~ParsedNode() {
+    delete d;
+}
+
+QString ParsedNode::title() const {
+    return d->title;
+}
+
+void ParsedNode::setTitle( const QString& title ) {
+    d->title = title;
+}
+
+QString ParsedNode::attribute( const QString& key ) const {
+    return d->attributes.value( key );
+}
+
+QHash<QString, QString> ParsedNode::attributes() const
+{
+    return d->attributes;
+}
+
+void ParsedNode::setAttribute( const QString& key, const QString& value )
+{
+    d->attributes.insert( key, value );
+}
+
+void ParsedNode::setAttributes( const QHash<QString, QString>& attributes )
+{
+    d->attributes = attributes;
+}
+
+QStringList ParsedNode::parentFolderTitles() const {
+    QStringList labels;
+    shared_ptr<ParsedNode> it = parent().lock();
+    while ( it ) {
+        labels.push_back( it->title() );
+        it = it->parent().lock();
+    }
+    return labels;
+}
+
+class ParsedFeed::Private
 {
 public:
     Private() {}
 
-    Private( const Private& other );
-
-    bool operator!=( const Private& other ) const
-    {
-        return !( *this == other );
-    }
-
-    bool operator==( const Private& other ) const
-    {
-        return title == other.title
-            && xmlUrl == other.xmlUrl
-            && htmlUrl == other.htmlUrl
-            && description == other.description
-            && type == other.type
-            && attributes == other.attributes;
-    }
-
-    QString title;
     QString xmlUrl;
     QString htmlUrl;
     QString description;
     QString type;
-    QHash<QString, QString> attributes;
 };
-
-ParsedFeed::Private::Private( const Private& other )
-    : QSharedData( other ),
-    title( other.title ),
-    xmlUrl( other.xmlUrl ),
-    htmlUrl( other.htmlUrl ),
-    description( other.description ),
-    type( other.type ),
-    attributes( other.attributes )
-{
-}
 
 ParsedFeed::ParsedFeed() : d( new Private )
 {
@@ -75,43 +105,24 @@ ParsedFeed::ParsedFeed() : d( new Private )
 
 ParsedFeed::~ParsedFeed()
 {
+    delete d;
 }
 
-void ParsedFeed::swap( ParsedFeed& other )
+bool ParsedFeed::isFolder() const
 {
-    std::swap( d, other.d );
+    return false;
 }
 
-ParsedFeed& ParsedFeed::operator=( const ParsedFeed& other )
+QList<shared_ptr<const ParsedFeed> > ParsedFeed::feeds() const
 {
-    ParsedFeed copy( other );
-    swap( copy );
-    return *this;
+  return QList<shared_ptr<const ParsedFeed> >() << static_pointer_cast<const ParsedFeed>( shared_from_this() );
 }
 
-bool ParsedFeed::operator==( const ParsedFeed& other ) const
+QList<shared_ptr<const ParsedFolder> > ParsedFeed::folders() const
 {
-    return *d == *(other.d);
+  return QList<shared_ptr<const ParsedFolder> >();
 }
 
-bool ParsedFeed::operator!=( const ParsedFeed& other ) const
-{
-    return *d != *(other.d);
-}
-
-ParsedFeed::ParsedFeed( const ParsedFeed& other ) : d( other.d )
-{
-}
-
-QString ParsedFeed::title() const
-{
-    return d->title;
-}
-
-void ParsedFeed::setTitle( const QString& title )
-{
-    d->title = title;
-}
 
 QString ParsedFeed::xmlUrl() const
 {
@@ -153,46 +164,76 @@ void ParsedFeed::setType( const QString& type )
     d->type = type;
 }
 
-QHash<QString, QString> ParsedFeed::attributes() const
-{
-    return d->attributes;
-}
-
-void ParsedFeed::setAttribute( const QString& key, const QString& value )
-{
-    d->attributes.insert( key, value );
-}
-
-void ParsedFeed::setAttributes( const QHash<QString, QString>& attributes )
-{
-    d->attributes = attributes;
-}
 
 Akonadi::Collection ParsedFeed::toAkonadiCollection() const
 {
     KRss::FeedCollection feed;
-    feed.setRemoteId( d->attributes.value( QLatin1String("remoteid") ) );
-    feed.setTitle( d->title );
+    feed.setRemoteId( attribute( QLatin1String("remoteid") ) );
+    feed.setTitle( title() );
     feed.setXmlUrl( d->xmlUrl );
     feed.setHtmlUrl( d->htmlUrl );
     feed.setDescription( d->description );
     feed.setFeedType( d->type );
-    feed.setName( d->title );
+    feed.setName( title() );
     feed.setContentMimeTypes( QStringList( QLatin1String("application/rss+xml") ) );
     return feed;
 }
 
-ParsedFeed ParsedFeed::fromAkonadiCollection( const Akonadi::Collection& collection )
+shared_ptr<ParsedFeed> ParsedFeed::fromAkonadiCollection( const Akonadi::Collection& collection )
 {
     const KRss::FeedCollection feedCollection = collection;
-    ParsedFeed parsedFeed;
-    parsedFeed.d->title = feedCollection.title();
-    parsedFeed.d->xmlUrl = feedCollection.xmlUrl();
-    parsedFeed.d->htmlUrl = feedCollection.htmlUrl();
-    parsedFeed.d->description = feedCollection.description();
-    parsedFeed.d->type = feedCollection.feedType();
-    parsedFeed.d->attributes.insert( QLatin1String("remoteid"), feedCollection.remoteId() );
+    shared_ptr<ParsedFeed> parsedFeed( new ParsedFeed );
+    parsedFeed->setTitle( feedCollection.title() );
+    parsedFeed->d->xmlUrl = feedCollection.xmlUrl();
+    parsedFeed->d->htmlUrl = feedCollection.htmlUrl();
+    parsedFeed->d->description = feedCollection.description();
+    parsedFeed->d->type = feedCollection.feedType();
+    parsedFeed->setAttribute( QLatin1String("remoteid"), feedCollection.remoteId() );
     return parsedFeed;
+}
+
+class ParsedFolder::Private {
+public:
+    QList<shared_ptr<ParsedNode> > children;
+};
+
+ParsedFolder::ParsedFolder() : d( new Private ) {
+
+}
+
+ParsedFolder::~ParsedFolder() {
+    delete d;
+}
+
+bool ParsedFolder::isFolder() const {
+    return true;
+}
+
+QList<shared_ptr<const ParsedFeed> > ParsedFolder::feeds() const {
+  QList<shared_ptr<const ParsedFeed> > f;
+  Q_FOREACH( const shared_ptr<const ParsedNode>& i, d->children )
+      f << i->feeds();
+  return f;
+}
+
+QList<shared_ptr<const ParsedFolder> > ParsedFolder::folders() const {
+  QList<shared_ptr<const ParsedFolder> > f;
+  f << static_pointer_cast<const ParsedFolder>( shared_from_this() );
+  Q_FOREACH( const shared_ptr<const ParsedNode>& i, d->children )
+      f << i->folders();
+  return f;
+}
+
+QList<shared_ptr<ParsedNode> > ParsedFolder::children() const {
+    return d->children;
+}
+
+void ParsedFolder::setChildren( const QList<shared_ptr<ParsedNode> >& children ) {
+    d->children = children;
+}
+
+void ParsedFolder::addChild( const shared_ptr<ParsedNode>& child ) {
+    d->children.push_back( child );
 }
 
 class OpmlReader::Private
@@ -202,12 +243,10 @@ public:
 
     QStringRef attributeValue( const QXmlStreamAttributes& attributes, const QString& name );
     void readBody( QXmlStreamReader& reader );
-    void readOutline( QXmlStreamReader& reader, QStringList& currentTags );
+    void readOutline( QXmlStreamReader& reader, const shared_ptr<ParsedFolder> &parent );
     void readUnknownElement( QXmlStreamReader& reader );
 
-    QList<ParsedFeed> m_feeds;
-    QList<QString > m_tags;
-    QHash<int, QList<int> > m_tagsForFeeds;
+    QList<shared_ptr<ParsedNode> > m_topNodes;
 };
 
 QStringRef OpmlReader::Private::attributeValue( const QXmlStreamAttributes& attributes, const QString& name )
@@ -233,8 +272,7 @@ void OpmlReader::Private::readBody( QXmlStreamReader& reader )
 
         if ( reader.isStartElement() ) {
             if ( reader.name().toString().toLower() == QLatin1String("outline") ) {
-                QStringList currentTags;
-                readOutline( reader, currentTags );
+                readOutline( reader, shared_ptr<ParsedFolder>() );
             }
             else {
                 readUnknownElement( reader );
@@ -243,22 +281,30 @@ void OpmlReader::Private::readBody( QXmlStreamReader& reader )
     }
 }
 
-void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& currentTags )
+void OpmlReader::Private::readOutline( QXmlStreamReader& reader, const shared_ptr<ParsedFolder>& parent )
 {
     Q_ASSERT( reader.isStartElement() && reader.name().toString().toLower() == QLatin1String("outline") );
 
-    bool isFolder = false;
+    shared_ptr<ParsedNode> newNode;
     const QString xmlUrl = attributeValue( reader.attributes(), QLatin1String("xmlurl") ).toString();
 
     if ( xmlUrl.isEmpty() ) {
         const QStringRef textAttribute = attributeValue( reader.attributes(), QLatin1String("text") );
         if ( !textAttribute.isEmpty() ) {
             // this attribute seem to represent a folder
-            isFolder = true;
-            if ( !currentTags.contains( textAttribute.toString() ) )
-                currentTags.append( textAttribute.toString() );
+            shared_ptr<ParsedFolder> newFolder( new ParsedFolder );
+            newNode = newFolder;
+            const QXmlStreamAttributes attrs = reader.attributes();
 
-            kDebug() << "Current tags:" << currentTags;
+            Q_FOREACH( const QXmlStreamAttribute& attr, attrs ) {
+                if ( attr.name().toString().toLower() == QLatin1String("title") )
+                    newFolder->setTitle( attr.value().toString() );
+                else if ( newFolder->title().isEmpty() && attr.name().toString().toLower() == QLatin1String("text")  )
+                    newFolder->setTitle( attr.value().toString() );
+                else {
+                    newFolder->setAttribute( attr.name().toString(), attr.value().toString() );
+                }
+            }
         }
         else {
             kDebug() << "Encountered an empty outline";
@@ -271,54 +317,49 @@ void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& cu
     else {
         // this is a feed
         kDebug() << "Feed:" << xmlUrl;
-        isFolder = false;
-        ParsedFeed feed;
+        shared_ptr<ParsedFeed> newFeed( new ParsedFeed );
+        newNode = newFeed;
         const QXmlStreamAttributes attrs = reader.attributes();
         Q_FOREACH( const QXmlStreamAttribute& attr, attrs ) {
             if ( attr.name().toString().toLower() == QLatin1String("title") )
-                feed.setTitle( attr.value().toString() );
-            else if ( attr.name().toString().toLower() == QLatin1String("text") && feed.title().isEmpty() )
-                feed.setTitle( attr.value().toString() );
+                newFeed->setTitle( attr.value().toString() );
+            else if ( newFeed->title().isEmpty() && attr.name().toString().toLower() == QLatin1String("text")  )
+                newFeed->setTitle( attr.value().toString() );
             else if ( attr.name().toString().toLower() == QLatin1String("htmlurl") )
-                feed.setHtmlUrl( attr.value().toString() );
+                newFeed->setHtmlUrl( attr.value().toString() );
             else if ( attr.name().toString().toLower() == QLatin1String("xmlurl") )
-                feed.setXmlUrl( attr.value().toString() );
+                newFeed->setXmlUrl( attr.value().toString() );
             else if ( attr.name().toString().toLower() == QLatin1String("description") )
-                feed.setDescription( attr.value().toString() );
+                newFeed->setDescription( attr.value().toString() );
             else if ( attr.name().toString().toLower() == QLatin1String("type") )
-                feed.setType( attr.value().toString() );
+                newFeed->setType( attr.value().toString() );
             else if ( attr.name().toString().toLower() == QLatin1String("category") ) {
                 const QStringList categories = attr.value().toString().split( QRegExp( QLatin1String("[,/]") ), QString::SkipEmptyParts );
+#if 0
                 Q_FOREACH( const QString& category, categories ) {
                     if ( !currentTags.contains( category ) )
                         currentTags.append( category );
                 }
+#endif
             }
             else {
-                feed.setAttribute( attr.name().toString(), attr.value().toString() );
+                newFeed->setAttribute( attr.name().toString(), attr.value().toString() );
             }
         }
 
-        if ( feed.title().isEmpty() )
-            feed.setTitle( xmlUrl );
+        if ( newFeed->title().isEmpty() )
+            newFeed->setTitle( xmlUrl );
 
-        if ( feed.type().isEmpty() )
-            feed.setType( QLatin1String("rss") );
-
-        // everything is parsed
-        QList<int> currentTagIds;
-        Q_FOREACH( const QString& tag, currentTags ) {
-            int index = m_tags.indexOf( tag );
-            if ( index == -1 ) {
-                m_tags.append( tag );
-                index = m_tags.count() - 1;
-            }
-            currentTagIds.append( index );
-        }
-
-        m_feeds.append( feed );
-        m_tagsForFeeds.insert( m_feeds.count() - 1, currentTagIds );
+        if ( newFeed->type().isEmpty() )
+            newFeed->setType( QLatin1String("rss") );
     }
+
+    if ( parent ) {
+        parent->addChild( newNode );
+        newNode->setParent( parent );
+    }
+    else
+        m_topNodes.append( newNode );
 
     while ( !reader.atEnd() ) {
         reader.readNext();
@@ -327,17 +368,12 @@ void OpmlReader::Private::readOutline( QXmlStreamReader& reader, QStringList& cu
             break;
 
         if ( reader.isStartElement() ) {
-            if ( reader.name().toString().toLower() == QLatin1String("outline") && isFolder )
-                readOutline( reader, currentTags );
+            if ( reader.name().toString().toLower() == QLatin1String("outline") && newNode->isFolder() )
+                readOutline( reader, static_pointer_cast<ParsedFolder>( newNode ) );
             else
                 readUnknownElement( reader );
         }
     }
-
-    // once we are back from recursion remove the added tag
-    // from the top of the list
-    if ( isFolder )
-        currentTags.removeLast();
 }
 
 void OpmlReader::Private::readUnknownElement( QXmlStreamReader& reader )
@@ -365,19 +401,31 @@ OpmlReader::~OpmlReader()
     delete d;
 }
 
-QList<ParsedFeed> OpmlReader::feeds() const
+QList<shared_ptr<const ParsedFeed> > OpmlReader::feeds() const
 {
-    return d->m_feeds;
+    QList<shared_ptr<const ParsedFeed> > f;
+    Q_FOREACH ( const shared_ptr<const ParsedNode>& i, d->m_topNodes )
+        f << i->feeds();
+    return f;
 }
 
-QList<QString> OpmlReader::tags() const
+QList<shared_ptr<const ParsedNode> > OpmlReader::topLevelNodes() const
 {
-    return d->m_tags;
+    QList<shared_ptr<const ParsedNode> > l;
+    Q_FOREACH( const shared_ptr<ParsedNode>& i, d->m_topNodes )
+        l << i;
+    return l;
 }
 
-QHash<int, QList<int> > OpmlReader::tagsForFeeds() const
+QStringList OpmlReader::tags() const
 {
-    return d->m_tagsForFeeds;
+    QStringList titles;
+    QList<shared_ptr<const ParsedFolder> > f;
+    Q_FOREACH ( const shared_ptr<const ParsedNode>& i, d->m_topNodes )
+        f << i->folders();
+    Q_FOREACH ( const shared_ptr<const ParsedFolder>& i, f )
+            titles << i->title();
+    return titles;
 }
 
 void OpmlReader::readOpml( QXmlStreamReader& reader )
@@ -404,28 +452,28 @@ void OpmlReader::readOpml( QXmlStreamReader& reader )
     }
 }
 
-void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<ParsedFeed>& feeds )
+void OpmlWriter::writeOpml( QXmlStreamWriter& writer, const QList<shared_ptr<ParsedFeed> >& feeds )
 {
     writer.writeStartElement( QLatin1String("opml") );
     writer.writeAttribute( QLatin1String("version"), QLatin1String("2.0") );
     writer.writeEmptyElement( QLatin1String("head") );
     writer.writeStartElement( QLatin1String("body") );
-    Q_FOREACH( const ParsedFeed& feed, feeds ) {
+    Q_FOREACH( const shared_ptr<ParsedFeed>& feed, feeds ) {
         writeOutline( writer, feed );
     }
     writer.writeEndElement(); // body
     writer.writeEndElement(); // opml
 }
 
-void OpmlWriter::writeOutline( QXmlStreamWriter& writer, const ParsedFeed& feed )
+void OpmlWriter::writeOutline( QXmlStreamWriter& writer, const shared_ptr<ParsedFeed>& feed )
 {
     writer.writeStartElement( QLatin1String("outline") );
-    writer.writeAttribute( QLatin1String("text"), feed.title() );
-    writer.writeAttribute( QLatin1String("title"), feed.title() );
-    writer.writeAttribute( QLatin1String("description"), feed.description() );
-    writer.writeAttribute( QLatin1String("htmlUrl"), feed.htmlUrl() );
-    writer.writeAttribute( QLatin1String("xmlUrl"), feed.xmlUrl() );
-    QHashIterator<QString, QString> it( feed.attributes() );
+    writer.writeAttribute( QLatin1String("text"), feed->title() );
+    writer.writeAttribute( QLatin1String("title"), feed->title() );
+    writer.writeAttribute( QLatin1String("description"), feed->description() );
+    writer.writeAttribute( QLatin1String("htmlUrl"), feed->htmlUrl() );
+    writer.writeAttribute( QLatin1String("xmlUrl"), feed->xmlUrl() );
+    QHashIterator<QString, QString> it( feed->attributes() );
     while ( it.hasNext() ) {
         it.next();
         writer.writeAttribute( it.key(), it.value() );
