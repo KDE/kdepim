@@ -28,14 +28,17 @@
 #include <QtCore/QXmlStreamReader>
 #include <QtCore/QUuid>
 
+#include <boost/shared_ptr.hpp>
+
+using namespace boost;
 using namespace KRss;
 using namespace KRssResource;
 
 namespace {
 
-static QList<ParsedFeed> toParsedFeedList( const QList<Akonadi::Collection>& feeds )
+static QList<shared_ptr<ParsedFeed> > toParsedFeedList( const QList<Akonadi::Collection>& feeds )
 {
-    QList<ParsedFeed> parsedFeeds;
+    QList<shared_ptr<ParsedFeed> > parsedFeeds;
     Q_FOREACH( const Akonadi::Collection& feed, feeds ) {
         if ( feed.parent() != Akonadi::Collection::root().id() )
             parsedFeeds.append( ParsedFeed::fromAkonadiCollection( feed ) );
@@ -150,9 +153,9 @@ void OpmlFeedsRetrieveJob::slotGetFinished( KJob *job )
     m_feedsCache.insert( top.remoteId(), top );
 
     bool needsPut = false;
-    const QList<ParsedFeed> parsedFeeds = opmlReader.feeds();
-    Q_FOREACH( const ParsedFeed& parsedFeed, parsedFeeds ) {
-        FeedCollection feed = parsedFeed.toAkonadiCollection();
+    const QList<shared_ptr<const ParsedFeed> > parsedFeeds = opmlReader.feeds();
+    Q_FOREACH( const shared_ptr<const ParsedFeed>& parsedFeed, parsedFeeds ) {
+        FeedCollection feed = parsedFeed->toAkonadiCollection();
         if ( feed.remoteId().isEmpty() ) {
             feed.setRemoteId( QUuid::createUuid().toString() );
             needsPut = true;

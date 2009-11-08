@@ -38,7 +38,7 @@
 #include <cassert>
 
 using namespace KRssResource;
-using boost::shared_ptr;
+using namespace boost;
 
 ImportOpmlJob::ImportOpmlJob( const KUrl& path, QObject *parent )
     : KJob( parent ), m_backendJob( 0 ), m_path( path ), m_pendingJobs( 0 )
@@ -208,22 +208,28 @@ void ImportOpmlJob::slotTagsCreated( KJob *job )
     const TagsCreateJob * const tjob = qobject_cast<const TagsCreateJob*>( job );
     assert( job );
     const QList<KRss::Tag> tags = tjob->tags();
+    QHash<QString,KRss::Tag> tagByLabel;
 
-    int currentFeed = 0;
-    const QList<ParsedFeed> parsedFeeds = m_opmlReader.feeds();
+    Q_FOREACH ( const KRss::Tag& i, tags )
+            tagByLabel.insert( i.label(), i );
+
+    const QList<shared_ptr<const ParsedFeed> > parsedFeeds = m_opmlReader.feeds();
     QList<Akonadi::Collection> feedsToImport;
-    Q_FOREACH( const ParsedFeed& parsedFeed, parsedFeeds ) {
-        KRss::FeedCollection feed = parsedFeed.toAkonadiCollection();
+    Q_FOREACH( const shared_ptr<const ParsedFeed>& parsedFeed, parsedFeeds ) {
+        KRss::FeedCollection feed = parsedFeed->toAkonadiCollection();
         feed.setParent( m_rootCollection );
-        const QList<int> tagIndexes = m_opmlReader.tagsForFeeds().value( currentFeed );
         kDebug() << "Current feed:" << feed.title();
-        Q_FOREACH( int tagIndex, tagIndexes ) {
-            kDebug() << "Adding tag:" << tags.at( tagIndex ).label() << ", id:" << tags.at( tagIndex ).id();
-            feed.addTag( tags.at( tagIndex ).id() );
+        QStringList folderTitles = parsedFeed->parentFolderTitles();
+        folderTitles.erase( std::unique( folderTitles.begin(), folderTitles.end() ), folderTitles.end() );
+        Q_FOREACH( const QString& i, folderTitles ) {
+            const KRss::Tag tag = tagByLabel.value( i );
+            if ( tag.isNull() )
+                continue;
+            kDebug() << "Adding tag:" << tag.label() << ", id:" << tag.id();
+            feed.addTag( tag.id() );
         }
         if ( !m_defaultTag.isEmpty() )
             feed.addTag( tags.last().id() ); // the last one is the default tag
-        ++currentFeed;
         feedsToImport.append( feed );
     }
 
