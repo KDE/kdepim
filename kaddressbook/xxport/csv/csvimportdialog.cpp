@@ -21,6 +21,7 @@
 
 #include "dateparser.h"
 #include "qcsvmodel.h"
+#include "templateselectiondialog.h"
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QThread>
@@ -159,6 +160,7 @@ class ContactFieldDelegate : public QStyledItemDelegate
       }
     }
 };
+
 
 CSVImportDialog::CSVImportDialog( QWidget *parent )
   : KDialog( parent ),
@@ -482,39 +484,18 @@ void CSVImportDialog::slotButtonClicked( int button )
 
 void CSVImportDialog::applyTemplate()
 {
-  QMap<QString, QString> templateFileMap;
-  QStringList templates;
-
-  // load all template files
-  const QStringList files = KGlobal::dirs()->findAllResources( "data" , "kaddressbook/csv-templates/*.desktop",
-                                                               KStandardDirs::Recursive | KStandardDirs::NoDuplicates );
-
-  for ( int i = 0; i < files.count(); ++i ) {
-    KConfig config( files.at( i ), KConfig::SimpleConfig );
-
-    if ( !config.hasGroup( "csv column map" ) )
-      continue;
-
-    KConfigGroup group( &config, "Misc" );
-    templates.append( group.readEntry( "Name" ) );
-    templateFileMap.insert( group.readEntry( "Name" ), files.at( i ) );
-  }
-
-  if ( templateFileMap.isEmpty() ) {
+  TemplateSelectionDialog dlg( this );
+  if ( !dlg.templatesAvailable() ) {
     KMessageBox::sorry( this, i18n( "There are no templates available yet." ), i18n( "No templates available" ) );
     return;
   }
 
-  // let the user chose, what to take
-  bool ok = false;
-  const QString selectedTemplate = KInputDialog::getItem( i18nc( "@title:window", "Template Selection" ),
-                                                          i18nc( "@info", "Please select a template, that matches the CSV file:" ),
-                                                          templates, 0, false, &ok, this );
-
-  if ( !ok )
+  if ( !dlg.exec() )
     return;
 
-  KConfig config( templateFileMap[ selectedTemplate ], KConfig::SimpleConfig );
+  const QString templateFileName = dlg.selectedTemplate();
+
+  KConfig config( templateFileName, KConfig::SimpleConfig );
 
   const KConfigGroup generalGroup( &config, "General" );
   mDatePatternEdit->setText( generalGroup.readEntry( "DatePattern", "Y-M-D" ) );
@@ -536,7 +517,7 @@ void CSVImportDialog::applyTemplate()
   if ( mDevice )
     mModel->load( mDevice );
 
-  setProperty( "TemplateFileName", templateFileMap[ selectedTemplate ] );
+  setProperty( "TemplateFileName", templateFileName );
   connect( mModel, SIGNAL( finishedLoading() ), this, SLOT( finalizeApplyTemplate() ) );
 }
 

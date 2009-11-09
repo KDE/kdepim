@@ -35,6 +35,7 @@ set( kaddressbook_xxport_SRCS
   xxport/csv/dateparser.cpp
   xxport/csv/qcsvmodel.cpp
   xxport/csv/qcsvreader.cpp
+  xxport/csv/templateselectiondialog.cpp
   xxport/ldif/ldif_xxport.cpp
   xxport/ldap/ldap_xxport.cpp
   xxport/ldap/ldapsearchdialog.cpp

@@ -36,6 +36,7 @@ class ItemView;
 class StandardContactActionManager;
 }
 
+class ContactFilterModel;
 class ContactSwitcher;
 class KActionCollection;
 class KDescendantsProxyModel;
@@ -93,7 +94,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Akonadi::EntityMimeTypeFilterModel *mCollectionTree;
     Akonadi::EntityMimeTypeFilterModel *mItemTree;
     Akonadi::EntityMimeTypeFilterModel *mAllContactsModel;
-    KDescendantsProxyModel *mDescendantTree;
+    ContactFilterModel *mContactFilterModel;
 
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;

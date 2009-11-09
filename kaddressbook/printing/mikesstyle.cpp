@@ -61,7 +61,7 @@ static QString contactsToHtml( const KABC::Addressee::List &contacts )
   foreach ( const KABC::Addressee &contact, contacts ) {
     const int max = qMax( leftFields.count(), rightFields.count() );
 
-    const QString name = contact.givenName() + ' ' + contact.familyName();
+    const QString name = contact.realName();
 
     if ( counter % 2 )
       content += "  <br/><br/>\n";
@@ -111,6 +111,7 @@ MikesStyle::MikesStyle( PrintingWizard *parent )
   : PrintStyle( parent )
 {
   setPreview( "mike-style.png" );
+  setPreferredSortOptions( ContactFields::FormattedName, Qt::AscendingOrder );
 }
 
 MikesStyle::~MikesStyle()

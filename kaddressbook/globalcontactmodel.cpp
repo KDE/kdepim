@@ -48,8 +48,6 @@ GlobalContactModel::GlobalContactModel()
   mMonitor->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
 
   mModel = new Akonadi::ContactsTreeModel( mSession, mMonitor );
-  mModel->setIncludeRootCollection( true );
-  mModel->setRootCollectionDisplayName( i18nc( "Name of toplevel contact collection", "All Contacts" ) );
 }
 
 GlobalContactModel::~GlobalContactModel()
