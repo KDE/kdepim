@@ -35,6 +35,10 @@
 #include <KDE/KUrl>
 #include <QtCore/QObject>
 
+namespace GpgME {
+class Context;
+}
+
 namespace Soprano {
 class Model;
 }
@@ -76,6 +80,10 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     void processHeaders( const KMime::Message::Ptr &msg );
     void processPart( KMime::Content *content );
 
+    bool createCryptoContainer( const QByteArray& keyId );
+    bool mountCryptoContainer( const QByteArray& keyId );
+    QString containerPathFromKeyId( const QByteArray& keyId );
+
   private:
     NepomukFeederAgentBase *m_parent;
     Akonadi::Item m_item;
@@ -85,6 +93,7 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     MessageViewer::NodeHelper *m_nodeHelper;
     MessageViewer::ObjectTreeParser *m_otp;
     Soprano::Model* m_mainModel;
+    GpgME::Context* m_ctx;
 };
 
 #endif
