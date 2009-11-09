@@ -63,7 +63,7 @@ public:
     QStringList parentFolderTitles() const;
 
 private:
-    Q_DISABLE_COPY(ParsedNode);
+    Q_DISABLE_COPY(ParsedNode)
     class Private;
     Private* const d;
 };
@@ -91,7 +91,7 @@ public:
     static boost::shared_ptr<ParsedFeed> fromAkonadiCollection( const Akonadi::Collection& collection );
 
 private:
-    Q_DISABLE_COPY(ParsedFeed);
+    Q_DISABLE_COPY(ParsedFeed)
     class Private;
     Private* const d;
 };
