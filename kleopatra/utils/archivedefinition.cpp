@@ -38,6 +38,8 @@
 #include <utils/input.h>
 #include <utils/path-helper.h>
 
+#include <kleo/cryptobackendfactory.h>
+
 #include <KConfigGroup>
 #include <KLocalizedString>
 #include <KGlobal>
@@ -55,7 +57,7 @@ using namespace Kleo;
 using namespace boost;
 
 static const QLatin1String ID_ENTRY( "id" );
-static const QLatin1String NAME_ENTRY( "name" );
+static const QLatin1String NAME_ENTRY( "Name" );
 static const QLatin1String COMMAND_ENTRY( "pack-command" );
 static const QLatin1String EXTENSIONS_ENTRY( "extensions" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
@@ -124,7 +126,11 @@ ArchiveDefinition::~ArchiveDefinition() {}
 
 shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) const {
     const QString base = heuristicBaseDirectory( files );
+    if ( base.isEmpty() )
+        throw Kleo::Exception( GPG_ERR_CONFLICT, i18n("Cannot find common base directory for these files:\n%1", files.join( "\n" ) ) );
+    qDebug() << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo( base, files );
+    qDebug() << "relative" << relative;
     return Input::createFromProcessStdOut( doGetCommand(),
                                            doGetArguments( relative ),
                                            QDir( base ) );
@@ -133,7 +139,7 @@ shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) co
 // static
 std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefinitions() {
     std::vector< shared_ptr<ArchiveDefinition> > result;
-    if ( const KSharedConfigPtr config = KGlobal::config() ) {
+    if ( KConfig * config = CryptoBackendFactory::instance()->configObject() ) {
         const QStringList groups = config->groupList().filter( QRegExp(QLatin1String("^Archive Definition #")) );
         result.reserve( groups.size() );
         Q_FOREACH( const QString & group, groups )

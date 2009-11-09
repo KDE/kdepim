@@ -175,6 +175,7 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
 
 ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
   : mSource( other.mSource ),
+    mNodeHelper( other.nodeHelper() ), //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
     mCryptoProtocol( other.cryptoProtocol() ),
     mShowOnlyOneMimePart( other.showOnlyOneMimePart() ),
     mKeepEncryptions( other.keepEncryptions() ),
@@ -184,7 +185,6 @@ ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
     mAttachmentStrategy( other.attachmentStrategy() ),
     mHtmlWriter( other.htmlWriter() ),
     mCSSHelper( other.cssHelper() ),
-    mNodeHelper( other.nodeHelper() ), //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
     mDeleteNodeHelper( false ) // TODO see above
 {
 
@@ -265,8 +265,9 @@ void ObjectTreeParser::parseObjectTree( KMime::Content * node ) {
   if ( showOnlyOneMimePart() ) {
     // ... this node and all descendants
     mNodeHelper->setNodeUnprocessed( node, false );
-    if ( KMime::Content* child = NodeHelper::firstChild( node ) )
-        mNodeHelper->setNodeUnprocessed( node, true );
+    if ( NodeHelper::firstChild( node ) ) {
+      mNodeHelper->setNodeUnprocessed( node, true );
+    }
   } else if ( !node->parent() ) {
     // ...this node and all it's siblings and descendants
     mNodeHelper->setNodeUnprocessed( node, true );
@@ -1595,7 +1596,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
   insertAndParseNewChildNode( *node,
                               rfc822messageStr.constData(),
                               "encapsulated message", false /*append*/,
-                                false /*add to textual content*/  );
+                              false /*add to textual content*/  );
   mNodeHelper->setNodeDisplayedEmbedded( node, true );
 
   if ( mHtmlWriter )
@@ -1840,7 +1841,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node
                                                     cryptoProtocol(),
                                                     static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString() ) );
         insertAndParseNewChildNode( *node,
-                                    &*decryptedData,
+                                    decryptedData.constData(),
                                     "encrypted data" );
         if ( mHtmlWriter )
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
@@ -2415,7 +2416,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
       htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"rfc822\">"
           "<tr class=\"rfc822H\"><td dir=\"" + dir + "\">";
       if( node ) {
-          htmlStr += "<a href=\"" + NodeHelper::asHREF( node, "body" ) + "\">" 
+          htmlStr += "<a href=\"" + NodeHelper::asHREF( node, "body" ) + "\">"
                     + i18n("Encapsulated message") + "</a>";
       } else {
           htmlStr += i18n("Encapsulated message");
@@ -3109,44 +3110,43 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         htmlStr.append( quoteEnd );
 
       /* start new quotelevel */
-      if (actQuoteLevel == -1)
+      if (actQuoteLevel == -1) {
         htmlStr += normalStartTag;
-      else
-      {
-      if ( GlobalSettings::self()->showExpandQuotesMark() )
-          if (true)
-        {
-          if (  actHidden )
-          {
-            //only show the QuoteMark when is the first line of the level hidden
-            if ( !curHidden )
-            {
-              //Expand all quotes
+      } else {
+        if ( GlobalSettings::self()->showExpandQuotesMark() ) {
+          if ( true ) {
+            if ( actHidden ) {
+              //only show the QuoteMark when is the first line of the level hidden
+              if ( !curHidden ) {
+                //Expand all quotes
+                htmlStr += "<div class=\"quotelevelmark\" >" ;
+                htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
+                                    "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
+                  .arg(-1)
+                  .arg( mExpandIcon );
+                htmlStr += "</div><br/>";
+                htmlStr += quoteEnd;
+              }
+            } else {
               htmlStr += "<div class=\"quotelevelmark\" >" ;
               htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
-                  "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
-                .arg(-1)
-                .arg( mExpandIcon );
-              htmlStr += "</div><br/>";
-              htmlStr += quoteEnd;
+                                  "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
+                .arg(actQuoteLevel)
+                .arg( mCollapseIcon);
+              htmlStr += "</div>";
+              if ( actQuoteLevel < 3 )
+                htmlStr += quoteFontTag[actQuoteLevel];
+              else
+                htmlStr += deepQuoteFontTag[actQuoteLevel%3];
             }
-          }else {
-            htmlStr += "<div class=\"quotelevelmark\" >" ;
-            htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
-                "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
-              .arg(actQuoteLevel)
-              .arg( mCollapseIcon);
-            htmlStr += "</div>";
-            if ( actQuoteLevel < 3 )
+          } else {
+            if ( actQuoteLevel < 3 ) {
               htmlStr += quoteFontTag[actQuoteLevel];
-            else
+            } else {
               htmlStr += deepQuoteFontTag[actQuoteLevel%3];
+            }
           }
-        } else
-            if ( actQuoteLevel < 3 )
-              htmlStr += quoteFontTag[actQuoteLevel];
-            else
-              htmlStr += deepQuoteFontTag[actQuoteLevel%3];
+        }
       }
       currQuoteLevel = actQuoteLevel;
     }

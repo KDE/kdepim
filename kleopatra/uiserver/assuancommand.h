@@ -254,8 +254,6 @@ namespace Kleo {
         }
         WId parentWId() const;
 
-        QString heuristicBaseDirectory() const;
-
         void setNohup( bool on );
         bool isNohup() const;
         bool isDone() const;

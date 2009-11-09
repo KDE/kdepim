@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/path-helper.h
+    utils/gui-helper.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2009 Klarälvdalens Datakonsult AB
@@ -30,20 +30,26 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UTILS_PATH_HELPER_H__
-#define __KLEOPATRA_UTILS_PATH_HELPER_H__
+#ifndef __KLEOPATRA_UTILS_GUI_HELPER_H__
+#define __KLEOPATRA_UTILS_GUI_HELPER_H__
 
-class QString;
-class QStringList;
-class QDir;
+#include <QAbstractButton>
 
 namespace Kleo {
+    static inline void really_check( QAbstractButton & b, bool on ) {
+        const bool excl = b.autoExclusive();
+        b.setAutoExclusive( false );
+        b.setChecked( on );
+        b.setAutoExclusive( excl );
+    }
 
-    QString heuristicBaseDirectory( const QStringList & files );
-    QStringList makeRelativeTo( const QDir & dir, const QStringList & files );
-    QStringList makeRelativeTo( const QString & dir, const QStringList & files );
-
-    void recursivelyRemovePath( const QString & path );
+    static inline bool xconnect( const QObject * a, const char * signal,
+                                 const QObject * b, const char * slot )
+    {
+        return
+            QObject::connect( a, signal, b, slot ) &&
+            QObject::connect( b, signal, a, slot ) ;
+    }
 }
 
-#endif /* __KLEOPATRA_UTILS_PATH_HELPER_H__ */
+#endif /* __KLEOPATRA_UTILS_GUI_HELPER_H__ */

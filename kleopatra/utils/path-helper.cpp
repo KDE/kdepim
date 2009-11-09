@@ -35,11 +35,15 @@
 #include "path-helper.h"
 
 #include <utils/stl_util.h>
+#include <utils/exception.h>
+
+#include <KLocalizedString>
 
 #include <QString>
 #include <QStringList>
 #include <QFileInfo>
 #include <QDir>
+#include <QDebug>
 
 #include <boost/bind.hpp>
 
@@ -62,12 +66,13 @@ static QString longestCommonPrefix( const QStringList & sl ) {
 }
 
 QString Kleo::heuristicBaseDirectory( const QStringList & fileNames ) {
-    const QString candidate = longestCommonPrefix( fileNames );
-    const QFileInfo fi( candidate );
-    if ( fi.isDir() )
-        return candidate;
-    else
-        return fi.absolutePath();
+    QStringList dirs;
+    Q_FOREACH( const QString & fileName, fileNames )
+        dirs.push_back( QFileInfo( fileName ).path() + QLatin1Char( '/' ) );
+    qDebug() << "dirs" << dirs;
+    const QString candidate = longestCommonPrefix( dirs );
+    const int idx = candidate.lastIndexOf( QLatin1Char( '/' ) );
+    return candidate.left( idx );
 }
 
 QStringList Kleo::makeRelativeTo( const QString & base, const QStringList & fileNames ) {
@@ -83,4 +88,21 @@ QStringList Kleo::makeRelativeTo( const QDir & baseDir, const QStringList & file
     return kdtools::transform<QStringList>
         ( fileNames,
           bind( &QDir::relativeFilePath, &baseDir, _1 ) );
+}
+
+void Kleo::recursivelyRemovePath( const QString & path ) {
+    const QFileInfo fi( path );
+    if ( fi.isDir() ) {
+        QDir dir( path );
+        Q_FOREACH( const QString & fname, dir.entryList( QDir::AllEntries|QDir::NoDotAndDotDot ) )
+            recursivelyRemovePath( dir.filePath( fname ) );
+        const QString dirName = fi.fileName();
+        dir.cdUp();
+        if ( !dir.rmdir( dirName ) )
+            throw Exception( GPG_ERR_EPERM, i18n("Cannot remove directory %1", path ) );
+    } else {
+        QFile file( path );
+        if ( !file.remove() )
+            throw Exception( GPG_ERR_EPERM, i18n("Cannot remove file %1: %2", path, file.errorString() ) );
+    }
 }

@@ -47,7 +47,11 @@
 #include <models/keylistmodel.h>
 
 #include <utils/archivedefinition.h>
+#include <utils/path-helper.h>
+#include <utils/gui-helper.h>
 #include <utils/stl_util.h>
+
+#include <ui/filenamerequester.h>
 
 #include <KLocale>
 #include <KIcon>
@@ -89,21 +93,6 @@ enum Page {
 
     NumPages
 };
-
-static void really_check( QAbstractButton & b, bool on ) {
-    const bool excl = b.autoExclusive();
-    b.setAutoExclusive( false );
-    b.setChecked( on );
-    b.setAutoExclusive( excl );
-}
-
-static bool xconnect( const QObject * a, const char * signal,
-                      const QObject * b, const char * slot )
-{
-    return
-        QObject::connect( a, signal, b, slot ) &&
-        QObject::connect( b, signal, a, slot ) ;
-}
 
 static void enable_disable( QAbstractButton & button, const QAbstractItemView * view ) {
     const QItemSelectionModel * ism = view ? view->selectionModel() : 0 ;
@@ -237,6 +226,42 @@ namespace {
         QStringList m_files;
     };
 
+    //
+    // Helper wrapper around Kleo::FileNameRequester that adjusts
+    // extensions to an ArchiveDefinition
+    //
+    class ArchiveFileNameRequester : public Kleo::FileNameRequester {
+        Q_OBJECT
+    public:
+        explicit ArchiveFileNameRequester( QWidget * parent=0 )
+            : FileNameRequester( QDir::Files, parent ), m_archiveDefinition()
+        {
+            setExistingOnly( false );
+        }
+
+    public Q_SLOTS:
+        void setArchiveDefinition( const boost::shared_ptr<const Kleo::ArchiveDefinition> & ad ) {
+            if ( ad == m_archiveDefinition )
+                return;
+            QString fn = fileName();
+            if ( m_archiveDefinition && fn.endsWith( m_archiveDefinition->extensions().front() ) )
+                fn.chop( m_archiveDefinition->extensions().front().size() + 1 );
+            m_archiveDefinition = ad;
+            if ( ad )
+                fn += '.' + ad->extensions().front();
+            FileNameRequester::setFileName( fn );
+        }
+        void setFileName( const QString & fn ) {
+            if ( m_archiveDefinition && !fn.endsWith( m_archiveDefinition->extensions().front() ) )
+                FileNameRequester::setFileName( fn + '.' + m_archiveDefinition->extensions().front() );
+            else
+                FileNameRequester::setFileName( fn );
+        }
+    private:
+        shared_ptr<const ArchiveDefinition> m_archiveDefinition;
+    };
+
+
 
     class WizardPage : public QWizardPage {
         Q_OBJECT
@@ -250,6 +275,10 @@ namespace {
 
         bool isArchiveRequested() const {
             return field("archive").toBool();
+        }
+
+        QString archiveName() const {
+            return field("archive-name").toString();
         }
 
         bool isRemoveUnencryptedFilesEnabled() const {
@@ -303,12 +332,15 @@ namespace {
 
     class OperationPage : public WizardPage {
         Q_OBJECT
+        Q_PROPERTY( QStringList files READ files WRITE setFiles )
     public:
         explicit OperationPage( QWidget * parent=0 )
             : WizardPage( parent ),
               m_objectsLabel( this ),
               m_archiveCB( i18n("Archive files with:"), this ),
               m_archive( this ),
+              m_archiveNameLB( i18n("Archive name:"), this ),
+              m_archiveName( this ),
               m_signencrypt( i18n("Sign and Encrypt (OpenPGP only)"), this ),
               m_encrypt( i18n("Encrypt"), this ),
               m_sign( i18n("Sign"), this ),
@@ -325,16 +357,20 @@ namespace {
             KDAB_SET_OBJECT_NAME( m_sign );
             KDAB_SET_OBJECT_NAME( m_archiveCB );
             KDAB_SET_OBJECT_NAME( m_archive );
+            KDAB_SET_OBJECT_NAME( m_archiveNameLB );
+            KDAB_SET_OBJECT_NAME( m_archiveName );
             KDAB_SET_OBJECT_NAME( m_armor );
             KDAB_SET_OBJECT_NAME( m_removeSource );
 
-            QHBoxLayout * hlay = new QHBoxLayout;
-            hlay->addWidget( &m_archiveCB );
-            hlay->addWidget( &m_archive, 1 );
+            QGridLayout * glay = new QGridLayout;
+            glay->addWidget( &m_archiveCB,     0, 0 );
+            glay->addWidget( &m_archive,       0, 1 );
+            glay->addWidget( &m_archiveNameLB, 1, 0 );
+            glay->addWidget( &m_archiveName,   1, 1 );
 
             QVBoxLayout * vlay = new QVBoxLayout( this );
             vlay->addWidget( &m_objectsLabel );
-            vlay->addLayout( hlay );
+            vlay->addLayout( glay );
             vlay->addWidget( &m_signencrypt );
             vlay->addWidget( &m_encrypt );
             vlay->addWidget( &m_sign );
@@ -342,13 +378,18 @@ namespace {
             vlay->addWidget( &m_armor );
             vlay->addWidget( &m_removeSource );
 
+            m_archiveNameLB.setAlignment( Qt::AlignRight );
+            m_archiveNameLB.setBuddy( &m_archiveName );
+
             m_armor.setChecked( false );
             m_archive.setEnabled( false );
+            m_archiveNameLB.setEnabled( false );
+            m_archiveName.setEnabled( false );
 
             Q_FOREACH( const shared_ptr<ArchiveDefinition> & ad, m_archiveDefinitions )
                 m_archive.addItem( ad->label(), qVariantFromValue( ad ) );
 
-            registerField( "files", &m_objectsLabel, "files" );
+            registerField( "files", this, "files" );
 
             registerField( "signencrypt", &m_signencrypt );
             registerField( "encrypt", &m_encrypt );
@@ -359,19 +400,43 @@ namespace {
 
             registerField( "archive", &m_archiveCB );
             registerField( "archive-id", &m_archive );
+            registerField( "archive-user-mutable", &m_archiveCB, "enabled" );
+            registerField( "archive-name", &m_archiveName, "fileName" );
+
+            connect( &m_archive, SIGNAL(currentIndexChanged(int)),
+                     this, SLOT(slotArchiveDefinitionChanged()) );
 
             connect( &m_signencrypt, SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_encrypt,     SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
             connect( &m_sign,        SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
+            connect( &m_archiveCB,   SIGNAL(clicked()), this, SIGNAL(completeChanged()) );
+            connect( &m_archiveName, SIGNAL(fileNameChanged(QString)), this, SIGNAL(completeChanged()) );
 
             connect( &m_sign, SIGNAL(toggled(bool)),
                      &m_removeSource, SLOT(setDisabled(bool)) );
             connect( &m_archiveCB, SIGNAL(toggled(bool)),
                      &m_archive, SLOT(setEnabled(bool)) );
+            connect( &m_archiveCB, SIGNAL(toggled(bool)),
+                     &m_archiveNameLB, SLOT(setEnabled(bool)) );
+            connect( &m_archiveCB, SIGNAL(toggled(bool)),
+                     &m_archiveName, SLOT(setEnabled(bool)) );
+
+            m_archiveName.setArchiveDefinition( archiveDefinition() );
+        }
+
+        QStringList files() const { return m_objectsLabel.files(); }
+        void setFiles( const QStringList & files ) {
+            m_objectsLabel.setFiles( files );
+            if ( files.size() == 1 )
+                m_archiveName.setFileName( files.front() );
+            else
+                m_archiveName.setFileName( QDir( heuristicBaseDirectory( files ) )
+                                           .absoluteFilePath( i18nc("base name of an archive file, e.g. archive.zip or archive.tar.gz", "archive") ) );
         }
 
         /* reimp */ bool isComplete() const {
-            return m_signencrypt.isChecked() || m_encrypt.isChecked() || m_sign.isChecked() ;
+            return ( !isArchiveRequested() || !archiveName().isEmpty() )
+                && ( isSigningSelected() || isEncryptionSelected() ) ;
         }
         /* reimp */ int nextId() const {
             return isEncryptionSelected() ? RecipientsPageId : SignerPageId ;
@@ -400,10 +465,17 @@ namespace {
                 m_archive.setCurrentIndex( it - m_archiveDefinitions.begin() );
         }
 
+    private Q_SLOTS:
+        void slotArchiveDefinitionChanged() {
+            m_archiveName.setArchiveDefinition( archiveDefinition() );
+        }
+
     private:
         ObjectsLabel m_objectsLabel;
         QCheckBox m_archiveCB;
         QComboBox m_archive;
+        QLabel m_archiveNameLB;
+        ArchiveFileNameRequester m_archiveName;
         QRadioButton m_signencrypt, m_encrypt, m_sign;
         QCheckBox m_armor, m_removeSource;
         std::vector< shared_ptr<ArchiveDefinition> > m_archiveDefinitions;
@@ -829,6 +901,7 @@ void NewSignEncryptFilesWizard::setCreateArchiveUserMutable( bool mut ) {
         return;
     d->createArchiveUserMutable = true;
     d->updateStartId();
+    setField( "archive-user-mutable", mut );
 }
 
 void NewSignEncryptFilesWizard::setArchiveDefinitionId( const QString & id ) {
@@ -898,6 +971,10 @@ bool NewSignEncryptFilesWizard::isCreateArchiveSelected() const {
 
 shared_ptr<ArchiveDefinition> NewSignEncryptFilesWizard::selectedArchiveDefinition() const {
     return d->operationPage->archiveDefinition();
+}
+
+QString NewSignEncryptFilesWizard::archiveFileName() const {
+    return field("archive-name").toString();
 }
 
 const std::vector<Key> & NewSignEncryptFilesWizard::resolvedRecipients() const {

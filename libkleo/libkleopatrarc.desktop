@@ -1,3 +1,33 @@
+[Archive Definition #0]
+extensions=tar
+id=tar
+Name=TAR (PGP®-compatible)
+Name[en_GB]=TAR (PGP®-compatible)
+Name[pt_BR]=TAR (compatível com o PGP®)
+Name[uk]=TAR (сумісні з PGP®)
+Name[x-test]=xxTAR (PGP®-compatible)xx
+pack-command=tar cf -
+
+[Archive Definition #1]
+extensions=zip
+id=zip
+Name=ZIP
+Name[en_GB]=ZIP
+Name[pt_BR]=ZIP
+Name[uk]=ZIP
+Name[x-test]=xxZIPxx
+pack-command=zip  -r - %f
+
+[Archive Definition #3]
+extensions=tar.bz2,tbz2
+id=bzip2
+Name=TAR (with bzip2 compression)
+Name[en_GB]=TAR (with bzip2 compression)
+Name[pt_BR]=TAR (com compressão em bzip2)
+Name[uk]=TAR (зі стисканням bzip2)
+Name[x-test]=xxTAR (with bzip2 compression)xx
+pack-command=tar cfj -
+
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key

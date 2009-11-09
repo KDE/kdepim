@@ -388,9 +388,9 @@ void KNArticleManager::search()
 {
   if(s_earchDlg) {
     s_earchDlg->show();
-#ifdef Q_OS_UNIX    
+#ifdef Q_OS_UNIX
     KWindowSystem::activateWindow(s_earchDlg->winId());
-#endif    
+#endif
   } else {
     s_earchDlg = new SearchDialog( SearchDialog::STgroupSearch, 0 );
     connect(s_earchDlg, SIGNAL(doSearch(KNArticleFilter*)), this,
@@ -528,12 +528,12 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
         if ( (*it)->isOrphant() )
           delete (*it); // ok, this is ugly; we simply delete orphant articles
         else
-          (*it)->Content::clear(); // no need to keep them in memory
+          (*it)->KMime::Content::clear(); // no need to keep them in memory
       }
       KNHelper::displayInternalFileError();
     } else {
       for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
-        (*it)->Content::clear(); // no need to keep them in memory
+        (*it)->KMime::Content::clear(); // no need to keep them in memory
       knGlobals.memoryManager()->updateCacheEntry(f);
     }
 
