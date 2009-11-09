@@ -282,20 +282,20 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     resultContent = eJob->content();
     headers = new KMime::Message;
     headers->setHeader( skeletonMessage->from() );
+    headers->setHeader( skeletonMessage->to() );
     headers->setHeader( skeletonMessage->subject() );
 
-    KMime::Headers::To *to = new KMime::Headers::To( headers );
+    KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc( headers );
     foreach( const QString &a, eJob->recipients() ) {
       KMime::Types::Mailbox address;
       address.fromUnicodeString( a );
-      to->addAddress( address );
+      bcc->addAddress( address );
     }
 
-    kDebug() << "got one of multiple messages sending to:" << to->asUnicodeString();
-    headers->setHeader( to );
+    kDebug() << "got one of multiple messages sending to:" << bcc->asUnicodeString();
+    headers->setHeader( bcc );
     headers->assemble();
   } else { // just use the saved headers from before
-    // TODO HACK what to do if you encrypt attachments only with BCC recipients? wtf
     if( encData.size() > 0 ) {
       kDebug() << "setting enc data:" << encData[ 0 ].first << "with num keys:" << encData[ 0 ].second.size();
       keys = encData[ 0 ].second;
