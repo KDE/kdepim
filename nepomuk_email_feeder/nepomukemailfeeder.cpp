@@ -21,12 +21,15 @@
 #include "nepomukemailfeeder.h"
 #include "messageanalyzer.h"
 #include "configdialog.h"
+#include "settings.h"
 
 #include <kmime/kmime_message.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
+
+#include <gpgme++/context.h>
 
 using namespace Akonadi;
 
@@ -39,6 +42,11 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   setNeedsStrigi( true );
 
   changeRecorder()->itemFetchScope().fetchFullPayload();
+
+  // failsafe in case we don't have / lost G13 support
+  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
+    Settings::self()->setIndexEncryptedContent( Settings::NoIndexing );
+  Settings::self()->writeConfig();
 }
 
 void NepomukEMailFeeder::updateItem(const Akonadi::Item & item, const QUrl &graphUri)
