@@ -41,6 +41,7 @@ target_link_libraries(akonadi_nepomuk_email_feeder
   ${NEPOMUK_LIBRARIES}
   ${STRIGI_STREAMANALYZER_LIBRARY}
   ${KDEPIMLIBS_KMIME_LIBS}
+  ${QGPGME_LIBRARIES}
 )
 
 install(TARGETS akonadi_nepomuk_email_feeder ${INSTALL_TARGETS_DEFAULT_ARGS})
