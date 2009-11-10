@@ -2817,14 +2817,7 @@ void ViewerPrivate::slotUrlClicked()
 
 void ViewerPrivate::slotUrlCopy()
 {
-  // we don't necessarily need a mainWidget for KMUrlCopyCommand so
-  // it doesn't matter if the dynamic_cast fails.
-  /* FIXME(Andras) port it
-  KMCommand *command =
-    new KMUrlCopyCommand( mUrlClicked,
-                          dynamic_cast<KMMainWidget*>( mMainWindow ) );
-  command->start();
-  */
+  emit copyUrl( mUrlClicked );
 }
 
 
