@@ -309,16 +309,30 @@ bool MessageAnalyzer::createCryptoContainer(const QByteArray& keyId)
 bool MessageAnalyzer::mountCryptoContainer( const QByteArray& keyId )
 {
   kDebug() << keyId;
+
+  const QString cryptoContainer = containerPathFromKeyId( keyId );
+  const QString mountDir = KStandardDirs::locateLocal( "data", "nepomuk/repository/" ) + QLatin1String( keyId );
+  KStandardDirs::makeDir( mountDir );
+
+  // ### HACK temporary hack until G13 reports that as an error correctly
+  // G13 currently fails silently if the mount target contains anything already, so check for that
+  const QDir dir( mountDir );
+  if ( !dir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot ).isEmpty() ) {
+    kWarning() << "Mount dir is not empty, can't mount there!" << dir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
+    return false;
+  }
+
   if ( !m_ctx )
     m_ctx = GpgME::Context::createForProtocol( GpgME::G13 );
   if ( !m_ctx )
     return false;
 
-  const QString cryptoContainer = containerPathFromKeyId( keyId );
-  const QString mountDir = KStandardDirs::locateLocal( "data", "nepomuk/repository/" ) + QLatin1String( keyId );
-  KStandardDirs::makeDir( mountDir );
   GpgME::VfsMountResult res = m_ctx->mountVFS( cryptoContainer.toLocal8Bit(), mountDir.toLocal8Bit() );
   kDebug() << res.mountDir() << res.error().asString() << res.error();
+
+  // ### HACK temporary hack until the mount race is fixed in G13
+  sleep( 1 );
+
   return !res.error();
 }
 
