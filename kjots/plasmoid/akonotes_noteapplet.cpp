@@ -309,7 +309,7 @@ void AkonotesNoteApplet::itemChanged( const Akonadi::Item& item )
   KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
   KMime::Headers::Subject *subject = msg->subject();
   m_subject->setText( subject->asUnicodeString() );
-  m_content->setText( msg->mainBodyPart()->decodedText() );
+  m_content->nativeWidget()->setText( msg->mainBodyPart()->decodedText() );
   m_item = item;
 }
 
