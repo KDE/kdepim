@@ -18,21 +18,21 @@ install(TARGETS kmail_bodypartformatter_text_vcard  DESTINATION ${PLUGIN_INSTALL
 
 ########### next target ###############
 MESSAGE(STATUS "Port kmail plugins text calendar")
-#set(kmail_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp)
+set(kmail_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp)
 
-#qt4_add_dbus_interfaces(kmail_bodypartformatter_text_calendar_PART_SRCS
-#  ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
-#)
+qt4_add_dbus_interfaces(kmail_bodypartformatter_text_calendar_PART_SRCS
+  ${CMAKE_SOURCE_DIR}/korganizer/org.kde.Korganizer.Calendar.xml
+)
 
-#kde4_add_ui_files(kmail_bodypartformatter_text_calendar_PART_SRCS ui_attendeeselector.ui)
+kde4_add_ui_files(kmail_bodypartformatter_text_calendar_PART_SRCS ui_attendeeselector.ui)
 
-#kde4_add_plugin(kmail_bodypartformatter_text_calendar ${kmail_bodypartformatter_text_calendar_PART_SRCS})
+kde4_add_plugin(kmail_bodypartformatter_text_calendar ${kmail_bodypartformatter_text_calendar_PART_SRCS})
 
 
 
-#target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kmailprivate  kdepim ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kmailprivate  kdepim ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
-#install(TARGETS kmail_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kmail_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 
 ########### next target ###############

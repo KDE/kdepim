@@ -45,8 +45,6 @@
 #include <kcal/incidence.h>
 #include <kcal/incidenceformatter.h>
 
-#include <kmail/callback.h>
-
 #include <kpimutils/email.h>
 
 #include <kglobal.h>
@@ -320,7 +318,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       DeclineCounter
     };
 
-    bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status,
+    bool mail( Incidence* incidence, /* TODO: port me!  KMail::Callback& callback,*/ const QString &status,
                iTIPMethod method = iTIPReply, const QString &to = QString(),
                MailType type = Answer ) const
     {
@@ -350,14 +348,19 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // Set the organizer to the sender, if the ORGANIZER hasn't been set.
       if ( incidence->organizer().isEmpty() ) {
         QString tname, temail;
-        KPIMUtils::extractEmailAddressAndName( callback.sender(), temail, tname );
+        KPIMUtils::extractEmailAddressAndName( /* TODO: port me! callback.sender()*/ QString(), temail, tname );
         incidence->setOrganizer( Person( tname, temail ) );
       }
 
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
+#if 0 // TODO port to Akonadi
       return callback.mailICal( recv, msg, subject, status, type != Forward );
+#else
+      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+      return true;
+#endif
     }
 
     void ensureKorganizerRunning() const
@@ -408,11 +411,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleInvitation( const QString& iCal, Attendee::PartStat status,
-                           KMail::Callback &callback ) const
+    bool handleInvitation( const QString& iCal, Attendee::PartStat status/*,
+                           TODO: port me! KMail::Callback &callback*/ ) const
     {
       bool ok = true;
-      const QString receiver = callback.receiver();
+      const QString receiver /* TODO port me! = callback.receiver() */;
 
       if ( receiver.isEmpty() )
         // Must be some error. Still return true though, since we did handle it
@@ -421,14 +424,14 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       // get comment for tentative acceptance
       Incidence* incidence = icalToString( iCal );
 
-      if ( callback.askForComment( status ) ) {
+      if ( /* TODO: port me! callback.askForComment( status )*/ false ) {
         bool ok = false;
         QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
-          if ( callback.outlookCompatibleInvitationReplyComments() ) {
+          if ( /* TODO: port me! callback.outlookCompatibleInvitationReplyComments() */ false ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
@@ -485,12 +488,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           newMyself->setDelegate( delegateString );
           newMyself->setRSVP( delegatorRSVP );
         }
-        ok =  mail( incidence, callback, dir );
+        ok =  mail( incidence, /* TODO: port me! callback,*/ dir );
 
         // check if we need to inform our delegator about this as well
         if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
           if ( delegatorRSVP || status == Attendee::Declined )
-            ok = mail( incidence, callback, dir, iTIPReply, delegator );
+            ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, delegator );
         }
 
       } else if ( !myself && (status != Attendee::Declined) ) {
@@ -508,11 +511,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                                     QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
-          ok = mail( incidence, callback, dir, iTIPReply );
+          ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply );
         }
       } else {
+#if 0 // TODO: port to Akonadi
         if ( callback.deleteInvitationAfterReply() )
           callback.deleteInvitation();
+#else
+        kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
 
       }
       delete incidence;
@@ -536,7 +543,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( incidence, callback, dir, iTIPRequest, delegateString, Delegation );
+        ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPRequest, delegateString, Delegation );
       }
       return ok;
     }
@@ -629,40 +636,44 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       delete iface;
     }
 
-    bool handleIgnore( const QString&, KMail::Callback& c ) const
+    bool handleIgnore( const QString& /* TODO port me! , KMail::Callback& c */ ) const
     {
+#if 0 // TODO port to Akonadi
       // simply move the message to trash
       c.deleteInvitation();
+#else
+      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO; 
+#endif
       return true;
     }
 
-    bool handleDeclineCounter( const QString &iCal, KMail::Callback &callback ) const
+    bool handleDeclineCounter( const QString &iCal/* TODO port me!, KMail::Callback &callback*/ ) const
     {
-      const QString receiver = callback.receiver();
+      const QString receiver /* TODO: port me! = callback.receiver()*/;
       if ( receiver.isEmpty() )
         return true;
       Incidence* incidence = icalToString( iCal );
-      if ( callback.askForComment( Attendee::Declined ) ) {
+      if ( /* TODO: port me! callback.askForComment( Attendee::Declined )*/ true ) {
         bool ok = false;
         QString comment = KInputDialog::getMultiLineText( i18n("Decline Counter Proposal"),
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
-          if ( callback.outlookCompatibleInvitationReplyComments() ) {
+          if ( /* TODO: port me! callback.outlookCompatibleInvitationReplyComments()*/ false ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
           }
         }
       }
-      return mail( incidence, callback, "declinecounter", KCal::iTIPDeclineCounter,
-                   callback.sender(), DeclineCounter );
+      return mail( incidence, /* TODO: port me! callback,*/ "declinecounter", KCal::iTIPDeclineCounter,
+                   /* TODO: port me! callback.sender() */ QString(), DeclineCounter );
     }
 
-    bool counterProposal( const QString &iCal, KMail::Callback &callback ) const
+    bool counterProposal( const QString &iCal /*TODO port me, KMail::Callback &callback*/ ) const
     {
-      const QString receiver = callback.receiver();
+      const QString receiver /*TODO port me! = callback.receiver()*/;
       if ( receiver.isEmpty() )
         return true;
       saveFile( receiver, iCal, "counter" );
@@ -710,20 +721,20 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       bool result = false;
       if ( path == "accept" )
-        result = handleInvitation( iCal, Attendee::Accepted, c );
+        result = handleInvitation( iCal, Attendee::Accepted/*,  TODO port me! c */);
       if ( path == "accept_conditionally" )
-        result = handleInvitation( iCal, Attendee::Tentative, c );
+        result = handleInvitation( iCal, Attendee::Tentative/*, TODO port me!  c */);
       if ( path == "counter" )
-        result = counterProposal( iCal, c );
+        result = counterProposal( iCal/*, TODO port me! c */ );
       if ( path == "ignore" )
-        result = handleIgnore( iCal, c );
+        result = handleIgnore( iCal/*,TODO port me! c*/ );
       if ( path == "decline" )
-        result = handleInvitation( iCal, Attendee::Declined, c );
+        result = handleInvitation( iCal, Attendee::Declined/*, TODO port me! c*/ );
       if ( path == "decline_counter" ) {
-        result = handleDeclineCounter( iCal, c );
+        result = handleDeclineCounter( iCal/*, TODO port me! c */ );
       }
       if ( path == "delegate" )
-        result = handleInvitation( iCal, Attendee::Delegated, c );
+        result = handleInvitation( iCal, Attendee::Delegated/*, TODO port me! c*/ );
       if ( path == "forward" ) {
         Incidence* incidence = icalToString( iCal );
         AttendeeSelector dlg;
@@ -732,7 +743,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( incidence, c, "forward", iTIPRequest, fwdTo, Forward );
+        result = mail( incidence, /*TODO port me! c,*/ "forward", iTIPRequest, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
         Incidence* incidence = icalToString( iCal );
@@ -743,8 +754,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // These should just be saved with their type as the dir
         const QString p = (path == "accept_counter" ? QString("reply") : path);
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
+#if 0 // TODO port to Akonadi
           if ( c.deleteInvitationAfterReply() )
             c.deleteInvitation();
+#else
+          kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
           result = true;
         }
       }
@@ -754,8 +769,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = openAttachment( name, iCal );
       }
 
+#if 0 // TODO port to Akonadi
       if ( result )
         c.closeIfSecondaryWindow();
+#else
+      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
       return result;
     }
 
