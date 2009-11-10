@@ -1903,10 +1903,10 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
         if ( inc->type() == "Todo" ) {
           html += "<td colspan=\"9\">";
-          html += helper->makeLink( "reply", i18n( "[Record invitation to my task list]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record invitation in my task list]" ) );
         } else {
           html += "<td colspan=\"13\">";
-          html += helper->makeLink( "reply", i18n( "[Record invitation to my calendar]" ) );
+          html += helper->makeLink( "reply", i18n( "[Record invitation in my calendar]" ) );
         }
         html += "</td></tr><tr>";
       }
@@ -1981,9 +1981,9 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
       } else {
         if ( inc ) {
           if ( inc->type() == "Todo" ) {
-            html += helper->makeLink( "reply", i18n( "[Record response into my task list]" ) );
+            html += helper->makeLink( "reply", i18n( "[Record response in my task list]" ) );
           } else {
-            html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+            html += helper->makeLink( "reply", i18n( "[Record response in my calendar]" ) );
           }
         }
       }
