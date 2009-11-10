@@ -308,7 +308,10 @@ public:
    * Return a persistent set from current thread
    */
   MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
-
+  /**
+   * Sets the focus on the view of the currently active tab.
+   */
+  void focusView();
 
 public slots:
   /**

@@ -571,5 +571,15 @@ MessageList::Core::MessageItemSetReference Pane::currentThreadAsPersistentSet() 
   return w->currentThreadAsPersistentSet();
 }
 
+void Pane::focusView()
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w ) {
+    QWidget *view = w->view();
+    if ( view )
+      view->setFocus();
+  }
+}
+
 
 #include "pane.moc"
