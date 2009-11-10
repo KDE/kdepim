@@ -2821,14 +2821,6 @@ void ViewerPrivate::slotUrlCopy()
 }
 
 
-void ViewerPrivate::slotUrlSave()
-{
-    /*FIXME(Andras) port to akonadi
-  KMCommand *command = new KMUrlSaveCommand( mUrlClicked, mMainWindow );
-  command->start();
-    */
-}
-
 void ViewerPrivate::slotSaveMessage()
 {
    if(!mMessage) return;

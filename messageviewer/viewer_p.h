@@ -447,8 +447,6 @@ public slots:
   /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
       beginning of URL before copying. */
   void slotUrlCopy();
-  /** Save the page to a file */
-  void slotUrlSave();
   void slotSaveMessage();
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
