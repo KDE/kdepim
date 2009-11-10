@@ -2810,17 +2810,8 @@ void ViewerPrivate::selectAll()
 
 void ViewerPrivate::slotUrlClicked()
 {
-  kDebug() << "Clicked on " << mUrlClicked;
-    /*FIXME Andras
-  KMMainWidget *mainWidget = dynamic_cast<KMMainWidget*>(mMainWindow);
-  uint identity = 0;
-  if ( message() && message()->parent() ) {
-    identity = message()->parent()->identity();
-  }
-
-  KMCommand *command = new KMUrlClickedCommand( mUrlClicked, identity, this,
-                                                false, mainWidget );
-  command->start();*/
+  //kDebug() << "Clicked on " << mUrlClicked;
+  emit urlClicked( mMessageItem, mUrlClicked );
 }
 
 
