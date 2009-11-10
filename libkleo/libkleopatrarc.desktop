@@ -7,6 +7,7 @@ Name[pt]=TAR (compatível com o PGP®)
 Name[pt_BR]=TAR (compatível com o PGP®)
 Name[uk]=TAR (сумісні з PGP®)
 Name[x-test]=xxTAR (PGP®-compatible)xx
+Name[zh_TW]=TAR (PGP®-相容)
 pack-command=tar cf -
 
 [Archive Definition #1]
@@ -18,6 +19,7 @@ Name[pt]=ZIP
 Name[pt_BR]=ZIP
 Name[uk]=ZIP
 Name[x-test]=xxZIPxx
+Name[zh_TW]=ZIP
 pack-command=zip  -r - %f
 
 [Archive Definition #3]
@@ -29,6 +31,7 @@ Name[pt]=TAR (com compressão bzip2)
 Name[pt_BR]=TAR (com compressão em bzip2)
 Name[uk]=TAR (зі стисканням bzip2)
 Name[x-test]=xxTAR (with bzip2 compression)xx
+Name[zh_TW]=TAR (加上 bzip2)
 pack-command=tar cfj -
 
 [Key Filter #0]
