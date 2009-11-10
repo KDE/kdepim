@@ -2203,8 +2203,8 @@ void ViewerPrivate::slotUrlOpen( const KUrl &url )
   kDebug() << "slotUrlOpen " << url;
   if ( !url.isEmpty() ) {
     mUrlClicked = url;
-    slotUrlOpen( url, KParts::OpenUrlArguments(), KParts::BrowserArguments() );
   }
+  slotUrlOpen( mUrlClicked, KParts::OpenUrlArguments(), KParts::BrowserArguments() );
 }
 
 
