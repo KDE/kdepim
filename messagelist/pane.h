@@ -313,6 +313,11 @@ public:
    */
   void focusView();
 
+  /**
+   * Reloads global configuration and eventually reloads all the views.
+   */
+  void reloadGlobalConfiguration();
+
 public slots:
   /**
    * Selects all the items in the current folder.

@@ -31,6 +31,7 @@
 #include "storagemodel.h"
 #include "widget.h"
 #include "core/settings.h"
+#include "core/manager.h"
 #include "messagecore/messagestatus.h"
 namespace MessageList
 {
@@ -581,5 +582,15 @@ void Pane::focusView()
   }
 }
 
+void Pane::reloadGlobalConfiguration()
+{
+  // Synchronize both configurations
+  Core::Settings::self()->setMessageToolTipEnabled(
+    Core::Manager::instance()->displayMessageToolTips()
+  );
+  d->updateTabControls();
+
+  Core::Settings::self()->writeConfig();
+}
 
 #include "pane.moc"
