@@ -93,6 +93,9 @@ int main( int argc, char** argv ) {
 
             cout << " string value=" << entry->stringValue().toLocal8Bit().constData();
             break;
+          case Kleo::CryptoConfigEntry::NumArgType:
+            // just metadata and should never actually occur in the switch
+            break;
           }
         else // lists
         {
@@ -138,6 +141,9 @@ int main( int argc, char** argv ) {
             cout << " string values=" << lst.join(" ").toLocal8Bit().constData();
             break;
           }
+          case Kleo::CryptoConfigEntry::NumArgType:
+            // just metadata and should never actually occur in the switch
+            break;
           }
         }
         cout << endl;
