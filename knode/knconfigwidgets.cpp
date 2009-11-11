@@ -859,6 +859,9 @@ void KNode::ReadNewsGeneralWidget::load()
     case KMime::DateFormatter::Localized: mLocalizedDateFormat->setChecked( true ); break;
     case KMime::DateFormatter::Fancy: mFancyDateFormat->setChecked( true ); break;
     case KMime::DateFormatter::Custom: mCustomDateFormat->setChecked( true ); break;
+    case KMime::DateFormatter::Iso: break; // not used
+    case KMime::DateFormatter::Rfc: break; // not used
+
   }
 }
 
