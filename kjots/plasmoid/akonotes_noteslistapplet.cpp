@@ -136,7 +136,7 @@ void AkonotesListApplet::configAccepted()
 
   Collection col = rows.at( 0 ).data( EntityTreeModel::CollectionRole ).value<Collection>();
 
-  cg.writeEntry("rootCollection", col.id());
+  cg.writeEntry( "rootCollection", col.id() );
 
   setupModel( col.id() );
 

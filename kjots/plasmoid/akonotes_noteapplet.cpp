@@ -20,12 +20,18 @@
 
 #include "akonotes_noteapplet.h"
 
+#include <QtCore/QMetaMethod>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusInterface>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QGraphicsLinearLayout>
 #include <QtGui/QGraphicsSceneResizeEvent>
 
 #include <KJob>
+#include <KLineEdit>
+#include <KStandardDirs>
+#include <KTextEdit>
 
 #include <Plasma/FrameSvg>
 #include <Plasma/Label>
@@ -33,9 +39,9 @@
 #include <Plasma/TextEdit>
 
 #include <KMime/Message>
-#include <KLineEdit>
-#include <KTextEdit>
 
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/agentmanager.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfetchscope.h>
 #include <akonadi/control.h>
@@ -46,6 +52,7 @@
 #include <akonadi/itemmonitor.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/monitor.h>
+#include <akonadi/resourcesynchronizationjob.h>
 
 #include "note.h"
 
@@ -112,14 +119,13 @@ void AkonotesNoteApplet::init()
   KConfigGroup cg = config();
 
   Item::Id itemId = m_item.id();
+
   if ( !m_item.isValid() )
     itemId = cg.readEntry( "itemId", -1 );
 
   if ( itemId < 0 )
   {
-    CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-    collectionFetchJob->fetchScope().setContentMimeTypes( QStringList() << Note::mimeType() );
-    connect( collectionFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsFetched(Akonadi::Collection::List)) );
+    createInDefaultCollection();
   } else
   {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( Item( itemId ), this );
@@ -130,6 +136,124 @@ void AkonotesNoteApplet::init()
   }
 }
 
+void AkonotesNoteApplet::createInDefaultCollection()
+{
+  KConfig noteCollectionConfig( "notesrc" );
+  KConfigGroup generalGroup( &noteCollectionConfig, "General" );
+  int unsortedCollectionId = generalGroup.readEntry( "unsortedCollection", -1 );
+
+  if ( unsortedCollectionId > 1 )
+  {
+    CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( Collection( unsortedCollectionId ), CollectionFetchJob::Base, this );
+    connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(collectionFetchDone(KJob*)) );
+  } else {
+    createDefaultConcreteCollection();
+  }
+}
+
+void AkonotesNoteApplet::createDefaultConcreteCollection()
+{
+  AgentType noteType = AgentManager::self()->type( "akonadi_akonotes_resource" );
+  AgentInstanceCreateJob *noteResourceCreateJob = new AgentInstanceCreateJob( noteType );
+  connect( noteResourceCreateJob, SIGNAL(result(KJob*)), SLOT(defaultCreated(KJob*)) );
+
+  noteResourceCreateJob->start();
+}
+
+void AkonotesNoteApplet::defaultCreated( KJob *job )
+{
+  AgentInstanceCreateJob *agentJob = qobject_cast<AgentInstanceCreateJob *>( job );
+
+  Q_ASSERT( agentJob );
+
+  AgentInstance instance = agentJob->instance();
+
+  QDBusInterface *iface = new QDBusInterface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( instance.identifier() ),
+                                              QLatin1String("/Settings"), QString(), QDBusConnection::sessionBus(), this );
+
+  if ( !iface->isValid() ) {
+    kError() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
+    delete iface;
+    return;
+  }
+  iface->call( "setPath", KStandardDirs::locateLocal( "data", "unsortednotes/" ) );
+  instance.reconfigure();
+
+  ResourceSynchronizationJob *syncJob = new ResourceSynchronizationJob( instance );
+  connect( syncJob, SIGNAL(result(KJob*)), SLOT(syncDone(KJob*)) );
+
+  syncJob->start();
+}
+
+void AkonotesNoteApplet::syncDone( KJob *job )
+{
+  ResourceSynchronizationJob *resourceSync = qobject_cast<ResourceSynchronizationJob *>( job );
+
+  Q_ASSERT( resourceSync );
+
+  AgentInstance agent = resourceSync->resource();
+
+  CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel, this );
+  collectionFetchJob->fetchScope().setResource( agent.identifier() );
+  connect( collectionFetchJob, SIGNAL(result(KJob*)), SLOT(collectionFetchDone(KJob*)) );
+}
+
+void AkonotesNoteApplet::collectionFetchDone( KJob *job )
+{
+  if ( job->error() )
+  {
+    kWarning() << job->errorString(); // Could be that the collection in the config does not exist.
+    KConfig noteCollectionConfig( "notesrc" );
+    KConfigGroup generalGroup( &noteCollectionConfig, "General" );
+    generalGroup.writeEntry( "unsortedCollection", -1 );
+    static int attempts = 0;
+    if ( attempts == 0 )
+      createDefaultConcreteCollection();
+    return;
+  }
+
+  CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>( job );
+
+  Q_ASSERT( fetchJob );
+
+  Collection::List collectionList = fetchJob->collections();
+
+  if ( collectionList.isEmpty() )
+    return; // Can happen if a sync does not create any collections.
+
+  Q_ASSERT( collectionList.size() == 1 );
+
+  Collection targetCollection = collectionList.first();
+
+  Q_ASSERT( targetCollection.isValid() );
+
+  KConfig noteCollectionConfig( "notesrc" );
+  KConfigGroup generalGroup( &noteCollectionConfig, "General" );
+  generalGroup.writeEntry( "unsortedCollection", targetCollection.id() );
+
+  Item item;
+  item.setMimeType( Note::mimeType() );
+
+  KMime::Message::Ptr msg = KMime::Message::Ptr( new KMime::Message() );
+
+  QString title = i18nc( "The default name for new pages.", "New Page" );
+  QByteArray encoding( "utf-8" );
+
+  msg->subject( true )->fromUnicodeString( title, encoding );
+  msg->contentType( true )->setMimeType( "text/plain" );
+  msg->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
+  // Need a non-empty body part so that the serializer regards this as a valid message.
+  msg->mainBodyPart()->fromUnicodeString( " " );
+
+  msg->assemble();
+
+  item.setPayload( msg );
+
+  ItemCreateJob *itemCreateJob = new ItemCreateJob(item, targetCollection);
+  connect( itemCreateJob, SIGNAL(result(KJob*)), SLOT(itemCreateJobFinished( KJob *)));
+}
+
+
 void AkonotesNoteApplet::itemFetchDone( KJob *job )
 {
   if ( job->error() )
@@ -138,9 +262,7 @@ void AkonotesNoteApplet::itemFetchDone( KJob *job )
   }
   if ( !m_item.isValid() )
   {
-    CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-    collectionFetchJob->fetchScope().setContentMimeTypes( QStringList() << Note::mimeType() );
-    connect( collectionFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsFetched(Akonadi::Collection::List)));
+    createInDefaultCollection();
   }
 }
 
@@ -205,59 +327,6 @@ void AkonotesNoteApplet::modifyDone( KJob *job )
   }
 }
 
-void AkonotesNoteApplet::collectionsFetched( const Akonadi::Collection::List &collectionList )
-{
-  Collection::List possibilities;
-  foreach( const Collection col, collectionList )
-  {
-    if ( col.id() == 325 )
-//     if ( col.resource() == "defaultnotebook" )
-      possibilities << col;
-  }
-
-  if ( possibilities.isEmpty() )
-    return;
-
-  Collection targetCollection;
-
-  while ( possibilities.size() != 1 )
-  {
-    Collection col = possibilities.first();
-    bool found = false;
-    for( int i = 1; i < possibilities.size(); ++i )
-    {
-      if ( possibilities.at( i ).parentCollection().id() == col.id() )
-      {
-        found = true;
-        possibilities.removeFirst();
-      }
-    }
-    if ( !found )
-      break;
-  }
-  targetCollection = possibilities.first();
-
-  Item item;
-  item.setMimeType( Note::mimeType() );
-
-  KMime::Message::Ptr msg = KMime::Message::Ptr( new KMime::Message() );
-
-  QString title = i18nc( "The default name for new pages.", "New Page" );
-  QByteArray encoding( "utf-8" );
-
-  msg->subject( true )->fromUnicodeString( title, encoding );
-  msg->contentType( true )->setMimeType( "text/plain" );
-  msg->date( true )->setDateTime( KDateTime::currentLocalDateTime() );
-  // Need a non-empty body part so that the serializer regards this as a valid message.
-  msg->mainBodyPart()->fromUnicodeString( " " );
-
-  msg->assemble();
-
-  item.setPayload( msg );
-
-  ItemCreateJob *job = new ItemCreateJob(item, targetCollection);
-  connect( job, SIGNAL(result(KJob*)), SLOT(itemCreateJobFinished( KJob *)));
-}
 
 void AkonotesNoteApplet::itemsFetched( const Akonadi::Item::List& itemList )
 {
@@ -266,9 +335,7 @@ void AkonotesNoteApplet::itemsFetched( const Akonadi::Item::List& itemList )
 
   if ( !item.hasPayload<KMime::Message::Ptr>() )
   {
-    CollectionFetchJob *collectionFetchJob = new CollectionFetchJob( Collection::root(), CollectionFetchJob::FirstLevel );
-    collectionFetchJob->fetchScope().setContentMimeTypes( QStringList() << Note::mimeType() );
-    connect( collectionFetchJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(collectionsFetched(Akonadi::Collection::List)));
+    createInDefaultCollection();
     return;
   }
 

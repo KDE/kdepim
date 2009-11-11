@@ -55,17 +55,21 @@ protected slots:
   void itemCreateJobFinished( KJob *job );
   void modifyDone( KJob *job );
   void itemsFetched( const Akonadi::Item::List &list );
-  void collectionsFetched( const Akonadi::Collection::List &list );
-  void itemFetchDone( KJob * );
+  void collectionFetchDone( KJob *job );
+  void itemFetchDone( KJob *job );
 
   void itemRemoved();
   void itemChanged( const Akonadi::Item &item );
+  void defaultCreated( KJob *job );
+  void syncDone( KJob *job );
 
 protected:
   virtual bool eventFilter( QObject* watched, QEvent* event );
 
 private:
   void saveItem();
+  void createInDefaultCollection();
+  void createDefaultConcreteCollection();
 
 private:
   Plasma::FrameSvg *m_theme;
