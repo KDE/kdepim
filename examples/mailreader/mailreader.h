@@ -17,6 +17,7 @@ class KToggleAction;
 class KUrl;
 class KComboBox;
 class KAction;
+class KJob;
 
 namespace MessageList
 {
@@ -49,6 +50,8 @@ private slots:
     void slotMessageSelected(const Akonadi::Item &item);
     void slotPreviousMessage();
     void slotNextMessage();
+    void itemsReceived( const Akonadi::Item::List &list );
+    void itemFetchDone(KJob *job);
 
 private:
     void setupDocks();

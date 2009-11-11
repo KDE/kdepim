@@ -8,10 +8,12 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitytreeview.h>
+#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 #include <akonadi/session.h>
 #include <akonadi/statisticsproxymodel.h>
+#include <akonadi/kmime/messageparts.h>
 
 #include <KDE/KAction>
 #include <KDE/KConfigDialog>
@@ -70,7 +72,7 @@ void mailreader::setupDocks()
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setMimeTypeMonitored( "message/rfc822", true );
-  monitor->itemFetchScope().fetchFullPayload(true);
+  monitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
 
   Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, this );
   entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
@@ -150,8 +152,37 @@ void mailreader::setupActions()
 
 void mailreader::slotMessageSelected( const Akonadi::Item &item )
 {
+  // TODO: Use ETM/PartFetcher to cache fetched items.
+
+  Akonadi::ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob( item, this );
+  itemFetchJob->fetchScope().fetchFullPayload( true );
+
+  connect( itemFetchJob, SIGNAL(itemsReceived(Akonadi::Item::List)), SLOT(itemsReceived(Akonadi::Item::List)) );
+  connect( itemFetchJob, SIGNAL(result(KJob *)), SLOT(itemFetchDone(KJob *)) );
+
   m_view->showItem( item );
 }
+
+void mailreader::itemsReceived(const Akonadi::Item::List &list )
+{
+  Q_ASSERT( list.size() == 1 );
+
+  Akonadi::Item item = list.first();
+
+  kDebug() << item.payloadData() << item.hasPayload<KMime::Message::Ptr>();
+
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+    return;
+
+  m_view->showItem( item );
+}
+
+void mailreader::itemFetchDone(KJob *job)
+{
+  if (job->error())
+    kDebug() << job->errorString();
+}
+
 
 void mailreader::slotPreviousMessage()
 {
