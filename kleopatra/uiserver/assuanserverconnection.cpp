@@ -612,7 +612,7 @@ private:
             const bool cms = proto != GpgME::OpenPGP && kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::CMS );
             if ( cms != pgp )
                 proto = pgp ? GpgME::OpenPGP : GpgME::CMS ;
-            if ( cms && pgp )
+            if ( cms && pgp ) {
                 if ( conn.bias != GpgME::UnknownProtocol ) {
                     proto = conn.bias;
                 } else {
@@ -640,6 +640,7 @@ private:
                             ? GpgME::OpenPGP
                             : GpgME::CMS ;
                 }
+            }
             conn.bias = proto;
             switch ( proto ) {
             case GpgME::OpenPGP:
@@ -1336,11 +1337,12 @@ int AssuanServerConnection::Private::startCommandBottomHalf() {
 
     try {
 
-        if ( const int err = cmd->start() )
+        if ( const int err = cmd->start() ) {
             if ( cmd->isDone() )
                 return err;
             else
                 return assuan_process_done( ctx.get(), err );
+        }
 
         if ( cmd->isDone() )
             return 0;
