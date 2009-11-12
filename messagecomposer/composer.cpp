@@ -34,6 +34,7 @@
 #include <QTimer>
 
 #include <KDebug>
+#include <klocalizedstring.h>
 
 using namespace Message;
 using KPIM::AttachmentPart;
@@ -234,6 +235,13 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   // different messages w/ clean headers
   kDebug() << "starting enc jobs";
   kDebug() << "format:" << format;
+
+  if( encData.size() == 0 ) { // no key data! bail!
+    q->setErrorText( i18n( "No key data for recipients found." ) );
+    q->setError( Composer::IncompleteError );
+    q->emitResult();
+    return;
+  }
 
   for( int i = 0; i < encData.size(); ++i ) {
     QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
