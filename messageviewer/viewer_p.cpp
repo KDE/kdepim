@@ -2611,8 +2611,10 @@ void ViewerPrivate::slotAttachmentSaveAs()
 {
   KMime::Content::List contents = selectedContents();
 
-  if ( contents.isEmpty() )
-     return;
+  if ( contents.isEmpty() ) {
+    KMessageBox::information( mMainWindow, i18n("Found no attachments to save.") );
+    return;
+  }
 
   saveAttachments( contents );
 }
