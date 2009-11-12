@@ -137,17 +137,19 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
 
     kleo_assert( !signDisallowed || !encryptDisallowed );
  
-    if ( !signDisallowed && encryptDisallowed )
+    if ( !signDisallowed && encryptDisallowed ) {
         if ( archiveForced )
             return i18n( "Archive and Sign Files" );
         else
             return i18n( "Sign Files" );
+    }
 
-    if ( signDisallowed && !encryptDisallowed )
+    if ( signDisallowed && !encryptDisallowed ) {
         if ( archiveForced )
             return i18n( "Archive and Encrypt Files" );
         else
             return i18n( "Encrypt Files" );
+    }
 
     if ( archiveForced )
         return i18n( "Archive and Sign/Encrypt Files" );
