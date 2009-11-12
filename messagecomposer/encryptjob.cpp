@@ -28,6 +28,7 @@
 #include "util.h"
 
 #include <kdebug.h>
+
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_content.h>
 #include <QBuffer>
@@ -141,6 +142,7 @@ void EncryptJob::process()
   Q_D( EncryptJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
 
+  kDebug() << "starting encryption job";
   if( d->keys.size() == 0 ) { // not good
     kDebug() << "HELP! Encrypt job but have no keys to encrypt with.";
     // TODO handle gracefully
@@ -166,22 +168,19 @@ void EncryptJob::process()
   Q_ASSERT( proto );
 
   kDebug() << "got backend, starting job";
-
   Kleo::EncryptJob* seJob = proto->encryptJob( !d->binaryHint( d->format ), d->format == Kleo::InlineOpenPGPFormat );
 
   // for now just do the main recipients
   QByteArray encryptedBody;
   const GpgME::EncryptionResult res = seJob->exec( d->keys,
-                                                                                   d->content->encodedContent(),
-                                                                                   false,
-                                                                                   encryptedBody );
+                                                   d->content->encodedContent(),
+                                                   false,
+                                                   encryptedBody );
 
   if ( res.error() ) {
     kDebug() << "encrypt failed:" << res.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
   }
-  kDebug() << "got encrypted body:" << encryptedBody;
-
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
 
   emitResult();

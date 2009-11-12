@@ -140,7 +140,6 @@ void ComposerPrivate::skeletonJobFinished( KJob *job )
   skeletonMessage = sjob->message();
   Q_ASSERT( skeletonMessage );
   skeletonMessage->assemble();
-  kDebug() << "encoded content of skeleton" << skeletonMessage->encodedContent();
 
   composeStep2();
 }
@@ -235,7 +234,10 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   // each SplitInfo holds a list of recipients/keys, if there is more than
   // one item in it then it means there are secondary recipients that need
   // different messages w/ clean headers
-  kDebug() << "startin enc gjobs";
+  kDebug() << "starting enc jobs";
+  kDebug() << "format:" << format;
+  kDebug() << "encryption key data:";
+
   for( int i = 0; i < encData.size(); ++i ) {
     QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
     kDebug() << "got first list of recipients:" << recipients.first;
@@ -304,6 +306,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     
     headers = skeletonMessage;
     resultContent = contentJob->content();
+
   }
   // manually remove the subjob so we can check if we have any left later
   q->removeSubjob( job );
@@ -403,13 +406,13 @@ void ComposerPrivate::composeFinalStep( KMime::Message* headers, KMime::Content*
   Q_Q( Composer );
 
   content->assemble();
+
   QByteArray allData = headers->head() + content->encodedContent();
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( allData );
   resultMessage->parse(); // Not strictly necessary.
   resultMessages.append( resultMessage );
 
-  kDebug() << "sending message:" << allData;
   kDebug() << "still have subjobs:" << q->hasSubjobs() << "num:" << q->subjobs().size();
   if( !q->hasSubjobs() ) {
     finished = true;

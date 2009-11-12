@@ -63,6 +63,10 @@ namespace Util {
       */
     bool makeMultiMime( Kleo::CryptoMessageFormat f, bool sign );
 
+    /**
+      * Whether or not to make the message signed and multi-part
+      */
+    bool makeMultiPartSigned( Kleo::CryptoMessageFormat f );
 
     // TODO should these be exported?
     // They are used in the unit tests, but are they useful to the outside world?

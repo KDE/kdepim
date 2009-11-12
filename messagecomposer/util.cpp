@@ -65,10 +65,10 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
     if( !makeMultiMime( format, sign ) ) {
       // set body to be body + encoded if there is a orig body
       // if not, ignore it because the newline messes up decrypting
-      if( orig->body().isEmpty() ) {
-        result->setBody( encodedBody );
-      } else {
+      if(  sign && makeMultiPartSigned( format ) ) {
         result->setBody( orig->body() + "\n" + encodedBody );
+      } else {
+        result->setBody( encodedBody );
       }
     } else {
       // Build the encapsulated MIME parts.
@@ -215,6 +215,10 @@ bool Message::Util::makeMultiMime( Kleo::CryptoMessageFormat format, bool sign )
   }
 }
 
+bool Message::Util::makeMultiPartSigned( Kleo::CryptoMessageFormat f )
+{
+  return makeMultiMime( f, true );
+}
 
 QByteArray Message::Util::selectCharset( const QList<QByteArray> &charsets, const QString &text )
 {
