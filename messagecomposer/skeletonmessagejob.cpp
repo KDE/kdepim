@@ -109,6 +109,13 @@ void SkeletonMessageJobPrivate::doStart()
     message->setHeader( subject );
   }
 
+  // Date:
+  {
+    KMime::Headers::Date *date = new KMime::Headers::Date( message );
+    date->setDateTime( KDateTime::currentLocalDateTime() );
+    message->setHeader( date );
+  }
+
   q->emitResult(); // Success.
 }
 
