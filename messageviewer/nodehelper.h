@@ -27,6 +27,8 @@
 
 #include "messageviewer_export.h"
 
+#include <messageviewer/partmetadata.h>
+
 class KUrl;
 class QTextCodec;
 
@@ -36,7 +38,6 @@ namespace KMime {
 }
 
 namespace MessageViewer {
-  class PartMetaData;
   namespace Interface {
     class BodyPartMemento;
   }

@@ -626,7 +626,7 @@ private:
   Q_PRIVATE_SLOT(d, void expandFullThread( const QModelIndex& ))
 
   class Private;
-  Private * const d;
+  Private * d;
 }; // class View
 
 } // namespace Core

@@ -140,7 +140,7 @@ View::~View()
   d->mTheme = 0;
   d->mAggregation = 0;
 
-  delete d;
+  delete d; d = 0;
 }
 
 Model *View::model() const
@@ -231,7 +231,7 @@ void View::modelJobBatchTerminated()
 void View::modelHasBeenReset()
 {
   // This is called by Model when it has been reset.
-  if ( d->mNeedToApplyThemeColumns )
+  if ( d && d->mNeedToApplyThemeColumns )
     applyThemeColumns();
 }
 
