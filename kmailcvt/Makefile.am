@@ -6,7 +6,7 @@ kmailcvt_SOURCES = kimportpagedlg.ui kimportpage.cpp kselfilterpagedlg.ui \
                    filter_mbox.cxx filter_evolution.cxx filter_mailapp.cxx \
                    filter_evolution_v2.cxx filter_opera.cxx filter_thunderbird.cxx \
                    filter_kmail_maildir.cxx filter_sylpheed.cxx filter_thebat.cxx \
-                   filter_lnotes.cxx
+                   filter_lnotes.cxx filter_kmail_archive.cxx
                 
 kmailcvt_LDADD   = $(LIB_KFILE)
 
@@ -25,7 +25,8 @@ EXTRA_DIST = main.cpp kmailcvt.cpp kimportpage.cpp kimportpage.h \
              filter_thunderbird.hxx filter_thunderbird.cxx \
              filter_kmail_maildir.hxx filter_kmail_maildir.cxx \
              filter_sylpheed.hxx filter_sylpheed.cxx \
-             filter_thebat.hxx filter_thebat.cxx filter_lnotes.hxx filter_lnotes.cxx
+             filter_thebat.hxx filter_thebat.cxx filter_lnotes.hxx filter_lnotes.cxx \
+             filter_kmail_archive.cxx fitler_kmail_archive.hxx
 
 install-data-local: uninstall.desktop
 	$(mkinstalldirs) $(DESTDIR)$(kde_appsdir)/Utilities

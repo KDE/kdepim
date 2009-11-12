@@ -197,4 +197,22 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   return true;
 }
 
+void Filter::showKMailImportArchiveDialog( FilterInfo* info )
+{
+  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+
+  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "showImportArchiveDialog" );
+  if ( !reply.isValid() )
+  {
+    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
+                       "Make sure <i>kmail</i> is installed." ) );
+  }
+}
+
+bool Filter::needsSecondPage()
+{
+  return true;
+}
+
 // vim: ts=2 sw=2 et

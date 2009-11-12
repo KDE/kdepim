@@ -56,24 +56,33 @@ void KMailCVT::next() {
 		// Save selected filter
 		Filter *selectedFilter = selfilterpage->getSelectedFilter();
 		// without filter don't go next
-		if (!selectedFilter)
+		if ( !selectedFilter )
 			return;
-		// Goto next page
-		KWizard::next();
-		// Disable back & finish
-		setBackEnabled( currentPage(), false );
-		setFinishEnabled( currentPage(), false );
-		// Start import
-		FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
-		info->setStatusMsg(i18n("Import in progress"));
-		info->clear(); // Clear info from last time
-		selectedFilter->import(info);
-		info->setStatusMsg(i18n("Import finished"));
-		// Cleanup
-		delete info;
-		// Enable finish & back buttons
-		setFinishEnabled( currentPage(), true );
-		setBackEnabled( currentPage(), true );
+
+    if ( !selectedFilter->needsSecondPage() ) {
+      FilterInfo *info = new FilterInfo( importpage, this, selfilterpage->removeDupMsg_checked() );
+      selectedFilter->import( info );
+      accept();
+      delete info;
+    }
+    else {
+      // Goto next page
+      KWizard::next();
+      // Disable back & finish
+      setBackEnabled( currentPage(), false );
+      setFinishEnabled( currentPage(), false );
+      // Start import
+      FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
+      info->setStatusMsg(i18n("Import in progress"));
+      info->clear(); // Clear info from last time
+      selectedFilter->import(info);
+      info->setStatusMsg(i18n("Import finished"));
+      // Cleanup
+      delete info;
+      // Enable finish & back buttons
+      setFinishEnabled( currentPage(), true );
+      setBackEnabled( currentPage(), true );
+    }
 	} else KWizard::next();
 }
 

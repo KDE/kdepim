@@ -16,40 +16,17 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef IMPORTARCHIVEDIALOG_H
-#define IMPORTARCHIVEDIALOG_H
+#ifndef FILTER_KMAIL_ARCHIVE_HXX
+#define FILTER_KMAIL_ARCHIVE_HXX
 
-#include <kdialogbase.h>
+#include "filters.hxx"
 
-class KMFolder;
-class KURLRequester;
-
-namespace KMail
+class FilterKMailArchive : public Filter
 {
-class FolderRequester;
-
-// TODO: Common base class for ArchiveFolderDialog and ImportArchiveDialog?
-class ImportArchiveDialog : public KDialogBase
-{
-  Q_OBJECT
-
-  public:
-
-    ImportArchiveDialog( QWidget *parent, Qt::WidgetFlags flags );
-    void setFolder( KMFolder *defaultFolder );
-
-  protected slots:
-
-    /** reimp */
-    virtual void slotOk();
-
-  private:
-
-    QWidget *mParentWidget;
-    FolderRequester *mFolderRequester;
-    KURLRequester *mUrlRequester;
+public:
+  FilterKMailArchive();
+  void import( FilterInfo *info );
+  virtual bool needsSecondPage() { return false; }
 };
-
-}
 
 #endif

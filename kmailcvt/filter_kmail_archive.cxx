@@ -16,40 +16,20 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef IMPORTARCHIVEDIALOG_H
-#define IMPORTARCHIVEDIALOG_H
+#include "filter_kmail_archive.hxx"
 
-#include <kdialogbase.h>
+#include <klocale.h>
 
-class KMFolder;
-class KURLRequester;
-
-namespace KMail
+FilterKMailArchive::FilterKMailArchive()
+  : Filter( i18n( "Import KMail Archive File" ),
+            "Klar\xE4lvdalens Datakonsult AB",
+            i18n( "<p><b>KMail Archive File Import Filter</b></p>"
+                  "<p>This filter will import archives files previously exported by KMail.</p>"
+                  "<p>Archive files contain a complete folder subtree compressed into a single file.</p>" ) )
 {
-class FolderRequester;
-
-// TODO: Common base class for ArchiveFolderDialog and ImportArchiveDialog?
-class ImportArchiveDialog : public KDialogBase
-{
-  Q_OBJECT
-
-  public:
-
-    ImportArchiveDialog( QWidget *parent, Qt::WidgetFlags flags );
-    void setFolder( KMFolder *defaultFolder );
-
-  protected slots:
-
-    /** reimp */
-    virtual void slotOk();
-
-  private:
-
-    QWidget *mParentWidget;
-    FolderRequester *mFolderRequester;
-    KURLRequester *mUrlRequester;
-};
-
 }
 
-#endif
+void FilterKMailArchive::import( FilterInfo *info )
+{
+  showKMailImportArchiveDialog( info );
+}
