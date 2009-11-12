@@ -39,7 +39,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 
   if( !( format & Kleo::InlineOpenPGPFormat ) ) { // make a MIME message
     // make headers and CE+CTE
-    kDebug() << "making MIME message";
+    kDebug() << "making MIME message, format:" << format;
     makeToplevelContentType( result, format, sign );
     const QByteArray boundary = KMime::multiPartBoundary();
 
@@ -47,7 +47,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       result->contentType()->setBoundary( boundary );
     }
 
-    if( format & Kleo::SMIMEOpaqueFormat ) {
+    if( format & Kleo::AnySMIME ) {
       result->contentDisposition()->setDisposition( KMime::Headers::CDattachment );
       result->contentDisposition()->setFilename( QString::fromAscii( "smime.p7m" ) );
     }
@@ -63,8 +63,13 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
     kDebug() << "processed header:" << result->head();
     // now make the body
     if( !makeMultiMime( format, sign ) ) {
-      // set body to be body + encoded
-      result->setBody( orig->body() + "\n" + encodedBody );
+      // set body to be body + encoded if there is a orig body
+      // if not, ignore it because the newline messes up decrypting
+      if( orig->body().isEmpty() ) {
+        result->setBody( encodedBody );
+      } else {
+        result->setBody( orig->body() + "\n" + encodedBody );
+      }
     } else {
       // Build the encapsulated MIME parts.
       // Build a MIME part holding the version information
@@ -113,7 +118,6 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 
     result->setBody( resultingBody );
   }
-  result->assemble();
   return result;
 
 }
@@ -148,15 +152,15 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
       // S/MIME)
     case Kleo::SMIMEOpaqueFormat:
 
-        kDebug() << "setting headers for SMIME/opaque";
+      kDebug() << "setting headers for SMIME/opaque";
       content->contentType()->setMimeType( QByteArray( "application/pkcs7-mime" ) );
-      content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "smime.p7m" ) );
 
       if( sign ) {
         content->contentType()->setParameter( QString::fromAscii( "smime-type" ), QString::fromAscii( "signed-data" ) );
       } else {
         content->contentType()->setParameter( QString::fromAscii( "smime-type" ), QString::fromAscii( "enveloped-data" ) );
       }
+      content->contentType()->setParameter( QString::fromAscii( "name" ), QString::fromAscii( "smime.p7m" ) );
   }
 }
 
