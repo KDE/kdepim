@@ -89,6 +89,19 @@ bool ContentJobBase::appendSubjob( ContentJobBase *job )
   return KCompositeJob::addSubjob( job );
 }
 
+void ContentJobBase::setExtraContent( KMime::Content* extra )
+{
+  Q_D( ContentJobBase );
+
+  d->extraContent = extra;
+}
+
+KMime::Content* ContentJobBase::extraContent() const {
+  Q_D( const ContentJobBase );
+
+  return d->extraContent;
+}
+
 bool ContentJobBase::addSubjob( KJob *job )
 {
   Q_UNUSED( job );

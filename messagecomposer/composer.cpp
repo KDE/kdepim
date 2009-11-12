@@ -67,7 +67,7 @@ class Message::ComposerPrivate : public JobBasePrivate
     void composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients );
     void attachmentsFinished( KJob* job ); // slot
 
-    void composeFinalStep( KMime::Message* headers, KMime::Content* content );
+    void composeFinalStep( KMime::Content* headers, KMime::Content* content );
     bool started;
     bool finished;
     bool sign;
@@ -92,8 +92,6 @@ class Message::ComposerPrivate : public JobBasePrivate
     // Stuff that we play with.
     KMime::Message *skeletonMessage;
     KMime::Content *resultContent;
-    // need to save headers 
-    KMime::Message *savedHeaders;
 
     Q_DECLARE_PUBLIC( Composer )
 };
@@ -236,7 +234,6 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   // different messages w/ clean headers
   kDebug() << "starting enc jobs";
   kDebug() << "format:" << format;
-  kDebug() << "encryption key data:";
 
   for( int i = 0; i < encData.size(); ++i ) {
     QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
@@ -295,6 +292,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     }
 
     kDebug() << "got one of multiple messages sending to:" << bcc->asUnicodeString();
+    kDebug() << "sending to recipients:" << recipients;
     headers->setHeader( bcc );
     headers->assemble();
   } else { // just use the saved headers from before
@@ -330,11 +328,10 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
   TransparentJob* tJob = new TransparentJob( q );
   tJob->setContent( content );
   multiJob->appendSubjob( tJob );
-
+  multiJob->setExtraContent( headers );
+  
   kDebug() << "attaachment encr key size:" << keys.size() << recipients;
 
-  // save for slot to use
-  savedHeaders = headers;
   // operate correctly on each attachment that has a different crypto policy than body.
   foreach( AttachmentPart::Ptr attachment, parts ) {
     AttachmentJob* attachJob = new AttachmentJob( attachment, q );
@@ -395,13 +392,14 @@ void ComposerPrivate::attachmentsFinished( KJob* job ) {
   ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
 
   KMime::Content* content = contentJob->content();
+  KMime::Content* headers = contentJob->extraContent();
 
   q->removeSubjob( job );
-  composeFinalStep( savedHeaders, content );
+  composeFinalStep( headers, content );
   
 }
 
-void ComposerPrivate::composeFinalStep( KMime::Message* headers, KMime::Content* content )
+void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content* content )
 {
   Q_Q( Composer );
 
