@@ -72,6 +72,7 @@ protected slots:
   void slotProgressDialogVisible( bool );
   void slotShowItemDelayed();
   void slotBusyIndicator();
+  void updateBusyMode();
 
 protected:
   void setMode();
