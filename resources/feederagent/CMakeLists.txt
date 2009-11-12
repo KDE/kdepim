@@ -20,7 +20,6 @@ kde4_add_executable(akonadi_nepomuk_rss_feeder ${akonadi_nepomuk_rss_feeder_SRCS
 
 target_link_libraries(akonadi_nepomuk_rss_feeder
   niefast
-  soprano
   krss
   ${KDE4_KDEUI_LIBRARY}
   ${KDE4_KDECORE_LIBS}
@@ -29,6 +28,7 @@ target_link_libraries(akonadi_nepomuk_rss_feeder
   ${QT_QTDBUS_LIBRARY}
   ${NEPOMUK_LIBRARIES}
   ${STRIGI_STREAMANALYZER_LIBRARY}
+  ${SOPRANO_LIBRARIES}
 )
 
 install(TARGETS akonadi_nepomuk_rss_feeder ${INSTALL_TARGETS_DEFAULT_ARGS})
