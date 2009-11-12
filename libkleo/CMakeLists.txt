@@ -108,6 +108,7 @@ if ( NOT KDEPIM_ONLY_KLEO )
    endif ( NOT KLEO_NO_COMPAT )
 endif ( NOT KDEPIM_ONLY_KLEO)
 
+
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
 if(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
