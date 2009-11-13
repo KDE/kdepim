@@ -487,6 +487,12 @@ bool Viewer::noMDNsWhenEncrypted() const
   return d->noMDNsWhenEncrypted();
 }
 
+void Viewer::readConfig()
+{
+  Q_D( Viewer );
+  d->readConfig();
+}
+
 }
 
 #include "viewer.moc"
