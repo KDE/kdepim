@@ -493,6 +493,47 @@ void Viewer::readConfig()
   d->readConfig();
 }
 
+void Viewer::setShowEmoticons( bool b )
+{
+  GlobalSettings::self()->setShowEmoticons( b );
+}
+
+void Viewer::setShrinkQuotes( bool b )
+{
+  GlobalSettings::self()->setShrinkQuotes( b );
+}
+
+void Viewer::setShowExpandQuotesMark( bool b )
+{
+  GlobalSettings::self()->setShowExpandQuotesMark( b );
+}
+
+void Viewer::setCollapseQuoteLevelSpin( int v )
+{
+  GlobalSettings::self()->setCollapseQuoteLevelSpin( v );
+}
+
+void Viewer::setShowColorBar( bool b )
+{
+  GlobalSettings::self()->setShowColorBar( b );
+}
+
+void Viewer::setShowSpamStatus( bool b )
+{
+  GlobalSettings::self()->setShowSpamStatus( b );
+}
+
+
+void Viewer::setFallbackCharacterEncoding( const QString& str)
+{
+  GlobalSettings::self()->setFallbackCharacterEncoding( str );
+}
+
+void Viewer::setOverrideCharacterEncoding( const QString& str)
+{
+  GlobalSettings::self()->setOverrideCharacterEncoding( str );
+}
+
 }
 
 #include "viewer.moc"

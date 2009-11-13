@@ -263,6 +263,15 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   void readConfig();
 
+  void setShowEmoticons( bool b );
+  void setShrinkQuotes( bool b );
+  void setShowExpandQuotesMark( bool b );
+  void setCollapseQuoteLevelSpin( int v );
+  void setShowColorBar( bool b );
+  void setShowSpamStatus( bool b );
+  void setFallbackCharacterEncoding( const QString& );
+  void setOverrideCharacterEncoding( const QString& );
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
