@@ -722,9 +722,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleDeclineCounter( const QString &iCal/* TODO port me!, KMail::Callback &callback*/ ) const
+    bool handleDeclineCounter( const QString &iCal, KMail::Interface::BodyPart* part ) const
     {
-      const QString receiver /* TODO: port me! = callback.receiver()*/;
+      const QString receiver = findReceiver( part->content() );
       if ( receiver.isEmpty() )
         return true;
       Incidence* incidence = icalToString( iCal );
@@ -746,9 +746,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                    /* TODO: port me! callback.sender() */ QString(), DeclineCounter );
     }
 
-    bool counterProposal( const QString &iCal /*TODO port me, KMail::Callback &callback*/ ) const
+    bool counterProposal( const QString &iCal, KMail::Interface::BodyPart* part ) const
     {
-      const QString receiver /*TODO port me! = callback.receiver()*/;
+      const QString receiver = findReceiver( part->content() );
       if ( receiver.isEmpty() )
         return true;
       saveFile( receiver, iCal, "counter" );
@@ -800,13 +800,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "accept_conditionally" )
         result = handleInvitation( iCal, Attendee::Tentative, part );
       if ( path == "counter" )
-        result = counterProposal( iCal/*, TODO port me! c */ );
+        result = counterProposal( iCal, part );
       if ( path == "ignore" )
         result = handleIgnore( iCal/*,TODO port me! c*/ );
       if ( path == "decline" )
         result = handleInvitation( iCal, Attendee::Declined, part );
       if ( path == "decline_counter" ) {
-        result = handleDeclineCounter( iCal/*, TODO port me! c */ );
+        result = handleDeclineCounter( iCal, part );
       }
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, part );
