@@ -23,11 +23,13 @@
 
 #include <akonadi/collectioncombobox.h>
 #include <akonadi/entitytreemodel.h>
+#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <klocale.h>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QItemSelectionModel>
@@ -42,9 +44,12 @@ ContactSelectionWidget::ContactSelectionWidget( QAbstractItemModel *model, QItem
 
   mSelectedContactsButton->setEnabled( mSelectionModel->hasSelection() );
   mAddressBookSelection->setEnabled( false );
+  mAddressBookSelectionRecursive->setEnabled( false );
 
   connect( mAddressBookContactsButton, SIGNAL( toggled( bool ) ),
            mAddressBookSelection, SLOT( setEnabled( bool ) ) );
+  connect( mAddressBookContactsButton, SIGNAL( toggled( bool ) ),
+           mAddressBookSelectionRecursive, SLOT( setEnabled( bool ) ) );
 
   // apply default configuration
   if ( mSelectionModel->hasSelection() )
@@ -95,6 +100,7 @@ void ContactSelectionWidget::initGui()
   mAddressBookSelection = new Akonadi::CollectionComboBox;
   mAddressBookSelection->setMimeTypeFilter( QStringList() << KABC::Addressee::mimeType() );
   mAddressBookSelection->setAccessRightsFilter( Akonadi::Collection::ReadOnly );
+  mAddressBookSelectionRecursive = new QCheckBox( i18n( "Include Subfolders" ) );
 
   group->addButton( mAllContactsButton );
   group->addButton( mSelectedContactsButton );
@@ -102,8 +108,14 @@ void ContactSelectionWidget::initGui()
 
   boxLayout->addWidget( mAllContactsButton, 0, 0, 1, 2 );
   boxLayout->addWidget( mSelectedContactsButton, 1, 0, 1, 2 );
-  boxLayout->addWidget( mAddressBookContactsButton, 2, 0 );
-  boxLayout->addWidget( mAddressBookSelection, 2, 1 );
+  boxLayout->addWidget( mAddressBookContactsButton, 2, 0, Qt::AlignTop );
+
+  QVBoxLayout *addressBookLayout = new QVBoxLayout;
+  addressBookLayout->setMargin( 0 );
+  addressBookLayout->addWidget( mAddressBookSelection );
+  addressBookLayout->addWidget( mAddressBookSelectionRecursive );
+
+  boxLayout->addLayout( addressBookLayout, 2, 1 );
 
   layout->addWidget( groupBox );
   layout->addStretch( 1 );
@@ -151,15 +163,30 @@ KABC::Addressee::List ContactSelectionWidget::collectAddressBookContacts() const
     return contacts;
   }
 
-  Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( collection );
-  job->fetchScope().fetchFullPayload();
+  if ( mAddressBookSelectionRecursive->isChecked() ) {
+    Akonadi::RecursiveItemFetchJob *job = new Akonadi::RecursiveItemFetchJob( collection );
+    job->fetchScope().fetchFullPayload();
 
-  if ( job->exec() ) {
-    const Akonadi::Item::List items = job->items();
+    if ( job->exec() ) {
+      const Akonadi::Item::List items = job->items();
 
-    foreach ( const Akonadi::Item &item, items ) {
-      if ( item.hasPayload<KABC::Addressee>() ) {
-        contacts.append( item.payload<KABC::Addressee>() );
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( item.hasPayload<KABC::Addressee>() ) {
+          contacts.append( item.payload<KABC::Addressee>() );
+        }
+      }
+    }
+  } else {
+    Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
+    job->fetchScope().fetchFullPayload();
+
+    if ( job->exec() ) {
+      const Akonadi::Item::List items = job->items();
+
+      foreach ( const Akonadi::Item &item, items ) {
+        if ( item.hasPayload<KABC::Addressee>() ) {
+          contacts.append( item.payload<KABC::Addressee>() );
+        }
       }
     }
   }

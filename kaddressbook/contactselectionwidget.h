@@ -25,6 +25,7 @@
 #include <kabc/addressee.h>
 
 class QAbstractItemModel;
+class QCheckBox;
 class QItemSelectionModel;
 class QLabel;
 class QRadioButton;
@@ -86,6 +87,7 @@ class ContactSelectionWidget : public QWidget
     QRadioButton *mSelectedContactsButton;
     QRadioButton *mAddressBookContactsButton;
     Akonadi::CollectionComboBox *mAddressBookSelection;
+    QCheckBox *mAddressBookSelectionRecursive;
 };
 
 #endif
