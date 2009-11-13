@@ -37,6 +37,10 @@
 class QByteArray;
 class QString;
 
+namespace KMime {
+  class Content;
+}
+
 namespace MessageViewer {
 namespace Interface {
 
@@ -156,6 +160,11 @@ namespace Interface {
       @return whether this body part should be displayed iconic or inline
       */
     virtual Display defaultDisplay() const = 0;
+
+    /** Returns the KMime::Content node represented here. Makes most of the above obsolete
+        and probably should be used in the interfaces in the first place.
+    */
+    virtual KMime::Content* content() const = 0;
   };
 
 } // namespace Interface

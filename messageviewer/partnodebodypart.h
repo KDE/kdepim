@@ -66,6 +66,7 @@ public:
   void setBodyPartMemento( MessageViewer::Interface::BodyPartMemento * memento );
   BodyPart::Display defaultDisplay() const;
   void setDefaultDisplay( BodyPart::Display );
+  KMime::Content* content() const { return mContent; }
 
 private:
   KMime::Content *mContent;

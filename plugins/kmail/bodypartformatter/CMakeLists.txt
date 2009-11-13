@@ -30,7 +30,7 @@ kde4_add_plugin(kmail_bodypartformatter_text_calendar ${kmail_bodypartformatter_
 
 
 
-target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kmailprivate  kdepim ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kmail_bodypartformatter_text_calendar  ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kmailprivate  kdepim ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS})
 
 install(TARGETS kmail_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 

@@ -46,6 +46,10 @@
 #include <kcal/incidenceformatter.h>
 
 #include <kpimutils/email.h>
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
+
+#include <kmime/kmime_content.h>
 
 #include <kglobal.h>
 #include <kfiledialog.h>
@@ -283,6 +287,75 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return a;
     }
 
+    static QString findReceiver( KMime::Content *node )
+    {
+      if ( !node || !node->topLevel() )
+        return QString();
+
+      QString receiver;
+      KPIMIdentities::IdentityManager* im = new KPIMIdentities::IdentityManager( true );
+
+      KMime::Types::Mailbox::List addrs;
+      if ( node->topLevel()->header<KMime::Headers::To>() )
+        addrs = node->topLevel()->header<KMime::Headers::To>()->mailboxes();
+      int found = 0;
+      for ( QList< KMime::Types::Mailbox >::const_iterator it = addrs.constBegin(); it != addrs.constEnd(); ++it ) {
+        if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
+          // Ok, this could be us
+          ++found;
+          receiver = (*it).address();
+        }
+      }
+
+      KMime::Types::Mailbox::List ccaddrs;
+      if ( node->topLevel()->header<KMime::Headers::Cc>() )
+        ccaddrs = node->topLevel()->header<KMime::Headers::Cc>()->mailboxes();
+      for ( QList< KMime::Types::Mailbox >::const_iterator it = ccaddrs.constBegin(); it != ccaddrs.constEnd(); ++it ) {
+        if ( im->identityForAddress( (*it).address() ) != KPIMIdentities::Identity::null() ) {
+          // Ok, this could be us
+          ++found;
+          receiver = (*it).address();
+        }
+      }
+
+      if ( found != 1 ) {
+        QStringList possibleAddrs;
+        bool ok;
+        QString selectMessage;
+        if ( found == 0 ) {
+          selectMessage = i18n("<qt>None of your identities match the "
+                              "receiver of this message,<br />please "
+                              "choose which of the following addresses "
+                              "is yours, if any, or select one of your "
+                              "identities to use in the reply:</qt>");
+          possibleAddrs += im->allEmails();
+        } else {
+          selectMessage = i18n("<qt>Several of your identities match the "
+                              "receiver of this message,<br />please "
+                              "choose which of the following addresses "
+                              "is yours:</qt>");
+          foreach ( const KMime::Types::Mailbox &mbx, addrs )
+            possibleAddrs.append( mbx.address() );
+          foreach ( const KMime::Types::Mailbox &mbx, ccaddrs )
+            possibleAddrs.append( mbx.address() );
+        }
+
+        // select default identity by default
+        const QString defaultAddr = im->defaultIdentity().emailAddr();
+        const int defaultIndex = qMax( 0, possibleAddrs.indexOf( defaultAddr ) );
+
+        receiver = KInputDialog::getItem(
+          i18n( "Select Address" ),
+          selectMessage,
+          possibleAddrs, defaultIndex, false, &ok, 0 );
+        if ( !ok ) {
+          receiver.clear();
+        }
+      }
+
+      return receiver;
+    }
+
     Attendee* setStatusOnMyself( Incidence* incidence, Attendee* myself,
                             Attendee::PartStat status, const QString &receiver ) const
     {
@@ -392,6 +465,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
+      kDebug() << receiver << iCal << type;
       KTemporaryFile file;
       file.setPrefix(KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/', true));
       file.setAutoRemove(false);
@@ -411,11 +485,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleInvitation( const QString& iCal, Attendee::PartStat status/*,
-                           TODO: port me! KMail::Callback &callback*/ ) const
+    bool handleInvitation( const QString& iCal, Attendee::PartStat status,
+                           KMail::Interface::BodyPart *part ) const
     {
       bool ok = true;
-      const QString receiver /* TODO port me! = callback.receiver() */;
+      const QString receiver = findReceiver( part->content() );
+      kDebug() << receiver;
 
       if ( receiver.isEmpty() )
         // Must be some error. Still return true though, since we did handle it
@@ -721,20 +796,20 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       bool result = false;
       if ( path == "accept" )
-        result = handleInvitation( iCal, Attendee::Accepted/*,  TODO port me! c */);
+        result = handleInvitation( iCal, Attendee::Accepted, part );
       if ( path == "accept_conditionally" )
-        result = handleInvitation( iCal, Attendee::Tentative/*, TODO port me!  c */);
+        result = handleInvitation( iCal, Attendee::Tentative, part );
       if ( path == "counter" )
         result = counterProposal( iCal/*, TODO port me! c */ );
       if ( path == "ignore" )
         result = handleIgnore( iCal/*,TODO port me! c*/ );
       if ( path == "decline" )
-        result = handleInvitation( iCal, Attendee::Declined/*, TODO port me! c*/ );
+        result = handleInvitation( iCal, Attendee::Declined, part );
       if ( path == "decline_counter" ) {
         result = handleDeclineCounter( iCal/*, TODO port me! c */ );
       }
       if ( path == "delegate" )
-        result = handleInvitation( iCal, Attendee::Delegated/*, TODO port me! c*/ );
+        result = handleInvitation( iCal, Attendee::Delegated, part );
       if ( path == "forward" ) {
         Incidence* incidence = icalToString( iCal );
         AttendeeSelector dlg;
