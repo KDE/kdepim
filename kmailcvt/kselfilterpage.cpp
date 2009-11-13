@@ -49,6 +49,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
         // For now, we have to live without the warm and fuzzy feeling a refactoring might give. 
         // Patches appreciated. (danimo)
 
+        addFilter(new FilterMBox);
         addFilter(new FilterEvolution);
         addFilter(new FilterEvolution_v2);
         addFilter(new FilterKMail_maildir);
@@ -60,7 +61,6 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
         addFilter(new FilterOE);
 //        addFilter(new FilterOutlook);
         addFilter(new FilterPMail);
-        addFilter(new FilterMBox);
         addFilter(new FilterLNotes);
         addFilter(new FilterPlain);
 }
