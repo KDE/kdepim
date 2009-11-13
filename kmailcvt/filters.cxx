@@ -213,7 +213,7 @@ void Filter::showKMailImportArchiveDialog( FilterInfo* info )
 
 
   org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-  QDBusReply<int> reply = kmail.showImportArchiveDialog();
+  QDBusReply<void> reply = kmail.showImportArchiveDialog();
 
   if ( !reply.isValid() )
   {
