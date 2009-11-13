@@ -702,7 +702,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     }
 
     bool handleClick( KMail::Interface::BodyPart *part,
-                      const QString &path, KMail::Callback& c ) const
+                      const QString &path ) const
     {
       if ( !hasWritableCalendars() ) {
         KMessageBox::error( 0, i18n("No writable calendar found.") );

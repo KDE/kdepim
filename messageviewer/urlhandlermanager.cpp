@@ -220,20 +220,16 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
 }
 
 bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-/*FIXME(Andras) port it
   QString path;
-  partNode * node = partNodeFromXKMailUrl( url, w, &path );
+  KMime::Content * node = partNodeFromXKMailUrl( url, w, &path );
   if ( !node )
     return false;
-  KMMessage *msg = w->mMessage;
-  if ( !msg ) return false;
-  Callback callback( msg, w );
-  PartNodeBodyPart part( *node, w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
-    if ( (*it)->handleClick( &part, path, callback ) )
+
+  PartNodeBodyPart part( node, w->nodeHelper(), w->overrideCodec() );
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+    if ( (*it)->handleClick( &part, path ) )
       return true;
-      */
-      kWarning() <<"FIXME PORT bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, MailViewerPrivate * w ) const ";
+  }
 
   return false;
 }

@@ -63,7 +63,7 @@ QString PartNodeBodyPart::makeLink( const QString & path ) const {
 QString PartNodeBodyPart::asText() const {
   if ( !mContent->contentType()->isText() )
     return QString();
-  return mCodec->toUnicode( mContent->decodedContent() );
+  return mContent->decodedText();
 }
 
 QByteArray PartNodeBodyPart::asBinary() const {
