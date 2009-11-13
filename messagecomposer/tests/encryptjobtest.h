@@ -18,20 +18,33 @@
   02110-1301, USA.
 */
 
-#ifndef SINGLEPARTJOBTEST_H
-#define SINGLEPARTJOBTEST_H
+#ifndef ENCRYPTJOBJOBTEST_H
+#define ENCRYPTJOBJOBTEST_H
 
 #include <QtCore/QObject>
 
-class SinglepartJobTest : public QObject
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
+
+class KJob;
+
+namespace Message {
+  class EncryptJob;
+}
+
+class EncryptJobTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void testContent();
-    void testContentDisposition();
-    void testContentID();
-    void testContentType();
-    void testContentTransferEncoding();
+    void testContentDirect();
+    void testContentChained();
+    void testHeaders();
+
+  private:
+    void setupEnv();
+    std::vector<GpgME::Key> getKeys();
+    bool checkEncryption( Message::EncryptJob* eJob );
+
 };
 
 #endif
