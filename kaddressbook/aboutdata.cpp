@@ -18,17 +18,19 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include "kdepim-version.h"
+
 #include "aboutdata.h"
 #include <klocale.h>
 
 AboutData::AboutData()
   : KAboutData( "kaddressbook", 0, ki18n( "KAddressBook" ),
-                "0.1", ki18n( "The KDE Address Book Application" ),
+                KDEPIM_VERSION, ki18n( "The KDE Address Book Application" ),
                 KAboutData::License_GPL_V2,
                 ki18n( "(c) 2007-2009 The KDE PIM Team" ) )
 {
   addAuthor( ki18n( "Tobias Koenig" ), ki18n( "Current maintainer" ), "tokoe@kde.org" );
-  addAuthor( ki18n("Laurent Montel"), ki18n( "Kontact integration" ), "montel@kde.org" );
+  addAuthor( ki18n( "Laurent Montel" ), ki18n( "Kontact integration" ), "montel@kde.org" );
 }
 
 AboutData::~AboutData()
