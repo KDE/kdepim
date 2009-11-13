@@ -109,8 +109,7 @@ namespace {
 
   class UrlHandler : public KMail::Interface::BodyPartURLHandler {
   public:
-     bool handleClick( BodyPart * bodyPart, const QString & path,
-                       KMail::Callback& ) const {
+     bool handleClick( BodyPart * bodyPart, const QString & path ) const {
 
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return true;
