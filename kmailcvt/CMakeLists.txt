@@ -24,7 +24,9 @@ set(kmailcvt_SRCS
    filter_kmail_maildir.cxx 
    filter_sylpheed.cxx 
    filter_thebat.cxx 
-   filter_lnotes.cxx )
+   filter_lnotes.cxx
+   filter_kmail_archive.cxx
+)
 
 
 qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )

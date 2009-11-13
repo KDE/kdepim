@@ -204,4 +204,28 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   return true;
 }
 
+void Filter::showKMailImportArchiveDialog( FilterInfo* info )
+{
+  QDBusConnectionInterface * sessionBus = 0;
+  sessionBus = QDBusConnection::sessionBus().interface();
+  if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
+    KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
+
+
+  org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
+  QDBusReply<int> reply = kmail.showImportArchiveDialog();
+
+  if ( !reply.isValid() )
+  {
+    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for D-Bus communication: %1; %2<br />"
+                       "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
+    return;
+  }
+}
+
+bool Filter::needsSecondPage()
+{
+  return true;
+}
+
 // vim: ts=2 sw=2 et

@@ -65,9 +65,12 @@ class Filter
     QString name() const { return m_name; }
     QString info() const { return m_info; }
 
+    virtual bool needsSecondPage();
+
     int count_duplicates; //to count all duplicate messages
 
   protected:
+    void showKMailImportArchiveDialog( FilterInfo* info );
     bool addMessage( FilterInfo* info,
                      const QString& folder,
                      const QString& msgFile,
