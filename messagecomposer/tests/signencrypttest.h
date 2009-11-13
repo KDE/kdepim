@@ -23,9 +23,6 @@
 
 #include <QtCore/QObject>
 
-#include <gpgme++/key.h>
-#include <gpgme++/keylistresult.h>
-
 class KJob;
 
 namespace Message {
@@ -38,11 +35,6 @@ class SignEncryptTest : public QObject
   private Q_SLOTS:
     void testContent();
     void testHeaders();
-
-  private:
-    void setupEnv();
-    std::vector<GpgME::Key> getKeys();
-
 };
 
 #endif

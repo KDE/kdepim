@@ -22,6 +22,8 @@
 #ifndef QTEST_MESSAGECOMPOSER_H
 #define QTEST_MESSAGECOMPOSER_H
 
+#include <gpgme++/key.h>
+
 /**
  * Runs a MessageComposer::JobBase synchronously and aborts if the job failed.
  * Similar to QVERIFY( job->exec() ) but includes the job error message
@@ -31,3 +33,9 @@
   QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
 
 #endif
+
+/**
+ * Returns list of keys used in various crypto routines
+ */
+
+std::vector<GpgME::Key> getKeys();

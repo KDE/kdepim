@@ -41,8 +41,6 @@ class SignJobTest : public QObject
     void testHeaders();
     
   private:
-    void setupEnv();
-    std::vector<GpgME::Key> getKeys();
     bool checkSignJob( Message::SignJob* sJob );
 
 };

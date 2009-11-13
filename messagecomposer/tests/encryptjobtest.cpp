@@ -43,34 +43,6 @@
 
 QTEST_KDEMAIN( EncryptJobTest, NoGUI )
 
-std::vector<GpgME::Key> EncryptJobTest::getKeys()
-{
-
-  setupEnv();
-
-  const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-  Kleo::KeyListJob * job = backend->keyListJob( false );
-  Q_ASSERT( job );
-
-  std::vector< GpgME::Key > keys;
-  GpgME::KeyListResult res = job->exec( QStringList(), true, keys );
-
-  Q_ASSERT( keys.size() == 1 );
-  Q_ASSERT( !res.error() );
-  kDebug() << "got private keys:" << keys.size();
-
-  for(std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i ) {
-    kDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-    kDebug() << "key numuserIds:" << i->numUserIDs();
-    for(uint k = 0; k < i->numUserIDs(); ++k ) {
-      kDebug() << "userIDs:" << i->userID( k ).email();
-    }
-  }
-
-  return keys;
-
-}
-
 void EncryptJobTest::testContentDirect() {
 
   std::vector< GpgME::Key > keys = getKeys();
@@ -201,15 +173,6 @@ bool EncryptJobTest::checkEncryption( Message::EncryptJob* eJob )
   Q_ASSERT( QString::fromUtf8( MessageViewer::NodeHelper::firstChild( resultMessage )->body() ) == QString::fromLocal8Bit( "one flew over the cuckoo's nest" ) );
 
   return true;
-}
-
-void EncryptJobTest::setupEnv()
-{
-  setenv("GNUPGHOME", QDir::currentPath().toLocal8Bit() +  "/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1); \
-  setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromAscii( "/.kde-unit-test" ) ), 1);
-
-  kDebug() << "Set test GNUPG home to:" <<  QDir::currentPath().toLocal8Bit() +  "/gnupg_home";
 }
 
 #include "encryptjobtest.moc"

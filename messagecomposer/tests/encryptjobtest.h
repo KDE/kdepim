@@ -41,8 +41,6 @@ class EncryptJobTest : public QObject
     void testHeaders();
 
   private:
-    void setupEnv();
-    std::vector<GpgME::Key> getKeys();
     bool checkEncryption( Message::EncryptJob* eJob );
 
 };

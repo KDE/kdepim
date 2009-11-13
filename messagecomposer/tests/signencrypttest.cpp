@@ -39,37 +39,9 @@
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/nodehelper.h>
 
-#include <stdlib.h>
 
 QTEST_KDEMAIN( SignEncryptTest, NoGUI )
 
-std::vector<GpgME::Key> SignEncryptTest::getKeys()
-{
-
-  setupEnv();
-
-  const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-  Kleo::KeyListJob * job = backend->keyListJob( false );
-  Q_ASSERT( job );
-
-  std::vector< GpgME::Key > keys;
-  GpgME::KeyListResult res = job->exec( QStringList(), true, keys );
-
-  Q_ASSERT( keys.size() == 1 );
-  Q_ASSERT( !res.error() );
-  kDebug() << "got private keys:" << keys.size();
-
-  for(std::vector< GpgME::Key >::iterator i = keys.begin(); i != keys.end(); ++i ) {
-    kDebug() << "key isnull:" << i->isNull() << "isexpired:" << i->isExpired();
-    kDebug() << "key numuserIds:" << i->numUserIDs();
-    for(uint k = 0; k < i->numUserIDs(); ++k ) {
-      kDebug() << "userIDs:" << i->userID( k ).email();
-    }
-  }
-
-  return keys;
-
-}
 
 void SignEncryptTest::testContent() {
 
@@ -202,16 +174,6 @@ void SignEncryptTest::testHeaders()
   QCOMPARE( signedPart->contentType()->parameter( QString::fromLocal8Bit( "micalg" ) ), QString::fromLocal8Bit( "pgp-sha1" ) );
   QCOMPARE( signedPart->contentType()->parameter( QString::fromLocal8Bit( "protocol" ) ), QString::fromLocal8Bit( "application/pgp-signature" ) );
   QCOMPARE( signedPart->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
-}
-
-
-void SignEncryptTest::setupEnv()
-{
-  setenv("GNUPGHOME", QDir::currentPath().toLocal8Bit() +  "/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1); \
-  setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromAscii( "/.kde-unit-test" ) ), 1);
-
-  kDebug() << "Set test GNUPG home to:" <<  QDir::currentPath().toLocal8Bit() +  "/gnupg_home";
 }
 
 #include "signencrypttest.moc"
