@@ -318,6 +318,12 @@ public:
    */
   void reloadGlobalConfiguration();
 
+
+  /**
+   * Allow to change auto hide tab bar config
+   */
+  void setAutoHideTabBarWithSingleTab( bool );
+
 public slots:
   /**
    * Selects all the items in the current folder.

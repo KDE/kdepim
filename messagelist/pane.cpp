@@ -593,4 +593,9 @@ void Pane::reloadGlobalConfiguration()
   Core::Settings::self()->writeConfig();
 }
 
+void Pane::setAutoHideTabBarWithSingleTab( bool b )
+{
+  Core::Settings::self()->setAutoHideTabBarWithSingleTab( b );
+}
+
 #include "pane.moc"
