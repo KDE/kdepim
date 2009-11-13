@@ -76,6 +76,7 @@ protected Q_SLOTS:
   void slotProgressDialogVisible( bool );
   void slotShowItemDelayed();
   void slotBusyIndicator();
+  void updateBusyMode();
 
 protected:
   void setMode();
