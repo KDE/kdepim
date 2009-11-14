@@ -23,6 +23,7 @@
 #include <KDebug>
 #include <qtest_kde.h>
 #include "qtest_messagecomposer.h"
+#include "cryptofunctions.h"
 
 #include <kmime/kmime_content.h>
 
@@ -45,7 +46,7 @@ QTEST_KDEMAIN( EncryptJobTest, NoGUI )
 
 void EncryptJobTest::testContentDirect() {
 
-  std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );
@@ -73,7 +74,7 @@ void EncryptJobTest::testContentDirect() {
 
 void EncryptJobTest::testContentChained()
 {
-  std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
   KMime::Content* content = new KMime::Content;
@@ -102,7 +103,7 @@ void EncryptJobTest::testContentChained()
 
 void EncryptJobTest::testHeaders()
 {
-   std::vector< GpgME::Key > keys = getKeys();
+   std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );
@@ -148,31 +149,8 @@ bool EncryptJobTest::checkEncryption( Message::EncryptJob* eJob )
   Q_ASSERT( result );
   result->assemble();
 
-  // store it in a KMime::Message, that's what OTP needs
-  KMime::Message* resultMessage =  new KMime::Message;
-  resultMessage->setContent( result->encodedContent() );
-  resultMessage->parse();
+  return ComposerTestUtil::verifyEncryption( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
 
-  // parse the result and make sure it is valid in various ways
-  MessageViewer::EmptySource es;
-  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
-
-  // ensure the enc part exists and is parseable
-  KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
-  Q_ASSERT( encPart );
-
-  // process the result..
-  MessageViewer::ProcessResult pResult( nh );
-//   kDebug() << resultMessage->topLevel();
-  otp.processMultiPartEncryptedSubtype( resultMessage, pResult );
-  Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
-
-  // make sure the decoded content is what we encrypted
-  // processMultiPartEncrypted will add a child part with the unencrypted data
-  Q_ASSERT( QString::fromUtf8( MessageViewer::NodeHelper::firstChild( resultMessage )->body() ) == QString::fromLocal8Bit( "one flew over the cuckoo's nest" ) );
-
-  return true;
 }
 
 #include "encryptjobtest.moc"

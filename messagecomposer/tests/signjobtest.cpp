@@ -23,6 +23,7 @@
 #include <KDebug>
 #include <qtest_kde.h>
 #include "qtest_messagecomposer.h"
+#include "cryptofunctions.h"
 
 #include <kmime/kmime_content.h>
 
@@ -35,17 +36,13 @@
 #include <messagecomposer/signjob.h>
 #include <messagecomposer/transparentjob.h>
 
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/objecttreeemptysource.h>
-#include <messageviewer/nodehelper.h>
-
 #include <stdlib.h>
 
 QTEST_KDEMAIN( SignJobTest, NoGUI )
 
 void SignJobTest::testContentDirect() {
 
-  std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );
@@ -68,7 +65,7 @@ void SignJobTest::testContentDirect() {
 
 void SignJobTest::testContentChained()
 {
-  std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
   KMime::Content* content = new KMime::Content;
@@ -93,7 +90,7 @@ void SignJobTest::testContentChained()
 
 void SignJobTest::testHeaders()
 {
-   std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );
@@ -136,30 +133,8 @@ bool SignJobTest::checkSignJob( Message::SignJob* sJob )
   Q_ASSERT( result );
   result->assemble();
 
-  // store it in a KMime::Message, that's what OTP needs
-  KMime::Message* resultMessage =  new KMime::Message;
-  resultMessage->setContent( result->encodedContent() );
-  resultMessage->parse();
-
-  // parse the result and make sure it is valid in various ways
-  MessageViewer::EmptySource es;
-  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
-
-  // ensure the signed part exists and is parseable
-  KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-signature", true, true );
-  Q_ASSERT( signedPart );
-
-  // process the result..
-  MessageViewer::ProcessResult pResult( nh );
-  kDebug() << resultMessage->topLevel();
-  otp.processMultiPartSignedSubtype( resultMessage, pResult );
-  Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
-
-  // make sure the good sig is of what we think it is
-  Q_ASSERT( QString::fromUtf8( MessageViewer::NodeHelper::firstChild( resultMessage )->body() ) == QString::fromLocal8Bit( "one flew over the cuckoo's nest" ) );
-
-  return true;
+  return ComposerTestUtil::verifySignature( result, QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(), Kleo::OpenPGPMIMEFormat );
+  
 }
 
 #include "signjobtest.moc"

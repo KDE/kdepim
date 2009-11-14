@@ -22,14 +22,42 @@
 
 #include <QtCore/QObject>
 
+namespace Message {
+  class Composer;
+}
+
 class ComposerTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
     void testAttachments();
 
+    // crypto tests
+    // openpgp
+    void testSignOpenPGPMime();
+    void testEncryptOpenPGPMime();
+    void testSignEncryptOpenPGPMime();
+    // the following will do for s-mime as well, as the same sign/enc jobs are used
+   /* void testSignEncryptSameAttachmentsOpenPGPMime();
+    void testSignEncryptLateAttachmentsOpenPGPMime();
+  
+    // secondary recipients
+    void testBCCEncrypt();
+
+    // inline pgp
+    void testSignInlinePGP();
+    void testEncryptInlinePGP();
+    void testSignEncryptInlinePGP();
+
+    //s-mime
+    void testSignSMIME();
+    void testEncryptSMIME(); */
     // TODO test the code for autodetecting the charset of a text attachment.
     // TODO figure out what CTE testing has to be done.
+  private:
+    void fillComposerData( Message::Composer* composer );
+    void fillComposerCryptoData( Message::Composer* composer );
+
 };
 
 #endif

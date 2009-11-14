@@ -23,6 +23,7 @@
 #include <KDebug>
 #include <qtest_kde.h>
 #include "qtest_messagecomposer.h"
+#include "cryptofunctions.h"
 
 #include <kmime/kmime_content.h>
 
@@ -45,7 +46,7 @@ QTEST_KDEMAIN( SignEncryptTest, NoGUI )
 
 void SignEncryptTest::testContent() {
 
-  std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );
@@ -80,37 +81,17 @@ void SignEncryptTest::testContent() {
 
   kDebug() << "result:" << result->encodedContent();
   
-  // store it in a KMime::Message, that's what OTP needs
-  KMime::Message* resultMessage =  new KMime::Message;
-  resultMessage->setContent( result->encodedContent() );
-  resultMessage->parse();
-
-  // parse the result and make sure it is valid in various ways
-  MessageViewer::EmptySource es;
-  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
-
-  // ensure the enc part exists and is parseable
-  KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
-  QVERIFY( encPart );
-
-  MessageViewer::ProcessResult pResult( nh );
-  otp.processMultiPartEncryptedSubtype( resultMessage, pResult );
-  QVERIFY( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
- 
-  KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
-//   kDebug() << "resultMessage signedpart:" << signedPart->encodedContent();
-  otp.processMultiPartSignedSubtype( signedPart, pResult );
-  QVERIFY( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
-  QVERIFY( QString::fromUtf8( MessageViewer::NodeHelper::firstChild( signedPart )->body() ) == QString::fromLocal8Bit( "one flew over the cuckoo's nest" ) );
-
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption(
+              result,
+              QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8(),
+              Kleo::OpenPGPMIMEFormat ) );
   
 }
 
 
 void SignEncryptTest::testHeaders()
 {
-  std::vector< GpgME::Key > keys = getKeys();
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
   Message::SignJob* sJob = new Message::SignJob( composer );

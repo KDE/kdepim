@@ -33,9 +33,3 @@
   QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
 
 #endif
-
-/**
- * Returns list of keys used in various crypto routines
- */
-
-std::vector<GpgME::Key> getKeys();
