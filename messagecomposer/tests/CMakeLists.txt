@@ -18,7 +18,18 @@ macro( add_messagecomposer_cryptotest _source )
   set( _test cryptofunctions.cpp ${_source} )
   get_filename_component( _name ${_source} NAME_WE )
   kde4_add_unit_test( ${_name} TESTNAME messagecomposer-${_name} ${_test} )
-  target_link_libraries( ${_name} ${KDE4_KMIME_LIBRARY} messagecomposer messageviewer ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDE4_KDEUI_LIBS} )
+  target_link_libraries( 
+      ${_name}
+      ${KDE4_KMIME_LIBRARY}
+      messagecomposer
+      messageviewer
+      ${QT_QTTEST_LIBRARY}
+      ${QT_QTGUI_LIBRARY}
+      ${QT_QTCORE_LIBRARY}
+      ${KDE4_KDEUI_LIBS}
+      ${QT_QT3SUPPORT_LIBRARY}
+      ${QGPGME_LIBRARIES}
+      )
 endmacro( add_messagecomposer_cryptotest )
 
 
