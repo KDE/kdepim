@@ -279,30 +279,6 @@ static QString formatInputOutputLabel( const QString & input, const QString & ou
                   strikeOut( output, outputDeleted ) );
 }
 
-static const char * iconForSignature( const Signature & sig ) {
-    if ( sig.summary() & Signature::Green )
-        return "dialog-ok";
-    if ( sig.summary() & Signature::Red )
-        return "dialog-error";
-    return "dialog-warning";
-}
-
-static QColor color( const DecryptionResult & dr, const VerificationResult & vr ) {
-    if ( !dr.isNull() && dr.error() )
-        return Qt::red;
-    if ( !vr.isNull() && vr.error() )
-        return Qt::red;
-    return Qt::gray;
-}
-
-static QColor color( const Signature & sig ) {
-    if ( sig.summary() & GpgME::Signature::Red )
-        return Qt::red;
-    if ( sig.summary() & GpgME::Signature::Green )
-        return Qt::green;
-    return Qt::yellow;
-}
-
 static bool IsErrorOrCanceled( const GpgME::Error & err )
 {
     return err || err.isCanceled();
