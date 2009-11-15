@@ -841,21 +841,6 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
 }
 
-static KUrl::List strings2urls( const QStringList & strs ) {
-    KUrl::List urls;
-    Q_FOREACH( const QString & str, strs )
-        if ( !str.isEmpty() )
-            urls.push_back( KUrl( str ) );
-    return urls;
-}
-
-static QStringList urls2strings( const KUrl::List & urls ) {
-    QStringList result;
-    Q_FOREACH( const KUrl & url, urls )
-        result.push_back( url.url() );
-    return result;
-}
-
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
 {
   setURLList( mEntry->urlValueList() );
