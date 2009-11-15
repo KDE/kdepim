@@ -172,21 +172,23 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
             throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
                                    i18n("INPUT/SENDER --info count mismatch") );
 
-    if ( numMessages )
+    if ( numMessages ) {
         if ( numMessages != numInputs )
             throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
                                    i18n("INPUT/MESSAGE count mismatch") );
         else if ( op != Verify )
             throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
                                    i18n("MESSAGE can only be given for detached signature verification") );
+    }
 
-    if ( numOutputs )
+    if ( numOutputs ) {
         if ( numOutputs != numInputs )
             throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_OUTPUT ), //TODO use better error code if possible
                                    i18n("INPUT/OUTPUT count mismatch") );
         else if ( numMessages )
             throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
                                    i18n("Can not use OUTPUT and MESSAGE simultaneously") );
+    }
 
     kleo_assert( proto != UnknownProtocol );
 
