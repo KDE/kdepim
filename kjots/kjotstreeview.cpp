@@ -179,7 +179,7 @@ void KJotsTreeView::changeColor()
 
   foreach ( const QModelIndex &idx, rows )
   {
-    model()->setData(idx, myColor, Qt::BackgroundColorRole );
+    model()->setData(idx, myColor, Qt::BackgroundRole );
   }
 }
 
