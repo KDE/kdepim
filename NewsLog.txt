@@ -2,9 +2,7 @@ Friday, November 13th 2009
 
 Problems addressed
 ------------------ 
-
-* kolab/issue3747: Better archiving function for a branch (subtree) of folders (rt#5817)
-
+* Work on the archiving function (kolab/issue3747).
 
 Friday, November 6th 2009
 
