@@ -212,7 +212,7 @@ bool KAlarmApp::restoreSession()
 	{
 		--mActiveCount;
 		quitIf(1, true);    // error opening the main calendar - quit
-		return true;
+		return false;
 	}
 	MainWindow* trayParent = 0;
 	for (int i = 1;  KMainWindow::canBeRestored(i);  ++i)
@@ -254,7 +254,8 @@ bool KAlarmApp::restoreSession()
 	}
 
 	--mActiveCount;
-	quitIf(0);           // quit if no windows are open
+	if (quitIf(0))           // quit if no windows are open
+		return false;    // quitIf() can sometimes return, despite calling exit()
 
 	startProcessQueue();      // start processing the execution queue
 	return true;
