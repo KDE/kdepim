@@ -17,6 +17,7 @@ set(akonadi_nepomuk_email_feeder_SRCS
   shared/selectsparqlbuilder.cpp
 )
 
+include_directories(${SOPRANO_INCLUDE_DIR})
 
 kde4_add_app_icon(akonadi_nepomuk_email_feeder_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/nepomuk.png")
 kde4_add_kcfg_files(akonadi_nepomuk_email_feeder_SRCS settings.kcfgc)
