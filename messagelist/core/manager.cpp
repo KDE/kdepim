@@ -505,31 +505,59 @@ const Theme * Manager::defaultTheme()
   return *it;
 }
 
+void Manager::saveThemeForStorageModel( int index, const QString &id, bool storageUsesPrivateTheme )
+{
+  saveThemeForStorageModel( QString::number( index ), id, storageUsesPrivateTheme );
+}
+
 void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateTheme )
+{
+  saveThemeForStorageModel( storageModel->id(), id, storageUsesPrivateTheme );
+}
+
+void Manager::saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme )
 {
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
 
   if ( storageUsesPrivateTheme )
-    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
+    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModelIndex ), id );
   else
-    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModelIndex ) );
 
   if ( !storageUsesPrivateTheme )
     conf.writeEntry( QString( "DefaultSet" ), id );
 }
 
 
+const Theme * Manager::themeForStorageModel( const Akonadi::Collection & col,  bool * storageUsesPrivateTheme )
+{
+  Q_ASSERT( storageUsesPrivateTheme );
+
+  *storageUsesPrivateTheme = false; // this is by default
+
+  if ( !col.isValid() )
+    return defaultTheme();
+  return Manager::themeForStorageModel( QString::number( col.id() ), storageUsesPrivateTheme );
+
+}
+
 const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateTheme )
 {
+
+
   Q_ASSERT( storageUsesPrivateTheme );
 
   *storageUsesPrivateTheme = false; // this is by default
 
   if ( !storageModel )
     return defaultTheme();
+  return Manager::themeForStorageModel( storageModel->id(), storageUsesPrivateTheme );
+}
 
+const Theme * Manager::themeForStorageModel( const QString &id, bool *storageUsesPrivateTheme )
+{
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
-  QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
+  QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( id ), "" );
 
   Theme * opt = 0;
 

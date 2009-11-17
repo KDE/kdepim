@@ -27,7 +27,7 @@
 #include <QObject>
 
 #include <messagelist/messagelist_export.h>
-
+#include <akonadi/collection.h>
 class QPixmap;
 
 namespace KMime
@@ -228,8 +228,15 @@ public:
                                      const SortOrder& order, bool storageUsesPrivateSortOrder );
 
   // theme sets management
+  const Theme * themeForStorageModel( const Akonadi::Collection & col,  bool * storageUsesPrivateTheme );
   const Theme * themeForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateTheme );
+  const Theme * themeForStorageModel( const QString &id,  bool * storageUsesPrivateTheme );
+
   void saveThemeForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateTheme );
+  void saveThemeForStorageModel( int index, const QString &id, bool storageUsesPrivateTheme );
+  void saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme );
+
+
   const Theme * defaultTheme();
   const Theme * theme( const QString &id );
 
