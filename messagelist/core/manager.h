@@ -206,7 +206,16 @@ public:
 
   // aggregation sets management
   const Aggregation * aggregationForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateAggregation );
+  const Aggregation * aggregationForStorageModel( const QString &storageModel, bool *storageUsesPrivateAggregation );
+  const Aggregation * aggregationForStorageModel( const Akonadi::Collection &storageModel, bool *storageUsesPrivateAggregation );
+
+
+
   void saveAggregationForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateAggregation );
+  void saveAggregationForStorageModel( const QString &index, const QString &id, bool storageUsesPrivateAggregation );
+  void saveAggregationForStorageModel( const Akonadi::Collection &col, const QString &id, bool storageUsesPrivateAggregation );
+
+
   const Aggregation * defaultAggregation();
   const Aggregation * aggregation( const QString &id );
 
