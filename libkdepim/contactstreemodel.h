@@ -22,11 +22,16 @@
 #ifndef CONTACTSTREEMODEL_H
 #define CONTACTSTREEMODEL_H
 
+#include "kdepim_export.h"
+
 #include <akonadi/entitytreemodel.h>
 
 namespace Akonadi {
 
-class ContactsTreeModel : public EntityTreeModel
+/**
+ * Model for contacts as stored in the KABC library.
+ */
+class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
 {
   Q_OBJECT
 

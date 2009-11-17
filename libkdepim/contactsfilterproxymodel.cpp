@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "contactfiltermodel.h"
+#include "contactsfilterproxymodel.h"
 
 #include <akonadi/entitytreemodel.h>
 #include <kabc/addressee.h>
@@ -26,18 +26,18 @@
 static bool contactMatchesFilter( const KABC::Addressee &contact, const QString &filterString );
 static bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString );
 
-ContactFilterModel::ContactFilterModel( QObject *parent )
+ContactsFilterModel::ContactsFilterModel( QObject *parent )
   : QSortFilterProxyModel( parent )
 {
 }
 
-void ContactFilterModel::setFilterString( const QString &filter )
+void ContactsFilterModel::setFilterString( const QString &filter )
 {
   mFilter = filter;
   invalidateFilter();
 }
 
-bool ContactFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
+bool ContactsFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
 {
   if ( mFilter.isEmpty() )
     return true;
@@ -162,4 +162,4 @@ bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &
   return false;
 }
 
-#include "contactfiltermodel.moc"
+#include "contactsfilterproxymodel.moc"

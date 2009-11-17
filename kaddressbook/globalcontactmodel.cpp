@@ -20,7 +20,7 @@
 
 #include "globalcontactmodel.h"
 
-#include "contactstreemodel.h"
+#include <libkdepim/contactstreemodel.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>

@@ -17,17 +17,22 @@
     02110-1301, USA.
 */
 
-#ifndef CONTACTFILTERMODEL_H
-#define CONTACTFILTERMODEL_H
+#ifndef CONTACTSFILTERMODEL_H
+#define CONTACTSFILTERMODEL_H
+
+#include "kdepim_export.h"
 
 #include <QtGui/QSortFilterProxyModel>
 
-class ContactFilterModel : public QSortFilterProxyModel
+/**
+ * Proxymodel for \a ContactsTreeModel models.
+ */
+class KDEPIM_EXPORT ContactsFilterModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
-    ContactFilterModel( QObject *parent );
+    ContactsFilterModel( QObject *parent );
 
   public Q_SLOTS:
     void setFilterString( const QString &filter );

@@ -48,11 +48,9 @@ set( kaddressbook_xxport_SRCS
 set( kaddressbook_LIB_SRCS
   aboutdata.cpp
   contactfields.cpp
-  contactfiltermodel.cpp
   contactselectiondialog.cpp
   contactselectionwidget.cpp
   contactsorter.cpp
-  contactstreemodel.cpp
   contactswitcher.cpp
   globalcontactmodel.cpp
   mainwidget.cpp

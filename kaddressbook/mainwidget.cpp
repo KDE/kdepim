@@ -58,9 +58,9 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 #include <libkdepim/uistatesaver.h>
+#include <libkdepim/contactstreemodel.h>
+#include <libkdepim/contactsfilterproxymodel.h>
 
-#include "contactfiltermodel.h"
-#include "contactstreemodel.h"
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
 #include "modelcolumnmanager.h"
@@ -85,7 +85,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *                               mItemView
    *                                   ^
    *                                   |
-   *                           mContactFilterModel
+   *                           mContactsFilterModel
    *                                   ^
    *                                   |
    *                               mItemTree
@@ -110,7 +110,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *             selectionProxyModel:  Filters out all collections and items that are no children
    *                                   of the collection currently selected in mCollectionView
    *                       mItemTree:  Filters out all collections
-   *             mContactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
+   *             mContactsFilterModel:  Filters the contacts by the content of mQuickSearchWidget
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
    *
    *                descendantsModel:  Flattens the item/collection tree to a list
@@ -142,16 +142,16 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
-  mContactFilterModel = new ContactFilterModel( this );
-  mContactFilterModel->setSourceModel( mItemTree );
+  mContactsFilterModel = new ContactsFilterModel( this );
+  mContactsFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
-           mContactFilterModel, SLOT( setFilterString( const QString& ) ) );
+           mContactsFilterModel, SLOT( setFilterString( const QString& ) ) );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            this, SLOT( selectFirstItem() ) );
   connect( mQuickSearchWidget, SIGNAL( arrowDownKeyPressed() ),
            mItemView, SLOT( setFocus() ) );
 
-  mItemView->setModel( mContactFilterModel );
+  mItemView->setModel( mContactsFilterModel );
   mItemView->setXmlGuiClient( guiClient );
   mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );
@@ -514,9 +514,9 @@ void MainWidget::setSimpleGuiMode( bool on )
   // in a list, otherwise we use the model that provides all contacts of the
   // currently selected collection.
   if ( on )
-    mContactFilterModel->setSourceModel( allContactsModel() );
+    mContactsFilterModel->setSourceModel( allContactsModel() );
   else
-    mContactFilterModel->setSourceModel( mItemTree );
+    mContactsFilterModel->setSourceModel( mItemTree );
 
   if ( mCollectionView->model() )
     mCollectionView->setCurrentIndex( mCollectionView->model()->index( 0, 0 ) );
