@@ -129,7 +129,8 @@ QStringList Locale::encodings()
   foreach ( const QString &enc, encodings ) {
     // Valid codec only
     bool ok;
-    QTextCodec *codec = KGlobal::charsets()->codecForName( enc, ok );
+
+    KGlobal::charsets()->codecForName( enc, ok );
     if ( !ok ) {
       continue;
     }
