@@ -1396,7 +1396,7 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
 
 			if (!win)
 			{
-				// There isn't already a message for this event,
+				// There isn't already a message for this event
 				int flags = (reschedule ? 0 : MessageWin::NO_RESCHEDULE) | (allowDefer ? 0 : MessageWin::NO_DEFER);
 				(new MessageWin(&event, alarm, flags))->show();
 			}
