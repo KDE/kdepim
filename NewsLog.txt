@@ -1,4 +1,4 @@
-Friday, November 19th 2009
+Friday, November 13th 2009
 
 Problems addressed
 ------------------
@@ -52,10 +52,7 @@ Merges
       - Use the correct reply template when smart-replying to a mailing list (KDE bug 160215)
 
 * Merges from enterprise35 branch:
-      - kolab/issue3923: Save as of an attachment of an invitation crashes kontact
       - kolab/issue3930: time on the Marcus Bains line doesn't change
-      - kolab/issue3908: Mail view and print layout problem if description of attachment is to long (rt#5872)
-      - kolab/issue3926: Start khelpcenter instead of webbrowser help: from the introduction/welcome screen (rt#5881)
       - kolab/issue3481: Keep current email in front after saving an attachment (rt#5746)
 
       
