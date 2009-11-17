@@ -98,6 +98,8 @@ void SignJob::setContent( KMime::Content* content )
 {
   Q_D( SignJob );
 
+  Q_ASSERT( content );
+
   d->content = content;
 }
 
@@ -105,6 +107,11 @@ void SignJob::setCryptoMessageFormat( Kleo::CryptoMessageFormat format)
 {
   Q_D( SignJob );
 
+  // There *must* be a concrete format set at this point.
+  Q_ASSERT( format == Kleo::OpenPGPMIMEFormat
+            || format == Kleo::InlineOpenPGPFormat
+            || format == Kleo::SMIMEFormat
+            || format == Kleo::SMIMEOpaqueFormat );
   d->format = format;
 }
 

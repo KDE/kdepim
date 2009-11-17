@@ -274,7 +274,7 @@ void ComposerPrivate::contentJobFinished( KJob *job )
   std::vector<GpgME::Key> keys;
   QStringList recipients;
 
-  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) == static_cast<ContentJobBase*>( job ) );
   ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
 
   // create the final headers and body,
@@ -312,7 +312,6 @@ void ComposerPrivate::contentJobFinished( KJob *job )
     
     headers = skeletonMessage;
     resultContent = contentJob->content();
-
   }
   // manually remove the subjob so we can check if we have any left later
   q->removeSubjob( job );
