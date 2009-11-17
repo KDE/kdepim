@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of Akonadi Contact.
 
     Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
@@ -19,8 +19,8 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CONTACTSTREEMODEL_H
-#define CONTACTSTREEMODEL_H
+#ifndef AKONADI_CONTACTSTREEMODEL_H
+#define AKONADI_CONTACTSTREEMODEL_H
 
 #include "kdepim_export.h"
 
@@ -29,18 +29,16 @@
 namespace Akonadi {
 
 /**
- * Model for contacts as stored in the KABC library.
+ * @short A model for contacts and contact groups as stored in Akonadi.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ * @since 4.4
  */
 class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
 {
   Q_OBJECT
 
   public:
-    enum Roles
-    {
-      EmailCompletionRole = EntityTreeModel::UserRole
-    };
-
     /**
      * Describes the columns that can be shown by the model.
      */
@@ -96,12 +94,34 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
        */
       Note
     };
+
+    /**
+     * Describes a list of columns of the contacts tree model.
+     */
     typedef QList<Column> Columns;
 
+    /**
+     * Creates a new contacts tree model.
+     *
+     * @param session The Session to use to communicate with Akonadi.
+     * @param monitor The ChangeRecorder whose entities should be represented in the model.
+     * @param parent The parent object.
+     */
     ContactsTreeModel( Session *session, ChangeRecorder *monitor, QObject *parent = 0 );
+
+    /**
+     * Destroys the contacts tree model.
+     */
     virtual ~ContactsTreeModel();
 
+    /**
+     * Sets the @p columns that the model should show.
+     */
     void setColumns( const Columns &columns );
+
+    /**
+     * Returns the columns that the model currently shows.
+     */
     Columns columns() const;
 
     virtual QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
@@ -110,7 +130,8 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
     virtual int entityColumnCount( HeaderGroup headerGroup ) const;
 
   private:
-    Columns mColumns;
+    class Private;
+    Private* const d;
 };
 
 }
