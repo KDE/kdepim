@@ -32,7 +32,7 @@ class KLineEdit;
  * This widget allows the user to filter for contacts
  * that match a given string criteria.
  * The filter string the user enters here is emitted to
- * the ContactFilterModel, which does the real filtering.
+ * the ContactsFilterModel, which does the real filtering.
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */

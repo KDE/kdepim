@@ -75,6 +75,8 @@ set(kdepim_LIB_SRCS
    colorlistbox.cpp
    uistatesaver.cpp
    distributionlistconverter.cpp
+   contactsfilterproxymodel.cpp
+   contactstreemodel.cpp
 )
 
 kde4_add_ui_files(kdepim_LIB_SRCS
