@@ -209,13 +209,18 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(akregator)
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
+  macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
-
+    
   if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
     macro_optional_add_subdirectory(akonadi)
   endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
+
+  if (BUILD_akonadi)
+    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
+  endif (BUILD_akonadi)
 
   macro_optional_add_subdirectory(kaddressbook)
   if(Q_WS_X11)
@@ -226,14 +231,6 @@ set(libkdgantt1_SRCS
   if(NOT WIN32)
     macro_optional_add_subdirectory(kpilot)
   endif(NOT WIN32)
-
-  if (BUILD_akonadi)
-    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
-
-    # Kalarm depend on kdepim/akonadi.
-    # that means these app won't compile for packagers. Disable them for anything else than a svn checkout.
-    macro_optional_add_subdirectory(kalarm)
-  endif (BUILD_akonadi)
 
   macro_optional_add_subdirectory(kontact) # must be the last one.
 
