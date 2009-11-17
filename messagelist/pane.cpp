@@ -363,6 +363,19 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
   }
 }
 
+void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
+    MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
+    w->setStorageModel( m );
+
+    d->mWidgetSelectionHash[w] = s;
+  }
+}
+
 void Pane::createNewTab()
 {
   Widget * w = new Widget( this );
