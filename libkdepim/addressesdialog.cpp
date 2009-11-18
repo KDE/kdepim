@@ -280,7 +280,7 @@ class ProxyModel : public ContactsFilterModel
           return false;
       } else if( item.hasPayload<KABC::ContactGroup>() ) {
         const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-        if( /* group.contactReferenceCount() < 1 || */ m_groupMap.contains( group.id() ) )
+        if( ( group.dataCount() < 1 && group.contactReferenceCount() < 1 ) || m_groupMap.contains( group.id() ) )
           return false;
       }
       return ContactsFilterModel::filterAcceptsRow( row, parent );
@@ -1254,10 +1254,13 @@ AddressesDialog::allAddressee( QStandardItem* parent ) const
         lst += item->addressee();
       } break;
       case AddresseeViewItem::Group: {
+        QStringList mails;
         const KABC::ContactGroup group = item->group();
-        for( uint i = 0; i < group.contactReferenceCount(); ++i ) {
-          const KABC::ContactGroup::ContactReference &ref = group.contactReference( i );
-          const QString email = ref.preferredEmail();
+        for( uint i = 0; i < group.dataCount(); ++i )
+          mails.append( group.data( i ).email() );
+        for( uint i = 0; i < group.contactReferenceCount(); ++i )
+          mails.append( group.contactReference( i ).preferredEmail() );
+        foreach( QString email, mails ) {
           if( email.isEmpty() )
             continue;
           KABC::Addressee addr;
