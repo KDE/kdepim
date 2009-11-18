@@ -61,6 +61,8 @@
 #include <QHeaderView>
 #include <QStandardItemModel>
 
+using namespace Akonadi;
+
 namespace KPIM {
 
 class AddresseeViewItem : public QStandardItem
@@ -233,7 +235,7 @@ bool AddresseeViewItem::operator < ( const QTreeWidgetItem& other ) const
 }
 #endif
 
-class ProxyModel : public Akonadi::ContactsFilterModel
+class ProxyModel : public ContactsFilterModel
 {
   public:
     AddressesDialog *q;
@@ -433,6 +435,7 @@ void AddressesDialog::rembtnClicked()
     }
   }
   delete addritem;
+  m_availableModel->emitLayoutChanged();
 }
 
 QStandardItem* AddressesDialog::selectedToItem()
