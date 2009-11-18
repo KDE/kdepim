@@ -339,16 +339,16 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
 
   m_tobtn = new QPushButton( i18n("To >>"), this );
   btnlayout->addWidget( m_tobtn );
-  connect( m_tobtn, SIGNAL(clicked()), this, SLOT(tobtnClicked()) );
+  connect( m_tobtn, SIGNAL(clicked()), this, SLOT(addSelectedTo()) );
   m_ccbtn = new QPushButton( i18n("CC >>"), this );
   btnlayout->addWidget( m_ccbtn );
-  connect( m_ccbtn, SIGNAL(clicked()), this, SLOT(ccbtnClicked()) );
+  connect( m_ccbtn, SIGNAL(clicked()), this, SLOT(addSelectedCC()) );
   m_bccbtn = new QPushButton( i18n("BCC >>"), this );
   btnlayout->addWidget( m_bccbtn );
-  connect( m_bccbtn, SIGNAL(clicked()), this, SLOT(bccbtnClicked()) );
+  connect( m_bccbtn, SIGNAL(clicked()), this, SLOT(addSelectedBCC()) );
   m_rembtn = new QPushButton( i18n("<< Remove"), this );
   btnlayout->addWidget( m_rembtn );
-  connect( m_rembtn, SIGNAL(clicked()), this, SLOT(rembtnClicked()) );
+  connect( m_rembtn, SIGNAL(clicked()), this, SLOT(removeEntry()) );
 
   KVBox *rightbox = new KVBox( page );
 
@@ -387,7 +387,7 @@ void AddressesDialog::selectedSelectionChanged()
   m_rembtn->setEnabled( enabled );
 }
 
-void AddressesDialog::tobtnClicked()
+void AddressesDialog::addSelectedTo()
 {
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );
@@ -395,7 +395,7 @@ void AddressesDialog::tobtnClicked()
   addToSelected( item, selectedToItem() );
 }
 
-void AddressesDialog::ccbtnClicked()
+void AddressesDialog::addSelectedCC()
 {
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );
@@ -403,7 +403,7 @@ void AddressesDialog::ccbtnClicked()
   addToSelected( item, selectedCcItem() );
 }
 
-void AddressesDialog::bccbtnClicked()
+void AddressesDialog::addSelectedBCC()
 {
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );
@@ -411,7 +411,7 @@ void AddressesDialog::bccbtnClicked()
   addToSelected( item, selectedBccItem() );
 }
 
-void AddressesDialog::rembtnClicked()
+void AddressesDialog::removeEntry()
 {
   const QModelIndex index = m_selectedView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );

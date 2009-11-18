@@ -190,11 +190,6 @@ namespace KPIM {
 
 #if 0
   private Q_SLOTS:
-    void addSelectedTo();
-    void addSelectedCC();
-    void addSelectedBCC();
-
-    void removeEntry();
     void saveAs();
     void searchLdap();
     void ldapSearchResult();
@@ -229,10 +224,10 @@ namespace KPIM {
   private Q_SLOTS:
     void availableSelectionChanged();
     void selectedSelectionChanged();
-    void tobtnClicked();
-    void ccbtnClicked();
-    void bccbtnClicked();
-    void rembtnClicked();
+    void addSelectedTo();
+    void addSelectedCC();
+    void addSelectedBCC();
+    void removeEntry();
 
   private:
     Akonadi::Session *m_session;
