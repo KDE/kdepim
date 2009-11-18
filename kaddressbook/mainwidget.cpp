@@ -57,9 +57,9 @@
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
-#include <libkdepim/uistatesaver.h>
 #include <libkdepim/contactstreemodel.h>
 #include <libkdepim/contactsfilterproxymodel.h>
+#include <libkdepim/uistatesaver.h>
 
 #include "contactswitcher.h"
 #include "globalcontactmodel.h"
@@ -110,7 +110,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
    *             selectionProxyModel:  Filters out all collections and items that are no children
    *                                   of the collection currently selected in mCollectionView
    *                       mItemTree:  Filters out all collections
-   *             mContactsFilterModel:  Filters the contacts by the content of mQuickSearchWidget
+   *            mContactsFilterModel:  Filters the contacts by the content of mQuickSearchWidget
    *                       mItemView:  Shows the items (contacts and contact groups) in a view
    *
    *                descendantsModel:  Flattens the item/collection tree to a list
@@ -142,7 +142,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
-  mContactsFilterModel = new ContactsFilterModel( this );
+  mContactsFilterModel = new Akonadi::ContactsFilterModel( this );
   mContactsFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            mContactsFilterModel, SLOT( setFilterString( const QString& ) ) );

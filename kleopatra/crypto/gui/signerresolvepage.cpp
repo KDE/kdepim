@@ -375,8 +375,6 @@ void SignerResolvePage::Private::updateUi() {
     q->setExplanation( validator->explanation() );
     emit q->completeChanged();
 
-    const bool sign = q->signingSelected();
-    const bool encr = q->encryptionSelected();
     const QString customTitle = validator->customWindowTitle();
     if ( !customTitle.isEmpty() )
         emit q->windowTitleChanged( customTitle );

@@ -1,4 +1,6 @@
 /*
+    This file is part of Akonadi Contact.
+
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -26,20 +28,33 @@
 static bool contactMatchesFilter( const KABC::Addressee &contact, const QString &filterString );
 static bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString );
 
-ContactsFilterModel::ContactsFilterModel( QObject *parent )
-  : QSortFilterProxyModel( parent )
+using namespace Akonadi;
+
+class ContactsFilterModel::Private
 {
+  public:
+    QString mFilter;
+};
+
+ContactsFilterModel::ContactsFilterModel( QObject *parent )
+  : QSortFilterProxyModel( parent ), d( new Private )
+{
+}
+
+ContactsFilterModel::~ContactsFilterModel()
+{
+  delete d;
 }
 
 void ContactsFilterModel::setFilterString( const QString &filter )
 {
-  mFilter = filter;
+  d->mFilter = filter;
   invalidateFilter();
 }
 
 bool ContactsFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) const
 {
-  if ( mFilter.isEmpty() )
+  if ( d->mFilter.isEmpty() )
     return true;
 
   const QModelIndex index = sourceModel()->index( row, 0, parent );
@@ -48,10 +63,10 @@ bool ContactsFilterModel::filterAcceptsRow( int row, const QModelIndex &parent )
 
   if ( item.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    return contactMatchesFilter( contact, mFilter );
+    return contactMatchesFilter( contact, d->mFilter );
   } else if ( item.hasPayload<KABC::ContactGroup>() ) {
     const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-    return contactGroupMatchesFilter( group, mFilter );
+    return contactGroupMatchesFilter( group, d->mFilter );
   }
 
   return true;
