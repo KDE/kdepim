@@ -339,8 +339,8 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
            q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-  action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( "tab-close-other" ) );
+  allOther->setEnabled( q->count() > 1 );
+  allOther->setIcon( KIcon( "tab-close-other" ) );
 
   action = menu.exec( q->mapToGlobal( pos ) );
 
@@ -371,7 +371,6 @@ void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab
     QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
     MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
     w->setStorageModel( m );
-
     d->mWidgetSelectionHash[w] = s;
   }
 }
