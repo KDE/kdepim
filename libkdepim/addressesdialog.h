@@ -26,28 +26,33 @@
 #define KDEPIM_ADDRESSESDIALOG_H
 
 #include "kdepim_export.h"
-#include "ui_addresspicker.h"
+//TODO remove #include "ui_addresspicker.h"
 
 #include <kabc/addressee.h>
 
 #include <KDialog>
 
+#include <QObject>
 #include <QList>
 #include <QSet>
 #include <QStringList>
-#include <QTreeWidget>
 
-class AddressPickerUI : public QWidget, public Ui::AddressPickerUI
-{
-public:
-  AddressPickerUI( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
+class QModelIndex;
+class QStandardItemModel;
+class QStandardItem;
 
-
+namespace Akonadi {
+  class Session;
+  class ChangeRecorder;
+  class EntityTreeView;
+}
 
 namespace KPIM {
+
+  class ProxyModel;
+
+#if 0
+  class AddressPickerUI;
 
   class AddresseeViewItem : public QObject, public QTreeWidgetItem
   {
@@ -84,13 +89,14 @@ namespace KPIM {
     struct AddresseeViewItemPrivate;
     AddresseeViewItemPrivate *d;
   };
+#endif
 
   class KDEPIM_EXPORT AddressesDialog : public KDialog
   {
     Q_OBJECT
   public:
-    AddressesDialog( QWidget *widget=0 );
-    ~AddressesDialog();
+    AddressesDialog( QWidget *widget = 0, Akonadi::Session *session = 0 );
+    virtual ~AddressesDialog();
 
     /**
      * Returns the list of picked "To" addresses as a QStringList.
@@ -110,12 +116,14 @@ namespace KPIM {
      * Note that this doesn't include the distribution lists
      */
     KABC::Addressee::List toAddresses()  const;
+
    /**
      * Returns the list of picked "To" addresses as KABC::Addressee::List.
      * Note that this does include the distribution lists
      * Multiple Addressees are removed
      */
     KABC::Addressee::List allToAddressesNoDuplicates()  const;
+
     /**
      * Returns the list of picked "CC" addresses as KABC::Addressee::List.
      * Note that this doesn't include the distribution lists
@@ -154,11 +162,17 @@ namespace KPIM {
      * hides it. By default displays it.
      */
     void setShowBCC( bool b );
+
+#if 0
     /**
      * If called adds "Recent Addresses" item to the picker list view,
      * with the addresses given in @p addr.
      */
     void setRecentAddresses( const KABC::Addressee::List& addr );
+#else
+    void setRecentAddresses( const KABC::Addressee::List&) {}
+#endif
+
     /**
      * Adds addresses in @p l to the selected "To" group.
      */
@@ -172,7 +186,8 @@ namespace KPIM {
      */
     void setSelectedBCC( const QStringList& l );
 
-  protected Q_SLOTS:
+#if 0
+  private Q_SLOTS:
     void addSelectedTo();
     void addSelectedCC();
     void addSelectedBCC();
@@ -185,29 +200,17 @@ namespace KPIM {
     void filterChanged( const QString & );
 
     void updateAvailableAddressees();
-    void availableSelectionChanged();
-    void selectedSelectionChanged();
 
   protected:
-    AddresseeViewItem* selectedToItem();
-    AddresseeViewItem* selectedCcItem();
-    AddresseeViewItem* selectedBccItem();
-
     QList<AddresseeViewItem*> selectedAvailableAddresses() const;
     QList<AddresseeViewItem*> selectedSelectedAddresses() const;
 
-    void initConnections();
     void addDistributionLists();
     void addAddresseeToAvailable( const KABC::Addressee& addr,
                                   AddresseeViewItem* defaultParent=0, bool useCategory=true );
-    void addAddresseeToSelected( const KABC::Addressee& addr,
-                                 AddresseeViewItem* defaultParent=0 );
     void addAddresseesToSelected( AddresseeViewItem *parent,
                                   const QList<AddresseeViewItem*> addresses );
-    QStringList entryToString( const KABC::Addressee::List& l ) const;
-    KABC::Addressee::List allAddressee( AddresseeViewItem* parent ) const;
     KABC::Addressee::List allAddressee( QTreeWidget* view, bool onlySelected = true ) const;
-    QStringList allDistributionLists( AddresseeViewItem* parent ) const;
 
   private:
     // if there's only one group in the available list, open it
@@ -218,10 +221,34 @@ namespace KPIM {
     void unmapSelectedAddress(AddresseeViewItem* item);
     void updateRecentAddresses();
 
-    struct AddressesDialogPrivate;
-    AddressesDialogPrivate *d;
-
     QMap<AddresseeViewItem*,AddresseeViewItem*> selectedToAvailableMapping;
+#endif
+
+  private Q_SLOTS:
+    void availableSelectionChanged();
+    void selectedSelectionChanged();
+    void tobtnClicked();
+    void ccbtnClicked();
+    void bccbtnClicked();
+    void rembtnClicked();
+
+  private:
+    Akonadi::Session *m_session;
+    Akonadi::ChangeRecorder *m_recorder;
+    Akonadi::EntityTreeView *m_availableView, *m_selectedView;
+    ProxyModel *m_availableModel;
+    QStandardItemModel *m_selectedModel;
+    QStandardItem *m_toItem, *m_ccItem, *m_bccItem;
+    QPushButton *m_tobtn, *m_ccbtn, *m_bccbtn, *m_rembtn;
+
+    QStandardItem* selectedToItem();
+    QStandardItem* selectedCcItem();
+    QStandardItem* selectedBccItem();
+
+    KABC::Addressee::List allAddressee( QStandardItem* parent ) const;
+    void addAddresseeToSelected( const KABC::Addressee& addr, QStandardItem *parentItem );
+    QStringList allDistributionLists( QStandardItem* parent ) const;
+    QStringList entryToString( const KABC::Addressee::List& l ) const;
   };
 
 }
