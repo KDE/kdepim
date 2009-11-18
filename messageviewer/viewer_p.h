@@ -220,7 +220,7 @@ public:
   void readConfig();
 
   /** Write settings to app's config file. Calls sync() if withSync is true. */
-  void writeConfig( bool withSync=true ) const;
+  void writeConfig( bool withSync=true );
 
    /** Get the message header style. */
   const HeaderStyle * headerStyle() const {
@@ -461,6 +461,7 @@ signals:
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void copyUrl( const KUrl & );
   void noDrag();
+  void requestConfigSync();
 
 public:
   NodeHelper* mNodeHelper;

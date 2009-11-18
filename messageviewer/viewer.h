@@ -250,7 +250,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   KHTMLPart *htmlPart() const;
 
 
-  void writeConfig( bool withSync=true ) const;
+  void writeConfig( bool withSync=true );
 
   void saveRelativePosition();
 
@@ -289,6 +289,7 @@ signals:
   void copyUrl( const KUrl & );
   /** Pgp displays a password dialog */
   void noDrag(void);
+  void requestConfigSync();
 
 public slots:
 

@@ -48,6 +48,7 @@ Viewer::Viewer(QWidget *aParent,
   connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ), SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
   connect( d_ptr, SIGNAL( copyUrl( const KUrl& ) ), SIGNAL( copyUrl( const KUrl& ) ) );
+  connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
   setMessage( 0, Delayed );
 }
 
@@ -426,9 +427,9 @@ void Viewer::setPrinting(bool enable)
   d->setPrinting( enable );
 }
 
-void Viewer::writeConfig( bool force ) const
+void Viewer::writeConfig( bool force )
 {
-  Q_D( const Viewer );
+  Q_D( Viewer );
   d->writeConfig( force );
 }
 

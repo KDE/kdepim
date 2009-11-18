@@ -1403,7 +1403,7 @@ void ViewerPrivate::readConfig()
 }
 
 
-void ViewerPrivate::writeConfig( bool sync ) const
+void ViewerPrivate::writeConfig( bool sync )
 {
   KConfigGroup reader( Global::instance()->config() , "Reader" );
 
@@ -1416,10 +1416,8 @@ void ViewerPrivate::writeConfig( bool sync ) const
     reader.writeEntry( "attachment-strategy", attachmentStrategy()->name() );
 
   saveSplitterSizes( reader );
-/*FIXME(Andras) port to akonadi
   if ( sync )
-    kmkernel->slotRequestConfigSync();
-  */
+    emit requestConfigSync();
 }
 
 
