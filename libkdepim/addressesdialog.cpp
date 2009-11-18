@@ -68,17 +68,25 @@ namespace KPIM {
 class AddresseeViewItem : public QStandardItem
 {
   public:
-    AddresseeViewItem( const QString &label, const KABC::Addressee& addr ) : QStandardItem( label ), m_addr( addr ) {
-      kDebug() << m_addr.realName();
-    }
-    ~AddresseeViewItem() {
-      kDebug() << m_addr.realName();
+    enum ItemType { Address, Group };
+    AddresseeViewItem( const QString &label, const KABC::Addressee& addr )
+      : QStandardItem( label ), m_type( Address ), m_addr( addr ) {}
+    AddresseeViewItem( const QString &label, const KABC::ContactGroup& group )
+      : QStandardItem( label ), m_type( Group ), m_group( group ) {}
+    ~AddresseeViewItem() {}
+    ItemType itemType() const {
+      return m_type;
     }
     const KABC::Addressee& addressee() {
       return m_addr;
     }
+    const KABC::ContactGroup& group() {
+      return m_group;
+    }
   private:
+    const ItemType m_type;
     const KABC::Addressee m_addr;
+    const KABC::ContactGroup m_group;
 };
 
 #if 0
@@ -239,7 +247,8 @@ class ProxyModel : public ContactsFilterModel
 {
   public:
     AddressesDialog *q;
-    QMap<QString, AddresseeViewItem*> m_map;
+    QMap<QString, AddresseeViewItem*> m_addressMap;
+    QMap<QString, AddresseeViewItem*> m_groupMap;
 
     void emitLayoutChanged( const QModelIndex &index = QModelIndex() )
     {
@@ -267,9 +276,11 @@ class ProxyModel : public ContactsFilterModel
       const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
       if( item.hasPayload<KABC::Addressee>() ) {
         const KABC::Addressee addr = item.payload<KABC::Addressee>();
-        if( addr.preferredEmail().isEmpty() )
+        if( addr.preferredEmail().isEmpty() || m_addressMap.contains( addr.preferredEmail() ) )
           return false;
-        if( m_map.contains( addr.preferredEmail() ) )
+      } else if( item.hasPayload<KABC::ContactGroup>() ) {
+        const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+        if( /* group.contactReferenceCount() < 1 || */ m_groupMap.contains( group.id() ) )
           return false;
       }
       return ContactsFilterModel::filterAcceptsRow( row, parent );
@@ -301,7 +312,7 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
   m_recorder->setItemFetchScope( scope );
   m_recorder->setCollectionMonitored( Akonadi::Collection::root() );
   m_recorder->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
-  //m_recorder->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
+  m_recorder->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
 
   Akonadi::ContactsTreeModel *model = new Akonadi::ContactsTreeModel( m_session, m_recorder, this );
   m_availableModel = new ProxyModel( this );
@@ -360,8 +371,9 @@ AddressesDialog::~AddressesDialog()
     
 void AddressesDialog::availableSelectionChanged()
 {
-  QModelIndex index = m_availableView->selectionModel()->currentIndex();
-  const bool enabled = index.isValid() && index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>().hasPayload<KABC::Addressee>();
+  const QModelIndex index = m_availableView->selectionModel()->currentIndex();
+  const Akonadi::Item item = index.isValid() ? index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>() : Akonadi::Item();
+  const bool enabled = item.isValid() && ( item.hasPayload<KABC::Addressee>() || item.hasPayload<KABC::ContactGroup>() );
   m_tobtn->setEnabled( enabled );
   m_ccbtn->setEnabled( enabled );
   m_bccbtn->setEnabled( enabled );
@@ -369,7 +381,7 @@ void AddressesDialog::availableSelectionChanged()
 
 void AddressesDialog::selectedSelectionChanged()
 {
-  QModelIndex index = m_selectedView->selectionModel()->currentIndex();
+  const QModelIndex index = m_selectedView->selectionModel()->currentIndex();
   AddresseeViewItem *item = dynamic_cast<AddresseeViewItem*>( m_selectedModel->itemFromIndex( index ) );
   const bool enabled = item != 0;
   m_rembtn->setEnabled( enabled );
@@ -380,9 +392,7 @@ void AddressesDialog::tobtnClicked()
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  Q_ASSERT( item.isValid() );
-  Q_ASSERT( item.hasPayload<KABC::Addressee>() );
-  addAddresseeToSelected( item.payload<KABC::Addressee>(), selectedToItem() );
+  addToSelected( item, selectedToItem() );
 }
 
 void AddressesDialog::ccbtnClicked()
@@ -390,9 +400,7 @@ void AddressesDialog::ccbtnClicked()
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  Q_ASSERT( item.isValid() );
-  Q_ASSERT( item.hasPayload<KABC::Addressee>() );
-  addAddresseeToSelected( item.payload<KABC::Addressee>(), selectedCcItem() );
+  addToSelected( item, selectedCcItem() );
 }
 
 void AddressesDialog::bccbtnClicked()
@@ -400,9 +408,7 @@ void AddressesDialog::bccbtnClicked()
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
   Q_ASSERT( index.isValid() );
   const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  Q_ASSERT( item.isValid() );
-  Q_ASSERT( item.hasPayload<KABC::Addressee>() );
-  addAddresseeToSelected( item.payload<KABC::Addressee>(), selectedBccItem() );
+  addToSelected( item, selectedBccItem() );
 }
 
 void AddressesDialog::rembtnClicked()
@@ -411,31 +417,49 @@ void AddressesDialog::rembtnClicked()
   Q_ASSERT( index.isValid() );
   AddresseeViewItem *item = dynamic_cast<AddresseeViewItem*>( m_selectedModel->itemFromIndex( index ) );
   Q_ASSERT( item );
-  KABC::Addressee addr = item->addressee();
-  const QString email = addr.preferredEmail();
-  Q_ASSERT( ! email.isEmpty() );
-  if( ! m_availableModel->m_map.contains( email ) ) {
-    return; //no such item
+  AddresseeViewItem *removedItem = 0;
+  switch( item->itemType() ) {
+    case AddresseeViewItem::Address: {
+      KABC::Addressee addr = item->addressee();
+      const QString email = addr.preferredEmail();
+      Q_ASSERT( ! email.isEmpty() );
+      if( m_availableModel->m_addressMap.contains( email ) ) {
+        removedItem = m_availableModel->m_addressMap.take( email );
+      }
+    } break;
+    case AddresseeViewItem::Group: {
+      KABC::ContactGroup group = item->group();
+      const QString id = group.id();
+      Q_ASSERT( ! id.isEmpty() );
+      if( m_availableModel->m_groupMap.contains( id ) ) {
+        removedItem = m_availableModel->m_groupMap.take( id );
+      }
+    } break;
   }
-  AddresseeViewItem *addritem = m_availableModel->m_map.take( email );
-  QStandardItem *parentitem = addritem->parent();
-  parentitem->takeRow( addritem->row() );
-  if( parentitem->rowCount() == 0 ) {
-    if( parentitem->parent() ) {
-      parentitem->parent()->takeRow( parentitem->row() );
-    } else if( parentitem->model() == m_selectedModel ) {
-      m_selectedModel->invisibleRootItem()->takeRow( parentitem->row() );
+  if( removedItem ) {
+    QStandardItem *parentitem = removedItem->parent();
+    Q_ASSERT( parentitem );
+    parentitem->takeRow( removedItem->row() );
+    if( parentitem->rowCount() == 0 ) {
+      if( parentitem->parent() ) {
+        parentitem->parent()->takeRow( parentitem->row() );
+      } else if( parentitem->model() == m_selectedModel ) {
+        m_selectedModel->invisibleRootItem()->takeRow( parentitem->row() );
+      }
+      if( parentitem == m_toItem ) {
+        delete m_toItem;
+        m_toItem = 0;
+      } else if( parentitem == m_ccItem ) {
+        delete m_ccItem;
+        m_ccItem = 0;
+      } else if( parentitem == m_bccItem ) {
+        delete m_bccItem;
+        m_bccItem = 0;
+      }
     }
-    if( parentitem == m_toItem ) {
-      delete m_toItem; m_toItem = 0;
-    } else if( parentitem == m_ccItem ) {
-      delete m_ccItem; m_ccItem = 0;
-    } else if( parentitem == m_bccItem ) {
-      delete m_bccItem; m_bccItem = 0;
-    }
+    delete removedItem;
+    m_availableModel->emitLayoutChanged();
   }
-  delete addritem;
-  m_availableModel->emitLayoutChanged();
 }
 
 QStandardItem* AddressesDialog::selectedToItem()
@@ -771,10 +795,20 @@ AddressesDialog::addAddresseeToAvailable( const KABC::Addressee& addr,
 #endif
 
 void
+AddressesDialog::addToSelected( const Akonadi::Item& item, QStandardItem *parentItem )
+{
+  if( item.hasPayload<KABC::Addressee>() ) {
+    addAddresseeToSelected( item.payload<KABC::Addressee>(), parentItem );
+  } else if( item.hasPayload<KABC::ContactGroup>() ) {
+    addGroupToSelected( item.payload<KABC::ContactGroup>(), parentItem );
+  } else {
+    Q_ASSERT( false );
+  }
+}
+
+void
 AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, QStandardItem *parentItem )
 {
-  Q_ASSERT( parentItem );
-
 #if 0
   if ( addr.preferredEmail().isEmpty() ) {
     return;
@@ -790,12 +824,13 @@ AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, QStandardI
   m_ui->mSelectedView->
   m_ui->mSaveAs->setEnabled(true);
 #else
+  Q_ASSERT( parentItem );
   const QString email = addr.preferredEmail();
   if ( email.isEmpty() ) {
     kDebug() << "Attendee has no email address";
     return;
   }
-  if( m_availableModel->m_map.contains( email ) ) {
+  if( m_availableModel->m_addressMap.contains( email ) ) {
     kDebug() << "Attendee already added, email=" << email;
     return; //already got it
   }
@@ -804,12 +839,29 @@ AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, QStandardI
   item->setIcon( pic.isIntern()
                     ? KIcon( QPixmap::fromImage( pic.data().scaled( QSize( 16, 16 ) ) ) )
                     : KIcon( QLatin1String( "x-office-contact" ) ) );
-  m_availableModel->m_map[ email ] = item;
+  m_availableModel->m_addressMap[ email ] = item;
   parentItem->appendRow( item );
   m_selectedView->setExpanded( m_selectedModel->indexFromItem( parentItem ), true );
   //m_selectedView->selectionModel()->setCurrentIndex( m_selectedModel->indexFromItem(item), QItemSelectionModel::SelectCurrent );
   m_availableModel->emitLayoutChanged( m_availableView->selectionModel()->currentIndex() );
 #endif
+}
+
+void
+AddressesDialog::addGroupToSelected( const KABC::ContactGroup& group, QStandardItem *parentItem )
+{
+  Q_ASSERT( parentItem );
+  if( m_availableModel->m_groupMap.contains( group.id() ) ) {
+    kDebug() << "Group already added, email=" << group.id();
+    return; //already got it
+  }
+
+  AddresseeViewItem *item = new AddresseeViewItem( group.name(), group );
+  item->setIcon( KIcon( QLatin1String( "x-mail-distribution-list" ) ) );
+  m_availableModel->m_groupMap[ group.id() ] = item;
+  parentItem->appendRow( item );
+  m_selectedView->setExpanded( m_selectedModel->indexFromItem( parentItem ), true );
+  m_availableModel->emitLayoutChanged( m_availableView->selectionModel()->currentIndex() );
 }
 
 #if 0
@@ -1197,7 +1249,24 @@ AddressesDialog::allAddressee( QStandardItem* parent ) const
   for(int i = parent->rowCount() - 1; i >= 0; --i) {
     AddresseeViewItem *item = dynamic_cast<AddresseeViewItem*>( parent->child( i ) );
     Q_ASSERT( item );
-    lst.append( item->addressee() );
+    switch( item->itemType() ) {
+      case AddresseeViewItem::Address: {
+        lst += item->addressee();
+      } break;
+      case AddresseeViewItem::Group: {
+        const KABC::ContactGroup group = item->group();
+        for( uint i = 0; i < group.contactReferenceCount(); ++i ) {
+          const KABC::ContactGroup::ContactReference &ref = group.contactReference( i );
+          const QString email = ref.preferredEmail();
+          if( email.isEmpty() )
+            continue;
+          KABC::Addressee addr;
+          addr.setNameFromString( group.name() );
+          addr.insertEmail( email );
+          lst.append( addr );
+        }
+      } break;
+    }
   }
 #endif
   return lst;

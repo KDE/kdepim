@@ -29,6 +29,7 @@
 //TODO remove #include "ui_addresspicker.h"
 
 #include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 
 #include <KDialog>
 
@@ -42,6 +43,7 @@ class QStandardItemModel;
 class QStandardItem;
 
 namespace Akonadi {
+  class Item;
   class Session;
   class ChangeRecorder;
   class EntityTreeView;
@@ -246,7 +248,9 @@ namespace KPIM {
     QStandardItem* selectedBccItem();
 
     KABC::Addressee::List allAddressee( QStandardItem* parent ) const;
+    void addToSelected( const Akonadi::Item& item, QStandardItem *parentItem );
     void addAddresseeToSelected( const KABC::Addressee& addr, QStandardItem *parentItem );
+    void addGroupToSelected( const KABC::ContactGroup& group, QStandardItem *parentItem );
     QStringList allDistributionLists( QStandardItem* parent ) const;
     QStringList entryToString( const KABC::Addressee::List& l ) const;
   };
