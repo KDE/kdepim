@@ -340,7 +340,7 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
                                 false, this, mMainWindow );
   mEditorWatchers[ watcher ] = node;
 
-  connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)), SLOT(slotAttachmentEditDone(MessageViewer::EditorWatcher*)) );
+  connect( watcher, SIGNAL(editDone(EditorWatcher*)), SLOT(slotAttachmentEditDone(EditorWatcher*)) );
   if ( !watcher->start() ) {
     QFile::remove( file.fileName() );
   }
@@ -2730,7 +2730,7 @@ void ViewerPrivate::slotAttachmentEdit()
 }
 
 
-void ViewerPrivate::slotAttachmentEditDone( MessageViewer::EditorWatcher* editorWatcher )
+void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
 {
   QString name = editorWatcher->url().fileName();
   if ( editorWatcher->fileChanged() ) {

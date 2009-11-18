@@ -426,7 +426,7 @@ public slots:
   void slotAttachmentCopy();
   void slotAttachmentDelete();
   void slotAttachmentEdit();
-  void slotAttachmentEditDone(MessageViewer::EditorWatcher* editorWatcher);
+  void slotAttachmentEditDone(EditorWatcher* editorWatcher);
   void slotLevelQuote( int l );
 
   /**
