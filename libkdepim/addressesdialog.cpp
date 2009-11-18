@@ -233,7 +233,7 @@ bool AddresseeViewItem::operator < ( const QTreeWidgetItem& other ) const
 }
 #endif
 
-class ProxyModel : public ContactsFilterModel
+class ProxyModel : public Akonadi::ContactsFilterModel
 {
   public:
     AddressesDialog *q;
