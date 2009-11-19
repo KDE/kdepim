@@ -462,6 +462,7 @@ signals:
   void copyUrl( const KUrl & );
   void noDrag();
   void requestConfigSync();
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
 
 public:
   NodeHelper* mNodeHelper;

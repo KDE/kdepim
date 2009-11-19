@@ -290,6 +290,7 @@ signals:
   /** Pgp displays a password dialog */
   void noDrag(void);
   void requestConfigSync();
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
 
 public slots:
 

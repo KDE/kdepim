@@ -359,10 +359,6 @@ void ViewerPrivate::showAttachmentPopup( int id, const QString & name, const QPo
   connect( attachmentMapper, SIGNAL( mapped( int ) ),
            this, SLOT( slotHandleAttachment( int ) ) );
 /*FIXME(Andras) port to akonadi
-  QSignalMapper *attachmentMapper = new QSignalMapper( menu );
-  connect( attachmentMapper, SIGNAL( mapped( int ) ),
-           this, SLOT( slotHandleAttachment( int ) ) );
-
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Open );
@@ -2488,11 +2484,7 @@ void ViewerPrivate::slotAtmView( KMime::Content *atmNode )
                  (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {
       setMessagePart( atmNode, htmlMail(), fileName, pname );
     } else {
-      /*TODO(Andras) port
-      KMReaderMainWin *win = new KMReaderMainWin(&msgPart, htmlMail(),
-          name, pname, overrideEncoding() );
-      win->show();
-      */
+      emit showReader( atmNode, htmlMail(), fileName, pname, overrideEncoding() );
     }
   }
 }

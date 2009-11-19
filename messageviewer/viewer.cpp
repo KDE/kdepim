@@ -49,6 +49,9 @@ Viewer::Viewer(QWidget *aParent,
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
   connect( d_ptr, SIGNAL( copyUrl( const KUrl& ) ), SIGNAL( copyUrl( const KUrl& ) ) );
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
+  connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
+           SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );
+
   setMessage( 0, Delayed );
 }
 
