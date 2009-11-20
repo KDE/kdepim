@@ -577,7 +577,7 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
-    
+
     const bool inHeader = attachmentIsInHeader( url );
     const bool shouldShowDialog = !w->nodeHelper()->isNodeDisplayedEmbedded( node ) || !inHeader;
     if ( inHeader )
@@ -594,11 +594,14 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
-
+#if 0
     // PENDING(romain_kdab) : replace with toLocalFile() ?
     /*FIXME(Andras) port it
     w->showAttachmentPopup( node->nodeId(), w->tempFileUrlFromPartNode( node ).path(), p );
     */
+#else
+    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
     return true;
   }
 
