@@ -87,7 +87,7 @@ SoundDlg::SoundDlg(const QString& file, float volume, float fadeVolume, int fade
 
 	// File browse button
 	mFileBrowseButton = new PushButton(box);
-	mFileBrowseButton->setIcon(SmallIcon("document-open"));
+	mFileBrowseButton->setIcon(KIcon(SmallIcon("document-open")));
 	connect(mFileBrowseButton, SIGNAL(clicked()), SLOT(slotPickFile()));
 	mFileBrowseButton->setToolTip(i18nc("@info:tooltip", "Choose a file"));
 	mFileBrowseButton->setWhatsThis(i18nc("@info:whatsthis", "Select a sound file to play."));

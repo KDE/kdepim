@@ -1,10 +1,11 @@
 KAlarm Change Log
 
-=== Version 2.2.10 --- 16 November 2009 ===
+=== Version 2.2.10 --- 22 November 2009 ===
 - If dual screens, show alarm in other screen if active window is full screen.
-- Prevent infinite loop if NEXTRECUR time in alarm is before alarm start time.
 - Fix crash if editing alarm from alarm window Edit button, and window changes
-  from reminder to normal, or from at-login to final at-login trigger time.
+  from reminder to normal, or window changes from at-login to final at-login
+  trigger time, or window auto-closes.
+- Prevent infinite loop if NEXTRECUR time in alarm is before alarm start time.
 
 === Version 2.2.9 (KDE 4.3.3) --- 29 October 2009 ===
 - Fix recurring date-only alarm triggering repeatedly and eating up CPU, if the

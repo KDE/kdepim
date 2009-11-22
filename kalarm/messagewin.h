@@ -27,6 +27,7 @@
 #include <QMap>
 #include <QPointer>
 
+#include "autoqpointer.h"
 #include "mainwindowbase.h"
 #include "alarmevent.h"
 
@@ -34,12 +35,12 @@ class QShowEvent;
 class QMoveEvent;
 class QResizeEvent;
 class QCloseEvent;
-class QPushButton;
-class KPushButton;
+class PushButton;
 class MessageText;
 class QCheckBox;
 class QLabel;
 class DeferAlarmDlg;
+class EditAlarmDlg;
 class ShellProcess;
 class AudioThread;
 
@@ -89,6 +90,9 @@ class MessageWin : public MainWindowBase
 		void                slotOk();
 		void                slotEdit();
 		void                slotDefer();
+		void                editCloseOk();
+		void                editCloseCancel();
+		void                activeWindowChanged(WId);
 		void                checkDeferralLimit();
 		void                displayMainWindow();
 #ifdef KMAIL_SUPPORTED
@@ -111,6 +115,7 @@ class MessageWin : public MainWindowBase
 		void                initView();
 		QString             dateTimeToDisplay();
 		void                displayComplete();
+		void                setButtonsReadOnly(bool);
 		bool                getWorkAreaAndModal();
 		void                playAudio();
 		void                setDeferralLimit(const KAEvent&);
@@ -155,14 +160,15 @@ class MessageWin : public MainWindowBase
 		AlarmResource*      mResource;        // resource which the event comes/came from
 		QLabel*             mTimeLabel;       // trigger time label
 		QLabel*             mRemainingText;   // the remaining time (for a reminder window)
-		KPushButton*        mOkButton;
-		QPushButton*        mEditButton;
-		QPushButton*        mDeferButton;
-		QPushButton*        mSilenceButton;
-		QPushButton*        mKAlarmButton;
-		QPushButton*        mKMailButton;
+		PushButton*         mOkButton;
+		PushButton*         mEditButton;
+		PushButton*         mDeferButton;
+		PushButton*         mSilenceButton;
+		PushButton*         mKAlarmButton;
+		PushButton*         mKMailButton;
 		MessageText*        mCommandText;     // shows output from command
 		QCheckBox*          mDontShowAgainCheck;
+		EditAlarmDlg*       mEditDlg;         // alarm edit dialog invoked by Edit button
 		DeferAlarmDlg*      mDeferDlg;
 		QDateTime           mDeferLimit;      // last time to which the message can currently be deferred
 		int                 mFlags;           // event flags
