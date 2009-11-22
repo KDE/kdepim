@@ -339,7 +339,6 @@ void Widget::viewDropEvent( QDropEvent *e )
       action = DragMove;
 
     } else {
-      // FIXME: This code is duplicated almost exactly in FolderView... shouldn't we share ?
       KMenu menu;
       QAction *moveAction = menu.addAction( KIcon( "go-jump"), i18n( "&Move Here" ) );
       QAction *copyAction = menu.addAction( KIcon( "edit-copy" ), i18n( "&Copy Here" ) );

@@ -372,6 +372,10 @@ void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab
     MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
     w->setStorageModel( m );
     d->mWidgetSelectionHash[w] = s;
+    if ( !overrideLabel.isEmpty() ) {
+       int index = indexOf( w );
+       setTabText( index, overrideLabel );
+    }
   }
 }
 
