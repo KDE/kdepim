@@ -583,8 +583,8 @@ namespace {
     if ( inHeader )
       w->scrollToAttachment( node );
     if ( shouldShowDialog )
-     // PENDING(romain_kdab) : replace with toLocalFile() ?
-     w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
+       // PENDING(romain_kdab) : replace with toLocalFile() ?
+       w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
 
     return true;
   }
@@ -594,14 +594,8 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
-#if 0
     // PENDING(romain_kdab) : replace with toLocalFile() ?
-    /*FIXME(Andras) port it
-    w->showAttachmentPopup( node->nodeId(), w->tempFileUrlFromPartNode( node ).path(), p );
-    */
-#else
-    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+    w->showAttachmentPopup( node, w->nodeHelper()->tempFileUrlFromNode( node ).path(), p );
     return true;
   }
 

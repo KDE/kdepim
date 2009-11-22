@@ -101,6 +101,19 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
    */
   KMime::Message* message() const; //TODO(Andras): convert mMessage to KMime::Message::Ptr ? This is not nice to expose the internal pointer.
 
+  enum AttachmentAction
+  {
+    Open = 1,
+    OpenWith = 2,
+    View = 3,
+    Save = 4,
+    Properties = 5,
+    ChiasmusEncrypt = 6,
+    Delete = 7,
+    Edit = 8,
+    Copy = 9,
+    ScrollTo = 10
+  };
 
   /** The display update mode: Force updates the display immediately, Delayed updates
   after some time (150ms by default */
@@ -271,6 +284,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   void setShowSpamStatus( bool b );
   void setFallbackCharacterEncoding( const QString& );
   void setOverrideCharacterEncoding( const QString& );
+
+
+  bool disregardUmask() const;
+  void setDisregardUmask( bool b);
 
 signals:
   /** Emitted after parsing of a message to have it stored

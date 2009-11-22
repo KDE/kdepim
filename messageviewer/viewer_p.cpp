@@ -31,7 +31,6 @@ using MessageViewer::TeeHtmlWriter;
 #endif
 #include <unistd.h> // link()
 #include <errno.h>
-
 //KDE includes
 #include <KAction>
 #include <KActionCollection>
@@ -64,6 +63,8 @@ using MessageViewer::TeeHtmlWriter;
 
 #include <kpimutils/kfileio.h>
 
+#include <kleo/cryptobackendfactory.h>
+
 #include <dom/html_element.h>
 #include <dom/html_block.h>
 #include <dom/html_document.h>
@@ -81,10 +82,13 @@ using MessageViewer::TeeHtmlWriter;
 #include <QTextDocument>
 #include <QTreeView>
 #include <QVBoxLayout>
+#include <QScrollBar>
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
 #include <messagecore/attachmentpropertiesdialog.h>
+
+#include <akonadi/collection.h>
 
 //own includes
 #include "attachmentdialog.h"
@@ -145,6 +149,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mDecrytMessageOverwrite( false ),
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true ),
+    mDisregardUmask( false ),
+    mCurrentContent( 0 ),
     q( aParent )
 {
   if ( !mainWindow )
@@ -349,68 +355,67 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
 }
 
 
-void ViewerPrivate::showAttachmentPopup( int id, const QString & name, const QPoint &p )
+void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint &p )
 {
-  prepareHandleAttachment( id, name );
+  prepareHandleAttachment( node, name );
   KMenu *menu = new KMenu();
   QAction *action;
 
   QSignalMapper *attachmentMapper = new QSignalMapper( menu );
   connect( attachmentMapper, SIGNAL( mapped( int ) ),
            this, SLOT( slotHandleAttachment( int ) ) );
-/*FIXME(Andras) port to akonadi
+
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Open );
+  attachmentMapper->setMapping( action, MessageViewer::Viewer::Open );
 
   action = menu->addAction(i18n("Open With..."));
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, KMHandleAttachmentCommand::OpenWith );
+  attachmentMapper->setMapping( action, MessageViewer::Viewer::OpenWith );
 
   action = menu->addAction(i18nc("to view something", "View") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, KMHandleAttachmentCommand::View );
+  attachmentMapper->setMapping( action, MessageViewer::Viewer::View );
 
   const bool attachmentInHeader = hasParentDivWithId( mViewer->nodeUnderMouse(), "attachmentInjectionPoint" );
   const bool hasScrollbar = mViewer->view()->verticalScrollBar()->isVisible();
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-    attachmentMapper->setMapping( action, KMHandleAttachmentCommand::ScrollTo );
+    attachmentMapper->setMapping( action, MessageViewer::Viewer::ScrollTo );
   }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Save );
+  attachmentMapper->setMapping( action, MessageViewer::Viewer::Save );
 
   action = menu->addAction(SmallIcon("edit-copy"), i18n("Copy") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Copy );
+  attachmentMapper->setMapping( action, MessageViewer::Viewer::Copy );
 
-  const bool canChange = message()->parent() ? !message()->parent()->isReadOnly() : false;
+  const bool canChange = mMessageItem.isValid() && mMessageItem.parentCollection().isValid() && ( mMessageItem.parentCollection().rights() != Akonadi::Collection::ReadOnly );
 
   if ( GlobalSettings::self()->allowAttachmentEditing() ) {
     action = menu->addAction(SmallIcon("document-properties"), i18n("Edit Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
-    attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Edit );
+    attachmentMapper->setMapping( action, MessageViewer::Viewer::Edit );
     action->setEnabled( canChange );
   }
   if ( GlobalSettings::self()->allowAttachmentDeletion() ) {
     action = menu->addAction(SmallIcon("edit-delete"), i18n("Delete Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
-    attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Delete );
+    attachmentMapper->setMapping( action, MessageViewer::Viewer::Delete );
     action->setEnabled( canChange );
   }
-  if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive ) &&
-       Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" ) ) {
+  if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive )
+       && Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" )) {
     action = menu->addAction( i18n( "Decrypt With Chiasmus..." ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-    attachmentMapper->setMapping( action, KMHandleAttachmentCommand::ChiasmusEncrypt );
+    attachmentMapper->setMapping( action, MessageViewer::Viewer::ChiasmusEncrypt );
   }
   action = menu->addAction(i18n("Properties") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, KMHandleAttachmentCommand::Properties );
-  */
+  attachmentMapper->setMapping( action, MessageViewer::Viewer::Properties );
   menu->exec( p );
   delete menu;
 }
@@ -468,12 +473,10 @@ void ViewerPrivate::clearBodyPartMementos()
   mBodyPartMementoMap.clear();
 }
 
-void ViewerPrivate::prepareHandleAttachment( int id, const QString& fileName )
+void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString& fileName )
 {
-  /*TODO(Andras) remove the whole method
-  mAtmCurrent = id;
-  mAtmCurrentName = fileName;
-  */
+  mCurrentContent = node;
+  mCurrentFileName = fileName;
 }
 
 // This function returns the complete data that were in this
@@ -768,11 +771,9 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
       return false;
     }
 
-/*FIXME(Andras) port it
     // #79685 by default use the umask the user defined, but let it be configurable
-    if ( GlobalSettings::self()->disregardUmask() )
+    if ( disregardUmask() )
       fchmod( file.handle(), S_IRUSR | S_IWUSR );
-*/
     ds.setDevice( &file );
   } else
   {
@@ -2660,11 +2661,17 @@ void ViewerPrivate::slotAttachmentProperties()
      return;
 
   Q_FOREACH( KMime::Content *content, contents ) {
-    KPIM::AttachmentPropertiesDialog *dialog = new KPIM::AttachmentPropertiesDialog( content, mMainWindow );
-    dialog->setAttribute( Qt::WA_DeleteOnClose );
-    dialog->show();
+    attachmentProperties( content );
   }
 }
+
+void ViewerPrivate::attachmentProperties( KMime::Content *content )
+{
+  KPIM::AttachmentPropertiesDialog *dialog = new KPIM::AttachmentPropertiesDialog( content, mMainWindow );
+  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  dialog->show();
+}
+
 
 
 void ViewerPrivate::slotAttachmentCopy()
@@ -2753,18 +2760,26 @@ void ViewerPrivate::slotLevelQuote( int l )
 
 void ViewerPrivate::slotHandleAttachment( int choice )
 {
-    /*FIXME(Andras) port to akonadi
-  mAtmUpdate = true;
-  partNode* node = mRootNode ? mRootNode->findId( mAtmCurrent ) : 0;
-  if ( choice == KMHandleAttachmentCommand::Delete ) {
-    slotDeleteAttachment( node );
-  } else if ( choice == KMHandleAttachmentCommand::Edit ) {
-    slotEditAttachment( node );
-  } else if ( choice == KMHandleAttachmentCommand::Copy ) {
-    if ( !node )
-      return;
+  //mAtmUpdate = true;
+  if(!mCurrentContent)
+    return;
+  if ( choice == MessageViewer::Viewer::Delete ) {
+    deleteAttachment( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::Edit ) {
+    editAttachment( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::Properties ) {
+    attachmentProperties( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::Save ) {
+    saveAttachments( KMime::Content::List()<<mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::OpenWith ) {
+    attachmentOpenWith( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::Open ) {
+    attachmentOpen( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::View ) {
+    slotAtmView( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::Copy ) {
     QList<QUrl> urls;
-    KUrl kUrl = tempFileUrlFromPartNode( node );
+    KUrl kUrl = mNodeHelper->tempFileUrlFromNode( mCurrentContent);
     QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
 
     if ( !url.isValid() )
@@ -2774,18 +2789,19 @@ void ViewerPrivate::slotHandleAttachment( int choice )
     QMimeData *mimeData = new QMimeData;
     mimeData->setUrls( urls );
     QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
-  } else if ( choice == KMHandleAttachmentCommand::ScrollTo ) {
-    scrollToAttachment( node );
+  } else if ( choice == MessageViewer::Viewer::ScrollTo ) {
+    scrollToAttachment( mCurrentContent );
   }
   else {
+#if 0
     KMHandleAttachmentCommand* command = new KMHandleAttachmentCommand(
         node, message(), mAtmCurrent, mAtmCurrentName,
         KMHandleAttachmentCommand::AttachmentAction( choice ), KService::Ptr( 0 ), this );
     connect( command, SIGNAL( showAttachment( int, const QString& ) ),
         this, SLOT( slotAtmView( int, const QString& ) ) );
     command->start();
+#endif
   }
-   */
 }
 
 void ViewerPrivate::slotCopySelectedText()
@@ -2846,11 +2862,9 @@ void ViewerPrivate::slotSaveMessage()
     //TODO handle huge attachment (and on demand attachment loading), especially saving them to
     //remote destination
 
-/*FIXME(Andras) port it
     // #79685 by default use the umask the user defined, but let it be configurable
-    if ( GlobalSettings::self()->disregardUmask() )
+    if ( disregardUmask() )
       fchmod( file.handle(), S_IRUSR | S_IWUSR );
-*/
     ds.setDevice( &file );
   } else
   {
@@ -3020,5 +3034,17 @@ bool ViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &i
     return hasParentDivWithId( start.parentNode(), id );
   else return false;
 }
+
+
+bool ViewerPrivate::disregardUmask() const
+{
+  return mDisregardUmask;
+}
+
+void ViewerPrivate::setDisregardUmask( bool b)
+{
+  mDisregardUmask = b;
+}
+
 
 #include "viewer_p.moc"

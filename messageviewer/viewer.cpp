@@ -315,10 +315,6 @@ bool Viewer::event(QEvent *e)
   {
     delete d->mCSSHelper;
     d->mCSSHelper = new CSSHelper( d->mViewer->view() );
-/*FIXME(Andras) port it
-    if (message())
-      message()->readConfig();
-*/
     d->update( Viewer::Force ); // Force update
     return true;
   }
@@ -537,6 +533,19 @@ void Viewer::setOverrideCharacterEncoding( const QString& str)
 {
   GlobalSettings::self()->setOverrideCharacterEncoding( str );
 }
+
+bool Viewer::disregardUmask() const
+{
+  Q_D( const Viewer );
+  return d->disregardUmask();
+}
+
+void Viewer::setDisregardUmask( bool b)
+{
+  Q_D( Viewer );
+  d->setDisregardUmask( b );
+}
+
 
 }
 

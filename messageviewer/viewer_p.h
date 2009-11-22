@@ -109,6 +109,10 @@ public:
   the attachment!) */
   bool deleteAttachment( KMime::Content* node, bool showWarning = true );
 
+
+  void attachmentProperties( KMime::Content *node );
+
+
   /** Edit the attachment the @param node points to. Returns false if the user
   cancelled the editing, true in all other cases! */
   bool editAttachment( KMime::Content* node, bool showWarning = true );
@@ -128,7 +132,7 @@ public:
       care! */
   KHTMLPart *htmlPart() const { return mViewer; }
 
-  void showAttachmentPopup( int id, const QString & name, const QPoint & p );
+  void showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & p );
 
   /** retrieve BodyPartMemento of id \a which for partNode \a node */
    Interface::BodyPartMemento * bodyPartMemento( const KMime::Content * node, const QByteArray & which ) const;
@@ -147,7 +151,7 @@ public:
    * to the given values.
    * Call this so that slotHandleAttachment() knows which attachment to handle.
    */
-  void prepareHandleAttachment( int id, const QString& fileName );
+  void prepareHandleAttachment(KMime::Content *node, const QString& fileName );
 
 
   /** This function returns the complete data that were in this
@@ -361,6 +365,10 @@ public:
 
   bool noMDNsWhenEncrypted() const { return mNoMDNsWhenEncrypted; }
 
+
+  bool disregardUmask() const;
+  void setDisregardUmask( bool b);
+
 public slots:
 
   void slotUrlOpen( const KUrl &url = KUrl() );
@@ -522,6 +530,9 @@ public:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
+  bool mDisregardUmask;
+  KMime::Content *mCurrentContent;
+  QString mCurrentFileName;
   QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
 
   Viewer *const q;
