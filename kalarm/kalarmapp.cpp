@@ -1358,6 +1358,9 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
 				// It's not a reminder or a deferred alarm, and there is no message window
 				// (other than a reminder window) currently displayed for this alarm,
 				// and we need to execute a command before displaying the new window.
+				//
+				// NOTE: The pre-action is not executed for a recurring alarm if an
+				// alarm message window for a previous occurrence is still visible.
 				if (!ShellProcess::authorised())
 					setEventCommandError(event, KAEvent::CMD_ERROR_PRE);
 				else
