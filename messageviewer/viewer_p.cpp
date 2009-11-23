@@ -1405,9 +1405,6 @@ void ViewerPrivate::readConfig()
   if ( mMessage )
     update();
   mColorBar->update();
- /*FIXME(Andras)
-  KMMessage::readConfig();
-  */
 }
 
 
@@ -2806,14 +2803,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
     scrollToAttachment( mCurrentContent );
   }
   else {
-#if 0
-    KMHandleAttachmentCommand* command = new KMHandleAttachmentCommand(
-        node, message(), mAtmCurrent, mAtmCurrentName,
-        KMHandleAttachmentCommand::AttachmentAction( choice ), KService::Ptr( 0 ), this );
-    connect( command, SIGNAL( showAttachment( int, const QString& ) ),
-        this, SLOT( slotAtmView( int, const QString& ) ) );
-    command->start();
-#endif
+    kDebug()<<" not implemented :"<<choice;
   }
 }
 
