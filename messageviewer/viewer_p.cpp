@@ -92,6 +92,8 @@ using MessageViewer::TeeHtmlWriter;
 #include <akonadi/collection.h>
 #include <kleo/specialjob.h>
 
+#include "chiasmuskeyselector.h"
+#include "autoqpointer.h"
 
 
 //own includes
@@ -3097,7 +3099,6 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
     KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
     return;
   }
-#if 0 //PORT to akonadi
   AutoQPointer<ChiasmusKeySelector> selectorDlg;
   selectorDlg = new ChiasmusKeySelector( mMainWindow,
                                          i18n( "Chiasmus Decryption Key Selection" ),
@@ -3110,7 +3111,6 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
   GlobalSettings::setChiasmusDecryptionOptions( selectorDlg->options() );
   GlobalSettings::setChiasmusDecryptionKey( selectorDlg->key() );
   assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
-#endif
   Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
   if ( !job ) {
     const QString msg = i18n( "Chiasmus backend does not offer the "

@@ -89,7 +89,6 @@ using KPIMUtils::LinkLocator;
 #include <khtml_part.h>
 #include <ktemporaryfile.h>
 #include <kstandarddirs.h>
-#include <kmessagebox.h>
 #include <kiconloader.h>
 #include <kcodecs.h>
 #include <kconfiggroup.h>
@@ -112,7 +111,7 @@ using KPIMUtils::LinkLocator;
 #include <sys/types.h>
 #include <unistd.h>
 #include <memory>
-// FIXME(Andras) port to akonadi #include "chiasmuskeyselector.h"
+#include "chiasmuskeyselector.h"
 
 #include <kmime/kmime_message.h>
 
@@ -1945,8 +1944,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   }
 
   mSource->emitNoDrag();
-  /*FIXME(Andras) port to akonadi
-  ChiasmusKeySelector selectorDlg( mReader, i18n( "Chiasmus Decryption Key Selection" ),
+  ChiasmusKeySelector selectorDlg( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
                                     keys, GlobalSettings::chiasmusDecryptionKey(),
                                     GlobalSettings::chiasmusDecryptionOptions() );
   if ( selectorDlg.exec() != KDialog::Accepted )
@@ -1954,7 +1952,6 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   GlobalSettings::setChiasmusDecryptionOptions( selectorDlg.options() );
   GlobalSettings::setChiasmusDecryptionKey( selectorDlg.key() );
   assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
-  */
 
   Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
   if ( !job ) {
