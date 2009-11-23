@@ -36,8 +36,11 @@
 #include <messagecore/messagestatus.h>
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
+#include <kio/job.h>
 
 using KPIM::MessageStatus;
+namespace GpgME { class Error; }
+namespace KIO { class Job; }
 
 class KAction;
 class KActionCollection;
@@ -371,6 +374,11 @@ public:
 
   void attachmentView( KMime::Content *atmNode );
   void attachmentEncryptWithChiasmus( KMime::Content * content );
+
+private slots:
+  void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
+  void slotAtmDecryptWithChiasmusUploadResult( KJob * );
+
 
 public slots:
 

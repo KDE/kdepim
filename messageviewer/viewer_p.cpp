@@ -64,6 +64,7 @@ using MessageViewer::TeeHtmlWriter;
 #include <kpimutils/kfileio.h>
 
 #include <kleo/cryptobackendfactory.h>
+#include <kleo/cryptobackend.h>
 
 #include <dom/html_element.h>
 #include <dom/html_block.h>
@@ -89,6 +90,9 @@ using MessageViewer::TeeHtmlWriter;
 #include <messagecore/attachmentpropertiesdialog.h>
 
 #include <akonadi/collection.h>
+#include <kleo/specialjob.h>
+
+
 
 //own includes
 #include "attachmentdialog.h"
@@ -112,6 +116,9 @@ using MessageViewer::TeeHtmlWriter;
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
+
+#include <gpgme++/error.h>
+
 
 using namespace MessageViewer;
 
@@ -3050,7 +3057,140 @@ void ViewerPrivate::setDisregardUmask( bool b)
 
 void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
 {
+  // FIXME: better detection of mimetype??
+  if ( !mCurrentFileName.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive ) )
+    return;
 
+  const Kleo::CryptoBackend::Protocol * chiasmus =
+    Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" );
+  Q_ASSERT( chiasmus );
+  if ( !chiasmus )
+    return;
+
+  const std::auto_ptr<Kleo::SpecialJob> listjob( chiasmus->specialJob( "x-obtain-keys", QMap<QString,QVariant>() ) );
+  if ( !listjob.get() ) {
+    const QString msg = i18n( "Chiasmus backend does not offer the "
+                              "\"x-obtain-keys\" function. Please report this bug." );
+    KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+
+  if ( listjob->exec() ) {
+    listjob->showErrorDialog( mMainWindow, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+
+  const QVariant result = listjob->property( "result" );
+  if ( result.type() != QVariant::StringList ) {
+    const QString msg = i18n( "Unexpected return value from Chiasmus backend: "
+                              "The \"x-obtain-keys\" function did not return a "
+                              "string list. Please report this bug." );
+    KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+
+  const QStringList keys = result.toStringList();
+  if ( keys.empty() ) {
+    const QString msg = i18n( "No keys have been found. Please check that a "
+                              "valid key path has been set in the Chiasmus "
+                              "configuration." );
+    KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+#if 0 //PORT to akonadi
+  AutoQPointer<ChiasmusKeySelector> selectorDlg;
+  selectorDlg = new ChiasmusKeySelector( mMainWindow,
+                                         i18n( "Chiasmus Decryption Key Selection" ),
+                                         keys, GlobalSettings::chiasmusDecryptionKey(),
+                                         GlobalSettings::chiasmusDecryptionOptions() );
+  if ( selectorDlg->exec() != QDialog::Accepted || !selectorDlg ) {
+    return;
+  }
+
+  GlobalSettings::setChiasmusDecryptionOptions( selectorDlg->options() );
+  GlobalSettings::setChiasmusDecryptionKey( selectorDlg->key() );
+  assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
+#endif
+  Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
+  if ( !job ) {
+    const QString msg = i18n( "Chiasmus backend does not offer the "
+                              "\"x-decrypt\" function. Please report this bug." );
+    KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+
+  //PORT IT
+  const QByteArray input;// = node->msgPart().bodyDecodedBinary();
+
+  if ( !job->setProperty( "key", GlobalSettings::chiasmusDecryptionKey() ) ||
+       !job->setProperty( "options", GlobalSettings::chiasmusDecryptionOptions() ) ||
+       !job->setProperty( "input", input ) ) {
+    const QString msg = i18n( "The \"x-decrypt\" function does not accept "
+                              "the expected parameters. Please report this bug." );
+    KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+
+  if ( job->start() ) {
+    job->showErrorDialog( mMainWindow, i18n( "Chiasmus Decryption Error" ) );
+    return;
+  }
+
+  //TODO PORT it
+  //mJob = job;
+  connect( job, SIGNAL(result(const GpgME::Error&,const QVariant&)),
+           this, SLOT(slotAtmDecryptWithChiasmusResult(const GpgME::Error&,const QVariant&)) );
 }
 
+void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, const QVariant & result )
+{
+#if 0
+  LaterDeleterWithCommandCompletion d( this );
+  if ( !mJob )
+    return;
+  Q_ASSERT( mJob == sender() );
+  if ( mJob != sender() )
+    return;
+  Kleo::Job * job = mJob;
+  mJob = 0;
+  if ( err.isCanceled() )
+    return;
+  if ( err ) {
+    job->showErrorDialog( parentWidget(), i18n( "Chiasmus Decryption Error" ) );
+    return;
+  }
+
+  if ( result.type() != QVariant::ByteArray ) {
+    const QString msg = i18n( "Unexpected return value from Chiasmus backend: "
+                              "The \"x-decrypt\" function did not return a "
+                              "byte array. Please report this bug." );
+    KMessageBox::error( parentWidget(), msg, i18n( "Chiasmus Backend Error" ) );
+    return;
+  }
+
+  const KUrl url = KFileDialog::getSaveUrl( chomp( mAtmName, ".xia", false ), QString(), parentWidget() );
+  if ( url.isEmpty() )
+    return;
+
+  bool overwrite = KMail::Util::checkOverwrite( url, parentWidget() );
+  if ( !overwrite )
+    return;
+
+  d.setDisabled( true ); // we got this far, don't delete yet
+  KIO::Job * uploadJob = KIO::storedPut( result.toByteArray(), url, -1, KIO::Overwrite );
+  uploadJob->ui()->setWindow( parentWidget() );
+  connect( uploadJob, SIGNAL(result(KJob*)),
+           this, SLOT(slotAtmDecryptWithChiasmusUploadResult(KJob*)) );
+#endif
+}
+
+void ViewerPrivate::slotAtmDecryptWithChiasmusUploadResult( KJob * job )
+{
+#if 0
+  if ( job->error() )
+    static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
+  LaterDeleterWithCommandCompletion d( this );
+  d.setResult( OK );
+#endif
+}
 #include "viewer_p.moc"
