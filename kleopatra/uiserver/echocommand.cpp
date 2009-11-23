@@ -97,12 +97,13 @@ int EchoCommand::doStart() {
     sendStatus( "ECHO", output.empty() ? "" : output.c_str() );
 
     // 2. if --inquire was given, inquire more data from the client:
-    if ( !keyword.empty() )
+    if ( !keyword.empty() ) {
         if ( const int err = inquire( keyword.c_str(), this,
                                       SLOT(slotInquireData(int,QByteArray)) ) )
             return err;
         else
             ++d->operationsInFlight;
+    }
 
     // 3. if INPUT was given, start the data pump for input->output
     if ( const shared_ptr<QIODevice> i = in.at(0)->ioDevice() ) {
@@ -163,7 +164,7 @@ void EchoCommand::slotInputReadyRead() {
         done( makeError( GPG_ERR_EIO ) );
         return;
     }
-    if ( read == 0 || !in->isSequential() && read == in->size() )
+    if ( read == 0 || (!in->isSequential() && read == in->size()) )
         in->close();
 
     buffer.resize( read );

@@ -314,14 +314,14 @@ void KDGanttSemiSizingControl::setup()
     if ( isMinimized() ) {
        widget = _minimizedWidget;
        if( widget ) {
-	 if ( _arrowPos == Before  || _orient == Qt::Vertical && !isMinimized() )
+	 if ( _arrowPos == Before  || ( _orient == Qt::Vertical && !isMinimized() ) )
 	   _layout->addWidget( widget, 1 );
 	 else
 	   _layout->insertWidget( 0, widget, 1 );
        }
     }
     else {
-      if ( _arrowPos == Before  || _orient == Qt::Vertical && !isMinimized() )
+      if ( _arrowPos == Before  || ( _orient == Qt::Vertical && !isMinimized() ) )
 	_layout->addStretch( 1 );
       else
 	_layout->insertStretch( 0, 1 );

@@ -110,14 +110,14 @@ void KNRemoteArticle::parse()
   KNArticle::parse();
   QByteArray raw;
 
-  raw = rawHeader( from()->type() );
+  raw = KMime::extractHeader( head(), from()->type() );
   if ( !raw.isEmpty() ) {
     QByteArray f;
     Locale::encodeTo7Bit( raw, defaultCharset(), f );
     from()->from7BitString( f );
   }
 
-  raw = rawHeader( subject()->type() );
+  raw = KMime::extractHeader( head(), subject()->type() );
   if( !raw.isEmpty() ) {
     QByteArray subjectStr;
     Locale::encodeTo7Bit( raw, defaultCharset(), subjectStr );

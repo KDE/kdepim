@@ -101,6 +101,14 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
     typedef QList<Column> Columns;
 
     /**
+     * Describes the role for contacts and contact groups.
+     */
+    enum Roles
+    {
+      DateRole = UserRole + 1   ///< The QDate object for the current index.
+    };
+
+    /**
      * Creates a new contacts tree model.
      *
      * @param session The Session to use to communicate with Akonadi.

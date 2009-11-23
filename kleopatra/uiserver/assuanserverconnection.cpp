@@ -520,7 +520,7 @@ private:
                 throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
             if ( !fi.exists() )
                 throw gpg_error( GPG_ERR_ENOENT );
-            if ( !fi.isReadable() || fi.isDir() && !fi.isExecutable() )
+            if ( !fi.isReadable() || ( fi.isDir() && !fi.isExecutable() ) )
                 throw gpg_error( GPG_ERR_EPERM );
             
             conn.files.push_back( fi.absoluteFilePath() );

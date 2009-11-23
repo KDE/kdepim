@@ -67,6 +67,7 @@ include_directories(
     ${GPGME_INCLUDES}
 )
 
+set_target_properties( messageviewer PROPERTIES VERSION 0.1.0 SOVERSION 0)
 install(TARGETS messageviewer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 #install( FILES viewer.h attachmentstrategy.h headerstrategy.h messageviewer_export.h DESTINATION  ${INCLUDE_INSTALL_DIR}/messageviewer COMPONENT devel)
