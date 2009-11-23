@@ -13,7 +13,6 @@ headerstrategy.cpp
 kmaddrbook.cpp
 stringutil.cpp
 attachmentstrategy.cpp
-kmmsgpartdlg.cpp
 csshelper.cpp
 util.cpp
 objecttreeparser_p.cpp
