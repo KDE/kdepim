@@ -119,6 +119,8 @@ using MessageViewer::TeeHtmlWriter;
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
+#include <kio/jobuidelegate.h>
+
 #include <gpgme++/error.h>
 
 
@@ -3186,11 +3188,7 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, 
 
 void ViewerPrivate::slotAtmDecryptWithChiasmusUploadResult( KJob * job )
 {
-#if 0
   if ( job->error() )
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
-  LaterDeleterWithCommandCompletion d( this );
-  d.setResult( OK );
-#endif
 }
 #include "viewer_p.moc"
