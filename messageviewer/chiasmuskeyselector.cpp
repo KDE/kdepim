@@ -10,6 +10,8 @@
 #include <QLabel>
 #include <QVBoxLayout>
 
+namespace MessageViewer {
+
 ChiasmusKeySelector::ChiasmusKeySelector( QWidget* parent, const QString& caption,
                                           const QStringList& keys, const QString& currentKey,
                                           const QString& lastOptions )
@@ -69,5 +71,5 @@ QString ChiasmusKeySelector::options() const
   return mOptions->text();
 }
 
-
+}
 #include "chiasmuskeyselector.moc"

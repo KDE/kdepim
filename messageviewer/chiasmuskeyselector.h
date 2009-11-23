@@ -3,11 +3,14 @@
 
 #include <kdialog.h>
 #include <QLabel>
+#include "messageviewer_export.h"
+
 class KListWidget;
 class KLineEdit;
 class QLabel;
 
-class ChiasmusKeySelector : public KDialog
+namespace MessageViewer {
+class MESSAGEVIEWER_EXPORT ChiasmusKeySelector : public KDialog
 {
   Q_OBJECT
 
@@ -27,5 +30,5 @@ private:
   KListWidget* mListBox;
   KLineEdit* mOptions;
 };
-
+}
 #endif
