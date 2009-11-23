@@ -922,6 +922,8 @@ void KAEvent::set(const KDateTime& dateTime, const QString& text, const QColor& 
 	mDeferral               = NO_DEFERRAL;    // do this before setting flags
 
 	KAAlarmEventBase::set(flags & ~READ_ONLY_FLAGS);
+	if (mRepeatAtLogin)                       // do this after setting flags
+		++mAlarmCount;
 	mStartDateTime.setDateOnly(flags & ANY_TIME);
 	set_deferral((flags & DEFERRAL) ? NORMAL_DEFERRAL : NO_DEFERRAL);
 	mCommandXterm           = flags & EXEC_IN_XTERM;
@@ -1013,6 +1015,26 @@ void KAEvent::setTemplate(const QString& name, int afterTime)
 	// Templates don't need trigger times to be calculated
 	mChangeCount = 0;
 	calcTriggerTimes();
+}
+
+/******************************************************************************
+* Set or clear repeat-at-login.
+*/
+void KAEvent::setRepeatAtLogin(bool rl)
+{
+	if (rl  &&  !mRepeatAtLogin)
+		++mAlarmCount;
+	else if (!rl  &&  mRepeatAtLogin)
+		--mAlarmCount;
+	mRepeatAtLogin = rl;
+	if (mRepeatAtLogin)
+	{
+		setReminder(0, false);
+		mLateCancel = 0;
+		mAutoClose = false;
+		mCopyToKOrganizer = false;
+	}
+	mUpdated = true;
 }
 
 void KAEvent::setReminder(int minutes, bool onceOnly)
@@ -4133,7 +4155,7 @@ bool KAEvent::convertRepetition(KCal::Event* event)
 	return converted;
 }
 
-#ifndef NDEBUG
+#ifndef KDE_NO_DEBUG_OUTPUT
 void KAEvent::dumpDebug() const
 {
 	kDebug() << "KAEvent dump:";
@@ -4224,7 +4246,7 @@ int KAAlarm::flags() const
 
 }
 
-#ifndef NDEBUG
+#ifndef KDE_NO_DEBUG_OUTPUT
 void KAAlarm::dumpDebug() const
 {
 	kDebug() << "KAAlarm dump:";
@@ -4336,7 +4358,7 @@ QFont KAAlarmEventBase::font() const
 	return mDefaultFont ? Preferences::messageFont() : mFont;
 }
 
-#ifndef NDEBUG
+#ifndef KDE_NO_DEBUG_OUTPUT
 void KAAlarmEventBase::dumpDebug() const
 {
 	kDebug() << "-- mEventID:" << mEventID;

@@ -6,6 +6,7 @@ KAlarm Change Log
   from reminder to normal, or window changes from at-login to final at-login
   trigger time, or window auto-closes.
 - Prevent infinite loop if NEXTRECUR time in alarm is before alarm start time.
+- Fix error saving the alarm after editing a repeat-at-login alarm.
 - Don't set reminder/late-cancel/show-in-KOrganizer when saving repeat-at-login
   alarms.
 

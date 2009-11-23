@@ -90,7 +90,7 @@ class KAAlarmEventBase
 		bool               displaying() const          { return mDisplaying; }
 		bool               beep() const                { return mBeep; }
 		int                flags() const;
-#ifdef NDEBUG
+#ifdef KDE_NO_DEBUG_OUTPUT
 		void               dumpDebug() const  { }
 #else
 		void               dumpDebug() const;
@@ -217,7 +217,7 @@ class KAAlarm : public KAAlarmEventBase
 		void               setTime(const DateTime& dt)  { mNextMainDateTime = dt; }
 		void               setTime(const KDateTime& dt) { mNextMainDateTime = dt; }
 		int                flags() const;
-#ifdef NDEBUG
+#ifdef KDE_NO_DEBUG_OUTPUT
 		void               dumpDebug() const  { }
 		static const char* debugType(Type)   { return ""; }
 #else
@@ -342,7 +342,7 @@ class KAEvent : public KAAlarmEventBase
 		void               setSaveDateTime(const KDateTime& dt)              { mSaveDateTime = dt;  mUpdated = true; }
 		void               setLateCancel(int lc)                             { mLateCancel = lc;  mUpdated = true; }
 		void               setAutoClose(bool ac)                             { mAutoClose = ac;  mUpdated = true; }
-		void               setRepeatAtLogin(bool rl)                         { mRepeatAtLogin = rl;  mUpdated = true; }
+		void               setRepeatAtLogin(bool rl);
 		void               setExcludeHolidays(bool ex)                       { mExcludeHolidays = ex;  mUpdated = true; }
 		void               setWorkTimeOnly(bool wto)                         { mWorkTimeOnly = wto; }
 		void               setKMailSerialNumber(unsigned long n)             { mKMailSerialNumber = n; }
@@ -458,7 +458,7 @@ class KAEvent : public KAAlarmEventBase
 		bool               setRecurAnnualByPos(int freq, const QList<MonthPos>& pos, const QList<int>& months, int count, const QDate& end);
 //		static QValueList<MonthPos> convRecurPos(const QValueList<KCal::RecurrenceRule::WDayPos>&);
 		void               adjustRecurrenceStartOfDay();
-#ifdef NDEBUG
+#ifdef KDE_NO_DEBUG_OUTPUT
 		void               dumpDebug() const  { }
 #else
 		void               dumpDebug() const;
