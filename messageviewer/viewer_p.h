@@ -369,6 +369,9 @@ public:
   bool disregardUmask() const;
   void setDisregardUmask( bool b);
 
+  void attachmentView( KMime::Content *atmNode );
+  void attachmentEncryptWithChiasmus( KMime::Content * content );
+
 public slots:
 
   void slotUrlOpen( const KUrl &url = KUrl() );
@@ -412,7 +415,6 @@ public slots:
   void slotHideAttachments();
 
   /** Some attachment operations. */
-  void slotAtmView( KMime::Content *atmNode );
   void slotDelayedResize();
 
   /** Print message. Called on as a response of finished() signal of mPartHtmlWriter

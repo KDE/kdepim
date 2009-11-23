@@ -672,7 +672,7 @@ KService::Ptr ViewerPrivate::getServiceOffer( KMime::Content *content)
   mimetype = KMimeType::mimeType( contentTypeStr, KMimeType::ResolveAliases );
 
   if ( !mimetype.isNull() && mimetype->is( KABC::Addressee::mimeType() ) ) {
-    slotAtmView( content );
+    attachmentView( content );
     return KService::Ptr( 0 );
   }
 
@@ -2469,7 +2469,7 @@ void ViewerPrivate::slotHideAttachments()
 }
 
 
-void ViewerPrivate::slotAtmView( KMime::Content *atmNode )
+void ViewerPrivate::attachmentView( KMime::Content *atmNode )
 {
   if ( atmNode ) {
     QString fileName = mNodeHelper->tempFileUrlFromNode( atmNode ).toLocalFile();
@@ -2648,7 +2648,7 @@ void ViewerPrivate::slotAttachmentView()
 
   Q_FOREACH(KMime::Content *content, contents)
   {
-    slotAtmView( content );
+    attachmentView( content );
   }
 
 }
@@ -2776,7 +2776,9 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   } else if ( choice == MessageViewer::Viewer::Open ) {
     attachmentOpen( mCurrentContent );
   } else if ( choice == MessageViewer::Viewer::View ) {
-    slotAtmView( mCurrentContent );
+    attachmentView( mCurrentContent );
+  } else if ( choice == MessageViewer::Viewer::ChiasmusEncrypt ) {
+    attachmentEncryptWithChiasmus( mCurrentContent );
   } else if ( choice == MessageViewer::Viewer::Copy ) {
     QList<QUrl> urls;
     KUrl kUrl = mNodeHelper->tempFileUrlFromNode( mCurrentContent);
@@ -3046,5 +3048,9 @@ void ViewerPrivate::setDisregardUmask( bool b)
   mDisregardUmask = b;
 }
 
+void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
+{
+
+}
 
 #include "viewer_p.moc"
