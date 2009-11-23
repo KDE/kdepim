@@ -31,20 +31,20 @@ using namespace KPIM;
 
 inline QString &quote( QString &string )
 {
-  Q_ASSERT( KPimPrefs::categorySeparator != "@" );
+  Q_ASSERT( CategoryConfig::categorySeparator != "@" );
   return string.replace( "@", "@0" ).replace( QString("\\") +
-                                              KPimPrefs::categorySeparator,
+                                              CategoryConfig::categorySeparator,
                                               "@1" );
 }
 
 inline QStringList &unquote( QStringList &strings )
 {
-  return strings.replaceInStrings( "@1", KPimPrefs::categorySeparator ).replaceInStrings( "@0", "@" );
+  return strings.replaceInStrings( "@1", CategoryConfig::categorySeparator ).replaceInStrings( "@0", "@" );
 }
 
 QStringList CategoryHierarchyReader::path( QString string )
 {
-  QStringList _path = quote( string).split( KPimPrefs::categorySeparator, QString::SkipEmptyParts );
+  QStringList _path = quote( string).split( CategoryConfig::categorySeparator, QString::SkipEmptyParts );
   return unquote( _path );
 }
 

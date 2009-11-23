@@ -34,13 +34,13 @@ namespace Ui {
 
 namespace KPIM {
 
-class KPimPrefs;
+class CategoryConfig;
 
 class KDEPIM_EXPORT CategoryEditDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit CategoryEditDialog( KPimPrefs *prefs, QWidget *parent = 0 );
+    explicit CategoryEditDialog( CategoryConfig *categoryConfig, QWidget *parent = 0 );
     ~CategoryEditDialog();
 
   public Q_SLOTS:
@@ -67,7 +67,7 @@ class KDEPIM_EXPORT CategoryEditDialog : public KDialog
 
   private:
     void deleteItem( QTreeWidgetItem *item, QList<QTreeWidgetItem *> &to_remove );
-    KPimPrefs *mPrefs;
+    CategoryConfig *mCategoryConfig;
     Ui::CategoryEditDialog_base *mWidgets;
 };
 
