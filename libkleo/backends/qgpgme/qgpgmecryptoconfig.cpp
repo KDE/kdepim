@@ -741,11 +741,12 @@ void QGpgMECryptoConfigEntry::resetToDefault()
   mDirty = true;
   if ( mFlags & GPGCONF_FLAG_DEFAULT )
     mValue = mDefaultValue;
-  else if ( mArgType == ArgType_None )
+  else if ( mArgType == ArgType_None ) {
     if ( isList() )
       mValue = 0U;
     else
       mValue = false;
+  }
 }
 
 void QGpgMECryptoConfigEntry::setBoolValue( bool b )
