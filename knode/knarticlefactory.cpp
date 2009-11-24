@@ -203,7 +203,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
     if ( authorWantsMailCopies && !mailCopiesTo->mailboxes().isEmpty() ) {
       art->to()->clear();
       foreach ( const KMime::Types::Mailbox &mbox, mailCopiesTo->mailboxes() ) {
-        art->to()->addAddress(address);
+        art->to()->addAddress( mbox );
       }
     }
   }
