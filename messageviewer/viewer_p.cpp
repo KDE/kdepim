@@ -2685,7 +2685,11 @@ void ViewerPrivate::attachmentProperties( KMime::Content *content )
 void ViewerPrivate::slotAttachmentCopy()
 {
   KMime::Content::List contents = selectedContents();
+  attachmentCopy( contents );
+}
 
+void ViewerPrivate::attachmentCopy( const KMime::Content::List & contents )
+{
   if ( contents.isEmpty() )
     return;
 
@@ -2788,17 +2792,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   } else if ( choice == MessageViewer::Viewer::ChiasmusEncrypt ) {
     attachmentEncryptWithChiasmus( mCurrentContent );
   } else if ( choice == MessageViewer::Viewer::Copy ) {
-    QList<QUrl> urls;
-    KUrl kUrl = mNodeHelper->tempFileUrlFromNode( mCurrentContent);
-    QUrl url = QUrl::fromPercentEncoding( kUrl.toEncoded() );
-
-    if ( !url.isValid() )
-      return;
-    urls.append( url );
-
-    QMimeData *mimeData = new QMimeData;
-    mimeData->setUrls( urls );
-    QApplication::clipboard()->setMimeData( mimeData, QClipboard::Clipboard );
+    attachmentCopy( KMime::Content::List()<< mCurrentContent );
   } else if ( choice == MessageViewer::Viewer::ScrollTo ) {
     scrollToAttachment( mCurrentContent );
   }

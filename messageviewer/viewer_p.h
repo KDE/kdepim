@@ -114,6 +114,7 @@ public:
 
 
   void attachmentProperties( KMime::Content *node );
+  void attachmentCopy( const KMime::Content::List & contents );
 
 
   /** Edit the attachment the @param node points to. Returns false if the user
