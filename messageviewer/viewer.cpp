@@ -47,7 +47,6 @@ Viewer::Viewer(QWidget *aParent,
   connect( d_ptr, SIGNAL( urlClicked(const KUrl&, int ) ), SIGNAL( urlClicked(const KUrl&, int ) ) );
   connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ), SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
-  connect( d_ptr, SIGNAL( copyUrl( const KUrl& ) ), SIGNAL( copyUrl( const KUrl& ) ) );
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
   connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
            SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );

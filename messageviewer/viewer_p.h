@@ -478,7 +478,6 @@ signals:
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
   void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
-  void copyUrl( const KUrl & );
   void noDrag();
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );

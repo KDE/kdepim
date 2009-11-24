@@ -303,7 +303,6 @@ signals:
   /** The user has clicked onto an URL that is no attachment. */
   void urlClicked(const KUrl &url, int button);
 
-  void copyUrl( const KUrl & );
   /** Pgp displays a password dialog */
   void noDrag(void);
   void requestConfigSync();

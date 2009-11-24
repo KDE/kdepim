@@ -2819,10 +2819,21 @@ void ViewerPrivate::slotUrlClicked()
   emit urlClicked( mMessageItem, mUrlClicked );
 }
 
-
 void ViewerPrivate::slotUrlCopy()
 {
-  emit copyUrl( mUrlClicked );
+  QClipboard* clip = QApplication::clipboard();
+  if (mUrlClicked.protocol() == "mailto") {
+    // put the url into the mouse selection and the clipboard
+    QString address = MessageViewer::StringUtil::decodeMailtoUrl( mUrlClicked.path() );
+    clip->setText( address, QClipboard::Clipboard );
+    clip->setText( address, QClipboard::Selection );
+    KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));
+  } else {
+    // put the url into the mouse selection and the clipboard
+    clip->setText( mUrlClicked.url(), QClipboard::Clipboard );
+    clip->setText( mUrlClicked.url(), QClipboard::Selection );
+    KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "URL copied to clipboard." ));
+  }
 }
 
 
