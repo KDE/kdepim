@@ -219,8 +219,9 @@ private:
             ;
         else if ( result.error() )
             showSignatureListingErrorDialog( result.error() );
-        else
-            ;
+        else {
+            ; // nothing to do
+        }
         keyListJob = 0;
         enableDisableWidgets();
     }
