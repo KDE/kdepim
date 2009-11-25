@@ -49,7 +49,7 @@
 #include <kactioncollection.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
-#include <kdescendantsproxymodel.h>
+#include "kdescendantsproxymodel_p.h"
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
