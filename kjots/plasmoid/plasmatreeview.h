@@ -23,8 +23,6 @@
 
 #include <QtGui/QGraphicsProxyWidget>
 
-#include <plasma/plasma_export.h>
-
 class QAbstractItemModel;
 
 namespace Akonadi
@@ -37,7 +35,7 @@ class TreeViewPrivate;
  *
  * @short Provides a plasma-themed Akonadi::EntityTreeView.
  */
-class PLASMA_EXPORT PlasmaTreeView : public QGraphicsProxyWidget
+class PlasmaTreeView : public QGraphicsProxyWidget
 {
     Q_OBJECT
 
