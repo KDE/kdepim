@@ -59,7 +59,6 @@
 #include <KAction>
 #include <KActionCollection>
 #include <KBookmarkMenu>
-#include <kdescendantsproxymodel.h>
 #include <KFileDialog>
 #include <KFind>
 #include <KFindDialog>

@@ -33,7 +33,7 @@
 #include "kjotsbookshelfentryvalidator.h"
 #include "kjotsentry.h"
 #include "bookshelf.h"
-#include <kdescendantsproxymodel.h>
+#include "kdescendantsproxymodel_p.h"
 
 KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
         KDialog(parent)
