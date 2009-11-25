@@ -51,6 +51,7 @@ namespace Akonadi {
 
 namespace KPIM {
 
+  class LdapSearchDialog;
   class ProxyModel;
 
 #if 0
@@ -191,11 +192,6 @@ namespace KPIM {
 #if 0
   private Q_SLOTS:
     void saveAs();
-    void searchLdap();
-    void ldapSearchResult();
-
-    void filterChanged( const QString & );
-
     void updateAvailableAddressees();
 
   protected:
@@ -228,6 +224,8 @@ namespace KPIM {
     void addSelectedCC();
     void addSelectedBCC();
     void removeEntry();
+    void searchLdap();
+    void ldapSearchResult();
 
   private:
     Akonadi::Session *m_session;
@@ -237,6 +235,7 @@ namespace KPIM {
     QStandardItemModel *m_selectedModel;
     QStandardItem *m_toItem, *m_ccItem, *m_bccItem;
     QPushButton *m_tobtn, *m_ccbtn, *m_bccbtn, *m_rembtn;
+    LdapSearchDialog  *m_ldapSearchDialog;
 
     QStandardItem* selectedToItem();
     QStandardItem* selectedCcItem();

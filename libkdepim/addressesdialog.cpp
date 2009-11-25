@@ -291,6 +291,7 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
   : KDialog( parent )
   , m_session( session )
   , m_toItem( 0 ), m_ccItem( 0 ), m_bccItem( 0 )
+  , m_ldapSearchDialog( 0 )
 {
   setCaption( i18n( "Address Selection" ) );
   setButtons( Ok|Cancel );
@@ -333,6 +334,9 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
   connect( filteredit, SIGNAL(textChanged(QString)), m_availableModel, SLOT(setFilterString(QString)) );
   filterlabel->setBuddy( filteredit );
 
+  QPushButton *ldapbtn = new QPushButton( i18n("Search Directory Service"), leftbox );
+  connect( ldapbtn, SIGNAL(clicked()), SLOT(searchLdap())  );
+ 
   QWidget *btnwidget = new QWidget( page );
   QVBoxLayout *btnlayout = new QVBoxLayout( btnwidget );
   btnwidget->setLayout( btnlayout );
@@ -743,8 +747,6 @@ AddressesDialog::initConnections()
            SLOT(addSelectedBCC())  );
   connect( m_ui->mSaveAs, SIGNAL(clicked()),
            SLOT(saveAs())  );
-  connect( m_ui->mLdapSearch, SIGNAL(clicked()),
-           SLOT(searchLdap())  );
   connect( m_ui->mRemoveButton, SIGNAL(clicked()),
            SLOT(removeEntry()) );
   connect( m_ui->mAvailableView, SIGNAL(itemSelectionChanged()),
@@ -835,7 +837,11 @@ AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, QStandardI
     return; //already got it
   }
   KABC::Picture pic = addr.photo();
-  AddresseeViewItem *item = new AddresseeViewItem( addr.realName(), addr );
+  QString name = addr.realName().trimmed();
+  if( name.isEmpty() ) {
+    name = addr.preferredEmail();
+  }
+  AddresseeViewItem *item = new AddresseeViewItem( name, addr );
   item->setIcon( pic.isIntern()
                     ? KIcon( QPixmap::fromImage( pic.data().scaled( QSize( 16, 16 ) ) ) )
                     : KIcon( QLatin1String( "x-office-contact" ) ) );
@@ -1137,27 +1143,27 @@ AddressesDialog::saveAs()
     dlist->insertEntry( *itr );
   }
 }
+#endif
 
 void
 AddressesDialog::searchLdap()
 {
-    if ( !d->ldapSearchDialog ) {
-      d->ldapSearchDialog = new LdapSearchDialog( this );
-      connect( d->ldapSearchDialog, SIGNAL( addresseesAdded() ),
+    if ( !m_ldapSearchDialog ) {
+      m_ldapSearchDialog = new LdapSearchDialog( this );
+      connect( m_ldapSearchDialog, SIGNAL( addresseesAdded() ),
                SLOT(ldapSearchResult() ) );
     }
-    d->ldapSearchDialog->show();
+    m_ldapSearchDialog->show();
 }
 
 void
 AddressesDialog::ldapSearchResult()
 {
-  QStringList emails = d->ldapSearchDialog->selectedEMails().split(',');
+  QStringList emails = m_ldapSearchDialog->selectedEMails().split(',');
   QStringList::iterator it( emails.begin() );
   QStringList::iterator end( emails.end() );
+  QString name, email;
   for ( ; it != end; ++it ){
-      QString name;
-      QString email;
       KPIMUtils::extractEmailAddressAndName( (*it), email, name );
       KABC::Addressee ad;
       ad.setNameFromString( name );
@@ -1166,6 +1172,7 @@ AddressesDialog::ldapSearchResult()
   }
 }
 
+#if 0
 void
 AddressesDialog::filterChanged( const QString& txt )
 {
