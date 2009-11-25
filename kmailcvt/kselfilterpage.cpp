@@ -28,6 +28,7 @@
 #include "filter_opera.hxx"
 #include "filter_thunderbird.hxx"
 #include "filter_kmail_maildir.hxx"
+#include "filter_kmail_archive.hxx"
 #include "filter_sylpheed.hxx"
 #include "filter_thebat.hxx"
 #include "filter_lnotes.hxx"
@@ -50,6 +51,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
         // Patches appreciated. (danimo)
 
         addFilter(new FilterMBox);
+        addFilter(new FilterKMailArchive);
         addFilter(new FilterEvolution);
         addFilter(new FilterEvolution_v2);
         addFilter(new FilterKMail_maildir);
