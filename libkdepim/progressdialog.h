@@ -50,106 +50,105 @@ class ProgressItem;
 class TransactionItem;
 class SSLLabel;
 
-class TransactionItemView : public QScrollArea {
+class TransactionItemView : public QScrollArea
+{
   Q_OBJECT
-public:
-  explicit TransactionItemView( QWidget * parent = 0, const char * name = 0 );
+  public:
+    explicit TransactionItemView( QWidget * parent = 0, const char * name = 0 );
 
-  virtual ~TransactionItemView() {}
-  TransactionItem* addTransactionItem( ProgressItem *item, bool first );
+    virtual ~TransactionItemView() {}
+    TransactionItem *addTransactionItem( ProgressItem *item, bool first );
 
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
 
-  QSize sizeHint() const;
-  QSize minimumSizeHint() const;
-public Q_SLOTS:
-  void slotLayoutFirstItem();
+  public Q_SLOTS:
+    void slotLayoutFirstItem();
 
-protected:
-  virtual void resizeEvent ( QResizeEvent *event );
+  protected:
+    virtual void resizeEvent ( QResizeEvent *event );
 
-private:
-  KVBox *mBigBox;
+  private:
+    KVBox *mBigBox;
 };
 
-class TransactionItem : public KVBox {
-
+class TransactionItem : public KVBox
+{
   Q_OBJECT
+  public:
+    TransactionItem( QWidget *parent, ProgressItem *item, bool first );
 
-public:
-  TransactionItem( QWidget * parent,
-                   ProgressItem* item, bool first );
+    ~TransactionItem();
 
-  ~TransactionItem();
+    void hideHLine();
 
-  void hideHLine();
+    void setProgress( int progress );
+    void setLabel( const QString & );
 
-  void setProgress( int progress );
-  void setLabel( const QString& );
+    // the given text is interpreted as RichText, so you might need to
+    // Qt::escape() it before passing
+    void setStatus( const QString & );
 
-  // the given text is interpreted as RichText, so you might need to
-  // Qt::escape() it before passing
-  void setStatus( const QString& );
+    void setCrypto( bool );
+    void setTotalSteps( int totalSteps );
 
-  void setCrypto( bool );
+    ProgressItem *item() const { return mItem; }
 
-  ProgressItem* item() const { return mItem; }
+    void addSubTransaction( ProgressItem *item );
 
-  void addSubTransaction( ProgressItem *item);
+    // The progressitem is deleted immediately, we take 5s to go out,
+    // so better not use mItem during this time.
+    void setItemComplete() { mItem = 0; }
 
-  // The progressitem is deleted immediately, we take 5s to go out,
-  // so better not use mItem during this time.
-  void setItemComplete() { mItem = 0; }
+  public Q_SLOTS:
+    void slotItemCanceled();
 
-public Q_SLOTS:
-  void slotItemCanceled();
-
-protected:
-  QProgressBar* mProgress;
-  QPushButton*  mCancelButton;
-  QLabel*       mItemLabel;
-  QLabel*       mItemStatus;
-  QFrame*       mFrame;
-  SSLLabel*     mSSLLabel;
-  ProgressItem* mItem;
+  protected:
+    QProgressBar *mProgress;
+    QPushButton  *mCancelButton;
+    QLabel       *mItemLabel;
+    QLabel       *mItemStatus;
+    QFrame       *mFrame;
+    SSLLabel     *mSSLLabel;
+    ProgressItem *mItem;
 };
 
 class KDEPIM_EXPORT ProgressDialog : public OverlayWidget
 {
-    Q_OBJECT
+  Q_OBJECT
+  public:
+    ProgressDialog( QWidget *alignWidget, QWidget *parent, const char *name = 0 );
+    ~ProgressDialog();
+    void setVisible( bool b );
 
-public:
-  ProgressDialog( QWidget* alignWidget, QWidget* parent, const char* name = 0 );
-  ~ProgressDialog();
-  void setVisible( bool b );
+  public Q_SLOTS:
+    void slotToggleVisibility();
 
-public Q_SLOTS:
-  void slotToggleVisibility();
+  protected Q_SLOTS:
+    void slotTransactionAdded( KPIM::ProgressItem *item );
+    void slotTransactionCompleted( KPIM::ProgressItem *item );
+    void slotTransactionCanceled( KPIM::ProgressItem *item );
+    void slotTransactionProgress( KPIM::ProgressItem *item, unsigned int progress );
+    void slotTransactionStatus( KPIM::ProgressItem *item, const QString & );
+    void slotTransactionLabel( KPIM::ProgressItem *item, const QString & );
+    void slotTransactionUsesCrypto( KPIM::ProgressItem *item, bool );
+    void slotTransactionUsesBusyIndicator( KPIM::ProgressItem *, bool );
 
-protected Q_SLOTS:
-void slotTransactionAdded( KPIM::ProgressItem *item );
-  void slotTransactionCompleted( KPIM::ProgressItem *item );
-  void slotTransactionCanceled( KPIM::ProgressItem *item );
-  void slotTransactionProgress( KPIM::ProgressItem *item, unsigned int progress );
-  void slotTransactionStatus( KPIM::ProgressItem *item, const QString& );
-  void slotTransactionLabel( KPIM::ProgressItem *item, const QString& );
-  void slotTransactionUsesCrypto( KPIM::ProgressItem *item, bool );
+    void slotClose();
+    void slotShow();
+    void slotHide();
 
-  void slotClose();
-  void slotShow();
-  void slotHide();
+  Q_SIGNALS:
+    void visibilityChanged( bool );
 
-Q_SIGNALS:
-  void visibilityChanged( bool );
+  protected:
+    virtual void closeEvent( QCloseEvent * );
 
-protected:
-  virtual void closeEvent( QCloseEvent* );
-
-  TransactionItemView* mScrollView;
-  TransactionItem* mPreviousItem;
-  QMap< const ProgressItem*, TransactionItem* > mTransactionsToListviewItems;
-  bool mWasLastShown;
+    TransactionItemView *mScrollView;
+    TransactionItem *mPreviousItem;
+    QMap<const ProgressItem *, TransactionItem *> mTransactionsToListviewItems;
+    bool mWasLastShown;
 };
-
 
 } // namespace KPIM
 
