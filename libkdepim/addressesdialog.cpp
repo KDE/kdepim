@@ -1371,7 +1371,6 @@ AddressesDialog::allAddressee( QStandardItem* parent ) const
         lst += item->addressee();
       } break;
       case AddresseeViewItem::Group: {
-        typedef QPair<QString,QString> ItemPair;
         QList<ItemPair> mails;
         extractMailsFromGroup( item->group(), mails );
         foreach( ItemPair p, mails ) {
