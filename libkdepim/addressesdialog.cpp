@@ -1317,8 +1317,10 @@ AddressesDialog::allAddressee( QTreeWidget* view, bool onlySelected ) const
 #endif
 
 typedef QPair<QString,QString> ItemPair;
-void extractMailsFromGroup( const KABC::ContactGroup &group, QList<ItemPair> &mails )
+void extractMailsFromGroup( const KABC::ContactGroup &group, QList<ItemPair> &mails, QStringList groupsDone = QStringList() )
 {
+  Q_ASSERT( ! group.id().isEmpty() );
+  groupsDone.append( group.id() );
   for( uint i = 0; i < group.dataCount(); ++i )
     mails.append( ItemPair( group.data( i ).name(), group.data( i ).email() ) );
   for( uint i = 0; i < group.contactReferenceCount(); ++i )
@@ -1332,8 +1334,8 @@ void extractMailsFromGroup( const KABC::ContactGroup &group, QList<ItemPair> &ma
       Q_ASSERT( j->items().count() == 1 );
       Q_ASSERT( j->items().first().hasPayload<KABC::ContactGroup>() );
       const KABC::ContactGroup g = j->items().first().payload<KABC::ContactGroup>();
-      //Q_ASSERT( g != group ); //FIXME prevent recursive
-      extractMailsFromGroup( g, mails );
+      if( ! groupsDone.contains( g.id() ) )
+        extractMailsFromGroup( g, mails, groupsDone );
     }
   }
 }
