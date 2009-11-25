@@ -12,6 +12,8 @@ NEPOMUK_ADD_ONTOLOGY_CLASSES(
 
 include_directories(${SOPRANO_INCLUDE_DIR})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 soprano_add_ontology(nie_apps_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/nie.rdfs "NIE" "Vocabulary" "rdfxml")
 soprano_add_ontology(nie_apps_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/nco.rdfs "NCO" "Vocabulary" "rdfxml")
 soprano_add_ontology(nie_apps_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/nmo.rdfs "NMO" "Vocabulary" "rdfxml")
