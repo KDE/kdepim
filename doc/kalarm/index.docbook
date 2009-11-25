@@ -186,12 +186,12 @@ background.</para>
 
 <para>The main &kalarm; window displays the current list of pending
 alarms, showing their times, repetition intervals, colors, and
-message texts, names of files to display, commands to execute or email
-subjects. (For a recurring alarm, the time shown is its next scheduled
-trigger time. For an alarm with a reminder, the time shown is the time
-of the alarm proper, not the reminder time.) An icon at the left of
-each alarm text/file/command/email subject indicates the type of
-alarm.</para>
+message texts, names of files to play or display, commands to execute
+or email subjects. (For a recurring alarm, the time shown is its next
+scheduled trigger time. For an alarm with a reminder, the time shown
+is the time of the alarm proper, not the reminder time.) An icon at
+the left of each alarm text/file/command/email subject indicates the
+type of alarm.</para>
 
 <screenshot>
 <screeninfo>Screenshot of the &kalarm; main window</screeninfo>
