@@ -39,6 +39,7 @@
 #include <Akonadi/Session>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
+#include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemCreateJob>
 #include <Akonadi/EntityTreeView>
 #include <Akonadi/CollectionDialog>
@@ -1315,6 +1316,28 @@ AddressesDialog::allAddressee( QTreeWidget* view, bool onlySelected ) const
 }
 #endif
 
+typedef QPair<QString,QString> ItemPair;
+void extractMailsFromGroup( const KABC::ContactGroup &group, QList<ItemPair> &mails )
+{
+  for( uint i = 0; i < group.dataCount(); ++i )
+    mails.append( ItemPair( group.data( i ).name(), group.data( i ).email() ) );
+  for( uint i = 0; i < group.contactReferenceCount(); ++i )
+    mails.append( ItemPair( QString(), group.contactReference( i ).preferredEmail() ) );
+
+  for( uint i = 0; i < group.contactGroupReferenceCount(); ++i ) {
+    const Akonadi::Item item( group.contactGroupReference( i ).uid().toLongLong() );
+    Akonadi::ItemFetchJob *j = new Akonadi::ItemFetchJob( item );
+    j->fetchScope().fetchFullPayload();
+    if( j->exec() ) {
+      Q_ASSERT( j->items().count() == 1 );
+      Q_ASSERT( j->items().first().hasPayload<KABC::ContactGroup>() );
+      const KABC::ContactGroup g = j->items().first().payload<KABC::ContactGroup>();
+      //Q_ASSERT( g != group ); //FIXME prevent recursive
+      extractMailsFromGroup( g, mails );
+    }
+  }
+}
+
 KABC::Addressee::List
 AddressesDialog::allAddressee( QStandardItem* parent ) const
 {
@@ -1348,11 +1371,7 @@ AddressesDialog::allAddressee( QStandardItem* parent ) const
       case AddresseeViewItem::Group: {
         typedef QPair<QString,QString> ItemPair;
         QList<ItemPair> mails;
-        const KABC::ContactGroup group = item->group();
-        for( uint i = 0; i < group.dataCount(); ++i )
-          mails.append( ItemPair( group.data( i ).name(), group.data( i ).email() ) );
-        for( uint i = 0; i < group.contactReferenceCount(); ++i )
-          mails.append( ItemPair( QString(), group.contactReference( i ).preferredEmail() ) );
+        extractMailsFromGroup( item->group(), mails );
         foreach( ItemPair p, mails ) {
           const QString name = p.first;
           const QString email = p.second;
