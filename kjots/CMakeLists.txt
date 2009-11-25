@@ -83,6 +83,7 @@ target_link_libraries(kjots
   ${kjotsLibs}
   ${KDE4_KUTILS_LIBS}
   ${KDE4_AKONADI_LIBS}
+  ${KDE4_KMIME_LIBS}
   ${KDE4_AKONADI_KMIME_LIBS}
   grantlee_core_library
 )
@@ -131,6 +132,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
     ${KDEPIMLIBS_KMIME_LIBS}
     ${KDE4_AKONADI_LIBS}
     ${KDE4_AKONADI_KMIME_LIBS}
+    ${KDE4_KMIME_LIBS}
     grantlee_core_library
   )
 
