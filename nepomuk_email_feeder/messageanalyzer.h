@@ -83,6 +83,7 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     bool createCryptoContainer( const QByteArray& keyId );
     bool mountCryptoContainer( const QByteArray& keyId );
     QString containerPathFromKeyId( const QByteArray& keyId );
+    QString repositoryPathFromKeyId( const QByteArray &keyId );
 
   private:
     NepomukFeederAgentBase *m_parent;

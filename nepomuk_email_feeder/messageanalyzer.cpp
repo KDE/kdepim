@@ -49,9 +49,11 @@
 #include <Nepomuk/Variant>
 #include <Nepomuk/Tag>
 
+#include <Soprano/BackendSetting>
 #include <Soprano/Client/DBusClient>
 #include <Soprano/Client/DBusModel>
 #include <Soprano/Model>
+#include <Soprano/PluginManager>
 #include <Soprano/QueryResultIterator>
 #include <Soprano/Vocabulary/NAO>
 
@@ -153,6 +155,8 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
 void MessageAnalyzer::processPart(KMime::Content* content)
 {
   bool resetModel = false;
+  Soprano::Model* cryptoModel = 0;
+
   if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !m_mainModel ) {
     const MessageViewer::PartMetaData metaData = m_nodeHelper->partMetaData( content );
     kDebug() << content << metaData.isEncrypted << metaData.keyId;
@@ -164,13 +168,20 @@ void MessageAnalyzer::processPart(KMime::Content* content)
         return;
       kDebug() << "crypto container mounted";
       Soprano::Client::DBusClient dbusClient( "org.kde.nepomuk.services.nepomukstorage" );
-      Soprano::Model* cryptoModel = dbusClient.createModel( metaData.keyId );
+      cryptoModel = dbusClient.createModel( metaData.keyId );
+      if ( !cryptoModel ) {
+        //  try again, the hard way, we are apparently using a Nepomuk server that lost support for multiple repoisitories :-/
+        const Soprano::Backend* backend = Soprano::PluginManager::instance()->discoverBackendByName( "virtuosobackend" );
+        Soprano::BackendSettings settings;
+        settings.append( Soprano::BackendSetting( Soprano::BackendOptionStorageDir, repositoryPathFromKeyId( metaData.keyId ) ) );
+        cryptoModel = backend->createModel( settings );
+      }
       if ( cryptoModel ) {
         m_mainModel = Nepomuk::ResourceManager::instance()->mainModel();
         Nepomuk::ResourceManager::instance()->setOverrideMainModel( cryptoModel );
         resetModel = true;
       } else {
-        kWarning() << "Could not obtain cryto index model";
+        kWarning() << "Could not obtain cryto index model" << dbusClient.lastError();
       }
     }
   }
@@ -216,6 +227,7 @@ void MessageAnalyzer::processPart(KMime::Content* content)
   if ( resetModel ) {
     Nepomuk::ResourceManager::instance()->setOverrideMainModel( 0 );
     m_mainModel = 0;
+    delete cryptoModel;
     kDebug() << "Unmounting crypto container";
     delete m_ctx;
     m_ctx = 0;
@@ -266,6 +278,7 @@ void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLa
 
 void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
 {
+  Q_UNUSED( mode );
   kDebug() << m_otp->hasPendingAsyncJobs();
   const KMime::Message::Ptr msg = m_item.payload<KMime::Message::Ptr>();
   m_otp->parseObjectTree( msg.get() );
@@ -311,7 +324,7 @@ bool MessageAnalyzer::mountCryptoContainer( const QByteArray& keyId )
   kDebug() << keyId;
 
   const QString cryptoContainer = containerPathFromKeyId( keyId );
-  const QString mountDir = KStandardDirs::locateLocal( "data", "nepomuk/repository/" ) + QLatin1String( keyId );
+  const QString mountDir = repositoryPathFromKeyId( keyId );
   KStandardDirs::makeDir( mountDir );
 
   // ### HACK temporary hack until G13 reports that as an error correctly
@@ -345,6 +358,12 @@ QString MessageAnalyzer::containerPathFromKeyId(const QByteArray& keyId)
   containerPath += QString::fromLatin1( keyId );
   containerPath += QLatin1String(".g13");
   return containerPath;
+}
+
+QString MessageAnalyzer::repositoryPathFromKeyId(const QByteArray& keyId)
+{
+  Q_ASSERT( !keyId.isEmpty() );
+  return KStandardDirs::locateLocal( "data", "nepomuk/repository/" ) + QLatin1String( keyId );
 }
 
 #include "messageanalyzer.moc"
