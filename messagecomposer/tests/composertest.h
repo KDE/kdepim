@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -38,12 +39,12 @@ class ComposerTest : public QObject
     void testEncryptOpenPGPMime();
     void testSignEncryptOpenPGPMime();
     // the following will do for s-mime as well, as the same sign/enc jobs are used
-   /* void testSignEncryptSameAttachmentsOpenPGPMime();
+    void testSignEncryptSameAttachmentsOpenPGPMime();
     void testSignEncryptLateAttachmentsOpenPGPMime();
   
     // secondary recipients
     void testBCCEncrypt();
-
+/*
     // inline pgp
     void testSignInlinePGP();
     void testEncryptInlinePGP();

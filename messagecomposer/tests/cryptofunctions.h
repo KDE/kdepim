@@ -32,27 +32,27 @@ namespace KMime {
 
 namespace ComposerTestUtil
 {
-/**
- * Returns list of keys used in various crypto routines
- */
+  /**
+  * Returns list of keys used in various crypto routines
+  */
 
-std::vector<GpgME::Key> getKeys();
+  std::vector<GpgME::Key> getKeys();
 
 
-/**
- * Verifies that the given MIME content is signed and that the text is equal.
- */
-bool verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f );
+  /**
+  * Verifies that the given MIME content is signed and that the text is equal.
+  */
+  bool verifySignature( KMime::Content* content, QByteArray signedContent, Kleo::CryptoMessageFormat f );
 
-/**
- * Verifies that the given MIME content is encrypted, and that the text is equal
- */
-bool verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f );
+  /**
+  * Verifies that the given MIME content is encrypted, and that the text is equal
+  */
+  bool verifyEncryption( KMime::Content* content, QByteArray encrContent, Kleo::CryptoMessageFormat f );
 
-/**
- * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
- */
-bool verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f );
+  /**
+  * Verifies that the given MIME content is signed and then encrypted, and the original text is as specified
+  */
+  bool verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, bool withAttachment = false );
 
 
 }

@@ -1,5 +1,6 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -35,6 +36,10 @@ using namespace KMime;
 #include <messagecomposer/infopart.h>
 #include <messagecomposer/textpart.h>
 using namespace Message;
+
+#include <messageviewer/objecttreeparser.h>
+#include <messageviewer/nodehelper.h>
+
 
 #include <messagecore/attachmentpart.h>
 #include <boost/shared_ptr.hpp>
@@ -150,7 +155,7 @@ void ComposerTest::testSignEncryptOpenPGPMime()
   QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
 }
 
-/*
+
 void ComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
 {
   Composer *composer = new Composer;
@@ -176,8 +181,9 @@ void ComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
   composer = 0;
 
 
-  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
-                                          Kleo::OpenPGPMIMEFormat ) );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message,
+                                                           QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                                           Kleo::OpenPGPMIMEFormat, true ) );
 
   QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
   QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
@@ -186,10 +192,97 @@ void ComposerTest::testSignEncryptSameAttachmentsOpenPGPMime()
 
 void ComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
 {
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  fillComposerCryptoData( composer );
+
+  AttachmentPart::Ptr attachment = AttachmentPart::Ptr( new AttachmentPart );
+  attachment->setData( "abc" );
+  attachment->setMimeType( "x-some/x-type" );
+  attachment->setFileName( QString::fromLocal8Bit( "anattachment.txt" ) );
+  attachment->setEncrypted( false );
+  attachment->setSigned( false );
+  composer->addAttachmentPart( attachment );
+
+  composer->setSignAndEncrypt( true, true );
+  composer->setMessageCryptoFormat( Kleo::OpenPGPMIMEFormat );
+
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+
+  KMime::Message* message = composer->resultMessages().first();
+  delete composer;
+  composer = 0;
+
+  // as we have an additional attachment, just ignore it when checking for sign/encrypt
+  KMime::Content * b = MessageViewer::NodeHelper::firstChild( message );
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( b,
+                                                           QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                                           Kleo::OpenPGPMIMEFormat, true ) );
+
+  QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+
+  // now check the attachment separately
+  kDebug() << "message:" << message->encodedContent();
+  QVERIFY( MessageViewer::NodeHelper::nextSibling( MessageViewer::NodeHelper::firstChild( message ) )->body() == "abc" );
+//   kDebug() << "attachment:" << attNode->encodedContent();
+
+}
 
 
-}*/
-    
+void ComposerTest::testBCCEncrypt()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  composer->infoPart()->setBcc( QStringList( QString::fromLatin1( "bcc@bcc.org" ) ) );
+
+  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys();
+
+  QStringList primRecipients;
+  primRecipients << QString::fromLocal8Bit( "you@you.you" );
+  std::vector< GpgME::Key > pkeys;
+  pkeys.push_back( keys[1] );
+
+  QStringList secondRecipients;
+  secondRecipients << QString::fromLocal8Bit( "bcc@bcc.org" );
+  std::vector< GpgME::Key > skeys;
+  skeys.push_back( keys[2] );
+
+  QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
+  data.append( QPair<QStringList, std::vector<GpgME::Key> >( primRecipients, pkeys ) );
+  data.append( QPair<QStringList, std::vector<GpgME::Key> >( secondRecipients, skeys ) );
+  
+  composer->setSignAndEncrypt( true, true );
+  composer->setMessageCryptoFormat( Kleo::OpenPGPMIMEFormat );
+
+  composer->setEncryptionKeys( data );
+  composer->setSigningKeys( keys );
+  
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 2 );
+
+  KMime::Message* primMessage = composer->resultMessages().first();
+  KMime::Message* secMessage = composer->resultMessages()[1];
+  delete composer;
+  composer = 0;
+
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( primMessage, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+
+  QVERIFY( primMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  QVERIFY( primMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+  
+
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( secMessage, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::OpenPGPMIMEFormat ) );
+
+  QVERIFY( secMessage->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  QVERIFY( secMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+  QVERIFY( secMessage->bcc()->asUnicodeString() == QString::fromLocal8Bit( "bcc@bcc.org" ) );
+
+
+}
+
+ 
 void ComposerTest::fillComposerData( Composer* composer )
 {
   composer->globalPart()->setFallbackCharsetEnabled( true );

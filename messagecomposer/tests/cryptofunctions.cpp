@@ -51,7 +51,7 @@ std::vector<GpgME::Key> ComposerTestUtil::getKeys()
   std::vector< GpgME::Key > keys;
   GpgME::KeyListResult res = job->exec( QStringList(), true, keys );
 
-  Q_ASSERT( keys.size() == 1 );
+  Q_ASSERT( keys.size() == 3 );
   Q_ASSERT( !res.error() );
   kDebug() << "got private keys:" << keys.size();
 
@@ -133,7 +133,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   return false;
 }
 
-bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f )
+bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QByteArray origContent, Kleo::CryptoMessageFormat f, bool withAttachment )
 {
   // store it in a KMime::Message, that's what OTP needs
   KMime::Message* resultMessage =  new KMime::Message;
@@ -152,14 +152,20 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
 
     MessageViewer::ProcessResult pResult( nh );
     otp.parseObjectTree( resultMessage );
+//     kDebug() << "message:" << resultMessage->encodedContent();
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 
     KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
-      kDebug() << "resultMessage signedpart:" << signedPart->encodedContent();
+//       kDebug() << "resultMessage signedpart:" << signedPart->encodedContent();
     otp.processMultiPartSignedSubtype( signedPart, pResult );
     Q_ASSERT( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
-    Q_ASSERT( MessageViewer::NodeHelper::firstChild( signedPart )->body() == origContent );
 
+    if( withAttachment ) {
+      // if there's an attachment we need to dig deeper
+      Q_ASSERT( MessageViewer::NodeHelper::firstChild( MessageViewer::NodeHelper::firstChild( signedPart ) )->body() == origContent );
+    } else {
+      Q_ASSERT( MessageViewer::NodeHelper::firstChild( signedPart )->body() == origContent );
+    }
     return true;
   }
 
