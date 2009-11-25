@@ -41,6 +41,7 @@
 class QModelIndex;
 class QStandardItemModel;
 class QStandardItem;
+class KJob;
 
 namespace Akonadi {
   class Item;
@@ -191,7 +192,6 @@ namespace KPIM {
 
 #if 0
   private Q_SLOTS:
-    void saveAs();
     void updateAvailableAddressees();
 
   protected:
@@ -220,12 +220,15 @@ namespace KPIM {
   private Q_SLOTS:
     void availableSelectionChanged();
     void selectedSelectionChanged();
+    void selectedCountChanged();
     void addSelectedTo();
     void addSelectedCC();
     void addSelectedBCC();
     void removeEntry();
     void searchLdap();
     void ldapSearchResult();
+    void saveAsDistributionList();
+    void saveAsDistributionListDone( KJob * );
 
   private:
     Akonadi::Session *m_session;
@@ -234,7 +237,7 @@ namespace KPIM {
     ProxyModel *m_availableModel;
     QStandardItemModel *m_selectedModel;
     QStandardItem *m_toItem, *m_ccItem, *m_bccItem;
-    QPushButton *m_tobtn, *m_ccbtn, *m_bccbtn, *m_rembtn;
+    QPushButton *m_tobtn, *m_ccbtn, *m_bccbtn, *m_rembtn, *m_savebtn;
     LdapSearchDialog  *m_ldapSearchDialog;
 
     QStandardItem* selectedToItem();

@@ -39,7 +39,9 @@
 #include <Akonadi/Session>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/ItemFetchScope>
+#include <Akonadi/ItemCreateJob>
 #include <Akonadi/EntityTreeView>
+#include <Akonadi/CollectionDialog>
 
 #include <KDebug>
 #include <KGlobal>
@@ -60,6 +62,7 @@
 #include <QPixmap>
 #include <QHeaderView>
 #include <QStandardItemModel>
+#include <QPointer>
 
 using namespace Akonadi;
 
@@ -363,7 +366,13 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
   m_selectedView->setModel( m_selectedModel );
   m_selectedView->header()->setResizeMode( QHeaderView::ResizeToContents );
   connect( m_selectedView->selectionModel(), SIGNAL( selectionChanged(QItemSelection,QItemSelection) ), SLOT( selectedSelectionChanged() ) );
-  
+  connect( m_selectedModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(selectedCountChanged())  );
+  connect( m_selectedModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(selectedCountChanged())  );
+
+  m_savebtn = new QPushButton( i18n("Save as Distribution List..."), rightbox );
+  m_savebtn->setEnabled( false );
+  connect( m_savebtn, SIGNAL(clicked()), this, SLOT(saveAsDistributionList()) );
+
   availableSelectionChanged();
   selectedSelectionChanged();
   setInitialSize( QSize( 780, 450 ) );
@@ -389,6 +398,12 @@ void AddressesDialog::selectedSelectionChanged()
   AddresseeViewItem *item = dynamic_cast<AddresseeViewItem*>( m_selectedModel->itemFromIndex( index ) );
   const bool enabled = item != 0;
   m_rembtn->setEnabled( enabled );
+}
+
+void AddressesDialog::selectedCountChanged()
+{
+  const bool enabled = m_toItem || m_ccItem || m_bccItem;
+  m_savebtn->setEnabled( enabled );
 }
 
 void AddressesDialog::addSelectedTo()
@@ -839,7 +854,7 @@ AddressesDialog::addAddresseeToSelected( const KABC::Addressee& addr, QStandardI
   KABC::Picture pic = addr.photo();
   QString name = addr.realName().trimmed();
   if( name.isEmpty() ) {
-    name = addr.preferredEmail();
+    name = email;
   }
   AddresseeViewItem *item = new AddresseeViewItem( name, addr );
   item->setIcon( pic.isIntern()
@@ -1099,10 +1114,36 @@ static KABC::Resource *requestResource( KABC::AddressBook* abook, QWidget *paren
   }
   else return 0;
 }
+#endif
+
+void appendToContactGroup( QStandardItem *parentItem, KABC::ContactGroup &group )
+{
+  if( ! parentItem )
+    return;
+  for(int i = 0; i < parentItem->rowCount(); ++i) {
+    AddresseeViewItem *item = dynamic_cast<AddresseeViewItem*>( parentItem->child( i ) );
+    Q_ASSERT( item );
+    switch( item->itemType() ) {
+      case AddresseeViewItem::Address: {
+        KABC::Addressee addr = item->addressee();
+        const QString id = addr.uid();
+        Q_ASSERT( ! id.isEmpty() );
+        group.append( KABC::ContactGroup::ContactReference( id ) );
+      } break;
+      case AddresseeViewItem::Group: {
+        KABC::ContactGroup group = item->group();
+        const QString id = group.id();
+        Q_ASSERT( ! id.isEmpty() );
+        group.append( KABC::ContactGroup::ContactGroupReference( id ) );
+      } break;
+    }
+  }
+}
 
 void
-AddressesDialog::saveAs()
+AddressesDialog::saveAsDistributionList()
 {
+#if 0
   if ( m_ui->mSelectedView->topLevelItemCount() == 0 ) {
     KMessageBox::information( 0,
                               i18n("There are no addresses in your list. "
@@ -1142,8 +1183,52 @@ AddressesDialog::saveAs()
         itr != addrl.end(); ++itr ) {
     dlist->insertEntry( *itr );
   }
-}
+#else
+  Q_ASSERT( m_toItem || m_ccItem || m_bccItem );
+
+  QPointer<CollectionDialog> dlg = new CollectionDialog( this );
+  dlg->setMimeTypeFilter( QStringList() << KABC::ContactGroup::mimeType() );
+  dlg->setAccessRightsFilter( Collection::CanCreateItem );
+  dlg->setCaption( i18n( "Select Address Book" ) );
+  dlg->setDescription( i18n( "Select the address book the new contact group shall be saved in:" ) );
+  if ( dlg->exec() != KDialog::Accepted )
+    return;
+
+  Akonadi::Collection collection = dlg->selectedCollection();
+  Q_ASSERT( collection.isValid() );
+    
+  bool ok = false;
+  QString name = KInputDialog::getText( i18n("New Contact Group"),
+                                        i18n("Please enter name of the new contact group:"),
+                                        QString(), &ok, this );
+  if ( !ok || name.isEmpty() )
+    return;
+
+  KABC::ContactGroup group;
+  group.setName( name );
+
+  appendToContactGroup( m_toItem, group );
+  appendToContactGroup( m_ccItem, group );
+  appendToContactGroup( m_bccItem, group );
+
+  Akonadi::Item item;
+  item.setMimeType( KABC::ContactGroup::mimeType() );
+  item.setPayload<KABC::ContactGroup>( group );
+
+  Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
+  connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
+  job->start();
 #endif
+}
+
+void AddressesDialog::saveAsDistributionListDone( KJob *job )
+{
+  if( ! job->error() ) {
+    KMessageBox::error( this, job->errorText() );
+    return;
+  }
+  m_availableModel->emitLayoutChanged();
+}
 
 void
 AddressesDialog::searchLdap()
@@ -1261,17 +1346,20 @@ AddressesDialog::allAddressee( QStandardItem* parent ) const
         lst += item->addressee();
       } break;
       case AddresseeViewItem::Group: {
-        QStringList mails;
+        typedef QPair<QString,QString> ItemPair;
+        QList<ItemPair> mails;
         const KABC::ContactGroup group = item->group();
         for( uint i = 0; i < group.dataCount(); ++i )
-          mails.append( group.data( i ).email() );
+          mails.append( ItemPair( group.data( i ).name(), group.data( i ).email() ) );
         for( uint i = 0; i < group.contactReferenceCount(); ++i )
-          mails.append( group.contactReference( i ).preferredEmail() );
-        foreach( QString email, mails ) {
+          mails.append( ItemPair( QString(), group.contactReference( i ).preferredEmail() ) );
+        foreach( ItemPair p, mails ) {
+          const QString name = p.first;
+          const QString email = p.second;
           if( email.isEmpty() )
             continue;
           KABC::Addressee addr;
-          addr.setNameFromString( group.name() );
+          addr.setNameFromString( name );
           addr.insertEmail( email );
           lst.append( addr );
         }
