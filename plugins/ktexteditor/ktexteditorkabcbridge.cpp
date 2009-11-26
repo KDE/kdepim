@@ -16,59 +16,63 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include <kabc/stdaddressbook.h>
 #include <kabc/addressee.h>
-#include <QString>
-#include <QWidget>
-#include <QEventLoop>
-#include <kprocess.h>
-#include <kmessagebox.h>
-#include <klocale.h>
+#include <kcmultidialog.h>
 #include <kglobal.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kpimidentities/identity.h>
+#include <kpimidentities/identitymanager.h>
 
-static void ktexteditorkabcbridge_run_kaddressbook() {
-	QEventLoop eventLoop;
-	KProcess proc;
-	proc<<"kaddressbook";
-	proc<<"--nofork";
-	QObject::connect(&proc, SIGNAL(finished (int,QProcess::ExitStatus)),
-		&eventLoop, SLOT(quit()));
-	proc.execute();
-	eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
-}
+#include <QtGui/QWidget>
+
+using namespace KPIMIdentities;
 
 extern "C" {
-KDE_EXPORT QString ktexteditorkabcbridge(const QString& placeholder, QWidget *widget,bool *ok) {
-	KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );
-	KABC::StdAddressBook *addrBook=KABC::StdAddressBook::self();
-	KABC::Addressee userAddress=addrBook->whoAmI();
-	if (userAddress.isEmpty()) {
- 		KMessageBox::error(widget,
-                          i18n("The template needs information about you. It looks like you did not set that information in the address book. Please set the information to use this template."),
-                          i18n("Missing personal information"));
-                *ok=false;
-                return QString();
-/* 		if (KMessageBox::questionYesNo(widget,
-                          i18n("The template needs information about you. It looks like you did not set that information in the addressbook. Do you want to open the addressbook to enter the information ?"),
-                          i18n("Missing personal information")) == KMessageBox::Yes) {
-			ktexteditorkabcbridge_run_kaddressbook();
-			userAddress=addrBook->whoAmI();
-		}
-		if (userAddress.isEmpty()) {
-			KMessageBox::sorry(widget,i18n("The template needs information about you, please set your identity in your addressbook"));
-			if (ok) *ok=false;
-			return QString();
-		}*/
-	}
-	if (ok) *ok=true;
-	if ( placeholder == "firstname" )
-		return userAddress.givenName();
-	else if ( placeholder == "lastname" )
-		return userAddress.familyName();
-	else if ( placeholder == "fullname" )
-		return userAddress.assembledName();
-	else if ( placeholder == "email" )
-		return userAddress.preferredEmail();
-	else return QString();
+
+KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *widget, bool *ok )
+{
+  KGlobal::locale()->insertCatalog( "ktexteditorkabcbridge_plugin" );
+
+  IdentityManager manager( true, widget );
+  Identity defaultIdentity = manager.defaultIdentity();
+
+  if ( defaultIdentity.fullName().isEmpty() && defaultIdentity.emailAddr().isEmpty() ) {
+    const int result = KMessageBox::questionYesNo( widget,
+                                                   i18n( "The template needs information about you. It looks like you did not set that information yet. Do you want to set that information now?" ),
+                                                   i18n( "Missing personal information" ) );
+
+    if ( result == KMessageBox::No ) {
+      *ok = false;
+      return QString();
+    }
+
+    KCMultiDialog dlg( widget );
+    dlg.addModule( "kcm_useraccount.desktop" );
+    if ( !dlg.exec() ) {
+      *ok = false;
+      return QString();
+    }
+  }
+
+  defaultIdentity = manager.defaultIdentity();
+
+  if ( ok )
+    *ok = true;
+
+  KABC::Addressee contact;
+  contact.setNameFromString( defaultIdentity.fullName() );
+
+  if ( placeHolder == "firstname" )
+    return contact.givenName();
+  else if ( placeHolder == "lastname" )
+    return contact.familyName();
+  else if ( placeHolder == "fullname" )
+    return contact.assembledName();
+  else if ( placeHolder == "email" )
+    return defaultIdentity.emailAddr();
+  else
+    return QString();
 }
+
 }
