@@ -27,6 +27,7 @@ target_link_libraries(akonadi_nepomuk_rss_feeder
   ${QT_QTCORE_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${NEPOMUK_LIBRARIES}
+  ${STRIGI_STREAMS_LIBRARY}
   ${STRIGI_STREAMANALYZER_LIBRARY}
   ${SOPRANO_LIBRARIES}
 )
