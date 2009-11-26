@@ -144,6 +144,7 @@ private:
             QPushButton * const ok = buttonBox.addButton( QDialogButtonBox::Ok );
             ok->setEnabled( false );
             QPushButton * const cancel = buttonBox.addButton( QDialogButtonBox::Close );
+            Q_UNUSED( cancel );
             QPushButton * const reload = buttonBox.addButton( i18n("Reload"),    QDialogButtonBox::ActionRole );
             QPushButton * const lookup = buttonBox.addButton( i18n("Lookup..."), QDialogButtonBox::ActionRole );
             QPushButton * const create = buttonBox.addButton( i18n("New..."),    QDialogButtonBox::ActionRole );
