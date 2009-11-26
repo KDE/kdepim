@@ -343,8 +343,12 @@ bool MessageAnalyzer::mountCryptoContainer( const QByteArray& keyId )
   GpgME::VfsMountResult res = m_ctx->mountVFS( cryptoContainer.toLocal8Bit(), mountDir.toLocal8Bit() );
   kDebug() << res.mountDir() << res.error().asString() << res.error();
 
+#ifdef Q_OS_UNIX
   // ### HACK temporary hack until the mount race is fixed in G13
   sleep( 1 );
+#else
+  // TODO check if similar hack needed for Windows as well
+#endif
 
   return !res.error();
 }

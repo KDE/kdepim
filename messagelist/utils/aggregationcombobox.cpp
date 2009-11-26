@@ -55,7 +55,7 @@ void AggregationComboBox::writeDefaultConfig() const
   Manager::instance()->aggregationsConfigurationCompleted();
 }
 
-void AggregationComboBox::writeStorageModelConfig( Core::StorageModel *storageModel, bool isPrivateSetting ) const
+void AggregationComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
 {
   writeStorageModelConfig( storageModel->id(), isPrivateSetting );
 }
@@ -84,7 +84,7 @@ void AggregationComboBox::readStorageModelConfig( const QString & id, bool &isPr
   d->setCurrentAggregation( aggregation );
 }
 
-void AggregationComboBox::readStorageModelConfig( Core::StorageModel *storageModel, bool &isPrivateSetting )
+void AggregationComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
 {
   readStorageModelConfig( storageModel->id(), isPrivateSetting );
 }

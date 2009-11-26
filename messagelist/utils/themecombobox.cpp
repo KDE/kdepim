@@ -63,7 +63,7 @@ void ThemeComboBox::writeStorageModelConfig( const Akonadi::Collection &col, boo
   writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
 }
 
-void ThemeComboBox::writeStorageModelConfig( Core::StorageModel *storageModel, bool isPrivateSetting ) const
+void ThemeComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
 {
   writeStorageModelConfig( storageModel->id(), isPrivateSetting );
 }
@@ -88,7 +88,7 @@ void ThemeComboBox::readStorageModelConfig( const Akonadi::Collection& col, bool
 
 }
 
-void ThemeComboBox::readStorageModelConfig( Core::StorageModel *storageModel, bool &isPrivateSetting )
+void ThemeComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
 {
   const Theme *theme = Manager::instance()->themeForStorageModel( storageModel, &isPrivateSetting );
   d->setCurrentTheme( theme );

@@ -30,7 +30,6 @@
 #include "netresource.h"
 #include "ui/netfeedcreatedialog.h"
 #include "ui/feedpropertiesdialog.h"
-#include "subscriptionsmodel.h"
 #include "tagprovider.h"
 #include "tagjobs.h"
 #include "ui/tagpropertiesdialog.h"

@@ -228,11 +228,11 @@ static bool readItem( Akonadi::Item& akonadiItem, QXmlStreamReader& reader ) {
             else if ( el.commentsFeed.isNextIn( reader ) )
                 item.setCommentsFeed( reader.readElementText() );
             else if ( el.link.isNextIn( reader ) )
-                ::readLink( item, reader );
+                readLink( item, reader );
             else if ( el.author.isNextIn( reader ) )
-                ::readAuthor( item, reader );
+                readAuthor( item, reader );
             else if ( el.category.isNextIn( reader ) )
-                ::readCategory( item, reader );
+                readCategory( item, reader );
             else if ( el.published.isNextIn( reader ) )
                 item.setDatePublished( KDateTime::fromString( reader.readElementText(), KDateTime::ISODate ) );
             else if ( el.updated.isNextIn( reader ) )
