@@ -39,7 +39,7 @@ KDE_EXPORT QString ktexteditorkabcbridge( const QString &placeHolder, QWidget *w
 
   if ( defaultIdentity.fullName().isEmpty() && defaultIdentity.emailAddr().isEmpty() ) {
     const int result = KMessageBox::questionYesNo( widget,
-                                                   i18n( "The template needs information about you. It looks like you did not set that information yet. Do you want to set that information now?" ),
+                                                   i18n( "The template needs information about you, but it looks as if you have not yet provided that information. Do you want to provide it now?" ),
                                                    i18n( "Missing personal information" ) );
 
     if ( result == KMessageBox::No ) {
