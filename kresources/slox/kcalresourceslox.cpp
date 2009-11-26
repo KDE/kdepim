@@ -334,6 +334,11 @@ void KCalResourceSlox::uploadIncidences()
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( ClientId ),
                                  mUploadedIncidence->uid() );
 
+  if ( type() == "ox" ) {
+    const QString lastModified = mUploadedIncidence->customProperty( "SLOX", "LastModified" );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastModified ), lastModified );
+  }
+
   if ( mUploadIsDelete ) {
     if ( mUploadedIncidence->type() == "Event" ) {
       url.setPath( "/servlet/webdav.calendar/" + sloxId );
@@ -694,6 +699,8 @@ void KCalResourceSlox::parseIncidenceAttribute( const QDomElement &e,
     parseReadRightsAttribute( e, incidence );
   } else if ( tag == fieldName( Categories ) ) {
     incidence->setCategories( text.split( QRegExp(",\\s*") ) );
+  } else if ( tag == fieldName( LastModified ) && type() == "ox" ) {
+    incidence->setCustomProperty( "SLOX", "LastModified", text );
   }
 }
 

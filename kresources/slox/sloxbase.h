@@ -34,6 +34,7 @@ class KSLOX_EXPORT SloxBase {
       ClientId,
       FolderId,
       LastSync,
+      LastModified,
       ObjectType,
       ObjectStatus,
       CreatedBy,
