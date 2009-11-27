@@ -40,7 +40,6 @@ What it is
 There is also quite an amount of infrastructure in this package:
 
 * libkdepim: Common code for different kdepim apps
-* mimelib: MIME messages library
 * kpgp: A library for pgp
 * kdgantt: lib for Gantt diagrams, used by the free/busy view of KOrganizer
 

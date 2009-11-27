@@ -175,7 +175,6 @@ set(libkdgantt1_SRCS
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)
   add_subdirectory(libstickynotes)
-  add_subdirectory(mimelib)
   add_subdirectory(kdgantt1)
   add_subdirectory(krss)
   add_subdirectory(icons)

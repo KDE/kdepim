@@ -1,5 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/mimelib ${KDE4_INCLUDE_DIR} )
+include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/libkdepim ${KDE4_INCLUDE_DIR} )
 
 
 ########### next target ###############
