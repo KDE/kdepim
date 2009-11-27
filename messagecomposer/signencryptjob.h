@@ -18,9 +18,8 @@
   02110-1301, USA.
 */
 
-#ifndef MESSAGECOMPOSER_ENCRYPTJOB_H
-#define MESSAGECOMPOSER_ENCRYPTJOB_H
-
+#ifndef MESSAGECOMPOSER_SIGNENCRYPTJOB_H
+#define MESSAGECOMPOSER_SIGNENCRYPTJOB_H
 
 #include "abstractencryptjob.h"
 #include "contentjobbase.h"
@@ -43,34 +42,38 @@ namespace GpgME {
 
 namespace Message {
 
-class EncryptJobPrivate;
+class SignEncryptJobPrivate;
 
 /**
-  Encrypt the contents of a message .
-  Used as a subjob of CryptoMessage
+  Signs and encrypt the contents of a message.
+  Used when doing inline pgp sign+encrypt
 */
-class MESSAGECOMPOSER_EXPORT EncryptJob : public ContentJobBase, public AbstractEncryptJob
+class MESSAGECOMPOSER_EXPORT SignEncryptJob : public ContentJobBase, public AbstractEncryptJob
 {
   Q_OBJECT
 
   public:
-    explicit EncryptJob( QObject *parent = 0 );
-    virtual ~EncryptJob();
+    SignEncryptJob( QObject *parent = 0 );
+    virtual ~SignEncryptJob();
 
     void setContent( KMime::Content* content );
     void setCryptoMessageFormat( Kleo::CryptoMessageFormat format);
+    void setSigningKeys( std::vector<GpgME::Key>& signers );
+
     void setEncryptionKeys( std::vector<GpgME::Key> keys );
     void setRecipients( QStringList rec );
-    
+
     std::vector<GpgME::Key> encryptionKeys();
     QStringList recipients();
     
+    KMime::Content* origContent();
+
   protected Q_SLOTS:
     //virtual void doStart();
     virtual void process();
 
   private:
-    Q_DECLARE_PRIVATE( EncryptJob )
+    Q_DECLARE_PRIVATE( SignEncryptJob )
 };
 
 }

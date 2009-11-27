@@ -42,7 +42,7 @@
 
 #include <stdlib.h>
 
-QTEST_KDEMAIN( EncryptJobTest, NoGUI )
+QTEST_KDEMAIN( EncryptJobTest, GUI )
 
 void EncryptJobTest::testContentDirect() {
 

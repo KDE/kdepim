@@ -38,7 +38,7 @@
 
 #include <stdlib.h>
 
-QTEST_KDEMAIN( SignJobTest, NoGUI )
+QTEST_KDEMAIN( SignJobTest, GUI )
 
 void SignJobTest::testContentDirect() {
 

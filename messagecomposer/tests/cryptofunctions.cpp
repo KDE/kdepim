@@ -20,6 +20,9 @@
 
 #include "cryptofunctions.h"
 
+#include "testhtmlwriter.h"
+#include "testcsshelper.h"
+
 #include <kleo/enum.h>
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -29,6 +32,7 @@
 #include <messageviewer/objecttreeparser.h>
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/nodehelper.h>
+#include <messageviewer/csshelper.h>
 
 #include <KDebug>
 #include <QDir>
@@ -72,11 +76,14 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   KMime::Message* resultMessage =  new KMime::Message;
   resultMessage->setContent( content->encodedContent() );
   resultMessage->parse();
-
+  
   // parse the result and make sure it is valid in various ways
   MessageViewer::EmptySource es;
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
+  MessageViewer::HtmlWriter* htmlWriter = new TestHtmlWriter();
+  MessageViewer::CSSHelper* css = new TestCSSHelper();
+  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true, 0, htmlWriter, css );
+  MessageViewer::ProcessResult pResult( nh );
 
   // ensure the signed part exists and is parseable
   if( f & Kleo::OpenPGPMIMEFormat ) {
@@ -84,13 +91,23 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
     Q_ASSERT( signedPart );
 
     // process the result..
-    MessageViewer::ProcessResult pResult( nh );
     kDebug() << resultMessage->topLevel();
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
     Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == signedContent );
+
+    return true;
+  } else if( f & Kleo::InlineOpenPGPFormat ) {
+    otp.processTextPlainSubtype( resultMessage, pResult );
+
+    otp.writeBodyString( resultMessage->encodedContent(),
+                           resultMessage->from()->asUnicodeString() ,
+                           nh->codec( resultMessage ),
+                           pResult, true );
+                          
+    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
 
     return true;
   }
@@ -109,7 +126,10 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   // parse the result and make sure it is valid in various ways
   MessageViewer::EmptySource es;
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
+  MessageViewer::HtmlWriter* htmlWriter = new TestHtmlWriter();
+  MessageViewer::CSSHelper* css = new TestCSSHelper();
+  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true, 0, htmlWriter, css );
+  MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
     // ensure the enc part exists and is parseable
@@ -117,17 +137,33 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_ASSERT( encPart );
 
     // process the result..
-    MessageViewer::ProcessResult pResult( nh );
   //   kDebug() << resultMessage->topLevel();
     otp.parseObjectTree( resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 
     // make sure the decoded content is what we encrypted
     // processMultiPartEncrypted will add a child part with the unencrypted data
+    /*     // strip the extra newline from the end of the body
+    QString body = QString::fromUtf8( MessageViewer::NodeHelper::firstChild( resultMessage )->encodedContent() ).trimmed();
+    QString ref = QString::fromUtf8( encrContent ).trimmed();
+    Q_ASSERT( body == ref );
+*/
+    kDebug() << "testing:" << MessageViewer::NodeHelper::firstChild( resultMessage )->encodedContent() << encrContent;
     Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == encrContent );
 
     return true;
     
+  } else if( f & Kleo::InlineOpenPGPFormat ) {
+    otp.processTextPlainSubtype( resultMessage, pResult );
+
+    otp.writeBodyString( resultMessage->encodedContent(),
+                           resultMessage->from()->asUnicodeString() ,
+                           nh->codec( resultMessage ),
+                           pResult, true );
+
+    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
+
+    return true;
   }
 
   return false;
@@ -143,14 +179,16 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   // parse the result and make sure it is valid in various ways
   MessageViewer::EmptySource es;
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
+  MessageViewer::HtmlWriter* htmlWriter = new TestHtmlWriter();
+  MessageViewer::CSSHelper* css = new TestCSSHelper();
+  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true, 0, htmlWriter, css );
+  MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
     // ensure the enc part exists and is parseable
     KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
     Q_ASSERT( encPart );
 
-    MessageViewer::ProcessResult pResult( nh );
     otp.parseObjectTree( resultMessage );
 //     kDebug() << "message:" << resultMessage->encodedContent();
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
@@ -166,6 +204,18 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     } else {
       Q_ASSERT( MessageViewer::NodeHelper::firstChild( signedPart )->body() == origContent );
     }
+    return true;
+  } else if( f & Kleo::InlineOpenPGPFormat ) {
+    otp.processTextPlainSubtype( resultMessage, pResult );
+
+    otp.writeBodyString( resultMessage->encodedContent(),
+                           resultMessage->from()->asUnicodeString() ,
+                           nh->codec( resultMessage ),
+                           pResult, true );
+
+    Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
+    Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
+
     return true;
   }
 

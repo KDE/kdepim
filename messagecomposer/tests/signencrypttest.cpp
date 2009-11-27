@@ -41,7 +41,7 @@
 #include <messageviewer/nodehelper.h>
 
 
-QTEST_KDEMAIN( SignEncryptTest, NoGUI )
+QTEST_KDEMAIN( SignEncryptTest, GUI )
 
 
 void SignEncryptTest::testContent() {

@@ -47,7 +47,7 @@ using KPIM::AttachmentPart;
 
 #include <gpgme++/key.h>
 
-QTEST_KDEMAIN( ComposerTest, NoGUI )
+QTEST_KDEMAIN( ComposerTest, GUI )
 
 void ComposerTest::testAttachments()
 {
@@ -279,9 +279,100 @@ void ComposerTest::testBCCEncrypt()
   QVERIFY( secMessage->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
   QVERIFY( secMessage->bcc()->asUnicodeString() == QString::fromLocal8Bit( "bcc@bcc.org" ) );
 
-
 }
 
+
+void ComposerTest::testSignInlinePGP()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  fillComposerCryptoData( composer );
+
+  composer->setSignAndEncrypt( true, false );
+  composer->setMessageCryptoFormat( Kleo::InlineOpenPGPFormat );
+
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+
+  KMime::Message* message = composer->resultMessages().first();
+  delete composer;
+  composer = 0;
+
+  kDebug() << message->encodedContent();
+
+  QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                          Kleo::InlineOpenPGPFormat ) );
+/*
+  QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                          Kleo::OpenPGPMIMEFormat ) );
+
+  QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+  */
+}
+
+void ComposerTest::testEncryptInlinePGP()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  fillComposerCryptoData( composer );
+
+  composer->setSignAndEncrypt( false, true );
+  composer->setMessageCryptoFormat( Kleo::InlineOpenPGPFormat );
+
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+
+  KMime::Message* message = composer->resultMessages().first();
+  delete composer;
+  composer = 0;
+
+  kDebug() << message->encodedContent();
+
+  QVERIFY( ComposerTestUtil::verifyEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                          Kleo::InlineOpenPGPFormat ) );
+/*
+  QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                          Kleo::OpenPGPMIMEFormat ) );
+
+  QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+  */
+}
+
+
+void ComposerTest::testSignEncryptInlinePGP()
+{
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+  fillComposerCryptoData( composer );
+
+  composer->setSignAndEncrypt( true, true );
+  composer->setMessageCryptoFormat( Kleo::InlineOpenPGPFormat );
+
+  QVERIFY( composer->exec() );
+  QCOMPARE( composer->resultMessages().size(), 1 );
+
+  KMime::Message* message = composer->resultMessages().first();
+  delete composer;
+  composer = 0;
+
+  kDebug() << message->encodedContent();
+
+  QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), Kleo::InlineOpenPGPFormat ) );
+/*
+  QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
+                                          Kleo::OpenPGPMIMEFormat ) );
+
+  QVERIFY( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  QVERIFY( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+  */
+}
+
+//s-mime
+/*void testSignSMIME();
+void testEncryptSMIME();
+*/
  
 void ComposerTest::fillComposerData( Composer* composer )
 {

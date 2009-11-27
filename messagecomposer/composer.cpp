@@ -28,6 +28,7 @@
 #include "multipartjob.h"
 #include "signjob.h"
 #include "encryptjob.h"
+#include "signencryptjob.h"
 #include "skeletonmessagejob.h"
 #include "transparentjob.h"
 
@@ -63,6 +64,7 @@ class Message::ComposerPrivate : public JobBasePrivate
     void composeStep2();
     void contentJobFinished( KJob *job ); // slot
     void contentJobPreCryptFinished( KJob *job ); // slot
+    void contentJobPreInlineFinished( KJob *job ); // slot
     void signBeforeEncryptJobFinished( KJob *job ); // slot
     void startEncryptJobs( KMime::Content* content );
     void composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients );
@@ -172,7 +174,10 @@ void ComposerPrivate::composeStep2()
     }
     mainJob = multipartJob;
   }
-  if( sign || encrypt ) {
+  if( sign && encrypt && format & Kleo::InlineOpenPGPFormat ) { // needs custom handling--- one SignEncryptJob by itself
+    kDebug() << "sending to sign/enc inline job!";
+    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreInlineFinished(KJob*)) );
+  } else if( sign || encrypt ) {
     QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreCryptFinished(KJob*)) );
   } else {
     QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
@@ -180,6 +185,43 @@ void ComposerPrivate::composeStep2()
   q->addSubjob( mainJob );
   mainJob->start();
 }
+
+
+void ComposerPrivate::contentJobPreInlineFinished( KJob *job )
+{
+  Q_Q( Composer );
+
+  Q_ASSERT( format & Kleo::InlineOpenPGPFormat );
+  Q_ASSERT( sign && encrypt ); // for safety... we shouldn't be here otherwise
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
+
+  kDebug() << "creaeting inline signandenc job";
+  if( encData.size() == 0 ) { // no key data! bail!
+    q->setErrorText( i18n( "No key data for recipients found." ) );
+    q->setError( Composer::IncompleteError );
+    q->emitResult();
+    return;
+  }
+
+
+  for( int i = 0; i < encData.size(); ++i ) {
+    QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
+    kDebug() << "got first list of recipients:" << recipients.first;
+    SignEncryptJob* seJob = new SignEncryptJob( q );
+    seJob->setContent( cjob->content() );
+    seJob->setCryptoMessageFormat( format );
+    seJob->setEncryptionKeys( recipients.second );
+    seJob->setSigningKeys( signers );
+    seJob->setRecipients( recipients.first );
+
+    QObject::connect( seJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+
+    q->addSubjob( seJob );
+    seJob->start();
+  }
+}
+
 
 void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
 {
@@ -208,7 +250,6 @@ void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
     // just encrypting, so setup the jobs directly
     startEncryptJobs( cjob->content() );
   }
-  
     
 }
 
@@ -235,6 +276,7 @@ void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   // different messages w/ clean headers
   kDebug() << "starting enc jobs";
   kDebug() << "format:" << format;
+  kDebug() << "enc data:" << encData.size();
 
   if( encData.size() == 0 ) { // no key data! bail!
     q->setErrorText( i18n( "No key data for recipients found." ) );
@@ -280,13 +322,13 @@ void ComposerPrivate::contentJobFinished( KJob *job )
   // create the final headers and body,
   // taking into account secondary recipients for encryption
   if( encData.size() > 1 ) { // crypto job with secondary recipients..
-    Q_ASSERT( dynamic_cast<EncryptJob*>( job ) ); // we need to get the recipients for this job
-    EncryptJob* eJob = dynamic_cast<EncryptJob*>( job );
+    Q_ASSERT( dynamic_cast<AbstractEncryptJob*>( job ) ); // we need to get the recipients for this job
+    AbstractEncryptJob* eJob = dynamic_cast<AbstractEncryptJob*>( job );
 
     keys = eJob->encryptionKeys();
     recipients = eJob->recipients();
     
-    resultContent = eJob->content();
+    resultContent = contentJob->content(); // content() comes from superclass
     headers = new KMime::Message;
     headers->setHeader( skeletonMessage->from() );
     headers->setHeader( skeletonMessage->to() );

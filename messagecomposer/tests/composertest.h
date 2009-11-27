@@ -44,12 +44,12 @@ class ComposerTest : public QObject
   
     // secondary recipients
     void testBCCEncrypt();
-/*
+
     // inline pgp
     void testSignInlinePGP();
     void testEncryptInlinePGP();
     void testSignEncryptInlinePGP();
-
+/*
     //s-mime
     void testSignSMIME();
     void testEncryptSMIME(); */
