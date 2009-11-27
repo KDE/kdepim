@@ -172,8 +172,14 @@ void EncryptJob::process()
 
   // for now just do the main recipients
   QByteArray encryptedBody;
+  QByteArray content;
+  if( d->format & Kleo::InlineOpenPGPFormat ) {
+    content = d->content->body();
+  } else {
+    content = d->content->encodedContent();
+  }
   const GpgME::EncryptionResult res = seJob->exec( d->keys,
-                                                   d->content->encodedContent(),
+                                                   content,
                                                    false,
                                                    encryptedBody );
 
