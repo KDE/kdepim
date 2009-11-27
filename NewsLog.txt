@@ -1,3 +1,21 @@
+Friday, November 27th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from the KDE 4.3 branch
+      - Add holidays for Luxembourg
+
+* Merges from enterprise35 branch:
+      - kolab/issue3969: two offline warning windows - that might overlap and lock (rt#5917)
+      - kolab/issue3098: OnlineIMAP, sometimes Mail body no longer shown -> Crash
+      - kolab/issue3978: Forwarding some emails with an embedded email as text loses some of the text (rt#5919)
+      - kolab/issue3957: Improvement of German text in conditionally accepted events (rt#5905)
+
+
 Friday, November 13th 2009
 
 Problems addressed
