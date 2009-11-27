@@ -117,6 +117,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
     }
 
     result->setBody( resultingBody );
+    result->parse();
   }
   return result;
 
