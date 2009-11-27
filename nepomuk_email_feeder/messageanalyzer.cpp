@@ -75,6 +75,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 {
   NepomukFeederAgentBase::setParent( m_email, item );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
+  m_email.addProperty( Vocabulary::NIE::byteSize(), Soprano::LiteralValue( item.size() ) );
 
   processFlags( item.flags() );
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
@@ -125,7 +126,7 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
   }
 
   if ( msg->date( false ) ) {
-    m_email.setReceivedDate( msg->date()->dateTime().dateTime() );
+    m_email.setSentDate( msg->date()->dateTime().dateTime() );
   }
 
   if ( msg->from( false ) ) {
