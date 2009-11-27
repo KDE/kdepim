@@ -29,6 +29,7 @@ static QString mFieldNameMap[][2] =
   {"clientid", "client_id"},
   {"folderid", "folder_id"},
   {"lastsync", "lastsync"},
+  {"n/a", "last_modified"},
   {"objecttype", "objectmode"},
   {"sloxstatus", "object_status"},
   {"createfrom", "created_by"},

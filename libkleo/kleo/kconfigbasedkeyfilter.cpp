@@ -301,8 +301,8 @@ bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const
   CAN_MATCH( Authenticate );
   IS_MATCH( Qualified );
   if ( mCardKey != DoesNotMatter )
-      if ( mCardKey == Set    && !is_card_key( key ) ||
-           mCardKey == NotSet &&  is_card_key( key ) )
+      if ( ( mCardKey == Set    && !is_card_key( key ) ) ||
+           ( mCardKey == NotSet &&  is_card_key( key ) )   )
           return false;
   MATCH( mHasSecret, hasSecret );
 #undef MATCH

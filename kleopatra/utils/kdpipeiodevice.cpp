@@ -434,8 +434,9 @@ qint64 KDPipeIODevice::bytesAvailable() const { KDAB_CHECK_THIS;
 qint64 KDPipeIODevice::bytesToWrite() const { KDAB_CHECK_THIS;
     d->startWriterThread();
     const qint64 base = QIODevice::bytesToWrite();
-    if ( d->writer )
+    if ( d->writer ) {
         synchronized( d->writer ) return base + d->writer->bytesInBuffer();
+    }
     return base;
 }
 
@@ -443,8 +444,9 @@ bool KDPipeIODevice::canReadLine() const { KDAB_CHECK_THIS;
     d->startReaderThread();
     if ( QIODevice::canReadLine() )
         return true;
-    if ( d->reader )
+    if ( d->reader ) {
         synchronized( d->reader ) return d->reader->bufferContains( '\n' );
+    }
     return true;
 }
 
@@ -465,11 +467,14 @@ bool KDPipeIODevice::atEnd() const { KDAB_CHECK_THIS;
     LOCKED( d->reader );
     const bool eof = ( d->reader->error || d->reader->eof ) && d->reader->bufferEmpty();
     if ( !eof ) {
-        if ( !d->reader->error && !d->reader->eof )
+        if ( !d->reader->error && !d->reader->eof ) {
             qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->error && !reader->eof",
-                ( void* )(  this ) );
-        if ( !d->reader->bufferEmpty() )
-            qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->bufferEmpty()", ( void*)  this );
+                    ( void* )(  this ) );
+        }
+        if ( !d->reader->bufferEmpty() ) {
+            qDebug( "%p: KDPipeIODevice::atEnd returns false since !reader->bufferEmpty()",
+                    ( void*)  this );
+        }
     }
     return eof;
 }
