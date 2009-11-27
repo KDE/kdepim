@@ -352,6 +352,10 @@ void KCalResourceSlox::uploadIncidences()
 
     if ( type() == "ox" ) {
       WebdavHandler::addSloxElement( this, doc, prop, "method", "DELETE" );
+      if ( mUploadedIncidence->type() == "Event" )
+        WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->calendarFolderId() );
+      else if ( mUploadedIncidence->type() == "Todo" )
+        WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->taskFolderId() );
     } else {
       QDomElement remove = WebdavHandler::addElement( doc, pu, "D:remove" );
       QDomElement prop = WebdavHandler::addElement( doc, remove, "D:prop" );
@@ -1168,6 +1172,16 @@ void KCalResourceSlox::slotUploadResult( KJob *job )
           }
           i->setUid( uid );
           i->setCustomProperty( "SLOX", "ID", sloxId );
+
+          if ( type() == "ox" ) {
+            // Update the last_modified property
+            const QDomNode lastModifiedNode = prop.namedItem( fieldName( LastModified ) );
+            if ( !lastModifiedNode.isNull() ) {
+              const QDomElement lastModifiedElement = lastModifiedNode.toElement();
+              const QString lastModified = lastModifiedElement.text();
+              i->setCustomProperty( "SLOX", "LastModified", lastModified );
+            }
+          }
 
           disableChangeNotification();
           calendar()->deleteIncidence( mUploadedIncidence );
