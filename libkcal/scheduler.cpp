@@ -539,13 +539,25 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
 
     // send update about new participants
     if ( attendeeAdded ) {
+      bool sendMail = false;
+      if ( ev || to ) {
+        if ( KMessageBox::questionYesNo( 0, i18n( "An attendee was added to the incidence. "
+                                                  "Do you want to email the attendees an update message?" ),
+                                         i18n( "Attendee Added" ), i18n( "Send Messages" ),
+                                         i18n( "Do Not Send" ) ) == KMessageBox::Yes ) {
+          sendMail = true;
+        }
+      }
+
       if ( ev ) {
         ev->setRevision( ev->revision() + 1 );
-        performTransaction( ev, Scheduler::Request );
+        if ( sendMail )
+          performTransaction( ev, Scheduler::Request );
       }
       if ( to ) {
         to->setRevision( ev->revision() + 1 );
-        performTransaction( to, Scheduler::Request );
+        if ( sendMail )
+          performTransaction( to, Scheduler::Request );
       }
     }
 
