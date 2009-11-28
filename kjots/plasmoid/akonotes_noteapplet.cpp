@@ -70,7 +70,7 @@ AkonotesNoteApplet::AkonotesNoteApplet( QObject* parent, const QVariantList& arg
 
   m_subject = new Plasma::LineEdit( this );
   m_subject->installEventFilter( this );
-  m_subject->setText( "Subject" );
+  m_subject->setText( i18n("Subject") );
   {
     QFont cf    = m_subject->nativeWidget()->font();
     QPalette cp = m_subject->nativeWidget()->palette();
@@ -86,7 +86,7 @@ AkonotesNoteApplet::AkonotesNoteApplet( QObject* parent, const QVariantList& arg
   }
 
   m_content = new Plasma::TextEdit( this );
-  m_content->setText( "content" );
+  m_content->setText( i18n("content") );
   m_content->installEventFilter( this );
 
   m_theme = new Plasma::FrameSvg( this );
