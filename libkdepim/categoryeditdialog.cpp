@@ -69,6 +69,8 @@ CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget *parent )
 
   fillList();
 
+  mWidgets->mCategories->setFocus();
+
   connect( mWidgets->mCategories, SIGNAL(currentItemChanged(QTreeWidgetItem *,QTreeWidgetItem *)),
            SLOT(editItem(QTreeWidgetItem *)) );
   connect( mWidgets->mCategories, SIGNAL(itemSelectionChanged()),
