@@ -590,7 +590,7 @@ namespace {
 
         /* reimp */ bool validatePage() {
             const std::vector<Key> & r = keys();
-            if ( _detail::none_of_secret( r ) )
+            if ( _detail::none_of_secret( r ) ) {
                 if ( KMessageBox::warningContinueCancel( this,
                                                          i18nc("@info",
                                                                "<para>None of the recipients you are encrypting to seems to be your own.</para>"
@@ -613,6 +613,7 @@ namespace {
                                                              "warn-encrypt-to-non-self-destructive", KMessageBox::Notify|KMessageBox::Dangerous )
                          == KMessageBox::Cancel )
                         return false;
+            }
             return true;
         }
 
