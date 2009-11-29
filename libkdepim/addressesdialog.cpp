@@ -284,7 +284,7 @@ class ProxyModel : public ContactsFilterModel
           return false;
       } else if( item.hasPayload<KABC::ContactGroup>() ) {
         const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
-        if( ( group.dataCount() < 1 && group.contactReferenceCount() < 1 ) || m_groupMap.contains( group.id() ) )
+        if( ( group.dataCount() < 1 && group.contactReferenceCount() < 1 && group.contactGroupReferenceCount() < 1 ) || m_groupMap.contains( group.id() ) )
           return false;
       }
       return ContactsFilterModel::filterAcceptsRow( row, parent );
@@ -1317,7 +1317,7 @@ AddressesDialog::allAddressee( QTreeWidget* view, bool onlySelected ) const
 #endif
 
 typedef QPair<QString,QString> ItemPair;
-void extractMailsFromGroup( const KABC::ContactGroup &group, QList<ItemPair> &mails, QStringList groupsDone = QStringList() )
+void extractMailsFromGroup( const KABC::ContactGroup &group, QList<ItemPair> &mails, QStringList &groupsDone )
 {
   Q_ASSERT( ! group.id().isEmpty() );
   groupsDone.append( group.id() );
@@ -1372,7 +1372,8 @@ AddressesDialog::allAddressee( QStandardItem* parent ) const
       } break;
       case AddresseeViewItem::Group: {
         QList<ItemPair> mails;
-        extractMailsFromGroup( item->group(), mails );
+        QStringList groupsDone;
+        extractMailsFromGroup( item->group(), mails, groupsDone );
         foreach( ItemPair p, mails ) {
           const QString name = p.first;
           const QString email = p.second;
