@@ -20,6 +20,7 @@
 
 #include "nepomukemailfeeder.h"
 #include "messageanalyzer.h"
+#include "messagesearch.h"
 #include "configdialog.h"
 #include "settings.h"
 
@@ -61,6 +62,25 @@ void NepomukEMailFeeder::configure(WId windowId)
   ConfigDialog* dlg = new ConfigDialog( windowId );
   dlg->setAttribute( Qt::WA_DeleteOnClose );
   dlg->show();
+}
+
+void NepomukEMailFeeder::addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection)
+{
+  if ( Settings::self()->indexEncryptedContent() != Settings::EncryptedIndex || !GpgME::hasFeature( GpgME::G13VFSFeature ) )
+    return;
+
+  if ( queryLanguage != QLatin1String( "SPARQL" ) ) {
+    kDebug() << "Unsupported query language: " << queryLanguage;
+    return;
+  }
+
+  new MessageSearch( query, resultCollection, this );
+}
+
+void NepomukEMailFeeder::removeSearch(const Akonadi::Collection& resultCollection)
+{
+  // ignored since we don't do persistent searches yet
+  Q_UNUSED( resultCollection );
 }
 
 AKONADI_AGENT_MAIN( NepomukEMailFeeder )

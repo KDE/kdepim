@@ -1,6 +1,5 @@
 /*
-    Copyright (c) 2006 Volker Krause <vkrause@kde.org>
-    Copyright (c) 2008 Sebastian Trueg <trueg@kde.org>
+    Copyright (c) 2009 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,33 +17,20 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NEPOMUK_EMAIL_FEEDER_H
-#define AKONADI_NEPOMUK_EMAIL_FEEDER_H
+#ifndef MESSAGESEARCH_H
+#define MESSAGESEARCH_H
 
-#include <nepomukfeederagent.h>
-
-#include <mailbox.h>
-#include <contact.h>
-
-#include <QtCore/QList>
-#include <akonadi/agentsearchinterface.h>
-#include <kmime/kmime_header_parsing.h>
+#include <task.h>
 
 namespace Akonadi {
+class Collection;
+}
 
-class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>, public AgentSearchInterface
+class MessageSearch : public Task
 {
   Q_OBJECT
   public:
-    NepomukEMailFeeder( const QString &id );
-    void configure(WId windowId);
-
-    void updateItem( const Akonadi::Item &item, const QUrl &graphUri );
-
-    void addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection);
-    void removeSearch(const Akonadi::Collection& resultCollection);
+    MessageSearch( const QString &query, const Akonadi::Collection &destination, QObject *parent = 0 );
 };
 
-}
-
-#endif
+#endif // MESSAGESEARCH_H

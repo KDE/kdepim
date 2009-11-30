@@ -37,10 +37,6 @@
 
 #include <kmime/kmime_message.h>
 
-#include <gpgme++/context.h>
-#include <gpgme++/key.h>
-#include <gpgme++/vfsmountresult.h>
-
 #include <klocalizedstring.h>
 #include <KStandardDirs>
 
@@ -62,7 +58,7 @@
 #include <boost/scoped_ptr.hpp>
 
 MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri, NepomukFeederAgentBase* parent) :
-  QObject( parent ),
+  Task( parent ),
   m_parent( parent ),
   m_item( item ),
   m_email( item.url(), graphUri ),
@@ -70,8 +66,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_mainBodyPart( 0 ),
   m_nodeHelper( new MessageViewer::NodeHelper ),
   m_otp( 0 ),
-  m_mainModel( 0 ),
-  m_ctx( 0 )
+  m_mainModel( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
@@ -100,7 +95,6 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
 MessageAnalyzer::~MessageAnalyzer()
 {
   delete m_otp;
-  delete m_ctx;
 }
 
 
@@ -229,9 +223,12 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     Nepomuk::ResourceManager::instance()->setOverrideMainModel( 0 );
     m_mainModel = 0;
     delete cryptoModel;
-    kDebug() << "Unmounting crypto container";
-    delete m_ctx;
-    m_ctx = 0;
+#ifdef Q_OS_UNIX
+    // ### HACK FIXME
+    kDebug() << "waiting for virtuoso to shut down";
+    sleep( 5 );
+#endif
+    unmountCryptoContainer();
   }
 }
 
@@ -285,90 +282,6 @@ void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
   m_otp->parseObjectTree( msg.get() );
   if ( !m_otp->hasPendingAsyncJobs() )
     processContent( msg );
-}
-
-bool MessageAnalyzer::createCryptoContainer(const QByteArray& keyId)
-{
-  kDebug() << keyId;
-  if ( keyId.isEmpty() )
-    return false;
-
-  const QString path = containerPathFromKeyId( keyId );
-  if ( QFile::exists( path ) )
-    return true;
-
-  std::vector<GpgME::Key> keys;
-  {
-    // TODO: we should get the real key from OTP maybe, which probably can handle CMS as well, not just PGP
-    boost::scoped_ptr<GpgME::Context> ctx( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
-    if ( !ctx )
-      return false;
-    GpgME::Error error;
-    const GpgME::Key key = ctx->key( keyId.constData(), error );
-    kDebug() << error.asString();
-    if ( key.isNull() || key.isInvalid() )
-      return false;
-    keys.push_back( key );
-  }
-
-  delete m_ctx;
-  m_ctx = GpgME::Context::createForProtocol( GpgME::G13 );
-  if ( !m_ctx )
-    return false;
-  const GpgME::Error error = m_ctx->createVFS( path.toLocal8Bit(), keys );
-  kDebug() << path << error.asString();
-  return !error;
-}
-
-bool MessageAnalyzer::mountCryptoContainer( const QByteArray& keyId )
-{
-  kDebug() << keyId;
-
-  const QString cryptoContainer = containerPathFromKeyId( keyId );
-  const QString mountDir = repositoryPathFromKeyId( keyId );
-  KStandardDirs::makeDir( mountDir );
-
-  // ### HACK temporary hack until G13 reports that as an error correctly
-  // G13 currently fails silently if the mount target contains anything already, so check for that
-  const QDir dir( mountDir );
-  if ( !dir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot ).isEmpty() ) {
-    kWarning() << "Mount dir is not empty, can't mount there!" << dir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
-    return false;
-  }
-
-  if ( !m_ctx )
-    m_ctx = GpgME::Context::createForProtocol( GpgME::G13 );
-  if ( !m_ctx )
-    return false;
-
-  GpgME::VfsMountResult res = m_ctx->mountVFS( cryptoContainer.toLocal8Bit(), mountDir.toLocal8Bit() );
-  kDebug() << res.mountDir() << res.error().asString() << res.error();
-
-#ifdef Q_OS_UNIX
-  // ### HACK temporary hack until the mount race is fixed in G13
-  sleep( 1 );
-#else
-  // TODO check if similar hack needed for Windows as well
-#endif
-
-  return !res.error();
-}
-
-QString MessageAnalyzer::containerPathFromKeyId(const QByteArray& keyId)
-{
-  Q_ASSERT( !keyId.isEmpty() );
-  QString containerPath = KStandardDirs::locateLocal( "data", "nepomuk/encrypted-repository" );
-  KStandardDirs::makeDir( containerPath, 0700 );
-  containerPath += QDir::separator();
-  containerPath += QString::fromLatin1( keyId );
-  containerPath += QLatin1String(".g13");
-  return containerPath;
-}
-
-QString MessageAnalyzer::repositoryPathFromKeyId(const QByteArray& keyId)
-{
-  Q_ASSERT( !keyId.isEmpty() );
-  return KStandardDirs::locateLocal( "data", "nepomuk/repository/" ) + QLatin1String( keyId );
 }
 
 #include "messageanalyzer.moc"

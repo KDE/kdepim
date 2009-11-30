@@ -21,6 +21,8 @@
 #ifndef MESSAGEANALYZER_H
 #define MESSAGEANALYZER_H
 
+#include "task.h"
+
 #include <contact.h>
 #include <email.h>
 
@@ -33,11 +35,6 @@
 #include <kmime/kmime_message.h>
 
 #include <KDE/KUrl>
-#include <QtCore/QObject>
-
-namespace GpgME {
-class Context;
-}
 
 namespace Soprano {
 class Model;
@@ -55,7 +52,7 @@ class NepomukFeederAgentBase;
   operations in the OTP, so we need to isolate state in case multiple items are processed at the same time.
   Also gives us the possibility to parallelizer this later on.
 */
-class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
+class MessageAnalyzer : public Task, public MessageViewer::EmptySource
 {
   Q_OBJECT
   public:
@@ -80,11 +77,6 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     void processHeaders( const KMime::Message::Ptr &msg );
     void processPart( KMime::Content *content );
 
-    bool createCryptoContainer( const QByteArray& keyId );
-    bool mountCryptoContainer( const QByteArray& keyId );
-    QString containerPathFromKeyId( const QByteArray& keyId );
-    QString repositoryPathFromKeyId( const QByteArray &keyId );
-
   private:
     NepomukFeederAgentBase *m_parent;
     Akonadi::Item m_item;
@@ -94,7 +86,6 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     MessageViewer::NodeHelper *m_nodeHelper;
     MessageViewer::ObjectTreeParser *m_otp;
     Soprano::Model* m_mainModel;
-    GpgME::Context* m_ctx;
 };
 
 #endif

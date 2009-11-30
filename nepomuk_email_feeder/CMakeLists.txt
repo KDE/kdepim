@@ -10,7 +10,9 @@ add_definitions(-DNEPOMUK_RESOURCE_STATIC)
 
 set(akonadi_nepomuk_email_feeder_SRCS
   nepomukemailfeeder.cpp
+  task.cpp
   messageanalyzer.cpp
+  messagesearch.cpp
   configdialog.cpp
   shared/nepomukfeederagentbase.cpp
   shared/sparqlbuilder.cpp
