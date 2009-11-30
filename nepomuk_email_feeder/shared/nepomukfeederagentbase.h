@@ -154,6 +154,7 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
 
     void collectionAdded(const Akonadi::Collection& collection, const Akonadi::Collection& parent);
     void collectionChanged(const Akonadi::Collection& collection, const QSet< QByteArray >& partIdentifiers);
+    using AgentBase::ObserverV2::collectionChanged;
     void collectionRemoved(const Akonadi::Collection& collection);
 
   private:

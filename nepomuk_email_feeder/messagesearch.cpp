@@ -19,16 +19,30 @@
 
 #include "messagesearch.h"
 
-#include <akonadi/collection.h>
-
 #include <KDebug>
 
 MessageSearch::MessageSearch(const QString& query, const Akonadi::Collection& destination, QObject* parent) :
-  Task(parent)
+  Task(parent),
+  m_query( query ),
+  m_destination( destination )
 {
   kDebug() << query << destination;
+  foreach ( const QByteArray &keyId, listCryptoContainers() )
+    searchInContainer( keyId );
   deleteLater();
 }
 
+void MessageSearch::searchInContainer(const QByteArray& keyId)
+{
+  kDebug() << keyId;
+  if ( !mountCryptoContainer( keyId ) ) {
+    kDebug() << "Unable to mount crypto container for key" << keyId;
+    return;
+  }
+
+  // TODO
+
+  unmountCryptoContainer();
+}
 
 #include "messagesearch.moc"

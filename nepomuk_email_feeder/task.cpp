@@ -49,8 +49,10 @@ bool Task::createCryptoContainer(const QByteArray& keyId)
     return false;
 
   const QString path = containerPathFromKeyId( keyId );
-  if ( QFile::exists( path ) )
+  if ( QFile::exists( path ) ) {
+    kDebug() << "container exists already, nothing to do";
     return true;
+  }
 
   std::vector<GpgME::Key> keys;
   {
@@ -93,8 +95,10 @@ bool Task::mountCryptoContainer( const QByteArray& keyId )
 
   if ( !m_ctx )
     m_ctx = GpgME::Context::createForProtocol( GpgME::G13 );
-  if ( !m_ctx )
+  if ( !m_ctx ) {
+    kWarning() << "Unable to aquire GpgME context for G13";
     return false;
+  }
 
   GpgME::VfsMountResult res = m_ctx->mountVFS( cryptoContainer.toLocal8Bit(), mountDir.toLocal8Bit() );
   kDebug() << res.mountDir() << res.error().asString() << res.error();
@@ -106,6 +110,7 @@ bool Task::mountCryptoContainer( const QByteArray& keyId )
   // TODO check if similar hack needed for Windows as well
 #endif
 
+  kWarning( res.error() ) << res.error();
   return !res.error();
 }
 
@@ -114,6 +119,18 @@ void Task::unmountCryptoContainer()
   kDebug( m_ctx != 0 ) << "Unmounting crypto container";
   delete m_ctx;
   m_ctx = 0;
+}
+
+QList< QByteArray > Task::listCryptoContainers()
+{
+  const QString containerBasePath = KStandardDirs::locateLocal( "data", "nepomuk/encrypted-repository" );
+  const QDir dir( containerBasePath );
+  QList<QByteArray> keys;
+  foreach ( QString container, dir.entryList( QStringList() << QLatin1String( "*.g13" ), QDir::Files | QDir::Readable ) ) {
+    container.chop( 4 );
+    keys.append( container.toLatin1() );
+  }
+  return keys;
 }
 
 QString Task::containerPathFromKeyId(const QByteArray& keyId)

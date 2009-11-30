@@ -37,8 +37,9 @@ class Task : public QObject
     bool createCryptoContainer( const QByteArray& keyId );
     bool mountCryptoContainer( const QByteArray& keyId );
     void unmountCryptoContainer();
-    QString containerPathFromKeyId( const QByteArray& keyId );
-    QString repositoryPathFromKeyId( const QByteArray &keyId );
+    static QList<QByteArray> listCryptoContainers();
+    static QString containerPathFromKeyId( const QByteArray& keyId );
+    static QString repositoryPathFromKeyId( const QByteArray &keyId );
 
   private:
     GpgME::Context* m_ctx;

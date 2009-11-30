@@ -21,16 +21,20 @@
 #define MESSAGESEARCH_H
 
 #include <task.h>
-
-namespace Akonadi {
-class Collection;
-}
+#include <akonadi/collection.h>
 
 class MessageSearch : public Task
 {
   Q_OBJECT
   public:
     MessageSearch( const QString &query, const Akonadi::Collection &destination, QObject *parent = 0 );
+
+  private:
+    void searchInContainer( const QByteArray &keyId );
+
+  private:
+    QString m_query;
+    Akonadi::Collection m_destination;
 };
 
 #endif // MESSAGESEARCH_H
