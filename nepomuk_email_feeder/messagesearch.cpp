@@ -19,17 +19,27 @@
 
 #include "messagesearch.h"
 
+#include <akonadi/item.h>
+#include <akonadi/linkjob.h>
+
+#include <Nepomuk/ResourceManager>
 #include <KDebug>
+#include <KUrl>
+#include <Soprano/QueryResultIterator>
+#include <Soprano/StatementIterator>
+#include <Soprano/Model>
 
 MessageSearch::MessageSearch(const QString& query, const Akonadi::Collection& destination, QObject* parent) :
   Task(parent),
   m_query( query ),
-  m_destination( destination )
+  m_destination( destination ),
+  m_refCount( 0 )
 {
   kDebug() << query << destination;
+  ref();
   foreach ( const QByteArray &keyId, listCryptoContainers() )
     searchInContainer( keyId );
-  deleteLater();
+  deref();
 }
 
 void MessageSearch::searchInContainer(const QByteArray& keyId)
@@ -44,11 +54,52 @@ void MessageSearch::searchInContainer(const QByteArray& keyId)
   Soprano::Model* model = cryptoModel( keyId );
 
   if ( model ) {
-    // TODO run the query
+#if 0 // Temporary debugging code, will need this again tomorrow
+    {
+      Soprano::StatementIterator it = model->listStatements();
+      foreach ( Soprano::Statement s, it.allStatements() )
+        kDebug() << "###" << s.subject().toString() << s.predicate().toString() << s.object().toString();
+    }
+#endif
+
+    Soprano::QueryResultIterator it = model->executeQuery( m_query, Soprano::Query::QUERY_LANGUAGE_SPARQL );
+    kDebug() << model->lastError().message();
+    Akonadi::Item::List result;
+    while ( it.next() ) {
+      kDebug() << "Found:" << it.binding( 0 ).toString();
+      Akonadi::Item item = Akonadi::Item::fromUrl( KUrl( it.binding( 0 ).toString() ) );
+      if ( item.isValid() )
+        result.append( item );
+    }
+    it.close();
+
+    ref();
+    Akonadi::LinkJob *linkJob = new Akonadi::LinkJob( m_destination, result, this );
+    connect( linkJob, SIGNAL(result(KJob*)), SLOT(linkResult(KJob*)) );
   }
 
   resetModel();
   unmountCryptoContainer();
+  Q_ASSERT( !hasActiveCryptoModel() );
+}
+
+void MessageSearch::linkResult(KJob* job)
+{
+  if ( job->error() )
+    kWarning() << job->errorText();
+  deref();
+}
+
+void MessageSearch::ref()
+{
+  ++m_refCount;
+}
+
+void MessageSearch::deref()
+{
+  --m_refCount;
+  if ( m_refCount <= 0 )
+    deleteLater();
 }
 
 #include "messagesearch.moc"

@@ -23,6 +23,8 @@
 #include <task.h>
 #include <akonadi/collection.h>
 
+class KJob;
+
 class MessageSearch : public Task
 {
   Q_OBJECT
@@ -32,9 +34,16 @@ class MessageSearch : public Task
   private:
     void searchInContainer( const QByteArray &keyId );
 
+    void ref();
+    void deref();
+
+  private slots:
+    void linkResult( KJob* job );
+
   private:
     QString m_query;
     Akonadi::Collection m_destination;
+    int m_refCount;
 };
 
 #endif // MESSAGESEARCH_H
