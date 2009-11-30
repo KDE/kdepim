@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2009-10-29</date>
+<date>2009-11-28</date>
 <releaseinfo>2.04.00</releaseinfo>
 
 <abstract>
@@ -670,6 +670,19 @@ option to determine whether it is automatically saved into the default
 calendar, or whether you will be prompted to choose a calendar. When
 you edit an existing alarm, it is automatically saved back into its
 original alarm calendar.</para>
+
+<screenshot>
+<screeninfo>Screenshot of the &kalarm; main window, showing the
+calendar list</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="mainwindow-calendars.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Main window showing the calendar list</phrase>
+</textobject>
+</mediaobject>
+</screenshot>
 
 <sect3>
 <title>Calendar Types and Options</title>

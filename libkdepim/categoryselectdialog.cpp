@@ -188,7 +188,7 @@ CategorySelectDialog::CategorySelectDialog( CategoryConfig* cc, QWidget *parent 
   lay->addWidget( mWidgets );
 
   mWidgets->setCategories();
-  mWidgets->setFocus();
+  mWidgets->listView()->setFocus();
 
   connect( mWidgets, SIGNAL(editCategories()), SIGNAL(editCategories()) );
 
@@ -241,12 +241,6 @@ void CategorySelectDialog::setCategoryList( const QStringList &categories )
 void CategorySelectDialog::setSelected( const QStringList &selList )
 {
   mWidgets->setSelected( selList );
-}
-
-void CategorySelectDialog::enterEvent( QEvent *event )
-{
-  Q_UNUSED( event );
-  mWidgets->listView()->setFocus();
 }
 
 #include "categoryselectdialog.moc"

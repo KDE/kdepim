@@ -205,7 +205,7 @@ void SignEncryptFilesController::Private::assertValidOperation( unsigned int op 
 void SignEncryptFilesController::setOperationMode( unsigned int mode ) {
     Private::assertValidOperation( mode );
     if ( contains_dir( d->files ) )
-        mode = mode & ~ArchiveMask | ArchiveForced ;
+        ( mode = mode & ~ArchiveMask ) | ArchiveForced ;
     d->operation = mode;
     d->updateWizardMode();
 }
@@ -266,7 +266,7 @@ void SignEncryptFilesController::setFiles( const QStringList & files ) {
     kleo_assert( !files.empty() );
     d->files = files;
     if ( contains_dir( files ) )
-        setOperationMode( operationMode() & ~ArchiveMask | ArchiveForced );
+        setOperationMode( ( operationMode() & ~ArchiveMask ) | ArchiveForced );
     d->ensureWizardCreated();
     d->wizard->setFiles( files );
 }
@@ -376,11 +376,11 @@ createArchiveSignEncryptTasksForFiles( const QStringList & files, const QString 
 
     const bool shallPgpSign = sign && !pgpSigners.empty();
     const bool shallPgpEncrypt = encrypt && !pgpRecipients.empty();
-    const bool pgp = shallPgpEncrypt && ( !sign || shallPgpSign ) || !encrypt && shallPgpSign;
+    const bool pgp = ( shallPgpEncrypt && ( !sign || shallPgpSign )) || ( !encrypt && shallPgpSign );
 
     const bool shallCmsSign = sign && !cmsSigners.empty();
     const bool shallCmsEncrypt = encrypt && !cmsRecipients.empty();
-    const bool cms = shallCmsEncrypt && ( !sign || shallCmsSign ) || !encrypt && shallCmsSign;
+    const bool cms = ( shallCmsEncrypt && ( !sign || shallCmsSign )) || ( !encrypt && shallCmsSign );
 
     result.reserve( pgp + cms );
 
