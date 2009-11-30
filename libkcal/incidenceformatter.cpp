@@ -1580,8 +1580,8 @@ static QString invitationAttachments( InvitationFormatterHelper *helper, Inciden
       tmpStr += "<li>";
       // Attachment icon
       KMimeType::Ptr mimeType = KMimeType::mimeType( a->mimeType() );
-      QString iconStr = mimeType->icon( a->uri(), false );
-      QString iconPath = KGlobal::iconLoader()->iconPath( iconStr, KIcon::Small );
+      const QString iconStr = mimeType ? mimeType->icon( a->uri(), false ) : QString( "application-octet-stream" );
+      const QString iconPath = KGlobal::iconLoader()->iconPath( iconStr, KIcon::Small );
       if ( !iconPath.isEmpty() ) {
         tmpStr += "<img valign=\"top\" src=\"" + iconPath + "\">";
       }
