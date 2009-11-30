@@ -85,7 +85,6 @@ class MessageAnalyzer : public Task, public MessageViewer::EmptySource
     KMime::Content *m_mainBodyPart;
     MessageViewer::NodeHelper *m_nodeHelper;
     MessageViewer::ObjectTreeParser *m_otp;
-    Soprano::Model* m_mainModel;
 };
 
 #endif

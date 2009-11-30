@@ -40,8 +40,14 @@ void MessageSearch::searchInContainer(const QByteArray& keyId)
     return;
   }
 
-  // TODO
+  Q_ASSERT( !hasActiveCryptoModel() );
+  Soprano::Model* model = cryptoModel( keyId );
 
+  if ( model ) {
+    // TODO run the query
+  }
+
+  resetModel();
   unmountCryptoContainer();
 }
 

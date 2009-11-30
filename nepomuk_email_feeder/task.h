@@ -22,6 +22,10 @@
 
 #include <QtCore/QObject>
 
+namespace Soprano {
+  class Model;
+}
+
 namespace GpgME {
   class Context;
 }
@@ -41,8 +45,13 @@ class Task : public QObject
     static QString containerPathFromKeyId( const QByteArray& keyId );
     static QString repositoryPathFromKeyId( const QByteArray &keyId );
 
+    Soprano::Model* cryptoModel( const QByteArray &keyId );
+    inline bool hasActiveCryptoModel() const { return m_cryptoModel; }
+    void resetModel();
+
   private:
     GpgME::Context* m_ctx;
+    Soprano::Model* m_cryptoModel;
 };
 
 #endif // TASK_H

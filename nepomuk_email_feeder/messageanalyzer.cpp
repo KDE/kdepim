@@ -45,12 +45,7 @@
 #include <Nepomuk/Variant>
 #include <Nepomuk/Tag>
 
-#include <Soprano/BackendSetting>
-#include <Soprano/Client/DBusClient>
-#include <Soprano/Client/DBusModel>
 #include <Soprano/Model>
-#include <Soprano/PluginManager>
-#include <Soprano/QueryResultIterator>
 #include <Soprano/Vocabulary/NAO>
 
 #include <QtCore/QDir>
@@ -65,8 +60,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
   m_graphUri( graphUri ),
   m_mainBodyPart( 0 ),
   m_nodeHelper( new MessageViewer::NodeHelper ),
-  m_otp( 0 ),
-  m_mainModel( 0 )
+  m_otp( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
@@ -149,10 +143,9 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
 
 void MessageAnalyzer::processPart(KMime::Content* content)
 {
-  bool resetModel = false;
-  Soprano::Model* cryptoModel = 0;
+  bool shouldResetModel = false;
 
-  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !m_mainModel ) {
+  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !hasActiveCryptoModel() ) {
     const MessageViewer::PartMetaData metaData = m_nodeHelper->partMetaData( content );
     kDebug() << content << metaData.isEncrypted << metaData.keyId;
     if ( metaData.isEncrypted && !metaData.keyId.isEmpty() ) {
@@ -162,21 +155,11 @@ void MessageAnalyzer::processPart(KMime::Content* content)
       if ( !mountCryptoContainer( metaData.keyId ) )
         return;
       kDebug() << "crypto container mounted";
-      Soprano::Client::DBusClient dbusClient( "org.kde.nepomuk.services.nepomukstorage" );
-      cryptoModel = dbusClient.createModel( metaData.keyId );
-      if ( !cryptoModel ) {
-        //  try again, the hard way, we are apparently using a Nepomuk server that lost support for multiple repoisitories :-/
-        const Soprano::Backend* backend = Soprano::PluginManager::instance()->discoverBackendByName( "virtuosobackend" );
-        Soprano::BackendSettings settings;
-        settings.append( Soprano::BackendSetting( Soprano::BackendOptionStorageDir, repositoryPathFromKeyId( metaData.keyId ) ) );
-        cryptoModel = backend->createModel( settings );
-      }
-      if ( cryptoModel ) {
-        m_mainModel = Nepomuk::ResourceManager::instance()->mainModel();
-        Nepomuk::ResourceManager::instance()->setOverrideMainModel( cryptoModel );
-        resetModel = true;
+      if ( cryptoModel( metaData.keyId ) ) {
+        shouldResetModel = true;
       } else {
-        kWarning() << "Could not obtain cryto index model" << dbusClient.lastError();
+        kWarning() << "Could not obtain cryto index model - skipping indexing of encrypted body parts";
+        return;
       }
     }
   }
@@ -219,15 +202,8 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     m_parent->indexData( attachmentUrl, content->decodedContent(), m_item.modificationTime() );
   }
 
-  if ( resetModel ) {
-    Nepomuk::ResourceManager::instance()->setOverrideMainModel( 0 );
-    m_mainModel = 0;
-    delete cryptoModel;
-#ifdef Q_OS_UNIX
-    // ### HACK FIXME
-    kDebug() << "waiting for virtuoso to shut down";
-    sleep( 5 );
-#endif
+  if ( shouldResetModel ) {
+    resetModel();
     unmountCryptoContainer();
   }
 }

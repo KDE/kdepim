@@ -26,19 +26,29 @@
 #include <kdebug.h>
 #include <KStandardDirs>
 
+#include <Soprano/BackendSetting>
+#include <Soprano/Client/DBusClient>
+#include <Soprano/Client/DBusModel>
+#include <Soprano/Model>
+#include <Soprano/PluginManager>
+#include <Soprano/QueryResultIterator>
+
 #include <QDir>
 #include <QFile>
 
 #include <boost/scoped_ptr.hpp>
+#include <Nepomuk/ResourceManager>
 
 Task::Task(QObject* parent) :
   QObject(parent),
-  m_ctx( 0 )
+  m_ctx( 0 ),
+  m_cryptoModel( 0 )
 {
 }
 
 Task::~Task()
 {
+  resetModel();
   unmountCryptoContainer();
 }
 
@@ -148,6 +158,45 @@ QString Task::repositoryPathFromKeyId(const QByteArray& keyId)
 {
   Q_ASSERT( !keyId.isEmpty() );
   return KStandardDirs::locateLocal( "data", "nepomuk/repository/" ) + QLatin1String( keyId );
+}
+
+
+Soprano::Model* Task::cryptoModel( const QByteArray &keyId )
+{
+  if ( m_cryptoModel )
+    return m_cryptoModel;
+
+  Soprano::Client::DBusClient dbusClient( "org.kde.nepomuk.services.nepomukstorage" );
+  m_cryptoModel = dbusClient.createModel( keyId );
+  if ( !m_cryptoModel ) {
+    //  try again, the hard way, we are apparently using a Nepomuk server that lost support for multiple repoisitories :-/
+    const Soprano::Backend* backend = Soprano::PluginManager::instance()->discoverBackendByName( "virtuosobackend" );
+    Soprano::BackendSettings settings;
+    settings.append( Soprano::BackendSetting( Soprano::BackendOptionStorageDir, repositoryPathFromKeyId( keyId ) ) );
+    m_cryptoModel = backend->createModel( settings );
+  }
+  if ( m_cryptoModel ) {
+    Nepomuk::ResourceManager::instance()->setOverrideMainModel( m_cryptoModel );
+    return m_cryptoModel;
+  }
+
+  kWarning() << "Could not obtain cryto index model" << dbusClient.lastError();
+  return 0;
+}
+
+void Task::resetModel()
+{
+  if ( !m_cryptoModel )
+    return;
+
+  Nepomuk::ResourceManager::instance()->setOverrideMainModel( 0 );
+  delete m_cryptoModel;
+  m_cryptoModel = 0;
+#ifdef Q_OS_UNIX
+  // ### HACK FIXME if we unmount the crypto container before virtuoso exits it might write to the normal filesystem
+  kDebug() << "waiting for virtuoso to shut down";
+  sleep( 5 );
+#endif
 }
 
 #include "task.moc"
