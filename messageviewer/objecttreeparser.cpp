@@ -495,7 +495,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
     dumpToFile( "dat_02_reader_signedtext_after_canonicalization",
                 cleartext.data(), cleartext.length() );
 
-    signaturetext = sign.body();
+    signaturetext = sign.decodedContent();
     dumpToFile( "dat_03_reader.sig", signaturetext.data(),
                 signaturetext.size() );
   }
