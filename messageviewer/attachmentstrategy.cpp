@@ -33,10 +33,12 @@
 
 #include "attachmentstrategy.h"
 
-#include <QString>
+#include "nodehelper.h"
 
 #include <kmime/kmime_content.h>
 #include <kdebug.h>
+
+#include <QString>
 
 namespace MessageViewer {
 
@@ -90,7 +92,7 @@ public:
     if ( node->contentDisposition()->disposition() == KMime::Headers::CDinline )
       // explict "inline" disposition:
       return Inline;
-    if ( node->contentDisposition()->disposition() == KMime::Headers::CDattachment)
+    if ( NodeHelper::isAttachment( node ) )
       // explicit "attachment" disposition:
       return AsIcon;
     if ( node->contentType()->isText() &&
