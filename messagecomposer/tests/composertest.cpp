@@ -302,6 +302,7 @@ void ComposerTest::testSignInlinePGP()
 
   QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::InlineOpenPGPFormat ) );
+                                          
 /*
   QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::OpenPGPMIMEFormat ) );
@@ -331,7 +332,8 @@ void ComposerTest::testEncryptInlinePGP()
 
   QVERIFY( ComposerTestUtil::verifyEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::InlineOpenPGPFormat ) );
-/*
+
+                                          /*
   QVERIFY( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                           Kleo::OpenPGPMIMEFormat ) );
 
@@ -369,11 +371,39 @@ void ComposerTest::testSignEncryptInlinePGP()
   */
 }
 
-//s-mime
-/*void testSignSMIME();
-void testEncryptSMIME();
-*/
- 
+void ComposerTest::testSignSMIME()
+{
+  runSMIMETest( true, false, false );
+}
+
+void ComposerTest::testEncryptSMIME() {
+  QVERIFY( runSMIMETest( false, true, false ) );
+}
+
+void ComposerTest::testSignEncryptSMIME() {
+  QVERIFY( runSMIMETest( true, true, false ) );
+  
+}
+
+void ComposerTest::testSignSMIMEOpaque()
+{
+  // TODO the test for signatures is currently not working
+  // mail seems to be fine in old kmail, might be bug in new otp
+  QVERIFY( runSMIMETest( true, false, true ) );
+}
+
+void ComposerTest::testEncryptSMIMEOpaque() {
+  QVERIFY( runSMIMETest( false, true, true ) );
+}
+
+void ComposerTest::testSignEncryptSMIMEOpaque() {
+  // TODO the test for signatures is currently not working
+  // mail seems to be fine in old kmail, might be bug in new otp
+   QVERIFY( runSMIMETest( true, true, true ) );
+
+}
+
+
 void ComposerTest::fillComposerData( Composer* composer )
 {
   composer->globalPart()->setFallbackCharsetEnabled( true );
@@ -386,6 +416,8 @@ void ComposerTest::fillComposerCryptoData( Composer* composer )
 {
   std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys();
 
+  kDebug() << "got num of keys:" << keys.size();
+  
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "you@you.you" );
 
@@ -394,6 +426,52 @@ void ComposerTest::fillComposerCryptoData( Composer* composer )
 
   composer->setEncryptionKeys( data );
   composer->setSigningKeys( keys );
+}
+
+bool ComposerTest::runSMIMETest( bool sign, bool enc, bool opaque )
+{
+
+  Composer *composer = new Composer;
+  fillComposerData( composer );
+
+  std::vector<GpgME::Key> keys = ComposerTestUtil::getKeys( true );
+  QStringList recipients;
+  recipients << QString::fromLocal8Bit( "you@you.you" );
+  QList<QPair<QStringList, std::vector<GpgME::Key> > > data;
+  data.append( QPair<QStringList, std::vector<GpgME::Key> >( recipients, keys ) );
+  composer->setEncryptionKeys( data );
+  composer->setSigningKeys( keys );
+  composer->setSignAndEncrypt( sign, enc );
+  Kleo::CryptoMessageFormat f;
+  if( opaque ) {
+    f = Kleo::SMIMEOpaqueFormat;
+  } else {
+    f = Kleo::SMIMEFormat;
+  }
+  composer->setMessageCryptoFormat( f );
+  
+  Q_ASSERT( composer->exec() );
+  Q_ASSERT( composer->resultMessages().size() == 1 );
+  KMime::Message* message = composer->resultMessages().first();
+  delete composer;
+  composer = 0;
+
+  kDebug() << "message:" << message->encodedContent();
+
+  if( sign && !enc ) {
+    Q_ASSERT( ComposerTestUtil::verifySignature( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
+  } else if( !sign && enc ) {
+    Q_ASSERT( ComposerTestUtil::verifyEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),  f ) );
+  } else if( sign && enc ) {
+    Q_ASSERT( ComposerTestUtil::verifySignatureAndEncryption( message, QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(), f ) );
+  }
+    
+
+  Q_ASSERT( message->from()->asUnicodeString() == QString::fromLocal8Bit( "me@me.me" ) );
+  Q_ASSERT( message->to()->asUnicodeString() == QString::fromLocal8Bit( "you@you.you" ) );
+
+  return true;
+
 }
 
 #include "composertest.moc"

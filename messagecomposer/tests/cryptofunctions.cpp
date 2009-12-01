@@ -41,21 +41,30 @@
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
 
-std::vector<GpgME::Key> ComposerTestUtil::getKeys()
+std::vector<GpgME::Key> ComposerTestUtil::getKeys( bool smime )
 {
 
   setenv("GNUPGHOME", KDESRCDIR "/gnupg_home" , 1 );
   setenv("LC_ALL", "C", 1); \
   setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromAscii( "/.kde-unit-test" ) ), 1);
 
-  const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
-  Kleo::KeyListJob * job = backend->keyListJob( false );
+  Kleo::KeyListJob * job = 0;
+
+  if( smime ) {
+    const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "smime" );
+    job = backend->keyListJob( false );
+  } else {
+    const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+    job = backend->keyListJob( false );
+  }
   Q_ASSERT( job );
 
   std::vector< GpgME::Key > keys;
   GpgME::KeyListResult res = job->exec( QStringList(), true, keys );
 
-  Q_ASSERT( keys.size() == 3 );
+  if( !smime )
+    Q_ASSERT( keys.size() == 3 );
+
   Q_ASSERT( !res.error() );
   kDebug() << "got private keys:" << keys.size();
 
@@ -108,6 +117,26 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
                            pResult, true );
                           
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
+
+    return true;
+  } else if( f & Kleo::AnySMIME ) {
+    if( f & Kleo::SMIMEFormat ) {
+      KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-signature", true, true );
+      Q_ASSERT( signedPart );
+    } else if( f & Kleo::SMIMEOpaqueFormat ) {
+      KMime::Content* signedPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
+      Q_ASSERT( signedPart );
+    }
+    // process the result..
+    kDebug() << resultMessage->topLevel();
+    kDebug() << "before:" << resultMessage->encodedContent();
+    otp.parseObjectTree( resultMessage );
+    kDebug() << "after:" << resultMessage->encodedContent();
+    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
+
+    // make sure the good sig is of what we think it is
+    kDebug() << "body:" << MessageViewer::NodeHelper::firstChild( resultMessage )->body();
+    Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == signedContent );
 
     return true;
   }
@@ -164,6 +193,16 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
 
     return true;
+  } else if( f & Kleo::AnySMIME) {
+    // ensure the enc part exists and is parseable
+    KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
+    Q_ASSERT( encPart );
+    otp.parseObjectTree( resultMessage );
+    Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
+    kDebug() << "testing:" << MessageViewer::NodeHelper::firstChild( resultMessage )->encodedContent() << encrContent;
+    Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == encrContent );
+
+    return true;
   }
 
   return false;
@@ -215,6 +254,19 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
 
     Q_ASSERT( pResult.inlineEncryptionState() == MessageViewer::KMMsgPartiallyEncrypted );
     Q_ASSERT( pResult.inlineSignatureState() == MessageViewer::KMMsgPartiallySigned );
+
+    return true;
+  } else if( f & Kleo::AnySMIME ) {
+    KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pkcs7-mime", true, true );
+    Q_ASSERT( encPart );
+
+    otp.parseObjectTree( resultMessage );
+    Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
+
+    KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
+    otp.processMultiPartSignedSubtype( signedPart, pResult );
+    Q_ASSERT( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( MessageViewer::NodeHelper::firstChild( signedPart )->body() == origContent );
 
     return true;
   }

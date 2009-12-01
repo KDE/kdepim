@@ -35,9 +35,7 @@ namespace ComposerTestUtil
   /**
   * Returns list of keys used in various crypto routines
   */
-
-  std::vector<GpgME::Key> getKeys();
-
+  std::vector<GpgME::Key> getKeys( bool smime = false );
 
   /**
   * Verifies that the given MIME content is signed and that the text is equal.

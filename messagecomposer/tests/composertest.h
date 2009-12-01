@@ -49,16 +49,22 @@ class ComposerTest : public QObject
     void testSignInlinePGP();
     void testEncryptInlinePGP();
     void testSignEncryptInlinePGP();
-/*
+
     //s-mime
     void testSignSMIME();
-    void testEncryptSMIME(); */
+    void testEncryptSMIME();
+    void testSignEncryptSMIME();
+    void testSignSMIMEOpaque();
+    void testEncryptSMIMEOpaque();
+    void testSignEncryptSMIMEOpaque();
     // TODO test the code for autodetecting the charset of a text attachment.
     // TODO figure out what CTE testing has to be done.
   private:
     void fillComposerData( Message::Composer* composer );
     void fillComposerCryptoData( Message::Composer* composer );
 
+    // convenience, shared code
+    bool runSMIMETest( bool sign, bool enc, bool opaque );
 };
 
 #endif
