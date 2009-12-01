@@ -582,6 +582,25 @@ QByteArray NodeHelper::path(const KMime::Content* node)
   return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
 }
 
+bool NodeHelper::isAttachment( KMime::Content *node )
+{
+  if ( node->head().isEmpty() )
+    return false;
+  if ( !node->contentDisposition( false ) )
+    return false;
+  return node->contentDisposition()->disposition() == KMime::Headers::CDattachment;
+}
+
+bool NodeHelper::isHeuristicalAttachment( KMime::Content *node )
+{
+  if ( isAttachment( node ) )
+    return true;
+  if ( ( node->contentType( false ) && !node->contentType()->name().isEmpty() ) ||
+       ( node->contentDisposition( false ) && !node->contentDisposition()->filename().isEmpty() ) )
+    return true;
+  return false;
+}
+
 QString NodeHelper::fileName(const KMime::Content* node)
 {
   QString name = const_cast<KMime::Content*>(node)->contentDisposition()->filename();
