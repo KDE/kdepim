@@ -387,8 +387,6 @@ void ComposerTest::testSignEncryptSMIME() {
 
 void ComposerTest::testSignSMIMEOpaque()
 {
-  // TODO the test for signatures is currently not working
-  // mail seems to be fine in old kmail, might be bug in new otp
   QVERIFY( runSMIMETest( true, false, true ) );
 }
 
@@ -397,8 +395,6 @@ void ComposerTest::testEncryptSMIMEOpaque() {
 }
 
 void ComposerTest::testSignEncryptSMIMEOpaque() {
-  // TODO the test for signatures is currently not working
-  // mail seems to be fine in old kmail, might be bug in new otp
    QVERIFY( runSMIMETest( true, true, true ) );
 
 }
