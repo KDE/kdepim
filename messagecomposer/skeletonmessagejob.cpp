@@ -116,6 +116,12 @@ void SkeletonMessageJobPrivate::doStart()
     message->setHeader( date );
   }
 
+  // Extras
+
+  foreach( KMime::Headers::Base* extra, infoPart->extraHeaders() ) {
+    message->setHeader( extra );
+  }
+
   q->emitResult(); // Success.
 }
 

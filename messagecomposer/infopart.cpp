@@ -31,6 +31,7 @@ class InfoPart::Private
     QString subject;
     QString fcc;
     int transportId;
+    KMime::Headers::Base::List extraHeaders;
 };
 
 InfoPart::InfoPart( QObject *parent )
@@ -114,5 +115,16 @@ QString InfoPart::fcc() const
 {
   return d->fcc;
 }
+
+void InfoPart::setExtraHeaders( KMime::Headers::Base::List headers )
+{
+  d->extraHeaders = headers;
+}
+
+KMime::Headers::Base::List InfoPart::extraHeaders() const
+{
+  return d->extraHeaders;
+}
+    
 
 #include "infopart.moc"
