@@ -64,6 +64,8 @@ class LIBKCAL_EXPORT IncidenceFormatter
 
     static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                          InvitationFormatterHelper *helper );
+    static QString formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
+                                               InvitationFormatterHelper *helper );
     // Format a TNEF attachment to an HTML mail
     static QString formatTNEFInvitation( const QByteArray& tnef,
                                          Calendar *mCalendar,
@@ -88,6 +90,10 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString resourceString( Calendar *calendar, Incidence *incidence );
 
   private:
+    static QString formatICalInvitationHelper( QString invitation,
+                                               Calendar *mCalendar,
+                                               InvitationFormatterHelper *helper,
+                                               bool noHtmlMode );
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;
