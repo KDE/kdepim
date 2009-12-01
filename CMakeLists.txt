@@ -97,9 +97,6 @@ else(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  macro_optional_find_package(Soprano)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" FALSE "" "Soprano is needed for Nepomuk")
-
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
@@ -195,11 +192,11 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
 
-    if( Nepomuk_FOUND AND SOPRANO_PLUGIN_RAPTORPARSER_FOUND )
+    if( Nepomuk_FOUND )
       include( SopranoAddOntology )
       add_subdirectory( ontologies )
       add_subdirectory( nepomuk_email_feeder )
-    endif( Nepomuk_FOUND AND SOPRANO_PLUGIN_RAPTORPARSER_FOUND )
+    endif( Nepomuk_FOUND )
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
