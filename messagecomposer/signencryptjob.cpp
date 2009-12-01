@@ -197,7 +197,9 @@ void SignEncryptJob::process()
     kDebug() << "encrypyting failed:" << res.second.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
   }
-  
+
+  // exec'ed jobs don't delete themselves
+  job->deleteLater();
 
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, encBody, d->format, true );
 //  d->resultContent->setBody( signature );

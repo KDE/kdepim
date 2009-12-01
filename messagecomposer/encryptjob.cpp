@@ -189,6 +189,9 @@ void EncryptJob::process()
   }
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, encryptedBody, d->format, false );
 
+  // exec'ed jobs don't delete themselves
+  seJob->deleteLater();
+  
   emitResult();
   return;
 

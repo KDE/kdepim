@@ -163,10 +163,16 @@ void SignJob::process()
   // according to RfC 2633, 3.1.1 Canonicalization
   d->content->assemble();
   QByteArray content;
-  if( d->format & Kleo::InlineOpenPGPFormat ) {
+  // 
+
+  kDebug() << "signing content before LFtoCRLF:" << d->content->encodedContent();
+  if( d->format & Kleo::InlineOpenPGPFormat  &&
+    !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
     content = KMime::LFtoCRLF( d->content->body() ); // TODO is this right?
-  } else {
+  } else if( !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
     content = KMime::LFtoCRLF( d->content->encodedContent() );
+  } else { // SMimeOpaque doesn't need LFtoCRLF, else it gets munged
+    content = d->content->encodedContent();
   }
   
   kDebug() << "signing content:" << content;
@@ -179,6 +185,9 @@ void SignJob::process()
     kDebug() << "signing failed:" << res.error().asString();
     //        job->showErrorDialog( globalPart()->parentWidgetForGui() );
   }
+
+  // exec'ed jobs don't delete themselves
+  job->deleteLater();
 
   d->resultContent = Message::Util::composeHeadersAndBody( d->content, signature, d->format, true );
 //  d->resultContent->setBody( signature );
