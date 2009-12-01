@@ -225,9 +225,10 @@ set(libkdgantt1_SRCS
   endif(Q_WS_X11)
 
   # Kpilot won't build on Windows.
-  if(NOT WIN32)
-    macro_optional_add_subdirectory(kpilot)
-  endif(NOT WIN32)
+# We are removing kpilot in 4.4
+#  if(NOT WIN32)
+#    macro_optional_add_subdirectory(kpilot)
+#  endif(NOT WIN32)
 
   macro_optional_add_subdirectory(kontact) # must be the last one.
 
