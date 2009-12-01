@@ -49,6 +49,10 @@ class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
     QString subject() const;
     void setSubject( const QString &subject );
 
+
+    QString fcc() const;
+    void setFcc( const QString &fcc );
+
     int transportId() const;
     void setTransportId( int tid );
 

@@ -29,6 +29,7 @@ class InfoPart::Private
     QStringList cc;
     QStringList bcc;
     QString subject;
+    QString fcc;
     int transportId;
 };
 
@@ -102,6 +103,16 @@ int InfoPart::transportId() const
 void InfoPart::setTransportId( int tid )
 {
   d->transportId = tid;
+}
+
+void InfoPart::setFcc( const QString &fcc )
+{
+  d->fcc = fcc;
+}
+
+QString InfoPart::fcc() const
+{
+  return d->fcc;
 }
 
 #include "infopart.moc"
