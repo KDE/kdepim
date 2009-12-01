@@ -1586,6 +1586,8 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
   KMime::Message* rfc822message = new KMime::Message();
   rfc822message->setContent( rfc822messageStr );
   rfc822message->parse();
+  // ### PORT ME: This crashes, try for example editing a message with an
+  //              encapsulated message in it
   static_cast<KMime::Message*>(node->topLevel())->from()->from7BitString( rfc822message->from()->as7BitString() );
   if ( mHtmlWriter )
     htmlWriter()->queue( mSource->createMessageHeader( rfc822message ) );
