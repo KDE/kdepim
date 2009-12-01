@@ -163,6 +163,7 @@ public:
     //static methods - TODO factor out in a separate namespace ?
     //
     static KMime::Content *nextSibling( const KMime::Content* node );
+    static KMime::Content *next( KMime::Content *node, bool allowChildren = true );
 
     static KMime::Content *firstChild( const KMime::Content* node );
 

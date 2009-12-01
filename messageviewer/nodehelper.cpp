@@ -334,6 +334,25 @@ KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
   return next;
 }
 
+KMime::Content *NodeHelper::next( KMime::Content *node, bool allowChildren )
+{
+  if ( allowChildren ) {
+    if ( KMime::Content *child = firstChild( node ) ) {
+      return child;
+    }
+  }
+  if ( KMime::Content *sibling = nextSibling( node ) ) {
+    return sibling;
+  }
+  for ( KMime::Content *parent = node->parent() ; parent ;
+        parent = parent->parent() ) {
+    if ( KMime::Content *sibling = nextSibling( parent ) ) {
+      return sibling;
+    }
+  }
+  return 0;
+}
+
 KMMsgEncryptionState NodeHelper::overallEncryptionState( KMime::Content *node ) const
 {
     KMMsgEncryptionState myState = KMMsgEncryptionStateUnknown;
