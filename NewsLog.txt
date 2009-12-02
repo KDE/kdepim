@@ -4,13 +4,11 @@ Problems addressed
 ------------------
 
 * kolab/issue3747: Better archiving function for a branch (subtree) of folders (rt#5817)
-* kolab/issue3928: Insert signature at cursor position: Two additional empty lines added (rt#5880)
-* kolab/issue3805: Sometimes at the Mail save dialog no filename is created from the subject (rt#5851)
 * kolab/issue3098: OnlineIMAP, sometimes Mail body no longer shown -> Crash
-* kolab/issue3969: two offline warning windows - that might overlap and lock (rt#5917)
+* kolab/issue3969(partial): two offline warning windows - that might overlap and lock (rt#5917)
 * kolab/issue3978: Forwarding some emails with an embedded email as text loses some of the text (rt#5919)
 * kolab/issue3955: Kontact automaticly sends a mail to all attendees of an event without confirm
-* kolab/issue3958: Copy action on the address of an open mail doesn't work (rt#5911)
+* kolab/issue3958(partial): Copy action on the address of an open mail doesn't work (rt#5911)
 * kolab/issue3957: Improvement of German text in conditionally accepted events (rt#5905)
 
 
