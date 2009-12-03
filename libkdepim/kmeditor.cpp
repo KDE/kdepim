@@ -615,7 +615,7 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     // Remove the old and insert the new signature
     cursor.removeSelectedText();
     setTextCursor( cursor );
-    newSig.insertIntoTextEdit( this, KPIMIdentities::Signature::AtCursor, false );
+    newSig.insertIntoTextEdit( this, KPIMIdentities::Signature::AtCursor, false, false );
 
     currentSearchPosition += newSig.plainText().length();
   }
