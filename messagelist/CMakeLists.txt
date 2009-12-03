@@ -89,13 +89,13 @@ target_link_libraries(messagelist
 
 set_target_properties(messagelist PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS messagelist ${INSTALL_TARGETS_DEFAULT_ARGS})
-install( FILES ${libmessagelist_HEADERS}
-         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist
-         COMPONENT devel)
-install( FILES ${libmessagelist_core_HEADERS}
-         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/core
-         COMPONENT devel)
-install( FILES ${libmessagelist_utils_HEADERS}
-         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/utils
-         COMPONENT devel)
+#install( FILES ${libmessagelist_HEADERS}
+#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist
+#         COMPONENT devel)
+#install( FILES ${libmessagelist_core_HEADERS}
+#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/core
+#         COMPONENT devel)
+#install( FILES ${libmessagelist_utils_HEADERS}
+#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagelist/utils
+#         COMPONENT devel)
 
