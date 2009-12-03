@@ -2071,7 +2071,11 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, Pr
     QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
 
     KMimeType::Ptr mimeType = KMimeType::mimeType( att->mimeTag(), KMimeType::ResolveAliases );
-    QString iconName = KIconLoader::global()->iconPath( mimeType->iconName(), KIconLoader::Desktop );
+    QString iconName;
+    if ( mimeType )
+      iconName = KIconLoader::global()->iconPath( mimeType->iconName(), KIconLoader::Desktop );
+    else
+      iconName = KIconLoader::global()->iconPath( "mail-attachment", KIconLoader::Desktop );
 
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
                           iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
