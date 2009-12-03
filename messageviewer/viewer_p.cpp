@@ -71,6 +71,8 @@ using MessageViewer::TeeHtmlWriter;
 #include <dom/html_document.h>
 #include <dom/dom_string.h>
 
+#include <mailtransport/errorattribute.h>
+
 //Qt includes
 #include <QClipboard>
 #include <QDesktopWidget>
@@ -123,7 +125,7 @@ using MessageViewer::TeeHtmlWriter;
 
 #include <gpgme++/error.h>
 
-
+using namespace MailTransport;
 using namespace MessageViewer;
 
 const int ViewerPrivate::delay = 150;
@@ -1111,6 +1113,15 @@ void ViewerPrivate::displayMessage()
 
   mColorBar->setNeutralMode();
 
+  if ( mMessageItem.hasAttribute<ErrorAttribute>() ) {
+    const ErrorAttribute* const attr = mMessageItem.attribute<ErrorAttribute>();
+    Q_ASSERT( attr );
+    const QColor foreground = KColorScheme( QPalette::Active, KColorScheme::View ).foreground( KColorScheme::NegativeText ).color();
+    const QColor background = KColorScheme( QPalette::Active, KColorScheme::View ).background( KColorScheme::NegativeBackground ).color();
+
+    htmlWriter()->queue( QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg( background.name(), foreground.name(), foreground.name(), Qt::escape( attr->message() ) ) );
+    htmlWriter()->queue( QLatin1String("<p></p>") );
+  }
   parseMsg();
 
   if( mColorBar->isNeutral() )
