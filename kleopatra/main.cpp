@@ -243,6 +243,9 @@ int main( int argc, char** argv )
       if ( !selfCheck( splash ) )
           return 1;
       qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
+
+      app.startMonitoringSmartCard();
+
 #ifdef HAVE_USABLE_ASSUAN
       fillKeyCache( &splash, &server );
 #else
@@ -276,6 +279,7 @@ int main( int argc, char** argv )
                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
                                      Qt::escape( QString::fromUtf8( e.what() ) ) ));
+      app.startMonitoringSmartCard();
       app.setIgnoreNewInstance( false );
       rc = app.exec();
       app.setIgnoreNewInstance( true );

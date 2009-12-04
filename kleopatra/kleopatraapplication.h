@@ -65,6 +65,7 @@ public:
 public Q_SLOTS:
     void openOrRaiseMainWindow();
     void openOrRaiseConfigDialog();
+    void startMonitoringSmartCard();
     void importCertificatesFromFile( const QStringList & files, GpgME::Protocol proto );
     void encryptFiles( const QStringList & files, GpgME::Protocol proto );
     void signFiles( const QStringList & files, GpgME::Protocol proto );

@@ -312,6 +312,10 @@ void KleopatraApplication::openOrRaiseConfigDialog() {
     d->sysTray.openOrRaiseConfigDialog();
 }
 
+void KleopatraApplication::startMonitoringSmartCard() {
+    d->readerStatus.startMonitoring();
+}
+
 void KleopatraApplication::importCertificatesFromFile( const QStringList & files, GpgME::Protocol /*proto*/) {
     openOrRaiseMainWindow();
     if ( !files.empty() )
