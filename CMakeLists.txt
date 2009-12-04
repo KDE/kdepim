@@ -57,7 +57,8 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
   target_link_libraries(${LINK_ARG_LIST})
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
-find_package(Boost REQUIRED)
+set( Boost_MINIMUM_VERSION "1.34" ) # Boost <= 1.33.1 has an unusable (for our purposes) bind() impl
+find_package(Boost REQUIRED )
 macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by kleopatra")
 
 if ( ONLY_KLEO )
