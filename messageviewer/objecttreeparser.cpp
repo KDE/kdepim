@@ -1226,7 +1226,7 @@ bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
 
 bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, ProcessResult & result )
 {
-  bool isFirstTextPart = (curNode->topLevel()->textContent() == curNode);
+  const bool isFirstTextPart = ( curNode->topLevel()->textContent() == curNode );
 
   if ( !mHtmlWriter ) {
     mRawReplyString = curNode->decodedContent();
@@ -1238,7 +1238,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
   }
 
   if ( !isFirstTextPart && attachmentStrategy()->defaultDisplay( curNode ) != AttachmentStrategy::Inline &&
-        !showOnlyOneMimePart() )
+       !showOnlyOneMimePart() )
     return false;
 
   // TODO: Remove code duplication
