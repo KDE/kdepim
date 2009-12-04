@@ -55,6 +55,8 @@
 
 #include <gpg-error.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <KLocale>
 
 #include <QPointer>
@@ -62,6 +64,7 @@
 #include <QTimer>
 
 #include <boost/bind.hpp>
+#include <boost/mem_fn.hpp>
 #include <boost/range.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/iterator/filter_iterator.hpp>
@@ -74,6 +77,7 @@
 using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
+using namespace KMime::Types;
 
 static const unsigned int hours2ms = 1000 * 60 * 60;
 
@@ -147,6 +151,8 @@ public:
         return std::equal_range( by.email.begin(), by.email.end(),
                                  email, ByEMail<std::less>() );
     }
+
+    std::vector<Key> find_mailbox( const Mailbox & mb, bool secret ) const;
 
     std::vector<Subkey>::const_iterator find_subkeyid( const char * subkeyid ) const {
         return find<_detail::ByKeyID>( by.subkeyid, subkeyid );
@@ -395,6 +401,50 @@ std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
     Q_FOREACH( const Signature & s, res.signatures() )
         fprs.push_back( s.fingerprint() );
     return findByKeyIDOrFingerprint( fprs );
+}
+
+std::vector<Key> KeyCache::findSigningKeysByMailbox( const Mailbox & mb ) const {
+    return d->find_mailbox( mb, true );
+}
+
+std::vector<Key> KeyCache::findEncryptionKeysByMailbox( const Mailbox & mb ) const {
+    return d->find_mailbox( mb, false );
+}
+
+namespace {
+    // only Boost >= 1.36 has bind( ... ) && bind( ... ), so we need
+    // to do it by hand...
+    struct logical_and {
+        typedef bool result_type;
+        template <typename T1, typename T2>
+        bool operator()( T1 lhs, T2 rhs ) const {
+            return lhs && rhs ;
+        }
+    };
+}
+
+std::vector<Key> KeyCache::Private::find_mailbox( const Mailbox & mb, bool sign ) const {
+    const QString email = mb.addrSpec().asString();
+    if ( email.isEmpty() )
+        return std::vector<Key>();
+
+    const std::pair<
+        std::vector< std::pair<std::string,Key> >::const_iterator,
+        std::vector< std::pair<std::string,Key> >::const_iterator
+    > pair = find_email( email.toUtf8().constData() );
+
+    std::vector<Key> result;
+    result.reserve( std::distance( pair.first, pair.second ) );
+    if ( sign )
+        kdtools::copy_2nd_if( pair.first, pair.second,
+                              std::back_inserter( result ),
+                              // bind( &Key::hasSecret, _1 ) && bind( &Key::canSign, _1 ), // Boost >= 1.36 only
+                              bind( logical_and(), bind( &Key::hasSecret, _1 ), bind( &Key::canSign, _1 ) ) );
+    else
+        kdtools::copy_2nd_if( pair.first, pair.second,
+                              std::back_inserter( result ),
+                              mem_fn( &Key::canEncrypt ) );
+    return result;
 }
 
 std::vector<Key> KeyCache::findSubjects( const GpgME::Key & key, Options options ) const {
