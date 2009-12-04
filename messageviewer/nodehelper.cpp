@@ -317,6 +317,14 @@ KMime::Content *NodeHelper::firstChild( const KMime::Content* node )
   return child;
 }
 
+QByteArray NodeHelper::charset( KMime::Content *node )
+{
+  if ( node->contentType( false ) )
+    return node->contentType( false )->charset();
+  else
+    return node->defaultCharset();
+}
+
 KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
 {
   if ( !node )

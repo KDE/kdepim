@@ -33,7 +33,7 @@ QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 void ObjectTreeParserTester::test_parsePlainMessage()
 {
   KMime::Message *msg = new KMime::Message();
-  const QByteArray content(
+  QByteArray content(
       "From: Thomas McGuire <dontspamme@gmx.net>\n"
       "Subject: Plain Message Test\n"
       "Date: Wed, 5 Aug 2009 10:58:27 +0200\n"
@@ -55,12 +55,26 @@ void ObjectTreeParserTester::test_parsePlainMessage()
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.textualContent(), QString( "This is the message text." ) );
-  //qDebug() << otp.textualContentCharset();
-  QEXPECT_FAIL( "", "Textual content charset not correctly retrieved!", Continue );
   QCOMPARE( otp.textualContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
   // Check that the message was not modified in any way
   QCOMPARE( msg->encodedContent().constData(), content.constData() );
+
+  // Test that the charset of messages without an explicit charset declaration
+  // is correct
+  content =
+      "From: Thomas McGuire <dontspamme@gmx.net>\n"
+      "Subject: Plain Message Test\n"
+      "Date: Wed, 5 Aug 2009 10:58:27 +0200\n"
+      "MIME-Version: 1.0\n"
+      "Content-Type: text/plain;\n"
+      "\n"
+      "This is the message text.\n";
+  msg->setContent( content );
+  msg->parse();
+  ObjectTreeParser otp2( &emptySource );
+  otp2.parseObjectTree( msg );
+  QCOMPARE( otp2.textualContentCharset().constData(), msg->defaultCharset().constData() );
 }
 
 void ObjectTreeParserTester::test_parseEncapsulatedMessage()
@@ -133,8 +147,6 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 
     // Check that the textual content and the charset have the expected values
     QCOMPARE( otp.textualContent(), QString( "This is the encapsulating message." ) );
-    //qDebug() << otp.textualContentCharset();
-    QEXPECT_FAIL( "", "Textual content charset not correctly retrieved!", Continue );
     QCOMPARE( otp.textualContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
 
     // Check that the encapsulated message parsing worked as expected

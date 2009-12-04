@@ -1019,7 +1019,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, Process
   mRawReplyString = partBody;
   if ( curNode->topLevel()->textContent() == curNode ) {
     mTextualContent += curNode->decodedText();
-    mTextualContentCharset = curNode->defaultCharset();
+    mTextualContentCharset = NodeHelper::charset( curNode );
   }
 
   if ( !mHtmlWriter )
@@ -1232,7 +1232,7 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
     mRawReplyString = curNode->decodedContent();
     if ( isFirstTextPart ) {
       mTextualContent += curNode->decodedText();
-      mTextualContentCharset = curNode->defaultCharset();
+      mTextualContentCharset += NodeHelper::charset( curNode );
     }
     return true;
   }
@@ -1241,10 +1241,11 @@ bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, Process
         !showOnlyOneMimePart() )
     return false;
 
+  // TODO: Remove code duplication
   mRawReplyString = curNode->decodedContent();
   if ( isFirstTextPart ) {
     mTextualContent += curNode->decodedText();
-    mTextualContentCharset = curNode->defaultCharset();
+    mTextualContentCharset = NodeHelper::charset( curNode );
   }
 
   QString label = NodeHelper::fileName( curNode );
@@ -1991,7 +1992,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   if ( !mHtmlWriter ) {
     mRawReplyString = curNode->decodedContent();
     mTextualContent += curNode->decodedText();
-    mTextualContentCharset = curNode->defaultCharset();
+    mTextualContentCharset = NodeHelper::charset( curNode );
     return true;
   }
 

@@ -168,6 +168,12 @@ public:
     static KMime::Content *firstChild( const KMime::Content* node );
 
     /**
+     * Returns the charset for the given node. If no charset is specified
+     * for the node, the defaultCharset() is returned.
+     */
+    static QByteArray charset( KMime::Content *node );
+
+    /**
      * Check for prefixes @p prefixRegExps in @p str. If none
      * is found, @p newPrefix + ' ' is prepended to @p str and the
      * resulting string is returned. If @p replace is true, any
