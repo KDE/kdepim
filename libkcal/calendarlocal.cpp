@@ -409,7 +409,7 @@ Event::List CalendarLocal::rawEventsForDate( const QDate &qd,
     }
   }
 
-  return sortEvents( &eventList, sortField, sortDirection );
+  return sortEventsForDate( &eventList, qd, sortField, sortDirection );
 }
 
 Event::List CalendarLocal::rawEvents( const QDate &start, const QDate &end,

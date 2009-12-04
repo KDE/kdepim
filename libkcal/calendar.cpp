@@ -161,7 +161,7 @@ Event::List Calendar::sortEvents( Event::List *eventList,
                                   SortDirection sortDirection )
 {
   Event::List eventListSorted;
-  Event::List tempList, t;
+  Event::List tempList;
   Event::List alphaList;
   Event::List::Iterator sortIt;
   Event::List::Iterator eit;
@@ -196,11 +196,11 @@ Event::List Calendar::sortEvents( Event::List *eventList,
       eventListSorted.insert( sortIt, *eit );
     }
     if ( sortDirection == SortDirectionAscending ) {
-      // Prepend the list of Events without End DateTimes
+      // Prepend the list of all-day Events
       tempList += eventListSorted;
       eventListSorted = tempList;
     } else {
-      // Append the list of Events without End DateTimes
+      // Append the list of all-day Events
       eventListSorted += tempList;
     }
     break;
@@ -257,7 +257,149 @@ Event::List Calendar::sortEvents( Event::List *eventList,
   }
 
   return eventListSorted;
+}
 
+Event::List Calendar::sortEventsForDate( Event::List *eventList,
+                                         const QDate &date,
+                                         EventSortField sortField,
+                                         SortDirection sortDirection )
+{
+  Event::List eventListSorted;
+  Event::List tempList;
+  Event::List alphaList;
+  Event::List::Iterator sortIt;
+  Event::List::Iterator eit;
+
+  switch( sortField ) {
+  case EventSortStartDate:
+    alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      if ( (*eit)->doesFloat() ) {
+        tempList.append( *eit );
+        continue;
+      }
+      sortIt = eventListSorted.begin();
+      if ( sortDirection == SortDirectionAscending ) {
+        while ( sortIt != eventListSorted.end() ) {
+          if ( !(*eit)->doesRecur() ) {
+            if ( (*eit)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
+              ++sortIt;
+            } else {
+              break;
+            }
+          } else {
+            if ( (*eit)->recursOn( date ) ) {
+              if ( (*eit)->dtStart().time() >= (*sortIt)->dtStart().time() ) {
+                ++sortIt;
+              } else {
+                break;
+              }
+            } else {
+              ++sortIt;
+            }
+          }
+        }
+      } else { // descending
+        while ( sortIt != eventListSorted.end() ) {
+          if ( !(*eit)->doesRecur() ) {
+            if ( (*eit)->dtStart().time() < (*sortIt)->dtStart().time() ) {
+              ++sortIt;
+            } else {
+              break;
+            }
+          } else {
+            if ( (*eit)->recursOn( date ) ) {
+              if ( (*eit)->dtStart().time() < (*sortIt)->dtStart().time() ) {
+                ++sortIt;
+              } else {
+                break;
+              }
+            } else {
+              ++sortIt;
+            }
+          }
+        }
+      }
+      eventListSorted.insert( sortIt, *eit );
+    }
+    if ( sortDirection == SortDirectionAscending ) {
+      // Prepend the list of all-day Events
+      tempList += eventListSorted;
+      eventListSorted = tempList;
+    } else {
+      // Append the list of all-day Events
+      eventListSorted += tempList;
+    }
+    break;
+
+  case EventSortEndDate:
+    alphaList = sortEvents( eventList, EventSortSummary, sortDirection );
+    for ( eit = alphaList.begin(); eit != alphaList.end(); ++eit ) {
+      if ( (*eit)->hasEndDate() ) {
+        sortIt = eventListSorted.begin();
+        if ( sortDirection == SortDirectionAscending ) {
+          while ( sortIt != eventListSorted.end() ) {
+            if ( !(*eit)->doesRecur() ) {
+              if ( (*eit)->dtEnd().time() >= (*sortIt)->dtEnd().time() ) {
+                ++sortIt;
+              } else {
+                break;
+              }
+            } else {
+              if ( (*eit)->recursOn( date ) ) {
+                if ( (*eit)->dtEnd().time() >= (*sortIt)->dtEnd().time() ) {
+                  ++sortIt;
+                } else {
+                  break;
+                }
+              } else {
+                ++sortIt;
+              }
+            }
+          }
+        } else { // descending
+          while ( sortIt != eventListSorted.end() ) {
+            if ( !(*eit)->doesRecur() ) {
+              if ( (*eit)->dtEnd().time() < (*sortIt)->dtEnd().time() ) {
+                ++sortIt;
+              } else {
+                break;
+              }
+            } else {
+              if ( (*eit)->recursOn( date ) ) {
+                if ( (*eit)->dtEnd().time() < (*sortIt)->dtEnd().time() ) {
+                  ++sortIt;
+                } else {
+                  break;
+                }
+              } else {
+                ++sortIt;
+              }
+            }
+          }
+        }
+      } else {
+        // Keep a list of the Events without End DateTimes
+        tempList.append( *eit );
+      }
+      eventListSorted.insert( sortIt, *eit );
+    }
+    if ( sortDirection == SortDirectionAscending ) {
+      // Prepend the list of Events without End DateTimes
+      tempList += eventListSorted;
+      eventListSorted = tempList;
+    } else {
+      // Append the list of Events without End DateTimes
+      eventListSorted += tempList;
+    }
+    break;
+
+  default:
+    eventListSorted = sortEvents( eventList, sortField, sortDirection );
+    break;
+  }
+
+  return eventListSorted;
 }
 
 Event::List Calendar::events( const QDate &date,

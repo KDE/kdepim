@@ -493,7 +493,7 @@ Event::List CalendarResources::rawEventsForDate( const QDate &date,
       mResourceMap[ *it2 ] = *it;
     }
   }
-  return sortEvents( &result, sortField, sortDirection );
+  return sortEventsForDate( &result, date, sortField, sortDirection );
 }
 
 Event::List CalendarResources::rawEvents( const QDate &start, const QDate &end,

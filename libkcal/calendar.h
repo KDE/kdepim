@@ -457,6 +457,22 @@ class LIBKCAL_EXPORT Calendar : public QObject, public CustomProperties,
     static Event::List sortEvents( Event::List *eventList,
                                    EventSortField sortField,
                                    SortDirection sortDirection );
+
+    /**
+       Sort a list of Events that occur on a specified date.
+
+       @param eventList is a pointer to a list of Events occurring on @p date.
+       @param date is the date.
+       @param sortField specifies the EventSortField.
+       @param sortDirection specifies the SortDirection.
+
+       @return a list of Events sorted as specified.
+    */
+    static Event::List sortEventsForDate( Event::List *eventList,
+                                          const QDate &date,
+                                          EventSortField sortField,
+                                          SortDirection sortDirection );
+
     /**
        Return a sorted, filtered list of all Events for this Calendar.
 
