@@ -34,7 +34,7 @@
 
 #include "encryptcommand.h"
 
-#include <crypto/encryptemailcontroller.h>
+#include <crypto/newsignencryptemailcontroller.h>
 
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
@@ -71,7 +71,7 @@ private Q_SLOTS:
     void slotRecipientsResolved();
 
 private:
-    shared_ptr<EncryptEMailController> controller;
+    shared_ptr<NewSignEncryptEMailController> controller;
 };
 
 EncryptCommand::EncryptCommand()
@@ -108,10 +108,10 @@ void EncryptCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_INV_VALUE ),
                          i18n( "MESSAGE command is not allowed before ENCRYPT" ) );
 
-    if ( q->hasMemento( EncryptEMailController::mementoName() ) ) {
+    const shared_ptr<NewSignEncryptEMailController> m = q->mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
+    kleo_assert( m );
 
-        const shared_ptr<EncryptEMailController> m = q->mementoContent< shared_ptr<EncryptEMailController> >( EncryptEMailController::mementoName() );
-        kleo_assert( m );
+    if ( m && m->isEncrypting() ) {
 
         if ( m->protocol() != q->checkProtocol( EMail ) )
             throw Exception( makeError( GPG_ERR_CONFLICT ),
@@ -134,38 +134,52 @@ void EncryptCommand::Private::checkForErrors() const {
 
 }
 
+static void connectController( const QObject * controller, const QObject * d ) {
+
+    QObject::connect( controller, SIGNAL(certificatesResolved()), d, SLOT(slotRecipientsResolved()) );
+    QObject::connect( controller, SIGNAL(done()), d, SLOT(slotDone()) );
+    QObject::connect( controller, SIGNAL(error(int,QString)), d, SLOT(slotError(int,QString)) );
+
+}
+
 int EncryptCommand::doStart() {
 
     d->checkForErrors();
 
-    const bool hasPreviousMemento = hasMemento( EncryptEMailController::mementoName() );
+    const shared_ptr<NewSignEncryptEMailController> seec = mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
 
-    if ( hasPreviousMemento ) {
-        d->controller = mementoContent< shared_ptr<EncryptEMailController> >( EncryptEMailController::mementoName() );
-        removeMemento( EncryptEMailController::mementoName() );
+    if ( seec && seec->isEncrypting() ) {
+        // reuse the controller from a previous PREP_ENCRYPT, if available:
+        d->controller = seec;
+        connectController( seec.get(), d.get() );
+        removeMemento( NewSignEncryptEMailController::mementoName() );
         d->controller->setExecutionContext( shared_from_this() );
+        if ( seec->areCertificatesResolved() )
+            QTimer::singleShot( 0, d.get(), SLOT(slotRecipientsResolved()) );
+        else
+            kleo_assert( seec->isResolvingInProgress() );
     } else {
-        d->controller.reset( new EncryptEMailController( shared_from_this(), EncryptEMailController::GpgOLMode ) );
+        // use a new controller
+        d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
+
+        const QString session = sessionTitle();
+        if ( !session.isEmpty() )
+            d->controller->setSubject( session );
+
+        d->controller->setEncrypting( true );
+        d->controller->setSigning( false );
         d->controller->setProtocol( checkProtocol( EMail ) );
+        connectController( d->controller.get(), d.get() );
+        d->controller->startResolveCertificates( recipients(), senders() );
     }
 
-    kleo_assert( d->controller );
-
-    QObject::connect( d->controller.get(), SIGNAL(recipientsResolved()), d.get(), SLOT(slotRecipientsResolved()), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
-
-    if ( hasPreviousMemento )
-        QTimer::singleShot( 0, d.get(), SLOT(slotRecipientsResolved()) );
-    else
-        d->controller->startResolveRecipients( recipients(), senders() );
 
     return 0;
 }
 
 void EncryptCommand::Private::slotRecipientsResolved() {
     //hold local shared_ptr to member as q->done() deletes *this
-    const shared_ptr<EncryptEMailController> cont( controller );
+    const shared_ptr<NewSignEncryptEMailController> cont( controller );
 
     try {
         const QString sessionTitle = q->sessionTitle();
@@ -173,8 +187,7 @@ void EncryptCommand::Private::slotRecipientsResolved() {
             Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
                 i->setLabel( sessionTitle );
 
-        cont->setInputsAndOutputs( q->inputs(), q->outputs() );
-        cont->start();
+        cont->startEncryption( q->inputs(), q->outputs() );
 
         return;
 
