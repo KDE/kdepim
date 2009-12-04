@@ -52,6 +52,7 @@
 #include <QTextDocument> // for Qt::escape
 
 #include <boost/bind.hpp>
+#include <boost/mem_fn.hpp>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -149,6 +150,7 @@ void SignEMailTask::setOutput( const shared_ptr<Output> & output ) {
 void SignEMailTask::setSigners( const std::vector<Key> & signers ) {
     kleo_assert( !d->job );
     kleo_assert( !signers.empty() );
+    kleo_assert( kdtools::none_of( signers, mem_fn( &Key::isNull ) ) );
     d->signers = signers;
 }
 
