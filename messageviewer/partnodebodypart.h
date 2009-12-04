@@ -47,7 +47,7 @@ namespace MessageViewer {
 }
 
 /**
-    @short an implementation of the BodyPart interface using partNodes
+    @short an implementation of the BodyPart interface using KMime::Content's
 */
 class PartNodeBodyPart : public MessageViewer::Interface::BodyPart {
 public:
