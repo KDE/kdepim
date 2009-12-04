@@ -1,3 +1,23 @@
+Friday, December 4th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from enterprise35 branch:
+      - kolab/issue3978: Forwarding some emails with an embedded email as text loses some of the text (rt#5919)
+      - kolab/issue3955: Kontact automaticly sends a mail to all attendees of an event without confirm
+      - kolab/issue3958(partial): Copy action on the address of an open mail doesn't work (rt#5911)
+      - kolab/issue3805: Sometimes at the Mail save dialog no filename is created from the subject (rt#5851)
+      - kolab/issue3971: Users dislike the "Cannot edit attachment" error message (rt#5908)
+      - kolab/issue3948: Show a 'record' button if the organizer is *not* expecting an rsvp (rt#5879)
+      - kolab/issue3984: New filter "*.*" for the save mail as dialog (rt#5896)
+      - kolab/issue3813: reccuring events show wrong dates (rt#5855)
+      - Fix problems when archiving empty folders (kolab/issue3747)
+
+
 Friday, November 27th 2009
 
 Problems addressed
