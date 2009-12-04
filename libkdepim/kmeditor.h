@@ -144,7 +144,7 @@ class KDEPIM_EXPORT KMeditor : public KPIMTextEdit::TextEdit
      * @param newSig the new signature
      * @return @p true if oldSig was found (and replaced) at least once
      */
-     bool replaceSignature( const KPIMIdentities::Signature &oldSig,
+    bool replaceSignature( const KPIMIdentities::Signature &oldSig,
                            const KPIMIdentities::Signature &newSig );
 
   public Q_SLOTS:
