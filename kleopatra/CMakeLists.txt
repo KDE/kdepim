@@ -166,6 +166,8 @@ set( _kleopatra_SRCS
   dialogs/setinitialpindialog.cpp
 
   crypto/certificateresolver.cpp
+  crypto/sender.cpp
+  crypto/recipient.cpp
   crypto/task.cpp
   crypto/taskcollection.cpp
   crypto/decryptverifytask.cpp
