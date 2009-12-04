@@ -164,6 +164,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mShowAttachmentQuicklist( true ),
     mDisregardUmask( false ),
     mCurrentContent( 0 ),
+    mJob( 0 ),
     q( aParent )
 {
   if ( !mainWindow )
@@ -3146,16 +3147,19 @@ void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )
     return;
   }
 
-  //TODO PORT it
-  //mJob = job;
+  mJob = job;
   connect( job, SIGNAL(result(const GpgME::Error&,const QVariant&)),
            this, SLOT(slotAtmDecryptWithChiasmusResult(const GpgME::Error&,const QVariant&)) );
 }
 
+
+static const QString chomp( const QString & base, const QString & suffix, bool cs ) {
+  return base.endsWith( suffix, cs?(Qt::CaseSensitive):(Qt::CaseInsensitive) ) ? base.left( base.length() - suffix.length() ) : base ;
+}
+
+
 void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, const QVariant & result )
 {
-#if 0
-  LaterDeleterWithCommandCompletion d( this );
   if ( !mJob )
     return;
   Q_ASSERT( mJob == sender() );
@@ -3166,7 +3170,7 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, 
   if ( err.isCanceled() )
     return;
   if ( err ) {
-    job->showErrorDialog( parentWidget(), i18n( "Chiasmus Decryption Error" ) );
+    job->showErrorDialog( mMainWindow, i18n( "Chiasmus Decryption Error" ) );
     return;
   }
 
@@ -3174,24 +3178,22 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusResult( const GpgME::Error & err, 
     const QString msg = i18n( "Unexpected return value from Chiasmus backend: "
                               "The \"x-decrypt\" function did not return a "
                               "byte array. Please report this bug." );
-    KMessageBox::error( parentWidget(), msg, i18n( "Chiasmus Backend Error" ) );
+    KMessageBox::error( mMainWindow, msg, i18n( "Chiasmus Backend Error" ) );
     return;
   }
 
-  const KUrl url = KFileDialog::getSaveUrl( chomp( mAtmName, ".xia", false ), QString(), parentWidget() );
+  const KUrl url = KFileDialog::getSaveUrl( chomp( mCurrentFileName, ".xia", false ), QString(), mMainWindow );
   if ( url.isEmpty() )
     return;
 
-  bool overwrite = KMail::Util::checkOverwrite( url, parentWidget() );
+  bool overwrite = Util::checkOverwrite( url, mMainWindow );
   if ( !overwrite )
     return;
 
-  d.setDisabled( true ); // we got this far, don't delete yet
   KIO::Job * uploadJob = KIO::storedPut( result.toByteArray(), url, -1, KIO::Overwrite );
-  uploadJob->ui()->setWindow( parentWidget() );
+  uploadJob->ui()->setWindow( mMainWindow );
   connect( uploadJob, SIGNAL(result(KJob*)),
            this, SLOT(slotAtmDecryptWithChiasmusUploadResult(KJob*)) );
-#endif
 }
 
 void ViewerPrivate::slotAtmDecryptWithChiasmusUploadResult( KJob * job )

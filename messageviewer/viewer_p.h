@@ -42,6 +42,8 @@ using KPIM::MessageStatus;
 namespace GpgME { class Error; }
 namespace KIO { class Job; }
 
+namespace Kleo { class SpecialJob; }
+
 class KAction;
 class KActionCollection;
 class KSelectAction;
@@ -544,7 +546,7 @@ public:
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
   QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
-
+  Kleo::SpecialJob *mJob;
   Viewer *const q;
 };
 
