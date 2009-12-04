@@ -88,47 +88,19 @@ using namespace Kleo::Commands;
 using namespace GpgME;
 using namespace boost;
 
+static const char RSA_KEYSIZES_ENTRY[] = "RSAKeySizes";
+static const char DSA_KEYSIZES_ENTRY[] = "DSAKeySizes";
+static const char ELG_KEYSIZES_ENTRY[] = "ELGKeySizes";
+
+static const char RSA_KEYSIZE_LABELS_ENTRY[] = "RSAKeySizeLabels";
+static const char DSA_KEYSIZE_LABELS_ENTRY[] = "DSAKeySizeLabels";
+static const char ELG_KEYSIZE_LABELS_ENTRY[] = "ELGKeySizeLabels";
+
+static const char PGP_KEY_TYPE_ENTRY[] = "PGPKeyType";
+static const char CMS_KEY_TYPE_ENTRY[] = "CMSKeyType";
+
 static void set_tab_order( const QList<QWidget*> & wl ) {
     kdtools::for_each_adjacent_pair( wl, &QWidget::setTabOrder );
-}
-
-static const unsigned int key_strengths[] = {
-    0, 1024, 1532, 2048, 3072, 4096,
-};
-static const unsigned int num_key_strengths = sizeof key_strengths / sizeof *key_strengths;
-
-static unsigned int index2strength( unsigned int index ) {
-    if ( index < num_key_strengths )
-        return key_strengths[index];
-    else
-        return 0;
-}
-
-static int strength2index( unsigned int strength ) {
-    const unsigned int * const it =
-        std::lower_bound( begin( key_strengths ), end( key_strengths ), strength );
-    if ( it == end( key_strengths ) )
-        return key_strengths[num_key_strengths-1];
-    else
-        return *it;
-}
-
-static unsigned int version2strength( int version ) {
-    if ( version == 1 )
-        return 1024;
-    if ( version == 2 )
-        return 2048;
-    return 0;
-}
-
-static int strength2version( unsigned int strength ) {
-    if ( strength == 0 )
-        return 0;
-    if ( strength <= 1024 )
-        return 1;
-    if ( strength <= 2048 )
-        return 2;
-    return 0;
 }
 
 enum KeyAlgo { RSA, DSA, ELG };
@@ -166,6 +138,24 @@ static void force_set_checked( QAbstractButton * b, bool on ) {
     b->setAutoExclusive( false );
     b->setChecked( b->isEnabled() && on );
     b->setAutoExclusive( autoExclusive );
+}
+
+static void set_keysize( QComboBox * cb, unsigned int strength ) {
+    if ( !cb )
+        return;
+    const int idx = cb->findData( static_cast<int>( strength ) );
+    if ( idx < 0 )
+        qWarning( "NewCertificateWizard: AdvancedSettingsDialog: keysize %u not allowed", strength );
+    cb->setCurrentIndex( idx );
+}
+
+static unsigned int get_keysize( const QComboBox * cb ) {
+    if ( !cb )
+        return 0;
+    const int idx = cb->currentIndex();
+    if ( idx < 0 )
+        return 0;
+    return cb->itemData( idx ).toInt();
 }
 
 namespace Kleo {
@@ -256,7 +246,12 @@ namespace {
         Q_PROPERTY( QDate expiryDate READ expiryDate WRITE setExpiryDate )
     public:
         explicit AdvancedSettingsDialog( QWidget * parent=0 )
-            : QDialog( parent ), protocol( UnknownProtocol ), ui()
+            : QDialog( parent ),
+              protocol( UnknownProtocol ),
+              pgpDefaultAlgorithm( GPGME_PK_ELG_E ),
+              cmsDefaultAlgorithm( GPGME_PK_RSA ),
+              keyTypeImmutable( false ),
+              ui()
         {
             ui.setupUi( this );
             const QDate today = QDate::currentDate();
@@ -265,6 +260,8 @@ namespace {
             ui.emailLW->setDefaultValue( i18n("new email") );
             ui.dnsLW->setDefaultValue( i18n("new dns name") );
             ui.uriLW->setDefaultValue( i18n("new uri") );
+
+            fillKeySizeComboBoxen();
         }
 
         void setProtocol( GpgME::Protocol proto ) {
@@ -272,6 +269,7 @@ namespace {
                 return;
             protocol = proto;
             updateWidgetVisibility();
+            loadDefaultKeyType();
         }
 
         void updateWidgetVisibility() {
@@ -281,6 +279,7 @@ namespace {
             ui.dnsGB->setVisible( protocol == CMS );
             ui.uriGB->setVisible( protocol == CMS );
             // Technical Details Page
+            // ### take keyTypeImmutable into account
             ui.dsaRB->setEnabled( protocol == OpenPGP );
             ui.elgCB->setEnabled( protocol == OpenPGP );
             if ( protocol == CMS ) {
@@ -318,13 +317,13 @@ namespace {
 
 
         void setKeyStrength( unsigned int strength ) {
-            ui.rsaKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
-            ui.dsaVersionCB->setCurrentIndex( strength2version( strength ) );
+            set_keysize( ui.rsaKeyStrengthCB, strength );
+            set_keysize( ui.dsaKeyStrengthCB, strength );
         }
         unsigned int keyStrength() const {
             return
-                ui.dsaRB->isChecked() ? version2strength( ui.dsaVersionCB->currentIndex() ) :
-                ui.rsaRB->isChecked() ? index2strength( ui.rsaKeyStrengthCB->currentIndex() ) : 0 ;
+                ui.dsaRB->isChecked() ? get_keysize( ui.dsaKeyStrengthCB ) :
+                ui.rsaRB->isChecked() ? get_keysize( ui.rsaKeyStrengthCB ) : 0 ;
         }
 
         void setKeyType( unsigned int algo ) {
@@ -345,10 +344,10 @@ namespace {
         unsigned int subkeyType() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG_E : 0 ; }
 
         void setSubkeyStrength( unsigned int strength ) {
-            ui.elgKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
+            set_keysize( ui.elgKeyStrengthCB, strength );
         }
         unsigned int subkeyStrength() const {
-            return index2strength( ui.elgKeyStrengthCB->currentIndex() );
+            return get_keysize( ui.elgKeyStrengthCB );
         }
 
         void setSigningAllowed( bool on ) { ui.signingCB->setChecked( on ); }
@@ -405,7 +404,14 @@ namespace {
         }
 
     private:
+        void fillKeySizeComboBoxen();
+        void loadDefaultKeyType();
+
+    private:
         GpgME::Protocol protocol;
+        unsigned int pgpDefaultAlgorithm;
+        unsigned int cmsDefaultAlgorithm;
+        bool keyTypeImmutable;
         Ui_AdvancedSettingsDialog ui;
     };
 
@@ -1329,6 +1335,76 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     s     << "</GnupgKeyParms>"                            << endl;
     kDebug() << '\n' << result;
     return result;
+}
+
+static void fill_combobox( QComboBox & cb, const QList<int> & sizes, const QStringList & labels ) {
+    cb.clear();
+    for ( int i = 0, end = sizes.size() ; i != end ; ++i ) {
+        cb.addItem( i < labels.size() && !labels[i].trimmed().isEmpty()
+                    ? sizes[i] < 0
+                      ? i18nc( "%1: some admin-supplied text, %2: key size in bits", "%1 (%2 bits; default)", labels[i].trimmed(), -sizes[i] )
+                      : i18nc( "%1: some admin-supplied text, %2: key size in bits", "%1 (%2 bits)", labels[i].trimmed(), sizes[i] )
+                    : sizes[i] < 0
+                      ? i18nc( "%1: key size in bits", "%1 bits (default)", -sizes[i] )
+                      : i18nc( "%1: key size in bits", "%1 bits", sizes[i] ),
+                    std::abs( sizes[i] ) );
+        if ( sizes[i] < 0 )
+            cb.setCurrentIndex( cb.count() - 1 );
+    }
+}
+
+void AdvancedSettingsDialog::fillKeySizeComboBoxen() {
+
+    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+
+    const QList<int> rsaKeySizes = config.readEntry( RSA_KEYSIZES_ENTRY, QList<int>() << 1024 << 1536 << -2048 << 3072 << 4096 );
+    const QList<int> dsaKeySizes = config.readEntry( DSA_KEYSIZES_ENTRY, QList<int>() << -1024 << 2048 );
+    const QList<int> elgKeySizes = config.readEntry( ELG_KEYSIZES_ENTRY, QList<int>() << 1024 << 1536 << -2048 << 3072 << 4096 );
+
+    const QStringList rsaKeySizeLabels = config.readEntry( RSA_KEYSIZE_LABELS_ENTRY, QStringList() );
+    const QStringList dsaKeySizeLabels = config.readEntry( DSA_KEYSIZE_LABELS_ENTRY, QStringList() << "v1" << "v2" );
+    const QStringList elgKeySizeLabels = config.readEntry( ELG_KEYSIZE_LABELS_ENTRY, QStringList() );
+
+    fill_combobox( *ui.rsaKeyStrengthCB, rsaKeySizes, rsaKeySizeLabels );
+    fill_combobox( *ui.dsaKeyStrengthCB, dsaKeySizes, dsaKeySizeLabels );
+    fill_combobox( *ui.elgKeyStrengthCB, elgKeySizes, elgKeySizeLabels );
+
+}
+
+void AdvancedSettingsDialog::loadDefaultKeyType() {
+
+    if ( protocol != CMS && protocol != OpenPGP )
+        return;
+
+    const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+
+    const QString entry = protocol == CMS ? CMS_KEY_TYPE_ENTRY : PGP_KEY_TYPE_ENTRY ;
+    const QString keyType = config.readEntry( entry ).trimmed().toUpper();
+
+    if ( keyType == "RSA" ) {
+        setKeyType( GPGME_PK_RSA );
+        setSubkeyType( 0 );
+    } else {
+        if ( protocol == OpenPGP ) {
+            if ( keyType == "DSA" ) {
+                setKeyType( GPGME_PK_DSA );
+                setSubkeyType( 0 );
+            } else {
+                if ( !keyType.isEmpty() && keyType != "DSA+ELG" )
+                    qWarning( "NewCertificateWizard: AdvancedSettingsDialog: invalid value for entry \"[CertificateCreationWizard]%s\"", qPrintable( entry ) );
+                setKeyType( GPGME_PK_DSA );
+                setSubkeyType( GPGME_PK_ELG_E );
+            }
+        } else {
+            if ( !keyType.isEmpty() )
+                qWarning( "NewCertificateWizard: AdvancedSettingsDialog: invalid value for entry \"[CertificateCreationWizard]%s\"", qPrintable( entry ) );
+            setKeyType( RSA );
+            setSubkeyType( 0 );
+        }
+    }
+
+    keyTypeImmutable = config.isEntryImmutable( entry );
+    //updateSomehting();
 }
 
 #include "moc_newcertificatewizard.cpp"

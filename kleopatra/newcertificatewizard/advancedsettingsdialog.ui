@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>353</width>
+    <width>376</width>
     <height>427</height>
    </rect>
   </property>
@@ -16,14 +16,6 @@
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <widget class="QWidget" name="personalTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>331</width>
-        <height>330</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Personal Details</string>
       </attribute>
@@ -79,14 +71,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="technicalTab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>331</width>
-        <height>330</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Technical Details</string>
       </attribute>
@@ -142,92 +126,16 @@
             <property name="enabled" >
              <bool>false</bool>
             </property>
-            <item>
-             <property name="text" >
-              <string>backend default</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>1024 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>1536 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>2048 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>3072 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>4096 bits</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="0" column="3" colspan="2" >
-           <widget class="QComboBox" name="rsaKeyStrengthCB" >
-            <item>
-             <property name="text" >
-              <string>backend default</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>1024 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>1536 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>2048 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>3072 bits</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>4096 bits</string>
-             </property>
-            </item>
-           </widget>
+           <widget class="QComboBox" name="rsaKeyStrengthCB" />
           </item>
           <item row="1" column="3" colspan="2" >
-           <widget class="QComboBox" name="dsaVersionCB" >
+           <widget class="QComboBox" name="dsaKeyStrengthCB" >
             <property name="enabled" >
              <bool>false</bool>
             </property>
-            <item>
-             <property name="text" >
-              <string>backend default</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>v1 (1024 bits)</string>
-             </property>
-            </item>
-            <item>
-             <property name="text" >
-              <string>v2 (2048 bits)</string>
-             </property>
-            </item>
            </widget>
           </item>
           <item row="2" column="0" >
@@ -444,7 +352,7 @@
   <connection>
    <sender>dsaRB</sender>
    <signal>toggled(bool)</signal>
-   <receiver>dsaVersionCB</receiver>
+   <receiver>dsaKeyStrengthCB</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
