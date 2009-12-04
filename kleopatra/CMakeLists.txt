@@ -192,6 +192,8 @@ set( _kleopatra_SRCS
   crypto/gui/newresultpage.cpp
   crypto/gui/newsignencryptfileswizard.cpp
 
+  crypto/gui/signencryptemailconflictdialog.cpp
+
   crypto/gui/decryptverifyoperationwidget.cpp
   crypto/gui/decryptverifyfileswizard.cpp
 
