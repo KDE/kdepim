@@ -2300,6 +2300,8 @@ void ViewerPrivate::slotToggleMimePartTree()
 
 void ViewerPrivate::slotShowMessageSource()
 {
+  // ### PORT ME: This is broken: The OTP modifies the source, so this is not
+  //              actually the real source
   QString str = QString::fromAscii( mMessage->encodedContent() );
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
