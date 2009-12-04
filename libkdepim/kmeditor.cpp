@@ -571,19 +571,21 @@ KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) cons
   return signaturePositions;
 }
 
-void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
+bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
                                  const KPIMIdentities::Signature &newSig )
 {
+  bool found = false;
   QTextCursor cursor( document() );
   cursor.beginEditBlock();
 
   QString oldSigText = oldSig.plainText();
-
+  if ( oldSigText.isEmpty() )
+    return false;
   int currentSearchPosition = 0;
   forever {
 
     // Find the next occurrence of the signature text
-    QString text = document()->toPlainText();
+    const QString text = document()->toPlainText();
     int currentMatch = text.indexOf( oldSigText, currentSearchPosition );
     currentSearchPosition = currentMatch;
     if ( currentMatch == -1 ) {
@@ -616,11 +618,13 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     cursor.removeSelectedText();
     setTextCursor( cursor );
     newSig.insertIntoTextEdit( this, KPIMIdentities::Signature::AtCursor, false, false );
+    found = true;
 
     currentSearchPosition += newSig.plainText().length();
   }
 
   cursor.endEditBlock();
+  return found;
 }
 
 #include "kmeditor.moc"
