@@ -240,7 +240,8 @@ static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Con
                 qDebug() << "waiting for gpg-agent ...zZZ";
                 ReaderStatusThread_sleep( RETRY_WAIT );
                 qDebug() << "returning from waiting for gpg-agent ...oOO";
-                gpgAgent = Context::createForEngine( AssuanEngine );
+                std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
+                gpgAgent = c;
                 continue;
             }
             return std::auto_ptr<DefaultAssuanTransaction>();
@@ -463,7 +464,8 @@ namespace {
 
     private:
         /* reimp */ void run() {
-            shared_ptr<Context> gpgAgent( Context::createForEngine( AssuanEngine ) );
+            std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
+            shared_ptr<Context> gpgAgent( c );
 
             while ( true ) {
 
