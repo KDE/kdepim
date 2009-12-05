@@ -57,11 +57,8 @@ QString HtmlExporter::toHtml( const QTextDocument* document )
     }
     doc = document;
 
-//     kDebug() << doc->blockCount() << endl;
-
     //const QFont defaultFont = doc->defaultFont();
     //defaultCharFormat.setFont(defaultFont);
-
     emitFrame( doc->rootFrame()->begin() );
 //  emitBlock(doc->rootFrame()->begin().currentBlock());
     //sanitizeHtml();
@@ -91,7 +88,7 @@ void HtmlExporter::emitFrame( QTextFrame::Iterator frameIt )
     for ( QTextFrame::Iterator it = frameIt;
             !it.atEnd(); ++it ) {;
         if ( QTextFrame *f = it.currentFrame() ) {
-//    qDebug() << "Its a frame, not a block" << endl;
+//	    kDebug() << "Its a frame, not a block" ;
             if ( QTextTable * table = qobject_cast<QTextTable *>( f ) ) {
                 emitTable( table );
             } else {
@@ -263,7 +260,7 @@ QList<HtmlExporter::tag> HtmlExporter::emitCharFormatStyle( const QTextCharForma
          charFormat.boolProperty( BilboTextFormat::HasCodeStyle ) ) {
         tags << code;
 
-    } else if ( !family.isEmpty() && family != mDefaultCharFormat.fontFamily() ) {
+    } else if ( !blockFormat.nonBreakableLines() && !family.isEmpty() && family != mDefaultCharFormat.fontFamily() ) {
 //         if ( family.right( 7 ) == "courier" ) {
 //             tags << code;
 //         } else {
@@ -741,8 +738,14 @@ void HtmlExporter::emitFragment( const QTextFragment &fragment, const QTextBlock
 
         const QStringList lines = txt.split( QRegExp( forcedLineBreakRegExp ) );
         for ( int i = 0; i < lines.count(); ++i ) {
-            if ( i > 0 )
-                html += QLatin1String( "<br />" ); // space on purpose for compatibility with Netscape, Lynx & Co.
+            if ( i > 0 ) {
+		if ( blockFormat.nonBreakableLines() )
+		{
+		    html += QLatin1String( "\n" );
+		} else {
+		    html += QLatin1String( "<br />" ); // space on purpose for compatibility with Netscape, Lynx & Co.
+		}
+	    }
             //and to convert LineSeparators to <br /> tags.
             html += lines.at( i );
         }
@@ -902,7 +905,6 @@ void HtmlExporter::emitBlock( const QTextBlock &block )
 
     // NOTE the bottom line is commented, to use default charFormat, which can be set from outside.
     //QTextCharFormat oldDefaultCharFormat = defaultCharFormat;
-
     QString blockTag;
     bool isBlockQuote = false;
     const QTextBlockFormat blockFormat = block.blockFormat();

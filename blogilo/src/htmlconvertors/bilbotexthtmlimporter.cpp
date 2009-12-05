@@ -340,12 +340,11 @@ void BilboTextHtmlImporter::import()
             const int textEnd = i;
 
             if ( ch == QLatin1Char( '\n' ) || ch == QChar::ParagraphSeparator ) {
-
-                if ( textEnd > textStart )
+		if ( textEnd > textStart )
                     cursor.insertText( text.mid( textStart, textEnd - textStart ), format );
 
                 textStart = i + 1;
-
+		
                 QTextBlockFormat fmt = cursor.blockFormat();
 
                 if ( fmt.hasProperty( QTextFormat::BlockBottomMargin ) ) {

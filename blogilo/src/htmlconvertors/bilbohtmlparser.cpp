@@ -1092,10 +1092,12 @@ void BilboTextHtmlParser::parse()
         } else {
             if ( c.isSpace() && c != QChar( QChar::Nbsp ) && c != QChar::ParagraphSeparator ) {
                 if ( wsm == BilboTextHtmlParserNode::WhiteSpacePre || textEditMode ) {
-                    if ( c == QLatin1Char( '\n' ) ) {
+		     if ( c == QLatin1Char( '\n' ) ) {
                         if ( textEditMode )
                             continue;
-                    } else if ( c == QLatin1Char( '\r' ) ) {
+			else
+			    c = QChar::LineSeparator;
+                     } else if ( c == QLatin1Char( '\r' ) ) {
                         continue;
                     }
                 } else if ( wsm != BilboTextHtmlParserNode::WhiteSpacePreWrap ) { // non-pre mode: collapse whitespace except nbsp
