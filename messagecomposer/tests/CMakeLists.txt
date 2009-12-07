@@ -33,10 +33,6 @@ macro( add_messagecomposer_cryptotest _source )
 endmacro( add_messagecomposer_cryptotest )
 
 
-# Location of the attachments to test.
-set( attachments_root "QLatin1String( \"${CMAKE_CURRENT_SOURCE_DIR}/attachments/\" )" )
-add_definitions( -DPATH_ATTACHMENTS='${attachments_root}' )
-
 # Utility stuff.
 add_messagecomposer_test( utiltest.cpp )
 

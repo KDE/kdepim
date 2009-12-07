@@ -37,6 +37,8 @@ using namespace Message;
 #include <boost/shared_ptr.hpp>
 using namespace KPIM;
 
+#define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )
+
 QTEST_KDEMAIN( AttachmentJobTest, NoGUI )
 
 void AttachmentJobTest::testAttachment()
