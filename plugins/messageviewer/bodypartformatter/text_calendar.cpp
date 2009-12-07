@@ -476,7 +476,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QTextStream ts ( &file );
       ts.setCodec("UTF-8");
       ts << receiver << '\n' << iCal;
+      ts.flush();
       file.flush();
+      file.close();
 
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
@@ -717,7 +719,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // simply move the message to trash
       c.deleteInvitation();
 #else
-      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO; 
+      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
       return true;
     }
