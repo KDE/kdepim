@@ -141,5 +141,6 @@ namespace {
 extern "C"
 KDE_EXPORT KMail::Interface::BodyPartFormatterPlugin *
 kmail_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
+  KGlobal::locale()->insertCatalog( "kmail_text_xdiff_plugin" );
   return new Plugin();
 }
