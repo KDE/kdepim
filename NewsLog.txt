@@ -9,8 +9,6 @@ Problems addressed
 * kolab/issue3948: Show a 'record' button if the organizer is *not* expecting an rsvp (rt#5879)
 * kolab/issue3984: New filter "*.*" for the save mail as dialog (rt#5896)
 * kolab/issue3813: reccuring events show wrong dates (rt#5855)
-* kolab/issue3985: Typos in German dialog "Ungültige E-Mail-Adresse" (rt#5898)
-* Fix problems when archiving empty folders (kolab/issue3747)
 
 
 Friday, November 27th 2009
