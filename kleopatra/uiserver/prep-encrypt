@@ -1,0 +1,11 @@
+#!/bin/bash
+exec gpg-connect-agent -S ~/.gnupg/S.uiserver --run <(cat <<BYE
+/serverpid
+session 123 Re: Letter received
+sender --info -- marc@kdab.com
+recipient till@kdab.net
+recipient none@example.org
+prep_encrypt --expect-sign
+bye
+BYE
+)
