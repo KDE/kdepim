@@ -53,6 +53,7 @@ CryptoPagePlugin::CryptoPagePlugin()
   : mReadOnly( false )
 {
   KGlobal::locale()->insertCatalog( "libkleopatra" );
+  KGlobal::locale()->insertCatalog( "cryptopageplugin" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
   KIconLoader::global()->addAppDir( "kdepim" );
 
