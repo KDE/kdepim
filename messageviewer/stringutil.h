@@ -161,7 +161,7 @@ namespace StringUtil
    *
    * All strings are handled case-insensitive.
    */
-  bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName );
+  MESSAGEVIEWER_EXPORT bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName );
 }
 }
 

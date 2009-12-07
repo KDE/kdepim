@@ -2,10 +2,6 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
 include_directories( ${Boost_INCLUDE_DIR} )
 
-# Location of the attachments to test.
-set( attachments_root "QLatin1String( \"${CMAKE_CURRENT_SOURCE_DIR}/attachments/\" )" )
-add_definitions( -DPATH_ATTACHMENTS='${attachments_root}' )
-
 # Convenience macro to add unit tests.
 macro( add_messagecore_test _source )
   set( _test ${_source} )
