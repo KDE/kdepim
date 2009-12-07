@@ -29,6 +29,8 @@ using namespace KPIM;
 
 QTEST_KDEMAIN( AttachmentFromUrlJobTest, NoGUI )
 
+#define PATH_ATTACHMENTS QLatin1String( KDESRCDIR "/attachments/" )
+
 void AttachmentFromUrlJobTest::testAttachments_data()
 {
   QTest::addColumn<KUrl>( "url" );
