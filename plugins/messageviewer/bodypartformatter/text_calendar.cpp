@@ -50,6 +50,9 @@
 #include <kpimidentities/identitymanager.h>
 
 #include <kmime/kmime_content.h>
+#include <kmime/kmime_message.h>
+#include <mailtransport/messagequeuejob.h>
+#include <mailtransport/transportmanager.h>
 
 #include <kglobal.h>
 #include <kfiledialog.h>
@@ -391,8 +394,146 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       DeclineCounter
     };
 
+    bool mailICal( const QString &receiver, const QString &to, const QString &iCal,
+                   const QString &subject, const QString &status,
+                   bool delMessage ) const
+    {
+      kDebug() << "Mailing message:" << iCal;
+
+      KMime::Message::Ptr msg( new KMime::Message );
+#if 0 //TODO finish porting
+      if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+        msg->subject()->fromUnicodeString( status, "utf-8" );
+        QString tsubject = subject;
+        tsubject.remove( i18n( "Answer: " ) );
+        if ( status == QLatin1String( "cancel" ) ) {
+          msg->subject()->fromUnicodeString( i18nc( "Not able to attend.", "Declined: %1", tsubject ), "utf-8" );
+        } else if ( status == QLatin1String("tentative") ) {
+          msg->subject()->fromUnicodeString( i18nc( "Unsure if it is possible to attend.", "Tentative: %1", tsubject ), "utf-8" );
+        } else if ( status == QLatin1String("accepted") ) {
+          msg->subject()->fromUnicodeString( i18nc( "Accepted the invitation.", "Accepted: %1", tsubject ), "utf-8" );
+        } else {
+          msg->subject()->fromUnicodeString( subject, "utf-8" );
+        }
+      } else {
+#endif
+        msg->subject()->fromUnicodeString( subject, "utf-8" );
+#if 0
+      }
+#endif
+      msg->to()->fromUnicodeString( to, "utf-8" );
+      msg->from()->fromUnicodeString( receiver, "utf-8" );
+#if 0
+      if ( !GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+        msg->setHeaderField( "Content-Type",
+                             "text/calendar; method=reply; charset=\"utf-8\"" );
+        msg->setBody( iCal.toUtf8() );
+      }
+#else
+      KMime::Content *body = new KMime::Content;
+      body->contentType()->setMimeType( "text/calendar" );
+      body->setBody( iCal.toUtf8() );
+      msg->addContent( body );
+#endif
+
+#if 0
+      if ( delMessage && deleteInvitationAfterReply() )
+        /* We want the triggering mail to be moved to the trash once this one
+         * has been sent successfully. Set a link header which accomplishes that. */
+        msg->link( mMsg, MessageStatus::statusDeleted() );
+#endif
+
+      // Try and match the receiver with an identity.
+      // Setting the identity here is important, as that is used to select the correct
+      // transport later
+#if 0
+      const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().identityForAddress( receiver() );
+#else
+      const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().defaultIdentity();
+#endif
+      const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
+      if ( !nullIdentity ) {
+        KMime::Headers::Generic *x_header = new KMime::Headers::Generic(
+          "X-KMail-Identity", msg.get(), QByteArray::number( identity.uoid() )
+        );
+        msg->setHeader( x_header );
+      }
+
+#if 0 // Shouldn't be necessary anymore
+      const bool identityHasTransport = !identity.transport().isEmpty();
+      if ( !nullIdentity && identityHasTransport )
+        msg->setHeaderField( "X-KMail-Transport", identity.transport() );
+      else if ( !nullIdentity && identity.isDefault() )
+        msg->setHeaderField( "X-KMail-Transport", TransportManager::self()->defaultTransportName() );
+      else {
+        const QString transport = askForTransport( nullIdentity );
+        if ( transport.isEmpty() )
+          return false; // user canceled transport selection dialog
+        msg->setHeaderField( "X-KMail-Transport", transport );
+      }
+#endif
+
+#if 0 //TODO: finish port
+      // Outlook will only understand the reply if the From: header is the
+      // same as the To: header of the invitation message.
+      if ( !GlobalSettings::self()->legacyMangleFromToHeaders() ) {
+        if ( identity != KPIMIdentities::Identity::null() ) {
+          msg->setFrom( identity.fullEmailAddr() );
+        }
+        // Remove BCC from identity on ical invitations (https://intevation.de/roundup/kolab/issue474)
+        msg->setBcc( "" );
+      }
+#endif
+
+#if 0 // For now assume automatic sending
+      KMail::Composer *cWin = KMail::makeComposer();
+      cWin->ignoreStickyFields();
+      cWin->setMsg( msg, false /* mayAutoSign */ );
+      // cWin->setCharset( "", true );
+      cWin->disableWordWrap();
+      cWin->setSigningAndEncryptionDisabled( true );
+      if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+        // For Exchange, send ical as attachment, with proper
+        // parameters
+        msg->setSubject( status );
+        msg->setCharset( "utf-8" );
+        KMMessagePart *msgPart = new KMMessagePart;
+        msgPart->setName( "cal.ics" );
+        // msgPart->setCteStr( attachCte ); // "base64" ?
+        msgPart->setBodyEncoded( iCal.toUtf8() );
+        msgPart->setTypeStr( "text" );
+        msgPart->setSubtypeStr( "calendar" );
+        msgPart->setParameter( "method", "reply" );
+        cWin->addAttach( msgPart );
+      }
+
+      cWin->forceDisableHtml();
+      cWin->disableRecipientNumberCheck();
+      cWin->disableForgottenAttachmentsCheck();
+      if ( GlobalSettings::self()->automaticSending() ) {
+        cWin->setAttribute( Qt::WA_DeleteOnClose );
+        cWin->slotSendNow();
+      } else {
+        cWin->show();
+      }
+#else
+      msg->assemble();
+
+      MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
+      job->setMessage( msg );
+      job->setTo( QStringList() << to );
+      job->setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
+      if( ! job->exec() ) {
+        kWarning() << "Error queuing message in outbox:" << job->errorText();
+        return false;
+      }
+#endif
+
+      return true;
+    }
+
     bool mail( Incidence* incidence, /* TODO: port me!  MessageViewer::Callback& callback,*/ const QString &status,
-               iTIPMethod method = iTIPReply, const QString &to = QString(),
+               iTIPMethod method = iTIPReply, const QString &receiver = QString(), const QString &to = QString(),
                MailType type = Answer ) const
     {
       //status is accepted/tentative/declined
@@ -428,12 +569,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
-#if 0 // TODO port to Akonadi
-      return callback.mailICal( recv, msg, subject, status, type != Forward );
-#else
-      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-      return true;
-#endif
+      return mailICal( receiver, recv, msg, subject, status, type != Forward );
     }
 
     void ensureKorganizerRunning() const
@@ -565,12 +701,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           newMyself->setDelegate( delegateString );
           newMyself->setRSVP( delegatorRSVP );
         }
-        ok =  mail( incidence, /* TODO: port me! callback,*/ dir );
+        ok =  mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, receiver );
 
         // check if we need to inform our delegator about this as well
         if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
           if ( delegatorRSVP || status == Attendee::Declined )
-            ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, delegator );
+            ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, receiver, delegator );
         }
 
       } else if ( !myself && (status != Attendee::Declined) ) {
@@ -588,7 +724,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                                     QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
-          ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply );
+          ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, receiver );
         }
       } else {
 #if 0 // TODO: port to Akonadi
@@ -620,7 +756,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPRequest, delegateString, Delegation );
+        ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPRequest, receiver, delegateString, Delegation );
       }
       return ok;
     }
@@ -745,7 +881,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         }
       }
       return mail( incidence, /* TODO: port me! callback,*/ "declinecounter", KCal::iTIPDeclineCounter,
-                   /* TODO: port me! callback.sender() */ QString(), DeclineCounter );
+                   receiver, QString(), DeclineCounter );
     }
 
     bool counterProposal( const QString &iCal, MessageViewer::Interface::BodyPart* part ) const
@@ -813,6 +949,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, part );
       if ( path == "forward" ) {
+        const QString receiver = findReceiver( part->content() );
         Incidence* incidence = icalToString( iCal );
         AttendeeSelector dlg;
         if ( dlg.exec() == QDialog::Rejected )
@@ -820,7 +957,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( incidence, /*TODO port me! c,*/ "forward", iTIPRequest, fwdTo, Forward );
+        result = mail( incidence, /*TODO port me! c,*/ "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
         Incidence* incidence = icalToString( iCal );
