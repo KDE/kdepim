@@ -41,10 +41,10 @@
 
 #include <kaddrbookexternal.h>
 
-#include "interfaces/bodypartformatter.h"
-#include "interfaces/bodypart.h"
-using KMail::Interface::BodyPart;
-#include "interfaces/bodyparturlhandler.h"
+#include "messageviewer/interfaces/bodypartformatter.h"
+#include "messageviewer/interfaces/bodypart.h"
+using MessageViewer::Interface::BodyPart;
+#include "messageviewer/interfaces/bodyparturlhandler.h"
 #include "messageviewer/khtmlparthtmlwriter.h"
 #include <kimproxy.h>
 
@@ -60,7 +60,7 @@ using KPIM::AddresseeView;
 
 namespace {
 
-  class Formatter : public KMail::Interface::BodyPartFormatter {
+  class Formatter : public MessageViewer::Interface::BodyPartFormatter {
   public:
     Formatter() {
       // disabled pending resolution of how to share static objects when dlopening libraries
@@ -107,7 +107,7 @@ namespace {
     //::KIMProxy *mKIMProxy;
 };
 
-  class UrlHandler : public KMail::Interface::BodyPartURLHandler {
+  class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler {
   public:
      bool handleClick( BodyPart * bodyPart, const QString & path ) const {
 
@@ -132,9 +132,9 @@ namespace {
      }
   };
 
-  class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
+  class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {
   public:
-    const KMail::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
+    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
       return validIndex( idx ) ? new Formatter() : 0 ;
     }
     const char * type( int idx ) const {
@@ -149,7 +149,7 @@ namespace {
       }
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const {
+    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int idx ) const {
        return validIndex( idx ) ? new UrlHandler() : 0 ;
     }
   private:
@@ -161,9 +161,9 @@ namespace {
 }
 
 extern "C"
-KDE_EXPORT KMail::Interface::BodyPartFormatterPlugin *
-kmail_bodypartformatter_text_vcard_create_bodypart_formatter_plugin() {
-  KGlobal::locale()->insertCatalog( "kmail_text_vcard_plugin" );
+KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+messageviewer_bodypartformatter_text_vcard_create_bodypart_formatter_plugin() {
+  KGlobal::locale()->insertCatalog( "messageviewer_text_vcard_plugin" );
   return new Plugin();
 }
 

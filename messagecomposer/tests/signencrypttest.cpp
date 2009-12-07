@@ -25,6 +25,8 @@
 #include "qtest_messagecomposer.h"
 #include "cryptofunctions.h"
 
+#include <akonadi/item.h>
+
 #include <kmime/kmime_content.h>
 
 #include <kleo/enum.h>
@@ -144,7 +146,7 @@ void SignEncryptTest::testHeaders()
   KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
   QVERIFY( encPart );
   MessageViewer::ProcessResult pResult( nh );
-  otp.processMultiPartEncryptedSubtype( resultMessage, pResult );
+  otp.processMultiPartEncryptedSubtype( Akonadi::Item(), resultMessage, pResult );
   QVERIFY( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );\
   KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
 

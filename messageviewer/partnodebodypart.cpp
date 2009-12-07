@@ -48,8 +48,8 @@ using namespace MessageViewer;
 
 static int serial = 0;
 
-PartNodeBodyPart::PartNodeBodyPart( KMime::Content *content, NodeHelper *nodeHelper, const QTextCodec * codec  )
-  : Interface::BodyPart(), mContent( content ), mCodec( codec ),
+PartNodeBodyPart::PartNodeBodyPart( const Akonadi::Item &item, KMime::Content *content, NodeHelper *nodeHelper, const QTextCodec * codec  )
+  : Interface::BodyPart(), mItem( item ), mContent( content ), mCodec( codec ),
     mDefaultDisplay( Interface::BodyPart::None ), mNodeHelper( nodeHelper )
 {}
 

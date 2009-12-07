@@ -29,9 +29,9 @@
     your version.
 */
 
-#include <interfaces/bodypartformatter.h>
-#include <interfaces/bodypart.h>
-#include <interfaces/bodyparturlhandler.h>
+#include <messageviewer/interfaces/bodypartformatter.h>
+#include <messageviewer/interfaces/bodypart.h>
+#include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/khtmlparthtmlwriter.h>
 
 #include <kglobal.h>
@@ -56,13 +56,13 @@ namespace {
   // TODO: Show filename header to make it possible to save the patch.
   // FIXME: The box should only be as wide as necessary.
 
-  class Formatter : public KMail::Interface::BodyPartFormatter {
+  class Formatter : public MessageViewer::Interface::BodyPartFormatter {
   public:
-    Result format( KMail::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
+    Result format( MessageViewer::Interface::BodyPart *bodyPart, MessageViewer::HtmlWriter *writer ) const {
 
       if ( !writer ) return Ok;
 
-      if (  bodyPart->defaultDisplay() == KMail::Interface::BodyPart::AsIcon )
+      if (  bodyPart->defaultDisplay() == MessageViewer::Interface::BodyPart::AsIcon )
         return AsIcon;
 
       const QString diff = bodyPart->asText();
@@ -118,9 +118,9 @@ namespace {
     }
   };
 
-  class Plugin : public KMail::Interface::BodyPartFormatterPlugin {
+  class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin {
   public:
-    const KMail::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
+    const MessageViewer::Interface::BodyPartFormatter * bodyPartFormatter( int idx ) const {
       return idx == 0 ? new Formatter() : 0 ;
     }
     const char * type( int idx ) const {
@@ -130,13 +130,13 @@ namespace {
       return idx == 0 ? "x-diff" : 0 ;
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }
+    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int ) const { return 0; }
   };
 
 }
 
 extern "C"
-KDE_EXPORT KMail::Interface::BodyPartFormatterPlugin *
-kmail_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
+KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
   return new Plugin();
 }

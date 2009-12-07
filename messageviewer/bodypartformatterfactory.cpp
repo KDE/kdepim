@@ -58,7 +58,7 @@ namespace {
   KPIM_DEFINE_PLUGIN_LOADER( BodyPartFormatterPluginLoader,
 			     Interface::BodyPartFormatterPlugin,
 			     "create_bodypart_formatter_plugin",
-			     "kmail/plugins/bodypartformatter/*.desktop" )
+			     "messageviewer/plugins/bodypartformatter/*.desktop" )
 
 }
 
@@ -145,7 +145,7 @@ static void loadPlugins() {
 static void setup() {
   if ( !all ) {
     all = new TypeRegistry();
-    kmail_create_builtin_bodypart_formatters( all );
+    messageviewer_create_builtin_bodypart_formatters( all );
     loadPlugins();
   }
 }

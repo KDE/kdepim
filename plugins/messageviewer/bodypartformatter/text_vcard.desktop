@@ -99,4 +99,4 @@ Comment[zh_TW]=text/vCard 格式化外掛程式
 
 [Plugin]
 Type=text/directory
-X-KDE-Library=kmail_bodypartformatter_text_vcard
+X-KDE-Library=messageviewer_bodypartformatter_text_vcard

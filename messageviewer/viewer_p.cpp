@@ -755,7 +755,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
 
           // process this node and all it's siblings and descendants
           mNodeHelper->setNodeUnprocessed( dataNode, true );
-          otp.parseObjectTree( dataNode );
+          otp.parseObjectTree( Akonadi::Item(), dataNode );
 
           rawReplyString = otp.rawReplyString();
           gotRawReplyString = true;
@@ -1185,7 +1185,7 @@ void ViewerPrivate::parseMsg()
   MailViewerSource otpSource( this );
   ObjectTreeParser otp( &otpSource, mNodeHelper );
   otp.setAllowAsync( true );
-  otp.parseObjectTree( mMessage );
+  otp.parseObjectTree( mMessageItem, mMessage );
 
   bool emitReplaceMsgByUnencryptedVersion = false;
 
@@ -1581,7 +1581,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
   if ( node ) {
     MailViewerSource otpSource( this );
     ObjectTreeParser otp( &otpSource, mNodeHelper, 0, true );
-    otp.parseObjectTree( node );
+    otp.parseObjectTree( Akonadi::Item(), node );
   }
   // ### this, too
   htmlWriter()->queue( "</body></html>" );

@@ -98,4 +98,4 @@ Comment[zh_TW]=text/calendar 格式化外掛程式
 
 [Plugin]
 Type=text/calendar
-X-KDE-Library=kmail_bodypartformatter_text_calendar
+X-KDE-Library=messageviewer_bodypartformatter_text_calendar

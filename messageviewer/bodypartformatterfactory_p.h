@@ -55,7 +55,7 @@ return qstricmp( s1, s2 ) < 0;
   typedef std::map<const char*, SubtypeRegistry, ltstr> TypeRegistry;
 
   // defined in bodypartformatters.cpp
-  extern void kmail_create_builtin_bodypart_formatters( TypeRegistry * );
+  extern void messageviewer_create_builtin_bodypart_formatters( TypeRegistry * );
 }
 
 #endif // __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__

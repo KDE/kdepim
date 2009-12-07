@@ -33,9 +33,9 @@
 #include "attendeeselector.h"
 #include "delegateselector.h"
 
-#include <interfaces/bodypartformatter.h>
-#include <interfaces/bodypart.h>
-#include <interfaces/bodyparturlhandler.h>
+#include <messageviewer/interfaces/bodypartformatter.h>
+#include <messageviewer/interfaces/bodypart.h>
+#include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/khtmlparthtmlwriter.h>
 
 #include <kcal/calendarlocal.h>
@@ -135,17 +135,17 @@ KCal::Calendar* CalendarManager::calendar()
 class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
 {
   public:
-    KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
+    KMInvitationFormatterHelper( MessageViewer::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
     KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
   private:
-    KMail::Interface::BodyPart *mBodyPart;
+    MessageViewer::Interface::BodyPart *mBodyPart;
 };
 
-class Formatter : public KMail::Interface::BodyPartFormatter
+class Formatter : public MessageViewer::Interface::BodyPartFormatter
 {
   public:
-    Result format( KMail::Interface::BodyPart *bodyPart,
+    Result format( MessageViewer::Interface::BodyPart *bodyPart,
                    MessageViewer::HtmlWriter *writer ) const
     {
       if ( !writer )
@@ -184,7 +184,7 @@ static Incidence *icalToString( const QString& iCal )
   return dynamic_cast<Incidence*>( message->event() );
 }
 
-class UrlHandler : public KMail::Interface::BodyPartURLHandler
+class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 {
   public:
     UrlHandler()
@@ -391,7 +391,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       DeclineCounter
     };
 
-    bool mail( Incidence* incidence, /* TODO: port me!  KMail::Callback& callback,*/ const QString &status,
+    bool mail( Incidence* incidence, /* TODO: port me!  MessageViewer::Callback& callback,*/ const QString &status,
                iTIPMethod method = iTIPReply, const QString &to = QString(),
                MailType type = Answer ) const
     {
@@ -486,7 +486,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     }
 
     bool handleInvitation( const QString& iCal, Attendee::PartStat status,
-                           KMail::Interface::BodyPart *part ) const
+                           MessageViewer::Interface::BodyPart *part ) const
     {
       bool ok = true;
       const QString receiver = findReceiver( part->content() );
@@ -711,7 +711,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       delete iface;
     }
 
-    bool handleIgnore( const QString& /* TODO port me! , KMail::Callback& c */ ) const
+    bool handleIgnore( const QString& /* TODO port me! , MessageViewer::Callback& c */ ) const
     {
 #if 0 // TODO port to Akonadi
       // simply move the message to trash
@@ -722,7 +722,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleDeclineCounter( const QString &iCal, KMail::Interface::BodyPart* part ) const
+    bool handleDeclineCounter( const QString &iCal, MessageViewer::Interface::BodyPart* part ) const
     {
       const QString receiver = findReceiver( part->content() );
       if ( receiver.isEmpty() )
@@ -746,7 +746,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                    /* TODO: port me! callback.sender() */ QString(), DeclineCounter );
     }
 
-    bool counterProposal( const QString &iCal, KMail::Interface::BodyPart* part ) const
+    bool counterProposal( const QString &iCal, MessageViewer::Interface::BodyPart* part ) const
     {
       const QString receiver = findReceiver( part->content() );
       if ( receiver.isEmpty() )
@@ -776,7 +776,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return false;
     }
 
-    bool handleClick( KMail::Interface::BodyPart *part,
+    bool handleClick( MessageViewer::Interface::BodyPart *part,
                       const QString &path ) const
     {
       if ( !hasWritableCalendars() ) {
@@ -853,7 +853,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return result;
     }
 
-    bool handleContextMenuRequest( KMail::Interface::BodyPart *part,
+    bool handleContextMenuRequest( MessageViewer::Interface::BodyPart *part,
                                    const QString &path,
                                    const QPoint &point ) const
     {
@@ -887,7 +887,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    QString statusBarMessage( KMail::Interface::BodyPart *,
+    QString statusBarMessage( MessageViewer::Interface::BodyPart *,
                               const QString &path ) const
     {
       if ( !path.isEmpty() ) {
@@ -926,10 +926,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     }
 };
 
-class Plugin : public KMail::Interface::BodyPartFormatterPlugin
+class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
 {
   public:
-    const KMail::Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
+    const MessageViewer::Interface::BodyPartFormatter *bodyPartFormatter( int idx ) const
     {
       if ( idx == 0 || idx == 1 ) return new Formatter();
       else return 0;
@@ -948,7 +948,7 @@ class Plugin : public KMail::Interface::BodyPartFormatterPlugin
       else return 0;
     }
 
-    const KMail::Interface::BodyPartURLHandler * urlHandler( int idx ) const
+    const MessageViewer::Interface::BodyPartURLHandler * urlHandler( int idx ) const
     {
       if ( idx == 0 ) return new UrlHandler();
       else return 0;
@@ -958,9 +958,9 @@ class Plugin : public KMail::Interface::BodyPartFormatterPlugin
 }
 
 extern "C"
-KDE_EXPORT KMail::Interface::BodyPartFormatterPlugin *
-kmail_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
+KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
+messageviewer_bodypartformatter_text_calendar_create_bodypart_formatter_plugin()
 {
-  KGlobal::locale()->insertCatalog( "kmail_text_calendar_plugin" );
+  KGlobal::locale()->insertCatalog( "messageviewer_text_calendar_plugin" );
   return new Plugin();
 }

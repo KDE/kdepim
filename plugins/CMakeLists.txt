@@ -1,5 +1,5 @@
 if(KMAIL_SUPPORTED)
-  add_subdirectory( kmail )
+  add_subdirectory( messageviewer )
 endif(KMAIL_SUPPORTED)
 
 add_subdirectory( ktexteditor )

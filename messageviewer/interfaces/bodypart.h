@@ -41,6 +41,10 @@ namespace KMime {
   class Content;
 }
 
+namespace Akonadi {
+  class Item;
+}
+
 namespace MessageViewer {
 namespace Interface {
 
@@ -165,6 +169,10 @@ namespace Interface {
         and probably should be used in the interfaces in the first place.
     */
     virtual KMime::Content* content() const = 0;
+
+    /** Returns the Akonadi::Item this BodyPart is contained in.
+    */
+    virtual Akonadi::Item item() const = 0;
   };
 
 } // namespace Interface

@@ -188,6 +188,8 @@ public:
 
   NodeHelper* nodeHelper() { return mNodeHelper; }
 
+  Akonadi::Item messageItem() { return mMessageItem; }
+
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;
 

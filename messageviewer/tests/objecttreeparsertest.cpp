@@ -21,6 +21,7 @@
 #include "objecttreeparser.h"
 #include "objecttreeemptysource.h"
 
+#include <akonadi/item.h>
 #include <kmime/kmime_message.h>
 
 #include "qtest_kde.h"
@@ -51,7 +52,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   // Parse the message
   EmptySource emptySource;
   ObjectTreeParser otp( &emptySource );
-  otp.parseObjectTree( msg );
+  otp.parseObjectTree( Akonadi::Item(), msg );
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.textualContent(), QString( "This is the message text." ) );
@@ -73,7 +74,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   msg->setContent( content );
   msg->parse();
   ObjectTreeParser otp2( &emptySource );
-  otp2.parseObjectTree( msg );
+  otp2.parseObjectTree( Akonadi::Item(), msg );
   QCOMPARE( otp2.textualContentCharset().constData(), msg->defaultCharset().constData() );
 }
 
@@ -143,7 +144,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
     // Parse the message
     EmptySource emptySource;
     ObjectTreeParser otp( &emptySource );
-    otp.parseObjectTree( msg );
+    otp.parseObjectTree( Akonadi::Item(), msg );
 
     // Check that the textual content and the charset have the expected values
     QCOMPARE( otp.textualContent(), QString( "This is the encapsulating message." ) );
