@@ -20,7 +20,7 @@ target_link_libraries(htmlquotecolorertest
 
 ########### stringutiltest ###############
 
-set(stringutiltest_SRCS stringutiltest.cpp ../stringutil.cpp)
+set(stringutiltest_SRCS stringutiltest.cpp)
 add_definitions(-DKMAIL_UNITTESTS=YES)
 kde4_add_unit_test(stringutiltest TESTNAME messageviewer-stringutiltest ${stringutiltest_SRCS})
 target_link_libraries(stringutiltest
