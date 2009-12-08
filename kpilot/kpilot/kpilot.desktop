@@ -2,6 +2,7 @@
 [Desktop Entry]
 Name=KPilot
 Name[af]=Kpilot
+Name[ar]=KPilot
 Name[be]=KPilot
 Name[bg]=KPilot
 Name[br]=KPilot
@@ -60,6 +61,7 @@ Name[zh_CN]=KPilot
 Name[zh_TW]=KPilot
 GenericName=PalmPilot Tool
 GenericName[af]=Palmpilot Program
+GenericName[ar]=أداة PalmPilot
 GenericName[bg]=Връзка с PalmPilot
 GenericName[br]=Ostilh PalmPilot
 GenericName[ca]=Eina PalmPilot

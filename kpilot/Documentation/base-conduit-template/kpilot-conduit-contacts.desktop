@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
+Comment[ar]=هذه القناة تزامن قاعدة بيانات المفاتيح المحمول مع قاعدة البيانات المخزنة في الحاسوب.
 Comment[bg]=Синхронизация на адресника на KDE с мобилни устройства
 Comment[ca]=Aquest conducte sincronitza base de dades de l'anell de claus de l'agenda electrònica amb la base de dades emmagatzemada al PC.
 Comment[da]=Denne kanal synkroniserer den håndholdte nøglering, med en database lagret på PC'en.
@@ -34,6 +35,7 @@ Comment[zh_CN]=此管道会将您的手持设备中的密钥环数据库和个�
 Comment[zh_TW]=此導管將掌上型裝置的金鑰鍊與 PC 上的資料庫同步。
 Name=Contacts
 Name[af]=Kontakte
+Name[ar]=جهات الإتصال
 Name[be]=Кантакты
 Name[bg]=Contacts
 Name[br]=Darempredoù

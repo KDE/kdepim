@@ -2,6 +2,7 @@
 Type=Service
 Name=NULL
 Name[af]=NULL
+Name[ar]=فارغة
 Name[be]=NULL
 Name[bg]=NULL
 Name[br]=NULL
@@ -57,6 +58,7 @@ Name[zh_CN]=NULL
 Name[zh_TW]=虛擬
 Comment=This conduit does nothing.
 Comment[af]=Hierdie pad doen niks
+Comment[ar]=لا تقوم هذه القناة بشيء.
 Comment[bg]=Това нещо прави нищо
 Comment[ca]=Aquest conducte no fa res.
 Comment[cs]=Toto propojení nedělá nic.

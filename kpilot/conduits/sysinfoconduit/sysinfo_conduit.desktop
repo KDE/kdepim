@@ -2,6 +2,7 @@
 Type=Service
 Comment=This conduit writes information about your handheld and the sync to a file.
 Comment[af]=Hierdie pad skryf informasie aangaande die draagbare toestel en sinkronisasie na 'n lêer.
+Comment[ar]=هذه القناة تكتب معلومات حول محمولك و التزامن مع ملف.
 Comment[bg]=Запис на информацията относно мобилното устройство във файл
 Comment[ca]=Aquest conducte escriu informació a un fitxer a sobre de la vostra agenda electrònica i la sincronització.
 Comment[cs]=Toto propojení zapisuje informace o vašem handheldu a synchronizaci do souboru.
@@ -48,6 +49,7 @@ Comment[zh_CN]=此管道写入您手持设备的信息，并同步至一文件�
 Comment[zh_TW]=此導管會寫下您的掌上型裝置的資訊，並同步到某個檔案。
 Name=System Information
 Name[af]=Stelsel informasie
+Name[ar]=معلومات النظام
 Name[be]=Сістэмная інфармацыя
 Name[bg]=System Information
 Name[br]=Titouroù diwar-benn ar reizhiad

@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld address book with a database stored on the PC.
+Comment[ar]=تزامن هذه القناة دفتر عناوين المحمول مع قاعدة البيانات المحفوظة على الجهاز.
 Comment[da]=Denne kanal synkroniserer den håndholdtes adressebog med en database lagret på pc'en.
 Comment[de]=Abgleich der Adressbücher von Taschencomputer und PC.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με τη βάση δεδομένων του υπολογιστή.
@@ -31,6 +32,7 @@ Comment[zh_CN]=此管道会将您的手持设备中的地址簿数据库和个�
 Comment[zh_TW]=此導管將掌上型裝置的通訊錄與 PC 上的資料庫同步。
 Name=Contacts
 Name[af]=Kontakte
+Name[ar]=جهات الإتصال
 Name[be]=Кантакты
 Name[bg]=Contacts
 Name[br]=Darempredoù

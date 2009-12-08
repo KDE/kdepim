@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld address book database with an Akonadi collection.
+Comment[ar]=تزامن هذه القناة قاعدة بيانات دفتر العناوين التي على المحمول مع مجموعة انكوندا.
 Comment[da]=Denne kanal synkroniserer den håndholdtes adressebogs-database med en Akonadi-samling.
 Comment[de]=Abgleich der Adressbücher von Taschencomputer und Akonadi-Ressourcen.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με μια συλλογή του Akonadi.
@@ -31,6 +32,7 @@ Comment[zh_CN]=此管道会将您的手持设备中的地址簿数据库和 Akon
 Comment[zh_TW]=此導管將掌上型裝置的通訊錄資料庫與 Akonadi 同步。
 Name=Contacts
 Name[af]=Kontakte
+Name[ar]=جهات الإتصال
 Name[be]=Кантакты
 Name[bg]=Contacts
 Name[br]=Darempredoù

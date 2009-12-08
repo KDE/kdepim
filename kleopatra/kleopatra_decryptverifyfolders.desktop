@@ -3,6 +3,7 @@ Type=Service
 Encoding=UTF-8
 X-KDE-ServiceTypes=inode/directory,KonqPopupMenu/Plugin
 Name=Kleopatra Decrypt/Verify All Files In Folder
+Name[ar]=كليوبترا فك تشفير/التحقق من جميع الملفات في المجلد
 Name[ca]=Desxifrat/verificació de fitxers de tots els fitxers en una carpeta del Kleopatra
 Name[cs]=Dešifrovat/ověřit všechny soubory ve složce (Kleopatra)
 Name[da]=Kleopatra dekryptér/verificér all filer i mappe
@@ -41,6 +42,7 @@ Actions=kleodecryptverifyfiles;
 
 [Desktop Action kleodecryptverifyfiles]
 Name=Decrypt/Verify All Files In Folder
+Name[ar]=فك تشفير/التحقق من جميع الملفات في المجلد
 Name[ca]=Desxifrat/verificació de fitxers de tots els fitxers en una carpeta
 Name[cs]=Dešifrovat/ověřit všechny soubory ve složce
 Name[da]=Dekryptér/verificér alle filer i mappe

@@ -14,6 +14,7 @@ X-KDE-Weight=200
 
 Name=Accounts
 Name[af]=Rekeninge
+Name[ar]=الحِسابات
 Name[be]=Рахункі
 Name[bg]=Сметки
 Name[br]=Kontoù
@@ -75,6 +76,7 @@ Name[zh_CN]=账户
 Name[zh_TW]=帳號
 Comment=Setup for Newsgroup and Mail Servers
 Comment[af]=Opstel van nuus groep en e-pos bedieners
+Comment[ar]=هيئ لمجموعة الأخبار و خوادم البريد
 Comment[bg]=Настройки на групите и пощенските сървъри
 Comment[ca]=Configuració dels grups de notícies i servidors de correu
 Comment[cs]=Nastavení diskuzní skupiny a poštovních serverů

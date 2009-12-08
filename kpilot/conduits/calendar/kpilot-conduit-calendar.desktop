@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld calendar database with an Akonadi calendar Collection.
+Comment[ar]=هذه القناة تزامن قاعدة بيانات التقويم التي في المحمول مع مجموعة تقويم انكوندا.
 Comment[ca]=Aquest conducte sincronitza la base de dades de calendari l'agenda electrònica una col·lecció de calendari de l'Akonadi.
 Comment[da]=Denne kanal synkroniserer den håndholdtes kalenderdatabase, med en Akonadi kalendersamling.
 Comment[de]=Abgleich der Kalender-Datenbanken von Taschencomputer und Akonadi-Ressourcen.
@@ -34,6 +35,7 @@ Comment[zh_CN]=此管道会将您的手持设备中的日历数据库和 Akonadi
 Comment[zh_TW]=此導管將掌上型裝置的行事曆資料庫與 Akonadi 上的行事曆同步。
 Name=Calendar
 Name[af]=Kalender
+Name[ar]=التقويم
 Name[bg]=Calendar
 Name[br]=Deiziadur
 Name[ca]=Calendari

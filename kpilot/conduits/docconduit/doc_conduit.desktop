@@ -2,6 +2,7 @@
 Type=Service
 Comment=Adds text files to your handheld, suitable for DOC readers.
 Comment[af]=Voeg teks lêers by jou draagbare toestel in DOC leser formaat.
+Comment[ar]=يضيف ملفات نصوص إلى جهازك محمول باليد ، مناسب لقارئات DOC.
 Comment[bg]=Добавяне на текстови файлове към мобилно устройство.
 Comment[ca]=Afegeix fitxers de text a la vostra agenda, apropiat per a lectors de DOC.
 Comment[cs]=Přidává textové soubory do vašeho Pilotu, výhodné pro čtenáře dokumentů.
@@ -47,6 +48,7 @@ Comment[zh_CN]=将文本文件添加到您的手持设备中，以适合 DOC 阅
 Comment[zh_TW]=新增文字檔到您的掌上型裝置，適用於 DOC 閱讀器。
 Name=Palm DOC
 Name[af]=Palm DOC
+Name[ar]=Palm DOC
 Name[bg]=Palm DOC
 Name[br]=Palm DOC
 Name[ca]=DOC de Palm

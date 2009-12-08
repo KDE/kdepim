@@ -1,6 +1,7 @@
 [Desktop Entry]
 X-DocPath=kjots/index.html
 Name=KJots
+Name[ar]=ملاحظات KJots
 Name[bg]=KJots
 Name[ca]=KJots
 Name[cs]=KJots
@@ -38,6 +39,7 @@ Name[x-test]=xxKJotsxx
 Name[zh_CN]=KJots
 Name[zh_TW]=KJots
 GenericName=Note Taker
+GenericName[ar]=آخذ الملاحظات
 GenericName[ca]=Bloc de notes
 GenericName[cs]=Nástroj pro poznámky
 GenericName[da]=Notetager
