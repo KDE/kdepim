@@ -408,7 +408,9 @@ void IncidenceBase::updated()
   while( it.current() ) {
     Observer *o = it.current();
     ++it;
-    o->incidenceUpdated( this );
+    if ( o ) {
+      o->incidenceUpdated( this );
+    }
   }
 }
 
