@@ -98,6 +98,18 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     void setUsesCrypto( bool v );
 
     /**
+     * @return whether this item uses a busy indicator instead of real progress display
+     */
+    bool usesBusyIndicator() const { return mUsesBusyIndicator; }
+
+    /**
+     * Sets whether this item uses a busy indicator instead of real progress for its progress bar.
+     * If it uses a busy indicator, you are still responsible for calling setProgress() from time to
+     * time to update the busy indicator.
+     */
+    void setUsesBusyIndicator( bool useBusyIndicator );
+
+    /**
      * @return The current progress value of this item in percent.
      */
     unsigned int progress() const { return mProgress; }
@@ -208,6 +220,15 @@ class KDEPIM_EXPORT ProgressItem : public QObject
      */
     void progressItemUsesCrypto( KPIM::ProgressItem *, bool );
 
+    /**
+     * Emitted when the busy indicator state of an item changes. Should be used
+     * by progress dialogs so that they can adjust the display of the progress bar
+     * to the new mode.
+     * @param item The updated item
+     * @param value True if the item uses a busy indicator now, false otherwise
+     */
+    void progressItemUsesBusyIndicator( KPIM::ProgressItem *item, bool value );
+
   protected:
     /* Only to be used by our good friend the ProgressManager */
     ProgressItem( ProgressItem *parent, const QString &id, const QString &label,
@@ -227,6 +248,7 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     bool mWaitingForKids;
     bool mCanceled;
     bool mUsesCrypto;
+    bool mUsesBusyIndicator;
 };
 
 struct ProgressManagerPrivate;
@@ -369,6 +391,9 @@ class KDEPIM_EXPORT ProgressManager : public QObject
     /**
      * @return the only top level progressitem when there's only one.
      * Returns 0 if there is no item, or more than one top level item.
+     * Since this is used to calculate the overall progress, it will also return
+     * 0 if there is an item which uses a busy indicator, since that will invalidate
+     * the overall progress.
      */
     ProgressItem *singleItem() const;
 
@@ -396,6 +421,8 @@ class KDEPIM_EXPORT ProgressManager : public QObject
     void progressItemLabel( KPIM::ProgressItem *, const QString & );
     /** @see ProgressItem::progressItemUsesCrypto() */
     void progressItemUsesCrypto( KPIM::ProgressItem *, bool );
+    /** @see ProgressItem::progressItemUsesBusyIndicator */
+    void progressItemUsesBusyIndicator( KPIM::ProgressItem*, bool );
 
     /**
      * Emitted when an operation requests the listeners to be shown.
