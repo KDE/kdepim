@@ -457,6 +457,10 @@ KNComposer::~KNComposer()
     delete (*it);
 
   saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
+
+  KNGlobals::self()->settings()->setAutoSpellChecking( a_ctAutoSpellChecking->isChecked() );
+  KNGlobals::self()->settings()->writeConfig();
+
   qDeleteAll( m_listAction );
 }
 
