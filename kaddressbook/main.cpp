@@ -19,12 +19,13 @@
 */
 
 #include "aboutdata.h"
+#include "mainwindow.h"
+
+#include <akonadi/control.h>
 #include <kcmdlineargs.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <kuniqueapplication.h>
-#include <akonadi/control.h>
-
-#include "mainwindow.h"
 
 int main( int argc, char **argv )
 {
@@ -48,7 +49,11 @@ int main( int argc, char **argv )
   MainWindow *window = new MainWindow;
   window->show();
 
-  Akonadi::Control::start( window );
+  if ( !Akonadi::Control::start( window ) ) {
+    //TODO: add message box after string freeze
+    kWarning() << "Unable to start Akonadi server, exit application";
+    return 1;
+  }
 
   return app.exec();
 }
