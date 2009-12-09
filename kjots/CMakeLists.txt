@@ -85,7 +85,7 @@ target_link_libraries(kjots
   ${KDE4_AKONADI_LIBS}
   ${KDE4_KMIME_LIBS}
   ${KDE4_AKONADI_KMIME_LIBS}
-  grantlee_core_library
+  ${Grantlee_LIBRARY}
 )
 
 if(KJOTS_BUILD_KONTACT_PLUGIN)
@@ -133,7 +133,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
     ${KDE4_AKONADI_LIBS}
     ${KDE4_AKONADI_KMIME_LIBS}
     ${KDE4_KMIME_LIBS}
-    grantlee_core_library
+    ${Grantlee_LIBRARY}
   )
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
