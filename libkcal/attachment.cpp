@@ -20,34 +20,46 @@
 */
 
 #include "attachment.h"
+#include <kmdcodec.h>
 
 using namespace KCal;
 
-Attachment::Attachment( const Attachment &attachment)
+Attachment::Attachment( const Attachment &attachment )
 {
+  mSize = attachment.mSize;
   mMimeType = attachment.mMimeType;
-  mData = attachment.mData;
+  mUri = attachment.mUri;
+  mData = qstrdup( attachment.mData );
+  mLabel = attachment.mLabel;
   mBinary = attachment.mBinary;
-	mShowInline = attachment.mShowInline;
-	mLabel = attachment.mLabel;
+  mLocal = attachment.mLocal;
+  mShowInline = attachment.mShowInline;
 }
 
-Attachment::Attachment(const QString& uri, const QString& mime)
+Attachment::Attachment( const QString &uri, const QString &mime )
 {
+  mSize = 0;
   mMimeType = mime;
-  mData = uri;
+  mUri = uri;
+  mData = 0;
   mBinary = false;
-	mShowInline = false;
-	mLabel = QString::null;
+  mLocal = false;
+  mShowInline = false;
 }
 
-Attachment::Attachment(const char *base64, const QString& mime)
+Attachment::Attachment( const char *base64, const QString &mime )
 {
+  mSize = 0;
   mMimeType = mime;
-  mData = QString::fromUtf8(base64);
+  mData = qstrdup( base64 );
   mBinary = true;
-	mShowInline = false;
-	mLabel = QString::null;
+  mLocal = false;
+  mShowInline = false;
+}
+
+Attachment::~Attachment()
+{
+  delete[] mData;
 }
 
 bool Attachment::isUri() const
@@ -57,15 +69,16 @@ bool Attachment::isUri() const
 
 QString Attachment::uri() const
 {
-  if (!mBinary)
-    return mData;
-  else
+  if ( !mBinary ) {
+    return mUri;
+  } else {
     return QString::null;
+  }
 }
 
-void Attachment::setUri(const QString& uri)
+void Attachment::setUri( const QString &uri )
 {
-  mData = uri;
+  mUri = uri;
   mBinary = false;
 }
 
@@ -76,17 +89,48 @@ bool Attachment::isBinary() const
 
 char *Attachment::data() const
 {
-  if (mBinary)
-    // this method actually return a const char*, but that can't be done because of the uneededly non-const libical API
-    return const_cast<char*>( mData.latin1() ); //mData.utf8().data();
-  else
+  if ( mBinary ) {
+    return mData;
+  } else {
     return 0;
+  }
 }
 
-void Attachment::setData(const char *base64)
+QByteArray &Attachment::decodedData()
 {
-  mData = QString::fromUtf8(base64);
+  if ( mDataCache.isNull() ) {
+    mDataCache = KCodecs::base64Decode( QCString( mData ) );
+  }
+
+  return mDataCache;
+}
+
+void Attachment::setDecodedData( const QByteArray &data )
+{
+  setData( KCodecs::base64Encode( QCString( data.data() ) ) );
+  mDataCache = data;
+  mSize = mDataCache.size();
+}
+
+void Attachment::setData( const char *base64 )
+{
+  delete[] mData;
+  mData = qstrdup( base64 );
   mBinary = true;
+  mDataCache = QByteArray();
+  mSize = 0;
+}
+
+uint Attachment::size()
+{
+  if ( isUri() ) {
+    return 0;
+  }
+  if ( !mSize ) {
+    mSize = decodedData().size();
+  }
+
+  return mSize;
 }
 
 QString Attachment::mimeType() const
@@ -119,3 +163,12 @@ void Attachment::setLabel( const QString& label )
   mLabel = label;
 }
 
+bool Attachment::isLocal() const
+{
+  return mLocal;
+}
+
+void Attachment::setLocal( bool local )
+{
+  mLocal = local;
+}
