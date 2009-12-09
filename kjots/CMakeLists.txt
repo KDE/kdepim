@@ -15,7 +15,7 @@ else("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   option(KJOTS_BUILD_KONTACT_PLUGIN "Build kjots with support for kontact" TRUE)
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 
-include_directories( ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
+include_directories( ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS} ${Grantlee_INCLUDE_DIR})
 
 set(kjotsLibs ${KDE4_KIO_LIBS})
 
