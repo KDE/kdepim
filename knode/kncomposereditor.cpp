@@ -30,6 +30,7 @@
 KNComposerEditor::KNComposerEditor( QWidget *parent)
  :KMeditor(parent)
 {
+  setSpellCheckingConfigFileName( KNGlobals::self()->config()->name() );
 }
 
 KNComposerEditor::~KNComposerEditor()

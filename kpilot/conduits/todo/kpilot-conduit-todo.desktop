@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld todo database with an Akonadi Todo Collection.
+Comment[ar]=تزامن هذه القناة قاعدة بيانات المهام التي على المحمول مع مجموعة مهام انكوندا.
 Comment[ca]=Aquest conducte sincronitza base de dades de tasques pendents de l'agenda electrònica amb una col·lecció de tasques pendents de l'Akonadi.
 Comment[da]=Denne kanal synkroniserer den håndholdtes gøremåls-database med en Akonadi gøremålssamling.
 Comment[de]=Abgleich der Aufgaben-Datenbanken von Taschencomputer und Akonadi-Ressourcen.
@@ -32,6 +33,7 @@ Comment[x-test]=xxThis conduit syncs the handheld todo database with an Akonadi 
 Comment[zh_CN]=此管道会将您的手持设备中的待办事宜数据库和 Akonadi 待办收藏库进行同步。
 Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi 上的待辦事項同步。
 Name=To-do
+Name[ar]=المهام
 Name[ca]=Pendent
 Name[cs]=Úkoly
 Name[da]=Gøremål

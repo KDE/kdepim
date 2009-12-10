@@ -14,6 +14,7 @@ X-KDE-Weight=600
 
 Name=Signing/Verifying
 Name[af]=Teken/Bevestig
+Name[ar]=التوقيع/التحقق
 Name[bg]=Подпис/проверка
 Name[ca]=Signat/Verificació
 Name[cs]=Podepisování/ověřování
@@ -66,6 +67,7 @@ Name[zh_CN]=签名/校验
 Name[zh_TW]=簽署/檢查
 Comment=Protect your privacy by signing and verifying postings
 Comment[af]=Beskerm you privaatheid deur pos stukke te onderteken en te bevestig
+Comment[ar]=حماية خصوصيتك من خلال التوقيع  و التحقق من الإعلانات
 Comment[bg]=Защита на личната кореспонденция чрез подписване и проверка на съобщенията
 Comment[ca]=Protegiu la vostra privadesa signant i verificant els missatges
 Comment[cs]=Chraňte své soukromí pomocí podepisování a ověřování podpisů

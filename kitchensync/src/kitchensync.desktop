@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=KitchenSync
+Name[ar]=KitchenSync
 Name[bg]=KitchenSync
 Name[ca]=KitchenSync
 Name[cs]=KitchenSync
@@ -43,6 +44,7 @@ Name[zh_CN]=KitchenSync
 Name[zh_TW]=KitchenSync
 GenericName=Synchronization
 GenericName[af]=Sinkronisasie
+GenericName[ar]=المزامنة
 GenericName[be]=Сінхранізацыя
 GenericName[bg]=Синхронизация
 GenericName[ca]=Sincronització

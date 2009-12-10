@@ -427,8 +427,55 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
 
 KBlog::BlogPost * Backend::preparePost( BilboPost &post )
 {
-    post.setContent( post.content().remove('\n') );
-    post.setAdditionalContent( post.additionalContent().remove( '\n' ) );
+    QString content = post.content();
+    QString html1 = QString();
+    int i = 0;
+    int found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+    while ( found != -1 )
+    {
+	html1 += content.mid( i, found-i).remove('\n');
+	i = found;
+	found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+	if ( found != -1 ) {
+	    html1 += content.mid( i, found+5-i);
+	    i = found + 5;
+	    found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+	} else {
+	    html1 += content.mid( i, content.length()-i );
+	    i = -1;
+	}
+    }
+    if ( i != -1 )
+	html1 += content.mid( i, content.length()-i).remove('\n');
+    post.setContent( html1 );
+    
+    content = post.additionalContent();
+    QString html2 = QString();
+    i= 0;
+    found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+    while ( found != -1 )
+    {
+	html2 += content.mid( i, found-i).remove('\n');
+	i = found;
+	found = content.indexOf("</pre>", i, Qt::CaseInsensitive);
+	if ( found != -1 ) {
+	    html2 += content.mid( i, found+5-i);
+	    i = found + 5;
+	    found = content.indexOf("<pre>", i, Qt::CaseInsensitive);
+	} else {
+	    html2 += content.mid( i, content.length()-i );
+	    i = -1;
+	}
+    }
+    if ( i != -1 )
+	html2 += content.mid( i, content.length()-i).remove('\n');
+    post.setAdditionalContent( html2 );
+
+    //the following two lines are replaced by the above code, because '\n' characters shouldn't
+    //be ommited inside <pre> blocks.
+
+    //post.setContent( post.content().remove('\n') );
+    //post.setAdditionalContent( post.additionalContent().remove( '\n' ) );
     if ( mBBlog->api() == BilboBlog::MOVABLETYPE_API || mBBlog->api() == BilboBlog::WORDPRESSBUGGY_API ) {
         QStringList content = post.content().split("<!--split-->");
         if( content.count() == 2 ) {

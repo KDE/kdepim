@@ -534,6 +534,9 @@ void BilboEditor::sltRemoveFormatting()
                QTextFormat::FontSizeAdjustment ) ) );
         format.setFontWeight( editor->textCursor().charFormat().fontWeight() );
     }
+    if ( editor->textCursor().blockFormat().nonBreakableLines() ) {
+	format.setFontFamily( "Courier New,courier" );
+    }
     editor->textCursor().mergeCharFormat( format );
     editor->setFocus( Qt::OtherFocusReason );
 }

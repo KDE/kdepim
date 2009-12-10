@@ -324,7 +324,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   actionCollection()->addAction( "options_auto_spellchecking", a_ctAutoSpellChecking );
   a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
   slotUpdateCheckSpellChecking( knGlobals.settings()->autoSpellChecking() );
-  a_ctAutoSpellChecking->isChecked();
   slotAutoSpellCheckingToggled();
   connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool) ), SLOT(slotAutoSpellCheckingToggled()));
   connect( v_iew->e_dit, SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
@@ -458,6 +457,10 @@ KNComposer::~KNComposer()
     delete (*it);
 
   saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
+
+  KNGlobals::self()->settings()->setAutoSpellChecking( a_ctAutoSpellChecking->isChecked() );
+  KNGlobals::self()->settings()->writeConfig();
+
   qDeleteAll( m_listAction );
 }
 

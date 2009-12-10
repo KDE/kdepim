@@ -7,6 +7,7 @@ Categories=Qt;KDE;Utility;Security;X-KDE-Utilities-PIM;
 
 Name=Kleopatra
 Name[af]=Kleopatra
+Name[ar]=كليوبترا
 Name[be]=Kleopatra
 Name[bg]=Kleopatra
 Name[br]=Kleopatra
@@ -66,6 +67,7 @@ Name[x-test]=xxKleopatraxx
 Name[zh_CN]=Kleopatra
 Name[zh_TW]=Kleopatra
 Comment=Certificate Manager and Unified Crypto GUI
+Comment[ar]=الواجهة الرسومية لمدير الشهادة و الشفرة الموحدة
 Comment[ca]=Gestor de certificats i IGU criptogràfica unificada
 Comment[cs]=Správce certifikátů a rozhraní pro šifrování
 Comment[da]=Certifikathåndtering og forenet krypterings-GUI

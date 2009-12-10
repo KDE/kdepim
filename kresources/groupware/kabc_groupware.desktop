@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Groupware Server
 Name[af]=Groupware bediener
+Name[ar]=خادم Groupware
 Name[bg]=Сървър Groupware
 Name[br]=Servijer strollant
 Name[ca]=Servidor Groupware
@@ -51,6 +52,7 @@ Name[x-test]=xxGroupware Serverxx
 Name[zh_CN]=群件服务器
 Name[zh_TW]=群組伺服器
 Comment=Provides access to contacts stored on a Groupware server.
+Comment[ar]=يوفر وصول لجهات الإتصال المحفوظة على خادم Groupware
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Groupware.
 Comment[da]=Giver adgang til kontakter lagret på en groupware-server.
 Comment[de]=Ermöglicht den Zugriff auf Kontakte, die auf einem Groupware-Server gespeichert sind.

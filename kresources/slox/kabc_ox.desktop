@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=OpenXchange Server
 Name[af]=OpenXchange bediener
+Name[ar]=الخادم OpenXchange
 Name[bg]=Сървър OpenXchange
 Name[br]=Servijer OpenXchange
 Name[ca]=Servidor OpenXchange
@@ -49,6 +50,7 @@ Name[x-test]=xxOpenXchange Serverxx
 Name[zh_CN]=OpenXchange 服务器
 Name[zh_TW]=OpenXchange 伺服器
 Comment=Provides access to contacts stored on an Open-Xchange server
+Comment[ar]=يوفر وصول لجهات الإتصال المحفوظة على خادم Open-Xchange
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Open-Xchange
 Comment[da]=Giver adgang til kontakter lagret på en Open-Xchange-server
 Comment[de]=Ermöglicht den Zugriff auf Kontakte, die auf einem Open-Xchange-Server gespeichert sind.

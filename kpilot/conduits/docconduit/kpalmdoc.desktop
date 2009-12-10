@@ -2,6 +2,7 @@
 [Desktop Entry]
 Name=KPalmDOC
 Name[af]=KPalmDOC
+Name[ar]=KPalmDOC
 Name[bg]=KPalmDOC
 Name[br]=KPalmDOC
 Name[ca]=KPalmDOC
@@ -53,6 +54,7 @@ Name[zh_CN]=KPalmDOC
 Name[zh_TW]=KPalmDOC
 GenericName=PalmDOC Converter
 GenericName[af]=PalmDOC omskakelaar
+GenericName[ar]=المحوّل PalmDOC
 GenericName[bg]=Конвертиране на PalmDOC
 GenericName[ca]=Convertidor a PalmDOC
 GenericName[cs]=Konvertor PalmDoc
