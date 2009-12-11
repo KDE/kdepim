@@ -100,6 +100,12 @@ else(KDEPIM_ONLY_KLEO)
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
+  # We require SharedDesktopOntology if nepomuk is enabled and was found on the system.
+  if(WITH_Nepomuk AND Nepomuk_FOUND)
+    find_package(SharedDesktopOntologies 0.2)
+    macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "0.2" "Ontologies necessary for the Nepomuk semantic desktop.")
+  endif(WITH_Nepomuk AND Nepomuk_FOUND)
+
 
 ############### Needed commands before building anything ###############
 
