@@ -201,7 +201,7 @@ set(libkdgantt1_SRCS
     if( Nepomuk_FOUND )
       include( SopranoAddOntology )
       add_subdirectory( ontologies )
-      add_subdirectory( nepomuk_email_feeder )
+#      add_subdirectory( nepomuk_email_feeder )
     endif( Nepomuk_FOUND )
   endif(QGPGME_FOUND)
 
