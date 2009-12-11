@@ -103,7 +103,9 @@ class KMeditorPrivate
 
     void startExternalEditor();
     void slotEditorFinished( int, QProcess::ExitStatus exitStatus );
-    
+
+    bool isCursorAtEndOfLine( const QTextCursor &cursor );
+
     // Data members
     QString extEditorPath;
     QString language;
@@ -282,6 +284,12 @@ void KMeditorPrivate::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
   q->killExternalEditor();   // cleanup...
 }
 
+bool KMeditorPrivate::isCursorAtEndOfLine( const QTextCursor &cursor )
+{
+  QTextCursor testCursor = cursor;
+  testCursor.movePosition( QTextCursor::EndOfLine, QTextCursor::KeepAnchor );
+  return !testCursor.hasSelection();
+}
 
 void KMeditorPrivate::ensureCursorVisibleDelayed()
 {
@@ -956,6 +964,8 @@ void KMeditor::insertSignature( const QString &signature, Placement placement,
       cursor.movePosition( QTextCursor::End );
     else if ( placement == Start )
       cursor.movePosition( QTextCursor::Start );
+    else if ( placement == AtCursor )
+      cursor.movePosition( QTextCursor::StartOfLine );
     setTextCursor( cursor );
 
     // Insert the signature and newlines depending on where it was inserted.
@@ -975,9 +985,15 @@ void KMeditor::insertSignature( const QString &signature, Placement placement,
       }
     } else if ( placement == Start || placement == AtCursor ) {
       if ( isHtml ) {
-        insertHtml( "<br>" + signature + "<br>" );
+        if ( d->isCursorAtEndOfLine( cursor ) )
+          insertHtml( signature );
+        else
+          insertHtml( signature + "<br>" );
       } else {
-        insertPlainText( '\n' + signature + '\n' );
+        if ( d->isCursorAtEndOfLine( cursor ) )
+          insertPlainText( signature );
+        else
+          insertPlainText( signature + '\n' );
       }
     }
 
