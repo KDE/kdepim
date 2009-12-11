@@ -166,6 +166,7 @@ set(libkdgantt1_SRCS
   include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
+  add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(libkleo)
@@ -208,6 +209,7 @@ set(libkdgantt1_SRCS
   endif(KDEPIM_BUILD_EVERYTHING)
 
   macro_optional_add_subdirectory(akregator)
+  macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
   if (Grantlee_FOUND)
@@ -217,13 +219,13 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
     
-  if(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
-    macro_optional_add_subdirectory(akonadi)
-  endif(EXISTS ${CMAKE_SOURCE_DIR}/akonadi)
+  if(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
+    macro_optional_add_subdirectory(runtime)
+  endif(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
 
-  if (BUILD_akonadi)
-    include_directories(${CMAKE_SOURCE_DIR}/akonadi ${CMAKE_BINARY_DIR}/akonadi)
-  endif (BUILD_akonadi)
+  if (BUILD_runtime)
+    include_directories(${CMAKE_SOURCE_DIR}/runtime ${CMAKE_BINARY_DIR}/runtime)
+  endif (BUILD_runtime)
 
   macro_optional_add_subdirectory(kaddressbook)
   if(Q_WS_X11)
