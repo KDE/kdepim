@@ -327,15 +327,15 @@ bool Alarm::hasTime() const
   return mHasTime;
 }
 
-void Alarm::setSnoozeTime(int alarmSnoozeTime)
+void Alarm::setSnoozeTime(const Duration &alarmSnoozeTime)
 {
-  if (alarmSnoozeTime > 0) {
+  if (alarmSnoozeTime.value() > 0) {
     mAlarmSnoozeTime = alarmSnoozeTime;
     if ( mParent ) mParent->updated();
   }
 }
 
-int Alarm::snoozeTime() const
+Duration Alarm::snoozeTime() const
 {
   return mAlarmSnoozeTime;
 }
@@ -351,9 +351,10 @@ int Alarm::repeatCount() const
   return mAlarmRepeatCount;
 }
 
-int Alarm::duration() const
+Duration Alarm::duration() const
 {
-  return mAlarmRepeatCount * mAlarmSnoozeTime * 60;
+  return Duration( mAlarmSnoozeTime.value() * mAlarmRepeatCount,
+                   mAlarmSnoozeTime.type() );
 }
 
 QDateTime Alarm::nextRepetition(const QDateTime& preTime) const
@@ -425,7 +426,7 @@ void Alarm::setStartOffset( const Duration &offset )
 
 Duration Alarm::startOffset() const
 {
-  return (mHasTime || mEndOffset) ? 0 : mOffset;
+  return (mHasTime || mEndOffset) ? Duration( 0 ) : mOffset;
 }
 
 bool Alarm::hasStartOffset() const
@@ -448,7 +449,7 @@ void Alarm::setEndOffset( const Duration &offset )
 
 Duration Alarm::endOffset() const
 {
-  return (mHasTime || !mEndOffset) ? 0 : mOffset;
+  return (mHasTime || !mEndOffset) ? Duration( 0 ) : mOffset;
 }
 
 void Alarm::setParent( Incidence *parent )

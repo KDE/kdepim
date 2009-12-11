@@ -67,7 +67,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Set the type of the alarm.
       If the specified type is different from the current type of the alarm,
       the alarm's type-specific properties are initialised to null.
-      
+
       @param type type of alarm.
     */
     void setType( Type type );
@@ -78,7 +78,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be a display alarm.
-      
+
       @param text text to display when the alarm is triggered.
     */
     void setDisplayAlarm( const QString &text = QString::null );
@@ -94,7 +94,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the alarm to be an audio alarm.
-      
+
       @param audioFile optional file to play when the alarm is triggered.
     */
     void setAudioAlarm( const QString &audioFile = QString::null );
@@ -105,14 +105,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setAudioFile( const QString &audioFile );
     /**
       Return the name of the audio file for the alarm.
-      
+
       @return The audio file for the alarm, or QString::null if not an audio alarm.
     */
     QString audioFile() const;
 
     /**
       Set the alarm to be a procedure alarm.
-      
+
       @param programFile program to execute when the alarm is triggered.
       @param arguments arguments to supply to programFile.
     */
@@ -125,7 +125,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setProgramFile( const QString &programFile );
     /**
       Return the name of the program file to execute when the alarm is triggered.
-      
+
       @return the program file name, or QString::null if not a procedure alarm.
     */
     QString programFile() const;
@@ -136,14 +136,14 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setProgramArguments( const QString &arguments );
     /**
       Return the arguments to the program to run when the alarm is triggered.
-      
+
       @return the program arguments, or QString::null if not a procedure alarm.
     */
     QString programArguments() const;
 
     /**
       Set the alarm to be an email alarm.
-      
+
       @param subject subject line of email.
       @param text body of email.
       @param addressees email addresses of recipient(s).
@@ -210,7 +210,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     void setMailText( const QString &text );
     /**
       Return the email body text.
-      
+
       @return the body text, or QString::null if not an email alarm.
     */
     QString mailText() const;
@@ -267,17 +267,17 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
 
     /**
       Set the interval between snoozes for the alarm.
-      
+
       @param alarmSnoozeTime the time in minutes between snoozes.
     */
-    void setSnoozeTime( int alarmSnoozeTime );
+    void setSnoozeTime( const Duration &alarmSnoozeTime );
 
     /**
       Get how long the alarm snooze interval is.
-      
+
       @return the number of minutes between snoozes.
     */
-    int snoozeTime() const;
+    Duration snoozeTime() const;
 
     /**
       Set how many times an alarm is to repeat itself after its initial
@@ -308,7 +308,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       Get how long between the alarm's initial occurrence and its final repetition.
       @return the number of seconds between the initial occurrence and final repetition.
     */
-    int duration() const;
+    Duration duration() const;
 
     /**
       Toggles the value of alarm to be either on or off.
@@ -350,8 +350,8 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     QValueList<Person> mMailAddresses; // who to mail for reminder
     QString mMailSubject;        // subject of email
 
-    int mAlarmSnoozeTime;        // number of minutes after alarm to
-                                 // snooze before ringing again
+    Duration mAlarmSnoozeTime;   // how long after alarm to snooze before
+                                 // triggering again
     int mAlarmRepeatCount;       // number of times for alarm to repeat
                                  // after the initial time
 
