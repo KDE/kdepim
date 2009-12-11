@@ -1,7 +1,8 @@
+# FIXME: apps cannot have a compile time dependency on kdepim/runtime!
 include_directories(
   ${kdepim-runtime_SOURCE_DIR}
-  ${CMAKE_SOURCE_DIR}/akonadi/agents/nepomukfeeder
-  ${CMAKE_BINARY_DIR}/akonadi/agents/ontologies
+  ${CMAKE_SOURCE_DIR}/runtime/agents/nepomukfeeder
+  ${CMAKE_BINARY_DIR}/runtime/agents/ontologies
   ${Boost_INCLUDE_DIR}
   )
 
@@ -10,9 +11,9 @@ add_definitions(-DNEPOMUK_RESOURCE_STATIC)
 
 set(akonadi_nepomuk_rss_feeder_SRCS
   nepomukrssfeeder.cpp
-  ${CMAKE_SOURCE_DIR}/akonadi/agents/nepomukfeeder/nepomukfeederagentbase.cpp
-  ${CMAKE_SOURCE_DIR}/akonadi/agents/nepomukfeeder/sparqlbuilder.cpp
-  ${CMAKE_SOURCE_DIR}/akonadi/agents/nepomukfeeder/selectsparqlbuilder.cpp
+  ${CMAKE_SOURCE_DIR}/runtime/agents/nepomukfeeder/nepomukfeederagentbase.cpp
+  ${CMAKE_SOURCE_DIR}/runtime/agents/nepomukfeeder/sparqlbuilder.cpp
+  ${CMAKE_SOURCE_DIR}/runtime/agents/nepomukfeeder/selectsparqlbuilder.cpp
 )
 
 kde4_add_app_icon(akonadi_nepomuk_rss_feeder_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/nepomuk.png")
