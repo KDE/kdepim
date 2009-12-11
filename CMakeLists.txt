@@ -169,7 +169,6 @@ set(libkdgantt1_SRCS
   include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
-  add_subdirectory(runtime)
   add_subdirectory(libkdepim)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
