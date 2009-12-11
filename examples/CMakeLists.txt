@@ -4,6 +4,6 @@ macro_optional_add_subdirectory(akonablog)
 macro_optional_add_subdirectory(akonalendar)
 macro_optional_add_subdirectory(kabc)
 
-if(BUILD_akonadi)
+if(BUILD_runtime)
   macro_optional_add_subdirectory(mailreader)
-endif(BUILD_akonadi)
+endif(BUILD_runtime)
