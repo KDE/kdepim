@@ -210,7 +210,7 @@ set(libkdgantt1_SRCS
   endif(KDEPIM_BUILD_EVERYTHING)
 
   macro_optional_add_subdirectory(akregator)
-  macro_optional_add_subdirectory(akonadiconsole)
+#  macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(kalarm)
