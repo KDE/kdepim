@@ -1,3 +1,22 @@
+Friday, December 11th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3493: Kontact creates events with the wrong time
+* Add combined sign/encrypt dialog for emails to Kleopatra
+* Some bugfixes to smartcard monitoring in Kleopatra
+* Allow the admin to set the allowed key sizes and type in the new certificate dialog in Kleopatra
+
+Merges
+------
+
+* Merges from enterprise35 branch:
+      - kolab/issue3972: Event print order will be wrong, if recurring and single events are mixed. (rt#5914)
+      - kolab/issue3964: An attendee of an event is not informed about his role or status in the event (rt#5893)
+      - kolab/issue3961: Mail attachment of a task should be persistent (rt#5915)
+
+
 Friday, December 4th 2009
 
 Problems addressed
