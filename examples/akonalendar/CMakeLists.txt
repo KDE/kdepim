@@ -1,4 +1,7 @@
-include_directories( ${CMAKE_SOURCE_DIR}/akonadi )
+include_directories(
+    ${CMAKE_SOURCE_DIR}/akonadi
+    ${Boost_INCLUDE_DIRS}
+)
 
 set(calendar_bin_SRCS
     calendar.cpp
