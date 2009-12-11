@@ -57,8 +57,6 @@
 #include <kmessagebox.h>
 #include <kxmlguiwindow.h>
 
-#include <xml/xmlwritejob.h>
-
 #ifdef NEPOMUK_FOUND
 #include <nepomuk/resource.h>
 #include <nepomuk/resourcemanager.h>
@@ -449,8 +447,10 @@ void BrowserWidget::dumpToXml()
   const QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.xml", this, i18n( "Select XML file" ) );
   if ( fileName.isEmpty() )
     return;
+#if 0 // TODO: port me, can't use XmlWriteJob here, it's in runtime, call the akonadi2xml cli tool instead
   XmlWriteJob *job = new XmlWriteJob( root, fileName, this );
   connect( job, SIGNAL(result(KJob*)), SLOT(dumpToXmlResult(KJob*)) );
+#endif
 }
 
 void BrowserWidget::dumpToXmlResult( KJob* job )
