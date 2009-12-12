@@ -104,7 +104,7 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
   find_package(LibKNotificationItem-1_New)
-  macro_log_feature(LIBKNOTIFICATIONITEM-1_FOUND "LibKNotificationItem-1" "An experimental library" "svn://anonsvn.kde.org/home/kde/trunk/KDE/kdelibs/experimental" TRUE "" "LibKNotificationItem-1 is an unfinished library which is required by korgac and akonaditray.")
+  macro_log_feature(LIBKNOTIFICATIONITEM-1_FOUND "LibKNotificationItem-1" "An experimental library" "svn://anonsvn.kde.org/home/kde/branches/KDE/4.3/kdelibs/experimental/" TRUE "" "LibKNotificationItem-1 is an unfinished library which is required by korgac and akonaditray.")
 
 
 ############### Needed commands before building anything ###############
