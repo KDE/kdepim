@@ -3,6 +3,7 @@ project(akonadiconsole)
 include_directories(${AKONADI_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIR})
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories(${CMAKE_SOURCE_DIR}/akonadi)
 
 if(NEPOMUK_FOUND)
   set(AKONADICONSOLE_EXTRA_LIBS ${NEPOMUK_LIBRARIES})

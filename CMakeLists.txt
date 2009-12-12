@@ -169,6 +169,7 @@ set(libkdgantt1_SRCS
   include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
+  add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
@@ -210,7 +211,7 @@ set(libkdgantt1_SRCS
   endif(KDEPIM_BUILD_EVERYTHING)
 
   macro_optional_add_subdirectory(akregator)
-#  macro_optional_add_subdirectory(akonadiconsole)
+  macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(kalarm)
