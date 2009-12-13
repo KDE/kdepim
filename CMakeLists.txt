@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ############### Build Options ###############
 
+option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
@@ -188,7 +189,11 @@ set(libkdgantt1_SRCS
     # The following components depend on QGpgME.
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(kmail)
-    macro_optional_add_subdirectory(examples)
+
+    if(KDEPIM_BUILD_EXAMPLES)
+      add_subdirectory(examples)
+    endif(KDEPIM_BUILD_EXAMPLES)
+
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
     if(BUILD_kmail)
       set(KMAIL_SUPPORTED TRUE)
