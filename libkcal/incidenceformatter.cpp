@@ -960,6 +960,17 @@ static QString rsvpRequestedStr( bool rsvpRequested, const QString &role )
   }
 }
 
+static QString myStatusStr( Incidence *incidence )
+{
+  QString ret;
+  Attendee *a = findMyAttendee( incidence );
+  if ( a && a->status() != Attendee::NeedsAction ) {
+    ret = i18n( "(<b>Note</b>: the Organizer preset your response to <b>%1</b>)" ).
+          arg( Attendee::statusName( a->status() ) );
+  }
+  return ret;
+}
+
 static QString invitationPerson( const QString& email, QString name, QString uid )
 {
   // Make the search, if there is an email address to search on,
@@ -2018,6 +2029,17 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       html += rsvpRequestedStr( rsvpReq, role );
     }
     html += "</u></i>";
+  }
+
+  // Print if the organizer gave you a preset status
+  if ( !myInc ) {
+    QString statStr = myStatusStr( inc );
+    if ( !statStr.isEmpty() ) {
+      html += "<br/>";
+      html += "<i>";
+      html += statStr;
+      html += "</i>";
+    }
   }
 
   // Add groupware links
