@@ -7,7 +7,6 @@ kdgantt           Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
                   Lutz Rogowski <lutz@klaralvdalens-datakonsult.se>
 kfile-plugins     ?
 kioslave          ?
-kitchensync       Tobias Koenig <tokoe@kde.org>
 kjots             Stephen Kelly <steveire@gmail.com>
 kleopatra         Marc Mutz <mutz@kde.org>
                   Steffen Hansen <hansen@kde.org>
@@ -18,8 +17,6 @@ knotes            Guillermo Antonio Amaral Bastidas <me@guillermoamaral.com>
 konsolekalendar   Allen Winter <winter@kde.org>
 kontact           Daniel Molkentin <molkentin@kde.org>
 korganizer        Allen Winter <winter@kde.org>
-kpilot            Bertjan Broeksema <b.broeksema@gmail.com>
-                  Jason 'vanRijn' Kasper <vR@movingparts.net>
 kresources        ?
 ksendemail        Pradeepto Bhattacharya <pradeepto@kde.org>
 ktimetracker      Thorsten Staerk <dev@staerk.de>

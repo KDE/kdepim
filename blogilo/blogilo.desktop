@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Blogilo
 Name[ca]=Blogilo
+Name[de]=Blogilo
 Name[en_GB]=Blogilo
 Name[eo]=Blogilo
 Name[es]=Blogilo
@@ -22,6 +23,7 @@ Type=Application
 Categories=Qt;KDE;Network;
 GenericName=A KDE Blogging Client
 GenericName[ca]=Un client de blocs per al KDE
+GenericName[de]=Ein Blogging-Programm für KDE
 GenericName[en_GB]=A KDE Blogging Client
 GenericName[es]=Un cliente de Blog par KDE
 GenericName[et]=KDE ajaveebiklient

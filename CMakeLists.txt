@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 ############### Build Options ###############
 
+option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
@@ -102,6 +103,12 @@ else(KDEPIM_ONLY_KLEO)
 
   macro_optional_find_package(Grantlee)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
+  
+  # We require SharedDesktopOntology if nepomuk is enabled and was found on the system.
+  if(WITH_Nepomuk AND Nepomuk_FOUND)
+    find_package(SharedDesktopOntologies 0.2)
+    macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "0.2" "Ontologies necessary for the Nepomuk semantic desktop.")
+  endif(WITH_Nepomuk AND Nepomuk_FOUND)
 
 
 ############### Needed commands before building anything ###############
@@ -186,7 +193,11 @@ set(libkdgantt1_SRCS
     # The following components depend on QGpgME.
     macro_optional_add_subdirectory(messagecomposer)
     macro_optional_add_subdirectory(kmail)
-    macro_optional_add_subdirectory(examples)
+
+    if(KDEPIM_BUILD_EXAMPLES)
+      add_subdirectory(examples)
+    endif(KDEPIM_BUILD_EXAMPLES)
+
     # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
     if(BUILD_kmail)
       set(KMAIL_SUPPORTED TRUE)
@@ -231,12 +242,6 @@ set(libkdgantt1_SRCS
   if(Q_WS_X11)
     macro_optional_add_subdirectory(ktimetracker)
   endif(Q_WS_X11)
-
-  # Kpilot won't build on Windows.
-# We are removing kpilot in 4.4
-#  if(NOT WIN32)
-#    macro_optional_add_subdirectory(kpilot)
-#  endif(NOT WIN32)
 
   macro_optional_add_subdirectory(kontact) # must be the last one.
 

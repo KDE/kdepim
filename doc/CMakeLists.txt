@@ -47,10 +47,6 @@ if(BUILD_kontact)
   add_subdirectory(kontact-admin)
 endif(BUILD_kontact)
 
-if(BUILD_kpilot)
-  add_subdirectory(kpilot)
-endif(BUILD_kpilot)
-
 if(BUILD_ktimetracker)
   add_subdirectory(ktimetracker)
 endif(BUILD_ktimetracker)
