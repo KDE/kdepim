@@ -1,3 +1,17 @@
+Friday, December 18th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3916: Dayview doesn't display events
+
+Merges
+------
+
+* Merges from enterprise35 branch:
+      - 
+
+
 Friday, December 11th 2009
 
 Problems addressed
