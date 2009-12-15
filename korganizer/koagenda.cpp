@@ -1808,16 +1808,18 @@ void KOAgenda::resizeEvent ( QResizeEvent *ev )
 void KOAgenda::resizeAllContents()
 {
   double subCellWidth;
-  KOAgendaItem *item;
-  if (mAllDayMode) {
-    for ( item=mItems.first(); item != 0; item=mItems.next() ) {
-      subCellWidth = calcSubCellWidth( item );
-      placeAgendaItem( item, subCellWidth );
-    }
-  } else {
-    for ( item=mItems.first(); item != 0; item=mItems.next() ) {
-      subCellWidth = calcSubCellWidth( item );
-      placeAgendaItem( item, subCellWidth );
+  if ( mItems.count() > 0 ) {
+    KOAgendaItem *item;
+    if (mAllDayMode) {
+      for ( item=mItems.first(); item != 0; item=mItems.next() ) {
+        subCellWidth = calcSubCellWidth( item );
+        placeAgendaItem( item, subCellWidth );
+      }
+    } else {
+      for ( item=mItems.first(); item != 0; item=mItems.next() ) {
+        subCellWidth = calcSubCellWidth( item );
+        placeAgendaItem( item, subCellWidth );
+      }
     }
   }
   checkScrollBoundaries();
