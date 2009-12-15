@@ -7,12 +7,15 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 ############### Build Options ###############
 
 option(KDEPIM_BUILD_EXAMPLES "Build the kdepim example applications." FALSE)
+option(KDEPIM_BUILD_NEPOMUK_AGENTS "Build the different Nepomuk Agents. Requires Soprano and Nepomuk." TRUE)
 option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
 option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
+
 # if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
 if(KDEPIM_ENTERPRISE_BUILD)
   set(KDEPIM_ONLY_KLEO FALSE)
   set(KDEPIM_BUILD_EVERYTHING FALSE)
+  set(KDEPIM_BUILD_NEPOMUK_AGENTS FALSE)
   message(STATUS "Enterprise build is enabled.")
 else(KDEPIM_ENTERPRISE_BUILD)
   # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING is disabled.
@@ -98,14 +101,19 @@ else(KDEPIM_ONLY_KLEO)
   find_package(QGpgme)
   macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  macro_optional_find_package(Nepomuk)
-  macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+  if(KDEPIM_BUILD_NEPOMUK_AGENTS)
+    set(SDO_MIN_VERSION 0.2)
+    set(SOPRANO_MIN_VERSION 2.3.70)
 
-  # We require SharedDesktopOntology if nepomuk is enabled and was found on the system.
-  if(WITH_Nepomuk AND Nepomuk_FOUND)
-    find_package(SharedDesktopOntologies 0.2)
-    macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "0.2" "Ontologies necessary for the Nepomuk semantic desktop.")
-  endif(WITH_Nepomuk AND Nepomuk_FOUND)
+    find_package(SharedDesktopOntologies ${SDO_MIN_VERSION})
+    macro_log_feature(SHAREDDESKTOPONTOLOGIES_FOUND "Shared desktop ontologies" "Desktop ontologies" "http://oscaf.sourceforge.net" TRUE "${SDO_MIN_VERSION}" "Ontologies necessary for the Nepomuk semantic desktop.")
+
+    find_package(Soprano)
+    macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+
+    find_package(Nepomuk)
+    macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
+  endif(KDEPIM_BUILD_NEPOMUK_AGENTS)
 
 
 ############### Needed commands before building anything ###############
@@ -204,11 +212,11 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
 
-    if( Nepomuk_FOUND )
+    if(KDEPIM_BUILD_NEPOMUK_AGENTS)
       include( SopranoAddOntology )
       add_subdirectory( ontologies )
       add_subdirectory( nepomuk_email_feeder )
-    endif( Nepomuk_FOUND )
+    endif(KDEPIM_BUILD_NEPOMUK_AGENTS)
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
