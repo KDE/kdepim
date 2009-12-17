@@ -1222,16 +1222,6 @@ void AccountsPage::ReceivingTab::slotAddAccount() {
       return;
   }
 
-  if ( accountType == "cachedimap" )
-  {
-	KMessageBox::information(this, " WARNING:\n\n It is possible to lose your e-mail with a Disconnected IMAP account if you do not use it correctly.  The purposes of Disconnected IMAP are to minimize bandwidth usage, to allow the user to decide when the client communicates with the server, and to keep a local copy of all e-mails.\n\n When using Disconnected IMAP, all changes (such as writing new e-mails, deleting e-mails, and moving e-mails between folders or accounts) are only made on the client until the user synchronizes the client with the server by using the Check Mail command when there is a network connection available.\n\n These are the commands that affect client-server syncronization:\n F5 synchronizes the current folder.\n Ctrl+L (Check Mail) synchronizes all folders in all accounts.\n Refresh Local IMAP Cache discards all local changes in the current folder.\n\n If you make changes that affect more than one folder or account, you should usually use Ctrl+L to make sure all of your changes are committed to the mail server.  ",
-	NULL, "dimap-warning", 0
-
-
-	);
-
-  }
-
   KMAccount *account
     = kmkernel->acctMgr()->create( QString::fromLatin1( accountType ) );
   if ( !account ) {
