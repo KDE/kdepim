@@ -555,7 +555,7 @@ bool Scheduler::acceptReply(IncidenceBase *incidence,ScheduleMessage::Status /* 
           performTransaction( ev, Scheduler::Request );
       }
       if ( to ) {
-        to->setRevision( ev->revision() + 1 );
+        to->setRevision( to->revision() + 1 );
         if ( sendMail )
           performTransaction( to, Scheduler::Request );
       }
