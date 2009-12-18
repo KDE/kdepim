@@ -807,12 +807,14 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                 "but you can send them an email message if you desire.\n\n"
                 "Would you like to send the organizer a message regarding this invitation?\n"
                 "Press the [Cancel] button to cancel the recording operation." ),
-          i18n( "Send Email to Organizer" ) );
+          i18n( "Send Email to Organizer" ),
+          KGuiItem( i18n( "Do Not Send" ) ),
+          KGuiItem( i18n( "Send EMail" ) ) );
 
         switch( response ) {
         case KMessageBox::Cancel:
           break;
-        case KMessageBox::Yes:
+        case KMessageBox::No: // means "send email"
           summary = incidence->summary();
           if ( !summary.isEmpty() ) {
             summary = i18n( "Re: %1" ).arg( summary );
@@ -820,7 +822,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
           KApplication::kApplication()->invokeMailer( incidence->organizer().email(), summary );
           //fall through
-        case KMessageBox::No:
+        case KMessageBox::Yes: // means "do not send"
           if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
             if ( c.deleteInvitationAfterReply() ) {
               ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
