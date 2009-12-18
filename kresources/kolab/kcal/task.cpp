@@ -196,14 +196,14 @@ bool Task::loadAttribute( QDomElement& element )
     bool ok;
     mKolabPriorityFromDom = element.text().toInt( &ok );
     if ( !ok || mKolabPriorityFromDom < 1 || mKolabPriorityFromDom > 5 ) {
-      kdWarning() << "loadAttribute(): Invalid \"priority\" value: " << element.text();
+      kdWarning() << "loadAttribute(): Invalid \"priority\" value: " << element.text() << endl;
       mKolabPriorityFromDom = -1;
     }
   } else if ( tagName == "x-kcal-priority" ) {
     bool ok;
     mKCalPriorityFromDom = element.text().toInt( &ok );
     if ( !ok || mKCalPriorityFromDom < 0 || mKCalPriorityFromDom > 9 ) {
-      kdWarning() << "loadAttribute(): Invalid \"x-kcal-priority\" value: " << element.text();
+      kdWarning() << "loadAttribute(): Invalid \"x-kcal-priority\" value: " << element.text() << endl;
       mKCalPriorityFromDom = -1;
     }
   } else if ( tagName == "completed" ) {
