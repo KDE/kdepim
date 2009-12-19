@@ -1840,10 +1840,10 @@ class IncidenceFormatter::IncidenceCompareVisitor
         return;
       if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->doesFloat() != newEvent->doesFloat() )
         mChanges += i18n( "The invitation starting time has been changed from %1 to %2" )
-            .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
+                    .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
       if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
         mChanges += i18n( "The invitation ending time has been changed from %1 to %2" )
-            .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
+                    .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
     }
 
     void compareIncidences( Incidence *newInc, Incidence *oldInc )
@@ -1865,7 +1865,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
         } else {
           if ( oldAtt->status() != (*it)->status() )
             mChanges += i18n( "The status of attendee %1 has been changed to: %2" ).arg( (*it)->fullName() )
-                .arg( (*it)->statusStr() );
+                        .arg( (*it)->statusStr() );
         }
       }
       for ( Attendee::List::ConstIterator it = oldAttendees.constBegin(); it != oldAttendees.constEnd(); ++it ) {
@@ -2017,9 +2017,14 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
-      html += i18n( "Your response has already been recorded [%1]" ).
-              arg( ea->statusStr() );
+    if ( rsvpRec && inc ) {
+      if ( inc->revision() == 0 ) {
+        html += i18n( "Your <b>%1</b> response has already been recorded" ).
+                arg( ea->statusStr() );
+      } else {
+        html += i18n( "The organizer currently has your response as <b>%1</b>" ).
+                arg( ea->statusStr() );
+      }
       rsvpReq = false;
     } else if ( msg->method() == Scheduler::Cancel ) {
       html += i18n( "This invitation was declined" );
@@ -2033,12 +2038,14 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   // Print if the organizer gave you a preset status
   if ( !myInc ) {
-    QString statStr = myStatusStr( inc );
-    if ( !statStr.isEmpty() ) {
-      html += "<br/>";
-      html += "<i>";
-      html += statStr;
-      html += "</i>";
+    if ( inc && inc->revision() == 0 ) {
+      QString statStr = myStatusStr( inc );
+      if ( !statStr.isEmpty() ) {
+        html += "<br/>";
+        html += "<i>";
+        html += statStr;
+        html += "</i>";
+      }
     }
   }
 
