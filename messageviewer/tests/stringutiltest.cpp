@@ -131,6 +131,19 @@ void StringUtilTester::test_SmartQuote_data()
                          "\n"
                          "Line after an empty one.";
 
+  // Make sure the "You wrote:" line is not broken, that would look strange
+  //                                                              40
+  //                                                              ↓
+  QTest::newRow( "" ) << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                         "> Bla Bla Bla Bla..."
+                      << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                         "> Bla Bla Bla Bla...";
+
+  QTest::newRow( "" ) << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                         "\n"
+                         "> Bla Bla Bla Bla..."
+                      << "Yesterday, Hans Martin Ulrich Franz August wrote:\n"
+                         "> Bla Bla Bla Bla...";
 
   // This test shows a fundamental flaw when breaking lines: The table header gets broken,
   // which is ok. However, the following line is appended to the table header, which leads

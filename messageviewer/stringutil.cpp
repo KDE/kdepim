@@ -934,18 +934,26 @@ QString smartQuote( const QString &msg, int maxLineLength )
     // The indent changed, that means we have to write everything contained in textParts to the
     // result, which we do by calling flushPart().
     if ( oldIndent != indent ) {
-      QString fromLine;
-      // Search if the last non-blank line could be "From" line
-      if ( textParts.count() && ( oldIndent.length() < indent.length() ) ) {
-        QStringList::Iterator it = textParts.isEmpty() ? textParts.end() : --textParts.end();
-        // FIXME: what if all strings are empty? Then we'll decrement textParts.begin().
-        // Shouldn't we also check for .begin()?
-        while ( ( it != textParts.end() ) && (*it).isEmpty() )
-          --it;
 
-        if ( ( it != textParts.end() ) && ( (*it).endsWith( ':' ) ) ) {
-          fromLine = oldIndent + (*it) + '\n';
-          textParts.erase( it );
+      // Check if the last non-blank line is a "From" line. A from line is the line containing the
+      // attribution to a quote, e.g. "Yesterday, you wrote:". We'll just check for the last colon
+      // here, to simply things.
+      // If there is a From line, remove it from the textParts to that flushPart won't break it.
+      // We'll manually add it to the result afterwards.
+      QString fromLine;
+      if ( !textParts.isEmpty() ) {
+        for ( int i = textParts.count() - 1; i >= 0; i-- ) {
+
+          // Check if we have found the From line
+          if ( textParts[i].endsWith( ':' ) ) {
+            fromLine = oldIndent + textParts[i] + '\n';
+            textParts.removeAt( i );
+            break;
+          }
+
+          // Abort on first non-empty line
+          if ( !textParts[i].trimmed().isEmpty() )
+            break;
         }
       }
 
