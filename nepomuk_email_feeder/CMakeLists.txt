@@ -3,6 +3,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/../libkleo
   ${Boost_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/shared
+  ${SOPRANO_INCLUDE_DIR}
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
@@ -16,8 +17,6 @@ set(akonadi_nepomuk_email_feeder_SRCS
   shared/sparqlbuilder.cpp
   shared/selectsparqlbuilder.cpp
 )
-
-include_directories(${SOPRANO_INCLUDE_DIR})
 
 kde4_add_app_icon(akonadi_nepomuk_email_feeder_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/nepomuk.png")
 kde4_add_kcfg_files(akonadi_nepomuk_email_feeder_SRCS settings.kcfgc)
