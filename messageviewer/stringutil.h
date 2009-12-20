@@ -117,13 +117,13 @@ namespace StringUtil
    * when replying to all.
    */
   MESSAGEVIEWER_EXPORT QStringList stripAddressFromAddressList( const QString& address,
-                                           const QStringList& addresses );
+                                                                const QStringList& addresses );
 
   /**
    * Returns true if the given address is contained in the given address list.
    */
   MESSAGEVIEWER_EXPORT bool addressIsInAddressList( const QString& address,
-                               const QStringList& addresses );
+                                                    const QStringList& addresses );
 
   /**
    * Expands aliases (distribution lists and nick names) and appends a
@@ -138,10 +138,19 @@ namespace StringUtil
   MESSAGEVIEWER_EXPORT QString guessEmailAddressFromLoginName( const QString& userName );
 
   /**
-   *  Given argument msg add quoting characters and relayout for max width maxLength
-   *  @param msg the string which it to be quoted
-   *  @param maxLineLength reformat text to be this amount of columns at maximum, adding
-   *    linefeeds at word boundaries to make it fit.
+   *  Relayouts the given string so that the invidual lines don't exceed the given
+   *  maximal length.
+   *
+   *  As the name of the function implies, it it smart, which means it deals with quoting
+   *  correctly. This means if a line already starts with quote characters and needs to be
+   *  broken, the same quote characters are prepended to the next line as well.
+   *
+   *  This does _not_ add new quote characters in front of every line, that is the responsibility
+   *  of the caller.
+   *
+   *  @param msg the string which it to be relayouted
+   *  @param maxLineLength reformat text to be this amount of columns at maximum. Note that this
+   *                       also includes the trailing \n!
    */
   MESSAGEVIEWER_EXPORT QString smartQuote( const QString &msg, int maxLineLength );
 
