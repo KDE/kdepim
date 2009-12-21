@@ -31,12 +31,15 @@
 
 #include <kmime/kmime_message.h>
 
+//#ifndef WEBKIT_BUILD
 #include <dom/dom_node.h>
+//#endif
 
 #include <messagecore/messagestatus.h>
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
+#include "config-webkit.h"
 
 using KPIM::MessageStatus;
 namespace GpgME { class Error; }
@@ -49,7 +52,12 @@ class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class KHBox;
+#ifdef WEBKIT_BUILD
+class KWebView;
+class QWebElement;
+#else
 class KHTMLPart;
+#endif
 
 class QPoint;
 class QSplitter;
@@ -60,7 +68,11 @@ class QTreeView;
 class MimeTreeModel;
 class ConfigureWidget;
 
+#ifdef WEBKIT_BUILD
+class WebKitPartHtmlWriter;
+#else
 class KHtmlPartHtmlWriter;
+#endif
 class HtmlStatusBar;
 
 namespace KParts {
@@ -136,7 +148,11 @@ public:
 
   /** Access to the KHTMLPart used for the viewer. Use with
       care! */
+#ifdef WEBKIT_BUILD
+  KWebView *htmlPart() const { return mViewer; }
+#else
   KHTMLPart *htmlPart() const { return mViewer; }
+#endif
 
   void showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & p );
 
@@ -474,7 +490,11 @@ public slots:
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
+#ifdef WEBKIT_BUILD
+  bool hasParentDivWithId( const QWebElement &start, const QString &id );
+#endif
   bool hasParentDivWithId( const DOM::Node &start, const QString &id );
+//#endif
 
 signals:
   void replaceMsgByUnencryptedVersion();
@@ -498,7 +518,11 @@ public:
   HtmlStatusBar *mColorBar;
   QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
   MimeTreeModel *mMimePartModel;
+#ifdef WEBKIT_BUILD
+  KWebView *mViewer;
+#else
   KHTMLPart *mViewer;
+#endif
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
@@ -534,7 +558,11 @@ public:
   HtmlWriter * mHtmlWriter;
   /** Used only to be able to connect and disconnect finished() signal
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */
+#ifdef WEBKIT_BUILD
+  QPointer<WebKitPartHtmlWriter> mPartHtmlWriter;
+#else
   QPointer<KHtmlPartHtmlWriter> mPartHtmlWriter;
+#endif
   QMap<QByteArray, Interface::BodyPartMemento*> mBodyPartMementoMap;
 
   int mChoice;

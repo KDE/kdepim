@@ -2,11 +2,23 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 add_subdirectory(tests)
 
+option(WEBKIT_BUILD "Use QtWebKit instead of KHTML" false)
+
+if(WEBKIT_BUILD)
+  set(htmlparthtmlwriter_SRCS webkitparthtmlwriter.cpp)
+  set(WEBKIT_BUILD true)
+else(WEBKIT_BUILD)
+  set(htmlparthtmlwriter_SRCS khtmlparthtmlwriter.cpp)
+  set(WEBKIT_BUILD false)
+endif(WEBKIT_BUILD)
+
+configure_file(config-webkit.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-webkit.h)
+
 set(libmessageviewer_SRCS
 
 viewer_p.cpp
 viewer.cpp
-khtmlparthtmlwriter.cpp
+${htmlparthtmlwriter_SRCS}
 htmlstatusbar.cpp
 headerstyle.cpp
 headerstrategy.cpp
@@ -53,14 +65,21 @@ kde4_add_ui_files(libmessageviewer_SRCS
 
 kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})
 
-
-target_link_libraries(messageviewer messagecore kdepim kpgp kleo
- ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
- ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
- ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KTNEF_LIBRARY}
- ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
-)
-
+if( WEBKIT_BUILD )
+  target_link_libraries(messageviewer messagecore kdepim kpgp kleo
+   ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+   ${KDE4_KDEUI_LIBS} ${KDE4_KTNEF_LIBRARY} ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
+   ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY}
+  )
+else( WEBKIT_BUILD )
+  target_link_libraries(messageviewer messagecore kdepim kpgp kleo
+   ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
+   ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+   ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KTNEF_LIBRARY}
+   ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
+  )
+endif( WEBKIT_BUILD )
 include_directories(
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIRS}

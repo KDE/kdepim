@@ -17,10 +17,17 @@
    Boston, MA 02110-1301, USA.
 */
 #include "htmlquotecolorer.h"
+#include "config-webkit.h"
 
+#ifdef WEBKIT_BUILD
+#include <QWebElement>
+#else
 #include <dom/html_document.h>
 #include <dom/dom_element.h>
 #include <dom/dom_exception.h>
+#endif
+
+#include <kdebug.h>
 
 HTMLQuoteColorer::HTMLQuoteColorer()
 {
@@ -28,6 +35,10 @@ HTMLQuoteColorer::HTMLQuoteColorer()
 
 QString HTMLQuoteColorer::process( const QString &htmlSource )
 {
+#ifdef WEBKIT_BUILD
+  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+  return htmlSource;
+#else
   try {
    // Create a DOM Document from the HTML source
    DOM::HTMLDocument doc;
@@ -45,8 +56,16 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
    kWarning() << "No quote coloring for you, then.";
    return htmlSource;
  }
+#endif
 }
 
+#ifdef WEBKIT_BUILD
+QWebElement HTMLQuoteColorer::processNode( QWebElement node )
+{
+  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+  return node;
+}
+#else
 DOM::Node HTMLQuoteColorer::processNode( DOM::Node node )
 {
   // Below, we determine if the current text node should be quote colored by keeping track of
@@ -101,7 +120,7 @@ DOM::Node HTMLQuoteColorer::processNode( DOM::Node node )
   }
   return returnNode;
 }
-
+#endif
 int HTMLQuoteColorer::quoteLength( const QString &line ) const
 {
   QString simplified = line.simplified();

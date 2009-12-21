@@ -49,8 +49,12 @@
 #include <QProcess>
 #include <algorithm>
 
-#include <QScrollArea>
+#include "config-webkit.h"
 
+#include <QScrollArea>
+#ifdef WEBKIT_BUILD
+#include <WebKitPart/WebKitPart>
+#endif
 using std::for_each;
 using std::remove;
 using std::find;
@@ -535,8 +539,12 @@ namespace {
   bool HtmlAnchorHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
     if ( url.hasHost() || url.path() != "/" || !url.hasRef() )
       return false;
+#ifdef WEBKIT_BUILD
+    kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+#else
     if ( w && !w->htmlPart()->gotoAnchor( url.ref() ) )
       static_cast<QScrollArea*>( w->htmlPart()->widget() )->ensureVisible( 0, 0 );
+#endif
     return true;
   }
 }

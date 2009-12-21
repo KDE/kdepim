@@ -18,8 +18,13 @@
 */
 #ifndef HTMLQUOTECOLORER_H
 #define HTMLQUOTECOLORER_H
+#include "config-webkit.h"
 
+#ifdef WEBKIT_BUILD
+#include <QWebElement>
+#else
 #include <dom/dom_node.h>
+#endif
 #include <QColor>
 /**
  * Little helper class that takes a HTML source as input and finds all
@@ -51,7 +56,11 @@ class HTMLQuoteColorer
 
   private:
 
+#ifdef WEBKIT_BUILD
+    QWebElement processNode( QWebElement node );
+#else
     DOM::Node processNode( DOM::Node node );
+#endif
     int quoteLength( const QString &line ) const;
 
     QColor mQuoteColors[3];
