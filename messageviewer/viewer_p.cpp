@@ -2901,11 +2901,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
 
 void ViewerPrivate::slotCopySelectedText()
 {
-#ifdef WEBKIT_BUILD
   QString selection = mViewer->selectedText();
-#else
-  QString selection = mViewer->selectedText();
-#endif
   selection.replace( QChar::Nbsp, ' ' );
   QApplication::clipboard()->setText( selection );
 }
