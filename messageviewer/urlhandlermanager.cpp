@@ -52,9 +52,6 @@
 #include "config-webkit.h"
 
 #include <QScrollArea>
-#ifdef WEBKIT_BUILD
-#include <WebKitPart/WebKitPart>
-#endif
 using std::for_each;
 using std::remove;
 using std::find;

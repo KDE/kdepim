@@ -1336,6 +1336,11 @@ void ViewerPrivate::initHtmlWidget(void)
 {
 #ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+  QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+  QWebSettings::globalSettings()->setAttribute(QWebSettings::JavaEnabled, false);
+  QWebSettings::globalSettings()->setAttribute(QWebSettings::PluginsEnabled, false);
+
+
 #else
   mViewer->widget()->setFocusPolicy(Qt::WheelFocus);
   // Let's better be paranoid and disable plugins (it defaults to enabled):
