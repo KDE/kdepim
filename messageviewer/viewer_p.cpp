@@ -2913,7 +2913,7 @@ void ViewerPrivate::slotCopySelectedText()
 void ViewerPrivate::selectAll()
 {
 #ifdef WEBKIT_BUILD
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+  mViewer->page()->triggerAction(QWebPage::SelectAll);
 #else
   mViewer->selectAll();
 #endif
