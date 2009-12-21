@@ -222,12 +222,7 @@ void Viewer::slotScrollNext()
 QString Viewer::selectedText()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
   QString temp = d->mViewer->selectedText();
-#else
-  QString temp = d->mViewer->selectedText();
-#endif
   return temp;
 }
 
