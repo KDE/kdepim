@@ -37,17 +37,13 @@
 
 #include <kdebug.h>
 #include <kwebview.h>
-
-//TODO: Port to QWebElement
-#include <dom/dom_string.h>
-#include <dom/html_document.h>
-#include <dom/html_image.h>
-#include <dom/html_misc.h>
+#include <kurl.h>
 
 #include <cassert>
 #include <QByteArray>
 #include <QWebView>
 #include <QWebPage>
+#include <QWebFrame>
 #include <QWebElement>
 
 WebKitPartHtmlWriter::WebKitPartHtmlWriter( KWebView *view,
@@ -75,45 +71,27 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
 
   // clear the widget:
   mHtmlView->setUpdatesEnabled( false );
-#ifdef WEBKIT_BUILD
-  mHtmlView->setUpdatesEnabled( false );
-  mHtmlView->scroll(0, 0);
-#else
-  mHtmlView->viewport()->setUpdatesEnabled( false );
-  mHtmlView->ensureVisible( 0, 0 );
-#endif
+  QPoint point = mHtmlView->page()->mainFrame()->scrollPosition();
+  point -= QPoint(0, 10);
+  mHtmlView->page()->mainFrame()->setScrollPosition( point );
 
-#ifdef WEBKIT_BUILD
   mHtmlView->load( QUrl() );
+  //TODO: WEBKIT_BUILD apply the css somehow...
   if ( !css.isEmpty() )
     mCss = css;
-#else
-  mHtmlView->begin( KUrl() );
-  if ( !css.isEmpty() )
-    mHtmlView->setUserStyleSheet( css );
-#endif
   mState = Begun;
 }
 
 void WebKitPartHtmlWriter::end() {
   kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: end() called on non-begun or queued session!";
-#ifdef WEBKIT_BUILD
   mHtmlView->setHtml( mHtml, QUrl() );
   mHtmlView->show();
   mHtml.clear();
-#else
-  mHtmlView->end();
-#endif
 
   resolveCidUrls();
 
-#ifdef WEBKIT_BUILD
   mHtmlView->setUpdatesEnabled( true );
-#else
-  mHtmlView->viewport()->setUpdatesEnabled( true );
-  mHtmlView->setUpdatesEnabled( true );
-  mHtmlView->viewport()->repaint();
-#endif
+  mHtmlView->update();
   mState = Ended;
   emit finished();
 }
@@ -122,9 +100,7 @@ void WebKitPartHtmlWriter::reset() {
   if ( mState != Ended ) {
     mHtmlTimer.stop();
     mHtmlQueue.clear();
-#ifdef WEBKIT_BUILD
     mHtml.clear();
-#endif
     mState = Begun; // don't run into end()'s warning
     end();
     mState = Ended;
@@ -133,11 +109,7 @@ void WebKitPartHtmlWriter::reset() {
 
 void WebKitPartHtmlWriter::write( const QString & str ) {
   kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: write() called in Ended or Queued state!";
-#ifdef WEBKIT_BUILD
   mHtml.append( str );
-#else
-  mHtmlView->write( str );
-#endif
 }
 
 void WebKitPartHtmlWriter::queue( const QString & str ) {
@@ -156,11 +128,7 @@ void WebKitPartHtmlWriter::slotWriteNextHtmlChunk() {
     mState = Begun; // don't run into end()'s warning
     end();
   } else {
-#ifdef WEBKIT_BUILD
-  mHtml.append( mHtmlQueue.front() );
-#else
-    mHtmlView->write( mHtmlQueue.front() );
-#endif
+    mHtml.append( mHtmlQueue.front() );
     mHtmlQueue.pop_front();
     mHtmlTimer.start( 0 );
   }
@@ -173,23 +141,22 @@ void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
 
 void WebKitPartHtmlWriter::resolveCidUrls()
 {
-#ifdef WEBKIT_BUILD
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
-  DOM::HTMLDocument document = mHtmlView->htmlDocument();
-  DOM::HTMLCollection images = document.images();
-  for ( DOM::Node node = images.firstItem(); !node.isNull(); node = images.nextItem() ) {
-    DOM::HTMLImageElement image( node );
-    KUrl url( image.src().string() );
-    if ( url.protocol() == "cid" ) {
+  kWarning() << "WEBKIT: Untested code in " << Q_FUNC_INFO;
+  QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
+  QWebElementCollection images = root.findAll( "img" );
+  QWebElement image;
+  foreach( image, images )
+  {
+    KUrl url( image.attribute( "src", "" ) );
+    if ( url.protocol() == "cid" )
+    {
       EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
       if ( it != mEmbeddedPartMap.constEnd() ) {
         kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();
-        image.setSrc( it.value() );
+        image.setAttribute( "src", it.value() );
       }
     }
   }
-#endif
 }
 
 
