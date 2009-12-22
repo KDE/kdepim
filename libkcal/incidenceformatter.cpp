@@ -953,9 +953,9 @@ static QString rsvpRequestedStr( bool rsvpRequested, const QString &role )
     }
   } else {
     if ( role.isEmpty() ) {
-      return i18n( "A response is not necessary" );
+      return i18n( "No response is necessary" );
     } else {
-      return i18n( "A response as <b>%1</b> is not necessary" ).arg( role );
+      return i18n( "No response as <b>%1</b> is necessary" ).arg( role );
     }
   }
 }
@@ -1994,10 +1994,17 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   bool rsvpRec = false;
   Attendee *ea = 0;
   if ( !myInc ) {
-    if ( existingIncidence ) {
-      ea = findMyAttendee( existingIncidence );
+    Incidence *rsvpIncidence = existingIncidence;
+    if ( !rsvpIncidence && inc && inc->revision() > 0 ) {
+      rsvpIncidence = inc;
     }
-    if ( ea && ( ea->status() == Attendee::Accepted || ea->status() == Attendee::Declined ) ) {
+    if ( rsvpIncidence ) {
+      ea = findMyAttendee( rsvpIncidence );
+    }
+    if ( ea &&
+         ( ea->status() == Attendee::Accepted ||
+           ea->status() == Attendee::Declined ||
+           ea->status() == Attendee::Tentative ) ) {
       rsvpRec = true;
     }
   }
@@ -2022,7 +2029,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         html += i18n( "Your <b>%1</b> response has already been recorded" ).
                 arg( ea->statusStr() );
       } else {
-        html += i18n( "The organizer currently has your response as <b>%1</b>" ).
+        html += i18n( "Your status for this invitation is <b>%1</b>" ).
                 arg( ea->statusStr() );
       }
       rsvpReq = false;
