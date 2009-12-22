@@ -978,8 +978,10 @@ KScoringRule *KScoringManager::addRule( const ScorableArticle &a,
     rule->addAction( new ActionSetScore( score ) );
   }
   rule->setExpireDate( QDate::currentDate().addDays( 30 ) );
-  addRule( rule );
   KScoringEditor *edit = KScoringEditor::createEditor( this );
+  // Note: the call to createEditor() call this->pushRuleList(). So addRule(KScoringRule)
+  // must be place after it, otherwise the cancel button of the editor is not effective (bug #101092).
+  addRule( rule );
   edit->setRule( rule );
   edit->show();
   setCacheValid( false );
