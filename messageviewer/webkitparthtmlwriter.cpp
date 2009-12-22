@@ -76,7 +76,6 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
   mHtmlView->page()->mainFrame()->setScrollPosition( point );
 
   mHtmlView->load( QUrl() );
-  //TODO: WEBKIT_BUILD apply the css somehow...
   if ( !css.isEmpty() )
     mCss = css;
   mState = Begun;
@@ -84,6 +83,7 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
 
 void WebKitPartHtmlWriter::end() {
   kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: end() called on non-begun or queued session!";
+  mHtml.insert( mHtml.indexOf( "<head>") + 6, "<style>" + mCss + "</style>" );
   mHtmlView->setHtml( mHtml, QUrl() );
   mHtmlView->show();
   mHtml.clear();
