@@ -26,6 +26,7 @@
 
 #include <kmime/kmime_message.h>
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 #include <messagelist/messagelist_export.h>
 
 class KXMLGUIClient;
@@ -274,8 +275,8 @@ public:
    * If includeCollapsedChildren is true then the children of the selected but
    * collapsed items are also included in the stats
    */
-  bool getSelectionStats( QList< quint32 > &selectedSernums,
-                          QList< quint32 > &selectedVisibleSernums,
+  bool getSelectionStats( Akonadi::Item::List &selectedItems,
+                          Akonadi::Item::List &selectedVisibleItems,
                           bool * allSelectedBelongToSameThread,
                           bool includeCollapsedChildren = true) const;
   /**

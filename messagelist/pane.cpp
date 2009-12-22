@@ -556,8 +556,8 @@ bool Pane::selectionEmpty() const
   return w->selectionEmpty();
 }
 
-bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
-                              QList< quint32 > &selectedVisibleSernums,
+bool Pane::getSelectionStats( Akonadi::Item::List &selectedItems,
+                              Akonadi::Item::List &selectedVisibleItems,
                               bool * allSelectedBelongToSameThread,
                               bool includeCollapsedChildren ) const
 {
@@ -567,7 +567,7 @@ bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
   }
 
   return w->getSelectionStats(
-      selectedSernums, selectedVisibleSernums,
+      selectedItems, selectedVisibleItems,
       allSelectedBelongToSameThread, includeCollapsedChildren
     );
 }
