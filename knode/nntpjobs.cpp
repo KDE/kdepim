@@ -210,20 +210,19 @@ KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KN
 void KNode::ArticleFetchJob::execute()
 {
   KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
-  QString path = static_cast<KNGroup*>( target->collection() )->groupname();
 
   KUrl url = baseUrl();
-  path += QDir::separator();
+
+  url.addPath( static_cast<KNGroup*>( target->collection() )->groupname() );
 
   // By default, fetch articles by their server-side Id.
   // (some server does not understand the "ARTICLE <msg-id>" command correctly (bug #193550))
   if ( target->articleNumber() != -1 ) {
-    path += QString::number( target->articleNumber() );
+    url.addPath( QString::number( target->articleNumber() ) );
   } else {
     // User asked to fetch a message by its msg-id
-    path += target->messageID()->as7BitString( false );
+    url.addPath( target->messageID()->as7BitString( false ) );
   }
-  url.setPath( path );
 
   KIO::Job* job = KIO::storedGet( url, KIO::NoReload, KIO::HideProgressInfo );
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );
