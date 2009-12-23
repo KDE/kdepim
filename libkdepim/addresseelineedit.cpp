@@ -111,7 +111,8 @@ static bool itemIsHeader( const QListBoxItem* item )
 
 AddresseeLineEdit::AddresseeLineEdit( QWidget* parent, bool useCompletion,
                                       const char *name )
-  : ClickLineEdit( parent, QString::null, name ), DCOPObject( newLineEditDCOPObjectName() )
+  : ClickLineEdit( parent, QString::null, name ), DCOPObject( newLineEditDCOPObjectName() ),
+    m_allowDistLists( true )
 {
   m_useCompletion = useCompletion;
   m_completionInitialized = false;
@@ -205,6 +206,11 @@ void AddresseeLineEdit::setFont( const QFont& font )
 void AddresseeLineEdit::allowSemiColonAsSeparator( bool useSemiColonAsSeparator )
 {
   m_useSemiColonAsSeparator = useSemiColonAsSeparator;
+}
+
+void AddresseeLineEdit::allowDistributionLists( bool allowDistLists )
+{
+  m_allowDistLists = allowDistLists;
 }
 
 void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
@@ -601,12 +607,14 @@ void AddresseeLineEdit::addContact( const KABC::Addressee& addr, int weight, int
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
     //kdDebug(5300) << "AddresseeLineEdit::addContact() distribution list \"" << addr.formattedName() << "\" weight=" << weight << endl;
 
-    //for CompletionAuto
-    addCompletionItem( addr.formattedName(), weight, source );
+    if ( m_allowDistLists ) {
+      //for CompletionAuto
+      addCompletionItem( addr.formattedName(), weight, source );
 
-    //for CompletionShell, CompletionPopup
-    QStringList sl( addr.formattedName() );
-    addCompletionItem( addr.formattedName(), weight, source, &sl );
+      //for CompletionShell, CompletionPopup
+      QStringList sl( addr.formattedName() );
+      addCompletionItem( addr.formattedName(), weight, source, &sl );
+    }
 
     return;
   }

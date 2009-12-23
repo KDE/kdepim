@@ -63,6 +63,12 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual void setFont( const QFont& );
     void allowSemiColonAsSeparator( bool );
 
+    /// Sets if distribution lists will be used for completion.
+    /// This is true by default.
+    /// Call this right after the constructor, before anything calls loadContacts(),
+    /// otherwise this has no effect.
+    void allowDistributionLists( bool allowDistLists );
+
   public slots:
     void cursorAtEnd();
     void enableCompletion( bool enable );
@@ -139,6 +145,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemiColonAsSeparator;
+    bool m_allowDistLists;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
 
