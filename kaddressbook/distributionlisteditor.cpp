@@ -145,6 +145,7 @@ KPIM::DistributionList::Entry KPIM::DistributionListEditor::Line::entry() const
 
 KPIM::DistributionListEditor::LineEdit::LineEdit( QWidget* parent ) : KPIM::AddresseeLineEdit( parent )
 {
+  allowDistributionLists( false );
 }
 
 void KPIM::DistributionListEditor::LineEdit::addContact( const KABC::Addressee &addr, int weight, int source )

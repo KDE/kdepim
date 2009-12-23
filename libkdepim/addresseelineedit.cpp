@@ -103,7 +103,7 @@ static bool itemIsHeader( const QListWidgetItem *item )
 }
 
 AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool useCompletion )
-  : KLineEdit( parent )
+  : KLineEdit( parent ), m_allowDistLists( true )
 {
   setObjectName( newLineEditObjectName() );
   setClickMessage( "" );
@@ -205,6 +205,11 @@ void AddresseeLineEdit::setFont( const QFont &font )
 void AddresseeLineEdit::allowSemiColonAsSeparator( bool useSemiColonAsSeparator )
 {
   m_useSemiColonAsSeparator = useSemiColonAsSeparator;
+}
+
+void AddresseeLineEdit::allowDistributionLists( bool allowDistLists )
+{
+  m_allowDistLists = allowDistLists;
 }
 
 void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
@@ -607,12 +612,14 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
 {
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
 
-    //for CompletionAuto
-    addCompletionItem( addr.formattedName(), weight, source );
+    if ( m_allowDistLists ) {
+      //for CompletionAuto
+      addCompletionItem( addr.formattedName(), weight, source );
 
-    //for CompletionShell, CompletionPopup
-    QStringList sl( addr.formattedName() );
-    addCompletionItem( addr.formattedName(), weight, source, &sl );
+      //for CompletionShell, CompletionPopup
+      QStringList sl( addr.formattedName() );
+      addCompletionItem( addr.formattedName(), weight, source, &sl );
+    }
 
     return;
   }

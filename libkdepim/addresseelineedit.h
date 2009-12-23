@@ -62,6 +62,12 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     virtual void setFont( const QFont & );
     void allowSemiColonAsSeparator( bool );
 
+    /// Sets if distribution lists will be used for completion.
+    /// This is true by default.
+    /// Call this right after the constructor, before anything calls loadContacts(),
+    /// otherwise this has no effect.
+    void allowDistributionLists( bool allowDistLists );
+
   public Q_SLOTS:
     void cursorAtEnd();
     void enableCompletion( bool enable );
@@ -107,7 +113,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * Adds the name of a completion source to the internal list of
      * such sources and returns its index, such that that can be used
      * for insertion of items associated with that source.
-     * 
+     *
      * If the source already exists, the weight will be updated.
      */
     int addCompletionSource( const QString &, int weight );
@@ -147,6 +153,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemiColonAsSeparator;
+    bool m_allowDistLists;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
 
