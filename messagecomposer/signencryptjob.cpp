@@ -200,8 +200,9 @@ void SignEncryptJob::process()
 
   // exec'ed jobs don't delete themselves
   job->deleteLater();
+  QByteArray signatureHashAlgo =  res.first.createdSignature( 0 ).hashAlgorithmAsString();
 
-  d->resultContent = Message::Util::composeHeadersAndBody( d->content, encBody, d->format, true );
+  d->resultContent = Message::Util::composeHeadersAndBody( d->content, encBody, d->format, true, signatureHashAlgo );
 //  d->resultContent->setBody( signature );
   emitResult();
 }

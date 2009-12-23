@@ -40,12 +40,12 @@ namespace Util {
       * Sets the proper structural information such as content-type, cte, and charset on the encoded body content. Depending on the crypto options,
       *  original content may be needed to determine some of the values
       */
-    KMime::Content* composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody,  Kleo::CryptoMessageFormat format, bool sign  );
+    KMime::Content* composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody,  Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo = "pgp-sha1"  );
 
      /**
       * Sets the content-type for the top level of the mime content, based on the crypto format and if a signature is used.
       */
-    void makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign );
+    void makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo = "pgp-sha1" );
 
      /**
       * Sets the nested content type of the content, for crypto operations. 

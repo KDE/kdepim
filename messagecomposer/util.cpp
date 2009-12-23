@@ -32,7 +32,7 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>
 
-KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign )
+KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByteArray encodedBody, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
 
   KMime::Content* result = new KMime::Content;
@@ -40,7 +40,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
   if( !( format & Kleo::InlineOpenPGPFormat ) ) { // make a MIME message
     // make headers and CE+CTE
     kDebug() << "making MIME message, format:" << format;
-    makeToplevelContentType( result, format, sign );
+    makeToplevelContentType( result, format, sign, hashAlgo );
     const QByteArray boundary = KMime::multiPartBoundary();
 
     if( makeMultiMime( format, sign ) ) {
@@ -124,7 +124,7 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
 }
 
 // set the correct top-level ContentType on the message
-void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign )
+void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::CryptoMessageFormat format, bool sign, QByteArray hashAlgo )
 {
   switch ( format ) {
     default:
@@ -133,7 +133,7 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
       if( sign ) {
         content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
         content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pgp-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "pgp-sha1" ) );
+        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "pgp-" + hashAlgo ).toLower() );
 
       } else {
         content->contentType()->setMimeType( QByteArray( "multipart/encrypted" ) );
@@ -145,7 +145,7 @@ void Message::Util::makeToplevelContentType( KMime::Content* content, Kleo::Cryp
         kDebug() << "setting headers for SMIME";
         content->contentType()->setMimeType( QByteArray( "multipart/signed" ) );
         content->contentType()->setParameter( QString::fromAscii( "protocol" ), QString::fromAscii( "application/pkcs7-signature" ) );
-        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "sha1" ) );// FIXME: obtain this parameter from gpgme!
+        content->contentType()->setParameter( QString::fromAscii( "micalg" ), QString::fromAscii( "pgp-" + hashAlgo ).toLower() );
         return;
       }
       // fall through (for encryption, there's no difference between
