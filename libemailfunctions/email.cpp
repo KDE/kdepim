@@ -801,16 +801,22 @@ QString KPIM::normalizedAddress( const QString & displayName,
                                  const QString & addrSpec,
                                  const QString & comment )
 {
-  if ( displayName.isEmpty() && comment.isEmpty() )
+  QString realDisplayName = displayName;
+  realDisplayName.remove( QChar( 0x202D ) );
+  realDisplayName.remove( QChar( 0x202E ) );
+  realDisplayName.remove( QChar( 0x202A ) );
+  realDisplayName.remove( QChar( 0x202B ) );
+
+  if ( realDisplayName.isEmpty() && comment.isEmpty() )
     return addrSpec;
   else if ( comment.isEmpty() )
-    return quoteNameIfNecessary( displayName ) + " <" + addrSpec + ">";
-  else if ( displayName.isEmpty() ) {
+    return quoteNameIfNecessary( realDisplayName ) + " <" + addrSpec + ">";
+  else if ( realDisplayName.isEmpty() ) {
     QString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
   }
   else
-    return displayName + " (" + comment + ") <" + addrSpec + ">";
+    return realDisplayName + " (" + comment + ") <" + addrSpec + ">";
 }
 
 
