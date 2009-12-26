@@ -27,18 +27,12 @@
 #include "configurewidget.h"
 #include "csshelper.h"
 #include "globalsettings.h"
-#include "config-webkit.h"
 
 //KDE includes
-#ifdef WEBKIT_BUILD
 #include <kwebview.h>
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
-#else
-#include <KHTMLPart>
-#include <KHTMLView>
-#endif //WEBKIT_BUILD
 
 namespace MessageViewer {
 
@@ -111,11 +105,7 @@ void Viewer::print()
   Q_D(Viewer);
   if ( !message() )
     return;
-#ifdef WEBKIT_BUILD
   d->mViewer->print( false );
-#else
-  d->mViewer->view()->print();
-#endif
 }
 
 void Viewer::resizeEvent( QResizeEvent * )
@@ -153,45 +143,32 @@ void Viewer::slotSaveMessage()
 void Viewer::slotScrollUp()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
   QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
   point -= QPoint(0, 10);
   d->mViewer->page()->mainFrame()->setScrollPosition( point );
-#else
-  d->mViewer->view()->scrollBy( 0, -10 );
-#endif
 }
 
 void Viewer::slotScrollDown()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
   QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
   point += QPoint(0, 10);
   d->mViewer->page()->mainFrame()->setScrollPosition( point );
-#else
-  d->mViewer->view()->scrollBy( 0, 10 );
-#endif
 }
 
 bool Viewer::atBottom() const
 {
   Q_D(const Viewer);
-#ifdef WEBKIT_BUILD
-  QWebView *view = d->mViewer;
-  return view->visibleRegion().contains( view->contentsRect() );
-#else
-  KHTMLView *view = d->mViewer->view();
-  return view->contentsY() + view->visibleHeight() >= view->contentsHeight();
-#endif
+  int pos = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  int max = d->mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+  return pos == max;
 }
 
 void Viewer::slotJumpDown()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   KHTMLView *view = d->mViewer->view();
   view->scrollBy( 0, view->visibleHeight() );
 #endif
@@ -200,9 +177,8 @@ void Viewer::slotJumpDown()
 void Viewer::slotScrollPrior()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   KHTMLView *view = d->mViewer->view();
   view->scrollBy( 0, -(int)(d->mViewer->widget()->height() * 0.8 ) );
 #endif
@@ -211,9 +187,8 @@ void Viewer::slotScrollPrior()
 void Viewer::slotScrollNext()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   KHTMLView *view = d->mViewer->view();
   view->scrollBy( 0, (int)(d->mViewer->widget()->height() * 0.8 ) );
 #endif
@@ -354,11 +329,7 @@ bool Viewer::event(QEvent *e)
   if (e->type() == QEvent::PaletteChange)
   {
     delete d->mCSSHelper;
-#ifdef WEBKIT_BUILD
     d->mCSSHelper = new CSSHelper( d->mViewer );
-#else
-    d->mCSSHelper = new CSSHelper( d->mViewer->view() );
-#endif
     d->update( Viewer::Force ); // Force update
     return true;
   }
@@ -368,9 +339,8 @@ bool Viewer::event(QEvent *e)
 void Viewer::slotFind()
 {
   Q_D(Viewer);
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   d->mViewer->findText();
 #endif
 }
@@ -444,19 +414,11 @@ void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
   d->setHeaderStyleAndStrategy( style, strategy );
 }
 
-#ifdef WEBKIT_BUILD
 KWebView *Viewer::htmlPart() const
 {
   Q_D( const Viewer );
   return d->htmlPart();
 }
-#else
-KHTMLPart *Viewer::htmlPart() const
-{
-  Q_D( const Viewer );
-  return d->htmlPart();
-}
-#endif
 
 KAction *Viewer::copyURLAction()
 {

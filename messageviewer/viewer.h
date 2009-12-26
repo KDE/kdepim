@@ -40,7 +40,6 @@
 
 //Akonadi includes
 #include <akonadi/item.h>
-#include "config-webkit.h"
 
 class QSplitter;
 class KHBox;
@@ -55,11 +54,7 @@ class KAction;
 class KSelectAction;
 class KToggleAction;
 class KToggleAction;
-#ifdef WEBKIT_BUILD
 class KWebView;
-#else
-class KHTMLPart;
-#endif
 class KUrl;
 class KConfigSkeleton;
 
@@ -265,11 +260,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   void setHeaderStyleAndStrategy( const HeaderStyle * style,
                                   const HeaderStrategy * strategy );
-#ifdef WEBKIT_BUILD
   KWebView *htmlPart() const;
-#else
-  KHTMLPart *htmlPart() const;
-#endif
 
   void writeConfig( bool withSync=true );
 

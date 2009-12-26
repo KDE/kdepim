@@ -40,15 +40,10 @@ using MessageViewer::TeeHtmlWriter;
 #include <kcursorsaver.h>
 #include <KFileDialog>
 #include <KGuiItem>
-#ifdef WEBKIT_BUILD
 #include <kwebview.h>
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
-#else
-#include <KHTMLPart>
-#include <KHTMLView>
-#endif
 #include <KMenu>
 #include <KMessageBox>
 #include <KMimeType>
@@ -73,14 +68,7 @@ using MessageViewer::TeeHtmlWriter;
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 
-#ifdef WEBKIT_BUILD
 #include <QWebElement>
-#else
-#include <dom/html_element.h>
-#include <dom/html_block.h>
-#include <dom/html_document.h>
-#include <dom/dom_string.h>
-#endif
 
 #include <mailtransport/errorattribute.h>
 
@@ -97,9 +85,7 @@ using MessageViewer::TeeHtmlWriter;
 #include <QTreeView>
 #include <QVBoxLayout>
 #include <QScrollBar>
-#ifdef WEBKIT_BUILD
 #include <QScrollArea>
-#endif
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
@@ -122,12 +108,8 @@ using MessageViewer::TeeHtmlWriter;
 #include "headerstyle.h"
 #include "headerstrategy.h"
 #include "htmlstatusbar.h"
-#ifdef WEBKIT_BUILD
 #include "webkitparthtmlwriter.h"
 #include <kparts/browserextension.h>
-#else
-#include "khtmlparthtmlwriter.h"
-#endif
 #include "mailsourceviewer.h"
 #include "mimetreemodel.h"
 #include "nodehelper.h"
@@ -143,8 +125,6 @@ using MessageViewer::TeeHtmlWriter;
 #include <kio/jobuidelegate.h>
 
 #include <gpgme++/error.h>
-
-#include "config-webkit.h"
 
 using namespace MailTransport;
 using namespace MessageViewer;
@@ -412,14 +392,12 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, MessageViewer::Viewer::View );
 
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
   const bool attachmentInHeader = false;
-  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical ) != 0;
-#else
+#if 0
   const bool attachmentInHeader = hasParentDivWithId( mViewer->nodeUnderMouse(), "attachmentInjectionPoint" );
-  const bool hasScrollbar = mViewer->view()->verticalScrollBar()->isVisible();
 #endif
+  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical ) != 0;
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
@@ -1085,11 +1063,7 @@ void ViewerPrivate::setStyleDependantFrameWidth()
 
 int ViewerPrivate::pointsToPixel(int pointSize) const
 {
-#ifdef WEBKIT_BUILD
   return (pointSize * mViewer->logicalDpiY() + 36) / 72;
-#else
-  return (pointSize * mViewer->view()->logicalDpiY() + 36) / 72;
-#endif
 }
 
 void ViewerPrivate::displaySplashPage( const QString &info )
@@ -1111,14 +1085,8 @@ void ViewerPrivate::displaySplashPage( const QString &info )
   QString catchPhrase = ""; //not enough space for a catch phrase at default window size i18n("Part of the Kontact Suite");
   QString quickDescription = i18n("The email client for the K Desktop Environment.");
 
-#ifdef WEBKIT_BUILD
   mViewer->setHtml( content.arg(fontSize).arg(appTitle).arg(catchPhrase).arg(quickDescription).arg(info), KUrl::fromPath( location ) );
   mViewer->show();
-#else
-  mViewer->begin(KUrl::fromPath( location ));
-  mViewer->write(content.arg(fontSize).arg(appTitle).arg(catchPhrase).arg(quickDescription).arg(info));
-  mViewer->end();
-#endif
 }
 
 void ViewerPrivate::enableMessageDisplay()
@@ -1334,19 +1302,15 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 
 void ViewerPrivate::initHtmlWidget(void)
 {
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
   QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptEnabled, false);
   QWebSettings::globalSettings()->setAttribute(QWebSettings::JavaEnabled, false);
   QWebSettings::globalSettings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
 
-#else
+#if 0
   mViewer->widget()->setFocusPolicy(Qt::WheelFocus);
   // Let's better be paranoid and disable plugins (it defaults to enabled):
-  mViewer->setPluginsEnabled(false);
-  mViewer->setJScriptEnabled(false); // just make this explicit
-  mViewer->setJavaEnabled(false);    // just make this explicit
   mViewer->setMetaRefreshEnabled(false);
   mViewer->setURLCursor( QCursor( Qt::PointingHandCursor ) );
   // Espen 2000-05-14: Getting rid of thick ugly frames
@@ -1355,11 +1319,7 @@ void ViewerPrivate::initHtmlWidget(void)
   mViewer->view()->viewport()->installEventFilter( this );
 #endif
   if ( !htmlWriter() ) {
-#ifdef WEBKIT_BUILD
     mPartHtmlWriter = new WebKitPartHtmlWriter( mViewer, 0 );
-#else
-    mPartHtmlWriter = new KHtmlPartHtmlWriter( mViewer, 0 );
-#endif
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
     mHtmlWriter = new TeeHtmlWriter( new FileHtmlWriter( QString() ),
                                      mPartHtmlWriter );
@@ -1387,9 +1347,8 @@ void ViewerPrivate::initHtmlWidget(void)
     metaTypesRegistered = true;
   }
 
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   connect(mViewer->browserExtension(),
           SIGNAL(openUrlRequest(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),this,
           SLOT(slotUrlOpen(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),
@@ -1429,11 +1388,7 @@ void ViewerPrivate::readConfig()
   KConfigGroup reader(Global::instance()->config(), "Reader");
 
   delete mCSSHelper;
-#ifdef WEBKIT_BUILD
   mCSSHelper = new CSSHelper( mViewer );
-#else
-  mCSSHelper = new CSSHelper( mViewer->view() );
-#endif
 
   mNoMDNsWhenEncrypted = mdnGroup.readEntry( "not-send-when-encrypted", true );
 
@@ -1836,11 +1791,10 @@ void ViewerPrivate::createWidgets() {
   mBox->setFrameStyle( mMimePartTree->frameStyle() );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
-#ifdef WEBKIT_BUILD
   mViewer = new KWebView( mBox );
-#else
-  mViewer = new KHTMLPart( mBox );
   mViewer->setObjectName( "mViewer" );
+  kWarning() << "WEBKIT: Disabled code in" << Q_FUNC_INFO;
+#if 0
   // Remove the shortcut for the selectAll action from khtml part. It's redefined to
   // CTRL-SHIFT-A in kmail and clashes with kmails CTRL-A action.
   KAction *selectAll = qobject_cast<KAction*>(
@@ -2298,9 +2252,8 @@ void ViewerPrivate::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments
 void ViewerPrivate::slotUrlOn(const QString &aUrl)
 {
   const KUrl url(aUrl);
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   if ( url.protocol() == "kmail" || url.protocol() == "x-kmail"
        || (url.protocol().isEmpty() && url.path().isEmpty()) ) {
     mViewer->setDNDEnabled( false );
@@ -2342,9 +2295,8 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
 
 void ViewerPrivate::slotFind()
 {
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   mViewer->findText();
 #endif
 }
@@ -2400,9 +2352,8 @@ void ViewerPrivate::updateReaderWin()
     return;
   }
 
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   mViewer->setOnlyLocalReferences( !htmlLoadExternal() );
 #endif
 
@@ -2426,10 +2377,9 @@ void ViewerPrivate::updateReaderWin()
   }
 
   if ( mSavedRelativePosition ) {
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
-    QScrollArea *scrollview = mViewer->view();
+#if 0
+  QScrollArea *scrollview = mViewer->view();
     scrollview->widget()->move( 0,
       qRound( scrollview->widget()->size().height() * mSavedRelativePosition ) );
 #endif
@@ -2599,11 +2549,7 @@ void ViewerPrivate::slotPrintMsg()
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
-#ifdef WEBKIT_BUILD
   mViewer->print( false );
-#else
-  mViewer->view()->print();
-#endif
 }
 
 
@@ -2620,9 +2566,8 @@ void ViewerPrivate::injectAttachments()
 {
   // inject attachments in header view
   // we have to do that after the otp has run so we also see encrypted parts
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   DOM::Document doc = mViewer->htmlDocument();
   DOM::Element injectionPoint = doc.getElementById( "attachmentInjectionPoint" );
   if ( injectionPoint.isNull() )
@@ -2908,11 +2853,7 @@ void ViewerPrivate::slotCopySelectedText()
 
 void ViewerPrivate::selectAll()
 {
-#ifdef WEBKIT_BUILD
   mViewer->page()->triggerAction(QWebPage::SelectAll);
-#else
-  mViewer->selectAll();
-#endif
 }
 
 void ViewerPrivate::slotUrlClicked()
@@ -3018,9 +2959,8 @@ void ViewerPrivate::slotSaveMessage()
 
 void ViewerPrivate::saveRelativePosition()
 {
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   const QScrollArea *scrollview = mViewer->view();
   mSavedRelativePosition = static_cast<float>( scrollview->widget()->pos().y() ) /
                            scrollview->widget()->size().height();
@@ -3086,9 +3026,8 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 
 void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
 {
-#ifdef WEBKIT_BUILD
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
   DOM::Document doc = mViewer->htmlDocument();
 
   // The anchors for this are created in ObjectTreeParser::parseObjectTree()
@@ -3136,7 +3075,6 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
 // Checks if the given node has a parent node that is a DIV which has an ID attribute
 // with the value specified here
 
-#ifdef WEBKIT_BUILD
 bool ViewerPrivate::hasParentDivWithId( const QWebElement &start, const QString &id )
 {
   if ( start.isNull() )
@@ -3153,26 +3091,6 @@ bool ViewerPrivate::hasParentDivWithId( const QWebElement &start, const QString 
 
  return false;
 }
-bool ViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &id ) {}
-#else
-bool ViewerPrivate::hasParentDivWithId( const DOM::Node &start, const QString &id )
-{
-  if ( start.isNull() )
-    return false;
-
-  if ( start.nodeName().string() == "div" ) {
-    for ( unsigned int i = 0; i < start.attributes().length(); i++ ) {
-      if ( start.attributes().item( i ).nodeName().string() == "id" &&
-           start.attributes().item( i ).nodeValue().string() == id )
-        return true;
-    }
-  }
-
-  if ( !start.parentNode().isNull() )
-    return hasParentDivWithId( start.parentNode(), id );
-  else return false;
-}
-#endif
 
 bool ViewerPrivate::disregardUmask() const
 {

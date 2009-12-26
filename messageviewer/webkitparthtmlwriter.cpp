@@ -33,8 +33,6 @@
 
 #include "webkitparthtmlwriter.h"
 
-#include "config-webkit.h"
-
 #include <kdebug.h>
 #include <kwebview.h>
 #include <kurl.h>
@@ -62,6 +60,8 @@ WebKitPartHtmlWriter::~WebKitPartHtmlWriter() {
 }
 
 void WebKitPartHtmlWriter::begin( const QString & css ) {
+  // The stylesheet is now included CSSHelper::htmlHead()
+  Q_UNUSED( css );
   if ( mState != Ended ) {
     kWarning() <<"WebKitPartHtmlWriter: begin() called on non-ended session!";
     reset();
@@ -76,14 +76,11 @@ void WebKitPartHtmlWriter::begin( const QString & css ) {
   mHtmlView->page()->mainFrame()->setScrollPosition( point );
 
   mHtmlView->load( QUrl() );
-  if ( !css.isEmpty() )
-    mCss = css;
   mState = Begun;
 }
 
 void WebKitPartHtmlWriter::end() {
   kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: end() called on non-begun or queued session!";
-  mHtml.insert( mHtml.indexOf( "<head>") + 6, "<style>" + mCss + "</style>" );
   mHtmlView->setHtml( mHtml, QUrl() );
   mHtmlView->show();
   mHtml.clear();
@@ -148,8 +145,12 @@ void WebKitPartHtmlWriter::resolveCidUrls()
   foreach( image, images )
   {
     KUrl url( image.attribute( "src", "" ) );
+    kDebug() << "url:" << url << "(proto: "<< url.protocol() << ", path:" << url.path() << ")";
+    kDebug()<< mEmbeddedPartMap.count();
+    kDebug()<< mEmbeddedPartMap;
     if ( url.protocol() == "cid" )
     {
+      kDebug() << "Got cid...";
       EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
       if ( it != mEmbeddedPartMap.constEnd() ) {
         kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();

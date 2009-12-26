@@ -339,8 +339,10 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
 void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & result ) {
   // ### (mmutz) default handling should go into the respective
   // ### bodypartformatters.
-  if ( !mHtmlWriter )
+  if ( !mHtmlWriter ) {
+    kWarning() << "no mHtmlWriter";
     return;
+  }
 
   // always show images in multipart/related when showing in html, not with an additional icon
   if ( result.isImage() && node->parent() &&

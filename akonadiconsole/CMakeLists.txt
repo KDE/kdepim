@@ -4,8 +4,6 @@ include_directories(${AKONADI_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIR})
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories(${CMAKE_SOURCE_DIR}/akonadi)
-# Temp for porting messageviewer to QtWebKit, to be removed once KHTML is removed
-include_directories(${CMAKE_BINARY_DIR}/messageviewer)
 
 if(NEPOMUK_FOUND)
   set(AKONADICONSOLE_EXTRA_LIBS ${NEPOMUK_LIBRARIES})

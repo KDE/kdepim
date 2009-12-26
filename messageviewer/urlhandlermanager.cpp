@@ -49,8 +49,6 @@
 #include <QProcess>
 #include <algorithm>
 
-#include "config-webkit.h"
-
 #include <QScrollArea>
 using std::for_each;
 using std::remove;
@@ -536,9 +534,8 @@ namespace {
   bool HtmlAnchorHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
     if ( url.hasHost() || url.path() != "/" || !url.hasRef() )
       return false;
-#ifdef WEBKIT_BUILD
     kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#else
+#if 0
     if ( w && !w->htmlPart()->gotoAnchor( url.ref() ) )
       static_cast<QScrollArea*>( w->htmlPart()->widget() )->ensureVisible( 0, 0 );
 #endif
