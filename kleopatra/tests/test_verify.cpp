@@ -34,6 +34,7 @@
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/verifydetachedjob.h>
+#include <kleo/keylistjob.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/verificationresult.h>
@@ -50,17 +51,31 @@ class VerifyTest : public QObject
     QByteArray mSignature;
     QByteArray mSignedData;
     QList<Kleo::VerifyDetachedJob*> mParallelJobs;
+    QList<Kleo::KeyListJob*> mKeyListJobs;
     const Kleo::CryptoBackend::Protocol * mBackend;
     QEventLoop mEventLoop;
 
   public slots:
-
-    void slotParallelJobFinished( GpgME::VerificationResult result )
+    void slotParallelKeyListJobFinished()
+    {
+      mKeyListJobs.removeAll( static_cast<Kleo::KeyListJob*>( sender() ) );
+      if ( mParallelJobs.isEmpty() && mKeyListJobs.isEmpty() )
+        mEventLoop.quit();
+    }
+        
+    void slotParallelVerifyJobFinished( GpgME::VerificationResult result )
     {
       QVERIFY( mParallelJobs.contains( static_cast<Kleo::VerifyDetachedJob*>( sender() ) ) );
       QCOMPARE( result.signature( 0 ).validity(), GpgME::Signature::Full );
       mParallelJobs.removeAll( static_cast<Kleo::VerifyDetachedJob*>( sender() ) );
-      if ( mParallelJobs.isEmpty() )
+
+      Kleo::KeyListJob *job = mBackend->keyListJob();
+      mKeyListJobs.append( job );
+      connect( job, SIGNAL( done() ),
+               this, SLOT( slotParallelKeyListJobFinished() ) );
+      QVERIFY( !job->start( QStringList( QString::fromLatin1( result.signature( 0 ).fingerprint() ) ) ) );
+
+      if ( mParallelJobs.isEmpty() && mKeyListJobs.isEmpty() )
         mEventLoop.quit();
     }
 
@@ -110,7 +125,7 @@ class VerifyTest : public QObject
         mParallelJobs.append( job );
         QVERIFY( !job->start( mSignature, mSignedData ) );
         connect( job, SIGNAL( result( GpgME::VerificationResult ) ),
-                 this, SLOT( slotParallelJobFinished( GpgME::VerificationResult ) ) );
+                 this, SLOT( slotParallelVerifyJobFinished( GpgME::VerificationResult ) ) );
       }
 
       mEventLoop.exec();
