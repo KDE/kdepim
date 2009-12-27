@@ -54,6 +54,8 @@ class VerifyTest : public QObject
     QList<Kleo::KeyListJob*> mKeyListJobs;
     const Kleo::CryptoBackend::Protocol * mBackend;
     QEventLoop mEventLoop;
+    int mJobsStarted;
+    QStringList mKeyListPattern;
 
   public slots:
     void slotParallelKeyListJobFinished()
@@ -73,10 +75,31 @@ class VerifyTest : public QObject
       mKeyListJobs.append( job );
       connect( job, SIGNAL( done() ),
                this, SLOT( slotParallelKeyListJobFinished() ) );
-      QVERIFY( !job->start( QStringList( QString::fromLatin1( result.signature( 0 ).fingerprint() ) ) ) );
+      QVERIFY( !job->start( mKeyListPattern ) );
 
       if ( mParallelJobs.isEmpty() && mKeyListJobs.isEmpty() )
         mEventLoop.quit();
+    }
+
+    void startAnotherJob()
+    {
+      if ( qrand() % 2 == 0 ) {
+        Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
+        mParallelJobs.append( job );
+        QVERIFY( !job->start( mSignature, mSignedData ) );
+      }
+      else {
+        Kleo::KeyListJob *job = mBackend->keyListJob();
+        QVERIFY( !job->start( mKeyListPattern ) );
+      }
+
+      mJobsStarted++;
+      if ( mJobsStarted >= 250 ) {
+        QTimer::singleShot( 1000, &mEventLoop, SLOT( quit() ) );
+      }
+      else {
+        QTimer::singleShot( qrand() % 100, this, SLOT( startAnotherJob() ) );
+      }
     }
 
   private slots:
@@ -115,6 +138,8 @@ class VerifyTest : public QObject
       QCOMPARE( sig.summary() & GpgME::Signature::KeyMissing, 0 );
       QCOMPARE( (quint64) sig.creationTime(), Q_UINT64_C( 1189650248 ) );
       QCOMPARE( sig.validity(), GpgME::Signature::Full );
+
+      mKeyListPattern = QStringList( QString::fromLatin1( result.signature( 0 ).fingerprint() ) );
     }
 
     // Run multiple verify jobs in parallel, to exercise bug 208353
@@ -128,6 +153,13 @@ class VerifyTest : public QObject
                  this, SLOT( slotParallelVerifyJobFinished( GpgME::VerificationResult ) ) );
       }
 
+      mEventLoop.exec();
+    }
+
+    void testMixedParallelJobs()
+    {
+      mJobsStarted = 0;
+      QTimer::singleShot( 0, this, SLOT( startAnotherJob() ) );
       mEventLoop.exec();
     }
 };
