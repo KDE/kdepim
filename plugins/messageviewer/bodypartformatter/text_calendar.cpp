@@ -36,7 +36,7 @@
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/khtmlparthtmlwriter.h>
+#include <messageviewer/webkitparthtmlwriter.h>
 
 #include <kcal/calendarlocal.h>
 #include <kcal/calendarresources.h>
