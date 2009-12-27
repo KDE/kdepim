@@ -32,7 +32,7 @@
 #include <messageviewer/interfaces/bodypartformatter.h>
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
-#include <messageviewer/khtmlparthtmlwriter.h>
+#include <messageviewer/webkitparthtmlwriter.h>
 
 #include <kglobal.h>
 #include <klocale.h>
@@ -77,7 +77,7 @@ namespace {
 
       static const QLatin1String tableStyle(
         "style=\""
-        "text-align: -khtml-auto; "
+        "text-align: left; "
         "border: solid black 1px; "
         "padding: 0.5em; "
         "margin: 0em;\"");
