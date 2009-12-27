@@ -1953,10 +1953,12 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
     // Record only
     html += "<td>" + helper->makeLink( "record", i18n( "[Record]" ) ) + "</td>";
     html += space;
+    html += "<td>" + helper->makeLink( "delete", i18n( "[Move to Trash]" ) ) + "</td>";
+    html += space;
   } else {
     // Accept
     html += "<td>" + helper->makeLink( "accept", i18n( "[Accept]" ) ) + "</td>";
-    html += "<td> &nbsp; </td>";
+    html += space;
 
     // Tentative
     html += "<td>" + helper->makeLink( "accept_conditionally",
