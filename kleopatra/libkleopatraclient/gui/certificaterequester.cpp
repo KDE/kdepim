@@ -43,12 +43,12 @@ public:
         : q( qq ),
           selectedCertificates(),
           command(),
-          multipleCertificatesAllowed(),
-          onlySigningCertificatesAllowed(),
-          onlyEncryptionCertificatesAllowed(),
-          onlyOpenPGPCertificatesAllowed(),
-          onlyX509CertificatesAllowed(),
-          onlySecretKeysAllowed(),
+          multipleCertificatesAllowed( false ),
+          onlySigningCertificatesAllowed( false ),
+          onlyEncryptionCertificatesAllowed( false ),
+          onlyOpenPGPCertificatesAllowed( false ),
+          onlyX509CertificatesAllowed( false ),
+          onlySecretKeysAllowed( false ),
           ui( q )
     {
 
