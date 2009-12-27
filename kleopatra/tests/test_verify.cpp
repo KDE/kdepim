@@ -46,14 +46,29 @@ Q_DECLARE_METATYPE( GpgME::VerificationResult )
 class VerifyTest : public QObject
 {
   Q_OBJECT
+  private:
+    QByteArray mSignature;
+    QByteArray mSignedData;
+    QList<Kleo::VerifyDetachedJob*> mParallelJobs;
+    const Kleo::CryptoBackend::Protocol * mBackend;
+    QEventLoop mEventLoop;
+
+  public slots:
+
+    void slotParallelJobFinished( GpgME::VerificationResult result )
+    {
+      QVERIFY( mParallelJobs.contains( static_cast<Kleo::VerifyDetachedJob*>( sender() ) ) );
+      QCOMPARE( result.signature( 0 ).validity(), GpgME::Signature::Full );
+      mParallelJobs.removeAll( static_cast<Kleo::VerifyDetachedJob*>( sender() ) );
+      if ( mParallelJobs.isEmpty() )
+        mEventLoop.quit();
+    }
+
   private slots:
     void initTestCase()
     {
       qRegisterMetaType<GpgME::VerificationResult>();
-    }
 
-    void testVerify()
-    {
       const QString sigFileName = KLEO_TEST_DATADIR "/test.data.sig";
       const QString dataFileName = KLEO_TEST_DATADIR "/test.data";
 
@@ -62,12 +77,18 @@ class VerifyTest : public QObject
       QFile dataFile( dataFileName );
       QVERIFY( dataFile.open(QFile::ReadOnly ) );
 
-      const Kleo::CryptoBackend::Protocol * const backend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+      mSignature = sigFile.readAll();
+      mSignedData = dataFile.readAll();
 
-      Kleo::VerifyDetachedJob *job = backend->verifyDetachedJob();
+      mBackend = Kleo::CryptoBackendFactory::instance()->protocol( "openpgp" );
+    }
+
+    void testVerify()
+    {
+      Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
       QSignalSpy spy( job, SIGNAL(result(GpgME::VerificationResult)) );
       QVERIFY( spy.isValid() );
-      GpgME::Error err = job->start( sigFile.readAll(), dataFile.readAll() );
+      GpgME::Error err = job->start( mSignature, mSignedData );
       QVERIFY( !err );
       QTest::qWait( 1000 ); // ### we need to enter the event loop, can be done nicer though
 
@@ -79,6 +100,20 @@ class VerifyTest : public QObject
       QCOMPARE( sig.summary() & GpgME::Signature::KeyMissing, 0 );
       QCOMPARE( (quint64) sig.creationTime(), Q_UINT64_C( 1189650248 ) );
       QCOMPARE( sig.validity(), GpgME::Signature::Full );
+    }
+
+    // Run multiple verify jobs in parallel, to exercise bug 208353
+    void testParallelVerify()
+    {
+      for ( int i = 0; i < 100; i++ ) {
+        Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
+        mParallelJobs.append( job );
+        QVERIFY( !job->start( mSignature, mSignedData ) );
+        connect( job, SIGNAL( result( GpgME::VerificationResult ) ),
+                 this, SLOT( slotParallelJobFinished( GpgME::VerificationResult ) ) );
+      }
+
+      mEventLoop.exec();
     }
 };
 
