@@ -789,6 +789,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         }
       }
 
+      if ( path == "delete" ) {
+        ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+        result = true;
+      }
+
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         QString name = path;
         name.remove( QRegExp( "^ATTACH:" ) );
@@ -856,6 +861,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n( "Record response into my calendar" );
         if ( path == "record" )
           return i18n( "Record invitation into my calendar" );
+        if ( path == "delete" )
+          return i18n( "Move this invitation to my trash folder" );
         if ( path == "delegate" )
           return i18n( "Delegate invitation" );
         if ( path == "forward" )
