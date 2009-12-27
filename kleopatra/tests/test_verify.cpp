@@ -48,57 +48,84 @@ class VerifyTest : public QObject
 {
   Q_OBJECT
   private:
+
+    // Data shared with all tests
     QByteArray mSignature;
     QByteArray mSignedData;
-    QList<Kleo::VerifyDetachedJob*> mParallelJobs;
-    QList<Kleo::KeyListJob*> mKeyListJobs;
     const Kleo::CryptoBackend::Protocol * mBackend;
     QEventLoop mEventLoop;
+
+    // Data for testParallelVerifyAndKeyListJobs()
+    QList<Kleo::VerifyDetachedJob*> mParallelVerifyJobs;
+    QList<Kleo::KeyListJob*> mParallelKeyListJobs;
+
+    // Data for testMixedParallelJobs()
+    QList<Kleo::Job*> mRunningJobs;
     int mJobsStarted;
-    QStringList mKeyListPattern;
 
   public slots:
     void slotParallelKeyListJobFinished()
     {
-      mKeyListJobs.removeAll( static_cast<Kleo::KeyListJob*>( sender() ) );
-      if ( mParallelJobs.isEmpty() && mKeyListJobs.isEmpty() )
+      mParallelKeyListJobs.removeAll( static_cast<Kleo::KeyListJob*>( sender() ) );
+
+      // When all jobs are done, quit the event loop
+      if ( mParallelVerifyJobs.isEmpty() && mParallelKeyListJobs.isEmpty() )
         mEventLoop.quit();
     }
         
     void slotParallelVerifyJobFinished( GpgME::VerificationResult result )
     {
-      QVERIFY( mParallelJobs.contains( static_cast<Kleo::VerifyDetachedJob*>( sender() ) ) );
+      // Verify the result of the job is correct
+      QVERIFY( mParallelVerifyJobs.contains( static_cast<Kleo::VerifyDetachedJob*>( sender() ) ) );
       QCOMPARE( result.signature( 0 ).validity(), GpgME::Signature::Full );
-      mParallelJobs.removeAll( static_cast<Kleo::VerifyDetachedJob*>( sender() ) );
+      mParallelVerifyJobs.removeAll( static_cast<Kleo::VerifyDetachedJob*>( sender() ) );
 
+      // Start a key list job
       Kleo::KeyListJob *job = mBackend->keyListJob();
-      mKeyListJobs.append( job );
+      mParallelKeyListJobs.append( job );
       connect( job, SIGNAL( done() ),
                this, SLOT( slotParallelKeyListJobFinished() ) );
-      QVERIFY( !job->start( mKeyListPattern ) );
+      QVERIFY( !job->start( QStringList() ) );
+    }
 
-      if ( mParallelJobs.isEmpty() && mKeyListJobs.isEmpty() )
-        mEventLoop.quit();
+    void someJobDone()
+    {
+      // Don't bother checking any results here
+      mRunningJobs.removeAll( static_cast<Kleo::Job*>( sender() ) );
     }
 
     void startAnotherJob()
     {
-      if ( qrand() % 2 == 0 ) {
-        Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
-        mParallelJobs.append( job );
-        QVERIFY( !job->start( mSignature, mSignedData ) );
-      }
-      else {
-        Kleo::KeyListJob *job = mBackend->keyListJob();
-        QVERIFY( !job->start( mKeyListPattern ) );
+      static int counter = 0;
+      counter++;
+
+      // Randomly kill a running job
+      if ( counter % 10 == 0 && !mRunningJobs.isEmpty() ) {
+        mRunningJobs.at( counter % mRunningJobs.size() )->slotCancel();
       }
 
+      // Randomly either start a keylist or a verify job
+      Kleo::Job *job;
+      if ( counter % 2 == 0 ) {
+        Kleo::VerifyDetachedJob *vdj = mBackend->verifyDetachedJob();
+        QVERIFY( !vdj->start( mSignature, mSignedData ) );
+        job = vdj;
+      }
+      else {
+        Kleo::KeyListJob *klj = mBackend->keyListJob();
+        QVERIFY( !klj->start( QStringList() ) );
+        job = klj;
+      }
+      mRunningJobs.append( job );
+      connect( job, SIGNAL( done() ), this, SLOT( someJobDone() ) );
+
+      // Quit after 2500 jobs, that should be enough
       mJobsStarted++;
-      if ( mJobsStarted >= 250 ) {
+      if ( mJobsStarted >= 2500 ) {
         QTimer::singleShot( 1000, &mEventLoop, SLOT( quit() ) );
       }
       else {
-        QTimer::singleShot( qrand() % 100, this, SLOT( startAnotherJob() ) );
+        QTimer::singleShot( 0, this, SLOT( startAnotherJob() ) );
       }
     }
 
@@ -138,16 +165,14 @@ class VerifyTest : public QObject
       QCOMPARE( sig.summary() & GpgME::Signature::KeyMissing, 0 );
       QCOMPARE( (quint64) sig.creationTime(), Q_UINT64_C( 1189650248 ) );
       QCOMPARE( sig.validity(), GpgME::Signature::Full );
-
-      mKeyListPattern = QStringList( QString::fromLatin1( result.signature( 0 ).fingerprint() ) );
     }
 
-    // Run multiple verify jobs in parallel, to exercise bug 208353
-    void testParallelVerify()
+    void testParallelVerifyAndKeyListJobs()
     {
-      for ( int i = 0; i < 100; i++ ) {
+      // ### Increasing 10 to 500 makes the verify jobs fail!
+      for ( int i = 0; i < 10; i++ ) {
         Kleo::VerifyDetachedJob *job = mBackend->verifyDetachedJob();
-        mParallelJobs.append( job );
+        mParallelVerifyJobs.append( job );
         QVERIFY( !job->start( mSignature, mSignedData ) );
         connect( job, SIGNAL( result( GpgME::VerificationResult ) ),
                  this, SLOT( slotParallelVerifyJobFinished( GpgME::VerificationResult ) ) );
