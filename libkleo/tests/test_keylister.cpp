@@ -99,7 +99,7 @@ CertListView::CertListView( QWidget * parent, Qt::WFlags f )
 CertListView::~CertListView() {}
 
 void CertListView::slotResult( const GpgME::KeyListResult & result ) {
-  kDebug() <<"CertListView::slotResult()";
+  kDebug(5150) <<"CertListView::slotResult()";
   if ( result.isNull() )
     QMessageBox::information( this, "Key Listing Result", "KeyListResult is null!" );
   else if ( result.error() )
@@ -112,7 +112,7 @@ void CertListView::slotResult( const GpgME::KeyListResult & result ) {
 }
 
 void CertListView::slotStart() {
-  kDebug() <<"CertListView::slotStart()";
+  kDebug(5150) <<"CertListView::slotStart()";
   Kleo::KeyListJob * job = Kleo::CryptoBackendFactory::instance()->smime()->keyListJob( false );
   assert( job );
   QObject::connect( job, SIGNAL(nextKey(const GpgME::Key&)),

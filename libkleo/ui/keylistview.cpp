@@ -179,14 +179,14 @@ bool Kleo::KeyListView::showToolTip( const QPoint& p )
 
 
 void Kleo::KeyListView::insertItem( Q3ListViewItem * qlvi ) {
-  //kDebug() <<"Kleo::KeyListView::insertItem(" << qlvi <<" )";
+  //kDebug(5150) <<"Kleo::KeyListView::insertItem(" << qlvi <<" )";
   K3ListView::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     registerItem( item );
 }
 
 void Kleo::KeyListView::takeItem( Q3ListViewItem * qlvi ) {
-  //kDebug() <<"Kleo::KeyListView::takeItem(" << qlvi <<" )";
+  //kDebug(5150) <<"Kleo::KeyListView::takeItem(" << qlvi <<" )";
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     deregisterItem( item );
   K3ListView::takeItem( qlvi );
@@ -241,7 +241,7 @@ void Kleo::KeyListView::clear() {
 }
 
 void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
-  //kDebug() <<"registerItem(" << item <<" )";
+  //kDebug(5150) <<"registerItem(" << item <<" )";
   if ( !item )
     return;
   const QByteArray fpr = item->key().primaryFingerprint();
@@ -250,7 +250,7 @@ void Kleo::KeyListView::registerItem( KeyListViewItem * item ) {
 }
 
 void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
-  //kDebug() <<"deregisterItem( KeyLVI:" << item <<" )";
+  //kDebug(5150) <<"deregisterItem( KeyLVI:" << item <<" )";
   if ( !item )
     return;
   std::map<QByteArray,KeyListViewItem*>::iterator it
@@ -462,14 +462,14 @@ void Kleo::KeyListViewItem::paintCell( QPainter * p, const QColorGroup & cg, int
 }
 
 void Kleo::KeyListViewItem::insertItem( Q3ListViewItem * qlvi ) {
-  //kDebug() <<"Kleo::KeyListViewItem::insertItem(" << qlvi <<" )";
+  //kDebug(5150) <<"Kleo::KeyListViewItem::insertItem(" << qlvi <<" )";
   Q3ListViewItem::insertItem( qlvi );
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     listView()->registerItem( item );
 }
 
 void Kleo::KeyListViewItem::takeItem( Q3ListViewItem * qlvi ) {
-  //kDebug() <<"Kleo::KeyListViewItem::takeItem(" << qlvi <<" )";
+  //kDebug(5150) <<"Kleo::KeyListViewItem::takeItem(" << qlvi <<" )";
   if ( KeyListViewItem * item = lvi_cast<KeyListViewItem>( qlvi ) )
     listView()->deregisterItem( item );
   Q3ListViewItem::takeItem( qlvi );

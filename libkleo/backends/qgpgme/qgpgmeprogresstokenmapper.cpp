@@ -33,9 +33,9 @@
 #include "qgpgmeprogresstokenmapper.h"
 
 #include <klocale.h>
+#include <KDebug>
 
 #include <QString>
-#include <QDebug>
 
 #include <boost/range.hpp>
 
@@ -102,7 +102,7 @@ QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoke
   if ( token.startsWith( "file:" ) )
     return QString(); // gpgme's job
 
-  qDebug() << "QGpgMEProgressTokenMapper::map(" << token << subtoken << ")";
+  kDebug(5150) << token << subtoken;
 
   for ( const _tokens * it = boost::begin( tokens ), *end = boost::end( tokens ) ; it != end ; ++it ) {
     if ( token.compare( QLatin1String( it->token ), Qt::CaseInsensitive ) == 0 ) {

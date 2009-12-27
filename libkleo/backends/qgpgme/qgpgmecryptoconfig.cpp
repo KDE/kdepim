@@ -435,7 +435,7 @@ static QString urlpart_encode( const QString& str )
   QString enc( str );
   enc.replace( '%', "%25" ); // first!
   enc.replace( ':', "%3a" );
-  //kDebug() <<"  urlpart_encode:" << str <<" ->" << enc;
+  //kDebug(5150) <<"  urlpart_encode:" << str <<" ->" << enc;
   return enc;
 }
 

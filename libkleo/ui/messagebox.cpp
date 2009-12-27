@@ -286,23 +286,23 @@ void MessageBox::error( QWidget * parent, const SigningResult & sresult, const E
 // static
 bool MessageBox::showAuditLogButton( const Kleo::Job * job ) {
     if ( !job ) {
-        kDebug() << "not showing audit log button (no job instance)";
+        kDebug(5150) << "not showing audit log button (no job instance)";
         return false;
     }
     if ( !GpgME::hasFeature( GpgME::AuditLogFeature ) ) {
-        kDebug() << "not showing audit log button (gpgme too old)";
+        kDebug(5150) << "not showing audit log button (gpgme too old)";
         return false;
     }
     if ( !job->isAuditLogSupported() ) {
-        kDebug() << "not showing audit log button (not supported)";
+        kDebug(5150) << "not showing audit log button (not supported)";
         return false;
     }
     if ( job->auditLogError().code() == GPG_ERR_NO_DATA ) {
-        kDebug() << "not showing audit log button (GPG_ERR_NO_DATA)";
+        kDebug(5150) << "not showing audit log button (GPG_ERR_NO_DATA)";
         return false;
     }
     if ( !job->auditLogError() && job->auditLogAsHtml().isEmpty() ) {
-        kDebug() << "not showing audit log button (success, but result empty)";
+        kDebug(5150) << "not showing audit log button (success, but result empty)";
         return false;
     }
     return true;

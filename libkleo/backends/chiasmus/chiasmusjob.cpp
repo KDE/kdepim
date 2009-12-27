@@ -156,7 +156,7 @@ GpgME::Error Kleo::ChiasmusJob::finished() {
 }
 
 void Kleo::ChiasmusJob::showChiasmusOutput() {
-  kDebug() ;
+  kDebug(5150) ;
   if ( mStderr.isEmpty() )
     return;
   KMessageBox::information( 0 /*how to get a parent widget?*/,
