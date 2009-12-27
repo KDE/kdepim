@@ -871,6 +871,35 @@ static QString invitationRow( const QString &cell1, const QString &cell2 )
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
 }
 
+static Attendee *findDelegatedFromMyAttendee( Incidence *incidence )
+{
+  // Return the first attendee that was delegated-from me
+
+  Attendee *attendee = 0;
+  if ( !incidence ) {
+    return attendee;
+  }
+
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+    settings.setProfile( *it );
+
+    QString delegatorName, delegatorEmail;
+    Attendee::List attendees = incidence->attendees();
+    Attendee::List::ConstIterator it2;
+    for ( it2 = attendees.begin(); it2 != attendees.end(); ++it2 ) {
+      Attendee *a = *it2;
+      KPIM::getNameAndMail( a->delegator(), delegatorName, delegatorEmail );
+      if ( settings.getSetting( KEMailSettings::EmailAddress ) == delegatorEmail ) {
+        attendee = a;
+        break;
+      }
+    }
+  }
+  return attendee;
+}
+
 static Attendee *findMyAttendee( Incidence *incidence )
 {
   // Return the attendee for the incidence that is probably me
@@ -1914,6 +1943,53 @@ static bool incidenceOwnedByMe( Calendar *calendar, Incidence *incidence )
   return true;
 }
 
+static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
+                                InvitationFormatterHelper *helper )
+{
+  QString html;
+  QString space = "<td> &nbsp; </td>";
+
+  if ( !rsvpReq ) {
+    // Record only
+    html += "<td>" + helper->makeLink( "record", i18n( "[Record]" ) ) + "</td>";
+    html += space;
+  } else {
+    // Accept
+    html += "<td>" + helper->makeLink( "accept", i18n( "[Accept]" ) ) + "</td>";
+    html += "<td> &nbsp; </td>";
+
+    // Tentative
+    html += "<td>" + helper->makeLink( "accept_conditionally",
+                                       i18n( "Accept conditionally", "[Accept cond.]" ) ) + "</td>";
+    html += space;
+
+    // Counter proposal
+    html += "<td>" + helper->makeLink( "counter", i18n( "[Counter proposal]" ) ) + "</td>";
+    html += space;
+
+    // Decline
+    html += "<td>" + helper->makeLink( "decline", i18n( "[Decline]" ) ) + "</td>";
+    html += space;
+  }
+
+  if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
+    // Delegate
+    html += "<td>" + helper->makeLink( "delegate", i18n( "[Delegate]" ) ) + "</td>";
+    html += space;
+
+    // Forward
+    html += "<td>" + helper->makeLink( "forward", i18n( "[Forward]" ) ) + "</td>";
+    html += space;
+
+    // Check calendar
+    if ( inc && inc->type() == "Event" ) {
+      html += "<td>" + helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) ) + "</td>";
+      html += space;
+    }
+  }
+  return html;
+}
+
 QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
                                                         Calendar *mCalendar,
                                                         InvitationFormatterHelper *helper,
@@ -2058,7 +2134,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   // Add groupware links
 
-  html += "<br><table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
+  html += "<br><table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr>";
 
   switch ( msg->method() ) {
     case Scheduler::Publish:
@@ -2067,6 +2143,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     case Scheduler::Add:
     {
       if ( inc && inc->revision() > 0 && ( existingIncidence || !helper->calendar() ) ) {
+        html += "<tr>";
         if ( inc->type() == "Todo" ) {
           html += "<td colspan=\"9\">";
           html += helper->makeLink( "reply", i18n( "[Record invitation in my task list]" ) );
@@ -2074,63 +2151,26 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
           html += "<td colspan=\"13\">";
           html += helper->makeLink( "reply", i18n( "[Record invitation in my calendar]" ) );
         }
-        html += "</td></tr><tr>";
+        html += "</td></tr>";
       }
-      html += "<td>";
 
       if ( !myInc ) {
-        if ( !rsvpReq ) {
-          // Record only
-          html += helper->makeLink( "record", i18n( "[Record]" ) );
-          html += "</td><td> &nbsp; </td><td>";
-        }
-
-        if ( rsvpReq ) {
-          // Accept
-          html += helper->makeLink( "accept", i18n( "[Accept]" ) );
-          html += "</td><td> &nbsp; </td><td>";
-          html += helper->makeLink( "accept_conditionally",
-                                    i18n( "Accept conditionally", "[Accept cond.]" ) );
-          html += "</td><td> &nbsp; </td><td>";
-        }
-
-        if ( rsvpReq ) {
-          // Counter proposal
-          html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
-          html += "</td><td> &nbsp; </td><td>";
-        }
-
-        if ( rsvpReq ) {
-          // Decline
-          html += helper->makeLink( "decline", i18n( "[Decline]" ) );
-          html += "</td><td> &nbsp; </td><td>";
-        }
-
-        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
-          // Delegate
-          html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
-          html += "</td><td> &nbsp; </td><td>";
-
-          // Forward
-          html += helper->makeLink( "forward", i18n( "[Forward]" ) );
-
-          // Check calendar
-          if ( inc && inc->type() == "Event" ) {
-            html += "</td><td> &nbsp; </td><td>";
-            html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
-          }
-        }
+        html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
       }
       break;
     }
 
     case Scheduler::Cancel:
       // Remove invitation
+      html += "<tr>";
       if ( inc->type() == "Todo" ) {
+        html += "<td colspan=\"9\">";
         html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
       } else {
+        html += "<td colspan=\"13\">";
         html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
       }
+      html += "</td></tr>";
       break;
 
     case Scheduler::Reply:
@@ -2139,6 +2179,20 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       Attendee *a = 0;
       Attendee *ea = 0;
       if ( inc ) {
+        // find first attendee who is delegated-from me
+        // look a their PARTSTAT response
+        // if the response is declined, then we need to start over which means putting
+        // all the action buttons and NOT putting on the [Record response..] button
+        a = findDelegatedFromMyAttendee( inc );
+        if ( a ) {
+          if ( a->status() != Attendee::Accepted ||
+               a->status() != Attendee::Tentative ) {
+            html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
+            break;
+          }
+        }
+
+        // record
         a = inc->attendees().first();
         if ( a ) {
           ea = findAttendee( existingIncidence, a->email() );
@@ -2152,11 +2206,13 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         }
       } else {
         if ( inc ) {
+          html += "<tr><td>";
           if ( inc->type() == "Todo" ) {
             html += helper->makeLink( "reply", i18n( "[Record response in my task list]" ) );
           } else {
             html += helper->makeLink( "reply", i18n( "[Record response in my calendar]" ) );
           }
+          html += "</td></tr>";
         }
       }
       break;
@@ -2164,11 +2220,12 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
     case Scheduler::Counter:
       // Counter proposal
-      html += helper->makeLink( "accept_counter", i18n("[Accept]") );
-      html += "&nbsp;";
-      html += helper->makeLink( "decline_counter", i18n("[Decline]") );
-      html += "&nbsp;";
-      html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+      html += "<tr>";
+      html += "<td>" + helper->makeLink( "accept_counter", i18n("[Accept]") ) + "</td>";
+      html += "<td> &nbsp; </td>";
+      html += "<td>" + helper->makeLink( "decline_counter", i18n("[Decline]") ) + "</td>";
+      html += "<td> &nbsp; </td>";
+      html += "<td>" + helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) ) + "</td>";
       break;
 
     case Scheduler::Declinecounter:
