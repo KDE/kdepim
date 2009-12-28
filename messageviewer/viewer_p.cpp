@@ -123,6 +123,7 @@ using MessageViewer::TeeHtmlWriter;
 #include "interfaces/htmlwriter.h"
 
 #include <kio/jobuidelegate.h>
+#include <kio/accessmanager.h>
 
 #include <gpgme++/error.h>
 
@@ -188,6 +189,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
   mMsgDisplay = true;
   mPrinting = false;
 
+  mAccessManager = new KIO::AccessManager( this );
   createWidgets();
   createActions();
   initHtmlWidget();
@@ -1303,10 +1305,11 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 void ViewerPrivate::initHtmlWidget(void)
 {
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+  mViewer->page()->setNetworkAccessManager( mAccessManager );
+  mViewer->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptEnabled, false);
   QWebSettings::globalSettings()->setAttribute(QWebSettings::JavaEnabled, false);
   QWebSettings::globalSettings()->setAttribute(QWebSettings::PluginsEnabled, false);
-
 
 #if 0
   mViewer->widget()->setFocusPolicy(Qt::WheelFocus);
@@ -1348,17 +1351,14 @@ void ViewerPrivate::initHtmlWidget(void)
   }
 
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+  connect(mViewer->page(), SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ),
+          this, SLOT( slotUrlOn(const QString &, const QString &, const QString & )));
+  connect(mViewer->page(), SIGNAL( linkClicked( const QUrl & ) ),this, SLOT( slotUrlOpen( const QUrl & ) ), Qt::QueuedConnection);
 #if 0
-  connect(mViewer->browserExtension(),
-          SIGNAL(openUrlRequest(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),this,
-          SLOT(slotUrlOpen(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),
-          Qt::QueuedConnection);
   connect(mViewer->browserExtension(),
           SIGNAL(createNewWindow(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),this,
           SLOT(slotUrlOpen(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),
           Qt::QueuedConnection);
-  connect(mViewer,SIGNAL(onURL(const QString &)),this,
-          SLOT(slotUrlOn(const QString &)));
   connect(mViewer,SIGNAL(popupMenu(const QString &, const QPoint &)),
           SLOT(slotUrlPopup(const QString &, const QPoint &)));
 #endif
@@ -2227,18 +2227,9 @@ void ViewerPrivate::update( Viewer::UpdateMode updateMode )
 }
 
 
-void ViewerPrivate::slotUrlOpen( const KUrl &url )
+void ViewerPrivate::slotUrlOpen( const QUrl& url )
 {
-  kDebug() << "slotUrlOpen " << url;
-  if ( !url.isEmpty() ) {
-    mUrlClicked = url;
-  }
-  slotUrlOpen( mUrlClicked, KParts::OpenUrlArguments(), KParts::BrowserArguments() );
-}
-
-
-void ViewerPrivate::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)
-{
+  KUrl aUrl(url);
   mUrlClicked = aUrl;
 
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
@@ -2249,9 +2240,12 @@ void ViewerPrivate::slotUrlOpen(const KUrl &aUrl, const KParts::OpenUrlArguments
 }
 
 
-void ViewerPrivate::slotUrlOn(const QString &aUrl)
+void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const QString& textContent
+)
 {
-  const KUrl url(aUrl);
+  Q_UNUSED(title)
+  Q_UNUSED(textContent)
+  const KUrl url(link);
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
 #if 0
   if ( url.protocol() == "kmail" || url.protocol() == "x-kmail"
@@ -2262,7 +2256,7 @@ void ViewerPrivate::slotUrlOn(const QString &aUrl)
   }
 #endif
 
-  if ( aUrl.trimmed().isEmpty() ) {
+  if ( link.trimmed().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
     return;
   }
@@ -2352,10 +2346,7 @@ void ViewerPrivate::updateReaderWin()
     return;
   }
 
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  mViewer->setOnlyLocalReferences( !htmlLoadExternal() );
-#endif
+  mAccessManager->setExternalContentAllowed( htmlLoadExternal() );
 
   htmlWriter()->reset();
   //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
@@ -2377,12 +2368,7 @@ void ViewerPrivate::updateReaderWin()
   }
 
   if ( mSavedRelativePosition ) {
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  QScrollArea *scrollview = mViewer->view();
-    scrollview->widget()->move( 0,
-      qRound( scrollview->widget()->size().height() * mSavedRelativePosition ) );
-#endif
+    mViewer->page()->currentFrame()->setScrollBarValue( Qt::Vertical, qRound( mViewer->page()->viewportSize().height() * mSavedRelativePosition ) );
     mSavedRelativePosition = 0;
   }
 }

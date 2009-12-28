@@ -35,6 +35,8 @@
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
+#include <kio/accessmanager.h>
+#include <kresources/groupwise/soap/soapStub.h>
 
 using KPIM::MessageStatus;
 namespace GpgME { class Error; }
@@ -385,14 +387,11 @@ private slots:
 
 
 public slots:
-
-  void slotUrlOpen( const KUrl &url = KUrl() );
-
   /** An URL has been activate with a click. */
-  void slotUrlOpen(const KUrl &url, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &);
+  void slotUrlOpen( const QUrl &url);
 
   /** The mouse has moved on or off an URL. */
-  void slotUrlOn(const QString &url);
+  void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
 
   /** The user presses the right mouse button on an URL. */
   void slotUrlPopup(const QString &, const QPoint& mousePos);
@@ -549,6 +548,10 @@ public:
   QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
   Kleo::SpecialJob *mJob;
   Viewer *const q;
+
+private:
+  KIO::AccessManager *mAccessManager;
+  
 };
 
 }
