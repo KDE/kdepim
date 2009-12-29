@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=network-server-database
+Icon=view-ldap-resource
 Type=Service
 X-KDE-ServiceTypes=KCModule
 
