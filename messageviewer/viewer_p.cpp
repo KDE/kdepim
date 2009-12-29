@@ -213,6 +213,8 @@ ViewerPrivate::~ViewerPrivate()
 {
   clearBodyPartMementos();
   delete mHtmlWriter; mHtmlWriter = 0;
+  delete mViewer; mViewer = 0;
+  delete mAccessManager; mAccessManager = 0;
   delete mCSSHelper;
   if ( mDeleteMessage )
     delete mMessage;
