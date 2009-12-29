@@ -222,7 +222,7 @@ void KeyFilterManager::reload() {
       }
   }
   std::stable_sort( d->filters.begin(), d->filters.end(), ByDecreasingSpecificity() );
-  qDebug( "KeyFilterManager::reload: final filter count is %lu", (unsigned long)d->filters.size() );
+  kDebug(5150) << "final filter count is" << d->filters.size();
 }
 
 QAbstractItemModel * KeyFilterManager::model() const {

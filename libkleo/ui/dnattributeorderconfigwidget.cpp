@@ -194,7 +194,7 @@ void Kleo::DNAttributeOrderConfigWidget::save() const {
 }
 
 void Kleo::DNAttributeOrderConfigWidget::defaults() {
-  kDebug() <<"Sorry, not implemented: Kleo::DNAttributeOrderConfigWidget::defaults()";
+  kDebug(5150) <<"Sorry, not implemented: Kleo::DNAttributeOrderConfigWidget::defaults()";
 }
 
 

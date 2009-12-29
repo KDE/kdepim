@@ -73,16 +73,16 @@ Kleo::Job::~Job() {
 }
 
 void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
-  kDebug() <<"Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
+  kDebug(5150) <<"Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
 }
 
 QString Kleo::Job::auditLogAsHtml() const {
-    kDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
+    kDebug(5150) << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
     return QString();
 }
 
 GpgME::Error Kleo::Job::auditLogError() const {
-    kDebug() << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
+    kDebug(5150) << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
     return GpgME::Error( gpg_error( GPG_ERR_NOT_IMPLEMENTED ) );
 }
 

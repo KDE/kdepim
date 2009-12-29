@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=ldap_lookup
+Icon=network-server-database
 Type=Service
 X-KDE-ServiceTypes=KCModule
 

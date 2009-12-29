@@ -27,6 +27,8 @@ class StringUtilTest : public QObject
   Q_OBJECT
 
   private slots:
+    void test_SmartQuote_data();
+    void test_SmartQuote();
     void test_signatureStripping();
     void test_isCryptoPart();
 };

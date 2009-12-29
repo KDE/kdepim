@@ -91,49 +91,49 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() ) {
       if ( key.keyListMode() & GpgME::Validate ) {
-        kDebug() << "key is invalid";
+        kDebug(5150) << "key is invalid";
         return false;
       } else {
-        kDebug() << "key is invalid - ignoring";
+        kDebug(5150) << "key is invalid - ignoring";
       }
     }
     if ( key.isExpired() ) {
-      kDebug() <<"key is expired";
+      kDebug(5150) <<"key is expired";
       return false;
     } else if ( key.isRevoked() ) {
-      kDebug() <<"key is revoked";
+      kDebug(5150) <<"key is revoked";
       return false;
     } else if ( key.isDisabled() ) {
-      kDebug() <<"key is disabled";
+      kDebug(5150) <<"key is disabled";
       return false;
     }
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::EncryptionKeys &&
        !key.canEncrypt() ) {
-    kDebug() <<"key can't encrypt";
+    kDebug(5150) <<"key can't encrypt";
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::SigningKeys &&
        !key.canSign() ) {
-    kDebug() <<"key can't sign";
+    kDebug(5150) <<"key can't sign";
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::CertificationKeys &&
        !key.canCertify() ) {
-    kDebug() <<"key can't certify";
+    kDebug(5150) <<"key can't certify";
     return false;
   }
   if ( keyUsage & Kleo::KeySelectionDialog::AuthenticationKeys &&
        !key.canAuthenticate() ) {
-    kDebug() <<"key can't authenticate";
+    kDebug(5150) <<"key can't authenticate";
     return false;
   }
 
   if ( keyUsage & Kleo::KeySelectionDialog::SecretKeys &&
        !( keyUsage & Kleo::KeySelectionDialog::PublicKeys ) &&
        !key.hasSecret() ) {
-    kDebug() <<"key isn't secret";
+    kDebug(5150) <<"key isn't secret";
     return false;
   }
 
@@ -146,7 +146,7 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
     for ( std::vector<GpgME::UserID>::const_iterator it = uids.begin() ; it != uids.end() ; ++it )
       if ( !it->isRevoked() && it->validity() >= GpgME::UserID::Marginal )
 	return true;
-    kDebug() <<"key has no UIDs with validity >= Marginal";
+    kDebug(5150) <<"key has no UIDs with validity >= Marginal";
     return false;
   }
   // X.509 keys are always trusted, else they won't be the keybox.

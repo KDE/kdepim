@@ -1547,19 +1547,19 @@ void View::selectFocusedMessageItem( bool centerItem )
 
 void View::fillViewMenu( KMenu * menu )
 {
-  KMenu* sortingMenu = new KMenu( i18n( "Sorting" ) );
+  KMenu* sortingMenu = new KMenu( i18n( "Sorting" ), menu );
   sortingMenu->setIcon( KIcon( "view-sort-ascending" ) );
   menu->addMenu( sortingMenu );
   connect( sortingMenu, SIGNAL( aboutToShow() ),
            d->mWidget, SLOT( sortOrderMenuAboutToShow() ) );
 
-  KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ) );
+  KMenu* aggregationMenu = new KMenu( i18n( "Aggregation" ), menu );
   aggregationMenu->setIcon( KIcon( "view-process-tree" ) );
   menu->addMenu( aggregationMenu );
   connect( aggregationMenu, SIGNAL( aboutToShow() ),
            d->mWidget, SLOT( aggregationMenuAboutToShow() ) );
 
-  KMenu* themeMenu = new KMenu( i18n( "Theme" ) );
+  KMenu* themeMenu = new KMenu( i18n( "Theme" ), menu );
   themeMenu->setIcon( KIcon( "preferences-desktop-theme" ) );
   menu->addMenu( themeMenu );
   connect( themeMenu, SIGNAL( aboutToShow() ),
