@@ -1415,6 +1415,25 @@ static QString invitationDetailsFreeBusy( FreeBusy *fb, bool /*noHtmlMode*/ )
   return html;
 }
 
+static bool replyMeansCounter( Incidence */*incidence*/ )
+{
+  return false;
+/**
+  see kolab/issue 3665 for an example of when we might use this for something
+
+  bool status = false;
+  if ( incidence ) {
+    // put code here that looks at the incidence and determines that
+    // the reply is meant to be a counter proposal.  We think this happens
+    // with Outlook counter proposals, but we aren't sure how yet.
+    if ( condition ) {
+      status = true;
+    }
+  }
+  return status;
+*/
+}
+
 static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 {
   if ( !msg || !event )
@@ -1443,7 +1462,13 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     return i18n( "This invitation has been canceled" );
   case Scheduler::Add:
     return i18n( "Addition to the invitation" );
-  case Scheduler::Reply: {
+  case Scheduler::Reply:
+  {
+    if ( replyMeansCounter( event ) ) {
+      return i18n( "%1 makes this counter proposal" ).
+        arg( firstAttendeeName( event, i18n( "Sender" ) ) );
+    }
+
     Attendee::List attendees = event->attendees();
     if( attendees.count() == 0 ) {
       kdDebug(5850) << "No attendees in the iCal reply!" << endl;
@@ -1547,7 +1572,13 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     return i18n( "This task was canceled" );
   case Scheduler::Add:
     return i18n( "Addition to the task" );
-  case Scheduler::Reply: {
+  case Scheduler::Reply:
+  {
+    if ( replyMeansCounter( todo ) ) {
+      return i18n( "%1 makes this counter proposal" ).
+        arg( firstAttendeeName( todo, i18n( "Sender" ) ) );
+    }
+
     Attendee::List attendees = todo->attendees();
     if( attendees.count() == 0 ) {
       kdDebug(5850) << "No attendees in the iCal reply!" << endl;
@@ -1648,7 +1679,12 @@ static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
     return i18n( "This journal was canceled" );
   case Scheduler::Add:
     return i18n( "Addition to the journal" );
-  case Scheduler::Reply: {
+  case Scheduler::Reply:
+  {
+    if ( replyMeansCounter( journal ) ) {
+      return i18n( "Sender makes this counter proposal" );
+    }
+
     Attendee::List attendees = journal->attendees();
     if( attendees.count() == 0 ) {
       kdDebug(5850) << "No attendees in the iCal reply!" << endl;
@@ -2289,6 +2325,13 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       Attendee *a = 0;
       Attendee *ea = 0;
       if ( inc ) {
+        // First, determine if this reply is really a counter in disguise.
+        if ( replyMeansCounter( inc ) ) {
+          html += "<tr>" + counterButtons( inc, helper ) + "</tr>";
+          break;
+        }
+
+        // Next, maybe this is a declined reply that was delegated from me?
         // find first attendee who is delegated-from me
         // look a their PARTSTAT response, if the response is declined,
         // then we need to start over which means putting all the action
@@ -2302,12 +2345,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
           }
         }
 
-        if ( !inc->nonKDECustomProperty( "X-MICROSOFT-CDO-IMPORTANCE" ).isEmpty() ) {
-          // we might have a counter proposal
-        }
-
-
-        // record
+        // Finally, simply allow a Record of the reply
         a = inc->attendees().first();
         if ( a ) {
           ea = findAttendee( existingIncidence, a->email() );
