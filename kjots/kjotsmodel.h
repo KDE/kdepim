@@ -64,7 +64,7 @@ class KJotsModel : public EntityTreeModel
 {
   Q_OBJECT
 public:
-  KJotsModel(Session *session, ChangeRecorder *monitor, QObject *parent = 0);
+  explicit KJotsModel( ChangeRecorder *monitor, QObject *parent = 0);
   virtual ~KJotsModel();
 
   enum KJotsRoles

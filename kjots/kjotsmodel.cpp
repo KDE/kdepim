@@ -101,8 +101,8 @@ QVariantList KJotsEntity::entities()
   return list;
 }
 
-KJotsModel::KJotsModel(Session *session, ChangeRecorder *monitor, QObject *parent)
-  : EntityTreeModel(session, monitor, parent)
+KJotsModel::KJotsModel( ChangeRecorder *monitor, QObject *parent)
+  : EntityTreeModel( monitor, parent)
 {
 
 }

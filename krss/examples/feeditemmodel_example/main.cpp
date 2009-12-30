@@ -61,11 +61,12 @@ MainWidget::MainWidget( QWidget* parent ) : QWidget( parent ) /*, m_feedModel( 0
 
     Session* session = new Session( QByteArray( "FeedReaderApplication-" ) + QByteArray::number( qrand() ) );
     ChangeRecorder* recorder = new ChangeRecorder;
+    recorder->setSession( session );
     recorder->fetchCollection( true );
     recorder->setItemFetchScope( scope );
     recorder->setCollectionMonitored( Collection::root() );
     recorder->setMimeTypeMonitored( QLatin1String( "application/rss+xml" ) );
-    m_itemModel = new FeedItemModel( session, recorder );
+    m_itemModel = new FeedItemModel( recorder );
 
     m_itemView = new EntityTreeView( this );
     splitter->addWidget( m_itemView );

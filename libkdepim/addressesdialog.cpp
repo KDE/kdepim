@@ -313,13 +313,14 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
   //scope.fetchAttribute<Akonadi::EntityDisplayAttribute>();
 
   m_recorder = new Akonadi::ChangeRecorder( this );
+  m_recorder->setSession( m_session );
   m_recorder->fetchCollection( true );
   m_recorder->setItemFetchScope( scope );
   m_recorder->setCollectionMonitored( Akonadi::Collection::root() );
   m_recorder->setMimeTypeMonitored( KABC::Addressee::mimeType(), true );
   m_recorder->setMimeTypeMonitored( KABC::ContactGroup::mimeType(), true );
 
-  Akonadi::ContactsTreeModel *model = new Akonadi::ContactsTreeModel( m_session, m_recorder, this );
+  Akonadi::ContactsTreeModel *model = new Akonadi::ContactsTreeModel( m_recorder, this );
   m_availableModel = new ProxyModel( this );
   m_availableModel->setSourceModel( model );
 
@@ -340,7 +341,7 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
 
   QPushButton *ldapbtn = new QPushButton( i18n("Search Directory Service"), leftbox );
   connect( ldapbtn, SIGNAL(clicked()), SLOT(searchLdap())  );
- 
+
   QWidget *btnwidget = new QWidget( page );
   QVBoxLayout *btnlayout = new QVBoxLayout( btnwidget );
   btnwidget->setLayout( btnlayout );
@@ -382,7 +383,7 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
 AddressesDialog::~AddressesDialog()
 {
 }
-    
+
 void AddressesDialog::availableSelectionChanged()
 {
   const QModelIndex index = m_availableView->selectionModel()->currentIndex();
@@ -508,7 +509,7 @@ QStandardItem* AddressesDialog::selectedBccItem()
   }
   return m_bccItem;
 }
-    
+
 void
 AddressesDialog::setSelectedTo( const QStringList& l )
 {
@@ -1197,7 +1198,7 @@ AddressesDialog::saveAsDistributionList()
 
   Akonadi::Collection collection = dlg->selectedCollection();
   Q_ASSERT( collection.isValid() );
-    
+
   bool ok = false;
   QString name = KInputDialog::getText( i18n("New Contact Group"),
                                         i18n("Please enter name of the new contact group:"),
