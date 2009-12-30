@@ -134,6 +134,27 @@ static bool iamOrganizer( Incidence *incidence )
   return iam;
 }
 
+static QString firstAttendeeName( Incidence *incidence, const QString &defName )
+{
+  QString name;
+  if ( !incidence ) {
+    return name;
+  }
+
+  Attendee::List attendees = incidence->attendees();
+  if( attendees.count() > 0 ) {
+    Attendee *attendee = *attendees.begin();
+    name = attendee->name();
+    if ( name.isEmpty() ) {
+      name = attendee->email();
+    }
+    if ( name.isEmpty() ) {
+      name = defName;
+    }
+  }
+  return name;
+}
+
 /*******************************************************************
  *  Helper functions for the extensive display (display viewer)
  *******************************************************************/
@@ -1432,16 +1453,10 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
       kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                     << "but is " << attendees.count() << endl;
     }
-    Attendee* attendee = *attendees.begin();
-    QString attendeeName = attendee->name();
-    if ( attendeeName.isEmpty() ) {
-      attendeeName = attendee->email();
-    }
-    if ( attendeeName.isEmpty() ) {
-      attendeeName = i18n( "Sender" );
-    }
+    QString attendeeName = firstAttendeeName( event, i18n( "Sender" ) );
 
     QString delegatorName, dummy;
+    Attendee* attendee = *attendees.begin();
     KPIM::getNameAndMail( attendee->delegator(), delegatorName, dummy );
     if ( delegatorName.isEmpty() ) {
       delegatorName = attendee->delegator();
@@ -1493,11 +1508,17 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     default:
       return i18n( "Unknown response to this invitation" );
     }
-    break; }
+    break;
+  }
+
   case Scheduler::Counter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "%1 makes this counter proposal" ).
+      arg( firstAttendeeName( event, i18n( "Sender" ) ) );
+
   case Scheduler::Declinecounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "%1 declines the counter proposal" ).
+      arg( firstAttendeeName( event, i18n( "Sender" ) ) );
+
   case Scheduler::NoMethod:
     return i18n("Error: iMIP message with unknown method: '%1'").
       arg( msg->method() );
@@ -1536,17 +1557,40 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
       kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                     << "but is " << attendees.count() << endl;
     }
+    QString attendeeName = firstAttendeeName( todo, i18n( "Sender" ) );
+
+    QString delegatorName, dummy;
     Attendee* attendee = *attendees.begin();
+    KPIM::getNameAndMail( attendee->delegator(), delegatorName, dummy );
+    if ( delegatorName.isEmpty() ) {
+      delegatorName = attendee->delegator();
+    }
 
     switch( attendee->status() ) {
     case Attendee::NeedsAction:
-      return i18n( "Sender indicates this task assignment still needs some action" );
+      return i18n( "%1 indicates this task assignment still needs some action" ).arg( attendeeName );
     case Attendee::Accepted:
-      return i18n( "Sender accepts this task" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 accepts this task" ).arg( attendeeName );
+      } else {
+        return i18n( "%1 accepts this task on behalf of %2" ).
+          arg( attendeeName ).arg( delegatorName );
+      }
     case Attendee::Tentative:
-      return i18n( "Sender tentatively accepts this task" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 tentatively accepts this task" ).
+          arg( attendeeName );
+      } else {
+        return i18n( "%1 tentatively accepts this task on behalf of %2" ).
+          arg( attendeeName ).arg( delegatorName );
+      }
     case Attendee::Declined:
-      return i18n( "Sender declines this task" );
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 declines this task" ).arg( attendeeName );
+      } else {
+        return i18n( "%1 declines this task on behalf of %2" ).
+          arg( attendeeName ).arg( delegatorName );
+      }
     case Attendee::Delegated: {
       QString delegate, dummy;
       KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
@@ -1554,25 +1598,34 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
         delegate = attendee->delegate();
       }
       if ( !delegate.isEmpty() ) {
-        return i18n( "Sender has delegated this request for the task to %1" ).arg( delegate );
+        return i18n( "%1 has delegated this request for the task to %2" ).
+          arg( attendeeName ).arg( delegate );
       } else {
-        return i18n( "Sender has delegated this request for the task " );
+        return i18n( "%1 has delegated this request for the task" ).
+          arg( attendeeName );
       }
     }
     case Attendee::Completed:
       return i18n( "The request for this task is now completed" );
     case Attendee::InProcess:
-      return i18n( "Sender is still processing the invitation" );
+      return i18n( "%1 is still processing the task" ).
+        arg( attendeeName );
     default:
       return i18n( "Unknown response to this task" );
     }
-    break; }
+    break;
+  }
+
   case Scheduler::Counter:
-    return i18n( "Sender makes this counter proposal" );
+    return i18n( "%1 makes this counter proposal" ).
+      arg( firstAttendeeName( todo, i18n( "Sender" ) ) );
+
   case Scheduler::Declinecounter:
-    return i18n( "Sender declines the counter proposal" );
+    return i18n( "%1 declines the counter proposal" ).
+      arg( firstAttendeeName( todo, i18n( "Sender" ) ) );
+
   case Scheduler::NoMethod:
-    return i18n("Error: iMIP message with unknown method: '%1'").
+    return i18n( "Error: iMIP message with unknown method: '%1'" ).
       arg( msg->method() );
   }
   return QString::null;
@@ -2248,6 +2301,11 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
             break;
           }
         }
+
+        if ( !inc->nonKDECustomProperty( "X-MICROSOFT-CDO-IMPORTANCE" ).isEmpty() ) {
+          // we might have a counter proposal
+        }
+
 
         // record
         a = inc->attendees().first();
