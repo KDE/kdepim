@@ -63,7 +63,7 @@ public:
 
 public:
 
-    explicit FeedItemModel( Akonadi::Session *session, Akonadi::ChangeRecorder* monitor, QObject* parent = 0 );
+    explicit FeedItemModel( Akonadi::ChangeRecorder* monitor, QObject* parent = 0 );
     ~FeedItemModel();
 
     /* reimp */ QVariant entityData( const Akonadi::Item& item, int column, int role=Qt::DisplayRole ) const;

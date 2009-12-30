@@ -39,7 +39,7 @@ public:
 };
 
 
-FeedItemModel::FeedItemModel( Session* session, ChangeRecorder* monitor, QObject* parent ) : EntityTreeModel( session, monitor, parent ), d( new FeedItemModelPrivate( this ) ) {
+FeedItemModel::FeedItemModel( ChangeRecorder* monitor, QObject* parent ) : EntityTreeModel( monitor, parent ), d( new FeedItemModelPrivate( this ) ) {
     setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
 }
 
