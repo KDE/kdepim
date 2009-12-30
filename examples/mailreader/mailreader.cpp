@@ -56,7 +56,7 @@ mailreader::mailreader()
     // mainwindow to automatically save settings if changed: window size,
     // toolbar position, icon size, etc.
     setupGUI();
-    
+
 }
 
 mailreader::~mailreader()
@@ -69,12 +69,13 @@ void mailreader::setupDocks()
   Akonadi::Session *session = new Akonadi::Session( "AkonadiMailReader", this );
 
   Akonadi::ChangeRecorder *monitor = new Akonadi::ChangeRecorder( this );
+  monitor->setSession(session);
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
   monitor->fetchCollection( true );
   monitor->setMimeTypeMonitored( "message/rfc822", true );
   monitor->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
 
-  Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( session, monitor, this );
+  Akonadi::EntityTreeModel *entityModel = new Akonadi::EntityTreeModel( monitor, this );
   entityModel->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
   // Create the collection view

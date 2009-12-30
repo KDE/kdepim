@@ -40,8 +40,8 @@ class ContactsTreeModel::Private
     Columns mColumns;
 };
 
-ContactsTreeModel::ContactsTreeModel( Session *session, ChangeRecorder *monitor, QObject *parent )
-  : EntityTreeModel( session, monitor, parent ), d( new Private )
+ContactsTreeModel::ContactsTreeModel( ChangeRecorder *monitor, QObject *parent )
+  : EntityTreeModel( monitor, parent ), d( new Private )
 {
 }
 

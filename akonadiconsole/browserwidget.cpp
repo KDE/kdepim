@@ -115,13 +115,14 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
   // monitor collection changes
   ChangeRecorder *monitor = new ChangeRecorder( this );
+  monitor->setSession(session);
   monitor->setCollectionMonitored( Collection::root() );
   monitor->fetchCollection( true );
   monitor->setAllMonitored( true );
   // TODO: Only fetch the envelope etc if possible.
   monitor->itemFetchScope().fetchFullPayload(true);
 
-  mBrowserModel = new AkonadiBrowserModel( session, monitor, this );
+  mBrowserModel = new AkonadiBrowserModel( monitor, this );
   mBrowserModel->setItemPopulationStrategy( EntityTreeModel::LazyPopulation );
   mBrowserModel->setShowSystemEntities( true );
 
