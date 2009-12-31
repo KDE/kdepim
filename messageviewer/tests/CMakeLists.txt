@@ -17,6 +17,7 @@ target_link_libraries(htmlquotecolorertest
   ${QT_QTCORE_LIBRARY}
   ${QT_QTGUI_LIBRARY}
   ${QT_QTWEBKIT_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
   messageviewer
 )
 
