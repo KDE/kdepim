@@ -1308,7 +1308,6 @@ void ViewerPrivate::initHtmlWidget(void)
   // register our own event filter for shift-click
   mViewer->window()->installEventFilter( this );
 #if 0
-  mViewer->setMetaRefreshEnabled(false);
   mViewer->setURLCursor( QCursor( Qt::PointingHandCursor ) );
   // Espen 2000-05-14: Getting rid of thick ugly frames
   mViewer->view()->setLineWidth(0);
