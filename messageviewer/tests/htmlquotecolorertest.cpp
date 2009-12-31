@@ -43,21 +43,21 @@ void HTMLQuoteColorerTester::test_QuoteColor_data()
   QTest::addColumn<QString>( "expectedCode" );
 
   QTest::newRow( "" ) << "<html><body>Some unquoted text.</body></html>"
-                      << "<html><body>Some unquoted text.</body></html>";
+                      << "<html><head></head><body>Some unquoted text.</body></html>";
   QTest::newRow( "" ) << "<html><body>Some unquoted &gt;text.</body></html>"
-                      << "<html><body>Some unquoted &gt;text.</body></html>";
+                      << "<html><head></head><body>Some unquoted &gt;text.</body></html>";
   QTest::newRow( "" ) << "<html><body>Some unquoted \n&gt;text.</body></html>"
-                      << "<html><body>Some unquoted \n&gt;text.</body></html>";
+                      << "<html><head></head><body>Some unquoted \n&gt;text.</body></html>";
   QTest::newRow( "" ) << "<html><body>Some unquoted <b>&gt;</b>text.</body></html>"
-                      << "<html><body>Some unquoted <b>&gt;</b>text.</body></html>";
+                      << "<html><head></head><body>Some unquoted <b>&gt;</b>text.</body></html>";
   QTest::newRow( "" ) << "<html><body>&gt;Some quoted text.</body></html>"
-                      << "<html><body><font color=\"#ff0000\">&gt;Some quoted text.</font></body></html>";
+                      << "<html><head></head><body><font color=\"#ff0000\">&gt;Some quoted text.</font></body></html>";
   QTest::newRow( "" ) << "<html><body><b>&gt;Some quoted</b> text.</body></html>"
-                      << "<html><body><b><font color=\"#ff0000\">&gt;Some quoted</font></b><font color=\"#ff0000\"> text.</font></body></html>";
+                      << "<html><head></head><body><b><font color=\"#ff0000\">&gt;Some quoted</font></b><font color=\"#ff0000\"> text.</font></body></html>";
   QTest::newRow( "" ) << "<html><body>&gt;Some quoted &gt;text.</body></html>"
-                      << "<html><body><font color=\"#ff0000\">&gt;Some quoted &gt;text.</font></body></html>";
+                      << "<html><head></head><body><font color=\"#ff0000\">&gt;Some quoted &gt;text.</font></body></html>";
   QTest::newRow( "" ) << "<html><body>&gt;Some <b>quoted</b> text.</body></html>"
-                      << "<html><body><font color=\"#ff0000\">&gt;Some </font><b><font color=\"#ff0000\">quoted</font></b><font color=\"#ff0000\"> text.</font></body></html>";
+                      << "<html><head></head><body><font color=\"#ff0000\">&gt;Some </font><b><font color=\"#ff0000\">quoted</font></b><font color=\"#ff0000\"> text.</font></body></html>";
   QTest::newRow( "" ) << "<html><body>"
                          "&gt;&gt;&gt;Level 3 Quote<br>"
                          "No Quote<br>"
@@ -65,7 +65,7 @@ void HTMLQuoteColorerTester::test_QuoteColor_data()
                          "&gt;Level 1 Quote<br>"
                          "No Quote<br>"
                          "</body></html>"
-                      << "<html><body>"
+                      << "<html><head></head><body>"
                          "<font color=\"#0000ff\">&gt;&gt;&gt;Level 3 Quote</font><br>"
                          "No Quote<br>"
                          "<font color=\"#00ff00\">&gt;&gt;Level 2 Quote</font><br>"
