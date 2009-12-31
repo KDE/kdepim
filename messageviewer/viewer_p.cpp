@@ -2931,12 +2931,9 @@ void ViewerPrivate::slotSaveMessage()
 
 void ViewerPrivate::saveRelativePosition()
 {
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  const QScrollArea *scrollview = mViewer->view();
-  mSavedRelativePosition = static_cast<float>( scrollview->widget()->pos().y() ) /
-                           scrollview->widget()->size().height();
-#endif
+  int pos = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  int height = mViewer->page()->viewportSize().height();
+  mSavedRelativePosition = static_cast<float>( pos / height );
 }
 
 //TODO(Andras) inline them
