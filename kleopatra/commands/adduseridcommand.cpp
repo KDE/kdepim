@@ -139,6 +139,13 @@ void AddUserIDCommand::doStart() {
 
     d->ensureDialogCreated();
     assert( d->dialog );
+
+    const UserID uid = d->key.userID(0);
+
+    d->dialog->setName( QString::fromUtf8( uid.name() ) );
+    d->dialog->setEmail( Formatting::prettyEMail( uid.email(), uid.id() ) );
+    d->dialog->setComment( QString::fromUtf8( uid.comment() ) );
+
     d->dialog->show();
 }
 
