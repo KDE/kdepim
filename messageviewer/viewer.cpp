@@ -167,31 +167,25 @@ bool Viewer::atBottom() const
 void Viewer::slotJumpDown()
 {
   Q_D(Viewer);
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, view->visibleHeight() );
-#endif
+  int height = d->mViewer->page()->viewportSize().height();
+  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current + height );
 }
 
 void Viewer::slotScrollPrior()
 {
   Q_D(Viewer);
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, -(int)(d->mViewer->widget()->height() * 0.8 ) );
-#endif
+  int height = d->mViewer->page()->viewportSize().height();
+  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current - ( 0.8 * height ) );
 }
 
 void Viewer::slotScrollNext()
 {
   Q_D(Viewer);
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, (int)(d->mViewer->widget()->height() * 0.8 ) );
-#endif
+  int height = d->mViewer->page()->viewportSize().height();
+  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current + ( 0.8 * height ) );
 }
 
 QString Viewer::selectedText()
