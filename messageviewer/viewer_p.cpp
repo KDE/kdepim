@@ -123,7 +123,6 @@ using MessageViewer::TeeHtmlWriter;
 #include "interfaces/htmlwriter.h"
 
 #include <kio/jobuidelegate.h>
-#include <kio/accessmanager.h>
 
 #include <gpgme++/error.h>
 
@@ -189,7 +188,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
   mMsgDisplay = true;
   mPrinting = false;
 
-  mAccessManager = new KIO::AccessManager( this );
   createWidgets();
   createActions();
   initHtmlWidget();
@@ -1307,11 +1305,10 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 void ViewerPrivate::initHtmlWidget(void)
 {
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-  mViewer->page()->setNetworkAccessManager( mAccessManager );
   mViewer->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
-  QWebSettings::globalSettings()->setAttribute(QWebSettings::JavascriptEnabled, false);
-  QWebSettings::globalSettings()->setAttribute(QWebSettings::JavaEnabled, false);
-  QWebSettings::globalSettings()->setAttribute(QWebSettings::PluginsEnabled, false);
+  mViewer->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
+  mViewer->settings()->setAttribute(QWebSettings::JavaEnabled, false);
+  mViewer->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
 #if 0
   mViewer->widget()->setFocusPolicy(Qt::WheelFocus);
@@ -2348,7 +2345,7 @@ void ViewerPrivate::updateReaderWin()
     return;
   }
 
-  mAccessManager->setExternalContentAllowed( htmlLoadExternal() );
+  mViewer->setAllowExternalContent( htmlLoadExternal() );
 
   htmlWriter()->reset();
   //TODO: if the item doesn't have the payload fetched, try to fetch it? Maybe not here, but in setMessageItem.
