@@ -36,6 +36,8 @@
 #include "certifycertificatedialog_p.h"
 
 #include <utils/formatting.h>
+#include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -49,6 +51,8 @@
 #include <QWizardPage>
 
 #include <QTextDocument> // Qt::escape
+
+#include <boost/bind.hpp>
 
 #include <gpg-error.h>
 
@@ -73,6 +77,12 @@ void UserIDModel::setCertificateToCertify( const Key & key ) {
         item->setEditable( false );
         appendRow( item );
     }
+}
+
+void UserIDModel::setCheckedUserIDs( const std::vector<unsigned int> & uids ) {
+    const std::vector<unsigned int> sorted = kdtools::sorted( uids );
+    for ( unsigned int i = 0, end = rowCount() ; i != end ; ++i )
+        item( i )->setCheckState( kdtools::binary_search( sorted, i ) ? Qt::Checked : Qt::Unchecked );
 }
 
 std::vector<unsigned int> UserIDModel::checkedUserIDs() const {
@@ -124,6 +134,10 @@ SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent )
 
 bool SelectUserIDsPage::isComplete() const {
     return !selectedUserIDs().empty();
+}
+
+void SelectUserIDsPage::setSelectedUserIDs( const std::vector<unsigned int> & uids ) {
+    m_userIDModel.setCheckedUserIDs( uids );
 }
 
 std::vector<unsigned int> SelectUserIDsPage::selectedUserIDs() const {
@@ -290,6 +304,10 @@ public:
         connect( optionsPage, SIGNAL(nextClicked()), q, SIGNAL(certificationPrepared()) );
     }
 
+    Key key() const {
+        return selectUserIDsPage ? selectUserIDsPage->certificateToCertify() : Key() ;
+    }
+
     void ensureSummaryPageVisible();
 
     void certificationResult( const Error & error );
@@ -383,6 +401,36 @@ void CertifyCertificateDialog::Private::certificationResult( const Error & err )
     setOperationCompleted();
     summaryPage->setResult( err );
     ensureSummaryPageVisible();
+}
+
+namespace {
+    struct UidEqual : std::binary_function<UserID,UserID,bool> {
+        bool operator()( const UserID & lhs, const UserID & rhs ) const {
+            return qstrcmp( lhs.parent().primaryFingerprint(),
+                            rhs.parent().primaryFingerprint() ) == 0
+                && qstrcmp( lhs.id(), rhs.id() ) == 0 ;
+        }
+    };
+}
+
+void CertifyCertificateDialog::setSelectedUserIDs( const std::vector<UserID> & uids ) {
+    const Key key = d->key();
+    const char * const fpr = key.primaryFingerprint();
+
+    const std::vector<UserID> all = key.userIDs();
+
+    std::vector<unsigned int> indexes;
+    indexes.reserve( uids.size() );
+
+    Q_FOREACH( const UserID & uid, uids ) {
+        kleo_assert( qstrcmp( uid.parent().primaryFingerprint(), fpr ) == 0 );
+        const unsigned int idx =
+            std::distance( all.begin(), kdtools::find_if( all, bind( UidEqual(), _1, uid ) ) );
+        if ( idx < all.size() )
+            indexes.push_back( idx );
+    }
+
+    d->selectUserIDsPage->setSelectedUserIDs( indexes );
 }
 
 std::vector<unsigned int> CertifyCertificateDialog::selectedUserIDs() const {
