@@ -1046,31 +1046,6 @@ bool ObjectTreeParser::processTextHtmlSubtype( const Akonadi::Item &item, KMime:
       bodyText = colorer.process( bodyText );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
 
-        // Strip <html>, <head>, and <body>, so we don't end up having those tags
-      // twice, which confuses KHTML (especially with a signed
-      // multipart/alternative message, the signature bars get rendered at the
-      // wrong place)
-      bodyText = bodyText.remove( "<html>", Qt::CaseInsensitive );
-      bodyText = bodyText.remove( "<head>", Qt::CaseInsensitive );
-      bodyText = bodyText.remove( "</head>", Qt::CaseInsensitive );
-      QRegExp bodyRegExp( "<body.*>" ); //the body tag might have additional attributes,
-      bodyRegExp.setMinimal( true );    //so make sure to match them as well
-      bodyRegExp.setCaseSensitivity( Qt::CaseInsensitive );
-      bodyText = bodyText.remove( bodyRegExp );
-
-      // Strip </BODY> and </HTML> from end.
-      // We must do this, or else the message will not be displayed correctly
-      // because we have two </body> or </html> tags in the generated HTML.
-      // It is IMHO enough to search only for </BODY> and put \0 there.
-      int i = bodyText.lastIndexOf( "</body>", -1, Qt::CaseInsensitive );
-      if ( 0 <= i )
-        bodyText.truncate(i);
-      else { // just in case - search for </html>
-        i = bodyText.lastIndexOf( "</html>", -1, Qt::CaseInsensitive );
-        if ( 0 <= i )
-          bodyText.truncate(i);
-      }
-
       // Show the "external references" warning (with possibility to load
       // external references only if loading external references is disabled
       // and the HTML code contains obvious external references). For

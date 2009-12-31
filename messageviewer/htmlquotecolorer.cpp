@@ -116,8 +116,9 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
   "}\n");
 
   QVariant res = frame->evaluateJavaScript( script );
-
-  return frame->toHtml();
+  QWebElement body = frame->documentElement().findFirst("body");
+  
+  return body.toInnerXml();
 }
 
 void HTMLQuoteColorer::setQuoteColor( int level, const QColor& color )
