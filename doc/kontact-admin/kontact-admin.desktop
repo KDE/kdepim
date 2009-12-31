@@ -26,3 +26,4 @@ Categories=Qt;KDE;Office;ProjectManagement;
 X-DocPath=kontact-admin/index.html
 NoDisplay=true
 Terminal=false
+Type=Application
