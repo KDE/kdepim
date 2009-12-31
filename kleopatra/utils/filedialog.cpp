@@ -54,7 +54,7 @@ static QString dir( const QString & id ) {
 
 static void update( const QString & fname, const QString & id ) {
     if ( !fname.isEmpty() )
-        (*dir_id_2_dir_map())[ id ] = QFileInfo( fname ).absoluteFilePath();
+        (*dir_id_2_dir_map())[ id ] = QFileInfo( fname ).absolutePath();
 }
 
 QString FileDialog::getExistingDirectory( QWidget * parent, const QString & caption, const QString & dirID, QFileDialog::Options options ) {
@@ -78,6 +78,12 @@ QStringList FileDialog::getOpenFileNames( QWidget * parent, const QString & capt
 
 QString FileDialog::getSaveFileName( QWidget * parent, const QString & caption, const QString & dirID, const QString & filter, QString * selectedFilter, QFileDialog::Options options ) {
     const QString fname = QFileDialog::getSaveFileName( parent, caption, dir( dirID ), filter, selectedFilter, options );
+    update( fname, dirID );
+    return fname;
+}
+
+QString FileDialog::getSaveFileNameEx( QWidget * parent, const QString & caption, const QString & dirID, const QString & proposedFileName, const QString & filter, QString * selectedFilter, QFileDialog::Options options ) {
+    const QString fname = QFileDialog::getSaveFileName( parent, caption, QDir( dir( dirID ) ).filePath( proposedFileName ), filter, selectedFilter, options );
     update( fname, dirID );
     return fname;
 }
