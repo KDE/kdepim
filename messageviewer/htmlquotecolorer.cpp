@@ -115,8 +115,8 @@ QString HTMLQuoteColorer::process( const QString &htmlSource )
   "  return 0;\n"
   "}\n");
 
-  QVariant res = frame->evaluateJavaScript( script );
-  QWebElement body = frame->documentElement().findFirst("body");
+  frame->evaluateJavaScript( script );
+  const QWebElement body = frame->documentElement().findFirst("body");
   
   return body.toInnerXml();
 }
