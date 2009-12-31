@@ -2237,15 +2237,12 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   Q_UNUSED(title)
   Q_UNUSED(textContent)
   const KUrl url(link);
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
   if ( url.protocol() == "kmail" || url.protocol() == "x-kmail"
        || (url.protocol().isEmpty() && url.path().isEmpty()) ) {
-    mViewer->setDNDEnabled( false );
+    mViewer->setAcceptDrops( false );
   } else {
-    mViewer->setDNDEnabled( true );
+    mViewer->setAcceptDrops( true );
   }
-#endif
 
   if ( link.trimmed().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
