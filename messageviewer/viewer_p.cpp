@@ -212,7 +212,6 @@ ViewerPrivate::~ViewerPrivate()
   clearBodyPartMementos();
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
-  delete mAccessManager; mAccessManager = 0;
   delete mCSSHelper;
   if ( mDeleteMessage )
     delete mMessage;
@@ -394,11 +393,7 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, MessageViewer::Viewer::View );
 
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-  const bool attachmentInHeader = false;
-#if 0
-  const bool attachmentInHeader = hasParentDivWithId( mViewer->nodeUnderMouse(), "attachmentInjectionPoint" );
-#endif
+  const bool attachmentInHeader = hasChildOrSibblingDivWithId( mViewer->page()->currentFrame()->documentElement(), "attachmentInjectionPoint" );
   const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical ) != 0;
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
@@ -1135,9 +1130,8 @@ void ViewerPrivate::displayMessage()
     mColorBar->setNormalMode();
 
   htmlWriter()->queue("</body></html>");
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ) );
   htmlWriter()->flush();
-
-  QTimer::singleShot( 1, this, SLOT(injectAttachments()) );
 }
 
 static bool message_was_saved_decrypted_before( KMime::Message * msg )
@@ -1310,15 +1304,14 @@ void ViewerPrivate::initHtmlWidget(void)
   mViewer->settings()->setAttribute(QWebSettings::JavaEnabled, false);
   mViewer->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
+  mViewer->setFocusPolicy( Qt::WheelFocus );
+  // register our own event filter for shift-click
+  mViewer->window()->installEventFilter( this );
 #if 0
-  mViewer->widget()->setFocusPolicy(Qt::WheelFocus);
-  // Let's better be paranoid and disable plugins (it defaults to enabled):
   mViewer->setMetaRefreshEnabled(false);
   mViewer->setURLCursor( QCursor( Qt::PointingHandCursor ) );
   // Espen 2000-05-14: Getting rid of thick ugly frames
   mViewer->view()->setLineWidth(0);
-  // register our own event filter for shift-click
-  mViewer->view()->viewport()->installEventFilter( this );
 #endif
   if ( !htmlWriter() ) {
     mPartHtmlWriter = new WebKitPartHtmlWriter( mViewer, 0 );
@@ -2549,13 +2542,12 @@ void ViewerPrivate::slotSetEncoding()
 
 void ViewerPrivate::injectAttachments()
 {
+  disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
   // inject attachments in header view
   // we have to do that after the otp has run so we also see encrypted parts
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  DOM::Document doc = mViewer->htmlDocument();
-  DOM::Element injectionPoint = doc.getElementById( "attachmentInjectionPoint" );
-  if ( injectionPoint.isNull() )
+  QWebElement doc = mViewer->page()->currentFrame()->documentElement();
+  QWebElement injectionPoint = doc.findFirst( "div#attachmentInjectionPoint" );
+  if( injectionPoint.isNull() )
     return;
 
   QString imgpath( KStandardDirs::locate("data","kmail/pics/") );
@@ -2577,17 +2569,16 @@ void ViewerPrivate::injectAttachments()
 
   QString link("");
   if ( headerStyle() == HeaderStyle::fancy() ) {
-    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\""+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: left;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
     html.prepend( QString::fromLatin1("<div style=\"float:left;\">%1&nbsp;</div>" ).arg(i18n("Attachments:")) );
   } else {
-    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\""+imgpath+imgSrc+"\"/></a></div>";
+    link += "<div style=\"text-align: right;\"><a href=\""+urlHandle+"\"><img src=\"file://"+imgpath+imgSrc+"\"/></a></div>";
     html.prepend( link );
   }
 
-  assert( injectionPoint.tagName() == "div" );
-  static_cast<DOM::HTMLElement>( injectionPoint ).setInnerHTML( html );
-#endif
+  assert( injectionPoint.tagName().toLower() == "div" );
+  injectionPoint.setInnerXml( html );
 }
 
 
@@ -3057,24 +3048,28 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
   }
 }
 
-// Checks if the given node has a parent node that is a DIV which has an ID attribute
+// Checks if the given node has a child node that is a DIV which has an ID attribute
 // with the value specified here
-
-bool ViewerPrivate::hasParentDivWithId( const QWebElement &start, const QString &id )
+bool ViewerPrivate::hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id )
 {
+  kWarning() << "looking at:"<<start.tagName() << "for:" << id;
   if ( start.isNull() )
     return false;
 
   if ( start.tagName() == "div" ) {
     if ( start.attribute( "id", "" ) == id )
-        return true;
+      return true;
   }
 
-  if ( !start.parent().isNull() ) {
-    return hasParentDivWithId( start.parent(), id );
+  if ( !start.firstChild().isNull() ) {
+    return hasChildOrSibblingDivWithId( start.firstChild(), id );
   }
 
- return false;
+  if ( !start.nextSibling().isNull() ) {
+    return hasChildOrSibblingDivWithId( start.nextSibling(), id );
+  }
+
+  return false;
 }
 
 bool ViewerPrivate::disregardUmask() const

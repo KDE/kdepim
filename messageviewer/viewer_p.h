@@ -35,7 +35,6 @@
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
-#include <kio/accessmanager.h>
 #include <kresources/groupwise/soap/soapStub.h>
 
 using KPIM::MessageStatus;
@@ -182,7 +181,7 @@ public:
   void attachmentOpen( KMime::Content *node );
 
 
-  /** Return the HtmlWriter connected to the KHTMLPart we use */
+  /** Return the HtmlWriter connected to the KWebView we use */
   HtmlWriter * htmlWriter() { return mHtmlWriter; }
 
   CSSHelper* cssHelper() const;
@@ -472,7 +471,7 @@ public slots:
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
-  bool hasParentDivWithId( const QWebElement &start, const QString &id );
+  bool hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id );
 
 signals:
   void replaceMsgByUnencryptedVersion();
@@ -548,10 +547,6 @@ public:
   QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
   Kleo::SpecialJob *mJob;
   Viewer *const q;
-
-private:
-  KIO::AccessManager *mAccessManager;
-  
 };
 
 }
