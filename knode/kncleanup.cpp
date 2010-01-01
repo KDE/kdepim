@@ -59,13 +59,13 @@ void KNCleanUp::start()
 
   for ( QList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->type() == KNCollection::CTgroup ) {
-      d_lg->showMessage( i18n( "Deleting expired articles in <b>%1</b>", (*it)->name() ) ); // krazy:exclude=qclasses
+      d_lg->showMessage( i18n( "Deleting expired articles in <b>%1</b>", (*it)->name() ) ); // krazy:exclude=qmethods
       qApp->processEvents();
       expireGroup( static_cast<KNGroup*>( (*it) ) );
       d_lg->doProgress();
     }
     else if ( (*it)->type() == KNCollection::CTfolder ) {
-      d_lg->showMessage( i18n("Compacting folder <b>%1</b>", (*it)->name() ) ); // krazy:exclude=qclasses
+      d_lg->showMessage( i18n("Compacting folder <b>%1</b>", (*it)->name() ) ); // krazy:exclude=qmethods
       qApp->processEvents();
       compactFolder( static_cast<KNFolder*>( (*it) ) );
       d_lg->doProgress();
