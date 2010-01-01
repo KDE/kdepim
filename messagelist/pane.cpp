@@ -32,6 +32,8 @@
 #include "widget.h"
 #include "core/settings.h"
 #include "messagecore/messagestatus.h"
+#include "core/model.h"
+
 namespace MessageList
 {
 
@@ -152,6 +154,9 @@ bool Pane::selectNextMessageItem( MessageList::Core::MessageTypeFilter messageTy
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
     return w->selectNextMessageItem( messageTypeFilter, existingSelectionBehaviour, centerItem, loop );
   } else {
     return false;
@@ -166,6 +171,9 @@ bool Pane::selectPreviousMessageItem( MessageList::Core::MessageTypeFilter messa
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
     return w->selectPreviousMessageItem( messageTypeFilter, existingSelectionBehaviour, centerItem, loop );
   } else {
     return false;
@@ -177,6 +185,9 @@ bool Pane::focusNextMessageItem( MessageList::Core::MessageTypeFilter messageTyp
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
     return w->focusNextMessageItem( messageTypeFilter, centerItem, loop );
   } else {
     return false;
@@ -188,6 +199,9 @@ bool Pane::focusPreviousMessageItem( MessageList::Core::MessageTypeFilter messag
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
     return w->focusNextMessageItem( messageTypeFilter, centerItem, loop );
   } else {
     return false;
@@ -199,6 +213,9 @@ void Pane::selectFocusedMessageItem( bool centerItem )
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return;
+
     w->selectFocusedMessageItem( centerItem );
   }
 }
@@ -208,6 +225,9 @@ bool Pane::selectFirstMessageItem( MessageList::Core::MessageTypeFilter messageT
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return true;
+
     return w->selectFirstMessageItem( messageTypeFilter, centerItem );
   } else {
     return false;
@@ -219,6 +239,9 @@ void Pane::selectAll()
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return;
+
     w->selectAll();
   }
 }
@@ -229,6 +252,9 @@ void Pane::setCurrentThreadExpanded( bool expand )
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return;
+
     w->setCurrentThreadExpanded(expand );
   }
 }
@@ -238,6 +264,9 @@ void Pane::setAllThreadsExpanded( bool expand )
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return;
+
     w->setAllThreadsExpanded( expand );
   }
 }
@@ -247,6 +276,9 @@ void Pane::setAllGroupsExpanded( bool expand )
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
+    if ( w->view()->model()->isLoading() )
+      return;
+
     w->setAllGroupsExpanded(expand);
   }
 }
