@@ -34,7 +34,18 @@ kde4_add_plugin(messageviewer_bodypartformatter_text_calendar ${messageviewer_bo
 
 
 
-target_link_libraries(messageviewer_bodypartformatter_text_calendar  ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_KPIMIDENTITIES_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS})
+target_link_libraries(messageviewer_bodypartformatter_text_calendar
+  ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDE4_KDECORE_LIBS}
+  ${KDEPIMLIBS_KCAL_LIBS}
+  kdepim
+  ${KDE4_KDE3SUPPORT_LIBS}
+  ${QT_QT3SUPPORT_LIBRARY}
+  ${KDEPIMLIBS_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
+  ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDE4_AKONADI_KMIME_LIBS}
+)
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
 

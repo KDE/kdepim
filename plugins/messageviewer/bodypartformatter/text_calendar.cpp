@@ -521,8 +521,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       MailTransport::MessageQueueJob *job = new MailTransport::MessageQueueJob;
       job->setMessage( msg );
-      job->setTo( QStringList() << to );
-      job->setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
+      job->addressAttribute().setTo( QStringList() << to );
+      job->transportAttribute().setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
       if( ! job->exec() ) {
         kWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
