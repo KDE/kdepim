@@ -551,7 +551,7 @@ KMeditorPrivate::signaturePositions( const KPIMIdentities::Signature &sig ) cons
   QList< QPair<int,int> > signaturePositions;
   if ( !sig.rawText().isEmpty() ) {
 
-    QString sigText = sig.plainText();
+    QString sigText = sig.toPlainText();
 
     int currentSearchPosition = 0;
     forever {
@@ -577,7 +577,7 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
   QTextCursor cursor( document() );
   cursor.beginEditBlock();
 
-  QString oldSigText = oldSig.plainText();
+  QString oldSigText = oldSig.toPlainText();
 
   int currentSearchPosition = 0;
   forever {
@@ -608,7 +608,7 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
 
     // Skip quoted signatures
     if ( isLineQuoted( cursor.block().text() ) ) {
-      currentSearchPosition += oldSig.plainText().length();
+      currentSearchPosition += oldSig.toPlainText().length();
       continue;
     }
 
@@ -617,7 +617,7 @@ void KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
     setTextCursor( cursor );
     newSig.insertIntoTextEdit( this, KPIMIdentities::Signature::AtCursor, false );
 
-    currentSearchPosition += newSig.plainText().length();
+    currentSearchPosition += newSig.toPlainText().length();
   }
 
   cursor.endEditBlock();
