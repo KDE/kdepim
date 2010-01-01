@@ -1,3 +1,20 @@
+Friday, January 1st 2010
+
+Problems addressed
+------------------
+
+* kolab/issue3988: Calendar: update mail of a changed attendee asked to reply (rt#5899)
+* kolab/issue3929: Contacts: The user can add a distribution list to itself
+* kolab/issue3747: Archiving function has a memory leak
+* kolab/issue4000: A user rejects a delegation, the delegator cannot react on this
+* kolab/issue3948: Show a 'record' button if the organizer is *not* expecting an rsvp (rt#5879)
+* kolab/issue3740: Selection jumps after deleting an attachment from an email
+* kolab/issue3959: In side-by-side view without Marcus Bains line is the seperator displaced (rt#5912)
+* kolab/issue3665: Not possible to accept a counter proposal from OL/toltec
+* kolab/issue2656: Wrong scale is shown, if the calendar component is selected. (rt#5916)
+* Fix email address spoofing by not allowing BIDI control characters in the display name
+
+
 Friday, December 18th 2009
 
 Problems addressed
