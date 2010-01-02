@@ -81,7 +81,8 @@ target_link_libraries( akonadiconsole_bin
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
   akonadi_next
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
-  akonadi-kcal
+  akonadi-kcal_next
+  ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
   kdepim
   ${KDE4_KUTILS_LIBS}
