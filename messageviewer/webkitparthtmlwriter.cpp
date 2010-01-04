@@ -138,7 +138,6 @@ void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
 
 void WebKitPartHtmlWriter::resolveCidUrls()
 {
-  kWarning() << "WEBKIT: Untested code in " << Q_FUNC_INFO;
   QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
   QWebElementCollection images = root.findAll( "img" );
   QWebElement image;
