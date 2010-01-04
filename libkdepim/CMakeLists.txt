@@ -66,7 +66,6 @@ set(kdepim_LIB_SRCS
    kcmdesignerfields.cpp
    embeddedurlpage.cpp
    kincidencechooser.cpp
-   groupwarejob.cpp
    csshelper.cpp
    distributionlist.cpp
    sendsmsdialog.cpp
