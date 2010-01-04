@@ -144,13 +144,9 @@ void WebKitPartHtmlWriter::resolveCidUrls()
   QWebElement image;
   foreach( image, images )
   {
-    KUrl url( image.attribute( "src", "" ) );
-    kDebug() << "url:" << url << "(proto: "<< url.protocol() << ", path:" << url.path() << ")";
-    kDebug()<< mEmbeddedPartMap.count();
-    kDebug()<< mEmbeddedPartMap;
+    KUrl url( image.attribute( "src" ) );
     if ( url.protocol() == "cid" )
     {
-      kDebug() << "Got cid...";
       EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
       if ( it != mEmbeddedPartMap.constEnd() ) {
         kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();

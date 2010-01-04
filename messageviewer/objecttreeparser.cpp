@@ -348,7 +348,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
   if ( result.isImage() && node->parent() &&
         node->parent()->contentType()->subType() == "related" && mSource->htmlMail() && !showOnlyOneMimePart() ) {
     QString fileName = mNodeHelper->writeNodeToTempFile( node );
-    QString href = "file:" + KUrl::toPercentEncoding( fileName );
+    QString href = "file://" + fileName;
     QByteArray cid = node->contentID()->as7BitString(false);
     if ( cid.startsWith('<') )
       cid = cid.mid(1);
