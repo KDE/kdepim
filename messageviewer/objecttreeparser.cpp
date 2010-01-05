@@ -350,10 +350,6 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     QString fileName = mNodeHelper->writeNodeToTempFile( node );
     QString href = "file://" + fileName;
     QByteArray cid = node->contentID()->identifier();
-    if ( cid.startsWith('<') )
-      cid = cid.mid(1);
-    if ( cid.endsWith('>') )
-      cid = cid.left( cid.length() - 1 );
     htmlWriter()->embedPart( cid, href );
     return;
   }
