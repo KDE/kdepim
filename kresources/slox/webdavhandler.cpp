@@ -141,6 +141,12 @@ QList<SloxItem> WebdavHandler::getSloxItems( SloxBase *res, const QDomDocument &
         }
       }
 
+      QDomNode lastModified = prop.namedItem( res->fieldName( SloxBase::LastModified ) );
+      if ( !lastModified.isNull() ) {
+        QDomElement lastModifiedElement = lastModified.toElement();
+        item.lastModified = lastModifiedElement.text();
+      }
+
       QDomNode status = propstat.namedItem( "status" );
       if ( status.isNull() ) {
         kError() <<"Unable to find WebDAV status";

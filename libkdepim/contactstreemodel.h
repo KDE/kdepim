@@ -115,7 +115,7 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
      * @param monitor The ChangeRecorder whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    ContactsTreeModel( ChangeRecorder *monitor, QObject *parent = 0 );
+    explicit ContactsTreeModel( ChangeRecorder *monitor, QObject *parent = 0 );
 
     /**
      * Destroys the contacts tree model.

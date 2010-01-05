@@ -29,7 +29,7 @@ class AkonadiBrowserModel : public EntityTreeModel
 {
   Q_OBJECT
 public:
-  AkonadiBrowserModel( ChangeRecorder* monitor, QObject* parent = 0 );
+  explicit AkonadiBrowserModel( ChangeRecorder* monitor, QObject* parent = 0 );
 
   enum ItemDisplayMode
   {

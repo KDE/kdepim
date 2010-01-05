@@ -257,6 +257,7 @@ void ResourceSlox::slotResult( KJob *job )
       } else if ( item.status == SloxItem::Create ) {
         Addressee a;
         a.setUid( uid );
+        a.insertCustom( "SLOX", "LastModified", item.lastModified );
 
         mWebdavHandler.clearSloxAttributeStatus();
 
@@ -313,19 +314,19 @@ void ResourceSlox::slotUploadResult( KJob *job )
         savingError( this, item.response + '\n' + item.responseDescription );
         continue;
       }
-      if ( item.status == SloxItem::New ) {
-        QMap<QString,Addressee>::Iterator search_res;
-        search_res = mAddrMap.find( item.clientId );
-        if ( search_res != mAddrMap.end() ) {
-          // use the id provided by the server
-          Addressee a = *search_res;
-          mAddrMap.erase( search_res );
-          a.setUid( "kresources_slox_kabc_" + item.sloxId );
-          a.setResource( this );
-          a.setChanged( false );
-          mAddrMap.insert( a.uid(), a );
-          saveToCache();
-        }
+
+      QMap<QString,Addressee>::Iterator search_res;
+      search_res = mAddrMap.find( mUploadAddressee.uid() );
+      if ( search_res != mAddrMap.end() ) {
+        // use the id provided by the server
+        Addressee a = *search_res;
+        mAddrMap.erase( search_res );
+        a.setUid( "kresources_slox_kabc_" + item.sloxId );
+        a.setResource( this );
+        a.setChanged( false );
+        a.insertCustom( "SLOX", "LastModified", item.lastModified );
+        mAddrMap.insert( a.uid(), a );
+        saveToCache();
       }
     }
   }
@@ -505,9 +506,13 @@ void ResourceSlox::uploadContacts()
 
   if ( !isDelete ) {
     createAddresseeFields( doc, prop, mUploadAddressee );
+    if ( !mUploadAddressee.custom( "SLOX", "LastModified" ).isEmpty() )
+      WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastModified ), mUploadAddressee.custom( "SLOX", "LastModified" ) );
   } else {
     QString tmp_uid = mUploadAddressee.uid().remove( 0, sizeof("kresources_slox_kabc_") - 1); // remove prefix from uid
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( ObjectId ), tmp_uid );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( FolderId ), mPrefs->folderId() );
+    WebdavHandler::addSloxElement( this, doc, prop, fieldName( LastModified ), mUploadAddressee.custom( "SLOX", "LastModified" ) );
     WebdavHandler::addSloxElement( this, doc, prop, "method", "DELETE" );
   }
 

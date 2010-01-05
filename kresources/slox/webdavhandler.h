@@ -50,6 +50,7 @@ class KSLOX_EXPORT SloxItem
     Status status;
     QString response;
     QString responseDescription;
+    QString lastModified;
 };
 
 class KSLOX_EXPORT WebdavHandler
