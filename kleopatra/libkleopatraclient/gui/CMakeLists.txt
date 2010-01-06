@@ -19,11 +19,4 @@ install(
   TARGETS kleopatraclientgui
   DESTINATION ${LIB_INSTALL_DIR}
   )
-  
-
-install(
-  FILES
-    certificaterequester.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/libkleopatraclient/gui
-  )
 
