@@ -16,7 +16,7 @@
    You should have received a copy of the GNU Lesser General Public
    License along with libgpg-error; if not, write to the Free
    Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-   02111-1307, USA.  */
+   02110-1301, USA.  */
 
 /* This file must not include config.h, as that is for the host
    system, while this file will be run on the build system.  */
@@ -43,7 +43,7 @@ static const char header[] =
 "   You should have received a copy of the GNU Lesser General Public\n"
 "   License along with libgpg-error; if not, write to the Free\n"
 "   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
-"   02111-1307, USA.  */\n"
+"   02110-1301, USA.  */\n"
 "\n";
 
 int
