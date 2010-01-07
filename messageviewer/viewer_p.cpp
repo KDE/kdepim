@@ -1784,18 +1784,6 @@ void ViewerPrivate::createWidgets() {
   mColorBar->setObjectName( "mColorBar" );
   mViewer = new KWebView( mBox );
   mViewer->setObjectName( "mViewer" );
-  kWarning() << "WEBKIT: Disabled code in" << Q_FUNC_INFO;
-#if 0
-  // Remove the shortcut for the selectAll action from khtml part. It's redefined to
-  // CTRL-SHIFT-A in kmail and clashes with kmails CTRL-A action.
-  KAction *selectAll = qobject_cast<KAction*>(
-          mViewer->actionCollection()->action( "selectAll" ) );
-  if ( selectAll ) {
-    selectAll->setShortcut( KShortcut() );
-  } else {
-    kDebug() << "Failed to find khtml's selectAll action to remove it's shortcut";
-  }
-#endif
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 }
