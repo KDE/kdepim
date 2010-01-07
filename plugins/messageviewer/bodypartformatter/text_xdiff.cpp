@@ -138,5 +138,6 @@ namespace {
 extern "C"
 KDE_EXPORT MessageViewer::Interface::BodyPartFormatterPlugin *
 messageviewer_bodypartformatter_text_xdiff_create_bodypart_formatter_plugin() {
+  KGlobal::locale()->insertCatalog( "messageviewer_text_xdiff_plugin" );
   return new Plugin();
 }
