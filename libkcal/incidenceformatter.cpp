@@ -1995,7 +1995,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   QString role;
   Attendee *a = findMyAttendee( inc );
   if ( !a && inc ) {
-    a = inc->attendees().first();
+    if ( !inc->attendees().isEmpty() ) {
+      a = inc->attendees().first();
+    }
   }
   if ( a ) {
     role = Attendee::roleName( a->role() );
@@ -2003,7 +2005,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   // Print if RSVP needed, not-needed, or response already recorded
   bool rsvpReq = rsvpRequested( inc );
-  if ( !myInc ) {
+  if ( !myInc && a ) {
     html += "<br/>";
     html += "<i><u>";
     if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
@@ -2042,7 +2044,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       }
       html += "<td>";
 
-      if ( !myInc ) {
+      if ( !myInc && a ) {
         if ( !rsvpReq ) {
           // Record only
           html += helper->makeLink( "record", i18n( "[Record]" ) );
@@ -2103,7 +2105,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
       Attendee *a = 0;
       Attendee *ea = 0;
       if ( inc ) {
-        a = inc->attendees().first();
+        if ( !inc->attendees().isEmpty() ) {
+          a = inc->attendees().first();
+        }
         if ( a ) {
           ea = findAttendee( existingIncidence, a->email() );
         }
