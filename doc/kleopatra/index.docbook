@@ -146,8 +146,8 @@ menu, as well as from the command line. The &kleopatra; executable is
 named <userinput><command>kleopatra</command></userinput>.</para>
 
 <note><para>This program is named after Cleopatra, a famous female
-Egyptian pharaoh that lived at the time of Julius Caesar, whom she is
-said to have had an intimate relationship with.</para>
+Egyptian pharaoh that lived at the time of Julius Caesar, with whom 
+she had a child, Caesarion, unacknowledged as his heir.</para>
 
 <para>The name was chosen since this program originates from the
 <ulink url="http://www.gnupg.org/aegypten2/">&Auml;gypten
@@ -494,7 +494,7 @@ command line interface).</para>
 
 
 <varlistentry id="view-stop-operation">
-<term><menuchoice><shortcut><keycombo action="simul"><keycap>Esc</keycap></keycombo></shortcut>
+<term><menuchoice><shortcut><keycombo action="simul">&Esc;</keycombo></shortcut>
 <guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice></term>
 
 <listitem>
