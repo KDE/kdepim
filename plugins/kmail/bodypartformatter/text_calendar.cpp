@@ -46,6 +46,8 @@
 #include <kcal/incidenceformatter.h>
 
 #include <kmail/callback.h>
+#include <kmail/kmmessage.h>
+#include <kmail/kmcommands.h>
 
 #include <kpimutils/email.h>
 
@@ -698,7 +700,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         return false;
       }
 
+      Incidence *incidence;
       QString iCal;
+      QString summary;
       /* If the bodypart does not have a charset specified, we need to fall back
          to utf8, not the KMail fallback encoding, so get the contents as binary
          and decode explicitly. */
@@ -725,7 +729,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, c );
       if ( path == "forward" ) {
-        Incidence* incidence = icalToString( iCal );
+        incidence = icalToString( iCal );
         AttendeeSelector dlg;
         if ( dlg.exec() == QDialog::Rejected )
           return true;
@@ -735,7 +739,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = mail( incidence, c, "forward", iTIPRequest, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
-        Incidence* incidence = icalToString( iCal );
+        incidence = icalToString( iCal );
         showCalendar( incidence->dtStart().date() );
         return true;
       }
@@ -748,6 +752,42 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           result = true;
         }
       }
+      if ( path == "record" ) {
+        incidence = icalToString( iCal );
+
+        int response =
+          KMessageBox::questionYesNoCancel(
+          0,
+          i18nc( "@info",
+                 "The organizer is not expecting a reply to this invitation "
+                 "but you can send them an email message if you desire.\n\n"
+                 "Would you like to send the organizer a message regarding this invitation?\n"
+                 "Press the [Cancel] button to cancel the recording operation." ),
+          i18nc( "@title:window", "Send Email to Organizer" ) );
+
+        switch( response ) {
+        case KMessageBox::Cancel:
+          break;
+        case KMessageBox::Yes:
+          summary = incidence->summary();
+          if ( !summary.isEmpty() ) {
+            summary = i18n( "Re: %1", summary );
+          }
+
+          KToolInvocation::invokeMailer( incidence->organizer().email(), summary );
+          //fall through
+        case KMessageBox::No:
+          if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
+            if ( c.deleteInvitationAfterReply() ) {
+              ( new KMTrashMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+              result = true;
+            }
+          }
+          showCalendar( incidence->dtStart().date() );
+          break;
+        }
+      }
+
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         QString name = path;
         name.remove( QRegExp( "^ATTACH:" ) );
@@ -815,6 +855,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Check my calendar..." );
         if ( path == "reply" )
           return i18n( "Record response into my calendar" );
+        if ( path == "record" )
+          return i18n( "Record invitation into my calendar" );
         if ( path == "delegate" )
           return i18n( "Delegate invitation" );
         if ( path == "forward" )
