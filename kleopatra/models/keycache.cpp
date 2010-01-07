@@ -91,7 +91,7 @@ namespace {
 
     make_comparator_str( ByEMail, .first.c_str() );
 
-    struct is_empty : std::unary_function<const char*,bool> {
+    struct is_string_empty : std::unary_function<const char*,bool> {
         bool operator()( const char * s ) const { return !s || !*s; }
     };
 
@@ -278,7 +278,7 @@ std::vector<Key> KeyCache::findByFingerprint( const std::vector<std::string> & f
     std::vector<std::string> sorted;
     sorted.reserve( fprs.size() );
     std::remove_copy_if( fprs.begin(), fprs.end(), std::back_inserter( sorted ),
-                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+                         bind( is_string_empty(), bind( &std::string::c_str, _1 ) ) );
 
     std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
 
@@ -335,7 +335,7 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
 
     std::vector<std::string> keyids;
     std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( keyids ),
-                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+                         bind( is_string_empty(), bind( &std::string::c_str, _1 ) ) );
 
     // this is just case-insensitive string search:
     std::sort( keyids.begin(), keyids.end(), _detail::ByFingerprint<std::less>() );
@@ -370,7 +370,7 @@ std::vector<Subkey> KeyCache::findSubkeysByKeyID( const std::vector<std::string>
     std::vector<std::string> sorted;
     sorted.reserve( ids.size() );
     std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( sorted ),
-                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+                         bind( is_string_empty(), bind( &std::string::c_str, _1 ) ) );
 
     std::sort( sorted.begin(), sorted.end(), _detail::ByKeyID<std::less>() );
 
@@ -709,7 +709,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     sorted.reserve( keys.size() );
     std::remove_copy_if( keys.begin(), keys.end(),
                          std::back_inserter( sorted ),
-                         bind( is_empty(), bind( &Key::primaryFingerprint, _1 ) ) );
+                         bind( is_string_empty(), bind( &Key::primaryFingerprint, _1 ) ) );
 
     Q_FOREACH( const Key & key, sorted )
         remove( key ); // this is sub-optimal, but makes implementation from here on much easier
