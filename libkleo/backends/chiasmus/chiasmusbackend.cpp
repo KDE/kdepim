@@ -62,7 +62,7 @@ namespace {
   //
 
   // to<> is a demarshaller. It's a class b/c you can't partially
-  // specialise function templates yet. However, to<> can be used as if
+  // specialize function templates yet. However, to<> can be used as if
   // it was a function: QString s = to<QString>( myVariant );
   template <typename T> class to {};
 
