@@ -1298,7 +1298,6 @@ void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
 
 void ViewerPrivate::initHtmlWidget(void)
 {
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
   mViewer->page()->setLinkDelegationPolicy( QWebPage::DelegateAllLinks );
   mViewer->settings()->setAttribute(QWebSettings::JavascriptEnabled, false);
   mViewer->settings()->setAttribute(QWebSettings::JavaEnabled, false);
