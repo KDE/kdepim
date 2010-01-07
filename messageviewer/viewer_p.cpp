@@ -1338,6 +1338,7 @@ void ViewerPrivate::initHtmlWidget(void)
   if ( !metaTypesRegistered ) {
     qRegisterMetaType<KParts::OpenUrlArguments>( "KParts::OpenUrlArguments" );
     qRegisterMetaType<KParts::BrowserArguments>( "KParts::BrowserArguments" );
+    qRegisterMetaType<KParts::WindowArgs>( "KParts::WindowArgs" );
     metaTypesRegistered = true;
   }
 
