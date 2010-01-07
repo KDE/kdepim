@@ -26,6 +26,7 @@
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/version.hpp>
 
 #include <algorithm>
 #include <numeric>
@@ -322,11 +323,13 @@ namespace kdtools {
         return std::find( boost::begin( c ), boost::end( c ), v );
     }
 
+#if BOOST_VERSION < 103500
     template <typename C, typename V>
-    typename boost::range_iterator<const C>::type
+    typename boost::range_const_iterator<C>::type
     find( const C & c, const V & v ) {
         return std::find( boost::begin( c ), boost::end( c ), v );
     }
+#endif
 
     template <typename C, typename P>
     typename boost::range_iterator<C>::type
@@ -334,11 +337,13 @@ namespace kdtools {
         return std::find_if( boost::begin( c ), boost::end( c ), p );
     }
 
+#if BOOST_VERSION < 103500
     template <typename C, typename P>
-    typename boost::range_iterator<const C>::type
+    typename boost::range_const_iterator<C>::type
     find_if( const C & c, P p ) {
         return std::find_if( boost::begin( c ), boost::end( c ), p );
     }
+#endif
 
     template <typename C, typename V>
     bool contains( const C & c, const V & v ) {
