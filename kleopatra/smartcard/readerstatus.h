@@ -96,6 +96,9 @@ namespace SmartCard {
 
         std::vector<PinState> pinStates( unsigned int slot ) const;
 
+    public Q_SLOTS:
+        void startMonitoring();
+
     Q_SIGNALS:
         void anyCardHasNullPinChanged( bool );
         void anyCardCanLearnKeysChanged( bool );

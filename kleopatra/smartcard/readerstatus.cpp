@@ -45,6 +45,8 @@
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
+#include <gpg-error.h>
+
 #include <QFileSystemWatcher>
 #include <QStringList>
 #include <QDir>
@@ -75,6 +77,9 @@ using namespace Kleo;
 using namespace Kleo::SmartCard;
 using namespace GpgME;
 using namespace boost;
+
+static const unsigned int MAX_RETRIES = 3;
+static const unsigned int RETRY_WAIT = 2; // seconds
 
 static ReaderStatus * self = 0;
 
@@ -215,22 +220,40 @@ static ReaderStatus::PinState parse_pin_state( const std::string & s ) {
     }
 }
 
-static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( const shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
-    qDebug() << "gpgagent_transact(" << command << ")";
-    const AssuanResult res = gpgAgent->assuanTransact( command );
-    err = res.error();
-    if ( !err.code() )
-        err = res.assuanError();
-    if ( err.code() ) {
-        qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
-        return std::auto_ptr<DefaultAssuanTransaction>();
+static void ReaderStatusThread_sleep( unsigned int secs );
+
+static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
+    for ( unsigned int i = 0 ; i < MAX_RETRIES ; ++i ) {
+        if ( i > 0 )
+            qDebug() << "gpgagent_transact(" << command << "), try #" << i;
+        else
+            qDebug() << "gpgagent_transact(" << command << ")";
+        const AssuanResult res = gpgAgent->assuanTransact( command );
+        err = res.error();
+        if ( !err.code() )
+            err = res.assuanError();
+        if ( err.code() ) {
+            qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
+            if ( err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE ) {
+                qDebug() << "Assuan problem, try re-creating the assuan context in " << RETRY_WAIT << "sec.";
+                gpgAgent.reset();
+                qDebug() << "waiting for gpg-agent ...zZZ";
+                ReaderStatusThread_sleep( RETRY_WAIT );
+                qDebug() << "returning from waiting for gpg-agent ...oOO";
+                gpgAgent = Context::createForEngine( AssuanEngine );
+                continue;
+            }
+            return std::auto_ptr<DefaultAssuanTransaction>();
+        }
+        std::auto_ptr<AssuanTransaction> t = gpgAgent->takeLastAssuanTransaction();
+        return dynamic_pointer_cast<DefaultAssuanTransaction>( t );
     }
-    std::auto_ptr<AssuanTransaction> t = gpgAgent->takeLastAssuanTransaction();
-    return dynamic_pointer_cast<DefaultAssuanTransaction>( t );
+    qDebug() << "Max. retries reached, giving up.";
+    return std::auto_ptr<DefaultAssuanTransaction>();
 }
 
 // returns const std::string so template deduction in boost::split works, and we don't need a temporary
-static const std::string scd_getattr_status( const shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
+static const std::string scd_getattr_status( shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
     std::string cmd = "SCD GETATTR ";
     cmd += what;
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, cmd.c_str(), err );
@@ -244,7 +267,7 @@ static const std::string scd_getattr_status( const shared_ptr<Context> & gpgAgen
 }
 
 // returns const std::string so template deduction in boost::split works, and we don't need a temporary
-static const std::string gpgagent_data( const shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
+static const std::string gpgagent_data( shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, what, err );
     if ( t.get() )
         return t->data();
@@ -273,7 +296,7 @@ static bool parse_keypairinfo_and_lookup_key( Context * ctx, const std::string &
     return !e && !key.isNull();
 }
 
-static CardInfo get_more_detailed_status( const QString & fileName, unsigned int idx, const shared_ptr<Context> & gpg_agent ) {
+static CardInfo get_more_detailed_status( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent ) {
     qDebug() << "get_more_detailed_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
     CardInfo ci( fileName, ReaderStatus::CardUsable );
     if ( idx != 0 || !gpg_agent )
@@ -334,7 +357,7 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
     return ci;
 }
 
-static CardInfo get_card_info( const QString & fileName, unsigned int idx, const shared_ptr<Context> & gpg_agent, ReaderStatus::Status oldStatus ) {
+static CardInfo get_card_info( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent, ReaderStatus::Status oldStatus ) {
     qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldStatus] << ')';
     const ReaderStatus::Status st = read_status( fileName );
     if ( ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldStatus && gpg_agent )
@@ -343,7 +366,7 @@ static CardInfo get_card_info( const QString & fileName, unsigned int idx, const
         return CardInfo( fileName, st );
 }
 
-static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, const shared_ptr<Context> & gpgAgent, const std::vector<CardInfo> & oldCardInfos ) {
+static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent, const std::vector<CardInfo> & oldCardInfos ) {
     const QDir gnupgHome( gnupgHomePath );
     if ( !gnupgHome.exists() ) {
         qDebug() << "update_cardinfo: gnupg home" << gnupgHomePath << "does not exist!";
@@ -407,6 +430,9 @@ namespace {
             m_waitForTransactions.wakeOne();
         }
 
+        // make QThread::sleep public
+        using QThread::sleep;
+
     Q_SIGNALS:
         void anyCardHasNullPinChanged( bool );
         void anyCardCanLearnKeysChanged( bool );
@@ -437,7 +463,7 @@ namespace {
 
     private:
         /* reimp */ void run() {
-            const shared_ptr<Context> gpgAgent( Context::createForEngine( AssuanEngine ) );
+            shared_ptr<Context> gpgAgent( Context::createForEngine( AssuanEngine ) );
 
             while ( true ) {
 
@@ -536,6 +562,10 @@ namespace {
 
 }
 
+void ReaderStatusThread_sleep( unsigned int secs ) {
+    ReaderStatusThread::sleep( secs );
+}
+
 class ReaderStatus::Private : ReaderStatusThread {
     friend class Kleo::SmartCard::ReaderStatus;
     ReaderStatus * const q;
@@ -588,11 +618,15 @@ private:
 ReaderStatus::ReaderStatus( QObject * parent )
     : QObject( parent ), d( new Private( this ) )
 {
-    QTimer::singleShot( 500, d.get(), SLOT(start()) );
     self = this;
 }
 
 ReaderStatus::~ReaderStatus() { self = 0; }
+
+// slot
+void ReaderStatus::startMonitoring() {
+    d->start();
+}
 
 // static
 ReaderStatus * ReaderStatus::mutableInstance() {
