@@ -356,6 +356,11 @@ namespace kdtools {
     }
 
     template <typename C, typename V>
+    bool binary_search( const C & c, const V & v ) {
+        return std::binary_search( boost::begin( c ), boost::end( c ), v );
+    }
+
+    template <typename C, typename V>
     size_t count( const C & c, const V & v ) {
         return std::count( boost::begin( c ), boost::end( c ), v );
     }
@@ -519,6 +524,20 @@ namespace kdtools {
     template <typename C, typename P>
     void sort( C & c, P p ) {
         return std::sort( boost::begin( c ), boost::end( c ), p );
+    }
+
+    template <typename C>
+    C sorted( const C & c ) {
+        C copy( c );
+        kdtools::sort( copy );
+        return copy;
+    }
+
+    template <typename C, typename P>
+    C sorted( const C & c, P p ) {
+        C copy( c );
+        kdtools::sort( copy, p );
+        return copy;
     }
 
 }
