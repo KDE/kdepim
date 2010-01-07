@@ -50,6 +50,8 @@ using namespace KMime::Types;
 using namespace GpgME;
 using namespace boost;
 
+namespace KMime {
+namespace Types {
 static bool operator==( const AddrSpec & lhs, const AddrSpec & rhs ) {
     return lhs.localPart == rhs.localPart
         && lhs.domain == rhs.domain ;
@@ -64,6 +66,8 @@ static bool determine_ambiguous( const Mailbox & mb, const std::vector<Key> & ke
     // ### really do check when we don't only show matching keys
     return keys.size() != 1 ;
 }
+} // namespace Types
+} // namespace KMime
 
 class Sender::Private {
     friend class ::Kleo::Crypto::Sender;
