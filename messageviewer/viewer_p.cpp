@@ -1908,7 +1908,7 @@ void ViewerPrivate::createActions()
   mSelectAllAction  = new KAction(i18n("Select All Text"), this);
   ac->addAction("mark_all_text", mSelectAllAction );
   connect(mSelectAllAction, SIGNAL(triggered(bool) ), SLOT(selectAll()));
-  mSelectAllAction->setShortcut(QKeySequence(Qt::CTRL+Qt::SHIFT+Qt::Key_A));
+  mSelectAllAction->setShortcut( QKeySequence( Qt::CTRL+ Qt::Key_T ) );
 
   // copy Email address to clipboard
   mCopyURLAction = new KAction( KIcon( "edit-copy" ),
