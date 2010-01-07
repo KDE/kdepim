@@ -66,6 +66,7 @@ Name[zh_CN]=Kleopatra
 Name[zh_TW]=Kleopatra
 GenericName=Certificate Manager and Unified Crypto GUI
 GenericName[ca]=Gestor de certificats i IGU criptogràfica unificada
+GenericName[da]=Certifikathåndtering og forenet krypterings-GUI
 GenericName[de]=Zertifikatsverwaltung und Kryptografie-Oberfläche
 GenericName[en_GB]=Certificate Manager and Unified Crypto GUI
 GenericName[es]=Gestor de certificados e interfaz gráfica unificada de cifrado
