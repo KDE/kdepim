@@ -34,7 +34,7 @@
 
 #include "prepencryptcommand.h"
 
-#include <crypto/encryptemailcontroller.h>
+#include <crypto/newsignencryptemailcontroller.h>
 
 #include <utils/exception.h>
 
@@ -63,7 +63,7 @@ public Q_SLOTS:
     void slotError( int, const QString & );
 
 private:
-    shared_ptr<EncryptEMailController> controller;
+    shared_ptr<NewSignEncryptEMailController> controller;
 };
 
 PrepEncryptCommand::PrepEncryptCommand()
@@ -96,33 +96,41 @@ void PrepEncryptCommand::Private::checkForErrors() const {
 
 int PrepEncryptCommand::doStart() {
 
-    removeMemento( EncryptEMailController::mementoName() );
+    removeMemento( NewSignEncryptEMailController::mementoName() );
 
     d->checkForErrors();
 
-    d->controller.reset( new EncryptEMailController( shared_from_this(), EncryptEMailController::GpgOLMode ) );
+    d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
+    d->controller->setEncrypting( true );
+
+    const QString session = sessionTitle();
+    if ( !session.isEmpty() )
+        d->controller->setSubject( session );
 
     if ( hasOption( "protocol" ) )
         // --protocol is optional for PREP_ENCRYPT
         d->controller->setProtocol( checkProtocol( EMail ) );
 
-    QObject::connect( d->controller.get(), SIGNAL(recipientsResolved()), d.get(), SLOT(slotRecipientsResolved()) );
+    if ( hasOption( "expect-sign" ) )
+        d->controller->setSigning( true );
+
+    QObject::connect( d->controller.get(), SIGNAL(certificatesResolved()), d.get(), SLOT(slotRecipientsResolved()) );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 
-    d->controller->startResolveRecipients( recipients(), senders() );
+    d->controller->startResolveCertificates( recipients(), senders() );
 
     return 0;
 }
 
 void PrepEncryptCommand::Private::slotRecipientsResolved() {
     //hold local shared_ptr to member as q->done() deletes *this
-    const shared_ptr<EncryptEMailController> cont = controller;
+    const shared_ptr<NewSignEncryptEMailController> cont = controller;
     QPointer<Private> that( this );
 
     try {
 
         q->sendStatus( "PROTOCOL", controller->protocolAsString() );
-        q->registerMemento( EncryptEMailController::mementoName(),
+        q->registerMemento( NewSignEncryptEMailController::mementoName(),
                             make_typed_memento( controller ) );
         q->done();
         return;
@@ -138,7 +146,7 @@ void PrepEncryptCommand::Private::slotRecipientsResolved() {
                  i18n("Caught unknown exception in PrepEncryptCommand::Private::slotRecipientsResolved") );
     }
     if ( that ) // isn't this always deleted here and thus unnecessary?
-        q->removeMemento( EncryptEMailController::mementoName() );
+        q->removeMemento( NewSignEncryptEMailController::mementoName() );
     cont->cancel();
 }
 
