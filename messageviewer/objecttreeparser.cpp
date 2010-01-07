@@ -288,7 +288,7 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
     ProcessResult processResult( mNodeHelper );
 
     if ( mHtmlWriter )
-      htmlWriter()->queue( QString::fromLatin1("<a name=\"att%1\"/>").arg( node->indexForContent(c).toString() ) );
+      htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"/>").arg( node->indexForContent(c).toString() ) );
     if ( const Interface::BodyPartFormatter * formatter
           = BodyPartFormatterFactory::instance()->createFor( c->contentType()->mediaType(), c->contentType()->subType() ) ) {
       PartNodeBodyPart part( item, c, mNodeHelper, codecFor( c ) );

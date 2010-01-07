@@ -2984,18 +2984,24 @@ void ViewerPrivate::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
 
 void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
 {
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  DOM::Document doc = mViewer->htmlDocument();
+  QWebElement doc = mViewer->page()->mainFrame()->documentElement();
 
   // The anchors for this are created in ObjectTreeParser::parseObjectTree()
-  mViewer->gotoAnchor( QString::fromLatin1( "att%1" ).arg( node->index().toString() ) );
+  QWebElement link = doc.findFirst( QString::fromLatin1( "a#att%1" ).arg( node->index().toString() ) );
+  if( link.isNull() ) {
+    return;
+  }
+
+  int linkPos = link.geometry().bottom();
+  int viewerPos  = mViewer->page()->mainFrame()->scrollPosition().y();
+  link.setFocus();
+  mViewer->page()->mainFrame()->scroll(0, linkPos - viewerPos );
 
   // Remove any old color markings which might be there
   const KMime::Content *root = node->topLevel();
   int totalChildCount = allContents( root ).size();
   for ( int i = 0; i <= totalChildCount + 1; i++ ) {
-    DOM::Element attachmentDiv = doc.getElementById( QString( "attachmentDiv%1" ).arg( i + 1 ) );
+    QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( i + 1 ) );
     if ( !attachmentDiv.isNull() )
       attachmentDiv.removeAttribute( "style" );
   }
@@ -3004,21 +3010,11 @@ void ViewerPrivate::scrollToAttachment( const KMime::Content *node )
   // We created a special marked div for this in writeAttachmentMarkHeader() in ObjectTreeParser,
   // find and modify that now.
 
-
-  kDebug() << "'ANDRIS::looking for " << QString( "attachmentDiv%1" ).arg( node->index().toString() );
-  DOM::Element attachmentDiv = doc.getElementById( QString( "attachmentDiv%1" ).arg( node->index().toString() ) );
+  QWebElement attachmentDiv = doc.findFirst( QString( "div#attachmentDiv%1" ).arg( node->index().toString() ) );
   if ( attachmentDiv.isNull() ) {
-    kWarning() << "Could not find attachment div for attachment" << node->index().toString();
     return;
   }
-  attachmentDiv.setAttribute( "style", QString( "border:2px solid %1" )
-      .arg( cssHelper()->pgpWarnColor().name() ) );
-
-  // Update rendering, otherwise the rendering is not updated when the user clicks on an attachment
-  // that causes scrolling and the open attachment dialog
-  doc.updateRendering();
-  q->update();
-#endif
+  attachmentDiv.setAttribute( "style", QString( "border:2px solid %1" ).arg( cssHelper()->pgpWarnColor().name() ) );
 }
 
 void ViewerPrivate::setUseFixedFont( bool useFixedFont )
