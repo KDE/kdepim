@@ -334,13 +334,14 @@ namespace kdtools {
         return std::find_if( boost::begin( c ), boost::end( c ), p );
     }
 
-    template <typename C, typename V>
-    bool contains( const C & c, const V & v ) {
-        return find( c, v ) != boost::end( c ) ;
+    template <typename C, typename P>
+    typename boost::range_iterator<const C>::type
+    find_if( const C & c, P p ) {
+        return std::find_if( boost::begin( c ), boost::end( c ), p );
     }
 
     template <typename C, typename V>
-    bool contains( C & c, const V & v ) {
+    bool contains( const C & c, const V & v ) {
         return find( c, v ) != boost::end( c ) ;
     }
 
