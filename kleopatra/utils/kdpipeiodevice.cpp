@@ -503,7 +503,7 @@ bool KDPipeIODevice::waitForBytesWritten( int msecs ) { KDAB_CHECK_THIS;
     LOCKED( r );
     if ( r->bytesInBuffer() != 0 || r->eof || r->error )
         return true;
-    assert( false );
+    assert( false ); // ### wtf?
     return r->bufferNotEmptyCondition.wait( &r->mutex, msecs ) ;
 }
 
@@ -761,7 +761,7 @@ void Reader::run() {
 
             assert( numBytes > 0 );
 
-            qDebug( "%p: Reader::run: trying to read %d bytes", ( void* )this, numBytes );
+            qDebug( "%p: Reader::run: trying to read %d bytes from fd %d", ( void* )this, numBytes, fd );
 #ifdef Q_OS_WIN32
             isReading = true;
             mutex.unlock();
