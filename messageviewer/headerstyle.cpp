@@ -492,10 +492,8 @@ QString FancyHeaderStyle::format( KMime::Message * message,
 
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() ) );
-#if 0 // FIXME this deadlocks as it is called from a akonadi job result slot!!!
   if ( !job->exec() )
     return QString();
-#endif
 
   const KABC::Addressee::List addresses = job->contacts();
 
