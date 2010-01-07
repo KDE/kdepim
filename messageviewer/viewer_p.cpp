@@ -1307,11 +1307,7 @@ void ViewerPrivate::initHtmlWidget(void)
   mViewer->setFocusPolicy( Qt::WheelFocus );
   // register our own event filter for shift-click
   mViewer->window()->installEventFilter( this );
-#if 0
-  mViewer->setURLCursor( QCursor( Qt::PointingHandCursor ) );
-  // Espen 2000-05-14: Getting rid of thick ugly frames
-  mViewer->view()->setLineWidth(0);
-#endif
+
   if ( !htmlWriter() ) {
     mPartHtmlWriter = new WebKitPartHtmlWriter( mViewer, 0 );
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
