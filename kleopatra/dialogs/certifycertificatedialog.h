@@ -64,6 +64,7 @@ namespace Dialogs {
 
         bool nonRevocableCertificationSelected() const;
 
+        void setSelectedUserIDs( const std::vector<GpgME::UserID> & uids );
         std::vector<unsigned int> selectedUserIDs() const;
 
         void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
