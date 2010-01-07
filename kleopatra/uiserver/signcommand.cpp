@@ -34,13 +34,16 @@
 
 #include "signcommand.h"
 
-#include <crypto/signemailcontroller.h>
+#include <crypto/newsignencryptemailcontroller.h>
 
+#include <utils/kleo_assert.h>
 #include <utils/exception.h>
 #include <utils/input.h>
 #include <utils/output.h>
 
 #include <KLocale>
+
+#include <QTimer>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -68,7 +71,7 @@ private Q_SLOTS:
     void slotError( int, const QString & );
 
 private:
-    shared_ptr<SignEMailController> controller;
+    shared_ptr<NewSignEncryptEMailController> controller;
 };
 
 SignCommand::SignCommand()
@@ -101,28 +104,78 @@ void SignCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_INV_VALUE ),
                          i18n( "MESSAGE command is not allowed before SIGN" ) );
 
+    const shared_ptr<NewSignEncryptEMailController> m = q->mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
+    kleo_assert( m );
+
+    if ( m && m->isSigning() ) {
+
+        if ( m->protocol() != q->checkProtocol( EMail ) )
+            throw Exception( makeError( GPG_ERR_CONFLICT ),
+                             i18n( "Protocol given conflicts with protocol determined by PREP_ENCRYPT in this session" ) );
+
+        // ### check that any SENDER here is the same as the one for PREP_ENCRYPT
+
+        // ### ditto RECIPIENT
+
+    } else {
+
+        // ### support the stupid "default signer" semantics of GpgOL
+        // ### where SENDER is missing
+        if ( false )
+        if ( q->senders().empty() || q->informativeSenders() )
+            throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
+                             i18n( "No senders given, or only with --info" ) );
+
+    }
+
+}
+
+static void connectController( const QObject * controller, const QObject * d ) {
+    QObject::connect( controller, SIGNAL(certificatesResolved()), d, SLOT(slotSignersResolved() ) );
+    QObject::connect( controller, SIGNAL(reportMicAlg(QString)), d, SLOT(slotMicAlgDetermined(QString)) );
+    QObject::connect( controller, SIGNAL(done()), d, SLOT(slotDone()) );
+    QObject::connect( controller, SIGNAL(error(int,QString)), d, SLOT(slotError(int,QString)) );
 }
 
 int SignCommand::doStart() {
 
     d->checkForErrors();
 
-    d->controller.reset( new SignEMailController( shared_from_this(), SignEMailController::GpgOLMode ) );
-    d->controller->setProtocol( checkProtocol( EMail, AssuanCommand::AllowProtocolMissing ) );
+    const shared_ptr<NewSignEncryptEMailController> seec = mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
 
-    QObject::connect( d->controller.get(), SIGNAL(signersResolved()), d.get(), SLOT(slotSignersResolved() ) );
-    QObject::connect( d->controller.get(), SIGNAL(reportMicAlg(QString)), d.get(), SLOT(slotMicAlgDetermined(QString)) );
-    QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()) );
-    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
+    if ( seec && seec->isSigning() ) {
+        // reuse the controller from a previous PREP_ENCRYPT --expect-sign, if available:
+        d->controller = seec;
+        connectController( seec.get(), d.get() );
+        if ( !seec->isEncrypting() )
+            removeMemento( NewSignEncryptEMailController::mementoName() );
+        seec->setExecutionContext( shared_from_this() );
+        if ( seec->areCertificatesResolved() )
+            QTimer::singleShot( 0, d.get(), SLOT(slotSignersResolved()) );
+        else
+            kleo_assert( seec->isResolvingInProgress() );
+    } else {
+        // use a new controller
+        d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
 
-    d->controller->startResolveSigners( senders() );
+        const QString session = sessionTitle();
+        if ( !session.isEmpty() )
+            d->controller->setSubject( session );
+
+        d->controller->setSigning( true );
+        d->controller->setEncrypting( false );
+        d->controller->setProtocol( checkProtocol( EMail, AssuanCommand::AllowProtocolMissing ) );
+        connectController( d->controller.get(), d.get() );
+        d->controller->startResolveCertificates( recipients(), senders() );
+    }
+
 
     return 0;
 }
 
 void SignCommand::Private::slotSignersResolved() {
     //hold local shared_ptr to member as q->done() deletes *this
-    const shared_ptr<SignEMailController> cont( controller );
+    const shared_ptr<NewSignEncryptEMailController> cont( controller );
 
     try {
         const QString sessionTitle = q->sessionTitle();
@@ -130,9 +183,8 @@ void SignCommand::Private::slotSignersResolved() {
             Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
                 i->setLabel( sessionTitle );
 
-        controller->setDetachedSignature( q->hasOption("detached" ) );
-        controller->setInputsAndOutputs( q->inputs(), q->outputs() );
-        controller->start();
+        cont->setDetachedSignature( q->hasOption("detached" ) );
+        cont->startSigning( q->inputs(), q->outputs() );
 
         return;
 
@@ -151,7 +203,7 @@ void SignCommand::Private::slotSignersResolved() {
 
 void SignCommand::Private::slotMicAlgDetermined( const QString & micalg ) {
     //hold local shared_ptr to member as q->done() deletes *this
-    const shared_ptr<SignEMailController> cont( controller );
+    const shared_ptr<NewSignEncryptEMailController> cont( controller );
 
     try {
 

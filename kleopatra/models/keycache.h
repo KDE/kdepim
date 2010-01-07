@@ -50,6 +50,12 @@ namespace GpgME {
     class Subkey;
 }
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
+
 namespace Kleo {
 
     class FileSystemWatcher;
@@ -102,6 +108,9 @@ namespace Kleo {
 
         std::vector<GpgME::Key> findRecipients( const GpgME::DecryptionResult & result ) const;
         std::vector<GpgME::Key> findSigners( const GpgME::VerificationResult & result ) const;
+
+        std::vector<GpgME::Key> findSigningKeysByMailbox( const KMime::Types::Mailbox & mb ) const;
+        std::vector<GpgME::Key> findEncryptionKeysByMailbox( const KMime::Types::Mailbox & mb ) const;
 
         enum Option {
             NoOption = 0,

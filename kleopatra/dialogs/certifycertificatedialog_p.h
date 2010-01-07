@@ -57,6 +57,7 @@ namespace Kleo {
                 explicit UserIDModel( QObject * parent=0 ) : QStandardItemModel( parent ) {}
                 GpgME::Key certificateToCertify() const { return m_key; }
                 void setCertificateToCertify( const GpgME::Key & key );
+                void setCheckedUserIDs( const std::vector<unsigned int> & uids );
                 std::vector<unsigned int> checkedUserIDs() const;
 
             private:
@@ -85,6 +86,7 @@ namespace Kleo {
                 explicit SelectUserIDsPage( QWidget * parent=0 );
                 /* reimp */ bool isComplete() const;
 
+                void setSelectedUserIDs( const std::vector<unsigned int> & indexes );
                 std::vector<unsigned int> selectedUserIDs() const;
                 void setCertificateToCertify( const GpgME::Key & ids );
                 GpgME::Key certificateToCertify() const { return m_userIDModel.certificateToCertify(); }

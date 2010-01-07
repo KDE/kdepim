@@ -167,6 +167,8 @@ set( _kleopatra_SRCS
   dialogs/setinitialpindialog.cpp
 
   crypto/certificateresolver.cpp
+  crypto/sender.cpp
+  crypto/recipient.cpp
   crypto/task.cpp
   crypto/taskcollection.cpp
   crypto/decryptverifytask.cpp
@@ -174,6 +176,7 @@ set( _kleopatra_SRCS
   crypto/decryptverifyfilescontroller.cpp
   crypto/encryptemailtask.cpp
   crypto/encryptemailcontroller.cpp
+  crypto/newsignencryptemailcontroller.cpp
   crypto/signencryptfilestask.cpp
   crypto/signemailtask.cpp
   crypto/signemailcontroller.cpp
@@ -190,6 +193,8 @@ set( _kleopatra_SRCS
 
   crypto/gui/newresultpage.cpp
   crypto/gui/newsignencryptfileswizard.cpp
+
+  crypto/gui/signencryptemailconflictdialog.cpp
 
   crypto/gui/decryptverifyoperationwidget.cpp
   crypto/gui/decryptverifyfileswizard.cpp

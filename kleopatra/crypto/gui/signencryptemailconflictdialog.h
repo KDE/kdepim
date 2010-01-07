@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    dialogs/signcertificatedialog.h
+    crypto/gui/signencryptemailconflictdialog.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,66 +30,74 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
-#define __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTEMAILCONFLICTDIALOG_H__
+#define __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTEMAILCONFLICTDIALOG_H__
 
 #include <QDialog>
 
-#include <QWizard>
-
-#include <kleo/signkeyjob.h>
-
-#include <gpgme++/key.h>
-
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
+#include <vector>
+
+namespace boost {
+    template <typename T> class shared_ptr;
+}
+
 namespace GpgME {
-    class Error;
+    class Key;
 }
 
 namespace Kleo {
-    class SignKeyJob;
+namespace Crypto {
+    class Sender;
+    class Recipient;
+}
+}
 
-namespace Dialogs {
+namespace Kleo {
+namespace Crypto {
+namespace Gui {
 
-    class CertifyCertificateDialog : public QWizard {
+    class SignEncryptEMailConflictDialog : public QDialog {
         Q_OBJECT
     public:
-        explicit CertifyCertificateDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~CertifyCertificateDialog();
+        explicit SignEncryptEMailConflictDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~SignEncryptEMailConflictDialog();
 
-        bool exportableCertificationSelected() const;
+        // Inputs
 
-        bool trustCertificationSelected() const;
+        void setPresetProtocol( GpgME::Protocol proto );
+        void setSubject( const QString & subject );
 
-        bool nonRevocableCertificationSelected() const;
+        void setSenders( const std::vector<Sender> & senders );
+        void setRecipients( const std::vector<Recipient> & recipients );
 
-        void setSelectedUserIDs( const std::vector<GpgME::UserID> & uids );
-        std::vector<unsigned int> selectedUserIDs() const;
+        void setSign( bool on );
+        void setEncrypt( bool on );
 
-        void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
-        GpgME::Key selectedSecretKey() const;
+        // Intermediate
 
-        bool sendToServer() const;
+        bool isComplete() const;
 
-        unsigned int selectedCheckLevel() const;
+        // Outputs
 
-        void setCertificateToCertify( const GpgME::Key & key );
-
-        void connectJob( Kleo::SignKeyJob * job );
-        void setError( const GpgME::Error & error );
-
-    Q_SIGNALS:
-        void certificationPrepared();
+        GpgME::Protocol selectedProtocol() const;
+        std::vector<GpgME::Key> resolvedSigningKeys() const;
+        std::vector<GpgME::Key> resolvedEncryptionKeys() const;
 
     private:
+        Q_PRIVATE_SLOT( d, void slotCompleteChanged() )
+        Q_PRIVATE_SLOT( d, void slotShowAllRecipientsToggled(bool) )
+        Q_PRIVATE_SLOT( d, void slotProtocolChanged() )
+        Q_PRIVATE_SLOT( d, void slotCertificateSelectionDialogRequested() )
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void certificationResult(GpgME::Error) )
     };
 
 }
 }
+}
 
-#endif /* __KLEOPATRA_DIALOGS_CERTIFYCERTIFICATEDIALOG_H__ */
-
+#endif /* __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTEMAILCONFLICTDIALOG_H__ */

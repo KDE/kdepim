@@ -197,6 +197,7 @@ void CertifyCertificateCommand::doStart() {
     d->ensureDialogCreated();
     assert( d->dialog );
     d->dialog->setCertificateToCertify( d->key() );
+    d->dialog->setSelectedUserIDs( d->uids );
     d->dialog->setCertificatesWithSecretKeys( secKeys );
     d->dialog->show();
 }

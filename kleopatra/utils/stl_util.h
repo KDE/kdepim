@@ -22,13 +22,17 @@
 #ifndef __KDTOOLSCORE_STL_UTIL_H__
 #define __KDTOOLSCORE_STL_UTIL_H__
 
-#include <algorithm>
-#include <numeric>
-#include <utility>
-
 #include <boost/range.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
+#include <boost/call_traits.hpp>
+#include <boost/version.hpp>
+
+#include <algorithm>
+#include <numeric>
+#include <utility>
+#include <iterator>
+#include <functional>
 
 namespace kdtools {
 
@@ -48,6 +52,29 @@ namespace kdtools {
         const T & operator()( const T & t ) const { return t; }
     };
 
+    template <typename Pair>
+    struct select1st;
+
+    template <typename U, typename V>
+    struct select1st< std::pair<U,V> >
+        : std::unary_function<std::pair<U,V>,U>
+    {
+        typename boost::call_traits<U>::param_type
+        operator()( const std::pair<U,V> & pair ) const { return pair.first; }
+    };
+        
+    template <typename Pair>
+    struct select2nd;
+
+    template <typename U, typename V>
+    struct select2nd< std::pair<U,V> >
+        : std::unary_function<std::pair<U,V>,V>
+    {
+        typename boost::call_traits<V>::param_type
+        operator()( const std::pair<U,V> & pair ) const { return pair.second; }
+    };
+
+
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
     OutputIterator copy_if( InputIterator first, InputIterator last, OutputIterator dest, UnaryPredicate pred ) {
 	while ( first != last ) {
@@ -65,6 +92,48 @@ namespace kdtools {
         return std::transform( boost::make_filter_iterator( filter, first, last ),
                                boost::make_filter_iterator( filter, last,  last ),
                                dest, pred );
+    }
+
+    template <typename InputIterator, typename OutputIterator>
+    OutputIterator copy_1st( InputIterator first, InputIterator last, OutputIterator dest ) {
+        return std::copy( boost::make_transform_iterator( first, select1st<typename std::iterator_traits<InputIterator>::value_type>() ),
+                          boost::make_transform_iterator( last,  select1st<typename std::iterator_traits<InputIterator>::value_type>() ),
+                          dest );
+    }
+
+    template <typename InputIterator, typename OutputIterator>
+    OutputIterator copy_2nd( InputIterator first, InputIterator last, OutputIterator dest ) {
+        return std::copy( boost::make_transform_iterator( first, select2nd<typename std::iterator_traits<InputIterator>::value_type>() ),
+                          boost::make_transform_iterator( last,  select2nd<typename std::iterator_traits<InputIterator>::value_type>() ),
+                          dest );
+    }
+
+    template <typename InputIterator, typename OutputIterator, typename Predicate>
+    OutputIterator copy_1st_if( InputIterator first, InputIterator last, OutputIterator dest, Predicate pred ) {
+        return kdtools::copy_if( boost::make_transform_iterator( first, select1st<typename std::iterator_traits<InputIterator>::value_type>() ),
+                                 boost::make_transform_iterator( last,  select1st<typename std::iterator_traits<InputIterator>::value_type>() ),
+                                 dest, pred );
+    }
+
+    template <typename InputIterator, typename OutputIterator, typename Predicate>
+    OutputIterator copy_2nd_if( InputIterator first, InputIterator last, OutputIterator dest, Predicate pred ) {
+        return kdtools::copy_if( boost::make_transform_iterator( first, select2nd<typename std::iterator_traits<InputIterator>::value_type>() ),
+                                 boost::make_transform_iterator( last,  select2nd<typename std::iterator_traits<InputIterator>::value_type>() ),
+                                 dest, pred );
+    }
+
+    template <typename OutputIterator, typename InputIterator, typename UnaryFunction>
+    OutputIterator transform_1st( InputIterator first, InputIterator last, OutputIterator dest, UnaryFunction func ) {
+        return std::transform( boost::make_transform_iterator( first, select1st<typename std::iterator_traits<InputIterator>::value_type>() ),
+                               boost::make_transform_iterator( last,  select1st<typename std::iterator_traits<InputIterator>::value_type>() ),
+                               dest, func );
+    }
+
+    template <typename OutputIterator, typename InputIterator, typename UnaryFunction>
+    OutputIterator transform_2nd( InputIterator first, InputIterator last, OutputIterator dest, UnaryFunction func ) {
+        return std::transform( boost::make_transform_iterator( first, select2nd<typename std::iterator_traits<InputIterator>::value_type>() ),
+                               boost::make_transform_iterator( last,  select2nd<typename std::iterator_traits<InputIterator>::value_type>() ),
+                               dest, func );
     }
 
     template <typename Value, typename InputIterator, typename UnaryPredicate>
@@ -254,11 +323,13 @@ namespace kdtools {
         return std::find( boost::begin( c ), boost::end( c ), v );
     }
 
+#if BOOST_VERSION < 103500
     template <typename C, typename V>
-    typename boost::range_iterator<const C>::type
+    typename boost::range_const_iterator<C>::type
     find( const C & c, const V & v ) {
         return std::find( boost::begin( c ), boost::end( c ), v );
     }
+#endif
 
     template <typename C, typename P>
     typename boost::range_iterator<C>::type
@@ -266,19 +337,27 @@ namespace kdtools {
         return std::find_if( boost::begin( c ), boost::end( c ), p );
     }
 
-    template <typename C, typename V>
-    bool contains( const C & c, const V & v ) {
-        return find( c, v ) != boost::end( c ) ;
+#if BOOST_VERSION < 103500
+    template <typename C, typename P>
+    typename boost::range_const_iterator<C>::type
+    find_if( const C & c, P p ) {
+        return std::find_if( boost::begin( c ), boost::end( c ), p );
     }
+#endif
 
     template <typename C, typename V>
-    bool contains( C & c, const V & v ) {
+    bool contains( const C & c, const V & v ) {
         return find( c, v ) != boost::end( c ) ;
     }
 
     template <typename C, typename P>
     bool contains_if( const C & c, P p ) {
         return find_if( c, p ) != boost::end( c );
+    }
+
+    template <typename C, typename V>
+    bool binary_search( const C & c, const V & v ) {
+        return std::binary_search( boost::begin( c ), boost::end( c ), v );
     }
 
     template <typename C, typename V>
@@ -297,6 +376,11 @@ namespace kdtools {
         std::transform( boost::begin( i ), boost::end( i ),
                         std::back_inserter( o ), p );
         return o;
+    }
+
+    template <typename I, typename OutputIterator, typename P>
+    OutputIterator transform( const I & i, OutputIterator out, P p ) {
+        return std::transform( boost::begin( i ), boost::end( i ), out, p );
     }
 
     template <typename O, typename I, typename P, typename F>
@@ -361,6 +445,25 @@ namespace kdtools {
         return std::for_each( boost::begin( i ), boost::end( i ), p );
     }
 
+    template <typename C1, typename C2>
+    bool equal( const C1 & c1, const C2 & c2 ) {
+        return boost::size( c1 ) == boost::size( c2 )
+            && std::equal( boost::begin( c1 ), boost::end( c1 ),
+                           boost::begin( c2 ) );
+    }
+
+    template <typename C1, typename C2, typename P>
+    bool equal( const C1 & c1, const C2 & c2, P p ) {
+        return boost::size( c1 ) == boost::size( c2 )
+            && std::equal( boost::begin( c1 ), boost::end( c1 ),
+                           boost::begin( c2 ), p );
+    }
+
+    template <typename C, typename O1, typename O2, typename P>
+    std::pair<O1,O2> separate_if( const C & c, O1 o1, O2 o2, P p ) {
+        return separate_if( boost::begin( c ), boost::end( c ), o1, o2, p );
+    }
+
     //@}
 
     template <typename C>
@@ -421,6 +524,20 @@ namespace kdtools {
     template <typename C, typename P>
     void sort( C & c, P p ) {
         return std::sort( boost::begin( c ), boost::end( c ), p );
+    }
+
+    template <typename C>
+    C sorted( const C & c ) {
+        C copy( c );
+        kdtools::sort( copy );
+        return copy;
+    }
+
+    template <typename C, typename P>
+    C sorted( const C & c, P p ) {
+        C copy( c );
+        kdtools::sort( copy, p );
+        return copy;
     }
 
 }

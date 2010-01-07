@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# This is test script 3/3 for email sign/encrypt operation on Unix.
+#
+# See prep-encrypt for instructions.
+
+exec gpg-connect-agent -S ~/.gnupg/S.uiserver --run <(cat <<'BYE'
+/subst
+/serverpid
+session 123 Re: Letter received
+/sendfd test.data.signencrypt.sign.out r
+INPUT FD
+/sendfd test.data.signencrypt.out w
+OUTPUT FD
+encrypt --protocol=CMS
+bye
+
+BYE
+)

@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# This is test script 1/3 for email sign/encrypt operation on Unix.
+#
+# You might need to adjust the sender email address below to something
+# you've got a private certificate for.
+#
+# To use:
+# 1. Start kleopatra
+# 2. run ./prep-encrypt
+#    (the dialog comes up in the background, that's normal, as we)
+#    (don't send a window-id)
+# 3. In the dialog, select S/MIME (for OpenPGP s/CMS/OpenPGP/ in all scripts),
+#    and a certificate for none@example.org -> OK button becomes enabled
+# 4. Click OK -> this script ends
+# 5. run ./sign -> should end with OK (no UI visible)
+# 6. run ./encrypt -> should end with OK (no UI visible)
+# 7. The results (also intermediate ones) can be found in test.data.*
+
+exec gpg-connect-agent -S ~/.gnupg/S.uiserver --run <(cat <<BYE
+/serverpid
+session 123 Re: Letter received
+sender --info -- marc@kdab.com
+recipient till@kdab.net
+recipient none@example.org
+prep_encrypt --expect-sign
+bye
+
+BYE
+)

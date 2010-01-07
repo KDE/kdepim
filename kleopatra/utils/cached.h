@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/filedialog.h
+    utils/cached.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2009 Klarälvdalens Datakonsult AB
@@ -30,22 +30,35 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UTILS_FILEDIALOG_H__
-#define __KLEOPATRA_UTILS_FILEDIALOG_H__
+#ifndef __KLEOPATRA_UTILS_CACHED_H__
+#define __KLEOPATRA_UTILS_CACHED_H__
 
-#include <QFileDialog>
+#include <boost/call_traits.hpp>
 
 namespace Kleo {
-namespace FileDialog {
 
-    QString getExistingDirectory( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), QFileDialog::Options options = QFileDialog::ShowDirsOnly );
-    QString getOpenFileName( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString(), QString * selectedFilter=0, QFileDialog::Options options=0 );
-    QStringList getOpenFileNames( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString(), QString * selectedFilter=0, QFileDialog::Options options=0 );
-    QString getSaveFileName( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & filter=QString(), QString * selectedFilter=0, QFileDialog::Options options=0 );
-    QString getSaveFileNameEx( QWidget * parent=0, const QString & caption=QString(), const QString & dirID=QString(), const QString & proposedFileName=QString(), const QString & filter=QString(), QString * selectedFilter=0, QFileDialog::Options options=0 );
+    template <typename T>
+    class cached {
+        T m_value;
+        bool m_dirty;
+    public:
+        cached() : m_value(), m_dirty( true ) {}
+        /* implicit */ cached( typename boost::call_traits<T>::param_type value ) : m_value( value ), m_dirty( false ) {}
+
+        operator typename boost::call_traits<T>::param_type () const { return m_value; }
+
+        cached & operator=( typename boost::call_traits<T>::param_type value ) {
+            m_value = value;
+            m_dirty = false;
+            return *this;
+        }
+
+        bool dirty() const { return m_dirty; }
+        typename boost::call_traits<T>::param_type value() const { return m_value; }
+
+        void set_dirty() { m_dirty = true; }
+    };
 
 }
-}
 
-#endif // __KLEOPATRA_UTILS_FILEDIALOG_H__
-
+#endif /* __KLEOPATRA_UTILS_CACHED_H__ */

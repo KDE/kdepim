@@ -38,6 +38,7 @@
 
 #include <dialogs/exportcertificatesdialog.h>
 
+#include <utils/classify.h>
 #include <utils/filedialog.h>
 
 #include <kleo/cryptobackend.h>
@@ -196,12 +197,23 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
     if ( !fileNames[protocol].isEmpty() )
         return true;
 
-    const QString fname =  FileDialog::getSaveFileName( parentWidgetOrView(),
-                                                        i18n( "Export Certificates" ), 
-                                                        "imp",
-                                                        protocol == GpgME::OpenPGP
-                                                        ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)"
-                                                        : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
+    QString proposedFileName;
+    if ( keys().size() == 1 )
+        proposedFileName
+            = QString::fromLatin1( keys().front().primaryFingerprint() )
+            + QLatin1Char( '.' )
+            + QString::fromLatin1( outputFileExtension( protocol == OpenPGP
+                                                        ? Class::OpenPGP|Class::Ascii|Class::Certificate
+                                                        : Class::CMS|Class::Ascii|Class::Certificate ) )
+            ;
+
+    const QString fname = FileDialog::getSaveFileNameEx( parentWidgetOrView(),
+                                                         i18n( "Export Certificates" ), 
+                                                         "imp",
+                                                         proposedFileName,
+                                                         protocol == GpgME::OpenPGP
+                                                         ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)"
+                                                         : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
     fileNames[protocol] = fname;
     return !fname.isEmpty();
 }
