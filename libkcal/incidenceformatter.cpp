@@ -2230,7 +2230,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
   bool isDelegated = false;
   Attendee *a = findMyAttendee( inc );
   if ( !a && inc ) {
-    a = inc->attendees().first();
+    if ( !inc->attendees().isEmpty() ) {
+      a = inc->attendees().first();
+    }
   }
   if ( a ) {
     isDelegated = ( a->status() == Attendee::Delegated );
@@ -2239,7 +2241,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
 
   // Print if RSVP needed, not-needed, or response already recorded
   bool rsvpReq = rsvpRequested( inc );
-  if ( !myInc ) {
+  if ( !myInc && a ) {
     html += "<br/>";
     html += "<i><u>";
     if ( rsvpRec && inc ) {
@@ -2300,7 +2302,7 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         html += "</td></tr>";
       }
 
-      if ( !myInc ) {
+      if ( !myInc && a ) {
         html += "<tr>" + responseButtons( inc, rsvpReq, rsvpRec, helper ) + "</tr>";
       }
       break;
@@ -2346,7 +2348,9 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
         }
 
         // Finally, simply allow a Record of the reply
-        a = inc->attendees().first();
+        if ( !inc->attendees().isEmpty() ) {
+          a = inc->attendees().first();
+        }
         if ( a ) {
           ea = findAttendee( existingIncidence, a->email() );
         }
