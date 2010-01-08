@@ -7,7 +7,7 @@ add_subdirectory(tests)
 add_subdirectory(icons)
 add_subdirectory(pics)
 add_subdirectory(kpartsdesignerplugin)
-add_subdirectory(about)
+# add_subdirectory(about)
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
