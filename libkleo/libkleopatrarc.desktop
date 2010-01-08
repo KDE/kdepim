@@ -19,6 +19,7 @@ Name[sl]=TAR (združljiv s PGP)
 Name[sv]=TAR (fungerar med PGP®)
 Name[uk]=TAR (сумісні з PGP®)
 Name[x-test]=xxTAR (PGP®-compatible)xx
+Name[zh_CN]=TAR(PGP® 兼容)
 Name[zh_TW]=TAR (PGP®-相容)
 pack-command=tar cf -
 
@@ -44,6 +45,7 @@ Name[sl]=ZIP
 Name[sv]=ZIP
 Name[uk]=ZIP
 Name[x-test]=xxZIPxx
+Name[zh_CN]=ZIP
 Name[zh_TW]=ZIP
 pack-command=zip  -r - %f
 
@@ -68,6 +70,7 @@ Name[sl]=TAR (s stiskanjem bzip2)
 Name[sv]=TAR (med komprimering av bzip2)
 Name[uk]=TAR (зі стисканням bzip2)
 Name[x-test]=xxTAR (with bzip2 compression)xx
+Name[zh_CN]=TAR(bzip2 压缩)
 Name[zh_TW]=TAR (加上 bzip2)
 pack-command=tar cfj -
 
@@ -457,5 +460,6 @@ Name[sv]=Smartkortsnyckel
 Name[tr]=Akıllı Kart Anahtarı
 Name[uk]=Ключ картки пам’яті
 Name[x-test]=xxSmartcard Keyxx
+Name[zh_CN]=智能卡密钥
 Name[zh_TW]=智慧卡金鑰
 icon=smartcard

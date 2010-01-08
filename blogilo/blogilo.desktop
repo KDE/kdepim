@@ -20,6 +20,7 @@ Name[sv]=Blogilo
 Name[tr]=Blogilo
 Name[uk]=Blogilo
 Name[x-test]=xxBlogiloxx
+Name[zh_CN]=Blogilo
 Name[zh_TW]=Blogilo
 Exec=blogilo %i -caption "%c"
 Icon=blogilo
@@ -45,6 +46,7 @@ GenericName[sv]=Ett webbjournalprogram för KDE
 GenericName[tr]=Bir KDE Günlük İstemcisi
 GenericName[uk]=Клієнт ведення блогів для KDE
 GenericName[x-test]=xxA KDE Blogging Clientxx
+GenericName[zh_CN]=KDE 的博客客户端
 GenericName[zh_TW]=KDE 部落格客戶端程式
 Terminal=false
 
