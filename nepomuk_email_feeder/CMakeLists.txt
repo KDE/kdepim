@@ -1,9 +1,9 @@
 include_directories(
   ${CMAKE_BINARY_DIR}/ontologies
-  ${CMAKE_CURRENT_SOURCE_DIR}/../libkleo
+  ${CMAKE_SOURCE_DIR}/libkleo
   ${Boost_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/shared
-  ${CMAKE_BINARY_DIR}/messageviewer/
+  ${CMAKE_BINARY_DIR}/messageviewer
   ${SOPRANO_INCLUDE_DIR}
 )
 
@@ -37,7 +37,6 @@ target_link_libraries(akonadi_nepomuk_email_feeder
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTCORE_LIBRARY}
-  ${QT_QT3SUPPORT_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${QT_QT3SUPPORT_LIBRARY}
   ${NEPOMUK_LIBRARIES}
