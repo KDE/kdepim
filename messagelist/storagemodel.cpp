@@ -30,6 +30,8 @@
 
 #include <KDE/KCodecs>
 #include <KDE/KLocale>
+#include <KDE/KIconLoader>
+#include <Nepomuk/Tag>
 
 #include "core/messageitem.h"
 #include "core/settings.h"
@@ -273,6 +275,46 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   }
 }
 
+
+/**
+ * Uses Nepomuk to fill a list of tags. It also picks out
+ * the colors the message should use.
+ */
+QList< Core::MessageItem::Tag * > * fillTagList( const Akonadi::Item &item,
+                                                 QColor & textColor, QColor & backgroundColor )
+{
+  const Nepomuk::Resource resource( item.url() );
+  QList< Nepomuk::Tag > nepomukTagList = resource.tags();
+  if ( !nepomukTagList.isEmpty() ) {
+    QList< Core::MessageItem::Tag * > *messageListTagList = new QList< Core::MessageItem::Tag * >();
+    foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
+      kDebug() << "Loaded Nepomuk tag:" << nepomukTag.label();
+      Core::MessageItem::Tag *messageListTag =
+          new Core::MessageItem::Tag( SmallIcon( nepomukTag.symbols().first() ),
+                                      nepomukTag.label(), nepomukTag.resourceUri().toString() );
+      messageListTagList->append( messageListTag );
+#if 0 // TODO: Port to Akonadi
+      int bestPriority = -0xfffff
+      const KMMessageTagDescription * description = kmkernel->msgTagMgr()->find( *it );
+      if ( description )
+      {
+        if ( ( bestPriority < description->priority() ) || ( !textColor.isValid() ) )
+        {
+          textColor = description->textColor();
+          backgroundColor = description->backgroundColor();
+          bestPriority = description->priority();
+        }
+      }
+#else
+      kWarning() << "AKONADI PORT: disabled color code here!";
+#endif
+    }
+    return messageListTagList;
+  }
+  else
+    return 0;
+}
+
 void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
@@ -311,12 +353,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 
   QColor clr;
   QColor backClr;
-#if 0
-  //FIXME: Missing tag handling, nepomuk based?
-  QList< Core::MessageItem::Tag * > * tagList;
-  tagList = fillTagList( msg, clr, backClr );
-  mi->setTagList( tagList );
-#endif
+  mi->setTagList( fillTagList( item, clr, backClr ) );
 
   if ( stat.isNew() ) {
     clr = d->mColorNewMessage;
