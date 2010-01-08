@@ -110,6 +110,9 @@ else(KDEPIM_ONLY_KLEO)
 
   find_package(Soprano)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+  if(Soprano_FOUND)
+    include(SopranoAddOntology)
+  endif(Soprano_FOUND)
 
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
@@ -177,7 +180,7 @@ set(libkdgantt1_SRCS
   include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
-  include( SopranoAddOntology )
+
   add_subdirectory( ontologies ) # must be the first one.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
