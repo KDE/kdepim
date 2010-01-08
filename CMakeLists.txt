@@ -177,6 +177,8 @@ set(libkdgantt1_SRCS
   include (kleopatra/ConfigureChecks.cmake)
 
   # These targets will always be built before anything else.
+  include( SopranoAddOntology )
+  add_subdirectory( ontologies ) # must be the first one.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkdepimdbusinterfaces)
@@ -212,8 +214,6 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
 
-    include( SopranoAddOntology )
-    add_subdirectory( ontologies )
     add_subdirectory( nepomuk_email_feeder )
   endif(QGPGME_FOUND)
 
