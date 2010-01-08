@@ -43,7 +43,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
-  ${KDE4_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
 )
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
