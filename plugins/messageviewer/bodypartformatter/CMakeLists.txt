@@ -1,7 +1,6 @@
 
-include_directories( 
+include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepim
-    ${KDE4_INCLUDE_DIR}   
     ${Boost_INCLUDE_DIRS}
 )
 
