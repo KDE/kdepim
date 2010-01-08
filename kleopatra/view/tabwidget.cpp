@@ -383,7 +383,7 @@ TabWidget::Private::Private( TabWidget * qq )
 
     const action_data actionDataNew = {
         "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
-        "tab-new", q, SLOT(slotNewTab()), i18n("CTRL+SHIFT+N"), false, true
+        "tab-new-background", q, SLOT(slotNewTab()), i18n("CTRL+SHIFT+N"), false, true
     };
 
     newAction = make_action_from_data( actionDataNew, q );
