@@ -38,12 +38,3 @@ install(
   )
   
 
-install(
-  FILES
-    initialization.h
-    command.h
-    selectcertificatecommand.h
-    signencryptfilescommand.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/libkleopatraclient/core
-  )
-
