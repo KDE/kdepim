@@ -84,7 +84,7 @@ target_link_libraries( akonadiconsole_bin
   akonadi-kcal_next
   ${KDEPIMLIBS_AKONADI_KCAL_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
-  kdepim-copy
+  kdepim
   messageviewer
   ${KDE4_KUTILS_LIBS}
   ${KDE4_KIO_LIBS}
