@@ -613,7 +613,7 @@ void ArticleWidget::displayHeader()
       if ( header ) {
         headerHtml+=QString( "<tr><td align=\"right\" valign=\"top\"><b>%1</b></td><td width=\"100%\">%2</td></tr>" )
           .arg( toHtmlString( header->type(), None ) + ": " )
-          .arg( toHtmlString( header->asUnicodeString() , ParseURL ) );
+          .arg( toHtmlString( header->asUnicodeString().remove( QRegExp( "^[^:]+:\\s*" ) ) , ParseURL ) );
         delete header;
       }
     }
