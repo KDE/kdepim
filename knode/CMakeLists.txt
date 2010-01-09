@@ -4,6 +4,7 @@ add_subdirectory( tests )
 
 add_subdirectory( pics )
 add_subdirectory( filters )
+add_subdirectory( kconf_update )
 
 include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim )
 
