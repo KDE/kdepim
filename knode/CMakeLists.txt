@@ -37,7 +37,6 @@ set(knodecommon_LIB_SRCS
    knfolder.cpp
    knmemorymanager.cpp
    kncleanup.cpp
-   knconvert.cpp
    knarticlemanager.cpp
    knarticle.cpp
    kndisplayedheader.cpp

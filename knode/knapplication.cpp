@@ -14,42 +14,20 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "knapplication.h"
+
 #include <kwindowsystem.h>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
-#include <kconfig.h>
 
 #include "knode.h"
-#include "knapplication.h"
-#include "knconvert.h"
-#include "knglobals.h"
 #include "knmainwidget.h"
 #include "knapplication.moc"
 
 
 int KNApplication::newInstance()
 {
-  kDebug(5003) <<"KNApplication::newInstance()";
-
-  KConfigGroup conf(knGlobals.config(), "GENERAL");
-  QString ver=conf.readEntry("Version");
-
-  if(!ver.isEmpty() && ver!=KNODE_VERSION) { //new version installed
-    if(KNConvert::needToConvert(ver)) { //we need to convert
-      kDebug(5003) <<"KNApplication::newInstance() : conversion needed";
-      KNConvert *convDlg=new KNConvert(ver);
-      if(!convDlg->exec()) { //reject()
-        if(convDlg->conversionDone()) //conversion has already happened but the user has canceled afterwards
-          conf.writeEntry("Version", KNODE_VERSION);
-        exit(0);
-        return(0);
-      } else //conversion done
-        conf.writeEntry("Version", KNODE_VERSION);
-      delete convDlg;
-    }
-    else //new version but no need to convert anything => just save the new version
-      conf.writeEntry("Version", KNODE_VERSION);
-  }
+  kDebug() << "KNApplication::newInstance()";
 
   if (!mainWidget()) {
     if ( isSessionRestored() ) {
@@ -80,7 +58,7 @@ int KNApplication::newInstance()
   KNMainWidget *w = static_cast<KNMainWindow*>(mainWidget())->mainWidget();
   w->handleCommandLine();
 
-  kDebug(5003) <<"KNApplication::newInstance() done";
+  kDebug() << "KNApplication::newInstance() done";
   return 0;
 }
 
