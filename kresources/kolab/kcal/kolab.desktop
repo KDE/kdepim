@@ -5,6 +5,7 @@ Name[ar]=التقويم على خادم IMAP عبر KMail
 Name[bg]=Календар на сървър IMAP чрез KMail
 Name[br]=Deiziadur en ur servijer IMAP gant KMail
 Name[ca]=Calendari sobre servidor IMAP mitjançant KMail
+Name[ca@valencia]=Calendari sobre servidor IMAP mitjançant KMail
 Name[cs]=Kalendář na IMAP serveru přes KMail
 Name[da]=Kalender på IMAP-server via KMail
 Name[de]=IMAP-Kalender via KMail
@@ -52,6 +53,7 @@ Name[zh_TW]=透過 KMail 取得 IMAP 伺服器上的行事曆
 Comment=Provides access to a calendar stored on a Kolab server using IMAP via KMail or Kontact
 Comment[ar]=يوفر وصول للتقويم المحفوظ على خادم Kolab  بإستخدام IMAP عبر KMail أو Kontact
 Comment[ca]=Proporciona l'accés a un calendari emmagatzemat en un servidor Kolab usant IMAP via el KMail o el Kontact
+Comment[ca@valencia]=Proporciona l'accés a un calendari emmagatzemat en un servidor Kolab usant IMAP via el KMail o el Kontact
 Comment[da]=Giver adgang til en kalender lagret på en Kolab-server som bruger IMAP via KMail eller Kontact
 Comment[de]=Ermöglicht den Zugriff auf Kalender, die mittels IMAP via KMail oder Kontact auf einem Kolab-Server gespeichert sind.
 Comment[el]=Προσφέρει πρόσβαση σε ένα ημερολόγιο αποθηκευμένο σε έναν εξυπηρετητή Kolab με τη χρήση του IMAP  μέσω του KMail ή Kontact
