@@ -31,7 +31,6 @@
 
 #include "calhelper.h"
 #include "calendarresources.h"
-#include "klocale.h"
 
 using namespace KCal;
 
@@ -109,8 +108,6 @@ bool CalHelper::hasMyWritableEventsFolders( Calendar *calendar )
 
   CalendarResourceManager::ActiveIterator it;
   for ( it=manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-    kdDebug() << "GOOOOO " << (*it)->resourceName()
-              << " TYPE IS " << (*it)->type() << endl;
     if ( (*it)->readOnly() ) {
       continue;
     }
@@ -122,21 +119,16 @@ bool CalHelper::hasMyWritableEventsFolders( Calendar *calendar )
 
     QStringList::ConstIterator subIt;
     for ( subIt=subResources.begin(); subIt != subResources.end(); ++subIt ) {
-      kdDebug() << "GOOOOO1 " << ( *subIt ) << endl;
       if ( !(*it)->subresourceActive( (*subIt) ) ) {
         continue;
       }
-      kdDebug() << "GOOOOO2 " << ( *subIt ) << " IS ACTIVE" << endl;
       if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
-        kdDebug() << "FOOO KOLAB " << ( *subIt )
-                  << " TYPE IS " << (*it)->subresourceType( (*subIt) ) << endl;
         if ( (*it)->subresourceType( ( *subIt ) ) == "todo" ||
              (*it)->subresourceType( ( *subIt ) ) == "journal" ||
              !(*subIt).contains( "/.INBOX.directory/" ) ) {
           continue;
         }
       }
-      kdDebug() << "FFOOOO WRITABLE " << ( *subIt ) << endl;
       return true;
     }
   }
