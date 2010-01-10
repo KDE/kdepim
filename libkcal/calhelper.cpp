@@ -96,3 +96,41 @@ bool CalHelper::usingGroupware( Calendar *calendar )
   }
   return false;
 }
+
+bool CalHelper::hasMyWritableEventsFolders( Calendar *calendar )
+{
+  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal ) {
+    return true;
+  }
+
+  CalendarResourceManager *manager = cal->resourceManager();
+
+  CalendarResourceManager::ActiveIterator it;
+  for ( it=manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+    if ( (*it)->readOnly() ) {
+      continue;
+    }
+
+    const QStringList subResources = (*it)->subresources();
+    if ( subResources.isEmpty() ) {
+      return true;
+    }
+
+    QStringList::ConstIterator subIt;
+    for ( subIt=subResources.begin(); subIt != subResources.end(); ++subIt ) {
+      if ( !(*it)->subresourceActive( (*subIt) ) ) {
+        continue;
+      }
+      if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+        if ( (*it)->subresourceType( ( *subIt ) ) == "todo" ||
+             (*it)->subresourceType( ( *subIt ) ) == "journal" ||
+             !(*subIt).contains( "/.INBOX.directory/" ) ) {
+          continue;
+        }
+      }
+      return true;
+    }
+  }
+  return false;
+}
