@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="6">
+<kpartgui name="kaddressbook" version="7">
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
@@ -60,6 +60,7 @@
     <Separator/>
     <Action name="akonadi_addressbook_create"/>
     <Action name="akonadi_addressbook_delete"/>
+    <Action name="akonadi_collection_sync"/>
     <Separator/>
     <Action name="akonadi_collection_properties"/>
     <Action name="akonadi_addressbook_properties"/>
