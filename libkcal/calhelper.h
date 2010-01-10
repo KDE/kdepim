@@ -86,6 +86,16 @@ namespace CalHelper {
     @since 4.4
   */
   bool usingGroupware( Calendar *calendar );
+
+  /**
+    Determines if the Calendar has any writable folders with Events content
+    that are owned by me.
+    @param calendar is a pointer to a valid Calendar object.
+
+    @return true if the any such writable folders are found; false otherwise.
+    @since 4.5
+  */
+  bool hasMyWritableEventsFolders( Calendar *calendar );
 }
 
 }

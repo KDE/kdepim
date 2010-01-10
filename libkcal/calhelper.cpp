@@ -31,6 +31,7 @@
 
 #include "calhelper.h"
 #include "calendarresources.h"
+#include "klocale.h"
 
 using namespace KCal;
 
@@ -91,6 +92,51 @@ bool CalHelper::usingGroupware( Calendar *calendar )
   for ( it = manager->begin(); it != manager->end(); ++it ) {
     QString res = (*it)->type();
     if ( res == "imap" ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool CalHelper::hasMyWritableEventsFolders( Calendar *calendar )
+{
+  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal ) {
+    return true;
+  }
+
+  CalendarResourceManager *manager = cal->resourceManager();
+
+  CalendarResourceManager::ActiveIterator it;
+  for ( it=manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+    kdDebug() << "GOOOOO " << (*it)->resourceName()
+              << " TYPE IS " << (*it)->type() << endl;
+    if ( (*it)->readOnly() ) {
+      continue;
+    }
+
+    const QStringList subResources = (*it)->subresources();
+    if ( subResources.isEmpty() ) {
+      return true;
+    }
+
+    QStringList::ConstIterator subIt;
+    for ( subIt=subResources.begin(); subIt != subResources.end(); ++subIt ) {
+      kdDebug() << "GOOOOO1 " << ( *subIt ) << endl;
+      if ( !(*it)->subresourceActive( (*subIt) ) ) {
+        continue;
+      }
+      kdDebug() << "GOOOOO2 " << ( *subIt ) << " IS ACTIVE" << endl;
+      if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+        kdDebug() << "FOOO KOLAB " << ( *subIt )
+                  << " TYPE IS " << (*it)->subresourceType( (*subIt) ) << endl;
+        if ( (*it)->subresourceType( ( *subIt ) ) == "todo" ||
+             (*it)->subresourceType( ( *subIt ) ) == "journal" ||
+             !(*subIt).contains( "/.INBOX.directory/" ) ) {
+          continue;
+        }
+      }
+      kdDebug() << "FFOOOO WRITABLE " << ( *subIt ) << endl;
       return true;
     }
   }
