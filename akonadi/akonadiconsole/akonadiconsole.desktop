@@ -2,6 +2,7 @@
 Name=Akonadi Console
 Name[ar]=طرفية اكوندا
 Name[ca]=Consola de l'Akonadi
+Name[ca@valencia]=Consola de l'Akonadi
 Name[cs]=Konzole Akonadi
 Name[da]=Akonadi-konsol
 Name[de]=Akonadi-Konsole
@@ -43,6 +44,7 @@ Type=Application
 Comment=Akonadi Management and Debugging Console
 Comment[ar]=إدارة اكوندا و طرفية التنقيح
 Comment[ca]=Consola de gestió i depuració per a l'Akonadi
+Comment[ca@valencia]=Consola de gestió i depuració per a l'Akonadi
 Comment[da]=Akonadi håndterings- og fejlretningskonsol
 Comment[de]=Akonadi-Konsole zur Verwaltung und Fehlersuche
 Comment[el]=Κονσόλα διαχείρισης και αποσφαλμάτωσης του Akonadi

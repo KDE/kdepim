@@ -5,6 +5,7 @@ Name[ar]=أعياد الميلاد من دفتر عناوين كدي
 Name[bg]=Рождени дни от адресника
 Name[br]=Deizioù-ha-bloazioù eus KAddressBook
 Name[ca]=Aniversaris des de KAddressBook
+Name[ca@valencia]=Aniversaris des de KAddressBook
 Name[cs]=Narozeniny z Knihy adres
 Name[cy]=Penblwyddi o KLlyfrCyfeiriadau
 Name[da]=Fødselsdage fra KAddressBook
@@ -59,6 +60,7 @@ Name[zh_TW]=自 KDE 通訊錄匯入生日
 Comment=Provides access to birthday dates of contacts in the KDE address book as calendar events
 Comment[ar]=يوفر وصول لتواريخ أعياد الميلاد لجهات الإتصال في دفتر عناوين كدي كأحداث في التقويم
 Comment[ca]=Proporciona l'accés a les dates de naixement dels contactes de la llibreta d'adreces del KDE com a esdeveniments de calendari
+Comment[ca@valencia]=Proporciona l'accés a les dates de naixement dels contactes de la llibreta d'adreces del KDE com a esdeveniments de calendari
 Comment[da]=Giver adgang til fødselsdatoer for kontakter i KDE's adressebog som kalenderbegivenheder
 Comment[de]=Ermöglicht den Zugriff auf Geburtstage von Kontakten aus dem KDE-Adressbuch in Form von Kalendereinträgen.
 Comment[el]=Προσφέρει πρόσβαση σε γενέθλια επαφών του βιβλίο διευθύνσεωη του KDE ως  γεγονότα ημερολογίου

@@ -2,6 +2,7 @@
 Name=kabcdistlistupdater
 Name[ar]=kabcdistlistupdater
 Name[ca]=kabcdistlistupdater
+Name[ca@valencia]=kabcdistlistupdater
 Name[cs]=kabcdistlistupdater
 Name[da]=kabcdistlistupdater
 Name[de]=kabcdistlistupdater
@@ -41,6 +42,7 @@ Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
 Comment[ar]=أداة لتحديث قوائم التوزيع لقوائم جديدة.
 Comment[ca]=Eina per actualitzar les llistes de distribució antigues a les noves.
+Comment[ca@valencia]=Eina per actualitzar les llistes de distribució antigues a les noves.
 Comment[da]=Værktøj til at opdatere de gamle distributionslister til de nye.
 Comment[de]=Werkzeug zum Aktualisieren alter Verteilerlisten in das neue Format.
 Comment[el]=Εργαλείο ενημέρωσης παλιών λιστών διανομής στις νέες.

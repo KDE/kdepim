@@ -2,6 +2,7 @@
 Name=Akonadi Imap
 Name[ar]=اكوندا IMAP
 Name[ca]=Akonadi imap
+Name[ca@valencia]=Akonadi imap
 Name[cs]=Akonadi Imap
 Name[da]=Akonadi Imap
 Name[de]=Akonadi-Imap
@@ -35,6 +36,7 @@ Name[zh_TW]=Akonadi Imap
 Comment=Connects to an IMAP-server. Based on the KIMAP from kdepimlibs.
 Comment[ar]=يتصل بخادم IMAP بالإعتماد على KIMAP من kdepimlibs.
 Comment[ca]=Connecta a un servidor IMAP. Basat en KIMAP de kdepimlibs.
+Comment[ca@valencia]=Connecta a un servidor IMAP. Basat en KIMAP de kdepimlibs.
 Comment[da]=Forbinder til en IMAP-server. Baseret på KIMAP fra kdepimlibs.
 Comment[de]=Verbindet zu einem IMAP-Server. Basiert auf der KIMAP-Bibliothek der kdepimlibs.
 Comment[el]=Σύνδεση με έναν διακομηστή IMAP.  Βασισμένο στη βιβλιοθήκη IMAP του kdepimlibs.

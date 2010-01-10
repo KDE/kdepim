@@ -2,6 +2,7 @@
 Name=Akonadi Kolab Proxy Resource
 Name[ar]=مورد وكيل Kolab لاكوندا
 Name[ca]=Recurs Kolab Proxy de l'Akonadi
+Name[ca@valencia]=Recurs Kolab Proxy de l'Akonadi
 Name[da]=Akonadi Kolab-proxy-ressource
 Name[de]=Akonadi-Proxy-Ressource für Kolab
 Name[el]=Πόρος διαμεσολαβητή του Akonadi Kolab 
@@ -31,6 +32,7 @@ Name[zh_TW]=Akonadi Kolab Proxy 資源
 Comment=Proxy resource to monitor groupware folders.
 Comment[ar]=موارد الوكيل لمراقبة مجلدات البرنامج الجماعي.
 Comment[ca]=Recurs proxy per controlar carpetes de groupware.
+Comment[ca@valencia]=Recurs proxy per controlar carpetes de groupware.
 Comment[da]=Proxy-ressource til overvågning af groupware-mapper.
 Comment[de]=Proxy-Ressource zur Überwachung von Arbeitsgruppen-Ordnern.
 Comment[el]=Πόρος διαμεσολαβητή για την παρακολούθηση των φακέλων groupware.

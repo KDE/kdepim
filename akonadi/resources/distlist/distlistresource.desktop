@@ -2,6 +2,7 @@
 Name=Distribution List File
 Name[ar]=ملف قائمة التوزيع
 Name[ca]=Fitxers de llistes de distribució
+Name[ca@valencia]=Fitxers de llistes de distribució
 Name[da]=Distributionsliste-fil
 Name[de]=Verteilerlistendatei
 Name[el]=Αρχείο λίστας διανομής
@@ -36,6 +37,7 @@ Name[zh_TW]=分派清單檔
 Comment=Loads data from a distribution list file
 Comment[ar]=تحميل البيانات من ملف قائمة التوزيع
 Comment[ca]=Carrega dades des d'un fitxer de llistes de distribució
+Comment[ca@valencia]=Carrega dades des d'un fitxer de llistes de distribució
 Comment[da]=Indlæser data fra en distributionsliste-fil
 Comment[de]=Daten werden aus einer Verteilerlistendatei geladen
 Comment[el]=Φόρτωση δεδομένων από ένα αρχείο λίστας διανομής

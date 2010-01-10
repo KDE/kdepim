@@ -5,6 +5,7 @@ Name[ar]=خادم GroupDAV  ( مثال , OpenGroupware )
 Name[bg]=Сървър GroupDAV (e.g. OpenGroupware)
 Name[br]=Servijer GroupDAV (e.g. OpenGroupware)
 Name[ca]=Servidor GroupDAV (p.ex. OpenGroupware)
+Name[ca@valencia]=Servidor GroupDAV (p.ex. OpenGroupware)
 Name[cs]=GroupDAV server (např. OpenGroupware)
 Name[da]=GroupDAV-server (f.eks. OpenGroupware)
 Name[de]=GroupDAV (z. B. OpenGroupware)
@@ -51,6 +52,7 @@ Name[zh_TW]=GroupDAV 伺服器 (如: OpenGroupware)
 Comment=Provides access to contacts stored in address books on GroupDAV enabled servers, e.g. OpenGroupware
 Comment[ar]=يوفر الدخول لجهات الإتصال المحفوظة في دفتر العناوين على خوادم GroupDAV  الممكنة، مثال. OpenGroupware
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en llibretes d'adreces en servidors basats en GroupDAV, p.ex. OpenGroupware
+Comment[ca@valencia]=Proporciona l'accés als contactes emmagatzemats en llibretes d'adreces en servidors basats en GroupDAV, p.ex. OpenGroupware
 Comment[da]=Giver adgang til kontakter lagret i adressebøger på GroupDAV-aktiverede servere, f.eks. OpenGroupware
 Comment[de]=Ermöglicht den Zugriff auf Kontakte, die in einem Adressbuch auf einem GroupDAV-Server wie z. B. OpenGroupware gespeichert sind.
 Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε βιβλία διευθύνσεων εξυπηρετών GroupDAV  π.χ. το OpenGroupware

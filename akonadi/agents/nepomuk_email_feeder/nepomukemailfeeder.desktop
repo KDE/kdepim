@@ -2,6 +2,7 @@
 Name=Nepomuk EMail Feeder
 Name[ar]=مغذي البريد الإلكتروني لنبومك
 Name[ca]=Alimentador de correus del Nepomuk
+Name[ca@valencia]=Alimentador de correus del Nepomuk
 Name[da]=Nepomuk e-mail-feeder
 Name[de]=E-Mail-Modul für Nepomuk
 Name[el]=Τροφοδότης EMail του Nepomuk
@@ -38,6 +39,7 @@ Name[zh_TW]=Nepomuk EMail Feeder
 Comment=Extension to push emails into Nepomuk
 Comment[ar]=امتداد لدفع البريد الإلكتروني داخل نبومك
 Comment[ca]=Extensió per a introduir correus en el Nepomuk
+Comment[ca@valencia]=Extensió per a introduir correus en el Nepomuk
 Comment[da]=Udvidelse til at skubbe e-mail ind i Nepomuk
 Comment[de]=Erweiterung zur Übergabe von E-Mails an Nepomuk
 Comment[el]=Επέκταση για την τροφοδοσία email στο Nepomuk
