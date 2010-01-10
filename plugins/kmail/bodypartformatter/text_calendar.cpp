@@ -40,6 +40,7 @@
 
 #include <kcal/calendarlocal.h>
 #include <kcal/calendarresources.h>
+#include <kcal/calhelper.h>
 #include <kcal/icalformat.h>
 #include <kcal/attendee.h>
 #include <kcal/incidence.h>
@@ -672,30 +673,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool hasWritableCalendars() const
-    {
-      CalendarResourceManager *manager = new CalendarResourceManager( "calendar" );
-      manager->readConfig();
-      for ( CalendarResourceManager::ActiveIterator it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
-        if ( (*it)->readOnly() )
-          continue;
-        const QStringList subResources = (*it)->subresources();
-        if ( subResources.isEmpty() )
-          return true;
-        foreach( const QString& subResource, subResources ) {
-          if ( !(*it)->subresourceActive( subResource ) )
-            continue;
-          return true;
-        }
-      }
-      return false;
-    }
-
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
-      if ( !hasWritableCalendars() ) {
-        KMessageBox::error( 0, i18n("No writable calendar found.") );
+      if ( !CalHelper::hasMyWritableEventsFolders( CalendarManager::calendar() ) ) {
+        KMessageBox::error(
+          0,
+          i18n( "You have no writable calendar folders for invitations, "
+                "so storing or saving a response will not be possble.\n"
+                "Please create at least 1 writable events calendar and re-sync." ) );
         return false;
       }
 
