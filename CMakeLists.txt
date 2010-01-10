@@ -117,6 +117,9 @@ else(KDEPIM_ONLY_KLEO)
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
+  find_program(XSLTPROC_EXECUTABLE xsltproc)
+  macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" TRUE "" "Required for building Akonadi.")
+
 
 ############### Needed commands before building anything ###############
 
