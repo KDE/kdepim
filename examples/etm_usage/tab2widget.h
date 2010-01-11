@@ -19,20 +19,18 @@
     USA.
 */
 
-#include "mainwindow.h"
+#ifndef TAB2WIDGET_H
+#define TAB2WIDGET_H
 
+#include <QWidget>
 
-#include "tab1widget.h"
-#include "tab2widget.h"
-
-
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
-  : QMainWindow(parent, flags)
+class Tab2Widget : public QWidget
 {
-  QTabWidget *tabWidget = new QTabWidget(this);
+  Q_OBJECT
+public:
+  Tab2Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-  tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
-  tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
+};
 
-  setCentralWidget(tabWidget);
-}
+#endif
+
