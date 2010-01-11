@@ -19,29 +19,41 @@
     USA.
 */
 
-#include "mainwindow.h"
+#ifndef ITEMVIEWERWIDGET_H
+#define ITEMVIEWERWIDGET_H
 
-#include <QHBoxLayout>
-#include <QTreeView>
+#include <QWidget>
 
-#include "entitytreewidget.h"
-#include "itemviewerwidget.h"
+class QItemSelectionModel;
+class QItemSelection;
+class QStackedWidget;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
-  : QMainWindow(parent, flags)
+namespace MessageViewer
 {
-  QTabWidget *tabWidget = new QTabWidget(this);
-
-  QWidget *tab1Widget = new QWidget(tabWidget);
-  tabWidget->addTab(tab1Widget, "EntityTreeModel");
-
-  QHBoxLayout *layout = new QHBoxLayout(tab1Widget);
-
-  EntityTreeWidget *etw = new EntityTreeWidget(tab1Widget);
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), tab1Widget);
-
-  layout->addWidget(etw);
-  layout->addWidget(viewerWidget);
-
-  setCentralWidget(tabWidget);
+class Viewer;
 }
+
+namespace Akonadi
+{
+class ContactViewer;
+}
+
+class ItemViewerWidget : public QWidget
+{
+  Q_OBJECT
+public:
+  ItemViewerWidget( QItemSelectionModel *selectionModel, QWidget* parent = 0, Qt::WindowFlags f = 0 );
+
+private slots:
+  void selectionChanged( const QItemSelection selected, const QItemSelection &deselected );
+
+private:
+  QItemSelectionModel *m_itemSelectionModel;
+  QStackedWidget *m_widgetStack;
+  MessageViewer::Viewer *m_mailViewer;
+  Akonadi::ContactViewer *m_contactViewer;
+};
+
+#endif
+
+
