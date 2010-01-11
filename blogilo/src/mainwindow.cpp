@@ -649,11 +649,16 @@ void MainWindow::uploadMediaObject()
 
 void MainWindow::slotOpenCurrentBlogInBrowser()
 {
-    KUrl url( DBMan::self()->blog( mCurrentBlogId ).blogUrl() );
-    if(url.isValid())
-        KToolInvocation::invokeBrowser(url.url());
-    else
-        KMessageBox::sorry(this, i18n("Cannot find current blog URL."));
+    if (mCurrentBlogId > -1)
+    {
+	KUrl url( DBMan::self()->blog( mCurrentBlogId ).blogUrl() );
+	if(url.isValid())
+	    KToolInvocation::invokeBrowser(url.url());
+	else
+	    KMessageBox::sorry(this, i18n("Cannot find current blog URL."));
+    }
+    ///TODO
+    ///else show a massege to the user saying that a blog should be selected before.
 }
 
 #include "mainwindow.moc"

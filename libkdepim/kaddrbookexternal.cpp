@@ -203,15 +203,6 @@ bool KAddrBookExternal::addAddressee( const KABC::Addressee &addr )
 
 QString KAddrBookExternal::expandDistributionList( const QString &listName, bool &emptyList )
 {
-#ifdef __GNUC__
-#warning Reenable and fix distribution list expansion for KDE 4.4
-#endif
-  // begin hack
-  // FIXME: Until searching works correctly we disable the functionality of expanding distribution lists
-  emptyList = false;
-  return QString();
-  // end hack
-
   emptyList = false;
   if ( listName.isEmpty() )
     return QString();

@@ -266,8 +266,20 @@ void KNode::ArticlePostJob::execute( )
 
 void KNode::ArticlePostJob::slotResult( KJob * job )
 {
-  if ( job->error() )
-    setError( job->error(), job->errorString() );
+  if ( job->error() ) {
+    QString hostname = job->errorText();
+    switch ( job->error() ) {
+      case KIO::ERR_WRITE_ACCESS_DENIED:
+        setError( job->error(), i18n( "The server %1 does not allow you to post articles to it.", hostname ) );
+        break;
+      case KIO::ERR_COULD_NOT_WRITE:
+        setError( job->error(), i18n( "The posting of this article to the server %1 failed.\n"
+                                      "Please check that you are not trying to post to a read-only group.", hostname ) );
+        break;
+      default:
+        setError( job->error(), job->errorString() );
+    }
+  }
 
   emitFinished();
 }

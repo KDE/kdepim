@@ -47,6 +47,8 @@ KCheckComboBox::KCheckComboBox( QWidget *parent ) : KComboBox( parent )
   view()->installEventFilter( this );
   view()->viewport()->installEventFilter( this );
 
+  lineEdit()->installEventFilter( this );
+
   updateCheckedItems();
 }
 
@@ -173,8 +175,17 @@ bool KCheckComboBox::eventFilter( QObject *receiver, QEvent *event )
           return true;
       }
     }
+      break;
+    case QEvent::MouseButtonDblClick:
+    case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease:
       mIgnoreHide = true;
+
+      if ( receiver == lineEdit() ) {
+        showPopup();
+        return true;
+      }
+
       break;
     default:
       break;

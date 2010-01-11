@@ -374,7 +374,6 @@ void KNAttachment::setMimeType(const QString &s)
 
 QString KNAttachment::contentSize() const
 {
-  QString ret;
   int s=0;
 
   if(c_ontent && c_ontent->hasContent())
@@ -384,17 +383,7 @@ QString KNAttachment::contentSize() const
       s=f_ile->size();
   }
 
-  if(s > 1023) {
-    s=s/1024;
-    ret.setNum(s);
-    ret+=" kB";
-  }
-  else {
-    ret.setNum(s);
-    ret+=" Bytes";
-  }
-
-  return ret;
+  return KGlobal::locale()->formatByteSize( s );
 }
 
 
