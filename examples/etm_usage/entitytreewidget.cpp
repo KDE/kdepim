@@ -71,10 +71,20 @@ EntityTreeWidget::EntityTreeWidget( QWidget* parent )
   m_changeRecorder->itemFetchScope().fetchAllAttributes( true );
   m_etm = new EntityTreeModel( m_changeRecorder, this );
 
-  m_treeView->setModel( m_etm );
+  connectTreeToModel(m_treeView, m_etm);
 
   connect(m_typeComboBox, SIGNAL(currentIndexChanged(int)), SLOT(mimeTypesChoiceChanged(int)));
   connect(m_typeLineEdit, SIGNAL(textChanged(QString)), SLOT(mimeTypesChanged(QString)));
+}
+
+EntityTreeWidget::~EntityTreeWidget()
+{
+
+}
+
+void EntityTreeWidget::connectTreeToModel(QTreeView* tree, EntityTreeModel* model)
+{
+  tree->setModel( model );
 }
 
 void EntityTreeWidget::mimeTypesChoiceChanged( int index )
@@ -98,5 +108,11 @@ QTreeView* EntityTreeWidget::view() const
 {
   return m_treeView;
 }
+
+EntityTreeModel* EntityTreeWidget::model() const
+{
+  return m_etm;
+}
+
 
 

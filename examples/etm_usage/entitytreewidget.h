@@ -37,8 +37,12 @@ class EntityTreeWidget : public QWidget
   Q_OBJECT
 public:
   EntityTreeWidget( QWidget *parent = 0 );
+  virtual ~EntityTreeWidget();
 
   QTreeView* view() const;
+  Akonadi::EntityTreeModel* model() const;
+
+  virtual void connectTreeToModel( QTreeView *tree, Akonadi::EntityTreeModel *model );
 
 private slots:
   void mimeTypesChoiceChanged( int index );
