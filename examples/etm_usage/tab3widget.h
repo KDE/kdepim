@@ -24,11 +24,20 @@
 
 #include <QWidget>
 
+class QModelIndex;
+class QTreeView;
+
+class EntityTreeWidget;
+
 class Tab3Widget : public QWidget
 {
   Q_OBJECT
 public:
   Tab3Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+private:
+  QTreeView *m_itemView;
+  EntityTreeWidget *m_etw;
 
 };
 

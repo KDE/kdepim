@@ -32,6 +32,7 @@ Tab1Widget::Tab1Widget(QWidget* parent, Qt::WindowFlags f)
   QHBoxLayout *layout = new QHBoxLayout(this);
 
   EntityTreeWidget *etw = new EntityTreeWidget(this);
+  etw->init();
   ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), this);
 
   layout->addWidget(etw);

@@ -24,11 +24,23 @@
 
 #include <QWidget>
 
+class QModelIndex;
+class QTreeView;
+
+class EntityTreeWidget;
+
 class Tab2Widget : public QWidget
 {
   Q_OBJECT
 public:
   Tab2Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+private slots:
+  void setMappedRootIndex(const QModelIndex &index);
+
+private:
+  QTreeView *m_itemView;
+  EntityTreeWidget *m_etw;
 
 };
 

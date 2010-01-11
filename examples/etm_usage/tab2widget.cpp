@@ -27,6 +27,7 @@
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
 
+#include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 
 class Tab2TreeWidget : public EntityTreeWidget
@@ -35,16 +36,25 @@ public:
   Tab2TreeWidget(QWidget* parent = 0)
     : EntityTreeWidget(parent)
   {
-
   }
 
-  virtual void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
+  /* reimp */ void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
   {
-    Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-    collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
-    collectionFilter->setSourceModel(model);
-    tree->setModel(collectionFilter);
+    m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+    m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+    m_collectionFilter->setSourceModel(model);
+    m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    tree->setModel(m_collectionFilter);
   }
+
+  /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
+  {
+    return m_collectionFilter->mapToSource(idx);
+  }
+
+
+private:
+  Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
 
 };
 
@@ -53,22 +63,28 @@ Tab2Widget::Tab2Widget(QWidget* parent, Qt::WindowFlags f)
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
 
-  EntityTreeWidget *etw = new Tab2TreeWidget(this);
+  m_etw = new Tab2TreeWidget(this);
+  m_etw->init();
 
-  layout->addWidget(etw);
+  layout->addWidget(m_etw);
   QWidget *rhsContainer = new QWidget(this);
   QVBoxLayout *rhsLayout = new QVBoxLayout(rhsContainer);
 
-  QTreeView *itemView = new QTreeView(this);
+  m_itemView = new QTreeView(this);
 
-  itemView->setModel(etw->model());
+  m_itemView->setModel(m_etw->model());
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(itemView->selectionModel(), this);
-  rhsLayout->addWidget(itemView);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), this);
+  rhsLayout->addWidget(m_itemView);
   rhsLayout->addWidget(viewerWidget);
   layout->addWidget(rhsContainer);
 
-  connect( etw->view(), SIGNAL(activated(QModelIndex)), itemView, SLOT(setRootIndex(QModelIndex)) );
-
+  connect( m_etw->view(), SIGNAL(activated(QModelIndex)), SLOT(setMappedRootIndex(QModelIndex)) );
 }
+
+void Tab2Widget::setMappedRootIndex(const QModelIndex& index)
+{
+  m_itemView->setRootIndex(m_etw->mapToSource(index));
+}
+
 

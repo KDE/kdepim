@@ -27,8 +27,10 @@
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
 
-#include <akonadi/entitymimetypefiltermodel.h>
 #include <kselectionproxymodel.h>
+
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/entitymimetypefiltermodel.h>
 
 class Tab3TreeWidget : public EntityTreeWidget
 {
@@ -36,16 +38,25 @@ public:
   Tab3TreeWidget(QWidget* parent = 0)
     : EntityTreeWidget(parent)
   {
-
   }
 
-  virtual void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
+  /* reimp */ void connectTreeToModel(QTreeView* tree, Akonadi::EntityTreeModel* model)
   {
-    Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-    collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
-    collectionFilter->setSourceModel(model);
-    tree->setModel(collectionFilter);
+    m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+    m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
+    m_collectionFilter->setSourceModel(model);
+    m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
+    tree->setModel(m_collectionFilter);
   }
+
+  /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
+  {
+    return m_collectionFilter->mapToSource(idx);
+  }
+
+
+private:
+  Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
 
 };
 
@@ -54,23 +65,25 @@ Tab3Widget::Tab3Widget(QWidget* parent, Qt::WindowFlags f)
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
 
-  EntityTreeWidget *etw = new Tab3TreeWidget(this);
+  m_etw = new Tab3TreeWidget(this);
+  m_etw->init();
 
-  layout->addWidget(etw);
+  layout->addWidget(m_etw);
   QWidget *rhsContainer = new QWidget(this);
   QVBoxLayout *rhsLayout = new QVBoxLayout(rhsContainer);
 
-  QTreeView *itemView = new QTreeView(this);
+  m_itemView = new QTreeView(this);
 
-  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(etw->view()->selectionModel(), this);
+  KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_etw->view()->selectionModel(), this);
   selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
-  selectionProxy->setSourceModel(etw->model());
+  selectionProxy->setSourceModel(m_etw->model());
 
-  itemView->setModel(selectionProxy);
+  m_itemView->setModel(selectionProxy);
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(itemView->selectionModel(), this);
-  rhsLayout->addWidget(itemView);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), this);
+  rhsLayout->addWidget(m_itemView);
   rhsLayout->addWidget(viewerWidget);
   layout->addWidget(rhsContainer);
 }
+
 
