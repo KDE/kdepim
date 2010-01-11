@@ -25,6 +25,7 @@ set(etm_usage_SRCS
     itemviewerwidget.cpp
     tab1widget.cpp
     tab2widget.cpp
+    tab3widget.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
