@@ -176,6 +176,14 @@ set(libkdgantt1_SRCS
 
   include (kleopatra/ConfigureChecks.cmake)
 
+  if(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
+    macro_optional_add_subdirectory(runtime)
+  endif(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
+
+  if (BUILD_runtime)
+    include_directories(${CMAKE_SOURCE_DIR}/runtime ${CMAKE_BINARY_DIR}/runtime)
+  endif (BUILD_runtime)
+
   # These targets will always be built before anything else.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
@@ -231,14 +239,6 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
-    
-  if(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
-    macro_optional_add_subdirectory(runtime)
-  endif(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
-
-  if (BUILD_runtime)
-    include_directories(${CMAKE_SOURCE_DIR}/runtime ${CMAKE_BINARY_DIR}/runtime)
-  endif (BUILD_runtime)
 
   macro_optional_add_subdirectory(kaddressbook)
   if(Q_WS_X11)
