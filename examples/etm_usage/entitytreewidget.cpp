@@ -56,7 +56,7 @@ EntityTreeWidget::EntityTreeWidget( QWidget* parent )
     m_typeLineEdit( new QLineEdit ),
     m_changeRecorder( new ChangeRecorder( this ) )
 {
-  for ( int i = 0; i < sizeof predefinedMimeTypes / sizeof *predefinedMimeTypes; ++i )
+  for ( uint i = 0; i < sizeof predefinedMimeTypes / sizeof *predefinedMimeTypes; ++i )
     m_typeComboBox->addItem(predefinedUserVisibleMimeTypes[i], predefinedMimeTypes[i]);
 
   QVBoxLayout *layout = new QVBoxLayout( this );
@@ -93,4 +93,10 @@ void EntityTreeWidget::mimeTypesChanged( const QString& mimetypeList )
   foreach ( const QString mimetype, list )
     m_changeRecorder->setMimeTypeMonitored( mimetype, true );
 }
+
+QTreeView* EntityTreeWidget::view() const
+{
+  return m_treeView;
+}
+
 

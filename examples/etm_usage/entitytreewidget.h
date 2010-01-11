@@ -38,6 +38,8 @@ class EntityTreeWidget : public QWidget
 public:
   EntityTreeWidget( QWidget *parent = 0 );
 
+  QTreeView* view() const;
+
 private slots:
   void mimeTypesChoiceChanged( int index );
   void mimeTypesChanged( const QString &mimetypeList );
