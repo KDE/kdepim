@@ -2,7 +2,7 @@
     Copyright (c) 2010 Stephen Kelly <steveire@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Library General Public License as published by
+    under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or (at your
     option) any later version.
 
@@ -19,16 +19,15 @@
 
 #include <QApplication>
 
-#include "entitytreewidget.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
 
   QApplication app(argc, argv);
 
-  EntityTreeWidget *etw = new EntityTreeWidget();
-
-  etw->show();
+  MainWindow *mainWindow = new MainWindow();
+  mainWindow->show();
 
   return app.exec();
 }
