@@ -70,8 +70,6 @@ EntityTreeWidget::EntityTreeWidget( QWidget* parent )
   m_changeRecorder->setAllMonitored( true );
   m_changeRecorder->itemFetchScope().fetchFullPayload( true );
   m_changeRecorder->itemFetchScope().fetchAllAttributes( true );
-  m_etm = new EntityTreeModel( m_changeRecorder, this );
-
   m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
 }
 
@@ -116,9 +114,21 @@ void EntityTreeWidget::init()
 {
   if (m_treeView->model())
     return; // Already set up
+
+  m_etm = getETM();
   connectTreeToModel(m_treeView, m_etm);
   connect(m_typeComboBox, SIGNAL(currentIndexChanged(int)), SLOT(mimeTypesChoiceChanged(int)));
   connect(m_typeLineEdit, SIGNAL(textChanged(QString)), SLOT(mimeTypesChanged(QString)));
+}
+
+Akonadi::ChangeRecorder* EntityTreeWidget::changeRecorder() const
+{
+  return m_changeRecorder;
+}
+
+EntityTreeModel* EntityTreeWidget::getETM()
+{
+  return new EntityTreeModel( m_changeRecorder, this );
 }
 
 

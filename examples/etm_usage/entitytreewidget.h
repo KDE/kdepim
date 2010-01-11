@@ -43,8 +43,11 @@ public:
   QTreeView* view() const;
   Akonadi::EntityTreeModel* model() const;
 
+  Akonadi::ChangeRecorder* changeRecorder() const;
+
   virtual void connectTreeToModel( QTreeView *tree, Akonadi::EntityTreeModel *model );
   virtual QModelIndex mapToSource(const QModelIndex &index) { return index; }
+  virtual Akonadi::EntityTreeModel* getETM();
 
 public:
   void init();
