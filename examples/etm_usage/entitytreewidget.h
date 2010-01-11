@@ -29,14 +29,18 @@ class QComboBox;
 namespace Akonadi
 {
 class EntityTreeModel;
-class Monitor;
+class ChangeRecorder;
 }
 
 class EntityTreeWidget : public QWidget
 {
   Q_OBJECT
 public:
-  EntityTreeWidget( QWidget *parent );
+  EntityTreeWidget( QWidget *parent = 0 );
+
+private slots:
+  void mimeTypesChoiceChanged( int index );
+  void mimeTypesChanged( const QString &mimetypeList );
 
 private:
   QTreeView *m_treeView;
@@ -44,7 +48,7 @@ private:
   QLineEdit *m_typeLineEdit;
 
   Akonadi::EntityTreeModel *m_etm;
-  Akonadi::Monitor *m_monitor;
+  Akonadi::ChangeRecorder *m_changeRecorder;
 };
 
 #endif
