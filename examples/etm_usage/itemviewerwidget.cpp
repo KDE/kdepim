@@ -51,7 +51,8 @@ ItemViewerWidget::ItemViewerWidget( QItemSelectionModel *itemSelectionModel, QWi
 void ItemViewerWidget::selectionChanged( const QItemSelection selected, const QItemSelection& deselected )
 {
   Q_UNUSED(deselected);
-  Q_ASSERT(selected.indexes().size() == 1);
+  if(selected.indexes().size() != 1)
+    return;
   QModelIndex selectedIndex = selected.indexes().first();
   QString mimeType = selectedIndex.data(EntityTreeModel::MimeTypeRole).toString();
   Akonadi::Item item = selectedIndex.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
