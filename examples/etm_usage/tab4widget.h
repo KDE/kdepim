@@ -19,24 +19,27 @@
     USA.
 */
 
-#include "mainwindow.h"
+#ifndef TAB4WIDGET_H
+#define TAB4WIDGET_H
 
+#include <QWidget>
 
-#include "tab1widget.h"
-#include "tab2widget.h"
-#include "tab3widget.h"
-#include "tab4widget.h"
+class QModelIndex;
+class QTreeView;
 
+class EntityTreeWidget;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
-  : QMainWindow(parent, flags)
+class Tab4Widget : public QWidget
 {
-  QTabWidget *tabWidget = new QTabWidget(this);
+  Q_OBJECT
+public:
+  Tab4Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-  tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
-  tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
-  tabWidget->addTab(new Tab3Widget(tabWidget), "KSelectionProxyModel");
-  tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
+private:
+  QTreeView *m_itemView;
+  EntityTreeWidget *m_etw;
 
-  setCentralWidget(tabWidget);
-}
+};
+
+#endif
+
