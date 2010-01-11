@@ -13,9 +13,9 @@ include(FindKdepimLibs)
 
 include_directories( ${KDE4_INCLUDES}
   ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/..
-  ${CMAKE_CURRENT_SOURCE_DIR}/..
+  ${CMAKE_CURRENT_SOURCE_DIR}/../..
   ${CMAKE_CURRENT_SOURCE_DIR}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set(etm_usage_SRCS
@@ -27,7 +27,9 @@ set(etm_usage_SRCS
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
 
-target_link_libraries(etm_usage
+target_link_libraries(etm_usage messageviewer messagelist kdepim kpgp kleo akonadi-kde
+                                        akonadi-kmime akonadi_next ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS}
+                                        ${KDE4_KTNEF_LIBRARY} ${QGPGME_LIBRARIES}
                       ${KDEPIMLIBS_AKONADI_LIBS}
                       ${KDE4_KIO_LIBS}
                       ${KDEPIMLIBS_KABC_LIBS}
