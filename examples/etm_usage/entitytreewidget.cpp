@@ -71,6 +71,8 @@ EntityTreeWidget::EntityTreeWidget( QWidget* parent )
   m_changeRecorder->itemFetchScope().fetchAllAttributes( true );
   m_etm = new EntityTreeModel( m_changeRecorder, this );
 
+  m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
   connectTreeToModel(m_treeView, m_etm);
 
   connect(m_typeComboBox, SIGNAL(currentIndexChanged(int)), SLOT(mimeTypesChoiceChanged(int)));
