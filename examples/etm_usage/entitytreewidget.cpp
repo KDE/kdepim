@@ -23,6 +23,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QVBoxLayout>
+#include <QTimer>
 
 
 #include <akonadi/changerecorder.h>
@@ -72,11 +73,6 @@ EntityTreeWidget::EntityTreeWidget( QWidget* parent )
   m_etm = new EntityTreeModel( m_changeRecorder, this );
 
   m_treeView->setSelectionMode(QAbstractItemView::ExtendedSelection);
-
-  connectTreeToModel(m_treeView, m_etm);
-
-  connect(m_typeComboBox, SIGNAL(currentIndexChanged(int)), SLOT(mimeTypesChoiceChanged(int)));
-  connect(m_typeLineEdit, SIGNAL(textChanged(QString)), SLOT(mimeTypesChanged(QString)));
 }
 
 EntityTreeWidget::~EntityTreeWidget()
@@ -115,6 +111,16 @@ EntityTreeModel* EntityTreeWidget::model() const
 {
   return m_etm;
 }
+
+void EntityTreeWidget::init()
+{
+  if (m_treeView->model())
+    return; // Already set up
+  connectTreeToModel(m_treeView, m_etm);
+  connect(m_typeComboBox, SIGNAL(currentIndexChanged(int)), SLOT(mimeTypesChoiceChanged(int)));
+  connect(m_typeLineEdit, SIGNAL(textChanged(QString)), SLOT(mimeTypesChanged(QString)));
+}
+
 
 
 

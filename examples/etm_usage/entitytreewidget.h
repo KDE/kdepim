@@ -21,6 +21,7 @@
 #define ENTITYTREEWIDGET_H
 
 #include <QWidget>
+#include <QModelIndex>
 
 class QTreeView;
 class QLineEdit;
@@ -43,6 +44,10 @@ public:
   Akonadi::EntityTreeModel* model() const;
 
   virtual void connectTreeToModel( QTreeView *tree, Akonadi::EntityTreeModel *model );
+  virtual QModelIndex mapToSource(const QModelIndex &index) { return index; }
+
+public:
+  void init();
 
 private slots:
   void mimeTypesChoiceChanged( int index );
