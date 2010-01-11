@@ -19,18 +19,21 @@
     USA.
 */
 
-#include "mainwindow.h"
-
-
 #include "tab1widget.h"
 
+#include <QHBoxLayout>
+#include <QTreeView>
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
-  : QMainWindow(parent, flags)
+#include "entitytreewidget.h"
+#include "itemviewerwidget.h"
+
+Tab1Widget::Tab1Widget(QWidget* parent, Qt::WindowFlags f)
 {
-  QTabWidget *tabWidget = new QTabWidget(this);
+  QHBoxLayout *layout = new QHBoxLayout(this);
 
-  tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
+  EntityTreeWidget *etw = new EntityTreeWidget(this);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), this);
 
-  setCentralWidget(tabWidget);
+  layout->addWidget(etw);
+  layout->addWidget(viewerWidget);
 }

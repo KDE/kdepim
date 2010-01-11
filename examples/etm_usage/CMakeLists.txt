@@ -23,6 +23,7 @@ set(etm_usage_SRCS
     mainwindow.cpp
     entitytreewidget.cpp
     itemviewerwidget.cpp
+    tab1widget.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
