@@ -2047,7 +2047,7 @@ static QString responseButtons( Incidence *inc, bool rsvpReq, bool rsvpRec,
     return html;
   }
 
-  if ( !rsvpReq ) {
+  if ( !rsvpReq && ( inc && inc->revision() == 0 ) ) {
     // Record only
     html += tdOpen;
     html += helper->makeLink( "record", i18n( "[Record]" ) );
