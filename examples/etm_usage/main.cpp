@@ -16,3 +16,19 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+
+#include <QApplication>
+
+#include "entitytreewidget.h"
+
+int main(int argc, char *argv[])
+{
+
+  QApplication app(argc, argv);
+
+  EntityTreeWidget *etw = new EntityTreeWidget();
+
+  etw->show();
+
+  return app.exec();
+}

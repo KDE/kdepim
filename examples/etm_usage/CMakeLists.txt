@@ -1,8 +1,27 @@
 project(etm_usage)
 
-set(example_mail_SRCS
+find_package(KDE4 REQUIRED)
+find_package(Akonadi REQUIRED)
+find_package(KdepimLibs REQUIRED)
+
+include(KDE4Defaults)
+include(MacroLibrary)
+include(MacroOptionalAddSubdirectory)
+include(CheckIncludeFiles)
+include(FindKdepimLibs)
+
+
+include_directories( ${KDE4_INCLUDES}
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}/..
+  ${CMAKE_CURRENT_SOURCE_DIR}/..
+  ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+set(etm_usage_SRCS
     main.cpp
     mainwindow.cpp
+    entitytreewidget.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
