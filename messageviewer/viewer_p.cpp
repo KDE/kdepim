@@ -667,7 +667,7 @@ QString ViewerPrivate::createAtmFileLink( const QString& atmFileName ) const
   linkFile->setPrefix( atmFileInfo.fileName() +"_[" );
   linkFile->setSuffix( "]." + KMimeType::extractKnownExtension( atmFileInfo.fileName() ) );
   linkFile->open();
-  QString linkName = linkFile->fileName();
+  const QString linkName = linkFile->fileName();
   delete linkFile;
 
   if ( ::link(QFile::encodeName( atmFileName ), QFile::encodeName( linkName )) == 0 ) {
