@@ -35,13 +35,11 @@
 */
 
 #include "kogroupware.h"
-#include "korganizer/calendarviewbase.h"
 #include "freebusymanager.h"
 #include "koprefs.h"
-#include "incidenceeditor/koincidenceeditor.h"
 #include "mailscheduler.h"
 #include "akonadicalendar.h"
-#include <korganizer/akonadicalendaradaptor.h>
+#include "akonadicalendaradaptor.h"
 
 #include <KCal/IncidenceFormatter>
 #include <KPIMUtils/Email>
@@ -76,15 +74,15 @@ KOGroupware *KOGroupware::instance()
 KOGroupware::KOGroupware( KOrg::AkonadiCalendar *cal )
   : QObject( 0 ), mCalendar( cal ), mDoNotNotify( false )
 {
-  setObjectName( "kmgroupware_instance" );
+  setObjectName( QLatin1String( "kmgroupware_instance" ) );
   // Set up the dir watch of the three incoming dirs
   KDirWatch *watcher = KDirWatch::self();
-  watcher->addDir( KStandardDirs::locateLocal( "data", "korganizer/income.accepted/" ) );
-  watcher->addDir( KStandardDirs::locateLocal( "data", "korganizer/income.tentative/" ) );
-  watcher->addDir( KStandardDirs::locateLocal( "data", "korganizer/income.counter/" ) );
-  watcher->addDir( KStandardDirs::locateLocal( "data", "korganizer/income.cancel/" ) );
-  watcher->addDir( KStandardDirs::locateLocal( "data", "korganizer/income.reply/" ) );
-  watcher->addDir( KStandardDirs::locateLocal( "data", "korganizer/income.delegated/" ) );
+  watcher->addDir( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.accepted/" ) ) );
+  watcher->addDir( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.tentative/" ) ) );
+  watcher->addDir( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.counter/" ) ) );
+  watcher->addDir( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.cancel/" ) ) );
+  watcher->addDir( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.reply/" ) ) );
+  watcher->addDir( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.delegated/" ) ) );
   connect( watcher, SIGNAL(dirty(const QString&)),
            this, SLOT(incomingDirChanged(const QString&)) );
   // Now set the ball rolling
@@ -93,16 +91,16 @@ KOGroupware::KOGroupware( KOrg::AkonadiCalendar *cal )
 
 void KOGroupware::initialCheckForChanges()
 {
-  incomingDirChanged( KStandardDirs::locateLocal( "data", "korganizer/income.accepted/" ) );
-  incomingDirChanged( KStandardDirs::locateLocal( "data", "korganizer/income.tentative/" ) );
-  incomingDirChanged( KStandardDirs::locateLocal( "data", "korganizer/income.counter/" ) );
-  incomingDirChanged( KStandardDirs::locateLocal( "data", "korganizer/income.cancel/" ) );
-  incomingDirChanged( KStandardDirs::locateLocal( "data", "korganizer/income.reply/" ) );
-  incomingDirChanged( KStandardDirs::locateLocal( "data", "korganizer/income.delegated/" ) );
+  incomingDirChanged( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.accepted/" ) ) );
+  incomingDirChanged( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.tentative/" ) ) );
+  incomingDirChanged( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.counter/" ) ) );
+  incomingDirChanged( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.cancel/" ) ) );
+  incomingDirChanged( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.reply/" ) ) );
+  incomingDirChanged( KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income.delegated/" ) ) );
 
   if ( !mFreeBusyManager ) {
     mFreeBusyManager = new FreeBusyManager( this );
-    mFreeBusyManager->setObjectName( "freebusymanager" );
+    mFreeBusyManager->setObjectName( QLatin1String( "freebusymanager" ) );
     mFreeBusyManager->setCalendar( mCalendar );
     connect( mCalendar, SIGNAL(calendarChanged()),
              mFreeBusyManager, SLOT(slotPerhapsUploadFB()) );
@@ -116,13 +114,13 @@ FreeBusyManager *KOGroupware::freeBusyManager()
 
 void KOGroupware::incomingDirChanged( const QString &path )
 {
-  const QString incomingDirName = KStandardDirs::locateLocal( "data","korganizer/" ) + "income.";
+  const QString incomingDirName = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/" ) ) + QLatin1String( "income." );
   if ( !path.startsWith( incomingDirName ) ) {
     kDebug() << "Wrong dir" << path;
     return;
   }
   QString action = path.mid( incomingDirName.length() );
-  while ( action.length() > 0 && action[ action.length()-1 ] == '/' ) {
+  while ( action.length() > 0 && action[ action.length()-1 ] == QLatin1Char( '/' ) ) {
     // Strip slashes at the end
     action.truncate( action.length() - 1 );
   }
@@ -135,7 +133,7 @@ void KOGroupware::incomingDirChanged( const QString &path )
     return;
   }
   // Read the file and remove it
-  QFile f( path + '/' + files[0] );
+  QFile f( path + QLatin1Char( '/' ) + files[0] );
   if ( !f.open( QIODevice::ReadOnly ) ) {
     kError() << "Can't open file '" << files[0] << "'";
     return;
@@ -206,14 +204,14 @@ void KOGroupware::incomingDirChanged( const QString &path )
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      sendICalMessage( 0, iTIPRequest, incidence, KOGlobals::INCIDENCEEDITED, false );
+      sendICalMessage( 0, iTIPRequest, incidence, INCIDENCEEDITED, false );
     }
   } else {
     kError() << "Unknown incoming action" << action;
   }
 
 //Reenable once this part is independent from KOrganizer
-#ifdef AKONADI_PORT_DISABLED
+#if AKONADI_PORT_DISABLED
   if ( action.startsWith( QLatin1String( "counter" ) ) ) {
     Akonadi::Item item;
     item.setPayload( Incidence::Ptr( incidence->clone() ) );
@@ -229,7 +227,7 @@ void KOGroupware::incomingDirChanged( const QString &path )
 class KOInvitationFormatterHelper : public InvitationFormatterHelper
 {
   public:
-    virtual QString generateLinkURL( const QString &id ) { return "kmail:groupware_request_" + id; }
+    virtual QString generateLinkURL( const QString &id ) { return QLatin1String( "kmail:groupware_request_" ) + id; }
 };
 
 /* This function sends mails if necessary, and makes sure the user really
@@ -241,7 +239,7 @@ class KOInvitationFormatterHelper : public InvitationFormatterHelper
 bool KOGroupware::sendICalMessage( QWidget *parent,
                                    KCal::iTIPMethod method,
                                    Incidence *incidence,
-                                   KOGlobals::HowChanged action,
+                                   HowChanged action,
                                    bool attendeeStatusChanged )
 {
   // If there are no attendees, don't bother
@@ -274,12 +272,12 @@ bool KOGroupware::sendICalMessage( QWidget *parent,
 
       QString txt;
       switch( action ) {
-      case KOGlobals::INCIDENCEEDITED:
+      case INCIDENCEEDITED:
         txt = i18n( "You changed the invitation \"%1\".\n"
                     "Do you want to email the attendees an update message?",
                     incidence->summary() );
         break;
-      case KOGlobals::INCIDENCEDELETED:
+      case INCIDENCEDELETED:
         Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
         if ( incidence->type() == "Event" ) {
           txt = i18n( "You removed the invitation \"%1\".\n"
@@ -291,7 +289,7 @@ bool KOGroupware::sendICalMessage( QWidget *parent,
                       incidence->summary() );
         }
         break;
-      case KOGlobals::INCIDENCEADDED:
+      case INCIDENCEADDED:
         if ( incidence->type() == "Event" ) {
           txt = i18n( "The event \"%1\" includes other people.\n"
                       "Do you want to email the invitation to the attendees?",
@@ -301,7 +299,7 @@ bool KOGroupware::sendICalMessage( QWidget *parent,
                       "Do you want to email the invitation to the attendees?",
                       incidence->summary() );
         } else {
-          QString type = incidence->type();
+          QString type = QLatin1String( incidence->type() );
           txt = i18n( "This %1 includes other people. "
                       "Should email be sent out to the attendees?",
                       type );
@@ -339,7 +337,7 @@ bool KOGroupware::sendICalMessage( QWidget *parent,
              parent, txt, QString(),
              KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
     } else {
-      if ( action == KOGlobals::INCIDENCEDELETED ) {
+      if ( action == INCIDENCEDELETED ) {
         const QStringList myEmails = KOPrefs::instance()->allEmails();
         bool askConfirmation = false;
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
@@ -364,7 +362,7 @@ bool KOGroupware::sendICalMessage( QWidget *parent,
           parent, txt, i18n( "Group Scheduling Email" ),
           KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
         setDoNotNotify( rc == KMessageBox::No );
-      } else if ( action == KOGlobals::INCIDENCEADDED ) {
+      } else if ( action == INCIDENCEADDED ) {
         // We just got this event from the groupware stack, so add it right away
         // the notification mail was sent on the KMail side.
         return true;

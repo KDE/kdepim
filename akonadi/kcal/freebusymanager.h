@@ -35,7 +35,7 @@
 #ifndef FREEBUSYMANAGER_H
 #define FREEBUSYMANAGER_H
 
-#include "korganizer_export.h"
+#include "akonadi-kcal_next_export.h"
 
 #include <kcal/icalformat.h>
 #include <kcal/freebusycache.h>
@@ -63,7 +63,7 @@ class QTimerEvent;
 /**
  * Class for downloading FreeBusy Lists
  */
-class KORGANIZER_CORE_EXPORT FreeBusyDownloadJob : public QObject
+class AKONADI_KCAL_NEXT_EXPORT FreeBusyDownloadJob : public QObject
 {
   Q_OBJECT
   public:
@@ -86,7 +86,7 @@ class KORGANIZER_CORE_EXPORT FreeBusyDownloadJob : public QObject
     QByteArray mFreeBusyData;
 };
 
-class KORGANIZER_CORE_EXPORT FreeBusyManager : public QObject, public KCal::FreeBusyCache
+class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::FreeBusyCache
 {
   Q_OBJECT
   public:

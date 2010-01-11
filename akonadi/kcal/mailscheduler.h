@@ -24,7 +24,7 @@
 #ifndef MAILSCHEDULER_H
 #define MAILSCHEDULER_H
 
-#include "korganizer_export.h"
+#include "akonadi-kcal_next_export.h"
 
 #include <QMap>
 #include <KCal/Scheduler>
@@ -43,7 +43,7 @@ namespace KOrg {
     This class implements the iTIP interface using the email interface specified
     as Mail.
   */
-  class KORGANIZER_CORE_EXPORT MailScheduler //: public Scheduler
+  class AKONADI_KCAL_NEXT_EXPORT MailScheduler //: public Scheduler
   {
     public:
       explicit MailScheduler( KOrg::AkonadiCalendar *calendar );

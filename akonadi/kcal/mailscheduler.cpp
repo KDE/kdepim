@@ -23,8 +23,8 @@
 */
 
 #include "mailscheduler.h"
-#include "kocore.h"
 #include "komailclient.h"
+#include "koidentitymanager.h"
 #include "koprefs.h"
 #include "akonadicalendar.h"
 #include "akonadicalendaradaptor.h"
@@ -66,7 +66,7 @@ bool MailScheduler::publish( KCal::IncidenceBase *incidence, const QString &reci
   KOMailClient mailer;
   return mailer.mailTo(
     incidence,
-    KOCore::self()->identityManager()->identityForAddress( from ),
+    KOrg::identityManager()->identityForAddress( from ),
     from, bccMe, recipients, messageText, KOPrefs::instance()->mMailTransport );
 }
 
@@ -79,7 +79,7 @@ bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iT
   KOMailClient mailer;
   return mailer.mailTo(
     incidence,
-    KOCore::self()->identityManager()->identityForAddress( from ),
+    KOrg::identityManager()->identityForAddress( from ),
     from, bccMe, recipients, messageText, KOPrefs::instance()->mMailTransport );
 }
 
@@ -97,7 +97,7 @@ bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iT
        method == iTIPDeclineCounter ) {
     status = mailer.mailAttendees(
       incidence,
-      KOCore::self()->identityManager()->identityForAddress( from ),
+      KOrg::identityManager()->identityForAddress( from ),
       bccMe, messageText, KOPrefs::instance()->mMailTransport );
   } else {
     QString subject;
@@ -107,7 +107,7 @@ bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iT
     }
     status = mailer.mailOrganizer(
       incidence,
-      KOCore::self()->identityManager()->identityForAddress( from ),
+      KOrg::identityManager()->identityForAddress( from ),
       from, bccMe, messageText, subject, KOPrefs::instance()->mMailTransport );
   }
   return status;
@@ -115,7 +115,7 @@ bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iT
 
 QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
 {
-  QString incomingDirName = KStandardDirs::locateLocal( "data", "korganizer/income" );
+  QString incomingDirName = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/income" ) );
   kDebug() << "dir:" << incomingDirName;
 
   QList<ScheduleMessage*> messageList;
@@ -126,11 +126,11 @@ QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
   for ( it = incoming.constBegin(); it != incoming.constEnd(); ++it ) {
     kDebug() << "-- File:" << (*it);
 
-    QFile f( incomingDirName + '/' + (*it) );
+    QFile f( incomingDirName + QLatin1Char( '/' ) + (*it) );
     bool inserted = false;
     QMap<IncidenceBase *, QString>::Iterator iter;
     for ( iter = mEventMap.begin(); iter != mEventMap.end(); ++iter ) {
-      if ( iter.value() == incomingDirName + '/' + (*it) ) {
+      if ( iter.value() == incomingDirName + QLatin1Char( '/' ) + (*it) ) {
         inserted = true;
       }
     }
@@ -141,7 +141,7 @@ QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
         QTextStream t( &f );
         t.setCodec( "ISO 8859-1" );
         QString messageString = t.readAll();
-        messageString.remove( QRegExp( "\n[ \t]" ) );
+        messageString.remove( QRegExp( QLatin1String( "\n[ \t]" ) ) );
         messageString = QString::fromUtf8( messageString.toLatin1() );
 
         AkonadiCalendarAdaptor caladaptor(mCalendar);
@@ -150,7 +150,7 @@ QList<ScheduleMessage*> MailScheduler::retrieveTransactions()
         if ( mess ) {
           kDebug() << "got message '" << (*it) << "'";
           messageList.append( mess );
-          mEventMap[ mess->event() ] = incomingDirName + '/' + (*it);
+          mEventMap[ mess->event() ] = incomingDirName + QLatin1Char( '/' ) + (*it);
         } else {
           QString errorMessage;
           if ( mFormat->exception() ) {
@@ -180,7 +180,7 @@ bool MailScheduler::deleteTransaction( IncidenceBase *incidence )
 
 QString MailScheduler::freeBusyDir()
 {
-  return KStandardDirs::locateLocal( "data", "korganizer/freebusy" );
+  return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
 bool MailScheduler::acceptTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method, KCal::ScheduleMessage::Status status, const QString &email )

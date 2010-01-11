@@ -23,7 +23,7 @@
 #ifndef AKONADICALENDARADAPTOR_H
 #define AKONADICALENDARADAPTOR_H
 
-#include "korganizer_export.h"
+#include "akonadi-kcal_next_export.h"
 
 #include "kogroupware.h"
 #include "koprefs.h"
@@ -71,7 +71,7 @@ template<class T> inline Akonadi::Item incidenceToItem(T* incidence) {
 
 //FIXME: Find a way to set a QWidget parent for user interaction
 //Probably an extra member with a setter
-class KORGANIZER_CORE_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
+class AKONADI_KCAL_NEXT_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
 {
   Q_OBJECT
 
@@ -217,7 +217,7 @@ class KORGANIZER_CORE_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
 
       kDebug() << "\"" << incidence->summary() << "\"";
       bool doDelete = sendGroupwareMessage( aitem, KCal::iTIPCancel,
-                                            KOGlobals::INCIDENCEDELETED );
+                                            KOGroupware::INCIDENCEDELETED );
       if( !doDelete )
         return false;
       Akonadi::ItemDeleteJob* job = new Akonadi::ItemDeleteJob( aitem );
@@ -247,7 +247,7 @@ class KORGANIZER_CORE_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
         if ( !KOGroupware::instance()->sendICalMessage(
                0, //PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
                KCal::iTIPRequest,
-               incidence.get(), KOGlobals::INCIDENCEADDED, false ) ) {
+               incidence.get(), KOGroupware::INCIDENCEADDED, false ) ) {
           kError() << "sendIcalMessage failed.";
         }
       }
@@ -301,7 +301,7 @@ class KORGANIZER_CORE_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
   private:
     bool sendGroupwareMessage( const Akonadi::Item &aitem,
                                KCal::iTIPMethod method,
-                               KOGlobals::HowChanged action )
+                               KOGroupware::HowChanged action )
     {
       const Incidence::Ptr incidence = Akonadi::incidence( aitem );
       if ( !incidence )
@@ -324,7 +324,7 @@ class KORGANIZER_CORE_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
       Incidence::Ptr incidence = Akonadi::incidence( item );
 
       if ( incidence->attendeeCount() == 0 && method != iTIPPublish ) {
-        KMessageBox::information( 0, i18n( "The item has no attendees." ), "ScheduleNoIncidences" );
+        KMessageBox::information( 0, i18n( "The item has no attendees." ), QLatin1String( "ScheduleNoIncidences" ) );
         return;
       }
 
@@ -341,7 +341,7 @@ class KORGANIZER_CORE_EXPORT AkonadiCalendarAdaptor : public KCal::Calendar
                                         incidence->summary(),
                                         Scheduler::methodName( method ) ),
                                   i18n( "Sending Free/Busy" ),
-                                  "FreeBusyPublishSuccess" );
+                                  QLatin1String( "FreeBusyPublishSuccess" ) );
       } else {
         KMessageBox::error( 0,
                             i18nc( "Groupware message sending failed. "

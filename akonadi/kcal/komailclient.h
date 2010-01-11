@@ -26,7 +26,7 @@
 #ifndef KOMAILCLIENT_H
 #define KOMAILCLIENT_H
 
-#include "korganizer_export.h"
+#include "akonadi-kcal_next_export.h"
 #include <QString>
 #include <QObject>
 
@@ -40,7 +40,7 @@ namespace KPIMIdentities {
 }
 using namespace KPIMIdentities;
 
-class KORGANIZER_EVENTVIEWER_EXPORT KOMailClient : public QObject
+class AKONADI_KCAL_NEXT_EXPORT KOMailClient : public QObject
 {
   public:
     KOMailClient();

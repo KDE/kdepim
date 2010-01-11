@@ -36,7 +36,7 @@
 #ifndef KOGROUPWARE_H
 #define KOGROUPWARE_H
 
-#include "koglobals.h"
+#include "akonadi-kcal_next_export.h"
 #include <KCal/ICalFormat>
 
 class FreeBusyManager;
@@ -57,10 +57,17 @@ using namespace KCal;
 
 class QString;
 
-class KORGANIZER_CORE_EXPORT KOGroupware : public QObject
+class AKONADI_KCAL_NEXT_EXPORT KOGroupware : public QObject
 {
   Q_OBJECT
   public:
+    enum HowChanged {
+      INCIDENCEADDED,
+      INCIDENCEEDITED,
+      INCIDENCEDELETED,
+      NOCHANGE
+    };
+
     static KOGroupware *create( KOrg::AkonadiCalendar * );
     static KOGroupware *instance();
 
@@ -72,7 +79,7 @@ class KORGANIZER_CORE_EXPORT KOGroupware : public QObject
     */
     bool sendICalMessage( QWidget *parent, KCal::iTIPMethod method,
                           KCal::Incidence *incidence,
-                          KOGlobals::HowChanged action,
+                          HowChanged action,
                           bool attendeeStatusChanged );
 
     /**

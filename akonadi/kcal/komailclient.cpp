@@ -25,7 +25,7 @@
 */
 
 #include "komailclient.h"
-#include "version.h"
+#include "kdepim-version.h"
 
 #include <KCal/Attendee>
 #include <KCal/Incidence>
@@ -114,7 +114,7 @@ bool KOMailClient::mailAttendees( IncidenceBase *incidence,
     // ignore the return value from extractEmailAddressAndName() because
     // it will always be false since tusername does not contain "@domain".
     KPIMUtils::extractEmailAddressAndName( username, temail, tname );
-    tname += " <" + email + '>';
+    tname += QLatin1String( " <" ) + email + QLatin1Char( '>' );
 
     // Optional Participants and Non-Participants are copied on the email
     if ( a->role() == Attendee::OptParticipant ||
@@ -130,11 +130,11 @@ bool KOMailClient::mailAttendees( IncidenceBase *incidence,
   }
   QString to;
   if ( toList.count() > 0 ) {
-    to = toList.join( ", " );
+    to = toList.join( QLatin1String( ", " ) );
   }
   QString cc;
   if ( ccList.count() > 0 ) {
-    cc = ccList.join( ", " );
+    cc = ccList.join( QLatin1String( ", " ) );
   }
 
   QString subject;
@@ -142,7 +142,7 @@ bool KOMailClient::mailAttendees( IncidenceBase *incidence,
     Incidence *inc = static_cast<Incidence *>( incidence );
     subject = inc->summary();
   } else {
-    subject = "Free Busy Object";
+    subject = QLatin1String( "Free Busy Object" );
   }
 
   QString body = IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
@@ -166,7 +166,7 @@ bool KOMailClient::mailOrganizer( IncidenceBase *incidence,
       subject = inc->summary();
     }
   } else {
-    subject = "Free Busy Message";
+    subject = QLatin1String( "Free Busy Message" );
   }
 
   QString body = IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
@@ -186,7 +186,7 @@ bool KOMailClient::mailTo( IncidenceBase *incidence, const Identity &identity,
     Incidence *inc = static_cast<Incidence *>( incidence );
     subject = inc->summary();
   } else {
-    subject = "Free Busy Message";
+    subject = QLatin1String( "Free Busy Message" );
   }
   QString body = IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
@@ -242,7 +242,7 @@ bool KOMailClient::send( const Identity &identity,
   message->contentTransferEncoding()->clear();  // 7Bit, decoded.
 
   // Set the headers
-  message->userAgent()->fromUnicodeString( KProtocolManager::userAgentForApplication( "KOrganizer", KDEPIM_VERSION ), "utf-8" );
+  message->userAgent()->fromUnicodeString( KProtocolManager::userAgentForApplication( QLatin1String( "KOrganizer" ), QLatin1String( KDEPIM_VERSION ) ), "utf-8" );
   message->from()->fromUnicodeString( from, "utf-8" );
   message->to()->fromUnicodeString( to, "utf-8" );
   message->cc()->fromUnicodeString( cc, "utf-8" );
@@ -259,7 +259,7 @@ bool KOMailClient::send( const Identity &identity,
   // Set the sedcond multipart, the attachment.
   KMime::Content *attachMessage = new KMime::Content;
   KMime::Headers::ContentDisposition *attachDisposition = new KMime::Headers::ContentDisposition( attachMessage );
-  attachDisposition->setFilename( "cal.ics" );
+  attachDisposition->setFilename( QLatin1String( "cal.ics" ) );
   attachDisposition->setDisposition( KMime::Headers::CDattachment );
   attachMessage->contentType()->setMimeType( "text/calendar" );
   attachMessage->setHeader( attachDisposition );

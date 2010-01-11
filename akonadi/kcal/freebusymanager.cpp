@@ -37,8 +37,6 @@
 
 #include "freebusymanager.h"
 #include "koprefs.h"
-#include "actionmanager.h"
-#include "korganizer.h"
 #include "akonadicalendar.h"
 
 #include <akonadi/contact/contactsearchjob.h>
@@ -277,7 +275,7 @@ void FreeBusyManager::publishFreeBusy()
 
   // We need to massage the list a bit so that Outlook understands
   // it.
-  messageText = messageText.replace( QRegExp( "ORGANIZER\\s*:MAILTO:" ), "ORGANIZER:" );
+  messageText = messageText.replace( QRegExp( QLatin1String( "ORGANIZER\\s*:MAILTO:" ) ), QLatin1String( "ORGANIZER:" ) );
 
   // Create a local temp file and save the message to it
   KTemporaryFile tempFile;
@@ -413,7 +411,7 @@ bool FreeBusyManager::processRetrieveQueue()
   }
 
   FreeBusyDownloadJob *job = new FreeBusyDownloadJob( email, sourceURL, this );
-  job->setObjectName( "freebusy_download_job" );
+  job->setObjectName( QLatin1String( "freebusy_download_job" ) );
   connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
            SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)) );
   connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
@@ -432,19 +430,18 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
   kDebug() << email;
 
   // First check if there is a specific FB url for this email
-  QString configFile = KStandardDirs::locateLocal( "data", "korganizer/freebusyurls" );
+  QString configFile = KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusyurls" ) );
   KConfig cfg( configFile );
   KConfigGroup group = cfg.group(email);
-  QString url = group.readEntry( "url" );
+  QString url = group.readEntry( QLatin1String( "url" ) );
   if ( !url.isEmpty() ) {
     return KUrl( url );
   }
   // Try with the url configurated by preferred email in kcontactmanager
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::Email, email );
-  if ( !job->exec() ) {
+  if ( !job->exec() )
     return KUrl();
-  }
 
   QString pref;
   const KABC::Addressee::List contacts = job->contacts();
@@ -468,7 +465,7 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
 
   // Sanity check: Don't download if it's not a correct email
   // address (this also avoids downloading for "(empty email)").
-  int emailpos = email.indexOf( '@' );
+  int emailpos = email.indexOf( QLatin1Char( '@' ) );
   if( emailpos == -1 ) {
      kDebug() << "No '@' found in" << email;
      return KUrl();
@@ -487,8 +484,8 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
     // This tests if the hostnames match, or one is a subset of the other
     const QString hostDomain = sourceURL.host();
     if ( hostDomain != emailHost &&
-         !hostDomain.endsWith( '.' + emailHost ) &&
-         !emailHost.endsWith( '.' + hostDomain ) ) {
+         !hostDomain.endsWith( QLatin1Char( '.' ) + emailHost ) &&
+         !emailHost.endsWith( QLatin1Char( '.' ) + hostDomain ) ) {
       // Host names do not match
       kDebug() << "Host '" << sourceURL.host()
                << "' doesn't match email '" << email << '\'';
@@ -497,9 +494,9 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
   }
 
   if ( KOPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
-    sourceURL.setFileName( email + ".ifb" );
+    sourceURL.setFileName( email + QLatin1String( ".ifb" ) );
   } else {
-    sourceURL.setFileName( emailName + ".ifb" );
+    sourceURL.setFileName( emailName + QLatin1String( ".ifb" ) );
   }
   sourceURL.setUser( KOPrefs::instance()->mFreeBusyRetrieveUser );
   sourceURL.setPass( KOPrefs::instance()->mFreeBusyRetrievePassword );
@@ -522,7 +519,7 @@ KCal::FreeBusy *FreeBusyManager::iCalToFreeBusy( const QByteArray &data )
 
 QString FreeBusyManager::freeBusyDir()
 {
-  return KStandardDirs::locateLocal( "data", "korganizer/freebusy" );
+  return KStandardDirs::locateLocal( "data", QLatin1String( "korganizer/freebusy" ) );
 }
 
 FreeBusy *FreeBusyManager::loadFreeBusy( const QString &email )
@@ -531,7 +528,7 @@ FreeBusy *FreeBusyManager::loadFreeBusy( const QString &email )
 
   QString fbd = freeBusyDir();
 
-  QFile f( fbd + '/' + email + ".ifb" );
+  QFile f( fbd + QLatin1Char( '/' ) + email + QLatin1String( ".ifb" ) );
   if ( !f.exists() ) {
     kDebug() << f.fileName() << "doesn't exist.";
     return 0;
@@ -566,9 +563,9 @@ bool FreeBusyManager::saveFreeBusy( FreeBusy *freebusy, const Person &person )
   }
 
   QString filename( fbd );
-  filename += '/';
+  filename += QLatin1Char( '/' );
   filename += person.email();
-  filename += ".ifb";
+  filename += QLatin1String( ".ifb" );
   QFile f( filename );
 
   kDebug() << "filename:" << filename;
