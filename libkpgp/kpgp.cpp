@@ -20,8 +20,6 @@
 #include "kpgpbase.h"
 #include "kpgpui.h"
 
-#include <kdepim-compat.h> // for KPATH_SEPARATOR, remove in KDEPIM 4.2
-
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
