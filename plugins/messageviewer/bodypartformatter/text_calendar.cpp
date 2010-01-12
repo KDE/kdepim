@@ -46,6 +46,7 @@
 #include <kcal/incidenceformatter.h>
 
 #include <akonadi/kcal/groupware.h>
+#include <kmail/kmcommands.h>
 
 #include <kpimutils/email.h>
 #include <kpimidentities/identity.h>
@@ -1073,6 +1074,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           return i18n("Check my calendar..." );
         if ( path == "reply" )
           return i18n( "Record response into my calendar" );
+        if ( path == "record" )
+          return i18n( "Record invitation into my calendar" );
         if ( path == "delegate" )
           return i18n( "Delegate invitation" );
         if ( path == "forward" )
