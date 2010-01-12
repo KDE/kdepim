@@ -2727,6 +2727,7 @@ void ViewerPrivate::slotAttachmentDelete()
       return;
     showWarning = false;
   }
+  update();
 }
 
 
