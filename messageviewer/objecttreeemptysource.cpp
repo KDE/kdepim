@@ -69,6 +69,7 @@ const QTextCodec * EmptySource::overrideCodec()
 
 QString EmptySource::createMessageHeader( KMime::Message* message )
 {
+  Q_UNUSED( message );
   return QString(); //do nothing
 }
 

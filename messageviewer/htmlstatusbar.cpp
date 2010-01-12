@@ -44,6 +44,8 @@
 #include <QLabel>
 #include <QMouseEvent>
 
+using namespace MessageViewer;
+
 HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
   : QLabel( parent, f ),
     mMode( Util::Normal )

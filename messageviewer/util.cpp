@@ -48,6 +48,8 @@
 #include <QTextCodec>
 #include <QWidget>
 
+using namespace MessageViewer;
+
 bool Util::checkOverwrite( const KUrl &url, QWidget *w )
 {
   if ( KIO::NetAccess::exists( url, KIO::NetAccess::DestinationSide, w ) ) {
