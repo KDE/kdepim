@@ -4,13 +4,9 @@ include_directories(${AKONADI_INCLUDE_DIR})
 include_directories(${Boost_INCLUDE_DIR})
 include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories(${CMAKE_SOURCE_DIR}/akonadi)
-
-if(NEPOMUK_FOUND)
-  set(AKONADICONSOLE_EXTRA_LIBS ${NEPOMUK_LIBRARIES})
-  include_directories(${NEPOMUK_INCLUDES})
+include_directories(${NEPOMUK_INCLUDES})
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-configure_file(config-akonadiconsole.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadiconsole.h)
 
 set(akonadiconsole_bin_SRCS
   agentwidget.cpp
@@ -88,7 +84,7 @@ target_link_libraries( akonadiconsole_bin
   messageviewer
   ${KDE4_KUTILS_LIBS}
   ${KDE4_KIO_LIBS}
-  ${AKONADICONSOLE_EXTRA_LIBS}
+  ${NEPOMUK_LIBRARIES}
   ${QT_QTSQL_LIBRARY}
   ${QT_QTNETWORK_LIBRARY}
   ${AKONADI_COMMON_LIBRARIES}
@@ -97,5 +93,3 @@ target_link_libraries( akonadiconsole_bin
 install( TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES akonadiconsole.desktop DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES akonadiconsoleui.rc DESTINATION ${DATA_INSTALL_DIR}/akonadiconsole )
-
-endif(NEPOMUK_FOUND)
