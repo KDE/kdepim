@@ -157,6 +157,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mScrollDownMoreAction( 0 ),
     mSelectEncodingAction( 0 ),
     mToggleFixFontAction( 0 ),
+    mToggleDisplayModeAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
@@ -205,6 +206,9 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
 
  connect( this, SIGNAL(urlClicked(const KUrl&,int)),
           this, SLOT(slotUrlClicked()) );
+
+  connect( mColorBar, SIGNAL( clicked() ),
+           this, SLOT( slotToggleHtmlMode() ) );
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -1113,7 +1117,7 @@ void ViewerPrivate::displayMessage()
 
   mNodeHelper->removeTempFiles();
 
-  mColorBar->setNeutralMode();
+  mColorBar->setNormalMode();
 
   if ( mMessageItem.hasAttribute<ErrorAttribute>() ) {
     const ErrorAttribute* const attr = mMessageItem.attribute<ErrorAttribute>();
@@ -1125,9 +1129,6 @@ void ViewerPrivate::displayMessage()
     htmlWriter()->queue( QLatin1String("<p></p>") );
   }
   parseMsg();
-
-  if( mColorBar->isNeutral() )
-    mColorBar->setNormalMode();
 
   htmlWriter()->queue("</body></html>");
   connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ) );
@@ -1965,6 +1966,17 @@ void ViewerPrivate::createActions()
   ac->addAction( "scroll_down_more", mScrollDownMoreAction );
   connect( mScrollDownMoreAction, SIGNAL( triggered( bool ) ),
            q, SLOT( slotScrollNext() ) );
+
+  //
+  // Actions not in menu
+  //
+
+  // Toggle HTML display mode.
+  mToggleDisplayModeAction = new KToggleAction( i18n( "Toggle HTML Display Mode" ), this );
+  ac->addAction( "toggle_html_display_mode", mToggleDisplayModeAction );
+  connect( mToggleDisplayModeAction, SIGNAL( triggered( bool ) ),
+           SLOT( slotToggleHtmlMode() ) );
+  mToggleDisplayModeAction->setHelpText( i18n( "Toggle display mode between HTML and plain text" ) );
 }
 
 
@@ -2261,6 +2273,12 @@ void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
     kWarning() << "Unhandled URL right-click!";
     emit popupMenu( mMessageItem, url, aPos );
   }
+}
+
+void ViewerPrivate::slotToggleHtmlMode()
+{
+  setHtmlOverride( !htmlMail() );
+  update( Viewer::Force );
 }
 
 void ViewerPrivate::slotFind()
@@ -2939,6 +2957,9 @@ bool ViewerPrivate::htmlLoadExternal() const
 void ViewerPrivate::setHtmlOverride( bool override )
 {
   mHtmlOverride = override;
+
+  // keep toggle display mode action state in sync.
+  mToggleDisplayModeAction->setChecked( htmlMail() );
 }
 
 bool ViewerPrivate::htmlOverride() const

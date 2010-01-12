@@ -52,7 +52,7 @@ bool EmptySource::showSignatureDetails()
   return false;
 }
 
-void EmptySource::setHtmlMode( bool mode )
+void EmptySource::setHtmlMode( Util::HtmlMode mode )
 {
   Q_UNUSED( mode );
 }

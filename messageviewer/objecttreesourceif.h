@@ -21,6 +21,7 @@
 #define MAILVIEWER_OBJECTTREESOURCE_IF_H
 
 #include "messageviewer_export.h"
+#include "util.h"
 
 namespace KMime {
   class Message;
@@ -42,8 +43,16 @@ namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT ObjectTreeSourceIf  {
 
 public:
+
     ObjectTreeSourceIf() {};
     virtual ~ObjectTreeSourceIf() {};
+
+    /**
+      * Sets the type of mail that is currently displayed. Applications can display this
+      * information to the user, for example KMail displays a HTML status bar.
+      * Note: This is not called when the mode is "Normal".
+      */
+    virtual void setHtmlMode( Util::HtmlMode mode ) = 0;
 
     /** Return true if the mail should be parsed as a html mail */
     virtual bool htmlMail() = 0;
@@ -57,9 +66,6 @@ public:
 
     /** Return true to include the signature detailes in the generated html */
     virtual bool showSignatureDetails() = 0;
-
-    /** Enable html mode (html statusbar) */
-    virtual void setHtmlMode( bool htmlMode ) = 0;
 
     virtual int levelQuote() = 0;
 

@@ -449,6 +449,9 @@ public slots:
   void slotAttachmentEditDone(EditorWatcher* editorWatcher);
   void slotLevelQuote( int l );
 
+  /** Toggle display mode between HTML and plain text. */
+  void slotToggleHtmlMode();
+
   /**
    * Does an action for the current attachment.
    * The action is defined by the KMHandleAttachmentCommand::AttachmentAction
@@ -523,9 +526,10 @@ public:
   KActionCollection *mActionCollection;
   KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mSelectAllAction,
-      *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction, *mViewSourceAction, *mSaveMessageAction;
+      *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
+      *mViewSourceAction, *mSaveMessageAction, ;
   KSelectAction *mSelectEncodingAction;
-  KToggleAction *mToggleFixFontAction;
+  KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mUrlClicked;
   HtmlWriter * mHtmlWriter;

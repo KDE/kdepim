@@ -42,10 +42,11 @@
 #include <QColor>
 #include <QString>
 #include <QLabel>
+#include <QMouseEvent>
 
 HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f )
   : QLabel( parent, f ),
-    mMode( Normal )
+    mMode( Util::Normal )
 {
   setObjectName( name );
   setAlignment( Qt::AlignHCenter | Qt::AlignTop );
@@ -63,55 +64,93 @@ void HtmlStatusBar::update() {
   pal.setColor( foregroundRole(), fgColor() );
   setPalette( pal );
   setText( message() );
+  setToolTip( toolTip() );
 }
 
-void HtmlStatusBar::setNormalMode() {
-  setMode( Normal );
+void HtmlStatusBar::setNormalMode()
+{
+  setMode( Util::Normal );
 }
 
-void HtmlStatusBar::setHtmlMode() {
-  setMode( Html );
+void HtmlStatusBar::setHtmlMode()
+{
+  setMode( Util::Html );
 }
 
-void HtmlStatusBar::setNeutralMode() {
-  setMode( Neutral );
+void HtmlStatusBar::setMultipartPlainMode()
+{
+  setMode( Util::MultipartPlain );
 }
 
-void HtmlStatusBar::setMode( Mode m ) {
+void HtmlStatusBar::setMultipartHtmlMode()
+{
+  setMode( Util::MultipartHtml );
+}
+
+void HtmlStatusBar::setMode( Util::HtmlMode m )
+{
   if ( m == mode() )
     return;
   mMode = m;
   update();
 }
 
+void HtmlStatusBar::mousePressEvent( QMouseEvent * event )
+{
+  if ( event->button() == Qt::LeftButton ) {
+    emit clicked();
+  }
+}
+
 QString HtmlStatusBar::message() const {
   switch ( mode() ) {
-  case Html: // bold: "HTML Message"
+  case Util::Html: // bold: "HTML Message"
+  case Util::MultipartHtml:
     return i18n( "<qt><b><br />H<br />T<br />M<br />L<br /> "
                  "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</b></qt>" );
-  case Normal: // normal: "No HTML Message"
+  case Util::Normal: // normal: "No HTML Message"
     return i18n( "<qt><br />N<br />o<br /> "
                  "<br />H<br />T<br />M<br />L<br /> "
                  "<br />M<br />e<br />s<br />s<br />a<br />g<br />e</qt>" );
+  case Util::MultipartPlain: // normal: "Plain Message"
+    return i18n( "<qt><br />P<br />l<br />a<br />i<br />n<br /> "
+                 "<br />M<br />e<br />s<br />s<br />a<br />g<br />e<br /></qt>" );
   default:
-  case Neutral:
     return QString();
   }
 }
 
+QString HtmlStatusBar::toolTip() const
+{
+  switch ( mode() )
+  {
+    case Util::Html:
+    case Util::MultipartHtml:
+    case Util::MultipartPlain:
+      return i18n( "Click to toggle between HTML and plain text." );
+    default:
+    case Util::Normal:
+      break;
+  }
 
-QColor HtmlStatusBar::fgColor() const {
+  return QString();
+}
+
+QColor HtmlStatusBar::fgColor() const
+{
   KConfigGroup conf( Global::instance()->config(), "Reader" );
   QColor defaultColor, color;
   switch ( mode() ) {
-  case Html:
+  case Util::Html:
+  case Util::MultipartHtml:
     defaultColor = Qt::white;
     color = defaultColor;
     if ( !GlobalSettings::self()->useDefaultColors() ) {
       color = conf.readEntry( "ColorbarForegroundHTML", defaultColor );
     }
     return color;
-  case Normal:
+  case Util::Normal:
+  case Util::MultipartPlain:
     defaultColor = Qt::black;
     color = defaultColor;
     if ( !GlobalSettings::self()->useDefaultColors() ) {
@@ -119,7 +158,6 @@ QColor HtmlStatusBar::fgColor() const {
     }
     return color;
   default:
-  case Neutral:
     return Qt::black;
   }
 }
@@ -129,14 +167,16 @@ QColor HtmlStatusBar::bgColor() const {
 
   QColor defaultColor, color;
   switch ( mode() ) {
-  case Html:
+  case Util::Html:
+  case Util::MultipartHtml:
     defaultColor = Qt::black;
     color = defaultColor;
     if ( !GlobalSettings::self()->useDefaultColors() ) {
       color = conf.readEntry( "ColorbarBackgroundHTML", defaultColor );
     }
     return color;
-  case Normal:
+  case Util::Normal:
+  case Util::MultipartPlain:
     defaultColor = Qt::lightGray;
     color = defaultColor;
     if ( !GlobalSettings::self()->useDefaultColors() ) {
@@ -144,7 +184,6 @@ QColor HtmlStatusBar::bgColor() const {
     }
     return color;
   default:
-  case Neutral:
     return Qt::white;
   }
 }

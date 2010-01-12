@@ -32,26 +32,29 @@
 #ifndef _MESSAGEVIEWER_HTMLSTATUSBAR_H_
 #define _MESSAGEVIEWER_HTMLSTATUSBAR_H_
 
+#include "util.h"
 #include <QLabel>
 class QString;
 class QColor;
-
+class QMouseEvent;
 
 /**
   * @short The HTML statusbar widget for use with the reader.
   *
   * The HTML status bar is a small widget that acts as an indicator
-  * for the message content. It can be in one of two modes:
+  * for the message content. It can be in one of four modes:
   *
   * <dl>
   * <dt><code>Normal</code></dt>
   * <dd>Default. No HTML.</dd>
-  * <dt><code>Neutral</code></dt>
-  * <dd>Temporary value. Used while the real mode is undetermined.</dd>
   * <dt><code>Html</code></dt>
   * <dd>HTML content is being shown. Since HTML mails can mimic all sorts
   *     of KMail markup in the reader, this provides out-of-band information
   *     about the presence of (rendered) HTML.</dd>
+  * <dt><code>MultipartPlain</code></dt>
+  * <dd>Viewed as plain text with HTML part also available.</dd>
+  * <dt><code>MultipartHtml</code></dt>
+  * <dd>Viewed as Html with plain text part also available.</dd>
   * </dl>
   *
   * @author Ingo Kloecker <kloecker@kde.org>, Marc Mutz <mutz@kde.org>
@@ -62,37 +65,43 @@ public:
   explicit HtmlStatusBar( QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
   virtual ~HtmlStatusBar();
 
-  enum Mode {
-    Normal,
-    Html,
-    Neutral
-  };
-
   /** @return current mode. */
-  Mode mode() const { return mMode ; }
-  bool isHtml() const { return mode() == Html ; }
-  bool isNormal() const { return mode() == Normal ; }
-  bool isNeutral() const { return mode() == Neutral ; }
+  Util::HtmlMode mode() const { return mMode ; }
+  bool isHtml() const { return mode() == Util::Html; }
+  bool isNormal() const { return mode() == Util::Normal; }
+  bool isMultipartHtml() const { return mode() == Util::MultipartHtml; }
+  bool isMultipartPlain() const { return mode() == Util::MultipartPlain; }
 
   // Update the status bar, for example when the color scheme changed.
   void update();
 
 public slots:
-  /** Switch to "html mode". */
   void setHtmlMode();
   /** Switch to "normal mode". */
   void setNormalMode();
-  /** Switch to "neutral" mode (currently == normal mode). */
-  void setNeutralMode();
+  /** Switch to "multipart html mode". */
+  void setMultipartHtmlMode();
+  /** Switch to "multipart plain mode". */
+  void setMultipartPlainMode();
   /** Switch to mode @p m */
-  void setMode( Mode m );
+  void setMode( Util::HtmlMode m );
+
+signals:
+
+  /** The user has clicked the status bar. */
+  void clicked();
+
+protected:
+
+  void mousePressEvent( QMouseEvent * event );
 
 private:
   QString message() const;
+  QString toolTip() const;
   QColor bgColor() const;
   QColor fgColor() const;
 
-  Mode mMode;
+  Util::HtmlMode mMode;
 };
 
 #endif // _KMAIL_HTMLSTATUSBAR_H_

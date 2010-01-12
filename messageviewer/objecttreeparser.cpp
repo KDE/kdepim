@@ -1074,7 +1074,7 @@ bool ObjectTreeParser::processTextHtmlSubtype( const Akonadi::Item &item, KMime:
     htmlWriter()->queue( "<div style=\"position: relative\">\n" );
     htmlWriter()->queue( bodyText );
     htmlWriter()->queue( "</div>\n" );
-    mSource->setHtmlMode( true );
+    mSource->setHtmlMode( Util::Html );
     return true;
   }
   return false;
@@ -1323,12 +1323,14 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( const Akonadi::Item &
     if ( dataPlain )
       mNodeHelper->setNodeProcessed( dataPlain, false);
     stdChildHandling( item, dataHtml );
+    mSource->setHtmlMode( Util::MultipartHtml );
     return true;
   }
 
   if ( !mHtmlWriter || (!mSource->htmlMail() && dataPlain) ) {
     mNodeHelper->setNodeProcessed( dataHtml, false );
     stdChildHandling( item, dataPlain );
+    mSource->setHtmlMode( Util::MultipartPlain );
     return true;
   }
 
