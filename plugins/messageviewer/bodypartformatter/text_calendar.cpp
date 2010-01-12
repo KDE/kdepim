@@ -905,7 +905,9 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         return false;
       }
 
+      Incidence *incidence;
       QString iCal;
+      QString summary;
       /* If the bodypart does not have a charset specified, we need to fall back
          to utf8, not the KMail fallback encoding, so get the contents as binary
          and decode explicitly. */
@@ -933,7 +935,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         result = handleInvitation( iCal, Attendee::Delegated, part );
       if ( path == "forward" ) {
         const QString receiver = findReceiver( part->content() );
-        Incidence* incidence = icalToString( iCal );
+        incidence = icalToString( iCal );
         AttendeeSelector dlg;
         if ( dlg.exec() == QDialog::Rejected )
           return true;
@@ -943,7 +945,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         result = mail( incidence, /*TODO port me! c,*/ "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
-        Incidence* incidence = icalToString( iCal );
+        incidence = icalToString( iCal );
         showCalendar( incidence->dtStart().date() );
         return true;
       }
@@ -960,6 +962,46 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           result = true;
         }
       }
+      if ( path == "record" ) {
+        incidence = icalToString( iCal );
+
+        int response =
+          KMessageBox::questionYesNoCancel(
+          0,
+          i18nc( "@info",
+                 "The organizer is not expecting a reply to this invitation "
+                 "but you can send them an email message if you desire.\n\n"
+                 "Would you like to send the organizer a message regarding this invitation?\n"
+                 "Press the [Cancel] button to cancel the recording operation." ),
+          i18nc( "@title:window", "Send Email to Organizer" ),
+          KGuiItem( i18n( "Do Not Send" ) ),
+          KGuiItem( i18n( "Send EMail" ) ) );
+
+        switch( response ) {
+        case KMessageBox::Cancel:
+          break;
+        case KMessageBox::No: // means "send email"
+          summary = incidence->summary();
+          if ( !summary.isEmpty() ) {
+            summary = i18n( "Re: %1", summary );
+          }
+
+          KToolInvocation::invokeMailer( incidence->organizer().email(), summary );
+          //fall through
+        case KMessageBox::Yes: // means "do not send"
+          if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
+#if 0 // TODO port to Akonadi
+            if ( c.deleteInvitationAfterReply() ) {
+              ( new KMTrashMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+              result = true;
+            }
+#endif
+          }
+          showCalendar( incidence->dtStart().date() );
+          break;
+        }
+      }
+
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         QString name = path;
         name.remove( QRegExp( "^ATTACH:" ) );
