@@ -2942,7 +2942,8 @@ void ViewerPrivate::setHtmlOverride( bool override )
   mHtmlOverride = override;
 
   // keep toggle display mode action state in sync.
-  mToggleDisplayModeAction->setChecked( htmlMail() );
+  if ( mToggleDisplayModeAction )
+    mToggleDisplayModeAction->setChecked( htmlMail() );
 }
 
 bool ViewerPrivate::htmlOverride() const
