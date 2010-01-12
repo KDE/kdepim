@@ -21,6 +21,7 @@
 #define ENTITYTREEWIDGET_H
 
 #include <QWidget>
+#include <QModelIndex>
 
 class QTreeView;
 class QLineEdit;
@@ -29,14 +30,31 @@ class QComboBox;
 namespace Akonadi
 {
 class EntityTreeModel;
-class Monitor;
+class ChangeRecorder;
 }
 
 class EntityTreeWidget : public QWidget
 {
   Q_OBJECT
 public:
-  EntityTreeWidget( QWidget *parent );
+  EntityTreeWidget( QWidget *parent = 0 );
+  virtual ~EntityTreeWidget();
+
+  QTreeView* view() const;
+  Akonadi::EntityTreeModel* model() const;
+
+  Akonadi::ChangeRecorder* changeRecorder() const;
+
+  virtual void connectTreeToModel( QTreeView *tree, Akonadi::EntityTreeModel *model );
+  virtual QModelIndex mapToSource(const QModelIndex &index) { return index; }
+  virtual Akonadi::EntityTreeModel* getETM();
+
+public:
+  void init();
+
+private slots:
+  void mimeTypesChoiceChanged( int index );
+  void mimeTypesChanged( const QString &mimetypeList );
 
 private:
   QTreeView *m_treeView;
@@ -44,7 +62,7 @@ private:
   QLineEdit *m_typeLineEdit;
 
   Akonadi::EntityTreeModel *m_etm;
-  Akonadi::Monitor *m_monitor;
+  Akonadi::ChangeRecorder *m_changeRecorder;
 };
 
 #endif
