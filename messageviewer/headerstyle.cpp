@@ -878,7 +878,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message * message,
 
     // attachments
     headerStr +=
-      "<div class=\"noprint\" style=\"position: absolute; top: 60px; right: 20px; width: 200px; height: 200px;\">"
+      "<div class=\"noprint\" style=\"position: absolute; top: 60px; right: 20px;\">"
       "<div id=\"attachmentInjectionPoint\"></div>"
       "</div>\n";
   }
