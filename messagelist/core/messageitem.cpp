@@ -78,7 +78,7 @@ public:
   bool mSubjectIsPrefixed;          ///< set only if we're doing subject based threading
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
-  QList< Tag * > * mTagList;        ///< Usually 0....
+  QList< Tag * > mTagList;          ///< Usually empty
   QColor mTextColor;                ///< If invalid, use default text color
   QColor mBackgroundColor;          ///< If invalid, use default background color
   QFont  mFont;
@@ -92,68 +92,48 @@ MessageItem::MessageItem()
 {
   d->mThreadingStatus = MessageItem::ParentMissing;
   d->mAboutToBeRemoved = false;
-  d->mTagList = 0;
   d->mUniqueId = 0;
 }
 
 MessageItem::~MessageItem()
 {
-  if ( d->mTagList )
-  {
-    qDeleteAll( *d->mTagList );
-    delete d->mTagList;
-    d->mTagList = 0;
-  }
-
+  qDeleteAll( d->mTagList );
   delete d;
 }
 
-QList< MessageItem::Tag * > *MessageItem::tagList() const
+const QList< MessageItem::Tag * > MessageItem::tagList() const
 {
   return d->mTagList;
 }
 
-void MessageItem::setTagList( QList< Tag * > * list )
+void MessageItem::setTagList( const QList< Tag * > &list )
 {
-  if ( d->mTagList )
-  {
-    qDeleteAll( *d->mTagList );
-    delete d->mTagList;
-  }
+  qDeleteAll( d->mTagList );
   d->mTagList = list;
 }
 
 MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
 {
-  if ( !mTagList )
-    return 0;
-
-  for ( QList< Tag * >::Iterator it = mTagList->begin(); it != mTagList->end(); ++it )
-  {
-    if ( ( *it )->id() == szTagId )
-      return *it;
+  foreach( Tag *tag, mTagList ) {
+    if ( tag->id() == szTagId )
+      return tag;
   }
-
- return 0;
+  return 0;
 }
 
 MessageItem::Tag *MessageItem::findTag( const QString &szTagId ) const
 {
-  return d->mTagList ? d->findTagInternal( szTagId ) : 0;
+  return d->findTagInternal( szTagId );
 }
 
 QString MessageItem::tagListDescription() const
 {
-  if ( !d->mTagList )
-    return QString();
-
   QString ret;
 
-  for ( QList< Tag * >::Iterator it = d->mTagList->begin(); it != d->mTagList->end(); ++it )
-  {
+  foreach( const Tag *tag, d->mTagList ) {
     if ( !ret.isEmpty() )
       ret += ", ";
-    ret += ( *it )->name();
+    ret += tag->name();
   }
 
   return ret;

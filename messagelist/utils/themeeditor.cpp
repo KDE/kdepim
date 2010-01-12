@@ -208,10 +208,10 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   mSampleMessageItem->setSignatureState( MessageItem::FullySigned );
   mSampleMessageItem->setEncryptionState( MessageItem::FullyEncrypted );
 
-  QList< MessageItem::Tag * > * list = new QList< MessageItem::Tag * >();
-  list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 1" ), QString() ) );
-  list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 2" ), QString() ) );
-  list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 3" ), QString() ) );
+  QList< MessageItem::Tag * > list;
+  list.append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 1" ), QString() ) );
+  list.append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 2" ), QString() ) );
+  list.append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 3" ), QString() ) );
   mSampleMessageItem->setTagList( list );
 
   mRowMapper->createModelInvariantIndex( 0, mSampleMessageItem );
