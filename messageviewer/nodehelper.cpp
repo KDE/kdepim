@@ -613,6 +613,13 @@ bool NodeHelper::isAttachment( KMime::Content *node )
 {
   if ( node->head().isEmpty() )
     return false;
+  if ( node->contentType( false ) &&
+       node->contentType()->mediaType().toLower() == "message" &&
+       node->contentType()->subType().toLower() == "rfc822" ) {
+    // Messages are always attachments. Normally message attachments created from KMail have a content
+    // disposition, but some mail clients omit that.
+    return true;
+  }
   if ( !node->contentDisposition( false ) )
     return false;
   return node->contentDisposition()->disposition() == KMime::Headers::CDattachment;
