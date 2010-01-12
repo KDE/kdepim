@@ -19,28 +19,27 @@
     USA.
 */
 
-#include "mainwindow.h"
+#ifndef TAB6WIDGET_H
+#define TAB6WIDGET_H
 
+#include <QWidget>
 
-#include "tab1widget.h"
-#include "tab2widget.h"
-#include "tab3widget.h"
-#include "tab4widget.h"
-#include "tab5widget.h"
-#include "tab6widget.h"
+class QModelIndex;
+class QTreeView;
 
+class EntityTreeWidget;
 
-MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
-  : QMainWindow(parent, flags)
+class Tab6Widget : public QWidget
 {
-  QTabWidget *tabWidget = new QTabWidget(this);
+  Q_OBJECT
+public:
+  Tab6Widget(QWidget* parent = 0, Qt::WindowFlags f = 0);
 
-  tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
-  tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
-  tabWidget->addTab(new Tab3Widget(tabWidget), "KSelectionProxyModel");
-  tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
-  tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
-  tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
+private:
+  QTreeView *m_itemView;
+  EntityTreeWidget *m_etw;
 
-  setCentralWidget(tabWidget);
-}
+};
+
+#endif
+
