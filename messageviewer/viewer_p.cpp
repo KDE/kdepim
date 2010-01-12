@@ -2148,6 +2148,10 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
         QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
         QFontMetrics fm( bodyFont );
         html += fm.elidedText( label, Qt::ElideRight, 180 );
+      } else if ( headerStyle() == HeaderStyle::fancy() ) {
+        QFont bodyFont = mCSSHelper->bodyFont( mUseFixedFont );
+        QFontMetrics fm( bodyFont );
+        html += fm.elidedText( label, Qt::ElideRight, 1000 );
       } else {
         html += label;
       }
