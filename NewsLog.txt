@@ -10,8 +10,6 @@ Problems addressed
 * kolab/issue3948: Show a 'record' button if the organizer is *not* expecting an rsvp (rt#5879)
 * kolab/issue3740: Selection jumps after deleting an attachment from an email
 * kolab/issue3959: In side-by-side view without Marcus Bains line is the seperator displaced (rt#5912)
-* kolab/issue3665: Not possible to accept a counter proposal from OL/toltec
-* kolab/issue2656: Wrong scale is shown, if the calendar component is selected. (rt#5916)
 * Fix email address spoofing by not allowing BIDI control characters in the display name
 
 
