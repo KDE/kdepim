@@ -20,15 +20,12 @@ Friday, December 18th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3986: event/todo recurrence option should be consistent (rt#5900)
-* kolab/issue3964: An attendee of an event is not informed about his role or status in the event (rt#5893)
+* kolab/issue3964(partial): An attendee of an event is not informed about his role or status in the event (rt#5893)
 * kolab/issue3994: The calendar/event view configuration dialog is too wide
-* kolab/issue3996: The name of a to a task attached mail with utf-8 symbols in the subject is confusing
 * kolab/issue3934: Reply of mail with signature removes the signature (rt#5887)
 * kolab/issue3973: Improvement of the German calendar import menu texts (rt#5812)
 * kolab/issue3961: Mail attachment of a task should be persistent (rt#5915)
 * kolab/issue4003: Crash after copying a mail to a quota full OnlineIMAP inbox
-* kolab/issue3805: Sometimes at the Mail save dialog no filename is created from the subject (rt#5851)
 * Fix priorities of todos stored on the Kolab server not being remembered properly after a restart
 
 
