@@ -38,15 +38,19 @@
 #ifndef MAILVIEWERUTIL_H
 #define MAILVIEWERUTIL_H
 
+#include "messageviewer_export.h"
+
 class KUrl;
 class QWidget;
 class QStringList;
 class QString;
 
-    /**
-     * The Util namespace contains a collection of helper functions use in
-     * various places.
-     */
+namespace MessageViewer {
+
+/**
+ * The Util namespace contains a collection of helper functions use in
+ * various places.
+ */
 namespace Util {
 
     /**
@@ -61,13 +65,15 @@ namespace Util {
     };
 
     // return true if we should proceed, false if we should abort
-    bool checkOverwrite( const KUrl &url, QWidget *w );
+    bool MESSAGEVIEWER_EXPORT checkOverwrite( const KUrl &url, QWidget *w );
 
     /**
      * Delegates opening a URL to the Max OSX mechanisms for that.
      * Returns false if it did nothing (such as on other platforms.
      */
-    bool handleUrlOnMac( const KUrl& url );
+    bool MESSAGEVIEWER_EXPORT handleUrlOnMac( const KUrl& url );
+}
+
 }
 
 #endif
