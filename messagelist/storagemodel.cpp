@@ -32,13 +32,21 @@
 #include <KDE/KLocale>
 #include <KDE/KIconLoader>
 #include <Nepomuk/Tag>
+#include <Nepomuk/ResourceManager>
+#include <Nepomuk/Variant>
+#include <Soprano/Statement>
+#include <soprano/signalcachemodel.h>
+#include <soprano/nao.h>
+#include <soprano/rdf.h>
 
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "core/subjectutils_p.h"
+#include "messagetag.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
+#include <QtCore/QScopedPointer>
 #include <QtGui/QItemSelectionModel>
 
 namespace MessageList
@@ -47,17 +55,17 @@ namespace MessageList
 class StorageModel::Private
 {
 public:
-  Private( StorageModel *owner )
-    : q( owner ) { }
-
   void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onSelectionChanged();
   void loadSettings();
+  void statementChanged( const Soprano::Statement &statement );
 
   StorageModel * const q;
 
   QAbstractItemModel *mModel;
   QItemSelectionModel *mSelectionModel;
+
+  QScopedPointer<Soprano::Util::SignalCacheModel> mSopranoModel;
 
   QColor mColorNewMessage;
   QColor mColorUnreadMessage;
@@ -69,6 +77,11 @@ public:
   QFont mFontUnreadMessage;
   QFont mFontImportantMessage;
   QFont mFontToDoMessage;
+
+  Private( StorageModel *owner )
+    : q( owner ),
+      mSopranoModel( new Soprano::Util::SignalCacheModel( Nepomuk::ResourceManager::instance()->mainModel() ) )
+  {}
 };
 
 } // namespace MessageList
@@ -97,7 +110,14 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
-  d->mModel = itemFilter;
+  // FIXME: itemFilter seems to be buggy, match() doesn't work!
+  //d->mModel = itemFilter;
+  d->mModel = childrenFilter;
+
+  connect( d->mSopranoModel.data(), SIGNAL(statementAdded(Soprano::Statement)),
+           SLOT(statementChanged(Soprano::Statement)) );
+  connect( d->mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),
+           SLOT(statementChanged(Soprano::Statement)) );
 
   connect( d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
@@ -287,27 +307,27 @@ QList< Core::MessageItem::Tag * > * fillTagList( const Akonadi::Item &item,
   QList< Nepomuk::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
     QList< Core::MessageItem::Tag * > *messageListTagList = new QList< Core::MessageItem::Tag * >();
+    int bestPriority = 0xfffff;
     foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
-      kDebug() << "Loaded Nepomuk tag:" << nepomukTag.label();
       Core::MessageItem::Tag *messageListTag =
           new Core::MessageItem::Tag( SmallIcon( nepomukTag.symbols().first() ),
                                       nepomukTag.label(), nepomukTag.resourceUri().toString() );
       messageListTagList->append( messageListTag );
-#if 0 // TODO: Port to Akonadi
-      int bestPriority = -0xfffff
-      const KMMessageTagDescription * description = kmkernel->msgTagMgr()->find( *it );
-      if ( description )
-      {
-        if ( ( bestPriority < description->priority() ) || ( !textColor.isValid() ) )
-        {
-          textColor = description->textColor();
-          backgroundColor = description->backgroundColor();
-          bestPriority = description->priority();
+
+      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
+        const int priority = nepomukTag.property(Vocabulary::MessageTag::priority() ).toInt();
+        if ( ( bestPriority > priority ) || ( !textColor.isValid() ) ) {
+          bestPriority = priority;
+          if ( nepomukTag.hasProperty( Vocabulary::MessageTag::backgroundColor() ) ) {
+            const QString name = nepomukTag.property( Vocabulary::MessageTag::backgroundColor() ).toString();
+            backgroundColor = QColor( name );
+          }
+          if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
+            const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
+            textColor = QColor( name );
+          }
         }
       }
-#else
-      kWarning() << "AKONADI PORT: disabled color code here!";
-#endif
     }
     return messageListTagList;
   }
@@ -438,6 +458,23 @@ int StorageModel::rowCount( const QModelIndex &parent ) const
 void StorageModel::prepareForScan()
 {
 
+}
+
+void StorageModel::Private::statementChanged( const Soprano::Statement &statement )
+{
+  if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ) {
+    const Akonadi::Item item = Item::fromUrl( statement.subject().uri() );
+    if ( !item.isValid() ) {
+      return;
+    }
+
+    const QModelIndexList list = mModel->match( QModelIndex(), EntityTreeModel::ItemIdRole, item.id() );
+    if ( list.isEmpty() ) {
+      return;
+    }
+    emit q->dataChanged( q->index( list.first().row(), 0 ),
+                         q->index( list.first().row(), 0 ) );
+  }
 }
 
 void StorageModel::Private::onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )
