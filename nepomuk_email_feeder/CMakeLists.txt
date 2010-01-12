@@ -1,8 +1,9 @@
 include_directories(
   ${CMAKE_BINARY_DIR}/ontologies
-  ${CMAKE_CURRENT_SOURCE_DIR}/../libkleo
+  ${CMAKE_SOURCE_DIR}/libkleo
   ${Boost_INCLUDE_DIR}
   ${CMAKE_CURRENT_SOURCE_DIR}/shared
+  ${CMAKE_BINARY_DIR}/messageviewer
   ${SOPRANO_INCLUDE_DIR}
 )
 
@@ -11,7 +12,9 @@ add_definitions(-DNEPOMUK_RESOURCE_STATIC)
 
 set(akonadi_nepomuk_email_feeder_SRCS
   nepomukemailfeeder.cpp
+  task.cpp
   messageanalyzer.cpp
+  messagesearch.cpp
   configdialog.cpp
   shared/nepomukfeederagentbase.cpp
   shared/sparqlbuilder.cpp
@@ -34,13 +37,13 @@ target_link_libraries(akonadi_nepomuk_email_feeder
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${QT_QTCORE_LIBRARY}
-  ${QT_QT3SUPPORT_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
   ${QT_QT3SUPPORT_LIBRARY}
   ${NEPOMUK_LIBRARIES}
   ${STRIGI_STREAMS_LIBRARY}
   ${STRIGI_STREAMANALYZER_LIBRARY}
   ${KDEPIMLIBS_KMIME_LIBS}
+  ${QGPGME_LIBRARIES}
 )
 
 install(TARGETS akonadi_nepomuk_email_feeder ${INSTALL_TARGETS_DEFAULT_ARGS})

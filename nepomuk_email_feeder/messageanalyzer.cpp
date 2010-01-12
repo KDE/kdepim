@@ -44,25 +44,26 @@
 #include <Nepomuk/Variant>
 #include <Nepomuk/Tag>
 
-#include <Soprano/Client/DBusClient>
-#include <Soprano/Client/DBusModel>
 #include <Soprano/Model>
-#include <Soprano/QueryResultIterator>
 #include <Soprano/Vocabulary/NAO>
 
+#include <QtCore/QDir>
+
+#include <boost/scoped_ptr.hpp>
+
 MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri, NepomukFeederAgentBase* parent) :
-  QObject( parent ),
+  Task( parent ),
   m_parent( parent ),
   m_item( item ),
   m_email( item.url(), graphUri ),
   m_graphUri( graphUri ),
   m_mainBodyPart( 0 ),
   m_nodeHelper( new MessageViewer::NodeHelper ),
-  m_otp( 0 ),
-  m_mainModel( 0 )
+  m_otp( 0 )
 {
   NepomukFeederAgentBase::setParent( m_email, item );
   m_email.addProperty( Soprano::Vocabulary::NAO::hasSymbol(), Soprano::LiteralValue( "internet-mail" ) );
+  m_email.addProperty( Vocabulary::NIE::byteSize(), Soprano::LiteralValue( item.size() ) );
 
   processFlags( item.flags() );
   const KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
@@ -112,7 +113,7 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
   }
 
   if ( msg->date( false ) ) {
-    m_email.setReceivedDate( msg->date()->dateTime().dateTime() );
+    m_email.setSentDate( msg->date()->dateTime().dateTime() );
   }
 
   if ( msg->from( false ) ) {
@@ -141,19 +142,23 @@ void MessageAnalyzer::processHeaders(const KMime::Message::Ptr& msg)
 
 void MessageAnalyzer::processPart(KMime::Content* content)
 {
-  bool resetModel = false;
-  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !m_mainModel ) {
+  bool shouldResetModel = false;
+
+  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !hasActiveCryptoModel() ) {
     const MessageViewer::PartMetaData metaData = m_nodeHelper->partMetaData( content );
     kDebug() << content << metaData.isEncrypted << metaData.keyId;
     if ( metaData.isEncrypted && !metaData.keyId.isEmpty() ) {
-      Soprano::Client::DBusClient dbusClient( "org.kde.nepomuk.services.nepomukstorage" );
-      Soprano::Model* cryptoModel = dbusClient.createModel( metaData.keyId );
-      if ( cryptoModel ) {
-        m_mainModel = Nepomuk::ResourceManager::instance()->mainModel();
-        Nepomuk::ResourceManager::instance()->setOverrideMainModel( cryptoModel );
-        resetModel = true;
+      kDebug() << "mounting crypto container...";
+      if ( !createCryptoContainer( metaData.keyId ) )
+        return;
+      if ( !mountCryptoContainer( metaData.keyId ) )
+        return;
+      kDebug() << "crypto container mounted";
+      if ( cryptoModel( metaData.keyId ) ) {
+        shouldResetModel = true;
       } else {
-        kWarning() << "Could not obtain cryto index model";
+        kWarning() << "Could not obtain cryto index model - skipping indexing of encrypted body parts";
+        return;
       }
     }
   }
@@ -196,9 +201,9 @@ void MessageAnalyzer::processPart(KMime::Content* content)
     m_parent->indexData( attachmentUrl, content->decodedContent(), m_item.modificationTime() );
   }
 
-  if ( resetModel ) {
-    Nepomuk::ResourceManager::instance()->setOverrideMainModel( 0 );
-    m_mainModel = 0;
+  if ( shouldResetModel ) {
+    resetModel();
+    unmountCryptoContainer();
   }
 }
 
@@ -246,6 +251,7 @@ void MessageAnalyzer::addTranslatedTag(const char* tagName, const QString& tagLa
 
 void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
 {
+  Q_UNUSED( mode );
   kDebug() << m_otp->hasPendingAsyncJobs();
   const KMime::Message::Ptr msg = m_item.payload<KMime::Message::Ptr>();
   m_otp->parseObjectTree( m_item, msg.get() );

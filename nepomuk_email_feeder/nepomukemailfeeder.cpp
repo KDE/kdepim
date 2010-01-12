@@ -20,13 +20,17 @@
 
 #include "nepomukemailfeeder.h"
 #include "messageanalyzer.h"
+#include "messagesearch.h"
 #include "configdialog.h"
+#include "settings.h"
 
 #include <kmime/kmime_message.h>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/item.h>
 #include <akonadi/itemfetchscope.h>
+
+#include <gpgme++/context.h>
 
 using namespace Akonadi;
 
@@ -39,6 +43,11 @@ Akonadi::NepomukEMailFeeder::NepomukEMailFeeder( const QString &id ) :
   setNeedsStrigi( true );
 
   changeRecorder()->itemFetchScope().fetchFullPayload();
+
+  // failsafe in case we don't have / lost G13 support
+  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
+    Settings::self()->setIndexEncryptedContent( Settings::NoIndexing );
+  Settings::self()->writeConfig();
 }
 
 void NepomukEMailFeeder::updateItem(const Akonadi::Item & item, const QUrl &graphUri)
@@ -53,6 +62,25 @@ void NepomukEMailFeeder::configure(WId windowId)
   ConfigDialog* dlg = new ConfigDialog( windowId );
   dlg->setAttribute( Qt::WA_DeleteOnClose );
   dlg->show();
+}
+
+void NepomukEMailFeeder::addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection)
+{
+  if ( Settings::self()->indexEncryptedContent() != Settings::EncryptedIndex || !GpgME::hasFeature( GpgME::G13VFSFeature ) )
+    return;
+
+  if ( queryLanguage != QLatin1String( "SPARQL" ) ) {
+    kDebug() << "Unsupported query language: " << queryLanguage;
+    return;
+  }
+
+  new MessageSearch( query, resultCollection, this );
+}
+
+void NepomukEMailFeeder::removeSearch(const Akonadi::Collection& resultCollection)
+{
+  // ignored since we don't do persistent searches yet
+  Q_UNUSED( resultCollection );
 }
 
 AKONADI_AGENT_MAIN( NepomukEMailFeeder )

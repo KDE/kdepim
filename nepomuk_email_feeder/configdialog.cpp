@@ -21,6 +21,8 @@
 #include "configdialog.h"
 #include "settings.h"
 
+#include <gpgme++/context.h>
+
 #include <KConfigDialogManager>
 #include <kwindowsystem.h>
 
@@ -34,6 +36,8 @@ ConfigDialog::ConfigDialog( WId windowId, QWidget * parent ) : KDialog( parent )
 
   connect( this, SIGNAL(okClicked()), SLOT(save()) );
 
+  ui.encryptedIndex->setEnabled( GpgME::hasFeature( GpgME::G13VFSFeature ) );
+
   m_manager = new KConfigDialogManager( this, Settings::self() );
   m_manager->updateWidgets();
 }
@@ -42,6 +46,8 @@ ConfigDialog::ConfigDialog( WId windowId, QWidget * parent ) : KDialog( parent )
 void ConfigDialog::save()
 {
   m_manager->updateSettings();
+  if ( Settings::self()->indexEncryptedContent() == Settings::EncryptedIndex && !GpgME::hasFeature( GpgME::G13VFSFeature ) )
+    Settings::self()->setIndexEncryptedContent( Settings::NoIndexing );
   Settings::self()->writeConfig();
 }
 

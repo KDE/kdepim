@@ -27,12 +27,12 @@
 #include <contact.h>
 
 #include <QtCore/QList>
-
+#include <akonadi/agentsearchinterface.h>
 #include <kmime/kmime_header_parsing.h>
 
 namespace Akonadi {
 
-class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>
+class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>, public AgentSearchInterface
 {
   Q_OBJECT
   public:
@@ -40,6 +40,9 @@ class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>
     void configure(WId windowId);
 
     void updateItem( const Akonadi::Item &item, const QUrl &graphUri );
+
+    void addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection);
+    void removeSearch(const Akonadi::Collection& resultCollection);
 };
 
 }

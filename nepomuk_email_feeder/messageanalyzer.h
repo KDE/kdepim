@@ -21,6 +21,8 @@
 #ifndef MESSAGEANALYZER_H
 #define MESSAGEANALYZER_H
 
+#include "task.h"
+
 #include <contact.h>
 #include <email.h>
 
@@ -33,11 +35,7 @@
 #include <kmime/kmime_message.h>
 
 #include <KDE/KUrl>
-#include <QtCore/QObject>
 
-namespace Soprano {
-class Model;
-}
 
 namespace MessageViewer {
 class NodeHelper;
@@ -51,7 +49,7 @@ class NepomukFeederAgentBase;
   operations in the OTP, so we need to isolate state in case multiple items are processed at the same time.
   Also gives us the possibility to parallelizer this later on.
 */
-class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
+class MessageAnalyzer : public Task, public MessageViewer::EmptySource
 {
   Q_OBJECT
   public:
@@ -84,7 +82,6 @@ class MessageAnalyzer : public QObject, public MessageViewer::EmptySource
     KMime::Content *m_mainBodyPart;
     MessageViewer::NodeHelper *m_nodeHelper;
     MessageViewer::ObjectTreeParser *m_otp;
-    Soprano::Model* m_mainModel;
 };
 
 #endif
