@@ -45,7 +45,7 @@ class HTMLQuoteColorer
     /**
      * Do the work and add nice colors to the HTML.
      * @param htmlSource the input HTML code
-     * @return the modified HTML code
+     * @return the modified HTML code, without any <body>, <html> or <head> tags
      */
     QString process( const QString &htmlSource );
 
