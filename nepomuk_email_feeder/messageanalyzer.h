@@ -36,9 +36,6 @@
 
 #include <KDE/KUrl>
 
-namespace Soprano {
-class Model;
-}
 
 namespace MessageViewer {
 class NodeHelper;

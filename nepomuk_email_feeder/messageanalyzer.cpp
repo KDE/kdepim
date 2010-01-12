@@ -38,7 +38,6 @@
 #include <kmime/kmime_message.h>
 
 #include <klocalizedstring.h>
-#include <KStandardDirs>
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/ResourceManager>
