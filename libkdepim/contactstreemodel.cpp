@@ -211,7 +211,7 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
 
         switch ( section ) {
           case 0:
-            return i18nc( "@title:column, address books overview", "Address Books" );
+            return i18nc( "@title:column address books overview", "Address Books" );
             break;
         }
       } else if ( headerGroup == EntityTreeModel::ItemListHeaders ) {
@@ -220,25 +220,25 @@ QVariant ContactsTreeModel::entityHeaderData( int section, Qt::Orientation orien
 
         switch ( d->mColumns.at( section ) ) {
           case FullName:
-            return i18nc( "@title:column, name of a person", "Name" );
+            return i18nc( "@title:column name of a person", "Name" );
             break;
           case Birthday:
             return KABC::Addressee::birthdayLabel();
             break;
           case HomeAddress:
-            return i18nc( "@title:column, home address of a person", "Home" );
+            return i18nc( "@title:column home address of a person", "Home" );
             break;
           case BusinessAddress:
-            return i18nc( "@title:column, home address of a person", "Work" );
+            return i18nc( "@title:column home address of a person", "Work" );
             break;
           case PhoneNumbers:
-            return i18nc( "@title:column, phone numbers of a person", "Phone Numbers" );
+            return i18nc( "@title:column phone numbers of a person", "Phone Numbers" );
             break;
           case PreferredEmail:
-            return i18nc( "@title:column, the preferred email addresses of a person", "Preferred EMail" );
+            return i18nc( "@title:column the preferred email addresses of a person", "Preferred EMail" );
             break;
           case AllEmails:
-            return i18nc( "@title:column, all email addresses of a person", "All EMails" );
+            return i18nc( "@title:column all email addresses of a person", "All EMails" );
             break;
           case Organization:
             return KABC::Addressee::organizationLabel();
