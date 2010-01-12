@@ -2056,12 +2056,8 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( const Akonadi::Item &ite
     mNodeHelper->addTempFile( dir + QDir::separator() + att->name() );
     QString href = "file:" + KUrl::toPercentEncoding( dir + QDir::separator() + att->name() );
 
-    KMimeType::Ptr mimeType = KMimeType::mimeType( att->mimeTag(), KMimeType::ResolveAliases );
-    QString iconName;
-    if ( mimeType )
-      iconName = KIconLoader::global()->iconPath( mimeType->iconName(), KIconLoader::Desktop );
-    else
-      iconName = KIconLoader::global()->iconPath( "mail-attachment", KIconLoader::Desktop );
+    const QString iconName = Util::fileNameForMimetype( att->mimeTag(),
+                                                         KIconLoader::Desktop, att->name() );
 
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
                           iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +

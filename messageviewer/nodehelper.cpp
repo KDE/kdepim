@@ -21,6 +21,7 @@
 #include "globalsettings.h"
 #include "partmetadata.h"
 #include "interfaces/bodypart.h"
+#include "util.h"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
@@ -463,26 +464,8 @@ QString NodeHelper::iconName( KMime::Content *node, int size ) const
 
   QByteArray mimeType = node->contentType()->mimeType();
   kAsciiToLower( mimeType.data() );
-
-  QString fileName;
-  KMimeType::Ptr mime = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
-  if (mime) {
-    fileName = mime->iconName();
-  } else {
-    kWarning() <<"unknown mimetype" << mimeType;
-  }
-
-  if ( fileName.isEmpty() )
-  {
-    fileName = node->contentDisposition()->filename();
-    if ( fileName.isEmpty() ) fileName = node->contentType()->name();
-    if ( !fileName.isEmpty() )
-    {
-      fileName = KMimeType::findByPath( "/tmp/"+fileName, 0, true )->iconName();
-    }
-  }
-
-  return MessageViewer::IconNameCache::instance()->iconPath( fileName, size );
+  return Util::fileNameForMimetype( mimeType, size, node->contentDisposition()->filename(),
+                                    node->contentType()->name() );
 }
 
 void NodeHelper::magicSetType( KMime::Content* node, bool aAutoDecode )
