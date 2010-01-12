@@ -57,11 +57,9 @@
 #include <kmessagebox.h>
 #include <kxmlguiwindow.h>
 
-#ifdef NEPOMUK_FOUND
 #include <nepomuk/resource.h>
 #include <nepomuk/resourcemanager.h>
 #include <nepomuk/variant.h>
-#endif
 
 #include <QSplitter>
 #include <QTextEdit>
@@ -84,9 +82,7 @@ Q_DECLARE_METATYPE( QSet<QByteArray> )
 BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
     QWidget( parent ),
     mAttrModel( 0 ),
-#ifdef NEPOMUK_FOUND
     mNepomukModel( 0 ),
-#endif
     mStdActionManager( 0 ),
     mMonitor( 0 )
 {
@@ -205,11 +201,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
   mStdActionManager->setFavoriteSelectionModel( favoritesView->selectionModel() );
   mStdActionManager->createAllActions();
 
-#ifndef NEPOMUK_FOUND
-  contentUi.mainTabWidget->removeTab( contentUi.mainTabWidget->indexOf( contentUi.nepomukTab ) );
-#else
   Nepomuk::ResourceManager::instance()->init();
-#endif
 
   const KConfigGroup cfg( KGlobal::config(), "CollectionViewState" );
   EntityTreeViewStateSaver* saver = new EntityTreeViewStateSaver( mCollectionView );
@@ -277,6 +269,10 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   } else if ( item.hasPayload<KCal::Incidence::Ptr>() ) {
     contentUi.incidenceView->setItem( item );
     contentUi.stack->setCurrentWidget( contentUi.incidenceViewPage );
+  } else if ( item.mimeType() == "message/rfc822" )
+  {
+    contentUi.mailView->setMessageItem( item, MessageViewer::Viewer::Force );
+    contentUi.stack->setCurrentWidget( contentUi.mailViewPage );
   } else if ( item.hasPayload<QPixmap>() ) {
     contentUi.imageView->setPixmap( item.payload<QPixmap>() );
     contentUi.stack->setCurrentWidget( contentUi.imageViewPage );
@@ -314,7 +310,6 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   }
   contentUi.attrView->setModel( mAttrModel );
 
-#ifdef NEPOMUK_FOUND
   if ( Settings::self()->nepomukEnabled() ) {
     Nepomuk::Resource res( item.url() );
 
@@ -348,7 +343,6 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   } else {
     contentUi.nepomukTab->setEnabled( false );
   }
-#endif
 
   if ( mMonitor )
     mMonitor->deleteLater(); // might be the one calling us
@@ -405,12 +399,10 @@ void BrowserWidget::save()
   ItemModifyJob *store = new ItemModifyJob( item, this );
   connect( store, SIGNAL(result(KJob*)), SLOT(saveResult(KJob*)) );
 
-#ifdef NEPOMUK_FOUND
   if ( Settings::self()->nepomukEnabled() ) {
     Nepomuk::Resource res( item.url() );
     res.setRating( contentUi.ratingWidget->rating() );
   }
-#endif
 }
 
 void BrowserWidget::saveResult(KJob * job)

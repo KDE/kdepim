@@ -10,7 +10,7 @@
     <height>633</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout_2">
+  <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0" colspan="7">
     <widget class="Akonadi::AgentInstanceWidget" name="instanceWidget" native="true">
      <property name="sizePolicy">

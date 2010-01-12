@@ -30,7 +30,7 @@
           <enum>QFrame::Sunken</enum>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="unsupportedTypePage">
           <layout class="QVBoxLayout">
@@ -77,6 +77,16 @@
            </property>
            <item>
             <widget class="Akonadi::KCalItemBrowser" name="incidenceView"/>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="mailViewPage">
+          <layout class="QGridLayout" name="gridLayout">
+           <property name="margin">
+            <number>0</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="MessageViewer::Viewer" name="mailView"/>
            </item>
           </layout>
          </widget>
@@ -437,6 +447,11 @@
    <class>Akonadi::KCalItemBrowser</class>
    <extends>KTextBrowser</extends>
    <header location="global">kcal/kcalitembrowser.h</header>
+  </customwidget>
+  <customwidget>
+   <class>MessageViewer::Viewer</class>
+   <extends>KTextBrowser</extends>
+   <header location="global">messageviewer/viewer.h</header>
   </customwidget>
   <customwidget>
    <class>Nepomuk::TagWidget</class>
