@@ -93,7 +93,9 @@ public:
     {
       if (!m_itemSelectionModel)
         return false;
-      m_itemSelectionModel->select(index, QItemSelectionModel::SelectCurrent);
+
+      Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
+      m_itemSelectionModel->select(index, state == Qt::Checked ? QItemSelectionModel::SelectCurrent : QItemSelectionModel::Deselect );
       return true;
     }
     return Akonadi::EntityTreeModel::setData(index, value, role);
@@ -128,6 +130,7 @@ public:
   {
     CheckedSelectionEntityModel* model = new CheckedSelectionEntityModel(changeRecorder(), this);
     m_itemSelectionModel = new QItemSelectionModel(model);
+    model->setSelectionModel(m_itemSelectionModel);
     return model;
   }
 
