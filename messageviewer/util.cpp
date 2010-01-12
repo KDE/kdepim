@@ -35,8 +35,9 @@
 **   your version.
 **
 *******************************************************************************/
-
 #include "util.h"
+
+#include "iconnamecache.h"
 
 #include <kcharsets.h>
 #include <kglobal.h>
@@ -44,6 +45,7 @@
 #include <kmessagebox.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
+#include <KMimeType>
 
 #include <QTextCodec>
 #include <QWidget>
@@ -62,6 +64,31 @@ bool Util::checkOverwrite( const KUrl &url, QWidget *w )
       return false;
   }
   return true;
+}
+
+QString Util::fileNameForMimetype( const QString &mimeType, int iconSize,
+                                   const QString &fallbackFileName1,
+                                   const QString &fallbackFileName2 )
+{
+  QString fileName;
+  KMimeType::Ptr mime = KMimeType::mimeType( mimeType, KMimeType::ResolveAliases );
+  if ( mime ) {
+    fileName = mime->iconName();
+  } else {
+    kWarning() << "unknown mimetype" << mimeType;
+  }
+
+  if ( fileName.isEmpty() )
+  {
+    fileName = fallbackFileName1;
+    if ( fileName.isEmpty() )
+      fileName = fallbackFileName2;
+    if ( !fileName.isEmpty() ) {
+      fileName = KMimeType::findByPath( "/tmp/" + fileName, 0, true )->iconName();
+    }
+  }
+
+  return IconNameCache::instance()->iconPath( fileName, iconSize );
 }
 
 #ifdef Q_WS_MACX

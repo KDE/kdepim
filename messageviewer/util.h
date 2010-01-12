@@ -40,10 +40,11 @@
 
 #include "messageviewer_export.h"
 
+#include <QString>
+
 class KUrl;
 class QWidget;
 class QStringList;
-class QString;
 
 namespace MessageViewer {
 
@@ -72,6 +73,27 @@ namespace Util {
      * Returns false if it did nothing (such as on other platforms.
      */
     bool MESSAGEVIEWER_EXPORT handleUrlOnMac( const KUrl& url );
+
+    /**
+     * Finds the filename of an icon based on the given mimetype or filenames.
+     *
+     * Always use this functions when looking up icon names for mime types, don't use
+     * KMimeType directly.
+     *
+     * Uses the IconNameCache internally to speed things up.
+     *
+     * @param mimeType The primary mime type used to find the icon, e.g. "application/zip". Alias
+     *                 mimetypes are resolved.
+     * @param size Size of the requested icon, e.g. KIconLoader::Desktop
+     * @param fallbackFileName(1|2) When the icon is not found by the given mime type, use the file
+     *                              name extensions of these file names to look the icon up.
+     *                              Example: "test.zip"
+     * @return the full file name of the icon file
+     */
+    QString fileNameForMimetype( const QString &mimeType, int iconSize,
+                                 const QString &fallbackFileName1 = QString(),
+                                 const QString &fallbackFileName2 = QString() );
+
 }
 
 }
