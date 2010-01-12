@@ -54,7 +54,7 @@ namespace {
       return AsIcon;
     }
 
-    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
+    bool process( ObjectTreeParser *, const Akonadi::Item &, KMime::Content *, ProcessResult & result ) const {
       result.setNeverDisplayInline( true );
       return false;
     }
@@ -71,7 +71,7 @@ namespace {
   class ImageTypeBodyPartFormatter : public BodyPartFormatter {
     static const ImageTypeBodyPartFormatter * self;
   public:
-    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & result ) const {
+    bool process( ObjectTreeParser *, const Akonadi::Item &, KMime::Content *, ProcessResult & result ) const {
       result.setIsImage( true );
       return false;
     }
@@ -88,7 +88,7 @@ namespace {
   class subtype##BodyPartFormatter : public BodyPartFormatter { \
     static const subtype##BodyPartFormatter * self; \
   public: \
-    bool process( ObjectTreeParser *, KMime::Content *, ProcessResult & ) const; \
+    bool process( ObjectTreeParser *, const Akonadi::Item &item, KMime::Content *, ProcessResult & ) const; \
     static const BodyPartFormatter * create() { \
       if ( !self ) \
 	self = new subtype##BodyPartFormatter(); \
@@ -98,8 +98,8 @@ namespace {
   \
   const subtype##BodyPartFormatter * subtype##BodyPartFormatter::self; \
   \
-  bool subtype##BodyPartFormatter::process( ObjectTreeParser * otp, KMime::Content * node, ProcessResult & result ) const { \
-    return otp->process##subtype##Subtype( node, result ); \
+  bool subtype##BodyPartFormatter::process( ObjectTreeParser * otp, const Akonadi::Item &item, KMime::Content * node, ProcessResult & result ) const { \
+    return otp->process##subtype##Subtype( item, node, result ); \
   }
 
 
@@ -127,7 +127,7 @@ namespace {
 } // anon namespace
 
 // FIXME: port some more BodyPartFormatters to Interface::BodyPartFormatters
-void BodyPartFormatterFactoryPrivate::kmail_create_builtin_bodypart_formatters( BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
+void BodyPartFormatterFactoryPrivate::messageviewer_create_builtin_bodypart_formatters( BodyPartFormatterFactoryPrivate::TypeRegistry * reg ) {
   if ( !reg ) return;
   (*reg)["application"]["octet-stream"] = new AnyTypeBodyPartFormatter();
 }

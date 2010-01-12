@@ -24,9 +24,9 @@
 
 using namespace MessageViewer;
 
-QTEST_KDEMAIN( StringUtilTester, GUI )
+QTEST_KDEMAIN( StringUtilTest, GUI )
 
-void StringUtilTester::test_SmartQuote()
+void StringUtilTest::test_SmartQuote()
 {
   QFETCH( QString, originalString );
   QFETCH( QString, quotedString );
@@ -35,7 +35,7 @@ void StringUtilTester::test_SmartQuote()
   QCOMPARE( StringUtil::smartQuote( originalString, 40 ), quotedString );
 }
 
-void StringUtilTester::test_SmartQuote_data()
+void StringUtilTest::test_SmartQuote_data()
 {
   QTest::addColumn<QString>( "originalString" );
   QTest::addColumn<QString>( "quotedString" );
@@ -168,7 +168,7 @@ void StringUtilTester::test_SmartQuote_data()
                          "   12.12.09          5            Car        \n";
 }
 
-void StringUtilTester::test_signatureStripping()
+void StringUtilTest::test_signatureStripping()
 {
   //QStringList tests;
   const QString test1 =
@@ -311,7 +311,7 @@ void StringUtilTester::test_signatureStripping()
   QCOMPARE( StringUtil::stripSignature( test6, false ), test6 );
 }
 
-void StringUtilTester::test_isCryptoPart()
+void StringUtilTest::test_isCryptoPart()
 {
   QVERIFY( StringUtil::isCryptoPart( "application", "pgp-encrypted", QString() ) );
   QVERIFY( StringUtil::isCryptoPart( "application", "pgp-signature", QString() ) );

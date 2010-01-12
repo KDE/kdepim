@@ -317,6 +317,14 @@ KMime::Content *NodeHelper::firstChild( const KMime::Content* node )
   return child;
 }
 
+QByteArray NodeHelper::charset( KMime::Content *node )
+{
+  if ( node->contentType( false ) )
+    return node->contentType( false )->charset();
+  else
+    return node->defaultCharset();
+}
+
 KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
 {
   if ( !node )
@@ -332,6 +340,25 @@ KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
   }
 
   return next;
+}
+
+KMime::Content *NodeHelper::next( KMime::Content *node, bool allowChildren )
+{
+  if ( allowChildren ) {
+    if ( KMime::Content *child = firstChild( node ) ) {
+      return child;
+    }
+  }
+  if ( KMime::Content *sibling = nextSibling( node ) ) {
+    return sibling;
+  }
+  for ( KMime::Content *parent = node->parent() ; parent ;
+        parent = parent->parent() ) {
+    if ( KMime::Content *sibling = nextSibling( parent ) ) {
+      return sibling;
+    }
+  }
+  return 0;
 }
 
 KMMsgEncryptionState NodeHelper::overallEncryptionState( KMime::Content *node ) const
@@ -580,6 +607,25 @@ QByteArray NodeHelper::path(const KMime::Content* node)
   }
   QString subpath;
   return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
+}
+
+bool NodeHelper::isAttachment( KMime::Content *node )
+{
+  if ( node->head().isEmpty() )
+    return false;
+  if ( !node->contentDisposition( false ) )
+    return false;
+  return node->contentDisposition()->disposition() == KMime::Headers::CDattachment;
+}
+
+bool NodeHelper::isHeuristicalAttachment( KMime::Content *node )
+{
+  if ( isAttachment( node ) )
+    return true;
+  if ( ( node->contentType( false ) && !node->contentType()->name().isEmpty() ) ||
+       ( node->contentDisposition( false ) && !node->contentDisposition()->filename().isEmpty() ) )
+    return true;
+  return false;
 }
 
 QString NodeHelper::fileName(const KMime::Content* node)

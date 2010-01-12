@@ -102,5 +102,14 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   recalculatePGPColors();
 }
 
+QString CSSHelper::htmlHead( bool fixed ) const {
+  return
+  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
+  "<html><head><title></title><style>"
+  + cssDefinitions( fixed ) +
+  "</style></head>\n"
+  "<body>\n";
+}
+
 }
 

@@ -32,6 +32,10 @@
 #ifndef __MESSAGEVIEWER_BODYPARTFORMATTER_H__
 #define __MESSAGEVIEWER_BODYPARTFORMATTER_H__
 
+namespace Akonadi {
+  class Item;
+}
+
 namespace KMime {
   class Content;
 }
@@ -50,7 +54,7 @@ protected:
 public:
   virtual ~BodyPartFormatter() {}
 
-  virtual bool process( MessageViewer::ObjectTreeParser *, KMime::Content *, MessageViewer::ProcessResult & ) const = 0;
+  virtual bool process( MessageViewer::ObjectTreeParser *, const Akonadi::Item &item, KMime::Content *, MessageViewer::ProcessResult & ) const = 0;
 
   static const BodyPartFormatter * createFor( const char * type, const char * subtype );
 };

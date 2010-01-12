@@ -21,13 +21,16 @@
 #include "ui_settings.h"
 #include "util.h"
 #include "globalsettings.h"
+#include "nodehelper.h"
+
+using namespace MessageViewer;
 
 ConfigureWidget::ConfigureWidget( QWidget *parent )
  : QWidget(parent)
 {
   mSettingsUi = new Ui_Settings;
   mSettingsUi->setupUi( this );
-  QStringList encodings = Util::supportedEncodings( false );
+  QStringList encodings = NodeHelper::supportedEncodings( false );
   mSettingsUi->kcfg_FallbackCharacterEncoding->addItems( encodings );
   QString fallbackCharsetWhatsThis =
     i18n( GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis().toUtf8() );
@@ -54,7 +57,7 @@ ConfigureWidget::~ConfigureWidget()
 
 void ConfigureWidget::readCurrentFallbackCodec()
 {
-  QStringList encodings = Util::supportedEncodings( false );
+  QStringList encodings = NodeHelper::supportedEncodings( false );
   QStringList::ConstIterator it( encodings.begin() );
   QStringList::ConstIterator end( encodings.end() );
   QString currentEncoding = GlobalSettings::self()->fallbackCharacterEncoding();
@@ -63,7 +66,7 @@ void ConfigureWidget::readCurrentFallbackCodec()
   bool found = false;
   for( ; it != end; ++it)
   {
-    const QString encoding = Util::encodingForName(*it);
+    const QString encoding = NodeHelper::encodingForName(*it);
     if ( encoding == "ISO-8859-15" )
         indexOfLatin9 = i;
     if( encoding == currentEncoding )
@@ -85,14 +88,14 @@ void ConfigureWidget::readCurrentOverrideCodec()
     mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex( 0 );
     return;
   }
-  QStringList encodings = Util::supportedEncodings( false );
+  QStringList encodings = NodeHelper::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   QStringList::ConstIterator it( encodings.constBegin() );
   QStringList::ConstIterator end( encodings.constEnd() );
   int i = 0;
   for( ; it != end; ++it)
   {
-    if( Util::encodingForName(*it) == currentOverrideEncoding )
+    if( NodeHelper::encodingForName(*it) == currentOverrideEncoding )
     {
       mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex( i );
       break;
@@ -111,8 +114,8 @@ void ConfigureWidget::readCurrentOverrideCodec()
 
 void ConfigureWidget::slotSettingsChanged()
 {
-  GlobalSettings::self()->setOverrideCharacterEncoding( Util::encodingForName( mSettingsUi->kcfg_OverrideCharacterEncoding->currentText() ) );
-  GlobalSettings::self()->setFallbackCharacterEncoding( Util::encodingForName( mSettingsUi->kcfg_FallbackCharacterEncoding->currentText() ) );
+  GlobalSettings::self()->setOverrideCharacterEncoding( NodeHelper::encodingForName( mSettingsUi->kcfg_OverrideCharacterEncoding->currentText() ) );
+  GlobalSettings::self()->setFallbackCharacterEncoding( NodeHelper::encodingForName( mSettingsUi->kcfg_FallbackCharacterEncoding->currentText() ) );
   emit settingsChanged();
 }
 

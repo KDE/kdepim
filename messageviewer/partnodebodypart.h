@@ -35,6 +35,7 @@
 #define __MESSAGEVIEWER_PARTNODEBODYPART_H_
 
 #include "interfaces/bodypart.h"
+#include <akonadi/item.h>
 
 class QTextCodec;
 
@@ -47,11 +48,11 @@ namespace MessageViewer {
 }
 
 /**
-    @short an implementation of the BodyPart interface using partNodes
+    @short an implementation of the BodyPart interface using KMime::Content's
 */
 class PartNodeBodyPart : public MessageViewer::Interface::BodyPart {
 public:
-  explicit PartNodeBodyPart( KMime::Content* content, MessageViewer::NodeHelper *nodeHelper, const QTextCodec * codec=0 );
+  explicit PartNodeBodyPart( const Akonadi::Item &item, KMime::Content* content, MessageViewer::NodeHelper *nodeHelper, const QTextCodec * codec=0 );
 
   QString makeLink( const QString & path ) const;
   QString asText() const;
@@ -66,8 +67,11 @@ public:
   void setBodyPartMemento( MessageViewer::Interface::BodyPartMemento * memento );
   BodyPart::Display defaultDisplay() const;
   void setDefaultDisplay( BodyPart::Display );
+  KMime::Content* content() const { return mContent; }
+  Akonadi::Item item() const { return mItem; }
 
 private:
+  Akonadi::Item mItem;
   KMime::Content *mContent;
   const QTextCodec * mCodec;
   BodyPart::Display mDefaultDisplay;

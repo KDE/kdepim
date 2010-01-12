@@ -16,21 +16,18 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef STRINGUTILTEST_H
-#define STRINGUTILTEST_H
-
+#ifndef OBJECTTREEPARSERTEST_H
+#define OBJECTTREEPARSERTEST_H
 
 #include <qobject.h>
 
-class StringUtilTest : public QObject
+class ObjectTreeParserTester : public QObject
 {
   Q_OBJECT
 
   private slots:
-    void test_SmartQuote_data();
-    void test_SmartQuote();
-    void test_signatureStripping();
-    void test_isCryptoPart();
+    void test_parseEncapsulatedMessage();
+    void test_parsePlainMessage();
 };
 
 #endif

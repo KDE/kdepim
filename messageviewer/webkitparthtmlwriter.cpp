@@ -1,8 +1,9 @@
 /*  -*- c++ -*-
-    khtmlparthtmlwriter.cpp
+    webkitparthtmlwriter.cpp
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2009 Torgny Nyblom <kde@nyblom.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -30,125 +31,129 @@
 */
 
 
-#include "khtmlparthtmlwriter.h"
+#include "webkitparthtmlwriter.h"
 
 #include <kdebug.h>
-#include <khtml_part.h>
-#include <khtmlview.h>
-
-#include <dom/dom_string.h>
-#include <dom/html_document.h>
-#include <dom/html_image.h>
-#include <dom/html_misc.h>
+#include <kwebview.h>
+#include <kurl.h>
 
 #include <cassert>
 #include <QByteArray>
+#include <QWebView>
+#include <QWebPage>
+#include <QWebFrame>
+#include <QWebElement>
 
-KHtmlPartHtmlWriter::KHtmlPartHtmlWriter( KHTMLPart * part,
+WebKitPartHtmlWriter::WebKitPartHtmlWriter( KWebView *view,
                                           QObject * parent, const char * name )
   : QObject( parent ), HtmlWriter(),
-    mHtmlPart( part ), mState( Ended )
+    mHtmlView( view ), mState( Ended )
 {
   setObjectName( name );
-  assert( part );
+  assert( view );
   mHtmlTimer.setSingleShot( true );
   connect( &mHtmlTimer, SIGNAL(timeout()), SLOT(slotWriteNextHtmlChunk()) );
 }
 
-KHtmlPartHtmlWriter::~KHtmlPartHtmlWriter() {
+WebKitPartHtmlWriter::~WebKitPartHtmlWriter() {
 
 }
 
-void KHtmlPartHtmlWriter::begin( const QString & css ) {
+void WebKitPartHtmlWriter::begin( const QString & css ) {
+  // The stylesheet is now included CSSHelper::htmlHead()
+  Q_UNUSED( css );
   if ( mState != Ended ) {
-    kWarning() <<"KHtmlPartHtmlWriter: begin() called on non-ended session!";
+    kWarning() <<"WebKitPartHtmlWriter: begin() called on non-ended session!";
     reset();
   }
 
   mEmbeddedPartMap.clear();
 
   // clear the widget:
-  mHtmlPart->view()->setUpdatesEnabled( false );
-  mHtmlPart->view()->viewport()->setUpdatesEnabled( false );
-  mHtmlPart->view()->ensureVisible( 0, 0 );
+  mHtmlView->setUpdatesEnabled( false );
+  QPoint point = mHtmlView->page()->mainFrame()->scrollPosition();
+  point -= QPoint(0, 10);
+  mHtmlView->page()->mainFrame()->setScrollPosition( point );
 
-  mHtmlPart->begin( KUrl() );
-  if ( !css.isEmpty() )
-    mHtmlPart->setUserStyleSheet( css );
+  mHtmlView->load( QUrl() );
   mState = Begun;
 }
 
-void KHtmlPartHtmlWriter::end() {
-  kWarning( mState != Begun, 5006 ) <<"KHtmlPartHtmlWriter: end() called on non-begun or queued session!";
-  mHtmlPart->end();
+void WebKitPartHtmlWriter::end() {
+  kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: end() called on non-begun or queued session!";
+  mHtmlView->setHtml( mHtml, QUrl() );
+  mHtmlView->show();
+  mHtml.clear();
 
   resolveCidUrls();
 
-  mHtmlPart->view()->viewport()->setUpdatesEnabled( true );
-  mHtmlPart->view()->setUpdatesEnabled( true );
-  mHtmlPart->view()->viewport()->repaint();
+  mHtmlView->setUpdatesEnabled( true );
+  mHtmlView->update();
   mState = Ended;
   emit finished();
 }
 
-void KHtmlPartHtmlWriter::reset() {
+void WebKitPartHtmlWriter::reset() {
   if ( mState != Ended ) {
     mHtmlTimer.stop();
     mHtmlQueue.clear();
+    mHtml.clear();
     mState = Begun; // don't run into end()'s warning
     end();
     mState = Ended;
   }
 }
 
-void KHtmlPartHtmlWriter::write( const QString & str ) {
-  kWarning( mState != Begun, 5006 ) <<"KHtmlPartHtmlWriter: write() called in Ended or Queued state!";
-  mHtmlPart->write( str );
+void WebKitPartHtmlWriter::write( const QString & str ) {
+  kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: write() called in Ended or Queued state!";
+  mHtml.append( str );
 }
 
-void KHtmlPartHtmlWriter::queue( const QString & str ) {
+void WebKitPartHtmlWriter::queue( const QString & str ) {
   static const uint chunksize = 16384;
   for ( int pos = 0 ; pos < str.length() ; pos += chunksize )
     mHtmlQueue.push_back( str.mid( pos, chunksize ) );
   mState = Queued;
 }
 
-void KHtmlPartHtmlWriter::flush() {
+void WebKitPartHtmlWriter::flush() {
   slotWriteNextHtmlChunk();
 }
 
-void KHtmlPartHtmlWriter::slotWriteNextHtmlChunk() {
+void WebKitPartHtmlWriter::slotWriteNextHtmlChunk() {
   if ( mHtmlQueue.empty() ) {
     mState = Begun; // don't run into end()'s warning
     end();
   } else {
-    mHtmlPart->write( mHtmlQueue.front() );
+    mHtml.append( mHtmlQueue.front() );
     mHtmlQueue.pop_front();
     mHtmlTimer.start( 0 );
   }
 }
 
-void KHtmlPartHtmlWriter::embedPart( const QByteArray & contentId,
+void WebKitPartHtmlWriter::embedPart( const QByteArray & contentId,
                                       const QString & contentURL ) {
   mEmbeddedPartMap[QString(contentId)] = contentURL;
 }
 
-void KHtmlPartHtmlWriter::resolveCidUrls()
+void WebKitPartHtmlWriter::resolveCidUrls()
 {
-  DOM::HTMLDocument document = mHtmlPart->htmlDocument();
-  DOM::HTMLCollection images = document.images();
-  for ( DOM::Node node = images.firstItem(); !node.isNull(); node = images.nextItem() ) {
-    DOM::HTMLImageElement image( node );
-    KUrl url( image.src().string() );
-    if ( url.protocol() == "cid" ) {
+  QWebElement root = mHtmlView->page()->mainFrame()->documentElement();
+  QWebElementCollection images = root.findAll( "img" );
+  QWebElement image;
+  foreach( image, images )
+  {
+    KUrl url( image.attribute( "src" ) );
+    if ( url.protocol() == "cid" )
+    {
       EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
       if ( it != mEmbeddedPartMap.constEnd() ) {
         kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();
-        image.setSrc( it.value() );
+        image.setAttribute( "src", it.value() );
       }
     }
   }
 }
 
 
-#include "khtmlparthtmlwriter.moc"
+#include "webkitparthtmlwriter.moc"

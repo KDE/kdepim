@@ -6,14 +6,13 @@ set(libmessageviewer_SRCS
 
 viewer_p.cpp
 viewer.cpp
-khtmlparthtmlwriter.cpp
+webkitparthtmlwriter.cpp
 htmlstatusbar.cpp
 headerstyle.cpp
 headerstrategy.cpp
 kmaddrbook.cpp
 stringutil.cpp
 attachmentstrategy.cpp
-kmmsgpartdlg.cpp
 csshelper.cpp
 util.cpp
 objecttreeparser_p.cpp
@@ -40,6 +39,7 @@ objecttreeviewersource.cpp
 objecttreeemptysource.cpp
 filehtmlwriter.cpp
 teehtmlwriter.cpp
+chiasmuskeyselector.cpp
 )
 
 
@@ -53,14 +53,12 @@ kde4_add_ui_files(libmessageviewer_SRCS
 
 kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})
 
-
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
- ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
- ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDEPIMLIBS_KABC_LIBS}
- ${KDE4_KDEUI_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KTNEF_LIBRARY}
- ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_KPIMUTILS_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
+  ${KDE4_KDEUI_LIBS} ${KDE4_KTNEF_LIBRARY} ${QGPGME_LIBRARIES} ${KDE4_KDE3SUPPORT_LIBS}
+  ${QT_QTWEBKIT_LIBRARY} ${KDE4_KDEWEBKIT_LIBRARY} ${QT_QT3SUPPORT_LIBRARY}
 )
-
 include_directories(
     ${CMAKE_SOURCE_DIR}/libkleo
     ${Boost_INCLUDE_DIRS}

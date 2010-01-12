@@ -19,8 +19,8 @@
 #ifndef HTMLQUOTECOLORER_H
 #define HTMLQUOTECOLORER_H
 
-#include <dom/dom_node.h>
 #include <QColor>
+
 /**
  * Little helper class that takes a HTML source as input and finds all
  * lines that are quoted with '>' or '|'. The HTML text is then modified so
@@ -51,13 +51,7 @@ class HTMLQuoteColorer
 
   private:
 
-    DOM::Node processNode( DOM::Node node );
-    int quoteLength( const QString &line ) const;
-
     QColor mQuoteColors[3];
-    bool mIsQuotedLine;
-    bool mIsFirstTextNodeInLine;
-    int currentQuoteLength;
 };
 
 #endif

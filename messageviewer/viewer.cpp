@@ -29,8 +29,10 @@
 #include "globalsettings.h"
 
 //KDE includes
-#include <KHTMLPart>
-#include <KHTMLView>
+#include <kwebview.h>
+#include <QWebView>
+#include <QWebPage>
+#include <QWebFrame>
 
 namespace MessageViewer {
 
@@ -45,7 +47,12 @@ Viewer::Viewer(QWidget *aParent,
   connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( urlClicked(const KUrl&, int ) ), SIGNAL( urlClicked(const KUrl&, int ) ) );
+  connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ), SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
+  connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
+  connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
+           SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );
+
   setMessage( 0, Delayed );
 }
 
@@ -98,7 +105,7 @@ void Viewer::print()
   Q_D(Viewer);
   if ( !message() )
     return;
-  d->mViewer->view()->print();
+  d->mViewer->print( false );
 }
 
 void Viewer::resizeEvent( QResizeEvent * )
@@ -136,41 +143,49 @@ void Viewer::slotSaveMessage()
 void Viewer::slotScrollUp()
 {
   Q_D(Viewer);
-  d->mViewer->view()->scrollBy( 0, -10 );
+  QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
+  point -= QPoint(0, 10);
+  d->mViewer->page()->mainFrame()->setScrollPosition( point );
 }
 
 void Viewer::slotScrollDown()
 {
   Q_D(Viewer);
-  d->mViewer->view()->scrollBy( 0, 10 );
+  QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
+  point += QPoint(0, 10);
+  d->mViewer->page()->mainFrame()->setScrollPosition( point );
 }
 
 bool Viewer::atBottom() const
 {
   Q_D(const Viewer);
-  KHTMLView *view = d->mViewer->view();
-  return view->contentsY() + view->visibleHeight() >= view->contentsHeight();
+  int pos = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  int max = d->mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+  return pos == max;
 }
 
 void Viewer::slotJumpDown()
 {
   Q_D(Viewer);
-  KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, view->visibleHeight() );
+  int height = d->mViewer->page()->viewportSize().height();
+  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current + height );
 }
 
 void Viewer::slotScrollPrior()
 {
   Q_D(Viewer);
-  KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, -(int)(d->mViewer->widget()->height() * 0.8 ) );
+  int height = d->mViewer->page()->viewportSize().height();
+  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current - ( 0.8 * height ) );
 }
 
 void Viewer::slotScrollNext()
 {
   Q_D(Viewer);
-  KHTMLView *view = d->mViewer->view();
-  view->scrollBy( 0, (int)(d->mViewer->widget()->height() * 0.8 ) );
+  int height = d->mViewer->page()->viewportSize().height();
+  int current = d->mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+  d->mViewer->page()->mainFrame()->setScrollBarValue( Qt::Vertical, current + ( 0.8 * height ) );
 }
 
 QString Viewer::selectedText()
@@ -308,11 +323,7 @@ bool Viewer::event(QEvent *e)
   if (e->type() == QEvent::PaletteChange)
   {
     delete d->mCSSHelper;
-    d->mCSSHelper = new CSSHelper( d->mViewer->view() );
-/*FIXME(Andras) port it
-    if (message())
-      message()->readConfig();
-*/
+    d->mCSSHelper = new CSSHelper( d->mViewer );
     d->update( Viewer::Force ); // Force update
     return true;
   }
@@ -322,7 +333,10 @@ bool Viewer::event(QEvent *e)
 void Viewer::slotFind()
 {
   Q_D(Viewer);
+  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+#if 0
   d->mViewer->findText();
+#endif
 }
 
 const AttachmentStrategy * Viewer::attachmentStrategy() const
@@ -394,7 +408,7 @@ void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
   d->setHeaderStyleAndStrategy( style, strategy );
 }
 
-KHTMLPart *Viewer::htmlPart() const
+KWebView *Viewer::htmlPart() const
 {
   Q_D( const Viewer );
   return d->htmlPart();
@@ -424,9 +438,9 @@ void Viewer::setPrinting(bool enable)
   d->setPrinting( enable );
 }
 
-void Viewer::writeConfig( bool force ) const
+void Viewer::writeConfig( bool force )
 {
-  Q_D( const Viewer );
+  Q_D( Viewer );
   d->writeConfig( force );
 }
 
@@ -484,6 +498,66 @@ bool Viewer::noMDNsWhenEncrypted() const
   Q_D( const Viewer );
   return d->noMDNsWhenEncrypted();
 }
+
+void Viewer::readConfig()
+{
+  Q_D( Viewer );
+  d->readConfig();
+}
+
+void Viewer::setShowEmoticons( bool b )
+{
+  GlobalSettings::self()->setShowEmoticons( b );
+}
+
+void Viewer::setShrinkQuotes( bool b )
+{
+  GlobalSettings::self()->setShrinkQuotes( b );
+}
+
+void Viewer::setShowExpandQuotesMark( bool b )
+{
+  GlobalSettings::self()->setShowExpandQuotesMark( b );
+}
+
+void Viewer::setCollapseQuoteLevelSpin( int v )
+{
+  GlobalSettings::self()->setCollapseQuoteLevelSpin( v );
+}
+
+void Viewer::setShowColorBar( bool b )
+{
+  GlobalSettings::self()->setShowColorBar( b );
+}
+
+void Viewer::setShowSpamStatus( bool b )
+{
+  GlobalSettings::self()->setShowSpamStatus( b );
+}
+
+
+void Viewer::setFallbackCharacterEncoding( const QString& str)
+{
+  GlobalSettings::self()->setFallbackCharacterEncoding( str );
+}
+
+void Viewer::setOverrideCharacterEncoding( const QString& str)
+{
+  GlobalSettings::self()->setOverrideCharacterEncoding( str );
+}
+
+bool Viewer::disregardUmask() const
+{
+  Q_D( const Viewer );
+  return d->disregardUmask();
+}
+
+void Viewer::setDisregardUmask( bool b)
+{
+  Q_D( Viewer );
+  d->setDisregardUmask( b );
+}
+
 
 }
 

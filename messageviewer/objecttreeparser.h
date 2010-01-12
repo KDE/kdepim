@@ -44,8 +44,12 @@
 
 class QString;
 
+namespace Akonadi {
+  class Item;
+}
+
 namespace KMime {
-    class Content;
+  class Content;
 }
 
 namespace GpgME {
@@ -121,7 +125,7 @@ public:
                     bool showOneMimePart=false, bool keepEncryptions=false,
                     bool includeSignatures=true,
                     const AttachmentStrategy * attachmentStrategy=0,
-                    HtmlWriter * htmlWriter=0,         
+                    HtmlWriter * htmlWriter=0,
                     CSSHelper * cssHelper=0 );
   virtual ~ObjectTreeParser();
 
@@ -174,12 +178,12 @@ public:
       the children of that node and it's next sibling. */
   //  Function is called internally by "parseMsg(KMMessage* msg)"
   //  and it will be replaced once KMime is alive.
-  void parseObjectTree( KMime::Content * node );
+  void parseObjectTree( const Akonadi::Item &item, KMime::Content * node );
 
 private:
   /** Standard children handling a.k.a. multipart/mixed (w/o
       kroupware hacks) */
-  void stdChildHandling( KMime::Content * child );
+  void stdChildHandling( const Akonadi::Item &item, KMime::Content * child );
 
   void defaultHandling( KMime::Content * node, ProcessResult & result );
 
@@ -196,11 +200,12 @@ private:
 
    */
   //  Function will be replaced once KMime is alive.
-  void insertAndParseNewChildNode( KMime::Content & node,
-                                    const char * content,
-                                    const char * cntDesc,
-                                    bool append=false,
-                                    bool addToTextualContent = true );
+  void insertAndParseNewChildNode( const Akonadi::Item &item,
+                                   KMime::Content & node,
+                                   const char * content,
+                                   const char * cntDesc,
+                                   bool append=false,
+                                   bool addToTextualContent = true );
   /** if data is 0:
       Feeds the HTML widget with the contents of the opaque signed
           data found in partNode 'sign'.
@@ -211,13 +216,14 @@ private:
 
       Returns whether a signature was found or not: use this to
       find out if opaque data is signed or not. */
-  bool writeOpaqueOrMultipartSignedData( KMime::Content * data,
-                                          KMime::Content & sign,
-                                          const QString & fromAddress,
-                                          bool doCheck=true,
-                                          QByteArray * cleartextData=0,
-                                          const std::vector<GpgME::Signature> & paramSignatures = std::vector<GpgME::Signature>(),
-                                          bool hideErrors=false );
+  bool writeOpaqueOrMultipartSignedData( const Akonadi::Item &item,
+                                         KMime::Content * data,
+                                         KMime::Content & sign,
+                                         const QString & fromAddress,
+                                         bool doCheck=true,
+                                         QByteArray * cleartextData=0,
+                                         const std::vector<GpgME::Signature> & paramSignatures = std::vector<GpgME::Signature>(),
+                                         bool hideErrors=false );
 
   /** Writes out the block that we use when the node is encrypted,
       but we're deferring decryption for later. */
@@ -240,7 +246,7 @@ private:
                       bool& decryptionStarted,
                       PartMetaData &partMetaData );
 
-  bool processMailmanMessage( KMime::Content* node );
+  bool processMailmanMessage( const Akonadi::Item &item, KMime::Content* node );
 
   /** Checks whether @p str contains external references. To be precise,
       we only check whether @p str contains 'xxx="http[s]:' where xxx is
@@ -250,22 +256,22 @@ private:
 
 public:// (during refactoring)
 
-  bool processTextHtmlSubtype( KMime::Content * node, ProcessResult & result );
-  bool processTextPlainSubtype( KMime::Content *node, ProcessResult & result );
+  bool processTextHtmlSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processTextPlainSubtype( const Akonadi::Item &item, KMime::Content *node, ProcessResult & result );
 
-  bool processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & result );
-  bool processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & result );
-  bool processMultiPartDigestSubtype( KMime::Content * node, ProcessResult & result );
-  bool processMultiPartParallelSubtype( KMime::Content * node, ProcessResult & result );
-  bool processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & result );
-  bool processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result );
+  bool processMultiPartMixedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processMultiPartAlternativeSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processMultiPartDigestSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processMultiPartParallelSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processMultiPartSignedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processMultiPartEncryptedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
 
-  bool processMessageRfc822Subtype( KMime::Content * node, ProcessResult & result );
+  bool processMessageRfc822Subtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
 
-  bool processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result );
-  bool processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result );
-  bool processApplicationChiasmusTextSubtype( KMime::Content * node, ProcessResult & result );
-  bool processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result );
+  bool processApplicationOctetStreamSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processApplicationPkcs7MimeSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processApplicationChiasmusTextSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result );
+  bool processApplicationMsTnefSubtype( const Akonadi::Item &item, KMime::Content *node, ProcessResult &result );
 
   bool decryptChiasmus( const QByteArray& data, QByteArray& bodyDecoded, QString& errorText );
   void writeBodyString( const QByteArray & bodyString,
@@ -300,13 +306,13 @@ public:// (during refactoring)
                       bool decorate );
 
   bool isMailmanMessage( KMime::Content * curNode );
-                        
+
 public: // KMReaderWin still needs this...
   void writeBodyStr( const QByteArray & bodyString,
                       const QTextCodec * aCodec,
                       const QString & fromAddress );
   static KMime::Content* findType( KMime::Content* content, const QByteArray& mimeType, bool deep, bool wide );
- 
+
   static KMime::Content* findType( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep, bool wide );
 
   static KMime::Content* findTypeNot( KMime::Content* content, const QByteArray& mediaType, const QByteArray& subType, bool deep=true, bool wide=true );
@@ -349,7 +355,7 @@ private:
   /// This variable is set to false again when processing the children in stdChildHandling(), as
   /// the children can be completely displayed again.
   bool mShowOnlyOneMimePart;
-  
+
   bool mKeepEncryptions;
   bool mIncludeSignatures;
   bool mHasPendingAsyncJobs;
@@ -361,7 +367,7 @@ private:
   QString mCollapseIcon;
   QString mExpandIcon;
   bool mDeleteNodeHelper;
-  
+
 };
 
 }

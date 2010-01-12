@@ -77,48 +77,4 @@ bool Util::handleUrlOnMac( const KUrl& url )
 #endif
 }
 
-QStringList Util::supportedEncodings(bool usAscii)
-{
-  // cberzan: replaced by KCodecAction in CodecManager
-  QStringList encodingNames = KGlobal::charsets()->availableEncodingNames();
-  QStringList encodings;
-  QMap<QString,bool> mimeNames;
-  for (QStringList::Iterator it = encodingNames.begin();
-    it != encodingNames.end(); ++it)
-  {
-    QTextCodec *codec = KGlobal::charsets()->codecForName(*it);
-//     kDebug() << "name" << *it << "codec" << codec << "name" << (codec ? codec->name() : "NULL");
-    QString mimeName = (codec) ? QString(codec->name()).toLower() : (*it);
-    if (!mimeNames.contains(mimeName) )
-    {
-      encodings.append( KGlobal::charsets()->descriptionForEncoding(*it) );
-      mimeNames.insert( mimeName, true );
-//       kDebug() << "added" << mimeName;
-    }
-  }
-  encodings.sort();
-  if (usAscii)
-    encodings.prepend(KGlobal::charsets()->descriptionForEncoding("us-ascii") );
-  return encodings;
-}
-
-//-----------------------------------------------------------------------------
-QString Util::fixEncoding( const QString &encoding )
-{
-  QString returnEncoding = encoding;
-  // According to http://www.iana.org/assignments/character-sets, uppercase is
-  // preferred in MIME headers
-  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
-    returnEncoding = returnEncoding.toUpper();
-    returnEncoding.replace( "ISO ", "ISO-" );
-  }
-  return returnEncoding;
-}
-
-//-----------------------------------------------------------------------------
-QString Util::encodingForName( const QString &descriptiveName )
-{
-  QString encoding = KGlobal::charsets()->encodingForName( descriptiveName );
-  return Util::fixEncoding( encoding );
-}
 

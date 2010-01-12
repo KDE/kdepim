@@ -18,93 +18,12 @@
  *
  */
 #include "kmaddrbook.h"
-#include "kcursorsaver.h"
 
 #include <akonadi/contact/contactsearchjob.h>
-#include <akonadi/contact/contactgroupsearchjob.h>
+#include <kabc/addressee.h>
 
 #include <kdebug.h>
-#include <klocale.h>
-#include <kmessagebox.h>
 
-#include <QtCore/QRegExp>
-
-#include <unistd.h>
-
-void KabcBridge::addresses(QStringList& result) // includes lists
-{
-  KCursorSaver busy(KBusyPtr::busy()); // loading might take a while
-
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  if ( !job->exec() )
-    return;
-
-  const KABC::Addressee::List contacts = job->contacts();
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    const QStringList emails = contact.emails();
-    QString n = contact.prefix() + ' ' +
-                contact.givenName() + ' ' +
-                contact.additionalName() + ' ' +
-                contact.familyName() + ' ' +
-                contact.suffix();
-    n = n.simplified();
-
-    QRegExp needQuotes("[^ 0-9A-Za-z\\x0080-\\xFFFF]");
-    QString endQuote = "\" ";
-    QStringList::ConstIterator mit;
-    QString addr, email;
-
-    for ( mit = emails.begin(); mit != emails.end(); ++mit ) {
-      email = *mit;
-      if (!email.isEmpty()) {
-        if (n.isEmpty() || (email.contains( '<' ) ))
-          addr.clear();
-        else { // do we really need quotes around this name ?
-          if (n.contains(needQuotes) )
-            addr = '"' + n + endQuote;
-          else
-            addr = n + ' ';
-        }
-
-        if (!addr.isEmpty() && !(email.contains( '<' ) )
-            && !(email.contains( '>' ) )
-            && !(email.contains( ',' ) ))
-          addr += '<' + email + '>';
-        else
-          addr += email;
-        addr = addr.trimmed();
-        result.append( addr );
-      }
-    }
-  }
-
-  Akonadi::ContactGroupSearchJob *groupJob = new Akonadi::ContactGroupSearchJob();
-  if ( !groupJob->exec() )
-    return;
-
-  const KABC::ContactGroup::List contactGroups = groupJob->contactGroups();
-  foreach ( const KABC::ContactGroup &group, contactGroups )
-    result.append( group.name() );
-
-  result.sort();
-}
-
-QStringList KabcBridge::addresses()
-{
-  QStringList entries;
-
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  if ( !job->exec() )
-    return QStringList();
-
-  const KABC::Addressee::List contacts = job->contacts();
-  foreach ( const KABC::Addressee &contact, contacts )
-    entries.append( contact.fullEmail() );
-
-  return entries;
-}
-
-//-----------------------------------------------------------------------------
 QString KabcBridge::expandNickName( const QString& nickName )
 {
   if ( nickName.isEmpty() )
@@ -124,30 +43,4 @@ QString KabcBridge::expandNickName( const QString& nickName )
   }
 
   return QString();
-}
-
-
-//-----------------------------------------------------------------------------
-
-QStringList KabcBridge::categories()
-{
-  QStringList allcategories, aux;
-
-  //TODO: Retrieve the categories from Nepomuk directly?!?
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  if ( !job->exec() )
-    return QStringList();
-
-  const KABC::Addressee::List contacts = job->contacts();
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    aux = contact.categories();
-    for ( QStringList::ConstIterator itAux = aux.constBegin();
-          itAux != aux.constEnd(); ++itAux ) {
-      // don't have duplicates in allcategories
-      if ( !allcategories.contains( *itAux )  )
-        allcategories += *itAux;
-    }
-  }
-
-  return allcategories;
 }

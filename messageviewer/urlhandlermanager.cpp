@@ -50,7 +50,6 @@
 #include <algorithm>
 
 #include <QScrollArea>
-
 using std::for_each;
 using std::remove;
 using std::find;
@@ -220,20 +219,16 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
 }
 
 bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-/*FIXME(Andras) port it
   QString path;
-  partNode * node = partNodeFromXKMailUrl( url, w, &path );
+  KMime::Content * node = partNodeFromXKMailUrl( url, w, &path );
   if ( !node )
     return false;
-  KMMessage *msg = w->mMessage;
-  if ( !msg ) return false;
-  Callback callback( msg, w );
-  PartNodeBodyPart part( *node, w->overrideCodec() );
-  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
-    if ( (*it)->handleClick( &part, path, callback ) )
+
+  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
+    if ( (*it)->handleClick( &part, path ) )
       return true;
-      */
-      kWarning() <<"FIXME PORT bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url, MailViewerPrivate * w ) const ";
+  }
 
   return false;
 }
@@ -244,7 +239,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest( con
   if ( !node )
     return false;
 
-  PartNodeBodyPart part( node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
     if ( (*it)->handleContextMenuRequest( &part, path, p ) )
       return true;
@@ -257,7 +252,7 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage( const KU
   if ( !node )
     return QString();
 
-  PartNodeBodyPart part( node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
     const QString msg = (*it)->statusBarMessage( &part, path );
     if ( !msg.isEmpty() )
@@ -539,8 +534,11 @@ namespace {
   bool HtmlAnchorHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
     if ( url.hasHost() || url.path() != "/" || !url.hasRef() )
       return false;
+    kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
+#if 0
     if ( w && !w->htmlPart()->gotoAnchor( url.ref() ) )
       static_cast<QScrollArea*>( w->htmlPart()->widget() )->ensureVisible( 0, 0 );
+#endif
     return true;
   }
 }
@@ -581,14 +579,14 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
-    
+
     const bool inHeader = attachmentIsInHeader( url );
     const bool shouldShowDialog = !w->nodeHelper()->isNodeDisplayedEmbedded( node ) || !inHeader;
     if ( inHeader )
       w->scrollToAttachment( node );
     if ( shouldShowDialog )
-     // PENDING(romain_kdab) : replace with toLocalFile() ?
-     w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
+       // PENDING(romain_kdab) : replace with toLocalFile() ?
+       w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
 
     return true;
   }
@@ -598,11 +596,8 @@ namespace {
     KMime::Content *node = nodeForUrl( url, w );
     if ( !node )
       return false;
-
     // PENDING(romain_kdab) : replace with toLocalFile() ?
-    /*FIXME(Andras) port it
-    w->showAttachmentPopup( node->nodeId(), w->tempFileUrlFromPartNode( node ).path(), p );
-    */
+    w->showAttachmentPopup( node, w->nodeHelper()->tempFileUrlFromNode( node ).path(), p );
     return true;
   }
 

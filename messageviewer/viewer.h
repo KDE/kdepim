@@ -54,7 +54,7 @@ class KAction;
 class KSelectAction;
 class KToggleAction;
 class KToggleAction;
-class KHTMLPart;
+class KWebView;
 class KUrl;
 class KConfigSkeleton;
 
@@ -101,6 +101,19 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
    */
   KMime::Message* message() const; //TODO(Andras): convert mMessage to KMime::Message::Ptr ? This is not nice to expose the internal pointer.
 
+  enum AttachmentAction
+  {
+    Open = 1,
+    OpenWith = 2,
+    View = 3,
+    Save = 4,
+    Properties = 5,
+    ChiasmusEncrypt = 6,
+    Delete = 7,
+    Edit = 8,
+    Copy = 9,
+    ScrollTo = 10
+  };
 
   /** The display update mode: Force updates the display immediately, Delayed updates
   after some time (150ms by default */
@@ -247,10 +260,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   void setHeaderStyleAndStrategy( const HeaderStyle * style,
                                   const HeaderStrategy * strategy );
-  KHTMLPart *htmlPart() const;
+  KWebView *htmlPart() const;
 
-
-  void writeConfig( bool withSync=true ) const;
+  void writeConfig( bool withSync=true );
 
   void saveRelativePosition();
 
@@ -261,6 +273,21 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   bool noMDNsWhenEncrypted() const;
 
+  void readConfig();
+
+  void setShowEmoticons( bool b );
+  void setShrinkQuotes( bool b );
+  void setShowExpandQuotesMark( bool b );
+  void setCollapseQuoteLevelSpin( int v );
+  void setShowColorBar( bool b );
+  void setShowSpamStatus( bool b );
+  void setFallbackCharacterEncoding( const QString& );
+  void setOverrideCharacterEncoding( const QString& );
+
+
+  bool disregardUmask() const;
+  void setDisregardUmask( bool b);
+
 signals:
   /** Emitted after parsing of a message to have it stored
       in unencrypted state in it's folder. */
@@ -270,13 +297,15 @@ signals:
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   /** The user presses the right mouse button. 'url' may be 0. */
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
-
+  void urlClicked( const Akonadi::Item &, const KUrl& );
 
   /** The user has clicked onto an URL that is no attachment. */
   void urlClicked(const KUrl &url, int button);
 
   /** Pgp displays a password dialog */
   void noDrag(void);
+  void requestConfigSync();
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
 
 public slots:
 

@@ -57,27 +57,6 @@ namespace Util {
      * Returns false if it did nothing (such as on other platforms.
      */
     bool handleUrlOnMac( const KUrl& url );
-
-    /**
-    * Return a list of the supported encodings
-    * @param usAscii if true, US-Ascii encoding will be prepended to the list.
-    */
-    QStringList supportedEncodings( bool usAscii );
-
-    /**
-    * Fixes an encoding received by a KDE function and returns the proper,
-    * MIME-compilant encoding name instead.
-    * @see encodingForName
-    */
-    QString fixEncoding( const QString &encoding );
-
-    /**
-    * Drop-in replacement for KCharsets::encodingForName(). The problem with
-    * the KCharsets function is that it returns "human-readable" encoding names
-    * like "ISO 8859-15" instead of valid encoding names like "ISO-8859-15".
-    * This function fixes this by replacing whitespace with a hyphen.
-    */
-    QString encodingForName( const QString &descriptiveName );
 }
 
 #endif

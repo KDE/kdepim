@@ -1,8 +1,9 @@
 /*  -*- c++ -*-
-    khtmlparthtmlwriter.h
+    webkitparthtmlwriter.h
 
     This file is part of KMail, the KDE mail client.
     Copyright (c) 2003 Marc Mutz <mutz@kde.org>
+    Copyright (c) 2009 Torgny Nyblom <kde@nyblom.org>
 
     KMail is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License, version 2, as
@@ -29,8 +30,8 @@
     your version.
 */
 
-#ifndef __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__
-#define __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__
+#ifndef __MESSAGEVIEWER_WEBKITHTMLPARTHTMLWRITER_H__
+#define __MESSAGEVIEWER_WEBKITHTMLPARTHTMLWRITER_H__
 
 #include "interfaces/htmlwriter.h"
 #include <QObject>
@@ -41,16 +42,16 @@
 #include <QMap>
 
 class QString;
-class KHTMLPart;
+class KWebView;
 
-class KHtmlPartHtmlWriter : public QObject, public MessageViewer::HtmlWriter {
+class WebKitPartHtmlWriter : public QObject, public MessageViewer::HtmlWriter {
   Q_OBJECT
 public:
   // Key is Content-Id, value is URL
   typedef QMap<QString, QString> EmbeddedPartMap;
-  explicit KHtmlPartHtmlWriter( KHTMLPart * part,
+  explicit WebKitPartHtmlWriter( KWebView *view,
                                 QObject * parent=0, const char * name = 0 );
-  virtual ~KHtmlPartHtmlWriter();
+  virtual ~WebKitPartHtmlWriter();
 
   void begin( const QString & cssDefs );
   void end();
@@ -70,8 +71,10 @@ private:
   void resolveCidUrls();
 
 private:
-  KHTMLPart * mHtmlPart;
+  KWebView *mHtmlView;
   QStringList mHtmlQueue;
+  QString mHtml;
+  QString mCss;
   QTimer mHtmlTimer;
   enum State {
     Begun,
@@ -81,4 +84,4 @@ private:
   EmbeddedPartMap mEmbeddedPartMap;
 };
 
-#endif // __MESSAGEVIEWER_KHTMLPARTHTMLWRITER_H__
+#endif // __MESSAGEVIEWER_WEBKITPARTHTMLWRITER_H__

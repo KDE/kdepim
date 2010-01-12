@@ -40,6 +40,10 @@ namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT CSSHelper : public KPIM::CSSHelper {
 public:
   CSSHelper( const QPaintDevice *pd );
+
+  /** @return HTML head including style sheet definitions and the
+  &gt;body&lt; tag */
+  QString htmlHead( bool fixedFont = false ) const;
 };
 
 }

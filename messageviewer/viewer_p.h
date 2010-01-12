@@ -31,20 +31,25 @@
 
 #include <kmime/kmime_message.h>
 
-#include <dom/dom_node.h>
-
 #include <messagecore/messagestatus.h>
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
+#include <kio/job.h>
+#include <kresources/groupwise/soap/soapStub.h>
 
 using KPIM::MessageStatus;
+namespace GpgME { class Error; }
+namespace KIO { class Job; }
+
+namespace Kleo { class SpecialJob; }
 
 class KAction;
 class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class KHBox;
-class KHTMLPart;
+class KWebView;
+class QWebElement;
 
 class QPoint;
 class QSplitter;
@@ -55,7 +60,7 @@ class QTreeView;
 class MimeTreeModel;
 class ConfigureWidget;
 
-class KHtmlPartHtmlWriter;
+class WebKitPartHtmlWriter;
 class HtmlStatusBar;
 
 namespace KParts {
@@ -109,6 +114,11 @@ public:
   the attachment!) */
   bool deleteAttachment( KMime::Content* node, bool showWarning = true );
 
+
+  void attachmentProperties( KMime::Content *node );
+  void attachmentCopy( const KMime::Content::List & contents );
+
+
   /** Edit the attachment the @param node points to. Returns false if the user
   cancelled the editing, true in all other cases! */
   bool editAttachment( KMime::Content* node, bool showWarning = true );
@@ -124,11 +134,11 @@ public:
       emit popupMenu( mMessageItem, url, p );
   }
 
-  /** Access to the KHTMLPart used for the viewer. Use with
+  /** Access to the KWebView used for the viewer. Use with
       care! */
-  KHTMLPart *htmlPart() const { return mViewer; }
+  KWebView *htmlPart() const { return mViewer; }
 
-  void showAttachmentPopup( int id, const QString & name, const QPoint & p );
+  void showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & p );
 
   /** retrieve BodyPartMemento of id \a which for partNode \a node */
    Interface::BodyPartMemento * bodyPartMemento( const KMime::Content * node, const QByteArray & which ) const;
@@ -147,7 +157,7 @@ public:
    * to the given values.
    * Call this so that slotHandleAttachment() knows which attachment to handle.
    */
-  void prepareHandleAttachment( int id, const QString& fileName );
+  void prepareHandleAttachment(KMime::Content *node, const QString& fileName );
 
 
   /** This function returns the complete data that were in this
@@ -171,12 +181,14 @@ public:
   void attachmentOpen( KMime::Content *node );
 
 
-  /** Return the HtmlWriter connected to the KHTMLPart we use */
+  /** Return the HtmlWriter connected to the KWebView we use */
   HtmlWriter * htmlWriter() { return mHtmlWriter; }
 
   CSSHelper* cssHelper() const;
 
   NodeHelper* nodeHelper() { return mNodeHelper; }
+
+  Akonadi::Item messageItem() { return mMessageItem; }
 
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;
@@ -220,7 +232,7 @@ public:
   void readConfig();
 
   /** Write settings to app's config file. Calls sync() if withSync is true. */
-  void writeConfig( bool withSync=true ) const;
+  void writeConfig( bool withSync=true );
 
    /** Get the message header style. */
   const HeaderStyle * headerStyle() const {
@@ -361,15 +373,24 @@ public:
 
   bool noMDNsWhenEncrypted() const { return mNoMDNsWhenEncrypted; }
 
+
+  bool disregardUmask() const;
+  void setDisregardUmask( bool b);
+
+  void attachmentView( KMime::Content *atmNode );
+  void attachmentEncryptWithChiasmus( KMime::Content * content );
+
+private slots:
+  void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
+  void slotAtmDecryptWithChiasmusUploadResult( KJob * );
+
+
 public slots:
-
-  void slotUrlOpen( const KUrl &url = KUrl() );
-
   /** An URL has been activate with a click. */
-  void slotUrlOpen(const KUrl &url, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &);
+  void slotUrlOpen( const QUrl &url);
 
   /** The mouse has moved on or off an URL. */
-  void slotUrlOn(const QString &url);
+  void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
 
   /** The user presses the right mouse button on an URL. */
   void slotUrlPopup(const QString &, const QPoint& mousePos);
@@ -404,7 +425,6 @@ public slots:
   void slotHideAttachments();
 
   /** Some attachment operations. */
-  void slotAtmView( KMime::Content *atmNode );
   void slotDelayedResize();
 
   /** Print message. Called on as a response of finished() signal of mPartHtmlWriter
@@ -426,7 +446,7 @@ public slots:
   void slotAttachmentCopy();
   void slotAttachmentDelete();
   void slotAttachmentEdit();
-  void slotAttachmentEditDone(MessageViewer::EditorWatcher* editorWatcher);
+  void slotAttachmentEditDone(EditorWatcher* editorWatcher);
   void slotLevelQuote( int l );
 
   /**
@@ -447,20 +467,21 @@ public slots:
   /** Copy URL in mUrlCurrent to clipboard. Removes "mailto:" at
       beginning of URL before copying. */
   void slotUrlCopy();
-  /** Save the page to a file */
-  void slotUrlSave();
   void slotSaveMessage();
   /** Re-parse the current message. */
   void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
 
-  bool hasParentDivWithId( const DOM::Node &start, const QString &id );
+  bool hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id );
 
 signals:
   void replaceMsgByUnencryptedVersion();
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
   void urlClicked(const KUrl &url, int button);
+  void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void noDrag();
+  void requestConfigSync();
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
 
 public:
   NodeHelper* mNodeHelper;
@@ -474,7 +495,7 @@ public:
   HtmlStatusBar *mColorBar;
   QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
   MimeTreeModel *mMimePartModel;
-  KHTMLPart *mViewer;
+  KWebView *mViewer;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
@@ -510,7 +531,7 @@ public:
   HtmlWriter * mHtmlWriter;
   /** Used only to be able to connect and disconnect finished() signal
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */
-  QPointer<KHtmlPartHtmlWriter> mPartHtmlWriter;
+  QPointer<WebKitPartHtmlWriter> mPartHtmlWriter;
   QMap<QByteArray, Interface::BodyPartMemento*> mBodyPartMementoMap;
 
   int mChoice;
@@ -520,8 +541,11 @@ public:
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
+  bool mDisregardUmask;
+  KMime::Content *mCurrentContent;
+  QString mCurrentFileName;
   QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
-
+  Kleo::SpecialJob *mJob;
   Viewer *const q;
 };
 
