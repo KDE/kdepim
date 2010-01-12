@@ -37,7 +37,7 @@ class MailViewerSource : public ObjectTreeSourceIf {
   bool decryptMessage();
   bool htmlLoadExternal();
   bool showSignatureDetails();
-  void setHtmlMode( bool mode );
+  void setHtmlMode( Util::HtmlMode mode );
   int levelQuote();
   const QTextCodec * overrideCodec();
   QString createMessageHeader( KMime::Message* message);

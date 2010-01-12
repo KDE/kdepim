@@ -51,13 +51,9 @@ bool MailViewerSource::showSignatureDetails()
   return mViewer->mShowSignatureDetails;
 }
 
-void MailViewerSource::setHtmlMode( bool mode )
+void MailViewerSource::setHtmlMode( Util::HtmlMode mode )
 {
-  if ( mode ) {
-    mViewer->mColorBar->setHtmlMode();
-  } else {
-    mViewer->mColorBar->setNormalMode();
-  }
+  mViewer->mColorBar->setMode( mode );
 }
 
 int MailViewerSource::levelQuote()
