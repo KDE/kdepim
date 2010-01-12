@@ -45,6 +45,8 @@
 #include <kcal/incidence.h>
 #include <kcal/incidenceformatter.h>
 
+#include <akonadi/kcal/groupware.h>
+
 #include <kpimutils/email.h>
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitymanager.h>
@@ -601,26 +603,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
-      kDebug() << receiver << iCal << type;
-      KTemporaryFile file;
-      file.setPrefix(KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/', true));
-      file.setAutoRemove(false);
-      if ( !file.open() ) {
-        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
-        return false;
-      }
-      QTextStream ts ( &file );
-      ts.setCodec("UTF-8");
-      ts << receiver << '\n' << iCal;
-      ts.flush();
-      file.flush();
-      file.close();
-
-      // Now ensure that korganizer is running; otherwise start it, to prevent surprises
-      // (https://intevation.de/roundup/kolab/issue758)
-      ensureKorganizerRunning();
-
-      return true;
+      return Akonadi::Groupware::instance()->handleInvitation( receiver, iCal, type );
     }
 
     bool handleInvitation( const QString& iCal, Attendee::PartStat status,
