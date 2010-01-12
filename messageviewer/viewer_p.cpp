@@ -1042,26 +1042,6 @@ bool ViewerPrivate::decryptMessage() const
     return true;
 }
 
-
-void ViewerPrivate::setStyleDependantFrameWidth()
-{
-  if ( !mBox )
-    return;
-  // set the width of the frame to a reasonable value for the current GUI style
-  int frameWidth;
-#if 0 // is this hack still needed with kde4?
-  if( !qstrcmp( style()->metaObject()->className(), "KeramikStyle" ) )
-    frameWidth = style()->pixelMetric( QStyle::PM_DefaultFrameWidth ) - 1;
-  else
-#endif
-    frameWidth = q->style()->pixelMetric( QStyle::PM_DefaultFrameWidth );
-  if ( frameWidth < 0 )
-    frameWidth = 0;
-  if ( frameWidth != mBox->lineWidth() )
-    mBox->setLineWidth( frameWidth );
-}
-
-
 int ViewerPrivate::pointsToPixel(int pointSize) const
 {
   return (pointSize * mViewer->logicalDpiY() + 36) / 72;
@@ -1117,7 +1097,9 @@ void ViewerPrivate::displayMessage()
 
   mNodeHelper->removeTempFiles();
 
-  mColorBar->setNormalMode();
+  // Don't update here, parseMsg() can overwrite the HTML mode, which would lead to flicker.
+  // It is updated right after parseMsg() instead.
+  mColorBar->setMode( Util::Normal, HtmlStatusBar::NoUpdate );
 
   if ( mMessageItem.hasAttribute<ErrorAttribute>() ) {
     const ErrorAttribute* const attr = mMessageItem.attribute<ErrorAttribute>();
@@ -1129,6 +1111,7 @@ void ViewerPrivate::displayMessage()
     htmlWriter()->queue( QLatin1String("<p></p>") );
   }
   parseMsg();
+  mColorBar->update();
 
   htmlWriter()->queue("</body></html>");
   connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ) );
@@ -1775,12 +1758,12 @@ void ViewerPrivate::createWidgets() {
   mMimePartTree->setContextMenuPolicy(Qt::CustomContextMenu);
   connect(mMimePartTree, SIGNAL( customContextMenuRequested( const QPoint& ) ), this, SLOT( slotMimeTreeContextMenuRequested(const QPoint&)) );
   mBox = new KHBox( mSplitter );
-  setStyleDependantFrameWidth();
-  mBox->setFrameStyle( mMimePartTree->frameStyle() );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
   mViewer = new KWebView( mBox );
   mViewer->setObjectName( "mViewer" );
+  mViewer->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::QSizePolicy::Expanding );
+  mColorBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Ignored );
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 }

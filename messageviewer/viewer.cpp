@@ -310,13 +310,6 @@ void Viewer::setPrintFont( const QFont& font )
   d->mCSSHelper->setPrintFont( font );
 }
 
-void Viewer::styleChange( QStyle& oldStyle )
-{
-  Q_D(Viewer);
-  d->setStyleDependantFrameWidth();
-  QWidget::styleChange( oldStyle );
-}
-
 bool Viewer::event(QEvent *e)
 {
   Q_D(Viewer);

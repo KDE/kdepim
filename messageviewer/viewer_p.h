@@ -193,10 +193,6 @@ public:
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;
 
-  /** Set the width of the frame to a reasonable value for the current GUI
-      style */
-  void setStyleDependantFrameWidth();
-
   /** Calculate the pixel size */
   int pointsToPixel(int pointSize) const;
 
