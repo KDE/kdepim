@@ -114,6 +114,7 @@ AgentProgressMonitor::AgentProgressMonitor( const AgentInstance &agent,
 
 AgentProgressMonitor::~AgentProgressMonitor()
 {
+  delete d;
 }
 
 #include "agentprogressmonitor.moc"
