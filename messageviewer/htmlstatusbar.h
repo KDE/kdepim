@@ -62,6 +62,11 @@ class QMouseEvent;
 class HtmlStatusBar : public QLabel {
   Q_OBJECT
 public:
+  enum UpdateMode {
+    NoUpdate,
+    Update
+  };
+
   explicit HtmlStatusBar( QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
   virtual ~HtmlStatusBar();
 
@@ -84,7 +89,7 @@ public slots:
   /** Switch to "multipart plain mode". */
   void setMultipartPlainMode();
   /** Switch to mode @p m */
-  void setMode( Util::HtmlMode m );
+  void setMode( Util::HtmlMode m, UpdateMode mode = Update );
 
 signals:
 

@@ -325,9 +325,6 @@ protected:
     /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);
   virtual void resizeEvent(QResizeEvent *);
-  /** reimplemented in order to update the frame width in case of a changed
-      GUI style */
-  void styleChange( QStyle& oldStyle );
   /** Watch for palette changes */
   virtual bool event(QEvent *e);
 

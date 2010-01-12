@@ -50,15 +50,14 @@ HtmlStatusBar::HtmlStatusBar( QWidget * parent, const char * name, Qt::WFlags f 
 {
   setObjectName( name );
   setAlignment( Qt::AlignHCenter | Qt::AlignTop );
-  // Don't force a minimum height to the reader widget
-  setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Ignored ) );
   setAutoFillBackground( true );
   update();
 }
 
 HtmlStatusBar::~HtmlStatusBar() {}
 
-void HtmlStatusBar::update() {
+void HtmlStatusBar::update()
+{
   QPalette pal = palette();
   pal.setColor( backgroundRole(), bgColor() );
   pal.setColor( foregroundRole(), fgColor() );
@@ -87,12 +86,11 @@ void HtmlStatusBar::setMultipartHtmlMode()
   setMode( Util::MultipartHtml );
 }
 
-void HtmlStatusBar::setMode( Util::HtmlMode m )
+void HtmlStatusBar::setMode( Util::HtmlMode m, UpdateMode mode )
 {
-  if ( m == mode() )
-    return;
   mMode = m;
-  update();
+  if ( mode == Update )
+    update();
 }
 
 void HtmlStatusBar::mousePressEvent( QMouseEvent * event )
