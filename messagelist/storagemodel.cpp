@@ -300,19 +300,19 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
  * Uses Nepomuk to fill a list of tags. It also picks out
  * the colors the message should use.
  */
-QList< Core::MessageItem::Tag * > fillTagList( const Akonadi::Item &item,
-                                               QColor & textColor, QColor & backgroundColor )
+QList< Core::MessageItem::Tag * > * fillTagList( const Akonadi::Item &item,
+                                                 QColor & textColor, QColor & backgroundColor )
 {
-  QList< Core::MessageItem::Tag * > messageListTagList;
   const Nepomuk::Resource resource( item.url() );
   QList< Nepomuk::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
+    QList< Core::MessageItem::Tag * > *messageListTagList = new QList< Core::MessageItem::Tag * >();
     int bestPriority = 0xfffff;
     foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
       Core::MessageItem::Tag *messageListTag =
           new Core::MessageItem::Tag( SmallIcon( nepomukTag.symbols().first() ),
                                       nepomukTag.label(), nepomukTag.resourceUri().toString() );
-      messageListTagList.append( messageListTag );
+      messageListTagList->append( messageListTag );
 
       if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
         const int priority = nepomukTag.property(Vocabulary::MessageTag::priority() ).toInt();
@@ -329,8 +329,10 @@ QList< Core::MessageItem::Tag * > fillTagList( const Akonadi::Item &item,
         }
       }
     }
+    return messageListTagList;
   }
-  return messageListTagList;
+  else
+    return 0;
 }
 
 void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,

@@ -81,9 +81,9 @@ public:
   virtual ~MessageItem();
 
 public:
-  const QList< Tag * > tagList() const;
+  QList< Tag * > * tagList() const;
 
-  void setTagList( const QList< Tag * > & list );
+  void setTagList( QList< Tag * > * list );
 
   /**
    * Returns Tag associated to this message that has the specified id or 0

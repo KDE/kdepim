@@ -78,7 +78,7 @@ public:
   bool mSubjectIsPrefixed;          ///< set only if we're doing subject based threading
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
-  QList< Tag * > mTagList;          ///< Usually empty
+  QList< Tag * > * mTagList;        ///< Usually 0....
   QColor mTextColor;                ///< If invalid, use default text color
   QColor mBackgroundColor;          ///< If invalid, use default background color
   QFont  mFont;
@@ -92,48 +92,68 @@ MessageItem::MessageItem()
 {
   d->mThreadingStatus = MessageItem::ParentMissing;
   d->mAboutToBeRemoved = false;
+  d->mTagList = 0;
   d->mUniqueId = 0;
 }
 
 MessageItem::~MessageItem()
 {
-  qDeleteAll( d->mTagList );
+  if ( d->mTagList )
+  {
+    qDeleteAll( *d->mTagList );
+    delete d->mTagList;
+    d->mTagList = 0;
+  }
+
   delete d;
 }
 
-const QList< MessageItem::Tag * > MessageItem::tagList() const
+QList< MessageItem::Tag * > *MessageItem::tagList() const
 {
   return d->mTagList;
 }
 
-void MessageItem::setTagList( const QList< Tag * > &list )
+void MessageItem::setTagList( QList< Tag * > * list )
 {
-  qDeleteAll( d->mTagList );
+  if ( d->mTagList )
+  {
+    qDeleteAll( *d->mTagList );
+    delete d->mTagList;
+  }
   d->mTagList = list;
 }
 
 MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
 {
-  foreach( Tag *tag, mTagList ) {
-    if ( tag->id() == szTagId )
-      return tag;
+  if ( !mTagList )
+    return 0;
+
+  for ( QList< Tag * >::Iterator it = mTagList->begin(); it != mTagList->end(); ++it )
+  {
+    if ( ( *it )->id() == szTagId )
+      return *it;
   }
-  return 0;
+
+ return 0;
 }
 
 MessageItem::Tag *MessageItem::findTag( const QString &szTagId ) const
 {
-  return d->findTagInternal( szTagId );
+  return d->mTagList ? d->findTagInternal( szTagId ) : 0;
 }
 
 QString MessageItem::tagListDescription() const
 {
+  if ( !d->mTagList )
+    return QString();
+
   QString ret;
 
-  foreach( const Tag *tag, d->mTagList ) {
+  for ( QList< Tag * >::Iterator it = d->mTagList->begin(); it != d->mTagList->end(); ++it )
+  {
     if ( !ret.isEmpty() )
       ret += ", ";
-    ret += tag->name();
+    ret += ( *it )->name();
   }
 
   return ret;

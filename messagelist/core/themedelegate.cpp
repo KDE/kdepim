@@ -429,33 +429,35 @@ static inline void compute_bounding_rect_for_boolean_state_icon( bool enabled, T
   compute_bounding_rect_for_permanent_icon( ci, left, top, right, outRect, alignOnRight, iconSize );
 }
 
-static inline void paint_tag_list( const QList< MessageItem::Tag * > &tagList, QPainter * painter,
+static inline void paint_tag_list( QList< MessageItem::Tag * > * tagList, QPainter * painter,
                                    int &left, int top, int &right, bool alignOnRight, int iconSize )
 {
   if ( alignOnRight )
   {
-    foreach( const MessageItem::Tag *tag, tagList ) {
+    for ( QList< MessageItem::Tag * >::Iterator it = tagList->begin(); it != tagList->end(); ++it )
+    {
       right -= iconSize; // this icon is always present
       if ( right < 0 )
         return;
-      painter->drawPixmap( right, top, iconSize, iconSize, tag->pixmap() );
+      painter->drawPixmap( right, top, iconSize, iconSize, ( *it )->pixmap() );
       right -= gHorizontalItemSpacing;
     }
   } else {
-    foreach( const MessageItem::Tag *tag, tagList ) {
+    for ( QList< MessageItem::Tag * >::Iterator it = tagList->begin(); it != tagList->end(); ++it )
+    {
       if ( left > right - iconSize )
         return;
-      painter->drawPixmap( left, top, iconSize, iconSize, tag->pixmap() );
+      painter->drawPixmap( left, top, iconSize, iconSize, ( *it )->pixmap() );
       left += iconSize + gHorizontalItemSpacing;
     }
   }
 }
 
-static inline void compute_bounding_rect_for_tag_list( const QList< MessageItem::Tag * > &tagList,
+static inline void compute_bounding_rect_for_tag_list( QList< MessageItem::Tag * > * tagList,
                                                        int &left, int top, int &right, QRect &outRect,
                                                        bool alignOnRight, int iconSize )
 {
-  int width = tagList.count() * ( iconSize + gHorizontalItemSpacing );
+  int width = tagList->count() * ( iconSize + gHorizontalItemSpacing );
   if ( alignOnRight )
   {
     right -= width;
@@ -948,8 +950,9 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
         case Theme::ContentItem::TagList:
           if ( messageItem )
           {
-            const QList< MessageItem::Tag * > tagList = messageItem->tagList();
-            paint_tag_list( tagList, painter, l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
+            QList< MessageItem::Tag * > * tagList = messageItem->tagList();
+            if ( tagList )
+              paint_tag_list( tagList, painter, l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
           }
         break;
       }
@@ -1099,8 +1102,9 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
         case Theme::ContentItem::TagList:
           if ( messageItem )
           {
-            const QList< MessageItem::Tag * > tagList = messageItem->tagList();
-            paint_tag_list( tagList, painter, l, top, r, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
+            QList< MessageItem::Tag * > * tagList = messageItem->tagList();
+            if ( tagList )
+              paint_tag_list( tagList, painter, l, top, r, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
           }
         break;
       }
@@ -1322,8 +1326,9 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
         case Theme::ContentItem::TagList:
           if ( messageItem )
           {
-            const QList< MessageItem::Tag * > tagList = messageItem->tagList();
-            compute_bounding_rect_for_tag_list( tagList, l, top, r, mHitContentItemRect, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
+            QList< MessageItem::Tag * > * tagList = messageItem->tagList();
+            if ( tagList )
+              compute_bounding_rect_for_tag_list( tagList, l, top, r, mHitContentItemRect, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
           }
         break;
       }
@@ -1464,8 +1469,9 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
         case Theme::ContentItem::TagList:
           if ( messageItem )
           {
-            const QList< MessageItem::Tag * > tagList = messageItem->tagList();
-            compute_bounding_rect_for_tag_list( tagList, l, top, r, mHitContentItemRect, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
+            QList< MessageItem::Tag * > * tagList = messageItem->tagList();
+            if ( tagList )
+              compute_bounding_rect_for_tag_list( tagList, l, top, r, mHitContentItemRect, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
           }
         break;
       }
