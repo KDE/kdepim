@@ -40,6 +40,23 @@ int MixedTreeModel::entityColumnCount(Akonadi::EntityTreeModel::HeaderGroup head
   return 0;
 }
 
+QVariant MixedTreeModel::entityHeaderData(int section, Qt::Orientation orientation, int role, Akonadi::EntityTreeModel::HeaderGroup headerGroup) const
+{
+  if (headerGroup == CollectionTreeHeaders || role != Qt::DisplayRole || orientation == Qt::Vertical)
+    return Akonadi::EntityTreeModel::entityHeaderData(section, orientation, role, headerGroup);
+
+  switch (section)
+  {
+  case 0:
+    return "Name/Subject";
+  case 1:
+    return "Email";
+  default:
+    return QVariant();
+  }
+}
+
+
 QVariant MixedTreeModel::entityData(const Akonadi::Item& item, int column, int role) const
 {
   if (role == Qt::DisplayRole)
