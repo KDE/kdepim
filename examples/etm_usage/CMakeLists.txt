@@ -28,6 +28,7 @@ set(etm_usage_SRCS
     itemviewerwidget.cpp
     tab1widget.cpp
     tab2widget.cpp
+    tab2_5widget.cpp
     tab3widget.cpp
     tab4widget.cpp
     tab5widget.cpp
