@@ -28,7 +28,6 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KMessageBox>
 #include <KZip>
 
 using namespace KPIM;
