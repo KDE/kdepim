@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>data/stickynoteeditor/align-horizontal-center.png</file>
+    <file>data/stickynoteeditor/align-horizontal-left.png</file>
+    <file>data/stickynoteeditor/align-horizontal-right.png</file>
+    <file>data/stickynoteeditor/format-text-bold.png</file>
+    <file>data/stickynoteeditor/format-text-italic.png</file>
+    <file>data/stickynoteeditor/format-text-underline.png</file>
+  </qresource>
+</RCC>
