@@ -1,5 +1,6 @@
 /*
-  Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (C) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -17,18 +18,38 @@
   02110-1301, USA.
 */
 
-#ifndef ATTACHMENTFROMURLJOBTEST_H
-#define ATTACHMENTFROMURLJOBTEST_H
+#ifndef MESSAGECOMPOSER_TRANSPARENTJOB_H
+#define MESSAGECOMPOSER_TRANSPARENTJOB_H
 
-#include <QtCore/QObject>
 
-class AttachmentFromUrlJobTest : public QObject
+#include "contentjobbase.h"
+#include "messagecomposer_export.h"
+
+
+
+namespace Message {
+
+class TransparentJobPrivate;
+
+/**
+  A job that just wraps some KMime::Content into a job object
+  for use as a subjob in another job.
+ */
+class MESSAGECOMPOSER_EXPORT TransparentJob : public ContentJobBase
 {
   Q_OBJECT
-  private Q_SLOTS:
-    void testAttachments_data();
-    void testAttachments();
-    void testAttachmentTooBig();
+
+  public:
+    explicit TransparentJob( QObject *parent = 0 );
+    virtual ~TransparentJob();
+
+    void setContent( KMime::Content* content );
+    void process();
+    
+  private:
+    Q_DECLARE_PRIVATE( TransparentJob )
 };
+
+}
 
 #endif

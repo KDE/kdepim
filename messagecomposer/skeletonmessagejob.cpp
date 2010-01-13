@@ -31,10 +31,9 @@
 
 #include <kmime/kmime_message.h>
 
-using namespace MessageComposer;
-using namespace KMime;
+using namespace Message;
 
-class MessageComposer::SkeletonMessageJobPrivate : public JobBasePrivate
+class Message::SkeletonMessageJobPrivate : public JobBasePrivate
 {
   public:
     SkeletonMessageJobPrivate( SkeletonMessageJob *qq )
@@ -47,7 +46,7 @@ class MessageComposer::SkeletonMessageJobPrivate : public JobBasePrivate
     void doStart(); // slot
 
     InfoPart *infoPart;
-    Message *message;
+    KMime::Message *message;
 
     Q_DECLARE_PUBLIC( SkeletonMessageJob )
 };
@@ -58,12 +57,12 @@ void SkeletonMessageJobPrivate::doStart()
 
   Q_ASSERT( infoPart );
   Q_ASSERT( message == 0 );
-  message = new Message;
+  message = new KMime::Message;
 
   // From:
   {
-    Headers::From *from = new Headers::From( message );
-    Types::Mailbox address;
+    KMime::Headers::From *from = new KMime::Headers::From( message );
+    KMime::Types::Mailbox address;
     address.fromUnicodeString( infoPart->from() );
     from->addAddress( address );
     message->setHeader( from );
@@ -71,9 +70,9 @@ void SkeletonMessageJobPrivate::doStart()
   
   // To:
   {
-    Headers::To *to = new Headers::To( message );
+    KMime::Headers::To *to = new KMime::Headers::To( message );
     foreach( const QString &a, infoPart->to() ) {
-      Types::Mailbox address;
+      KMime::Types::Mailbox address;
       address.fromUnicodeString( a );
       to->addAddress( address );
     }
@@ -82,9 +81,9 @@ void SkeletonMessageJobPrivate::doStart()
 
   // Cc:
   {
-    Headers::Cc *cc = new Headers::Cc( message );
+    KMime::Headers::Cc *cc = new KMime::Headers::Cc( message );
     foreach( const QString &a, infoPart->cc() ) {
-      Types::Mailbox address;
+      KMime::Types::Mailbox address;
       address.fromUnicodeString( a );
       cc->addAddress( address );
     }
@@ -93,9 +92,9 @@ void SkeletonMessageJobPrivate::doStart()
 
   // Bcc:
   {
-    Headers::Bcc *bcc = new Headers::Bcc( message );
+    KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc( message );
     foreach( const QString &a, infoPart->bcc() ) {
-      Types::Mailbox address;
+      KMime::Types::Mailbox address;
       address.fromUnicodeString( a );
       bcc->addAddress( address );
     }
@@ -104,10 +103,23 @@ void SkeletonMessageJobPrivate::doStart()
 
   // Subject:
   {
-    Headers::Subject *subject = new Headers::Subject( message );
+    KMime::Headers::Subject *subject = new KMime::Headers::Subject( message );
     subject->fromUnicodeString( infoPart->subject(), "utf-8" );
     // TODO should we be more specific about the charset?
     message->setHeader( subject );
+  }
+
+  // Date:
+  {
+    KMime::Headers::Date *date = new KMime::Headers::Date( message );
+    date->setDateTime( KDateTime::currentLocalDateTime() );
+    message->setHeader( date );
+  }
+
+  // Extras
+
+  foreach( KMime::Headers::Base* extra, infoPart->extraHeaders() ) {
+    message->setHeader( extra );
   }
 
   q->emitResult(); // Success.
@@ -137,7 +149,7 @@ void SkeletonMessageJob::setInfoPart( InfoPart *part )
   d->infoPart = part;
 }
 
-Message *SkeletonMessageJob::message() const
+KMime::Message *SkeletonMessageJob::message() const
 {
   Q_D( const SkeletonMessageJob );
   return d->message;

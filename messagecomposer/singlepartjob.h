@@ -25,6 +25,7 @@
 
 namespace KMime {
   namespace Headers {
+    class ContentDescription;
     class ContentDisposition;
     class ContentID;
     class ContentTransferEncoding;
@@ -32,7 +33,7 @@ namespace KMime {
   }
 }
 
-namespace MessageComposer {
+namespace Message {
 
 class SinglepartJobPrivate;
 
@@ -50,6 +51,7 @@ class MESSAGECOMPOSER_EXPORT SinglepartJob : public ContentJobBase
     void setData( const QByteArray &data );
 
     /// created on first call. delete them if you don't use the content
+    KMime::Headers::ContentDescription *contentDescription();
     KMime::Headers::ContentDisposition *contentDisposition();
     KMime::Headers::ContentID *contentID();
     KMime::Headers::ContentTransferEncoding *contentTransferEncoding();

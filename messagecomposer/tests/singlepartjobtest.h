@@ -1,5 +1,6 @@
 /*
-  Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (C) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by

@@ -192,6 +192,7 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(wizards)
     # The following components depend on QGpgME.
     add_subdirectory(messageviewer)
+    macro_optional_add_subdirectory(messagecomposer)
     macro_optional_add_subdirectory(kmail)
 
     if(KDEPIM_BUILD_EXAMPLES)

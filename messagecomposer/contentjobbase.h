@@ -29,7 +29,7 @@ namespace KMime {
   class Content;
 }
 
-namespace MessageComposer {
+namespace Message {
 
 class ContentJobBasePrivate;
 
@@ -61,6 +61,18 @@ class MESSAGECOMPOSER_EXPORT ContentJobBase : public JobBase
       Transfers ownership of the @p job to this object.
     */
     bool appendSubjob( ContentJobBase *job );
+
+    /**
+      Set some extra content to be saved with the job, and available
+        later, for example, in slot handling result of job.
+      Job does not take care of deleting extra content.
+      */
+    void setExtraContent( KMime::Content* extra );
+
+    /**
+      Get extra content that was previously added.
+     */
+    KMime::Content* extraContent() const;
 
   protected:
     ContentJobBase( ContentJobBasePrivate &dd, QObject *parent );

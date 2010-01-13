@@ -24,10 +24,10 @@
 
 #include <kmime/kmime_content.h>
 
-using namespace MessageComposer;
+using namespace Message;
 using namespace KMime;
 
-class MessageComposer::MultipartJobPrivate : public ContentJobBasePrivate
+class Message::MultipartJobPrivate : public ContentJobBasePrivate
 {
   public:
     MultipartJobPrivate( MultipartJob *qq )
@@ -76,7 +76,7 @@ void MultipartJob::process()
       break;
     }
   }
-  kDebug() << "Created" << d->resultContent->contentType()->name() << "content with"
+  kDebug() << "Created" << d->resultContent->contentType()->mimeType() << "content with"
     << d->resultContent->contents().count() << "subjobContents.";
   emitResult();
 }

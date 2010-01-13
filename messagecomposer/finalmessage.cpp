@@ -21,7 +21,7 @@
 #include "finalmessage_p.h"
 
 using namespace KMime;
-using namespace MessageComposer;
+using namespace Message;
 
 FinalMessage::FinalMessage( Message *message )
   : d( new Private )

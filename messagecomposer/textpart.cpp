@@ -20,7 +20,7 @@
 #include "textpart.h"
 
 using namespace KPIMTextEdit;
-using namespace MessageComposer;
+using namespace Message;
 
 class TextPart::Private
 {

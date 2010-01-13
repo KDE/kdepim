@@ -25,9 +25,10 @@
 #include <QtCore/QStringList>
 
 #include <kmime/kmime_message.h>
+#include <kmime/kmime_headers.h>
 #include <boost/shared_ptr.hpp>
 
-namespace MessageComposer {
+namespace Message {
 
 class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
 {
@@ -49,6 +50,12 @@ class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
     QString subject() const;
     void setSubject( const QString &subject );
 
+    QString fcc() const;
+    void setFcc( const QString &fcc );
+
+    void setExtraHeaders( KMime::Headers::Base::List headers );
+    KMime::Headers::Base::List extraHeaders() const;
+    
     int transportId() const;
     void setTransportId( int tid );
 

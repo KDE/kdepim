@@ -1,5 +1,7 @@
 /*
   Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (C) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -19,74 +21,82 @@
 
 #include "composer.h"
 
-#include "attachmentpart.h"
-#include "finalmessage_p.h"
+#include "attachmentjob.h"
 #include "globalpart.h"
 #include "infopart.h"
 #include "jobbase_p.h"
 #include "textpart.h"
 #include "maintextjob.h"
 #include "multipartjob.h"
+#include "signjob.h"
+#include "encryptjob.h"
+#include "signencryptjob.h"
 #include "skeletonmessagejob.h"
+#include "transparentjob.h"
 
 #include <QTimer>
 
 #include <KDebug>
+#include <klocalizedstring.h>
 
-using namespace MessageComposer;
-using namespace KMime;
+using namespace Message;
+using KPIM::AttachmentPart;
 
-class MessageComposer::ComposerPrivate : public JobBasePrivate
+class Message::ComposerPrivate : public JobBasePrivate
 {
   public:
     ComposerPrivate( Composer *qq )
       : JobBasePrivate( qq )
       , started( false )
       , finished( false )
+      , sign( false )
+      , encrypt( false )
       , globalPart( 0 )
       , infoPart( 0 )
       , textPart( 0 )
       , skeletonMessage( 0 )
-      , contentBeforeCrypto( 0 )
-#if 0
-      , pendingCryptoJobs( 0 )
-#endif
+      , resultContent( 0 )
     {
     }
 
     void init();
     void doStart(); // slot
     void composeStep1();
-    void splitAttachmentsIntoEarlyLate();
     void skeletonJobFinished( KJob *job ); // slot
     void composeStep2();
-    void beforeCryptoJobFinished( KJob *job ); // slot
-    void composeStep3();
-    FinalMessage *createFinalMessage( Content *content );
+    void contentJobFinished( KJob *job ); // slot
+    void contentJobPreCryptFinished( KJob *job ); // slot
+    void contentJobPreInlineFinished( KJob *job ); // slot
+    void signBeforeEncryptJobFinished( KJob *job ); // slot
+    void startEncryptJobs( KMime::Content* content );
+    void composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients );
+    void attachmentsFinished( KJob* job ); // slot
 
+    void composeFinalStep( KMime::Content* headers, KMime::Content* content );
     bool started;
     bool finished;
-    FinalMessage::List messages;
+    bool sign;
+    bool encrypt;
+
+    Kleo::CryptoMessageFormat format;
+    std::vector<GpgME::Key> signers;
+    QList<QPair<QStringList, std::vector<GpgME::Key> > > encData;
+    
+    KMime::Message::List resultMessages;
 
     // Stuff that the application plays with.
     GlobalPart *globalPart;
     InfoPart *infoPart;
     TextPart *textPart;
     AttachmentPart::List attachmentParts;
+    // attachments with different sign/encrypt settings from
+    // main message body. added at the end of the process
+    AttachmentPart::List lateAttachmentParts; 
+
 
     // Stuff that we play with.
-    AttachmentPart::List earlyAttachments;
-    AttachmentPart::List lateAttachments;
-    Message *skeletonMessage;
-    Content *contentBeforeCrypto;
-    // TODO crypto: for each resulting message, keep track of its recipient.
-    // See keyresolver in kmail...
-    // We need a structure to keep track of a recipient (list) as well as type
-    // (to or cc or bcc), and createFinalMessage needs to honour it.
-#if 0
-    int pendingCryptoJobs;
-    QList<Content*> contentsAfterCrypto;
-#endif
+    KMime::Message *skeletonMessage;
+    KMime::Content *resultContent;
 
     Q_DECLARE_PUBLIC( Composer )
 };
@@ -94,14 +104,12 @@ class MessageComposer::ComposerPrivate : public JobBasePrivate
 void ComposerPrivate::init()
 {
   Q_Q( Composer );
+
+  // We cannot create these in ComposerPrivate's constructor, because
+  // their parent q is not fully constructed at that time.
   globalPart = new GlobalPart( q );
   infoPart = new InfoPart( q );
   textPart = new TextPart( q );
-  // FIXME: If I do these in ComposerPrivate's constructor, I get weird
-  // "Cannot create children for a parent that is in a different thread"
-  // errors. WTF? Something to do with construction order... I think q is
-  // not fully constructed by the time it is passed as a parent for these
-  // part QObjects.
 }
 
 void ComposerPrivate::doStart()
@@ -115,20 +123,11 @@ void ComposerPrivate::composeStep1()
 {
   Q_Q( Composer );
 
-  // Split the attachments into early and late.  (see DESIGN)
-  splitAttachmentsIntoEarlyLate();
-
   // Create skeleton message (containing headers only; no content).
   SkeletonMessageJob *skeletonJob = new SkeletonMessageJob( infoPart, q );
   QObject::connect( skeletonJob, SIGNAL(finished(KJob*)), q, SLOT(skeletonJobFinished(KJob*)) );
   q->addSubjob( skeletonJob );
   skeletonJob->start();
-}
-
-void ComposerPrivate::splitAttachmentsIntoEarlyLate()
-{
-  // TODO
-  earlyAttachments = attachmentParts;
 }
 
 void ComposerPrivate::skeletonJobFinished( KJob *job )
@@ -144,7 +143,6 @@ void ComposerPrivate::skeletonJobFinished( KJob *job )
   skeletonMessage = sjob->message();
   Q_ASSERT( skeletonMessage );
   skeletonMessage->assemble();
-  kDebug() << "encoded content of skeleton" << skeletonMessage->encodedContent();
 
   composeStep2();
 }
@@ -153,165 +151,323 @@ void ComposerPrivate::composeStep2()
 {
   Q_Q( Composer );
 
-  ContentJobBase *beforeCryptoJob = 0;
-  // Create contentBeforeCrypto from the main text part and early attachments.
-  if( earlyAttachments.isEmpty() ) {
-    // We have no attachments.  Use whatever content the textPart gives us.
-    beforeCryptoJob = new MainTextJob( textPart, q );
+  ContentJobBase *mainJob = 0;
+  MainTextJob *mainTextJob = new MainTextJob( textPart, q );
+  if( attachmentParts.isEmpty() ) {
+    // We have no attachments.  Use the content given by the MainTextJob.
+    mainJob = mainTextJob;
   } else {
     // We have attachments.  Create a multipart/mixed content.
-    // TODO
-    Q_ASSERT( false );
-#if 0
-    beforeCryptoJob = new MultipartJob( q );
-    beforeCryptoJob->setMultipartSubtype( "mixed" );
-    new MainTextJob( textPart, beforeCryptoJob );
-    foreach( AttachmentPart *part, earlyAttachments ) {
-      new AttachmentJob( part, beforeCryptoJob );
+    QMutableListIterator<AttachmentPart::Ptr> iter( attachmentParts );
+    while( iter.hasNext() ) {
+      AttachmentPart::Ptr part = iter.next();
+      kDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
+      if( sign != part->isSigned() || encrypt != part->isEncrypted() ) { // different policy
+        kDebug() << "got attachment with different crypto policy!";
+        lateAttachmentParts.append( part );
+        iter.remove();
+      }
     }
-#endif
+    MultipartJob *multipartJob = new MultipartJob( q );
+    multipartJob->setMultipartSubtype( "mixed" );
+    multipartJob->appendSubjob( mainTextJob );
+    foreach( AttachmentPart::Ptr part, attachmentParts ) {
+      multipartJob->appendSubjob( new AttachmentJob( part ) );
+    }
+    mainJob = multipartJob;
   }
-  QObject::connect( beforeCryptoJob, SIGNAL(finished(KJob*)), q, SLOT(beforeCryptoJobFinished(KJob*)) );
-  q->addSubjob( beforeCryptoJob );
-  beforeCryptoJob->start();
+  if( sign && encrypt && format & Kleo::InlineOpenPGPFormat ) { // needs custom handling--- one SignEncryptJob by itself
+    kDebug() << "sending to sign/enc inline job!";
+    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreInlineFinished(KJob*)) );
+  } else if( sign || encrypt ) {
+    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobPreCryptFinished(KJob*)) );
+  } else {
+    QObject::connect( mainJob, SIGNAL(finished(KJob*)), q, SLOT(contentJobFinished(KJob*)) );
+  }
+  q->addSubjob( mainJob );
+  mainJob->start();
 }
 
-void ComposerPrivate::beforeCryptoJobFinished( KJob *job )
+
+void ComposerPrivate::contentJobPreInlineFinished( KJob *job )
 {
+  Q_Q( Composer );
+
+  Q_ASSERT( format & Kleo::InlineOpenPGPFormat );
+  Q_ASSERT( sign && encrypt ); // for safety... we shouldn't be here otherwise
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
+
+  kDebug() << "creaeting inline signandenc job";
+  if( encData.size() == 0 ) { // no key data! bail!
+    q->setErrorText( i18n( "No key data for recipients found." ) );
+    q->setError( Composer::IncompleteError );
+    q->emitResult();
+    return;
+  }
+
+
+  for( int i = 0; i < encData.size(); ++i ) {
+    QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
+    kDebug() << "got first list of recipients:" << recipients.first;
+    SignEncryptJob* seJob = new SignEncryptJob( q );
+    seJob->setContent( cjob->content() );
+    seJob->setCryptoMessageFormat( format );
+    seJob->setEncryptionKeys( recipients.second );
+    seJob->setSigningKeys( signers );
+    seJob->setRecipients( recipients.first );
+
+    QObject::connect( seJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+
+    q->addSubjob( seJob );
+    seJob->start();
+  }
+}
+
+
+void ComposerPrivate::contentJobPreCryptFinished( KJob *job )
+{
+  Q_Q( Composer );
+
+  // we're signing or encrypting or both, so add an additional job to the process
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
+
+  
+  if( sign ) {
+    SignJob* sJob = new SignJob( q );
+    sJob->setContent( cjob->content() );
+    sJob->setCryptoMessageFormat( format );
+    sJob->setSigningKeys( signers );
+
+    if( encrypt ) {
+      QObject::connect( sJob, SIGNAL( finished( KJob* ) ), q, SLOT( signBeforeEncryptJobFinished( KJob* ) ) );
+    } else {
+      QObject::connect( sJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+    }
+    q->addSubjob( sJob );
+    sJob->start();
+    
+  } else if( encrypt ) {
+    // just encrypting, so setup the jobs directly
+    startEncryptJobs( cjob->content() );
+  }
+    
+}
+
+void ComposerPrivate::signBeforeEncryptJobFinished( KJob* job )
+{
+  
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
   }
 
   Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
   ContentJobBase *cjob = static_cast<ContentJobBase*>( job );
-  contentBeforeCrypto = cjob->content();
-  contentBeforeCrypto->assemble();
 
-  composeStep3();
+  // cjob holds the signed content, now we encrypt per recipient
+  startEncryptJobs( cjob->content() );
+         
 }
 
-void ComposerPrivate::composeStep3()
-{
+void ComposerPrivate::startEncryptJobs( KMime::Content* content ) {
   Q_Q( Composer );
 
-  // (temporary until crypto) Compose final message.
-  FinalMessage *msg = createFinalMessage( contentBeforeCrypto );
-  delete contentBeforeCrypto;
-  contentBeforeCrypto = 0;
-  messages << msg;
-  kDebug() << "Finished composing the single lousy unencrypted message.";
-  finished = true;
-  q->emitResult();
+  // each SplitInfo holds a list of recipients/keys, if there is more than
+  // one item in it then it means there are secondary recipients that need
+  // different messages w/ clean headers
+  kDebug() << "starting enc jobs";
+  kDebug() << "format:" << format;
+  kDebug() << "enc data:" << encData.size();
 
-#if 0
-  // The contentBeforeCrypto is done; now create contentsAfterCrypto.
-  QList<Job*> afterCryptoJobs = createAfterCryptoJobs();
-  pendingCryptoJobs = afterCryptoJobs.count();
-  foreach( const Job *cryptoJob, afterCryptoJobs ) {
-    connect( cryptoJob, SIGNAL(finished(KJob*)), q, SLOT(afterCryptoJobFinished(KJob*)) );
-    cryptoJob->start();
+  if( encData.size() == 0 ) { // no key data! bail!
+    q->setErrorText( i18n( "No key data for recipients found." ) );
+    q->setError( Composer::IncompleteError );
+    q->emitResult();
+    return;
   }
-#endif
+
+  for( int i = 0; i < encData.size(); ++i ) {
+    QPair<QStringList, std::vector<GpgME::Key> > recipients = encData[ i ];
+    kDebug() << "got first list of recipients:" << recipients.first;
+    EncryptJob* eJob = new EncryptJob( q );
+    eJob->setContent( content );
+    eJob->setCryptoMessageFormat( format );
+    eJob->setEncryptionKeys( recipients.second );
+    eJob->setRecipients( recipients.first );
+    
+    QObject::connect( eJob, SIGNAL( finished( KJob* ) ), q, SLOT( contentJobFinished( KJob* ) ) );
+
+    q->addSubjob( eJob );
+    eJob->start();
+  }
+
 }
 
-#if 0
-void ComposerPrivate::afterCryptoJobFinished( KJob *job )
+void ComposerPrivate::contentJobFinished( KJob *job )
 {
+  Q_Q( Composer );
+  
   if( job->error() ) {
     return; // KCompositeJob takes care of the error.
   }
+  kDebug() << "composing final message";
 
-  Q_ASSERT( dynamic_cast<Job*>( job ) );
-  Job *cryptoJob = static_cast<Job*>( job );
-  contentsAfterCrypto << cryptoJob->content();
-  pendingCryptoJobs--;
-  Q_ASSERT( pendingCryptoJobs >= 0 );
-  if( pendingCryptoJobs == 0 ) {
-    // All contentsAfterCrypto are done; now add the late attachments.
+  KMime::Message* headers;
+  KMime::Content* resultContent;
+  std::vector<GpgME::Key> keys;
+  QStringList recipients;
+
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) == static_cast<ContentJobBase*>( job ) );
+  ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
+
+  // create the final headers and body,
+  // taking into account secondary recipients for encryption
+  if( encData.size() > 1 ) { // crypto job with secondary recipients..
+    Q_ASSERT( dynamic_cast<AbstractEncryptJob*>( job ) ); // we need to get the recipients for this job
+    AbstractEncryptJob* eJob = dynamic_cast<AbstractEncryptJob*>( job );
+
+    keys = eJob->encryptionKeys();
+    recipients = eJob->recipients();
+    
+    resultContent = contentJob->content(); // content() comes from superclass
+    headers = new KMime::Message;
+    headers->setHeader( skeletonMessage->from() );
+    headers->setHeader( skeletonMessage->to() );
+    headers->setHeader( skeletonMessage->subject() );
+
+    KMime::Headers::Bcc *bcc = new KMime::Headers::Bcc( headers );
+    foreach( const QString &a, eJob->recipients() ) {
+      KMime::Types::Mailbox address;
+      address.fromUnicodeString( a );
+      bcc->addAddress( address );
+    }
+
+    kDebug() << "got one of multiple messages sending to:" << bcc->asUnicodeString();
+    kDebug() << "sending to recipients:" << recipients;
+    headers->setHeader( bcc );
+    headers->assemble();
+  } else { // just use the saved headers from before
+    if( encData.size() > 0 ) {
+      kDebug() << "setting enc data:" << encData[ 0 ].first << "with num keys:" << encData[ 0 ].second.size();
+      keys = encData[ 0 ].second;
+      recipients = encData[ 0 ].first;
+    }
+    
+    headers = skeletonMessage;
+    resultContent = contentJob->content();
   }
-}
-#endif
-
-FinalMessage *ComposerPrivate::createFinalMessage( Content *content )
-{
-  Q_ASSERT( skeletonMessage );
-  Message *message = new Message;
-  // Merge the headers from skeletonMessage with the headers + content
-  // of beforeCryptoJobFinished.  FIXME HACK There should be a better way.
-  QByteArray allData = skeletonMessage->head() + content->encodedContent();
-  message->setContent( allData );
-  message->parse();
-#if 0 // this was the second attempt
-  QByteArray head = skeletonMessage->head() + content->head();
-  kDebug() << "head" << head;
-  QByteArray body = content->body();
-  kDebug() << "body" << body;
-  message->setHead( head );
-  message->setBody( body );
-
-  // With the above, for some reason the CTE thinks it has already encoded
-  // the content, and so we get non-encoded content :-/
-#endif
-#if 0 // this was the first attempt
-  // Copy the content.  FIXME There should be an easier way.
-  content->assemble();
-  message->setContent( content->encodedContent() );
-  kDebug() << "encoded content" << content->encodedContent();
+  // manually remove the subjob so we can check if we have any left later
+  q->removeSubjob( job );
   
-  // Extract the headers from the skeletonMessage and copy them.
-  // FIXME There should be an easier way.
-  QByteArray head = skeletonMessage->head();
-  while( true ) {
-    Headers::Base *header = skeletonMessage->nextHeader( head ); // Shouldn't this be static?
-    if( !header ) {
-      break;
-    }
-    kDebug() << "header from skeleton" << header->as7BitString();
-    message->setHeader( header );
-    header->setParent( message );
-    kDebug() << "created header @" << header;
-
-    // The above SIGSEGVs for a reason I don't understand.
-    // (when Akonadi tries to serialize the item)
+  if( lateAttachmentParts.isEmpty() ) {
+    composeFinalStep( headers, resultContent );
+  } else {
+    composeWithLateAttachments( headers, resultContent, lateAttachmentParts, keys, recipients );
   }
-#endif
-
-  // Assemble the FinalMessage.
-#if 0 // part of 2nd attempt debugging
-  //message->parse();
-  {
-    kDebug() << "for the bloody content:";
-    Headers::ContentTransferEncoding *cte = content->contentTransferEncoding( false );
-    kDebug() << "CTE" << (cte ? cte->as7BitString() : "NULL");
-    if( cte ) {
-      kDebug() << "decoded" << cte->decoded() << "needToEncode" << cte->needToEncode();
-    }
-  }
-  {
-    kDebug() << "for the bloody message:";
-    Headers::ContentTransferEncoding *cte = message->contentTransferEncoding( false );
-    kDebug() << "CTE" << (cte ? cte->as7BitString() : "NULL");
-    if( cte ) {
-      kDebug() << "decoded" << cte->decoded() << "needToEncode" << cte->needToEncode();
-    }
-  }
-#endif
-  //message->assemble();
-  kDebug() << "encoded message after assembly" << message->encodedContent();
-  FinalMessage *finalMessage = new FinalMessage( message );
-  finalMessage->d->hasCustomHeaders = false; // TODO save those if not sending...
-  finalMessage->d->transportId = infoPart->transportId();
-
-  // TODO will need to change this for crypto...
-  finalMessage->d->from = infoPart->from();
-  finalMessage->d->to = infoPart->to();
-  finalMessage->d->cc = infoPart->cc();
-  finalMessage->d->bcc = infoPart->bcc();
-
-  return finalMessage;
+  
 }
 
+void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime::Content* content, AttachmentPart::List parts, std::vector<GpgME::Key> keys, QStringList recipients ) 
+{
+  Q_Q( Composer );
 
+  MultipartJob* multiJob = new MultipartJob( q );
+  multiJob->setMultipartSubtype( "mixed" );
+
+  // wrap the content into a job for the multijob to handle it
+  TransparentJob* tJob = new TransparentJob( q );
+  tJob->setContent( content );
+  multiJob->appendSubjob( tJob );
+  multiJob->setExtraContent( headers );
+  
+  kDebug() << "attaachment encr key size:" << keys.size() << recipients;
+
+  // operate correctly on each attachment that has a different crypto policy than body.
+  foreach( AttachmentPart::Ptr attachment, parts ) {
+    AttachmentJob* attachJob = new AttachmentJob( attachment, q );
+
+    kDebug() << "got a late attachment";
+    if( attachment->isSigned() ) {
+      kDebug() << "adding signjob for late attachment";
+      SignJob* sJob = new SignJob( q );
+      sJob->setCryptoMessageFormat( format );
+      sJob->setSigningKeys( signers );
+
+      sJob->appendSubjob( attachJob );
+      if( attachment->isEncrypted() ) {
+        kDebug() << "adding sign + encrypt job for late attachment";
+        EncryptJob* eJob = new EncryptJob( q );
+        eJob->setCryptoMessageFormat( format );
+        eJob->setEncryptionKeys( keys );
+        eJob->setRecipients( recipients );
+
+        eJob->appendSubjob( sJob );
+
+        multiJob->appendSubjob( eJob );
+      } else {
+        kDebug() << "Just signing late attachment";
+        multiJob->appendSubjob( sJob );
+      }
+    } else if( attachment->isEncrypted() ) { // only encryption
+      kDebug() << "just encrypting late attachment";
+      EncryptJob* eJob = new EncryptJob( q );
+      eJob->setCryptoMessageFormat( format );
+      eJob->setEncryptionKeys( keys );
+      eJob->setRecipients( recipients );
+
+      eJob->appendSubjob( attachJob );
+      multiJob->appendSubjob( eJob );
+    } else {
+      kDebug() << "attaching plain non-crypto attachment";
+      AttachmentJob* attachJob = new AttachmentJob( attachment, q );
+      multiJob->appendSubjob( attachJob );
+    }
+  }
+
+  QObject::connect( multiJob, SIGNAL( finished( KJob* ) ), q, SLOT( attachmentsFinished( KJob* ) ) );
+
+  q->addSubjob( multiJob );
+  multiJob->start();
+}
+
+void ComposerPrivate::attachmentsFinished( KJob* job ) {
+  Q_Q( Composer );
+
+  if( job->error() ) {
+    return; // KCompositeJob takes care of the error.
+  }
+  kDebug() << "composing final message with late attachments";
+
+  Q_ASSERT( dynamic_cast<ContentJobBase*>( job ) );
+  ContentJobBase* contentJob = static_cast<ContentJobBase*>( job );
+
+  KMime::Content* content = contentJob->content();
+  KMime::Content* headers = contentJob->extraContent();
+
+  q->removeSubjob( job );
+  composeFinalStep( headers, content );
+  
+}
+
+void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content* content )
+{
+  Q_Q( Composer );
+
+  content->assemble();
+
+  QByteArray allData = headers->head() + content->encodedContent();
+  KMime::Message* resultMessage =  new KMime::Message;
+  resultMessage->setContent( allData );
+  resultMessage->parse(); // Not strictly necessary.
+  resultMessages.append( resultMessage );
+
+  kDebug() << "still have subjobs:" << q->hasSubjobs() << "num:" << q->subjobs().size();
+  if( !q->hasSubjobs() ) {
+    finished = true;
+    q->emitResult();
+  }
+}
 
 Composer::Composer( QObject *parent )
   : JobBase( *new ComposerPrivate( this ), parent )
@@ -324,12 +480,13 @@ Composer::~Composer()
 {
 }
 
-FinalMessage::List Composer::messages() const
+KMime::Message::List Composer::resultMessages() const
 {
   Q_D( const Composer );
   Q_ASSERT( d->finished );
   Q_ASSERT( !error() );
-  return d->messages;
+  KMime::Message::List results = d->resultMessages;
+  return results;
 }
 
 GlobalPart *Composer::globalPart()
@@ -338,7 +495,7 @@ GlobalPart *Composer::globalPart()
   return d->globalPart;
 }
 
-InfoPart *Composer::infoPart()
+InfoPart* Composer::infoPart()
 {
   Q_D( Composer );
   return d->infoPart;
@@ -350,40 +507,70 @@ TextPart *Composer::textPart()
   return d->textPart;
 }
 
-QList<AttachmentPart*> Composer::attachmentParts()
+AttachmentPart::List Composer::attachmentParts()
 {
   Q_D( Composer );
   return d->attachmentParts;
 }
 
-void Composer::addAttachmentPart( AttachmentPart *part )
+void Composer::addAttachmentPart( AttachmentPart::Ptr part )
 {
   Q_D( Composer );
   Q_ASSERT( !d->started );
   Q_ASSERT( !d->attachmentParts.contains( part ) );
   d->attachmentParts.append( part );
-  part->setParent( this );
 }
 
-void Composer::removeAttachmentPart( AttachmentPart *part, bool del )
+void Composer::addAttachmentParts( const AttachmentPart::List &parts )
+{
+  foreach( AttachmentPart::Ptr part, parts ) {
+    addAttachmentPart( part );
+  }
+}
+
+void Composer::removeAttachmentPart( AttachmentPart::Ptr part )
 {
   Q_D( Composer );
   Q_ASSERT( !d->started );
   if( d->attachmentParts.contains( part ) ) {
     d->attachmentParts.removeAll( part );
   } else {
-    kWarning() << "Unknown attachment part" << part;
+    kError() << "Unknown attachment part" << part;
     Q_ASSERT( false );
     return;
   }
-
-  if( del ) {
-    delete part;
-  } else {
-    part->setParent( 0 );
-  }
 }
 
+void Composer::setSignAndEncrypt( const bool doSign, const bool doEncrypt )
+{
+  Q_D( Composer );
+  d->sign = doSign;
+  d->encrypt = doEncrypt;
+}
+
+
+void Composer::setMessageCryptoFormat( Kleo::CryptoMessageFormat format )
+{
+  Q_D( Composer );
+
+  d->format = format;
+}
+
+void Composer::setSigningKeys( std::vector<GpgME::Key>& signers )
+{
+  Q_D( Composer );
+
+  d->signers = signers;
+}
+
+void Composer::setEncryptionKeys( QList<QPair<QStringList, std::vector<GpgME::Key> > > encData )
+{
+  Q_D( Composer );
+
+  d->encData = encData;
+}
+
+    
 void Composer::start()
 {
   QTimer::singleShot( 0, this, SLOT(doStart()) );

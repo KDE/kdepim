@@ -8,34 +8,34 @@ add_subdirectory( tests )
 set( messagecomposer_src
 
      composer.cpp
-     finalmessage.cpp
      util.cpp
 
      messagepart.cpp
-     attachmentpart.cpp
      globalpart.cpp
      infopart.cpp
      textpart.cpp
 
      jobbase.cpp
      contentjobbase.cpp
+     attachmentjob.cpp
      singlepartjob.cpp
      multipartjob.cpp
      maintextjob.cpp
+     signjob.cpp
+     encryptjob.cpp
+     signencryptjob.cpp
+     transparentjob.cpp
 
-     attachmentcompressjob.cpp
-     attachmentfrommimecontentjob.cpp
-     attachmentfrompublickeyjob.cpp
-     attachmentfromurljob.cpp
      skeletonmessagejob.cpp
 )
 
 include_directories(
     ${Boost_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/libkleo
 )
 
 kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
-target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} kleo kmime kpimtextedit )
+target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} messagecore kleo ${QGPGME_LIBRARIES} )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
 install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
@@ -43,8 +43,6 @@ install( FILES
          messagecomposer_export.h
           
          composer.h
-         attachmentpart.h
-         finalmessage.h
          globalpart.h
          infopart.h
          messagepart.h
@@ -52,14 +50,16 @@ install( FILES
 
          jobbase.h
          contentjobbase.h
+         attachmentjob.h
          singlepartjob.h
          multipartjob.h
          maintextjob.h
 
-         attachmentcompressjob.h
-         attachmentfrommimecontentjob.h
-         attachmentfrompublickeyjob.h
-         attachmentfromurljob.h
+	 signjob.h
+	 encryptjob.h
+	 signencryptjob.h
+         transparentjob.h
+
          skeletonmessagejob.h
 
          DESTINATION ${INCLUDE_INSTALL_DIR}/messagecomposer COMPONENT Devel )

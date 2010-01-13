@@ -19,7 +19,7 @@
 
 #include "infopart.h"
 
-using namespace MessageComposer;
+using namespace Message;
 
 class InfoPart::Private
 {
@@ -29,7 +29,9 @@ class InfoPart::Private
     QStringList cc;
     QStringList bcc;
     QString subject;
+    QString fcc;
     int transportId;
+    KMime::Headers::Base::List extraHeaders;
 };
 
 InfoPart::InfoPart( QObject *parent )
@@ -103,5 +105,26 @@ void InfoPart::setTransportId( int tid )
 {
   d->transportId = tid;
 }
+
+void InfoPart::setFcc( const QString &fcc )
+{
+  d->fcc = fcc;
+}
+
+QString InfoPart::fcc() const
+{
+  return d->fcc;
+}
+
+void InfoPart::setExtraHeaders( KMime::Headers::Base::List headers )
+{
+  d->extraHeaders = headers;
+}
+
+KMime::Headers::Base::List InfoPart::extraHeaders() const
+{
+  return d->extraHeaders;
+}
+    
 
 #include "infopart.moc"

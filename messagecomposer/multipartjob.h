@@ -23,7 +23,7 @@
 #include "contentjobbase.h"
 #include "messagecomposer_export.h"
 
-namespace MessageComposer {
+namespace Message {
 
 class MultipartJobPrivate;
 

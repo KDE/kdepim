@@ -25,7 +25,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 
-namespace MessageComposer {
+namespace Message {
 
 class MESSAGECOMPOSER_EXPORT GlobalPart : public MessagePart
 {

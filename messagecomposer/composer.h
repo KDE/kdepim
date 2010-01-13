@@ -20,15 +20,25 @@
 #ifndef MESSAGECOMPOSER_COMPOSER_H
 #define MESSAGECOMPOSER_COMPOSER_H
 
-#include "attachmentpart.h"
-#include "finalmessage.h"
 #include "jobbase.h"
-#include "messagecomposer_export.h"
+#include "kleo/enum.h"
 
+#include "messagecomposer_export.h"
 #include <QtCore/QByteArray>
 #include <QtCore/QStringList>
 
-namespace MessageComposer {
+#include <kmime/kmime_message.h>
+
+#include <messagecore/attachmentpart.h>
+
+#include <vector>
+#include <gpgme++/key.h>
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
+namespace Message {
 
 class ComposerPrivate;
 class GlobalPart;
@@ -46,16 +56,20 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
-    FinalMessage::List messages() const;
+    KMime::Message::List resultMessages() const;
 
     GlobalPart *globalPart();
     InfoPart *infoPart();
     TextPart *textPart();
-    AttachmentPart::List attachmentParts();
-    // takes ownership
-    void addAttachmentPart( AttachmentPart *part );
-    // sets parent to 0
-    void removeAttachmentPart( AttachmentPart *part, bool del = true );
+    KPIM::AttachmentPart::List attachmentParts();
+    void addAttachmentPart( KPIM::AttachmentPart::Ptr part );
+    void addAttachmentParts( const KPIM::AttachmentPart::List &parts );
+    void removeAttachmentPart( KPIM::AttachmentPart::Ptr part );
+    
+    void setSignAndEncrypt( const bool doSign, const bool doEncrypt );
+    void setMessageCryptoFormat( Kleo::CryptoMessageFormat format );
+    void setSigningKeys( std::vector<GpgME::Key>& signers );
+    void setEncryptionKeys(QList<QPair<QStringList, std::vector<GpgME::Key> > > data );
 
   public Q_SLOTS:
     virtual void start();
@@ -65,7 +79,11 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
 
     Q_PRIVATE_SLOT( d_func(), void doStart() )
     Q_PRIVATE_SLOT( d_func(), void skeletonJobFinished(KJob*) )
-    Q_PRIVATE_SLOT( d_func(), void beforeCryptoJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void contentJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void contentJobPreCryptFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void contentJobPreInlineFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void signBeforeEncryptJobFinished(KJob*) )
+    Q_PRIVATE_SLOT( d_func(), void attachmentsFinished(KJob*) )
 };
 
 }

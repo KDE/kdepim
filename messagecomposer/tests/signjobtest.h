@@ -1,5 +1,6 @@
 /*
-  Copyright (c) 2009 Constantin Berzan <exit3219@gmail.com>
+  Copyright (C) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Copyright (c) 2009 Leo Franchi <lfranchi@kde.org>
 
   This library is free software; you can redistribute it and/or modify it
   under the terms of the GNU Library General Public License as published by
@@ -17,17 +18,31 @@
   02110-1301, USA.
 */
 
-#ifndef ATTACHMENTFROMMIMECONTENTJOBTEST_H
-#define ATTACHMENTFROMMIMECONTENTJOBTEST_H
+#ifndef SIGNJOBJOBTEST_H
+#define SIGNJOBJOBTEST_H
 
 #include <QtCore/QObject>
 
-// 33-byte class names say I suck?
-class AttachmentFromMimeContentJobTest : public QObject
+#include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
+
+class KJob;
+
+namespace Message {
+  class SignJob;
+}
+
+class SignJobTest : public QObject
 {
   Q_OBJECT
   private Q_SLOTS:
-    void testAttachment();
+    void testContentDirect();
+    void testContentChained();
+    void testHeaders();
+    
+  private:
+    bool checkSignJob( Message::SignJob* sJob );
+
 };
 
 #endif

@@ -22,7 +22,7 @@
 #include <qtest_kde.h>
 
 #include <messagecomposer/util.h>
-using namespace MessageComposer;
+using namespace Message;
 
 QTEST_KDEMAIN( UtilTest, NoGUI )
 
@@ -35,7 +35,7 @@ void UtilTest::testSelectCharset()
     charsets << "us-ascii";
     charsets << "iso-8859-1";
     charsets << "iso-8859-2"; // This one works.
-    QByteArray choice = selectCharset( charsets, text );
+    QByteArray choice = Util::selectCharset( charsets, text );
     QCOMPARE( choice, QByteArray( "iso-8859-2" ) );
   }
 
@@ -46,7 +46,7 @@ void UtilTest::testSelectCharset()
     charsets << "us-ascii"; // This one works.
     charsets << "iso-8859-1";
     charsets << "utf-8";
-    QByteArray choice = selectCharset( charsets, text );
+    QByteArray choice = Util::selectCharset( charsets, text );
     QCOMPARE( choice, QByteArray( "us-ascii" ) );
   }
 
@@ -54,11 +54,11 @@ void UtilTest::testSelectCharset()
   {
     QString text = QString::fromUtf8( "text 123 ăîşţâ" );
     QList<QByteArray> charsets;
-    QByteArray choice = selectCharset( charsets, text );
+    QByteArray choice = Util::selectCharset( charsets, text );
     QVERIFY( choice.isEmpty() );
     charsets << "us-ascii";
     charsets << "iso-8859-1";
-    choice = selectCharset( charsets, text );
+    choice = Util::selectCharset( charsets, text );
     QVERIFY( choice.isEmpty() );
   }
 

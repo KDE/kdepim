@@ -26,7 +26,7 @@
 
 #include <kmime/kmime_headers.h>
 
-namespace MessageComposer {
+namespace Message {
 
 class MessagePartPrivate;
 

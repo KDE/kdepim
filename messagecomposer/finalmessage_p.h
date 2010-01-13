@@ -25,7 +25,7 @@
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
-namespace MessageComposer {
+namespace Message {
 
 /**
   @internal

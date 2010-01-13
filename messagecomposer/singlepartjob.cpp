@@ -30,14 +30,14 @@
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_headers.h>
 
-using namespace MessageComposer;
-using namespace KMime;
+using namespace Message;
 
-class MessageComposer::SinglepartJobPrivate : public ContentJobBasePrivate
+class Message::SinglepartJobPrivate : public ContentJobBasePrivate
 {
   public:
     SinglepartJobPrivate( SinglepartJob *qq )
       : ContentJobBasePrivate( qq )
+      , contentDescription( 0 )
       , contentDisposition( 0 )
       , contentID( 0 )
       , contentTransferEncoding( 0 )
@@ -48,10 +48,11 @@ class MessageComposer::SinglepartJobPrivate : public ContentJobBasePrivate
     bool chooseCTE();
 
     QByteArray data;
-    Headers::ContentDisposition *contentDisposition;
-    Headers::ContentID *contentID;
-    Headers::ContentTransferEncoding *contentTransferEncoding;
-    Headers::ContentType *contentType;
+    KMime::Headers::ContentDescription *contentDescription;
+    KMime::Headers::ContentDisposition *contentDisposition;
+    KMime::Headers::ContentID *contentID;
+    KMime::Headers::ContentTransferEncoding *contentTransferEncoding;
+    KMime::Headers::ContentType *contentType;
 
     Q_DECLARE_PUBLIC( SinglepartJob )
 };
@@ -60,10 +61,10 @@ bool SinglepartJobPrivate::chooseCTE()
 {
   Q_Q( SinglepartJob );
 
-  QList<Headers::contentEncoding> allowed = encodingsForData( data );
+  QList<KMime::Headers::contentEncoding> allowed = KMime::encodingsForData( data );
 
   if( !q->globalPart()->is8BitAllowed() ) {
-    allowed.removeAll( Headers::CE8Bit );
+    allowed.removeAll( KMime::Headers::CE8Bit );
   }
 
 #if 0 //TODO signing
@@ -83,16 +84,17 @@ bool SinglepartJobPrivate::chooseCTE()
     if( !allowed.contains( contentTransferEncoding->encoding() ) ) {
       q->setError( JobBase::BugError );
       q->setErrorText( i18n( "%1 Content-Transfer-Encoding cannot correctly encode this message.",
-          nameForEncoding( contentTransferEncoding->encoding() ) ) );
+          KMime::nameForEncoding( contentTransferEncoding->encoding() ) ) );
       return false;
+      // TODO improve error message in case 8bit is requested but not allowed.
     }
   } else {
     // No specific CTE set.  Choose the best one.
     Q_ASSERT( !allowed.isEmpty() );
-    contentTransferEncoding = new Headers::ContentTransferEncoding;
+    contentTransferEncoding = new KMime::Headers::ContentTransferEncoding;
     contentTransferEncoding->setEncoding( allowed.first() );
   }
-  kDebug() << "Settled on encoding" << nameForEncoding( contentTransferEncoding->encoding() );
+  kDebug() << "Settled on encoding" << KMime::nameForEncoding( contentTransferEncoding->encoding() );
   return true;
 }
 
@@ -117,38 +119,47 @@ void SinglepartJob::setData( const QByteArray &data )
   d->data = data;
 }
 
-Headers::ContentDisposition *SinglepartJob::contentDisposition()
+KMime::Headers::ContentDescription *SinglepartJob::contentDescription()
+{
+  Q_D( SinglepartJob );
+  if( !d->contentDescription ) {
+    d->contentDescription = new KMime::Headers::ContentDescription;
+  }
+  return d->contentDescription;
+}
+
+KMime::Headers::ContentDisposition *SinglepartJob::contentDisposition()
 {
   Q_D( SinglepartJob );
   if( !d->contentDisposition ) {
-    d->contentDisposition = new Headers::ContentDisposition;
+    d->contentDisposition = new KMime::Headers::ContentDisposition;
   }
   return d->contentDisposition;
 }
 
-Headers::ContentID *SinglepartJob::contentID()
+KMime::Headers::ContentID *SinglepartJob::contentID()
 {
   Q_D( SinglepartJob );
   if( !d->contentID ) {
-    d->contentID = new Headers::ContentID;
+    d->contentID = new KMime::Headers::ContentID;
   }
   return d->contentID;
 }
 
-Headers::ContentTransferEncoding *SinglepartJob::contentTransferEncoding()
+KMime::Headers::ContentTransferEncoding *SinglepartJob::contentTransferEncoding()
 {
   Q_D( SinglepartJob );
   if( !d->contentTransferEncoding ) {
-    d->contentTransferEncoding = new Headers::ContentTransferEncoding;
+    d->contentTransferEncoding = new KMime::Headers::ContentTransferEncoding;
   }
   return d->contentTransferEncoding;
 }
 
-Headers::ContentType *SinglepartJob::contentType()
+KMime::Headers::ContentType *SinglepartJob::contentType()
 {
   Q_D( SinglepartJob );
   if( !d->contentType ) {
-    d->contentType = new Headers::ContentType;
+    d->contentType = new KMime::Headers::ContentType;
   }
   return d->contentType;
 }
@@ -157,7 +168,7 @@ void SinglepartJob::process()
 {
   Q_D( SinglepartJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
-  d->resultContent = new Content;
+  d->resultContent = new KMime::Content;
 
   if( !d->chooseCTE() ) {
     Q_ASSERT( error() );
@@ -166,6 +177,10 @@ void SinglepartJob::process()
   }
   
   // Set headers.
+  if( d->contentDescription ) {
+    d->resultContent->setHeader( d->contentDescription );
+    d->contentDescription->setParent( d->resultContent );
+  }
   if( d->contentDisposition ) {
     d->resultContent->setHeader( d->contentDisposition );
     d->contentDisposition->setParent( d->resultContent );
