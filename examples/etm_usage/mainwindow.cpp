@@ -41,8 +41,8 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new Tab2_5Widget(tabWidget), "Type specific data");
   tabWidget->addTab(new Tab3Widget(tabWidget), "KSelectionProxyModel");
   tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
-  tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
   tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
+  tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
 
   setCentralWidget(tabWidget);
 }
