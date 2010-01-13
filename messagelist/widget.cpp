@@ -339,7 +339,6 @@ void Widget::viewDropEvent( QDropEvent *e )
       action = DragMove;
 
     } else {
-      // FIXME: This code is duplicated almost exactly in FolderView... shouldn't we share ?
       KMenu menu;
       QAction *moveAction = menu.addAction( KIcon( "go-jump"), i18n( "&Move Here" ) );
       QAction *copyAction = menu.addAction( KIcon( "edit-copy" ), i18n( "&Copy Here" ) );
@@ -533,16 +532,16 @@ bool Widget::selectionEmpty() const
 }
 
 bool Widget::getSelectionStats(
-  QList< quint32 > &selectedSernums,
-  QList< quint32 > &selectedVisibleSernums,
+  Akonadi::Item::List &selectedItems,
+  Akonadi::Item::List &selectedVisibleItems,
   bool * allSelectedBelongToSameThread,
   bool includeCollapsedChildren ) const
 {
   if ( !storageModel() )
     return false;
 
-  selectedSernums.clear();
-  selectedVisibleSernums.clear();
+  selectedItems.clear();
+  selectedVisibleItems.clear();
 
   QList< Core::MessageItem * > selected = view()->selectionAsMessageItemList( includeCollapsedChildren );
 
@@ -551,10 +550,10 @@ bool Widget::getSelectionStats(
   *allSelectedBelongToSameThread = true;
 
   foreach( Core::MessageItem *it, selected ) {
-    Item item = d->itemForRow( it->currentModelIndexRow() );
-    selectedSernums.append( item.id() );
+    const Item item = d->itemForRow( it->currentModelIndexRow() );
+    selectedItems.append( item );
     if ( view()->isDisplayedWithParentsExpanded( it ) )
-      selectedVisibleSernums.append( item.id() );
+      selectedVisibleItems.append( item );
     if ( topmost == 0 )
       topmost = ( *it ).topmostMessage();
     else {

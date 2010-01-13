@@ -31,6 +31,7 @@
 #include "storagemodel.h"
 #include "widget.h"
 #include "core/settings.h"
+#include "core/manager.h"
 #include "messagecore/messagestatus.h"
 #include "core/model.h"
 
@@ -370,8 +371,8 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
            q, SLOT(onCloseTabClicked()) ); // Reuse the logic...
 
   QAction *allOther = menu.addAction( i18nc("@action:inmenu", "Close All Other Tabs" ) );
-  action->setEnabled( q->count() > 1 );
-  action->setIcon( KIcon( "tab-close-other" ) );
+  allOther->setEnabled( q->count() > 1 );
+  allOther->setIcon( KIcon( "tab-close-other" ) );
 
   action = menu.exec( q->mapToGlobal( pos ) );
 
@@ -391,6 +392,22 @@ void Pane::Private::onTabContextMenuRequest( const QPoint &pos )
     }
 
     updateTabControls();
+  }
+}
+
+void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab, Core::PreSelectionMode preSelectionMode, const QString &overrideLabel )
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+
+  if ( w ) {
+    QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
+    MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
+    w->setStorageModel( m );
+    d->mWidgetSelectionHash[w] = s;
+    if ( !overrideLabel.isEmpty() ) {
+       int index = indexOf( w );
+       setTabText( index, overrideLabel );
+    }
   }
 }
 
@@ -571,8 +588,8 @@ bool Pane::selectionEmpty() const
   return w->selectionEmpty();
 }
 
-bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
-                              QList< quint32 > &selectedVisibleSernums,
+bool Pane::getSelectionStats( Akonadi::Item::List &selectedItems,
+                              Akonadi::Item::List &selectedVisibleItems,
                               bool * allSelectedBelongToSameThread,
                               bool includeCollapsedChildren ) const
 {
@@ -582,7 +599,7 @@ bool Pane::getSelectionStats( QList< quint32 > &selectedSernums,
   }
 
   return w->getSelectionStats(
-      selectedSernums, selectedVisibleSernums,
+      selectedItems, selectedVisibleItems,
       allSelectedBelongToSameThread, includeCollapsedChildren
     );
 }
@@ -603,5 +620,30 @@ MessageList::Core::MessageItemSetReference Pane::currentThreadAsPersistentSet() 
   return w->currentThreadAsPersistentSet();
 }
 
+void Pane::focusView()
+{
+  Widget *w = static_cast<Widget*>( currentWidget() );
+  if ( w ) {
+    QWidget *view = w->view();
+    if ( view )
+      view->setFocus();
+  }
+}
+
+void Pane::reloadGlobalConfiguration()
+{
+  // Synchronize both configurations
+  Core::Settings::self()->setMessageToolTipEnabled(
+    Core::Manager::instance()->displayMessageToolTips()
+  );
+  d->updateTabControls();
+
+  Core::Settings::self()->writeConfig();
+}
+
+void Pane::setAutoHideTabBarWithSingleTab( bool b )
+{
+  Core::Settings::self()->setAutoHideTabBarWithSingleTab( b );
+}
 
 #include "pane.moc"

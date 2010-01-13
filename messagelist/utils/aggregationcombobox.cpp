@@ -23,7 +23,7 @@
 #include "messagelist/core/aggregation.h"
 #include "messagelist/core/manager.h"
 #include "messagelist/core/configprovider.h"
-
+#include "messagelist/storagemodel.h"
 #include <KDE/KGlobal>
 
 using namespace MessageList::Core;
@@ -55,7 +55,12 @@ void AggregationComboBox::writeDefaultConfig() const
   Manager::instance()->aggregationsConfigurationCompleted();
 }
 
-void AggregationComboBox::writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const
+void AggregationComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
+{
+  writeStorageModelConfig( storageModel->id(), isPrivateSetting );
+}
+
+void AggregationComboBox::writeStorageModelConfig( const QString &id, bool isPrivateSetting ) const
 {
   // message list aggregation
   QString aggregationID;
@@ -64,14 +69,30 @@ void AggregationComboBox::writeStorageModelConfig( StorageModel *storageModel, b
   } else { // explicitly use default aggregation id when using default aggregation.
     aggregationID = Manager::instance()->defaultAggregation()->id();
   }
-  Manager::instance()->saveAggregationForStorageModel( storageModel, aggregationID, isPrivateSetting );
+  Manager::instance()->saveAggregationForStorageModel( id, aggregationID, isPrivateSetting );
   Manager::instance()->aggregationsConfigurationCompleted();
 }
 
-void AggregationComboBox::readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting )
+void AggregationComboBox::writeStorageModelConfig( const Akonadi::Collection&col, bool isPrivateSetting ) const
 {
-  const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( storageModel, &isPrivateSetting );
+  writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
+}
+
+void AggregationComboBox::readStorageModelConfig( const QString & id, bool &isPrivateSetting )
+{
+  const Aggregation *aggregation = Manager::instance()->aggregationForStorageModel( id, &isPrivateSetting );
   d->setCurrentAggregation( aggregation );
+}
+
+void AggregationComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
+{
+  readStorageModelConfig( storageModel->id(), isPrivateSetting );
+}
+
+void AggregationComboBox::readStorageModelConfig( const Akonadi::Collection &col, bool &isPrivateSetting )
+{
+  if ( col.isValid() )
+    readStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
 }
 
 void AggregationComboBox::selectDefault()

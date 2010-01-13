@@ -228,18 +228,41 @@ const Aggregation * Manager::defaultAggregation()
   return *it;
 }
 
+void Manager::saveAggregationForStorageModel( const Akonadi::Collection &col, const QString &id, bool storageUsesPrivateAggregation )
+{
+  if ( !col.isValid() )
+    return;
+  saveAggregationForStorageModel( QString::number( col.id() ), id, storageUsesPrivateAggregation );
+}
+
 void Manager::saveAggregationForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateAggregation )
+{
+  saveAggregationForStorageModel( storageModel->id(), id, storageUsesPrivateAggregation );
+}
+
+void Manager::saveAggregationForStorageModel( const QString &modelId, const QString &id, bool storageUsesPrivateAggregation )
 {
   KConfigGroup conf( ConfigProvider::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
   if ( storageUsesPrivateAggregation )
-    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
+    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( modelId ), id );
   else
-    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( modelId ) );
 
   if ( !storageUsesPrivateAggregation )
     conf.writeEntry( QString( "DefaultSet" ), id );
+}
+
+const Aggregation * Manager::aggregationForStorageModel( const Akonadi::Collection &col, bool *storageUsesPrivateAggregation )
+{
+  Q_ASSERT( storageUsesPrivateAggregation );
+
+  *storageUsesPrivateAggregation = false; // this is by default
+
+  if ( !col.isValid() )
+    return defaultAggregation();
+  return Manager::aggregationForStorageModel( QString::number( col.id() ), storageUsesPrivateAggregation );
 }
 
 
@@ -251,11 +274,15 @@ const Aggregation * Manager::aggregationForStorageModel( const StorageModel *sto
 
   if ( !storageModel )
     return defaultAggregation();
+  return Manager::aggregationForStorageModel( storageModel->id(), storageUsesPrivateAggregation );
+}
 
+const Aggregation * Manager::aggregationForStorageModel( const QString &storageId, bool *storageUsesPrivateAggregation )
+{
   KConfigGroup conf( ConfigProvider::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
-  QString aggregationId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
+  QString aggregationId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageId ), "" );
 
   Aggregation * opt = 0;
 
@@ -505,31 +532,59 @@ const Theme * Manager::defaultTheme()
   return *it;
 }
 
+void Manager::saveThemeForStorageModel( int index, const QString &id, bool storageUsesPrivateTheme )
+{
+  saveThemeForStorageModel( QString::number( index ), id, storageUsesPrivateTheme );
+}
+
 void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateTheme )
+{
+  saveThemeForStorageModel( storageModel->id(), id, storageUsesPrivateTheme );
+}
+
+void Manager::saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme )
 {
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
 
   if ( storageUsesPrivateTheme )
-    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), id );
+    conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModelIndex ), id );
   else
-    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ) );
+    conf.deleteEntry( QString( "SetForStorageModel%1" ).arg( storageModelIndex ) );
 
   if ( !storageUsesPrivateTheme )
     conf.writeEntry( QString( "DefaultSet" ), id );
 }
 
 
+const Theme * Manager::themeForStorageModel( const Akonadi::Collection & col,  bool * storageUsesPrivateTheme )
+{
+  Q_ASSERT( storageUsesPrivateTheme );
+
+  *storageUsesPrivateTheme = false; // this is by default
+
+  if ( !col.isValid() )
+    return defaultTheme();
+  return Manager::themeForStorageModel( QString::number( col.id() ), storageUsesPrivateTheme );
+
+}
+
 const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateTheme )
 {
+
+
   Q_ASSERT( storageUsesPrivateTheme );
 
   *storageUsesPrivateTheme = false; // this is by default
 
   if ( !storageModel )
     return defaultTheme();
+  return Manager::themeForStorageModel( storageModel->id(), storageUsesPrivateTheme );
+}
 
+const Theme * Manager::themeForStorageModel( const QString &id, bool *storageUsesPrivateTheme )
+{
   KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
-  QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageModel->id() ), "" );
+  QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( id ), "" );
 
   Theme * opt = 0;
 

@@ -79,7 +79,7 @@ QString OptionSet::saveToString() const
   return QString::fromAscii( raw.toHex() );
 }
 
-bool OptionSet::loadFromString( QString &data )
+bool OptionSet::loadFromString(const QString &data )
 {
   QByteArray raw = QByteArray::fromHex( data.toAscii() );
 

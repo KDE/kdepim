@@ -263,8 +263,8 @@ public:
    * collapsed items are also included in the stats
    */
 
-  bool getSelectionStats( QList< quint32 > &selectedSernums,
-                          QList< quint32 > &selectedVisibleSernums,
+  bool getSelectionStats( Akonadi::Item::List &selectedSernums,
+                          Akonadi::Item::List &selectedVisibleSernums,
                           bool * allSelectedBelongToSameThread,
                           bool includeCollapsedChildren = true ) const;
   /**

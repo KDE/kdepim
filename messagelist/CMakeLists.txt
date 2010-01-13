@@ -73,6 +73,14 @@ set(libmessagelist_HEADERS
     widget.h
 )
 
+
+soprano_add_ontology(libmessagelist_SRCS
+  ${CMAKE_SOURCE_DIR}/messagecore/messagetag.trig
+  "MessageTag"
+  "Vocabulary"
+  "trig"
+)
+
 kde4_add_kcfg_files(libmessagelist_SRCS USE_RELATIVE_PATH
     core/settings.kcfgc
 )
@@ -84,6 +92,8 @@ target_link_libraries(messagelist
     ${KDEPIMLIBS_AKONADI_LIBS}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
+    ${NEPOMUK_LIBRARIES}
+    ${SOPRANO_LIBRARIES}
     messagecore
 )
 

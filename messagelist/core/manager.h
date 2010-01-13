@@ -27,7 +27,7 @@
 #include <QObject>
 
 #include <messagelist/messagelist_export.h>
-
+#include <akonadi/collection.h>
 class QPixmap;
 
 namespace KMime
@@ -206,7 +206,16 @@ public:
 
   // aggregation sets management
   const Aggregation * aggregationForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateAggregation );
+  const Aggregation * aggregationForStorageModel( const QString &storageModel, bool *storageUsesPrivateAggregation );
+  const Aggregation * aggregationForStorageModel( const Akonadi::Collection &storageModel, bool *storageUsesPrivateAggregation );
+
+
+
   void saveAggregationForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateAggregation );
+  void saveAggregationForStorageModel( const QString &index, const QString &id, bool storageUsesPrivateAggregation );
+  void saveAggregationForStorageModel( const Akonadi::Collection &col, const QString &id, bool storageUsesPrivateAggregation );
+
+
   const Aggregation * defaultAggregation();
   const Aggregation * aggregation( const QString &id );
 
@@ -228,8 +237,15 @@ public:
                                      const SortOrder& order, bool storageUsesPrivateSortOrder );
 
   // theme sets management
+  const Theme * themeForStorageModel( const Akonadi::Collection & col,  bool * storageUsesPrivateTheme );
   const Theme * themeForStorageModel( const StorageModel *storageModel, bool *storageUsesPrivateTheme );
+  const Theme * themeForStorageModel( const QString &id,  bool * storageUsesPrivateTheme );
+
   void saveThemeForStorageModel( const StorageModel *storageModel, const QString &id, bool storageUsesPrivateTheme );
+  void saveThemeForStorageModel( int index, const QString &id, bool storageUsesPrivateTheme );
+  void saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme );
+
+
   const Theme * defaultTheme();
   const Theme * theme( const QString &id );
 

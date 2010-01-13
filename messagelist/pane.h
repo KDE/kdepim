@@ -25,7 +25,8 @@
 #include <QtGui/QTabWidget>
 
 #include <kmime/kmime_message.h>
-
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
 #include <messagelist/messagelist_export.h>
 
 class KXMLGUIClient;
@@ -274,8 +275,8 @@ public:
    * If includeCollapsedChildren is true then the children of the selected but
    * collapsed items are also included in the stats
    */
-  bool getSelectionStats( QList< quint32 > &selectedSernums,
-                          QList< quint32 > &selectedVisibleSernums,
+  bool getSelectionStats( Akonadi::Item::List &selectedItems,
+                          Akonadi::Item::List &selectedVisibleItems,
                           bool * allSelectedBelongToSameThread,
                           bool includeCollapsedChildren = true) const;
   /**
@@ -308,8 +309,45 @@ public:
    * Return a persistent set from current thread
    */
   MessageList::Core::MessageItemSetReference currentThreadAsPersistentSet() const;
+  /**
+   * Sets the focus on the view of the currently active tab.
+   */
+  void focusView();
+
+  /**
+   * Reloads global configuration and eventually reloads all the views.
+   */
+  void reloadGlobalConfiguration();
 
 
+  /**
+   * Allow to change auto hide tab bar config
+   */
+  void setAutoHideTabBarWithSingleTab( bool );
+  /**
+   * Sets the current folder to be displayed by this Pane.
+   * If the specified folder is already open in one of the tabs
+   * then that tab is made current (and no reloading happens).
+   * If the specified folder is not open yet then behaviour
+   * depends on the preferEmptyTab value as follows.
+   *
+   * If preferEmptyTab is set to false then the (new) folder is loaded
+   * in the current tab. If preferEmptyTab is set to true then the (new) folder is
+   * loaded in the first empty tab (or a new one if there are no empty ones).
+   *
+   * Pre-selection is the action of automatically selecting a message just after the folder
+   * has finished loading. See Model::setStorageModel() for more information.
+   *
+   * If overrideLabel is not empty then it's used as the tab text for the
+   * specified folder. This is useful to signal a particular folder state
+   * like "loading..."
+   */
+  void setCurrentFolder(
+    const Akonadi::Collection &fld,
+    bool preferEmptyTab = false,
+    MessageList::Core::PreSelectionMode preSelectionMode = MessageList::Core::PreSelectLastSelected,
+    const QString &overrideLabel = QString()
+    );
 public slots:
   /**
    * Selects all the items in the current folder.

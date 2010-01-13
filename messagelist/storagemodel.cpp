@@ -26,17 +26,27 @@
 #include <akonadi/item.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/kmime/messagefolderattribute.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <KDE/KCodecs>
 #include <KDE/KLocale>
-#include <kselectionproxymodel.h>
+#include <KDE/KIconLoader>
+#include <Nepomuk/Tag>
+#include <Nepomuk/ResourceManager>
+#include <Nepomuk/Variant>
+#include <Soprano/Statement>
+#include <soprano/signalcachemodel.h>
+#include <soprano/nao.h>
+#include <soprano/rdf.h>
 
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "core/subjectutils_p.h"
+#include "messagetag.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
+#include <QtCore/QScopedPointer>
 #include <QtGui/QItemSelectionModel>
 
 namespace MessageList
@@ -45,17 +55,17 @@ namespace MessageList
 class StorageModel::Private
 {
 public:
-  Private( StorageModel *owner )
-    : q( owner ) { }
-
   void onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
   void onSelectionChanged();
   void loadSettings();
+  void statementChanged( const Soprano::Statement &statement );
 
   StorageModel * const q;
 
   QAbstractItemModel *mModel;
   QItemSelectionModel *mSelectionModel;
+
+  QScopedPointer<Soprano::Util::SignalCacheModel> mSopranoModel;
 
   QColor mColorNewMessage;
   QColor mColorUnreadMessage;
@@ -67,6 +77,11 @@ public:
   QFont mFontUnreadMessage;
   QFont mFontImportantMessage;
   QFont mFontToDoMessage;
+
+  Private( StorageModel *owner )
+    : q( owner ),
+      mSopranoModel( new Soprano::Util::SignalCacheModel( Nepomuk::ResourceManager::instance()->mainModel() ) )
+  {}
 };
 
 } // namespace MessageList
@@ -85,7 +100,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
     AttributeFactory::registerAttribute<MessageFolderAttribute>();
   }
 
-  KSelectionProxyModel *childrenFilter = new KSelectionProxyModel( d->mSelectionModel, this );
+  Akonadi::SelectionProxyModel *childrenFilter = new Akonadi::SelectionProxyModel( d->mSelectionModel, this );
   childrenFilter->setSourceModel( model );
   childrenFilter->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
@@ -95,7 +110,14 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
-  d->mModel = itemFilter;
+  // FIXME: itemFilter seems to be buggy, match() doesn't work!
+  //d->mModel = itemFilter;
+  d->mModel = childrenFilter;
+
+  connect( d->mSopranoModel.data(), SIGNAL(statementAdded(Soprano::Statement)),
+           SLOT(statementChanged(Soprano::Statement)) );
+  connect( d->mSopranoModel.data(), SIGNAL(statementRemoved(Soprano::Statement)),
+           SLOT(statementChanged(Soprano::Statement)) );
 
   connect( d->mModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
            this, SLOT(onSourceDataChanged(QModelIndex, QModelIndex)) );
@@ -273,6 +295,46 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   }
 }
 
+
+/**
+ * Uses Nepomuk to fill a list of tags. It also picks out
+ * the colors the message should use.
+ */
+QList< Core::MessageItem::Tag * > * fillTagList( const Akonadi::Item &item,
+                                                 QColor & textColor, QColor & backgroundColor )
+{
+  const Nepomuk::Resource resource( item.url() );
+  QList< Nepomuk::Tag > nepomukTagList = resource.tags();
+  if ( !nepomukTagList.isEmpty() ) {
+    QList< Core::MessageItem::Tag * > *messageListTagList = new QList< Core::MessageItem::Tag * >();
+    int bestPriority = 0xfffff;
+    foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
+      Core::MessageItem::Tag *messageListTag =
+          new Core::MessageItem::Tag( SmallIcon( nepomukTag.symbols().first() ),
+                                      nepomukTag.label(), nepomukTag.resourceUri().toString() );
+      messageListTagList->append( messageListTag );
+
+      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
+        const int priority = nepomukTag.property(Vocabulary::MessageTag::priority() ).toInt();
+        if ( ( bestPriority > priority ) || ( !textColor.isValid() ) ) {
+          bestPriority = priority;
+          if ( nepomukTag.hasProperty( Vocabulary::MessageTag::backgroundColor() ) ) {
+            const QString name = nepomukTag.property( Vocabulary::MessageTag::backgroundColor() ).toString();
+            backgroundColor = QColor( name );
+          }
+          if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
+            const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
+            textColor = QColor( name );
+          }
+        }
+      }
+    }
+    return messageListTagList;
+  }
+  else
+    return 0;
+}
+
 void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
@@ -311,12 +373,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
 
   QColor clr;
   QColor backClr;
-#if 0
-  //FIXME: Missing tag handling, nepomuk based?
-  QList< Core::MessageItem::Tag * > * tagList;
-  tagList = fillTagList( msg, clr, backClr );
-  mi->setTagList( tagList );
-#endif
+  mi->setTagList( fillTagList( item, clr, backClr ) );
 
   if ( stat.isNew() ) {
     clr = d->mColorNewMessage;
@@ -401,6 +458,23 @@ int StorageModel::rowCount( const QModelIndex &parent ) const
 void StorageModel::prepareForScan()
 {
 
+}
+
+void StorageModel::Private::statementChanged( const Soprano::Statement &statement )
+{
+  if ( statement.predicate() == Soprano::Vocabulary::NAO::hasTag() ) {
+    const Akonadi::Item item = Item::fromUrl( statement.subject().uri() );
+    if ( !item.isValid() ) {
+      return;
+    }
+
+    const QModelIndexList list = mModel->match( QModelIndex(), EntityTreeModel::ItemIdRole, item.id() );
+    if ( list.isEmpty() ) {
+      return;
+    }
+    emit q->dataChanged( q->index( list.first().row(), 0 ),
+                         q->index( list.first().row(), 0 ) );
+  }
 }
 
 void StorageModel::Private::onSourceDataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight )

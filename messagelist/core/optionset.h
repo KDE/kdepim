@@ -104,7 +104,7 @@ public:
    * likely to come out from a config file). Returns true if the string
    * was in a valid format and the load operation succeeded, false otherwise.
    */
-  bool loadFromString( QString &data );
+  bool loadFromString( const QString &data );
 
   /**
    * (Re)generates a (hopefully) unique identifier for this option set.

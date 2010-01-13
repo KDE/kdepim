@@ -20,7 +20,7 @@
 
 #include "messagelist/utils/themecombobox.h"
 #include "messagelist/utils/themecombobox_p.h"
-
+#include "messagelist/storagemodel.h"
 #include "messagelist/core/manager.h"
 #include "messagelist/core/theme.h"
 #include "messagelist/core/configprovider.h"
@@ -56,7 +56,19 @@ void ThemeComboBox::writeDefaultConfig() const
   Manager::instance()->themesConfigurationCompleted();
 }
 
-void ThemeComboBox::writeStorageModelConfig( StorageModel *storageModel, bool isPrivateSetting ) const
+void ThemeComboBox::writeStorageModelConfig( const Akonadi::Collection &col, bool isPrivateSetting ) const
+{
+  if ( !col.isValid() )
+    return;
+  writeStorageModelConfig( QString::number( col.id() ), isPrivateSetting );
+}
+
+void ThemeComboBox::writeStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool isPrivateSetting ) const
+{
+  writeStorageModelConfig( storageModel->id(), isPrivateSetting );
+}
+
+void ThemeComboBox::writeStorageModelConfig( const QString &id, bool isPrivateSetting )const
 {
   QString themeID;
   if ( isPrivateSetting ) {
@@ -64,11 +76,19 @@ void ThemeComboBox::writeStorageModelConfig( StorageModel *storageModel, bool is
   } else { // explicitly use default theme id when using default theme.
     themeID = Manager::instance()->defaultTheme()->id();
   }
-  Manager::instance()->saveThemeForStorageModel( storageModel, themeID, isPrivateSetting );
+  Manager::instance()->saveThemeForStorageModel( id, themeID, isPrivateSetting );
   Manager::instance()->themesConfigurationCompleted();
 }
 
-void ThemeComboBox::readStorageModelConfig( StorageModel *storageModel, bool &isPrivateSetting )
+
+void ThemeComboBox::readStorageModelConfig( const Akonadi::Collection& col, bool &isPrivateSetting )
+{
+  const Theme *theme = Manager::instance()->themeForStorageModel( col, &isPrivateSetting );
+  d->setCurrentTheme( theme );
+
+}
+
+void ThemeComboBox::readStorageModelConfig( MessageList::Core::StorageModel *storageModel, bool &isPrivateSetting )
 {
   const Theme *theme = Manager::instance()->themeForStorageModel( storageModel, &isPrivateSetting );
   d->setCurrentTheme( theme );
