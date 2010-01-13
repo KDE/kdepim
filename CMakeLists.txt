@@ -107,6 +107,7 @@ else(KDEPIM_ONLY_KLEO)
 
   find_package(Soprano)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
+  include(SopranoAddOntology)
 
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
@@ -209,7 +210,7 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
 
-    include( SopranoAddOntology )
+
     add_subdirectory( ontologies )
     add_subdirectory( nepomuk_email_feeder )
   endif(QGPGME_FOUND)
