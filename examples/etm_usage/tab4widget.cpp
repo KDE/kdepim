@@ -85,6 +85,7 @@ Tab4Widget::Tab4Widget(QWidget* parent, Qt::WindowFlags f)
   selectionProxy->setSourceModel(m_etw->model());
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
   itemFilter->setSourceModel(selectionProxy);
 

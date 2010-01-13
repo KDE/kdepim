@@ -35,7 +35,7 @@ int MixedTreeModel::entityColumnCount(Akonadi::EntityTreeModel::HeaderGroup head
   if (headerGroup == CollectionTreeHeaders)
     return 1;
 
-  if (rowCount() > 0)
+  if (headerGroup == ItemListHeaders)
     return 2;
   return 0;
 }
