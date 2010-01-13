@@ -26,6 +26,7 @@
 
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
+#include "mixedtreemodel.h"
 
 #include <kselectionproxymodel.h>
 #include <kcategorizedsortfilterproxymodel.h>
@@ -58,11 +59,11 @@ public:
 
 };
 
-class CheckedSelectionEntityModel : public Akonadi::EntityTreeModel
+class CheckedSelectionEntityModel : public MixedTreeModel
 {
 public:
   CheckedSelectionEntityModel(Akonadi::ChangeRecorder* monitor, QObject* parent = 0)
-    : Akonadi::EntityTreeModel(monitor, parent), m_itemSelectionModel(0)
+    : MixedTreeModel(monitor, parent), m_itemSelectionModel(0)
   {
   }
 
