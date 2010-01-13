@@ -1,5 +1,3 @@
-INCLUDE_DIRECTORIES(BEFORE SYSTEM ${CMAKE_BINARY_DIR}/plasma/demo)
-
 SET(PLASMADEMO_SRCS	main.cpp
 			noteserver.cpp
 			noteconnection.cpp)
