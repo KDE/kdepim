@@ -15,9 +15,7 @@ if(BUILD_kalarm)
   add_subdirectory(kalarm)
 endif(BUILD_kalarm)
 
-if(BUILD_kioslave)
-  add_subdirectory(kioslave)
-endif(BUILD_kioslave)
+add_subdirectory(kioslave)
 
 if(BUILD_kjots)
   add_subdirectory(kjots)
