@@ -1,8 +1,8 @@
 ADD_DEFINITIONS(${KDE4_DEFINITIONS})
 
 INCLUDE_DIRECTORIES(BEFORE SYSTEM ${KDE4_INCLUDES}
-				  ${stickynotes_BINARY_DIR}/gui/plasma/include
-				  ${stickynotes_SOURCE_DIR}/gui/plasma/include)
+				  ${CMAKE_BINARY_DIR}/gui/plasma/include
+				  ${CMAKE_SOURCE_DIR}/gui/plasma/include)
 
 
 SET(PLASMANOTE_SRCS	stickynote.cpp
