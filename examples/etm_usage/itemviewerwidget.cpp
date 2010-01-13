@@ -51,9 +51,17 @@ ItemViewerWidget::ItemViewerWidget( QItemSelectionModel *itemSelectionModel, QWi
 void ItemViewerWidget::selectionChanged( const QItemSelection selected, const QItemSelection& deselected )
 {
   Q_UNUSED(deselected);
-  if(selected.indexes().size() != 1)
-    return;
-  QModelIndex selectedIndex = selected.indexes().first();
+  QModelIndex selectedIndex;
+  foreach ( const QItemSelectionRange &range, selected)
+  {
+    selectedIndex = range.topLeft();
+    if (range.bottom() > selectedIndex.row())
+      return; // Somehow more than one selected row in the list.
+  }
+
+  if(!selectedIndex.isValid())
+    return; // No meaningful selection.
+
   QString mimeType = selectedIndex.data(EntityTreeModel::MimeTypeRole).toString();
   Akonadi::Item item = selectedIndex.data( EntityTreeModel::ItemRole ).value<Akonadi::Item>();
   if (mimeType == "message/rfc822")
