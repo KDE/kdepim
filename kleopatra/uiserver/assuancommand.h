@@ -39,6 +39,8 @@
 #include <gpgme++/global.h>
 #include <gpgme++/error.h>
 
+#include <gpg-error.h>
+
 #include <kmime/kmime_header_parsing.h>
 
 #include <qwindowdefs.h> // for WId
@@ -329,16 +331,16 @@ namespace Kleo {
         virtual boost::shared_ptr<AssuanCommand> create() const = 0;
         virtual const char * name() const = 0;
 
-        typedef int(*_Handler)( assuan_context_s*, char *);
+        typedef gpg_error_t(*_Handler)( assuan_context_s*, char *);
         virtual _Handler _handler() const = 0;
     protected:
-        static int _handle( assuan_context_s*, char *, const char * );
+        static gpg_error_t _handle( assuan_context_s*, char *, const char * );
     };
 
     template <typename Command>
     class GenericAssuanCommandFactory : public AssuanCommandFactory {
         /* reimp */ AssuanCommandFactory::_Handler _handler() const { return &GenericAssuanCommandFactory::_handle; }
-        static int _handle( assuan_context_s* _ctx, char * _line ) {
+        static gpg_error_t _handle( assuan_context_s* _ctx, char * _line ) {
             return AssuanCommandFactory::_handle( _ctx, _line, Command::staticName() );
         }
         /* reimp */ boost::shared_ptr<AssuanCommand> create() const { return make(); }

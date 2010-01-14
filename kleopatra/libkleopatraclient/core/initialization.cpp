@@ -29,7 +29,7 @@
 using namespace KLEOPATRACLIENT_NAMESPACE;
 
 Initialization::Initialization() {
-    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
+    assuan_set_gpg_err_source( GPG_ERR_SOURCE_DEFAULT );
 }
 
 Initialization::~Initialization() {
