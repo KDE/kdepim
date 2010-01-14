@@ -55,9 +55,9 @@ and version 0.2 should be used.
 
 MySQL
 -----
-Akonadi needs a relation database to keep metadata about the PIM data it manages.
+Akonadi needs a relational database to keep metadata about the PIM data it manages.
 There exists different backends for MySQL, PostgreSQL and SQLite. While it might
-be tempting to use the SQLite backend to reduce dependecies, we highly discourage
+be tempting to use the SQLite backend to reduce dependencies, we highly discourage
 to use it, because it is not yet finished, can lose your data, has performance
 problems and is not automatically tested yet!
 The PostgreSQL backend has some more testing, however we discourage the use of it
@@ -136,9 +136,9 @@ Libraries inside KDEPIM
 -----------------------
 
 There are several libraries in the KDEPIM module, such as 'libkdepim', 'libkleo' or 'libksieve'.
-There is no guarentee for a stable API or ABI in those libraries.
+There is no guarantee for a stable API or ABI in those libraries.
 API and ABI stableness is only guaranteed for kdepimlibs.
-The libraries of the KDEPIM module a generally work in progress and therefore change a lot,
+The libraries of the KDEPIM module are generally work in progress and therefore change a lot,
 API and ABI breakage can occur at any moment.
 
 Therefore, please make sure to always ship the libraries with the exact same revision numbers as
@@ -152,7 +152,7 @@ that KMail.
 Further resources
 -----------------
 
-Some frequently occuring problems with Akonadi are collected under
+Some frequently occurring problems with Akonadi are collected under
 http://userbase.kde.org/Akonadi#Some_Technical_Issues.
 
 For further questions feel free to contact the KDE PIM developers on kde-pim@kde.org
