@@ -131,6 +131,9 @@ Note that not all parts of kdepimlibs require kdepim/runtime at runtime, only th
 the Akonadi store in some way, like 'kcal', 'kabc' or 'akonadi'. Other parts, like 'kmime' or 'gpgme++'
 are not accessing the Akonadi store and therefore don't need kdepim/runtime.
 
+The tarballs released by the KDE project are already split, there is a 'kdepim' tarball as well as
+a 'kdepim-runtime' tarball.
+
 
 Libraries inside KDEPIM
 -----------------------
