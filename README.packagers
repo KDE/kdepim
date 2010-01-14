@@ -1,10 +1,15 @@
 Information for packagers of KDEPIM
 =====================================
 
-KDE-PIM 4.4 is the first release that makes use of Akonadi. Since
-Akonadi depends on several components to be properly installed and
-configured this documents give some hints to packagers what is needed
-to provide a sane installation of Akonadi.
+This document gives some hints to packagers on what is needed to provide
+a sane installation and packaging for KDE PIM.
+
+KDE-PIM 4.4 is the first release that makes use of Akonadi. Akonadi depends
+on several components to be properly installed and configured, which are
+listed below.
+
+Also, this document discusses other topics which are of importance for
+packagers, such as the GPG support.
 
 
 Nepomuk & Soprano
@@ -43,7 +48,7 @@ and version 0.2 should be used.
 
 
 MySQL
-------------------
+-----
 Akonadi needs a relation database to keep metadata about the PIM data it manages.
 There exists different backends for MySQL, PostgreSQL and SQLite. While it might
 be tempting to use the SQLite backend to reduce dependecies, we highly discourage
@@ -54,6 +59,30 @@ to Virtuoso as SQL backend in the future.
 So please make MySQL a hard dependency for Akonadi and compile the Qt library with
 support for MySQL (can be done as plugin as well).
 
+Kontact Plugins
+---------------
+Kontact is a container application which embeds other PIM applications such as KMail
+and KOrganizer.
+For an application to be embedded in Kontact, it needs to provide a Kontact plugin.
+These Kontact plugins reside under kontact/plugins, while the applications itself are
+in the top-level folder.
+This is important when splitting up the KDEPIM module in several packages. The Kontact
+plugin should be packaged together with its application. It is an error to install a
+Kontact plugin without installing the associated application, this will make Kontact
+crash.
+As an example, assume you want to provide a seperate package for KNode. This package
+should contain KNode from the knode/ directory, and the Kontact plugin from the 
+kontact/plugins/knode directory. kontact/plugins/knode should not be installed when
+knode/ is not installed.
 
-For further questions feel free to contact the Akonadi developers on kde-pim@kde.org
-or ask on freenode IRC channel #akonadi
+GPG Support
+-----------
+
+Runtime split
+-------------
+
+Libraries inside KDEPIM
+-----------------------
+
+For further questions feel free to contact the KDE PIM developers on kde-pim@kde.org
+or ask on freenode IRC channel #kontact or #akonadi
