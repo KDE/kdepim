@@ -24,7 +24,7 @@ fulfilled. The compile time dependency is libiodbc which is available from
 http://www.iodbc.org and packages for all distributions should be available.
 The runtime dependency is the Virtuoso server version 5.0.12 that can be
 retrieved from http://virtuoso.openlinksw.com. Although the Virtuoso sources
-are huge, the compilation can be speeded up by passing -disable-all-vads to
+are huge, the compilation can be speeded up by passing --disable-all-vads to
 the configure script. After compilation has finished only the executable
   virtuoso-t
 and the ODBC driver library
