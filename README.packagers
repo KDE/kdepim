@@ -52,12 +52,13 @@ MySQL
 Akonadi needs a relation database to keep metadata about the PIM data it manages.
 There exists different backends for MySQL, PostgreSQL and SQLite. While it might
 be tempting to use the SQLite backend to reduce dependecies, we highly discourage
-to use it, because it has performance problems and is not well tested!
+to use it, because it is not yet finished, can lose your data, has performance
+problems and is not automatically tested yet!
 The PostgreSQL backend has some more testing, however we discourage the use of it
 as well, because it will make the migration path much harder once we'll switch
 to Virtuoso as SQL backend in the future.
-So please make MySQL a hard dependency for Akonadi and compile the Qt library with
-support for MySQL (can be done as plugin as well).
+So please make MySQL a hard (runtime) dependency for Akonadi and compile the Qt
+library with support for MySQL (can be done as plugin as well).
 
 Kontact Plugins
 ---------------
