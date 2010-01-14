@@ -60,6 +60,18 @@ to Virtuoso as SQL backend in the future.
 So please make MySQL a hard (runtime) dependency for Akonadi and compile the Qt
 library with support for MySQL (can be done as plugin as well).
 
+
+Akonadi
+-------
+Having a working installation of Nepomuk, Soprano, Virtuoso and MySQL should normally
+result in a working installation of Akonadi.
+Akonadi provides a self test dialog to make sure it really works. Please make sure all
+tests in this self test dialog pass.
+The test can be found in a control center module that is started with
+'kcmshell4 kcm_akonadi'. The test is in the tab 'Akonadi Server Configuration' and is
+started with the 'Test...' button.
+
+
 Kontact Plugins
 ---------------
 Kontact is a container application which embeds other PIM applications such as KMail
@@ -75,6 +87,7 @@ As an example, assume you want to provide a seperate package for KNode. This pac
 should contain KNode from the knode/ directory, and the Kontact plugin from the 
 kontact/plugins/knode directory. kontact/plugins/knode should not be installed when
 knode/ is not installed.
+
 
 GPG Support
 -----------
@@ -94,6 +107,7 @@ A common packaging error is that gpg-agent is not running or that it is wrongly
 configured. This will result in KMail failing on crypto operations with error messages 
 that give no indication of the real problem, such as 'bad passphrase'.
 
+
 Runtime split
 -------------
 
@@ -106,6 +120,7 @@ without installing the rest of KDEPIM, only 'runtime' (and of course kdepimlibs)
 
 If you don't install 'runtime' for third-party applications which use the PIM API of kdepimlibs,
 these applications will fail to work at runtime.
+
 
 Libraries inside KDEPIM
 -----------------------
