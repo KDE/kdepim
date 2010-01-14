@@ -1763,7 +1763,7 @@ void ViewerPrivate::createWidgets() {
   mColorBar->setObjectName( "mColorBar" );
   mViewer = new KWebView( mBox );
   mViewer->setObjectName( "mViewer" );
-  mViewer->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::QSizePolicy::Expanding );
+  mViewer->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
   mColorBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Ignored );
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
