@@ -889,7 +889,8 @@ void CertManager::slotDirmngrExited() {
    This slot will import CRLs from a file.
 */
 void CertManager::importCRLFromFile() {
-  QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List (*.crl *.arl *-crl.der *-arl.der)");
+  // loadcrl can only work with DER encoded files (verified with dirmngr 1.0.3)
+  QString filter = QString("*.crl *.arl *-crl.der *-arl.der|") + i18n("Certificate Revocation List, DER encoded (*.crl *.arl *-crl.der *-arl.der)");
   KURL url = KFileDialog::getOpenURL( QString::null,
                                       filter,
                                       this,
