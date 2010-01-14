@@ -145,6 +145,11 @@ error, and can result in failure at runtime, since this libkdepim is not binary 
 that KMail.
 
 
+Further resources
+-----------------
+
+Some frequently occuring problems with Akonadi are collected under
+http://userbase.kde.org/Akonadi#Some_Technical_Issues.
 
 For further questions feel free to contact the KDE PIM developers on kde-pim@kde.org
 or ask on freenode IRC channel #kontact or #akonadi
