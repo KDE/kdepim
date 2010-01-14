@@ -79,7 +79,7 @@ bool Task::createCryptoContainer(const QByteArray& keyId)
   }
 
   delete m_ctx;
-  m_ctx = GpgME::Context::createForProtocol( GpgME::G13 );
+  m_ctx = GpgME::Context::createForEngine( GpgME::G13Engine ).release();
   if ( !m_ctx )
     return false;
   const GpgME::Error error = m_ctx->createVFS( path.toLocal8Bit(), keys );
@@ -104,7 +104,7 @@ bool Task::mountCryptoContainer( const QByteArray& keyId )
   }
 
   if ( !m_ctx )
-    m_ctx = GpgME::Context::createForProtocol( GpgME::G13 );
+    m_ctx = GpgME::Context::createForEngine( GpgME::G13Engine ).release();
   if ( !m_ctx ) {
     kWarning() << "Unable to aquire GpgME context for G13";
     return false;
