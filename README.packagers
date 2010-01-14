@@ -110,5 +110,20 @@ these applications will fail to work at runtime.
 Libraries inside KDEPIM
 -----------------------
 
+There are several libraries in the KDEPIM module, such as 'libkdepim', 'libkleo' or 'libksieve'.
+There is no guarentee for a stable API or ABI in those libraries.
+API and ABI stableness is only guaranteed for kdepimlibs.
+The libraries of the KDEPIM module a generally work in progress and therefore change a lot,
+API and ABI breakage can occur at any moment.
+
+Therefore, please make sure to always ship the libraries with the exact same revision numbers as
+the applications. This is always the case for the tags created for KDE SC versions.
+
+As an example, shipping libkdepim from KDE SC 4.4.1 together with KMail from KDE SC 4.4.2 is an
+error, and can result in failure at runtime, since this libkdepim is not binary compatible with
+that KMail.
+
+
+
 For further questions feel free to contact the KDE PIM developers on kde-pim@kde.org
 or ask on freenode IRC channel #kontact or #akonadi
