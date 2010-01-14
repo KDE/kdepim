@@ -9,30 +9,29 @@ to provide a sane installation of Akonadi.
 
 Nepomuk & Soprano
 ------------------
-Akonadi uses Nepomuk and Soprano for all kind of searches, therefor
-it requires a fast working and stable Soprano backend. Currently two
-backends match these requirements and are hard dependencies for KDE-PIM:
+Akonadi uses Nepomuk and Soprano for all kind of searches. Nepomuk itself
+requires two storage backends for full functionality. Thus, these are
+hard requirements for KDEPIM:
 
   - Redland (for in-memory representation)
-  - Virtuoso (for persistant storage on hard-disc)
+  - Virtuoso (for persistant storage on hard-disk)
 
 For the Redland backend you need librdf from http://librdf.org which should
 be available as package for all major distributions already.
 
 The Virtuoso backend has a compile time and runtime dependency, both must be
-fullfilled. The compile time dependency is libiodbc that is available from
+fulfilled. The compile time dependency is libiodbc which is available from
 http://www.iodbc.org and packages for all distributions should be available.
-The runtime dependency is the Virtuoso server in version 5.0.12 that can be
+The runtime dependency is the Virtuoso server version 5.0.12 that can be
 retrieved from http://virtuoso.openlinksw.com. Although the Virtuoso sources
 are huge, the compilation can be speeded up by passing -disable-all-vads to
 the configure script. After compilation has finished only the executable
   virtuoso-t
-and the shared libraries
-  virtodbc_r.*
-are needed for the Soprano backend, we suggest to put these files into a separated
-package with a name like 'virtuoso-sporano' to not force the user to install a
-full blown Virtuoso server. The executable must be available in $PATH and the
-shared libraries in $LD_LIBRARY_PATH.
+and the ODBC driver library
+  virtodbc_r(.so)
+are needed for the Soprano backend. We suggest splitting Virtuoso into
+several sub-packages, two of which are the server binary and the ODBC drivers
+to not force the user to install a full blown Virtuoso server.
 
 
 Shared Desktop Ontologies
