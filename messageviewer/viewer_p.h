@@ -383,7 +383,7 @@ private slots:
 
 public slots:
   /** An URL has been activate with a click. */
-  void slotUrlOpen( const QUrl &url);
+  void slotUrlOpen( const QUrl &url = QUrl());
 
   /** The mouse has moved on or off an URL. */
   void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
