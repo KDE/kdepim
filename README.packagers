@@ -97,6 +97,16 @@ that give no indication of the real problem, such as 'bad passphrase'.
 Runtime split
 -------------
 
+The KDEPIM sources have a top-level directory named 'runtime'. Please package this directory
+seperatly. It contains applications and plugins that are needed by all applications making
+use of the PIM API in kdepimlibs, such as Akonadi resources or KIO slaves.
+
+By packaging 'runtime' seperatly, third-party applications which use the PIM API can be installed
+without installing the rest of KDEPIM, only 'runtime' (and of course kdepimlibs) is needed.
+
+If you don't install 'runtime' for third-party applications which use the PIM API of kdepimlibs,
+these applications will fail to work at runtime.
+
 Libraries inside KDEPIM
 -----------------------
 
