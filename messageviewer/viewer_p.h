@@ -523,7 +523,7 @@ public:
   KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
-      *mViewSourceAction, *mSaveMessageAction, ;
+      *mViewSourceAction, *mSaveMessageAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
