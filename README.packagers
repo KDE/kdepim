@@ -38,6 +38,12 @@ are needed for the Soprano backend. We suggest splitting Virtuoso into
 several sub-packages, two of which are the server binary and the ODBC drivers
 to not force the user to install a full blown Virtuoso server.
 
+Akonadi only requires Nepomuk, Strigi file indexing is not needed. You can
+disable Stigi file indexing if you find that is uses too many resources. Only
+the rest of Nepomuk needs to be running for Akonadi to work.
+Akonadi uses some Strigi libraries to index e-mail content. These libraries are
+needed at compile time.
+
 
 Shared Desktop Ontologies
 --------------------------
