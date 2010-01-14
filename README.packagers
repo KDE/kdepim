@@ -1,0 +1,60 @@
+Information for packagers of KDEPIM
+=====================================
+
+KDE-PIM 4.4 is the first release that makes use of Akonadi. Since
+Akonadi depends on several components to be properly installed and
+configured this documents give some hints to packagers what is needed
+to provide a sane installation of Akonadi.
+
+
+Nepomuk & Soprano
+------------------
+Akonadi uses Nepomuk and Soprano for all kind of searches, therefor
+it requires a fast working and stable Soprano backend. Currently two
+backends match these requirements and are hard dependencies for KDE-PIM:
+
+  - Redland (for in-memory representation)
+  - Virtuoso (for persistant storage on hard-disc)
+
+For the Redland backend you need librdf from http://librdf.org which should
+be available as package for all major distributions already.
+
+The Virtuoso backend has a compile time and runtime dependency, both must be
+fullfilled. The compile time dependency is libiodbc that is available from
+http://www.iodbc.org and packages for all distributions should be available.
+The runtime dependency is the Virtuoso server in version 5.0.12 that can be
+retrieved from http://virtuoso.openlinksw.com. Although the Virtuoso sources
+are huge, the compilation can be speeded up by passing -disable-all-vads to
+the configure script. After compilation has finished only the executable
+  virtuoso-t
+and the shared libraries
+  virtodbc_r.*
+are needed for the Soprano backend, we suggest to put these files into a separated
+package with a name like 'virtuoso-sporano' to not force the user to install a
+full blown Virtuoso server. The executable must be available in $PATH and the
+shared libraries in $LD_LIBRARY_PATH.
+
+
+Shared Desktop Ontologies
+--------------------------
+Nepomuk and Akonadi need some semantic ontologies to know how to interpret the content
+of Sopranos RDF store. These ontologies are available at
+  http://sourceforge.net/projects/oscaf/files
+and version 0.2 should be used.
+
+
+MySQL
+------------------
+Akonadi needs a relation database to keep metadata about the PIM data it manages.
+There exists different backends for MySQL, PostgreSQL and SQLite. While it might
+be tempting to use the SQLite backend to reduce dependecies, we highly discourage
+to use it, because it has performance problems and is not well tested!
+The PostgreSQL backend has some more testing, however we discourage the use of it
+as well, because it will make the migration path much harder once we'll switch
+to Virtuoso as SQL backend in the future.
+So please make MySQL a hard dependency for Akonadi and compile the Qt library with
+support for MySQL (can be done as plugin as well).
+
+
+For further questions feel free to contact the Akonadi developers on kde-pim@kde.org
+or ask on freenode IRC channel #akonadi
