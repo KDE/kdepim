@@ -78,6 +78,21 @@ knode/ is not installed.
 
 GPG Support
 -----------
+Crypto operations are supported in multiple places in KDEPIM: KMail provides support for
+dealing with signed and encrypted mails, and Kleopatra is an application that manages
+certificates and GPG keys.
+For this to work, GPG needs to be installed and configured correctly.
+An easy way to check if you have a working GPG installation is to run the self test in
+Kleopatra, which checks many aspects of the GPG installation. After starting Kleopatra,
+the self test can be found in the menu under 'Settings->Perform Self Test'. Please make
+sure the self test passes.
+Another way to test is sending an encrypted and signed message with KMail, and later
+decrypting the received message. Note that saving as draft is not enough here, you need
+to actually send the mail.
+
+A common packaging error is that gpg-agent is not running or that it is wrongly
+configured. This will result in KMail failing on crypto operations with error messages 
+that give no indication of the real problem, such as 'bad passphrase'.
 
 Runtime split
 -------------
