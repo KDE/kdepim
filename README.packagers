@@ -118,14 +118,18 @@ Runtime split
 -------------
 
 The KDEPIM sources have a top-level directory named 'runtime'. Please package this directory
-seperatly. It contains applications and plugins that are needed by all applications making
-use of the PIM API in kdepimlibs, such as Akonadi resources or KIO slaves.
+seperatly. It contains applications and plugins, for example Akonadi resources or KIO slaves,
+that are needed by all applications making use of the PIM API in kdepimlibs.
 
 By packaging 'runtime' seperatly, third-party applications which use the PIM API can be installed
 without installing the rest of KDEPIM, only 'runtime' (and of course kdepimlibs) is needed.
 
 If you don't install 'runtime' for third-party applications which use the PIM API of kdepimlibs,
 these applications will fail to work at runtime.
+
+Note that not all parts of kdepimlibs require kdepim/runtime at runtime, only the parts that access
+the Akonadi store in some way, like 'kcal', 'kabc' or 'akonadi'. Other parts, like 'kmime' or 'gpgme++'
+are not accessing the Akonadi store and therefore don't need kdepim/runtime.
 
 
 Libraries inside KDEPIM
