@@ -100,7 +100,7 @@ int MarcusBains::todayColumn()
     if((*it) == currentDate)
       return KOGlobals::self()->reverseLayout() ?
              agenda->columns() - 1 - col : col;
-      ++col;
+    ++col;
   }
 
   return -1;
@@ -146,8 +146,12 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   if(recalculate)
     mTimeBox->setFont(KOPrefs::instance()->mMarcusBainsFont);
 
-  mTimeBox->setText(KGlobal::locale()->formatTime(tim, KOPrefs::instance()->mMarcusBainsShowSeconds));
-  mTimeBox->adjustSize();
+  QString timeStr = KGlobal::locale()->formatTime(tim, KOPrefs::instance()->mMarcusBainsShowSeconds);
+  QFontMetrics fm = fontMetrics();
+  mTimeBox->setText( timeStr );
+  QSize sz( fm.width( timeStr ), fm.height() );
+  mTimeBox->setFixedSize( sz );
+
   if (y-mTimeBox->height()>=0) y-=mTimeBox->height(); else y++;
   if (x-mTimeBox->width()+agenda->gridSpacingX() > 0)
     x += int( agenda->gridSpacingX() - mTimeBox->width() - 1 );
@@ -173,6 +177,10 @@ KOAgenda::KOAgenda( int columns, int rows, int rowSize, QWidget *parent,
   mColumns = columns;
   mRows = rows;
   mGridSpacingY = rowSize;
+  if ( mGridSpacingY < 4 || mGridSpacingY > 30 ) {
+    mGridSpacingY = 10;
+  }
+
   mAllDayMode = false;
 
   init();
@@ -223,6 +231,16 @@ const QString KOAgenda::lastSelectedUid() const
 void KOAgenda::init()
 {
   mGridSpacingX = 100;
+  mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
+  if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
+    mDesiredGridSpacingY = 10;
+  }
+
+ // make sure that there are not more than 24 per day
+  mGridSpacingY = (double)height() / (double)mRows;
+  if ( mGridSpacingY < mDesiredGridSpacingY ) {
+    mGridSpacingY = mDesiredGridSpacingY;
+  }
 
   mResizeBorderWidth = 8;
   mScrollBorderWidth = 8;
@@ -1830,7 +1848,6 @@ void KOAgenda::resizeAllContents()
   marcus_bains();
 }
 
-
 void KOAgenda::scrollUp()
 {
   scrollBy(0,-mScrollOffset);
@@ -1857,15 +1874,23 @@ int KOAgenda::minimumWidth() const
 void KOAgenda::updateConfig()
 {
   double oldGridSpacingY = mGridSpacingY;
+
   mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
- // make sure that there are not more than 24 per day
-  mGridSpacingY = (double)height()/(double)mRows;
-  if (mGridSpacingY<mDesiredGridSpacingY) mGridSpacingY=mDesiredGridSpacingY;
+  if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
+    mDesiredGridSpacingY = 10;
+  }
+
+  // make sure that there are not more than 24 per day
+  mGridSpacingY = (double)height() / (double)mRows;
+  if ( mGridSpacingY < mDesiredGridSpacingY ) {
+    mGridSpacingY = mDesiredGridSpacingY;
+  }
 
   //can be two doubles equal?, it's better to compare them with an epsilon
-  if ( fabs( oldGridSpacingY - mGridSpacingY ) > 0.1 )
+  if ( fabs( oldGridSpacingY - mGridSpacingY ) > 0.1 ) {
     resizeContents( int( mGridSpacingX * mColumns ),
-                  int( mGridSpacingY * mRows ) );
+                    int( mGridSpacingY * mRows ) );
+  }
 
   calculateWorkingHours();
 
