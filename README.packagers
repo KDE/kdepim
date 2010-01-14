@@ -4,9 +4,9 @@ Information for packagers of KDEPIM
 This document gives some hints to packagers on what is needed to provide
 a sane installation and packaging for KDE PIM.
 
-KDE-PIM 4.4 is the first release that makes use of Akonadi. Akonadi depends
-on several components to be properly installed and configured, which are
-listed below.
+Akonadi is a key component of KDEPIM that is used by almost all applications.
+It depends on several components to be properly installed and configured,
+which are listed below.
 
 Also, this document discusses other topics which are of importance for
 packagers, such as the GPG support.
