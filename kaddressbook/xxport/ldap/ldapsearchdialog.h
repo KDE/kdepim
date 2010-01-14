@@ -46,7 +46,6 @@ class LDAPSearchDialog : public KDialog
     KABC::Addressee::List selectedContacts() const;
 
   protected Q_SLOTS:
-    virtual void slotHelp();
     virtual void slotUser1();
     virtual void slotUser2();
 

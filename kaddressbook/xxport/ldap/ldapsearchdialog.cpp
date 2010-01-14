@@ -358,7 +358,6 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent )
   connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
   connect(this,SIGNAL(user2Clicked()),this,SLOT(slotUser2()));
 
-  connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
   restoreSettings();
 }
 
@@ -549,11 +548,6 @@ void LDAPSearchDialog::closeEvent( QCloseEvent* e )
 {
   slotStopSearch();
   e->accept();
-}
-
-void LDAPSearchDialog::slotHelp()
-{
-  KToolInvocation::invokeHelp( "ldap-queries" );
 }
 
 void LDAPSearchDialog::slotUnselectAll()
