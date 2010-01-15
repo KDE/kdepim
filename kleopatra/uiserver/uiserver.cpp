@@ -73,16 +73,28 @@ UiServer::Private::Private( UiServer * qq )
       actualSocketName(),
       cryptoCommandsEnabled( false )
 {
+#ifndef HAVE_ASSUAN2
+    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
+#else
     assuan_set_gpg_err_source( GPG_ERR_SOURCE_DEFAULT );
     assuan_sock_init();
+#endif
 }
 
 bool UiServer::Private::isStaleAssuanSocket( const QString& fileName )
 {
     assuan_context_t ctx = 0;
+#ifndef HAVE_ASSUAN2
+    const bool error = assuan_socket_connect_ext( &ctx, QFile::encodeName( fileName ).constData(), -1, 0 );
+#else
     const bool error = assuan_new( &ctx ) || assuan_socket_connect( ctx, QFile::encodeName( fileName ).constData(), ASSUAN_INVALID_PID, 0 );
+#endif
     if ( !error )
+#ifndef HAVE_ASSUAN2
+        assuan_disconnect( ctx );
+#else
         assuan_release( ctx );
+#endif
     return error;
 }
 
@@ -167,11 +179,13 @@ void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * con
 void UiServer::Private::incomingConnection( int fd ) {
     try {
         qDebug( "UiServer: client connect on fd %d", fd );
+#if defined(HAVE_ASSUAN_SOCK_GET_NONCE) || defined(HAVE_ASSUAN2)
         if ( assuan_sock_check_nonce( (assuan_fd_t)fd, &nonce ) ) {
             qDebug( "UiServer: nonce check failed" );
             assuan_sock_close( (assuan_fd_t)fd );
             return;
         }
+#endif
         const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( (assuan_fd_t)fd, factories ) );
         connect( c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
