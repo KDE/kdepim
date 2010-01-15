@@ -41,6 +41,7 @@ set(kdepim_LIB_SRCS
    ldapsearchdialog.cpp
    overlaywidget.cpp
    progressmanager.cpp
+   agentprogressmonitor.cpp
    progressdialog.cpp
    statusbarprogresswidget.cpp
    ssllabel.cpp
