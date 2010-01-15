@@ -1161,6 +1161,8 @@ the KIOSK framework.</para>
 
 <sect1 id="admin-certificate-request-wizard"><title>Customization of the Certificate-Creation Wizard</title>
 
+<sect2 id="admin-certificate-request-wizard-dn"><title>Customizing the DN fields</title>
+
 <para>&kleopatra; allows you to customize the fields that the user is
 allowed to enter in order to create their certificate.</para>
 
@@ -1210,9 +1212,126 @@ OU[$ei]=$(lookup_dept_from_ip)
 ; sets country to DE, but allows for changes by the user
 C=DE
 </programlisting>
-
 </para>
-</sect1>
+
+</sect2>
+
+      <sect2 id="admin-certificate-request-wizard-keys">
+
+        <title>
+          Restricting the Types of Keys a User is Allowed to Create
+        </title>
+
+        <para>
+          &kleopatra; also allows to restrict which type of
+          certificates a user is allowed to create. Note, however,
+          that an easy way around these restrictions is to just create
+          one on the command line.
+        </para>
+
+        <sect3 id="admin-certificate-request-wizard-keys-type">
+
+          <title>
+            Public Key Algorithms
+          </title>
+
+          <para>
+            To restrict the public key algorithm to use, add the
+            config key <varname>PGPKeyType</varname> (and
+            <varname>CMSKeyType</varname>, but only
+            <acronym>RSA</acronym> is supported for
+            <acronym>CMS</acronym> anyway) to the
+            <literal>CertificateCreationWizard</literal> section of
+            <filename>kleopatrarc</filename>.
+          </para>
+
+          <para>
+            The allowed values as <literal>RSA</literal> for
+            <acronym>RSA</acronym> keys, <literal>DAS</literal> for
+            <acronym>DSA</acronym> (sign-only) keys, and
+            <literal>DSA+ELG</literal> for a <acronym>DSA</acronym>
+            (sign-only) key with an Elgamal subkey for encryption.
+          </para>
+
+          <para>
+            The default is read from &gpgconf; or else
+            <literal>RSA</literal> if &gpgconf; doesn't provide a
+            default.
+          </para>
+
+        </sect3>
+
+        <sect3 id="admin-certificate-request-wizard-keys-size">
+
+          <title>
+            Public Key Size
+          </title>
+
+          <para>
+            To restrict the available keys sizes for a public
+            algorithm, add the config key
+            <varname><replaceable>&lt;ALG&gt;</replaceable>KeySizes</varname>
+            (where <replaceable>ALG</replaceable> may be
+            <literal>RSA</literal>, <literal>DSA</literal> or
+            <literal>ELG</literal>) to the
+            <literal>CertificateCreationWizard</literal> section of
+            <filename>kleopatrarc</filename>, containing a
+            comma-separated list of keysizes (in bits). A default may
+            be indicated by prefixing the keysize with a hyphen
+            (<literal>-</literal>).
+          </para>
+
+          <para>
+            <programlisting><!--
+              -->RSAKeySizes = 1536,-2048,3072
+            </programlisting>
+          </para>
+              
+
+          <para>
+            The above would restrict allowed <acronym>RSA</acronym>
+            key sizes to 1536, 2048 and 3072, with 2048 the default.
+          </para>
+
+          <para>
+            In addition to the sizes themselves, you may also specify
+            labels for each of the sizes. Simply set the config key
+            <varname><replaceable>ALG</replaceable>KeySizeLabels</varname>
+            to a comma-separated list of labels.
+          </para>
+
+          <para>
+            <programlisting><!--
+              -->RSAKeySizeLabels = weak,normal,strong
+            </programlisting>
+          </para>
+
+          <para>
+            The above, in connection with the previous example, would
+            print something like the following options for selection:
+            <programlisting>
+              weak (1536 bits)
+              normal (2048 bits)
+              strong (3072 bits)
+            </programlisting>
+          </para>
+
+          <para>
+            The defaults are as if the following was in effect:
+            <programlisting>
+              RSAKeySizes = 1536,-2048,3072,4096
+              RSAKeySizeLabels =
+              DSAKeySizes = -1024,2048
+              DSAKeySizeLabels = v1,v2
+              ELGKeySizes = 1536,-2048,3072,4096
+            </programlisting>
+          </para>
+
+        </sect3>
+
+      </sect2>
+
+    </sect1>
 
     <sect1 id="admin-key-filters">
 
