@@ -5,13 +5,10 @@ add_definitions(-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
-add_subdirectory(icons)
 add_subdirectory(pics)
 add_subdirectory(kpartsdesignerplugin)
-add_subdirectory(about)
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
-
 
 include_directories( ${Boost_INCLUDE_DIR} )
 
