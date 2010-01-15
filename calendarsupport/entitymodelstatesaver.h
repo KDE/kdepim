@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2008 Bruno Virlet <bvirlet@kdemail.net>
+    Copyright (c) 2009 KDAB
+    Author: Frank Osterfeld <frank@kdab.net>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,32 +18,27 @@
     02110-1301, USA.
 */
 
-#ifndef KCALITEMBROWSER_H
-#define KCALITEMBROWSER_H
+#ifndef AKONADI_ENTITYMODELSTATESAVER_H
+#define AKONADI_ENTITYMODELSTATESAVER_H
 
-#include "akonadi-kcal_next_export.h"
-#include "itembrowser.h"
+#include "modelstatesaver.h"
 
 namespace Akonadi {
-class Item;
+    
+    class AKONADI_KCAL_NEXT_EXPORT EntityModelStateSaver : public ModelStateSaver
+    {
+        Q_OBJECT
+    public:
+        explicit EntityModelStateSaver( QAbstractItemModel* model, QObject* parent=0 );
+        ~EntityModelStateSaver();
 
-class AKONADI_KCAL_NEXT_EXPORT KCalItemBrowser : public ItemBrowser
-{
-  public:
-    KCalItemBrowser( QWidget *parent = 0 );
-    virtual ~KCalItemBrowser();
+    protected:
+        /* reimp */ QString key( const QModelIndex &index ) const;
 
-  protected:
-    virtual QString itemToRichText( const Item &item );
-
-  private:
-    class Private;
-    Private* const d;
-
-    Q_DISABLE_COPY( KCalItemBrowser )
-};
-
+    private:
+        class Private;
+        Private *const d;
+    };
 }
 
-#endif
-
+#endif // AKONADI_ENTITYMODELSTATESAVER_H

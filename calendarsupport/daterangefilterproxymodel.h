@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2008 Bruno Virlet <bvirlet@kdemail.net>
+    Copyright (c) 2009 KDAB
+    Author: Frank Osterfeld <osterfeld@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,33 +17,38 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#ifndef AKONADI_KCAL_DATERANGEFILTERPROXYMODEL_H
+#define AKONADI_KCAL_DATERANGEFILTERPROXYMODEL_H
 
-#ifndef KCALITEMBROWSER_H
-#define KCALITEMBROWSER_H
+#include <QtGui/QSortFilterProxyModel>
 
-#include "akonadi-kcal_next_export.h"
-#include "itembrowser.h"
-
+class KDateTime;
 namespace Akonadi {
-class Item;
-
-class AKONADI_KCAL_NEXT_EXPORT KCalItemBrowser : public ItemBrowser
-{
+  class DateRangeFilterProxyModel : public QSortFilterProxyModel {
+    Q_OBJECT
   public:
-    KCalItemBrowser( QWidget *parent = 0 );
-    virtual ~KCalItemBrowser();
+    explicit DateRangeFilterProxyModel( QObject* parent=0 );
+    ~DateRangeFilterProxyModel();
+    
+    KDateTime startDate() const;
+    void setStartDate( const KDateTime& date );
+
+    KDateTime endDate() const;
+    void setEndDate( const KDateTime& date );
+    
+    int startDateColumn() const;
+    void setStartDateColumn( int column );
+
+    int endDateColumn() const;
+    void setEndDateColumn( int column );
 
   protected:
-    virtual QString itemToRichText( const Item &item );
-
+    /* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex& source_parent ) const;
+    
   private:
     class Private;
     Private* const d;
-
-    Q_DISABLE_COPY( KCalItemBrowser )
-};
-
+  };
 }
 
-#endif
-
+#endif // AKONADI_KCAL_DATERANGEFILTERPROXYMODEL_H

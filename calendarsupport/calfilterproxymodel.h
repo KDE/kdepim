@@ -1,5 +1,6 @@
 /*
-    Copyright (c) 2008 Bruno Virlet <bvirlet@kdemail.net>
+    Copyright (c) 2009 KDAB
+    Author: Frank Osterfeld <osterfeld@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -16,33 +17,33 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
+#ifndef AKONADI_KCAL_CALFILTERPROXYMODEL_H
+#define AKONADI_KCAL_CALFILTERPROXYMODEL_H
 
-#ifndef KCALITEMBROWSER_H
-#define KCALITEMBROWSER_H
+#include <QtGui/QSortFilterProxyModel>
 
-#include "akonadi-kcal_next_export.h"
-#include "itembrowser.h"
+namespace KCal {
+  class CalFilter;
+}
 
+class KDateTime;
 namespace Akonadi {
-class Item;
-
-class AKONADI_KCAL_NEXT_EXPORT KCalItemBrowser : public ItemBrowser
-{
+  class CalFilterProxyModel : public QSortFilterProxyModel {
+    Q_OBJECT
   public:
-    KCalItemBrowser( QWidget *parent = 0 );
-    virtual ~KCalItemBrowser();
+    explicit CalFilterProxyModel( QObject* parent=0 );
+    ~CalFilterProxyModel();
 
+    KCal::CalFilter* filter() const;
+    void setFilter( KCal::CalFilter* filter );
+    
   protected:
-    virtual QString itemToRichText( const Item &item );
-
+    /* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex& source_parent ) const;
+    
   private:
     class Private;
     Private* const d;
-
-    Q_DISABLE_COPY( KCalItemBrowser )
-};
-
+  };
 }
 
-#endif
-
+#endif // AKONADI_KCAL_CALFILTERPROXYMODEL_H

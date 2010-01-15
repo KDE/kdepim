@@ -18,7 +18,8 @@
 */
 
 #include "kcalmodel.h"
-#include "kcalmimetypevisitor.h"
+
+#include <akonadi/kcal/incidencemimetypevisitor.h>
 
 #include <akonadi/item.h>
 #include <akonadi/itemfetchjob.h>
@@ -49,20 +50,28 @@ class KCalModel::Private
     static QStringList allMimeTypes()
     {
         QStringList types;
-        types << KCalMimeTypeVisitor::eventMimeType()
-              << KCalMimeTypeVisitor::todoMimeType()
-              << KCalMimeTypeVisitor::journalMimeType()
-              << KCalMimeTypeVisitor::freeBusyMimeType();
+        types << IncidenceMimeTypeVisitor::eventMimeType()
+              << IncidenceMimeTypeVisitor::todoMimeType()
+              << IncidenceMimeTypeVisitor::journalMimeType()
+              << IncidenceMimeTypeVisitor::freeBusyMimeType();
         return types;
     }
     bool collectionMatchesMimeTypes() const
     {
-      Q_FOREACH( QString type, allMimeTypes() ) {
+      Q_FOREACH( const QString &type, allMimeTypes() ) {
       if ( q->collection().contentMimeTypes().contains( type ) )
         return true;
       }
       return false;
     }
+
+    bool collectionIsValid()
+    {
+      return !q->collection().isValid()
+          || collectionMatchesMimeTypes()
+          || q->collection().contentMimeTypes() == QStringList( QLatin1String("inode/directory") );
+    }
+
   private:
     KCalModel *q;
 };
@@ -88,7 +97,7 @@ QStringList KCalModel::mimeTypes() const
 
 int KCalModel::columnCount( const QModelIndex& ) const
 {
-  if ( d->collectionMatchesMimeTypes() )
+  if ( d->collectionIsValid() )
     return 4;
   else
     return 1;
@@ -96,7 +105,7 @@ int KCalModel::columnCount( const QModelIndex& ) const
 
 int KCalModel::rowCount( const QModelIndex& ) const
 {
-  if ( d->collectionMatchesMimeTypes() )
+  if ( d->collectionIsValid() )
     return ItemModel::rowCount();
   else
     return 1;
@@ -111,7 +120,7 @@ QVariant KCalModel::data( const QModelIndex &index,  int role ) const
     return QVariant();
 
   // guard against use with collections that do not have the right contents
-  if ( !d->collectionMatchesMimeTypes() ) {
+  if ( !d->collectionIsValid() ) {
     if ( role == Qt::DisplayRole )
       // FIXME: i18n when strings unfreeze for 4.4
       return QString::fromLatin1( "This model can only handle event, task, journal or free-busy list folders. The current collection holds mimetypes: %1").arg(
@@ -135,7 +144,7 @@ QVariant KCalModel::data( const QModelIndex &index,  int role ) const
       } else if ( incidence->type() == "Journal" ) {
         return SmallIcon( QLatin1String( "view-pim-journal" ) );
       } else if ( incidence->type() == "Event" ) {
-        return SmallIcon( QLatin1String( "view-pim-calendar" ) );
+        return SmallIcon( QLatin1String( "view-calendar" ) );
       } else {
         return SmallIcon( QLatin1String( "network-wired" ) );
       }
@@ -169,7 +178,7 @@ QVariant KCalModel::data( const QModelIndex &index,  int role ) const
 
 QVariant KCalModel::headerData( int section, Qt::Orientation orientation, int role ) const
 {
-  if ( !d->collectionMatchesMimeTypes() )
+  if ( !d->collectionIsValid() )
     return QVariant();
 
   if ( role == Qt::DisplayRole && orientation == Qt::Horizontal ) {
