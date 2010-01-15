@@ -74,12 +74,13 @@ UiServer::Private::Private( UiServer * qq )
       cryptoCommandsEnabled( false )
 {
     assuan_set_gpg_err_source( GPG_ERR_SOURCE_DEFAULT );
+    assuan_sock_init();
 }
 
 bool UiServer::Private::isStaleAssuanSocket( const QString& fileName )
 {
     assuan_context_t ctx = 0;
-    const bool error = assuan_new( &ctx ) || assuan_socket_connect( ctx, QFile::encodeName( fileName ).constData(), -1, 0 );
+    const bool error = assuan_new( &ctx ) || assuan_socket_connect( ctx, QFile::encodeName( fileName ).constData(), ASSUAN_INVALID_PID, 0 );
     if ( !error )
         assuan_release( ctx );
     return error;
