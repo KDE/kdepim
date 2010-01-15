@@ -26,6 +26,7 @@
 
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
+#include "mixedtreemodel.h"
 
 #include <kselectionproxymodel.h>
 
@@ -54,6 +55,11 @@ public:
     return m_collectionFilter->mapToSource(idx);
   }
 
+  /* reimp */ Akonadi::EntityTreeModel* getETM()
+  {
+    return new MixedTreeModel(changeRecorder(), this);
+  }
+
 
 private:
   Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
@@ -79,6 +85,7 @@ Tab4Widget::Tab4Widget(QWidget* parent, Qt::WindowFlags f)
   selectionProxy->setSourceModel(m_etw->model());
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
   itemFilter->setSourceModel(selectionProxy);
 

@@ -9,5 +9,5 @@ reading=false
 writing=false
 makedir=false
 deleting=false
-x-DocPath=kioslave/news/index.html
+X-DocPath=kioslave/news/index.html
 Icon=knode

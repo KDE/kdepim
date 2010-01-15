@@ -383,7 +383,7 @@ private slots:
 
 public slots:
   /** An URL has been activate with a click. */
-  void slotUrlOpen( const QUrl &url);
+  void slotUrlOpen( const QUrl &url = QUrl());
 
   /** The mouse has moved on or off an URL. */
   void slotUrlOn(const QString & link, const QString & title, const QString & textContent);
@@ -523,7 +523,7 @@ public:
   KAction *mCopyAction, *mCopyURLAction,
       *mUrlOpenAction, *mSelectAllAction,
       *mScrollUpAction, *mScrollDownAction, *mScrollUpMoreAction, *mScrollDownMoreAction,
-      *mViewSourceAction, *mSaveMessageAction, ;
+      *mViewSourceAction, *mSaveMessageAction;
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;

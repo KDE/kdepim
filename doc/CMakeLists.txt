@@ -15,9 +15,7 @@ if(BUILD_kalarm)
   add_subdirectory(kalarm)
 endif(BUILD_kalarm)
 
-if(BUILD_kioslave)
-  add_subdirectory(kioslave)
-endif(BUILD_kioslave)
+add_subdirectory(kioslave)
 
 if(BUILD_kjots)
   add_subdirectory(kjots)
@@ -25,6 +23,7 @@ endif(BUILD_kjots)
 
 if(BUILD_kleopatra)
   add_subdirectory(kleopatra)
+  add_subdirectory(kwatchgnupg)
 endif(BUILD_kleopatra)
 
 if(BUILD_kmail)
@@ -50,7 +49,3 @@ endif(BUILD_kontact)
 if(BUILD_ktimetracker)
   add_subdirectory(ktimetracker)
 endif(BUILD_ktimetracker)
-
-#if(BUILD_kwatchgnupg)
-#  add_subdirectory(kwatchgnupg)
-#endif(BUILD_kwatchgnupg)

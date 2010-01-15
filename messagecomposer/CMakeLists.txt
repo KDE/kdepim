@@ -38,29 +38,27 @@ kde4_add_library( messagecomposer SHARED ${messagecomposer_src} )
 target_link_libraries( messagecomposer ${KDE4_KIO_LIBS} ${KDE4_KMIME_LIBRARY} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} messagecore kleo ${QGPGME_LIBRARIES} )
 set_target_properties( messagecomposer PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
-install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
-install( FILES
-         messagecomposer_export.h
-          
-         composer.h
-         globalpart.h
-         infopart.h
-         messagepart.h
-         textpart.h
+install( TARGETS messagecomposer ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-         jobbase.h
-         contentjobbase.h
-         attachmentjob.h
-         singlepartjob.h
-         multipartjob.h
-         maintextjob.h
+#install( TARGETS messagecomposer EXPORT kdepimlibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-	 signjob.h
-	 encryptjob.h
-	 signencryptjob.h
-         transparentjob.h
-
-         skeletonmessagejob.h
-
-         DESTINATION ${INCLUDE_INSTALL_DIR}/messagecomposer COMPONENT Devel )
+#install( FILES
+#         messagecomposer_export.h
+#         composer.h
+#         globalpart.h
+#         infopart.h
+#         messagepart.h
+#         textpart.h
+#         jobbase.h
+#         contentjobbase.h
+#         attachmentjob.h
+#         singlepartjob.h
+#         multipartjob.h
+#         maintextjob.h
+#         signjob.h
+#         encryptjob.h
+#         signencryptjob.h
+#         transparentjob.h
+#         skeletonmessagejob.h
+#         DESTINATION ${INCLUDE_INSTALL_DIR}/messagecomposer COMPONENT Devel )
 

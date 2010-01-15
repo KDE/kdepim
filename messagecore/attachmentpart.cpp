@@ -20,7 +20,6 @@
 #include "attachmentpart.h"
 
 #include <KDebug>
-#include <KUrl>
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_util.h>

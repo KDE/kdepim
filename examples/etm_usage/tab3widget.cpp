@@ -26,6 +26,7 @@
 
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
+#include "mixedtreemodel.h"
 
 #include <kselectionproxymodel.h>
 
@@ -52,6 +53,11 @@ public:
   /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
   {
     return m_collectionFilter->mapToSource(idx);
+  }
+
+  /* reimp */ Akonadi::EntityTreeModel* getETM()
+  {
+    return new MixedTreeModel(changeRecorder(), this);
   }
 
 

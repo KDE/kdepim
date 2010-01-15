@@ -22,7 +22,6 @@
 #include "../include/remoteservicemessage.h"
 
 #include <QBuffer>
-#include <QVariant>
 
 using namespace StickyNotes;
 

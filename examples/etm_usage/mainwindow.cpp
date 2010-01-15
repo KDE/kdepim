@@ -24,9 +24,11 @@
 
 #include "tab1widget.h"
 #include "tab2widget.h"
+#include "tab2_5widget.h"
 #include "tab3widget.h"
 #include "tab4widget.h"
 #include "tab5widget.h"
+#include "tab6widget.h"
 
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
@@ -36,8 +38,10 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
 
   tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
   tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
+  tabWidget->addTab(new Tab2_5Widget(tabWidget), "Type specific data");
   tabWidget->addTab(new Tab3Widget(tabWidget), "KSelectionProxyModel");
   tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
+  tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
   tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
 
   setCentralWidget(tabWidget);

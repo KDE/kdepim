@@ -24,7 +24,6 @@
 
 #include <Plasma/Applet>
 
-#include <QAbstractSocket>
 
 class QTcpServer;
 
