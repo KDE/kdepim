@@ -1,3 +1,33 @@
+Friday, January 15th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue3362: Calendar: strange <html> </html>in comment of an update mail
+* New icons for recurring items
+* Change location of the DN attribute order in the config dialog of Kleopatra
+* Add the "allow-mark-trusted" option to Kleopatra's config dialog
+* Port Kleopatra to libassuan2
+
+Merges
+------
+
+* Merges from enterprise35 branch:
+      - kolab/issue4004: Calendar prints should contain a print date (rt#5927)
+      - kolab/issue4013: Make KMail-Archive format input the default (rt#5817)
+      - kolab/issue4014(partial): Better Archiving zip -> tar.bz2 default (rt#5817)
+      - kolab/issue1783: Invitation gets lost, if no Kalender resource is activated
+      - kolab/issue3903: Kontact hangs when switching to calendar side-by-side view (rt#5870)
+      - kolab/issue3986: event/todo recurrence option should be consistent (rt#5900)
+      - kolab/issue3813: reccuring events show wrong dates (rt#5855)
+      - kolab/issue4015: Archiving file selector does not keep the suggested file name when changing the directory (rt#5817)
+      - kolab/issue4030: The filename of an UTF-16 text attachment is displayed wrongly (rt#5942)
+      - Fix regression in KMail: Subfolders were never created in the mbox format, even when requested
+      - In KMail, disable some actions that are not applicable to read-only folders
+      - Allow to select read-only folders when archiving
+      - Don't crash when attempting to archive a folder without selecting a file name
+
+
 Friday, January 1st 2010
 
 Problems addressed
