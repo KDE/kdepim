@@ -191,7 +191,7 @@ int main( int argc, char * argv[] ) {
     }
 
     if ( const gpg_error_t err = assuan_socket_connect( ctx, socket, -1, ASSUAN_CONNECT_FLAGS ) ) {
-        qDebug( "%s", Exception( err, "assuan_socket_connect_ext" ).what() );
+        qDebug( "%s", Exception( err, "assuan_socket_connect" ).what() );
         return 1;
     }
 
