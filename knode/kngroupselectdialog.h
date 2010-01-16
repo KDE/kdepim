@@ -26,7 +26,13 @@ class KNGroupSelectDialog : public KNGroupBrowser {
   Q_OBJECT
 
   public:
-    KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act);
+    /**
+      Creates a group selection dialog.
+      @param parent Parent widget.
+      @param a An NNTP account.
+      @param groups a list of groups that are already selected when this dialog shows.
+    */
+    KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QStringList &groups );
     ~KNGroupSelectDialog();
 
     QString selectedGroups()const;

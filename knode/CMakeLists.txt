@@ -88,6 +88,7 @@ kde4_add_ui_files(knodecommon_LIB_SRCS
    readnewsviewerwidget_base.ui
    postnewstechnicalwidget_base.ui
    postnewscomposerwidget_base.ui
+   composer/composer_view.ui
    configuration/identity_widget.ui
    configuration/identity_edition_dialog.ui
 )

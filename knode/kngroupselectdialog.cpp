@@ -23,7 +23,7 @@
 #include <QPushButton>
 
 
-KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, const QString &act) :
+KNGroupSelectDialog::KNGroupSelectDialog( QWidget *parent, KNNntpAccount *a, const QStringList &groups ) :
   KNGroupBrowser(parent, i18n("Select Destinations"), a)
 {
   selView=new Q3ListView(page);
@@ -34,9 +34,8 @@ KNGroupSelectDialog::KNGroupSelectDialog(QWidget *parent, KNNntpAccount *a, cons
   subCB->setChecked(true);
 
   KNGroupInfo info;
-  QStringList actGroups = act.split(',',QString::SkipEmptyParts);
-  for ( QStringList::Iterator it = actGroups.begin(); it != actGroups.end(); ++it ) {
-    info.name = *it;
+  foreach ( const QString &group, groups ) {
+    info.name = group;
     new GroupItem(selView, info);
   }
 

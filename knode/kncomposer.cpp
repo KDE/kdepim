@@ -78,12 +78,17 @@ using KPIM::RecentAddresses;
 using namespace KNode::Utilities;
 
 
-KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
-                        QWidget *parent )
-    : KNLineEditInherited( parent,useCompletion ), composerView( _composerView )
-
+KNLineEdit::KNLineEdit( View *parent, bool useCompletion )
+  : KABC::AddressLineEdit( parent, useCompletion ),
+    composerView( parent )
 {
 }
+
+KNLineEdit::KNLineEdit( QWidget *parent, bool useCompletion )
+  : KABC::AddressLineEdit( parent, useCompletion )
+{
+}
+
 
 void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
@@ -112,7 +117,7 @@ void KNLineEdit::editRecentAddresses()
 
 void KNLineEdit::loadAddresses()
 {
-    KNLineEditInherited::loadAddresses();
+    KABC::AddressLineEdit::loadAddresses();
 
     QStringList recent = RecentAddresses::self(knGlobals.config())->addresses();
     QStringList::Iterator it = recent.begin();
@@ -140,11 +145,17 @@ void KNLineEdit::keyPressEvent(QKeyEvent *e)
       return;
     }
     // ---sven's Return is same Tab and arrow key navigation end ---
-  KNLineEditInherited::keyPressEvent(e);
+  KABC::AddressLineEdit::keyPressEvent(e);
 }
 
-KNLineEditSpell::KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent )
-    :KNLineEdit( _composerView, useCompletion, parent )
+
+KNLineEditSpell::KNLineEditSpell( View *parent, bool useCompletion )
+  : KNLineEdit( parent, useCompletion )
+{
+}
+
+KNLineEditSpell::KNLineEditSpell( QWidget *parent, bool useCompletion )
+  : KNLineEdit( parent, useCompletion )
 {
 }
 
@@ -191,12 +202,12 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
   setAcceptDrops(true);
 
   //init v_iew
-  v_iew=new ComposerView(this);
+  v_iew = new View( this );
   setCentralWidget(v_iew);
 
-  connect(v_iew->c_ancelEditorBtn, SIGNAL(clicked()), SLOT(slotCancelEditor()));
-  connect(v_iew->e_dit, SIGNAL(sigDragEnterEvent(QDragEnterEvent *)), SLOT(slotDragEnterEvent(QDragEnterEvent *)));
-  connect(v_iew->e_dit, SIGNAL(sigDropEvent(QDropEvent *)), SLOT(slotDropEvent(QDropEvent *)));
+  connect( v_iew, SIGNAL(closeExternalEditor()), this, SLOT(slotCancelEditor()) );
+  connect(v_iew->editor(), SIGNAL(sigDragEnterEvent(QDragEnterEvent *)), SLOT(slotDragEnterEvent(QDragEnterEvent *)));
+  connect(v_iew->editor(), SIGNAL(sigDropEvent(QDropEvent *)), SLOT(slotDropEvent(QDropEvent *)));
 
   //statusbar
   KStatusBar *sb=statusBar();
@@ -210,8 +221,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
   sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
   sb->insertItem( QString(), 5, 1 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
-  connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
-  connect(v_iew->e_dit, SIGNAL(insertModeChanged()), SLOT(slotUpdateStatusBar()));
+  connect(v_iew->editor(), SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
+  connect(v_iew->editor(), SIGNAL(insertModeChanged()), SLOT(slotUpdateStatusBar()));
 
   QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
   //------------------------------- <Actions> --------------------------------------
@@ -253,14 +264,14 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
 
   action = actionCollection()->addAction("paste_quoted");
   action->setText(i18n("Paste as &Quotation"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotPasteAsQuotation()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotPasteAsQuotation()));
 
   KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
-  KStandardAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
-  KStandardAction::findNext(v_iew->e_dit, SLOT(slotFindNext()), actionCollection());
+  KStandardAction::find(v_iew->editor(), SLOT(slotFind()), actionCollection());
+  KStandardAction::findNext(v_iew->editor(), SLOT(slotFindNext()), actionCollection());
 
-  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
+  KStandardAction::replace(v_iew->editor(), SLOT(slotReplace()), actionCollection());
 
   //attach menu
   action = actionCollection()->addAction("append_signature");
@@ -328,26 +339,26 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
   slotUpdateCheckSpellChecking( knGlobals.settings()->autoSpellChecking() );
   slotAutoSpellCheckingToggled();
   connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool) ), SLOT(slotAutoSpellCheckingToggled()));
-  connect( v_iew->e_dit, SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
+  connect( v_iew->editor(), SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
 
 
   //tools menu
 
   action = actionCollection()->addAction("tools_quote");
   action->setText(i18n("Add &Quote Characters"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotAddQuotes()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotAddQuotes()));
 
   action = actionCollection()->addAction("tools_unquote");
   action->setText(i18n("&Remove Quote Characters"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotRemoveQuotes()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotRemoveQuotes()));
 
   action = actionCollection()->addAction("tools_box");
   action->setText(i18n("Add &Box"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotAddBox()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotAddBox()));
 
   action = actionCollection()->addAction("tools_unbox");
   action->setText(i18n("Re&move Box"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotRemoveBox()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotRemoveBox()));
 
   QAction *undoRewrap = actionCollection()->addAction("tools_undoRewrap");
   undoRewrap->setText(i18n("Get &Original Text (not re-wrapped)"));
@@ -357,16 +368,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
   QAction *rot13 = actionCollection()->addAction("tools_rot13");
   rot13->setIcon(KIcon("document-encrypt"));
   rot13->setText(i18n("S&cramble (Rot 13)"));
-  connect(rot13, SIGNAL(triggered(bool)), v_iew->e_dit, SLOT(slotRot13()));
+  connect(rot13, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotRot13()));
   rot13->setEnabled(false);
-  connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
+  connect(v_iew->editor(), SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
 
   a_ctExternalEditor = actionCollection()->addAction("external_editor");
   a_ctExternalEditor->setIcon(KIcon("system-run"));
   a_ctExternalEditor->setText(i18n("Start &External Editor"));
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
-  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(checkSpelling()), actionCollection());
+  a_ctSpellCheck = KStandardAction::spelling ( v_iew->editor(), SLOT(checkSpelling()), actionCollection());
 
   //settings menu
   createStandardStatusBarAction();
@@ -395,45 +406,12 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
   //apply configuration
   setConfig(false);
 
-  if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
-    if ( knGlobals.settings()->cursorOnTop() ) {
-      int numLines = knGlobals.settings()->intro().count( "%L" );
-      //Laurent fix me
-      //v_iew->e_dit->setCursorPosition(numLines+1,0);
-    }
-    else
-    {
-     //Laurent fixme
-     //v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
-     }
-  } else
-  {
-    //Laurent fixme
-     //v_iew->e_dit->setCursorPosition(0,0);
-  }
-  v_iew->e_dit->setFocus();
-
-  if (v_iew->s_ubject->text().length() == 0) {
-    v_iew->s_ubject->setFocus();
-  }
-
-  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {
-    v_iew->g_roups->setFocus();
-  }
-
-  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {
-    v_iew->t_o->setFocus();
-  }
-
-  if( firstEdit && knGlobals.settings()->appendOwnSignature() )
-    v_iew->appendSignature();
-
   if (createCopy && (m_ode==news)) {
     a_ctDoMail->setChecked(true);
     slotToggleDoMail();
   }
 
-  v_iew->e_dit->document()->setModified(false);
+  v_iew->completeSetup( firstEdit, m_ode );
 
   // restore window & toolbar configuration
   resize(535,450);    // default optimized for 800x600
@@ -552,12 +530,7 @@ void KNComposer::setConfig(bool onlyFonts)
     a_ctPGPsign->setEnabled(pgp->usePGP());
   }
 
-  QFont fnt = knGlobals.settings()->composerFont();
-  v_iew->s_ubject->setFont(fnt);
-  v_iew->t_o->setFont(fnt);
-  v_iew->g_roups->setFont(fnt);
-  v_iew->f_up2->setFont(fnt);
-  v_iew->e_dit->setFontForWholeText(fnt);
+  v_iew->setComposingFont( knGlobals.settings()->composerFont() );
 
   slotUpdateStatusBar();
 }
@@ -571,19 +544,19 @@ void KNComposer::setMessageMode(MessageMode mode)
   v_iew->setMessageMode(m_ode);
   //Laurent fixme
 #if 0
-  QString s = v_iew->e_dit->document ()->begin()->text ();
+  QString s = v_iew->editor()->document ()->begin()->text ();
   if (m_ode == news_mail) {
     if (!s.contains(i18n("<posted & mailed>"))) {
-      QTextCursor cursor(v_iew->e_dit->document ()->begin());
+      QTextCursor cursor(v_iew->editor()->document ()->begin());
       cursor.setPosition(0);
       cursor.insertText(i18n("<posted & mailed>\n\n"));
-      v_iew->e_dit->setTextCursor(cursor);
+      v_iew->editor()->setTextCursor(cursor);
       }
   } else {
     if (s == i18n("<posted & mailed>")) {
-      v_iew->e_dit->removeLine(0);
-      if (v_iew->e_dit->textLine(0).isEmpty())
-        v_iew->e_dit->removeLine(0);
+      v_iew->editor()->removeLine(0);
+      if (v_iew->editor()->textLine(0).isEmpty())
+        v_iew->editor()->removeLine(0);
     }
   }
 #endif
@@ -598,22 +571,20 @@ bool KNComposer::hasValidData()
 
   // header checks
 
-  if (v_iew->s_ubject->text().isEmpty()) {
+  if ( v_iew->subject().isEmpty() ) {
     KMessageBox::sorry(this, i18n("Please enter a subject."));
     return false;
   }
-  if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->s_ubject->text()))
+  if ( !n_eeds8Bit && !KMime::isUsAscii( v_iew->subject() ) ) {
     n_eeds8Bit=true;
+  }
 
   if (m_ode != mail) {
-    if (v_iew->g_roups->text().isEmpty()) {
+    int groupCount = v_iew->groups().count();
+    if ( groupCount == 0 ) {
       KMessageBox::sorry(this, i18n("Please enter a newsgroup."));
       return false;
     }
-
-    int groupCount = v_iew->g_roups->text().split(',', QString::SkipEmptyParts).count();
-    int fupCount = v_iew->f_up2->currentText().split(',', QString::SkipEmptyParts).count();
-    bool followUp = !v_iew->f_up2->currentText().isEmpty();
 
     if (groupCount>12) {
       KMessageBox::sorry(this, i18n("You are crossposting to more than 12 newsgroups.\nPlease remove all newsgroups in which your article is off-topic."));
@@ -625,7 +596,8 @@ bool KNComposer::hasValidData()
             QString(), KGuiItem(i18n("&Send")), KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
         return false;
 
-    if ( !followUp && groupCount > 2 ) {
+    int fupCount = v_iew->followupTo().count();
+    if ( fupCount == 0 && groupCount > 2 ) {
       if ( KMessageBox::warningYesNo( this,
            i18n("You are crossposting to more than two newsgroups.\n"
                 "Please use the \"Followup-To\" header to direct the replies "
@@ -648,12 +620,13 @@ bool KNComposer::hasValidData()
   }
 
   if (m_ode != news) {
-    if (v_iew->t_o->text().isEmpty() ) {
+    if ( v_iew->emailRecipient().isEmpty() ) {
       KMessageBox::sorry(this, i18n("Please enter the email address."));
       return false;
     }
-    if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->t_o->text()))
+    if ( !n_eeds8Bit && !KMime::isUsAscii( v_iew->emailRecipient() ) ) {
       n_eeds8Bit=true;
+    }
   }
 
   //GNKSA body checks
@@ -664,7 +637,7 @@ bool KNComposer::hasValidData()
   int sigLength = 0;
   int notQuoted = 0;
   int textLines = 0;
-  QStringList text = v_iew->e_dit->toWrappedPlainText().split('\n');
+  QStringList text = v_iew->editor()->toWrappedPlainText().split('\n');
 
   for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
 
@@ -831,11 +804,11 @@ bool KNComposer::applyChanges()
   a_rticle->date()->setDateTime( KDateTime::currentLocalDateTime() );    //set current date+time
 
   //Subject
-  a_rticle->subject()->fromUnicodeString( v_iew->s_ubject->text(), mCharset.toLatin1() );
+  a_rticle->subject()->fromUnicodeString( v_iew->subject(), mCharset.toLatin1() );
 
   //Newsgroups
   if (m_ode != mail) {
-    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text().remove(QRegExp("\\s")), KMime::Headers::Latin1);
+    a_rticle->newsgroups()->fromUnicodeString( v_iew->groups().join( QString( ',' ) ), KMime::Headers::Latin1 );
     a_rticle->setDoPost(true);
   } else {
     a_rticle->setDoPost(false);
@@ -844,7 +817,7 @@ bool KNComposer::applyChanges()
 
   //To
   if (m_ode != news) {
-    a_rticle->to()->fromUnicodeString( v_iew->t_o->text(), mCharset.toLatin1() );
+    a_rticle->to()->fromUnicodeString( v_iew->emailRecipient(), mCharset.toLatin1() );
     a_rticle->setDoMail(true);
   } else {
     a_rticle->setDoMail(false);
@@ -853,10 +826,11 @@ bool KNComposer::applyChanges()
   }
 
   //Followup-To
-  if( a_rticle->doPost() && !v_iew->f_up2->currentText().isEmpty())
-    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), KMime::Headers::Latin1);
-  else
+  if ( a_rticle->doPost() && !v_iew->followupTo().isEmpty() ) {
+    a_rticle->followUpTo()->fromUnicodeString( v_iew->followupTo().join( QString( ',' ) ), KMime::Headers::Latin1 );
+  } else {
     a_rticle->removeHeader("Followup-To");
+  }
 
   if(a_ttChanged && (v_iew->a_ttView)) {
 
@@ -912,7 +886,7 @@ bool KNComposer::applyChanges()
     }
   }
 
-  QString tmp = v_iew->e_dit->toWrappedPlainText();
+  QString tmp = v_iew->editor()->toWrappedPlainText();
 
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
@@ -956,7 +930,7 @@ void KNComposer::setCharset( const QString &charset )
 
 void KNComposer::closeEvent(QCloseEvent *e)
 {
-  if(!v_iew->e_dit->document()->isModified() && !a_ttChanged) {  // nothing to save, don't show nag screen
+  if(!v_iew->editor()->document()->isModified() && !a_ttChanged) {  // nothing to save, don't show nag screen
     if(a_rticle->id()==-1)
       r_esult=CRdel;
     else
@@ -1001,24 +975,25 @@ void KNComposer::initData(const QString &text)
   if(a_rticle->subject()->isEmpty())
     slotSubjectChanged( QString() );
   else
-    v_iew->s_ubject->setText(a_rticle->subject()->asUnicodeString());
+    v_iew->setSubject( a_rticle->subject()->asUnicodeString() );
 
   //Newsgroups
   KMime::Headers::Newsgroups *hNewsgroup = a_rticle->newsgroups( false );
   if ( hNewsgroup && !hNewsgroup->isEmpty() ) {
-    v_iew->g_roups->setText( hNewsgroup->asUnicodeString());
+    v_iew->setGroups( hNewsgroup->asUnicodeString() );
   }
 
   //To
   KMime::Headers::To *hTo = a_rticle->to( false );
   if ( hTo && !hTo->isEmpty() ) {
-    v_iew->t_o->setText( hTo->asUnicodeString() );
+    v_iew->setEmailRecipient( hTo->asUnicodeString() );
   }
 
   //Followup-To
   KMime::Headers::FollowUpTo *fup2=a_rticle->followUpTo(false);
-  if(fup2 && !fup2->isEmpty())
-    v_iew->f_up2->lineEdit()->setText(fup2->asUnicodeString());
+  if( fup2 && !fup2->isEmpty() ) {
+    v_iew->setFollowupTo( fup2->asUnicodeString() );
+  }
 
   KMime::Content *textContent=a_rticle->textContent();
   QString s;
@@ -1029,7 +1004,7 @@ void KNComposer::initData(const QString &text)
   } else
     s = text;
 
-  v_iew->e_dit->setText(s);
+  v_iew->editor()->setText(s);
 
   // initialize the charset select action
   if(textContent) {
@@ -1074,8 +1049,8 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
   if (box)
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
   //Laurent fixme
-  if (box && (v_iew->e_dit->wordWrapMode()!=QTextOption::NoWrap)) {
-    int wrapAt = v_iew->e_dit->lineWrapColumnOrWidth();
+  if (box && (v_iew->editor()->wordWrapMode()!=QTextOption::NoWrap)) {
+    int wrapAt = v_iew->editor()->lineWrapColumnOrWidth();
     QStringList lst;
     QString line;
     while(!ts.atEnd()) {
@@ -1098,9 +1073,9 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     temp += QString::fromLatin1("`----");
 
   if(clear)
-    v_iew->e_dit->setText(temp);
+    v_iew->editor()->setText(temp);
   else
-    v_iew->e_dit->insertPlainText(temp);
+    v_iew->editor()->insertPlainText(temp);
 }
 
 
@@ -1130,8 +1105,9 @@ void KNComposer::insertFile(bool clear, bool box)
 
 void KNComposer::addRecentAddress()
 {
-    if( !v_iew->t_o->isHidden() )
-        RecentAddresses::self(knGlobals.config())->add( v_iew->t_o->text() );
+  if ( m_ode == mail || m_ode == news_mail ) {
+    RecentAddresses::self( knGlobals.config() )->add( v_iew->emailRecipient() );
+  }
 }
 
 void KNComposer::slotSendNow()
@@ -1266,17 +1242,17 @@ void KNComposer::slotToggleDoMail()
 //Laurent fix me
 #if 0
     if ( knGlobals.settings()->useExternalMailer() ) {
-      QString s = v_iew->e_dit->textLine(0);
+      QString s = v_iew->editor()->textLine(0);
       if (!s.contains(i18n("<posted & mailed>")))
-        v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
+        v_iew->editor()->insertAt(i18n("<posted & mailed>\n\n"),0,0);
       QString tmp;
-      QStringList textLines = v_iew->e_dit->processedText();
+      QStringList textLines = v_iew->editor()->processedText();
       for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it) {
         if (*it == "-- ")   // try to be smart, don't include the signature,
           break;            // kmail will append one, too.
         tmp+=*it+'\n';
       }
-      knGlobals.artFactory->sendMailExternal(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
+      knGlobals.artFactory->sendMailExternal( v_iew->t_o->text(), v_iew->subject(), tmp );
       a_ctDoMail->setChecked(false); //revert
       return;
     } else {
@@ -1322,21 +1298,21 @@ void KNComposer::slotSetCharsetKeyboard()
 void KNComposer::slotToggleWordWrap()
 {
   if ( a_ctWordWrap->isChecked() )
-    v_iew->e_dit->enableWordWrap( knGlobals.settings()->maxLineLength() );
+    v_iew->editor()->enableWordWrap( knGlobals.settings()->maxLineLength() );
   else
-    v_iew->e_dit->disableWordWrap();
+    v_iew->editor()->disableWordWrap();
 }
 
 void KNComposer::slotAutoSpellCheckingToggled()
 {
-  v_iew->e_dit->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
+  v_iew->editor()->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
 }
 
 
 void KNComposer::slotUndoRewrap()
 {
   if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written.")) == KMessageBox::Continue) {
-    v_iew->e_dit->setText(u_nwraped);
+    v_iew->editor()->setText(u_nwraped);
     v_iew->appendSignature();
   }
 }
@@ -1368,7 +1344,7 @@ void KNComposer::slotExternalEditor()
   bool ok=true;
   QTextCodec *codec=KGlobal::charsets()->codecForName( mCharset, ok );
 
-  QString tmp = v_iew->e_dit->toWrappedPlainText();
+  QString tmp = v_iew->editor()->toWrappedPlainText();
 
   QByteArray local = codec->fromUnicode(tmp);
   e_ditorTempfile->write(local.data(),local.length());
@@ -1423,7 +1399,7 @@ void KNComposer::slotUpdateStatusBar()
     default  :  typeDesc = i18n("News Article & Email");
   }
   QString overwriteDesc;
-  if (v_iew->e_dit->overwriteMode ())
+  if (v_iew->editor()->overwriteMode ())
     overwriteDesc = i18n(" OVR ");
   else
     overwriteDesc = i18n(" INS ");
@@ -1431,15 +1407,15 @@ void KNComposer::slotUpdateStatusBar()
   statusBar()->changeItem(i18n(" Type: %1 ", typeDesc), 1);
   statusBar()->changeItem(i18n(" Charset: %1 ", mCharset ), 2);
   statusBar()->changeItem(overwriteDesc, 3);
-  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->editor()->columnNumber () + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->editor()->linePosition() + 1), 5);
 }
 
 
 void KNComposer::slotUpdateCursorPos()
 {
-  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->editor()->columnNumber () + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->editor()->linePosition() + 1), 5);
 }
 
 
@@ -1477,7 +1453,7 @@ void KNComposer::slotSubjectChanged(const QString &t)
   subject.replace( '\n', ' ' );
   subject.replace( '\r', ' ' );
   if ( subject != t ) // setText() sets the cursor to the end
-    v_iew->s_ubject->setText( subject );
+    v_iew->setSubject( subject );
   // update caption
   if( !subject.isEmpty() )
     setCaption( subject );
@@ -1486,28 +1462,11 @@ void KNComposer::slotSubjectChanged(const QString &t)
 }
 
 
-void KNComposer::slotGroupsChanged(const QString &t)
-{
-  QString currText=v_iew->f_up2->currentText();
-
-  v_iew->f_up2->clear();
-
-  QStringList groups = t.split(',');
-  foreach ( const QString &s, groups ) {
-    v_iew->f_up2->addItem( s );
-  }
-  v_iew->f_up2->addItem("");
-
-  if ( !currText.isEmpty() || !mFirstEdit ) // user might have cleared fup2 intentionally during last edit
-    v_iew->f_up2->lineEdit()->setText(currText);
-}
-
-
 void KNComposer::slotToBtnClicked()
 {
   AddressesDialog dlg( this );
   QString txt;
-  QString to = v_iew->t_o->text();
+  QString to = v_iew->emailRecipient();
   dlg.setShowBCC(false);
   dlg.setShowCC(false);
 #if 0
@@ -1527,8 +1486,7 @@ void KNComposer::slotToBtnClicked()
       to+=", ";
   to+=dlg.to().join(", ");
 
-  v_iew->t_o->setText(to);
-
+  v_iew->setEmailRecipient( to );
 }
 
 
@@ -1545,14 +1503,14 @@ void KNComposer::slotGroupsBtnClicked()
 
   if(!nntp) {
     KMessageBox::error(this, i18n("You have no valid news accounts configured."));
-    v_iew->g_roups->clear();
+    v_iew->setGroups( QString() );
     return;
   }
 
   if(id==-1)
     a_rticle->setServerId(nntp->id());
 
-  KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, v_iew->g_roups->text().remove(QRegExp("\\s")));
+  KNGroupSelectDialog *dlg = new KNGroupSelectDialog( this, nntp, v_iew->groups() );
 
   connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
     knGlobals.groupManager(), SLOT(slotLoadGroupList(KNNntpAccount*)));
@@ -1560,7 +1518,7 @@ void KNComposer::slotGroupsBtnClicked()
     dlg, SLOT(slotReceiveList(KNGroupListData*)));
 
   if(dlg->exec())
-    v_iew->g_roups->setText(dlg->selectedGroups());
+    v_iew->setGroups( dlg->selectedGroups() );
 
   delete dlg;
 }

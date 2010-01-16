@@ -41,6 +41,12 @@ class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
 class QComboBox;
+namespace KNode {
+  namespace Composer {
+    class View;
+  }
+}
+using KNode::Composer::View;
 
 
 /** Message composer window. */
@@ -107,14 +113,13 @@ class KNComposer : public KXmlGuiWindow {
     QMenu * popupMenu( const QString& name );
 
 //internal classes
-    class ComposerView;
     class Editor;
     class AttachmentView;
     class AttachmentViewItem;
     class AttachmentPropertiesDlg;
 
     //GUI
-    ComposerView *v_iew;
+    View *v_iew;
     QMenu *a_ttPopup;
 
     //Data
@@ -181,7 +186,6 @@ class KNComposer : public KXmlGuiWindow {
 
     // GUI
     void slotSubjectChanged(const QString &t);
-    void slotGroupsChanged(const QString &t);
     void slotToBtnClicked();
     void slotGroupsBtnClicked();
 
@@ -290,10 +294,24 @@ class KNComposer::AttachmentPropertiesDlg : public KDialog {
 class KNLineEdit : public KABC::AddressLineEdit
 {
     Q_OBJECT
-    typedef KABC::AddressLineEdit KNLineEditInherited;
-public:
 
-    KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion, QWidget *parent = 0 );
+public:
+    /**
+      Constructor.
+    */
+    explicit KNLineEdit( View *parent, bool useCompletion = true );
+    /**
+      Helper constructor (for UI designer generated class).
+      You must call setView later.
+    */
+    explicit KNLineEdit( QWidget *parent, bool useCompletion = true );
+
+    /**
+      Sets the View that this line edit belongs to.
+    */
+    void setView( View *view )
+      { composerView = view; }
+
 protected:
     // Inherited. Always called by the parent when this widget is created.
     virtual void loadAddresses();
@@ -302,7 +320,7 @@ protected:
 private slots:
     void editRecentAddresses();
 private:
-    KNComposer::ComposerView *composerView;
+    View *composerView;
 };
 
 /** Line edit with on-the-fly spell checking. */
@@ -310,7 +328,16 @@ class KNLineEditSpell : public KNLineEdit
 {
     Q_OBJECT
 public:
-    KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion, QWidget * parent );
+    /**
+      Constructor.
+    */
+    explicit KNLineEditSpell( View *parent, bool useCompletion = true );
+    /**
+      Helper constructor (for UI designer generated class).
+      You must call setView later.
+    */
+    explicit KNLineEditSpell( QWidget *parent, bool useCompletion = true );
+
     void highLightWord( unsigned int length, unsigned int pos );
     void spellCheckDone( const QString &s );
     void spellCheckerMisspelling( const QString &text, const QStringList &, unsigned int pos);

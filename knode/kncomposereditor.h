@@ -33,7 +33,7 @@ class KNComposerEditor : public KMeditor
     /**
      * Constructs a KNComposerEditor object.
      */
-    explicit KNComposerEditor( QWidget *parent );
+    explicit KNComposerEditor( QWidget *parent = 0 );
 
     virtual ~KNComposerEditor();
 
