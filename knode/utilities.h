@@ -17,44 +17,12 @@
 
 #include <kurl.h>
 
-#include <QFile>
-
-#include <qglobal.h>
-#include <q3ptrvector.h>
-#include <q3ptrlist.h>
-
-class QWidget;
-class QString;
-class QChar;
-class QStringList;
-class QSize;
-
 class KTemporaryFile;
-
+class QFile;
 
 //*****************************************************************************
 // utility classes
 //*****************************************************************************
-
-#if 0
-/** clone of QSortedList... */
-template<class type> class Q_EXPORT QSortedVector : public Q3PtrVector<type>
-{
-public:
-    QSortedVector() {}
-    QSortedVector ( uint size ) : Q3PtrVector<type>(size) {}
-    QSortedVector( const QSortedVector<type> &l ) : Q3PtrVector<type>(l) {}
-    ~QSortedVector() { Q3PtrVector<type>::clear(); }
-    QSortedVector<type> &operator=(const QSortedVector<type> &l)
-      { return (QSortedVector<type>&)Q3PtrList<type>::operator=(l); }
-
-    virtual int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
-      { if ( *((type*)s1) == *((type*)s2) ) return 0; return ( *((type*)s1) < *((type*)s2) ? -1 : 1 ); }
-};
-#endif
-
-
-//========================================================================================
 
 
 /** File save helper (includes file save dialog and network upload). */
@@ -129,7 +97,6 @@ public:
 
   static const QString encryptStr(const QString& aStr);
   static const QString decryptStr(const QString& aStr);
-  static QString rot13(const QString &s);
 
   /** used for rewarping a text when replying to a message or inserting a file into a box */
   static QString rewrapStringList(const QStringList &text, int wrapAt, QChar quoteChar, bool stopAtSig, bool alwaysSpace);
