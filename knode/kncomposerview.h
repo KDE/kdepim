@@ -141,7 +141,6 @@ class View : public QSplitter, private Ui::View
     KNComposerEditor * editor() const;
 
 
-    QWidget         *a_ttWidget;
     KNComposer::AttachmentView *a_ttView;
     QPushButton     *a_ttRemoveBtn,
                     *a_ttEditBtn;

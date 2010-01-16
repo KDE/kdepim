@@ -33,9 +33,12 @@ namespace Composer {
 
 View::View( KNComposer *composer )
   : QSplitter( Qt::Vertical, composer ),
-    a_ttWidget( 0 ), a_ttView( 0 ), v_iewOpen( false )
+    a_ttView( 0 ), v_iewOpen( false )
 {
   setupUi( this );
+
+  setChildrenCollapsible( false );
+  mAttachementWidget->hide();
 
   //From
   mFromEdit->setView( this );
@@ -348,13 +351,12 @@ void View::showSubject( bool show )
 
 void View::showAttachmentView()
 {
-  if(!a_ttWidget) {
-    a_ttWidget=new QWidget(this);
-    QGridLayout *topL=new QGridLayout(a_ttWidget);
+  if ( !a_ttView ) {
+    QGridLayout *topL=new QGridLayout(mAttachementWidget);
     topL->setSpacing(4);
     topL->setMargin(4);
 
-    a_ttView = new KNComposer::AttachmentView( a_ttWidget );
+    a_ttView = new KNComposer::AttachmentView( mAttachementWidget );
     topL->addWidget(a_ttView, 0, 0, 3, 1);
 
     //connections
@@ -373,16 +375,16 @@ void View::showAttachmentView()
             parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
 
     //buttons
-    a_ttAddBtn=new QPushButton(i18n("A&dd..."),a_ttWidget);
+    a_ttAddBtn=new QPushButton(i18n("A&dd..."),mAttachementWidget);
     connect(a_ttAddBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachFile()));
     topL->addWidget(a_ttAddBtn, 0,1);
 
-    a_ttRemoveBtn=new QPushButton(i18n("&Remove"), a_ttWidget);
+    a_ttRemoveBtn=new QPushButton(i18n("&Remove"), mAttachementWidget);
     a_ttRemoveBtn->setEnabled(false);
     connect(a_ttRemoveBtn, SIGNAL(clicked()), parent(), SLOT(slotRemoveAttachment()));
     topL->addWidget(a_ttRemoveBtn, 1,1);
 
-    a_ttEditBtn=new QPushButton(i18n("&Properties"), a_ttWidget);
+    a_ttEditBtn=new QPushButton(i18n("&Properties"), mAttachementWidget);
     a_ttEditBtn->setEnabled(false);
     connect(a_ttEditBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachmentProperties()));
     topL->addWidget(a_ttEditBtn, 2,1, Qt::AlignTop);
@@ -393,7 +395,7 @@ void View::showAttachmentView()
 
   if(!v_iewOpen) {
     v_iewOpen=true;
-    a_ttWidget->show();
+    mAttachementWidget->show();
 
     KConfigGroup conf(knGlobals.config(), "POSTNEWS");
 
@@ -419,7 +421,7 @@ void View::showAttachmentView()
 void View::hideAttachmentView()
 {
   if(v_iewOpen) {
-    a_ttWidget->hide();
+    mAttachementWidget->hide();
     v_iewOpen=false;
   }
 }

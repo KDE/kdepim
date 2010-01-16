@@ -1567,7 +1567,7 @@ void KNComposer::slotAttachmentPopup(K3ListView*, Q3ListViewItem *it, const QPoi
 
 void KNComposer::slotAttachmentSelected(Q3ListViewItem *it)
 {
-  if(v_iew->a_ttWidget) {
+  if ( v_iew->a_ttView ) {
     v_iew->a_ttRemoveBtn->setEnabled((it!=0));
     v_iew->a_ttEditBtn->setEnabled((it!=0));
   }
