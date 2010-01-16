@@ -1012,8 +1012,8 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
     break;
 
     case KNComposer::CRsave :
-      if ( com->applyChanges() )
-        knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->drafts());
+      com->applyChanges();
+      knGlobals.articleManager()->moveIntoFolder(lst, knGlobals.folderManager()->drafts());
     break;
 
     case KNComposer::CRdelAsk:

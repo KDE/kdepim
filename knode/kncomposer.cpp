@@ -783,13 +783,14 @@ bool KNComposer::applyChanges()
 {
   KMime::Content *text=0;
   KNAttachment *a=0;
+  bool result = true; // no error occurs ?
 
 
   // Identity (for later edition)
   const KPIMIdentities::Identity identity = KNGlobals::self()->identityManager()->identityForUoid( v_iew->selectedIdentity() );
   if ( identity.isNull() ) {
     // Identity was removed!
-    return false;
+    result = false;
   } else {
     KMime::Headers::Generic *xKnodeIdentity = new KMime::Headers::Generic( "X-KNode-Identity",
                                                                           a_rticle,
@@ -801,7 +802,8 @@ bool KNComposer::applyChanges()
   if ( KPIMUtils::isValidSimpleAddress( identity.emailAddr() ) ) {
     a_rticle->from()->fromUnicodeString( identity.fullEmailAddr(), mCharset.toLatin1() );
   } else {
-    return false;
+    a_rticle->removeHeader( "From" );
+    result = false;
   }
 
   //Reply-To
@@ -929,7 +931,7 @@ bool KNComposer::applyChanges()
               QByteArray result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           } else {
-              return false;
+              result = false;
           }
       }
   }
@@ -941,7 +943,8 @@ bool KNComposer::applyChanges()
 
   a_rticle->assemble();
   a_rticle->updateListItem();
-  return true;
+
+  return result;
 }
 
 void KNComposer::setCharset( const QString &charset )

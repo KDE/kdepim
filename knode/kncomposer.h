@@ -81,6 +81,10 @@ class KNComposer : public KXmlGuiWindow {
     bool hasValidData();
     composerResult result() const              { return r_esult; }
     KNLocalArticle* article()const             { return a_rticle; }
+    /**
+      Applies changes from the editor into the article being edited.
+      @return false if an error occured.
+    */
     bool applyChanges();
 
     void closeEvent(QCloseEvent *e);
