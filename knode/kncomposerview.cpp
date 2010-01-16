@@ -11,22 +11,17 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
-#include <QFile>
+
+#include "kncomposerview.h"
+
 #include <QGridLayout>
 #include <klocale.h>
 #include <QPushButton>
-#include <kmeditor.h>
-#include <QVBoxLayout>
 #include <QGroupBox>
-#include <QHBoxLayout>
 #include <Q3Header>
 #include <KComboBox>
-#include <KTemporaryFile>
-#include <QApplication>
 #include "knglobals.h"
-#include "kncomposer.h"
 #include "kncomposereditor.h"
-#include "kncomposerview.h"
 
 //=====================================================================================
 

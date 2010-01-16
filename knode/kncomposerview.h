@@ -14,23 +14,45 @@
 #ifndef KNCOMPOSERVIEW_H
 #define KNCOMPOSERVIEW_H
 
-class KNLineEditSpell;
-class KNLineEdit;
-class KNComposer;
+#include "kncomposer.h"
+
+#include <QSplitter>
+
+class KComboBox;
 class KNComposerEditor;
+class QGroupBox;
+
 
 /** Message composer view. */
 class KNComposer::ComposerView  : public QSplitter {
 
   public:
-    ComposerView( KNComposer *_composer );
-    ~ComposerView();
+    /**
+      Constructor.
+    */
+    explicit ComposerView( KNComposer *_composer );
+    /**
+      Destructor.
+    */
+    virtual ~ComposerView();
+
+    /**
+      Gives the focus to the next/previous edition widget (group, to, subject, body, etc.)
+      @param aCur the widget which currently have the focus
+      @param aNext if true, the next widget get the focus., otherwise the previous one get the focus.
+    */
     void focusNextPrevEdit(const QWidget* aCur, bool aNext);
+
+    /**
+      Set the message mode to @param mode.
+    */
     void setMessageMode(KNComposer::MessageMode mode);
+
     void showAttachmentView();
     void hideAttachmentView();
     void showExternalNotification();
     void hideExternalNotification();
+
     QList<QWidget*> mEdtList;
 
     QLabel      *l_to,
