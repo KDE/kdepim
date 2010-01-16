@@ -861,7 +861,7 @@ void ModelPrivate::checkIfDateChanged()
   if ( !mViewItemJobs.isEmpty() )
     return; // not now
 
-  if ( mTodayDate.day() == QDate::currentDate().day() )
+  if ( mTodayDate == QDate::currentDate() )
     return; // date not changed
 
   // date changed, reload the view (and try to preserve the current selection)
@@ -1264,178 +1264,105 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
   switch( mAggregation->grouping() )
   {
     case Aggregation::GroupByDate:
-    {
-      QDateTime dt;
-      switch ( mAggregation->threadLeader() )
-      {
-        case Aggregation::MostRecentMessage:
-          date = mi->maxDate();
-        break;
-        case Aggregation::TopmostMessage:
-          date = mi->date();
-        break;
-        default:
-          // should never happen
-          date = mi->date();
-        break;
-      }
-
-      dt.setTime_t( date );
-
-      QDate dDate = dt.date();
-      if ( static_cast< uint >( date ) == static_cast< uint >( -1 ) )
-      {
-        groupLabel = mCachedUnknownLabel;
-      } else if(
-          ( dDate.day() == mTodayDate.day() ) &&
-          ( dDate.month() == mTodayDate.month() ) &&
-          ( dDate.year() == mTodayDate.year() )
-        )
-      {
-        // today
-        groupLabel = mCachedTodayLabel;
-      } else if ( dDate.daysTo( mTodayDate ) == 1 )
-      {
-        // yesterday
-        groupLabel = mCachedYesterdayLabel;
-      } else if(
-          ( dDate.month() == mTodayDate.month() ) &&
-          ( dDate.year() == mTodayDate.year() )
-        )
-      {
-        // within this month
-        int weekStartOffset = KGlobal::locale()->workingWeekStartDay() - 1;
-        int todayWeekNumber = mTodayDate.addDays( -weekStartOffset ).weekNumber();
-        int dateWeekNumber = dDate.addDays( -weekStartOffset ).weekNumber();
-        if ( dateWeekNumber == todayWeekNumber )
-        {
-          // within this week
-          groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate );
-        } else {
-          groupLabel = KGlobal::locale()->formatDate( dDate, KLocale::ShortDate );
-        }
-      } else {
-        groupLabel = KGlobal::locale()->formatDate( dDate, KLocale::ShortDate );
-      }
-
-    }
-    break;
     case Aggregation::GroupByDateRange:
     {
-      // "smart" date ranges
-      QDateTime dt;
-      switch ( mAggregation->threadLeader() )
+      if ( mAggregation->threadLeader() == Aggregation::MostRecentMessage )
       {
-        case Aggregation::MostRecentMessage:
           date = mi->maxDate();
-        break;
-        case Aggregation::TopmostMessage:
+      } else
+      {
           date = mi->date();
-        break;
-        default:
-          // should never happen
-          date = mi->date();
-        break;
       }
 
+      QDateTime dt;
       dt.setTime_t( date );
-
       QDate dDate = dt.date();
-      if ( static_cast< uint >( date ) == static_cast< uint >( -1 ) )
+      const KCalendarSystem *calendar = KGlobal::locale()->calendar();
+      int daysAgo = -1;
+      if ( calendar->isValid( dDate ) && calendar->isValid( mTodayDate ) ) {
+        daysAgo = dDate.daysTo( mTodayDate );
+      }
+
+      if ( ( daysAgo < 0 ) || // In the future
+           ( static_cast< uint >( date ) == static_cast< uint >( -1 ) ) ) // Invalid
       {
         groupLabel = mCachedUnknownLabel;
-      } else if(
-          ( dDate.day() == mTodayDate.day() ) &&
-          ( dDate.month() == mTodayDate.month() ) &&
-          ( dDate.year() == mTodayDate.year() )
-        )
+      } else if( daysAgo == 0 ) // Today
       {
-        // today
         groupLabel = mCachedTodayLabel;
-      } else if ( dDate.daysTo( mTodayDate ) == 1 )
+      } else if ( daysAgo == 1 ) // Yesterday
       {
-        // yesterday
         groupLabel = mCachedYesterdayLabel;
-      } else if ( dDate.daysTo( mTodayDate) > 1 && dDate.daysTo( mTodayDate ) < 7 )
+      } else if ( daysAgo > 1 && daysAgo < calendar->daysInWeek( mTodayDate ) ) // Within last seven days
       {
-        // Within last seven days
-        groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate.dayOfWeek() );
-      } else if(
-          ( dDate.month() == mTodayDate.month() ) &&
-          ( dDate.year() == mTodayDate.year() )
-        )
+        groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate );
+      } else if ( mAggregation->grouping() == Aggregation::GroupByDate ) { // GroupByDate seven days or more ago
+        groupLabel = KGlobal::locale()->formatDate( dDate, KLocale::ShortDate );
+      } else if( ( calendar->month( dDate ) == calendar->month( mTodayDate ) ) && // GroupByDateRange within this month
+                 ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) )
       {
-        // within this month
-        int weekStartOffset = KGlobal::locale()->workingWeekStartDay() - 1;
-        int todayWeekNumber = mTodayDate.addDays( -weekStartOffset ).weekNumber();
-        int dateWeekNumber = dDate.addDays( -weekStartOffset ).weekNumber();
-        if ( dateWeekNumber == todayWeekNumber )
+        int startOfWeekDaysAgo = ( calendar->daysInWeek( mTodayDate ) + calendar->dayOfWeek( mTodayDate ) -
+                                   KGlobal::locale()->weekStartDay() ) % calendar->daysInWeek( mTodayDate );
+        int weeksAgo = ( ( daysAgo - startOfWeekDaysAgo ) / calendar->daysInWeek( mTodayDate ) ) + 1;
+        switch( weeksAgo )
         {
-          // within this week
-          groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate );
-        } else {
-          // previous weeks
-          int weekDiff = todayWeekNumber - dateWeekNumber;
-          switch( weekDiff )
-          {
-            case 1:
-              groupLabel = mCachedLastWeekLabel;
+          case 0: // This week
+            groupLabel = KGlobal::locale()->calendar()->weekDayName( dDate );
             break;
-            case 2:
-              groupLabel = mCachedTwoWeeksAgoLabel;
+          case 1: // 1 week ago
+            groupLabel = mCachedLastWeekLabel;
             break;
-            case 3:
-              groupLabel = mCachedThreeWeeksAgoLabel;
+          case 2:
+            groupLabel = mCachedTwoWeeksAgoLabel;
             break;
-            case 4:
-              groupLabel = mCachedFourWeeksAgoLabel;
+          case 3:
+            groupLabel = mCachedThreeWeeksAgoLabel;
             break;
-            case 5:
-              groupLabel = mCachedFiveWeeksAgoLabel;
+          case 4:
+            groupLabel = mCachedFourWeeksAgoLabel;
             break;
-            default:
-              groupLabel = mCachedUnknownLabel; // should never happen
+          case 5:
+            groupLabel = mCachedFiveWeeksAgoLabel;
             break;
-          }
+          default: // should never happen
+            groupLabel = mCachedUnknownLabel;
         }
-      } else {
-        if(
-          ( dDate.year() == mTodayDate.year() )
-        )
-        {
-          // group by months, this year (so no year appended)
-          groupLabel = KGlobal::locale()->calendar()->monthName( dDate );
-        } else {
-          // group by months
-          groupLabel = QString( "%1 %2" )
-            .arg( KGlobal::locale()->calendar()->monthName( dDate ) )
-            .arg( dDate.year() );
-        }
+      } else if ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) { // GroupByDateRange within this year
+        groupLabel = calendar->monthName( dDate );
+      } else { // GroupByDateRange in previous years
+        // Make date format translatable in 4.5
+        // groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2" )
+        groupLabel = QString( "%1 %2" )
+          .arg( calendar->monthName( dDate ) )
+          .arg( calendar->year( dDate ) );
       }
+      break;
     }
-    break;
+
     case Aggregation::GroupBySenderOrReceiver:
       date = mi->date();
       groupLabel = mi->senderOrReceiver();
-    break;
+      break;
+
     case Aggregation::GroupBySender:
       date = mi->date();
       groupLabel = mi->sender();
-    break;
+      break;
+
     case Aggregation::GroupByReceiver:
       date = mi->date();
       groupLabel = mi->receiver();
-    break;
+      break;
+
     case Aggregation::NoGrouping:
       // append directly to root
       attachMessageToParent( mRootItem, mi );
       return;
-    break;
+
     default:
       // should never happen
       attachMessageToParent( mRootItem, mi );
       return;
-    break;
   }
 
   GroupHeaderItem * ghi;
