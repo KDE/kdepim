@@ -28,6 +28,7 @@
 #include "headerview.h"
 #include "settings.h"
 #include "utils/locale.h"
+#include "utils/scoped_cursor_override.h"
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -933,7 +934,7 @@ void KNGroup::scoreArticles(bool onlynew)
 
     kDebug(5003) <<"scoring" << newCount() <<" articles";
     kDebug(5003) <<"(total" << length() <<" article in group)";
-    knGlobals.top->setCursorBusy(true);
+    ScopedCursorOverride cursor( Qt::WaitCursor );
     knGlobals.setStatusMsg(i18n(" Scoring..."));
 
     int defScore;
@@ -967,7 +968,7 @@ void KNGroup::scoreArticles(bool onlynew)
     }
 
     knGlobals.setStatusMsg( QString() );
-    knGlobals.top->setCursorBusy(false);
+    cursor.restore();
 
     //kDebug(5003) << KNScorableArticle::notifyC->collection();
     if (KNScorableArticle::notifyC)
@@ -980,7 +981,7 @@ void KNGroup::reorganize()
 {
   kDebug(5003) <<"KNGroup::reorganize()";
 
-  knGlobals.top->setCursorBusy(true);
+  ScopedCursorOverride cursor( Qt::WaitCursor );
   knGlobals.setStatusMsg(i18n(" Reorganizing headers..."));
 
   for(int idx=0; idx<length(); idx++) {
@@ -996,7 +997,6 @@ void KNGroup::reorganize()
   saveDynamicData(length(), true);
   knGlobals.top->headerView()->repaint();
   knGlobals.setStatusMsg( QString() );
-  knGlobals.top->setCursorBusy(false);
 }
 
 

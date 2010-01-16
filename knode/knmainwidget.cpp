@@ -332,14 +332,6 @@ void KNMainWidget::updateCaption()
   emit signalCaptionChangeRequest(newCaption);
 }
 
-
-void KNMainWidget::setCursorBusy(bool b)
-{
-  if(b) QApplication::setOverrideCursor(Qt::WaitCursor);
-  else  QApplication::restoreOverrideCursor();
-}
-
-
 void KNMainWidget::disableAccels(bool b)
 {
 #ifdef __GNUC__

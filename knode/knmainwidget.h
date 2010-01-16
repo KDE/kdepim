@@ -75,7 +75,6 @@ public:
   void setStatusMsg(const QString& = QString(), int id=SB_MAIN);
   void setStatusHelpMsg(const QString& text);
   void updateCaption();
-  void setCursorBusy(bool b=true);
   void disableAccels(bool b=true);
   /** processEvents with some blocking */
   void secureProcessEvents();

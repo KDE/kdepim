@@ -12,6 +12,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "knarticlemanager.h"
+
+#include "utils/scoped_cursor_override.h"
+
 #include <QByteArray>
 #include <QList>
 #include <krun.h>
@@ -45,6 +49,7 @@
 #include "settings.h"
 
 using namespace KNode;
+using namespace KNode::Utilities;
 
 
 KNArticleManager::KNArticleManager() : QObject(0)
@@ -186,7 +191,7 @@ void KNArticleManager::showHdrs(bool clear)
   if(clear)
     v_iew->clear();
 
-  knGlobals.top->setCursorBusy(true);
+  ScopedCursorOverride cursor( Qt::WaitCursor );
   knGlobals.setStatusMsg(i18n(" Creating list..."));
   knGlobals.top->secureProcessEvents();
 
@@ -327,7 +332,6 @@ void KNArticleManager::showHdrs(bool clear)
 
   knGlobals.setStatusMsg( QString() );
   updateStatusString();
-  knGlobals.top->setCursorBusy(false);
 }
 
 
@@ -366,7 +370,7 @@ void KNArticleManager::setAllThreadsOpen(bool b)
 {
   KNRemoteArticle *art;
   if(g_roup) {
-    knGlobals.top->setCursorBusy(true);
+    ScopedCursorOverride cursor( Qt::WaitCursor );
     d_isableExpander = true;
     for(int idx=0; idx<g_roup->length(); idx++) {
       art = g_roup->at(idx);
@@ -379,7 +383,6 @@ void KNArticleManager::setAllThreadsOpen(bool b)
         }
     }
     d_isableExpander = false;
-    knGlobals.top->setCursorBusy(false);
   }
 }
 
@@ -1061,8 +1064,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
   top=static_cast<KNRemoteArticle*>(hdrItem->art);
 
   if (p->childCount() == 0) {
-
-    knGlobals.top->setCursorBusy(true);
+    ScopedCursorOverride cursor( Qt::WaitCursor );
 
     for(int i=0; i<g_roup->count(); i++) {
       art=g_roup->at(i);
@@ -1086,7 +1088,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
       }
     }
 
-    knGlobals.top->setCursorBusy(false);
+    cursor.restore();
   }
 
   if ( knGlobals.settings()->totalExpandThreads() )

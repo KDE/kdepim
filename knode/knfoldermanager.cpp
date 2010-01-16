@@ -12,11 +12,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QByteArray>
-#include <QDir>
-#include <QTextStream>
+#include "knfoldermanager.h"
 
-#include <klocale.h>
+#include "utils/scoped_cursor_override.h"
+
+#include <QDir>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -31,6 +31,7 @@
 #include "knmemorymanager.h"
 #include "knmainwidget.h"
 
+using namespace KNode::Utilities;
 
 KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 {
@@ -312,7 +313,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
   bool done=true;
 
   if (file) {
-    knGlobals.top->setCursorBusy(true);
+    ScopedCursorOverride cursor( Qt::WaitCursor );
     knGlobals.setStatusMsg(i18n(" Importing articles..."));
     knGlobals.top->secureProcessEvents();
 
@@ -384,7 +385,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
       knGlobals.articleManager()->moveIntoFolder(list, f);
 
     knGlobals.setStatusMsg( QString() );
-    knGlobals.top->setCursorBusy(false);
+    cursor.restore();
   }
 
   f->setNotUnloadable(false);
@@ -407,7 +408,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
   QFile *file = helper.getFile(i18n("Export Folder"));
 
   if (file) {
-    knGlobals.top->setCursorBusy(true);
+    ScopedCursorOverride cursor( Qt::WaitCursor );
     knGlobals.setStatusMsg(i18n(" Exporting articles..."));
     knGlobals.top->secureProcessEvents();
 
@@ -433,7 +434,6 @@ void KNFolderManager::exportToMBox(KNFolder *f)
     }
 
     knGlobals.setStatusMsg( QString() );
-    knGlobals.top->setCursorBusy(false);
   }
 }
 
