@@ -90,7 +90,11 @@ public:
   virtual ~MessageItem();
 
 public:
-  QList< Tag * > tagList() const;
+
+  /// Returns the list of tags for this item.
+  /// The tags are fetched from Nepomuk, you need to call setNepomukResourceURI() before so that
+  /// the correct Nepomuk::Resource is used for the tags.
+  virtual QList< Tag * > tagList() const;
 
   /**
    * Returns Tag associated to this message that has the specified id or 0
@@ -179,6 +183,26 @@ public:
 private:
   class Private;
   Private * const d;
+};
+
+/// A message item that can have a fake tag list
+class MESSAGELIST_EXPORT FakeItem : public MessageItem
+{
+  public:
+
+    FakeItem();
+    ~FakeItem();
+
+    /// Reimplemented to return the fake tag list
+    virtual QList< Tag * > tagList() const;
+
+    /// Sets a list of fake tags for this item
+    void setFakeTags( const QList< Tag* > &tagList );
+
+  private:
+
+    class Private;
+    Private * const d;
 };
 
 } // namespace Core

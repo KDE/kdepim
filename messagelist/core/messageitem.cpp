@@ -30,6 +30,12 @@
 
 using namespace MessageList::Core;
 
+class FakeItem::Private
+{
+  public:
+    QList<Tag*> mFakeTags;
+};
+
 class MessageItem::Tag::Private
 {
 public:
@@ -527,3 +533,25 @@ void MessageItem::setToDoMessageFont( const QFont &font )
 {
   MessageItem::Private::mFontToDoMessage = font;
 }
+
+FakeItem::FakeItem()
+  : d( new Private() )
+{
+}
+
+FakeItem::~FakeItem()
+{
+  delete d;
+}
+
+QList< MessageItem::Tag * > FakeItem::tagList() const
+{
+  return d->mFakeTags;
+}
+
+void FakeItem::setFakeTags( const QList< MessageItem::Tag* > &tagList )
+{
+  d->mFakeTags = tagList;
+}
+
+

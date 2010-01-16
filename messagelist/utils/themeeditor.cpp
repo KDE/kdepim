@@ -196,7 +196,7 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   mSampleGroupHeaderItem->setSenderOrReceiver( i18n( "Sender/Receiver" ) );
   mSampleGroupHeaderItem->setSubject( i18n( "Very long subject very long subject very long subject very long subject very long subject very long" ) );
 
-  mSampleMessageItem = new MessageItem();
+  mSampleMessageItem = new FakeItem();
 
   mSampleMessageItem->setDate( time( 0 ) );
   mSampleMessageItem->setSize( 0x31337 );
@@ -208,13 +208,11 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   mSampleMessageItem->setSignatureState( MessageItem::FullySigned );
   mSampleMessageItem->setEncryptionState( MessageItem::FullyEncrypted );
 
-  QList< MessageItem::Tag * > * list = new QList< MessageItem::Tag * >();
-  list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 1" ), QString() ) );
-  list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 2" ), QString() ) );
-  list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 3" ), QString() ) );
-#if 0 // ### PORT ME
-  mSampleMessageItem->setTagList( list );
-#endif
+  QList< MessageItem::Tag * > list;
+  list.append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 1" ), QString() ) );
+  list.append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 2" ), QString() ) );
+  list.append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 3" ), QString() ) );
+  mSampleMessageItem->setFakeTags( list );
 
   mRowMapper->createModelInvariantIndex( 0, mSampleMessageItem );
 
