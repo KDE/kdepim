@@ -33,6 +33,7 @@ set(etm_usage_SRCS
     tab4widget.cpp
     tab5widget.cpp
     tab6widget.cpp
+    entitytreemodelfactory.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )
