@@ -49,7 +49,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   mIdentitySelectorLabel = new QLabel( i18nc( "@label:listbox", "Identity:" ), hdrFrame );
   mIdentitySelectorLabel->setBuddy( mIdentitySelector );
   hdrL->addWidget( mIdentitySelectorLabel, hdrLLine, 0 );
-  hdrL->addWidget( mIdentitySelector, hdrLLine, 1, 2, 2 );
+  hdrL->addWidget( mIdentitySelector, hdrLLine, 1, 1, 2 );
 
   ++hdrLLine;
   //To
