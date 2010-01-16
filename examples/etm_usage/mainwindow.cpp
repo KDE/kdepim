@@ -21,6 +21,7 @@
 
 #include "mainwindow.h"
 
+#include <akonadi/control.h>
 
 #include "tab1widget.h"
 #include "tab2widget.h"
@@ -30,11 +31,12 @@
 #include "tab5widget.h"
 #include "tab6widget.h"
 
-
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   : QMainWindow(parent, flags)
 {
   QTabWidget *tabWidget = new QTabWidget(this);
+
+  Akonadi::Control::start();
 
   tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
   tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
