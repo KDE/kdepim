@@ -537,6 +537,10 @@ bool KNComposer::hasValidData()
   n_eeds8Bit=false;
 
   // header checks
+  if ( KPIMUtils::isValidAddress( v_iew->from() ) != KPIMUtils::AddressOk ) {
+    KMessageBox::sorry( this, i18n( "Your email address does not appears to be valid. Please modify it." ) );
+    return false;
+  }
 
   if ( v_iew->subject().isEmpty() ) {
     KMessageBox::sorry(this, i18n("Please enter a subject."));
@@ -727,10 +731,7 @@ bool KNComposer::applyChanges()
 
   // Identity (for later edition)
   const KPIMIdentities::Identity identity = KNGlobals::self()->identityManager()->identityForUoid( v_iew->selectedIdentity() );
-  if ( identity.isNull() ) {
-    // Identity was removed!
-    result = false;
-  } else {
+  if ( !identity.isNull() ) {
     KMime::Headers::Generic *xKnodeIdentity = new KMime::Headers::Generic( "X-KNode-Identity",
                                                                           a_rticle,
                                                                           QByteArray::number( identity.uoid() ) );
@@ -738,7 +739,7 @@ bool KNComposer::applyChanges()
   }
 
   //From
-  if ( !KPIMUtils::isValidAddress( v_iew->from() ) == KPIMUtils::AddressOk ) {
+  if ( KPIMUtils::isValidAddress( v_iew->from() ) != KPIMUtils::AddressOk ) {
     result = false;
   }
   // FIXME: if v_iew->from() is not valid, the following call is a

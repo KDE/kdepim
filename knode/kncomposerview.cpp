@@ -209,7 +209,7 @@ void View::slotIdentityChanged( uint uoid )
   KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
   KPIMIdentities::Identity identity = im->identityForUoid( uoid );
   setFrom( identity.fullEmailAddr() );
-  if ( ! KPIMUtils::isValidAddress( from() ) == KPIMUtils::AddressOk ) {
+  if ( KPIMUtils::isValidAddress( from() ) != KPIMUtils::AddressOk ) {
     showFrom( true );
   }
 }
