@@ -166,6 +166,7 @@ Tab6Widget::Tab6Widget(QWidget* parent, Qt::WindowFlags f)
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new NoncheckableFilterModel(this);
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->setSourceModel(selectionProxy);
 
   m_itemView->setModel(itemFilter);
