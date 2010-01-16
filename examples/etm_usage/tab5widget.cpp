@@ -117,6 +117,7 @@ Tab5Widget::Tab5Widget(QWidget* parent, Qt::WindowFlags f)
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->setSourceModel(selectionProxy);
 
   KCategorizedSortFilterProxyModel *categorizedModel = new KCategorizedSortFilterProxyModel(this);
