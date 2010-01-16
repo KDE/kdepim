@@ -82,23 +82,4 @@
   <Action name="remove_attachment"/>
 </Menu>
 
-
-<Menu name="edit_with_spell">
-  <Action name="edit_undo"/>
-  <Action name="edit_redo"/>
-  <Separator/>
-  <Action name="edit_cut"/>
-  <Action name="edit_copy"/>
-  <Action name="edit_paste"/>
-  <Action name="paste_quoted"/>
-  <Action name="edit_select_all"/>
-  <Separator/>
-  <Action name="edit_find"/>
-  <Action name="edit_replace"/>
-  <Separator/>
-  <Menu name="spell"><text>Spell Result</text>
-     <ActionList name="spell_result"/>
-  </Menu>
-</Menu>
-
 </kpartgui>

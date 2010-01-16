@@ -50,7 +50,6 @@ using KPIM::RecentAddresses;
 #include <kcombobox.h>
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgpblock.h>
-#include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
 #include <kstatusbar.h>
@@ -183,8 +182,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentit
       mFirstEdit( firstEdit )
 {
   setObjectName( "composerWindow" );
-    mSpellingFilter = 0;
-    spellLineEdit = false;
 
   if( knGlobals.componentData().isValid() )
     setComponentData( knGlobals.componentData() );
@@ -449,7 +446,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentit
 
 KNComposer::~KNComposer()
 {
-  delete mSpellingFilter;
   // prevent slotEditorFinished from being called
   if (e_xternalEditor)
     e_xternalEditor->disconnect();
@@ -464,8 +460,6 @@ KNComposer::~KNComposer()
 
   KNGlobals::self()->settings()->setAutoSpellChecking( a_ctAutoSpellChecking->isChecked() );
   KNGlobals::self()->settings()->writeConfig();
-
-  qDeleteAll( m_listAction );
 }
 
 void KNComposer::slotUpdateCheckSpellChecking(bool _b)
@@ -473,30 +467,6 @@ void KNComposer::slotUpdateCheckSpellChecking(bool _b)
   a_ctAutoSpellChecking->setChecked(_b);
 }
 
-int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
-{
-    createGUI("kncomposerui.rc");
-    unplugActionList("spell_result" );
-    qDeleteAll( m_listAction );
-    m_listAction.clear();
-    if ( !lst.contains( selectWord ) )
-    {
-        QStringList::ConstIterator it = lst.begin();
-        for ( ; it != lst.end() ; ++it )
-        {
-            if ( !(*it).isEmpty() ) // in case of removed subtypes or placeholders
-            {
-                KAction *act = new KAction( *it, 0 );
-                connect(act, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT( slotCorrectWord() ));
-
-                m_listAction.append( act );
-            }
-        }
-    }
-    if ( m_listAction.count()>0 )
-        plugActionList("spell_result", m_listAction );
-    return m_listAction.count();
-}
 
 void KNComposer::slotUndo()
 {
@@ -1616,99 +1586,6 @@ void KNComposer::slotAttachmentRemove(Q3ListViewItem *)
   slotRemoveAttachment();
 }
 
-
-//==============================================================================
-// spellchecking code copied form kedit (Bernd Johannes Wuebben)
-//==============================================================================
-#if 0
-
-void KNComposer::slotSpellStarted( K3Spell *)
-{
-    if( !spellLineEdit )
-    {
-        v_iew->e_dit->spellcheck_start();
-        s_pellChecker->setProgressResolution(2);
-
-        // read the quote indicator from the preferences
-        KConfigGroup config( knGlobals.config(), "READNEWS" );
-        QString quotePrefix;
-        quotePrefix = config.readEntry("quoteCharacters",">");
-//todo fixme
-//quotePrefix = mComposer->msg()->formatString(quotePrefix);
-
-        kDebug(5003) <<"spelling: new SpellingFilter with prefix=\"" << quotePrefix <<"\"";
-        mSpellingFilter = new SpellingFilter(v_iew->e_dit->text(), quotePrefix, SpellingFilter::FilterUrls,
-                                             SpellingFilter::FilterEmailAddresses);
-
-        s_pellChecker->check(mSpellingFilter->filteredText());
-    }
-    else
-        s_pellChecker->check( v_iew->s_ubject->text());
-}
-
-void KNComposer::slotSpellDone(const QString &newtext)
-{
-    a_ctExternalEditor->setEnabled(true);
-    a_ctSpellCheck->setEnabled(true);
-    if ( !spellLineEdit )
-        v_iew->e_dit->spellcheck_stop();
-
-    int dlgResult = s_pellChecker->dlgResult();
-    if ( dlgResult == KS_CANCEL )
-    {
-        if( spellLineEdit)
-        {
-            //stop spell check
-            spellLineEdit = false;
-            QString tmpText( newtext);
-            tmpText =  tmpText.remove('\n');
-
-            if( tmpText != v_iew->s_ubject->text() )
-                v_iew->s_ubject->setText( tmpText );
-        }
-        else
-        {
-            kDebug(5003) <<"spelling: canceled - restoring text from SpellingFilter";
-            kDebug(5003)<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText();
-            v_iew->e_dit->setText(mSpellingFilter->originalText());
-
-            //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
-        }
-    }
-    s_pellChecker->cleanUp();
-    K3DictSpellingHighlighter::dictionaryChanged();
-}
-
-
-void KNComposer::slotSpellFinished()
-{
-  a_ctExternalEditor->setEnabled(true);
-  a_ctSpellCheck->setEnabled(true);
-  K3Spell::spellStatus status=s_pellChecker->status();
-  delete s_pellChecker;
-  s_pellChecker=0;
-
-  kDebug(5003) <<"spelling: delete SpellingFilter";
-  delete mSpellingFilter;
-  mSpellingFilter = 0;
-
-  if(status==K3Spell::Error) {
-    KMessageBox::error(this, i18n("ISpell could not be started.\n"
-    "Please make sure you have ISpell properly configured and in your PATH."));
-  }
-  else if(status==K3Spell::Crashed) {
-    v_iew->e_dit->spellcheck_stop();
-    KMessageBox::error(this, i18n("ISpell seems to have crashed."));
-  }
-  else
-  {
-      if( spellLineEdit )
-          slotSpellcheck();
-      else if( status == K3Spell::FinishedNoMisspellingsEncountered )
-          KMessageBox::information( this, i18n("No misspellings encountered."));
-  }
-}
-#endif
 
 void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
 {
