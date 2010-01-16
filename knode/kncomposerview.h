@@ -86,6 +86,12 @@ class KNComposer::ComposerView  : public QSplitter {
                     *a_ttEditBtn;
     bool v_iewOpen;
 
+  public slots:
+    /**
+      Appends the signature to the editor.
+    */
+    void appendSignature();
+
   private slots:
     /**
       Called when a new identity is selected to update edit lines that

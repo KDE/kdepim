@@ -70,7 +70,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
     return;
 
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( a, identity, Locale::defaultCharset() );
+  KNLocalArticle *art = newArticle( a, Locale::defaultCharset() );
   if(!art)
     return;
 
@@ -78,7 +78,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   art->setDoPost(true);
   art->setDoMail(false);
 
-  KNComposer *c = new KNComposer( art, QString(), identity, QString(), true, false, false, false );
+  KNComposer *c = new KNComposer( art, QString(), QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -93,7 +93,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   QByteArray chset = Locale::defaultCharset( g );
 
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( g, identity, chset );
+  KNLocalArticle *art = newArticle( g, chset );
 
   if(!art)
     return;
@@ -102,7 +102,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoPost(true);
   art->setDoMail(false);
   art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
-  KNComposer *c = new KNComposer( art, QString(), identity, QString(), true, false, false, false );
+  KNComposer *c = new KNComposer( art, QString(), QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -125,7 +125,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
 
   //create new article
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( g, identity, chset, true, a );
+  KNLocalArticle *art = newArticle( g, chset, true, a );
   if(!art)
     return;
 
@@ -270,7 +270,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
   }
 
   //open composer
-  KNComposer *c=new KNComposer(art, quoted, identity, notRewraped, true, authorDislikesMailCopies, authorWantsMailCopies);
+  KNComposer *c=new KNComposer(art, quoted, notRewraped, true, authorDislikesMailCopies, authorWantsMailCopies);
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -297,7 +297,7 @@ void KNArticleFactory::createForward(KNArticle *a)
 
   //create new article
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), identity, chset );
+  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), chset );
   if(!art)
     return;
 
@@ -348,7 +348,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   }
 
   //open composer
-  KNComposer *c = new KNComposer( art, fwd, identity, QString(), true );
+  KNComposer *c = new KNComposer( art, fwd, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -393,7 +393,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
     grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( grp, identity, "us-ascii", false );
+  KNLocalArticle *art = newArticle( grp, "us-ascii", false );
   if(!art)
     return;
 
@@ -468,7 +468,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
 
   //new article
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( grp, identity, a->contentType()->charset() );
+  KNLocalArticle *art = newArticle( grp, a->contentType()->charset() );
   if(!art)
     return;
 
@@ -501,7 +501,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     text = textContent->decodedText();
 
   //open composer
-  KNComposer *c=new KNComposer(art, text, identity);
+  KNComposer *c=new KNComposer(art, text);
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -517,7 +517,7 @@ void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
 
   //create new article
   KPIMIdentities::Identity identity;
-  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), identity, Locale::defaultCharset() );
+  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), Locale::defaultCharset() );
   if(!art)
     return;
 
@@ -526,7 +526,7 @@ void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
   art->to()->addAddress((*address));
 
   //open composer
-  KNComposer *c = new KNComposer( art, QString(), identity, QString(), true );
+  KNComposer *c = new KNComposer( art, QString(), QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -604,7 +604,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     knGlobals.articleManager()->loadArticle(a);
 
   //open composer
-  com = new KNComposer( a, QString(), id );
+  com = new KNComposer( a, QString() );
   mCompList.append( com );
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();
@@ -790,7 +790,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle( KNCollection *col, KPIMIdentities::Identity &id, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost )
+KNLocalArticle* KNArticleFactory::newArticle( KNCollection *col, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost )
 {
   if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
@@ -798,6 +798,7 @@ KNLocalArticle* KNArticleFactory::newArticle( KNCollection *col, KPIMIdentities:
   }
 
   KNLocalArticle *art=new KNLocalArticle(0);
+  KPIMIdentities::Identity id;
   if (col) {
     if (col->type() == KNCollection::CTgroup) {
       id = (static_cast<KNGroup *>(col))->identity();

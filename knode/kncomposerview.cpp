@@ -15,6 +15,7 @@
 #include "kncomposerview.h"
 
 #include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 #include <QGridLayout>
 #include <klocale.h>
@@ -226,6 +227,16 @@ void KNComposer::ComposerView::setIdentity( uint uoid )
 void KNComposer::ComposerView::slotIdentityChanged( uint uoid )
 {
   // TODO: populate this method when necessary.
+}
+
+
+void KNComposer::ComposerView::appendSignature()
+{
+  KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
+  KPIMIdentities::Identity identity = im->identityForUoid( selectedIdentity() );
+  identity.signature().insertIntoTextEdit( KPIMIdentities::Signature::End,
+                                           KPIMIdentities::Signature::AddSeparator,
+                                           v_iew->e_dit );
 }
 
 

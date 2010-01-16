@@ -15,6 +15,7 @@
 #include "kncomposer.h"
 
 #include <KPIMUtils/Email>
+#include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 #include <q3header.h>
 #include <QTextCodec>
@@ -174,13 +175,12 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 }
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentities::Identity &identity, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
     : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a),
       u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), a_ttChanged(false),
-      mFirstEdit( firstEdit ),
-      mIdentity( identity )
+      mFirstEdit( firstEdit )
 {
   setObjectName( "composerWindow" );
 
@@ -265,7 +265,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentit
   //attach menu
   action = actionCollection()->addAction("append_signature");
   action->setText(i18n("Append &Signature"));
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotAppendSig()));
+  connect( action, SIGNAL(triggered(bool)), v_iew, SLOT(appendSignature()) );
 
   action = actionCollection()->addAction("insert_file");
   action->setText(i18n("&Insert File..."));
@@ -426,7 +426,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentit
   }
 
   if( firstEdit && knGlobals.settings()->appendOwnSignature() )
-    slotAppendSig();
+    v_iew->appendSignature();
 
   if (createCopy && (m_ode==news)) {
     a_ctDoMail->setChecked(true);
@@ -1162,14 +1162,6 @@ void KNComposer::slotArtDelete()
 }
 
 
-void KNComposer::slotAppendSig()
-{
-  mIdentity.signature().insertIntoTextEdit( KPIMIdentities::Signature::End,
-                                            KPIMIdentities::Signature::AddSeparator,
-                                            v_iew->e_dit );
-}
-
-
 void KNComposer::slotInsertFile()
 {
   insertFile(false,false);
@@ -1342,7 +1334,7 @@ void KNComposer::slotUndoRewrap()
 {
   if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written.")) == KMessageBox::Continue) {
     v_iew->e_dit->setText(u_nwraped);
-    slotAppendSig();
+    v_iew->appendSignature();
   }
 }
 

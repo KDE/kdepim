@@ -16,7 +16,6 @@
 #define KNCOMPOSER_H
 
 #include <k3listview.h>
-#include <KPIMIdentities/Identity>
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
 #include <QRegExp>
@@ -64,7 +63,6 @@ class KNComposer : public KXmlGuiWindow {
       Create a composer for a message (e-mail or newsgroup post).
       @param a The article to edit.
       @param text The <strong>wraped</strong> text of the message.
-      @param identity The identity whose informations (name, address, signature, etc.) will be used to send this message.
       @param unwraped The original, <strong>not rewraped</strong> text.
       @param firstEdit Indicates if it is the first time that this message is edited.
       @param dislikesCopies When true, this indicates that the author of the message
@@ -72,7 +70,7 @@ class KNComposer : public KXmlGuiWindow {
       @param createCopy When true, this indicates that a copy should be sent by e-mail.
       @param allowMail Enables or disables sending the message via e-mail.
     */
-    KNComposer( KNLocalArticle *a, const QString &text = QString(), const KPIMIdentities::Identity &identity = KPIMIdentities::Identity(),
+    KNComposer( KNLocalArticle *a, const QString &text = QString(),
                 const QString &unwraped = QString(), bool firstEdit = false,
                 bool dislikesCopies = false, bool createCopy = false, bool allowMail = true);
     ~KNComposer();
@@ -154,7 +152,6 @@ class KNComposer : public KXmlGuiWindow {
     void slotSendLater();
     void slotSaveAsDraft();
     void slotArtDelete();
-    void slotAppendSig();
     void slotInsertFile();
     void slotInsertFileBoxed();
     void slotAttachFile();
@@ -228,9 +225,6 @@ class KNComposer : public KXmlGuiWindow {
       As a consequence this can not used directly as input of methods from KCharset.
     */
     QString mCharset;
-
-    /** Identity to used to send this article. */
-    KPIMIdentities::Identity mIdentity;
 };
 
 
