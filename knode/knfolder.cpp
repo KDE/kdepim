@@ -141,7 +141,7 @@ bool KNFolder::readInfo()
 }
 
 
-void KNFolder::saveInfo()
+void KNFolder::writeConfig()
 {
   if(!i_nfoPath.isEmpty()) {
     KConfig info(i_nfoPath, KConfig::SimpleConfig);

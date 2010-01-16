@@ -12,8 +12,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "kncomposer.h"
+
 #include <q3header.h>
 #include <QTextCodec>
+#include <KPIMIdentities/Identity>
 #include <QApplication>
 #include <QGridLayout>
 #include <QKeyEvent>
@@ -60,7 +63,6 @@ using KPIM::RecentAddresses;
 #include "kngroupselectdialog.h"
 #include "utilities.h"
 #include "knglobals.h"
-#include "kncomposer.h"
 #include "knmainwidget.h"
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
@@ -172,8 +174,10 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 }
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
-    : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentities::Signature &signature, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
+    : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a),
+      mSignature( signature ),
+      u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), a_ttChanged(false),
       mFirstEdit( firstEdit )
@@ -768,16 +772,17 @@ bool KNComposer::hasValidData()
   // check if article can be signed
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
-    QByteArray signingKey = knGlobals.configManager()->identity()->signingKey().toLatin1();
+    QByteArray signingKey = KNGlobals::self()->settings()->identity().pgpSigningKey();
     KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
       if ( !grps->isEmpty() ) {
         KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
-        if (grp && grp->identity())
-          signingKey = grp->identity()->signingKey().toLatin1();
-        else if (acc->identity())
-          signingKey = acc->identity()->signingKey().toLatin1();
+        if ( grp && !grp->identity().isNull() ) {
+          signingKey = grp->identity().pgpSigningKey();
+        } else if ( !acc->identity().isNull() ) {
+          signingKey = acc->identity().pgpSigningKey();
+        }
       }
     }
 
@@ -898,16 +903,17 @@ bool KNComposer::applyChanges()
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
       // first get the signing key
-      QByteArray signingKey = knGlobals.configManager()->identity()->signingKey().toLatin1();
+      QByteArray signingKey = KNGlobals::self()->settings()->identity().pgpSigningKey();
       KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
       if ( acc ) {
           KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
           if ( !grps->isEmpty() ) {
             KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
-            if (grp && grp->identity())
-              signingKey = grp->identity()->signingKey().toLatin1();
-            else if (acc->identity())
-              signingKey = acc->identity()->signingKey().toLatin1();
+            if ( grp && !grp->identity().isNull() ) {
+              signingKey = grp->identity().pgpSigningKey();
+            } else if ( !acc->identity().isNull() ) {
+              signingKey = acc->identity().pgpSigningKey();
+            }
           }
       }
       // now try to sign the article
@@ -1149,8 +1155,9 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotAppendSig()
 {
-  KPIMIdentities::Signature::insertPlainSignatureIntoTextEdit( s_ignature, v_iew->e_dit,
-      KPIMIdentities::Signature::End, false );
+  mSignature.insertIntoTextEdit( KPIMIdentities::Signature::End,
+                                 KPIMIdentities::Signature::AddSeparator,
+                                 v_iew->e_dit );
 }
 
 

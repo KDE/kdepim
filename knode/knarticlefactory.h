@@ -18,8 +18,8 @@
 #include <QByteArray>
 #include <QList>
 #include <QListWidgetItem>
-
 #include <kdialog.h>
+#include <KPIMIdentities/Signature>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -73,7 +73,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article generation
     // col: group or account
-    KNLocalArticle* newArticle(KNCollection *col, QString &sig, const QByteArray &defChset, bool withXHeaders=true, KNArticle *origPost=0);
+    KNLocalArticle* newArticle(KNCollection *col, KPIMIdentities::Signature &signature, const QByteArray &defChset, bool withXHeaders=true, KNArticle *origPost=0);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);

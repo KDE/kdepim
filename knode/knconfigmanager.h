@@ -15,7 +15,6 @@
 #ifndef KNCONFIGMANAGER_H
 #define KNCONFIGMANAGER_H
 
-#include <kcmoduleinfo.h>
 #include <kcmultidialog.h>
 
 #include "knconfig.h"
@@ -34,7 +33,6 @@ class KNConfigManager : QObject {
     KNConfigManager( QObject *parent = 0 );
     ~KNConfigManager();
 
-    KNode::Identity*             identity() const           { return i_dentity; }
     KNode::Appearance*           appearance()const          { return a_ppearance; }
     KNode::DisplayedHeaders*     displayedHeaders()const    { return d_isplayedHeaders; }
     KNode::Cleanup*              cleanup()const             { return c_leanup; }
@@ -43,7 +41,6 @@ class KNConfigManager : QObject {
     void syncConfig();
 
   protected:
-    KNode::Identity             *i_dentity;
     KNode::Appearance           *a_ppearance;
     KNode::DisplayedHeaders     *d_isplayedHeaders;
     KNode::Cleanup              *c_leanup;

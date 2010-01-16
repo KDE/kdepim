@@ -15,19 +15,20 @@
 #ifndef KNGROUP_H
 #define KNGROUP_H
 
+#include "configuration/settings_container_interface.h"
 #include "knarticlecollection.h"
 #include "knjobdata.h"
+#include "knglobals.h"
 #include "knarticle.h"
 
 #include <kio/job.h>
-
+#include <KPIMIdentities/Identity>
 #include <QByteArray>
 #include <QList>
 
 class KNNntpAccount;
 
 namespace KNode {
-  class Identity;
   class Cleanup;
 }
 
@@ -38,8 +39,8 @@ namespace KNode {
  * - Group specific settings (eg. identities or cleanup settings)
  * - Load and store methods for the header list of this group
  */
-class KNGroup : public KNArticleCollection , public KNJobItem  {
-
+class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::SettingsContainerInterface
+{
   public:
     /** The posting rights status of this group. */
     enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
@@ -59,7 +60,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** info */
     QString path();
     bool readInfo(const QString &confPath);
-    void saveInfo();
+    void writeConfig();
 
     /** name */
     bool hasName() const                         { return (!n_ame.isEmpty()); }
@@ -152,12 +153,18 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
     /** Returns the account this group belongs to. */
     KNNntpAccount* account();
-    /** Returns the identity configured for this group (might be empty). */
-    KNode::Identity* identity() const { return i_dentity; }
+
+    /**
+      Returns the identity configured for this group.
+      It is the null identity if there is none.
+    */
+    virtual const KPIMIdentities::Identity & identity() const;
     /** Sets the identity for this group.
-     * @param i The identity.
+     * @param i The identity or a null Identity to unset it.
      */
-    void setIdentity(KNode::Identity *i) { i_dentity = i; }
+    virtual void setIdentity( const KPIMIdentities::Identity &i )
+      { mIdentityUoid = ( i.isNull() ? -1 : i.uoid() ); }
+
     /** Returns the posting rights of this group.
      */
     Status status() const { return s_tatus; }
@@ -209,7 +216,13 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
      */
     QList<QByteArray> mOptionalHeaders;
 
-    KNode::Identity *i_dentity;
+    /**
+      Unique object identifier of the identity of this group.
+      -1 means there is no specific identity for this group
+      (because KPIMIdentities::Identity::uoid() returns an unsigned int.
+    */
+    int mIdentityUoid;
+
     KNode::Cleanup *mCleanupConf;
 
     class dynDataVer0 {

@@ -15,7 +15,6 @@
 
 #include "knarticlefactory.h"
 
-#include "knconfigmanager.h"
 #include "knglobals.h"
 #include "kngroupmanager.h"
 #include "knaccountmanager.h"
@@ -31,19 +30,19 @@
 #include "settings.h"
 #include "utils/locale.h"
 
-
 #include <QByteArray>
 #include <QList>
 #include <QListWidget>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
+#include <KPIMUtils/Email>
 #include <QLabel>
-
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kwindowsystem.h>
 #include <ktoolinvocation.h>
 #include <kvbox.h>
-
 #include <mailtransport/transportmanager.h>
 
 
@@ -70,7 +69,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   if(!a)
     return;
 
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art=newArticle( a, sig, Locale::defaultCharset() );
   if(!art)
     return;
@@ -93,7 +92,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
 
   QByteArray chset = Locale::defaultCharset( g );
 
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art=newArticle(g, sig, chset);
 
   if(!art)
@@ -103,7 +102,6 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoPost(true);
   art->setDoMail(false);
   art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
-
   KNComposer *c = new KNComposer( art, QString(), sig, QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
@@ -126,7 +124,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
   }
 
   //create new article
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art=newArticle(g, sig, chset, true, a);
   if(!art)
     return;
@@ -298,7 +296,7 @@ void KNArticleFactory::createForward(KNArticle *a)
     chset = a->contentType()->charset();
 
   //create new article
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, chset);
   if(!art)
     return;
@@ -394,7 +392,7 @@ void KNArticleFactory::createCancel(KNArticle *a)
   if ( !a->newsgroups()->isEmpty() )
     grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art=newArticle(grp, sig, "us-ascii", false);
   if(!art)
     return;
@@ -469,7 +467,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
   //new article
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art = newArticle( grp, sig, a->contentType()->charset() );
   if(!art)
     return;
@@ -518,7 +516,7 @@ void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
   }
 
   //create new article
-  QString sig;
+  KPIMIdentities::Signature sig;
   KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), sig, Locale::defaultCharset() );
   if(!art)
     return;
@@ -584,7 +582,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
   }
 
   //find signature
-  KNode::Identity *id=knGlobals.configManager()->identity();
+  KPIMIdentities::Identity id = KNGlobals::self()->settings()->identity();
 
   if(a->doPost()) {
     KNNntpAccount *acc=knGlobals.accountManager()->account(a->serverId());
@@ -592,10 +590,11 @@ void KNArticleFactory::edit(KNLocalArticle *a)
       KMime::Headers::Newsgroups *grps=a->newsgroups();
       if ( !grps->isEmpty() ) {
         KNGroup *grp = knGlobals.groupManager()->group(grps->groups().first(), acc);
-        if (grp && grp->identity())
-          id=grp->identity();
-        else if (acc->identity())
-          id=acc->identity();
+        if ( grp && !grp->identity().isNull() ) {
+          id = grp->identity();
+        } else if ( !acc->identity().isNull() ) {
+          id = acc->identity();
+        }
       }
     }
   }
@@ -605,13 +604,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     knGlobals.articleManager()->loadArticle(a);
 
   //open composer
-  com = new KNComposer( a, QString(), id->getSignature() );
-  if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
-  KMessageBox::information(knGlobals.topWidget,
-                            i18n("<qt>The signature generator program produced the "
-                                "following output:<br /><br />%1</qt>",
-                                 id->getSigGeneratorStdErr()));
-
+  com = new KNComposer( a, QString(), id.signature() );
   mCompList.append( com );
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();
@@ -783,7 +776,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost)
+KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, KPIMIdentities::Signature &signature, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost)
 {
   if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
@@ -791,24 +784,19 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
   }
 
   KNLocalArticle *art=new KNLocalArticle(0);
-  KNode::Identity *tmpId=0, *id=0;
-
+  KPIMIdentities::Identity id;
   if (col) {
     if (col->type() == KNCollection::CTgroup) {
       id = (static_cast<KNGroup *>(col))->identity();
-      tmpId = (static_cast<KNGroup *>(col))->account()->identity();
-    } else
-      if (col->type() == KNCollection::CTnntpAccount) {
-        id = (static_cast<KNNntpAccount *>(col))->identity();
+      if ( id.isNull() ) {
+        id = (static_cast<KNGroup *>(col))->account()->identity();
       }
+    } else if (col->type() == KNCollection::CTnntpAccount) {
+      id = (static_cast<KNNntpAccount *>(col))->identity();
+    }
   }
-
-  // determine active innermost non-empty identity
-  if (!id) {
-    if (tmpId)
-      id = tmpId;
-    else
-      id = knGlobals.configManager()->identity();
+  if ( id.isNull() ) {
+    id = KNGlobals::self()->settings()->identity();
   }
 
   //Message-id
@@ -817,49 +805,32 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
 
   //From
   KMime::Headers::From *from=art->from();
-  from->setRFC2047Charset( Locale::defaultCharset() );
-  KMime::Types::Mailbox mbox;
-
-  //name
-  if(id->hasName())
-    mbox.setName( id->name() );
-
-  //email
-  if(id->hasEmail()&&id->emailIsValid())
-    mbox.setAddress( id->email().toLatin1() );
-  else {
-    if ( id->hasEmail() )
-      KMessageBox::sorry(knGlobals.topWidget,
-	i18n("Please enter a valid email address at the identity tab of the account configuration dialog."));
-    else
-      KMessageBox::sorry(knGlobals.topWidget,
-         i18n("Please enter a valid email address at the identity section of the configuration dialog."));
+  if ( KPIMUtils::isValidSimpleAddress( id.emailAddr() ) ) {
+    from->fromUnicodeString( id.fullEmailAddr(), Locale::defaultCharset() );
+  } else {
+    KMessageBox::sorry( knGlobals.topWidget,
+                        i18n( "<qt>Please enter a valid email address for the "
+                              "identity named <emphasis>%1</emphasis> "
+                              "at the identity section of the configuration dialog.</qt>",
+                              id.identityName() ) );
     delete art;
     return 0;
   }
-  from->addAddress( mbox );
 
   //Reply-To
-  if(id->hasReplyTo()) {
-    art->replyTo()->fromUnicodeString( id->replyTo(), Locale::defaultCharset() );
-    foreach ( const KMime::Types::Mailbox &mbox, art->replyTo()->mailboxes() ) {
-      if ( !mbox.hasAddress() ) {   // the header is invalid => drop it
-        art->removeHeader("Reply-To");
-        break;
-      }
-    }
+  if ( KPIMUtils::isValidAddress( id.replyToAddr() ) == KPIMUtils::AddressOk ) {
+    art->replyTo()->fromUnicodeString( id.replyToAddr(), Locale::defaultCharset() );
   }
 
   //Mail-Copies-To
-  if(id->hasMailCopiesTo()) {
-    art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), Locale::defaultCharset() );
-    if ( art->mailCopiesTo()->isEmpty() )   // the header is invalid => drop it
-      art->removeHeader("Mail-Copies-To");
+  if ( KPIMUtils::isValidAddress( id.property( "Mail-Copies-To" ).toString() ) == KPIMUtils::AddressOk ) {
+    art->mailCopiesTo()->fromUnicodeString( id.property( "Mail-Copies-To" ).toString(), Locale::defaultCharset() );
   }
 
   //Organization
-  if(id->hasOrga())
-    art->organization()->fromUnicodeString( id->orga(), Locale::defaultCharset() );
+  if ( !id.organization().trimmed().isEmpty() ) {
+    art->organization()->fromUnicodeString( id.organization(), Locale::defaultCharset() );
+  }
 
   //Date
   art->date()->setDateTime( KDateTime::currentLocalDateTime() );
@@ -903,17 +874,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
   }
 
   //Signature
-  if(id->hasSignature())
-  {
-    sig=id->getSignature();
-    if(id->useSigGenerator() && !id->getSigGeneratorStdErr().isEmpty())
-      KMessageBox::information(knGlobals.topWidget,
-                               i18n("<qt>The signature generator program produced the "
-                                   "following output:<br /><br />%1</qt>",
-                                    id->getSigGeneratorStdErr()));
-  }
-  else
-    sig.clear();
+  signature = id.signature();
 
   return art;
 }
@@ -963,27 +924,16 @@ and cancel (or supersede) it there."));
   else if ( a->type() == KNArticle::ATremote ) {
 
     KNRemoteArticle *remArt=static_cast<KNRemoteArticle*>(a);
-    KNGroup *g=static_cast<KNGroup*>(a->collection());
-    KNode::Identity  *defId=knGlobals.configManager()->identity(),
-                        *gid=g->identity(),
-                        *accId=g->account()->identity();
+
+    KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
     bool ownArticle = false;
-
-    if (gid && gid->hasName())
-      ownArticle = ownArticle || remArt->from()->displayNames().contains( gid->name() );
-    if (accId && accId->hasName())
-      ownArticle = ownArticle || remArt->from()->displayNames().contains( accId->name() );
-    ownArticle = ownArticle || remArt->from()->displayNames().contains( defId->name() );
-
-    if(ownArticle) {
-      ownArticle = false;
-      if(gid && gid->hasEmail())
-        ownArticle = ownArticle || remArt->from()->addresses().contains( gid->email().toLatin1() );
-      if (accId && accId->hasEmail())
-        ownArticle = ownArticle || remArt->from()->addresses().contains( accId->email().toLatin1() );
-      ownArticle = ownArticle || remArt->from()->addresses().contains( defId->email().toLatin1() );
+    QList<QByteArray> fromAddr = remArt->from()->addresses();
+    foreach ( const QByteArray addr, fromAddr ) {
+      if ( im->thatIsMe( QString::fromLatin1( addr ) ) ) {
+        ownArticle = true;
+        break;
+      }
     }
-
     if(!ownArticle) {
       KMessageBox::sorry(knGlobals.topWidget, i18n("This article does not appear to be from you.\nYou can only cancel or supersede your own articles."));
       return false;

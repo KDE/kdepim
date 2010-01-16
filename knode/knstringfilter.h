@@ -19,7 +19,7 @@
 
 class QCheckBox;
 class QComboBox;
-
+class KConfigGroup;
 class KLineEdit;
 class KConfig;
 

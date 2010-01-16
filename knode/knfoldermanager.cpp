@@ -235,7 +235,7 @@ bool KNFolderManager::moveFolder(KNFolder *f, KNFolder *p)
 
   // reparent
   f->setParent(p);
-  f->saveInfo();
+  f->writeConfig();
 
   emit folderAdded(f);
 
@@ -450,7 +450,7 @@ void KNFolderManager::syncFolders()
   for ( List::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
     if ( !(*it)->isRootFolder() )
       (*it)->syncIndex();
-    (*it)->saveInfo();
+    (*it)->writeConfig();
   }
 }
 

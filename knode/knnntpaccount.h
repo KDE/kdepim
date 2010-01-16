@@ -15,20 +15,21 @@
 #ifndef KNNNTPACCOUNT_H
 #define KNNNTPACCOUNT_H
 
-
+#include "configuration/settings_container_interface.h"
 #include "kncollection.h"
 #include "knserverinfo.h"
+
 #include <QObject>
-#include <QTimer>
 #include <QDate>
 
+class QTimer;
 class KNNntpAccount;
-
 namespace KNode {
-  class Identity;
   class Cleanup;
 }
-
+namespace KPIMIdentities {
+  class Identity;
+}
 
 /** Handles the interval checking of an news server account. */
 class KNNntpAccountIntervalChecking : public QObject  {
@@ -52,8 +53,8 @@ class KNNntpAccountIntervalChecking : public QObject  {
 
 
 /** Represents an account on a news server. */
-class KNNntpAccount : public KNCollection , public KNServerInfo {
-
+class KNNntpAccount : public KNCollection , public KNServerInfo, public KNode::SettingsContainerInterface
+{
   public:
     KNNntpAccount();
     ~KNNntpAccount();
@@ -62,7 +63,7 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
 
     /** tries to read information, returns false if it fails to do so */
     bool readInfo(const QString &confPath);
-    void saveInfo();
+    void writeConfig();
     //void syncInfo();
     QString path();
     /** returns true when the user accepted */
@@ -76,7 +77,18 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     QDate lastNewFetch() const             { return l_astNewFetch; }
     bool wasOpen() const                   { return w_asOpen; }
     bool useDiskCache() const              { return u_seDiskCache; }
-    KNode::Identity* identity() const   { return i_dentity; }
+
+    /**
+      Returns this server's specific identity or
+      the null identity if there is none.
+    */
+    virtual const KPIMIdentities::Identity & identity() const;
+    /**
+      Sets this server's specific identity
+      @param identity this server's identity of a null identity to unset.
+    */
+    virtual void setIdentity( const KPIMIdentities::Identity &identity );
+
     bool intervalChecking() const          { return i_ntervalChecking; }
     int checkInterval() const              { return c_heckInterval; }
     KNode::Cleanup *cleanupConfig() const { return mCleanupConf; }
@@ -92,8 +104,12 @@ class KNNntpAccount : public KNCollection , public KNServerInfo {
     void setIntervalChecking(bool b)  { i_ntervalChecking=b; }
 
   protected:
-    /** server specific identity */
-    KNode::Identity *i_dentity;
+    /**
+      Unique object identifier of the identity of this server.
+      -1 means there is no specific identity for this group
+      (because KPIMIdentities::Identity::uoid() returns an unsigned int.
+    */
+    int mIdentityUoid;
     /** account specific cleanup configuration */
     KNode::Cleanup *mCleanupConf;
     /** use an additional "list newsgroups" command to fetch the newsgroup descriptions */

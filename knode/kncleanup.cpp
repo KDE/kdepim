@@ -172,14 +172,14 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
     g->decCount(delCnt);
     g->setNewCount(newCnt);
     g->setFirstNewIndex(firstNew);
-    g->saveInfo();
+    g->writeConfig();
     knGlobals.groupManager()->unloadHeaders(g, true);
   }
   else
     g->syncDynamicData();
 
   conf->setLastExpireDate();
-  g->saveInfo();
+  g->writeConfig();
   leftCnt=g->count();
 
   kDebug(5003) <<"KNCleanUp::expireGroup() :" << g->groupname() <<":"

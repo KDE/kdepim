@@ -1,3 +1,4 @@
+
 /*
     Copyright (c) 2005 by Volker Krause <vkrause@kde.org>
 
@@ -11,15 +12,18 @@
 */
 
 #include "settings.h"
+
 #include "knconfig.h"
+#include "knglobals.h"
 #include "utilities.h"
 
 #include <klocale.h>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 #include <kstandarddirs.h>
-
 #include <QFile>
-#include <QTextCodec>
 #include <QTextStream>
+
 
 KNode::Settings::Settings() : SettingsBase()
 {
@@ -82,4 +86,14 @@ QFont KNode::Settings::effectiveFont( KConfigSkeleton::ItemFont * item ) const
   QFont rv = item->value();
   item->swapDefault();
   return rv;
+}
+
+const KPIMIdentities::Identity & KNode::Settings::identity() const
+{
+  return KNGlobals::self()->identityManager()->identityForUoidOrDefault( SettingsBase::identity() );
+}
+
+void KNode::Settings::setIdentity( const KPIMIdentities::Identity &identity )
+{
+  SettingsBase::setIdentity( identity.uoid() );
 }

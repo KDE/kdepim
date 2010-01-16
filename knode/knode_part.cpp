@@ -56,7 +56,10 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList
   kDebug(5003) <<"KNodePart()...";
   kDebug(5003) <<"  InstanceName:" << KGlobal::mainComponent().componentName();
 
-  KNode::Utilities::Startup::loadLibrariesIconsAndTranslations();
+
+  KNode::Utilities::Startup s;
+  s.loadLibrariesIconsAndTranslations();
+  s.updateDataAndConfiguration();
 
 #ifdef __GNUC__
 #warning Port me!

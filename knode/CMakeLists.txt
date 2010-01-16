@@ -6,7 +6,12 @@ add_subdirectory( pics )
 add_subdirectory( filters )
 add_subdirectory( kconf_update )
 
-include_directories( ${KDE4_INCLUDE_DIR} ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim )
+include_directories(
+  ${KDE4_INCLUDE_DIR}
+  ${CMAKE_BINARY_DIR}/libkdepim
+  ${CMAKE_SOURCE_DIR}/libkdepim
+  ${CMAKE_SOURCE_DIR}/libkleo
+)
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5003 )
@@ -65,6 +70,8 @@ set(knodecommon_LIB_SRCS
    kncollectionview.cpp
    articlewidget.cpp
    csshelper.cpp
+   configuration/identity_widget.cpp
+   configuration/identity_edition_dialog.cpp
    utils/locale.cpp
    utils/startup.cpp
 )
@@ -80,17 +87,23 @@ kde4_add_ui_files(knodecommon_LIB_SRCS
    readnewsnavigationwidget_base.ui
    readnewsviewerwidget_base.ui
    postnewstechnicalwidget_base.ui
-   postnewscomposerwidget_base.ui )
+   postnewscomposerwidget_base.ui
+   configuration/identity_widget.ui
+   configuration/identity_edition_dialog.ui
+)
 
 kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-target_link_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBS} ${KDE4_KIO_LIBS}
-                              ${KDE4_KDE3SUPPORT_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KHTML_LIBS}
-                              ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY}
-                              ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
-                              kdepim kpgp)
+target_link_libraries(knodecommon
+  ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBS} ${KDE4_KIO_LIBS}
+  ${KDE4_KDE3SUPPORT_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KHTML_LIBS}
+  ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY}
+  ${KDEPIMLIBS_KONTACTINTERFACE_LIBS}
+  kleo
+  kdepim kpgp
+)
 
 target_link_libraries(knodecommon LINK_INTERFACE_LIBRARIES ${KDE4_KUTILS_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
 

@@ -13,11 +13,16 @@
 #ifndef KNODE_SETTINGS_H
 #define KNODE_SETTINGS_H
 
+#include "configuration/settings_container_interface.h"
 #include "knode_export.h"
 #include "settings_base.h"
-
 // TODO: remove as soon as XHeader is in it's own file
 #include "knconfig.h"
+
+namespace KPIMIdentities {
+  class Identity;
+}
+
 
 namespace KNode {
 
@@ -26,7 +31,7 @@ namespace KNode {
  * @todo Make the color and font accessors const (requires the KConfigXT
  * generated item accessors to be const too).
  */
-class KNODE_EXPORT Settings : public SettingsBase
+class KNODE_EXPORT Settings : public SettingsBase, public SettingsContainerInterface
 {
   public:
     /// Create a new Settings object.
@@ -81,6 +86,21 @@ class KNODE_EXPORT Settings : public SettingsBase
      */
     void setXHeaders( const QList<XHeader> &list ) { mXHeaders = list; }
 
+    /**
+      Returns the global identity (or the default one when none is set yet).
+    */
+    virtual const KPIMIdentities::Identity & identity() const;
+    /**
+      Sets the global identity.
+    */
+    virtual void setIdentity( const KPIMIdentities::Identity &identity );
+
+    /**
+      Reimplemented to hide writeConfig() from SettingsContainerInterface
+      and delegate call to SettingsBase::writeConfig().
+    */
+    virtual void writeConfig()
+      { SettingsBase::writeConfig(); }
 
   protected:
     /** Reimplemented from KConfigSkeleton. */

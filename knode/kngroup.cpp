@@ -18,7 +18,6 @@
 #include "knglobals.h"
 #include "kncollectionview.h"
 #include "kncollectionviewitem.h"
-#include "knconfig.h"
 #include "kngrouppropdlg.h"
 #include "utilities.h"
 #include "knmainwidget.h"
@@ -31,9 +30,10 @@
 #include "utils/locale.h"
 
 #include <kconfig.h>
-#include <klocale.h>
 #include <kdebug.h>
-
+#include <klocale.h>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 #include <QTextStream>
 #include <QByteArray>
 
@@ -45,7 +45,8 @@ using namespace KNode::Utilities;
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0), i_gnoreCount(0),
     f_irstNr(0), l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
-    u_seCharset(false), s_tatus(unknown), i_dentity(0)
+    u_seCharset(false), s_tatus(unknown),
+    mIdentityUoid( -1 )
 {
   mCleanupConf = new KNode::Cleanup( false );
 }
@@ -53,7 +54,6 @@ KNGroup::KNGroup(KNCollection *p)
 
 KNGroup::~KNGroup()
 {
-  delete i_dentity;
   delete mCleanupConf;
 }
 
@@ -112,15 +112,7 @@ bool KNGroup::readInfo(const QString &confPath)
     s_tatus = unknown;
   c_rosspostIDBuffer = info.readEntry("crosspostIDBuffer", QStringList() );
 
-  i_dentity=new KNode::Identity(false);
-  i_dentity->loadConfig(info);
-  if(!i_dentity->isEmpty()) {
-    kDebug(5003) <<"KNGroup::readInfo(const QString &confPath) : using alternative user for" << g_roupname;
-  }
-  else {
-    delete i_dentity;
-    i_dentity=0;
-  }
+  mIdentityUoid = info.readEntry( "identity", -1 );
 
   mCleanupConf->loadConfig( info );
 
@@ -128,7 +120,7 @@ bool KNGroup::readInfo(const QString &confPath)
 }
 
 
-void KNGroup::saveInfo()
+void KNGroup::writeConfig()
 {
   QString dir(path());
 
@@ -158,19 +150,7 @@ void KNGroup::saveInfo()
     }
     info.writeEntry("crosspostIDBuffer", c_rosspostIDBuffer);
 
-    if(i_dentity)
-      i_dentity->saveConfig(info);
-    else if(info.hasKey("Email")) {
-      info.deleteEntry("Name", false);
-      info.deleteEntry("Email", false);
-      info.deleteEntry("Reply-To", false);
-      info.deleteEntry("Mail-Copies-To", false);
-      info.deleteEntry("Org", false);
-      info.deleteEntry("UseSigFile", false);
-      info.deleteEntry("UseSigGenerator", false);
-      info.deleteEntry("sigFile", false);
-      info.deleteEntry("sigText", false);
-    }
+    info.writeEntry( "identity", mIdentityUoid );
 
     mCleanupConf->saveConfig( info );
   }
@@ -183,6 +163,14 @@ KNNntpAccount* KNGroup::account()
   while(p->type()!=KNCollection::CTnntpAccount) p=p->parent();
 
   return (KNNntpAccount*)p_arent;
+}
+
+const KPIMIdentities::Identity & KNGroup::identity() const
+{
+  if ( mIdentityUoid < 0 ) {
+    return KPIMIdentities::Identity::null();
+  }
+  return KNGlobals::self()->identityManager()->identityForUoid( mIdentityUoid );
 }
 
 
@@ -542,7 +530,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
   n_ewCount+=new_cnt;
   l_astFetchCount=new_cnt;
   updateListItem();
-  saveInfo();
+  writeConfig();
 }
 
 
@@ -1056,18 +1044,12 @@ void KNGroup::updateThreadInfo()
 
 void KNGroup::showProperties()
 {
-  if(!i_dentity) i_dentity=new KNode::Identity(false);
   KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
 
   if(d->exec()) {
     if(d->nickHasChanged()) {
       l_istItem->setLabelText( name() );
     }
-  }
-
-  if(i_dentity->isEmpty()) {
-    delete i_dentity;
-    i_dentity=0;
   }
 
   delete d;

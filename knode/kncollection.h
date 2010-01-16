@@ -58,7 +58,7 @@ class KNCollection {
     /** Load the properties/settings of this collection. */
     virtual bool readInfo( const QString &confPath ) = 0;
     /** Save the properties/settings of this collection. */
-    virtual void saveInfo() = 0;
+    virtual void writeConfig() = 0;
 
     /// Returns the parent collection.
     KNCollection* parent() const { return p_arent; }

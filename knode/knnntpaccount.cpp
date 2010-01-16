@@ -12,18 +12,21 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <kconfig.h>
-#include <kstandarddirs.h>
-#include <kdebug.h>
+#include "knnntpaccount.h"
 
 #include "utilities.h"
 #include "kncollectionviewitem.h"
-#include "knnntpaccount.h"
-#include "knconfig.h"
 #include "knconfigmanager.h"
 #include "knconfigwidgets.h"
 #include "kngroupmanager.h"
 #include "knglobals.h"
+
+#include <QTimer>
+#include <kconfig.h>
+#include <kdebug.h>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
+#include <kstandarddirs.h>
 
 
 KNNntpAccountIntervalChecking::KNNntpAccountIntervalChecking(KNNntpAccount* account) : t_imer(0) {
@@ -73,7 +76,9 @@ void KNNntpAccountIntervalChecking::slotCheckNews()
 
 
 KNNntpAccount::KNNntpAccount()
-  : KNCollection(0), KNServerInfo(), i_dentity(0), f_etchDescriptions(true), w_asOpen(false), i_ntervalChecking(false), c_heckInterval(10)
+  : KNCollection(0), KNServerInfo(),
+    mIdentityUoid( -1 ),
+    f_etchDescriptions(true), w_asOpen(false), i_ntervalChecking(false), c_heckInterval(10)
 {
   l_astNewFetch = QDate::currentDate();
   a_ccountIntervalChecking = new KNNntpAccountIntervalChecking(this);
@@ -84,7 +89,6 @@ KNNntpAccount::KNNntpAccount()
 KNNntpAccount::~KNNntpAccount()
 {
   delete a_ccountIntervalChecking;
-  delete i_dentity;
   delete mCleanupConf;
 }
 
@@ -104,16 +108,9 @@ bool KNNntpAccount::readInfo(const QString &confPath)
   c_heckInterval=conf.readEntry("checkInterval", 10);
   KNServerInfo::readConf(conf);
 
-  startTimer();
+  mIdentityUoid = conf.readEntry( "identity", -1 );
 
-  i_dentity=new KNode::Identity(false);
-  i_dentity->loadConfig(conf);
-  if(!i_dentity->isEmpty()) {
-    kDebug(5003) <<"KNGroup::readInfo(const QString &confPath) : using alternative user for" << n_ame;
-  } else {
-    delete i_dentity;
-    i_dentity=0;
-  }
+  startTimer();
 
   mCleanupConf->loadConfig( conf );
 
@@ -124,7 +121,7 @@ bool KNNntpAccount::readInfo(const QString &confPath)
 }
 
 
-void KNNntpAccount::saveInfo()
+void KNNntpAccount::writeConfig()
 {
   QString dir(path());
   if (dir.isNull())
@@ -141,22 +138,9 @@ void KNNntpAccount::saveInfo()
   conf.writeEntry("useDiskCache", u_seDiskCache);
   conf.writeEntry("intervalChecking", i_ntervalChecking);
   conf.writeEntry("checkInterval", c_heckInterval);
+  conf.writeEntry( "identity", mIdentityUoid );
 
   KNServerInfo::saveConf(conf);      // save not KNNntpAccount specific settings
-
-  if(i_dentity)
-    i_dentity->saveConfig(conf);
-  else if(conf.hasKey("Email")) {
-    conf.deleteEntry("Name", false);
-    conf.deleteEntry("Email", false);
-    conf.deleteEntry("Reply-To", false);
-    conf.deleteEntry("Mail-Copies-To", false);
-    conf.deleteEntry("Org", false);
-    conf.deleteEntry("UseSigFile", false);
-    conf.deleteEntry("UseSigGenerator", false);
-    conf.deleteEntry("sigFile", false);
-    conf.deleteEntry("sigText", false);
-  }
 
   mCleanupConf->saveConfig( conf );
 }
@@ -174,6 +158,10 @@ void KNNntpAccount::saveInfo()
 
 QString KNNntpAccount::path()
 {
+  if ( i_d == -1 ) {
+    return QString();
+  }
+
   QString dir( KStandardDirs::locateLocal( "data", QString( "knode/nntp.%1/" ).arg( i_d ) ) );
   if (dir.isNull())
     KNHelper::displayInternalFileError();
@@ -183,18 +171,12 @@ QString KNNntpAccount::path()
 
 bool KNNntpAccount::editProperties(QWidget *parent)
 {
-  if(!i_dentity) i_dentity=new KNode::Identity(false);
   KNode::NntpAccountConfDialog *d = new KNode::NntpAccountConfDialog(this, parent);
 
   bool ret=false;
   if (d->exec()) {
     updateListItem();
     ret=true;
-  }
-
-  if(i_dentity->isEmpty()) {
-    delete i_dentity;
-    i_dentity=0;
   }
 
   delete d;
@@ -224,6 +206,20 @@ KNode::Cleanup *KNNntpAccount::activeCleanupConfig() const
   if (cleanupConfig()->useDefault())
     return knGlobals.configManager()->cleanup();
   return cleanupConfig();
+}
+
+
+const KPIMIdentities::Identity & KNNntpAccount::identity() const
+{
+  if ( mIdentityUoid < 0 ) {
+    return KPIMIdentities::Identity::null();
+  }
+  return KNGlobals::self()->identityManager()->identityForUoid( mIdentityUoid );
+}
+
+void KNNntpAccount::setIdentity( const KPIMIdentities::Identity &identity )
+{
+  mIdentityUoid = ( identity.isNull() ? -1 : identity.uoid() );
 }
 
 #include "knnntpaccount.moc"

@@ -16,7 +16,7 @@
 #define KNCOMPOSER_H
 
 #include <k3listview.h>
-
+#include <KPIMIdentities/Signature>
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
 #include <QRegExp>
@@ -31,23 +31,20 @@
 #include <QMenu>
 #include <QDragEnterEvent>
 #include <QSplitter>
-
 #include <kprocess.h>
 #include <kabc/addresslineedit.h>
 
 
+class QFile;
 class KSelectAction;
+class KTemporaryFile;
 class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
 class QComboBox;
-namespace KPIM {
-class KMeditor;
+namespace KPIMUtils {
+  class SpellingFilter;
 }
-using KPIM::KMeditor;
-
-namespace KPIMUtils { class SpellingFilter; }
-using KPIMUtils::SpellingFilter;
 
 /** Message composer window. */
 class KNComposer : public KXmlGuiWindow {
@@ -58,12 +55,26 @@ class KNComposer : public KXmlGuiWindow {
   public:
     enum composerResult { CRsendNow, CRsendLater, CRdelAsk,
                           CRdel, CRsave, CRcancel };
-    enum MessageMode { news=0, mail=1, news_mail=2 };
 
-    // unwraped == original, not rewraped text
-    // firstEdit==true: place the cursor at the end of the article
-    // allowMail==false: Sending using smtp is disabled
-    KNComposer( KNLocalArticle *a, const QString &text = QString(), const QString &sig = QString(),
+    enum MessageMode {
+      news = 0,       ///< Message is to be sent to a newsgroup.
+      mail = 1,       ///< Message is to be sent by e-mail.
+      news_mail = 2   ///< Message is to be sent by e-mail and to a newsgroup.
+    };
+
+    /**
+      Create a composer for a message (e-mail or newsgroup post).
+      @param a The article to edit.
+      @param text The <strong>wraped</strong> text of the message.
+      @param signature The signature to append to the message.
+      @param unwraped The original, <strong>not rewraped</strong> text.
+      @param firstEdit Indicates if it is the first time that this message is edited.
+      @param dislikesCopies When true, this indicates that the author of the message
+                            that is replied to did not want an e-mail copy of the answer.
+      @param createCopy When true, this indicates that a copy should be sent by e-mail.
+      @param allowMail Enables or disables sending the message via e-mail.
+    */
+    KNComposer( KNLocalArticle *a, const QString &text = QString(), const KPIMIdentities::Signature &signature = KPIMIdentities::Signature(),
                 const QString &unwraped = QString(), bool firstEdit = false,
                 bool dislikesCopies = false, bool createCopy = false, bool allowMail = true);
     ~KNComposer();
@@ -110,7 +121,8 @@ class KNComposer : public KXmlGuiWindow {
     //Data
     composerResult r_esult;
     KNLocalArticle *a_rticle;
-    QString s_ignature, u_nwraped;
+    const KPIMIdentities::Signature mSignature;
+    QString u_nwraped;
     MessageMode m_ode;
     bool n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
@@ -126,7 +138,7 @@ class KNComposer : public KXmlGuiWindow {
     bool e_xternalEdited;
     KProcess *e_xternalEditor;
     KTemporaryFile *e_ditorTempfile;
-    SpellingFilter* mSpellingFilter;
+    KPIMUtils::SpellingFilter* mSpellingFilter;
 
     //Attachments
     QList<KNAttachment*> mDeletedAttachments;

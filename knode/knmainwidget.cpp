@@ -11,6 +11,7 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
+
 #include "knmainwidget.h"
 
 #include <Q3Accel>
@@ -23,7 +24,6 @@
 #include <kicon.h>
 #include <kactioncollection.h>
 #include <kinputdialog.h>
-#include <kconfig.h>
 #include <kmessagebox.h>
 #include <kedittoolbar.h>
 #include <kstandardaction.h>
@@ -878,19 +878,6 @@ bool KNMainWidget::firstStart()
   QString ver = conf.readEntry("Version");
   if(!ver.isEmpty())
     return false;
-
-  KConfig emailConf("emaildefaults");
-
-  KConfigGroup cgdefaults(&emailConf, "Defaults");
-  QString group = cgdefaults.readEntry("Profile","Default");
-
-  KConfigGroup cgprofile(&emailConf, QString("PROFILE_%1").arg(group));
-  KNode::Identity *id=knGlobals.configManager()->identity();
-  id->setName(cgprofile.readEntry("FullName"));
-  id->setEmail(cgprofile.readEntry("EmailAddress").toLatin1());
-  id->setOrga(cgprofile.readEntry("Organization"));
-  id->setReplyTo(cgprofile.readEntry("ReplyAddr"));
-  id->save();
 
   if ( TransportManager::self()->isEmpty() )
     TransportManager::self()->createDefaultTransport();

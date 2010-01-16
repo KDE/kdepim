@@ -55,7 +55,7 @@ class KNFolder : public KNArticleCollection  {
     QString path();
     bool readInfo(const QString &confPath);
     bool readInfo();
-    void saveInfo();
+    void writeConfig();
 
     //article access
     KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(KNArticleCollection::at(i)); }

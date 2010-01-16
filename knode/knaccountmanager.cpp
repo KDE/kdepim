@@ -52,7 +52,7 @@ KNAccountManager::~KNAccountManager()
 void KNAccountManager::prepareShutdown()
 {
   for ( List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
-    (*it)->saveInfo();
+    (*it)->writeConfig();
 }
 
 
