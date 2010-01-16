@@ -95,6 +95,8 @@ void IdentityWidget::identitySelected( uint uoid )
   KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
   const Identity &identity = im->identityForUoid( uoid );
   loadFromIdentity( identity );
+
+  emit changed( ( uoid != mConfigurationContainer->identity().uoid() ) );
 }
 
 void IdentityWidget::useSpecificIdentity( bool useSpecific )
@@ -105,6 +107,7 @@ void IdentityWidget::useSpecificIdentity( bool useSpecific )
     identitySelected( mIdentitySelector->currentIdentity() );
   } else {
     loadFromIdentity( Identity::null() );
+    emit changed( !mConfigurationContainer->identity().isNull() );
   }
 }
 
