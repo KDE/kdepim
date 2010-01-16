@@ -22,6 +22,7 @@
 #define __MESSAGELIST_CORE_MODEL_P_H__
 
 #include "model.h"
+#include <config-messagelist.h>
 
 namespace MessageList
 {
