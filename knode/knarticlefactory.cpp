@@ -69,8 +69,8 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   if(!a)
     return;
 
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art=newArticle( a, sig, Locale::defaultCharset() );
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( a, identity, Locale::defaultCharset() );
   if(!art)
     return;
 
@@ -78,7 +78,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   art->setDoPost(true);
   art->setDoMail(false);
 
-  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true, false, false, false );
+  KNComposer *c = new KNComposer( art, QString(), identity, QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -92,8 +92,8 @@ void KNArticleFactory::createPosting(KNGroup *g)
 
   QByteArray chset = Locale::defaultCharset( g );
 
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art=newArticle(g, sig, chset);
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( g, identity, chset );
 
   if(!art)
     return;
@@ -102,7 +102,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoPost(true);
   art->setDoMail(false);
   art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
-  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true, false, false, false );
+  KNComposer *c = new KNComposer( art, QString(), identity, QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -124,8 +124,8 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
   }
 
   //create new article
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art=newArticle(g, sig, chset, true, a);
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( g, identity, chset, true, a );
   if(!art)
     return;
 
@@ -270,7 +270,7 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
   }
 
   //open composer
-  KNComposer *c=new KNComposer(art, quoted, sig, notRewraped, true, authorDislikesMailCopies, authorWantsMailCopies);
+  KNComposer *c=new KNComposer(art, quoted, identity, notRewraped, true, authorDislikesMailCopies, authorWantsMailCopies);
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -296,8 +296,8 @@ void KNArticleFactory::createForward(KNArticle *a)
     chset = a->contentType()->charset();
 
   //create new article
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art=newArticle(knGlobals.groupManager()->currentGroup(), sig, chset);
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), identity, chset );
   if(!art)
     return;
 
@@ -348,7 +348,7 @@ void KNArticleFactory::createForward(KNArticle *a)
   }
 
   //open composer
-  KNComposer *c = new KNComposer( art, fwd, sig, QString(), true );
+  KNComposer *c = new KNComposer( art, fwd, identity, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -392,8 +392,8 @@ void KNArticleFactory::createCancel(KNArticle *a)
   if ( !a->newsgroups()->isEmpty() )
     grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art=newArticle(grp, sig, "us-ascii", false);
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( grp, identity, "us-ascii", false );
   if(!art)
     return;
 
@@ -467,8 +467,8 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     grp = knGlobals.groupManager()->group(a->newsgroups()->groups().first(), nntp);
 
   //new article
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art = newArticle( grp, sig, a->contentType()->charset() );
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( grp, identity, a->contentType()->charset() );
   if(!art)
     return;
 
@@ -501,7 +501,7 @@ void KNArticleFactory::createSupersede(KNArticle *a)
     text = textContent->decodedText();
 
   //open composer
-  KNComposer *c=new KNComposer(art, text, sig);
+  KNComposer *c=new KNComposer(art, text, identity);
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -516,8 +516,8 @@ void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
   }
 
   //create new article
-  KPIMIdentities::Signature sig;
-  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), sig, Locale::defaultCharset() );
+  KPIMIdentities::Identity identity;
+  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), identity, Locale::defaultCharset() );
   if(!art)
     return;
 
@@ -526,7 +526,7 @@ void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
   art->to()->addAddress((*address));
 
   //open composer
-  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true );
+  KNComposer *c = new KNComposer( art, QString(), identity, QString(), true );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -581,7 +581,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     return;
   }
 
-  //find signature
+  //find identity
   KPIMIdentities::Identity id = KNGlobals::self()->settings()->identity();
 
   if(a->doPost()) {
@@ -604,7 +604,7 @@ void KNArticleFactory::edit(KNLocalArticle *a)
     knGlobals.articleManager()->loadArticle(a);
 
   //open composer
-  com = new KNComposer( a, QString(), id.signature() );
+  com = new KNComposer( a, QString(), id );
   mCompList.append( com );
   connect(com, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   com->show();
@@ -646,6 +646,20 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
         showSendErrorDialog();
         s_endErrDlg->append( (*it)->subject()->asUnicodeString(), i18n("Unable to load article.") );
         continue;
+      }
+    }
+
+
+    // filter out internal headers
+    QByteArray head = (*it)->head();
+    KMime::Headers::Base *header = 0;
+    while ( true ) {
+      header = KMime::HeaderParsing::extractFirstHeader( head );
+      if ( !header ) {
+        break;
+      }
+      if ( qstrncmp( header->type(), "X-KNode", 7 ) == 0 ) {
+        (*it)->removeHeader( header->type() );
       }
     }
 
@@ -776,7 +790,7 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, KPIMIdentities::Signature &signature, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost)
+KNLocalArticle* KNArticleFactory::newArticle( KNCollection *col, KPIMIdentities::Identity &id, const QByteArray &defChset, bool withXHeaders, KNArticle *origPost )
 {
   if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
@@ -784,7 +798,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, KPIMIdentities::
   }
 
   KNLocalArticle *art=new KNLocalArticle(0);
-  KPIMIdentities::Identity id;
   if (col) {
     if (col->type() == KNCollection::CTgroup) {
       id = (static_cast<KNGroup *>(col))->identity();
@@ -798,6 +811,11 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, KPIMIdentities::
   if ( id.isNull() ) {
     id = KNGlobals::self()->settings()->identity();
   }
+  // Identity UOID
+  KMime::Headers::Generic *xKnodeIdentity = new KMime::Headers::Generic( "X-KNode-Identity",
+                                                                         art,
+                                                                         QByteArray::number( id.uoid() ) );
+  art->setHeader( xKnodeIdentity );
 
   //Message-id
   if ( knGlobals.settings()->generateMessageID() )
@@ -820,16 +838,22 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, KPIMIdentities::
   //Reply-To
   if ( KPIMUtils::isValidAddress( id.replyToAddr() ) == KPIMUtils::AddressOk ) {
     art->replyTo()->fromUnicodeString( id.replyToAddr(), Locale::defaultCharset() );
+  } else {
+    art->removeHeader( "Reply-To" );
   }
 
   //Mail-Copies-To
   if ( KPIMUtils::isValidAddress( id.property( "Mail-Copies-To" ).toString() ) == KPIMUtils::AddressOk ) {
     art->mailCopiesTo()->fromUnicodeString( id.property( "Mail-Copies-To" ).toString(), Locale::defaultCharset() );
+  } else {
+    art->removeHeader( "Mail-Copies-To" );
   }
 
   //Organization
   if ( !id.organization().trimmed().isEmpty() ) {
     art->organization()->fromUnicodeString( id.organization(), Locale::defaultCharset() );
+  } else {
+    art->removeHeader( "Organization" );
   }
 
   //Date
@@ -872,9 +896,6 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, KPIMIdentities::
                       Locale::defaultCharset() ) );
     }
   }
-
-  //Signature
-  signature = id.signature();
 
   return art;
 }

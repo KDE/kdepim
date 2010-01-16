@@ -70,22 +70,6 @@ void KNArticle::setLocked(bool b)
 }
 
 
-QByteArray KNArticle::assembleHeaders()
-{
-  // filter out internal headers
-  for ( Headers::Base::List::Iterator it = h_eaders.begin(); it != h_eaders.end(); ) {
-    if ( (*it)->isXHeader() && ( strncasecmp( (*it)->type(), "X-KNode", 7 ) == 0 ) ) {
-      delete *it;
-      it = h_eaders.erase( it );
-    }
-    else
-      ++it;
-  }
-
-  return KMime::NewsArticle::assembleHeaders();
-}
-
-
 //=========================================================================================
 
 

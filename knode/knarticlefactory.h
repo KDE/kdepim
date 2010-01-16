@@ -19,7 +19,7 @@
 #include <QList>
 #include <QListWidgetItem>
 #include <kdialog.h>
-#include <KPIMIdentities/Signature>
+#include <KPIMIdentities/Identity>
 
 #include "knjobdata.h"
 #include "knarticle.h"
@@ -73,7 +73,15 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
 
     //article generation
     // col: group or account
-    KNLocalArticle* newArticle(KNCollection *col, KPIMIdentities::Signature &signature, const QByteArray &defChset, bool withXHeaders=true, KNArticle *origPost=0);
+    /**
+      Generate a new article to edit before posting.
+      @param col the group or server this article article will be sent to.
+      @param identity this identity will be set with the identity configured for @p col.
+      @param defChset the default charset of the message
+      @param withXHeaders
+      @param origPost original article (in case of reply).
+    */
+    KNLocalArticle* newArticle(KNCollection *col, KPIMIdentities::Identity &identity, const QByteArray &defChset, bool withXHeaders=true, KNArticle *origPost=0);
 
     //cancel & supersede
     bool cancelAllowed(KNArticle *a);

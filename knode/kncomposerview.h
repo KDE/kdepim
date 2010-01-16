@@ -21,10 +21,14 @@
 class KComboBox;
 class KNComposerEditor;
 class QGroupBox;
-
+namespace KPIMIdentities {
+  class IdentityCombo;
+}
 
 /** Message composer view. */
 class KNComposer::ComposerView  : public QSplitter {
+
+  Q_OBJECT
 
   public:
     /**
@@ -53,22 +57,26 @@ class KNComposer::ComposerView  : public QSplitter {
     void showExternalNotification();
     void hideExternalNotification();
 
-    QList<QWidget*> mEdtList;
 
-    QLabel      *l_to,
-                *l_groups,
-                *l_fup2;
+    // Editor accessors
+    /**
+      Return the UOID of the selected identity.
+    */
+    uint selectedIdentity() const;
+    /**
+      Changes the selected identity and update related edit lines.
+    */
+    void setIdentity( uint uoid );
+
+
     KNLineEditSpell *s_ubject;
 
     KNLineEdit  *g_roups;
     KNLineEdit  *t_o;
 
     KComboBox   *f_up2;
-    QPushButton *g_roupsBtn,
-                *t_oBtn;
 
     KNComposerEditor    *e_dit;
-    QGroupBox  *n_otification;
     QPushButton *c_ancelEditorBtn;
 
     QWidget         *a_ttWidget;
@@ -77,6 +85,26 @@ class KNComposer::ComposerView  : public QSplitter {
                     *a_ttRemoveBtn,
                     *a_ttEditBtn;
     bool v_iewOpen;
+
+  private slots:
+    /**
+      Called when a new identity is selected to update edit lines that
+      contain identity information.
+    */
+    void slotIdentityChanged( uint uoid );
+
+  private:
+    KPIMIdentities::IdentityCombo *mIdentitySelector;
+    QLabel *mIdentitySelectorLabel;
+
+    QList<QWidget*> mEdtList;
+
+    QLabel      *l_to,
+                *l_groups,
+                *l_fup2;
+    QPushButton *g_roupsBtn,
+                *t_oBtn;
+    QGroupBox  *n_otification;
 };
 
 #endif

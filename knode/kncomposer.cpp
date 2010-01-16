@@ -14,9 +14,10 @@
 
 #include "kncomposer.h"
 
+#include <KPIMUtils/Email>
+#include <KPIMIdentities/IdentityManager>
 #include <q3header.h>
 #include <QTextCodec>
-#include <KPIMIdentities/Identity>
 #include <QApplication>
 #include <QGridLayout>
 #include <QKeyEvent>
@@ -173,13 +174,13 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 }
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentities::Signature &signature, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const KPIMIdentities::Identity &identity, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
     : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a),
-      mSignature( signature ),
       u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), a_ttChanged(false),
-      mFirstEdit( firstEdit )
+      mFirstEdit( firstEdit ),
+      mIdentity( identity )
 {
   setObjectName( "composerWindow" );
 
@@ -783,6 +784,47 @@ bool KNComposer::applyChanges()
   KMime::Content *text=0;
   KNAttachment *a=0;
 
+
+  // Identity (for later edition)
+  const KPIMIdentities::Identity identity = KNGlobals::self()->identityManager()->identityForUoid( v_iew->selectedIdentity() );
+  if ( identity.isNull() ) {
+    // Identity was removed!
+    return false;
+  } else {
+    KMime::Headers::Generic *xKnodeIdentity = new KMime::Headers::Generic( "X-KNode-Identity",
+                                                                          a_rticle,
+                                                                          QByteArray::number( identity.uoid() ) );
+    a_rticle->setHeader( xKnodeIdentity );
+  }
+
+  //From
+  if ( KPIMUtils::isValidSimpleAddress( identity.emailAddr() ) ) {
+    a_rticle->from()->fromUnicodeString( identity.fullEmailAddr(), mCharset.toLatin1() );
+  } else {
+    return false;
+  }
+
+  //Reply-To
+  if ( KPIMUtils::isValidAddress( identity.replyToAddr() ) == KPIMUtils::AddressOk ) {
+    a_rticle->replyTo()->fromUnicodeString( identity.replyToAddr(), mCharset.toLatin1() );
+  } else {
+    a_rticle->removeHeader( "Reply-To" );
+  }
+
+  //Mail-Copies-To
+  if ( !identity.property( "Mail-Copies-To" ).toString().trimmed().isEmpty() ) {
+    a_rticle->mailCopiesTo()->fromUnicodeString( identity.property( "Mail-Copies-To" ).toString(), mCharset.toLatin1() );
+  } else {
+    a_rticle->removeHeader( "Mail-Copies-To" );
+  }
+
+  //Organization
+  if ( !identity.organization().trimmed().isEmpty() ) {
+    a_rticle->organization()->fromUnicodeString( identity.organization(), mCharset.toLatin1() );
+  } else {
+    a_rticle->removeHeader( "Organization" );
+  }
+
   //Date
   a_rticle->date()->setDateTime( KDateTime::currentLocalDateTime() );    //set current date+time
 
@@ -872,21 +914,7 @@ bool KNComposer::applyChanges()
 
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
-      // first get the signing key
-      QByteArray signingKey = KNGlobals::self()->settings()->identity().pgpSigningKey();
-      KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
-      if ( acc ) {
-          KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-          if ( !grps->isEmpty() ) {
-            KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
-            if ( grp && !grp->identity().isNull() ) {
-              signingKey = grp->identity().pgpSigningKey();
-            } else if ( !acc->identity().isNull() ) {
-              signingKey = acc->identity().pgpSigningKey();
-            }
-          }
-      }
-      // now try to sign the article
+      QByteArray signingKey = identity.pgpSigningKey();
       if (!signingKey.isEmpty()) {
           QString tmpText = tmp;
           Kpgp::Block block;
@@ -955,6 +983,17 @@ void KNComposer::closeEvent(QCloseEvent *e)
 
 void KNComposer::initData(const QString &text)
 {
+  // Identity
+  KPIMIdentities::IdentityManager *idManager = KNGlobals::self()->identityManager();
+  KPIMIdentities::Identity identity = idManager->defaultIdentity();
+  KMime::Headers::Base* xKnodeIdentity = a_rticle->headerByType( "X-KNode-Identity" );
+  if ( xKnodeIdentity && !xKnodeIdentity->isEmpty() ) {
+    uint uoid = xKnodeIdentity->asUnicodeString().toUInt();
+    // Note: this ensure the identity exists even if it was removed
+    identity = idManager->identityForUoidOrDefault( uoid );
+  }
+  v_iew->setIdentity( identity.uoid() );
+
   //Subject
   if(a_rticle->subject()->isEmpty())
     slotSubjectChanged( QString() );
@@ -1125,9 +1164,9 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotAppendSig()
 {
-  mSignature.insertIntoTextEdit( KPIMIdentities::Signature::End,
-                                 KPIMIdentities::Signature::AddSeparator,
-                                 v_iew->e_dit );
+  mIdentity.signature().insertIntoTextEdit( KPIMIdentities::Signature::End,
+                                            KPIMIdentities::Signature::AddSeparator,
+                                            v_iew->e_dit );
 }
 
 
@@ -1530,7 +1569,6 @@ void KNComposer::slotGroupsBtnClicked()
 
   delete dlg;
 }
-
 
 void KNComposer::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
 {

@@ -81,7 +81,6 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     bool isOrphant() const                           { return (i_d==-1); }
 
   protected:
-    virtual QByteArray assembleHeaders();
     int i_d; //unique in the given collection
     KNArticleCollection *c_ol;
     KNHdrViewItem *i_tem;

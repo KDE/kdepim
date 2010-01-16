@@ -14,6 +14,8 @@
 
 #include "kncomposerview.h"
 
+#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/IdentityManager>
 #include <QGridLayout>
 #include <klocale.h>
 #include <QPushButton>
@@ -38,7 +40,17 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   hdrL->setSpacing(5);
   hdrL->setMargin(7);
   hdrL->setColumnStretch(1,1);
+  int hdrLLine = 0;
 
+
+  // Identity
+  mIdentitySelector = new KPIMIdentities::IdentityCombo( KNGlobals::self()->identityManager(), hdrFrame );
+  mIdentitySelectorLabel = new QLabel( i18nc( "@label:listbox", "Identity:" ), hdrFrame );
+  mIdentitySelectorLabel->setBuddy( mIdentitySelector );
+  hdrL->addWidget( mIdentitySelectorLabel, hdrLLine, 0 );
+  hdrL->addWidget( mIdentitySelector, hdrLLine, 1, 2, 2 );
+
+  ++hdrLLine;
   //To
   t_o=new KNLineEdit(this, true, hdrFrame);
   mEdtList.append(t_o);
@@ -46,11 +58,12 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   l_to=new QLabel(i18n("T&o:"),hdrFrame);
   l_to->setBuddy(t_o);
   t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
-  hdrL->addWidget(l_to, 0,0);
-  hdrL->addWidget(t_o, 0,1);
-  hdrL->addWidget(t_oBtn, 0,2);
+  hdrL->addWidget(l_to, hdrLLine,0);
+  hdrL->addWidget(t_o, hdrLLine,1);
+  hdrL->addWidget(t_oBtn, hdrLLine,2);
   connect(t_oBtn, SIGNAL(clicked()), parent(), SLOT(slotToBtnClicked()));
 
+  ++hdrLLine;
   //Newsgroups
   g_roups=new KNLineEdit(this, false, hdrFrame);
   mEdtList.append(g_roups);
@@ -58,28 +71,30 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   l_groups=new QLabel(i18n("&Groups:"),hdrFrame);
   l_groups->setBuddy(g_roups);
   g_roupsBtn=new QPushButton(i18n("B&rowse..."), hdrFrame);
-  hdrL->addWidget(l_groups, 1,0);
-  hdrL->addWidget(g_roups, 1,1);
-  hdrL->addWidget(g_roupsBtn, 1,2);
+  hdrL->addWidget(l_groups, hdrLLine,0);
+  hdrL->addWidget(g_roups, hdrLLine,1);
+  hdrL->addWidget(g_roupsBtn, hdrLLine,2);
   connect(g_roups, SIGNAL(textChanged(const QString&)),
           parent(), SLOT(slotGroupsChanged(const QString&)));
   connect(g_roupsBtn, SIGNAL(clicked()), parent(), SLOT(slotGroupsBtnClicked()));
 
+  ++hdrLLine;
   //Followup-To
   f_up2=new KComboBox(true, hdrFrame);
   l_fup2=new QLabel(i18n("Follo&wup-To:"),hdrFrame);
   l_fup2->setBuddy(f_up2);
-  hdrL->addWidget(l_fup2, 2,0);
-  hdrL->addWidget(f_up2, 2, 1, 1,2);
+  hdrL->addWidget(l_fup2, hdrLLine,0);
+  hdrL->addWidget(f_up2, hdrLLine, 1, 1,2);
 
+  ++hdrLLine;
   //subject
   s_ubject=new KNLineEditSpell(this, false, hdrFrame);
   mEdtList.append(s_ubject);
 
   QLabel *l=new QLabel(i18n("S&ubject:"),hdrFrame);
   l->setBuddy(s_ubject);
-  hdrL->addWidget(l, 3,0);
-  hdrL->addWidget(s_ubject, 3, 1, 1,2);
+  hdrL->addWidget(l, hdrLLine,0);
+  hdrL->addWidget(s_ubject, hdrLLine, 1, 1,2);
   connect(s_ubject, SIGNAL(textChanged(const QString&)),
           parent(), SLOT(slotSubjectChanged(const QString&)));
 
@@ -111,6 +126,11 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   topL->setMargin(4);
   topL->addWidget(hdrFrame);
   topL->addWidget(e_dit, 1);
+
+
+  connect( mIdentitySelector, SIGNAL(identityChanged(uint)),
+           this, SLOT(slotIdentityChanged(uint)) );
+  setIdentity( KNGlobals::self()->identityManager()->defaultIdentity().uoid() );
 }
 
 
@@ -187,6 +207,25 @@ void KNComposer::ComposerView::setMessageMode(KNComposer::MessageMode mode)
     f_up2->hide();
     g_roupsBtn->hide();
   }
+}
+
+
+uint KNComposer::ComposerView::selectedIdentity() const
+{
+  return mIdentitySelector->currentIdentity();
+}
+
+void KNComposer::ComposerView::setIdentity( uint uoid )
+{
+  mIdentitySelector->setCurrentIdentity( uoid );
+  // mIdentitySelector will emit its identityChanged(uint) signal
+  // that is connected to slotIdentityChanged(uint)
+}
+
+
+void KNComposer::ComposerView::slotIdentityChanged( uint uoid )
+{
+  // TODO: populate this method when necessary.
 }
 
 
