@@ -15,18 +15,16 @@
 #ifndef KNARTICLE_H
 #define KNARTICLE_H
 
+#include "knjobdata.h"
+
 #include <boost/shared_ptr.hpp>
 #include <QFile>
 #include <QColor>
-#include <q3asciidict.h>
-#include <QList>
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_newsarticle.h>
 #include <kmime/boolflags.h>
 
-#include "knjobdata.h"
 
-//forward declarations
 class KNLoadHelper;
 class KNHdrViewItem;
 class KNArticleCollection;

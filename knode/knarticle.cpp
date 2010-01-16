@@ -22,12 +22,8 @@
 #include "utilities.h"
 #include "utils/locale.h"
 
-
-#include <klocale.h>
 #include <kcodecs.h>
 #include <kmimetype.h>
-
-#include <QByteArray>
 
 
 using namespace KNode::Utilities;
