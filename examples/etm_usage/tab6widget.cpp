@@ -83,7 +83,8 @@ public:
     {
       if (!m_itemSelectionModel)
         return Qt::Unchecked;
-      return m_itemSelectionModel->selectedRows().contains(index) ? Qt::Checked : Qt::Unchecked;
+
+      return m_itemSelectionModel->selection().contains(index) ? Qt::Checked : Qt::Unchecked;
     }
     return Akonadi::EntityTreeModel::data(index, role);
   }
@@ -96,7 +97,7 @@ public:
         return false;
 
       Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
-      m_itemSelectionModel->select(index, state == Qt::Checked ? QItemSelectionModel::SelectCurrent : QItemSelectionModel::Deselect );
+      m_itemSelectionModel->select(index, state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
       return true;
     }
     return Akonadi::EntityTreeModel::setData(index, value, role);
