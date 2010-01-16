@@ -30,6 +30,7 @@
 #include "tab4widget.h"
 #include "tab5widget.h"
 #include "tab6widget.h"
+#include "tab7widget.h"
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   : QMainWindow(parent, flags)
@@ -45,6 +46,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
   tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
   tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
+  tabWidget->addTab(new Tab7Widget(tabWidget), "Tagged Items");
 
   setCentralWidget(tabWidget);
 }

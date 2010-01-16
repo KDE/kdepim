@@ -33,6 +33,7 @@ set(etm_usage_SRCS
     tab4widget.cpp
     tab5widget.cpp
     tab6widget.cpp
+    tab7widget.cpp
     entitytreemodelfactory.cpp
 )
 
