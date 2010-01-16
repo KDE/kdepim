@@ -34,10 +34,10 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1" colspan="2">
+      <item row="6" column="1" colspan="2">
        <widget class="KNLineEditSpell" name="mSubjectEdit"/>
       </item>
-      <item row="1" column="0">
+      <item row="3" column="0">
        <widget class="QLabel" name="mToLabel">
         <property name="text">
          <string comment="@label:textbox email recipient of a message">To:</string>
@@ -47,10 +47,10 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="3" column="1">
        <widget class="KNLineEdit" name="mToEdit"/>
       </item>
-      <item row="1" column="2">
+      <item row="3" column="2">
        <widget class="KPushButton" name="mToButton">
         <property name="accessibleName">
          <string/>
@@ -60,7 +60,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="4" column="0">
        <widget class="QLabel" name="mGroupsLabel">
         <property name="text">
          <string comment="@label:textbox">Groups:</string>
@@ -70,7 +70,7 @@
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="5" column="0">
        <widget class="QLabel" name="mFollowuptoLabel">
         <property name="text">
          <string comment="@label">Followup-To:</string>
@@ -80,7 +80,7 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
+      <item row="6" column="0">
        <widget class="QLabel" name="mSubjetLabel">
         <property name="text">
          <string comment="@label:textbox subject of a message">Subject:</string>
@@ -90,22 +90,35 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item row="4" column="2">
        <widget class="KPushButton" name="mGroupsButton">
         <property name="text">
          <string comment="@action:button open a dialog to choose newsgroups">Browse...</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="4" column="1">
        <widget class="KNLineEdit" name="mGroupsEdit"/>
       </item>
-      <item row="3" column="1" colspan="2">
+      <item row="5" column="1" colspan="2">
        <widget class="KComboBox" name="mFollowuptoEdit">
         <property name="editable">
          <bool>true</bool>
         </property>
        </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="mFromLabel">
+        <property name="text">
+         <string comment="@label:textbox">From:</string>
+        </property>
+        <property name="buddy">
+         <cstring>mFromEdit</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" colspan="2">
+       <widget class="KNLineEdit" name="mFromEdit"/>
       </item>
      </layout>
     </widget>
@@ -253,6 +266,7 @@ to close the external editor.</string>
  </customwidgets>
  <tabstops>
   <tabstop>mIdentitySelector</tabstop>
+  <tabstop>mFromEdit</tabstop>
   <tabstop>mToEdit</tabstop>
   <tabstop>mToButton</tabstop>
   <tabstop>mGroupsEdit</tabstop>

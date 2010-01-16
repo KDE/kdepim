@@ -90,6 +90,15 @@ class View : public QSplitter, private Ui::View
     void setIdentity( uint uoid );
 
     /**
+      Returns the sender full name and email address to use in a From: header of a message.
+    */
+    const QString from();
+    /**
+      Set the name and email address of the sender of the message.
+    */
+    void setFrom( const QString &from );
+
+    /**
       Returns the followup-to list of groups (name are trimmed).
     */
     const QStringList groups() const;
@@ -167,6 +176,31 @@ class View : public QSplitter, private Ui::View
     QList<QWidget*> mEdtList;
 
     QPushButton *a_ttAddBtn;
+
+    /**
+      Shows/hide the identity selector.
+    */
+    void showIdentity( bool show );
+    /**
+      Shows/hide the From editor.
+    */
+    void showFrom( bool show );
+    /**
+      Shows/hide the To editor.
+    */
+    void showTo( bool show );
+    /**
+      Shows/hide the Groups editor.
+    */
+    void showGroups( bool show );
+    /**
+      Shows/hide the Followup-To selector.
+    */
+    void showFollowupto( bool show );
+    /**
+      Shows/hide the Subject editor..
+    */
+    void showSubject( bool show );
 };
 
 

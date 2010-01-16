@@ -772,12 +772,12 @@ bool KNComposer::applyChanges()
   }
 
   //From
-  if ( KPIMUtils::isValidSimpleAddress( identity.emailAddr() ) ) {
-    a_rticle->from()->fromUnicodeString( identity.fullEmailAddr(), mCharset.toLatin1() );
-  } else {
-    a_rticle->removeHeader( "From" );
+  if ( !KPIMUtils::isValidAddress( v_iew->from() ) == KPIMUtils::AddressOk ) {
     result = false;
   }
+  // FIXME: if v_iew->from() is not valid, the following call is a
+  // no-op: the content of the from keeps its previous value! (thanks KMime)
+  a_rticle->from()->fromUnicodeString( v_iew->from(), mCharset.toLatin1() );
 
   //Reply-To
   if ( KPIMUtils::isValidAddress( identity.replyToAddr() ) == KPIMUtils::AddressOk ) {
@@ -970,6 +970,14 @@ void KNComposer::initData(const QString &text)
     identity = idManager->identityForUoidOrDefault( uoid );
   }
   v_iew->setIdentity( identity.uoid() );
+
+  //From
+  KMime::Headers::From *from = a_rticle->from( false );
+  if ( from  ) {
+    v_iew->setFrom( from->asUnicodeString() );
+  } else {
+    v_iew->setFrom( identity.fullEmailAddr() );
+  }
 
   //Subject
   if(a_rticle->subject()->isEmpty())

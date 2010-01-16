@@ -18,15 +18,13 @@
 #include "knglobals.h"
 #include "settings.h"
 
+#include <KLocale>
 #include <KPIMIdentities/IdentityCombo>
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
-#include <QGridLayout>
-#include <klocale.h>
+#include <KPIMUtils/Email>
 #include <QPushButton>
-#include <QGroupBox>
 #include <Q3Header>
-#include <KComboBox>
 
 
 namespace KNode {
@@ -39,6 +37,11 @@ View::View( KNComposer *composer )
 {
   setupUi( this );
 
+  //From
+  mFromEdit->setView( this );
+  mFromEdit->enableCompletion( false );
+  mEdtList.append( mFromEdit );
+  showFrom( false );
 
   //To
   mToEdit->setView( this );
@@ -181,29 +184,10 @@ void View::setComposingFont( const QFont &font )
 
 void View::setMessageMode( KNComposer::MessageMode mode )
 {
-  if (mode != KNComposer::news) {
-    mToLabel->show();
-    mToEdit->show();
-    mToButton->show();
-  } else {
-    mToLabel->hide();
-    mToEdit->hide();
-    mToButton->hide();
-  }
-  if (mode != KNComposer::mail) {
-    mGroupsLabel->show();
-    mFollowuptoLabel->show();
-    mGroupsEdit->show();
-    mFollowuptoEdit->show();
-    mGroupsButton->show();
+  showTo( mode != KNComposer::news );
 
-  } else {
-    mGroupsLabel->hide();
-    mFollowuptoLabel->hide();
-    mGroupsEdit->hide();
-    mFollowuptoEdit->hide();
-    mGroupsButton->hide();
-  }
+  showGroups( mode != KNComposer::mail );
+  showFollowupto( mode != KNComposer::mail );
 }
 
 
@@ -221,8 +205,23 @@ void View::setIdentity( uint uoid )
 
 void View::slotIdentityChanged( uint uoid )
 {
-  Q_UNUSED( uoid );
-  // TODO: populate this method when necessary.
+  KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
+  KPIMIdentities::Identity identity = im->identityForUoid( uoid );
+  setFrom( identity.fullEmailAddr() );
+  if ( ! KPIMUtils::isValidAddress( from() ) == KPIMUtils::AddressOk ) {
+    showFrom( true );
+  }
+}
+
+
+const QString View::from()
+{
+  return mFromEdit->text();
+}
+
+void View::setFrom( const QString& from )
+{
+  mFromEdit->setText( from );
 }
 
 
@@ -304,6 +303,47 @@ void View::appendSignature()
                                            KPIMIdentities::Signature::AddSeparator,
                                            mEditor );
 }
+
+
+
+void View::showIdentity( bool show )
+{
+  mIdentitySelectorLabel->setVisible( show );
+  mIdentitySelector->setVisible( show );
+}
+
+void View::showFrom( bool show )
+{
+  mFromLabel->setVisible( show );
+  mFromEdit->setVisible( show );
+}
+
+void View::showTo( bool show )
+{
+  mToLabel->setVisible( show );
+  mToEdit->setVisible( show );
+  mToButton->setVisible( show );
+}
+
+void View::showGroups( bool show )
+{
+  mGroupsLabel->setVisible( show );
+  mGroupsEdit->setVisible( show );
+  mGroupsButton->setVisible( show );
+}
+
+void View::showFollowupto( bool show )
+{
+  mFollowuptoLabel->setVisible( show );
+  mFollowuptoEdit->setVisible( show );
+}
+
+void View::showSubject( bool show )
+{
+  mSubjetLabel->setVisible( show );
+  mSubjectEdit->setVisible( show );
+}
+
 
 
 void View::showAttachmentView()
@@ -399,3 +439,5 @@ void View::hideExternalNotification()
 
 } // namespace Composer
 } // namespace KNode
+
+#include "kncomposerview.moc"
