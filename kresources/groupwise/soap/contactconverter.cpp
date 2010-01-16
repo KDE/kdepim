@@ -355,11 +355,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
 
     if ( info->department )
     {
-#if KDE_IS_VERSION(3,5,8)
       addr.setDepartment( stringToQString( info->department ) );
-#else
-      addr.insertCustom( "KADDRESSBOOK", "X-Department", stringToQString( info->department ) );
-#endif
     }
     if ( info->title )
       addr.setTitle( stringToQString( info->title ) );
