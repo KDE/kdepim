@@ -20,15 +20,26 @@
 
 #include "messageitem.h"
 #include "core/messageitem.h"
+#include "messagetag.h"
+
+#include <Nepomuk/Resource>
+#include <Nepomuk/Tag>
+#include <Nepomuk/Variant>
+
+#include <KIconLoader>
 
 using namespace MessageList::Core;
 
 class MessageItem::Tag::Private
 {
 public:
-  QPixmap mPixmap;      ///< The pixmap associated to this tag
-  QString mName;        ///< The name of this tag
-  QString mId;          ///< The unique id of this tag
+  QPixmap mPixmap;
+  QString mName;
+  QString mId;             ///< The unique id of this tag
+  QColor mTextColor;
+  QColor mBackgroundColor;
+  QFont  mFont;
+  int    mPriority;
 };
 
 MessageItem::Tag::Tag( const QPixmap &pix, const QString &tagName, const QString &tagId )
@@ -59,134 +70,286 @@ QString MessageItem::Tag::id() const
   return d->mId;
 }
 
+QColor MessageItem::Tag::textColor() const
+{
+  return d->mTextColor;
+}
+
+QColor MessageItem::Tag::backgroundColor() const
+{
+  return d->mBackgroundColor;
+}
+
+QFont MessageItem::Tag::font() const
+{
+  return d->mFont;
+}
+
+int MessageItem::Tag::priority() const
+{
+  return d->mPriority;
+}
+
+void MessageItem::Tag::setTextColor( const QColor &textColor )
+{
+  d->mTextColor = textColor;
+}
+
+void MessageItem::Tag::setBackgroundColor( const QColor &backgroundColor )
+{
+  d->mBackgroundColor = backgroundColor;
+}
+
+void MessageItem::Tag::setFont( const QFont &font )
+{
+  d->mFont = font;
+}
+
+void MessageItem::Tag::setPriority( int priority )
+{
+  d->mPriority = priority;
+}
+
 
 class MessageItem::Private
 {
 public:
+
+  Private();
+  ~Private();
+
   /**
    * Linear search in the list of tags. The lists of tags
    * associated to a message are supposed to be very short (c'mon.. you won't add more than a couple of tags to a single msg).
    * so a linear search is better than a hash lookup in most cases.
    */
-  Tag *findTagInternal( const QString &szTagId ) const;
+  const Tag *findTagInternal( const QString &szTagId ) const;
+
+  /// Returns the list of tags. This is calculated on demand and cached in mTagList
+  QList<Tag*> getTagList() const;
+
+  /// Returns the tag with the highest priority, or 0 if there are no tags
+  const Tag* bestTag() const;
+
+  /// Deletes the internal list of tags
+  void invalidateTagCache();
 
   ThreadingStatus mThreadingStatus;
   QString mMessageIdMD5;            ///< always set
   QString mInReplyToIdMD5;          ///< set only if we're doing threading
   QString mReferencesIdMD5;         ///< set only if we're doing threading
   QString mStrippedSubjectMD5;      ///< set only if we're doing threading
+  QUrl mNepomukResourceUri;         ///< The URI under which this item can be found in Nepomuk
   bool mSubjectIsPrefixed;          ///< set only if we're doing subject based threading
   EncryptionState mEncryptionState;
   SignatureState mSignatureState;
-  QList< Tag * > * mTagList;        ///< Usually 0....
-  QColor mTextColor;                ///< If invalid, use default text color
-  QColor mBackgroundColor;          ///< If invalid, use default background color
-  QFont  mFont;
   unsigned long mUniqueId;          ///< The unique id of this message (serial number of KMMsgBase at the moment of writing)
-
   bool mAboutToBeRemoved;           ///< Set to true when this item is going to be deleted and shouldn't be selectable
+
+  static QColor mColorNewMessage;
+  static QColor mColorUnreadMessage;
+  static QColor mColorImportantMessage;
+  static QColor mColorToDoMessage;
+  static QFont mFont;
+  static QFont mFontNewMessage;
+  static QFont mFontUnreadMessage;
+  static QFont mFontImportantMessage;
+  static QFont mFontToDoMessage;
+
+private:
+
+  // This creates mTagList and fills it with useful data
+  void fillTagList() const;
+
+  // List of all tags. If this is 0, it means we have not yet calculated this list. It is calculated
+  // on demand when needed.
+  mutable QList< Tag * > * mTagList;
 };
+
+QColor MessageItem::Private::mColorNewMessage;
+QColor MessageItem::Private::mColorUnreadMessage;
+QColor MessageItem::Private::mColorImportantMessage;
+QColor MessageItem::Private::mColorToDoMessage;
+QFont MessageItem::Private::mFont;
+QFont MessageItem::Private::mFontNewMessage;
+QFont MessageItem::Private::mFontUnreadMessage;
+QFont MessageItem::Private::mFontImportantMessage;
+QFont MessageItem::Private::mFontToDoMessage;
+
+MessageItem::Private::Private()
+  : mTagList( 0 )
+{
+}
+
+MessageItem::Private::~Private()
+{
+  invalidateTagCache();
+}
+
+void MessageItem::Private::invalidateTagCache()
+{
+  if ( mTagList ) {
+    qDeleteAll( *mTagList );
+    delete mTagList;
+    mTagList = 0;
+  }
+}
+
+const MessageItem::Tag* MessageItem::Private::bestTag() const
+{
+  const Tag *best = 0;
+  foreach( const Tag* tag, getTagList() ) {
+    if ( !best || tag->priority() < best->priority() )
+      best = tag;
+  }
+  return best;
+}
+
+void MessageItem::Private::fillTagList() const
+{
+  Q_ASSERT( !mTagList );
+  mTagList = new QList<Tag*>;
+
+  // TODO: The tag pointers here could be shared between all items, there really is no point in
+  //       creating them for each item that has tags
+
+  const Nepomuk::Resource resource( mNepomukResourceUri );
+  const QList< Nepomuk::Tag > nepomukTagList = resource.tags();
+  if ( !nepomukTagList.isEmpty() ) {
+    foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
+      Tag *messageListTag =
+          new Tag( SmallIcon( nepomukTag.symbols().first() ),
+                   nepomukTag.label(), nepomukTag.resourceUri().toString() );
+      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
+        const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
+        messageListTag->setTextColor( QColor( name ) );
+      }
+      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::backgroundColor() ) ) {
+        const QString name = nepomukTag.property( Vocabulary::MessageTag::backgroundColor() ).toString();
+        messageListTag->setBackgroundColor( QColor( name ) );
+      }
+      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
+        messageListTag->setPriority( nepomukTag.property( Vocabulary::MessageTag::priority() ).toInt() );
+      }
+      else
+        messageListTag->setPriority( 0xFFFF );
+
+      // TODO: add font as well!
+
+      mTagList->append( messageListTag );
+    }
+  }
+}
+
+QList<MessageItem::Tag*> MessageItem::Private::getTagList() const
+{
+  if ( !mTagList )
+    fillTagList();
+
+  return *mTagList;
+}
 
 MessageItem::MessageItem()
   : Item( Message ), ModelInvariantIndex(), d( new Private )
 {
   d->mThreadingStatus = MessageItem::ParentMissing;
   d->mAboutToBeRemoved = false;
-  d->mTagList = 0;
   d->mUniqueId = 0;
 }
 
 MessageItem::~MessageItem()
 {
-  if ( d->mTagList )
-  {
-    qDeleteAll( *d->mTagList );
-    delete d->mTagList;
-    d->mTagList = 0;
-  }
-
   delete d;
 }
 
-QList< MessageItem::Tag * > *MessageItem::tagList() const
+QList< MessageItem::Tag * > MessageItem::tagList() const
 {
-  return d->mTagList;
+  return d->getTagList();
 }
 
-void MessageItem::setTagList( QList< Tag * > * list )
+const MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
 {
-  if ( d->mTagList )
-  {
-    qDeleteAll( *d->mTagList );
-    delete d->mTagList;
+  foreach( const Tag *tag, getTagList() ) {
+    if ( tag->id() == szTagId )
+      return tag;
   }
-  d->mTagList = list;
+  return 0;
 }
 
-MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
+const MessageItem::Tag *MessageItem::findTag( const QString &szTagId ) const
 {
-  if ( !mTagList )
-    return 0;
-
-  for ( QList< Tag * >::Iterator it = mTagList->begin(); it != mTagList->end(); ++it )
-  {
-    if ( ( *it )->id() == szTagId )
-      return *it;
-  }
-
- return 0;
-}
-
-MessageItem::Tag *MessageItem::findTag( const QString &szTagId ) const
-{
-  return d->mTagList ? d->findTagInternal( szTagId ) : 0;
+  return d->findTagInternal( szTagId );
 }
 
 QString MessageItem::tagListDescription() const
 {
-  if ( !d->mTagList )
-    return QString();
-
   QString ret;
 
-  for ( QList< Tag * >::Iterator it = d->mTagList->begin(); it != d->mTagList->end(); ++it )
-  {
+  foreach( const Tag *tag, tagList() ) {
     if ( !ret.isEmpty() )
       ret += ", ";
-    ret += ( *it )->name();
+    ret += tag->name();
   }
 
   return ret;
 }
 
+void MessageItem::invalidateTagCache()
+{
+  d->invalidateTagCache();
+}
+
 QColor MessageItem::textColor() const
 {
-  return d->mTextColor;
+  QColor clr;
+  if ( status().isNew() ) {
+    clr = d->mColorNewMessage;
+  } else if ( status().isUnread() ) {
+    clr = d->mColorUnreadMessage;
+  } else if ( status().isImportant() ) {
+    clr = d->mColorImportantMessage;
+  } else if ( status().isToAct() ) {
+    clr = d->mColorToDoMessage;
+  }
+
+  const Tag *bestTag = d->bestTag();
+  if ( bestTag != 0 ) {
+    clr = bestTag->textColor();
+  }
+
+  return clr;
 }
 
 QColor MessageItem::backgroundColor() const
 {
-  return d->mBackgroundColor;
+  const Tag *bestTag = d->bestTag();
+  if ( bestTag != 0 ) {
+    return bestTag->backgroundColor();
+  } else {
+    return QColor();
+  }
 }
 
 QFont MessageItem::font() const
 {
-  return d->mFont;
-}
+  QFont font;
 
-void MessageItem::setTextColor( const QColor &clr )
-{
-  d->mTextColor = clr;
-}
+  // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
+  if ( status().isImportant() ) {
+    font = d->mFontImportantMessage;
+  } else if ( status().isNew() ) {
+    font = d->mFontNewMessage;
+  } else if ( status().isUnread() ) {
+    font = d->mFontUnreadMessage;
+  } else if ( status().isToAct() ) {
+    font = d->mFontToDoMessage;
+  } else {
+    font = d->mFont;
+  }
 
-void MessageItem::setBackgroundColor( const QColor &clr )
-{
-  d->mBackgroundColor = clr;
-}
+  // TODO: handle tag font
 
-void MessageItem::setFont( const QFont &f )
-{
-  d->mFont = f;
+  return font;
 }
 
 MessageItem::SignatureState MessageItem::signatureState() const
@@ -289,6 +452,11 @@ void MessageItem::setUniqueId( unsigned long uniqueId )
   d->mUniqueId = uniqueId;
 }
 
+void MessageItem::setNepomukResourceURI( const QUrl &nepomukUri )
+{
+  d->mNepomukResourceUri = nepomukUri;
+}
+
 MessageItem * MessageItem::topmostMessage()
 {
   if ( !parent() )
@@ -309,4 +477,53 @@ void MessageItem::subTreeToList( QList< MessageItem * > &list )
     Q_ASSERT( ( *it )->type() == Item::Message );
     static_cast< MessageItem * >( *it )->subTreeToList( list );
   }
+}
+
+void MessageItem::setNewMessageColor( const QColor &color )
+{
+  MessageItem::Private::mColorNewMessage = color;
+}
+
+
+void MessageItem::setUnreadMessageColor( const QColor &color )
+{
+  MessageItem::Private::mColorUnreadMessage = color;
+}
+
+
+void MessageItem::setImportantMessageColor( const QColor &color )
+{
+  MessageItem::Private::mColorImportantMessage = color;
+}
+
+
+void MessageItem::setToDoMessageColor( const QColor &color )
+{
+  MessageItem::Private::mColorToDoMessage = color;
+}
+
+
+void MessageItem::setGeneralFont( const QFont &font )
+{
+  MessageItem::Private::mFont = font;
+}
+
+void MessageItem::setNewMessageFont( const QFont &font )
+{
+  MessageItem::Private::mFontNewMessage = font;
+}
+
+void MessageItem::setUnreadMessageFont( const QFont &font )
+{
+  MessageItem::Private::mFontUnreadMessage = font;
+}
+
+void MessageItem::setImportantMessageFont( const QFont &font )
+{
+  MessageItem::Private::mFontImportantMessage = font;
+}
+
+void MessageItem::setToDoMessageFont( const QFont &font )
+{
+  MessageItem::Private::mFontToDoMessage = font;
 }

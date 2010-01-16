@@ -212,7 +212,9 @@ ThemePreviewDelegate::ThemePreviewDelegate( QAbstractItemView * parent )
   list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 1" ), QString() ) );
   list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 2" ), QString() ) );
   list->append( new MessageItem::Tag( SmallIcon( "feed-subscribe" ), i18n( "Sample Tag 3" ), QString() ) );
+#if 0 // ### PORT ME
   mSampleMessageItem->setTagList( list );
+#endif
 
   mRowMapper->createModelInvariantIndex( 0, mSampleMessageItem );
 

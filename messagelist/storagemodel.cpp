@@ -30,19 +30,14 @@
 
 #include <KDE/KCodecs>
 #include <KDE/KLocale>
-#include <KDE/KIconLoader>
-#include <Nepomuk/Tag>
 #include <Nepomuk/ResourceManager>
-#include <Nepomuk/Variant>
 #include <Soprano/Statement>
 #include <soprano/signalcachemodel.h>
 #include <soprano/nao.h>
-#include <soprano/rdf.h>
 
 #include "core/messageitem.h"
 #include "core/settings.h"
 #include "core/subjectutils_p.h"
-#include "messagetag.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QAtomicInt>
@@ -66,17 +61,6 @@ public:
   QItemSelectionModel *mSelectionModel;
 
   QScopedPointer<Soprano::Util::SignalCacheModel> mSopranoModel;
-
-  QColor mColorNewMessage;
-  QColor mColorUnreadMessage;
-  QColor mColorImportantMessage;
-  QColor mColorToDoMessage;
-
-  QFont mFont;
-  QFont mFontNewMessage;
-  QFont mFontUnreadMessage;
-  QFont mFontImportantMessage;
-  QFont mFontToDoMessage;
 
   Private( StorageModel *owner )
     : q( owner ),
@@ -246,6 +230,10 @@ bool StorageModel::initializeMessageItem( MessageList::Core::MessageItem *mi,
 
   mi->setUniqueId( item.id() );
 
+  // Storing the Nepomuk resource URI could be avoided, since we already store the item ID, but that
+  // would mean that MessageItem needs to depend on Akonadi, which we don't want (yet?)
+  mi->setNepomukResourceURI( item.url() );
+
   QString subject = mail->subject()->asUnicodeString();
   if ( subject.isEmpty() ) {
     subject = '(' + noSubject + ')';
@@ -295,46 +283,6 @@ void StorageModel::fillMessageItemThreadingData( MessageList::Core::MessageItem 
   }
 }
 
-
-/**
- * Uses Nepomuk to fill a list of tags. It also picks out
- * the colors the message should use.
- */
-QList< Core::MessageItem::Tag * > * fillTagList( const Akonadi::Item &item,
-                                                 QColor & textColor, QColor & backgroundColor )
-{
-  const Nepomuk::Resource resource( item.url() );
-  QList< Nepomuk::Tag > nepomukTagList = resource.tags();
-  if ( !nepomukTagList.isEmpty() ) {
-    QList< Core::MessageItem::Tag * > *messageListTagList = new QList< Core::MessageItem::Tag * >();
-    int bestPriority = 0xfffff;
-    foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
-      Core::MessageItem::Tag *messageListTag =
-          new Core::MessageItem::Tag( SmallIcon( nepomukTag.symbols().first() ),
-                                      nepomukTag.label(), nepomukTag.resourceUri().toString() );
-      messageListTagList->append( messageListTag );
-
-      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::priority() ) ) {
-        const int priority = nepomukTag.property(Vocabulary::MessageTag::priority() ).toInt();
-        if ( ( bestPriority > priority ) || ( !textColor.isValid() ) ) {
-          bestPriority = priority;
-          if ( nepomukTag.hasProperty( Vocabulary::MessageTag::backgroundColor() ) ) {
-            const QString name = nepomukTag.property( Vocabulary::MessageTag::backgroundColor() ).toString();
-            backgroundColor = QColor( name );
-          }
-          if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
-            const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
-            textColor = QColor( name );
-          }
-        }
-      }
-    }
-    return messageListTagList;
-  }
-  else
-    return 0;
-}
-
 void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
                                           int row ) const
 {
@@ -371,36 +319,7 @@ void StorageModel::updateMessageItemData( MessageList::Core::MessageItem *mi,
     mi->setSignatureState( Core::MessageItem::PartiallySigned );
   }
 
-  QColor clr;
-  QColor backClr;
-  mi->setTagList( fillTagList( item, clr, backClr ) );
-
-  if ( stat.isNew() ) {
-    clr = d->mColorNewMessage;
-  } else if ( stat.isUnread() ) {
-    clr = d->mColorUnreadMessage;
-  } else if ( stat.isImportant() ) {
-    clr = d->mColorImportantMessage;
-  } else if ( stat.isToAct() ) {
-    clr = d->mColorToDoMessage;
-  }
-
-  mi->setTextColor( clr ); // same invalid => default color. Otherwise we can't change color when status is Read.
-
-  mi->setBackgroundColor( backClr );
-
-  // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
-  if ( stat.isImportant() ) {
-    mi->setFont( d->mFontImportantMessage );
-  } else if ( stat.isNew() ) {
-    mi->setFont( d->mFontNewMessage );
-  } else if ( stat.isUnread() ) {
-    mi->setFont( d->mFontUnreadMessage );
-  } else if ( stat.isToAct() ) {
-    mi->setFont( d->mFontToDoMessage );
-  } else {
-    mi->setFont( d->mFont );
-  }
+  mi->invalidateTagCache();
 }
 
 void StorageModel::setMessageItemStatus( MessageList::Core::MessageItem *mi,
@@ -494,32 +413,30 @@ void StorageModel::Private::loadSettings()
   Core::Settings *settings = Core::Settings::self();
 
   if ( settings->useDefaultColors() ) {
-    mColorNewMessage = QColor("red");
-    mColorUnreadMessage = QColor("blue");
-    mColorImportantMessage = QColor(0x0, 0x7F, 0x0);
-    mColorToDoMessage = QColor(0x0, 0x98, 0x0);
+    Core::MessageItem::setNewMessageColor( QColor( "red" ) );
+    Core::MessageItem::setUnreadMessageColor( QColor( "blue" ) );
+    Core::MessageItem::setImportantMessageColor( QColor( 0x0, 0x7F, 0x0 ) );
+    Core::MessageItem::setToDoMessageColor( QColor( 0x0, 0x98, 0x0 ) );
   } else {
-    mColorNewMessage = settings->newMessageColor();
-    mColorUnreadMessage = settings->unreadMessageColor();
-    mColorImportantMessage = settings->importantMessageColor();
-    mColorToDoMessage = settings->todoMessageColor();
+    Core::MessageItem::setNewMessageColor( settings->newMessageColor() );
+    Core::MessageItem::setUnreadMessageColor( settings->unreadMessageColor() );
+    Core::MessageItem::setImportantMessageColor( settings->importantMessageColor() );
+    Core::MessageItem::setToDoMessageColor( settings->todoMessageColor() );
   }
 
   if ( settings->useDefaultFonts() ) {
-    mFont = KGlobalSettings::generalFont();
-    mFontNewMessage = KGlobalSettings::generalFont();
-    mFontUnreadMessage = KGlobalSettings::generalFont();
-    mFontImportantMessage = KGlobalSettings::generalFont();
-    mFontToDoMessage = KGlobalSettings::generalFont();
+    Core::MessageItem::setGeneralFont( KGlobalSettings::generalFont() );
+    Core::MessageItem::setNewMessageFont( KGlobalSettings::generalFont() );
+    Core::MessageItem::setUnreadMessageFont( KGlobalSettings::generalFont() );
+    Core::MessageItem::setImportantMessageFont( KGlobalSettings::generalFont() );
+    Core::MessageItem::setToDoMessageFont( KGlobalSettings::generalFont() );
   } else {
-    mFont = settings->messageListFont();
-    mFontNewMessage = settings->newMessageFont();
-    mFontUnreadMessage = settings->unreadMessageFont();
-    mFontImportantMessage = settings->importantMessageFont();
-    mFontToDoMessage = settings->todoMessageFont();
+    Core::MessageItem::setGeneralFont( settings->messageListFont() );
+    Core::MessageItem::setNewMessageFont( settings->newMessageFont() );
+    Core::MessageItem::setUnreadMessageFont( settings->unreadMessageFont() );
+    Core::MessageItem::setImportantMessageFont( settings->importantMessageFont() );
+    Core::MessageItem::setToDoMessageFont( settings->todoMessageFont() );
   }
-
-  q->reset();
 }
 
 Item StorageModel::itemForRow( int row ) const

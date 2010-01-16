@@ -47,6 +47,15 @@ public:
     QPixmap pixmap() const;
     QString name() const;
     QString id() const;
+    QColor textColor() const;
+    QColor backgroundColor() const;
+    QFont font() const;
+    int priority() const;
+
+    void setTextColor( const QColor &textColor );
+    void setBackgroundColor( const QColor &backgroundColor );
+    void setFont( const QFont &font );
+    void setPriority( int priority );
 
   private:
     class Private;
@@ -81,29 +90,25 @@ public:
   virtual ~MessageItem();
 
 public:
-  QList< Tag * > * tagList() const;
-
-  void setTagList( QList< Tag * > * list );
+  QList< Tag * > tagList() const;
 
   /**
    * Returns Tag associated to this message that has the specified id or 0
    * if no such tag exists. mTagList will be 0 in 99% of the cases.
    */
-  Tag * findTag( const QString &szTagId ) const;
+  const Tag * findTag( const QString &szTagId ) const;
 
   QString tagListDescription() const;
+
+  /// Deletes all cached tags. The next time someone asks this item for the tags, they are
+  /// fetched from Nepomuk again
+  void invalidateTagCache();
 
   QColor textColor() const;
 
   QColor backgroundColor() const;
 
   QFont font() const;
-
-  void setTextColor( const QColor &clr );
-
-  void setBackgroundColor( const QColor &clr );
-
-  void setFont( const QFont &f );
 
   SignatureState signatureState() const;
 
@@ -143,7 +148,9 @@ public:
 
   unsigned long uniqueId() const;
 
-  void setUniqueId(unsigned long uniqueId);
+  void setUniqueId( unsigned long uniqueId );
+
+  void setNepomukResourceURI( const QUrl &nepomukUri );
 
   MessageItem * topmostMessage();
 
@@ -152,6 +159,22 @@ public:
    * to the specified list. This item is included!
    */
   void subTreeToList( QList< MessageItem * > &list );
+
+  //
+  // Colors and fonts shared by all message items.
+  // textColor() and font() will take the message status into account and return
+  // one of these.
+  // Call these setters only once when reading the colors from the config file.
+  //
+  static void setNewMessageColor( const QColor &color );
+  static void setUnreadMessageColor( const QColor &color );
+  static void setImportantMessageColor( const QColor &color );
+  static void setToDoMessageColor( const QColor &color );
+  static void setGeneralFont( const QFont &font );
+  static void setNewMessageFont( const QFont &font );
+  static void setUnreadMessageFont( const QFont &font );
+  static void setImportantMessageFont( const QFont &font );
+  static void setToDoMessageFont( const QFont &font );
 
 private:
   class Private;
