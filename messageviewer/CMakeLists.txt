@@ -1,5 +1,9 @@
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
+macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
+configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-messageviewer.h)
+
 add_subdirectory(tests)
 
 set(libmessageviewer_SRCS
