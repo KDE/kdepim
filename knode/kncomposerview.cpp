@@ -55,8 +55,8 @@ View::View( KNComposer *composer )
   mGroupsEdit->setView( this );
   mGroupsEdit->enableCompletion( false );
   mEdtList.append( mGroupsEdit );
-  connect( mGroupsEdit, SIGNAL(textChanged(QString)),
-           this, SLOT(slotGroupsChanged(QString)) );
+  connect( mGroupsEdit, SIGNAL( editingFinished() ),
+           this, SLOT( slotGroupsChanged() ) );
   connect( mGroupsButton, SIGNAL(clicked()),
            parent(), SLOT(slotGroupsBtnClicked()) );
 
@@ -237,7 +237,7 @@ void View::setGroups( const QString &groups )
   mGroupsEdit->setText( groups );
 }
 
-void View::slotGroupsChanged( const QString &/*groupText*/ )
+void View::slotGroupsChanged()
 {
   QStringList groupsList = groups();
   groupsList.append( QString() );

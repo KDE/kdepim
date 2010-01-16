@@ -189,7 +189,7 @@ class View : public QSplitter, private Ui::View
     /**
       Called when the content of the groups line edit changes.
     */
-    void slotGroupsChanged( const QString &groupText );
+    void slotGroupsChanged();
 
     /**
       Called when the attachment selection changed.
