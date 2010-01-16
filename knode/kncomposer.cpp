@@ -76,6 +76,7 @@ using KPIM::RecentAddresses;
 #include "utils/locale.h"
 
 using namespace KNode::Utilities;
+using namespace KNode::Composer;
 
 
 KNLineEdit::KNLineEdit( View *parent, bool useCompletion )
@@ -206,8 +207,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
   setCentralWidget(v_iew);
 
   connect( v_iew, SIGNAL(closeExternalEditor()), this, SLOT(slotCancelEditor()) );
-  connect(v_iew->editor(), SIGNAL(sigDragEnterEvent(QDragEnterEvent *)), SLOT(slotDragEnterEvent(QDragEnterEvent *)));
-  connect(v_iew->editor(), SIGNAL(sigDropEvent(QDropEvent *)), SLOT(slotDropEvent(QDropEvent *)));
 
   //statusbar
   KStatusBar *sb=statusBar();
@@ -297,11 +296,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
 
   a_ctRemoveAttachment = actionCollection()->addAction("remove_attachment");
   a_ctRemoveAttachment->setText(i18n("&Remove"));
-  connect(a_ctRemoveAttachment, SIGNAL(triggered(bool) ), SLOT(slotRemoveAttachment()));
+  connect( a_ctRemoveAttachment, SIGNAL(triggered(bool) ), v_iew, SLOT(removeCurrentAttachment()) );
 
   a_ctAttachmentProperties = actionCollection()->addAction("attachment_properties");
   a_ctAttachmentProperties->setText(i18n("&Properties"));
-  connect(a_ctAttachmentProperties, SIGNAL(triggered(bool) ), SLOT(slotAttachmentProperties()));
+  connect( a_ctAttachmentProperties, SIGNAL(triggered(bool)), v_iew, SLOT(editCurrentAttachment()) );
 
   //options menu
 
@@ -394,12 +393,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &un
 
   //---------------------------------- </Actions> ----------------------------------------
 
-
-  //attachment popup
-  a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new QMenu();
-  slotAttachmentSelected(0);
-
   //init
   initData(text);
 
@@ -432,8 +425,7 @@ KNComposer::~KNComposer()
 
   delete e_ditorTempfile;
 
-  for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
-    delete (*it);
+  qDeleteAll( mDeletedAttachments );
 
   saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 
@@ -755,7 +747,6 @@ bool KNComposer::hasValidData()
 bool KNComposer::applyChanges()
 {
   KMime::Content *text=0;
-  KNAttachment *a=0;
   bool result = true; // no error occurs ?
 
 
@@ -832,18 +823,17 @@ bool KNComposer::applyChanges()
     a_rticle->removeHeader("Followup-To");
   }
 
-  if(a_ttChanged && (v_iew->a_ttView)) {
 
-    Q3ListViewItemIterator it(v_iew->a_ttView);
-    while(it.current()) {
-      a=(static_cast<AttachmentViewItem*> (it.current()))->attachment;
+  // Attachments
+  if ( a_ttChanged ) {
+    const QList< KNAttachment * > l = v_iew->attachments();
+    foreach ( KNAttachment *a, l ) {
       if(a->hasChanged()) {
         if(a->isAttached())
           a->updateContentInfo();
         else
           a->attach(a_rticle);
       }
-      ++it;
     }
   }
 
@@ -1036,10 +1026,10 @@ void KNComposer::initData(const QString &text)
 
   if(a_rticle->contentType()->isMultipart()) {
     v_iew->showAttachmentView();
-    KMime::Content::List attList = a_rticle->attachments();
-    AttachmentViewItem *item=0;
-    foreach ( KMime::Content *c, attList )
-      item=new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(c));
+    const KMime::Content::List attList = a_rticle->attachments();
+    foreach ( KMime::Content *c, attList ) {
+      v_iew->addAttachment( new KNAttachment( c ) );
+    }
   }
 }
 
@@ -1165,11 +1155,11 @@ void KNComposer::slotAttachFile()
   KNLoadHelper *helper = new KNLoadHelper(this);
 
   if (helper->getFile(i18n("Attach File"))) {
-   if (!v_iew->v_iewOpen) {
+   if ( !v_iew->isAttachmentViewVisible() ) {
       KNHelper::saveWindowSize("composer", size());
       v_iew->showAttachmentView();
     }
-    (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
+    v_iew->addAttachment( new KNAttachment( helper ) );
     a_ttChanged=true;
   } else {
     delete helper;
@@ -1177,44 +1167,29 @@ void KNComposer::slotAttachFile()
 }
 
 
-void KNComposer::slotRemoveAttachment()
+void KNComposer::slotAttachmentRemoved( KNAttachment *attachment, bool last )
 {
-  if(!v_iew->v_iewOpen) return;
-
-  if(v_iew->a_ttView->currentItem()) {
-    AttachmentViewItem *it=static_cast<AttachmentViewItem*>(v_iew->a_ttView->currentItem());
-    if(it->attachment->isAttached()) {
-      mDeletedAttachments.append( it->attachment );
-      it->attachment=0;
-    }
-    delete it;
-
-    if(v_iew->a_ttView->childCount()==0) {
-      KNHelper::saveWindowSize("composerAtt", size());
-      v_iew->hideAttachmentView();
-    }
-
-    a_ttChanged=true;
+   if( !attachment ) {
+    return;
   }
+
+  if ( attachment->isAttached() ) {
+    mDeletedAttachments.append( attachment );
+  }
+
+  if ( last ) {
+    KNHelper::saveWindowSize( "composerAtt", size() );
+    v_iew->hideAttachmentView();
+  }
+
+  a_ttChanged = true;
 }
 
-void KNComposer::slotAttachmentProperties()
+void KNComposer::slotAttachmentChanged()
 {
-  if(!v_iew->v_iewOpen) return;
-
-  if(v_iew->a_ttView->currentItem()) {
-    AttachmentViewItem *it=static_cast<AttachmentViewItem*>(v_iew->a_ttView->currentItem());
-    AttachmentPropertiesDlg *d=new AttachmentPropertiesDlg(it->attachment, this);
-    if(d->exec()) {
-      d->apply();
-      it->setText(1, it->attachment->mimeType());
-      it->setText(3, it->attachment->description());
-      it->setText(4, it->attachment->encoding());
-    }
-    delete d;
-    a_ttChanged=true;
-  }
+  a_ttChanged = true;
 }
+
 
 
 void KNComposer::slotToggleDoPost()
@@ -1445,9 +1420,6 @@ void KNComposer::slotNewToolbarConfig()
 {
   createGUI("kncomposerui.rc");
 
-  a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new QMenu();
-
   applyMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 }
 
@@ -1558,137 +1530,40 @@ void KNComposer::slotCancelEditor()
 }
 
 
-void KNComposer::slotAttachmentPopup(K3ListView*, Q3ListViewItem *it, const QPoint &p)
+void KNComposer::slotAttachmentPopup( const QPoint &point )
 {
-  if(it)
-    a_ttPopup->popup(p);
-}
-
-
-void KNComposer::slotAttachmentSelected(Q3ListViewItem *it)
-{
-  if ( v_iew->a_ttView ) {
-    v_iew->a_ttRemoveBtn->setEnabled((it!=0));
-    v_iew->a_ttEditBtn->setEnabled((it!=0));
+  QMenu *menu = static_cast<QMenu*>( factory()->container( "attachment_popup", this ) );
+  if ( menu ) {
+    menu->popup( point );
   }
 }
 
-
-void KNComposer::slotAttachmentEdit(Q3ListViewItem *)
+void KNComposer::dragEnterEvent( QDragEnterEvent *event )
 {
-  slotAttachmentProperties();
+  if ( KUrl::List::canDecode( event->mimeData() ) ) {
+    event->setDropAction( Qt::CopyAction );
+    event->accept();
+  }
 }
 
-
-void KNComposer::slotAttachmentRemove(Q3ListViewItem *)
+void KNComposer::dropEvent( QDropEvent *event )
 {
-  slotRemoveAttachment();
-}
+  KUrl::List urls = KUrl::List::fromMimeData( event->mimeData() );
 
-
-void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
-{
-  QStringList files;
-  ev->setAccepted( KUrl::List::canDecode( ev->mimeData() ) );
-}
-
-
-void KNComposer::slotDropEvent(QDropEvent *ev)
-{
-  KUrl::List urls = KUrl::List::fromMimeData( ev->mimeData() );
-
-  if ( urls.isEmpty() )
-    return;
-
-  for (KUrl::List::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it) {
-    const KUrl &url = *it;
+  foreach ( const KUrl &url, urls ) {
     KNLoadHelper *helper = new KNLoadHelper(this);
 
     if (helper->setURL(url)) {
-      if (!v_iew->v_iewOpen) {
+      if ( !v_iew->isAttachmentViewVisible() ) {
         KNHelper::saveWindowSize("composer", size());
         v_iew->showAttachmentView();
       }
-      (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
+      v_iew->addAttachment( new KNAttachment( helper ) );
       a_ttChanged=true;
     } else {
       delete helper;
     }
   }
-}
-
-
-void KNComposer::dragEnterEvent(QDragEnterEvent *ev)
-{
-  slotDragEnterEvent(ev);
-}
-
-
-void KNComposer::dropEvent(QDropEvent *ev)
-{
-  slotDropEvent(ev);
-}
-
-QMenu * KNComposer::popupMenu( const QString& name )
-{
-    Q_ASSERT(factory());
-    if ( factory() )
-        return ((QMenu*)factory()->container( name, this ));
-    return 0L;
-}
-
-//=====================================================================================
-
-
-KNComposer::AttachmentView::AttachmentView( QWidget *parent )
- : K3ListView( parent )
-{
-  setFrameStyle(QFrame::WinPanel | QFrame::Sunken);  // match the QMultiLineEdit style
-  addColumn(i18n("File"), 115);
-  addColumn(i18n("Type"), 91);
-  addColumn(i18n("Size"), 55);
-  addColumn(i18n("Description"), 110);
-  addColumn(i18n("Encoding"), 60);
-  header()->setClickEnabled(false);
-  setAllColumnsShowFocus(true);
-}
-
-
-KNComposer::AttachmentView::~AttachmentView()
-{
-}
-
-
-void KNComposer::AttachmentView::keyPressEvent(QKeyEvent *e)
-{
-  if(!e)
-    return; // subclass bug
-
-  if( (e->key()==Qt::Key_Delete) && (currentItem()) )
-    emit(delPressed(currentItem()));
-  else
-    K3ListView::keyPressEvent(e);
-}
-
-
-//=====================================================================================
-
-
-KNComposer::AttachmentViewItem::AttachmentViewItem(K3ListView *v, KNAttachment *a) :
-  K3ListViewItem(v), attachment(a)
-{
-  setText(0, a->name());
-  setText(1, a->mimeType());
-  setText(2, a->contentSize());
-  setText(3, a->description());
-  setText(4, a->encoding());
-}
-
-
-
-KNComposer::AttachmentViewItem::~AttachmentViewItem()
-{
-  delete attachment;
 }
 
 
@@ -1797,6 +1672,9 @@ void KNComposer::AttachmentPropertiesDlg::accept()
        KMessageBox::warningContinueCancel(this,
        i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
        ) == KMessageBox::Cancel) return;
+
+  // update the attachment
+  apply();
 
   KDialog::accept();
 }

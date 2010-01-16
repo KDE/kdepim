@@ -23,8 +23,6 @@
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
 #include <KPIMUtils/Email>
-#include <QPushButton>
-#include <Q3Header>
 
 
 namespace KNode {
@@ -33,12 +31,12 @@ namespace Composer {
 
 View::View( KNComposer *composer )
   : QSplitter( Qt::Vertical, composer ),
-    a_ttView( 0 ), v_iewOpen( false )
+    mAttachmentSetup( false )
 {
   setupUi( this );
 
   setChildrenCollapsible( false );
-  mAttachementWidget->hide();
+  mAttachmentWidget->hide();
 
   //From
   mFromEdit->setView( this );
@@ -87,13 +85,13 @@ View::View( KNComposer *composer )
 
 View::~View()
 {
-  if(v_iewOpen) {
+  if ( mAttachmentWidget->isVisible() ) {
     KConfigGroup conf( knGlobals.config(), "POSTNEWS");
 
     conf.writeEntry("Att_Splitter",sizes());   // save splitter pos
 
     QList<int> lst;                        // save header sizes
-    Q3Header *h=a_ttView->header();
+    QHeaderView *h = mAttachmentsList->header();
     for (int i=0; i<5; i++)
       lst << h->sectionSize(i);
     conf.writeEntry("Att_Headers",lst);
@@ -351,51 +349,43 @@ void View::showSubject( bool show )
 
 void View::showAttachmentView()
 {
-  if ( !a_ttView ) {
-    QGridLayout *topL=new QGridLayout(mAttachementWidget);
-    topL->setSpacing(4);
-    topL->setMargin(4);
-
-    a_ttView = new KNComposer::AttachmentView( mAttachementWidget );
-    topL->addWidget(a_ttView, 0, 0, 3, 1);
+  if ( !mAttachmentSetup ) {
+    mAttachmentSetup = true;
 
     //connections
-    connect(a_ttView, SIGNAL(currentChanged(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentSelected(Q3ListViewItem*)));
-    connect(a_ttView, SIGNAL(clicked ( Q3ListViewItem * )),
-            parent(), SLOT(slotAttachmentSelected(Q3ListViewItem*)));
+    connect( mAttachmentsList, SIGNAL(itemSelectionChanged()),
+             this, SLOT(slotAttachmentSelectionChanged()) );
 
-    connect(a_ttView, SIGNAL(contextMenu(K3ListView*, Q3ListViewItem*, const QPoint&)),
-            parent(), SLOT(slotAttachmentPopup(K3ListView*, Q3ListViewItem*, const QPoint&)));
-    connect(a_ttView, SIGNAL(delPressed(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentRemove(Q3ListViewItem*)));
-    connect(a_ttView, SIGNAL(doubleClicked(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
-    connect(a_ttView, SIGNAL(returnPressed(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
+    connect( mAttachmentsList, SIGNAL( contextMenuRequested( const QPoint & ) ),
+             parent(), SLOT( slotAttachmentPopup( const QPoint & ) ) );
+
+    connect( mAttachmentsList, SIGNAL(deletePressed()),
+             this, SLOT(removeCurrentAttachment()) );
+    connect( mAttachmentsList, SIGNAL(attachmentRemoved(KNAttachment*,bool)),
+             parent(), SLOT(slotAttachmentRemoved(KNAttachment*,bool)) );
+
+    connect( mAttachmentsList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+             mAttachmentsList, SLOT(editCurrentAttachment()) );
+    connect( mAttachmentsList, SIGNAL(returnPressed()),
+             mAttachmentsList, SLOT(editCurrentAttachment()) );
+    connect( mAttachmentsList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+             parent(), SLOT(slotAttachmentChanged()) );
 
     //buttons
-    a_ttAddBtn=new QPushButton(i18n("A&dd..."),mAttachementWidget);
-    connect(a_ttAddBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachFile()));
-    topL->addWidget(a_ttAddBtn, 0,1);
+    connect( mAttachmentAddButton, SIGNAL(clicked()),
+             parent(), SLOT(slotAttachFile()) );
 
-    a_ttRemoveBtn=new QPushButton(i18n("&Remove"), mAttachementWidget);
-    a_ttRemoveBtn->setEnabled(false);
-    connect(a_ttRemoveBtn, SIGNAL(clicked()), parent(), SLOT(slotRemoveAttachment()));
-    topL->addWidget(a_ttRemoveBtn, 1,1);
+    mAttachmentRemoveButton->setEnabled( false );
+    connect( mAttachmentRemoveButton, SIGNAL(clicked()),
+             this, SLOT(removeCurrentAttachment()) );
 
-    a_ttEditBtn=new QPushButton(i18n("&Properties"), mAttachementWidget);
-    a_ttEditBtn->setEnabled(false);
-    connect(a_ttEditBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachmentProperties()));
-    topL->addWidget(a_ttEditBtn, 2,1, Qt::AlignTop);
-
-    topL->setRowStretch(2,1);
-    topL->setColumnStretch(0,1);
+    mAttachmentPropertiesButton->setEnabled( false );
+    connect( mAttachmentPropertiesButton, SIGNAL(clicked()),
+             mAttachmentsList, SLOT(editCurrentAttachment()) );
   }
 
-  if(!v_iewOpen) {
-    v_iewOpen=true;
-    mAttachementWidget->show();
+  if ( !mAttachmentWidget->isVisible() ) {
+    mAttachmentWidget->show();
 
     KConfigGroup conf(knGlobals.config(), "POSTNEWS");
 
@@ -408,7 +398,7 @@ void View::showAttachmentView()
     if(lst.count()==5) {
       QList<int>::Iterator it = lst.begin();
 
-      Q3Header *h=a_ttView->header();
+      QHeaderView *h = mAttachmentsList->header();
       for(int i=0; i<5; i++) {
         h->resizeSection(i,(*it));
         ++it;
@@ -417,14 +407,39 @@ void View::showAttachmentView()
   }
 }
 
-
 void View::hideAttachmentView()
 {
-  if(v_iewOpen) {
-    mAttachementWidget->hide();
-    v_iewOpen=false;
-  }
+  mAttachmentWidget->hide();
 }
+
+void View::addAttachment( KNAttachment* attachment )
+{
+  AttachmentViewItem *item = new AttachmentViewItem( mAttachmentsList, attachment );
+  mAttachmentsList->addTopLevelItem( item );
+}
+
+const QList< KNAttachment* > View::attachments() const
+{
+  return mAttachmentsList->attachments();
+}
+
+void View::removeCurrentAttachment()
+{
+  mAttachmentsList->removeCurrentAttachment();
+}
+
+void View::editCurrentAttachment()
+{
+  mAttachmentsList->editCurrentAttachment();
+}
+
+void View::slotAttachmentSelectionChanged()
+{
+  bool e = !mAttachmentsList->selectedItems().isEmpty();
+  mAttachmentRemoveButton->setEnabled( e );
+  mAttachmentPropertiesButton->setEnabled( e );
+}
+
 
 
 void View::showExternalNotification()

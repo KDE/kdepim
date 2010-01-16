@@ -15,32 +15,20 @@
 #ifndef KNCOMPOSER_H
 #define KNCOMPOSER_H
 
-#include <k3listview.h>
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
-#include <QRegExp>
-#include <QByteArray>
-#include <QCloseEvent>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QDropEvent>
-#include <QLabel>
 #include <QList>
-#include <QContextMenuEvent>
-#include <QMenu>
-#include <QDragEnterEvent>
-#include <QSplitter>
 #include <kprocess.h>
 #include <kabc/addresslineedit.h>
 
 
-class QFile;
 class KSelectAction;
 class KTemporaryFile;
 class KToggleAction;
 class KNLocalArticle;
 class KNAttachment;
 class QComboBox;
+class QFile;
 namespace KNode {
   namespace Composer {
     class View;
@@ -110,17 +98,12 @@ class KNComposer : public KXmlGuiWindow {
     /// ask for a filename, handle network urls
     void insertFile(bool clear=false, bool box=false);
 
-    QMenu * popupMenu( const QString& name );
-
 //internal classes
     class Editor;
-    class AttachmentView;
-    class AttachmentViewItem;
     class AttachmentPropertiesDlg;
 
     //GUI
     View *v_iew;
-    QMenu *a_ttPopup;
 
     //Data
     composerResult r_esult;
@@ -164,8 +147,6 @@ class KNComposer : public KXmlGuiWindow {
     void slotInsertFile();
     void slotInsertFileBoxed();
     void slotAttachFile();
-    void slotRemoveAttachment();
-    void slotAttachmentProperties();
     void slotToggleDoPost();
     void slotToggleDoMail();
     void slotSetCharset(const QString &s);
@@ -194,14 +175,20 @@ class KNComposer : public KXmlGuiWindow {
     void slotCancelEditor();
 
     // attachment list
-    void slotAttachmentPopup(K3ListView*, Q3ListViewItem *it, const QPoint &p);
-    void slotAttachmentSelected(Q3ListViewItem *it);
-    void slotAttachmentEdit(Q3ListViewItem *it);
-    void slotAttachmentRemove(Q3ListViewItem *it);
+    /**
+      Open a popup menu to do action on an attachment
+      @param point the global position where the popup should be opened.
+    */
+    void slotAttachmentPopup( const QPoint &point );
+    /**
+      Called by the View when an attachment was removed.
+    */
+    void slotAttachmentRemoved( KNAttachment *attachment, bool last );
+    /**
+      Called by the View to notify that an attachment was modified.
+    */
+    void slotAttachmentChanged();
 
-    // DND handling
-    virtual void slotDragEnterEvent(QDragEnterEvent *);
-    virtual void slotDropEvent(QDropEvent *);
 
     void slotUndo();
     void slotRedo();
@@ -214,8 +201,14 @@ class KNComposer : public KXmlGuiWindow {
   protected:
 
     // DND handling
-    virtual void dragEnterEvent(QDragEnterEvent *);
-    virtual void dropEvent(QDropEvent *);
+    /**
+      Reimplemted to accept list of URI as drag content
+    */
+    virtual void dragEnterEvent( QDragEnterEvent *event );
+    /**
+      Reimplemented to add the dropped files as attachments.
+    */
+    virtual void dropEvent( QDropEvent *event );
 
   signals:
     void composerDone(KNComposer*);
@@ -236,47 +229,31 @@ class KNComposer : public KXmlGuiWindow {
 };
 
 
-/** Attachment view of the message composer. */
-class KNComposer::AttachmentView : public K3ListView {
-
-  Q_OBJECT
-
-  public:
-    AttachmentView( QWidget *parent );
-    ~AttachmentView();
-
-  protected:
-    void keyPressEvent( QKeyEvent *e );
-
-  signals:
-    void delPressed ( Q3ListViewItem * );      // the user used Key_Delete on a list view item
-};
-
-
-/** Attachment view item. */
-class KNComposer::AttachmentViewItem : public K3ListViewItem {
-
-  public:
-    AttachmentViewItem(K3ListView *v, KNAttachment *a);
-    ~AttachmentViewItem();
-
-  KNAttachment *attachment;
-
-};
-
-
 /** Attachment properties dialog. */
 class KNComposer::AttachmentPropertiesDlg : public KDialog {
 
   Q_OBJECT
 
   public:
+    /**
+      Create a dialog to edit attribute of a message attachment.
+
+      Note: if this dialog is accepted, the attachement @p a is updated automatically.
+      @param a The attachment to edit.
+      @param parent Parent widget.
+    */
     AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent = 0 );
+    /**
+      Destructor.
+    */
     ~AttachmentPropertiesDlg();
 
+  protected:
+    /**
+      Apply the change to the attachment passed to the constructor.
+    */
     void apply();
 
-  protected:
     KLineEdit *m_imeType,
               *d_escription;
     QComboBox *e_ncoding;

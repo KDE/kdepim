@@ -70,6 +70,7 @@ set(knodecommon_LIB_SRCS
    kncollectionview.cpp
    articlewidget.cpp
    csshelper.cpp
+   composer/attachment_view.cpp
    configuration/identity_widget.cpp
    configuration/identity_edition_dialog.cpp
    utils/locale.cpp

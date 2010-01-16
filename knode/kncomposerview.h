@@ -73,8 +73,25 @@ class View : public QSplitter, private Ui::View
     */
     void setComposingFont( const QFont &font );
 
+
+    // Attachments
     void showAttachmentView();
     void hideAttachmentView();
+    /**
+      Adds an attachment to the message.
+    */
+    void addAttachment( KNAttachment *attachment );
+    /**
+      Returns the list of attachments of this message.
+    */
+    const QList< KNAttachment *> attachments() const;
+    /**
+      Indicates whether the attachment view is visible or not
+      @return true when it is shown.
+    */
+    bool isAttachmentViewVisible() const
+      { return mAttachmentWidget->isVisible(); }
+
     void showExternalNotification();
     void hideExternalNotification();
 
@@ -141,16 +158,19 @@ class View : public QSplitter, private Ui::View
     KNComposerEditor * editor() const;
 
 
-    KNComposer::AttachmentView *a_ttView;
-    QPushButton     *a_ttRemoveBtn,
-                    *a_ttEditBtn;
-    bool v_iewOpen;
-
   public slots:
     /**
       Appends the signature to the editor.
     */
     void appendSignature();
+    /**
+      Remove the currently selected attachment if there is a selection.
+    */
+    void removeCurrentAttachment();
+    /**
+      Edit the currently selected attachment.
+    */
+    void editCurrentAttachment();
 
   signals:
     /**
@@ -171,10 +191,13 @@ class View : public QSplitter, private Ui::View
     */
     void slotGroupsChanged( const QString &groupText );
 
+    /**
+      Called when the attachment selection changed.
+    */
+    void slotAttachmentSelectionChanged();
+
   private:
     QList<QWidget*> mEdtList;
-
-    QPushButton *a_ttAddBtn;
 
     /**
       Shows/hide the identity selector.
@@ -200,6 +223,11 @@ class View : public QSplitter, private Ui::View
       Shows/hide the Subject editor..
     */
     void showSubject( bool show );
+
+    /**
+      Indicate whether the attachment widget has been setup yet.
+    */
+    bool mAttachmentSetup;
 };
 
 

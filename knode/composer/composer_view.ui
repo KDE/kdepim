@@ -3,248 +3,303 @@
  <author>Olivier Trichet &lt;nive@nivalis.org&gt;</author>
  <class>KNode::Composer::View</class>
  <widget class="QFrame" name="KNode::Composer::View">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>478</width>
-    <height>491</height>
-   </rect>
-  </property>
-  <layout class="QVBoxLayout" name="mVerticalLayout">
-   <item>
-    <widget class="QWidget" name="mHeadersBodyWidget" native="true">
-     <layout class="QVBoxLayout" name="mLayout1">
-      <item>
-       <widget class="QFrame" name="mHeadersFrame">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="frameShape">
-         <enum>QFrame::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Raised</enum>
-        </property>
-        <layout class="QGridLayout" name="mLayout2" columnstretch="0,1,0">
-         <item row="0" column="1" colspan="2">
-          <widget class="KNode::IdentityComboWrapper" name="mIdentitySelector"/>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="mIdentitySelectorLabel">
-           <property name="accessibleName">
-            <string/>
-           </property>
-           <property name="text">
-            <string comment="@label:listbox">Identity:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="1" colspan="2">
-          <widget class="KNLineEditSpell" name="mSubjectEdit"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="mToLabel">
-           <property name="text">
-            <string comment="@label:textbox email recipient of a message">To:</string>
-           </property>
-           <property name="buddy">
-            <cstring>mToEdit</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="KNLineEdit" name="mToEdit"/>
-         </item>
-         <item row="3" column="2">
-          <widget class="KPushButton" name="mToButton">
-           <property name="accessibleName">
-            <string/>
-           </property>
-           <property name="text">
-            <string comment="@action:button open a dialog to choose email recipients">Browse...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0">
-          <widget class="QLabel" name="mGroupsLabel">
-           <property name="text">
-            <string comment="@label:textbox">Groups:</string>
-           </property>
-           <property name="buddy">
-            <cstring>mGroupsEdit</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="5" column="0">
-          <widget class="QLabel" name="mFollowuptoLabel">
-           <property name="text">
-            <string comment="@label">Followup-To:</string>
-           </property>
-           <property name="buddy">
-            <cstring>mFollowuptoEdit</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="0">
-          <widget class="QLabel" name="mSubjetLabel">
-           <property name="text">
-            <string comment="@label:textbox subject of a message">Subject:</string>
-           </property>
-           <property name="buddy">
-            <cstring>mSubjectEdit</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="2">
-          <widget class="KPushButton" name="mGroupsButton">
-           <property name="text">
-            <string comment="@action:button open a dialog to choose newsgroups">Browse...</string>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="1">
-          <widget class="KNLineEdit" name="mGroupsEdit"/>
-         </item>
-         <item row="5" column="1" colspan="2">
-          <widget class="KComboBox" name="mFollowuptoEdit">
-           <property name="editable">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="mFromLabel">
-           <property name="text">
-            <string comment="@label:textbox">From:</string>
-           </property>
-           <property name="buddy">
-            <cstring>mFromEdit</cstring>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1" colspan="2">
-          <widget class="KNLineEdit" name="mFromEdit"/>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QStackedWidget" name="mEditorsStack">
-        <property name="currentIndex">
-         <number>1</number>
-        </property>
-        <widget class="KNComposerEditor" name="mEditor">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>50</height>
-          </size>
+  <widget class="QWidget" name="mHeadersBodyWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>4</x>
+     <y>4</y>
+     <width>471</width>
+     <height>291</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="mLayout1">
+    <item>
+     <widget class="QFrame" name="mHeadersFrame">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QGridLayout" name="mLayout2" columnstretch="0,1,0">
+       <item row="0" column="1" colspan="2">
+        <widget class="KNode::IdentityComboWrapper" name="mIdentitySelector"/>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="mIdentitySelectorLabel">
+         <property name="accessibleName">
+          <string/>
+         </property>
+         <property name="text">
+          <string comment="@label:listbox">Identity:</string>
          </property>
         </widget>
-        <widget class="QWidget" name="mExternalEditorNotification">
-         <layout class="QGridLayout" name="mExternalEditorLayout">
-          <item row="2" column="2">
-           <spacer name="mExtEditVerticalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="4" column="0">
-           <spacer name="mExtEditHorizontalSpacer1">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="4" column="2">
-           <widget class="QGroupBox" name="groupBox">
-            <layout class="QVBoxLayout" name="mExtEditorKillerLayout">
-             <item>
-              <widget class="QLabel" name="mExternalKillSwitchLabel">
-               <property name="text">
-                <string>You are currently editing the article body
+       </item>
+       <item row="6" column="1" colspan="2">
+        <widget class="KNLineEditSpell" name="mSubjectEdit"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="mToLabel">
+         <property name="text">
+          <string comment="@label:textbox email recipient of a message">To:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mToEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="KNLineEdit" name="mToEdit"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="KPushButton" name="mToButton">
+         <property name="accessibleName">
+          <string/>
+         </property>
+         <property name="text">
+          <string comment="@action:button open a dialog to choose email recipients">Browse...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="mGroupsLabel">
+         <property name="text">
+          <string comment="@label:textbox">Groups:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mGroupsEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="mFollowuptoLabel">
+         <property name="text">
+          <string comment="@label">Followup-To:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mFollowuptoEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="mSubjetLabel">
+         <property name="text">
+          <string comment="@label:textbox subject of a message">Subject:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mSubjectEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="2">
+        <widget class="KPushButton" name="mGroupsButton">
+         <property name="text">
+          <string comment="@action:button open a dialog to choose newsgroups">Browse...</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="KNLineEdit" name="mGroupsEdit"/>
+       </item>
+       <item row="5" column="1" colspan="2">
+        <widget class="KComboBox" name="mFollowuptoEdit">
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="mFromLabel">
+         <property name="text">
+          <string comment="@label:textbox">From:</string>
+         </property>
+         <property name="buddy">
+          <cstring>mFromEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1" colspan="2">
+        <widget class="KNLineEdit" name="mFromEdit"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QStackedWidget" name="mEditorsStack">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="KNComposerEditor" name="mEditor">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>50</height>
+        </size>
+       </property>
+      </widget>
+      <widget class="QWidget" name="mExternalEditorNotification">
+       <layout class="QGridLayout" name="mExternalEditorLayout" rowstretch="1,0,2">
+        <item row="0" column="1">
+         <spacer name="mExtEditVerticalSpacer1">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="0">
+         <spacer name="mExtEditHorizontalSpacer1">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QGroupBox" name="groupBox">
+          <layout class="QVBoxLayout" name="mExtEditorKillerLayout">
+           <item>
+            <widget class="QLabel" name="mExternalKillSwitchLabel">
+             <property name="text">
+              <string>You are currently editing the article body
 in an external editor. To continue, you have
 to close the external editor.</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="KPushButton" name="mExternalKillSwitch">
-               <property name="text">
-                <string comment="@action:button">Kill external editor</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <spacer name="mExtEditHorizontalSpacer2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="7" column="2">
-           <spacer name="mExtEditVerticalSpacer2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="8" column="2">
-           <spacer name="mExtEditVerticalSpacer3">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="mAttachementWidget" native="true"/>
-   </item>
-  </layout>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="KPushButton" name="mExternalKillSwitch">
+             <property name="text">
+              <string comment="@action:button">Kill external editor</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <spacer name="mExtEditHorizontalSpacer2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="1">
+         <spacer name="mExtEditVerticalSpacer2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="mAttachmentWidget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>330</y>
+     <width>491</width>
+     <height>281</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout" columnstretch="1,0">
+    <item row="0" column="0" rowspan="4">
+     <widget class="KNode::Composer::AttachmentView" name="mAttachmentsList">
+      <column>
+       <property name="text">
+        <string comment="@title:column list of attachments of a message">File</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string comment="@title:column list of attachments of a message">Type</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string comment="@title:column list of attachments of a message">Size</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string comment="@title:column list of attachments of a message">Description</string>
+       </property>
+      </column>
+      <column>
+       <property name="text">
+        <string comment="@title:column list of attachments of a message">Encoding</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+    <item row="0" column="1">
+     <widget class="KPushButton" name="mAttachmentAddButton">
+      <property name="text">
+       <string comment="@action:button Open a dialog to add a message attachment">Add...</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="KPushButton" name="mAttachmentPropertiesButton">
+      <property name="text">
+       <string comment="@action:button open a dialog displaying properties of a message attachment">Properties</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>88</width>
+        <height>276</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="2" column="1">
+     <widget class="KPushButton" name="mAttachmentRemoveButton">
+      <property name="text">
+       <string comment="@action:button remove an attachment of a message">Remove</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
  <customwidgets>
   <customwidget>
@@ -277,6 +332,11 @@ to close the external editor.</string>
    <extends>QWidget</extends>
    <header>kncomposereditor.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KNode::Composer::AttachmentView</class>
+   <extends>QTreeWidget</extends>
+   <header>composer/attachment_view.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
