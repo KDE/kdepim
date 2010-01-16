@@ -361,8 +361,8 @@ void View::showAttachmentView()
 
     connect( mAttachmentsList, SIGNAL(deletePressed()),
              this, SLOT(removeCurrentAttachment()) );
-    connect( mAttachmentsList, SIGNAL(attachmentRemoved(KNAttachment*,bool)),
-             parent(), SLOT(slotAttachmentRemoved(KNAttachment*,bool)) );
+    connect( mAttachmentsList, SIGNAL( attachmentRemoved( KNAttachment::Ptr, bool ) ),
+             parent(), SLOT( slotAttachmentRemoved( KNAttachment::Ptr, bool ) ) );
 
     connect( mAttachmentsList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
              mAttachmentsList, SLOT(editCurrentAttachment()) );
@@ -412,13 +412,13 @@ void View::hideAttachmentView()
   mAttachmentWidget->hide();
 }
 
-void View::addAttachment( KNAttachment* attachment )
+void View::addAttachment( KNAttachment::Ptr attachment )
 {
   AttachmentViewItem *item = new AttachmentViewItem( mAttachmentsList, attachment );
   mAttachmentsList->addTopLevelItem( item );
 }
 
-const QList< KNAttachment* > View::attachments() const
+const QList<KNAttachment::Ptr> View::attachments() const
 {
   return mAttachmentsList->attachments();
 }

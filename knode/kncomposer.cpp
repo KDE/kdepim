@@ -17,19 +17,7 @@
 #include <KPIMUtils/Email>
 #include <KPIMIdentities/Identity>
 #include <KPIMIdentities/IdentityManager>
-#include <q3header.h>
-#include <QTextCodec>
-#include <QApplication>
-#include <QGridLayout>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QTextStream>
-#include <QByteArray>
-#include <QContextMenuEvent>
 #include <QVBoxLayout>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QCloseEvent>
 #include <QLabel>
 #include <QtDBus/QtDBus>
 #include <qgroupbox.h>
@@ -39,16 +27,12 @@ using KPIM::AddressesDialog;
 using KPIM::RecentAddresses;
 #include <kcharsets.h>
 #include <kmessagebox.h>
-#include <kabc/addresseedialog.h>
-#include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <kshortcutsdialog.h>
 #include <kedittoolbar.h>
 #include <kmenu.h>
-#include <kfiledialog.h>
 #include <kdebug.h>
-#include <klineedit.h>
 #include <kcombobox.h>
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgpblock.h>
@@ -57,22 +41,15 @@ using KPIM::RecentAddresses;
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kselectaction.h>
-#include <KStandardGuiItem>
 #include <ktoggleaction.h>
-#include <kconfiggroup.h>
-#include <kicon.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "knmainwidget.h"
-#include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
-#include "knarticlefactory.h"
 #include "settings.h"
 #include "kncomposerview.h"
-#include <kmeditor.h>
-#include "kncomposereditor.h"
 #include "utils/locale.h"
 
 using namespace KNode::Utilities;
@@ -424,8 +401,6 @@ KNComposer::~KNComposer()
   delete e_xternalEditor;  // this also kills the editor process if it's still running
 
   delete e_ditorTempfile;
-
-  qDeleteAll( mDeletedAttachments );
 
   saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 
@@ -826,8 +801,8 @@ bool KNComposer::applyChanges()
 
   // Attachments
   if ( a_ttChanged ) {
-    const QList< KNAttachment * > l = v_iew->attachments();
-    foreach ( KNAttachment *a, l ) {
+    const QList<KNAttachment::Ptr> l = v_iew->attachments();
+    foreach ( const KNAttachment::Ptr a, l ) {
       if(a->hasChanged()) {
         if(a->isAttached())
           a->updateContentInfo();
@@ -837,7 +812,7 @@ bool KNComposer::applyChanges()
     }
   }
 
-  for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+  for ( QList<KNAttachment::Ptr>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     if ( (*it)->isAttached() )
       (*it)->detach( a_rticle );
 
@@ -1028,7 +1003,7 @@ void KNComposer::initData(const QString &text)
     v_iew->showAttachmentView();
     const KMime::Content::List attList = a_rticle->attachments();
     foreach ( KMime::Content *c, attList ) {
-      v_iew->addAttachment( new KNAttachment( c ) );
+      v_iew->addAttachment( KNAttachment::Ptr( new KNAttachment( c ) ) );
     }
   }
 }
@@ -1159,7 +1134,7 @@ void KNComposer::slotAttachFile()
       KNHelper::saveWindowSize("composer", size());
       v_iew->showAttachmentView();
     }
-    v_iew->addAttachment( new KNAttachment( helper ) );
+    v_iew->addAttachment( KNAttachment::Ptr( new KNAttachment( helper ) ) );
     a_ttChanged=true;
   } else {
     delete helper;
@@ -1167,7 +1142,7 @@ void KNComposer::slotAttachFile()
 }
 
 
-void KNComposer::slotAttachmentRemoved( KNAttachment *attachment, bool last )
+void KNComposer::slotAttachmentRemoved( KNAttachment::Ptr attachment, bool last )
 {
    if( !attachment ) {
     return;
@@ -1558,7 +1533,7 @@ void KNComposer::dropEvent( QDropEvent *event )
         KNHelper::saveWindowSize("composer", size());
         v_iew->showAttachmentView();
       }
-      v_iew->addAttachment( new KNAttachment( helper ) );
+      v_iew->addAttachment( KNAttachment::Ptr( new KNAttachment( helper ) ) );
       a_ttChanged=true;
     } else {
       delete helper;
@@ -1570,7 +1545,7 @@ void KNComposer::dropEvent( QDropEvent *event )
 //=====================================================================================
 
 
-KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent ) :
+KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment::Ptr a, QWidget *parent ) :
   KDialog( parent ), a_ttachment(a),
   n_onTextAsText(false)
 {

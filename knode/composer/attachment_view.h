@@ -23,10 +23,9 @@
 #ifndef KNODE_COMPOSER_ATTACHMENT_VIEW_H
 #define KNODE_COMPOSER_ATTACHMENT_VIEW_H
 
+#include "knarticle.h"
 
 #include <QTreeWidget>
-
-class KNAttachment;
 
 
 namespace KNode {
@@ -66,7 +65,7 @@ class AttachmentView : public QTreeWidget
     /**
       Returns the list of attachments contained by this view .
     */
-    const QList< KNAttachment *> attachments();
+    const QList<KNAttachment::Ptr> attachments();
 
 
   public slots:
@@ -86,7 +85,7 @@ class AttachmentView : public QTreeWidget
       @param attachment the removed attachment.
       @param last true when @p attachment was the last attachment of this message.
     */
-    void attachmentRemoved( KNAttachment *attachment, bool last );
+    void attachmentRemoved( KNAttachment::Ptr attachment, bool last );
 
     /**
       This signal is emitted when the Delete key is pressed on this widget.
@@ -126,7 +125,7 @@ class AttachmentViewItem : public QTreeWidgetItem
     /**
       Constructor.
     */
-    AttachmentViewItem( AttachmentView *parent, KNAttachment *attachment );
+    AttachmentViewItem( AttachmentView *parent, KNAttachment::Ptr attachment );
     /**
       Destructor.
     */
@@ -138,7 +137,7 @@ class AttachmentViewItem : public QTreeWidgetItem
     QVariant data( int column, int role ) const;
 
   private:
-    KNAttachment *mAttachment;
+    KNAttachment::Ptr mAttachment;
 };
 
 

@@ -22,7 +22,6 @@
 
 #include "attachment_view.h"
 
-#include "../knarticle.h"
 #include "../kncomposer.h"
 
 #include <QHeaderView>
@@ -89,10 +88,10 @@ void AttachmentView::editCurrentAttachment()
 
 
 
-const QList< KNAttachment* > AttachmentView::attachments()
+const QList<KNAttachment::Ptr> AttachmentView::attachments()
 {
-  QList< KNAttachment * > al;
-  KNAttachment *a = 0;
+  QList<KNAttachment::Ptr> al;
+  KNAttachment::Ptr a;
   QTreeWidgetItemIterator it( this, QTreeWidgetItemIterator::All );
   while ( *it ) {
     a = static_cast< AttachmentViewItem * >( *it )->mAttachment;
@@ -137,7 +136,7 @@ void AttachmentView::contextMenuEvent( QContextMenuEvent* event )
 
 // -- AttachmentViewItem -----------------------------------------------
 
-AttachmentViewItem::AttachmentViewItem( AttachmentView *parent, KNAttachment *attachment )
+AttachmentViewItem::AttachmentViewItem( AttachmentView *parent, KNAttachment::Ptr attachment )
   : QTreeWidgetItem( parent ),
     mAttachment( attachment )
 {

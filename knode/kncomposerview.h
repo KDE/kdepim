@@ -80,11 +80,11 @@ class View : public QSplitter, private Ui::View
     /**
       Adds an attachment to the message.
     */
-    void addAttachment( KNAttachment *attachment );
+    void addAttachment( KNAttachment::Ptr attachment );
     /**
       Returns the list of attachments of this message.
     */
-    const QList< KNAttachment *> attachments() const;
+    const QList<KNAttachment::Ptr> attachments() const;
     /**
       Indicates whether the attachment view is visible or not
       @return true when it is shown.

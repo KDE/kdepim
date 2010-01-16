@@ -15,6 +15,8 @@
 #ifndef KNCOMPOSER_H
 #define KNCOMPOSER_H
 
+#include "knarticle.h"
+
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
 #include <QList>
@@ -25,8 +27,6 @@
 class KSelectAction;
 class KTemporaryFile;
 class KToggleAction;
-class KNLocalArticle;
-class KNAttachment;
 class QComboBox;
 class QFile;
 namespace KNode {
@@ -126,7 +126,7 @@ class KNComposer : public KXmlGuiWindow {
     KTemporaryFile *e_ditorTempfile;
 
     //Attachments
-    QList<KNAttachment*> mDeletedAttachments;
+    QList<KNAttachment::Ptr> mDeletedAttachments;
     bool a_ttChanged;
 
   //------------------------------ <Actions> -----------------------------
@@ -183,7 +183,7 @@ class KNComposer : public KXmlGuiWindow {
     /**
       Called by the View when an attachment was removed.
     */
-    void slotAttachmentRemoved( KNAttachment *attachment, bool last );
+    void slotAttachmentRemoved( KNAttachment::Ptr attachment, bool last );
     /**
       Called by the View to notify that an attachment was modified.
     */
@@ -242,7 +242,7 @@ class KNComposer::AttachmentPropertiesDlg : public KDialog {
       @param a The attachment to edit.
       @param parent Parent widget.
     */
-    AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent = 0 );
+    AttachmentPropertiesDlg( KNAttachment::Ptr a, QWidget *parent = 0 );
     /**
       Destructor.
     */
@@ -258,7 +258,7 @@ class KNComposer::AttachmentPropertiesDlg : public KDialog {
               *d_escription;
     QComboBox *e_ncoding;
 
-    KNAttachment *a_ttachment;
+    KNAttachment::Ptr a_ttachment;
     bool n_onTextAsText;
 
   protected slots:
