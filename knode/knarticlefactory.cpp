@@ -662,6 +662,8 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
         (*it)->removeHeader( header->type() );
       }
     }
+    (*it)->assemble(); // Validate change made above
+
 
     if ( (*it)->doPost() && !(*it)->posted() ) {
       ser = knGlobals.accountManager()->account( (*it)->serverId() );
