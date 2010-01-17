@@ -35,8 +35,14 @@ public:
 signals:
   void modelCreated(Akonadi::EntityTreeModel *model);
 
+protected:
+  virtual Akonadi::EntityTreeModel* getModel(Akonadi::ChangeRecorder *changeRecorder, QObject *parent);
+
 private slots:
   void collectionsFetched(const Akonadi::Collection::List &list);
+
+private:
+  Akonadi::ChangeRecorder *m_changeRecorder;
 
 };
 

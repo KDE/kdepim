@@ -61,8 +61,24 @@ public:
       if (mimetype == "text/directory")
         return "Addressee";
     }
-    return Akonadi::EntityTreeModel::data(index, role);
+    return MixedTreeModel::data(index, role);
   }
+};
+
+class CategorisedEntityModelFactory : public EntityTreeModelFactory
+{
+public:
+  CategorisedEntityModelFactory(QObject* parent = 0)
+    : EntityTreeModelFactory(parent)
+  {
+
+  }
+
+  virtual Akonadi::EntityTreeModel* getModel(Akonadi::ChangeRecorder* changeRecorder, QObject* parent)
+  {
+    return new CategorisedEntityModel(changeRecorder, parent);
+  }
+
 };
 
 class Tab7TreeWidget : public EntityTreeWidget
@@ -90,7 +106,6 @@ public:
   virtual Akonadi::EntityTreeModel* getETM()
   {
     return m_model;
-    return new CategorisedEntityModel(changeRecorder(), this);
   }
 
   void setModel(Akonadi::EntityTreeModel *model)
@@ -108,7 +123,7 @@ private:
 Tab7Widget::Tab7Widget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)
 {
-  EntityTreeModelFactory *modelFactory = new EntityTreeModelFactory(this);
+  EntityTreeModelFactory *modelFactory = new CategorisedEntityModelFactory(this);
   modelFactory->createFromRemoteId("nepomuktags");
   connect(modelFactory, SIGNAL(modelCreated(Akonadi::EntityTreeModel*)), SLOT(initModel(Akonadi::EntityTreeModel*)));
 }

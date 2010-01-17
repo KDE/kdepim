@@ -27,6 +27,7 @@
 #include <akonadi/session.h>
 
 #define WANTED_REMOTE_ID "WANTED_REMOTE_ID"
+#include <Akonadi/ItemFetchScope>
 
 using namespace Akonadi;
 
@@ -60,8 +61,9 @@ void EntityTreeModelFactory::collectionsFetched(const Akonadi::Collection::List&
         changeRecorder->setCollectionMonitored(col, true);
         changeRecorder->fetchCollection(true);
         changeRecorder->setAllMonitored(true);
+        changeRecorder->itemFetchScope().fetchFullPayload();
 
-        EntityTreeModel *etm = new EntityTreeModel(changeRecorder, parent());
+        EntityTreeModel *etm = getModel(changeRecorder, parent());
 
         emit modelCreated(etm);
         return;
@@ -71,5 +73,9 @@ void EntityTreeModelFactory::collectionsFetched(const Akonadi::Collection::List&
   }
 }
 
+EntityTreeModel* EntityTreeModelFactory::getModel(ChangeRecorder *changeRecorder, QObject *parent)
+{
+  return new EntityTreeModel(changeRecorder, parent);
+}
 
 #include "entitytreemodelfactory.moc"
