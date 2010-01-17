@@ -19,44 +19,34 @@
     USA.
 */
 
-#ifndef ITEMVIEWERWIDGET_H
-#define ITEMVIEWERWIDGET_H
+#ifndef NOTEVIEWER-H
+#define NOTEVIEWER_H
 
 #include <QWidget>
+#include <QPersistentModelIndex>
 
-class NoteViewer;
+class QLineEdit;
+class QTextEdit;
 
-class QItemSelectionModel;
-class QItemSelection;
-class QStackedWidget;
-
-namespace MessageViewer
-{
-class Viewer;
-}
-
-namespace Akonadi
-{
-class ContactViewer;
-}
-
-class ItemViewerWidget : public QWidget
+class NoteViewer : public QWidget
 {
   Q_OBJECT
 public:
-  ItemViewerWidget( QItemSelectionModel *selectionModel, QWidget* parent = 0, Qt::WindowFlags f = 0 );
+  NoteViewer(QWidget* parent = 0, Qt::WindowFlags f = 0);
+
+  void setIndex(const QPersistentModelIndex &index);
 
 private slots:
-  void selectionChanged( const QItemSelection selected, const QItemSelection &deselected );
+  void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-  QItemSelectionModel *m_itemSelectionModel;
-  QStackedWidget *m_widgetStack;
-  MessageViewer::Viewer *m_mailViewer;
-  Akonadi::ContactViewer *m_contactViewer;
-  NoteViewer *m_noteViewer;
+  void populateWidget(const QModelIndex &index);
+private:
+  QPersistentModelIndex m_persistentIndex;
+  QLineEdit *m_titleEdit;
+  QTextEdit *m_contentEdit;
+
 };
 
 #endif
-
 

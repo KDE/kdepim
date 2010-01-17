@@ -26,6 +26,7 @@ set(etm_usage_SRCS
     entitytreewidget.cpp
     mixedtreemodel.cpp
     itemviewerwidget.cpp
+    noteviewer.cpp
     tab1widget.cpp
     tab2widget.cpp
     tab2_5widget.cpp
