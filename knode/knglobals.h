@@ -65,8 +65,7 @@ class KNODE_EXPORT KNGlobals
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
     KNMainWidget          *top;
-    /** Returns the KXMLGUIClient of the main window. */
-    KXMLGUIClient         *guiClient;
+
     /** Returns the article factory. */
     KNArticleFactory      *artFactory;
     /** Returns KNode's main configuration. */

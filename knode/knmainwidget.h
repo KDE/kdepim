@@ -15,6 +15,7 @@
 #define KNMAINWIDGET_H
 
 #include "knode_export.h"
+
 #include "resource.h"
 #include <kdialog.h>
 #include <kvbox.h>
@@ -27,7 +28,6 @@ class QLineEdit;
 class QSplitter;
 class QTreeWidget;
 class QTreeWidgetItem;
-
 class K3ListView;
 class KUrl;
 class KAction;
@@ -37,8 +37,6 @@ class KSqueezedTextLabel;
 class KLineEdit;
 class KToolBar;
 class KXMLGUIClient;
-class KXMLGUIFactory;
-
 class KNHeaderView;
 class KNCollectionView;
 class KNProgress;
@@ -161,7 +159,10 @@ signals:
 protected:
 
   KActionCollection* actionCollection() const;
-  KXMLGUIFactory *factory() const;
+  /**
+    Returns the menu from knodeui.rc whose name is @p name.
+  */
+  QMenu * popupMenu( const QString &name ) const;
 
   void initActions();
   void initStatusBar();

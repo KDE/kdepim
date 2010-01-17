@@ -89,7 +89,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   (void) new KnodeAdaptor( this );
   QDBusConnection::sessionBus().registerObject("/KNode", this);
   knGlobals.top=this;
-  knGlobals.guiClient=client;
   knGlobals.topWidget=this;
 
   //------------------------------- <CONFIG> ----------------------------------
@@ -113,7 +112,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   mSecondSplitter->setObjectName( "mSecondSplitter" );
 
   //article view
-  mArticleViewer = new ArticleWidget( mPrimarySplitter, knGlobals.guiClient, actionCollection(), true/*main viewer*/ );
+  mArticleViewer = new ArticleWidget( mPrimarySplitter, client, actionCollection(), true/*main viewer*/ );
 
   //collection view
   c_olView = new KNCollectionView( mSecondSplitter );
@@ -1274,9 +1273,9 @@ void KNMainWidget::slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &
   if(i) {
     QMenu *popup;
     if( (static_cast<KNHdrViewItem*>(i))->art->type()==KNArticle::ATremote) {
-     popup = static_cast<QMenu *>(factory()->container("remote_popup", m_GUIClient));
+     popup = popupMenu( "remote_popup" );
     } else {
-     popup = static_cast<QMenu *>(factory()->container("local_popup", m_GUIClient));
+     popup = popupMenu( "local_popup" );
     }
 
     if ( popup )
@@ -1293,15 +1292,15 @@ void KNMainWidget::slotCollectionRMB( QTreeWidgetItem *i, const QPoint &pos )
   if(i) {
     QMenu *popup = 0;
     if( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTgroup ) {
-      popup = static_cast<QMenu *>(factory()->container("group_popup", m_GUIClient));
+      popup = popupMenu( "group_popup" );
     } else if ( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTfolder ) {
       if ( static_cast<KNFolder*>( static_cast<KNCollectionViewItem*>( i )->collection() )->isRootFolder() ) {
-        popup = static_cast<QMenu *>(factory()->container("root_folder_popup", m_GUIClient));
+        popup = popupMenu( "root_folder_popup" );
       } else {
-        popup = static_cast<QMenu *>(factory()->container("folder_popup", m_GUIClient));
+        popup = popupMenu( "folder_popup" );
       }
     } else {
-      popup = static_cast<QMenu *>(factory()->container("account_popup", m_GUIClient));
+      popup = popupMenu( "account_popup" );
     }
     if ( popup ) {
       popup->popup( pos );
@@ -1960,11 +1959,11 @@ KActionCollection* KNMainWidget::actionCollection() const
   return m_GUIClient->actionCollection();
 }
 
-KXMLGUIFactory* KNMainWidget::factory() const
+QMenu * KNMainWidget::popupMenu( const QString &name ) const
 {
-  kDebug(5003)<<"m_guiclient is"<< m_GUIClient
-           <<", the factory is" << m_GUIClient->factory();
-  return m_GUIClient->factory();
+  Q_ASSERT( m_GUIClient );
+  Q_ASSERT( m_GUIClient->factory() );
+  return static_cast<QMenu*>( m_GUIClient->factory()->container( name, m_GUIClient ) );
 }
 
 //--------------------------------
