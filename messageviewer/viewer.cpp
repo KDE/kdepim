@@ -27,9 +27,9 @@
 #include "configurewidget.h"
 #include "csshelper.h"
 #include "globalsettings.h"
+#include "mailwebview.h"
 
 //KDE includes
-#include <kwebview.h>
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
@@ -401,7 +401,7 @@ void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
   d->setHeaderStyleAndStrategy( style, strategy );
 }
 
-KWebView *Viewer::htmlPart() const
+MailWebView *Viewer::htmlPart() const
 {
   Q_D( const Viewer );
   return d->htmlPart();

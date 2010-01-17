@@ -40,7 +40,6 @@ using MessageViewer::TeeHtmlWriter;
 #include <kcursorsaver.h>
 #include <KFileDialog>
 #include <KGuiItem>
-#include <kwebview.h>
 #include <QWebView>
 #include <QWebPage>
 #include <QWebFrame>
@@ -118,6 +117,7 @@ using MessageViewer::TeeHtmlWriter;
 #include "urlhandlermanager.h"
 #include "util.h"
 #include "vcardviewer.h"
+#include "mailwebview.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -1324,13 +1324,13 @@ void ViewerPrivate::initHtmlWidget(void)
   connect(mViewer->page(), SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ),
           this, SLOT( slotUrlOn(const QString &, const QString &, const QString & )));
   connect(mViewer->page(), SIGNAL( linkClicked( const QUrl & ) ),this, SLOT( slotUrlOpen( const QUrl & ) ), Qt::QueuedConnection);
+  connect( mViewer, SIGNAL(popupMenu(const QString &, const QPoint &) ),
+           SLOT(slotUrlPopup(const QString &, const QPoint &)) );
 #if 0
   connect(mViewer->browserExtension(),
           SIGNAL(createNewWindow(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),this,
           SLOT(slotUrlOpen(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),
           Qt::QueuedConnection);
-  connect(mViewer,SIGNAL(popupMenu(const QString &, const QPoint &)),
-          SLOT(slotUrlPopup(const QString &, const QPoint &)));
 #else
   kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
 #endif
@@ -1761,7 +1761,7 @@ void ViewerPrivate::createWidgets() {
   mBox = new KHBox( mSplitter );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
-  mViewer = new KWebView( mBox );
+  mViewer = new MailWebView( mBox );
   mViewer->setObjectName( "mViewer" );
   mViewer->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
   mColorBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Ignored );

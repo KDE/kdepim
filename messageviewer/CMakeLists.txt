@@ -44,6 +44,7 @@ objecttreeemptysource.cpp
 filehtmlwriter.cpp
 teehtmlwriter.cpp
 chiasmuskeyselector.cpp
+mailwebview.cpp
 )
 
 
