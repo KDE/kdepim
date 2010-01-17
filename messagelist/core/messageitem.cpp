@@ -273,6 +273,16 @@ QList< MessageItem::Tag * > MessageItem::tagList() const
   return d->getTagList();
 }
 
+bool MessageItem::hasAnnotation() const
+{
+  Nepomuk::Resource resource( d->mNepomukResourceUri );
+  if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
+    return !resource.description().isEmpty();
+  } else {
+    return false;
+  }
+}
+
 const MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
 {
   foreach( const Tag *tag, getTagList() ) {
@@ -552,6 +562,11 @@ QList< MessageItem::Tag * > FakeItem::tagList() const
 void FakeItem::setFakeTags( const QList< MessageItem::Tag* > &tagList )
 {
   d->mFakeTags = tagList;
+}
+
+bool FakeItem::hasAnnotation() const
+{
+  return true;
 }
 
 

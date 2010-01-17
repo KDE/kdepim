@@ -96,6 +96,11 @@ public:
   /// the correct Nepomuk::Resource is used for the tags.
   virtual QList< Tag * > tagList() const;
 
+  /// Returns true if this message has an annotation.
+  /// This is the case if the Nepomuk::Resource that is associated with the URI set by
+  /// setNepomukResourceURI() has a description which is not empty
+  virtual bool hasAnnotation() const;
+
   /**
    * Returns Tag associated to this message that has the specified id or 0
    * if no such tag exists. mTagList will be 0 in 99% of the cases.
@@ -185,7 +190,7 @@ private:
   Private * const d;
 };
 
-/// A message item that can have a fake tag list
+/// A message item that can have a fake tag list and a fake annotation
 class MESSAGELIST_EXPORT FakeItem : public MessageItem
 {
   public:
@@ -198,6 +203,9 @@ class MESSAGELIST_EXPORT FakeItem : public MessageItem
 
     /// Sets a list of fake tags for this item
     void setFakeTags( const QList< Tag* > &tagList );
+
+    /// Reimplemented to always return true
+    virtual bool hasAnnotation() const;
 
   private:
 

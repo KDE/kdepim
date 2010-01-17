@@ -927,6 +927,12 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
                                       Manager::instance()->pixmapMessageAttachment(), ci, painter,
                                       l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
         break;
+        case Theme::ContentItem::AnnotationIcon:
+          if ( messageItem )
+            paint_boolean_state_icon( messageItem->hasAnnotation(),
+                                      Manager::instance()->pixmapMessageAnnotation(), ci, painter,
+                                      l, top, r, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
+        break;
         case Theme::ContentItem::ActionItemStateIcon:
           if ( messageItem )
             paint_boolean_state_icon( messageItem->status().isToAct(),
@@ -1076,6 +1082,12 @@ void ThemeDelegate::paint( QPainter * painter, const QStyleOptionViewItem & opti
           if ( messageItem )
             paint_boolean_state_icon( messageItem->status().hasAttachment(),
                                       Manager::instance()->pixmapMessageAttachment(), ci, painter,
+                                      l, top, r, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
+        break;
+        case Theme::ContentItem::AnnotationIcon:
+          if ( messageItem )
+            paint_boolean_state_icon( messageItem->hasAnnotation(),
+                                      Manager::instance()->pixmapMessageAnnotation(), ci, painter,
                                       l, top, r, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
         break;
         case Theme::ContentItem::ActionItemStateIcon:
@@ -1305,6 +1317,10 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
           if ( messageItem )
             compute_bounding_rect_for_boolean_state_icon( messageItem->status().hasAttachment(), ci, l, top, r, mHitContentItemRect, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
         break;
+        case Theme::ContentItem::AnnotationIcon:
+          if ( messageItem )
+            compute_bounding_rect_for_boolean_state_icon( messageItem->hasAnnotation(), ci, l, top, r, mHitContentItemRect, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
+        break;
         case Theme::ContentItem::ActionItemStateIcon:
           if ( messageItem )
             compute_bounding_rect_for_boolean_state_icon( messageItem->status().isToAct(), ci, l, top, r, mHitContentItemRect, layoutDir == Qt::LeftToRight, mTheme->iconSize() );
@@ -1446,6 +1462,10 @@ bool ThemeDelegate::hitTest( const QPoint &viewportPoint, bool exact )
         case Theme::ContentItem::AttachmentStateIcon:
           if ( messageItem )
             compute_bounding_rect_for_boolean_state_icon( messageItem->status().hasAttachment(), ci, l, top, r, mHitContentItemRect, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
+        break;
+        case Theme::ContentItem::AnnotationIcon:
+          if ( messageItem )
+            compute_bounding_rect_for_boolean_state_icon( messageItem->hasAnnotation(), ci, l, top, r, mHitContentItemRect, layoutDir != Qt::LeftToRight, mTheme->iconSize() );
         break;
         case Theme::ContentItem::ActionItemStateIcon:
           if ( messageItem )

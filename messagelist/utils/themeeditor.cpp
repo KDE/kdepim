@@ -1397,6 +1397,11 @@ ThemeEditor::ThemeEditor( QWidget *parent )
   cil->setToolTip( Theme::ContentItem::description( cil->type() ) );
   gblayout->addWidget( cil, 0, 5 );
 
+  cil = new ThemeContentItemSourceLabel( gb, Theme::ContentItem::AnnotationIcon );
+  cil->setPixmap( *( Manager::instance()->pixmapMessageAnnotation() ) );
+  cil->setToolTip( Theme::ContentItem::description( cil->type() ) );
+  gblayout->addWidget( cil, 1, 5 );
+
 
 
 

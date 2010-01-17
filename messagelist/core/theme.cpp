@@ -43,14 +43,16 @@ using namespace MessageList::Core;
 //  0x1015  03.03.2009      Added icon size
 //  0x1016  08.03.2009      Added support for sorting by New/Unread status
 //  0x1017  16.08.2009      Added support for column icon
+//  0x1018  17.01.2010      Added support for annotation icon
 //
-static const int gThemeCurrentVersion = 0x1017; // increase if you add new fields or change the meaning of some
+static const int gThemeCurrentVersion = 0x1018; // increase if you add new fields or change the meaning of some
 // you don't need to change the values below, but you might want to add new ones
 static const int gThemeMinimumSupportedVersion = 0x1013;
 static const int gThemeMinimumVersionWithColumnRuntimeData = 0x1014;
 static const int gThemeMinimumVersionWithIconSizeField = 0x1015;
 static const int gThemeMinimumVersionWithSortingByNewUnreadStatusAllowed = 0x1016;
 static const int gThemeMinimumVersionWithColumnIcon = 0x1017;
+static const int gThemeMinimumVersionWithAnnotationIcon = 0x1018;
 
 // the default icon size
 static const int gThemeDefaultIconSize = 16;
@@ -139,6 +141,8 @@ QString Theme::ContentItem::description( Type type )
     case TagList:
       return i18n( "Message Tags" );
     break;
+    case AnnotationIcon:
+      return i18n( "Note Icon" );
     default:
       return i18nc( "Description for an Unknown Type", "Unknown" );
     break;
@@ -199,6 +203,7 @@ bool Theme::ContentItem::load( QDataStream &stream, int /*themeVersion*/ )
     case MostRecentDate:
     case CombinedReadRepliedStateIcon:
     case TagList:
+    case AnnotationIcon:
       // ok
     break;
     default:
@@ -324,6 +329,8 @@ bool Theme::Row::load( QDataStream &stream, int themeVersion )
   if ( ( val < 0 ) || ( val > 50 ) )
     return false; // senseless
 
+  // FIXME: Remove code duplication here
+
   for ( int i = 0; i < val ; ++i )
   {
     ContentItem * ci = new ContentItem( ContentItem::Subject ); // dummy type
@@ -334,6 +341,18 @@ bool Theme::Row::load( QDataStream &stream, int themeVersion )
       return false;
     }
     addLeftItem( ci );
+
+    // Add the annotation item next to the attachment icon, so that users upgrading from old
+    // versions don't manually need to set this.
+    // Don't do this for the stand-alone attchment column.
+    if ( ci->type() == ContentItem::AttachmentStateIcon &&
+         themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
+         val > 1 ) {
+      kDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
+      ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
+      annotationItem->setHideWhenDisabled( true );
+      addLeftItem( annotationItem );
+    }
   }
 
   // right item count
@@ -353,6 +372,14 @@ bool Theme::Row::load( QDataStream &stream, int themeVersion )
       return false;
     }
     addRightItem( ci );
+    if ( ci->type() == ContentItem::AttachmentStateIcon &&
+         themeVersion < gThemeMinimumVersionWithAnnotationIcon &&
+         val > 1 ) {
+      kDebug() << "Old theme version detected, adding annotation item next to attachment icon.";
+      ContentItem *annotationItem = new ContentItem( ContentItem::AnnotationIcon ) ;
+      annotationItem->setHideWhenDisabled( true );
+      addRightItem( annotationItem );
+    }
   }
 
   return true;
