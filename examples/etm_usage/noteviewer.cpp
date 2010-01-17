@@ -24,10 +24,12 @@
 #include <QHBoxLayout>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QEvent>
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
+#include <akonadi/itemmodifyjob.h>
 
 #include <KMime/Message>
 
@@ -40,7 +42,9 @@ NoteViewer::NoteViewer(QWidget* parent, Qt::WindowFlags f)
 {
   QVBoxLayout *layout = new QVBoxLayout(this);
   m_titleEdit = new QLineEdit(this);
+  m_titleEdit->installEventFilter(this);
   m_contentEdit = new QTextEdit(this);
+  m_contentEdit->installEventFilter(this);
   layout->addWidget(m_titleEdit);
   layout->addWidget(m_contentEdit);
 
@@ -106,5 +110,41 @@ void NoteViewer::populateWidget(const QModelIndex& index)
   m_titleEdit->setText( note->subject()->asUnicodeString() );
 
   m_contentEdit->setText( note->mainBodyPart()->decodedText() );
+}
+
+bool NoteViewer::eventFilter(QObject* watched, QEvent* event)
+{
+  if ( ( event->type() == QEvent::FocusOut )
+    && ( m_contentEdit->document()->isModified() || m_titleEdit->isModified() )
+    && ( watched == m_contentEdit || watched == m_titleEdit ) )
+  {
+    Item item = m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+      return false;
+
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+    QByteArray encoding = "utf-8";
+
+    msg->subject()->fromUnicodeString( m_titleEdit->text(), encoding );
+    msg->mainBodyPart()->fromUnicodeString( m_contentEdit->toPlainText() );
+    msg->assemble();
+    item.setPayload( msg );
+
+    ItemModifyJob *modifyJob = new ItemModifyJob(item, this);
+    connect(modifyJob, SIGNAL(result(KJob*)), SLOT(modifyDone(KJob*)) );
+
+    m_contentEdit->document()->setModified( false );
+    m_titleEdit->setModified( false );
+  }
+  return QObject::eventFilter(watched,event);
+}
+
+void NoteViewer::modifyDone( KJob *job )
+{
+  if ( job->error() )
+  {
+    kDebug() << job->errorString();
+  }
 }
 

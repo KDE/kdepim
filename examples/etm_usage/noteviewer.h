@@ -28,6 +28,8 @@
 class QLineEdit;
 class QTextEdit;
 
+class KJob;
+
 class NoteViewer : public QWidget
 {
   Q_OBJECT
@@ -36,8 +38,12 @@ public:
 
   void setIndex(const QPersistentModelIndex &index);
 
+protected:
+  virtual bool eventFilter( QObject* watched, QEvent* event );
+
 private slots:
   void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+  void modifyDone( KJob *job );
 
 private:
   void populateWidget(const QModelIndex &index);
