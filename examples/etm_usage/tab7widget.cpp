@@ -29,6 +29,7 @@
 #include "entitytreemodelfactory.h"
 #include "itemviewerwidget.h"
 #include "mixedtreemodel.h"
+#include "categorizedentitymodel.h"
 
 #include <kselectionproxymodel.h>
 #include <kcategorizedsortfilterproxymodel.h>
@@ -37,33 +38,6 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-
-class CategorisedEntityModel : public MixedTreeModel
-{
-public:
-  CategorisedEntityModel(Akonadi::ChangeRecorder* monitor, QObject* parent = 0)
-    : MixedTreeModel(monitor, parent)
-  {
-
-  }
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if (role == KCategorizedSortFilterProxyModel::CategorySortRole)
-    {
-      return index.data(MimeTypeRole);
-    }
-    if (role == KCategorizedSortFilterProxyModel::CategoryDisplayRole)
-    {
-      QString mimetype = index.data(MimeTypeRole).toString();
-      if (mimetype == "message/rfc822")
-        return "Email";
-      if (mimetype == "text/directory")
-        return "Addressee";
-    }
-    return MixedTreeModel::data(index, role);
-  }
-};
 
 class CategorisedEntityModelFactory : public EntityTreeModelFactory
 {
