@@ -73,7 +73,7 @@ void AnnotationEditDialog::slotButtonClicked ( int button )
                               i18n( "Delete Note?" ), KGuiItem( i18n( "Delete" ), "edit-delete" ) );
     if ( answer == KMessageBox::Continue ) {
       Nepomuk::Resource resource( mNepomukResourceUri );
-      resource.remove();
+      resource.removeProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
       accept();
     }
   }
