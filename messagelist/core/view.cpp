@@ -2258,7 +2258,7 @@ bool View::event( QEvent *e )
                 "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">"
         );
 
-      tip += QString::fromLatin1(
+      const QString htmlCodeForStandardRow = QString::fromLatin1(
            "<tr>" \
               "<td align=\"right\" valign=\"top\" width=\"45\">" \
                 "<div style=\"font-weight: bold;\"><nobr>" \
@@ -2268,34 +2268,11 @@ bool View::event( QEvent *e )
               "<td align=\"left\" valign=\"top\">" \
                  "%2" \
               "</td>" \
-            "</tr>"
-        ).arg( i18n( "From" ) ).arg( mi->sender() );
+            "</tr>" );
 
-      tip += QString::fromLatin1(
-           "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
-                "<div style=\"font-weight: bold;\"><nobr>" \
-                 "%1:" \
-                "</nobr></div>" \
-              "</td>" \
-              "<td align=\"left\" valign=\"top\">" \
-                 "%2" \
-              "</td>" \
-            "</tr>"
-        ).arg( i18nc( "Receiver of the emial", "To" ) ).arg( mi->receiver() );
-
-      tip += QString::fromLatin1(
-           "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
-                "<div style=\"font-weight: bold;\"><nobr>" \
-                 "%1:" \
-                "</nobr></div>" \
-              "</td>" \
-              "<td align=\"left\" valign=\"top\">" \
-                 "%2" \
-              "</td>" \
-            "</tr>"
-        ).arg( i18n( "Date" ) ).arg( mi->formattedDate() );
+      tip += htmlCodeForStandardRow.arg( i18n( "From" ) ).arg( mi->sender() );
+      tip += htmlCodeForStandardRow.arg( i18nc( "Receiver of the emial", "To" ) ).arg( mi->receiver() );
+      tip += htmlCodeForStandardRow.arg( i18n( "Date" ) ).arg( mi->formattedDate() );;
 
       QString status = mi->statusDescription();
       QString tags = mi->tagListDescription();
@@ -2306,44 +2283,11 @@ bool View::event( QEvent *e )
         status += tags;
       }
 
-      tip += QString::fromLatin1(
-           "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
-                "<div style=\"font-weight: bold;\"><nobr>" \
-                 "%1:" \
-                "</nobr></div>" \
-              "</td>" \
-              "<td align=\"left\" valign=\"top\">" \
-                 "%2" \
-              "</td>" \
-            "</tr>"
-        ).arg( i18n( "Status" ) ).arg( status );
-
-      tip += QString::fromLatin1(
-           "<tr>" \
-              "<td align=\"right\" valign=\"top\" width=\"45\">" \
-                "<div style=\"font-weight: bold;\"><nobr>" \
-                 "%1:" \
-                "</nobr></div>" \
-              "</td>" \
-              "<td align=\"left\" valign=\"top\">" \
-                 "%2" \
-              "</td>" \
-            "</tr>"
-        ).arg( i18n( "Size" ) ).arg( mi->formattedSize() );
+      tip += htmlCodeForStandardRow.arg( i18n( "Status" ) ).arg( status );
+      tip += htmlCodeForStandardRow.arg( i18n( "Size" ) ).arg( mi->formattedSize() );
 
       if ( mi->hasAnnotation() ) {
-        tip += QString::fromLatin1( "<tr>" \
-                                    "<td align=\"right\" valign=\"top\" width=\"45\">" \
-                                    "<div style=\"font-weight: bold;\"><nobr>" \
-                                    "%1:" \
-                                    "</nobr></div>" \
-                                    "</td>" \
-                                    "<td align=\"left\" valign=\"top\">" \
-                                    "%2" \
-                                    "</td>" \
-                                     "</tr>"
-                                     ).arg( i18n( "Note" ) ).arg( mi->annotation().replace( "\n", "<br>" ) );
+        tip += htmlCodeForStandardRow.arg( i18n( "Note" ) ).arg( mi->annotation().replace( "\n", "<br>" ) );
       }
 
       tip += QString::fromLatin1(
