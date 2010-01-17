@@ -19,9 +19,10 @@
  *******************************************************************************/
 
 #include "messageitem.h"
-#include "core/messageitem.h"
+
 #include "messagetag.h"
 #include "ontologies/email.h"
+#include "messagecore/annotationdialog.h"
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
@@ -293,6 +294,13 @@ QString MessageItem::annotation() const
     return resource.description();
   }
   else return QString();
+}
+
+void MessageItem::editAnnotation()
+{
+  KPIM::AnnotationEditDialog *dialog = new KPIM::AnnotationEditDialog( d->mNepomukResourceUri );
+  dialog->setAttribute( Qt::WA_DeleteOnClose );
+  dialog->show();
 }
 
 QString MessageItem::contentSummary() const

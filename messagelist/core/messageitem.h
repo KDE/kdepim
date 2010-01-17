@@ -104,6 +104,9 @@ public:
   /// Returns the annotation of the message, given that hasAnnotation() is true
   QString annotation() const;
 
+  /// Shows a dialog to edit or delete the annotation
+  void editAnnotation();
+
   /// Returns the first few lines of the actual email text
   /// This data is taken from Nepomuk, if available.
   QString contentSummary() const;

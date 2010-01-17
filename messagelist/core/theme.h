@@ -215,7 +215,7 @@ public:
       /**
        * Whether the message has a annotation/note
        */
-      AnnotationIcon               = 23 | ApplicableToMessageItems | IsIcon | CanBeDisabled
+      AnnotationIcon               = 23 | ApplicableToMessageItems | IsIcon | CanBeDisabled | IsClickable
 #if 0
       TotalMessageCount
       UnreadMessageCount
