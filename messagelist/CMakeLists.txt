@@ -98,6 +98,7 @@ target_link_libraries(messagelist
     ${NEPOMUK_LIBRARIES}
     ${SOPRANO_LIBRARIES}
     messagecore
+    niefast_apps
 )
 
 set_target_properties(messagelist PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})

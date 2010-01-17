@@ -2290,6 +2290,11 @@ bool View::event( QEvent *e )
         tip += htmlCodeForStandardRow.arg( i18n( "Note" ) ).arg( mi->annotation().replace( "\n", "<br>" ) );
       }
 
+      QString content = mi->contentSummary();
+      if ( !content.isEmpty() ) {
+        tip += htmlCodeForStandardRow.arg( i18n( "Preview" ) ).arg( content.replace( "\n", "<br>" ) );
+      }
+
       tip += QString::fromLatin1(
                 "</table" \
               "</td>" \

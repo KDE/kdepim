@@ -104,6 +104,10 @@ public:
   /// Returns the annotation of the message, given that hasAnnotation() is true
   QString annotation() const;
 
+  /// Returns the first few lines of the actual email text
+  /// This data is taken from Nepomuk, if available.
+  QString contentSummary() const;
+
   /**
    * Returns Tag associated to this message that has the specified id or 0
    * if no such tag exists. mTagList will be 0 in 99% of the cases.

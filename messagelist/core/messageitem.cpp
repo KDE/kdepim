@@ -21,6 +21,7 @@
 #include "messageitem.h"
 #include "core/messageitem.h"
 #include "messagetag.h"
+#include "ontologies/email.h"
 
 #include <Nepomuk/Resource>
 #include <Nepomuk/Tag>
@@ -292,6 +293,29 @@ QString MessageItem::annotation() const
     return resource.description();
   }
   else return QString();
+}
+
+QString MessageItem::contentSummary() const
+{
+  Nepomuk::Resource mail( d->mNepomukResourceUri );
+  const QString content =
+      mail.property( NepomukFast::Message::plainTextMessageContentUri() ).toString();
+
+  // Extract the first 5 non-empty, non-quoted lines from the content and return it
+  int numLines = 0;
+  const int maxLines = 5;
+  const QStringList lines = content.split( '\n' );
+  QString ret;
+  foreach( const QString &line, lines ) {
+    const bool isQuoted = line.trimmed().startsWith( '>' ) || line.trimmed().startsWith( '|' );
+    if ( !line.trimmed().isEmpty() && !isQuoted ) {
+      ret += line + '\n';
+      numLines++;
+      if ( numLines >= maxLines )
+        break;
+    }
+  }
+  return ret;
 }
 
 const MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const
