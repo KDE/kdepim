@@ -2,6 +2,7 @@
     KNode, the KDE newsreader
     Copyright (c) 1999-2007 the KNode authors.
     See file AUTHORS for details
+    Copyright (c) 2010 Olivier Trichet <nive@nivalis.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -85,15 +86,16 @@ View::View( KNComposer *composer )
 
 View::~View()
 {
-  if ( mAttachmentWidget->isVisible() ) {
+  if ( mAttachmentsList->topLevelItemCount() > 0 ) { // The attachment view was visible
     KConfigGroup conf( knGlobals.config(), "POSTNEWS");
 
     conf.writeEntry("Att_Splitter",sizes());   // save splitter pos
 
     QList<int> lst;                        // save header sizes
     QHeaderView *h = mAttachmentsList->header();
-    for (int i=0; i<5; i++)
+    for ( int i = 0 ; i < h->count() ; ++i ) {
       lst << h->sectionSize(i);
+    }
     conf.writeEntry("Att_Headers",lst);
   }
 }
@@ -395,13 +397,10 @@ void View::showAttachmentView()
     setSizes(lst);
 
     lst=conf.readEntry("Att_Headers",QList<int>());
-    if(lst.count()==5) {
-      QList<int>::Iterator it = lst.begin();
-
-      QHeaderView *h = mAttachmentsList->header();
-      for(int i=0; i<5; i++) {
-        h->resizeSection(i,(*it));
-        ++it;
+    QHeaderView *h = mAttachmentsList->header();
+    if ( lst.count() == h->count() ) {
+      for( int i = 0 ; i < h->count() ; ++i) {
+        h->resizeSection( i, lst[ i ] );
       }
     }
   }

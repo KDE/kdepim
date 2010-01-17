@@ -38,14 +38,8 @@ AttachmentView::AttachmentView( QWidget *parent )
 {
   QHeaderView *h = header();
   h->setMovable( false );
-  // FIXME: the following resizeSection() calls do not have any effect.
-  //        Or it is lost as soon as an item is inserted (Qt 4.6).
   h->setResizeMode( QHeaderView::Interactive );
-  h->resizeSection( File, 180 );
-  h->resizeSection( Type, 80 );
-  h->resizeSection( Size, 50 );
-  h->resizeSection( Description, 180 );
-  h->setStretchLastSection( true ); // Encoding
+  h->setStretchLastSection( true );
 }
 
 AttachmentView::~AttachmentView()
