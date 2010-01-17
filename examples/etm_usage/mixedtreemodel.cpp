@@ -69,7 +69,12 @@ QVariant MixedTreeModel::entityData(const Akonadi::Item& item, int column, int r
       case 0:
         return message->subject()->asUnicodeString();
       case 1:
-        return message->from()->asUnicodeString();
+      {
+        if (item.mimeType() == KMime::Message::mimeType())
+          return message->from()->asUnicodeString();
+        else
+          return message->mainBodyPart()->decodedText().mid(0, 30) + "...";
+      }
       default:
         return QVariant();
       }
