@@ -23,6 +23,8 @@
 #include <QContextMenuEvent>
 #include <QWebFrame>
 
+using namespace MessageViewer;
+
 MailWebView::MailWebView( QWidget *parent )
   : KWebView( parent )
 {

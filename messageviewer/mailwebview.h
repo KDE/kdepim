@@ -20,6 +20,8 @@
 
 class QContextMenuEventF;
 
+namespace MessageViewer {
+
 /// MailWebView extends KWebView so that it can emit the popupMenu() signal
 class MailWebView : public KWebView
 {
@@ -40,3 +42,5 @@ class MailWebView : public KWebView
     /// Reimplemented to catch context menu events and emit popupMenu()
     virtual void contextMenuEvent ( QContextMenuEvent * ev );
 };
+
+}

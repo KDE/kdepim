@@ -54,7 +54,6 @@ class KAction;
 class KSelectAction;
 class KToggleAction;
 class KToggleAction;
-class MailWebView;
 class KUrl;
 class KConfigSkeleton;
 
@@ -70,6 +69,7 @@ namespace MessageViewer {
   class CSSHelper;
   class HeaderStrategy;
   class HeaderStyle;
+  class MailWebView;
 }
 
 /**

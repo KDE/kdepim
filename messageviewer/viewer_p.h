@@ -58,7 +58,6 @@ class QTreeView;
 
 class MimeTreeModel;
 class ConfigureWidget;
-class MailWebView;
 
 class WebKitPartHtmlWriter;
 class HtmlStatusBar;
