@@ -275,12 +275,23 @@ QList< MessageItem::Tag * > MessageItem::tagList() const
 
 bool MessageItem::hasAnnotation() const
 {
+  //return true;
   Nepomuk::Resource resource( d->mNepomukResourceUri );
   if ( resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) ) ) {
     return !resource.description().isEmpty();
   } else {
     return false;
   }
+}
+
+QString MessageItem::annotation() const
+{
+  //return "laber laber laber\nbla bla bla bla\nfin";
+  if ( hasAnnotation() ) {
+    Nepomuk::Resource resource( d->mNepomukResourceUri );
+    return resource.description();
+  }
+  else return QString();
 }
 
 const MessageItem::Tag * MessageItem::Private::findTagInternal( const QString &szTagId ) const

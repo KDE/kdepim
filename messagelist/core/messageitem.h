@@ -101,6 +101,9 @@ public:
   /// setNepomukResourceURI() has a description which is not empty
   virtual bool hasAnnotation() const;
 
+  /// Returns the annotation of the message, given that hasAnnotation() is true
+  QString annotation() const;
+
   /**
    * Returns Tag associated to this message that has the specified id or 0
    * if no such tag exists. mTagList will be 0 in 99% of the cases.

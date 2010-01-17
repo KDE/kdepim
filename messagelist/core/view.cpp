@@ -2332,6 +2332,19 @@ bool View::event( QEvent *e )
             "</tr>"
         ).arg( i18n( "Size" ) ).arg( mi->formattedSize() );
 
+      if ( mi->hasAnnotation() ) {
+        tip += QString::fromLatin1( "<tr>" \
+                                    "<td align=\"right\" valign=\"top\" width=\"45\">" \
+                                    "<div style=\"font-weight: bold;\"><nobr>" \
+                                    "%1:" \
+                                    "</nobr></div>" \
+                                    "</td>" \
+                                    "<td align=\"left\" valign=\"top\">" \
+                                    "%2" \
+                                    "</td>" \
+                                     "</tr>"
+                                     ).arg( i18n( "Note" ) ).arg( mi->annotation().replace( "\n", "<br>" ) );
+      }
 
       tip += QString::fromLatin1(
                 "</table" \
