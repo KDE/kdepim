@@ -2302,7 +2302,6 @@ bool View::event( QEvent *e )
         );
 
       // FIXME: Find a way to show also CC and other header fields ?
-      //        Text-mail 2 line preview would be also nice.. but that's kinda hard...
 
       if ( mi->hasChildren() )
       {
