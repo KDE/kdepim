@@ -37,8 +37,8 @@
 //   kmheaders.cpp / kmheaders.h, headeritem.cpp / headeritem.h
 //   Copyright: (c) 2004 Till Adam < adam at kde dot org >
 //
-
 #include "model.h"
+#include <config-messagelist.h>
 #include "core/model.h"
 #include "core/model_p.h"
 #include "core/view.h"
