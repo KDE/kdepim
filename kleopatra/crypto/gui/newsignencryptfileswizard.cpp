@@ -333,6 +333,11 @@ namespace {
     class OperationPage : public WizardPage {
         Q_OBJECT
         Q_PROPERTY( QStringList files READ files WRITE setFiles )
+        Q_PROPERTY( bool signingPreset READ isSigningPreset WRITE setSigningPreset )
+        Q_PROPERTY( bool signingUserMutable READ isSigningUserMutable WRITE setSigningUserMutable )
+        Q_PROPERTY( bool encryptionPreset READ isEncryptionPreset WRITE setEncryptionPreset )
+        Q_PROPERTY( bool encryptionUserMutable READ isEncryptionUserMutable WRITE setEncryptionUserMutable )
+        Q_PROPERTY( bool archiveUserMutable READ isArchiveUserMutable WRITE setArchiveUserMutable )
     public:
         explicit OperationPage( QWidget * parent=0 )
             : WizardPage( parent ),
@@ -346,6 +351,11 @@ namespace {
               m_sign( i18n("Sign"), this ),
               m_armor( i18n("Text output (ASCII armor)"), this ),
               m_removeSource( i18n("Remove unencrypted original file when done"), this ),
+              m_signingUserMutable( true ),
+              m_encryptionUserMutable( true ),
+              m_archiveUserMutable( true ),
+              m_signingPreset( true ),
+              m_encryptionPreset( true ),
               m_archiveDefinitions( ArchiveDefinition::getArchiveDefinitions() )
         {
             setTitle( i18nc("@title","What do you want to do?") );
@@ -391,6 +401,9 @@ namespace {
 
             registerField( "files", this, "files" );
 
+            registerField( "signing-preset", this, "signingPreset" );
+            registerField( "encryption-preset", this, "encryptionPreset" );
+
             registerField( "signencrypt", &m_signencrypt );
             registerField( "encrypt", &m_encrypt );
             registerField( "sign", &m_sign );
@@ -400,8 +413,11 @@ namespace {
 
             registerField( "archive", &m_archiveCB );
             registerField( "archive-id", &m_archive );
-            registerField( "archive-user-mutable", &m_archiveCB, "enabled" );
             registerField( "archive-name", &m_archiveName, "fileName" );
+
+            registerField( "signing-user-mutable", this, "signingUserMutable" );
+            registerField( "encryption-user-mutable", this, "encryptionUserMutable" );
+            registerField( "archive-user-mutable", this, "archiveUserMutable" );
 
             connect( &m_archive, SIGNAL(currentIndexChanged(int)),
                      this, SLOT(slotArchiveDefinitionChanged()) );
@@ -434,20 +450,69 @@ namespace {
                                            .absoluteFilePath( i18nc("base name of an archive file, e.g. archive.zip or archive.tar.gz", "archive") ) );
         }
 
+        bool isSigningPreset() const { return m_signingPreset; }
+        void setSigningPreset( bool preset ) {
+            if ( m_signingPreset == preset )
+                return;
+            m_signingPreset = preset;
+            updateSignEncryptArchiveWidgetStates();
+        }
+
+        bool isSigningUserMutable() const { return m_signingUserMutable; }
+        void setSigningUserMutable( bool mut ) {
+            if ( m_signingUserMutable == mut )
+                return;
+            m_signingUserMutable = mut;
+            updateSignEncryptArchiveWidgetStates();
+        }
+
+        bool isEncryptionPreset() const { return m_encryptionPreset; }
+        void setEncryptionPreset( bool preset ) {
+            if ( m_encryptionPreset == preset )
+                return;
+            m_encryptionPreset = preset;
+            updateSignEncryptArchiveWidgetStates();
+        }
+
+        bool isEncryptionUserMutable() const { return m_encryptionUserMutable; }
+        void setEncryptionUserMutable( bool mut ) {
+            if ( m_encryptionUserMutable == mut )
+                return;
+            m_encryptionUserMutable = mut;
+            updateSignEncryptArchiveWidgetStates();
+        }
+
+        bool isArchiveUserMutable() const { return m_archiveUserMutable; }
+        void setArchiveUserMutable( bool mut ) {
+            if ( m_archiveUserMutable == mut )
+                return;
+            m_archiveUserMutable = mut;
+            updateSignEncryptArchiveWidgetStates();
+        }
+
         /* reimp */ bool isComplete() const {
             return ( !isArchiveRequested() || !archiveName().isEmpty() )
                 && ( isSigningSelected() || isEncryptionSelected() ) ;
         }
+
+        /* reimp */ bool validatePage() {
+            if ( isSignOnlySelected() && isArchiveRequested() ) {
+                KMessageBox::information( this,
+                                          i18nc("@info",
+                                                "<para>Archiving is currently only implemented for use with encryption or sign+encrypt, not for sign-only.</para>"
+                                                "<para>Sorry.</para>" ),
+                                          i18nc("@title:window", "Unsupported Combination") );
+                return false;
+            } else {
+                return true;
+            }
+        }
+
         /* reimp */ int nextId() const {
             return isEncryptionSelected() ? RecipientsPageId : SignerPageId ;
         }
         /* reimp */ void doSetPresetProtocol() {
-            const bool canSignEncrypt = protocol() != CMS ;
-            m_signencrypt.setEnabled( canSignEncrypt );
-            m_signencrypt.setToolTip( canSignEncrypt ? QString() :
-                                      i18n("This operation is not available for S/MIME") );
-            if ( !canSignEncrypt )
-                really_check( m_signencrypt, false );
+            updateSignEncryptArchiveWidgetStates();
         }
 
         shared_ptr<ArchiveDefinition> archiveDefinition() const {
@@ -471,6 +536,32 @@ namespace {
         }
 
     private:
+        void updateSignEncryptArchiveWidgetStates() {
+            m_archiveCB.setEnabled( m_archiveUserMutable );
+
+            const bool mustEncrypt = m_encryptionPreset && !m_encryptionUserMutable ;
+            const bool mustSign    = m_signingPreset    && !m_signingUserMutable    ;
+
+            const bool mayEncrypt  = m_encryptionPreset || m_encryptionUserMutable  ;
+            const bool maySign     = m_signingPreset    || m_signingUserMutable     ;
+
+            const bool canSignEncrypt = protocol() != CMS && mayEncrypt && maySign ;
+            const bool canSignOnly    = maySign && !mustEncrypt ;
+            const bool canEncryptOnly = mayEncrypt && !mustSign ;
+
+            m_signencrypt.setEnabled( canSignEncrypt );
+            m_encrypt.setEnabled( canEncryptOnly );
+            m_sign.setEnabled( canSignOnly );
+
+            really_check( m_signencrypt, canSignEncrypt &&  m_signingPreset &&  m_encryptionPreset );
+            really_check( m_encrypt,     canEncryptOnly && !m_signingPreset &&  m_encryptionPreset );
+            really_check( m_sign,        canSignOnly    &&  m_signingPreset && !m_encryptionPreset );
+
+            m_signencrypt.setToolTip( protocol() == CMS
+                                      ? i18n("This operation is not available for S/MIME")
+                                      : QString() );
+        }
+    private:
         ObjectsLabel m_objectsLabel;
         QCheckBox m_archiveCB;
         QComboBox m_archive;
@@ -478,7 +569,9 @@ namespace {
         ArchiveFileNameRequester m_archiveName;
         QRadioButton m_signencrypt, m_encrypt, m_sign;
         QCheckBox m_armor, m_removeSource;
-        std::vector< shared_ptr<ArchiveDefinition> > m_archiveDefinitions;
+        bool m_signingUserMutable, m_encryptionUserMutable, m_archiveUserMutable;
+        bool m_signingPreset, m_encryptionPreset;
+        const std::vector< shared_ptr<ArchiveDefinition> > m_archiveDefinitions;
     };
 
 
@@ -742,13 +835,10 @@ namespace {
                 // make up the recipients:
 
                 const std::vector<Key> & recipients = resolvedRecipients();
-                assert( !recipients.empty() );
                 if ( _detail::none_of_protocol( recipients, OpenPGP ) )
                     pgp = false;
                 if ( _detail::none_of_protocol( recipients, CMS ) )
                     cms = false;
-
-                assert( pgp || cms );
 
                 pgpCB.setEnabled( false );
                 cmsCB.setEnabled( false );
@@ -763,10 +853,6 @@ namespace {
                 widget.setSelectedCertificates( signPref->preferredCertificate( OpenPGP ),
                                                 signPref->preferredCertificate( CMS ) );
             }
-        }
-
-        /* reimp */ bool validatePage() {
-            return true;
         }
 
     private:
@@ -849,7 +935,14 @@ private:
 
 private:
     int startId() const {
-        if ( signingUserMutable || encryptionUserMutable )
+        if ( !createArchivePreset && !createArchiveUserMutable ) {
+            if ( signingPreset && !encryptionPreset && !encryptionUserMutable )
+                return SignerPageId;
+            if ( encryptionPreset && !signingPreset && !signingUserMutable ||
+                 signingPreset && !signingUserMutable && encryptionPreset && !encryptionUserMutable )
+                return RecipientsPageId;
+        }
+        if ( signingUserMutable || encryptionUserMutable || createArchivePreset || createArchiveUserMutable )
             return OperationPageId;
         else
             if ( encryptionPreset )
@@ -892,16 +985,16 @@ void NewSignEncryptFilesWizard::setCreateArchivePreset( bool preset ) {
     if ( preset == d->createArchivePreset && preset == isCreateArchiveSelected() )
         return;
     d->createArchivePreset = preset;
-    d->updateStartId();
     setField( "archive", preset );
+    d->updateStartId();
 }
 
 void NewSignEncryptFilesWizard::setCreateArchiveUserMutable( bool mut ) {
     if ( mut == d->createArchiveUserMutable )
         return;
-    d->createArchiveUserMutable = true;
-    d->updateStartId();
+    d->createArchiveUserMutable = mut;
     setField( "archive-user-mutable", mut );
+    d->updateStartId();
 }
 
 void NewSignEncryptFilesWizard::setArchiveDefinitionId( const QString & id ) {
@@ -909,38 +1002,34 @@ void NewSignEncryptFilesWizard::setArchiveDefinitionId( const QString & id ) {
 }
 
 void NewSignEncryptFilesWizard::setSigningPreset( bool preset ) {
-    if ( preset == d->signingPreset && preset == isSigningSelected() )
+    if ( preset == d->signingPreset )
         return;
     d->signingPreset = preset;
+    setField( "signing-preset", preset );
     d->updateStartId();
-    if ( isEncryptionSelected() )
-        setField( "signencrypt", true );
-    else
-        setField( "sign", true );
 }
 
 void NewSignEncryptFilesWizard::setSigningUserMutable( bool mut ) {
     if ( mut == d->signingUserMutable )
         return;
     d->signingUserMutable = mut;
+    setField( "signing-user-mutable", mut );
     d->updateStartId();
 }
     
 void NewSignEncryptFilesWizard::setEncryptionPreset( bool preset ) {
-    if ( preset == d->encryptionPreset && preset == isEncryptionSelected() )
+    if ( preset == d->encryptionPreset )
         return;
     d->encryptionPreset = preset;
+    setField( "encryption-preset", preset );
     d->updateStartId();
-    if ( isSigningSelected() )
-        setField( "signencrypt", true );
-    else
-        setField( "encrypt", true );
 }
 
 void NewSignEncryptFilesWizard::setEncryptionUserMutable( bool mut ) {
     if ( mut == d->encryptionUserMutable )
         return;
     d->encryptionUserMutable = mut;
+    setField( "encryption-user-mutable", mut );
     d->updateStartId();
 }
 
