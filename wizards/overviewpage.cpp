@@ -20,7 +20,6 @@
 */
 
 #include "overviewpage.h"
-#include "kolabwizard.h"
 #include "sloxwizard.h"
 #include "groupwisewizard.h"
 
@@ -61,11 +60,11 @@ OverViewPage::OverViewPage( QWidget *parent )
 
   // FIXME: Maybe hyperlinks would be better than buttons.
 
-  QPushButton* button = new QPushButton( i18n("Kolab"), this );
+/*  QPushButton* button = new QPushButton( i18n("Kolab"), this );
   layout->addWidget( button, 4, 0, 1, 4 );
-  connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );
+  connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );*/
 
-  button = new QPushButton( i18n("SUSE Linux Openexchange (SLOX)"), this );
+  QPushButton *button = new QPushButton( i18n("SUSE Linux Openexchange (SLOX)"), this );
   layout->addWidget( button, 5, 0, 1, 4 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardSlox() ) );
 
@@ -94,8 +93,8 @@ OverViewPage::~OverViewPage()
 
 void OverViewPage::showWizardKolab()
 {
-  KolabWizard wizard;
-  wizard.exec();
+/*  KolabWizard wizard;
+  wizard.exec();*/
 }
 
 void OverViewPage::showWizardSlox()
