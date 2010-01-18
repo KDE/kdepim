@@ -3,10 +3,8 @@ Friday, January 15th 2010
 Problems addressed
 ------------------
 
-* kolab/issue4004: Calendar prints should contain a print date (rt#5927)
 * kolab/issue3790: Crash in KMReaderWin::parseMsg at kmreaderwin.cpp:1609
 * kolab/issue4013: Make KMail-Archive format input the default (rt#5817)
-* kolab/issue1783: Invitation gets lost, if no Kalender resource is activated
 * kolab/issue3903: Kontact hangs when switching to calendar side-by-side view (rt#5870)
 * kolab/issue3986: event/todo recurrence option should be consistent (rt#5900)
 * kolab/issue4027: Kontact crahes if store event attachment inline (rt#5941)
