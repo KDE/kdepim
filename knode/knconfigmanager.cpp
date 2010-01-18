@@ -15,7 +15,6 @@
 #include "knconfigmanager.h"
 
 #include <kiconloader.h>
-#include <klocale.h>
 #include <kwindowsystem.h>
 
 #include "utilities.h"
@@ -29,7 +28,6 @@
 KNConfigManager::KNConfigManager( QObject *parent )
     : QObject( parent ), d_ialog(0)
 {
-  i_dentity           = new KNode::Identity();
   a_ppearance         = new KNode::Appearance();
   d_isplayedHeaders   = new KNode::DisplayedHeaders();
   c_leanup            = new KNode::Cleanup();
@@ -38,7 +36,6 @@ KNConfigManager::KNConfigManager( QObject *parent )
 
 KNConfigManager::~KNConfigManager()
 {
-  delete i_dentity;
   delete a_ppearance;
   delete d_isplayedHeaders;
   delete c_leanup;
@@ -53,10 +50,10 @@ void KNConfigManager::configure()
     connect(d_ialog, SIGNAL(finished()), this, SLOT(slotDialogDone()));
     d_ialog->show();
   }
-#ifdef Q_OS_UNIX  
+#ifdef Q_OS_UNIX
   else
     KWindowSystem::activateWindow(d_ialog->winId());
-#endif  
+#endif
 }
 
 

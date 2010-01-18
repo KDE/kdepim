@@ -11,21 +11,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-//Added by qt3to4:
-#include <QVBoxLayout>
-
-#include <kcmodule.h>
-#include <kcmoduleloader.h>
-#include <kdebug.h>
-#include <klocale.h>
-
-#include "knglobals.h"
-#include "knconfig.h"
-#include "knconfigmanager.h"
 #include "knconfigpages.h"
-#include "knconfigwidgets.h"
 
-#include <kdemacros.h>
+#include "configuration/identity_widget.h"
+#include "knconfigmanager.h"
+#include "knconfigwidgets.h"
+#include "settings.h"
+
+#include <kcmoduleloader.h>
+
 
 //
 // common config page with tabs (code mostly taken from kmail)
@@ -77,8 +71,7 @@ extern "C"
 {
   KDE_EXPORT KCModule *create_knode_config_identity( QWidget *parent )
   {
-    KNode::IdentityWidget *page = new KNode::IdentityWidget(
-        knGlobals.configManager()->identity(), knGlobals.componentData(), parent );
+    KNode::IdentityWidget *page = new KNode::IdentityWidget( KNGlobals::self()->settings(), knGlobals.componentData(), parent );
     return page;
   }
 }

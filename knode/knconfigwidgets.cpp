@@ -14,8 +14,8 @@
 
 #include "knconfigwidgets.h"
 
+#include "configuration/identity_widget.h"
 #include "knaccountmanager.h"
-#include "knconfig.h"
 #include "knconfigmanager.h"
 #include "kndisplayedheader.h"
 #include "kngroupmanager.h"
@@ -31,269 +31,18 @@
 #include "settings.h"
 #include "utils/locale.h"
 
-
 #include <QPainter>
-#include <QLabel>
-#include <QGridLayout>
-#include <QBoxLayout>
-#include <QVBoxLayout>
-#include <QTextEdit>
-
 #include <kcharsets.h>
 #include <kio/ioslave_defaults.h>
-#include <klocale.h>
-#include <knumvalidator.h>
 #include <kmessagebox.h>
-#include <kmimetypetrader.h>
-#include <kmime/kmime_dateformatter.h>
 #include <kcolordialog.h>
 #include <kfontdialog.h>
-#include <kfiledialog.h>
 #include <kscoringeditor.h>
 #include <sonnet/configwidget.h>
 #include <kcombobox.h>
 #include <libkpgp/kpgpui.h>
-#include <kurlcompletion.h>
-#include <kiconloader.h>
-#include <kpushbutton.h>
-#include <kvbox.h>
-#include <krun.h>
 
 
-
-KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, QWidget *parent ) :
-  KCModule( inst ,parent ),
-  d_ata( d )
-{
-  QString msg;
-
-  QGridLayout *topL=new QGridLayout(this);
-  topL->setSpacing(5);
-  topL->setMargin(5);
-
-  n_ame=new KLineEdit(this);
-  QLabel *l = new QLabel( i18nc( "@label:textbox Name of the user in a message", "&Name:" ), this );
-  l->setBuddy(n_ame);
-  topL->addWidget(l, 0,0);
-  topL->addWidget(n_ame, 0, 1, 1,2);
-  msg = i18n("<qt><p>Your name as it will appear to others reading your articles.</p>"
-      "<p>Ex: <b>John Stuart Masterson III</b>.</p></qt>");
-  n_ame->setWhatsThis( msg );
-  l->setWhatsThis( msg );
-  connect( n_ame, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
-
-  o_rga=new KLineEdit(this);
-  l=new QLabel(i18n("Organi&zation:"),this);
-  l->setBuddy(o_rga);
-  topL->addWidget(l, 1,0);
-  topL->addWidget(o_rga, 1, 1, 1,2);
-  msg = i18n( "<qt><p>The name of the organization you work for.</p>"
-      "<p>Ex: <b>KNode, Inc</b>.</p></qt>" );
-  o_rga->setWhatsThis( msg );
-  l->setWhatsThis( msg );
-  connect( o_rga, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
-
-  e_mail=new KLineEdit(this);
-  l=new QLabel(i18n("Email a&ddress:"),this);
-  l->setBuddy(e_mail);
-  topL->addWidget(l, 2,0);
-  topL->addWidget(e_mail, 2, 1, 1,2);
-  msg = i18n( "<qt><p>Your email address as it will appear to others "
-      "reading your articles</p><p>Ex: <b>nospam@please.com</b>.</p></qt>" );
-  l->setWhatsThis( msg );
-  e_mail->setWhatsThis( msg );
-  connect( e_mail, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
-
-  r_eplyTo=new KLineEdit(this);
-  l=new QLabel(i18n("&Reply-to address:"),this);
-  l->setBuddy(r_eplyTo);
-  topL->addWidget(l, 3,0);
-  topL->addWidget(r_eplyTo, 3, 1, 1,2);
-  msg = i18n( "<qt><p>When someone reply to your article by email, this is the address the message "
-      "will be sent. If you fill in this field, please do it with a real "
-      "email address.</p><p>Ex: <b>john@example.com</b>.</p></qt>" );
-  l->setWhatsThis( msg );
-  r_eplyTo->setWhatsThis( msg );
-  connect( r_eplyTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
-
-  m_ailCopiesTo=new KLineEdit(this);
-  l=new QLabel(i18n("&Mail-copies-to:"),this);
-  l->setBuddy(m_ailCopiesTo);
-  topL->addWidget(l, 4,0);
-  topL->addWidget(m_ailCopiesTo, 4, 1, 1,2);
-  connect( m_ailCopiesTo, SIGNAL(textChanged(const QString&)), SLOT(changed()) );
-
-  s_igningKey = new Kpgp::SecretKeyRequester(this);
-  s_igningKey->dialogButton()->setText( i18nc( "@action:button Change signing key", "Chan&ge..." ) );
-  s_igningKey->setDialogCaption(i18n("Your OpenPGP Key"));
-  s_igningKey->setDialogMessage(i18n("Select the OpenPGP key which should be "
-      "used for signing articles."));
-  l=new QLabel(i18n("Signing ke&y:"),this);
-  l->setBuddy(s_igningKey);
-  topL->addWidget(l, 5,0);
-  topL->addWidget(s_igningKey, 5, 1, 1,2);
-  msg = i18n("<qt><p>The OpenPGP key you choose here will be "
-      "used to sign your articles.</p></qt>");
-  l->setWhatsThis( msg );
-  s_igningKey->setWhatsThis( msg );
-  connect( s_igningKey, SIGNAL(changed()), SLOT(changed()) );
-
-  b_uttonGroup = new QButtonGroup( this );
-  connect( b_uttonGroup, SIGNAL( buttonClicked( int ) ),
-           this, SLOT( slotSignatureType( int ) ) );
-  b_uttonGroup->setExclusive( true );
-
-  s_igFile = new QRadioButton( i18n("&Use a signature from file"), this );
-  b_uttonGroup->addButton( s_igFile, 0 );
-  topL->addWidget(s_igFile, 6, 0, 1, 3 );
-  s_igFile->setWhatsThis(
-                   i18n( "<qt><p>Mark this to let KNode read the signature from a file.</p></qt>" ) );
-  s_ig = new KLineEdit(this);
-
-  f_ileName = new QLabel(i18n("Signature &file:"),this);
-  f_ileName->setBuddy(s_ig);
-  topL->addWidget(f_ileName, 7, 0 );
-  topL->addWidget(s_ig, 7, 1 );
-  c_ompletion = new KUrlCompletion();
-  s_ig->setCompletionObject(c_ompletion);
-  msg = i18n( "<qt><p>The file from which the signature will be read.</p>"
-      "<p>Ex: <b>/home/robt/.sig</b>.</p></qt>" );
-  f_ileName->setWhatsThis( msg );
-  s_ig->setWhatsThis( msg );
-
-  c_hooseBtn = new QPushButton( i18nc( "@action:button Choose a file that contains a signature for messages", "Choo&se..." ), this );
-  connect(c_hooseBtn, SIGNAL(clicked()),
-          this, SLOT(slotSignatureChoose()));
-  topL->addWidget(c_hooseBtn, 7, 2 );
-  e_ditBtn = new QPushButton( i18nc("@action:button Launch the edit of the signature file", "&Edit File" ), this );
-  connect(e_ditBtn, SIGNAL(clicked()),
-          this, SLOT(slotSignatureEdit()));
-  topL->addWidget(e_ditBtn, 8, 2);
-
-  s_igGenerator = new QCheckBox(i18n("&The file is a program"), this);
-  topL->addWidget(s_igGenerator, 8, 0, 1, 2 );
-  msg = i18n( "<qt><p>Mark this option if the signature will be generated by a program</p>"
-      "<p>Ex: <b>/home/robt/gensig.sh</b>.</p></qt>" );
-  s_igGenerator->setWhatsThis( msg );
-  connect( s_igGenerator, SIGNAL(toggled(bool)), SLOT(changed()) );
-
-  s_igEdit = new QRadioButton( i18n("Specify signature &below"), this);
-  b_uttonGroup->addButton( s_igEdit, 1 );
-  topL->addWidget(s_igEdit, 9, 0, 1, 3 );
-
-  s_igEditor = new QTextEdit( this );
-  topL->addWidget(s_igEditor, 10, 0, 1, 3 );
-  connect( s_igEditor, SIGNAL(textChanged()), SLOT(changed()) );
-
-  topL->setColumnStretch(1,1);
-  topL->setRowStretch(7,1);
-  topL->setSizeConstraint( QLayout::SetMinimumSize );
-  connect(s_ig,SIGNAL(textChanged ( const QString & )),
-          this,SLOT(textFileNameChanged(const QString &)));
-
-  load();
-}
-
-
-KNode::IdentityWidget::~IdentityWidget()
-{
-  delete c_ompletion;
-}
-
-void KNode::IdentityWidget::textFileNameChanged(const QString &text)
-{
-    e_ditBtn->setEnabled(!text.isEmpty());
-    emit changed( true );
-}
-
-void KNode::IdentityWidget::load()
-{
-  kDebug() <<"void KNConfig::IdentityWidget::load()";
-  n_ame->setText(d_ata->n_ame);
-  o_rga->setText(d_ata->o_rga);
-  e_mail->setText(d_ata->e_mail);
-  r_eplyTo->setText(d_ata->r_eplyTo);
-  m_ailCopiesTo->setText(d_ata->m_ailCopiesTo);
-  s_igningKey->setKeyIDs( Kpgp::KeyIDList() << d_ata->s_igningKey.toLatin1() );
-  s_ig->setText(d_ata->s_igPath);
-  s_igGenerator->setChecked(d_ata->useSigGenerator());
-  s_igEditor->setPlainText( d_ata->s_igText );
-  slotSignatureType(d_ata->useSigFile()? 0:1);
-}
-
-void KNode::IdentityWidget::save()
-{
-  d_ata->n_ame=n_ame->text();
-  d_ata->o_rga=o_rga->text();
-  d_ata->e_mail=e_mail->text();
-  d_ata->r_eplyTo=r_eplyTo->text();
-  d_ata->m_ailCopiesTo=m_ailCopiesTo->text();
-  d_ata->s_igningKey = s_igningKey->keyIDs().first();
-  d_ata->u_seSigFile=s_igFile->isChecked();
-  d_ata->u_seSigGenerator=s_igGenerator->isChecked();
-  d_ata->s_igPath=c_ompletion->replacedPath(s_ig->text());
-  d_ata->s_igText = s_igEditor->toPlainText();
-
-  if(d_ata->isGlobal())
-    d_ata->save();
-}
-
-void KNode::IdentityWidget::slotSignatureType(int type)
-{
-  bool sigFromFile = (type==0);
-
-  b_uttonGroup->button( type )->setChecked( true );
-  f_ileName->setEnabled(sigFromFile);
-  s_ig->setEnabled(sigFromFile);
-  c_hooseBtn->setEnabled(sigFromFile);
-  e_ditBtn->setEnabled(sigFromFile && !s_ig->text().isEmpty());
-  s_igGenerator->setEnabled(sigFromFile);
-  s_igEditor->setEnabled(!sigFromFile);
-
-  if (sigFromFile)
-    f_ileName->setFocus();
-  else
-    s_igEditor->setFocus();
-  emit changed( true );
-}
-
-
-void KNode::IdentityWidget::slotSignatureChoose()
-{
-  QString tmp = KFileDialog::getOpenFileName( c_ompletion->replacedPath( s_ig->text() ), QString(), this, i18n("Choose Signature") );
-  if(!tmp.isEmpty()) s_ig->setText(tmp);
-  emit changed( true );
-}
-
-
-void KNode::IdentityWidget::slotSignatureEdit()
-{
-  QString fileName = c_ompletion->replacedPath(s_ig->text()).trimmed();
-
-  if (fileName.isEmpty()) {
-    KMessageBox::sorry(this, i18n("You must specify a filename."));
-    return;
-  }
-
-  QFileInfo fileInfo( fileName );
-  if (fileInfo.isDir()) {
-    KMessageBox::sorry(this, i18n("You have specified a folder."));
-    return;
-  }
-
-  KService::Ptr offer = KMimeTypeTrader::self()->preferredService("text/plain", "Application");
-  KUrl u(fileName);
-
-  if (offer)
-    KRun::run(*offer, u, this);
-  else
-    KRun::displayOpenWithDialog(u, this);
-  emit changed( true );
-}
-
-
-
-//==========================================================================================
 
 //BEGIN: NNTP account configuration widgets ----------------------------------
 
@@ -398,7 +147,7 @@ void KNode::NntpAccountListWidget::slotAddBtnClicked()
 
   if(acc->editProperties(this)) {
     if(knGlobals.accountManager()->newAccount(acc))
-      acc->saveInfo();
+      acc->writeConfig();
   }
   else
     delete acc;
@@ -502,7 +251,7 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mInterval->setSuffix(ki18np(" minute", " minutes"));
 
   // identity tab
-  mIdentityWidget = new KNode::IdentityWidget( a->identity(), knGlobals.componentData(), this );
+  mIdentityWidget = new KNode::IdentityWidget( a, knGlobals.componentData(), this );
   addPage( mIdentityWidget, i18n("&Identity") );
 
   // per server cleanup configuration
@@ -564,7 +313,7 @@ void KNode::NntpAccountConfDialog::slotButtonClicked( int button )
     mAccount->setCheckInterval( mInterval->value() );
 
     if ( mAccount->id() != -1 ) // only save if account has a valid id
-      mAccount->saveInfo();
+      mAccount->writeConfig();
 
     mIdentityWidget->save();
     mCleanupWidget->save();
@@ -1919,3 +1668,4 @@ void KNode::CleanupWidget::slotFolderCBtoggled(bool b)
 
 //------------------------
 #include "knconfigwidgets.moc"
+

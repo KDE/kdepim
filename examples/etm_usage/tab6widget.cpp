@@ -21,6 +21,7 @@
 
 #include "tab6widget.h"
 
+#include <QSplitter>
 #include <QHBoxLayout>
 #include <QTreeView>
 
@@ -83,7 +84,8 @@ public:
     {
       if (!m_itemSelectionModel)
         return Qt::Unchecked;
-      return m_itemSelectionModel->selectedRows().contains(index) ? Qt::Checked : Qt::Unchecked;
+
+      return m_itemSelectionModel->selection().contains(index) ? Qt::Checked : Qt::Unchecked;
     }
     return Akonadi::EntityTreeModel::data(index, role);
   }
@@ -96,7 +98,7 @@ public:
         return false;
 
       Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
-      m_itemSelectionModel->select(index, state == Qt::Checked ? QItemSelectionModel::SelectCurrent : QItemSelectionModel::Deselect );
+      m_itemSelectionModel->select(index, state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
       return true;
     }
     return Akonadi::EntityTreeModel::setData(index, value, role);
@@ -148,31 +150,30 @@ Tab6Widget::Tab6Widget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
+  QSplitter *splitter = new QSplitter(this);
+  layout->addWidget(splitter);
 
-  Tab6TreeWidget *etw = new Tab6TreeWidget(this);
+  Tab6TreeWidget *etw = new Tab6TreeWidget(splitter);
   m_etw = etw;
   m_etw->init();
 
-  layout->addWidget(m_etw);
-  QWidget *rhsContainer = new QWidget(this);
-  QVBoxLayout *rhsLayout = new QVBoxLayout(rhsContainer);
+  QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
 
-  m_itemView = new QTreeView(this);
+  m_itemView = new QTreeView(rhsContainer);
 
   KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(etw->itemSelectionModel(), this);
   selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
   selectionProxy->setSourceModel(m_etw->model());
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new NoncheckableFilterModel(this);
+  itemFilter->setObjectName("itemFilter");
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->setSourceModel(selectionProxy);
 
   m_itemView->setModel(itemFilter);
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), this);
-  rhsLayout->addWidget(m_itemView);
-  rhsLayout->addWidget(viewerWidget);
-  layout->addWidget(rhsContainer);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }
 
 

@@ -30,6 +30,7 @@
 
 #include "messageviewer/viewer.h"
 #include "akonadi/contact/contactviewer.h"
+#include "noteviewer.h"
 
 using namespace Akonadi;
 
@@ -42,8 +43,10 @@ ItemViewerWidget::ItemViewerWidget( QItemSelectionModel *itemSelectionModel, QWi
   m_widgetStack->addWidget(new QWidget(this));
   m_mailViewer = new MessageViewer::Viewer(this);
   m_contactViewer = new Akonadi::ContactViewer(this);
+  m_noteViewer = new NoteViewer(this);
   m_widgetStack->addWidget(m_mailViewer);
   m_widgetStack->addWidget(m_contactViewer);
+  m_widgetStack->addWidget(m_noteViewer);
 
   connect(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)));
 }
@@ -76,6 +79,13 @@ void ItemViewerWidget::selectionChanged( const QItemSelection selected, const QI
     m_contactViewer->setItem( item );
     return;
   }
+  if (mimeType == "text/x-vnd.akonadi.note")
+  {
+    m_widgetStack->setCurrentIndex( 3 );
+    m_noteViewer->setIndex(selectedIndex);
+    return;
+  }
+
   m_widgetStack->setCurrentIndex( 0 );
 }
 

@@ -21,6 +21,7 @@
 
 #include "mainwindow.h"
 
+#include <akonadi/control.h>
 
 #include "tab1widget.h"
 #include "tab2widget.h"
@@ -29,12 +30,14 @@
 #include "tab4widget.h"
 #include "tab5widget.h"
 #include "tab6widget.h"
-
+#include "tab7widget.h"
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   : QMainWindow(parent, flags)
 {
   QTabWidget *tabWidget = new QTabWidget(this);
+
+  Akonadi::Control::start();
 
   tabWidget->addTab(new Tab1Widget(tabWidget), "EntityTreeModel");
   tabWidget->addTab(new Tab2Widget(tabWidget), "setRootIndex");
@@ -43,6 +46,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new Tab4Widget(tabWidget), "KSelectionProxyModel Filtered");
   tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
   tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
+  tabWidget->addTab(new Tab7Widget(tabWidget), "Tagged Items");
 
   setCentralWidget(tabWidget);
 }

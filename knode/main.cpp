@@ -39,7 +39,9 @@ int main(int argc, char* argv[])
 
   KNApplication app;
 
-  KNode::Utilities::Startup::loadLibrariesIconsAndTranslations();
+  KNode::Utilities::Startup s;
+  s.loadLibrariesIconsAndTranslations();
+  s.updateDataAndConfiguration();
 
   return app.exec();
 }

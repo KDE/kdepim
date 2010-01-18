@@ -6,6 +6,14 @@
   <include>kglobalsettings.h</include>
   <include>kcolorscheme.h</include>
   <kcfgfile name="knoderc"/>
+
+  <!-- Identities -->
+  <group name="IDENTITY">
+    <entry name="identity" type="Int">
+      <!-- <label>Identity</label> -->
+      <default>-1</default>
+    </entry>
+  </group>
   <!-- News reading options -->
   <group name="READNEWS">
     <!-- General options -->

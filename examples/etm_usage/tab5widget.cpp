@@ -21,12 +21,14 @@
 
 #include "tab5widget.h"
 
+#include <QSplitter>
 #include <QHBoxLayout>
 #include <QTreeView>
 
 #include "entitytreewidget.h"
 #include "itemviewerwidget.h"
 #include "mixedtreemodel.h"
+#include "categorizedentitymodel.h"
 
 #include <kselectionproxymodel.h>
 #include <kcategorizedsortfilterproxymodel.h>
@@ -35,33 +37,6 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-
-class CategorisedEntityModel : public MixedTreeModel
-{
-public:
-  CategorisedEntityModel(Akonadi::ChangeRecorder* monitor, QObject* parent = 0)
-    : MixedTreeModel(monitor, parent)
-  {
-
-  }
-
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if (role == KCategorizedSortFilterProxyModel::CategorySortRole)
-    {
-      return index.data(MimeTypeRole);
-    }
-    if (role == KCategorizedSortFilterProxyModel::CategoryDisplayRole)
-    {
-      QString mimetype = index.data(MimeTypeRole).toString();
-      if (mimetype == "message/rfc822")
-        return "Email";
-      if (mimetype == "text/directory")
-        return "Addressee";
-    }
-    return Akonadi::EntityTreeModel::data(index, role);
-  }
-};
 
 class Tab5TreeWidget : public EntityTreeWidget
 {
@@ -100,16 +75,15 @@ Tab5Widget::Tab5Widget(QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f)
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
+  QSplitter *splitter = new QSplitter(this);
+  layout->addWidget(splitter);
 
-  m_etw = new Tab5TreeWidget(this);
+  m_etw = new Tab5TreeWidget(splitter);
   m_etw->init();
 
-  layout->addWidget(m_etw);
-  QWidget *rhsContainer = new QWidget(this);
-  QVBoxLayout *rhsLayout = new QVBoxLayout(rhsContainer);
+  QSplitter *rhsContainer = new QSplitter(Qt::Vertical, splitter);
 
-  m_itemView = new KCategorizedView(this);
-
+  m_itemView = new KCategorizedView(rhsContainer);
 
   KSelectionProxyModel *selectionProxy = new KSelectionProxyModel(m_etw->view()->selectionModel(), this);
   selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
@@ -117,6 +91,7 @@ Tab5Widget::Tab5Widget(QWidget* parent, Qt::WindowFlags f)
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
+  itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
   itemFilter->setSourceModel(selectionProxy);
 
   KCategorizedSortFilterProxyModel *categorizedModel = new KCategorizedSortFilterProxyModel(this);
@@ -126,10 +101,7 @@ Tab5Widget::Tab5Widget(QWidget* parent, Qt::WindowFlags f)
   m_itemView->setModel(categorizedModel);
   m_itemView->setCategoryDrawer(new KCategoryDrawerV2());
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), this);
-  rhsLayout->addWidget(m_itemView);
-  rhsLayout->addWidget(viewerWidget);
-  layout->addWidget(rhsContainer);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 }
 
 

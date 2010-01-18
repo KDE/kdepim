@@ -12,10 +12,11 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QByteArray>
-#include <QFileInfo>
-#include <QTextStream>
+#include "knfolder.h"
 
+#include "utils/scoped_cursor_override.h"
+
+#include <QFileInfo>
 #include <kconfig.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -28,11 +29,11 @@
 #include "utilities.h"
 #include "knglobals.h"
 #include "knarticlefactory.h"
-#include "knfolder.h"
 #include "knarticlewindow.h"
 #include "knmainwidget.h"
 
 using namespace KNode;
+using namespace KNode::Utilities;
 
 
 KNFolder::KNFolder()
@@ -141,7 +142,7 @@ bool KNFolder::readInfo()
 }
 
 
-void KNFolder::saveInfo()
+void KNFolder::writeConfig()
 {
   if(!i_nfoPath.isEmpty()) {
     KConfig info(i_nfoPath, KConfig::SimpleConfig);
@@ -193,7 +194,7 @@ bool KNFolder::loadHdrs()
   DynData dynamic;
   int pos1=0, pos2=0, cnt=0, byteCount;
 
-  knGlobals.top->setCursorBusy(true);
+  ScopedCursorOverride cursor( Qt::WaitCursor );
   knGlobals.setStatusMsg(i18n(" Loading folder..."));
   knGlobals.top->secureProcessEvents();
 
@@ -210,7 +211,6 @@ bool KNFolder::loadHdrs()
         kError(5003) <<"KNFolder::loadHeaders() : corrupted index-file, IO-error!";
         closeFiles();
         clear();
-        knGlobals.top->setCursorBusy( false );
         return false;
       }
     }
@@ -225,7 +225,6 @@ bool KNFolder::loadHdrs()
       kError(5003) <<"KNFolder::loadHdrs() : cannot set mbox file-pointer!";
       closeFiles();
       clear();
-      knGlobals.top->setCursorBusy( false );
       return false;
     }
     tmp = m_boxFile.readLine();
@@ -241,7 +240,6 @@ bool KNFolder::loadHdrs()
         kError(5003) <<"KNFolder::loadHdrs() : corrupted mbox-file, IO-error!";
         closeFiles();
         clear();
-        knGlobals.top->setCursorBusy( false );
         return false;
       }
     }
@@ -289,7 +287,6 @@ bool KNFolder::loadHdrs()
       closeFiles();
 
       knGlobals.setStatusMsg( QString() );
-      knGlobals.top->setCursorBusy(false);
       return false;
     }
 
@@ -302,7 +299,6 @@ bool KNFolder::loadHdrs()
   updateListItem();
 
   knGlobals.setStatusMsg( QString() );
-  knGlobals.top->setCursorBusy(false);
 
   return true;
 }

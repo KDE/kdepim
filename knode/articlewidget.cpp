@@ -98,9 +98,9 @@ ArticleWidget::ArticleWidget( QWidget *parent,
   mForceCharset( false ),
   mOverrideCharset( KMime::Headers::Latin1 ),
   mTimer( 0 ),
+  mIsMainViewer( isMainViewer ),
   mGuiClient( guiClient ),
-  mActionCollection( actionCollection ),
-  mIsMainViewer( isMainViewer )
+  mActionCollection( actionCollection )
 {
   mInstances.append( this );
 
@@ -604,12 +604,12 @@ void ArticleWidget::displayHeader()
   // full header style
   if ( mHeaderStyle == "all" ) {
     QByteArray head = mArticle->head();
-    KMime::Headers::Generic *header = 0;
+    KMime::Headers::Base *header = 0;
 
     headerHtml += "<div class=\"header\">"
                   "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"> ";
     while ( !head.isEmpty() ) {
-      header = mArticle->nextHeader( head );
+      header = KMime::HeaderParsing::extractFirstHeader( head );
       if ( header ) {
         headerHtml+=QString( "<tr><td align=\"right\" valign=\"top\"><b>%1</b></td><td width=\"100%\">%2</td></tr>" )
           .arg( toHtmlString( header->type(), None ) + ": " )

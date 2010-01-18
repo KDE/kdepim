@@ -25,8 +25,10 @@
 
 #include "knode_export.h"
 
-namespace KNode {
+#include <KConfigGroup>
 
+
+namespace KNode {
 namespace Utilities {
 
 /**
@@ -38,7 +40,26 @@ class KNODE_EXPORT Startup
     /**
       Loads translation catalogs and icons directories for imported libraries.
     */
-    static void loadLibrariesIconsAndTranslations();
+    void loadLibrariesIconsAndTranslations() const;
+
+    /**
+      Updates internal data at startup.
+      Whenever possible, use kconf_update instead.
+    */
+    void updateDataAndConfiguration() const;
+
+  private:
+    /**
+      Convert KNode-specific Identity objects stored in configuration of KNode and accounts and groups
+      to KPIMIdentities::Identity.
+      @since 4.5
+    */
+    void convertPre45Identities() const;
+    /**
+      Convert a KNode-specific identity from a group of a (global, account or group) configuration as
+      stored in KNode up to version 4.4.x (included).
+    */
+    void convertPre45Identity( KConfigGroup &cg ) const;
 };
 
 

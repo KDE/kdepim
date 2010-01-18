@@ -12,19 +12,12 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <q3header.h>
-#include <QTextCodec>
-#include <QApplication>
-#include <QGridLayout>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QTextStream>
-#include <QByteArray>
-#include <QContextMenuEvent>
+#include "kncomposer.h"
+
+#include <KPIMUtils/Email>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
 #include <QVBoxLayout>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QCloseEvent>
 #include <QLabel>
 #include <QtDBus/QtDBus>
 #include <qgroupbox.h>
@@ -34,53 +27,46 @@ using KPIM::AddressesDialog;
 using KPIM::RecentAddresses;
 #include <kcharsets.h>
 #include <kmessagebox.h>
-#include <kabc/addresseedialog.h>
-#include <kaction.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
 #include <kshortcutsdialog.h>
 #include <kedittoolbar.h>
 #include <kmenu.h>
-#include <kfiledialog.h>
 #include <kdebug.h>
-#include <klineedit.h>
 #include <kcombobox.h>
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgpblock.h>
-#include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
 #include <kstatusbar.h>
 #include <klocale.h>
 #include <kselectaction.h>
-#include <KStandardGuiItem>
 #include <ktoggleaction.h>
-#include <kconfiggroup.h>
-#include <kicon.h>
 #include "kngroupselectdialog.h"
 #include "utilities.h"
 #include "knglobals.h"
-#include "kncomposer.h"
 #include "knmainwidget.h"
-#include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "knnntpaccount.h"
-#include "knarticlefactory.h"
 #include "settings.h"
 #include "kncomposerview.h"
-#include <kmeditor.h>
-#include "kncomposereditor.h"
 #include "utils/locale.h"
 
 using namespace KNode::Utilities;
+using namespace KNode::Composer;
 
 
-KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
-                        QWidget *parent )
-    : KNLineEditInherited( parent,useCompletion ), composerView( _composerView )
-
+KNLineEdit::KNLineEdit( View *parent, bool useCompletion )
+  : KABC::AddressLineEdit( parent, useCompletion ),
+    composerView( parent )
 {
 }
+
+KNLineEdit::KNLineEdit( QWidget *parent, bool useCompletion )
+  : KABC::AddressLineEdit( parent, useCompletion )
+{
+}
+
 
 void KNLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
@@ -109,7 +95,7 @@ void KNLineEdit::editRecentAddresses()
 
 void KNLineEdit::loadAddresses()
 {
-    KNLineEditInherited::loadAddresses();
+    KABC::AddressLineEdit::loadAddresses();
 
     QStringList recent = RecentAddresses::self(knGlobals.config())->addresses();
     QStringList::Iterator it = recent.begin();
@@ -137,11 +123,17 @@ void KNLineEdit::keyPressEvent(QKeyEvent *e)
       return;
     }
     // ---sven's Return is same Tab and arrow key navigation end ---
-  KNLineEditInherited::keyPressEvent(e);
+  KABC::AddressLineEdit::keyPressEvent(e);
 }
 
-KNLineEditSpell::KNLineEditSpell( KNComposer::ComposerView *_composerView, bool useCompletion,QWidget * parent )
-    :KNLineEdit( _composerView, useCompletion, parent )
+
+KNLineEditSpell::KNLineEditSpell( View *parent, bool useCompletion )
+  : KNLineEdit( parent, useCompletion )
+{
+}
+
+KNLineEditSpell::KNLineEditSpell( QWidget *parent, bool useCompletion )
+  : KNLineEdit( parent, useCompletion )
 {
 }
 
@@ -172,15 +164,14 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 }
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
-    : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
+    : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a),
+      u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), a_ttChanged(false),
       mFirstEdit( firstEdit )
 {
   setObjectName( "composerWindow" );
-    mSpellingFilter = 0;
-    spellLineEdit = false;
 
   if( knGlobals.componentData().isValid() )
     setComponentData( knGlobals.componentData() );
@@ -189,12 +180,10 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   setAcceptDrops(true);
 
   //init v_iew
-  v_iew=new ComposerView(this);
+  v_iew = new View( this );
   setCentralWidget(v_iew);
 
-  connect(v_iew->c_ancelEditorBtn, SIGNAL(clicked()), SLOT(slotCancelEditor()));
-  connect(v_iew->e_dit, SIGNAL(sigDragEnterEvent(QDragEnterEvent *)), SLOT(slotDragEnterEvent(QDragEnterEvent *)));
-  connect(v_iew->e_dit, SIGNAL(sigDropEvent(QDropEvent *)), SLOT(slotDropEvent(QDropEvent *)));
+  connect( v_iew, SIGNAL(closeExternalEditor()), this, SLOT(slotCancelEditor()) );
 
   //statusbar
   KStatusBar *sb=statusBar();
@@ -208,8 +197,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
   sb->insertItem( QString(), 5, 1 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
-  connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
-  connect(v_iew->e_dit, SIGNAL(insertModeChanged()), SLOT(slotUpdateStatusBar()));
+  connect(v_iew->editor(), SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
+  connect(v_iew->editor(), SIGNAL(insertModeChanged()), SLOT(slotUpdateStatusBar()));
 
   QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
   //------------------------------- <Actions> --------------------------------------
@@ -251,19 +240,19 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   action = actionCollection()->addAction("paste_quoted");
   action->setText(i18n("Paste as &Quotation"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotPasteAsQuotation()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotPasteAsQuotation()));
 
   KStandardAction::selectAll(this, SLOT(slotSelectAll()), actionCollection());
 
-  KStandardAction::find(v_iew->e_dit, SLOT(slotFind()), actionCollection());
-  KStandardAction::findNext(v_iew->e_dit, SLOT(slotFindNext()), actionCollection());
+  KStandardAction::find(v_iew->editor(), SLOT(slotFind()), actionCollection());
+  KStandardAction::findNext(v_iew->editor(), SLOT(slotFindNext()), actionCollection());
 
-  KStandardAction::replace(v_iew->e_dit, SLOT(slotReplace()), actionCollection());
+  KStandardAction::replace(v_iew->editor(), SLOT(slotReplace()), actionCollection());
 
   //attach menu
   action = actionCollection()->addAction("append_signature");
   action->setText(i18n("Append &Signature"));
-  connect(action, SIGNAL(triggered(bool) ), SLOT(slotAppendSig()));
+  connect( action, SIGNAL(triggered(bool)), v_iew, SLOT(appendSignature()) );
 
   action = actionCollection()->addAction("insert_file");
   action->setText(i18n("&Insert File..."));
@@ -284,11 +273,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctRemoveAttachment = actionCollection()->addAction("remove_attachment");
   a_ctRemoveAttachment->setText(i18n("&Remove"));
-  connect(a_ctRemoveAttachment, SIGNAL(triggered(bool) ), SLOT(slotRemoveAttachment()));
+  connect( a_ctRemoveAttachment, SIGNAL(triggered(bool) ), v_iew, SLOT(removeCurrentAttachment()) );
 
   a_ctAttachmentProperties = actionCollection()->addAction("attachment_properties");
   a_ctAttachmentProperties->setText(i18n("&Properties"));
-  connect(a_ctAttachmentProperties, SIGNAL(triggered(bool) ), SLOT(slotAttachmentProperties()));
+  connect( a_ctAttachmentProperties, SIGNAL(triggered(bool)), v_iew, SLOT(editCurrentAttachment()) );
 
   //options menu
 
@@ -326,26 +315,26 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   slotUpdateCheckSpellChecking( knGlobals.settings()->autoSpellChecking() );
   slotAutoSpellCheckingToggled();
   connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool) ), SLOT(slotAutoSpellCheckingToggled()));
-  connect( v_iew->e_dit, SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
+  connect( v_iew->editor(), SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
 
 
   //tools menu
 
   action = actionCollection()->addAction("tools_quote");
   action->setText(i18n("Add &Quote Characters"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotAddQuotes()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotAddQuotes()));
 
   action = actionCollection()->addAction("tools_unquote");
   action->setText(i18n("&Remove Quote Characters"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotRemoveQuotes()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotRemoveQuotes()));
 
   action = actionCollection()->addAction("tools_box");
   action->setText(i18n("Add &Box"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotAddBox()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotAddBox()));
 
   action = actionCollection()->addAction("tools_unbox");
   action->setText(i18n("Re&move Box"));
-  connect(action, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT(slotRemoveBox()));
+  connect(action, SIGNAL(triggered(bool) ), v_iew->editor(), SLOT(slotRemoveBox()));
 
   QAction *undoRewrap = actionCollection()->addAction("tools_undoRewrap");
   undoRewrap->setText(i18n("Get &Original Text (not re-wrapped)"));
@@ -355,16 +344,16 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   QAction *rot13 = actionCollection()->addAction("tools_rot13");
   rot13->setIcon(KIcon("document-encrypt"));
   rot13->setText(i18n("S&cramble (Rot 13)"));
-  connect(rot13, SIGNAL(triggered(bool)), v_iew->e_dit, SLOT(slotRot13()));
+  connect(rot13, SIGNAL(triggered(bool)), v_iew->editor(), SLOT(slotRot13()));
   rot13->setEnabled(false);
-  connect(v_iew->e_dit, SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
+  connect(v_iew->editor(), SIGNAL(copyAvailable(bool)), rot13, SLOT(setEnabled(bool)));
 
   a_ctExternalEditor = actionCollection()->addAction("external_editor");
   a_ctExternalEditor->setIcon(KIcon("system-run"));
   a_ctExternalEditor->setText(i18n("Start &External Editor"));
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
-  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(checkSpelling()), actionCollection());
+  a_ctSpellCheck = KStandardAction::spelling ( v_iew->editor(), SLOT(checkSpelling()), actionCollection());
 
   //settings menu
   createStandardStatusBarAction();
@@ -381,57 +370,18 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   //---------------------------------- </Actions> ----------------------------------------
 
-
-  //attachment popup
-  a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new QMenu();
-  slotAttachmentSelected(0);
-
   //init
   initData(text);
 
   //apply configuration
   setConfig(false);
 
-  if (firstEdit) {   // now we place the cursor at the end of the quoted text / below the attribution line
-    if ( knGlobals.settings()->cursorOnTop() ) {
-      int numLines = knGlobals.settings()->intro().count( "%L" );
-      //Laurent fix me
-      //v_iew->e_dit->setCursorPosition(numLines+1,0);
-    }
-    else
-    {
-     //Laurent fixme
-     //v_iew->e_dit->setCursorPosition(v_iew->e_dit->numLines()-1,0);
-     }
-  } else
-  {
-    //Laurent fixme
-     //v_iew->e_dit->setCursorPosition(0,0);
-  }
-  v_iew->e_dit->setFocus();
-
-  if (v_iew->s_ubject->text().length() == 0) {
-    v_iew->s_ubject->setFocus();
-  }
-
-  if (v_iew->g_roups->text().length() == 0 && m_ode == news) {
-    v_iew->g_roups->setFocus();
-  }
-
-  if (v_iew->t_o->text().length() == 0 && m_ode == mail) {
-    v_iew->t_o->setFocus();
-  }
-
-  if( firstEdit && knGlobals.settings()->appendOwnSignature() )
-    slotAppendSig();
-
   if (createCopy && (m_ode==news)) {
     a_ctDoMail->setChecked(true);
     slotToggleDoMail();
   }
 
-  v_iew->e_dit->document()->setModified(false);
+  v_iew->completeSetup( firstEdit, m_ode );
 
   // restore window & toolbar configuration
   resize(535,450);    // default optimized for 800x600
@@ -445,7 +395,6 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
 KNComposer::~KNComposer()
 {
-  delete mSpellingFilter;
   // prevent slotEditorFinished from being called
   if (e_xternalEditor)
     e_xternalEditor->disconnect();
@@ -453,15 +402,10 @@ KNComposer::~KNComposer()
 
   delete e_ditorTempfile;
 
-  for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
-    delete (*it);
-
   saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 
   KNGlobals::self()->settings()->setAutoSpellChecking( a_ctAutoSpellChecking->isChecked() );
   KNGlobals::self()->settings()->writeConfig();
-
-  qDeleteAll( m_listAction );
 }
 
 void KNComposer::slotUpdateCheckSpellChecking(bool _b)
@@ -469,30 +413,6 @@ void KNComposer::slotUpdateCheckSpellChecking(bool _b)
   a_ctAutoSpellChecking->setChecked(_b);
 }
 
-int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
-{
-    createGUI("kncomposerui.rc");
-    unplugActionList("spell_result" );
-    qDeleteAll( m_listAction );
-    m_listAction.clear();
-    if ( !lst.contains( selectWord ) )
-    {
-        QStringList::ConstIterator it = lst.begin();
-        for ( ; it != lst.end() ; ++it )
-        {
-            if ( !(*it).isEmpty() ) // in case of removed subtypes or placeholders
-            {
-                KAction *act = new KAction( *it, 0 );
-                connect(act, SIGNAL(triggered(bool) ), v_iew->e_dit, SLOT( slotCorrectWord() ));
-
-                m_listAction.append( act );
-            }
-        }
-    }
-    if ( m_listAction.count()>0 )
-        plugActionList("spell_result", m_listAction );
-    return m_listAction.count();
-}
 
 void KNComposer::slotUndo()
 {
@@ -577,12 +497,7 @@ void KNComposer::setConfig(bool onlyFonts)
     a_ctPGPsign->setEnabled(pgp->usePGP());
   }
 
-  QFont fnt = knGlobals.settings()->composerFont();
-  v_iew->s_ubject->setFont(fnt);
-  v_iew->t_o->setFont(fnt);
-  v_iew->g_roups->setFont(fnt);
-  v_iew->f_up2->setFont(fnt);
-  v_iew->e_dit->setFontForWholeText(fnt);
+  v_iew->setComposingFont( knGlobals.settings()->composerFont() );
 
   slotUpdateStatusBar();
 }
@@ -596,19 +511,19 @@ void KNComposer::setMessageMode(MessageMode mode)
   v_iew->setMessageMode(m_ode);
   //Laurent fixme
 #if 0
-  QString s = v_iew->e_dit->document ()->begin()->text ();
+  QString s = v_iew->editor()->document ()->begin()->text ();
   if (m_ode == news_mail) {
     if (!s.contains(i18n("<posted & mailed>"))) {
-      QTextCursor cursor(v_iew->e_dit->document ()->begin());
+      QTextCursor cursor(v_iew->editor()->document ()->begin());
       cursor.setPosition(0);
       cursor.insertText(i18n("<posted & mailed>\n\n"));
-      v_iew->e_dit->setTextCursor(cursor);
+      v_iew->editor()->setTextCursor(cursor);
       }
   } else {
     if (s == i18n("<posted & mailed>")) {
-      v_iew->e_dit->removeLine(0);
-      if (v_iew->e_dit->textLine(0).isEmpty())
-        v_iew->e_dit->removeLine(0);
+      v_iew->editor()->removeLine(0);
+      if (v_iew->editor()->textLine(0).isEmpty())
+        v_iew->editor()->removeLine(0);
     }
   }
 #endif
@@ -622,23 +537,25 @@ bool KNComposer::hasValidData()
   n_eeds8Bit=false;
 
   // header checks
+  if ( KPIMUtils::isValidAddress( v_iew->from() ) != KPIMUtils::AddressOk ) {
+    KMessageBox::sorry( this, i18n( "Your email address does not appears to be valid. Please modify it." ) );
+    return false;
+  }
 
-  if (v_iew->s_ubject->text().isEmpty()) {
+  if ( v_iew->subject().isEmpty() ) {
     KMessageBox::sorry(this, i18n("Please enter a subject."));
     return false;
   }
-  if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->s_ubject->text()))
+  if ( !n_eeds8Bit && !KMime::isUsAscii( v_iew->subject() ) ) {
     n_eeds8Bit=true;
+  }
 
   if (m_ode != mail) {
-    if (v_iew->g_roups->text().isEmpty()) {
+    int groupCount = v_iew->groups().count();
+    if ( groupCount == 0 ) {
       KMessageBox::sorry(this, i18n("Please enter a newsgroup."));
       return false;
     }
-
-    int groupCount = v_iew->g_roups->text().split(',', QString::SkipEmptyParts).count();
-    int fupCount = v_iew->f_up2->currentText().split(',', QString::SkipEmptyParts).count();
-    bool followUp = !v_iew->f_up2->currentText().isEmpty();
 
     if (groupCount>12) {
       KMessageBox::sorry(this, i18n("You are crossposting to more than 12 newsgroups.\nPlease remove all newsgroups in which your article is off-topic."));
@@ -650,7 +567,8 @@ bool KNComposer::hasValidData()
             QString(), KGuiItem(i18n("&Send")), KGuiItem(i18nc("edit article","&Edit")) ) != KMessageBox::Yes )
         return false;
 
-    if ( !followUp && groupCount > 2 ) {
+    int fupCount = v_iew->followupTo().count();
+    if ( fupCount == 0 && groupCount > 2 ) {
       if ( KMessageBox::warningYesNo( this,
            i18n("You are crossposting to more than two newsgroups.\n"
                 "Please use the \"Followup-To\" header to direct the replies "
@@ -673,12 +591,13 @@ bool KNComposer::hasValidData()
   }
 
   if (m_ode != news) {
-    if (v_iew->t_o->text().isEmpty() ) {
+    if ( v_iew->emailRecipient().isEmpty() ) {
       KMessageBox::sorry(this, i18n("Please enter the email address."));
       return false;
     }
-    if (!n_eeds8Bit && !KMime::isUsAscii(v_iew->t_o->text()))
+    if ( !n_eeds8Bit && !KMime::isUsAscii( v_iew->emailRecipient() ) ) {
       n_eeds8Bit=true;
+    }
   }
 
   //GNKSA body checks
@@ -689,7 +608,7 @@ bool KNComposer::hasValidData()
   int sigLength = 0;
   int notQuoted = 0;
   int textLines = 0;
-  QStringList text = v_iew->e_dit->toWrappedPlainText().split('\n');
+  QStringList text = v_iew->editor()->toWrappedPlainText().split('\n');
 
   for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
 
@@ -768,16 +687,17 @@ bool KNComposer::hasValidData()
   // check if article can be signed
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
-    QByteArray signingKey = knGlobals.configManager()->identity()->signingKey().toLatin1();
+    QByteArray signingKey = KNGlobals::self()->settings()->identity().pgpSigningKey();
     KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
       if ( !grps->isEmpty() ) {
         KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
-        if (grp && grp->identity())
-          signingKey = grp->identity()->signingKey().toLatin1();
-        else if (acc->identity())
-          signingKey = acc->identity()->signingKey().toLatin1();
+        if ( grp && !grp->identity().isNull() ) {
+          signingKey = grp->identity().pgpSigningKey();
+        } else if ( !acc->identity().isNull() ) {
+          signingKey = acc->identity().pgpSigningKey();
+        }
       }
     }
 
@@ -806,17 +726,56 @@ bool KNComposer::hasValidData()
 bool KNComposer::applyChanges()
 {
   KMime::Content *text=0;
-  KNAttachment *a=0;
+  bool result = true; // no error occurs ?
+
+
+  // Identity (for later edition)
+  const KPIMIdentities::Identity identity = KNGlobals::self()->identityManager()->identityForUoid( v_iew->selectedIdentity() );
+  if ( !identity.isNull() ) {
+    KMime::Headers::Generic *xKnodeIdentity = new KMime::Headers::Generic( "X-KNode-Identity",
+                                                                          a_rticle,
+                                                                          QByteArray::number( identity.uoid() ) );
+    a_rticle->setHeader( xKnodeIdentity );
+  }
+
+  //From
+  if ( KPIMUtils::isValidAddress( v_iew->from() ) != KPIMUtils::AddressOk ) {
+    result = false;
+  }
+  // FIXME: if v_iew->from() is not valid, the following call is a
+  // no-op: the content of the from keeps its previous value! (thanks KMime)
+  a_rticle->from()->fromUnicodeString( v_iew->from(), mCharset.toLatin1() );
+
+  //Reply-To
+  if ( KPIMUtils::isValidAddress( identity.replyToAddr() ) == KPIMUtils::AddressOk ) {
+    a_rticle->replyTo()->fromUnicodeString( identity.replyToAddr(), mCharset.toLatin1() );
+  } else {
+    a_rticle->removeHeader( "Reply-To" );
+  }
+
+  //Mail-Copies-To
+  if ( !identity.property( "Mail-Copies-To" ).toString().trimmed().isEmpty() ) {
+    a_rticle->mailCopiesTo()->fromUnicodeString( identity.property( "Mail-Copies-To" ).toString(), mCharset.toLatin1() );
+  } else {
+    a_rticle->removeHeader( "Mail-Copies-To" );
+  }
+
+  //Organization
+  if ( !identity.organization().trimmed().isEmpty() ) {
+    a_rticle->organization()->fromUnicodeString( identity.organization(), mCharset.toLatin1() );
+  } else {
+    a_rticle->removeHeader( "Organization" );
+  }
 
   //Date
   a_rticle->date()->setDateTime( KDateTime::currentLocalDateTime() );    //set current date+time
 
   //Subject
-  a_rticle->subject()->fromUnicodeString( v_iew->s_ubject->text(), mCharset.toLatin1() );
+  a_rticle->subject()->fromUnicodeString( v_iew->subject(), mCharset.toLatin1() );
 
   //Newsgroups
   if (m_ode != mail) {
-    a_rticle->newsgroups()->fromUnicodeString(v_iew->g_roups->text().remove(QRegExp("\\s")), KMime::Headers::Latin1);
+    a_rticle->newsgroups()->fromUnicodeString( v_iew->groups().join( QString( ',' ) ), KMime::Headers::Latin1 );
     a_rticle->setDoPost(true);
   } else {
     a_rticle->setDoPost(false);
@@ -825,7 +784,7 @@ bool KNComposer::applyChanges()
 
   //To
   if (m_ode != news) {
-    a_rticle->to()->fromUnicodeString( v_iew->t_o->text(), mCharset.toLatin1() );
+    a_rticle->to()->fromUnicodeString( v_iew->emailRecipient(), mCharset.toLatin1() );
     a_rticle->setDoMail(true);
   } else {
     a_rticle->setDoMail(false);
@@ -834,27 +793,27 @@ bool KNComposer::applyChanges()
   }
 
   //Followup-To
-  if( a_rticle->doPost() && !v_iew->f_up2->currentText().isEmpty())
-    a_rticle->followUpTo()->fromUnicodeString(v_iew->f_up2->currentText(), KMime::Headers::Latin1);
-  else
+  if ( a_rticle->doPost() && !v_iew->followupTo().isEmpty() ) {
+    a_rticle->followUpTo()->fromUnicodeString( v_iew->followupTo().join( QString( ',' ) ), KMime::Headers::Latin1 );
+  } else {
     a_rticle->removeHeader("Followup-To");
+  }
 
-  if(a_ttChanged && (v_iew->a_ttView)) {
 
-    Q3ListViewItemIterator it(v_iew->a_ttView);
-    while(it.current()) {
-      a=(static_cast<AttachmentViewItem*> (it.current()))->attachment;
+  // Attachments
+  if ( a_ttChanged ) {
+    const QList<KNAttachment::Ptr> l = v_iew->attachments();
+    foreach ( const KNAttachment::Ptr a, l ) {
       if(a->hasChanged()) {
         if(a->isAttached())
           a->updateContentInfo();
         else
           a->attach(a_rticle);
       }
-      ++it;
     }
   }
 
-  for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
+  for ( QList<KNAttachment::Ptr>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     if ( (*it)->isAttached() )
       (*it)->detach( a_rticle );
 
@@ -893,24 +852,11 @@ bool KNComposer::applyChanges()
     }
   }
 
-  QString tmp = v_iew->e_dit->toWrappedPlainText();
+  QString tmp = v_iew->editor()->toWrappedPlainText();
 
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
-      // first get the signing key
-      QByteArray signingKey = knGlobals.configManager()->identity()->signingKey().toLatin1();
-      KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
-      if ( acc ) {
-          KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
-          if ( !grps->isEmpty() ) {
-            KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
-            if (grp && grp->identity())
-              signingKey = grp->identity()->signingKey().toLatin1();
-            else if (acc->identity())
-              signingKey = acc->identity()->signingKey().toLatin1();
-          }
-      }
-      // now try to sign the article
+      QByteArray signingKey = identity.pgpSigningKey();
       if (!signingKey.isEmpty()) {
           QString tmpText = tmp;
           Kpgp::Block block;
@@ -925,7 +871,7 @@ bool KNComposer::applyChanges()
               QByteArray result = block.text();
               tmp = codec->toUnicode(result.data(), result.length() );
           } else {
-              return false;
+              result = false;
           }
       }
   }
@@ -937,7 +883,8 @@ bool KNComposer::applyChanges()
 
   a_rticle->assemble();
   a_rticle->updateListItem();
-  return true;
+
+  return result;
 }
 
 void KNComposer::setCharset( const QString &charset )
@@ -949,7 +896,7 @@ void KNComposer::setCharset( const QString &charset )
 
 void KNComposer::closeEvent(QCloseEvent *e)
 {
-  if(!v_iew->e_dit->document()->isModified() && !a_ttChanged) {  // nothing to save, don't show nag screen
+  if(!v_iew->editor()->document()->isModified() && !a_ttChanged) {  // nothing to save, don't show nag screen
     if(a_rticle->id()==-1)
       r_esult=CRdel;
     else
@@ -979,28 +926,48 @@ void KNComposer::closeEvent(QCloseEvent *e)
 
 void KNComposer::initData(const QString &text)
 {
+  // Identity
+  KPIMIdentities::IdentityManager *idManager = KNGlobals::self()->identityManager();
+  KPIMIdentities::Identity identity = idManager->defaultIdentity();
+  KMime::Headers::Base* xKnodeIdentity = a_rticle->headerByType( "X-KNode-Identity" );
+  if ( xKnodeIdentity && !xKnodeIdentity->isEmpty() ) {
+    uint uoid = xKnodeIdentity->asUnicodeString().toUInt();
+    // Note: this ensure the identity exists even if it was removed
+    identity = idManager->identityForUoidOrDefault( uoid );
+  }
+  v_iew->setIdentity( identity.uoid() );
+
+  //From
+  KMime::Headers::From *from = a_rticle->from( false );
+  if ( from  ) {
+    v_iew->setFrom( from->asUnicodeString() );
+  } else {
+    v_iew->setFrom( identity.fullEmailAddr() );
+  }
+
   //Subject
   if(a_rticle->subject()->isEmpty())
     slotSubjectChanged( QString() );
   else
-    v_iew->s_ubject->setText(a_rticle->subject()->asUnicodeString());
+    v_iew->setSubject( a_rticle->subject()->asUnicodeString() );
 
   //Newsgroups
   KMime::Headers::Newsgroups *hNewsgroup = a_rticle->newsgroups( false );
   if ( hNewsgroup && !hNewsgroup->isEmpty() ) {
-    v_iew->g_roups->setText( hNewsgroup->asUnicodeString());
+    v_iew->setGroups( hNewsgroup->asUnicodeString() );
   }
 
   //To
   KMime::Headers::To *hTo = a_rticle->to( false );
   if ( hTo && !hTo->isEmpty() ) {
-    v_iew->t_o->setText( hTo->asUnicodeString() );
+    v_iew->setEmailRecipient( hTo->asUnicodeString() );
   }
 
   //Followup-To
   KMime::Headers::FollowUpTo *fup2=a_rticle->followUpTo(false);
-  if(fup2 && !fup2->isEmpty())
-    v_iew->f_up2->lineEdit()->setText(fup2->asUnicodeString());
+  if( fup2 && !fup2->isEmpty() ) {
+    v_iew->setFollowupTo( fup2->asUnicodeString() );
+  }
 
   KMime::Content *textContent=a_rticle->textContent();
   QString s;
@@ -1011,7 +978,7 @@ void KNComposer::initData(const QString &text)
   } else
     s = text;
 
-  v_iew->e_dit->setText(s);
+  v_iew->editor()->setText(s);
 
   // initialize the charset select action
   if(textContent) {
@@ -1035,10 +1002,10 @@ void KNComposer::initData(const QString &text)
 
   if(a_rticle->contentType()->isMultipart()) {
     v_iew->showAttachmentView();
-    KMime::Content::List attList = a_rticle->attachments();
-    AttachmentViewItem *item=0;
-    foreach ( KMime::Content *c, attList )
-      item=new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(c));
+    const KMime::Content::List attList = a_rticle->attachments();
+    foreach ( KMime::Content *c, attList ) {
+      v_iew->addAttachment( KNAttachment::Ptr( new KNAttachment( c ) ) );
+    }
   }
 }
 
@@ -1056,8 +1023,8 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
   if (box)
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
   //Laurent fixme
-  if (box && (v_iew->e_dit->wordWrapMode()!=QTextOption::NoWrap)) {
-    int wrapAt = v_iew->e_dit->lineWrapColumnOrWidth();
+  if (box && (v_iew->editor()->wordWrapMode()!=QTextOption::NoWrap)) {
+    int wrapAt = v_iew->editor()->lineWrapColumnOrWidth();
     QStringList lst;
     QString line;
     while(!ts.atEnd()) {
@@ -1080,9 +1047,9 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     temp += QString::fromLatin1("`----");
 
   if(clear)
-    v_iew->e_dit->setText(temp);
+    v_iew->editor()->setText(temp);
   else
-    v_iew->e_dit->insertPlainText(temp);
+    v_iew->editor()->insertPlainText(temp);
 }
 
 
@@ -1112,8 +1079,9 @@ void KNComposer::insertFile(bool clear, bool box)
 
 void KNComposer::addRecentAddress()
 {
-    if( !v_iew->t_o->isHidden() )
-        RecentAddresses::self(knGlobals.config())->add( v_iew->t_o->text() );
+  if ( m_ode == mail || m_ode == news_mail ) {
+    RecentAddresses::self( knGlobals.config() )->add( v_iew->emailRecipient() );
+  }
 }
 
 void KNComposer::slotSendNow()
@@ -1147,13 +1115,6 @@ void KNComposer::slotArtDelete()
 }
 
 
-void KNComposer::slotAppendSig()
-{
-  KPIMIdentities::Signature::insertPlainSignatureIntoTextEdit( s_ignature, v_iew->e_dit,
-      KPIMIdentities::Signature::End, false );
-}
-
-
 void KNComposer::slotInsertFile()
 {
   insertFile(false,false);
@@ -1170,11 +1131,11 @@ void KNComposer::slotAttachFile()
   KNLoadHelper *helper = new KNLoadHelper(this);
 
   if (helper->getFile(i18n("Attach File"))) {
-   if (!v_iew->v_iewOpen) {
+   if ( !v_iew->isAttachmentViewVisible() ) {
       KNHelper::saveWindowSize("composer", size());
       v_iew->showAttachmentView();
     }
-    (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
+    v_iew->addAttachment( KNAttachment::Ptr( new KNAttachment( helper ) ) );
     a_ttChanged=true;
   } else {
     delete helper;
@@ -1182,44 +1143,29 @@ void KNComposer::slotAttachFile()
 }
 
 
-void KNComposer::slotRemoveAttachment()
+void KNComposer::slotAttachmentRemoved( KNAttachment::Ptr attachment, bool last )
 {
-  if(!v_iew->v_iewOpen) return;
-
-  if(v_iew->a_ttView->currentItem()) {
-    AttachmentViewItem *it=static_cast<AttachmentViewItem*>(v_iew->a_ttView->currentItem());
-    if(it->attachment->isAttached()) {
-      mDeletedAttachments.append( it->attachment );
-      it->attachment=0;
-    }
-    delete it;
-
-    if(v_iew->a_ttView->childCount()==0) {
-      KNHelper::saveWindowSize("composerAtt", size());
-      v_iew->hideAttachmentView();
-    }
-
-    a_ttChanged=true;
+   if( !attachment ) {
+    return;
   }
+
+  if ( attachment->isAttached() ) {
+    mDeletedAttachments.append( attachment );
+  }
+
+  if ( last ) {
+    KNHelper::saveWindowSize( "composerAtt", size() );
+    v_iew->hideAttachmentView();
+  }
+
+  a_ttChanged = true;
 }
 
-void KNComposer::slotAttachmentProperties()
+void KNComposer::slotAttachmentChanged()
 {
-  if(!v_iew->v_iewOpen) return;
-
-  if(v_iew->a_ttView->currentItem()) {
-    AttachmentViewItem *it=static_cast<AttachmentViewItem*>(v_iew->a_ttView->currentItem());
-    AttachmentPropertiesDlg *d=new AttachmentPropertiesDlg(it->attachment, this);
-    if(d->exec()) {
-      d->apply();
-      it->setText(1, it->attachment->mimeType());
-      it->setText(3, it->attachment->description());
-      it->setText(4, it->attachment->encoding());
-    }
-    delete d;
-    a_ttChanged=true;
-  }
+  a_ttChanged = true;
 }
+
 
 
 void KNComposer::slotToggleDoPost()
@@ -1255,17 +1201,17 @@ void KNComposer::slotToggleDoMail()
 //Laurent fix me
 #if 0
     if ( knGlobals.settings()->useExternalMailer() ) {
-      QString s = v_iew->e_dit->textLine(0);
+      QString s = v_iew->editor()->textLine(0);
       if (!s.contains(i18n("<posted & mailed>")))
-        v_iew->e_dit->insertAt(i18n("<posted & mailed>\n\n"),0,0);
+        v_iew->editor()->insertAt(i18n("<posted & mailed>\n\n"),0,0);
       QString tmp;
-      QStringList textLines = v_iew->e_dit->processedText();
+      QStringList textLines = v_iew->editor()->processedText();
       for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it) {
         if (*it == "-- ")   // try to be smart, don't include the signature,
           break;            // kmail will append one, too.
         tmp+=*it+'\n';
       }
-      knGlobals.artFactory->sendMailExternal(v_iew->t_o->text(), v_iew->s_ubject->text(), tmp);
+      knGlobals.artFactory->sendMailExternal( v_iew->t_o->text(), v_iew->subject(), tmp );
       a_ctDoMail->setChecked(false); //revert
       return;
     } else {
@@ -1311,22 +1257,22 @@ void KNComposer::slotSetCharsetKeyboard()
 void KNComposer::slotToggleWordWrap()
 {
   if ( a_ctWordWrap->isChecked() )
-    v_iew->e_dit->enableWordWrap( knGlobals.settings()->maxLineLength() );
+    v_iew->editor()->enableWordWrap( knGlobals.settings()->maxLineLength() );
   else
-    v_iew->e_dit->disableWordWrap();
+    v_iew->editor()->disableWordWrap();
 }
 
 void KNComposer::slotAutoSpellCheckingToggled()
 {
-  v_iew->e_dit->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
+  v_iew->editor()->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
 }
 
 
 void KNComposer::slotUndoRewrap()
 {
   if (KMessageBox::warningContinueCancel( this, i18n("This will replace all text you have written.")) == KMessageBox::Continue) {
-    v_iew->e_dit->setText(u_nwraped);
-    slotAppendSig();
+    v_iew->editor()->setText(u_nwraped);
+    v_iew->appendSignature();
   }
 }
 
@@ -1357,7 +1303,7 @@ void KNComposer::slotExternalEditor()
   bool ok=true;
   QTextCodec *codec=KGlobal::charsets()->codecForName( mCharset, ok );
 
-  QString tmp = v_iew->e_dit->toWrappedPlainText();
+  QString tmp = v_iew->editor()->toWrappedPlainText();
 
   QByteArray local = codec->fromUnicode(tmp);
   e_ditorTempfile->write(local.data(),local.length());
@@ -1412,7 +1358,7 @@ void KNComposer::slotUpdateStatusBar()
     default  :  typeDesc = i18n("News Article & Email");
   }
   QString overwriteDesc;
-  if (v_iew->e_dit->overwriteMode ())
+  if (v_iew->editor()->overwriteMode ())
     overwriteDesc = i18n(" OVR ");
   else
     overwriteDesc = i18n(" INS ");
@@ -1420,15 +1366,15 @@ void KNComposer::slotUpdateStatusBar()
   statusBar()->changeItem(i18n(" Type: %1 ", typeDesc), 1);
   statusBar()->changeItem(i18n(" Charset: %1 ", mCharset ), 2);
   statusBar()->changeItem(overwriteDesc, 3);
-  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->editor()->columnNumber () + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->editor()->linePosition() + 1), 5);
 }
 
 
 void KNComposer::slotUpdateCursorPos()
 {
-  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
-  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
+  statusBar()->changeItem(i18n(" Column: %1 ", v_iew->editor()->columnNumber () + 1), 4);
+  statusBar()->changeItem(i18n(" Line: %1 ", v_iew->editor()->linePosition() + 1), 5);
 }
 
 
@@ -1450,9 +1396,6 @@ void KNComposer::slotNewToolbarConfig()
 {
   createGUI("kncomposerui.rc");
 
-  a_ttPopup=static_cast<QMenu*> (factory()->container("attachment_popup", this));
-  if(!a_ttPopup) a_ttPopup = new QMenu();
-
   applyMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
 }
 
@@ -1466,7 +1409,7 @@ void KNComposer::slotSubjectChanged(const QString &t)
   subject.replace( '\n', ' ' );
   subject.replace( '\r', ' ' );
   if ( subject != t ) // setText() sets the cursor to the end
-    v_iew->s_ubject->setText( subject );
+    v_iew->setSubject( subject );
   // update caption
   if( !subject.isEmpty() )
     setCaption( subject );
@@ -1475,28 +1418,11 @@ void KNComposer::slotSubjectChanged(const QString &t)
 }
 
 
-void KNComposer::slotGroupsChanged(const QString &t)
-{
-  QString currText=v_iew->f_up2->currentText();
-
-  v_iew->f_up2->clear();
-
-  QStringList groups = t.split(',');
-  foreach ( const QString &s, groups ) {
-    v_iew->f_up2->addItem( s );
-  }
-  v_iew->f_up2->addItem("");
-
-  if ( !currText.isEmpty() || !mFirstEdit ) // user might have cleared fup2 intentionally during last edit
-    v_iew->f_up2->lineEdit()->setText(currText);
-}
-
-
 void KNComposer::slotToBtnClicked()
 {
   AddressesDialog dlg( this );
   QString txt;
-  QString to = v_iew->t_o->text();
+  QString to = v_iew->emailRecipient();
   dlg.setShowBCC(false);
   dlg.setShowCC(false);
 #if 0
@@ -1516,8 +1442,7 @@ void KNComposer::slotToBtnClicked()
       to+=", ";
   to+=dlg.to().join(", ");
 
-  v_iew->t_o->setText(to);
-
+  v_iew->setEmailRecipient( to );
 }
 
 
@@ -1534,14 +1459,14 @@ void KNComposer::slotGroupsBtnClicked()
 
   if(!nntp) {
     KMessageBox::error(this, i18n("You have no valid news accounts configured."));
-    v_iew->g_roups->clear();
+    v_iew->setGroups( QString() );
     return;
   }
 
   if(id==-1)
     a_rticle->setServerId(nntp->id());
 
-  KNGroupSelectDialog *dlg=new KNGroupSelectDialog(this, nntp, v_iew->g_roups->text().remove(QRegExp("\\s")));
+  KNGroupSelectDialog *dlg = new KNGroupSelectDialog( this, nntp, v_iew->groups() );
 
   connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
     knGlobals.groupManager(), SLOT(slotLoadGroupList(KNNntpAccount*)));
@@ -1549,11 +1474,10 @@ void KNComposer::slotGroupsBtnClicked()
     dlg, SLOT(slotReceiveList(KNGroupListData*)));
 
   if(dlg->exec())
-    v_iew->g_roups->setText(dlg->selectedGroups());
+    v_iew->setGroups( dlg->selectedGroups() );
 
   delete dlg;
 }
-
 
 void KNComposer::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
 {
@@ -1582,151 +1506,35 @@ void KNComposer::slotCancelEditor()
 }
 
 
-void KNComposer::slotAttachmentPopup(K3ListView*, Q3ListViewItem *it, const QPoint &p)
+void KNComposer::slotAttachmentPopup( const QPoint &point )
 {
-  if(it)
-    a_ttPopup->popup(p);
-}
-
-
-void KNComposer::slotAttachmentSelected(Q3ListViewItem *it)
-{
-  if(v_iew->a_ttWidget) {
-    v_iew->a_ttRemoveBtn->setEnabled((it!=0));
-    v_iew->a_ttEditBtn->setEnabled((it!=0));
+  QMenu *menu = static_cast<QMenu*>( factory()->container( "attachment_popup", this ) );
+  if ( menu ) {
+    menu->popup( point );
   }
 }
 
-
-void KNComposer::slotAttachmentEdit(Q3ListViewItem *)
+void KNComposer::dragEnterEvent( QDragEnterEvent *event )
 {
-  slotAttachmentProperties();
-}
-
-
-void KNComposer::slotAttachmentRemove(Q3ListViewItem *)
-{
-  slotRemoveAttachment();
-}
-
-
-//==============================================================================
-// spellchecking code copied form kedit (Bernd Johannes Wuebben)
-//==============================================================================
-#if 0
-
-void KNComposer::slotSpellStarted( K3Spell *)
-{
-    if( !spellLineEdit )
-    {
-        v_iew->e_dit->spellcheck_start();
-        s_pellChecker->setProgressResolution(2);
-
-        // read the quote indicator from the preferences
-        KConfigGroup config( knGlobals.config(), "READNEWS" );
-        QString quotePrefix;
-        quotePrefix = config.readEntry("quoteCharacters",">");
-//todo fixme
-//quotePrefix = mComposer->msg()->formatString(quotePrefix);
-
-        kDebug(5003) <<"spelling: new SpellingFilter with prefix=\"" << quotePrefix <<"\"";
-        mSpellingFilter = new SpellingFilter(v_iew->e_dit->text(), quotePrefix, SpellingFilter::FilterUrls,
-                                             SpellingFilter::FilterEmailAddresses);
-
-        s_pellChecker->check(mSpellingFilter->filteredText());
-    }
-    else
-        s_pellChecker->check( v_iew->s_ubject->text());
-}
-
-void KNComposer::slotSpellDone(const QString &newtext)
-{
-    a_ctExternalEditor->setEnabled(true);
-    a_ctSpellCheck->setEnabled(true);
-    if ( !spellLineEdit )
-        v_iew->e_dit->spellcheck_stop();
-
-    int dlgResult = s_pellChecker->dlgResult();
-    if ( dlgResult == KS_CANCEL )
-    {
-        if( spellLineEdit)
-        {
-            //stop spell check
-            spellLineEdit = false;
-            QString tmpText( newtext);
-            tmpText =  tmpText.remove('\n');
-
-            if( tmpText != v_iew->s_ubject->text() )
-                v_iew->s_ubject->setText( tmpText );
-        }
-        else
-        {
-            kDebug(5003) <<"spelling: canceled - restoring text from SpellingFilter";
-            kDebug(5003)<<" mSpellingFilter->originalText() :"<<mSpellingFilter->originalText();
-            v_iew->e_dit->setText(mSpellingFilter->originalText());
-
-            //v_iew->e_dit->setModified(mWasModifiedBeforeSpellCheck);
-        }
-    }
-    s_pellChecker->cleanUp();
-    K3DictSpellingHighlighter::dictionaryChanged();
-}
-
-
-void KNComposer::slotSpellFinished()
-{
-  a_ctExternalEditor->setEnabled(true);
-  a_ctSpellCheck->setEnabled(true);
-  K3Spell::spellStatus status=s_pellChecker->status();
-  delete s_pellChecker;
-  s_pellChecker=0;
-
-  kDebug(5003) <<"spelling: delete SpellingFilter";
-  delete mSpellingFilter;
-  mSpellingFilter = 0;
-
-  if(status==K3Spell::Error) {
-    KMessageBox::error(this, i18n("ISpell could not be started.\n"
-    "Please make sure you have ISpell properly configured and in your PATH."));
-  }
-  else if(status==K3Spell::Crashed) {
-    v_iew->e_dit->spellcheck_stop();
-    KMessageBox::error(this, i18n("ISpell seems to have crashed."));
-  }
-  else
-  {
-      if( spellLineEdit )
-          slotSpellcheck();
-      else if( status == K3Spell::FinishedNoMisspellingsEncountered )
-          KMessageBox::information( this, i18n("No misspellings encountered."));
+  if ( KUrl::List::canDecode( event->mimeData() ) ) {
+    event->setDropAction( Qt::CopyAction );
+    event->accept();
   }
 }
-#endif
 
-void KNComposer::slotDragEnterEvent(QDragEnterEvent *ev)
+void KNComposer::dropEvent( QDropEvent *event )
 {
-  QStringList files;
-  ev->setAccepted( KUrl::List::canDecode( ev->mimeData() ) );
-}
+  KUrl::List urls = KUrl::List::fromMimeData( event->mimeData() );
 
-
-void KNComposer::slotDropEvent(QDropEvent *ev)
-{
-  KUrl::List urls = KUrl::List::fromMimeData( ev->mimeData() );
-
-  if ( urls.isEmpty() )
-    return;
-
-  for (KUrl::List::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it) {
-    const KUrl &url = *it;
+  foreach ( const KUrl &url, urls ) {
     KNLoadHelper *helper = new KNLoadHelper(this);
 
     if (helper->setURL(url)) {
-      if (!v_iew->v_iewOpen) {
+      if ( !v_iew->isAttachmentViewVisible() ) {
         KNHelper::saveWindowSize("composer", size());
         v_iew->showAttachmentView();
       }
-      (void) new AttachmentViewItem(v_iew->a_ttView, new KNAttachment(helper));
+      v_iew->addAttachment( KNAttachment::Ptr( new KNAttachment( helper ) ) );
       a_ttChanged=true;
     } else {
       delete helper;
@@ -1735,84 +1543,10 @@ void KNComposer::slotDropEvent(QDropEvent *ev)
 }
 
 
-void KNComposer::dragEnterEvent(QDragEnterEvent *ev)
-{
-  slotDragEnterEvent(ev);
-}
-
-
-void KNComposer::dropEvent(QDropEvent *ev)
-{
-  slotDropEvent(ev);
-}
-
-QMenu * KNComposer::popupMenu( const QString& name )
-{
-    Q_ASSERT(factory());
-    if ( factory() )
-        return ((QMenu*)factory()->container( name, this ));
-    return 0L;
-}
-
 //=====================================================================================
 
 
-KNComposer::AttachmentView::AttachmentView( QWidget *parent )
- : K3ListView( parent )
-{
-  setFrameStyle(QFrame::WinPanel | QFrame::Sunken);  // match the QMultiLineEdit style
-  addColumn(i18n("File"), 115);
-  addColumn(i18n("Type"), 91);
-  addColumn(i18n("Size"), 55);
-  addColumn(i18n("Description"), 110);
-  addColumn(i18n("Encoding"), 60);
-  header()->setClickEnabled(false);
-  setAllColumnsShowFocus(true);
-}
-
-
-KNComposer::AttachmentView::~AttachmentView()
-{
-}
-
-
-void KNComposer::AttachmentView::keyPressEvent(QKeyEvent *e)
-{
-  if(!e)
-    return; // subclass bug
-
-  if( (e->key()==Qt::Key_Delete) && (currentItem()) )
-    emit(delPressed(currentItem()));
-  else
-    K3ListView::keyPressEvent(e);
-}
-
-
-//=====================================================================================
-
-
-KNComposer::AttachmentViewItem::AttachmentViewItem(K3ListView *v, KNAttachment *a) :
-  K3ListViewItem(v), attachment(a)
-{
-  setText(0, a->name());
-  setText(1, a->mimeType());
-  setText(2, a->contentSize());
-  setText(3, a->description());
-  setText(4, a->encoding());
-}
-
-
-
-KNComposer::AttachmentViewItem::~AttachmentViewItem()
-{
-  delete attachment;
-}
-
-
-//=====================================================================================
-
-
-KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment *a, QWidget *parent ) :
+KNComposer::AttachmentPropertiesDlg::AttachmentPropertiesDlg( KNAttachment::Ptr a, QWidget *parent ) :
   KDialog( parent ), a_ttachment(a),
   n_onTextAsText(false)
 {
@@ -1914,6 +1648,9 @@ void KNComposer::AttachmentPropertiesDlg::accept()
        KMessageBox::warningContinueCancel(this,
        i18n("You have changed the mime-type of this non-textual attachment\nto text. This might cause an error while loading or encoding the file.\nProceed?")
        ) == KMessageBox::Cancel) return;
+
+  // update the attachment
+  apply();
 
   KDialog::accept();
 }

@@ -14,6 +14,7 @@
 
 #include "kngrouppropdlg.h"
 
+#include "configuration/identity_widget.h"
 #include "knconfigmanager.h"
 #include "knconfigwidgets.h"
 #include "knglobals.h"
@@ -162,7 +163,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
   pageL->addStretch(1);
 
   // Specific Identity tab =========================================
-  i_dWidget = new KNode::IdentityWidget( g_rp->identity(), knGlobals.componentData(), this );
+  i_dWidget = new KNode::IdentityWidget( g_rp, knGlobals.componentData(), this );
   addPage( i_dWidget, i18nc( "@title:tab", "Identity" ) );
 
   // per server cleanup configuration

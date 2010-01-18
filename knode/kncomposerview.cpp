@@ -2,6 +2,7 @@
     KNode, the KDE newsreader
     Copyright (c) 1999-2007 the KNode authors.
     See file AUTHORS for details
+    Copyright (c) 2010 Olivier Trichet <nive@nivalis.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -11,131 +12,139 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
-#include <QFile>
-#include <QGridLayout>
-#include <klocale.h>
-#include <QPushButton>
-#include <kmeditor.h>
-#include <QVBoxLayout>
-#include <QGroupBox>
-#include <QHBoxLayout>
-#include <Q3Header>
-#include <KComboBox>
-#include <KTemporaryFile>
-#include <QApplication>
-#include "knglobals.h"
-#include "kncomposer.h"
-#include "kncomposereditor.h"
+
 #include "kncomposerview.h"
 
-//=====================================================================================
+#include "kncomposereditor.h"
+#include "knglobals.h"
+#include "settings.h"
+
+#include <KLocale>
+#include <KPIMIdentities/IdentityCombo>
+#include <KPIMIdentities/Identity>
+#include <KPIMIdentities/IdentityManager>
+#include <KPIMUtils/Email>
 
 
-KNComposer::ComposerView::ComposerView( KNComposer *composer )
-  : QSplitter( Qt::Vertical, composer ), a_ttWidget(0), a_ttView(0), v_iewOpen(false)
+namespace KNode {
+namespace Composer {
+
+
+View::View( KNComposer *composer )
+  : QSplitter( Qt::Vertical, composer ),
+    mAttachmentSetup( false )
 {
-  QWidget *main=new QWidget(this);
+  setupUi( this );
 
-  //headers
-  QFrame *hdrFrame=new QFrame(main);
-  hdrFrame->setFrameStyle(QFrame::Box | QFrame::Sunken);
-  QGridLayout *hdrL=new QGridLayout(hdrFrame);
-  hdrL->setSpacing(5);
-  hdrL->setMargin(7);
-  hdrL->setColumnStretch(1,1);
+  setChildrenCollapsible( false );
+  mAttachmentWidget->hide();
+
+  //From
+  mFromEdit->setView( this );
+  mFromEdit->enableCompletion( false );
+  mEdtList.append( mFromEdit );
+  showFrom( false );
 
   //To
-  t_o=new KNLineEdit(this, true, hdrFrame);
-  mEdtList.append(t_o);
-
-  l_to=new QLabel(i18n("T&o:"),hdrFrame);
-  l_to->setBuddy(t_o);
-  t_oBtn=new QPushButton(i18n("&Browse..."), hdrFrame);
-  hdrL->addWidget(l_to, 0,0);
-  hdrL->addWidget(t_o, 0,1);
-  hdrL->addWidget(t_oBtn, 0,2);
-  connect(t_oBtn, SIGNAL(clicked()), parent(), SLOT(slotToBtnClicked()));
+  mToEdit->setView( this );
+  mToEdit->enableCompletion( true );
+  mEdtList.append( mToEdit );
+  connect( mToButton, SIGNAL(clicked(bool)),
+           parent(), SLOT(slotToBtnClicked()) );
 
   //Newsgroups
-  g_roups=new KNLineEdit(this, false, hdrFrame);
-  mEdtList.append(g_roups);
-
-  l_groups=new QLabel(i18n("&Groups:"),hdrFrame);
-  l_groups->setBuddy(g_roups);
-  g_roupsBtn=new QPushButton(i18n("B&rowse..."), hdrFrame);
-  hdrL->addWidget(l_groups, 1,0);
-  hdrL->addWidget(g_roups, 1,1);
-  hdrL->addWidget(g_roupsBtn, 1,2);
-  connect(g_roups, SIGNAL(textChanged(const QString&)),
-          parent(), SLOT(slotGroupsChanged(const QString&)));
-  connect(g_roupsBtn, SIGNAL(clicked()), parent(), SLOT(slotGroupsBtnClicked()));
-
-  //Followup-To
-  f_up2=new KComboBox(true, hdrFrame);
-  l_fup2=new QLabel(i18n("Follo&wup-To:"),hdrFrame);
-  l_fup2->setBuddy(f_up2);
-  hdrL->addWidget(l_fup2, 2,0);
-  hdrL->addWidget(f_up2, 2, 1, 1,2);
+  mGroupsEdit->setView( this );
+  mGroupsEdit->enableCompletion( false );
+  mEdtList.append( mGroupsEdit );
+  connect( mGroupsEdit, SIGNAL( editingFinished() ),
+           this, SLOT( slotGroupsChanged() ) );
+  connect( mGroupsButton, SIGNAL(clicked()),
+           parent(), SLOT(slotGroupsBtnClicked()) );
 
   //subject
-  s_ubject=new KNLineEditSpell(this, false, hdrFrame);
-  mEdtList.append(s_ubject);
+  mSubjectEdit->setView( this );
+  mSubjectEdit->enableCompletion( false );
+  mEdtList.append( mSubjectEdit );
+  connect( mSubjectEdit, SIGNAL(textChanged(QString)),
+           parent(), SLOT(slotSubjectChanged(QString)) );
 
-  QLabel *l=new QLabel(i18n("S&ubject:"),hdrFrame);
-  l->setBuddy(s_ubject);
-  hdrL->addWidget(l, 3,0);
-  hdrL->addWidget(s_ubject, 3, 1, 1,2);
-  connect(s_ubject, SIGNAL(textChanged(const QString&)),
-          parent(), SLOT(slotSubjectChanged(const QString&)));
+  //Editors
+  mEditor->switchToPlainText();
+  mEditor->setMinimumHeight(50);
 
-  //Editor
-  e_dit=new KNComposerEditor(this);
-  e_dit->switchToPlainText();
-  e_dit->setMinimumHeight(50);
+  connect( mExternalKillSwitch, SIGNAL(clicked(bool)),
+           this, SIGNAL(closeExternalEditor()) );
+  hideExternalNotification();
+  mExternalKillSwitch->setIcon( KIcon( "application-exit" ) );
 
-  QVBoxLayout *notL=new QVBoxLayout(e_dit);
-  notL->addStretch(1);
-  n_otification=new QGroupBox(e_dit);
-  QHBoxLayout *v2 = new QHBoxLayout( n_otification );
-  l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
-  c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
-  v2->addWidget(l);
-  v2->addWidget(c_ancelEditorBtn);
-#ifdef __GNUC__
-#warning Port me?
-#endif
-//   n_otification->setFrameStyle(Q3Frame::Panel | Q3Frame::Raised);
-//   n_otification->setLineWidth(2);
-  n_otification->hide();
-  notL->addWidget(n_otification, 0, Qt::AlignHCenter);
-  notL->addStretch(1);
-
-  //finish GUI
-  QVBoxLayout *topL=new QVBoxLayout(main);
-  topL->setSpacing(4);
-  topL->setMargin(4);
-  topL->addWidget(hdrFrame);
-  topL->addWidget(e_dit, 1);
+  // Identities
+  connect( mIdentitySelector, SIGNAL(identityChanged(uint)),
+           this, SLOT(slotIdentityChanged(uint)) );
+  setIdentity( KNGlobals::self()->identityManager()->defaultIdentity().uoid() );
 }
 
 
-KNComposer::ComposerView::~ComposerView()
+View::~View()
 {
-  if(v_iewOpen) {
+  if ( mAttachmentsList->topLevelItemCount() > 0 ) { // The attachment view was visible
     KConfigGroup conf( knGlobals.config(), "POSTNEWS");
 
     conf.writeEntry("Att_Splitter",sizes());   // save splitter pos
 
     QList<int> lst;                        // save header sizes
-    Q3Header *h=a_ttView->header();
-    for (int i=0; i<5; i++)
+    QHeaderView *h = mAttachmentsList->header();
+    for ( int i = 0 ; i < h->count() ; ++i ) {
       lst << h->sectionSize(i);
+    }
     conf.writeEntry("Att_Headers",lst);
   }
 }
 
 
-void KNComposer::ComposerView::focusNextPrevEdit(const QWidget* aCur, bool aNext)
+void View::completeSetup( bool firstEdit, KNComposer::MessageMode mode )
+{
+  if ( firstEdit ) {
+    // now we place the cursor at the end of the quoted text / below the attribution line
+    if ( KNGlobals::self()->settings()->cursorOnTop() ) {
+      // FIXME: hack: counting the number of \n\n to catch end of introduction (see KNArticleFactory::createReply())
+      int dbleLfCount = KNGlobals::self()->settings()->intro().count( "%L%L" );
+      const QString text = mEditor->textOrHtml();
+      int pos = 0;
+      while ( dbleLfCount >= 0 ) {
+        pos = text.indexOf( QLatin1String( "\n\n" ), pos );
+        pos += 2;
+        --dbleLfCount;
+      }
+      mEditor->setCursorPositionFromStart( pos - 1 );
+    } else {
+      mEditor->setCursorPositionFromStart( mEditor->document()->characterCount() - 1 );
+    }
+
+    if ( knGlobals.settings()->appendOwnSignature() ) {
+      appendSignature();
+    }
+  } else {
+     mEditor->setCursorPositionFromStart( 0 );
+  }
+  mEditor->document()->setModified( false );
+
+  setMessageMode( mode );
+
+  // Focus
+  mEditor->setFocus();
+  if ( mSubjectEdit->text().length() == 0 ) {
+    mSubjectEdit->setFocus();
+  }
+  if ( mGroupsEdit->text().length() == 0 && mode == KNComposer::news ) {
+    mGroupsEdit->setFocus();
+  }
+  if ( mToEdit->text().length() == 0 && mode == KNComposer::mail ) {
+    mToEdit->setFocus();
+  }
+}
+
+
+void View::focusNextPrevEdit( const QWidget *aCur, bool aNext )
 {
   QList<QWidget*>::Iterator it;
 
@@ -163,86 +172,222 @@ void KNComposer::ComposerView::focusNextPrevEdit(const QWidget* aCur, bool aNext
     if ( (*it)->isVisible() )
       (*it)->setFocus();
   } else if ( aNext )
-    e_dit->setFocus();
+    mEditor->setFocus();
+}
+
+void View::setComposingFont( const QFont &font )
+{
+  mSubjectEdit->setFont( font );
+  mToEdit->setFont( font );
+  mGroupsEdit->setFont( font );
+  mFollowuptoEdit->setFont( font );
+  mEditor->setFontForWholeText( font );
 }
 
 
-void KNComposer::ComposerView::setMessageMode(KNComposer::MessageMode mode)
+void View::setMessageMode( KNComposer::MessageMode mode )
 {
-  if (mode != KNComposer::news) {
-    l_to->show();
-    t_o->show();
-    t_oBtn->show();
-  } else {
-    l_to->hide();
-    t_o->hide();
-    t_oBtn->hide();
-  }
-  if (mode != KNComposer::mail) {
-    l_groups->show();
-    l_fup2->show();
-    g_roups->show();
-    f_up2->show();
-    g_roupsBtn->show();
+  showTo( mode != KNComposer::news );
 
-  } else {
-    l_groups->hide();
-    l_fup2->hide();
-    g_roups->hide();
-    f_up2->hide();
-    g_roupsBtn->hide();
+  showGroups( mode != KNComposer::mail );
+  showFollowupto( mode != KNComposer::mail );
+}
+
+
+uint View::selectedIdentity() const
+{
+  return mIdentitySelector->currentIdentity();
+}
+
+void View::setIdentity( uint uoid )
+{
+  mIdentitySelector->setCurrentIdentity( uoid );
+  // mIdentitySelector will emit its identityChanged(uint) signal
+  // that is connected to slotIdentityChanged(uint)
+}
+
+void View::slotIdentityChanged( uint uoid )
+{
+  KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
+  KPIMIdentities::Identity identity = im->identityForUoid( uoid );
+  setFrom( identity.fullEmailAddr() );
+  if ( KPIMUtils::isValidAddress( from() ) != KPIMUtils::AddressOk ) {
+    showFrom( true );
   }
 }
 
 
-void KNComposer::ComposerView::showAttachmentView()
+const QString View::from()
 {
-  if(!a_ttWidget) {
-    a_ttWidget=new QWidget(this);
-    QGridLayout *topL=new QGridLayout(a_ttWidget);
-    topL->setSpacing(4);
-    topL->setMargin(4);
+  return mFromEdit->text();
+}
 
-    a_ttView=new AttachmentView(a_ttWidget);
-    topL->addWidget(a_ttView, 0, 0, 3, 1);
+void View::setFrom( const QString& from )
+{
+  mFromEdit->setText( from );
+}
+
+
+const QStringList View::groups() const
+{
+  const QRegExp r = QRegExp( "\\s*,\\s*", Qt::CaseInsensitive, QRegExp::RegExp2 );
+  return mGroupsEdit->text().split( r, QString::SkipEmptyParts );
+}
+
+void View::setGroups( const QString &groups )
+{
+  mGroupsEdit->setText( groups );
+}
+
+void View::slotGroupsChanged()
+{
+  QStringList groupsList = groups();
+  groupsList.append( QString() );
+
+  const QString currFup2 = mFollowuptoEdit->currentText();
+  int i = groupsList.indexOf( currFup2 );
+  if ( i == -1 ) {
+    groupsList.prepend( currFup2 );
+  } else {
+    groupsList.move( i, 0 );
+  }
+
+  mFollowuptoEdit->clear();
+  mFollowuptoEdit->addItems( groupsList );
+}
+
+
+const QString View::emailRecipient() const
+{
+  return mToEdit->text();
+}
+
+void View::setEmailRecipient( const QString& to )
+{
+  mToEdit->setText( to );
+}
+
+
+const QStringList View::followupTo() const
+{
+  const QRegExp r = QRegExp( "\\s*,\\s*", Qt::CaseInsensitive, QRegExp::RegExp2 );
+  return mFollowuptoEdit->currentText().split( r, QString::SkipEmptyParts );
+}
+
+void View::setFollowupTo( const QString &followupTo )
+{
+  mFollowuptoEdit->setEditText( followupTo );
+}
+
+
+const QString View::subject() const
+{
+  return mSubjectEdit->text();
+}
+
+void View::setSubject( const QString &subject )
+{
+  mSubjectEdit->setText( subject );
+}
+
+
+KNComposerEditor * View::editor() const
+{
+  return mEditor;
+}
+
+
+
+void View::appendSignature()
+{
+  KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
+  KPIMIdentities::Identity identity = im->identityForUoid( selectedIdentity() );
+  identity.signature().insertIntoTextEdit( KPIMIdentities::Signature::End,
+                                           KPIMIdentities::Signature::AddSeparator,
+                                           mEditor );
+}
+
+
+
+void View::showIdentity( bool show )
+{
+  mIdentitySelectorLabel->setVisible( show );
+  mIdentitySelector->setVisible( show );
+}
+
+void View::showFrom( bool show )
+{
+  mFromLabel->setVisible( show );
+  mFromEdit->setVisible( show );
+}
+
+void View::showTo( bool show )
+{
+  mToLabel->setVisible( show );
+  mToEdit->setVisible( show );
+  mToButton->setVisible( show );
+}
+
+void View::showGroups( bool show )
+{
+  mGroupsLabel->setVisible( show );
+  mGroupsEdit->setVisible( show );
+  mGroupsButton->setVisible( show );
+}
+
+void View::showFollowupto( bool show )
+{
+  mFollowuptoLabel->setVisible( show );
+  mFollowuptoEdit->setVisible( show );
+}
+
+void View::showSubject( bool show )
+{
+  mSubjetLabel->setVisible( show );
+  mSubjectEdit->setVisible( show );
+}
+
+
+
+void View::showAttachmentView()
+{
+  if ( !mAttachmentSetup ) {
+    mAttachmentSetup = true;
 
     //connections
-    connect(a_ttView, SIGNAL(currentChanged(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentSelected(Q3ListViewItem*)));
-    connect(a_ttView, SIGNAL(clicked ( Q3ListViewItem * )),
-            parent(), SLOT(slotAttachmentSelected(Q3ListViewItem*)));
+    connect( mAttachmentsList, SIGNAL(itemSelectionChanged()),
+             this, SLOT(slotAttachmentSelectionChanged()) );
 
-    connect(a_ttView, SIGNAL(contextMenu(K3ListView*, Q3ListViewItem*, const QPoint&)),
-            parent(), SLOT(slotAttachmentPopup(K3ListView*, Q3ListViewItem*, const QPoint&)));
-    connect(a_ttView, SIGNAL(delPressed(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentRemove(Q3ListViewItem*)));
-    connect(a_ttView, SIGNAL(doubleClicked(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
-    connect(a_ttView, SIGNAL(returnPressed(Q3ListViewItem*)),
-            parent(), SLOT(slotAttachmentEdit(Q3ListViewItem*)));
+    connect( mAttachmentsList, SIGNAL( contextMenuRequested( const QPoint & ) ),
+             parent(), SLOT( slotAttachmentPopup( const QPoint & ) ) );
+
+    connect( mAttachmentsList, SIGNAL(deletePressed()),
+             this, SLOT(removeCurrentAttachment()) );
+    connect( mAttachmentsList, SIGNAL( attachmentRemoved( KNAttachment::Ptr, bool ) ),
+             parent(), SLOT( slotAttachmentRemoved( KNAttachment::Ptr, bool ) ) );
+
+    connect( mAttachmentsList, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+             mAttachmentsList, SLOT(editCurrentAttachment()) );
+    connect( mAttachmentsList, SIGNAL(returnPressed()),
+             mAttachmentsList, SLOT(editCurrentAttachment()) );
+    connect( mAttachmentsList, SIGNAL(itemChanged(QTreeWidgetItem*,int)),
+             parent(), SLOT(slotAttachmentChanged()) );
 
     //buttons
-    a_ttAddBtn=new QPushButton(i18n("A&dd..."),a_ttWidget);
-    connect(a_ttAddBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachFile()));
-    topL->addWidget(a_ttAddBtn, 0,1);
+    connect( mAttachmentAddButton, SIGNAL(clicked()),
+             parent(), SLOT(slotAttachFile()) );
 
-    a_ttRemoveBtn=new QPushButton(i18n("&Remove"), a_ttWidget);
-    a_ttRemoveBtn->setEnabled(false);
-    connect(a_ttRemoveBtn, SIGNAL(clicked()), parent(), SLOT(slotRemoveAttachment()));
-    topL->addWidget(a_ttRemoveBtn, 1,1);
+    mAttachmentRemoveButton->setEnabled( false );
+    connect( mAttachmentRemoveButton, SIGNAL(clicked()),
+             this, SLOT(removeCurrentAttachment()) );
 
-    a_ttEditBtn=new QPushButton(i18n("&Properties"), a_ttWidget);
-    a_ttEditBtn->setEnabled(false);
-    connect(a_ttEditBtn, SIGNAL(clicked()), parent(), SLOT(slotAttachmentProperties()));
-    topL->addWidget(a_ttEditBtn, 2,1, Qt::AlignTop);
-
-    topL->setRowStretch(2,1);
-    topL->setColumnStretch(0,1);
+    mAttachmentPropertiesButton->setEnabled( false );
+    connect( mAttachmentPropertiesButton, SIGNAL(clicked()),
+             mAttachmentsList, SLOT(editCurrentAttachment()) );
   }
 
-  if(!v_iewOpen) {
-    v_iewOpen=true;
-    a_ttWidget->show();
+  if ( !mAttachmentWidget->isVisible() ) {
+    mAttachmentWidget->show();
 
     KConfigGroup conf(knGlobals.config(), "POSTNEWS");
 
@@ -252,37 +397,63 @@ void KNComposer::ComposerView::showAttachmentView()
     setSizes(lst);
 
     lst=conf.readEntry("Att_Headers",QList<int>());
-    if(lst.count()==5) {
-      QList<int>::Iterator it = lst.begin();
-
-      Q3Header *h=a_ttView->header();
-      for(int i=0; i<5; i++) {
-        h->resizeSection(i,(*it));
-        ++it;
+    QHeaderView *h = mAttachmentsList->header();
+    if ( lst.count() == h->count() ) {
+      for( int i = 0 ; i < h->count() ; ++i) {
+        h->resizeSection( i, lst[ i ] );
       }
     }
   }
 }
 
-
-void KNComposer::ComposerView::hideAttachmentView()
+void View::hideAttachmentView()
 {
-  if(v_iewOpen) {
-    a_ttWidget->hide();
-    v_iewOpen=false;
-  }
+  mAttachmentWidget->hide();
+}
+
+void View::addAttachment( KNAttachment::Ptr attachment )
+{
+  AttachmentViewItem *item = new AttachmentViewItem( mAttachmentsList, attachment );
+  mAttachmentsList->addTopLevelItem( item );
+}
+
+const QList<KNAttachment::Ptr> View::attachments() const
+{
+  return mAttachmentsList->attachments();
+}
+
+void View::removeCurrentAttachment()
+{
+  mAttachmentsList->removeCurrentAttachment();
+}
+
+void View::editCurrentAttachment()
+{
+  mAttachmentsList->editCurrentAttachment();
+}
+
+void View::slotAttachmentSelectionChanged()
+{
+  bool e = !mAttachmentsList->selectedItems().isEmpty();
+  mAttachmentRemoveButton->setEnabled( e );
+  mAttachmentPropertiesButton->setEnabled( e );
 }
 
 
-void KNComposer::ComposerView::showExternalNotification()
+
+void View::showExternalNotification()
 {
-  e_dit->setReadOnly(true);
-  n_otification->show();
+  mEditorsStack->setCurrentWidget( mExternalEditorNotification );
 }
 
 
-void KNComposer::ComposerView::hideExternalNotification()
+void View::hideExternalNotification()
 {
-  e_dit->setReadOnly(false);
-  n_otification->hide();
+  mEditorsStack->setCurrentWidget( mEditor );
 }
+
+
+} // namespace Composer
+} // namespace KNode
+
+#include "kncomposerview.moc"

@@ -18,23 +18,13 @@
 #include "knode_export.h"
 
 #include <QList>
-#include <QObject>
 #include <QPixmap>
 #include <QDateTime>
-
 #include <kconfig.h>
-#include <kprocess.h>
 
-#include <kmime/kmime_util.h>
-
-namespace Kpgp {
-  class Config;
-}
 
 class KNDisplayedHeader;
-namespace KNode {
-  class IdentityWidget;
-}
+
 
 namespace KNode {
 
@@ -55,78 +45,6 @@ class ConfigBase {
   protected:
     bool d_irty;
 
-};
-
-
-/** A user identity. */
-class KNODE_EXPORT Identity : public QObject, public ConfigBase {
-
-Q_OBJECT
-
-  friend class IdentityWidget;
-
-  public:
-    Identity(bool g=true);
-    ~Identity();
-
-    void loadConfig(const KConfigGroup &c);
-    void saveConfig(KConfigGroup &c);
-    void save();
-    bool isEmpty();
-    bool isGlobal()const           { return g_lobal; }
-
-    //personal information
-    bool hasName() const { return !n_ame.isEmpty(); }
-    QString name() const                   { return n_ame; }
-    void setName(const QString &s)    { n_ame=s; }
-    bool emailIsValid();
-    bool hasEmail() const { return !e_mail.isEmpty(); }
-    QString email() const { return e_mail; }
-    void setEmail( const QString &s ) { e_mail = s; }
-    bool hasReplyTo() const { return !r_eplyTo.isEmpty(); }
-    QString replyTo() const { return r_eplyTo; }
-    void setReplyTo(const QString &s) { r_eplyTo=s; }
-    bool hasMailCopiesTo() const { return !m_ailCopiesTo.isEmpty(); }
-    QString mailCopiesTo() const { return m_ailCopiesTo; }
-    void setMailCopiesTo(const QString &s) { m_ailCopiesTo=s; }
-    bool hasOrga() const { return !o_rga.isEmpty(); }
-    QString orga() const                   { return o_rga; }
-    void setOrga(const QString &s)    { o_rga=s; }
-
-    // OpenPGP signing key
-    bool hasSigningKey() const { return !s_igningKey.isEmpty(); }
-    QString signingKey() const            { return s_igningKey; }
-    void setSigningKey( const QString &s ) { s_igningKey = s;}
-
-    //signature
-    bool hasSignature() const { return (u_seSigFile && !s_igPath.isEmpty()) || !s_igText.isEmpty(); }
-    bool useSigFile() const        { return u_seSigFile; }
-    bool useSigGenerator()const    { return u_seSigGenerator; }
-    QString sigPath()const         { return s_igPath; }
-    QString sigText()const         { return s_igText; }
-    QString getSignature();
-    QString getSigGeneratorStdErr() const { return s_igStdErr; }
-
-
-  protected slots:
-    void slotReceiveStdout();
-    void slotReceiveStderr();
-
-  protected:
-    QString   n_ame,
-              e_mail,
-              o_rga,
-              r_eplyTo,
-              m_ailCopiesTo,
-              s_igText,
-              s_igContents,
-              s_igStdErr,
-              s_igPath;
-    QString  s_igningKey;
-    bool      u_seSigFile,
-              u_seSigGenerator,
-              g_lobal;
-    KProcess *m_process;
 };
 
 

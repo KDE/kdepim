@@ -24,6 +24,8 @@
 
 #include <QWidget>
 
+class NoteViewer;
+
 class QItemSelectionModel;
 class QItemSelection;
 class QStackedWidget;
@@ -52,6 +54,7 @@ private:
   QStackedWidget *m_widgetStack;
   MessageViewer::Viewer *m_mailViewer;
   Akonadi::ContactViewer *m_contactViewer;
+  NoteViewer *m_noteViewer;
 };
 
 #endif

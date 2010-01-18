@@ -26,6 +26,7 @@ set(etm_usage_SRCS
     entitytreewidget.cpp
     mixedtreemodel.cpp
     itemviewerwidget.cpp
+    noteviewer.cpp
     tab1widget.cpp
     tab2widget.cpp
     tab2_5widget.cpp
@@ -33,6 +34,8 @@ set(etm_usage_SRCS
     tab4widget.cpp
     tab5widget.cpp
     tab6widget.cpp
+    tab7widget.cpp
+    entitytreemodelfactory.cpp
 )
 
 kde4_add_executable(etm_usage ${etm_usage_SRCS} )

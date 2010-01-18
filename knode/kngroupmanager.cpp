@@ -250,7 +250,7 @@ void KNGroupManager::syncGroups()
 {
   for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     (*it)->syncDynamicData();
-    (*it)->saveInfo();
+    (*it)->writeConfig();
   }
 }
 
@@ -449,7 +449,7 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
   grp->setGroupname(gi->name);
   grp->setDescription(gi->description);
   grp->setStatus(gi->status);
-  grp->saveInfo();
+  grp->writeConfig();
   mGroupList.append( grp );
   emit groupAdded(grp);
 }
@@ -632,7 +632,7 @@ void KNGroupManager::processJob(KNJobData *j)
           group->scoreArticles();
           group->processXPostBuffer(true);
           emit groupUpdated(group);
-          group->saveInfo();
+          group->writeConfig();
           knGlobals.memoryManager()->updateCacheEntry(group);
         }
       } else {

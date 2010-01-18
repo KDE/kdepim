@@ -15,18 +15,16 @@
 #ifndef KNARTICLE_H
 #define KNARTICLE_H
 
+#include "knjobdata.h"
+
+#include <boost/shared_ptr.hpp>
 #include <QFile>
 #include <QColor>
-#include <q3asciidict.h>
-#include <QList>
-
 #include <kmime/kmime_headers.h>
 #include <kmime/kmime_newsarticle.h>
 #include <kmime/boolflags.h>
 
-#include "knjobdata.h"
 
-//forward declarations
 class KNLoadHelper;
 class KNHdrViewItem;
 class KNArticleCollection;
@@ -81,7 +79,6 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     bool isOrphant() const                           { return (i_d==-1); }
 
   protected:
-    virtual QByteArray assembleHeaders();
     int i_d; //unique in the given collection
     KNArticleCollection *c_ol;
     KNHdrViewItem *i_tem;
@@ -269,6 +266,11 @@ class KNLocalArticle : public KNArticle {
 class KNAttachment {
 
   public:
+    /**
+      Shared pointer to a KNAttachment. To be used instead of raw KNAttachment*.
+    */
+    typedef boost::shared_ptr<KNAttachment> Ptr;
+
     KNAttachment(KMime::Content *c);
     KNAttachment(KNLoadHelper *helper);
     ~KNAttachment();

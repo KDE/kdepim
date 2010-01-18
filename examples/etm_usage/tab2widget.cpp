@@ -22,6 +22,7 @@
 #include "tab2widget.h"
 
 #include <QHBoxLayout>
+#include <QSplitter>
 #include <QTreeView>
 
 #include "entitytreewidget.h"
@@ -63,21 +64,19 @@ Tab2Widget::Tab2Widget(QWidget* parent, Qt::WindowFlags f)
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
 
-  m_etw = new Tab2TreeWidget(this);
+  QSplitter *splitter = new QSplitter(this);
+  layout->addWidget(splitter);
+
+  m_etw = new Tab2TreeWidget(splitter);
   m_etw->init();
 
-  layout->addWidget(m_etw);
-  QWidget *rhsContainer = new QWidget(this);
-  QVBoxLayout *rhsLayout = new QVBoxLayout(rhsContainer);
+  QSplitter *rhsContainer = new QSplitter( Qt::Vertical, splitter);
 
-  m_itemView = new QTreeView(this);
+  m_itemView = new QTreeView(rhsContainer);
 
   m_itemView->setModel(m_etw->model());
 
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), this);
-  rhsLayout->addWidget(m_itemView);
-  rhsLayout->addWidget(viewerWidget);
-  layout->addWidget(rhsContainer);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(m_itemView->selectionModel(), rhsContainer);
 
   connect( m_etw->view(), SIGNAL(activated(QModelIndex)), SLOT(setMappedRootIndex(QModelIndex)) );
 }

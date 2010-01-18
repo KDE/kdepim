@@ -22,6 +22,7 @@
 #include "tab1widget.h"
 
 #include <QHBoxLayout>
+#include <QSplitter>
 #include <QTreeView>
 
 #include "entitytreewidget.h"
@@ -30,11 +31,10 @@
 Tab1Widget::Tab1Widget(QWidget* parent, Qt::WindowFlags f)
 {
   QHBoxLayout *layout = new QHBoxLayout(this);
+  QSplitter *splitter = new QSplitter(this);
+  layout->addWidget(splitter);
 
-  EntityTreeWidget *etw = new EntityTreeWidget(this);
+  EntityTreeWidget *etw = new EntityTreeWidget(splitter);
   etw->init();
-  ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), this);
-
-  layout->addWidget(etw);
-  layout->addWidget(viewerWidget);
+  ItemViewerWidget *viewerWidget = new ItemViewerWidget(etw->view()->selectionModel(), splitter);
 }

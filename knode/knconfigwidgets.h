@@ -16,6 +16,7 @@
 #define KNCONFIGWIDGETS_H
 
 #include "knode_export.h"
+
 #include <kpagedialog.h>
 #include <kcmodule.h>
 
@@ -24,22 +25,8 @@
 #include "ui_postnewstechnicalwidget_base.h"
 #include "ui_readnewsgeneralwidget_base.h"
 
-#include <QList>
-#include <QPixmap>
-#include <QLabel>
-#include <QListWidgetItem>
 
-class QButtonGroup;
-class QCheckBox;
-class QGroupBox;
-class QRadioButton;
-class QTextEdit;
-class QListWidget;
-
-class KLineEdit;
 class KComboBox;
-class KIntSpinBox;
-class KUrlCompletion;
 
 namespace Sonnet{
 class ConfigWidget;
@@ -51,7 +38,6 @@ namespace KPIM {
 
 namespace Kpgp {
   class Config;
-  class SecretKeyRequester;
 }
 
 class KNArticleFilter;
@@ -60,59 +46,13 @@ class KNFilterManager;
 class KNNntpAccount;
 
 namespace KNode {
-  class Appearance;
   class Cleanup;
-  class Identity;
   class DisplayedHeaders;
   class GroupCleanupWidget;
-  class PostNewsTechnical;
-  class Scoring;
+  class IdentityWidget;
 }
 
 namespace KNode {
-
-/** Configuration widget for an dentity.
- */
-class KNODE_EXPORT IdentityWidget : public KCModule {
-
-  Q_OBJECT
-
-  public:
-    IdentityWidget( Identity *d, const KComponentData &inst, QWidget *parent = 0 );
-    ~IdentityWidget();
-
-    void load();
-    void save();
-
-  protected:
-    QLabel          *f_ileName;
-    KLineEdit       *n_ame,
-                    *o_rga,
-                    *e_mail,
-                    *r_eplyTo,
-                    *m_ailCopiesTo,
-                    *s_ig;
-    QRadioButton    *s_igFile,
-                    *s_igEdit;
-    QCheckBox       *s_igGenerator;
-    QPushButton     *c_hooseBtn,
-                    *e_ditBtn;
-    QTextEdit       *s_igEditor;
-    QButtonGroup    *b_uttonGroup;
-    Kpgp::SecretKeyRequester
-                    *s_igningKey;
-    KUrlCompletion  *c_ompletion;
-
-    Identity        *d_ata;
-
-  protected slots:
-    void slotSignatureType(int type);
-    void slotSignatureChoose();
-    void slotSignatureEdit();
-    void textFileNameChanged(const QString &);
-
-};
-
 
 /** News server account list widget. */
 class KNODE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAccountListWidgetBase

@@ -87,6 +87,8 @@ class MimeTreeModel::Private
       KMimeType::Ptr mimeType = KMimeType::mimeType( QString::fromLatin1( content->contentType()->mimeType() ) );
       if ( mimeType.isNull() || mimeType->iconName().isEmpty() )
         return KIcon();
+      if( mimeType->name().startsWith( QLatin1String( "multipart/" ) ) )
+        return KIcon( "folder" );
       return KIcon( mimeType->iconName() );
     }
 

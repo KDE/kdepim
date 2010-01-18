@@ -44,6 +44,9 @@ namespace KNode {
   class Scheduler;
   class Settings;
 }
+namespace KPIMIdentities {
+  class IdentityManager;
+}
 
 
 /** idea: Previously the manager classes were available
@@ -62,8 +65,7 @@ class KNODE_EXPORT KNGlobals
     QWidget               *topWidget;
     /** no need to include knode.h everywhere */
     KNMainWidget          *top;
-    /** Returns the KXMLGUIClient of the main window. */
-    KXMLGUIClient         *guiClient;
+
     /** Returns the article factory. */
     KNArticleFactory      *artFactory;
     /** Returns KNode's main configuration. */
@@ -92,6 +94,9 @@ class KNODE_EXPORT KNGlobals
     KNMemoryManager       *memoryManager();
     /** Returns the KConfigXT generated settings object. */
     KNode::Settings *settings();
+    /** Returns the identity manager. */
+    KPIMIdentities::IdentityManager *identityManager();
+
 
     /** forwarded to top->setStatusMsg() if available */
     void setStatusMsg(const QString& text = QString(), int id = SB_MAIN);
@@ -115,6 +120,7 @@ class KNODE_EXPORT KNGlobals
     KNScoringManager *mScoreManager;
     KNMemoryManager       *mMemManager;
     KNode::Settings *mSettings;
+    KPIMIdentities::IdentityManager * mIdentityManager;
 };
 
 #endif

@@ -12,20 +12,22 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QComboBox>
-#include <QCheckBox>
-#include <QGridLayout>
+#include "knstringfilter.h"
 
+#include "knglobals.h"
+#include "kngroup.h"
+#include "knnntpaccount.h"
+#include "settings.h"
+
+#include <QCheckBox>
+#include <QComboBox>
+#include <QGridLayout>
+#include <kconfig.h>
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kconfig.h>
+#include <KPIMIdentities/Identity>
 
-#include "kngroup.h"
-#include "knnntpaccount.h"
-#include "knglobals.h"
-#include "knconfigmanager.h"
-#include "knstringfilter.h"
 
 using namespace KNode;
 
@@ -62,17 +64,21 @@ bool KNode::StringFilter::doFilter( const QString &s )
 // replace placeholders
 void KNode::StringFilter::expand( KNGroup *g )
 {
-  Identity *id = (g) ? g->identity() : 0;
-
-  if (!id) {
-    id = (g) ? g->account()->identity() : 0;
-    if (!id)
-      id = knGlobals.configManager()->identity();
+  KPIMIdentities::Identity id;
+  if ( g ) {
+    if ( !g->identity().isNull() ) {
+      id = g->identity();
+    } else if ( !g->account()->identity().isNull() ) {
+      id = g->account()->identity();
+    }
+  }
+  if ( id.isNull() ) {
+    id = KNGlobals::self()->settings()->identity();
   }
 
   expanded = data;
-  expanded.replace(QRegExp("%MYNAME"), id->name());
-  expanded.replace(QRegExp("%MYEMAIL"), id->email());
+  expanded.replace( QRegExp("%MYNAME"), id.fullName() );
+  expanded.replace( QRegExp("%MYEMAIL"), id.emailAddr() );
 }
 
 

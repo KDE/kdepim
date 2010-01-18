@@ -14,10 +14,6 @@
 
 #include "knglobals.h"
 
-#include <kglobal.h>
-#include <kconfig.h>
-#include <kiconloader.h>
-
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -29,6 +25,11 @@
 #include "knmainwidget.h"
 #include "scheduler.h"
 #include "settings.h"
+
+#include <kconfig.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <KPIMIdentities/IdentityManager>
 
 
 class KNGlobalsPrivate
@@ -50,7 +51,8 @@ KNGlobals::KNGlobals() :
   mFolManager( 0 ),
   mScoreManager( 0 ),
   mMemManager( 0 ),
-  mSettings( 0 )
+  mSettings( 0 ),
+  mIdentityManager( 0 )
 {
   kDebug();
 }
@@ -58,6 +60,7 @@ KNGlobals::KNGlobals() :
 KNGlobals::~KNGlobals( )
 {
   kDebug();
+  mIdentityManager->deleteLater();
   delete mScoreManager;
   delete mSettings;
 }
@@ -148,6 +151,14 @@ KNMemoryManager* KNGlobals::memoryManager()
   if(!mMemManager)
     mMemManager = new KNMemoryManager();
   return mMemManager;
+}
+
+KPIMIdentities::IdentityManager* KNGlobals::identityManager()
+{
+  if ( !mIdentityManager ) {
+    mIdentityManager = new KPIMIdentities::IdentityManager( false, 0, "mIdentityManager" );
+  }
+  return mIdentityManager;
 }
 
 
