@@ -54,7 +54,6 @@ class KAction;
 class KSelectAction;
 class KToggleAction;
 class KToggleAction;
-class KWebView;
 class KUrl;
 class KConfigSkeleton;
 
@@ -70,6 +69,7 @@ namespace MessageViewer {
   class CSSHelper;
   class HeaderStrategy;
   class HeaderStyle;
+  class MailWebView;
 }
 
 /**
@@ -260,7 +260,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
 
   void setHeaderStyleAndStrategy( const HeaderStyle * style,
                                   const HeaderStrategy * strategy );
-  KWebView *htmlPart() const;
+  MailWebView *htmlPart() const;
 
   void writeConfig( bool withSync=true );
 

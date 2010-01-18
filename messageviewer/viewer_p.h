@@ -48,7 +48,6 @@ class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class KHBox;
-class KWebView;
 class QWebElement;
 
 class QPoint;
@@ -134,9 +133,9 @@ public:
       emit popupMenu( mMessageItem, url, p );
   }
 
-  /** Access to the KWebView used for the viewer. Use with
+  /** Access to the MailWebView used for the viewer. Use with
       care! */
-  KWebView *htmlPart() const { return mViewer; }
+  MailWebView *htmlPart() const { return mViewer; }
 
   void showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & p );
 
@@ -181,7 +180,7 @@ public:
   void attachmentOpen( KMime::Content *node );
 
 
-  /** Return the HtmlWriter connected to the KWebView we use */
+  /** Return the HtmlWriter connected to the MailWebView we use */
   HtmlWriter * htmlWriter() { return mHtmlWriter; }
 
   CSSHelper* cssHelper() const;
@@ -494,7 +493,7 @@ public:
   HtmlStatusBar *mColorBar;
   QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
   MimeTreeModel *mMimePartModel;
-  KWebView *mViewer;
+  MailWebView *mViewer;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
