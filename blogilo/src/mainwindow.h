@@ -28,6 +28,7 @@
 #include <kxmlguiwindow.h>
 #include "bilbopost.h"
 #include "bilboblog.h"
+#include <QPointer>
 
 class KTabWidget;
 class QProgressBar;
@@ -118,7 +119,7 @@ private:
 
     Toolbox *toolbox;
     QDockWidget *toolboxDock;
-    PostEntry *activePost;
+    QPointer<PostEntry> activePost;
     KSystemTrayIcon *systemTray;
     KTabWidget *tabPosts;
 

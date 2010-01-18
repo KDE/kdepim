@@ -463,7 +463,10 @@ void MainWindow::sltRemovePostEntry( PostEntry *widget )
 {
     kDebug();
     if( !widget ) {
-        widget = activePost;
+        if( activePost )
+            widget = activePost;
+        else
+            return;
     }
     DBMan::self()->removeTempEntry( *widget->currentPost() );
     tabPosts->removePage(widget);
