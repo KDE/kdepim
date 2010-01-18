@@ -496,16 +496,20 @@ namespace {
         }
 
         /* reimp */ bool validatePage() {
-            if ( isSignOnlySelected() && isArchiveRequested() ) {
-                KMessageBox::information( this,
-                                          i18nc("@info",
-                                                "<para>Archiving is currently only implemented for use with encryption or sign+encrypt, not for sign-only.</para>"
-                                                "<para>Sorry.</para>" ),
-                                          i18nc("@title:window", "Unsupported Combination") );
-                return false;
-            } else {
+            if ( isSignOnlySelected() && isArchiveRequested() )
+                return KMessageBox::warningContinueCancel( this,
+                                                           i18nc("@info",
+                                                                 "<para>Archiving in combination with sign-only currently requires so-called opaque signatures "
+                                                                 "(as opposed to detached ones, they embed the content in the signature).</para>"
+                                                                 "<para>This format is rather usual. You might want to archive the files spearately, "
+                                                                 "and then sign the archive as one file with Kleopatra.</para>"
+                                                                 "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>" ),                                                    
+                                                           i18nc("@title:window", "Unusual Signature Warning"),
+                                                           KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
+                                                           "signencryptfileswizard-archive+sign-only-warning" )
+                    == KMessageBox::Continue ;
+            else
                 return true;
-            }
         }
 
         /* reimp */ int nextId() const {
