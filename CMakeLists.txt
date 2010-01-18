@@ -200,7 +200,7 @@ set(libkdgantt1_SRCS
     if (Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
     endif(Boost_TOPOLOGICAL_SORT_DIR)
-    macro_optional_add_subdirectory(wizards)
+    # macro_optional_add_subdirectory(wizards)
     # The following components depend on QGpgME.
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
