@@ -117,6 +117,12 @@ class StandardContactActionManager::Private
                 mActions[ StandardContactActionManager::DeleteAddressBook ]->setEnabled( isEnabled );
               if ( mActions.contains( StandardContactActionManager::ConfigureAddressBook ) )
                 mActions[ StandardContactActionManager::ConfigureAddressBook ]->setEnabled( isEnabled );
+
+              // only enable 'Create Contact Group' action if current collection supports contact groups
+              if ( mActions.contains( StandardContactActionManager::CreateContactGroup ) ) {
+                const bool isEnabled = collection.contentMimeTypes().contains( KABC::ContactGroup::mimeType() );
+                mActions[ StandardContactActionManager::CreateContactGroup ]->setEnabled( isEnabled );
+              }
             }
           }
         }
