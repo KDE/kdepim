@@ -211,7 +211,11 @@ public:
       /**
        * The list of MessageItem::Tag entries
        */
-      TagList                      = 22 | ApplicableToMessageItems | IsIcon
+      TagList                      = 22 | ApplicableToMessageItems | IsIcon,
+      /**
+       * Whether the message has a annotation/note
+       */
+      AnnotationIcon               = 23 | ApplicableToMessageItems | IsIcon | CanBeDisabled | IsClickable
 #if 0
       TotalMessageCount
       UnreadMessageCount

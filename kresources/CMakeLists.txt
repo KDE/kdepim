@@ -24,7 +24,7 @@ add_subdirectory( lib )
 add_subdirectory( birthdays )
 add_subdirectory( blog )
 add_subdirectory( remote )
-add_subdirectory( kolab )
+#add_subdirectory( kolab )
 
 if(KDEPIM_BUILD_EVERYTHING)
   add_subdirectory( slox )

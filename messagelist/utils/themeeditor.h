@@ -47,6 +47,7 @@ namespace Core
 class Item;
 class GroupHeaderItem;
 class MessageItem;
+class FakeItem;
 class ModelInvariantRowMapper;
 
 } // namespace Core
@@ -80,7 +81,7 @@ public:
 
 private:
   Core::GroupHeaderItem * mSampleGroupHeaderItem;
-  Core::MessageItem * mSampleMessageItem;
+  Core::FakeItem * mSampleMessageItem;
   Core::ModelInvariantRowMapper * mRowMapper; // needed for the MessageItem above to be valid
 public:
   virtual Core::Item * itemFromIndex( const QModelIndex &index ) const;

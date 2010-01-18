@@ -1,6 +1,8 @@
 include(NepomukAddOntologyClasses)
 include_directories(${SOPRANO_INCLUDE_DIR})
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
 nepomuk_add_ontology_classes(
   nie_apps_SRCS
   FAST
