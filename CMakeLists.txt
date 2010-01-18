@@ -41,6 +41,12 @@ include(MacroBoolTo01)
 find_package(KdepimLibs 4.3.85 REQUIRED)
 
 
+############### Load the CTest options ###############
+# CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
+# in the KDE build system, this is the same as CMAKE_BINARY_DIR.
+configure_file(${CMAKE_SOURCE_DIR}/CTestCustom.cmake ${CMAKE_BINARY_DIR}/CTestCustom.cmake)
+
+
 ############### search Boost ###############
 
 find_package(Boost 1.34.0)
