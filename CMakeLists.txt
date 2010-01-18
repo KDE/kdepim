@@ -186,6 +186,7 @@ set(libkdgantt1_SRCS
   # These targets will always be built before anything else.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
+  add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)

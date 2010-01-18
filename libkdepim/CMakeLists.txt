@@ -18,7 +18,6 @@ set(kdepim_LIB_SRCS
    kdescendantsproxymodel.cpp
    kcheckcombobox.cpp
    ktimeedit.cpp
-   reminderclient.cpp
    kprefsdialog.cpp
    kpimprefs.cpp
    categoryselectdialog.cpp
@@ -78,8 +77,6 @@ set(kdepim_LIB_SRCS
    contactstreemodel.cpp
 )
 
-QT4_ADD_DBUS_INTERFACE(kdepim_LIB_SRCS ${CMAKE_SOURCE_DIR}/korganizer/korgac/org.kde.korganizer.KOrgac.xml korganizer_korgac_interface )
-
 kde4_add_ui_files(kdepim_LIB_SRCS
   categoryselectdialog_base.ui
   categoryeditdialog_base.ui
@@ -101,9 +98,9 @@ target_link_libraries(kdepim
   ${KDE4_KPARTS_LIBS}
   ${KDE4_KMIME_LIBRARY}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
-  ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 target_link_libraries(kdepim LINK_INTERFACE_LIBRARIES

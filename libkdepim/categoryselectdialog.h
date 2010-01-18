@@ -28,7 +28,7 @@
 
 namespace KPIM {
 
-class KPimPrefs;
+class CategoryConfig;
 class AutoCheckTreeWidget;
 class CategorySelectWidgetBase;
 
@@ -36,7 +36,7 @@ class KDEPIM_EXPORT CategorySelectWidget : public QWidget
 {
   Q_OBJECT
   public:
-    CategorySelectWidget( QWidget *parent, KPimPrefs *prefs );
+    explicit CategorySelectWidget( CategoryConfig* config, QWidget *parent=0 );
     ~CategorySelectWidget();
 
     void setCategories( const QStringList &categoryList = QStringList() );
@@ -62,14 +62,14 @@ class KDEPIM_EXPORT CategorySelectWidget : public QWidget
   private:
     QStringList mCategoryList;
     CategorySelectWidgetBase *mWidgets;
-    KPimPrefs *mPrefs;
+    CategoryConfig *mCategoryConfig;
 };
 
 class KDEPIM_EXPORT CategorySelectDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit CategorySelectDialog( KPimPrefs *prefs, QWidget *parent = 0 );
+    explicit CategorySelectDialog( CategoryConfig *cfg, QWidget *parent = 0 );
     ~CategorySelectDialog();
 
     QStringList selectedCategories() const;

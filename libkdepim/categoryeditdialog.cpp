@@ -34,8 +34,8 @@
 
 using namespace KPIM;
 
-CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget *parent )
-  : KDialog( parent ), mPrefs( prefs )
+CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig, QWidget *parent )
+  : KDialog( parent ), mCategoryConfig( categoryConfig )
 {
   setCaption( i18n( "Edit Categories" ) );
   setButtons( Ok | Apply | Cancel | Help );
@@ -97,7 +97,7 @@ CategoryEditDialog::~CategoryEditDialog()
 
 void CategoryEditDialog::fillList()
 {
-  CategoryHierarchyReaderQTreeWidget( mWidgets->mCategories ).read( mPrefs->mCustomCategories );
+  CategoryHierarchyReaderQTreeWidget( mWidgets->mCategories ).read( mCategoryConfig->customCategories() );
 
   mWidgets->mButtonRemove->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
   mWidgets->mButtonAddSubcategory->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
@@ -187,18 +187,18 @@ void CategoryEditDialog::slotOk()
 
 void CategoryEditDialog::slotApply()
 {
-  mPrefs->mCustomCategories.clear();
+  QStringList l;
 
   QStringList path;
   QTreeWidgetItemIterator it( mWidgets->mCategories );
   while ( *it ) {
     path = mWidgets->mCategories->pathByItem( *it++ );
     path.replaceInStrings(
-      KPimPrefs::categorySeparator, QString( "\\" ) + KPimPrefs::categorySeparator );
-    mPrefs->mCustomCategories.append( path.join( KPimPrefs::categorySeparator ) );
+      CategoryConfig::categorySeparator, QString( "\\" ) + CategoryConfig::categorySeparator );
+      l.append( path.join( CategoryConfig::categorySeparator ) );
   }
-
-  mPrefs->writeConfig();
+  mCategoryConfig->setCustomCategories( l );
+  mCategoryConfig->writeConfig();
 
   emit categoryConfigChanged();
 }

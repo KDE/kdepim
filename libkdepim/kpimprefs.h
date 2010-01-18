@@ -30,34 +30,28 @@
 
 class QString;
 
+class KConfig;
+
 namespace KPIM {
 
-class KDEPIM_EXPORT KPimPrefs : public KConfigSkeleton
+class KDEPIM_EXPORT CategoryConfig : public QObject
 {
-  public:
-    KPimPrefs( const QString &name = QString() );
+  Q_OBJECT
+public:
+  explicit CategoryConfig( KCoreConfigSkeleton* cfg, QObject* parent=0 );
+  ~CategoryConfig();
+  QStringList customCategories() const;
+  void setCustomCategories( const QStringList &categories );
 
-    KPimPrefs(KPimPrefs const & other);
+  void writeConfig();
 
-    virtual ~KPimPrefs();
+  static const QString categorySeparator;
 
-    /** Set preferences to default values */
-    void usrSetDefaults();
-
-    /** Read preferences from config file */
-    void usrReadConfig();
-
-    /** Write preferences to config file */
-    void usrWriteConfig();
-
-  public:
-    QStringList mCustomCategories;
-
-  protected:
-    virtual void setCategoryDefaults() {}
-
-  public:
-    static const QString categorySeparator;
+private:
+  Q_DISABLE_COPY(CategoryConfig)
+  class Private;
+  Private* const d;
+  Q_PRIVATE_SLOT( d, void configChanged() )
 };
 
 }

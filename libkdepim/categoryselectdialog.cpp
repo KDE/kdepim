@@ -51,8 +51,8 @@ class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog
 
 using namespace KPIM;
 
-CategorySelectWidget::CategorySelectWidget( QWidget *parent, KPimPrefs *prefs )
-  : QWidget( parent ), mPrefs( prefs )
+CategorySelectWidget::CategorySelectWidget( CategoryConfig *cc, QWidget *parent )
+  : QWidget( parent ), mCategoryConfig( cc )
 {
   QHBoxLayout *topL = new QHBoxLayout( this );
   topL->setMargin( 0 );
@@ -86,14 +86,14 @@ void CategorySelectWidget::setCategories( const QStringList &categoryList )
   mCategoryList.clear();
 
   QStringList::ConstIterator it;
-
+  QStringList cats = mCategoryConfig->customCategories();
   for ( it = categoryList.begin(); it != categoryList.end(); ++it ) {
-    if ( !mPrefs->mCustomCategories.contains( *it ) ) {
-      mPrefs->mCustomCategories.append( *it );
+    if ( !cats.contains( *it ) ) {
+      cats.append( *it );
     }
   }
-
-  CategoryHierarchyReaderQTreeWidget( mWidgets->mCategories ).read( mPrefs->mCustomCategories );
+  mCategoryConfig->setCustomCategories( cats );
+  CategoryHierarchyReaderQTreeWidget( mWidgets->mCategories ).read( cats );
 }
 
 void CategorySelectWidget::setSelected( const QStringList &selList )
@@ -121,9 +121,9 @@ static QStringList getSelectedCategories( AutoCheckTreeWidget *categoriesView )
   while ( *it ) {
     QStringList path = categoriesView->pathByItem( *it++ );
     if ( path.count() ) {
-      path.replaceInStrings( KPimPrefs::categorySeparator, QString( "\\" ) +
-                             KPimPrefs::categorySeparator );
-      categories.append( path.join( KPimPrefs::categorySeparator ) );
+      path.replaceInStrings( CategoryConfig::categorySeparator, QString( "\\" ) +
+                             CategoryConfig::categorySeparator );
+      categories.append( path.join( CategoryConfig::categorySeparator ) );
     }
   }
 
@@ -170,7 +170,7 @@ void CategorySelectWidget::setCategoryList( const QStringList &categories )
    mCategoryList = categories;
 }
 
-CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget *parent )
+CategorySelectDialog::CategorySelectDialog( CategoryConfig* cc, QWidget *parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Select Categories" ) );
@@ -182,7 +182,7 @@ CategorySelectDialog::CategorySelectDialog( KPimPrefs *prefs, QWidget *parent )
   lay->setMargin( 0 );
   lay->setSpacing( KDialog::spacingHint() );
 
-  mWidgets = new CategorySelectWidget( this, prefs );
+  mWidgets = new CategorySelectWidget( cc, this );
   mWidgets->setObjectName( "CategorySelection" );
   mWidgets->hideHeader();
   lay->addWidget( mWidgets );

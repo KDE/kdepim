@@ -33,18 +33,19 @@ using namespace KCal;
 class KPIM::KTimeZoneComboBox::Private
 {
   public:
-    Private( Calendar *calendar, KTimeZoneComboBox *parent )
-      : mParent( parent ), mCalendar( calendar )
+    Private( KTimeZoneComboBox *parent )
+      : mParent( parent ), mAdditionalZones( 0 )
     {}
 
     void fillComboBox();
-    KTimeZoneComboBox *mParent;
-    Calendar *mCalendar;
+    KTimeZoneComboBox * const mParent;
     QStringList mZones;
+    const ICalTimeZones* mAdditionalZones;
 };
 
 void KPIM::KTimeZoneComboBox::Private::fillComboBox()
 {
+  mParent->clear();
   // Read all system time zones
 
   const KTimeZones::ZoneMap timezones = KSystemTimeZones::zones();
@@ -53,15 +54,14 @@ void KPIM::KTimeZoneComboBox::Private::fillComboBox()
   }
   mZones.sort();
 
-  // Prepend the list of timezones from the Calendar
-  if ( mCalendar ) {
-    const ICalTimeZones::ZoneMap calzones = mCalendar->timeZones()->zones();
+  // Prepend the list of additional timezones
+  if ( mAdditionalZones ) {
+    const ICalTimeZones::ZoneMap calzones = mAdditionalZones->zones();
     for ( ICalTimeZones::ZoneMap::ConstIterator it=calzones.begin(); it != calzones.end(); ++it ) {
       kDebug() << "Prepend timezone " << it.key().toUtf8();
       mZones.prepend( it.key().toUtf8() );
     }
   }
-
   // Prepend UTC and Floating, for convenience
   mZones.prepend( "UTC" );      // do not use i18n here
   mZones.prepend( "Floating" ); // do not use i18n here
@@ -72,16 +72,26 @@ void KPIM::KTimeZoneComboBox::Private::fillComboBox()
   }
 }
 
-KTimeZoneComboBox::KTimeZoneComboBox( Calendar *calendar, QWidget *parent )
-  : KComboBox( parent ), d( new KPIM::KTimeZoneComboBox::Private( calendar, this ) )
+KTimeZoneComboBox::KTimeZoneComboBox( QWidget *parent )
+  : KComboBox( parent ), d( new KPIM::KTimeZoneComboBox::Private( this ) )
 {
   KGlobal::locale()->insertCatalog( "timezones4" ); // for translated timezones
   d->fillComboBox();
 }
 
-void KTimeZoneComboBox::setCalendar( Calendar *calendar )
+
+KTimeZoneComboBox::KTimeZoneComboBox( const ICalTimeZones* zones, QWidget *parent )
+  : KComboBox( parent ), d( new KPIM::KTimeZoneComboBox::Private( this ) )
 {
-  d->mCalendar = calendar;
+  d->mAdditionalZones = zones;
+  KGlobal::locale()->insertCatalog( "timezones4" ); // for translated timezones
+  d->fillComboBox();
+}
+
+void KTimeZoneComboBox::setAdditionalTimeZones( const ICalTimeZones* zones )
+{
+  d->mAdditionalZones = zones;
+  d->fillComboBox();
 }
 
 KTimeZoneComboBox::~KTimeZoneComboBox()
