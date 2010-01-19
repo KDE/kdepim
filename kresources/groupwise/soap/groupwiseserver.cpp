@@ -1649,13 +1649,13 @@ void GroupwiseServer::slotSocketError(KTcpSocket::Error error)
   QString errorMsg = QString::fromLatin1( "Unhandled error type: %1" ).arg( error );
   kError() << "slotSocketError: connect failed " << error;
   if ( error == KTcpSocket::ConnectionRefusedError ) {
-    errorMsg = QString::fromLatin1( "Connection refused.  Check host and port number" );
+    errorMsg = i18n( "Connection refused.  Check host and port number" );
   }
   if ( error == KTcpSocket::SocketTimeoutError ) {
-    errorMsg = QString::fromLatin1( "Connection timed out.  Check port number" );
+    errorMsg = i18n( "Connection timed out.  Check port number" );
   }
   if ( error == KTcpSocket::HostNotFoundError ) {
-    errorMsg = QString::fromLatin1( "Host not found. Check your configuration" );
+    errorMsg = i18n( "Host not found. Check your configuration" );
   }
   mErrors.append( i18n("Connect failed: %1.", errorMsg ) );
 }
