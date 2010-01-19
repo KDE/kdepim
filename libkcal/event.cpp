@@ -87,8 +87,8 @@ QDateTime Event::dtEnd() const
   if (hasEndDate()) return mDtEnd;
   if (hasDuration()) return dtStart().addSecs(duration());
 
-  kdDebug(5800) << "Warning! Event '" << summary()
-            << "' has neither end date nor duration." << endl;
+  // It is valid for a VEVENT to be without a DTEND. See RFC2445, Sect4.6.1.
+  // Be careful to use Event::dateEnd() as appropriate due to this possibility.
   return dtStart();
 }
 
