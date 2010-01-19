@@ -47,7 +47,6 @@
 
 #include <gpg-error.h>
 
-#include <QFileSystemWatcher>
 #include <QStringList>
 #include <QDir>
 #include <QFileInfo>
@@ -80,6 +79,7 @@ using namespace boost;
 
 static const unsigned int MAX_RETRIES = 3;
 static const unsigned int RETRY_WAIT = 2; // seconds
+static const unsigned int CHECK_INTERVAL = 2000; // msecs
 
 static ReaderStatus * self = 0;
 
@@ -267,6 +267,27 @@ static const std::string scd_getattr_status( shared_ptr<Context> & gpgAgent, con
     }
 }
 
+static unsigned int parse_event_counter( const std::string & str ) {
+    unsigned int result;
+    if ( sscanf( str.c_str(), "%*u %*u %u ", &result ) == 1 )
+        return result;
+    return 0U;
+}
+
+static unsigned int get_event_counter( shared_ptr<Context> & gpgAgent ) {
+    Error err;
+    const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, "GETEVENTCOUNTER", err );
+    if ( err.code() )
+        qDebug() << "get_event_counter(): got error" << err.asString();
+    if ( t.get() ) {
+        qDebug() << "get_event_counter(): got" << t->statusLines();
+        return parse_event_counter( t->firstStatusLine( "EVENTCOUNTER" ) );
+    } else {
+        qDebug() << "scd_getattr_status(): t == NULL";
+        return 0U;
+    }
+}
+
 // returns const std::string so template deduction in boost::split works, and we don't need a temporary
 static const std::string gpgagent_data( shared_ptr<Context> & gpgAgent, const char * what, Error & err ) {
     const std::auto_ptr<DefaultAssuanTransaction> t = gpgagent_transact( gpgAgent, what, err );
@@ -304,8 +325,10 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
         return ci;
     Error err;
     ci.serialNumber = gpgagent_data( gpg_agent, "SCD SERIALNO", err );
-    if ( err.code() )
+    if ( err.code() == GPG_ERR_CARD_NOT_PRESENT || err.code() == GPG_ERR_CARD_REMOVED ) {
+        ci.status = ReaderStatus::NoCard;
         return ci;
+    }
     ci.appType = parse_app_type( scd_getattr_status( gpg_agent, "APPTYPE", err ) );
     if ( err.code() )
         return ci;
@@ -358,16 +381,17 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
     return ci;
 }
 
-static CardInfo get_card_info( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent, ReaderStatus::Status oldStatus ) {
-    qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldStatus] << ')';
+static CardInfo get_card_info( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent, const CardInfo & oldInfo, bool force ) {
+    qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldInfo.status] << ')';
     const ReaderStatus::Status st = read_status( fileName );
-    if ( ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldStatus && gpg_agent )
+    if ( force && gpg_agent ||
+         ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldInfo.status && gpg_agent )
         return get_more_detailed_status( fileName, idx, gpg_agent );
     else
         return CardInfo( fileName, st );
 }
 
-static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent, const std::vector<CardInfo> & oldCardInfos ) {
+static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent, const std::vector<CardInfo> & oldCardInfos, bool force ) {
     const QDir gnupgHome( gnupgHomePath );
     if ( !gnupgHome.exists() ) {
         qDebug() << "update_cardinfo: gnupg home" << gnupgHomePath << "does not exist!";
@@ -384,9 +408,20 @@ static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, sha
             continue;
         result.resize( idx );
         result.push_back( get_card_info( gnupgHome.absoluteFilePath( file ), idx, gpgAgent,
-                                         idx < oldCardInfos.size() ? oldCardInfos[idx].status : ReaderStatus::NoCard ) );
+                                         idx < oldCardInfos.size() ? oldCardInfos[idx] : CardInfo(), force ) );
     }
     return result;
+}
+
+static bool check_event_counter_changed( shared_ptr<Context> & gpg_agent, unsigned int & counter ) {
+    const unsigned int oldCounter = counter;
+    counter = get_event_counter( gpg_agent );
+    if ( oldCounter != counter ) {
+        qDebug() << "ReaderStatusThread[2nd]: events:" << oldCounter << "->" << counter ;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 struct Transaction {
@@ -396,6 +431,7 @@ struct Transaction {
     GpgME::Error error;
 };
 
+static const Transaction checkTransaction  = { "__check__",  0, 0, Error() };
 static const Transaction updateTransaction = { "__update__", 0, 0, Error() };
 static const Transaction quitTransaction   = { "__quit__",   0, 0, Error() };
 
@@ -467,6 +503,8 @@ namespace {
             std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
             shared_ptr<Context> gpgAgent( c );
 
+            unsigned int eventCounter = -1;
+
             while ( true ) {
 
                 QByteArray command;
@@ -479,7 +517,8 @@ namespace {
                     while ( m_transactions.empty() ) {
                         // go to sleep waiting for more work:
                         qDebug( "ReaderStatusThread[2nd]: .zZZ" );
-                        m_waitForTransactions.wait( &m_mutex );
+                        if ( !m_waitForTransactions.wait( &m_mutex, CHECK_INTERVAL ) )
+                            m_transactions.push_front( checkTransaction );
                         qDebug( "ReaderStatusThread[2nd]: .oOO" );
                     }
 
@@ -504,10 +543,14 @@ namespace {
                 if ( nullSlot && command == quitTransaction.command )
                     return; // quit
 
-                if ( nullSlot && command == updateTransaction.command ) {
+                if ( nullSlot && command == updateTransaction.command ||
+                     nullSlot && command == checkTransaction.command ) {
+
+                    if ( nullSlot && command == checkTransaction.command && !check_event_counter_changed( gpgAgent, eventCounter ) )
+                        continue; // early out
 
                     std::vector<CardInfo> newCardInfos
-                        = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos );
+                        = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos, command == checkTransaction.command );
 
                     newCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
                     oldCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
@@ -550,6 +593,10 @@ namespace {
                     emit oneTransactionFinished();
 
                 }
+
+                // update event counter in case anything above changed
+                // it:
+                eventCounter = get_event_counter( gpgAgent );
             }
         }
 
