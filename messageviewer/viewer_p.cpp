@@ -118,6 +118,7 @@ using MessageViewer::TeeHtmlWriter;
 #include "util.h"
 #include "vcardviewer.h"
 #include "mailwebview.h"
+#include "findbar/findbar.h"
 
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
@@ -146,6 +147,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mOldGlobalOverrideEncoding( "---" ), // init with dummy value
     mCSSHelper( 0 ),
     mMainWindow( mainWindow ),
+    mFindBar( 0 ),
     mActionCollection( actionCollection ),
     mCopyAction( 0 ),
     mCopyURLAction( 0 ),
@@ -1761,9 +1763,11 @@ void ViewerPrivate::createWidgets() {
   mBox = new KHBox( mSplitter );
   mColorBar = new HtmlStatusBar( mBox );
   mColorBar->setObjectName( "mColorBar" );
-  mViewer = new MailWebView( mBox );
+  KVBox *readerBox = new KVBox( mBox );
+  mViewer = new MailWebView( readerBox );
   mViewer->setObjectName( "mViewer" );
   mViewer->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Expanding );
+  mFindBar = new FindBar( mViewer, readerBox );
   mColorBar->setSizePolicy( QSizePolicy::Minimum, QSizePolicy::Ignored );
   mSplitter->setStretchFactor( mSplitter->indexOf(mMimePartTree), 0 );
   mSplitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
@@ -2267,10 +2271,8 @@ void ViewerPrivate::slotToggleHtmlMode()
 
 void ViewerPrivate::slotFind()
 {
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  mViewer->findText();
-#endif
+  mFindBar->show();
+  mFindBar->focusAndSetCursor();
 }
 
 

@@ -45,6 +45,7 @@ filehtmlwriter.cpp
 teehtmlwriter.cpp
 chiasmuskeyselector.cpp
 mailwebview.cpp
+findbar/findbar.cpp
 )
 
 

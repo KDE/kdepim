@@ -28,6 +28,7 @@
 #include "csshelper.h"
 #include "globalsettings.h"
 #include "mailwebview.h"
+#include "findbar/findbar.h"
 
 //KDE includes
 #include <QWebView>
@@ -326,10 +327,8 @@ bool Viewer::event(QEvent *e)
 void Viewer::slotFind()
 {
   Q_D(Viewer);
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-  d->mViewer->findText();
-#endif
+  d->mFindBar->show();
+  d->mFindBar->focusAndSetCursor();
 }
 
 const AttachmentStrategy * Viewer::attachmentStrategy() const

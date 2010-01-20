@@ -80,6 +80,7 @@ namespace MessageViewer {
   class HeaderStrategy;
   class HeaderStyle;
   class NodeHelper;
+  class FindBar;
 }
 
 namespace MessageViewer {
@@ -494,6 +495,7 @@ public:
   QTreeView* mMimePartTree; //FIXME(Andras) port the functionality from KMMimePartTree to a new view class or to here with signals/slots
   MimeTreeModel *mMimePartModel;
   MailWebView *mViewer;
+  FindBar *mFindBar;
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
