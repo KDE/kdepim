@@ -21,6 +21,7 @@
 #include "ui_attendeeselector.h"
 
 #include <libkdepim/addresseelineedit.h>
+#include <libemailfunctions/email.h>
 
 #include <klocale.h>
 #include <kpushbutton.h>
@@ -51,8 +52,15 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
 QStringList AttendeeSelector::attendees() const
 {
   QStringList rv;
-  for ( uint i = 0; i < ui->attendeeList->count(); ++i )
-    rv << ui->attendeeList->item( i )->text();
+  for ( uint i = 0; i < ui->attendeeList->count(); ++i ) {
+    QString addr = ui->attendeeList->item( i )->text();
+
+    // Build a nice address for this attendee including the CN.
+    QString tname, temail;
+    KPIM::getNameAndMail( addr, tname, temail ); // ignore return value
+                                                 // which is always false
+    rv << temail;
+  }
   return rv;
 }
 
