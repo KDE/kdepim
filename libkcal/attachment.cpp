@@ -98,8 +98,14 @@ char *Attachment::data() const
 
 QByteArray &Attachment::decodedData()
 {
-  if ( mDataCache.isNull() ) {
-    mDataCache = KCodecs::base64Decode( QCString( mData ) );
+  if ( mDataCache.isNull() && mData ) {
+    // base64Decode() sometimes appends a null byte when called
+    // with a QCString so work on QByteArray's instead
+    QByteArray encoded;
+    encoded.duplicate( mData, strlen( mData ) );
+    QByteArray decoded;
+    KCodecs::base64Decode( encoded, decoded );
+    mDataCache = decoded;
   }
 
   return mDataCache;
@@ -107,7 +113,9 @@ QByteArray &Attachment::decodedData()
 
 void Attachment::setDecodedData( const QByteArray &data )
 {
-  setData( KCodecs::base64Encode( QCString( data.data() ) ) );
+  QByteArray encoded;
+  KCodecs::base64Encode( data, encoded );
+  setData( encoded.data() );
   mDataCache = data;
   mSize = mDataCache.size();
 }

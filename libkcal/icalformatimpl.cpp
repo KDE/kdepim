@@ -639,7 +639,7 @@ icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
   if (att->isUri())
       attach = icalattach_new_from_url( att->uri().utf8().data());
   else
-      attach = icalattach_new_from_data ( (unsigned char *)att->data(), 0, 0);
+      attach = icalattach_new_from_data ( (unsigned char *)att->decodedData().data(), 0, 0);
   icalproperty *p = icalproperty_new_attach(attach);
 
   if ( !att->mimeType().isEmpty() ) {
