@@ -160,8 +160,9 @@ void FindBar::clearSelections()
   } else {
     m_view->findText( QString(), m_searchOptions | QWebPage::FindCaseSensitively );
   }
-  m_view->triggerPageAction( QWebPage::MoveToStartOfDocument );
-  m_view->triggerPageAction( QWebPage::SelectStartOfDocument );
+  //WEBKIT: TODO: Find a way to unselect last selection
+  //m_view->triggerPageAction( QWebPage::MoveToStartOfDocument );
+  //m_view->triggerPageAction( QWebPage::SelectStartOfDocument );
 }
 
 void FindBar::closeBar()
