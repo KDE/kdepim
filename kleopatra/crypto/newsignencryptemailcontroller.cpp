@@ -57,6 +57,7 @@
 
 #include <KLocale>
 #include <KDebug>
+#include <KMessageBox>
 
 #include <QPointer>
 #include <QTimer>
@@ -363,7 +364,21 @@ shared_ptr<Task> NewSignEncryptEMailController::Private::takeRunnable( GpgME::Pr
 
 void NewSignEncryptEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
     assert( task );
-    (void)result;
+
+    if ( result && result->hasError() ) {
+        QPointer<QObject> that = this;
+        if ( result->details().isEmpty() )
+            KMessageBox::        sorry( 0,
+                                        result->overview(),
+                                        i18nc("@title:window","Error") );
+        else
+            KMessageBox::detailedSorry( 0,
+                                        result->overview(),
+                                        result->details(),
+                                        i18nc("@title:window","Error") );
+        if ( !that )
+            return;
+    }
     
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
