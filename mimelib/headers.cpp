@@ -76,20 +76,47 @@ void DwHeadersParser::NextField(DwString* aStr)
     size_t pos = mPos;
     size_t start = pos;
     size_t len = 0;
+    bool forcedWrap = false;
     while (pos < bufEnd) {
         if (buf[pos] == '\n'
             && pos+1 < bufEnd
             && buf[pos+1] != ' '
             && buf[pos+1] != '\t') {
-
-            ++len;
-            ++pos;
-            break;
+            if (pos+3 < bufEnd
+                && buf[pos+1] == '='
+                && (
+                        (buf[pos+2] == '0'
+                         && buf[pos+3] == '9')
+                    ||  (buf[pos+2] == '2'
+                         && buf[pos+3] == '0'))) {
+                // bug 86302 - workaround for malformed wrapped encoded-words
+                len += 3;
+                pos += 3;
+                forcedWrap = true;
+            } else {
+                ++len;
+                ++pos;
+                break;
+            }
         }
         ++len;
         ++pos;
     }
     *aStr = mString.substr(start, len);
+    // bug 86302 - workaround for malformed wrapped encoded-words
+    if (forcedWrap) {
+      size_t lastPos = 0;
+      while ((lastPos = aStr->find("\n=09", lastPos, 4)) != DwString::npos) {
+          aStr->replace(lastPos+1, 3, "\t", 1);
+          lastPos += 2;
+      }
+
+      lastPos = 0;
+      while ((lastPos = aStr->find("\n=20", lastPos, 4)) != DwString::npos) {
+          aStr->replace(lastPos+1, 3, " ", 1);
+          lastPos += 2;
+      }
+    }
     mPos = pos;
 }
 

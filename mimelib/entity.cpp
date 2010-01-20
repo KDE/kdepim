@@ -104,7 +104,15 @@ void DwEntityParser::Parse()
                 (buf[pos] == ' ' || buf[pos] == '\t')) {
                 isHeaderLine = DwTrue;
                 ++pos;
-                            }
+            }
+            else if (pos == lineStart &&
+                (pos+2 < bufEnd && buf[pos] == '=' &&
+                 ((buf[pos+1] == '0' && buf[pos+2] == '9') ||
+                  (buf[pos+1] == '2' && buf[pos+2] == '0')))) {
+                // bug 86302 - workaround for malformed wrapped encoded-words
+                isHeaderLine = DwTrue;
+                pos += 3;
+            }
             else {
                 ++pos;
             }
