@@ -1049,6 +1049,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       } else if ( a == saveas ) {
         saveAsAttachment( name, iCal );
       }
+      delete menu;
       return true;
     }
 
