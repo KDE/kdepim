@@ -268,41 +268,7 @@ namespace {
             if ( protocol == proto )
                 return;
             protocol = proto;
-            updateWidgetVisibility();
             loadDefaultKeyType();
-        }
-
-        void updateWidgetVisibility() {
-            // Personal Details Page
-            ui.uidGB->setVisible( protocol == OpenPGP );
-            ui.uidGB->setEnabled( false );
-            ui.uidGB->setToolTip( i18nc("@info:tooltip","Adding more than one User-ID isn't yet implemented, sorry.") );
-            ui.emailGB->setVisible( protocol == CMS );
-            ui.dnsGB->setVisible( protocol == CMS );
-            ui.uriGB->setVisible( protocol == CMS );
-            // Technical Details Page
-            // ### take keyTypeImmutable into account
-            ui.dsaRB->setEnabled( protocol == OpenPGP );
-            ui.elgCB->setEnabled( protocol == OpenPGP );
-            if ( protocol == CMS ) {
-                ui.rsaRB->setChecked( true ); // gpgsm can generate only rsa atm
-                ui.elgCB->setChecked( false );
-            } else {
-                ui.dsaRB->setChecked( true ); // default for OpenPGP
-                ui.elgCB->setChecked( true );
-            }
-            ui.certificationCB->setVisible( protocol == OpenPGP ); // gpgsm limitation?
-            ui.authenticationCB->setVisible( protocol == OpenPGP );
-            if ( protocol == OpenPGP ) { // pgp keys must have certify capability
-                ui.certificationCB->setChecked( true );
-                ui.certificationCB->setEnabled( false );
-            }
-            if ( protocol == CMS ) {
-                ui.encryptionCB->setEnabled( true );
-            }
-            ui.expiryDE->setVisible( protocol == OpenPGP );
-            ui.expiryCB->setVisible( protocol == OpenPGP );
-            slotKeyMaterialSelectionChanged();
         }
 
         void setAdditionalUserIDs( const QStringList & items ) { ui.uidLW->setItems( items ); }
@@ -375,9 +341,11 @@ namespace {
             const unsigned int algo = keyType();
             const unsigned int sk_algo = subkeyType();
             if ( protocol == OpenPGP ) {
-                ui.elgCB->setEnabled( is_dsa( algo ) );
-                if ( sender() == ui.dsaRB || sender() == ui.rsaRB )
-                    ui.elgCB->setChecked( is_dsa( algo ) );
+                if ( !keyTypeImmutable ) {
+                    ui.elgCB->setEnabled( is_dsa( algo ) );
+                    if ( sender() == ui.dsaRB || sender() == ui.rsaRB )
+                        ui.elgCB->setChecked( is_dsa( algo ) );
+                }
                 if ( is_rsa( algo ) ) {
                     ui.encryptionCB->setEnabled( true );
                     ui.encryptionCB->setChecked( true );
@@ -392,7 +360,7 @@ namespace {
                         ui.encryptionCB->setChecked( false );
                 }
             } else {
-                assert( is_rsa( keyType() ) );
+                //assert( is_rsa( keyType() ) ); // it can happen through misconfiguration by the admin that no key type is selectable at all
             }
         }
 
@@ -408,6 +376,7 @@ namespace {
     private:
         void fillKeySizeComboBoxen();
         void loadDefaultKeyType();
+        void updateWidgetVisibility();
 
     private:
         GpgME::Protocol protocol;
@@ -1406,7 +1375,39 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
     }
 
     keyTypeImmutable = config.isEntryImmutable( entry );
-    //updateSomehting();
+    updateWidgetVisibility();
+}
+
+void AdvancedSettingsDialog::updateWidgetVisibility() {
+    // Personal Details Page
+    ui.uidGB->setVisible( protocol == OpenPGP );
+    ui.uidGB->setEnabled( false );
+    ui.uidGB->setToolTip( i18nc("@info:tooltip","Adding more than one User-ID isn't yet implemented, sorry.") );
+    ui.emailGB->setVisible( protocol == CMS );
+    ui.dnsGB->setVisible( protocol == CMS );
+    ui.uriGB->setVisible( protocol == CMS );
+    // Technical Details Page
+    if ( keyTypeImmutable ) {
+        ui.rsaRB->setEnabled( false );
+        ui.dsaRB->setEnabled( false );
+        ui.elgCB->setEnabled( false );
+    } else {
+        ui.rsaRB->setEnabled( true );
+        ui.dsaRB->setEnabled( protocol == OpenPGP );
+        ui.elgCB->setEnabled( protocol == OpenPGP );
+    }
+    ui.certificationCB->setVisible( protocol == OpenPGP ); // gpgsm limitation?
+    ui.authenticationCB->setVisible( protocol == OpenPGP );
+    if ( protocol == OpenPGP ) { // pgp keys must have certify capability
+        ui.certificationCB->setChecked( true );
+        ui.certificationCB->setEnabled( false );
+    }
+    if ( protocol == CMS ) {
+        ui.encryptionCB->setEnabled( true );
+    }
+    ui.expiryDE->setVisible( protocol == OpenPGP );
+    ui.expiryCB->setVisible( protocol == OpenPGP );
+    slotKeyMaterialSelectionChanged();
 }
 
 #include "moc_newcertificatewizard.cpp"
