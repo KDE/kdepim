@@ -105,7 +105,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
 QString CSSHelper::htmlHead( bool fixed ) const {
   return
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
-  "<html><head><title></title><style>"
+  "<html><head><title></title><style>\n"
   + cssDefinitions( fixed ) +
   "</style></head>\n"
   "<body>\n";

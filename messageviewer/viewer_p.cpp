@@ -1091,7 +1091,7 @@ void ViewerPrivate::displayMessage()
 
   mNodeHelper->setOverrideCodec( mMessage, overrideCodec() );
 
-  htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont ) );
+  htmlWriter()->begin( QString() );
   htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
 
   if ( !mMainWindow )
@@ -2342,7 +2342,7 @@ void ViewerPrivate::updateReaderWin()
     mColorBar->hide();
     mMimePartTree->hide();
   //FIXME(Andras)  mMimePartTree->clearAndResetSortOrder();
-    htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont) );
+    htmlWriter()->begin( QString() );
     htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) + "</body></html>" );
     htmlWriter()->end();
   }
@@ -2539,7 +2539,6 @@ void ViewerPrivate::injectAttachments()
     return;
 
   QString imgpath( KStandardDirs::locate("data","kmail/pics/") );
-  QString visibility;
   QString urlHandle;
   QString imgSrc;
   if( !mShowAttachmentQuicklist ) {
