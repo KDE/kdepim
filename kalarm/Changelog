@@ -1,7 +1,7 @@
 KAlarm Change Log
 
 === Version 2.2.11 (KDE 4.3.5) --- 20 January 2010 ===
-- Fix non-Latin characters being illegible in emails (when sent via KMail only).
+- Fix non-Latin characters being illegible in emails.
 
 === Version 2.2.10 (KDE 4.3.4) --- 23 November 2009 ===
 - If dual screens, show alarm in other screen if any full screen window exists.
