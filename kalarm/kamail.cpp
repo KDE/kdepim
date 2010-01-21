@@ -304,14 +304,14 @@ QString KAMail::addToKMailFolder(JobData& data, const char* folder, bool checkKm
 			kError() << folder << ": Unable to open a temporary mail file";
 			return QString("");
 		}
-		QTextStream stream(&tmpFile);
-		stream << message.encodedContent();
-		stream.flush();
+		tmpFile.write(message.encodedContent());
 		if (tmpFile.error() != QFile::NoError)
 		{
 			kError() << folder << ": Error" << tmpFile.errorString() << " writing to temporary mail file";
+			tmpFile.close();
 			return QString("");
 		}
+		tmpFile.close();
 
 		// Notify KMail of the message in the temporary file
 		org::kde::kmail::kmail kmail(KMAIL_DBUS_SERVICE, KMAIL_DBUS_PATH, QDBusConnection::sessionBus());
