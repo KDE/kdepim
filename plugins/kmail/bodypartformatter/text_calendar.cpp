@@ -721,7 +721,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
-      if ( !CalHelper::hasMyWritableEventsFolders( CalendarManager::calendar() ) ) {
+      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "

@@ -97,17 +97,18 @@ bool CalHelper::usingGroupware( Calendar *calendar )
   return false;
 }
 
-bool CalHelper::hasMyWritableEventsFolders( Calendar *calendar )
+bool CalHelper::hasMyWritableEventsFolders( const QString &family )
 {
-  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
-  if ( !cal ) {
-    return true;
+  QString myfamily = family;
+  if ( family.isEmpty() ) {
+    myfamily = "calendar";
   }
 
-  CalendarResourceManager *manager = cal->resourceManager();
+  CalendarResourceManager manager( myfamily );
+  manager.readConfig();
 
   CalendarResourceManager::ActiveIterator it;
-  for ( it=manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+  for ( it=manager.activeBegin(); it != manager.activeEnd(); ++it ) {
     if ( (*it)->readOnly() ) {
       continue;
     }
