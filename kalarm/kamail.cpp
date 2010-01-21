@@ -304,6 +304,7 @@ QString KAMail::addToKMailFolder(JobData& data, const char* folder, bool checkKm
 			kError() << folder << ": Unable to open a temporary mail file";
 			return QString("");
 		}
+		tmpFile.setTextModeEnabled(true);
 		tmpFile.write(message.encodedContent());
 		if (tmpFile.error() != QFile::NoError)
 		{
