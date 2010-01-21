@@ -95,7 +95,7 @@ class CalendarManager
   public:
     CalendarManager();
     ~CalendarManager();
-    static KCal::Calendar* calendar();
+    static KCal::CalendarResources* calendar();
 
   private:
     KCal::CalendarResources* mCalendar;
@@ -139,7 +139,7 @@ CalendarManager::~CalendarManager()
   mSelf = 0;
 }
 
-KCal::Calendar* CalendarManager::calendar()
+KCal::CalendarResources *CalendarManager::calendar()
 {
   if ( !mSelf ) {
     sCalendarDeleter.setObject( mSelf, new CalendarManager() );
@@ -452,6 +452,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleInvitation( const QString& iCal, Attendee::PartStat status,
                            KMail::Callback &callback ) const
     {
+      kdDebug() << "FOOOO handleInvitation, status is " << status << endl;
       bool ok = true;
       const QString receiver = callback.receiver();
 
@@ -479,10 +480,16 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // First, save it for KOrganizer to handle
       QString dir = directoryForStatus( status );
-      if ( dir.isEmpty() )
+      if ( dir.isEmpty() ) {
         return true; // unknown status
-      if ( status != Attendee::Delegated ) // we do that below for delegated incidences
-        saveFile( receiver, iCal, dir );
+      }
+
+      if ( status != Attendee::Delegated ) {
+       // we do that below for delegated incidences
+        if ( !saveFile( receiver, iCal, dir ) ) {
+          return false;
+        }
+      }
 
       QString delegateString;
       bool delegatorRSVP = false;
@@ -510,10 +517,16 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         for ( Attendee::List::ConstIterator it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
           if( KPIM::compareEmail( (*it)->fullName(), myself->delegator(), false ) && (*it)->status() == Attendee::Delegated ) {
             delegator = (*it)->fullName();
+            kdDebug() << "FOOO: found delegator " << delegator << endl;
             delegatorRSVP = (*it)->RSVP();
             break;
           }
         }
+      }
+
+      if ( myself && !myself->delegate().isEmpty() &&
+           status != Attendee::Delegated ) {
+        kdDebug() << "FOOO MAYBE I REMOVE DELEGATE?" << endl;
       }
 
       if ( ( myself && myself->RSVP() ) || heuristicalRSVP( incidence ) ) {
@@ -721,7 +734,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
-      if ( !CalHelper::hasMyWritableEventsFolders( CalendarManager::calendar() ) ) {
+      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "
