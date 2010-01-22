@@ -10,6 +10,7 @@ set(CTEST_CUSTOM_WARNING_EXCEPTION
   ${CTEST_CUSTOM_WARNING_EXCEPTION}
   "groupwise/soap"
   "mk4storage"
+  "too big, try a different debug format"
   )
 
 # Errors that will be ignored
