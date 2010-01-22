@@ -158,7 +158,7 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &col
 
   item.setMimeType( "message/rfc822" );
 
-  KMime::Headers::Base *statusHeaders = message->getHeaderByType( "X-Status" );
+  KMime::Headers::Base *statusHeaders = message->headerByType( "X-Status" );
   if( statusHeaders ) {
     if( !statusHeaders->isEmpty() ) {
       status.setStatusFromStr( statusHeaders->asUnicodeString() );
@@ -228,7 +228,7 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
 
   // The subCollection doesn't exsit, create a new one
   Akonadi::Collection newSubCollection;
-  newSubCollection.setParent( baseCollection );
+  newSubCollection.setParentCollection( baseCollection );
   newSubCollection.setName( newCollectionPathName );
 
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
