@@ -252,7 +252,7 @@ void SignEncryptFilesController::Private::updateWizardMode() {
     default:
         assert( !"Shouldn't happen" );
     case ArchiveAllowed:
-        wizard->setCreateArchivePreset( true );
+        wizard->setCreateArchivePreset( false );
         wizard->setEncryptionUserMutable( true );
         break;
     };
