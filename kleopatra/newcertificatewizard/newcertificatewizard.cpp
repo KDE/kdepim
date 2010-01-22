@@ -275,6 +275,8 @@ namespace {
         void updateWidgetVisibility() {
             // Personal Details Page
             ui.uidGB->setVisible( protocol == OpenPGP );
+            ui.uidGB->setEnabled( false );
+            ui.uidGB->setToolTip( i18nc("@info:tooltip","Adding more than one User-ID isn't yet implemented, sorry.") );
             ui.emailGB->setVisible( protocol == CMS );
             ui.dnsGB->setVisible( protocol == CMS );
             ui.uriGB->setVisible( protocol == CMS );
