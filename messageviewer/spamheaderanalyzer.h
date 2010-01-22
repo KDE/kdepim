@@ -34,12 +34,10 @@
 #ifndef __MESSAGEVIEWER_SPAMHEADERANALYZER_H__
 #define __MESSAGEVIEWER_SPAMHEADERANALYZER_H__
 
+#include <KMime/Message>
+
 #include <QString>
 #include <QList>
-
-namespace KMime {
-  class Message;
-}
 
 typedef enum {
   noError,
@@ -104,7 +102,7 @@ public:
       @param message A KMime::Message to examine
       @return A list of detected scores. See SpamScore
   */
-  static SpamScores getSpamScores( KMime::Message *message );
+  static SpamScores getSpamScores( KMime::Message::Ptr message );
 };
 
 

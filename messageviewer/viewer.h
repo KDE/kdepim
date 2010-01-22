@@ -99,7 +99,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   /**
    * Returns the current message displayed in the viewer.
    */
-  KMime::Message* message() const; //TODO(Andras): convert mMessage to KMime::Message::Ptr ? This is not nice to expose the internal pointer.
+  KMime::Message::Ptr message() const;
 
   enum AttachmentAction
   {
@@ -122,20 +122,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
     Delayed
   };
 
-  /** Flag to indicate the owrnership of the message data pointer. Transfer means the ownership is taken
-  * by the MailViewer class, Keep means it the ownership is not taken.
-  */
-  enum Ownership {
-    Transfer= 0,
-    Keep
-  };
-
   /** Set the message that shall be shown.
   * @param msg - the message to be shown. If 0, an empty page is displayed.
   * @param updateMode - update the display immediately or not. See UpdateMode.
-  * @param Ownership - Transfer means the ownership of the msg pointer is taken by the lib
   */
-  void setMessage(KMime::Message* message, UpdateMode updateMode = Delayed, Ownership ownership = Keep);
+  void setMessage( KMime::Message::Ptr message, UpdateMode updateMode = Delayed );
 
   /** Set the Akonadi item that will be displayed.
   * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
@@ -153,14 +144,14 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   * returned by message() to 0.
   * @param updateMode - update the display immediately or not. See UpdateMode.
   */
-  void clear(UpdateMode updateMode = Delayed ) { setMessage(0, updateMode); }
+  void clear( UpdateMode updateMode = Delayed ) { setMessage( KMime::Message::Ptr(), updateMode ); }
 
-  void update(UpdateMode updateMode = Delayed );
+  void update( UpdateMode updateMode = Delayed );
 
   /** Sets a message as the current one and print it immediately.
   *   @param message the message to display and print
   */
-  void printMessage( KMime::Message* message );
+  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
   /** Print the currently displayed message */
@@ -267,9 +258,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   void saveRelativePosition();
 
   KUrl urlClicked() const;
-
-  bool autoDelete(void) const;
-  void setAutoDelete(bool f);
 
   bool noMDNsWhenEncrypted() const;
 

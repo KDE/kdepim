@@ -167,7 +167,7 @@ public:
   */
   void objectTreeToDecryptedMsg( KMime::Content* node,
                                  QByteArray& resultingData,
-                                 KMime::Message& theMessage,
+                                 KMime::Message::Ptr theMessage,
                                  bool weAreReplacingTheRootNode = false,
                                  int recCount = 0 );
 
@@ -213,7 +213,8 @@ public:
 
   /** Creates a nice mail header depending on the current selected
     header style. */
-  QString writeMsgHeader( KMime::Message* aMsg, KMime::Content* vCardNode = 0, bool topLevel = false );
+  QString writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content* vCardNode = 0,
+                          bool topLevel = false );
 
   /** show window containing information about a vCard. */
   void showVCard(KMime::Content *msgPart);
@@ -266,7 +267,7 @@ public:
 
 
   /** Print message. */
-  void printMessage( KMime::Message* message );
+  void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
     /** Set the Akonadi item that will be displayed.
@@ -280,14 +281,13 @@ public:
   /** Set the message that shall be shown.
   * @param msg - the message to be shown. If 0, an empty page is displayed.
   * @param updateMode - update the display immediately or not. See MailViewer::UpdateMode.
-  *  @param MailViewer::Ownership - Transfer means the ownership of the msg pointer is taken by the lib
   */
-  void setMessage(KMime::Message* msg, Viewer::UpdateMode updateMode = Viewer::Delayed, Viewer::Ownership = Viewer::Keep);
+  void setMessage( KMime::Message::Ptr msg, Viewer::UpdateMode updateMode = Viewer::Delayed );
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
   void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                   const QString& aFileName, const QString& pname );
+                       const QString& aFileName, const QString& pname );
 
   void setMessagePart( KMime::Content * node );
 
@@ -485,9 +485,8 @@ signals:
 public:
   NodeHelper* mNodeHelper;
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
-  KMime::Message *mMessage; //the current message, if it was set manually
+  KMime::Message::Ptr mMessage; //the current message, if it was set manually
   Akonadi::Item mMessageItem; //the message item from Akonadi
-  bool mDeleteMessage; //the message was created in the lib, eg. by calling setMessageItem()
   // widgets:
   QSplitter * mSplitter;
   KHBox *mBox;

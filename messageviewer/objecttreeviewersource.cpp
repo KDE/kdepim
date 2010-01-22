@@ -66,7 +66,7 @@ const QTextCodec * MailViewerSource::overrideCodec()
   return mViewer->overrideCodec();
 }
 
-QString MailViewerSource::createMessageHeader( KMime::Message* message )
+QString MailViewerSource::createMessageHeader( KMime::Message::Ptr message )
 {
   return mViewer->writeMsgHeader( message );
 }

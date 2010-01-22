@@ -33,7 +33,7 @@ QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 
 void ObjectTreeParserTester::test_parsePlainMessage()
 {
-  KMime::Message *msg = new KMime::Message();
+  KMime::Message::Ptr msg( new KMime::Message() );
   QByteArray content(
       "From: Thomas McGuire <dontspamme@gmx.net>\n"
       "Subject: Plain Message Test\n"
@@ -52,7 +52,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   // Parse the message
   EmptySource emptySource;
   ObjectTreeParser otp( &emptySource );
-  otp.parseObjectTree( Akonadi::Item(), msg );
+  otp.parseObjectTree( Akonadi::Item(), msg.get() );
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.textualContent(), QString( "This is the message text." ) );
@@ -74,14 +74,14 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   msg->setContent( content );
   msg->parse();
   ObjectTreeParser otp2( &emptySource );
-  otp2.parseObjectTree( Akonadi::Item(), msg );
+  otp2.parseObjectTree( Akonadi::Item(), msg.get() );
   QCOMPARE( otp2.textualContentCharset().constData(), msg->defaultCharset().constData() );
 }
 
 void ObjectTreeParserTester::test_parseEncapsulatedMessage()
 {
   QVERIFY( true );
-  KMime::Message *msg = new KMime::Message();
+  KMime::Message::Ptr msg( new KMime::Message() );
   const QByteArray content(
       "From: Thomas McGuire <dontspamme@gmx.net>\n"
       "Subject: Fwd: Test with attachment\n"
@@ -144,7 +144,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
     // Parse the message
     EmptySource emptySource;
     ObjectTreeParser otp( &emptySource );
-    otp.parseObjectTree( Akonadi::Item(), msg );
+    otp.parseObjectTree( Akonadi::Item(), msg.get() );
 
     // Check that the textual content and the charset have the expected values
     QCOMPARE( otp.textualContent(), QString( "This is the encapsulating message." ) );

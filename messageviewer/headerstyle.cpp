@@ -95,11 +95,11 @@ public:
   const HeaderStyle * next() const { return plain(); }
   const HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message * message, const HeaderStrategy * strategy,
+  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
                   const QString & vCardName, bool printing, bool topLevel ) const;
 };
 
-QString BriefHeaderStyle::format( KMime::Message * message,
+QString BriefHeaderStyle::format( KMime::Message::Ptr message,
                                   const HeaderStrategy * strategy,
                                   const QString & vCardName, bool printing, bool topLevel ) const {
   Q_UNUSED( topLevel );
@@ -192,14 +192,14 @@ public:
   const HeaderStyle * next() const { return fancy(); }
   const HeaderStyle * prev() const { return brief(); }
 
-  QString format( KMime::Message * message, const HeaderStrategy * strategy,
+  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
                   const QString & vCardName, bool printing, bool topLevel ) const;
 
 private:
-  QString formatAllMessageHeaders( KMime::Message * message ) const;
+  QString formatAllMessageHeaders( KMime::Message::Ptr message ) const;
 };
 
-QString PlainHeaderStyle::format( KMime::Message * message,
+QString PlainHeaderStyle::format( KMime::Message::Ptr message,
                                   const HeaderStrategy * strategy,
                                   const QString & vCardName, bool printing, bool topLevel ) const {
   Q_UNUSED( topLevel );
@@ -297,7 +297,7 @@ QString PlainHeaderStyle::format( KMime::Message * message,
   return headerStr;
 }
 
-QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message * message ) const {
+QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message::Ptr message ) const {
   QByteArray head = message->head();
   KMime::Headers::Generic *header = message->nextHeader(head);
   QString result;
@@ -327,7 +327,7 @@ public:
   const HeaderStyle * next() const { return enterprise(); }
   const HeaderStyle * prev() const { return plain(); }
 
-  QString format( KMime::Message * message, const HeaderStrategy * strategy,
+  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
                   const QString & vCardName, bool printing, bool topLevel ) const;
   static QString imgToDataUrl( const QImage & image );
 
@@ -434,7 +434,7 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
 }
 
 
-QString FancyHeaderStyle::format( KMime::Message * message,
+QString FancyHeaderStyle::format( KMime::Message::Ptr message,
                                   const HeaderStrategy * strategy,
                                   const QString & vCardName, bool printing, bool topLevel ) const {
   Q_UNUSED( topLevel );
@@ -715,11 +715,11 @@ public:
   const HeaderStyle * next() const { return brief(); }
   const HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message * message, const HeaderStrategy * strategy,
+  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
                   const QString & vCardName, bool printing, bool topLevel ) const;
 };
 
-QString EnterpriseHeaderStyle::format( KMime::Message * message,
+QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
                                         const HeaderStrategy * strategy,
                                         const QString & vCardName, bool printing, bool topLevel ) const
 {

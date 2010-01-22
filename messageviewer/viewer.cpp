@@ -54,7 +54,7 @@ Viewer::Viewer(QWidget *aParent,
   connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
            SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );
 
-  setMessage( 0, Delayed );
+  setMessage( KMime::Message::Ptr(), Delayed );
 }
 
 Viewer::~Viewer()
@@ -63,10 +63,10 @@ Viewer::~Viewer()
 }
 
 
-void Viewer::setMessage(KMime::Message* message, UpdateMode updateMode, Ownership ownership)
+void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 {
   Q_D(Viewer);
-  d->setMessage( message, updateMode, ownership);
+  d->setMessage( message, updateMode );
 }
 
 
@@ -95,7 +95,7 @@ void Viewer::printMessage( const Akonadi::Item &msg )
   d->printMessage( msg );
 }
 
-void Viewer::printMessage( KMime::Message* message )
+void Viewer::printMessage( KMime::Message::Ptr message )
 {
    Q_D(Viewer);
    d->printMessage( message );
@@ -299,7 +299,7 @@ KConfigSkeleton *Viewer::configObject()
   return GlobalSettings::self();
 }
 
-KMime::Message* Viewer::message() const
+KMime::Message::Ptr Viewer::message() const
 {
   Q_D(const Viewer);
   return d->mMessage;
@@ -452,18 +452,6 @@ KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );
   return d->mUrlClicked;
-}
-
-bool Viewer::autoDelete(void) const
-{
-  Q_D( const Viewer );
-  return d->mDeleteMessage;
-}
-
-void Viewer::setAutoDelete(bool f)
-{
-  Q_D( Viewer );
-  d->mDeleteMessage = f;
 }
 
 void Viewer::update( Viewer::UpdateMode updateMode )

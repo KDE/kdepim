@@ -23,9 +23,7 @@
 #include "messageviewer_export.h"
 #include "util.h"
 
-namespace KMime {
-  class Message;
-}
+#include <KMime/Message>
 
 class QObject;
 class QTextCodec;
@@ -72,7 +70,7 @@ public:
     /** The override codec that should be used for the mail */
     virtual const QTextCodec * overrideCodec() = 0;
     
-    virtual QString createMessageHeader( KMime::Message* message) = 0;
+    virtual QString createMessageHeader( KMime::Message::Ptr message) = 0;
 
     /** Disable drag and drop in the sourceObject */
     virtual void emitNoDrag() = 0;

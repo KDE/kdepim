@@ -19,23 +19,20 @@
 
 #ifndef _MESSAGEVIEWER_NODEHELPER_H
 #define _MESSAGEVIEWER_NODEHELPER_H
+#include "messageviewer_export.h"
+
+#include "partmetadata.h"
+
+#include <KMime/Message>
+
+#include <KIconLoader>
 
 #include <QList>
 #include <QMap>
 #include <QSet>
-#include <kiconloader.h>
-
-#include "messageviewer_export.h"
-
-#include <messageviewer/partmetadata.h>
 
 class KUrl;
 class QTextCodec;
-
-namespace KMime {
-  class Content;
-  class Message;
-}
 
 namespace MessageViewer {
   namespace Interface {
@@ -108,10 +105,10 @@ public:
      *  Return this mails subject, with all "forward" and "reply"
      *  prefixes removed
      */
-    static QString cleanSubject( KMime::Message* message );
+    static QString cleanSubject( KMime::Message::Ptr message );
 
     /** Attach an unencrypted message to an encrypted one */
-    void attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted);
+    void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
 
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
@@ -239,8 +236,8 @@ private:
         sequence of whitespace-delimited prefixes at the beginning of
         #subject() is replaced by @p newPrefix
     **/
-    static QString cleanSubject( KMime::Message* message, const QStringList& prefixRegExps, bool replace,
-                          const QString& newPrefix );
+    static QString cleanSubject( KMime::Message::Ptr message, const QStringList& prefixRegExps,
+                                 bool replace, const QString& newPrefix );
 
     void clearBodyPartMemento(QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> bodyPartMementoMap);
 
@@ -248,7 +245,7 @@ private:
     QList<KMime::Content*> mNodesUnderProcess;
     QMap<KMime::Content *, KMMsgEncryptionState> mEncryptionState;
     QMap<KMime::Content *, KMMsgSignatureState> mSignatureState;
-    QMap<KMime::Message*, KMime::Message* > mUnencryptedMessages;
+    QMap<KMime::Message::Ptr, KMime::Message::Ptr > mUnencryptedMessages;
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;

@@ -137,7 +137,6 @@ void NodeHelper::clear()
   mProcessedNodes.clear();
   mEncryptionState.clear();
   mSignatureState.clear();
-  qDeleteAll(mUnencryptedMessages);
   mUnencryptedMessages.clear();
   mOverrideCodecs.clear();
   for ( QMap<KMime::Content*, QMap< QByteArray, MessageViewer::Interface::BodyPartMemento*> >::iterator
@@ -510,13 +509,13 @@ QString NodeHelper::replacePrefixes( const QString& str,
     return str;
 }
 
-QString NodeHelper::cleanSubject( KMime::Message* message )
+QString NodeHelper::cleanSubject( KMime::Message::Ptr message )
 {
   return cleanSubject( message, replySubjPrefixes + forwardSubjPrefixes,
            true, QString() ).trimmed();
 }
 
-QString NodeHelper::cleanSubject( KMime::Message* message, const QStringList & prefixRegExps,
+QString NodeHelper::cleanSubject( KMime::Message::Ptr message, const QStringList & prefixRegExps,
                                  bool replace,
                                  const QString & newPrefix )
 {
@@ -524,13 +523,12 @@ QString NodeHelper::cleanSubject( KMime::Message* message, const QStringList & p
                                      newPrefix );
 }
 
-void NodeHelper::attachUnencryptedMessage( KMime::Message* message, KMime::Message* unencrypted)
+void NodeHelper::attachUnencryptedMessage( KMime::Message::Ptr message,
+                                           KMime::Message::Ptr unencrypted)
 {
  if ( !message )
   return;
 
- if ( mUnencryptedMessages.contains( message ) )
-    delete mUnencryptedMessages[message];
   mUnencryptedMessages[message] = unencrypted;
 }
 

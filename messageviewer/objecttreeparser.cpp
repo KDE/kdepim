@@ -392,7 +392,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     writePartIcon( node, true );
   } else {
     mNodeHelper->setNodeDisplayedEmbedded( node, true );
-    KMime::Message *topLevel = dynamic_cast<KMime::Message*>(node->topLevel());
+    KMime::Message* topLevel = dynamic_cast<KMime::Message*>(node->topLevel());
     writeBodyString( node->decodedContent(),
                       topLevel ? topLevel->from()->asUnicodeString() : QString(),
                       codecFor( node ), result, false );
@@ -1566,7 +1566,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item, K
   }
   QByteArray rfc822messageStr( node->decodedContent() );
   // display the headers of the encapsulated message
-  KMime::Message* rfc822message = new KMime::Message();
+  KMime::Message::Ptr rfc822message( new KMime::Message() );
   rfc822message->setContent( rfc822messageStr );
   rfc822message->parse();
   // ### PORT ME: This crashes, try for example editing a message with an
@@ -1574,7 +1574,6 @@ bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item, K
   static_cast<KMime::Message*>(node->topLevel())->from()->from7BitString( rfc822message->from()->as7BitString() );
   if ( mHtmlWriter )
     htmlWriter()->queue( mSource->createMessageHeader( rfc822message ) );
-  delete rfc822message;
     //mReader->parseMsgHeader( &rfc822message );
   // display the body of the encapsulated message
   insertAndParseNewChildNode( item,

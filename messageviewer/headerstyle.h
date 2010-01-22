@@ -32,13 +32,11 @@
 #ifndef __MESSAGEVIEWER_HEADERSTYLE_H__
 #define __MESSAGEVIEWER_HEADERSTYLE_H__
 #include "messageviewer_export.h"
+
+#include <KMime/Message>
 class QByteArray;
 class QString;
 class KDateTime;
-
-namespace KMime {
-    class Message;
-}
 
 namespace MessageViewer {
 
@@ -83,7 +81,7 @@ public:
   //
   // HeaderStyle interface:
   //
-  virtual QString format( KMime::Message * message,
+  virtual QString format( KMime::Message::Ptr message,
         const HeaderStrategy * strategy,
         const QString & vCardName,
         bool printing = false, bool topLevel = false ) const = 0;

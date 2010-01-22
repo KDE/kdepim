@@ -40,9 +40,13 @@
 #include <kmime/kmime_headers.h>
 
 #include <kdebug.h>
+
+#include <boost/shared_ptr.hpp>
+
 using namespace MessageViewer;
+
 // static
-SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message* message ) {
+SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
   SpamScores scores;
   SpamAgents agents = AntiSpamConfig::instance()->uniqueAgents();
 
