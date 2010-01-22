@@ -26,8 +26,8 @@ set(kjots_SRCS
 
 # D-Bus interface
 qt4_generate_dbus_interface( kjotscomponent.h org.kde.KJotsComponent.xml OPTIONS -m )
-qt4_add_dbus_interfaces(kjots_SRCS
-    ${CMAKE_BINARY_DIR}/kjots/org.kde.KJotsComponent.xml)
+qt4_add_dbus_interfaces(kjots_common_SRCS                                    
+    ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsComponent.xml)                  
 
 kde4_add_ui_files(kjots_SRCS confpagemisc.ui )
 
