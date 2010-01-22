@@ -185,7 +185,7 @@ Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& f
   }
 
   // The folder hasn't yet been created, create it now.
-  QStringList folderList = folderParseString.split("/");
+  const QStringList folderList = folderParseString.split('/');
   bool isFirst = true;
   QString folderBuilder;
   Akonadi::Collection lastCollection;
