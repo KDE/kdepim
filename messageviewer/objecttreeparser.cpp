@@ -287,8 +287,9 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
       continue;
     ProcessResult processResult( mNodeHelper );
 
-    if ( mHtmlWriter )
-      htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"/>").arg( node->indexForContent(c).toString() ) );
+    KMime::ContentIndex contentIndex = node->indexForContent(c);
+    if ( mHtmlWriter /*&& contentIndex.isValid()*/ )
+      htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"></a>").arg( contentIndex.toString() ) );
     if ( const Interface::BodyPartFormatter * formatter
           = BodyPartFormatterFactory::instance()->createFor( c->contentType()->mediaType(), c->contentType()->subType() ) ) {
       PartNodeBodyPart part( item, c, mNodeHelper, codecFor( c ) );
@@ -3099,37 +3100,36 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
         htmlStr += normalStartTag;
       } else {
         if ( GlobalSettings::self()->showExpandQuotesMark() ) {
-          if ( true ) {
-            if ( actHidden ) {
-              //only show the QuoteMark when is the first line of the level hidden
-              if ( !curHidden ) {
-                //Expand all quotes
-                htmlStr += "<div class=\"quotelevelmark\" >" ;
-                htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
-                                    "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
-                  .arg(-1)
-                  .arg( mExpandIcon );
-                htmlStr += "</div><br/>";
-                htmlStr += quoteEnd;
-              }
-            } else {
+          if ( actHidden ) {
+            //only show the QuoteMark when is the first line of the level hidden
+            if ( !curHidden ) {
+              //Expand all quotes
               htmlStr += "<div class=\"quotelevelmark\" >" ;
               htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
                                   "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
-                .arg(actQuoteLevel)
-                .arg( mCollapseIcon);
-              htmlStr += "</div>";
-              if ( actQuoteLevel < 3 )
-                htmlStr += quoteFontTag[actQuoteLevel];
-              else
-                htmlStr += deepQuoteFontTag[actQuoteLevel%3];
+                  .arg(-1)
+                  .arg( mExpandIcon );
+              htmlStr += "</div><br/>";
+              htmlStr += quoteEnd;
             }
           } else {
+            htmlStr += "<div class=\"quotelevelmark\" >" ;
+            htmlStr += QString( "<a href=\"kmail:levelquote?%1 \">"
+                                "<img src=\"%2\" alt=\"\" title=\"\"/></a>" )
+                .arg(actQuoteLevel)
+                .arg( mCollapseIcon);
+            htmlStr += "</div>";
             if ( actQuoteLevel < 3 ) {
               htmlStr += quoteFontTag[actQuoteLevel];
             } else {
               htmlStr += deepQuoteFontTag[actQuoteLevel%3];
             }
+          }
+        } else {
+          if ( actQuoteLevel < 3 ) {
+            htmlStr += quoteFontTag[actQuoteLevel];
+          } else {
+            htmlStr += deepQuoteFontTag[actQuoteLevel%3];
           }
         }
       }
