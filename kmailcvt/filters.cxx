@@ -247,6 +247,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          const QString&  msgStatusFlags // Defunct - KMime will now handle the MessageStatus flags.
                          )
 {
+  Q_UNUSED( msgStatusFlags );
   // Create the mail folder (if not already created).
   Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
@@ -295,6 +296,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
                                     const QString& msgStatusFlags // Defunct - KMime will now handle the MessageStatus flags.
                                     )
 {
+  Q_UNUSED( msgStatusFlags );
   // Create the mail folder (if not already created).
   Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
