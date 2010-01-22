@@ -60,7 +60,12 @@ if ( USABLE_ASSUAN_FOUND  )
     kde4_add_executable(test_uiserver TEST ${test_uiserver_SRCS})
   endif(WIN32)
 
-  target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} )
+  if ( ASSUAN2_FOUND )
+    target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} ${ASSUAN2_LIBRARIES})
+  else ( ASSUAN2_FOUND )
+    target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} ${ASSUAN_LIBRARIES})
+  endif ( ASSUAN2_FOUND )
+
   if(WIN32)
 	 target_link_libraries(test_uiserver ${ASSUAN_VANILLA_LIBRARIES} ${QGPGME_LIBRARIES} ws2_32)
   else(WIN32)
