@@ -231,7 +231,7 @@ ProcessStdOutInput::ProcessStdOutInput( const QString & cmd, const QStringList &
     m_proc->start( cmd, args, QIODevice::ReadOnly );
     if ( !m_proc->waitForStarted() )
         throw Exception( gpg_error( GPG_ERR_EIO ),
-                         i18n( "Could not start %1 process: %2" ).arg( cmd, m_proc->errorString() ) );
+                         i18n( "Could not start %1 process: %2", cmd, m_proc->errorString() ) );
 }
 
 QString ProcessStdOutInput::label() const {
