@@ -60,8 +60,6 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   addModule( "kleopatra_config_appear" );
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
   addModule( "kleopatra_config_smimevalidation" );
-#else
-  # error want libkleopatra
 #endif
   addModule( "kleopatra_config_gnupgsystem" );
 
