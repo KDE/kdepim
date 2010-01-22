@@ -53,7 +53,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
   for ( SpamAgentsIterator it = agents.begin(); it != agents.end(); ++it ) {
     float score = -2.0;
 
-    SpamError spamError = errorExtractingAgentString;
+    SpamError spamError = noError;
 
     // Skip bogus agents
     if ( (*it).scoreType() == SpamAgentNone )

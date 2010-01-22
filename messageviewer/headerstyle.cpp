@@ -394,6 +394,7 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
     }
     else // do not show negative confidence
     {
+      confidenceString = QString() + "&nbsp;";
       titleText = i18n("%1% probability of being spam.\n\n"
                        "Full report:\nProbability=%2",
                        percent, filterHeader);
