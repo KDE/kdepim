@@ -178,10 +178,10 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &col
 Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& folderParseString)
 {
   // Return an already created collection:
-  for( QMap<QString, Akonadi::Collection>::iterator i = m_messageFolderCollectionMap.begin();
-    i != m_messageFolderCollectionMap.end(); i ++ ) {
-    if( i.key() ==  folderParseString )
-      return i.value();
+  for( QMap<QString, Akonadi::Collection>::const_iterator it =
+    m_messageFolderCollectionMap.constBegin(); it != m_messageFolderCollectionMap.constEnd(); it ++ ) {
+    if( it.key() ==  folderParseString )
+      return it.value();
   }
 
   // The folder hasn't yet been created, create it now.
@@ -267,10 +267,10 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     newMessage->parse();
 
     // Check for duplicate.
-    for( QMap<QString, QString>::iterator i = m_messageFolderMessageIDMap.begin();
-     i != m_messageFolderMessageIDMap.end(); i++ ) {
-      if( i.key() == folderName &&
-        i.value() == newMessage->messageID()->asUnicodeString() ) {
+    for( QMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
+     it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+      if( it.key() == folderName &&
+        it.value() == newMessage->messageID()->asUnicodeString() ) {
         count_duplicates ++;
         return false;
       }
