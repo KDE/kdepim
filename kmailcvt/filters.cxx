@@ -211,14 +211,14 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info, const Akonadi::C
 					      const QString& newCollectionPathName )
 {
   // Ensure that the collection doesn't already exsit, if it does just return it.
-  Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob( baseCollection, 
+  Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob( baseCollection,
 									   Akonadi::CollectionFetchJob::FirstLevel);
   if( !fetchJob->exec() ) {
     info->alert( i18n( "<b>Error:<\b> Could not execute fetchJob when adding sub collection because %1",
 		       fetchJob->errorString() ) );
     return Akonadi::Collection();
   }
-  
+
   foreach( const Akonadi::Collection &subCollection, fetchJob->collections() ) {
    if( subCollection.name() == newCollectionPathName ) {
      return subCollection;
@@ -229,7 +229,7 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info, const Akonadi::C
   Akonadi::Collection newSubCollection;
   newSubCollection.setParent( baseCollection );
   newSubCollection.setName( newCollectionPathName );
-  
+
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
   if( !job->exec() ) {
     info->alert( i18n("<b>Error:<\b> Could not create subCollection because %1",
