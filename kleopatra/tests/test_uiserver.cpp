@@ -89,17 +89,29 @@ static void usage( const std::string & msg=std::string() ) {
     exit( 1 );
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t data( void * void_ctx, const void * buffer, size_t len ) {
+#else
 static gpg_error_t data( void * void_ctx, const void * buffer, size_t len ) {
+#endif
     (void)void_ctx; (void)buffer; (void)len;
     return 0; // ### implement me
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t status( void * void_ctx, const char * line ) {
+#else
 static gpg_error_t status( void * void_ctx, const char * line ) {
+#endif
     (void)void_ctx; (void)line;
     return 0;
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t inquire( void * void_ctx, const char * keyword ) {
+#else
 static gpg_error_t inquire( void * void_ctx, const char * keyword ) {
+#endif
     assuan_context_t ctx = (assuan_context_t)void_ctx;
     assert( ctx );
     const std::map<std::string,std::string>::const_iterator it = inquireData.find( keyword );
@@ -121,7 +133,11 @@ int main( int argc, char * argv[] ) {
 
     const Kleo::WSAStarter _wsastarter;
 
+#ifndef HAVE_ASSUAN2
+    assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
+#else
     assuan_set_gpg_err_source( GPG_ERR_SOURCE_DEFAULT );
+#endif
 
     if ( argc < 3 )
         usage(); // need socket and command, at least
@@ -185,6 +201,10 @@ int main( int argc, char * argv[] ) {
 
     assuan_context_t ctx = 0;
 
+#ifndef HAVE_ASSUAN2
+    if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, socket, -1, ASSUAN_CONNECT_FLAGS ) ) {
+        qDebug( "%s", Exception( err, "assuan_socket_connect_ext" ).what() );
+#else
     if ( const gpg_error_t err = assuan_new( &ctx ) ) {
         qDebug( "%s", Exception( err, "assuan_new" ).what() );
         return 1;
@@ -192,6 +212,7 @@ int main( int argc, char * argv[] ) {
 
     if ( const gpg_error_t err = assuan_socket_connect( ctx, socket, -1, ASSUAN_CONNECT_FLAGS ) ) {
         qDebug( "%s", Exception( err, "assuan_socket_connect" ).what() );
+#endif
         return 1;
     }
 
@@ -284,7 +305,11 @@ int main( int argc, char * argv[] ) {
         return 1;
     }
 
+#ifndef HAVE_ASSUAN2
+    assuan_disconnect( ctx );
+#else
     assuan_release( ctx );
-
+#endif
+    
     return 0;
 }

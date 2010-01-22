@@ -61,7 +61,11 @@ QString UiServer::Private::systemErrorString() {
 
 void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileName ) {
     // Create a Unix Domain Socket:
+#if defined(HAVE_ASSUAN2) || HAVE_ASSUAN_SOCK_GET_NONCE
     const assuan_fd_t sock = assuan_sock_new( AF_UNIX, SOCK_STREAM, 0 );
+#else
+    const assuan_fd_t sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
+#endif
     if ( sock == ASSUAN_INVALID_FD )
         throw_<std::runtime_error>( i18n( "Could not create socket: %1", systemErrorString() ) );
 
@@ -71,13 +75,19 @@ void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileNam
         std::memset( &sa, 0, sizeof(sa) );
         sa.sun_family = AF_UNIX;
         std::strncpy( sa.sun_path, encodedFileName.constData(), sizeof( sa.sun_path ) - 1 );
+#if defined(HAVE_ASSUAN2) || defined(HAVE_ASSUAN_SOCK_GET_NONCE)
         if ( assuan_sock_bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
+#else
+        if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
+#endif
             throw_<std::runtime_error>( i18n( "Could not bind to socket: %1", systemErrorString() ) );
 
         // ### TODO: permissions?
 
+#if defined(HAVE_ASSUAN2) || defined(HAVE_ASSUAN_SOCK_GET_NONCE)
         if ( assuan_sock_get_nonce( (struct sockaddr*)&sa, sizeof( sa ), &nonce ) )
             throw_<std::runtime_error>( i18n("Could not get socket nonce: %1", systemErrorString() ) );
+#endif
 
         // Listen
         if ( ::listen( sock, SOMAXCONN ) )

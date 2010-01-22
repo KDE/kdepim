@@ -279,23 +279,51 @@ QByteArray Command::command() const {
 // here comes the ugly part
 //
 
+#ifdef HAVE_ASSUAN2
+static void my_assuan_release( assuan_context_t ctx ) {
+    if ( ctx )
+        assuan_release( ctx );
+}
+#endif
+
 typedef shared_ptr< remove_pointer<assuan_context_t>::type > AssuanContextBase;
 namespace {
     struct AssuanClientContext : AssuanContextBase {
         AssuanClientContext() : AssuanContextBase() {}
-        explicit AssuanClientContext( assuan_context_t ctx ) : AssuanContextBase( ctx, &assuan_release ) {}
-        void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &assuan_release ); }
+#ifndef HAVE_ASSUAN2
+        explicit AssuanClientContext( assuan_context_t ctx ) : AssuanContextBase( ctx, &assuan_disconnect ) {}
+        void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &assuan_disconnect ); }
+#else
+        explicit AssuanClientContext( assuan_context_t ctx ) : AssuanContextBase( ctx, &my_assuan_release ) {}
+        void reset( assuan_context_t ctx=0 ) { AssuanContextBase::reset( ctx, &my_assuan_release ); }
+#endif
     };
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t
+#else
 static gpg_error_t
+#endif
 my_assuan_transact( const AssuanClientContext & ctx,
                     const char *command,
+#ifndef HAVE_ASSUAN2
+                    assuan_error_t (*data_cb)( void *, const void *, size_t )=0,
+#else
                     gpg_error_t (*data_cb)( void *, const void *, size_t )=0,
+#endif
                     void * data_cb_arg=0,
+#ifndef HAVE_ASSUAN2
+                    assuan_error_t (*inquire_cb)( void *, const char * )=0,
+#else
                     gpg_error_t (*inquire_cb)( void *, const char * )=0,
+#endif
                     void * inquire_cb_arg=0,
+#ifndef HAVE_ASSUAN2
+                    assuan_error_t (*status_cb)( void *, const char * )=0,
+#else
                     gpg_error_t (*status_cb)( void *, const char * )=0,
+#endif
                     void * status_cb_arg=0)
 {
     return assuan_transact( ctx.get(), command, data_cb, data_cb_arg, inquire_cb, inquire_cb_arg, status_cb, status_cb_arg );
@@ -337,26 +365,42 @@ static QString start_uiserver() {
     return Command::tr("start_uiserver: not yet implemented");
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
+#else
 static gpg_error_t getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
+#endif
     qint64 & pid = *static_cast<qint64*>( opaque );
     pid = QByteArray( static_cast<const char*>( buffer ), length ).toLongLong();
     return 0;
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t command_data_cb( void * opaque, const void * buffer, size_t length ) {
+#else
 static gpg_error_t command_data_cb( void * opaque, const void * buffer, size_t length ) {
+#endif
     QByteArray & ba = *static_cast<QByteArray*>( opaque );
     ba.append( QByteArray( static_cast<const char*>(buffer), length ) );
     return 0;
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
+#else
 static gpg_error_t send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
+#endif
     if ( value.isValid() )
         return my_assuan_transact( ctx, QString().sprintf( "OPTION %s=%s", name, value.toString().toUtf8().constData() ).toUtf8().constData() );
     else
         return my_assuan_transact( ctx, QString().sprintf( "OPTION %s", name ).toUtf8().constData() );
 }
 
+#ifndef HAVE_ASSUAN2
+static assuan_error_t send_file( const AssuanClientContext & ctx, const QString & file ) {
+#else
 static gpg_error_t send_file( const AssuanClientContext & ctx, const QString & file ) {
+#endif
     return my_assuan_transact( ctx, QString().sprintf( "FILE %s", hexencode( QFile::encodeName( file ) ).constData() ).toUtf8().constData() );
 }
 
@@ -373,18 +417,35 @@ void Command::Private::run() {
 
     out.canceled = false;
 
+#ifndef HAVE_ASSUAN2
+    assuan_error_t err = 0;
+#else
+    if ( out.serverLocation.isEmpty() )
+        out.serverLocation = default_socket_name();
+#endif
+
+#ifndef HAVE_ASSUAN2
+    assuan_context_t naked_ctx = 0;
+#endif
+    AssuanClientContext ctx;
+#ifdef HAVE_ASSUAN2
+    gpg_error_t err = 0;
+#endif
+
+#ifndef HAVE_ASSUAN2
     if ( out.serverLocation.isEmpty() )
         out.serverLocation = default_socket_name();
 
-    AssuanClientContext ctx;
-    gpg_error_t err = 0;
-
+#endif
     const QString socketName = out.serverLocation;
     if ( socketName.isEmpty() ) {
         out.errorString = tr("Invalid socket name!");
         goto leave;
     }
 
+#ifndef HAVE_ASSUAN2
+    err = assuan_socket_connect( &naked_ctx, QFile::encodeName( socketName ).constData(), -1 );
+#else
     {
         assuan_context_t naked_ctx = 0;
         err = assuan_new( &naked_ctx );
@@ -399,6 +460,7 @@ void Command::Private::run() {
 
 
     err = assuan_socket_connect( ctx.get(), QFile::encodeName( socketName ).constData(), -1, 0 );
+#endif
     if ( err ) {
         qDebug( "UI server not running, starting it" );
         
@@ -411,7 +473,11 @@ void Command::Private::run() {
         // give it a bit of time to start up and try a couple of times
         for ( int i = 0 ; err && i < 20 ; ++i ) {
             msleep( 500 );
+#ifndef HAVE_ASSUAN2
+            err = assuan_socket_connect( &naked_ctx, QFile::encodeName( socketName ).constData(), -1 );
+#else
             err = assuan_socket_connect( ctx.get(), QFile::encodeName( socketName ).constData(), -1, 0 );
+#endif
         }
     }
 
@@ -421,6 +487,11 @@ void Command::Private::run() {
         goto leave;
     }
 
+#ifndef HAVE_ASSUAN2
+    ctx.reset( naked_ctx );
+    naked_ctx = 0;
+
+#endif
     out.serverPid = -1;
     err = my_assuan_transact( ctx, "GETINFO pid", &getinfo_pid_cb, &out.serverPid );
     if ( err || out.serverPid <= 0 ) {
