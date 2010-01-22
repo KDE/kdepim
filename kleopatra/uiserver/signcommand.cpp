@@ -105,7 +105,6 @@ void SignCommand::Private::checkForErrors() const {
                          i18n( "MESSAGE command is not allowed before SIGN" ) );
 
     const shared_ptr<NewSignEncryptEMailController> m = q->mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
-    kleo_assert( m );
 
     if ( m && m->isSigning() ) {
 
