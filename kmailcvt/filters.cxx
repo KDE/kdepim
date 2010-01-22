@@ -175,7 +175,7 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection coll
   return true;
 }
 
-Akonadi::Collection Filter::praseFolderString(FilterInfo* info, const QString& folderParseString)
+Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& folderParseString)
 {
   // Return an already created collection:
   for( QMap<QString, Akonadi::Collection>::iterator i = m_messageFolderCollectionMap.begin();
@@ -247,7 +247,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          )
 {
   // Create the mail folder (if not already created).
-  Akonadi::Collection mailFolder = praseFolderString( info, folderName );
+  Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
   KUrl msgUrl( msgPath );
   if( !msgUrl.isEmpty() && msgUrl.isLocalFile() ) {
@@ -295,7 +295,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
                                     )
 {
   // Create the mail folder (if not already created).
-  Akonadi::Collection mailFolder = praseFolderString( info, folderName );
+  Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
   KUrl msgUrl( msgPath );
   if( !msgUrl.isEmpty() && msgUrl.isLocalFile() ) {

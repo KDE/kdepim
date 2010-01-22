@@ -77,7 +77,7 @@ class Filter
     Akonadi::Collection addSubCollection( FilterInfo* info,
                                           const Akonadi::Collection &baseCollection,
                                           const QString &newCollectionPathName );
-    Akonadi::Collection praseFolderString( FilterInfo* info,
+    Akonadi::Collection parseFolderString( FilterInfo* info,
                                            const QString &folderParseString );
     bool addAkonadiMessage( FilterInfo* info,
                             const Akonadi::Collection collection,
