@@ -215,7 +215,7 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
   Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob( baseCollection,
 									   Akonadi::CollectionFetchJob::FirstLevel);
   if( !fetchJob->exec() ) {
-    info->alert( i18n( "<b>Error:<\b> Could not execute fetchJob when adding sub collection because %1",
+    info->alert( i18n( "<b>Error:<\b> Could not execute fetchJob when adding sub collection. Reason: %1",
 		       fetchJob->errorString() ) );
     return Akonadi::Collection();
   }
@@ -233,7 +233,7 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
 
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
   if( !job->exec() ) {
-    info->alert( i18n("<b>Error:<\b> Could not create subCollection because %1",
+    info->alert( i18n("<b>Error:<\b> Could not create subCollection. Reason: %1",
 		 job->errorString() ) );
     return Akonadi::Collection();
   }
@@ -305,7 +305,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
     const QByteArray msgText =
       KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
     if( msgText.isEmpty() ) {
-      info->addLog( "Error: failed to read temporary file at" + msgPath );
+      info->addLog( i18n( "Error: failed to read temporary file at %1", msgPath ) );
       return false;
     }
 
