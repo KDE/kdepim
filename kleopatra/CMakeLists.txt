@@ -2,7 +2,7 @@ project(kleopatra)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 2.1.0 )
+set( kleopatra_version 2.0.13 )
 set( kleopatra_release FALSE )
 
 if (NOT kleopatra_release)
