@@ -18,9 +18,15 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kurl.h>
+#include <messagecore/messagestatus.h>
 #include <kdebug.h>
 #include <ktoolinvocation.h>
-#include <kmailinterface.h>
+#include <Akonadi/CollectionCreateJob>
+#include <KPIMUtils/KFileIO>
+#include <KDebug>
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
 #include "filters.hxx"
 #include "kmailcvt.h"
 
@@ -31,6 +37,7 @@
 // put information on the dialog.
 //
 //////////////////////////////////////////////////////////////////////////////////
+#include <qfile.h>
 
 bool FilterInfo::s_terminateASAP = false;
 
@@ -110,6 +117,17 @@ bool FilterInfo::shouldTerminate()
   return s_terminateASAP;
 }
 
+Akonadi::Collection FilterInfo::getRootCollection() const
+{
+  return m_rootCollection;
+}
+
+void FilterInfo::setRootCollection( const Akonadi::Collection &collection )
+{
+  m_rootCollection = collection;
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////
 //
 // The generic filter class
@@ -127,84 +145,184 @@ Filter::Filter( const QString& name, const QString& author,
     count_duplicates = 0;
 }
 
-bool Filter::addMessage( FilterInfo* info, const QString& folderName,
-                         const QString& msgPath, const QString &  msgStatusFlags)
+bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection collection,
+                                const KMime::Message::Ptr message )
 {
-  KUrl msgURL;
-  msgURL.setPath( msgPath );
+  Akonadi::Item item;
+  KPIM::MessageStatus status;
 
-  QDBusConnectionInterface * sessionBus = 0;
-  sessionBus = QDBusConnection::sessionBus().interface();
-  if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ).value() )
-    KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
+  item.setMimeType( "message/rfc822" );
 
-  org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-  QDBusReply<int> reply = kmail.dbusAddMessage(folderName, msgURL.url(), msgStatusFlags);
-
-  if ( !reply.isValid() )
-  {
-    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for D-Bus communication: %1; %2<br />"
-                       "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
+  KMime::Headers::Base *statusHeaders = message->getHeaderByType( "X-Status" );
+  if( statusHeaders ) {
+    if( !statusHeaders->isEmpty() ) {
+      status.setStatusFromStr( statusHeaders->asUnicodeString() );
+      item.setFlags( status.getStatusFlags() );
+    }
+  }
+  item.setPayload<KMime::Message::Ptr>( message );
+  Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
+  if( !job->exec() ){
+    info->alert( i18n( "<b>Error:<\b> Could not add message to the collection %1. Reason: %2",
+		       collection.name(), job->errorString() ) );
     return false;
   }
+  return true;
+}
 
-  switch ( int( reply ) )
-  {
-    case -1:
-      info->alert( i18n( "Cannot make folder %1 in KMail", folderName ) );
+Akonadi::Collection Filter::praseFolderString(FilterInfo* info, const QString& folderParseString)
+{
+  // Return an already created collection:
+  for( QMap<QString, Akonadi::Collection>::iterator i = m_messageFolderCollectionMap.begin();
+    i != m_messageFolderCollectionMap.end(); i ++ ){
+    if( i.key() ==  folderParseString )
+      return i.value();
+  }
+
+  // The folder hasn't yet been created, create it now.
+  QStringList folderList = folderParseString.split("/");
+  bool isFirst = true;
+  QString folderBuilder;
+  Akonadi::Collection lastCollection;
+
+  // Create each folder on the folder list and add it the map.
+  foreach( const QString &folder, folderList ){
+    if(isFirst){
+      m_messageFolderCollectionMap[folder] = addSubCollection( info, info->getRootCollection(), folder );
+      folderBuilder = folder;
+      lastCollection = m_messageFolderCollectionMap[folder];
+      isFirst = false;
+    } else {
+      folderBuilder += "/" + folder;
+      m_messageFolderCollectionMap[folderBuilder] = addSubCollection( info, lastCollection, folder );
+      lastCollection = m_messageFolderCollectionMap[folderBuilder];
+    }
+  }
+
+  return lastCollection;
+}
+
+Akonadi::Collection Filter::addSubCollection( FilterInfo* info, const Akonadi::Collection &baseCollection,
+					      const QString& newCollectionPathName )
+{
+  // Ensure that the collection doesn't already exsit, if it does just return it.
+  Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob( baseCollection, 
+									   Akonadi::CollectionFetchJob::FirstLevel);
+  if( !fetchJob->exec() ){
+    info->alert( i18n( "<b>Error:<\b> Could not execute fetchJob when adding sub collection because %1",
+		       fetchJob->errorString() ) );
+    return Akonadi::Collection();
+  }
+  
+  foreach( const Akonadi::Collection &subCollection, fetchJob->collections() ){
+   if( subCollection.name() == newCollectionPathName ){
+     return subCollection;
+   }
+  }
+
+  // The subCollection doesn't exsit, create a new one
+  Akonadi::Collection newSubCollection;
+  newSubCollection.setParent( baseCollection );
+  newSubCollection.setName( newCollectionPathName );
+  
+  Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
+  if( !job->exec() ){
+    info->alert( i18n("<b>Error:<\b> Could not create subCollection because %1",
+		 job->errorString() ) );
+    return Akonadi::Collection();
+  }
+  // Return the newly created collection
+  return job->collection();
+}
+
+
+bool Filter::addMessage( FilterInfo* info, const QString& folderName,
+                         const QString& msgPath,
+                         const QString &  msgStatusFlags // Defunct - KMime will now handle the MessageStatus flags.
+                         )
+{
+  // Create the mail folder (if not already created).
+  Akonadi::Collection mailFolder = praseFolderString( info, folderName );
+
+  KUrl msgUrl( msgPath );
+  if( !msgUrl.isEmpty() && msgUrl.isLocalFile() ) {
+
+    // Read in the temporary file.
+    const QByteArray msgText =
+      KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
+    if( msgText.isEmpty() ){
+      info->addLog( "Error: failed to read temporary file at" + msgPath );
       return false;
-    case -2:
-      info->alert( i18n( "Cannot add message to folder %1 in KMail", folderName ) );
-      return false;
-    case -4:
-      count_duplicates++;
-      return false;
-    case 0:
-      info->alert( i18n( "Error while adding message to folder %1 in KMail", folderName ) );
-      return false;
+    }
+
+    // Construct a message.
+    KMime::Message::Ptr newMessage( new KMime::Message() );
+    newMessage->setContent( msgText );
+    newMessage->parse();
+
+    // Check for duplicate.
+    for( QMap<QString, QString>::iterator i = m_messageFolderMessageIDMap.begin();
+     i != m_messageFolderMessageIDMap.end(); i++ ){
+      if( i.key() == folderName &&
+        i.value() == newMessage->messageID()->asUnicodeString() ){
+        count_duplicates ++;
+        return false;
+      }
+    }
+
+    // Add the message and folder to the map for duplicate checking.
+    m_messageFolderMessageIDMap[folderName] = newMessage->messageID()->asUnicodeString();
+
+    // Add it to the collection.
+    if( mailFolder.isValid() ){
+      addAkonadiMessage( info, mailFolder, newMessage );
+    } else {
+      info->alert( i18n( "<b>Warning:<\b> Got a bad message collection, adding to root collection." ) );
+      addAkonadiMessage( info, info->getRootCollection(), newMessage );
+    }
   }
   return true;
 }
 
 bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
-                         	        const QString& msgPath, const QString& msgStatusFlags )
+                         	    const QString& msgPath,
+                                    const QString& msgStatusFlags // Defunct - KMime will now handle the MessageStatus flags.
+                                    )
 {
-  KUrl msgURL;
-  msgURL.setPath( msgPath );
+  // Create the mail folder (if not already created).
+  Akonadi::Collection mailFolder = praseFolderString( info, folderName );
 
-  QDBusConnectionInterface * sessionBus = 0;
-  sessionBus = QDBusConnection::sessionBus().interface();
-  if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
-    KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
+  KUrl msgUrl( msgPath );
+  if( !msgUrl.isEmpty() && msgUrl.isLocalFile() ) {
 
-
-  org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-  QDBusReply<int> reply = kmail.dbusAddMessage_fastImport(folderName, msgURL.url(), msgStatusFlags);
-
-  if ( !reply.isValid() )
-  {
-    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for D-Bus communication: %1; %2<br />"
-                       "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
-    return false;
-  }
-
-  switch ( int( reply ) )
-  {
-    case -1:
-      info->alert( i18n( "Cannot make folder %1 in KMail", folderName ) );
+    // Read in the temporary file.
+    const QByteArray msgText =
+      KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
+    if( msgText.isEmpty() ){
+      info->addLog( "Error: failed to read temporary file at" + msgPath );
       return false;
-    case -2:
-      info->alert( i18n( "Cannot add message to folder %1 in KMail", folderName ) );
-      return false;
-    case 0:
-      info->alert( i18n( "Error while adding message to folder %1 in KMail", folderName ) );
-      return false;
+    }
+
+    // Construct a message.
+    KMime::Message::Ptr newMessage( new KMime::Message() );
+    newMessage->setContent( msgText );
+    newMessage->parse();
+
+    // Add it to the collection.
+    if( mailFolder.isValid() ){
+      addAkonadiMessage( info, mailFolder, newMessage );
+    } else {
+      info->alert( i18n( "<b>Warning:<\b> Got a bad message collection, adding to root collection." ) );
+      addAkonadiMessage( info, info->getRootCollection(), newMessage );
+    }
   }
   return true;
+
 }
 
 void Filter::showKMailImportArchiveDialog( FilterInfo* info )
 {
+  #if 0
   QDBusConnectionInterface * sessionBus = 0;
   sessionBus = QDBusConnection::sessionBus().interface();
   if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
@@ -220,6 +338,7 @@ void Filter::showKMailImportArchiveDialog( FilterInfo* info )
                        "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
     return;
   }
+  #endif
 }
 
 bool Filter::needsSecondPage()

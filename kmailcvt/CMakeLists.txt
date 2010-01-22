@@ -28,7 +28,8 @@ if(KMAIL_SUPPORTED)
     filter_lnotes.cxx
     filter_kmail_archive.cxx )
 
-
+  include_directories(${Boost_INCLUDE_DIR} )
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
   qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
 
   kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
@@ -37,7 +38,13 @@ if(KMAIL_SUPPORTED)
   kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
   add_dependencies(kmailcvt kmail_xml)
 
-  target_link_libraries(kmailcvt  ${KDE4_KIO_LIBS} )
+  target_link_libraries(kmailcvt
+    ${KDE4_KIO_LIBS}
+    ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDEPIMLIBS_KPIMUTILS_LIBS}
+    messagecore
+  )
 
   install(TARGETS kmailcvt  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

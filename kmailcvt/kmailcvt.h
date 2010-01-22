@@ -33,6 +33,9 @@ public:
 	virtual void reject();
 public slots:
 	void help();
+	
+private slots:
+	void delayedStart();
 private:
 	KPageWidgetItem* page1;
 	KPageWidgetItem* page2;

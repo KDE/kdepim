@@ -14,17 +14,28 @@
  *                                                                         *
  ***************************************************************************/
 
+// Local includes
 #include "kmailcvt.h"
-#include <kaboutapplicationdialog.h>
-#include <kglobal.h>
-#include <klocale.h>
-#include <QPushButton>
-#include <kdebug.h>
-#include <ktoolinvocation.h>
-#include <kmailinterface.h>
 #include "kimportpage.h"
 #include "kselfilterpage.h"
 #include "filters.hxx"
+
+// Akonadi includes
+#include <Akonadi/Control>
+
+// KDE includes
+#include <kaboutapplicationdialog.h>
+#include <kglobal.h>
+#include <klocale.h>
+#include <kdebug.h>
+#include <ktoolinvocation.h>
+
+// Qt includes
+#include <QPushButton>
+#include <QTimer>
+#include <kmessagebox.h>
+
+
 
 KMailCVT::KMailCVT(QWidget *parent)
 	: KAssistantDialog(parent) {
@@ -41,6 +52,7 @@ KMailCVT::KMailCVT(QWidget *parent)
 	page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
 	addPage( page2 );
         connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
+	QTimer::singleShot( 0, this, SLOT( delayedStart()) );
 }
 
 KMailCVT::~KMailCVT() {
@@ -49,6 +61,7 @@ KMailCVT::~KMailCVT() {
 
 void KMailCVT::endImport()
 {
+  #if 0
     QDBusConnectionInterface * sessionBus = 0;
     sessionBus = QDBusConnection::sessionBus().interface();
     if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
@@ -60,6 +73,7 @@ void KMailCVT::endImport()
 
     QDBusReply<void> reply2 = kmail.dbusResetAddMessage();
     if ( !reply2.isValid() ) return;
+   #endif
 }
 
 void KMailCVT::next()
@@ -67,11 +81,16 @@ void KMailCVT::next()
   if( currentPage() == page1 ){
     // Save selected filter
     Filter *selectedFilter = selfilterpage->getSelectedFilter();
+    Akonadi::Collection selectedCollection = selfilterpage->mCollectionRequestor->collection();
     // without filter don't go next
     if ( !selectedFilter )
       return;
+    // Ensure we have a valid collection.
+    if( !selectedCollection.isValid() )
+      return;
     if ( !selectedFilter->needsSecondPage() ) {
       FilterInfo *info = new FilterInfo( importpage, this, selfilterpage->removeDupMsg_checked() );
+      info->setRootCollection( selectedCollection );
       selectedFilter->import( info );
       accept();
       delete info;
@@ -85,6 +104,7 @@ void KMailCVT::next()
       FilterInfo *info = new FilterInfo(importpage, this, selfilterpage->removeDupMsg_checked());
       info->setStatusMsg(i18n("Import in progress"));
       info->clear(); // Clear info from last time
+      info->setRootCollection( selectedCollection );
       selectedFilter->import(info);
       info->setStatusMsg(i18n("Import finished"));
       // Cleanup
@@ -100,6 +120,17 @@ void KMailCVT::reject() {
           FilterInfo::terminateASAP(); // ie. import in progress
 	KAssistantDialog::reject();
 }
+
+void KMailCVT::delayedStart()
+{
+  if( !Akonadi::Control::start( this ) ) {
+    KMessageBox::sorry( 0, i18n( "Akonadi failed to start. Please check your configuration." ),
+			i18n( "KMailCVT" ) );
+    qApp->exit( -1 );
+    return;
+  }
+}
+
 
 void KMailCVT::help()
 {

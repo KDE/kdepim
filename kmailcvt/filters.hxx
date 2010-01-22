@@ -22,6 +22,8 @@
 #define MAX_LINE 4096
 #endif
 
+#include <akonadi/collection.h>
+#include <kmime/kmime_message.h>
 
 #include "kimportpage.h"
 
@@ -42,12 +44,15 @@ class FilterInfo
     void alert( const QString& message );
     static void terminateASAP();
     bool shouldTerminate();
+    Akonadi::Collection getRootCollection() const;
+    void setRootCollection( const Akonadi::Collection &collection );
 
     QWidget *parent() { return m_parent; }
     bool removeDupMsg;
 
   private:
     KImportPageDlg *m_dlg;
+    Akonadi::Collection m_rootCollection;
     QWidget      *m_parent;
     static bool s_terminateASAP;
 };
@@ -69,6 +74,15 @@ class Filter
 
   protected:
     void showKMailImportArchiveDialog( FilterInfo* info );
+    Akonadi::Collection addSubCollection( FilterInfo* info,
+                                          const Akonadi::Collection &baseCollection,
+                                          const QString &newCollectionPathName );
+    Akonadi::Collection praseFolderString( FilterInfo* info,
+                                           const QString &folderParseString );
+    bool addAkonadiMessage( FilterInfo* info,
+                            const Akonadi::Collection collection,
+                            const KMime::Message::Ptr message);
+
     bool addMessage( FilterInfo* info,
                      const QString& folder,
                      const QString& msgFile,
@@ -78,6 +92,8 @@ class Filter
                      		    const QString& msgFile,
                                 const QString& msgStatusFlags = QString());
   private:
+    QMap<QString, QString> m_messageFolderMessageIDMap;
+    QMap<QString, Akonadi::Collection> m_messageFolderCollectionMap;
     QString m_name;
     QString m_author;
     QString m_info;

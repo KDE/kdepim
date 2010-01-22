@@ -15,8 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+// Local includes
 #include "kselfilterpage.h"
 
+// Filter includes
 #include "filter_mbox.hxx"
 #include "filter_oe.hxx"
 #include "filter_outlook.hxx"
@@ -35,9 +37,20 @@
 
 #include "filters.hxx"
 
+// KDE includes
 #include <kstandarddirs.h>
-#include <QCheckBox> 
 #include <klocale.h>
+#include <kmessagebox.h>
+
+// Qt includes
+#include <QCheckBox>
+#include <QTimer>
+
+// Akonadi includes
+#include <akonadi/collectionrequester.h>
+#include <akonadi/control.h>
+
+
 
 KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
 
@@ -65,6 +78,12 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
         addFilter(new FilterPMail);
         addFilter(new FilterLNotes);
         addFilter(new FilterPlain);
+
+        // Ensure we return the correct type of Akonadi collection.
+        mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
+        mCollectionRequestor->setAccessRightsFilter(
+          Akonadi::Collection::CanCreateCollection |
+          Akonadi::Collection::CanCreateItem );
 }
 
 KSelFilterPage::~KSelFilterPage() {
