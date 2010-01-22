@@ -1354,26 +1354,18 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
     const QString entry = protocol == CMS ? CMS_KEY_TYPE_ENTRY : PGP_KEY_TYPE_ENTRY ;
     const QString keyType = config.readEntry( entry ).trimmed().toUpper();
 
-    if ( keyType == "RSA" ) {
+    if ( protocol == OpenPGP && keyType == "DSA" ) {
+        setKeyType( GPGME_PK_DSA );
+        setSubkeyType( 0 );
+    } else if ( protocol == OpenPGP && keyType == "DSA+ELG" ) {
+        setKeyType( GPGME_PK_DSA );
+        setSubkeyType( GPGME_PK_ELG_E );
+    } else {
+        if ( !keyType.isEmpty() && keyType != "RSA" )
+            qWarning( "NewCertificateWizard: AdvancedSettingsDialog: invalid value \"%s\" for entry \"[CertificateCreationWizard]%s\"",
+                      qPrintable( keyType ), qPrintable( entry ) );
         setKeyType( GPGME_PK_RSA );
         setSubkeyType( 0 );
-    } else {
-        if ( protocol == OpenPGP ) {
-            if ( keyType == "DSA" ) {
-                setKeyType( GPGME_PK_DSA );
-                setSubkeyType( 0 );
-            } else {
-                if ( !keyType.isEmpty() && keyType != "DSA+ELG" )
-                    qWarning( "NewCertificateWizard: AdvancedSettingsDialog: invalid value for entry \"[CertificateCreationWizard]%s\"", qPrintable( entry ) );
-                setKeyType( GPGME_PK_DSA );
-                setSubkeyType( GPGME_PK_ELG_E );
-            }
-        } else {
-            if ( !keyType.isEmpty() )
-                qWarning( "NewCertificateWizard: AdvancedSettingsDialog: invalid value for entry \"[CertificateCreationWizard]%s\"", qPrintable( entry ) );
-            setKeyType( RSA );
-            setSubkeyType( 0 );
-        }
     }
 
     keyTypeImmutable = config.isEntryImmutable( entry );
