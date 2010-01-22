@@ -91,6 +91,7 @@ private:
                 { OCSPResponderSignature, SIGNAL(selectedCertificatesChanged(QStringList)) },
                 { doNotCheckCertPolicyCB, SIGNAL(toggled(bool)) },
                 { neverConsultCB, SIGNAL(toggled(bool)) },
+                { allowMarkTrustedCB, SIGNAL(toggled(bool)) },
                 { fetchMissingCB, SIGNAL(toggled(bool)) },
                 { ignoreServiceURLCB, SIGNAL(toggled(bool)) },
                 { ignoreHTTPDPCB, SIGNAL(toggled(bool)) },
@@ -146,6 +147,7 @@ struct SMIMECryptoConfigEntries {
           mEnableOCSPsendingConfigEntry( configEntry( "dirmngr", "OCSP", "allow-ocsp", CryptoConfigEntry::ArgType_None, false ) ),
           mDoNotCheckCertPolicyConfigEntry( configEntry( "gpgsm", "Security", "disable-policy-checks", CryptoConfigEntry::ArgType_None, false ) ),
           mNeverConsultConfigEntry( configEntry( "gpgsm", "Security", "disable-crl-checks", CryptoConfigEntry::ArgType_None, false ) ),
+          mAllowMarkTrustedConfigEntry( configEntry( "gpg-agent", "Security", "allow-mark-trusted", CryptoConfigEntry::ArgType_None, false ) ),
           mFetchMissingConfigEntry( configEntry( "gpgsm", "Security", "auto-issuer-key-retrieve", CryptoConfigEntry::ArgType_None, false ) ),
           // dirmngr-0.9.0 options
           mIgnoreServiceURLEntry( configEntry( "dirmngr", "OCSP", "ignore-ocsp-service-url", CryptoConfigEntry::ArgType_None, false ) ),
@@ -176,6 +178,7 @@ struct SMIMECryptoConfigEntries {
     CryptoConfigEntry * const mEnableOCSPsendingConfigEntry;
     CryptoConfigEntry * const mDoNotCheckCertPolicyConfigEntry;
     CryptoConfigEntry * const mNeverConsultConfigEntry;
+    CryptoConfigEntry * const mAllowMarkTrustedConfigEntry;
     CryptoConfigEntry * const mFetchMissingConfigEntry;
     // dirmngr-0.9.0 options
     CryptoConfigEntry * const mIgnoreServiceURLEntry;
@@ -239,6 +242,8 @@ void SMimeValidationConfigurationWidget::load() {
         d->ui.doNotCheckCertPolicyCB->setChecked( e.mDoNotCheckCertPolicyConfigEntry->boolValue() );
     if ( e.mNeverConsultConfigEntry )
         d->ui.neverConsultCB->setChecked( e.mNeverConsultConfigEntry->boolValue() );
+    if ( e.mAllowMarkTrustedConfigEntry )
+        d->ui.allowMarkTrustedCB->setChecked( e.mAllowMarkTrustedConfigEntry->boolValue() );
     if ( e.mFetchMissingConfigEntry )
         d->ui.fetchMissingCB->setChecked( e.mFetchMissingConfigEntry->boolValue() );
 
@@ -310,6 +315,7 @@ void SMimeValidationConfigurationWidget::save() const {
 
     saveCheckBoxToKleoEntry( d->ui.doNotCheckCertPolicyCB, e.mDoNotCheckCertPolicyConfigEntry );
     saveCheckBoxToKleoEntry( d->ui.neverConsultCB, e.mNeverConsultConfigEntry );
+    saveCheckBoxToKleoEntry( d->ui.allowMarkTrustedCB, e.mAllowMarkTrustedConfigEntry );
     saveCheckBoxToKleoEntry( d->ui.fetchMissingCB, e.mFetchMissingConfigEntry );
 
     QString txt = d->ui.OCSPResponderURL->text();
