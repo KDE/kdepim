@@ -1,7 +1,5 @@
 project(kmailcvt)
 
-if(KMAIL_SUPPORTED)
-
   add_subdirectory( pics )
 
   ########### next target ###############
@@ -30,13 +28,11 @@ if(KMAIL_SUPPORTED)
 
   include_directories(${Boost_INCLUDE_DIR} )
   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
-  qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
 
   kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
 
   kde4_add_app_icon(kmailcvt_SRCS "ox*-app-kmailcvt.png")
   kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
-  add_dependencies(kmailcvt kmail_xml)
 
   target_link_libraries(kmailcvt
     ${KDE4_KIO_LIBS}
@@ -51,7 +47,3 @@ if(KMAIL_SUPPORTED)
   ########### install files ###############
 
   kde4_install_icons( ${ICON_INSTALL_DIR} )
-
-else(KMAIL_SUPPORTED)
-  message(STATUS "kmailcvt will NOT be built.")
-endif(KMAIL_SUPPORTED)
