@@ -30,10 +30,20 @@ MailWebView::MailWebView( QWidget *parent )
 {
 }
 
-void MailWebView::contextMenuEvent ( QContextMenuEvent * ev )
+bool MailWebView::event( QEvent *event )
 {
-  const QWebFrame *frame = page()->currentFrame();
-  const QWebHitTestResult hit = frame->hitTestContent( ev->pos() );
-  kDebug() << "Right-clicked URL:" << hit.linkUrl();
-  emit popupMenu( hit.linkUrl().toString(), mapToGlobal( ev->pos() ) );
+  if ( event->type() != QEvent::ContextMenu )
+    return KWebView::event( event );
+  else {
+    // Don't call KWebView::event() here, it will do silly things like selecting the text
+    // under the mouse cursor, which we don't want.
+
+    QContextMenuEvent const *contextMenuEvent = static_cast<QContextMenuEvent*>( event );
+    const QWebFrame * const frame = page()->currentFrame();
+    const QWebHitTestResult hit = frame->hitTestContent( contextMenuEvent->pos() );
+    kDebug() << "Right-clicked URL:" << hit.linkUrl();
+    emit popupMenu( hit.linkUrl().toString(), mapToGlobal( contextMenuEvent->pos() ) );
+    event->accept();
+    return true;
+  }
 }

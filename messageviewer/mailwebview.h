@@ -40,7 +40,7 @@ class MailWebView : public KWebView
   protected:
 
     /// Reimplemented to catch context menu events and emit popupMenu()
-    virtual void contextMenuEvent ( QContextMenuEvent * ev );
+    virtual bool event( QEvent *event );
 };
 
 }
