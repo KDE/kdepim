@@ -150,7 +150,7 @@ Filter::Filter( const QString& name, const QString& author,
     count_duplicates = 0;
 }
 
-bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection collection,
+bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &collection,
                                 const KMime::Message::Ptr message )
 {
   Akonadi::Item item;
@@ -207,7 +207,8 @@ Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& f
   return lastCollection;
 }
 
-Akonadi::Collection Filter::addSubCollection( FilterInfo* info, const Akonadi::Collection &baseCollection,
+Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
+                                              const Akonadi::Collection &baseCollection,
 					      const QString& newCollectionPathName )
 {
   // Ensure that the collection doesn't already exsit, if it does just return it.
