@@ -1005,7 +1005,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
 #if 0 // TODO port to Akonadi
       if ( path == "delete" ) {
-        ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+        ( new KMTrashMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
         result = true;
       }
 #else
