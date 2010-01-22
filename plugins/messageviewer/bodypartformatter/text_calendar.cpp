@@ -1003,6 +1003,15 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         }
       }
 
+#if 0 // TODO port to Akonadi
+      if ( path == "delete" ) {
+        ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+        result = true;
+      }
+#else
+      kWarning() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
+
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         QString name = path;
         name.remove( QRegExp( "^ATTACH:" ) );
@@ -1077,6 +1086,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           return i18n( "Record response into my calendar" );
         if ( path == "record" )
           return i18n( "Record invitation into my calendar" );
+        if ( path == "delete" )
+          return i18n( "Move this invitation to my trash folder" );
         if ( path == "delegate" )
           return i18n( "Delegate invitation" );
         if ( path == "forward" )
