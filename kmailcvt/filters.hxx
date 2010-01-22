@@ -81,7 +81,7 @@ class Filter
                                            const QString &folderParseString );
     bool addAkonadiMessage( FilterInfo* info,
                             const Akonadi::Collection collection,
-                            const KMime::Message::Ptr message);
+                            const KMime::Message::Ptr message );
 
     bool addMessage( FilterInfo* info,
                      const QString& folder,
