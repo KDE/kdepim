@@ -3081,7 +3081,6 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
     } /* for() */
 
     bool actHidden = false;
-    QString textExpand;
 
     // This quoted line needs be hidden
     if (GlobalSettings::self()->showExpandQuotesMark() && mSource->levelQuote() >= 0
@@ -3090,10 +3089,11 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
 
     if ( actQuoteLevel != currQuoteLevel ) {
       /* finish last quotelevel */
-      if (currQuoteLevel == -1)
+      if (currQuoteLevel == -1) {
         htmlStr.append( normalEndTag );
-      else if ( currQuoteLevel >= 0 && !curHidden )
+      } else if ( currQuoteLevel >= 0 && !curHidden ) {
         htmlStr.append( quoteEnd );
+      }
 
       /* start new quotelevel */
       if (actQuoteLevel == -1) {
@@ -3161,10 +3161,11 @@ QString ObjectTreeParser::quotedHTML( const QString& s, bool decorate )
   } /* while() */
 
   /* really finish the last quotelevel */
-  if (currQuoteLevel == -1)
+  if (currQuoteLevel == -1) {
       htmlStr.append( normalEndTag );
-  else
+    } else {
       htmlStr.append( quoteEnd );
+    }
 
   //kDebug() << "========================================\n"
   //         << htmlStr
