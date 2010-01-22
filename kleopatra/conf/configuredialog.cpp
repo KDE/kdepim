@@ -58,7 +58,6 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
 
   addModule( "kleopatra_config_dirserv" );
   addModule( "kleopatra_config_appear" );
-  addModule( "kleopatra_config_dnorder" );
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
   addModule( "kleopatra_config_smimevalidation" );
 #endif

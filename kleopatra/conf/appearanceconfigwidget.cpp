@@ -41,6 +41,8 @@
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
+#include "libkleo/kleo/dn.h"
+#include "libkleo/ui/dnattributeorderconfigwidget.h"
 
 #ifdef KDEPIM_ONLY_KLEO
 # include <utils/kleo_kicondialog.h>
@@ -293,12 +295,22 @@ class AppearanceConfigWidget::Private : public Ui_AppearanceConfigWidget {
 public:
     explicit Private( AppearanceConfigWidget * qq )
         : Ui_AppearanceConfigWidget(),
-          q( qq )
+          q( qq ),
+          dnOrderWidget( 0 )
     {
         setupUi( q );
 
         if ( QLayout * const l = q->layout() )
             l->setMargin( 0 );
+
+        QWidget * w = new QWidget;
+        dnOrderWidget = Kleo::DNAttributeMapper::instance()->configWidget( w );
+        dnOrderWidget->setObjectName( QLatin1String( "dnOrderWidget" ) );
+        ( new QVBoxLayout( w ) )->addWidget( dnOrderWidget );
+
+        tabWidget->addTab( w, i18n("DN-Attribute Order") );
+
+        connect( dnOrderWidget, SIGNAL(changed()), q, SIGNAL(changed()) );
 
         connect( iconButton, SIGNAL(clicked()), q, SLOT(slotIconClicked()) );
         connect( foregroundButton, SIGNAL(clicked()), q, SLOT(slotForegroundClicked()) );
@@ -331,6 +343,9 @@ private:
     void slotTooltipValidityChanged(bool);
     void slotTooltipOwnerChanged(bool);
     void slotTooltipDetailsChanged(bool);
+
+private:
+    Kleo::DNAttributeOrderConfigWidget * dnOrderWidget;
 };
 
 AppearanceConfigWidget::AppearanceConfigWidget( QWidget * p, Qt::WindowFlags f )
@@ -380,16 +395,23 @@ void AppearanceConfigWidget::Private::slotDefaultClicked() {
 }
 
 void AppearanceConfigWidget::defaults() {
+
     // This simply means "default look for every category"
     for ( int i = 0, end = d->categoriesLV->count() ; i != end ; ++i )
         set_default_appearance( d->categoriesLV->item( i ) );
     d->tooltipValidityCheckBox->setChecked( true );
     d->tooltipOwnerCheckBox->setChecked( false );
     d->tooltipDetailsCheckBox->setChecked( false );
+
+    d->dnOrderWidget->defaults();
+
     emit changed();
 }
 
 void AppearanceConfigWidget::load() {
+
+    d->dnOrderWidget->load();
+
     d->categoriesLV->clear();
     KConfig * const config = CryptoBackendFactory::instance()->configObject();
     if ( !config )
@@ -407,6 +429,9 @@ void AppearanceConfigWidget::load() {
 }
 
 void AppearanceConfigWidget::save() {
+
+    d->dnOrderWidget->save();
+
     TooltipPreferences prefs;
     prefs.setShowValidity( d->tooltipValidityCheckBox->isChecked() );
     prefs.setShowOwnerInformation( d->tooltipOwnerCheckBox->isChecked() );
