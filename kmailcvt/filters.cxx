@@ -14,22 +14,28 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-#include <kmessagebox.h>
-#include <klocale.h>
-#include <kurl.h>
-#include <messagecore/messagestatus.h>
-#include <kdebug.h>
-#include <ktoolinvocation.h>
-#include <Akonadi/CollectionCreateJob>
-#include <KPIMUtils/KFileIO>
-#include <KDebug>
-#include <Akonadi/CollectionFetchJob>
-#include <Akonadi/Item>
-#include <Akonadi/ItemCreateJob>
+// Local Includes
 #include "filters.hxx"
 #include "kmailcvt.h"
 
+// KDEPIM Includes
+#include <messagecore/messagestatus.h>
+#include <KPIMUtils/KFileIO>
+
+// Akonadi Includes
+#include <Akonadi/CollectionFetchJob>
+#include <Akonadi/Item>
+#include <Akonadi/ItemCreateJob>
+#include <Akonadi/CollectionCreateJob>
+
+// KDE Includes
+#include <KUrl>
+#include <KLocale>
+#include <KDebug>
+#include <KMessageBox>
+
+// Qt Includes
+#include <QFile>
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -37,7 +43,6 @@
 // put information on the dialog.
 //
 //////////////////////////////////////////////////////////////////////////////////
-#include <qfile.h>
 
 bool FilterInfo::s_terminateASAP = false;
 

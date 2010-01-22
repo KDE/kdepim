@@ -22,8 +22,8 @@
 #define MAX_LINE 4096
 #endif
 
-#include <akonadi/collection.h>
-#include <kmime/kmime_message.h>
+#include <Akonadi/Collection>
+#include <KMime/KMimeMessage>
 
 #include "kimportpage.h"
 
