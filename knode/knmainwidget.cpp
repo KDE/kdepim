@@ -521,7 +521,7 @@ void KNMainWidget::initActions()
   a_ctNavNextUnreadArt->setShortcut(QKeySequence(Qt::ALT+Qt::SHIFT+Qt::Key_Space));
 
   a_ctNavNextUnreadThread = actionCollection()->addAction("go_nextUnreadThread");
-  a_ctNavNextUnreadThread->setIcon(KIcon("go-previous"));
+  a_ctNavNextUnreadThread->setIcon(KIcon("go-last"));
   a_ctNavNextUnreadThread->setText(i18n("Next Unread &Thread"));
   connect(a_ctNavNextUnreadThread, SIGNAL(triggered(bool)), SLOT(slotNavNextUnreadThread()));
   a_ctNavNextUnreadThread->setShortcut(QKeySequence(Qt::SHIFT+Qt::Key_Space));
