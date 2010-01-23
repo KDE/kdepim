@@ -201,7 +201,7 @@ Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& f
       lastCollection = m_messageFolderCollectionMap[folder];
       isFirst = false;
     } else {
-      folderBuilder += "/" + folder;
+      folderBuilder += '/' + folder;
       m_messageFolderCollectionMap[folderBuilder] = addSubCollection( info, lastCollection, folder );
       lastCollection = m_messageFolderCollectionMap[folderBuilder];
     }
