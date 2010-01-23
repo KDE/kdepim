@@ -3,6 +3,14 @@
  <author>Olivier Trichet &lt;nive@nivalis.org&gt;</author>
  <class>KNode::Composer::View</class>
  <widget class="QFrame" name="KNode::Composer::View">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>505</width>
+    <height>704</height>
+   </rect>
+  </property>
   <widget class="QWidget" name="mHeadersBodyWidget" native="true">
    <property name="geometry">
     <rect>
@@ -107,13 +115,6 @@
        <item row="4" column="1">
         <widget class="KNLineEdit" name="mGroupsEdit"/>
        </item>
-       <item row="5" column="1" colspan="2">
-        <widget class="KComboBox" name="mFollowuptoEdit">
-         <property name="editable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
        <item row="2" column="0">
         <widget class="QLabel" name="mFromLabel">
          <property name="text">
@@ -126,6 +127,25 @@
        </item>
        <item row="2" column="1" colspan="2">
         <widget class="KNLineEdit" name="mFromEdit"/>
+       </item>
+       <item row="5" column="1" colspan="2">
+        <widget class="KNode::Composer::FollowuptoCombobox" name="mFollowuptoEdit">
+         <property name="whatsThis">
+          <string>&lt;qt&gt;
+&lt;p&gt;The group &lt;strong&gt;where the replies to your message should be sent&lt;/strong&gt;. Use this field when you are sending it to more than one group.&lt;br /&gt;
+This group is usually the place where you espect the discussion you
+  are starting to fit the best.&lt;/p&gt;
+
+&lt;p&gt;Remember to subscribe to this group if you are not yet.&lt;/p&gt;
+
+&lt;p&gt;&lt;note&gt;It is also good practise to indicate the &amp;quot;followup-to&amp;quot;
+  in your message to inform readers.&lt;/note&gt;&lt;/p&gt;
+&lt;/qt&gt;</string>
+         </property>
+         <property name="editable">
+          <bool>true</bool>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -153,7 +173,7 @@
           <property name="sizeHint" stdset="0">
            <size>
             <width>0</width>
-            <height>0</height>
+            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -214,7 +234,7 @@ to close the external editor.</string>
           <property name="sizeHint" stdset="0">
            <size>
             <width>0</width>
-            <height>0</height>
+            <height>20</height>
            </size>
           </property>
          </spacer>
@@ -229,7 +249,7 @@ to close the external editor.</string>
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>330</y>
+     <y>420</y>
      <width>491</width>
      <height>281</height>
     </rect>
@@ -308,11 +328,6 @@ to close the external editor.</string>
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>KComboBox</class>
-   <extends>QComboBox</extends>
-   <header>kcombobox.h</header>
-  </customwidget>
-  <customwidget>
    <class>KNode::IdentityComboWrapper</class>
    <extends>QComboBox</extends>
    <header>configuration/identity_combo_wrapper.h</header>
@@ -338,6 +353,11 @@ to close the external editor.</string>
    <extends>QTreeWidget</extends>
    <header>composer/attachment_view.h</header>
   </customwidget>
+  <customwidget>
+   <class>KNode::Composer::FollowuptoCombobox</class>
+   <extends>QComboBox</extends>
+   <header>composer/followupto_combobox.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>mIdentitySelector</tabstop>
@@ -349,6 +369,10 @@ to close the external editor.</string>
   <tabstop>mFollowuptoEdit</tabstop>
   <tabstop>mSubjectEdit</tabstop>
   <tabstop>mExternalKillSwitch</tabstop>
+  <tabstop>mAttachmentsList</tabstop>
+  <tabstop>mAttachmentAddButton</tabstop>
+  <tabstop>mAttachmentPropertiesButton</tabstop>
+  <tabstop>mAttachmentRemoveButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>

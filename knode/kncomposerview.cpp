@@ -61,6 +61,10 @@ View::View( KNComposer *composer )
   connect( mGroupsButton, SIGNAL(clicked()),
            parent(), SLOT(slotGroupsBtnClicked()) );
 
+  //Followup-to
+  connect( mFollowuptoEdit, SIGNAL( focused() ),
+           this, SLOT( hideFollowuptoHint() ) );
+
   //subject
   mSubjectEdit->setView( this );
   mSubjectEdit->enableCompletion( false );
@@ -237,11 +241,13 @@ const QStringList View::groups() const
 void View::setGroups( const QString &groups )
 {
   mGroupsEdit->setText( groups );
+  slotGroupsChanged(); // update the followup-to
 }
 
 void View::slotGroupsChanged()
 {
   QStringList groupsList = groups();
+  int groupsCount = groupsList.size();
   groupsList.append( QString() );
 
   const QString currFup2 = mFollowuptoEdit->currentText();
@@ -254,6 +260,13 @@ void View::slotGroupsChanged()
 
   mFollowuptoEdit->clear();
   mFollowuptoEdit->addItems( groupsList );
+
+  // Display an hint about fu2
+  if ( groupsCount > 1 ) {
+    displayFollowuptoHint();
+  } else {
+    hideFollowuptoHint();
+  }
 }
 
 
@@ -276,7 +289,38 @@ const QStringList View::followupTo() const
 
 void View::setFollowupTo( const QString &followupTo )
 {
+  hideFollowuptoHint();
   mFollowuptoEdit->setEditText( followupTo );
+}
+
+void View::displayFollowuptoHint()
+{
+  const QString hint = i18nc( "@info/plain This message is place, as an inactive text, in the Followup-To "
+                              "line edit of the message composer when the user select more than one "
+                              "group to post his/her message.",
+                              "Choose an appropriate group to redirect replies..." );
+  if ( mFollowuptoEdit->currentText().isEmpty() ) {
+    QLineEdit *l = mFollowuptoEdit->lineEdit();
+    QPalette palette = l->palette();
+    KColorScheme::adjustForeground( palette, KColorScheme::InactiveText );
+    l->setPalette( palette );
+    l->setText( hint );
+  }
+}
+
+void View::hideFollowuptoHint()
+{
+  const QString hint = i18nc( "@info/plain This message is place, as an inactive text, in the Followup-To "
+                              "line edit of the message composer when the user select more than one "
+                              "group to post his/her message.",
+                              "Choose an appropriate group to redirect replies..." );
+  if ( mFollowuptoEdit->currentText() == hint ) {
+    QLineEdit *l = mFollowuptoEdit->lineEdit();
+    QPalette palette = l->palette();
+    KColorScheme::adjustForeground( palette, KColorScheme::NormalText );
+    l->setPalette( palette );
+    l->setText( QString() );
+  }
 }
 
 

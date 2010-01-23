@@ -144,6 +144,11 @@ class View : public QSplitter, private Ui::View
     void setFollowupTo( const QString &followupTo );
 
     /**
+      Display an indication to the user about followup-to.
+    */
+    void displayFollowuptoHint();
+
+    /**
       Returns the subject text.
     */
     const QString subject() const;
@@ -190,6 +195,11 @@ class View : public QSplitter, private Ui::View
       Called when the content of the groups line edit changes.
     */
     void slotGroupsChanged();
+
+    /**
+      Hide the indication to the user about followup-to.
+    */
+    void hideFollowuptoHint();
 
     /**
       Called when the attachment selection changed.
