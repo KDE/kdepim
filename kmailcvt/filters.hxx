@@ -87,12 +87,21 @@ class Filter
                      const QString& folder,
                      const QString& msgFile,
                      const QString& msgStatusFlags = QString());
+
+    /**
+    * Checks for duplicate messages in the collection by message ID.
+    * returns true if a duplicate was detected.
+    */
+    bool checkForDuplicates( FilterInfo* info,
+                             const QString& msgID,
+                             const Akonadi::Collection& msgCollection,
+                             const QString& messageFolder );
     bool addMessage_fastImport( FilterInfo* info,
                      		    const QString& folder,
                      		    const QString& msgFile,
                                 const QString& msgStatusFlags = QString());
   private:
-    QMap<QString, QString> m_messageFolderMessageIDMap;
+    QMultiMap<QString, QString> m_messageFolderMessageIDMap;
     QMap<QString, Akonadi::Collection> m_messageFolderCollectionMap;
     QString m_name;
     QString m_author;

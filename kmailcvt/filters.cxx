@@ -26,7 +26,10 @@
 #include <Akonadi/CollectionFetchJob>
 #include <Akonadi/Item>
 #include <Akonadi/ItemCreateJob>
+#include <Akonadi/ItemFetchJob>
+#include <Akonadi/ItemFetchScope>
 #include <Akonadi/CollectionCreateJob>
+#include <akonadi/kmime/messageparts.h>
 
 // KDE Includes
 #include <KUrl>
@@ -241,6 +244,60 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
   return job->collection();
 }
 
+bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
+                                  const Akonadi::Collection& msgCollection,
+                                  const QString& messageFolder )
+{
+  bool folderFound = false;
+
+  // Check if the contents of this collection have already been found.
+  for( QMultiMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
+    it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+    if( it.key() == messageFolder ) {
+      folderFound = true;
+      break;
+    }
+  }
+
+  if( !folderFound ) {
+    // Populate the map with message IDs that are in that collection.
+    if( msgCollection.isValid() ) {
+      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(msgCollection);
+      job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+      if( !job->exec() ) {
+        info->addLog( i18n( "<b>Warning:<\b> Could not fetch items in folder %1. Reason: %2"
+        " You may have duplicate messages.", messageFolder, job->errorString() ) );
+      } else {
+        foreach( const Akonadi::Item& messageItem, job->items() ) {
+          if( !messageItem.isValid() ) {
+            info->addLog( i18n( "<b>Warning:<\b> Got an invalid message in folder %1.", messageFolder ) );
+          } else {
+            const KMime::Message::Ptr message = messageItem.payload<KMime::Message::Ptr>();
+            const KMime::Headers::Base* messageID = message->messageID();
+            if( messageID ) {
+              if( !messageID->isEmpty() ) {
+                m_messageFolderMessageIDMap.insert( messageFolder, messageID->asUnicodeString() );
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Check if this message has a duplicate
+  for( QMultiMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
+    it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+    if( it.key() == messageFolder &&
+      it.value() == msgID )
+      return true;
+  }
+
+  // The message isn't a duplicate, but add it to the map for checking in the future.
+  m_messageFolderMessageIDMap.insert( messageFolder, msgID );
+  return false;
+}
+
 
 bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          const QString& msgPath,
@@ -268,17 +325,12 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     newMessage->parse();
 
     // Check for duplicate.
-    for( QMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
-     it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
-      if( it.key() == folderName &&
-        it.value() == newMessage->messageID()->asUnicodeString() ) {
-        count_duplicates ++;
-        return false;
-      }
+    if( checkForDuplicates( info,
+                        newMessage->messageID()->asUnicodeString(),
+                        mailFolder, folderName ) ) {
+      count_duplicates++;
+      return false;
     }
-
-    // Add the message and folder to the map for duplicate checking.
-    m_messageFolderMessageIDMap[folderName] = newMessage->messageID()->asUnicodeString();
 
     // Add it to the collection.
     if( mailFolder.isValid() ) {
