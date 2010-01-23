@@ -37,7 +37,7 @@ project(kmailcvt)
   target_link_libraries(kmailcvt
     ${KDE4_KIO_LIBS}
     ${KDEPIMLIBS_AKONADI_LIBS}
-    ${KDE4_AKONADI_KMIME_LIBS}
+    ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
     ${KDEPIMLIBS_KMIME_LIBS}
     ${KDEPIMLIBS_KPIMUTILS_LIBS}
     messagecore
