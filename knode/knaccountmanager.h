@@ -15,6 +15,7 @@
 #ifndef KNACCOUNTMANAGER_H
 #define KNACCOUNTMANAGER_H
 
+#include <QObject>
 #include <qglobal.h>
 #include <QList>
 
@@ -37,7 +38,7 @@ class KNAccountManager : public QObject
      * @param gm The group manager.
      * @param parent The parent object.
      */
-    KNAccountManager( KNGroupManager *gm, QObject * parent = 0 );
+    explicit KNAccountManager( KNGroupManager *gm, QObject *parent = 0 );
     /** Delete this account manager and all managed accounts.
      */
     ~KNAccountManager();

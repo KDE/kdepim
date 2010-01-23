@@ -33,7 +33,7 @@ class KCM_KNODE_EXPORT KCMTabContainer : public KCModule
     /** Create a new tab-based KCModule container.
      * @param parent The parent widget.
      */
-    KCMTabContainer( const KComponentData &inst, QWidget * parent = 0 );
+    explicit KCMTabContainer( const KComponentData &inst, QWidget * parent = 0 );
 
     /** Reimplemented to forward load() to all tabs. */
     virtual void load();
@@ -60,7 +60,7 @@ class AccountsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
-    AccountsPage( const KComponentData &inst, QWidget *parent = 0 );
+    explicit AccountsPage( const KComponentData &inst, QWidget *parent = 0 );
 };
 
 
@@ -69,7 +69,7 @@ class KCM_KNODE_EXPORT ReadNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
-    ReadNewsPage( const KComponentData &inst, QWidget *parent = 0 );
+    explicit ReadNewsPage( const KComponentData &inst, QWidget *parent = 0 );
 };
 
 /** Post news page. */
@@ -77,7 +77,7 @@ class KCM_KNODE_EXPORT PostNewsPage : public KCMTabContainer {
   Q_OBJECT
 
   public:
-    PostNewsPage( const KComponentData &inst, QWidget *parent = 0 );
+    explicit PostNewsPage( const KComponentData &inst, QWidget *parent = 0 );
 };
 
 

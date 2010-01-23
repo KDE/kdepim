@@ -12,20 +12,18 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "knserverinfo.h"
+
+#include "knaccountmanager.h"
+#include "knglobals.h"
+#include "utilities.h"
 
 #include <kmessagebox.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
-#include <kdebug.h>
 #include <kwallet.h>
 using namespace KWallet;
-
-#include "knglobals.h"
-#include "knserverinfo.h"
-#include "knaccountmanager.h"
-#include "utilities.h"
-
 #include <kio/ioslave_defaults.h>
 
 
@@ -123,7 +121,7 @@ void KNServerInfo::saveConf(KConfigGroup &conf)
 
 
 
-bool KNServerInfo::operator==(const KNServerInfo &s)
+bool KNServerInfo::operator==(const KNServerInfo &s) const
 {
   return (  (s_erver==s.s_erver) &&
             (p_ort==s.p_ort) &&

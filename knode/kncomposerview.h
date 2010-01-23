@@ -130,7 +130,7 @@ class View : public QSplitter, private Ui::View
     const QString emailRecipient() const;
     /**
       Sets the email recipient list as a string.
-      @param to a coma seperated list of recipient address.
+      @param to a coma separated list of recipient address.
     */
     void setEmailRecipient( const QString &to );
 

@@ -102,7 +102,7 @@ class KNODE_EXPORT IdentityEditionDialog : public KDialog, private Ui::IdentityE
 
     /**
       Create a new identity prefilled with the currently selected
-      identity informations.
+      identity information.
     */
     void duplicateCurrentIdentity();
 

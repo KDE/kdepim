@@ -60,7 +60,7 @@ class KNCleanUp {
          * @param steps The number of progress steps.
          * @param parent The parent widget.
          */
-        ProgressDialog( int steps, QWidget *parent = 0 );
+        explicit ProgressDialog( int steps, QWidget *parent = 0 );
         ~ProgressDialog();
 
         /** Shows a message in the progress dialog.

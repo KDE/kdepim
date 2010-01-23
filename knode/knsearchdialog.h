@@ -34,7 +34,7 @@ class SearchDialog : public KDialog
     /** Create a new article search dialog.
      * @param parent The parent widget.
      */
-    SearchDialog( searchType t = STgroupSearch, QWidget *parent = 0 );
+    explicit SearchDialog( searchType t = STgroupSearch, QWidget *parent = 0 );
     ~SearchDialog();
 
     KNArticleFilter* filter() const  { return f_ilter; }

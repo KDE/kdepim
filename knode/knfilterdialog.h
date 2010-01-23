@@ -32,7 +32,7 @@ class KNFilterDialog : public KDialog {
   friend class KNFilterManager;
 
   public:
-    KNFilterDialog( KNArticleFilter *f = 0, QWidget *parent = 0 );
+    explicit KNFilterDialog( KNArticleFilter *f = 0, QWidget *parent = 0 );
     ~KNFilterDialog();
 
     KNArticleFilter* filter() { return fltr; }

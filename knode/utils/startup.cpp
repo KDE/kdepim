@@ -132,12 +132,12 @@ void Startup::convertPre45Identity( KConfigGroup &cg ) const
 
   // Save to the new backend
   if ( // Is identity empty ?
-         identity.fullName() != QString()
-      || identity.emailAddr() != QString()
-      || identity.organization() != QString()
-      || identity.replyToAddr() != QString()
-      || identity.property( "Mail-Copies-To" ).toString() != QString()
-      || identity.pgpSigningKey() != QString()
+         !identity.fullName().isEmpty()
+      || !identity.emailAddr().isEmpty()
+      || !identity.organization().isEmpty()
+      || !identity.replyToAddr().isEmpty()
+      || !identity.property( "Mail-Copies-To" ).toString().isEmpty()
+      || !identity.pgpSigningKey().isEmpty()
       || identity.signature().type() != KPIMIdentities::Signature::Disabled
    ) {
     // If an identity (even created by another application) has the

@@ -29,7 +29,7 @@ class KNArticleVector {
   public:
     enum SortingType { STid, STmsgId, STunsorted };
 
-    KNArticleVector(KNArticleVector *master=0, SortingType sorting=STunsorted);
+    explicit KNArticleVector(KNArticleVector *master=0, SortingType sorting=STunsorted);
     virtual ~KNArticleVector();
 
     // list-info

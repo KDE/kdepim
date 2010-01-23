@@ -34,7 +34,7 @@ namespace KNode {
 class KNGroupPropDlg : public KPageDialog  {
 Q_OBJECT
   public:
-    KNGroupPropDlg( KNGroup *group, QWidget *parent=0 );
+    explicit KNGroupPropDlg( KNGroup *group, QWidget *parent=0 );
     ~KNGroupPropDlg();
 
     bool nickHasChanged()const { return n_ickChanged; }

@@ -64,7 +64,7 @@ class KNComposer : public KXmlGuiWindow {
       @param createCopy When true, this indicates that a copy should be sent by e-mail.
       @param allowMail Enables or disables sending the message via e-mail.
     */
-    KNComposer( KNLocalArticle *a, const QString &text = QString(),
+    explicit KNComposer( KNLocalArticle *a, const QString &text = QString(),
                 const QString &unwraped = QString(), bool firstEdit = false,
                 bool dislikesCopies = false, bool createCopy = false, bool allowMail = true);
     ~KNComposer();
@@ -77,7 +77,7 @@ class KNComposer : public KXmlGuiWindow {
     KNLocalArticle* article()const             { return a_rticle; }
     /**
       Applies changes from the editor into the article being edited.
-      @return false if an error occured.
+      @return false if an error occurred.
     */
     bool applyChanges();
 

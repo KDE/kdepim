@@ -26,8 +26,8 @@ class KNHeaderView;
 class KNHdrViewItem : public K3ListViewItem  {
 
   public:
-    KNHdrViewItem( KNHeaderView *ref, KNArticle *a = 0 );
-    KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a = 0 );
+    explicit KNHdrViewItem( KNHeaderView *ref, KNArticle *a = 0 );
+    explicit KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a = 0 );
     ~KNHdrViewItem();
 
     virtual int compare(Q3ListViewItem *i, int col, bool ascending) const;

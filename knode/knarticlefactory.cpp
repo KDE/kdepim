@@ -951,8 +951,8 @@ and cancel (or supersede) it there."));
 
     KPIMIdentities::IdentityManager *im = KNGlobals::self()->identityManager();
     bool ownArticle = false;
-    QList<QByteArray> fromAddr = remArt->from()->addresses();
-    foreach ( const QByteArray addr, fromAddr ) {
+    const QList<QByteArray> fromAddr = remArt->from()->addresses();
+    foreach ( const QByteArray &addr, fromAddr ) {
       if ( im->thatIsMe( QString::fromLatin1( addr ) ) ) {
         ownArticle = true;
         break;

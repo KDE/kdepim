@@ -25,8 +25,8 @@ using namespace KPIM;
 class KNCollectionViewItem : public FolderTreeWidgetItem  {
 
   public:
-    KNCollectionViewItem( FolderTreeWidget *parent, Protocol protocol = NONE, FolderType type = Root);
-    KNCollectionViewItem( FolderTreeWidgetItem *parent, Protocol protocol = NONE,
+    explicit KNCollectionViewItem( FolderTreeWidget *parent, Protocol protocol = NONE, FolderType type = Root);
+    explicit KNCollectionViewItem( FolderTreeWidgetItem *parent, Protocol protocol = NONE,
                           FolderType type = Other, int unread = 0, int total = 0 );
     ~KNCollectionViewItem();
 

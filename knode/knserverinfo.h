@@ -56,7 +56,7 @@ class KNServerInfo {
     void setNeedsLogon(bool b)        { n_eedsLogon=b; }
     void setEncryption( Encryption enc ) { mEncryption = enc; }
 
-    bool operator==(const KNServerInfo &s);
+    bool operator==(const KNServerInfo &s) const;
 
     /** Loads the password from KWallet, used for on-demand password loading */
     void readPassword();

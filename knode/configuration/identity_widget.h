@@ -74,7 +74,7 @@ class KNODE_EXPORT IdentityWidget : public KCModule, private Ui::IdentityWidget
   private slots:
     /**
       Called when a new identity is selected.
-      It loads the widget with its informations.
+      It loads the widget with its information.
     */
     void identitySelected( uint uoid );
 
