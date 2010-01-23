@@ -1330,9 +1330,7 @@ void ModelPrivate::attachMessageToGroupHeader( MessageItem *mi )
       } else if ( calendar->year( dDate ) == calendar->year( mTodayDate ) ) { // GroupByDateRange within this year
         groupLabel = calendar->monthName( dDate );
       } else { // GroupByDateRange in previous years
-        // Make date format translatable in 4.5
-        // groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2" )
-        groupLabel = QString( "%1 %2" )
+        groupLabel = i18nc( "Message Aggregation Group Header: Month name and Year number", "%1 %2" )
           .arg( calendar->monthName( dDate ) )
           .arg( calendar->year( dDate ) );
       }
