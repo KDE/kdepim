@@ -275,7 +275,7 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
             if( !messageItem.hasPayload<KMime::Message::Ptr>() )
               continue;
             const KMime::Message::Ptr message = messageItem.payload<KMime::Message::Ptr>();
-            const KMime::Headers::Base* messageID = message->messageID();
+            const KMime::Headers::Base* messageID = message->messageID( false );
             if( messageID ) {
               if( !messageID->isEmpty() ) {
                 m_messageFolderMessageIDMap.insert( messageFolder, messageID->asUnicodeString() );
@@ -328,7 +328,9 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     newMessage->parse();
 
     // Get the messageID.
-    messageID = newMessage->messageID()->asUnicodeString();
+    const KMime::Headers::Base* messageIDHeader = newMessage->messageID( false );
+    if( messageIDHeader )
+      messageID = messageIDHeader->asUnicodeString();
     
     if( !messageID.isEmpty() ) {
       // Check for duplicate.
