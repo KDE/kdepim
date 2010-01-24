@@ -125,7 +125,7 @@ bool FilterInfo::shouldTerminate()
   return s_terminateASAP;
 }
 
-Akonadi::Collection FilterInfo::getRootCollection() const
+Akonadi::Collection FilterInfo::rootCollection() const
 {
   return m_rootCollection;
 }
@@ -196,7 +196,7 @@ Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& f
   // Create each folder on the folder list and add it the map.
   foreach( const QString &folder, folderList ) {
     if( isFirst ) {
-      m_messageFolderCollectionMap[folder] = addSubCollection( info, info->getRootCollection(), folder );
+      m_messageFolderCollectionMap[folder] = addSubCollection( info, info->rootCollection(), folder );
       folderBuilder = folder;
       lastCollection = m_messageFolderCollectionMap[folder];
       isFirst = false;
@@ -337,7 +337,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
       addAkonadiMessage( info, mailFolder, newMessage );
     } else {
       info->alert( i18n( "<b>Warning:<\b> Got a bad message collection, adding to root collection." ) );
-      addAkonadiMessage( info, info->getRootCollection(), newMessage );
+      addAkonadiMessage( info, info->rootCollection(), newMessage );
     }
   }
   return true;
@@ -373,7 +373,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
       addAkonadiMessage( info, mailFolder, newMessage );
     } else {
       info->alert( i18n( "<b>Warning:<\b> Got a bad message collection, adding to root collection." ) );
-      addAkonadiMessage( info, info->getRootCollection(), newMessage );
+      addAkonadiMessage( info, info->rootCollection(), newMessage );
     }
   }
   return true;

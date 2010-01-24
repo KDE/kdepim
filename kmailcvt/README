@@ -27,8 +27,8 @@ the following methods that you may want to use:
     void addLog( const QString& log ); // Add a message for the user to see
     void alert( const QString& message ); // Tell user something has gone wrong
     QWidget *parent(); // The parent widget
-    Akonadi::Collection getRootCollection(); // The root collection the mails should be
-                                             // imported to.
+    Akonadi::Collection rootCollection(); // The root collection the mails should be
+                                          // imported to.
     
     bool removeDupMsg; // true, if user selected 'remove duplicated messages'
     

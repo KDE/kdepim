@@ -44,7 +44,7 @@ class FilterInfo
     void alert( const QString& message );
     static void terminateASAP();
     bool shouldTerminate();
-    Akonadi::Collection getRootCollection() const;
+    Akonadi::Collection rootCollection() const;
     void setRootCollection( const Akonadi::Collection &collection );
 
     QWidget *parent() { return m_parent; }

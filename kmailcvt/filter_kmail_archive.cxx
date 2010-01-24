@@ -97,7 +97,7 @@ bool FilterKMailArchive::importFolder( const KArchiveDirectory *folder, const QS
 {
   kDebug() << "Importing folder" << folder->name();
   mFilterInfo->addLog( i18n( "Importing folder '%1'...", folderPath ) );
-  mFilterInfo->setTo( mFilterInfo->getRootCollection().name() + folderPath );
+  mFilterInfo->setTo( mFilterInfo->rootCollection().name() + folderPath );
   const KArchiveDirectory * const messageDir =
       dynamic_cast<const KArchiveDirectory*>( folder->entry( "cur" ) );
   if ( messageDir ) {
@@ -181,7 +181,7 @@ int FilterKMailArchive::countFiles( const KArchiveDirectory *directory ) const
 
 void FilterKMailArchive::import( FilterInfo *info )
 {
-  Q_ASSERT( info->getRootCollection().isValid() );
+  Q_ASSERT( info->rootCollection().isValid() );
 
   mFilterInfo = info;
   KFileDialog fileDialog( KUrl(), QString(), mFilterInfo->parent() );
@@ -221,7 +221,7 @@ void FilterKMailArchive::import( FilterInfo *info )
     mFilterInfo->setOverall( 100 );
     mFilterInfo->setCurrent( 100 );
     QString text = i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
-                         archiveFile, mFilterInfo->getRootCollection().name() );
+                         archiveFile, mFilterInfo->rootCollection().name() );
     text += '\n' + i18np( "1 message was imported.", "%1 messages were imported.",
                           mFilesDone );
     mFilterInfo->alert( text );
