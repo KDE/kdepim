@@ -307,50 +307,9 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          )
 {
   Q_UNUSED( msgStatusFlags );
-  QString messageID;
-  // Create the mail folder (if not already created).
-  Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
-  KUrl msgUrl( msgPath );
-  if( !msgUrl.isEmpty() && msgUrl.isLocalFile() ) {
-
-    // Read in the temporary file.
-    const QByteArray msgText =
-      KPIMUtils::kFileToByteArray( msgUrl.toLocalFile(), true, false );
-    if( msgText.isEmpty() ) {
-      info->addLog( "Error: failed to read temporary file at" + msgPath );
-      return false;
-    }
-
-    // Construct a message.
-    KMime::Message::Ptr newMessage( new KMime::Message() );
-    newMessage->setContent( msgText );
-    newMessage->parse();
-
-    // Get the messageID.
-    const KMime::Headers::Base* messageIDHeader = newMessage->messageID( false );
-    if( messageIDHeader )
-      messageID = messageIDHeader->asUnicodeString();
-    
-    if( !messageID.isEmpty() ) {
-      // Check for duplicate.   
-      if( checkForDuplicates( info,
-                              newMessage->messageID()->asUnicodeString(),
-                              mailFolder, folderName ) ) {
-        count_duplicates++;
-        return false;
-      }
-    }
-
-    // Add it to the collection.
-    if( mailFolder.isValid() ) {
-      addAkonadiMessage( info, mailFolder, newMessage );
-    } else {
-      info->alert( i18n( "<b>Warning:<\b> Got a bad message collection, adding to root collection." ) );
-      addAkonadiMessage( info, info->rootCollection(), newMessage );
-    }
-  }
-  return true;
+  // Add the message.
+  return doAddMessage( info, folderName, msgPath, true );
 }
 
 bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
@@ -359,6 +318,16 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
                                     )
 {
   Q_UNUSED( msgStatusFlags );
+
+  // Add the message.
+  return doAddMessage( info, folderName, msgPath );
+}
+
+bool Filter::doAddMessage( FilterInfo* info, const QString& folderName,
+                           const QString& msgPath,
+                           bool duplicateCheck )
+{
+  QString messageID;
   // Create the mail folder (if not already created).
   Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
@@ -378,6 +347,21 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
     newMessage->setContent( msgText );
     newMessage->parse();
 
+    if( duplicateCheck ) {
+      // Get the messageID.
+      const KMime::Headers::Base* messageIDHeader = newMessage->messageID( false );
+      if( messageIDHeader )
+        messageID = messageIDHeader->asUnicodeString();
+
+      if( !messageID.isEmpty() ) {
+        // Check for duplicate.
+        if( checkForDuplicates( info, messageID, mailFolder, folderName ) ) {
+          count_duplicates++;
+          return false;
+        }
+      }
+    }
+
     // Add it to the collection.
     if( mailFolder.isValid() ) {
       addAkonadiMessage( info, mailFolder, newMessage );
@@ -387,8 +371,8 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
     }
   }
   return true;
-
 }
+
 
 bool Filter::needsSecondPage()
 {
