@@ -272,6 +272,8 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
           if( !messageItem.isValid() ) {
             info->addLog( i18n( "<b>Warning:<\b> Got an invalid message in folder %1.", messageFolder ) );
           } else {
+            if( !messageItem.hasPayload<KMime::Message::Ptr>() )
+              continue;
             const KMime::Message::Ptr message = messageItem.payload<KMime::Message::Ptr>();
             const KMime::Headers::Base* messageID = message->messageID();
             if( messageID ) {
