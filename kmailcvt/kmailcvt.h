@@ -16,6 +16,7 @@
 
 #include <kapplication.h>
 #include <KAssistantDialog>
+#include <Akonadi/Collection>
 
 class KPageWidgetItem;
 class KSelFilterPage;
@@ -36,6 +37,7 @@ public slots:
 
 private slots:
 	void delayedStart();
+        void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
 	KPageWidgetItem* page1;
 	KPageWidgetItem* page2;

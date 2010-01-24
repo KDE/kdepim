@@ -53,6 +53,12 @@ KMailCVT::KMailCVT(QWidget *parent)
 	addPage( page2 );
         connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
 	QTimer::singleShot( 0, this, SLOT( delayedStart()) );
+
+        // Disable the 'next button to begin with.
+        setValid( currentPage(), false );
+
+        connect( selfilterpage->mCollectionRequestor, SIGNAL( collectionChanged(Akonadi::Collection) ),
+                 this, SLOT( collectionChanged(Akonadi::Collection) ) );
 }
 
 KMailCVT::~KMailCVT()
@@ -115,6 +121,14 @@ void KMailCVT::delayedStart()
   }
 }
 
+void KMailCVT::collectionChanged( const Akonadi::Collection& selectedCollection )
+{
+ if( selectedCollection.isValid() ){
+   setValid( currentPage(), true );
+ } else {
+   setValid( currentPage(), false );
+ }
+}
 
 void KMailCVT::help()
 {
