@@ -41,6 +41,8 @@ To add a message, there are two possibilities:
    with that message and the target collection.
    To facilitate creating a hierachy of folders, use the parseFolderString() method.
    Check for duplicates with checkForDuplicates() if removeDupMsg from the FilterInfo is true.
+   Only call checkForDuplicates() if a message ID exists for the message, otherwise you could get
+   false positives.
 2) Extract the email (including all headers) into a KTempFile.
    Then use the following:
 

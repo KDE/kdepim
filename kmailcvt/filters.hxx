@@ -106,6 +106,8 @@ class Filter
     /**
     * Checks for duplicate messages in the collection by message ID.
     * returns true if a duplicate was detected.
+    * NOTE: Only call this method if a message ID exists, otherwise
+    * you could get false positives.
     */
     bool checkForDuplicates( FilterInfo* info,
                              const QString& msgID,

@@ -305,6 +305,7 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
                          )
 {
   Q_UNUSED( msgStatusFlags );
+  QString messageID;
   // Create the mail folder (if not already created).
   Akonadi::Collection mailFolder = parseFolderString( info, folderName );
 
@@ -324,12 +325,17 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
     newMessage->setContent( msgText );
     newMessage->parse();
 
-    // Check for duplicate.
-    if( checkForDuplicates( info,
-                        newMessage->messageID()->asUnicodeString(),
-                        mailFolder, folderName ) ) {
-      count_duplicates++;
-      return false;
+    // Get the messageID.
+    messageID = newMessage->messageID()->asUnicodeString();
+    
+    if( !messageID.isEmpty() ) {
+      // Check for duplicate.
+      if( checkForDuplicates( info,
+                          newMessage->messageID()->asUnicodeString(),
+                          mailFolder, folderName ) ) {
+        count_duplicates++;
+        return false;
+      }
     }
 
     // Add it to the collection.
