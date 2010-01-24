@@ -81,6 +81,7 @@ KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
 
         // Ensure we return the correct type of Akonadi collection.
         mCollectionRequestor->setMimeTypeFilter( QStringList() << QString( "message/rfc822" ) );
+        mCollectionRequestor->setCollection(Akonadi::Collection());
         mCollectionRequestor->setAccessRightsFilter(
           Akonadi::Collection::CanCreateCollection |
           Akonadi::Collection::CanCreateItem );
