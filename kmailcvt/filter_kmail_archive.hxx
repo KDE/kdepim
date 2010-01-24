@@ -1,4 +1,4 @@
-/* Copyright 2009 Klarälvdalens Datakonsult AB
+/* Copyright 2009,2010 Klarälvdalens Datakonsult AB
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -21,12 +21,28 @@
 
 #include "filters.hxx"
 
+class KArchiveFile;
+class KArchiveDirectory;
+
 class FilterKMailArchive : public Filter
 {
 public:
   FilterKMailArchive();
+  ~FilterKMailArchive();
   void import( FilterInfo *info );
-  virtual bool needsSecondPage() { return false; }
+  virtual bool needsSecondPage() { return true; }
+
+private:
+
+  bool importDirectory( const KArchiveDirectory *directory, const QString &folderPath );
+  bool importFolder( const KArchiveDirectory *folder, const QString &folderPath );
+  bool importMessage( const KArchiveFile *file, const QString &folderPath );
+
+  int countFiles( const KArchiveDirectory *directory ) const;
+
+  FilterInfo *mFilterInfo;
+  int mTotalFiles;
+  int mFilesDone;
 };
 
 #endif

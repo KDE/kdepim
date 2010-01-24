@@ -188,7 +188,7 @@ Akonadi::Collection Filter::parseFolderString(FilterInfo* info, const QString& f
   }
 
   // The folder hasn't yet been created, create it now.
-  const QStringList folderList = folderParseString.split('/');
+  const QStringList folderList = folderParseString.split( '/', QString::SkipEmptyParts );
   bool isFirst = true;
   QString folderBuilder;
   Akonadi::Collection lastCollection;
@@ -378,27 +378,6 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   }
   return true;
 
-}
-
-void Filter::showKMailImportArchiveDialog( FilterInfo* info )
-{
-  #if 0
-  QDBusConnectionInterface * sessionBus = 0;
-  sessionBus = QDBusConnection::sessionBus().interface();
-  if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
-    KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
-
-
-  org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-  QDBusReply<void> reply = kmail.showImportArchiveDialog();
-
-  if ( !reply.isValid() )
-  {
-    info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for D-Bus communication: %1; %2<br />"
-                       "Make sure <i>kmail</i> is installed.", reply.error().message(), reply.error().message() ) );
-    return;
-  }
-  #endif
 }
 
 bool Filter::needsSecondPage()

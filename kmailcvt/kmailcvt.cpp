@@ -106,6 +106,7 @@ void KMailCVT::next()
       info->clear(); // Clear info from last time
       info->setRootCollection( selectedCollection );
       selectedFilter->import(info);
+      accept();
       info->setStatusMsg(i18n("Import finished"));
       // Cleanup
       delete info;

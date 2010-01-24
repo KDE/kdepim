@@ -73,7 +73,6 @@ class Filter
     int count_duplicates; //to count all duplicate messages
 
   protected:
-    void showKMailImportArchiveDialog( FilterInfo* info );
     Akonadi::Collection addSubCollection( FilterInfo* info,
                                           const Akonadi::Collection &baseCollection,
                                           const QString &newCollectionPathName );
