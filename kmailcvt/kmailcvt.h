@@ -39,7 +39,6 @@ private slots:
 private:
 	KPageWidgetItem* page1;
 	KPageWidgetItem* page2;
-        void endImport();
 	KSelFilterPage *selfilterpage;
 	KImportPage *importpage;
 

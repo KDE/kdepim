@@ -55,25 +55,8 @@ KMailCVT::KMailCVT(QWidget *parent)
 	QTimer::singleShot( 0, this, SLOT( delayedStart()) );
 }
 
-KMailCVT::~KMailCVT() {
-  endImport();
-}
-
-void KMailCVT::endImport()
+KMailCVT::~KMailCVT()
 {
-  #if 0
-    QDBusConnectionInterface * sessionBus = 0;
-    sessionBus = QDBusConnection::sessionBus().interface();
-    if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
-       KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
-
-    org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-    QDBusReply<int> reply = kmail.dbusAddMessage(QString(), QString(),QString());
-    if ( !reply.isValid() ) return;
-
-    QDBusReply<void> reply2 = kmail.dbusResetAddMessage();
-    if ( !reply2.isValid() ) return;
-   #endif
 }
 
 void KMailCVT::next()
