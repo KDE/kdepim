@@ -28,7 +28,7 @@
 
 using namespace KPIM;
 
-AnnotationEditDialog::AnnotationEditDialog( QUrl nepomukResourceUri, QWidget *parent )
+AnnotationEditDialog::AnnotationEditDialog( const QUrl &nepomukResourceUri, QWidget *parent )
   : KDialog( parent ),
   mNepomukResourceUri( nepomukResourceUri )
 {

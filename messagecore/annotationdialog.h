@@ -28,7 +28,7 @@ class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
   Q_OBJECT
 
   public:
-    AnnotationEditDialog( QUrl nepomukResourceUri, QWidget *parent = 0 );
+    AnnotationEditDialog( const QUrl &nepomukResourceUri, QWidget *parent = 0 );
     ~AnnotationEditDialog();
 
   protected:
