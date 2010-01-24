@@ -171,7 +171,7 @@ bool Filter::addAkonadiMessage( FilterInfo* info, const Akonadi::Collection &col
   item.setPayload<KMime::Message::Ptr>( message );
   Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( item, collection );
   if( !job->exec() ) {
-    info->alert( i18n( "<b>Error:<\b> Could not add message to the collection %1. Reason: %2",
+    info->alert( i18n( "<b>Error:<\b> Could not add message to folder %1. Reason: %2",
 		       collection.name(), job->errorString() ) );
     return false;
   }
@@ -218,7 +218,7 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
   Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob( baseCollection,
 									   Akonadi::CollectionFetchJob::FirstLevel);
   if( !fetchJob->exec() ) {
-    info->alert( i18n( "<b>Error:<\b> Could not execute fetchJob when adding sub collection. Reason: %1",
+    info->alert( i18n( "<b>Warning:<\b> Could not check that the folder already exists. Reason: %1",
 		       fetchJob->errorString() ) );
     return Akonadi::Collection();
   }
@@ -236,7 +236,7 @@ Akonadi::Collection Filter::addSubCollection( FilterInfo* info,
 
   Akonadi::CollectionCreateJob * job = new Akonadi::CollectionCreateJob( newSubCollection );
   if( !job->exec() ) {
-    info->alert( i18n("<b>Error:<\b> Could not create subCollection. Reason: %1",
+    info->alert( i18n("<b>Error:<\b> Could not create folder. Reason: %1",
 		 job->errorString() ) );
     return Akonadi::Collection();
   }
@@ -265,7 +265,7 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
       Akonadi::ItemFetchJob job( msgCollection );
       job.fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
       if( !job.exec() ) {
-        info->addLog( i18n( "<b>Warning:<\b> Could not fetch items in folder %1. Reason: %2"
+        info->addLog( i18n( "<b>Warning:<\b> Could not fetch mail in folder %1. Reason: %2"
         " You may have duplicate messages.", messageFolder, job.errorString() ) );
       } else {
         foreach( const Akonadi::Item& messageItem, job.items() ) {
@@ -366,7 +366,7 @@ bool Filter::doAddMessage( FilterInfo* info, const QString& folderName,
     if( mailFolder.isValid() ) {
       addAkonadiMessage( info, mailFolder, newMessage );
     } else {
-      info->alert( i18n( "<b>Warning:<\b> Got a bad message collection, adding to root collection." ) );
+      info->alert( i18n( "<b>Warning:<\b> Got a bad message folder, adding to root folder." ) );
       addAkonadiMessage( info, info->rootCollection(), newMessage );
     }
   }
