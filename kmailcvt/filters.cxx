@@ -252,7 +252,7 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
 
   // Check if the contents of this collection have already been found.
   for( QMultiMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
-    it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+       it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
     if( it.key() == messageFolder ) {
       folderFound = true;
       break;
@@ -289,9 +289,9 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
 
   // Check if this message has a duplicate
   for( QMultiMap<QString, QString>::const_iterator it = m_messageFolderMessageIDMap.constBegin();
-    it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
+       it != m_messageFolderMessageIDMap.constEnd(); it++ ) {
     if( it.key() == messageFolder &&
-      it.value() == msgID )
+        it.value() == msgID )
       return true;
   }
 
@@ -333,10 +333,10 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
       messageID = messageIDHeader->asUnicodeString();
     
     if( !messageID.isEmpty() ) {
-      // Check for duplicate.
+      // Check for duplicate.   
       if( checkForDuplicates( info,
-                          newMessage->messageID()->asUnicodeString(),
-                          mailFolder, folderName ) ) {
+                              newMessage->messageID()->asUnicodeString(),
+                              mailFolder, folderName ) ) {
         count_duplicates++;
         return false;
       }
