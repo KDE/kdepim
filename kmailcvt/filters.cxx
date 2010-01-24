@@ -262,13 +262,13 @@ bool Filter::checkForDuplicates ( FilterInfo* info, const QString& msgID,
   if( !folderFound ) {
     // Populate the map with message IDs that are in that collection.
     if( msgCollection.isValid() ) {
-      Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob(msgCollection);
-      job->fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
-      if( !job->exec() ) {
+      Akonadi::ItemFetchJob job( msgCollection );
+      job.fetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
+      if( !job.exec() ) {
         info->addLog( i18n( "<b>Warning:<\b> Could not fetch items in folder %1. Reason: %2"
-        " You may have duplicate messages.", messageFolder, job->errorString() ) );
+        " You may have duplicate messages.", messageFolder, job.errorString() ) );
       } else {
-        foreach( const Akonadi::Item& messageItem, job->items() ) {
+        foreach( const Akonadi::Item& messageItem, job.items() ) {
           if( !messageItem.isValid() ) {
             info->addLog( i18n( "<b>Warning:<\b> Got an invalid message in folder %1.", messageFolder ) );
           } else {
