@@ -73,11 +73,27 @@ class Filter
     int count_duplicates; //to count all duplicate messages
 
   protected:
+
+    /**
+     * Adds a single subcollection to the given base collection and returns it.
+     * Use parseFolderString() instead if you want to create hierachies of collections.
+     */
     Akonadi::Collection addSubCollection( FilterInfo* info,
                                           const Akonadi::Collection &baseCollection,
                                           const QString &newCollectionPathName );
+
+    /**
+     * Creates a hierachy of collections based on the given path string. The collection
+     * hierachy will be placed under the root collection.
+     * For example, if the folderParseString "foo/bar/test" is passsed to this method, it
+     * will make sure the root collection has a subcollection named "foo", which in turn
+     * has a subcollection named "bar", which again has a subcollection named "test".
+     * The "test" collection will be returned.
+     * An invalid collection will be returned in case of an error.
+     */
     Akonadi::Collection parseFolderString( FilterInfo* info,
                                            const QString &folderParseString );
+
     bool addAkonadiMessage( FilterInfo* info,
                             const Akonadi::Collection &collection,
                             const KMime::Message::Ptr message );

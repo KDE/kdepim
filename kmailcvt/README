@@ -1,8 +1,11 @@
 The KDE Mail Import tool - KMailCVT
 ===================================
 
-This directory contains the sources for the kmailcvt program. It communicates
-with KMail via its D-Bus interface to add messages.
+This directory contains the sources for the KMailCVT program.
+KMailCVT imports messages into Akonadi.
+The name KMailCVT stems from historic reasons: Before using Akonadi,
+KMailCVT communicated over D-Bus with KMail to add messages. Nowadays
+that is no longer necessary, KMailCVT is independent of KMail.
 
 Writing a filter
 ----------------
@@ -24,6 +27,8 @@ the following methods that you may want to use:
     void addLog( const QString& log ); // Add a message for the user to see
     void alert( const QString& message ); // Tell user something has gone wrong
     QWidget *parent(); // The parent widget
+    Akonadi::Collection getRootCollection(); // The root collection the mails should be
+                                             // imported to.
     
     bool removeDupMsg; // true, if user selected 'remove duplicated messages'
     
@@ -31,17 +36,28 @@ Also, every now and again you should check to see if the shouldTerminate method
 returns true, if it does the user has pressed cancel and your import method
 should return.
 
-To add messages, extract the email (including all headers) into a KTempFile.
-Then use the following:
+To add a message, there are two possibilities:
+1) Extract the mail into a KMime::Message::Ptr object and then call addAkonadiMessage
+   with that message and the target collection.
+   To facilitate creating a hierachy of folders, use the parseFolderString() method.
+   Check for duplicates with checkForDuplicates() if removeDupMsg from the FilterInfo is true.
+2) Extract the email (including all headers) into a KTempFile.
+   Then use the following:
 
-if(info->removeDupMsg) addMessage( info, folderName, tempfilepath );
-else addMessage_fastImport( info, folderName, tempfilepath );
+   if ( info->removeDupMsg )
+     addMessage( info, folderName, tempfilepath );
+   else
+     addMessage_fastImport( info, folderName, tempfilepath );
+
+The second method is only provided for compatibility with legacy filters and should
+not be used anymore.
 
 For a simple example, look at filter_plain
 
 Finally for the filter to appear in the combo box in the wizard you need to edit
 kselfilterpage.cpp and add an appropriate addFilter() function call.
 
+Thomas McGuire, January 2010
 Danny Kukawka, February 2005
 Laurence Anderson, April 2003.
 
