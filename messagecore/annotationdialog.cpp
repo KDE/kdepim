@@ -43,13 +43,14 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &nepomukResourceUri, QWid
     setCaption( i18n( "Add Note" ) );
     setButtons( Ok | Cancel );
   }
+  setDefaultButton(KDialog::Ok);
 
   QLabel *label = new QLabel( i18n( "Enter the text that should be stored as a note to the mail:" ) );
   QGridLayout *grid = new QGridLayout( mainWidget() );
   mTextEdit = new KTextEdit( this );
   grid->addWidget( label );
   grid->addWidget( mTextEdit );
-
+  mTextEdit->setFocus();
   if ( hasAnnotation ) {
     mTextEdit->setPlainText( resource.description() );
   }
