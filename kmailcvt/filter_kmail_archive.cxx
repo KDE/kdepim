@@ -220,11 +220,13 @@ void FilterKMailArchive::import( FilterInfo *info )
   if ( importDirectory( archive->directory(), QString() ) ) {
     mFilterInfo->setOverall( 100 );
     mFilterInfo->setCurrent( 100 );
-    QString text = i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
-                         archiveFile, mFilterInfo->rootCollection().name() );
-    text += '\n' + i18np( "1 message was imported.", "%1 messages were imported.",
-                          mFilesDone );
-    mFilterInfo->alert( text );
+    mFilterInfo->addLog( i18n( "Importing the archive file '%1' into the folder '%2' succeeded.",
+                               archiveFile, mFilterInfo->rootCollection().name() ) );
+    mFilterInfo->addLog( i18np( "1 message was imported.", "%1 messages were imported.",
+                                mFilesDone ) );
+  }
+  else {
+    mFilterInfo->addLog( i18n( "Importing the archive failed." ) );
   }
   archive->close();
 }
