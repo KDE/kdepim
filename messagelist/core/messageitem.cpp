@@ -242,7 +242,12 @@ void MessageItem::Private::fillTagList() const
       else
         messageListTag->setPriority( 0xFFFF );
 
-      // TODO: add font as well!
+      if ( nepomukTag.hasProperty( Vocabulary::MessageTag::font() ) ) {
+        const QString fontName = nepomukTag.property( Vocabulary::MessageTag::font() ).toString();
+        QFont font;
+        font.fromString( fontName );
+        messageListTag->setFont( font );
+      }
 
       mTagList->append( messageListTag );
     }
@@ -389,6 +394,11 @@ QColor MessageItem::backgroundColor() const
 
 QFont MessageItem::font() const
 {
+  const Tag *bestTag = d->bestTag();
+  if ( bestTag != 0 && bestTag->font() != QFont() ) {
+    return bestTag->font();
+  }
+
   QFont font;
 
   // from KDE3: "important" overrides "new" overrides "unread" overrides "todo"
@@ -403,8 +413,6 @@ QFont MessageItem::font() const
   } else {
     font = d->mFont;
   }
-
-  // TODO: handle tag font
 
   return font;
 }
