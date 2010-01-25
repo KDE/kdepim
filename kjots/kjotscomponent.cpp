@@ -226,6 +226,18 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action->setIcon(KIcon("checkmark"));
     action->setEnabled(false);
 
+    action = actionCollection->addAction("lock");
+    action->setText(i18n("Lock Selected"));
+    action->setIcon(KIcon("emblem-locked"));
+    connect(action, SIGNAL(triggered()), SLOT(actionLock()));
+
+    action = actionCollection->addAction("unlock");
+    action->setText(i18n("Unlock Selected"));
+    action->setIcon(KIcon("emblem-unlocked"));
+    connect(action, SIGNAL(triggered()), SLOT(actionUnlock()));
+
+    connect(this, SIGNAL(updateEditor()), editor, SLOT(onBookshelfSelection()));
+
     KStandardAction::print(this, SLOT(onPrint()), actionCollection);
 
     action = KStandardAction::cut(editor, SLOT(cut()), actionCollection);
@@ -523,6 +535,28 @@ void KJotsComponent::onRenameEntry()
     }
 }
 
+void KJotsComponent::actionLock()
+{
+    QList<KJotsEntry*> selection = bookshelf->selected();
+    KJotsEntry* tmpEntry;
+    foreach(tmpEntry, selection)
+    {
+        tmpEntry->setEditable(false);
+    }
+    emit updateEditor();
+}
+
+void KJotsComponent::actionUnlock()
+{
+    QList<KJotsEntry*> selection = bookshelf->selected();
+    KJotsEntry* tmpEntry;
+    foreach(tmpEntry, selection)
+    {
+        tmpEntry->setEditable(true);
+    }
+    emit updateEditor();
+}
+
 /*!
 *   Deletes the current book or the book that owns the current page.
 */
@@ -531,14 +565,21 @@ void KJotsComponent::deleteBook()
     KJotsBook *book = bookshelf->currentBook();
     if ( !book ) return;
 
-    if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-        i18nc("remove the book, by title", "<qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", book->title()),
-        i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeleteBookWarning") == KMessageBox::Cancel) {
-        return;
-    }
+    if( !book->isEditable() )
+        KMessageBox::information(topLevelWidget(),
+            i18n("This book is locked. You can only delete it when you first unlock it."),
+            i18n("Item is locked"));
+    else
+    {
+        if ( KMessageBox::warningContinueCancel(topLevelWidget(),
+            i18nc("remove the book, by title", "<qt>Are you sure you want to delete the book <strong>%1</strong>?</qt>", book->title()),
+            i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeleteBookWarning") == KMessageBox::Cancel) {
+            return;
+        }
 
-    bookshelf->remove(book);
-    updateMenu();
+        bookshelf->remove(book);
+        updateMenu();
+    }
 }
 
 /*!
@@ -549,14 +590,21 @@ void KJotsComponent::deletePage()
     KJotsPage *page = bookshelf->currentPage();
     if ( !page ) return;
 
-    if ( KMessageBox::warningContinueCancel(topLevelWidget(),
-        i18nc("remove the page, by title", "<qt>Are you sure you want to delete the page <strong>%1</strong>?</qt>", page->title()),
-        i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeletePageWarning") == KMessageBox::Cancel) {
-        return;
-    }
+    if( !page->isEditable() )
+        KMessageBox::information(topLevelWidget(),
+            i18n("This page is locked. You can only delete it when you first unlock it."),
+            i18n("Item is locked"));
+    else
+    {
+        if ( KMessageBox::warningContinueCancel(topLevelWidget(),
+                i18nc("remove the page, by title", "<qt>Are you sure you want to delete the page <strong>%1</strong>?</qt>", page->title()),
+                i18n("Delete"), KStandardGuiItem::del(), KStandardGuiItem::cancel(), "DeletePageWarning") == KMessageBox::Cancel) {
+            return;
+        }
 
-    bookshelf->remove(page);
-    updateMenu();
+        bookshelf->remove(page);
+        updateMenu();
+    }
 }
 
 /*!
@@ -574,7 +622,8 @@ void KJotsComponent::deleteMultiple()
     }
 
     foreach ( QTreeWidgetItem *item, selection ) {
-        bookshelf->remove(item);
+        if(dynamic_cast<KJotsEntry*>(item)->isEditable())
+            bookshelf->remove(item);
     }
 
     updateMenu();

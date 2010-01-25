@@ -77,6 +77,7 @@ class KJotsComponent : public QWidget
 
     signals:
         void captionChanged(QString captionText);
+        void updateEditor();
 
         /**
         Signals that the text cursor in the editor is now on a different anchor, or not on
@@ -92,6 +93,8 @@ class KJotsComponent : public QWidget
         void deletePage();
         void deleteMultiple();
         void onRenameEntry();
+        void actionLock();
+        void actionUnlock();
         void configure();
         void updateConfiguration();
         void bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint );

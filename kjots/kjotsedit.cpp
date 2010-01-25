@@ -120,14 +120,14 @@ void KJotsEdit::onBookshelfSelection ( void )
         if ( !newPage ) {
             disableEditing();
         } else {
+            setEnabled(newPage->isEditable());
+            setReadOnly(!newPage->isEditable());
             if ( currentPage != newPage ) {
                 if ( currentPage ) {
                     currentPage->setCursor(textCursor());
                 }
                 currentPage = newPage;
 
-                setEnabled(true);
-                setReadOnly(false);
                 setDocument(currentPage->body());
                 if ( !currentPage->getCursor().isNull() ) {
                     setTextCursor(currentPage->getCursor());
