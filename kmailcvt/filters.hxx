@@ -117,11 +117,12 @@ class Filter
                      		    const QString& folder,
                      		    const QString& msgFile,
                                 const QString& msgStatusFlags = QString());
+  private: 
     bool doAddMessage( FilterInfo* info,
                        const QString& folderName,
                        const QString& msgPath,
                        bool duplicateCheck = false );
-  private:
+
     QMultiMap<QString, QString> m_messageFolderMessageIDMap;
     QMap<QString, Akonadi::Collection> m_messageFolderCollectionMap;
     QString m_name;
