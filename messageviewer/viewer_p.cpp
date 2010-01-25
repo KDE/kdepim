@@ -3018,7 +3018,6 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
 // with the value specified here
 bool ViewerPrivate::hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id )
 {
-  kWarning() << "looking at:"<<start.tagName() << "for:" << id;
   if ( start.isNull() )
     return false;
 
