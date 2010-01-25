@@ -3,18 +3,13 @@ Friday, January 22th 2010
 Problems addressed
 ------------------
 
-* kolab/issue3992: Print layout problem, if a url is to long (rt#5872)
 * kolab/issue4004: calendar prints should contain a print date (rt#5927)
 * kolab/issue4033: calendar print: week-schedule big time numbers didn't fit the border
 * kolab/issue3901: Result of printing a day seems to be broken
 * kolab/issue4036: calendar print: tasks are wrongly printed
 * kolab/issue4038: After deletion of an event the small monthview is not updated
 * kolab/issue3805: Sometimes at the Mail save dialog no filename is created from the subject (rt#5851)
-* kolab/issue4004: calendar prints should contain a print date (rt#5927)
-* kolab/issue4039: Size of an embedded event attachment is too small.
-* kolab/issue4012: Calender view update problem, if the same appointment is moved on the server in other folders (rt#5930)
 * kolab/issue3989: Calendar: Attendee names with comma are handled wrongly (rt#5899)
-* kolab/issue4043: extended alarm: Own reminder dialog text is ignored
 * kolab/issue1783: Invitation gets lost, if no Kalender resource is activated
 * kolab/issue4042: minutes field in the extended alarm dialog has a problem
 
