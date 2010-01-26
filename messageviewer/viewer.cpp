@@ -326,8 +326,7 @@ bool Viewer::event(QEvent *e)
 void Viewer::slotFind()
 {
   Q_D(Viewer);
-  d->mFindBar->show();
-  d->mFindBar->focusAndSetCursor();
+  d->slotFind();
 }
 
 const AttachmentStrategy * Viewer::attachmentStrategy() const
