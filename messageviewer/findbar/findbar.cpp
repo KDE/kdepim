@@ -81,6 +81,7 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   connect( m_caseSensitiveAct, SIGNAL( toggled( bool ) ), this, SLOT( caseSensitivityChanged() ) );
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
   connect( m_search, SIGNAL( userTextChanged( QString ) ), this, SLOT( autoSearch( QString ) ) );
+
   hide();
 }
 
@@ -127,7 +128,8 @@ void FindBar::find()
     clearSelections();
   }
   mLastSearchStr = m_search->text();
-  m_view->findText( mLastSearchStr, m_searchOptions );
+  if( !mLastSearchStr.isEmpty() )
+    m_view->findText( mLastSearchStr, m_searchOptions );
 }
 
 void FindBar::caseSensitivityChanged()
