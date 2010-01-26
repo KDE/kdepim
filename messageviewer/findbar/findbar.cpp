@@ -40,7 +40,7 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   m_searchOptions |= QWebPage::FindWrapsAroundDocument;
   QHBoxLayout * lay = new QHBoxLayout( this );
   lay->setMargin( 2 );
-  
+
   QToolButton * closeBtn = new QToolButton( this );
   closeBtn->setIcon( KIcon( "dialog-close" ) );
   closeBtn->setIconSize( QSize( 24, 24 ) );
@@ -53,17 +53,18 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
 
   m_search = new KLineEdit( this );
   m_search->setToolTip( i18n( "Text to search for" ) );
+  m_search->setClearButtonShown( true );
   label->setBuddy( m_search );
   lay->addWidget( m_search );
-  
+
   QPushButton * findNextBtn = new QPushButton( KIcon( "go-down-search" ), i18nc( "Find and go to the next search match", "Next" ), this );
   findNextBtn->setToolTip( i18n( "Jump to next match" ) );
   lay->addWidget( findNextBtn );
-  
+
   QPushButton * findPrevBtn = new QPushButton( KIcon( "go-up-search" ), i18nc( "Find and go to the previous search match", "Previous" ), this );
   findPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
   lay->addWidget( findPrevBtn );
-  
+
   QPushButton * optionsBtn = new QPushButton( this );
   optionsBtn->setText( i18n( "Options" ) );
   optionsBtn->setToolTip( i18n( "Modify search behavior" ) );
@@ -74,14 +75,14 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   m_highlightAll->setCheckable( true );
   optionsBtn->setMenu( optionsMenu );
   lay->addWidget( optionsBtn );
-  
+
   connect( closeBtn, SIGNAL( clicked() ), this, SLOT( closeBar() ) );
   connect( findNextBtn, SIGNAL( clicked() ), this, SLOT( findNext() ) );
   connect( findPrevBtn, SIGNAL( clicked() ), this, SLOT( findPrev() ) );
   connect( m_caseSensitiveAct, SIGNAL( toggled( bool ) ), this, SLOT( caseSensitivityChanged() ) );
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
   connect( m_search, SIGNAL( userTextChanged( QString ) ), this, SLOT( autoSearch( QString ) ) );
-
+  connect( m_search, SIGNAL( clearButtonClicked() ), this, SLOT( slotClearSearch() ) );
   hide();
 }
 
@@ -99,6 +100,11 @@ void FindBar::focusAndSetCursor()
   setFocus();
   m_search->selectAll();
   m_search->setFocus();
+}
+
+void FindBar::slotClearSearch()
+{
+  clearSelections();
 }
 
 void FindBar::autoSearch( QString str )

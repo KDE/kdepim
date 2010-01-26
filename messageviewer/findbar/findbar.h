@@ -56,7 +56,7 @@ class FindBar : public QWidget
     void caseSensitivityChanged();
     void highlightAllChanged();
     void closeBar();
-
+    void slotClearSearch();
   private:
     QWebView * m_view;
     KLineEdit * m_search;
