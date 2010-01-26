@@ -51,6 +51,8 @@ class FindBar : public QWidget
     FindBar( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
 
+    void setFoundMatch( bool match );
+
   public slots:
     void findNext();
     void findPrev();

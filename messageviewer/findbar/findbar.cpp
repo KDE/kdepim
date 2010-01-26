@@ -1,6 +1,7 @@
 /* This file is part of the KDE project
  *
  * Copyright (C) 2010 Torgny Nyblom <kde nyblom org>
+ * Copyright (C) 2010 Laurent Montel <montel@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -33,6 +34,7 @@
 #include <klocale.h>
 #include <kpushbutton.h>
 #include <klineedit.h>
+#include <KColorScheme>
 
 using namespace MessageViewer;
 
@@ -136,7 +138,30 @@ void FindBar::searchText( bool backward)
     clearSelections();
   }
   mLastSearchStr = m_search->text();
-  m_view->findText( mLastSearchStr, searchOptions );
+  bool found = m_view->findText( mLastSearchStr, searchOptions );
+  setFoundMatch( found );
+}
+
+void FindBar::setFoundMatch( bool match )
+{
+  QString styleSheet;
+
+  if (!m_search->text().isEmpty()) {
+    KColorScheme::BackgroundRole bgColorScheme;
+
+    if (match)
+      bgColorScheme = KColorScheme::PositiveBackground;
+    else
+      bgColorScheme = KColorScheme::NegativeBackground;
+
+    KStatefulBrush bgBrush(KColorScheme::View, bgColorScheme);
+
+    styleSheet = QString("QLineEdit{ background-color:%1 }")
+                 .arg(bgBrush.brush(m_search).color().name());
+  }
+
+  m_search->setStyleSheet(styleSheet);
+
 }
 
 void FindBar::findNext()
@@ -162,6 +187,7 @@ void FindBar::highlightAllChanged()
 void FindBar::clearSelections()
 {
   m_view->findText( QString());
+  setFoundMatch( false );
   //WEBKIT: TODO: Find a way to unselect last selection
   //m_view->triggerPageAction( QWebPage::MoveToStartOfDocument );
   //m_view->triggerPageAction( QWebPage::SelectStartOfDocument );
@@ -172,6 +198,7 @@ void FindBar::closeBar()
   // Make sure that all old searches are cleared
   m_search->setText( QString() );
   clearSelections();
+  setFoundMatch( false );
   hide();
 }
 
