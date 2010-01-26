@@ -647,7 +647,10 @@ so you can choose a monospaced font for the date field for better readability.</
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
 quoted more than three times will appear in color. Note that the
 <guilabel>Quoted text</guilabel> colors only work in the message reader, not in
-the composer.<!-- TODO --></para>
+the composer. If you want folders which are close to their quota
+(space allotment, usually used on IMAP servers) to be displayed in a different color,
+you can specify a percentage value as a threshold for this. The color to be used
+can be configured along with the other custom colors.<!-- TODO --></para>
 
 </sect2>
 
@@ -656,7 +659,7 @@ the composer.<!-- TODO --></para>
 
 <para>If the <guilabel>Close message window after replying or forwarding</guilabel> option is
 activated, KMail will close the message window after replying to or forwarding the message that
-is displayed in the window. This only applies to the seperate message window, not to the embedded
+is displayed in the window. This only applies to the separate message window, not to the embedded
 message preview pane.</para>
 
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
@@ -1129,7 +1132,7 @@ of key words can be modified.</para>
 		  <para>
 		    Attaches the complete message to the disposition
 		    notification. Usually, this is overkill. It does
-		    not add any valueable information that cannot be
+		    not add any valuable information that cannot be
 		    deduced from the message headers alone, but people
 		    sometimes insist on this, since it is much easier
 		    for humans to correlate the content of the message
@@ -1303,7 +1306,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      If checked, everytime you encrypt a message, a dialog
+	      If checked, every time you encrypt a message, a dialog
 	      will appear that presents you with the encryption keys
 	      that will be used for each recipient. You can then
 	      review the choice of keys, change them, and approve or
@@ -1413,7 +1416,7 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	      If checked, &kmail; will emit a warning if an &smime;
-	      certifciate or &openpgp; key will be used for a recipient
+	      certificate or &openpgp; key will be used for a recipient
 	      whose email address is not listed in the email addresses
 	      stored in the certificate.
 	    </para>
@@ -1725,7 +1728,7 @@ of key words can be modified.</para>
 	backends. Below each backend entry, you can see what protocols
 	(&openpgp; and/or &smime;) the backend supports. If a protocol
 	is not listed, the backend does not support it. If it is
-	listed, but greyed out, the backend supports the protocol, but
+	listed, but grayed out, the backend supports the protocol, but
 	some required programs were not found, or other errors
 	occurred during initialization. If you press
 	<guibutton>Rescan</guibutton>, a dialog box will appear that
@@ -1947,7 +1950,7 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 <varlistentry>
 <term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
 <listitem>
-<para>When the user provides comments when responding to invitations, send the comment in way that Microsoft Outlook(tm) understands. If this option is not enabled, the reponse comments will not be seen in Outlook.</para>
+<para>When the user provides comments when responding to invitations, send the comment in way that Microsoft Outlook(tm) understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1996,7 +1999,7 @@ SendMDNsWithEmptySender=true
 to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on
 a line by itself just above the option.
 
-Note that the default setting of "false" strictly speaking violates internet standards, but is
+Note that the default setting of "false" strictly speaking violates Internet standards, but is
 set that way for practical reasons, to avoid servers rejecting MDNs that KMail
 generates because they think they are SPAM.
 </para>
@@ -2142,6 +2145,16 @@ To enable this feature, add a line reading (under [General] section):
 </programlisting>
 <para>
 <prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group General --key disregardUmask true</option></userinput>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>AutoLostFoundMove</guilabel></term>
+<listitem><para>Activate this option to automate the handling of not yet uploaded messages in disconnected IMAP
+folders that can not be uploaded. This can happen if the folder was removed from the server or your access
+rights have been restricted. Such messages will automatically moved to a newly created lost+found folder if
+this option is enabled, you will be ask how to proceed every time otherwise.
 </para>
 </listitem>
 </varlistentry>
