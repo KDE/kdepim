@@ -27,6 +27,7 @@ class QAction;
 class QWebView;
 class KLineEdit;
 class SearchLineWidget;
+class QPushButton;
 
 namespace MessageViewer
 {
@@ -64,6 +65,8 @@ class FindBar : public QWidget
     QAction * m_highlightAll;
     QWebPage::FindFlags m_searchOptions;
     QString mLastSearchStr;
+    QPushButton *m_findPrevBtn;
+    QPushButton *m_findNextBtn;
 };
 };
 #endif

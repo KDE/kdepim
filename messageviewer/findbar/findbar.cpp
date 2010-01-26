@@ -57,13 +57,15 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   label->setBuddy( m_search );
   lay->addWidget( m_search );
 
-  QPushButton * findNextBtn = new QPushButton( KIcon( "go-down-search" ), i18nc( "Find and go to the next search match", "Next" ), this );
-  findNextBtn->setToolTip( i18n( "Jump to next match" ) );
-  lay->addWidget( findNextBtn );
+  m_findNextBtn = new QPushButton( KIcon( "go-down-search" ), i18nc( "Find and go to the next search match", "Next" ), this );
+  m_findNextBtn->setToolTip( i18n( "Jump to next match" ) );
+  lay->addWidget( m_findNextBtn );
+  m_findNextBtn->setEnabled( false );
 
-  QPushButton * findPrevBtn = new QPushButton( KIcon( "go-up-search" ), i18nc( "Find and go to the previous search match", "Previous" ), this );
-  findPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
-  lay->addWidget( findPrevBtn );
+  m_findPrevBtn = new QPushButton( KIcon( "go-up-search" ), i18nc( "Find and go to the previous search match", "Previous" ), this );
+  m_findPrevBtn->setToolTip( i18n( "Jump to previous match" ) );
+  lay->addWidget( m_findPrevBtn );
+  m_findPrevBtn->setEnabled( false );
 
   QPushButton * optionsBtn = new QPushButton( this );
   optionsBtn->setText( i18n( "Options" ) );
@@ -77,8 +79,8 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   lay->addWidget( optionsBtn );
 
   connect( closeBtn, SIGNAL( clicked() ), this, SLOT( closeBar() ) );
-  connect( findNextBtn, SIGNAL( clicked() ), this, SLOT( findNext() ) );
-  connect( findPrevBtn, SIGNAL( clicked() ), this, SLOT( findPrev() ) );
+  connect( m_findNextBtn, SIGNAL( clicked() ), this, SLOT( findNext() ) );
+  connect( m_findPrevBtn, SIGNAL( clicked() ), this, SLOT( findPrev() ) );
   connect( m_caseSensitiveAct, SIGNAL( toggled( bool ) ), this, SLOT( caseSensitivityChanged() ) );
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
   connect( m_search, SIGNAL( userTextChanged( QString ) ), this, SLOT( autoSearch( QString ) ) );
@@ -109,6 +111,8 @@ void FindBar::slotClearSearch()
 
 void FindBar::autoSearch( QString str )
 {
+  m_findPrevBtn->setEnabled( !str.isEmpty() );
+  m_findNextBtn->setEnabled( !str.isEmpty() );
   if( str.length() > 2 )
     QTimer::singleShot(0, this, SLOT( find() ) );
   else
