@@ -298,6 +298,12 @@ public:
 
 
 protected:
+
+  /**
+   * Reimplemented from MessageList::Core::Widget
+   */
+  virtual void fillMessageTagCombo( KComboBox * combo );
+
   /**
    * Reimplemented from MessageList::Core::Widget
    */

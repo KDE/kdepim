@@ -1066,7 +1066,6 @@ void Widget::searchEditClearButtonClicked()
   d->mView->scrollTo( d->mView->currentIndex(), QAbstractItemView::PositionAtCenter );
 }
 
-
 void Widget::viewMessageSelected( MessageItem * )
 {
 }

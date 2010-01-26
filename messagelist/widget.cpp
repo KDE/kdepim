@@ -28,7 +28,6 @@
 #include "core/view.h"
 
 #include <QtCore/QTimer>
-
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QDrag>
@@ -42,6 +41,9 @@
 #include <KDE/KMenu>
 #include <KDE/KXMLGUIClient>
 #include <KDE/KXMLGUIFactory>
+#include <KDE/KComboBox>
+
+#include <Nepomuk/Tag>
 
 namespace MessageList
 {
@@ -171,6 +173,19 @@ void Widget::setAllGroupsExpanded( bool expand )
 void Widget::focusQuickSearch()
 {
   view()->focusQuickSearch();
+}
+
+
+void Widget::fillMessageTagCombo( KComboBox * combo )
+{
+  foreach( const Nepomuk::Tag &nepomukTag, Nepomuk::Tag::allTags() ) {
+    QString iconName = "mail-tagged";
+    const QString label = nepomukTag.label();
+    if ( !nepomukTag.symbols().isEmpty() )
+      iconName = nepomukTag.symbols().first();
+    const QString id = nepomukTag.resourceUri().toString();
+    combo->addItem( SmallIcon( iconName ), label, QVariant( id ) );
+  }
 }
 
 void Widget::viewMessageSelected( MessageList::Core::MessageItem *msg )
