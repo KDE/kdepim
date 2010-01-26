@@ -501,7 +501,7 @@ namespace {
                                                            i18nc("@info",
                                                                  "<para>Archiving in combination with sign-only currently requires so-called opaque signatures "
                                                                  "(as opposed to detached ones, they embed the content in the signature).</para>"
-                                                                 "<para>This format is rather usual. You might want to archive the files spearately, "
+                                                                 "<para>This format is rather unusual. You might want to archive the files spearately, "
                                                                  "and then sign the archive as one file with Kleopatra.</para>"
                                                                  "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>" ),                                                    
                                                            i18nc("@title:window", "Unusual Signature Warning"),
