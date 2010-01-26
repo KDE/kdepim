@@ -633,14 +633,15 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   return p;
 }
 
-icalproperty *ICalFormatImpl::writeAttachment(Attachment *att)
+icalproperty *ICalFormatImpl::writeAttachment( Attachment *att )
 {
   icalattach *attach;
-  if (att->isUri())
-      attach = icalattach_new_from_url( att->uri().utf8().data());
-  else
-      attach = icalattach_new_from_data ( (unsigned char *)att->decodedData().data(), 0, 0);
-  icalproperty *p = icalproperty_new_attach(attach);
+  if ( att->isUri() ) {
+    attach = icalattach_new_from_url( att->uri().utf8().data() );
+  } else {
+    attach = icalattach_new_from_data ( (unsigned char *)att->data(), 0, 0 );
+  }
+  icalproperty *p = icalproperty_new_attach( attach );
 
   if ( !att->mimeType().isEmpty() ) {
     icalproperty_add_parameter( p,
