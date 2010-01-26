@@ -33,8 +33,11 @@
 #define MAILSOURCEVIEWER_H
 
 #include <QSyntaxHighlighter>
-
+#include <KTabWidget>
 #include <KTextBrowser>
+class QString;
+class QWidget;
+class QShowEvent;
 
 /**
  * A tiny little class to use for displaying raw messages, textual
@@ -56,14 +59,29 @@ protected:
 };
 
 
-class MailSourceViewer : public KTextBrowser
+class MailSourceViewer : public KTabWidget
 {
+Q_OBJECT;
 public:
   MailSourceViewer( QWidget *parent = 0 );
   ~MailSourceViewer();
 
+  void setRawSource( const QString &source );
+  void setProcessedSource( const QString &source );
+  void setDisplayedSource( const QString &source );
+
+protected:
+  void showEvent( QShowEvent *event );
+
 private:
-  MailSourceHighlighter *mSourceHighLighter;
+  bool mShowHTMLBrowser;
+  KTextBrowser *mRawBrowser;
+  KTextBrowser *mProcessedBrowser;
+#ifndef NDEBUG
+  KTextBrowser *mHtmlBrowser;
+#endif
+  MailSourceHighlighter *mRawSourceHighLighter;
+  MailSourceHighlighter *mProcessedSourceHighLighter;
 };
 
 }
