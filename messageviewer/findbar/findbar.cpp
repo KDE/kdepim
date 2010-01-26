@@ -27,6 +27,8 @@
 #include <QtGui/QMenu>
 #include <QtGui/QToolButton>
 #include <QtWebKit/QWebView>
+#include <QEvent>
+#include <QKeyEvent>
 #include <kicon.h>
 #include <klocale.h>
 #include <kpushbutton.h>
@@ -85,6 +87,7 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
   connect( m_search, SIGNAL( userTextChanged( QString ) ), this, SLOT( autoSearch( QString ) ) );
   connect( m_search, SIGNAL( clearButtonClicked() ), this, SLOT( slotClearSearch() ) );
+  connect( m_search, SIGNAL( returnPressed() ), this, SLOT( findNext() ) );
   hide();
 }
 
@@ -183,6 +186,25 @@ void FindBar::closeBar()
   m_search->setText( QString() );
   clearSelections();
   hide();
+}
+
+
+
+bool FindBar::event(QEvent* e)
+{
+    // Close the bar when pressing Escape.
+    // Not using a QShortcut for this because it could conflict with
+    // window-global actions (e.g. Emil Sedgh binds Esc to "close tab").
+    // With a shortcut override we can catch this before it gets to kactions.
+    if (e->type() == QEvent::ShortcutOverride) {
+        QKeyEvent* kev = static_cast<QKeyEvent* >(e);
+        if (kev->key() == Qt::Key_Escape) {
+            e->accept();
+            closeBar();
+            return true;
+        }
+    }
+    return QWidget::event(e);
 }
 
 #include "findbar.moc"

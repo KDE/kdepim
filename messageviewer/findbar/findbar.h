@@ -43,6 +43,10 @@ class FindBar : public QWidget
 
     void focusAndSetCursor();
 
+  protected:
+    virtual bool event(QEvent* e);
+
+
   private:
     FindBar( QWidget *parent) { Q_UNUSED(parent); }
     void clearSelections();
@@ -58,6 +62,7 @@ class FindBar : public QWidget
     void highlightAllChanged();
     void closeBar();
     void slotClearSearch();
+
   private:
     QWebView * m_view;
     KLineEdit * m_search;
