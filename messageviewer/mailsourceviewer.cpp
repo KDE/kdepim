@@ -32,14 +32,11 @@
 #include "mailsourceviewer.h"
 #include <QApplication>
 #include <QIcon>
-#include <QTabBar>
 #include <kwindowsystem.h>
-#include <KLocalizedString>
 
 #include <QRegExp>
 #include <QShortcut>
 #include <kiconloader.h>
-
 namespace MessageViewer {
 
 void MailSourceHighlighter::highlightBlock ( const QString & text ) {
@@ -75,30 +72,11 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
 }
 
 MailSourceViewer::MailSourceViewer( QWidget *parent )
-  : KTabWidget( parent ), mRawSourceHighLighter( 0 )
+  : KTextBrowser( parent ), mSourceHighLighter( 0 )
 {
   setAttribute( Qt::WA_DeleteOnClose );
-  mRawBrowser = new KTextBrowser();
-  addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw source" ) );
-  setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
-  mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-
-  mProcessedBrowser = new KTextBrowser();
-  addTab( mProcessedBrowser, i18nc( "Mail message after being processed, might be alterred from original", "Processed source") );
-  setTabToolTip( 1, i18n( "Processed mail, for example after decrypting an encrypted part of the mail" ) );
-  mProcessedBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mProcessedBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-
-#ifndef NDEBUG
-    mHtmlBrowser = new KTextBrowser();
-    addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
-    setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
-    mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
-    mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-#endif
-
-  setCurrentIndex( 0 );
+  setLineWrapMode( QTextEdit::NoWrap );
+  setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
   // combining the shortcuts in one qkeysequence() did not work...
   QShortcut* shortcut = new QShortcut( this );
@@ -113,44 +91,12 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
                   IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
-  mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser );
-  mProcessedSourceHighLighter = new MailSourceHighlighter( mProcessedBrowser );
+  mSourceHighLighter = new MailSourceHighlighter( this );
 }
 
 MailSourceViewer::~MailSourceViewer()
 {
+  delete mSourceHighLighter; mSourceHighLighter = 0;
 }
 
-void MailSourceViewer::setRawSource( const QString &source )
-{
-  mRawBrowser->setText( source );
-}
-
-void MailSourceViewer::setProcessedSource( const QString &source )
-{
-  mProcessedBrowser->setText( source );
-}
-
-void MailSourceViewer::setDisplayedSource( const QString &source )
-{
-#ifndef NDEBUG
-  mHtmlBrowser->setPlainText( source );
-#else
-  Q_UNUSED( source );
-#endif
-}
-
-void MailSourceViewer::showEvent( QShowEvent *event )
-{
-  Q_UNUSED( event );
-  if ( mRawBrowser->document()->toPlainText() == mProcessedBrowser->document()->toPlainText() ){
-    if ( count() == 2 ) {
-      tabBar()->hide();
-    }
-    setCurrentIndex( 0 );
-    widget( 1 )->hide();
-  }
-}
-
-#include "mailsourceviewer.moc"
 }

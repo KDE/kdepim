@@ -2276,15 +2276,13 @@ void ViewerPrivate::slotToggleMimePartTree()
 
 void ViewerPrivate::slotShowMessageSource()
 {
-  const QString rawMessage = QString::fromAscii( mMessageItem.payloadData() );
-  const QString processedMessage = QString::fromAscii( mMessage->encodedContent() );
-  const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
+  // ### PORT ME: This is broken: The OTP modifies the source, so this is not
+  //              actually the real source
+  QString str = QString::fromAscii( mMessageItem.payloadData() );
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
   viewer->setWindowTitle( i18n("Message as Plain Text") );
-  viewer->setRawSource( rawMessage );
-  viewer->setProcessedSource( processedMessage );
-  viewer->setDisplayedSource( htmlSource );
+  viewer->setText( str );
   if( mUseFixedFont ) {
     viewer->setFont( KGlobalSettings::fixedFont() );
   }
