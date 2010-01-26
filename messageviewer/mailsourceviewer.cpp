@@ -79,13 +79,13 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
 {
   setAttribute( Qt::WA_DeleteOnClose );
   mRawBrowser = new KTextBrowser();
-  addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw source" ) );
+  addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
   setTabToolTip( 0, i18n( "Raw, unmodified mail as it is stored on the filesystem or on the server" ) );
   mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
   mProcessedBrowser = new KTextBrowser();
-  addTab( mProcessedBrowser, i18nc( "Mail message after being processed, might be alterred from original", "Processed source") );
+  addTab( mProcessedBrowser, i18nc( "Mail message after being processed, might be alterred from original", "Processed Source") );
   setTabToolTip( 1, i18n( "Processed mail, for example after decrypting an encrypted part of the mail" ) );
   mProcessedBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mProcessedBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
