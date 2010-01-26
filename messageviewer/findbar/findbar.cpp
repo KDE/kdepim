@@ -87,7 +87,6 @@ FindBar::FindBar( QWebView * view, QWidget * parent )
   connect( m_highlightAll, SIGNAL( toggled( bool ) ), this, SLOT( highlightAllChanged() ) );
   connect( m_search, SIGNAL( userTextChanged( QString ) ), this, SLOT( autoSearch( QString ) ) );
   connect( m_search, SIGNAL( clearButtonClicked() ), this, SLOT( slotClearSearch() ) );
-  connect( m_search, SIGNAL( returnPressed() ), this, SLOT( findNext() ) );
   hide();
 }
 
@@ -141,8 +140,9 @@ void FindBar::find()
     clearSelections();
   }
   mLastSearchStr = m_search->text();
-  if( !mLastSearchStr.isEmpty() )
+  if( !mLastSearchStr.isEmpty() ) {
     m_view->findText( mLastSearchStr, m_searchOptions );
+  }
 }
 
 void FindBar::caseSensitivityChanged()
@@ -188,8 +188,6 @@ void FindBar::closeBar()
   hide();
 }
 
-
-
 bool FindBar::event(QEvent* e)
 {
     // Close the bar when pressing Escape.
@@ -202,6 +200,12 @@ bool FindBar::event(QEvent* e)
             e->accept();
             closeBar();
             return true;
+        }
+        else if ( kev->key() == Qt::Key_Enter ||
+                  kev->key() == Qt::Key_Return ) {
+          e->accept();
+          findNext();
+          return true;
         }
     }
     return QWidget::event(e);
