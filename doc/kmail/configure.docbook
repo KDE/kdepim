@@ -654,6 +654,11 @@ the composer.<!-- TODO --></para>
 <sect2 id="configure-appearance-layout">
 <title>Layout</title>
 
+<para>If the <guilabel>Close message window after replying or forwarding</guilabel> option is
+activated, KMail will close the message window after replying to or forwarding the message that
+is displayed in the window. This only applies to the seperate message window, not to the embedded
+message preview pane.
+
 <para><guilabel>Show HTML status bar</guilabel> activates a bar at the left side of the reader
 pane that tells you if a message is &html; or not. This is important because
 &html; messages might imitate the look of a signed and encrypted message, so
