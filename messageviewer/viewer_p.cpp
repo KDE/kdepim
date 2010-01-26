@@ -1297,7 +1297,7 @@ void ViewerPrivate::initHtmlWidget(void)
     mHtmlWriter = mPartHtmlWriter;
 #endif
   }
-
+#if 0
   // We do a queued connection below, and for that we need to register the meta types of the
   // parameters.
   //
@@ -1317,7 +1317,7 @@ void ViewerPrivate::initHtmlWidget(void)
     qRegisterMetaType<KParts::WindowArgs>( "KParts::WindowArgs" );
     metaTypesRegistered = true;
   }
-
+#endif
   connect(mViewer->page(), SIGNAL( linkHovered( const QString &, const QString &, const QString & ) ),
           this, SLOT( slotUrlOn(const QString &, const QString &, const QString & )));
   connect(mViewer->page(), SIGNAL( linkClicked( const QUrl & ) ),this, SLOT( slotUrlOpen( const QUrl & ) ), Qt::QueuedConnection);
