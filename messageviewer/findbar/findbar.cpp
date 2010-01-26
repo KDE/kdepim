@@ -39,7 +39,6 @@ using namespace MessageViewer;
 FindBar::FindBar( QWebView * view, QWidget * parent )
   : QWidget( parent ), m_view( view )
 {
-  m_searchOptions |= QWebPage::FindWrapsAroundDocument;
   QHBoxLayout * lay = new QHBoxLayout( this );
   lay->setMargin( 2 );
 
@@ -116,65 +115,53 @@ void FindBar::autoSearch( QString str )
   m_findPrevBtn->setEnabled( !str.isEmpty() );
   m_findNextBtn->setEnabled( !str.isEmpty() );
   if( str.length() > 2 )
-    QTimer::singleShot(0, this, SLOT( find() ) );
+    QTimer::singleShot(0, this, SLOT( searchText() ) );
   else
     clearSelections();
 }
 
-void FindBar::findNext()
+void FindBar::searchText( bool backward)
 {
-  m_searchOptions ^= QWebPage::FindBackward;
-  find();
-}
+  QWebPage::FindFlags searchOptions = QWebPage::FindWrapsAroundDocument;
 
-void FindBar::findPrev()
-{
-  m_searchOptions |= QWebPage::FindBackward;
-  find();
-}
+  if ( backward )
+    searchOptions = QWebPage::FindBackward;
+  if ( m_caseSensitiveAct->isChecked() )
+    searchOptions |= QWebPage::FindCaseSensitively;
+  if ( m_highlightAll->isChecked() )
+    searchOptions |= QWebPage::HighlightAllOccurrences;
 
-void FindBar::find()
-{
   if( !mLastSearchStr.contains( m_search->text(), Qt::CaseSensitive ) )
   {
     clearSelections();
   }
   mLastSearchStr = m_search->text();
-  if( !mLastSearchStr.isEmpty() ) {
-    m_view->findText( mLastSearchStr, m_searchOptions );
-  }
+  m_view->findText( mLastSearchStr, searchOptions );
+}
+
+void FindBar::findNext()
+{
+  searchText( false );
+}
+
+void FindBar::findPrev()
+{
+  searchText( true );
 }
 
 void FindBar::caseSensitivityChanged()
 {
   clearSelections();
-  if ( m_caseSensitiveAct->isChecked() )
-  {
-    m_searchOptions |= QWebPage::FindCaseSensitively;
-  } else {
-    m_searchOptions ^= QWebPage::FindCaseSensitively;
-  }
 }
 
 void FindBar::highlightAllChanged()
 {
   clearSelections();
-  if ( m_highlightAll->isChecked() )
-  {
-    m_searchOptions |= QWebPage::HighlightAllOccurrences;
-  } else {
-    m_searchOptions ^= QWebPage::HighlightAllOccurrences;
-  }
 }
 
 void FindBar::clearSelections()
 {
-  if ( m_highlightAll->isChecked() )
-  {
-    m_view->findText( QString(), m_searchOptions ^ QWebPage::FindCaseSensitively );
-  } else {
-    m_view->findText( QString(), m_searchOptions | QWebPage::FindCaseSensitively );
-  }
+  m_view->findText( QString());
   //WEBKIT: TODO: Find a way to unselect last selection
   //m_view->triggerPageAction( QWebPage::MoveToStartOfDocument );
   //m_view->triggerPageAction( QWebPage::SelectStartOfDocument );

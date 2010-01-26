@@ -52,23 +52,20 @@ class FindBar : public QWidget
     void clearSelections();
 
   public slots:
-    void find();
     void findNext();
     void findPrev();
     void autoSearch( QString str );
-
+    void searchText( bool backward = false );
   private slots:
     void caseSensitivityChanged();
     void highlightAllChanged();
     void closeBar();
     void slotClearSearch();
-
   private:
     QWebView * m_view;
     KLineEdit * m_search;
     QAction * m_caseSensitiveAct;
     QAction * m_highlightAll;
-    QWebPage::FindFlags m_searchOptions;
     QString mLastSearchStr;
     QPushButton *m_findPrevBtn;
     QPushButton *m_findNextBtn;
