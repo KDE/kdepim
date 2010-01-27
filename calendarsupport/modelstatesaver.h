@@ -50,7 +50,7 @@ namespace Akonadi {
         * @param role the role to save/restore
         * @param identifier Identifier used internally to write/read the role values. Must only contain letters (a-z) or digits (0-9)!
         * @param defaultValue The value that should be set if nothing is stored in the settings. When saving,
-        *        values equal to the default value are not explicitely stored
+        *        values equal to the default value are not explicitly stored
         */
         void addRole( int role, const QByteArray& identifier, const QVariant& defaultValue=QVariant() );
 
