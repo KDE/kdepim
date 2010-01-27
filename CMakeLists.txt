@@ -30,6 +30,21 @@ endif(KDEPIM_ENTERPRISE_BUILD)
 # config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
 configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
+############### generate kdepim-version.h ###############
+# Support for the SVN revision number in kdepim-version.h
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+  if (NOT KdeSubversion_FOUND)
+    find_package(KdeSubversion)
+  endif (NOT KdeSubversion_FOUND)
+  if (KdeSubversion_FOUND)
+    KdeSubversion_WC_INFO(${PROJECT_SOURCE_DIR} KDEPIM)
+    string(SUBSTRING "${KDEPIM_WC_LAST_CHANGED_DATE}" 0 10 KDEPIM_WC_LAST_CHANGED_DATE)
+    set(kdepim_svn_revision "svn-${KDEPIM_WC_REVISION}")
+    set(kdepim_svn_last_change "${KDEPIM_WC_LAST_CHANGED_DATE}")
+  endif (KdeSubversion_FOUND)
+endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+
+configure_file(kdepim-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdepim-version.h)
 
 ############### search packages used by KDE ###############
 

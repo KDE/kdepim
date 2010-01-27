@@ -60,4 +60,10 @@
 
 #define KDEPIM_VERSION "4.5 pre"
 
+/* SVN revision number, of the form "svn-xxxxxxxx" */
+#define KDEPIM_SVN_REVISION_STRING "@kdepim_svn_revision@"
+
+/* Date of last commit, of the form "YYYY-MM-DD" */
+#define KDEPIM_SVN_LAST_CHANGE "@kdepim_svn_last_change@"
+
 #endif
