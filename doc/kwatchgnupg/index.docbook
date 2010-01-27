@@ -47,7 +47,7 @@
 
 <legalnotice>&GPLNotice;</legalnotice>
 
-<date>2004-05-09</date>
+<date>2010-01-12</date>
 <releaseinfo>1.0</releaseinfo>
 
 <abstract>
@@ -78,7 +78,7 @@ socket for log lines from the &gnupg; backend applications. See
 &watchgnupg;.</para>
 
 <para>&kwatchgnupg; can be started from the
-<menuchoice><guimenu>Tools</guimenu></menuchoice> menu of both
+<menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer</guimenuitem></menuchoice> menu of both
 &kleopatra; and &kmail;, as well as from the command
 line. The &kwatchgnupg; executable is named
 <userinput>kwatchgnupg</userinput>.
