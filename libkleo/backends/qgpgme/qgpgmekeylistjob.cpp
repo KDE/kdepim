@@ -112,6 +112,10 @@ retry:
         return make_tuple( this_result, keys, QString(), Error() );
       else
         goto retry;
+    } else if ( this_result.error().code() == GPG_ERR_EOF ) {
+        // early end of keylisting (can happen when ~/.gnupg doesn't
+        // exist). Fakeing an empty result:
+        return make_tuple( KeyListResult(), std::vector<Key>(), QString(), Error() );
     }
     // ok, that seemed to work...
     result.mergeWith( this_result );
