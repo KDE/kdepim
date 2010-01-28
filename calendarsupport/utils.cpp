@@ -265,11 +265,14 @@ Item Akonadi::itemFromIndex( const QModelIndex& idx ) {
   return idx.data( EntityTreeModel::ItemRole ).value<Item>();
 }
 
-Item::List Akonadi::itemsFromModel( QAbstractItemModel* model, int start, int end ) {
+Item::List Akonadi::itemsFromModel( const QAbstractItemModel* model,
+                                    const QModelIndex &parentIndex,
+                                    int start,
+                                    int end ) {
   const int endRow = end >= 0 ? end : model->rowCount() - 1;
   Item::List items;
   int row = start;
-  QModelIndex i = model->index( row, 0 );
+  QModelIndex i = model->index( row, 0, parentIndex );
   while ( row <= endRow ) {
     const Item item = itemFromIndex( i );
     if ( Akonadi::hasIncidence( item ) )

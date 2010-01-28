@@ -81,12 +81,12 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
 }
 
 
-void Calendar::Private::rowsInserted( const QModelIndex&, int start, int end ) {
-  itemsAdded( itemsFromModel( m_model, start, end ) );
+void Calendar::Private::rowsInserted( const QModelIndex &parent, int start, int end ) {
+  itemsAdded( itemsFromModel( m_model, parent, start, end ) );
 }
 
-void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex&, int start, int end ) {
-  itemsRemoved( itemsFromModel( m_model, start, end ) );
+void Calendar::Private::rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end ) {
+  itemsRemoved( itemsFromModel( m_model, parent, start, end ) );
 }
 
 void Calendar::Private::layoutChanged() {

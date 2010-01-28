@@ -35,6 +35,7 @@
 #include <KCal/Todo>
 
 #include <KDateTime>
+#include <QModelIndex>
 
 namespace KCal {
   class CalFilter;
@@ -165,7 +166,10 @@ namespace Akonadi
 
   AKONADI_KCAL_NEXT_EXPORT Akonadi::Item itemFromIndex( const QModelIndex &index );
 
-  AKONADI_KCAL_NEXT_EXPORT Akonadi::Item::List itemsFromModel( QAbstractItemModel* model, int start=0, int end=-1 );
+  AKONADI_KCAL_NEXT_EXPORT Akonadi::Item::List itemsFromModel( const QAbstractItemModel *model,
+                                                               const QModelIndex &parentIndex = QModelIndex(),
+                                                               int start = 0,
+                                                               int end = -1 );
 
   AKONADI_KCAL_NEXT_EXPORT Collection collectionFromIndex( const QModelIndex &index );
 
