@@ -242,6 +242,9 @@ void LdapSearchDialog::restoreSettings()
                         i18n( "You must select a LDAP server before searching.\n"
                               "You can do this from the menu Settings/Configure KAddressBook." ) );
     mIsOK = false;
+    // Remove existing columns
+    mResultListView->setColumnCount( 0 );
+
   } else {
     mIsOK = true;
     for ( int j = 0; j < mNumHosts; ++j ) {
