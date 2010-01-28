@@ -1134,8 +1134,6 @@ void ViewerPrivate::parseMsg()
   if ( mMessage->subject( false ) )
       cntDesc = mMessage->subject()->asUnicodeString();
 
-  KIO::filesize_t cntSize = mMessage->size();
-
   QString cntEnc= "7bit";
   if ( mMessage->contentTransferEncoding( false ) )
       cntEnc = mMessage->contentTransferEncoding()->asUnicodeString();
