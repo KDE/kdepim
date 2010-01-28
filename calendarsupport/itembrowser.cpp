@@ -20,7 +20,7 @@
 #include "itembrowser.h"
 
 using namespace Akonadi;
-
+#include <KLocale>
 #include <akonadi/item.h>
 
 ItemBrowser::ItemBrowser( QWidget *parent )
@@ -50,7 +50,7 @@ void ItemBrowser::itemChanged( const Item &item )
 
 void ItemBrowser::itemRemoved()
 {
-  setHtml( QLatin1String( "<html><body><center>The watched item has been deleted</center></body></html>" ) );
+  setHtml( i18n( "<html><body><center>The watched item has been deleted</center></body></html>" ) );
 }
 
 QString ItemBrowser::itemToRichText( const Item &item )
