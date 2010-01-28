@@ -335,7 +335,8 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
 
   KHBox *filterbox = new KHBox( leftbox );
   QLabel *filterlabel = new QLabel( i18n("Filter on:"), filterbox );
-  QLineEdit *filteredit = new QLineEdit( filterbox );
+  KLineEdit *filteredit = new KLineEdit( filterbox );
+  filteredit->setClearButtonShown(true);
   connect( filteredit, SIGNAL(textChanged(QString)), m_availableModel, SLOT(setFilterString(QString)) );
   filterlabel->setBuddy( filteredit );
 
