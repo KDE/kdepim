@@ -85,6 +85,7 @@ using MessageViewer::TeeHtmlWriter;
 #include <QVBoxLayout>
 #include <QScrollBar>
 #include <QScrollArea>
+#include <QPrintPreviewDialog>
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
@@ -2498,7 +2499,12 @@ void ViewerPrivate::slotPrintMsg()
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
-  mViewer->print( false );
+
+  QPointer<QPrintPreviewDialog> dlg = new QPrintPreviewDialog( mViewer );
+  connect( dlg, SIGNAL( paintRequested( QPrinter * ) ),
+           mViewer->page()->mainFrame(), SLOT( print( QPrinter * ) ) );
+  dlg->exec();
+  delete dlg;
 }
 
 
