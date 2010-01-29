@@ -286,6 +286,7 @@ CalendarSearch::IncidenceTypes CalendarSearch::incidenceTypes() const
 
 void CalendarSearch::setIncidenceTypes( IncidenceTypes types )
 {
+  if ( int( types ) != int( d->incidenceTypes ) ) {
     const bool showEvents = types.testFlag( Events );
     const bool showTodos = types.testFlag( Todos );
     const bool showJournals = types.testFlag( Journals );
@@ -297,6 +298,7 @@ void CalendarSearch::setIncidenceTypes( IncidenceTypes types )
     d->incidenceFilterProxyModel->setShowEvents( showEvents );
     d->incidenceFilterProxyModel->setShowTodos( showTodos );
     d->incidenceFilterProxyModel->setShowJournals( showJournals );
+  }
 }
 
 void CalendarSearch::Private::rowsInserted( const QModelIndex& parent, int start, int end ) {
