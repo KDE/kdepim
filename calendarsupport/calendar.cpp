@@ -197,7 +197,7 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
   if ( hasParent ) {
     parentItem.collection = item.storageCollectionId();
     parentItem.uid = parentUID;
-    QMap<UnseenItem,Item::Id>::const_iterator parentIt = m_uidToItemId.constFind( parentItem );
+    parentIt = m_uidToItemId.constFind( parentItem );
     knowParent = parentIt != m_uidToItemId.constEnd();
   }
 
