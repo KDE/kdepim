@@ -491,6 +491,7 @@ QString FancyHeaderStyle::format( KMime::Message * message,
   QString userHTML;
 
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+  job->setLimit( 1 );
   job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() ) );
   if ( !job->exec() )
     return QString();
@@ -532,6 +533,8 @@ QString FancyHeaderStyle::format( KMime::Message * message,
   }
   else // TODO: find a usable one
   {
+    // Note: Currently more than 1 result is disabled because of the setLimit() call on the search
+    //       job anyway
     userHTML = "&nbsp;";
   }
 
