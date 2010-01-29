@@ -102,6 +102,9 @@ public:
   /** Is this subresource active? */
   bool subresourceActive( const QString& ) const;
 
+  /** Is this subresource writable? */
+  bool subresourceWritable( const QString& ) const;
+
 signals:
   void signalSubresourceAdded( Resource*, const QString&, const QString& );
   void signalSubresourceRemoved( Resource*, const QString&, const QString& );

@@ -128,6 +128,9 @@ public:
   /** (De)activate the subresource */
   virtual void setSubresourceActive( const QString &, bool );
 
+  /** Is this subresource writable? */
+  bool subresourceWritable( const QString& ) const;
+
   /** What is the label for this subresource? */
   virtual const QString labelForSubresource( const QString& resource ) const;
 

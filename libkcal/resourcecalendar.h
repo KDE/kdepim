@@ -324,6 +324,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual bool subresourceActive( const QString& ) const { return true; }
 
     /**
+      Is this subresource writable or not?
+    */
+    virtual bool subresourceWritable( const QString& ) const;
+
+    /**
       What is the label for this subresource?
      */
     virtual const QString labelForSubresource( const QString& resource ) const

@@ -1039,6 +1039,22 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
   QTimer::singleShot( 0, this, SLOT(writeConfig()) );
 }
 
+bool ResourceKolab::subresourceWritable( const QString& subresource ) const
+{
+  // Workaround: The ResourceView in KOrganizer wants to know this
+  // before it opens the resource :-( Make sure we are open
+  const_cast<ResourceKolab*>( this )->doOpen();
+
+  if ( mEventSubResources.contains( subresource ) )
+    return mEventSubResources[ subresource ].writable();
+  if ( mTodoSubResources.contains( subresource ) )
+    return mTodoSubResources[ subresource ].writable();
+  if ( mJournalSubResources.contains( subresource ) )
+    return mJournalSubResources[ subresource ].writable();
+
+  return false; //better a safe default
+}
+
 void ResourceKolab::slotEmitResourceChanged()
 {
    kdDebug(5650) << "KCal Kolab resource: emitting resource changed " << endl;

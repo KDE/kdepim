@@ -442,5 +442,14 @@ bool ResourceKolab::subresourceActive( const QString& res ) const
   return true;
 }
 
+bool ResourceKolab::subresourceWritable( const QString& res ) const
+{
+  if ( mSubResources.contains( res ) ) {
+    return mSubResources[ res ].writable();
+  }
+
+  // Safe default bet:
+  return false;
+}
 
 #include "resourcekolab.moc"

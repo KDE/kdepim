@@ -192,6 +192,8 @@ void ResourceCalendar::saveError( const QString &err )
 
 bool ResourceCalendar::setValue( const QString &key, const QString &value )
 {
+  Q_UNUSED( key );
+  Q_UNUSED( value );
   return false;
 }
 
@@ -201,5 +203,13 @@ QString ResourceCalendar::subresourceType( const QString &resource )
   return QString();
 }
 
+bool ResourceCalendar::subresourceWritable( const QString &resource ) const
+{
+  if ( resource.isEmpty() ) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 #include "resourcecalendar.moc"
