@@ -42,6 +42,7 @@ void KAddrBookExternal::openEmail( const QString &email, const QString &addr, QW
 
   // search whether contact with that email address already exists
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob;
+  searchJob->setLimit( 1 );
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, email );
   if ( searchJob->exec() )
     items = searchJob->items();
@@ -107,6 +108,7 @@ void KAddrBookExternal::addEmail( const QString &addr, QWidget *parent )
 
   // search whether a contact with the same email exists already
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob;
+  searchJob->setLimit( 1 );
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, email );
   if ( searchJob->exec() )
     contacts = searchJob->contacts();
@@ -148,6 +150,7 @@ bool KAddrBookExternal::addVCard( const KABC::Addressee &addressee, QWidget *par
 
   // check whether a contact with the same email address exists already
   Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob;
+  searchJob->setLimit( 1 );
   searchJob->setQuery( Akonadi::ContactSearchJob::Email, addressee.preferredEmail() );
   if ( searchJob->exec() )
     contacts = searchJob->contacts();
