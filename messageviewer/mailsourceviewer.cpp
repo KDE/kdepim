@@ -74,6 +74,80 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   }
 }
 
+const QString HTMLPrettyFormatter::reformat( const QString &src )
+{
+  // Best to be really verbose about this one...
+  const QRegExp tag( "<"
+                          "(/)?"    //Captures the / if this is an end tag.
+                          "(\\w+)"    //Captures TagName
+                          "(?:"                //Groups tag contents
+                          "(?:\\s+"            //Groups attributes
+                          "(?:\\w+)"  //Attribute name
+                                  "(?:"                //groups =value portion.
+                                      "\\s*=\\s*"            // =
+                                      "(?:"        //Groups attribute "value" portion.
+                                      "\\\"(?:[^\\\"]*)\\\""    // attVal='double quoted'
+                                          "|'(?:[^']*)'"        // attVal='single quoted'
+                                          "|(?:[^'"">\\s]+)"    // attVal=urlnospaces
+                                      ")"
+                                  ")?"        //end optional att value portion.
+                             ")+\\s*"        //One or more attribute pairs
+                              "|\\s*"            //Some white space.
+                          ")"
+                       "(/)?>" //Captures the "/" if this is a complete tag.
+                      );
+  const QRegExp cleanLeadingWhitespace( "(?:\\n)+\\w*" );
+  QStringList tmpSource;
+  QString source( src );
+  int pos = 0;
+  QString indent = "";
+
+  //First make sure that each tag is surrounded by newlines
+  while( (pos = tag.indexIn( source, pos ) ) != -1 )
+  {
+    source.insert(pos, '\n');
+    pos += tag.matchedLength() + 1;
+    source.insert(pos, '\n');
+    pos++;
+  }
+
+  // Then split the source on newlines skiping empty parts.
+  // Now a line is either a tag or pure data.
+  tmpSource = source.split('\n', QString::SkipEmptyParts );
+
+  // Then clean any leading whitespace
+  for( int i = 0; i != tmpSource.length(); i++ )
+  {
+    tmpSource[i] = tmpSource[i].remove( cleanLeadingWhitespace );
+  }
+
+  // Then indent as apropriate
+  for( int i = 0; i != tmpSource.length(); i++ )  {
+    if( tag.indexIn( tmpSource[i] ) != -1 ) // A tag
+    {
+      if( tag.cap( 3 ) == "/" ) {
+        //Self closing tag "<br/>"
+        continue;
+      }
+      if( tag.cap( 1 ) == "/" ) {
+        // End tag
+        indent.chop( 2 );
+        tmpSource[i].prepend( indent );
+        continue;
+      }
+      // start tag
+      tmpSource[i].prepend( indent );
+      indent.append( "  " );
+      continue;
+    }
+    // Data
+    tmpSource[i].prepend( indent );
+  }
+
+  // Finally reassemble and return :)
+  return tmpSource.join( "\n" );
+}
+
 MailSourceViewer::MailSourceViewer( QWidget *parent )
   : KTabWidget( parent ), mRawSourceHighLighter( 0 )
 {
@@ -134,7 +208,7 @@ void MailSourceViewer::setProcessedSource( const QString &source )
 void MailSourceViewer::setDisplayedSource( const QString &source )
 {
 #ifndef NDEBUG
-  mHtmlBrowser->setPlainText( source );
+  mHtmlBrowser->setPlainText( HTMLPrettyFormatter::reformat( source ) );
 #else
   Q_UNUSED( source );
 #endif

@@ -58,6 +58,10 @@ protected:
   virtual void highlightBlock ( const QString & text );
 };
 
+namespace HTMLPrettyFormatter
+{
+  const QString reformat( const QString &src );
+};
 
 class MailSourceViewer : public KTabWidget
 {
