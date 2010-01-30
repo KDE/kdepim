@@ -58,6 +58,16 @@ protected:
   virtual void highlightBlock ( const QString & text );
 };
 
+class HTMLSourceHighlighter : public QSyntaxHighlighter
+{
+public:
+  HTMLSourceHighlighter( KTextBrowser* browser )
+    : QSyntaxHighlighter( browser )
+  {}
+protected:
+  virtual void highlightBlock ( const QString & text );
+};
+
 namespace HTMLPrettyFormatter
 {
   // Best to be really verbose about this one...
@@ -104,6 +114,7 @@ private:
   KTextBrowser *mProcessedBrowser;
 #ifndef NDEBUG
   KTextBrowser *mHtmlBrowser;
+  HTMLSourceHighlighter *mHtmlSourceHighLighter;
 #endif
   MailSourceHighlighter *mRawSourceHighLighter;
   MailSourceHighlighter *mProcessedSourceHighLighter;

@@ -74,6 +74,16 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
   }
 }
 
+void HTMLSourceHighlighter::highlightBlock ( const QString & text ) {
+  int pos = 0;
+  if( ( pos = HTMLPrettyFormatter::htmlTagRegExp.indexIn( text ) ) != -1 )
+  {
+    QFont font = document()->defaultFont();
+    font.setBold( true );
+    setFormat( pos, HTMLPrettyFormatter::htmlTagRegExp.matchedLength(), font );
+  }
+}
+
 const QString HTMLPrettyFormatter::reformat( const QString &src )
 {
   const QRegExp cleanLeadingWhitespace( "(?:\\n)+\\w*" );
@@ -150,6 +160,7 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
     setTabToolTip( 2, i18n( "HTML code for displaying the message to the user" ) );
     mHtmlBrowser->setLineWrapMode( QTextEdit::NoWrap );
     mHtmlBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
+    mHtmlSourceHighLighter = new HTMLSourceHighlighter( mHtmlBrowser );
 #endif
 
   setCurrentIndex( 0 );
