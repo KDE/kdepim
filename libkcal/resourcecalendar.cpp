@@ -206,7 +206,7 @@ QString ResourceCalendar::subresourceType( const QString &resource )
 bool ResourceCalendar::subresourceWritable( const QString &resource ) const
 {
   if ( resource.isEmpty() ) {
-    return true;
+    return !readOnly();
   } else {
     return false;
   }
