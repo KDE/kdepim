@@ -76,26 +76,6 @@ void MailSourceHighlighter::highlightBlock ( const QString & text ) {
 
 const QString HTMLPrettyFormatter::reformat( const QString &src )
 {
-  // Best to be really verbose about this one...
-  const QRegExp tag( "<"
-                          "(/)?"    //Captures the / if this is an end tag.
-                          "(\\w+)"    //Captures TagName
-                          "(?:"                //Groups tag contents
-                          "(?:\\s+"            //Groups attributes
-                          "(?:\\w+)"  //Attribute name
-                                  "(?:"                //groups =value portion.
-                                      "\\s*=\\s*"            // =
-                                      "(?:"        //Groups attribute "value" portion.
-                                      "\\\"(?:[^\\\"]*)\\\""    // attVal='double quoted'
-                                          "|'(?:[^']*)'"        // attVal='single quoted'
-                                          "|(?:[^'"">\\s]+)"    // attVal=urlnospaces
-                                      ")"
-                                  ")?"        //end optional att value portion.
-                             ")+\\s*"        //One or more attribute pairs
-                              "|\\s*"            //Some white space.
-                          ")"
-                       "(/)?>" //Captures the "/" if this is a complete tag.
-                      );
   const QRegExp cleanLeadingWhitespace( "(?:\\n)+\\w*" );
   QStringList tmpSource;
   QString source( src );
@@ -103,10 +83,10 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
   QString indent = "";
 
   //First make sure that each tag is surrounded by newlines
-  while( (pos = tag.indexIn( source, pos ) ) != -1 )
+  while( (pos = htmlTagRegExp.indexIn( source, pos ) ) != -1 )
   {
     source.insert(pos, '\n');
-    pos += tag.matchedLength() + 1;
+    pos += htmlTagRegExp.matchedLength() + 1;
     source.insert(pos, '\n');
     pos++;
   }
@@ -123,13 +103,13 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 
   // Then indent as apropriate
   for( int i = 0; i != tmpSource.length(); i++ )  {
-    if( tag.indexIn( tmpSource[i] ) != -1 ) // A tag
+    if( htmlTagRegExp.indexIn( tmpSource[i] ) != -1 ) // A tag
     {
-      if( tag.cap( 3 ) == "/" ) {
+      if( htmlTagRegExp.cap( 3 ) == "/" ) {
         //Self closing tag "<br/>"
         continue;
       }
-      if( tag.cap( 1 ) == "/" ) {
+      if( htmlTagRegExp.cap( 1 ) == "/" ) {
         // End tag
         indent.chop( 2 );
         tmpSource[i].prepend( indent );

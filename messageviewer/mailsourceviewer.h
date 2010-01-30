@@ -60,6 +60,27 @@ protected:
 
 namespace HTMLPrettyFormatter
 {
+  // Best to be really verbose about this one...
+  const QRegExp htmlTagRegExp( "<"
+                          "(/)?"    //Captures the / if this is an end tag.
+                          "(\\w+)"    //Captures TagName
+                          "(?:"                //Groups tag contents
+                          "(?:\\s+"            //Groups attributes
+                          "(?:\\w+)"  //Attribute name
+                                  "(?:"                //groups =value portion.
+                                      "\\s*=\\s*"            // =
+                                      "(?:"        //Groups attribute "value" portion.
+                                      "\\\"(?:[^\\\"]*)\\\""    // attVal='double quoted'
+                                          "|'(?:[^']*)'"        // attVal='single quoted'
+                                          "|(?:[^'"">\\s]+)"    // attVal=urlnospaces
+                                      ")"
+                                  ")?"        //end optional att value portion.
+                             ")+\\s*"        //One or more attribute pairs
+                              "|\\s*"            //Some white space.
+                          ")"
+                       "(/)?>" //Captures the "/" if this is a complete tag.
+                      );
+
   const QString reformat( const QString &src );
 };
 
