@@ -301,7 +301,7 @@ void Calendar::Private::itemsRemoved( const Item::List &items )
 {
     assertInvariants();
     //kDebug()<<items.count();
-    foreach(const Item& item, items) {
+    foreach( const Item& item, items ) {
         Q_ASSERT( item.isValid() );
         Item ci( m_itemMap.take( item.id() ) );
         kDebug()<<item.id();
@@ -309,10 +309,10 @@ void Calendar::Private::itemsRemoved( const Item::List &items )
         const KCal::Incidence::Ptr incidence = ci.payload<KCal::Incidence::Ptr>();
         kDebug() << "Remove uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
 
-        if( const KCal::Event::Ptr e = dynamic_pointer_cast<KCal::Event>(incidence) ) {
-        if ( !e->recurs() ) {
+        if( const KCal::Event::Ptr e = dynamic_pointer_cast<KCal::Event>( incidence ) ) {
+          if ( !e->recurs() ) {
             m_itemsForDate.remove( e->dtStart().date().toString(), item );
-        }
+          }
         } else if( const KCal::Todo::Ptr t = dynamic_pointer_cast<KCal::Todo>( incidence ) ) {
           if ( t->hasDueDate() ) {
             m_itemsForDate.remove( t->dtDue().date().toString(), item );
@@ -320,7 +320,7 @@ void Calendar::Private::itemsRemoved( const Item::List &items )
         } else if( const KCal::Journal::Ptr j = dynamic_pointer_cast<KCal::Journal>( incidence ) ) {
           m_itemsForDate.remove( j->dtStart().date().toString(), item );
         } else {
-          Q_ASSERT(false);
+          Q_ASSERT( false );
           continue;
         }
 
