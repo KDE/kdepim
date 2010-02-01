@@ -97,7 +97,7 @@ namespace Akonadi
   AKONADI_KCAL_NEXT_EXPORT bool hasJournal( const Akonadi::Item &item );
 
   /**
-  * returns @p true iff the URL represents an Akonadi item and has one of the given mimetypes.
+  * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
   */
   AKONADI_KCAL_NEXT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url, const QStringList &supportedMimeTypes );
 
