@@ -1278,9 +1278,11 @@ void CertManager::slotCertificateExportResult( const GpgME::Error & err, const Q
 
 void CertManager::slotExportSecretKey() {
   Kleo::KeySelectionDialog dlg( i18n("Secret Key Export"),
-				i18n("Select the secret key to export "
+				"<qt>" +
+                                i18n("Select the secret key to export "
 				     "(<b>Warning: The PKCS#12 format is insecure; "
-				     "exporting secret keys is discouraged</b>):"),
+				     "exporting secret keys is discouraged</b>):") +
+                                "</qt>",
 				std::vector<GpgME::Key>(),
 				Kleo::KeySelectionDialog::SecretKeys|Kleo::KeySelectionDialog::SMIMEKeys,
 				false /* no multiple selection */,
