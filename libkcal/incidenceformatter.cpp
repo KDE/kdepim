@@ -428,9 +428,9 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   }
   if ( event->doesFloat() ) {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
-                i18n("<beginTime> - <endTime>","%1 - %2").
+                i18n("<beginDate> - <endDate>","%1 - %2").
                 arg( IncidenceFormatter::dateToString( startDt, false ) ).
                 arg( IncidenceFormatter::dateToString( endDt, false ) ) +
                 "</td>";
@@ -443,9 +443,9 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
     }
   } else {
     if ( event->isMultiDay() ) {
-      tmpStr += "<td><b>" + i18n( "Time:" ) + "</b></td>";
+      tmpStr += "<td><b>" + i18n( "Date:" ) + "</b></td>";
       tmpStr += "<td>" +
-                i18n("<beginTime> - <endTime>","%1 - %2").
+                i18n("<beginDate> - <endDate>","%1 - %2").
                 arg( IncidenceFormatter::dateToString( startDt, false ) ).
                 arg( IncidenceFormatter::dateToString( endDt, false ) ) +
                 "</td>";
