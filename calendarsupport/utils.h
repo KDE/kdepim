@@ -104,7 +104,7 @@ namespace Akonadi
   AKONADI_KCAL_NEXT_EXPORT bool isValidIncidenceItemUrl( const KUrl &url );
 
   /**
-  * returns @p true iff the mime data object contains any of the following:
+  * returns @p true if the mime data object contains any of the following:
   *
   * * An akonadi item with a supported KCal mimetype
   * * an iCalendar
@@ -121,7 +121,7 @@ namespace Akonadi
   AKONADI_KCAL_NEXT_EXPORT QList<KCal::Todo::Ptr> todos( const QMimeData* mimeData, const KDateTime::Spec &timeSpec );
 
   /**
-  * returns @p true iff the URL represents an Akonadi item and has one of the given mimetypes.
+  * returns @p true if the URL represents an Akonadi item and has one of the given mimetypes.
   */
   AKONADI_KCAL_NEXT_EXPORT bool isValidTodoItemUrl( const KUrl &url );
 
