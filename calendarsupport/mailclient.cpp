@@ -257,17 +257,19 @@ bool Akonadi::MailClient::send( const Identity &identity,
   bodyMessage->setBody( body.toUtf8() );
 
   // Set the sedcond multipart, the attachment.
-  KMime::Content *attachMessage = new KMime::Content;
-  KMime::Headers::ContentDisposition *attachDisposition = new KMime::Headers::ContentDisposition( attachMessage );
-  attachDisposition->setFilename( QLatin1String( "cal.ics" ) );
-  attachDisposition->setDisposition( KMime::Headers::CDattachment );
-  attachMessage->contentType()->setMimeType( "text/calendar" );
-  attachMessage->setHeader( attachDisposition );
-  attachMessage->setBody( attachment.toUtf8() );
+  if ( !attachment.isEmpty() ) {
+    KMime::Content *attachMessage = new KMime::Content;
+    KMime::Headers::ContentDisposition *attachDisposition = new KMime::Headers::ContentDisposition( attachMessage );
+    attachDisposition->setFilename( QLatin1String( "cal.ics" ) );
+    attachDisposition->setDisposition( KMime::Headers::CDattachment );
+    attachMessage->contentType()->setMimeType( "text/calendar" );
+    attachMessage->setHeader( attachDisposition );
+    attachMessage->setBody( attachment.toUtf8() );
+    message->addContent( attachMessage );
+  }
 
   // Job done, attach the both multiparts and assemble the message.
   message->addContent( bodyMessage );
-  message->addContent( attachMessage );
   message->assemble();
 
   // Put the newly created item in the MessageQueueJob.
