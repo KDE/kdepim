@@ -21,7 +21,7 @@
 #ifndef RECURSIVECOLLECTIONFILTERPROXYMODEL_H
 #define RECURSIVECOLLECTIONFILTERPROXYMODEL_H
 
-#include "krecursivefilterproxymodel.h"
+#include <akonadi/krecursivefilterproxymodel.h>
 
 #include "akonadi_next_export.h"
 
