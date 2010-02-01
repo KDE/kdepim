@@ -4,7 +4,6 @@ Problems addressed
 ------------------
 
 * kolab/issue4044: Wish: Mail window should close after pressing on reply/forward (rt#5945)
-* kolab/issue4039: Size of an embedded event attachment is too small
 * kolab/issue4043: extended alarm: Own reminder dialog text is ignored
 * kolab/issue4053: reminder of an event with recurrence shows wrong date (rt#5953)
 * kolab/issue3989: Calendar: Attendee names with comma are handled wrongly (rt#5899)
