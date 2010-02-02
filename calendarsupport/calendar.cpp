@@ -288,7 +288,7 @@ void Calendar::Private::itemsAdded( const Item::List &items )
           continue;
         updateItem( item, AssertNew );
         const KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
-        kDebug() << "Add akonadi id=" << item.id() << "uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
+        kDebug() << "Add akonadi id=" << item.id() << "parentCollection.id() :"<<item.parentCollection().id()<< "parentCollection.name() :"<<item.parentCollection().name()<<"uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
 
         incidence->registerObserver( q );
         q->notifyIncidenceAdded( item );
