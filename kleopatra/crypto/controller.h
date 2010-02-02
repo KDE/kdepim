@@ -59,7 +59,7 @@ namespace Crypto {
      Q_SIGNALS:
          void error( int err, const QString & details );
 
-    protected:   
+    protected:
         void emitDoneOrError();
         void connectTask( const boost::shared_ptr<Task> & task );
 
