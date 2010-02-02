@@ -614,6 +614,8 @@ void Model::setStorageModel( StorageModel *storageModel, PreSelectionMode preSel
   d->mPreSelectionMode = PreSelectNone;
   d->mUniqueIdOfLastSelectedMessageInFolder = 0;
   d->mLastSelectedMessageInFolder = 0;
+  d->mOldestItem = 0;
+  d->mNewestItem = 0;
 
   // Reset the row mapper before removing items
   // This is faster since the items don't need to access the mapper.
@@ -876,51 +878,6 @@ void Model::abortMessagePreSelection()
   d->mUniqueIdOfLastSelectedMessageInFolder = 0;
   d->mLastSelectedMessageInFolder = 0;
 }
-
-void Model::applyMessagePreSelection( PreSelectionMode preSelectionMode )
-{
-  if ( d->mLoading )
-  {
-    // override the current mode
-    d->mPreSelectionMode = preSelectionMode;
-    // will be applied when loading completes
-    return;
-  }
-
-  switch( preSelectionMode )
-  {
-    case PreSelectFirstUnread:
-      d->mView->selectFirstMessageItem( MessageTypeUnreadOnly, false ); // don't center
-    break;
-    case PreSelectFirstUnreadCentered:
-      d->mView->selectFirstMessageItem( MessageTypeUnreadOnly, true ); // center
-    break;
-    case PreSelectFirstNew:
-      if ( !d->mView->selectFirstMessageItem( MessageTypeNewOnly, false ) ) // don't center
-        d->mView->selectFirstMessageItem( MessageTypeUnreadOnly, false ); // try to fallback to unread
-    break;
-    case PreSelectFirstNewCentered:
-      if ( !d->mView->selectFirstMessageItem( MessageTypeNewOnly, true ) ) // center
-        d->mView->selectFirstMessageItem( MessageTypeUnreadOnly, true ); // try to fallback to unread
-    break;
-    case PreSelectFirstNewOrUnread:
-      d->mView->selectFirstMessageItem( MessageTypeNewOrUnreadOnly, false ); // don't center
-    break;
-    case PreSelectFirstNewOrUnreadCentered:
-      d->mView->selectFirstMessageItem( MessageTypeNewOrUnreadOnly, true ); // center
-    break;
-    case PreSelectLastSelected:
-      // has no meaning in this state
-    break;
-    case PreSelectNone:
-      // explicitly ignored
-    break;
-    default:
-      kWarning() << "Unrecognized pre-selection mode " << (int)preSelectionMode;
-    break;
-  }
-}
-
 
 void Model::activateMessageAfterLoading( unsigned long uniqueIdOfMessage, int row )
 {
@@ -2739,6 +2696,14 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
       }
     }
 
+    // Update the newest/oldest message, since we might be supposed to select those later
+    if ( !mOldestItem || mOldestItem->date() > mi->date() ) {
+      mOldestItem = mi;
+    }
+    if ( !mNewestItem || mNewestItem->date() < mi->date() ) {
+      mNewestItem = mi;
+    }
+
     // Ok.. it passed the initial checks: we will not be discarding it.
     // Make this message item an invariant index to the underlying model storage.
     mInvariantRowMapper->createModelInvariantIndex( curIndex, mi );
@@ -4002,27 +3967,21 @@ void ModelPrivate::viewItemJobStep()
           case PreSelectLastSelected:
             // fall down
           break;
-          case PreSelectFirstUnread:
-            bSelectionDone = mView->selectFirstMessageItem( MessageTypeUnreadOnly, false ); // don't center
-          break;
-          case PreSelectFirstUnreadCentered:
-            bSelectionDone = mView->selectFirstMessageItem( MessageTypeUnreadOnly, true ); // center
-          break;
-          case PreSelectFirstNew:
-            bSelectionDone = mView->selectFirstMessageItem( MessageTypeNewOnly, false ); // don't center
-            if ( !bSelectionDone ) // try to fallback to unread
-              bSelectionDone = mView->selectFirstMessageItem( MessageTypeUnreadOnly, false ); // don't center
-          break;
           case PreSelectFirstNewCentered:
             bSelectionDone = mView->selectFirstMessageItem( MessageTypeNewOnly, true ); // center
             if ( !bSelectionDone ) // try to fallback to unread
               bSelectionDone = mView->selectFirstMessageItem( MessageTypeUnreadOnly, true ); // center
           break;
-          case PreSelectFirstNewOrUnread:
-            bSelectionDone = mView->selectFirstMessageItem( MessageTypeNewOrUnreadOnly, false ); // don't center
-          break;
           case PreSelectFirstNewOrUnreadCentered:
             bSelectionDone = mView->selectFirstMessageItem( MessageTypeNewOrUnreadOnly, true ); // center
+          break;
+          case PreSelectOldestCentered:
+            mView->setCurrentMessageItem( mOldestItem, true /* center */ );
+            bSelectionDone = true;
+          break;
+          case PreSelectNewestCentered:
+            mView->setCurrentMessageItem( mNewestItem, true /* center */ );
+            bSelectionDone = true;
           break;
           case PreSelectNone:
             // deal with selection below

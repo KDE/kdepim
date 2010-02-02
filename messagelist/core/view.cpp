@@ -817,16 +817,22 @@ MessageItem * View::currentMessageItem( bool selectIfNeeded ) const
   return static_cast< MessageItem * >( it );
 }
 
-void View::setCurrentMessageItem( MessageItem * it )
+void View::setCurrentMessageItem( MessageItem * it, bool center )
 {
   if ( it )
   {
     kDebug() << "Setting current message to" << it->subject();
 
-    selectionModel()->setCurrentIndex( d->mModel->index( it, 0 ), QItemSelectionModel::Select | QItemSelectionModel::Current | QItemSelectionModel::Rows );
+    const QModelIndex index = d->mModel->index( it, 0 );
+    selectionModel()->setCurrentIndex( index, QItemSelectionModel::Select |
+                                       QItemSelectionModel::Current | QItemSelectionModel::Rows );
+    if ( center ) {
+      scrollTo( index, QAbstractItemView::PositionAtCenter );
+    }
   }
   else
-    selectionModel()->setCurrentIndex( QModelIndex(), QItemSelectionModel::Current | QItemSelectionModel::Clear );
+    selectionModel()->setCurrentIndex( QModelIndex(), QItemSelectionModel::Current |
+                                       QItemSelectionModel::Clear );
 }
 
 bool View::selectionEmpty() const
@@ -1563,12 +1569,6 @@ void View::fillViewMenu( KMenu * menu )
   connect( themeMenu, SIGNAL( aboutToShow() ),
            d->mWidget, SLOT( themeMenuAboutToShow() ) );
 }
-
-void View::applyMessagePreSelection( PreSelectionMode preSelectionMode )
-{
-  d->mModel->applyMessagePreSelection( preSelectionMode );
-}
-
 
 bool View::selectFirstMessageItem( MessageTypeFilter messageTypeFilter, bool centerItem )
 {

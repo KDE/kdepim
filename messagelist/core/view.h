@@ -92,14 +92,6 @@ public:
   void setStorageModel( StorageModel * storageModel, PreSelectionMode preSelectionMode = PreSelectLastSelected );
 
   /**
-   * Applies the specified pre-selection to the view.
-   * This is used to apply the pre-selection to a folder that was in fact already opened.
-   *
-   * See Model::applyMessagePreSelection() for more information.
-   */
-  void applyMessagePreSelection( PreSelectionMode preSelectionMode );
-
-  /**
    * Returns the currently displayed StorageModel. May be 0.
    */
   StorageModel * storageModel() const;
@@ -139,7 +131,7 @@ public:
   /**
    * Sets the current message item.
    */
-  void setCurrentMessageItem( MessageItem * it );
+  void setCurrentMessageItem( MessageItem * it, bool center = false );
 
   /**
    * Returns true if the specified item is currently displayed in the tree

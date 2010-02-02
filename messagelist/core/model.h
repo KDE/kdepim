@@ -133,22 +133,6 @@ public:
   void activateMessageAfterLoading( unsigned long uniqueIdOfMessage, int row );
 
   /**
-   * This function attempts to apply the specified pre-selection mode in any model state.
-   * This isn't always possible so you should specify the pre-selection mode in setStorageModel()
-   * if possible. However, this function is useful to implement coherent behaviour when navigating
-   * multiple views with the keyboard.
-   *
-   * If the model is still loading then the pre-selection is scheduled to be applied
-   * at the end of the job. PreSelectNone is equivalent to calling abortMessagePreSelection().
-   * If the model is no longer loading then the pre-selection is applied immediately with
-   * the following restrictions:
-   *
-   * - PreSelectNone is explicitly ignored (does NOT unselect the current item)
-   * - PreSelectLastSelected has no effect (since it would simply re-select the currently selected message)
-   */
-  void applyMessagePreSelection( PreSelectionMode preSelectionMode );
-
-  /**
    * Returns the hidden root item that all the messages are (or will be) attached to.
    * The returned value is never 0.
    */

@@ -387,6 +387,11 @@ public:
    */
   PreSelectionMode mPreSelectionMode;
 
+  // Oldest and newest item while loading the model
+  // Not valid afterwards anymore. Used for pre-selection of the newest/oldest message
+  MessageItem *mOldestItem;
+  MessageItem *mNewestItem;
+
   /**
    * The Unique Id of the message item to pre-select when mPreSelectionMode
    * is PreSelectLastSelected. This message is "caught" when it "pops up" during
