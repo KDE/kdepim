@@ -430,8 +430,10 @@ void MainWindow::Private::setupActions() {
         { "certificates_dump_certificate", i18n("Dump Certificate"), QString(),
           0, q, SLOT(dumpCertificate()), QString(), false, true },
           // Tools menu
+#ifndef Q_OS_WIN
         { "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
-          "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, !OS_WIN },
+          "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true },
+#endif
 #if 0
         { "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
           "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true },
