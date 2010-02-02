@@ -97,7 +97,7 @@ target_link_libraries( blogilo ${KDE4_KDEUI_LIBS} ${QT_QTSQL_LIBRARY} ${KDE4_KTE
 ENDIF(WIN32)
 
 
-install( TARGETS blogilo DESTINATION ${BIN_INSTALL_DIR} )
+install( TARGETS blogilo ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############
