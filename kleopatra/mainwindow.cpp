@@ -418,7 +418,7 @@ void MainWindow::Private::setupActions() {
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         { "certificates_certify_certificate", i18n("Certify Certificate..."), QString(),
-          "view-certificate-certify", q, SLOT(certifyCertificate()), QString(), false, true },
+          "view-certificate-sign", q, SLOT(certifyCertificate()), QString(), false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
         { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
