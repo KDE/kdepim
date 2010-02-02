@@ -39,6 +39,8 @@
 
 #include <dialogs/certificateselectiondialog.h>
 
+#include <models/predicates.h>
+
 #include <utils/gui-helper.h>
 #include <utils/stl_util.h>
 #include <utils/formatting.h>
@@ -236,10 +238,17 @@ namespace {
             return mailboxLB->text();
         }
 
+        static int find_or_add( QComboBox & cb, const Key & key ) {
+            for ( int i = 0, end = cb.count() ; i != end ; ++i )
+                if ( _detail::ByFingerprint<std::equal_to>()( key, cb.itemData( i ).value<Key>() ) )
+                    return i;
+            cb.insertItem( 0, Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
+            return 0;
+        }
+
         void addAndSelectCertificate( const Key & key ) const {
             if ( QComboBox * const cb = comboBox( key.protocol() ) ) {
-                cb->insertItem( 0, Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
-                cb->setCurrentIndex( 0 );
+                cb->setCurrentIndex( find_or_add( *cb, key ) );
                 cb->setEnabled( true );
             }
         }
