@@ -1823,12 +1823,39 @@ Correspondingly, if you ask &kmail; to go to the previous unread message.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Jump to first unread message when entering a folder</guilabel></term>
+
+<term><guilabel>When entering a folder</guilabel></term>
 <listitem>
-<para>If this option is enabled &kmail; will go to the first unread message
-when you enter a folder; if it is not enabled, &kmail; will go to first
-new message or, if there is no new message, to the message
-that was selected when you last left the folder.</para>
+<para>This option controls what happens if you open a folder.
+<itemizedlist>
+<listitem>
+<para>If <guilabel>Jump to First New Message</guilabel> is selected then &kmail; will select the
+first message it finds that is marked as new.
+</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Jump to First Unread or New Message</guilabel> is selected then &kmail; will
+select the first message it finds that is marked either as new or as unread.
+</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Jump to Last Selected Message</guilabel> is selected then &kmail; will select
+the message that was selected when the folder was open the last time.
+</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Jump to Newest Message</guilabel> is selected then &kmail; will select the newest
+message by date.
+</para>
+</listitem>
+<listitem>
+<para>If <guilabel>Jump to Oldest Message</guilabel> is selected then &kmail; will select the oldest
+message by date.
+</para>
+</listitem>
+</itemizedlist>
+
+</para>
 </listitem>
 </varlistentry>
 
