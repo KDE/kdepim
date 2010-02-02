@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="440" >
+<kpartgui name="kleopatra" version="441" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -79,8 +79,8 @@
 
 <ToolBar fullWidth="false" name="mainToolBar">
         <text>Main Toolbar</text>
-        <Action name="file_sign_encrypt_files"/>
-        <Action name="file_decrypt_verify_files"/>
+        <Action name="file_import_certificates"/>
+        <Action name="file_export_certificates"/>
         <Separator/>
         <Action name="view_redisplay"/>
         <Action name="view_stop_operations"/>
