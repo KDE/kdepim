@@ -111,7 +111,7 @@ private: // don't tell moc, but those signals are in fact private
     };
 
     class Task::Result {
-        QString m_nonce;
+        const QString m_nonce;
     public:
         Result();
         virtual ~Result();
