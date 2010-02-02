@@ -382,7 +382,7 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
 }
 
 static CardInfo get_card_info( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent, const CardInfo & oldInfo, bool force ) {
-    qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldInfo.status] << ')';
+    qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldInfo.status] << ',' << force << ')';
     const ReaderStatus::Status st = read_status( fileName );
     if ( force && gpg_agent ||
          ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldInfo.status && gpg_agent )
@@ -392,24 +392,29 @@ static CardInfo get_card_info( const QString & fileName, unsigned int idx, share
 }
 
 static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent, const std::vector<CardInfo> & oldCardInfos, bool force ) {
+    qDebug() << "<update_cardinfo>";
     const QDir gnupgHome( gnupgHomePath );
-    if ( !gnupgHome.exists() ) {
-        qDebug() << "update_cardinfo: gnupg home" << gnupgHomePath << "does not exist!";
-        return std::vector<CardInfo>();
-    }
-    const QStringList files = gnupgHome.entryList( QStringList( QLatin1String( "reader_*.status" ) ), QDir::Files, QDir::Name );
+    if ( !gnupgHome.exists() )
+        qWarning() << "update_cardinfo: gnupg home" << gnupgHomePath << "does not exist!";
+
+    QStringList files = gnupgHome.entryList( QStringList( QLatin1String( "reader_*.status" ) ), QDir::Files, QDir::Name );
+    if ( files.empty() )
+        files.push_back( QLatin1String( "reader_0.status" ) ); // not always present on Windows, so fake it
 
     std::vector<CardInfo> result;
     result.reserve( files.size() );
     Q_FOREACH( const QString & file, files ) {
         bool ok = false;
         const unsigned int idx = parseFileName( file, &ok );
-        if ( !ok )
+        if ( !ok ) {
+            qDebug() << "filename" << file << ": cannot parse reader slot number";
             continue;
+        }
         result.resize( idx );
         result.push_back( get_card_info( gnupgHome.absoluteFilePath( file ), idx, gpgAgent,
                                          idx < oldCardInfos.size() ? oldCardInfos[idx] : CardInfo(), force ) );
     }
+    qDebug() << "</update_cardinfo>";
     return result;
 }
 
@@ -550,7 +555,7 @@ namespace {
                         continue; // early out
 
                     std::vector<CardInfo> newCardInfos
-                        = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos, command == checkTransaction.command );
+                        = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos, true );
 
                     newCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
                     oldCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
