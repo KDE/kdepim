@@ -674,8 +674,8 @@ void SignEncryptEMailConflictDialog::setRecipients( const std::vector<Recipient>
 bool SignEncryptEMailConflictDialog::isComplete() const {
     const Protocol proto = selectedProtocol();
     return proto != UnknownProtocol
-        && kdtools::none_of( d->ui.signers,    bind( &Line::isStillAmbiguous, _1, proto ) )
-        && kdtools::none_of( d->ui.recipients, bind( &Line::isStillAmbiguous, _1, proto ) )
+        && ( !d->sign    || kdtools::none_of( d->ui.signers,    bind( &Line::isStillAmbiguous, _1, proto ) ) )
+        && ( !d->encrypt || kdtools::none_of( d->ui.recipients, bind( &Line::isStillAmbiguous, _1, proto ) ) )
         ;
 }
 
@@ -693,11 +693,11 @@ static std::vector<Key> get_keys( const std::vector<Line> & lines, Protocol prot
 }
 
 std::vector<Key> SignEncryptEMailConflictDialog::resolvedSigningKeys() const {
-    return get_keys( d->ui.signers, selectedProtocol() );
+    return d->sign    ? get_keys( d->ui.signers,    selectedProtocol() ) : std::vector<Key>() ;
 }
 
 std::vector<Key> SignEncryptEMailConflictDialog::resolvedEncryptionKeys() const {
-    return get_keys( d->ui.recipients, selectedProtocol() );
+    return d->encrypt ? get_keys( d->ui.recipients, selectedProtocol() ) : std::vector<Key>() ;
 }
 
 
