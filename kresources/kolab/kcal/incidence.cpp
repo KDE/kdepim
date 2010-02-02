@@ -52,7 +52,6 @@ using namespace Kolab;
 Incidence::Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
                       const QString& tz )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
-    mRevision( 0 ),
     mResource( res ),
     mSubResource( subResource ),
     mSernum( sernum )
@@ -163,16 +162,6 @@ void Incidence::setInternalUID( const QString& iuid )
 QString Incidence::internalUID() const
 {
   return mInternalUID;
-}
-
-void Incidence::setRevision( int revision )
-{
-  mRevision = revision;
-}
-
-int Incidence::revision() const
-{
-  return mRevision;
 }
 
 bool Incidence::loadAttendeeAttribute( QDomElement& element,
@@ -529,12 +518,7 @@ bool Incidence::loadAttribute( QDomElement& element )
     loadAlarms( element );
   else if ( tagName == "x-kde-internaluid" )
     setInternalUID( element.text() );
-  else if ( tagName == "revision" ) {
-    bool ok;
-    int revision = element.text().toInt( &ok );
-    if ( ok )
-      setRevision( revision );
-  } else if ( tagName == "x-custom" )
+  else if ( tagName == "x-custom" )
     loadCustomAttributes( element );
   else {
     bool ok = KolabBase::loadAttribute( element );
@@ -574,7 +558,6 @@ bool Incidence::saveAttributes( QDomElement& element ) const
   }
   saveAlarms( element );
   writeString( element, "x-kde-internaluid", internalUID() );
-  writeString( element, "revision", QString::number( revision() ) );
   saveCustomAttributes( element );
   return true;
 }
