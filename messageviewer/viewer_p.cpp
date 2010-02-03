@@ -1127,8 +1127,6 @@ void ViewerPrivate::parseMsg()
 {
   assert( mMessage != 0 );
 
-  mNodeHelper->setNodeBeingProcessed( mMessage.get(), true );
-
   QString cntDesc = i18n("( body part )");
 
   if ( mMessage->subject( false ) )
@@ -1249,7 +1247,6 @@ void ViewerPrivate::parseMsg()
   } else {
     showHideMimeTree();
   }
-  mNodeHelper->setNodeBeingProcessed( mMessage.get(), false );
 }
 
 
@@ -1489,11 +1486,6 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
 {
   if ( mMessage && !mNodeHelper->nodeProcessed( mMessage.get() ) ) {
     kWarning() << "The root node is not yet processed! Danger!";
-    return;
-  }
-
-  if ( mMessage && mNodeHelper->nodeBeingProcessed( mMessage.get() ) ) {
-    kWarning() << "The root node is not yet fully processed! Danger!";
     return;
   }
 
