@@ -1497,24 +1497,24 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
     return;
   }
 
-    mNodeHelper->clear();
-    mMimePartModel->setRoot( 0 );
+  mNodeHelper->clear();
+  mMimePartModel->setRoot( 0 );
 
-    mMessage = KMime::Message::Ptr(); //forget the old message if it was set
-    mMessageItem = item;
+  mMessage = KMime::Message::Ptr(); //forget the old message if it was set
+  mMessageItem = item;
 
-    if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
-      kWarning() << "Payload is not a MessagePtr!";
-      return;
-    }
-    mMessage = KMime::Message::Ptr( new KMime::Message );
-    kDebug() << "START SHOWING" << mMessage;
+  if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
+    kWarning() << "Payload is not a MessagePtr!";
+    return;
+  }
+  mMessage = KMime::Message::Ptr( new KMime::Message );
+  kDebug() << "START SHOWING" << mMessage;
 
-    mMessage ->setContent( mMessageItem.payloadData() );
-    mMessage ->parse();
+  mMessage ->setContent( mMessageItem.payloadData() );
+  mMessage ->parse();
 
-    update( updateMode );
-    kDebug() << "SHOWN" << mMessage;
+  update( updateMode );
+  kDebug() << "SHOWN" << mMessage;
 
 }
 
