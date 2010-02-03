@@ -167,8 +167,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true ),
     mDisregardUmask( false ),
-    mCurrentContent( 0 ),
     mRecursionCountForDisplayMessage( 0 ),
+    mCurrentContent( 0 ),
     mJob( 0 ),
     q( aParent )
 {
