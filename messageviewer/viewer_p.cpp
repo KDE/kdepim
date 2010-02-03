@@ -1484,11 +1484,6 @@ void ViewerPrivate::printMessage( KMime::Message::Ptr message )
 
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
-  if ( mMessage && !mNodeHelper->nodeProcessed( mMessage.get() ) ) {
-    kWarning() << "The root node is not yet processed! Danger!";
-    return;
-  }
-
   mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
 
