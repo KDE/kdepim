@@ -34,13 +34,15 @@
 #ifndef _MESSAGEVIEWER_OBJECTTREEPARSER_H_
 #define _MESSAGEVIEWER_OBJECTTREEPARSER_H_
 
+#include "messageviewer_export.h"
+
+#include "nodehelper.h"
+#include "objecttreesourceif.h"
+
 #include <kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>
 
 #include <QList>
-
-#include "nodehelper.h"
-#include "messageviewer_export.h"
 
 class QString;
 
@@ -64,7 +66,6 @@ class ViewerPrivate;
 class HtmlWriter;
 class CSSHelper;
 class AttachmentStrategy;
-class ObjectTreeSourceIf;
 class NodeHelper;
 
 
@@ -124,9 +125,7 @@ public:
                     const Kleo::CryptoBackend::Protocol * protocol=0,
                     bool showOneMimePart=false, bool keepEncryptions=false,
                     bool includeSignatures=true,
-                    const AttachmentStrategy * attachmentStrategy=0,
-                    HtmlWriter * htmlWriter=0,
-                    CSSHelper * cssHelper=0 );
+                    const AttachmentStrategy * attachmentStrategy=0 );
   virtual ~ObjectTreeParser();
 
   void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
@@ -168,9 +167,9 @@ public:
     return mAttachmentStrategy;
   }
 
-  HtmlWriter * htmlWriter() const { return mHtmlWriter; }
+  HtmlWriter * htmlWriter() const { return mSource->htmlWriter(); }
 
-  CSSHelper * cssHelper() const { return mCSSHelper; }
+  CSSHelper * cssHelper() const { return mSource->cssHelper(); }
 
   NodeHelper * nodeHelper() const { return mNodeHelper; }
 
@@ -361,8 +360,6 @@ private:
   bool mHasPendingAsyncJobs;
   bool mAllowAsync;
   const AttachmentStrategy * mAttachmentStrategy;
-  HtmlWriter * mHtmlWriter;
-  CSSHelper * mCSSHelper;
   // DataUrl Icons cache
   QString mCollapseIcon;
   QString mExpandIcon;
