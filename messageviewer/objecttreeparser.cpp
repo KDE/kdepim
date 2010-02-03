@@ -273,8 +273,9 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
   contents.prepend(node); //the toplevel node needs to parsed as well
   Q_FOREACH(KMime::Content *c, contents)
   {
-    if ( mNodeHelper->nodeProcessed( c ) )
+    if ( mNodeHelper->nodeProcessed( c ) ) {
       continue;
+    }
     ProcessResult processResult( mNodeHelper );
 
     KMime::ContentIndex contentIndex = node->indexForContent(c);
@@ -287,12 +288,12 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
       // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
       part.setDefaultDisplay( (Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
 
-     writeAttachmentMarkHeader( c );
-     mNodeHelper->setNodeDisplayedEmbedded( c, true );
-     const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
-     writeAttachmentMarkFooter();
+      writeAttachmentMarkHeader( c );
+      mNodeHelper->setNodeDisplayedEmbedded( c, true );
+      const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
+      writeAttachmentMarkFooter();
 
-     switch ( result ) {
+      switch ( result ) {
       case Interface::BodyPartFormatter::AsIcon:
         processResult.setNeverDisplayInline( true );
         // fall through:
@@ -303,15 +304,16 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
       case Interface::BodyPartFormatter::NeedContent:
         // FIXME: incomplete content handling
         ;
-      }
+       }
     } else {
       const BodyPartFormatter * bpf
         = BodyPartFormatter::createFor( c->contentType()->mediaType(), c->contentType()->subType() );
       kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
                             << c->contentType()->mediaType() << '/' << c->contentType()->subType() << ')';
       writeAttachmentMarkHeader( c );
-      if ( bpf && !bpf->process( this, item, c, processResult ) )
+      if ( bpf && !bpf->process( this, item, c, processResult ) ) {
         defaultHandling( c, processResult );
+      }
       writeAttachmentMarkFooter();
     }
     mNodeHelper->setNodeProcessed( c, false);
