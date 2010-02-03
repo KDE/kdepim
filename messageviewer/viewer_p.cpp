@@ -2296,6 +2296,14 @@ void ViewerPrivate::updateReaderWin()
   }
 
   if ( mRecursionCountForDisplayMessage + 1 > 1 ) {
+    // This recursion here can happen because the ObjectTreeParser in parseMsg() can exec() an
+    // eventloop.
+    // This happens in two cases:
+    //   1) The ContactSearchJob started by FancyHeaderStyle::format
+    //   2) Various model passphrase dialogs for decryption of a message (bug 96498)
+    //
+    // While the exec() eventloop is running, it is possible that a timer calls updateReaderWin(),
+    // and not aborting here would confuse the state terribly.
     kWarning() << "Danger, recursion while displaying a message!";
     return;
   }
