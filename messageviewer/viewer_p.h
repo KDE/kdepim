@@ -544,6 +544,7 @@ public:
   bool mShowAttachmentQuicklist;
   bool mExternalWindow;
   bool mDisregardUmask;
+  int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
   QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;

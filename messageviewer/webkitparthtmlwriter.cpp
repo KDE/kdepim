@@ -56,14 +56,13 @@ WebKitPartHtmlWriter::WebKitPartHtmlWriter( KWebView *view,
 }
 
 WebKitPartHtmlWriter::~WebKitPartHtmlWriter() {
-
 }
 
 void WebKitPartHtmlWriter::begin( const QString & css ) {
   // The stylesheet is now included CSSHelper::htmlHead()
   Q_UNUSED( css );
   if ( mState != Ended ) {
-    kWarning() <<"WebKitPartHtmlWriter: begin() called on non-ended session!";
+    kWarning() << "begin() called on non-ended session!";
     reset();
   }
 
@@ -105,11 +104,13 @@ void WebKitPartHtmlWriter::reset() {
 }
 
 void WebKitPartHtmlWriter::write( const QString & str ) {
-  kWarning( mState != Begun, 5006 ) <<"WebKitPartHtmlWriter: write() called in Ended or Queued state!";
+  kWarning( mState != Begun, 5006 ) << "write() called in Ended or Queued state!";
   mHtml.append( str );
 }
 
 void WebKitPartHtmlWriter::queue( const QString & str ) {
+  kWarning( mState != Begun && mState != Queued, 5006 )
+      << "queue() called in Ended state!";
   static const uint chunksize = 16384;
   for ( int pos = 0 ; pos < str.length() ; pos += chunksize )
     mHtmlQueue.push_back( str.mid( pos, chunksize ) );

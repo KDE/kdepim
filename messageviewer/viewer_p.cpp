@@ -168,6 +168,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mShowAttachmentQuicklist( true ),
     mDisregardUmask( false ),
     mCurrentContent( 0 ),
+    mRecursionCountForDisplayMessage( 0 ),
     mJob( 0 ),
     q( aParent )
 {
@@ -1077,7 +1078,6 @@ void ViewerPrivate::enableMessageDisplay()
 
 void ViewerPrivate::displayMessage()
 {
-
   /*FIXME(Andras) port to Akonadi
   mMimePartTree->clearAndResetSortOrder();
   */
@@ -2295,6 +2295,12 @@ void ViewerPrivate::updateReaderWin()
     return;
   }
 
+  if ( mRecursionCountForDisplayMessage + 1 > 1 ) {
+    kWarning() << "Danger, recursion while displaying a message!";
+    return;
+  }
+  mRecursionCountForDisplayMessage++;
+
   mViewer->setAllowExternalContent( htmlLoadExternal() );
 
   htmlWriter()->reset();
@@ -2320,6 +2326,7 @@ void ViewerPrivate::updateReaderWin()
     mViewer->page()->currentFrame()->setScrollBarValue( Qt::Vertical, qRound( mViewer->page()->viewportSize().height() * mSavedRelativePosition ) );
     mSavedRelativePosition = 0;
   }
+  mRecursionCountForDisplayMessage--;
 }
 
 
