@@ -269,27 +269,26 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
   if ( isRoot && htmlWriter() )
     htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
-  KMime::Content::List contents = node->contents();
-  contents.prepend(node); //the toplevel node needs to parsed as well
-  Q_FOREACH(KMime::Content *c, contents)
+  for( ; node ; node = NodeHelper::nextSibling( node ) )
   {
-    if ( mNodeHelper->nodeProcessed( c ) ) {
+    if ( mNodeHelper->nodeProcessed( node ) ) {
       continue;
     }
     ProcessResult processResult( mNodeHelper );
 
-    KMime::ContentIndex contentIndex = node->indexForContent(c);
+    KMime::ContentIndex contentIndex = node->index();
     if ( htmlWriter() /*&& contentIndex.isValid()*/ )
       htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"></a>").arg( contentIndex.toString() ) );
     if ( const Interface::BodyPartFormatter * formatter
-          = BodyPartFormatterFactory::instance()->createFor( c->contentType()->mediaType(), c->contentType()->subType() ) ) {
-      PartNodeBodyPart part( item, c, mNodeHelper, codecFor( c ) );
+          = BodyPartFormatterFactory::instance()->createFor( node->contentType()->mediaType(),
+                                                             node->contentType()->subType() ) ) {
+      PartNodeBodyPart part( item, node, mNodeHelper, codecFor( node ) );
       // Set the default display strategy for this body part relying on the
       // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
-      part.setDefaultDisplay( (Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( c ) );
+      part.setDefaultDisplay( (Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( node ) );
 
-      writeAttachmentMarkHeader( c );
-      mNodeHelper->setNodeDisplayedEmbedded( c, true );
+      writeAttachmentMarkHeader( node );
+      mNodeHelper->setNodeDisplayedEmbedded( node, true );
       const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
       writeAttachmentMarkFooter();
 
@@ -307,16 +306,17 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
        }
     } else {
       const BodyPartFormatter * bpf
-        = BodyPartFormatter::createFor( c->contentType()->mediaType(), c->contentType()->subType() );
+        = BodyPartFormatter::createFor( node->contentType()->mediaType(), node->contentType()->subType() );
       kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
-                            << c->contentType()->mediaType() << '/' << c->contentType()->subType() << ')';
-      writeAttachmentMarkHeader( c );
-      if ( bpf && !bpf->process( this, item, c, processResult ) ) {
-        defaultHandling( c, processResult );
+                           << node->contentType()->mediaType() << '/'
+                           << node->contentType()->subType() << ')';
+      writeAttachmentMarkHeader( node );
+      if ( bpf && !bpf->process( this, item, node, processResult ) ) {
+        defaultHandling( node, processResult );
       }
       writeAttachmentMarkFooter();
     }
-    mNodeHelper->setNodeProcessed( c, false);
+    mNodeHelper->setNodeProcessed( node, false);
 
     // adjust signed/encrypted flags if inline PGP was found
     processResult.adjustCryptoStatesOfNode( node );
