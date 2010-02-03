@@ -175,8 +175,6 @@ public:
 
   /** Parse beginning at a given node and recursively parsing
       the children of that node and it's next sibling. */
-  //  Function is called internally by "parseMsg(KMMessage* msg)"
-  //  and it will be replaced once KMime is alive.
   void parseObjectTree( const Akonadi::Item &item, KMime::Content * node );
 
 private:
