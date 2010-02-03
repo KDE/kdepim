@@ -389,12 +389,17 @@ KABC::Lock *ResourceKABC::lock()
 }
 
 
-bool ResourceKABC::addEvent(Event*)
+bool ResourceKABC::addEvent( Event * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteEvent(Event*)
+bool ResourceKABC::addEvent( Event *, const QString & )
+{
+  return false;
+}
+
+bool ResourceKABC::deleteEvent( Event * )
 {
   return false;
 }
@@ -428,12 +433,17 @@ Event::List ResourceKABC::rawEvents( EventSortField sortField, SortDirection sor
   return mCalendar.rawEvents( sortField, sortDirection );
 }
 
-bool ResourceKABC::addTodo(Todo*)
+bool ResourceKABC::addTodo( Todo * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteTodo(Todo*)
+bool ResourceKABC::addTodo( Todo *, const QString & )
+{
+  return false;
+}
+
+bool ResourceKABC::deleteTodo( Todo * )
 {
   return false;
 }
@@ -455,12 +465,17 @@ Todo::List ResourceKABC::rawTodosForDate( const QDate &date )
 }
 
 
-bool ResourceKABC::addJournal(Journal*)
+bool ResourceKABC::addJournal( Journal * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteJournal(Journal*)
+bool ResourceKABC::addJournal( Journal *, const QString & )
+{
+  return false;
+}
+
+bool ResourceKABC::deleteJournal( Journal * )
 {
   return false;
 }

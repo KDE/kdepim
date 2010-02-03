@@ -84,6 +84,12 @@ bool ResourceCalendar::addIncidence( Incidence *incidence )
   return incidence->accept( v );
 }
 
+bool ResourceCalendar::addIncidence( Incidence *incidence, const QString &subresource )
+{
+  Incidence::AddSubResourceVisitor<ResourceCalendar> v( this, subresource );
+  return incidence->accept( v );
+}
+
 bool ResourceCalendar::deleteIncidence( Incidence *incidence )
 {
   Incidence::DeleteVisitor<ResourceCalendar> v( this );

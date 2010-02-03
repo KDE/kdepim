@@ -44,7 +44,7 @@ using namespace KCal;
 
 ResourceCached::ResourceCached( const KConfig* config )
   : ResourceCalendar( config ), mCalendar( QString::fromLatin1( "UTC" ) ),
-    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ), 
+    mReloadPolicy( ReloadNever ),  mReloadInterval( 10 ),
     mReloadTimer( 0, "mReloadTimer" ), mReloaded( false ),
     mSavePolicy( SaveNever ), mSaveInterval( 10 ),
     mSaveTimer( 0, "mSaveTimer" ), mIdMapper( "kcal/uidmaps/" )
@@ -155,6 +155,12 @@ bool ResourceCached::addEvent(Event *event)
   return mCalendar.addEvent( event );
 }
 
+bool ResourceCached::addEvent(Event *event, const QString &subresource )
+{
+  Q_UNUSED( subresource ); // CalendarLocal does not support subresources
+  return mCalendar.addEvent( event );
+}
+
 // probably not really efficient, but...it works for now.
 bool ResourceCached::deleteEvent( Event *event )
 {
@@ -199,6 +205,12 @@ bool ResourceCached::addTodo( Todo *todo )
   return mCalendar.addTodo( todo );
 }
 
+bool ResourceCached::addTodo( Todo *todo, const QString &subresource )
+{
+  Q_UNUSED( subresource ); // CalendarLocal does not support subresources
+  return mCalendar.addTodo( todo );
+}
+
 bool ResourceCached::deleteTodo( Todo *todo )
 {
   return mCalendar.deleteTodo( todo );
@@ -225,11 +237,14 @@ Todo::List ResourceCached::rawTodosForDate( const QDate &date )
   return mCalendar.rawTodosForDate( date );
 }
 
-
 bool ResourceCached::addJournal( Journal *journal )
 {
-  kdDebug(5800) << "Adding Journal on " << journal->dtStart().toString() << endl;
+  return mCalendar.addJournal( journal );
+}
 
+bool ResourceCached::addJournal( Journal *journal, const QString &subresource )
+{
+  Q_UNUSED( subresource ); // CalendarLocal does not support subresources
   return mCalendar.addJournal( journal );
 }
 

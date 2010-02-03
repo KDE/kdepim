@@ -70,8 +70,9 @@ public:
   void doClose();
 
   // The libkcal functions. See the resource for descriptions
-  bool addEvent( KCal::Event* anEvent );
-  bool deleteEvent( KCal::Event* );
+  KDE_DEPRECATED bool addEvent( KCal::Event *event );
+  bool addEvent( KCal::Event *event, const QString &subResource );
+  bool deleteEvent( KCal::Event * );
   KCal::Event* event( const QString &UniqueStr );
   KCal::Event::List rawEvents( EventSortField sortField = EventSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Event::List rawEventsForDate(
@@ -82,15 +83,17 @@ public:
   KCal::Event::List rawEvents( const QDate& start, const QDate& end,
                                bool inclusive = false );
 
-  bool addTodo( KCal::Todo* todo );
-  bool deleteTodo( KCal::Todo* );
-  KCal::Todo* todo( const QString& uid );
+  KDE_DEPRECATED bool addTodo( KCal::Todo * todo );
+  bool addTodo( KCal::Todo *todo, const QString &subResource );
+  bool deleteTodo( KCal::Todo * );
+  KCal::Todo* todo( const QString &uid );
   KCal::Todo::List rawTodos( TodoSortField sortField = TodoSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Todo::List rawTodosForDate( const QDate& date );
 
-  bool addJournal( KCal::Journal* );
-  bool deleteJournal( KCal::Journal* );
-  KCal::Journal* journal( const QString& uid );
+  KDE_DEPRECATED bool addJournal( KCal::Journal * );
+  bool addJournal( KCal::Journal *, const QString &subResource );
+  bool deleteJournal( KCal::Journal * );
+  KCal::Journal* journal( const QString &uid );
   KCal::Journal::List rawJournals( JournalSortField sortField = JournalSortUnsorted, SortDirection sortDirection = SortDirectionAscending );
   KCal::Journal::List rawJournalsForDate( const QDate &date );
 

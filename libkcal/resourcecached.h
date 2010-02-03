@@ -133,7 +133,9 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Add event to calendar.
     */
-    bool addEvent(Event *anEvent);
+    KDE_DEPRECATED bool addEvent( Event *event );
+    bool addEvent( Event *event, const QString &subresource );
+
     /**
       Deletes an event from this calendar.
     */
@@ -171,7 +173,9 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Add a todo to the todolist.
     */
-    bool addTodo( Todo *todo );
+    KDE_DEPRECATED bool addTodo( Todo *todo );
+    bool addTodo( Todo *todo, const QString &subresource );
+
     /**
       Remove a todo from the todolist.
     */
@@ -192,15 +196,17 @@ class KDE_EXPORT ResourceCached : public ResourceCalendar,
     /**
       Add a Journal entry to calendar
     */
-    virtual bool addJournal( Journal * );
+    KDE_DEPRECATED bool addJournal( Journal *journal );
+    bool addJournal( Journal *journal, const QString &subresource );
+
     /**
       Remove a Journal from the calendar
     */
-    virtual bool deleteJournal( Journal * );
+    bool deleteJournal( Journal * );
     /**
       Return Journal with given unique id.
     */
-    virtual Journal *journal( const QString &uid );
+    Journal *journal( const QString &uid );
     /**
       Return list of all journals.
     */

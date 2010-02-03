@@ -83,7 +83,9 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
 //    void close();
 
     /** Add Event to calendar. */
-    bool addEvent(Event *anEvent);
+    KDE_DEPRECATED bool addEvent( Event *event );
+    bool addEvent( Event *event, const QString &subresource );
+
     /** deletes an event from this calendar. */
     bool deleteEvent(Event *);
 
@@ -118,7 +120,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     /**
       Add a todo to the todolist.
     */
-    bool addTodo( Todo *todo );
+    KDE_DEPRECATED bool addTodo( Todo *todo );
+    bool addTodo( Todo *todo, const QString &subresource );
     /**
       Remove a todo from the todolist.
     */
@@ -138,7 +141,8 @@ class ResourceExchange : public ResourceCalendar, public IncidenceBase::Observer
     Todo::List rawTodosForDate( const QDate &date );
 
     /** Add a Journal entry to calendar */
-    virtual bool addJournal(Journal *);
+    KDE_DEPRECATED bool addJournal( Journal *journal );
+    bool addJournal( Journal *journal, const QString &subresource );
     /** deletes an event from this calendar. */
     virtual bool deleteJournal(Journal *);
     /** Return Journals for given date */

@@ -55,7 +55,7 @@ class CalFormat;
 */
 class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 {
-    Q_OBJECT
+  Q_OBJECT
   public:
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
@@ -123,8 +123,14 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Add incidence to resource.
+      @deprecated use addIncidence(Incidence *,const QString &) instead.
     */
-    virtual bool addIncidence( Incidence * );
+    KDE_DEPRECATED virtual bool addIncidence( Incidence * );
+
+    /**
+      Add incidence to resource and subresource.
+    */
+    virtual bool addIncidence( Incidence *, const QString &subresource );
 
     /**
       Delete incidence from resource.
@@ -139,8 +145,10 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Add event to resource.
+      @deprecated use addEvent(Event *,const QString&) instead.
     */
-    virtual bool addEvent( Event *event ) = 0;
+    KDE_DEPRECATED virtual bool addEvent( Event *event ) = 0;
+    virtual bool addEvent( Event *event, const QString &subresource ) = 0;
 
     /**
       Delete event from this resource.
@@ -241,8 +249,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
   public:
     /**
       Add a todo to the todolist.
+      @deprecated use addTodo(Todo *,const QString &) instead.
     */
-    virtual bool addTodo( Todo *todo ) = 0;
+    KDE_DEPRECATED virtual bool addTodo( Todo *todo ) = 0;
+    virtual bool addTodo( Todo *todo,  const QString &subresource ) = 0;
+
     /**
       Remove a todo from the todolist.
     */
@@ -265,8 +276,10 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
     /**
       Add a Journal entry to the resource.
+      @deprecated use addJournal(Journal *,const QString &) instead.
     */
-    virtual bool addJournal( Journal * ) = 0;
+    KDE_DEPRECATED virtual bool addJournal( Journal * ) = 0;
+    virtual bool addJournal( Journal *journal, const QString &subresource ) = 0;
 
     /**
       Remove a Journal entry from calendar.
