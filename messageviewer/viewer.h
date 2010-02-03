@@ -72,14 +72,16 @@ namespace MessageViewer {
   class MailWebView;
 }
 
-/**
-   This class implements a "reader window", that is a window
-   used for reading or viewing messages.
-*/
-
 namespace MessageViewer {
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
-class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
+
+/**
+ * This is the main widget for the viewer.
+ * See the documentation of ViewerPrivate for implementation details.
+ * See Mainpage.dox for an overview of the classes in the messageviewer library.
+ */
+class MESSAGEVIEWER_EXPORT Viewer: public QWidget
+{
   Q_OBJECT
   Q_DECLARE_PRIVATE(Viewer)
 
@@ -206,10 +208,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget {
   /** Show signature details. */
   void setShowSignatureDetails( bool showDetails = true ) ;
 
-  /* show or hide the list that points to the attachments */
+  /** show or hide the list that points to the attachments */
   bool showAttachmentQuicklist() const;
 
-  /* show or hide the list that points to the attachments */
+  /** show or hide the list that points to the attachments */
   void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true );
 
   /**

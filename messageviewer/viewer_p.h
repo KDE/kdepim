@@ -84,9 +84,12 @@ namespace MessageViewer {
 }
 
 namespace MessageViewer {
-/** Private class for MailViewer.
-* @author andras@kdab.net
-*/
+
+/**
+ * Private class for the Viewer.
+ *
+ * @author andras@kdab.net
+ */
 class ViewerPrivate : public QObject {
   Q_OBJECT
 public:
@@ -534,7 +537,6 @@ public:
   QPointer<WebKitPartHtmlWriter> mPartHtmlWriter;
   QMap<QByteArray, Interface::BodyPartMemento*> mBodyPartMementoMap;
 
-  int mChoice;
   float mSavedRelativePosition;
   int mLevelQuote;
   bool mDecrytMessageOverwrite;
