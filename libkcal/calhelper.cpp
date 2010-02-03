@@ -1,7 +1,7 @@
 /*
   This file is part of the kcal library.
 
-  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -134,4 +134,34 @@ bool CalHelper::hasMyWritableEventsFolders( const QString &family )
     }
   }
   return false;
+}
+
+ResourceCalendar *CalHelper::incResourceCalendar( Calendar *calendar, Incidence *incidence )
+{
+  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal || !incidence ) {
+    return 0;
+  }
+
+  return cal->resource( incidence );
+}
+
+QPair<ResourceCalendar *, QString> CalHelper::incSubResourceCalendar( Calendar *calendar,
+                                                                      Incidence *incidence )
+{
+  QPair<ResourceCalendar *, QString> p( 0, QString() );
+
+  CalendarResources *cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal || !incidence ) {
+    return p;
+  }
+
+  ResourceCalendar *res = cal->resource( incidence );
+
+  QString subRes;
+  if ( res && res->canHaveSubresources() ) {
+    subRes = res->subresourceIdentifier( incidence );
+  }
+  p = qMakePair( res, subRes );
+  return p;
 }

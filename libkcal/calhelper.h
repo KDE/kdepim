@@ -1,7 +1,7 @@
 /*
   This file is part of libkcal.
 
-  Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -30,10 +30,12 @@
 #define KCAL_CALHELPER_H
 
 class QString;
+#include <qpair.h>
 
 namespace KCal {
 class Calendar;
 class Incidence;
+class ResourceCalendar;
 
 /**
   @brief
@@ -96,6 +98,35 @@ namespace CalHelper {
     @since 4.5
   */
   bool hasMyWritableEventsFolders( const QString &family );
+
+  /**
+    Returns the ResourceCalendar where the Incidence is stored, if any.
+    @param calendar is a pointer to a valid Calendar object.
+    @param incidence is a pointer to an Incidence object.
+
+    @return a pointer to the ResourceCalendar where the Incidence is stored;
+    else 0 if none can be found.
+    @since 4.5
+  */
+  ResourceCalendar *incResourceCalendar( Calendar *calendar, Incidence *incidence );
+
+  /**
+    Returns the (ResourceCalendar, SubResourceCalendar) pair where the
+    Incidence is stored, if any.
+    @param calendar is a pointer to a valid Calendar object.
+    @param incidence is a pointer to an Incidence object.
+
+    @return a QPair containing a pointer to the Incidence's ResourceCalendar
+    in the 'first' element of the QPair and the SubResourceCalendar in the
+    'second' element.
+
+    @note many resource types do not support subresources, so the 'second'
+    element will be an empty QString in those situations.
+    @since 4.5
+  */
+  QPair<ResourceCalendar *, QString> incSubResourceCalendar( Calendar *calendar,
+                                                             Incidence *incidence );
+
 }
 
 }
