@@ -213,8 +213,15 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
         QVector<Item::Id>& l = m_parentToChildren[oldParentIt.value()];
         l.erase( std::remove( l.begin(), l.end(), id ), l.end() );
         m_childToParent.remove( id );
-      } else
+      } else {
         parentNotChanged = true;
+
+        // incidences come from akonadi without the relatedTo() pointer set
+        // so we have to re-set it after an update
+        if ( !incidence->relatedTo() ) {
+          incidence->setRelatedTo( parentInc.get() );
+        }
+      }
     } else { //old parent not seen, maybe unseen?
       QHash<Item::Id,UnseenItem>::Iterator oldUnseenParentIt = m_childToUnseenParent.find( id );
       if ( oldUnseenParentIt != m_childToUnseenParent.end() ) {
@@ -223,9 +230,9 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
           QVector<Item::Id>& l = m_unseenParentToChildren[oldUnseenParentIt.value()];
           l.erase( std::remove( l.begin(), l.end(), id ), l.end() );
           m_childToUnseenParent.remove( id );
-        }
-        else
+        } else {
           parentNotChanged = true;
+        }
       }
     }
 
