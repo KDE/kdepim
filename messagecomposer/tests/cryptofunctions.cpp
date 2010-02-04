@@ -43,6 +43,27 @@
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
 
+// We can't use EmptySource, since that doesn't provide a HTML writer. Therefore, derive
+// from EmptySource so we can provide our own HTML writer.
+// This is only needed because ObjectTreeParser has a bug and doesn't decrypt inline PGP messages
+// when there is no HTML writer, see FIXME comment in ObjectTreeParser::writeBodyString().
+class TestObjectTreeSource : public MessageViewer::EmptySource
+{
+  public:
+    TestObjectTreeSource( MessageViewer::HtmlWriter *writer,
+                          MessageViewer::CSSHelper *cssHelper )
+      : mWriter( writer ), mCSSHelper( cssHelper )
+    {
+    }
+
+    virtual MessageViewer::HtmlWriter * htmlWriter() { return mWriter; }
+    virtual MessageViewer::CSSHelper * cssHelper() { return mCSSHelper; }
+
+  private:
+    MessageViewer::HtmlWriter *mWriter;
+    MessageViewer::CSSHelper *mCSSHelper;
+};
+
 std::vector<GpgME::Key> ComposerTestUtil::getKeys( bool smime )
 {
 
@@ -89,9 +110,11 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   resultMessage->parse();
   
   // parse the result and make sure it is valid in various ways
-  MessageViewer::EmptySource es;
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh );
 
   // ensure the signed part exists and is parseable
@@ -153,9 +176,11 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   resultMessage->parse();
 
   // parse the result and make sure it is valid in various ways
-  MessageViewer::EmptySource es;
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
   MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
@@ -214,9 +239,11 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   resultMessage->parse();
   
   // parse the result and make sure it is valid in various ways
-  MessageViewer::EmptySource es;
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh );
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0  );
   MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
