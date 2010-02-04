@@ -1,0 +1,144 @@
+1  /** \mainpage The MessageViewer library
+
+\section Overview
+
+The messageviewer is a library that provides a widget that can show a KMime::Message in a nice
+way.
+
+The message is displayed by first converting it to HTML and then displaying the HTML in a widget
+based on WebKit.
+
+\section ObjectTreeParser
+
+The class ObjectTreeParser is used to parse the KMime::Message and create a HTML representation out
+of it. An implementation of the ObjectTreeSourceIf interface is passed to the ObjectTreeParser,
+which provides an interface for the ObjectTreeParser to interact with the viewer widget. The most
+import part of this interface is that it provides a HtmlWriter, which the ObjectTreeParser uses to
+write the HTML it generates to.
+
+The HtmlWriter passed to the ObjectTreeParser can be a dummy implementation, like in EmptySource.
+This is used when one is not interested in the interaction between the ObjectTreeParser and the
+viewer. The most common use case is that one is not interested in the generated HTML, but only in
+the textual content that the ObjectTreeParser extracted, which can be retrieved with
+ObjectTreeParser::textualContent(). This is used for example when KMail creates an inline forward
+message.
+
+The Viewer of course uses a non-dummy implementation of the ObjectTreeSourceIf, the MailViewerSource.
+The HtmlWriter provided by the MailViewerSource is a WebKitPartHtmlWriter, which writes the HTML
+directly to the MailWebView widget, which is a KWebView.
+
+The header of the message or the headers of any embedded messages are formatted in a special way.
+The user can chose between many styles of header formatting, like 'fancy' or 'brief'. The creation
+of the HTML code for these headers is handled by HeaderStyle. The ObjectTreeParser does not use
+the HeaderStyle classes directly; instead, it is delegated to ViewerPrivate::writeMsgHeader() via
+ObjectTreeSourceIf::createMessageHeader().
+
+The 'fancy' header style can display the spam status of the message in a nice way. To extract the
+spam information, SpamHeaderAnalyzer, AntiSpamConfig and SpamAgent are used.
+
+The HeaderStrategy controls which parts of the header should be shown. Based on this strategy, the
+HeaderStyle implementations decide which header fields to include in the HTML code they generate.
+
+Some parts of the appearance of the message can be customized by changing the CSS. For this, the
+CSSHelper class is used, which is passed to the ObjectTreeParser with ObjectTreeSourceIf::cssHelper().
+
+The ObjectTreeParser can have plugins that create the HTML for special MIME parts themselves. Those
+plugins are found in kdepim/plugins/messageviewer. Examples are plugins that render the vCard in a
+nice way when a vCard MIME type is encountered, or which do the same when a diff attachment is found.
+The classes used for this are the interfaces BodyPartFormatter and BodyPartFormatterPlugin and their
+helper interfaces in the interfaces/ subdirectory. The plugins only depend on these interfaces and
+are independent from the rest of the viewer.
+
+Most MIME parts are handled internally, like all multipart types or text/plain and text/html. For
+text/html, a HTMLQuoteColorer is used to change the HTML of the message to include coloring of the
+quotes.
+
+The AttachmentStrategy which is passed to the constructor or ObjectTreeParser controls how some of
+the MIME parts are handled: For example, an image MIME part might be displayed as an icon, or it
+might display the full image inline in the body.
+
+For details on the internals of the ObjectTreeParser, especially the way it parses and changes a
+message, see the documentation of ObjectTreeParser.
+
+\section Widgets
+
+The Viewer consists of several widgets.
+The main widget is the MailWebView, which displays the HTML code that the ObjectTreeParser generated
+from the message.
+On the left side of that, a HtmlStatusBar displays the type of the displayed message.
+Below the MailWebView, a QTreeView shows the message structure by using a MimeTreeModel.
+The viewer can open an additional window to show the raw message source with the MailSourceViewer.
+The viewer also can show the properties of a MIME part of the message, which uses the
+AttachmentDialog class.
+When opening MIME parts that are vCards, they are displayed in a VCardViewer.
+When searching through the message, a FindBar is displayed at the bottom.
+
+\section urlhandling URL handling
+
+The generated HTML has many different URLs in it. Those can be the normal URLs which are contained
+in the message text, the mailto URLs that are in the header, or special KMail URLs. These KMail URLs
+for example include the "Load external references" link for HTML mails with external images, the
+"Show details" link for signed messages, the URL to expand or collapse quoted text and many more.
+
+Throughout the displayed message, there are links to attachments, either in the header when using
+some header styles, or at the place where the actual attachment is, in the body. These URLs all
+start with 'attachment:', followed by a number that describes the KMime::ContentIndex of the
+attachment. The attachment links also contain a parameter that describes whether the link is in the
+header of the message or in the body. This is needed because clicking on the links in the header
+should scroll to the attachment in the body.
+
+These URLs are all written to the HTML code by ObjectTreeParser, but it is up to the Viewer to
+handle interaction with these URLs, such as clicking on them or hovering over them.
+
+For this, the Viewer has a URLHandlerManager, which manages a list of URLHandler. An URLHandler is
+responsible for the interaction with exactly one type or URL. Interaction means executing an action
+when clicking the URL or showing a status bar message when hovering over it. Examples of these
+URLHandler are AttachmentURLHandler or ExpandCollapseQuoteURLManager. The special
+KMailProtocolURLHandler deals with multiple types of URLs that all start with 'kmail:'.
+
+Note that the 'kmail:' URLs are only named like this for historic reasons, nowadays the viewer is
+independent of KMail.
+
+\section Misc
+
+There are various smaller and unimportant classes in this library.
+
+PartNodeBodyPart is an implementation of the BodyPart interface. It is used by plugins to gain
+access to various properties of the MIME part the plugins are supposed to handle.
+
+NodeHelper currently is a big mess that consists of mainly two things: First, it provides
+convenience methods for operations related to the MIME part class KMime::Content, such as
+nextSibling() or charset(). All these methods should eventually be moved away from here, either to
+kdepim/messagecore or to kdpimlibs/kmime.
+Secondly, it provides lists and maps which are used by the ObjectTreeParser and the Viewer during
+processing. Such can include a list of all KMime::Content that are currently being processed, a map
+of KMime::Content to their signature or encryption state, a map of KMime::Content to PartMetaData,
+and so on.
+
+The class Global is used so that applications that use this library can set the correct config
+object. Those applications also can use the ConfigureWidget in their application to display some
+settings. Most of the settings use KConfigXT, and the file for the settings definitions is
+messageviewer.kcfg. The GlobalSettings class is a thin wrapper around the GlobalSettingsBase class,
+which is generated from the KCFG.
+
+StringUtil is a namespace that groups various functions that mainly do string operations, for
+example on mail addresses.
+
+Then there is the Util namespace, which again has some convenience functions that neither fit into
+StringUtil or into NodeHelper.
+
+The last utilitly thing are the functions in stl_util.h, which are supposed to be used in
+combination with STL algorithms.
+
+There are a bunch of smaller classes like AutoQPointer, ChiasmusKeySelector, EditorWatcher,
+IconNameCache, KCursorSaver, KleoJobExecutor, KabcBridge and many more. See the full class list if
+you're curious.
+
+You should also read the documentation of the following classes, which are extensivly documented:
+\sa MessageViewer::ViewerPrivate
+\sa MessageViewer::ObjectTreeParser
+
+*/
+
+// DOXYGEN_NAME=messageviewer
+// DOXYGEN_ENABLE=YES

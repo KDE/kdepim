@@ -86,9 +86,95 @@ namespace MessageViewer {
 namespace MessageViewer {
 
 /**
- * Private class for the Viewer.
- *
- * @author andras@kdab.net
+Private class for the Viewer.
+
+This class creates all subwidgets, like the MailWebView, the HtmlStatusBar and the FindBar.
+
+Also, ViewerPrivate creates and exposes all actions.
+
+\par Displaying a message
+
+Before displaying a message, a message needs to be set. This can be done in two ways, with
+setMessageItem() and with setMessage(). setMessageItem() is the preferred way, as the viewer can
+then remember the Akonadi::Item belonging to the message. The Akonadi::Item is needed when modifying
+the message, for example when editing or deleting an attachment.
+Sometimes passing an Akonadi::Item to the viewer is not possible, for example when double-clicking
+an attached message, in which case a new KMime::Message is constructed out of the attachment, and a
+seperate window is opened for it. In this case, the KMime::Message has no associated Akonadi::Item.
+
+Once a message is set, update() is called. update() can also be called after the message has already
+been displayed. As an example, this is the case when the user decides to decrypt the message. The
+decryption can happen async, and once the decryption is finished, update() is called to display the
+now decrypted content. See the documentation of ObjectTreeParser on how exactly decryption is
+handled.
+update() is just a thin wrapper that calls updateReaderWin(). The only difference is that update()
+has a timer that prevents too many slow calls to updateReaderWin() in a short time frame.
+updateReaderWin() again is only a thin wrapper that resets some state and then calls
+displayMessage().
+displayMessage() itself is again a thin wrapper, which starts the HtmlWriter and then calls
+parseMsg().
+Finally, parseMsg() does the real work. It uses ObjectTreeParser::parseObjectTree() to let the
+ObjectTreeParser parse the message and generate the HTML code for it.
+As mentioned before, it can happen that the ObjectTreeParser needs to do some operation that happens
+async, for example decrypting. In this case, the ObjectTreeParser will create a BodyPartMemento,
+which basically is a wrapper around the job that does the async operation. Once the async operation
+is finished. the BodyPartMemento will trigger an update() of ViewerPrivate, so that
+ObjectTreeParser::parseObjectTree() gets called again and the ObjectTreeParser then can generate
+HTML which has the decrypted content of the message. Again, see the documentation of ObjectTreeParser
+for the details.
+Additionally, parseMsg() does some evil hack for saving unencrypted messages should the config
+option for that be set.
+
+\par Displaying a MIME part of the message
+
+The viewer can show only a part of the message, for example by clicking on a MIME part in the
+message structure viewer or by double-clicking an attached message. In this case, setMessagePart()
+is called. There are two of these functions. One even has special handling for images, special
+handling for binary attachments and special handling of attached messages. In the last case, a new
+KMime::Message is constructed and set as the main message with setMessage().
+
+\par Attachment Handling
+
+Some of those actions are actions that operate on a single attachment. For those, there is usually
+a slot, like slotAttachmentCopy(). These actions are triggered from the attachment context menu,
+which is shown in showAttachmentPopup(). The actions are connected to slotHandleAttachment() when
+they are activated.
+The action to edit an attachment uses the EditorWatcher to detect when editing with an external
+editor is finished. Upon finishing, slotAttachmentEditDone() is called, which then creates an
+ItemModifyJob to store the changes of the attachment. A map of currently active EditorWatcher and
+their KMime::Content is available in mEditorWatchers.
+For most attachment actions, the attachment is first written to a temp file. The action is then
+executed on this temp file. Writing the attachment to a temp file is done with
+NodeHelper::writeNodeToTempFile(). This method is called before opening or copying an attachment or
+when rendering the attachment list. The ObjectTreeParser also calls NodeHelper::writeNodeToTempFile()
+in some places. Once the temp file is written, NodeHelper::tempFileUrlFromNode() can be used to get
+the file name of the temp file for a specific MIME part. This is for example used by the handler for
+'attachment:' URLs, AttachmentURLHandler.
+
+TODO: How are attachment handled that are loaded on demand? How does prepareHandleAttachment() work?
+TODO: This temp file handling is a big mess and could use a rewrite, especially in the face of load
+      on demand. There shouldn't be the need to write out tempfiles until really needed.
+TODO: Dragging of URLs -> see bug 225416
+
+Some header styles display an attachment list in the header. The HTML code for the attachment list
+can not be generated by the HeaderStyle itself, since that does not know about all attachments.
+Therefore, the attachment list needs to be created by ViewerPrivate. For this, the HeaderStyle
+writes out a placeholder for the attachment list when it creates the HTML for the header. Once the
+ObjectTreeParser is finished with message, injectAttachments() is called. injectAttachments()
+searches for the placeholder and replaces that with the real HTML code for the attachment.
+
+One of the attachment actions is to scoll to the attachment. That action is only available when
+right-clicking the header. The action scrolls to the attachment in the body and draws a yellow frame
+around the attachment. This is done in scrollToAttachment(). The attachment in the body and the div
+which is used for the colored frame are both created by the ObjectTreeParser.
+
+\par Misc
+
+ViewerPrivate holds the NodeHelper, which is passed on to the ObjectTreeParser when it needs it.
+It also holds the HeaderStyle, HeaderStrategy, AttachmentStrategy, CSSHelper, HtmlWriter and more,
+some of them again passed to the ObjectTreeParser when it needs it.
+
+@author andras@kdab.net
  */
 class ViewerPrivate : public QObject {
   Q_OBJECT
