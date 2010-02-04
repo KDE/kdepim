@@ -34,8 +34,9 @@
 #ifndef __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_H__
 #define __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_H__
 
-class QString;
 #include <QByteArray>
+
+class QString;
 
 namespace MessageViewer {
 
@@ -43,7 +44,8 @@ namespace Interface {
   class BodyPartFormatter;
 }
 
-class BodyPartFormatterFactory {
+class BodyPartFormatterFactory
+{
   class gcc_shut_up;
   friend class BodyPartFormatterFactory::gcc_shut_up;
 public:

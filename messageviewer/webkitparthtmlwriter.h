@@ -36,15 +36,17 @@
 #include "interfaces/htmlwriter.h"
 #include <QObject>
 
+#include <QString>
 #include <QStringList>
 #include <QTimer>
 #include <QByteArray>
 #include <QMap>
 
-class QString;
 class KWebView;
 
-class WebKitPartHtmlWriter : public QObject, public MessageViewer::HtmlWriter {
+namespace MessageViewer {
+
+class WebKitPartHtmlWriter : public QObject, public HtmlWriter {
   Q_OBJECT
 public:
   // Key is Content-Id, value is URL
@@ -83,5 +85,7 @@ private:
   } mState;
   EmbeddedPartMap mEmbeddedPartMap;
 };
+
+}
 
 #endif // __MESSAGEVIEWER_WEBKITPARTHTMLWRITER_H__

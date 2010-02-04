@@ -33,9 +33,9 @@
 
 #include "webkitparthtmlwriter.h"
 
-#include <kdebug.h>
-#include <kwebview.h>
-#include <kurl.h>
+#include <KDebug>
+#include <KUrl>
+#include <KWebView>
 
 #include <cassert>
 #include <QByteArray>
@@ -43,6 +43,8 @@
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
+
+using namespace MessageViewer;
 
 WebKitPartHtmlWriter::WebKitPartHtmlWriter( KWebView *view,
                                           QObject * parent, const char * name )

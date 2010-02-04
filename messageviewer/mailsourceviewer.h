@@ -39,6 +39,8 @@ class QString;
 class QWidget;
 class QShowEvent;
 
+namespace MessageViewer {
+
 /**
  * A tiny little class to use for displaying raw messages, textual
  * attachments etc.
@@ -47,7 +49,6 @@ class QShowEvent;
  *
  * @author Carsten Pfeiffer <pfeiffer@kde.org>
  */
-namespace MessageViewer {
 class MailSourceHighlighter : public QSyntaxHighlighter
 {
 public:

@@ -85,7 +85,7 @@ static QString strToHtml( const QString & str,
 //
 namespace MessageViewer {
 class BriefHeaderStyle : public HeaderStyle {
-  friend class MessageViewer::HeaderStyle;
+  friend class HeaderStyle;
 protected:
   BriefHeaderStyle() : HeaderStyle() {}
   virtual ~BriefHeaderStyle() {}
@@ -182,7 +182,7 @@ QString BriefHeaderStyle::format( KMime::Message::Ptr message,
 //
 
 class PlainHeaderStyle : public HeaderStyle {
-  friend class MessageViewer::HeaderStyle;
+  friend class HeaderStyle;
 protected:
   PlainHeaderStyle() : HeaderStyle() {}
   virtual ~PlainHeaderStyle() {}
@@ -317,7 +317,7 @@ QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message::Ptr message )
 //
 
 class FancyHeaderStyle : public HeaderStyle {
-  friend class MessageViewer::HeaderStyle;
+  friend class HeaderStyle;
 protected:
   FancyHeaderStyle() : HeaderStyle() {}
   virtual ~FancyHeaderStyle() {}
@@ -709,7 +709,7 @@ QString FancyHeaderStyle::imgToDataUrl( const QImage &image )
 // #####################
 
 class EnterpriseHeaderStyle : public HeaderStyle {
-  friend class MessageViewer::HeaderStyle;
+  friend class HeaderStyle;
 protected:
   EnterpriseHeaderStyle() : HeaderStyle() {}
   virtual ~EnterpriseHeaderStyle() {}

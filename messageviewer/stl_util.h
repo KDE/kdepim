@@ -32,6 +32,8 @@
 #ifndef __KDEPIM__MESSAGEVIEWER__STL_UTIL_H__
 #define __KDEPIM__MESSAGEVIEWER__STL_UTIL_H__
 
+namespace MessageViewer {
+
 template <typename T>
 struct DeleteAndSetToZero {
   void operator()( const T * & t ) { delete t; t = 0; }
@@ -42,6 +44,8 @@ static inline void deleteAll( T & c ) {
   for ( typename T::iterator it = c.begin() ; it != c.end() ; ++it ) {
     delete *it ; *it = 0;
   }
+}
+
 }
 
 #endif // __KDEPIM__MESSAGEVIEWER__STL_UTIL_H__

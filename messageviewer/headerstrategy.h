@@ -36,8 +36,11 @@
 
 class QString;
 class QStringList;
+
 namespace MessageViewer {
-class MESSAGEVIEWER_EXPORT HeaderStrategy {
+
+class MESSAGEVIEWER_EXPORT HeaderStrategy
+{
 protected:
   HeaderStrategy();
   virtual ~HeaderStrategy();
@@ -76,4 +79,5 @@ public:
 };
 
 }
+
 #endif // __MESSAGEVIEWER_HEADERSTRATEGY_H__

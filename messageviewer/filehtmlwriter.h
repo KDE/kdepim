@@ -41,7 +41,7 @@ class QString;
 
 namespace MessageViewer {
 
-  class FileHtmlWriter : public MessageViewer::HtmlWriter {
+  class FileHtmlWriter : public HtmlWriter {
   public:
     FileHtmlWriter( const QString & filename );
     virtual ~FileHtmlWriter();

@@ -43,7 +43,8 @@ namespace KMime {
 
 namespace MessageViewer {
 
-class MESSAGEVIEWER_EXPORT AttachmentStrategy {
+class MESSAGEVIEWER_EXPORT AttachmentStrategy
+{
 protected:
   AttachmentStrategy();
   virtual ~AttachmentStrategy();

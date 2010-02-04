@@ -18,6 +18,9 @@
 */
 
 #include "global.h"
+
+using namespace MessageViewer;
+
 Global * Global::mSelf = 0;
 
 Global * Global::instance()

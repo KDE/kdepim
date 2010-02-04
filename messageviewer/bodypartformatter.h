@@ -45,8 +45,10 @@ namespace MessageViewer {
   class ProcessResult;
 }
 
+namespace MessageViewer {
 
-class BodyPartFormatter {
+class BodyPartFormatter
+{
   const BodyPartFormatter & operator=( const BodyPartFormatter & );
   BodyPartFormatter( const BodyPartFormatter & );
 protected:
@@ -54,10 +56,12 @@ protected:
 public:
   virtual ~BodyPartFormatter() {}
 
-  virtual bool process( MessageViewer::ObjectTreeParser *, const Akonadi::Item &item, KMime::Content *, MessageViewer::ProcessResult & ) const = 0;
+  virtual bool process( ObjectTreeParser *, const Akonadi::Item &item, KMime::Content *,
+                        ProcessResult & ) const = 0;
 
   static const BodyPartFormatter * createFor( const char * type, const char * subtype );
 };
 
+}
 
 #endif // __MESSAGEVIEWER_BODYPARTFORMATTER_H__

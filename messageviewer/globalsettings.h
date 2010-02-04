@@ -26,7 +26,10 @@
 
 #include "globalsettings_base.h"
 #include "messageviewer_export.h"
+
 class QTimer;
+
+namespace MessageViewer {
 
 class MESSAGEVIEWER_EXPORT GlobalSettings : public GlobalSettingsBase
 {
@@ -52,5 +55,7 @@ private:
   QTimer *mConfigSyncTimer;
 
 };
+
+}
 
 #endif /* KMAIL_GLOBALSETTINGS_H */

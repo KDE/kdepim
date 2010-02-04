@@ -25,6 +25,8 @@
 #include "globalsettings.h"
 #include <QTimer>
 
+using namespace MessageViewer;
+
 GlobalSettings *GlobalSettings::mSelf = 0;
 
 GlobalSettings *GlobalSettings::self()

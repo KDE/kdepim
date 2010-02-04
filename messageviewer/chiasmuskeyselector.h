@@ -10,6 +10,7 @@ class KLineEdit;
 class QLabel;
 
 namespace MessageViewer {
+
 class MESSAGEVIEWER_EXPORT ChiasmusKeySelector : public KDialog
 {
   Q_OBJECT
@@ -30,5 +31,7 @@ private:
   KListWidget* mListBox;
   KLineEdit* mOptions;
 };
+
 }
+
 #endif

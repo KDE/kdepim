@@ -18,10 +18,13 @@
 */
 #include "htmlquotecolorer.h"
 
+#include <KDebug>
+
 #include <QWebPage>
 #include <QWebFrame>
 #include <QWebElement>
-#include <kdebug.h>
+
+using namespace MessageViewer;
 
 HTMLQuoteColorer::HTMLQuoteColorer()
 {

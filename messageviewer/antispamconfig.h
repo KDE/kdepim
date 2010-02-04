@@ -37,7 +37,9 @@
 #include <QRegExp>
 #include <QList>
 #include "messageviewer_export.h"
+
 class QString;
+
 namespace MessageViewer {
 
 /// Valid types of SpamAgent
@@ -49,7 +51,8 @@ typedef enum {
   SpamAgentAdjustedFloat  //!< Use this when we need to compare against a threshold (SpamAssasssin)
 } SpamAgentTypes;
 
-class SpamAgent {
+class SpamAgent
+{
 public:
   SpamAgent() : mType( SpamAgentNone ) {}
   SpamAgent( const QString & name, SpamAgentTypes type, const QByteArray & field, const QByteArray & cfield,
@@ -117,6 +120,7 @@ private:
 
   void readConfig();
 };
+
 }
 
 #endif // __MESSAGEVIEWER_ANTISPAMCONFIG_H__

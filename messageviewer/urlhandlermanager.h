@@ -34,8 +34,8 @@
 #ifndef __MESSAGEVIEWER_URLHANDLERMANAGER_H__
 #define __MESSAGEVIEWER_URLHANDLERMANAGER_H__
 
-
 #include <QVector>
+
 class KUrl;
 
 class QString;
@@ -72,12 +72,12 @@ public:
   void registerHandler( const URLHandler * handler );
   void unregisterHandler( const URLHandler * handler );
 
-  void registerHandler( const MessageViewer::Interface::BodyPartURLHandler * handler );
-  void unregisterHandler( const MessageViewer::Interface::BodyPartURLHandler * handler );
+  void registerHandler( const Interface::BodyPartURLHandler * handler );
+  void unregisterHandler( const Interface::BodyPartURLHandler * handler );
 
-  bool handleClick( const KUrl & url, MessageViewer::ViewerPrivate * w=0 ) const;
-  bool handleContextMenuRequest( const KUrl & url, const QPoint & p, MessageViewer::ViewerPrivate * w=0 ) const;
-  QString statusBarMessage( const KUrl & url, MessageViewer::ViewerPrivate* w=0 ) const;
+  bool handleClick( const KUrl & url, ViewerPrivate * w = 0 ) const;
+  bool handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w = 0 ) const;
+  QString statusBarMessage( const KUrl & url, ViewerPrivate * w = 0 ) const;
 
 private:
   typedef QVector<const URLHandler*> HandlerList;

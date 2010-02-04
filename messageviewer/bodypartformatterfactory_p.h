@@ -44,6 +44,8 @@ namespace MessageViewer {
   }
 }
 
+namespace MessageViewer {
+
 namespace BodyPartFormatterFactoryPrivate {
   struct ltstr {
     bool operator()( const char * s1, const char * s2 ) const {
@@ -51,11 +53,13 @@ return qstricmp( s1, s2 ) < 0;
     }
   };
 
-  typedef std::map<const char*, const MessageViewer::Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
+  typedef std::map<const char*, const Interface::BodyPartFormatter*, ltstr> SubtypeRegistry;
   typedef std::map<const char*, SubtypeRegistry, ltstr> TypeRegistry;
 
   // defined in bodypartformatters.cpp
   extern void messageviewer_create_builtin_bodypart_formatters( TypeRegistry * );
+}
+
 }
 
 #endif // __MESSAGEVIEWER_BODYPARTFORMATTERFACTORY_P_H__

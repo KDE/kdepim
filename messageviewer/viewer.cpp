@@ -354,7 +354,7 @@ void Viewer::setOverrideEncoding( const QString &encoding )
 
 }
 
-MessageViewer::CSSHelper* Viewer::cssHelper() const
+CSSHelper* Viewer::cssHelper() const
 {
   Q_D( const Viewer );
   return d->cssHelper();

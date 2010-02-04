@@ -40,10 +40,6 @@ namespace MessageViewer {
   }
 }
 
-/**
-  @author Andras Mantia <andras@kdab.net>
-*/
-
 namespace MessageViewer {
 
 /** Flags for the encryption state. */
@@ -66,6 +62,10 @@ typedef enum
     KMMsgSignatureProblematic='X'
 } KMMsgSignatureState;
 
+
+/**
+ * @author Andras Mantia <andras@kdab.net>
+ */
 class MESSAGEVIEWER_EXPORT NodeHelper {
 public:
     NodeHelper();
@@ -116,9 +116,10 @@ public:
 
     const QTextCodec * localCodec() const { return mLocalCodec;}
 
-    MessageViewer::Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
+    Interface::BodyPartMemento *bodyPartMemento( KMime::Content* node, const QByteArray &which ) const;
 
-    void setBodyPartMemento( KMime::Content* node, const QByteArray &which, MessageViewer::Interface::BodyPartMemento *memento );
+    void setBodyPartMemento( KMime::Content* node, const QByteArray &which,
+                             Interface::BodyPartMemento *memento );
 
     // A flag to remember if the node was embedded. This is useful for attachment nodes, the reader
     // needs to know if they were displayed inline or not.
@@ -237,7 +238,7 @@ private:
     static QString cleanSubject( KMime::Message::Ptr message, const QStringList& prefixRegExps,
                                  bool replace, const QString& newPrefix );
 
-    void clearBodyPartMemento(QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> bodyPartMementoMap);
+    void clearBodyPartMemento( QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap );
 
     QList<KMime::Content*> mProcessedNodes;
     QList<KMime::Content*> mNodesUnderProcess;
@@ -247,7 +248,7 @@ private:
     QSet<KMime::Content *> mDisplayEmbeddedNodes;
     QTextCodec *mLocalCodec;
     QMap<KMime::Content*, const QTextCodec*> mOverrideCodecs;
-    QMap<KMime::Content*, QMap<QByteArray, MessageViewer::Interface::BodyPartMemento*> > mBodyPartMementoMap;
+    QMap<KMime::Content*, QMap<QByteArray, Interface::BodyPartMemento*> > mBodyPartMementoMap;
     QStringList mTempFiles;
     QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;

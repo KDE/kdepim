@@ -77,7 +77,7 @@ static QStringList stringList( const char * headers[], int numHeaders ) {
 //
 
 class AllHeaderStrategy : public HeaderStrategy {
-  friend class MessageViewer::HeaderStrategy;
+  friend class HeaderStrategy;
 protected:
   AllHeaderStrategy() : HeaderStrategy() {}
   virtual ~AllHeaderStrategy() {}
@@ -100,7 +100,7 @@ public:
 //
 
 class RichHeaderStrategy : public HeaderStrategy {
-  friend class MessageViewer::HeaderStrategy;
+  friend class HeaderStrategy;
 protected:
   RichHeaderStrategy()
     : HeaderStrategy(),
@@ -125,7 +125,7 @@ private:
 //
 
 class StandardHeaderStrategy : public HeaderStrategy {
-  friend class MessageViewer::HeaderStrategy;
+  friend class HeaderStrategy;
 protected:
   StandardHeaderStrategy()
     : HeaderStrategy(),
@@ -150,7 +150,7 @@ private:
 //
 
 class BriefHeaderStrategy : public HeaderStrategy {
-  friend class MessageViewer::HeaderStrategy;
+  friend class HeaderStrategy;
 protected:
   BriefHeaderStrategy()
     : HeaderStrategy(),
@@ -176,7 +176,7 @@ private:
 //
 
 class CustomHeaderStrategy : public HeaderStrategy {
-  friend class MessageViewer::HeaderStrategy;
+  friend class HeaderStrategy;
 protected:
   CustomHeaderStrategy();
   virtual ~CustomHeaderStrategy() {}

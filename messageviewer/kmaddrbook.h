@@ -23,10 +23,14 @@
 #include "messageviewer_export.h"
 #include <QStringList>
 
+namespace MessageViewer {
+
 class MESSAGEVIEWER_EXPORT KabcBridge {
 public:
   static QString expandNickName( const QString& nickName );
 };
+
+}
 
 
 #endif /*KMAddrBook_h*/

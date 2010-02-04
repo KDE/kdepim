@@ -4,6 +4,9 @@
 #include <QCursor>
 #include <QApplication>
 #include "messageviewer_export.h"
+
+namespace MessageViewer {
+
 /**
  * @short sets a cursor and makes sure it's restored on destruction
  * Create a KCursorSaver object when you want to set the cursor.
@@ -56,6 +59,8 @@ namespace KBusyPtr {
     inline KCursorSaver busy() {
         return KCursorSaver(Qt::WaitCursor);
     }
+}
+
 }
 
 #endif /*kbusyptr_h_*/

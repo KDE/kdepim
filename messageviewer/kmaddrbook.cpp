@@ -19,10 +19,12 @@
  */
 #include "kmaddrbook.h"
 
-#include <akonadi/contact/contactsearchjob.h>
-#include <kabc/addressee.h>
+#include <Akonadi/Contact/ContactSearchJob>
+#include <KABC/Addressee>
 
-#include <kdebug.h>
+#include <KDebug>
+
+using namespace MessageViewer;
 
 QString KabcBridge::expandNickName( const QString& nickName )
 {

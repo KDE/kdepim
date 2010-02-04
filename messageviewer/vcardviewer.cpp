@@ -33,6 +33,8 @@ using KABC::Addressee;
 
 #include <QString>
 
+using namespace MessageViewer;
+
 VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
   : KDialog( parent )
 {

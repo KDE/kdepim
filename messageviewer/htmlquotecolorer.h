@@ -21,6 +21,8 @@
 
 #include <QColor>
 
+namespace MessageViewer {
+
 /**
  * Little helper class that takes a HTML source as input and finds all
  * lines that are quoted with '>' or '|'. The HTML text is then modified so
@@ -53,5 +55,7 @@ class HTMLQuoteColorer
 
     QColor mQuoteColors[3];
 };
+
+}
 
 #endif

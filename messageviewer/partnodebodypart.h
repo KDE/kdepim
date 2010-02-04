@@ -47,12 +47,15 @@ namespace MessageViewer {
   class NodeHelper;
 }
 
+namespace MessageViewer {
+
 /**
     @short an implementation of the BodyPart interface using KMime::Content's
 */
-class PartNodeBodyPart : public MessageViewer::Interface::BodyPart {
+class PartNodeBodyPart : public Interface::BodyPart {
 public:
-  explicit PartNodeBodyPart( const Akonadi::Item &item, KMime::Content* content, MessageViewer::NodeHelper *nodeHelper, const QTextCodec * codec=0 );
+  explicit PartNodeBodyPart( const Akonadi::Item &item, KMime::Content* content,
+                             NodeHelper *nodeHelper, const QTextCodec * codec=0 );
 
   QString makeLink( const QString & path ) const;
   QString asText() const;
@@ -63,8 +66,8 @@ public:
   QString contentDispositionParameter( const char * param ) const;
   bool hasCompleteBody() const;
 
-  MessageViewer::Interface::BodyPartMemento * memento() const;
-  void setBodyPartMemento( MessageViewer::Interface::BodyPartMemento * memento );
+  Interface::BodyPartMemento * memento() const;
+  void setBodyPartMemento( Interface::BodyPartMemento * memento );
   BodyPart::Display defaultDisplay() const;
   void setDefaultDisplay( BodyPart::Display );
   KMime::Content* content() const { return mContent; }
@@ -75,7 +78,9 @@ private:
   KMime::Content *mContent;
   const QTextCodec * mCodec;
   BodyPart::Display mDefaultDisplay;
-  MessageViewer::NodeHelper *mNodeHelper;
+  NodeHelper *mNodeHelper;
 };
+
+}
 
 #endif // __MESSAGEVIEWER_PARTNODEBODYPART_H_

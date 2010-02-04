@@ -24,6 +24,7 @@
 
 #include <QPointer>
 
+namespace MessageViewer {
 
 /**
  *  A QPointer which when destructed, deletes the object it points to.
@@ -41,5 +42,7 @@ class AutoQPointer : public QPointer<T>
     inline AutoQPointer<T>& operator=(const AutoQPointer<T>& p) { QPointer<T>::operator=(p); return *this; }
     inline AutoQPointer<T>& operator=(T* p) { QPointer<T>::operator=(p); return *this; }
 };
+
+}
 
 #endif // AUTOQPOINTER_H

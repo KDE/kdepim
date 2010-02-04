@@ -35,9 +35,11 @@ namespace MessageViewer {
 }
 
 namespace MessageViewer {
-/** @author Andras Mantia <amantia@kdab.net> */
 
-/** Interface for object tree sources.*/
+/**
+ * Interface for object tree sources.
+ * @author Andras Mantia <amantia@kdab.net>
+ */
 class MESSAGEVIEWER_EXPORT ObjectTreeSourceIf  {
 
 public:

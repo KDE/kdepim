@@ -21,6 +21,7 @@
 
 #include <QString>
 #include "messageviewer_export.h"
+
 class KUrl;
 
 //TODO(Andras) this class probably can be shared between the reader and the composer
@@ -36,6 +37,7 @@ namespace KMime
 }
 namespace MessageViewer
 {
+
 /**
  * This namespace contain helper functions for string manipulation
  */

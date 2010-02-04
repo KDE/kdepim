@@ -38,6 +38,8 @@ class QString;
 class QColor;
 class QMouseEvent;
 
+namespace MessageViewer {
+
 /**
   * @short The HTML statusbar widget for use with the reader.
   *
@@ -71,11 +73,11 @@ public:
   virtual ~HtmlStatusBar();
 
   /** @return current mode. */
-  MessageViewer::Util::HtmlMode mode() const { return mMode ; }
-  bool isHtml() const { return mode() == MessageViewer::Util::Html; }
-  bool isNormal() const { return mode() == MessageViewer::Util::Normal; }
-  bool isMultipartHtml() const { return mode() == MessageViewer::Util::MultipartHtml; }
-  bool isMultipartPlain() const { return mode() == MessageViewer::Util::MultipartPlain; }
+  Util::HtmlMode mode() const { return mMode ; }
+  bool isHtml() const { return mode() == Util::Html; }
+  bool isNormal() const { return mode() == Util::Normal; }
+  bool isMultipartHtml() const { return mode() == Util::MultipartHtml; }
+  bool isMultipartPlain() const { return mode() == Util::MultipartPlain; }
 
   // Update the status bar, for example when the color scheme changed.
   void update();
@@ -89,7 +91,7 @@ public slots:
   /** Switch to "multipart plain mode". */
   void setMultipartPlainMode();
   /** Switch to mode @p m */
-  void setMode( MessageViewer::Util::HtmlMode m, UpdateMode mode = Update );
+  void setMode( Util::HtmlMode m, UpdateMode mode = Update );
 
 signals:
 
@@ -106,7 +108,9 @@ private:
   QColor bgColor() const;
   QColor fgColor() const;
 
-  MessageViewer::Util::HtmlMode mMode;
+  Util::HtmlMode mMode;
 };
+
+}
 
 #endif // _KMAIL_HTMLSTATUSBAR_H_

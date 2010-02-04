@@ -23,6 +23,7 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 
+using namespace MessageViewer;
 
 //---------------------------------------------------------------------
 

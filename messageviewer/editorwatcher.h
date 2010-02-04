@@ -28,13 +28,15 @@
 
 class KProcess;
 
+namespace MessageViewer {
+
+
 /**
   Starts an editor for the given URL and emits an signal when
   editing has been finished. Both, the editor process as well
   as the edited file are watched to work with as many as possible
   editors.
 */
-namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
 {
   Q_OBJECT
@@ -83,5 +85,7 @@ class MESSAGEVIEWER_EXPORT EditorWatcher : public QObject
     bool mError;
     bool mDone;
 };
+
 }
+
 #endif

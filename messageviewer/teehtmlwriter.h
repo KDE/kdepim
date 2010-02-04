@@ -43,13 +43,13 @@ namespace MessageViewer {
   /** @short A HtmlWriter that dispatches all calls to a list of other HtmlWriters
       @author Marc Mutz <mutz@kde.org>
   **/
-  class TeeHtmlWriter : public MessageViewer::HtmlWriter {
+  class TeeHtmlWriter : public HtmlWriter {
   public:
-    explicit TeeHtmlWriter( MessageViewer::HtmlWriter * writer1=0,
-                            MessageViewer::HtmlWriter * writer2=0  );
+    explicit TeeHtmlWriter( HtmlWriter * writer1 = 0,
+                            HtmlWriter * writer2 = 0 );
     virtual ~TeeHtmlWriter();
 
-    void addHtmlWriter( MessageViewer::HtmlWriter * writer );
+    void addHtmlWriter( HtmlWriter * writer );
 
     //
     // HtmlWriter Interface
@@ -64,7 +64,7 @@ namespace MessageViewer {
 
   private:
     /** We own the HtmlWriters added to us! */
-    QList<MessageViewer::HtmlWriter*> mWriters;
+    QList<HtmlWriter*> mWriters;
   };
 
 } // namespace MessageViewer

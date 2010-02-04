@@ -31,9 +31,11 @@
 
 #ifndef __MESSAGEVIEWER_HEADERSTYLE_H__
 #define __MESSAGEVIEWER_HEADERSTYLE_H__
+
 #include "messageviewer_export.h"
 
 #include <KMime/Message>
+
 class QByteArray;
 class QString;
 class KDateTime;

@@ -34,7 +34,6 @@
 
 #include "bodypartformatterfactory.h"
 #include "bodypartformatterfactory_p.h"
-using namespace BodyPartFormatterFactoryPrivate;
 
 #include "interfaces/bodypartformatter.h"
 #include "urlhandlermanager.h"
@@ -51,6 +50,7 @@ using namespace BodyPartFormatterFactoryPrivate;
 
 #include <assert.h>
 
+using namespace MessageViewer::BodyPartFormatterFactoryPrivate;
 using namespace MessageViewer;
 
 namespace {

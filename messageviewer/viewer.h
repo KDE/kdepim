@@ -42,13 +42,13 @@
 #include <akonadi/item.h>
 
 class QSplitter;
-class KHBox;
 class QTreeWidgetItem;
 class QString;
 class QTextCodec;
 class QTreeView;
 class QModelIndex;
 
+class KHBox;
 class KActionCollection;
 class KAction;
 class KSelectAction;

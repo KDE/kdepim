@@ -22,6 +22,7 @@
 
 #include "qtest_kde.h"
 
+using namespace MessageViewer;
 
 QTEST_KDEMAIN( HTMLQuoteColorerTester, GUI )
 

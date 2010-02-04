@@ -32,6 +32,7 @@
 
 using namespace Kleo;
 using namespace GpgME;
+using namespace MessageViewer;
 using boost::shared_ptr;
 
 KleoJobExecutor::KleoJobExecutor( QObject* parent ) : QObject( parent )

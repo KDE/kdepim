@@ -39,7 +39,9 @@
 #include <kglobal.h>
 
 #include <QStringList>
+
 namespace MessageViewer {
+
 class AntiSpamConfigSingletonProvider
 {
   public:

@@ -20,16 +20,17 @@
 #ifndef MAILVIEWERGLOBAL_H
 #define MAILVIEWERGLOBAL_H
 
-/**
-Globally accesible methods and data structures.
-
-	@author Andras Mantia <andras@kdab.net>
-*/
-
 #include <ksharedconfig.h>
 
-class Global{
+namespace MessageViewer {
 
+/**
+ * Globally accesible methods and data structures.
+ *
+ * @author Andras Mantia <andras@kdab.net>
+ */
+class Global
+{
 public:
     static Global * instance();
 
@@ -44,5 +45,7 @@ private:
     static Global * mSelf;
     KSharedConfigPtr mConfig;
 };
+
+}
 
 #endif

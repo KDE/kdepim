@@ -25,6 +25,9 @@
 namespace KPIM {
   class AddresseeView;
 }
+
+namespace MessageViewer {
+
 class VCardViewer : public KDialog
 {
     Q_OBJECT
@@ -44,6 +47,7 @@ class VCardViewer : public KDialog
       KABC::Addressee::List::Iterator itAddresseeList;
 };
 
+}
 
 #endif // VCARDVIEWER_H
 

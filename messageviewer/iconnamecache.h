@@ -23,6 +23,8 @@
 #include <QMap>
 #include <QString>
 
+namespace MessageViewer {
+
 /**
  * This class is a replacement for KIconLoader::iconPath(), because the iconPath()
  * function can be slow for non-existing icons or icons that fall back to a generic icon.
@@ -30,7 +32,6 @@
  *
  * The IconNameCache caches the result of iconPath() in a map and solves the slowness.
  */
-namespace MessageViewer {
 class MESSAGEVIEWER_EXPORT IconNameCache
 {
   public:
@@ -51,5 +52,6 @@ class MESSAGEVIEWER_EXPORT IconNameCache
 
     mutable QMap<Entry,QString> mCachedEntries;
 };
+
 }
 #endif

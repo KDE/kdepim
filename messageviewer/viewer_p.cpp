@@ -25,9 +25,7 @@
 
 #ifdef MESSAGEVIEWER_READER_HTML_DEBUG
 #include "filehtmlwriter.h"
-using MessageViewer::FileHtmlWriter;
 #include "teehtmlwriter.h"
-using MessageViewer::TeeHtmlWriter;
 #endif
 #include <unistd.h> // link()
 #include <errno.h>
@@ -205,8 +203,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
   connect( &mUpdateReaderWinTimer, SIGNAL(timeout()),
            this, SLOT(updateReaderWin()) );
 
- connect( this, SIGNAL(urlClicked(const KUrl&,int)),
-          this, SLOT(slotUrlClicked()) );
+  connect( this, SIGNAL(urlClicked(const KUrl&,int)),
+           this, SLOT(slotUrlClicked()) );
 
   connect( mColorBar, SIGNAL( clicked() ),
            this, SLOT( slotToggleHtmlMode() ) );
@@ -359,9 +357,9 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   file.write( node->decodedContent() );
   file.flush();
 
-  MessageViewer::EditorWatcher *watcher =
-    new MessageViewer::EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
-                                false, this, mMainWindow );
+  EditorWatcher *watcher =
+    new EditorWatcher( KUrl( file.fileName() ), node->contentType()->mimeType(),
+                       false, this, mMainWindow );
   mEditorWatchers[ watcher ] = node;
 
   connect( watcher, SIGNAL(editDone(EditorWatcher*)), SLOT(slotAttachmentEditDone(EditorWatcher*)) );
@@ -385,55 +383,55 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
 
   action = menu->addAction(SmallIcon("document-open"),i18nc("to open", "Open"));
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, MessageViewer::Viewer::Open );
+  attachmentMapper->setMapping( action, Viewer::Open );
 
   action = menu->addAction(i18n("Open With..."));
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, MessageViewer::Viewer::OpenWith );
+  attachmentMapper->setMapping( action, Viewer::OpenWith );
 
   action = menu->addAction(i18nc("to view something", "View") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, MessageViewer::Viewer::View );
+  attachmentMapper->setMapping( action, Viewer::View );
 
   const bool attachmentInHeader = hasChildOrSibblingDivWithId( mViewer->page()->currentFrame()->documentElement(), "attachmentInjectionPoint" );
   const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical ) != 0;
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-    attachmentMapper->setMapping( action, MessageViewer::Viewer::ScrollTo );
+    attachmentMapper->setMapping( action, Viewer::ScrollTo );
   }
 
   action = menu->addAction(SmallIcon("document-save-as"),i18n("Save As...") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, MessageViewer::Viewer::Save );
+  attachmentMapper->setMapping( action, Viewer::Save );
 
   action = menu->addAction(SmallIcon("edit-copy"), i18n("Copy") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, MessageViewer::Viewer::Copy );
+  attachmentMapper->setMapping( action, Viewer::Copy );
 
   const bool canChange = mMessageItem.isValid() && mMessageItem.parentCollection().isValid() && ( mMessageItem.parentCollection().rights() != Akonadi::Collection::ReadOnly );
 
   if ( GlobalSettings::self()->allowAttachmentEditing() ) {
     action = menu->addAction(SmallIcon("document-properties"), i18n("Edit Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
-    attachmentMapper->setMapping( action, MessageViewer::Viewer::Edit );
+    attachmentMapper->setMapping( action, Viewer::Edit );
     action->setEnabled( canChange );
   }
   if ( GlobalSettings::self()->allowAttachmentDeletion() ) {
     action = menu->addAction(SmallIcon("edit-delete"), i18n("Delete Attachment") );
     connect( action, SIGNAL(triggered()), attachmentMapper, SLOT(map()) );
-    attachmentMapper->setMapping( action, MessageViewer::Viewer::Delete );
+    attachmentMapper->setMapping( action, Viewer::Delete );
     action->setEnabled( canChange );
   }
   if ( name.endsWith( QLatin1String(".xia"), Qt::CaseInsensitive )
        && Kleo::CryptoBackendFactory::instance()->protocol( "Chiasmus" )) {
     action = menu->addAction( i18n( "Decrypt With Chiasmus..." ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-    attachmentMapper->setMapping( action, MessageViewer::Viewer::ChiasmusEncrypt );
+    attachmentMapper->setMapping( action, Viewer::ChiasmusEncrypt );
   }
   action = menu->addAction(i18n("Properties") );
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
-  attachmentMapper->setMapping( action, MessageViewer::Viewer::Properties );
+  attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( p );
   delete menu;
 }
@@ -2099,7 +2097,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
 
     bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
     if ( !typeBlacklisted ) {
-      typeBlacklisted = MessageViewer::StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
+      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
                                                   node->contentDisposition()->filename() );
     }
     typeBlacklisted = typeBlacklisted || node == mMessage.get();
@@ -2771,25 +2769,25 @@ void ViewerPrivate::slotHandleAttachment( int choice )
   //mAtmUpdate = true;
   if(!mCurrentContent)
     return;
-  if ( choice == MessageViewer::Viewer::Delete ) {
+  if ( choice == Viewer::Delete ) {
     deleteAttachment( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::Edit ) {
+  } else if ( choice == Viewer::Edit ) {
     editAttachment( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::Properties ) {
+  } else if ( choice == Viewer::Properties ) {
     attachmentProperties( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::Save ) {
+  } else if ( choice == Viewer::Save ) {
     saveAttachments( KMime::Content::List()<<mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::OpenWith ) {
+  } else if ( choice == Viewer::OpenWith ) {
     attachmentOpenWith( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::Open ) {
+  } else if ( choice == Viewer::Open ) {
     attachmentOpen( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::View ) {
+  } else if ( choice == Viewer::View ) {
     attachmentView( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::ChiasmusEncrypt ) {
+  } else if ( choice == Viewer::ChiasmusEncrypt ) {
     attachmentEncryptWithChiasmus( mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::Copy ) {
+  } else if ( choice == Viewer::Copy ) {
     attachmentCopy( KMime::Content::List()<< mCurrentContent );
-  } else if ( choice == MessageViewer::Viewer::ScrollTo ) {
+  } else if ( choice == Viewer::ScrollTo ) {
     scrollToAttachment( mCurrentContent );
   }
   else {
@@ -2820,7 +2818,7 @@ void ViewerPrivate::slotUrlCopy()
   QClipboard* clip = QApplication::clipboard();
   if (mUrlClicked.protocol() == "mailto") {
     // put the url into the mouse selection and the clipboard
-    QString address = MessageViewer::StringUtil::decodeMailtoUrl( mUrlClicked.path() );
+    QString address = StringUtil::decodeMailtoUrl( mUrlClicked.path() );
     clip->setText( address, QClipboard::Clipboard );
     clip->setText( address, QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));

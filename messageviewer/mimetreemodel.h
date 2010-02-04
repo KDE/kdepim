@@ -26,6 +26,7 @@ namespace KMime {
   class Content;
 }
 
+namespace MessageViewer {
 
 /**
   A model representing the mime part tree of a message.
@@ -55,6 +56,8 @@ class MimeTreeModel : public QAbstractItemModel
     class Private;
     Private* const d;
 };
+
+}
 
 
 #endif

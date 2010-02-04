@@ -39,6 +39,8 @@
 #include <QString>
 #include <QList>
 
+namespace MessageViewer {
+
 typedef enum {
   noError,
   uninitializedStructUsed,
@@ -104,6 +106,8 @@ public:
   */
   static SpamScores getSpamScores( KMime::Message::Ptr message );
 };
+
+}
 
 
 #endif // __SPAMHEADERANALYZER_H__

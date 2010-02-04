@@ -524,7 +524,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( const Akonadi::Item &it
           VerifyDetachedBodyPartMemento * newM
             = new VerifyDetachedBodyPartMemento( job, cryptProto->keyListJob(), signaturetext, plainData );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
+            QObject::connect( newM, SIGNAL(update(Viewer::UpdateMode)),
+                              mSource->sourceObject(), SLOT(update(Viewer::UpdateMode)) );
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -561,7 +562,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( const Akonadi::Item &it
           VerifyOpaqueBodyPartMemento * newM
             = new VerifyOpaqueBodyPartMemento( job, cryptProto->keyListJob(), signaturetext );
           if ( allowAsync() ) {
-            QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
+            QObject::connect( newM, SIGNAL(update(Viewer::UpdateMode)), mSource->sourceObject(),
+                              SLOT(update(Viewer::UpdateMode)) );
             if ( newM->start() ) {
               messagePart.inProgress = true;
               mHasPendingAsyncJobs = true;
@@ -871,7 +873,8 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
         DecryptVerifyBodyPartMemento * newM
           = new DecryptVerifyBodyPartMemento( job, ciphertext );
         if ( allowAsync() ) {
-          QObject::connect(newM, SIGNAL(update(MessageViewer::Viewer::UpdateMode)), mSource->sourceObject(), SLOT(update(MessageViewer::Viewer::UpdateMode)));
+          QObject::connect( newM, SIGNAL(update(Viewer::UpdateMode)), mSource->sourceObject(),
+                            SLOT(update(Viewer::UpdateMode)) );
           if ( newM->start() ) {
             decryptionStarted = true;
             mHasPendingAsyncJobs = true;

@@ -29,6 +29,8 @@
 Q_DECLARE_METATYPE(KMime::Content*)
 Q_DECLARE_METATYPE(KMime::ContentIndex)
 
+using namespace MessageViewer;
+
 class MimeTreeModel::Private
 {
   public:

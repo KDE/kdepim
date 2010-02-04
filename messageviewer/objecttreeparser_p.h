@@ -53,9 +53,11 @@ namespace Kleo {
 
 class QStringList;
 
+namespace MessageViewer {
+
 class CryptoBodyPartMemento
   : public QObject,
-    public MessageViewer::Interface::BodyPartMemento
+    public Interface::BodyPartMemento
 {
   Q_OBJECT
 public:
@@ -68,11 +70,11 @@ public:
   GpgME::Error auditLogError() const { return m_auditLogError; }
 
 signals:
-  void update(MessageViewer::Viewer::UpdateMode);
+  void update(Viewer::UpdateMode);
 
 protected slots:
   void notify() {
-    emit update(MessageViewer::Viewer::Force);
+    emit update(Viewer::Force);
   }
 
 protected:
@@ -198,6 +200,8 @@ private:
   QByteArray m_plainText;
   GpgME::Key m_key;
 };
+
+}
 
 
 #endif // _KMAIL_OBJECTTREEPARSER_H_

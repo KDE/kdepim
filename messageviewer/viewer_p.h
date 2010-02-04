@@ -35,7 +35,6 @@
 
 #include "viewer.h" //not so nice, it is actually for the enums from MailViewer
 #include <kio/job.h>
-#include <kresources/groupwise/soap/soapStub.h>
 
 using KPIM::MessageStatus;
 namespace GpgME { class Error; }
@@ -48,19 +47,13 @@ class KActionCollection;
 class KSelectAction;
 class KToggleAction;
 class KHBox;
-class QWebElement;
 
+class QWebElement;
 class QPoint;
 class QSplitter;
 class QStyle;
 class QModelIndex;
 class QTreeView;
-
-class MimeTreeModel;
-class ConfigureWidget;
-
-class WebKitPartHtmlWriter;
-class HtmlStatusBar;
 
 namespace KParts {
   struct BrowserArguments;
@@ -81,6 +74,10 @@ namespace MessageViewer {
   class HeaderStyle;
   class NodeHelper;
   class FindBar;
+  class MimeTreeModel;
+  class ConfigureWidget;
+  class WebKitPartHtmlWriter;
+  class HtmlStatusBar;
 }
 
 namespace MessageViewer {
@@ -557,7 +554,7 @@ public slots:
   void slotUrlCopy();
   void slotSaveMessage();
   /** Re-parse the current message. */
-  void update(MessageViewer::Viewer::UpdateMode updateMode = Viewer::Delayed);
+  void update(Viewer::UpdateMode updateMode = Viewer::Delayed);
 
   bool hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id );
 
@@ -633,7 +630,7 @@ public:
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
-  QMap<MessageViewer::EditorWatcher*, KMime::Content*> mEditorWatchers;
+  QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
   Kleo::SpecialJob *mJob;
   Viewer *const q;
 };

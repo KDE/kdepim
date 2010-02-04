@@ -25,6 +25,7 @@
 class QString;
 
 namespace MessageViewer {
+
 /** An ObjectTreeSource that does not work on anything */
 class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf {
  public:
