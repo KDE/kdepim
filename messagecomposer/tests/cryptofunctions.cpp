@@ -91,9 +91,7 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
   // parse the result and make sure it is valid in various ways
   MessageViewer::EmptySource es;
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::HtmlWriter* htmlWriter = new TestHtmlWriter();
-  MessageViewer::CSSHelper* css = new TestCSSHelper();
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true, 0, htmlWriter, css );
+  MessageViewer::ObjectTreeParser otp( &es, nh );
   MessageViewer::ProcessResult pResult( nh );
 
   // ensure the signed part exists and is parseable
@@ -157,9 +155,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
   // parse the result and make sure it is valid in various ways
   MessageViewer::EmptySource es;
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::HtmlWriter* htmlWriter = new TestHtmlWriter();
-  MessageViewer::CSSHelper* css = new TestCSSHelper();
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true, 0, htmlWriter, css );
+  MessageViewer::ObjectTreeParser otp( &es, nh );
   MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
@@ -220,9 +216,7 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
   // parse the result and make sure it is valid in various ways
   MessageViewer::EmptySource es;
   MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::HtmlWriter* htmlWriter = new TestHtmlWriter();
-  MessageViewer::CSSHelper* css = new TestCSSHelper();
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true, 0, htmlWriter, css );
+  MessageViewer::ObjectTreeParser otp( &es, nh );
   MessageViewer::ProcessResult pResult( nh );
 
   if( f & Kleo::OpenPGPMIMEFormat ) {
