@@ -1,5 +1,9 @@
-1  /** \mainpage The MessageViewer library
+// Put this in the MessageViewer namespace so that autolinks to classes work without needing a
+// MessageViewer:: prefix.
 
+namespace MessageViewer {
+
+/** \mainpage The MessageViewer library
 \section Overview
 
 The messageviewer is a library that provides a widget that can show a KMime::Message in a nice
@@ -140,6 +144,7 @@ You should also read the documentation of the following classes, which are exten
 
 */
 
+}
 // DOXYGEN_NAME=messageviewer
 // DOXYGEN_ENABLE=YES
 // DOXYGEN_REFERENCES=kmime
