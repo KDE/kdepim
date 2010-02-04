@@ -763,7 +763,7 @@ void KJotsWidget::selectNext( int role, int step )
     }
     sibling = sibling.sibling( sibling.row() + step, column );
   }
-  kWarning( "No valid selection" );
+  kWarning() << "No valid selection";
 }
 
 void KJotsWidget::nextBook()
