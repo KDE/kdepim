@@ -142,3 +142,4 @@ You should also read the documentation of the following classes, which are exten
 
 // DOXYGEN_NAME=messageviewer
 // DOXYGEN_ENABLE=YES
+// DOXYGEN_REFERENCES=kmime
