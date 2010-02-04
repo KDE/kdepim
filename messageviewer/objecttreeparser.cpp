@@ -2068,8 +2068,15 @@ void ObjectTreeParser::writeBodyString( const QByteArray & bodyString,
                                         ProcessResult & result,
                                         bool decorate )
 {
+  // FIXME: This is wrong, it means that inline PGP messages will not be decrypted when there is no
+  //        HTML writer. Even if there would be a HTML writer, the decrypted inline PGP text is not
+  //        added to the textual content.
+  //        The solution would be to remove this if statement and make writeBodyStr() add the
+  //        decrypted string to the textual content as well, and removing any manual modifictions
+  //        of the textual content by callers of this method.
   if ( !htmlWriter() )
     return;
+
   assert( codec );
   KMMsgSignatureState inlineSignatureState = result.inlineSignatureState();
   KMMsgEncryptionState inlineEncryptionState = result.inlineEncryptionState();
