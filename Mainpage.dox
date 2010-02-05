@@ -4,13 +4,10 @@
 	*
         * \section Overview
         *
-        * This section contains the KDE online class reference for the current
-        * development version of KDE-PIM.  Additionally, you can subscribe
-        * or read the mailing lists for any additions and/or modifications
-        * to the API.
+        * This is the online reference for developing KDE-PIM applications.
         *
 	* <table width="100%">
-	* <tr><th>Applications</th><th>Libraries</th></tr>
+	* <tr><th>Applications</th><th>Components</th><th>Libraries</th></tr>
 	* <tr><td valign="top">
         * - <a href="kaddressbook/html/index.html"><b>kaddressbook</b></a>
         *   (<a href="kaddressbook/html/classes.html">classes</a>)\n
@@ -21,9 +18,6 @@
         * - <a href="kalarm/html/index.html"><b>kalarm</b></a>
         *   (<a href="kalarm/html/classes.html">classes</a>)\n
         *   <i>A personal alarm message, command and email scheduler.</i>
-        * - <a href="kalarm/kalarmd/html/index.html"><b>kalarmd</b></a>
-        *   (<a href="kalarm/kalarmd/html/classes.html">classes</a>)\n
-        *   <i>Alarm daemon.</i>
         * - <a href="kjots/html/index.html"><b>kjots</b></a>
         *   (<a href="kjots/html/classes.html">classes</a>)\n
         *   <i>A time tracker.</i>
@@ -55,41 +49,28 @@
         *   (<a href="ktimetracker/html/classes.html">classes</a>)\n
         *   <i>A note taker.</i>
 	* </td>
+        *
+        * <td valign="top">
+        * - <a href="messageviewer/html/index.html"><b>messageviewer</b></a>
+        *   (<a href="messageviewer/html/classes.html">classes</a>)\n
+        *   <i>A widget that can show a KMime::Message in a nice way.</i>
+        * </td>
+        *
 	* <td valign="top">
         * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
         *   (<a href="libkdepim/html/classes.html">classes</a>)\n
         *   <i>A library of widgets and other goodies for pim.</i>
-        * - <a href="kpgp/html/index.html"><b>kpgp</b></a>
+        * - <a href="libkpgp/html/index.html"><b>libkpgp</b></a>
         *   (<a href="libkpgp/html/classes.html">classes</a>)\n
         *   <i>Library for kpgp.</i>
+        * - <a href="libkleo/html/index.html"><b>libkleo</b></a>
+        *   (<a href="libkleo/html/classes.html">classes</a>)\n
         *   <i>A library for encryption handling.</i>
         * - <a href="kdgantt/html/index.html"><b>kdgantt</b></a>
         *   (<a href="kdgantt/html/classes.html">classes</a>)\n
         *   <i>Klarälvdalens Datakonsult AB's gantt charting engine.</i>
 	* </td>
 	* </tr></table>
-        *
-        * \section Dependencies
-        *
-        * \ref dependency-graph
-        *
-        *
-        * \page dependency-graph Dependencies 
-        * The following graph shows the compile-time dependencies between the various kdepim and kdepimlibs modules.
-        *
-        * Colors:
-        * - yellow: shared libraries
-        * - red: static libraries
-        * - blue: applications
-        * - green: plugins or other non-standalone modules (kded modules, kioslaves, etc.)
-        * - orange: code generators or other development tools
-        * - gray: currently disabled
-        *
-        * Shapes:
-        * - box: The item is located in kdepimlibs.
-        * - ellipse: The item is located in kdepim.
-        *
-        * \dotfile dependency-graph.dot
         *
         */
 // DOXYGEN_NAME=kdepim
