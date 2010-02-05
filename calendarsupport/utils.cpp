@@ -47,7 +47,7 @@
 #include <QPointer>
 #include <QUrl>
 
-#include <boost/bind.hpp>\
+#include <boost/bind.hpp>
 
 #include <algorithm>
 #include <memory>
