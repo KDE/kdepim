@@ -83,7 +83,7 @@ namespace MessageViewer {
 namespace MessageViewer {
 
 /**
-Private class for the Viewer.
+\brief Private class for the Viewer, the main widget in the messageviewer library.
 
 This class creates all subwidgets, like the MailWebView, the HtmlStatusBar and the FindBar.
 
