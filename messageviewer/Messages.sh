@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT `find -name '*.cpp'` -o $podir/libmessageviewer.pot
+$XGETTEXT `find . -name '*.cpp'` -o $podir/libmessageviewer.pot
