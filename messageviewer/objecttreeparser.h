@@ -284,7 +284,7 @@ public:
   virtual ~ObjectTreeParser();
 
   void setAllowAsync( bool allow ) { assert( !mHasPendingAsyncJobs ); mAllowAsync = allow; }
-  bool allowAsync() const { return false; /* Disabled, see bug 208353. return mAllowAsync;*/ }
+  bool allowAsync() const { return mAllowAsync; }
 
   bool hasPendingAsyncJobs() const { return mHasPendingAsyncJobs; }
 

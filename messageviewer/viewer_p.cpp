@@ -1160,7 +1160,8 @@ void ViewerPrivate::parseMsg()
   // show message content
   MailViewerSource otpSource( this );
   ObjectTreeParser otp( &otpSource, mNodeHelper );
-  otp.setAllowAsync( true );
+  otp.setAllowAsync( false ); // Async mode disabled for now, see bug 208353
+  //otp.setAllowAsync( true );
   otp.parseObjectTree( mMessageItem, mMessage.get() );
 
   bool emitReplaceMsgByUnencryptedVersion = false;
