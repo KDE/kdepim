@@ -248,7 +248,7 @@ One example for its use is to tell the caller about the crypto state of the node
 
 \par BodyPartFormatter Plugins
 
-As mentioned way earlier, BodyPartFormatter can either be plugins or be internal. bodypartformatter
+As mentioned way earlier, BodyPartFormatter can either be plugins or be internal. bodypartformatter.cpp
 contains some trickery so that the processXXX() methods of the ObjectTreeParser are called from
 a BodyPartFormatter associated with them, see the CREATE_BODY_PART_FORMATTER macro.
 
