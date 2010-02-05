@@ -1097,6 +1097,7 @@ void ViewerPrivate::displayMessage()
   mColorBar->setMode( Util::Normal, HtmlStatusBar::NoUpdate );
 
   if ( mMessageItem.hasAttribute<ErrorAttribute>() ) {
+    //TODO: Insert link to clear error so that message might be resent
     const ErrorAttribute* const attr = mMessageItem.attribute<ErrorAttribute>();
     Q_ASSERT( attr );
     const QColor foreground = KColorScheme( QPalette::Active, KColorScheme::View ).foreground( KColorScheme::NegativeText ).color();
