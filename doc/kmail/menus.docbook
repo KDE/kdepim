@@ -83,6 +83,22 @@ and attachments.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<guimenu>Tools</guimenu>
+<guimenuitem>Import Messages...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>
+Starts up <application>kmailcvt</application> (which is
+part of kdepim). This application lets you import
+messages from several email clients &kmail;.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo></shortcut>
 <guimenu>File</guimenu>
 <guimenuitem>Print...</guimenuitem>
@@ -92,7 +108,7 @@ and attachments.</para>
 <para>Display a dialog that lets you prints the currently displayed message.</para>
 </listitem>
 </varlistentry>
-
+<!-- NOT IN 4.4.0
 <varlistentry>
 <term>
 <menuchoice>
@@ -104,7 +120,7 @@ and attachments.</para>
 on disk according to how you have moved and deleted them in &kmail;.</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -233,21 +249,7 @@ in the trash.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycap>T</keycap></shortcut>
-<guimenu>Edit</guimenu>
-<guimenuitem>Edit Message</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Edits the selected message if it is editable. Only messages in the
-<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycap>Delete</keycap></shortcut>
+<shortcut><keycap>Del</keycap></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Move to Trash</guimenuitem>
 </menuchoice>
@@ -257,7 +259,7 @@ in the trash.</para>
 messages are already in the trash folder, they will really be deleted.</para>
 </listitem>
 </varlistentry>
-
+<!-- not in 440
 <varlistentry>
 <term>
 <menuchoice>
@@ -271,7 +273,7 @@ messages are already in the trash folder, they will really be deleted.</para>
 once they are deleted with this command.</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -301,9 +303,9 @@ once they are deleted with this command.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>A</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>T</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
-<guimenuitem>Select Message Text</guimenuitem>
+<guimenuitem>Select All Text</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -356,7 +358,7 @@ compressed files, will still be shown as an icon.
 </para>
 </listitem>
 </varlistentry>
-
+<!-- not in 440
 <varlistentry>
 <term>
 <menuchoice>
@@ -384,7 +386,7 @@ Column</guilabel>)</para>
 of messages per folder.</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -559,7 +561,7 @@ linkend="configure-misc-folders-go-unread"/> option.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>+</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Alt;<keycap>+</keycap></keycombo></shortcut>
 <guimenu>Go</guimenu>
 <guimenuitem>Next Unread Folder</guimenuitem>
 </menuchoice>
@@ -572,7 +574,7 @@ linkend="configure-misc-folders-go-unread"/> option.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>-</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Alt;<keycap>-</keycap></keycombo></shortcut>
 <guimenu>Go</guimenu>
 <guimenuitem>Previous Unread Folder</guimenuitem>
 </menuchoice>
@@ -634,49 +636,6 @@ dialog that lets you create a new folder.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Compact</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Compacts the folder file to reduce its disk space usage. Usually
-&kmail; compacts all folders automatically, but under certain circumstances
-you might want to compact a folder manually.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Folder</guimenu>
-<guimenuitem>Expire</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Deletes old messages from the current folder or moves them to another
-folder, according to the rules in the folder's <guilabel>Properties</guilabel> dialog (the default is not to delete or move old messages). Usually &kmail;
-does this automatically, but under certain circumstances you might want to
-expire a folder manually...</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>*</keycap></keycombo></shortcut>
-<guimenu>Folder</guimenu>
-<guimenuitem>Remove Duplicate Messages</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Searches the folder for duplicate messages and deletes the
-duplicates.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
 <shortcut><keycap>F5</keycap></shortcut>
 <guimenu>Folder</guimenu>
 <guimenuitem>Check Mail in This Folder</guimenuitem>
@@ -702,6 +661,50 @@ folder.</para>
 </listitem>
 </varlistentry>
 
+<!-- not in 440
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Compact</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Compacts the folder file to reduce its disk space usage. Usually
+&kmail; compacts all folders automatically, but under certain circumstances
+you might want to compact a folder manually.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
+<guimenuitem>Expire</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Deletes old messages from the current folder or moves them to another
+folder, according to the rules in the folder's <guilabel>Properties</guilabel> dialog (the default is not to delete or move old messages). Usually &kmail;
+does this automatically, but under certain circumstances you might want to
+expire a folder manually...</para>
+</listitem>
+</varlistentry>
+-->
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycombo action="simul">&Ctrl;<keycap>*</keycap></keycombo></shortcut>
+<guimenu>Folder</guimenu>
+<guimenuitem>Remove Duplicate Messages</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Searches the folder for duplicate messages and deletes the
+duplicates.</para>
+</listitem>
+</varlistentry>
+<!-- not in 440
 <varlistentry>
 <term>
 <menuchoice>
@@ -714,7 +717,7 @@ folder.</para>
 currently selected folder is a trash folder.</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -742,7 +745,7 @@ of a folder after it has been removed.</para></warning>
 activate this for folders which only contain trusted messages.</para>
 </listitem>
 </varlistentry>
-
+<!-- not in 440
 <varlistentry>
 <term>
 <menuchoice>
@@ -773,7 +776,7 @@ to disable this option.
 </para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -873,6 +876,7 @@ sent to.</para>
 <menuchoice>
 <shortcut><keycombo action="simul">&Shift;<keycap>A</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
+<guisubmenu>Reply Special</guisubmenu>
 <guimenuitem>Reply to Author...</guimenuitem>
 </menuchoice>
 </term>
@@ -890,6 +894,7 @@ sent to.</para>
 <menuchoice>
 <shortcut><keycap>L</keycap></shortcut>
 <guimenu>Message</guimenu>
+<guisubmenu>Reply Special</guisubmenu>
 <guimenuitem>Reply to Mailing-List...</guimenuitem>
 </menuchoice>
 </term>
@@ -910,6 +915,7 @@ sent to.</para>
 <menuchoice>
 <shortcut><keycombo action="simul">&Shift;<keycap>R</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
+<guisubmenu>Reply Special</guisubmenu>
 <guimenuitem>Reply Without Quote...</guimenuitem>
 </menuchoice>
 </term>
@@ -950,6 +956,20 @@ header fields (<literal>Redirect-From</literal>, <literal>Redirect-Date</literal
 <para>Opens a composer window with the currently selected message so it can be
 sent again. This is only available for messages which you have sent or, more
 precisely, for messages which have the <guilabel>sent</guilabel> status.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
+<shortcut><keycap>T</keycap></shortcut>
+<guimenu>Message</guimenu>
+<guimenuitem>Edit Message</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Edits the selected message if it is editable. Only messages in the
+<guilabel>outbox</guilabel> and <guilabel>drafts</guilabel> folder can be edited.</para>
 </listitem>
 </varlistentry>
 
@@ -1071,7 +1091,7 @@ states are the same as for <menuchoice><guimenu>Message</guimenu>
 <guimenuitem>Mark Message</guimenuitem></menuchoice>.</para>
 </listitem>
 </varlistentry>
-
+<!-- not in 440
 <varlistentry>
 <term>
 <menuchoice>
@@ -1097,7 +1117,7 @@ contributions to the discussion.</para>
 to this thread will automatically be marked as read.</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1214,21 +1234,6 @@ the &kde; address book.</para>
       </listitem>
     </varlistentry>
 
-    <varlistentry id="reader-tools-import-messages">
-      <term>
-        <menuchoice>
-          <guimenu>Tools</guimenu>
-          <guimenuitem>Import Messages...</guimenuitem>
-        </menuchoice>
-      </term>
-      <listitem>
-        <para>
-          Starts up <application>kmailcvt</application> (which is
-          part of kdepim). This application lets you import
-          messages from several email clients &kmail;.
-        </para>
-      </listitem>
-    </varlistentry>
 <varlistentry>
 <term>
 <menuchoice>
@@ -1273,7 +1278,6 @@ you to set up spam filtering.</para>
 </listitem>
 </varlistentry>
 
-<!--
 <varlistentry>
 <term>
 <menuchoice>
@@ -1286,7 +1290,6 @@ you to set up spam filtering.</para>
 you to set up scanning messages for viruses.</para>
 </listitem>
 </varlistentry>
--->
 
 </variablelist>
 
@@ -1310,7 +1313,7 @@ you to set up scanning messages for viruses.</para>
 to compose a new message &etc;).</para>
 </listitem>
 </varlistentry>
-
+<!-- not in 440
 <varlistentry>
 <term>
 <menuchoice>
@@ -1323,7 +1326,7 @@ to compose a new message &etc;).</para>
 for messages matching a search text is visible.</para>
 </listitem>
 </varlistentry>
-
+-->
 <varlistentry>
 <term>
 <menuchoice>
@@ -1482,7 +1485,7 @@ differences between your version of &kmail; and the previous one.</para>
 <menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>Return</keycap></keycombo></shortcut>
 <guimenu>Message</guimenu>
-<guimenuitem>Send Now</guimenuitem>
+<guimenuitem>Send Mail</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
@@ -1645,6 +1648,18 @@ clipboard is pasted at the current cursor position.</para>
 <varlistentry>
 <term>
 <menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Paste as Quotation</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Pastes the text from the clipboard marked as quotation.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+<menuchoice>
 <shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Select All</guimenuitem>
@@ -1671,7 +1686,7 @@ clipboard is pasted at the current cursor position.</para>
 <varlistentry>
 <term>
 <menuchoice>
-<shortcut><keycombo action="simul">&Ctrl;<keycap>F</keycap></keycombo></shortcut>
+<shortcut><keycap>F3</keycap></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Find Next</guimenuitem>
 </menuchoice>
@@ -1704,18 +1719,6 @@ clipboard is pasted at the current cursor position.</para>
 <listitem>
 <para>This replaces multiple line breaks or spaces with single line breaks or spaces.
 It works on the current selection or on the complete message if there is no selection.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Edit</guimenu>
-<guimenuitem>Paste as Quotation</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>Pastes the text from the clipboard marked as quotation.</para>
 </listitem>
 </varlistentry>
 
@@ -2100,24 +2103,12 @@ first time.</para>
 <term>
 <menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Main Toolbar</guimenuitem>
+<guimenuitem>Toolbars Shown</guimenuitem>
 </menuchoice>
 </term>
 <listitem>
-<para>If enabled, the Main Toolbar is visible, &ie; the one with the icon
-to send the message &etc;.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Show HTML Toolbar</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>If enabled, the &html; Toolbar is visible, &ie; the one which with the
+<para>Enables and disbles the Main Toolbar, &ie; the one with the icon
+to send the message &etc; and the &html; Toolbar, &ie; the one which with the
 tools to change certain properties of the composed text.</para>
 </listitem>
 </varlistentry>

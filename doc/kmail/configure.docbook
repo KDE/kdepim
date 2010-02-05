@@ -115,7 +115,7 @@ least one identity, which is then the <guilabel>Default</guilabel>
 identity.</para>
 
 <para>To add a new identity to the identity list, click on the
-<guibutton>New...</guibutton> button.
+<guibutton>Add...</guibutton> button.
 The <link linkend="configure-identity-newidentitydialog">New identity</link> dialog
 will then appear.</para>
 
@@ -143,11 +143,9 @@ standard values.</para>
 <varlistentry>
 <term><guilabel>Use Control Center settings</guilabel></term>
 <listitem>
-<para>Uses the settings of the <application>Control
-Center</application>'s default email profile (you can edit that one
-under <menuchoice><guimenu>Internet &amp; Network</guimenu>
-<guimenuitem>Email</guimenuitem></menuchoice> in the
-<application>Control Center</application>).</para>
+<para>Uses the values from <menuchoice><guimenu>Personal</guimenu><guimenuitem>About Me</guimenuitem>
+<guimenuitem>Password &amp; User Account</guimenuitem></menuchoice> in the
+&systemsettings;.</para>
 </listitem>
 </varlistentry>
 
@@ -533,12 +531,12 @@ will open respectively. For sending via <application>sendmail</application>
 or similar programs
 you can specify a name and the location of the
 <command>sendmail</command> program.  For <acronym>SMTP</acronym> you
-can specify <guilabel>Name</guilabel>, <guilabel>Host</guilabel>, and
+can specify <guilabel>Name</guilabel>, <guilabel>Outgoing mail server</guilabel>, and
 <guilabel>Port</guilabel> of the server.  <guilabel>Server requires
 authentication</guilabel> will enable the <guilabel>Login</guilabel>
 and <guilabel>Password</guilabel> fields and the
 <guilabel>Authentication method</guilabel> buttons on the
-<guilabel>Security</guilabel> tab. If you are not sure about the
+<guilabel>Advanced</guilabel> tab. If you are not sure about the
 security settings you can make &kmail; test for the best settings by
 using <guibutton>Check What the Server Supports</guibutton>.</para>
 
@@ -1953,6 +1951,14 @@ option is selected.</para>
 <para>You should not need to see the folders that hold the  <guilabel>IMAP</guilabel> resources. However if you want to see them, you can set that by enabling this option.</para>
 </listitem>
 </varlistentry>
+</variablelist>
+</sect2>
+
+<sect2 id="configure-misc-invitation">
+<title>Invitations</title>
+
+<variablelist>
+
 <varlistentry>
 <term><guilabel>Mangle From:/To: headers in replies to invitations</guilabel></term>
 <listitem>
@@ -1978,6 +1984,23 @@ Exchange understands. The invitation will be sent as an attachment with name <fi
 <term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
 <listitem>
 <para>When the user provides comments when responding to invitations, send the comment in way that Microsoft Outlook(tm) understands. If this option is not enabled, the response comments will not be seen in Outlook.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Automatic invitation sending</guilabel></term>
+<listitem>
+<para>When this is checked, you will not see the mail composer window. Instead, 
+all invitation mails are sent automatically. If you want to see the mail 
+before sending it, you can uncheck this option. However, be aware that the 
+text in the composer window is in iCalendar syntax, and you should not try 
+modifying it by hand.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Delete invitation emails after the reply to them has been sent</guilabel></term>
+<listitem>
+<para>When this is checked, received invitation emails that have been replied to 
+will be moved to the Trash folder, once the reply has been successfully sent.</para>
 </listitem>
 </varlistentry>
 </variablelist>
