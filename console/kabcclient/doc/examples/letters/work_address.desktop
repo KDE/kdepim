@@ -5,10 +5,11 @@
 Name=Letter business/work address
 Name[ar]=عنوان العمل/الوظيفة للرسالة
 Name[ca]=Adreça postal negoci/treball
+Name[ca@valencia]=Adreça postal negoci/treball
 Name[cs]=Obchodní korespondenční adresa
 Name[da]=Postadresse erhverv/arbejde
 Name[de]=Postanschrift (geschäftlich)
-Name[el]=Διευθύνσεις επιχείρησης/εργασίας αλληλογραφίας
+Name[el]=Διευθύνσεις αλληλογραφίας επιχείρησης/εργασίας
 Name[en_GB]=Letter business/work address
 Name[es]=Dirección postal de negocios/del trabajo
 Name[et]=Kirja äri/tööaadress

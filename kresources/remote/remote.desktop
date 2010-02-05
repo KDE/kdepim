@@ -5,6 +5,7 @@ Name[ar]=التقويم في ملف بعيد
 Name[bg]=Календар в отдалечен файл
 Name[br]=Deiziadur e restr a-bell
 Name[ca]=Calendari a un fitxer remot
+Name[ca@valencia]=Calendari a un fitxer remot
 Name[cs]=Kalendář ve vzdáleném souboru
 Name[cy]=Calendr mewn Ffeil Pell
 Name[da]=Kalender i ekstern fil
@@ -56,9 +57,10 @@ Name[zh_TW]=遠端檔案的行事曆
 Comment=Provides access to a calendar in a remote file using KDE's network framework KIO
 Comment[ar]=يوفر وصول للتقويم في ملف بعيد بإستخدام إطار شبكة كدي KIO
 Comment[ca]=Proporciona l'accés a un calendari en un fitxer remot usant la infraestructura KIO de xarxa del KDE
+Comment[ca@valencia]=Proporciona l'accés a un calendari en un fitxer remot usant la infraestructura KIO de xarxa del KDE
 Comment[da]=Giver adgang til en kalender i en ekstern fil med brug af KDE's netværks-framework KIO
 Comment[de]=Ermöglicht den Zugriff auf einen entfernten Kalender über KDEs Netzwerk-Zugriffsystem KIO.
-Comment[el]=Προσφέρει πρόσβαση ημερολογίου σε ένα απομακρυσμένο αρχείου με τη χρήση του  συστήματος KIO του KDE
+Comment[el]=Προσφέρει πρόσβαση ημερολογίου σε ένα απομακρυσμένο αρχείο με τη χρήση του  συστήματος KIO του KDE
 Comment[en_GB]=Provides access to a calendar in a remote file using KDE's network framework KIO
 Comment[es]=Provee acceso a un calendario en un archivo remoto utilizando la infraestructura KIO de red de KDE 
 Comment[et]=Võimaldab kasutada võrgufaili salvestatud kalendrit KDE võrguraamistiku KIO abil
