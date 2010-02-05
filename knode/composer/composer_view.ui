@@ -133,12 +133,12 @@
          <property name="whatsThis">
           <string>&lt;qt&gt;
 &lt;p&gt;The group &lt;strong&gt;where the replies to your message should be sent&lt;/strong&gt;. Use this field when you are sending it to more than one group.&lt;br /&gt;
-This group is usually the place where you espect the discussion you
+This group is usually the place where you expect the discussion you
   are starting to fit the best.&lt;/p&gt;
 
 &lt;p&gt;Remember to subscribe to this group if you are not yet.&lt;/p&gt;
 
-&lt;p&gt;&lt;note&gt;It is also good practise to indicate the &amp;quot;followup-to&amp;quot;
+&lt;p&gt;&lt;note&gt;It is also good practice to indicate the &amp;quot;followup-to&amp;quot;
   in your message to inform readers.&lt;/note&gt;&lt;/p&gt;
 &lt;/qt&gt;</string>
          </property>
