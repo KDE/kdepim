@@ -33,7 +33,6 @@
 #include <KUrl>
 #include <KConfigGroup>
 #include <KLocale>
-#include <KMessageBox>
 
 #include <kcal/journal.h>
 #include <kcal/calendarlocal.h>
