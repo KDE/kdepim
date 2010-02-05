@@ -1511,7 +1511,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
     }
   }
 #else
-  kWarning()<<"TODO";
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
 
