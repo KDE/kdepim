@@ -1,3 +1,26 @@
+Friday, February 5th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue1765: In parallel calender view there is no need to ask in which resource folder a new
+                   event should get. (rt#5816)
+* kolab/issue4072: too small window: kleopatra: German export secret key (rt#5848)
+* kolab/issue4054: Umlauts and sending contacts problem (rt#5956)
+* kolab/issue4076: Mail: search for whole message cannot handle umlauts (rt#5979)
+* kolab/issue3817: Wish: New choices for the option KMail->Misc->Folder->When entering a folder (rt#5857)
+* kolab/issue4081: Use of many kmail subwindows can lead to crash (KMFolder::open) (rt#5854)
+* kolab/issue4052: copy+paste of an appointment in side-by-side view creates the appointment at a
+                   wrong time. (rt#5951)
+* kolab/issue4084: Overwriting of an address in the To/CC/BCC field of a composer doesnt work with "Paste"
+                   of a copied address (rt#5988)
+* In the archiving dialog, disable the Ok button if the wrong folder or no file is selected
+* Add a warning when trying to use the current folder as expiry target
+* Don't allow deleting 'no content' IMAP folders
+* Don't write out the unused revision field to the XML of events
+* Remove unmaintained Scalix and featureplan support
+
+
 Friday, January 29th 2010
 
 Problems addressed
