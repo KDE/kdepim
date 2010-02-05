@@ -1712,6 +1712,8 @@ void ViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
 }
 
 void ViewerPrivate::createWidgets() {
+  //TODO: Make a MDN bar similar to Mozillas password bar and show MDNs here as soon as a
+  //      MDN enabled message is shown.
   QVBoxLayout * vlay = new QVBoxLayout( q );
   vlay->setMargin( 0 );
   mSplitter = new QSplitter( Qt::Vertical, q );
