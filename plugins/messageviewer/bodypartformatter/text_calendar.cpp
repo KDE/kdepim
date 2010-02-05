@@ -887,7 +887,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "
-                "so storing or saving a response will not be possble.\n"
+                "so storing or saving a response will not be possible.\n"
                 "Please create at least 1 writable events calendar and re-sync." ) );
         return false;
       }
