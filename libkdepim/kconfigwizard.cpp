@@ -174,9 +174,7 @@ void KConfigWizard::updateChanges()
 
   mChangeView->clear();
 
-  KConfigPropagator::Change::List changes = mPropagator->changes();
-  KConfigPropagator::Change *c;
-  for ( c = changes.first(); c; c = changes.next() ) {
+  foreach( KConfigPropagator::Change *c, mPropagator->changes() ) {
     new Q3ListViewItem( mChangeView, mChangeView->lastItem(), c->title(), c->arg1(), c->arg2() );
   }
 }

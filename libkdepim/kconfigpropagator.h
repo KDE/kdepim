@@ -26,7 +26,6 @@
 #include <QDomElement>
 #include <QList>
 #include <QString>
-#include <Q3PtrList>
 
 class KConfigSkeleton;
 class KConfigSkeletonItem;
@@ -48,7 +47,7 @@ class KDEPIM_EXPORT KConfigPropagator
       @param kcfgFile file name of kcfg file containing the propagation rules
     */
     KConfigPropagator( KConfigSkeleton *skeleton, const QString &kcfgFile );
-    virtual ~KConfigPropagator() {}
+    virtual ~KConfigPropagator() { qDeleteAll( mChanges ); }
 
     KConfigSkeleton *skeleton() { return mSkeleton; }
 
@@ -93,7 +92,7 @@ class KDEPIM_EXPORT KConfigPropagator
     class KDEPIM_EXPORT Change
     {
       public:
-        typedef Q3PtrList<Change> List;
+        typedef QList<Change*> List;
 
         Change( const QString &title ) : mTitle( title ) {}
         virtual ~Change();
@@ -131,9 +130,9 @@ class KDEPIM_EXPORT KConfigPropagator
 
     void updateChanges();
 
-    Change::List changes();
+    Change::List changes() const;
 
-    Rule::List rules();
+    Rule::List rules() const;
 
   protected:
     void init();

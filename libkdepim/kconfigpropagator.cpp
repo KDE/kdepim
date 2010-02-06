@@ -31,6 +31,9 @@
 #include <QFile>
 #include <QStringList>
 
+#include <boost/bind.hpp>
+#include <algorithm>
+
 using namespace KPIM;
 
 KConfigPropagator::Change::~Change()
@@ -83,7 +86,6 @@ KConfigPropagator::KConfigPropagator( KConfigSkeleton *skeleton,
 
 void KConfigPropagator::init()
 {
-  mChanges.setAutoDelete( true );
 }
 
 void KConfigPropagator::readKcfgFile()
@@ -199,10 +201,7 @@ void KConfigPropagator::commit()
 {
   updateChanges();
 
-  Change *c;
-  for ( c = mChanges.first(); c; c = mChanges.next() ) {
-    c->apply();
-  }
+  std::for_each( mChanges.begin(), mChanges.end(), boost::bind( &Change::apply, _1 ) );
 }
 
 KConfigSkeletonItem *KConfigPropagator::findItem( const QString &group,
@@ -243,6 +242,7 @@ QString KConfigPropagator::itemValueAsString( KConfigSkeletonItem *item )
 
 void KConfigPropagator::updateChanges()
 {
+  qDeleteAll( mChanges );
   mChanges.clear();
 
   Rule::List::ConstIterator it;
@@ -294,12 +294,12 @@ void KConfigPropagator::updateChanges()
   addCustomChanges( mChanges );
 }
 
-KConfigPropagator::Change::List KConfigPropagator::changes()
+KConfigPropagator::Change::List KConfigPropagator::changes() const
 {
   return mChanges;
 }
 
-KConfigPropagator::Rule::List KConfigPropagator::rules()
+KConfigPropagator::Rule::List KConfigPropagator::rules() const
 {
   return mRules;
 }
