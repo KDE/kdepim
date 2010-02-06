@@ -34,7 +34,7 @@
 #include <QLayout>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <Q3ListView>
+#include <QTreeWidget>
 
 using namespace KPIM;
 
@@ -104,12 +104,13 @@ void KConfigWizard::setupRulesPage()
   //rame *topFrame = new QFrame( this );
   QVBoxLayout *topLayout = new QVBoxLayout;
   page->setLayout(topLayout);
-  mRuleView = new Q3ListView;
+  mRuleView = new QTreeWidget;
   topLayout->addWidget( mRuleView );
 
-  mRuleView->addColumn( i18nc( "@title:column source file,group,entry", "Source" ) );
-  mRuleView->addColumn( i18nc( "@title:column target file,group,entry", "Target" ) );
-  mRuleView->addColumn( i18nc( "@title:column file,group,key,value", "Condition" ) );
+  mRuleView->setHeaderLabels( QStringList()
+   << i18nc( "@title:column source file,group,entry", "Source" )
+   << i18nc( "@title:column target file,group,entry", "Target" )
+   << i18nc( "@title:column file,group,key,value", "Condition" ) );
 
   updateRules();
 }
@@ -136,7 +137,10 @@ void KConfigWizard::updateRules()
     if ( c.isValid ) {
       condition = c.file + '/' + c.group + '/' + c.key + " = " + c.value;
     }
-    new Q3ListViewItem( mRuleView, source, target, condition );
+    QTreeWidgetItem *item = new QTreeWidgetItem( mRuleView );
+    item->setText( 0, source );
+    item->setText( 1, target );
+    item->setText( 2, condition );
   }
 }
 
@@ -148,13 +152,14 @@ void KConfigWizard::setupChangesPage()
   //TODO: set item icon
   QVBoxLayout *topLayout = new QVBoxLayout;
   page->setLayout(topLayout);
-  mChangeView = new Q3ListView;
+  mChangeView = new QTreeWidget;
   topLayout->addWidget( mChangeView );
 
-  mChangeView->addColumn( i18nc( "@title:column change action", "Action" ) );
-  mChangeView->addColumn( i18nc( "@title:column option to change", "Option" ) );
-  mChangeView->addColumn( i18nc( "@title:column value for option", "Value" ) );
-  mChangeView->setSorting( -1 );
+  mChangeView->setHeaderLabels( QStringList() 
+    << i18nc( "@title:column change action", "Action" )
+    << i18nc( "@title:column option to change", "Option" )
+    << i18nc( "@title:column value for option", "Value" ) );
+  mChangeView->setSortingEnabled( false );
 
   mChangesPage = item;
 }
@@ -175,7 +180,10 @@ void KConfigWizard::updateChanges()
   mChangeView->clear();
 
   foreach( KConfigPropagator::Change *c, mPropagator->changes() ) {
-    new Q3ListViewItem( mChangeView, mChangeView->lastItem(), c->title(), c->arg1(), c->arg2() );
+    QTreeWidgetItem *item = new QTreeWidgetItem( mChangeView );
+    item->setText( 0, c->title() );
+    item->setText( 1, c->arg1() );
+    item->setText( 2, c->arg2() );
   }
 }
 

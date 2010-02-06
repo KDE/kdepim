@@ -39,7 +39,7 @@
 #include <QFile>
 #include <QtDesigner/QFormBuilder>
 #include <QVBoxLayout>
-#include <Q3DateTimeEdit>
+#include <QDateTimeEdit>
 
 using namespace KPIM;
 
@@ -155,7 +155,7 @@ void DesignerFields::load( DesignerFields::Storage *storage )
       QCheckBox *wdg = static_cast<QCheckBox*>( widIt.value() );
       wdg->setChecked( false );
     } else if ( widIt.value()->inherits( "QDateTimeEdit" ) ) {
-      Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( widIt.value() );
+      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( widIt.value() );
       wdg->setDateTime( QDateTime::currentDateTime() );
     } else if ( widIt.value()->inherits( "KDateTimeWidget" ) ) {
       KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( widIt.value() );
@@ -188,7 +188,7 @@ void DesignerFields::load( DesignerFields::Storage *storage )
         QCheckBox *wdg = static_cast<QCheckBox*>( it.value() );
         wdg->setChecked( value == "true" || value == "1" );
       } else if ( it.value()->inherits( "QDateTimeEdit" ) ) {
-        Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( it.value() );
+        QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( it.value() );
         wdg->setDateTime( QDateTime::fromString( value, Qt::ISODate ) );
       } else if ( it.value()->inherits( "KDateTimeWidget" ) ) {
         KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( it.value() );
@@ -222,7 +222,7 @@ void DesignerFields::save( DesignerFields::Storage *storage )
       QCheckBox *wdg = static_cast<QCheckBox*>( it.value() );
       value = ( wdg->isChecked() ? "true" : "false" );
     } else if ( it.value()->inherits( "QDateTimeEdit" ) ) {
-      Q3DateTimeEdit *wdg = static_cast<Q3DateTimeEdit*>( it.value() );
+      QDateTimeEdit *wdg = static_cast<QDateTimeEdit*>( it.value() );
       value = wdg->dateTime().toString( Qt::ISODate );
     } else if ( it.value()->inherits( "KDateTimeWidget" ) ) {
       KDateTimeWidget *wdg = static_cast<KDateTimeWidget*>( it.value() );

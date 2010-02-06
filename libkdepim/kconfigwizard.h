@@ -24,7 +24,7 @@
 #include "kdepim_export.h"
 #include <KPageDialog>
 
-class Q3ListView;
+class QTreeWidget;
 class KPageWidgetItem;
 
 namespace KPIM {
@@ -107,8 +107,8 @@ class KDEPIM_EXPORT KConfigWizard : public KPageDialog
   private:
     KConfigPropagator *mPropagator;
 
-    Q3ListView *mRuleView;
-    Q3ListView *mChangeView;
+    QTreeWidget *mRuleView;
+    QTreeWidget *mChangeView;
 
     KPageWidgetItem *mChangesPage;
 };
