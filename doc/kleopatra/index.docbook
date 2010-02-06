@@ -1282,8 +1282,8 @@ C=DE
           </para>
 
           <para>
-            <programlisting><!--
-              -->RSAKeySizes = 1536,-2048,3072
+            <programlisting>
+            RSAKeySizes = 1536,-2048,3072
             </programlisting>
           </para>
               
@@ -1301,8 +1301,8 @@ C=DE
           </para>
 
           <para>
-            <programlisting><!--
-              -->RSAKeySizeLabels = weak,normal,strong
+            <programlisting>
+                RSAKeySizeLabels = weak,normal,strong
             </programlisting>
           </para>
 
