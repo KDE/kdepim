@@ -40,6 +40,7 @@ class MESSAGECORE_EXPORT AnnotationEditDialog : public KDialog
 
     QUrl mNepomukResourceUri;
     KTextEdit *mTextEdit;
+    bool mHasAnnotation;
 };
 
 }

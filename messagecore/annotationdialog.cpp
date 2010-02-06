@@ -33,8 +33,8 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &nepomukResourceUri, QWid
   mNepomukResourceUri( nepomukResourceUri )
 {
   Nepomuk::Resource resource( mNepomukResourceUri );
-  const bool hasAnnotation = resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
-  if ( hasAnnotation ) {
+  mHasAnnotation = resource.hasProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
+  if ( mHasAnnotation ) {
     setCaption( i18n( "Edit Note" ) );
     setButtons( Ok | Cancel | User1 );
     setButtonText( User1, i18n( "Delete Note" ) );
@@ -51,7 +51,7 @@ AnnotationEditDialog::AnnotationEditDialog( const QUrl &nepomukResourceUri, QWid
   grid->addWidget( label );
   grid->addWidget( mTextEdit );
   mTextEdit->setFocus();
-  if ( hasAnnotation ) {
+  if ( mHasAnnotation ) {
     mTextEdit->setPlainText( resource.description() );
   }
 }
@@ -63,8 +63,15 @@ AnnotationEditDialog::~AnnotationEditDialog()
 void AnnotationEditDialog::slotButtonClicked ( int button )
 {
   if ( button == KDialog::Ok ) {
-    Nepomuk::Resource resource( mNepomukResourceUri );
-    resource.setDescription( mTextEdit->toPlainText() );
+    bool textIsEmpty = mTextEdit->toPlainText().isEmpty();
+    if ( !textIsEmpty ) {
+      Nepomuk::Resource resource( mNepomukResourceUri );
+      resource.setDescription( mTextEdit->toPlainText() );
+    }
+    else if ( mHasAnnotation && textIsEmpty ) {
+      Nepomuk::Resource resource( mNepomukResourceUri );
+      resource.removeProperty( QUrl( Nepomuk::Resource::descriptionUri() ) );
+    }
     accept();
   } else if ( button == KDialog::Cancel ) {
     reject();
