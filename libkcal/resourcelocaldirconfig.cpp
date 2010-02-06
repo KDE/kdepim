@@ -26,6 +26,7 @@
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kmessagebox.h>
 #include <kstandarddirs.h>
 
 #include "vcaldrag.h"
@@ -41,7 +42,7 @@ using namespace KCal;
 ResourceLocalDirConfig::ResourceLocalDirConfig( QWidget* parent,  const char* name )
     : KRES::ConfigWidget( parent, name )
 {
-  resize( 245, 115 ); 
+  resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this, 2, 2 );
 
   QLabel *label = new QLabel( i18n( "Location:" ), this );
@@ -65,6 +66,14 @@ void ResourceLocalDirConfig::saveSettings( KRES::Resource *resource )
   ResourceLocalDir* res = static_cast<ResourceLocalDir*>( resource );
   if (res) {
     res->mURL = mURL->url();
+    if ( mURL->url().isEmpty() && !resource->readOnly() ) {
+      KMessageBox::information(
+        this,
+        i18n( "No location specified.  The calendar will be read-only." ),
+        QString(),
+        "ResourceLocalDirUrl" );
+      resource->setReadOnly( true );
+    }
   } else
     kdDebug(5700) << "ERROR: ResourceLocalDirConfig::saveSettings(): no ResourceLocalDir, cast failed" << endl;
 }
