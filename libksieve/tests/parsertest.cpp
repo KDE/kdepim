@@ -36,7 +36,6 @@ using KSieve::Parser;
 #include <ksieve/error.h>
 #include <ksieve/scriptbuilder.h>
 
-#include <q3cstring.h> // qstrlen
 #include <QString>
 
 #include <iostream>
@@ -472,7 +471,7 @@ private:
       cout << " ";
     cout << msg << endl;
   }
-  void write( const Q3CString & key, const QString & value ) {
+  void write( const QByteArray & key, const QString & value ) {
     if ( value.isEmpty() ) {
       write( "<" + key + "/>" );
       return;

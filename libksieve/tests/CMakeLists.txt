@@ -10,7 +10,7 @@ include_directories(
 set(lexertest_SRCS lexertest.cpp )
 
 
-kde4_add_executable(lexertest TEST ${lexertest_SRCS})
+kde4_add_unit_test(lexertest TESTNAME ksieve-lexertest ${lexertest_SRCS})
 
 target_link_libraries(lexertest  ksieve ${KDE4_KDECORE_LIBS} )
 
@@ -21,6 +21,6 @@ set(parsertest_SRCS parsertest.cpp )
 
 
 
-kde4_add_executable(parsertest TEST ${parsertest_SRCS})
+kde4_add_unit_test(parsertest TESTNAME ksieve-parsertest ${parsertest_SRCS})
 
-target_link_libraries(parsertest  ksieve ${KDE4_KDECORE_LIBS} ${KDE4_KDE3SUPPORT_LIBS})
+target_link_libraries(parsertest  ksieve ${KDE4_KDECORE_LIBS})
