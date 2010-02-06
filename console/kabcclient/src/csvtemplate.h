@@ -92,7 +92,7 @@ public:
     * @brief Creates a template handler for the given description
     *
     * Assuming that the best way to read the actual template description files
-    * is using KConfigBase derived classes, this constructor initalizes a
+    * is using KConfigBase derived classes, this constructor initializes a
     * template handler from such an instance.
     *
     * @see csvhandling

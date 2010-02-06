@@ -118,7 +118,7 @@ class SingleActionWidget : public QWidget
     QStackedWidget *stack;
     /** the notify action editor */
     KLineEdit *notifyEditor;
-    /** the score acton editor */
+    /** the score action editor */
     KIntSpinBox *scoreEditor;
     /** the color action editor */
     KColorCombo *colorEditor;

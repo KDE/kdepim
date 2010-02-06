@@ -111,7 +111,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
     tmpSource[i] = tmpSource[i].remove( cleanLeadingWhitespace );
   }
 
-  // Then indent as apropriate
+  // Then indent as appropriate
   for( int i = 0; i != tmpSource.length(); i++ )  {
     if( htmlTagRegExp.indexIn( tmpSource[i] ) != -1 ) // A tag
     {

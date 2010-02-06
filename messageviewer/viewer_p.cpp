@@ -1242,7 +1242,7 @@ void ViewerPrivate::parseMsg()
   setIdOfLastViewedMessage( aMsg->index().toString() );
 */
   if( emitReplaceMsgByUnencryptedVersion ) {
-    kDebug() << "Invoce saving in decrypted form:";
+    kDebug() << "Invoke saving in decrypted form:";
     emit replaceMsgByUnencryptedVersion(); //FIXME(Andras) actually connect and do the replacement on the server (see KMMainWidget::slotReplaceByUnencryptedVersion)
   } else {
     showHideMimeTree();

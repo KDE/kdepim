@@ -25,7 +25,7 @@
 namespace MessageViewer {
 
 /**
- * Globally accesible methods and data structures.
+ * Globally accessible methods and data structures.
  *
  * @author Andras Mantia <andras@kdab.net>
  */

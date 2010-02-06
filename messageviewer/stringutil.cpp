@@ -163,7 +163,7 @@ static QString flowText( QString &text, const QString& indent, int maxLength )
 // Quote characters are added in front of each line, and no line is longer than
 // maxLength.
 //
-// Although the lines in textParts are considered seperate lines, they can actually be run
+// Although the lines in textParts are considered separate lines, they can actually be run
 // together into a single line in some cases. This is basically the main difference to flowText().
 //
 // Example:
@@ -172,7 +172,7 @@ static QString flowText( QString &text, const QString& indent, int maxLength )
 //   maxLength = 20
 //   Result: "> Hello World, this\n
 //            > is a test. Really"
-// Notice how in this example, the text line "Really" is no longer a seperate line, it was run
+// Notice how in this example, the text line "Really" is no longer a separate line, it was run
 // together with a previously broken line.
 //
 // "textParts" is cleared upon return.
@@ -903,7 +903,7 @@ QString guessEmailAddressFromLoginName( const QString& loginName )
 QString smartQuote( const QString &msg, int maxLineLength )
 {
   // The algorithm here is as follows:
-  // We split up the incomming msg into lines, and then iterate over each line.
+  // We split up the incoming msg into lines, and then iterate over each line.
   // We keep adding lines with the same indent ( = quote prefix, e.g. "> " ) to a
   // "textParts" list. So the textParts list contains only lines with the same quote
   // prefix.
@@ -979,7 +979,7 @@ QString smartQuote( const QString &msg, int maxLineLength )
   // Write out anything still pending
   flushPart( result, textParts, oldIndent, maxLineLength );
 
-  // Remove superflous newline which was appended in flowText
+  // Remove superfluous newline which was appended in flowText
   if ( !result.isEmpty() && result.endsWith( '\n' ) )
     result.chop( 1 );
 

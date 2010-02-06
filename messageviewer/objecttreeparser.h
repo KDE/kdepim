@@ -180,9 +180,9 @@ writeBodyString() first. That method checks if the provided text is an inline PG
 it if necessary. It also pushes the text through quotedHTML(), which does a number of things like
 coloring quoted lines or detecting links and creating real link tags for them.
 
-\par Modifing the Message
+\par Modifying the Message
 
-The ObjectTreeParser does not only parse its message, in some cirumstances it also modifies it
+The ObjectTreeParser does not only parse its message, in some circumstances it also modifies it
 before displaying. This is for example the case when displaying a decrypted message: The original
 message only contains a binary blob of crypto data, and processMultiPartEncryptedSubtype() decrypts
 that blob. After decryption, the current node is replaced with the decrypted node, which happens
@@ -201,7 +201,7 @@ of the Viewer, which will cause parseObjectTree() to be called again.
 \par Async Crypto Operations
 
 The above case describes decryption the message in place. However, decryption and also verifying of
-the signature can take a long time, so syncronous decryption and verifing would cause the Viewer to
+the signature can take a long time, so synchronous decryption and verifing would cause the Viewer to
 block. Therefore it is possible to run these operations in async mode, see allowAsync().
 In the first run of the async mode, all the ObjectTreeParser does is starting the decrypt or the
 verify job, and informing the user that the operation is in progress with
@@ -253,7 +253,7 @@ contains some trickery so that the processXXX() methods of the ObjectTreeParser 
 a BodyPartFormatter associated with them, see the CREATE_BODY_PART_FORMATTER macro.
 
 The BodyPartFormatter code is work in progress, it was supposed to be refactored, but that has not
-yet happened at the time of writting. Therefore the code can seem a bit chaotic.
+yet happened at the time of writing. Therefore the code can seem a bit chaotic.
 
 External plugins are loaded with loadPlugins() in bodypartformatterfactory.cpp. External plugins
 can only use the classes in the interfaces/ directory, they include BodyPart, BodyPartMemento,

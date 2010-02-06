@@ -56,7 +56,7 @@ class FolderTreeWidgetItem;
  * count of unread messages from FolderTreeWidgetItem::unreadCount() and
  * it will automatically display it aligned to the right.
  *
- * You add a "Total" colum with addTotalColumn(). It will fetch the numeric
+ * You add a "Total" column with addTotalColumn(). It will fetch the numeric
  * total count of messages from FolderTreeWidgetItem::totalCount() and it will
  * automatically display it aligned to the right.
  *
@@ -66,7 +66,7 @@ class FolderTreeWidgetItem;
  *
  * You can set the color of the unread message count with setUnreadCountColor().
  * When the items are marked with the closeToQuota() warning then the text in the
- * "Label" colum is displayed with the color set by setCloseToQuotaWarningColor().
+ * "Label" column is displayed with the color set by setCloseToQuotaWarningColor().
  *
  * @author: Szymon Tomasz Stefanek <pragma@kvirc.net>
  */
@@ -439,7 +439,7 @@ public:
     { return mAlwaysDisplayCounts; };
 
   /**
-   * Sets wheter this item should bypass the size, total and unread
+   * Sets whether this item should bypass the size, total and unread
    * display logic. Normally when this item is a toplevel one and
    * has no children it doesn't display the counts. With this flag
    * set it displays the counts regardless of this.

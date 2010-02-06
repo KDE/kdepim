@@ -97,7 +97,7 @@ then remember the Akonadi::Item belonging to the message. The Akonadi::Item is n
 the message, for example when editing or deleting an attachment.
 Sometimes passing an Akonadi::Item to the viewer is not possible, for example when double-clicking
 an attached message, in which case a new KMime::Message is constructed out of the attachment, and a
-seperate window is opened for it. In this case, the KMime::Message has no associated Akonadi::Item.
+separate window is opened for it. In this case, the KMime::Message has no associated Akonadi::Item.
 
 Once a message is set, update() is called. update() can also be called after the message has already
 been displayed. As an example, this is the case when the user decides to decrypt the message. The

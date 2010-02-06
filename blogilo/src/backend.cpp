@@ -472,7 +472,7 @@ KBlog::BlogPost * Backend::preparePost( BilboPost &post )
     post.setAdditionalContent( html2 );
 
     //the following two lines are replaced by the above code, because '\n' characters shouldn't
-    //be ommited inside <pre> blocks.
+    //be omitted inside <pre> blocks.
 
     //post.setContent( post.content().remove('\n') );
     //post.setAdditionalContent( post.additionalContent().remove( '\n' ) );

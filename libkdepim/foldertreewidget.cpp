@@ -153,7 +153,7 @@ public:
           label = item->elidedLabelText( fm, textRect.width() - ( ITEM_LABEL_TO_UNREADCOUNT_SPACING + unreadWidth ) );
           labelWidth = fm.width( label );
 
-          // the condition inside this call is an optimisation (it's faster than simply label != item->labelText())
+          // the condition inside this call is an optimization (it's faster than simply label != item->labelText())
           item->setLabelTextElided( ( label.length() != item->labelText().length() ) || ( label != item->labelText() ) );
         } else {
           label = item->labelText();
@@ -176,7 +176,7 @@ public:
         // got unread messages: bold font but no special text tricks
         QString label = item->elidedLabelText( fm, textRect.width() );
 
-        // the condition inside this call is an optimisation (it's faster than simply label != item->labelText())
+        // the condition inside this call is an optimization (it's faster than simply label != item->labelText())
         item->setLabelTextElided( ( label.length() != item->labelText().length() ) || ( label != item->labelText() ) );
 
         painter->drawText( textRect, Qt::AlignLeft | Qt::TextSingleLine | Qt::AlignVCenter, label );
@@ -185,7 +185,7 @@ public:
       // no unread messages: normal font, no text tricks
       QString label = item->elidedLabelText( opt.fontMetrics, textRect.width() );
 
-      // the condition inside this call is an optimisation (it's faster than simply label != item->labelText())
+      // the condition inside this call is an optimization (it's faster than simply label != item->labelText())
       item->setLabelTextElided( ( label.length() != item->labelText().length() ) || ( label != item->labelText() ) );
 
       painter->setFont( opt.font );
