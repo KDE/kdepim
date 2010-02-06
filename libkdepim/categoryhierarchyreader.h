@@ -26,7 +26,6 @@
 class QComboBox;
 class QStringList;
 class QString;
-class Q3ListView;
 class QTreeWidget;
 class QTreeWidgetItem;
 
