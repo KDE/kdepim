@@ -132,6 +132,10 @@ void Calendar::Private::dataChanged( const QModelIndex& topLeft, const QModelInd
 
 Calendar::Private::~Private()
 {
+  Q_FOREACH ( const Item &item, m_itemMap ) {
+    Akonadi::incidence( item )->unRegisterObserver( q );
+  }
+
   delete mTimeZones;
   delete mDefaultFilter;
 }
@@ -296,9 +300,6 @@ void Calendar::Private::itemsAdded( const Item::List &items )
         updateItem( item, AssertNew );
         const KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
         kDebug() << "Add akonadi id=" << item.id() << "parentCollection.id() :"<<item.parentCollection().id()<< "parentCollection.name() :"<<item.parentCollection().name()<<"uid=" << incidence->uid() << "summary=" << incidence->summary() << "type=" << incidence->type();
-
-        incidence->registerObserver( q );
-        q->notifyIncidenceAdded( item );
     }
     emit q->calendarChanged();
     assertInvariants();
