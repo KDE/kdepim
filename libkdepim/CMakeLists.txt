@@ -61,7 +61,6 @@ set(kdepim_LIB_SRCS
    designerfields.cpp
    kcmdesignerfields.cpp
    embeddedurlpage.cpp
-   kincidencechooser.cpp
    csshelper.cpp
    distributionlist.cpp
    sendsmsdialog.cpp
