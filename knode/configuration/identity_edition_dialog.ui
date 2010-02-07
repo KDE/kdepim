@@ -185,7 +185,7 @@
 &lt;/qt&gt;</string>
         </property>
         <property name="text">
-         <string>Organisation:</string>
+         <string>Organization:</string>
         </property>
         <property name="buddy">
          <cstring>mOrganisationEdit</cstring>
@@ -232,7 +232,7 @@
        <widget class="QLabel" name="mReplytoLabel">
         <property name="whatsThis">
          <string>&lt;qt&gt;
-  &lt;p&gt;When someone reply to your article by email, this is the address the message will be sent. If you fill in this field, please do it with a real email address.&lt;/p&gt;
+  &lt;p&gt;When someone replies to your article by email, this is the address to which the message will be sent. If you fill in this field, please do so with a real email address.&lt;/p&gt;
   &lt;p&gt;Ex: &lt;b&gt;john@example.com&lt;/b&gt;.&lt;/p&gt;
 &lt;/qt&gt;</string>
         </property>
@@ -248,7 +248,7 @@
        <widget class="KLineEdit" name="mReplytoEdit">
         <property name="whatsThis">
          <string>&lt;qt&gt;
-  &lt;p&gt;When someone reply to your article by email, this is the address the message will be sent. If you fill in this field, please do it with a real email address.&lt;/p&gt;
+  &lt;p&gt;When someone replies to your article by email, this is the address to which the message will be sent. If you fill in this field, please do so with a real email address.&lt;/p&gt;
   &lt;p&gt;Ex: &lt;b&gt;john@example.com&lt;/b&gt;.&lt;/p&gt;
 &lt;/qt&gt;</string>
         </property>
@@ -258,7 +258,7 @@
        <widget class="QLabel" name="mMailcopiestoLabel">
         <property name="whatsThis">
          <string>&lt;qt&gt;
-  &lt;p&gt;When someone reply to your article on a group, you can ask to be sent a copy by email. This is the address this copy will be sent. If you fill in this field, please do it with a real email address.&lt;/p&gt;
+  &lt;p&gt;When someone replies to your article on a group, you can ask to be sent a copy by email. This is the address to which this copy will be sent. If you fill in this field, please do so with a real email address.&lt;/p&gt;
   &lt;p&gt;Ex: &lt;b&gt;john@example.com&lt;/b&gt;.&lt;/p&gt;
 &lt;/qt&gt;</string>
         </property>
@@ -274,7 +274,7 @@
        <widget class="KLineEdit" name="mMailcopiestoEdit">
         <property name="whatsThis">
          <string>&lt;qt&gt;
-  &lt;p&gt;When someone reply to your article on a group, you can ask to be sent a copy by email. This is the address this copy will be sent. If you fill in this field, please do it with a real email address.&lt;/p&gt;
+  &lt;p&gt;When someone replies to your article on a group, you can ask to be sent a copy by email. This is the address to which this copy will be sent. If you fill in this field, please do so with a real email address.&lt;/p&gt;
   &lt;p&gt;Ex: &lt;b&gt;john@example.com&lt;/b&gt;.&lt;/p&gt;
 &lt;/qt&gt;</string>
         </property>
