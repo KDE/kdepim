@@ -50,7 +50,7 @@
 #include <QFrame>
 #include <QVBoxLayout>
 #include <QWhatsThis>
-#include <Q3GroupBox>
+#include <QGroupBox>
 
 #include <unistd.h>
 
@@ -313,12 +313,16 @@ void KCMDesignerFields::initGUI()
   hbox->addWidget( mPageView );
   QTimer::singleShot( 0, mPageView, SLOT(triggerUpdate()) );
 
-  Q3GroupBox *box = new Q3GroupBox(1, Qt::Horizontal, i18n("Preview of Selected Page"), this );
+  QGroupBox *box = new QGroupBox( i18n("Preview of Selected Page"), this );
+  QVBoxLayout *boxLayout = new QVBoxLayout( box );
 
   mPagePreview = new QLabel( box );
   mPagePreview->setMinimumWidth( 300 );
+  boxLayout->addWidget( mPagePreview );
 
   mPageDetails = new QLabel( box );
+  boxLayout->addWidget( mPageDetails );
+  boxLayout->addStretch( 1 );
 
   hbox->addWidget( box );
 
