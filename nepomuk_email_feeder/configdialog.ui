@@ -23,7 +23,7 @@
       <item>
        <widget class="QRadioButton" name="noIndexing">
         <property name="text">
-         <string>Don't index encrypted content</string>
+         <string>Do not index encrypted content</string>
         </property>
        </widget>
       </item>
