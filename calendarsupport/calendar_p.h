@@ -98,6 +98,7 @@ class Akonadi::Calendar::Private : public QObject
 {
   Q_OBJECT
 private:
+  void removeItemFromMaps( const Akonadi::Item &item );
   Calendar* const q;
 
 public:
@@ -141,11 +142,11 @@ public:
   QHash<Akonadi::Item::Id, Akonadi::Item> m_itemMap; // akonadi id to items
 
   QHash<Akonadi::Item::Id, Akonadi::Item::Id> m_childToParent; // child to parent map, for already cached parents
-  QHash<Akonadi::Item::Id, QVector<Akonadi::Item::Id> > m_parentToChildren; //parent to children map, for alread cached children
+  QHash<Akonadi::Item::Id, QList<Akonadi::Item::Id> > m_parentToChildren; //parent to children map, for alread cached children
   QMap<UnseenItem, Akonadi::Item::Id> m_uidToItemId;
 
   QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent; // child to parent map, unknown/not cached parent items
-  QMap<UnseenItem, QVector<Akonadi::Item::Id> > m_unseenParentToChildren;
+  QMap<UnseenItem, QList<Akonadi::Item::Id> > m_unseenParentToChildren;
 
   QMultiHash<QString, Akonadi::Item> m_itemsForDate;// on start dates of non-recurring, single-day Incidences
 

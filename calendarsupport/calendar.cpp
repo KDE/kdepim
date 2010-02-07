@@ -168,11 +168,13 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
   }
 
   if( const KCal::Todo::Ptr t = Akonadi::todo( item ) ) {
-    if ( t->hasDueDate() )
+    if ( t->hasDueDate() ) {
       m_itemsForDate.insert( t->dtDue().date().toString(), item );
+    }
   } else if( const KCal::Event::Ptr e = Akonadi::event( item ) ) {
-    if ( !e->recurs() && !e->isMultiDay() )
+    if ( !e->recurs() && !e->isMultiDay() ) {
       m_itemsForDate.insert( e->dtStart().date().toString(), item );
+    }
   } else if( const KCal::Journal::Ptr j = Akonadi::journal( item ) ) {
       m_itemsForDate.insert( j->dtStart().date().toString(), item );
   }  else {
@@ -214,8 +216,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
       if ( parentInc->uid() != parentUID ) {
         //parent changed, remove old entries
         Akonadi::incidence( item )->setRelatedTo( 0 );
-        QVector<Item::Id>& l = m_parentToChildren[oldParentIt.value()];
-        l.erase( std::remove( l.begin(), l.end(), id ), l.end() );
+        QList<Item::Id>& l = m_parentToChildren[oldParentIt.value()];
+        l.removeAll( id );
         m_childToParent.remove( id );
       } else {
         parentNotChanged = true;
@@ -231,8 +233,8 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
       if ( oldUnseenParentIt != m_childToUnseenParent.end() ) {
         if ( oldUnseenParentIt.value().uid != parentUID ) {
           //parent changed, remove old entries
-          QVector<Item::Id>& l = m_unseenParentToChildren[oldUnseenParentIt.value()];
-          l.erase( std::remove( l.begin(), l.end(), id ), l.end() );
+          QList<Item::Id>& l = m_unseenParentToChildren[oldUnseenParentIt.value()];
+          l.removeAll( id );
           m_childToUnseenParent.remove( id );
         } else {
           parentNotChanged = true;
@@ -244,11 +246,15 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
     m_uidToItemId.insert( ui, item.id() );
 
     //check for already known children:
-    const QVector<Item::Id> orphanedChildren = m_unseenParentToChildren.value( ui );
-    if ( !orphanedChildren.isEmpty() )
+    const QList<Item::Id> orphanedChildren = m_unseenParentToChildren.value( ui );
+    if ( !orphanedChildren.isEmpty() ) {
       m_parentToChildren.insert( id, orphanedChildren );
-    Q_FOREACH ( const Item::Id &cid, orphanedChildren )
+    }
+
+    Q_FOREACH ( const Item::Id &cid, orphanedChildren ) {
       m_childToParent.insert( cid, id );
+    }
+
     m_unseenParentToChildren.remove( ui );
     m_childToUnseenParent.remove( id );
   }
@@ -259,11 +265,11 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
       const KCal::Incidence::Ptr parentInc = Akonadi::incidence( m_itemMap.value( parentIt.value() ) );
       Q_ASSERT( parentInc );
       Akonadi::incidence( item )->setRelatedTo( parentInc.get() );
-      m_parentToChildren[parentIt.value()].push_back( id );
+      m_parentToChildren[parentIt.value()].append( id );
       m_childToParent.insert( id, parentIt.value() );
     } else {
       m_childToUnseenParent.insert( id, parentItem );
-      m_unseenParentToChildren[parentItem].push_back( id );
+      m_unseenParentToChildren[parentItem].append( id );
     }
   }
 
@@ -305,13 +311,44 @@ void Calendar::Private::itemsAdded( const Item::List &items )
     assertInvariants();
 }
 
+void Calendar::Private::removeItemFromMaps( const Akonadi::Item &item )
+{
+  UnseenItem unseen_item;
+  UnseenItem unseen_parent;
+
+  unseen_item.collection = unseen_parent.collection = item.storageCollectionId();
+
+  unseen_item.uid   = Akonadi::incidence( item )->uid();
+  unseen_parent.uid = Akonadi::incidence( item )->relatedToUid();
+
+  if ( m_childToParent.contains( item.id() ) ) {
+    Akonadi::Item::Id parentId = m_childToParent.take( item.id() );
+    m_parentToChildren[parentId].removeAll( item.id() );
+  }
+
+  foreach ( const Akonadi::Item::Id &id, m_parentToChildren[item.id()] ) {
+    m_childToUnseenParent[id] = unseen_item;
+    m_unseenParentToChildren[unseen_item].push_back( id );
+  }
+
+  m_parentToChildren.remove( item.id() );
+
+  m_childToUnseenParent.remove( item.id() );
+
+  m_unseenParentToChildren[unseen_parent].removeAll( item.id() );
+
+  m_uidToItemId.remove( unseen_item );
+}
+
 void Calendar::Private::itemsRemoved( const Item::List &items )
 {
     assertInvariants();
-    //kDebug()<<items.count();
     foreach( const Item& item, items ) {
         Q_ASSERT( item.isValid() );
         Item ci( m_itemMap.take( item.id() ) );
+
+        removeItemFromMaps( ci );
+
         kDebug()<<item.id();
         Q_ASSERT( ci.hasPayload<KCal::Incidence::Ptr>() );
         const KCal::Incidence::Ptr incidence = ci.payload<KCal::Incidence::Ptr>();
