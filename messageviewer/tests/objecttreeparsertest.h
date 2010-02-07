@@ -19,7 +19,9 @@
 #ifndef OBJECTTREEPARSERTEST_H
 #define OBJECTTREEPARSERTEST_H
 
-#include <qobject.h>
+#include <KMime/Message>
+
+#include <QObject>
 
 class ObjectTreeParserTester : public QObject
 {
@@ -28,6 +30,9 @@ class ObjectTreeParserTester : public QObject
   private slots:
     void test_parseEncapsulatedMessage();
     void test_parsePlainMessage();
+
+  private:
+    KMime::Message::Ptr readAndParseMail( const QString &mailFile ) const;
 };
 
 #endif
