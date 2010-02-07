@@ -2108,20 +2108,10 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   QString href = QString( "attachment:%1?place=body" ).arg( msgPart->index().toString() );
 
   QString iconName;
-  QByteArray contentId = msgPart->index().toString().toUtf8();
-  if ( inlineImage ) {
-    iconName = href;
-  }
-  else {
-    iconName = mNodeHelper->iconName( msgPart );
-    if( iconName.right( 14 ) == "mime_empty.png" ) {
-      mNodeHelper->magicSetType( msgPart );
-      iconName = mNodeHelper->iconName( msgPart );
-    }
-  }
 
   if ( inlineImage ) {
     // show the filename of the image below the embedded image
+    iconName = href;
     htmlWriter()->queue( "<div><a href=\"" + href + "\">"
                           "<img src=\"" + fileName + "\" border=\"0\" style=\"max-width: 100%\"></a>"
                           "</div>"
@@ -2131,6 +2121,11 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
   }
   else {
     // show the filename next to the image
+    iconName = mNodeHelper->iconName( msgPart );
+    if( iconName.right( 14 ) == "mime_empty.png" ) {
+      mNodeHelper->magicSetType( msgPart );
+      iconName = mNodeHelper->iconName( msgPart );
+    }
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
                           iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
                           "</a></div>"
