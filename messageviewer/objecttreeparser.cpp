@@ -2126,7 +2126,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
       iconName = mNodeHelper->iconName( msgPart );
     }
     htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
-                          iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
+                          iconName + "\" border=\"0\" style=\"max-width: 100%\" alt=\"\">" + label +
                           "</a></div>"
                           "<div>" + comment + "</div><br>" );
   }
