@@ -1,6 +1,14 @@
 [Desktop Entry]
 Name=StickyNote
+Name[pt]=Nota Autocolante
+Name[sv]=Klistrig anteckning
+Name[uk]=Липка нотатка
+Name[x-test]=xxStickyNotexx
 Comment=Connect to your libstickynotes powered backend!
+Comment[pt]=Ligue-se à sua infra-estrutura controlada pela libstickynotes!
+Comment[sv]=Anslut till gränssnitt hanterat av libstickynotes.
+Comment[uk]=З’єднайтеся з вашим сервером за допомогою libstickynotes!
+Comment[x-test]=xxConnect to your libstickynotes powered backend!xx
 Type=Service
 Icon=knotes
 ServiceTypes=Plasma/Applet
