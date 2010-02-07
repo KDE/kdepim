@@ -47,8 +47,9 @@
 #include <QRadioButton>
 #include <QSpinBox>
 #include <QTimeEdit>
-#include <Q3ButtonGroup>
-#include <Q3HBox>
+#include <QButtonGroup>
+#include <QGroupBox>
+#include <KHBox>
 
 #include "kprefsdialog.moc"
 
@@ -79,8 +80,9 @@ KPrefsWid *create( KConfigSkeletonItem *item, QWidget *parent )
     } else {
       KPrefsWidRadios *radios = new KPrefsWidRadios( enumItem, parent );
       QList<KConfigSkeleton::ItemEnum::Choice>::ConstIterator it;
+      int value = 0;
       for ( it = choices.constBegin(); it != choices.constEnd(); ++it ) {
-        radios->addRadio( (*it).label );
+        radios->addRadio( value++, (*it).label );
       }
       return radios;
     }
@@ -431,18 +433,22 @@ KDateEdit *KPrefsWidDate::dateEdit()
 KPrefsWidRadios::KPrefsWidRadios( KConfigSkeleton::ItemEnum *item, QWidget *parent )
   : mItem( item )
 {
-  mBox = new Q3ButtonGroup( 1, Qt::Horizontal, mItem->label(), parent );
-  connect( mBox, SIGNAL(clicked(int)), SIGNAL(changed()) );
+  mBox = new QGroupBox( mItem->label(), parent );
+  new QVBoxLayout( mBox );
+  mGroup = new QButtonGroup( parent );
+  connect( mGroup, SIGNAL(buttonClicked(int)), SIGNAL(changed()) );
 }
 
 KPrefsWidRadios::~KPrefsWidRadios()
 {
 }
 
-void KPrefsWidRadios::addRadio( const QString &text, const QString &toolTip,
+void KPrefsWidRadios::addRadio( int value, const QString &text, const QString &toolTip,
                                 const QString &whatsThis )
 {
   QRadioButton *r = new QRadioButton( text, mBox );
+  mBox->layout()->addWidget( r );
+  mGroup->addButton( r, value );
   if ( !toolTip.isEmpty() ) {
     r->setToolTip( toolTip );
   }
@@ -451,19 +457,21 @@ void KPrefsWidRadios::addRadio( const QString &text, const QString &toolTip,
   }
 }
 
-Q3ButtonGroup *KPrefsWidRadios::groupBox()
+QGroupBox *KPrefsWidRadios::groupBox() const
 {
   return mBox;
 }
 
 void KPrefsWidRadios::readConfig()
 {
-  mBox->setButton( mItem->value() );
+  if ( !mGroup->button( mItem->value() ) )
+    return;
+  mGroup->button( mItem->value() )->setChecked( true );
 }
 
 void KPrefsWidRadios::writeConfig()
 {
-  mItem->setValue( mBox->id( mBox->selected() ) );
+  mItem->setValue( mGroup->checkedId() );
 }
 
 QList<QWidget *> KPrefsWidRadios::widgets() const
@@ -476,7 +484,7 @@ QList<QWidget *> KPrefsWidRadios::widgets() const
 KPrefsWidCombo::KPrefsWidCombo( KConfigSkeleton::ItemEnum *item, QWidget *parent )
   : mItem( item )
 {
-  Q3HBox *hbox = new Q3HBox( parent );
+  KHBox *hbox = new KHBox( parent );
   new QLabel( mItem->label(), hbox );
   mCombo = new KComboBox( hbox );
   connect( mCombo, SIGNAL(activated(int)), SIGNAL(changed()) );
@@ -675,8 +683,9 @@ KPrefsWidRadios *KPrefsWidManager::addWidRadios( KConfigSkeleton::ItemEnum *item
   QList<KConfigSkeleton::ItemEnum::Choice2> choices;
   choices = item->choices2();
   QList<KConfigSkeleton::ItemEnum::Choice2>::ConstIterator it;
+  int value = 0;
   for ( it = choices.constBegin(); it != choices.constEnd(); ++it ) {
-    w->addRadio( (*it).label, (*it).toolTip, (*it).whatsThis );
+    w->addRadio( value++, (*it).label, (*it).toolTip, (*it).whatsThis );
   }
   addWid( w );
   return w;

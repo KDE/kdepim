@@ -44,7 +44,8 @@ class QCheckBox;
 class QLabel;
 class QSpinBox;
 class QTimeEdit;
-class Q3ButtonGroup;
+class QButtonGroup;
+class QGroupBox;
 
 namespace KPIM {
 
@@ -399,18 +400,20 @@ class KDEPIM_EXPORT KPrefsWidRadios : public KPrefsWid
     /**
       Add a radio button.
 
+      @param value The enum value represented by this radio button.
       @param text Text of the button.
       @param toolTip ToolTip help for the button.
       @param whatsThis What's This help for the button.
     */
-    void addRadio( const QString &text,
+    void addRadio( int value,
+                   const QString &text,
                    const QString &toolTip = QString(),
                    const QString &whatsThis = QString() );
 
     /**
       Return the box widget used by this widget.
     */
-    Q3ButtonGroup *groupBox();
+    QGroupBox *groupBox() const;
 
     void readConfig();
     void writeConfig();
@@ -420,7 +423,8 @@ class KDEPIM_EXPORT KPrefsWidRadios : public KPrefsWid
   private:
     KConfigSkeleton::ItemEnum *mItem;
 
-    Q3ButtonGroup *mBox;
+    QGroupBox *mBox;
+    QButtonGroup *mGroup;
 };
 
 /**
