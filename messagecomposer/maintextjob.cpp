@@ -39,7 +39,6 @@
 #include <kpimtextedit/textedit.h>
 
 using namespace Message;
-using namespace KMime;
 
 class Message::MainTextJobPrivate : public ContentJobBasePrivate
 {
@@ -202,7 +201,7 @@ SinglepartJob *MainTextJobPrivate::createImageJob( const QSharedPointer<KPIMText
   const QByteArray charset = Util::selectCharset( q->globalPart()->charsets( true ), image->imageName );
   Q_ASSERT( !charset.isEmpty() );
   cjob->contentType()->setName( image->imageName, charset );
-  cjob->contentTransferEncoding()->setEncoding( Headers::CEbase64 );
+  cjob->contentTransferEncoding()->setEncoding( KMime::Headers::CEbase64 );
   cjob->contentTransferEncoding()->setDecoded( false ); // It is already encoded.
   cjob->contentID()->setIdentifier( image->contentID.toLatin1() );
   kDebug() << "cid" << cjob->contentID()->identifier();

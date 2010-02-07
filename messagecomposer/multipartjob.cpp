@@ -25,7 +25,6 @@
 #include <kmime/kmime_content.h>
 
 using namespace Message;
-using namespace KMime;
 
 class Message::MultipartJobPrivate : public ContentJobBasePrivate
 {
@@ -65,14 +64,14 @@ void MultipartJob::process()
   Q_D( MultipartJob );
   Q_ASSERT( d->resultContent == 0 ); // Not processed before.
   Q_ASSERT( !d->subtype.isEmpty() );
-  d->resultContent = new Content;
+  d->resultContent = new KMime::Content;
   d->resultContent->contentType( true )->setMimeType( "multipart/" + d->subtype );
   d->resultContent->contentType()->setBoundary( KMime::multiPartBoundary() );
-  d->resultContent->contentTransferEncoding()->setEncoding( Headers::CE7Bit );
-  foreach( Content *c, d->subjobContents ) {
+  d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE7Bit );
+  foreach( KMime::Content *c, d->subjobContents ) {
     d->resultContent->addContent( c );
-    if( c->contentTransferEncoding()->encoding() == Headers::CE8Bit ) {
-      d->resultContent->contentTransferEncoding()->setEncoding( Headers::CE8Bit );
+    if( c->contentTransferEncoding()->encoding() == KMime::Headers::CE8Bit ) {
+      d->resultContent->contentTransferEncoding()->setEncoding( KMime::Headers::CE8Bit );
       break;
     }
   }

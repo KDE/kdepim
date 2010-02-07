@@ -28,7 +28,6 @@
 #include <kmime/kmime_content.h>
 
 using namespace Message;
-using namespace KMime;
 
 void ContentJobBasePrivate::init( QObject *parent )
 {
@@ -75,7 +74,7 @@ void ContentJobBase::start()
   QTimer::singleShot( 0, this, SLOT(doStart()) );
 }
 
-Content *ContentJobBase::content() const
+KMime::Content *ContentJobBase::content() const
 {
   Q_D( const ContentJobBase );
   //Q_ASSERT( !hasSubjobs() ); // Finished. // JobBase::hasSubjobs is not const :-/ TODO const_cast??
