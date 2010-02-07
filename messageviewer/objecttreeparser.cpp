@@ -2118,8 +2118,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
                           "<div><a href=\"" + href + "\">" + label + "</a>"
                           "</div>"
                           "<div>" + comment + "</div><br>" );
-  }
-  else {
+  } else {
     // show the filename next to the image
     iconName = mNodeHelper->iconName( msgPart );
     if( iconName.right( 14 ) == "mime_empty.png" ) {
