@@ -32,7 +32,6 @@
 #include <KDirWatch>
 #include <KProtocolInfo>
 #include <KStandardDirs>
-#include <K3StaticDeleter>
 
 #include <QFile>
 #include <QImage>
