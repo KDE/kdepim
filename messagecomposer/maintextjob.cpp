@@ -76,7 +76,7 @@ bool MainTextJobPrivate::chooseSourcePlainText()
     if( sourcePlainText.isEmpty() &&
         !textPart->cleanPlainText().isEmpty() ) {
       q->setError( JobBase::BugError );
-      q->setErrorText( i18n( "Asked to use word wrapping, but given no wrapped plain text." ) );
+      q->setErrorText( i18n( "Asked to use word wrapping, but not given wrapped plain text." ) );
       return false;
     }
   } else {
@@ -84,7 +84,7 @@ bool MainTextJobPrivate::chooseSourcePlainText()
     if( sourcePlainText.isEmpty() &&
         !textPart->wrappedPlainText().isEmpty() ) {
       q->setError( JobBase::BugError );
-      q->setErrorText( i18n( "Asked not to use word wrapping, but given no clean plain text." ) );
+      q->setErrorText( i18n( "Asked not to use word wrapping, but not given clean plain text." ) );
       return false;
     }
   }
