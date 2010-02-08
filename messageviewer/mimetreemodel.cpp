@@ -172,9 +172,10 @@ QVariant MimeTreeModel::data(const QModelIndex & index, int role) const
   KMime::Content *content = static_cast<KMime::Content*>( index.internalPointer() );
   if ( !content )
     return QVariant();
-  if ( role == Qt::ToolTipRole )
+  if ( role == Qt::ToolTipRole ) {
     // TODO
-    return d->root->indexForContent( content ).toString();
+    //return d->root->indexForContent( content ).toString();
+  }
   if ( role == Qt::DisplayRole ) {
     switch( index.column() ) {
       case 0:
