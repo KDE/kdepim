@@ -2529,7 +2529,7 @@ void ViewerPrivate::injectAttachments()
   if( injectionPoint.isNull() )
     return;
 
-  QString imgpath( KStandardDirs::locate("data","kmail/pics/") );
+  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
   QString urlHandle;
   QString imgSrc;
   if( !mShowAttachmentQuicklist ) {

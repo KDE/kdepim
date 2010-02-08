@@ -2054,7 +2054,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( const Akonadi::Item &ite
     const QString iconName = Util::fileNameForMimetype( att->mimeTag(),
                                                          KIconLoader::Desktop, att->name() );
 
-    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
+    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
                           iconName + "\" border=\"0\" style=\"max-width: 100%\">" + label +
                           "</a></div><br>" );
   }
@@ -2111,9 +2111,8 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
 
   if ( inlineImage ) {
     // show the filename of the image below the embedded image
-    iconName = href;
     htmlWriter()->queue( "<div><a href=\"" + href + "\">"
-                          "<img src=\"" + fileName + "\" border=\"0\" style=\"max-width: 100%\"></a>"
+                         "<img src=\"file:///" + fileName + "\" border=\"0\" style=\"max-width: 100%\"></a>"
                           "</div>"
                           "<div><a href=\"" + href + "\">" + label + "</a>"
                           "</div>"
@@ -2125,7 +2124,7 @@ void ObjectTreeParser::writePartIcon( KMime::Content * msgPart, bool inlineImage
       mNodeHelper->magicSetType( msgPart );
       iconName = mNodeHelper->iconName( msgPart );
     }
-    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"" +
+    htmlWriter()->queue( "<div><a href=\"" + href + "\"><img src=\"file:///" +
                           iconName + "\" border=\"0\" style=\"max-width: 100%\" alt=\"\">" + label +
                           "</a></div>"
                           "<div>" + comment + "</div><br>" );

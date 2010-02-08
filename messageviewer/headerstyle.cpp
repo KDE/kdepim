@@ -793,7 +793,8 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
     dateString = dateStr(message->date()->dateTime());
   }
 
-  QString imgpath( KStandardDirs::locate("data","kmail/pics/") );
+  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
+  imgpath.prepend( "file:///" );
   imgpath.append("enterprise_");
   const QString borderSettings( " padding-top: 0px; padding-bottom: 0px; border-width: 0px " );
   QString headerStr;
