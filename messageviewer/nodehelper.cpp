@@ -230,10 +230,10 @@ KUrl NodeHelper::tempFileUrlFromNode( const KMime::Content *node )
   foreach ( const QString &path, mTempFiles ) {
     int right = path.lastIndexOf( '/' );
     int left = path.lastIndexOf( ".index.", right );
-    if (left != -1)
+    if ( left != -1 )
         left += 7;
 
-    QString storedIndex = path.mid( left + 1, right - left - 1 );
+    QString storedIndex = path.mid( left, right - left );
     if ( left != -1 && storedIndex == index )
       return KUrl( path );
   }
@@ -601,7 +601,7 @@ QString NodeHelper::fileName(const KMime::Content* node)
 {
   QString name = const_cast<KMime::Content*>(node)->contentDisposition()->filename();
   if ( name.isEmpty() )
-      name = const_cast<KMime::Content*>(node)->contentType()->name();;
+    name = const_cast<KMime::Content*>(node)->contentType()->name();
 
   name = name.trimmed();
   return name;
