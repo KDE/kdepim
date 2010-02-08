@@ -49,15 +49,6 @@ target_link_libraries(testdateedit  kdepim ${KDE4_KDEUI_LIBS})
 
 ########### next target ###############
 
-set(testdistrlist_SRCS testdistrlist.cpp )
-
-
-kde4_add_executable(testdistrlist TEST ${testdistrlist_SRCS})
-
-target_link_libraries(testdistrlist kdepim ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
-
-########### next target ###############
-
 set(testldapclient_SRCS testldapclient.cpp )
 
 

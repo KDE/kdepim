@@ -61,7 +61,6 @@ set(kdepim_LIB_SRCS
    utils.cpp
    colorlistbox.cpp
    uistatesaver.cpp
-   distributionlistconverter.cpp
    contactsfilterproxymodel.cpp
    contactstreemodel.cpp
 )
