@@ -1,3 +1,4 @@
+
 /*  -*- c++ -*-
     urlhandlermanager.cpp
 
@@ -609,7 +610,11 @@ namespace {
     QString name = NodeHelper::fileName( node );
     if ( !name.isEmpty() )
       return i18n( "Attachment: %1", name );
-    return i18n( "Attachment #%1 (unnamed)", node->index().toString() );
+    else if ( dynamic_cast<KMime::Message*>( node ) ) {
+      return i18n( "Encapsulated Message (Subject: %1)",
+                   node->header<KMime::Headers::Subject>()->asUnicodeString() );
+    }
+    return i18n( "Unnamed attachment" );
   }
 }
 
