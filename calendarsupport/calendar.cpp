@@ -277,6 +277,12 @@ void Calendar::Private::updateItem( const Item &item, UpdateMode mode ) {
     incidence->registerObserver( q );
     q->notifyIncidenceAdded( item );
   } else {
+
+    // The raw incidence's address changed, so we have to update all children
+    Q_FOREACH ( const Item::Id &child_id, m_parentToChildren[item.id()] ) {
+      Akonadi::incidence( m_itemMap[child_id] )->setRelatedTo( incidence.get() );
+    }
+
     q->notifyIncidenceChanged( item );
   }
   assertInvariants();
