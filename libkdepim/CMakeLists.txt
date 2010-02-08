@@ -53,8 +53,6 @@ set(kdepim_LIB_SRCS
    kaddrbookexternal.cpp
    treewidget.cpp
    foldertreewidget.cpp
-   kscoring.cpp
-   kscoringeditor.cpp
    ksubscription.cpp
    kwidgetlister.cpp
    recentaddresses.cpp

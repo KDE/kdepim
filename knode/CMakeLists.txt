@@ -80,6 +80,8 @@ set(knodecommon_LIB_SRCS
    configuration/identity_edition_dialog.cpp
    utils/locale.cpp
    utils/startup.cpp
+   kscoring.cpp
+   kscoringeditor.cpp
 )
 
 qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMainWidget)
