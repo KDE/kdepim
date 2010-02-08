@@ -499,9 +499,9 @@ namespace {
             if ( isSignOnlySelected() && isArchiveRequested() )
                 return KMessageBox::warningContinueCancel( this,
                                                            i18nc("@info",
-                                                                 "<para>Archiving in combination with sign-only currently requires so-called opaque signatures "
-                                                                 "(as opposed to detached ones, they embed the content in the signature).</para>"
-                                                                 "<para>This format is rather unusual. You might want to archive the files spearately, "
+                                                                 "<para>Archiving in combination with sign-only currently requires what are known as opaque signatures - "
+                                                                 "unlike detached ones, these embed the content in the signature.</para>"
+                                                                 "<para>This format is rather unusual. You might want to archive the files separately, "
                                                                  "and then sign the archive as one file with Kleopatra.</para>"
                                                                  "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>" ),                                                    
                                                            i18nc("@title:window", "Unusual Signature Warning"),
