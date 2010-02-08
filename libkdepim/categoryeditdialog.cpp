@@ -51,19 +51,18 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig, QWidget 
 
   // unfortunately, kde-core-devel will not allow this code in KDialog
   // because these button's functionality cannot be easily generalized.
-  //TODO(KDE4.3): uncomment when strings are unfrozen
-  //setButtonToolTip( Ok, i18n( "Apply changes and close" ) );
-  //setButtonWhatsThis( Ok, i18n( "When clicking <b>Ok</b>, "
-  //                              "the settings will be handed over to the "
-  //                              "program and the dialog will be closed." ) );
-  //setButtonToolTip( Cancel, i18n( "Cancel changes and close" ) );
-  //setButtonWhatsThis( Cancel, i18n( "When clicking <b>Cancel</b>, "
-  //                                  "the settings will be discarded and the "
-  //                                  "dialog will be closed." ) );
+  setButtonToolTip( Ok, i18n( "Apply changes and close" ) );
+  setButtonWhatsThis( Ok, i18n( "When clicking <b>Ok</b>, "
+                                "the settings will be handed over to the "
+                                "program and the dialog will be closed." ) );
+  setButtonToolTip( Cancel, i18n( "Cancel changes and close" ) );
+  setButtonWhatsThis( Cancel, i18n( "When clicking <b>Cancel</b>, "
+                                    "the settings will be discarded and the "
+                                    "dialog will be closed." ) );
 
-  //setButtonWhatsThis( Help, i18n( "When clicking <b>Help</b>, "
-  //                                "a separate KHelpCenter window will open "
-  //                                "providing more information about the settings." ) );
+  setButtonWhatsThis( Help, i18n( "When clicking <b>Help</b>, "
+                                  "a separate KHelpCenter window will open "
+                                  "providing more information about the settings." ) );
 
   setMainWidget( widget );
 
