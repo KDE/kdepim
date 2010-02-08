@@ -117,4 +117,10 @@ public:
 
 };
 
+namespace Utils {
+
+  QString rot13( const QString &s );
+
+};
+
 #endif

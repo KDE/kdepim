@@ -22,7 +22,7 @@
 #include "kncomposereditor.h"
 #include "kncomposereditor.moc"
 #include "knglobals.h"
-#include "utils.h"
+#include "utilities.h"
 #include <KPIMTextEdit/EMailQuoteHighlighter>
 #include <KConfigGroup>
 #include <QApplication>
@@ -56,7 +56,7 @@ void KNComposerEditor::slotRot13()
 {
   QTextCursor cursor = textCursor();
   if ( cursor.hasSelection() )
-    insertPlainText( KPIM::Utils::rot13( cursor.selectedText() ) );
+    insertPlainText( Utils::rot13( cursor.selectedText() ) );
   //FIXME: breaks HTML formatting
 }
 

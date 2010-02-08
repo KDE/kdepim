@@ -78,8 +78,6 @@
 #include "nntpjobs.h"
 #include "settings.h"
 
-#include "libkdepim/utils.h"
-
 using namespace KNode;
 
 QList<ArticleWidget*> ArticleWidget::mInstances;
@@ -947,7 +945,7 @@ QString ArticleWidget::toHtmlString( const QString &line, int flags )
   QString text = line;
   if ( flags & ArticleWidget::AllowROT13 ) {
     if ( mRot13 )
-      text = KPIM::Utils::rot13( line );
+      text = Utils::rot13( line );
   }
   return KPIMUtils::LinkLocator::convertToHtml( text, llflags );
 }
