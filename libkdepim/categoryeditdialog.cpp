@@ -139,7 +139,7 @@ void CategoryEditDialog::addSubcategory()
   if ( !mWidgets->mEdit->text().isEmpty() ) {
     QTreeWidgetItem *newItem =
       new QTreeWidgetItem( mWidgets->mCategories->currentItem(),
-                           QStringList( i18n( "New category" ) ) );
+                           QStringList( i18n( "New subcategory" ) ) );
     newItem->setExpanded( true );
 
     mWidgets->mCategories->setCurrentItem( newItem );
