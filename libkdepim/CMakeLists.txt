@@ -6,7 +6,6 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
 add_subdirectory(pics)
-add_subdirectory(kpartsdesignerplugin)
 
 add_definitions(${QT_QTDBUS_DEFINITIONS})
 
