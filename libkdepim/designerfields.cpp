@@ -37,7 +37,7 @@
 #include <QRegExp>
 #include <QTextEdit>
 #include <QFile>
-#include <QtDesigner/QFormBuilder>
+#include <QUiLoader>
 #include <QVBoxLayout>
 #include <QDateTimeEdit>
 
@@ -57,7 +57,7 @@ void DesignerFields::initGUI( const QString &uiFile )
 
   QFile f( uiFile );
   f.open(QFile::ReadOnly);
-  QFormBuilder builder;
+  QUiLoader builder;
   QWidget *wdg = builder.load( &f, this );
   f.close();
   if ( !wdg ) {

@@ -45,7 +45,7 @@
 #include <QPushButton>
 #include <QRegExp>
 #include <QTimer>
-#include <QtDesigner/QFormBuilder>
+#include <QUiLoader>
 #include <QHBoxLayout>
 #include <QFrame>
 #include <QVBoxLayout>
@@ -69,7 +69,7 @@ class PageItem : public Q3CheckListItem
 
       QFile f( mPath );
       f.open(QFile::ReadOnly);
-      QFormBuilder builder;
+      QUiLoader builder;
       QWidget *wdg = builder.load( &f, 0 );
       f.close();
       if ( wdg ) {
