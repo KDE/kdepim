@@ -49,11 +49,7 @@ set(kdepim_LIB_SRCS
    broadcaststatus.cpp
    kresourceprefs.cpp
    kxface.cpp
-   kaccount.cpp
    kaddrbookexternal.cpp
-   treewidget.cpp
-   foldertreewidget.cpp
-   ksubscription.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
    designerfields.cpp
