@@ -25,8 +25,8 @@
 <title>Using other Mailbox Files with &kmail;</title>
 
 <para>&kmail; offers an import tool for the messages and address books of some
-other email clients. You can access it using <menuchoice><guimenu>Tools</guimenu>
-<guimenuitem>Import...</guimenuitem></menuchoice>. Please make sure that you 
+other email clients. You can access it using <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Import Messages</guimenuitem></menuchoice>. Please make sure that you 
 compact your folders in the other email client, no matter if you are going to use
 the import utility or if you are going to copy files manually.
 You only need to read this chapter if this tool does not work for you.</para>
@@ -46,7 +46,7 @@ your mailboxes), make sure they are writable by your user, and launch
 &kmail;. The mailboxes should now show up correctly in &kmail;.</para>
 
 <para>Please have a look at the
-<ulink url="http://kontact.kde.org/kmail/tools.html">Tools section of &kmail;'s
+<ulink url="http://userbase.kde.org/KMail/Tools">Tools section of &kmail;'s
 homepage</ulink> first, to see if there is a tool that imports your mailbox
 and maybe even address book.</para>
 
@@ -241,7 +241,7 @@ there.</para>
 <term>Maildir / Outlook Express / xfmail</term>
 <listitem>
 <para>Tools to convert these formats are available at the
-<ulink url="http://kontact.kde.org/kmail/tools.html">Tools section of &kmail;'s
+<ulink url="http://userbase.kde.org/KMail/Tools">Tools section of &kmail;'s
 homepage</ulink>.</para>
 </listitem>
 </varlistentry>
@@ -251,7 +251,7 @@ homepage</ulink>.</para>
 Mail</application>, &etc;...</term>
 <listitem>
 <para>First you should have a look at <ulink
-url="http://kontact.kde.org/kmail/tools.html">Tools section of &kmail;'s homepage</ulink> if 
+url="http://userbase.kde.org/KMail/Tools">Tools section of &kmail;'s homepage</ulink> if 
 there are tools to convert your messages.</para>
 <para>Mail programs not listed here or on the homepage probably do not work with &kmail; as they use
 proprietary mail formats that &kmail; cannot understand. However, there is no

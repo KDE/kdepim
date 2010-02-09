@@ -492,7 +492,7 @@ used.</para>
 <answer><para>See the <link linkend="popfilters">Download filters</link> chapter.
 If you want to leave all messages on the server: open up the
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kmail;...</guimenuitem>
-</menuchoice> window. Click on the <guilabel>Network</guilabel> page. Select your
+</menuchoice> window. Click on the <guilabel>Accounts</guilabel> page. Select your
 account from the account list and click the <guibutton>Modify...</guibutton>
 button. This dialog contains the <guilabel>Leave fetched messages on the server</guilabel>
 setting which you must enable.</para></answer>

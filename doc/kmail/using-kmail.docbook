@@ -210,8 +210,7 @@ users, depending on your system configuration.</para>
 message, click the <guiicon>Send Now</guiicon> icon (the envelope) to send
 the message now, or click the <guiicon>Send Later</guiicon> icon to put
 the message in the outbox. If your message is not finished yet, select
-<menuchoice><guimenu>Message</guimenu><guimenuitem>Save in Drafts
-Folder</guimenuitem></menuchoice>.
+<menuchoice><guimenu>Message</guimenu><guimenuitem>Save as Draft</guimenuitem></menuchoice>.
 </para></sect2>
 
 <sect2 id="encrypt-sign">
@@ -1773,9 +1772,9 @@ have matched messages, but at least one message was tagged for
 <para>Multiple accounts are used to check for messages from more than one email address
 and/or mail server. Select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kmail;...</guimenuitem></menuchoice> and click on the
-<guilabel>Network</guilabel> page to add or change your account settings. See the
+<guilabel>Accounts</guilabel> page to add or change your account settings. See the
 <link linkend="getting-started">Getting started</link> section for more
-information on the settings in the <guilabel>Network</guilabel> page.</para>
+information on the settings in the <guilabel>Accounts</guilabel> page.</para>
 
 <para>To check for messages from a particular account, use the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Check Mail

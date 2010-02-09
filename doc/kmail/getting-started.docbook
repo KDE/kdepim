@@ -49,14 +49,14 @@ so &kmail; will be able to properly retrieve and send your
 messages.</para>
 
 <para>The Configure window consists of six sections:
-<guilabel>Identities</guilabel>, <guilabel>Network</guilabel>,
+<guilabel>Identities</guilabel>, <guilabel>Accounts</guilabel>,
 <guilabel>Appearance</guilabel>, <guilabel>Composer</guilabel>,
 <guilabel>Security</guilabel>, and
 <guilabel>Misc</guilabel>.</para>
 
 <para>To begin sending and receiving messages you will only have to
 change some settings in the <guilabel>Identities</guilabel> and
-<guilabel>Network</guilabel> pages.</para>
+<guilabel>Accounts</guilabel> pages.</para>
 
   <sect1 id="setting-your-identity">
     <title>
@@ -94,7 +94,7 @@ change some settings in the <guilabel>Identities</guilabel> and
 <sect1 id="setting-up-your-account">
 <title>Setting up your Account</title>
 
-<para>The <guilabel>Network</guilabel> page contains the settings that
+<para>The <guilabel>Accounts</guilabel> page contains the settings that
 tell &kmail; how to send and receive your email messages. Many of these settings
 can vary greatly depending on the setup of your system and on the kind
 of network that your mail server is located in. If you do not know what
@@ -116,8 +116,8 @@ reputation of being difficult to set up, so if you do not already have a
 working &Sendmail; configuration, choose
 <guilabel>SMTP</guilabel> and fill in the <guilabel>Name</guilabel>
 field with a descriptive name
-(&eg; <userinput>My Mail Account</userinput>)
-and the <guilabel>Host</guilabel>
+(&eg; <userinput>My Mail Account</userinput>). Click the <guibutton>Create and Configure</guibutton>
+and fill the <guilabel>Outgoing mail server</guilabel>
 field with the name and domain of your mail server
 (&eg; <userinput>smtp.provider.com</userinput>). You will probably
 not need to change the <guilabel>Port</guilabel> setting (the default is
@@ -159,10 +159,10 @@ you want to use a local mailbox file, please see the <link linkend="faq-file-loc
 about file locking</link>.</para>
 
 <para>You will then be presented with
-the <guilabel>Add account</guilabel> window. First, fill in the
-<guilabel>Name</guilabel> field to name your account. You can choose any name
+the <guilabel>Add Account</guilabel> window. First, fill in the
+<guilabel>Account name</guilabel> field to name your account. You can choose any name
 you like.  <guilabel>Login</guilabel>, <guilabel>Password</guilabel>, and
-<guilabel>Host</guilabel> should be filled in with the appropriate information
+<guilabel>Incoming mail server</guilabel> should be filled in with the appropriate information
 from your <acronym>ISP</acronym> or system administrator. You should not
 need to change the <guilabel>Port</guilabel> setting (the default for POP3 is
 <userinput>110</userinput>, the default for <acronym>IMAP</acronym> is
@@ -234,12 +234,12 @@ messages. If you want to change that for some reason, you can do so with
 <link linkend="filters">filter</link>, which has nothing to do with this
 option.</para>
 
-<para>With <guilabel>Precommand</guilabel> you can specify any program that &kmail;
+<para>With <guilabel>Pre-command</guilabel> you can specify any program that &kmail;
 will execute just before fetching mail. Please specify the full path
 (do not use <quote>~</quote>) and note that &kmail; will not continue
 until the program returns.</para>
 
-<para>On the <guilabel>Extras</guilabel> tab you can select <guilabel>Use
+<para>On the <guilabel>POP Settings</guilabel> tab you can select <guilabel>Use
 pipelining for faster mail download</guilabel> if this is supported by your
 server. You should carefully test this to make sure it works safely.</para>
 </sect3>
@@ -248,9 +248,9 @@ server. You should carefully test this to make sure it works safely.</para>
 <title>Options for both <acronym>IMAP</acronym> and POP3</title>
 
 <!-- TODO: move all this, this isn't important for beginners?! -->
-<para>If you select <guilabel>Store POP password in configuration
-file</guilabel> or <guilabel>Store IMAP password in configuration
-file</guilabel> &kmail; will remember your password so you will not have to
+<para>If you select <guilabel>Store POP password</guilabel> or 
+<guilabel>Store IMAP Password</guilabel> &kmail; will remember 
+your password so you will not have to
 type it every time you start &kmail; and fetch new mail.</para>
 
 <warning><para>Be warned that &kmail; cannot really encrypt your password, so
@@ -282,7 +282,7 @@ text</guilabel> if your server does not support any of the other
 authentication methods. Additionally, for <acronym>IMAP</acronym>
 <guilabel>Anonymous</guilabel> is supported, but <guilabel>APOP</guilabel>
 is not. Use the <guibutton>Check what the server supports</guibutton> button
-on the <guilabel>Extras</guilabel> or <guilabel>Security</guilabel> tab
+on the <guilabel>Security</guilabel> tab
 to automatically select the most secure settings supported by your server.</para>
 
 <para>You are now ready to send and receive mail. For
@@ -310,7 +310,7 @@ Message...</guimenuitem></menuchoice> menu item.  The
 <link linkend="the-composer-window">composer window</link> will appear. Fill in the
 <guilabel>To:</guilabel> field with your email address and type
 something in the <guilabel>Subject</guilabel> field. Send the message by
-selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send</guimenuitem>
+selecting <menuchoice><guimenu>Message</guimenu> <guimenuitem>Send Mail</guimenuitem>
 </menuchoice>.</para>
 
 <para>To check your email, select
