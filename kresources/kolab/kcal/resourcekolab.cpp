@@ -565,7 +565,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       /* Add to the cache immediately if this is a new event coming from
        * KOrganizer. It relies on the incidence being in the calendar when
        * addIncidence returns. */
-      if ( newIncidence ) {
+      if ( newIncidence || sernum == 0 ) {
         mCalendar.addIncidence( incidence );
        incidence->registerObserver( this );
       }
