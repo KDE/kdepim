@@ -138,7 +138,6 @@ int KontactApp::newInstance()
         mMainWindow->setInitialActivePluginModule( moduleName );
       }
       mMainWindow->show();
-      Akonadi::Control::start( mMainWindow );
       KontactInterface::UniqueAppHandler::setMainWidget( mMainWindow );
       // --iconify is needed in kontact, although kstart can do that too,
       // because kstart returns immediately so it's too early to talk D-Bus to the app.
@@ -199,6 +198,10 @@ int main( int argc, char **argv )
   }
 
   KontactApp app;
+
+  // KDE 4.4: do akonadi startup before creating any window, since creating
+  // the window loads kmail. In 4.5 we'll do this startup async instead.
+  Akonadi::Control::start( 0 );
 
   // Qt doesn't treat the system tray as a window, and therefore Qt would quit
   // the event loop when an error message is clicked away while Kontact is in the
