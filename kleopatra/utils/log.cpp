@@ -72,7 +72,10 @@ void Log::messageHandler( QtMsgType type, const char* msg )
 {
     Q_UNUSED( type )
     FILE* const file = Log::instance()->logFile();
-    assert( file );
+    if ( !file ) {
+        fprintf( stderr, "Log::messageHandler[!file]: %s", msg );
+        return;
+    }
     
     qint64 toWrite = strlen( msg );
     while ( toWrite > 0 )
