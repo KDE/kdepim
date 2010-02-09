@@ -782,9 +782,23 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+  <varlistentry id="configure-composer-general-quote-selection-only">
+    <term>
+      <guilabel>Only quote selected text when repyling</guilabel>
+    </term>
+    <listitem>
+      <para>
+        If checked, &kmail; will quote only the selected text in the message window,
+        instead of the complete message, when replying.
+        With this, it is possible to quickly generate replies that quote only the relevant
+        paragraph to which you are actually replying, and omits the other paragraphs that are
+        not relevant to the context.
+      </para>
+    </listitem>
+  </varlistentry>
   <varlistentry id="configure-composer-general-strip-signatures">
     <term>
-      <guilabel>Remove the signature when replying to a message</guilabel>
+      <guilabel>Remove the signature when replying</guilabel>
     </term>
     <listitem>
       <para>
