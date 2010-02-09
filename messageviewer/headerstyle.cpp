@@ -614,7 +614,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
   // QString::arg is not possible
   if ( strategy->showHeader( "from" ) ) {
 
-    // Get the resent-from header into an AddressList
+    // Get the resent-from header into a Mailbox
     QList<KMime::Types::Mailbox> resentFrom;
     if ( message->headerByType( "Resent-From" ) ) {
       const QByteArray data = message->headerByType( "Resent-From" )->as7BitString( false );
