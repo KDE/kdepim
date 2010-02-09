@@ -29,7 +29,8 @@ DbBrowser::DbBrowser(QWidget* parent) :
 {
   ui.setupUi( this );
 
-  ui.tableBox->addItems( DbAccess::database().tables(QSql::AllTables) );
+  if ( DbAccess::database().isOpen() )
+    ui.tableBox->addItems( DbAccess::database().tables(QSql::AllTables) );
 
   ui.refreshButton->setIcon( KIcon( "view-refresh" ) );
   connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
