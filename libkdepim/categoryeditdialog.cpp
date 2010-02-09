@@ -38,7 +38,7 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig, QWidget 
   : KDialog( parent ), mCategoryConfig( categoryConfig )
 {
   setCaption( i18n( "Edit Categories" ) );
-  setButtons( Ok | Apply | Cancel | Help );
+  setButtons( Ok /*| Apply*/ | Cancel | Help );
   mWidgets = new Ui::CategoryEditDialog_base();
   QWidget *widget = new QWidget( this );
   widget->setObjectName( "CategoryEdit" );
@@ -86,7 +86,7 @@ CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig, QWidget 
            this, SLOT(remove()) );
   connect( this, SIGNAL(okClicked()), this, SLOT(slotOk()) );
   connect( this, SIGNAL(cancelClicked()), this, SLOT(slotCancel()) );
-  connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
+  //connect( this, SIGNAL(applyClicked()), this, SLOT(slotApply()) );
 }
 
 CategoryEditDialog::~CategoryEditDialog()
