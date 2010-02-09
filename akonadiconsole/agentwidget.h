@@ -53,6 +53,8 @@ class AgentWidget : public QWidget
     void currentChanged( const Akonadi::AgentInstance &instance );
     void showContextMenu( const QPoint &pos );
 
+    void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+
   private:
     Ui::AgentWidget ui;
     QMenu *mSyncMenu;

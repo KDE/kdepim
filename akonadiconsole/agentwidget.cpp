@@ -51,6 +51,9 @@ AgentWidget::AgentWidget( QWidget *parent )
   connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
            SLOT(currentChanged(Akonadi::AgentInstance)) );
   connect( ui.instanceWidget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)) );
+
+  connect( ui.instanceWidget->view()->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+
   currentChanged( ui.instanceWidget->currentAgentInstance() );
 
   ui.addButton->setGuiItem( KStandardGuiItem::add() );
@@ -92,20 +95,33 @@ void AgentWidget::addAgent()
   }
 }
 
+void AgentWidget::selectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
+{
+  Q_UNUSED( selected );
+  Q_UNUSED( deselected );
+
+  const bool multiSelection = ui.instanceWidget->view()->selectionModel()->selectedRows().size() > 1;
+  // Only agent removal, sync and restart is possible when multiple items are selected.
+  ui.configButton->setDisabled( multiSelection );
+}
+
+
 void AgentWidget::removeAgent()
 {
-  const AgentInstance agent = ui.instanceWidget->currentAgentInstance();
-  if ( agent.isValid() ) {
+  QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+  if ( !list.isEmpty() )
+  {
     if ( KMessageBox::questionYesNo( this,
-                                     i18n( "Do you really want to delete agent instance %1?", agent.name() ),
-                                     i18n( "Agent Deletion" ),
+                                     i18n( "Do you really want to delete these %1 agent instances?", list.size() ),
+                                     i18n( "Multiple Agent Deletion" ),
                                      KStandardGuiItem::del(),
                                      KStandardGuiItem::cancel(),
                                      QString(),
                                      KMessageBox::Dangerous )
       == KMessageBox::Yes )
     {
-      AgentManager::self()->removeInstance( agent );
+      foreach( const AgentInstance &agent, list )
+        AgentManager::self()->removeInstance( agent );
     }
   }
 }
@@ -119,9 +135,10 @@ void AgentWidget::configureAgent()
 
 void AgentWidget::synchronizeAgent()
 {
-  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
-  if ( agent.isValid() )
-    agent.synchronize();
+  QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+  if ( !list.isEmpty() )
+    foreach( AgentInstance agent, list )
+      agent.synchronize();
 }
 
 void AgentWidget::toggleOnline()
@@ -133,16 +150,18 @@ void AgentWidget::toggleOnline()
 
 void AgentWidget::synchronizeTree()
 {
-  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
-  if ( agent.isValid() )
-    agent.synchronizeCollectionTree();
+  QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+  if ( !list.isEmpty() )
+    foreach( AgentInstance agent, list )
+      agent.synchronizeCollectionTree();
 }
 
 void AgentWidget::abortAgent()
 {
-  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
-  if ( agent.isValid() )
-    agent.abortCurrentTask();
+  QList<AgentInstance> list = ui.instanceWidget->selectedAgentInstances();
+  if ( !list.isEmpty() )
+    foreach( AgentInstance agent, list )
+      agent.abortCurrentTask();
 }
 
 void AgentWidget::restartAgent()
