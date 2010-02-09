@@ -189,8 +189,7 @@ void FindBar::clearSelections()
   m_view->findText( QString());
   setFoundMatch( false );
   //WEBKIT: TODO: Find a way to unselect last selection
-  //m_view->triggerPageAction( QWebPage::MoveToStartOfDocument );
-  //m_view->triggerPageAction( QWebPage::SelectStartOfDocument );
+  // http://bugreports.qt.nokia.com/browse/QTWEBKIT-80
 }
 
 void FindBar::closeBar()
