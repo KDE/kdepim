@@ -496,7 +496,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
-              i18n( "Category:", "Categories:", categoryCount ) +
+              i18n( "Category:", "%n Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( event ) + "</td>";
     tmpStr += "</tr>";
@@ -608,7 +608,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
-              i18n( "Category:", "Categories:", categoryCount ) +
+              i18n( "Category:", "%n Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( todo ) + "</td>";
     tmpStr += "</tr>";
@@ -705,7 +705,7 @@ static QString displayViewFormatJournal( Calendar *calendar, Journal *journal )
   if ( categoryCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
-              i18n( "Category:", "Categories:", categoryCount ) +
+              i18n( "Category:", "%n Categories:", categoryCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatCategories( journal ) + "</td>";
     tmpStr += "</tr>";
