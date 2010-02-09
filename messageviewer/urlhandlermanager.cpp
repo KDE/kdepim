@@ -39,6 +39,7 @@
 #include "interfaces/bodyparturlhandler.h"
 #include "partnodebodypart.h"
 #include "viewer_p.h"
+#include "mailwebview.h"
 #include "nodehelper.h"
 
 #include "stringutil.h"
@@ -51,6 +52,10 @@
 #include <algorithm>
 
 #include <QScrollArea>
+#include <QWebElement>
+#include <QWebPage>
+#include <QWebFrame>
+
 using std::for_each;
 using std::remove;
 using std::find;
@@ -533,13 +538,23 @@ namespace {
 
 namespace {
   bool HtmlAnchorHandler::handleClick( const KUrl & url, ViewerPrivate * w ) const {
-    if ( url.hasHost() || url.path() != "/" || !url.hasRef() )
+    if ( url.hasHost() || !url.hasRef() )
       return false;
-    kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#if 0
-    if ( w && !w->htmlPart()->gotoAnchor( url.ref() ) )
-      static_cast<QScrollArea*>( w->htmlPart()->widget() )->ensureVisible( 0, 0 );
-#endif
+
+    QWebPage *page = w->htmlPart()->page();
+    QWebElement doc = page->mainFrame()->documentElement();
+
+    QWebElement link = doc.findFirst( QString( "a[name=%1]" ).arg( url.ref() ) );
+    if( link.isNull() ) {
+      kDebug() << "No such anchor found in document:" << url.ref();
+      return false;
+    }
+
+    int linkPos = link.geometry().bottom();
+    int viewerPos  = page->mainFrame()->scrollPosition().y();
+    link.setFocus();
+    page->mainFrame()->scroll(0, linkPos - viewerPos );
+
     return true;
   }
 }

@@ -2805,7 +2805,6 @@ void ViewerPrivate::selectAll()
 
 void ViewerPrivate::slotUrlClicked()
 {
-  //kDebug() << "Clicked on " << mUrlClicked;
   emit urlClicked( mMessageItem, mUrlClicked );
 }
 
