@@ -1319,14 +1319,6 @@ void ViewerPrivate::initHtmlWidget(void)
   connect(mViewer->page(), SIGNAL( linkClicked( const QUrl & ) ),this, SLOT( slotUrlOpen( const QUrl & ) ), Qt::QueuedConnection);
   connect( mViewer, SIGNAL(popupMenu(const QString &, const QPoint &) ),
            SLOT(slotUrlPopup(const QString &, const QPoint &)) );
-#if 0
-  connect(mViewer->browserExtension(),
-          SIGNAL(createNewWindow(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),this,
-          SLOT(slotUrlOpen(const KUrl &, const KParts::OpenUrlArguments &, const KParts::BrowserArguments &)),
-          Qt::QueuedConnection);
-#else
-  kWarning() << "WEBKIT: Disabled code in " << Q_FUNC_INFO;
-#endif
 }
 
 bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
