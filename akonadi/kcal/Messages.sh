@@ -1,2 +1,2 @@
 #!/bin/sh
-$XGETTEXT *.cpp -o $podir/akonadi-kcal.pot
+$XGETTEXT *.h *.cpp -o $podir/akonadi-kcal.pot
