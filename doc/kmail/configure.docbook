@@ -782,6 +782,18 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+  <varlistentry id="configure-composer-general-strip-signatures">
+    <term>
+      <guilabel>Remove the signature when replying to a message</guilabel>
+    </term>
+    <listitem>
+      <para>
+        If checked, &kmail; will remove the signature from the quoted text
+        when replying to a message. This is useful since it reduces the amount
+        of quoted text, which makes it easier to read the reply.
+      </para>
+    </listitem>
+  </varlistentry>
 	<varlistentry id="configure-composer-general-auto-request-mdns">
 	  <term>
 	    <guilabel>Automatically request message disposition notifications</guilabel>
