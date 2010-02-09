@@ -33,6 +33,14 @@ namespace KMime
   {
     struct Address;
     typedef QList<Address> AddressList;
+    class Mailbox;
+  }
+  namespace Headers
+  {
+    namespace Generics {
+      class MailboxList;
+      class AddressList;
+    }
   }
 }
 namespace MessageCore
@@ -116,10 +124,26 @@ namespace StringUtil
    * If stripped is true then the visible part of the anchor contains
    * only the name part and not the given emailAddr.
    */
-  MESSAGECORE_EXPORT QString emailAddrAsAnchor( const QString& emailAddr,
+  MESSAGECORE_EXPORT QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
                                                 bool stripped = true,
                                                 const QString& cssStyle = QString(),
                                                 bool link = true );
+
+  /**
+   * Same as above method, only for AddressList headers
+   */
+  MESSAGECORE_EXPORT QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
+                                                bool stripped = true,
+                                                const QString& cssStyle = QString(),
+                                                bool link = true );
+
+  /**
+   * Same as the above, only for Mailbox::List types
+   */
+  MESSAGECORE_EXPORT QString emailAddrAsAnchor( const QList<KMime::Types::Mailbox> &mailboxList,
+                                                bool stripped = true,
+                                                const QString& cssStyle = QString(),
+                                                bool aLink = true );
 
   /**
    * Strips an address from an address list. This is for example used

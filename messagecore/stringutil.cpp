@@ -23,6 +23,7 @@
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_util.h>
+#include <kmime/kmime_headers.h>
 #include <KPIMUtils/Email>
 #include <KPIMIdentities/IdentityManager>
 #include <Akonadi/Contact/ContactSearchJob>
@@ -767,41 +768,52 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
   return result;
 }
 
-QString emailAddrAsAnchor( const QString& aEmail, bool stripped, const QString& cssStyle,
+QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
+                           bool stripped, const QString& cssStyle,
                            bool aLink )
 {
-  if( aEmail.isEmpty() )
-    return aEmail;
-
-  const QStringList addressList = KPIMUtils::splitAddressList( aEmail );
-
   QString result;
 
-  for( QStringList::ConstIterator it = addressList.constBegin();
-       ( it != addressList.constEnd() );
-       ++it ) {
-    if( !(*it).isEmpty() ) {
-      QString address = *it;
+  foreach( KMime::Types::Mailbox mailbox, mailboxList ) {
+    if( !mailbox.prettyAddress().isEmpty() ) {
       if( aLink ) {
         result += "<a href=\"mailto:"
-                + encodeMailtoUrl( address )
+                + encodeMailtoUrl( mailbox.quotedPrettyAddress() )
                 + "\" "+cssStyle+">";
       }
-      if( stripped )
-        address = stripEmailAddr( address );
-      result += quoteHtmlChars( address, true );
+      if ( stripped ) {
+        result += quoteHtmlChars( mailbox.name(), true );
+      } else {
+        result += quoteHtmlChars( mailbox.prettyAddress(), true );
+      }
       if( aLink ) {
         result += "</a>, ";
       }
     }
   }
+
   // cut of the trailing ", "
   if( aLink ) {
     result.truncate( result.length() - 2 );
   }
 
-  //kDebug() << "('" << aEmail << "') returns:\n-->" << result << "<--";
   return result;
+}
+
+QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
+                           bool stripped, const QString& cssStyle,
+                           bool aLink )
+{
+  Q_ASSERT( mailboxList );
+  return emailAddrAsAnchor( mailboxList->mailboxes(), stripped, cssStyle, aLink );
+}
+
+QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
+                           bool stripped, const QString& cssStyle,
+                           bool aLink )
+{
+  Q_ASSERT( addressList );
+  return emailAddrAsAnchor( addressList->mailboxes(), stripped, cssStyle, aLink );
 }
 
 QStringList stripAddressFromAddressList( const QString& address,
