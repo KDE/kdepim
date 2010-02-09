@@ -36,12 +36,12 @@
 using KPIMUtils::LinkLocator;
 #include "spamheaderanalyzer.h"
 #include "globalsettings.h"
-#include "stringutil.h"
 #include "nodehelper.h"
 #include "global.h"
 
 #include <kpimutils/email.h>
 #include "libkdepim/kxface.h"
+#include <messagecore/stringutil.h>
 using namespace KPIM;
 
 #include <akonadi/contact/contactsearchjob.h>
@@ -65,6 +65,7 @@ using namespace KPIM;
 #include <kmime/kmime_message.h>
 #include <kmime/kmime_dateformatter.h>
 
+using namespace MessageCore;
 
 //
 // Convenience functions:

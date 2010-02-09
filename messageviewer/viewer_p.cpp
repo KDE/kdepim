@@ -112,7 +112,6 @@
 #include "mimetreemodel.h"
 #include "nodehelper.h"
 #include "objecttreeparser.h"
-#include "stringutil.h"
 #include "urlhandlermanager.h"
 #include "util.h"
 #include "vcardviewer.h"
@@ -122,12 +121,15 @@
 #include "interfaces/bodypart.h"
 #include "interfaces/htmlwriter.h"
 
+#include <messagecore/stringutil.h>
+
 #include <kio/jobuidelegate.h>
 
 #include <gpgme++/error.h>
 
 using namespace MailTransport;
 using namespace MessageViewer;
+using namespace MessageCore;
 
 const int ViewerPrivate::delay = 150;
 

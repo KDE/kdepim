@@ -15,8 +15,6 @@ webkitparthtmlwriter.cpp
 htmlstatusbar.cpp
 headerstyle.cpp
 headerstrategy.cpp
-kmaddrbook.cpp
-stringutil.cpp
 attachmentstrategy.cpp
 csshelper.cpp
 util.cpp

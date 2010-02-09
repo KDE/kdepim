@@ -52,10 +52,11 @@
 #include "util.h"
 #include "global.h"
 #include "kleojobexecutor.h"
-#include "stringutil.h"
 #include "nodehelper.h"
 #include "iconnamecache.h"
 #include "htmlquotecolorer.h"
+
+#include <messagecore/stringutil.h>
 
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
@@ -116,6 +117,7 @@ using KPIMUtils::LinkLocator;
 #include <kmime/kmime_message.h>
 
 using namespace MessageViewer;
+using namespace MessageCore;
 
 // A small class that eases temporary CryptPlugWrapper changes:
 class ObjectTreeParser::CryptoProtocolSaver {

@@ -18,11 +18,11 @@
 */
 #include "stringutiltest.h"
 
-#include "stringutil.h"
+#include "../stringutil.h"
 
 #include "qtest_kde.h"
 
-using namespace MessageViewer;
+using namespace MessageCore;
 
 QTEST_KDEMAIN( StringUtilTest, GUI )
 

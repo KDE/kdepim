@@ -17,6 +17,7 @@ set(messagecore_LIB_SRCS
    attachmentpropertiesdialog.cpp
    messagestatus.cpp
    annotationdialog.cpp
+   stringutil.cpp
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
@@ -30,6 +31,10 @@ target_link_libraries(messagecore
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
   ${NEPOMUK_LIBRARIES}
+  ${KDEPIMLIBS_KABC_LIBS}
+  ${KDEPIMLIBS_KPIMUTILS_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
+  kdepim
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES

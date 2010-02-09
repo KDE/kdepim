@@ -42,9 +42,10 @@
 #include "mailwebview.h"
 #include "nodehelper.h"
 
-#include "stringutil.h"
 #include "stl_util.h"
 #include <kurl.h>
+
+#include <messagecore/stringutil.h>
 
 #include <kmime/kmime_content.h>
 
@@ -60,6 +61,7 @@ using std::for_each;
 using std::remove;
 using std::find;
 using namespace MessageViewer;
+using namespace MessageCore;
 
 URLHandlerManager * URLHandlerManager::self = 0;
 

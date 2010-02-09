@@ -17,11 +17,6 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "stringutil.h"
-#include "global.h"
-#include <KUrl>
-#include <KDebug>
-
-#include "kmaddrbook.h"
 
 #include <libkdepim/kaddrbookexternal.h>
 
@@ -30,11 +25,14 @@
 #include <kmime/kmime_util.h>
 #include <KPIMUtils/Email>
 #include <KPIMIdentities/IdentityManager>
+#include <Akonadi/Contact/ContactSearchJob>
 
 #include <kascii.h>
 #include <KConfigGroup>
 #include <KDebug>
-#include <kuser.h>
+#include <KUser>
+#include <KUrl>
+#include <KDebug>
 
 #include <QHostInfo>
 #include <QRegExp>
@@ -44,7 +42,7 @@ using namespace KMime;
 using namespace KMime::Types;
 using namespace KMime::HeaderParsing;
 
-namespace MessageViewer
+namespace MessageCore
 {
 namespace StringUtil
 {
@@ -223,6 +221,27 @@ static bool flushPart( QString &msg, QStringList &textParts,
   return appendEmptyLine;
 }
 
+QString expandNickName( const QString& nickName )
+{
+  if ( nickName.isEmpty() )
+    return QString();
+
+  const QString lowerNickName = nickName.toLower();
+
+  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+  job->setQuery( Akonadi::ContactSearchJob::NickName, lowerNickName );
+  if ( !job->exec() )
+    return QString();
+
+  const KABC::Addressee::List contacts = job->contacts();
+  foreach ( const KABC::Addressee &contact, contacts ) {
+    if ( contact.nickName().toLower() == lowerNickName )
+      return contact.fullEmail();
+  }
+
+  return QString();
+}
+
 QString stripSignature ( const QString & msg, bool clearSigned )
 {
   // Following RFC 3676, only > before --
@@ -290,18 +309,11 @@ AddressList splitAddrField( const QByteArray & str )
   return result;
 }
 
-QString generateMessageId( const QString& addr )
+QString generateMessageId( const QString& addr, const QString &msgIdSuffix )
 {
-  QDateTime datetime = QDateTime::currentDateTime();
-  QString msgIdStr;
+  const QDateTime datetime = QDateTime::currentDateTime();
 
-  msgIdStr = '<' + datetime.toString( "yyyyMMddhhmm.sszzz" );
-
-  QString msgIdSuffix;
-  KConfigGroup general( Global::instance()->config(), "General" );
-
-  if( general.readEntry( "useCustomMessageIdSuffix", false ) )
-    msgIdSuffix = general.readEntry( "myMessageIdSuffix" );
+  QString msgIdStr = '<' + datetime.toString( "yyyyMMddhhmm.sszzz" );
 
   if( !msgIdSuffix.isEmpty() )
     msgIdStr += '@' + msgIdSuffix;
@@ -823,7 +835,8 @@ bool addressIsInAddressList( const QString& address,
   return false;
 }
 
-QString expandAliases( const QString& recipients, QStringList &distributionListEmpty )
+QString expandAliases( const QString& recipients, const QString &defaultDomain,
+                       QStringList &distributionListEmpty )
 {
   if ( recipients.isEmpty() )
     return QString();
@@ -851,7 +864,7 @@ QString expandAliases( const QString& recipients, QStringList &distributionListE
     }
 
     // try to expand nick name
-    QString expandedNickName = KabcBridge::expandNickName( receiver );
+    QString expandedNickName = expandNickName( receiver );
     if ( !expandedNickName.isEmpty() ) {
       expandedRecipients += expandedNickName;
       continue;
@@ -861,10 +874,9 @@ QString expandAliases( const QString& recipients, QStringList &distributionListE
     QByteArray displayName, addrSpec, comment;
     KPIMUtils::splitAddress( receiver.toLatin1(), displayName, addrSpec, comment );
     if ( !addrSpec.contains('@') ) {
-      KConfigGroup general( Global::instance()->config(), "General" );
-      QString defaultdomain = general.readEntry( "Default domain" );
-      if ( !defaultdomain.isEmpty() ) {
-        expandedRecipients += KPIMUtils::normalizedAddress( displayName, addrSpec + '@' + defaultdomain, comment );
+      if ( !defaultDomain.isEmpty() ) {
+        expandedRecipients += KPIMUtils::normalizedAddress( displayName, addrSpec + '@' +
+                                                            defaultDomain, comment );
       }
       else {
         expandedRecipients += guessEmailAddressFromLoginName( addrSpec );
