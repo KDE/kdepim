@@ -28,7 +28,7 @@
  * @file treewidget.h A common QTreeWidget extension
  */
 
-#include "kdepim_export.h"
+#include "knode_export.h"
 #include <QTreeWidget>
 
 class KMenu;
@@ -53,7 +53,7 @@ namespace KPIM
  *
  * @author Szymon Tomasz Stefanek <pragma@kvirc.net>
  */
-class KDEPIM_EXPORT TreeWidget : public QTreeWidget
+class KNODE_EXPORT TreeWidget : public QTreeWidget
 {
   Q_OBJECT
 public:

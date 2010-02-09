@@ -28,7 +28,7 @@
  * @file foldertreewidget.h A basic implementation of an UI for a tree of folders
  */
 
-#include "kdepim_export.h"
+#include "knode_export.h"
 #include "treewidget.h"
 
 #include <QHash>
@@ -70,7 +70,7 @@ class FolderTreeWidgetItem;
  *
  * @author: Szymon Tomasz Stefanek <pragma@kvirc.net>
  */
-class KDEPIM_EXPORT FolderTreeWidget : public KPIM::TreeWidget
+class KNODE_EXPORT FolderTreeWidget : public KPIM::TreeWidget
 {
   friend class FolderTreeWidgetItemLabelColumnDelegate;
   Q_OBJECT
@@ -222,7 +222,7 @@ class FolderTreeWidgetItemLabelColumnDelegate;
  *
  * @author Szymon Tomasz Stefanek <pragma@kvirc.net>
  */
-class KDEPIM_EXPORT FolderTreeWidgetItem : public QTreeWidgetItem
+class KNODE_EXPORT FolderTreeWidgetItem : public QTreeWidgetItem
 {
   friend class FolderTreeWidgetItemLabelColumnDelegate;
 public:

@@ -18,7 +18,7 @@
 #ifndef LIBKDEPIM_KSCORINGEDITOR_H
 #define LIBKDEPIM_KSCORINGEDITOR_H
 
-#include "kdepim_export.h"
+#include "knode_export.h"
 #include "kscoring.h"
 #include "kwidgetlister.h"
 
@@ -46,7 +46,7 @@ namespace KPIM {
 /** this widget implements an editor for one condition.
     It is used in ExpressionEditWidget
 */
-class KDEPIM_EXPORT SingleConditionWidget : public QFrame
+class KNODE_EXPORT SingleConditionWidget : public QFrame
 {
   Q_OBJECT
   friend class ConditionEditWidget;
@@ -130,7 +130,7 @@ class SingleActionWidget : public QWidget
 
 /** this widget implements the action editor
  */
-class KDEPIM_EXPORT ActionEditWidget : public KWidgetLister
+class KNODE_EXPORT ActionEditWidget : public KWidgetLister
 {
   Q_OBJECT
   public:
@@ -204,7 +204,7 @@ class RuleEditWidget : public QWidget
 /** This widget shows a list of rules with buttons for
     copy, delete aso.
 */
-class KDEPIM_EXPORT RuleListWidget : public QWidget
+class KNODE_EXPORT RuleListWidget : public QWidget
 {
   Q_OBJECT
   public:
@@ -257,7 +257,7 @@ class KDEPIM_EXPORT RuleListWidget : public QWidget
     QPushButton *mRuleDown;
 };
 
-class KDEPIM_EXPORT KScoringEditor : public KDialog
+class KNODE_EXPORT KScoringEditor : public KDialog
 {
   Q_OBJECT
   public:
@@ -309,7 +309,7 @@ class KScoringEditorWidgetDialog : public KDialog
     QString ruleName;
 };
 
-class KDEPIM_EXPORT KScoringEditorWidget : public QWidget
+class KNODE_EXPORT KScoringEditorWidget : public QWidget
 {
   Q_OBJECT
   public:
