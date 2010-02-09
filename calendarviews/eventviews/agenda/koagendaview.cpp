@@ -252,6 +252,8 @@ void KOAgendaView::setCalendar( Akonadi::Calendar *cal )
   Q_ASSERT( cal );
   KOrg::AgendaView::setCalendar(cal);
   calendar()->registerObserver( this );
+  mAgenda->setCalendar(calendar());
+  mAllDayAgenda->setCalendar(calendar());
 }
 
 void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
@@ -262,7 +264,6 @@ void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
 
   connect( agenda, SIGNAL(showNewEventPopupSignal()),
            SLOT(showNewEventPopup()) );
-
   agenda->setCalendar( calendar() );
 
   // Create/Show/Edit/Delete Event
