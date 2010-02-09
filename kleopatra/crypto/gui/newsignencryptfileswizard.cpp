@@ -499,9 +499,9 @@ namespace {
             if ( isSignOnlySelected() && isArchiveRequested() )
                 return KMessageBox::warningContinueCancel( this,
                                                            i18nc("@info",
-                                                                 "<para>Archiving in combination with sign-only currently requires so-called opaque signatures "
-                                                                 "(as opposed to detached ones, they embed the content in the signature).</para>"
-                                                                 "<para>This format is rather unusual. You might want to archive the files spearately, "
+                                                                 "<para>Archiving in combination with sign-only currently requires what are known as opaque signatures - "
+                                                                 "unlike detached ones, these embed the content in the signature.</para>"
+                                                                 "<para>This format is rather unusual. You might want to archive the files separately, "
                                                                  "and then sign the archive as one file with Kleopatra.</para>"
                                                                  "<para>Future versions of Kleopatra are expected to also support detached signatures in this case.</para>" ),                                                    
                                                            i18nc("@title:window", "Unusual Signature Warning"),
@@ -591,9 +591,9 @@ namespace {
               m_unselectPB( i18n("Remove"), this ),
               m_selectedKTV( this )
         {
-            setTitle( i18nc("@title","Whom do you want to encrypt to?") );
+            setTitle( i18nc("@title","For whom do you want to encrypt?") );
             setSubTitle( i18nc("@title",
-                               "Please select whom you want the files to be encrypted to. "
+                               "Please select for whom you want the files to be encrypted. "
                                "Do not forget to pick one of your own certificates.") );
             // the button may be there or not, the _text_ is static, though:
             setButtonText( QWizard::CommitButton, i18nc("@action","Encrypt") );
@@ -687,7 +687,7 @@ namespace {
 
         /* reimp */ bool validatePage() {
             const std::vector<Key> & r = keys();
-            if ( _detail::none_of_secret( r ) )
+            if ( _detail::none_of_secret( r ) ) {
                 if ( KMessageBox::warningContinueCancel( this,
                                                          i18nc("@info",
                                                                "<para>None of the recipients you are encrypting to seems to be your own.</para>"
@@ -710,6 +710,7 @@ namespace {
                                                              "warn-encrypt-to-non-self-destructive", KMessageBox::Notify|KMessageBox::Dangerous )
                          == KMessageBox::Cancel )
                         return false;
+            }
             return true;
         }
 

@@ -1313,11 +1313,11 @@ static void fill_combobox( QComboBox & cb, const QList<int> & sizes, const QStri
     for ( int i = 0, end = sizes.size() ; i != end ; ++i ) {
         cb.addItem( i < labels.size() && !labels[i].trimmed().isEmpty()
                     ? sizes[i] < 0
-                      ? i18nc( "%1: some admin-supplied text, %2: key size in bits", "%1 (%2 bits; default)", labels[i].trimmed(), -sizes[i] )
-                      : i18nc( "%1: some admin-supplied text, %2: key size in bits", "%1 (%2 bits)", labels[i].trimmed(), sizes[i] )
+                      ? i18ncp( "%2: some admin-supplied text, %1: key size in bits", "%2 (1 bit; default)", "%2 (%1 bits; default)", -sizes[i], labels[i].trimmed() )
+                      : i18ncp( "%2: some admin-supplied text, %1: key size in bits", "%2 (1 bit)", "%2 (%1 bits)", sizes[i], labels[i].trimmed() )
                     : sizes[i] < 0
-                      ? i18nc( "%1: key size in bits", "%1 bits (default)", -sizes[i] )
-                      : i18nc( "%1: key size in bits", "%1 bits", sizes[i] ),
+                      ? i18ncp( "%1: key size in bits", "1 bit (default)", "%1 bits (default)", -sizes[i] )
+                      : i18ncp( "%1: key size in bits", "1 bit", "%1 bits", sizes[i] ),
                     std::abs( sizes[i] ) );
         if ( sizes[i] < 0 )
             cb.setCurrentIndex( cb.count() - 1 );
@@ -1374,7 +1374,7 @@ void AdvancedSettingsDialog::updateWidgetVisibility() {
     // Personal Details Page
     ui.uidGB->setVisible( protocol == OpenPGP );
     ui.uidGB->setEnabled( false );
-    ui.uidGB->setToolTip( i18nc("@info:tooltip","Adding more than one User-ID isn't yet implemented, sorry.") );
+    ui.uidGB->setToolTip( i18nc("@info:tooltip","Adding more than one User ID is not yet implemented.") );
     ui.emailGB->setVisible( protocol == CMS );
     ui.dnsGB->setVisible( protocol == CMS );
     ui.uriGB->setVisible( protocol == CMS );
