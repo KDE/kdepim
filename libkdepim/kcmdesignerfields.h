@@ -29,10 +29,10 @@
 #undef KDE3_SUPPORT
 
 class KComponentData;
-class K3ListView;
 
 class QLabel;
-class Q3ListViewItem;
+class QTreeWidget;
+class QTreeWidgetItem;
 class QPushButton;
 class QStringList;
 
@@ -61,8 +61,8 @@ class KDEPIM_EXPORT KCMDesignerFields : public KCModule
     virtual QString applicationName() = 0;
 
   private Q_SLOTS:
-    void updatePreview( Q3ListViewItem* );
-    void itemClicked( Q3ListViewItem* );
+    void updatePreview();
+    void itemClicked( QTreeWidgetItem* );
     void startDesigner();
     void rebuildList();
     void deleteFile();
@@ -73,7 +73,7 @@ class KDEPIM_EXPORT KCMDesignerFields : public KCModule
   private:
     void initGUI();
 
-    K3ListView *mPageView;
+    QTreeWidget *mPageView;
     QLabel *mPagePreview;
     QLabel *mPageDetails;
     QPushButton *mDeleteButton;

@@ -33,7 +33,6 @@
 #include <KRun>
 #include <KShell>
 #include <KStandardDirs>
-#include <K3ListView>
 #include <kio/job.h>
 #include <kio/netaccess.h>
 
@@ -51,6 +50,8 @@
 #include <QVBoxLayout>
 #include <QWhatsThis>
 #include <QGroupBox>
+#include <QTreeWidget>
+#include <QHeaderView>
 
 #include <unistd.h>
 
@@ -58,13 +59,15 @@ using namespace KPIM;
 
 namespace KPIM {
 
-class PageItem : public Q3CheckListItem
+class PageItem : public QTreeWidgetItem
 {
   public:
-    PageItem( Q3ListView *parent, const QString &path )
-      : Q3CheckListItem( parent, "", Q3CheckListItem::CheckBox ),
+    PageItem( QTreeWidget *parent, const QString &path )
+      : QTreeWidgetItem( parent ),
         mPath( path ), mIsActive( false )
-    {
+    { 
+      setFlags( flags() | Qt::ItemIsUserCheckable );
+      setCheckState( 0, Qt::Unchecked );
       mName = path.mid( path.lastIndexOf( '/' ) + 1 );
 
       QFile f( mPath );
@@ -97,10 +100,11 @@ class PageItem : public Q3CheckListItem
           if ( allowedTypes.contains( it->metaObject()->className() )  ) {
             QString name = it->objectName();
             if ( name.startsWith( "X_" ) ) {
-              new Q3ListViewItem( this, name,
-                                 allowedTypes[ it->metaObject()->className() ],
-                                 it->metaObject()->className(),
-                                 it->whatsThis() );
+              new QTreeWidgetItem( this, QStringList()
+                << name
+                << allowedTypes[ it->metaObject()->className() ]
+                << it->metaObject()->className()
+                << it->whatsThis() );
             }
           }
         }
@@ -118,12 +122,13 @@ class PageItem : public Q3CheckListItem
 
     void setIsActive( bool isActive ) { mIsActive = isActive; }
     bool isActive() const { return mIsActive; }
+    bool isOn() const { return checkState( 0 ) == Qt::Checked; }
 
-  protected:
+/*  protected:
     void paintBranches( QPainter *p, const QColorGroup & cg, int w, int y, int h )
     {
       Q3ListViewItem::paintBranches( p, cg, w, y, h );
-    }
+    }*/
 
   private:
     QString mName;
@@ -160,10 +165,10 @@ void KCMDesignerFields::delayedInit()
 
   initGUI();
 
-  connect( mPageView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
-           this, SLOT( updatePreview( Q3ListViewItem* ) ) );
-  connect( mPageView, SIGNAL( clicked( Q3ListViewItem* ) ),
-           this, SLOT( itemClicked( Q3ListViewItem* ) ) );
+  connect( mPageView, SIGNAL(itemSelectionChanged()),
+           this, SLOT(updatePreview()) );
+  connect( mPageView, SIGNAL(itemClicked(QTreeWidgetItem*)),
+           this, SLOT(itemClicked(QTreeWidgetItem*)) );
 
   connect( mDeleteButton, SIGNAL( clicked() ),
            this, SLOT( deleteFile() ) );
@@ -185,8 +190,7 @@ void KCMDesignerFields::delayedInit()
 
 void KCMDesignerFields::deleteFile()
 {
-  Q3ListViewItem *item = mPageView->selectedItem();
-  if ( item ) {
+  foreach ( QTreeWidgetItem *item, mPageView->selectedItems() ) {
     PageItem *pageItem = static_cast<PageItem*>( item->parent() ? item->parent() : item );
     if (KMessageBox::warningContinueCancel(this,
 	i18n( "<qt>Do you really want to delete '<b>%1</b>'?</qt>", pageItem->text(0) ), "", KStandardGuiItem::del() )
@@ -225,7 +229,7 @@ void KCMDesignerFields::rebuildList()
   // If nothing is initialized there is no need to do something
   if (mPageView) {
     QStringList ai = saveActivePages();
-    updatePreview( 0 );
+    updatePreview();
     mPageView->clear();
     loadUiFiles();
     loadActivePages(ai);
@@ -234,12 +238,12 @@ void KCMDesignerFields::rebuildList()
 
 void KCMDesignerFields::loadActivePages(const QStringList& ai)
 {
-  Q3ListViewItemIterator it( mPageView );
-  while ( it.current() ) {
-    if ( it.current()->parent() == 0 ) {
-      PageItem *item = static_cast<PageItem*>( it.current() );
+  QTreeWidgetItemIterator it( mPageView );
+  while ( *it ) {
+    if ( (*it)->parent() == 0 ) {
+      PageItem *item = static_cast<PageItem*>( *it );
       if ( ai.contains( item->name() )  ) {
-        item->setOn( true );
+        item->setCheckState( 0, Qt::Checked );
         item->setIsActive( true );
       }
     }
@@ -259,13 +263,13 @@ void KCMDesignerFields::load()
 
 QStringList KCMDesignerFields::saveActivePages()
 {
-  Q3ListViewItemIterator it( mPageView, Q3ListViewItemIterator::Checked |
-                            Q3ListViewItemIterator::Selectable );
+  QTreeWidgetItemIterator it( mPageView, QTreeWidgetItemIterator::Checked |
+                              QTreeWidgetItemIterator::Selectable );
 
   QStringList activePages;
-  while ( it.current() ) {
-    if ( it.current()->parent() == 0 ) {
-      PageItem *item = static_cast<PageItem*>( it.current() );
+  while ( *it ) {
+    if ( (*it)->parent() == 0 ) {
+      PageItem *item = static_cast<PageItem*>( *it );
       activePages.append( item->name() );
     }
 
@@ -305,11 +309,11 @@ void KCMDesignerFields::initGUI()
   layout->addLayout( hbox );
   hbox->setSpacing( KDialog::spacingHint() );
 
-  mPageView = new K3ListView( this );
-  mPageView->addColumn( i18n( "Available Pages" ) );
+  mPageView = new QTreeWidget( this );
+  mPageView->setHeaderLabel( i18n( "Available Pages" ) );
   mPageView->setRootIsDecorated( true );
   mPageView->setAllColumnsShowFocus( true );
-  mPageView->setFullWidth( true );
+  mPageView->header()->setResizeMode( QHeaderView::Stretch );
   hbox->addWidget( mPageView );
   QTimer::singleShot( 0, mPageView, SLOT(triggerUpdate()) );
 
@@ -378,8 +382,11 @@ void KCMDesignerFields::initGUI()
     mDesignerButton->setEnabled( false );
 }
 
-void KCMDesignerFields::updatePreview( Q3ListViewItem *item )
+void KCMDesignerFields::updatePreview()
 {
+  QTreeWidgetItem *item = 0;
+  if ( mPageView->selectedItems().size() == 1 )
+    item = mPageView->selectedItems().first();
   bool widgetItemSelected = false;
 
   if ( item ) {
@@ -422,7 +429,7 @@ void KCMDesignerFields::updatePreview( Q3ListViewItem *item )
   mDeleteButton->setEnabled( widgetItemSelected );
 }
 
-void KCMDesignerFields::itemClicked( Q3ListViewItem *item )
+void KCMDesignerFields::itemClicked( QTreeWidgetItem *item )
 {
   if ( !item || item->parent() != 0 )
     return;
@@ -448,7 +455,9 @@ void KCMDesignerFields::startDesigner()
   // finally jump there
   chdir(cepPath.toLocal8Bit());
 
-  Q3ListViewItem *item = mPageView->selectedItem();
+  QTreeWidgetItem *item = 0;
+  if ( mPageView->selectedItems().size() == 1 )
+    item = mPageView->selectedItems().first();
   if ( item ) {
     PageItem *pageItem = static_cast<PageItem*>( item->parent() ? item->parent() : item );
     cmdLine += ' ' + KShell::quoteArg( pageItem->path() );
