@@ -617,7 +617,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
     // Get the resent-from header into an AddressList
     QList<KMime::Types::Mailbox> resentFrom;
     if ( message->headerByType( "Resent-From" ) ) {
-      const QByteArray data = message->headerByType( "Resent-From" )->as7BitString();
+      const QByteArray data = message->headerByType( "Resent-From" )->as7BitString( false );
       const char * start = data.data();
       const char * end = start + data.length();
       KMime::Types::AddressList addressList;
