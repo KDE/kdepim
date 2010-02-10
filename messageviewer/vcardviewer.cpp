@@ -18,7 +18,6 @@
  */
 
 #include "vcardviewer.h"
-#include "kmaddrbook.h"
 #include <kaddrbookexternal.h>
 
 #include <addresseeview.h>
