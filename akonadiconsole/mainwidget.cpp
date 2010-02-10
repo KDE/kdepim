@@ -36,6 +36,7 @@
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/control.h>
 #include <akonadi/searchcreatejob.h>
+#include <akonadi/servermanager.h>
 
 #include <KAction>
 #include <KActionCollection>
@@ -111,12 +112,12 @@ void MainWidget::createSearch()
 
 void MainWidget::startServer()
 {
-  Akonadi::Control::start( this );
+  Akonadi::ServerManager::start();
 }
 
 void MainWidget::stopServer()
 {
-  Akonadi::Control::stop( this );
+  Akonadi::ServerManager::stop();
 }
 
 void MainWidget::restartServer()

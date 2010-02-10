@@ -24,8 +24,6 @@
 #include "mainwidget.h"
 #include <libkdepim/uistatesaver.h>
 
-#include <akonadi/control.h>
-
 #include <KAction>
 #include <KActionCollection>
 #include <KConfigGroup>
@@ -37,7 +35,6 @@
 MainWindow::MainWindow( QWidget *parent )
   : KXmlGuiWindow( parent )
 {
-  Akonadi::Control::start( this );
   setCentralWidget( new MainWidget( this ) );
 
   KStandardAction::quit( qApp, SLOT(quit()), actionCollection() );

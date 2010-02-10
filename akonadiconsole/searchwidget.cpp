@@ -21,6 +21,7 @@
 
 #include "searchwidget.h"
 
+#include <akonadi/control.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemsearchjob.h>
@@ -40,6 +41,7 @@
 SearchWidget::SearchWidget( QWidget *parent )
   : QWidget( parent )
 {
+  Akonadi::Control::widgetNeedsAkonadi( this );
   QGridLayout *layout = new QGridLayout( this );
 
   mQueryCombo = new QComboBox;
