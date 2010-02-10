@@ -36,7 +36,6 @@
 #include "kotodomodel.h"
 #include "kotodoviewquickaddline.h"
 #include "kotodoviewquicksearch.h"
-#include "kotodoviewsortfilterproxymodel.h"
 #include "kotodoviewview.h"
 
 #include <libkdepim/kdatepickerpopup.h>
@@ -414,7 +413,7 @@ void KOTodoView::clearSelection()
 void KOTodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
 {
   if ( modifiers == Qt::NoModifier ) {
-    QModelIndex index = mModel->addTodo( mQuickAdd->text() );
+    QModelIndex index = mModel->addTodo( mQuickAdd->text(), QModelIndex(), mProxyModel->categories() );
 
     QModelIndexList selection = mView->selectionModel()->selectedRows();
     if ( selection.size() <= 1 ) {
@@ -429,7 +428,7 @@ void KOTodoView::addQuickTodo( Qt::KeyboardModifiers modifiers )
     if ( selection.size() != 1 ) {
       return;
     }
-    mModel->addTodo( mQuickAdd->text(), mProxyModel->mapToSource( selection[0] ) );
+    mModel->addTodo( mQuickAdd->text(), mProxyModel->mapToSource( selection[0] ), mProxyModel->categories() );
   } else {
     return;
   }

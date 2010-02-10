@@ -26,6 +26,7 @@
 #define KOTODOMODEL_H
 
 #include <QAbstractItemModel>
+#include <QStringList>
 #include <QString>
 #include <QHash>
 
@@ -84,7 +85,8 @@ class KOTodoModel : public QAbstractItemModel
 
     /** Creates a new todo with the given text as summary under the given parent */
     QModelIndex addTodo( const QString &summary,
-                         const QModelIndex &parent = QModelIndex() );
+                         const QModelIndex &parent = QModelIndex(),
+                         const QStringList &categories = QStringList() );
     /** Copy the todo with the given index to the given date */
     void copyTodo( const QModelIndex &index, const QDate &date );
 

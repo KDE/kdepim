@@ -28,6 +28,7 @@
 #define KOTODOVIEW_H
 
 #include "korganizer/baseview.h"
+#include "kotodoviewsortfilterproxymodel.h"
 
 namespace KCal {
   class Incidence;
@@ -125,7 +126,7 @@ class KOTodoView : public BaseView
 
     KOTodoViewView *mView;
     KOTodoModel *mModel;
-    QSortFilterProxyModel *mProxyModel;
+    KOTodoViewSortFilterProxyModel *mProxyModel;
     KOTodoCategoriesDelegate *mCategoriesDelegate;
 
     KOTodoViewQuickSearch *mQuickSearch;

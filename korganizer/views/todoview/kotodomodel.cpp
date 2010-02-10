@@ -305,7 +305,8 @@ void KOTodoModel::processChange( Incidence *incidence, int action )
 }
 
 QModelIndex KOTodoModel::addTodo( const QString &summary,
-                                  const QModelIndex &parent )
+                                  const QModelIndex &parent,
+                                  const QStringList &categories )
 {
   if ( !mChanger ) {
     return QModelIndex();
@@ -316,6 +317,9 @@ QModelIndex KOTodoModel::addTodo( const QString &summary,
     todo->setSummary( summary.trimmed() );
     todo->setOrganizer( Person( KOPrefs::instance()->fullName(),
                                 KOPrefs::instance()->email() ) );
+
+    todo->setCategories( categories );
+
     if ( parent.isValid() ) {
       TodoTreeNode *node = static_cast<TodoTreeNode *>( parent.internalPointer() );
       if ( node->isValid() ) {
