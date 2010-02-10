@@ -44,6 +44,8 @@
 #include <KLocalizedString>
 #include <KGlobal>
 #include <KConfig>
+#include <KShell>
+#include <KStandardDirs>
 
 #include <QProcess>
 #include <QString>
@@ -61,6 +63,12 @@ static const QLatin1String NAME_ENTRY( "Name" );
 static const QLatin1String COMMAND_ENTRY( "pack-command" );
 static const QLatin1String EXTENSIONS_ENTRY( "extensions" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
+
+#if defined( _WIN32 ) || defined( _WIN64 )
+static const bool HAVE_WINDOWS = true;
+#else
+static const bool HAVE_WINDOWS = false;
+#endif
 
 namespace {
 
@@ -87,11 +95,28 @@ namespace {
         {
             if ( extensions().empty() )
                 throw ArchiveDefinitionError( id(), i18n("'extensions' entry is empty/missing") );
-            const QStringList l = group.readEntry( COMMAND_ENTRY ).split( QLatin1Char(' '), QString::SkipEmptyParts );
+            KShell::Errors errors;
+            QString cmdline = group.readEntry( COMMAND_ENTRY );
+            if ( HAVE_WINDOWS )
+                cmdline.replace( QRegExp( QString::fromLatin1( "\\b%1\\b" ).arg( FILE_PLACEHOLDER ) ), "%PERCENT_ESCAPE" + FILE_PLACEHOLDER );
+            const QStringList l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
+            if ( errors == KShell::BadQuoting )
+                throw ArchiveDefinitionError( id(), i18n("Quoting error") );
+            if ( errors == KShell::FoundMeta )
+                throw ArchiveDefinitionError( id(), i18n("Command too complex (would need shell)") );
             qDebug() << "ArchiveDefinition[" << id() << ']' << l;
             if ( l.empty() )
                 throw ArchiveDefinitionError( id(), i18n("'command' entry is empty/missing") );
-            m_command = l.front();
+            const QFileInfo fi( l.front() );
+            if ( fi.isAbsolute() )
+                if ( !fi.exists() )
+                    throw ArchiveDefinitionError( id(), i18n("Command not found in filesystem") );
+                else
+                    m_command = l.front();
+            else
+                m_command = KStandardDirs::findExe( fi.fileName() );
+            if ( m_command.isEmpty() )
+                throw ArchiveDefinitionError( id(), i18n("Command empty or not found") );
             const int idx = l.indexOf( FILE_PLACEHOLDER );
             if ( idx < 0 ) {
                 // none -> append
