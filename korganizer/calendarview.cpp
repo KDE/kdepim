@@ -241,7 +241,7 @@ CalendarView::CalendarView( QWidget *parent )
 CalendarView::~CalendarView()
 {
   mCalendar->unregisterObserver( this );
-  qDeleteAll( mFilters );
+  deleteFilters();
   qDeleteAll( mExtensions );
 
   delete mDialogManager;
@@ -505,7 +505,7 @@ void CalendarView::writeSettings()
 
 void CalendarView::readFilterSettings( KConfig *config )
 {
-  qDeleteAll( mFilters );
+  deleteFilters();
   mFilters.clear();
 
   KConfigGroup generalConfig( config, "General" );
@@ -2755,7 +2755,8 @@ bool CalendarView::eventFilter( QObject *watched, QEvent *event )
   return KOrg::CalendarViewBase::eventFilter( watched, event );
 }
 
-void CalendarView::updateHighlightModes() {
+void CalendarView::updateHighlightModes()
+{
 
   KOrg::BaseView *view = mViewManager->currentView();
   if ( view ) {
@@ -2769,4 +2770,15 @@ void CalendarView::updateHighlightModes() {
                                                hiJournals );
   }
 }
+
+void CalendarView::deleteFilters()
+{
+  if ( mCalendar ) {
+    // KCal::Calendar takes ownership of it's filter, and will free it.
+    mFilters.removeAll( mCalendar->filter() );
+  }
+
+  qDeleteAll( mFilters );
+}
+
 #include "calendarview.moc"

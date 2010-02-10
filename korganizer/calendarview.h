@@ -651,6 +651,9 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     // uncompleted subitems), notAllPurged is set to true.
     bool purgeCompletedSubTodos( Todo *todo, bool &notAllPurged );
 
+    // Frees filters
+    void deleteFilters();
+
     KOrg::History *mHistory;
 
     CalPrinter *mCalPrinter;
