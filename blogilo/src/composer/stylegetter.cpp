@@ -82,7 +82,6 @@ StyleGetter::StyleGetter( const int blogid, QObject *parent ): QObject( parent )
     b = new Backend( blogid );
     connect( b, SIGNAL( sigPostPublished( int, BilboPost* ) ), this,
              SLOT( sltTempPostPublished( int, BilboPost* ) ) );
-//     connect( b, SIGNAL( sigPostFetched( BilboPost * ) ), this, SLOT( sltTempPostFetched( BilboPost * ) ) );
     connect( b, SIGNAL( sigError( const QString& ) ), this, SLOT( sltError( const QString& ) ) );
 
     Q_EMIT sigGetStyleProgress( 10 );
@@ -160,9 +159,9 @@ void StyleGetter::sltTempPostPublished( int blogId, BilboPost* post )
 
     mTempPost = post;
     KIO::StoredTransferJob *job = KIO::storedGet( postUrl, KIO::NoReload, KIO::HideProgressInfo );
-
     connect( job, SIGNAL( result( KJob* ) ),
             this, SLOT( sltHtmlCopied( KJob* ) ) );
+
 }
 
 void StyleGetter::sltHtmlCopied( KJob *job )
@@ -212,9 +211,9 @@ void StyleGetter::sltHtmlCopied( KJob *job )
 
 
     //Remove temp post from the server.
-    b->removePost( *mTempPost );
     connect( b, SIGNAL( sigPostRemoved( int, const BilboPost &) ), this,
              SLOT( sltTempPostRemoved( int, const BilboPost & ) ) );
+    b->removePost( *mTempPost );
 }
 
 void StyleGetter::sltTempPostRemoved( int blog_id, const BilboPost &post)
