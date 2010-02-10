@@ -422,7 +422,9 @@ void Backend::savePostInDbAndEmitResult( KBlog::BlogPost *post )
         kDebug() << "Emitting sigPostPublished ...";
         Q_EMIT sigPostPublished( mBBlog->id(), pp );
     }
-    delete post;
+    // TODO crashes stylegetter on GData. Somehow the post gets deleted before
+    // slotFetchedPost as it seems. Don't get all the pointer copies done here.
+    //delete post;
 }
 
 KBlog::BlogPost * Backend::preparePost( BilboPost &post )
