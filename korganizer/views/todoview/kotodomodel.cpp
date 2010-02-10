@@ -173,7 +173,7 @@ struct KOTodoModel::TodoTreeNode : QObject
 };
 
 KOTodoModel::KOTodoModel( Calendar *cal, QObject *parent )
-  : QAbstractItemModel( parent ), mColumnCount( DescriptionColumn + 1 )
+  : QAbstractItemModel( parent ), mColumnCount( DescriptionColumn + 1 ), mChanger( 0 )
 {
   mRootNode = new TodoTreeNode( 0, 0, this );
   mFlatView = false;
