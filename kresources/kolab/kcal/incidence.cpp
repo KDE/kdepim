@@ -524,7 +524,7 @@ bool Incidence::loadAttribute( QDomElement& element )
     bool ok = KolabBase::loadAttribute( element );
     if ( !ok ) {
         // Unhandled tag - save for later storage
-        kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
+        //kdDebug() << "Saving unhandled tag " << element.tagName() << endl;
         Custom c;
         c.key = QCString( "X-KDE-KolabUnhandled-" ) + element.tagName().latin1();
         c.value = element.text();
