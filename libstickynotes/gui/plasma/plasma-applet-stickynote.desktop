@@ -9,6 +9,7 @@ Comment=Connect to your libstickynotes-powered backend.
 Comment[en_GB]=Connect to your libstickynotes-powered backend.
 Comment[sv]=Anslut till gränssnitt hanterat av libstickynotes.
 Comment[uk]=З’єднайтеся з вашим сервером за допомогою libstickynotes.
+Comment[x-test]=xxConnect to your libstickynotes-powered backend.xx
 Type=Service
 Icon=knotes
 ServiceTypes=Plasma/Applet
