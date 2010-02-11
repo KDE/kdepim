@@ -381,7 +381,7 @@ void ComposerPrivate::composeWithLateAttachments( KMime::Message* headers, KMime
   multiJob->appendSubjob( tJob );
   multiJob->setExtraContent( headers );
   
-  kDebug() << "attaachment encr key size:" << keys.size() << recipients;
+  kDebug() << "attachment encr key size:" << keys.size() << recipients;
 
   // operate correctly on each attachment that has a different crypto policy than body.
   foreach( AttachmentPart::Ptr attachment, parts ) {
