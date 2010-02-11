@@ -26,7 +26,6 @@
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
 #include <kconfig.h>
-#include <k3staticdeleter.h>
 #include <kde_file.h>
 
 #include <QLabel>
@@ -57,8 +56,13 @@
 
 namespace Kpgp {
 
-Module *Module::kpgpObject = 0;
-static K3StaticDeleter<Module> kpgpod;
+struct ModuleStatic {
+  ModuleStatic() : kpgpObject( 0 ) {}
+  ~ModuleStatic() { delete kpgpObject; }
+  Module* kpgpObject;
+};
+
+K_GLOBAL_STATIC( ModuleStatic, s_module )
 
 Module::Module()
   : mPublicKeys(),
@@ -78,7 +82,8 @@ Module::~Module()
 {
   writeAddressData();
 
-  if (kpgpObject == this) kpgpObject = kpgpod.setObject( Module::kpgpObject, 0, false );
+  if (!s_module.isDestroyed() && s_module->kpgpObject == this)
+    s_module->kpgpObject = 0;
   clear(true);
   delete config;
   delete pgp;
@@ -1015,11 +1020,11 @@ Module::selectPublicKeys( const QString& title,
 Module *
 Module::getKpgp()
 {
-  if (!kpgpObject)
+  if (!s_module->kpgpObject)
   {
-    kpgpObject = kpgpod.setObject(Module::kpgpObject, new Module());
+    s_module->kpgpObject = new Module();
   }
-  return kpgpObject;
+  return s_module->kpgpObject;
 }
 
 

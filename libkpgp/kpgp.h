@@ -413,7 +413,6 @@ private:
   bool checkForPGP(void);
   void assignPGPBase(void);
 
-  static Kpgp::Module *kpgpObject;
   KConfig *config;
 
   struct AddressData {
