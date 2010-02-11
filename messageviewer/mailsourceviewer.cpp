@@ -115,8 +115,8 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
   for( int i = 0; i != tmpSource.length(); i++ )  {
     if( htmlTagRegExp.indexIn( tmpSource[i] ) != -1 ) // A tag
     {
-      if( htmlTagRegExp.cap( 3 ) == "/" ) {
-        //Self closing tag "<br/>"
+      if( htmlTagRegExp.cap( 3 ) == "/" || htmlTagRegExp.cap( 2 ) == "img" || htmlTagRegExp.cap( 2 ) == "br" ) {
+        //Self closing tag or no closure needed
         continue;
       }
       if( htmlTagRegExp.cap( 1 ) == "/" ) {
