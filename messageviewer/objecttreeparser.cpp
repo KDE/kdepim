@@ -87,7 +87,6 @@ using KPIMUtils::LinkLocator;
 #include <klocale.h>
 #include <kmimetype.h>
 #include <kglobal.h>
-#include <khtml_part.h>
 #include <ktemporaryfile.h>
 #include <kstandarddirs.h>
 #include <kiconloader.h>

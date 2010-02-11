@@ -348,7 +348,6 @@ QString URLHandlerManager::statusBarMessage( const KUrl & url, ViewerPrivate * w
 
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <khtml_part.h>
 
 #include <QString>
 
