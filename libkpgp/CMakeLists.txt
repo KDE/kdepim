@@ -28,6 +28,7 @@ target_link_libraries(kpgp  ${KDE4_KDE3SUPPORT_LIBS})
 set_target_properties(kpgp PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS kpgp ${INSTALL_TARGETS_DEFAULT_ARGS})
 
+add_subdirectory( tests )
 
 ########### install files ###############
 

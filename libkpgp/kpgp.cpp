@@ -35,6 +35,8 @@
 #include <QByteArray>
 #include <QFileInfo>
 
+#include <algorithm>
+
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -734,10 +736,11 @@ Module::publicKey(const KeyID& keyID)
 {
   readPublicKeys();
 
-  for( KeyListIterator it( mPublicKeys ); (*it); ++it )
-    if( keyID == (*it)->primaryKeyID() ||
-	keyID == (*it)->primaryFingerprint() )
-      return (*it);
+  foreach ( Key* key, mPublicKeys ) {
+    if( keyID == key->primaryKeyID() ||
+        keyID == key->primaryFingerprint() )
+      return key;
+  }
 
   return 0;
 }
@@ -747,9 +750,10 @@ Module::publicKey( const QString& userID )
 {
   readPublicKeys();
 
-  for( KeyListIterator it( mPublicKeys ); (*it); ++it )
-    if( (*it)->matchesUserID( userID ) )
-      return (*it);
+  foreach ( Key* key, mPublicKeys ) {
+    if( key->matchesUserID( userID ) )
+      return key;
+  }
 
   return 0;
 }
@@ -759,10 +763,11 @@ Module::secretKey(const KeyID& keyID)
 {
   readSecretKeys();
 
-  for( KeyListIterator it( mSecretKeys ); (*it); ++it )
-    if( keyID == (*it)->primaryKeyID() ||
-	keyID == (*it)->primaryFingerprint() )
-      return (*it);
+  foreach ( Key* key, mSecretKeys ) {
+    if( keyID == key->primaryKeyID() ||
+        keyID == key->primaryFingerprint() )
+      return key;
+  }
 
   return 0;
 }
@@ -818,7 +823,8 @@ Module::rereadKey( const KeyID& keyID, const bool readTrust /* = true */ )
 
   if( ( 0 == oldKey ) && ( 0 != newKey ) )
   {
-    mPublicKeys.inSort( newKey );
+    KeyList::Iterator it = std::lower_bound( mPublicKeys.begin(), mPublicKeys.end(), newKey, KeyCompare );
+    mPublicKeys.insert( it, newKey );
     kDebug( 5326 ) <<"New public key 0x" << newKey->primaryKeyID() <<" ("
                   << newKey->primaryUserID() << ").\n";
   }
@@ -826,7 +832,7 @@ Module::rereadKey( const KeyID& keyID, const bool readTrust /* = true */ )
   { // the key has been deleted in the meantime
     kDebug( 5326 ) <<"Public key 0x" << oldKey->primaryKeyID() <<" ("
                   << oldKey->primaryUserID() << ") will be removed.\n";
-    mPublicKeys.removeRef( oldKey );
+    mPublicKeys.removeAll( oldKey );
   }
 
   return newKey;
@@ -1132,10 +1138,10 @@ Module::haveTrustedEncryptionKey( const QString& person )
   }
 
   // Now search the public keys for matching keys
-  KeyListIterator it( mPublicKeys );
+  KeyList::Iterator it = mPublicKeys.begin();
 
   // search a key which matches the complete address
-  for( it.toFirst(); (*it); ++it ) {
+  for(; it != mPublicKeys.end(); ++it ) {
     // search case insensitively in the list of userIDs of this key
     if( (*it)->matchesUserID( person, false ) ) {
       keyTrust( (*it)->primaryKeyID() ); // this is called to make sure that
@@ -1149,7 +1155,7 @@ Module::haveTrustedEncryptionKey( const QString& person )
 
   // if no key matches the complete address look for a key which matches
   // the canonical mail address
-  for( it.toFirst(); (*it); ++it ) {
+  for( it = mPublicKeys.begin(); it != mPublicKeys.end(); ++it ) {
     // search case insensitively in the list of userIDs of this key
     if( (*it)->matchesUserID( address, false ) ) {
       keyTrust( (*it)->primaryKeyID() ); // this is called to make sure that
@@ -1231,12 +1237,12 @@ Module::getEncryptionKeys( const QString& person )
   }
 
   // Now search all public keys for matching keys
-  KeyListIterator it( mPublicKeys );
+  KeyList::Iterator it = mPublicKeys.begin();
   KeyList matchingKeys;
 
   // search all keys which match the complete address
   kDebug( 5326 ) <<"Looking for keys matching" << person <<" ...";
-  for( it.toFirst(); (*it); ++it ) {
+  for( ; it != mPublicKeys.end(); ++it ) {
     // search case insensitively in the list of userIDs of this key
     if( (*it)->matchesUserID( person, false ) ) {
       keyTrust( (*it)->primaryKeyID() ); // this is called to make sure that
@@ -1254,7 +1260,7 @@ Module::getEncryptionKeys( const QString& person )
   // the canonical mail address
   kDebug( 5326 ) <<"Looking for keys matching" << address <<" ...";
   if( matchingKeys.isEmpty() ) {
-    for ( it.toFirst(); (*it); ++it ) {
+    for ( it = mPublicKeys.begin(); it != mPublicKeys.end(); ++it ) {
       // search case insensitively in the list of userIDs of this key
       if( (*it)->matchesUserID( address, false ) ) {
         keyTrust( (*it)->primaryKeyID() ); // this is called to make sure that
@@ -1294,7 +1300,7 @@ Module::getEncryptionKeys( const QString& person )
   }
   // only one key matches
   else if( matchingKeys.count() == 1 ) {
-    return KeyIDList( matchingKeys.getFirst()->primaryKeyID() );
+    return KeyIDList( matchingKeys.first()->primaryKeyID() );
   }
   // more than one key matches; let the user choose the key(s)
   else {
@@ -1508,6 +1514,7 @@ Module::readPublicKeys( bool reread )
 
   if( !usePGP() )
   {
+    qDeleteAll( mPublicKeys );
     mPublicKeys.clear();
     mPublicKeysCached = false;
     return;
@@ -1526,8 +1533,7 @@ Module::readPublicKeys( bool reread )
       // merge the trust info from the old key list into the new key list
       // FIXME: This is currently O(K^2) where K = #keys. As the key lists
       //        are sorted this can be done in O(K).
-      KeyListIterator it( newPublicKeyList );
-      for( it.toFirst(); (*it); ++it )
+      for( KeyList::Iterator it = newPublicKeyList.begin(); it != newPublicKeyList.end(); ++it )
       {
         Key* oldKey = publicKey( (*it)->primaryKeyID() );
         if( oldKey )
@@ -1536,11 +1542,11 @@ Module::readPublicKeys( bool reread )
         }
       }
 
+      qDeleteAll( mPublicKeys );
       mPublicKeys = newPublicKeyList;
     }
 
     mPublicKeysCached = true;
-    mPublicKeys.setAutoDelete( true );
   }
 }
 
@@ -1551,6 +1557,7 @@ Module::readSecretKeys( bool reread )
 
   if( !usePGP() )
   {
+    qDeleteAll( mSecretKeys );
     mSecretKeys.clear();
     mSecretKeysCached = false;
     return;
@@ -1569,8 +1576,7 @@ Module::readSecretKeys( bool reread )
       // merge the trust info from the old key list into the new key list
       // FIXME: This is currently O(K^2) where K = #keys. As the key lists
       //        are sorted this can be done in O(K).
-      KeyListIterator it( newSecretKeyList );
-      for( it.toFirst(); (*it); ++it )
+      for( KeyList::Iterator it = newSecretKeyList.begin(); it != newSecretKeyList.end(); ++it )
       {
         Key* oldKey = secretKey( (*it)->primaryKeyID() );
         if( oldKey )
@@ -1579,11 +1585,11 @@ Module::readSecretKeys( bool reread )
         }
       }
 
+      qDeleteAll( mSecretKeys );
       mSecretKeys = newSecretKeyList;
     }
 
     mSecretKeysCached = true;
-    mSecretKeys.setAutoDelete( true );
   }
 }
 

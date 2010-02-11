@@ -26,6 +26,7 @@
 #include <QTextCodec>
 #include <QByteArray>
 
+#include <algorithm>
 #include <string.h> /* strncmp */
 
 namespace Kpgp {
@@ -438,7 +439,7 @@ BaseG::publicKeys( const QStringList & patterns )
   KeyList publicKeys = parseKeyList(output, false);
 
   // sort the list of public keys
-  publicKeys.sort();
+  std::sort( publicKeys.begin(), publicKeys.end(), KeyCompare );
 
   return publicKeys;
 }
@@ -470,7 +471,7 @@ BaseG::secretKeys( const QStringList & patterns )
   KeyList secretKeys = parseKeyList(output, true);
 
   // sort the list of secret keys
-  secretKeys.sort();
+  std::sort( secretKeys.begin(), secretKeys.end(), KeyCompare );
 
   return secretKeys;
 }

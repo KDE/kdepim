@@ -21,6 +21,7 @@
 
 #include "libkpgp_export.h"
 #include "kpgp.h"
+#include "kpgpkey.h"
 
 #include <QtCore/QString>     // is a member in KeyRequester
 #include <QtCore/QVector>     // used in KeyApprovalDialog
@@ -52,7 +53,6 @@ class KPasswordEdit;        // needed by PassphraseDialog
 namespace Kpgp {
 
 class Module;
-class KeyList;              // needed by KeySelectionDialog
 class Key;                  // needed by KeySelectionDialog
 class KeyIDList;            // needed by KeySelectionDialog
 

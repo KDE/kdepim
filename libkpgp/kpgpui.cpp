@@ -435,11 +435,11 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
   mListView->clear();
 
   // build a list of all public keys
-  for( KeyListIterator it( keyList ); it.current(); ++it ) {
-    KeyID curKeyId = (*it)->primaryKeyID();
+  foreach ( Key* key, keyList ) {
+    KeyID curKeyId = key->primaryKeyID();
 
     Q3ListViewItem* primaryUserID = new Q3ListViewItem( mListView, curKeyId,
-                                                      (*it)->primaryUserID() );
+                                                      key->primaryUserID() );
 
     // select and open the given key
     if( keyIds.indexOf( curKeyId ) != -1 ) {
@@ -452,7 +452,7 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
     primaryUserID->setOpen( false );
 
     // set icon for this key
-    switch( keyValidity( *it ) ) {
+    switch( keyValidity( key ) ) {
       case 0: // the key's validity can't be determined
         primaryUserID->setPixmap( 0, *mKeyUnknownPix );
         break;
@@ -471,21 +471,21 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
 
     childItem = new Q3ListViewItem( primaryUserID, "",
                                    i18n( "Fingerprint: %1" ,
-                                     beautifyFingerprint( (*it)->primaryFingerprint() ) ) );
+                                     beautifyFingerprint( key->primaryFingerprint() ) ) );
     if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
       mListView->setSelected( childItem, true );
     }
 
-    childItem = new Q3ListViewItem( primaryUserID, "", keyInfo( *it ) );
+    childItem = new Q3ListViewItem( primaryUserID, "", keyInfo( key ) );
     if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
       mListView->setSelected( childItem, true );
     }
 
-    UserIDList userIDs = (*it)->userIDs();
-    UserIDListIterator uidit( userIDs );
-    if( *uidit ) {
+    UserIDList userIDs = key->userIDs();
+    UserIDList::Iterator uidit( userIDs.begin() );
+    if( uidit != userIDs.end() ) {
       ++uidit; // skip the primary user ID
-      for( ; *uidit; ++uidit ) {
+      for( ; uidit != userIDs.end(); ++uidit ) {
         childItem = new Q3ListViewItem( primaryUserID, "", (*uidit)->text() );
         if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
           mListView->setSelected( childItem, true );

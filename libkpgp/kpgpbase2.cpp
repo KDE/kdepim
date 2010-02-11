@@ -30,6 +30,8 @@
 #include <kshell.h>
 #include <kdebug.h>
 
+#include <algorithm>
+
 #define PGP2 "pgp"
 
 namespace Kpgp {
@@ -544,7 +546,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
 
       // put all new keys into a map, remove duplicates
       while ( !publicKeys.isEmpty() ) {
-        Key * key = publicKeys.take( 0 );
+        Key * key = publicKeys.takeFirst();
         if ( !map.contains( key->primaryFingerprint() ) )
           map.insert( key->primaryFingerprint(), key );
         else
@@ -558,7 +560,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
   }
 
   // sort the list of public keys
-  publicKeys.sort();
+  std::sort( publicKeys.begin(), publicKeys.end(), KeyCompare );
 
   return publicKeys;
 }
@@ -875,7 +877,7 @@ Base2::parseTrustDataForKey( Key* key, const QByteArray& str )
       QString uid = str.mid( pos, index2-pos );
 
       // set the validity of the corresponding user ID
-      for( UserIDListIterator it( userIDs ); it.current(); ++it )
+      for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )
         if( (*it)->text() == uid )
         {
           kDebug( 5326 )<<"Setting the validity of"<<uid<<" to"<<validity;

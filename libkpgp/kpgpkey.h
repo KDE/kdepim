@@ -21,7 +21,6 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <Qt3Support/Q3PtrList>
 
 #include <time.h>
 
@@ -136,8 +135,7 @@ class UserID
   QString mText;
 };
 
-typedef Q3PtrList<UserID> UserIDList;
-typedef Q3PtrListIterator<UserID> UserIDListIterator;
+typedef QList<UserID*> UserIDList;
 
 inline QString UserID::text() const
 {
@@ -500,8 +498,7 @@ inline void Subkey::setExpirationDate(const time_t expirationDate)
   mExpiration = expirationDate;
 }
 
-typedef Q3PtrList<Subkey> SubkeyList;
-typedef Q3PtrListIterator<Subkey> SubkeyListIterator;
+typedef QList<Subkey*> SubkeyList;
 
 
 /** This class is used to store information about a PGP key.
@@ -779,7 +776,7 @@ inline void Key::setEncryptionPreference( const EncryptPref encrPref )
 
 inline QString Key::primaryUserID() const
 {
-  UserID *uid = mUserIDs.getFirst();
+  UserID *uid = mUserIDs.isEmpty() ? 0 : mUserIDs.first();
 
   if (uid)
     return uid->text();
@@ -789,7 +786,7 @@ inline QString Key::primaryUserID() const
 
 inline KeyID Key::primaryKeyID() const
 {
-  Subkey *key = mSubkeys.getFirst();
+  Subkey *key = mSubkeys.isEmpty() ? 0 : mSubkeys.first();
 
   if (key)
     return key->keyID();
@@ -799,7 +796,7 @@ inline KeyID Key::primaryKeyID() const
 
 inline QByteArray Key::primaryFingerprint() const
 {
-  Subkey *key = mSubkeys.getFirst();
+  Subkey *key = mSubkeys.isEmpty() ? 0 : mSubkeys.first();
 
   if (key)
     return key->fingerprint();
@@ -825,7 +822,7 @@ inline bool Key::isNull() const
 inline time_t Key::creationDate() const
 {
   if( !mSubkeys.isEmpty() )
-    return mSubkeys.getFirst()->creationDate();
+    return mSubkeys.first()->creationDate();
   else
     return -1;
 }
@@ -833,34 +830,22 @@ inline time_t Key::creationDate() const
 inline void Key::addUserID(const UserID *userID)
 {
   if (userID)
-    mUserIDs.append(userID);
+    mUserIDs.append(const_cast<UserID*>(userID));
 }
 
 inline void Key::addSubkey(const Subkey *subkey)
 {
   if (subkey)
-    mSubkeys.append(subkey);
+    mSubkeys.append(const_cast<Subkey*>(subkey));
 }
 
 
+typedef QList<Key*> KeyList;
 
-typedef Q3PtrList<Key> KeyListBase;
-typedef Q3PtrListIterator<Key> KeyListIterator;
-
-class KeyList : public KeyListBase
+inline bool KeyCompare( Key* left, Key* right )
 {
- public:
-  ~KeyList()
-    { clear(); }
-
- private:
-  int compareItems( Q3PtrCollection::Item s1, Q3PtrCollection::Item s2 )
-    {
-      // sort case insensitively by the primary User IDs
-      return QString::compare((static_cast<Key*>(s1))->primaryUserID().toLower(),
-                              (static_cast<Key*>(s2))->primaryUserID().toLower());
-    }
-};
+  return QString::compare( left->primaryUserID().toLower(), right->primaryUserID().toLower() );
+}
 
 } // namespace Kpgp
 

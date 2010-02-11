@@ -821,7 +821,7 @@ Base6::parseTrustDataForKey( Key* key, const QByteArray& str )
       QString uid = str.mid( pos, eol-pos );
 
       // set the validity of the corresponding user ID
-      for( UserIDListIterator it( userIDs ); it.current(); ++it )
+      for( UserIDList::Iterator it = userIDs.begin(); it != userIDs.end(); ++it )
         if( (*it)->text() == uid )
         {
           kDebug( 5326 )<<"Setting the validity of"<<uid<<" to"<<validity;
