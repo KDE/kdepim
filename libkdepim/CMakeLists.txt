@@ -72,7 +72,6 @@ kde4_add_ui_files(kdepim_LIB_SRCS
 kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
 
 target_link_libraries(kdepim
-  ${KDE4_KDE3SUPPORT_LIBS}
   ${QT_QTUITOOLS_LIBRARY}
   ${KDEPIMLIBS_KRESOURCES_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}

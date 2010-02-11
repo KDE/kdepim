@@ -40,7 +40,6 @@ class QKeyEvent;
 class QMenu;
 class QMouseEvent;
 class QObject;
-class QTimer;
 
 namespace KPIM {
   class LdapSearch;
@@ -149,16 +148,6 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     bool m_useSemiColonAsSeparator;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
-
-    static bool s_addressesDirty;
-    static KMailCompletion *s_completion;
-    static CompletionItemsMap *s_completionItemMap;
-    static QTimer *s_LDAPTimer;
-    static KPIM::LdapSearch *s_LDAPSearch;
-    static QString *s_LDAPText;
-    static AddresseeLineEdit *s_LDAPLineEdit;
-    static QStringList *s_completionSources;
-    static QMap<int,int> *s_ldapClientToCompletionSourceMap;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;
