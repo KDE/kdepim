@@ -769,51 +769,67 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
 }
 
 QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
-                           bool stripped, const QString& cssStyle,
-                           bool aLink )
+                           Display display, const QString& cssStyle,
+                           Link link, AddressMode expandable, const QString& fieldName,
+                           int collapseNumber )
 {
   QString result;
+  int numberAddresses = 0;
+  bool expandableInserted = false;
+
 
   foreach( KMime::Types::Mailbox mailbox, mailboxList ) {
     if( !mailbox.prettyAddress().isEmpty() ) {
-      if( aLink ) {
+      numberAddresses++;
+      if( expandable == ExpandableAddresses && !expandableInserted && numberAddresses > collapseNumber ) {
+        result = "<span id=\"icon" + fieldName + "\"></span>" + result;
+        result += "<span id=\"dots" + fieldName + "\">...</span><span id=\"hidden" + fieldName +"\">";
+        expandableInserted = true;
+      }
+
+      if( link == ShowLink ) {
         result += "<a href=\"mailto:"
                 + encodeMailtoUrl( mailbox.quotedPrettyAddress() )
                 + "\" "+cssStyle+">";
       }
-      if ( stripped ) {
+      if ( display == DisplayNameOnly ) {
         result += quoteHtmlChars( mailbox.name(), true );
       } else {
         result += quoteHtmlChars( mailbox.prettyAddress(), true );
       }
-      if( aLink ) {
+      if( link == ShowLink ) {
         result += "</a>, ";
       }
     }
   }
 
   // cut of the trailing ", "
-  if( aLink ) {
+  if( link == ShowLink ) {
     result.truncate( result.length() - 2 );
   }
 
+  if( expandableInserted ) {
+    result += "</span>";
+  }
   return result;
 }
 
 QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
-                           bool stripped, const QString& cssStyle,
-                           bool aLink )
+                           Display display, const QString& cssStyle,
+                           Link link, AddressMode expandable, const QString& fieldName,
+                           int collapseNumber )
 {
   Q_ASSERT( mailboxList );
-  return emailAddrAsAnchor( mailboxList->mailboxes(), stripped, cssStyle, aLink );
+  return emailAddrAsAnchor( mailboxList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber );
 }
 
 QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
-                           bool stripped, const QString& cssStyle,
-                           bool aLink )
+                           Display display, const QString& cssStyle,
+                           Link link, AddressMode expandable, const QString& fieldName,
+                           int collapseNumber )
 {
   Q_ASSERT( addressList );
-  return emailAddrAsAnchor( addressList->mailboxes(), stripped, cssStyle, aLink );
+  return emailAddrAsAnchor( addressList->mailboxes(), display, cssStyle, link, expandable, fieldName, collapseNumber );
 }
 
 QStringList stripAddressFromAddressList( const QString& address,

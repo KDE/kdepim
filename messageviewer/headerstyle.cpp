@@ -150,17 +150,17 @@ QString BriefHeaderStyle::format( KMime::Message::Ptr message,
     if ( fromStr.isEmpty() ) // no valid email in from, maybe just a name
       fromStr = message->fromStrip(); // let's use that
 */
-    QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), true );
+    QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly );
     if ( !vCardName.isEmpty() )
       fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\">" + i18n("[vCard]") + "</a>";
     headerParts << fromPart;
   }
 
   if ( strategy->showHeader( "cc" ) && message->cc(false) )
-    headerParts << i18n("CC: ") + StringUtil::emailAddrAsAnchor( message->cc(), true );
+    headerParts << i18n("CC: ") + StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly );
 
   if ( strategy->showHeader( "bcc" ) && message->bcc(false) )
-    headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), true );
+    headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly );
 
   if ( strategy->showHeader( "date" ) )
     headerParts << strToHtml(dateShortStr(message->date()->dateTime()));
@@ -263,7 +263,7 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message,
       fromStr = message->fromStrip(); // let's use that
 */
     headerStr.append( i18n("From: ") +
-                      StringUtil::emailAddrAsAnchor( message->from(), false, "", true ) );
+                      StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
     if ( !vCardName.isEmpty() )
       headerStr.append("&nbsp;&nbsp;<a href=\"" + vCardName +
             "\">" + i18n("[vCard]") + "</a>" );
@@ -277,19 +277,19 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message,
 
   if ( strategy->showHeader( "to" ) )
     headerStr.append( i18nc("To-field of the mailheader.", "To: ") +
-                      StringUtil::emailAddrAsAnchor( message->to(), false ) + "<br/>\n" );
+                      StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
 
   if ( strategy->showHeader( "cc" ) && message->cc( false ) )
     headerStr.append( i18n("CC: ") +
-                      StringUtil::emailAddrAsAnchor( message->cc(),false ) + "<br/>\n" );
+                      StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
 
   if ( strategy->showHeader( "bcc" ) && message->bcc( false ) )
     headerStr.append( i18n("BCC: ") +
-                      StringUtil::emailAddrAsAnchor( message->bcc(), false ) + "<br/>\n" );
+                      StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
 
   if ( strategy->showHeader( "reply-to" ) && message->replyTo( false ) )
     headerStr.append( i18n("Reply to: ") +
-                      StringUtil::emailAddrAsAnchor( message->replyTo(), false ) + "<br/>\n" );
+                      StringUtil::emailAddrAsAnchor( message->replyTo(), StringUtil::DisplayFullAddress ) + "<br/>\n" );
 
   headerStr += "</div>\n";
 
@@ -632,11 +632,11 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
     headerStr += QString("<tr><th>%1</th>\n"
                           "<td>")
                           .arg(i18n("From: "))
-                + StringUtil::emailAddrAsAnchor( message->from(), false )
+                + StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress )
                 + ( message->headerByType( "Resent-From" ) ? "&nbsp;"
                               + i18n( "(resent from %1)",
-                                      StringUtil::emailAddrAsAnchor(
-                                          resentFrom, false ) )
+                                    StringUtil::emailAddrAsAnchor(
+                                      resentFrom, StringUtil::DisplayFullAddress ) )
                             : QString("") )
                 + ( !vCardName.isEmpty() ? "&nbsp;&nbsp;<a href=\"" + vCardName + "\">"
                               + i18n("[vCard]") + "</a>"
@@ -652,22 +652,28 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
   if ( strategy->showHeader( "to" ) )
     headerStr.append(QString("<tr><th>%1</th>\n"
                   "<td>%2</td></tr>\n")
-                          .arg( i18nc( "To-field of the mail header.", "To: " ) )
-                          .arg( StringUtil::emailAddrAsAnchor( message->to(), false ) ) );
+                          .arg( i18nc( "To-field of the mail header.","To: " ) )
+                          .arg( StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress,
+                                                             QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
+                                                             "FullToAddressList",
+                                                             GlobalSettings::self()->numberOfAddressesToShow() ) ) );
 
   // cc line, if an
   if ( strategy->showHeader( "cc" ) && message->cc(false))
     headerStr.append(QString("<tr><th>%1</th>\n"
                   "<td>%2</td></tr>\n")
                             .arg( i18n( "CC: " ) )
-                            .arg( StringUtil::emailAddrAsAnchor( message->cc(), false ) ) );
+                            .arg( StringUtil::emailAddrAsAnchor(message->cc(), StringUtil::DisplayFullAddress,
+                                                               QString(), StringUtil::ShowLink, StringUtil::ExpandableAddresses,
+                                                               "FullCcAddressList",
+                                                               GlobalSettings::self()->numberOfAddressesToShow() ) ) );
 
   // Bcc line, if any
   if ( strategy->showHeader( "bcc" ) && message->bcc(false))
     headerStr.append(QString("<tr><th>%1</th>\n"
                   "<td>%2</td></tr>\n")
                             .arg( i18n( "BCC: " ) )
-                            .arg( StringUtil::emailAddrAsAnchor( message->bcc(), false ) ) );
+                            .arg( StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayFullAddress ) ) );
 
   if ( strategy->showHeader( "date" ) )
     headerStr.append(QString("<tr><th>%1</th>\n"
@@ -777,15 +783,15 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
 //TODO(Andras) this looks like  duplicate code, try to factor out!
   QStringList headerParts;
   if ( strategy->showHeader( "to" ) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->to(), false, linkColor );
+    headerParts << StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor );
   }
 
   if ( strategy->showHeader( "cc" ) && message->cc(false) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->cc(), true, linkColor );
+    headerParts << StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly, linkColor );
   }
 
   if ( strategy->showHeader( "bcc" ) && message->bcc(false) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->bcc(), true, linkColor );
+    headerParts << StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly, linkColor );
   }
 
   // remove all empty (modulo whitespace) entries and joins them via ", \n"
@@ -843,7 +849,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   // from
   if ( strategy->showHeader( "from" ) ) {
     // TODO vcard
-    QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), true, linkColor );
+    QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
     if ( !vCardName.isEmpty() )
       fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" "+linkColor+">" + i18n("[vCard]") + "</a>";
     //TDDO strategy date

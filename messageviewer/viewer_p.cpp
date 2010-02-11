@@ -1113,6 +1113,7 @@ void ViewerPrivate::displayMessage()
 
   htmlWriter()->queue("</body></html>");
   connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( injectAttachments() ) );
+  connect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( toggleFullAddressList() ) );
   htmlWriter()->flush();
 }
 
@@ -3183,4 +3184,75 @@ void ViewerPrivate::slotAtmDecryptWithChiasmusUploadResult( KJob * job )
   if ( job->error() )
     static_cast<KIO::Job*>(job)->ui()->showErrorMessage();
 }
+
+bool ViewerPrivate::showFullToAddressList() const
+{
+  return mShowFullToAddressList;
+}
+
+void ViewerPrivate::setShowFullToAddressList( bool showFullToAddressList )
+{
+  mShowFullToAddressList = showFullToAddressList;
+}
+
+bool ViewerPrivate::showFullCcAddressList() const
+{
+  return mShowFullCcAddressList;
+}
+
+void ViewerPrivate::setShowFullCcAddressList( bool showFullCcAddressList )
+{
+  mShowFullCcAddressList = showFullCcAddressList;
+}
+
+void ViewerPrivate::toggleFullAddressList()
+{
+  toggleFullAddressList( "To" );
+  toggleFullAddressList( "Cc" );
+}
+
+void ViewerPrivate::toggleFullAddressList( const QString &field )
+{
+  QWebElement doc = mViewer->page()->currentFrame()->documentElement();
+  // First inject the corrent icon
+  QWebElement tag = doc.findFirst( QString( "span#iconFull%1AddressList" ).arg( field ) );
+  if ( tag.isNull() ) {
+    return;
+  }
+
+  QString imgpath( KStandardDirs::locate( "data","libmessageviewer/pics/" ) );
+  QString urlHandle;
+  QString imgSrc;
+  QString altText;
+  bool doShow = ( field == "To" && showFullToAddressList() ) || ( field == "Cc" && showFullCcAddressList() );
+  if ( doShow ) {
+    urlHandle.append( "kmail:hideFull" + field + "AddressList" );
+    imgSrc.append( "quicklistOpened.png" );
+    altText = i18n("Hide full address list");
+  } else {
+    urlHandle.append( "kmail:showFull" + field + "AddressList" );
+    imgSrc.append( "quicklistClosed.png" );
+    altText = i18n("Show full address list");
+  }
+
+  QString link = "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"" + imgpath + imgSrc + "\""
+                 "alt=\"" + altText + "\" /></a></span>";
+  tag.setInnerXml( link );
+
+  // Then show/hide the full address list
+  QWebElement dotsTag = doc.findFirst( QString( "span#dotsFull%1AddressList" ).arg( field ) );
+  Q_ASSERT( !dotsTag.isNull() );
+
+  tag = doc.findFirst( QString( "span#hiddenFull%1AddressList" ).arg( field ) );
+  Q_ASSERT( !tag.isNull() );
+
+  if ( doShow ) {
+    dotsTag.setStyleProperty( "display", "none" );
+    tag.removeAttribute( "display" );
+  } else {
+    tag.setStyleProperty( "display", "none" );
+    dotsTag.removeAttribute( "display" );
+  }
+}
+
 #include "viewer_p.moc"

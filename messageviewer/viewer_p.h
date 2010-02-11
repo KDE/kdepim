@@ -462,10 +462,27 @@ public:
   void attachmentView( KMime::Content *atmNode );
   void attachmentEncryptWithChiasmus( KMime::Content * content );
 
+  /** Return weather to show or hide the full list of "To" addresses */
+  bool showFullToAddressList() const;
+
+  /** Show or hide the full list of "To" addresses */
+  void setShowFullToAddressList( bool showFullToAddressList = true );
+
+  /** Return weather to show or hide the full list of "To" addresses */
+  bool showFullCcAddressList() const;
+
+  /** Show or hide the full list of "To" addresses */
+  void setShowFullCcAddressList( bool showFullCcAddressList = true );
+
+  /** Show/Hide the field with id "field" */
+  void toggleFullAddressList(const QString& field);
+
 private slots:
   void slotAtmDecryptWithChiasmusResult( const GpgME::Error &, const QVariant & );
   void slotAtmDecryptWithChiasmusUploadResult( KJob * );
 
+  /** Show hide all fields specified inside this function */
+  void toggleFullAddressList();
 
 public slots:
   /** An URL has been activate with a click. */
@@ -633,6 +650,9 @@ public:
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
   Kleo::SpecialJob *mJob;
   Viewer *const q;
+  bool mShowFullToAddressList;
+  bool mShowFullCcAddressList;
+
 };
 
 }

@@ -120,30 +120,66 @@ namespace StringUtil
                      bool removeLineBreaks = false );
 
   /**
+   * Used to determine if the visible part of the anchor contains
+   * only the name part and not the given emailAddr or the full address.
+   */
+  enum Display {
+    DisplayNameOnly,
+    DisplayFullAddress
+  };
+
+  /** Used to determine if the address should be a link or not */
+  enum Link {
+    ShowLink,
+    HideLink
+  };
+
+  /** Used to determine if the address field should be expandable/collapsable */
+  enum AddressMode {
+    ExpandableAddresses,
+    FullAddresses
+  };
+
+  /**
    * Converts the email address(es) to (a) nice HTML mailto: anchor(s).
-   * If stripped is true then the visible part of the anchor contains
-   * only the name part and not the given emailAddr.
+   * @p display determines if only the name part or the entire address should be returned.
+   * @p cssStyle a custom css template.
+   * @p link determines if the result should be a html link or not.
+   * @p expandable determines if a long list of addresses should be expandable or shown
+   * in full.
+   * @p fieldName the name that the divs should be based on if expandable is set to ExpanableAddesses.
+   * @p The number of addresses to show before collapsing the rest, if expandable is set to
+   * ExpandableAddresses.
    */
   MESSAGECORE_EXPORT QString emailAddrAsAnchor( KMime::Headers::Generics::MailboxList *mailboxList,
-                                                bool stripped = true,
+                                                Display display = DisplayNameOnly,
                                                 const QString& cssStyle = QString(),
-                                                bool link = true );
+                                                Link link = ShowLink,
+                                                AddressMode expandable = FullAddresses,
+                                                const QString &fieldName = QString(),
+                                                int collapseNumber = 4 );
 
   /**
    * Same as above method, only for AddressList headers
    */
   MESSAGECORE_EXPORT QString emailAddrAsAnchor( KMime::Headers::Generics::AddressList *addressList,
-                                                bool stripped = true,
+                                                Display display = DisplayNameOnly,
                                                 const QString& cssStyle = QString(),
-                                                bool link = true );
+                                                Link link = ShowLink,
+                                                AddressMode expandable = FullAddresses,
+                                                const QString &fieldName = QString(),
+                                                int collapseNumber = 4 );
 
   /**
    * Same as the above, only for Mailbox::List types
    */
   MESSAGECORE_EXPORT QString emailAddrAsAnchor( const QList<KMime::Types::Mailbox> &mailboxList,
-                                                bool stripped = true,
+                                                Display display = DisplayNameOnly,
                                                 const QString& cssStyle = QString(),
-                                                bool aLink = true );
+                                                Link link = ShowLink,
+                                                AddressMode expandable = FullAddresses,
+                                                const QString &fieldName = QString(),
+                                                int collapseNumber = 4 );
 
   /**
    * Strips an address from an address list. This is for example used
