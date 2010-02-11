@@ -37,8 +37,9 @@
 #include <QButtonGroup>
 #include <q3multilineedit.h>
 #include <QGroupBox>
+#include <QTreeWidget>
+#include <QHeaderView>
 
-#include <k3listview.h>
 #include <kvbox.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
@@ -340,17 +341,19 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 	   this, SLOT(slotSearch(const QString&)) );
   connect( mStartSearchTimer, SIGNAL(timeout()), SLOT(slotFilter()) );
 
-  mListView = new K3ListView( page );
-  mListView->addColumn( i18n("Key ID") );
-  mListView->addColumn( i18n("User ID") );
+  mListView = new QTreeWidget( page );
+  mListView->setHeaderLabels( QStringList()
+    << i18n("Key ID")
+    << i18n("User ID") );
   mListView->setAllColumnsShowFocus( true );
-  mListView->setResizeMode( Q3ListView::LastColumn );
+  mListView->header()->setStretchLastSection( true );
   mListView->setRootIsDecorated( true );
-  mListView->setShowSortIndicator( true );
-  mListView->setSorting( 1, true ); // sort by User ID
-  mListView->setShowToolTips( true );
+  mListView->setSortingEnabled( true );
+  mListView->header()->setSortIndicatorShown( true );
+  mListView->sortItems( 1, Qt::AscendingOrder ); // sort by User ID
+//  mListView->setShowToolTips( true );
   if( extendedSelection ) {
-    mListView->setSelectionMode( Q3ListView::Extended );
+    mListView->setSelectionMode( QTreeWidget::ExtendedSelection );
     //mListView->setSelectionMode( QListView::Multi );
   }
   topLayout->addWidget( mListView, 10 );
@@ -366,35 +369,34 @@ KeySelectionDialog::KeySelectionDialog( const KeyList& keyList,
 
   initKeylist( keyList, keyIds );
 
-  Q3ListViewItem *lvi;
+  QTreeWidgetItem *lvi = 0;
   if( extendedSelection ) {
     lvi = mListView->currentItem();
     slotCheckSelection();
   }
   else {
-    lvi = mListView->selectedItem();
+    if ( mListView->selectedItems().size() > 0 )
+      lvi = mListView->selectedItems().first();
     slotCheckSelection( lvi );
   }
-  // make sure that the selected item is visible
-  // (ensureItemVisible(...) doesn't work correctly in Qt 3.0.0)
   if( lvi != 0 )
-    mListView->center( mListView->contentsX(), mListView->itemPos( lvi ) );
+    mListView->scrollToItem( lvi );
 
   if( extendedSelection ) {
     connect( mCheckSelectionTimer, SIGNAL( timeout() ),
              this,                 SLOT( slotCheckSelection() ) );
-    connect( mListView, SIGNAL( selectionChanged() ),
+    connect( mListView, SIGNAL( itemSelectionChanged() ),
              this,      SLOT( slotSelectionChanged() ) );
   }
   else {
-    connect( mListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
-             this,      SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
+    connect( mListView, SIGNAL(itemSelectionChanged()),
+             this,      SLOT(slotSelectionChanged()) );
   }
-  connect( mListView, SIGNAL( doubleClicked ( Q3ListViewItem *, const QPoint &, int ) ), this, SLOT( accept() ) );
+  connect( mListView, SIGNAL(itemDoubleClicked(QTreeWidgetItem*, int) ), this, SLOT(accept()) );
 
-  connect( mListView, SIGNAL( contextMenuRequested( Q3ListViewItem*,
-                                                    const QPoint&, int ) ),
-           this,      SLOT( slotRMB( Q3ListViewItem*, const QPoint&, int ) ) );
+  mListView->setContextMenuPolicy( Qt::CustomContextMenu );
+  connect( mListView, SIGNAL( customContextMenuRequested(const QPoint&) ),
+           this,      SLOT( slotRMB(const QPoint&) ) );
 
   setButtonGuiItem( KDialog::Default, KGuiItem(i18n("&Reread Keys")) );
   connect( this, SIGNAL( defaultClicked() ),
@@ -420,7 +422,7 @@ KeySelectionDialog::~KeySelectionDialog()
 
 KeyID KeySelectionDialog::key() const
 {
-  if( mListView->isMultiSelection() || mKeyIds.isEmpty() )
+  if( mListView->selectionMode() == QTreeWidget::ExtendedSelection || mKeyIds.isEmpty() )
     return KeyID();
   else
     return mKeyIds.first();
@@ -430,7 +432,7 @@ KeyID KeySelectionDialog::key() const
 void KeySelectionDialog::initKeylist( const KeyList& keyList,
                                       const KeyIDList& keyIds )
 {
-  Q3ListViewItem* firstSelectedItem = 0;
+  QTreeWidgetItem* firstSelectedItem = 0;
   mKeyIds.clear();
   mListView->clear();
 
@@ -438,47 +440,48 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
   foreach ( Key* key, keyList ) {
     KeyID curKeyId = key->primaryKeyID();
 
-    Q3ListViewItem* primaryUserID = new Q3ListViewItem( mListView, curKeyId,
-                                                      key->primaryUserID() );
+    QTreeWidgetItem* primaryUserID = new QTreeWidgetItem( mListView );
+    primaryUserID->setText( 0, curKeyId );
+    primaryUserID->setText( 1, key->primaryUserID() );
 
     // select and open the given key
     if( keyIds.indexOf( curKeyId ) != -1 ) {
       if( 0 == firstSelectedItem ) {
         firstSelectedItem = primaryUserID;
       }
-      mListView->setSelected( primaryUserID, true );
+      primaryUserID->setSelected( true );
       mKeyIds.append( curKeyId );
     }
-    primaryUserID->setOpen( false );
+    primaryUserID->setExpanded( false );
 
     // set icon for this key
     switch( keyValidity( key ) ) {
       case 0: // the key's validity can't be determined
-        primaryUserID->setPixmap( 0, *mKeyUnknownPix );
+        primaryUserID->setData( 0, Qt::DecorationRole, *mKeyUnknownPix );
         break;
       case 1: // key is valid but not trusted
-        primaryUserID->setPixmap( 0, *mKeyValidPix );
+        primaryUserID->setData( 0, Qt::DecorationRole, *mKeyValidPix );
         break;
       case 2: // key is valid and trusted
-        primaryUserID->setPixmap( 0, *mKeyGoodPix );
+        primaryUserID->setData( 0, Qt::DecorationRole, *mKeyGoodPix );
         break;
       case -1: // key is invalid
-        primaryUserID->setPixmap( 0, *mKeyBadPix );
+        primaryUserID->setData( 0, Qt::DecorationRole, *mKeyBadPix );
         break;
     }
 
-    Q3ListViewItem* childItem;
+    QTreeWidgetItem* childItem;
 
-    childItem = new Q3ListViewItem( primaryUserID, "",
-                                   i18n( "Fingerprint: %1" ,
-                                     beautifyFingerprint( key->primaryFingerprint() ) ) );
-    if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
-      mListView->setSelected( childItem, true );
+    childItem = new QTreeWidgetItem( primaryUserID );
+    childItem->setText( 1, i18n( "Fingerprint: %1" , beautifyFingerprint( key->primaryFingerprint() ) ) );
+    if( primaryUserID->isSelected() && mListView->selectionMode() == QTreeWidget::ExtendedSelection ) {
+      childItem->setSelected( true );
     }
 
-    childItem = new Q3ListViewItem( primaryUserID, "", keyInfo( key ) );
-    if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
-      mListView->setSelected( childItem, true );
+    childItem = new QTreeWidgetItem( primaryUserID );
+    childItem->setText( 1, keyInfo( key ) );
+    if( primaryUserID->isSelected() && mListView->selectionMode() == QTreeWidget::ExtendedSelection ) {
+      childItem->setSelected( true );
     }
 
     UserIDList userIDs = key->userIDs();
@@ -486,9 +489,10 @@ void KeySelectionDialog::initKeylist( const KeyList& keyList,
     if( uidit != userIDs.end() ) {
       ++uidit; // skip the primary user ID
       for( ; uidit != userIDs.end(); ++uidit ) {
-        childItem = new Q3ListViewItem( primaryUserID, "", (*uidit)->text() );
-        if( primaryUserID->isSelected() && mListView->isMultiSelection() ) {
-          mListView->setSelected( childItem, true );
+        childItem = new QTreeWidgetItem( primaryUserID );
+        childItem->setText( 1, (*uidit)->text() );
+        if( primaryUserID->isSelected() && mListView->selectionMode() == QTreeWidget::ExtendedSelection ) {
+          childItem->setSelected( true );
         }
       }
     }
@@ -674,7 +678,7 @@ int KeySelectionDialog::keyValidity( const Kpgp::Key *key ) const
 
 
 void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
-                                        Q3ListViewItem* lvi ) const
+                                        QTreeWidgetItem* lvi ) const
 {
   if( 0 == lvi ) {
     return;
@@ -686,9 +690,9 @@ void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
 
   if( 0 == key ) {
     // the key doesn't exist anymore -> delete it from the list view
-    while( lvi->firstChild() ) {
-      kDebug( 5326 ) <<"Deleting '" << lvi->firstChild()->text( 1 ) <<"'";
-      delete lvi->firstChild();
+    while( lvi->childCount() ) {
+      kDebug( 5326 ) <<"Deleting '" << lvi->child( 0 )->text( 1 ) <<"'";
+      delete lvi->takeChild( 0 );
     }
     kDebug( 5326 ) <<"Deleting key 0x" << lvi->text( 0 ) <<" ("
                   << lvi->text( 1 ) << ")\n";
@@ -700,33 +704,35 @@ void KeySelectionDialog::updateKeyInfo( const Kpgp::Key* key,
   // update the icon for this key
   switch( keyValidity( key ) ) {
   case 0: // the key's validity can't be determined
-    lvi->setPixmap( 0, *mKeyUnknownPix );
+    lvi->setData( 0, Qt::DecorationRole, *mKeyUnknownPix );
     break;
   case 1: // key is valid but not trusted
-    lvi->setPixmap( 0, *mKeyValidPix );
+    lvi->setData( 0, Qt::DecorationRole, *mKeyValidPix );
     break;
   case 2: // key is valid and trusted
-    lvi->setPixmap( 0, *mKeyGoodPix );
+    lvi->setData( 0, Qt::DecorationRole, *mKeyGoodPix );
     break;
   case -1: // key is invalid
-    lvi->setPixmap( 0, *mKeyBadPix );
+    lvi->setData( 0, Qt::DecorationRole, *mKeyBadPix );
     break;
   }
 
   // update the key info for this key
   // the key info is identified by a leading space; this shouldn't be
   // a problem because User Ids shouldn't start with a space
-  for( lvi = lvi->firstChild(); lvi; lvi = lvi->nextSibling() ) {
+  QTreeWidgetItemIterator it( lvi );
+  while ( *it ) {
     if( lvi->text( 1 ).at(0) == ' ' ) {
       lvi->setText( 1, keyInfo( key ) );
       break;
     }
+    ++it;
   }
 }
 
 
 int
-KeySelectionDialog::keyAdmissibility( Q3ListViewItem* lvi,
+KeySelectionDialog::keyAdmissibility( QTreeWidgetItem* lvi,
                                       TrustCheckMode trustCheckMode ) const
 {
   // Return:
@@ -793,7 +799,7 @@ KeySelectionDialog::keyAdmissibility( Q3ListViewItem* lvi,
 
 
 KeyID
-KeySelectionDialog::getKeyId( const Q3ListViewItem* lvi ) const
+KeySelectionDialog::getKeyId( const QTreeWidgetItem* lvi ) const
 {
   KeyID keyId;
 
@@ -830,38 +836,20 @@ void KeySelectionDialog::slotRereadKeys()
   }
 
   // save the current position of the contents
-  int offsetY = mListView->contentsY();
+  int offsetY = mListView->verticalScrollBar()->value();
 
-  if( mListView->isMultiSelection() ) {
-    disconnect( mListView, SIGNAL( selectionChanged() ),
-                this,      SLOT( slotSelectionChanged() ) );
-  }
-  else {
-    disconnect( mListView, SIGNAL( selectionChanged( Q3ListViewItem * ) ),
-                this,      SLOT( slotSelectionChanged( Q3ListViewItem * ) ) );
-  }
+  disconnect( mListView, SIGNAL( itemSelectionChanged() ),
+              this,      SLOT( slotSelectionChanged() ) );
 
   initKeylist( keys, KeyIDList( mKeyIds ) );
   slotFilter();
 
-  if( mListView->isMultiSelection() ) {
-    connect( mListView, SIGNAL( selectionChanged() ),
-             this,      SLOT( slotSelectionChanged() ) );
-    slotSelectionChanged();
-  }
-  else {
-    connect( mListView, SIGNAL( selectionChanged( Q3ListViewItem * ) ),
-             this,      SLOT( slotSelectionChanged( Q3ListViewItem * ) ) );
-  }
+  connect( mListView, SIGNAL( itemSelectionChanged() ),
+           this,      SLOT( slotSelectionChanged() ) );
+  slotSelectionChanged();
 
   // restore the saved position of the contents
-  mListView->setContentsPos( 0, offsetY );
-}
-
-
-void KeySelectionDialog::slotSelectionChanged( Q3ListViewItem * lvi )
-{
-  slotCheckSelection( lvi );
+  mListView->verticalScrollBar()->setValue( offsetY );
 }
 
 
@@ -869,18 +857,23 @@ void KeySelectionDialog::slotSelectionChanged()
 {
   kDebug( 5326 ) <<"KeySelectionDialog::slotSelectionChanged()";
 
-  // (re)start the check selection timer. Checking the selection is delayed
-  // because else drag-selection doesn't work very good (checking key trust
-  // is slow).
-  mCheckSelectionTimer->start( sCheckSelectionDelay );
+  if ( mListView->selectionMode() == QTreeWidget::ExtendedSelection ) {
+    // (re)start the check selection timer. Checking the selection is delayed
+    // because else drag-selection doesn't work very good (checking key trust
+    // is slow).
+    mCheckSelectionTimer->start( sCheckSelectionDelay );
+  } else {
+    if ( mListView->selectedItems().size() > 0 )
+      slotCheckSelection( mListView->selectedItems().first() );
+  }
 }
 
 
-void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
+void KeySelectionDialog::slotCheckSelection( QTreeWidgetItem* plvi /* = 0 */ )
 {
   kDebug( 5326 ) <<"KeySelectionDialog::slotCheckSelection()";
 
-  if( !mListView->isMultiSelection() ) {
+  if( mListView->selectionMode() != QTreeWidget::ExtendedSelection ) {
     mKeyIds.clear();
     KeyID keyId = getKeyId( plvi );
     if( !keyId.isEmpty() ) {
@@ -896,18 +889,17 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
 
     // As we might change the selection, we have to disconnect the slot
     // to prevent recursion
-    disconnect( mListView, SIGNAL( selectionChanged() ),
+    disconnect( mListView, SIGNAL( itemSelectionChanged() ),
                 this,      SLOT( slotSelectionChanged() ) );
 
     KeyIDList newKeyIdList;
-    QList<Q3ListViewItem*> keysToBeChecked;
+    QList<QTreeWidgetItem*> keysToBeChecked;
 
     bool keysAllowed = true;
     enum { UNKNOWN, SELECTED, DESELECTED } userAction = UNKNOWN;
     // Iterate over the tree to find selected keys.
-    for( Q3ListViewItem *lvi = mListView->firstChild();
-         0 != lvi;
-         lvi = lvi->nextSibling() ) {
+    for( int lviIndex = 0; lviIndex < mListView->topLevelItemCount(); ++lviIndex ) {
+      QTreeWidgetItem *lvi = mListView->topLevelItem( lviIndex );
       // We make sure that either all items belonging to a key are selected
       // or unselected. As it's possible to select/deselect multiple keys at
       // once in extended selection mode we have to figure out whether the user
@@ -916,9 +908,8 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
       // First count the selected items of this key
       int itemCount = 1 + lvi->childCount();
       int selectedCount = lvi->isSelected() ? 1 : 0;
-      for( Q3ListViewItem *clvi = lvi->firstChild();
-           0 != clvi;
-           clvi = clvi->nextSibling() ) {
+      for( int clviIndex = 0; clviIndex < lvi->childCount(); ++clviIndex ) {
+        QTreeWidgetItem *clvi = lvi->child( clviIndex );
         if( clvi->isSelected() ) {
           ++selectedCount;
         }
@@ -964,11 +955,10 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
         // according to the user's action
         if( userAction == SELECTED ) {
           // select all items of this key
-          mListView->setSelected( lvi, true );
-          for( Q3ListViewItem *clvi = lvi->firstChild();
-               0 != clvi;
-               clvi = clvi->nextSibling() ) {
-            mListView->setSelected( clvi, true );
+          lvi->setSelected( true );
+          for( int clviIndex = 0; clviIndex < lvi->childCount(); ++clviIndex ) {
+            QTreeWidgetItem *clvi = lvi->child( clviIndex );
+            clvi->setSelected( true );
           }
           // add key to the list of selected keys
           KeyID keyId = lvi->text(0).toLocal8Bit();
@@ -983,11 +973,10 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
         }
         else { // userAction == DESELECTED
           // deselect all items of this key
-          mListView->setSelected( lvi, false );
-          for( Q3ListViewItem *clvi = lvi->firstChild();
-               0 != clvi;
-               clvi = clvi->nextSibling() ) {
-            mListView->setSelected( clvi, false );
+          lvi->setSelected( false );
+          for ( int clviIndex = 0; clviIndex < lvi->childCount(); ++clviIndex ) {
+            QTreeWidgetItem *clvi = lvi->child( clviIndex );
+            clvi->setSelected( false );
           }
         }
       }
@@ -1005,7 +994,7 @@ void KeySelectionDialog::slotCheckSelection( Q3ListViewItem* plvi /* = 0 */ )
 }
 
 
-bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
+bool KeySelectionDialog::checkKeys( const QList<QTreeWidgetItem*>& keys ) const
 {
   KProgressDialog* pProgressDlg = 0;
   bool keysAllowed = true;
@@ -1019,7 +1008,7 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
   pProgressDlg->setMinimumDuration( 1000 );
   pProgressDlg->show();
 
-  for( QList<Q3ListViewItem*>::ConstIterator it = keys.begin();
+  for( QList<QTreeWidgetItem*>::ConstIterator it = keys.begin();
        it != keys.end();
        ++it ) {
     kDebug( 5326 ) <<"Checking key 0x" << getKeyId( *it ) <<"...";
@@ -1038,8 +1027,9 @@ bool KeySelectionDialog::checkKeys( const QList<Q3ListViewItem*>& keys ) const
 }
 
 
-void KeySelectionDialog::slotRMB( Q3ListViewItem* lvi, const QPoint& pos, int )
+void KeySelectionDialog::slotRMB( const QPoint& pos )
 {
+  QTreeWidgetItem *lvi = mListView->itemAt( pos );
   if( !lvi ) {
     return;
   }
@@ -1048,7 +1038,7 @@ void KeySelectionDialog::slotRMB( Q3ListViewItem* lvi, const QPoint& pos, int )
 
   QMenu menu(this);
   menu.addAction( i18n( "Recheck Key" ), this, SLOT( slotRecheckKey() ) );
-  menu.exec( pos );
+  menu.exec( mListView->viewport()->mapToGlobal( pos ) );
 }
 
 
@@ -1114,9 +1104,12 @@ void KeySelectionDialog::filterByKeyID( const QString & keyID )
   assert( !keyID.isEmpty() ); // regexp in slotFilter should prevent these
   if ( keyID.isEmpty() )
     showAllItems();
-  else
-    for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-      item->setVisible( item->text( 0 ).toUpper().startsWith( keyID ) );
+  else {
+    for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
+      QTreeWidgetItem * item = mListView->topLevelItem( i );
+      item->setHidden( !item->text( 0 ).toUpper().startsWith( keyID ) );
+    }
+  }
 }
 
 void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
@@ -1126,11 +1119,12 @@ void KeySelectionDialog::filterByKeyIDOrUID( const QString & str )
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
-  for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( item->text( 0 ).toUpper().startsWith( str )
-                      || rx.indexIn( item->text( 1 ) ) >= 0
-                      || anyChildMatches( item, rx ) );
-
+  for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
+    QTreeWidgetItem * item = mListView->topLevelItem( i );
+    item->setHidden( !item->text( 0 ).toUpper().startsWith( str )
+                     && rx.indexIn( item->text( 1 ) ) < 0
+                     && !anyChildMatches( item, rx ) );
+  }
 }
 
 void KeySelectionDialog::filterByUID( const QString & str )
@@ -1140,31 +1134,34 @@ void KeySelectionDialog::filterByUID( const QString & str )
   // match beginnings of words:
   QRegExp rx( "\\b" + QRegExp::escape( str ), Qt::CaseInsensitive );
 
-  for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( rx.indexIn( item->text( 1 ) ) >= 0
-                      || anyChildMatches( item, rx ) );
+  for ( int i = 0; i < mListView->topLevelItemCount(); ++i ) {
+    QTreeWidgetItem * item = mListView->topLevelItem( i );
+    item->setHidden( rx.indexIn( item->text( 1 ) ) < 0
+                     && !anyChildMatches( item, rx ) );
+  }
 }
 
 
-bool KeySelectionDialog::anyChildMatches( const Q3ListViewItem * item, QRegExp & rx ) const
+bool KeySelectionDialog::anyChildMatches( const QTreeWidgetItem * item, QRegExp & rx ) const
 {
   if ( !item )
     return false;
 
-  Q3ListViewItem * stop = item->nextSibling(); // It's OK if stop is NULL...
-
-  for ( Q3ListViewItemIterator it( item->firstChild() ) ; it.current() && it.current() != stop ; ++it )
-    if ( rx.indexIn( it.current()->text( 1 ) ) >= 0 ) {
+  for ( int i = 0; i < item->childCount(); ++i ) {
+    QTreeWidgetItem* it = item->child( i );
+    if ( rx.indexIn( it->text( 1 ) ) >= 0 ) {
       //item->setOpen( true ); // do we want that?
       return true;
     }
+  }
+
   return false;
 }
 
 void KeySelectionDialog::showAllItems()
 {
-  for ( Q3ListViewItem * item = mListView->firstChild() ; item ; item = item->nextSibling() )
-    item->setVisible( true );
+  for ( QTreeWidgetItemIterator it( mListView ); *it; ++it )
+    (*it)->setHidden( false );
 }
 
 // ------------------------------------------------------------------------
