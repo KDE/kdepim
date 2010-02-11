@@ -50,6 +50,68 @@ Q_INLINE_TEMPLATES void qSortUnique( QValueList<T> &lst )
   }
 }
 
+template <class T>
+Q_INLINE_TEMPLATES int findGE( QValueList<T> &lst, const T &value, int start )
+{
+  // Do a binary search to find the first item >= value
+  int st = start - 1;
+  int end = lst.count();
+  while ( end - st > 1 ) {
+    int i = ( st + end ) / 2;
+    if ( value <= lst[i] ) {
+      end = i;
+    } else {
+      st = i;
+    }
+  }
+  ++st;
+  return ( st == int( lst.count() ) ) ? -1 : st;
+}
+
+template <class T>
+Q_INLINE_TEMPLATES int findGT( QValueList<T> &lst, const T &value, int start )
+{
+  // Do a binary search to find the first item > value
+  int st = start - 1;
+  int end = lst.count();
+  while ( end - st > 1 ) {
+    int i = ( st + end ) / 2;
+    if ( value < lst[i] ) {
+      end = i;
+    } else {
+      st = i;
+    }
+  }
+  ++st;
+  return ( st == int( lst.count() ) ) ? -1 : st;
+}
+
+template <class T>
+Q_INLINE_TEMPLATES int findSorted( QValueList<T> &lst, const T &value, int start )
+{
+  // Do a binary search to find the item == value
+  int st = start - 1;
+  int end = lst.count();
+  while ( end - st > 1 ) {
+    int i = ( st + end ) / 2;
+    if ( value < lst[i] ) {
+      end = i;
+    } else {
+      st = i;
+    }
+  }
+  return ( end > start && value == lst[st] ) ? st : -1;
+}
+
+template <class T>
+Q_INLINE_TEMPLATES int removeSorted( QValueList<T> &lst, const T &value, int start )
+{
+  int i = findSorted( lst, value, start );
+  if ( i >= 0 ) {
+    lst.remove( lst.at( i ) );
+  }
+  return i;
+}
 
 namespace KCal {
 
@@ -188,6 +250,18 @@ class LIBKCAL_EXPORT RecurrenceRule
      */
     TimeList recurTimesOn( const QDate &date ) const;
 
+    /** Returns a list of all the times at which the recurrence will occur
+     * between two specified times.
+     *
+     * There is a (large) maximum limit to the number of times returned. If due to
+     * this limit the list is incomplete, this is indicated by the last entry being
+     * set to an invalid KDateTime value. If you need further values, call the
+     * method again with a start time set to just after the last valid time returned.
+     * @param start inclusive start of interval
+     * @param end inclusive end of interval
+     * @return list of date/time values
+     */
+    DateTimeList timesInInterval( const QDateTime &start, const QDateTime &end ) const;
 
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
@@ -331,8 +405,12 @@ class LIBKCAL_EXPORT RecurrenceRule
 
     // Cache for duration
     mutable DateTimeList mCachedDates;
-    mutable bool mCached;
     mutable QDateTime mCachedDateEnd;
+    mutable QDateTime mCachedLastDate;   // when mCachedDateEnd invalid, last date checked
+    mutable bool mCached;
+
+    bool mNoByRules;        // no BySeconds, ByMinutes, ... rules exist
+    uint mTimedRepetition;  // repeats at a regular number of seconds interval, or 0
 
     class Private;
     Private *d;

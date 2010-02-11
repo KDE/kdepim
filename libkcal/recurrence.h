@@ -166,6 +166,21 @@ class LIBKCAL_EXPORT Recurrence : public RecurrenceRule::Observer
      */
     QValueList<QTime> recurTimesOn(const QDate &date) const;
 
+    /** Returns a list of all the times at which the recurrence will occur
+     * between two specified times.
+     *
+     * There is a (large) maximum limit to the number of times returned. If due to
+     * this limit the list is incomplete, this is indicated by the last entry being
+     * set to an invalid QDateTime value. If you need further values, call the
+     * method again with a start time set to just after the last valid time returned.
+     *
+     * @param start inclusive start of interval
+     * @param end inclusive end of interval
+     * @return list of date/time values
+     */
+    DateTimeList timesInInterval( const QDateTime &start, const QDateTime &end ) const;
+
+
     /** Returns the date and time of the next recurrence, after the specified date/time.
      * If the recurrence has no time, the next date after the specified date is returned.
      * @param preDateTime the date/time after which to find the recurrence.

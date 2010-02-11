@@ -770,6 +770,71 @@ TimeList Recurrence::recurTimesOn( const QDate &date ) const
   return times;
 }
 
+DateTimeList Recurrence::timesInInterval( const QDateTime &start, const QDateTime &end ) const
+{
+  int i, count;
+  DateTimeList times;
+  for ( i = 0, count = mRRules.count();  i < count;  ++i ) {
+    times += mRRules[i]->timesInInterval( start, end );
+  }
+
+  // add rdatetimes that fit in the interval
+  for ( i = 0, count = mRDateTimes.count();  i < count;  ++i ) {
+    if ( mRDateTimes[i] >= start && mRDateTimes[i] <= end ) {
+      times += mRDateTimes[i];
+    }
+  }
+
+  // add rdates that fit in the interval
+  QDateTime qdt( mStartDateTime );
+  for ( i = 0, count = mRDates.count();  i < count;  ++i ) {
+    qdt.setDate( mRDates[i] );
+    if ( qdt >= start && qdt <= end ) {
+      times += qdt;
+    }
+  }
+
+  // Recurrence::timesInInterval(...) doesn't explicitly add mStartDateTime to the list
+  // of times to be returned. It calls mRRules[i]->timesInInterval(...) which include
+  // mStartDateTime.
+  // So, If we have rdates/rdatetimes but don't have any rrule we must explicitly
+  // add mStartDateTime to the list, otherwise we won't see the first occurrence.
+  if ( ( !mRDates.isEmpty() || !mRDateTimes.isEmpty() ) &&
+       mRRules.isEmpty() &&
+       start <= mStartDateTime &&
+       end >= mStartDateTime ) {
+    times += mStartDateTime;
+  }
+
+  qSortUnique( times );
+
+  // Remove excluded times
+  int idt = 0;
+  int enddt = times.count();
+  for ( i = 0, count = mExDates.count();  i < count && idt < enddt;  ++i ) {
+    while ( idt < enddt && times[idt].date() < mExDates[i] ) ++idt;
+    while ( idt < enddt && times[idt].date() == mExDates[i] ) {
+      times.remove( times.at( idt ) );
+      --enddt;
+    }
+  }
+  DateTimeList extimes;
+  for ( i = 0, count = mExRules.count();  i < count;  ++i ) {
+    extimes += mExRules[i]->timesInInterval( start, end );
+  }
+  extimes += mExDateTimes;
+  qSortUnique( extimes );
+
+  int st = 0;
+  for ( i = 0, count = extimes.count();  i < count;  ++i ) {
+    int j = removeSorted( times, extimes[i], st );
+    if ( j >= 0 ) {
+      st = j;
+    }
+  }
+
+  return times;
+}
 
 QDateTime Recurrence::getNextDateTime( const QDateTime &preDateTime ) const
 {
