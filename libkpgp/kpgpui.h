@@ -38,7 +38,7 @@ class QString;
 class QRegExp;
 class QByteArray;
 class QCheckBox;            // needed by Config, KeySelectionDialog
-class Q3MultiLineEdit;      // needed by CipherTextDialog
+class QTextEdit;            // needed by CipherTextDialog
 class QComboBox;            // needed by Config
 class QPixmap;              // needed by KeySelectionDialog
 class QPushButton;          // needed by KeyRequester
@@ -337,7 +337,7 @@ class KPGP_EXPORT CipherTextDialog: public KDialog
 
   private:
     void setMinimumSize();
-    Q3MultiLineEdit *mEditBox;
+    QTextEdit *mEditBox;
 };
 
 } // namespace Kpgp

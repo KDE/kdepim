@@ -35,11 +35,13 @@
 #include <QHBoxLayout>
 #include <QProgressBar>
 #include <QButtonGroup>
-#include <q3multilineedit.h>
+#include <QTextEdit>
 #include <QGroupBox>
 #include <QTreeWidget>
 #include <QHeaderView>
 #include <QScrollArea>
+#include <QScrollBar>
+#include <QAbstractTextDocumentLayout>
 
 #include <kvbox.h>
 #include <kconfiggroup.h>
@@ -1630,7 +1632,7 @@ CipherTextDialog::CipherTextDialog( const QByteArray & text,
   label->setText(i18n("Result of the last encryption/sign operation:"));
   topLayout->addWidget( label );
 
-  mEditBox = new Q3MultiLineEdit( page );
+  mEditBox = new QTextEdit( page );
   mEditBox->setReadOnly(true);
   topLayout->addWidget( mEditBox, 10 );
 
@@ -1655,12 +1657,11 @@ void CipherTextDialog::setMinimumSize()
 {
   // this seems to force a layout of the entire document, so we get a
   // a proper contentsWidth(). Is there a better way?
-  for ( int i = 0; i < mEditBox->paragraphs(); i++ )
-      (void) mEditBox->paragraphRect( i );
+  (void) mEditBox->document()->documentLayout()->documentSize();
 
   mEditBox->setMinimumHeight( mEditBox->fontMetrics().lineSpacing() * 25 );
 
-  int textWidth = mEditBox->contentsWidth() + 30;
+  int textWidth = mEditBox->viewport()->width() + 30;
 
 
   int maxWidth = KGlobalSettings::desktopGeometry(parentWidget()).width()-100;
