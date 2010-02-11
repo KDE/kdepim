@@ -164,7 +164,7 @@ void MailList::populateMimeData( QMimeData *md )
     QByteArray array;
     QBuffer buffer( &array, 0 );
     buffer.open( QIODevice::WriteOnly);
-    QDataStream stream( &array, QIODevice::WriteOnly );
+    QDataStream stream( &buffer );
     stream << (*this);
     buffer.close();
     md->setData( MailList::mimeDataType(), array );
