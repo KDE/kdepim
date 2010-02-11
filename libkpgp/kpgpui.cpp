@@ -39,6 +39,7 @@
 #include <QGroupBox>
 #include <QTreeWidget>
 #include <QHeaderView>
+#include <QScrollArea>
 
 #include <kvbox.h>
 #include <kconfiggroup.h>
@@ -1352,13 +1353,13 @@ KeyApprovalDialog::KeyApprovalDialog( const QStringList& addresses,
                               page );
   topLayout->addWidget( label );
 
-  Q3ScrollView* sv = new Q3ScrollView( page );
-  sv->setResizePolicy( Q3ScrollView::AutoOneFit );
+  QScrollArea* sv = new QScrollArea( page );
+  sv->setWidgetResizable( true );
   topLayout->addWidget( sv );
-  KVBox* bigvbox = new KVBox( sv->viewport() );
+  KVBox* bigvbox = new KVBox;
+  sv->setWidget( bigvbox );
   //bigvbox->setMargin( KDialog::marginHint() );
   bigvbox->setSpacing( KDialog::spacingHint() );
-  sv->addChild( bigvbox );
 
   QButtonGroup *mChangeButtonGroup = new QButtonGroup;
   mAddressLabels.resize( addresses.count() );
