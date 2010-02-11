@@ -29,7 +29,6 @@
 #include <QtGui/QCheckBox>    // used in inlined methods
 #include <QtGui/QPixmap>
 #include <QtGui/QLabel>
-#include <Qt3Support/Q3PtrVector>
 
 #include <kdebug.h>       // used in inlined methods
 #include <kdialog.h>      // base class of all dialogs here
@@ -319,10 +318,10 @@ class KPGP_EXPORT KeyApprovalDialog: public KDialog
     int mAllowedKeys;
     int mEncryptToSelf;
     bool mPrefsChanged;
-    Q3PtrVector<QLabel> mAddressLabels;
-    Q3PtrVector<QLabel> mKeyIdsLabels;
+    QVector<QLabel*> mAddressLabels;
+    QVector<QLabel*> mKeyIdsLabels;
     //QPtrVector<QListBox> mKeyIdListBoxes;
-    Q3PtrVector<QComboBox> mEncrPrefCombos;
+    QVector<QComboBox*> mEncrPrefCombos;
 };
 
 
