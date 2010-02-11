@@ -467,7 +467,7 @@ void HtmlExport::createTodo (QTextStream *ts,Todo *todo)
     if (completed) *ts << " class=\"done\"";
     *ts << ">\n";
     if (todo->hasDueDate()) {
-      *ts << "    " << todo->dtDueDateStr() << "\n";
+      *ts << "    " << IncidenceFormatter::dateToString( todo->dtDue( true ) ) << "\n";
     } else {
       *ts << "    &nbsp;\n";
     }
