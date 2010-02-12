@@ -1,3 +1,27 @@
+Friday, February 12th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4059: After deactivating of a calendar the small monthview is not updated (rt#5966)
+* kolab/issue2656: Wrong scale is shown, if the calendar component is selected (rt#5916)
+* kolab/issue3835: Edit in the Reminder dialog doesn't work after restart of KDE
+* kolab/issue4090: Wish:Mail: Double click on mail in search dialog should open the mail in a window (rt#5992)
+* kolab/issue4066(partly): Change the default value for the close to quota threshold to 80%
+* kolab/issue4039: Size of an embedded event attachment is too small
+* kolab/issue4057: Attach file: if filedialog default directory doesn't exit, it should use the home directory 
+                   of the user as default (rt#5962)
+* kolab/issue4097: Wish for an option: reply should always quote the whole mail (rt#5995)
+* kolab/issue4089: Composer: double click on a word should select the word and not additional spaces,
+                   brackets etc (rt#5991)
+* kolab/issue2524: KMail: message window shows backslash for quoted-pairs
+* kolab/issue1765: In parallel calender view there is no need to ask in which resource folder a new event
+                   should get (rt#5816)
+* kolab/issue4063: New task is not visible in calendar side-by-side view (rt#5974)
+* kolab/issue4065: Wish: Create new event: it should be possible to add it into many calendar resources (rt#5952)
+* Don't crash when using menu item Action->Show after deselecting an incidence
+
+
 Friday, February 5th 2010
 
 Problems addressed
