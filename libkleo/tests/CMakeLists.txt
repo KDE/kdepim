@@ -3,11 +3,11 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### next target ###############
 
-#set(test_keylister_SRCS test_keylister.cpp )
+set(test_keylister_SRCS test_keylister.cpp )
 
-#kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
+kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
 
-#target_link_libraries(test_keylister  kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_keylister  kleo ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
