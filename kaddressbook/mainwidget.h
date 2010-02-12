@@ -39,7 +39,6 @@ class StandardContactActionManager;
 
 class ContactSwitcher;
 class KActionCollection;
-class KDescendantsProxyModel;
 class KXMLGUIClient;
 class ModelColumnManager;
 class QAbstractItemModel;

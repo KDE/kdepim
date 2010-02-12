@@ -30,7 +30,6 @@ class QItemSelectionModel;
 class QLabel;
 class QRadioButton;
 
-class KJob;
 
 namespace Akonadi
 {

@@ -28,7 +28,6 @@
 
 #include "printstyle.h"
 
-class QPrinter;
 
 namespace KABPrinting
 {
