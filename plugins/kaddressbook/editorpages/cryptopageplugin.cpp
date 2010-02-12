@@ -43,8 +43,6 @@
 #include "gpgme++/key.h"
 
 #include "libkleo/ui/keyrequester.h"
-#include "libkleo/kleo/cryptplugfactory.h"
-#include "libkleo/kleo/cryptplugwrapper.h"
 #include "libkleo/kleo/enum.h"
 
 using namespace Akonadi;
