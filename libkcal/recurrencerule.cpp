@@ -32,6 +32,8 @@
 
 using namespace KCal;
 
+// Maximum number of intervals to process
+const int LOOP_LIMIT = 10000;
 
 // FIXME: If Qt is ever changed so that QDateTime:::addSecs takes into account
 //        DST shifts, we need to use our own addSecs method, too, since we
@@ -774,6 +776,8 @@ void RecurrenceRule::setWeekStart( short weekStart )
 
 void RecurrenceRule::buildConstraints()
 {
+  mTimedRepetition = 0;
+  mNoByRules = mBySetPos.isEmpty();
   mConstraints.clear();
   Constraint con;
   if ( mWeekStart > 0 ) con.weekstart = mWeekStart;
@@ -785,6 +789,7 @@ void RecurrenceRule::buildConstraints()
 
   #define intConstraint( list, element ) \
   if ( !list.isEmpty() ) { \
+    mNoByRules = false; \
     for ( it = mConstraints.constBegin(); it != mConstraints.constEnd(); ++it ) { \
       for ( intit = list.constBegin(); intit != list.constEnd(); ++intit ) { \
         con = (*it); \
@@ -806,6 +811,7 @@ void RecurrenceRule::buildConstraints()
   #undef intConstraint
 
   if ( !mByDays.isEmpty() ) {
+    mNoByRules = false;
     for ( it = mConstraints.constBegin(); it != mConstraints.constEnd(); ++it ) {
       QValueList<WDayPos>::const_iterator dayit;
       for ( dayit = mByDays.constBegin(); dayit != mByDays.constEnd(); ++dayit ) {
@@ -866,12 +872,28 @@ void RecurrenceRule::buildConstraints()
   }
   #undef fixConstraint
 
-  Constraint::List::Iterator conit = mConstraints.begin();
-  while ( conit != mConstraints.end() ) {
-    if ( (*conit).isConsistent( mPeriod ) ) {
-      ++conit;
-    } else {
-      conit = mConstraints.remove( conit );
+  if ( mNoByRules ) {
+    switch ( mPeriod ) {
+      case rHourly:
+        mTimedRepetition = mFrequency * 3600;
+        break;
+      case rMinutely:
+        mTimedRepetition = mFrequency * 60;
+        break;
+      case rSecondly:
+        mTimedRepetition = mFrequency;
+        break;
+      default:
+        break;
+    }
+  } else {
+    Constraint::List::Iterator conit = mConstraints.begin();
+    while ( conit != mConstraints.end() ) {
+      if ( (*conit).isConsistent( mPeriod ) ) {
+        ++conit;
+      } else {
+        conit = mConstraints.remove( conit );
+      }
     }
   }
 }
@@ -1148,6 +1170,104 @@ QDateTime RecurrenceRule::getNextDate( const QDateTime &preDate ) const
     ++loopnr;
   }
   return QDateTime();
+}
+
+DateTimeList RecurrenceRule::timesInInterval( const QDateTime &dtStart,
+                                              const QDateTime &dtEnd ) const
+{
+  QDateTime start = dtStart;
+  QDateTime end = dtEnd;
+  DateTimeList result;
+  if ( end < mDateStart ) {
+    return result;    // before start of recurrence
+  }
+  QDateTime enddt = end;
+  if ( mDuration >= 0 ) {
+    QDateTime endRecur = endDt();
+    if ( endRecur.isValid() ) {
+      if ( start >= endRecur ) {
+        return result;    // beyond end of recurrence
+      }
+      if ( end > endRecur ) {
+        enddt = endRecur;    // limit end time to end of recurrence rule
+      }
+    }
+  }
+
+  if ( mTimedRepetition ) {
+    // It's a simple sub-daily recurrence with no constraints
+    int n = static_cast<int>( ( mDateStart.secsTo( start ) - 1 ) % mTimedRepetition );
+    QDateTime dt = start.addSecs( mTimedRepetition - n );
+    if ( dt < enddt ) {
+      n = static_cast<int>( ( dt.secsTo( enddt ) - 1 ) / mTimedRepetition ) + 1;
+      // limit n by a sane value else we can "explode".
+      n = QMIN( n, LOOP_LIMIT );
+      for ( int i = 0;  i < n;  dt = dt.addSecs( mTimedRepetition ), ++i ) {
+        result += dt;
+      }
+    }
+    return result;
+  }
+
+  QDateTime st = start;
+  bool done = false;
+  if ( mDuration > 0 ) {
+    if ( !mCached ) {
+      buildCache();
+    }
+    if ( mCachedDateEnd.isValid() && start >= mCachedDateEnd ) {
+      return result;    // beyond end of recurrence
+    }
+    int i = findGE( mCachedDates, start, 0 );
+    if ( i >= 0 ) {
+      int iend = findGT( mCachedDates, enddt, i );
+      if ( iend < 0 ) {
+        iend = mCachedDates.count();
+      } else {
+        done = true;
+      }
+      while ( i < iend ) {
+        result += mCachedDates[i++];
+      }
+    }
+    if ( mCachedDateEnd.isValid() ) {
+      done = true;
+    } else if ( !result.isEmpty() ) {
+      result += QDateTime();    // indicate that the returned list is incomplete
+      done = true;
+    }
+    if ( done ) {
+      return result;
+    }
+    // We don't have any result yet, but we reached the end of the incomplete cache
+    st = mCachedLastDate.addSecs( 1 );
+  }
+
+  Constraint interval( getNextValidDateInterval( st, recurrenceType() ) );
+  int loop = 0;
+  do {
+    DateTimeList dts = datesForInterval( interval, recurrenceType() );
+    int i = 0;
+    int iend = dts.count();
+    if ( loop == 0 ) {
+      i = findGE( dts, st, 0 );
+      if ( i < 0 ) {
+        i = iend;
+      }
+    }
+    int j = findGT( dts, enddt, i );
+    if ( j >= 0 ) {
+      iend = j;
+      loop = LOOP_LIMIT;
+    }
+    while ( i < iend ) {
+      result += dts[i++];
+    }
+    // Increase the interval.
+    interval.increase( recurrenceType(), frequency() );
+  } while ( ++loop < LOOP_LIMIT &&
+            interval.intervalDateTime( recurrenceType() ) < end );
+  return result;
 }
 
 RecurrenceRule::Constraint RecurrenceRule::getPreviousValidDateInterval( const QDateTime &preDate, PeriodType type ) const
