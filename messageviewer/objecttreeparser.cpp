@@ -192,7 +192,7 @@ void ObjectTreeParser::insertAndParseNewChildNode( const Akonadi::Item &item,
                                                    KMime::Content& startNode,
                                                    const char* content,
                                                    const char* cntDesc,
-                                                   bool append, bool addToTextualContent )
+                                                   bool append )
 {
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( content );
@@ -233,12 +233,10 @@ void ObjectTreeParser::insertAndParseNewChildNode( const Akonadi::Item &item,
   }*/
   ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
   otp.parseObjectTree( item, newNode );
-  if ( addToTextualContent ) {
-    mRawReplyString += otp.rawReplyString();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
-  }
+  mRawReplyString += otp.rawReplyString();
+  mTextualContent += otp.textualContent();
+  if ( !otp.textualContentCharset().isEmpty() )
+    mTextualContentCharset = otp.textualContentCharset();
 }
 
 
@@ -1131,7 +1129,7 @@ bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::
   insertAndParseNewChildNode( item,
                               *curNode,
                               digestHeaderStr.toLatin1(),
-                              "Digest Header", true );
+                              "Digest Header" );
   //mReader->queueHtml("<br><hr><br>");
   // temporarily change curent node's Content-Type
   // to get our embedded RfC822 messages properly inserted
@@ -1168,7 +1166,7 @@ bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::
     insertAndParseNewChildNode( item,
                                 *curNode,
                                 partStr.toLatin1(),
-                                subject.toLatin1(), true );
+                                subject.toLatin1() );
     //mReader->queueHtml("<br><hr><br>");
     thisDelim = nextDelim+1;
     nextDelim = str.indexOf(delim1, thisDelim, Qt::CaseInsensitive );
@@ -1195,7 +1193,7 @@ bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::
   insertAndParseNewChildNode( item,
                               *curNode,
                               partStr.toLatin1(),
-                              "Digest Footer", true );
+                              "Digest Footer" );
   return true;
 }
 

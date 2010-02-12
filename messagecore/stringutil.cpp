@@ -789,7 +789,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
 
       if( link == ShowLink ) {
         result += "<a href=\"mailto:"
-                + encodeMailtoUrl( mailbox.quotedPrettyAddress() )
+                + encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) )
                 + "\" "+cssStyle+">";
       }
       if ( display == DisplayNameOnly ) {
