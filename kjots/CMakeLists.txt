@@ -5,10 +5,14 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(KDE4 REQUIRED)
+  find_package(Akonadi REQUIRED)
+  find_package(KdepimLibs REQUIRED)
   include(KDE4Defaults)
   include(MacroLibrary)
   include(CheckIncludeFiles)
 
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+  include_directories( ../akonadi/akonadi_next )
 
   set(KJOTS_BUILD_KONTACT_PLUGIN FALSE)
 else("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
