@@ -151,6 +151,10 @@ void KJotsEntry::generateXml( QDomDocument &doc, QDomElement &parent )
     id.appendChild( doc.createTextNode(id_string) );
     parent.appendChild( id );
 
+    QDomElement locked = doc.createElement( "Locked" );
+    locked.appendChild( doc.createTextNode( isEditable() ? QString("false") : QString("true") ));
+    parent.appendChild( locked );
+
     QColor currentColor = backgroundColor(0);
     if ( currentColor.isValid() ) {
         QDomElement color = doc.createElement( "Color" );
@@ -182,6 +186,14 @@ void KJotsEntry::parseXml( QDomElement &e, bool )
         {
             QColor color( e.text() );
             setBackgroundColor(0, color);
+        }
+        else
+        if ( e.tagName() == "Locked" )
+        {
+                if(e.text()==QString("true"))
+                    setEditable(false);
+                else
+                    setEditable(true);
         }
     }
 
@@ -653,10 +665,25 @@ KJotsBook *KJotsBook::createNewBook ( void )
     if ( ok ) {
         book = new KJotsBook();
         book->setTitle(name);
+        book->setEditable(true);
         book->openBook(QString());
     }
 
     return book;
+}
+
+void KJotsBook::setEditable(bool editable)
+{
+    m_editable = editable;
+    KJotsEntry *tmpEntry;
+    foreach(tmpEntry, children())
+        tmpEntry->setEditable(editable);
+    setDirty(true);
+}
+
+bool KJotsBook::isEditable()
+{
+    return m_editable;
 }
 
 //
@@ -696,6 +723,7 @@ KJotsPage *KJotsPage::createNewPage(int pageCount)
     KJotsPage *page = new KJotsPage();
     page->setId(0);
     page->setTitle(title);
+    page->setEditable(true);
     return page;
 }
 
@@ -899,6 +927,16 @@ void KJotsPage::generatePrintData ( QTextCursor *cursor )
     cursor->insertFragment(allCursor.selection());
 
     return;
+}
+
+void KJotsPage::setEditable(bool editable)
+{
+    m_editable = editable;
+}
+
+bool KJotsPage::isEditable()
+{
+    return m_editable;
 }
 
 #include "kjotsentry.moc"

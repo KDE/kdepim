@@ -165,6 +165,8 @@ void Bookshelf::contextMenuEvent( QContextMenuEvent* event)
     popup->addAction(m_actionCollection->action("save_to"));
     popup->addAction(m_actionCollection->action("copy_link_address"));
     popup->addAction(m_actionCollection->action("change_color"));
+    popup->addAction(m_actionCollection->action("lock"));
+    popup->addAction(m_actionCollection->action("unlock"));
     popup->addSeparator();
 
     QList<QTreeWidgetItem*> selection = selectedItems();

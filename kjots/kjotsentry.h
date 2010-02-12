@@ -67,6 +67,9 @@ class KJotsEntry : public QObject, public QTreeWidgetItem
         static quint64 idFromLinkUrl(const QString &link);
         static QString kjotsLinkUrlFromId(quint64 id);
 
+        virtual void setEditable(bool editable) = 0;    //items can be made read-only with this. implemented in children classes
+        virtual bool isEditable() = 0;                  //check if an item is read-only
+
     protected:
         void setId(quint64);
         bool m_isBook; //!< used for speed and code clarity.
@@ -113,12 +116,17 @@ friend class KJotsEntry;
 
         static KJotsBook *createNewBook( void );
 
+        void setEditable(bool editable);    //items can be made read-only with this.
+        bool isEditable();                  //check if an item is read-only
+
     private:
         QString getToc();
 
         bool m_open, m_shouldBeOpened;
         QString m_fileName;
         bool m_dirty; //!< Set when this book needs saving.
+
+        bool m_editable; //used for making items read-only
 };
 
 //
@@ -145,12 +153,17 @@ class KJotsPage : public KJotsEntry
 
         static KJotsPage *createNewPage( int );
 
+        void setEditable(bool editable);    //items can be made read-only with this.
+        bool isEditable();                  //check if an item is read-only
+
     protected slots:
         void documentModified(bool);
 
     private:
         QTextDocument document;
         QTextCursor cursor;
+
+        bool m_editable; //used for making items read-only
 };
 
 #endif // __KJOTSENTRY_H
