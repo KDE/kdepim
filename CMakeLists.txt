@@ -217,7 +217,9 @@ set(libkdgantt1_SRCS
     if (Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
     endif(Boost_TOPOLOGICAL_SORT_DIR)
-    macro_optional_add_subdirectory(wizards)
+    if (QT_QT3SUPPORT_FOUND)
+      macro_optional_add_subdirectory(wizards)
+    endif (QT_QT3SUPPORT_FOUND)
     # The following components depend on QGpgME.
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
@@ -240,11 +242,13 @@ set(libkdgantt1_SRCS
     add_subdirectory( nepomuk_email_feeder )
   endif(QGPGME_FOUND)
 
-  if(KDEPIM_BUILD_EVERYTHING)
+  if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
     macro_optional_add_subdirectory(knode)
-  endif(KDEPIM_BUILD_EVERYTHING)
+  endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
 
-  macro_optional_add_subdirectory(akregator)
+  if (QT_QT3SUPPORT_FOUND)
+    macro_optional_add_subdirectory(akregator)
+  endif (QT_QT3SUPPORT_FOUND)
   macro_optional_add_subdirectory(akonadiconsole)
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
