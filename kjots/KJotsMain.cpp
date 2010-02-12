@@ -24,8 +24,6 @@
 
 
 #include "KJotsMain.h"
-#include "kjotscomponent.h"
-
 
 #include <q3header.h>
 #include <QtGui/QPrinter>
@@ -69,8 +67,6 @@
 #include "kjotsbookmarks.h"
 #include "kjotsedit.h"
 #include "kjotsbrowser.h"
-#include "kjotsentry.h"
-#include "bookshelf.h"
 #include "kjotswidget.h"
 
 
@@ -119,6 +115,8 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 
 bool KJotsMain::queryClose()
 {
+  return true;
+  // TODO: Port
 //     return component->queryClose();
 }
 

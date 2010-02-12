@@ -51,9 +51,9 @@
 #include <akonadi/session.h>
 
 // Grantlee
-#include <grantlee/template.h>
-#include <grantlee/engine.h>
-#include <grantlee/context.h>
+// #include <grantlee/template.h>
+// #include <grantlee/engine.h>
+// #include <grantlee/context.h>
 
 // KDE
 #include <KAction>
@@ -91,7 +91,7 @@ Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
 
 using namespace Akonadi;
-using namespace Grantlee;
+// using namespace Grantlee;
 
 KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::WindowFlags f )
     : QWidget( parent, f ), m_xmlGuiClient( xmlGuiClient )
@@ -108,6 +108,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   QHBoxLayout *layout = new QHBoxLayout( this );
 
+#if 0
   KStandardDirs KStd;
   Engine *engine = Engine::instance();
   engine->setPluginDirs( KStd.findDirs( "lib", QLatin1String( "grantlee" ) ) );
@@ -117,6 +118,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   m_loader->setTheme( QLatin1String( "default" ) );
 
   engine->addTemplateLoader( m_loader );
+#endif
 
   treeview = new KJotsTreeView( xmlGuiClient, splitter );
 
@@ -631,6 +633,8 @@ void KJotsWidget::newBookResult( KJob* job )
 
 QString KJotsWidget::renderSelectionToHtml()
 {
+  return QString();
+#if 0
   QHash<QString, QVariant> hash;
 
   QList<QVariant> objectList;
@@ -654,6 +658,7 @@ QString KJotsWidget::renderSelectionToHtml()
   QString result = t->render(&c);
   // TODO: handle errors.
   return result;
+#endif
 }
 
 void KJotsWidget::renderSelection()
@@ -667,13 +672,16 @@ void KJotsWidget::renderSelection()
 
     QTextDocument *document = idx.data( KJotsModel::DocumentRole ).value<QTextDocument*>();
 
-    editor->setDocument( document );
-    QTextCursor textCursor = document->property( "textCursor" ).value<QTextCursor>();
-    if ( !textCursor.isNull() )
-      editor->setTextCursor( textCursor );
-    stackedWidget->setCurrentWidget( editor );
-    editor->setFocus();
-    return;
+    if ( document )
+    {
+      editor->setDocument( document );
+      QTextCursor textCursor = document->property( "textCursor" ).value<QTextCursor>();
+      if ( !textCursor.isNull() )
+        editor->setTextCursor( textCursor );
+      stackedWidget->setCurrentWidget( editor );
+      editor->setFocus();
+      return;
+    } // else fallthrough
   }
 
   // ... Otherwise, render the selection read-only.
@@ -687,6 +695,8 @@ void KJotsWidget::renderSelection()
 
 QString KJotsWidget::getThemeFromUser()
 {
+  return QString();
+#if 0
   bool ok;
   QString text = QInputDialog::getText(this, i18n("Change Theme"),
                                       tr("Theme name:"), QLineEdit::Normal,
@@ -697,17 +707,21 @@ QString KJotsWidget::getThemeFromUser()
   }
 
   return text;
+#endif
 }
 
 
 void KJotsWidget::changeTheme()
 {
+#if 0
   m_loader->setTheme(getThemeFromUser());
   renderSelection();
+#endif
 }
 
 void KJotsWidget::exportSelection()
 {
+#if 0
   QString currentTheme = m_loader->themeName();
   QString themeName = getThemeFromUser();
   if (themeName.isEmpty())
@@ -730,6 +744,7 @@ void KJotsWidget::exportSelection()
     exportFile.close();
   }
   m_loader->setTheme(currentTheme);
+#endif
 }
 
 

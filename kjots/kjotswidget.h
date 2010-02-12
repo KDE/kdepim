@@ -61,6 +61,7 @@ class KJotsTreeView;
 class KJotsWidget : public QWidget
 {
   Q_OBJECT
+  Q_CLASSINFO("D-Bus Interface", "org.kde.KJotsWidget")
 
 public:
   KJotsWidget( QWidget *parent, KXMLGUIClient *xmlGuiclient, Qt::WindowFlags f = 0 );

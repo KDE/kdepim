@@ -25,7 +25,6 @@
 
 #include <QItemSelectionModel>
 
-#include "kjotsentry.h"
 #include "kjotsmodel.h"
 #include "kjotstreeview.h"
 

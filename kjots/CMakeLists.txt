@@ -43,11 +43,9 @@ kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
 
 set (kjots_common_SRCS
      aboutdata.cpp
-     kjotsentry.cpp
      kjotsedit.cpp
      kjotstreeview.cpp
      kjotsbookmarks.cpp
-     bookshelf.cpp
      kjotsreplacenextdialog.cpp
      kjotsmodel.cpp
      kjotswidget.cpp
@@ -62,9 +60,9 @@ set (kjots_common_SRCS
 # D-Bus interface
 #########################################################################
 
-qt4_generate_dbus_interface( kjotscomponent.h org.kde.KJotsComponent.xml OPTIONS -m )
+qt4_generate_dbus_interface( kjotswidget.h org.kde.KJotsWidget.xml OPTIONS -m )
 qt4_add_dbus_interfaces(kjots_common_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsComponent.xml)
+    ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsWidget.xml)
 
 
 #########################################################################

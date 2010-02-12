@@ -26,14 +26,10 @@
 #define __KJOTSEDIT_H
 
 #include <KRichTextWidget>
-#include <QPointer>
 
 class QItemSelectionModel;
 
 class KActionCollection;
-class Bookshelf;
-class KJotsPage;
-
 
 class KJotsEdit : public KRichTextWidget
 {
@@ -71,8 +67,6 @@ protected slots:
 private:
     void disableEditing ( void );
     void createAutoDecimalList();
-    QPointer<Bookshelf> bookshelf;
-    QPointer<KJotsPage> currentPage;
     KActionCollection *actionCollection;
     bool allowAutoDecimal;
     QItemSelectionModel *m_selectionModel;

@@ -40,9 +40,7 @@
 #include <KApplication>
 #include <KLocale>
 
-#include "kjotsentry.h"
 #include "kjotslinkdialog.h"
-#include "bookshelf.h"
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/item.h>
@@ -117,18 +115,22 @@ void KJotsEdit::insertDate()
 
 void KJotsEdit::disableEditing ( void )
 {
+// TODO: PORT
+#if 0
     if ( currentPage ) {
         currentPage->setCursor(textCursor());
         setDocument(0);
         currentPage = 0;
     }
-
+#endif
     setReadOnly(true);
     setEnabled(false);
 }
 
 void KJotsEdit::onBookshelfSelection ( void )
 {
+  // TODO: PORT. Review and remove. Possibly keep the bug workaround.
+#if 0
     QList<QTreeWidgetItem*> selection = bookshelf->selectedItems();
     int selectionSize = selection.size();
 
@@ -168,6 +170,7 @@ void KJotsEdit::onBookshelfSelection ( void )
             }
         }
     }
+#endif
 }
 
 void KJotsEdit::onAutoBullet ( void )
@@ -240,7 +243,7 @@ void KJotsEdit::onAutoDecimal( void )
 void KJotsEdit::onLinkify ( void )
 {
     selectLinkText();
-    KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this, bookshelf);
+    KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this);
     linkDialog->setLinkText(currentLinkText());
     linkDialog->setLinkUrl(currentLinkUrl());
 
@@ -321,6 +324,8 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
 
 void KJotsEdit::mouseReleaseEvent(QMouseEvent *event)
 {
+  // TODO: PORT
+#if 0
     if ( ( event->modifiers() & Qt::ControlModifier ) && ( event->button() & Qt::LeftButton )
           && !anchorAt(event->pos()).isEmpty() )
     {
@@ -332,6 +337,7 @@ void KJotsEdit::mouseReleaseEvent(QMouseEvent *event)
             new KRun ( anchor, this );
         }
     }
+#endif
     KTextEdit::mouseReleaseEvent(event);
 }
 

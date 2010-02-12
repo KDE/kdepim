@@ -31,9 +31,6 @@
 #include <krun.h>
 #include <kdebug.h>
 
-#include "kjotsentry.h"
-#include "bookshelf.h"
-
 KJotsBrowser::KJotsBrowser ( QWidget *parent ) : QTextBrowser(parent)
 {
     setWordWrapMode(QTextOption::WordWrap);
@@ -43,41 +40,9 @@ KJotsBrowser::~KJotsBrowser()
 {
 }
 
-void KJotsBrowser::DelayedInitialization ( Bookshelf *shelf )
+void KJotsBrowser::DelayedInitialization ()
 {
-    bookshelf = shelf;
-    connect(bookshelf, SIGNAL(itemSelectionChanged()), SLOT(onSelectionChange()));
     connect(this, SIGNAL(anchorClicked(const QUrl&)), SLOT(linkClicked(const QUrl&)));
-}
-
-void KJotsBrowser::onSelectionChange ( void )
-{
-    QList<KJotsEntry*> selection = bookshelf->selected();
-    int selectionSize = selection.size();
-
-    QStackedWidget *stack = static_cast<QStackedWidget*>(parent());
-    
-    if ( selectionSize == 0 ) {
-        clear();
-        setEnabled(false);
-        stack->setCurrentWidget(this);
-        setFocus();
-    } else if (selectionSize ==  1 && selection[0]->isPage() ) {
-        setEnabled(false);
-    } else {
-        setEnabled(true);
-        QTextDocument document;
-        QTextCursor bookCursor ( &document );
-
-        foreach ( KJotsEntry *entry, selection ) {
-            entry->generateHtml(entry, false, &bookCursor);
-        }
-
-        setHtml(document.toHtml());
-
-        stack->setCurrentWidget(this);
-        setFocus();
-    }
 }
 
 /*!
@@ -85,8 +50,8 @@ void KJotsBrowser::onSelectionChange ( void )
 */
 void KJotsBrowser::linkClicked(const QUrl& link)
 {
-    kDebug() << "Link clicked: " << link;
-
+// TODO: PORT
+#if 0
     //Stop QTextBrowser from being stupid by giving it an invalid url.
     QUrl url;
     setSource(url);
@@ -105,6 +70,7 @@ void KJotsBrowser::linkClicked(const QUrl& link)
     }
 
     return;
+#endif
 }
 
 #include "kjotsbrowser.moc"

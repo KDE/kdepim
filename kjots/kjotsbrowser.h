@@ -25,9 +25,6 @@
 #define __KJOTSBROWSER_H
 
 #include <QTextBrowser>
-#include <QPointer>
-
-class Bookshelf;
 
 class KJotsBrowser : public QTextBrowser
 {
@@ -36,16 +33,10 @@ public:
     explicit KJotsBrowser ( QWidget* );
     virtual ~KJotsBrowser ();
 
-    void DelayedInitialization ( Bookshelf* );
+    void DelayedInitialization ();
 
 protected slots:
-    void onSelectionChange ( void );
     void linkClicked(const QUrl&);
-
-private:
-    void disableBrowser ( void );
-
-    QPointer<Bookshelf> bookshelf;
 };
 
 #endif
