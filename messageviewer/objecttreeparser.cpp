@@ -1531,57 +1531,53 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
 }
 
 
-bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
+bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item,
+                                                    KMime::Content * node, ProcessResult & )
 {
-  if ( htmlWriter()
-        && !attachmentStrategy()->inlineNestedMessages()
-        && !showOnlyOneMimePart() )
+  if ( htmlWriter() && !attachmentStrategy()->inlineNestedMessages() && !showOnlyOneMimePart() )
     return false;
 
-  KMime::Content * child = NodeHelper::firstChild( node );
-  if ( child ) {
-    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.parseObjectTree( item, child );
-    mRawReplyString += otp.rawReplyString();
-    mTextualContent += otp.textualContent();
-    if ( !otp.textualContentCharset().isEmpty() )
-      mTextualContentCharset = otp.textualContentCharset();
-    return true;
-  }
-  // paint the frame
   PartMetaData messagePart;
-  if ( htmlWriter() ) {
-    messagePart.isEncrypted = false;
-    messagePart.isSigned = false;
-    messagePart.isEncapsulatedRfc822Message = true;
-    QString filename = mNodeHelper->writeNodeToTempFile( node );
-    htmlWriter()->queue( writeSigstatHeader( messagePart,
-                                              cryptoProtocol(),
-                                              static_cast<KMime::Message*>(node->topLevel())->from()->asUnicodeString(),
-                                              node ) );
-  }
-  QByteArray rfc822messageStr( node->decodedContent() );
-  // display the headers of the encapsulated message
-  KMime::Message::Ptr rfc822message( new KMime::Message() );
-  rfc822message->setContent( rfc822messageStr );
-  rfc822message->parse();
-  // ### PORT ME: This crashes, try for example editing a message with an
-  //              encapsulated message in it
-  static_cast<KMime::Message*>(node->topLevel())->from()->from7BitString( rfc822message->from()->as7BitString() );
-  if ( htmlWriter() )
-    htmlWriter()->queue( mSource->createMessageHeader( rfc822message ) );
-    //mReader->parseMsgHeader( &rfc822message );
-  // display the body of the encapsulated message
-  insertAndParseNewChildNode( item,
-                              *node,
-                              rfc822messageStr.constData(),
-                              "encapsulated message", false /*append*/,
-                              false /*add to textual content*/  );
-  mNodeHelper->setNodeDisplayedEmbedded( node, true );
+  messagePart.isEncrypted = false;
+  messagePart.isSigned = false;
+  messagePart.isEncapsulatedRfc822Message = true;
 
-  if ( htmlWriter() )
+  KMime::Message::Ptr message = node->bodyAsMessage();
+  if ( !message ) {
+    kWarning() << "Node is of type message/rfc822 but doesn't have a message!";
+  }
+
+  if ( htmlWriter() && message ) {
+
+    // The link to "Encapsulated message" is clickable, therefore the temp file needs to exists,
+    // since the user can click the link and expect to have normal attachment operations there.
+    mNodeHelper->writeNodeToTempFile( message.get() );
+
+    // Paint the frame header
+    htmlWriter()->queue( writeSigstatHeader( messagePart,
+                                             cryptoProtocol(),
+                                             message->from()->asUnicodeString(),
+                                             message.get() ) );
+
+    // Paint the message header
+    htmlWriter()->queue( mSource->createMessageHeader( message ) );
+
+    // Process the message, i.e. paint it by processing it with an OTP
+    ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
+    otp.parseObjectTree( item, message.get() );
+
+    // Don't add the resulting textual content to our textual content here.
+    // That is unwanted when inline forwarding a message, since the encapsulated message will
+    // already be in the forward message as attachment, so don't duplicate the textual content
+    // by adding it to the inline body as well
+
+    // Paint the frame footer
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
+  }
+
+  mNodeHelper->setNodeDisplayedEmbedded( node, true );
   mNodeHelper->setPartMetaData( node, messagePart );
+
   return true;
 }
 

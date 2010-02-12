@@ -382,7 +382,7 @@ public:
   void showHideMimeTree();
 
   /** View message part of type message/RFC822 in extra viewer window. */
-  void atmViewMsg(KMime::Content* msgPart);
+  void atmViewMsg( KMime::Message::Ptr message );
 
   void adjustLayout();
   void saveSplitterSizes( KConfigGroup & c ) const;

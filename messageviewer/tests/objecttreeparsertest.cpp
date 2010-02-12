@@ -20,6 +20,8 @@
 
 #include "objecttreeparser.h"
 #include "objecttreeemptysource.h"
+#include "interfaces/htmlwriter.h"
+#include "messageviewer/csshelper.h"
 
 #include <akonadi/item.h>
 
@@ -27,6 +29,50 @@
 
 using namespace MessageViewer;
 
+class TestHtmlWriter : public MessageViewer::HtmlWriter {
+  public:
+    explicit TestHtmlWriter() {}
+    virtual ~TestHtmlWriter() {}
+
+
+    virtual void begin( const QString & ) {}
+    virtual void write( const QString & ) {}
+    virtual void end() {}
+    virtual void reset() {}
+    virtual void queue( const QString & ) {}
+    virtual void flush() {}
+    virtual void embedPart( const QByteArray &, const QString & ) {}
+
+};
+
+class TestCSSHelper : public MessageViewer::CSSHelper {
+  public:
+    TestCSSHelper() : MessageViewer::CSSHelper( 0 ) {}
+    virtual ~TestCSSHelper() {}
+
+    QString nonQuotedFontTag() const { return QString::fromAscii( "<" ); }
+
+    QString quoteFontTag( int ) const { return QString::fromAscii( "<" ); }
+};
+
+// We can't use EmptySource, since that doesn't provide a HTML writer. Therefore, derive
+// from EmptySource so we can provide our own HTML writer.
+class TestObjectTreeSource : public MessageViewer::EmptySource
+{
+  public:
+    TestObjectTreeSource( MessageViewer::HtmlWriter *writer,
+                          MessageViewer::CSSHelper *cssHelper )
+      : mWriter( writer ), mCSSHelper( cssHelper )
+    {
+    }
+
+    virtual MessageViewer::HtmlWriter * htmlWriter() { return mWriter; }
+    virtual MessageViewer::CSSHelper * cssHelper() { return mCSSHelper; }
+
+  private:
+    MessageViewer::HtmlWriter *mWriter;
+    MessageViewer::CSSHelper *mCSSHelper;
+};
 
 QTEST_KDEMAIN( ObjectTreeParserTester, GUI )
 
@@ -84,13 +130,32 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   QCOMPARE( msg->contents().size(), 2 );
 
   // Parse the message
-  EmptySource emptySource;
-  ObjectTreeParser otp( &emptySource );
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  NodeHelper nodeHelper;
+  TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
+  ObjectTreeParser otp( &emptySource, &nodeHelper );
   otp.parseObjectTree( Akonadi::Item(), msg.get() );
+
+  // Check that the OTP didn't modify the message in weird ways
+  QCOMPARE( msg->contents().size(), 2 );
+  QCOMPARE( msg->contents().at( 0 )->contents().size(), 0 );
+  QCOMPARE( msg->contents().at( 1 )->contents().size(), 1 );
+  QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().size(), 2 );
+  QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().at( 0 )->contents().size(), 0 );
+  QCOMPARE( msg->contents().at( 1 )->contents().first()->contents().at( 1 )->contents().size(), 0 );
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.textualContent(), QString( "This is the encapsulating message." ) );
   QCOMPARE( otp.textualContentCharset().toLower(), QByteArray( "iso-8859-15" ) );
+
+  // Check that the objecttreeparser did process the encapsulated message
+  KMime::Message::Ptr encapsulated = msg->contents().at( 1 )->bodyAsMessage();
+  QVERIFY( encapsulated );
+  QVERIFY( nodeHelper.nodeProcessed( encapsulated.get() ) );
+  QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 0 ) ) );
+  QVERIFY( nodeHelper.nodeProcessed( encapsulated->contents().at( 1 ) ) );
+  QVERIFY( nodeHelper.partMetaData( msg->contents().at( 1 ) ).isEncapsulatedRfc822Message );
 }
 
 KMime::Message::Ptr ObjectTreeParserTester::readAndParseMail( const QString &mailFile ) const

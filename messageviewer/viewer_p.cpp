@@ -254,22 +254,21 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
-  QString atmName = name;
-  QString str, pname, cmd, fileName;
-
-  if ( name.isEmpty() )
-    atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
-
-  if ( node->contentType()->mediaType() == "message" )
-  {
-    atmViewMsg( node );
+  const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
+  if ( isEncapsulatedMessage ) {
+    atmViewMsg( node->parent()->bodyAsMessage() );
     return;
   }
+
+  QString atmName = name;
+  if ( name.isEmpty() )
+    atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
 
   // determine the MIME type of the attachment
   KMimeType::Ptr mimetype;
   // prefer the value of the Content-Type header
-  mimetype = KMimeType::mimeType( QString::fromLatin1( node->contentType()->mimeType().toLower() ), KMimeType::ResolveAliases );
+  mimetype = KMimeType::mimeType( QString::fromLatin1( node->contentType()->mimeType().toLower() ),
+                                  KMimeType::ResolveAliases );
   if ( !mimetype.isNull() && mimetype->is( KABC::Addressee::mimeType() ) ) {
     showVCard( node );
     return;
@@ -293,21 +292,21 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
   KService::Ptr offer =
       KMimeTypeTrader::self()->preferredService( mimetype->name(), "Application" );
 
-  QString filenameText = NodeHelper::fileName( node );
+  const QString filenameText = NodeHelper::fileName( node );
 
   AttachmentDialog dialog( mMainWindow, filenameText, offer ? offer->name() : QString(),
-                                  QString::fromLatin1( "askSave_" ) + mimetype->name() );
+                           QString::fromLatin1( "askSave_" ) + mimetype->name() );
   const int choice = dialog.exec();
 
   if ( choice == AttachmentDialog::Save ) {
     saveAttachments( KMime::Content::List() << node );
   }
   else if ( choice == AttachmentDialog::Open ) { // Open
-      attachmentOpen( node );
+    attachmentOpen( node );
   } else if ( choice == AttachmentDialog::OpenWith ) {
-      attachmentOpenWith( node );
+    attachmentOpenWith( node );
   } else { // Cancel
-    kDebug() <<"Canceled opening attachment";
+    kDebug() << "Canceled opening attachment";
   }
 
 }
@@ -411,7 +410,11 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::Copy );
 
-  const bool canChange = mMessageItem.isValid() && mMessageItem.parentCollection().isValid() && ( mMessageItem.parentCollection().rights() != Akonadi::Collection::ReadOnly );
+  const bool isEncapsulatedMessage = node->parent() && node->parent()->bodyIsMessage();
+  const bool canChange = mMessageItem.isValid() && mMessageItem.parentCollection().isValid() &&
+                         ( mMessageItem.parentCollection().rights() != Akonadi::Collection::ReadOnly ) &&
+                         !isEncapsulatedMessage;
+
 
   if ( GlobalSettings::self()->allowAttachmentEditing() ) {
     action = menu->addAction(SmallIcon("document-properties"), i18n("Edit Attachment") );
@@ -1654,14 +1657,12 @@ void ViewerPrivate::showHideMimeTree( )
 }
 
 
-void ViewerPrivate::atmViewMsg(KMime::Content* aMsgPart)
+void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 {
-  assert(aMsgPart!=0);
-  KMime::Content* msg = new KMime::Content( mMessage->parent() );
-  msg->setContent(aMsgPart->decodedContent());
-  msg->parse();
-  assert(msg != 0);
-/*FIXME(Andras)  port it
+  Q_ASSERT( message );
+
+#if 0 // TODO: Port to Akonadi
+  // FIXME(Andras)  port it
   msg->setMsgSerNum( 0 ); // because lookups will fail
   // some information that is needed for imap messages with LOD
   msg->setParent( message()->parent() );
@@ -1671,7 +1672,9 @@ void ViewerPrivate::atmViewMsg(KMime::Content* aMsgPart)
   KMReaderMainWin *win = new KMReaderMainWin();
   win->showMsg( overrideEncoding(), msg );
   win->show();
- */
+#else
+  kWarning() << "Port to Akonadi: Viewing message with subject" << message->subject()->asUnicodeString();
+#endif
 }
 
 void ViewerPrivate::adjustLayout() {
@@ -2472,9 +2475,10 @@ void ViewerPrivate::attachmentView( KMime::Content *atmNode )
     QString pname = NodeHelper::fileName( atmNode );
     if (pname.isEmpty()) pname = atmNode->contentDescription()->asUnicodeString();
     if (pname.isEmpty()) pname = "unnamed";
-    // image Attachment is saved already
-    if (kasciistricmp(atmNode->contentType()->mediaType(), "message")==0) {
-      atmViewMsg( atmNode );
+
+    const bool isEncapsulatedMessage = atmNode->parent() && atmNode->parent()->bodyIsMessage();
+    if ( isEncapsulatedMessage ) {
+      atmViewMsg( atmNode->parent()->bodyAsMessage() );
     } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
                ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
                  (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {
