@@ -87,6 +87,9 @@
 
 #include <memory>
 
+Q_DECLARE_METATYPE(QTextDocument*)
+Q_DECLARE_METATYPE(QTextCursor)
+
 using namespace Akonadi;
 using namespace Grantlee;
 
@@ -662,29 +665,15 @@ void KJotsWidget::renderSelection()
   {
     QModelIndex idx = selProxy->index( 0, 0, QModelIndex());
 
-    Item item = idx.data(EntityTreeModel::ItemRole).value<Item>();
-    if (item.isValid())
-    {
-      if (!item.hasPayload<KMime::Message::Ptr>())
-        return;
+    QTextDocument *document = idx.data( KJotsModel::DocumentRole ).value<QTextDocument*>();
 
-      KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
-      editor->clear();
-      QTextDocument *doc = new QTextDocument( editor );
-      doc->setPlainText( page->mainBodyPart()->decodedText() );
-
-      // TODO: Store textcursor separately?
-      editor->setDocument( doc );
-      editor->document()->setModified( false );
-
-      QTextCursor textCursor = editor->textCursor();
-      textCursor.setPosition( idx.data( KJotsModel::DocumentCursorPositionRole ).toInt() );
-
+    editor->setDocument( document );
+    QTextCursor textCursor = document->property( "textCursor" ).value<QTextCursor>();
+    if ( !textCursor.isNull() )
       editor->setTextCursor( textCursor );
-      stackedWidget->setCurrentWidget( editor );
-      editor->setFocus();
-      return;
-    }
+    stackedWidget->setCurrentWidget( editor );
+    editor->setFocus();
+    return;
   }
 
   // ... Otherwise, render the selection read-only.
@@ -804,7 +793,6 @@ bool KJotsWidget::canGo( int role, int step ) const
 
   while ( sibling.isValid() && sibling != currentIdx )
   {
-    kDebug() << sibling << sibling.data() << sibling.data( role ).toInt();
     if ( sibling.data( role ).toInt() >= 0 )
       return true;
 
@@ -845,7 +833,13 @@ void KJotsWidget::selectionChanged( const QItemSelection &selected, const QItemS
   emit canGoPreviousPageChanged( canGoPreviousPage() );
 
   if ( deselected.size() == 1 )
-    treeview->model()->setData( deselected.indexes().first(), editor->textCursor().position(), KJotsModel::DocumentCursorPositionRole );
+  {
+    editor->document()->setProperty( "textCursor", QVariant::fromValue( editor->textCursor() ) );
+    if ( editor->document()->isModified() )
+    {
+      treeview->model()->setData( deselected.indexes().first(), QVariant::fromValue( editor->document() ), KJotsModel::DocumentRole );
+    }
+  }
 }
 
 /*!

@@ -50,6 +50,11 @@
 #include <KMime/Message>
 
 #include <kdebug.h>
+#include "kjotsmodel.h"
+
+
+Q_DECLARE_METATYPE(QTextDocument*)
+Q_DECLARE_METATYPE(QTextCursor)
 
 using namespace Akonadi;
 
@@ -385,7 +390,8 @@ void KJotsEdit::savePage()
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
 
     document()->setModified( false );
-    model->setData( index, QVariant::fromValue( item ), EntityTreeModel::ItemRole );
+    document()->setProperty( "textCursor", QVariant::fromValue( textCursor() ) );
+    model->setData( index, QVariant::fromValue( document() ), KJotsModel::DocumentRole );
 }
 
 

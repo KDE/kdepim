@@ -22,6 +22,7 @@
 #include "kjotsmodel.h"
 
 #include <QColor>
+#include <QTextDocument>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
@@ -29,7 +30,11 @@
 #include <kdebug.h>
 #include <KMime/KMimeMessage>
 
+#include <kpimtextedit/textutils.h>
+
 #include "note.h"
+
+Q_DECLARE_METATYPE(QTextDocument*)
 
 KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
   : QObject(parent)
@@ -109,9 +114,8 @@ KJotsModel::KJotsModel( ChangeRecorder *monitor, QObject *parent)
 
 KJotsModel::~KJotsModel()
 {
-
+  qDeleteAll( m_documents );
 }
-
 
 bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
@@ -139,6 +143,23 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
     return EntityTreeModel::setData(index, QVariant::fromValue<Item>( item ), ItemRole);
   }
 
+  if ( role == KJotsModel::DocumentRole )
+  {
+    Item item = EntityTreeModel::data( index, ItemRole ).value<Item>();
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+      return false;
+    KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+    QTextDocument *document = value.value<QTextDocument*>();
+
+    bool isRichText = KPIMTextEdit::TextUtils::isFormattingUsed( document );
+
+    note->contentType()->setMimeType( isRichText ? "text/html" : "text/plain" );
+    note->mainBodyPart()->fromUnicodeString( isRichText ? document->toHtml() : document->toPlainText() );
+    note->assemble();
+    item.setPayload<KMime::Message::Ptr>( note );
+    return EntityTreeModel::setData(index, QVariant::fromValue<Item>( item ), ItemRole );
+  }
+
   if ( role == KJotsModel::DocumentCursorPositionRole )
   {
     Item item = index.data( ItemRole ).value<Item>();
@@ -155,6 +176,27 @@ QVariant KJotsModel::data(const QModelIndex &index, int role) const
   {
     QObject *obj = new KJotsEntity(index);
     return QVariant::fromValue(obj);
+  }
+
+  if ( role == KJotsModel::DocumentRole )
+  {
+    Item item = index.data( ItemRole ).value<Item>();
+    Entity::Id itemId = item.id();
+    if ( m_documents.contains( itemId ) )
+      return QVariant::fromValue( m_documents.value( itemId ) );
+    if ( !item.hasPayload<KMime::Message::Ptr>() )
+      return QVariant();
+
+    KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+    QTextDocument *document = new QTextDocument;
+    if ( note->contentType()->asUnicodeString() == "text/html" )
+      document->setHtml( note->mainBodyPart()->decodedText() );
+    else if ( note->contentType()->asUnicodeString() == "text/plain" )
+    {
+      document->setPlainText( note->mainBodyPart()->decodedText() );
+    }
+    m_documents.insert( itemId, document );
+    return QVariant::fromValue( document );
   }
 
   if ( role == KJotsModel::DocumentCursorPositionRole )
