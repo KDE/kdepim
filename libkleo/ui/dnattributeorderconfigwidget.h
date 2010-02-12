@@ -41,7 +41,7 @@ namespace Kleo {
   class DNAttributeMapper;
 }
 
-class Q3ListViewItem;
+class QTreeWidgetItem;
 
 namespace Kleo {
 
@@ -64,8 +64,8 @@ namespace Kleo {
     //
 
   private Q_SLOTS:
-    void slotAvailableSelectionChanged( Q3ListViewItem * );
-    void slotCurrentOrderSelectionChanged( Q3ListViewItem * );
+    void slotAvailableSelectionChanged( QTreeWidgetItem * );
+    void slotCurrentOrderSelectionChanged( QTreeWidgetItem * );
     void slotDoubleUpButtonClicked();
     void slotUpButtonClicked();
     void slotDownButtonClicked();
@@ -75,7 +75,7 @@ namespace Kleo {
 
   private:
     void takePlaceHolderItem();
-    void enableDisableButtons( Q3ListViewItem * );
+    void enableDisableButtons( QTreeWidgetItem * );
 
   private:
     class Private;
