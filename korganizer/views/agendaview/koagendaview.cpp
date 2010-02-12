@@ -252,6 +252,8 @@ void KOAgendaView::setCalendar( Akonadi::Calendar *cal )
   Q_ASSERT( cal );
   KOrg::AgendaView::setCalendar(cal);
   calendar()->registerObserver( this );
+  mAgenda->setCalendar(calendar());
+  mAllDayAgenda->setCalendar(calendar());
 }
 
 void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
@@ -262,7 +264,6 @@ void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
 
   connect( agenda, SIGNAL(showNewEventPopupSignal()),
            SLOT(showNewEventPopup()) );
-
   agenda->setCalendar( calendar() );
 
   // Create/Show/Edit/Delete Event
@@ -1511,7 +1512,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
     }
   }
 #else
-  kWarning()<<"TODO";
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
 
