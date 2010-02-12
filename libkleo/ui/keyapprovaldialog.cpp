@@ -39,7 +39,6 @@
 
 #include "keyrequester.h"
 
-#include <kleo/cryptplugfactory.h>
 #include "kleo/cryptobackend.h"
 #include <kpushbutton.h>
 #include <klocale.h>

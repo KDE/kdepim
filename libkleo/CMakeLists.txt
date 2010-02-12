@@ -87,12 +87,6 @@ set(libkleo_ui_common_SRCS
    ui/dnattributeorderconfigwidget.cpp
 )
 
-set(libkleo_compat_SRCS # make this a separate lib.
-   kleo/cryptplug.cpp
-   kleo/cryptplugwrapper.cpp
-   kleo/cryptplugwrapperlist.cpp
-   kleo/cryptplugfactory.cpp )
-
 kde4_add_ui_files(libkleo_ui_common_SRCS
     ui/adddirectoryservicedialog.ui
     ui/directoryserviceswidget.ui
@@ -103,9 +97,6 @@ set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY
 if ( NOT KDEPIM_ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS} )
    set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} )
-   if ( NOT KLEO_NO_COMPAT )
-     set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_compat_SRCS} )
-   endif ( NOT KLEO_NO_COMPAT )
 endif ( NOT KDEPIM_ONLY_KLEO)
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
