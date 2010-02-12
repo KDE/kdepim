@@ -81,9 +81,8 @@ void AttachmentPropertiesDialog::Private::init( AttachmentPart::Ptr part, bool r
 void AttachmentPropertiesDialog::Private::polishUi()
 {
   // Update the icon when the selected mime type changes.
-  connect( ui.mimeType, SIGNAL(editTextChanged(QString)),
-      q, SLOT(mimeTypeChanged(QString)) );
-
+  connect( ui.mimeType, SIGNAL( currentIndexChanged ( const QString & ) ),
+           q, SLOT( mimeTypeChanged( QString ) ) );
   // Tweak the dialog, depending on whether it is read-only or not.
   if( readOnly ) {
     ui.mimeType->setEditable( false );
