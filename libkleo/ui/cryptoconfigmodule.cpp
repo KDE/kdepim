@@ -486,11 +486,11 @@ static const struct {
     const char * label;
     const char * name;
 } debugLevels[] = {
-    { I18N_NOOP( "None (no debugging at all)" ),               "none"     },
-    { I18N_NOOP( "Basic (some basic debug messages)" ),        "basic"    },
-    { I18N_NOOP( "Advanced (more verbose debug messages)" ),   "advanced" },
-    { I18N_NOOP( "Expert (even more detailed messages)" ),     "expert"   },
-    { I18N_NOOP( "Guru (all of the debug messages you can get)" ), "guru" },
+    { I18N_NOOP( "0 - None (no debugging at all)" ),               "none"     },
+    { I18N_NOOP( "1 - Basic (some basic debug messages)" ),        "basic"    },
+    { I18N_NOOP( "2 - Advanced (more verbose debug messages)" ),   "advanced" },
+    { I18N_NOOP( "3 - Expert (even more detailed messages)" ),     "expert"   },
+    { I18N_NOOP( "4 - Guru (all of the debug messages you can get)" ), "guru" },
 };
 static const unsigned int numDebugLevels = sizeof debugLevels / sizeof *debugLevels;
 
