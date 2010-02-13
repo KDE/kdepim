@@ -72,7 +72,6 @@ set(libkleo_ui_SRCS    # make this a separate lib.
    ui/keyselectiondialog.cpp
    ui/keyrequester.cpp
    ui/keyapprovaldialog.cpp
-   ui/backendconfigwidget.cpp
 )
 set(libkleo_ui_common_SRCS
    ui/kdhorizontalline.cpp

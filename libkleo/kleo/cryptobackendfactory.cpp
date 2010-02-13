@@ -42,7 +42,6 @@
 
 #ifndef KDEPIM_ONLY_KLEO
 # include "libkleo/backends/chiasmus/chiasmusbackend.h"
-# include "libkleo/ui/backendconfigwidget.h"
 #endif
 
 #include <kconfig.h>
@@ -189,14 +188,6 @@ const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QSt
       return *it;
   }
   return 0;
-}
-
-Kleo::BackendConfigWidget * Kleo::CryptoBackendFactory::configWidget( QWidget * parent, const char * name ) const {
-#ifndef KDEPIM_ONLY_KLEO
-  return new Kleo::BackendConfigWidget( mSelf, parent, name );
-#else
-  return 0;
-#endif
 }
 
 KConfig* Kleo::CryptoBackendFactory::configObject() const {

@@ -43,10 +43,6 @@
 #include <vector>
 #include <map>
 
-namespace Kleo {
-  class BackendConfigWidget;
-}
-
 class QString;
 class KConfig;
 
@@ -76,8 +72,6 @@ namespace Kleo {
     const CryptoBackend * backend( unsigned int idx ) const;
 
     bool hasBackends() const;
-
-    Kleo::BackendConfigWidget * configWidget( QWidget * parent=0, const char * name=0 ) const;
 
     KConfig* configObject() const;
 
