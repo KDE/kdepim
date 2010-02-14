@@ -1,5 +1,6 @@
 File=messageviewer.kcfg
 ClassName=GlobalSettingsBase
+NameSpace=MessageViewer
 Mutators=true
 Singleton=true
 ItemAccessors=true
