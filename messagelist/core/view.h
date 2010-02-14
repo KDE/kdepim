@@ -43,7 +43,7 @@ namespace MessageList
 namespace Core
 {
 
-typedef unsigned long int MessageItemSetReference;
+typedef long int MessageItemSetReference;
 
 class Aggregation;
 class Delegate;

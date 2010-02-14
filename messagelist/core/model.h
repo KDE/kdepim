@@ -44,7 +44,7 @@ namespace MessageList
 namespace Core
 {
 
-typedef unsigned long int MessageItemSetReference;
+typedef long int MessageItemSetReference;
 
 class ViewItemJob;
 class Filter;

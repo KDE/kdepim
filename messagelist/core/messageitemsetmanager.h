@@ -32,7 +32,7 @@ namespace Core
 
 class MessageItem;
 
-typedef unsigned long int MessageItemSetReference;
+typedef long int MessageItemSetReference;
 
 /**
  * This class manages sets of messageitem references.
