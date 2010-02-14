@@ -290,6 +290,7 @@ void AddEditBlog::handleFetchAPITimeout()
     mFetchAPITimer = 0;
     hideWaitWidget();
     ui.txtId->setEnabled( true );
+    ui.txtId->setText( QString() );
     KMessageBox::sorry( this, i18n( "The API guess function has failed, \
 please check your Internet connection. Otherwise, you have to set the API type manually on the Advanced tab." ),
                         i18n( "Auto Configuration Failed" ) );
@@ -299,6 +300,7 @@ void AddEditBlog::handleFetchError( KBlog::Blog::ErrorType type, const QString &
 {
     kDebug() << " ErrorType: " << type;
     ui.txtId->setEnabled( true );
+    ui.txtId->setText( QString() );
     hideWaitWidget();
     KMessageBox::detailedError( this, i18n( "Fetching BlogID Failed.\nPlease check your Internet connection." ), errorMsg );
 }
@@ -347,11 +349,14 @@ void AddEditBlog::fetchedBlogId( const QList< QMap < QString , QString > > & lis
             apiUrl = qobject_cast<QLabel*>( blogsList->cellWidget(row, 3) )->text();
         } else
             return;
+    } else if (list.count() > 0) {
+        blogId = list.constBegin()->value("id");
+        blogName = list.constBegin()->value("title");
+        blogUrl = list.constBegin()->value("url");
+        apiUrl = list.constBegin()->value("apiUrl");
     } else {
-        blogId = list.begin()->value("id");
-        blogName = list.begin()->value("title");
-        blogUrl = list.begin()->value("url");
-        apiUrl = list.begin()->value("apiUrl");
+        KMessageBox::sorry(this, i18n("Sorry, No blog found with the specified account info."));
+        return;
     }
     ui.txtId->setText( blogId );
     ui.txtTitle->setText( blogName );
