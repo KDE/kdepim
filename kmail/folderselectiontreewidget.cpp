@@ -283,9 +283,13 @@ void FolderSelectionTreeWidget::slotItemSelectionChanged()
     allowOk = allowCreate = false;
   else
   {
-    const KMFolder *fld = static_cast<FolderSelectionTreeWidgetItem *>( selectedItems().first() )->folder();
-    if ( !fld )						// "Local Folders" root
+    const FolderSelectionTreeWidgetItem *itemFolderSelection = static_cast<FolderSelectionTreeWidgetItem *>( selectedItems().first() );
+    const KMFolder *fld = itemFolderSelection->folder();
+    if ( !fld ) {
+      // "Local Folders" root
       allowOk = !mLastMustBeReadWrite;
+      allowCreate = (itemFolderSelection->protocol() != FolderViewItem::Search);
+    }
     else						// any other folder
     {
       allowCreate = !fld->noChildren() && !fld->isReadOnly();
