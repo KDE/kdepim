@@ -80,12 +80,14 @@ class VCardExportSelectionDialog : public KDialog
     bool exportBusinessFields() const;
     bool exportOtherFields() const;
     bool exportEncryptionKeys() const;
+    bool exportPictureFields() const;
 
   private:
     QCheckBox *mPrivateBox;
     QCheckBox *mBusinessBox;
     QCheckBox *mOtherBox;
     QCheckBox *mEncryptionKeys;
+    QCheckBox *mPictureBox;
 };
 
 VCardXXPort::VCardXXPort( QWidget *parent )
@@ -285,7 +287,14 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     if ( dlg.exportPrivateFields() ) {
       addr.setBirthday( (*it).birthday() );
       addr.setNote( (*it).note() );
-      addr.setPhoto( (*it).photo() );
+    }
+
+    if ( dlg.exportPictureFields() ) {
+      if ( dlg.exportPrivateFields() )
+        addr.setPhoto( (*it).photo() );
+
+      if ( dlg.exportBusinessFields() )
+        addr.setLogo( (*it).logo() );
     }
 
     if ( dlg.exportBusinessFields() ) {
@@ -293,8 +302,6 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
       addr.setRole( (*it).role() );
       addr.setOrganization( (*it).organization() );
       addr.setDepartment( (*it).department() );
-
-      addr.setLogo( (*it).logo() );
 
       KABC::PhoneNumber::List phones = (*it).phoneNumbers( KABC::PhoneNumber::Work );
       KABC::PhoneNumber::List::Iterator phoneIt;
@@ -485,24 +492,27 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   QFrame *page = new QFrame( this );
   setMainWidget( page );
 
-  QVBoxLayout *layout = new QVBoxLayout( page );
+  QGridLayout *layout = new QGridLayout( page );
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
 
   QLabel *label = new QLabel( i18n( "Select the fields which shall be exported in the vCard." ), page );
-  layout->addWidget( label );
+  layout->addWidget( label, 0, 0, 1, 2 );
 
   mPrivateBox = new QCheckBox( i18n( "Private fields" ), page );
-  layout->addWidget( mPrivateBox );
+  layout->addWidget( mPrivateBox, 1, 0 );
 
   mBusinessBox = new QCheckBox( i18n( "Business fields" ), page );
-  layout->addWidget( mBusinessBox );
+  layout->addWidget( mBusinessBox, 2, 0 );
 
   mOtherBox = new QCheckBox( i18n( "Other fields" ), page );
-  layout->addWidget( mOtherBox );
+  layout->addWidget( mOtherBox, 3, 0 );
 
   mEncryptionKeys = new QCheckBox( i18n( "Encryption keys" ), page );
-  layout->addWidget( mEncryptionKeys );
+  layout->addWidget( mEncryptionKeys, 1, 1 );
+
+  mPictureBox = new QCheckBox( i18n( "Pictures" ), page);
+  layout->addWidget( mPictureBox, 2, 1 );
 
   KConfig config( "kaddressbookrc" );
   const KConfigGroup group( &config, "XXPortVCard" );
@@ -511,6 +521,7 @@ VCardExportSelectionDialog::VCardExportSelectionDialog( QWidget *parent )
   mBusinessBox->setChecked( group.readEntry( "ExportBusinessFields", true ) );
   mOtherBox->setChecked( group.readEntry( "ExportOtherFields", true ) );
   mEncryptionKeys->setChecked( group.readEntry( "ExportEncryptionKeys", true ) );
+  mPictureBox->setChecked( group.readEntry( "ExportPictureFields", true ) );
 }
 
 VCardExportSelectionDialog::~VCardExportSelectionDialog()
@@ -522,6 +533,7 @@ VCardExportSelectionDialog::~VCardExportSelectionDialog()
   group.writeEntry( "ExportBusinessFields", mBusinessBox->isChecked() );
   group.writeEntry( "ExportOtherFields", mOtherBox->isChecked() );
   group.writeEntry( "ExportEncryptionKeys", mEncryptionKeys->isChecked() );
+  group.writeEntry( "ExportPictureFields", mPictureBox->isChecked() );
 }
 
 bool VCardExportSelectionDialog::exportPrivateFields() const
@@ -542,4 +554,9 @@ bool VCardExportSelectionDialog::exportOtherFields() const
 bool VCardExportSelectionDialog::exportEncryptionKeys() const
 {
   return mEncryptionKeys->isChecked();
+}
+
+bool VCardExportSelectionDialog::exportPictureFields() const
+{
+  return mPictureBox->isChecked();
 }
