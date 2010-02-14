@@ -354,7 +354,7 @@ KMail::FolderDialogGeneralTab::FolderDialogGeneralTab( KMFolderDialog* dlg,
   topLayout->setMargin( 0 );
 
   // Musn't be able to edit details for a non-resource, system folder.
-  if ( !mIsLocalSystemFolder || mIsResourceFolder ) {
+  if ( (!mIsLocalSystemFolder || mIsResourceFolder )&& !mDlg->folder()->isReadOnly()) {
 
     QHBoxLayout *hl = new QHBoxLayout();
     topLayout->addItem( hl );
