@@ -105,6 +105,7 @@ namespace {
         unsigned int classification;
     } content_classifications[] = {
         { "CERTIFICATE",       Certificate },
+        { "ENCRYPTED MESSAGE", CipherText  },
         { "MESSAGE",           OpaqueSignature|CipherText },
         { "PKCS12",            ExportedPSM },
         { "PRIVATE KEY BLOCK", ExportedPSM },
