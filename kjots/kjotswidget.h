@@ -30,7 +30,7 @@
 #include <QModelIndexList>
 #include <akonadi/item.h>
 
-#include <grantlee/templateloader.h>
+// #include <grantlee/templateloader.h>
 #include <QItemSelection>
 
 class QCheckBox;
@@ -145,7 +145,7 @@ private:
   KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;
   KSelectionProxyModel *selProxy;
-  Grantlee::FileSystemTemplateLoader::Ptr m_loader;
+//   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
 
