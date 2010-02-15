@@ -2999,12 +2999,14 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Todo *todo, const QDa
     QDateTime dueDt = todo->dtDue();
     if ( todo->doesRecur() ) {
       if ( date.isValid() ) {
-        dueDt.addDays( todo->dtDue().date().daysTo( date ) );
+        QDateTime dt( date, QTime( 0, 0, 0 ) );
+        dt = dt.addSecs( -1 );
+        dueDt.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
       }
     }
     ret += "<br>" +
            i18n("<i>Due:</i>&nbsp;%1").
-           arg( IncidenceFormatter::dateTimeToString( todo->dtDue(), floats, false ).
+           arg( IncidenceFormatter::dateTimeToString( dueDt, floats, false ).
                 replace( " ", "&nbsp;" ) );
   }
 
