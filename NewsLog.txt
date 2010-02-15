@@ -15,10 +15,6 @@ Problems addressed
 * kolab/issue4089: Composer: double click on a word should select the word and not additional spaces,
                    brackets etc (rt#5991)
 * kolab/issue2524: KMail: message window shows backslash for quoted-pairs
-* kolab/issue1765: In parallel calender view there is no need to ask in which resource folder a new event
-                   should get (rt#5816)
-* kolab/issue4063: New task is not visible in calendar side-by-side view (rt#5974)
-* kolab/issue4065: Wish: Create new event: it should be possible to add it into many calendar resources (rt#5952)
 * Don't crash when using menu item Action->Show after deselecting an incidence
 
 
