@@ -585,7 +585,9 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     QDateTime dueDt = todo->dtDue();
     if ( todo->doesRecur() ) {
       if ( date.isValid() ) {
-        dueDt.addDays( todo->dtDue().date().daysTo( date ) );
+        QDateTime dt( date, QTime( 0, 0, 0 ) );
+        dt = dt.addSecs( -1 );
+        dueDt.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
       }
     }
     tmpStr += "<tr>";
