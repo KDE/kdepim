@@ -842,8 +842,12 @@ void DecryptVerifyTask::setProtocol( Protocol prot )
 
 void DecryptVerifyTask::autodetectProtocolFromInput()
 {
-    if ( d->m_input )
-        setProtocol( findProtocol( d->m_input->classification() ) );
+    if ( !d->m_input )
+        return;
+    const Protocol p = findProtocol( d->m_input->classification() );
+    if ( p == UnknownProtocol )
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature/ciphertext - maybe it is neither ciphertext nor a signature?") );
+    setProtocol( p );
 }
 
 QString DecryptVerifyTask::label() const
@@ -971,8 +975,12 @@ void DecryptTask::setProtocol( Protocol prot )
 
 void DecryptTask::autodetectProtocolFromInput()
 {
-    if ( d->m_input )
-        setProtocol( findProtocol( d->m_input->classification() ) );
+    if ( !d->m_input )
+        return;
+    const Protocol p = findProtocol( d->m_input->classification() );
+    if ( p == UnknownProtocol )
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this was S/MIME- or OpenPGP-encrypted - maybe it is not ciphertext at all?") );
+    setProtocol( p );
 }
 
 QString DecryptTask::label() const
@@ -1102,8 +1110,12 @@ void VerifyOpaqueTask::setProtocol( Protocol prot )
 
 void VerifyOpaqueTask::autodetectProtocolFromInput()
 {
-    if ( d->m_input )
-        setProtocol( findProtocol( d->m_input->classification() ) );
+    if ( !d->m_input )
+        return;
+    const Protocol p = findProtocol( d->m_input->classification() );
+    if ( p == UnknownProtocol )
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature - maybe it is not a signature at all?") );
+    setProtocol( p );
 }
 
 QString VerifyOpaqueTask::label() const
@@ -1224,8 +1236,12 @@ void VerifyDetachedTask::setProtocol( Protocol prot )
 
 void VerifyDetachedTask::autodetectProtocolFromInput()
 {
-    if ( d->m_input )
-        setProtocol( findProtocol( d->m_input->classification() ) );
+    if ( !d->m_input )
+        return;
+    const Protocol p = findProtocol( d->m_input->classification() );
+    if ( p == UnknownProtocol )
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature - maybe it is not a signature at all?") );
+    setProtocol( p );
 }
 
 unsigned long long VerifyDetachedTask::inputSize() const
