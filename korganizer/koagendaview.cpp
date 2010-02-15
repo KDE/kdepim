@@ -1629,7 +1629,8 @@ bool KOAgendaView::filterByResource( Incidence *incidence )
   if ( resourceCalendar() && incidence->type() == "Todo" ) {
     QString subRes = resourceCalendar()->subresourceIdentifier( incidence );
     if ( resourceCalendar()->subresourceType( subRes ) == "todo" ) {
-      if ( subResourceCalendar().contains( "/.INBOX.directory/Calendar" ) ) {
+      QString calmatch = "/.INBOX.directory/" + i18n( "Calendar" );
+      if ( subResourceCalendar().contains( calmatch ) ) {
         return true;
       }
     }
