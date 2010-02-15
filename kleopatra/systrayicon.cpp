@@ -209,7 +209,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       mainWindowPreviousGeometry()
 {
     q->setNormalIcon( KIcon( "kleopatra" ) );
-    q->setAttentionIcon( KIcon( "smartcard" ) );
+    q->setAttentionIcon( KIcon( "secure-card" ) );
 
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
