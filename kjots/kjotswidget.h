@@ -99,6 +99,7 @@ protected:
 
   void selectNext( int role, int step );
   int search( bool );
+  void migrateNoteData( const QString &migrator, const QString &type = QString() );
 
 protected slots:
   void renderSelection();

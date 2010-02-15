@@ -70,6 +70,7 @@
 #include <KTextEdit>
 #include <KGlobalSettings>
 #include <KXMLGUIClient>
+#include <KProcess>
 
 // KMime
 #include <KMime/KMimeMessage>
@@ -96,10 +97,8 @@ using namespace Akonadi;
 KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::WindowFlags f )
     : QWidget( parent, f ), m_xmlGuiClient( xmlGuiClient )
 {
-
   Akonadi::Control::widgetNeedsAkonadi( this );
   Akonadi::Control::start( this );
-
 
   QSplitter *splitter = new QSplitter( this );
 
@@ -309,6 +308,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
 void KJotsWidget::delayedInitialization()
 {
+  migrateNoteData( "kjotsmigrator" );
+  migrateNoteData( "kres-migrator", "notes" );
 
   //TODO: Save previous searches in settings file?
   searchDialog = new KFindDialog ( this, 0, QStringList(), false );
@@ -389,6 +390,46 @@ void KJotsWidget::delayedInitialization()
   connect( editor, SIGNAL(currentCharFormatChanged(const QTextCharFormat&)),
       SLOT(currentCharFormatChanged(const QTextCharFormat &)) );
   updateMenu();
+}
+
+void KJotsWidget::migrateNoteData( const QString &migrator, const QString &type )
+{
+  // Akonadi migration
+  KConfig config( migrator + "rc" );
+  KConfigGroup migrationCfg( &config, "Migration" );
+  const bool enabled = migrationCfg.readEntry( "Enabled", true );
+  const bool completed = migrationCfg.readEntry( "Completed", false );
+  const int currentVersion = migrationCfg.readEntry( "Version", 0 );
+  const int targetVersion = migrationCfg.readEntry( "TargetVersion", 1 );
+  if ( enabled && !completed && currentVersion < targetVersion ) {
+    kDebug() << "Performing Akonadi migration. Good luck!";
+    KProcess proc;
+    QStringList args = QStringList() << "--interactive-on-change";
+    if ( !type.isEmpty() )
+      args << "--type" << type;
+
+    const QString path = KStandardDirs::findExe( migrator );
+    proc.setProgram( path, args );
+    proc.start();
+    bool result = proc.waitForStarted();
+    if ( result ) {
+      result = proc.waitForFinished();
+    }
+    if ( result && proc.exitCode() == 0 ) {
+      kDebug() << "Akonadi migration has been successful";
+      migrationCfg.writeEntry( "Version", targetVersion );
+      migrationCfg.writeEntry( "Completed", true );
+      migrationCfg.sync();
+    } else {
+      // exit code 1 means it is already running, so we are probably called by a migrator instance
+      kError() << "Akonadi migration failed!";
+      kError() << "command was: " << proc.program();
+      kError() << "exit code: " << proc.exitCode();
+      kError() << "stdout: " << proc.readAllStandardOutput();
+      kError() << "stderr: " << proc.readAllStandardError();
+      exit( 42 );
+    }
+  }
 }
 
 inline QTextEdit* KJotsWidget::activeEditor() {
