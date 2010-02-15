@@ -252,6 +252,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
     const Subkey subkey = key.subkey( 0 );
 
     QString result;
+    result += i18n("Key-ID: %1", QString::fromLatin1( key.shortKeyID() ) ) + "<br>" ;
     if ( flags & Validity )
         if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
             if ( key.isRevoked() )
