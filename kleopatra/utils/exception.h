@@ -42,12 +42,12 @@ namespace Kleo {
 
     class Exception : public GpgME::Exception {
     public:
-        Exception( gpg_error_t e, const std::string & msg )
-            : GpgME::Exception( GpgME::Error( e ), msg ) {}
-        Exception( gpg_error_t e, const char* msg )
-            : GpgME::Exception( GpgME::Error( e ), msg ) {}
-        Exception( gpg_error_t e, const QString & msg )
-            : GpgME::Exception( GpgME::Error( e ), msg.toLocal8Bit().constData() ) {}
+        Exception( gpg_error_t e, const std::string & msg, Options opt=NoOptions )
+            : GpgME::Exception( GpgME::Error( e ), msg, opt ) {}
+        Exception( gpg_error_t e, const char* msg, Options opt=NoOptions )
+            : GpgME::Exception( GpgME::Error( e ), msg, opt ) {}
+        Exception( gpg_error_t e, const QString & msg, Options opt=NoOptions )
+            : GpgME::Exception( GpgME::Error( e ), msg.toLocal8Bit().constData(), opt ) {}
 
         Exception( const GpgME::Error & e, const std::string & msg )
             : GpgME::Exception( e, msg ) {}
