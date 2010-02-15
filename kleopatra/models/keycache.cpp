@@ -438,8 +438,8 @@ std::vector<Key> KeyCache::Private::find_mailbox( const Mailbox & mb, bool sign 
     if ( sign )
         kdtools::copy_2nd_if( pair.first, pair.second,
                               std::back_inserter( result ),
-                              // bind( &Key::hasSecret, _1 ) && bind( &Key::canSign, _1 ), // Boost >= 1.36 only
-                              bind( logical_and(), bind( &Key::hasSecret, _1 ), bind( &Key::canSign, _1 ) ) );
+                              // bind( &Key::hasSecret, _1 ) && bind( &Key::canReallySign, _1 ), // Boost >= 1.36 only
+                              bind( logical_and(), bind( &Key::hasSecret, _1 ), bind( &Key::canReallySign, _1 ) ) );
     else
         kdtools::copy_2nd_if( pair.first, pair.second,
                               std::back_inserter( result ),

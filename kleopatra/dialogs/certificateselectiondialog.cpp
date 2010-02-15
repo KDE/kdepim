@@ -295,7 +295,7 @@ void CertificateSelectionDialog::Private::filterAllowedKeys( std::vector<Key> & 
 
     switch ( options & AnyCertificate ) {
     case SignOnly:
-        end = std::remove_if( keys.begin(), end, !bind( &Key::canSign, _1 ) );
+        end = std::remove_if( keys.begin(), end, !bind( &Key::canReallySign, _1 ) );
         break;
     case EncryptOnly:
         end = std::remove_if( keys.begin(), end, !bind( &Key::canEncrypt, _1 ) );

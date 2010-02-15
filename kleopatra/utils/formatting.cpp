@@ -219,7 +219,7 @@ namespace {
 
     QString format_keyusage( const Key & key ) {
 	QStringList capabilites;
-	if ( key.canSign() )
+	if ( key.canReallySign() )
 	    if ( key.isQualified() )
 		capabilites.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
 	    else

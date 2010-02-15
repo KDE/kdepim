@@ -90,7 +90,7 @@ std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Pro
         = std::remove_if( result.begin(), result.end(),
                           !bind( &Key::hasSecret, _1 ) );
     end = std::remove_if( result.begin(), end,
-                          !bind( &Key::canSign, _1 ) );
+                          !bind( &Key::canReallySign, _1 ) );
     if ( proto != UnknownProtocol )
         end = std::remove_if( result.begin(), end,
                               bind( &Key::protocol, _1 ) != proto );
