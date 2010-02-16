@@ -130,8 +130,8 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
   include(SopranoAddOntology)
 
-  macro_optional_find_package(Grantlee)
-  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
+#  macro_optional_find_package(Grantlee)
+#  macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
 
   find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" TRUE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
@@ -256,9 +256,9 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(blogilo)
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(kalarm)
-  if (Grantlee_FOUND)
-    macro_optional_add_subdirectory(kjots)
-  endif (Grantlee_FOUND)
+#  if (Grantlee_FOUND)
+  #  macro_optional_add_subdirectory(kjots)
+#  endif (Grantlee_FOUND)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)
     
