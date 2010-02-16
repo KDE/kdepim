@@ -22,8 +22,6 @@
 #ifndef KNOWITIMPORTER_H
 #define KNOWITIMPORTER_H
 
-#include "kjotsentry.h"
-
 class QDomElement;
 
 #include <QHash>
@@ -56,7 +54,7 @@ public:
   /**
   Create a KJotsBook from the knowit file at @p url.
   */
-  KJotsBook* importFromUrl( KUrl url );
+  void importFromUrl( KUrl url );
 
   private:
     /**

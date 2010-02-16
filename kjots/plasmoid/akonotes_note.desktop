@@ -1,0 +1,22 @@
+[Desktop Entry]
+Name=Akonotes note plasmoid
+Name[x-test]=xxAkonotes note plasmoidxx
+Comment=Akonotes note plasmoid
+Comment[x-test]=xxAkonotes note plasmoidxx
+Type=Service
+Icon=kjots
+
+X-KDE-ServiceTypes=Plasma/Applet
+X-KDE-Library=plasma_applet_akonotes_note
+X-KDE-PluginInfo-Author=Stephen Kelly
+X-KDE-PluginInfo-Email=steveire@gmail.com
+X-KDE-PluginInfo-Name=akonotes_note
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=http://pim.kde.org
+X-KDE-PluginInfo-Category=PIM
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-DropUrlPatterns=akonadi:*type=text/x-vnd.akonadi.note
+
+

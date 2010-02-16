@@ -24,18 +24,17 @@
 #include <QCompleter>
 #include <QGridLayout>
 #include <QRadioButton>
+#include <QTreeView>
 
 #include <KLocale>
 #include <KComboBox>
 #include <KLineEdit>
 
 #include "KJotsSettings.h"
-#include "flatcollectionproxymodel.h"
 #include "kjotsbookshelfentryvalidator.h"
-#include "kjotsentry.h"
-#include "bookshelf.h"
+// #include "kdescendantsproxymodel_p.h"
 
-KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
+KJotsLinkDialog::KJotsLinkDialog(QWidget *parent) :
         KDialog(parent)
 {
     setCaption(i18n("Manage Link"));
@@ -43,12 +42,10 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     setDefaultButton(Ok);
     setModal(true);
     showButtonSeparator(true);
-    mBookshelf = bookshelf;
 
-    FlatCollectionProxyModel* proxyModel = new FlatCollectionProxyModel( this );
-    proxyModel->setSourceModel( mBookshelf->model() );
-    proxyModel->setRolesToFlatten( QList< int >() << Qt::DisplayRole << Qt::EditRole );
-    proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
+//     KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel( this );
+//     proxyModel->setSourceModel(  );
+//     proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
 
     QWidget *entries = new QWidget(this);
 
@@ -63,18 +60,18 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     linkUrlLineEdit->setClearButtonShown(true);
 
     tree = new QTreeView();
-    tree->setModel(proxyModel);
+//     tree->setModel(proxyModel);
     tree->expandAll();
     tree->setColumnHidden(1, true);
-    hrefCombo->setModel(proxyModel);
+//     hrefCombo->setModel(proxyModel);
     hrefCombo->setView(tree);
 
     hrefCombo->setEditable(true);
-    QCompleter *completer = new QCompleter(proxyModel, this);
-    completer->setCaseSensitivity(Qt::CaseInsensitive);
-    hrefCombo->setCompleter(completer);
-    KJotsBookshelfEntryValidator* validator = new KJotsBookshelfEntryValidator( proxyModel, this );
-    hrefCombo->setValidator( validator );
+//     QCompleter *completer = new QCompleter(proxyModel, this);
+//     completer->setCaseSensitivity(Qt::CaseInsensitive);
+//     hrefCombo->setCompleter(completer);
+//     KJotsBookshelfEntryValidator* validator = new KJotsBookshelfEntryValidator( proxyModel, this );
+//     hrefCombo->setValidator( validator );
 
     QGridLayout* linkLayout = new QGridLayout();
     linkUrlLineEditRadioButton = new QRadioButton(entries);
@@ -114,6 +111,8 @@ void KJotsLinkDialog::setLinkText(const QString &linkText)
 
 void KJotsLinkDialog::setLinkUrl(const QString &linkUrl)
 {
+// TODO PORT
+#if 0
     if (KJotsEntry::isKJotsLink(linkUrl)) {
 
         quint64 id = KJotsEntry::idFromLinkUrl(linkUrl);
@@ -144,6 +143,7 @@ void KJotsLinkDialog::setLinkUrl(const QString &linkUrl)
         linkUrlLineEdit->setText(linkUrl);
         linkUrlLineEditRadioButton->setChecked(true);
     }
+#endif
 }
 
 QString KJotsLinkDialog::linkText() const
@@ -166,7 +166,9 @@ void KJotsLinkDialog::trySetEntry(const QString & text)
 
 QString KJotsLinkDialog::linkUrl() const
 {
-
+  return QString();
+//  TODO PORT
+#if 0
     if (hrefComboRadioButton->isChecked()){
         QModelIndex index = hrefCombo->view()->currentIndex();
         index = index.sibling(index.row(), 1);
@@ -175,5 +177,5 @@ QString KJotsLinkDialog::linkUrl() const
     } else {
         return linkUrlLineEdit->text();
     }
-
+#endif
 }

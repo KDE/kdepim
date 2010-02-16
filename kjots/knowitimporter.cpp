@@ -37,8 +37,10 @@ KnowItImporter::KnowItImporter()
 {
 }
 
-KJotsBook* KnowItImporter::importFromUrl( KUrl url )
+void KnowItImporter::importFromUrl( KUrl url )
 {
+// TODO PORT
+#if 0
   KJotsBook *book = new KJotsBook();
   buildNoteTree(url);
 
@@ -64,6 +66,7 @@ KJotsBook* KnowItImporter::importFromUrl( KUrl url )
 
 
   return book;
+#endif
 }
 
 QDomElement KnowItImporter::addNote( KnowItNote note)

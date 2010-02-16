@@ -1,0 +1,166 @@
+/*
+    This file is part of KJots.
+
+    Copyright (C) 1997 Christoph Neerfeld <Christoph.Neerfeld@home.ivm.de>
+    Copyright (C) 2002, 2003 Aaron J. Seigo <aseigo@kde.org>
+    Copyright (C) 2003 Stanislav Kljuhhin <crz@hot.ee>
+    Copyright (C) 2005-2006 Jaison Lee <lee.jaison@gmail.com>
+    Copyright (C) 2007-2009 Stephen Kelly <steveire@gmail.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#ifndef KJOTSWIDGET_H
+#define KJOTSWIDGET_H
+
+#include <QWidget>
+#include <QModelIndexList>
+#include <akonadi/item.h>
+
+// #include <grantlee/templateloader.h>
+#include <QItemSelection>
+
+class QCheckBox;
+class QTextBrowser;
+class QTextCursor;
+class QTextEdit;
+class QStackedWidget;
+class QModelIndex;
+
+class KActionCollection;
+class KActionMenu;
+class KFindDialog;
+class KJob;
+class KReplaceDialog;
+class KSelectionProxyModel;
+class KTextEdit;
+class KXMLGUIClient;
+
+namespace Akonadi
+{
+class EntityTreeModel;
+class Session;
+}
+
+class KJotsEdit;
+class KJotsTreeView;
+
+class KJotsWidget : public QWidget
+{
+  Q_OBJECT
+  Q_CLASSINFO("D-Bus Interface", "org.kde.KJotsWidget")
+
+public:
+  KJotsWidget( QWidget *parent, KXMLGUIClient *xmlGuiclient, Qt::WindowFlags f = 0 );
+  ~KJotsWidget();
+
+  QTextEdit* activeEditor();
+
+public slots:
+  void prevPage();
+  void nextPage();
+  void prevBook();
+  void nextBook();
+  bool canGoNextPage() const;
+  bool canGoPreviousPage() const;
+  bool canGoNextBook() const;
+  bool canGoPreviousBook() const;
+
+  void updateCaption();
+  void updateMenu();
+
+  void newPage();
+  void newBook();
+
+signals:
+  void canGoNextPageChanged( bool );
+  void canGoPreviousPageChanged( bool );
+  void canGoNextBookChanged( bool );
+  void canGoPreviousBookChanged( bool );
+
+  void captionChanged( const QString &newCaption );
+
+protected:
+  QString renderSelectionToHtml();
+  QString getThemeFromUser();
+
+  void selectNext( int role, int step );
+  int search( bool );
+  void migrateNoteData( const QString &migrator, const QString &type = QString() );
+
+protected slots:
+  void renderSelection();
+  void changeTheme();
+  void exportSelection();
+
+  void deletePage();
+  void deleteBook();
+  void deleteMultiple();
+
+private slots:
+  void delayedInitialization();
+  void selectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
+  void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight );
+
+  bool canGo( int role, int step ) const;
+
+  void newPageResult( KJob *job );
+  void newBookResult( KJob *job );
+
+  void copySelectionToTitle();
+  void copy();
+  void configure();
+
+  void onShowSearch();
+  void onUpdateSearch();
+  void onStartSearch();
+  void onRepeatSearch();
+  void onEndSearch();
+
+  void onShowReplace();
+  void onUpdateReplace();
+  void onStartReplace();
+  void onRepeatReplace();
+  void onEndReplace();
+
+
+private:
+  KXMLGUIClient  *m_xmlGuiClient;
+  KJotsEdit      *editor;
+  QTextBrowser   *browser;
+  QStackedWidget *stackedWidget;
+  KActionMenu    *bookmarkMenu;
+  Akonadi::EntityTreeModel *m_kjotsModel;
+  KSelectionProxyModel *selProxy;
+//   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
+  KJotsTreeView *treeview;
+  Akonadi::Session *m_session;
+
+  KFindDialog *searchDialog;
+  QStringList searchHistory;
+  int searchBeginPos, searchEndPos, searchPos;
+  QCheckBox *searchAllPages;
+
+  KReplaceDialog *replaceDialog;
+  QStringList replaceHistory;
+  int replaceBeginPos, replaceEndPos, replacePos;
+  QCheckBox *replaceAllPages;
+  QModelIndex replaceStartPage;
+
+  QSet<QAction*> entryActions, pageActions, bookActions, multiselectionActions;
+};
+
+#endif

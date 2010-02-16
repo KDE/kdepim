@@ -32,20 +32,34 @@
 #include <QMenu>
 #include <QContextMenuEvent>
 #include <QClipboard>
+#include <QItemSelectionModel>
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <krun.h>
 #include <KApplication>
+#include <KLocale>
 
-#include "kjotsentry.h"
 #include "kjotslinkdialog.h"
-#include "bookshelf.h"
+
+#include <akonadi/entitytreemodel.h>
+#include <akonadi/item.h>
+
+#include <KMime/Message>
 
 #include <kdebug.h>
+#include "kjotsmodel.h"
 
-KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent),
-  allowAutoDecimal(false)
+
+Q_DECLARE_METATYPE(QTextDocument*)
+Q_DECLARE_METATYPE(QTextCursor)
+
+using namespace Akonadi;
+
+KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
+  : KRichTextWidget(parent),
+    allowAutoDecimal(false),
+    m_selectionModel( selectionModel )
 {
     setAcceptRichText(true);
     setWordWrapMode(QTextOption::WordWrap);
@@ -54,6 +68,8 @@ KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent),
             | SupportAlignment
             | SupportRuleLine
             | SupportFormatPainting );
+
+    setFocusPolicy(Qt::StrongFocus);
 }
 
 KJotsEdit::~KJotsEdit()
@@ -80,36 +96,41 @@ void KJotsEdit::contextMenuEvent( QContextMenuEvent *event )
     delete popup;
 }
 
-void KJotsEdit::DelayedInitialization ( KActionCollection *collection, Bookshelf *shelf )
+void KJotsEdit::delayedInitialization ( KActionCollection *collection )
 {
-    bookshelf = shelf;
     actionCollection = collection;
 
     connect(actionCollection->action("auto_bullet"), SIGNAL(triggered()), SLOT(onAutoBullet()));
     connect(actionCollection->action("auto_decimal"), SIGNAL(triggered()), SLOT(onAutoDecimal())); //auto decimal list
     connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
     connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
+    connect(actionCollection->action("manual_save"), SIGNAL(triggered()), SLOT(savePage()));
+    connect(actionCollection->action("insert_date"), SIGNAL(triggered()), SLOT(insertDate()));
+}
 
-    connect(bookshelf, SIGNAL(itemSelectionChanged()), SLOT(onBookshelfSelection()));
-    connect(this, SIGNAL(textChanged()), SLOT(onTextChanged()));
-
-
+void KJotsEdit::insertDate()
+{
+  insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + ' ');
 }
 
 void KJotsEdit::disableEditing ( void )
 {
+// TODO: PORT
+#if 0
     if ( currentPage ) {
         currentPage->setCursor(textCursor());
         setDocument(0);
         currentPage = 0;
     }
-
+#endif
     setReadOnly(true);
     setEnabled(false);
 }
 
 void KJotsEdit::onBookshelfSelection ( void )
 {
+  // TODO: PORT. Review and remove. Possibly keep the bug workaround.
+#if 0
     QList<QTreeWidgetItem*> selection = bookshelf->selectedItems();
     int selectionSize = selection.size();
 
@@ -149,6 +170,7 @@ void KJotsEdit::onBookshelfSelection ( void )
             }
         }
     }
+#endif
 }
 
 void KJotsEdit::onAutoBullet ( void )
@@ -221,7 +243,7 @@ void KJotsEdit::onAutoDecimal( void )
 void KJotsEdit::onLinkify ( void )
 {
     selectLinkText();
-    KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this, bookshelf);
+    KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this);
     linkDialog->setLinkText(currentLinkText());
     linkDialog->setLinkUrl(currentLinkUrl());
 
@@ -238,13 +260,6 @@ void KJotsEdit::addCheckmark( void )
     static const QChar unicode[] = {0x2713};
     int size = sizeof(unicode) / sizeof(QChar);
     cursor.insertText( QString::fromRawData(unicode, size) );
-}
-
-void KJotsEdit::onTextChanged ( void )
-{
-    if ( currentPage ) {
-        currentPage->parentBook()->setDirty(true);
-    }
 }
 
 bool KJotsEdit::canInsertFromMimeData ( const QMimeData *source ) const
@@ -309,6 +324,8 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
 
 void KJotsEdit::mouseReleaseEvent(QMouseEvent *event)
 {
+  // TODO: PORT
+#if 0
     if ( ( event->modifiers() & Qt::ControlModifier ) && ( event->button() & Qt::LeftButton )
           && !anchorAt(event->pos()).isEmpty() )
     {
@@ -320,6 +337,7 @@ void KJotsEdit::mouseReleaseEvent(QMouseEvent *event)
             new KRun ( anchor, this );
         }
     }
+#endif
     KTextEdit::mouseReleaseEvent(event);
 }
 
@@ -331,6 +349,58 @@ void KJotsEdit::pastePlainText()
         insertPlainText(text);
     }
 }
+
+bool KJotsEdit::event( QEvent *event )
+{
+    if ( event->type() == QEvent::WindowDeactivate )
+    {
+        savePage();
+    }
+    return KRichTextWidget::event( event );
+}
+
+void KJotsEdit::focusOutEvent( QFocusEvent* event )
+{
+    savePage();
+    KRichTextWidget::focusOutEvent(event);
+}
+
+void KJotsEdit::savePage()
+{
+    if ( !document()->isModified() )
+      return;
+
+    QModelIndexList rows = m_selectionModel->selectedRows();
+
+    if (rows.size() != 1)
+      return;
+
+    QModelIndex index = rows.at( 0 );
+
+    Item item = index.data( EntityTreeModel::ItemRole ).value<Item>();
+
+    if ( !item.isValid() )
+      return;
+
+    if (!item.hasPayload<KMime::Message::Ptr>())
+      return;
+
+    KMime::Message::Ptr msg = item.payload<KMime::Message::Ptr>();
+
+    KMime::Content* c =msg->mainBodyPart();
+    c->fromUnicodeString( toPlainText() );
+    msg->assemble();
+
+    item.setPayload( msg );
+
+    QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_selectionModel->model());
+
+    document()->setModified( false );
+    document()->setProperty( "textCursor", QVariant::fromValue( textCursor() ) );
+    model->setData( index, QVariant::fromValue( document() ), KJotsModel::DocumentRole );
+}
+
+
 
 #include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */

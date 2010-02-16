@@ -1,27 +1,39 @@
 project(kjots)
 
+
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   find_package(KDE4 REQUIRED)
+  find_package(Akonadi REQUIRED)
+  find_package(KdepimLibs REQUIRED)
   include(KDE4Defaults)
   include(MacroLibrary)
   include(CheckIncludeFiles)
 
-  include_directories( ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS})
+  set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+  include_directories( ../akonadi/akonadi_next )
 
   set(KJOTS_BUILD_KONTACT_PLUGIN FALSE)
 else("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   option(KJOTS_BUILD_KONTACT_PLUGIN "Build kjots with support for kontact" TRUE)
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 
+include_directories( 
+  ${KDE4_INCLUDES} 
+  ${KDEPIMLIBS_INCLUDE_DIRS} 
+  ${Boost_INCLUDE_DIRS}
+)
+
 set(kjotsLibs ${KDE4_KIO_LIBS})
 
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   add_definitions(-DKJOTSKONTACTPLUGIN)
   set(kjotsLibs ${kjotsLibs} kdepim)
-  
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
 
 add_subdirectory( icons )
+add_subdirectory( plasmoid )
 
 
 #########################################################################
@@ -39,16 +51,16 @@ kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
 
 set (kjots_common_SRCS
      aboutdata.cpp
-     kjotsentry.cpp
      kjotsedit.cpp
+     kjotstreeview.cpp
      kjotsbookmarks.cpp
-     bookshelf.cpp
-     kjotscomponent.cpp
      kjotsreplacenextdialog.cpp
+     kjotsmodel.cpp
+     kjotswidget.cpp
      kjotsbrowser.cpp
      kjotslinkdialog.cpp
-     flatcollectionproxymodel.cpp
      kjotsbookshelfentryvalidator.cpp
+     note.cpp
      knowitimporter.cpp ${kjots_config_SRCS}
 )
 
@@ -56,9 +68,9 @@ set (kjots_common_SRCS
 # D-Bus interface
 #########################################################################
 
-qt4_generate_dbus_interface( kjotscomponent.h org.kde.KJotsComponent.xml OPTIONS -m )
+qt4_generate_dbus_interface( kjotswidget.h org.kde.KJotsWidget.xml OPTIONS -m )
 qt4_add_dbus_interfaces(kjots_common_SRCS
-    ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsComponent.xml)
+    ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KJotsWidget.xml)
 
 
 #########################################################################
@@ -73,7 +85,15 @@ set(kjots_SRCS
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
-target_link_libraries(kjots ${kjotsLibs} ${KDE4_KUTILS_LIBS})
+target_link_libraries(kjots
+  ${kjotsLibs}
+  ${KDE4_KUTILS_LIBS}
+  ${KDE4_AKONADI_LIBS}
+  ${KDE4_KMIME_LIBS}
+  ${KDE4_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+)
+
 if(KJOTS_BUILD_KONTACT_PLUGIN)
   target_link_libraries(kjots ${KDEPIMLIBS_KONTACTINTERFACE_LIBS} )
 endif(KJOTS_BUILD_KONTACT_PLUGIN)
@@ -87,6 +107,10 @@ install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 install( FILES Kjots.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kjots.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 install( FILES kjotsui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
+
+# TODO Figure out how to exclude the .svn dirs.
+install(DIRECTORY themes DESTINATION ${DATA_INSTALL_DIR}/kjots PATTERN *.svn EXCLUDE )
+
 
 
 
@@ -107,7 +131,16 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
   )
 
 
-  target_link_libraries(kjotspart ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS} kdepim)
+  target_link_libraries(kjotspart
+    ${KDE4_KUTILS_LIBS}
+    ${KDE4_KPARTS_LIBS}
+    kdepim
+    ${KDEPIMLIBS_KMIME_LIBS}
+    ${KDE4_AKONADI_LIBS}
+    ${KDE4_AKONADI_KMIME_LIBS}
+    ${KDE4_KMIME_LIBS}
+    ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  )
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
   install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
@@ -118,7 +151,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
   ###########################################################################
   set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
 
-  kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS}) 
+  kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS})
 
   target_link_libraries(kcm_kjots  ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
 

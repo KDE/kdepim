@@ -31,13 +31,11 @@ class QTreeView;
 class KComboBox;
 class KLineEdit;
 
-class Bookshelf;
-
 class KJotsLinkDialog : public KDialog
 {
     Q_OBJECT
-    public:
-        explicit KJotsLinkDialog(QWidget *parent = 0, Bookshelf *bookshelf =0 );
+public:
+    explicit KJotsLinkDialog(QWidget *parent = 0 );
 
 
     /**
@@ -75,7 +73,6 @@ class KJotsLinkDialog : public KDialog
         KComboBox *hrefCombo;
         QRadioButton* linkUrlLineEditRadioButton;
         QRadioButton* hrefComboRadioButton;
-        Bookshelf* mBookshelf;
         QTreeView* tree;
 };
 

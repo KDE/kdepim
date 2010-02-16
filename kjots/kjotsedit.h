@@ -26,22 +26,19 @@
 #define __KJOTSEDIT_H
 
 #include <KRichTextWidget>
-#include <QPointer>
 
+class QItemSelectionModel;
 
 class KActionCollection;
-class Bookshelf;
-class KJotsPage;
-
 
 class KJotsEdit : public KRichTextWidget
 {
 Q_OBJECT
 public:
-    explicit KJotsEdit ( QWidget* );
+    explicit KJotsEdit ( QItemSelectionModel *selectionModel, QWidget* );
     virtual ~KJotsEdit ();
 
-    void DelayedInitialization ( KActionCollection*, Bookshelf* );
+    void delayedInitialization ( KActionCollection* );
     virtual bool canInsertFromMimeData ( const QMimeData *) const;
     virtual void insertFromMimeData ( const QMimeData *);
 
@@ -51,9 +48,12 @@ protected:
     /** Override to make ctrl+click follow links */
     virtual void mouseReleaseEvent(QMouseEvent *);
 
+    virtual void focusOutEvent( QFocusEvent* );
+
+    virtual bool event( QEvent *event );
+
 protected slots:
     void onBookshelfSelection ( void );
-    void onTextChanged ( void );
     void onAutoBullet ( void );
     void onLinkify ( void );
     void addCheckmark( void );
@@ -61,13 +61,15 @@ protected slots:
     void DecimalList( void );
     void pastePlainText( void );
 
+    void savePage();
+    void insertDate();
+
 private:
     void disableEditing ( void );
     void createAutoDecimalList();
-    QPointer<Bookshelf> bookshelf;
-    QPointer<KJotsPage> currentPage;
     KActionCollection *actionCollection;
     bool allowAutoDecimal;
+    QItemSelectionModel *m_selectionModel;
 
 };
 

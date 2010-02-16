@@ -45,6 +45,7 @@
 #include <QTimer>
 #include <QtGui/QTextEdit>
 #include <QtGui/QLabel>
+#include "kjotswidget.h"
 
 const KAboutData &createAboutData()
 {
@@ -62,7 +63,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     setComponentData( KJotsPartFactory::componentData() );
 
     // this should be your custom internal widget
-    component = new KJotsComponent(parentWidget, actionCollection());
+    component = new KJotsWidget(parentWidget, this);
 
     mStatusBar = new KParts::StatusBarExtension(this);
     // notify the part that this is our internal widget
@@ -76,7 +77,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
 
 KJotsPart::~KJotsPart()
 {
-	component->queryClose();
+// 	component->queryClose();
 }
 
 bool KJotsPart::openFile()
