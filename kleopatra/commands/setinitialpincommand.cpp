@@ -110,6 +110,7 @@ private:
             canceled();
     }
     void slotDialogAccepted() {
+        ReaderStatus::mutableInstance()->updateStatus();
         finished();
     }
 
