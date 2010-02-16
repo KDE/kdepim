@@ -116,12 +116,14 @@ public:
 private:
     void slotNksButtonClicked() {
         nksState = Ongoing;
+        ui.nksStatusLB->clear();
         updateWidgets();
         emit q->nksPinRequested();
     }
 
     void slotSigGButtonClicked() {
         sigGState = Ongoing;
+        ui.sigGStatusLB->clear();
         updateWidgets();
         emit q->sigGPinRequested();
     }
@@ -130,7 +132,7 @@ private:
     void updateWidgets() {
         update_widget( nksState,  false,
                        ui.nksResultIcon,  ui.nksLB,  ui.nksPB,  ui.nksStatusLB  );
-        update_widget( sigGState, nksState == NotSet || nksState == Failed,
+        update_widget( sigGState, nksState == NotSet || nksState == Failed || nksState == Ongoing,
                        ui.sigGResultIcon, ui.sigGLB, ui.sigGPB, ui.sigGStatusLB );
         ui.closePB()->setEnabled( q->isComplete() );
         ui.cancelPB()->setEnabled( !q->isComplete() );
@@ -183,17 +185,19 @@ void SetInitialPinDialog::setSigGPinPresent( bool on ) {
 
 void SetInitialPinDialog::setNksPinSettingResult( const Error & err ) {
     d->ui.nksStatusLB->setText( format_error( err ) );
-    if ( err.isCanceled() )
-        return;
-    d->nksState = err ? Failed : Ok ;
+    d->nksState =
+        err.isCanceled() ? NotSet :
+        err              ? Failed :
+        Ok ;
     d->updateWidgets();
 }
 
 void SetInitialPinDialog::setSigGPinSettingResult( const Error & err ) {
     d->ui.sigGStatusLB->setText( format_error( err ) );
-    if ( err.isCanceled() )
-        return;
-    d->sigGState = err ? Failed : Ok ;
+    d->sigGState =
+        err.isCanceled() ? NotSet :
+        err              ? Failed :
+        Ok ;
     d->updateWidgets();
 }
 
