@@ -254,6 +254,7 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::C
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
   dlg->setMimeTypeFilter( QStringList() << QLatin1String( "text/calendar" ) );
+  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   if ( defaultCollection.isValid() )
     dlg->setDefaultCollection( defaultCollection );
   Akonadi::Collection collection;
