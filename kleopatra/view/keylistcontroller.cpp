@@ -437,11 +437,12 @@ int KeyListController::Private::toolTipOptions() const
     using namespace Kleo::Formatting;
     static const int validityFlags = Validity;
     static const int ownerFlags = Subject|Issuer|UserIDs|SerialNumber;
-    static const int detailsFlags = ExpiryDates|CertificateType|CertificateUsage|Fingerprint;
+    static const int detailsFlags = StorageLocation|ExpiryDates|CertificateType|CertificateUsage|Fingerprint;
 
     const TooltipPreferences prefs;
     
-    int flags = prefs.showValidity() ? validityFlags : 0;
+    int flags = KeyID;
+    flags |= prefs.showValidity() ? validityFlags : 0;
     flags |= prefs.showOwnerInformation() ? ownerFlags : 0;
     flags |= prefs.showCertificateDetails() ? detailsFlags : 0;
     return flags;
