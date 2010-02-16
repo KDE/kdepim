@@ -70,9 +70,7 @@ void AkonotesListApplet::setupModel( Collection::Id id )
   monitor->setCollectionMonitored( Collection( id ) );
   monitor->setMimeTypeMonitored( Note::mimeType() );
 
-  Session *session = new Session( QByteArray( "EntityTreeModel-" ) + QByteArray::number( qrand() ), this );
-
-  EntityTreeModel *model = new KJotsModel( session, monitor, this );
+  EntityTreeModel *model = new KJotsModel( monitor, this );
   model->setCollectionFetchStrategy( EntityTreeModel::FetchNoCollections );
 
   m_treeView->setModel( model );
@@ -107,7 +105,7 @@ void AkonotesListApplet::createConfigurationInterface(KConfigDialog *configDialo
   monitor->setMimeTypeMonitored( Note::mimeType(), true );
   monitor->setCollectionMonitored( Akonadi::Collection::root() );
 
-  EntityTreeModel *model = new EntityTreeModel( Session::defaultSession(), monitor, this );
+  EntityTreeModel *model = new EntityTreeModel( monitor, this );
   model->setItemPopulationStrategy( EntityTreeModel::NoItemPopulation );
 
   CollectionFilterProxyModel *mimeTypeFilterModel = new CollectionFilterProxyModel( this );

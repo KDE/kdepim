@@ -131,9 +131,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   monitor->setCollectionMonitored( Collection::root() );
   monitor->setMimeTypeMonitored( Note::mimeType() );
 
-  Session *session = new Session( QByteArray( "EntityTreeModel-" ) + QByteArray::number( qrand() ), this );
-
-  m_kjotsModel = new KJotsModel(session, monitor, this);
+  m_kjotsModel = new KJotsModel( monitor, this );
 
   treeview->setModel( m_kjotsModel );
   treeview->setSelectionMode( QAbstractItemView::ExtendedSelection );

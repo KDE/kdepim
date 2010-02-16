@@ -106,8 +106,8 @@ QVariantList KJotsEntity::entities()
   return list;
 }
 
-KJotsModel::KJotsModel(Session *session, ChangeRecorder *monitor, QObject *parent)
-  : EntityTreeModel(session, monitor, parent)
+KJotsModel::KJotsModel( ChangeRecorder *monitor, QObject *parent )
+  : EntityTreeModel( monitor, parent )
 {
 
 }
@@ -117,7 +117,7 @@ KJotsModel::~KJotsModel()
   qDeleteAll( m_documents );
 }
 
-bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int role )
 {
   if ( role == Qt::EditRole )
   {
@@ -170,7 +170,7 @@ bool KJotsModel::setData(const QModelIndex& index, const QVariant& value, int ro
   return EntityTreeModel::setData(index, value, role);
 }
 
-QVariant KJotsModel::data(const QModelIndex &index, int role) const
+QVariant KJotsModel::data( const QModelIndex &index, int role ) const
 {
   if (GrantleeObjectRole == role)
   {
@@ -214,14 +214,14 @@ QVariant KJotsModel::data(const QModelIndex &index, int role) const
   return EntityTreeModel::data(index, role);
 }
 
-QVariant KJotsModel::getData( const Akonadi::Item& item, int column, int role) const
+QVariant KJotsModel::entityData( const Akonadi::Item& item, int column, int role) const
 {
   if ( ( role == Qt::EditRole || role == Qt::DisplayRole ) && item.hasPayload<KMime::Message::Ptr>() )
   {
     KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
     return page->subject()->asUnicodeString();
   }
-  return EntityTreeModel::getData( item, column, role );
+  return EntityTreeModel::entityData( item, column, role );
 }
 
 #include "kjotsmodel.moc"

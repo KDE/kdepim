@@ -257,7 +257,7 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(console)
   macro_optional_add_subdirectory(kalarm)
 #  if (Grantlee_FOUND)
-  #  macro_optional_add_subdirectory(kjots)
+    macro_optional_add_subdirectory(kjots)
 #  endif (Grantlee_FOUND)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(strigi-analyzer)

@@ -47,7 +47,7 @@ class KJotsEntity : public QObject
   Q_PROPERTY(QVariantList entities READ entities)
 
 public:
-  KJotsEntity(const QModelIndex &index, QObject *parent = 0);
+  KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
 
   bool isBook();
   bool isPage();
@@ -66,7 +66,7 @@ class KJotsModel : public EntityTreeModel
 {
   Q_OBJECT
 public:
-  KJotsModel(Session *session, ChangeRecorder *monitor, QObject *parent = 0);
+  explicit KJotsModel( ChangeRecorder *monitor, QObject *parent = 0 );
   virtual ~KJotsModel();
 
   enum KJotsRoles
@@ -77,12 +77,12 @@ public:
   };
 
   // We don't reimplement the Collection overload.
-  using EntityTreeModel::getData;
-  virtual QVariant getData( const Akonadi::Item& item, int column, int role = Qt::DisplayRole ) const;
+  using EntityTreeModel::entityData;
+  virtual QVariant entityData( const Akonadi::Item& item, int column, int role = Qt::DisplayRole ) const;
 
-  QVariant data(const QModelIndex &index, int role) const;
+  QVariant data( const QModelIndex &index, int role ) const;
 
-  virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
+  virtual bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 
 
 private:
