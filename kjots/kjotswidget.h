@@ -82,8 +82,8 @@ public slots:
   void updateCaption();
   void updateMenu();
 
-  void newPage();
-  void newBook();
+  Q_SCRIPTABLE void newPage();
+  Q_SCRIPTABLE void newBook();
 
 signals:
   void canGoNextPageChanged( bool );
