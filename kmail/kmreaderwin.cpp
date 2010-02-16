@@ -646,6 +646,7 @@ void KMReaderWin::createActions()
   KAction *action = new KAction(KIcon("edit-find"), i18n("&Find in Message..."), this);
   ac->addAction("find_in_messages", action );
   connect(action, SIGNAL(triggered(bool)), SLOT(slotFind()));
+  action->setShortcut(KStandardShortcut::find());
 
   // open URL
   mUrlOpenAction = new KAction( KIcon( "document-open" ), i18n( "Open URL" ), this );
