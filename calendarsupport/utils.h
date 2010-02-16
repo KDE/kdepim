@@ -162,7 +162,7 @@ namespace Akonadi
   * @return The select collection or an invalid collection if
   * there was no collection selected.
   */
-  AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent );
+  AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent, const Akonadi::Collection& defaultCollection = Akonadi::Collection());
 
   AKONADI_KCAL_NEXT_EXPORT Akonadi::Item itemFromIndex( const QModelIndex &index );
 

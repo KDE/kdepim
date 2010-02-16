@@ -2,7 +2,7 @@
   This file is part of KOrganizer.
 
   Copyright (C) 2009 KDAB (author: Frank Osterfeld <osterfeld@kde.org>)
-  
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -250,10 +250,12 @@ QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spe
   return todos;
 }
 
-Akonadi::Collection Akonadi::selectCollection( QWidget *parent )
+Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::Collection &defaultCollection )
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
   dlg->setMimeTypeFilter( QStringList() << QLatin1String( "text/calendar" ) );
+  if ( defaultCollection.isValid() )
+    dlg->setDefaultCollection( defaultCollection );
   Akonadi::Collection collection;
   if ( dlg->exec() == QDialog::Accepted )
     collection = dlg->selectedCollection();
