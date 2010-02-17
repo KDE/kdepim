@@ -3567,7 +3567,7 @@ QString IncidenceFormatter::recurrenceString(Incidence * incidence)
           recurString = i18n( "no recurrence", "None" );
           break;
       case Recurrence::rDaily:
-          recurString = i18n( "Every day", "Every %1 days", recurs->frequency() );
+          recurString = i18n( "Every day", "Every %n days", recurs->frequency() );
           break;
       case Recurrence::rWeekly:
       {
