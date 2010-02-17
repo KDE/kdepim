@@ -182,7 +182,6 @@ SearchWindow::SearchWindow(KMMainWidget* w, KMFolder *curFolder):
       } else {
           mChkbxAllFolders->setChecked(true);
       }
-      mFolder = searchFolder;
   }
   else
       mSearchPattern->append( KMSearchRule::createInstance( "Subject" ) );
