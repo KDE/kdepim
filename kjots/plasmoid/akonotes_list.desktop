@@ -1,8 +1,6 @@
 [Desktop Entry]
 Name=Akonotes list plasmoid
-Name[x-test]=xxAkonotes list plasmoidxx
 Comment=Akonotes list plasmoid
-Comment[x-test]=xxAkonotes list plasmoidxx
 Type=Service
 Icon=kjots
 
