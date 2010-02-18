@@ -23,14 +23,13 @@
 
 
 #include <QLayout>
-//Added by qt3to4:
 #include <QLabel>
 #include <QFrame>
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QBoxLayout>
 #include <QCheckBox>
-#include <QIntValidator>
+#include <QSpinBox>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -54,9 +53,8 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   mALabel = new QLabel(i18n("Reminder before (in days):"),this);
   topLayout->addWidget(mALabel, 1, 0 );
-  mAlarmTimeEdit = new KLineEdit(this); 
-  mAlarmTimeEdit->setValidator(new QIntValidator(mAlarmTimeEdit));
-  mAlarmTimeEdit->setText("0");
+  mAlarmTimeEdit = new QSpinBox(this);
+  mAlarmTimeEdit->setMinimum(0);
   topLayout->addWidget(mAlarmTimeEdit, 1, 1 );
 
   QFrame *line = new QFrame( this );
@@ -92,8 +90,7 @@ void ResourceKABCConfig::loadSettings( KRES::Resource *resource )
   ResourceKABC *res = static_cast<ResourceKABC *>( resource );
   if ( res ) {
     mAlarm->setChecked( res->alarm() );
-    QString days;
-    mAlarmTimeEdit->setText( days.setNum(res->alarmDays()) );
+    mAlarmTimeEdit->setValue( res->alarmDays() );
 
     mAlarmTimeEdit->setEnabled( res->alarm() );
     mALabel->setEnabled( res->alarm() );
@@ -111,7 +108,7 @@ void ResourceKABCConfig::saveSettings( KRES::Resource *resource )
   ResourceKABC *res = static_cast<ResourceKABC *>( resource );
   if ( res ) {
     res->setAlarm( mAlarm->isChecked() );
-    res->setAlarmDays( mAlarmTimeEdit->text().toInt() );
+    res->setAlarmDays( mAlarmTimeEdit->value() );
     setReadOnly( true );
 
     QStringList categories;

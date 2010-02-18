@@ -28,7 +28,7 @@
 
 class QCheckBox;
 class QLabel;
-class KLineEdit;
+class QSpinBox;
 
 namespace KPIM {
 class CategorySelectWidget;
@@ -39,7 +39,7 @@ namespace KCal {
 
 /**
   Configuration widget for birtday/anniversaries resource.
-  
+
   @see ResourceKABC
 */
 class ResourceKABCConfig : public KRES::ConfigWidget
@@ -57,7 +57,7 @@ class ResourceKABCConfig : public KRES::ConfigWidget
 
   private:
     QCheckBox *mAlarm;
-    KLineEdit *mAlarmTimeEdit;
+    QSpinBox *mAlarmTimeEdit;
     QLabel *mALabel;
     QCheckBox *mUseCategories;
     KPIM::CategorySelectWidget *mCategoryView;
