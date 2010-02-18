@@ -2338,12 +2338,14 @@ view</link>.</para>
 <guibutton>Accept</guibutton> or <guibutton>Accept Cond.</guibutton>. The
 last two actions will insert the item to your calendar. In any case, &kmail; will
 send your response to the organizer automatically.</para>
+
 <para>You can also <guibutton>Delegate</guibutton> or <guibutton>Forward</guibutton>
 the invitation. When delegating, you can suggest another person as your proxy.
 Using <guibutton>Forward</guibutton> you can forward the invitation to one or more
 people not yet invited.
 When the receiver of the delegation or forward accepts the invitation,
 the organizer will be asked to approve the new attendee.</para>
+
 <para>If for any reason you changed your mind, edit your status in the item's
 <link linkend="entering-data-events-attendees">attendee tab</link>. If you
 checked the <guilabel>Use Groupware Communication</guilabel> box
@@ -2733,7 +2735,7 @@ defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
 <term><guilabel>Enable tooltips for displaying summaries</guilabel></term>
 <listitem><para>If your summary for an event is longer than would fit in the
 current View, the remaining characters are not displayed. Check <guilabel>Enable
-tooltips displaying summary of events</guilabel> if you want the full summary
+tooltips for displaying summaries</guilabel> if you want the full summary
 displayed when the hovering the mouse pointer over the appointment for a few
 seconds.</para></listitem>
 </varlistentry>
