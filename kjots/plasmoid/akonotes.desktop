@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=Akonotes plasmoid
+Name[pt]=Plasmóide de Akonotas
+Name[pt_BR]=Plasmoide Akonotas
+Name[sv]=Plasmoid Ako-anteckningar
+Name[uk]=Плазмоїд Akonotes
+Name[x-test]=xxAkonotes plasmoidxx
 Comment=Akonotes plasmoid
+Comment[pt]=Plasmóide de Akonotas
+Comment[pt_BR]=Plasmoide Akonotas
+Comment[sv]=Plasmoid Ako-anteckningar
+Comment[uk]=Плазмоїд Akonotes
+Comment[x-test]=xxAkonotes plasmoidxx
 Type=Service
 Icon=kjots
 
