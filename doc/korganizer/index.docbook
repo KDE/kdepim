@@ -2769,6 +2769,13 @@ navigator</guilabel> box is checked, the days containing weekly recurring
 events are shown in bold typeface in the date navigator.</para></listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Week numbers select a work week when in work week view</guilabel></term>
+<listitem><para>If the <guilabel>Week numbers select a work week when in work
+week view</guilabel> box is checked, clicking on the week numbers along the 
+side of the date navigator will navigate through work weeks rather than
+through normal 7-day weeks.</para></listitem>
+</varlistentry>
 
 </variablelist>
 
