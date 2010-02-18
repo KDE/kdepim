@@ -573,8 +573,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   }
 
   if ( event->doesRecur() ) {
-    QDateTime dt =
-      event->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
+    QDateTime dt = event->recurrence()->getNextDateTime( startDt );
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "next recurrence", "Next:" ) + "</b></td>";
     tmpStr += "<td>" +
@@ -635,11 +634,13 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     tmpStr += "</tr>";
   }
 
+  QDateTime nextDt;
   if ( todo->hasStartDate() && todo->dtStart().isValid() ) {
     QDateTime startDt = todo->dtStart();
     if ( todo->doesRecur() ) {
       if ( date.isValid() ) {
         startDt.setDate( date );
+        nextDt = startDt;
       }
     }
     tmpStr += "<tr>";
@@ -658,6 +659,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
         QDateTime dt( date, QTime( 0, 0, 0 ) );
         dt = dt.addSecs( -1 );
         dueDt.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
+        nextDt = dueDt;
       }
     }
     tmpStr += "<tr>";
@@ -703,8 +705,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
   tmpStr += "</tr>";
 
   if ( todo->doesRecur() ) {
-    QDateTime dt =
-      todo->recurrence()->getNextDateTime( QDateTime::currentDateTime() );
+    QDateTime dt = todo->recurrence()->getNextDateTime( nextDt );
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
               i18n( "next recurrence", "Next:" ) +
