@@ -1608,7 +1608,7 @@ void CalendarView::schedule_forward( Incidence *incidence )
     KMessageBox::information(
       this,
       i18n( "No item selected." ),
-      "ForwardNoEventSelected" );
+      QString(), "ForwardNoEventSelected" );
     return;
   }
 
