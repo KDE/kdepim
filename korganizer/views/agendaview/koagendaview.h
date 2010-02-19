@@ -52,9 +52,6 @@ class QMenu;
 class QPaintEvent;
 class QSplitter;
 
-namespace KCal {
-  class ResourceCalendar;
-}
 using namespace KCal;
 
 namespace Akonadi {
