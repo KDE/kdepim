@@ -282,9 +282,8 @@ bool Recurrence::recursOn(const QDate &qd) const
 
   if ( mRDates.contains( qd ) ) return true;
 
-  // Check if it might recur today at all.
   bool recurs = false;
-  if ( startDate() == qd ) recurs = true;
+
   for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
     recurs = recurs || (*rr)->recursOn( qd );
   }
