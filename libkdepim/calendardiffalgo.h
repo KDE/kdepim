@@ -22,9 +22,10 @@
 #ifndef KPIM_CALENDARDIFFALGO_H
 #define KPIM_CALENDARDIFFALGO_H
 
+#include "diffalgo.h"
+
 #include <libkcal/event.h>
 #include <libkcal/todo.h>
-#include <libkdepim/diffalgo.h>
 
 namespace KPIM {
 

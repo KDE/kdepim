@@ -22,8 +22,9 @@
 #ifndef KPIM_HTMLDIFFALGODISPLAY_H
 #define KPIM_HTMLDIFFALGODISPLAY_H
 
+#include "diffalgo.h"
+
 #include <ktextbrowser.h>
-#include <libkdepim/diffalgo.h>
 #include <kdepimmacros.h>
 
 namespace KPIM {

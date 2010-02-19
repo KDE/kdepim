@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I$(top_builddir)/libkdepim -I$(top_srcdir)/libemailfunctions $(all_includes)
+AM_CPPFLAGS = -I$(top_builddir)/libkdepim -I$(top_srcdir)/libkdepim -I$(top_srcdir)/libemailfunctions $(all_includes)
 AM_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 LDADD = ../libkdepim.la $(LIB_KDECORE)
 
@@ -8,7 +8,8 @@ check_PROGRAMS = testwizard testaddresseelineedit \
                  testutf7encoder \
                  test_kregexp \
                  testdateedit \
-                 testlinklocator
+                 testlinklocator \
+                 testkincidencechooser
 
 # disabled because of X dependency
 #                 testdistrlist
@@ -22,6 +23,7 @@ test_kregexp_SOURCES = test_kregexp.cpp
 testdateedit_SOURCES = testdateedit.cpp
 testlinklocator_SOURCES = testlinklocator.cpp
 #testdistrlist_SOURCES = testdistrlist.cpp
+testkincidencechooser_SOURCES = testkincidencechooser.cpp
 
 #TESTS = testdistrlist
 
