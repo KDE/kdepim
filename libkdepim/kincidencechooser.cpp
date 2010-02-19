@@ -65,6 +65,7 @@ KIncidenceChooser::KIncidenceChooser(QWidget *parent, char *name) :
     button = new QPushButton( i18n("Take New"), b_box );
     connect ( button, SIGNAL( clicked()), this, SLOT (takeIncidence2() ) );
     button = new QPushButton( i18n("Take Both"), b_box );
+    button->setFocus(); //kolab/issue4147:  "Take Both" should be default
     connect ( button, SIGNAL( clicked()), this, SLOT (takeBoth() ) );
     topLayout->setSpacing(spacingHint());
     topLayout->setMargin(marginHint());
