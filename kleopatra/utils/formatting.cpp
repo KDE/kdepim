@@ -252,11 +252,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
     const Subkey subkey = key.subkey( 0 );
 
     QString result;
-    if ( flags & KeyID )
-        result += i18n("Key-ID: %1", QString::fromLatin1( key.shortKeyID() ) ) ;
-    if ( flags & Validity ) {
-        if ( !result.isEmpty() )
-            result += "<br>";
+    if ( flags & Validity )
         if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
             if ( key.isRevoked() )
                 result += make_red( i18n( "This certificate has been revoked." ) );
@@ -268,16 +264,10 @@ QString Formatting::toolTip( const Key & key, int flags ) {
                 result += i18n( "This certificate is currently valid." );
         else
             result += i18n( "The validity of this certificate cannot be checked at the moment." );
-    }
     if ( flags == Validity )
         return result;
 
     result += QLatin1String( "<table border=\"0\">" );
-    if ( flags & StorageLocation )
-        if ( const char * card = subkey.cardSerialNumber() )
-            result += format_row( i18n("Stored"), i18nc("stored...","on SmartCard with serial no. %1", QString::fromUtf8( card ) ) );
-        else
-            result += format_row( i18n("Stored"), i18nc("stored...","on this computer") );
     if ( key.protocol() == CMS ) {
         if ( flags & SerialNumber )
             result += format_row( i18n("Serial number"), key.issuerSerial() );
@@ -304,9 +294,16 @@ QString Formatting::toolTip( const Key & key, int flags ) {
         result += format_row( i18n("Certificate type"), format_keytype( key ) );
     if ( flags & CertificateUsage )
         result += format_row( i18n("Certificate usage"), format_keyusage( key ) );
+    if ( flags & KeyID )
+        result += format_row( i18n("Key-ID"), QString::fromLatin1( key.shortKeyID() ) ) ;
     if ( flags & Fingerprint )
         result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
-    result += QLatin1String( "</table><br>" );
+    if ( flags & StorageLocation )
+        if ( const char * card = subkey.cardSerialNumber() )
+            result += format_row( i18n("Stored"), i18nc("stored...","on SmartCard with serial no. %1", QString::fromUtf8( card ) ) );
+        else
+            result += format_row( i18n("Stored"), i18nc("stored...","on this computer") );
+    result += QLatin1String( "</table>" );
 
     return result;
 }
