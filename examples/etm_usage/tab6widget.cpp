@@ -36,76 +36,7 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/entitymimetypefiltermodel.h>
-
-class NoncheckableFilterModel : public Akonadi::EntityMimeTypeFilterModel
-{
-public:
-  NoncheckableFilterModel(QObject* parent = 0)
-    : Akonadi::EntityMimeTypeFilterModel(parent)
-  {
-
-  }
-
-  /* reimp */ Qt::ItemFlags flags(const QModelIndex& index) const
-  {
-    return Akonadi::EntityMimeTypeFilterModel::flags(index) & (~Qt::ItemIsUserCheckable);
-  }
-
-  /* reimp */ QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if ( role == Qt::CheckStateRole )
-      return QVariant();
-    return Akonadi::EntityMimeTypeFilterModel::data(index, role);
-  }
-
-};
-
-class CheckedSelectionEntityModel : public MixedTreeModel
-{
-public:
-  CheckedSelectionEntityModel(Akonadi::ChangeRecorder* monitor, QObject* parent = 0)
-    : MixedTreeModel(monitor, parent), m_itemSelectionModel(0)
-  {
-  }
-
-  void setSelectionModel(QItemSelectionModel *itemSelectionModel)
-  {
-    m_itemSelectionModel = itemSelectionModel;
-  }
-
-  /* reimp */ Qt::ItemFlags flags(const QModelIndex& index) const
-  {
-    return EntityTreeModel::flags(index) | Qt::ItemIsUserCheckable;
-  }
-
-  /* reimp */ QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const
-  {
-    if (role == Qt::CheckStateRole)
-    {
-      if (!m_itemSelectionModel)
-        return Qt::Unchecked;
-
-      return m_itemSelectionModel->selection().contains(index) ? Qt::Checked : Qt::Unchecked;
-    }
-    return Akonadi::EntityTreeModel::data(index, role);
-  }
-
-  /* reimp */ bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole)
-  {
-    if (role == Qt::CheckStateRole)
-    {
-      if (!m_itemSelectionModel)
-        return false;
-
-      Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
-      m_itemSelectionModel->select(index, state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
-      return true;
-    }
-    return Akonadi::EntityTreeModel::setData(index, value, role);
-  }
-private:
-  QItemSelectionModel *m_itemSelectionModel;
-};
+#include "akonadi_next/checkableitemproxymodel.h"
 
 class Tab6TreeWidget : public EntityTreeWidget
 {
@@ -121,7 +52,14 @@ public:
     m_collectionFilter->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
     m_collectionFilter->setSourceModel(model);
     m_collectionFilter->setHeaderGroup(Akonadi::EntityTreeModel::CollectionTreeHeaders);
-    tree->setModel(m_collectionFilter);
+
+    m_checkableProxy = new CheckableItemProxyModel(this);
+    m_checkableProxy->setSourceModel(m_collectionFilter);
+
+    m_itemSelectionModel = new QItemSelectionModel(m_collectionFilter);
+    m_checkableProxy->setSelectionModel(m_itemSelectionModel);
+
+    tree->setModel(m_checkableProxy);
   }
 
   /* reimp */ QModelIndex mapToSource(const QModelIndex &idx)
@@ -131,9 +69,7 @@ public:
 
   virtual Akonadi::EntityTreeModel* getETM()
   {
-    CheckedSelectionEntityModel* model = new CheckedSelectionEntityModel(changeRecorder(), this);
-    m_itemSelectionModel = new QItemSelectionModel(model);
-    model->setSelectionModel(m_itemSelectionModel);
+    MixedTreeModel* model = new MixedTreeModel(changeRecorder(), this);
     return model;
   }
 
@@ -142,6 +78,7 @@ public:
 
 private:
   Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
+  CheckableItemProxyModel *m_checkableProxy;
   QItemSelectionModel *m_itemSelectionModel;
 
 };
@@ -165,7 +102,7 @@ Tab6Widget::Tab6Widget(QWidget* parent, Qt::WindowFlags f)
   selectionProxy->setFilterBehavior(KSelectionProxyModel::ChildrenOfExactSelection);
   selectionProxy->setSourceModel(m_etw->model());
 
-  Akonadi::EntityMimeTypeFilterModel *itemFilter = new NoncheckableFilterModel(this);
+  Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
   itemFilter->setObjectName("itemFilter");
   itemFilter->addMimeTypeExclusionFilter(Akonadi::Collection::mimeType());
   itemFilter->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
