@@ -1372,6 +1372,13 @@ void AdvancedSettingsDialog::loadDefaultKeyType() {
 
 void AdvancedSettingsDialog::updateWidgetVisibility() {
     // Personal Details Page
+    if ( protocol == OpenPGP ) {  // ### hide until multi-uid is implemented
+        if ( ui.tabWidget->indexOf( ui.personalTab ) != -1 )
+            ui.tabWidget->removeTab( ui.tabWidget->indexOf( ui.personalTab ) );
+    } else {
+        if ( ui.tabWidget->indexOf( ui.personalTab ) == -1 )
+            ui.tabWidget->addTab( ui.personalTab, tr2i18n( "Personal Details", 0 ) );
+    }
     ui.uidGB->setVisible( protocol == OpenPGP );
     ui.uidGB->setEnabled( false );
     ui.uidGB->setToolTip( i18nc("@info:tooltip","Adding more than one User ID is not yet implemented.") );
