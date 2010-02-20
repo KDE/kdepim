@@ -3,7 +3,7 @@
 
     Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
     Copyright (c) 2004 Reinhold Kainhofer <reinhold@kainhofer.com>
-    Copyright (c) 2009 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+    Copyright (c) 2009-2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -3509,16 +3509,25 @@ QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
   return QString::null;
 }
 
+static QString recurEnd( Incidence *incidence )
+{
+  QString endstr;
+  if ( incidence->doesFloat() ) {
+    endstr = KGlobal::locale()->formatDate( incidence->recurrence()->endDate() );
+  } else {
+    endstr = KGlobal::locale()->formatDateTime( incidence->recurrence()->endDateTime() );
+  }
+  return endstr;
+}
+
 /************************************
  *  More static formatting functions
  ************************************/
-
-QString IncidenceFormatter::recurrenceString(Incidence * incidence)
+QString IncidenceFormatter::recurrenceString( Incidence *incidence )
 {
-  if ( !incidence->doesRecur() )
+  if ( !incidence->doesRecur() ) {
     return i18n( "No recurrence" );
-
-     // recurrence
+  }
   QStringList dayList;
   dayList.append( i18n( "31st Last" ) );
   dayList.append( i18n( "30th Last" ) );
@@ -3557,93 +3566,231 @@ QString IncidenceFormatter::recurrenceString(Incidence * incidence)
   dayList.append( i18n( "3rd" ) );
   dayList.append( i18n( "4th" ) );
   dayList.append( i18n( "5th" ) );
+  dayList.append( i18n( "6th" ) );
+  dayList.append( i18n( "7th" ) );
+  dayList.append( i18n( "8th" ) );
+  dayList.append( i18n( "9th" ) );
+  dayList.append( i18n( "10th" ) );
+  dayList.append( i18n( "11th" ) );
+  dayList.append( i18n( "12th" ) );
+  dayList.append( i18n( "13th" ) );
+  dayList.append( i18n( "14th" ) );
+  dayList.append( i18n( "15th" ) );
+  dayList.append( i18n( "16th" ) );
+  dayList.append( i18n( "17th" ) );
+  dayList.append( i18n( "18th" ) );
+  dayList.append( i18n( "19th" ) );
+  dayList.append( i18n( "20th" ) );
+  dayList.append( i18n( "21st" ) );
+  dayList.append( i18n( "22nd" ) );
+  dayList.append( i18n( "23rd" ) );
+  dayList.append( i18n( "24th" ) );
+  dayList.append( i18n( "25th" ) );
+  dayList.append( i18n( "26th" ) );
+  dayList.append( i18n( "27th" ) );
+  dayList.append( i18n( "28th" ) );
+  dayList.append( i18n( "29th" ) );
+  dayList.append( i18n( "30th" ) );
+  dayList.append( i18n( "31st" ) );
+  int weekStart = KGlobal::locale()->weekStartDay();
+  QString dayNames;
+  QString recurStr, txt;
+  const KCalendarSystem *calSys = KGlobal::locale()->calendar();
+  Recurrence *recur = incidence->recurrence();
+  switch ( recur->recurrenceType() ) {
+  case Recurrence::rNone:
+    return i18n( "No recurrence" );
 
-  QString recurString;
-  const KCalendarSystem *calSys = KGlobal::locale()->calendar();;
+  case Recurrence::rMinutely:
+    recurStr = i18n( "Recurs every minute", "Recurs every %n minutes", recur->frequency() );
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 until %2" ).arg( recurStr ).arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    return recurStr;
 
-  Recurrence *recurs = incidence->recurrence();
-  switch ( recurs->recurrenceType() ) {
+  case Recurrence::rHourly:
+    recurStr = i18n( "Recurs hourly", "Recurs every %n hours", recur->frequency() );
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 until %2" ).arg( recurStr ).arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    return recurStr;
 
-      case Recurrence::rNone:
-          recurString = i18n( "no recurrence", "None" );
-          break;
-      case Recurrence::rDaily:
-          recurString = i18n( "Every day", "Every %n days", recurs->frequency() );
-          break;
-      case Recurrence::rWeekly:
-      {
-          QString dayNames;
-          // Respect start of week setting
-          int weekStart = KGlobal::locale()->weekStartDay();
-          bool addSpace = false;
-          for ( int i = 0; i < 7; ++i ) {
-              if ( recurs->days().testBit( (i+weekStart+6)%7 )) {
-                  if (addSpace) dayNames.append(" ");
-                  dayNames.append( calSys->weekDayName( ((i+weekStart+6)%7)+1, true ) );
-                  addSpace=true;
-              }
-          }
-          recurString = i18n( "Every week on %1",
-                              "Every %n weeks on %1",
-                              recurs->frequency()).arg( dayNames );
-          break;
-      }
-      case Recurrence::rMonthlyPos:
-      {
-          KCal::RecurrenceRule::WDayPos rule = recurs->monthPositions()[0];
-          recurString = i18n( "Every month on the %1 %2",
-                              "Every %n months on the %1 %2",
-                              recurs->frequency() ).arg(dayList[rule.pos() + 31]).arg(
-                                      calSys->weekDayName( rule.day(),false ) );
-          break;
-      }
-      case Recurrence::rMonthlyDay:
-      {
-          int days = recurs->monthDays()[0];
-          if (days < 0) {
-              recurString = i18n( "Every month on the %1 day",
-                                  "Every %n months on the %1 day",
-                                  recurs->frequency() ).arg( dayList[days + 31] );
-          } else {
-              recurString = i18n( "Every month on day %1",
-                                  "Every %n months on day %1",
-                                  recurs->frequency() ).arg( recurs->monthDays()[0] );
-          }
-          break;
-      }
+  case Recurrence::rDaily:
+    recurStr = i18n( "Recurs daily", "Recurs every %n days", recur->frequency() );
+    if ( recur->duration() != -1 ) {
 
-      case Recurrence::rYearlyMonth:
-      {
-          recurString = i18n( "Every year on day %1 of %2",
-                              "Every %n years on day %1 of %2",
-                              recurs->frequency() )
-                  .arg(recurs->yearDates()[0])
-                  .arg(calSys->monthName( recurs->yearMonths()[0], recurs->startDate().year() ) );
-          break;
+      txt = i18n( "%1 until %2" ).arg( recurStr ).arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
       }
-      case Recurrence::rYearlyPos:
-      {
-          KCal::RecurrenceRule::WDayPos rule = recurs->yearPositions()[0];
-          recurString = i18n( "Every year on the %1 %2 of %3",
-                              "Every %n years on the %1 %2of %3",
-                              recurs->frequency()).arg( dayList[rule.pos() + 31] )
-                  .arg( calSys->weekDayName( rule.day(), false ))
-                  .arg( calSys->monthName( recurs->yearMonths()[0], recurs->startDate().year() ) );
-          break;
-      }
-      case Recurrence::rYearlyDay:
-      {
-          recurString = i18n( "Every year on day %1",
-                              "Every %n years on day %1",
-                              recurs->frequency()).arg( recurs->yearDays()[0] );
-          break;
-      }
+      return txt;
+    }
+    return recurStr;
 
-      default:
-          return i18n( "Incidence recurs" );
+  case Recurrence::rWeekly:
+  {
+    recurStr = i18n( "Recurs weekly", "Recurs every %n weeks", recur->frequency() );
+
+    bool addSpace = false;
+    for ( int i = 0; i < 7; ++i ) {
+      if ( recur->days().testBit( ( i + weekStart + 6 ) % 7 ) ) {
+        if ( addSpace ) {
+          dayNames.append( i18n( "separator for list of days", ", " ) );
+        }
+        dayNames.append( calSys->weekDayName( ( ( i + weekStart + 6 ) % 7 ) + 1, true ) );
+        addSpace = true;
+      }
+    }
+    if ( dayNames.isEmpty() ) {
+      dayNames = i18n( "Recurs weekly on no days", "no days" );
+    }
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 on %2 until %3" ).
+            arg( recurStr ).arg( dayNames ).arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    txt = i18n( "%1 on %2" ).arg( recurStr ).arg( dayNames );
+    return txt;
   }
 
-  return recurString;
+  case Recurrence::rMonthlyPos:
+  {
+    recurStr = i18n( "Recurs monthly", "Recurs every %n months", recur->frequency() );
+
+    KCal::RecurrenceRule::WDayPos rule = recur->monthPositions()[0];
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 on the %2 %3 until %4" ).
+            arg( recurStr ).
+            arg( dayList[rule.pos() + 31] ).
+            arg( calSys->weekDayName( rule.day(), false ) ).
+            arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    txt = i18n( "%1 on the %2 %3" ).
+          arg( recurStr ).
+          arg( dayList[rule.pos() + 31] ).
+          arg( calSys->weekDayName( rule.day(), false ) );
+    return txt;
+  }
+
+  case Recurrence::rMonthlyDay:
+  {
+    recurStr = i18n( "Recurs monthly", "Recurs every %n months", recur->frequency() );
+
+    int days = recur->monthDays()[0];
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 on the %2 day until %3" ).
+            arg( recurStr ).
+            arg( dayList[days + 31] ).
+            arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    txt = i18n( "%1 on the %2 day" ).arg( recurStr ).arg( dayList[days + 31] );
+    return txt;
+  }
+
+  case Recurrence::rYearlyMonth:
+  {
+    recurStr = i18n( "Recurs yearly", "Recurs every %n years", recur->frequency() );
+
+    if ( recur->duration() != -1 ) {
+      if ( !recur->yearDates().isEmpty() ) {
+        txt = i18n( "%1 on %2 %3 until %4" ).
+              arg( recurStr ).
+              arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) ).
+              arg( dayList[ recur->yearDates()[0] + 31 ] ).
+              arg( recurEnd( incidence ) );
+        if ( recur->duration() >  0 ) {
+          txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+        }
+        return txt;
+      }
+    }
+    if ( !recur->yearDates().isEmpty() ) {
+      txt = i18n( "%1 on %2 %3" ).
+            arg( recurStr ).
+            arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) ).
+            arg( dayList[ recur->yearDates()[0] + 31 ] );
+      return txt;
+    } else {
+      if ( !recur->yearMonths().isEmpty() ) {
+        txt = i18n( "Recurs yearly on %1 %2" ).
+              arg( calSys->monthName( recur->yearMonths()[0],
+                                      recur->startDate().year() ) ).
+              arg( dayList[ recur->startDate().day() + 31 ] );
+      } else {
+        txt = i18n( "Recurs yearly on %1 %2" ).
+              arg( calSys->monthName( recur->startDate().month(),
+                                      recur->startDate().year() ) ).
+              arg( dayList[ recur->startDate().day() + 31 ] );
+      }
+      return txt;
+    }
+  }
+
+  case Recurrence::rYearlyDay:
+  {
+    recurStr = i18n( "Recurs yearly", "Recurs every %n years", recur->frequency() );
+
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 on day %2 until %3" ).
+            arg( recurStr ).
+            arg( recur->yearDays()[0] ).
+            arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    txt = i18n( "%1 on day %2" ).arg( recurStr ).arg( recur->yearDays()[0] );
+    return txt;
+  }
+
+  case Recurrence::rYearlyPos:
+  {
+    recurStr = i18n( "Every year", "Every %n years", recur->frequency() );
+
+    KCal::RecurrenceRule::WDayPos rule = recur->yearPositions()[0];
+    if ( recur->duration() != -1 ) {
+      txt = i18n( "%1 on the %2 %3 of %4 until %5" ).
+            arg( recurStr ).
+            arg( dayList[rule.pos() + 31] ).
+            arg( calSys->weekDayName( rule.day(), false ) ).
+            arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) ).
+            arg( recurEnd( incidence ) );
+      if ( recur->duration() >  0 ) {
+        txt += i18n( " (%1 occurrences)" ).arg( recur->duration() );
+      }
+      return txt;
+    }
+    txt = i18n( "%1 on the %2 %3 of %4" ).
+          arg( recurStr ).
+          arg( dayList[rule.pos() + 31] ).
+          arg( calSys->weekDayName( rule.day(), false ) ).
+          arg( calSys->monthName( recur->yearMonths()[0], recur->startDate().year() ) );
+    return txt;
+  }
+
+  default:
+    return i18n( "Incidence recurs" );
+  }
 }
 
 QString IncidenceFormatter::timeToString( const QDateTime &date, bool shortfmt )
