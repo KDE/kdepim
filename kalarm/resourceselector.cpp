@@ -86,8 +86,6 @@ ResourceSelector::ResourceSelector(AlarmResources* calendar, QWidget* parent)
 	ResourceFilterModel* filterModel = new ResourceFilterModel(model, this);
 	mListView = new ResourceView(this);
 	mListView->setModel(filterModel);
-	ResourceDelegate* delegate = new ResourceDelegate(mListView);
-	mListView->setItemDelegate(delegate);
 	connect(mListView->selectionModel(), SIGNAL(selectionChanged(const QItemSelection&,const QItemSelection&)), SLOT(selectionChanged()));
 	mListView->setContextMenuPolicy(Qt::CustomContextMenu);
 	connect(mListView, SIGNAL(customContextMenuRequested(const QPoint&)), SLOT(contextMenuRequested(const QPoint&)));

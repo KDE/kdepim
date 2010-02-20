@@ -445,6 +445,7 @@ void ResourceView::setModel(QAbstractItemModel* model)
 {
 	model->setData(QModelIndex(), viewOptions().font, Qt::FontRole);
 	QListView::setModel(model);
+	setItemDelegate(new ResourceDelegate(this));
 }
 
 /******************************************************************************
