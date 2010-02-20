@@ -30,7 +30,7 @@ class QItemSelectionModel;
 
 class CheckableItemProxyModelPrivate;
 
-class AKONADI_NEXT_EXPORT CheckableItemProxyModel : QSortFilterProxyModel
+class AKONADI_NEXT_EXPORT CheckableItemProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 public:
