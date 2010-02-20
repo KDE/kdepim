@@ -24,6 +24,7 @@ set( akonadi_next_SRCS
   collectionchildorderattribute.cpp
   modeltest.cpp
   quotacolorproxymodel.cpp
+  checkableitemproxymodel.cpp
   # TODO Move this to akonadi-kabc
   contactsmodel.cpp
   # TODO Move this to akonadi-mail?
