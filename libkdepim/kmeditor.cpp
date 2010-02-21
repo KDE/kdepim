@@ -362,8 +362,8 @@ bool KMeditor::checkExternalEditorFinished()
   int ret = KMessageBox::warningYesNoCancel(
     topLevelWidget(),
     i18nc( "@info",
-           "The external editor is still running.<nl>"
-           "Do you want to stop the editor or keep it running?</nl>"
+           "The external editor is still running.<nl/>"
+           "Do you want to stop the editor or keep it running?<nl/>"
            "<warning>Stopping the editor will cause all your "
            "unsaved changes to be lost.</warning>" ),
     i18nc( "@title:window", "External Editor Running" ),
