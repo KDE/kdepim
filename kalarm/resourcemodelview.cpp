@@ -1,7 +1,7 @@
 /*
  *  resourcemodelview.cpp  -  model/view classes for alarm resource lists
  *  Program:  kalarm
- *  Copyright © 2007-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2007-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ QVariant ResourceModel::data(const QModelIndex& index, int role) const
 			QString name = '@' + resource->resourceName();   // insert markers for stripping out name
 			QString type = '@' + resource->displayType();
 			bool inactive = !resource->isActive();
-			QString disabled = i18nc("@info/plain", "Disabled");
+			QString disabled = resource->isWrongAlarmType() ? i18nc("@info/plain", "Disabled (wrong alarm type)") : i18nc("@info/plain", "Disabled");
 			QString readonly = i18nc("@info/plain", "Read-only");
 			if (inactive  &&  resource->readOnly())
 				return i18nc("@info:tooltip",

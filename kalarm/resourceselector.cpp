@@ -1,7 +1,7 @@
 /*
  *  resourceselector.cpp  -  calendar resource selection widget
  *  Program:  kalarm
- *  Copyright © 2006-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2006-2010 by David Jarvie <djarvie@kde.org>
  *  Based on KOrganizer's ResourceView class and KAddressBook's ResourceSelection class,
  *  Copyright (C) 2003,2004 Cornelius Schumacher <schumacher@kde.org>
  *  Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
@@ -114,6 +114,8 @@ ResourceSelector::ResourceSelector(AlarmResources* calendar, QWidget* parent)
 	connect(mAddButton, SIGNAL(clicked()), SLOT(addResource()));
 	connect(mEditButton, SIGNAL(clicked()), SLOT(editResource()));
 	connect(mDeleteButton, SIGNAL(clicked()), SLOT(removeResource()));
+
+	connect(mCalendar, SIGNAL(resourceStatusChanged(AlarmResource*, AlarmResources::Change)), SLOT(slotStatusChanged(AlarmResource*, AlarmResources::Change)));
 
 	connect(mAlarmType, SIGNAL(activated(int)), SLOT(alarmTypeSelected()));
 	QTimer::singleShot(0, this, SLOT(alarmTypeSelected()));
@@ -444,6 +446,32 @@ void ResourceSelector::setStandard()
 		}
 		else
 			resource->setStandardResource(false);
+	}
+}
+
+/******************************************************************************
+* Called when a resource status has changed.
+*/
+void ResourceSelector::slotStatusChanged(AlarmResource* resource, AlarmResources::Change change)
+{
+	if (change == AlarmResources::WrongType  &&  resource->isWrongAlarmType())
+	{
+		QString text;
+		switch (resource->alarmType())
+		{
+			case AlarmResource::ACTIVE:
+				text = i18nc("@info/plain", "It is not an active alarm calendar.");
+				break;
+			case AlarmResource::ARCHIVED:
+				text = i18nc("@info/plain", "It is not an archived alarm calendar.");
+				break;
+			case AlarmResource::TEMPLATE:
+				text = i18nc("@info/plain", "It is not an alarm template calendar.");
+				break;
+			default:
+				return;
+		}
+		KMessageBox::sorry(this, i18nc("@info", "<para>Calendar <resource>%1</resource> has been disabled:</para><para>%2</para>", resource->resourceName(), text));
 	}
 }
 

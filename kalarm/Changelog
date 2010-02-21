@@ -1,6 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.4.2 --- 30 January 2010 ===
+=== Version 2.4.3 --- 21 February 2010 ===
+- Disable resource calendars which contain only wrong alarm types.
+
+=== Version 2.4.2 (KDE 4.4.0) --- 30 January 2010 ===
 - Fix non-ASCII text being corrupted in emails sent by KAlarm.
 - Show error message if selected email identity has no email address.
 
