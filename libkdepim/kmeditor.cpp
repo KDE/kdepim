@@ -575,12 +575,12 @@ bool KMeditor::replaceSignature( const KPIMIdentities::Signature &oldSig,
                                  const KPIMIdentities::Signature &newSig )
 {
   bool found = false;
-  QTextCursor cursor( document() );
-  cursor.beginEditBlock();
-
   QString oldSigText = oldSig.toPlainText();
   if ( oldSigText.isEmpty() )
     return false;
+
+  QTextCursor cursor( document() );
+  cursor.beginEditBlock();
   int currentSearchPosition = 0;
   forever {
 
