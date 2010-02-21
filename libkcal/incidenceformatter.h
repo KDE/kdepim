@@ -89,6 +89,13 @@ class LIBKCAL_EXPORT IncidenceFormatter
     */
     static QString resourceString( Calendar *calendar, Incidence *incidence );
 
+    /**
+      Returns a duration string computed for the specified Incidence.
+      Only makes sense for Events and Todos.
+      @param incidence is a pointer to the Incidence.
+    */
+    static QString durationString( Incidence *incidence );
+
   private:
     static QString formatICalInvitationHelper( QString invitation,
                                                Calendar *mCalendar,
