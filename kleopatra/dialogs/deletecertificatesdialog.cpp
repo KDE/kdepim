@@ -93,7 +93,7 @@ private:
         explicit UI( DeleteCertificatesDialog * qq )
             : selectedLB( i18n( "These are the certificates you have selected for deletion:" ), qq ),
               selectedKTV( qq ),
-              unselectedLB( i18n("These certificates will be deleted even though you did <emphasis>not</emphasis><nl> "
+              unselectedLB( i18n("These certificates will be deleted even though you did <emphasis>not</emphasis><nl/> "
                                  "explicitly select them (<a href=\"whatsthis://\">Why?</a>):"), qq ),
               unselectedKTV( qq ),
               buttonBox( QDialogButtonBox::Ok|QDialogButtonBox::Cancel ),
