@@ -47,6 +47,7 @@
 # include <selftest/uiservercheck.h>
 #endif
 #include <selftest/gpgagentcheck.h>
+#include <selftest/libkleopatrarccheck.h>
 
 #include <utils/stl_util.h>
 
@@ -146,6 +147,7 @@ private:
 #ifndef Q_OS_WIN
         tests.push_back( makeGpgAgentConnectivitySelfTest() );
 #endif
+        tests.push_back( makeLibKleopatraRcSelfTest() );
 
         if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
             finished();

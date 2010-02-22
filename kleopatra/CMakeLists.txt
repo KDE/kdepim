@@ -144,6 +144,7 @@ set( _kleopatra_SRCS
   selftest/enginecheck.cpp
   selftest/gpgconfcheck.cpp
   selftest/gpgagentcheck.cpp
+  selftest/libkleopatrarccheck.cpp
 
   smartcard/readerstatus.cpp
 
