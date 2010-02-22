@@ -47,7 +47,7 @@ void CalFormat::clearException()
   mException = 0;
 }
 
-void CalFormat::setException(ErrorFormat *exception)
+void CalFormat::setException( ErrorFormat *exception )
 {
   delete mException;
   mException = exception;

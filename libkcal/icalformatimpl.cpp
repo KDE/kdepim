@@ -2034,6 +2034,14 @@ bool ICalFormatImpl::populate( Calendar *cal, icalcomponent *calendar)
     return false;
   } else {
     const char *version = icalproperty_get_version(p);
+    if ( !version ) {
+      kdDebug(5800) << "No VERSION property found" << endl;
+      mParent->setException( new ErrorFormat(
+                               ErrorFormat::CalVersionUnknown,
+                               i18n( "No VERSION property found" ) ) );
+      return false;
+    }
+
 //    kdDebug(5800) << "VCALENDAR version: '" << version << "'" << endl;
 
     if (strcmp(version,"1.0") == 0) {

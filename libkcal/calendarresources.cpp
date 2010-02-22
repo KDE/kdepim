@@ -117,15 +117,28 @@ void CalendarResources::init( const QString &family )
   mStandardPolicy = new StandardDestinationPolicy( mManager );
   mAskPolicy = new AskDestinationPolicy( mManager );
   mDestinationPolicy = mStandardPolicy;
+  mException = 0;
   mPendingDeleteFromResourceMap = false;
 }
 
 CalendarResources::~CalendarResources()
 {
   close();
+  clearException();
   delete mManager;
   delete mStandardPolicy;
   delete mAskPolicy;
+}
+
+void CalendarResources::clearException()
+{
+  delete mException;
+  mException = 0;
+}
+
+ErrorFormat *CalendarResources::exception()
+{
+  return mException;
 }
 
 void CalendarResources::readConfig( KConfig *config )
@@ -293,6 +306,8 @@ bool CalendarResources::addIncidence( Incidence *incidence )
 {
   kdDebug(5800) << "CalendarResources::addIncidence" << this << endl;
 
+  clearException();
+
   ResourceCalendar *resource = mDestinationPolicy->destination( incidence );
 
   if ( resource ) {
@@ -310,8 +325,9 @@ bool CalendarResources::addIncidence( Incidence *incidence )
     } else {
       mResourceMap.remove( incidence );
     }
-  } else
-    kdDebug(5800) << "CalendarResources::addIncidence(): no resource" << endl;
+  } else {
+    mException = new ErrorFormat( ErrorFormat::UserCancel );
+  }
 
   return false;
 }

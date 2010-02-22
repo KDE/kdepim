@@ -33,6 +33,7 @@
 #include <qmap.h>
 
 #include "calendar.h"
+#include "exceptions.h"
 #include "resourcecalendar.h"
 
 #include "libkcal_export.h"
@@ -167,6 +168,17 @@ class LIBKCAL_EXPORT CalendarResources :
        Destructor
     */
     ~CalendarResources();
+
+    /**
+      Clears the exception status.
+    */
+    void clearException();
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+    */
+    ErrorFormat *exception();
 
     /**
        Loads all Incidences from the Resources.  The Resources must be added
@@ -748,6 +760,7 @@ class LIBKCAL_EXPORT CalendarResources :
 
     QMap<ResourceCalendar *, Ticket *> mTickets;
     QMap<ResourceCalendar *, int> mChangeCounts;
+    ErrorFormat *mException;
 
     class Private;
     Private *d;

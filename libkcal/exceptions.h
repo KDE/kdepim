@@ -47,9 +47,9 @@ class Exception
 
     /**
       Return descriptive message of exception.
-    */    
+    */
     virtual QString message();
-    
+
   protected:
     QString mMessage;
 
@@ -64,18 +64,27 @@ class Exception
 class ErrorFormat : public Exception
 {
   public:
-    enum ErrorCodeFormat { LoadError, SaveError,
-                           ParseErrorIcal, ParseErrorKcal,
-                           NoCalendar,
-                           CalVersion1,CalVersion2,
-                           CalVersionUnknown,
-                           Restriction };
-  
+    /**
+      The different types of Calendar format errors.
+    */
+    enum ErrorCodeFormat {
+      LoadError,         /**< Load error */
+      SaveError,         /**< Save error */
+      ParseErrorIcal,    /**< Parse error in libical */
+      ParseErrorKcal,    /**< Parse error in libkcal */
+      NoCalendar,        /**< No calendar component found */
+      CalVersion1,       /**< vCalendar v1.0 detected */
+      CalVersion2,       /**< iCalendar v2.0 detected */
+      CalVersionUnknown, /**< Unknown calendar format detected */
+      Restriction,       /**< Restriction violation */
+      UserCancel         /**< User canceled the operation */
+    };
+
     /**
       Create format error exception.
     */
     ErrorFormat( ErrorCodeFormat code, const QString &message = QString::null );
-    
+
     /**
       Return format error message.
     */
@@ -84,7 +93,7 @@ class ErrorFormat : public Exception
       Return format error code.
     */
     ErrorCodeFormat errorCode();
-    
+
   private:
     ErrorCodeFormat mCode;
 

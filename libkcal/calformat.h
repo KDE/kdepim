@@ -95,7 +95,7 @@ class LIBKCAL_EXPORT CalFormat
       Set exception for this object. This is used by the functions of this
       class to report errors.
     */
-    void setException(ErrorFormat *error);
+    void setException( ErrorFormat *error );
 
   protected:
     QString mLoadedProductId;         // PRODID string loaded from calendar file
