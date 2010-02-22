@@ -38,6 +38,7 @@
 
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <Nepomuk/Tag>
 
 #include <QStackedWidget>
 #include <QString>
@@ -461,8 +462,12 @@ namespace {
     if ( number == 2 ) {
       KComboBox *combo =  new KComboBox( valueStack );
       combo->setObjectName( "categoryCombo" );
-      QStringList categories = KabcBridge::categories();
-      combo->addItems( categories );
+      foreach ( const Nepomuk::Tag &tag, Nepomuk::Tag::allTags() ) {
+        if ( tag.genericIcon().isEmpty() )
+          combo->addItem( tag.label(), tag.resourceUri() );
+        else
+          combo->addItem( KIcon( tag.genericIcon() ), tag.label(), tag.resourceUri() );
+      }
       QObject::connect( combo, SIGNAL( activated( int ) ),
                         receiver, SLOT( slotValueChanged() ) );
       return combo;

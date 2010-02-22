@@ -125,29 +125,3 @@ QString KabcBridge::expandNickName( const QString& nickName )
 
   return QString();
 }
-
-
-//-----------------------------------------------------------------------------
-
-QStringList KabcBridge::categories()
-{
-  QStringList allcategories, aux;
-
-  //TODO: Retrieve the categories from Nepomuk directly?!?
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  if ( !job->exec() )
-    return QStringList();
-
-  const KABC::Addressee::List contacts = job->contacts();
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    aux = contact.categories();
-    for ( QStringList::ConstIterator itAux = aux.constBegin();
-          itAux != aux.constEnd(); ++itAux ) {
-      // don't have duplicates in allcategories
-      if ( !allcategories.contains( *itAux )  )
-        allcategories += *itAux;
-    }
-  }
-
-  return allcategories;
-}
