@@ -3,6 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
 ########### next target ###############
 
+if ( QT_QT3SUPPORT_FOUND )
 set(test_keylister_SRCS test_keylister.cpp )
 
 kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
@@ -15,6 +16,7 @@ target_link_libraries(test_keylister
     ${QGPGME_LIBRARIES}
     ${QT_QTGUI_LIBRARY}
     ${QT_QT3SUPPORT_LIBRARY} )
+endif( QT_QT3SUPPORT_FOUND )
 
 
 ########### next target ###############
