@@ -72,11 +72,11 @@ static const bool HAVE_WINDOWS = false;
 
 namespace {
 
-    class ArchiveDefinitionError : Kleo::Exception {
+    class ArchiveDefinitionError : public Kleo::Exception {
         const QString m_id;
     public:
         ArchiveDefinitionError( const QString & id, const QString & message )
-            : Kleo::Exception( GPG_ERR_INV_PARAMETER, i18n("Error in archive definition %1: %2").arg( id, message ) ),
+            : Kleo::Exception( GPG_ERR_INV_PARAMETER, i18n("Error in archive definition %1: %2", id, message ), MessageOnly ),
               m_id( id )
         {
 
@@ -163,6 +163,12 @@ shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) co
 
 // static
 std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefinitions() {
+    QStringList errors;
+    return getArchiveDefinitions( errors );
+}
+
+// static
+std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefinitions( QStringList & errors ) {
     std::vector< shared_ptr<ArchiveDefinition> > result;
     if ( KConfig * config = CryptoBackendFactory::instance()->configObject() ) {
         const QStringList groups = config->groupList().filter( QRegExp(QLatin1String("^Archive Definition #")) );
@@ -173,6 +179,9 @@ std::vector< shared_ptr<ArchiveDefinition> > ArchiveDefinition::getArchiveDefini
                 result.push_back( ad );
             } catch ( const std::exception & e ) {
                 qDebug() << e.what();
+                errors.push_back( QString::fromLocal8Bit( e.what() ) );
+            } catch ( ... ) {
+                errors.push_back( i18n("Caught unknown exception in group %1", group ) );
             }
     }
     return result;
