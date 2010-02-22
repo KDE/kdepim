@@ -331,6 +331,7 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent )
   mModel = new ContactListModel( mResultView );
   mResultView->setModel( mModel );
   mResultView->verticalHeader()->hide();
+  connect( mResultView, SIGNAL( clicked ( const QModelIndex & ) ), SLOT( slotSelectionChanged() ) );
   topLayout->addWidget( mResultView );
 
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
@@ -357,7 +358,7 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent )
   mSearchEdit->setFocus();
   connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
   connect(this,SIGNAL(user2Clicked()),this,SLOT(slotUser2()));
-
+  slotSelectionChanged();
   restoreSettings();
 }
 
@@ -370,6 +371,11 @@ LDAPSearchDialog::~LDAPSearchDialog()
 KABC::Addressee::List LDAPSearchDialog::selectedContacts() const
 {
   return mSelectedContacts;
+}
+
+void LDAPSearchDialog::slotSelectionChanged()
+{
+  enableButton( KDialog::User1, mResultView->selectionModel()->hasSelection () );
 }
 
 void LDAPSearchDialog::restoreSettings()

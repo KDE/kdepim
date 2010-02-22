@@ -61,6 +61,7 @@ class LDAPSearchDialog : public KDialog
     void slotError( const QString& );
     void slotSelectAll();
     void slotUnselectAll();
+    void slotSelectionChanged();
 
   private:
     void saveSettings();
