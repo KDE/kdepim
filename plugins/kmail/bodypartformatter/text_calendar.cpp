@@ -597,11 +597,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         } else {
           file = new KTempFile( QString::null, QString::null, 0600 );
         }
-        QByteArray encoded;
-        encoded.duplicate( a->data(), strlen(a->data()) );
-        QByteArray decoded;
-        KCodecs::base64Decode( encoded, decoded );
-        KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
+        file->setAutoDelete( true );
+        file->file()->open( IO_WriteOnly );
+        QTextStream stream( file->file() );
+        stream.writeRawBytes( a->decodedData().data(), a->size() );
         file->close();
 
         bool stat = KRun::runURL( KURL( file->name() ), a->mimeType(), 0, true );
@@ -646,11 +645,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         } else {
           file = new KTempFile( QString::null, QString::null, 0600 );
         }
-        QByteArray encoded;
-        encoded.duplicate( a->data(), strlen(a->data()) );
-        QByteArray decoded;
-        KCodecs::base64Decode( encoded, decoded );
-        KPIM::kByteArrayToFile( decoded, file->name(), false, false, false );
+        file->setAutoDelete( true );
+        file->file()->open( IO_WriteOnly );
+        QTextStream stream( file->file() );
+        stream.writeRawBytes( a->decodedData().data(), a->size() );
         file->close();
 
         stat = KIO::NetAccess::file_copy( KURL( file->name() ), KURL( saveAsFile ), -1, true );
