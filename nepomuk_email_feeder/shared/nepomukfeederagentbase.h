@@ -167,7 +167,6 @@ class NepomukFeederAgentBase : public Akonadi::AgentBase, public Akonadi::AgentB
     void itemFetchResult( KJob* job );
 
     void selfTest();
-    void serviceOwnerChanged( const QString &name, const QString &oldOwner, const QString &newOwner );
 
   private:
     QStringList mSupportedMimeTypes;
