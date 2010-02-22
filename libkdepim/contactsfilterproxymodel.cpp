@@ -168,6 +168,9 @@ static bool contactMatchesFilter( const KABC::Addressee &contact, const QString 
 
 bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString )
 {
+  if ( group.name().contains( filterString, Qt::CaseInsensitive ) )
+    return true;
+
   const int count = group.dataCount();
   for ( int i = 0; i < count; ++i ) {
     if ( group.data( i ).name().contains( filterString, Qt::CaseInsensitive ) )
