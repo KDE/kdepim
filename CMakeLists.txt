@@ -226,7 +226,9 @@ set(libkdgantt1_SRCS
     # The following components depend on QGpgME.
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
-    macro_optional_add_subdirectory(kmail)
+    if (QT_QT3SUPPORT_FOUND)
+      macro_optional_add_subdirectory(kmail)
+    endif (QT_QT3SUPPORT_FOUND)
 
     if(KDEPIM_BUILD_EXAMPLES)
       add_subdirectory(examples)
@@ -240,7 +242,9 @@ set(libkdgantt1_SRCS
 
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
-    macro_optional_add_subdirectory(korganizer)
+    if (QT_QT3SUPPORT_FOUND)
+      macro_optional_add_subdirectory(korganizer)
+    endif (QT_QT3SUPPORT_FOUND)
 
     add_subdirectory( nepomuk_email_feeder )
   endif(QGPGME_FOUND)
@@ -275,7 +279,9 @@ set(libkdgantt1_SRCS
     macro_optional_add_subdirectory(ktimetracker)
   endif(Q_WS_X11)
 
-  macro_optional_add_subdirectory(kontact) # must be the last one.
+  if (QT_QT3SUPPORT_FOUND)
+    macro_optional_add_subdirectory(kontact) # must be the last one.
+  endif (QT_QT3SUPPORT_FOUND)
 
   # These targets depend on optional applications
   add_subdirectory(kresources) # Must be after KAddressbook

@@ -21,6 +21,7 @@ install(TARGETS messageviewer_bodypartformatter_text_vcard  DESTINATION ${PLUGIN
 
 
 ########### next target ###############
+if (QT_QT3SUPPORT_FOUND)
 set(messageviewer_bodypartformatter_text_calendar_PART_SRCS text_calendar.cpp delegateselector.cpp attendeeselector.cpp)
 
 qt4_add_dbus_interfaces(messageviewer_bodypartformatter_text_calendar_PART_SRCS
@@ -48,7 +49,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
 )
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
-
+endif (QT_QT3SUPPORT_FOUND)
 
 ########### next target ###############
 
