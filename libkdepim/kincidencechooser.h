@@ -24,44 +24,40 @@
 #ifndef _KINCIDENCECHOOSER_H
 #define _KINCIDENCECHOOSER_H
 
+#include "calendardiffalgo.h"
+#include "htmldiffalgodisplay.h"
 
 #include <kdialogbase.h>
-#include <qptrlist.h>
-#include <qmutex.h>
-#include <kdepimmacros.h>
 
-#include <libkcal/incidence.h>
-#include "htmldiffalgodisplay.h"
-#include "calendardiffalgo.h"
+namespace KCal {
+  class Incidence;
+}
+using namespace KCal;
 
-
-class QRadioButton;
 class QButtonGroup;
-class QVBox;
-class QStringList;
-class QTextBrowser;
-class KDialogBase;
 
 /** Dialog to change the korganizer configuration.
   */
 
 class KDE_EXPORT KIncidenceChooser : public KDialog
 {
-    Q_OBJECT
-public:
-    enum mode { local, remote, newest, ask, both };
+  Q_OBJECT
+  public:
+    enum mode {
+      local, remote, newest, ask, both
+    };
     /** Initialize dialog and pages */
-    KIncidenceChooser(QWidget *parent=0,char *name=0);
+    KIncidenceChooser( QWidget *parent=0, char *name=0 );
     ~KIncidenceChooser();
     //void setChooseText( QString );
-    void setIncidence( KCal::Incidence*,KCal::Incidence*);
-    KCal::Incidence* getIncidence();
+    void setIncidence( Incidence *, Incidence  * );
+    Incidence *getIncidence();
     static int chooseMode;
 
-public slots:
+  public slots:
     void useGlobalMode();
 
-protected slots:
+  protected slots:
     void showIncidence1();
     void showIncidence2();
     void showDiff();
@@ -72,16 +68,15 @@ protected slots:
     void setSyncMode();
     void detailsDialogClosed();
 
-protected:
-private:
-    KPIM::HTMLDiffAlgoDisplay* mDisplayDiff;
-    KPIM::CalendarDiffAlgo* diff;
-    KDialogBase* mTbL, *mTbN;
-    KCal::Incidence* choosedIncidence;
-    KCal::Incidence* mInc1, *mInc2;
+  private:
+    KPIM::HTMLDiffAlgoDisplay *mDisplayDiff;
+    KPIM::CalendarDiffAlgo *diff;
+    KDialogBase *mTbL, *mTbN;
+    Incidence *mSelIncidence;
+    Incidence *mInc1, *mInc2;
     QButtonGroup *mBg;
-    QPushButton *diffBut,*showDetails1,*showDetails2;
-    QLabel* mInc1lab, *mInc2lab,* mInc1Sumlab, *mInc2Sumlab,*mMod1lab,*mMod2lab;
+    QPushButton *mDiffBut,*mShowDetails1,*mShowDetails2;
+    QLabel *mInc1lab, *mInc2lab,* mInc1Sumlab, *mInc2Sumlab,*mMod1lab,*mMod2lab;
 
 };
 
