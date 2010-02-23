@@ -128,10 +128,25 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     break;
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
     {
-        shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
-        t->setInput( Input::createFromFile( fileName ) );
-        t->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy ) );
-        task = t;
+        const unsigned int classification = classify( fileName );
+        kDebug() << "classified" << fileName << "as" << printableClassification( classification );
+
+        const shared_ptr<Input> input = Input::createFromFile( fileName );
+        const shared_ptr<Output> output = Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( fileName ).fileName() ) ), overwritePolicy );
+
+        if ( mayBeCipherText( classification ) ) {
+            kDebug() << "creating a DecryptVerifyTask";
+            shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
+            t->setInput( input );
+            t->setOutput( output );
+            task = t;
+        } else {
+            kDebug() << "creating a VerifyOpaqueTask";
+            shared_ptr<VerifyOpaqueTask> t( new VerifyOpaqueTask );
+            t->setInput( input );
+            t->setOutput( output );
+            task = t;
+        }
 
         kleo_assert( fileName == w->inputFileName() );
     }
