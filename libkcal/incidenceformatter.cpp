@@ -544,12 +544,13 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   }
   tmpStr += "</tr>";
 
-  tmpStr += "<tr>";
-  tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
-  tmpStr += "<td>" +
-            IncidenceFormatter::durationString( event ) +
-            "</td>";
-  tmpStr += "</tr>";
+  QString durStr = IncidenceFormatter::durationString( event );
+  if ( !durStr.isEmpty() ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
+    tmpStr += "<td>" + durStr + "</td>";
+    tmpStr += "</tr>";
+  }
 
   if ( event->doesRecur() ) {
     tmpStr += "<tr>";
@@ -676,12 +677,11 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     tmpStr += "</tr>";
   }
 
-  if ( todo->hasStartDate() && todo->hasDueDate() ) {
+  QString durStr = IncidenceFormatter::durationString( todo );
+  if ( !durStr.isEmpty() ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" + i18n( "Duration:" ) + "</b></td>";
-    tmpStr += "<td>" +
-              IncidenceFormatter::durationString( todo ) +
-              "</td>";
+    tmpStr += "<td>" + durStr + "</td>";
     tmpStr += "</tr>";
   }
 
@@ -1318,8 +1318,9 @@ static QString invitationDetailsEvent( Event* event, bool noHtmlMode )
   }
 
   // Invitation Duration Row
-  if ( !event->doesFloat() && event->hasEndDate() ) {
-    html += invitationRow( i18n( "Duration:" ), IncidenceFormatter::durationString( event ) );
+  QString durStr = IncidenceFormatter::durationString( event );
+  if ( !durStr.isEmpty() ) {
+    html += invitationRow( i18n( "Duration:" ), durStr );
   }
 
   if ( event->doesRecur() )
