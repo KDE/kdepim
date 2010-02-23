@@ -439,6 +439,12 @@ namespace {
             : WizardPage( p ), dialog( this ), ui()
         {
             ui.setupUi( this );
+
+            // set errorLB to have a fixed height of two lines:
+            ui.errorLB->setText( "2<br>1" );
+            ui.errorLB->setFixedHeight( ui.errorLB->minimumSizeHint().height() );
+            ui.errorLB->clear();
+
             connect( ui.resultLE, SIGNAL(textChanged(QString)),
                      SIGNAL(completeChanged()) );
             // The email doesn't necessarily show up in ui.resultLE:
@@ -463,6 +469,12 @@ namespace {
             saveValues();
         }
 
+        struct Line {
+            QString attr;
+            QString label;
+            QString regex;
+            QLineEdit * edit;
+        };
     private:
         void updateForm();
         void clearForm();
@@ -480,7 +492,7 @@ namespace {
         }
 
     private:
-        QVector< QPair<QString,QLineEdit*> > attributePairList;
+        QVector<Line> lineList;
         QList<QWidget*> dynamicWidgets;
         QMap<QString,QString> savedValues;
         AdvancedSettingsDialog dialog;
@@ -909,12 +921,20 @@ static QString attributeLabel( const QString & attr, bool pgp ) {
   const QString label = pgp ? pgpLabel( attr ) : Kleo::DNAttributeMapper::instance()->name2label( attr ) ;
   if ( !label.isEmpty() )
       if ( pgp )
-          return label + ':';
+          return label;
       else
           return i18nc("Format string for the labels in the \"Your Personal Data\" page",
-                       "%1 (%2):", label, attr );
+                       "%1 (%2)", label, attr );
   else
-    return attr + ':';
+    return attr;
+}
+
+static QString attributeLabelWithColor( const QString & attr, bool pgp ) {
+    const QString result = attributeLabel( attr, pgp );
+    if ( result.isEmpty() )
+        return QString();
+    else
+        return result + ':';
 }
 
 static QString attributeFromKey( QString key ) {
@@ -945,14 +965,14 @@ void EnterDetailsPage::registerDialogPropertiesAsFields() {
 }
 
 void EnterDetailsPage::saveValues() {
-    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.constBegin(), end = attributePairList.constEnd() ; it != end ; ++it )
-        savedValues[ attributeFromKey(it->first) ] = it->second->text().trimmed();
+    Q_FOREACH( const Line & line, lineList )
+        savedValues[ attributeFromKey( line.attr ) ] = line.edit->text().trimmed();
 }
 
 void EnterDetailsPage::clearForm() {
     qDeleteAll( dynamicWidgets );
     dynamicWidgets.clear();
-    attributePairList.clear();
+    lineList.clear();
 
     ui.nameLE->hide();
     ui.nameLE->clear();
@@ -991,7 +1011,7 @@ static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, 
     QLabel * reqLB = qobject_cast<QLabel*>( l->itemAtPosition( row, 2 )->widget() );
     assert( reqLB );
 
-    lb->setText( label );
+    lb->setText( i18nc("interpunctation for labels", "%1:", label ) );
     le->setText( preset );
     reqLB->setText( required ? i18n("(required)") : i18n("(optional)") );
     delete le->validator();
@@ -1043,6 +1063,8 @@ void EnterDetailsPage::updateForm() {
     widgets.push_back( ui.emailLE );
     widgets.push_back( ui.commentLE );
 
+    QMap<int,Line> lines;
+
     Q_FOREACH( const QString & rawKey, attrOrder ) {
         const QString key = rawKey.trimmed().toUpper();
         const QString attr = attributeFromKey( key );
@@ -1083,7 +1105,8 @@ void EnterDetailsPage::updateForm() {
 
         QLineEdit * le = adjust_row( ui.gridLayout, row, label, preset, validator, readonly, required );
 
-        attributePairList.append( qMakePair( key, le ) );
+        const Line line = { key, label, regex, le };
+        lines[row] = line;
 
         if ( !known )
             widgets.push_back( le );
@@ -1095,6 +1118,10 @@ void EnterDetailsPage::updateForm() {
                  this, SLOT(slotUpdateResultLabel()) );
     }
 
+    // create lineList in visual order, so requirementsAreMet()
+    // complains from top to bottom:
+    lineList = kdtools::copy< QVector<Line> >( lines );
+
     widgets.push_back( ui.resultLE );
     widgets.push_back( ui.addEmailToDnCB );
     widgets.push_back( ui.advancedPB );
@@ -1104,11 +1131,11 @@ void EnterDetailsPage::updateForm() {
 
 QString EnterDetailsPage::cmsDN() const {
     DN dn;
-    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it ) {
-        const QString text = it->second->text().trimmed();
+    for ( QVector<Line>::const_iterator it = lineList.begin(), end = lineList.end() ; it != end ; ++it ) {
+        const QString text = it->edit->text().trimmed();
         if ( text.isEmpty() )
             continue;
-        QString attr = attributeFromKey( it->first );
+        QString attr = attributeFromKey( it->attr );
         if ( attr == "EMAIL" && !ui.addEmailToDnCB->isChecked() )
             continue;
         if ( const char * const oid = oidForAttributeName( attr ) )
@@ -1125,17 +1152,43 @@ QString EnterDetailsPage::pgpUserID() const {
                                            ui.commentLE->text().trimmed() );
 }
 
-static bool requirementsAreMet( const QVector< QPair<QString,QLineEdit*> > & list ) {
-    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = list.begin() ;
-          it != list.end() ; ++it ) {
-    const QLineEdit * le = (*it).second;
+static bool has_intermediate_input( const QLineEdit * le ) {
+    QString text = le->text();
+    int pos = le->cursorPosition();
+    const QValidator * const v = le->validator();
+    return v && v->validate( text, pos ) == QValidator::Intermediate ;
+}
+
+static bool requirementsAreMet( const QVector<EnterDetailsPage::Line> & list, QString & error ) {
+  Q_FOREACH( const EnterDetailsPage::Line & line, list ) {
+    const QLineEdit * le = line.edit;
     if ( !le )
       continue;
-    const QString key = (*it).first;
+    const QString key = line.attr;
     kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
-    if ( key.endsWith('!') && !le->hasAcceptableInput() ) {
-      kDebug() << "required field has non-acceptable input!";
-      return false;
+    if ( le->text().trimmed().isEmpty() ) {
+        if ( key.endsWith('!') ) {
+            if ( line.regex.isEmpty() )
+                error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
+            else
+                error = i18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
+                              "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
+            return false;
+        }
+    } else if ( has_intermediate_input( le ) ) {
+        if ( line.regex.isEmpty() )
+            error = i18nc("@info","<interface>%1</interface> is incomplete.", line.label );
+        else
+            error = i18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
+                          "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
+        return false;
+    } else if ( !le->hasAcceptableInput() ) {
+        if ( line.regex.isEmpty() )
+            error = i18nc("@info","<interface>%1</interface> is invalid.", line.label );
+        else
+            error = i18nc("@info","<interface>%1</interface> is invalid.<nl/>"
+                          "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
+        return false;
     }
     kDebug() << "ok" << endl;
   }
@@ -1143,7 +1196,10 @@ static bool requirementsAreMet( const QVector< QPair<QString,QLineEdit*> > & lis
 }
 
 bool EnterDetailsPage::isComplete() const {
-    return requirementsAreMet( attributePairList );
+    QString error;
+    const bool ok = requirementsAreMet( lineList, error );
+    ui.errorLB->setText( error );
+    return ok;
 }
 
 void EnterDetailsPage::slotAdvancedSettingsClicked() {
