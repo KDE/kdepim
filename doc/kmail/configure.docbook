@@ -708,7 +708,7 @@ buttons.</para>
 
 <para>With <guilabel>Date Display</guilabel> you can choose between several
 date formats. The <guilabel>Localized Format</guilabel> is the one you can
-specify under <guilabel>Country &amp; Language</guilabel> in &kcontrol;.
+specify under <guilabel>Country/Region &amp; Language</guilabel> in the &systemsettings;.
 For the <guilabel>Custom</guilabel> format you can get
 a description of the possible values by pressing
 <keycombo action="simul">&Shift;<keycap>F1</keycap></keycombo>

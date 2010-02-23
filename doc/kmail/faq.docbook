@@ -182,7 +182,7 @@ you delete it.</para>
 open links in messages?</para></question>
 <answer>
 <para>Change the <guilabel>File Associations</guilabel> for HTML files
-using &kcontrol;.</para>
+using &systemsettings;.</para>
 </answer>
 </qandaentry>
 
