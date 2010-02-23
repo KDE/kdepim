@@ -180,7 +180,7 @@ void CertifyCertificateCommand::doStart() {
 
     if ( secKeys.empty() ) {
         KMessageBox::error( d->parentWidgetOrView(),
-                            i18n( "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one." ),
+                            i18nc( "@info", "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one." ),
                             i18n( "Certification Not Possible" ) );
         d->finished();
         return;
