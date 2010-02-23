@@ -38,9 +38,11 @@ add_definitions ( -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -D_ASSUAN_ONLY_GPG_ERRORS
 remove_definitions ( -DQT_NO_STL )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-if (CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers" )
-endif (CMAKE_COMPILER_IS_GNUCXX)
+if (UNIX)
+  if (CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-missing-braces -Wno-parentheses -Wno-ignored-qualifiers" )
+  endif (CMAKE_COMPILER_IS_GNUCXX)
+endif (UNIX)
 
 add_subdirectory( pics )
 add_subdirectory( conf )
