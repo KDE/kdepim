@@ -221,7 +221,7 @@ namespace {
 
     QString format_keyusage( const Key & key ) {
 	QStringList capabilities;
-	if ( key.canSign() ) {
+	if ( key.canReallySign() ) {
 	    if ( key.isQualified() )
 		capabilities.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
 	    else
