@@ -3296,8 +3296,9 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
   QString tmp = "<qt>";
 
   // header
-  tmp += "<b>"+ incidence->summary().replace( "\n", "<br>" ) + "</b>";
-  tmp += "<hr>";
+  tmp += "<b>" + incidence->summary().replace( "\n", "<br>" ) + "</b>";
+  //NOTE: using <hr> seems to confuse Qt3 tooltips in some cases so use "-----"
+  tmp += "<br>----------<br>";
 
   if ( mCalendar ) {
     QString calStr = IncidenceFormatter::resourceString( mCalendar, incidence );
@@ -3315,17 +3316,31 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
     tmp += incidence->location().replace( "\n", "<br>" );
   }
 
+  QString durStr = IncidenceFormatter::durationString( incidence );
+  if ( !durStr.isEmpty() ) {
+    tmp += "<br>";
+    tmp += "<i>" + i18n( "Duration:" ) + "</i>" + "&nbsp;";
+    tmp += durStr;
+  }
+
+  if ( incidence->doesRecur() ) {
+    tmp += "<br>";
+    tmp += "<i>" + i18n( "Recurrence:" ) + "</i>" + "&nbsp;";
+    tmp += IncidenceFormatter::recurrenceString( incidence );
+  }
+
   if ( !incidence->description().isEmpty() ) {
     QString desc( incidence->description() );
     if ( desc.length() > maxDescLen ) {
       desc = desc.left( maxDescLen ) + etc;
     }
-    tmp += "<hr>";
+    tmp += "<br>----------<br>";
     tmp += "<i>" + i18n( "Description:" ) + "</i>" + "<br>";
     tmp += desc.replace( "\n", "<br>" );
+    tmp += "<br>";
   }
   if ( incidence->attendees().count() > 1 ) {
-    tmp += "<hr>";
+    tmp += "<br>----------<br>";
     tmp += tooltipFormatAttendees( incidence );
   }
 
