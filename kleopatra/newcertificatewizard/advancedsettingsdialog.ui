@@ -15,61 +15,6 @@
   <layout class="QVBoxLayout" name="verticalLayout_7" >
    <item>
     <widget class="QTabWidget" name="tabWidget" >
-     <widget class="QWidget" name="personalTab" >
-      <attribute name="title" >
-       <string>Personal Details</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout" >
-       <item row="0" column="0" colspan="2" >
-        <widget class="QGroupBox" name="uidGB" >
-         <property name="title" >
-          <string>Additional User-IDs</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6" >
-          <item>
-           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uidLW" />
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item rowspan="2" row="2" column="0" >
-        <widget class="QGroupBox" name="emailGB" >
-         <property name="title" >
-          <string>EMail Addresses</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_5" >
-          <item>
-           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="emailLW" />
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="2" column="1" >
-        <widget class="QGroupBox" name="dnsGB" >
-         <property name="title" >
-          <string>DNS Names</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4" >
-          <item>
-           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="dnsLW" />
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item row="3" column="1" >
-        <widget class="QGroupBox" name="uriGB" >
-         <property name="title" >
-          <string>URIs</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_3" >
-          <item>
-           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uriLW" />
-          </item>
-         </layout>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="technicalTab" >
       <attribute name="title" >
        <string>Technical Details</string>
@@ -239,6 +184,61 @@
           </size>
          </property>
         </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="personalTab" >
+      <attribute name="title" >
+       <string>Personal Details</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout" >
+       <item row="0" column="0" colspan="2" >
+        <widget class="QGroupBox" name="uidGB" >
+         <property name="title" >
+          <string>Additional User-IDs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uidLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item rowspan="2" row="2" column="0" >
+        <widget class="QGroupBox" name="emailGB" >
+         <property name="title" >
+          <string>EMail Addresses</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="emailLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="1" >
+        <widget class="QGroupBox" name="dnsGB" >
+         <property name="title" >
+          <string>DNS Names</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="dnsLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="1" >
+        <widget class="QGroupBox" name="uriGB" >
+         <property name="title" >
+          <string>URIs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uriLW" />
+          </item>
+         </layout>
+        </widget>
        </item>
       </layout>
      </widget>
