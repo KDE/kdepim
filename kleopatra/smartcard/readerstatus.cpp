@@ -127,24 +127,17 @@ static const char * prettyFlags[] = {
 };
 BOOST_STATIC_ASSERT(( sizeof prettyFlags/sizeof *prettyFlags == ReaderStatus::NumStates ));
 
-static ReaderStatus::Status read_status( const QString & fileName ) {
+static QByteArray read_file( const QString & fileName ) {
     QFile file( fileName );
     if ( !file.exists() ) {
-        qDebug() << "read_status: file" << fileName << "does not exist";
-        return ReaderStatus::NoCard;
+        qDebug() << "read_file: file" << fileName << "does not exist";
+        return QByteArray();
     }
     if ( !file.open( QIODevice::ReadOnly ) ) {
-        qDebug() << "read_status: failed to open" << fileName << ':' << file.errorString();
-        return ReaderStatus::NoCard;
+        qDebug() << "read_file: failed to open" << fileName << ':' << file.errorString();
+        return QByteArray();
     }
-    const QByteArray contents = file.readAll().trimmed();
-    const char ** it = std::find( begin( flags ), end( flags ), contents );
-    if ( it == end( flags ) ) {
-        qDebug() << "read_status: not found";
-        return ReaderStatus::NoCard;
-    } else {
-        return static_cast<ReaderStatus::Status>( it - begin( flags ) );
-    }
+    return file.readAll().trimmed();
 }
 
 static unsigned int parseFileName( const QString & fileName, bool * ok ) {
@@ -318,8 +311,8 @@ static bool parse_keypairinfo_and_lookup_key( Context * ctx, const std::string &
     return !e && !key.isNull();
 }
 
-static CardInfo get_more_detailed_status( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent ) {
-    qDebug() << "get_more_detailed_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
+static CardInfo get_card_status( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent ) {
+    qDebug() << "get_card_status(" << fileName << ',' << idx << ',' << gpg_agent.get() << ')';
     CardInfo ci( fileName, ReaderStatus::CardUsable );
     if ( idx != 0 || !gpg_agent )
         return ci;
@@ -333,14 +326,14 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
     if ( err.code() )
         return ci;
     if ( ci.appType != ReaderStatus::NksApplication ) {
-        qDebug() << "get_more_detailed_status: not a NetKey card, giving up";
+        qDebug() << "get_card_status: not a NetKey card, giving up";
         return ci;
     }
     ci.appVersion = parse_app_version( scd_getattr_status( gpg_agent, "NKS-VERSION", err ) );
     if ( err.code() )
         return ci;
     if ( ci.appVersion != 3 ) {
-        qDebug() << "get_more_detailed_status: not a NetKey v3 card, giving up";
+        qDebug() << "get_card_status: not a NetKey v3 card, giving up";
         return ci;
     }
 
@@ -376,46 +369,21 @@ static CardInfo get_more_detailed_status( const QString & fileName, unsigned int
     if ( kdtools::any( keyPairInfos, !bind( &parse_keypairinfo_and_lookup_key, klc.get(), _1 ) ) )
         ci.status = ReaderStatus::CardCanLearnKeys;
 
-    qDebug() << "get_more_detailed_status: ci.status " << prettyFlags[ci.status];
+    qDebug() << "get_card_status: ci.status " << prettyFlags[ci.status];
 
     return ci;
 }
 
-static CardInfo get_card_info( const QString & fileName, unsigned int idx, shared_ptr<Context> & gpg_agent, const CardInfo & oldInfo, bool force ) {
-    qDebug() << "get_card_info(" << fileName << ',' << idx << ',' << gpg_agent.get() << ',' << prettyFlags[oldInfo.status] << ',' << force << ')';
-    const ReaderStatus::Status st = read_status( fileName );
-    if ( force && gpg_agent ||
-         ( st == ReaderStatus::CardUsable || st == ReaderStatus::CardPresent ) && st != oldInfo.status && gpg_agent )
-        return get_more_detailed_status( fileName, idx, gpg_agent );
-    else
-        return CardInfo( fileName, st );
-}
-
-static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent, const std::vector<CardInfo> & oldCardInfos, bool force ) {
+static std::vector<CardInfo> update_cardinfo( const QString & gnupgHomePath, shared_ptr<Context> & gpgAgent ) {
     qDebug() << "<update_cardinfo>";
     const QDir gnupgHome( gnupgHomePath );
     if ( !gnupgHome.exists() )
         qWarning() << "update_cardinfo: gnupg home" << gnupgHomePath << "does not exist!";
 
-    QStringList files = gnupgHome.entryList( QStringList( QLatin1String( "reader_*.status" ) ), QDir::Files, QDir::Name );
-    if ( files.empty() )
-        files.push_back( QLatin1String( "reader_0.status" ) ); // not always present on Windows, so fake it
+    const CardInfo ci = get_card_status( gnupgHome.absoluteFilePath( QLatin1String( "reader_0.status" ) ), 0, gpgAgent );
 
-    std::vector<CardInfo> result;
-    result.reserve( files.size() );
-    Q_FOREACH( const QString & file, files ) {
-        bool ok = false;
-        const unsigned int idx = parseFileName( file, &ok );
-        if ( !ok ) {
-            qDebug() << "filename" << file << ": cannot parse reader slot number";
-            continue;
-        }
-        result.resize( idx );
-        result.push_back( get_card_info( gnupgHome.absoluteFilePath( file ), idx, gpgAgent,
-                                         idx < oldCardInfos.size() ? oldCardInfos[idx] : CardInfo(), force ) );
-    }
     qDebug() << "</update_cardinfo>";
-    return result;
+    return std::vector<CardInfo>( 1, ci );
 }
 
 static bool check_event_counter_changed( shared_ptr<Context> & gpg_agent, unsigned int & counter ) {
@@ -493,6 +461,41 @@ namespace {
             m_waitForTransactions.wakeOne();
         }
 
+        void slotReaderStatusFileChanged() {
+            const QDir gnupgHome( m_gnupgHomePath );
+            if ( !gnupgHome.exists() ) {
+                qWarning() << "ReaderStatusThread::slotReaderStatusFileChanged: gnupg home" << m_gnupgHomePath << "does not exist!";
+                return;
+            }
+
+            QStringList files = gnupgHome.entryList( QStringList( QLatin1String( "reader_*.status" ) ), QDir::Files, QDir::Name );
+            bool * dummy = 0;
+            kdtools::sort( files, bind( parseFileName, _1, dummy ) < bind( parseFileName, _2, dummy ) );
+
+            std::vector<QByteArray> contents;
+
+            Q_FOREACH( const QString & file, files ) {
+                bool ok = false;
+                const unsigned int idx = parseFileName( file, &ok );
+                if ( !ok ) {
+                    qDebug() << "filename" << file << ": cannot parse reader slot number";
+                    continue;
+                }
+                assert( idx >= contents.size() );
+                contents.resize( idx );
+                contents.push_back( read_file( gnupgHome.absoluteFilePath( file ) ) );
+            }
+
+            // canonicalise by removing empty stuff from the end
+            while ( !contents.empty() && contents.back().isEmpty() )
+                contents.pop_back();
+
+            if ( contents != readerStatusFileContents )
+                ping();
+
+            readerStatusFileContents.swap( contents );
+        }
+
     private Q_SLOTS:
         void slotOneTransactionFinished() {
             std::list<Transaction> ft;
@@ -555,7 +558,7 @@ namespace {
                         continue; // early out
 
                     std::vector<CardInfo> newCardInfos
-                        = update_cardinfo( m_gnupgHomePath, gpgAgent, oldCardInfos, true );
+                        = update_cardinfo( m_gnupgHomePath, gpgAgent );
 
                     newCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
                     oldCardInfos.resize( std::max( newCardInfos.size(), oldCardInfos.size() ) );
@@ -609,6 +612,7 @@ namespace {
         mutable QMutex m_mutex;
         QWaitCondition m_waitForTransactions;
         const QString m_gnupgHomePath;
+        std::vector<QByteArray> readerStatusFileContents;
         // protected by m_mutex:
         std::vector<CardInfo> m_cardInfos;
         std::list<Transaction> m_transactions, m_finishedTransactions;
@@ -644,7 +648,7 @@ public:
         connect( this, SIGNAL(anyCardCanLearnKeysChanged(bool)),
                  q, SIGNAL(anyCardCanLearnKeysChanged(bool)) );
 
-        connect( &watcher, SIGNAL(triggered()), this, SLOT(ping()) );
+        connect( &watcher, SIGNAL(triggered()), this, SLOT(slotReaderStatusFileChanged()) );
 
     }
     ~Private() {
