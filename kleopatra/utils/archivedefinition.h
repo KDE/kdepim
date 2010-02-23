@@ -62,6 +62,7 @@ namespace Kleo {
         boost::shared_ptr<Input> createInput( const QStringList & files ) const;
 
         static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions();
+        static std::vector< boost::shared_ptr<ArchiveDefinition> > getArchiveDefinitions( QStringList & errors );
 
     private:
         virtual QString doGetCommand() const = 0;
