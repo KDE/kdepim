@@ -225,8 +225,12 @@ void MessageItem::Private::fillTagList() const
   const QList< Nepomuk::Tag > nepomukTagList = resource.tags();
   if ( !nepomukTagList.isEmpty() ) {
     foreach( const Nepomuk::Tag &nepomukTag, nepomukTagList ) {
+      QString symbol = "mail-tagged";
+      if ( !nepomukTag.symbols().isEmpty() ) {
+        symbol = nepomukTag.symbols().first();
+      }
       Tag *messageListTag =
-          new Tag( SmallIcon( nepomukTag.symbols().first() ),
+          new Tag( SmallIcon( symbol ),
                    nepomukTag.label(), nepomukTag.resourceUri().toString() );
       if ( nepomukTag.hasProperty( Vocabulary::MessageTag::textColor() ) ) {
         const QString name = nepomukTag.property( Vocabulary::MessageTag::textColor() ).toString();
