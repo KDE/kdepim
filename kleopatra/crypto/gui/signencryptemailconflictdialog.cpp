@@ -447,6 +447,8 @@ private:
                          q );
     }
 
+    bool isComplete( Protocol proto ) const;
+
 private:
     void enableDisableOkButton() {
         ui.setOkButtonEnabled( q->isComplete() );
@@ -680,11 +682,28 @@ void SignEncryptEMailConflictDialog::setRecipients( const std::vector<Recipient>
     d->enableDisableOkButton();
 }
 
+void SignEncryptEMailConflictDialog::pickProtocol() {
+
+    if ( selectedProtocol() != UnknownProtocol )
+        return; // already picked
+
+    const bool pgp = d->isComplete( OpenPGP );
+    const bool cms = d->isComplete( CMS );
+
+    if ( pgp && !cms )
+        d->ui.pgpRB.setChecked( true );
+    else if ( cms && !pgp )
+        d->ui.cmsRB.setChecked( true );
+}
+
 bool SignEncryptEMailConflictDialog::isComplete() const {
     const Protocol proto = selectedProtocol();
-    return proto != UnknownProtocol
-        && ( !d->sign    || kdtools::none_of( d->ui.signers,    bind( &Line::isStillAmbiguous, _1, proto ) ) )
-        && ( !d->encrypt || kdtools::none_of( d->ui.recipients, bind( &Line::isStillAmbiguous, _1, proto ) ) )
+    return proto != UnknownProtocol && d->isComplete( proto ) ;
+}
+
+bool SignEncryptEMailConflictDialog::Private::isComplete( Protocol proto ) const {
+    return ( !sign    || kdtools::none_of( ui.signers,    bind( &Line::isStillAmbiguous, _1, proto ) ) )
+        && ( !encrypt || kdtools::none_of( ui.recipients, bind( &Line::isStillAmbiguous, _1, proto ) ) )
         ;
 }
 
