@@ -152,7 +152,7 @@ public:
                                  email, ByEMail<std::less>() );
     }
 
-    std::vector<Key> find_mailbox( const Mailbox & mb, bool secret ) const;
+    std::vector<Key> find_mailbox( const Mailbox & mb, bool sign ) const;
 
     std::vector<Subkey>::const_iterator find_subkeyid( const char * subkeyid ) const {
         return find<_detail::ByKeyID>( by.subkeyid, subkeyid );
@@ -412,13 +412,17 @@ std::vector<Key> KeyCache::findEncryptionKeysByMailbox( const Mailbox & mb ) con
 }
 
 namespace {
-    // only Boost >= 1.36 has bind( ... ) && bind( ... ), so we need
-    // to do it by hand...
-    struct logical_and {
-        typedef bool result_type;
-        template <typename T1, typename T2>
-        bool operator()( T1 lhs, T2 rhs ) const {
-            return lhs && rhs ;
+    struct ready_for_signing : std::unary_function<Key,bool> {
+        bool operator()( const Key & key ) const {
+            return key.hasSecret() &&
+                key.canReallySign() && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
+        }
+    };
+
+    struct ready_for_encryption : std::unary_function<Key,bool> {
+        bool operator()( const Key & key ) const {
+            return                       
+                key.canEncrypt()    && !key.isRevoked() && !key.isExpired() && !key.isDisabled() && !key.isInvalid() ;
         }
     };
 }
@@ -438,12 +442,11 @@ std::vector<Key> KeyCache::Private::find_mailbox( const Mailbox & mb, bool sign 
     if ( sign )
         kdtools::copy_2nd_if( pair.first, pair.second,
                               std::back_inserter( result ),
-                              // bind( &Key::hasSecret, _1 ) && bind( &Key::canReallySign, _1 ), // Boost >= 1.36 only
-                              bind( logical_and(), bind( &Key::hasSecret, _1 ), bind( &Key::canReallySign, _1 ) ) );
+                              ready_for_signing() );
     else
         kdtools::copy_2nd_if( pair.first, pair.second,
                               std::back_inserter( result ),
-                              mem_fn( &Key::canEncrypt ) );
+                              ready_for_encryption() );
     return result;
 }
 
