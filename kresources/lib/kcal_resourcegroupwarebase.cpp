@@ -39,13 +39,13 @@
 using namespace KCal;
 
 ResourceGroupwareBase::ResourceGroupwareBase()
-  : ResourceCached( 0 ), mPrefs(0), mFolderLister(0), 
+  : ResourceCached( 0 ), mPrefs(0), mFolderLister(0),
     mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
 }
 
 ResourceGroupwareBase::ResourceGroupwareBase( const KConfig *config )
-  : ResourceCached( config ), mPrefs(0), mFolderLister(0), 
+  : ResourceCached( config ), mPrefs(0), mFolderLister(0),
     mLock( true ), mAdaptor(0), mDownloadJob(0), mUploadJob(0)
 {
   if ( config ) readConfig( config );
@@ -69,7 +69,7 @@ bool ResourceGroupwareBase::addEvent( Event *event )
 {
   if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Event ) ||
                       adaptor()->supports( KPIM::FolderLister::All ) ) ) {
-    return ResourceCached::addEvent( event );
+    return ResourceCached::addEvent( event, QString() );
   } else return false;
 }
 
@@ -77,7 +77,7 @@ bool ResourceGroupwareBase::addTodo( Todo *todo )
 {
   if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Todo ) ||
                       adaptor()->supports( KPIM::FolderLister::All ) ) ) {
-    return ResourceCached::addTodo( todo );
+    return ResourceCached::addTodo( todo, QString() );
   } else return false;
 }
 
@@ -85,30 +85,30 @@ bool ResourceGroupwareBase::addJournal( Journal *journal )
 {
   if ( adaptor() && ( adaptor()->supports( KPIM::FolderLister::Journal ) ||
                       adaptor()->supports( KPIM::FolderLister::All ) ) ) {
-    return ResourceCached::addJournal( journal );
+    return ResourceCached::addJournal( journal, QString() );
   } else return false;
 }
 
 
-KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob( 
+KPIM::GroupwareDownloadJob *ResourceGroupwareBase::createDownloadJob(
                             CalendarAdaptor *adaptor )
 {
   return new KPIM::GroupwareDownloadJob( adaptor );
 }
 
-KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob( 
+KPIM::GroupwareUploadJob *ResourceGroupwareBase::createUploadJob(
                           CalendarAdaptor *adaptor )
 {
   return new KPIM::GroupwareUploadJob( adaptor );
 }
 
-void ResourceGroupwareBase::setPrefs( KPIM::GroupwarePrefsBase *newprefs ) 
+void ResourceGroupwareBase::setPrefs( KPIM::GroupwarePrefsBase *newprefs )
 {
   if ( !newprefs ) return;
   if ( mPrefs ) delete mPrefs;
   mPrefs = newprefs;
   mPrefs->addGroupPrefix( identifier() );
-  
+
   mPrefs->readConfig();
   if ( mFolderLister ) mFolderLister->readConfig( mPrefs );
 }
@@ -236,7 +236,7 @@ void ResourceGroupwareBase::doClose()
   ResourceCached::doClose();
   if ( mDownloadJob ) mDownloadJob->kill();
 
-  if ( adaptor() && 
+  if ( adaptor() &&
        adaptor()->flags() & KPIM::GroupwareDataAdaptor::GWResNeedsLogoff ) {
     KIO::Job *logoffJob = adaptor()->createLogoffJob( prefs()->url(), prefs()->user(), prefs()->password() );
     connect( logoffJob, SIGNAL( result( KIO::Job * ) ),
@@ -267,7 +267,7 @@ bool ResourceGroupwareBase::doLoad()
     kdWarning() << "Download still in progress" << endl;
     return false;
   }
-  
+
   mCalendar.close();
   clearChanges();
   disableChangeNotification();
@@ -292,7 +292,7 @@ void ResourceGroupwareBase::slotDownloadJobResult( KPIM::GroupwareJob *job )
     mIsShowingError = false;
   } else {
     kdDebug(5800) << "Successfully downloaded data" << endl;
-  
+
     clearChanges();
     saveCache();
     enableChangeNotification();
@@ -318,9 +318,9 @@ bool ResourceGroupwareBase::doSave()
   //       to upload only certain changes and discard the rest. This is
   //       particularly important for resources like the blogging resource,
   //       where uploading would mean a republication of the blog, not only
-  //       a modifications. 
+  //       a modifications.
   if ( !confirmSave() ) return false;
-  
+
   mUploadJob = createUploadJob( adaptor() );
   connect( mUploadJob, SIGNAL( result( KPIM::GroupwareJob * ) ),
     SLOT( slotUploadJobResult( KPIM::GroupwareJob * ) ) );
@@ -331,20 +331,20 @@ bool ResourceGroupwareBase::doSave()
 
   inc = addedIncidences();
   for( it = inc.begin(); it != inc.end(); ++it ) {
-    addedItems.append( adaptor()->newUploadItem( *it, 
+    addedItems.append( adaptor()->newUploadItem( *it,
                                            KPIM::GroupwareUploadItem::Added ) );
   }
   // TODO: Check if the item has changed on the server...
-  // In particular, check if the version we based our change on is still current 
+  // In particular, check if the version we based our change on is still current
   // on the server
   inc = changedIncidences();
   for( it = inc.begin(); it != inc.end(); ++it ) {
-    changedItems.append( adaptor()->newUploadItem( *it, 
+    changedItems.append( adaptor()->newUploadItem( *it,
                                          KPIM::GroupwareUploadItem::Changed ) );
   }
   inc = deletedIncidences();
   for( it = inc.begin(); it != inc.end(); ++it ) {
-    deletedItems.append( adaptor()->newUploadItem( *it, 
+    deletedItems.append( adaptor()->newUploadItem( *it,
                                          KPIM::GroupwareUploadItem::Deleted ) );
   }
 
@@ -368,10 +368,10 @@ void ResourceGroupwareBase::slotUploadJobResult( KPIM::GroupwareJob *job )
     mIsShowingError = false;
   } else {
     kdDebug(5800) << "Successfully uploaded data" << endl;
-    /* 
+    /*
      * After the put the server might have expanded recurring events and will
      * also change the uids of the uploaded events. Remove them from the cache
-     * and get the fresh delta and download. 
+     * and get the fresh delta and download.
      */
 
     if ( !mDownloadJob ) {
