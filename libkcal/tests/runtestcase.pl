@@ -78,7 +78,7 @@ sub checkfile()
     exit 1;
   }
   while( <REF> ) {
-    push @ref, $_;
+    push @ref, $_ if($_ !~ m/^\s*$/);  #skip blank lines in the ref
   }
   close REF;
 
@@ -92,10 +92,13 @@ sub checkfile()
   $line = 0;
   my $errorlines = 0;
   while( <READ> ) {
+    next if ($_ =~ m/^\s*$/); #skip blank lines in the output
     $out = $_;
     $ref = @ref[$i++];
     $line++;
 
+    $out =~ s/\s*$//; #remove trailing whitespace
+    $ref =~ s/\s*$//; #remove trailing whitespace
     # DTSTAMP, LAST-MODIFIED and CREATED might be different to the reference...
     if ( $out =~ /^DTSTAMP:[0-9ZT]+\r?$/ && $ref =~ /^DTSTAMP:[0-9ZT]+\r?$/ ) {
       next;
@@ -122,7 +125,6 @@ sub checkfile()
         print "  <Remaining error suppressed>\n";
       }
     }
-    
   }
 
   close READ;
@@ -150,7 +152,7 @@ sub checkfile()
     } else {
       print "\n  FAILED: $error errors found.\n";
       if ( $error > 5 ) {
-        system( "diff -u $file.$id.ref $outfile" ); 
+        system( "diff -u $file.$id.ref $outfile" );
       }
       system( "touch FAILED" );
       exit 1;
