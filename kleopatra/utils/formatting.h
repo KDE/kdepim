@@ -65,17 +65,19 @@ namespace Formatting {
     QString prettyEMail( const GpgME::UserID::Signature & sig );
 
     enum ToolTipOption {
-        Validity=0x1,
-        SerialNumber=0x2,
-        Issuer=0x4,
-        Subject=0x8,
-        ExpiryDates=0x10,
-        CertificateType=0x20,
-        CertificateUsage=0x40,
-        Fingerprint=0x80,
-        UserIDs=0x100,
+        KeyID            = 0x001,
+        Validity         = 0x002,
+        StorageLocation  = 0x004,
+        SerialNumber     = 0x008,
+        Issuer           = 0x010,
+        Subject          = 0x020,
+        ExpiryDates      = 0x040,
+        CertificateType  = 0x080,
+        CertificateUsage = 0x100,
+        Fingerprint      = 0x200,
+        UserIDs          = 0x400,
 
-        AllOptions = 0x1ff
+        AllOptions = 0x7ff
     };
 
     QString toolTip( const GpgME::Key & key, int opts );
