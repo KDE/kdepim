@@ -35,6 +35,8 @@
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
 
+#include <utils/formatting.h>
+
 #include <kapplication.h>
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
@@ -87,6 +89,11 @@ private:
 
 int main( int argc, char * argv[] ) {
 
+    if ( const GpgME::Error initError = GpgME::initializeLibrary(0) ) {
+        qDebug() << "Error initializing gpgme:" << QString::fromLocal8Bit( initError.asString() ) ;
+        return 1;
+    }
+
     KAboutData aboutData( "test_flatkeylistmodel", 0, ki18n("FlatKeyListModel Test"), "0.2" );
     KCmdLineArgs::init( argc, argv, &aboutData );
 
@@ -94,6 +101,7 @@ int main( int argc, char * argv[] ) {
     options.add( "flat",         ki18n("Perform flat certificate listing") );
     options.add( "hierarchical", ki18n("Perform hierarchical certificate listing") );
     options.add( "disable-smime", ki18n("Do not list SMIME certificates") );
+    options.add( "secret", ki18n("List secret keys only") );
 
     KCmdLineArgs::addCmdLineOptions( options );
 
@@ -102,8 +110,9 @@ int main( int argc, char * argv[] ) {
     KCmdLineArgs * args = KCmdLineArgs::parsedArgs();
 
     const bool showFlat = args->isSet( "flat" ) || !args->isSet( "hierarchical" );
-   const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
+    const bool showHier = args->isSet( "hierarchical" ) || !args->isSet( "flat" );
     const bool disablesmime = args->isSet( "disable-smime" );
+    const bool secretOnly = args->isSet( "secret" );
 
     qsrand( QDateTime::currentDateTime().toTime_t() );
 
@@ -141,6 +150,7 @@ int main( int argc, char * argv[] ) {
     if ( showFlat )
         if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createFlatKeyListModel( &flat ) ) {
             QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
+            model->setToolTipOptions( Kleo::Formatting::AllOptions );
             flatProxy.setSourceModel( model );
             flat.setModel( &flatProxy );
 
@@ -150,17 +160,20 @@ int main( int argc, char * argv[] ) {
     if ( showHier )
         if ( Kleo::AbstractKeyListModel * const model = Kleo::AbstractKeyListModel::createHierarchicalKeyListModel( &hierarchical ) ) {
             QObject::connect( &relay, SIGNAL(nextKeys(std::vector<GpgME::Key>)), model, SLOT(addKeys(std::vector<GpgME::Key>)) );
+            model->setToolTipOptions( Kleo::Formatting::AllOptions );
             hierarchicalProxy.setSourceModel( model );
             hierarchical.setModel( &hierarchicalProxy );
 
             hierarchicalWidget.show();
         }
 
+    const char * pattern[] = { 0 };
+
     const std::auto_ptr<GpgME::Context> pgp( GpgME::Context::createForProtocol( GpgME::OpenPGP ) );
     pgp->setManagedByEventLoopInteractor( true );
     pgp->setKeyListMode( GpgME::Local );
 
-    if ( const GpgME::Error e = pgp->startKeyListing() )
+    if ( const GpgME::Error e = pgp->startKeyListing( pattern, secretOnly ) )
         qDebug() << "pgp->startKeyListing() ->" << e.asString();
 
 
@@ -169,7 +182,7 @@ int main( int argc, char * argv[] ) {
         cms->setManagedByEventLoopInteractor( true );
         cms->setKeyListMode( GpgME::Local );
 
-        if ( const GpgME::Error e = cms->startKeyListing() )
+        if ( const GpgME::Error e = cms->startKeyListing( pattern, secretOnly ) )
             qDebug() << "cms" << e.asString();
 
 
@@ -181,7 +194,7 @@ int main( int argc, char * argv[] ) {
        cms2->setManagedByEventLoopInteractor( true );
        cms2->setKeyListMode( GpgME::Local );
 
-       if ( const GpgME::Error e = cms2->startKeyListing() )
+       if ( const GpgME::Error e = cms2->startKeyListing( pattern, secretOnly ) )
           qDebug() << "cms2" << e.asString();
     }
 
