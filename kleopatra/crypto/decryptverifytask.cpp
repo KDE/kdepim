@@ -824,7 +824,7 @@ void DecryptVerifyTask::autodetectProtocolFromInput()
         return;
     const Protocol p = findProtocol( d->m_input->classification() );
     if ( p == UnknownProtocol )
-        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature/ciphertext - maybe it is neither ciphertext nor a signature?") );
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature/ciphertext - maybe it is neither ciphertext nor a signature?"), Exception::MessageOnly );
     setProtocol( p );
 }
 
@@ -957,7 +957,7 @@ void DecryptTask::autodetectProtocolFromInput()
         return;
     const Protocol p = findProtocol( d->m_input->classification() );
     if ( p == UnknownProtocol )
-        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this was S/MIME- or OpenPGP-encrypted - maybe it is not ciphertext at all?") );
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this was S/MIME- or OpenPGP-encrypted - maybe it is not ciphertext at all?"), Exception::MessageOnly );
     setProtocol( p );
 }
 
@@ -1092,7 +1092,7 @@ void VerifyOpaqueTask::autodetectProtocolFromInput()
         return;
     const Protocol p = findProtocol( d->m_input->classification() );
     if ( p == UnknownProtocol )
-        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature - maybe it is not a signature at all?") );
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature - maybe it is not a signature at all?"), Exception::MessageOnly );
     setProtocol( p );
 }
 
@@ -1218,7 +1218,7 @@ void VerifyDetachedTask::autodetectProtocolFromInput()
         return;
     const Protocol p = findProtocol( d->m_input->classification() );
     if ( p == UnknownProtocol )
-        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature - maybe it is not a signature at all?") );
+        throw Exception( gpg_error( GPG_ERR_NOTHING_FOUND ), i18n("Could not determine whether this is an S/MIME or an OpenPGP signature - maybe it is not a signature at all?"), Exception::MessageOnly );
     setProtocol( p );
 }
 
