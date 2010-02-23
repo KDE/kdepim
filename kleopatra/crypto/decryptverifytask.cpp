@@ -53,6 +53,7 @@
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
+#include <utils/auditlog.h>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -88,9 +89,8 @@ using namespace KMime::Types;
 
 namespace {
 
-static QString auditLogFromSender( QObject* sender ) {
-    const Job * const job = qobject_cast<const Job*>( sender );
-    return job ? job->auditLogAsHtml() : QString();
+static AuditLog auditLogFromSender( QObject* sender ) {
+    return AuditLog::fromJob( qobject_cast<const Job*>( sender ) );
 }
 
 static bool addrspec_equal( const AddrSpec & lhs, const AddrSpec & rhs, Qt::CaseSensitivity cs  ) {
@@ -511,7 +511,7 @@ public:
              const QString & errString,
              const QString & input,
              const QString & output,
-             const QString & auditLog,
+             const AuditLog & auditLog,
              const Mailbox & informativeSender,
              DecryptVerifyResult* qq ) :
                  q( qq ),
@@ -545,7 +545,7 @@ public:
     QString m_errorString;
     QString m_inputLabel;
     QString m_outputLabel;
-    const QString m_auditLog;
+    const AuditLog m_auditLog;
     const Mailbox m_informativeSender;
 };
 
@@ -553,7 +553,7 @@ DecryptVerifyResult::SenderInfo DecryptVerifyResult::Private::makeSenderInfo() c
     return SenderInfo( m_informativeSender, KeyCache::instance()->findSigners( m_verificationResult ) );
 }
 
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( const DecryptionResult & dr, const QByteArray & plaintext, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( const DecryptionResult & dr, const QByteArray & plaintext, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Decrypt,
         VerificationResult(),
@@ -567,7 +567,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( co
         informativeSender() ) );
 }
 
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( const GpgME::Error & err, const QString& what, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( const GpgME::Error & err, const QString& what, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Decrypt,
         VerificationResult(),
@@ -581,7 +581,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( co
         informativeSender() ) );
 }
 
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResult( const DecryptionResult & dr, const VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResult( const DecryptionResult & dr, const VerificationResult & vr, const QByteArray & plaintext, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         DecryptVerify,
         vr,
@@ -595,7 +595,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResu
         informativeSender() ) );
 }
 
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResult( const GpgME::Error & err, const QString & details, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         DecryptVerify,
         VerificationResult(),
@@ -609,7 +609,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResu
         informativeSender() ) );
 }
 
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResult( const VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResult( const VerificationResult & vr, const QByteArray & plaintext, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Verify,
         vr,
@@ -622,7 +622,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResul
         auditLog,
         informativeSender() ) );
 }
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Verify,
         VerificationResult( err ),
@@ -636,7 +636,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResul
         informativeSender() ) );
 }
 
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const VerificationResult & vr, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const VerificationResult & vr, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Verify,
         vr,
@@ -649,7 +649,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedRes
         auditLog,
         informativeSender() ) );
 }
-shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const GpgME::Error & err, const QString & details, const QString & auditLog ) {
+shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Verify,
         VerificationResult( err ),
@@ -671,7 +671,7 @@ DecryptVerifyResult::DecryptVerifyResult( DecryptVerifyOperation type,
                     const QString & errString,
                     const QString & inputLabel,
                     const QString & outputLabel,
-                    const QString & auditLog,
+                    const AuditLog & auditLog,
                     const Mailbox & informativeSender )
     : Task::Result(), d( new Private( type, vr, dr, stuff, errCode, errString, inputLabel, outputLabel, auditLog, informativeSender, this ) )
 {
@@ -713,7 +713,7 @@ QString DecryptVerifyResult::errorString() const
     return d->m_errorString;
 }
 
-QString DecryptVerifyResult::auditLogAsHtml() const {
+AuditLog DecryptVerifyResult::auditLog() const {
     return d->m_auditLog;
 }
 
@@ -795,7 +795,7 @@ void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const V
         ss << dr << '\n' << vr;
         kDebug() << ss.str().c_str();
     }
-    const QString auditLog = auditLogFromSender( q->sender() );
+    const AuditLog auditLog = auditLogFromSender( q->sender() );
     if ( dr.error().code() || vr.error().code() ) {
         m_output->cancel();
     } else {
@@ -889,7 +889,7 @@ void DecryptVerifyTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ), QString() ) );
+        d->emitResult( fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ), AuditLog() ) );
     }
 }
 
@@ -929,7 +929,7 @@ void DecryptTask::Private::slotResult( const DecryptionResult& result, const QBy
         ss << result;
         kDebug() << ss.str().c_str();
     }
-    const QString auditLog = auditLogFromSender( q->sender() );
+    const AuditLog auditLog = auditLogFromSender( q->sender() );
     if ( result.error().code() ) {
         m_output->cancel();
     } else {
@@ -1024,7 +1024,7 @@ void DecryptTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ), QString() ) );
+        d->emitResult( fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ), AuditLog() ) );
     }
 }
 
@@ -1064,7 +1064,7 @@ void VerifyOpaqueTask::Private::slotResult( const VerificationResult& result, co
         ss << result;
         kDebug() << ss.str().c_str();
     }
-    const QString auditLog = auditLogFromSender( q->sender() );
+    const AuditLog auditLog = auditLogFromSender( q->sender() );
     if ( result.error().code() ) {
         m_output->cancel();
     } else {
@@ -1158,7 +1158,7 @@ void VerifyOpaqueTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_output ? d->m_output->ioDevice() : shared_ptr<QIODevice>() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( fromVerifyOpaqueResult( e.error(), QString::fromLocal8Bit( e.what() ), QString() ) );
+        d->emitResult( fromVerifyOpaqueResult( e.error(), QString::fromLocal8Bit( e.what() ), AuditLog() ) );
     }
 }
 
@@ -1197,7 +1197,7 @@ void VerifyDetachedTask::Private::slotResult( const VerificationResult& result )
         ss << result;
         kDebug() << ss.str().c_str();
     }
-    const QString auditLog = auditLogFromSender( q->sender() );
+    const AuditLog auditLog = auditLogFromSender( q->sender() );
     try {
         kleo_assert( !result.isNull() );
         emitResult( q->fromVerifyDetachedResult( result, auditLog ) );
@@ -1284,7 +1284,7 @@ void VerifyDetachedTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_signedData->ioDevice() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( fromVerifyDetachedResult( e.error(), QString::fromLocal8Bit( e.what() ), QString() ) );
+        d->emitResult( fromVerifyDetachedResult( e.error(), QString::fromLocal8Bit( e.what() ), AuditLog() ) );
     }
 }
 

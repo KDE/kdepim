@@ -38,6 +38,7 @@
 #include <utils/output.h>
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
+#include <utils/auditlog.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
@@ -63,9 +64,9 @@ namespace {
 
     class SignEMailResult : public Task::Result {
         const SigningResult m_result;
-        const QString m_auditLog;
+        const AuditLog m_auditLog;
     public:
-        explicit SignEMailResult( const SigningResult & r, const QString & auditLog )
+        explicit SignEMailResult( const SigningResult & r, const AuditLog & auditLog )
             : Task::Result(), m_result( r ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
@@ -73,7 +74,7 @@ namespace {
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
-        /* reimp */ QString auditLogAsHtml() const;
+        /* reimp */ AuditLog auditLog() const;
     };
 
     QString makeResultString( const SigningResult& res )
@@ -245,7 +246,7 @@ void SignEMailTask::Private::slotResult( const SigningResult & result ) {
         output->finalize();
         micAlg = collect_micalgs( result, q->protocol() );
     }
-    q->emitResult( shared_ptr<Result>( new SignEMailResult( result, job ? job->auditLogAsHtml() : QString() ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEMailResult( result, AuditLog::fromJob( job ) ) ) );
 }
 
 QString SignEMailTask::micAlg() const {
@@ -275,7 +276,7 @@ Task::Result::VisualCode SignEMailResult::code() const {
     return m_result.error().code() ? NeutralError : NeutralSuccess;
 }
 
-QString SignEMailResult::auditLogAsHtml() const {
+AuditLog SignEMailResult::auditLog() const {
     return m_auditLog;
 }
 

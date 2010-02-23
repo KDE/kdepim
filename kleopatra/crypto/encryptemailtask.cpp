@@ -38,6 +38,7 @@
 #include <utils/output.h>
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
+#include <utils/auditlog.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
@@ -63,9 +64,9 @@ namespace {
 
     class EncryptEMailResult : public Task::Result {
         const EncryptionResult m_result;
-        const QString m_auditLog;
+        const AuditLog m_auditLog;
     public:
-        EncryptEMailResult( const EncryptionResult & r, const QString & auditLog )
+        EncryptEMailResult( const EncryptionResult & r, const AuditLog & auditLog )
             : Task::Result(), m_result( r ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
@@ -73,7 +74,7 @@ namespace {
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
-        /* reimp */ QString auditLogAsHtml() const;
+        /* reimp */ AuditLog auditLog() const;
     };
 
     QString makeResultString( const EncryptionResult& res )
@@ -202,7 +203,7 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     } else {
         output->finalize();
     }
-    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( result, job ? job->auditLogAsHtml() : QString() ) ) );
+    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( result, AuditLog::fromJob( job ) ) ) );
 }
 
 QString EncryptEMailResult::overview() const {
@@ -221,7 +222,7 @@ QString EncryptEMailResult::errorString() const {
     return hasError() ? makeResultString( m_result ) : QString();
 }
 
-QString EncryptEMailResult::auditLogAsHtml() const {
+AuditLog EncryptEMailResult::auditLog() const {
     return m_auditLog;
 }
 

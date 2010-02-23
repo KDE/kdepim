@@ -41,6 +41,7 @@
 #include <utils/path-helper.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
+#include <utils/auditlog.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
@@ -76,7 +77,7 @@ namespace {
 
     class ErrorResult : public Task::Result {
     public:
-        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output, const QString & auditLog )
+        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output, const AuditLog & auditLog )
             : Task::Result(), m_sign( sign ), m_encrypt( encrypt ), m_error( err ), m_errString( errStr ), m_inputLabel( input ), m_outputLabel( output ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
@@ -84,7 +85,7 @@ namespace {
         /* reimp */ int errorCode() const { return m_error.encodedError(); }
         /* reimp */ QString errorString() const { return m_errString; }
         /* reimp */ VisualCode code() const { return NeutralError; }
-        /* reimp */ QString auditLogAsHtml() const { return m_auditLog; }
+        /* reimp */ AuditLog auditLog() const { return m_auditLog; }
     private:
         const bool m_sign;
         const bool m_encrypt;
@@ -92,20 +93,20 @@ namespace {
         const QString m_errString;
         const QString m_inputLabel;
         const QString m_outputLabel;
-        const QString m_auditLog;
+        const AuditLog m_auditLog;
     };
 
     class SignEncryptFilesResult : public Task::Result {
     public:
-        SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const QString & auditLog )
+        SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const AuditLog & auditLog )
             : Task::Result(), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ), m_auditLog( auditLog ) {
             assert( !m_sresult.isNull() );
         }
-        SignEncryptFilesResult( const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const QString & auditLog )
+        SignEncryptFilesResult( const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const AuditLog & auditLog )
             : Task::Result(), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ), m_auditLog( auditLog ) {
             assert( !m_eresult.isNull() );
         }
-        SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated,  const QString & auditLog )
+        SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated,  const AuditLog & auditLog )
             : Task::Result(), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ), m_auditLog( auditLog ) {
             assert( !m_sresult.isNull() || !m_eresult.isNull() );
         }
@@ -115,7 +116,7 @@ namespace {
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
-        /* reimp */ QString auditLogAsHtml() const;
+        /* reimp */ AuditLog auditLog() const;
 
     private:
         const SigningResult m_sresult;
@@ -124,7 +125,7 @@ namespace {
         const QString m_outputLabel;
         const bool m_inputRemoved;
         const bool m_outputCreated;
-        const QString m_auditLog;
+        const AuditLog m_auditLog;
     };
 
     static QString makeSigningOverview( const Error & err ) {
@@ -211,7 +212,7 @@ private:
     std::auto_ptr<Kleo::SignJob> createSignJob( GpgME::Protocol proto );
     std::auto_ptr<Kleo::SignEncryptJob> createSignEncryptJob( GpgME::Protocol proto );
     std::auto_ptr<Kleo::EncryptJob> createEncryptJob( GpgME::Protocol proto );
-    shared_ptr<const Task::Result> makeErrorResult( const Error & err, const QString & errStr, const QString & auditLog );
+    shared_ptr<const Task::Result> makeErrorResult( const Error & err, const QString & errStr, const AuditLog & auditLog );
 
 private:
     void slotResult( const SigningResult & );
@@ -253,7 +254,7 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
     q->setAsciiArmor( true );
 }
 
-shared_ptr<const Task::Result> SignEncryptFilesTask::Private::makeErrorResult( const Error & err, const QString & errStr, const QString & auditLog )
+shared_ptr<const Task::Result> SignEncryptFilesTask::Private::makeErrorResult( const Error & err, const QString & errStr, const AuditLog & auditLog )
 {
     return shared_ptr<const ErrorResult>( new ErrorResult( sign, encrypt, err, errStr, input->label(), output->label(), auditLog ) );
 }
@@ -435,7 +436,7 @@ std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
     const Job * const job = qobject_cast<const Job*>( q->sender() );
-    const QString auditLog = job ? job->auditLogAsHtml() : QString();
+    const AuditLog auditLog = AuditLog::fromJob( job );
     bool inputRemoved = false;
     bool outputCreated = false;
     if ( result.error().code() ) {
@@ -462,7 +463,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
     const Job * const job = qobject_cast<const Job*>( q->sender() );
-    const QString auditLog = job ? job->auditLogAsHtml() : QString();
+    const AuditLog auditLog = AuditLog::fromJob( job );
     bool inputRemoved = false;
     bool outputCreated = false;
     if ( sresult.error().code() || eresult.error().code() ) {
@@ -489,7 +490,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
     const Job * const job = qobject_cast<const Job*>( q->sender() );
-    const QString auditLog = job ? job->auditLogAsHtml() : QString();
+    const AuditLog auditLog = AuditLog::fromJob( job );
     bool inputRemoved = false;
     bool outputCreated = false;
     if ( result.error().code() ) {
@@ -553,7 +554,7 @@ Task::Result::VisualCode SignEncryptFilesResult::code() const
     return ( m_sresult.error().code() || m_eresult.error().code() ) ? NeutralError : NeutralSuccess;
 }
 
-QString SignEncryptFilesResult::auditLogAsHtml() const {
+AuditLog SignEncryptFilesResult::auditLog() const {
     return m_auditLog;
 }
 

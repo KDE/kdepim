@@ -34,12 +34,15 @@
 
 #include "resultitemwidget.h"
 
+#include <utils/auditlog.h>
+
 #include <ui/messagebox.h>
 
 #include <KDebug>
 #include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
+#include <KUrl>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -84,13 +87,20 @@ public:
     KPushButton * m_closeButton;
 };
 
+static KUrl auditlog_url_template() {
+    KUrl url;
+    url.setScheme( "kleoresultitem" );
+    url.setHost( "showauditlog" );
+    return url;
+}
+
 void ResultItemWidget::Private::updateShowDetailsLabel()
 {
     if ( !m_showDetailsLabel || !m_detailsLabel )
         return;
 
     const bool detailsVisible = m_detailsLabel->isVisible();
-    const QString auditLogLink = !m_result->auditLogAsHtml().isEmpty() ?  QString( "<a href=\"kleoresultitem://showauditlog/\">%1</a>" ).arg( i18n( "Show Audit Log" ) ) : i18n( "No Audit Log available" );
+    const QString auditLogLink = m_result->auditLog().formatLink( auditlog_url_template() );
     m_showDetailsLabel->setText( QString( "<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2" ).arg( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ), auditLogLink ) );
 }
 
@@ -191,7 +201,7 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
 }
 
 void ResultItemWidget::showAuditLog() {
-    MessageBox::auditLog( parentWidget(), d->m_result->auditLogAsHtml() );
+    MessageBox::auditLog( parentWidget(), d->m_result->auditLog().text() );
 }
 
 void ResultItemWidget::showDetails( bool show )
