@@ -39,6 +39,7 @@
 #include <QDBusMessage>
 #include <QMetaObject>
 #include <QMetaMethod>
+#include <QResizeEvent>
 
 using namespace Akonadi;
 
@@ -285,5 +286,9 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.exec( mapToGlobal( pos ) );
 }
 
+void AgentWidget::resizeEvent( QResizeEvent *event )
+{
+  ui.detailsBox->setVisible( event->size().height() > 400 );
+}
 
 #include "agentwidget.moc"

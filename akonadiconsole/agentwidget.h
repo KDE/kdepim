@@ -29,6 +29,7 @@
 class KJob;
 class QMenu;
 class QPoint;
+class QResizeEvent;
 
 class AgentWidget : public QWidget
 {
@@ -37,6 +38,9 @@ class AgentWidget : public QWidget
   public:
     AgentWidget( QWidget *parent = 0 );
     Akonadi::AgentInstanceWidget *widget() const { return ui.instanceWidget; }
+
+protected:
+    void resizeEvent( QResizeEvent *event );
 
   private Q_SLOTS:
     void addAgent();
