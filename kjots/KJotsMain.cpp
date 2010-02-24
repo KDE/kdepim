@@ -25,7 +25,6 @@
 
 #include "KJotsMain.h"
 
-#include <q3header.h>
 #include <QtGui/QPrinter>
 #include <QtGui/QPrintDialog>
 #include <QCheckBox>
