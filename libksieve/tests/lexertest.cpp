@@ -35,7 +35,6 @@ using KSieve::Lexer;
 #include <ksieve/error.h>
 using KSieve::Error;
 
-#include <q3cstring.h> // qstrlen
 #include <QString>
 
 #include <iostream>
