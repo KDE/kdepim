@@ -38,7 +38,6 @@
 #include <klocale.h>
 
 #include <QStringList>
-#include <q3tl.h>
 
 #include <gpgme++/key.h>
 #include <gpgme++/context.h>

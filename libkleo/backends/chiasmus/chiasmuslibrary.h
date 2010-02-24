@@ -34,8 +34,8 @@
 #ifndef __KLEO_CHIASMUSLIBRARY_H__
 #define __KLEO_CHIASMUSLIBRARY_H__
 
-#include <q3valuevector.h>
-#include <q3cstring.h>
+#include <qvector.h>
+#include <qbytearray.h>
 
 class KLibrary;
 
