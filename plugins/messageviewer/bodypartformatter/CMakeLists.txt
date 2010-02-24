@@ -46,6 +46,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   akonadi-kcal_next
+  korg_incidenceeditor
 )
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})
