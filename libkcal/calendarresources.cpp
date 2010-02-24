@@ -278,13 +278,13 @@ bool CalendarResources::addIncidence( Incidence *incidence,
     oldResource = mResourceMap[incidence];
   }
   mResourceMap[incidence] = resource;
-  if ( validRes && beginChange( incidence ) &&
+  if ( validRes && beginChange( incidence, resource, subresource ) &&
        resource->addIncidence( incidence, subresource ) ) {
 //    mResourceMap[incidence] = resource;
     incidence->registerObserver( this );
     notifyIncidenceAdded( incidence );
     setModified( true );
-    endChange( incidence );
+    endChange( incidence, resource, subresource );
     return true;
   } else {
     if ( oldResource )
@@ -313,14 +313,15 @@ bool CalendarResources::addIncidence( Incidence *incidence )
   if ( resource ) {
     mResourceMap[ incidence ] = resource;
 
-    if ( beginChange( incidence ) && resource->addIncidence( incidence ) ) {
+    if ( beginChange( incidence, resource, QString() ) &&
+         resource->addIncidence( incidence ) ) {
       incidence->registerObserver( this );
       notifyIncidenceAdded( incidence );
 
 
       mResourceMap[ incidence ] = resource;
       setModified( true );
-      endChange( incidence );
+      endChange( incidence, resource, QString() );
       return true;
     } else {
       mResourceMap.remove( incidence );
@@ -786,29 +787,40 @@ void CalendarResources::releaseSaveTicket( Ticket *ticket )
 
 bool CalendarResources::beginChange( Incidence *incidence )
 {
+  return beginChange( incidence, 0, QString() );
+}
+
+bool CalendarResources::beginChange( Incidence *incidence,
+                                     ResourceCalendar *res,
+                                     const QString &subres )
+{
+  Q_UNUSED( subres ); // possible future use
+
   kdDebug(5800) << "CalendarResources::beginChange()" << endl;
 
-  ResourceCalendar *r = resource( incidence );
-  if ( !r ) {
-    r = mDestinationPolicy->destination( incidence );
-    if ( !r ) {
+  if ( !res ) {
+    res = resource( incidence );
+  }
+  if ( !res ) {
+    res = mDestinationPolicy->destination( incidence );
+    if ( !res ) {
       kdError() << "Unable to get destination resource." << endl;
       return false;
     }
-    mResourceMap[ incidence ] = r;
+    mResourceMap[ incidence ] = res;
   }
   mPendingDeleteFromResourceMap = false;
 
-  int count = incrementChangeCount( r );
+  int count = incrementChangeCount( res );
   if ( count == 1 ) {
-    Ticket *ticket = requestSaveTicket( r );
+    Ticket *ticket = requestSaveTicket( res );
     if ( !ticket ) {
       kdDebug(5800) << "CalendarResources::beginChange(): unable to get ticket."
                     << endl;
-      decrementChangeCount( r );
+      decrementChangeCount( res );
       return false;
     } else {
-      mTickets[ r ] = ticket;
+      mTickets[ res ] = ticket;
     }
   }
 
@@ -817,13 +829,24 @@ bool CalendarResources::beginChange( Incidence *incidence )
 
 bool CalendarResources::endChange( Incidence *incidence )
 {
+  return endChange( incidence, 0, QString() );
+}
+
+bool CalendarResources::endChange( Incidence *incidence,
+                                   ResourceCalendar *res,
+                                   const QString &subres )
+{
+  Q_UNUSED( subres ); // possible future use
+
   kdDebug(5800) << "CalendarResource::endChange()" << endl;
 
-  ResourceCalendar *r = resource( incidence );
-  if ( !r )
+  if ( !res ) {
+    res = resource( incidence );
+  }
+  if ( !res )
     return false;
 
-  int count = decrementChangeCount( r );
+  int count = decrementChangeCount( res );
 
   if ( mPendingDeleteFromResourceMap ) {
     mResourceMap.remove( incidence );
@@ -831,9 +854,9 @@ bool CalendarResources::endChange( Incidence *incidence )
   }
 
   if ( count == 0 ) {
-    bool ok = save( mTickets[ r ], incidence );
+    bool ok = save( mTickets[ res ], incidence );
     if ( ok ) {
-      mTickets.remove( r );
+      mTickets.remove( res );
     } else {
       return false;
     }

@@ -345,21 +345,55 @@ class LIBKCAL_EXPORT CalendarResources :
 
        @return true if the Incidence was successfully inserted; false otherwise.
     */
-    bool addIncidence( Incidence *incidence, ResourceCalendar *resource, const QString &subresource );
+    bool addIncidence( Incidence *incidence,
+                       ResourceCalendar *resource, const QString &subresource );
 
     /**
        Flag that a change to a Calendar Incidence is starting.
-
        @param incidence is a pointer to the Incidence that will be changing.
+
+       @return false if the resource could not be computed or if a ticket
+       request fails; true otherwise.
     */
-    bool beginChange( Incidence *incidence );
+    KDE_DEPRECATED bool beginChange( Incidence *incidence );
+
+    /**
+       Flag that a change to a Calendar Incidence is starting.
+       @param incidence is a pointer to the Incidence that will be changing.
+       @param resource is a pointer to the ResourceCalendar that @p incidence
+       belongs to; if this is 0 then the resource is queried via the
+       DestinationPolicy.
+       @param subresource is the @p Incidence subresource name, which may not
+       be used by some calendar resources.
+
+       @return false if the resource could not be computed or if a ticket
+       request fails; true otherwise.
+    */
+    bool beginChange( Incidence *incidence, ResourceCalendar *resource, const QString &subresource );
 
     /**
        Flag that a change to a Calendar Incidence has completed.
-
        @param incidence is a pointer to the Incidence that was changed.
+
+       @return false if the resource could not be computed or if a ticket
+       save fails; true otherwise.
     */
-    bool endChange( Incidence *incidence );
+    KDE_DEPRECATED bool endChange( Incidence *incidence );
+
+    /**
+       Flag that a change to a Calendar Incidence has completed.
+       @param incidence is a pointer to the Incidence that was changed.
+       @param resource is a pointer to the ResourceCalendar that @p incidence
+       belongs to; if this is 0 then the resource is queried via the
+       DestinationPolicy.
+       @param subresource is the @p Incidence subresource name, which may not
+       be used by some calendar resources.
+
+       @return false if the resource could not be computed or if a ticket
+       save fails; true otherwise.
+    */
+    bool endChange( Incidence *incidence,
+                    ResourceCalendar *resource, const QString &subresource );
 
 // Event Specific Methods //
 
