@@ -31,6 +31,8 @@ set( akonadi_next_SRCS
   mailmodel.cpp
   amazingcompleter.cpp
   amazingdelegate.cpp
+  modelstatesaver.cpp
+  entitymodelstatesaver.cpp
   recursivecollectionfilterproxymodel.cpp
 )
 
