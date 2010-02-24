@@ -475,7 +475,7 @@ Name[zh_TW]=其他金鑰
 [Key Filter #7]
 is-cardkey=true
 Name=Smartcard Key
-Name[ca]=Clau Smartcard
+Name[ca]=Clau de targeta intel·ligent
 Name[ca@valencia]=Clau Smartcard
 Name[da]=Smartcard-nøgle
 Name[de]=Smartcard-Zertifikat
