@@ -113,16 +113,17 @@ install(TARGETS kdepim ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
-set(kdepimwidgets_PART_SRCS)
-kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/kdepim.widgets)
+if (QT_QTDESIGNER_FOUND)
+  set(kdepimwidgets_PART_SRCS)
+  kde4_add_widget_files(kdepimwidgets_PART_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/kdepim.widgets)
 
-kde4_add_plugin(kdepimwidgets ${kdepimwidgets_PART_SRCS})
+  kde4_add_plugin(kdepimwidgets ${kdepimwidgets_PART_SRCS})
 
 
+  target_link_libraries(kdepimwidgets  ${KDE4_KIO_LIBS} kdepim)
 
-target_link_libraries(kdepimwidgets  ${KDE4_KIO_LIBS} kdepim)
-
-install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+  install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
+endif (QT_QTDESIGNER_FOUND)
 
 
 ########### install files ###############
