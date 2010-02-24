@@ -34,7 +34,7 @@
 
 #include <kdialog.h>
 
-#include <q3cstring.h>
+#include <qbytearray.h>
 
 namespace GpgME {
   class Error;
