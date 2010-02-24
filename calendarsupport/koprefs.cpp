@@ -38,7 +38,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kemailsettings.h>
-#include <k3staticdeleter.h>
 #include <kstringhandler.h>
 #include <ksystemtimezone.h>
 
