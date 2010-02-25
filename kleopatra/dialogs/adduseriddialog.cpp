@@ -37,16 +37,97 @@
 #include "ui_adduseriddialog.h"
 
 #include <utils/validation.h>
+#include <utils/stl_util.h>
 
 #include <QString>
 #include <QStringList>
 #include <QPushButton>
 #include <QValidator>
 
+#include <KConfigGroup>
+#include <KGlobal>
+#include <KLocalizedString>
+#include <KDebug>
+
 #include <cassert>
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
+
+namespace {
+    struct Line {
+        QString attr;
+        QString label;
+        QString regex;
+        QLineEdit * edit;
+    };
+}
+
+static QString pgpLabel( const QString & attr ) {
+    if ( attr == "NAME" )
+        return i18n("Name");
+    if ( attr == "COMMENT" )
+        return i18n("Comment");
+    if ( attr == "EMAIL" )
+        return i18n("EMail");
+    return QString();
+}
+
+static QString attributeLabel( const QString & attr, bool pgp ) {
+  if ( attr.isEmpty() )
+    return QString();
+  const QString label = /*pgp ?*/ pgpLabel( attr ) /*: Kleo::DNAttributeMapper::instance()->name2label( attr )*/ ;
+  if ( !label.isEmpty() )
+      if ( pgp )
+          return label;
+      else
+          return i18nc("Format string for the labels in the \"Your Personal Data\" page",
+                       "%1 (%2)", label, attr );
+  else
+    return attr;
+}
+
+static QString attributeFromKey( QString key ) {
+  return key.remove( '!' );
+}
+
+static int row_index_of( QWidget * w, QGridLayout * l ) {
+    const int idx = l->indexOf( w );
+    int r, c, rs, cs;
+    l->getItemPosition( idx, &r, &c, &rs, &cs );
+    return r;
+}
+
+static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, const QString & preset, QValidator * validator, bool readonly, bool required ) {
+    assert( l );
+    assert( row >= 0 );
+    assert( row < l->rowCount() );
+
+    QLabel * lb = qobject_cast<QLabel*>( l->itemAtPosition( row, 0 )->widget() );
+    assert( lb );
+    QLineEdit * le = qobject_cast<QLineEdit*>( l->itemAtPosition( row, 1 )->widget() );
+    assert( le );
+    QLabel * reqLB = qobject_cast<QLabel*>( l->itemAtPosition( row, 2 )->widget() );
+    assert( reqLB );
+
+    lb->setText( i18nc("interpunctation for labels", "%1:", label ) );
+    le->setText( preset );
+    reqLB->setText( required ? i18n("(required)") : i18n("(optional)") );
+    delete le->validator();
+    if ( validator ) {
+        if ( !validator->parent() )
+            validator->setParent( le );
+        le->setValidator( validator );
+    }
+
+    le->setReadOnly( readonly && le->hasAcceptableInput() );
+
+    lb->show();
+    le->show();
+    reqLB->show();
+
+    return le;
+}
 
 class AddUserIDDialog::Private {
     friend class ::Kleo::Dialogs::AddUserIDDialog;
@@ -63,15 +144,80 @@ private:
     void slotUserIDChanged();
 
 private:
+    bool isComplete() const;
+
+private:
     struct UI : public Ui_AddUserIDDialog {
+
+        QVector<Line> lineList;
+
         explicit UI( AddUserIDDialog * qq )
             : Ui_AddUserIDDialog()
         {
             setupUi( qq );
 
-            nameLE->setValidator( Validation::pgpName( nameLE ) );
-            emailLE->setValidator( Validation::email( emailLE ) );
-            commentLE->setValidator( Validation::pgpComment( commentLE ) );
+            // ### this code is mostly the same as the one in
+            // ### newcertificatewizard. Find some time to factor them
+            // ### into a single copy.
+
+            // hide the stuff
+            nameLB->hide();
+            nameLE->hide();
+            nameRequiredLB->hide();
+
+            emailLB->hide();
+            emailLE->hide();
+            emailRequiredLB->hide();
+
+            commentLB->hide();
+            commentLE->hide();
+            commentRequiredLB->hide();
+
+            // set errorLB to have a fixed height of two lines:
+            errorLB->setText( "2<br>1" );
+            errorLB->setFixedHeight( errorLB->minimumSizeHint().height() );
+            errorLB->clear();
+
+            const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+            const QStringList attrOrder = config.readEntry( "OpenPGPAttributeOrder",
+                                                            QStringList() << "NAME!" << "EMAIL!" << "COMMENT" );
+
+            QMap<int,Line> lines;
+
+            Q_FOREACH( const QString & rawKey, attrOrder ) {
+                const QString key = rawKey.trimmed().toUpper();
+                const QString attr = attributeFromKey( key );
+                if ( attr.isEmpty() )
+                    continue;
+                const QString preset = config.readEntry( attr );
+                const bool required = key.endsWith( QLatin1Char('!') );
+                const bool readonly = config.isEntryImmutable( attr );
+                const QString label = config.readEntry( attr + "_label",
+                                                        attributeLabel( attr, true ) );
+                const QString regex = config.readEntry( attr + "_regex" );
+
+                int row;
+                QValidator * validator = 0;
+                if ( attr == "EMAIL" ) {
+                    validator = regex.isEmpty() ? Validation::email() : Validation::email( QRegExp( regex ) ) ;
+                    row = row_index_of( emailLE, gridLayout );
+                } else if ( attr == "NAME" ) {
+                    validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName( QRegExp( regex ) ) ;
+                    row = row_index_of( nameLE, gridLayout );
+                } else if ( attr == "COMMENT" ) {
+                    validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment( QRegExp( regex ) ) ;
+                    row = row_index_of( commentLE, gridLayout );
+                } else {
+                    continue;
+                }
+
+                QLineEdit * le = adjust_row( gridLayout, row, label, preset, validator, readonly, required );
+
+                const Line line = { key, label, regex, le };
+                lines[row] = line;
+            }
+
+            lineList = kdtools::copy< QVector<Line> >( lines );
         }
 
         QPushButton * okPB() const {
@@ -120,28 +266,52 @@ static bool has_intermediate_input( const QLineEdit * le ) {
     return !v || v->validate( text, pos ) == QValidator::Intermediate ;
 }
 
+static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
+  Q_FOREACH( const Line & line, list ) {
+    const QLineEdit * le = line.edit;
+    if ( !le )
+      continue;
+    const QString key = line.attr;
+    kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+    if ( le->text().trimmed().isEmpty() ) {
+        if ( key.endsWith('!') ) {
+            if ( line.regex.isEmpty() )
+                error = i18nc("@info","<interface>%1</interface> is required, but empty.", line.label );
+            else
+                error = i18nc("@info","<interface>%1</interface> is required, but empty.<nl/>"
+                              "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
+            return false;
+        }
+    } else if ( has_intermediate_input( le ) ) {
+        if ( line.regex.isEmpty() )
+            error = i18nc("@info","<interface>%1</interface> is incomplete.", line.label );
+        else
+            error = i18nc("@info","<interface>%1</interface> is incomplete.<nl/>"
+                          "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
+        return false;
+    } else if ( !le->hasAcceptableInput() ) {
+        if ( line.regex.isEmpty() )
+            error = i18nc("@info","<interface>%1</interface> is invalid.", line.label );
+        else
+            error = i18nc("@info","<interface>%1</interface> is invalid.<nl/>"
+                          "Local Admin rule: <icode>%2</icode>", line.label, line.regex );
+        return false;
+    }
+    kDebug() << "ok" << endl;
+  }
+  return true;
+}
+
+bool AddUserIDDialog::Private::isComplete() const {
+    QString error;
+    const bool ok = requirementsAreMet( ui.lineList, error );
+    ui.errorLB->setText( error );
+    return ok;
+}
+
 void AddUserIDDialog::Private::slotUserIDChanged() {
 
-    bool ok = false;
-    QString error;
-
-    if ( ui.nameLE->text().trimmed().isEmpty() )
-        error = i18nc("@info", "<interface>Real name</interface> is required, but missing.");
-    else if ( !ui.nameLE->hasAcceptableInput() )
-        error = i18nc("@info", "<interface>Real name</interface> must be at least 5 characters long.");
-    else if ( ui.emailLE->text().trimmed().isEmpty() )
-        error = i18nc("@info", "<interface>EMail address</interface> is required, but missing.");
-    else if ( has_intermediate_input( ui.emailLE ) )
-        error = i18nc("@info", "<interface>EMail address</interface> is incomplete." );
-    else if ( !ui.emailLE->hasAcceptableInput() )
-        error = i18nc("@info", "<interface>EMail address</interface> is invalid.");
-    else if ( !ui.commentLE->hasAcceptableInput() )
-        error = i18nc("@info", "<interface>Comment</interface> contains invalid characters.");
-    else
-        ok = true;
-
-    ui.okPB()->setEnabled( ok );
-    ui.errorLB->setText( error );
+    ui.okPB()->setEnabled( isComplete() );
 
     const QString name = q->name();
     const QString email = q->email();
