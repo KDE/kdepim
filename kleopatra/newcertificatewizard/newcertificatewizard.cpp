@@ -432,6 +432,13 @@ namespace {
         Ui_ChooseProtocolPage ui;
     };
 
+    struct Line {
+        QString attr;
+        QString label;
+        QString regex;
+        QLineEdit * edit;
+    };
+
     class EnterDetailsPage : public WizardPage {
         Q_OBJECT
     public:
@@ -469,12 +476,6 @@ namespace {
             saveValues();
         }
 
-        struct Line {
-            QString attr;
-            QString label;
-            QString regex;
-            QLineEdit * edit;
-        };
     private:
         void updateForm();
         void clearForm();
@@ -1157,8 +1158,8 @@ static bool has_intermediate_input( const QLineEdit * le ) {
     return v && v->validate( text, pos ) == QValidator::Intermediate ;
 }
 
-static bool requirementsAreMet( const QVector<EnterDetailsPage::Line> & list, QString & error ) {
-  Q_FOREACH( const EnterDetailsPage::Line & line, list ) {
+static bool requirementsAreMet( const QVector<Line> & list, QString & error ) {
+  Q_FOREACH( const Line & line, list ) {
     const QLineEdit * le = line.edit;
     if ( !le )
       continue;
