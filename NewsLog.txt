@@ -1,3 +1,18 @@
+Friday, February 26th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4055: Workweek after restart is today and next 4 days (rt#5958)
+* kolab/issue4053: reminder of an event with recurrence shows wrong date (rt#5953)
+* kolab/issue4112: Event/Task conflict dialog is too difficult (rt#6009)
+* kolab/issue1765: In parallel calender view there is no need to ask in which resource folder a new event
+                   should get (rt#5816)
+* kolab/issue4060: Wish: Auto-spellchecking: action to add new suggestion in context menu (rt#5969)
+* When recovering a written message after a crash, don't delete the autosave file immediatley, to avoid data
+  loss in case KMail crashes again before the next autosave is triggered
+
+
 Friday, February 19th 2010
 
 Problems addressed
