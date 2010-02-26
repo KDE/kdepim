@@ -3,24 +3,18 @@ Friday, February 19th 2010
 Problems addressed
 ------------------
 
-* kolab/issue4109: Task with recurrence: Startime not saved (rt#6019)
-* kolab/issue4105: Three warning dialogs appears, if I try to create an event and have deactivated
+* kolab/issue4105: (partly) Three warning dialogs appears, if I try to create an event and have deactivated
                    the Task resources.
-* kolab/issue1765: In parallel calender view there is no need to ask in which resource folder a new event
+* kolab/issue1765: (partly) In parallel calender view there is no need to ask in which resource folder a new event
                    should get (rt#5816)
 * kolab/issue4117: Reminder: Preselected "remind me later" time should always be 5 mins (rt#6017)
-* kolab/issue4110: Task with recurrence: due of a selected task in calendar doesn't match the right date (rt#6020)
-* kolab/issue4101: edit or copy/move/paste of an event with recurrence should ask how to handle recurrence (rt#6002)
-* kolab/issue4063: New task is not visible in calendar side-by-side view (rt#5974)
 * kolab/issue3597: Event reminder of a deleted event appears (rt#6010)
 * kolab/issue4108: Reminder option "remind me later" should work even if the user closed the session (rt#6016)
-* kolab/issue4125: Event with recurrence: Changing attendee of one event, changes it for every event (rt#6029)
-* kolab/issue4102: Wish: type of attendee of an event should be displayed in the small event pane (rt#6004)
+* kolab/issue4125: (mainly) Event with recurrence: Changing attendee of one event, changes it for every event (rt#6029)
 * kolab/issue2079: Search for mails: Cannot create a new search if an old search is selected
-* kolab/issue4107: In workweek mode clicking on the month pane week number selects whole week (rt#6013)
 * kolab/issue4056: calendar month view: It is not visible in the big calendar, which day is selected in the
                    small month calendar (rt#5960)
-* kolab/issue4053: reminder of an event with recurrence shows wrong date (rt#5953)
+* kolab/issue4053: (partly) reminder of an event with recurrence shows wrong date (rt#5953)
 * kolab/issue4145: Calendar: month view/agenda view inconsistence with events with recurrence
 * kolab/issue4147: Event/Task conflict dialog "Take Both" should be default (rt#6009)
 
