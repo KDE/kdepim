@@ -74,7 +74,7 @@ namespace {
             m_explaination
                 = i18nc( "@info",
                          "<para>Kleopatra detected the following errors in the libkleopatrarc configuration:</para>"
-                         "%1", "<list><item>" + errors.join( "</item><item>" ) + "</item></list>" );
+                         "%1", "<ol><li>" + errors.join( "</li><li>" ) + "</li></ol>" );
         }
 
         ///* reimp */ bool canFixAutomatically() const { return false; }
