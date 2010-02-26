@@ -1607,7 +1607,7 @@ void KMailICalIfaceImpl::triggerKolabFreeBusy( const KUrl& folderURL )
   KUrl httpURL( folderURL );
   // Keep username ("user@domain"), pass, and host from the imap url
   httpURL.setProtocol( "https" );
-  httpURL.setPort( 0 ); // remove imap port
+  httpURL.setPort( -1 ); // remove imap port
 
   // IMAP path is either /INBOX/<path> or /user/someone/<path>
   QString path = folderURL.path( KUrl::RemoveTrailingSlash );
