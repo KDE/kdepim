@@ -35,6 +35,7 @@
 #include <Akonadi/CollectionDialog>
 #include <Akonadi/EntityDisplayAttribute>
 #include <akonadi/entitytreemodel.h>
+#include <Akonadi/KCal/IncidenceMimeTypeVisitor>
 
 #include <KIconLoader>
 #include <KUrl>
@@ -253,7 +254,12 @@ QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spe
 Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::Collection &defaultCollection )
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
-  dlg->setMimeTypeFilter( QStringList() << QLatin1String( "text/calendar" ) );
+  QStringList mimetypes;
+  mimetypes << Akonadi::IncidenceMimeTypeVisitor::todoMimeType();
+  mimetypes << Akonadi::IncidenceMimeTypeVisitor::journalMimeType();
+  mimetypes << Akonadi::IncidenceMimeTypeVisitor::eventMimeType();
+
+  dlg->setMimeTypeFilter( mimetypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
   if ( defaultCollection.isValid() )
     dlg->setDefaultCollection( defaultCollection );
