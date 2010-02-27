@@ -338,7 +338,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
     if ( !mCachedSubresource.isNull() ) {
       subResource = mCachedSubresource;
     } else {
-      subResource = findWritableResource( mSubResources );
+      subResource = findWritableResource( i18n( "Contact" ), mSubResources );
       // We were locked, remember the subresource we are working with until
       // we are unlocked
       if ( mLocked )

@@ -41,6 +41,7 @@
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 using namespace Kolab;
 
@@ -198,7 +199,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   mCalendar.addJournal( journal );
 
   QString resource =
-    newNote ? findWritableResource( mSubResources ) : subresource;
+    newNote ? findWritableResource( i18n( "Note" ), mSubResources ) : subresource;
   if ( resource.isEmpty() ) // canceled
   {
     return false;
@@ -267,7 +268,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     subResource = mUidMap[ i->uid() ].resource();
     sernum = mUidMap[ i->uid() ].serialNumber();
   } else { // can this happen?
-    subResource = findWritableResource( mSubResources );
+    subResource = findWritableResource( i18n( i->type() ), mSubResources );
     if ( subResource.isEmpty() ) // canceled
       return;
     sernum = 0;

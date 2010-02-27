@@ -41,7 +41,6 @@
 #include <kio/uiserver_stub.h>
 #include <kapplication.h>
 #include <dcopclient.h>
-#include <libkcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
 #include <kmainwindow.h>
@@ -516,14 +515,17 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     // Find out if this event was previously stored in KMail
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
+      QString type = incidence->type();
       // Add a description of the incidence
       QString text = "<b><font size=\"+1\">";
-      if ( incidence->type() == "Event" )
+      if ( incidence->type() == "Event" ) {
         text += i18n( "Choose the folder where you want to store this event" );
-      else if ( incidence->type() == "Todo" )
+      } else if ( incidence->type() == "Todo" ) {
+        type = i18n( "Task" );
         text += i18n( "Choose the folder where you want to store this task" );
-      else
+      } else {
         text += i18n( "Choose the folder where you want to store this incidence" );
+      }
       text += "<font></b><br>";
       if ( !incidence->summary().isEmpty() )
         text += i18n( "<b>Summary:</b> %1" ).arg( incidence->summary() ) + "<br>";
@@ -546,7 +548,7 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
             text += i18n( "<b>End:</b> %1" ).arg( event->dtEndDateStr() );
         text += "<br>";
       }
-      subResource = findWritableResource( *map, text );
+      subResource = findWritableResource( type, *map, text );
     }
 
     if ( subResource.isEmpty() )

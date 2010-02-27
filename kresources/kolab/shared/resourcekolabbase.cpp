@@ -210,7 +210,8 @@ bool ResourceKolabBase::kmailRemoveSubresource( const QString& resource )
   return mConnection->kmailRemoveSubresource( resource );
 }
 
-QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
+QString ResourceKolabBase::findWritableResource( const QString &type,
+                                                 const ResourceMap& resources,
                                                  const QString& text )
 {
   // I have to use the label (shown in the dialog) as key here. But given how the
@@ -227,7 +228,11 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
 
   if ( possible.isEmpty() ) { // None found!!
     kdWarning(5650) << "No writable resource found!" << endl;
-    KMessageBox::error( 0, i18n( "No writable resource was found, saving will not be possible. Reconfigure KMail first." ) );
+    KMessageBox::error(
+      0,
+      i18n( "You have no writable %1 folders so saving will not be possible.\n"
+            "Please create or activate at least 1 writable %2 folder and try again." ).
+      arg( type, type ) );
     return QString::null;
   }
   if ( possible.count() == 1 )
