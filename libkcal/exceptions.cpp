@@ -83,6 +83,9 @@ QString ErrorFormat::message()
   case Restriction:
     message = i18n( "Restriction violation" );
     break;
+  case NoWritableFound:
+    message = i18n( "No writable resource found" );
+    break;
   case UserCancel:
     // no real error; the user canceled the operation
     break;
