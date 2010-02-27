@@ -9,5 +9,5 @@ include_directories(${GPGME_INCLUDES} )
 kde4_add_plugin(cryptopageplugin ${cryptopageplugin_SRCS})
 target_link_libraries(cryptopageplugin ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS} kleo)
 
-install(TARGETS cryptopageplugin DESTINATION ${DATA_INSTALL_DIR}/akonadi/contact/editorpageplugins/)
+install(TARGETS cryptopageplugin DESTINATION ${LIB_INSTALL_DIR}/akonadi/contact/editorpageplugins/)
 endif (QT_QT3SUPPORT_FOUND)
