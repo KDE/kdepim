@@ -36,6 +36,7 @@
 #include "event.h"
 #include "journal.h"
 #include "calendar.h"
+#include "exceptions.h"
 
 #include <kresources/resource.h>
 #include <kresources/manager.h>
@@ -59,6 +60,23 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
   public:
     ResourceCalendar( const KConfig * );
     virtual ~ResourceCalendar();
+
+    /**
+      Clears the exception status.
+    */
+    void clearException();
+
+    /**
+      Set exception for this object. This is used by the functions of this
+      class to report errors.
+    */
+    void setException( ErrorFormat *error );
+
+    /**
+      Returns an exception, if there is any, containing information about the
+      last error that occurred.
+    */
+    ErrorFormat *exception();
 
     void setResolveConflict( bool b);
 
@@ -419,6 +437,8 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
   private:
     bool mReceivedLoadError;
     bool mReceivedSaveError;
+
+    ErrorFormat *mException;
 
     class Private;
     Private *d;

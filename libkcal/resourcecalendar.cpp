@@ -33,18 +33,38 @@
 using namespace KCal;
 
 ResourceCalendar::ResourceCalendar( const KConfig *config )
-    : KRES::Resource( config ),mResolveConflict( false )
+  : KRES::Resource( config ), mResolveConflict( false )
 {
+  mException = 0;
 }
 
 ResourceCalendar::~ResourceCalendar()
 {
+  delete mException;
+}
+
+void ResourceCalendar::clearException()
+{
+  delete mException;
+  mException = 0;
+}
+
+void ResourceCalendar::setException( ErrorFormat *exception )
+{
+  delete mException;
+  mException = exception;
+}
+
+ErrorFormat *ResourceCalendar::exception()
+{
+  return mException;
 }
 
 void ResourceCalendar::setResolveConflict( bool b)
 {
  mResolveConflict = b;
 }
+
 QString ResourceCalendar::infoText() const
 {
   QString txt;

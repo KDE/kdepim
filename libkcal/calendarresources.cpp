@@ -324,6 +324,9 @@ bool CalendarResources::addIncidence( Incidence *incidence )
       endChange( incidence, resource, QString() );
       return true;
     } else {
+      if ( resource->exception() ) {
+        mException = new ErrorFormat( resource->exception()->errorCode() );
+      }
       mResourceMap.remove( incidence );
     }
   } else {
