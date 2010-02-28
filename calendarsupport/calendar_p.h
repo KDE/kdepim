@@ -105,8 +105,6 @@ public:
   explicit Private( QAbstractItemModel* treeModel, QAbstractItemModel* model, Calendar *q );
   ~Private();
 
-  bool deleteIncidence( const Akonadi::Item & );
-
   enum UpdateMode {
     DontCare,
     AssertExists,
