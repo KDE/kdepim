@@ -3,7 +3,7 @@ include_directories(
     ${Boost_INCLUDE_DIR}
 )
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII ${KDE4_ENABLE_EXCEPTIONS}" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 ########### next target ###############
 
@@ -27,6 +27,7 @@ set( kcalakonadi_LIB_SRC
      koprefs.cpp
      mailscheduler.cpp
      freebusymanager.cpp
+     dndfactory.cpp
 )
 
 kde4_add_kcfg_files(kcalakonadi_LIB_SRC koprefs_base.kcfgc )
