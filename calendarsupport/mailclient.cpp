@@ -142,7 +142,7 @@ bool Akonadi::MailClient::mailAttendees( IncidenceBase *incidence,
     Incidence *inc = static_cast<Incidence *>( incidence );
     subject = inc->summary();
   } else {
-    subject = QLatin1String( "Free Busy Object" );
+    subject = i18n( "Free Busy Object" );
   }
 
   QString body = IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
@@ -166,7 +166,7 @@ bool Akonadi::MailClient::mailOrganizer( IncidenceBase *incidence,
       subject = inc->summary();
     }
   } else {
-    subject = QLatin1String( "Free Busy Message" );
+    subject = i18n( "Free Busy Message" );
   }
 
   QString body = IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
@@ -186,7 +186,7 @@ bool Akonadi::MailClient::mailTo( IncidenceBase *incidence, const Identity &iden
     Incidence *inc = static_cast<Incidence *>( incidence );
     subject = inc->summary();
   } else {
-    subject = QLatin1String( "Free Busy Message" );
+    subject = i18n( "Free Busy Message" );
   }
   QString body = IncidenceFormatter::mailBodyStr( incidence, KSystemTimeZones::local() );
 
