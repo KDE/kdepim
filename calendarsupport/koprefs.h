@@ -84,7 +84,7 @@ class KOPrefs : public KOPrefsBase
     QString mPublishPassword;
     QString mRetrievePassword;
 
-    QStringList timeScaleTimezones();
+    QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
 
   private:

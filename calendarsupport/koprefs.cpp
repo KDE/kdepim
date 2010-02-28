@@ -313,7 +313,7 @@ bool KOPrefs::thatIsMe( const QString &_email )
   return false;
 }
 
-QStringList KOPrefs::timeScaleTimezones()
+QStringList KOPrefs::timeScaleTimezones() const
 {
   return mTimeScaleTimeZones;
 }
