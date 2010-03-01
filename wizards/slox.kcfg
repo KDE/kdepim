@@ -47,6 +47,6 @@
   </group>
 
   <propagation source="sloxrc/Constants/EnableFreeBusy"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrieveAuto" />
 
 </kcfg>

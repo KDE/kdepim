@@ -195,7 +195,7 @@ class GroupwisePropagator : public KConfigPropagator
     {
       ChangeConfig *c = new ChangeConfig;
       c->file = "korganizerrc";
-      c->group = "FreeBusy";
+      c->group = "FreeBusy Retrieve";
       c->name = "FreeBusyRetrieveUrl";
       c->value = "groupwise://" + GroupwiseConfig::self()->host() + GroupwiseConfig::self()->path() +
         "/freebusy/";

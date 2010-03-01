@@ -176,7 +176,7 @@ class KolabPropagator : public KConfigPropagator
 
       ChangeConfig *c = new ChangeConfig;
       c->file = "korganizerrc";
-      c->group = "FreeBusy";
+      c->group = "FreeBusy Publish";
 
       c->name = "FreeBusyPublishUrl";
 
@@ -201,7 +201,7 @@ class KolabPropagator : public KConfigPropagator
 
       ChangeConfig *c = new ChangeConfig;
       c->file = "korganizerrc";
-      c->group = "FreeBusy";
+      c->group = "FreeBusy Retrieve";
       c->name = "FreeBusyRetrieveUrl";
       c->value = freeBusyBaseUrl.url();
       changes.append( c );
@@ -209,7 +209,7 @@ class KolabPropagator : public KConfigPropagator
       // Use full email address for retrieval of free/busy lists
       c = new ChangeConfig;
       c->file = "korganizerrc";
-      c->group = "FreeBusy";
+      c->group = "FreeBusy Retrieve";
       c->name = "FreeBusyFullDomainRetrieval";
       c->value = "true";
       changes.append( c );

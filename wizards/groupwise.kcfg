@@ -72,14 +72,14 @@
   </group>
 
   <propagation source="groupwiserc/Constants/EnableFreeBusy"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrieveAuto" />
 
   <propagation source="groupwiserc/General/User"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveUser" />
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrieveUser" />
   <propagation source="groupwiserc/General/Password"
-               target="korganizerrc/FreeBusy/FreeBusyRetrievePassword"
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrievePassword"
                hidevalue="true" />
   <propagation source="groupwiserc/General/SavePassword"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveSavePassword" />
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrieveSavePassword" />
 
 </kcfg>
