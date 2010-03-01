@@ -45,24 +45,24 @@
   </group>
 
   <propagation source="kolabrc/General/Kolab1Legacy"
-               target="korganizerrc/FreeBusy/FreeBusyPublishAuto" />
+               target="korganizerrc/FreeBusy Publish/FreeBusyPublishAuto" />
   <propagation source="kolabrc/Constants/EnableFreeBusy"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveAuto" />
+               target="korganizerrc/FreeBusy Publish/FreeBusyRetrieveAuto" />
 
   <propagation source="kolabrc/General/User"
-               target="korganizerrc/FreeBusy/FreeBusyPublishUser" />
+               target="korganizerrc/FreeBusy Publish/FreeBusyPublishUser" />
   <propagation source="kolabrc/General/Password"
-               target="korganizerrc/FreeBusy/FreeBusyPublishPassword"
+               target="korganizerrc/FreeBusy Publish/FreeBusyPublishPassword"
                hidevalue="true" />
   <propagation source="kolabrc/General/SavePassword"
-               target="korganizerrc/FreeBusy/FreeBusyPublishSavePassword" />
+               target="korganizerrc/FreeBusy Publish/FreeBusyPublishSavePassword" />
 
   <propagation source="kolabrc/General/User"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveUser" />
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrieveUser" />
   <propagation source="kolabrc/General/Password"
-               target="korganizerrc/FreeBusy/FreeBusyRetrievePassword"
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrievePassword"
                hidevalue="true" />
   <propagation source="kolabrc/General/SavePassword"
-               target="korganizerrc/FreeBusy/FreeBusyRetrieveSavePassword" />
+               target="korganizerrc/FreeBusy Retrieve/FreeBusyRetrieveSavePassword" />
 
 </kcfg>
