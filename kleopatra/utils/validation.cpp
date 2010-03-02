@@ -52,16 +52,17 @@ static const char comment_rx[] = "[^()]*";
 
 namespace {
 
-    class EMailValidator : public QRegExpValidator {
+    class EMailValidator : public QValidator {
+        QRegExp rx;
     public:
-        explicit EMailValidator( QObject * parent=0 ) : QRegExpValidator( QRegExp( email_rx ), parent ) {}
+        explicit EMailValidator( QObject * parent=0 ) : QValidator( parent ), rx( QRegExp( email_rx ) ) {}
 
         /* reimp */ void fixup( QString & ) const {}
 
         /* reimp */ State validate( QString & str, int & pos ) const {
             const int atIdx = str.lastIndexOf( '@' );
             if ( atIdx < 0 || str.endsWith( '@' ) )
-                return QRegExpValidator::validate( str, pos );
+                return regexValidate( str, pos );
 
             // toAce/fromAce doesn't like intermediate domain names,
             // so we fix them up with something innocuous to help it
@@ -93,8 +94,30 @@ namespace {
                      << "\n encoded       :" << encoded ;
             if ( domain != domainRestored )
                 return Invalid;
-            int dummyPosition = 0;
-            return QRegExpValidator::validate( encoded, dummyPosition );
+
+            // there's no difference between 'encoded' and 'str' at
+            // least up to and including 'atIdx', and we need the
+            // position for the fixed Intermediate state in
+            // regexValidate (e.g. adding a . after marc in
+            // marc@kdab.com, intending to eventually arrive at
+            // marc.mutz@kdab.com)
+            int adjustedPos = pos <= atIdx ? pos : encoded.size() ;
+            return regexValidate( encoded, adjustedPos );
+        }
+
+    private:
+        State regexValidate( QString & input, int & pos ) const {
+            // fixed version of QRegExpValidator::validate():
+            if (rx.exactMatch(input)) {
+                return Acceptable;
+            } else {
+                if (const_cast<QRegExp &>(rx).matchedLength() == /*input.size()*/pos) {
+                    return Intermediate;
+                } else {
+                    pos = input.size();
+                    return Invalid;
+                }
+            }
         }
 
     };
