@@ -223,7 +223,14 @@ class LIBKCAL_EXPORT Todo : public Incidence
 
   private:
     bool accept(Visitor &v) { return v.visit( this ); }
-    /** Returns true if the todo got a new date, else false will be returned. */
+
+    /**
+      * If the todo recurs, mDtRecurrence is set to the next occurrence
+      * that's after today, mPercentComplete is set to 0 and true is returned.
+      *
+      * If the todo doesn't recur or if there aren't anymore occurrences
+      * it just returns false.
+      */
     bool recurTodo();
 
     QDateTime mDtDue;                    // due date of todo
