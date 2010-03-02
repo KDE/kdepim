@@ -1009,6 +1009,7 @@ void KMFolder::updateIndicatorCount()
   int count = mStorage->countUnread();
   if ( count > 0 ) {
     mIndicator->setCountProperty( count );
+    mIndicator->setDrawAttentionProperty( true );
     mIndicator->show();
   } else {
     mIndicator->hide();
