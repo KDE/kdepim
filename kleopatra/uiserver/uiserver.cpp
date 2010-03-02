@@ -35,8 +35,10 @@
 #include "uiserver.h"
 #include "uiserver_p.h"
 
+#include "sessiondata.h"
+
 #include <utils/detail_p.h>
-#include "utils/gnupg-helper.h"
+#include <utils/gnupg-helper.h>
 #include <utils/exception.h>
 #include <utils/stl_util.h>
 
@@ -131,6 +133,11 @@ void UiServer::stop() {
     if ( d->file.exists() )
         d->file.remove();
 
+    if ( isStopped() ) {
+        SessionDataHandler::instance()->clear();
+        emit stopped();
+    }
+
 }
 
 void UiServer::enableCryptoCommands( bool on ) {
@@ -171,8 +178,10 @@ void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * con
     connections.erase( std::remove_if( connections.begin(), connections.end(),
                                        boost::bind( &boost::shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
                        connections.end() );
-    if ( q->isStopped() )
+    if ( q->isStopped() ) {
+        SessionDataHandler::instance()->clear();
         emit q->stopped();
+    }
 }
 
 
