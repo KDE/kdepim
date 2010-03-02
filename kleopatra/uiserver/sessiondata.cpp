@@ -34,6 +34,8 @@
 
 #include "sessiondata.h"
 
+#include <KDebug>
+
 #include <QMutex>
 
 #include <boost/bind.hpp>
@@ -71,6 +73,7 @@ SessionDataHandler::SessionDataHandler()
       
 
 void SessionDataHandler::enterSession( unsigned int id ) {
+    kDebug() << id;
     const shared_ptr<SessionData> sd = sessionDataInternal( id );
     assert( sd );
     ++sd->ref;
@@ -78,6 +81,7 @@ void SessionDataHandler::enterSession( unsigned int id ) {
 }
 
 void SessionDataHandler::exitSession( unsigned int id ) {
+    kDebug() << id;
     const shared_ptr<SessionData> sd = sessionDataInternal( id );
     assert( sd );
     if ( --sd->ref <= 0 ) {
@@ -100,6 +104,10 @@ shared_ptr<SessionData> SessionDataHandler::sessionDataInternal( unsigned int id
 
 shared_ptr<SessionData> SessionDataHandler::sessionData( unsigned int id ) const {
     return sessionDataInternal( id );
+}
+
+void SessionDataHandler::clear() {
+    data.clear();
 }
 
 void SessionDataHandler::slotCollectGarbage() {

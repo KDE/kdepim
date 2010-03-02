@@ -69,6 +69,8 @@ namespace Kleo {
 
         boost::shared_ptr<SessionData> sessionData( unsigned int ) const;
 
+        void clear();
+
     private Q_SLOTS:
         void slotCollectGarbage();
 
