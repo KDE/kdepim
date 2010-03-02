@@ -64,12 +64,6 @@ static const QLatin1String COMMAND_ENTRY( "pack-command" );
 static const QLatin1String EXTENSIONS_ENTRY( "extensions" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
 
-#if defined( _WIN32 ) || defined( _WIN64 )
-static const bool HAVE_WINDOWS = true;
-#else
-static const bool HAVE_WINDOWS = false;
-#endif
-
 namespace {
 
     class ArchiveDefinitionError : public Kleo::Exception {
@@ -97,9 +91,9 @@ namespace {
                 throw ArchiveDefinitionError( id(), i18n("'extensions' entry is empty/missing") );
             KShell::Errors errors;
             QString cmdline = group.readEntry( COMMAND_ENTRY );
-            if ( HAVE_WINDOWS )
-                cmdline.replace( QRegExp( QString::fromLatin1( "\\b%1\\b" ).arg( FILE_PLACEHOLDER ) ), "%PERCENT_ESCAPE" + FILE_PLACEHOLDER );
-            const QStringList l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
+            cmdline.replace( FILE_PLACEHOLDER, QLatin1String("__files_go_here__") );
+            QStringList l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
+            l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
             if ( errors == KShell::BadQuoting )
                 throw ArchiveDefinitionError( id(), i18n("Quoting error") );
             if ( errors == KShell::FoundMeta )
