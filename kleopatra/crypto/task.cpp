@@ -37,6 +37,7 @@
 
 #include <utils/exception.h>
 #include <utils/gnupg-helper.h>
+#include <utils/auditlog.h>
 
 #include <gpgme++/exception.h>
 
@@ -68,7 +69,7 @@ namespace {
         /* reimp */ int errorCode() const { return m_code; }
         /* reimp */ QString errorString() const { return m_details; }
         /* reimp */ VisualCode code() const { return NeutralError; }
-        /* reimp */ QString auditLogAsHtml() const { return QString(); }
+        /* reimp */ AuditLog auditLog() const { return AuditLog(); }
     private:
         int m_code;
         QString m_details;

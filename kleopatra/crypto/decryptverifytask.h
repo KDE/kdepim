@@ -55,10 +55,12 @@ namespace GpgME {
 }
 
 namespace Kleo {
+    class Input;
+    class Output;
+    class AuditLog;
+}
 
-class Input;
-class Output;
-
+namespace Kleo {
 namespace Crypto {
 
     class DecryptVerifyResult;
@@ -77,14 +79,14 @@ namespace Crypto {
         void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
 
     protected:
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::DecryptionResult & dr, const QByteArray & plaintext, const QString & auditLog );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::Error & err, const QString& details, const QString & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::Error & err, const QString & what, const QString & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const QString & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::VerificationResult & vr, const QString & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::Error & err, const QString & details, const QString & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::DecryptionResult & dr, const QByteArray & plaintext, const AuditLog & auditLog );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::Error & err, const QString& details, const AuditLog & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext, const AuditLog & auditLog );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::Error & err, const QString & what, const AuditLog & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::VerificationResult & vr, const QByteArray & plaintext, const AuditLog & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::VerificationResult & vr, const AuditLog & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::Error & err, const QString & details, const AuditLog & auditLog  );
 
         virtual QString inputLabel() const = 0;
         virtual QString outputLabel() const = 0;
@@ -230,7 +232,7 @@ namespace Crypto {
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
-        /* reimp */ QString auditLogAsHtml() const;
+        /* reimp */ AuditLog auditLog() const;
 
         GpgME::VerificationResult verificationResult() const;
 
@@ -252,7 +254,7 @@ private:
                   const QString & errString,
                   const QString & inputLabel,
                   const QString & outputLabel,
-                  const QString & auditLog,
+                  const AuditLog & auditLog,
                   const KMime::Types::Mailbox & informativeSender );
 
     private:
