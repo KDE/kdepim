@@ -77,6 +77,9 @@ namespace Gui {
         void setSign( bool on );
         void setEncrypt( bool on );
 
+        // To wrap up inputs:
+        void pickProtocol();
+
         // Intermediate
 
         bool isComplete() const;
