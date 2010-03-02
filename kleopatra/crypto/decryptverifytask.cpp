@@ -122,8 +122,10 @@ static std::string email( const UserID & uid ) {
 }
 
 static Mailbox mailbox( const UserID & uid ) {
+    const std::string e = email( uid );
     Mailbox mbox;
-    mbox.setAddress( email( uid ).c_str() );
+    if ( !e.empty() )
+        mbox.setAddress( e.c_str() );
     return mbox;
 }
 
