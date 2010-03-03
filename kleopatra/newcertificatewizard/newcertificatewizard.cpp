@@ -1278,18 +1278,19 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
     QString result;
     QTextStream s( &result );
     s             << "<table>";
+    s         	  << Row<        >( i18n("Real Name:"),         name() );
+    s             << Row<        >( i18n("Email Address:"),     email() );
+    if ( pgp() && !comment().isEmpty() )
+        s         << Row<        >( i18n("Comment:"),           comment() );
+    else
+        s         << Row<        >( i18n("Subject-DN:"),        dn() );
     if ( details ) {
         s         << Row<        >( i18n("Key Type:"),          gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) );
         if ( const unsigned int strength = keyStrength() )
             s     << Row<unsigned>( i18n("Key Strength:"),      strength );
         else
             s     << Row<        >( i18n("Key Strength:"),      i18n("default") );
-    }
-    if ( details )
-        s         << Row<        >( i18n("Key Usage:"),         i18nKeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
-    else
         s         << Row<        >( i18n("Certificate Usage:"), i18nCombinedKeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
-    if ( details )
         if ( const unsigned int subkey = subkeyType() ) {
             s     << Row<        >( i18n("Subkey Type:"),       gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) );
             if ( const unsigned int strength = subkeyStrength() )
@@ -1297,16 +1298,11 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
             else
                 s << Row<        >( i18n("Subkey Strength:"),   i18n("default") );
             s     << Row<        >( i18n("Subkey Usage:"),      i18nSubkeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
+	}
     }
-    if ( pgp() && expiryDate().isValid() )
+    if ( pgp() && details && expiryDate().isValid() )
         s         << Row<        >( i18n("Valid Until:"),       KGlobal::locale()->formatDate( expiryDate() ) );
-    s             << Row<        >( i18n("Email Address:"),     email() );
-    if ( pgp() ) {
-        s         << Row<        >( i18n("Real Name:"),         name() );
-        if ( !comment().isEmpty() )
-            s     << Row<        >( i18n("Comment:"),           comment() );
-    } else {
-        s         << Row<        >( i18n("Subject-DN:"),        dn() );
+    if ( !pgp() && details ) {
         Q_FOREACH( const QString & email, additionalEMailAddresses() )
             s     << Row<        >( i18n("Add. Email Address:"),email );
         Q_FOREACH( const QString & dns,   dnsNames() )
