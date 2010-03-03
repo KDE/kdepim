@@ -116,10 +116,13 @@ void Todo::setDtDue(const QDateTime &dtDue, bool first )
 
 QDateTime Todo::dtDue( bool first ) const
 {
-  if ( doesRecur() && !first && mDtRecurrence.isValid() )
+  if ( doesRecur() && !first && mDtRecurrence.isValid() ) {
     return mDtRecurrence;
-
-  return mDtDue;
+  } else if ( hasDueDate() ) {
+    return mDtDue;
+  } else {
+    return QDateTime();
+  }
 }
 
 QString Todo::dtDueTimeStr() const
@@ -175,8 +178,10 @@ QDateTime Todo::dtStart( bool first ) const
 {
   if ( doesRecur() && !first ) {
     return mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
-  } else {
+  } else if ( hasStartDate() ) {
     return IncidenceBase::dtStart();
+  } else {
+    return QDateTime();
   }
 }
 
