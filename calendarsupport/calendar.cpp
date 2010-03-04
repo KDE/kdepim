@@ -1595,15 +1595,18 @@ void Calendar::appendAlarms( KCal::Alarm::List &alarms, const Item &item,
 }
 
 void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
-                                      const Item &incidence,
+                                      const Item &item,
                                       const KDateTime &from,
                                       const KDateTime &to )
 {
-#ifdef AKONADI_PORT_DISABLED
   KDateTime dt;
   bool endOffsetValid = false;
-  Duration endOffset( 0 );
-  Duration period( from, to );
+  KCal::Duration endOffset( 0 );
+  KCal::Duration period( from, to );
+
+  const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+  Q_ASSERT( incidence );
+
 
   KCal::Alarm::List alarmlist = incidence->alarms();
   for ( int i = 0, iend = alarmlist.count();  i < iend;  ++i ) {
@@ -1619,13 +1622,13 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
         // Alarm time is defined by an offset from the event start or end time.
         // Find the offset from the event start time, which is also used as the
         // offset from the recurrence time.
-        Duration offset( 0 );
+        KCal::Duration offset( 0 );
         if ( a->hasStartOffset() ) {
           offset = a->startOffset();
         } else if ( a->hasEndOffset() ) {
           offset = a->endOffset();
           if ( !endOffsetValid ) {
-            endOffset = Duration( incidence->dtStart(), incidence->dtEnd() );
+            endOffset = KCal::Duration( incidence->dtStart(), incidence->dtEnd() );
             endOffsetValid = true;
           }
         }
@@ -1657,7 +1660,7 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
           // The alarm has repetitions, so check whether repetitions of previous
           // recurrences fall within the time period.
           bool found = false;
-          Duration alarmDuration = a->duration();
+          KCal::Duration alarmDuration = a->duration();
           for ( KDateTime base = baseStart;
                 ( dt = incidence->recurrence()->getPreviousDateTime( base ) ).isValid();
                 base = dt ) {
@@ -1669,7 +1672,7 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
             // Check if a repetition occurs between 'alarmStart' and 'to'.
             int snooze = a->snoozeTime().value();   // in seconds or days
             if ( a->snoozeTime().isDaily() ) {
-              Duration toFromDuration( dt, base );
+              KCal::Duration toFromDuration( dt, base );
               int toFrom = toFromDuration.asDays();
               if ( a->snoozeTime().end( from ) <= to ||
                    ( toFromDuration.isDaily() && toFrom % snooze == 0 ) ||
@@ -1705,7 +1708,4 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
       alarms.append( a );
     }
   }
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif // AKONADI_PORT_DISABLED
 }
