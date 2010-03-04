@@ -3087,7 +3087,9 @@ void KMReaderWin::setBodyPartMemento( const partNode *node,
   }
 
   if ( Observable * o = memento ? memento->asObservable() : 0 ) {
-    o->attach( this );
+    if ( o ) {
+      o->attach( this );
+    }
   }
 }
 
