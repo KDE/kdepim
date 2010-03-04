@@ -88,13 +88,6 @@ namespace StringUtil
   MESSAGECORE_EXPORT QByteArray html2source( const QByteArray & src );
 
 
-  /** Encodes an email address as mailto URL
-   */
-  MESSAGECORE_EXPORT QString encodeMailtoUrl( const QString& str );
-
-  /** Decodes a mailto URL
-   */
-  MESSAGECORE_EXPORT QString decodeMailtoUrl( const QString& url );
 
   /**
    * This function generates a displayable string from a list of email

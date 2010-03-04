@@ -2583,8 +2583,9 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
                       signer = "";
                   else {
                       if( !blockAddrs.empty() ){
-                          QString address = StringUtil::encodeMailtoUrl( blockAddrs.first() );
-                          signer = "<a href=\"mailto:" + address + "\">" + signer + "</a>";
+                          const KUrl address = KPIMUtils::encodeMailtoUrl( blockAddrs.first() );
+                          signer = "<a href=\"mailto:" + KUrl::toPercentEncoding( address.path() ) +
+                                   "\">" + signer + "</a>";
                       }
                   }
 

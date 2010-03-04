@@ -398,23 +398,6 @@ QByteArray html2source( const QByteArray & src )
   return result;
 }
 
-QString encodeMailtoUrl( const QString& str )
-{
-  QString result = QString::fromLatin1( KMime::encodeRFC2047String( str, "utf-8" ) );
-
-  result = KUrl::toPercentEncoding( result );
-  return result;
-}
-
-QString decodeMailtoUrl( const QString& url )
-{
-  QString result;
-  result = KUrl::fromPercentEncoding( url.toLatin1() );
-  result = KMime::decodeRFC2047String( result.toLatin1() );
-
-  return result;
-}
-
 QByteArray stripEmailAddr( const QByteArray& aStr )
 {
   //kDebug() << "(" << aStr <<" )";
@@ -789,7 +772,7 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
 
       if( link == ShowLink ) {
         result += "<a href=\"mailto:"
-                + encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) )
+                + KUrl::toPercentEncoding( KPIMUtils::encodeMailtoUrl( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ) ).path() )
                 + "\" "+cssStyle+">";
       }
       if ( display == DisplayNameOnly ) {

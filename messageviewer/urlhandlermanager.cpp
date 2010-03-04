@@ -48,6 +48,7 @@
 #include <messagecore/stringutil.h>
 
 #include <kmime/kmime_content.h>
+#include <KPIMUtils/Email>
 
 #include <QProcess>
 #include <algorithm>
@@ -600,7 +601,7 @@ namespace {
   QString MailToURLHandler::statusBarMessage( const KUrl & url, ViewerPrivate * ) const {
     if ( url.protocol() != "mailto" )
       return QString();
-    return StringUtil::decodeMailtoUrl( url.url() );
+    return KPIMUtils::decodeMailtoUrl( url );
   }
 }
 

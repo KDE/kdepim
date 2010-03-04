@@ -57,7 +57,7 @@
 #include <KIO/NetAccess>
 #include <KABC/Addressee>
 #include <KABC/VCardConverter>
-
+#include <KPIMUtils/Email>
 #include <Akonadi/ItemModifyJob>
 
 #include <kpimutils/kfileio.h>
@@ -2819,7 +2819,7 @@ void ViewerPrivate::slotUrlCopy()
   QClipboard* clip = QApplication::clipboard();
   if (mUrlClicked.protocol() == "mailto") {
     // put the url into the mouse selection and the clipboard
-    QString address = StringUtil::decodeMailtoUrl( mUrlClicked.path() );
+    QString address = KPIMUtils::decodeMailtoUrl( mUrlClicked );
     clip->setText( address, QClipboard::Clipboard );
     clip->setText( address, QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));
