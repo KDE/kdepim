@@ -1062,7 +1062,7 @@ void KOAgenda::endItemAction()
           mActionItem->setIncidence( item );
           mActionItem->dissociateFromMultiItem();
 #endif
-          mChanger->addIncidence( newInc, this );
+          mChanger->addIncidence( newInc, inc.parentCollection(),this );
           emit enableAgendaUpdate( true );
         } else {
           KMessageBox::sorry(
@@ -1095,7 +1095,7 @@ void KOAgenda::endItemAction()
           item.setPayload( newInc );
           mActionItem->setIncidence( item );
 #endif
-          mChanger->addIncidence( newInc, this );
+          mChanger->addIncidence( newInc, inc.parentCollection(), this );
           emit enableAgendaUpdate( true );
           mChanger->changeIncidence( oldIncSaved, inc,
                                      KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this );
