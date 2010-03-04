@@ -44,7 +44,7 @@ FolderSelectDialog::FolderSelectDialog( const QString& caption, const QString& l
 {
   setModal(true);
   setCaption(caption);
-  setButtons(Ok);
+  setButtons(Ok|Cancel);
   setDefaultButton(Ok);
   showButtonSeparator(true);
 
