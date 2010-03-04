@@ -62,15 +62,17 @@ using namespace Akonadi;
 class Akonadi::DndFactory::Private
 {
   public:
-    Private( CalendarAdaptor *cal )
-      : mCalendar ( cal )
+  Private( CalendarAdaptor *cal, bool deleteCalendar )
+    : mCalendar ( cal ), mDeleteCalendar( deleteCalendar )
     {}
-    CalendarAdaptor *mCalendar;
+  bool mDeleteCalendar;
+  CalendarAdaptor *mCalendar;
+
 };
 //@endcond
 namespace Akonadi {
-DndFactory::DndFactory( CalendarAdaptor *cal )
-  : d( new Akonadi::DndFactory::Private ( cal ) )
+DndFactory::DndFactory( CalendarAdaptor *cal, bool deleteCalendarHere )
+  : d( new Akonadi::DndFactory::Private ( cal, deleteCalendarHere ) )
 {
 }
 
@@ -217,7 +219,7 @@ KCal::Todo *DndFactory::createDropTodo( QDropEvent *de )
 void DndFactory::cutIncidence( const Akonadi::Item &selectedInc )
 {
   if ( copyIncidence( selectedInc ) ) {
-    d->mCalendar->deleteIncidence( selectedInc );
+    d->mCalendar->deleteIncidence( selectedInc, d->mDeleteCalendar );
   }
 }
 

@@ -76,7 +76,7 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
   public:
     explicit CalendarAdaptor(Akonadi::Calendar *calendar, QWidget *parent)
       : KCal::Calendar( KOPrefs::instance()->timeSpec() )
-      , mCalendar( calendar ), mParent( parent )
+      , mCalendar( calendar ), mParent( parent ), mDeleteCalendar( false )
     {
       Q_ASSERT(mCalendar);
     }
@@ -206,8 +206,9 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
       return true;
     }
 
-    bool deleteIncidence( const Akonadi::Item &aitem )
+    bool deleteIncidence( const Akonadi::Item &aitem, bool deleteCalendar = false )
     {
+      mDeleteCalendar = deleteCalendar;
       const Incidence::Ptr incidence = Akonadi::incidence( aitem );
       if ( !incidence ) {
         return true;
@@ -216,8 +217,11 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
       kDebug() << "\"" << incidence->summary() << "\"";
       bool doDelete = sendGroupwareMessage( aitem, KCal::iTIPCancel,
                                             Groupware::INCIDENCEDELETED );
-      if( !doDelete )
+      if( !doDelete ) {
+        if ( mDeleteCalendar )
+          deleteLater();
         return false;
+      }
       Akonadi::ItemDeleteJob* job = new Akonadi::ItemDeleteJob( aitem );
       connect( job, SIGNAL(result(KJob*)), this, SLOT(deleteIncidenceFinished(KJob*)) );
       return true;
@@ -237,6 +241,8 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
                 i18n( incidence->type() ),
                 incidence->summary(),
                 job->errorString() ) );
+        if ( mDeleteCalendar )
+          deleteLater();
         return;
       }
 
@@ -249,6 +255,8 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
           kError() << "sendIcalMessage failed.";
         }
       }
+      if ( mDeleteCalendar )
+        deleteLater();
     }
 
     void deleteIncidenceFinished( KJob* j )
@@ -352,6 +360,7 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
 
     Akonadi::Calendar *mCalendar;
     QWidget *mParent;
+    bool mDeleteCalendar;
 };
 
 }

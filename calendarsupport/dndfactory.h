@@ -67,7 +67,7 @@ class Item;
 class AKONADI_KCAL_NEXT_EXPORT DndFactory
 {
   public:
-    explicit DndFactory( Akonadi::CalendarAdaptor * );
+    explicit DndFactory( Akonadi::CalendarAdaptor *, bool deleteCalendar = false );
 
     ~DndFactory();
 
