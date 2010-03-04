@@ -39,7 +39,7 @@ using namespace KPIM;
 
 FolderSelectDialog::FolderSelectDialog( const QString& caption, const QString& label,
                                         const QStringList& list )
-  : KDialogBase(0, 0, true, caption, Ok, Ok, true)
+  : KDialogBase(0, 0, true, caption, Ok|Cancel, Ok, true)
 {
   QFrame* frame = makeMainWidget();
   QVBoxLayout* layout = new QVBoxLayout( frame, 0, spacingHint() );
