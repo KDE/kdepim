@@ -385,7 +385,8 @@ std::vector<Subkey> KeyCache::findSubkeysByKeyID( const std::vector<std::string>
 std::vector<Key> KeyCache::findRecipients( const DecryptionResult & res ) const {
     std::vector<std::string> keyids;
     Q_FOREACH( const DecryptionResult::Recipient & r, res.recipients() )
-        keyids.push_back( r.keyID() );
+        if ( const char * kid = r.keyID() )
+            keyids.push_back( kid );
     const std::vector<Subkey> subkeys = findSubkeysByKeyID( keyids );
     std::vector<Key> result;
     result.reserve( subkeys.size() );
@@ -399,7 +400,8 @@ std::vector<Key> KeyCache::findRecipients( const DecryptionResult & res ) const 
 std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
     std::vector<std::string> fprs;
     Q_FOREACH( const Signature & s, res.signatures() )
-        fprs.push_back( s.fingerprint() );
+        if ( const char * fpr = s.fingerprint() )
+            fprs.push_back( fpr );
     return findByKeyIDOrFingerprint( fprs );
 }
 
