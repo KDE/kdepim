@@ -419,6 +419,8 @@ void Calendar::incidenceUpdated( KCal::IncidenceBase *incidence )
   // The static_cast is ok as the CalendarLocal only observes Incidence objects
 #ifdef AKONADI_PORT_DISABLED
   notifyIncidenceChanged( static_cast<KCal::Incidence *>( incidence ) );
+#else
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
 
@@ -724,6 +726,8 @@ KDateTime::Spec Calendar::Private::timeZoneIdSpec( const QString &timeZoneId,
     KCal::ICalTimeZoneSource tzsrc;
 #ifdef AKONADI_PORT_DISABLED
     tz = tzsrc.parse( icaltimezone_get_builtin_timezone( timeZoneId.toLatin1() ) );
+#else
+    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
     if ( view ) {
       mBuiltInViewTimeZone = tz;
@@ -1047,6 +1051,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &incidence,
   }
   return newInc;
 #else //AKONADI_PORT_DISABLED
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
   return KCal::Incidence::Ptr();
 #endif // AKONADI_PORT_DISABLED
 }
@@ -1700,5 +1705,7 @@ void Calendar::appendRecurringAlarms( KCal::Alarm::List &alarms,
       alarms.append( a );
     }
   }
+#else
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif // AKONADI_PORT_DISABLED
 }
