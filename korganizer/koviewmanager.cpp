@@ -66,6 +66,7 @@ KOViewManager::KOViewManager( CalendarView *mainView )
   mAgendaViewTabs = 0;
   mTimeSpentView = 0;
   mMonthView = 0;
+  mAgendaMode = AGENDA_NONE;
 }
 
 KOViewManager::~KOViewManager()
@@ -100,7 +101,27 @@ void KOViewManager::readSettings( KConfig *config )
   } else if ( view == QLatin1String( "Month" ) ) {
     showMonthView();
   } else {
-    showAgendaView();
+    mAgendaMode = AgendaMode( generalConfig.readEntry( "Agenda Mode", int( AGENDA_OTHER ) ) );
+
+    switch ( mAgendaMode ) {
+      case AGENDA_WORK_WEEK:
+        showWorkWeekView();
+        break;
+      case AGENDA_WEEK:
+        showWeekView();
+        break;
+      case AGENDA_NEXTX:
+        showNextXView();
+        break;
+      case AGENDA_DAY:
+        showDayView();
+        break;
+      case AGENDA_NONE:
+        // Someone has been playing with the config file.
+      default:
+        mAgendaMode = AGENDA_OTHER;
+        showAgendaView();
+    } 
   }
 }
 
@@ -125,6 +146,7 @@ void KOViewManager::writeSettings( KConfig *config )
     view = QLatin1String( "Month" );
   } else {
     view = QLatin1String( "Agenda" );
+    generalConfig.writeEntry( "Agenda Mode", int( mAgendaMode ) );
   }
 
   generalConfig.writeEntry( "Current View", view );
@@ -452,6 +474,7 @@ void KOViewManager::showAgendaView()
 
 void KOViewManager::showDayView()
 {
+  mAgendaMode = AGENDA_DAY;
   QDate date = mMainView->activeDate();
   showAgendaView();
   mMainView->dateNavigator()->selectDate( date );
@@ -460,6 +483,7 @@ void KOViewManager::showDayView()
 void KOViewManager::showWorkWeekView()
 {
   if ( KOGlobals::self()->getWorkWeekMask() != 0 ) {
+    mAgendaMode = AGENDA_WORK_WEEK;
     QDate date = mMainView->activeDate();
     showAgendaView();
     mMainView->dateNavigator()->selectWorkWeek( date );
@@ -473,6 +497,7 @@ void KOViewManager::showWorkWeekView()
 
 void KOViewManager::showWeekView()
 {
+  mAgendaMode = AGENDA_WEEK;
   QDate date = mMainView->activeDate();
   showAgendaView();
   mMainView->dateNavigator()->selectWeek( date );
@@ -480,6 +505,7 @@ void KOViewManager::showWeekView()
 
 void KOViewManager::showNextXView()
 {
+  mAgendaMode = AGENDA_NEXTX;
   showAgendaView();
   mMainView->dateNavigator()->selectDates( QDate::currentDate(),
                                            KOPrefs::instance()->mNextXDays );

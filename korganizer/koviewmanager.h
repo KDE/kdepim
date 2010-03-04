@@ -60,6 +60,16 @@ class KOViewManager : public QObject
 {
   Q_OBJECT
   public:
+
+    enum AgendaMode {
+      AGENDA_NONE,
+      AGENDA_DAY,
+      AGENDA_WORK_WEEK,
+      AGENDA_WEEK,
+      AGENDA_NEXTX,
+      AGENDA_OTHER // for example, showing 8 days
+    };
+
     explicit KOViewManager( CalendarView * );
     virtual ~KOViewManager();
 
@@ -130,6 +140,12 @@ class KOViewManager : public QObject
 
     void setUpdateNeeded();
 
+    /**
+      If the agenda view is selected it returns the current range mode:
+      week, work week, day or nextX days
+     */
+    AgendaMode agendaMode() const { return mAgendaMode; }
+
   private slots:
     void currentAgendaViewTabChanged( QWidget * );
 
@@ -150,6 +166,8 @@ class KOViewManager : public QObject
 
     KOrg::BaseView *mLastEventView;
     KTabWidget *mAgendaViewTabs;
+
+    AgendaMode mAgendaMode;
 };
 
 #endif
