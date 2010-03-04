@@ -977,17 +977,21 @@ Item::List Calendar::events( EventSortField sortField,
   return Akonadi::applyCalFilter( el, filter() );
 }
 
-KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &incidence,
+KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &item,
                                            const QDate &date,
                                            const KDateTime::Spec &spec,
                                            bool single )
 {
-#ifdef AKONADI_PORT_DISABLED
-  if ( !incidence || !incidence->recurs() ) {
-    return 0;
+  if ( !item.isValid() ) {
+    return KCal::Incidence::Ptr();
   }
 
-  KCal::Incidence *newInc = incidence->clone();
+  const KCal::Incidence::Ptr incidence = Akonadi::incidence( item );
+  if ( !incidence || !incidence->recurs() ) {
+    return KCal::Incidence::Ptr();
+  }
+
+  KCal::Incidence * newInc =  incidence->clone();
   newInc->recreate();
   // Do not call setRelatedTo() when dissociating recurring to-dos, otherwise the new to-do
   // will appear as a child.  Originally, we planned to set a relation with reltype SIBLING
@@ -1015,7 +1019,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &incidence,
   }
   // Adjust the date of the incidence
   if ( incidence->type() == "Event" ) {
-    KCal::Event *ev = static_cast<Event *>( newInc );
+    KCal::Event *ev = static_cast<KCal::Event *>( newInc );
     KDateTime start( ev->dtStart() );
     int daysTo = start.toTimeSpec( spec ).date().daysTo( date );
     ev->setDtStart( start.addDays( daysTo ) );
@@ -1049,11 +1053,7 @@ KCal::Incidence::Ptr Calendar::dissociateOccurrence( const Item &incidence,
       recur->setEndDate( date.addDays(-1) );
     }
   }
-  return newInc;
-#else //AKONADI_PORT_DISABLED
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-  return KCal::Incidence::Ptr();
-#endif // AKONADI_PORT_DISABLED
+  return KCal::Incidence::Ptr( newInc );
 }
 
 Item Calendar::incidence( const Item::Id &uid )
