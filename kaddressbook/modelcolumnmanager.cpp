@@ -78,6 +78,14 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
       fullNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::FullName ) );
       fullNameAction->setEnabled( false );
 
+      QAction *familyNameAction = menu.addAction( i18n( "Family Name" ) );
+      familyNameAction->setCheckable( true );
+      familyNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::FamilyName ) );
+
+      QAction *givenNameAction = menu.addAction( i18n( "Given Name" ) );
+      givenNameAction->setCheckable( true );
+      givenNameAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::GivenName ) );
+
       QAction *birthdayAction = menu.addAction( KABC::Addressee::birthdayLabel() );
       birthdayAction->setCheckable( true );
       birthdayAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Birthday ) );
@@ -106,6 +114,10 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
       organizationAction->setCheckable( true );
       organizationAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Organization ) );
 
+      QAction *roleAction = menu.addAction( KABC::Addressee::roleLabel() );
+      roleAction->setCheckable( true );
+      roleAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Role ) );
+
       QAction *homepageAction = menu.addAction( KABC::Addressee::urlLabel() );
       homepageAction->setCheckable( true );
       homepageAction->setChecked( columns.contains( Akonadi::ContactsTreeModel::Homepage ) );
@@ -119,6 +131,10 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
 
         if ( fullNameAction->isChecked() )
           columns << Akonadi::ContactsTreeModel::FullName;
+        if ( familyNameAction->isChecked() )
+          columns << Akonadi::ContactsTreeModel::FamilyName;
+        if ( givenNameAction->isChecked() )
+          columns << Akonadi::ContactsTreeModel::GivenName;
         if ( birthdayAction->isChecked() )
           columns << Akonadi::ContactsTreeModel::Birthday;
         if ( homeAddressAction->isChecked() )
@@ -133,6 +149,8 @@ bool ModelColumnManager::eventFilter( QObject *watched, QEvent* event )
           columns << Akonadi::ContactsTreeModel::AllEmails;
         if ( organizationAction->isChecked() )
           columns << Akonadi::ContactsTreeModel::Organization;
+        if ( roleAction->isChecked() )
+          columns << Akonadi::ContactsTreeModel::Role;
         if ( homepageAction->isChecked() )
           columns << Akonadi::ContactsTreeModel::Homepage;
         if ( noteAction->isChecked() )

@@ -50,6 +50,16 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
       FullName,
 
       /**
+       * Shows the family name.
+       */
+      FamilyName,
+
+      /**
+       * Shows the given name.
+       */
+      GivenName,
+
+      /**
        * Shows the birthday.
        */
       Birthday,
@@ -83,6 +93,11 @@ class KDEPIM_EXPORT ContactsTreeModel : public EntityTreeModel
        * Shows organization name.
        */
       Organization,
+
+      /**
+       * Shows the role of a contact.
+       */
+      Role,
 
       /**
        * Shows homepage url.
