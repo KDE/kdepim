@@ -46,6 +46,8 @@ class KURL;
 
 namespace Kolab {
 
+enum ResourceType { Tasks, Events, Incidences, Contacts, Notes };
+
 class KMailConnection;
 
 /**
@@ -168,7 +170,7 @@ protected:
   QString configFile( const QString& type ) const;
 
   /// If only one of these is writable, return that. Otherwise return null.
-  QString findWritableResource( const QString &type,
+  QString findWritableResource( const ResourceType &type,
                                 const ResourceMap& resources,
                                 const QString& text = QString::null );
 

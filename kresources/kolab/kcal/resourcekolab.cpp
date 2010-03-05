@@ -515,13 +515,14 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
     // Find out if this event was previously stored in KMail
     bool newIncidence = _subresource.isEmpty();
     if ( newIncidence ) {
-      QString type = incidence->type();
+      ResourceType type = Incidences;
       // Add a description of the incidence
       QString text = "<b><font size=\"+1\">";
       if ( incidence->type() == "Event" ) {
+        type = Events;
         text += i18n( "Choose the folder where you want to store this event" );
       } else if ( incidence->type() == "Todo" ) {
-        type = i18n( "Task" );
+        type = Tasks;
         text += i18n( "Choose the folder where you want to store this task" );
       } else {
         text += i18n( "Choose the folder where you want to store this incidence" );

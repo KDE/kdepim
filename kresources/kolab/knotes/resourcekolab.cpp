@@ -199,7 +199,7 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   mCalendar.addJournal( journal );
 
   QString resource =
-    newNote ? findWritableResource( i18n( "Note" ), mSubResources ) : subresource;
+    newNote ? findWritableResource( Kolab::Notes, mSubResources ) : subresource;
   if ( resource.isEmpty() ) // canceled
   {
     return false;
@@ -268,7 +268,7 @@ void ResourceKolab::incidenceUpdated( KCal::IncidenceBase* i )
     subResource = mUidMap[ i->uid() ].resource();
     sernum = mUidMap[ i->uid() ].serialNumber();
   } else { // can this happen?
-    subResource = findWritableResource( i18n( i->type() ), mSubResources );
+    subResource = findWritableResource( Kolab::Notes, mSubResources );
     if ( subResource.isEmpty() ) // canceled
       return;
     sernum = 0;
