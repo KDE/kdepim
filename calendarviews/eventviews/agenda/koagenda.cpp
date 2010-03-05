@@ -1055,7 +1055,7 @@ void KOAgenda::endItemAction()
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
           mChanger->changeIncidence( oldIncSaved, inc,
-                                     KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY, this );
+                                   KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY, this );
 #ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item
           Akonadi::Item item;
           item.setPayload( newInc );
@@ -1136,7 +1136,9 @@ void KOAgenda::endItemAction()
 
       // Notify about change
       // the agenda view will apply the changes to the actual Incidence*!
-      mChanger->endChange( inc );
+      // Bug #228696 don't call endChanged now it's async in akonadi so it can be called before that modified item was done. And endChange is calling when we move item.
+      // Not perfect need to improve it!
+      //mChanger->endChange( inc );
       emit itemModified( modif );
     } else {
       // the item was moved, but not further modified, since it's not recurring
@@ -1860,7 +1862,7 @@ void KOAgenda::updateConfig()
   mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
   if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
     mDesiredGridSpacingY = 10;
-  } 
+  }
 
   // make sure that there are not more than 24 per day
   mGridSpacingY = (double)height() / (double)mRows;
