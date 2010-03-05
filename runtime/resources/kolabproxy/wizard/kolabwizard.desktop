@@ -1,0 +1,33 @@
+[Desktop Entry]
+Name=Kolab
+Name[en_GB]=Kolab
+Name[es]=Kolab
+Name[gl]=Kolab
+Name[nb]=Kolab
+Name[nds]=Kolab
+Name[nn]=Kolab
+Name[pt]=Kolab
+Name[pt_BR]=Kolab
+Name[sv]=Kolab
+Name[uk]=Kolab
+Name[x-test]=xxKolabxx
+Icon=kolab
+Comment=Kolab Groupware Server
+Comment[en_GB]=Kolab Groupware Server
+Comment[es]=Servidor de trabajo en grupo Kolab
+Comment[gl]=Servidor de traballo en grupo Kolab
+Comment[nb]=Kolab groupware-tjener 
+Comment[nds]=Kolab-Arbeitkoppel-Server
+Comment[nn]=Kolab Groupware-tenar
+Comment[pt]=Servidor de 'Groupware' Kolab
+Comment[pt_BR]=Servidor groupware Kolab
+Comment[sv]=Kolab grupprogramserver
+Comment[uk]=Сервер групової роботи Kolab
+Comment[x-test]=xxKolab Groupware Serverxx
+
+[Wizard]
+Type=message/rfc822,text/directory,text/calendar
+Script=kolabwizard.js
+
+[Translate]
+Filename=accountwizard_kolab
