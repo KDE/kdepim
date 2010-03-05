@@ -47,7 +47,7 @@ using KMail::Interface::BodyPart;
 #include "interfaces/bodyparturlhandler.h"
 #include "khtmlparthtmlwriter.h"
 #include <kimproxy.h>
-
+#include <kdebug.h>
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>
 using KABC::VCardConverter;
@@ -73,6 +73,11 @@ namespace {
 
        VCardConverter vcc;
        const QString vCard = bodyPart->asText();
+       kdDebug(5006) << "============== vCardText:" << vCard << endl;
+       for ( int i = 0; i < vCard.length(); i++ ) {
+            QChar c = vCard.at(i);
+            kdDebug(5006) << "i: " << i << " ascii: " << c.latin1() << " unicode " << c.unicode() << endl;
+       }
        if ( vCard.isEmpty() ) return AsIcon;
        Addressee::List al = vcc.parseVCards(  vCard );
        if ( al.empty() ) return AsIcon;

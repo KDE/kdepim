@@ -1,3 +1,32 @@
+Friday, March 5th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4102: Wish: type of attendee of an event should be displayed in the small event pane (rt#6004)
+* kolab/issue4105: Three warning dialogs appears, if I try to create a todo and have deactivated the Task resources
+* kolab/issue4107: In workweek mode clicking on the month pane week number selects whole week (rt#6013)
+* kolab/issue1765: In parallel calender view there is no need to ask in which resource folder a new event should get. (rt#5816)
+* kolab/issue4110: Task with recurrence: due of a selected task in calendar doesn't match the right date (rt#6020)
+* kolab/issue4149: Search Directory Services and comma-formated names (rt#5954)
+* kolab/issue4118. Wish: next/previous week buttons in the small month pane (rt#6024)
+* kolab/issue3874: Calendar Timeline View: Resize and deactive and activate of a calendar resource changes the duration of
+                   the event to 15 mins
+* kolab/issue4063: New task is not visible in calendar side-by-side view (rt#5974)
+* kolab/issue4168: task with recurrence are not displayed in the calendar agenda view
+* kolab/issue4066: Quota warning color coming later than server warning dialog (rt#5955)
+* kolab/issue2277: Usability problem with "enterprise headers" airmail icon
+* kolab/issue4177: A hidden reminder dialog should reappear, if a new alarm is triggered
+* kolab/issue4181: Wish: an additional column "folder" in the todos list in the todo component
+* kolab/issue4142(partly): Add some tooltips to KMail's composer
+* kolab/issue4096: User with write access to a calendar folder should be able to change the events
+                   (even if he isnot the organizer) (rt#5999)
+* kolab/issue4148: New event, attendee dialog: entry with comma format should stay in comma format in the attendee pane (rt#6035)
+* kolab/issue4128: side-by-side view: scrollbar slider too small
+* kolab/issue4109: Task with recurrence: Startime not saved (rt#6019)
+* kolab/issue4054: Umlauts and sending contacts problem (rt#5956)
+
+
 Friday, February 26th 2010
 
 Problems addressed
