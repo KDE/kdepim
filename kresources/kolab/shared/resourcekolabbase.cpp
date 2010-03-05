@@ -232,24 +232,24 @@ QString ResourceKolabBase::findWritableResource( const ResourceType &type,
     QString errorText;
     switch( type ) {
       case Events:
-        errorText = "You have no writable event folders so saving will not be possible.\n"
-                    "Please create or activate at least one writable event folder and try again.";
+        errorText = i18n( "You have no writable event folders so saving will not be possible.\n"
+                          "Please create or activate at least one writable event folder and try again." );
         break;
       case Tasks:
-        errorText = "You have no writable task folders so saving will not be possible.\n"
-                    "Please create or activate at least one writable task folder and try again.";
+        errorText = i18n( "You have no writable task folders so saving will not be possible.\n"
+                          "Please create or activate at least one writable task folder and try again." );
         break;
       case Incidences:
-        errorText = "You have no writable calendar folder so saving will not be possible.\n"
-                    "Please create or activate at least one writable calendar folder and try again.";
+        errorText = i18n( "You have no writable calendar folder so saving will not be possible.\n"
+                          "Please create or activate at least one writable calendar folder and try again." );
         break;
       case Notes:
-        errorText = "You have no writable notes folders so saving will not be possible.\n"
-                    "Please create or activate at least one writable notes folder and try again.";
+        errorText = i18n( "You have no writable notes folders so saving will not be possible.\n"
+                          "Please create or activate at least one writable notes folder and try again." );
         break;
       case Contacts:
-        errorText = "You have no writable addressbook folder so saving will not be possible.\n"
-                    "Please create or activate at least one writable addressbook folder and try again.";
+        errorText = i18n( "You have no writable addressbook folder so saving will not be possible.\n"
+                          "Please create or activate at least one writable addressbook folder and try again." );
         break;
     }
 
