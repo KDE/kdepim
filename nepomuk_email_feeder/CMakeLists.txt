@@ -5,6 +5,7 @@ include_directories(
   ${CMAKE_CURRENT_SOURCE_DIR}/shared
   ${CMAKE_BINARY_DIR}/messageviewer
   ${SOPRANO_INCLUDE_DIR}
+  ${STRIGI_INCLUDE_DIR}
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
