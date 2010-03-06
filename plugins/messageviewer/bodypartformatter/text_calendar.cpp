@@ -94,7 +94,7 @@ class CalendarManager
   public:
     CalendarManager();
     ~CalendarManager();
-    static KCal::Calendar* calendar();
+    static KCal::CalendarResources* calendar();
 
   private:
     KCal::CalendarResources* mCalendar;
@@ -133,7 +133,7 @@ CalendarManager::~CalendarManager()
   delete mCalendar;
 }
 
-KCal::Calendar* CalendarManager::calendar()
+KCal::CalendarResources * CalendarManager::calendar()
 {
   K_GLOBAL_STATIC(CalendarManager, _self);
   return _self->mCalendar;
@@ -179,6 +179,28 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       return Ok;
     }
 };
+
+static QString directoryForStatus( Attendee::PartStat status )
+{
+  QString dir;
+  switch ( status ) {
+  case Attendee::Accepted:
+    dir = "accepted";
+    break;
+  case Attendee::Tentative:
+    dir = "tentative";
+    break;
+  case Attendee::Declined:
+    dir = "cancel";
+    break;
+  case Attendee::Delegated:
+    dir = "delegated";
+    break;
+  default:
+    break;
+  }
+  return dir;
+}
 
 static Incidence *icalToString( const QString& iCal )
 {
@@ -642,15 +664,16 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
       // First, save it for KOrganizer to handle
-      QString dir;
-      if ( status == Attendee::Accepted ) dir = "accepted";
-      else if ( status == Attendee::Tentative  ) dir = "tentative";
-      else if ( status == Attendee::Declined ) dir = "cancel";
-      else if ( status == Attendee::Delegated ) dir = "delegated";
-      else return true; // unknown status
-
-      if ( status != Attendee::Delegated ) // we do that below for delegated incidences
-        saveFile( receiver, iCal, dir );
+      QString dir = directoryForStatus( status );
+      if ( dir.isEmpty() ) {
+        return true; // unknown status
+      }
+      if ( status != Attendee::Delegated ) {
+        // we do that below for delegated incidences
+        if ( !saveFile( receiver, iCal, dir ) ) {
+          return false;
+        }
+      }
 
       QString delegateString;
       bool delegatorRSVP = false;
@@ -887,7 +910,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool handleClick( MessageViewer::Interface::BodyPart *part,
                       const QString &path ) const
     {
-      if ( !CalHelper::hasMyWritableEventsFolders( CalendarManager::calendar() ) ) {
+      if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
           i18n( "You have no writable calendar folders for invitations, "
