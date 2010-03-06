@@ -180,7 +180,6 @@ static QString displayViewLinkPerson( const QString& email, QString name, QStrin
       }
     }
   }
-  kdDebug(5850) << "formatAttendees: uid = " << uid << endl;
 
   // Show the attendee
   QString tmpString;
