@@ -670,9 +670,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       if ( status != Attendee::Delegated ) {
         // we do that below for delegated incidences
-        if ( !saveFile( receiver, iCal, dir ) ) {
-          return false;
-        }
+        saveFile( receiver, iCal, dir );
       }
 
       QString delegateString;
