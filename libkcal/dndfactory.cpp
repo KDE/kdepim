@@ -135,15 +135,15 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
   }
 
   Incidence::List incList = cal.incidences();
-  Incidence *inc = incList.first();
+  Incidence *inc = incList.isEmpty() ? 0 : incList.first();
 
-  if ( !incList.isEmpty() && inc ) {
+  if ( inc ) {
     inc = inc->clone();
-
     inc->recreate();
+  }
 
+  if ( inc && newDate.isValid() ) {
     if ( inc->type() == "Event" ) {
-
       Event *anEvent = static_cast<Event*>( inc );
       // Calculate length of event
       int daysOffset = anEvent->dtStart().date().daysTo(
@@ -178,10 +178,7 @@ Incidence *DndFactory::pasteIncidence(const QDate &newDate, const QTime *newTime
     } else {
       kdDebug(5850) << "Trying to paste unknown incidence of type " << inc->type() << endl;
     }
-
-    return inc;
-
   }
 
-  return 0;
+  return inc;
 }
