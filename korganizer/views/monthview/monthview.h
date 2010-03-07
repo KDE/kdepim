@@ -51,7 +51,7 @@ class MonthView : public KOEventView
     Incidence::List selectedIncidences();
 
     /** Returns dates of the currently selected events */
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
 
     virtual QDateTime selectionStart();
 

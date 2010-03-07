@@ -113,7 +113,7 @@ class KOAgendaView : public KOrg::AgendaView, public KCal::Calendar::CalendarObs
     virtual Incidence::List selectedIncidences();
 
     /** returns the currently selected incidence's dates */
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
 
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );

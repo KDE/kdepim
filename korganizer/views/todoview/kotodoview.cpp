@@ -276,7 +276,7 @@ Incidence::List KOTodoView::selectedIncidences()
   return ret;
 }
 
-DateList KOTodoView::selectedDates()
+DateList KOTodoView::selectedIncidenceDates()
 {
   // The todo view only lists todo's. It's probably not a good idea to
   // return something about the selected todo here, because it has got
@@ -486,10 +486,10 @@ void KOTodoView::selectionChanged( const QItemSelection &selected,
 
   Todo *todo = static_cast<Todo *>( selection[0].data( KOTodoModel::TodoRole ).value<void *>() );
 
-  if ( selectedDates().isEmpty() ) {
+  if ( selectedIncidenceDates().isEmpty() ) {
     emit incidenceSelected( todo, QDate() );
   } else {
-    emit incidenceSelected( todo, selectedDates().first() );
+    emit incidenceSelected( todo, selectedIncidenceDates().first() );
   }
 }
 

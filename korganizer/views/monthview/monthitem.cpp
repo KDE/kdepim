@@ -558,8 +558,8 @@ QString IncidenceMonthItem::text( bool end ) const
 QString IncidenceMonthItem::toolTipText() const
 {
   QDate date;
-  if ( monthScene()->mMonthView && !monthScene()->mMonthView->selectedDates().isEmpty() ) {
-    date = monthScene()->mMonthView->selectedDates().first();
+  if ( monthScene()->mMonthView && !monthScene()->mMonthView->selectedIncidenceDates().isEmpty() ) {
+    date = monthScene()->mMonthView->selectedIncidenceDates().first();
   }
   return IncidenceFormatter::toolTipStr(
     monthScene()->calendar(), mIncidence, date, true, KOPrefs::instance()->timeSpec() );

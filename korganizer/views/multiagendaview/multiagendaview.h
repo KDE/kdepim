@@ -48,7 +48,7 @@ class MultiAgendaView : public AgendaView
     ~MultiAgendaView();
 
     Incidence::List selectedIncidences();
-    DateList selectedDates();
+    DateList selectedIncidenceDates();
     int currentDateCount();
     int maxDatesHint();
 

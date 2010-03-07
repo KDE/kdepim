@@ -62,7 +62,7 @@ class KOTodoView : public BaseView
     virtual void setCalendar( Calendar *cal );
 
     virtual Incidence::List selectedIncidences();
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
     virtual int currentDateCount() { return 0; }
 
     void setDocumentId( const QString & ) {}
