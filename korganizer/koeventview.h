@@ -113,6 +113,8 @@ class KOEventView : public KOrg::BaseView
      */
     static bool usesCompletedTodoPixmap( Todo *todo, const QDate &date );
 
+    bool supportsDateNavigation() const { return true; }
+
   public slots:
 
     /*
