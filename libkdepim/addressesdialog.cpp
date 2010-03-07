@@ -30,10 +30,12 @@
 #include "contactsfilterproxymodel.h"
 
 #include <kpimutils/email.h>
+#ifndef KDEPIM_NO_KRESOURCES
 #include <kresources/selectdialog.h>
 
 #include <kabc/resource.h>
 #include <kabc/stdaddressbook.h>
+#endif
 #include <kabc/contactgroup.h>
 
 #include <Akonadi/Session>

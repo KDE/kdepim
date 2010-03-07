@@ -29,9 +29,11 @@
 #include "ldapclient.h"
 #include "distributionlist.h"
 
+#ifndef KDEPIM_NO_KRESOURCES
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
+#endif
 #include <kmime/kmime_util.h>
 
 #include <KCompletionBox>
@@ -554,6 +556,7 @@ void AddresseeLineEdit::loadContacts()
   KConfig _config( "kpimcompletionorder" );
   KConfigGroup config(&_config, "CompletionWeights" );
 
+#ifndef KDEPIM_NO_KRESOURCES
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   // Can't just use the addressbook's iterator, we need to know which subresource
   // is behind which contact.
@@ -603,6 +606,7 @@ void AddresseeLineEdit::loadContacts()
              SLOT(loadContacts()) );
     m_addressBookConnected = true;
   }
+#endif
 }
 
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )

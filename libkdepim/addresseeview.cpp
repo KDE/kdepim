@@ -25,8 +25,10 @@
 #include <kabc/address.h>
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
+#ifndef KDEPIM_NO_KRESOURCES
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
+#endif
 
 #include <KApplication>
 #include <KCodecs>
@@ -454,6 +456,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
   strAddr.append( customData );
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
 
+#ifndef KDEPIM_NO_KRESOURCES
   if ( addr.resource() ) {
     QString addrBookName = addr.resource()->resourceName();
     KABC::ResourceABC *r = dynamic_cast<KABC::ResourceABC*>( addr.resource() );
@@ -465,6 +468,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, Li
     }
     strAddr.append( i18n( "<p><b>Address book</b>: %1</p>", addrBookName ) );
   }
+#endif
   return strAddr;
 }
 

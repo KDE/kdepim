@@ -36,7 +36,7 @@
 #include <Akonadi/Collection>
 #include <akonadi/kcal/utils.h>
 
-#include <KCal/CalendarResources>
+#include <KCal/Calendar>
 #include <KCal/CalFilter>
 #include <KCal/DndFactory>
 #include <KCal/FileStorage>

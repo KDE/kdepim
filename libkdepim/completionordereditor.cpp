@@ -32,9 +32,11 @@
 #include "completionordereditor_p.h"
 #include "ldapclient.h"
 
+#ifndef KDEPIM_NO_KRESOURCES
 #include <kabc/stdaddressbook.h>
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
+#endif
 
 #include <KConfigGroup>
 #include <KDebug>
@@ -138,6 +140,7 @@ void SimpleCompletionItem::save( CompletionOrderEditor* editor )
 }
 
 // An imap subresource for kabc
+#ifndef KDEPIM_NO_KRESOURCES
 class KABCImapSubResCompletionItem : public CompletionItem
 {
 public:
@@ -160,6 +163,7 @@ private:
   QString mSubResource;
   int mWeight;
 };
+#endif
 
 /////////
 
@@ -200,6 +204,7 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
     //kDebug(5300) << "LDAP: host" << client->server().host() <<" weight" << client->completionWeight();
     mItems.append( new LDAPCompletionItem( client ) );
   }
+#ifndef KDEPIM_NO_KRESOURCES
   KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
   QList<KABC::Resource*> resources = addressBook->resources();
   QListIterator<KABC::Resource*> resit( resources );
@@ -217,6 +222,7 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
                                                resource->identifier(), 60 ) );
     }
   }
+#endif
 
   mItems.append( new SimpleCompletionItem( this, i18n( "Recent Addresses" ), "Recent Addresses", 10 ) );
 

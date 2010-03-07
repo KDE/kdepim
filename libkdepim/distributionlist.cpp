@@ -20,7 +20,9 @@
 */
 
 #include "distributionlist.h"
+#ifndef KDEPIM_NO_KRESOURCES
 #include <kabc/addressbook.h>
+#endif
 
 static const char *s_customFieldName = "DistributionList";
 
@@ -150,6 +152,7 @@ static KABC::Addressee::List findByFormattedName( KABC::AddressBook *book,
                                                   bool caseSensitive = true )
 {
   KABC::Addressee::List res;
+#ifndef KDEPIM_NO_KRESOURCES
   KABC::AddressBook::Iterator abIt;
   for ( abIt = book->begin(); abIt != book->end(); ++abIt ) {
     if ( caseSensitive && (*abIt).formattedName() == name ) {
@@ -159,6 +162,7 @@ static KABC::Addressee::List findByFormattedName( KABC::AddressBook *book,
       res.append( *abIt );
     }
   }
+#endif
   return res;
 }
 
@@ -166,6 +170,7 @@ KPIM::DistributionList KPIM::DistributionList::findByName( KABC::AddressBook *bo
                                                            const QString &name,
                                                            bool caseSensitive )
 {
+#ifndef KDEPIM_NO_KRESOURCES
   KABC::AddressBook::Iterator abIt;
   for ( abIt = book->begin(); abIt != book->end(); ++abIt ) {
     if ( isDistributionList( *abIt ) ) {
@@ -177,6 +182,7 @@ KPIM::DistributionList KPIM::DistributionList::findByName( KABC::AddressBook *bo
       }
     }
   }
+#endif
   return DistributionList();
 }
 
@@ -184,6 +190,7 @@ static KABC::Addressee findByUidOrName( KABC::AddressBook *book,
                                         const QString &uidOrName,
                                         const QString &email )
 {
+#ifndef KDEPIM_NO_KRESOURCES
   KABC::Addressee a = book->findByUid( uidOrName );
   if ( a.isEmpty() ) {
     // UID not found, maybe it is a name instead.
@@ -213,6 +220,9 @@ static KABC::Addressee findByUidOrName( KABC::AddressBook *book,
     }
   }
   return a;
+#else
+  return KABC::Addressee();
+#endif
 }
 
 KPIM::DistributionList::Entry::List KPIM::DistributionList::entries( KABC::AddressBook *book ) const
@@ -220,6 +230,7 @@ KPIM::DistributionList::Entry::List KPIM::DistributionList::entries( KABC::Addre
   Entry::List res;
   const QString str = custom( "KADDRESSBOOK", s_customFieldName );
   const ParseList parseList = parseCustom( str );
+#ifndef KDEPIM_NO_KRESOURCES
   for ( ParseList::ConstIterator it = parseList.begin(); it != parseList.end(); ++it ) {
     const QString uid = (*it).first;
     const QString email = (*it).second;
@@ -232,6 +243,7 @@ KPIM::DistributionList::Entry::List KPIM::DistributionList::entries( KABC::Addre
       res.append( Entry( a, email ) );
     }
   }
+#endif
   return res;
 }
 
@@ -265,11 +277,13 @@ QList<KPIM::DistributionList>
 KPIM::DistributionList::allDistributionLists( KABC::AddressBook *book )
 {
   QList<KPIM::DistributionList> lst;
+#ifndef KDEPIM_NO_KRESOURCES
   KABC::AddressBook::Iterator abIt;
   for ( abIt = book->begin(); abIt != book->end(); ++abIt ) {
     if ( isDistributionList( *abIt ) ) {
       lst.append( KPIM::DistributionList( *abIt ) );
     }
   }
+#endif
   return lst;
 }

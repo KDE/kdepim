@@ -42,7 +42,6 @@ set(kdepim_LIB_SRCS
    ssllabel.cpp
    completionordereditor.cpp
    broadcaststatus.cpp
-   kresourceprefs.cpp
    kxface.cpp
    kaddrbookexternal.cpp
    kwidgetlister.cpp
@@ -51,7 +50,7 @@ set(kdepim_LIB_SRCS
    kcmdesignerfields.cpp
    embeddedurlpage.cpp
    csshelper.cpp
-   distributionlist.cpp
+   distributionlist.cpp 
    sendsmsdialog.cpp
    categoryhierarchyreader.cpp
    kmailcompletion.cpp
@@ -62,6 +61,12 @@ set(kdepim_LIB_SRCS
    contactsfilterproxymodel.cpp
    contactstreemodel.cpp
 )
+
+if (KDEPIMLIBS_KRESOURCES_LIBRARY)
+  set(kdepim_LIB_SRCS ${kdepim_LIB_SRCS}
+    kresourceprefs.cpp
+  )
+endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
 
 kde4_add_ui_files(kdepim_LIB_SRCS
   categoryselectdialog_base.ui

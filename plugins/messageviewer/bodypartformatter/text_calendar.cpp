@@ -39,8 +39,10 @@
 #include <messageviewer/webkitparthtmlwriter.h>
 
 #include <kcal/calendarlocal.h>
+#ifndef KDEPIM_NO_KRESOURCES
 #include <kcal/calendarresources.h>
 #include <kcal/calhelper.h>
+#endif
 #include <kcal/icalformat.h>
 #include <kcal/attendee.h>
 #include <kcal/incidence.h>
@@ -89,6 +91,7 @@ using namespace KCal;
 
 namespace {
 
+#ifndef KDEPIM_NO_KRESOURCES
 class CalendarManager
 {
   public:
@@ -138,6 +141,7 @@ KCal::CalendarResources * CalendarManager::calendar()
   K_GLOBAL_STATIC(CalendarManager, _self);
   return _self->mCalendar;
 }
+#endif
 
 
 class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
@@ -145,7 +149,11 @@ class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
   public:
     KMInvitationFormatterHelper( MessageViewer::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
+#ifndef KDEPIM_NO_KRESOURCES
     KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
+#else
+    KCal::Calendar* calendar() const { return 0; }
+#endif
   private:
     MessageViewer::Interface::BodyPart *mBodyPart;
 };
@@ -908,6 +916,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool handleClick( MessageViewer::Interface::BodyPart *part,
                       const QString &path ) const
     {
+#ifndef KDEPIM_NO_KRESOURCES
       if ( !CalHelper::hasMyWritableEventsFolders( "calendar" ) ) {
         KMessageBox::error(
           0,
@@ -916,6 +925,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                 "Please create at least 1 writable events calendar and re-sync." ) );
         return false;
       }
+#endif
 
       Incidence *incidence;
       QString iCal;
