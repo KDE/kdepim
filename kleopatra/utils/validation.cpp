@@ -111,7 +111,7 @@ namespace {
             if (rx.exactMatch(input)) {
                 return Acceptable;
             } else {
-                if (const_cast<QRegExp &>(rx).matchedLength() == /*input.size()*/pos) {
+                if (const_cast<QRegExp &>(rx).matchedLength() >= /*input.size()*/pos) {
                     return Intermediate;
                 } else {
                     pos = input.size();
