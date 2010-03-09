@@ -36,6 +36,7 @@ namespace KMail {
   class EditorWatcher;
   class HeaderStyle;
   class HeaderStrategy;
+  class AttachmentStrategy;
 }
 namespace GpgME { class Error; }
 namespace Kleo { class SpecialJob; }
@@ -591,12 +592,14 @@ public:
                   const QString & encoding = QString() );
 
   void setOverrideFont( const QFont& );
+  void setAttachmentStrategy( const KMail::AttachmentStrategy *strategy );
 
 private:
   virtual Result execute();
 
   const KMail::HeaderStyle *mHeaderStyle;
   const KMail::HeaderStrategy *mHeaderStrategy;
+  const KMail::AttachmentStrategy *mAttachmentStrategy;
   bool mHtmlOverride;
   bool mHtmlLoadExtOverride;
   bool mUseFixedFont;

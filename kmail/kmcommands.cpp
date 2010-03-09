@@ -1616,6 +1616,7 @@ KMPrintCommand::KMPrintCommand( QWidget *parent, KMMessage *msg,
                                 bool useFixedFont, const QString & encoding )
   : KMCommand( parent, msg ),
     mHeaderStyle( headerStyle ), mHeaderStrategy( headerStrategy ),
+    mAttachmentStrategy( 0 ),
     mHtmlOverride( htmlOverride ),
     mHtmlLoadExtOverride( htmlLoadExtOverride ),
     mUseFixedFont( useFixedFont ), mEncoding( encoding )
@@ -1634,6 +1635,10 @@ void KMPrintCommand::setOverrideFont( const QFont& font )
   mOverrideFont = font;
 }
 
+void KMPrintCommand::setAttachmentStrategy( const KMail::AttachmentStrategy *strategy )
+{
+  mAttachmentStrategy = strategy;
+}
 
 KMCommand::Result KMPrintCommand::execute()
 {
@@ -1649,6 +1654,8 @@ KMCommand::Result KMPrintCommand::execute()
   printerWin->setOverrideEncoding( mEncoding );
   printerWin->cssHelper()->setPrintFont( mOverrideFont );
   printerWin->setDecryptMessageOverwrite( true );
+  if ( mAttachmentStrategy != 0 )
+    printerWin->setAttachmentStrategy( mAttachmentStrategy );
   printerWin->printMsg( retrievedMessage() );
 
   return OK;

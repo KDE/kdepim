@@ -1560,6 +1560,11 @@ void KMReaderWin::parseMsg(KMMessage* aMsg)
 
   assert(aMsg!=0);
 
+  if ( aMsg->isBeingParsed() ) {
+    kWarning() << "Recursive parsing detected, aborting!";
+    return;
+  }
+
   aMsg->setIsBeingParsed( true );
 
   if ( mRootNode && !mRootNode->processed() ) {

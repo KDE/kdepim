@@ -142,6 +142,7 @@ using KMail::TemplateParser;
 #include "accountwizard.h"
 #include "archivefolderdialog.h"
 #include "folderutil.h"
+#include "csshelper.h"
 
 #if !defined(NDEBUG)
     #include "sievedebugdialog.h"
@@ -2653,12 +2654,16 @@ void KMMainWidget::slotPrintMsg()
   KConfigGroup reader( KMKernel::config(), "Reader" );
   bool useFixedFont = mMsgView ? mMsgView->isFixedFont() : GlobalSettings::self()->useFixedFont();
 
-  KMCommand *command =
+  // FIXME: Remove code duplication with KMReaderMainWin::slotPrintMsg. Maybe move to MessageActions?
+  KMPrintCommand *command =
     new KMPrintCommand( this, msg,
                         mMsgView ? mMsgView->headerStyle() : 0,
                         mMsgView ? mMsgView->headerStrategy() : 0,
                         htmlOverride, htmlLoadExtOverride,
                         useFixedFont, overrideEncoding() );
+  command->setAttachmentStrategy( mMsgView ? mMsgView->attachmentStrategy() : 0 );
+  if ( mMsgView )
+    command->setOverrideFont( mMsgView->cssHelper()->bodyFont( mMsgView->isFixedFont(), true /*printing*/ ) );
   command->start();
 }
 
