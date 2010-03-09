@@ -437,7 +437,7 @@ int KeyListController::Private::toolTipOptions() const
     using namespace Kleo::Formatting;
     static const int validityFlags = Validity;
     static const int ownerFlags = Subject|Issuer|UserIDs|SerialNumber;
-    static const int detailsFlags = StorageLocation|ExpiryDates|CertificateType|CertificateUsage|Fingerprint;
+    static const int detailsFlags = StorageLocation|ExpiryDates|CertificateType|CertificateUsage|Fingerprint|OwnerTrust;
 
     const TooltipPreferences prefs;
     

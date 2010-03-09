@@ -76,8 +76,9 @@ namespace Formatting {
         CertificateUsage = 0x100,
         Fingerprint      = 0x200,
         UserIDs          = 0x400,
+        OwnerTrust       = 0x800,
 
-        AllOptions = 0x7ff
+        AllOptions = 0xfff
     };
 
     QString toolTip( const GpgME::Key & key, int opts );
@@ -101,6 +102,7 @@ namespace Formatting {
     QString type( const GpgME::Subkey & subkey );
 
 
+    QString ownerTrustShort( const GpgME::Key & key );
     QString ownerTrustShort( GpgME::Key::OwnerTrust trust );
 
     QString validityShort( const GpgME::Subkey & subkey );
