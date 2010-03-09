@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Akonotes plasmoid
+Name[es]=Plasmoide Akonotes
 Name[gl]=Plasmoide Akonotes
 Name[nb]=Akonotes plasmoide
 Name[nn]=Akonotes-element
@@ -9,6 +10,7 @@ Name[sv]=Plasmoid Ako-anteckningar
 Name[uk]=Плазмоїд Akonotes
 Name[x-test]=xxAkonotes plasmoidxx
 Comment=Akonotes plasmoid
+Comment[es]=Plasmoide Akonotes
 Comment[gl]=Plasmoide Akonotes
 Comment[nb]=Akonotes plasmoide
 Comment[nn]=Akonotes-element

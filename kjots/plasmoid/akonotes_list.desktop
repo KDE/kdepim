@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Akonotes list plasmoid
+Name[es]=Plasmoide de lista de Akonotes
 Name[gl]=Plasmoide de listas Akonotes
 Name[nb]=Akonotes listeplasmoide
 Name[nn]=Akonotes-listeelement
@@ -9,6 +10,7 @@ Name[sv]=Plasmoid Ako-anteckningslista
 Name[uk]=Плазмоїд списку Akonotes
 Name[x-test]=xxAkonotes list plasmoidxx
 Comment=Akonotes list plasmoid
+Comment[es]=Plasmoide de lista de Akonotes
 Comment[gl]=Plasmoide de lista Akonotes
 Comment[nb]=Akonotes listeplasmoide
 Comment[nn]=Akonotes-listeelement
