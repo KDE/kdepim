@@ -21,6 +21,8 @@
 
 #include "contactsfilterproxymodel.h"
 
+#include "contactstreemodel.h"
+
 #include <akonadi/entitytreemodel.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
@@ -72,6 +74,23 @@ bool ContactsFilterModel::filterAcceptsRow( int row, const QModelIndex &parent )
   }
 
   return true;
+}
+
+bool ContactsFilterModel::lessThan( const QModelIndex &leftIndex, const QModelIndex &rightIndex ) const
+{
+  const QDate leftDate = leftIndex.data( ContactsTreeModel::DateRole ).toDate();
+  const QDate rightDate = rightIndex.data( ContactsTreeModel::DateRole ).toDate();
+
+  if ( leftDate.isValid() && rightDate.isValid() ) {
+    if ( leftDate.month() < rightDate.month() )
+      return true;
+    else if ( leftDate.month() == rightDate.month() )
+      return (leftDate.day() < rightDate.day());
+    else
+      return false;
+  }
+
+  return QSortFilterProxyModel::lessThan( leftIndex, rightIndex );
 }
 
 static bool addressMatchesFilter( const KABC::Address &address, const QString &filterString )

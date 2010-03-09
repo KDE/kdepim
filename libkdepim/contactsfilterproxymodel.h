@@ -60,6 +60,7 @@ class KDEPIM_EXPORT ContactsFilterModel : public QSortFilterProxyModel
 
   protected:
     virtual bool filterAcceptsRow( int row, const QModelIndex &parent ) const;
+    virtual bool lessThan( const QModelIndex &left, const QModelIndex &right ) const;
 
   private:
     class Private;
