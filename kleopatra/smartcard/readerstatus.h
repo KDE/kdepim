@@ -53,7 +53,6 @@ namespace SmartCard {
         static ReaderStatus * mutableInstance();
 
         void startSimpleTransaction( const QByteArray & cmd, QObject * receiver, const char * slot );
-        void updateStatus();
 
         enum AppType {
             UnknownApplication,
@@ -99,6 +98,7 @@ namespace SmartCard {
         std::vector<PinState> pinStates( unsigned int slot ) const;
 
     public Q_SLOTS:
+        void updateStatus();
         void startMonitoring();
 
     Q_SIGNALS:
