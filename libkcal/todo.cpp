@@ -177,7 +177,11 @@ void Todo::setHasStartDate(bool f)
 QDateTime Todo::dtStart( bool first ) const
 {
   if ( doesRecur() && !first ) {
-    return mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+    QDateTime dt = mDtRecurrence.addDays( dtDue( true ).daysTo( IncidenceBase::dtStart() ) );
+
+    // We want the dtStart's time, not dtDue's
+    dt.setTime( IncidenceBase::dtStart().time() );
+    return dt;
   } else if ( hasStartDate() ) {
     return IncidenceBase::dtStart();
   } else {
