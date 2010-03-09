@@ -35,6 +35,8 @@
 #include "systrayicon.h"
 #include "mainwindow.h"
 
+#include <smartcard/readerstatus.h>
+
 #include <utils/kdsignalblocker.h>
 
 #include <commands/importcertificatefromclipboardcommand.h>
@@ -69,6 +71,7 @@
 using namespace boost;
 using namespace Kleo;
 using namespace Kleo::Commands;
+using namespace Kleo::SmartCard;
 
 class SysTrayIcon::Private {
     friend class ::SysTrayIcon;
@@ -102,7 +105,6 @@ private:
         decryptVerifyClipboardAction.setEnabled( DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() );
         setInitialPinAction.setEnabled( anyCardHasNullPin );
         learnCertificatesAction.setEnabled( anyCardCanLearnKeys );
-        cardMenu.setEnabled( anyCardHasNullPin || anyCardCanLearnKeys );
 
         q->setAttentionWanted( ( anyCardHasNullPin || anyCardCanLearnKeys ) && !q->attentionWindow() );
     }
@@ -178,6 +180,7 @@ private:
     QAction openPGPSignClipboardAction;
     QAction decryptVerifyClipboardAction;
     QMenu cardMenu;
+    QAction updateCardStatusAction;
     QAction setInitialPinAction;
     QAction learnCertificatesAction;
 
@@ -203,6 +206,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
       openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
       decryptVerifyClipboardAction( i18n("Decrypt/Verify..."), q ),
       cardMenu( i18n("SmartCard") ),
+      updateCardStatusAction( i18n("Update Card Status"), q ),
       setInitialPinAction( i18n("Set NetKey v3 Initial PIN..."), q ),
       learnCertificatesAction( i18n("Learn NetKey v3 Card Certificates"), q ),
       aboutDialog(),
@@ -235,6 +239,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     connect( &smimeSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotSMIMESignClipboard()) );
     connect( &openPGPSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotOpenPGPSignClipboard()) );
     connect( &decryptVerifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptVerifyClipboard()) );
+    connect( &updateCardStatusAction, SIGNAL(triggered()), ReaderStatus::instance(), SLOT(updateStatus()) );
     connect( &setInitialPinAction, SIGNAL(triggered()), q, SLOT(slotSetInitialPin()) );
     connect( &learnCertificatesAction, SIGNAL(triggered()), q, SLOT(slotLearnCertificates()) );
 
@@ -253,6 +258,7 @@ SysTrayIcon::Private::Private( SysTrayIcon * qq )
     clipboardMenu.addAction( &decryptVerifyClipboardAction );
     menu.addSeparator();
     menu.addMenu( &cardMenu );
+    cardMenu.addAction( &updateCardStatusAction );
     cardMenu.addAction( &setInitialPinAction );
     cardMenu.addAction( &learnCertificatesAction );
     menu.addSeparator();
