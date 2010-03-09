@@ -292,12 +292,12 @@ static QString dn_escape( const QString & s ) {
 }
 
 static QString
-serialise( const QVector<Kleo::DN::Attribute> & dn ) {
+serialise( const QVector<Kleo::DN::Attribute> & dn, const QString & sep ) {
   QStringList result;
   for ( QVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it )
     if ( !(*it).name().isEmpty() && !(*it).value().isEmpty() )
       result.push_back( (*it).name().trimmed() + '=' + dn_escape( (*it).value().trimmed() ) );
-  return result.join( "," );
+  return result.join( sep );
 }
 
 static Kleo::DN::Attribute::List
@@ -383,11 +383,15 @@ QString Kleo::DN::prettyDN() const {
     return QString();
   if ( d->reorderedAttributes.empty() )
     d->reorderedAttributes = reorder_dn( d->attributes );
-  return serialise( d->reorderedAttributes );
+  return serialise( d->reorderedAttributes, "," );
 }
 
 QString Kleo::DN::dn() const {
-  return d ? serialise( d->attributes ) : QString() ;
+  return d ? serialise( d->attributes, "," ) : QString() ;
+}
+
+QString Kleo::DN::dn( const QString & sep ) const {
+  return d ? serialise( d->attributes, sep ) : QString() ;
 }
 
 // static

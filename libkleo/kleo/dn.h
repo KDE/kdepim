@@ -96,6 +96,11 @@ namespace Kleo {
     QString prettyDN() const;
     /** @return the DN in the original form */
     QString dn() const;
+    /**
+       \overload
+       Uses \a sep as separator (default: ,)
+    */
+    QString dn( const QString & sep ) const;
 
     QString operator[]( const QString & attr ) const;
 
