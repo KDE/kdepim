@@ -250,7 +250,12 @@ Alarm::List CalendarLocal::alarms( const QDateTime &from, const QDateTime &to )
 
   Todo::List::ConstIterator it2;
   for( it2 = mTodoList.begin(); it2 != mTodoList.end(); ++it2 ) {
-    if (! (*it2)->isCompleted() ) appendAlarms( alarms, *it2, from, to );
+    Todo *t = *it2;
+    if ( t->isCompleted() ) {
+      continue;
+    }
+    if ( t->doesRecur() ) appendRecurringAlarms( alarms, t, from, to );
+    else appendAlarms( alarms, t, from, to );
   }
 
   return alarms;
@@ -281,10 +286,14 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
                                            const QDateTime &from,
                                            const QDateTime &to )
 {
-  QDateTime qdt;
-  int  endOffset = 0;
+  QDateTime dt;
+  Duration endOffset( 0 );
   bool endOffsetValid = false;
-  int  period = from.secsTo(to);
+  Duration period( from, to );
+
+  Event *e = static_cast<Event *>( incidence );
+  Todo *t = static_cast<Todo *>( incidence );
+
   Alarm::List::ConstIterator it;
   for( it = incidence->alarms().begin(); it != incidence->alarms().end();
        ++it ) {
@@ -292,59 +301,127 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
     if ( alarm->enabled() ) {
       if ( alarm->hasTime() ) {
         // The alarm time is defined as an absolute date/time
-        qdt = alarm->nextRepetition( from.addSecs(-1) );
-        if ( !qdt.isValid() || qdt > to )
+        dt = alarm->nextRepetition( from.addSecs(-1) );
+        if ( !dt.isValid() || dt > to ) {
           continue;
+        }
       } else {
-        // The alarm time is defined by an offset from the event start or end time.
+        // Alarm time is defined by an offset from the event start or end time.
         // Find the offset from the event start time, which is also used as the
         // offset from the recurrence time.
-        int offset = 0;
+        Duration offset( 0 );
         if ( alarm->hasStartOffset() ) {
           offset = alarm->startOffset().asSeconds();
         } else if ( alarm->hasEndOffset() ) {
+          offset = alarm->endOffset();
           if ( !endOffsetValid ) {
-            endOffset = incidence->dtStart().secsTo( incidence->dtEnd() );
-            endOffsetValid = true;
-          }
-          offset = alarm->endOffset().asSeconds() + endOffset;
-        }
-
-        // Adjust the 'from' date/time and find the next recurrence at or after it
-        qdt = incidence->recurrence()->getNextDateTime( from.addSecs(-offset - 1) );
-        if ( !qdt.isValid()
-        ||   (qdt = qdt.addSecs( offset )) > to )    // remove the adjustment to get the alarm time
-        {
-          // The next recurrence is too late.
-          if ( !alarm->repeatCount() )
-            continue;
-          // The alarm has repetitions, so check whether repetitions of previous
-          // recurrences fall within the time period.
-          bool found = false;
-          qdt = from.addSecs( -offset );
-          while ( (qdt = incidence->recurrence()->getPreviousDateTime( qdt )).isValid() ) {
-            int toFrom = qdt.secsTo( from ) - offset;
-            if ( toFrom > alarm->duration() )
-              break;     // this recurrence's last repetition is too early, so give up
-            // The last repetition of this recurrence is at or after 'from' time.
-            // Check if a repetition occurs between 'from' and 'to'.
-            int snooze = alarm->snoozeTime() * 60;   // in seconds
-            if ( period >= snooze
-            ||   toFrom % snooze == 0
-            ||   (toFrom / snooze + 1) * snooze <= toFrom + period ) {
-              found = true;
-#ifndef NDEBUG
-              qdt = qdt.addSecs( offset + ((toFrom-1) / snooze + 1) * snooze );   // for debug output
-#endif
-              break;
+            if ( incidence->type() == "Event" ) {
+              endOffset = Duration( e->dtStart(), e->dtEnd() );
+              endOffsetValid = true;
+            } else if ( incidence->type() == "Todo" &&
+                        t->hasStartDate() && t->hasDueDate() ) {
+              endOffset = Duration( t->dtStart(), t->dtDue() );
+              endOffsetValid = true;
             }
           }
-          if ( !found )
+        }
+
+        // Find the incidence's earliest alarm
+        QDateTime alarmStart;
+        if ( incidence->type() == "Event" ) {
+          alarmStart =
+            offset.end( alarm->hasEndOffset() ? e->dtEnd() : e->dtStart() );
+        } else if ( incidence->type() == "Todo" ) {
+          if ( alarm->hasEndOffset() ) {
+            if ( t->hasDueDate() ) {
+              alarmStart = offset.end( t->dtDue() );
+            } else if ( t->hasStartDate() ) {
+              alarmStart = offset.end( t->dtStart() );
+            }
+          }
+        }
+
+        if ( alarmStart.isValid() && alarmStart > to ) {
+          continue;
+        }
+
+        QDateTime baseStart;
+        if ( incidence->type() == "Event" ) {
+          baseStart = e->dtStart();
+        } else if ( incidence->type() == "Todo" ) {
+          if ( t->hasStartDate() ) {
+            baseStart = t->dtStart();
+          } else if ( t->hasDueDate() ) {
+            baseStart = t->dtDue();
+          }
+        }
+        if ( alarmStart.isValid() && from > alarmStart ) {
+          alarmStart = from;   // don't look earlier than the earliest alarm
+          baseStart = (-offset).end( (-endOffset).end( alarmStart ) );
+        }
+
+        // Adjust the 'alarmStart' date/time and find the next recurrence
+        // at or after it. Treat the two offsets separately in case one
+        // is daily and the other not.
+        dt = incidence->recurrence()->getNextDateTime( baseStart.addSecs(-1) );
+        if ( !dt.isValid() ||
+             ( dt = endOffset.end( offset.end( dt ) ) ) > to ) // adjust 'dt' to get the alarm time
+        {
+          // The next recurrence is too late.
+          if ( !alarm->repeatCount() ) {
             continue;
+          }
+
+          // The alarm has repetitions, so check whether repetitions of
+          // previous recurrences fall within the time period.
+          bool found = false;
+          Duration alarmDuration = alarm->duration();
+          for ( QDateTime base = baseStart;
+                ( dt = incidence->recurrence()->getPreviousDateTime( base ) ).isValid();
+                base = dt ) {
+            if ( alarm->duration().end( dt ) < base ) {
+              break;  // recurrence's last repetition is too early, so give up
+            }
+
+            // The last repetition of this recurrence is on or after
+            // 'alarmStart' time. Check if a repetition occurs between
+            // 'alarmStart' and 'to'.
+            int snooze = alarm->snoozeTime().value();   // in seconds or days
+            if ( alarm->snoozeTime().isDaily() ) {
+              Duration toFromDuration( dt, base );
+              int toFrom = toFromDuration.asDays();
+              if ( alarm->snoozeTime().end( from ) <= to ||
+                   ( toFromDuration.isDaily() && toFrom % snooze == 0 ) ||
+                   ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asDays() ) {
+                found = true;
+#ifndef NDEBUG
+                // for debug output
+                dt = offset.end( dt ).addDays( ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+#endif
+                break;
+              }
+            } else {
+              int toFrom = dt.secsTo( base );
+              if ( period.asSeconds() >= snooze ||
+                   toFrom % snooze == 0 ||
+                   ( toFrom / snooze + 1 ) * snooze <= toFrom + period.asSeconds() )
+              {
+                found = true;
+#ifndef NDEBUG
+                // for debug output
+                dt = offset.end( dt ).addSecs( ( ( toFrom - 1 ) / snooze + 1 ) * snooze );
+#endif
+                break;
+              }
+            }
+          }
+          if ( !found ) {
+            continue;
+          }
         }
       }
       kdDebug(5800) << "CalendarLocal::appendAlarms() '" << incidence->summary()
-                    << "': " << qdt.toString() << endl;
+                    << "': " << dt.toString() << endl;
       alarms.append( alarm );
     }
   }
