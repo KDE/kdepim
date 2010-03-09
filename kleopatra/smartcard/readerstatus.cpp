@@ -77,7 +77,6 @@ using namespace Kleo::SmartCard;
 using namespace GpgME;
 using namespace boost;
 
-static const unsigned int MAX_RETRIES = 3;
 static const unsigned int RETRY_WAIT = 2; // seconds
 static const unsigned int CHECK_INTERVAL = 2000; // msecs
 
@@ -124,6 +123,7 @@ static const char * prettyFlags[] = {
     "CardUsable",
     "CardCanLearnKeys",
     "CardHasNullPin",
+    "CardError",
 };
 BOOST_STATIC_ASSERT(( sizeof prettyFlags/sizeof *prettyFlags == ReaderStatus::NumStates ));
 
@@ -213,37 +213,22 @@ static ReaderStatus::PinState parse_pin_state( const std::string & s ) {
     }
 }
 
-static void ReaderStatusThread_sleep( unsigned int secs );
-
 static std::auto_ptr<DefaultAssuanTransaction> gpgagent_transact( shared_ptr<Context> & gpgAgent, const char * command, Error & err ) {
-    for ( unsigned int i = 0 ; i < MAX_RETRIES ; ++i ) {
-        if ( i > 0 )
-            qDebug() << "gpgagent_transact(" << command << "), try #" << i;
-        else
-            qDebug() << "gpgagent_transact(" << command << ")";
-        const AssuanResult res = gpgAgent->assuanTransact( command );
-        err = res.error();
-        if ( !err.code() )
-            err = res.assuanError();
-        if ( err.code() ) {
-            qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
-            if ( err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE ) {
-                qDebug() << "Assuan problem, try re-creating the assuan context in " << RETRY_WAIT << "sec.";
-                gpgAgent.reset();
-                qDebug() << "waiting for gpg-agent ...zZZ";
-                ReaderStatusThread_sleep( RETRY_WAIT );
-                qDebug() << "returning from waiting for gpg-agent ...oOO";
-                std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
-                gpgAgent = c;
-                continue;
-            }
-            return std::auto_ptr<DefaultAssuanTransaction>();
+    qDebug() << "gpgagent_transact(" << command << ")";
+    const AssuanResult res = gpgAgent->assuanTransact( command );
+    err = res.error();
+    if ( !err.code() )
+        err = res.assuanError();
+    if ( err.code() ) {
+        qDebug() << "gpgagent_transact(" << command << "):" << QString::fromLocal8Bit( err.asString() );
+        if ( err.code() >= GPG_ERR_ASS_GENERAL && err.code() <= GPG_ERR_ASS_UNKNOWN_INQUIRE ) {
+            qDebug() << "Assuan problem, killing context";
+            gpgAgent.reset();
         }
-        std::auto_ptr<AssuanTransaction> t = gpgAgent->takeLastAssuanTransaction();
-        return dynamic_pointer_cast<DefaultAssuanTransaction>( t );
+        return std::auto_ptr<DefaultAssuanTransaction>();
     }
-    qDebug() << "Max. retries reached, giving up.";
-    return std::auto_ptr<DefaultAssuanTransaction>();
+    std::auto_ptr<AssuanTransaction> t = gpgAgent->takeLastAssuanTransaction();
+    return dynamic_pointer_cast<DefaultAssuanTransaction>( t );
 }
 
 // returns const std::string so template deduction in boost::split works, and we don't need a temporary
@@ -264,7 +249,7 @@ static unsigned int parse_event_counter( const std::string & str ) {
     unsigned int result;
     if ( sscanf( str.c_str(), "%*u %*u %u ", &result ) == 1 )
         return result;
-    return 0U;
+    return -1;
 }
 
 static unsigned int get_event_counter( shared_ptr<Context> & gpgAgent ) {
@@ -277,7 +262,7 @@ static unsigned int get_event_counter( shared_ptr<Context> & gpgAgent ) {
         return parse_event_counter( t->firstStatusLine( "EVENTCOUNTER" ) );
     } else {
         qDebug() << "scd_getattr_status(): t == NULL";
-        return 0U;
+        return -1;
     }
 }
 
@@ -320,6 +305,10 @@ static CardInfo get_card_status( const QString & fileName, unsigned int idx, sha
     ci.serialNumber = gpgagent_data( gpg_agent, "SCD SERIALNO", err );
     if ( err.code() == GPG_ERR_CARD_NOT_PRESENT || err.code() == GPG_ERR_CARD_REMOVED ) {
         ci.status = ReaderStatus::NoCard;
+        return ci;
+    }
+    if ( err.code() ) {
+        ci.status = ReaderStatus::CardError;
         return ci;
     }
     ci.appType = parse_app_type( scd_getattr_status( gpg_agent, "APPTYPE", err ) );
@@ -508,9 +497,8 @@ namespace {
 
     private:
         /* reimp */ void run() {
-            std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
-            shared_ptr<Context> gpgAgent( c );
 
+            shared_ptr<Context> gpgAgent;
             unsigned int eventCounter = -1;
 
             while ( true ) {
@@ -519,6 +507,11 @@ namespace {
                 bool nullSlot;
                 std::list<Transaction> item;
                 std::vector<CardInfo> oldCardInfos;
+
+                if ( !gpgAgent ) {
+                    std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
+                    gpgAgent = c;
+                }
 
                 KDAB_SYNCHRONIZED( m_mutex ) {
 
@@ -573,6 +566,7 @@ namespace {
                     unsigned int idx = 0;
                     bool anyLC = false;
                     bool anyNP = false;
+                    bool anyError = false;
                     while ( nit != nend && oit != oend ) {
                         if ( nit->status != oit->status ) {
                             qDebug() << "ReaderStatusThread[2nd]: slot" << idx << ":" << prettyFlags[oit->status] << "->" << prettyFlags[nit->status];
@@ -582,6 +576,8 @@ namespace {
                             anyLC = true;
                         if ( nit->status == ReaderStatus::CardHasNullPin )
                             anyNP = true;
+                        if ( nit->status == ReaderStatus::CardError )
+                            anyError = true;
                         ++nit;
                         ++oit;
                         ++idx;
@@ -589,6 +585,9 @@ namespace {
 
                     emit anyCardHasNullPinChanged( anyNP );
                     emit anyCardCanLearnKeysChanged( anyLC );
+
+                    if ( anyError )
+                        gpgAgent.reset();
 
                 } else {
 
@@ -604,7 +603,13 @@ namespace {
 
                 // update event counter in case anything above changed
                 // it:
-                eventCounter = get_event_counter( gpgAgent );
+                if ( gpgAgent )
+                    eventCounter = get_event_counter( gpgAgent );
+                else
+                    eventCounter = -1;
+
+                qDebug() << "eventCounter:" << eventCounter;
+
             }
         }
 
@@ -618,10 +623,6 @@ namespace {
         std::list<Transaction> m_transactions, m_finishedTransactions;
     };
 
-}
-
-void ReaderStatusThread_sleep( unsigned int secs ) {
-    ReaderStatusThread::sleep( secs );
 }
 
 class ReaderStatus::Private : ReaderStatusThread {

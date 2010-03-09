@@ -87,6 +87,8 @@ namespace SmartCard {
             CardCanLearnKeys = _NumScdStates,
             CardHasNullPin,
 
+            CardError,
+
             NumStates
         };
 
