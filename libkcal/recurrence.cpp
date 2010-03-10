@@ -34,7 +34,6 @@
 
 using namespace KCal;
 
-
 Recurrence::Recurrence()
 : mFloating( false ),
   mRecurReadOnly(false),
@@ -837,7 +836,6 @@ DateTimeList Recurrence::timesInInterval( const QDateTime &start, const QDateTim
 
 QDateTime Recurrence::getNextDateTime( const QDateTime &preDateTime ) const
 {
-//kdDebug(5800) << " Recurrence::getNextDateTime after " << preDateTime << endl;
   QDateTime nextDT = preDateTime;
   // prevent infinite loops, e.g. when an exrule extinguishes an rrule (e.g.
   // the exrule is identical to the rrule). If an occurrence is found, break
@@ -859,40 +857,51 @@ QDateTime Recurrence::getNextDateTime( const QDateTime &preDateTime ) const
     ++loop;
     // First, get the next recurrence from the RDate lists
     DateTimeList dates;
-    if ( nextDT < startDateTime() ) dates << startDateTime();
-    DateTimeList::ConstIterator it = mRDateTimes.begin();
-    // Assume that the rdatetime list is sorted
-    while ( it != mRDateTimes.end() && (*it) <= nextDT ) ++it;
-    if ( it != mRDateTimes.end() ) dates << (*it);
+    if ( nextDT < startDateTime() ) {
+      dates << startDateTime();
+    }
 
-/*kdDebug(5800) << "    nextDT: " << nextDT << ", startDT: " << startDateTime() << endl;
-kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " RDATES and DTSTART in loop " << loop << endl;*/
-    DateList::ConstIterator dit = mRDates.begin();
-    while ( dit != mRDates.end() && QDateTime( (*dit), startDateTime().time() ) <= nextDT ) ++dit;
-    if ( dit != mRDates.end() ) dates << QDateTime( (*dit), startDateTime().time() );
+    int end;
+    // Assume that the rdatetime list is sorted
+    int i = findGT( mRDateTimes, nextDT, 0 );
+    if ( i >= 0 ) {
+      dates << mRDateTimes[i];
+    }
+
+    QDateTime qdt( startDateTime() );
+    for ( i = 0, end = mRDates.count();  i < end;  ++i ) {
+      qdt.setDate( mRDates[i] );
+      if ( qdt > nextDT ) {
+        dates << qdt;
+        break;
+      }
+    }
 
     // Add the next occurrences from all RRULEs.
-    for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
-      QDateTime dt = (*rr)->getNextDate( nextDT );
-      if ( dt.isValid() ) dates << dt;
+    for ( i = 0, end = mRRules.count();  i < end;  ++i ) {
+      QDateTime dt = mRRules[i]->getNextDate( nextDT );
+      if ( dt.isValid() ) {
+        dates << dt;
+      }
     }
 
     // Take the first of these (all others can't be used later on)
     qSortUnique( dates );
-// kdDebug(5800) << "   getNextDateTime: found " << dates.count() << " dates in loop " << loop << endl;
-
-    if ( dates.isEmpty() ) return QDateTime();
+    if ( dates.isEmpty() ) {
+      return QDateTime();
+    }
     nextDT = dates.first();
 
     // Check if that date/time is excluded explicitly or by an exrule:
-    if ( !mExDates.contains( nextDT.date() ) && !mExDateTimes.contains( nextDT ) ) {
-// kdDebug(5800) << "   NextDT" << nextDT << " not excluded by EXDATE " << endl;
+    if ( !containsSorted( mExDates, nextDT.date() ) &&
+         !containsSorted( mExDateTimes, nextDT ) ) {
       bool allowed = true;
-      for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
-        allowed = allowed && !( (*rr)->recursAt( nextDT ) );
+      for ( i = 0, end = mExRules.count();  i < end;  ++i ) {
+        allowed = allowed && !( mExRules[i]->recursAt( nextDT ) );
       }
-// kdDebug(5800) << "   NextDT " << nextDT << ", allowed=" << allowed << endl;
-      if ( allowed ) return nextDT;
+      if ( allowed ) {
+        return nextDT;
+      }
     }
   }
 
@@ -920,44 +929,50 @@ QDateTime Recurrence::getPreviousDateTime( const QDateTime &afterDateTime ) cons
     ++loop;
     // First, get the next recurrence from the RDate lists
     DateTimeList dates;
-    if ( prevDT > startDateTime() ) dates << startDateTime();
-
-    DateTimeList::ConstIterator dtit = mRDateTimes.end();
-    if ( dtit != mRDateTimes.begin() ) {
-      do {
-        --dtit;
-      } while ( dtit != mRDateTimes.begin() && (*dtit) >= prevDT );
-      if ( (*dtit) < prevDT ) dates << (*dtit);
+    if ( prevDT > startDateTime() ) {
+      dates << startDateTime();
     }
 
-    DateList::ConstIterator dit = mRDates.end();
-    if ( dit != mRDates.begin() ) {
-      do {
-        --dit;
-      } while ( dit != mRDates.begin() && QDateTime((*dit), startDateTime().time()) >= prevDT );
-      if ( QDateTime((*dit), startDateTime().time()) < prevDT )
-        dates << QDateTime( (*dit), startDateTime().time() );
+    int i = findLT( mRDateTimes, prevDT, 0 );
+    if ( i >= 0 ) {
+      dates << mRDateTimes[i];
+    }
+
+    QDateTime qdt( startDateTime() );
+    for ( i = mRDates.count();  --i >= 0; ) {
+      qdt.setDate( mRDates[i] );
+      if ( qdt < prevDT ) {
+        dates << qdt;
+        break;
+      }
     }
 
     // Add the previous occurrences from all RRULEs.
-    for ( RecurrenceRule::List::ConstIterator rr = mRRules.begin(); rr != mRRules.end(); ++rr ) {
-      QDateTime dt = (*rr)->getPreviousDate( prevDT );
-      if ( dt.isValid() ) dates << dt;
+    int end;
+    for ( i = 0, end = mRRules.count();  i < end;  ++i ) {
+      QDateTime dt = mRRules[i]->getPreviousDate( prevDT );
+      if ( dt.isValid() ) {
+        dates << dt;
+      }
     }
-//kdDebug(5800) << "   getPreviousDateTime: found " << dates.count() << " dates in loop " << loop << endl;
 
     // Take the last of these (all others can't be used later on)
     qSortUnique( dates );
-    if ( dates.isEmpty() ) return QDateTime();
+    if ( dates.isEmpty() ) {
+      return QDateTime();
+    }
     prevDT = dates.last();
 
     // Check if that date/time is excluded explicitly or by an exrule:
-    if ( !mExDates.contains( prevDT.date() ) && !mExDateTimes.contains( prevDT ) ) {
+    if ( !containsSorted( mExDates, prevDT.date() ) &&
+         !containsSorted( mExDateTimes, prevDT ) ) {
       bool allowed = true;
-      for ( RecurrenceRule::List::ConstIterator rr = mExRules.begin(); rr != mExRules.end(); ++rr ) {
-        allowed = allowed && !( (*rr)->recursAt( prevDT ) );
+      for ( i = 0, end = mExRules.count();  i < end;  ++i ) {
+        allowed = allowed && !( mExRules[i]->recursAt( prevDT ) );
       }
-      if ( allowed ) return prevDT;
+      if ( allowed ) {
+        return prevDT;
+      }
     }
   }
 

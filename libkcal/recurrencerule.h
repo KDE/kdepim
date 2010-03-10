@@ -51,7 +51,7 @@ Q_INLINE_TEMPLATES void qSortUnique( QValueList<T> &lst )
 }
 
 template <class T>
-Q_INLINE_TEMPLATES int findGE( QValueList<T> &lst, const T &value, int start )
+Q_INLINE_TEMPLATES int findGE( const QValueList<T> &lst, const T &value, int start )
 {
   // Do a binary search to find the first item >= value
   int st = start - 1;
@@ -69,7 +69,7 @@ Q_INLINE_TEMPLATES int findGE( QValueList<T> &lst, const T &value, int start )
 }
 
 template <class T>
-Q_INLINE_TEMPLATES int findGT( QValueList<T> &lst, const T &value, int start )
+Q_INLINE_TEMPLATES int findGT( const QValueList<T> &lst, const T &value, int start )
 {
   // Do a binary search to find the first item > value
   int st = start - 1;
@@ -87,7 +87,41 @@ Q_INLINE_TEMPLATES int findGT( QValueList<T> &lst, const T &value, int start )
 }
 
 template <class T>
-Q_INLINE_TEMPLATES int findSorted( QValueList<T> &lst, const T &value, int start )
+Q_INLINE_TEMPLATES int findLE( const QValueList<T> &lst, const T &value, int start )
+{
+  // Do a binary search to find the last item <= value
+  int st = start - 1;
+  int end = lst.count();
+  while ( end - st > 1 ) {
+    int i = ( st + end ) / 2;
+    if ( value < lst[i] ) {
+      end = i;
+    } else {
+      st = i;
+    }
+  }
+  return ( end > start ) ? st : -1;
+}
+
+template <class T>
+Q_INLINE_TEMPLATES int findLT( const QValueList<T> &lst, const T &value, int start )
+{
+  // Do a binary search to find the last item < value
+  int st = start - 1;
+  int end = lst.count();
+  while ( end - st > 1 ) {
+    int i = ( st + end ) / 2;
+    if ( value <= lst[i] ) {
+      end = i;
+    } else {
+      st = i;
+    }
+  }
+  return ( end > start ) ? st : -1;
+}
+
+template <class T>
+Q_INLINE_TEMPLATES int findSorted( const QValueList<T> &lst, const T &value, int start )
 {
   // Do a binary search to find the item == value
   int st = start - 1;
@@ -112,6 +146,13 @@ Q_INLINE_TEMPLATES int removeSorted( QValueList<T> &lst, const T &value, int sta
   }
   return i;
 }
+
+template <class T>
+Q_INLINE_TEMPLATES bool containsSorted( const QValueList<T> &lst, const T &value )
+{
+  return findSorted( lst, value, 0 ) >= 0;
+}
+
 
 namespace KCal {
 
