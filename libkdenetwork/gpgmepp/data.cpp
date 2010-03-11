@@ -1,5 +1,5 @@
 /* data.cpp - wraps a gpgme data object
-   Copyright (C) 2003 Klarälvdalens Datakonsult AB
+   Copyright (C) 2003 Klarï¿½lvdalens Datakonsult AB
 
    This file is part of GPGME++.
  
@@ -133,11 +133,11 @@ GpgME::Data::Data( DataProvider * dp ) {
   if ( e )
     d->data = 0;
 #ifndef NDEBUG
-  std::cerr << "GpgME::Data(): DataProvider supports: "
-	    << ( d->cbs.read ? "read" : "no read" ) << ", "
-	    << ( d->cbs.write ? "write" : "no write" ) << ", "
-	    << ( d->cbs.seek ? "seek" : "no seek" ) << ", "
-	    << ( d->cbs.release ? "release" : "no release" ) << std::endl;
+//  std::cerr << "GpgME::Data(): DataProvider supports: "
+//	    << ( d->cbs.read ? "read" : "no read" ) << ", "
+//	    << ( d->cbs.write ? "write" : "no write" ) << ", "
+//	    << ( d->cbs.seek ? "seek" : "no seek" ) << ", "
+//	    << ( d->cbs.release ? "release" : "no release" ) << std::endl;
 #endif
 }
 

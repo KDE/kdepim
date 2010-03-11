@@ -1,5 +1,5 @@
 /* dataprovider.cpp
-   Copyright (C) 2004 Klarälvdalens Datakonsult AB
+   Copyright (C) 2004 Klarï¿½lvdalens Datakonsult AB
 
    This file is part of QGPGME.
 
@@ -61,7 +61,7 @@ ssize_t QGpgME::QByteArrayDataProvider::read( void * buffer, size_t bufSize ) {
 
 ssize_t QGpgME::QByteArrayDataProvider::write( const void * buffer, size_t bufSize ) {
 #ifndef NDEBUG
-  qDebug( "QGpgME::QByteArrayDataProvider::write( %p, %d )", buffer, bufSize );
+  //qDebug( "QGpgME::QByteArrayDataProvider::write( %p, %d )", buffer, bufSize );
 #endif
   if ( bufSize == 0 )
     return 0;
@@ -79,7 +79,7 @@ ssize_t QGpgME::QByteArrayDataProvider::write( const void * buffer, size_t bufSi
 
 off_t QGpgME::QByteArrayDataProvider::seek( off_t offset, int whence ) {
 #ifndef NDEBUG
-  qDebug( "QGpgME::QByteArrayDataProvider::seek( %d, %d )", int(offset), whence );
+  //qDebug( "QGpgME::QByteArrayDataProvider::seek( %d, %d )", int(offset), whence );
 #endif
   int newOffset = mOff;
   switch ( whence ) {
@@ -101,7 +101,7 @@ off_t QGpgME::QByteArrayDataProvider::seek( off_t offset, int whence ) {
 
 void QGpgME::QByteArrayDataProvider::release() {
 #ifndef NDEBUG
-  qDebug( "QGpgME::QByteArrayDataProvider::release()" );
+  //qDebug( "QGpgME::QByteArrayDataProvider::release()" );
 #endif
   mArray = QByteArray();
 }
