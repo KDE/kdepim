@@ -2,6 +2,7 @@
     This file is part of libkcal.
 
     Copyright (c) 2001-2003 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -58,6 +59,18 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
     ~Alarm();
 
     /**
+      Returns an exact copy of this alarm. The returned object is owned by the caller.
+      @since 4.5
+    */
+    Alarm *clone();
+
+    /**
+      Copy operator.
+      @since 4.5
+    */
+    Alarm &operator=( const Alarm & );
+
+    /**
       Compare this alarm with another one.
     */
     bool operator==( const Alarm & ) const;
@@ -71,6 +84,7 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       @param type type of alarm.
     */
     void setType( Type type );
+
     /**
       Return the type of the alarm.
     */
@@ -82,11 +96,13 @@ class LIBKCAL_EXPORT Alarm : public CustomProperties
       @param text text to display when the alarm is triggered.
     */
     void setDisplayAlarm( const QString &text = QString::null );
+
     /**
       Set the text to be displayed when the alarm is triggered.
       Ignored if the alarm is not a display alarm.
     */
     void setText( const QString &text );
+
     /**
       Return the text string that displays when the alarm is triggered.
     */

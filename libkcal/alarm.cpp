@@ -47,6 +47,30 @@ Alarm::~Alarm()
 {
 }
 
+Alarm *Alarm::clone()
+{
+  return new Alarm( *this );
+}
+
+Alarm &Alarm::operator=( const Alarm &a )
+{
+  mParent = a.mParent;
+  mType = a.mType;
+  mDescription = a.mDescription;
+  mFile = a.mFile;
+  mMailAttachFiles = a.mMailAttachFiles;
+  mMailAddresses = a.mMailAddresses;
+  mMailSubject = a.mMailSubject;
+  mAlarmSnoozeTime = a.mAlarmSnoozeTime;
+  mAlarmRepeatCount = a.mAlarmRepeatCount;
+  mAlarmTime = a.mAlarmTime;
+  mOffset = a.mOffset;
+  mEndOffset = a.mEndOffset;
+  mHasTime = a.mHasTime;
+  mAlarmEnabled = a.mAlarmEnabled;
+  return *this;
+}
+
 bool Alarm::operator==( const Alarm& rhs ) const
 {
   if ( mType != rhs.mType ||
