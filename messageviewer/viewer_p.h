@@ -62,9 +62,6 @@ namespace KParts {
 
 namespace MessageViewer {
 
-  namespace Interface {
-    class BodyPartMemento;
-  }
   class EditorWatcher;
   class HtmlWriter;
   class CSSHelper;
@@ -225,18 +222,6 @@ public:
   MailWebView *htmlPart() const { return mViewer; }
 
   void showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint & p );
-
-  /** retrieve BodyPartMemento of id \a which for partNode \a node */
-   Interface::BodyPartMemento * bodyPartMemento( const KMime::Content * node, const QByteArray & which ) const;
-
-   /** set/replace BodyPartMemento \a memento of id \a which for
-      partNode \a node. If there was a BodyPartMemento registered
-      already, replaces (deletes) that one. */
-   void setBodyPartMemento( const KMime::Content * node, const QByteArray & which, Interface::BodyPartMemento * memento );
-
-   /** deletes all BodyPartMementos. Use this when skipping to another
-      message (as opposed to re-loading the same one again). */
-   void clearBodyPartMementos();
 
    /**
    * Sets the current attachment ID and the current attachment temporary filename
@@ -635,7 +620,6 @@ public:
   /** Used only to be able to connect and disconnect finished() signal
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */
   QPointer<WebKitPartHtmlWriter> mPartHtmlWriter;
-  QMap<QByteArray, Interface::BodyPartMemento*> mBodyPartMementoMap;
 
   float mSavedRelativePosition;
   int mLevelQuote;

@@ -214,7 +214,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
 
 ViewerPrivate::~ViewerPrivate()
 {
-  clearBodyPartMementos();
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
   delete mCSSHelper;
@@ -439,59 +438,6 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   attachmentMapper->setMapping( action, Viewer::Properties );
   menu->exec( p );
   delete menu;
-}
-
-Interface::BodyPartMemento *ViewerPrivate::bodyPartMemento( const KMime::Content *node,
-                                               const QByteArray &which ) const
-{
-  const QByteArray index = NodeHelper::path(node) + ':' + which.toLower();
-  const QMap<QByteArray,Interface::BodyPartMemento*>::const_iterator it =
-    mBodyPartMementoMap.find( index );
-
-  if ( it == mBodyPartMementoMap.end() ) {
-    return 0;
-  } else {
-    return it.value();
-  }
-}
-
-void ViewerPrivate::setBodyPartMemento( const KMime::Content *node,
-                                      const QByteArray &which,
-                                      Interface::BodyPartMemento *memento )
-{
-  const QByteArray index = NodeHelper::path(node) + ':' + which.toLower();
-
-  const QMap<QByteArray,Interface::BodyPartMemento*>::iterator it =
-    mBodyPartMementoMap.lowerBound( index );
-
-  if ( it != mBodyPartMementoMap.end() && it.key() == index ) {
-    if ( memento && memento == it.value() ) {
-      return;
-    }
-
-    delete it.value();
-
-    if ( memento ) {
-      it.value() = memento;
-    } else {
-      mBodyPartMementoMap.erase( it );
-    }
-  } else {
-    if ( memento ) {
-      mBodyPartMementoMap.insert( index, memento );
-    }
-  }
-}
-
-
-void ViewerPrivate::clearBodyPartMementos()
-{
-  for ( QMap<QByteArray,Interface::BodyPartMemento*>::iterator
-          it = mBodyPartMementoMap.begin(), end = mBodyPartMementoMap.end();
-        it != end; ++it ) {
-    delete it.value();
-  }
-  mBodyPartMementoMap.clear();
 }
 
 void ViewerPrivate::prepareHandleAttachment( KMime::Content *node, const QString& fileName )
