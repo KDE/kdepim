@@ -81,6 +81,8 @@ void Controller::taskDone( const boost::shared_ptr<const Task::Result> & result 
     doTaskDone( task, result );
 }
 
+void Controller::doTaskDone( const Task *, const shared_ptr<const Task::Result> & ) {}
+
 void Controller::connectTask( const shared_ptr<Task> & task ) {
     assert( task );
     connect( task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
