@@ -2,7 +2,7 @@
     commands/changepassphrasecommand.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -33,12 +33,12 @@
 #ifndef __KLEOPATRA_COMMMANDS_CHANGEPASSPHRASECOMMAND_H__
 #define __KLEOPATRA_COMMMANDS_CHANGEPASSPHRASECOMMAND_H__
 
-#include <commands/gnupgprocesscommand.h>
+#include <commands/command.h>
 
 namespace Kleo {
 namespace Commands {
 
-    class ChangePassphraseCommand : public GnuPGProcessCommand {
+    class ChangePassphraseCommand : public Command {
         Q_OBJECT
     public:
         explicit ChangePassphraseCommand( QAbstractItemView * view, KeyListController * parent );
@@ -49,14 +49,14 @@ namespace Commands {
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|NeedSecretKey; }
 
     private:
-        /* reimp */ QStringList arguments() const;
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
-        /* reimp */ QString errorCaption() const;
-        /* reimp */ QString successCaption() const;
-
-        /* reimp */ QString crashExitMessage( const QStringList & ) const;
-        /* reimp */ QString errorExitMessage( const QStringList & ) const;
-        /* reimp */ QString successMessage( const QStringList & ) const;
+    private:
+        class Private;
+        inline Private * d_func();
+        inline const Private * d_func() const;
+        Q_PRIVATE_SLOT( d_func(), void slotResult(GpgME::Error) )
     };
 
 }
