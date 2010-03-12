@@ -250,7 +250,7 @@ set(libkdgantt1_SRCS
       macro_optional_add_subdirectory(korganizer)
     endif (QT_QT3SUPPORT_FOUND)
 
-    add_subdirectory( nepomuk_email_feeder )
+#    add_subdirectory( nepomuk_email_feeder )
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
