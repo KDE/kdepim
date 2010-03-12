@@ -1,3 +1,23 @@
+Friday, March 12th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4195: Copy+Paste of a todo with recurrence should not change the enddate (rt#6046)
+* kolab/issue4192: Wish: Rename German "Start" into "Beginn" in a event advanced alarm dialog (rt#6043)
+* kolab/issue3706: copy+ paste of an appointment in the monthview creates the appointment at a wrong time (rt#6042)
+* kolab/issue4194: Task without starttime should have default alarm type "before the end" (rt#6045)
+* kolab/issue4109: Task with recurrence: Starttime not saved (rt#6019)
+* kolab/issue3963: Alarm of an recurring task doesn't pop up (rt#5891)
+* kolab/issue4200: Reminder date sorting doesn't recognize different month (rt#6047)
+* kolab/issue4066: Quota warning color coming later than server warning dialog (rt#5955)
+* kolab/issue4098: Cannot import "archived" mails into local folders
+* kolab/issue3596: Display a special text instead of a Toltec binary invitation email (rt#5766)
+* kolab/issue4203: A reminder can contain non-existing events.(rt#6051)
+* kolab/issue4201: Spellchecking in composer:RMB->suggestion deletes wrong word (rt#6050)
+* kolab/issue4187: Crash while switching between signed and unsigned mail (rt#5980)
+
+
 Friday, March 5th 2010
 
 Problems addressed
