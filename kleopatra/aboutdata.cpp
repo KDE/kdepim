@@ -31,6 +31,7 @@
 */
 
 #include <config-kleopatra.h>
+#include <kleopatra-version.h>
 
 #include "aboutdata.h"
 

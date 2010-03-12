@@ -18,6 +18,7 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 endif (NOT kleopatra_release)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/kleopatra-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kleopatra-version.h )
 
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
