@@ -53,6 +53,7 @@
 #include "qgpgmeverifyopaquejob.h"
 #include "qgpgmechangeexpiryjob.h"
 #include "qgpgmechangeownertrustjob.h"
+#include "qgpgmechangepasswdjob.h"
 #include "qgpgmeadduseridjob.h"
 
 #include <gpgme++/error.h>
@@ -246,6 +247,14 @@ namespace {
       return new Kleo::QGpgMEChangeExpiryJob( context );
     }
 
+    Kleo::ChangePasswdJob * changePasswdJob() const {
+      if ( !GpgME::hasFeature( GpgME::PasswdFeature ) )
+        return 0;
+      GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
+      if ( !context )
+        return 0;
+      return new Kleo::QGpgMEChangePasswdJob( context );
+    }
 
     Kleo::SignKeyJob * signKeyJob() const {
       if ( mProtocol != GpgME::OpenPGP )

@@ -2,7 +2,7 @@
     kleo/cryptobackend.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2005,2010 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -55,6 +55,7 @@ namespace Kleo {
   class RefreshKeysJob;
   class ChangeExpiryJob;
   class ChangeOwnerTrustJob;
+  class ChangePasswdJob;
   class AddUserIDJob;
   class SpecialJob;
 }
@@ -121,6 +122,7 @@ namespace Kleo {
     virtual RefreshKeysJob      * refreshKeysJob() const = 0;
     virtual ChangeExpiryJob     * changeExpiryJob() const;
     virtual ChangeOwnerTrustJob * changeOwnerTrustJob() const;
+    virtual ChangePasswdJob     * changePasswdJob() const;
     virtual SignKeyJob          * signKeyJob() const;
     virtual AddUserIDJob        * addUserIDJob() const;
     virtual SpecialJob          * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
