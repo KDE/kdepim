@@ -210,7 +210,7 @@ set(libkdgantt1_SRCS
 
     include( SopranoAddOntology )
     add_subdirectory( ontologies )
-    add_subdirectory( nepomuk_email_feeder )
+#    add_subdirectory( nepomuk_email_feeder )
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
