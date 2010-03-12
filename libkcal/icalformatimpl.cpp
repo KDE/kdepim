@@ -888,7 +888,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   if (alarm->repeatCount()) {
     icalcomponent_add_property(a,icalproperty_new_repeat(alarm->repeatCount()));
     icalcomponent_add_property(a,icalproperty_new_duration(
-                                 writeICalDuration(alarm->snoozeTime()*60)));
+                                 writeICalDuration(alarm->snoozeTime().value())));
   }
 
   // Custom properties
@@ -1749,7 +1749,7 @@ void ICalFormatImpl::readAlarm(icalcomponent *alarm,Incidence *incidence)
       }
       case ICAL_DURATION_PROPERTY: {
         icaldurationtype duration = icalproperty_get_duration(p);
-        ialarm->setSnoozeTime(icaldurationtype_as_int(duration)/60);
+        ialarm->setSnoozeTime( readICalDuration( duration ) );
         break;
       }
       case ICAL_REPEAT_PROPERTY:
