@@ -333,6 +333,19 @@ QDate CalendarView::activeDate( bool fallbackToToday )
   }
 }
 
+QDate CalendarView::activeIncidenceDate()
+{
+  KOrg::BaseView *curView = mViewManager->currentView();
+  if ( curView ) {
+    DateList dates = curView->selectedIncidenceDates();
+    if ( !dates.isEmpty() ) {
+      return dates.first();
+    }
+  }
+
+  return QDate();
+}
+
 QDate CalendarView::startDate()
 {
   DateList dates = mDateNavigator->selectedDates();
@@ -2320,7 +2333,7 @@ bool CalendarView::editIncidence( Incidence *incidence, bool isCounter )
   connectIncidenceEditor( incidenceEditor );
 
   mDialogList.insert( incidence, incidenceEditor );
-  incidenceEditor->editIncidence( incidence, activeDate(), mCalendar );
+  incidenceEditor->editIncidence( incidence, activeIncidenceDate(), mCalendar );
   incidenceEditor->show();
   return true;
 }
