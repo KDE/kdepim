@@ -1249,7 +1249,7 @@ AddressesDialog::searchLdap()
 void
 AddressesDialog::ldapSearchResult()
 {
-  QStringList emails = m_ldapSearchDialog->selectedEMails().split(',');
+  QStringList emails = KPIMUtils::splitAddressList( m_ldapSearchDialog->selectedEMails() );
   QStringList::iterator it( emails.begin() );
   QStringList::iterator end( emails.end() );
   QString name, email;
