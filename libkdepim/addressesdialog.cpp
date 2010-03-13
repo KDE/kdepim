@@ -67,7 +67,7 @@ struct AddresseeViewItem::AddresseeViewItemPrivate {
 };
 
 struct AddressesDialog::AddressesDialogPrivate {
-  AddressesDialogPrivate() : 
+  AddressesDialogPrivate() :
     ui(0), personal(0), recent(0),
     toItem(0), ccItem(0), bccItem(0),
     ldapSearchDialog(0)
@@ -950,7 +950,7 @@ AddressesDialog::searchLdap()
 void
 AddressesDialog::ldapSearchResult()
 {
-  QStringList emails = QStringList::split(',', d->ldapSearchDialog->selectedEMails() );
+  QStringList emails = KPIM::splitEmailAddrList( d->ldapSearchDialog->selectedEMails() );
   QStringList::iterator it( emails.begin() );
   QStringList::iterator end( emails.end() );
   for ( ; it != end; ++it ){
