@@ -7,6 +7,7 @@ configure_file(config-messagelist.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-mes
 
 include_directories(
     ${Boost_INCLUDE_DIRS}
+    ${SOPRANO_INCLUDE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
