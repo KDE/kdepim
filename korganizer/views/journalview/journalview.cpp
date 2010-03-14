@@ -310,12 +310,11 @@ void JournalView::readJournal( Journal *j )
   cursor.insertBlock();
   cursor.insertBlock();
   cursor.setBlockCharFormat( bodyFormat );
+  const QString description = mJournal->description();
   if ( mJournal->descriptionIsRich() ) {
-    QString description = mJournal->description();
     mBrowser->insertHtml( description );
   } else {
-    mBrowser->insertPlainText( mJournal->description() );
+    mBrowser->insertPlainText( description );
   }
-  cursor.insertBlock();
   setReadOnly( mJournal->isReadOnly() );
 }
