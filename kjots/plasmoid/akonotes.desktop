@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Akonotes plasmoid
+Name[ca]=Estri Akonotes
 Name[en_GB]=Akonotes plasmoid
 Name[es]=Plasmoide Akonotes
 Name[gl]=Plasmoide Akonotes
@@ -11,6 +12,7 @@ Name[sv]=Plasmoid Ako-anteckningar
 Name[uk]=Плазмоїд Akonotes
 Name[x-test]=xxAkonotes plasmoidxx
 Comment=Akonotes plasmoid
+Comment[ca]=L'estri Akonotes
 Comment[en_GB]=Akonotes plasmoid
 Comment[es]=Plasmoide Akonotes
 Comment[gl]=Plasmoide Akonotes

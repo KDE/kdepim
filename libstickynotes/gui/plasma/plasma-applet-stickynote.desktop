@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=StickyNote
+Name[ca]=StickyNote
 Name[en_GB]=StickyNote
 Name[es]=StickyNote
 Name[gl]=NotaPegañenta
@@ -11,6 +12,7 @@ Name[sv]=Klistrig anteckning
 Name[uk]=Липка нотатка
 Name[x-test]=xxStickyNotexx
 Comment=Connect to your libstickynotes-powered backend.
+Comment[ca]=Connecteu al dorsal potenciat per libstickynotes.
 Comment[en_GB]=Connect to your libstickynotes-powered backend.
 Comment[es]=Conecte a su motor libstickynotes-powered.
 Comment[gl]=Conectar coa infraestrutura baseada en libstickynotes.
