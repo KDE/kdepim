@@ -231,7 +231,7 @@ void JournalView::printItem()
 #ifndef KORG_NOPRINTER
   if ( mJournal ) {
     KOCoreHelper helper;
-    CalPrinter printer( this, mCalendar, &helper );
+    CalPrinter printer( this, mCalendar, &helper, true );
     connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
 
     Incidence::List selectedIncidences;

@@ -123,7 +123,7 @@ class KOTodoView : public BaseView
 
   private:
     QMenu *createCategoryPopupMenu();
-
+    void printTodo( bool preview );
     KOTodoViewView *mView;
     KOTodoModel *mModel;
     KOTodoViewSortFilterProxyModel *mProxyModel;
