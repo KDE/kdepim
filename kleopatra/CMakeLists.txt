@@ -192,6 +192,7 @@ set( _kleopatra_SRCS
   crypto/signencryptfilescontroller.cpp
   crypto/signemailtask.cpp
   crypto/signemailcontroller.cpp
+  crypto/createchecksumscontroller.cpp
 
   crypto/gui/wizard.cpp
   crypto/gui/wizardpage.cpp
