@@ -98,7 +98,8 @@ private:
     void updateWizardMode();
     void cancelAllTasks();
     void reportError( int err, const QString & details ) {
-        emit q->error( err, details );
+        q->setLastError( err, details );
+        q->emitDoneOrError();
     }
 
     void schedule();
