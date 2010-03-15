@@ -52,7 +52,7 @@ using namespace GpgME;
 LearnCardKeysCommand::LearnCardKeysCommand( GpgME::Protocol proto )
     : GnuPGProcessCommand( 0 ), m_protocol( proto )
 {
-
+    setIgnoresSuccessOrFailure( true );
 }
 
 LearnCardKeysCommand::~LearnCardKeysCommand() {}
@@ -83,15 +83,14 @@ QString LearnCardKeysCommand::crashExitMessage( const QStringList & args ) const
                  "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
 }
 
-QString LearnCardKeysCommand::errorExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
-                 "<para>An error occurred while trying to learn the smart card's certificates.</para> "
-                 "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString() );
+QString LearnCardKeysCommand::errorExitMessage( const QStringList & ) const {
+    // unused, since we setIgnoresSuccessOrFailure(true)
+    return QString();
 }
 
 QString LearnCardKeysCommand::successMessage( const QStringList & ) const {
-    return i18n( "Smart card certificates successfully learned." );
+    // unused, since we setIgnoresSuccessOrFailure(true)
+    return QString();
 }
 
 void LearnCardKeysCommand::postSuccessHook( QWidget * ) {
