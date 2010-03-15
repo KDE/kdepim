@@ -244,14 +244,14 @@ int main( int argc, char** argv )
           return 1;
       qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
 
-      app.startMonitoringSmartCard();
-
 #ifdef HAVE_USABLE_ASSUAN
       fillKeyCache( &splash, &server );
 #else
       fillKeyCache( &splash, 0 );
 #endif
       qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
+
+      app.startMonitoringSmartCard();
 
       app.setIgnoreNewInstance( false );
 
