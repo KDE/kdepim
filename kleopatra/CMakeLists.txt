@@ -83,6 +83,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/encryptcommand.cpp
     uiserver/selectcertificatecommand.cpp
     uiserver/importfilescommand.cpp
+    uiserver/createchecksumscommand.cpp
 
     libkleopatraclient/core/command.cpp
     selftest/uiservercheck.cpp
