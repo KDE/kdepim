@@ -65,6 +65,8 @@ namespace Commands {
 
     protected:
         QString errorString() const;
+        void setIgnoresSuccessOrFailure( bool ignore );
+        bool ignoresSuccessOrFailure() const;
 
     private:
         /* reimp */ void doStart();
