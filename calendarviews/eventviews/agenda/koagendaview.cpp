@@ -1224,6 +1224,10 @@ void KOAgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
     if ( todo ) {
       QTime t = todo->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() ).time();
 
+      if ( t == QTime( 0, 0 ) ) {
+        t = QTime( 23, 59 );
+      }
+
       int halfHour = 1800;
       if ( t.addSecs( -halfHour ) < t ) {
         startY = mAgenda->timeToY( t.addSecs( -halfHour ) );
@@ -1397,6 +1401,13 @@ void KOAgendaView::displayIncidence( const Item &aitem )
     if ( todo && todo->hasDueDate() && !todo->isOverdue() ) {
       // If it's not overdue it will be shown at the original date (not today)
       dateToAdd = todo->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() );
+
+      // To-dos are drawn with the bottom of the rectangle at dtDue
+      // if dtDue is at 00:00, then it should be displayed in the previous day, at 23:59
+      if ( dateToAdd.time() == QTime( 0, 0 ) ) {
+        dateToAdd = dateToAdd.addSecs( -1 );
+      }
+
       incidenceEnd = dateToAdd;
     } else if ( event ) {
       dateToAdd = incDtStart;
