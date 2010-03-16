@@ -63,7 +63,7 @@ namespace Crypto {
         void emitDoneOrError();
         void connectTask( const boost::shared_ptr<Task> & task );
 
-        virtual void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result ) = 0;
+        virtual void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result );
 
     protected Q_SLOTS:
         void taskDone( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
