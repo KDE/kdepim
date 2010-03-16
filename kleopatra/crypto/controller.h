@@ -56,6 +56,9 @@ namespace Crypto {
 
         using ExecutionContextUser::setExecutionContext;
 
+    Q_SIGNALS:
+        void progress( int current, int total, const QString & what );
+
     protected:
         void emitDoneOrError();
         void setLastError( int err, const QString & details );
