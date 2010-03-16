@@ -181,6 +181,7 @@ set( _kleopatra_SRCS
   dialogs/deletecertificatesdialog.cpp
   dialogs/setinitialpindialog.cpp
 
+  crypto/controller.cpp
   crypto/certificateresolver.cpp
   crypto/sender.cpp
   crypto/recipient.cpp
@@ -193,6 +194,7 @@ set( _kleopatra_SRCS
   crypto/encryptemailcontroller.cpp
   crypto/newsignencryptemailcontroller.cpp
   crypto/signencryptfilestask.cpp
+  crypto/signencryptfilescontroller.cpp
   crypto/signemailtask.cpp
   crypto/signemailcontroller.cpp
 
@@ -221,9 +223,6 @@ set( _kleopatra_SRCS
   crypto/gui/signemailwizard.cpp
   crypto/gui/signencryptfileswizard.cpp
   crypto/gui/signencryptwizard.cpp
-
-  crypto/controller.cpp
-  crypto/signencryptfilescontroller.cpp
 
   commands/command.cpp
   commands/gnupgprocesscommand.cpp
