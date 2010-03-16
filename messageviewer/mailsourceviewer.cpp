@@ -141,6 +141,7 @@ const QString HTMLPrettyFormatter::reformat( const QString &src )
 MailSourceViewer::MailSourceViewer( QWidget *parent )
   : KTabWidget( parent ), mRawSourceHighLighter( 0 )
 {
+  setLayoutDirection( Qt::LeftToRight );
   setAttribute( Qt::WA_DeleteOnClose );
   mRawBrowser = new KTextBrowser();
   addTab( mRawBrowser, i18nc( "Unchanged mail message", "Raw Source" ) );
