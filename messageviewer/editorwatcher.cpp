@@ -89,7 +89,7 @@ bool EditorWatcher::start()
       mFileModified = false;
     }
   } else {
-    kWarning() <<"Failed to activate INOTIFY!";
+    kWarning() << "Failed to activate INOTIFY!";
   }
 #endif
 

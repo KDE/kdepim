@@ -478,11 +478,11 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( const Akonadi::Item &it
 
       // replace simple LFs by CRLSs
       // according to RfC 2633, 3.1.1 Canonicalization
-      kDebug() <<"Converting LF to CRLF (see RfC 2633, 3.1.1 Canonicalization)";
+      kDebug() << "Converting LF to CRLF (see RfC 2633, 3.1.1 Canonicalization)";
 #endif
       cleartext = KMime::LFtoCRLF( cleartext );
 #ifdef DEBUG_SIGNATURE
-      kDebug() <<"                                                       done.";
+      kDebug() << "                                                       done.";
 #endif
 }
 

@@ -215,7 +215,7 @@ static KMime::Content * partNodeFromXKMailUrl( const KUrl & url, ViewerPrivate *
 
   // urlPath format is: /bodypart/<random number>/<part id>/<path>
 
-  kDebug() <<"BodyPartURLHandler: urlPath == \"" << urlPath <<"\"";
+  kDebug() << "BodyPartURLHandler: urlPath ==" << urlPath;
   if ( !urlPath.startsWith( QLatin1String("/bodypart/") ) )
     return 0;
 

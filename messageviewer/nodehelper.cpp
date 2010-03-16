@@ -732,7 +732,7 @@ QByteArray NodeHelper::autoDetectCharset(const QByteArray &_encoding, const QStr
        {
          const QTextCodec *codec = codecForName(encoding);
          if (!codec) {
-           kDebug() <<"Auto-Charset: Something is wrong and I can not get a codec. [" << encoding <<"]";
+           kDebug() << "Auto-Charset: Something is wrong and I can not get a codec:" << encoding;
          } else {
            if (codec->canEncode(text))
               return encoding;

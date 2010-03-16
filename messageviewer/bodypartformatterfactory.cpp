@@ -87,7 +87,7 @@ static void insertBodyPartFormatter( const char * type, const char * subtype,
 
   TypeRegistry::iterator type_it = all->find( type );
   if ( type_it == all->end() ) {
-    kDebug() <<"BodyPartFormatterFactory: instantiating new Subtype Registry for \""
+    kDebug() << "BodyPartFormatterFactory: instantiating new Subtype Registry for \""
 		    << type << "\"";
     type_it = all->insert( std::make_pair( type, SubtypeRegistry() ) ).first;
     assert( type_it != all->end() );
@@ -96,7 +96,7 @@ static void insertBodyPartFormatter( const char * type, const char * subtype,
   SubtypeRegistry & subtype_reg = type_it->second;
   SubtypeRegistry::iterator subtype_it = subtype_reg.find( subtype );
   if ( subtype_it != subtype_reg.end() ) {
-    kDebug() <<"BodyPartFormatterFactory: overwriting previously registered formatter for \""
+    kDebug() << "BodyPartFormatterFactory: overwriting previously registered formatter for \""
 		    << type << "/" << subtype << "\"";
     subtype_reg.erase( subtype_it ); subtype_it = subtype_reg.end();
   }
@@ -107,31 +107,31 @@ static void insertBodyPartFormatter( const char * type, const char * subtype,
 static void loadPlugins() {
   const BodyPartFormatterPluginLoader * pl = BodyPartFormatterPluginLoader::instance();
   if ( !pl ) {
-    kWarning() <<"BodyPartFormatterFactory: cannot instantiate plugin loader!";
+    kWarning() << "BodyPartFormatterFactory: cannot instantiate plugin loader!";
     return;
   }
   const QStringList types = pl->types();
-  kDebug() <<"BodyPartFormatterFactory: found" << types.size() <<" plugins.";
+  kDebug() << "BodyPartFormatterFactory: found" << types.size() << "plugins.";
   for ( QStringList::const_iterator it = types.begin() ; it != types.end() ; ++it ) {
     const Interface::BodyPartFormatterPlugin * plugin = pl->createForName( *it );
     if ( !plugin ) {
-      kWarning() <<"BodyPartFormatterFactory: plugin \"" << *it <<"\" is not valid!";
+      kWarning() << "BodyPartFormatterFactory: plugin" << *it << "is not valid!";
       continue;
     }
     const Interface::BodyPartFormatter * bfp;
     for ( int i = 0 ; (bfp = plugin->bodyPartFormatter( i )) ; ++i ) {
       const char * type = plugin->type( i );
       if ( !type || !*type ) {
-        kWarning() <<"BodyPartFormatterFactory: plugin \"" << *it
-                  << "\" returned empty type specification for index"
-                  << i;
+        kWarning() << "BodyPartFormatterFactory: plugin" << *it
+                   << "returned empty type specification for index"
+                   << i;
         break;
       }
       const char * subtype = plugin->subtype( i );
       if ( !subtype || !*subtype ) {
-        kWarning() <<"BodyPartFormatterFactory: plugin \"" << *it
-                  << "\" returned empty subtype specification for index"
-                  << i;
+        kWarning() << "BodyPartFormatterFactory: plugin" << *it
+                   << "returned empty subtype specification for index"
+                   << i;
         break;
       }
       insertBodyPartFormatter( type, subtype, bfp );

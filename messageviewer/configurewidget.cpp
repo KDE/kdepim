@@ -104,8 +104,8 @@ void ConfigureWidget::readCurrentOverrideCodec()
   }
   if ( i == encodings.size() ) {
     // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
-    kWarning() <<"Unknown override character encoding \"" << currentOverrideEncoding
-                   << "\". Resetting to Auto.";
+    kWarning() << "Unknown override character encoding" << currentOverrideEncoding
+               << ". Resetting to Auto.";
     mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex( 0 );
     GlobalSettings::self()->setOverrideCharacterEncoding( QString() );
   }

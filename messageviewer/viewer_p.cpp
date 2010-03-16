@@ -468,10 +468,10 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
     QString type = curNode->contentType()->mediaType();
     QString subType = curNode->contentType()->subType();
     if ( type == "text") {
-      kDebug() <<"* text *";
+      kDebug() << "* text *";
       kDebug() << subType;
     } else if ( type == "multipart ") {
-        kDebug() <<"* multipart *";
+        kDebug() << "* multipart *";
         kDebug() << subType;
         bIsMultipart = true;
         if ( subType == "signed" ) {
@@ -486,7 +486,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
                 dataNode = child;
         }
     } else if ( type == "application" ) {
-          kDebug() <<"* application *";
+          kDebug() << "* application *";
           kDebug() << subType;
           if ( subType == "octet-stream" ) {
               if ( child )
@@ -503,10 +503,10 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
             }
           }
     } else if ( type == "image" ) {
-        kDebug() <<"* image *";
+        kDebug() << "* image *";
         kDebug() << subType;
     } else if ( type == "audio" ) {
-        kDebug() <<"* audio *";
+        kDebug() << "* audio *";
         kDebug() << subType;
     } else if ( type == "video" ) {
         kDebug() << "* video *";
@@ -524,20 +524,20 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
       headerContent = theMessage.get();
     }
     if( dataNode == curNode ) {
-      kDebug() <<"dataNode == curNode:  Save curNode without replacing it.";
+      kDebug() << "dataNode == curNode:  Save curNode without replacing it.";
 
       // A) Store the headers of this part IF curNode is not the root node
       //    AND we are not replacing a node that already *has* replaced
       //    the root node in previous recursion steps of this function...
       if ( !headerContent->head().isEmpty() ) {
         if( dataNode->parent() && !weAreReplacingTheRootNode ) {
-          kDebug() <<"dataNode is NOT replacing the root node:  Store the headers.";
+          kDebug() << "dataNode is NOT replacing the root node:  Store the headers.";
           resultingData += headerContent->head();
         } else if( weAreReplacingTheRootNode && !dataNode->head().isEmpty() ){
-          kDebug() <<"dataNode replace the root node:  Do NOT store the headers but change";
-          kDebug() <<"                                 the Message's headers accordingly.";
-          kDebug() <<"              old Content-Type =" << theMessage->contentType()->asUnicodeString();
-          kDebug() <<"              new Content-Type =" << headerContent->contentType()->asUnicodeString();
+          kDebug() << "dataNode replace the root node:  Do NOT store the headers but change";
+          kDebug() << "                                 the Message's headers accordingly.";
+          kDebug() << "              old Content-Type =" << theMessage->contentType()->asUnicodeString();
+          kDebug() << "              new Content-Type =" << headerContent->contentType()->asUnicodeString();
           theMessage->contentType()->from7BitString( headerContent->contentType()->as7BitString() );
           theMessage->contentTransferEncoding()->from7BitString(
               headerContent->contentTransferEncoding(false)
@@ -555,12 +555,12 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
 
         // B) Store the body of this part.
         if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
-          kDebug() <<"is valid Multipart, processing children:";
+          kDebug() << "is valid Multipart, processing children:";
           QByteArray boundary = headerContent->contentType()->boundary();
           curNode = NodeHelper::firstChild( dataNode );
           // store children of multipart
           while( curNode ) {
-            kDebug() <<"--boundary";
+            kDebug() << "--boundary";
             if( resultingData.size() &&
                 ( '\n' != resultingData.at( resultingData.size()-1 ) ) )
               resultingData += '\n';
@@ -578,24 +578,24 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
                                       recCount + 1 );
             curNode = NodeHelper::nextSibling( curNode );
           }
-          kDebug() <<"--boundary--";
+          kDebug() << "--boundary--";
           resultingData += "\n--";
           resultingData += boundary;
           resultingData += "--\n\n";
-          kDebug() <<"Multipart processing children - DONE";
+          kDebug() << "Multipart processing children - DONE";
         } else {
           // store simple part
-          kDebug() <<"is Simple part or invalid Multipart, storing body data .. DONE";
+          kDebug() << "is Simple part or invalid Multipart, storing body data .. DONE";
           resultingData += dataNode->body();
         }
       }
     } else {
-      kDebug() <<"dataNode != curNode:  Replace curNode by dataNode.";
+      kDebug() << "dataNode != curNode:  Replace curNode by dataNode.";
       bool rootNodeReplaceFlag = weAreReplacingTheRootNode || !curNode->parent();
       if( rootNodeReplaceFlag ) {
-        kDebug() <<"                      Root node will be replaced.";
+        kDebug() << "                      Root node will be replaced.";
       } else {
-        kDebug() <<"                      Root node will NOT be replaced.";
+        kDebug() << "                      Root node will NOT be replaced.";
       }
       // store special data to replace the current part
       // (e.g. decrypted data or embedded RfC 822 data)
@@ -1103,7 +1103,6 @@ void ViewerPrivate::parseMsg()
       KABC::VCardConverter t;
       if ( !t.parseVCards( vCard ).isEmpty() ) {
           hasVCard = true;
-          kDebug() <<"FOUND A VALID VCARD";
           mNodeHelper->writeNodeToTempFile( vCardContent );
       }
   }
@@ -1150,8 +1149,8 @@ void ViewerPrivate::parseMsg()
 //     kDebug() << "message_was_saved_decrypted_before( aMsg ) = " << message_was_saved_decrypted_before( aMsg );
     kDebug() << "this->decryptMessage() = " << decryptMessage();
     kDebug() << "otp.hasPendingAsyncJobs() = " << otp.hasPendingAsyncJobs();
-    kDebug() <<"   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
-    kDebug() <<"|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
+    kDebug() << "   (KMMsgFullyEncrypted == encryptionState) ="     << (KMMsgFullyEncrypted == encryptionState);
+    kDebug() << "|| (KMMsgPartiallyEncrypted == encryptionState) =" << (KMMsgPartiallyEncrypted == encryptionState);
          // only proceed if we were called the normal way - not by
          // double click on the message (==not running in a separate window)
     if(    (/*aMsg == message()*/ true) //TODO(Andras) review if still needed
@@ -1176,7 +1175,7 @@ void ViewerPrivate::parseMsg()
       kDebug() << "Resulting data:" << decryptedData;
 
       if( !decryptedData.isEmpty() ) {
-        kDebug() <<"Composing unencrypted message";
+        kDebug() << "Composing unencrypted message";
         unencryptedMessage->setBody( decryptedData );
       //FIXME(Andras) fix it? kDebug() << "Resulting message:" << unencryptedMessage->asString();
         kDebug() << "Attach unencrypted message to aMsg";
@@ -1392,8 +1391,8 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
       }
       if ( i == encodings.size() ) {
         // the value of encoding is unknown => use Auto
-        kWarning() <<"Unknown override character encoding \"" << encoding
-                       << "\". Using Auto instead.";
+        kWarning() << "Unknown override character encoding" << encoding
+                   << ". Using Auto instead.";
         mSelectEncodingAction->setCurrentItem( 0 );
         mOverrideEncoding.clear();
       }
@@ -2740,7 +2739,7 @@ void ViewerPrivate::slotHandleAttachment( int choice )
     scrollToAttachment( mCurrentContent );
   }
   else {
-    kDebug()<<" not implemented :"<<choice;
+    kDebug() << " not implemented :" << choice;
   }
 }
 

@@ -84,8 +84,8 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
 
     if ( !scoreValid ) {
       spamError = couldNotFindTheScoreField;
-      kDebug() <<"Score could not be extracted from header '"
-                    << mField << "'";
+      kDebug() << "Score could not be extracted from header '"
+               << mField << "'";
     } else {
       bool floatValid = false;
       switch ( (*it).scoreType() ) {
@@ -104,7 +104,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
           score = scoreString.toFloat( &floatValid );
           if ( !floatValid ) {
             spamError = couldNotConverScoreToFloat;
-            kDebug() <<"Score (" << scoreString <<") is no number";
+            kDebug() << "Score (" << scoreString << ") is no number";
           }
           else
             score *= 100.0;
@@ -114,7 +114,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
           score = scoreString.toFloat( &floatValid );
           if ( !floatValid ) {
             spamError = couldNotConverScoreToFloat;
-            kDebug() <<"Score (" << scoreString <<") is no number";
+            kDebug() << "Score (" << scoreString << ") is no number";
           }
           break;
 
@@ -122,7 +122,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
           score = scoreString.toFloat( &floatValid );
           if ( !floatValid ) {
             spamError = couldNotConverScoreToFloat;
-            kDebug() <<"Score (" << scoreString <<") is no number";
+            kDebug() << "Score (" << scoreString << ") is no number";
             break;
           }
 
@@ -134,15 +134,15 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
           }
           else {
             spamError = couldNotFindTheThresholdField;
-            kDebug() <<"Threshold could not be extracted from header '"
-                          << mField << "'";
+            kDebug() << "Threshold could not be extracted from header '"
+                     << mField << "'";
             break;
           }
           float threshold = thresholdString.toFloat( &floatValid );
           if ( !floatValid || ( threshold <= 0.0 ) ) {
             spamError = couldNotConvertThresholdToFloatOrThresholdIsNegative;
-            kDebug() <<"Threshold (" << thresholdString <<") is no"
-                          << "number or is negative";
+            kDebug() << "Threshold (" << thresholdString << ") is no"
+                     << "number or is negative";
             break;
           }
 
@@ -180,7 +180,7 @@ SpamScores SpamHeaderAnalyzer::getSpamScores( KMime::Message::Ptr message ) {
           confidence = confidenceString.toFloat( &confidenceValid );
           if( !confidenceValid) {
             spamError = couldNotConvertConfidenceToFloat;
-            kDebug() <<"Unable to convert confidence to float:" << confidenceString;
+            kDebug() << "Unable to convert confidence to float:" << confidenceString;
           }
         }
       }

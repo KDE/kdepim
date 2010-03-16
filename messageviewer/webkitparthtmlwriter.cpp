@@ -156,7 +156,7 @@ void WebKitPartHtmlWriter::resolveCidUrls()
     {
       EmbeddedPartMap::const_iterator it = mEmbeddedPartMap.constFind( url.path() );
       if ( it != mEmbeddedPartMap.constEnd() ) {
-        kDebug() <<"Replacing" << url.prettyUrl() <<" by" << it.value();
+        kDebug() << "Replacing" << url.prettyUrl() << "by" << it.value();
         image.setAttribute( "src", it.value() );
       }
     }

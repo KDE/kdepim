@@ -47,7 +47,7 @@ namespace MessageViewer {
 
   FileHtmlWriter::~FileHtmlWriter() {
     if ( mFile.isOpen() ) {
-      kWarning() <<"FileHtmlWriter: file still open!";
+      kWarning() << "FileHtmlWriter: file still open!";
       mStream.setDevice(0);
       mFile.close();
     }
@@ -87,12 +87,12 @@ namespace MessageViewer {
 
   void FileHtmlWriter::openOrWarn() {
     if ( mFile.isOpen() ) {
-      kWarning() <<"FileHtmlWriter: file still open!";
+      kWarning() << "FileHtmlWriter: file still open!";
       mStream.setDevice( 0 );
       mFile.close();
     }
     if ( !mFile.open( QIODevice::WriteOnly ) )
-      kWarning() <<"FileHtmlWriter: Cannot open file" << mFile.fileName();
+      kWarning() << "FileHtmlWriter: Cannot open file" << mFile.fileName();
     else
       mStream.setDevice( &mFile );
   }
