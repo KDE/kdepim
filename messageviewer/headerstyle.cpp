@@ -850,6 +850,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   // from
   if ( strategy->showHeader( "from" ) ) {
     // TODO vcard
+    // We by design use the stripped mail address here, it is more enterprise-like.
     QString fromPart = StringUtil::emailAddrAsAnchor( message->from(),
                                                       StringUtil::DisplayNameOnly, linkColor );
     if ( !vCardName.isEmpty() )
