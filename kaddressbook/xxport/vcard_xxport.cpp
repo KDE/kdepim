@@ -213,8 +213,7 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
             // and hope that are fields are encoded correctly.
             if ( QString::fromLatin1( rawData ).lower().contains( "version:3.0" ) ) {
               vCardText = QString::fromUtf8( rawData );
-            }
-            else {
+            } else {
               vCardText = QString::fromLatin1( rawData );
             }
             addrList += parseVCard( vCardText );
