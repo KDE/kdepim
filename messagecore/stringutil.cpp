@@ -400,8 +400,6 @@ QByteArray html2source( const QByteArray & src )
 
 QByteArray stripEmailAddr( const QByteArray& aStr )
 {
-  //kDebug() << "(" << aStr <<" )";
-
   if ( aStr.isEmpty() )
     return QByteArray();
 
@@ -449,14 +447,6 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
               name = name.trimmed();
               comment = comment.trimmed();
               angleAddress = angleAddress.trimmed();
-                   /*
-              kDebug() <<"Name    : \"" << name
-              << "\"";
-              kDebug() <<"Comment : \"" << comment
-              << "\"";
-              kDebug() <<"Address : \"" << angleAddress
-              << "\"";
-                   */
               if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
                      // handle Outlook-style addresses like
                      // john.doe@invalid (John Doe)
@@ -531,11 +521,6 @@ QByteArray stripEmailAddr( const QByteArray& aStr )
   name = name.trimmed();
   comment = comment.trimmed();
   angleAddress = angleAddress.trimmed();
-  /*
-  kDebug() <<"Name    : \"" << name <<"\"";
-  kDebug() <<"Comment : \"" << comment <<"\"";
-  kDebug() <<"Address : \"" << angleAddress <<"\"";
-  */
   if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
     // handle Outlook-style addresses like
     // john.doe@invalid (John Doe)
@@ -609,14 +594,6 @@ QString stripEmailAddr( const QString& aStr )
               name = name.trimmed();
               comment = comment.trimmed();
               angleAddress = angleAddress.trimmed();
-                   /*
-              kDebug() <<"Name    : \"" << name
-              << "\"";
-              kDebug() <<"Comment : \"" << comment
-              << "\"";
-              kDebug() <<"Address : \"" << angleAddress
-              << "\"";
-                   */
               if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
                      // handle Outlook-style addresses like
                      // john.doe@invalid (John Doe)
@@ -691,11 +668,6 @@ QString stripEmailAddr( const QString& aStr )
   name = name.trimmed();
   comment = comment.trimmed();
   angleAddress = angleAddress.trimmed();
-  /*
-  kDebug() <<"Name    : \"" << name <<"\"";
-  kDebug() <<"Comment : \"" << comment <<"\"";
-  kDebug() <<"Address : \"" << angleAddress <<"\"";
-  */
   if ( angleAddress.isEmpty() && !comment.isEmpty() ) {
     // handle Outlook-style addresses like
     // john.doe@invalid (John Doe)
@@ -824,7 +796,7 @@ QStringList stripAddressFromAddressList( const QString& address,
         it != addresses.end(); ) {
     if ( kasciistricmp( addrSpec.toUtf8().data(),
          KPIMUtils::extractEmailAddress( *it ).toUtf8().data() ) == 0 ) {
-      kDebug() << "Removing" << *it <<" from the address list";
+      kDebug() << "Removing" << *it << "from the address list";
       it = addresses.erase( it );
     }
     else
