@@ -122,7 +122,8 @@ public:
     void ensureWizardCreated();
     void ensureWizardVisible();
     void reportError( int err, const QString & details ) {
-        emit q->error( err, details );
+        q->setLastError( err, details );
+        q->emitDoneOrError();
     }
 
     void cancelAllTasks();

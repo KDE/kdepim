@@ -56,11 +56,9 @@ namespace Crypto {
 
         using ExecutionContextUser::setExecutionContext;
 
-     Q_SIGNALS:
-         void error( int err, const QString & details );
-
     protected:
         void emitDoneOrError();
+        void setLastError( int err, const QString & details );
         void connectTask( const boost::shared_ptr<Task> & task );
 
         virtual void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result );
@@ -75,6 +73,7 @@ namespace Crypto {
     private: // don't tell moc or doxygen, but those signals are in fact private
 # endif
 #endif
+        void error( int err, const QString & details );
         void done();
 
     private:

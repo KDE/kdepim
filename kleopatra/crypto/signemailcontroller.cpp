@@ -176,7 +176,8 @@ void SignEMailController::Private::slotWizardSignersResolved() {
 
 // ### extract to base
 void SignEMailController::Private::slotWizardCanceled() {
-    emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
+    q->setLastError( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
+    q->emitDoneOrError();
 }
 
 void SignEMailController::setInputAndOutput( const shared_ptr<Input> & input, const shared_ptr<Output> & output ) {

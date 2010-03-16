@@ -165,7 +165,8 @@ void EncryptEMailController::Private::slotWizardRecipientsResolved() {
 }
 
 void EncryptEMailController::Private::slotWizardCanceled() {
-    emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
+    q->setLastError( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
+    q->emitDoneOrError();
 }
 
 void EncryptEMailController::setInputAndOutput( const shared_ptr<Input> & input, const shared_ptr<Output> & output ) {

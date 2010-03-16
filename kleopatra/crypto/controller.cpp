@@ -89,6 +89,11 @@ void Controller::connectTask( const shared_ptr<Task> & task ) {
              this, SLOT(taskDone(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
 }
 
+void Controller::setLastError( int err, const QString & msg ) {
+    d->lastError = err;
+    d->lastErrorString = msg;
+}
+
 void Controller::emitDoneOrError() {
     if ( d->lastError != 0 )
         emit error( d->lastError, d->lastErrorString );
