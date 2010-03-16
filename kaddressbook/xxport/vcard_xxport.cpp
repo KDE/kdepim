@@ -205,8 +205,20 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
         if ( file.open( IO_ReadOnly ) ) {
           QByteArray rawData = file.readAll();
           file.close();
-          if ( rawData.size() > 0 )
-            addrList += parseVCard( rawData );
+          if ( rawData.size() > 0 ) {
+
+            QString vCardText;
+
+            // With version 3.0, vCards are encoded with UTF-8 by default. Otherwise, use fromLatin1()
+            // and hope that are fields are encoded correctly.
+            if ( QString::fromLatin1( rawData ).lower().contains( "version:3.0" ) ) {
+              vCardText = QString::fromUtf8( rawData );
+            }
+            else {
+              vCardText = QString::fromLatin1( rawData );
+            }
+            addrList += parseVCard( vCardText );
+          }
 
           KIO::NetAccess::removeTempFile( fileName );
         } else {
