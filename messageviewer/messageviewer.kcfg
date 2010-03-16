@@ -7,6 +7,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
   <include>kglobalsettings.h</include>
   <include>kcolorscheme.h</include>
   <kcfgfile name="mailviewerrc" />
+
   <group name="Fonts">
     <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
       <default>true</default>
@@ -15,6 +16,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default code="true">KGlobalSettings::fixedFont()</default>
     </entry>
   </group>
+
   <group name="Reader">
     <entry name="UseDefaultColors" type="Bool" key="defaultColors">
       <default>true</default>
@@ -129,12 +131,57 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>4</default>
       <min>1</min>
     </entry>
+    <entry name="MimePaneHeight" type="Int">
+      <default>100</default>
+    </entry>
+    <entry name="MessagePaneHeight" type="Int">
+      <default>180</default>
+    </entry>
+    <entry name="headerStyle" type="String" key="header-style">
+      <label>What style of headers should be displayed</label>
+      <default>fancy</default>
+    </entry>
+    <entry name="headerSetDisplayed" type="String" key="header-set-displayed">
+      <label>How much of headers should be displayed</label>
+      <default>rich</default>
+    </entry>
+     <entry name="htmlMail" type="Bool">
+       <label>Prefer HTML to plain text</label>
+       <default>false</default>
+    </entry>
+    <entry name="htmlLoadExternal" type="Bool">
+      <label>Allow messages to load external references from the Internet</label>
+      <default>false</default>
+    </entry>
+    <entry name="attachmentStrategy" type="String" key="attachment-strategy">
+      <label>How attachments are shown</label>
+      <default>Smart</default>
+    </entry>
   </group>
+
   <group name="TextIndex">
     <entry name="automaticDecrypt" type="Bool"
     key="automaticDecrypt">
       <default>true</default>
       <label></label>
+    </entry>
+  </group>
+
+  <group name="MDN">
+    <entry name="notSendWhenEncrypted" type="Bool" key="not-send-when-encrypted">
+      <label>Do not send MDNs in response to encrypted messages</label>
+      <default>true</default>
+    </entry>
+  </group>
+
+  <!-- FIXME: Make a seperate setting for this for the composer and the reader. Only the
+              reader setting should be here.
+              Regression from r1021989.
+  -->"
+  <group name="Composer">
+    <entry name="UseFixedFont" type="Bool" key="use-fixed-font">
+      <label>Use Fi&amp;xed Font</label>
+      <default>false</default>
     </entry>
   </group>
 </kcfg>

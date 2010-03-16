@@ -1291,32 +1291,29 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
 
 void ViewerPrivate::readConfig()
 {
-  const KConfigGroup mdnGroup(Global::instance()->config(), "MDN");
-  KConfigGroup reader(Global::instance()->config(), "Reader");
-
   delete mCSSHelper;
   mCSSHelper = new CSSHelper( mViewer );
 
-  mNoMDNsWhenEncrypted = mdnGroup.readEntry( "not-send-when-encrypted", true );
+  mNoMDNsWhenEncrypted = GlobalSettings::self()->notSendWhenEncrypted();
 
-  mUseFixedFont = reader.readEntry( "useFixedFont", false );
+  mUseFixedFont = GlobalSettings::self()->useFixedFont();
   if ( mToggleFixFontAction )
     mToggleFixFontAction->setChecked( mUseFixedFont );
 
-  mHtmlMail = reader.readEntry( "htmlMail", false );
-  mHtmlLoadExternal = reader.readEntry( "htmlLoadExternal", false );
+  mHtmlMail = GlobalSettings::self()->htmlMail();
+  mHtmlLoadExternal = GlobalSettings::self()->htmlLoadExternal();
 
   KToggleAction *raction = actionForHeaderStyle( headerStyle(), headerStrategy() );
   if ( raction )
     raction->setChecked( true );
 
-  setAttachmentStrategy( AttachmentStrategy::create( reader.readEntry( "attachment-strategy", "smart" ) ) );
+  setAttachmentStrategy( AttachmentStrategy::create( GlobalSettings::self()->attachmentStrategy() ) );
   raction = actionForAttachmentStrategy( attachmentStrategy() );
   if ( raction )
     raction->setChecked( true );
 
-  const int mimeH = reader.readEntry( "MimePaneHeight", 100 );
-  const int messageH = reader.readEntry( "MessagePaneHeight", 180 );
+  const int mimeH = GlobalSettings::self()->mimePaneHeight();
+  const int messageH = GlobalSettings::self()->messagePaneHeight();
   mSplitterSizes.clear();
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitterSizes << messageH << mimeH;
@@ -1329,8 +1326,8 @@ void ViewerPrivate::readConfig()
 
   // Note that this call triggers an update, see this call has to be at the
   // bottom when all settings are already est.
-  setHeaderStyleAndStrategy( HeaderStyle::create( reader.readEntry( "header-style", "fancy" ) ),
-                             HeaderStrategy::create( reader.readEntry( "header-set-displayed", "rich" ) ) );
+  setHeaderStyleAndStrategy( HeaderStyle::create( GlobalSettings::self()->headerStyle() ),
+                             HeaderStrategy::create( GlobalSettings::self()->headerSetDisplayed() ) );
 
   if ( mMessage )
     update();
@@ -1340,17 +1337,15 @@ void ViewerPrivate::readConfig()
 
 void ViewerPrivate::writeConfig( bool sync )
 {
-  KConfigGroup reader( Global::instance()->config() , "Reader" );
-
-  reader.writeEntry( "useFixedFont", mUseFixedFont );
+  GlobalSettings::self()->setUseFixedFont( mUseFixedFont );
   if ( headerStyle() )
-    reader.writeEntry( "header-style", headerStyle()->name() );
+    GlobalSettings::self()->setHeaderStyle( headerStyle()->name() );
   if ( headerStrategy() )
-    reader.writeEntry( "header-set-displayed", headerStrategy()->name() );
+    GlobalSettings::self()->setHeaderSetDisplayed( headerStrategy()->name() );
   if ( attachmentStrategy() )
-    reader.writeEntry( "attachment-strategy", attachmentStrategy()->name() );
+    GlobalSettings::self()->setAttachmentStrategy( attachmentStrategy()->name() );
 
-  saveSplitterSizes( reader );
+  saveSplitterSizes();
   if ( sync )
     emit requestConfigSync();
 }
@@ -1592,8 +1587,7 @@ void ViewerPrivate::showHideMimeTree( )
     mMimePartTree->show();
   else {
     // don't rely on QSplitter maintaining sizes for hidden widgets:
-    KConfigGroup reader( Global::instance()->config() , "Reader" );
-    saveSplitterSizes( reader );
+    saveSplitterSizes();
     mMimePartTree->hide();
   }
   if ( mToggleMimePartTreeAction && ( mToggleMimePartTreeAction->isChecked() != mMimePartTree->isVisible() ) )
@@ -1641,7 +1635,7 @@ void ViewerPrivate::adjustLayout() {
 }
 
 
-void ViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
+void ViewerPrivate::saveSplitterSizes() const
 {
   if ( !mSplitter || !mMimePartTree )
     return;
@@ -1649,8 +1643,8 @@ void ViewerPrivate::saveSplitterSizes( KConfigGroup & c ) const
     return; // don't rely on QSplitter maintaining sizes for hidden widgets.
 
   const bool mimeTreeAtBottom = GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom;
-  c.writeEntry( "MimePaneHeight", mSplitter->sizes()[ mimeTreeAtBottom ? 1 : 0 ] );
-  c.writeEntry( "MessagePaneHeight", mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ] );
+  GlobalSettings::self()->setMimePaneHeight( mSplitter->sizes()[ mimeTreeAtBottom ? 1 : 0 ] );
+  GlobalSettings::self()->setMessagePaneHeight( mSplitter->sizes()[ mimeTreeAtBottom ? 0 : 1 ] );
 }
 
 void ViewerPrivate::createWidgets() {

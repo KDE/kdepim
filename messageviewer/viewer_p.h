@@ -370,7 +370,7 @@ public:
   void atmViewMsg( KMime::Message::Ptr message );
 
   void adjustLayout();
-  void saveSplitterSizes( KConfigGroup & c ) const;
+  void saveSplitterSizes() const;
   void createWidgets();
   void createActions();
 
