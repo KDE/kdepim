@@ -37,6 +37,7 @@
 #include "implementation_p.h"
 
 #include <utils/archivedefinition.h>
+#include <utils/checksumdefinition.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -65,6 +66,7 @@ namespace {
 
             QStringList errors;
             ArchiveDefinition::getArchiveDefinitions( errors );
+            ChecksumDefinition::getChecksumDefinitions( errors );
 
             m_passed = errors.empty();
             if ( m_passed )

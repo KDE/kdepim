@@ -19,6 +19,22 @@ Name=TAR (with bzip2 compression)
 Name[de]=TAR (mit bzip2-Kompression)
 pack-command=tar cfj -
 
+[Checksum Definition #1]
+file-patterns=sha1sum.txt
+output-file=sha1sum.txt
+id=sha1sum
+Name=sha1sum
+create-command=sha1sum -- %f
+verify-command=sha1sum -c --
+
+[Checksum Definition #2]
+file-patterns=md5sum.txt
+output-file=md5sum.txt
+id=md5sum
+Name=md5sum
+create-command=md5sum -- %f
+verify-command=md5sum -c --
+
 [Key Filter #0]
 was-validated=false
 Name=Not Validated Key
