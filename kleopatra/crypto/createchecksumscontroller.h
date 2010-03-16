@@ -54,18 +54,6 @@ namespace Crypto {
         explicit CreateChecksumsController( const boost::shared_ptr<const ExecutionContext> & ctx, QObject * parent=0 );
         ~CreateChecksumsController();
 
-        enum ChecksumType {
-            NoType  = 0x0,
-            Sha1Sum = 0x1,
-            Md5Sum  = 0x2,
-
-            AllChecksumTypes = Sha1Sum|Md5Sum
-        };
-        Q_DECLARE_FLAGS( ChecksumTypes, ChecksumType )
-
-        void setChecksumTypes( ChecksumTypes types );
-        ChecksumTypes checksumTypes() const;
-
         void setAllowAddition( bool allow );
         bool allowAddition() const;
 
@@ -82,8 +70,6 @@ namespace Crypto {
         Q_PRIVATE_SLOT( d, void slotOperationFinished() )
         Q_PRIVATE_SLOT( d, void slotProgress(int,int,QString) )
     };
-
-    Q_DECLARE_OPERATORS_FOR_FLAGS( CreateChecksumsController::ChecksumTypes )
 
 }
 }

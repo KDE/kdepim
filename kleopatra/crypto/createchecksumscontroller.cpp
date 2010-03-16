@@ -34,6 +34,7 @@
 
 #include "createchecksumscontroller.h"
 
+#include <utils/checksumdefinition.h>
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/classify.h>
@@ -43,6 +44,8 @@
 #include <KLocale>
 #include <kdebug.h>
 #include <KSaveFile>
+#include <KGlobal>
+#include <KConfigGroup>
 
 #include <QPointer>
 #include <QFileInfo>
@@ -69,42 +72,47 @@ static const bool HAVE_UNIX = true;
 static const bool HAVE_UNIX = false;
 #endif
 
-namespace {
+static const QLatin1String CHECKSUM_DEFINITION_ID_ENTRY( "checksum-definition-id" );
 
-    static const struct ChecksumFiles {
-        const char * name;
-        CreateChecksumsController::ChecksumType type;
-    } checksumFiles[] = {
-        { "sha1sum.txt", CreateChecksumsController::Sha1Sum },
-        { "md5sum.txt",  CreateChecksumsController::Md5Sum  },
-    };
-    static const size_t numChecksumFiles = sizeof checksumFiles / sizeof *checksumFiles;
+static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive ; // can we use QAbstractFileEngine::caseSensitive()?
 
+static QStringList fs_sort( QStringList l ) {
+    int (*QString_compare)(const QString&,const QString&,Qt::CaseSensitivity) = &QString::compare;
+    kdtools::sort( l, bind( QString_compare, _1, _2, fs_cs ) < 0 );
+    return l;
 }
 
-static CreateChecksumsController::ChecksumType filename2type( const QString & file ) {
-    for ( unsigned int i = 0 ; i < numChecksumFiles ; ++i )
-        if ( QString::compare( QLatin1String( checksumFiles[i].name ), file, Qt::CaseInsensitive ) == 0 )
-            return checksumFiles[i].type;
-    return CreateChecksumsController::NoType;
+static QStringList fs_intersect( QStringList l1, QStringList l2 ) {
+    int (*QString_compare)(const QString&,const QString&,Qt::CaseSensitivity) = &QString::compare;
+    fs_sort( l1 );
+    fs_sort( l2 );
+    QStringList result;
+    std::set_intersection( l1.begin(), l1.end(),
+                           l2.begin(), l2.end(),
+                           std::back_inserter( result ),
+                           bind( QString_compare, _1, _2, fs_cs ) < 0 );
+    return result;
 }
 
-#if 0
-namespace {
+static QList<QRegExp> get_patterns( const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions )
+{
+    QList<QRegExp> result;
+    Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
+        if ( cd )
+            Q_FOREACH( const QString & pattern, cd->patterns() )
+                result.push_back( QRegExp( pattern, fs_cs ) );
+    return result;
+}
 
-    struct is_dir : std::unary_function<QString,bool> {
-        bool operator()( const QString & file ) const {
-            return QFileInfo( file ).isDir();
+namespace {
+    struct matches_any : std::unary_function<QString,bool> {
+        const QList<QRegExp> m_regexps;
+        explicit matches_any( const QList<QRegExp> & regexps ) : m_regexps( regexps ) {}
+        bool operator()( const QString & s ) const {
+            return kdtools::any( m_regexps, bind( &QRegExp::exactMatch, _1, s ) );
         }
     };
-
 }
-
-static bool contains_dir( const QStringList & files ) {
-    return kdtools::any( files, is_dir() );
-}
-#endif
-
 
 class CreateChecksumsController::Private : public QThread {
     Q_OBJECT
@@ -143,9 +151,10 @@ private:
 private:
     QPointer<QProgressDialog> progressDialog;
     mutable QMutex mutex;
+    const std::vector< shared_ptr<ChecksumDefinition> > checksumDefinitions;
+    shared_ptr<ChecksumDefinition> checksumDefinition;
     QStringList files;
     QStringList errors;
-    ChecksumTypes checksumTypes;
     bool allowAddition;
     volatile bool canceled;
 };
@@ -153,12 +162,25 @@ private:
 CreateChecksumsController::Private::Private( CreateChecksumsController * qq )
     : q( qq ),
       progressDialog(),
+      mutex(),
+      checksumDefinitions( ChecksumDefinition::getChecksumDefinitions() ),
+      checksumDefinition(),
       files(),
       errors(),
-      checksumTypes( Sha1Sum ),
       allowAddition( false ),
       canceled( false )
 {
+    const KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    const QString checksumDefinitionId = group.readEntry( CHECKSUM_DEFINITION_ID_ENTRY );
+    if ( !checksumDefinitionId.isEmpty() )
+        Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
+            if ( cd && cd->id() == checksumDefinitionId ) {
+                checksumDefinition = cd;
+                break;
+            }
+    if ( !checksumDefinition && !checksumDefinitions.empty() )
+        checksumDefinition = checksumDefinitions.front();
+
     connect( this, SIGNAL(progress(int,int,QString)),
              q, SLOT(slotProgress(int,int,QString)) );
     connect( this, SIGNAL(progress(int,int,QString)),
@@ -185,32 +207,12 @@ CreateChecksumsController::~CreateChecksumsController() {
     kDebug();
 }
 
-void CreateChecksumsController::setChecksumTypes( ChecksumTypes types ) {
-    kleo_assert( !d->isRunning() );
-    const QMutexLocker locker( &d->mutex );
-    d->checksumTypes = types;
-}
-
-CreateChecksumsController::ChecksumTypes CreateChecksumsController::checksumTypes() const {
-    const QMutexLocker locker( &d->mutex );
-    return d->checksumTypes;
-}
-
-namespace {
-    struct AreChecksumFiles : std::unary_function<QString,bool> {
-        bool operator()( const QString & file ) const {
-            const QString base = QFileInfo( file ).fileName();
-            return base == QLatin1String( "md5sum.txt" )
-                || base == QLatin1String( "sha1sum.txt" ) ;
-        }
-    };
-}
-
 void CreateChecksumsController::setFiles( const QStringList & files ) {
     kleo_assert( !d->isRunning() );
     kleo_assert( !files.empty() );
-    if ( !kdtools::all( files, AreChecksumFiles() ) &&
-         !kdtools::none_of( files, AreChecksumFiles() ) )
+    const QList<QRegExp> patterns = get_patterns( d->checksumDefinitions );
+    if ( !kdtools::all( files, matches_any( patterns ) ) &&
+         !kdtools::none_of( files, matches_any( patterns ) ) )
         throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Create Checksums: input files must be either all checksum files or all files to be checksummed, not a mixture of both.") );
     const QMutexLocker locker( &d->mutex );
     d->files = files;
@@ -259,45 +261,17 @@ namespace {
         QString sumFile;
         QStringList inputFiles;
         quint64 totalSize;
-        CreateChecksumsController::ChecksumType checksumType;
+        shared_ptr<ChecksumDefinition> checksumDefinition;
     };
 
-#if 0        
-    template <typename T Dir::*mf>
-    struct By : std::binary_function<Dir,Dir,bool> {
-        void operator()( const Dir & lhs, const Dir & rhs ) const {
-            return (lhs.*mf)() < (rhs.*mf)();
-        }
-    };
-#endif
-
 }
 
-static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive ; // can we use QAbstractFileEngine::caseSensitive()?
-
-static QStringList fs_sort( QStringList l ) {
-    int (*QString_compare)(const QString&,const QString&,Qt::CaseSensitivity) = &QString::compare;
-    kdtools::sort( l, bind( QString_compare, _1, _2, fs_cs ) < 0 );
-    return l;
-}
-
-static QStringList fs_intersect( QStringList l1, QStringList l2 ) {
-    int (*QString_compare)(const QString&,const QString&,Qt::CaseSensitivity) = &QString::compare;
-    fs_sort( l1 );
-    fs_sort( l2 );
-    QStringList result;
-    std::set_intersection( l1.begin(), l1.end(),
-                           l2.begin(), l2.end(),
-                           std::back_inserter( result ),
-                           bind( QString_compare, _1, _2, fs_cs ) < 0 );
-    return result;
-}
-
-static QStringList remove_checksum_files( QStringList l ) {
-    const QRegExp rx( "md5sum.txt|sha1sum.txt", fs_cs );
-    l.erase( std::remove_if( l.begin(), l.end(),
-                             bind( &QRegExp::exactMatch, rx, _1 ) ),
-             l.end() );
+static QStringList remove_checksum_files( QStringList l, const QList<QRegExp> & rxs ) {
+    QStringList::iterator end = l.end();
+    Q_FOREACH( const QRegExp & rx, rxs )
+        end = std::remove_if( l.begin(), end,
+                              bind( &QRegExp::exactMatch, rx, _1 ) );
+    l.erase( end, l.end() );
     return l;
 }
 
@@ -347,7 +321,23 @@ static quint64 aggregate_size( const QDir & dir, const QStringList & files ) {
     return n;
 }
 
-static std::vector<Dir> find_dirs_by_sum_files( const QStringList & files, bool allowAddition, const function<void(int)> & progress ) {
+static shared_ptr<ChecksumDefinition> filename2definition( const QString & fileName,
+                                                           const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions )
+{
+    Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
+        if ( cd )
+            Q_FOREACH( const QString & pattern, cd->patterns() )
+                if ( QRegExp( pattern, fs_cs ).exactMatch( fileName ) )
+                    return cd;
+    return shared_ptr<ChecksumDefinition>();
+}
+
+static std::vector<Dir> find_dirs_by_sum_files( const QStringList & files, bool allowAddition,
+                                                const function<void(int)> & progress,
+                                                const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions )
+{
+
+    const QList<QRegExp> patterns = get_patterns( checksumDefinitions );
 
     std::vector<Dir> dirs;
     dirs.reserve( files.size() );
@@ -358,7 +348,7 @@ static std::vector<Dir> find_dirs_by_sum_files( const QStringList & files, bool 
 
         const QFileInfo fi( file );
         const QDir dir = fi.dir();
-        const QStringList entries = remove_checksum_files( dir.entryList( QDir::Files ) );
+        const QStringList entries = remove_checksum_files( dir.entryList( QDir::Files ), patterns );
 
         QStringList inputFiles;
         if ( allowAddition ) {
@@ -375,7 +365,7 @@ static std::vector<Dir> find_dirs_by_sum_files( const QStringList & files, bool 
             fi.fileName(),
             inputFiles,
             aggregate_size( dir, inputFiles ),
-            filename2type( fi.fileName() )
+            filename2definition( fi.fileName(), checksumDefinitions )
         };
 
         dirs.push_back( item );
@@ -395,7 +385,14 @@ namespace {
     };
 }
 
-static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, CreateChecksumsController::ChecksumTypes types, bool allowAddition, const function<void(int)> & progress ) {
+static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, const shared_ptr<ChecksumDefinition> & checksumDefinition, bool allowAddition,
+                                                  const function<void(int)> & progress,
+                                                  const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions )
+{
+    if ( !checksumDefinition )
+        return std::vector<Dir>();
+
+    const QList<QRegExp> patterns = get_patterns( checksumDefinitions );
 
     std::map<QDir,QStringList,less_dir> dirs2files;
 
@@ -410,7 +407,7 @@ static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, Cre
         const QFileInfo fi( file );
         if ( fi.isDir() ) {
             QDir dir( file );
-            dirs2files[ dir ] = remove_checksum_files( dir.entryList( QDir::Files ) );
+            dirs2files[ dir ] = remove_checksum_files( dir.entryList( QDir::Files ), patterns );
             kdtools::transform( dir.entryList( QDir::Dirs|QDir::NoDotAndDotDot ),
                                 std::inserter( inputs, inputs.begin() ),
                                 bind( &QDir::absoluteFilePath, cref(dir), _1 ) );
@@ -424,40 +421,22 @@ static std::vector<Dir> find_dirs_by_input_files( const QStringList & files, Cre
     // Step 2: convert into vector<Dir>:
 
     std::vector<Dir> dirs;
-    const unsigned int numTypes =
-        static_cast<bool>( types & CreateChecksumsController::Sha1Sum ) +
-        static_cast<bool>( types & CreateChecksumsController::Md5Sum  ) ;
-    dirs.reserve( numTypes * dirs2files.size() );
+    dirs.reserve( dirs2files.size() );
 
     for ( std::map<QDir,QStringList,less_dir>::const_iterator it = dirs2files.begin(), end = dirs2files.end() ; it != end ; ++it ) {
 
-        const QStringList inputFiles = remove_checksum_files( it->second );
+        const QStringList inputFiles = remove_checksum_files( it->second, patterns );
         if ( inputFiles.empty() )
             continue;
 
-        quint64 size = 0U;
-
-        if ( types & CreateChecksumsController::Sha1Sum ) {
-            const Dir dir = {
-                it->first,
-                QLatin1String( "sha1sum.txt" ),
-                inputFiles,
-                size ? size : size = aggregate_size( it->first, inputFiles ),
-                CreateChecksumsController::Sha1Sum
-            };
-            dirs.push_back( dir );
-        }
-
-        if ( types & CreateChecksumsController::Md5Sum ) {
-            const Dir dir = {
-                it->first,
-                QLatin1String( "md5sum.txt" ),
-                inputFiles,
-                size ? size : size = aggregate_size( it->first, inputFiles ),
-                CreateChecksumsController::Md5Sum
-            };
-            dirs.push_back( dir );
-        }
+        const Dir dir = {
+            it->first,
+            checksumDefinition->outputFileName(),
+            inputFiles,
+            aggregate_size( it->first, inputFiles ),
+            checksumDefinition
+        };
+        dirs.push_back( dir );
 
         if ( !progress.empty() )
             progress( ++i );
@@ -476,12 +455,10 @@ static QString process( const Dir & dir, bool * fatal ) {
     QProcess p;
     p.setWorkingDirectory( dir.dir.absolutePath() );
     p.setStandardOutputFile( dir.dir.absoluteFilePath( file.QFile::fileName() /*!sic*/ ) );
-    const QString program =
-        // ### make config'able
-        dir.checksumType == CreateChecksumsController::Sha1Sum ? "sha1sum" :
-        dir.checksumType == CreateChecksumsController::Md5Sum  ? "md5sum" : "" ;
-    qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( dir.inputFiles.join(" ") ) );
-    p.start( program, dir.inputFiles );
+    const QString program = dir.checksumDefinition->createCommand();
+    const QStringList arguments = dir.checksumDefinition->createCommandArguments( dir.inputFiles );
+    qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( arguments.join(" ") ) );
+    p.start( program, arguments );
     p.waitForFinished();
     qDebug( "[%p] Exit code %d.", &p, p.exitCode() );
 
@@ -514,10 +491,22 @@ void CreateChecksumsController::Private::run() {
     QMutexLocker locker( &mutex );
 
     const QStringList files = this->files;
-    const ChecksumTypes checksumTypes = this->checksumTypes;
+    const std::vector< shared_ptr<ChecksumDefinition> > checksumDefinitions = this->checksumDefinitions;
+    const shared_ptr<ChecksumDefinition> checksumDefinition = this->checksumDefinition;
     const bool allowAddition = this->allowAddition;
 
     locker.unlock();
+
+    QStringList errors;
+
+    if ( !checksumDefinition ) {
+        errors.push_back( i18n("No checksum programs defined.") );
+        locker.relock();
+        this->errors = errors;
+        return;
+    } else {
+        qDebug() << Q_FUNC_INFO << "using checksum-definition" << checksumDefinition->id();
+    }
 
     //
     // Step 1: build a list of work to do (no progress):
@@ -526,15 +515,15 @@ void CreateChecksumsController::Private::run() {
     const QString scanning = i18n("Scanning directories...");
     emit progress( 0, 0, scanning );
 
-    const bool haveSumFiles = kdtools::all( files, AreChecksumFiles() );
+    const bool haveSumFiles
+        = kdtools::all( files, matches_any( get_patterns( checksumDefinitions ) ) );
+    const function<void(int)> progressCb = bind( &Private::progress, this, _1, 0, scanning );
     const std::vector<Dir> dirs = haveSumFiles
-        ? find_dirs_by_sum_files( files, allowAddition, bind( &Private::progress, this, _1, 0, scanning ) )
-        : find_dirs_by_input_files( files, checksumTypes, allowAddition, bind( &Private::progress, this, _1, 0, scanning ) ) ;
+        ? find_dirs_by_sum_files( files, allowAddition, progressCb, checksumDefinitions )
+        : find_dirs_by_input_files( files, checksumDefinition, allowAddition, progressCb, checksumDefinitions ) ;
 
     Q_FOREACH( const Dir & dir, dirs )
         qDebug() << dir;
-
-    QStringList errors;
 
     if ( !canceled ) {
 
@@ -555,8 +544,7 @@ void CreateChecksumsController::Private::run() {
             quint64 done = 0;
             Q_FOREACH( const Dir & dir, dirs ) {
                 emit progress( done/factor, total/factor,
-                               dir.checksumType == Md5Sum  ? i18n("MD5-summing in %1", dir.dir.path() ) :
-                               dir.checksumType == Sha1Sum ? i18n("SHA1-summing in %1", dir.dir.path() ) : QString() );
+                               i18n("Checksumming (%2) in %1", dir.checksumDefinition->label(), dir.dir.path() ) );
                 bool fatal = false;
                 const QString error = process( dir, &fatal );
                 if ( !error.isEmpty() )
