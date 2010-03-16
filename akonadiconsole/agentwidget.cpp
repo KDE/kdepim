@@ -113,7 +113,9 @@ void AgentWidget::removeAgent()
   if ( !list.isEmpty() )
   {
     if ( KMessageBox::questionYesNo( this,
-                                     i18n( "Do you really want to delete these %1 agent instances?", list.size() ),
+                                     i18np( "Do you really want to delete the selected agent instance?",
+                                            "Do you really want to delete these %1 agent instances?",
+                                            list.size() ),
                                      i18n( "Multiple Agent Deletion" ),
                                      KStandardGuiItem::del(),
                                      KStandardGuiItem::cancel(),
