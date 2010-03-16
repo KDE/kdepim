@@ -178,9 +178,10 @@ const Interface::BodyPartFormatter * BodyPartFormatterFactory::createFor( const 
   if ( subtype_it == subtype_reg.end() )
     return 0;
 
-  kWarning( !(*subtype_it).second, 5006 )
-    << "BodyPartFormatterFactory: a null bodypart formatter sneaked in for \""
-    << type << "/" << subtype << "\"!";
+  if ( !(*subtype_it).second ) {
+    kWarning() << "BodyPartFormatterFactory: a null bodypart formatter sneaked in for \""
+               << type << "/" << subtype << "\"!";
+  }
 
   return (*subtype_it).second;
 }

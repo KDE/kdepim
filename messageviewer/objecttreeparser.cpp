@@ -306,9 +306,11 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
     } else {
       const BodyPartFormatter * bpf
         = BodyPartFormatter::createFor( node->contentType()->mediaType(), node->contentType()->subType() );
-      kFatal( !bpf, 5006 ) <<"THIS SHOULD NO LONGER HAPPEN ("
-                           << node->contentType()->mediaType() << '/'
-                           << node->contentType()->subType() << ')';
+      if ( !bpf ) {
+        kFatal() << "THIS SHOULD NO LONGER HAPPEN ("
+                 << node->contentType()->mediaType() << '/'
+                 << node->contentType()->subType() << ')';
+      }
       writeAttachmentMarkHeader( node );
       if ( bpf && !bpf->process( this, item, node, processResult ) ) {
         defaultHandling( node, processResult );
