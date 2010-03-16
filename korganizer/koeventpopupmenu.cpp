@@ -114,8 +114,7 @@ void KOEventPopupMenu::showIncidencePopup( Calendar *cal, Incidence *incidence, 
     delete mMoveToCalendarMenu;
     mMoveToCalendarMenu = 0;
   }
-
-  if ( mCurrentIncidence && qd.isValid() ) {
+  if ( mCurrentIncidence /*&& qd.isValid()*/ ) {
 
     if ( mCurrentIncidence->recurs() ) {
       KDateTime thisDateTime( qd, KOPrefs::instance()->timeSpec() );
