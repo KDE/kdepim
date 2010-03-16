@@ -851,7 +851,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   if ( strategy->showHeader( "from" ) ) {
     // TODO vcard
     QString fromPart = StringUtil::emailAddrAsAnchor( message->from(),
-                                                      StringUtil::DisplayFullAddress, linkColor );
+                                                      StringUtil::DisplayNameOnly, linkColor );
     if ( !vCardName.isEmpty() )
       fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" "+linkColor+">" + i18n("[vCard]") + "</a>";
     //TDDO strategy date
