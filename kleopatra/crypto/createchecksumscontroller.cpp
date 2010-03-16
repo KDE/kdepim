@@ -61,6 +61,7 @@
 #include <gpg-error.h>
 
 #include <deque>
+#include <limits>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
