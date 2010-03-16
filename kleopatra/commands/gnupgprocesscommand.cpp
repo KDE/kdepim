@@ -68,6 +68,7 @@ private:
     KProcess process;
     QStringList arguments;
     QByteArray errorBuffer;
+    bool ignoresSuccessOrFailure;
     bool canceled;
 };
 
@@ -81,6 +82,7 @@ GnuPGProcessCommand::Private::Private( GnuPGProcessCommand * qq, KeyListControll
     : Command::Private( qq, c ),
       process(),
       errorBuffer(),
+      ignoresSuccessOrFailure( false ),
       canceled( false )
 {
     process.setOutputChannelMode( KProcess::OnlyStderrChannel );
@@ -157,6 +159,8 @@ void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::Exit
     if ( !canceled ) {
         if ( status == QProcess::CrashExit )
             KMessageBox::error( parentWidgetOrView(), q->crashExitMessage( arguments ), q->errorCaption() );
+        else if ( ignoresSuccessOrFailure )
+            ;
         else if ( code )
             KMessageBox::error( parentWidgetOrView(), q->errorExitMessage( arguments ), q->errorCaption() );
         else {
@@ -173,6 +177,14 @@ void GnuPGProcessCommand::Private::slotProcessReadyReadStandardError() {
 
 QString GnuPGProcessCommand::errorString() const {
     return QString::fromLocal8Bit( d->errorBuffer );
+}
+
+void GnuPGProcessCommand::setIgnoresSuccessOrFailure( bool ignores ) {
+    d->ignoresSuccessOrFailure = ignores;
+}
+
+bool GnuPGProcessCommand::ignoresSuccessOrFailure() const {
+    return d->ignoresSuccessOrFailure;
 }
 
 #undef d
