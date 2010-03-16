@@ -35,6 +35,7 @@
 #include "objecttreeparser.h"
 #include "objecttreeparser_p.h"
 #include "objecttreesourceif.h"
+#include "autoqpointer.h"
 
 // other KMail headers
 #include "viewer_p.h"
@@ -1923,13 +1924,16 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   }
 
   mSource->emitNoDrag();
-  ChiasmusKeySelector selectorDlg( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
-                                    keys, GlobalSettings::chiasmusDecryptionKey(),
-                                    GlobalSettings::chiasmusDecryptionOptions() );
-  if ( selectorDlg.exec() != KDialog::Accepted )
+  AutoQPointer<ChiasmusKeySelector> selectorDlg;
+  selectorDlg = new ChiasmusKeySelector( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
+                                         keys, GlobalSettings::chiasmusDecryptionKey(),
+                                         GlobalSettings::chiasmusDecryptionOptions() );
+
+  if ( selectorDlg->exec() != KDialog::Accepted || !selectorDlg ) {
     return false;
-  GlobalSettings::setChiasmusDecryptionOptions( selectorDlg.options() );
-  GlobalSettings::setChiasmusDecryptionKey( selectorDlg.key() );
+  }
+  GlobalSettings::setChiasmusDecryptionOptions( selectorDlg->options() );
+  GlobalSettings::setChiasmusDecryptionKey( selectorDlg->key() );
   assert( !GlobalSettings::chiasmusDecryptionKey().isEmpty() );
 
   Kleo::SpecialJob * job = chiasmus->specialJob( "x-decrypt", QMap<QString,QVariant>() );
