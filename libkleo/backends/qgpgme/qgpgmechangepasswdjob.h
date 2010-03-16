@@ -1,8 +1,8 @@
 /*
-    kleo/cryptobackend.cpp
+    qgpgmechangepasswdjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005,2010 Klarälvdalens Datakonsult AB
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,13 +30,35 @@
     your version.
 */
 
-#include "cryptobackend.h"
+#ifndef __KLEO_QGPGMECHANGEPASSWDJOB_H__
+#define __KLEO_QGPGMECHANGEPASSWDJOB_H__
 
-const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
-const char Kleo::CryptoBackend::SMIME[] = "SMIME";
+#include "kleo/changepasswdjob.h"
 
-Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
-Kleo::ChangeOwnerTrustJob * Kleo::CryptoBackend::Protocol::changeOwnerTrustJob() const { return 0; }
-Kleo::ChangePasswdJob * Kleo::CryptoBackend::Protocol::changePasswdJob() const { return 0; }
-Kleo::SignKeyJob * Kleo::CryptoBackend::Protocol::signKeyJob() const { return 0; }
-Kleo::AddUserIDJob * Kleo::CryptoBackend::Protocol::addUserIDJob() const { return 0; }
+#include "threadedjobmixin.h"
+
+namespace Kleo {
+
+  class QGpgMEChangePasswdJob
+#ifdef Q_MOC_RUN
+    : public ChangePasswdJob
+#else
+    : public _detail::ThreadedJobMixin<ChangePasswdJob>
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  private Q_SLOTS:
+    void slotFinished();
+#endif
+  public:
+    explicit QGpgMEChangePasswdJob( GpgME::Context * context );
+    ~QGpgMEChangePasswdJob();
+
+    /*! \reimp from ChangePasswdJob */
+    GpgME::Error start( const GpgME::Key & key );
+  };
+
+}
+
+#endif // __KLEO_QGPGMECHANGEPASSWDJOB_H__

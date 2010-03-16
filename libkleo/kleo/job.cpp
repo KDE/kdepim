@@ -48,6 +48,7 @@
 #include "exportjob.h"
 #include "changeexpiryjob.h"
 #include "changeownertrustjob.h"
+#include "changepasswdjob.h"
 #include "downloadjob.h"
 #include "deletejob.h"
 #include "refreshkeysjob.h"
@@ -112,6 +113,7 @@ make_job_subclass_ext(ImportFromKeyserverJob,AbstractImportJob)
 make_job_subclass(ExportJob)
 make_job_subclass(ChangeExpiryJob)
 make_job_subclass(ChangeOwnerTrustJob)
+make_job_subclass(ChangePasswdJob)
 make_job_subclass(DownloadJob)
 make_job_subclass(DeleteJob)
 make_job_subclass(RefreshKeysJob)
@@ -138,6 +140,7 @@ make_job_subclass(SpecialJob)
 #include "exportjob.moc"
 #include "changeexpiryjob.moc"
 #include "changeownertrustjob.moc"
+#include "changepasswdjob.moc"
 #include "downloadjob.moc"
 #include "deletejob.moc"
 #include "refreshkeysjob.moc"

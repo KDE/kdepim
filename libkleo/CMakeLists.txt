@@ -29,6 +29,7 @@ set(libkleo_backend_qgpgme_SRCS
     backends/qgpgme/qgpgmesecretkeyexportjob.cpp
     backends/qgpgme/qgpgmechangeexpiryjob.cpp
     backends/qgpgme/qgpgmechangeownertrustjob.cpp
+    backends/qgpgme/qgpgmechangepasswdjob.cpp
     backends/qgpgme/qgpgmedownloadjob.cpp
     backends/qgpgme/qgpgmedeletejob.cpp
     backends/qgpgme/qgpgmeencryptjob.cpp
