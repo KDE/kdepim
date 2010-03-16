@@ -31,15 +31,13 @@
     your version.
 */
 
-// my header file
+// MessageViewer includes
 #include "objecttreeparser.h"
+
 #include "objecttreeparser_p.h"
 #include "objecttreesourceif.h"
 #include "autoqpointer.h"
-
-// other KMail headers
 #include "viewer_p.h"
-#include <kpimutils/email.h>
 #include "partmetadata.h"
 #include "attachmentstrategy.h"
 #include "interfaces/htmlwriter.h"
@@ -56,9 +54,10 @@
 #include "nodehelper.h"
 #include "iconnamecache.h"
 #include "htmlquotecolorer.h"
+#include "chiasmuskeyselector.h"
 
+// KDEPIM includes
 #include <messagecore/stringutil.h>
-
 #include <kleo/specialjob.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/decryptverifyjob.h>
@@ -67,23 +66,23 @@
 #include <kleo/keylistjob.h>
 #include <kleo/importjob.h>
 #include <kleo/dn.h>
+#include <libkpgp/kpgpblock.h>
+#include <libkpgp/kpgp.h>
 
+// KDEPIMLIBS includes
+#include <kpimutils/email.h>
+#include <kpimutils/linklocator.h>
 #include <gpgme++/importresult.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 #include <gpgme.h>
-
-#include <libkpgp/kpgpblock.h>
-#include <libkpgp/kpgp.h>
-#include <kpimutils/linklocator.h>
-using KPIMUtils::LinkLocator;
-
 #include <ktnef/ktnefparser.h>
 #include <ktnef/ktnefmessage.h>
 #include <ktnef/ktnefattach.h>
+#include <kmime/kmime_message.h>
 
-// other KDE headers
+// KDE includes
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmimetype.h>
@@ -95,7 +94,7 @@ using KPIMUtils::LinkLocator;
 #include <kconfiggroup.h>
 #include <kstyle.h>
 
-// other Qt headers
+// Qt includes
 #include <QApplication>
 #include <QDir>
 #include <QFile>
@@ -106,16 +105,14 @@ using KPIMUtils::LinkLocator;
 #include <QPainter>
 #include <QPointer>
 
-// other headers
+// other includes
 #include <sstream>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <memory>
-#include "chiasmuskeyselector.h"
 
-#include <kmime/kmime_message.h>
-
+using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
 using namespace MessageCore;
 
