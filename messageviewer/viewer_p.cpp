@@ -3157,7 +3157,7 @@ void ViewerPrivate::toggleFullAddressList()
 void ViewerPrivate::toggleFullAddressList( const QString &field )
 {
   QWebElement doc = mViewer->page()->currentFrame()->documentElement();
-  // First inject the corrent icon
+  // First inject the correct icon
   QWebElement tag = doc.findFirst( QString( "span#iconFull%1AddressList" ).arg( field ) );
   if ( tag.isNull() ) {
     return;
