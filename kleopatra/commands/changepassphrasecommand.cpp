@@ -2,7 +2,7 @@
     commands/changepassphrasecommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,69 +36,170 @@
 
 #include "command_p.h"
 
-#include <utils/gnupg-helper.h>
+#include <utils/formatting.h>
+
+#include <kleo/cryptobackendfactory.h>
+#include <kleo/cryptobackend.h>
+#include <kleo/changepasswdjob.h>
 
 #include <gpgme++/key.h>
 
 #include <KLocale>
 #include <KMessageBox>
+#include <kdebug.h>
+
+#include <gpg-error.h>
+
+#include <cassert>
 
 using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace GpgME;
 
-ChangePassphraseCommand::ChangePassphraseCommand( KeyListController * c )
-    : GnuPGProcessCommand( c )
+class ChangePassphraseCommand::Private : public Command::Private {
+    friend class ::Kleo::Commands::ChangePassphraseCommand;
+    ChangePassphraseCommand * q_func() const { return static_cast<ChangePassphraseCommand*>( q ); }
+public:
+    explicit Private( ChangePassphraseCommand * qq, KeyListController * c );
+    ~Private();
+
+    void init();
+
+private:
+    void slotResult( const Error & err );
+
+private:
+    void createJob();
+    void startJob();
+    void showErrorDialog( const Error & error );
+    void showSuccessDialog();
+
+private:
+    GpgME::Key key;
+    QPointer<ChangePasswdJob> job;
+};
+
+
+ChangePassphraseCommand::Private * ChangePassphraseCommand::d_func() { return static_cast<Private*>( d.get() ); }
+const ChangePassphraseCommand::Private * ChangePassphraseCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+
+#define d d_func()
+#define q q_func()
+
+ChangePassphraseCommand::Private::Private( ChangePassphraseCommand * qq, KeyListController * c )
+    : Command::Private( qq, c ),
+      key(),
+      job()
 {
 
+}
+
+ChangePassphraseCommand::Private::~Private() { kDebug(); }
+
+ChangePassphraseCommand::ChangePassphraseCommand( KeyListController * c )
+    : Command( new Private( this, c ) )
+{
+    d->init();
 }
 
 ChangePassphraseCommand::ChangePassphraseCommand( QAbstractItemView * v, KeyListController * c )
-    : GnuPGProcessCommand( v, c )
+    : Command( v, new Private( this, c ) )
 {
+    d->init();
+}
+
+ChangePassphraseCommand::ChangePassphraseCommand( const GpgME::Key & key )
+    : Command( key, new Private( this, 0 ) )
+{
+    d->init();
+}
+
+void ChangePassphraseCommand::Private::init() {
 
 }
 
-ChangePassphraseCommand::ChangePassphraseCommand( const Key & key )
-    : GnuPGProcessCommand( key )
-{
+ChangePassphraseCommand::~ChangePassphraseCommand() { kDebug(); }
+
+void ChangePassphraseCommand::doStart() {
+
+    const std::vector<Key> keys = d->keys();
+    if ( keys.size() != 1 ||
+         keys.front().protocol() != GpgME::OpenPGP ||
+         !keys.front().hasSecret() ||
+         keys.front().subkey(0).isNull() ) {
+        d->finished();
+        return;
+    }
+
+    d->key = keys.front();
+
+    d->createJob();
+    d->startJob();
 
 }
 
-ChangePassphraseCommand::~ChangePassphraseCommand() {}
+void ChangePassphraseCommand::Private::startJob() {
+    const Error err = job
+        ? job->start( key )
+        : Error( gpg_error( GPG_ERR_NOT_SUPPORTED ) )
+        ;
+    if ( err ) {
+        showErrorDialog( err );
+        finished();
+    }
+}
 
-QStringList ChangePassphraseCommand::arguments() const {
-    const Key key = d->key();
-    if ( key.protocol() == OpenPGP )
-        return QStringList() << gpgPath() << "--batch" << "--edit-key" << key.primaryFingerprint() << "passwd" << "save" ;
+void ChangePassphraseCommand::Private::slotResult( const Error & err ) {
+    if ( err.isCanceled() )
+        ;
+    else if ( err )
+        showErrorDialog( err );
     else
-        return QStringList() << gpgSmPath() << "--passwd" << key.primaryFingerprint();
+        showSuccessDialog();
+    finished();
 }
 
-QString ChangePassphraseCommand::errorCaption() const {
-    return i18nc( "@title:window", "Passphrase Change Error" );
+void ChangePassphraseCommand::doCancel() {
+    kDebug();
+    if ( d->job )
+        d->job->slotCancel();
 }
 
-QString ChangePassphraseCommand::successCaption() const {
-    return i18nc( "@title:window", "Passphrase Change Finished" );
+void ChangePassphraseCommand::Private::createJob() {
+    assert( !job );
+
+    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key.protocol() );
+    if ( !backend )
+        return;
+
+    ChangePasswdJob * const j = backend->changePasswdJob();
+    if ( !j )
+        return;
+
+    connect( j, SIGNAL(progress(QString,int,int)),
+             q, SIGNAL(progress(QString,int,int)) );
+    connect( j, SIGNAL(result(GpgME::Error)),
+             q, SLOT(slotResult(GpgME::Error)) );
+
+    job = j;
 }
 
-QString ChangePassphraseCommand::crashExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
-                 "<para>The GPG or GpgSM process that tried to change the passphrase "
-                 "ended prematurely because of an unexpected error.</para>"
-                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
+void ChangePassphraseCommand::Private::showErrorDialog( const Error & err ) {
+    KMessageBox::error( parentWidgetOrView(),
+                        i18n("<p>An error occurred while trying to change "
+                             "the passphrase for <b>%1</b>:</p><p>%2</p>",
+                             Formatting::formatForComboBox( key ),
+                             QString::fromLocal8Bit( err.asString() ) ),
+                        i18n("Passphrase Change Error") );
 }
 
-QString ChangePassphraseCommand::errorExitMessage( const QStringList & args ) const {
-    return i18nc("@info",
-                 "<para>An error occurred while trying to change the passphrase.</para> "
-                 "<para>The output from <command>%1</command> was: <message>%2</message></para>",
-                 args[0], errorString() );
+void ChangePassphraseCommand::Private::showSuccessDialog() {
+    KMessageBox::information( parentWidgetOrView(),
+                              i18n("Passphrase changed successfully."),
+                              i18n("Passphrase Change Succeeded") );
 }
 
-QString ChangePassphraseCommand::successMessage( const QStringList & ) const {
-    return i18nc( "@info", "Passphrase changed successfully." );
-}
+#undef d
+#undef q
 
 #include "moc_changepassphrasecommand.cpp"
