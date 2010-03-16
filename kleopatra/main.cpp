@@ -56,6 +56,7 @@
 # include <uiserver/signencryptfilescommand.h>
 # include <uiserver/selectcertificatecommand.h>
 # include <uiserver/importfilescommand.h>
+# include <uiserver/createchecksumscommand.h>
 #else
 namespace Kleo {
     class UiServer;
@@ -215,6 +216,7 @@ int main( int argc, char** argv )
                         &app, SLOT(openOrRaiseConfigDialog()) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
+      REGISTER( CreateChecksumsCommand );
       REGISTER( DecryptCommand );
       REGISTER( DecryptFilesCommand );
       REGISTER( DecryptVerifyFilesCommand );
