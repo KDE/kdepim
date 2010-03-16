@@ -301,6 +301,9 @@ QString Formatting::toolTip( const Key & key, int flags ) {
         result += format_row( i18n("Key-ID"), QString::fromLatin1( key.shortKeyID() ) ) ;
     if ( flags & Fingerprint )
         result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
+    if ( flags & OwnerTrust )
+        if ( key.protocol() == OpenPGP )
+            result += format_row( i18n("Ownertrust"), ownerTrustShort( key ) );
     if ( flags & StorageLocation )
         if ( const char * card = subkey.cardSerialNumber() )
             result += format_row( i18n("Stored"), i18nc("stored...","on SmartCard with serial no. %1", QString::fromUtf8( card ) ) );
@@ -414,6 +417,9 @@ QString Formatting::type( const Subkey & subkey ) {
 // Status / Validity
 //
 
+QString Formatting::ownerTrustShort( const Key & key ) {
+    return ownerTrustShort( key.ownerTrust() );
+}
 
 QString Formatting::ownerTrustShort( Key::OwnerTrust trust ) {
     switch ( trust ) {
