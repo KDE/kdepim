@@ -1405,10 +1405,11 @@ void KOAgendaView::displayIncidence( const Item &aitem )
       if ( dateToAdd.isDateOnly() ) {
         // so comparisons with < > actually work
         dateToAdd.setTime( QTime( 0, 0 ) );
+        incidenceEnd.setTime( QTime( 23, 59 ) );
       }
     }
 
-    if  ( dateToAdd <= lastVisibleDateTime && incidenceEnd >= firstVisibleDateTime ) {
+    if  ( dateToAdd <= lastVisibleDateTime && incidenceEnd > firstVisibleDateTime ) {
       dateTimeList += dateToAdd;
     }
   }
