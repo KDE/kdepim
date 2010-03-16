@@ -2337,6 +2337,9 @@ return "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td rowspa
 }
 
 static QString makeShowAuditLogLink( const GpgME::Error & err, const QString & auditLog ) {
+// more or less the same as
+// kleopatra/utils/auditlog.cpp:formatLink(), so any bug fixed here
+// equally applies there:
 if ( const unsigned int code = err.code() ) {
   if ( code == GPG_ERR_NOT_IMPLEMENTED ) {
     kDebug() << "makeShowAuditLogLink: not showing link (not implemented)";
