@@ -1204,10 +1204,10 @@ void ViewerPrivate::parseMsg()
 QString ViewerPrivate::writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content* vCardNode,
                                        bool topLevel )
 {
-  kFatal( !headerStyle(), 5006 )
-    << "trying to writeMsgHeader() without a header style set!";
-  kFatal( !headerStrategy(), 5006 )
-    << "trying to writeMsgHeader() without a header strategy set!";
+  if ( !headerStyle() )
+    kFatal() << "trying to writeMsgHeader() without a header style set!";
+  if ( !headerStrategy() )
+    kFatal() << "trying to writeMsgHeader() without a header strategy set!";
   QString href;
   if ( vCardNode )
     href = NodeHelper::asHREF( vCardNode, "body" );
@@ -2153,7 +2153,8 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   const QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
 
-  kWarning( msg.isEmpty(), 5006 ) << "Unhandled URL hover!";
+  if ( msg.isEmpty() )
+    kWarning() << "Unhandled URL hover!";
   KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );
 }
 

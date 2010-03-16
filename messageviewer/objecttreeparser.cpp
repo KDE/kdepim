@@ -788,7 +788,6 @@ void ObjectTreeParser::writeDeferredDecryptionBlock()
 
 void ObjectTreeParser::writeDecryptionInProgressBlock()
 {
-  kDebug(5006) << k_funcinfo << endl;
   if ( !htmlWriter() )
     return;
   // PENDING(marc) find an animated icon here:
