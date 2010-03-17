@@ -233,6 +233,9 @@ set(libkdgantt1_SRCS
     if (QT_QT3SUPPORT_FOUND)
       macro_optional_add_subdirectory(kmail)
     endif (QT_QT3SUPPORT_FOUND)
+    if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
+      macro_optional_add_subdirectory(kmail-mobile)
+    endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
 
     if(KDEPIM_BUILD_EXAMPLES)
       add_subdirectory(examples)
