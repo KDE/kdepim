@@ -28,21 +28,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       "eucjp" ? QString("jis7") : QString(
       QTextCodec::codecForLocale()-&gt;name() ).toLower()</default>
       <label></label>
-      <whatsthis>Some emails, especially those generated
-      automatically, do not specify the character encoding which
-      needs to be used to properly display them. In such cases a
-      fallback character encoding will be used, which you can
-      configure here. Set it to the character encoding most
-      commonly used in your part of the world. As a default the
-      encoding configured for the whole system is used.</whatsthis>
+      <whatsthis>Some emails, especially those generated automatically, do not specify the character encoding which needs to be used to properly display them. In such cases a fallback character encoding will be used, which you can configure here. Set it to the character encoding most commonly used in your part of the world. As a default the encoding configured for the whole system is used.</whatsthis>
     </entry>
     <entry name="OverrideCharacterEncoding" type="String"
     key="encoding">
       <default></default>
       <label></label>
-      <whatsthis>Changing this from its default 'Auto' will force
-      the use of the specified encoding for all emails, regardless
-      of what they specify themselves.</whatsthis>
+      <whatsthis>Changing this from its default 'Auto' will force the use of the specified encoding for all emails, regardless of what they specify themselves.</whatsthis>
     </entry>
     <entry name="showColorBar" type="Bool">
       <default>false</default>
@@ -57,16 +49,12 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="ShowEmoticons" type="Bool">
       <default>true</default>
       <label>Replace smileys by emoticons</label>
-      <whatsthis>Enable this if you want smileys like :-) appearing
-      in the message text to be replaced by emoticons (small
-      pictures).</whatsthis>
+      <whatsthis>Enable this if you want smileys like :-) appearing in the message text to be replaced by emoticons (small pictures).</whatsthis>
     </entry>
     <entry name="ShowExpandQuotesMark" type="Bool">
       <default>false</default>
       <label>Show expand/collapse quote marks</label>
-      <whatsthis>Enable this option to show different levels of
-      quoted text. Disable to hide the levels of quoted
-      text.</whatsthis>
+      <whatsthis>Enable this option to show different levels of quoted text. Disable to hide the levels of quoted text.</whatsthis>
     </entry>
     <entry name="CollapseQuoteLevelSpin" type="Int">
       <label>Automatic collapse level:</label>
@@ -77,17 +65,14 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="ShrinkQuotes" type="Bool">
       <default>false</default>
       <label>Reduce font size for quoted text</label>
-      <whatsthis>Enable this option to show quoted text with a
-      smaller font.</whatsthis>
+      <whatsthis>Enable this option to show quoted text with a smaller font.</whatsthis>
     </entry>
     <entry name="ChiasmusDecryptionKey" type="String"></entry>
     <entry name="ChiasmusDecryptionOptions" type="String"></entry>
     <entry name="ShowUserAgent" type="Bool">
       <default>false</default>
       <label>Show user agent in fancy headers</label>
-      <whatsthis>Enable this option to get the User-Agent and
-      X-Mailer header lines displayed when using fancy
-      headers.</whatsthis>
+      <whatsthis>Enable this option to get the User-Agent and X-Mailer header lines displayed when using fancy headers.</whatsthis>
     </entry>
     <entry name="AllowAttachmentDeletion" type="Bool">
       <default>true</default>
@@ -99,8 +84,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
     <entry name="AlwaysDecrypt" type="Bool">
       <default>false</default>
-      <label>Always decrypt messages when viewing or ask before
-      decrypting</label>
+      <label>Always decrypt messages when viewing or ask before decrypting</label>
     </entry>
     <entry name="MimeTreeLocation" type="Enum">
       <label>Message Structure Viewer Placement</label>
