@@ -1,7 +1,7 @@
 /*
  *  kaeventdata.cpp  -  represents calendar alarm and event data
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -756,13 +756,19 @@ void KAEventData::readAlarms(const Event* event, void* almap, bool cmdDisplay)
 	bool audioOnly = false;
 	for (int i = 0, end = alarms.count();  i < end;  ++i)
 	{
-		if (alarms[i]->type() == Alarm::Display)
+		switch (alarms[i]->type())
 		{
-			audioOnly = false;
-			break;
+			case Alarm::Display:
+			case Alarm::Procedure:
+				audioOnly = false;
+				i = end;   // exit from the 'for' loop
+				break;
+			case Alarm::Audio:
+				audioOnly = true;
+				break;
+			default:
+				break;
 		}
-		if (alarms[i]->type() == Alarm::Audio)
-			audioOnly = true;
 	}
 
 	for (int i = 0, end = alarms.count();  i < end;  ++i)
