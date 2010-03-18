@@ -59,6 +59,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   addModule( "kleopatra_config_dirserv" );
   addModule( "kleopatra_config_appear" );
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+  addModule( "kleopatra_config_cryptooperations" );
   addModule( "kleopatra_config_smimevalidation" );
 #endif
   addModule( "kleopatra_config_gnupgsystem" );
