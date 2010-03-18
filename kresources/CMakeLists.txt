@@ -28,7 +28,6 @@ add_subdirectory( blog )
 add_subdirectory( remote )
 
 if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
-  add_subdirectory( slox )
   add_subdirectory( groupdav )
   add_subdirectory( groupwise )
 endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
