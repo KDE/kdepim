@@ -222,6 +222,8 @@ set( _kleopatra_SRCS
   crypto/gui/signencryptfileswizard.cpp
   crypto/gui/signencryptwizard.cpp
 
+  crypto/gui/verifychecksumsdialog.cpp
+
   commands/command.cpp
   commands/gnupgprocesscommand.cpp
   commands/detailscommand.cpp
