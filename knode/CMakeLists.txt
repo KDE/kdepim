@@ -174,7 +174,7 @@ install( FILES knewsservice.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES KNode.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES knode_config_identity.desktop knode_config_accounts.desktop knode_config_appearance.desktop knode_config_read_news.desktop knode_config_post_news.desktop knode_config_privacy.desktop knode_config_cleanup.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
 install( FILES headers.rc knodeui.rc knreaderui.rc kncomposerui.rc  DESTINATION ${DATA_INSTALL_DIR}/knode)
-install(FILES org.kde.knode.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR} )
+install(FILES org.kde.knode.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
 
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
 
