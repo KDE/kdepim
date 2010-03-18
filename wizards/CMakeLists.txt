@@ -1,6 +1,10 @@
 project(wizards)
 
-include_directories(${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/kresources/lib)
+include_directories(
+    ${CMAKE_SOURCE_DIR}/knotes 
+    ${CMAKE_SOURCE_DIR}/kresources/lib
+    ${Boost_INCLUDE_DIR}
+    )
 
 add_subdirectory(tests)
 
