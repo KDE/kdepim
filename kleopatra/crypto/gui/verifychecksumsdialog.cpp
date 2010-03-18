@@ -36,9 +36,7 @@
 
 #include <KDebug>
 #include <KLocalizedString>
-#include <KPushButton>
-#include <KStandardGuiItem>
-#include <KUrl>
+#include <KMessageBox>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -50,6 +48,7 @@
 #include <QDirModel>
 #include <QProgressBar>
 #include <QDialogButtonBox>
+#include <QPushButton>
 
 #include <boost/static_assert.hpp>
 
@@ -194,6 +193,7 @@ public:
     explicit Private( VerifyChecksumsDialog * qq )
         : q( qq ),
           bases(),
+          errors(),
           model(),
           ui( q )
     {
@@ -201,41 +201,78 @@ public:
     }
 
 private:
+    void slotErrorButtonClicked() {
+        KMessageBox::errorList( q, i18n("The following errors and warnings were recorded:"),
+                                errors, i18n("Checksum Verification Errors") );
+    }
+
+private:
+    void updateErrors() {
+        const bool active = ui.isProgressBarActive();
+        ui.progressLabel.setVisible(  active );
+        ui.progressBar.  setVisible(  active );
+        ui.errorLabel.   setVisible( !active );
+        ui.errorButton.  setVisible( !active && !errors.empty() );
+        if ( errors.empty() )
+            ui.errorLabel.setText( i18n("No errors occurred" ) );
+        else
+            ui.errorLabel.setText( i18np( "One error occurred", "%1 errors occurred", errors.size() ) );
+    }
+
+private:
     QStringList bases;
+    QStringList errors;
     ColorizedFileSystemModel model;
     
     struct UI {
         std::vector<BaseWidget*> baseWidgets;
         QLabel progressLabel;
         QProgressBar progressBar;
+        QLabel errorLabel;
+        QPushButton errorButton;
         QDialogButtonBox buttonBox;
         QVBoxLayout vlay;
-        QHBoxLayout hlay;
+        QHBoxLayout hlay[2];
 
         explicit UI( VerifyChecksumsDialog * q )
             : baseWidgets(),
               progressLabel( i18n("Progress:"), q ),
               progressBar( q ),
+              errorLabel( i18n("No errors occurred"), q ),
+              errorButton( i18nc("Show Errors","Show"), q ),
               buttonBox( QDialogButtonBox::Close, Qt::Horizontal, q ),
-              vlay( q ),
-              hlay()
+              vlay( q )
         {
             KDAB_SET_OBJECT_NAME( progressLabel );
             KDAB_SET_OBJECT_NAME( progressBar );
+            KDAB_SET_OBJECT_NAME( errorLabel );
+            KDAB_SET_OBJECT_NAME( errorButton );
             KDAB_SET_OBJECT_NAME( buttonBox );
             KDAB_SET_OBJECT_NAME( vlay );
-            KDAB_SET_OBJECT_NAME( hlay );
+            KDAB_SET_OBJECT_NAME( hlay[0] );
+            KDAB_SET_OBJECT_NAME( hlay[1] );
 
-            hlay.addWidget( &progressLabel );
-            hlay.addWidget( &progressBar, 1 );
+            errorButton.setAutoDefault( false );
 
-            vlay.addLayout( &hlay );
+            hlay[0].addWidget( &progressLabel );
+            hlay[0].addWidget( &progressBar, 1 );
+
+            hlay[1].addWidget( &errorLabel, 1 );
+            hlay[1].addWidget( &errorButton );
+
+            vlay.addLayout( &hlay[0] );
+            vlay.addLayout( &hlay[1] );
             vlay.addWidget( &buttonBox );
+
+            errorLabel.hide();
+            errorButton.hide();
 
             QPushButton * close = closeButton();
 
             connect( close, SIGNAL(clicked()), q, SIGNAL(canceled()) );
             connect( close, SIGNAL(clicked()), q, SLOT(accept()) );
+
+            connect( &errorButton, SIGNAL(clicked()), q, SLOT(slotErrorButtonClicked()) );
         }
 
         ~UI() {
@@ -269,8 +306,12 @@ private:
         void setProgress( int cur, int tot ) {
             progressBar.setMaximum( tot );
             progressBar.setValue( cur );
-            progressBar.setVisible( !tot || cur != tot );
-            progressLabel.setVisible( !tot || cur != tot );
+        }
+
+        bool isProgressBarActive() const {
+            const int tot = progressBar.maximum();
+            const int cur = progressBar.value();
+            return !tot || cur != tot ;
         }
 
     } ui;
@@ -285,6 +326,7 @@ VerifyChecksumsDialog::VerifyChecksumsDialog( QWidget * parent, Qt::WindowFlags 
 
 VerifyChecksumsDialog::~VerifyChecksumsDialog() {}
 
+// slot
 void VerifyChecksumsDialog::setBaseDirectories( const QStringList & bases ) {
     if ( d->bases == bases )
         return;
@@ -293,8 +335,17 @@ void VerifyChecksumsDialog::setBaseDirectories( const QStringList & bases ) {
 }
 
 // slot
+void VerifyChecksumsDialog::setErrors( const QStringList & errors ) {
+    if ( d->errors == errors )
+        return;
+    d->errors = errors;
+    d->updateErrors();
+}
+
+// slot
 void VerifyChecksumsDialog::setProgress( int cur, int tot ) {
     d->ui.setProgress( cur, tot );
+    d->updateErrors();
 }
 
 // slot
@@ -304,6 +355,8 @@ void VerifyChecksumsDialog::setStatus( const QString & file, Status status ) {
 
 // slot
 void VerifyChecksumsDialog::clearStatusInformation() {
+    d->errors.clear();
+    d->updateErrors();
     d->model.clearStatusInformation();
 }
 

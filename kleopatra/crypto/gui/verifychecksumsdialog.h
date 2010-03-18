@@ -61,12 +61,14 @@ namespace Gui {
         void setBaseDirectories( const QStringList & bases );
         void setProgress( int current, int total );
         void setStatus( const QString & file, Kleo::Crypto::Gui::VerifyChecksumsDialog::Status status );
+        void setErrors( const QStringList & errors );
         void clearStatusInformation();
 
     Q_SIGNALS:
         void canceled();
 
     private:
+        Q_PRIVATE_SLOT( d, void slotErrorButtonClicked() )
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };
