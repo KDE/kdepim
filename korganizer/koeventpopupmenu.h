@@ -81,6 +81,7 @@ class KOEventPopupMenu : public QMenu
   private:
     QMenu *buildCalendarCopyMenu();
     QMenu *buildCalendarMoveMenu();
+    void print( bool preview );
     bool hasOtherWriteableCalendars() const;
     bool isResourceWritable( const ResourceCalendar *resource ) const;
 

@@ -173,34 +173,29 @@ void KOEventPopupMenu::popupEdit()
   }
 }
 
-void KOEventPopupMenu::print()
+void KOEventPopupMenu::print( bool preview )
 {
 #ifndef KORG_NOPRINTER
   KOCoreHelper helper;
-  CalPrinter printer( this, mCalendar, &helper );
+  CalPrinter printer( this, mCalendar, &helper, true );
   connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
 
   Incidence::List selectedIncidences;
   selectedIncidences.append( mCurrentIncidence );
 
   printer.print( KOrg::CalPrinterBase::Incidence,
-                 mCurrentDate, mCurrentDate, selectedIncidences, false );
+                 mCurrentDate, mCurrentDate, selectedIncidences, preview );
 #endif
+}
+
+void KOEventPopupMenu::print()
+{
+  print( false );
 }
 
 void KOEventPopupMenu::printPreview()
 {
-#ifndef KORG_NOPRINTER
-  KOCoreHelper helper;
-  CalPrinter printer( this, mCalendar, &helper );
-  connect( this, SIGNAL(configChanged()), &printer, SLOT(updateConfig()) );
-
-  Incidence::List selectedIncidences;
-  selectedIncidences.append( mCurrentIncidence );
-
-  printer.print( KOrg::CalPrinterBase::Incidence,
-                 mCurrentDate, mCurrentDate, selectedIncidences, true );
-#endif
+  print( true );
 }
 
 void KOEventPopupMenu::popupDelete()
