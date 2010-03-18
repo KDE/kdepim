@@ -1,7 +1,7 @@
 KDE4_NO_ENABLE_FINAL(libkdepim)
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-add_definitions(-DQT3_SUPPORT_WARNINGS)
+#add_definitions(-DQT3_SUPPORT_WARNINGS)
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5300)
 
 add_subdirectory(tests)
@@ -22,8 +22,6 @@ set(kdepim_LIB_SRCS
    addressesdialog.cpp
    addresseeview.cpp
    maillistdrag.cpp
-   kconfigpropagator.cpp
-   kconfigwizard.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
    ktimezonecombobox.cpp
@@ -41,7 +39,6 @@ set(kdepim_LIB_SRCS
    kaddrbookexternal.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
-   embeddedurlpage.cpp
    csshelper.cpp
    distributionlist.cpp 
    sendsmsdialog.cpp

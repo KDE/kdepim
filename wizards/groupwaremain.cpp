@@ -49,9 +49,8 @@ int main( int argc, char **argv )
   if ( args->isSet( "serverType" ) )
     serverType = args->getOption( "serverType" );
   args->clear();
-  GroupwareWizard wizard( 0 );
-  app.setMainWidget( &wizard );
 
+  GroupwareWizard wizard( 0 );
   wizard.show();
 
   return app.exec();

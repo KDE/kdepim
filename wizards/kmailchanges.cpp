@@ -33,6 +33,9 @@
 #include <kstringhandler.h>
 #include <krandom.h>
 #include <kwallet.h>
+
+#include <QtGui/QWidget>
+
 using namespace KWallet;
 
 static const char* s_folderContentsType[] = {

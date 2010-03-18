@@ -33,8 +33,6 @@
 #include <QLayout>
 #include <QVBoxLayout>
 
-using namespace KPIM;
-
 EmbeddedURLPage::EmbeddedURLPage( const QString &url, const QString &mimetype,
                                   QWidget *parent )
   : QWidget( parent ), mUri(url), mMimeType( mimetype ), mPart( 0 )

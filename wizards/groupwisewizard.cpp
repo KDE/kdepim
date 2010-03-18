@@ -288,7 +288,8 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   label = new QLabel( i18n("Port:"));
   topLayout->addWidget( label, 2, 0 );
-  mPortEdit = new QSpinBox( 1, 65536, 1, this );
+  mPortEdit = new QSpinBox( this );
+  mPortEdit->setRange( 1, 65536 );
   topLayout->addWidget( mPortEdit, 2, 1 );
 
   label = new QLabel( i18n("User name:") );

@@ -20,14 +20,12 @@
 #ifndef GROUPWISEWIZARD_H
 #define GROUPWISEWIZARD_H
 
-#include <kconfigwizard.h>
+#include "kconfigwizard.h"
 
 class KLineEdit;
 class QCheckBox;
 class QSpinBox;
 class QGroupBox;
-
-using namespace KPIM;
 
 class GroupwiseWizard : public KConfigWizard
 {

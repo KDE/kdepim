@@ -20,12 +20,10 @@
 #ifndef SLOXWIZARD_H
 #define SLOXWIZARD_H
 
-#include <kconfigwizard.h>
+#include "kconfigwizard.h"
 
 class KLineEdit;
 class QCheckBox;
-
-using namespace KPIM;
 
 class SloxWizard : public KConfigWizard
 {

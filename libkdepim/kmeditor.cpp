@@ -31,9 +31,11 @@
 
 #include <QApplication>
 #include <QClipboard>
+#include <QKeyEvent>
 #include <QPointer>
 #include <QProcess>
 #include <QShortcut>
+#include <QTextLayout>
 #include <QTimer>
 
 using namespace KPIMTextEdit;

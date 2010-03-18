@@ -18,18 +18,16 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_EMBEDDEDURLPAGE_H
-#define KDEPIM_EMBEDDEDURLPAGE_H
 
-#include "kdepim_export.h"
+#ifndef EMBEDDEDURLPAGE_H
+#define EMBEDDEDURLPAGE_H
+
 #include <KUrl>
 #include <QWidget>
 
 namespace KParts { class ReadOnlyPart; }
 
-namespace KPIM {
-
-class KDEPIM_EXPORT EmbeddedURLPage : public QWidget
+class EmbeddedURLPage : public QWidget
 {
     Q_OBJECT
   public:
@@ -47,7 +45,5 @@ class KDEPIM_EXPORT EmbeddedURLPage : public QWidget
     QString mMimeType;
     KParts::ReadOnlyPart* mPart;
 };
-
-}
 
 #endif

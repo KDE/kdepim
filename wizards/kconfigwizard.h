@@ -18,23 +18,20 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_KCONFIGWIZARD_H
-#define KDEPIM_KCONFIGWIZARD_H
+#ifndef KCONFIGWIZARD_H
+#define KCONFIGWIZARD_H
 
-#include "kdepim_export.h"
 #include <KPageDialog>
 
 class QTreeWidget;
 class KPageWidgetItem;
-
-namespace KPIM {
 
 class KConfigPropagator;
 
 /**
   @short Configuration wizard base class
 */
-class KDEPIM_EXPORT KConfigWizard : public KPageDialog
+class KConfigWizard : public KPageDialog
 {
   Q_OBJECT
   public:
@@ -112,7 +109,5 @@ class KDEPIM_EXPORT KConfigWizard : public KPageDialog
 
     KPageWidgetItem *mChangesPage;
 };
-
-}
 
 #endif

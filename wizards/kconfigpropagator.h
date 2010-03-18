@@ -18,10 +18,8 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_KCONFIGPROPAGATOR_H
-#define KDEPIM_KCONFIGPROPAGATOR_H
-
-#include "kdepim_export.h"
+#ifndef KCONFIGPROPAGATOR_H
+#define KCONFIGPROPAGATOR_H
 
 #include <QDomElement>
 #include <QList>
@@ -30,9 +28,7 @@
 class KConfigSkeleton;
 class KConfigSkeletonItem;
 
-namespace KPIM {
-
-class KDEPIM_EXPORT KConfigPropagator
+class KConfigPropagator
 {
   public:
 
@@ -56,7 +52,7 @@ class KDEPIM_EXPORT KConfigPropagator
     */
     void commit();
 
-    class KDEPIM_EXPORT Condition
+    class Condition
     {
       public:
         Condition() : isValid( false ) {}
@@ -69,7 +65,7 @@ class KDEPIM_EXPORT KConfigPropagator
         bool isValid;
     };
 
-    class KDEPIM_EXPORT Rule
+    class Rule
     {
       public:
         typedef QList<Rule> List;
@@ -89,7 +85,7 @@ class KDEPIM_EXPORT KConfigPropagator
         bool hideValue;
     };
 
-    class KDEPIM_EXPORT Change
+    class Change
     {
       public:
         typedef QList<Change*> List;
@@ -109,7 +105,7 @@ class KDEPIM_EXPORT KConfigPropagator
         QString mTitle;
     };
 
-    class KDEPIM_EXPORT ChangeConfig : public Change
+    class ChangeConfig : public Change
     {
       public:
         ChangeConfig();
@@ -162,7 +158,5 @@ class KDEPIM_EXPORT KConfigPropagator
     Rule::List mRules;
     Change::List mChanges;
 };
-
-}
 
 #endif

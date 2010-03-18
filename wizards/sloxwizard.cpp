@@ -21,8 +21,7 @@
 #include "sloxwizard.h"
 #include "sloxconfig.h"
 
-#include "libkdepim/kconfigpropagator.h"
-
+#include "kconfigpropagator.h"
 #include "kresources/slox/kabcsloxprefs.h"
 #include "kresources/slox/kabcresourceslox.h"
 #include "kresources/slox/kcalsloxprefs.h"

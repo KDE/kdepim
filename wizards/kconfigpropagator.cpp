@@ -34,8 +34,6 @@
 #include <boost/bind.hpp>
 #include <algorithm>
 
-using namespace KPIM;
-
 KConfigPropagator::Change::~Change()
 {
 }

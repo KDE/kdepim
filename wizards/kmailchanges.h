@@ -22,10 +22,9 @@
 #ifndef KMAILCHANGES_H
 #define KMAILCHANGES_H
 
-#include <kconfigpropagator.h>
 #include <kconfig.h>
 
-using namespace KPIM;
+#include "kconfigpropagator.h"
 
 namespace KWallet {
   class Wallet;

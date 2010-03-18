@@ -36,8 +36,6 @@
 #include <QVBoxLayout>
 #include <QTreeWidget>
 
-using namespace KPIM;
-
 KConfigWizard::KConfigWizard( QWidget *parent, bool modal )
   : KPageDialog( parent ), mPropagator( 0 ), mChangesPage( 0 )
 {

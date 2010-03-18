@@ -34,8 +34,6 @@
 #include <QFrame>
 #include <QLayout>
 
-using namespace KPIM;
-
 class TestConfigWizard : public KConfigWizard
 {
   public:
