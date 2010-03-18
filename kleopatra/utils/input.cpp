@@ -39,7 +39,8 @@
 #include "kdpipeiodevice.h"
 #include "log.h"
 #include "kleo_assert.h"
-#include "exception.h"
+
+#include <kleo/exception.h>
 
 #include <KLocale>
 

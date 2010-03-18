@@ -54,9 +54,11 @@ set(libkleo_backend_chiasmus_SRCS
 
 
 set(libkleo_core_SRCS
+   kleo/checksumdefinition.cpp
    kleo/cryptobackend.cpp
    kleo/cryptobackendfactory.cpp
    kleo/enum.cpp
+   kleo/exception.cpp
    kleo/dn.cpp
    kleo/job.cpp
    kleo/multideletejob.cpp
@@ -116,12 +118,14 @@ set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION $
 install(TARGETS kleo DESTINATION ${LIB_INSTALL_DIR})
 
 install( FILES
+	kleo/checksumdefinition.h
 	kleo/cryptplug.h
 	kleo/cryptplugfactory.h
 	kleo/cryptplugwrapper.h
 	kleo/cryptplugwrapperlist.h
 	kleo/kleo_export.h
 	kleo/enum.h
+        kleo/exception.h
 	kleo/oidmap.h
 	kleo/cryptobackend.h
 	kleo/cryptobackendfactory.h

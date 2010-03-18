@@ -4,7 +4,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_BINARY_DIR}/kleopatra
 ########### next target ###############
 
 if ( PORT_ME_AWAY_FROM_EVENT_LOOPS )
-set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp ../utils/formatting.cpp ../utils/exception.cpp )
+set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp ../utils/formatting.cpp )
 if ( KLEO_MODEL_TEST )
    set(test_keylistmodels_SRCS ${test_keylistmodels_SRCS} ../models/modeltest.cpp )
 endif ( KLEO_MODEL_TEST )
@@ -15,7 +15,7 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-set(test_useridlistmodels_SRCS test_useridlistmodels.cpp ../models/useridlistmodel.cpp ../utils/formatting.cpp ../utils/exception.cpp )
+set(test_useridlistmodels_SRCS test_useridlistmodels.cpp ../models/useridlistmodel.cpp ../utils/formatting.cpp )
 if ( KLEO_MODEL_TEST )
    set(test_useridlistmodels_SRCS ${test_useridlistmodels_SRCS} ../models/modeltest.cpp )
 endif ( KLEO_MODEL_TEST )
@@ -50,7 +50,7 @@ if ( USABLE_ASSUAN_FOUND  )
 
   add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_2 )
 
-  set(test_uiserver_SRCS test_uiserver.cpp ../utils/exception.cpp ../utils/wsastarter.cpp ../utils/hex.cpp )
+  set(test_uiserver_SRCS test_uiserver.cpp ../utils/wsastarter.cpp ../utils/hex.cpp )
 
 #FIXME: omitting TEST makes test_uiserver print output again on a Win32 console;
 # find a better fix for this issue
@@ -61,9 +61,9 @@ if ( USABLE_ASSUAN_FOUND  )
   endif(WIN32)
 
   if ( ASSUAN2_FOUND )
-    target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} ${ASSUAN2_LIBRARIES})
+    target_link_libraries(test_uiserver kleo ${KDE4_KDECORE_LIBS} ${ASSUAN2_LIBRARIES})
   else ( ASSUAN2_FOUND )
-    target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} ${ASSUAN_LIBRARIES})
+    target_link_libraries(test_uiserver kleo ${KDE4_KDECORE_LIBS} ${ASSUAN_LIBRARIES})
   endif ( ASSUAN2_FOUND )
 
   if(WIN32)

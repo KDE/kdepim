@@ -51,10 +51,11 @@
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>
-#include <utils/exception.h>
 #include <utils/kleo_assert.h>
 #include <utils/getpid.h>
 #include <utils/stl_util.h>
+
+#include <kleo/exception.h>
 
 #include <gpgme++/data.h>
 #include <gpgme++/key.h>

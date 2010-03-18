@@ -132,7 +132,6 @@ set( _kleopatra_SRCS
   utils/path-helper.cpp
   utils/input.cpp
   utils/output.cpp
-  utils/exception.cpp
   utils/formatting.cpp
   utils/validation.cpp
   utils/wsastarter.cpp
@@ -142,7 +141,6 @@ set( _kleopatra_SRCS
   utils/action_data.cpp
   utils/types.cpp
   utils/archivedefinition.cpp
-  utils/checksumdefinition.cpp
   utils/auditlog.cpp
 
   selftest/selftest.cpp

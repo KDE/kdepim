@@ -37,7 +37,8 @@
 #include "implementation_p.h"
 
 #include <utils/archivedefinition.h>
-#include <utils/checksumdefinition.h>
+
+#include <kleo/checksumdefinition.h>
 
 #include <KLocale>
 #include <KMessageBox>

@@ -37,9 +37,10 @@
 #include <crypto/newsignencryptemailcontroller.h>
 
 #include <utils/kleo_assert.h>
-#include <utils/exception.h>
 #include <utils/input.h>
 #include <utils/output.h>
+
+#include <kleo/exception.h>
 
 #include <KLocale>
 

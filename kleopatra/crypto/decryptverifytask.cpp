@@ -41,6 +41,7 @@
 #include <kleo/decryptjob.h>
 #include <kleo/decryptverifyjob.h>
 #include <kleo/dn.h>
+#include <kleo/exception.h>
 
 #include <models/keycache.h>
 #include <models/predicates.h>
@@ -52,7 +53,6 @@
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
-#include <utils/exception.h>
 #include <utils/auditlog.h>
 
 #include <kmime/kmime_header_parsing.h>

@@ -36,7 +36,7 @@
 
 #include <commands/importcertificatefromfilecommand.h>
 
-#include <utils/exception.h>
+#include <kleo/exception.h>
 
 #include <gpgme++/key.h>
 

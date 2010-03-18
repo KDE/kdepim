@@ -35,7 +35,8 @@
 #include "path-helper.h"
 
 #include <utils/stl_util.h>
-#include <utils/exception.h>
+
+#include <kleo/exception.h>
 
 #include <KLocalizedString>
 
