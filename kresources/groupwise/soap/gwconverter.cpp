@@ -21,7 +21,6 @@
 #include "gwconverter.h"
 
 #include <KTimeZone>
-#include <libkdepim/kpimprefs.h>
 
 #include <kdebug.h>
 //Added by qt3to4:

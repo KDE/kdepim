@@ -27,11 +27,11 @@
 
 #include <kcal/calendar.h>
 #include <kcal/incidence.h>
-#include <libkdepim/kpimprefs.h>
 
 #include <kabc/addressee.h>
 #include <kabc/addresseelist.h>
 
+#include <kconfiggroup.h>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
 #include <kio/netaccess.h>

@@ -36,10 +36,9 @@
 
 #include <kcal/incidence.h>
 
-#include <libkdepim/kpimprefs.h>
-
 #include <kdebug.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 
 #include <QFile>
 

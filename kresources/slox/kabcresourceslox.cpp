@@ -27,7 +27,6 @@
 #include <kcodecs.h>
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
-#include <libkdepim/kpimprefs.h>
 #include <libkdepim/progressmanager.h>
 #include <kio/jobuidelegate.h>
 #include <kio/davjob.h>

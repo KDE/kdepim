@@ -42,7 +42,6 @@
 #include <kstandarddirs.h>
 #include <kstringhandler.h>
 #include <kurl.h>
-#include <libkdepim/kpimprefs.h>
 
 using namespace KCal;
 

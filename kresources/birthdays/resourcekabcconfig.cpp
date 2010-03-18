@@ -34,7 +34,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <krestrictedline.h>
-#include <categoryselectdialog.h>
 
 #include "resourcekabc.h"
 #include "resourcekabcconfig.h"
@@ -64,6 +63,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
   mUseCategories = new QCheckBox( i18n( "Filter by categories" ), this );
   topLayout->addWidget( mUseCategories, 3, 0, 1, 2 );
 /*
+  //TODO: replace with Nepomuk tags
   KABPrefs *prefs = KABPrefs::instance();
   mCategoryView = new KPIM::CategorySelectWidget(this,prefs);
   mCategoryView->setCategories(prefs->customCategories());
