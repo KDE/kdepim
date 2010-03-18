@@ -48,7 +48,7 @@ Rectangle {
     }
     MouseArea  {
       anchors.fill: parent
-      onClicked: topLevel.state = 'collectionListState'
+      onClicked: topLevel.state = "collectionListState"
     }
   }
 
@@ -56,20 +56,21 @@ Rectangle {
     id: collectionList
     anchors.fill: parent
     model: collectionModel
-    onCollectionSelected: topLevel.state = 'headerListState'
+    onCollectionSelected: topLevel.state = "headerListState"
   }
 
   HeaderView {
     id: headerList
     anchors.fill: parent
     model: itemModel
+    onMessageSelected: topLevel.state = "homeScreen"
   }
 
   states: [
     State {
       name: "homeScreenState"
       PropertyChanges {
-        target: homeScreen;
+        target: homeScreen
         visible: true
       }
       PropertyChanges {
@@ -113,7 +114,7 @@ Rectangle {
     }
   ]
 
-  state: "homeScreenState";
+  state: "homeScreenState"
 
   Binding {
     target: application

@@ -19,6 +19,7 @@
 */
 
 #include "mainview.h"
+#include "messagelistproxy.h"
 
 #include <libkdepim/kdescendantsproxymodel_p.h>
 
@@ -66,8 +67,11 @@ MainView::MainView(QWidget* parent) :
   itemFilter->setSourceModel( selectionProxyModel );
   itemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
+  MessageListProxy *messageProxy = new MessageListProxy( this );
+  messageProxy->setSourceModel( itemFilter );
+
   engine()->rootContext()->setContextProperty( "collectionModel", QVariant::fromValue( static_cast<QObject*>( flatProxy ) ) );
-  engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( itemFilter ) ) );
+  engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( messageProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   const QString qmlPath = KStandardDirs::locate( "appdata", "kmail-mobile.qml" );

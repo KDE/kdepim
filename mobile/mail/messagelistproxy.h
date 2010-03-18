@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2010 Stephen Kelly <steveire@gmail.com>
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,28 +17,26 @@
     02110-1301, USA.
 */
 
-#ifndef MAINVIEW_H
-#define MAINVIEW_H
+#ifndef MESSAGELISTPROXY_H
+#define MESSAGELISTPROXY_H
 
-#include <QtDeclarative/QDeclarativeView>
+#include <QtGui/QSortFilterProxyModel>
+#include <akonadi/entitytreemodel.h>
 
-class QItemSelectionModel;
-
-/** The new KMMainWidget ;-) */
-class MainView : public QDeclarativeView
+/** Proxy model to provide roles for accessing KMime::Message properties from QML. */
+class MessageListProxy : public QSortFilterProxyModel
 {
   Q_OBJECT
-  Q_PROPERTY( int collectionRow READ selectedCollectionRow WRITE setSelectedCollectionRow )
-
   public:
-    explicit MainView(QWidget* parent = 0);
+    explicit MessageListProxy(QObject* parent = 0);
+    enum Role {
+      SubjectRole = Akonadi::EntityTreeModel::UserRole,
+      FromRole,
+      DateRole
+    };
 
-  public:
-    int selectedCollectionRow() const;
-    void setSelectedCollectionRow( int row );
-
-  private:
-    QItemSelectionModel *m_collectionSelection;
+    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
+    void setSourceModel(QAbstractItemModel* sourceModel);
 };
 
 #endif

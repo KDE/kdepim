@@ -1,8 +1,11 @@
 project( kmail-mobile )
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
 set(kmail_mobile_srcs
   mainview.cpp
   main.cpp
+  messagelistproxy.cpp
 )
 
 kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )

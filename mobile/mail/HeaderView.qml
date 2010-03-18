@@ -25,8 +25,10 @@ import org.kde 4.5
     @param currentIndex: Index of the currently selected row.
  */
 Rectangle {
+  id: headerViewTopLevel
   property alias model: messageListView.model
   property alias currentIndex: messageListView.currentIndex
+  signal messageSelected
 
   SystemPalette { id: palette; colorGroup: Qt.Active }
   Component {
@@ -49,30 +51,22 @@ Rectangle {
           anchors.fill: parent
           onClicked: {
             wrapper.ListView.view.currentIndex = model.index;
+            headerViewTopLevel.messageSelected()
           }
       }
 
-      Row {
-        id: topLayout
-        x: 10; y: 10;
-        height: collectionIcon.height;
-        width: parent.width
-        spacing: 10
-
-        Image {
-            id: collectionIcon
-            pixmap: KDE.iconToPixmap( model.decoration, height );
-            width: 48; height: 48
+      Column {
+        anchors.fill: parent
+        spacing: 5
+        Text {
+          text: model.subject
+          font.bold: true
         }
-
-        Column {
-          height: collectionIcon.height
-          width: background.width - collectionIcon.width - 20
-          spacing: 5
-          Text {
-            text : model.display
-            font.bold: true
-          }
+        Text {
+          text: "From: " + model.from
+        }
+        Text {
+          text: "Date: " + model.date
         }
       }
     }
