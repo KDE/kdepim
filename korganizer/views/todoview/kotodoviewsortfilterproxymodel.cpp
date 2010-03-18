@@ -103,7 +103,7 @@ bool KOTodoViewSortFilterProxyModel::lessThan( const QModelIndex &left,
     // unspecified priority is a low priority, so, if we don't have two QVariant:Ints
     // we return true ("left is less, i.e. higher prio") if right is a string ("--").
     if ( leftIsString || rightIsString ) {
-      return rightIsString;
+      return leftIsString;
     }
   }
 
