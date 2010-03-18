@@ -20,10 +20,11 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_CATEGORYEDITDIALOG_H
-#define KDEPIM_CATEGORYEDITDIALOG_H
+#ifndef CATEGORYEDITDIALOG_H
+#define CATEGORYEDITDIALOG_H
 
-#include "kdepim_export.h"
+#include "korganizer_export.h"
+
 #include <KDialog>
 
 class QTreeWidgetItem;
@@ -32,11 +33,9 @@ namespace Ui {
   class CategoryEditDialog_base;
 }
 
-namespace KPIM {
-
 class CategoryConfig;
 
-class KDEPIM_EXPORT CategoryEditDialog : public KDialog
+class KORGANIZER_CORE_EXPORT CategoryEditDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -70,7 +69,5 @@ class KDEPIM_EXPORT CategoryEditDialog : public KDialog
     CategoryConfig *mCategoryConfig;
     Ui::CategoryEditDialog_base *mWidgets;
 };
-
-}
 
 #endif

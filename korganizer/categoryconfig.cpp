@@ -20,7 +20,7 @@
   Boston, MA 02110-1301, USA.
 */
 
-#include "kpimprefs.h"
+#include "categoryconfig.h"
 
 #include <KConfigGroup>
 #include <KConfigSkeleton>
@@ -28,8 +28,6 @@
 
 #include <QString>
 #include <QStringList>
-
-using namespace KPIM;
 
 static QStringList categoryDefaults()
 {
@@ -106,4 +104,4 @@ void CategoryConfig::setCustomCategories( const QStringList& categories )
 
 const QString CategoryConfig::categorySeparator( ":" );
 
-#include "kpimprefs.moc"
+#include "categoryconfig.moc"

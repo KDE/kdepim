@@ -18,9 +18,6 @@ set(kdepim_LIB_SRCS
    kcheckcombobox.cpp
    ktimeedit.cpp
    kprefsdialog.cpp
-   kpimprefs.cpp
-   categoryselectdialog.cpp
-   categoryeditdialog.cpp
    kdateedit.cpp
    kvcarddrag.cpp
    addressesdialog.cpp
@@ -51,10 +48,8 @@ set(kdepim_LIB_SRCS
    csshelper.cpp
    distributionlist.cpp 
    sendsmsdialog.cpp
-   categoryhierarchyreader.cpp
    kmailcompletion.cpp
    kmeditor.cpp
-   autochecktreewidget.cpp
    uistatesaver.cpp
    contactsfilterproxymodel.cpp
    contactstreemodel.cpp
@@ -67,8 +62,6 @@ if (KDEPIMLIBS_KRESOURCES_LIBRARY)
 endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
 
 kde4_add_ui_files(kdepim_LIB_SRCS
-  categoryselectdialog_base.ui
-  categoryeditdialog_base.ui
   addresspicker.ui
 )
 

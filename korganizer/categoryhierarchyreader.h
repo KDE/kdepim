@@ -18,10 +18,10 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_CATEGORYHIERARCHYREADER_H
-#define KDEPIM_CATEGORYHIERARCHYREADER_H
+#ifndef CATEGORYHIERARCHYREADER_H
+#define CATEGORYHIERARCHYREADER_H
 
-#include "kdepim_export.h"
+#include "korganizer_export.h"
 
 class QComboBox;
 class QStringList;
@@ -29,9 +29,7 @@ class QString;
 class QTreeWidget;
 class QTreeWidgetItem;
 
-namespace KPIM {
-
-class KDEPIM_EXPORT CategoryHierarchyReader
+class KORGANIZER_CORE_EXPORT CategoryHierarchyReader
 {
   public:
     void read( QStringList categories );
@@ -45,7 +43,7 @@ class KDEPIM_EXPORT CategoryHierarchyReader
     virtual int depth() const = 0;
 };
 
-class KDEPIM_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
+class KORGANIZER_CORE_EXPORT CategoryHierarchyReaderQComboBox : public CategoryHierarchyReader
 {
   public:
     CategoryHierarchyReaderQComboBox( QComboBox *box )
@@ -80,7 +78,5 @@ class CategoryHierarchyReaderQTreeWidget : public CategoryHierarchyReader
     QTreeWidgetItem *mItem;
     int mCurrentDepth;
 };
-
-}
 
 #endif

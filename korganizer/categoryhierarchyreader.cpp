@@ -20,13 +20,11 @@
 */
 
 #include "categoryhierarchyreader.h"
+#include "categoryconfig.h"
 #include "autochecktreewidget.h"
-#include "kpimprefs.h"
 
 #include <QComboBox>
 #include <QStringList>
-
-using namespace KPIM;
 
 inline QString &quote( QString &string )
 {

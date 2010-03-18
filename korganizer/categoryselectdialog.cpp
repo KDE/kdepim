@@ -23,7 +23,7 @@
 #include "categoryselectdialog.h"
 #include "categoryhierarchyreader.h"
 #include "autochecktreewidget.h"
-#include "kpimprefs.h"
+#include "categoryconfig.h"
 #include "ui_categoryselectdialog_base.h"
 
 #include <KLocale>
@@ -31,9 +31,6 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QHeaderView>
-
-namespace KPIM
-{
 
 class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog_base
 {
@@ -46,10 +43,6 @@ class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog
       mButtonEdit->setIcon( KIcon( "document-properties" ) );
     }
 };
-
-}
-
-using namespace KPIM;
 
 CategorySelectWidget::CategorySelectWidget( CategoryConfig *cc, QWidget *parent )
   : QWidget( parent ), mCategoryConfig( cc )
@@ -69,7 +62,7 @@ CategorySelectWidget::~CategorySelectWidget()
 {
 }
 
-KPIM::AutoCheckTreeWidget *CategorySelectWidget::listView() const
+AutoCheckTreeWidget *CategorySelectWidget::listView() const
 {
    return mWidgets->mCategories;
 }

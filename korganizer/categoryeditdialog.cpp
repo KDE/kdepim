@@ -23,16 +23,14 @@
 
 #include "categoryeditdialog.h"
 #include "ui_categoryeditdialog_base.h"
+#include "categoryconfig.h"
 #include "categoryhierarchyreader.h"
-#include "kpimprefs.h"
 
 #include <KLocale>
 
 #include <QHeaderView>
 #include <QList>
 #include <QStringList>
-
-using namespace KPIM;
 
 CategoryEditDialog::CategoryEditDialog( CategoryConfig *categoryConfig, QWidget *parent )
   : KDialog( parent ), mCategoryConfig( categoryConfig )

@@ -18,13 +18,10 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_AUTOCHECKTREEWIDGET_H
-#define KDEPIM_AUTOCHECKTREEWIDGET_H
+#ifndef AUTOCHECKTREEWIDGET_H
+#define AUTOCHECKTREEWIDGET_H
 
-#include "kdepim_export.h"
 #include <QTreeWidget>
-
-namespace KPIM {
 
 /**
   A tree widget which supports auto selecting child items, when clicking
@@ -35,7 +32,7 @@ namespace KPIM {
 
   @author Mathias Soeken <msoeken@tzi.de>
  */
-class KDEPIM_EXPORT AutoCheckTreeWidget : public QTreeWidget {
+class AutoCheckTreeWidget : public QTreeWidget {
   Q_OBJECT
 
   Q_PROPERTY( bool autoCheckChildren
@@ -114,7 +111,5 @@ class KDEPIM_EXPORT AutoCheckTreeWidget : public QTreeWidget {
     Private *const d;
     //@endcond
 };
-
-}
 
 #endif

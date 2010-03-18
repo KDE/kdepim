@@ -19,20 +19,19 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_CATEGORYSELECTDIALOG_H
-#define KDEPIM_CATEGORYSELECTDIALOG_H
 
-#include "kdepim_export.h"
+#ifndef CATEGORYSELECTDIALOG_H
+#define CATEGORYSELECTDIALOG_H
+
+#include "korganizer_export.h"
 
 #include <KDialog>
-
-namespace KPIM {
 
 class CategoryConfig;
 class AutoCheckTreeWidget;
 class CategorySelectWidgetBase;
 
-class KDEPIM_EXPORT CategorySelectWidget : public QWidget
+class CategorySelectWidget : public QWidget
 {
   Q_OBJECT
   public:
@@ -51,7 +50,7 @@ class KDEPIM_EXPORT CategorySelectWidget : public QWidget
     void hideButton();
     void hideHeader();
 
-    KPIM::AutoCheckTreeWidget *listView() const;
+    AutoCheckTreeWidget *listView() const;
 
   public Q_SLOTS:
     void clear();
@@ -65,7 +64,7 @@ class KDEPIM_EXPORT CategorySelectWidget : public QWidget
     CategoryConfig *mCategoryConfig;
 };
 
-class KDEPIM_EXPORT CategorySelectDialog : public KDialog
+class KORGANIZER_CORE_EXPORT CategorySelectDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -94,7 +93,5 @@ class KDEPIM_EXPORT CategorySelectDialog : public KDialog
     class CategorySelectDialogPrivate;
     CategorySelectDialogPrivate *d;
 };
-
-}
 
 #endif

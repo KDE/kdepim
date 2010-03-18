@@ -19,10 +19,10 @@
   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
   Boston, MA 02110-1301, USA.
 */
-#ifndef KDEPIM_KPIMPREFS_H
-#define KDEPIM_KPIMPREFS_H
+#ifndef CATEGORYCONFIG_H
+#define CATEGORYCONFIG_H
 
-#include "kdepim_export.h"
+#include "korganizer_export.h"
 
 #include <KConfigSkeleton>
 
@@ -32,9 +32,7 @@ class QString;
 
 class KConfig;
 
-namespace KPIM {
-
-class KDEPIM_EXPORT CategoryConfig : public QObject
+class KORGANIZER_CORE_EXPORT CategoryConfig : public QObject
 {
   Q_OBJECT
 public:
@@ -53,7 +51,5 @@ private:
   Private* const d;
   Q_PRIVATE_SLOT( d, void configChanged() )
 };
-
-}
 
 #endif

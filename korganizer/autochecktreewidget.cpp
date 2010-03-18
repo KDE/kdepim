@@ -22,8 +22,6 @@
 
 #include <QAbstractItemModel>
 
-namespace KPIM {
-
 //@cond PRIVATE
 class AutoCheckTreeWidget::Private {
   public:
@@ -152,8 +150,6 @@ void AutoCheckTreeWidget::slotDataChanged( const QModelIndex &topLeft,
       item1->child( i )->setCheckState( 0, item1->checkState( 0 ) );
     }
   }
-}
-
 }
 
 #include "autochecktreewidget.moc"
