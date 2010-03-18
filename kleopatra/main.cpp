@@ -57,6 +57,7 @@
 # include <uiserver/selectcertificatecommand.h>
 # include <uiserver/importfilescommand.h>
 # include <uiserver/createchecksumscommand.h>
+# include <uiserver/verifychecksumscommand.h>
 #else
 namespace Kleo {
     class UiServer;
@@ -230,6 +231,7 @@ int main( int argc, char** argv )
       REGISTER( SignCommand );
       REGISTER( SignEncryptFilesCommand );
       REGISTER( SignFilesCommand );
+      REGISTER( VerifyChecksumsCommand );
       REGISTER( VerifyCommand );
       REGISTER( VerifyFilesCommand );
 #undef REGISTER
