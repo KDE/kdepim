@@ -37,6 +37,8 @@
 
 #include "emailoperationspreferences.h"
 
+#include <kleo/checksumdefinition.h>
+
 #include <kconfig.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -44,8 +46,11 @@
 
 #include <QLayout>
 
+#include <boost/shared_ptr.hpp>
+
 using namespace Kleo;
 using namespace Kleo::Config;
+using namespace boost;
 
 class CryptoOperationsConfigWidget::Private {
     friend class ::Kleo::Config::CryptoOperationsConfigWidget;
@@ -64,8 +69,6 @@ private:
 
             if ( QLayout * const l = q->layout() )
                 l->setMargin( 0 );
-
-            tabWidget->removeTab( 1 ); // ### until implemented
 
             connect( quickSignCB,    SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
             connect( quickEncryptCB, SIGNAL(toggled(bool)), q, SIGNAL(changed()) );
@@ -92,19 +95,24 @@ void CryptoOperationsConfigWidget::defaults() {
         d->ui.checksumDefinitionCB->setCurrentIndex( 0 );
 }
 
+Q_DECLARE_METATYPE( boost::shared_ptr<Kleo::ChecksumDefinition> )
+
 void CryptoOperationsConfigWidget::load() {
 
     const EMailOperationsPreferences emailPrefs;
     d->ui.quickSignCB   ->setChecked( emailPrefs.quickSignEMail()    );
     d->ui.quickEncryptCB->setChecked( emailPrefs.quickEncryptEMail() );
 
-#if 0
-    const std::vector< 
+    const std::vector< shared_ptr<ChecksumDefinition> > cds = ChecksumDefinition::getChecksumDefinitions();
+    const shared_ptr<ChecksumDefinition> default_cd = ChecksumDefinition::getDefaultChecksumDefinition( cds );
 
-    const KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
-    const QString checksumDefinitionId = group.readEntry( CHECKSUM_DEFINITION_ID_ENTRY );
-#endif
+    d->ui.checksumDefinitionCB->clear();
 
+    Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, cds ) {
+        d->ui.checksumDefinitionCB->addItem( cd->label(), qVariantFromValue( cd  ) );
+        if ( cd == default_cd )
+            d->ui.checksumDefinitionCB->setCurrentIndex( d->ui.checksumDefinitionCB->count() - 1 );
+    }
 }
 
 void CryptoOperationsConfigWidget::save() {
@@ -113,9 +121,12 @@ void CryptoOperationsConfigWidget::save() {
     emailPrefs.setQuickSignEMail   ( d->ui.quickSignCB   ->isChecked() );
     emailPrefs.setQuickEncryptEMail( d->ui.quickEncryptCB->isChecked() );
 
-#if 0
-    KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
-#endif
+    const int idx = d->ui.checksumDefinitionCB->currentIndex();
+    if ( idx < 0 )
+        return; // ### pick first?
+    const shared_ptr<ChecksumDefinition> cd = qvariant_cast< shared_ptr<ChecksumDefinition> >( d->ui.checksumDefinitionCB->itemData( idx ) );
+    ChecksumDefinition::setDefaultChecksumDefinition( cd );
+
 }
 
 #include "moc_cryptooperationsconfigwidget.cpp"
