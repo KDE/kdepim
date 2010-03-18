@@ -196,6 +196,7 @@ set( _kleopatra_SRCS
   crypto/signemailtask.cpp
   crypto/signemailcontroller.cpp
   crypto/createchecksumscontroller.cpp
+  crypto/verifychecksumscontroller.cpp
 
   crypto/gui/wizard.cpp
   crypto/gui/wizardpage.cpp
