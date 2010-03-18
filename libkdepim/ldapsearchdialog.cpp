@@ -21,8 +21,6 @@
 #include "ldapsearchdialog.h"
 #include "ldapclient.h"
 
-#include <kabc/addresslineedit.h>
-
 #include <kapplication.h>
 #include <kcombobox.h>
 #include <kconfig.h>
