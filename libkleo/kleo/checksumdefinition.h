@@ -67,6 +67,9 @@ namespace Kleo {
         static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions();
         static std::vector< boost::shared_ptr<ChecksumDefinition> > getChecksumDefinitions( QStringList & errors );
 
+        static boost::shared_ptr<ChecksumDefinition> getDefaultChecksumDefinition( const std::vector< boost::shared_ptr<ChecksumDefinition> > & available );
+        static void setDefaultChecksumDefinition( const boost::shared_ptr<ChecksumDefinition> & checksumDefinition );
+
     private:
         virtual QString doGetCreateCommand() const = 0;
         virtual QString doGetVerifyCommand() const = 0;

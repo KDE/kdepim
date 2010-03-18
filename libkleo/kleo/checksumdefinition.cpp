@@ -52,6 +52,7 @@
 using namespace Kleo;
 using namespace boost;
 
+// Checksum Definition #N groups
 static const QLatin1String ID_ENTRY( "id" );
 static const QLatin1String NAME_ENTRY( "Name" );
 static const QLatin1String CREATE_COMMAND_ENTRY( "create-command" );
@@ -59,6 +60,10 @@ static const QLatin1String VERIFY_COMMAND_ENTRY( "verify-command" );
 static const QLatin1String FILE_PATTERNS_ENTRY( "file-patterns" );
 static const QLatin1String OUTPUT_FILE_ENTRY( "output-file" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
+
+// ChecksumOperations group
+static const QLatin1String CHECKSUM_DEFINITION_ID_ENTRY( "checksum-definition-id" );
+
 
 namespace {
 
@@ -230,3 +235,27 @@ std::vector< shared_ptr<ChecksumDefinition> > ChecksumDefinition::getChecksumDef
     }
     return result;
 }
+
+// static
+shared_ptr<ChecksumDefinition> ChecksumDefinition::getDefaultChecksumDefinition( const std::vector< shared_ptr<ChecksumDefinition> > & checksumDefinitions ) {
+    const KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    const QString checksumDefinitionId = group.readEntry( CHECKSUM_DEFINITION_ID_ENTRY );
+    if ( !checksumDefinitionId.isEmpty() )
+        Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
+            if ( cd && cd->id() == checksumDefinitionId )
+                return cd;
+    if ( !checksumDefinitions.empty() )
+        return checksumDefinitions.front();
+    else
+        return shared_ptr<ChecksumDefinition>();
+}
+
+// static
+void ChecksumDefinition::setDefaultChecksumDefinition( const shared_ptr<ChecksumDefinition> & checksumDefinition ) {
+    if ( !checksumDefinition )
+        return;
+    KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
+    group.writeEntry( CHECKSUM_DEFINITION_ID_ENTRY, checksumDefinition->id() );
+    group.sync();
+}
+
