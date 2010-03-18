@@ -87,7 +87,7 @@ namespace {
        foreach (const KABC::Addressee& a, al ) {
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a, 0L, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );
+          QString contact = AddresseeView::vCardAsHTML( a, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );
           writer->queue( contact );
 
           QString addToLinkText = i18n( "[Add this contact to the address book]" );

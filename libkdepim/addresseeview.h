@@ -26,7 +26,6 @@
 
 #include <kabc/addressee.h>
 
-#include <KIMProxy>
 #include <KTextBrowser>
 
 class QPixmap;
@@ -128,7 +127,7 @@ class KDEPIM_EXPORT AddresseeView : public KTextBrowser
       @param fieldMask The mask for which fields of the contact will
                        be displayed.
     */
-    static QString vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *proxy, LinkMask linkMask = DefaultLinks,
+    static QString vCardAsHTML( const KABC::Addressee& addr, LinkMask linkMask = DefaultLinks,
                                 bool internalLoading = true, FieldMask fieldMask = DefaultFields );
 
     /**
@@ -155,7 +154,6 @@ class KDEPIM_EXPORT AddresseeView : public KTextBrowser
     virtual void smsTextClicked( const QString &number );
     virtual void sendSMS( const QString &number, const QString &msg );
     virtual void faxNumberClicked( const QString &number );
-    virtual void imAddressClicked();
     virtual void contextMenuEvent( QContextMenuEvent *e );
 
 
@@ -197,7 +195,6 @@ class KDEPIM_EXPORT AddresseeView : public KTextBrowser
 
     class AddresseeViewPrivate;
     AddresseeViewPrivate *d;
-    ::KIMProxy *mKIMProxy;
 };
 
 }

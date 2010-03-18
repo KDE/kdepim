@@ -98,13 +98,6 @@ AddresseeView::AddresseeView( QWidget *parent, KConfig *config )
   connect( mActionShowURLs, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
   connect( mActionShowIMAddresses, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
   connect( mActionShowCustomFields, SIGNAL( toggled( bool ) ), SLOT( configChanged() ) );
-
-  // set up IMProxy to display contacts' IM presence and make connections to keep the display live
-  mKIMProxy = ::KIMProxy::instance();
-  connect( mKIMProxy, SIGNAL( sigContactPresenceChanged( const QString& ) ),
-           this, SLOT( slotPresenceChanged( const QString& ) ) );
-  connect( mKIMProxy, SIGNAL( sigPresenceInfoExpired() ),
-           this, SLOT( slotPresenceInfoExpired() ) );
 }
 
 AddresseeView::~AddresseeView()
@@ -120,8 +113,6 @@ AddresseeView::~AddresseeView()
   delete mActionShowURLs;
   delete mActionShowIMAddresses;
   delete mActionShowCustomFields;
-
-  mKIMProxy = 0;
 }
 
 void AddresseeView::setAddressee( const KABC::Addressee& addr )
@@ -143,7 +134,7 @@ void AddresseeView::enableLinks( int linkMask )
   mLinkMask = linkMask;
 }
 
-QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy*, LinkMask linkMask,
+QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, LinkMask linkMask,
                                     bool internalLoading, FieldMask fieldMask )
 {
   QString image = QString( "contact_%1_image" ).arg( addr.uid() );
@@ -514,8 +505,7 @@ void AddresseeView::updateView()
   if ( mActionShowCustomFields->isChecked() )
     fieldMask |= CustomFields;
 
-  QString strAddr = vCardAsHTML( mAddressee, mKIMProxy, (LinkMask)mLinkMask,
-                                 true, (FieldMask)fieldMask );
+  QString strAddr = vCardAsHTML( mAddressee, (LinkMask)mLinkMask, true, (FieldMask)fieldMask );
 
   strAddr = QString::fromLatin1(
     "<html>"
@@ -636,11 +626,6 @@ void AddresseeView::faxNumberClicked( const QString &number )
   KRun::runCommand( commandLine, topLevelWidget());
 }
 
-void AddresseeView::imAddressClicked()
-{
-  // mKIMProxy->chatWithContact( mAddressee.uid() );
-}
-
 void AddresseeView::contextMenuEvent(QContextMenuEvent *e)
 {
   QMenu *menu = new QMenu( this );
@@ -670,8 +655,6 @@ void AddresseeView::slotUrlClicked( const QString &url )
     faxNumberClicked( strippedNumber( url.mid( 4 ) ) );
   else if ( url.startsWith( "addr:" ) )
     emit addressClicked( url.mid( 5 ) );
-  else if ( url.startsWith( "im:" ) )
-    imAddressClicked();
   else
     urlClicked( url );
 }
