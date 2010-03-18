@@ -28,9 +28,30 @@ Rectangle {
   height: 480
   width: 800
 
+  SystemPalette { id: palette; colorGroup: Qt.Active }
+  Rectangle {
+    id: navbar
+    width: parent.width
+    height: 56
+    anchors.top: parent.top
+    color: palette.window
+    Image {
+      height: 48
+      width: height
+      anchors.right: parent.right
+      source: KDE.iconPath( "folder", 56 )
+      MouseArea {
+        anchors.fill: parent
+        onClicked: topLevel.state = "collectionListState"
+      }
+    }
+  }
+
   Rectangle {
     id: homeScreen
-    anchors.fill: parent
+    width: parent.width
+    height: parent.height - navbar.height
+    anchors.top: navbar.bottom
     color: "blue"
     Row {
       anchors.fill: parent
@@ -54,14 +75,18 @@ Rectangle {
 
   CollectionView {
     id: collectionList
-    anchors.fill: parent
+    width: parent.width
+    height: parent.height - navbar.height
+    anchors.top: navbar.bottom
     model: collectionModel
     onCollectionSelected: topLevel.state = "headerListState"
   }
 
   HeaderView {
     id: headerList
-    anchors.fill: parent
+    width: parent.width
+    height: parent.height - navbar.height
+    anchors.top: navbar.bottom
     model: itemModel
     onMessageSelected: topLevel.state = "homeScreen"
   }
