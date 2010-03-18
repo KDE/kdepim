@@ -307,14 +307,6 @@ static std::vector<File> parse_sum_file( const QString & fileName ) {
     return files;
 }
 
-namespace {
-    struct file_size : std::unary_function<QString,quint64> {
-        quint64 operator()( const QString & file ) const {
-            return QFileInfo( file ).size();
-        }
-    };
-}
-
 static quint64 aggregate_size( const QDir & dir, const QStringList & files ) {
     quint64 n = 0;
     Q_FOREACH( const QString & file, files )
