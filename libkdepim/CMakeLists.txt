@@ -42,8 +42,6 @@ set(kdepim_LIB_SRCS
    kaddrbookexternal.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
-   designerfields.cpp
-   kcmdesignerfields.cpp
    embeddedurlpage.cpp
    csshelper.cpp
    distributionlist.cpp 
@@ -68,7 +66,6 @@ kde4_add_ui_files(kdepim_LIB_SRCS
 kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
 
 target_link_libraries(kdepim
-  ${QT_QTUITOOLS_LIBRARY}
   ${KDEPIMLIBS_KRESOURCES_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
