@@ -19,10 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KDEPIM_PLUGINLOADERBASE_H
-#define KDEPIM_PLUGINLOADERBASE_H
-
-#include "kdepim_export.h"
+#ifndef PLUGINLOADERBASE_H
+#define PLUGINLOADERBASE_H
 
 #include <QString>
 #include <QMap>
@@ -30,22 +28,22 @@
 
 class QStringList;
 
-namespace KPIM {
-
-  class KDEPIM_EXPORT PluginMetaData {
+class PluginMetaData
+{
   public:
     PluginMetaData() {}
     PluginMetaData( const QString & lib, const QString & name,
-		    const QString & comment )
+                    const QString & comment )
       : library( lib ), nameLabel( name ),
-	descriptionLabel( comment ), loaded( false ) {}
+        descriptionLabel( comment ), loaded( false ) {}
     QString library;
     QString nameLabel;
     QString descriptionLabel;
     bool loaded;
-  };
+};
 
-  class KDEPIM_EXPORT PluginLoaderBase {
+class PluginLoaderBase
+{
   protected:
     PluginLoaderBase();
     virtual ~PluginLoaderBase();
@@ -63,9 +61,9 @@ namespace KPIM {
 
   protected:
     /** Rescans the plugin directory to find any newly installed
-	plugins. Extend this method in subclasses to add any
-	builtins. Subclasses must call this explicitly. It's not
-	called for them in the constructor.
+        plugins. Extend this method in subclasses to add any
+        builtins. Subclasses must call this explicitly. It's not
+        called for them in the constructor.
     **/
     void doScan( const char * path );
 
@@ -79,8 +77,6 @@ namespace KPIM {
 
     class Private;
     Private * d;
-  };
+};
 
-} // namespace KMime
-
-#endif // __LIBKDEPIM_PLUGINLOADERBASE_H__
+#endif // PLUGINLOADERBASE_H

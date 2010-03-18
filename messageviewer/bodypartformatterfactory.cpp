@@ -36,10 +36,8 @@
 #include "bodypartformatterfactory_p.h"
 
 #include "interfaces/bodypartformatter.h"
+#include "pluginloader.h"
 #include "urlhandlermanager.h"
-
-// libkdepim
-#include <libkdepim/pluginloader.h>
 
 // KDE
 #include <kdebug.h>
@@ -55,10 +53,10 @@ using namespace MessageViewer;
 
 namespace {
 
-  KPIM_DEFINE_PLUGIN_LOADER( BodyPartFormatterPluginLoader,
-			     Interface::BodyPartFormatterPlugin,
-			     "create_bodypart_formatter_plugin",
-			     "messageviewer/plugins/bodypartformatter/*.desktop" )
+  DEFINE_PLUGIN_LOADER( BodyPartFormatterPluginLoader,
+                        Interface::BodyPartFormatterPlugin,
+                        "create_bodypart_formatter_plugin",
+                        "messageviewer/plugins/bodypartformatter/*.desktop" )
 
 }
 

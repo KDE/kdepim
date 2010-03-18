@@ -28,7 +28,6 @@ set(kdepim_LIB_SRCS
    maillistdrag.cpp
    kconfigpropagator.cpp
    kconfigwizard.cpp
-   pluginloaderbase.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
    ktimezonecombobox.cpp
