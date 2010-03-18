@@ -21,10 +21,3 @@ WhatsThis=A widget to enter a time. It can also be selected from a drop-down lis
 IncludeFile=libkdepim/ktimeedit.h
 ConstructorArgs=(parent, QTime::currentTime())
 Group=Input (KDE-PIM)
-
-[KPIM::KCheckComboBox]
-ToolTip=Multi-select Combobox (KDE-PIM)
-WhatsThis=A widget to select multiple items from drop-down list.
-IncludeFile=libkdepim/kcheckcombobox.h
-ConstructorArgs=(parent)
-Group=Input (KDE-PIM)

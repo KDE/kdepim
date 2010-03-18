@@ -28,8 +28,6 @@
 #include <QKeyEvent>
 #include <QLineEdit>
 
-using namespace KPIM;
-
 KCheckComboBox::KCheckComboBox( QWidget *parent ) : KComboBox( parent )
 {
   mSeparator = QLatin1String( "," );

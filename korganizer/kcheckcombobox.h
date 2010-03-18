@@ -25,14 +25,10 @@
 #ifndef KCHECKCOMBOBOX_H
 #define KCHECKCOMBOBOX_H
 
-#include "kdepim_export.h"
-
 #include <KComboBox>
 #include <QModelIndex>
 
-namespace KPIM {
-
-class KDEPIM_EXPORT KCheckComboBox : public KComboBox
+class KCheckComboBox : public KComboBox
 {
   Q_OBJECT
 
@@ -80,7 +76,5 @@ class KDEPIM_EXPORT KCheckComboBox : public KComboBox
     QString mDefaultText;
     bool mIgnoreHide;
 };
-
-}
 
 #endif // KCHECKCOMBOBOX_H

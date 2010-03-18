@@ -15,7 +15,6 @@ include_directories( ${Boost_INCLUDE_DIR} )
 
 set(kdepim_LIB_SRCS
    kdescendantsproxymodel.cpp
-   kcheckcombobox.cpp
    ktimeedit.cpp
    kprefsdialog.cpp
    kdateedit.cpp
