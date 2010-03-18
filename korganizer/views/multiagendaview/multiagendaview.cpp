@@ -485,12 +485,14 @@ void MultiAgendaView::setUpdateNeeded()
 
 void MultiAgendaView::setupScrollBar()
 {
-  QScrollBar *scrollBar = mAgendaViews.first()->agenda()->verticalScrollBar();
-  mScrollBar->setMinimum( scrollBar->minimum() );
-  mScrollBar->setMaximum( scrollBar->maximum() );
-  mScrollBar->setSingleStep( scrollBar->singleStep() );
-  mScrollBar->setPageStep( scrollBar->pageStep() );
-  mScrollBar->setValue( scrollBar->value() );
+  if ( !mAgendaViews.isEmpty() && mAgendaViews.first()->agenda() ) {
+    QScrollBar *scrollBar = mAgendaViews.first()->agenda()->verticalScrollBar();
+    mScrollBar->setMinimum( scrollBar->minimum() );
+    mScrollBar->setMaximum( scrollBar->maximum() );
+    mScrollBar->setSingleStep( scrollBar->singleStep() );
+    mScrollBar->setPageStep( scrollBar->pageStep() );
+    mScrollBar->setValue( scrollBar->value() );
+  }
 }
 
 #include "multiagendaview.moc"
