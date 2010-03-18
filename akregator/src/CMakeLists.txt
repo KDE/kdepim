@@ -120,4 +120,4 @@ install( FILES articleviewer.rc akregator_part.rc akregator.notifyrc  DESTINATIO
 install( FILES akregator_plugin.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install( FILES akregator_shell.rc  DESTINATION ${DATA_INSTALL_DIR}/akregator)
 install( FILES feed.protocol  DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES org.kde.akregator.part.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR} )
+install( FILES org.kde.akregator.part.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR} )
