@@ -30,7 +30,6 @@
 #include <kpimidentities/identitymanager.h>
 #include <kpimidentities/identity.h>
 #include <kpimutils/email.h>
-#include <libkdepim/kpimprefs.h>
 
 #include <kglobalsettings.h>
 #include <kglobal.h>
