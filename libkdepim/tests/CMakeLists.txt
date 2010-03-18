@@ -75,7 +75,3 @@ set(testkmeditorwin_SRCS testkmeditorwin.cpp )
 kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
 
 target_link_libraries(testkmeditorwin  kdepim ${KDE4_KDEUI_LIBS} )
-
-
-kde4_add_executable(testkcmdesignerfields TEST testkcmdesignerfields.cpp)
-target_link_libraries(testkcmdesignerfields kdepim)
