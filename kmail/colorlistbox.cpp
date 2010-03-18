@@ -32,8 +32,6 @@
 #include <QHeaderView>
 #include <QStringList>
 
-namespace KPIM {
-
 ColorListBox::ColorListBox( QWidget *parent )
   : QTreeWidget( parent ), mCurrentOnDragEnter( 0L )
 {
@@ -128,8 +126,6 @@ void ColorListBox::dropEvent( QDropEvent *e )
     }
     mCurrentOnDragEnter = 0L;
   }
-}
-
 }
 
 #include "colorlistbox.moc"

@@ -20,10 +20,8 @@
  *
  */
 
-#ifndef KDEPIM_COLORLISTBOX_H
-#define KDEPIM_COLORLISTBOX_H
-
-#include "kdepim_export.h"
+#ifndef COLORLISTBOX_H
+#define COLORLISTBOX_H
 
 #include <QDragEnterEvent>
 #include <QDragLeaveEvent>
@@ -31,9 +29,7 @@
 #include <QDropEvent>
 #include <QTreeWidget>
 
-namespace KPIM {
-
-class KDEPIM_EXPORT ColorListBox : public QTreeWidget
+class ColorListBox : public QTreeWidget
 {
   Q_OBJECT
 
@@ -59,7 +55,4 @@ class KDEPIM_EXPORT ColorListBox : public QTreeWidget
 
 };
 
-}
-
 #endif
-

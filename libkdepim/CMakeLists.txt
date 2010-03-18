@@ -55,7 +55,6 @@ set(kdepim_LIB_SRCS
    kmailcompletion.cpp
    kmeditor.cpp
    autochecktreewidget.cpp
-   colorlistbox.cpp
    uistatesaver.cpp
    contactsfilterproxymodel.cpp
    contactstreemodel.cpp
