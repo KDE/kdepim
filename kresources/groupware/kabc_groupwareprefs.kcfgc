@@ -1,8 +1,0 @@
-ClassName=GroupwarePrefs
-File=kresources_kabc_groupware.kcfg
-GlobalEnums=true
-IncludeFiles=libkdepim/kresourceprefs.h
-Inherits=KResourcePrefs
-Mutators=true
-NameSpace=KABC
-Singleton=false
