@@ -34,7 +34,7 @@
 
 void WhatsNextTextBrowser::setSource( const QUrl &name )
 {
-  QString uri = name.toString();
+  const QString uri = name.toString();
   if ( uri.startsWith( QLatin1String( "event:" ) ) ) {
     emit showIncidence( uri );
   } else if ( uri.startsWith( QLatin1String( "todo:" ) ) ) {
@@ -293,7 +293,7 @@ void KOWhatsNextView::appendEvent( Incidence *ev, const QDateTime &start,
   if ( ev->type() == "Event" ) {
     mText += "href=\"event:";
   }
-  if ( ev->type() == "Todo" ) {
+  else if ( ev->type() == "Todo" ) {
     mText += "href=\"todo:";
   }
   mText += ev->uid() + "\">";
