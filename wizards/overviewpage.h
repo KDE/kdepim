@@ -34,7 +34,6 @@ class OverViewPage : public QWidget
 
   private slots:
     void showWizardKolab();
-    void showWizardSlox();
     void showWizardGroupwise();
 
   signals:

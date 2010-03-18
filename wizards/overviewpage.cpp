@@ -20,7 +20,6 @@
 */
 
 #include "overviewpage.h"
-#include "sloxwizard.h"
 #include "groupwisewizard.h"
 
 #include <kacceleratormanager.h>
@@ -64,11 +63,7 @@ OverViewPage::OverViewPage( QWidget *parent )
   layout->addWidget( button, 4, 0, 1, 4 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardKolab() ) );*/
 
-  QPushButton *button = new QPushButton( i18n("SUSE Linux Openexchange (SLOX)"), this );
-  layout->addWidget( button, 5, 0, 1, 4 );
-  connect( button, SIGNAL( clicked() ), SLOT( showWizardSlox() ) );
-
-  button = new QPushButton( i18n("Novell GroupWise"), this );
+  QPushButton *button = new QPushButton( i18n("Novell GroupWise"), this );
   layout->addWidget( button, 6, 0, 1, 4 );
   connect( button, SIGNAL( clicked() ), SLOT( showWizardGroupwise() ) );
 
@@ -95,12 +90,6 @@ void OverViewPage::showWizardKolab()
 {
 /*  KolabWizard wizard;
   wizard.exec();*/
-}
-
-void OverViewPage::showWizardSlox()
-{
-  SloxWizard wizard;
-  wizard.exec();
 }
 
 void OverViewPage::showWizardGroupwise()
