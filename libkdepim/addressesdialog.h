@@ -59,29 +59,38 @@ class KDEPIM_EXPORT AddressesDialog : public KDialog
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new addresses dialog.
+     *
+     * @param widget The parent widget.
+     * @param session The session to use for Akonadi.
+     */
     AddressesDialog( QWidget *widget = 0, Akonadi::Session *session = 0 );
+
+    /**
+     * Destroys the addresses dialog.
+     */
     virtual ~AddressesDialog();
 
     /**
-     * Returns the list of picked "To" addresses as a QStringList.
+     * Describes the email address receiver types.
      */
-    QStringList to() const;
+    enum ReceiverType
+    {
+      ToReceiver, ///< Direct receivers
+      CcReceiver, ///< Carbon copy receivers
+      BccReceiver ///< Blind carbon copy receivers
+    };
 
     /**
-     * Returns the list of picked "CC" addresses as a QStringList.
+     * Returns the selected email addresses for the given receiver @p type.
      */
-    QStringList cc() const;
+    QStringList emailAddresses( ReceiverType type ) const;
 
     /**
-     * Returns the list of picked "BCC" addresses as a QStringList.
+     * Returns the selected contacts for the given receiver @p type.
      */
-    QStringList bcc() const;
-
-    /**
-     * Returns the list of picked "To" addresses as KABC::Addressee::List.
-     * Note that this doesn't include the distribution lists
-     */
-    KABC::Addressee::List toAddresses()  const;
+    KABC::Addressee::List contacts( ReceiverType type ) const;
 
     /**
      * Returns the list of picked "To" addresses as KABC::Addressee::List.
@@ -91,34 +100,9 @@ class KDEPIM_EXPORT AddressesDialog : public KDialog
     KABC::Addressee::List allToAddressesNoDuplicates()  const;
 
     /**
-     * Returns the list of picked "CC" addresses as KABC::Addressee::List.
-     * Note that this doesn't include the distribution lists
+     * Returns the selected contact groups for the given receiver @p type.
      */
-    KABC::Addressee::List ccAddresses()  const;
-
-    /**
-     * Returns the list of picked "BCC" addresses as KABC::Addressee::List.
-     * Note that this doesn't include the distribution lists
-     */
-    KABC::Addressee::List bccAddresses() const;
-
-    /**
-     * Returns the list of picked "To" distribution lists.
-     * This complements @ref toAddresses.
-     */
-    QStringList toDistributionLists() const;
-
-    /**
-     * Returns the list of picked "CC" distribution lists.
-     * This complements @ref ccAddresses.
-     */
-    QStringList ccDistributionLists() const;
-
-    /**
-     * Returns the list of picked "BCC" distribution lists.
-     * This complements @ref bccAddresses.
-     */
-    QStringList bccDistributionLists() const;
+    QStringList distributionLists( ReceiverType type ) const;
 
   public Q_SLOTS:
     /**
@@ -150,39 +134,21 @@ class KDEPIM_EXPORT AddressesDialog : public KDialog
      */
     void setSelectedBCC( const QStringList& l );
 
-  private Q_SLOTS:
-    void availableSelectionChanged();
-    void selectedSelectionChanged();
-    void selectedCountChanged();
-    void addSelectedTo();
-    void addSelectedCC();
-    void addSelectedBCC();
-    void removeEntry();
-    void searchLdap();
-    void ldapSearchResult();
-    void saveAsDistributionList();
-    void saveAsDistributionListDone( KJob * );
-
   private:
-    Akonadi::Session *m_session;
-    Akonadi::ChangeRecorder *m_recorder;
-    Akonadi::EntityTreeView *m_availableView, *m_selectedView;
-    ProxyModel *m_availableModel;
-    QStandardItemModel *m_selectedModel;
-    QStandardItem *m_toItem, *m_ccItem, *m_bccItem;
-    QPushButton *m_toButton, *m_ccButton, *m_bccButton, *m_removeButton, *m_saveButton;
-    LdapSearchDialog  *m_ldapSearchDialog;
+    class Private;
+    Private* const d;
 
-    QStandardItem* selectedToItem();
-    QStandardItem* selectedCcItem();
-    QStandardItem* selectedBccItem();
-
-    KABC::Addressee::List allAddressee( QStandardItem* parent ) const;
-    void addToSelected( const Akonadi::Item& item, QStandardItem *parentItem );
-    void addContactToSelected( const KABC::Addressee& contact, QStandardItem *parentItem );
-    void addGroupToSelected( const KABC::ContactGroup& group, QStandardItem *parentItem );
-    QStringList allDistributionLists( QStandardItem* parent ) const;
-    QStringList entryToString( const KABC::Addressee::List& l ) const;
+    Q_PRIVATE_SLOT( d, void availableSelectionChanged() )
+    Q_PRIVATE_SLOT( d, void selectedSelectionChanged() )
+    Q_PRIVATE_SLOT( d, void selectedCountChanged() )
+    Q_PRIVATE_SLOT( d, void addSelectedTo() )
+    Q_PRIVATE_SLOT( d, void addSelectedCC() )
+    Q_PRIVATE_SLOT( d, void addSelectedBCC() )
+    Q_PRIVATE_SLOT( d, void removeEntry() )
+    Q_PRIVATE_SLOT( d, void searchLdap() )
+    Q_PRIVATE_SLOT( d, void ldapSearchResult() )
+    Q_PRIVATE_SLOT( d, void saveAsDistributionList() )
+    Q_PRIVATE_SLOT( d, void saveAsDistributionListDone( KJob* ) )
 };
 
 }

@@ -1440,7 +1440,7 @@ void KNComposer::slotToBtnClicked()
 
   if(!to.isEmpty())
       to+=", ";
-  to+=dlg.to().join(", ");
+  to+=dlg.emailAddresses( AddressesDialog::ToReceiver ).join(", ");
 
   v_iew->setEmailRecipient( to );
 }
