@@ -252,6 +252,8 @@ void KOAgendaView::setCalendar( Akonadi::Calendar *cal )
   Q_ASSERT( cal );
   KOrg::AgendaView::setCalendar(cal);
   calendar()->registerObserver( this );
+  mAgenda->setCalendar(calendar());
+  mAllDayAgenda->setCalendar(calendar());
 }
 
 void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
@@ -262,7 +264,6 @@ void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
 
   connect( agenda, SIGNAL(showNewEventPopupSignal()),
            SLOT(showNewEventPopup()) );
-
   agenda->setCalendar( calendar() );
 
   // Create/Show/Edit/Delete Event
@@ -625,7 +626,7 @@ Akonadi::Item::List KOAgendaView::selectedIncidences()
   return selected;
 }
 
-DateList KOAgendaView::selectedDates()
+DateList KOAgendaView::selectedIncidenceDates()
 {
   DateList selected;
   QDate qd;
@@ -1223,6 +1224,10 @@ void KOAgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
     if ( todo ) {
       QTime t = todo->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() ).time();
 
+      if ( t == QTime( 0, 0 ) ) {
+        t = QTime( 23, 59 );
+      }
+
       int halfHour = 1800;
       if ( t.addSecs( -halfHour ) < t ) {
         startY = mAgenda->timeToY( t.addSecs( -halfHour ) );
@@ -1379,7 +1384,7 @@ void KOAgendaView::displayIncidence( const Item &aitem )
   }
 
   if ( incidence->recurs() ) {
-    int eventDuration = incDtStart.daysTo( incDtEnd );
+    int eventDuration = event ? incDtStart.daysTo( incDtEnd ) : 0;
 
     // if there's a multiday event that starts before firstVisibleDateTime but ends after
     // lets include it. timesInInterval() ignores incidences that aren't totaly inside
@@ -1396,6 +1401,13 @@ void KOAgendaView::displayIncidence( const Item &aitem )
     if ( todo && todo->hasDueDate() && !todo->isOverdue() ) {
       // If it's not overdue it will be shown at the original date (not today)
       dateToAdd = todo->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() );
+
+      // To-dos are drawn with the bottom of the rectangle at dtDue
+      // if dtDue is at 00:00, then it should be displayed in the previous day, at 23:59
+      if ( dateToAdd.time() == QTime( 0, 0 ) ) {
+        dateToAdd = dateToAdd.addSecs( -1 );
+      }
+
       incidenceEnd = dateToAdd;
     } else if ( event ) {
       dateToAdd = incDtStart;
@@ -1404,10 +1416,11 @@ void KOAgendaView::displayIncidence( const Item &aitem )
       if ( dateToAdd.isDateOnly() ) {
         // so comparisons with < > actually work
         dateToAdd.setTime( QTime( 0, 0 ) );
+        incidenceEnd.setTime( QTime( 23, 59 ) );
       }
     }
 
-    if  ( dateToAdd <= lastVisibleDateTime && incidenceEnd >= firstVisibleDateTime ) {
+    if  ( dateToAdd <= lastVisibleDateTime && incidenceEnd > firstVisibleDateTime ) {
       dateTimeList += dateToAdd;
     }
   }
@@ -1511,7 +1524,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
     }
   }
 #else
-  kWarning()<<"TODO";
+  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
 }
 
