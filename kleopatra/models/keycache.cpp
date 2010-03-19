@@ -223,15 +223,20 @@ KeyCache::KeyCache()
 
 KeyCache::~KeyCache() {}
 
-void KeyCache::startKeyListing()
+void KeyCache::enableFileSystemWatcher( bool enable )
+{
+    Q_FOREACH( const shared_ptr<FileSystemWatcher> & i, d->m_fsWatchers )
+        i->setEnabled( enable );
+}
+
+void KeyCache::reload( GpgME::Protocol /*proto*/ )
 {
     if ( d->m_refreshJob )
         return;
 
     d->updateAutoKeyListingTimer();
 
-    Q_FOREACH( const shared_ptr<FileSystemWatcher>& i, d->m_fsWatchers )
-        i->setEnabled( false );
+    enableFileSystemWatcher( false );
     d->m_refreshJob = new RefreshKeysJob( this );
     connect( d->m_refreshJob, SIGNAL(done(GpgME::KeyListResult)), this, SLOT(refreshJobDone(GpgME::KeyListResult)) );
     d->m_refreshJob->start();
@@ -260,8 +265,7 @@ void KeyCache::addFileSystemWatcher( const shared_ptr<FileSystemWatcher>& watche
 void KeyCache::Private::refreshJobDone( const KeyListResult& result )
 {
     emit q->keyListingDone( result );
-    Q_FOREACH( const shared_ptr<FileSystemWatcher>& i, m_fsWatchers )
-        i->setEnabled( true );
+    q->enableFileSystemWatcher( true );
 }
 
 const Key & KeyCache::findByFingerprint( const char * fpr ) const {
