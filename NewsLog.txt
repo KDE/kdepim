@@ -1,3 +1,31 @@
+Friday, March 19th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4207: alarm time textfield in advanced alarm dialog should be 5-digits (rt#6055)
+* kolab/issue4203: A reminder can contain non-existing events (rt#6051)
+* kolab/issue4149: Search Directory Services and comma-formated names (rt#5954)
+* kolab/issue4012: Calender view update problem, if the same appointment is moved on the server in other
+                   folders (rt#5930)
+* kolab/issue4096: User with write access to a calendar folder should be able to change the events 
+                   (even if he is not the organizer)(rt#5999)
+* kolab/issue4194: Task without starttime should have default alarm type "before the end" (rt#6045)
+* kolab/issue4200: Reminder date sorting doesn't recognize different month (rt#6047)
+* kolab/issue4215: Events ending at 00h appear in the wrong day in day-view
+* kolab/issue4054: Umlauts and sending contacts problem (rt#5956)
+* kolab/issue4060: Wish: Auto-spellchecking: action to add new suggestion in context menu (rt#5969)
+* kolab/issue4064: Task with associated due time "00:00" isn't displayed in all calendar views (rt#5974)
+* kolab/issue4203: A reminder can contain non-existing events (rt#6051)
+* kolab/issue4224: event viewer dialog to small (rt#6060)
+* kolab/issue4218: Tasks: Copy to of a recurring event forgets the recurrence
+* kolab/issue4203: A reminder can contain non-existing events (rt#6051)
+* kolab/issue4225: small month view: selected weekend days and holidays should be colored red in blue (rt#6061)
+* kolab/issue4194: Task without starttime should have default alarm type "before the end" (rt#6045)
+* kolab/issue4227: To-do: time associate flag not saved at a starttime only todo
+* kolab/issue3658: Changing the name of a calendar subresource leads to crash
+
+
 Friday, March 12th 2010
 
 Problems addressed
