@@ -115,6 +115,7 @@ target_link_libraries(knodecommon
   kleo
   kdepim kpgp
   messagecomposer
+  messageviewer
 )
 
 target_link_libraries(knodecommon LINK_INTERFACE_LIBRARIES ${KDE4_KUTILS_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS})

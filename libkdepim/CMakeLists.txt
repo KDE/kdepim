@@ -35,7 +35,6 @@ set(kdepim_LIB_SRCS
    ssllabel.cpp
    completionordereditor.cpp
    broadcaststatus.cpp
-   kxface.cpp
    kaddrbookexternal.cpp
    kwidgetlister.cpp
    recentaddresses.cpp

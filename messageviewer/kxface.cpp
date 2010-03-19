@@ -71,7 +71,7 @@
 
 #define MAX_XFACE_LENGTH 2048
 
-using namespace KPIM;
+using namespace MessageViewer;
 
 KXFace::KXFace()
 {

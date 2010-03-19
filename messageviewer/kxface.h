@@ -23,10 +23,11 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef KDEPIM_KXFACE_H
-#define KDEPIM_KXFACE_H
+#ifndef MESSAGEVIEWER_KXFACE_H
+#define MESSAGEVIEWER_KXFACE_H
 
-#include "kdepim_export.h"
+#include "messageviewer_export.h"
+
 #include <QObject>
 #include <setjmp.h>
 
@@ -515,9 +516,9 @@ static const char HexDigits[] = "0123456789ABCDEF";
 class QImage;
 class QString;
 
-namespace KPIM {
+namespace MessageViewer {
 
-  class KDEPIM_EXPORT KXFace : public QObject
+  class MESSAGEVIEWER_EXPORT KXFace : public QObject
   {
     Q_OBJECT
 
@@ -587,5 +588,5 @@ namespace KPIM {
 
 
   };
-} // namespace KPIM
-#endif // __KXFACE_H
+}
+#endif

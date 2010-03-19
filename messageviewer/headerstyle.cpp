@@ -40,9 +40,8 @@ using KPIMUtils::LinkLocator;
 #include "global.h"
 
 #include <kpimutils/email.h>
-#include "libkdepim/kxface.h"
+#include "kxface.h"
 #include <messagecore/stringutil.h>
-using namespace KPIM;
 
 #include <akonadi/contact/contactsearchjob.h>
 #include <kdebug.h>
@@ -579,7 +578,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
     QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
     if ( !xfhead.isEmpty() )
     {
-      KXFace xf;
+      MessageViewer::KXFace xf;
       photoURL = imgToDataUrl( xf.toImage( xfhead ) );
       photoWidth = 48;
       photoHeight = 48;

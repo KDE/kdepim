@@ -55,7 +55,7 @@
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
 
-#include <libkdepim/kxface.h>
+#include <messageviewer/kxface.h>
 #include <kpimutils/kfileio.h>
 #include <kpimutils/linklocator.h>
 #include <kpimutils/email.h>
@@ -681,7 +681,7 @@ void ArticleWidget::displayHeader()
     xfhead = temp->asUnicodeString();
   QString xface = "";
   if ( !xfhead.isEmpty() ) {
-    KPIM::KXFace xf;
+    MessageViewer::KXFace xf;
     xface = QString::fromLatin1( "<div class=\"senderpic\"><img src=\"%1\" width=\"48\" height=\"48\"/></div>" )
       .arg( imgToDataUrl( xf.toImage( xfhead ), "PNG" ) );
   }

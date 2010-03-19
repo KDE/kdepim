@@ -46,6 +46,7 @@ chiasmuskeyselector.cpp
 mailwebview.cpp
 findbar/findbar.cpp
 pluginloaderbase.cpp
+kxface.cpp
 )
 
 
