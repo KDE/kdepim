@@ -1,4 +1,4 @@
-/* This file is part of the KDE libraries
+/*
     Copyright (C) 2007 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -17,21 +17,26 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kapplication.h>
-#include <kcmdlineargs.h>
-#include <kmeditor.h>
+#ifndef _TESTKMEDITORWIN_H_
+#define _TESTKMEDITORWIN_H_
 
-#include <QtCore/QFile>
+#include <QMainWindow>
 
-using namespace KPIM;
+#include <messagecomposer/kmeditor.h>
 
-int main( int argc, char **argv )
+using namespace Message;
+
+class testKMeditorWindow  : public QMainWindow
 {
-    KCmdLineArgs::init( argc, argv, "testkmeditor", 0, ki18n("KMeditorTest"), "1.0" , ki18n("kmeditor test app"));
-    KApplication app;
-    KMeditor *edit = new KMeditor();
-    edit->setAcceptRichText(false);
-    edit->resize( 600, 600 );
-    edit->show();
-    return app.exec();
-}
+    Q_OBJECT
+
+public:
+    testKMeditorWindow ();
+    ~testKMeditorWindow ();
+
+private:
+    KMeditor *editor;
+};
+
+#endif
+

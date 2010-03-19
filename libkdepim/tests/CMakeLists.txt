@@ -42,23 +42,3 @@ set(testldapclient_SRCS testldapclient.cpp )
 kde4_add_executable(testldapclient TEST ${testldapclient_SRCS})
 
 target_link_libraries(testldapclient kdepim ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KLDAP_LIBS})
-
-########### next target ###############
-
-set(testkmeditor_SRCS testkmeditor.cpp )
-
-
-kde4_add_executable(testkmeditor TEST ${testkmeditor_SRCS})
-
-target_link_libraries(testkmeditor  kdepim ${KDE4_KDEUI_LIBS} )
-
-
-
-########### next target ###############
-
-set(testkmeditorwin_SRCS testkmeditorwin.cpp )
-
-
-kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
-
-target_link_libraries(testkmeditorwin  kdepim ${KDE4_KDEUI_LIBS} )

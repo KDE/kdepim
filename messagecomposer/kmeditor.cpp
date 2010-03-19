@@ -40,7 +40,7 @@
 
 using namespace KPIMTextEdit;
 
-namespace KPIM {
+namespace Message {
 
 class KMeditorPrivate
 {
@@ -101,7 +101,7 @@ class KMeditorPrivate
 
 }
 
-using namespace KPIM;
+using namespace Message;
 
 void KMeditorPrivate::startExternalEditor()
 {
@@ -124,15 +124,15 @@ void KMeditorPrivate::startExternalEditor()
 
   mExtEditorProcess = new KProcess();
     // construct command line...
-  QStringList command = extEditorPath.split( ' ', QString::SkipEmptyParts );
+  QStringList command = extEditorPath.split( QLatin1Char( ' ' ), QString::SkipEmptyParts );
   bool filenameAdded = false;
   for ( QStringList::Iterator it = command.begin(); it != command.end(); ++it ) {
-    if ( ( *it ).contains( "%f" ) ) {
-      ( *it ).replace( QRegExp( "%f" ), mExtEditorTempFile->fileName() );
+    if ( ( *it ).contains( QLatin1String( "%f" ) ) ) {
+      ( *it ).replace( QRegExp( QLatin1String( "%f" ) ), mExtEditorTempFile->fileName() );
       filenameAdded = true;
     }
-    else if ( ( *it ).contains( "%l" ) ) {
-      ( *it ).replace( QRegExp( "%l" ), QString::number(q->textCursor().blockNumber() + 1) );  // line number
+    else if ( ( *it ).contains( QLatin1String( "%l" ) ) ) {
+      ( *it ).replace( QRegExp( QLatin1String( "%l" ) ), QString::number(q->textCursor().blockNumber() + 1) );  // line number
     }
     ( *mExtEditorProcess ) << ( *it );
   }
@@ -342,11 +342,11 @@ QString KMeditorPrivate::addQuotesToText( const QString &inputText )
 {
   QString answer = QString( inputText );
   QString indentStr = q->defaultQuoteSign();
-  answer.replace( '\n', '\n' + indentStr );
+  answer.replace( QLatin1Char( '\n' ), QLatin1Char( '\n' ) + indentStr );
   //cursor.selectText() as QChar::ParagraphSeparator as paragraph separator.
-  answer.replace( QChar::ParagraphSeparator, '\n' + indentStr );
+  answer.replace( QChar::ParagraphSeparator, QLatin1Char( '\n' ) + indentStr );
   answer.prepend( indentStr );
-  answer += '\n';
+  answer += QLatin1Char( '\n' );
   return q->smartQuote( answer );
 }
 

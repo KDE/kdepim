@@ -20,20 +20,20 @@
  * 02110-1301  USA
  */
 
-#ifndef KDEPIM_KMEDITOR_H
-#define KDEPIM_KMEDITOR_H
+#ifndef MESSAGECOMPOSER_KMEDITOR_H
+#define MESSAGECOMPOSER_KMEDITOR_H
 
-#include "kdepim_export.h"
+#include "messagecomposer_export.h"
+
 #include <KPIMTextEdit/TextEdit>
 
 namespace KPIMIdentities {
   class Signature;
 }
 
-namespace KPIM {
+namespace Message {
 
 class KMeditorPrivate;
-class KEMailQuotingHighlighter;
 
 /**
  * The KMeditor class provides a widget to edit and display text,
@@ -45,7 +45,7 @@ class KEMailQuotingHighlighter;
  * @li Utility functions like removing whitespace, inserting a file,
  *     adding quotes or rot13'ing the text
  */
-class KDEPIM_EXPORT KMeditor : public KPIMTextEdit::TextEdit
+class MESSAGECOMPOSER_EXPORT KMeditor : public KPIMTextEdit::TextEdit
 {
   Q_OBJECT
 

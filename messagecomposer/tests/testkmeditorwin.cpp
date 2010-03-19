@@ -1,4 +1,4 @@
-/* This file is part of the KDE libraries
+/*
     Copyright (C) 2007 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kmeditor.h>
+#include <messagecomposer/kmeditor.h>
 #include <KApplication>
 #include <kcmdlineargs.h>
 #include <QAction>
@@ -28,11 +28,11 @@
 
 testKMeditorWindow::testKMeditorWindow()
 {
-  setWindowTitle("test kmeditor window");
+  setWindowTitle(QLatin1String("test kmeditor window"));
   editor = new KMeditor;
   editor->setAcceptRichText(false);
   setCentralWidget(editor);
-  
+
   QMenu *editMenu = menuBar()->addMenu(tr("Edit"));
   QAction *act = new QAction(tr("bold"), this);
   act->setCheckable(true);

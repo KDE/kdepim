@@ -43,7 +43,6 @@ set(kdepim_LIB_SRCS
    distributionlist.cpp 
    sendsmsdialog.cpp
    kmailcompletion.cpp
-   kmeditor.cpp
    uistatesaver.cpp
    contactsfilterproxymodel.cpp
    contactstreemodel.cpp

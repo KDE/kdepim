@@ -58,3 +58,19 @@ add_messagecomposer_cryptotest( composertest.cpp )
 add_messagecomposer_cryptotest( signjobtest.cpp )
 add_messagecomposer_cryptotest( encryptjobtest.cpp )
 add_messagecomposer_cryptotest( signencrypttest.cpp )
+
+########### next target ###############
+
+set(testkmeditor_SRCS testkmeditor.cpp )
+
+kde4_add_executable(testkmeditor TEST ${testkmeditor_SRCS})
+
+target_link_libraries(testkmeditor messagecomposer ${KDE4_KDEUI_LIBS} )
+
+########### next target ###############
+
+set(testkmeditorwin_SRCS testkmeditorwin.cpp )
+
+kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
+
+target_link_libraries(testkmeditorwin messagecomposer ${KDE4_KDEUI_LIBS} )
