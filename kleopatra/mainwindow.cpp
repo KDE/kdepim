@@ -61,6 +61,7 @@
 #include "commands/importcrlcommand.h"
 #include "commands/changeexpirycommand.h"
 #include "commands/changeownertrustcommand.h"
+#include "commands/changeroottrustcommand.h"
 #include "commands/selftestcommand.h"
 #include "commands/certifycertificatecommand.h"
 #include "commands/adduseridcommand.h"
@@ -212,6 +213,12 @@ public:
     }
     void changeCertificateOwnerTrust() {
         createAndStart<ChangeOwnerTrustCommand>();
+    }
+    void trustRootCertificate() {
+        createAndStart<TrustRootCommand>();
+    }
+    void distrustRootCertificate() {
+        createAndStart<DistrustRootCommand>();
     }
     void signEncryptFiles() {
         createAndStart<SignEncryptFilesCommand>();
@@ -424,6 +431,10 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
         { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
           0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
+        { "certificates_trust_root", i18n("Trust Root Certificate"), QString(),
+          0, q, SLOT(trustRootCertificate()), QString(), false, true },
+        { "certificates_distrust_root", i18n("Distrust Root Certificate"), QString(),
+          0, q, SLOT(distrustRootCertificate()), QString(), false, true },
         { "certificates_change_passphrase", i18n("Change Passphrase..."), QString(),
           0, q, SLOT(changePassphrase()), QString(), false, true },
         { "certificates_add_userid", i18n("Add User-ID..."), QString(),
@@ -493,6 +504,8 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
     controller.registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
+    controller.registerActionForCommand<TrustRootCommand>(          coll->action( "certificates_trust_root" ) );
+    controller.registerActionForCommand<DistrustRootCommand>(       coll->action( "certificates_distrust_root" ) );
     controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
     controller.registerActionForCommand<CertifyCertificateCommand>(    coll->action( "certificates_certify_certificate" ) );
     controller.registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
