@@ -18,12 +18,17 @@ target_link_libraries(
 
 set(testaddresseelineedit_SRCS testaddresseelineedit.cpp )
 
-
-
 kde4_add_executable(testaddresseelineedit TEST ${testaddresseelineedit_SRCS})
 
 target_link_libraries(testaddresseelineedit  kdepim ${KDE4_KDEUI_LIBS})
 
+########### next target ###############
+
+set(testaddressesdialog_SRCS testaddressesdialog.cpp )
+
+kde4_add_executable(testaddressesdialog TEST ${testaddressesdialog_SRCS})
+
+target_link_libraries(testaddressesdialog kdepim ${KDE4_KDEUI_LIBS})
 
 ########### next target ###############
 
