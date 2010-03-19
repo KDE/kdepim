@@ -388,6 +388,28 @@ static bool all_secret_are_not_owner_trust_ultimate( const std::vector<Key> & ke
     return true;
 }
 
+Command::Restrictions find_root_restrictions( const std::vector<Key> & keys ) {
+    bool trusted = false, untrusted = false;
+    Q_FOREACH( const Key & key, keys )
+        if ( key.isRoot() )
+            if ( key.userID(0).validity() == UserID::Ultimate )
+                trusted = true;
+            else
+                untrusted = true;
+        else
+            return Command::NoRestriction;
+    if ( trusted )
+        if ( untrusted )
+            return Command::NoRestriction;
+        else
+            return Command::MustBeTrustedRoot;
+    else
+        if ( untrusted )
+            return Command::MustBeUntrustedRoot;
+        else
+            return Command::NoRestriction;
+}
+
 Command::Restrictions KeyListController::Private::calculateRestrictionsMask( const QItemSelectionModel * sm ) {
     if ( !sm )
         return 0;
@@ -417,6 +439,8 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 
     if ( all_secret_are_not_owner_trust_ultimate( keys ) )
         result |= Command::MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate;
+
+    result |= find_root_restrictions( keys );
 
     if ( const ReaderStatus * rs = ReaderStatus::instance() ) {
         if ( rs->anyCardHasNullPin() )

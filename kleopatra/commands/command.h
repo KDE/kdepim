@@ -78,6 +78,10 @@ namespace Kleo {
             AnyCardHasNullPin   = 128,
             AnyCardCanLearnKeys = 256,
 
+            MustBeRoot          = 512,
+            MustBeTrustedRoot   = 1024|MustBeRoot,
+            MustBeUntrustedRoot = 2048|MustBeRoot,
+
             _AllRestrictions_Helper,
             AllRestrictions = 2*(_AllRestrictions_Helper-1) - 1
         };
