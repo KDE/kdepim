@@ -604,6 +604,14 @@ int KMFolderCachedImap::rename( const QString &aName, KMFolderDir *aParent )
 {
   Q_UNUSED( aParent );
 
+  if ( account() == 0 || imapPath().isEmpty() ) {
+    // This can happen when creating a folder and then renaming it without syncing before,
+    // see https://issues.kolab.org/issue3658
+    QString err = i18n("You must synchronize with the server before renaming IMAP folders.");
+    KMessageBox::error( 0, err );
+    return -1;
+  }
+
   QString oldName = mAccount->renamedFolder( imapPath() );
   if ( oldName.isEmpty() ) {
     oldName = objectName();
@@ -612,13 +620,6 @@ int KMFolderCachedImap::rename( const QString &aName, KMFolderDir *aParent )
   if ( aName == oldName ) {
     // Stupid user trying to rename it to it's old name :)
     return 0;
-  }
-
-  if ( account() == 0 || imapPath().isEmpty() ) {
-    // We don't think any of this can happen anymore
-    QString err = i18n("You must synchronize with the server before renaming IMAP folders.");
-    KMessageBox::error( 0, err );
-    return -1;
   }
 
   /*
