@@ -28,9 +28,13 @@ class Viewer;
 class MessageViewItem : public QDeclarativeItem
 {
   Q_OBJECT
+  Q_PROPERTY( int messageItemId READ messageItemId WRITE setMessageItemId )
   public:
     explicit MessageViewItem( QDeclarativeItem *parent = 0 );
     ~MessageViewItem();
+
+    qint64 messageItemId() const;
+    void setMessageItemId( qint64 id );
 
   protected:
     void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);

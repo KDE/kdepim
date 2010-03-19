@@ -90,6 +90,7 @@
 #include <messagecore/attachmentpropertiesdialog.h>
 
 #include <akonadi/collection.h>
+#include <akonadi/itemfetchjob.h>
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
@@ -3195,6 +3196,22 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
   } else {
     tag.setStyleProperty( "display", "none" );
     dotsTag.removeAttribute( "display" );
+  }
+}
+
+void ViewerPrivate::itemFetchResult(KJob* job)
+{
+  if ( job->error() ) {
+    displaySplashPage( i18n( "Message loading failed: %1.", job->errorText() ) );
+  } else {
+    Akonadi::ItemFetchJob* fetch = qobject_cast<Akonadi::ItemFetchJob*>( job );
+    Q_ASSERT( fetch );
+    if ( fetch->items().size() < 1 ) {
+      displaySplashPage( i18n( "Message not found." ) );
+    } else {
+      enableMessageDisplay();
+      setMessageItem( fetch->items().first() );
+    }
   }
 }
 

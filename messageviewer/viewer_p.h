@@ -469,6 +469,8 @@ private slots:
   /** Show hide all fields specified inside this function */
   void toggleFullAddressList();
 
+  void itemFetchResult( KJob *job );
+
 public slots:
   /** An URL has been activate with a click. */
   void slotUrlOpen( const QUrl &url = QUrl());

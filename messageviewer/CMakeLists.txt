@@ -65,6 +65,7 @@ kde4_add_library(messageviewer SHARED ${libmessageviewer_SRCS})
 target_link_libraries(messageviewer messagecore kdepim kpgp kleo
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}

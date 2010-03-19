@@ -30,6 +30,10 @@
 #include "mailwebview.h"
 #include "findbar/findbar.h"
 
+#include <akonadi/kmime/messageparts.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+
 //KDE includes
 #include <QWebView>
 #include <QWebPage>
@@ -72,7 +76,14 @@ void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 void Viewer::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
 {
   Q_D(Viewer);
-  d->setMessageItem( item, updateMode );
+  if ( item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
+    d->setMessageItem( item, updateMode );
+  } else {
+    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item, this );
+    job->fetchScope().fetchFullPayload( true );
+    connect( job, SIGNAL(result(KJob*)), d, SLOT(itemFetchResult(KJob*)) );
+    d->displaySplashPage( i18n( "Loading message..." ) );
+  }
 }
 
 void Viewer::displaySplashPage( const QString &info )

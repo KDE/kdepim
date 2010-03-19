@@ -53,5 +53,14 @@ void MessageViewItem::geometryChanged(const QRectF& newGeometry, const QRectF& o
   m_proxy->resize( newGeometry.size() );
 }
 
+qint64 MessageViewItem::messageItemId() const
+{
+  return 0; // TODO
+}
+
+void MessageViewItem::setMessageItemId(qint64 id)
+{
+  m_viewer->setMessageItem( Akonadi::Item( id ) );
+}
 
 #include "messageviewitem.moc"
