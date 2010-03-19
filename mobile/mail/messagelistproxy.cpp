@@ -47,6 +47,7 @@ void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
 {
   QSortFilterProxyModel::setSourceModel(sourceModel);
   QHash<int, QByteArray> names = roleNames();
+  names.insert( Akonadi::EntityTreeModel::ItemIdRole, "itemId" );
   names.insert( SubjectRole, "subject" );
   names.insert( FromRole, "from" );
   names.insert( DateRole, "date" );

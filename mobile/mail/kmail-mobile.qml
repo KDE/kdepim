@@ -20,6 +20,7 @@
 import Qt 4.6
 import org.kde 4.5
 import org.kde.akonadi 4.5
+import org.kde.messageviewer 4.5
 import "HeaderView.qml"
 
 Rectangle {
@@ -36,10 +37,18 @@ Rectangle {
     anchors.top: parent.top
     color: palette.window
     Image {
+      id: messageViewIcon
+      height: 48
+      width: 48
+      anchors.right: parent.right
+      source: KDE.iconPath( "internet-mail", height )
+      MouseArea { anchors.fill: parent; onClicked: topLevel.state = "messageViewState" }
+    }
+    Image {
       height: 48
       width: height
-      anchors.right: parent.right
-      source: KDE.iconPath( "folder", 56 )
+      anchors.right: messageViewIcon.left
+      source: KDE.iconPath( "folder", height )
       MouseArea {
         anchors.fill: parent
         onClicked: topLevel.state = "collectionListState"
@@ -88,7 +97,16 @@ Rectangle {
     height: parent.height - navbar.height
     anchors.top: navbar.bottom
     model: itemModel
-    onMessageSelected: topLevel.state = "homeScreen"
+    onMessageSelected: topLevel.state = "messageViewState"
+  }
+
+  MessageView {
+    id: messageView
+    width: parent.width
+    height: parent.height - navbar.height
+    anchors.top: navbar.bottom
+    messageItemId: headerList.currentMessage
+    splashMessage: KDE.i18n( "Welcome to KMail Mobile." )
   }
 
   states: [
@@ -106,6 +124,10 @@ Rectangle {
         target: headerList
         visible: false
       }
+      PropertyChanges {
+        target: messageView
+        visible: false
+      }
     },
     State {
       name: "collectionListState"
@@ -121,6 +143,10 @@ Rectangle {
         target: headerList
         visible: false
       }
+      PropertyChanges {
+        target: messageView
+        visible: false
+      }
     },
     State {
       name: "headerListState"
@@ -134,6 +160,29 @@ Rectangle {
       }
       PropertyChanges {
         target: headerList
+        visible: true
+      }
+      PropertyChanges {
+        target: messageView
+        visible: false
+      }
+    },
+    State {
+      name: "messageViewState"
+      PropertyChanges {
+        target: homeScreen
+        visible: false
+      }
+      PropertyChanges {
+        target: collectionList
+        visible: false
+      }
+      PropertyChanges {
+        target: headerList
+        visible: false
+      }
+      PropertyChanges {
+        target: messageView
         visible: true
       }
     }

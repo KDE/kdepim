@@ -28,6 +28,7 @@ Rectangle {
   id: headerViewTopLevel
   property alias model: messageListView.model
   property alias currentIndex: messageListView.currentIndex
+  property int currentMessage: -1
   signal messageSelected
 
   SystemPalette { id: palette; colorGroup: Qt.Active }
@@ -49,7 +50,8 @@ Rectangle {
       MouseArea {
         anchors.fill: parent
         onClicked: {
-          wrapper.ListView.view.currentIndex = model.index;
+          wrapper.ListView.view.currentIndex = model.index
+          headerViewTopLevel.currentMessage = model.itemId
           headerViewTopLevel.messageSelected()
         }
       }
