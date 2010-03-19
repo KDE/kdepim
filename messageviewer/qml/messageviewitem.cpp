@@ -27,17 +27,6 @@ using namespace MessageViewer;
 MessageViewItem::MessageViewItem(QDeclarativeItem* parent) : QDeclarativeItem(parent)
 {
   m_viewer = new Viewer( 0 );
-  KMime::Message::Ptr msg(new KMime::Message);
-  msg->setContent(
-    "Subject: Hello World!\n"
-    "From: vkrause@kde.org\n"
-    "To: volker@kdab.com\n"
-    "Date: 01-01-1970\n"
-    "\n"
-    "Hellow World!!!\n"
-  );
-  msg->parse();
-  m_viewer->setMessage( msg );
   m_proxy = new QGraphicsProxyWidget( this );
   m_proxy->setWidget( m_viewer );
 }
@@ -61,6 +50,19 @@ qint64 MessageViewItem::messageItemId() const
 void MessageViewItem::setMessageItemId(qint64 id)
 {
   m_viewer->setMessageItem( Akonadi::Item( id ) );
+}
+
+QString MessageViewItem::splashMessage() const
+{
+  return QString(); // TODO
+}
+
+void MessageViewItem::setSplashMessage(const QString& message)
+{
+  if ( message.isEmpty() )
+    m_viewer->enableMessageDisplay();
+  else
+    m_viewer->displaySplashPage( message );
 }
 
 #include "messageviewitem.moc"

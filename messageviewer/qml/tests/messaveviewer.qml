@@ -26,6 +26,7 @@ MessageView {
   width: 800
   height: 320
   messageItemId: 63422
+  //splashMessage: "Hello World!"
   transformOrigin: Item.TopLeft
   SequentialAnimation on scale {
     NumberAnimation { to: 1.05; duration: 2500; from: 0.95; easing.type: "InBounce" }
