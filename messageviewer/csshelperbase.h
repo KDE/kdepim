@@ -29,25 +29,25 @@
     your version.
 */
 
-#ifndef KDEPIM_CSSHELPER_H
-#define KDEPIM_CSSHELPER_H
+#ifndef MESSAGEVIEWER_CSSHELPER_H
+#define MESSAGEVIEWER_CSSHELPER_H
 
-#include "kdepim_export.h"
+#include "messageviewer_export.h"
 #include <QColor>
 #include <QFont>
 
 class QString;
 class QPaintDevice;
 
-namespace KPIM {
+namespace MessageViewer {
 
-class KDEPIM_EXPORT CSSHelper {
+class MESSAGEVIEWER_EXPORT CSSHelperBase {
   public:
     /** Construct a CSSHelper object and set its font and color settings to
         default values.
         Sub-Classes should put their config loading here.
      */
-    CSSHelper( const QPaintDevice *pd );
+    CSSHelperBase( const QPaintDevice *pd );
 
     /** @return HTML head including style sheet definitions and the
         &gt;body&lt; tag */
@@ -101,7 +101,7 @@ class KDEPIM_EXPORT CSSHelper {
      // returns CSS rules specific to the print media type
     QString printCssDefinitions( bool fixed ) const;
     // returns CSS rules specific to the screen media type
-    QString screenCssDefinitions( const CSSHelper * helper, bool fixed ) const;
+    QString screenCssDefinitions( const CSSHelperBase * helper, bool fixed ) const;
     // returns CSS rules common to both screen and print media types
     QString commonCssDefinitions() const;
 
@@ -110,6 +110,6 @@ class KDEPIM_EXPORT CSSHelper {
 
 };
 
-} // namespace KPIM
+}
 
-#endif // KPIM_CSSHELPER_H
+#endif

@@ -17,7 +17,7 @@
 
 
 KNode::CSSHelper::CSSHelper( const QPaintDevice *pd ) :
-  KPIM::CSSHelper( pd )
+  MessageViewer::CSSHelperBase( pd )
 {
   mForegroundColor = knGlobals.settings()->textColor();
   mLinkColor = knGlobals.settings()->linkColor();

@@ -14,14 +14,14 @@
 #ifndef KNODE_CSSHELPER_H
 #define KNODE_CSSHELPER_H
 
-#include <libkdepim/csshelper.h>
+#include <messageviewer/csshelperbase.h>
 
 namespace KNode {
 
 /** Helper class to generate a CSS style sheet for article widget.
  *  @see KNode::ArticleWidget
  */
-class CSSHelper : public KPIM::CSSHelper
+class CSSHelper : public MessageViewer::CSSHelperBase
 {
   public:
     CSSHelper( const QPaintDevice *pd );

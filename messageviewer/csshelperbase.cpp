@@ -29,7 +29,7 @@
     your version.
 */
 
-#include "csshelper.h"
+#include "csshelperbase.h"
 
 #include <KColorScheme>
 #include <KConfig>
@@ -41,7 +41,7 @@
 #include <QApplication>
 #include <QPaintDevice>
 
-namespace KPIM {
+namespace MessageViewer {
 
   namespace {
     // some QColor manipulators that hide the ugly QColor API w.r.t. HSV:
@@ -70,7 +70,7 @@ namespace KPIM {
     }
   }
 
-  CSSHelper::CSSHelper( const QPaintDevice *pd ) :
+  CSSHelperBase::CSSHelperBase( const QPaintDevice *pd ) :
     mShrinkQuotes( false ),
     mPaintDevice( pd )
   {
@@ -104,7 +104,7 @@ namespace KPIM {
     recalculatePGPColors();
   }
 
-  void CSSHelper::recalculatePGPColors() {
+  void CSSHelperBase::recalculatePGPColors() {
     // determine the frame and body color for PGP messages from the header color
     // if the header color equals the background color then the other colors are
     // also set to the background color (-> old style PGP message viewing)
@@ -155,7 +155,7 @@ namespace KPIM {
     }
   }
 
-  QString CSSHelper::cssDefinitions( bool fixed ) const {
+  QString CSSHelperBase::cssDefinitions( bool fixed ) const {
     return
       commonCssDefinitions()
       +
@@ -171,14 +171,14 @@ namespace KPIM {
       "}\n";
   }
 
-  QString CSSHelper::htmlHead( bool /*fixed*/ ) const {
+  QString CSSHelperBase::htmlHead( bool /*fixed*/ ) const {
     return
       "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n"
       "<html><head><title></title></head>\n"
       "<body>\n";
   }
 
-  QString CSSHelper::quoteFontTag( int level ) const {
+  QString CSSHelperBase::quoteFontTag( int level ) const {
     if ( level < 0 )
       level = 0;
     static const int numQuoteLevels = sizeof mQuoteFont / sizeof *mQuoteFont;
@@ -191,16 +191,16 @@ namespace KPIM {
       return QString( "<div class=\"quotelevel%1\">" ).arg( effectiveLevel );
   }
 
-  QString CSSHelper::nonQuotedFontTag() const {
+  QString CSSHelperBase::nonQuotedFontTag() const {
     return "<div class=\"noquote\">";
   }
 
-  QFont CSSHelper::bodyFont( bool fixed, bool print ) const {
+  QFont CSSHelperBase::bodyFont( bool fixed, bool print ) const {
       return fixed ? ( print ? mFixedPrintFont : mFixedFont )
         : ( print ? mPrintFont : mBodyFont );
   }
 
-  int CSSHelper::fontSize( bool fixed, bool print ) const {
+  int CSSHelperBase::fontSize( bool fixed, bool print ) const {
     return bodyFont( fixed, print ).pointSize();
   }
 
@@ -213,7 +213,7 @@ namespace KPIM {
 
   static const char * const quoteFontSizes[] = { "85", "80", "75" };
 
-  QString CSSHelper::printCssDefinitions( bool fixed ) const {
+  QString CSSHelperBase::printCssDefinitions( bool fixed ) const {
     const QString headerFont = QString( "  font-family: \"%1\" ! important;\n"
                                         "  font-size: %2pt ! important;\n" )
                            .arg( mPrintFont.family() )
@@ -296,7 +296,7 @@ namespace KPIM {
       + quoteCSS;
   }
 
-  QString CSSHelper::screenCssDefinitions( const CSSHelper * helper, bool fixed ) const {
+  QString CSSHelperBase::screenCssDefinitions( const CSSHelperBase * helper, bool fixed ) const {
     const QString fgColor = mForegroundColor.name();
     const QString bgColor = mBackgroundColor.name();
     const QString linkColor = mLinkColor.name();
@@ -530,7 +530,7 @@ namespace KPIM {
       + quoteCSS;
   }
 
-  QString CSSHelper::commonCssDefinitions() const {
+  QString CSSHelperBase::commonCssDefinitions() const {
     return
       "div.header {\n"
       "  margin-bottom: 10pt ! important;\n"
@@ -631,25 +631,25 @@ namespace KPIM {
   }
 
 
-  void CSSHelper::setBodyFont( const QFont& font )
+  void CSSHelperBase::setBodyFont( const QFont& font )
   {
     mBodyFont = font;
   }
 
-  void CSSHelper::setPrintFont( const QFont& font )
+  void CSSHelperBase::setPrintFont( const QFont& font )
   {
     mPrintFont = font;
   }
 
-  QColor CSSHelper::quoteColor( int level )
+  QColor CSSHelperBase::quoteColor( int level )
   {
     const int actualLevel = qMin( qMax( level, 0 ), 2 );
     return mQuoteColor[actualLevel];
   }
 
-  QColor CSSHelper::pgpWarnColor() const
+  QColor CSSHelperBase::pgpWarnColor() const
   {
     return cPgpWarnH;
   }
 
-} // namespace KPIM
+}

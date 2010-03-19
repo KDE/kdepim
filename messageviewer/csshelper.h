@@ -32,13 +32,13 @@
 #ifndef __MESSAGEVIEWER_CSSHELPER_H__
 #define __MESSAGEVIEWER_CSSHELPER_H__
 
-#include <libkdepim/csshelper.h>
+#include "csshelperbase.h"
 
 #include "messageviewer_export.h"
 
 namespace MessageViewer {
 
-class MESSAGEVIEWER_EXPORT CSSHelper : public KPIM::CSSHelper
+class MESSAGEVIEWER_EXPORT CSSHelper : public CSSHelperBase
 {
 public:
   CSSHelper( const QPaintDevice *pd );

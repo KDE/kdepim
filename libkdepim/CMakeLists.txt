@@ -38,7 +38,6 @@ set(kdepim_LIB_SRCS
    kaddrbookexternal.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
-   csshelper.cpp
    distributionlist.cpp 
    sendsmsdialog.cpp
    kmailcompletion.cpp

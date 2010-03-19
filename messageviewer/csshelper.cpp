@@ -46,7 +46,7 @@
 namespace MessageViewer {
 
 CSSHelper::CSSHelper( const QPaintDevice *pd ) :
-  KPIM::CSSHelper( pd )
+  CSSHelperBase( pd )
 {
   KSharedConfigPtr config = Global::instance()->config();
 
