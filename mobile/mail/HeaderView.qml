@@ -31,18 +31,17 @@ Rectangle {
   property int currentMessage: -1
   signal messageSelected
 
-  SystemPalette { id: palette; colorGroup: Qt.Active }
+  SystemPalette { id: palette; colorGroup: "Active" }
   Component {
     id: messageListDelegate
 
     Item {
       id: wrapper
       width: messageListView.width
-      height : 68
+      height : 32
 
       Rectangle {
         id: background
-        opacity: 0.25
         x: 1; y: 2; width: parent.width - 2; height: parent.height - 4
         border.color: palette.mid
         radius: 5
@@ -50,34 +49,65 @@ Rectangle {
       MouseArea {
         anchors.fill: parent
         onClicked: {
+          var nonCurrentClicked = false
+          if ( headerViewTopLevel.currentIndex == model.index ) { nonCurrentClicked = true }
           wrapper.ListView.view.currentIndex = model.index
           headerViewTopLevel.currentMessage = model.itemId
-          headerViewTopLevel.messageSelected()
+          if ( nonCurrentClicked ) { headerViewTopLevel.messageSelected() }
         }
       }
 
       Column {
-        anchors.fill: parent
-        spacing: 5
+        anchors.fill: background
+        anchors.top: background.top
+        anchors.left: background.left
+        spacing: 10
         Text {
+          id: subjectLabel
           text: model.subject
           font.bold: true
         }
-        Text {
-          text: "From: " + model.from
-        }
-        Text {
-          text: "Date: " + model.date
+        Column {
+          id: currentMessageDetails
+          opacity: 0
+          spacing: 4
+          Text {
+            text: "From: " + model.from
+            color: palette.highlightedText
+          }
+          Text {
+            text: "Date: " + model.date
+            color: palette.highlightedText
+          }
         }
       }
+
+      states: [
+        State {
+          name: "currentState"
+          when: wrapper.ListView.isCurrentItem
+          PropertyChanges { target: wrapper; height: 100 }
+          PropertyChanges { target: currentMessageDetails; opacity: 1 }
+          PropertyChanges { target: background; color: palette.highlight }
+          PropertyChanges { target: subjectLabel; color: palette.highlightedText }
+        }
+      ]
+      transitions: [
+        Transition {
+          NumberAnimation { property: "height"; duration: 200 }
+          NumberAnimation { target: currentMessageDetails; property: "opacity"; duration: 200 }
+          ColorAnimation { target: currentMessageDetails; property: "color"; duration: 200 }
+          ColorAnimation { target: background; property: "color"; duration: 200 }
+          ColorAnimation { target: subjectLabel; property: "color"; duration: 200 }
+        }
+      ]
     }
   }
 
   Component {
     id: highlight
     Rectangle {
-      color: palette.highlight
-      radius: 5
+      color: "red"
     }
   }
 
@@ -86,8 +116,12 @@ Rectangle {
     id: messageListView
     anchors.fill: parent
     delegate : messageListDelegate
-    highlight: highlight
+    // for debugging current item selection
+    //highlight: highlight
     highlightFollowsCurrentItem: true
+    highlightRangeMode: "StrictlyEnforceRange"
+    preferredHighlightBegin: height/2 - currentItem.height/2
+    preferredHighlightEnd: height/2 + currentItem.height/2
     focus: true
   }
 }
