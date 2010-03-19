@@ -1,7 +1,7 @@
 /*
  *  editdlg.cpp  -  dialog to create or modify an alarm or alarm template
  *  Program:  kalarm
- *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2010 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -48,7 +48,6 @@
 #include "timespinbox.h"
 
 #include <libkdepim/maillistdrag.h>
-#include <libkdepim/kvcarddrag.h>
 #include <kcal/period.h>
 #include <kcal/icaldrag.h>
 
