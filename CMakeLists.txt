@@ -72,25 +72,6 @@ else(WIN32)
 endif(WIN32)
 
 
-############### ONLY_KLEO ###############
-
-# The KDEPIM_ONLY_KLEO option is true
-if(KDEPIM_ONLY_KLEO)
-  find_package(QGpgme)
-  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library" "http://www.kde.org" TRUE "" "QGpgME is required to build Kleopatra.")
-
-  add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
-  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${KDEPIMLIBS_INCLUDE_DIRS} ${QT_QTDBUS_INCLUDE_DIR})
-  include(kleopatra/ConfigureChecks.cmake)
-
-  add_subdirectory(libkleo)
-  if (Boost_TOPOLOGICAL_SORT_DIR)
-    macro_optional_add_subdirectory(kleopatra)
-  endif (Boost_TOPOLOGICAL_SORT_DIR)
-
-else(KDEPIM_ONLY_KLEO)
-
-# Otherwise...
 ############### Find the stuff we need ###############
 
   find_package(Akonadi QUIET NO_MODULE)
@@ -150,44 +131,6 @@ macro(kcfg_generate_dbus_interface _kcfg _name)
 endmacro(kcfg_generate_dbus_interface)
 
 
-############### Code used in several places ###############
-# TODO Remove from the top CMakeLists.
-
-# used in knotes, kontact/plugins/knotes, kresources/egroupware, kresources/kolab/knotes, kresources/scalix/knotes, wizard
-set(libknotesresources_SRCS
-  ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
-  ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
-  ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
-  ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
-)
-
-# used in knotes, kontact/plugins/knotes
-set(libknoteseditor_SRCS
-  ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
-)
-
-# used in kdgantt1, korganizer
-set(libkdgantt1_SRCS
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttView.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewEventItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItemDrag.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSubwidgets.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSummaryItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskItem.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLink.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLinkGroup.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttMinimizeSplitter.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSemiSizingControl.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSizingControl.cpp
-  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
-)
-
-
-############### Now, we add the PIM components ###############
-
-  include (kleopatra/ConfigureChecks.cmake)
-
   if(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
     macro_optional_add_subdirectory(runtime)
   endif(EXISTS ${CMAKE_SOURCE_DIR}/runtime)
@@ -196,89 +139,13 @@ set(libkdgantt1_SRCS
     include_directories(${CMAKE_SOURCE_DIR}/runtime ${CMAKE_BINARY_DIR}/runtime)
   endif (BUILD_runtime)
 
-  # These targets will always be built before anything else.
-
   add_subdirectory( ontologies ) # must be the first one.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
-  add_subdirectory(libkdepimdbusinterfaces)
-  add_subdirectory(libkleo)
-  add_subdirectory(libkpgp)
-  add_subdirectory(libksieve)
-  add_subdirectory(libstickynotes)
-  add_subdirectory(kdgantt1)
+#  add_subdirectory(libkdepimdbusinterfaces)
   add_subdirectory(krss)
-  add_subdirectory(icons)
-  add_subdirectory(messagecore)
-
-  if(QGPGME_FOUND)
-    if (Boost_TOPOLOGICAL_SORT_DIR)
-      macro_optional_add_subdirectory(kleopatra)
-    endif(Boost_TOPOLOGICAL_SORT_DIR)
-    macro_optional_add_subdirectory(wizards)
-    # The following components depend on QGpgME.
-    macro_optional_add_subdirectory(messagecomposer)
-    macro_optional_add_subdirectory(kmail)
-
-    if(KDEPIM_BUILD_EXAMPLES)
-      add_subdirectory(examples)
-    endif(KDEPIM_BUILD_EXAMPLES)
-
-    # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
-    if(BUILD_kmail)
-      set(KMAIL_SUPPORTED TRUE)
-      add_definitions(-DKMAIL_SUPPORTED)
-    endif(BUILD_kmail)
-
-    macro_optional_add_subdirectory(kmailcvt)
-    macro_optional_add_subdirectory(ksendemail)
-    macro_optional_add_subdirectory(korganizer)
-
-    add_subdirectory( nepomuk_email_feeder )
-  endif(QGPGME_FOUND)
-
-  if(KDEPIM_BUILD_EVERYTHING)
-    macro_optional_add_subdirectory(knode)
-  endif(KDEPIM_BUILD_EVERYTHING)
-
   macro_optional_add_subdirectory(akregator)
   macro_optional_add_subdirectory(akonadiconsole)
-  macro_optional_add_subdirectory(blogilo)
-  macro_optional_add_subdirectory(console)
-  if (Grantlee_FOUND)
-    macro_optional_add_subdirectory(kjots)
-  endif (Grantlee_FOUND)
-  macro_optional_add_subdirectory(kalarm)
-  macro_optional_add_subdirectory(knotes)
-  macro_optional_add_subdirectory(strigi-analyzer)
-
-  macro_optional_add_subdirectory(kaddressbook)
-  if(Q_WS_X11)
-    macro_optional_add_subdirectory(ktimetracker)
-  endif(Q_WS_X11)
-
-  macro_optional_add_subdirectory(kontact) # must be the last one.
-
-  # These targets depend on optional applications
-  add_subdirectory(kresources) # Must be after KAddressbook
-  add_subdirectory(plugins) # Must be after KMail
-
-endif (KDEPIM_ONLY_KLEO)
-
-# doc must be a subdir of kdepim or packagers will kill us
-macro_optional_add_subdirectory(doc)
 
 
-# We really want to encourage users to enable/install QGpgME from kdepimlibs
-if(NOT QGPGME_FOUND)
-  # Users must be aware that QGpgMe is really needed
-  message(STATUS "*** WARNING: QGpgME is not installed on your system ***")
-  message(STATUS "*** It is required if you want to use KMail, KOrganizer or Kleopatra ***")
-  message(STATUS "*** You are really encouraged to install it ***")
-endif(NOT QGPGME_FOUND)
-# All done, let's display what we found...
-macro_display_feature_log()
-
-add_subdirectory(messageviewer)
-add_subdirectory(messagelist)
 
