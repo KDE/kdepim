@@ -32,6 +32,9 @@ class QAction;
 class QItemSelectionModel;
 class QSignalMapper;
 
+class KJob;
+class KProgressDialog;
+
 /**
  * @short The class that manages import and export of contacts.
  */
@@ -93,6 +96,8 @@ class XXPortManager : public QObject
     void slotImport( const QString& );
     void slotExport( const QString& );
 
+    void slotImportJobDone( KJob* );
+
   private:
     QAbstractItemModel *mItemModel;
     QItemSelectionModel *mSelectionModel;
@@ -101,6 +106,7 @@ class XXPortManager : public QObject
     QSignalMapper *mImportMapper;
     QSignalMapper *mExportMapper;
     Akonadi::Collection mDefaultAddressBook;
+    KProgressDialog *mImportProgressDialog;
 };
 
 #endif

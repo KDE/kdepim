@@ -29,6 +29,7 @@
 #include <akonadi/itemcreatejob.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kprogressdialog.h>
 
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
@@ -37,7 +38,8 @@
 
 
 XXPortManager::XXPortManager( QWidget *parent )
-  : QObject( parent ), mItemModel( 0 ), mSelectionModel( 0 ), mParentWidget( parent )
+  : QObject( parent ), mItemModel( 0 ), mSelectionModel( 0 ),
+    mParentWidget( parent ), mImportProgressDialog( 0 )
 {
   mImportMapper = new QSignalMapper( this );
   mExportMapper = new QSignalMapper( this );
@@ -105,13 +107,40 @@ void XXPortManager::slotImport( const QString &identifier )
 
   const Akonadi::Collection collection = dlg.selectedCollection();
 
+  if ( !mImportProgressDialog ) {
+    mImportProgressDialog = new KProgressDialog( mParentWidget, i18n( "Import Contacts" ) );
+    mImportProgressDialog->setLabelText( i18np( "Importing one contact to %2", "Importing %1 contacts to %2",
+                                                contacts.count(), collection.name() ) );
+    mImportProgressDialog->setAllowCancel( false );
+    mImportProgressDialog->setAutoClose( true );
+    mImportProgressDialog->progressBar()->setRange( 1, contacts.count() );
+  }
+
+  mImportProgressDialog->show();
+
   for ( int i = 0; i < contacts.count(); ++i ) {
     Akonadi::Item item;
     item.setPayload<KABC::Addressee>( contacts.at( i ) );
     item.setMimeType( KABC::Addressee::mimeType() );
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, collection );
-    job->exec();
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( slotImportJobDone( KJob* ) ) );
+  }
+}
+
+void XXPortManager::slotImportJobDone( KJob* )
+{
+  if ( !mImportProgressDialog )
+    return;
+
+  QProgressBar *progressBar = mImportProgressDialog->progressBar();
+
+  progressBar->setValue( progressBar->value() + 1 );
+
+  // cleanup on last step
+  if ( progressBar->value() == progressBar->maximum() ) {
+    mImportProgressDialog->deleteLater();
+    mImportProgressDialog = 0;
   }
 }
 
