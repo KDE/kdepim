@@ -76,11 +76,13 @@ class KOTimelineView : public KOEventView
     void newEventWithHint( const QDateTime & );
 
   private:
+    KCal::Incidence::List mSelectedItemList;
     KDGanttView *mGantt;
     QMap<KCal::ResourceCalendar*, QMap<QString, KOrg::TimelineItem*> > mCalendarItemMap;
     KOEventPopupMenu *mEventPopup;
     QDate mStartDate, mEndDate;
     QDateTime mHintDate;
+
 };
 
 #endif

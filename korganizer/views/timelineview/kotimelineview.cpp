@@ -80,7 +80,7 @@ KOTimelineView::~KOTimelineView()
 /*virtual*/
 KCal::Incidence::List KOTimelineView::selectedIncidences()
 {
-  return KCal::Incidence::List();
+  return mSelectedItemList;
 }
 
 /*virtual*/
@@ -222,6 +222,7 @@ void KOTimelineView::itemRightClicked( KDGanttViewItem *item )
   TimelineSubItem *tlitem = dynamic_cast<TimelineSubItem *>( item );
   if ( !tlitem ) {
     showNewEventPopup();
+    mSelectedItemList = KCal::Incidence::List();
     return;
   }
   if ( !mEventPopup ) {
@@ -229,6 +230,7 @@ void KOTimelineView::itemRightClicked( KDGanttViewItem *item )
   }
   mEventPopup->showIncidencePopup(
     calendar(), tlitem->incidence(), tlitem->incidence()->dtStart().date() );
+  mSelectedItemList << tlitem->incidence();
 }
 
 bool KOTimelineView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay )
