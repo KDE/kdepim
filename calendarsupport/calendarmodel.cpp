@@ -61,13 +61,20 @@ CalendarModel::~CalendarModel()
   delete d;
 }
 
-static KDateTime primaryDateForIncidence( const Item& item ) {
-  if( const Todo::Ptr t = Akonadi::todo( item ) )
+static KDateTime primaryDateForIncidence( const Item& item )
+{
+  if ( const Todo::Ptr t = Akonadi::todo( item ) ) {
     return t->hasDueDate() ? t->dtDue() : KDateTime();
-  if( const Event::Ptr e = Akonadi::event( item ) )
+  }
+
+  if ( const Event::Ptr e = Akonadi::event( item ) ) {
     return ( !e->recurs() && !e->isMultiDay() ) ? e->dtStart() : KDateTime();
-  if( const Journal::Ptr j = Akonadi::journal( item ) )
+  }
+
+  if ( const Journal::Ptr j = Akonadi::journal( item ) ) {
     return j->dtStart();
+  }
+
   return KDateTime();
 }
 
@@ -122,16 +129,16 @@ QVariant CalendarModel::entityData( const Item& item, int column, int role ) con
     case Summary:
       return incidence->summary();
     case DateTimeStart:
-      return incidence->dtStart().toTime_t();
+      return incidence->dtStart().toUtc().dateTime();
     case DateTimeEnd:
-      return incidence->dtEnd().toTime_t();
+      return incidence->dtEnd().toUtc().dateTime();
     case DateTimeDue:
       if ( Todo::ConstPtr todo = Akonadi::todo( item ) )
-        return todo->dtDue().toTime_t();
+        return todo->dtDue().toUtc().dateTime();
       else
         return QVariant();
-    case PrimaryDate:
-      return primaryDateForIncidence( item ).toTime_t();
+    case PrimaryDate:      
+      return primaryDateForIncidence( item ).toUtc().dateTime();
     case Priority:
       if ( Todo::ConstPtr todo = Akonadi::todo( item ) )
         return todo->priority();

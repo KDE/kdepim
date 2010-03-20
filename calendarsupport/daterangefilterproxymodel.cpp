@@ -29,91 +29,101 @@ using namespace Akonadi;
 
 class DateRangeFilterProxyModel::Private {
   public:
-  explicit Private() : startColumn( CalendarModel::DateTimeStart ), endColumn( CalendarModel::DateTimeEnd ), startT( 0 ), endT( 0 ) {}
-    int startColumn;
-    int endColumn;
-    KDateTime start;
-    KDateTime end;
-    uint startT;
-    uint endT;
+  explicit Private() : mStartColumn( CalendarModel::PrimaryDate ), mEndColumn( CalendarModel::DateTimeEnd ) {}
+    int mStartColumn;
+    int mEndColumn;
+    KDateTime mStart;
+    KDateTime mEnd;
 };
 
-DateRangeFilterProxyModel::DateRangeFilterProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), d( new Private ) {
+DateRangeFilterProxyModel::DateRangeFilterProxyModel( QObject* parent ) : QSortFilterProxyModel( parent ), d( new Private )
+{
   setFilterRole( CalendarModel::SortRole );
 }
 
-DateRangeFilterProxyModel::~DateRangeFilterProxyModel() {
+DateRangeFilterProxyModel::~DateRangeFilterProxyModel()
+{
   delete d;
 }
 
-KDateTime DateRangeFilterProxyModel::startDate() const {
-  return d->start;
+KDateTime DateRangeFilterProxyModel::startDate() const
+{
+  return d->mStart;
 }
 
-void DateRangeFilterProxyModel::setStartDate( const KDateTime& date ) {
-  if ( date == d->start )
-    return;
-  d->start = date;
-  d->startT = date.toTime_t();
+void DateRangeFilterProxyModel::setStartDate( const KDateTime &date )
+{
+  if ( date.isValid() ) {  
+    d->mStart = date;
+  }
   invalidateFilter();
 }
 
-KDateTime DateRangeFilterProxyModel::endDate() const {
-  return d->end;
+KDateTime DateRangeFilterProxyModel::endDate() const
+{
+  return d->mEnd;
 }
 
-void DateRangeFilterProxyModel::setEndDate( const KDateTime& date ) {
-  if ( date == d->end )
-    return;
-  d->end = date;
-  d->endT = date.toTime_t();
+void DateRangeFilterProxyModel::setEndDate( const KDateTime &date )
+{
+  if ( date.isValid() ) {
+    d->mEnd = date.toUtc();
+  }
+
   invalidateFilter();
 }
   
-int DateRangeFilterProxyModel::startDateColumn() const {
-  return d->startColumn;
+int DateRangeFilterProxyModel::startDateColumn() const
+{
+  return d->mStartColumn;
 }
 
-void DateRangeFilterProxyModel::setStartDateColumn( int column ) {
-  if ( column == d->startColumn )
+void DateRangeFilterProxyModel::setStartDateColumn( int column )
+{
+  if ( column == d->mStartColumn )
     return;
-  d->startColumn = column;
+  d->mStartColumn = column;
   invalidateFilter();
 }
 
-int DateRangeFilterProxyModel::endDateColumn() const {
-  return d->endColumn;
+int DateRangeFilterProxyModel::endDateColumn() const
+{
+  return d->mEndColumn;
 }
 
-void DateRangeFilterProxyModel::setEndDateColumn( int column ) {
-  if ( column == d->endColumn )
+void DateRangeFilterProxyModel::setEndDateColumn( int column )
+{
+  if ( column == d->mEndColumn )
     return;
-  d->endColumn = column;
+  d->mEndColumn = column;
   invalidateFilter();
 }
-bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex& source_parent ) const {
 
-  if ( d->end.isValid() ) {
-    const QModelIndex idx = sourceModel()->index( source_row, d->startColumn, source_parent );
+bool DateRangeFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex &source_parent ) const
+{
+  if ( d->mEnd.isValid() ) {
+    const QModelIndex idx = sourceModel()->index( source_row, d->mStartColumn, source_parent );
     const QVariant v = idx.data( filterRole() );
-    bool ok;
-    const uint start = v.toUInt( &ok );
-    if ( ok && start > d->endT )
+    const QDateTime start = v.toDateTime();
+    if ( start.isValid() && start > d->mEnd.dateTime() ) {
       return false;
+    }
   }
 
   const bool recurs = sourceModel()->index( source_row, 0, source_parent ).data( CalendarModel::RecursRole ).toBool();
 
-  if ( recurs ) // that's fuzzy and might return events not actually recurring in the range
+  if ( recurs ) {// that's fuzzy and might return events not actually recurring in the range
     return true;
-
-  if ( d->start.isValid() ) {
-    const QModelIndex idx = sourceModel()->index( source_row, d->endColumn, source_parent );
-    const QVariant v = idx.data( filterRole() );
-    bool ok;
-    const uint end = v.toUInt( &ok );
-    if ( ok && end < d->startT )
-      return false;
   }
+
+  if ( d->mStart.isValid() ) {
+    const QModelIndex idx = sourceModel()->index( source_row, d->mEndColumn, source_parent );
+    const QVariant v = idx.data( filterRole() );
+    const QDateTime end = v.toDateTime();
+    if ( end.isValid() && end < d->mStart.dateTime() ) {
+      return false;
+    }
+  }
+
   return true;
 }
