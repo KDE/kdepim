@@ -329,7 +329,7 @@ QString Task::saveXML() const
   QDomElement element = document.createElement( "task" );
   element.setAttribute( "version", "1.0" );
   saveAttributes( element );
-  if ( !hasStartDate() ) {
+  if ( !hasStartDate() && startDate().isValid() ) {
     // events and journals always have a start date, but tasks don't.
     // Remove the entry done by the inherited save above, because we
     // don't have one.
@@ -385,7 +385,7 @@ void Task::decideAndSetPriority()
 
   // Only KCal priority set, use that.
   else if ( mKolabPriorityFromDom == -1 && mKCalPriorityFromDom != -1 ) {
-    kdWarning() << "decideAndSetPriority(): No Kolab priority found, only the KCal priority!" << endl; 
+    kdWarning() << "decideAndSetPriority(): No Kolab priority found, only the KCal priority!" << endl;
     setPriority( mKCalPriorityFromDom );
   }
 
