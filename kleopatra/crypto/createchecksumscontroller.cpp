@@ -233,7 +233,7 @@ void CreateChecksumsController::start() {
     {
         const QMutexLocker locker( &d->mutex );
 
-        d->progressDialog = new QProgressDialog( i18n("Initialising..."), i18n("Cancel"), 0, 0 );
+        d->progressDialog = new QProgressDialog( i18n("Initializing..."), i18n("Cancel"), 0, 0 );
         d->progressDialog->setAttribute( Qt::WA_DeleteOnClose );
         d->progressDialog->setMinimumDuration( 1000 );
         d->progressDialog->setWindowTitle( i18nc("@title:window","Create Checksum Progress") );
