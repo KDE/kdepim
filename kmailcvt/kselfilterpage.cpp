@@ -55,7 +55,6 @@
 KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
 
 	mIntroSidebar->setPixmap(KStandardDirs::locate("data", "kmailcvt/pics/step1.png"));
-	//mFilterList.setAutoDelete( true );
 	connect(mFilterCombo, SIGNAL(activated(int)), SLOT(filterSelected(int)));
 
 	// Add new filters below. If this annoys you, please rewrite the stuff to use a factory.
