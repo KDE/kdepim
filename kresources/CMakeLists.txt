@@ -23,7 +23,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 if (QT_QT3SUPPORT_FOUND)
   add_subdirectory( lib )
 endif (QT_QT3SUPPORT_FOUND)
-add_subdirectory( birthdays )
 add_subdirectory( blog )
 add_subdirectory( remote )
 
