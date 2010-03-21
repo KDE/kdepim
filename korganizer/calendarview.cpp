@@ -984,12 +984,12 @@ void CalendarView::newEvent()
 void CalendarView::newEvent( const QDate &dt )
 {
   QDateTime startDt( dt, KOPrefs::instance()->mStartTime.time() );
-  return newEvent( QDateTime( dt ), QDateTime(dt) );
+  newEvent( QDateTime( dt ), QDateTime(dt) );
 }
 
 void CalendarView::newEvent( const QDateTime &startDt )
 {
-  return newEvent( startDt, QDateTime(startDt) );
+  newEvent( startDt, QDateTime(startDt) );
 }
 
 void CalendarView::newEvent( const QDateTime &startDt, const QDateTime &endDt, bool allDay )
