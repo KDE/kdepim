@@ -620,9 +620,9 @@ private:
 
             connect( &showAllRecipientsCB, SIGNAL(toggled(bool)),
                      q, SLOT(slotShowAllRecipientsToggled(bool)) );
-            connect( &pgpRB, SIGNAL(clicked()),
+            connect( &pgpRB, SIGNAL(toggled(bool)),
                      q, SLOT(slotProtocolChanged()) );
-            connect( &cmsRB, SIGNAL(clicked()),
+            connect( &cmsRB, SIGNAL(toggled(bool)),
                      q, SLOT(slotProtocolChanged()) );
         }
 
