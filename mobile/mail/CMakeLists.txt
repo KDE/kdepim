@@ -2,6 +2,8 @@ project( kmail-mobile )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+add_subdirectory(tests)
+
 set(kmail_mobile_srcs
   mainview.cpp
   main.cpp
@@ -23,4 +25,3 @@ install(FILES
   HeaderView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
-
