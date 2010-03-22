@@ -51,6 +51,7 @@
 # include <uiserver/decryptfilescommand.h>
 # include <uiserver/verifyfilescommand.h>
 # include <uiserver/prepencryptcommand.h>
+# include <uiserver/prepsigncommand.h>
 # include <uiserver/encryptcommand.h>
 # include <uiserver/signcommand.h>
 # include <uiserver/signencryptfilescommand.h>
@@ -227,6 +228,7 @@ int main( int argc, char** argv )
       REGISTER( EncryptSignFilesCommand );
       REGISTER( ImportFilesCommand );
       REGISTER( PrepEncryptCommand );
+      REGISTER( PrepSignCommand );
       REGISTER( SelectCertificateCommand );
       REGISTER( SignCommand );
       REGISTER( SignEncryptFilesCommand );
