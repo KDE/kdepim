@@ -91,7 +91,11 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
     if ( !first )
       stream << ",";
 
-    stream << "\"" << ContactFields::label( fields.at( i ) ) << "\"";
+    // add quoting as defined in RFC 4180
+    QString label = ContactFields::label( fields.at( i ) );
+    label.replace( QLatin1Char( '"' ), QLatin1String( "\"\"" ) );
+
+    stream << "\"" << label << "\"";
     first = false;
   }
   stream << "\n";
@@ -115,6 +119,9 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
       } else {
         content = ContactFields::value( fields.at( j ), contact ).replace( '\n', "\\n" );
       }
+
+      // add quoting as defined in RFC 4180
+      content.replace( QLatin1Char( '"' ), QLatin1String( "\"\"" ) );
 
       stream << '\"' << content << '\"';
       first = false;
