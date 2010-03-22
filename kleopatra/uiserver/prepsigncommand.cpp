@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/prepencryptcommand.cpp
+    uiserver/prepsigncommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,7 +32,7 @@
 
 #include <config-kleopatra.h>
 
-#include "prepencryptcommand.h"
+#include "prepsigncommand.h"
 
 #include <crypto/newsignencryptemailcontroller.h>
 
@@ -46,75 +46,69 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace boost;
 
-class PrepEncryptCommand::Private : public QObject {
+class PrepSignCommand::Private : public QObject {
     Q_OBJECT
 private:
-    friend class ::Kleo::PrepEncryptCommand;
-    PrepEncryptCommand * const q;
+    friend class ::Kleo::PrepSignCommand;
+    PrepSignCommand * const q;
 public:
-    explicit Private( PrepEncryptCommand * qq )
+    explicit Private( PrepSignCommand * qq )
         : q( qq ), controller() {}
 
 private:
     void checkForErrors() const;
 
 public Q_SLOTS:
-    void slotRecipientsResolved();
+    void slotSignersResolved();
     void slotError( int, const QString & );
 
 private:
     shared_ptr<NewSignEncryptEMailController> controller;
 };
 
-PrepEncryptCommand::PrepEncryptCommand()
-    : AssuanCommandMixin<PrepEncryptCommand>(), d( new Private( this ) )
+PrepSignCommand::PrepSignCommand()
+    : AssuanCommandMixin<PrepSignCommand>(), d( new Private( this ) )
 {
 
 }
 
-PrepEncryptCommand::~PrepEncryptCommand() {}
+PrepSignCommand::~PrepSignCommand() {}
 
-void PrepEncryptCommand::Private::checkForErrors() const {
+void PrepSignCommand::Private::checkForErrors() const {
 
     if ( !q->inputs().empty() || !q->outputs().empty() || !q->messages().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "INPUT/OUTPUT/MESSAGE may only be given after PREP_ENCRYPT" ) );
+                         i18n( "INPUT/OUTPUT/MESSAGE may only be given after PREP_SIGN" ) );
     
     if ( q->numFiles() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "PREP_ENCRYPT is an email mode command, connection seems to be in filemanager mode" ) );
+                         i18n( "PREP_SIGN is an email mode command, connection seems to be in filemanager mode" ) );
 
-    if ( !q->senders().empty() && !q->informativeSenders() )
+    if ( q->senders().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "SENDER may not be given prior to PREP_ENCRYPT, except with --info" ) );
-
-    if ( q->recipients().empty() || q->informativeRecipients() )
-        throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
-                         i18n( "No recipients given, or only with --info" ) );
+                         i18n( "No SENDER given" ) );
 
 }
 
-int PrepEncryptCommand::doStart() {
+int PrepSignCommand::doStart() {
 
     removeMemento( NewSignEncryptEMailController::mementoName() );
 
     d->checkForErrors();
 
     d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
-    d->controller->setEncrypting( true );
+    d->controller->setEncrypting( false );
+    d->controller->setSigning( true );
 
     const QString session = sessionTitle();
     if ( !session.isEmpty() )
         d->controller->setSubject( session );
 
     if ( hasOption( "protocol" ) )
-        // --protocol is optional for PREP_ENCRYPT
+        // --protocol is optional for PREP_SIGN
         d->controller->setProtocol( checkProtocol( EMail ) );
 
-    if ( hasOption( "expect-sign" ) )
-        d->controller->setSigning( true );
-
-    QObject::connect( d->controller.get(), SIGNAL(certificatesResolved()), d.get(), SLOT(slotRecipientsResolved()) );
+    QObject::connect( d->controller.get(), SIGNAL(certificatesResolved()), d.get(), SLOT(slotSignersResolved()) );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 
     d->controller->startResolveCertificates( recipients(), senders() );
@@ -122,7 +116,7 @@ int PrepEncryptCommand::doStart() {
     return 0;
 }
 
-void PrepEncryptCommand::Private::slotRecipientsResolved() {
+void PrepSignCommand::Private::slotSignersResolved() {
     //hold local shared_ptr to member as q->done() deletes *this
     const shared_ptr<NewSignEncryptEMailController> cont = controller;
     QPointer<Private> that( this );
@@ -139,24 +133,24 @@ void PrepEncryptCommand::Private::slotRecipientsResolved() {
         q->done( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
-                 i18n("Caught unexpected exception in PrepEncryptCommand::Private::slotRecipientsResolved: %1",
+                 i18n("Caught unexpected exception in PrepSignCommand::Private::slotRecipientsResolved: %1",
                       QString::fromLocal8Bit( e.what() ) ) );
     } catch ( ... ) {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
-                 i18n("Caught unknown exception in PrepEncryptCommand::Private::slotRecipientsResolved") );
+                 i18n("Caught unknown exception in PrepSignCommand::Private::slotRecipientsResolved") );
     }
     if ( that ) // isn't this always deleted here and thus unnecessary?
         q->removeMemento( NewSignEncryptEMailController::mementoName() );
     cont->cancel();
 }
 
-void PrepEncryptCommand::Private::slotError( int err, const QString & details ) {
+void PrepSignCommand::Private::slotError( int err, const QString & details ) {
     q->done( err, details );
 }
 
-void PrepEncryptCommand::doCanceled() {
+void PrepSignCommand::doCanceled() {
     if ( d->controller )
         d->controller->cancel();
 }
 
-#include "prepencryptcommand.moc"
+#include "prepsigncommand.moc"
