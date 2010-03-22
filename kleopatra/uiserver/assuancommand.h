@@ -339,7 +339,7 @@ namespace Kleo {
         typedef gpg_error_t(*_Handler)( assuan_context_s*, char *);
 #endif
         virtual _Handler _handler() const = 0;
-    protected:
+
 #ifndef HAVE_ASSUAN2
         static int _handle( assuan_context_s*, char *, const char * );
 #else
