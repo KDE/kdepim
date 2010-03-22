@@ -37,7 +37,7 @@ AboutData::AboutData()
 #endif
                 ki18n( "KDE note taking utility" ),
                 KAboutData::License_GPL,
-                ki18n("(c) 1997-2008, KJots developers" ),
+                ki18n("Copyright © 1997–2008 KJots authors" ),
                 KLocalizedString() )
 {
 

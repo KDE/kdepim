@@ -1,6 +1,6 @@
 /*
     KNode, the KDE newsreader
-    Copyright (c) 1999-2005 the KNode authors.
+    Copyright (c) 1999-2010 the KNode authors.
     See file AUTHORS for details
 
     This program is free software; you can redistribute it and/or modify
@@ -47,7 +47,7 @@ namespace KNode
                   KNODE_VERSION,
                   ki18n("A newsreader for KDE"),
                   KAboutData::License_GPL,
-                  ki18n("Copyright (c) 1999-2009 the KNode authors"),
+                  ki18n("Copyright © 1999–2010 KNode authors"),
                   KLocalizedString(),
                   "http://kontact.kde.org/knode/" )
   {

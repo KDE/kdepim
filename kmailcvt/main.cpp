@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 
   KAboutData aboutData( "kmailcvt", 0, ki18n("KMailCVT"),
     "3", ki18n("Mail Import Tool"), KAboutData::License_GPL_V2,
-    ki18n("(c) 2000-2010, The KMailCVT developers"));
+    ki18n("Copyright © 2000–2010 KMailCVT authors"));
   aboutData.addAuthor(ki18n("Hans Dijkema"),ki18n("Original author"), "kmailcvt@hum.org");
   aboutData.addAuthor(ki18n("Danny Kukawka"), ki18n("Maintainer & New filters"), "danny.kukawka@web.de");
   aboutData.addAuthor(ki18n("Laurence Anderson"), ki18n("New GUI & cleanups"), "l.d.anderson@warwick.ac.uk");
