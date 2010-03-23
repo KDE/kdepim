@@ -20,8 +20,7 @@
 #include "vcardviewer.h"
 #include <kaddrbookexternal.h>
 
-#include <addresseeview.h>
-using KPIM::AddresseeView;
+#include <akonadi/contact/contactviewer.h>
 
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>
@@ -44,16 +43,14 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
   setButtonGuiItem( User1, KGuiItem(i18n("&Import")) );
   setButtonGuiItem( User2, KGuiItem(i18n("&Next Card")) );
   setButtonGuiItem( User3, KGuiItem(i18n("&Previous Card")) );
-  mAddresseeView = new AddresseeView(this);
-  mAddresseeView->enableLinks( 0 );
-  mAddresseeView->setVerticalScrollBarPolicy( Qt::ScrollBarAsNeeded );
-  setMainWidget(mAddresseeView);
+  mContactViewer = new Akonadi::ContactViewer(this);
+  setMainWidget(mContactViewer);
 
   VCardConverter vcc;
   mAddresseeList = vcc.parseVCards( vCard );
   if ( !mAddresseeList.empty() ) {
     itAddresseeList = mAddresseeList.begin();
-    mAddresseeView->setAddressee( *itAddresseeList );
+    mContactViewer->setRawContact( *itAddresseeList );
     if ( mAddresseeList.size() <= 1 ) {
       showButton(User2, false);
       showButton(User3, false);
@@ -62,7 +59,7 @@ VCardViewer::VCardViewer(QWidget *parent, const QByteArray& vCard)
       enableButton(User3, false);
   }
   else {
-    mAddresseeView->setPlainText(i18n("Failed to parse vCard."));
+    mContactViewer->setRawContact(KABC::Addressee());
     enableButton(User1, false);
   }
   connect( this, SIGNAL( user1clicked() ), SLOT( slotUser1() ) );
@@ -84,7 +81,7 @@ void VCardViewer::slotUser1()
 void VCardViewer::slotUser2()
 {
   // next vcard
-  mAddresseeView->setAddressee( *(++itAddresseeList) );
+  mContactViewer->setRawContact( *(++itAddresseeList) );
   if ( itAddresseeList == --(mAddresseeList.end()) )
     enableButton(User2, false);
   enableButton(User3, true);
@@ -93,7 +90,7 @@ void VCardViewer::slotUser2()
 void VCardViewer::slotUser3()
 {
   // previous vcard
-  mAddresseeView->setAddressee( *(--itAddresseeList) );
+  mContactViewer->setRawContact( *(--itAddresseeList) );
   if ( itAddresseeList == mAddresseeList.begin() )
     enableButton(User3, false);
   enableButton(User2, true);

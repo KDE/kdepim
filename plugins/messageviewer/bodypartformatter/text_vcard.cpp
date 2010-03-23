@@ -39,6 +39,7 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 
+#include <akonadi/contact/standardcontactformatter.h>
 #include <kaddrbookexternal.h>
 
 #include "messageviewer/interfaces/bodypartformatter.h"
@@ -52,9 +53,6 @@ using MessageViewer::Interface::BodyPart;
 #include <kabc/addressee.h>
 using KABC::VCardConverter;
 using KABC::Addressee;
-
-#include "addresseeview.h"
-using KPIM::AddresseeView;
 
 #include <kdemacros.h>
 
@@ -87,8 +85,10 @@ namespace {
        foreach (const KABC::Addressee& a, al ) {
           if ( a.isEmpty() ) return AsIcon;
 
-          QString contact = AddresseeView::vCardAsHTML( a, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );
-          writer->queue( contact );
+          Akonadi::StandardContactFormatter formatter;
+          formatter.setContact( a );
+
+          writer->queue( formatter.toHtml( Akonadi::StandardContactFormatter::DivForm ) );
 
           QString addToLinkText = i18n( "[Add this contact to the address book]" );
           QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );

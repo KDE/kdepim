@@ -22,8 +22,8 @@
 #include <kdialog.h>
 #include <kabc/addressee.h>
 
-namespace KPIM {
-  class AddresseeView;
+namespace Akonadi {
+  class ContactViewer;
 }
 
 namespace MessageViewer {
@@ -41,7 +41,7 @@ class VCardViewer : public KDialog
       virtual void slotUser3();
 
     private:
-      KPIM::AddresseeView *  mAddresseeView;
+      Akonadi::ContactViewer *  mContactViewer;
       KABC::Addressee::List  mAddresseeList;
 
       KABC::Addressee::List::Iterator itAddresseeList;

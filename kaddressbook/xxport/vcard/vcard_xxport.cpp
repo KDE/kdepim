@@ -38,7 +38,7 @@
 #include <kpushbutton.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
-#include <libkdepim/addresseeview.h>
+#include <akonadi/contact/contactviewer.h>
 
 #ifdef QGPGME_FOUND
 #include "gpgme++/context.h"
@@ -64,7 +64,7 @@ class VCardViewerDialog : public KDialog
   private:
     void updateView();
 
-    KPIM::AddresseeView *mView;
+    Akonadi::ContactViewer *mView;
 
     KABC::Addressee::List mContacts;
     KABC::Addressee::List::Iterator mIt;
@@ -416,9 +416,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   label->setFont( font );
   layout->addWidget( label );
 
-  mView = new KPIM::AddresseeView( page );
-  mView->enableLinks( 0 );
-  mView->setVerticalScrollBarPolicy ( Qt::ScrollBarAsNeeded );
+  mView = new Akonadi::ContactViewer( page );
   layout->addWidget( mView );
 
   setButtonText( Apply, i18n( "Import All..." ) );
@@ -440,7 +438,7 @@ KABC::Addressee::List VCardViewerDialog::contacts() const
 
 void VCardViewerDialog::updateView()
 {
-  mView->setAddressee( *mIt );
+  mView->setRawContact( *mIt );
 
   KABC::Addressee::List::Iterator it = mIt;
   enableButton( Apply, (++it) != mContacts.end() );
