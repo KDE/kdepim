@@ -1382,12 +1382,12 @@ void KOAgendaView::displayIncidence( Incidence *incidence )
     } else if ( event ) {
       dateToAdd = incDtStart;
       incidenceEnd = incDtEnd;
+    }
 
-      if ( dateToAdd.isDateOnly() ) {
-        // so comparisons with < > actually work
-        dateToAdd.setTime( QTime( 0, 0 ) );
-        incidenceEnd.setTime( QTime( 23, 59 ) );
-      }
+    if ( dateToAdd.isValid() && dateToAdd.isDateOnly() ) {
+      // so comparisons with < > actually work
+      dateToAdd.setTime( QTime( 0, 0 ) );
+      incidenceEnd.setTime( QTime( 23, 59 ) );
     }
 
     if  ( dateToAdd <= lastVisibleDateTime && incidenceEnd > firstVisibleDateTime ) {
