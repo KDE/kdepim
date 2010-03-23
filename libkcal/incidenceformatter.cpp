@@ -323,7 +323,8 @@ static QString displayViewFormatAttachments( Incidence *incidence )
 
 static QString displayViewFormatCategories( Incidence *incidence )
 {
-  return incidence->categoriesStr();
+  // We do not use Incidence::categoriesStr() since it does not have whitespace
+  return incidence->categories().join( ", " );
 }
 
 static QString displayViewFormatCreationDate( Incidence *incidence )
@@ -571,7 +572,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
   if ( attachmentCount > 0 ) {
     tmpStr += "<tr>";
     tmpStr += "<td><b>" +
-              i18n( "Attachment:", "Attachments:", attachmentCount ) +
+              i18n( "Attachment:", "%n Attachments:", attachmentCount ) +
               "</b></td>";
     tmpStr += "<td>" + displayViewFormatAttachments( event ) + "</td>";
     tmpStr += "</tr>";
