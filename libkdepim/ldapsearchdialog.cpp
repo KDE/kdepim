@@ -21,6 +21,8 @@
 #include "ldapsearchdialog.h"
 #include "ldapclient.h"
 
+#include <libemailfunctions/email.h>
+
 #include <qcheckbox.h>
 #include <qgroupbox.h>
 #include <qheader.h>
@@ -258,7 +260,7 @@ void LDAPSearchDialog::restoreSettings()
 
       KPIM::LdapClient* ldapClient = new KPIM::LdapClient( 0, this, "ldapclient" );
       ldapClient->setServer( ldapServer );
-      
+
       QStringList attrs;
 
       for ( QMap<QString,QString>::Iterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
@@ -445,7 +447,7 @@ QString LDAPSearchDialog::selectedEMails() const
         if ( name.isEmpty() ) {
           result << email;
         } else {
-          result << name + " <" + email + ">";
+          result << KPIM::quoteNameIfNecessary( name ) + " <" + email + ">";
         }
       }
     }
