@@ -246,7 +246,7 @@ KOAgendaView::~KOAgendaView()
 
 void KOAgendaView::setCalendar( Akonadi::Calendar *cal )
 {
-  if( calendar() ) {
+  if ( calendar() ) {
     calendar()->unregisterObserver( this );
   }
   Q_ASSERT( cal );
@@ -355,7 +355,7 @@ void KOAgendaView::zoomInHorizontally( const QDate &date )
     dateToZoom = mAgenda->selectedIncidenceDate();
   }
 
-  if( !dateToZoom.isValid() ) {
+  if ( !dateToZoom.isValid() ) {
     if ( ndays > 1 ) {
       newBegin = begin.addDays(1);
       count = ndays - 1;
@@ -837,7 +837,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
       endDt.setTime( endTime );
     }
 
-    if( td->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() )  == endDt ) {
+    if ( td->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() )  == endDt ) {
       // No change
       mChanger->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
@@ -1333,12 +1333,12 @@ void KOAgendaView::fillAgenda()
 
   foreach ( const Item& aitem, incidences ) {
     displayIncidence( aitem );
-    if( aitem.id() == selectedAgendaId ) {
+    if ( aitem.id() == selectedAgendaId ) {
       mAgenda->selectItem( aitem );
       somethingReselected = true;
     }
 
-    if( aitem.id() == selectedAllDayAgendaId ) {
+    if ( aitem.id() == selectedAllDayAgendaId ) {
       mAllDayAgenda->selectItem( aitem );
       somethingReselected = true;
     }
@@ -1353,7 +1353,7 @@ void KOAgendaView::fillAgenda()
   // make invalid
   deleteSelectedDateTime();
 
-  if( !somethingReselected ) {
+  if ( !somethingReselected ) {
     emit incidenceSelected( Item(), QDate() );
   }
 }
