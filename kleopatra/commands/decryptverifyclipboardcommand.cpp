@@ -168,11 +168,6 @@ void DecryptVerifyClipboardCommand::doCancel() {
     d->controller.cancel();
 }
 
-void DecryptVerifyClipboardCommand::applyWindowID( QWidget * wid ) const {
-    if ( wid )
-        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
-}
-
 #undef d
 #undef q
 

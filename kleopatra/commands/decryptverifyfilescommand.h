@@ -42,7 +42,7 @@ class QStringList;
 namespace Kleo {
 namespace Commands {
 
-    class DecryptVerifyFilesCommand : public Command, public ExecutionContext {
+    class DecryptVerifyFilesCommand : public Command {
         Q_OBJECT
     public:
         explicit DecryptVerifyFilesCommand( QAbstractItemView * view, KeyListController * parent );
@@ -59,8 +59,6 @@ namespace Commands {
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
-
-        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
     private:
         class Private;

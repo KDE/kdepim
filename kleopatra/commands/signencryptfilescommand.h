@@ -44,7 +44,7 @@ class QStringList;
 namespace Kleo {
 namespace Commands {
 
-    class SignEncryptFilesCommand : public Command, public ExecutionContext {
+    class SignEncryptFilesCommand : public Command {
         Q_OBJECT
     public:
         explicit SignEncryptFilesCommand( QAbstractItemView * view, KeyListController * parent );
@@ -67,8 +67,6 @@ namespace Commands {
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
-
-        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
     private:
         class Private;

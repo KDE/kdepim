@@ -40,7 +40,7 @@
 namespace Kleo {
 namespace Commands {
 
-    class DecryptVerifyClipboardCommand : public Command, public ExecutionContext {
+    class DecryptVerifyClipboardCommand : public Command {
         Q_OBJECT
     public:
         explicit DecryptVerifyClipboardCommand( QAbstractItemView * view, KeyListController * parent );
@@ -52,8 +52,6 @@ namespace Commands {
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
-
-        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
     private:
         class Private;

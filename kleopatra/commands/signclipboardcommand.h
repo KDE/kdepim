@@ -42,7 +42,7 @@
 namespace Kleo {
 namespace Commands {
 
-    class SignClipboardCommand : public Command, public ExecutionContext {
+    class SignClipboardCommand : public Command {
         Q_OBJECT
     public:
         explicit SignClipboardCommand( GpgME::Protocol protocol, QAbstractItemView * view, KeyListController * parent );
@@ -54,8 +54,6 @@ namespace Commands {
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
-
-        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
     private:
         class Private;

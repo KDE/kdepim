@@ -167,11 +167,6 @@ void EncryptClipboardCommand::doCancel() {
     d->controller.cancel();
 }
 
-void EncryptClipboardCommand::applyWindowID( QWidget * wid ) const {
-    if ( wid )
-        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
-}
-
 #undef d
 #undef q
 

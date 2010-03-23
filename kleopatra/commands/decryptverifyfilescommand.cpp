@@ -171,11 +171,6 @@ void DecryptVerifyFilesCommand::doCancel() {
     d->controller.cancel();
 }
 
-void DecryptVerifyFilesCommand::applyWindowID( QWidget * wid ) const {
-    if ( wid )
-        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
-}
-
 QStringList DecryptVerifyFilesCommand::Private::selectFiles() const {
     return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ), "enc" );
 }
