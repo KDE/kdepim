@@ -29,7 +29,6 @@
 #include <kparts/statusbarextension.h>
 
 class QWidget;
-class QTextEdit;
 class KAboutData;
 class KJotsWidget;
 
@@ -70,7 +69,6 @@ protected Q_SLOTS:
 private:
     KJotsWidget *component;
     KParts::StatusBarExtension *mStatusBar;
-    QTextEdit* m_widget;
 };
 
 #endif // KJOTSPART_H

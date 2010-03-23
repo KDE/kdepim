@@ -33,7 +33,6 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QTextDocumentFragment>
-#include <QTextBrowser>
 #include <QTimer>
 
 // Akonadi
@@ -68,6 +67,7 @@
 #include <kselectionproxymodel.h>
 #include <KStandardDirs>
 #include <KTextEdit>
+#include <KTextBrowser>
 #include <KGlobalSettings>
 #include <KXMLGUIClient>
 #include <KProcess>
@@ -158,7 +158,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   layout->addWidget( splitter );
 
-  browser = new QTextBrowser( stackedWidget );
+  browser = new KTextBrowser( stackedWidget );
   stackedWidget->addWidget( browser );
   stackedWidget->setCurrentWidget( browser );
 

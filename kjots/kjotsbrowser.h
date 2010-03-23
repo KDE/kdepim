@@ -24,9 +24,9 @@
 #ifndef __KJOTSBROWSER_H
 #define __KJOTSBROWSER_H
 
-#include <QTextBrowser>
+#include <KTextBrowser>
 
-class KJotsBrowser : public QTextBrowser
+class KJotsBrowser : public KTextBrowser
 {
 Q_OBJECT
 public:

@@ -24,14 +24,13 @@
 //Own Header
 #include "kjotsbrowser.h"
 
-#include <QTextBrowser>
 #include <QTextDocument>
 #include <QStackedWidget>
 
 #include <krun.h>
 #include <kdebug.h>
 
-KJotsBrowser::KJotsBrowser ( QWidget *parent ) : QTextBrowser(parent)
+KJotsBrowser::KJotsBrowser ( QWidget *parent ) : KTextBrowser(parent)
 {
     setWordWrapMode(QTextOption::WordWrap);
 }

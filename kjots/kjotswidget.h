@@ -34,7 +34,6 @@
 #include <QItemSelection>
 
 class QCheckBox;
-class QTextBrowser;
 class QTextCursor;
 class QTextEdit;
 class QStackedWidget;
@@ -47,6 +46,7 @@ class KJob;
 class KReplaceDialog;
 class KSelectionProxyModel;
 class KTextEdit;
+class KTextBrowser;
 class KXMLGUIClient;
 
 namespace Akonadi
@@ -140,7 +140,7 @@ private slots:
 private:
   KXMLGUIClient  *m_xmlGuiClient;
   KJotsEdit      *editor;
-  QTextBrowser   *browser;
+  KTextBrowser   *browser;
   QStackedWidget *stackedWidget;
   KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;
