@@ -40,6 +40,7 @@
 
 #include <QAbstractTableModel>
 #include <QHeaderView>
+#include <QSortFilterProxyModel>
 
 #include <boost/shared_ptr.hpp>
 
@@ -90,15 +91,10 @@ namespace {
                     case TestName:
                         return m_tests[row]->name();
                     case TestResult:
-                        if ( m_tests[row]->passed() )
-                            return i18n("Passed");
-                        else
-                            if ( role == Qt::ToolTipRole )
-                                return m_tests[row]->longError();
-                            else
-                                return m_tests[row]->skipped()
-                                    ? i18n("Skipped")
-                                    : m_tests[row]->shortError();
+                        return
+                            m_tests[row]->skipped() ? i18n("Skipped") :
+                            m_tests[row]->passed()  ? i18n("Passed") :
+                            /* else */                m_tests[row]->shortError();
                     }
                     break;
                 case Qt::BackgroundRole:
@@ -149,6 +145,54 @@ namespace {
         std::vector< shared_ptr<SelfTest> > m_tests;
     };
 
+    class Proxy : public QSortFilterProxyModel {
+        Q_OBJECT
+    public:
+        explicit Proxy( QObject * parent=0 )
+            : QSortFilterProxyModel( parent ), m_showAll( false )
+        {
+            setDynamicSortFilter( true );
+        }
+
+        bool showAll() const { return m_showAll; }
+
+    Q_SIGNALS:
+        void showAllChanged( bool );
+
+    public Q_SLOTS:
+        void setShowAll( bool on ) {
+            if ( on == m_showAll )
+                return;
+            m_showAll = on;
+            invalidateFilter();
+            emit showAllChanged( on );
+        }
+
+    private:
+        /* reimp */ bool filterAcceptsRow( int src_row, const QModelIndex & src_parent ) const {
+            if ( m_showAll )
+                return true;
+            if ( const Model * const model = qobject_cast<Model*>( sourceModel() ) )
+                if ( !src_parent.isValid() && src_row >= 0 && src_row < model->rowCount( src_parent ) )
+                    if ( const shared_ptr<SelfTest> & t = model->at( src_row ) )
+                        return !t->passed() ;
+                    else
+                        qWarning( "%s: NULL test??", Q_FUNC_INFO );
+                else
+                    if ( src_parent.isValid() )
+                        qWarning( "%s: view asks for subitems!", Q_FUNC_INFO );
+                    else
+                        qWarning( "%s: index %d is out of range [%d,%d[", Q_FUNC_INFO, src_row, 0, model->rowCount( src_parent ) );
+            else
+                qWarning( "%s: expected a ::Model, got %s", Q_FUNC_INFO,
+                          sourceModel() ? sourceModel()->metaObject()->className() : "nullptr" );
+            return false;
+        }
+
+    private:
+        bool m_showAll;
+    };
+
 }
 
 class SelfTestDialog::Private {
@@ -157,25 +201,37 @@ class SelfTestDialog::Private {
 public:
     explicit Private( SelfTestDialog * qq )
         : q( qq ),
+          model( q ),
+          proxy( q ),
           ui( q )
     {
-        ui.resultsTV->setModel( &model );
+        proxy.setSourceModel( &model );
+        ui.resultsTV->setModel( &proxy );
+
+        ui.detailsGB->hide();
+        ui.proposedCorrectiveActionGB->hide();
 
         connect( ui.resultsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotSelectionChanged()) );
-        ui.proposedCorrectiveActionLB->setTextFormat( Qt::RichText );
+        connect( ui.showAllCB, SIGNAL(toggled(bool)),
+                 &proxy, SLOT(setShowAll(bool)) );
     }
 
 private:
     void slotSelectionChanged() {
         const int row = selectedRowIndex();
         if ( row < 0 ) {
-            ui.proposedCorrectiveActionLB->setText( i18n("(select test first)" ) );
-            ui.proposedCorrectiveActionGB->setEnabled( false );
+            ui.detailsLB->setText( i18n("(select test first)") );
+            ui.detailsGB->hide();
+            ui.proposedCorrectiveActionGB->hide();
         } else {
-            ui.proposedCorrectiveActionGB->setEnabled( true );
-            ui.proposedCorrectiveActionLB->setText( model.at(row)->proposedFix() );
-            ui.doItPB->setEnabled( !model.at(row)->passed() && model.at(row)->canFixAutomatically() );
+            const shared_ptr<SelfTest> & t = model.at( row );
+            ui.detailsLB->setText( t->longError() );
+            ui.detailsGB->setVisible( !t->passed() );
+            const QString action = t->proposedFix();
+            ui.proposedCorrectiveActionGB->setVisible( !t->passed() && !action.isEmpty() );
+            ui.proposedCorrectiveActionLB->setText( action );
+            ui.doItPB->setVisible( !t->passed() && t->canFixAutomatically() );
         }
     }
     void slotDoItClicked() {
@@ -195,7 +251,7 @@ private:
         if ( !ism )
             return QModelIndex();
         const QModelIndexList mil = ism->selectedRows();
-        return mil.empty() ? QModelIndex() : mil.front() ;
+        return mil.empty() ? QModelIndex() : proxy.mapToSource( mil.front() ) ;
     }
     int selectedRowIndex() const {
         return selectedRow().row();
@@ -203,6 +259,7 @@ private:
 
 private:
     Model model;
+    Proxy proxy;
 
     struct UI : public Ui_SelfTestDialog {
 
