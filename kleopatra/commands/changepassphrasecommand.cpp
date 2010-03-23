@@ -185,18 +185,16 @@ void ChangePassphraseCommand::Private::createJob() {
 }
 
 void ChangePassphraseCommand::Private::showErrorDialog( const Error & err ) {
-    KMessageBox::error( parentWidgetOrView(),
-                        i18n("<p>An error occurred while trying to change "
-                             "the passphrase for <b>%1</b>:</p><p>%2</p>",
-                             Formatting::formatForComboBox( key ),
-                             QString::fromLocal8Bit( err.asString() ) ),
-                        i18n("Passphrase Change Error") );
+    error( i18n("<p>An error occurred while trying to change "
+                "the passphrase for <b>%1</b>:</p><p>%2</p>",
+                Formatting::formatForComboBox( key ),
+                QString::fromLocal8Bit( err.asString() ) ),
+           i18n("Passphrase Change Error") );
 }
 
 void ChangePassphraseCommand::Private::showSuccessDialog() {
-    KMessageBox::information( parentWidgetOrView(),
-                              i18n("Passphrase changed successfully."),
-                              i18n("Passphrase Change Succeeded") );
+    information( i18n("Passphrase changed successfully."),
+                 i18n("Passphrase Change Succeeded") );
 }
 
 #undef d

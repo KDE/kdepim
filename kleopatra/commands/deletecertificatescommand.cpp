@@ -93,7 +93,8 @@ public:
     void ensureDialogCreated() {
         if ( dialog )
             return;
-        dialog = new DeleteCertificatesDialog( parentWidgetOrView() );
+        dialog = new DeleteCertificatesDialog;
+        applyWindowID( dialog );
         dialog->setAttribute( Qt::WA_DeleteOnClose );
         dialog->setWindowTitle( i18nc("@title:window", "Delete Certificates") );
         connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
@@ -275,11 +276,10 @@ void DeleteCertificatesCommand::Private::slotDialogAccepted() {
             cms.empty() << 1U |     canDelete( CMS ) << 0U ;
 
     if ( const unsigned int actions = deletionErrorCases[errorCase].actions ) {
-        KMessageBox::information( parentWidgetOrView(),
-                                  i18n( deletionErrorCases[errorCase].text ),
-                                  (actions & Failure)
-                                  ? i18n( "Certificate Deletion Failed" )
-                                  : i18n( "Certificate Deletion Problem" ) );
+        information( i18n( deletionErrorCases[errorCase].text ),
+                     (actions & Failure)
+                     ? i18n( "Certificate Deletion Failed" )
+                     : i18n( "Certificate Deletion Problem" ) );
         if ( actions & ClearCMS )
             cms.clear();
         if ( actions & ClearPGP )
@@ -343,7 +343,7 @@ void DeleteCertificatesCommand::Private::showErrorsAndFinish() {
                                  "the certificate:</p>"
                                  "<p><b>%1</b></p></qt>",
                                  pgpError ? cmsError ? pgpErrorString + "</br>" + cmsErrorString : pgpErrorString : cmsErrorString );
-        KMessageBox::error( parentWidgetOrView(), msg, i18n("Certificate Deletion Failed") );
+        error( msg, i18n("Certificate Deletion Failed") );
     } else {
         std::vector<Key> keys = pgpKeys;
         keys.insert( keys.end(), cmsKeys.begin(), cmsKeys.end() );

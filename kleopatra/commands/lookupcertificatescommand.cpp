@@ -180,7 +180,8 @@ void LookupCertificatesCommand::doStart() {
 void LookupCertificatesCommand::Private::createDialog() {
     if ( dialog )
         return;
-    dialog = new LookupCertificatesDialog( parentWidgetOrView() );
+    dialog = new LookupCertificatesDialog;
+    applyWindowID( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     connect( dialog, SIGNAL(searchTextChanged(QString)),
              q, SLOT(slotSearchTextChanged(QString)) );
@@ -348,13 +349,13 @@ static bool haveX509DirectoryServerConfigured() {
 bool LookupCertificatesCommand::Private::checkConfig() const {
     const bool ok = haveOpenPGPKeyserverConfigured() || haveX509DirectoryServerConfigured();
     if ( !ok )
-        KMessageBox::information( parentWidgetOrView(), i18nc("@info",
-                                           "<para>You do not have any directory servers configured.</para>"
-                                           "<para>You need to configure at least one directory server to "
-                                           "search on one.</para>"
-                                           "<para>You can configure directory servers here: "
-                                           "<interface>Settings->Configure Kleopatra</interface>.</para>"),
-                                  i18nc("@title", "No Directory Servers Configured") );
+        information( i18nc("@info",
+                           "<para>You do not have any directory servers configured.</para>"
+                           "<para>You need to configure at least one directory server to "
+                           "search on one.</para>"
+                           "<para>You can configure directory servers here: "
+                           "<interface>Settings->Configure Kleopatra</interface>.</para>"),
+                     i18nc("@title", "No Directory Servers Configured") );
     return ok;
 }
 

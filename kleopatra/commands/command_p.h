@@ -93,6 +93,10 @@ public:
             KMessageBox::information( parentWidgetOrView(), text, caption, dontShowAgainName, options );
     }
 
+    void applyWindowID( QWidget * w ) const {
+        return q->applyWindowID( w );
+    }
+
 private:
     bool autoDelete : 1;
     bool warnWhenRunningAtShutdown : 1;
