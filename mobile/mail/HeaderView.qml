@@ -38,7 +38,8 @@ Rectangle {
     Item {
       id: wrapper
       width: messageListView.width
-      height : 32
+      height: 32
+      clip: true
 
       Rectangle {
         id: background
@@ -123,5 +124,6 @@ Rectangle {
     preferredHighlightBegin: height/2 - currentItem.height/2
     preferredHighlightEnd: height/2 + currentItem.height/2
     focus: true
+    clip: true
   }
 }

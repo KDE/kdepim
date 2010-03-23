@@ -18,7 +18,6 @@
 */
 
 import Qt 4.6
-import org.kde 4.5
 
 /**
  * Static set of nessages, for testing QML files without available Akonadi.
