@@ -1341,7 +1341,7 @@ void KOAgendaView::displayIncidence( Incidence *incidence )
   KDateTime firstVisibleDateTime( mSelectedDates.first(), KOPrefs::instance()->timeSpec() );
   KDateTime lastVisibleDateTime( mSelectedDates.last(), KOPrefs::instance()->timeSpec() );
 
-  lastVisibleDateTime.setTime( QTime( 23, 59 ) );
+  lastVisibleDateTime.setTime( QTime( 23, 59, 59, 59 ) );
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
   DateTimeList dateTimeList;
 
@@ -1387,7 +1387,7 @@ void KOAgendaView::displayIncidence( Incidence *incidence )
     if ( dateToAdd.isValid() && dateToAdd.isDateOnly() ) {
       // so comparisons with < > actually work
       dateToAdd.setTime( QTime( 0, 0 ) );
-      incidenceEnd.setTime( QTime( 23, 59 ) );
+      incidenceEnd.setTime( QTime( 23, 59, 59, 59 ) );
     }
 
     if  ( dateToAdd <= lastVisibleDateTime && incidenceEnd > firstVisibleDateTime ) {
