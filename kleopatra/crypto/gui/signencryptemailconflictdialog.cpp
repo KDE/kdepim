@@ -401,7 +401,7 @@ private:
         const Protocol proto = q->selectedProtocol();
         const bool quickMode = q->isQuickMode();
 
-        const bool needProtocolSelection = !quickMode || presetProtocol == UnknownProtocol ;
+        const bool needProtocolSelection = presetProtocol == UnknownProtocol ;
 
         const bool needShowAllRecipientsCB =
             quickMode             ? false :
