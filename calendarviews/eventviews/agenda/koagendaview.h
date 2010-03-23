@@ -139,7 +139,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
 
     /* reimp from BaseView */
     virtual void setCalendar( Akonadi::Calendar *cal );
-     
+
     /** Show only incidences from the given collection selection. */
 //    void setCollectionSelection( CollectionSelection* selection );
     void setCollection( Akonadi::Collection::Id id );

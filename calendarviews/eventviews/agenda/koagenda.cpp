@@ -436,13 +436,15 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
   switch ( de->type() ) {
   case QEvent::DragEnter:
   case QEvent::DragMove:
-    if ( !Akonadi::canDecode( md ) )
+    if ( !Akonadi::canDecode( md ) ) {
       return false;
+    }
 
-    if ( Akonadi::mimeDataHasTodo( md ) )
+    if ( Akonadi::mimeDataHasTodo( md ) ) {
       de->accept();
-    else
+    } else {
       de->ignore();
+    }
     return true;
     break;
   case QEvent::DragLeave:
@@ -450,8 +452,9 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
     break;
   case QEvent::Drop:
   {
-    if ( !Akonadi::canDecode( md ) )
+    if ( !Akonadi::canDecode( md ) ) {
       return false;
+    }
 
     const QList<KUrl> todoUrls = Akonadi::todoItemUrls( md );
     const QList<Todo::Ptr> todos = Akonadi::todos( md, mCalendar->timeSpec() );
@@ -469,10 +472,11 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
       pos = viewportToContents( viewportPos );
     }
     QPoint gpos = contentsToGrid( pos );
-    if ( !todoUrls.isEmpty() )
+    if ( !todoUrls.isEmpty() ) {
       emit droppedToDos( todoUrls, gpos, mAllDayMode );
-    else
+    } else {
       emit droppedToDos( todos, gpos, mAllDayMode );
+    }
     return true;
   }
   break;
@@ -1062,7 +1066,7 @@ void KOAgenda::endItemAction()
           mActionItem->setIncidence( item );
           mActionItem->dissociateFromMultiItem();
 #endif
-          mChanger->addIncidence( newInc, inc.parentCollection(),this );
+          mChanger->addIncidence( newInc, inc.parentCollection(), this );
           emit enableAgendaUpdate( true );
         } else {
           KMessageBox::sorry(
@@ -1135,8 +1139,10 @@ void KOAgenda::endItemAction()
       }
 
       // Notify about change
-      // the agenda view will apply the changes to the actual Incidence*!
-      // Bug #228696 don't call endChanged now it's async in akonadi so it can be called before that modified item was done. And endChange is calling when we move item.
+      // The agenda view will apply the changes to the actual Incidence*!
+      // Bug #228696 don't call endChanged now it's async in Akonadi so it can
+      // be called before that modified item was done.  And endChange is
+      // calling when we move item.
       // Not perfect need to improve it!
       //mChanger->endChange( inc );
       emit itemModified( modif );
@@ -1704,11 +1710,14 @@ void KOAgenda::insertMultiItem( const Item &event, const QDate &qd, int XBegin,
   marcus_bains();
 }
 
-QList<KOAgendaItem*> KOAgenda::agendaItems( const Akonadi::Item &aitem ) const {
+QList<KOAgendaItem*> KOAgenda::agendaItems( const Akonadi::Item &aitem ) const
+{
   QList<KOAgendaItem*> items;
-  Q_FOREACH ( KOAgendaItem* const item, mItems )
-    if ( item && item->incidence() == aitem )
+  Q_FOREACH ( KOAgendaItem * const item, mItems ) {
+    if ( item && item->incidence() == aitem ) {
       items.push_back( item );
+    }
+  }
   return items;
 }
 

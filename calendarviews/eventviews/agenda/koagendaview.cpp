@@ -252,8 +252,8 @@ void KOAgendaView::setCalendar( Akonadi::Calendar *cal )
   Q_ASSERT( cal );
   KOrg::AgendaView::setCalendar(cal);
   calendar()->registerObserver( this );
-  mAgenda->setCalendar(calendar());
-  mAllDayAgenda->setCalendar(calendar());
+  mAgenda->setCalendar( calendar() );
+  mAllDayAgenda->setCalendar( calendar() );
 }
 
 void KOAgendaView::connectAgenda( KOAgenda *agenda, QMenu *popup,
@@ -731,9 +731,9 @@ void KOAgendaView::updateTimeBarWidth()
 
   int num = 0;
   int width = mTimeLabelsZone->timeLabelsWidth();
-  foreach( QLabel *l, mTimeBarHeaders ) {
+  foreach ( QLabel *l, mTimeBarHeaders ) {
     num++;
-    foreach( const QString &word, l->text().split( ' ' ) ) {
+    foreach ( const QString &word, l->text().split( ' ' ) ) {
       width = qMax( width, fm.width( word ) );
     }
   }
@@ -1096,7 +1096,7 @@ void KOAgendaView::showIncidences( const Item::List &incidences, const QDate &da
   CalFilter *filter = calendar()->filter();
   bool wehaveall = true;
   if ( filter ) {
-    Q_FOREACH( const Item& aitem, incidences ){
+    Q_FOREACH ( const Item &aitem, incidences ) {
       if ( !( wehaveall = filter->filterIncidence( Akonadi::incidence( aitem ).get() ) ) ) {
         break;
       }
@@ -1107,15 +1107,17 @@ void KOAgendaView::showIncidences( const Item::List &incidences, const QDate &da
     calendar()->setFilter( 0 );
   }
 
-  KDateTime start = Akonadi::incidence( incidences.first() )->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ),
-            end = Akonadi::incidence( incidences.first() )->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() );
+  KDateTime start = Akonadi::incidence( incidences.first() )->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() );
+  KDateTime end = Akonadi::incidence( incidences.first() )->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() );
   Item first = incidences.first();
   Q_FOREACH( const Item &aitem, incidences ) {
     if ( Akonadi::incidence( aitem )->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ) < start ) {
       first = aitem;
     }
-    start = qMin( start, Akonadi::incidence( aitem )->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ) );
-    end = qMax( start, Akonadi::incidence( aitem )->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() ) );
+    start = qMin( start,
+                  Akonadi::incidence( aitem )->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ) );
+    end = qMax( start,
+                Akonadi::incidence( aitem )->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() ) );
   }
 
   end.toTimeSpec( start );    // allow direct comparison of dates
@@ -1331,7 +1333,7 @@ void KOAgendaView::fillAgenda()
   bool somethingReselected = false;
   const Item::List incidences = calendar()->incidences();
 
-  foreach ( const Item& aitem, incidences ) {
+  foreach ( const Item &aitem, incidences ) {
     displayIncidence( aitem );
     if ( aitem.id() == selectedAgendaId ) {
       mAgenda->selectItem( aitem );
@@ -1499,7 +1501,8 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
 
   Todo::Ptr todo = Akonadi::todo( todoItem );
   if ( todo &&  dynamic_cast<Akonadi::Calendar*>( calendar() ) ) {
-    const Item existingTodoItem = dynamic_cast<Akonadi::Calendar*>( calendar() )->itemForIncidence( calendar()->todo( todo->uid() ) );
+    const Item existingTodoItem =
+      dynamic_cast<Akonadi::Calendar*>( calendar() )->itemForIncidence( calendar()->todo( todo->uid() ) );
     if ( Todo::Ptr existingTodo = Akonadi::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
@@ -1550,8 +1553,9 @@ void KOAgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint
 }
 void KOAgendaView::startDrag( const Item &incidence )
 {
-  if ( QDrag *drag = Akonadi::createDrag( incidence, calendar()->timeSpec(), this ) )
+  if ( QDrag *drag = Akonadi::createDrag( incidence, calendar()->timeSpec(), this ) ) {
     drag->exec();
+  }
 }
 
 void KOAgendaView::readSettings()
@@ -1686,18 +1690,20 @@ void KOAgendaView::clearTimeSpanSelection()
 }
 
 #if 0
-void KOAgendaView::setCollectionSelection( CollectionSelection* sel )
+void KOAgendaView::setCollectionSelection( CollectionSelection *sel )
 {
-  if ( mCollectionSelection == sel )
+  if ( mCollectionSelection == sel ) {
     return;
+  }
   mCollectionSelection = sel;
 }
 #endif
 
 void KOAgendaView::setCollection( Collection::Id coll )
 {
-  if ( mCollectionId == coll )
+  if ( mCollectionId == coll ) {
     return;
+  }
   mCollectionId = coll;
 }
 
@@ -1711,10 +1717,12 @@ bool KOAgendaView::filterByCollectionSelection( const Item &incidence )
   if ( customCollectionSelection() ) {
     return customCollectionSelection()->contains( incidence.parentCollection().id() );
   }
-  if ( mCollectionId < 0 )
+
+  if ( mCollectionId < 0 ) {
     return true;
-  else
+  } else {
     return mCollectionId == incidence.storageCollectionId();
+  }
 }
 
 void KOAgendaView::setUpdateNeeded()
