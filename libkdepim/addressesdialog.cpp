@@ -24,8 +24,6 @@
 
 #include "addressesdialog.h"
 
-#include "contactstreemodel.h"
-#include "contactsfilterproxymodel.h"
 #include "distributionlist.h"
 #include "ldapsearchdialog.h"
 
@@ -39,6 +37,8 @@
 #include <Akonadi/ItemFetchJob>
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
+#include <akonadi/contact/contactstreemodel.h>
+#include <akonadi/contact/contactsfilterproxymodel.h>
 
 #include <KDebug>
 #include <KGlobal>

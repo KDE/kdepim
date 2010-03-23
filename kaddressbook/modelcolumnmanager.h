@@ -21,7 +21,7 @@
 #ifndef MODELCOLUMNMANAGER_H
 #define MODELCOLUMNMANAGER_H
 
-#include <libkdepim/contactstreemodel.h>
+#include <akonadi/contact/contactstreemodel.h>
 
 #include <QtCore/QObject>
 

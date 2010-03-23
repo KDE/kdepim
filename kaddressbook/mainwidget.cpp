@@ -37,6 +37,8 @@
 #include <akonadi/contact/contacteditordialog.h>
 #include <akonadi/contact/contactgroupeditordialog.h>
 #include <akonadi/contact/contactgroupviewer.h>
+#include <akonadi/contact/contactsfilterproxymodel.h>
+#include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
 #include <akonadi/entitymimetypefiltermodel.h>
@@ -57,8 +59,6 @@
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
-#include <libkdepim/contactstreemodel.h>
-#include <libkdepim/contactsfilterproxymodel.h>
 #include <libkdepim/uistatesaver.h>
 
 #include "contactswitcher.h"

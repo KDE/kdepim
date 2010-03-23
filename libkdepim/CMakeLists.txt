@@ -42,8 +42,6 @@ set(kdepim_LIB_SRCS
    sendsmsdialog.cpp
    kmailcompletion.cpp
    uistatesaver.cpp
-   contactsfilterproxymodel.cpp
-   contactstreemodel.cpp
 )
 
 if (KDEPIMLIBS_KRESOURCES_LIBRARY)
