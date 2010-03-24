@@ -163,32 +163,35 @@ bool ResourceKolab::addNote( KCal::Journal* journal )
 KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subresource,
                              Q_UINT32 sernum, const QString &mimetype )
 {
-  KCal::Journal* journal = 0;
-    // FIXME: This does not take into account the time zone!
-  KCal::ICalFormat formatter;
-  if ( mimetype == attachmentMimeType )
-    journal = Note::xmlToJournal( data );
-  else
-    journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
+  KCal::Journal *journal = 0;
 
+  // FIXME: This does not take into account the time zone!
+  KCal::ICalFormat formatter;
+  if ( mimetype == attachmentMimeType ) {
+    journal = Note::xmlToJournal( data );
+  } else {
+    journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
+  }
   Q_ASSERT( journal );
-  if( journal && !mUidMap.contains( journal->uid() ) )
-  {
-    if ( addNote( journal, subresource, sernum ) )
-      return journal;
-    else
-      delete journal;
+
+  bool addedOk = journal &&
+                 !mUidMap.contains( journal->uid() ) &&
+                 addNote( journal, subresource, sernum );
+
+  // for debugging
+  if ( journal && mUidMap.contains( journal->uid() ) ) {
+    kdDebug(5500) << "mUidMap already contains " << journal->uid() << endl;
   }
-  else if ( journal && mUidMap.contains( journal->uid() ) )
-  {
-    //For debugging
-    kdDebug( 5500 )<< "mUidMap already contains "<<journal->uid()<<endl;
+
+  if ( !addedOk ) {
+    delete journal;
+    journal = 0;
   }
-  return 0;
+
+  return journal;
 }
 
-bool ResourceKolab::addNote( KCal::Journal* journal,
-                             const QString& subresource, Q_UINT32 sernum )
+bool ResourceKolab::addNote( KCal::Journal *journal, const QString &subresource, Q_UINT32 sernum )
 {
   kdDebug(5500) << "ResourceKolab::addNote( KCal::Journal*, '" << subresource << "', " << sernum << " )\n";
 
@@ -196,14 +199,16 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
 
   // Find out if this note was previously stored in KMail
   bool newNote = subresource.isEmpty();
-  mCalendar.addJournal( journal );
-
-  QString resource =
-    newNote ? findWritableResource( Kolab::Notes, mSubResources ) : subresource;
-  if ( resource.isEmpty() ) // canceled
-  {
+  if ( !mCalendar.addJournal( journal ) ) {
     return false;
   }
+
+  QString resource = newNote ? findWritableResource( Kolab::Notes, mSubResources ) : subresource;
+  if ( resource.isEmpty() ) {
+    // canceled
+    return false;
+  }
+
   if ( !mSilent ) {
     QString xml = Note::journalToXML( journal );
     kdDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
