@@ -266,7 +266,7 @@ int QCsvModel::columnCount( const QModelIndex &parent ) const
 int QCsvModel::rowCount( const QModelIndex &parent ) const
 {
   if ( !parent.isValid() )
-    return d->mRowCount;
+    return d->mRowCount + 1; // +1 for the header row
   else
     return 0;
 }
