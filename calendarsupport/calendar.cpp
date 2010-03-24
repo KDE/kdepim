@@ -479,7 +479,7 @@ KCal::Alarm::List Calendar::alarmsTo( const KDateTime &to )
 
 KCal::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
 {
-  qWarning() << "Alarms:" << d->m_itemMap.count();
+  kDebug() << "Alarms:" << d->m_itemMap.count();
   KCal::Alarm::List alarmList;
   QHashIterator<Item::Id, Item> i( d->m_itemMap );
   while ( i.hasNext() ) {
@@ -487,7 +487,7 @@ KCal::Alarm::List Calendar::alarms( const KDateTime &from, const KDateTime &to )
     KCal::Incidence::Ptr e = Akonadi::event( item );
     if( ! e )
       continue;
-    qWarning() << e->summary();
+    kDebug() << e->summary();
     if ( e->recurs() )
         appendRecurringAlarms( alarmList, item, from, to );
     else
@@ -668,7 +668,7 @@ Item::Id Calendar::itemIdForIncidenceUid(const QString &uid) const {
     if ( inc->uid() == uid )
         return item.id();
   }
-  qWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;
+  kWarning() << "Failed to find Akonadi::Item for KCal uid " << uid;
   return -1;
 }
 
