@@ -21,8 +21,8 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#ifndef __KJOTSENTRY_H
-#define __KJOTSENTRY_H
+#ifndef KJOTSENTRY_H
+#define KJOTSENTRY_H
 
 #include <QTreeWidgetItem>
 #include <QTextDocument>

@@ -18,8 +18,8 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#ifndef __KJOTSREPLACENEXTDIALOG_H
-#define __KJOTSREPLACENEXTDIALOG_H
+#ifndef KJOTSREPLACENEXTDIALOG_H
+#define KJOTSREPLACENEXTDIALOG_H
 
 
 #include <KDialog>

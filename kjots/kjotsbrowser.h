@@ -21,8 +21,8 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#ifndef __KJOTSBROWSER_H
-#define __KJOTSBROWSER_H
+#ifndef KJOTSBROWSER_H
+#define KJOTSBROWSER_H
 
 #include <KTextBrowser>
 

@@ -17,6 +17,9 @@
     02110-1301, USA.
 */
 
+#ifndef AKONOTES_NOTEAPPLET_H
+#define AKONOTES_NOTEAPPLET_H
+
 #include <Plasma/Applet>
 
 #include <akonadi/collection.h>
@@ -81,3 +84,5 @@ private:
   Akonadi::Monitor *m_monitor;
 
 };
+
+#endif

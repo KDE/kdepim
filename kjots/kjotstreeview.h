@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef KJOTS_VIEW_H
-#define KJOTS_VIEW_H
+#ifndef KJOTSTREEVIEW_H
+#define KJOTSTREEVIEW_H
 
 #include <Akonadi/EntityTreeView>
 

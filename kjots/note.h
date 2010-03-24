@@ -17,6 +17,9 @@
     02110-1301, USA.
 */
 
+#ifndef KJOTS_NOTE_H
+#define KJOTS_NOTE_H
+
 #include <QtCore/QString>
 
 /**
@@ -29,3 +32,5 @@ public:
   static QString mimeType();
 
 };
+
+#endif

@@ -22,8 +22,8 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#ifndef __KJOTSEDIT_H
-#define __KJOTSEDIT_H
+#ifndef KJOTSEDIT_H
+#define KJOTSEDIT_H
 
 #include <KRichTextWidget>
 

@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONOTES_LIST_APPLET
-#define AKONOTES_LIST_APPLET
+#ifndef AKONOTES_NOTESLISTAPPLET_H
+#define AKONOTES_NOTESLISTAPPLET_H
 
 #include <Plasma/PopupApplet>
 
