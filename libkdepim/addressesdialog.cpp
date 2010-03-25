@@ -601,7 +601,7 @@ void AddressesDialog::Private::searchLdap()
 {
   if ( !m_ldapSearchDialog ) {
     m_ldapSearchDialog = new KLDAP::LdapSearchDialog( q );
-    q->connect( m_ldapSearchDialog, SIGNAL( addresseesAdded() ),
+    q->connect( m_ldapSearchDialog, SIGNAL( contactsAdded() ),
                 SLOT( ldapSearchResult() ) );
   }
 
