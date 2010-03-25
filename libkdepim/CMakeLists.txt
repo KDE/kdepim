@@ -24,8 +24,6 @@ set(kdepim_LIB_SRCS
    addresseelineedit.cpp
    kdatepickerpopup.cpp
    ktimezonecombobox.cpp
-   ldapclient.cpp
-   ldapsearchdialog.cpp
    overlaywidget.cpp
    progressmanager.cpp
    agentprogressmonitor.cpp

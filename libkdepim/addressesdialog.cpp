@@ -25,9 +25,9 @@
 #include "addressesdialog.h"
 
 #include "distributionlist.h"
-#include "ldapsearchdialog.h"
 
 #include <kabc/contactgroup.h>
+#include <kldap/ldapsearchdialog.h>
 #include <kpimutils/email.h>
 
 #include <Akonadi/ChangeRecorder>
@@ -343,7 +343,7 @@ class AddressesDialog::Private
     QStandardItemModel *m_selectedModel;
     QStandardItem *m_toItem, *m_ccItem, *m_bccItem;
     QPushButton *m_toButton, *m_ccButton, *m_bccButton, *m_removeButton, *m_saveButton;
-    LdapSearchDialog  *m_ldapSearchDialog;
+    KLDAP::LdapSearchDialog  *m_ldapSearchDialog;
 };
 
 QStandardItem* AddressesDialog::Private::selectedToItem()
@@ -600,7 +600,7 @@ void AddressesDialog::Private::saveAsDistributionListDone( KJob *job )
 void AddressesDialog::Private::searchLdap()
 {
   if ( !m_ldapSearchDialog ) {
-    m_ldapSearchDialog = new LdapSearchDialog( q );
+    m_ldapSearchDialog = new KLDAP::LdapSearchDialog( q );
     q->connect( m_ldapSearchDialog, SIGNAL( addresseesAdded() ),
                 SLOT( ldapSearchResult() ) );
   }

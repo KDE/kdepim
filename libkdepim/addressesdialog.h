@@ -43,16 +43,10 @@ class QStandardItem;
 class KJob;
 
 namespace Akonadi {
-  class Item;
   class Session;
-  class ChangeRecorder;
-  class EntityTreeView;
 }
 
 namespace KPIM {
-
-class LdapSearchDialog;
-class ProxyModel;
 
 class KDEPIM_EXPORT AddressesDialog : public KDialog
 {

@@ -38,7 +38,6 @@ set( kaddressbook_xxport_SRCS
   xxport/csv/templateselectiondialog.cpp
   xxport/ldif/ldif_xxport.cpp
   xxport/ldap/ldap_xxport.cpp
-  xxport/ldap/ldapsearchdialog.cpp
   xxport/gmx/gmx_xxport.cpp
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp 
@@ -106,19 +105,3 @@ target_link_libraries(kaddressbookpart ${KDE4_KPARTS_LIBS} kaddressbookprivate )
 install(TARGETS kaddressbookpart DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kaddressbookpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
-########### next target ###############
-
-set( kcm_ldap_SRCS
-     xxport/ldap/addhostdialog.cpp
-     xxport/ldap/kcmldap.cpp
-)
-
-kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
-
-target_link_libraries(kcm_ldap kdepim ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KLDAP_LIBS})
-
-install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
-
-########### install files ###############
-
-install(FILES xxport/ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})

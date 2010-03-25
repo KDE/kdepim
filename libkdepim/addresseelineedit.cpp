@@ -26,7 +26,6 @@
 
 #include "addresseelineedit.h"
 #include "completionordereditor.h"
-#include "ldapclient.h"
 #include "distributionlist.h"
 
 #ifndef KDEPIM_NO_KRESOURCES
@@ -34,6 +33,7 @@
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
 #endif
+#include <kldap/ldapclient.h>
 #include <kmime/kmime_util.h>
 
 #include <KCompletionBox>
@@ -80,7 +80,7 @@ class AddresseeLineEditStatic {
     QStringList completionSources;
     bool addressesDirty;
     QTimer *ldapTimer;
-    KPIM::LdapSearch *ldapSearch;
+    KLDAP::LdapClientSearch *ldapSearch;
     QString ldapText;
     AddresseeLineEdit *ldapLineEdit;
     // The weights associated with the completion sources in s_static->completionSources.
@@ -137,7 +137,7 @@ void AddresseeLineEdit::updateLDAPWeights()
    * that they map to the ldapclient::clientNumber() */
   s_static->ldapSearch->updateCompletionWeights();
   int clientIndex = 0;
-  foreach ( const LdapClient *client, s_static->ldapSearch->clients() ) {
+  foreach ( const KLDAP::LdapClient *client, s_static->ldapSearch->clients() ) {
     const int sourceIndex = addCompletionSource(
       "LDAP server: " + client->server().host(), client->completionWeight() );
     s_static->ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
@@ -156,7 +156,7 @@ void AddresseeLineEdit::init()
   if ( m_useCompletion ) {
     if ( !s_static->ldapTimer ) {
       s_static->ldapTimer = new QTimer;
-      s_static->ldapSearch = new KPIM::LdapSearch;
+      s_static->ldapSearch = new KLDAP::LdapClientSearch;
     }
 
     updateLDAPWeights();
@@ -183,8 +183,8 @@ void AddresseeLineEdit::init()
       }
 
       connect( s_static->ldapTimer, SIGNAL(timeout()), SLOT(slotStartLDAPLookup()) );
-      connect( s_static->ldapSearch, SIGNAL(searchData(const KPIM::LdapResultList&)),
-               SLOT(slotLDAPSearchData(const KPIM::LdapResultList&)) );
+      connect( s_static->ldapSearch, SIGNAL(searchData(const KLDAP::LdapResultList&)),
+               SLOT(slotLDAPSearchData(const KLDAP::LdapResultList&)) );
 
       m_completionInitialized = true;
     }
@@ -826,13 +826,13 @@ void AddresseeLineEdit::startLoadingLDAPEntries()
   s_static->ldapSearch->startSearch( s );
 }
 
-void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList &adrs )
+void AddresseeLineEdit::slotLDAPSearchData( const KLDAP::LdapResultList &adrs )
 {
   if ( adrs.isEmpty() || s_static->ldapLineEdit != this ) {
     return;
   }
 
-  for ( KPIM::LdapResultList::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
+  for ( KLDAP::LdapResultList::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
     KABC::Addressee addr;
     addr.setNameFromString( (*it).name );
     addr.setEmails( (*it).email );

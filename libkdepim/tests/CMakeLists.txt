@@ -39,11 +39,3 @@ kde4_add_executable(testdateedit TEST ${testdateedit_SRCS})
 
 target_link_libraries(testdateedit  kdepim ${KDE4_KDEUI_LIBS})
 
-########### next target ###############
-
-set(testldapclient_SRCS testldapclient.cpp )
-
-
-kde4_add_executable(testldapclient TEST ${testldapclient_SRCS})
-
-target_link_libraries(testldapclient kdepim ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KLDAP_LIBS})

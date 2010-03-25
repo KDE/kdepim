@@ -39,9 +39,12 @@
 class KPushButton;
 class QTreeWidget;
 
+namespace KLDAP {
+class LdapClientSearch;
+}
+
 namespace KPIM {
 
-class LdapSearch;
 class CompletionOrderEditor;
 
 // Base class for items in the list
@@ -60,7 +63,7 @@ class KDEPIM_EXPORT CompletionOrderEditor : public KDialog {
   Q_OBJECT
 
 public:
-  CompletionOrderEditor( KPIM::LdapSearch* ldapSearch, QWidget* parent );
+  CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch, QWidget* parent );
   ~CompletionOrderEditor();
 
   KConfig* configFile() { return &mConfig; }

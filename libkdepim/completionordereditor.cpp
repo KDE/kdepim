@@ -30,7 +30,7 @@
 
 #include "completionordereditor.h"
 #include "completionordereditor_p.h"
-#include "ldapclient.h"
+#include <kldap/ldapclient.h>
 
 #ifndef KDEPIM_NO_KRESOURCES
 #include <kabc/stdaddressbook.h>
@@ -92,20 +92,20 @@ bool completionLessThan( const CompletionItem *o1, const CompletionItem *o2 )
 class LDAPCompletionItem : public CompletionItem
 {
 public:
-  LDAPCompletionItem( LdapClient* ldapClient ) : mLdapClient( ldapClient ) {}
+  LDAPCompletionItem( KLDAP::LdapClient* ldapClient ) : mLdapClient( ldapClient ) {}
   virtual QString label() const { return i18n( "LDAP server %1", mLdapClient->server().host() ); }
   virtual int completionWeight() const { return mLdapClient->completionWeight(); }
   virtual void save( CompletionOrderEditor* );
 protected:
   virtual void setCompletionWeight( int weight ) { mWeight = weight; }
 private:
-  LdapClient* mLdapClient;
+KLDAP::LdapClient* mLdapClient;
   int mWeight;
 };
 
 void LDAPCompletionItem::save( CompletionOrderEditor* )
 {
-  KConfig *config = LdapSearch::config();
+  KConfig *config = KLDAP::LdapClientSearch::config();
   KConfigGroup group( config, "LDAP" );
   group.writeEntry( QString( "SelectedCompletionWeight%1" ).arg( mLdapClient->clientNumber() ),
                     mWeight );
@@ -187,7 +187,7 @@ private:
   CompletionItem* mItem;
 };
 
-CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
+CompletionOrderEditor::CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch,
                                               QWidget* parent )
   : KDialog( parent ), mConfig( "kpimcompletionorder" ), mDirty( false )
 {
@@ -199,8 +199,8 @@ CompletionOrderEditor::CompletionOrderEditor( KPIM::LdapSearch* ldapSearch,
   new CompletionOrderEditorAdaptor( this );
   QDBusConnection::sessionBus().registerObject("/", this, QDBusConnection::ExportAdaptors);
   // The first step is to gather all the data, creating CompletionItem objects
-  QList< LdapClient* > ldapClients = ldapSearch->clients();
-  foreach( LdapClient* client, ldapClients ) {
+  QList< KLDAP::LdapClient* > ldapClients = ldapSearch->clients();
+  foreach( KLDAP::LdapClient* client, ldapClients ) {
     //kDebug(5300) << "LDAP: host" << client->server().host() <<" weight" << client->completionWeight();
     mItems.append( new LDAPCompletionItem( client ) );
   }

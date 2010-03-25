@@ -41,10 +41,13 @@ class QMenu;
 class QMouseEvent;
 class QObject;
 
-namespace KPIM {
-  class LdapSearch;
+namespace KLDAP {
+  class LdapClientSearch;
   struct LdapResult;
   typedef QList<LdapResult> LdapResultList;
+}
+
+namespace KPIM {
   typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
 }
 
@@ -119,7 +122,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void slotPopupCompletion( const QString & );
     void slotReturnPressed( const QString & );
     void slotStartLDAPLookup();
-    void slotLDAPSearchData( const KPIM::LdapResultList & );
+    void slotLDAPSearchData( const KLDAP::LdapResultList & );
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
 

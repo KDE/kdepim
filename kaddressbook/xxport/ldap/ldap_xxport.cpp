@@ -25,7 +25,7 @@
 
 #include "ldap_xxport.h"
 
-#include "ldapsearchdialog.h"
+#include <kldap/ldapsearchdialog.h>
 
 LDAPXXPort::LDAPXXPort( QWidget *parentWidget )
   : XXPort( parentWidget )
@@ -36,7 +36,7 @@ KABC::Addressee::List LDAPXXPort::importContacts() const
 {
   KABC::Addressee::List contacts;
 
-  LDAPSearchDialog dlg( parentWidget() );
+  KLDAP::LdapSearchDialog dlg( parentWidget() );
   dlg.exec();
 
   return dlg.selectedContacts();
