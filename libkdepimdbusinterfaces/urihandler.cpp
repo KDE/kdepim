@@ -28,8 +28,6 @@
 #include <kmailinterface.h>
 #include <korganizerinterface.h>
 
-#include "kdepimprotocols.h"
-
 #include <kiconloader.h>
 #include <krun.h>
 #include <kapplication.h>
@@ -43,7 +41,7 @@ bool UriHandler::process( const QString &uri )
 {
   kDebug() << uri;
 
-  if ( uri.startsWith( KDEPIMPROTOCOL_EMAIL ) ) {
+  if ( uri.startsWith( QLatin1String( "kmail:" ) ) ) {
     // make sure kmail is running or the part is shown
     KToolInvocation::startServiceByDesktopPath( "kmail" );
 
@@ -60,14 +58,14 @@ bool UriHandler::process( const QString &uri )
   } else if ( uri.startsWith( QLatin1String( "mailto:" ) ) ) {
     KToolInvocation::invokeMailer( uri.mid(7), QString() );
     return true;
-  } else if ( uri.startsWith( KDEPIMPROTOCOL_CONTACT ) ) {
+  } else if ( uri.startsWith( QLatin1String( "uid:" ) ) ) {
     if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(
            "org.kde.kaddressbook" ) ) {
 /*FIXME: use external contact viewer
       kapp->updateRemoteUserTimestamp( "org.kde.kaddressbook" );
       org::kde::KAddressbook::Core kaddressbook(
         "org.kde.kaddressbook", "/KAddressBook", QDBusConnection::sessionBus() );
-      kaddressbook.showContactEditor( uri.mid( ::qstrlen( KDEPIMPROTOCOL_CONTACT ) ) );
+      kaddressbook.showContactEditor( uri.mid( ::qstrlen( "uid:" ) ) );
 */
       return true;
     } else {
@@ -79,11 +77,11 @@ bool UriHandler::process( const QString &uri )
       QString iconPath =
         KIconLoader::global()->iconPath( "view-pim-contacts", KIconLoader::SizeSmall );
       QString tmpStr = "kaddressbook --editor-only --uid ";
-      tmpStr += KShell::quoteArg( uri.mid( ::qstrlen( KDEPIMPROTOCOL_CONTACT ) ) );
+      tmpStr += KShell::quoteArg( uri.mid( ::qstrlen( "uid:" ) ) );
       KRun::runCommand( tmpStr, "KAddressBook", iconPath, 0 );
       return true;
     }
-  } else if ( uri.startsWith( KDEPIMPROTOCOL_INCIDENCE ) ) {
+  } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {
     // make sure korganizer is running or the part is shown
     KToolInvocation::startServiceByDesktopPath( "korganizer" );
 
@@ -93,7 +91,7 @@ bool UriHandler::process( const QString &uri )
       "org.kde.korganizer", "/Korganizer", QDBusConnection::sessionBus() );
 
     return korganizerIface.showIncidence( uid );
-  } else if ( uri.startsWith( KDEPIMPROTOCOL_NEWSARTICLE ) ) {
+  } else if ( uri.startsWith( QLatin1String( "news:" ) ) ) {
     KToolInvocation::startServiceByDesktopPath( "knode" );
     org::kde::knode knode(
       "org.kde.knode", "/KNode", QDBusConnection::sessionBus() );

@@ -19,9 +19,6 @@
 
 #include <kdebug.h>
 
-
-#include <libkdepim/kdepimprotocols.h>
-
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knhdrviewitem.h"
@@ -257,7 +254,7 @@ return 0;
   QString mid = art->messageID()->asUnicodeString();
   // for some obscure reason it returns messageid in <>s
   mid = mid.mid( 1, mid.length() - 2 );
-  list.append( KDEPIMPROTOCOL_NEWSARTICLE + mid );
+  list.append( QLatin1String( "news:" ) + mid );
   QMap<QString,QString> metadata;
   metadata["labels"] = KUrl::toPercentEncoding( art->subject()->asUnicodeString() );
   list.populateMimeData( md, metadata );

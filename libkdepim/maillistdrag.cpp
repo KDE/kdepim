@@ -23,7 +23,6 @@
 */
 
 #include "maillistdrag.h"
-#include "kdepimprotocols.h"
 
 #include <KDateTime>
 #include <KLocale>
