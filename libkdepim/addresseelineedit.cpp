@@ -34,6 +34,7 @@
 #include <kabc/resourceabc.h>
 #endif
 #include <kldap/ldapclient.h>
+#include <kldap/ldapserver.h>
 #include <kmime/kmime_util.h>
 
 #include <KCompletionBox>
@@ -53,6 +54,7 @@
 #include <QDropEvent>
 #include <QMouseEvent>
 #include <QMenu>
+#include <QTimer>
 #include <QtDBus/QDBusConnection>
 
 using namespace KPIM;
