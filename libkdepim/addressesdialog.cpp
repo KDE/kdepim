@@ -610,17 +610,10 @@ void AddressesDialog::Private::searchLdap()
 
 void AddressesDialog::Private::ldapSearchResult()
 {
-  const QStringList emails = KPIMUtils::splitAddressList( m_ldapSearchDialog->selectedEMails() );
-  QString name, email;
+  const KABC::Addressee::List contacts = m_ldapSearchDialog->selectedContacts();
 
-  foreach ( const QString &entry, emails ) {
-    KPIMUtils::extractEmailAddressAndName( entry, email, name );
-
-    KABC::Addressee contact;
-    contact.setNameFromString( name );
-    contact.insertEmail( email );
+  foreach ( const KABC::Addressee &contact, contacts )
     addContactToSelected( contact, selectedToItem() );
-  }
 }
 
 
