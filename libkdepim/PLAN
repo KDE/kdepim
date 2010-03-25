@@ -36,10 +36,6 @@ uistatesaver
 # Port korganizer and kontact to kconfigdialogmanager instead
 kprefsdialog
 
-# Move to kdepimlibs/kldap after api review
-ldapclient
-ldapsearchdialog
-
 # Get rid of
 distributionlist     # replace with Akonadi::ContactGroup everywhere
 kaddrbookexternal    # replace with native _async_ Akonadi calls
