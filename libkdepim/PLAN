@@ -1,3 +1,51 @@
 Intro: Plans for cleaning up libkdepim.
 
 Goal: libkdepim should no longer be a dumping ground of misc stuff for pim apps.
+
+# Rewrite and move to kdepimlibs/akonadi/contacts
+addresseelineedit
+completionordereditor
+kmailcompletion
+
+# Move to kdepimlibs/akonadi/contact + api review
+addressesdialog          # rename to EmailAddressDialog
+
+# Make private and move to kdepimlibs/akonadi/contact
+sendsmsdialog
+
+# Move to kdepimlibs/kontactinterfaces?
+agentprogressmonitor
+broadcaststatus
+overlaywidget
+progressdialog
+progressmanager
+ssllabel
+statusbarprogresswidget
+
+# Move to kdeui/itemviews/ when stable and finished
+kdescendantsproxymodel
+
+# Move to kdeui/widgets after api review
+kdateedit
+kdatepickerpopup
+ktimeedit
+ktimezonecombobox
+kwidgetlister
+uistatesaver
+
+# Port korganizer and kontact to kconfigdialogmanager instead
+kprefsdialog
+
+# Move to kdepimlibs/kldap after api review
+ldapclient
+ldapsearchdialog
+
+# Get rid of
+distributionlist     # replace with Akonadi::ContactGroup everywhere
+kaddrbookexternal    # replace with native _async_ Akonadi calls
+kresourceprefs       # drop together with kresources, in the meanwhile move to kresources/ subdir as static library
+recentaddresses      # replace with live searches?
+
+# Still needed? or replaced by a new parameterized AkonadiDrag object?
+kvcarddrag
+maillistdrag
