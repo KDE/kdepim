@@ -49,10 +49,6 @@ if (KDEPIMLIBS_KRESOURCES_LIBRARY)
   )
 endif (KDEPIMLIBS_KRESOURCES_LIBRARY)
 
-kde4_add_ui_files(kdepim_LIB_SRCS
-  addresspicker.ui
-)
-
 kde4_add_library(kdepim SHARED ${kdepim_LIB_SRCS})
 
 target_link_libraries(kdepim
