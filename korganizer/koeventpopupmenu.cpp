@@ -84,8 +84,9 @@ KOEventPopupMenu::KOEventPopupMenu()
   mTodoOnlyItems.append( addAction( KOGlobals::self()->smallIcon( "task-complete" ),
                                     i18n( "Togg&le To-do Completed" ),
                                     this, SLOT(toggleTodoCompleted()) ) );
-  mEditOnlyItems.append( addAction( QIcon( KOGlobals::self()->smallIcon( "appointment-reminder" ) ),
-                                    i18n( "&Toggle Reminder" ), this, SLOT(toggleAlarm())) );
+  mToggleReminder = addAction( QIcon( KOGlobals::self()->smallIcon( "appointment-reminder" ) ),
+                                    i18n( "&Toggle Reminder" ), this, SLOT(toggleAlarm()));
+  mEditOnlyItems.append( mToggleReminder );
   //------------------------------------------------------------------------
   mRecurrenceItems.append( addSeparator() );
   mDissociateOccurrences = addAction( i18n( "&Dissociate From Recurrence..." ),
@@ -132,6 +133,8 @@ void KOEventPopupMenu::showIncidencePopup( Calendar *cal, Incidence *incidence, 
     for ( it = mEditOnlyItems.begin(); it != mEditOnlyItems.end(); ++it ) {
       (*it)->setEnabled( !mCurrentIncidence->isReadOnly() );
     }
+    mToggleReminder->setVisible( ( mCurrentIncidence->type() != "Journal" ) );
+
     for ( it = mRecurrenceItems.begin(); it != mRecurrenceItems.end(); ++it ) {
       (*it)->setVisible( mCurrentIncidence->recurs() );
     }
