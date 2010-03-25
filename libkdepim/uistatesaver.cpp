@@ -20,13 +20,12 @@
 #include "uistatesaver.h"
 
 #include <KConfigGroup>
-#include <KDebug>
 
-#include <QComboBox>
-#include <QHeaderView>
-#include <QSplitter>
-#include <QTabWidget>
-#include <QTreeView>
+#include <QtGui/QComboBox>
+#include <QtGui/QHeaderView>
+#include <QtGui/QSplitter>
+#include <QtGui/QTabWidget>
+#include <QtGui/QTreeView>
 
 using namespace KPIM;
 
