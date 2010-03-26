@@ -91,6 +91,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
 #include <kleo/specialjob.h>
 
 #include "chiasmuskeyselector.h"
@@ -211,6 +212,12 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
 
   connect( mColorBar, SIGNAL( clicked() ),
            this, SLOT( slotToggleHtmlMode() ) );
+
+  Akonadi::ItemFetchScope fs;
+  fs.fetchFullPayload();
+  mMonitor.setItemFetchScope( fs );
+  connect( &mMonitor, SIGNAL( itemChanged( Akonadi::Item,QSet<QByteArray> ) ),
+           this, SLOT( slotItemChanged( Akonadi::Item, QSet<QByteArray> ) ) );
 }
 
 ViewerPrivate::~ViewerPrivate()
@@ -1422,11 +1429,15 @@ void ViewerPrivate::printMessage( KMime::Message::Ptr message )
 
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
+  mMonitor.setItemMonitored( mMessageItem, false );
+  Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
+
   mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
 
   mMessage = KMime::Message::Ptr(); //forget the old message if it was set
   mMessageItem = item;
+  mMonitor.setItemMonitored( mMessageItem, true );
 
   if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
     kWarning() << "Payload is not a MessagePtr!";
@@ -3213,6 +3224,15 @@ void ViewerPrivate::itemFetchResult(KJob* job)
       setMessageItem( fetch->items().first() );
     }
   }
+}
+
+void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, QSet<QByteArray> & )
+{
+  if ( item.id() != messageItem().id() ) {
+    kDebug() << "Update for an already forgotten item. Weird.";
+    return;
+  }
+  setMessageItem( item );
 }
 
 #include "viewer_p.moc"
