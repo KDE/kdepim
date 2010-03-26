@@ -28,12 +28,6 @@
 #include "completionordereditor.h"
 #include "distributionlist.h"
 
-#ifndef KDEPIM_NO_KRESOURCES
-#include <kabc/stdaddressbook.h>
-#include <kabc/resource.h>
-#include <kabc/resourceabc.h>
-#endif
-
 #include <akonadi/contact/contactsearchjob.h>
 
 #include <kldap/ldapclient.h>
@@ -69,7 +63,8 @@ class AddresseeLineEditStatic {
         addressesDirty( false ),
         ldapTimer( 0 ),
         ldapSearch( 0 ),
-        ldapLineEdit( 0 )
+        ldapLineEdit( 0 ),
+        akonadiSourceId( 0 )
     {
 
     }
@@ -95,6 +90,8 @@ class AddresseeLineEditStatic {
     // the assumption that they are always the first n indices in s_static->completion
     // does not hold when clients are added later on
     QMap<int, int> ldapClientToCompletionSourceMap;
+
+    int akonadiSourceId;
 };
 
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
@@ -167,6 +164,7 @@ void AddresseeLineEdit::init()
     }
 
     updateLDAPWeights();
+    s_static->akonadiSourceId = addCompletionSource( i18n("Akonadi Storage"), 1); 
 
     if ( !m_completionInitialized ) {
       setCompletionObject( s_static->completion, false );
@@ -560,62 +558,8 @@ void AddresseeLineEdit::loadContacts()
   s_static->addressesDirty = false;
   //m_contactMap.clear();
 
-  QApplication::setOverrideCursor( QCursor( Qt::WaitCursor ) ); // loading might take a while
-
   KConfig _config( "kpimcompletionorder" );
   KConfigGroup config(&_config, "CompletionWeights" );
-
-#ifndef KDEPIM_NO_KRESOURCES
-  KABC::AddressBook *addressBook = KABC::StdAddressBook::self( true );
-  // Can't just use the addressbook's iterator, we need to know which subresource
-  // is behind which contact.
-  QList<KABC::Resource*> resources( addressBook->resources() );
-  QListIterator<KABC::Resource*> resit( resources );
-  while ( resit.hasNext() ) {
-    KABC::Resource *resource = resit.next();
-    KABC::ResourceABC *resabc = dynamic_cast<KABC::ResourceABC *>( resource );
-    if ( resabc ) { // IMAP KABC resource; need to associate each contact with the subresource
-      const QMap<QString, QString> uidToResourceMap = resabc->uidToResourceMap();
-      KABC::Resource::Iterator it;
-      for ( it = resource->begin(); it != resource->end(); ++it ) {
-        QString uid = (*it).uid();
-        QMap<QString, QString>::const_iterator wit = uidToResourceMap.find( uid );
-        const QString subresourceLabel = resabc->subresourceLabel( *wit );
-        int weight = ( wit != uidToResourceMap.end() ) ?
-                     resabc->subresourceCompletionWeight( *wit ) : 80;
-        const int idx = addCompletionSource( subresourceLabel, weight );
-        addContact( *it, weight, idx );
-      }
-    } else { // KABC non-imap resource
-      int weight = config.readEntry( resource->identifier(), 60 );
-      int sourceIndex = addCompletionSource( resource->resourceName(), weight );
-      KABC::Resource::Iterator it;
-      for ( it = resource->begin(); it != resource->end(); ++it ) {
-        addContact( *it, weight, sourceIndex );
-      }
-    }
-
-    // add distribution list names
-    int weight = config.readEntry( resource->identifier(), 60 );
-    const QStringList distListNames = resource->allDistributionListNames();
-    foreach ( const QString &distList, distListNames ) {
-      //for CompletionAuto
-      addCompletionItem( distList, weight, s_static->completionSources.size() - 1 );
-
-      //for CompletionShell, CompletionPopup
-      QStringList sl( distList );
-      addCompletionItem( distList, weight, s_static->completionSources.size() - 1, &sl );
-    }
-  }
-
-  QApplication::restoreOverrideCursor();
-
-  if ( !m_addressBookConnected ) {
-    connect( addressBook, SIGNAL(addressBookChanged(AddressBook*)),
-             SLOT(loadContacts()) );
-    m_addressBookConnected = true;
-  }
-#endif
 }
 
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
@@ -965,7 +909,7 @@ void AddresseeLineEdit::slotAkonadiSearchResult( KJob* job )
   kDebug() << "found " << contacts.size() << "contacts";
   foreach(KABC::Addressee addr, contacts)
   {
-    addContact( addr, 1, 1 );
+    addContact( addr, 1, s_static->akonadiSourceId );
   }
   if(contacts.size() > 0 )
   {
