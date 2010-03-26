@@ -27,6 +27,7 @@
 
 #include <qdatetime.h>
 #include <qstring.h>
+#include <qstringlist.h>
 
 namespace KCal {
 class Calendar;
@@ -74,6 +75,14 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString msTNEFToVPart( const QByteArray& tnef );
 
     static QString recurrenceString( Incidence *incidence );
+
+    /*
+      Returns a reminder string computed for the specified Incidence.
+      Each item of the returning QStringList corresponds to a string
+      representation of an reminder belonging to this incidence.
+      @param incidence is a pointer to the Incidence.
+    */
+    static QStringList reminderStringList( Incidence *incidence );
 
     static QString timeToString( const QDateTime &date, bool shortfmt = true );
 
