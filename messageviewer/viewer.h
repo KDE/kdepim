@@ -103,6 +103,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   KMime::Message::Ptr message() const;
 
+  /**
+   * Returns the current message item displayed in the viewer.
+   */
+  Akonadi::Item messageItem() const;
+
   enum AttachmentAction
   {
     Open = 1,

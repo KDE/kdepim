@@ -315,6 +315,12 @@ KMime::Message::Ptr Viewer::message() const
   return d->mMessage;
 }
 
+Akonadi::Item Viewer::messageItem() const
+{
+  Q_D(const Viewer);
+  return d->mMessageItem;
+}
+
 void Viewer::setPrintFont( const QFont& font )
 {
   Q_D(Viewer);
