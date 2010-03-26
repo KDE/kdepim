@@ -31,6 +31,7 @@
 #include "kdepim_export.h"
 
 #include <kabc/addressee.h>
+#include <akonadi/job.h>
 
 #include <KLineEdit>
 
@@ -125,6 +126,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void slotLDAPSearchData( const KLDAP::LdapResultList & );
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
+    void slotAkonadiSearchResult( KJob* );
 
   private:
     virtual bool eventFilter( QObject *o, QEvent *e );
@@ -139,6 +141,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     QString completionSearchText( QString & );
     const QStringList getAdjustedCompletionItems( bool fullSearch );
     void updateSearchString();
+    void akonadiSearchString();
 
     QString m_previousAddresses;
     QString m_searchString;

@@ -33,6 +33,9 @@
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
 #endif
+
+#include <akonadi/contact/contactsearchjob.h>
+
 #include <kldap/ldapclient.h>
 #include <kldap/ldapserver.h>
 #include <kmime/kmime_util.h>
@@ -128,6 +131,8 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool useCompletion )
 
   init();
 
+  kDebug() << "AddresseeLineEdit ctor";
+
   if ( m_useCompletion ) {
     s_static->addressesDirty = true;
   }
@@ -222,6 +227,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
   if ( KStandardShortcut::shortcut( KStandardShortcut::SubstringCompletion ).contains( key ) ) {
     //TODO: add LDAP substring lookup, when it becomes available in KPIM::LDAPSearch
     updateSearchString();
+    akonadiSearchString();
     doCompletion( true );
     accept = true;
   } else if ( KStandardShortcut::shortcut( KStandardShortcut::TextCompletion ).contains( key ) ) {
@@ -229,6 +235,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
 
     if ( len == cursorPosition() ) { // at End?
       updateSearchString();
+      akonadiSearchString();
       doCompletion( true );
       accept = true;
     }
@@ -950,6 +957,25 @@ void KPIM::AddresseeLineEdit::slotUserCancelled( const QString &cancelText )
   userCancelled( m_previousAddresses + cancelText ); // in KLineEdit
 }
 
+void AddresseeLineEdit::slotAkonadiSearchResult( KJob* job )
+{
+  kDebug() << "slotAkonadiSearchResult";
+  Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
+  const KABC::Addressee::List contacts = searchJob->contacts();
+  kDebug() << "found " << contacts.size() << "contacts";
+  foreach(KABC::Addressee addr, contacts)
+  {
+    addContact( addr, 1, 1 );
+  }
+  if(contacts.size() > 0 )
+  {
+    QListWidgetItem *current = completionBox()->currentItem();
+    if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
+      doCompletion( m_lastSearchMode );
+    }
+  }
+}
+
 void AddresseeLineEdit::updateSearchString()
 {
   m_searchString = text();
@@ -989,6 +1015,15 @@ void AddresseeLineEdit::updateSearchString()
   }
 }
 
+void AddresseeLineEdit::akonadiSearchString()
+{
+  kDebug() << "searching akonadi with:" << m_searchString;
+  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
+  job->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString, Akonadi::ContactSearchJob::ContainsMatch );
+  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotAkonadiSearchResult( KJob* ) ) );
+}
+
+
 void KPIM::AddresseeLineEdit::slotCompletion()
 {
   // Called by KLineEdit's keyPressEvent for CompletionModes
@@ -1000,6 +1035,7 @@ void KPIM::AddresseeLineEdit::slotCompletion()
   if ( completionBox() ) {
     completionBox()->setCancelledText( m_searchString );
   }
+  akonadiSearchString();
   doCompletion( false );
 }
 
