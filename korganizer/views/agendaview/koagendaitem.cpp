@@ -737,8 +737,9 @@ static void conditionalPaint( QPainter *p, bool condition, int &x, int y,
 void KOAgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
 {
   const Event::Ptr event = Akonadi::event( mIncidence );
-  if ( !event )
+  if ( !event ) {
     return;
+  }
 
   QPixmap tPxmp;
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
@@ -763,8 +764,9 @@ void KOAgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
 
 void KOAgendaItem::paintTodoIcon( QPainter *p, int &x, int y, int ft )
 {
-  if ( !Akonadi::hasTodo( mIncidence ) )
+  if ( !Akonadi::hasTodo( mIncidence ) ) {
     return;
+  }
 
   const bool isCompleted = KOEventView::usesCompletedTodoPixmap( mIncidence, mDate );
 
@@ -835,7 +837,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
 
   QColor bgColor;
 
-  if ( Akonadi::hasTodo( mIncidence) && !KOPrefs::instance()->todosUseCategoryColors() ) {
+  if ( Akonadi::hasTodo( mIncidence ) && !KOPrefs::instance()->todosUseCategoryColors() ) {
     if ( Akonadi::todo( mIncidence )->isOverdue() ) {
       bgColor = KOPrefs::instance()->agendaCalendarItemsToDosOverdueBackgroundColor();
     } else if ( Akonadi::todo( mIncidence )->dtDue().date() ==
@@ -1359,7 +1361,9 @@ bool KOAgendaItem::event( QEvent *event )
       QToolTip::showText(
         helpEvent->globalPos(),
         IncidenceFormatter::toolTipStr(
-        Akonadi::displayName( mIncidence.parentCollection() ), Akonadi::incidence( mIncidence ).get(), mDate, true, KOPrefs::instance()->timeSpec() ),
+          Akonadi::displayName( mIncidence.parentCollection() ),
+          Akonadi::incidence( mIncidence ).get(),
+          mDate, true, KOPrefs::instance()->timeSpec() ),
         this );
     }
   }
