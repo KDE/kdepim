@@ -470,8 +470,9 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
     }
   }
   CustomHeaderMap customHeaders;
-  if ( incidence->schedulingID() != incidence->uid() )
+  if ( incidence->schedulingID() != incidence->uid() ) {
     customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
+  }
 
   QString subject = incidencebase->uid();
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style
@@ -604,8 +605,13 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
         } else {
           // duplicate uid in a different folder, do the internal-uid tango
           incidence->setSchedulingID( uid );
-          incidence->setUid(CalFormat::createUniqueId( ) );
+
+          incidence->setUid( CalFormat::createUniqueId( ) );
           uid = incidence->uid();
+
+          /* Will be needed when kmail triggers a delete, so we don't delete the inocent
+           * incidence that's sharing the uid with this one */
+          mOriginalUID2fakeUID[qMakePair( incidence->schedulingID(), subResource )] = uid;
         }
       }
       /* Add to the cache if the add didn't come from KOrganizer, in which case
@@ -899,13 +905,25 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
     // It's good to know if was deleted, but we are waiting on a new one to
     // replace it, so let's just sit tight.
   } else {
+    QString uidToUse;
+
+    QPair<QString, QString> p( uid, subResource );
+    if ( mOriginalUID2fakeUID.contains( p ) ) {
+      // Incidence with the same uid in a different folder...
+      // use the UID that addIncidence(...) generated
+      uidToUse = mOriginalUID2fakeUID[p];
+    } else {
+      uidToUse = uid;
+    }
+
     // We didn't trigger this, so KMail did, remove the reference to the uid
-    KCal::Incidence* incidence = mCalendar.incidence( uid );
+    KCal::Incidence* incidence = mCalendar.incidence( uidToUse );
     if( incidence ) {
       incidence->unRegisterObserver( this );
       mCalendar.deleteIncidence( incidence );
     }
-    mUidMap.remove( uid );
+    mUidMap.remove( uidToUse );
+    mOriginalUID2fakeUID.remove( p );
     mResourceChangedTimer.changeInterval( 100 );
   }
 }

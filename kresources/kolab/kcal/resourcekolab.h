@@ -222,6 +222,22 @@ private:
    */
   QMap<QString, QString> mNewIncidencesMap;
   int mProgressDialogIncidenceLimit;
+
+  /**
+   * If a user has a subresource for viewing another user's folder then it can happen
+   * that addIncidence(...) adds an incidence with an already existing UID.
+   *
+   * When this happens, addIncidence(...) sets a new random UID and stores the
+   * original UID using incidence->setSchedulingID(uid) because KCal doesn't
+   * allow two incidences to have the same UID.
+   *
+   * This map keeps track of the generated UIDs (which are local) so we can delete the
+   * right incidence inside fromKMailDelIncidence(...) whenever we sync.
+   *
+   * The key is originalUID,subResource and the value is the fake UID.
+   */
+  QMap< QPair<QString, QString>, QString > mOriginalUID2fakeUID;
+
 };
 
 struct TemporarySilencer {
