@@ -1,3 +1,29 @@
+Friday, March 26th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4229: Kontact hangs when switching to calendar with incorrect interval tag in event (rt#6063)
+* kolab/issue4203: A reminder can contain non-existing events (rt#6051)
+* kolab/issue4230: Todo: alarm 0 mins vs 1 min in advanced alarm dialog
+* kolab/issue4220: Calander tabular view , side-by-side tab Move an event asks for resource
+* kolab/issue4219: Tasks: Copy, Select nothing, Paste of a subtask copies it as subtask
+* kolab/issue3974: Clicking on an ics/vcs-attachment doesn't import or display the events of the attachment (rt#5812)
+* kolab/issue4064: Task with associated due time "00:00" isn't displayed in all calendar views (rt#5974)
+* kolab/issue4224: event viewer dialog to small (rt#6060)
+* kolab/issue4149: Search Directory Services and comma-formated names (rt#5954)
+* kolab/issue3599: KNotes: Crash in KNotesResourceManager::deleteNote at resourcemanager.cpp:109
+* kolab/issue3469: KNotes: Deleted notes reappear
+* kolab/issue4247: Composer: After removing an attachment is the focus not on the next attachment (rt#6073)
+* kolab/issue4246: Not possible to add umlauts to the move message dialog (rt#6072)
+* kolab/issue3902: Delete a folder while syncing leads to crash
+* kolab/issue4250: Edit "Out of office" replies: Resend notification only after: days is missing (rt#6076)
+* kolab/issue4249: Crash while printing a mail without preview pane (rt#6075)
+* kolab/issue4142: Composer: view all fields layout and small problems (rt#6032)
+* kolab/issue2762: Sometimes whole day events overlap in the view (rt#5936)
+* kolab/issue4012: Calender view update problem, if the same appointment is moved on the server in other folders (rt#5930)
+
+
 Friday, March 19th 2010
 
 Problems addressed
