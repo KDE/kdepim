@@ -31,7 +31,8 @@
 #include "kdepim_export.h"
 
 #include <kabc/addressee.h>
-#include <akonadi/job.h>
+#include <Akonadi/Job>
+#include <Akonadi/Collection>
 
 #include <KLineEdit>
 
@@ -71,9 +72,6 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     /** Reimplemented for stripping whitespace after completion */
     virtual void setText( const QString & txt );
 
-  protected Q_SLOTS:
-    virtual void loadContacts();
-    void slotIMAPCompletionOrderChanged();
   protected:
     virtual void addContact( const KABC::Addressee &, int weight, int source = -1 );
     virtual void keyPressEvent( QKeyEvent * );
@@ -127,6 +125,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
     void slotAkonadiSearchResult( KJob* );
+    void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
 
   private:
     virtual bool eventFilter( QObject *o, QEvent *e );
@@ -141,7 +140,8 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     QString completionSearchText( QString & );
     const QStringList getAdjustedCompletionItems( bool fullSearch );
     void updateSearchString();
-    void akonadiSearchString();
+    void akonadiPerformSearch();
+    void akonadiHandlePending();
 
     QString m_previousAddresses;
     QString m_searchString;
@@ -152,8 +152,6 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
     bool m_useSemiColonAsSeparator;
-
-    //QMap<QString, KABC::Addressee> m_contactMap;
 
     class AddresseeLineEditPrivate;
     AddresseeLineEditPrivate *d;

@@ -28,7 +28,8 @@
 #include "completionordereditor.h"
 #include "distributionlist.h"
 
-#include <akonadi/contact/contactsearchjob.h>
+#include <Akonadi/Contact/ContactSearchJob>
+#include <Akonadi/CollectionFetchJob>
 
 #include <kldap/ldapclient.h>
 #include <kldap/ldapserver.h>
@@ -60,11 +61,9 @@ class AddresseeLineEditStatic {
   public:
     AddresseeLineEditStatic() :
         completion( new KMailCompletion ),
-        addressesDirty( false ),
         ldapTimer( 0 ),
         ldapSearch( 0 ),
-        ldapLineEdit( 0 ),
-        akonadiSourceId( 0 )
+        ldapLineEdit( 0 )
     {
 
     }
@@ -78,7 +77,6 @@ class AddresseeLineEditStatic {
     KMailCompletion *completion;
     KPIM::CompletionItemsMap completionItemMap;
     QStringList completionSources;
-    bool addressesDirty;
     QTimer *ldapTimer;
     KLDAP::LdapClientSearch *ldapSearch;
     QString ldapText;
@@ -90,8 +88,10 @@ class AddresseeLineEditStatic {
     // the assumption that they are always the first n indices in s_static->completion
     // does not hold when clients are added later on
     QMap<int, int> ldapClientToCompletionSourceMap;
-
-    int akonadiSourceId;
+    // holds the cached mapping from akonadi collection id to the completion source index
+    QMap<Akonadi::Collection::Id, int> akonadiCollectionToCompletionSourceMap;
+    // a list of akonadi items (contacts) that have not had their collection fetched yet
+    Akonadi::Item::List akonadiPendingItems;
 };
 
 K_GLOBAL_STATIC( AddresseeLineEditStatic, s_static )
@@ -127,12 +127,6 @@ AddresseeLineEdit::AddresseeLineEdit( QWidget *parent, bool useCompletion )
   m_searchExtended = false;
 
   init();
-
-  kDebug() << "AddresseeLineEdit ctor";
-
-  if ( m_useCompletion ) {
-    s_static->addressesDirty = true;
-  }
 }
 
 void AddresseeLineEdit::updateLDAPWeights()
@@ -164,7 +158,6 @@ void AddresseeLineEdit::init()
     }
 
     updateLDAPWeights();
-    s_static->akonadiSourceId = addCompletionSource( i18n("Akonadi Storage"), 1); 
 
     if ( !m_completionInitialized ) {
       setCompletionObject( s_static->completion, false );
@@ -178,14 +171,6 @@ void AddresseeLineEdit::init()
                this, SLOT(slotPopupCompletion(const QString&)) );
       connect( box, SIGNAL(userCancelled(const QString&)),
                SLOT(slotUserCancelled(const QString&)) );
-
-      // The emitter is always called KPIM::IMAPCompletionOrder by contract
-      if ( !QDBusConnection::sessionBus().connect(
-             "kde.org.pim.completionorder", "/",
-             "kde.org.pim.CompletionOrder", "completionOrderChanged",
-             this, SLOT(slotIMAPCompletionOrderChanged()) ) ) {
-        kError() << "AddresseeLineEdit: connection to orderChanged() failed";
-      }
 
       connect( s_static->ldapTimer, SIGNAL(timeout()), SLOT(slotStartLDAPLookup()) );
       connect( s_static->ldapSearch, SIGNAL(searchData(const KLDAP::LdapResultList&)),
@@ -225,7 +210,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
   if ( KStandardShortcut::shortcut( KStandardShortcut::SubstringCompletion ).contains( key ) ) {
     //TODO: add LDAP substring lookup, when it becomes available in KPIM::LDAPSearch
     updateSearchString();
-    akonadiSearchString();
+    akonadiPerformSearch();
     doCompletion( true );
     accept = true;
   } else if ( KStandardShortcut::shortcut( KStandardShortcut::TextCompletion ).contains( key ) ) {
@@ -233,7 +218,7 @@ void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
 
     if ( len == cursorPosition() ) { // at End?
       updateSearchString();
-      akonadiSearchString();
+      akonadiPerformSearch();
       doCompletion( true );
       accept = true;
     }
@@ -429,10 +414,7 @@ void AddresseeLineEdit::doCompletion( bool ctrlT )
     return;
   }
 
-  if ( s_static->addressesDirty ) {
-    loadContacts(); // read from local address book
-    s_static->completion->setOrder( completionOrder() );
-  }
+  s_static->completion->setOrder( completionOrder() );
 
   // cursor at end of string - or Ctrl+T pressed for substring completion?
   if ( ctrlT ) {
@@ -551,17 +533,6 @@ void AddresseeLineEdit::slotReturnPressed( const QString &item )
   }
 }
 
-void AddresseeLineEdit::loadContacts()
-{
-  s_static->completion->clear();
-  s_static->completionItemMap.clear();
-  s_static->addressesDirty = false;
-  //m_contactMap.clear();
-
-  KConfig _config( "kpimcompletionorder" );
-  KConfigGroup config(&_config, "CompletionWeights" );
-}
-
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
 {
   if ( KPIM::DistributionList::isDistributionList( addr ) ) {
@@ -575,7 +546,6 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
 
     return;
   }
-  //m_contactMap.insert( addr.realName(), addr );
   const QStringList emails = addr.emails();
   QStringList::ConstIterator it;
   const int prefEmailWeight = 1;     //increment weight by prefEmailWeight
@@ -774,8 +744,6 @@ void AddresseeLineEdit::startLoadingLDAPEntries()
   if ( s.isEmpty() ) {
     return;
   }
-
-  //loadContacts(); // TODO reuse these?
   s_static->ldapSearch->startSearch( s );
 }
 
@@ -882,14 +850,6 @@ void AddresseeLineEdit::slotEditCompletionOrder()
   editor.exec();
   if ( m_useCompletion ) {
     updateLDAPWeights();
-    s_static->addressesDirty = true;
-  }
-}
-
-void KPIM::AddresseeLineEdit::slotIMAPCompletionOrderChanged()
-{
-  if ( m_useCompletion ) {
-    s_static->addressesDirty = true;
   }
 }
 
@@ -903,20 +863,58 @@ void KPIM::AddresseeLineEdit::slotUserCancelled( const QString &cancelText )
 
 void AddresseeLineEdit::slotAkonadiSearchResult( KJob* job )
 {
-  kDebug() << "slotAkonadiSearchResult";
   Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
-  const KABC::Addressee::List contacts = searchJob->contacts();
-  kDebug() << "found " << contacts.size() << "contacts";
-  foreach(KABC::Addressee addr, contacts)
-  {
-    addContact( addr, 1, s_static->akonadiSourceId );
+  kDebug() << "akonadi found " << searchJob->contacts().size() << "contacts";
+  /* We have to fetch the collections of the items, so that
+     the source name can be correctly labeled.*/
+  Akonadi::Item::List items = searchJob->items();
+  foreach( Akonadi::Item item, items ) {
+    // check the local cache of collections
+    int sourceIndex;
+    if( ( sourceIndex = s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 ) ) == -1 ) {
+      kDebug() << "Fetching New collection: " << item.parentCollection().id();
+      // the collection isn't there, start the fetch job.
+      Akonadi::CollectionFetchJob *collectionJob = new Akonadi::CollectionFetchJob( item.parentCollection(),
+                                                                                    Akonadi::CollectionFetchJob::Base, this );
+      connect( collectionJob, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ),
+               this, SLOT( slotAkonadiCollectionsReceived(Akonadi::Collection::List ) ) );
+      /* we don't want to start multiple fetch jobs for the same collection,
+         so insert the collection with an index value of -2 */
+      s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
+      s_static->akonadiPendingItems.append( item );
+    } else if( sourceIndex == -2 ) {
+      /* fetch job already started, don't need to start another one,
+         so just append the item as pending */
+      s_static->akonadiPendingItems.append( item );
+    } else if ( item.hasPayload<KABC::Addressee>() ) {
+      addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper weight somehow..
+    }
+    
   }
-  if(contacts.size() > 0 )
-  {
+  if( searchJob->contacts().size() > 0 ) {
     QListWidgetItem *current = completionBox()->currentItem();
     if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
       doCompletion( m_lastSearchMode );
     }
+  }
+}
+
+void AddresseeLineEdit::slotAkonadiCollectionsReceived( const Akonadi::Collection::List &collections )
+{
+  foreach( Akonadi::Collection collection, collections ) {
+    if( collection.isValid() ) {
+      QString sourceString = collection.name();
+      int index = addCompletionSource( sourceString, 1 );
+      kDebug() << "\treceived: " << sourceString << "index: " << index;
+      s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
+    }
+  }
+  // now that we have added the new collections, recheck our list of pending contacts
+  akonadiHandlePending();
+  // do completion
+  QListWidgetItem *current = completionBox()->currentItem();
+  if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
+    doCompletion( m_lastSearchMode );
   }
 }
 
@@ -959,12 +957,32 @@ void AddresseeLineEdit::updateSearchString()
   }
 }
 
-void AddresseeLineEdit::akonadiSearchString()
+void AddresseeLineEdit::akonadiPerformSearch()
 {
   kDebug() << "searching akonadi with:" << m_searchString;
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
   job->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString, Akonadi::ContactSearchJob::ContainsMatch );
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotAkonadiSearchResult( KJob* ) ) );
+  akonadiHandlePending();
+}
+
+void AddresseeLineEdit::akonadiHandlePending()
+{
+  kDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
+  Akonadi::Item::List::iterator it = s_static->akonadiPendingItems.begin();
+  while( it != s_static->akonadiPendingItems.end() ) {
+    Akonadi::Item item = *it;
+    int sourceIndex;
+    if( ( sourceIndex = s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 ) ) >= 0 ) {
+      kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
+      if ( item.hasPayload<KABC::Addressee>() )
+        addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper weight somehow..
+      // remove from the pending
+      it = s_static->akonadiPendingItems.erase( it );
+    } else {
+      ++it;
+    }
+  }
 }
 
 
@@ -979,7 +997,7 @@ void KPIM::AddresseeLineEdit::slotCompletion()
   if ( completionBox() ) {
     completionBox()->setCancelledText( m_searchString );
   }
-  akonadiSearchString();
+  akonadiPerformSearch();
   doCompletion( false );
 }
 
