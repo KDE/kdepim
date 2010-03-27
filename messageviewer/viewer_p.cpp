@@ -1429,6 +1429,7 @@ void ViewerPrivate::printMessage( KMime::Message::Ptr message )
 
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
+  enableMessageDisplay(); // just to make sure it's on
   mMonitor.setItemMonitored( mMessageItem, false );
   Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
 
@@ -3220,7 +3221,6 @@ void ViewerPrivate::itemFetchResult(KJob* job)
     if ( fetch->items().size() < 1 ) {
       displaySplashPage( i18n( "Message not found." ) );
     } else {
-      enableMessageDisplay();
       setMessageItem( fetch->items().first() );
     }
   }
