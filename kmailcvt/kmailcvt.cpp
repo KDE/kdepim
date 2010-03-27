@@ -20,9 +20,6 @@
 #include "kselfilterpage.h"
 #include "filters.hxx"
 
-// Akonadi includes
-#include <Akonadi/Control>
-
 // KDE includes
 #include <kaboutapplicationdialog.h>
 #include <kglobal.h>
@@ -32,8 +29,6 @@
 
 // Qt includes
 #include <QPushButton>
-#include <QTimer>
-#include <kmessagebox.h>
 
 
 
@@ -52,7 +47,6 @@ KMailCVT::KMailCVT(QWidget *parent)
 	page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
 	addPage( page2 );
         connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
-	QTimer::singleShot( 0, this, SLOT( delayedStart()) );
 
         // Disable the 'next button to begin with.
         setValid( currentPage(), false );
@@ -108,16 +102,6 @@ void KMailCVT::reject() {
 	if ( currentPage() == page2 )
           FilterInfo::terminateASAP(); // ie. import in progress
 	KAssistantDialog::reject();
-}
-
-void KMailCVT::delayedStart()
-{
-  if( !Akonadi::Control::start( this ) ) {
-    KMessageBox::sorry( 0, i18n( "Akonadi failed to start. Please check your configuration." ),
-			i18n( "KMailCVT" ) );
-    qApp->exit( -1 );
-    return;
-  }
 }
 
 void KMailCVT::collectionChanged( const Akonadi::Collection& selectedCollection )

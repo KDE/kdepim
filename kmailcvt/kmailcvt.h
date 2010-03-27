@@ -36,7 +36,6 @@ public slots:
 	void help();
 
 private slots:
-	void delayedStart();
         void collectionChanged( const Akonadi::Collection& selectedCollection );
 private:
 	KPageWidgetItem* page1;
