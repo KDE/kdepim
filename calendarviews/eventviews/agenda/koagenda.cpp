@@ -844,12 +844,12 @@ void KOAgenda::performItemAction( const QPoint &viewportPos )
       placeSubCells( mActionItem );
       emit startDragSignal( mActionItem->incidence() );
       setCursor( Qt::ArrowCursor );
+      if ( mChanger ) {
+        mChanger->cancelChange( mActionItem->incidence() );
+      }
       mActionItem = 0;
       mActionType = NOP;
       mItemMoved = false;
-      if ( mItemMoved && mChanger ) {
-        mChanger->endChange( mActionItem->incidence() );
-      }
       return;
     }
   } else {
