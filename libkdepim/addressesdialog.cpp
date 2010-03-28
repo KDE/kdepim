@@ -38,7 +38,7 @@
 #include <Akonadi/ItemFetchScope>
 #include <Akonadi/Session>
 #include <akonadi/contact/contactstreemodel.h>
-#include <akonadi/contact/contactsfilterproxymodel.h>
+#include <akonadi/contact/contactsfiltermodel.h>
 
 #include <KDebug>
 #include <KGlobal>

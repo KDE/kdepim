@@ -37,7 +37,7 @@
 #include <akonadi/contact/contacteditordialog.h>
 #include <akonadi/contact/contactgroupeditordialog.h>
 #include <akonadi/contact/contactgroupviewer.h>
-#include <akonadi/contact/contactsfilterproxymodel.h>
+#include <akonadi/contact/contactsfiltermodel.h>
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
