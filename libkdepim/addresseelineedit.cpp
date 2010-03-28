@@ -962,7 +962,7 @@ void AddresseeLineEdit::akonadiPerformSearch()
 {
   kDebug() << "searching akonadi with:" << m_searchString;
   Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);
+  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
   job->setQuery( Akonadi::ContactSearchJob::NameOrEmail, m_searchString, Akonadi::ContactSearchJob::ContainsMatch );
   connect( job, SIGNAL( result( KJob* ) ), this, SLOT( slotAkonadiSearchResult( KJob* ) ) );
   akonadiHandlePending();
