@@ -52,11 +52,11 @@ bool MailerService::start()
     return mSuccess;
   }
   //Check if Kontact is already running and if not ...
-  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/ResourceBackend/IMAP", QString(),
+  int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Mailer", QString(),
                                                             &mError, &mDBusService );
   if ( result != 0 ) {
     // ... start Kontact
-    result = KDBusServiceStarter::self()->startServiceFor( "DBUS/ResourceBackend/IMAP", QString(),
+    result = KDBusServiceStarter::self()->startServiceFor( "DBUS/Mailer", QString(),
                                                            &mError, &mDBusService );
     if(  result != 0 ) {
       const bool ok = QProcess::startDetached( QLatin1String("kontact") );
