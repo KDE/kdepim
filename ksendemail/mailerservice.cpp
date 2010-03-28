@@ -35,7 +35,6 @@
 MailerService::MailerService()
                 : mSuccess( false ), mEventLoop( 0 )
 {
-  kWarning() << "MailerService()";
   connect( QDBusConnection::sessionBus().interface(), SIGNAL( serviceOwnerChanged( QString, QString, QString ) ),
            SLOT( serviceOwnerChanged( QString, QString, QString ) ) );
   start();
@@ -48,7 +47,6 @@ MailerService::~MailerService()
 
 bool MailerService::start()
 {
-  kWarning() << "START()";
   if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kmail" ) || mEventLoop ) {
     mSuccess = true;
     return mSuccess;
@@ -92,8 +90,6 @@ void MailerService::serviceOwnerChanged( const QString & name, const QString & o
 
 void MailerService::processArgs( KCmdLineArgs *args )
 {
-    kDebug() << "processArgs( KCmdLineArgs *args )";
-
     QString to, cc, bcc, subj, body;
     QStringList customHeaders;
     KUrl messageFile;
