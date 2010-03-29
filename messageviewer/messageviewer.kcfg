@@ -158,6 +158,19 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
   </group>
 
+  <group name="Behaviour">
+    <entry name="DelayedMarkAsRead"  type="Bool">
+      <label></label>
+      <whatsthis></whatsthis>
+      <default>true</default>
+    </entry>
+    <entry name="DelayedMarkTime"  type="UInt">
+      <label></label>
+      <whatsthis></whatsthis>
+      <default>0</default>
+    </entry>
+  </group>
+
   <!-- FIXME: Make a seperate setting for this for the composer and the reader. Only the
               reader setting should be here.
               Regression from r1021989.
