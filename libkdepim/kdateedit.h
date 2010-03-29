@@ -25,15 +25,12 @@
 #define KDEPIM_KDATEEDIT_H
 
 #include "kdepim_export.h"
-#include "kdatepickerpopup.h"
 
-#include <QComboBox>
-#include <QDateTime>
-#include <QEvent>
-#include <QMap>
-#include <QMouseEvent>
+#include <QtGui/QComboBox>
 
+class QDate;
 class QEvent;
+class QMouseEvent;
 
 namespace KPIM {
 
@@ -59,7 +56,7 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
   Q_OBJECT
 
   public:
-    explicit KDateEdit( QWidget *parent = 0, const char *name = 0 );
+    explicit KDateEdit( QWidget *parent = 0 );
     virtual ~KDateEdit();
 
     /**
@@ -107,16 +104,11 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
      */
     void setDate( const QDate &date );
 
-  protected Q_SLOTS:
-    void lineEnterPressed();
-    void slotTextChanged( const QString & );
-    void dateSelected( const QDate & );
-
   protected:
-    virtual bool eventFilter( QObject *, QEvent * );
-    virtual void mousePressEvent( QMouseEvent * );
-    virtual void focusOutEvent( QFocusEvent * );
-    virtual void keyPressEvent( QKeyEvent * );
+    virtual bool eventFilter( QObject*, QEvent* );
+    virtual void mousePressEvent( QMouseEvent* );
+    virtual void focusOutEvent( QFocusEvent* );
+    virtual void keyPressEvent( QKeyEvent* );
 
     /**
       Sets the date, without altering the display.
@@ -131,23 +123,15 @@ class KDEPIM_EXPORT KDateEdit : public QComboBox
      */
     virtual bool assignDate( const QDate &date );
 
-    /**
-      Fills the keyword map. Reimplement it if you want additional keywords.
-     */
-    void setupKeywords();
-
   private:
-    QDate parseDate( bool *replaced = 0 ) const;
-    void updateView();
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
 
-    KDatePickerPopup *mPopup;
-
-    QDate mDate;
-    bool mReadOnly;
-    bool mTextChanged;
-    bool mDiscardNextMousePress;
-
-    QMap<QString, int> mKeywordMap;
+    Q_PRIVATE_SLOT( d, void lineEnterPressed() )
+    Q_PRIVATE_SLOT( d, void slotTextChanged( const QString& ) )
+    Q_PRIVATE_SLOT( d, void dateSelected( const QDate ) )
+    //@endcond
 };
 
 }

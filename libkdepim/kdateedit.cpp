@@ -26,19 +26,20 @@
 
 #include "kdateedit.h"
 
+#include "kdatepickerpopup.h"
+
 #include <KCalendarSystem>
-#include <KDebug>
 #include <KGlobal>
 #include <KGlobalSettings>
 #include <KLocale>
 
-#include <QAbstractItemView>
-#include <QApplication>
-#include <QEvent>
-#include <QKeyEvent>
-#include <QLineEdit>
-#include <QMouseEvent>
-#include <QValidator>
+#include <QtCore/QEvent>
+#include <QtGui/QAbstractItemView>
+#include <QtGui/QApplication>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QLineEdit>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QValidator>
 
 using namespace KPIM;
 
@@ -75,166 +76,50 @@ class DateValidator : public QValidator
     QStringList mKeywords;
 };
 
-KDateEdit::KDateEdit( QWidget *parent, const char *name )
-  : QComboBox( parent ), mReadOnly( false ), mDiscardNextMousePress( false )
+class KDateEdit::Private
 {
-  setObjectName( name );
-  // need at least one entry for popup to work
-  setMaxCount( 1 );
-  setEditable( true );
-
-  mDate = QDate::currentDate();
-  QString today = KGlobal::locale()->formatDate( mDate, KLocale::ShortDate );
-
-  addItem( today );
-  setCurrentIndex( 0 );
-  setSizeAdjustPolicy( AdjustToContents );
-
-  connect( lineEdit(), SIGNAL( returnPressed() ),
-           this, SLOT( lineEnterPressed() ) );
-  connect( this, SIGNAL( textChanged( const QString& ) ),
-           SLOT( slotTextChanged( const QString& ) ) );
-
-  mPopup = new KDatePickerPopup( KDatePickerPopup::DatePicker | KDatePickerPopup::Words,
-                                 QDate::currentDate(), this );
-  mPopup->hide();
-  mPopup->installEventFilter( this );
-
-  connect( mPopup, SIGNAL( dateChanged( const QDate& ) ),
-           SLOT( dateSelected( const QDate& ) ) );
-
-  // handle keyword entry
-  setupKeywords();
-  lineEdit()->installEventFilter( this );
-
-  setValidator( new DateValidator( mKeywordMap.keys(), this ) );
-
-  mTextChanged = false;
-}
-
-KDateEdit::~KDateEdit()
-{
-}
-
-void KDateEdit::setDate( const QDate &date )
-{
-  assignDate( date );
-  updateView();
-}
-
-QDate KDateEdit::date() const
-{
-  return mDate;
-}
-
-void KDateEdit::setReadOnly( bool readOnly )
-{
-  mReadOnly = readOnly;
-  lineEdit()->setReadOnly( readOnly );
-}
-
-bool KDateEdit::isReadOnly() const
-{
-  return mReadOnly;
-}
-
-void KDateEdit::showPopup()
-{
-  if ( mReadOnly ) {
-    return;
-  }
-
-  QRect desk = KGlobalSettings::desktopGeometry( this );
-
-  QPoint popupPoint = mapToGlobal( QPoint( 0, 0 ) );
-
-  int dateFrameHeight = mPopup->sizeHint().height();
-  if ( popupPoint.y() + height() + dateFrameHeight > desk.bottom() ) {
-    popupPoint.setY( popupPoint.y() - dateFrameHeight );
-  } else {
-    popupPoint.setY( popupPoint.y() + height() );
-  }
-
-  int dateFrameWidth = mPopup->sizeHint().width();
-  if ( popupPoint.x() + dateFrameWidth > desk.right() ) {
-    popupPoint.setX( desk.right() - dateFrameWidth );
-  }
-
-  if ( popupPoint.x() < desk.left() ) {
-    popupPoint.setX( desk.left() );
-  }
-
-  if ( popupPoint.y() < desk.top() ) {
-    popupPoint.setY( desk.top() );
-  }
-
-  if ( mDate.isValid() ) {
-    mPopup->setDate( mDate );
-  } else {
-    mPopup->setDate( QDate::currentDate() );
-  }
-
-  mPopup->popup( popupPoint );
-
-  // The combo box is now shown pressed. Make it show not pressed again
-  // by causing its (invisible) list box to emit a 'selected' signal.
-  // First, ensure that the list box contains the date currently displayed.
-  QDate date = parseDate();
-  assignDate( date );
-  updateView();
-
-  // Now, simulate an Enter to unpress it
-  QAbstractItemView *lb = view();
-  if ( lb ) {
-    lb->setCurrentIndex( lb->model()->index( 0, 0 ) );
-    QKeyEvent *keyEvent =
-      new QKeyEvent( QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier );
-    QApplication::postEvent( lb, keyEvent );
-  }
-}
-
-void KDateEdit::dateSelected( const QDate &date )
-{
-  if ( assignDate( date ) ) {
-    updateView();
-    emit dateChanged( date );
-    emit dateEntered( date );
-
-    if ( date.isValid() ) {
-      mPopup->hide();
-    }
-  }
-}
-
-void KDateEdit::lineEnterPressed()
-{
-  bool replaced = false;
-
-  QDate date = parseDate( &replaced );
-
-  if ( assignDate( date ) ) {
-    if ( replaced ) {
-      updateView();
+  public:
+    Private( KDateEdit *qq )
+      : q( qq ),
+        mDate( QDate::currentDate() ),
+        mReadOnly( false ),
+        mDiscardNextMousePress( false )
+    {
     }
 
-    emit dateChanged( date );
-    emit dateEntered( date );
-  }
-}
+    QDate parseDate( bool *replaced = 0 ) const;
+    void updateView();
+    void setupKeywords();
 
-QDate KDateEdit::parseDate( bool *replaced ) const
+    // slots
+    void lineEnterPressed();
+    void slotTextChanged( const QString& );
+    void dateSelected( const QDate& );
+
+    KDateEdit *q;
+
+    KDatePickerPopup *mPopup;
+
+    QDate mDate;
+    bool mReadOnly;
+    bool mTextChanged;
+    bool mDiscardNextMousePress;
+
+    QMap<QString, int> mKeywordMap;
+};
+
+QDate KDateEdit::Private::parseDate( bool *replaced ) const
 {
-  QString text = currentText();
-  QDate result;
+  const QString text = q->currentText();
 
-  if ( replaced ) {
+  if ( replaced )
     (*replaced) = false;
-  }
 
+  QDate result;
   if ( text.isEmpty() ) {
     result = QDate();
   } else if ( mKeywordMap.contains( text.toLower() ) ) {
-    QDate today = QDate::currentDate();
+    const QDate today = QDate::currentDate();
     int i = mKeywordMap[ text.toLower() ];
     if ( i >= 100 ) {
       /* A day name has been entered. Convert to offset from today.
@@ -246,18 +131,18 @@ QDate KDateEdit::parseDate( bool *replaced ) const
        * day in the next week).
        */
       i -= 100;
-      int currentDay = today.dayOfWeek();
-      if ( i >= currentDay ) {
+
+      const int currentDay = today.dayOfWeek();
+      if ( i >= currentDay )
         i -= currentDay;
-      } else {
+      else
         i += 7 - currentDay;
-      }
     }
 
     result = today.addDays( i );
-    if ( replaced ) {
+    if ( replaced )
       (*replaced) = true;
-    }
+
   } else {
     result = KGlobal::locale()->readDate( text );
   }
@@ -265,102 +150,22 @@ QDate KDateEdit::parseDate( bool *replaced ) const
   return result;
 }
 
-void KDateEdit::focusOutEvent( QFocusEvent *e )
+void KDateEdit::Private::updateView()
 {
-  if ( mTextChanged ) {
-    lineEnterPressed();
-    mTextChanged = false;
-  }
-  QComboBox::focusOutEvent( e );
+  QString dateString;
+  if ( mDate.isValid() )
+    dateString = KGlobal::locale()->formatDate( mDate, KLocale::ShortDate );
+
+  // We do not want to generate a signal here,
+  // since we explicitly setting the date
+  const bool blocked = q->signalsBlocked();
+  q->blockSignals( true );
+  q->removeItem( 0 );
+  q->insertItem( 0, dateString );
+  q->blockSignals( blocked );
 }
 
-void KDateEdit::keyPressEvent(QKeyEvent* e)
-{
-      int step = 0;
-      if ( e->key() == Qt::Key_Up ) {
-        step = 1;
-      } else if ( e->key() == Qt::Key_Down ) {
-        step = -1;
-      }
-      if ( step && !mReadOnly ) {
-        QDate date = parseDate();
-        if ( date.isValid() ) {
-          date = date.addDays( step );
-          if ( assignDate( date ) ) {
-            updateView();
-            emit dateChanged( date );
-            emit dateEntered( date );
-          }
-        }
-      }
-      QComboBox::keyPressEvent( e );
-}
-
-bool KDateEdit::eventFilter( QObject *object, QEvent *event )
-{
-  if ( object == lineEdit() ) {
-    // We only process the focus out event if the text has changed
-    // since we got focus
-    if ( ( event->type() == QEvent::FocusOut ) && mTextChanged ) {
-      lineEnterPressed();
-      mTextChanged = false;
-    } else if ( event->type() == QEvent::KeyPress ) {
-      // Up and down arrow keys step the date
-      QKeyEvent *keyEvent = (QKeyEvent *)event;
-
-      if ( keyEvent->key() == Qt::Key_Return ) {
-        lineEnterPressed();
-        return true;
-      }
-    }
-  } else {
-    // It's a date picker event
-    switch ( event->type() ) {
-    case QEvent::MouseButtonDblClick:
-    case QEvent::MouseButtonPress:
-    {
-      QMouseEvent *mouseEvent = (QMouseEvent*)event;
-      if ( !mPopup->rect().contains( mouseEvent->pos() ) ) {
-        QPoint globalPos = mPopup->mapToGlobal( mouseEvent->pos() );
-        if ( QApplication::widgetAt( globalPos ) == this ) {
-          // The date picker is being closed by a click on the
-          // KDateEdit widget. Avoid popping it up again immediately.
-          mDiscardNextMousePress = true;
-        }
-      }
-
-      break;
-    }
-    default:
-      break;
-    }
-  }
-
-  return false;
-}
-
-void KDateEdit::mousePressEvent( QMouseEvent *event )
-{
-  if ( event->button() == Qt::LeftButton && mDiscardNextMousePress ) {
-    mDiscardNextMousePress = false;
-    return;
-  }
-
-  QComboBox::mousePressEvent( event );
-}
-
-void KDateEdit::slotTextChanged( const QString & )
-{
-  QDate date = parseDate();
-
-  if ( assignDate( date ) ) {
-    emit dateChanged( date );
-  }
-
-  mTextChanged = true;
-}
-
-void KDateEdit::setupKeywords()
+void KDateEdit::Private::setupKeywords()
 {
   // Create the keyword list. This will be used to match against when the user
   // enters information.
@@ -375,27 +180,248 @@ void KDateEdit::setupKeywords()
   }
 }
 
-bool KDateEdit::assignDate( const QDate &date )
+void KDateEdit::Private::lineEnterPressed()
 {
-  mDate = date;
-  mTextChanged = false;
-  return true;
+  bool replaced = false;
+
+  const QDate date = parseDate( &replaced );
+
+  if ( q->assignDate( date ) ) {
+    if ( replaced ) {
+      updateView();
+    }
+
+    emit q->dateChanged( date );
+    emit q->dateEntered( date );
+  }
 }
 
-void KDateEdit::updateView()
+void KDateEdit::Private::slotTextChanged( const QString& )
 {
-  QString dateString;
-  if ( mDate.isValid() ) {
-    dateString = KGlobal::locale()->formatDate( mDate, KLocale::ShortDate );
+  const QDate date = parseDate();
+
+  if ( q->assignDate( date ) )
+    emit q->dateChanged( date );
+
+  mTextChanged = true;
+}
+
+void KDateEdit::Private::dateSelected( const QDate &date )
+{
+  if ( q->assignDate( date ) ) {
+    updateView();
+    emit q->dateChanged( date );
+    emit q->dateEntered( date );
+
+    if ( date.isValid() )
+      mPopup->hide();
+  }
+}
+
+
+KDateEdit::KDateEdit( QWidget *parent )
+  : QComboBox( parent ), d( new Private( this ) )
+{
+  // need at least one entry for popup to work
+  setMaxCount( 1 );
+  setEditable( true );
+
+  const QString today = KGlobal::locale()->formatDate( d->mDate, KLocale::ShortDate );
+
+  addItem( today );
+  setCurrentIndex( 0 );
+  setSizeAdjustPolicy( AdjustToContents );
+
+  connect( lineEdit(), SIGNAL( returnPressed() ),
+           this, SLOT( lineEnterPressed() ) );
+  connect( this, SIGNAL( textChanged( const QString& ) ),
+           SLOT( slotTextChanged( const QString& ) ) );
+
+  d->mPopup = new KDatePickerPopup( KDatePickerPopup::DatePicker | KDatePickerPopup::Words,
+                                    QDate::currentDate(), this );
+  d->mPopup->hide();
+  d->mPopup->installEventFilter( this );
+
+  connect( d->mPopup, SIGNAL( dateChanged( const QDate& ) ),
+           SLOT( dateSelected( const QDate& ) ) );
+
+  // handle keyword entry
+  d->setupKeywords();
+  lineEdit()->installEventFilter( this );
+
+  setValidator( new DateValidator( d->mKeywordMap.keys(), this ) );
+
+  d->mTextChanged = false;
+}
+
+KDateEdit::~KDateEdit()
+{
+  delete d;
+}
+
+void KDateEdit::setDate( const QDate &date )
+{
+  assignDate( date );
+  d->updateView();
+}
+
+QDate KDateEdit::date() const
+{
+  return d->mDate;
+}
+
+void KDateEdit::setReadOnly( bool readOnly )
+{
+  d->mReadOnly = readOnly;
+  lineEdit()->setReadOnly( readOnly );
+}
+
+bool KDateEdit::isReadOnly() const
+{
+  return d->mReadOnly;
+}
+
+void KDateEdit::showPopup()
+{
+  if ( d->mReadOnly )
+    return;
+
+  const QRect desk = KGlobalSettings::desktopGeometry( this );
+
+  QPoint popupPoint = mapToGlobal( QPoint( 0, 0 ) );
+
+  const int dateFrameHeight = d->mPopup->sizeHint().height();
+  if ( popupPoint.y() + height() + dateFrameHeight > desk.bottom() )
+    popupPoint.setY( popupPoint.y() - dateFrameHeight );
+  else
+    popupPoint.setY( popupPoint.y() + height() );
+
+  const int dateFrameWidth = d->mPopup->sizeHint().width();
+  if ( popupPoint.x() + dateFrameWidth > desk.right() )
+    popupPoint.setX( desk.right() - dateFrameWidth );
+
+  if ( popupPoint.x() < desk.left() )
+    popupPoint.setX( desk.left() );
+
+  if ( popupPoint.y() < desk.top() )
+    popupPoint.setY( desk.top() );
+
+  if ( d->mDate.isValid() )
+    d->mPopup->setDate( d->mDate );
+  else
+    d->mPopup->setDate( QDate::currentDate() );
+
+  d->mPopup->popup( popupPoint );
+
+  // The combo box is now shown pressed. Make it show not pressed again
+  // by causing its (invisible) list box to emit a 'selected' signal.
+  // First, ensure that the list box contains the date currently displayed.
+  const QDate date = d->parseDate();
+  assignDate( date );
+  d->updateView();
+
+  // Now, simulate an Enter to unpress it
+  QAbstractItemView *lb = view();
+  if ( lb ) {
+    lb->setCurrentIndex( lb->model()->index( 0, 0 ) );
+    QKeyEvent *keyEvent = new QKeyEvent( QEvent::KeyPress, Qt::Key_Enter, Qt::NoModifier );
+    QApplication::postEvent( lb, keyEvent );
+  }
+}
+
+void KDateEdit::focusOutEvent( QFocusEvent *event )
+{
+  if ( d->mTextChanged ) {
+    d->lineEnterPressed();
+    d->mTextChanged = false;
   }
 
-  // We do not want to generate a signal here,
-  // since we explicitly setting the date
-  bool blocked = signalsBlocked();
-  blockSignals( true );
-  removeItem( 0 );
-  insertItem( 0, dateString );
-  blockSignals( blocked );
+  QComboBox::focusOutEvent( event );
+}
+
+void KDateEdit::keyPressEvent( QKeyEvent *event )
+{
+  int step = 0;
+
+  if ( event->key() == Qt::Key_Up )
+    step = 1;
+  else if ( event->key() == Qt::Key_Down )
+    step = -1;
+
+  if ( step && !d->mReadOnly ) {
+    QDate date = d->parseDate();
+    if ( date.isValid() ) {
+      date = date.addDays( step );
+      if ( assignDate( date ) ) {
+        d->updateView();
+        emit dateChanged( date );
+        emit dateEntered( date );
+      }
+    }
+  }
+
+  QComboBox::keyPressEvent( event );
+}
+
+bool KDateEdit::eventFilter( QObject *object, QEvent *event )
+{
+  if ( object == lineEdit() ) {
+    // We only process the focus out event if the text has changed
+    // since we got focus
+    if ( (event->type() == QEvent::FocusOut) && d->mTextChanged ) {
+      d->lineEnterPressed();
+      d->mTextChanged = false;
+    } else if ( event->type() == QEvent::KeyPress ) {
+      // Up and down arrow keys step the date
+      QKeyEvent *keyEvent = (QKeyEvent *)event;
+
+      if ( keyEvent->key() == Qt::Key_Return ) {
+        d->lineEnterPressed();
+        return true;
+      }
+    }
+  } else {
+    // It's a date picker event
+    switch ( event->type() ) {
+      case QEvent::MouseButtonDblClick:
+      case QEvent::MouseButtonPress:
+        {
+          QMouseEvent *mouseEvent = (QMouseEvent*)event;
+          if ( !d->mPopup->rect().contains( mouseEvent->pos() ) ) {
+            const QPoint globalPos = d->mPopup->mapToGlobal( mouseEvent->pos() );
+            if ( QApplication::widgetAt( globalPos ) == this ) {
+              // The date picker is being closed by a click on the
+              // KDateEdit widget. Avoid popping it up again immediately.
+              d->mDiscardNextMousePress = true;
+            }
+          }
+
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  return false;
+}
+
+void KDateEdit::mousePressEvent( QMouseEvent *event )
+{
+  if ( event->button() == Qt::LeftButton && d->mDiscardNextMousePress ) {
+    d->mDiscardNextMousePress = false;
+    return;
+  }
+
+  QComboBox::mousePressEvent( event );
+}
+
+bool KDateEdit::assignDate( const QDate &date )
+{
+  d->mDate = date;
+  d->mTextChanged = false;
+
+  return true;
 }
 
 #include "kdateedit.moc"
