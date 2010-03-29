@@ -81,8 +81,10 @@ class LIBKCAL_EXPORT IncidenceFormatter
       Each item of the returning QStringList corresponds to a string
       representation of an reminder belonging to this incidence.
       @param incidence is a pointer to the Incidence.
+      @param shortfmt if false, a short version of each reminder is printed;
+      else a longer version of each reminder is printed.
     */
-    static QStringList reminderStringList( Incidence *incidence );
+    static QStringList reminderStringList( Incidence *incidence, bool shortfmt = true );
 
     static QString timeToString( const QDateTime &date, bool shortfmt = true );
 

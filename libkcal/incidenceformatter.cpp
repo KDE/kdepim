@@ -3877,9 +3877,10 @@ QString IncidenceFormatter::durationString( Incidence *incidence )
   return tmp;
 }
 
-QStringList IncidenceFormatter::reminderStringList( Incidence *incidence )
+QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool shortfmt )
 {
-  // offset before/after start/end/due (recurs N times, with a snooze of X)
+  //TODO: implement shortfmt=false
+  Q_UNUSED( shortfmt );
 
   QStringList reminderStringList;
 
