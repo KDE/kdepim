@@ -46,14 +46,29 @@ namespace KPIM {
 class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
 {
   public:
+    /**
+     * Creates a new time zone combobox.
+     *
+     * @param parent The parent widget.
+     */
     explicit KTimeZoneComboBox( QWidget *parent = 0 );
+
+    /**
+     * Creates a new time zone combobox.
+     *
+     * @param additionalZones Additional time zones that shall be included in the combobox.
+     * @param parent The parent widget.
+     */
     explicit KTimeZoneComboBox( const KCal::ICalTimeZones* additionalZones, QWidget *parent = 0 );
+
+    /**
+     * Destroys the time zone combobox.
+     */
     ~KTimeZoneComboBox();
 
     /**
-     * sets additional timezones (usually from a calendar) which should be displayed additionally
-     * to the system timezones
-     * @param zones the timezones to show
+     * Sets additional time @p zones (usually from a calendar) which should be displayed additionally
+     * to the system time zones
      */
     void setAdditionalTimeZones( const KCal::ICalTimeZones* zones );
 
@@ -64,25 +79,27 @@ class KDEPIM_EXPORT KTimeZoneComboBox : public KComboBox
 
     /**
      * Convenience version of selectTimeSpec(const KDateTime::Spec &).
-     * Selects the local timezone specified in the user settings.
+     * Selects the local time zone specified in the user settings.
      */
     void selectLocalTimeSpec();
 
     /**
-     * If @p floating is true, selects floating timezone.
-     * Else if @spec is valid, selects @p spec timezone, if not selects
-     * local timezone.
+     * If @p floating is true, selects floating time zone, otherwise
+     * if @spec is valid, selects @p spec time zone, if not selects
+     * local time zone.
      */
     void setFloating( bool floating, const KDateTime::Spec &spec = KDateTime::Spec() );
 
     /**
-     * @returns The timespec associated with the currently selected item.
+     * Return the timespec associated with the currently selected item.
      */
-    KDateTime::Spec selectedTimeSpec();
+    KDateTime::Spec selectedTimeSpec() const;
 
   private:
+    //@cond PRIVATE
     class Private;
     Private *const d;
+    //@endcond
 };
 
 }

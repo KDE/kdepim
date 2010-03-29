@@ -123,7 +123,7 @@ void KTimeZoneComboBox::selectTimeSpec( const KDateTime::Spec &spec )
   }
 }
 
-KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec()
+KDateTime::Spec KTimeZoneComboBox::selectedTimeSpec() const
 {
   KDateTime::Spec spec;
   if ( currentIndex() == 0 ) { // Floating event
