@@ -69,14 +69,14 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     virtual ~AddresseeLineEdit();
 
     /**
-     * Sets the @p font that shall be used for the line edit.
-     */
-    virtual void setFont( const QFont &font );
-
-    /**
      * Sets whether semicolons are allowed as separators.
      */
-    void allowSemiColonAsSeparator( bool allow );
+    void allowSemicolonAsSeparator( bool allow );
+
+    /**
+     * Reimplemented for setting the @p font for line edit and completion box.
+     */
+    void setFont( const QFont &font );
 
   public Q_SLOTS:
     /**
@@ -95,8 +95,20 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     virtual void setText( const QString &text );
 
   protected:
-    virtual void addContact( const KABC::Addressee &, int weight, int source = -1 );
-    virtual void keyPressEvent( QKeyEvent * );
+    /**
+     * Adds a new @p contact to the completion with a given @p weight and @p source index.
+     */
+    void addContact( const KABC::Addressee &contact, int weight, int source = -1 );
+
+    /**
+     * Adds the @p name of a completion source and its @p weight
+     * to the internal list of completion sources and returns its index,
+     * which can be used for insertion of items associated with that source.
+     *
+     * If the source already exists, the weight will be updated.
+     */
+    int addCompletionSource( const QString &name, int weight );
+
     /**
      * Reimplemented for smart insertion of email addresses.
      * Features:
@@ -105,78 +117,57 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
      * - Recognizes email addresses which are protected against address
      *   harvesters, i.e. "name at kde dot org" and "name(at)kde.org"
      */
-    virtual void insert( const QString &text );
-    /** Reimplemented for smart insertion of pasted email addresses. */
+    virtual void insert( const QString& );
+
+    /**
+     * Reimplemented for smart insertion of pasted email addresses.
+     */
     virtual void paste();
-    /** Reimplemented for smart insertion with middle mouse button. */
-    virtual void mouseReleaseEvent( QMouseEvent *e );
-    /** Reimplemented for smart insertion of dragged email addresses. */
-    virtual void dropEvent( QDropEvent *e );
-    void doCompletion( bool ctrlT );
+
+    /**
+     * Reimplemented for smart insertion with middle mouse button.
+     */
+    virtual void mouseReleaseEvent( QMouseEvent* );
+
+    /**
+     * Reimplemented for smart insertion of dragged email addresses.
+     */
+    virtual void dropEvent( QDropEvent* );
+
+    /**
+     * Reimplemented for internal reasons.
+     */
+    virtual void keyPressEvent( QKeyEvent* );
 
     /**
      * Reimplemented for subclass access to menu
      */
-    QMenu *createStandardContextMenu();
+    virtual QMenu *createStandardContextMenu();
 
     /**
-     * Re-implemented for internal reasons.  API not affected.
+     * Reimplemented for internal reasons.  API not affected.
      *
      * See QLineEdit::contextMenuEvent().
      */
-    virtual void contextMenuEvent( QContextMenuEvent * );
-
-    /**
-     * Adds the name of a completion source to the internal list of
-     * such sources and returns its index, such that that can be used
-     * for insertion of items associated with that source.
-     * 
-     * If the source already exists, the weight will be updated.
-     */
-    int addCompletionSource( const QString &, int weight );
-
-    /** return whether we are using sorted or weighted display */
-    static KCompletion::CompOrder completionOrder();
-
-  private Q_SLOTS:
-    void slotCompletion();
-    void slotPopupCompletion( const QString & );
-    void slotReturnPressed( const QString & );
-    void slotStartLDAPLookup();
-    void slotLDAPSearchData( const KLDAP::LdapResult::List & );
-    void slotEditCompletionOrder();
-    void slotUserCancelled( const QString & );
-    void slotAkonadiSearchResult( KJob* );
-    void slotAkonadiCollectionsReceived( const Akonadi::Collection::List & );
+    virtual void contextMenuEvent( QContextMenuEvent* );
 
   private:
-    virtual bool eventFilter( QObject *o, QEvent *e );
-    void init();
-    void startLoadingLDAPEntries();
-    void stopLDAPLookup();
-    void updateLDAPWeights();
+    virtual bool eventFilter( QObject*, QEvent* );
 
-    void setCompletedItems( const QStringList &items, bool autoSuggest );
-    void addCompletionItem( const QString &string, int weight, int source,
-                            const QStringList *keyWords=0 );
-    QString completionSearchText( QString & );
-    const QStringList getAdjustedCompletionItems( bool fullSearch );
-    void updateSearchString();
-    void akonadiPerformSearch();
-    void akonadiHandlePending();
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
 
-    QString m_previousAddresses;
-    QString m_searchString;
-    bool m_useCompletion;
-    bool m_completionInitialized;
-    bool m_smartPaste;
-    bool m_addressBookConnected;
-    bool m_lastSearchMode;
-    bool m_searchExtended; //has \" been added?
-    bool m_useSemiColonAsSeparator;
-
-    class AddresseeLineEditPrivate;
-    AddresseeLineEditPrivate *d;
+    Q_PRIVATE_SLOT( d, void slotCompletion() )
+    Q_PRIVATE_SLOT( d, void slotPopupCompletion( const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotReturnPressed( const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotStartLDAPLookup() )
+    Q_PRIVATE_SLOT( d, void slotLDAPSearchData( const KLDAP::LdapResult::List& ) )
+    Q_PRIVATE_SLOT( d, void slotEditCompletionOrder() )
+    Q_PRIVATE_SLOT( d, void slotUserCancelled( const QString& ) )
+    Q_PRIVATE_SLOT( d, void slotAkonadiSearchResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotAkonadiCollectionsReceived( const Akonadi::Collection::List& ) )
+    //@endcond
 };
 
 }
