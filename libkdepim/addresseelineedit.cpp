@@ -225,9 +225,9 @@ void AddresseeLineEdit::Private::startLoadingLDAPEntries()
 
   // TODO cache last?
   QString prevAddr;
-  const int index = text.lastIndexOf( ',' );
+  const int index = text.lastIndexOf( QLatin1Char( ',' ) );
   if ( index >= 0 ) {
-    prevAddr = text.left( index + 1 ) + ' ';
+    prevAddr = text.left( index + 1 ) + QLatin1Char( ' ' );
     text = text.mid( index + 1, 255 ).trimmed();
   }
 
@@ -250,7 +250,7 @@ void AddresseeLineEdit::Private::updateLDAPWeights()
   s_static->ldapSearch->updateCompletionWeights();
   int clientIndex = 0;
   foreach ( const KLDAP::LdapClient *client, s_static->ldapSearch->clients() ) {
-    const int sourceIndex = q->addCompletionSource( "LDAP server: " + client->server().host(),
+    const int sourceIndex = q->addCompletionSource( QLatin1String( "LDAP server: " ) + client->server().host(),
                                                     client->completionWeight() );
 
     s_static->ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
@@ -364,7 +364,7 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
       }
       (*it) = (*it).prepend( s_completionItemIndentString );
       // remove preferred email sort <blank> added in  addContact()
-      (*it).replace( "  <", " <" );
+      (*it).replace( QLatin1String( "  <" ), QLatin1String( " <" ) );
     }
     sections[idx].append( *it );
 
@@ -410,11 +410,11 @@ void AddresseeLineEdit::Private::updateSearchString()
   int n = -1;
   bool inQuote = false;
   for ( uint i = 0, searchStringLength = m_searchString.length(); i < searchStringLength; ++i ) {
-    if ( m_searchString[ i ] == '"' )
+    if ( m_searchString[ i ] == QLatin1Char( '"' ) )
       inQuote = !inQuote;
 
     if ( m_searchString[ i ] == '\\' &&
-         ( i + 1 ) < searchStringLength && m_searchString[ i + 1 ] == '"' ) {
+         ( i + 1 ) < searchStringLength && m_searchString[ i + 1 ] == QLatin1Char( '"' ) ) {
       ++i;
     }
 
@@ -532,7 +532,7 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
         if ( !m_searchString.isEmpty() ) {
 
           //if only our \" is left, remove it since user has not typed it either
-          if ( m_searchExtended && m_searchString == "\"" ){
+          if ( m_searchExtended && m_searchString == QLatin1String( "\"" ) ) {
             m_searchExtended = false;
             m_searchString.clear();
             q->setText( m_previousAddresses );
@@ -547,11 +547,11 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
               q->setCompletedText( adds );
             }
           } else {
-            if ( !m_searchString.startsWith( '\"' ) ) {
+            if ( !m_searchString.startsWith( QLatin1Char( '\"' ) ) ) {
               //try with quoted text, if user has not type one already
-              match = s_static->completion->makeCompletion( "\"" + m_searchString );
+              match = s_static->completion->makeCompletion( QLatin1String( "\"" ) + m_searchString );
               if ( !match.isEmpty() && match != m_searchString ) {
-                m_searchString = "\"" + m_searchString;
+                m_searchString = QLatin1String( "\"" ) + m_searchString;
                 m_searchExtended = true;
                 q->setText( m_previousAddresses + m_searchString );
                 q->setCompletedText( m_previousAddresses + match );
@@ -728,11 +728,11 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived( const Akonadi::
 // not cached, to make sure we get an up-to-date value when it changes
 KCompletion::CompOrder AddresseeLineEdit::Private::completionOrder()
 {
-  KConfig _config( "kpimcompletionorder" );
-  KConfigGroup config( &_config, "General" );
-  const QString order = config.readEntry( "CompletionOrder", "Weighted" );
+  KConfig _config( QLatin1String( "kpimcompletionorder" ) );
+  KConfigGroup config( &_config, QLatin1String( "General" ) );
+  const QString order = config.readEntry( QLatin1String( "CompletionOrder" ), QString::fromLatin1( "Weighted" ) );
 
-  if ( order == "Weighted" ) {
+  if ( order == QLatin1String( "Weighted" ) ) {
     return KCompletion::Weighted;
   } else {
     return KCompletion::Sorted;
@@ -835,22 +835,22 @@ void AddresseeLineEdit::insert( const QString &t )
   }
 
   // remove newlines in the to-be-pasted string
-  QStringList lines = newText.split( QRegExp( "\r?\n" ), QString::SkipEmptyParts );
+  QStringList lines = newText.split( QRegExp( QLatin1String( "\r?\n" ) ), QString::SkipEmptyParts );
   for ( QStringList::iterator it = lines.begin(); it != lines.end(); ++it ) {
     // remove trailing commas and whitespace
-    (*it).remove( QRegExp( ",?\\s*$" ) );
+    (*it).remove( QRegExp( QLatin1String( ",?\\s*$" ) ) );
   }
-  newText = lines.join( ", " );
+  newText = lines.join( QLatin1String( ", " ) );
 
   if ( newText.startsWith( QLatin1String( "mailto:" ) ) ) {
     KUrl url( newText );
     newText = url.path();
-  } else if ( newText.indexOf( " at " ) != -1 ) {
+  } else if ( newText.indexOf( QLatin1String( " at " ) ) != -1 ) {
     // Anti-spam stuff
-    newText.replace( " at ", "@" );
-    newText.replace( " dot ", "." );
-  } else if ( newText.indexOf( "(at)" ) != -1 ) {
-    newText.replace( QRegExp( "\\s*\\(at\\)\\s*" ), "@" );
+    newText.replace( QLatin1String( " at " ), QLatin1String( "@" ) );
+    newText.replace( QLatin1String( " dot " ), QLatin1String( "." ) );
+  } else if ( newText.indexOf( QLatin1String( "(at)" ) ) != -1 ) {
+    newText.replace( QRegExp( QLatin1String( "\\s*\\(at\\)\\s*" ) ), QLatin1String( "@" ) );
   }
 
   QString contents = text();
@@ -871,11 +871,11 @@ void AddresseeLineEdit::insert( const QString &t )
   if ( eot == 0 ) {
     contents.clear();
   } else if ( pos >= eot ) {
-    if ( contents[ eot - 1 ] == ',' ) {
+    if ( contents[ eot - 1 ] == QLatin1Char( ',' ) ) {
       eot--;
     }
     contents.truncate( eot );
-    contents += ", ";
+    contents += QLatin1String( ", " );
     pos = eot + 2;
   }
 
@@ -935,13 +935,13 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       // append the mailto URLs
       for ( KUrl::List::Iterator it = uriList.begin(); it != uriList.end(); ++it ) {
         KUrl u( *it );
-        if ( u.protocol() == "mailto" ) {
+        if ( u.protocol() == QLatin1String( "mailto" ) ) {
           mailtoURL = true;
           QString address;
           address = KUrl::fromPercentEncoding( u.path().toLatin1() );
           address = KMime::decodeRFC2047String( address.toAscii() );
           if ( !contents.isEmpty() ) {
-            contents.append( ", " );
+            contents.append( QLatin1String( ", " ) );
           }
           contents.append( address );
         }
@@ -1002,23 +1002,23 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
     if ( givenName.isEmpty() && familyName.isEmpty() ) {
       d->addCompletionItem( fullEmail, weight + isPrefEmail, source ); // use whatever is there
     } else {
-      const QString byFirstName=  "\"" + givenName + " " + familyName + "\" <" + email + ">";
-      const QString byLastName =  "\"" + familyName + ", " + givenName + "\" <" + email + ">";
+      const QString byFirstName = QLatin1Char( '"' ) + givenName + QLatin1Char( ' ' ) + familyName + QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
+      const QString byLastName = QLatin1Char( '"' ) + familyName + QLatin1String( ", " ) + givenName + QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
       d->addCompletionItem( byFirstName, weight + isPrefEmail, source );
       d->addCompletionItem( byLastName, weight + isPrefEmail, source );
     }
 
     d->addCompletionItem( email, weight + isPrefEmail, source );
 
-    if ( !nickName.isEmpty() ){
-      const QString byNick     =  "\"" + nickName + "\" <" + email + ">";
+    if ( !nickName.isEmpty() ) {
+      const QString byNick = QLatin1Char( '"' ) + nickName + QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
       d->addCompletionItem( byNick, weight + isPrefEmail, source );
     }
 
-    if ( !domain.isEmpty() ){
-      const QString byDomain = '\"' + domain + ' ' +
-                               familyName + ' ' + givenName +
-                               "\" <" + email + '>';
+    if ( !domain.isEmpty() ) {
+      const QString byDomain = QLatin1Char( '"' ) + domain + QLatin1Char( ' ' ) +
+                               familyName + QLatin1Char( ' ' ) + givenName +
+                               QLatin1String( "\" <" ) + email + QLatin1Char( '>' );
       d->addCompletionItem( byDomain, weight + isPrefEmail, source );
     }
 
@@ -1027,9 +1027,9 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
     const QString realName  = addr.realName();
 
     if ( !givenName.isEmpty() && !familyName.isEmpty() ) {
-      keyWords.append( givenName  + ' '  + familyName );
-      keyWords.append( familyName + ' '  + givenName );
-      keyWords.append( familyName + ", " + givenName );
+      keyWords.append( givenName  + QLatin1Char( ' ' ) + familyName );
+      keyWords.append( familyName + QLatin1Char( ' ' ) + givenName );
+      keyWords.append( familyName + QLatin1String( ", " ) + givenName );
     } else if ( !givenName.isEmpty() ) {
       keyWords.append( givenName );
     } else if ( !familyName.isEmpty() ) {
@@ -1057,7 +1057,7 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
      * We remove the <blank> in adjustedCompletionItems.
      */
     if ( isPrefEmail == prefEmailWeight ) {
-      fullEmail.replace( " <", "  <" );
+      fullEmail.replace( QLatin1String( " <" ), QLatin1String( "  <" ) );
     }
 
     d->addCompletionItem( fullEmail, weight + isPrefEmail, source, &keyWords );
