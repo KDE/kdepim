@@ -696,6 +696,7 @@ AddressesDialog::AddressesDialog( QWidget* parent, Akonadi::Session *session )
 
 AddressesDialog::~AddressesDialog()
 {
+  delete d;
 }
 
 void AddressesDialog::setSelectedTo( const QStringList &contents )
