@@ -21,14 +21,18 @@
 #include <messageviewer/viewer.h>
 
 #include <QGraphicsProxyWidget>
+#include <QtGui/QGraphicsSceneMouseEvent>
 
 using namespace MessageViewer;
 
-MessageViewItem::MessageViewItem(QDeclarativeItem* parent) : QDeclarativeItem(parent)
+MessageViewItem::MessageViewItem(QDeclarativeItem* parent)
+  : QDeclarativeItem(parent)
+  , m_mousePressed( false )
 {
   m_viewer = new Viewer( 0 );
   m_proxy = new QGraphicsProxyWidget( this );
   m_proxy->setWidget( m_viewer );
+  m_proxy->installEventFilter( this );
 }
 
 MessageViewItem::~MessageViewItem()
@@ -40,6 +44,36 @@ void MessageViewItem::geometryChanged(const QRectF& newGeometry, const QRectF& o
 {
   QDeclarativeItem::geometryChanged(newGeometry, oldGeometry);
   m_proxy->resize( newGeometry.size() );
+}
+
+bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
+{
+  if ( ev->type() == QEvent::GraphicsSceneMousePress ) {
+    QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
+    if ( mev->button() == Qt::LeftButton ) {
+      m_mousePressed = true;
+      return true;
+    }
+  } else if ( ev->type() == QEvent::GraphicsSceneMouseRelease ) {
+    QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
+    if ( mev->button() == Qt::LeftButton ) {
+      m_mousePressed = false;
+      return true;
+    }
+  } else if ( QEvent::GraphicsSceneMouseMove && m_mousePressed ) {
+    QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
+    const int dy = mev->lastPos().y() - mev->pos().y();
+    if ( dy < 0 ) {
+      for ( int i = 0; i < -dy; ++i )
+        m_viewer->slotScrollUp();
+    } else {
+      for ( int i = 0; i < dy; ++i )
+        m_viewer->slotScrollDown();
+    }
+    return true;
+  }
+
+  return QObject::eventFilter( obj, ev );
 }
 
 qint64 MessageViewItem::messageItemId() const

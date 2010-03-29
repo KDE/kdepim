@@ -43,10 +43,14 @@ class MessageViewItem : public QDeclarativeItem
 
   protected:
     void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
+    bool eventFilter( QObject *obj, QEvent *event );
 
   private:
     Viewer *m_viewer;
     QGraphicsProxyWidget *m_proxy;
+
+    /// Handle mouse events
+    bool m_mousePressed;
 };
 
 }
