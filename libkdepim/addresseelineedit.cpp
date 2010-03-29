@@ -58,18 +58,20 @@
 
 using namespace KPIM;
 
-class AddresseeLineEditStatic {
+class AddresseeLineEditStatic
+{
   public:
-    AddresseeLineEditStatic() :
-        completion( new KMailCompletion ),
+
+    AddresseeLineEditStatic()
+      : completion( new KMailCompletion ),
         ldapTimer( 0 ),
         ldapSearch( 0 ),
         ldapLineEdit( 0 )
     {
-
     }
 
-    ~AddresseeLineEditStatic() {
+    ~AddresseeLineEditStatic()
+    {
       delete completion;
       delete ldapTimer;
       delete ldapSearch;
@@ -116,17 +118,21 @@ static bool itemIsHeader( const QListWidgetItem *item )
   return item && !item->text().startsWith( s_completionItemIndentString );
 }
 
-class SourceWithWeight {
+class SourceWithWeight
+{
   public:
     int weight;           // the weight of the source
     QString sourceName;   // the name of the source, e.g. "LDAP Server"
     int index;            // index into s_static->completionSources
 
-    bool operator< ( const SourceWithWeight &other ) const {
+    bool operator< ( const SourceWithWeight &other ) const
+    {
       if ( weight > other.weight )
         return true;
+
       if ( weight < other.weight )
         return false;
+
       return sourceName < other.sourceName;
     }
 };
@@ -186,8 +192,6 @@ void AddresseeLineEdit::Private::init()
     s_static->completion->setOrder( completionOrder() );
     s_static->completion->setIgnoreCase( true );
   }
-//  connect( s_static->completion, SIGNAL(match(const QString&)),
-//           this, SLOT(slotMatched(const QString&)) );
 
   if ( m_useCompletion ) {
     if ( !s_static->ldapTimer ) {
@@ -265,6 +269,7 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
 
   if ( !items.isEmpty() &&
        !( items.count() == 1 && m_searchString == items.first() ) ) {
+
     completionBox->setItems( items );
 
     if ( !completionBox->isVisible() ) {
@@ -288,8 +293,8 @@ void AddresseeLineEdit::Private::setCompletedItems( const QStringList &items, bo
     }
 
     if ( autoSuggest ) {
-      int index = items.first().indexOf( m_searchString );
-      QString newText = items.first().mid( index );
+      const int index = items.first().indexOf( m_searchString );
+      const QString newText = items.first().mid( index );
       q->setUserSelection( false );
       q->setCompletedText( newText, true );
     }
@@ -349,26 +354,28 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
   QMap<int, QStringList> sections;
   QStringList sortedItems;
   for ( QStringList::Iterator it = items.begin(); it != items.end(); ++it, ++i ) {
-    CompletionItemsMap::const_iterator cit = s_static->completionItemMap.constFind(*it);
+    CompletionItemsMap::const_iterator cit = s_static->completionItemMap.constFind( *it );
     if ( cit == s_static->completionItemMap.constEnd() ) {
       continue;
     }
-    int idx = (*cit).second;
+
+    const int index = (*cit).second;
 
     if ( s_static->completion->order() == KCompletion::Weighted ) {
-      if ( lastSourceIndex == -1 || lastSourceIndex != idx ) {
-        const QString sourceLabel( s_static->completionSources[idx] );
-        if ( sections.find(idx) == sections.end() ) {
+      if ( lastSourceIndex == -1 || lastSourceIndex != index ) {
+        const QString sourceLabel( s_static->completionSources[ index ] );
+        if ( sections.find( index ) == sections.end() ) {
           it = items.insert( it, sourceLabel );
           ++it; //skip new item
         }
-        lastSourceIndex = idx;
+        lastSourceIndex = index;
       }
+
       (*it) = (*it).prepend( s_completionItemIndentString );
       // remove preferred email sort <blank> added in  addContact()
       (*it).replace( QLatin1String( "  <" ), QLatin1String( " <" ) );
     }
-    sections[idx].append( *it );
+    sections[ index ].append( *it );
 
     if ( s_static->completion->order() == KCompletion::Sorted ) {
       sortedItems.append( *it );
@@ -390,11 +397,10 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
 
     // Add the sections and their items to the final sortedItems result list
     for( int i = 0; i < sourcesAndWeights.size(); i++ ) {
-      QStringList sectionItems = sections[sourcesAndWeights[i].index];
+      const QStringList sectionItems = sections[sourcesAndWeights[i].index];
       if ( !sectionItems.isEmpty() ) {
         sortedItems.append( sourcesAndWeights[i].sourceName );
-        QStringList sectionItems = sections[sourcesAndWeights[i].index];
-        foreach( const QString &itemInSection, sectionItems ) {
+        foreach ( const QString &itemInSection, sectionItems ) {
           sortedItems.append( itemInSection );
         }
       }
@@ -402,6 +408,7 @@ const QStringList KPIM::AddresseeLineEdit::Private::adjustedCompletionItems( boo
   } else {
     sortedItems.sort();
   }
+
   return sortedItems;
 }
 
@@ -430,7 +437,7 @@ void AddresseeLineEdit::Private::updateSearchString()
   if ( n >= 0 ) {
     ++n; // Go past the ","
 
-    int len = m_searchString.length();
+    const int len = m_searchString.length();
 
     // Increment past any whitespace...
     while ( n < len && m_searchString[ n ].isSpace() ) {
@@ -459,12 +466,14 @@ void AddresseeLineEdit::Private::akonadiHandlePending()
   kDebug() << "Pending items: " << s_static->akonadiPendingItems.size();
   Akonadi::Item::List::iterator it = s_static->akonadiPendingItems.begin();
   while ( it != s_static->akonadiPendingItems.end() ) {
-    Akonadi::Item item = *it;
-    int sourceIndex;
-    if ( ( sourceIndex = s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 ) ) >= 0 ) {
+    const Akonadi::Item item = *it;
+
+    const int sourceIndex = s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
+    if ( sourceIndex >= 0 ) {
       kDebug() << "identified collection: " << s_static->completionSources[sourceIndex];
       if ( item.hasPayload<KABC::Addressee>() )
         q->addContact( item.payload<KABC::Addressee>(), 1, sourceIndex ); // TODO calculate proper weight somehow..
+
       // remove from the pending
       it = s_static->akonadiPendingItems.erase( it );
     } else {
@@ -477,7 +486,7 @@ void AddresseeLineEdit::Private::doCompletion( bool ctrlT )
 {
   m_lastSearchMode = ctrlT;
 
-  KGlobalSettings::Completion mode = q->completionMode();
+  const KGlobalSettings::Completion mode = q->completionMode();
 
   if ( mode == KGlobalSettings::CompletionNone )
     return;
@@ -610,7 +619,7 @@ void AddresseeLineEdit::Private::slotReturnPressed( const QString& )
 
 void AddresseeLineEdit::Private::slotStartLDAPLookup()
 {
-  KGlobalSettings::Completion  mode = q->completionMode();
+  const KGlobalSettings::Completion mode = q->completionMode();
 
   if ( mode == KGlobalSettings::CompletionNone )
     return;
@@ -624,20 +633,20 @@ void AddresseeLineEdit::Private::slotStartLDAPLookup()
   startLoadingLDAPEntries();
 }
 
-void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::List &adrs )
+void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::List &results )
 {
-  if ( adrs.isEmpty() || s_static->ldapLineEdit != q )
+  if ( results.isEmpty() || s_static->ldapLineEdit != q )
     return;
 
-  for ( KLDAP::LdapResult::List::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
-    KABC::Addressee addr;
-    addr.setNameFromString( (*it).name );
-    addr.setEmails( (*it).email );
+  foreach ( const KLDAP::LdapResult &result, results ) {
+    KABC::Addressee contact;
+    contact.setNameFromString( result.name );
+    contact.setEmails( result.email );
 
-    if ( !s_static->ldapClientToCompletionSourceMap.contains( (*it).clientNumber ) )
+    if ( !s_static->ldapClientToCompletionSourceMap.contains( result.clientNumber ) )
       updateLDAPWeights(); // we got results from a new source, so update the completion sources
 
-    q->addContact( addr, (*it).completionWeight, s_static->ldapClientToCompletionSourceMap[ (*it ).clientNumber ]  );
+    q->addContact( contact, result.completionWeight, s_static->ldapClientToCompletionSourceMap[ result.clientNumber ]  );
   }
 
   if ( ( q->hasFocus() || q->completionBox()->hasFocus() ) &&
@@ -646,7 +655,7 @@ void AddresseeLineEdit::Private::slotLDAPSearchData( const KLDAP::LdapResult::Li
     q->setText( m_previousAddresses + m_searchString );
     // only complete again if the user didn't change the selection while
     // we were waiting; otherwise the completion box will be closed
-    QListWidgetItem *current = q->completionBox()->currentItem();
+    const QListWidgetItem *current = q->completionBox()->currentItem();
     if ( !current || m_searchString.trimmed() != current->text().trimmed() )
       doCompletion( m_lastSearchMode );
   }
@@ -677,10 +686,11 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob* job )
   /* We have to fetch the collections of the items, so that
      the source name can be correctly labeled.*/
   const Akonadi::Item::List items = searchJob->items();
-  foreach ( Akonadi::Item item, items ) {
+  foreach ( const Akonadi::Item &item, items ) {
+
     // check the local cache of collections
-    int sourceIndex;
-    if ( ( sourceIndex = s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 ) ) == -1 ) {
+    const int sourceIndex = s_static->akonadiCollectionToCompletionSourceMap.value( item.parentCollection().id(), -1 );
+    if ( sourceIndex == -1 ) {
       kDebug() << "Fetching New collection: " << item.parentCollection().id();
       // the collection isn't there, start the fetch job.
       Akonadi::CollectionFetchJob *collectionJob = new Akonadi::CollectionFetchJob( item.parentCollection(),
@@ -691,7 +701,7 @@ void AddresseeLineEdit::Private::slotAkonadiSearchResult( KJob* job )
          so insert the collection with an index value of -2 */
       s_static->akonadiCollectionToCompletionSourceMap.insert( item.parentCollection().id(), -2 );
       s_static->akonadiPendingItems.append( item );
-    } else if( sourceIndex == -2 ) {
+    } else if ( sourceIndex == -2 ) {
       /* fetch job already started, don't need to start another one,
          so just append the item as pending */
       s_static->akonadiPendingItems.append( item );
@@ -721,7 +731,7 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived( const Akonadi::
   // now that we have added the new collections, recheck our list of pending contacts
   akonadiHandlePending();
   // do completion
-  QListWidgetItem *current = q->completionBox()->currentItem();
+  const QListWidgetItem *current = q->completionBox()->currentItem();
   if ( !current || m_searchString.trimmed() != current->text().trimmed() ) {
     doCompletion( m_lastSearchMode );
   }
@@ -731,7 +741,7 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived( const Akonadi::
 KCompletion::CompOrder AddresseeLineEdit::Private::completionOrder()
 {
   KConfig _config( QLatin1String( "kpimcompletionorder" ) );
-  KConfigGroup config( &_config, QLatin1String( "General" ) );
+  const KConfigGroup config( &_config, QLatin1String( "General" ) );
   const QString order = config.readEntry( QLatin1String( "CompletionOrder" ), QString::fromLatin1( "Weighted" ) );
 
   if ( order == QLatin1String( "Weighted" ) ) {
@@ -845,7 +855,7 @@ void AddresseeLineEdit::insert( const QString &t )
   newText = lines.join( QLatin1String( ", " ) );
 
   if ( newText.startsWith( QLatin1String( "mailto:" ) ) ) {
-    KUrl url( newText );
+    const KUrl url( newText );
     newText = url.path();
   } else if ( newText.indexOf( QLatin1String( " at " ) ) != -1 ) {
     // Anti-spam stuff
@@ -857,7 +867,7 @@ void AddresseeLineEdit::insert( const QString &t )
 
   QString contents = text();
   int start_sel = 0;
-  int pos = cursorPosition( );
+  int pos = cursorPosition();
 
   if ( hasSelectedText() ) {
     // Cut away the selection.
@@ -902,24 +912,24 @@ void AddresseeLineEdit::paste()
   d->m_smartPaste = false;
 }
 
-void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *e )
+void AddresseeLineEdit::mouseReleaseEvent( QMouseEvent *event )
 {
   // reimplemented from QLineEdit::mouseReleaseEvent()
   if ( d->m_useCompletion &&
        QApplication::clipboard()->supportsSelection() &&
        !isReadOnly() &&
-       e->button() == Qt::MidButton ) {
+       event->button() == Qt::MidButton ) {
     d->m_smartPaste = true;
   }
 
-  KLineEdit::mouseReleaseEvent( e );
+  KLineEdit::mouseReleaseEvent( event );
   d->m_smartPaste = false;
 }
 
-void AddresseeLineEdit::dropEvent( QDropEvent *e )
+void AddresseeLineEdit::dropEvent( QDropEvent *event )
 {
   if ( !isReadOnly() ) {
-    KUrl::List uriList = KUrl::List::fromMimeData( e->mimeData() );
+    const KUrl::List uriList = KUrl::List::fromMimeData( event->mimeData() );
     if ( !uriList.isEmpty() ) {
       QString contents = text();
       // remove trailing white space and comma
@@ -935,12 +945,11 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
       }
       bool mailtoURL = false;
       // append the mailto URLs
-      for ( KUrl::List::Iterator it = uriList.begin(); it != uriList.end(); ++it ) {
-        KUrl u( *it );
-        if ( u.protocol() == QLatin1String( "mailto" ) ) {
+      foreach ( const KUrl &url, uriList ) {
+        if ( url.protocol() == QLatin1String( "mailto" ) ) {
           mailtoURL = true;
           QString address;
-          address = KUrl::fromPercentEncoding( u.path().toLatin1() );
+          address = KUrl::fromPercentEncoding( url.path().toLatin1() );
           address = KMime::decodeRFC2047String( address.toAscii() );
           if ( !contents.isEmpty() ) {
             contents.append( QLatin1String( ", " ) );
@@ -959,7 +968,8 @@ void AddresseeLineEdit::dropEvent( QDropEvent *e )
   if ( d->m_useCompletion ) {
     d->m_smartPaste = true;
   }
-  QLineEdit::dropEvent( e );
+
+  QLineEdit::dropEvent( event );
   d->m_smartPaste = false;
 }
 
@@ -1064,78 +1074,22 @@ void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int
 
     d->addCompletionItem( fullEmail, weight + isPrefEmail, source, &keyWords );
     isPrefEmail = 0;
-
-#if 0
-    int len = (*it).length();
-    if ( len == 0 ) {
-      continue;
-    }
-    if( '\0' == (*it)[len-1] ) {
-      --len;
-    }
-    const QString tmp = (*it).left( len );
-    const QString fullEmail = addr.fullEmail( tmp );
-    //kDebug(5300) <<"AddresseeLineEdit::addContact() \"" << fullEmail <<"\" weight=" << weight;
-    addCompletionItem( fullEmail.simplified(), weight, source );
-    // Try to guess the last name: if found, we add an extra
-    // entry to the list to make sure completion works even
-    // if the user starts by typing in the last name.
-    QString name( addr.realName().simplified() );
-    if ( name.endsWith( "\"" ) ) {
-      name.truncate( name.length()-1 );
-    }
-    if ( name.startsWith( "\"" ) ) {
-      name = name.mid( 1 );
-    }
-
-    // While we're here also add "email (full name)" for completion on the email
-    if ( !name.isEmpty() ) {
-      addCompletionItem( addr.preferredEmail() + " (" + name + ')', weight, source );
-    }
-
-    bool bDone = false;
-    int i = -1;
-    while ( ( i = name.lastIndexOf( ' ' ) ) > 1 && !bDone ) {
-      QString sLastName( name.mid( i + 1 ) );
-      // last names must be at least 2 chars long and must not end
-      // with a '.', like in "Jr." or "Sr."
-      if( !sLastName.isEmpty() &&
-          2 <= sLastName.length() &&
-          !sLastName.endsWith( "." ) ) {
-        name.truncate( i );
-        if ( !name.isEmpty() ){
-          sLastName.prepend( "\"" );
-          sLastName.append( ", " + name + "\" <" );
-        }
-        QString sExtraEntry( sLastName );
-        sExtraEntry.append( tmp.isEmpty() ? addr.preferredEmail() : tmp );
-        sExtraEntry.append( ">" );
-        addCompletionItem( sExtraEntry.simplified(), weight, source );
-        bDone = true;
-      }
-      if ( !bDone ) {
-        name.truncate( i );
-        if ( name.endsWith( "\"" ) ) {
-          name.truncate( name.length() - 1 );
-        }
-      }
-    }
-#endif
   }
 }
 
-void AddresseeLineEdit::contextMenuEvent( QContextMenuEvent *e )
+void AddresseeLineEdit::contextMenuEvent( QContextMenuEvent *event )
 {
   QMenu *menu = createStandardContextMenu();
-  menu->exec( e->globalPos() );
+  menu->exec( event->globalPos() );
   delete menu;
 }
 
 QMenu *AddresseeLineEdit::createStandardContextMenu()
 {
-  //disable modes not supported by KMailCompletion
+  // disable modes not supported by KMailCompletion
   setCompletionModeDisabled( KGlobalSettings::CompletionMan );
   setCompletionModeDisabled( KGlobalSettings::CompletionPopupAuto );
+
   QMenu *menu = KLineEdit::createStandardContextMenu();
   if ( !menu ) {
     return 0;
@@ -1157,40 +1111,40 @@ int KPIM::AddresseeLineEdit::addCompletionSource( const QString &source, int wei
   else
     s_static->completionSourceWeights[source] = weight;
 
-  int sourceIndex = s_static->completionSources.indexOf( source );
+  const int sourceIndex = s_static->completionSources.indexOf( source );
   if ( sourceIndex == -1 ) {
     s_static->completionSources.append( source );
     return s_static->completionSources.size() - 1;
-  }
-  else
+  } else
     return sourceIndex;
 }
 
-bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
+bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
 {
   if ( d->m_completionInitialized &&
-       ( obj == completionBox() ||
-         completionBox()->findChild<QWidget*>( obj->objectName() ) == obj ) ) {
-    if ( e->type() == QEvent::MouseButtonPress ||
-         e->type() == QEvent::MouseMove ||
-         e->type() == QEvent::MouseButtonRelease ||
-         e->type() == QEvent::MouseButtonDblClick ) {
-      QMouseEvent* me = static_cast<QMouseEvent*>( e );
+       ( object == completionBox() ||
+         completionBox()->findChild<QWidget*>( object->objectName() ) == object ) ) {
+    if ( event->type() == QEvent::MouseButtonPress ||
+         event->type() == QEvent::MouseMove ||
+         event->type() == QEvent::MouseButtonRelease ||
+         event->type() == QEvent::MouseButtonDblClick ) {
+
+      const QMouseEvent* mouseEvent = static_cast<QMouseEvent*>( event );
       // find list box item at the event position
-      QListWidgetItem *item = completionBox()->itemAt( me->pos() );
+      QListWidgetItem *item = completionBox()->itemAt( mouseEvent->pos() );
       if ( !item ) {
         // In the case of a mouse move outside of the box we don't want
         // the parent to fuzzy select a header by mistake.
-        bool eat = e->type() == QEvent::MouseMove;
+        bool eat = event->type() == QEvent::MouseMove;
         return eat;
       }
       // avoid selection of headers on button press, or move or release while
       // a button is pressed
-      Qt::MouseButtons btns = me->buttons();
-      if ( e->type() == QEvent::MouseButtonPress ||
-           e->type() == QEvent::MouseButtonDblClick ||
-           btns & Qt::LeftButton || btns & Qt::MidButton ||
-           btns & Qt::RightButton ) {
+      const Qt::MouseButtons buttons = mouseEvent->buttons();
+      if ( event->type() == QEvent::MouseButtonPress ||
+           event->type() == QEvent::MouseButtonDblClick ||
+           buttons & Qt::LeftButton || buttons & Qt::MidButton ||
+           buttons & Qt::RightButton ) {
         if ( itemIsHeader( item ) ) {
           return true; // eat the event, we don't want anything to happen
         } else {
@@ -1199,31 +1153,33 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
           // to fuzzy auto-selection from QListBox
           completionBox()->setCurrentItem( item );
           item->setSelected( true );
-          if ( e->type() == QEvent::MouseMove ) {
+          if ( event->type() == QEvent::MouseMove ) {
             return true; // avoid fuzzy selection behavior
           }
         }
       }
     }
   }
-  if ( ( obj == this ) &&
-     ( e->type() == QEvent::ShortcutOverride ) ) {
-    QKeyEvent *ke = static_cast<QKeyEvent*>( e );
-    if ( ke->key() == Qt::Key_Up || ke->key() == Qt::Key_Down || ke->key() == Qt::Key_Tab ) {
-      ke->accept();
+
+  if ( ( object == this ) &&
+     ( event->type() == QEvent::ShortcutOverride ) ) {
+    QKeyEvent *keyEvent = static_cast<QKeyEvent*>( event );
+    if ( keyEvent->key() == Qt::Key_Up || keyEvent->key() == Qt::Key_Down || keyEvent->key() == Qt::Key_Tab ) {
+      keyEvent->accept();
       return true;
     }
   }
-  if ( ( obj == this ) &&
-      ( e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease ) &&
+
+  if ( ( object == this ) &&
+      ( event->type() == QEvent::KeyPress || event->type() == QEvent::KeyRelease ) &&
       completionBox()->isVisible() ) {
-    QKeyEvent *ke = static_cast<QKeyEvent*>( e );
+    const QKeyEvent *keyEvent = static_cast<QKeyEvent*>( event );
     int currentIndex = completionBox()->currentRow();
-    if ( ke->key() == Qt::Key_Up ) {
+    if ( keyEvent->key() == Qt::Key_Up ) {
       //kDebug() <<"EVENTFILTER: Qt::Key_Up currentIndex=" << currentIndex;
       // figure out if the item we would be moving to is one we want
       // to ignore. If so, go one further
-      QListWidgetItem *itemAbove = completionBox()->item( currentIndex );
+      const QListWidgetItem *itemAbove = completionBox()->item( currentIndex );
       if ( itemAbove && itemIsHeader( itemAbove ) ) {
         // there is a header above is, check if there is even further up
         // and if so go one up, so it'll be selected
@@ -1235,22 +1191,23 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
           // nothing to skip to, let's stay where we are, but make sure the
           // first header becomes visible, if we are the first real entry
           completionBox()->scrollToItem( completionBox()->item( 0 ) );
-          QListWidgetItem *i = completionBox()->item( currentIndex );
-          if ( i ) {
-            if ( itemIsHeader( i ) ) {
+          QListWidgetItem *item = completionBox()->item( currentIndex );
+          if ( item ) {
+            if ( itemIsHeader( item ) ) {
               currentIndex++;
-              i = completionBox()->item( currentIndex );
+              item = completionBox()->item( currentIndex );
             }
-            completionBox()->setCurrentItem( i );
-            i->setSelected( true );
+            completionBox()->setCurrentItem( item );
+            item->setSelected( true );
           }
         }
+
         return true;
       }
-    } else if ( ke->key() == Qt::Key_Down ) {
+    } else if ( keyEvent->key() == Qt::Key_Down ) {
       // same strategy for downwards
       //kDebug() <<"EVENTFILTER: Qt::Key_Down. currentIndex=" << currentIndex;
-      QListWidgetItem *itemBelow = completionBox()->item( currentIndex );
+      const QListWidgetItem *itemBelow = completionBox()->item( currentIndex );
       if ( itemBelow && itemIsHeader( itemBelow ) ) {
         if ( completionBox()->item( currentIndex + 1 ) ) {
           //kDebug() <<"EVENTFILTER: Qt::Key_Down -> skipping" << currentIndex+1;
@@ -1258,60 +1215,66 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *obj, QEvent *e )
           completionBox()->item( currentIndex + 1 )->setSelected( true );
         } else {
           // nothing to skip to, let's stay where we are
-          QListWidgetItem *i = completionBox()->item( currentIndex );
-          if ( i ) {
-            completionBox()->setCurrentItem( i );
-            i->setSelected( true );
+          QListWidgetItem *item = completionBox()->item( currentIndex );
+          if ( item ) {
+            completionBox()->setCurrentItem( item );
+            item->setSelected( true );
           }
         }
+
         return true;
       }
       // special case of the initial selection, which is unfortunately a header.
       // Setting it to selected tricks KCompletionBox into not treating is special
       // and selecting making it current, instead of the one below.
       QListWidgetItem *item = completionBox()->item( currentIndex );
-      if ( item && itemIsHeader(item) ) {
+      if ( item && itemIsHeader( item ) ) {
         completionBox()->setCurrentItem( item );
         item->setSelected( true );
       }
-    } else if ( ke->key() == Qt::Key_Tab || ke->key() == Qt::Key_Backtab ) {
+    } else if ( keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab ) {
       /// first, find the header of the current section
       QListWidgetItem *myHeader = 0;
-      int i = currentIndex;
-      while ( i>=0 ) {
-        if ( itemIsHeader( completionBox()->item(i) ) ) {
-          myHeader = completionBox()->item( i );
+      int index = currentIndex;
+      while ( index >= 0 ) {
+        if ( itemIsHeader( completionBox()->item( index ) ) ) {
+          myHeader = completionBox()->item( index );
           break;
         }
-        i--;
+
+        index--;
       }
       Q_ASSERT( myHeader ); // we should always be able to find a header
 
       // find the next header (searching backwards, for Qt::Key_Backtab
       QListWidgetItem *nextHeader = 0;
-      const int iterationstep = ke->key() == Qt::Key_Tab ?  1 : -1;
+      const int iterationStep = keyEvent->key() == Qt::Key_Tab ?  1 : -1;
+
       // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
-      uint j = ke->key() == Qt::Key_Tab ?
-               currentIndex : i == 0 ?
-               completionBox()->count() - 1 : ( i - 1 ) % completionBox()->count();
+      uint j = keyEvent->key() == Qt::Key_Tab ?
+               currentIndex : index == 0 ?
+               completionBox()->count() - 1 : ( index - 1 ) % completionBox()->count();
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
           if ( itemIsHeader(nextHeader) ) {
               break;
           }
-          j = ( j + iterationstep ) % completionBox()->count();
+          j = ( j + iterationStep ) % completionBox()->count();
       }
+
       if ( nextHeader && nextHeader != myHeader ) {
         QListWidgetItem *item = completionBox()->item( j + 1 );
-        if ( item && !itemIsHeader(item) ) {
+        if ( item && !itemIsHeader( item ) ) {
           completionBox()->setCurrentItem( item );
           item->setSelected( true );
         }
       }
+
       return true;
     }
   }
-  return KLineEdit::eventFilter( obj, e );
+
+  return KLineEdit::eventFilter( object, event );
 }
 
 #include "addresseelineedit.moc"
