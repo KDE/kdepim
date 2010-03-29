@@ -116,7 +116,7 @@ Rectangle {
   ListView {
     id: messageViewList
     model : itemModel
-    delegate : del1
+    delegate : messageViewDelegate
 
     anchors.top: navbar.bottom
     anchors.left : parent.left
