@@ -23,98 +23,98 @@
 
 #include "kdepim_export.h"
 
-#include <QDateTime>
-#include <QMenu>
+#include <QtCore/QDate>
+#include <QtGui/QMenu>
 
 class KDatePicker;
 
 namespace KPIM {
 
 /**
-   @short This menu helps the user to select a date quickly.
-
-   This menu helps the user to select a date quicly. It offers various
-   ways of selecting, e.g. with a KDatePicker or with words like "Tomorrow".
-
-   The available items are:
-
-   @li NoDate: A menu-item with "No Date". If chosen, the datepicker will emit
-       a null QDate.
-   @li DatePicker: Show a KDatePicker-widget.
-   @li Words: Show items like "Today", "Tomorrow" or "Next Week".
-
-   When supplying multiple items, separate each item with a bitwise OR.
-
-   @author Bram Schoenmakers <bram_s@softhome.net>
-*/
+ * @short This menu helps the user to select a date quickly.
+ *
+ * This menu helps the user to select a date quickly. It offers various
+ * modes of selecting, e.g. with a KDatePicker or with words like "Tomorrow".
+ *
+ * The available modes are:
+ *
+ * @li NoDate: A menu-item with "No Date". If chosen, the datepicker will emit
+ *     a null QDate.
+ * @li DatePicker: Shows a KDatePicker-widget.
+ * @li Words: Shows items like "Today", "Tomorrow" or "Next Week".
+ *
+ * @author Bram Schoenmakers <bram_s@softhome.net>
+ */
 class KDEPIM_EXPORT KDatePickerPopup: public QMenu
 {
   Q_OBJECT
 
   public:
-    enum ItemFlag {
-      NoDate = 1,
-      DatePicker = 2,
-      Words = 4
+    /**
+     * Describes the available selection modes.
+     */
+    enum Mode
+    {
+      NoDate = 1,     ///< A menu-item with "No Date". Will always return an invalid date.
+      DatePicker = 2, ///< A menu-item with a KDatePicker.
+      Words = 4       ///< A menu-item with list of words that describe a date.
     };
 
-    Q_DECLARE_FLAGS( Items, ItemFlag )
+    /**
+     * Describes the a set of combined modes.
+     */
+    Q_DECLARE_FLAGS( Modes, Mode )
 
     /**
-       A constructor for the KDatePickerPopup.
-
-       @param items List of all desirable items, separated with a bitwise OR.
-       @param date Initial date of datepicker-widget.
-       @param parent The object's parent.
-       @param name The object's name.
-    */
-    explicit KDatePickerPopup( Items items = DatePicker,
+     * Creates a new date picker popup.
+     *
+     * @param modes The selection modes that shall be offered
+     * @param date The initial date of date picker widget.
+     * @param parent The parent object.
+     */
+    explicit KDatePickerPopup( Modes modes = DatePicker,
                                const QDate &date = QDate::currentDate(),
                                QWidget *parent = 0 );
 
     /**
-       @return A pointer to the private variable mDatePicker, an instance of
-       KDatePicker.
-    */
-    KDatePicker *datePicker() const;
-
-    void setDate( const QDate &date );
-
-#if 0
-    /** Set items which should be shown and rebuilds the menu afterwards.
-        Only if the menu is not visible.
-        @param items List of all desirable items, separated with a bitwise OR.
-    */
-    void setItems( int items = 1 );
-#endif
-    /** @return Returns the bitwise result of the active items in the popup. */
-    int items() const { return mItems; }
-
-  Q_SIGNALS:
+     * Destroys the date picker popup.
+     */
+    ~KDatePickerPopup();
 
     /**
-      This signal emits the new date (selected with datepicker or other
-      menu-items).
-    */
-    void dateChanged ( const QDate &date );
+     * Returns the used KDatePicker object.
+     */
+    KDatePicker *datePicker() const;
 
-  protected Q_SLOTS:
-    void slotDateChanged ( const QDate &date );
+  public Q_SLOTS:
+    /**
+     * Sets the current @p date.
+     */
+    void setDate( const QDate &date );
 
-    void slotToday();
-    void slotTomorrow();
-    void slotNextWeek();
-    void slotNextMonth();
-    void slotNoDate();
+  Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has selected a new date.
+     *
+     * @param date The new date.
+     */
+    void dateChanged( const QDate &date );
 
   private:
-    void buildMenu();
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
 
-    KDatePicker *mDatePicker;
-    Items mItems;
+    Q_PRIVATE_SLOT( d, void slotDateChanged( const QDate& ) )
+    Q_PRIVATE_SLOT( d, void slotToday() )
+    Q_PRIVATE_SLOT( d, void slotTomorrow() )
+    Q_PRIVATE_SLOT( d, void slotNextWeek() )
+    Q_PRIVATE_SLOT( d, void slotNextMonth() )
+    Q_PRIVATE_SLOT( d, void slotNoDate() )
+    //@endcond
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS( KDatePickerPopup::Items )
+Q_DECLARE_OPERATORS_FOR_FLAGS( KDatePickerPopup::Modes )
 
 }
 
