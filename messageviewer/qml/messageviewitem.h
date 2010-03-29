@@ -41,9 +41,24 @@ class MessageViewItem : public QDeclarativeItem
     QString splashMessage() const;
     void setSplashMessage( const QString &message );
 
+  signals:
+    void nextMessageRequest();
+    void previousMessageRequest();
+
   protected:
     void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
     bool eventFilter( QObject *obj, QEvent *event );
+
+  private:
+    enum Direction {
+      Unknown, /// Need more events to determin the actual direction.
+      Up,
+      Down,
+      Left,
+      Right
+    };
+
+    Direction direction() const;
 
   private:
     Viewer *m_viewer;
@@ -51,6 +66,8 @@ class MessageViewItem : public QDeclarativeItem
 
     /// Handle mouse events
     bool m_mousePressed;
+    int m_dx;
+    int m_dy;
 };
 
 }
