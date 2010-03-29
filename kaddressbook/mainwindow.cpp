@@ -41,9 +41,9 @@ MainWindow::MainWindow()
 
   setStandardToolBarMenuEnabled( true );
 
-  setupGUI( Keys | Save | Create, "kaddressbookui.rc" );
-
   toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
+
+  setupGUI( Keys | Save | Create, "kaddressbookui.rc" );
 
   setAutoSaveSettings();
 }
