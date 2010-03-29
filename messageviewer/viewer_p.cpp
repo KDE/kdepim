@@ -213,6 +213,8 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
   connect( mColorBar, SIGNAL( clicked() ),
            this, SLOT( slotToggleHtmlMode() ) );
 
+  // FIXME: Don't use the full payload here when attachment loading on demand is used, just
+  //        like in KMMainWidget::slotMessageActivated().
   Akonadi::ItemFetchScope fs;
   fs.fetchFullPayload();
   mMonitor.setItemFetchScope( fs );
