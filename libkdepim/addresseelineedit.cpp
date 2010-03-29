@@ -254,6 +254,8 @@ void AddresseeLineEdit::Private::updateLDAPWeights()
                                                     client->completionWeight() );
 
     s_static->ldapClientToCompletionSourceMap.insert( clientIndex, sourceIndex );
+
+    clientIndex++;
   }
 }
 
