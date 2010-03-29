@@ -232,6 +232,8 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
       mPrinter->newPage();
     }
 
+    const bool isJournal = ( (*it)->type() == "Journal" );
+
     //  PAGE Layout (same for landscape and portrait! astonishingly, it looks good with both!):
     //  +-----------------------------------+
     //  | Header:  Summary                  |
@@ -311,6 +313,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
                                     displayString, captionFont, textFont ), h );
     }
 
+    if ( !isJournal ) {
     // Alarms Printing
     QRect alarmBox( timesBox.left() + padding(), h + padding(),
                     timesBox.right() - padding(), lineHeight );
@@ -370,7 +373,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
 
     }
     h = qMax( printCaptionAndText( p, alarmBox, cap, txt, captionFont, textFont ), h );
-
+    }
     QRect organizerBox( timesBox.left() + padding(), h + padding(),
                         timesBox.right() - padding(), lineHeight );
     h = qMax( printCaptionAndText( p, organizerBox, i18n( "Organizer: " ),
@@ -392,12 +395,11 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
     QRect categoriesBox( locationBox );
     categoriesBox.setBottom( box.bottom() );
     categoriesBox.setTop( categoriesBox.bottom() - lineHeight - 2 * padding() );
-
     QRect attendeesBox( box.left(), categoriesBox.top() - padding() - box.height() / 9,
                         box.width(), box.height() / 9 );
     QRect attachmentsBox( box.left(), attendeesBox.top() - padding() - box.height() / 9,
                           box.width() * 3 / 4 - padding(), box.height() / 9 );
-    QRect optionsBox( attachmentsBox.right() + padding(), attachmentsBox.top(), 0, 0 );
+    QRect optionsBox( isJournal ? box.left() :  attachmentsBox.right() + padding(), attachmentsBox.top(), 0, 0 );
     optionsBox.setRight( box.right() );
     optionsBox.setBottom( attachmentsBox.bottom() );
     QRect notesBox( optionsBox.left(), locationBox.bottom() + padding(),
@@ -408,7 +410,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
     descriptionBox.setRight( attachmentsBox.right() );
 
     // Adjust boxes depending on the show options...
-    if ( !mShowSubitemsNotes ) {
+    if ( !mShowSubitemsNotes || isJournal ) {
       descriptionBox.setRight( box.right() );
     }
     if ( !mShowAttachments || !mShowAttendees ) {
@@ -429,7 +431,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
         }
       }
     }
-    if ( mShowAttachments ) {
+    if ( mShowAttachments && !isJournal ) {
       if ( !mShowOptions ) {
         attachmentsBox.setRight( box.right() );
         attachmentsBox.setRight( box.right() );
@@ -446,8 +448,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
     if ( mShowNoteLines ) {
       drawNoteLines( p, descriptionBox, newBottom );
     }
-
-    if ( mShowSubitemsNotes ) {
+    if ( mShowSubitemsNotes && !isJournal ) {
       if ( (*it)->relations().isEmpty() || (*it)->type() != "Todo" ) {
         int notesPosition = drawBoxWithCaption( p, notesBox, i18n( "Notes:" ),
                                                 QString(), /*sameLine=*/false,
@@ -535,7 +536,7 @@ void CalPrintIncidence::print( QPainter &p, int width, int height )
       }
     }
 
-    if ( mShowAttachments ) {
+    if ( mShowAttachments && !isJournal ) {
       Attachment::List attachments = (*it)->attachments();
       QString attachmentCaption;
       if ( attachments.count() == 0 ) {
