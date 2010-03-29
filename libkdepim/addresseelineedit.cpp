@@ -174,8 +174,8 @@ void AddresseeLineEdit::init()
                SLOT(slotUserCancelled(const QString&)) );
 
       connect( s_static->ldapTimer, SIGNAL(timeout()), SLOT(slotStartLDAPLookup()) );
-      connect( s_static->ldapSearch, SIGNAL(searchData(const KLDAP::LdapResultList&)),
-               SLOT(slotLDAPSearchData(const KLDAP::LdapResultList&)) );
+      connect( s_static->ldapSearch, SIGNAL(searchData(const KLDAP::LdapResult::List&)),
+               SLOT(slotLDAPSearchData(const KLDAP::LdapResult::List&)) );
 
       m_completionInitialized = true;
     }
@@ -748,13 +748,13 @@ void AddresseeLineEdit::startLoadingLDAPEntries()
   s_static->ldapSearch->startSearch( s );
 }
 
-void AddresseeLineEdit::slotLDAPSearchData( const KLDAP::LdapResultList &adrs )
+void AddresseeLineEdit::slotLDAPSearchData( const KLDAP::LdapResult::List &adrs )
 {
   if ( adrs.isEmpty() || s_static->ldapLineEdit != this ) {
     return;
   }
 
-  for ( KLDAP::LdapResultList::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
+  for ( KLDAP::LdapResult::List::ConstIterator it = adrs.begin(); it != adrs.end(); ++it ) {
     KABC::Addressee addr;
     addr.setNameFromString( (*it).name );
     addr.setEmails( (*it).email );

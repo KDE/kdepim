@@ -31,6 +31,7 @@
 #include "kdepim_export.h"
 
 #include <kabc/addressee.h>
+#include <kldap/ldapclient.h>
 #include <Akonadi/Job>
 #include <Akonadi/Collection>
 
@@ -43,12 +44,6 @@ class QMenu;
 class QMouseEvent;
 class QObject;
 
-namespace KLDAP {
-  class LdapClientSearch;
-  struct LdapResult;
-  typedef QList<LdapResult> LdapResultList;
-}
-
 namespace KPIM {
   typedef QMap< QString, QPair<int,int> > CompletionItemsMap;
 }
@@ -60,17 +55,44 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
   Q_OBJECT
 
   public:
-    explicit AddresseeLineEdit( QWidget *parent, bool useCompletion = true );
+    /**
+     * Creates a new addressee line edit.
+     *
+     * @param parent The parent object.
+     * @param enableCompletion Whether autocompletion shall be enabled.
+     */
+    explicit AddresseeLineEdit( QWidget *parent, bool enableCompletion = true );
+
+    /**
+     * Destroys the addressee line edit.
+     */
     virtual ~AddresseeLineEdit();
 
-    virtual void setFont( const QFont & );
-    void allowSemiColonAsSeparator( bool );
+    /**
+     * Sets the @p font that shall be used for the line edit.
+     */
+    virtual void setFont( const QFont &font );
+
+    /**
+     * Sets whether semicolons are allowed as separators.
+     */
+    void allowSemiColonAsSeparator( bool allow );
 
   public Q_SLOTS:
+    /**
+     * Moves the cursor at the end of the line edit.
+     */
     void cursorAtEnd();
+
+    /**
+     * Sets whether autocompletion shall be enabled.
+     */
     void enableCompletion( bool enable );
-    /** Reimplemented for stripping whitespace after completion */
-    virtual void setText( const QString & txt );
+
+    /**
+     * Reimplemented for stripping whitespace after completion
+     */
+    virtual void setText( const QString &text );
 
   protected:
     virtual void addContact( const KABC::Addressee &, int weight, int source = -1 );
@@ -121,7 +143,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     void slotPopupCompletion( const QString & );
     void slotReturnPressed( const QString & );
     void slotStartLDAPLookup();
-    void slotLDAPSearchData( const KLDAP::LdapResultList & );
+    void slotLDAPSearchData( const KLDAP::LdapResult::List & );
     void slotEditCompletionOrder();
     void slotUserCancelled( const QString & );
     void slotAkonadiSearchResult( KJob* );
