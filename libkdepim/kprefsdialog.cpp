@@ -302,7 +302,7 @@ KPrefsWidTime::KPrefsWidTime( KConfigSkeleton::ItemDateTime *item, QWidget *pare
   mLabel = new QLabel( mItem->label() + ':', parent );
   mTimeEdit = new KTimeEdit( parent );
   mLabel->setBuddy( mTimeEdit );
-  connect( mTimeEdit, SIGNAL(timeChanged(QTime)), SIGNAL(changed()) );
+  connect( mTimeEdit, SIGNAL(timeChanged(const QTime&)), SIGNAL(changed()) );
   QString toolTip = mItem->toolTip();
   if ( !toolTip.isEmpty() ) {
     mTimeEdit->setToolTip( toolTip );
@@ -323,7 +323,7 @@ void KPrefsWidTime::writeConfig()
   // Don't overwrite the date value of the QDateTime, so we can use a
   // KPrefsWidTime and a KPrefsWidDate on the same config entry!
   QDateTime dt( mItem->value() );
-  dt.setTime( mTimeEdit->getTime() );
+  dt.setTime( mTimeEdit->time() );
   mItem->setValue( dt );
 }
 

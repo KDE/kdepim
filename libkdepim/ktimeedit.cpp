@@ -33,13 +33,10 @@
 #include <KLocale>
 #include <KMessageBox>
 
-#include <QDateTime>
-#include <QLineEdit>
-#include <QKeyEvent>
-#include <QDebug>
-#include <QValidator>
-
-#include "ktimeedit.moc"
+#include <QtCore/QDateTime>
+#include <QtGui/QLineEdit>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QValidator>
 
 using namespace KPIM;
 
@@ -112,188 +109,188 @@ class KOTimeValidator : public QValidator
     }
 };
 
-// KTimeWidget/QTimeEdit provide nicer editing, but don't provide a combobox.
-// Difficult to get all in one...
-// But Qt-3.2 will offer QLineEdit::setMask, so a "99:99" mask would help.
-KTimeEdit::KTimeEdit( QWidget *parent, QTime qt, const char * )
-  : QComboBox( parent )
+class KTimeEdit::Private
 {
-  setEditable( true );
-  setInsertPolicy( NoInsert );
-  setValidator( new KOTimeValidator( this ) );
-
-  mTime = qt;
-
-//  mNoTimeString = i18n("No Time");
-//  insertItem( mNoTimeString );
-
-  // Fill combo box with selection of times in localized format.
-  QTime timeEntry( 0, 0, 0 );
-  QTime endEntry = timeEntry;
-  do {
-    addItem( KGlobal::locale()->formatTime( timeEntry ) );
-    timeEntry = timeEntry.addSecs( 60 * 15 );
-  } while ( timeEntry != endEntry );
-  // Add end of day.
-  addItem( KGlobal::locale()->formatTime( QTime( 23, 59, 59 ) ) );
-
-  updateText();
-  setFocusPolicy( Qt::StrongFocus );
-
-  connect( this, SIGNAL(activated(int)), this, SLOT(active(int)) );
-  connect( this, SIGNAL(highlighted(int)), this, SLOT(hilit(int)) );
-  connect( this, SIGNAL(textChanged(const QString&)),this,SLOT(changedText()) );
-}
-
-KTimeEdit::~KTimeEdit()
-{
-}
-
-bool KTimeEdit::hasTime() const
-{
-  // Can't happen
-  if ( currentText().isEmpty() ) {
-    return false;
-  }
-  return true; // always
-}
-
-QTime KTimeEdit::getTime() const
-{
-  // TODO use KLocale::WithoutSeconds in HEAD
-  bool ok = false;
-  QTime time = KGlobal::locale()->readTime( currentText(), KLocale::WithoutSeconds, &ok );
-  if ( !ok ) {
-    // Also try to accept times in "military format", i.e. no delimiter, like 1200
-    int tm = currentText().toInt( &ok );
-    if ( ( 0 <= tm ) && ( tm < 2400 ) && ( tm%100 < 60 ) && ok ) {
-      time.setHMS( tm / 100, tm % 100, 0 );
-    } else {
-      ok = false;
+  public:
+    Private( KTimeEdit *qq )
+      : q( qq )
+    {
     }
-  }
-  kDebug(5300) <<"KTimeEdit::getTime():" << time.toString();
-  return time;
-}
 
-QSizePolicy  KTimeEdit::sizePolicy() const
-{
-  // Set size policy to Fixed, because edit cannot contain more text than the
-  // string representing the time. It doesn't make sense to provide more space.
-  QSizePolicy sizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+    void addTime( const QTime& );
+    void subTime( const QTime& );
+    void updateText();
 
-  return sizePolicy;
-}
+    void slotActivated( int );
+    void slotTextChanged();
 
-void KTimeEdit::setTime( QTime newTime )
-{
-  if ( mTime != newTime ) {
-    kDebug(5300) <<"KTimeEdit::setTime():" << newTime.toString();
+    KTimeEdit *q;
+    QTime mTime;
+};
 
-    mTime = newTime;
-    updateText();
-  }
-}
-
-void KTimeEdit::active( int i )
-{
-  // The last entry, 23:59, is a special case
-  if( i == count() - 1 ) {
-    mTime = QTime( 23, 59, 0 );
-  } else {
-    mTime = QTime( 0, 0, 0 ).addSecs( i * 15 * 60 );
-  }
-  emit timeChanged( mTime );
-}
-
-void KTimeEdit::hilit( int )
-{
-  // we don't currently need to do anything here.
-}
-
-void KTimeEdit::addTime( QTime qt )
+void KTimeEdit::Private::addTime( const QTime &time )
 {
   // Calculate the new time.
-  mTime = qt.addSecs( mTime.minute() * 60 + mTime.hour() * 3600 );
+  mTime = time.addSecs( mTime.minute() * 60 + mTime.hour() * 3600 );
   updateText();
-  emit timeChanged( mTime );
+  emit q->timeChanged( mTime );
 }
 
-void KTimeEdit::subTime( QTime qt )
+void KTimeEdit::Private::subTime( const QTime &time )
 {
   int h, m;
 
   // Note that we cannot use the same method for determining the new
   // time as we did in addTime, because QTime does not handle adding
   // negative seconds well at all.
-  h = mTime.hour() - qt.hour();
-  m = mTime.minute() - qt.minute();
+  h = mTime.hour() - time.hour();
+  m = mTime.minute() - time.minute();
 
-  if( m < 0 ) {
+  if ( m < 0 ) {
     m += 60;
     h -= 1;
   }
 
-  if( h < 0 ) {
+  if ( h < 0 )
     h += 24;
-  }
 
   // store the newly calculated time.
   mTime.setHMS( h, m, 0 );
   updateText();
-  emit timeChanged( mTime );
+  emit q->timeChanged( mTime );
 }
 
-void KTimeEdit::keyPressEvent( QKeyEvent *qke )
+void KTimeEdit::Private::updateText()
 {
-  switch( qke->key() ) {
-  case Qt::Key_Down:
-    addTime( QTime( 0, 1, 0 ) );
-    break;
-  case Qt::Key_Up:
-    subTime( QTime( 0, 1, 0 ) );
-    break;
-  case Qt::Key_PageUp:
-    subTime( QTime( 1, 0, 0 ) );
-    break;
-  case Qt::Key_PageDown:
-    addTime( QTime( 1, 0, 0 ) );
-    break;
-  default:
-    QComboBox::keyPressEvent( qke );
-    break;
-  } // switch
-}
-
-void KTimeEdit::updateText()
-{
-  QString s = KGlobal::locale()->formatTime(mTime);
+  const QString text = KGlobal::locale()->formatTime( mTime );
 
   // Set the text but without emitting signals, nor losing the cursor position
-  QLineEdit *line = lineEdit();
-  line->blockSignals(true);
-  int pos = line->cursorPosition();
+  QLineEdit *line = q->lineEdit();
+  line->blockSignals( true );
+  const int pos = line->cursorPosition();
 
   // select item with nearest time, must be done while line edit is blocked
   // as setCurrentItem() calls setText() with triggers KTimeEdit::changedText()
-  setCurrentIndex( ( mTime.hour() * 4 )+( ( mTime.minute() + 7 ) / 15 ) );
+  q->setCurrentIndex( ( mTime.hour() * 4 ) + ( ( mTime.minute() + 7 ) / 15 ) );
 
-  line->setText( s );
+  line->setText( text );
   line->setCursorPosition( pos );
   line->blockSignals( false );
+}
+
+void KTimeEdit::Private::slotActivated( int index )
+{
+  // The last entry, 23:59, is a special case
+  if ( index == q->count() - 1 )
+    mTime = QTime( 23, 59, 0 );
+  else
+    mTime = QTime( 0, 0, 0 ).addSecs( index * 15 * 60 );
+
+  emit q->timeChanged( mTime );
+}
+
+void KTimeEdit::Private::slotTextChanged()
+{
+  if ( q->inputIsValid() ) {
+    mTime = q->time();
+    emit q->timeChanged( mTime );
+  }
+}
+
+// KTimeWidget/QTimeEdit provide nicer editing, but don't provide a combobox.
+// Difficult to get all in one...
+// But Qt-3.2 will offer QLineEdit::setMask, so a "99:99" mask would help.
+KTimeEdit::KTimeEdit( QWidget *parent, const QTime &time )
+  : QComboBox( parent ), d( new Private( this ) )
+{
+  setEditable( true );
+  setInsertPolicy( NoInsert );
+  setValidator( new KOTimeValidator( this ) );
+
+  d->mTime = time;
+
+  // Fill combo box with selection of times in localized format.
+  QTime timeEntry( 0, 0, 0 );
+  const QTime endEntry = timeEntry;
+  do {
+    addItem( KGlobal::locale()->formatTime( timeEntry ) );
+    timeEntry = timeEntry.addSecs( 60 * 15 );
+  } while ( timeEntry != endEntry );
+
+  // Add end of day.
+  addItem( KGlobal::locale()->formatTime( QTime( 23, 59, 59 ) ) );
+
+  d->updateText();
+  setFocusPolicy( Qt::StrongFocus );
+
+  connect( this, SIGNAL( activated( int ) ), this, SLOT( slotActivated( int ) ) );
+  connect( this, SIGNAL( textChanged( const QString& ) ), this, SLOT( slotTextChanged() ) );
+}
+
+KTimeEdit::~KTimeEdit()
+{
+  delete d;
+}
+
+QTime KTimeEdit::time() const
+{
+  bool ok = false;
+
+  QTime result = KGlobal::locale()->readTime( currentText(), KLocale::WithoutSeconds, &ok );
+  if ( !ok ) {
+    // Also try to accept times in "military format", i.e. no delimiter, like 1200
+    const int tm = currentText().toInt( &ok );
+    if ( (0 <= tm) && (tm < 2400) && (tm%100 < 60) && ok )
+      result.setHMS( tm / 100, tm % 100, 0 );
+    else
+      ok = false;
+  }
+
+  return result;
+}
+
+QSizePolicy KTimeEdit::sizePolicy() const
+{
+  // Set size policy to Fixed, because edit cannot contain more text than the
+  // string representing the time. It doesn't make sense to provide more space.
+  return QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
+}
+
+void KTimeEdit::setTime( const QTime &newTime )
+{
+  if ( d->mTime != newTime ) {
+    d->mTime = newTime;
+    d->updateText();
+  }
+}
+
+void KTimeEdit::keyPressEvent( QKeyEvent *event )
+{
+  switch ( event->key() ) {
+    case Qt::Key_Down:
+      d->addTime( QTime( 0, 1, 0 ) );
+      break;
+    case Qt::Key_Up:
+      d->subTime( QTime( 0, 1, 0 ) );
+      break;
+    case Qt::Key_PageUp:
+      d->subTime( QTime( 1, 0, 0 ) );
+      break;
+    case Qt::Key_PageDown:
+      d->addTime( QTime( 1, 0, 0 ) );
+      break;
+    default:
+      QComboBox::keyPressEvent( event );
+      break;
+  }
 }
 
 bool KTimeEdit::inputIsValid() const
 {
   int cursorPos = lineEdit()->cursorPosition();
   QString str = currentText();
+
   return validator()->validate( str, cursorPos ) == QValidator::Acceptable;
 }
 
-void KTimeEdit::changedText()
-{
-  if ( inputIsValid() ) {
-    mTime = getTime();
-    emit timeChanged( mTime );
-  }
-}
+#include "ktimeedit.moc"

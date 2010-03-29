@@ -27,69 +27,78 @@
 
 #include "kdepim_export.h"
 
-#include <QComboBox>
-#include <QTime>
+#include <QtCore/QTime>
+#include <QtGui/QComboBox>
 
 class QKeyEvent;
 
 namespace KPIM {
 
 /**
-  This is a class that provides an easy, user friendly way to edit times.
-  up/down/ increase or decrease time, respectively.
-
-  @short Provides a way to edit times in a user-friendly manner.
-  @author Preston Brown, Ian Dawes
-*/
+ * @short Provides a way to edit times in a user-friendly manner.
+ * This is a class that provides an easy, user friendly way to edit times.
+ * up/down/ increase or decrease time, respectively.
+ *
+ * @author Preston Brown, Ian Dawes
+ */
 class KDEPIM_EXPORT KTimeEdit : public QComboBox
 {
   Q_OBJECT
-  public:
-    /** constructs a new time edit. */
-    explicit KTimeEdit( QWidget *parent=0, QTime qt=QTime( 12, 0 ), const char *name=0 );
 
+  public:
+    /**
+     * Creates a new time edit.
+     *
+     * @param parent The parent widget.
+     * @param time The initial time to show.
+     */
+    explicit KTimeEdit( QWidget *parent = 0, const QTime &time = QTime( 12, 0 ) );
+
+    /**
+     * Destroys the time edit.
+     */
     virtual ~KTimeEdit();
 
     /**
-      Returns, if a time is selected. Can not return false anymore....
-    */
-    bool hasTime() const;
+     * Returns the currently selected time.
+     */
+    QTime time() const;
 
-    /** returns the time that is currently set in the timeLineEdit. */
-    QTime getTime() const;
-
-    /** returns the preferred size policy of the KTimeEdit */
-    QSizePolicy sizePolicy() const;
-
-    /** return true if input is a valid time and false if not */
+    /**
+     * Returns whether the current input is a valid time.
+     */
     bool inputIsValid() const;
+
+    /**
+     * Returns the preferred size policy of the KTimeEdit
+     */
+    QSizePolicy sizePolicy() const;
 
   Q_SIGNALS:
     /**
-      Emitted every time the time displayed changes. "newt" is the new
-      time.
-    */
-    void timeChanged( QTime newt );
+     * This signal is emitted whenever the time has been changed.
+     *
+     * @note The time can be invalid.
+     */
+    void timeChanged( const QTime &time );
 
   public Q_SLOTS:
-    /** used to set the time which is displayed to a specific value. */
-    void setTime( QTime qt );
-
-  protected Q_SLOTS:
-    void active( int );
-    void hilit( int );
-    void changedText();
+    /**
+     * Sets the current time.
+     */
+    void setTime( const QTime &time );
 
   protected:
     virtual void keyPressEvent( QKeyEvent *qke );
-    void addTime( QTime qt );
-    void subTime( QTime qt );
-    // Update the lineedit text from mTime
-    void updateText();
 
   private:
-    QTime mTime;                   // the widget's displayed time.
-    //QString mNoTimeString;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+
+    Q_PRIVATE_SLOT( d, void slotActivated( int ) )
+    Q_PRIVATE_SLOT( d, void slotTextChanged() )
+    //@endcond
 };
 
 }
