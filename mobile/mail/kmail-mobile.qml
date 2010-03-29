@@ -100,13 +100,31 @@ Rectangle {
     onMessageSelected: topLevel.state = "messageViewState"
   }
 
-  MessageView {
-    id: messageView
-    width: parent.width
-    height: parent.height - navbar.height
+  Component {
+    id : messageViewDelegate
+
+    MessageView {
+      id: messageView
+      width: messageViewList.width
+      height: messageViewList.height
+      anchors.top: navbar.bottom
+      messageItemId: model.itemId
+      splashMessage: KDE.i18n( "Welcome to KMail Mobile." )
+    }
+  }
+
+  ListView {
+    id: messageViewList
+    model : itemModel
+    delegate : del1
+
     anchors.top: navbar.bottom
-    messageItemId: headerList.currentMessage
-    splashMessage: KDE.i18n( "Welcome to KMail Mobile." )
+    anchors.left : parent.left
+    anchors.bottom : parent.bottom
+    anchors.right : parent.right
+    orientation: ListView.Horizontal
+    snapMode: ListView.SnapOneItem
+    flickDeceleration: 2000
   }
 
   states: [
@@ -125,7 +143,7 @@ Rectangle {
         visible: false
       }
       PropertyChanges {
-        target: messageView
+        target: messageViewList
         visible: false
       }
     },
@@ -144,7 +162,7 @@ Rectangle {
         visible: false
       }
       PropertyChanges {
-        target: messageView
+        target: messageViewList
         visible: false
       }
     },
@@ -163,7 +181,7 @@ Rectangle {
         visible: true
       }
       PropertyChanges {
-        target: messageView
+        target: messageViewList
         visible: false
       }
     },
@@ -182,7 +200,7 @@ Rectangle {
         visible: false
       }
       PropertyChanges {
-        target: messageView
+        target: messageViewList
         visible: true
       }
     }
