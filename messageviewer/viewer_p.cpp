@@ -3213,7 +3213,7 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
   }
 }
 
-void ViewerPrivate::itemFetchResult(KJob* job)
+void ViewerPrivate::itemFetchResult( KJob* job )
 {
   if ( job->error() ) {
     displaySplashPage( i18n( "Message loading failed: %1.", job->errorText() ) );
