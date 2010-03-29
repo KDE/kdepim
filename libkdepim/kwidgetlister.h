@@ -67,95 +67,136 @@ namespace KPIM {
 class KDEPIM_EXPORT KWidgetLister : public QWidget
 {
   Q_OBJECT
+
   public:
-    explicit KWidgetLister( int minWidgets=1, int maxWidgets=8,
-                            QWidget *parent=0, const char *name=0 );
+    /**
+     * Creates a new widget lister.
+     *
+     * @param minWidgets The minimum number of widgets to stay on the screen.
+     * @param maxWidgets The maximum number of widgets to stay on the screen.
+     * @param parent The parent widget.
+     */
+    explicit KWidgetLister( int minWidgets = 1, int maxWidgets = 8, QWidget *parent = 0 );
+
+    /**
+     * Destroys the widget lister.
+     */
     virtual ~KWidgetLister();
 
   protected Q_SLOTS:
-    /** Called whenever the user clicks on the 'more' button.
-        Reimplementations should call this method, because this
-        implementation does all the dirty work with adding the widgets
-        to the layout (through @ref addWidgetAtEnd) and enabling/disabling
-        the control buttons. */
+    /**
+     * Called whenever the user clicks on the 'more' button.
+     * Reimplementations should call this method, because this
+     * implementation does all the dirty work with adding the widgets
+     * to the layout (through @ref addWidgetAtEnd) and enabling/disabling
+     * the control buttons.
+     */
     virtual void slotMore();
 
-    /** Called whenever the user clicks on the 'fewer' button.
-        Reimplementations should call this method, because this
-        implementation does all the dirty work with removing the widgets
-        from the layout (through @ref removeLastWidget) and
-        enabling/disabling the control buttons. */
+    /**
+     * Called whenever the user clicks on the 'fewer' button.
+     * Reimplementations should call this method, because this
+     * implementation does all the dirty work with removing the widgets
+     * from the layout (through @ref removeLastWidget) and
+     * enabling/disabling the control buttons.
+     */
     virtual void slotFewer();
 
-    /** Called whenever the user clicks on the 'clear' button.
-        Reimplementations should call this method, because this
-        implementation does all the dirty work with removing all but
-        @ref mMinWidgets widgets from the layout and enabling/disabling
-        the control buttons. */
+    /**
+     * Called whenever the user clicks on the 'clear' button.
+     * Reimplementations should call this method, because this
+     * implementation does all the dirty work with removing all but
+     * @ref mMinWidgets widgets from the layout and enabling/disabling
+     * the control buttons.
+     */
     virtual void slotClear();
 
   protected:
-    /** Adds a single widget. Doesn't care if there are already @ref
-        mMaxWidgets on screen and whether it should enable/disable any
-        controls. It simply does what it is asked to do.  You want to
-        reimplement this method if you want to initialize the widget
-        when showing it on screen. Make sure you call this
-        implementaion, though, since you cannot put the widget on screen
-        from derived classes (@p mLayout is private).
-        Make sure the parent of the QWidget to add is this KWidgetLister. */
-    virtual void addWidgetAtEnd( QWidget *w=0 );
+    /**
+     * Adds a single widget. Doesn't care if there are already @ref
+     * mMaxWidgets on screen and whether it should enable/disable any
+     * controls. It simply does what it is asked to do.  You want to
+     * reimplement this method if you want to initialize the widget
+     * when showing it on screen. Make sure you call this
+     * implementaion, though, since you cannot put the widget on screen
+     * from derived classes (@p mLayout is private).
+     * Make sure the parent of the QWidget to add is this KWidgetLister.
+     */
+    virtual void addWidgetAtEnd( QWidget *widget = 0 );
 
-    /** Removes a single (always the last) widget. Doesn't care if there
-        are still only @ref mMinWidgets left on screen and whether it
-        should enable/disable any controls. It simply does what it is
-        asked to do. You want to reimplement this method if you want to
-        save the widget's state before removing it from screen. Make
-        sure you call this implementaion, though, since you should not
-        remove the widget from screen from derived classes. */
+    /**
+     * Removes a single (always the last) widget. Doesn't care if there
+     * are still only @ref mMinWidgets left on screen and whether it
+     * should enable/disable any controls. It simply does what it is
+     * asked to do. You want to reimplement this method if you want to
+     * save the widget's state before removing it from screen. Make
+     * sure you call this implementaion, though, since you should not
+     * remove the widget from screen from derived classes.
+     */
     virtual void removeLastWidget();
 
-    /** Called to clear a given widget. The default implementation does
-        nothing. */
+    /**
+     * Called to clear a given widget. The default implementation does
+     * nothing.
+     */
     virtual void clearWidget( QWidget *w );
 
-    /** Because QT 2.x does not support signals/slots in template
-        classes, we are forced to emulate this by forcing the
-        implementers of subclasses of KWidgetLister to reimplement this
-        function which replaces the "@p new @p T" call. */
+    /**
+     * Returns a new widget that shall be added to the lister.
+     *
+     * @param parent The parent widget of the new widget.
+     */
     virtual QWidget *createWidget( QWidget *parent );
 
-    /** Sets the number of widgets on scrren to exactly @p aNum. Doesn't
-        check if @p aNum is inside the range @p
-        [mMinWidgets,mMaxWidgets]. */
-    virtual void setNumberOfShownWidgetsTo( int aNum );
+    /**
+     * Sets the number of widgets on scrren to exactly @p count. Doesn't
+     * check if @p count is inside the range @p [mMinWidgets,mMaxWidgets].
+     */
+    virtual void setNumberOfShownWidgetsTo( int count );
 
-    /** The list of widgets. Note that this list is set to auto-delete,
-        meaning that widgets that are removed from the screen by either
-        @ref slotFewer or @ref slotClear will be destroyed! */
-    QList<QWidget*> mWidgetList;
+    /**
+     * Returns the list of widgets.
+     */
+    QList<QWidget*> widgets() const;
 
-    /** The minimum number of widgets that are to stay on screen. */
-    int mMinWidgets;
+    /**
+     * The minimum number of widgets that are to stay on screen.
+     */
+    int widgetsMinimum() const;
 
-    /** The maximum number of widgets that are to be shown on screen. */
-    int mMaxWidgets;
+    /**
+     * The maximum number of widgets that are to be shown on screen.
+     */
+    int widgetsMaximum() const;
 
   Q_SIGNALS:
-    /** This signal is emitted whenever a widget was added */
+    /**
+     * This signal is emitted whenever a widget was added.
+     */
     void widgetAdded();
-    /** This signal is emitted whenever a widget was added */
-    void widgetAdded(QWidget *);
-    /** This signal is emitted whenever a widget was removed */
+
+    /**
+     * This signal is emitted whenever a widget was added.
+     *
+     * @param widget The added widget.
+     */
+    void widgetAdded( QWidget *widget );
+
+    /**
+     * This signal is emitted whenever a widget was removed.
+     */
     void widgetRemoved();
-    /** This signal is emitted whenever the clear button is clicked */
+
+    /**
+     * This signal is emitted whenever the clear button is clicked.
+     */
     void clearWidgets();
 
   private:
-    void enableControls();
-
-    QPushButton *mBtnMore, *mBtnFewer, *mBtnClear;
-    QVBoxLayout *mLayout;
-    KHBox       *mButtonBox;
+    //@cond PRIVATE
+    class Private;
+    Private* const d;
+    //@endcond
 };
 
 }

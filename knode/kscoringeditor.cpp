@@ -163,8 +163,8 @@ void SingleConditionWidget::showRegExpDialog()
 // class ConditionEditWidget (the widget to edit the conditions of a rule)
 //
 //============================================================================
-ConditionEditWidget::ConditionEditWidget( KScoringManager *m, QWidget *p, const char *n )
-  : KWidgetLister( 1, 8, p, n ), manager( m )
+ConditionEditWidget::ConditionEditWidget( KScoringManager *m, QWidget *p, const char* )
+  : KWidgetLister( 1, 8, p ), manager( m )
 {
   // create one initial widget
   addWidgetAtEnd();
@@ -198,9 +198,10 @@ void ConditionEditWidget::slotEditRule( KScoringRule *rule )
   } else {
     setNumberOfShownWidgetsTo( l.count() );
     KScoringExpression *e = l.first();
-    QList<QWidget*>::ConstIterator it = mWidgetList.constBegin();
-    while ( e && it != mWidgetList.constEnd() ) {
-      SingleConditionWidget *scw = static_cast<SingleConditionWidget *>( *it );
+    QList<QWidget*> widgetList = widgets();
+    QList<QWidget*>::ConstIterator it = widgetList.constBegin();
+    while ( e && it != widgetList.constEnd() ) {
+      SingleConditionWidget *scw = qobject_cast<SingleConditionWidget *>( *it );
       scw->setCondition( e );
       e = l.next();
       ++it;
@@ -211,8 +212,8 @@ void ConditionEditWidget::slotEditRule( KScoringRule *rule )
 void ConditionEditWidget::updateRule( KScoringRule *rule )
 {
   rule->cleanExpressions();
-  foreach ( QWidget* w, mWidgetList ) {
-    SingleConditionWidget *saw = dynamic_cast<SingleConditionWidget*>( w );
+  foreach ( QWidget* w, widgets() ) {
+    SingleConditionWidget *saw = qobject_cast<SingleConditionWidget*>( w );
     if ( saw ) {
       rule->addExpression( saw->createCondition() );
     } else {
@@ -362,8 +363,8 @@ void SingleActionWidget::clear()
 // class ActionEditWidget (the widget to edit the actions of a rule)
 //
 //============================================================================
-ActionEditWidget::ActionEditWidget( KScoringManager *m, QWidget *p, const char *n )
-  : KWidgetLister( 1, 8, p, n ), manager( m )
+ActionEditWidget::ActionEditWidget( KScoringManager *m, QWidget *p, const char* )
+  : KWidgetLister( 1, 8, p ), manager( m )
 {
   // create one initial widget
   addWidgetAtEnd();
@@ -388,9 +389,10 @@ void ActionEditWidget::slotEditRule( KScoringRule *rule )
   } else {
     setNumberOfShownWidgetsTo( l.count() );
     ActionBase *act = l.first();
-    QList<QWidget*>::ConstIterator it = mWidgetList.constBegin();
-    while ( act && it != mWidgetList.constEnd() ) {
-      SingleActionWidget *saw = static_cast<SingleActionWidget*>( *it );
+    QList<QWidget*> widgetList = widgets();
+    QList<QWidget*>::ConstIterator it = widgetList.constBegin();
+    while ( act && it != widgetList.constEnd() ) {
+      SingleActionWidget *saw = qobject_cast<SingleActionWidget*>( *it );
       saw->setAction( act );
       act = l.next();
       ++it;
@@ -401,8 +403,8 @@ void ActionEditWidget::slotEditRule( KScoringRule *rule )
 void ActionEditWidget::updateRule( KScoringRule *rule )
 {
   rule->cleanActions();
-  foreach ( QWidget *w, mWidgetList ) {
-    SingleActionWidget *saw = dynamic_cast<SingleActionWidget*>( w );
+  foreach ( QWidget *w, widgets() ) {
+    SingleActionWidget *saw = qobject_cast<SingleActionWidget*>( w );
     if (saw) {
       ActionBase *act = saw->createAction();
       if ( act ) {
