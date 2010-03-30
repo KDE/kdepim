@@ -112,6 +112,11 @@ MainView::MainView(QWidget* parent) :
   view3->setModel( childCollectionFilter );
   view3->setSelectionModel(m_childCollectionSelection);
   view3->show();
+
+  QTreeView *view4 = new QTreeView;
+  view4->setModel( itemFilter );
+  view4->setSelectionModel(m_childCollectionSelection);
+  view4->show();
 #endif
 
   // It shouldn't be necessary to have three of these once I've

@@ -152,16 +152,20 @@ Rectangle {
         id: attachmentDelegate
         Item {
           id: wrapper
-          width: 180; height: 40
-          Column {
-            x: 5; y: 5
-            Text { text: '<b>Name:</b> ' + model.display }
-            Text { text: '<b>Number:</b> ' + model.display }
+          width: attachmentList.width
+          height: 48
+          Rectangle {
+            anchors.fill: parent
+            opacity: 0.25
+            border.color: palette.mid
+            Text { opacity: 1.0; anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
           }
         }
       },
       ListView {
+        id: attachmentList
         anchors.fill: parent
+        anchors.margins: 12
         model: messageViewList.currentItem.messageTreeModel
         delegate: attachmentDelegate
 
