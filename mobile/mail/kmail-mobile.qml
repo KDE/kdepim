@@ -44,6 +44,7 @@ Rectangle {
         anchors.margins: 12
         anchors.fill: parent
         model: collectionModel
+        onCollectionSelected: folderPanel.collapse()
       }
     ]
   }
