@@ -304,6 +304,10 @@ QWidget* Viewer::configWidget()
   return w;
 }
 
+KConfigSkeleton *Viewer::configObject()
+{
+  return GlobalSettings::self();
+}
 
 KMime::Message::Ptr Viewer::message() const
 {
