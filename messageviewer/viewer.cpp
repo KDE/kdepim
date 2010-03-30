@@ -49,10 +49,14 @@ Viewer::Viewer(QWidget *aParent,
                          Qt::WindowFlags aFlags )
   : QWidget(aParent, aFlags ), d_ptr(new ViewerPrivate(this, config, mainWindow, actionCollection) )
 {
-  connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ), SIGNAL( replaceMsgByUnencryptedVersion() ) );
-  connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
-  connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ), SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
-  connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ), SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
+  connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ),
+          SIGNAL( replaceMsgByUnencryptedVersion() ) );
+  connect( d_ptr, SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ),
+           SIGNAL( popupMenu(KMime::Message &, const KUrl &, const QPoint&) ) );
+  connect( d_ptr, SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ),
+           SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
+  connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ),
+           SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
   connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
   connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
