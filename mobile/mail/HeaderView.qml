@@ -45,6 +45,7 @@ Item {
         id: background
         x: 1; y: 2; width: parent.width - 2; height: parent.height - 4
         border.color: palette.mid
+        opacity: 0.25
         radius: 5
       }
       MouseArea {
@@ -89,7 +90,7 @@ Item {
           when: wrapper.ListView.isCurrentItem
           PropertyChanges { target: wrapper; height: 100 }
           PropertyChanges { target: currentMessageDetails; opacity: 1 }
-          PropertyChanges { target: background; color: palette.highlight }
+          PropertyChanges { target: background; color: palette.highlight; opacity: 1.0 }
           PropertyChanges { target: subjectLabel; color: palette.highlightedText }
         }
       ]
