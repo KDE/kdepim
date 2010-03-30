@@ -73,6 +73,9 @@ ResourceKolab::ResourceKolab( const KConfig *config )
     mCalendar( QString::fromLatin1("UTC") ), mOpen( false ),mResourceChangedTimer( 0,
         "mResourceChangedTimer" )
 {
+  if ( !config ) {
+    setResourceName( i18n( "Kolab Server" ) );
+  }
   setType( "imap" );
   connect( &mResourceChangedTimer, SIGNAL( timeout() ),
            this, SLOT( slotEmitResourceChanged() ) );

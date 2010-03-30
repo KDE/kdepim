@@ -62,7 +62,11 @@ ResourceGroupwise::ResourceGroupwise( const KConfig *config )
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config ) readConfig( config );
+  if ( config ) {
+    readConfig( config );
+  } else {
+    setResourceName( i18n( "GroupWise Server" ) );
+  }
 }
 
 ResourceGroupwise::~ResourceGroupwise()

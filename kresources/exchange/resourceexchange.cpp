@@ -91,6 +91,7 @@ ResourceExchange::ResourceExchange( const KConfig *config )
     mCachedSeconds = config->readNumEntry( "ExchangeCacheTimeout", 600 );
     mAutoMailbox = config->readBoolEntry( "ExchangeAutoMailbox", true );
   } else {
+    setResourceName( i18n( "Exchange Server" ) );
     mAccount = new ExchangeAccount( "", "", "", "" );
     mCachedSeconds = 600;
   }

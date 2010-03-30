@@ -82,6 +82,9 @@ KABC::ResourceKolab::ResourceKolab( const KConfig *config )
     mCachedSubresource( QString::null ), mLocked( false )
 {
   setType( "imap" );
+  if ( !config ) {
+    setResourceName( i18n( "Kolab Server" ) );
+  }
 }
 
 KABC::ResourceKolab::~ResourceKolab()

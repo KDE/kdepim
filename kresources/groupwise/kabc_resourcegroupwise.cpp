@@ -42,6 +42,8 @@ ResourceGroupwise::ResourceGroupwise( const KConfig *config )
 
   if ( config ) {
     readConfig( config );
+  } else {
+    setResourceName( i18n( "GroupWise Server" ) );
   }
   initGroupwise();
 }

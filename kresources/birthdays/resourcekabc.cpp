@@ -72,6 +72,8 @@ ResourceKABC::ResourceKABC( const KConfig* config )
 {
   if ( config ) {
     readConfig( config );
+  } else {
+    setResourceName( i18n( "Birthdays" ) );
   }
 
   init();

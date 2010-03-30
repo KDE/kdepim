@@ -54,6 +54,9 @@ ResourceKolab::ResourceKolab( const KConfig *config )
   : ResourceNotes( config ), ResourceKolabBase( "ResourceKolab-KNotes" ),
     mCalendar( QString::fromLatin1("UTC") )
 {
+  if ( !config ) {
+    setResourceName( i18n( "Kolab Server" ) );
+  }
   setType( "imap" );
 }
 

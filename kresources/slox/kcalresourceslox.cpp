@@ -70,6 +70,8 @@ KCalResourceSlox::KCalResourceSlox( const KConfig *config )
 
   if ( config ) {
     readConfig( config );
+  } else {
+    setResourceName( i18n( "OpenXchange Server" ) );
   }
 }
 

@@ -57,8 +57,11 @@ ResourceXMLRPC::ResourceXMLRPC( const KConfig* config )
 
   mPrefs->addGroupPrefix( identifier() );
 
-  if ( config )
+  if ( config ) {
     readConfig( config );
+  } else {
+    setResourceName( i18n( "eGroupware Server" ) );
+  }
 }
 
 ResourceXMLRPC::ResourceXMLRPC( )

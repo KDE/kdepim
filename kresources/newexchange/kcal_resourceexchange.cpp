@@ -25,6 +25,7 @@
 #include <groupwaredownloadjob.h>
 #include <groupwareuploadjob.h>
 #include <kresources_groupwareprefs.h>
+#include <klocale.h>
 
 using namespace KCal;
 
@@ -38,7 +39,11 @@ ResourceExchange::ResourceExchange( const KConfig *config )
   : ResourceGroupwareBase( config )
 {
   init();
-  if ( config ) readConfig( config );
+  if ( config ) {
+    readConfig( config );
+  } else {
+    setResourceName( i18n( "Exchange Server" ) );
+  }
 }
 
 void ResourceExchange::init()

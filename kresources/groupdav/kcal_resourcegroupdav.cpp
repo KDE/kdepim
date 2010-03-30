@@ -24,6 +24,8 @@
 
 #include "kcal_resourcegroupdav.h"
 
+#include <klocale.h>
+
 using namespace KCal;
 
 ResourceGroupDav::ResourceGroupDav()
@@ -36,7 +38,11 @@ ResourceGroupDav::ResourceGroupDav( const KConfig *config )
   : ResourceGroupwareBase( config )
 {
   init();
-  if ( config ) readConfig( config );
+  if ( config ) {
+    readConfig( config );
+  } else {
+    setResourceName( i18n( "GroupDAV Server" ) );
+  }
 }
 
 void ResourceGroupDav::init()
