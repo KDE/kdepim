@@ -29,6 +29,7 @@
 #include "globalsettings.h"
 #include "mailwebview.h"
 #include "findbar/findbar.h"
+#include "mimetreemodel.h"
 
 #include <akonadi/kmime/messageparts.h>
 #include <akonadi/itemfetchjob.h>
@@ -505,6 +506,11 @@ void Viewer::setDisregardUmask( bool b)
 {
   Q_D( Viewer );
   d->setDisregardUmask( b );
+}
+
+QAbstractItemModel* Viewer::messageTreeModel() const
+{
+  return d_func()->mMimePartModel;
 }
 
 

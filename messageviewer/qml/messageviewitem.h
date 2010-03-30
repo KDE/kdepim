@@ -22,6 +22,7 @@
 
 #include <QDeclarativeItem>
 
+class KDescendantsProxyModel;
 namespace MessageViewer {
 class Viewer;
 
@@ -30,6 +31,7 @@ class MessageViewItem : public QDeclarativeItem
   Q_OBJECT
   Q_PROPERTY( int messageItemId READ messageItemId WRITE setMessageItemId )
   Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
+  Q_PROPERTY( QObject* messageTreeModel READ messageTreeModel )
 
   public:
     explicit MessageViewItem( QDeclarativeItem *parent = 0 );
@@ -40,6 +42,8 @@ class MessageViewItem : public QDeclarativeItem
 
     QString splashMessage() const;
     void setSplashMessage( const QString &message );
+
+    QObject* messageTreeModel() const;
 
   signals:
     void nextMessageRequest();
@@ -63,6 +67,7 @@ class MessageViewItem : public QDeclarativeItem
   private:
     Viewer *m_viewer;
     QGraphicsProxyWidget *m_proxy;
+    KDescendantsProxyModel *m_attachmentProxy;
 
     /// Handle mouse events
     bool m_mousePressed;

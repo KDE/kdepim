@@ -10,6 +10,7 @@ if (QT_QTDECLARATIVE_FOUND)
     ${KDEPIMLIBS_KMIME_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
+    kdepim
   )
 
   install( FILES qmldir DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )

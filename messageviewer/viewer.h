@@ -41,6 +41,7 @@
 //Akonadi includes
 #include <akonadi/item.h>
 
+class QAbstractItemModel;
 class QSplitter;
 class QTreeWidgetItem;
 class QString;
@@ -267,6 +268,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   bool disregardUmask() const;
   void setDisregardUmask( bool b);
+
+  /** A QAIM tree model of the message structure. */
+  QAbstractItemModel* messageTreeModel() const;
 
 signals:
   /** Emitted after parsing of a message to have it stored
