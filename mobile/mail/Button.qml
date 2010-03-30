@@ -19,32 +19,36 @@
 
 import Qt 4.6
 
-Item {
+Rectangle {
   property string icon
+  property string buttonText
   signal clicked
+  
+  radius: 12
 
-  Rectangle {
+  gradient: Gradient {
+    id: mGrad
+    GradientStop { position: 0.0; color: "lightgrey" }
+    GradientStop { position: 0.8; color: "grey" }
+  }
+
+  Image {
+    source: icon
     anchors.fill: parent
-    radius: 12
-    
-    gradient: Gradient {
-      id: mGrad
-      GradientStop { position: 0.0; color: "lightgrey" }
-      GradientStop { position: 0.8; color: "grey" }
-    }
+    anchors.margins: 5
+  }
 
-    Image {
-      source: icon
-      anchors.fill: parent
-      anchors.margins: 5
-    }
+  Text {
+    anchors.horizontalCenter: parent.horizontalCenter
+    anchors.verticalCenter: parent.verticalCenter
+    text: buttonText
+  }
     
-    MouseArea {
-      anchors.fill: parent
-      hoverEnabled: true
-      onEntered: { parent.border.color = "lightblue"; parent.border.width = 2 }
-      onExited: parent.border.width = 0
-      onClicked: parent.parent.clicked()
-    }
+  MouseArea {
+    anchors.fill: parent
+    hoverEnabled: true
+    onEntered: { border.color = "lightblue"; border.width = 2 }
+    onExited: border.width = 0
+    onClicked: parent.clicked()
   }
 }
