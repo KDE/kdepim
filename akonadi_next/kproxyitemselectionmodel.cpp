@@ -22,6 +22,8 @@
 
 #include "kproxyitemselectionmodel.h"
 
+#include "kdebug.h"
+
 using namespace Future;
 
 namespace Future
