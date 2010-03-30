@@ -96,9 +96,7 @@ StorageModel::StorageModel( QAbstractItemModel *model, QItemSelectionModel *sele
   itemFilter->addMimeTypeInclusionFilter( "message/rfc822" );
   itemFilter->setHeaderGroup( EntityTreeModel::ItemListHeaders );
 
-  // FIXME: itemFilter seems to be buggy, match() doesn't work!
-  //d->mModel = itemFilter;
-  d->mModel = childrenFilter;
+  d->mModel = itemFilter;
 
   connect( d->mSopranoModel.data(), SIGNAL(statementAdded(Soprano::Statement)),
            SLOT(statementChanged(Soprano::Statement)) );
