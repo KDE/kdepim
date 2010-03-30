@@ -134,6 +134,7 @@ namespace {
     ~AttachmentURLHandler() {}
 
     bool handleClick( const KUrl &, ViewerPrivate * ) const;
+    bool handleShiftClick( const KUrl &, ViewerPrivate *window ) const;
     bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const;
     bool handleDrag( const KUrl &url, ViewerPrivate *window ) const;
     bool willHandleDrag( const KUrl &url, ViewerPrivate *window ) const;
@@ -320,6 +321,14 @@ void URLHandlerManager::unregisterHandler( const Interface::BodyPartURLHandler *
 bool URLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
   for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
     if ( (*it)->handleClick( url, w ) )
+      return true;
+  return false;
+}
+
+bool URLHandlerManager::handleShiftClick( const KUrl &url, ViewerPrivate *window ) const
+{
+  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+    if ( (*it)->handleShiftClick( url, window ) )
       return true;
   return false;
 }
@@ -660,6 +669,17 @@ namespace {
        // PENDING(romain_kdab) : replace with toLocalFile() ?
        w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
 
+    return true;
+  }
+
+  bool AttachmentURLHandler::handleShiftClick( const KUrl &url, ViewerPrivate *window ) const
+  {
+    KMime::Content *node = nodeForUrl( url, window );
+    if ( !node )
+      return false;
+    if ( !window )
+      return false;
+    window->saveAttachments( QList<KMime::Content*>() << node );
     return true;
   }
 

@@ -1288,11 +1288,8 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>(e);
     if ( me->button() == Qt::LeftButton && ( me->modifiers() & Qt::ShiftModifier ) ) {
       // special processing for shift+click
-      KMime::Content *node = nodeFromUrl( mUrlClicked );
-      if ( node ) {
-        saveAttachments( KMime::Content::List() << node);
-      }
-      return true; // eat event
+      URLHandlerManager::instance()->handleShiftClick( mUrlClicked, this );
+      return true;
     }
     if ( me->button() == Qt::LeftButton ) {
       mCanStartDrag = URLHandlerManager::instance()->willHandleDrag( mUrlClicked, this );
