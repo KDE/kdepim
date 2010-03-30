@@ -224,6 +224,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
 
 ViewerPrivate::~ViewerPrivate()
 {
+  GlobalSettings::self()->writeConfig();
   delete mHtmlWriter; mHtmlWriter = 0;
   delete mViewer; mViewer = 0;
   delete mCSSHelper;
