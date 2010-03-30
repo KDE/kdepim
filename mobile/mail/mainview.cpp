@@ -73,6 +73,9 @@ MainView::MainView(QWidget* parent) :
   MessageListProxy *messageProxy = new MessageListProxy( this );
   messageProxy->setSourceModel( itemFilter );
 
+  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
+    engine()->addImportPath( importPath );
+
   engine()->rootContext()->setContextProperty( "collectionModel", QVariant::fromValue( static_cast<QObject*>( flatProxy ) ) );
   engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( messageProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
