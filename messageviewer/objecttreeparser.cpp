@@ -343,6 +343,7 @@ void ObjectTreeParser::defaultHandling( KMime::Content * node, ProcessResult & r
     QString href = "file://" + fileName;
     QByteArray cid = node->contentID()->identifier();
     htmlWriter()->embedPart( cid, href );
+    nodeHelper()->setNodeDisplayedEmbedded( node, true );
     return;
   }
 
