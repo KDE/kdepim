@@ -44,13 +44,8 @@ Rectangle {
         anchors.margins: 12
         anchors.fill: parent
         model: collectionModel
-        onCollectionSelected: folderPanel.state = ""
       }
     ]
-
-    states: State {
-      name: ""; when: collectionList.onCollectionSelected
-    }
   }
 
   SlideoutPanel {
@@ -86,7 +81,6 @@ Rectangle {
   ListView {
     id: messageViewList
     x: folderPanel.handleWidth
-    y: 0
     width: parent.width - folderPanel.handleWidth
     height: parent.height
     model: itemModel
@@ -94,6 +88,16 @@ Rectangle {
     orientation: ListView.Horizontal
     snapMode: ListView.SnapOneItem;
     flickDeceleration: 2000
+  }
+  
+  Button {
+    id: deleteButton 
+    x: parent.width - 80
+    y: parent.height - 100
+    width: 60
+    height: 60
+    icon: KDE.iconPath( "user-trash", 48 )
+    onClicked: console.log( "please, delete current akonadi item" );
   }
 
   Binding {

@@ -21,8 +21,9 @@ target_link_libraries(kmail-mobile
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
-  kmail-mobile.qml
-  SlideoutPanel.qml
+  Button.qml
   HeaderView.qml
+  SlideoutPanel.qml
+  kmail-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
