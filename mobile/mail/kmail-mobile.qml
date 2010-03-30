@@ -27,7 +27,7 @@ Rectangle {
   id: kmailMobile
   height: 480
   width: 800
-  
+
   SystemPalette { id: palette; colorGroup: "Active" }
 
   SlideoutPanel {
@@ -39,14 +39,16 @@ Rectangle {
     titleText: "Folders"
     handleHeight: 150
     content: [
-      CollectionView {
-        id: collectionList
-        anchors.margins: 12
-        anchors.fill: parent
-        model: collectionModel
-        onCollectionSelected: folderPanel.collapse()
+
+      BreadcrumbNavigationView {
+        anchors.fill : parent
+        id : collectionView
+        breadcrumbItemsModel : breadcrumbCollectionsModel
+        selectedItemModel : selectedCollectionModel
+        childItemsModel : childCollectionsModel
       }
     ]
+
   }
 
   SlideoutPanel {
@@ -90,13 +92,13 @@ Rectangle {
     snapMode: ListView.SnapOneItem;
     flickDeceleration: 2000
   }
-  
+
   Button {
-    id: deleteButton 
+    id: deleteButton
     x: parent.width - 140
     y: parent.height - 160
     z: 5
-    
+
     width: 120
     height: 120
     opacity: 0.5
@@ -105,9 +107,12 @@ Rectangle {
     onClicked: console.log( "please, delete current akonadi item" );
   }
 
-  Binding {
-    target: application
-    property: "collectionRow"
-    value: collectionList.currentIndex
+  Connections {
+    target: collectionView
+    onChildCollectionSelected : { application.selectedChildCollectionRow(row); }
+  }
+  Connections {
+    target: collectionView
+    onBreadcrumbCollectionSelected : { application.selectedBreadcrumbCollectionRow(row); }
   }
 }

@@ -20,6 +20,7 @@
 
 #include "mainview.h"
 #include "messagelistproxy.h"
+#include "breadcrumbnavigation.h"
 
 #include <libkdepim/kdescendantsproxymodel_p.h>
 
@@ -34,6 +35,9 @@
 
 #include "kdebug.h"
 #include <kselectionproxymodel.h>
+
+#include <akonadi_next/kbreadcrumbselectionmodel.h>
+#include <akonadi_next/kproxyitemselectionmodel.h>
 #include <KStandardDirs>
 
 #include <QtDeclarative/QDeclarativeContext>
@@ -42,7 +46,7 @@
 
 MainView::MainView(QWidget* parent) :
   QDeclarativeView(parent),
-  m_collectionSelection( 0 )
+  m_childCollectionSelection( 0 )
 {
   Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
   changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
@@ -51,24 +55,37 @@ MainView::MainView(QWidget* parent) :
 
   Akonadi::EntityTreeModel *etm = new Akonadi::EntityTreeModel( changeRecorder, this );
   etm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
-  Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel();
-  collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  collectionFilter->setSourceModel( etm );
-  collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
 
-  KDescendantsProxyModel *flatProxy = new KDescendantsProxyModel( this );
-  flatProxy->setSourceModel( collectionFilter );
-  flatProxy->setAncestorSeparator( QLatin1String(" / ") );
-  flatProxy->setDisplayAncestorData( true );
+  m_collectionSelection = new QItemSelectionModel( etm, this );
 
-  m_collectionSelection = new QItemSelectionModel( flatProxy, this );
-  Akonadi::SelectionProxyModel *selectionProxyModel = new Akonadi::SelectionProxyModel( m_collectionSelection );
-  selectionProxyModel->setSourceModel( etm );
-  selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel(m_collectionSelection, this);
+  currentCollectionSelectionModel->setFilterBehavior(KSelectionProxyModel::ExactSelection);
+  currentCollectionSelectionModel->setSourceModel( etm );
+
+  Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection = new Future::KBreadcrumbSelectionModel(m_collectionSelection, Future::KBreadcrumbSelectionModel::Forward, this);
+  breadcrumbCollectionSelection->setIncludeActualSelection(false);
+
+  KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, this);
+  breadcrumbNavigationModel->setSourceModel( etm );
+  breadcrumbNavigationModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+
+  KForwardingItemSelectionModel *oneway = new KForwardingItemSelectionModel(m_collectionSelection, etm, this);
+
+  KNavigatingProxyModel *childEntitiesModel = new KNavigatingProxyModel( oneway, this );
+  childEntitiesModel->setSourceModel( etm );
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel();
-  itemFilter->setSourceModel( selectionProxyModel );
+  itemFilter->setSourceModel( childEntitiesModel );
   itemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+
+  Akonadi::EntityMimeTypeFilterModel *childCollectionFilter = new Akonadi::EntityMimeTypeFilterModel();
+  childCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  childCollectionFilter->setSourceModel( childEntitiesModel );
+  childCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+
+  m_breadcrumbCollectionSelection = new Future::KProxyItemSelectionModel(breadcrumbNavigationModel, m_collectionSelection, this);
+
+  m_childCollectionSelection = new Future::KProxyItemSelectionModel(childCollectionFilter, m_collectionSelection, this);
 
   MessageListProxy *messageProxy = new MessageListProxy( this );
   messageProxy->setSourceModel( itemFilter );
@@ -76,7 +93,32 @@ MainView::MainView(QWidget* parent) :
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
     engine()->addImportPath( importPath );
 
-  engine()->rootContext()->setContextProperty( "collectionModel", QVariant::fromValue( static_cast<QObject*>( flatProxy ) ) );
+#if 0
+  QTreeView *viewetm = new QTreeView;
+  viewetm->setModel( etm );
+  viewetm->setSelectionModel( m_collectionSelection );
+  viewetm->show();
+
+  QTreeView *view1 = new QTreeView;
+  view1->setModel( currentCollectionSelectionModel );
+  view1->show();
+
+  QTreeView *view2 = new QTreeView;
+  view2->setModel( breadcrumbNavigationModel );
+  view2->setSelectionModel( m_breadcrumbCollectionSelection );
+  view2->show();
+
+  QTreeView *view3 = new QTreeView;
+  view3->setModel( childCollectionFilter );
+  view3->setSelectionModel(m_childCollectionSelection);
+  view3->show();
+#endif
+
+  // It shouldn't be necessary to have three of these once I've
+  // written KReaggregationProxyModel :)
+  engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( currentCollectionSelectionModel ) ) );
+  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( breadcrumbNavigationModel ) ) );
+  engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( childCollectionFilter ) ) );
   engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( messageProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -84,19 +126,30 @@ MainView::MainView(QWidget* parent) :
   setSource( qmlPath );
 }
 
-int MainView::selectedCollectionRow() const
+void MainView::setSelectedChildCollectionRow(int row)
 {
-  const QModelIndexList indexes = m_collectionSelection->selectedRows();
-  Q_ASSERT( indexes.size() <= 1 );
-  if ( !indexes.isEmpty() )
-    return indexes.first().row();
-  return 0;
+  if ( row < 0 )
+  {
+    m_breadcrumbCollectionSelection->clearSelection();
+    return;
+  }
+  QModelIndex index = m_childCollectionSelection->model()->index( row, 0 );
+  kDebug() << row << index << index.data();
+//   return;
+  m_childCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
 
-void MainView::setSelectedCollectionRow(int row)
+void MainView::setSelectedBreadcrumbCollectionRow(int row)
 {
-  kDebug() << row;
-  m_collectionSelection->select( m_collectionSelection->model()->index( row, 0 ), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
+  if ( row < 0 )
+  {
+    m_breadcrumbCollectionSelection->clearSelection();
+    return;
+  }
+  QModelIndex index = m_breadcrumbCollectionSelection->model()->index( row, 0 );
+  kDebug() << row << index << index.data() << m_breadcrumbCollectionSelection->model();
+//   return;
+  m_breadcrumbCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
 
 #include "mainview.moc"

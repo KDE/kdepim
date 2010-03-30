@@ -25,21 +25,26 @@
 
 class QItemSelectionModel;
 
+namespace Future
+{
+class KProxyItemSelectionModel;
+}
+
 /** The new KMMainWidget ;-) */
 class MainView : public QDeclarativeView
 {
   Q_OBJECT
-  Q_PROPERTY( int collectionRow READ selectedCollectionRow WRITE setSelectedCollectionRow )
-
   public:
     explicit MainView(QWidget* parent = 0);
 
-  public:
-    int selectedCollectionRow() const;
-    void setSelectedCollectionRow( int row );
+  public slots:
+    void setSelectedChildCollectionRow( int row );
+    void setSelectedBreadcrumbCollectionRow( int row );
 
   private:
     QItemSelectionModel *m_collectionSelection;
+    QItemSelectionModel *m_childCollectionSelection;
+    Future::KProxyItemSelectionModel *m_breadcrumbCollectionSelection;
 };
 
 #endif
