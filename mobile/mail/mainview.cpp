@@ -27,6 +27,8 @@
 #include <akonadi/entitytreeview.h>
 #include <Akonadi/ItemFetchScope>
 #include <akonadi/entitymimetypefiltermodel.h>
+#include <akonadi/kmime/messageparts.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <KMime/Message>
 
@@ -45,9 +47,10 @@ MainView::MainView(QWidget* parent) :
   Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
   changeRecorder->setMimeTypeMonitored( KMime::Message::mimeType() );
   changeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
-  changeRecorder->itemFetchScope().fetchFullPayload();
+  changeRecorder->itemFetchScope().fetchPayloadPart( Akonadi::MessagePart::Header );
 
   Akonadi::EntityTreeModel *etm = new Akonadi::EntityTreeModel( changeRecorder, this );
+  etm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
   Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel();
   collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
   collectionFilter->setSourceModel( etm );
@@ -59,7 +62,7 @@ MainView::MainView(QWidget* parent) :
   flatProxy->setDisplayAncestorData( true );
 
   m_collectionSelection = new QItemSelectionModel( flatProxy, this );
-  KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( m_collectionSelection );
+  Akonadi::SelectionProxyModel *selectionProxyModel = new Akonadi::SelectionProxyModel( m_collectionSelection );
   selectionProxyModel->setSourceModel( etm );
   selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
