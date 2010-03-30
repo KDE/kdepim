@@ -92,10 +92,14 @@ Rectangle {
   
   Button {
     id: deleteButton 
-    x: parent.width - 80
-    y: parent.height - 100
-    width: 60
-    height: 60
+    x: parent.width - 140
+    y: parent.height - 160
+    z: 5
+    
+    width: 120
+    height: 120
+    opacity: 0.5
+    visible: messageViewList.count > 0
     icon: KDE.iconPath( "user-trash", 48 )
     onClicked: console.log( "please, delete current akonadi item" );
   }
