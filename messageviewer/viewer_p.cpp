@@ -405,8 +405,9 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::View );
 
-  const bool attachmentInHeader = hasChildOrSibblingDivWithId( mViewer->page()->currentFrame()->documentElement(), "attachmentInjectionPoint" );
-  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical ) != 0;
+  const bool attachmentInHeader = hasChildOrSibblingDivWithId(
+      mViewer->page()->currentFrame()->documentElement(), "attachmentInjectionPoint" );
+  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
     connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
