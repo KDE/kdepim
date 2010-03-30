@@ -24,7 +24,7 @@ import org.kde 4.5
     @param model: The collection model to display, ETM-based, filtered to only contain a flat collection list.
     @param currentIndex: Index of the currently selected row.
  */
-Rectangle {
+Item {
   id: headerViewTopLevel
   property alias model: messageListView.model
   property alias currentIndex: messageListView.currentIndex

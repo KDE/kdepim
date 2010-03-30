@@ -39,6 +39,10 @@ Rectangle {
     titleText: "Folders"
     handleHeight: 150
     content: [
+      Item {
+        anchors.fill: parent
+        anchors.margins: 12
+
       /*CollectionView {
         id: collectionList
         anchors.fill: parent
@@ -48,16 +52,35 @@ Rectangle {
           folderPanel.collapse()
           messageViewListFixingTimerHack.start()
         }*/
-      BreadcrumbNavigationView {
-        anchors.fill : parent
-        anchors.margins: 12
-        id : collectionView
-        breadcrumbItemsModel : breadcrumbCollectionsModel
-        selectedItemModel : selectedCollectionModel
-        childItemsModel : childCollectionsModel
-        onCollectionSelected: {
-          folderPanel.collapse()
-          messageViewListFixingTimerHack.start()
+        BreadcrumbNavigationView {
+          id : collectionView
+          width: 1/3 * folderPanel.contentWidth
+          anchors.top: parent.top
+          anchors.bottom: parent.bottom
+          anchors.left: parent.left
+          anchors.rightMargin: 4
+          breadcrumbItemsModel : breadcrumbCollectionsModel
+          selectedItemModel : selectedCollectionModel
+          childItemsModel : childCollectionsModel
+          onCollectionSelected: {
+            console.log( "XXX" );
+            //folderPanel.collapse()
+            messageViewListFixingTimerHack.start()
+          }
+        }
+
+        HeaderView {
+          id: headerList
+          model: itemModel
+          anchors.top: parent.top
+          anchors.bottom: parent.bottom
+          anchors.right: parent.right
+          anchors.left: collectionView.right
+          onMessageSelected: {
+            console.log( "YYY" );
+            messageViewList.currentIndex = headerList.currentIndex
+            folderPanel.collapse()
+          }
         }
       }
     ]
