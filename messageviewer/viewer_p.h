@@ -567,8 +567,6 @@ public slots:
   /** Re-parse the current message. */
   void update(Viewer::UpdateMode updateMode = Viewer::Delayed);
 
-  bool hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id );
-
 signals:
   void replaceMsgByUnencryptedVersion();
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);

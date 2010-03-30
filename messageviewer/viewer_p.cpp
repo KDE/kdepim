@@ -382,6 +382,22 @@ bool ViewerPrivate::editAttachment( KMime::Content * node, bool showWarning )
   return true;
 }
 
+// Checks if the given node has a child node that is a DIV which has an ID attribute
+// with the value specified here
+static bool hasParentDivWithId( const QWebElement &start, const QString &id )
+{
+  if ( start.isNull() )
+    return false;
+
+  if ( start.tagName().toLower() == "div" ) {
+    if ( start.attribute( "id", "" ) == id )
+      return true;
+  }
+
+  if ( !start.parent().isNull() )
+    return hasParentDivWithId( start.parent(), id );
+  else return false;
+}
 
 void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & name, const QPoint &p )
 {
@@ -405,8 +421,10 @@ void ViewerPrivate::showAttachmentPopup( KMime::Content* node, const QString & n
   connect( action, SIGNAL( triggered(bool) ), attachmentMapper, SLOT( map() ) );
   attachmentMapper->setMapping( action, Viewer::View );
 
-  const bool attachmentInHeader = hasChildOrSibblingDivWithId(
-      mViewer->page()->currentFrame()->documentElement(), "attachmentInjectionPoint" );
+  const QPoint local = mViewer->page()->view()->mapFromGlobal( p );
+  const QWebHitTestResult hit = mViewer->page()->currentFrame()->hitTestContent( local );
+  const bool attachmentInHeader = hasParentDivWithId(
+      hit.enclosingBlockElement(), "attachmentInjectionPoint" );
   const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
   if ( attachmentInHeader && hasScrollbar ) {
     action = menu->addAction( i18n( "Scroll To" ) );
@@ -2994,29 +3012,6 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
   {
     mToggleFixFontAction->setChecked( mUseFixedFont );
   }
-}
-
-// Checks if the given node has a child node that is a DIV which has an ID attribute
-// with the value specified here
-bool ViewerPrivate::hasChildOrSibblingDivWithId( const QWebElement &start, const QString &id )
-{
-  if ( start.isNull() )
-    return false;
-
-  if ( start.tagName() == "div" ) {
-    if ( start.attribute( "id", "" ) == id )
-      return true;
-  }
-
-  if ( !start.firstChild().isNull() ) {
-    return hasChildOrSibblingDivWithId( start.firstChild(), id );
-  }
-
-  if ( !start.nextSibling().isNull() ) {
-    return hasChildOrSibblingDivWithId( start.nextSibling(), id );
-  }
-
-  return false;
 }
 
 bool ViewerPrivate::disregardUmask() const
