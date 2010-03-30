@@ -225,11 +225,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   QWidget* configWidget();
 
-  /**
-   * Returns the configuration object that can be used in a KConfigDialog together with configWidget();
-   */
-  KConfigSkeleton *configObject();
-
   /** Set the font used for printing.
   * @param font the selected font
   */

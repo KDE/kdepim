@@ -7,6 +7,7 @@
 #include "settings.h"
 #include "messageviewer/viewer.h"
 #include "messageviewer/attachmentstrategy.h"
+#include <messageviewer/globalsettings.h>
 #include <KXmlGuiWindow>
 #include <KConfigDialog>
 
@@ -90,7 +91,7 @@ void mailreaderView::slotConfigure()
 {
   if(KConfigDialog::showDialog("mailviewersettings"))
      return;
-  KConfigDialog *dialog = new KConfigDialog( this, "mailviewersettings", m_readerWin->configObject() );
+  KConfigDialog *dialog = new KConfigDialog( this, "mailviewersettings", MessageViewer::GlobalSettings::self() );
   QWidget* widget = m_readerWin->configWidget();
   dialog->addPage( widget, i18n("Viewer"), "kmail");
 
