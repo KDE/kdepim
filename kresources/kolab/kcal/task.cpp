@@ -279,8 +279,13 @@ bool Task::saveAttributes( QDomElement& element ) const
     break;
   }
 
-  if ( hasDueDate() )
-    writeString( element, "due-date", dateTimeToString( dueDate() ) );
+  if ( hasDueDate() ) {
+    if ( mFloatingStatus == HasTime ) {
+      writeString( element, "due-date", dateTimeToString( dueDate() ) );
+    } else {
+      writeString( element, "due-date", dateToString( dueDate().date() ) );
+    }
+  }
 
   if ( !parent().isNull() )
     writeString( element, "parent", parent() );
@@ -350,10 +355,19 @@ void Task::setFields( const KCal::Todo* task )
   setStatus( task->status() );
   setHasStartDate( task->hasStartDate() );
 
-  if ( task->hasDueDate() )
+  if ( task->hasDueDate() ) {
     setDueDate( localToUTC( task->dtDue() ) );
-  else
+    if ( task->doesFloat() ) {
+      // This is a floating task. Don't timezone move this one
+      mFloatingStatus = AllDay;
+      setDueDate( task->dtDue().date() );
+    } else {
+      mFloatingStatus = HasTime;
+      setDueDate( localToUTC( task->dtDue() ) );
+    }
+  } else {
     mHasDueDate = false;
+  }
   if ( task->relatedTo() )
     setParent( task->relatedTo()->uid() );
   else if ( !task->relatedToUid().isEmpty() )
