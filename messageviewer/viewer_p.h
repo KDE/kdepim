@@ -474,7 +474,7 @@ private slots:
 
   void itemFetchResult( KJob *job );
 
-  void slotItemChanged( const Akonadi::Item& item, QSet<QByteArray>& partIdentifiers );
+  void slotItemChanged( const Akonadi::Item& item, const QSet<QByteArray>& partIdentifiers );
 
 public slots:
   /** An URL has been activate with a click. */

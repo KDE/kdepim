@@ -3229,7 +3229,7 @@ void ViewerPrivate::itemFetchResult( KJob* job )
   }
 }
 
-void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, QSet<QByteArray> & )
+void ViewerPrivate::slotItemChanged( const Akonadi::Item &item, const QSet<QByteArray> & )
 {
   if ( item.id() != messageItem().id() ) {
     kDebug() << "Update for an already forgotten item. Weird.";
