@@ -287,7 +287,6 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
       writeAttachmentMarkHeader( node );
       mNodeHelper->setNodeDisplayedEmbedded( node, true );
       const Interface::BodyPartFormatter::Result result = formatter->format( &part, htmlWriter() );
-      writeAttachmentMarkFooter();
 
       switch ( result ) {
       case Interface::BodyPartFormatter::AsIcon:
@@ -301,6 +300,8 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
         // FIXME: incomplete content handling
         ;
        }
+
+      writeAttachmentMarkFooter();
     } else {
       const BodyPartFormatter * bpf
         = BodyPartFormatter::createFor( node->contentType()->mediaType(), node->contentType()->subType() );
