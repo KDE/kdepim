@@ -33,8 +33,11 @@ Rectangle {
   SlideoutPanel {
     id: folderPanel
     anchors.fill: parent
+    anchors.topMargin: 20
+    anchors.rightMargin: 20
+    anchors.bottomMargin: 10
     titleText: "Folders"
-    handlePosition: 40
+    handleHeight: 150
     content: [
       CollectionView {
         id: collectionList
@@ -50,19 +53,24 @@ Rectangle {
     }
   }
 
-//   SlideoutPanel {
-//     anchors.fill:parent
-//     title: "Actions"
-//     handlePosition: 200
-//     contentWidth: 200
-//     content: [
-//       Rectangle {
-//         color: "red"
-//         anchors.margins: 12
-//         anchors.fill: parent
-//       }
-//     ]
-//   }
+  SlideoutPanel {
+    id: actionPanel
+    anchors.fill: parent
+    anchors.topMargin: 20
+    anchors.rightMargin: 20
+    anchors.bottomMargin: 10
+    titleText: "Actions"
+    handlePosition: folderPanel.handleHeight
+    handleHeight: 150
+    contentWidth: 240
+    content: [
+      Rectangle {
+        color: "red"
+        anchors.margins: 12
+        anchors.fill: parent
+      }
+    ]
+  }
 
   Component {
     id : messageViewDelegate
