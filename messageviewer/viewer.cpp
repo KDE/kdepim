@@ -466,7 +466,7 @@ void Viewer::saveRelativePosition()
 KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );
-  return d->mUrlClicked;
+  return d->mClickedUrl;
 }
 
 void Viewer::update( Viewer::UpdateMode updateMode )

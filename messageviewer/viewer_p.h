@@ -619,7 +619,8 @@ public:
   KSelectAction *mSelectEncodingAction;
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
-  KUrl mUrlClicked;
+  KUrl mHoveredUrl;
+  KUrl mClickedUrl;
   QPoint mLastClickPosition;
   bool mCanStartDrag;
   HtmlWriter * mHtmlWriter;

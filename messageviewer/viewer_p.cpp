@@ -1307,11 +1307,11 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>(e);
     if ( me->button() == Qt::LeftButton && ( me->modifiers() & Qt::ShiftModifier ) ) {
       // special processing for shift+click
-      URLHandlerManager::instance()->handleShiftClick( mUrlClicked, this );
+      URLHandlerManager::instance()->handleShiftClick( mHoveredUrl, this );
       return true;
     }
     if ( me->button() == Qt::LeftButton ) {
-      mCanStartDrag = URLHandlerManager::instance()->willHandleDrag( mUrlClicked, this );
+      mCanStartDrag = URLHandlerManager::instance()->willHandleDrag( mHoveredUrl, this );
       mLastClickPosition = me->pos();
     }
   }
@@ -1324,9 +1324,9 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
 
     if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
-      if ( mCanStartDrag && !mUrlClicked.isEmpty() && mUrlClicked.protocol() == "attachment" ) {
+      if ( mCanStartDrag && !mHoveredUrl.isEmpty() && mHoveredUrl.protocol() == "attachment" ) {
         mCanStartDrag = false;
-        URLHandlerManager::instance()->handleDrag( mUrlClicked, this );
+        URLHandlerManager::instance()->handleDrag( mHoveredUrl, this );
         slotUrlOn( QString(), QString(), QString() );
         return true;
       }
@@ -2168,7 +2168,7 @@ void ViewerPrivate::update( Viewer::UpdateMode updateMode )
 void ViewerPrivate::slotUrlOpen( const QUrl& url )
 {
   KUrl aUrl(url);
-  mUrlClicked = aUrl;
+  mClickedUrl = aUrl;
 
   if ( URLHandlerManager::instance()->handleClick( aUrl, this ) )
     return;
@@ -2192,11 +2192,11 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   if ( link.trimmed().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
-    mUrlClicked = KUrl();
+    mHoveredUrl = KUrl();
     return;
   }
 
-  mUrlClicked = url;
+  mHoveredUrl = url;
 
   const QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
 
@@ -2208,7 +2208,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)
 {
   const KUrl url( aUrl );
-  mUrlClicked = url;
+  mClickedUrl = url;
 
   if ( URLHandlerManager::instance()->handleContextMenuRequest( url, aPos, this ) )
     return;
@@ -2804,22 +2804,22 @@ void ViewerPrivate::selectAll()
 
 void ViewerPrivate::slotUrlClicked()
 {
-  emit urlClicked( mMessageItem, mUrlClicked );
+  emit urlClicked( mMessageItem, mClickedUrl );
 }
 
 void ViewerPrivate::slotUrlCopy()
 {
   QClipboard* clip = QApplication::clipboard();
-  if (mUrlClicked.protocol() == "mailto") {
+  if ( mClickedUrl.protocol() == "mailto" ) {
     // put the url into the mouse selection and the clipboard
-    QString address = KPIMUtils::decodeMailtoUrl( mUrlClicked );
+    QString address = KPIMUtils::decodeMailtoUrl( mClickedUrl );
     clip->setText( address, QClipboard::Clipboard );
     clip->setText( address, QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "Address copied to clipboard." ));
   } else {
     // put the url into the mouse selection and the clipboard
-    clip->setText( mUrlClicked.url(), QClipboard::Clipboard );
-    clip->setText( mUrlClicked.url(), QClipboard::Selection );
+    clip->setText( mClickedUrl.url(), QClipboard::Clipboard );
+    clip->setText( mClickedUrl.url(), QClipboard::Selection );
     KPIM::BroadcastStatus::instance()->setStatusMsg( i18n( "URL copied to clipboard." ));
   }
 }
