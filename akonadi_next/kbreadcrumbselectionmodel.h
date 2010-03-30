@@ -25,9 +25,10 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtCore/QAbstractItemModel>
 
-#include "kdeui_export.h"
+#include "akonadi_next_export.h"
 
-#include "kdebug.h"
+namespace Future
+{
 
 class KBreadcrumbSelectionModelPrivate;
 
@@ -110,7 +111,7 @@ class KBreadcrumbSelectionModelPrivate;
   @since 4.5
 
 */
-class KDEUI_EXPORT KBreadcrumbSelectionModel : public QItemSelectionModel
+class AKONADI_NEXT_EXPORT KBreadcrumbSelectionModel : public QItemSelectionModel
 {
   Q_OBJECT
 public:
@@ -173,5 +174,6 @@ private:
   Q_DECLARE_PRIVATE(KBreadcrumbSelectionModel)
 };
 
+}
 
 #endif

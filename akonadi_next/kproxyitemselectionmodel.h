@@ -25,9 +25,10 @@
 #include <QtGui/QItemSelectionModel>
 #include <QtGui/QAbstractProxyModel>
 
-#include "kdeui_export.h"
+#include "akonadi_next_export.h"
 
-#include "kdebug.h"
+namespace Future
+{
 
 class KProxyItemSelectionModelPrivate;
 
@@ -42,7 +43,7 @@ class KProxyItemSelectionModelPrivate;
   @since 4.5
 
 */
-class KDEUI_EXPORT KProxyItemSelectionModel : public QItemSelectionModel
+class AKONADI_NEXT_EXPORT KProxyItemSelectionModel : public QItemSelectionModel
 {
   Q_OBJECT
 public:
@@ -73,4 +74,7 @@ private:
   Q_DECLARE_PRIVATE(KProxyItemSelectionModel)
 };
 
+}
+
 #endif
+

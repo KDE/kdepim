@@ -24,6 +24,11 @@
 
 #include "kdebug.h"
 
+using namespace Future;
+
+namespace Future
+{
+
 class KBreadcrumbSelectionModelPrivate
 {
   Q_DECLARE_PUBLIC(KBreadcrumbSelectionModel);
@@ -50,6 +55,8 @@ public:
   KBreadcrumbSelectionModel::Direction m_direction;
   bool m_ignoreCurrentChanged;
 };
+
+}
 
 KBreadcrumbSelectionModel::KBreadcrumbSelectionModel(QItemSelectionModel *selectionModel, QObject* parent)
   : QItemSelectionModel(const_cast<QAbstractItemModel *>(selectionModel->model()), parent),

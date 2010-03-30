@@ -22,6 +22,11 @@
 
 #include "kproxyitemselectionmodel.h"
 
+using namespace Future;
+
+namespace Future
+{
+
 class KProxyItemSelectionModelPrivate
 {
 public:
@@ -46,6 +51,8 @@ public:
   QItemSelectionModel *m_proxySelector;
   bool m_ignoreCurrentChanged;
 };
+
+}
 
 /*
 
@@ -130,7 +137,6 @@ void KProxyItemSelectionModelPrivate::createProxyChain()
 
 bool KProxyItemSelectionModelPrivate::assertValid()
 {
-  qDebug() << m_proxyChainDown << m_proxyChainUp;
   if ( m_proxyChainDown.isEmpty())
   {
     Q_ASSERT( !m_proxyChainUp.isEmpty() );
