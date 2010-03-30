@@ -163,6 +163,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mToggleFixFontAction( 0 ),
     mToggleDisplayModeAction( 0 ),
     mToggleMimePartTreeAction( 0 ),
+    mCanStartDrag( false ),
     mHtmlWriter( 0 ),
     mSavedRelativePosition( 0 ),
     mDecrytMessageOverwrite( false ),
@@ -1242,8 +1243,7 @@ void ViewerPrivate::initHtmlWidget(void)
   mViewer->settings()->setAttribute(QWebSettings::PluginsEnabled, false);
 
   mViewer->setFocusPolicy( Qt::WheelFocus );
-  // register our own event filter for shift-click
-  mViewer->window()->installEventFilter( this );
+  mViewer->page()->view()->installEventFilter( this );
 
   if ( !htmlWriter() ) {
     mPartHtmlWriter = new WebKitPartHtmlWriter( mViewer, 0 );
@@ -1294,7 +1294,29 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
       }
       return true; // eat event
     }
+    if ( me->button() == Qt::LeftButton ) {
+      mCanStartDrag = URLHandlerManager::instance()->willHandleDrag( mUrlClicked, this );
+      mLastClickPosition = me->pos();
+    }
   }
+
+  if ( e->type() ==  QEvent::MouseButtonRelease ) {
+    mCanStartDrag = false;
+  }
+
+  if ( e->type() == QEvent::MouseMove ) {
+    QMouseEvent* me = static_cast<QMouseEvent*>( e );
+
+    if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+      if ( mCanStartDrag && !mUrlClicked.isEmpty() && mUrlClicked.protocol() == "attachment" ) {
+        mCanStartDrag = false;
+        URLHandlerManager::instance()->handleDrag( mUrlClicked, this );
+        slotUrlOn( QString(), QString(), QString() );
+        return true;
+      }
+    }
+  }
+
   // standard event processing
   return false;
 }
@@ -2140,14 +2162,13 @@ void ViewerPrivate::slotUrlOpen( const QUrl& url )
 }
 
 
-void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const QString& textContent
-)
+void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const QString& textContent )
 {
   Q_UNUSED(title)
   Q_UNUSED(textContent)
   const KUrl url(link);
-  if ( url.protocol() == "kmail" || url.protocol() == "x-kmail"
-       || (url.protocol().isEmpty() && url.path().isEmpty()) ) {
+  if ( url.protocol() == "kmail" || url.protocol() == "x-kmail" || url.protocol() == "attachment" ||
+       ( url.protocol().isEmpty() && url.path().isEmpty() ) ) {
     mViewer->setAcceptDrops( false );
   } else {
     mViewer->setAcceptDrops( true );
@@ -2155,6 +2176,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   if ( link.trimmed().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
+    mUrlClicked = KUrl();
     return;
   }
 

@@ -135,6 +135,8 @@ namespace {
 
     bool handleClick( const KUrl &, ViewerPrivate * ) const;
     bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const;
+    bool handleDrag( const KUrl &url, ViewerPrivate *window ) const;
+    bool willHandleDrag( const KUrl &url, ViewerPrivate *window ) const;
     QString statusBarMessage( const KUrl &, ViewerPrivate * ) const;
   private:
     KMime::Content* nodeForUrl( const KUrl &url, ViewerPrivate *w ) const;
@@ -318,6 +320,22 @@ void URLHandlerManager::unregisterHandler( const Interface::BodyPartURLHandler *
 bool URLHandlerManager::handleClick( const KUrl & url, ViewerPrivate * w ) const {
   for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
     if ( (*it)->handleClick( url, w ) )
+      return true;
+  return false;
+}
+
+bool URLHandlerManager::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
+{
+  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+    if ( (*it)->willHandleDrag( url, window ) )
+      return true;
+  return false;
+}
+
+bool URLHandlerManager::handleDrag( const KUrl &url, ViewerPrivate *window ) const
+{
+  for ( HandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
+    if ( (*it)->handleDrag( url, window ) )
       return true;
   return false;
 }
@@ -643,6 +661,33 @@ namespace {
        w->openAttachment( node, w->nodeHelper()->tempFileUrlFromNode( node ).path() );
 
     return true;
+  }
+
+  bool AttachmentURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
+  {
+    return nodeForUrl( url, window ) != 0;
+  }
+
+  bool AttachmentURLHandler::handleDrag( const KUrl &url, ViewerPrivate *window ) const
+  {
+    KMime::Content *node = nodeForUrl( url, window );
+    if ( !node )
+      return false;
+    KUrl file = window->nodeHelper()->tempFileUrlFromNode( node );
+    if ( !file.isEmpty() ) {
+      const QString icon = window->nodeHelper()->iconName( node, KIconLoader::Small );
+      QDrag *drag = new QDrag( window->viewer() );
+      QMimeData *mimeData = new QMimeData();
+      mimeData->setUrls( QList<QUrl>() << file );
+      drag->setMimeData( mimeData );
+      if ( !icon.isEmpty() ) {
+        drag->setPixmap( QPixmap( icon ) );
+      }
+      drag->start();
+      return true;
+    }
+    else
+      return false;
   }
 
   bool AttachmentURLHandler::handleContextMenuRequest( const KUrl & url, const QPoint & p, ViewerPrivate * w ) const

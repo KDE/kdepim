@@ -256,11 +256,13 @@ public:
 
 
   /** Return the HtmlWriter connected to the MailWebView we use */
-  HtmlWriter * htmlWriter() { return mHtmlWriter; }
+  HtmlWriter * htmlWriter() const { return mHtmlWriter; }
 
   CSSHelper* cssHelper() const;
 
-  NodeHelper* nodeHelper() { return mNodeHelper; }
+  NodeHelper* nodeHelper() const { return mNodeHelper; }
+
+  Viewer *viewer() const { return q; }
 
   Akonadi::Item messageItem() { return mMessageItem; }
 
@@ -620,6 +622,8 @@ public:
   KToggleAction *mToggleFixFontAction, *mToggleDisplayModeAction;
   KToggleAction *mToggleMimePartTreeAction;
   KUrl mUrlClicked;
+  QPoint mLastClickPosition;
+  bool mCanStartDrag;
   HtmlWriter * mHtmlWriter;
   /** Used only to be able to connect and disconnect finished() signal
       in printMsg() and slotPrintMsg() since mHtmlWriter points only to abstract non-QObject class. */

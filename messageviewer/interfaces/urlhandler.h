@@ -78,6 +78,26 @@ public:
     * over this link.
     */
   virtual QString statusBarMessage( const KUrl & url, ViewerPrivate * w ) const = 0;
+
+  /**
+   * @return should return true if this URLHandler will handle the drag
+   */
+  virtual bool willHandleDrag( const KUrl &url, ViewerPrivate *window ) const {
+    Q_UNUSED( url );
+    Q_UNUSED( window );
+    return false;
+  }
+
+  /**
+   * Called when starting a drag with the given URL.
+   * If the drag is handled, you should create a drag object.
+   * @return true if the click was handled by this URLHandler, false otherwise
+   */
+  virtual bool handleDrag( const KUrl &url, ViewerPrivate *window ) const {
+    Q_UNUSED( url );
+    Q_UNUSED( window );
+    return false;
+  }
 };
 
 }
