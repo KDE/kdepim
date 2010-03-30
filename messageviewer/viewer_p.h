@@ -607,10 +607,7 @@ public:
   CSSHelper * mCSSHelper;
   bool mUseFixedFont;
   bool mPrinting;
-  bool mShowColorbar;
   //bool mShowCompleteMessage;
-  int mMimeTreeMode;
-  bool mMimeTreeAtBottom;
   QList<int> mSplitterSizes;
   QString mIdOfLastViewedMessage;
   QWidget *mMainWindow;

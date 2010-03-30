@@ -2516,7 +2516,6 @@ void ViewerPrivate::injectAttachments()
 
 void ViewerPrivate::slotSettingsChanged()
 {
-  mShowColorbar = GlobalSettings::self()->showColorBar();
   saveRelativePosition();
   update( Viewer::Force );
 }
