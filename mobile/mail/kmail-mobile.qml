@@ -98,11 +98,42 @@ Rectangle {
     handleHeight: 150
     contentWidth: 240
     content: [
-      Rectangle {
-        color: "red"
-        anchors.margins: 12
-        anchors.fill: parent
-      }
+        Text {
+          text: "Actions"
+          style: Text.Sunken
+          anchors.horizontalCenter: parent.horizontalCenter
+        },  
+        Button {
+          id: moveButton
+          anchors.top: parent.top;
+          anchors.margins: 12
+          width: parent.width
+          height: parent.height / 6
+          buttonText: "Move"
+        },
+        Button {
+          id: deleteButton
+          anchors.top: moveButton.bottom;
+          anchors.margins: 12
+          width: parent.width
+          height: parent.height / 6
+          buttonText: "Delete"
+        },
+        Button {
+          id: previousButton
+          anchors.top: deleteButton.bottom;
+          anchors.margins: 12
+          width: parent.width
+          height: parent.height / 6
+          buttonText: "Previous"
+        },
+        Button {
+          anchors.top: previousButton.bottom;
+          anchors.margins: 12
+          width: parent.width
+          height: parent.height / 6
+          buttonText: "Next"
+        }
     ]
   }
 
@@ -150,7 +181,7 @@ Rectangle {
 
   Component {
     id : messageViewDelegate
-
+  
     MessageView {
       id: messageView
       width: messageViewList.width
@@ -158,7 +189,7 @@ Rectangle {
       messageItemId: model.itemId
     }
   }
-
+  
   ListView {
     id: messageViewList
     x: folderPanel.handleWidth
@@ -175,7 +206,7 @@ Rectangle {
   }
 
   Button {
-    id: deleteButton
+    id: floatingDeleteButton
     x: parent.width - 140
     y: parent.height - 160
     z: 5
