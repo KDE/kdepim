@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/prepencryptcommand.h
+    uiserver/prepsigncommand.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2010 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEO_UISERVER_PREPENCRYPTCOMMAND_H__
-#define __KLEO_UISERVER_PREPENCRYPTCOMMAND_H__
+#ifndef __KLEO_UISERVER_PREPSIGNCOMMAND_H__
+#define __KLEO_UISERVER_PREPSIGNCOMMAND_H__
 
 #include "assuancommand.h"
 
@@ -39,15 +39,15 @@
 
 namespace Kleo {
 
-    class PrepEncryptCommand : public Kleo::AssuanCommandMixin<PrepEncryptCommand> {
+    class PrepSignCommand : public Kleo::AssuanCommandMixin<PrepSignCommand> {
     public:
-        PrepEncryptCommand();
-        virtual ~PrepEncryptCommand();
+        PrepSignCommand();
+        virtual ~PrepSignCommand();
     private:
         int doStart();
         void doCanceled();
     public:
-        static const char * staticName() { return "PREP_ENCRYPT"; }
+        static const char * staticName() { return "PREP_SIGN"; }
 
         class Private;
     private:
@@ -56,4 +56,4 @@ namespace Kleo {
 
 }
 
-#endif /*__KLEO_UISERVER_PREPENCRYPTCOMMAND_H__*/
+#endif /*__KLEO_UISERVER_PREPSIGNCOMMAND_H__*/

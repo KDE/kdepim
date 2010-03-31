@@ -85,6 +85,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
     uiserver/prepencryptcommand.cpp
+    uiserver/prepsigncommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/selectcertificatecommand.cpp
     uiserver/importfilescommand.cpp
