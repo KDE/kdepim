@@ -2065,12 +2065,12 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType() == "message" || node == mMessage.get() )
+      if ( node->contentType()->mediaType().toLower() == "message" || node == mMessage.get() )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType() == "message" || node == mMessage.get() )
+      if ( node->contentType()->mediaType().toLower() == "message" || node == mMessage.get() )
         html += "</div>";
     }
   } else {
@@ -2081,12 +2081,18 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
       label = NodeHelper::fileName( node );
     }
 
-    bool typeBlacklisted = node->contentType()->mediaType() == "multipart";
+    bool typeBlacklisted = node->contentType()->mediaType().toLower() == "multipart";
     if ( !typeBlacklisted ) {
-      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),  node->contentType()->subType(),
+      typeBlacklisted = StringUtil::isCryptoPart( node->contentType()->mediaType(),
+                                                  node->contentType()->subType(),
                                                   node->contentDisposition()->filename() );
     }
     typeBlacklisted = typeBlacklisted || node == mMessage.get();
+    const bool firstTextChildOfEncapsulatedMsg =
+        node->contentType()->mediaType().toLower() == "text" &&
+        node->contentType()->subType().toLower() == "plain" &&
+        node->parent() && node->parent()->contentType()->mediaType().toLower() == "message";
+    typeBlacklisted = typeBlacklisted || firstTextChildOfEncapsulatedMsg;
     if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
