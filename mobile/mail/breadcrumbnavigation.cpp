@@ -25,7 +25,7 @@
 #include "kdebug.h"
 
 KBreadcrumbNavigationProxyModel::KBreadcrumbNavigationProxyModel(QItemSelectionModel* selectionModel, QObject* parent)
-  : KSelectionProxyModel(selectionModel, parent)
+  : Akonadi::SelectionProxyModel(selectionModel, parent)
 {
 
 }
@@ -57,7 +57,7 @@ bool KBreadcrumbNavigationProxyModel::showHiddenAscendantData() const
 }
 
 KNavigatingProxyModel::KNavigatingProxyModel(QItemSelectionModel* selectionModel, QObject* parent)
-  : KSelectionProxyModel(selectionModel, parent), m_selectionModel(selectionModel)
+  : Akonadi::SelectionProxyModel(selectionModel, parent), m_selectionModel(selectionModel)
 {
 
 }

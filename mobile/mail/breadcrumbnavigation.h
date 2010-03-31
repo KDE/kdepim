@@ -24,12 +24,12 @@
 
 #include <QItemSelectionModel>
 
-#include <kselectionproxymodel.h>
+#include <akonadi/selectionproxymodel.h>
 
 // Copied from kdeui/tests/proxymodeltestapp/breadcrumbnavigationwidget
 // A version of these might be somewhere stable in the future.
 
-class KBreadcrumbNavigationProxyModel : public KSelectionProxyModel
+class KBreadcrumbNavigationProxyModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
 public:
@@ -45,7 +45,7 @@ private:
 
 };
 
-class KNavigatingProxyModel : public KSelectionProxyModel
+class KNavigatingProxyModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
 public:
