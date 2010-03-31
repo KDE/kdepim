@@ -89,8 +89,10 @@ CryptoOperationsConfigWidget::CryptoOperationsConfigWidget( QWidget * p, Qt::Win
 CryptoOperationsConfigWidget::~CryptoOperationsConfigWidget() {}
 
 void CryptoOperationsConfigWidget::defaults() {
-    d->ui.quickSignCB->setChecked( false );
-    d->ui.quickEncryptCB->setChecked( false );
+    EMailOperationsPreferences emailPrefs;
+    emailPrefs.setDefaults();
+    d->ui.quickSignCB->setChecked( emailPrefs.quickSignEMail() );
+    d->ui.quickEncryptCB->setChecked( emailPrefs.quickEncryptEMail() );
     if ( d->ui.checksumDefinitionCB->count() )
         d->ui.checksumDefinitionCB->setCurrentIndex( 0 );
 }
