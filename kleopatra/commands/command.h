@@ -38,6 +38,7 @@
 #include <qwindowdefs.h> // for WId
 
 #include <utils/pimpl_ptr.h>
+#include <utils/types.h> // for ExecutionContext
 
 #include <vector>
 
@@ -54,7 +55,7 @@ namespace Kleo {
     class KeyListController;
     class AbstractKeyListSortFilterProxyModel;
 
-    class Command : public QObject {
+    class Command : public QObject, public ExecutionContext {
         Q_OBJECT
     public:
         explicit Command( KeyListController * parent );
@@ -117,6 +118,9 @@ namespace Kleo {
     private:
         virtual void doStart() = 0;
         virtual void doCancel() = 0;
+
+    private:
+        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
     protected:
         void addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy=0, const QString & tabToolTip=QString() );

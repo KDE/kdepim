@@ -38,6 +38,7 @@
 #include <view/tabwidget.h>
 
 #include <kdebug.h>
+#include <KWindowSystem>
 
 #include <QAbstractItemView>
 
@@ -192,6 +193,17 @@ void Command::addTemporaryView( const QString & title, AbstractKeyListSortFilter
     if ( TabWidget * const tw = d->controller_ ? d->controller_->tabWidget() : 0 )
         if ( QAbstractItemView * const v = tw->addTemporaryView( title, proxy, tabToolTip ) )
             setView( v );
+}
+
+void Command::applyWindowID( QWidget * w ) const {
+    if ( w )
+        if ( d->parentWId )
+            if ( QWidget * pw = QWidget::find( d->parentWId ) )
+                w->setParent( pw, w->windowFlags() );
+            else
+                KWindowSystem::setMainWindow( w, d->parentWId );
+        else
+            w->setParent( d->parentWidgetOrView(), w->windowFlags() );
 }
 
 //#include "moc_command.cpp"

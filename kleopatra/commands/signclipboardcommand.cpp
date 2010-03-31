@@ -170,11 +170,6 @@ void SignClipboardCommand::doCancel() {
     d->controller.cancel();
 }
 
-void SignClipboardCommand::applyWindowID( QWidget * wid ) const {
-    if ( wid )
-        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
-}
-
 #undef d
 #undef q
 

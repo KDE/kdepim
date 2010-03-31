@@ -241,11 +241,6 @@ void SignEncryptFilesCommand::doCancel() {
     d->controller.cancel();
 }
 
-void SignEncryptFilesCommand::applyWindowID( QWidget * wid ) const {
-    if ( wid )
-        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
-}
-
 QStringList SignEncryptFilesCommand::Private::selectFiles() const {
     return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ), "enc" );
 }
