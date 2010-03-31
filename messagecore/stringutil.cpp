@@ -1045,6 +1045,30 @@ QString formatString( const QString &wildString, const QString &fromAddr )
   return result;
 }
 
+QString cleanFileName( const QString &name )
+{
+  QString fileName = name.trimmed();
+
+  // We need to replace colons with underscores since those cause problems with
+  // KFileDialog (bug in KFileDialog though) and also on Windows filesystems.
+  // We also look at the special case of ": ", since converting that to "_ "
+  // would look strange, simply "_" looks better.
+  // https://issues.kolab.org/issue3805
+  fileName.replace( ": ", "_" );
+  // replace all ':' with '_' because ':' isn't allowed on FAT volumes
+  fileName.replace( ':', '_' );
+  // better not use a dir-delimiter in a filename
+  fileName.replace( '/', '_' );
+  fileName.replace( '\\', '_' );
+
+  // replace all '.' with '_', not just at the start of the filename
+  fileName.replace( '.', '_' );
+
+  // replace all '~' with '_', not just leading '~' either.
+  fileName.replace( '~', '_' );
+
+  return fileName;
+}
 
 }
 

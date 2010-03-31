@@ -828,13 +828,13 @@ void ViewerPrivate::saveAttachments( const KMime::Content::List & contents )
   } else {
     // only one item, get the desired filename
     KMime::Content *content = contents[0];
-    // replace all ':' with '_' because ':' isn't allowed on FAT volumes
-    QString s = content->contentDisposition()->filename().trimmed().replace( ':', '_' );
-    if ( s.isEmpty() )
-      s = content->contentType()->name().trimmed().replace( ':', '_' );
-    if ( s.isEmpty() )
-      s = i18nc("filename for an unnamed attachment", "attachment.1");
-    url = KFileDialog::getSaveUrl( KUrl( "kfiledialog:///saveAttachment/" + s ),
+
+    QString fileName = NodeHelper::fileName( content );
+    fileName = MessageCore::StringUtil::cleanFileName( fileName );
+    if ( fileName.isEmpty() ) {
+      fileName = i18nc( "filename for an unnamed attachment", "attachment.1" );
+    }
+    url = KFileDialog::getSaveUrl( KUrl( "kfiledialog:///saveAttachment/" + fileName ),
                                    QString(),
                                    mMainWindow,
                                    i18n( "Save Attachment" ) );

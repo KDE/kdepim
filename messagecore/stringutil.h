@@ -236,6 +236,12 @@ namespace StringUtil
    * All strings are handled case-insensitive.
    */
   MESSAGECORE_EXPORT bool isCryptoPart( const QString &type, const QString &subType, const QString &fileName );
+
+  /**
+   * Cleans a filename by replacing characters not allowed or wanted on the filesystem
+   *  e.g. ':', '/', '\' with '_'
+   */
+  MESSAGECORE_EXPORT QString cleanFileName( const QString &fileName );
 }
 }
 
