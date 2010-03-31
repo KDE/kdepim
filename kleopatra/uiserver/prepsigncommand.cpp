@@ -110,7 +110,6 @@ void PrepSignCommand::Private::checkForErrors() const {
 
 static void connectController( const QObject * controller, const QObject * d ) {
     QObject::connect( controller, SIGNAL(certificatesResolved()), d, SLOT(slotSignersResolved() ) );
-    QObject::connect( controller, SIGNAL(done()), d, SLOT(slotDone()) );
     QObject::connect( controller, SIGNAL(error(int,QString)), d, SLOT(slotError(int,QString)) );
 }
 
