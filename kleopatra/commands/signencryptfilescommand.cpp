@@ -228,10 +228,9 @@ void SignEncryptFilesCommand::doStart() {
         d->controller.start();
 
     } catch ( const std::exception & e ) {
-        KMessageBox::information( d->parentWidgetOrView(),
-                                  i18n("An error occurred: %1",
-                                       QString::fromLocal8Bit( e.what() ) ),
-                                  i18n("Sign/Encrypt Files Error") );
+        d->information( i18n("An error occurred: %1",
+                             QString::fromLocal8Bit( e.what() ) ),
+                        i18n("Sign/Encrypt Files Error") );
         d->finished();
     }
 }

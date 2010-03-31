@@ -89,7 +89,8 @@ private:
     void ensureDialogCreated() {
         if ( dialog )
             return;
-        dialog = new SelfTestDialog( parentWidgetOrView() );
+        dialog = new SelfTestDialog;
+        applyWindowID( dialog );
         dialog->setAttribute( Qt::WA_DeleteOnClose );
 
         connect( dialog, SIGNAL(updateRequested()),

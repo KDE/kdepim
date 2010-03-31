@@ -191,7 +191,8 @@ void ChangeExpiryCommand::Private::ensureDialogCreated() {
     if ( dialog )
         return;
 
-    dialog = new ExpiryDialog( parentWidgetOrView() );
+    dialog = new ExpiryDialog;
+    applyWindowID( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
@@ -218,18 +219,16 @@ void ChangeExpiryCommand::Private::createJob() {
 }
 
 void ChangeExpiryCommand::Private::showErrorDialog( const Error & err ) {
-    KMessageBox::error( parentWidgetOrView(),
-                        i18n("<p>An error occurred while trying to change "
-                             "the expiry date for <b>%1</b>:</p><p>%2</p>",
-                             Formatting::formatForComboBox( key ),
-                             QString::fromLocal8Bit( err.asString() ) ),
-                        i18n("Expiry Date Change Error") );
+    error( i18n("<p>An error occurred while trying to change "
+                "the expiry date for <b>%1</b>:</p><p>%2</p>",
+                Formatting::formatForComboBox( key ),
+                QString::fromLocal8Bit( err.asString() ) ),
+           i18n("Expiry Date Change Error") );
 }
 
 void ChangeExpiryCommand::Private::showSuccessDialog() {
-    KMessageBox::information( parentWidgetOrView(),
-                              i18n("Expiry date changed successfully."),
-                              i18n("Expiry Date Change Succeeded") );
+    information( i18n("Expiry date changed successfully."),
+                 i18n("Expiry Date Change Succeeded") );
 }
 
 #undef d

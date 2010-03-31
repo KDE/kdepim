@@ -179,9 +179,8 @@ void CertifyCertificateCommand::doStart() {
     secKeys.erase( it, secKeys.end() );
 
     if ( secKeys.empty() ) {
-        KMessageBox::error( d->parentWidgetOrView(),
-                            i18nc( "@info", "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one." ),
-                            i18n( "Certification Not Possible" ) );
+        d->error( i18nc( "@info", "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one." ),
+                  i18n( "Certification Not Possible" ) );
         d->finished();
         return;
     }
@@ -245,7 +244,8 @@ void CertifyCertificateCommand::Private::ensureDialogCreated() {
     if ( dialog )
         return;
 
-    dialog = new CertifyCertificateDialog( parentWidgetOrView() );
+    dialog = new CertifyCertificateDialog;
+    applyWindowID( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );

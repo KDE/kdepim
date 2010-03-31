@@ -190,7 +190,8 @@ void ChangeOwnerTrustCommand::Private::ensureDialogCreated() {
     if ( dialog )
         return;
 
-    dialog = new OwnerTrustDialog( parentWidgetOrView() );
+    dialog = new OwnerTrustDialog;
+    applyWindowID( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
@@ -217,18 +218,16 @@ void ChangeOwnerTrustCommand::Private::createJob() {
 }
 
 void ChangeOwnerTrustCommand::Private::showErrorDialog( const Error & err ) {
-    KMessageBox::error( parentWidgetOrView(),
-                        i18n("<p>An error occurred while trying to change "
-                             "the owner trust for <b>%1</b>:</p><p>%2</p>",
-                             Formatting::formatForComboBox( key() ),
-                             QString::fromLocal8Bit( err.asString() ) ),
-                        i18n("Owner Trust Change Error") );
+    error( i18n("<p>An error occurred while trying to change "
+                "the owner trust for <b>%1</b>:</p><p>%2</p>",
+                Formatting::formatForComboBox( key() ),
+                QString::fromLocal8Bit( err.asString() ) ),
+           i18n("Owner Trust Change Error") );
 }
 
 void ChangeOwnerTrustCommand::Private::showSuccessDialog() {
-    KMessageBox::information( parentWidgetOrView(),
-                              i18n("Owner trust changed successfully."),
-                              i18n("Owner Trust Change Succeeded") );
+    information( i18n("Owner trust changed successfully."),
+                 i18n("Owner Trust Change Succeeded") );
 }
 
 #undef d

@@ -139,7 +139,8 @@ void NewCertificateCommand::Private::ensureDialogCreated() {
     if ( dialog )
         return;
 
-    dialog = new NewCertificateWizard( parentWidgetOrView() );
+    dialog = new NewCertificateWizard;
+    applyWindowID( dialog );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
