@@ -676,61 +676,10 @@ private:
         // ### command, so we just ignore this for now:
         const QString email = mb.addrSpec().asString();
         (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# ok, parsed as \"%s\"", qPrintable( email ) ) ) );
-        if ( sender && !informative ) {
-            const std::vector<GpgME::Key> seckeys =
-                kdtools::copy_if<std::vector<GpgME::Key> >( KeyCache::instance()->findByEMailAddress( email.toStdString() ),
-                                                            mem_fn( &GpgME::Key::hasSecret ) );
-            if ( seckeys.empty() )
-                (void)assuan_write_line( conn.ctx.get(), "# no matching keys found" );
-            else
-                Q_FOREACH( const GpgME::Key & key, seckeys )
-                    (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# matching %s key %s", key.protocolAsString(), key.primaryFingerprint() ) ) );
-            const bool pgp = proto != GpgME::CMS     && kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::OpenPGP );
-            const bool cms = proto != GpgME::OpenPGP && kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::CMS );
-            if ( cms != pgp )
-                proto = pgp ? GpgME::OpenPGP : GpgME::CMS ;
-            if ( cms && pgp ) {
-                if ( conn.bias != GpgME::UnknownProtocol ) {
-                    proto = conn.bias;
-                } else {
-                    if ( conn.options.count("window-id") )
-                        proto =
-                            KMessageBox::questionYesNoWId( wid_from_string( conn.options["window-id"].toString() ),
-                                                           i18nc("@info",
-                                                                 "<para>The sender address <email>%1</email> matches more than one cryptographic format.</para>"
-                                                                 "<para>Which format do you want to use?</para>", email ),
-                                                           i18nc("@title","Format Choice"),
-                                                           KGuiItem( i18nc("@action:button","Send OpenPGP-Signed") ),
-                                                           KGuiItem( i18nc("@action:button","Send S/MIME-Signed") ),
-                                                           QLatin1String("uiserver-sender-ask-protocol") ) == KMessageBox::Yes
-                            ? GpgME::OpenPGP
-                            : GpgME::CMS ;
-                    else
-                        proto =
-                            KMessageBox::questionYesNo( 0, i18nc("@info",
-                                                                 "<para>The sender address <email>%1</email> matches more than one cryptographic format.</para>"
-                                                                 "<para>Which format do you want to use?</para>", email ),
-                                                        i18nc("@title","Format Choice"),
-                                                        KGuiItem( i18nc("@action:button","Send OpenPGP-Signed") ),
-                                                        KGuiItem( i18nc("@action:button","Send S/MIME-Signed") ),
-                                                        QLatin1String("uiserver-sender-ask-protocol") ) == KMessageBox::Yes
-                            ? GpgME::OpenPGP
-                            : GpgME::CMS ;
-                }
-            }
-            conn.bias = proto;
-            switch ( proto ) {
-            case GpgME::OpenPGP:
-                (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", "OpenPGP" );
-                break;
-            case GpgME::CMS:
-                (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", "CMS" );
-                break;
-            case GpgME::UnknownProtocol:
-                ; // keep compiler happy
-            };
-        }
-        return assuan_process_done( ctx, 0 );
+        if ( sender && !informative )
+            return AssuanCommandFactory::_handle( conn.ctx.get(), line, "PREP_SIGN" );
+        else
+            return assuan_process_done( ctx, 0 );
     }
 
 #ifndef HAVE_ASSUAN2
