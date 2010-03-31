@@ -75,8 +75,8 @@ namespace Kleo {
             // esoteric:
             MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate = 64, // for set-owner-trust
 
-            AnyCardHasNullPin   = 64,
-            AnyCardCanLearnKeys = 128,
+            AnyCardHasNullPin   = 128,
+            AnyCardCanLearnKeys = 256,
 
             _AllRestrictions_Helper,
             AllRestrictions = 2*(_AllRestrictions_Helper-1) - 1
