@@ -189,7 +189,7 @@ void ChangeRootTrustCommand::doCancel() {
 }
 
 static QString change_trust_file( const QString & trustListFile, const QString & key, Key::OwnerTrust trust );
-static QString run_gpgconf_reload( const QString & gpgConfPath );
+static QString run_gpgconf_reload_gpg_agent( const QString & gpgConfPath );
 
 void ChangeRootTrustCommand::Private::run() {
 
@@ -204,7 +204,7 @@ void ChangeRootTrustCommand::Private::run() {
 
     QString err = change_trust_file( trustListFile, key, trust );
     if ( err.isEmpty() )
-        err = run_gpgconf_reload( gpgConfPath );
+        err = run_gpgconf_reload_gpg_agent( gpgConfPath );
 
     locker.relock();
 
@@ -323,20 +323,20 @@ QString change_trust_file( const QString & trustListFile, const QString & key, K
 }
 
 // static
-QString run_gpgconf_reload( const QString & gpgConfPath )
+QString run_gpgconf_reload_gpg_agent( const QString & gpgConfPath )
 {
     if ( gpgConfPath.isEmpty() )
         return i18n("Could not find gpgconf executable");
 
     QProcess p;
-    p.start( gpgConfPath, QStringList() << "--reload" );
-    qDebug( "%s: starting %s %s", Q_FUNC_INFO, qPrintable( gpgConfPath ), "--reload" );
+    p.start( gpgConfPath, QStringList() << "--reload" << "gpg-agent" );
+    qDebug( "%s: starting %s %s %s", Q_FUNC_INFO, qPrintable( gpgConfPath ), "--reload", "gpg-agent" );
     p.waitForFinished( -1 );
     qDebug( "%s: done", Q_FUNC_INFO );
     if ( p.error() == QProcess::UnknownError )
         return QString();
     else
-        return i18n("gpgconf --reload failed: %1", p.errorString() );
+        return i18n("\"gpgconf --reload gpg-agent\" failed: %1", p.errorString() );
 }
 
 #undef q_func
