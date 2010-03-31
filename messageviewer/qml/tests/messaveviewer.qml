@@ -25,12 +25,12 @@ MessageView {
   y: 0
   width: 800
   height: 320
-  messageItemId: 63422
+  messageItemId: 7
   //splashMessage: "Hello World!"
   transformOrigin: Item.TopLeft
-  SequentialAnimation on scale {
-    NumberAnimation { to: 1.05; duration: 2500; from: 0.95; easing.type: "InBounce" }
-    NumberAnimation { to: 0.95; from: 1.05; duration: 2500; easing.type: "OutBounce" }
-    repeat: true;
-  }
+//  SequentialAnimation on scale {
+//    NumberAnimation { to: 1.05; duration: 2500; from: 0.95; easing.type: "InBounce" }
+//    NumberAnimation { to: 0.95; from: 1.05; duration: 2500; easing.type: "OutBounce" }
+//    //repeat: true;
+//  }
 }

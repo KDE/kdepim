@@ -810,7 +810,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   }
 
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
-  imgpath.prepend( "file:///" );
+  imgpath.prepend( "file://" );
   imgpath.append("enterprise_");
   const QString borderSettings( " padding-top: 0px; padding-bottom: 0px; border-width: 0px " );
   QString headerStr;
@@ -819,9 +819,9 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   if(topLevel)
     headerStr +=
       "<div style=\"position: fixed; top: 0px; left: 0px; background-color: #606060; "
-      "background-image: url("+imgpath+"shadow_left.png); width: 10px; min-height: 100%;\">&nbsp;</div>"
+      "background-image: url("+imgpath+"s_left.png); width: 10px; min-height: 100%;\">&nbsp;</div>"
       "<div style=\"position: fixed; top: 0px; right: 0px;  background-color: #606060; "
-      "background-image: url("+imgpath+"shadow_right.png); width: 10px; min-height: 100%;\">&nbsp;</div>";
+      "background-image: url("+imgpath+"s_right.png); width: 10px; min-height: 100%;\">&nbsp;</div>";
 
   headerStr +=
     "<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"+dateString+"</span></div>"
@@ -858,7 +858,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
     //if ( strategy->showHeader( "date" ) )
     headerStr +=
       "     <tr> \n"
-      "      <td style=\"font-size: 6px; padding-left: 5px; padding-right: 24px; text-align: right; "+borderSettings+"\">"+i18n("From: ")+"</td> \n"
+      "      <td style=\"font-size: 10px; padding-left: 5px; padding-right: 24px; text-align: right; "+borderSettings+"\">"+i18n("From: ")+"</td> \n"
       "      <td style=\""+borderSettings+"\">"+ fromPart +"</td> "
       "     </tr> ";
   }
@@ -866,7 +866,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   // to, cc, bcc
   headerStr +=
     "     <tr> "
-    "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\">"+i18nc("To field of the mail header.", "To: ")+"</td> "
+    "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\">"+i18nc("To field of the mail header.", "To: ")+"</td> "
     "      <td style=\""+borderSettings+"\">"
     +headerPart+
     "      </td> "

@@ -18,6 +18,9 @@
 */
 
 #include "messageviewitem.h"
+
+#include <messageviewer/headerstyle.h>
+#include <messageviewer/headerstrategy.h>
 #include <messageviewer/viewer.h>
 
 #include <math.h>
@@ -38,6 +41,7 @@ MessageViewItem::MessageViewItem(QDeclarativeItem* parent)
   , m_dy( 0 )
 {
   m_viewer = new Viewer( 0 );
+  m_viewer->setHeaderStyleAndStrategy( HeaderStyle::enterprise(), HeaderStrategy::all() );
   m_proxy = new QGraphicsProxyWidget( this );
   m_proxy->setWidget( m_viewer );
   m_proxy->installEventFilter( this );
