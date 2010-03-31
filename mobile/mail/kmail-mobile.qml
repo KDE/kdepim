@@ -78,7 +78,10 @@ Rectangle {
           anchors.left: collectionView.right
           onMessageSelected: {
             console.log( "YYY" );
+            var existingSpeed = messageViewList.highlightMoveSpeed;
+            messageViewList.highlightMoveSpeed = -1;
             messageViewList.currentIndex = headerList.currentIndex
+            messageViewList.highlightMoveSpeed = existingSpeed;
             folderPanel.collapse()
           }
         }
