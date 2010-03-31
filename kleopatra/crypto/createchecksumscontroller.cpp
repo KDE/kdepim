@@ -45,8 +45,6 @@
 #include <KLocale>
 #include <kdebug.h>
 #include <KSaveFile>
-#include <KGlobal>
-#include <KConfigGroup>
 
 #include <QPointer>
 #include <QFileInfo>
@@ -73,8 +71,6 @@ static const bool HAVE_UNIX = true;
 #else
 static const bool HAVE_UNIX = false;
 #endif
-
-static const QLatin1String CHECKSUM_DEFINITION_ID_ENTRY( "checksum-definition-id" );
 
 static const Qt::CaseSensitivity fs_cs = HAVE_UNIX ? Qt::CaseSensitive : Qt::CaseInsensitive ; // can we use QAbstractFileEngine::caseSensitive()?
 
@@ -166,23 +162,12 @@ CreateChecksumsController::Private::Private( CreateChecksumsController * qq )
       progressDialog(),
       mutex(),
       checksumDefinitions( ChecksumDefinition::getChecksumDefinitions() ),
-      checksumDefinition(),
+      checksumDefinition( ChecksumDefinition::getDefaultChecksumDefinition( checksumDefinitions ) ),
       files(),
       errors(),
       allowAddition( false ),
       canceled( false )
 {
-    const KConfigGroup group( KGlobal::config(), "ChecksumOperations" );
-    const QString checksumDefinitionId = group.readEntry( CHECKSUM_DEFINITION_ID_ENTRY );
-    if ( !checksumDefinitionId.isEmpty() )
-        Q_FOREACH( const shared_ptr<ChecksumDefinition> & cd, checksumDefinitions )
-            if ( cd && cd->id() == checksumDefinitionId ) {
-                checksumDefinition = cd;
-                break;
-            }
-    if ( !checksumDefinition && !checksumDefinitions.empty() )
-        checksumDefinition = checksumDefinitions.front();
-
     connect( this, SIGNAL(progress(int,int,QString)),
              q, SLOT(slotProgress(int,int,QString)) );
     connect( this, SIGNAL(progress(int,int,QString)),
