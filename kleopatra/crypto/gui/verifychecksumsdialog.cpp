@@ -177,7 +177,7 @@ namespace {
         void setBase( const QString & base ) {
             label.setText( base );
             if ( QDirModel * fsm = qobject_cast<QDirModel*>( proxy.sourceModel() ) )
-                view.setRootIndex( /*proxy.mapFromSource*/( fsm->index( base ) ) );
+                view.setRootIndex( proxy.mapFromSource( fsm->index( base ) ) );
             else
                 qWarning( "%s: expect a QDirModel-derived class as proxy.sourceModel(), got %s",
                           Q_FUNC_INFO, proxy.sourceModel() ? proxy.sourceModel()->metaObject()->className() : "null pointer" );
