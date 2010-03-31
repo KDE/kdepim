@@ -157,16 +157,58 @@ namespace {
         QIcon m_initialIcon;
     };
 
+    static QString make_initial_text( const std::vector<Key> & keys ) {
+        if ( keys.empty() )
+            return i18n("(no matching certificates found)");
+        else
+            return i18n("Please select a certificate");
+    }
+
+    class KeysComboBox : public ComboBox {
+        Q_OBJECT
+    public:
+        explicit KeysComboBox( QWidget * parent=0 )
+            : ComboBox( parent ) {}
+        explicit KeysComboBox( const QString & initialText, QWidget * parent=0 )
+            : ComboBox( initialText, parent ) {}
+        explicit KeysComboBox( const std::vector<Key> & keys, QWidget * parent=0 )
+            : ComboBox( make_initial_text( keys ), parent ) { setKeys( keys ); }
+
+        void setKeys( const std::vector<Key> & keys ) {
+            clear();
+            Q_FOREACH( const Key & key, keys )
+                addItem( Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
+        }
+
+        std::vector<Key> keys() const {
+            std::vector<Key> result;
+            result.reserve( count() );
+            for ( int i = 0, end = count() ; i != end ; ++i )
+                result.push_back( qvariant_cast<Key>( itemData(i) ) );
+            return result;;
+        }
+
+        int findOrAdd( const Key & key ) {
+            for ( int i = 0, end = count() ; i != end ; ++i )
+                if ( _detail::ByFingerprint<std::equal_to>()( key, qvariant_cast<Key>( itemData(i) ) ) )
+                    return i;
+            insertItem( 0, Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
+            return 0;
+        }
+
+        void addAndSelectCertificate( const Key & key ) {
+            setCurrentIndex( findOrAdd( key ) );
+        }
+
+        Key currentKey() const {
+            return qvariant_cast<Key>( itemData( currentIndex() ) );
+        }
+
+    };
+        
     class Line {
     public:
         static const unsigned int NumColumns = 4;
-
-        static QString makeInitialText( const std::vector<Key> & keys ) {
-            if ( keys.empty() )
-                return i18n("(no matching certificates found)");
-            else
-                return i18n("Please select a certificate");
-        }
 
         Line( const QString & toFrom, const QString & mailbox, const std::vector<Key> & pgp, bool pgpAmbig, const std::vector<Key> & cms, bool cmsAmbig, QWidget * q, QGridLayout & glay )
             : pgpAmbiguous( pgpAmbig ),
@@ -174,9 +216,9 @@ namespace {
               toFromLB( new QLabel( toFrom, q ) ),
               mailboxLB( new QLabel( mailbox, q ) ),
               sbox( new QStackedWidget( q ) ),
-              pgpCB( new ComboBox( makeInitialText( pgp ), sbox ) ),
-              cmsCB( new ComboBox( makeInitialText( cms ), sbox ) ),
-              noProtocolCB( new ComboBox( i18n("(please choose between OpenPGP and S/MIME first)"), sbox ) ),
+              pgpCB( new KeysComboBox( pgp, sbox ) ),
+              cmsCB( new KeysComboBox( cms, sbox ) ),
+              noProtocolCB( new KeysComboBox( i18n("(please choose between OpenPGP and S/MIME first)"), sbox ) ),
               toolTB( new QToolButton( q ) )
         {
             KDAB_SET_OBJECT_NAME( toFromLB );
@@ -198,13 +240,11 @@ namespace {
             cmsCB->setEnabled( !cms.empty() );
             noProtocolCB->setEnabled( false );
 
-            Q_FOREACH( const Key & key, pgp )
-                pgpCB->addItem( Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
+            pgpCB->setKeys( pgp );
             if ( pgpAmbiguous )
                 pgpCB->setCurrentIndex( -1 );
 
-            Q_FOREACH( const Key & key, cms )
-                cmsCB->addItem( Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
+            cmsCB->setKeys( cms );
             if ( cmsAmbiguous )
                 cmsCB->setCurrentIndex( -1 );
 
@@ -226,7 +266,7 @@ namespace {
             q->connect( toolTB, SIGNAL(clicked()), SLOT(slotCertificateSelectionDialogRequested()) );
         }
 
-        ComboBox * comboBox( Protocol proto ) const {
+        KeysComboBox * comboBox( Protocol proto ) const {
             if ( proto == OpenPGP )
                 return pgpCB;
             if ( proto == CMS )
@@ -238,17 +278,9 @@ namespace {
             return mailboxLB->text();
         }
 
-        static int find_or_add( QComboBox & cb, const Key & key ) {
-            for ( int i = 0, end = cb.count() ; i != end ; ++i )
-                if ( _detail::ByFingerprint<std::equal_to>()( key, cb.itemData( i ).value<Key>() ) )
-                    return i;
-            cb.insertItem( 0, Formatting::formatForComboBox( key ), qVariantFromValue( key ) );
-            return 0;
-        }
-
         void addAndSelectCertificate( const Key & key ) const {
-            if ( QComboBox * const cb = comboBox( key.protocol() ) ) {
-                cb->setCurrentIndex( find_or_add( *cb, key ) );
+            if ( KeysComboBox * const cb = comboBox( key.protocol() ) ) {
+                cb->addAndSelectCertificate( key );
                 cb->setEnabled( true );
             }
         }
@@ -284,14 +316,14 @@ namespace {
 
         bool isStillAmbiguous( Protocol proto ) const {
             kleo_assert( proto == OpenPGP || proto == CMS );
-            const ComboBox * const cb = comboBox( proto );
+            const KeysComboBox * const cb = comboBox( proto );
             return cb->currentIndex() == -1 ;
         }
 
         Key key( Protocol proto ) const {
             kleo_assert( proto == OpenPGP || proto == CMS );
-            const ComboBox * const cb = comboBox( proto );
-            return cb->itemData( cb->currentIndex() ).value<Key>();
+            const KeysComboBox * const cb = comboBox( proto );
+            return cb->currentKey();
         }
 
         const QToolButton * toolButton() const { return toolTB; }
@@ -310,9 +342,9 @@ namespace {
         QLabel * toFromLB;
         QLabel * mailboxLB;
         QStackedWidget * sbox;
-        ComboBox * pgpCB;
-        ComboBox * cmsCB;
-        ComboBox * noProtocolCB;
+        KeysComboBox * pgpCB;
+        KeysComboBox * cmsCB;
+        KeysComboBox * noProtocolCB;
         QToolButton * toolTB;
 
     };
