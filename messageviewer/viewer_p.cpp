@@ -1483,15 +1483,8 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
     kWarning() << "Payload is not a MessagePtr!";
     return;
   }
-  mMessage = KMime::Message::Ptr( new KMime::Message );
-  kDebug() << "START SHOWING" << mMessage;
-
-  mMessage ->setContent( mMessageItem.payloadData() );
-  mMessage ->parse();
-
+  mMessage = mMessageItem.payload<KMime::Message::Ptr>();
   update( updateMode );
-  kDebug() << "SHOWN" << mMessage;
-
 }
 
 void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode updateMode )
