@@ -1,6 +1,7 @@
 [Desktop Entry]
 Name=Akonotes list plasmoid
 Name[ca]=Estri llista de l'Akonotes
+Name[ca@valencia]=Estri llista de l'Akonotes
 Name[en_GB]=Akonotes list plasmoid
 Name[es]=Plasmoide de lista de Akonotes
 Name[gl]=Plasmoide de listas Akonotes
@@ -13,6 +14,7 @@ Name[uk]=Плазмоїд списку Akonotes
 Name[x-test]=xxAkonotes list plasmoidxx
 Comment=Akonotes list plasmoid
 Comment[ca]=L'estri llista de l'Akonotes
+Comment[ca@valencia]=L'estri llista de l'Akonotes
 Comment[en_GB]=Akonotes list plasmoid
 Comment[es]=Plasmoide de lista de Akonotes
 Comment[gl]=Plasmoide de lista Akonotes
