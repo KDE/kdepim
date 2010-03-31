@@ -85,18 +85,6 @@ int CreateChecksumsCommand::doStart() {
 
     d->controller.reset( new CreateChecksumsController( shared_from_this() ) );
 
-    if ( hasOption( "sha1sum" ) )
-        if ( hasOption( "md5sum" ) )
-            d->controller->setChecksumTypes( CreateChecksumsController::Sha1Sum|
-                                             CreateChecksumsController::Md5Sum );
-        else
-            d->controller->setChecksumTypes( CreateChecksumsController::Sha1Sum );
-    else
-        if ( hasOption( "md5sum" ) )
-            d->controller->setChecksumTypes( CreateChecksumsController::Md5Sum );
-        else
-            d->controller->setChecksumTypes( CreateChecksumsController::Sha1Sum );
-
     d->controller->setAllowAddition( hasOption( "allow-addition" ) );
 
     d->controller->setFiles( fileNames() );
