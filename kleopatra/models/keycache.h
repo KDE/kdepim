@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <string>
@@ -79,6 +81,8 @@ namespace Kleo {
         void remove( const std::vector<GpgME::Key> & keys );
 
         void addFileSystemWatcher( const boost::shared_ptr<FileSystemWatcher>& watcher );
+
+        void enableFileSystemWatcher( bool enable );
 
         const std::vector<GpgME::Key> & keys() const;
         std::vector<GpgME::Key> secretKeys() const;
@@ -129,7 +133,10 @@ namespace Kleo {
 
     public Q_SLOTS:
         void clear();
-        void startKeyListing();
+        void startKeyListing( GpgME::Protocol proto=GpgME::UnknownProtocol ) {
+            reload( proto );
+        }
+        void reload( GpgME::Protocol proto=GpgME::UnknownProtocol );
         void cancelKeyListing();
 
     Q_SIGNALS:
