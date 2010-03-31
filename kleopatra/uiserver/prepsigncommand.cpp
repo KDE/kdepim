@@ -36,11 +36,14 @@
 
 #include <crypto/newsignencryptemailcontroller.h>
 
+#include <utils/kleo_assert.h>
+
 #include <kleo/exception.h>
 
 #include <KLocale>
 
 #include <QPointer>
+#include <QTimer>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -88,30 +91,61 @@ void PrepSignCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_CONFLICT ),
                          i18n( "No SENDER given" ) );
 
+    const shared_ptr<NewSignEncryptEMailController> m = q->mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
+
+    if ( m && m->isSigning() ) {
+
+        if ( q->hasOption( "protocol" ) )
+            if ( m->protocol() != q->checkProtocol( EMail ) )
+                throw Exception( makeError( GPG_ERR_CONFLICT ),
+                                 i18n( "Protocol given conflicts with protocol determined by PREP_ENCRYPT in this session" ) );
+
+        // ### check that any SENDER here is the same as the one for PREP_ENCRYPT
+
+        // ### ditto RECIPIENT
+
+    }
+
+}
+
+static void connectController( const QObject * controller, const QObject * d ) {
+    QObject::connect( controller, SIGNAL(certificatesResolved()), d, SLOT(slotSignersResolved() ) );
+    QObject::connect( controller, SIGNAL(done()), d, SLOT(slotDone()) );
+    QObject::connect( controller, SIGNAL(error(int,QString)), d, SLOT(slotError(int,QString)) );
 }
 
 int PrepSignCommand::doStart() {
 
-    removeMemento( NewSignEncryptEMailController::mementoName() );
-
     d->checkForErrors();
 
-    d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
-    d->controller->setEncrypting( false );
-    d->controller->setSigning( true );
+    const shared_ptr<NewSignEncryptEMailController> seec = mementoContent< shared_ptr<NewSignEncryptEMailController> >( NewSignEncryptEMailController::mementoName() );
 
-    const QString session = sessionTitle();
-    if ( !session.isEmpty() )
-        d->controller->setSubject( session );
+    if ( seec && seec->isSigning() ) {
+        // reuse the controller from a previous PREP_ENCRYPT --expect-sign, if available:
+        d->controller = seec;
+        connectController( seec.get(), d.get() );
+        seec->setExecutionContext( shared_from_this() );
+        if ( seec->areCertificatesResolved() )
+            QTimer::singleShot( 0, d.get(), SLOT(slotSignersResolved()) );
+        else
+            kleo_assert( seec->isResolvingInProgress() );
+    } else {
+        // use a new controller
+        d->controller.reset( new NewSignEncryptEMailController( shared_from_this() ) );
 
-    if ( hasOption( "protocol" ) )
-        // --protocol is optional for PREP_SIGN
-        d->controller->setProtocol( checkProtocol( EMail ) );
+        const QString session = sessionTitle();
+        if ( !session.isEmpty() )
+            d->controller->setSubject( session );
 
-    QObject::connect( d->controller.get(), SIGNAL(certificatesResolved()), d.get(), SLOT(slotSignersResolved()) );
-    QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
+        if ( hasOption( "protocol" ) )
+            // --protocol is optional for PREP_SIGN
+            d->controller->setProtocol( checkProtocol( EMail ) );
 
-    d->controller->startResolveCertificates( recipients(), senders() );
+        d->controller->setEncrypting( false );
+        d->controller->setSigning( true );
+        connectController( d->controller.get(), d.get() );
+        d->controller->startResolveCertificates( recipients(), senders() );
+    }
 
     return 0;
 }
