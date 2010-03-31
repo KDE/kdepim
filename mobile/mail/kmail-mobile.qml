@@ -87,7 +87,6 @@ Rectangle {
         }
       }
     ]
-
   }
 
   SlideoutPanel {
@@ -185,6 +184,13 @@ Rectangle {
         }
       }
     ]
+  }
+
+  /** Placeholder to prevent mailviewers show up under the tabs */
+  Rectangle {
+    x: 0
+    width: folderPanel.handleWidth
+    height: parent.height
   }
 
   Component {
