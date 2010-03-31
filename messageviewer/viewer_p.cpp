@@ -2090,7 +2090,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
     if ( !label.isEmpty() && !icon.isEmpty() && !typeBlacklisted ) {
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
-      QString fileName = mNodeHelper->writeNodeToTempFile( node );
+      mNodeHelper->writeNodeToTempFile( node );
       QString href = NodeHelper::asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
