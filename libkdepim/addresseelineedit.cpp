@@ -130,6 +130,7 @@ void AddresseeLineEdit::updateLDAPWeights()
     const int sourceIndex = addCompletionSource(
       "LDAP server: " + client->server().host(), client->completionWeight() );
     s_ldapClientToCompletionSourceMap->insert( clientIndex, sourceIndex );
+    clientIndex++;
   }
 }
 
