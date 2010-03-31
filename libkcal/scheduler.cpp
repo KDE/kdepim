@@ -305,7 +305,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   // in case this is an update and we didn't find the to-be-updated incidence,
   // ask whether we should create a new one, or drop the update
   if ( existingIncidences.count() > 0 || inc->revision() == 0 ||
-          KMessageBox::warningYesNo( 0,
+          KMessageBox::questionYesNo( 0,
               i18n("The event, task or journal to be updated could not be found. "
                   "Maybe it has already been deleted, or the calendar that "
                   "contains it is disabled. Press 'Store' to create a new "
