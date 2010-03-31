@@ -671,9 +671,7 @@ private:
                                             i18n("Garbage after valid RFC-2822 mailbox detected").toUtf8().constData() );
         (conn.*info) = informative;
         (conn.*mp).push_back( mb );
-        // ### we should wait for the KeyCache to become ready here,
-        // ### but we don't have time anymore to turn SENDER into a
-        // ### command, so we just ignore this for now:
+
         const QString email = mb.addrSpec().asString();
         (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# ok, parsed as \"%s\"", qPrintable( email ) ) ) );
         if ( sender && !informative )
