@@ -158,7 +158,7 @@ void ImportCrlCommand::doStart() {
                             i18n( "Unable to start process dirmngr. "
                                   "Please check your installation." ),
                             i18n( "Clear CRL Cache Error" ) );
-        finished();
+        d->finished();
     }
 }
 
