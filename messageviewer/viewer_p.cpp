@@ -490,61 +490,47 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
   kDebug() << "-------------------------------------------------";
   kDebug() << "START" << "(" << recCount << ")";
   if( node ) {
+
     KMime::Content* curNode = node;
     KMime::Content* dataNode = curNode;
     KMime::Content * child = NodeHelper::firstChild( node );
-    bool bIsMultipart = false;
+    const QString type = curNode->contentType()->mediaType().toLower();
+    const QString subType = curNode->contentType()->subType().toLower();
+    const bool bIsMultipart = type == "multipart";
     bool bKeepPartAsIs = false;
 
-    QString type = curNode->contentType()->mediaType();
-    QString subType = curNode->contentType()->subType();
-    if ( type == "text") {
-      kDebug() << "* text *";
-      kDebug() << subType;
-    } else if ( type == "multipart ") {
-        kDebug() << "* multipart *";
-        kDebug() << subType;
-        bIsMultipart = true;
-        if ( subType == "signed" ) {
-            bKeepPartAsIs = true;
-        } else if ( subType == "encrypted" ) {
-          if ( child )
-            dataNode = child;
+    kDebug() << type << "/" << subType;
+
+    if ( type == "multipart" ) {
+      if ( subType == "signed" ) {
+        bKeepPartAsIs = true;
+      } else if ( subType == "encrypted" ) {
+        if ( child ) {
+          dataNode = child;
         }
+      }
     } else if ( type == "message" ) {
-        if ( subType == "rfc822") {
-              if ( child )
-                dataNode = child;
+      if ( subType == "rfc822" ) {
+        if ( child ) {
+          dataNode = child;
         }
+      }
     } else if ( type == "application" ) {
-          kDebug() << "* application *";
-          kDebug() << subType;
-          if ( subType == "octet-stream" ) {
-              if ( child )
-                dataNode = child;
-          } else if ( subType == "pkcs7-signature" ) {
-              // note: subtype Pkcs7Signature specifies a signature part
-              //       which we do NOT want to remove!
-              bKeepPartAsIs = true;
-          } else if ( subType == "pkcs7-mime" ) {
-              // note: subtype Pkcs7Mime can also be signed
-              //       and we do NOT want to remove the signature!
-              if ( child && mNodeHelper->encryptionState( curNode ) != KMMsgNotEncrypted ) {
-                dataNode = child;
-            }
-          }
-    } else if ( type == "image" ) {
-        kDebug() << "* image *";
-        kDebug() << subType;
-    } else if ( type == "audio" ) {
-        kDebug() << "* audio *";
-        kDebug() << subType;
-    } else if ( type == "video" ) {
-        kDebug() << "* video *";
-        kDebug() << subType;
-    } else {
-        kDebug() << type;
-        kDebug() << subType;
+      if ( subType == "octet-stream" ) {
+        if ( child ) {
+          dataNode = child;
+        }
+      } else if ( subType == "x-pkcs7-signature" ) {
+        // note: subtype Pkcs7Signature specifies a signature part
+        //       which we do NOT want to remove!
+        bKeepPartAsIs = true;
+      } else if ( subType == "x-pkcs7-mime" ) {
+        // note: subtype Pkcs7Mime can also be signed
+        //       and we do NOT want to remove the signature!
+        if ( child && mNodeHelper->encryptionState( curNode ) != KMMsgNotEncrypted ) {
+          dataNode = child;
+        }
+      }
     }
 
     KMime::Content* headerContent = 0;
