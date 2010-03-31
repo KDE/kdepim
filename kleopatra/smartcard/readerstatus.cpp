@@ -509,7 +509,10 @@ namespace {
                 std::vector<CardInfo> oldCardInfos;
 
                 if ( !gpgAgent ) {
-                    std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine );
+                    Error err;
+                    std::auto_ptr<Context> c = Context::createForEngine( AssuanEngine, &err );
+                    if ( err.code() == GPG_ERR_NOT_SUPPORTED )
+                        return;
                     gpgAgent = c;
                 }
 
