@@ -154,12 +154,13 @@ Rectangle {
           id: wrapper
           width: attachmentList.width
           height: 48
+          clip: true
           Rectangle {
             anchors.fill: parent
             opacity: 0.25
             border.color: palette.mid
-            Text { opacity: 1.0; anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
           }
+          Text { anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
         }
       },
       ListView {
@@ -211,15 +212,16 @@ Rectangle {
 
   Button {
     id: floatingDeleteButton
-    x: parent.width - 140
-    y: parent.height - 160
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+    anchors.margins: 20
     z: 5
 
-    width: 120
-    height: 120
+    width: 80
+    height: 80
     opacity: 0.5
     visible: messageViewList.count > 0
-    icon: KDE.iconPath( "user-trash", 48 )
+    icon: KDE.iconPath( "user-trash", 64 )
     onClicked: console.log( "please, delete current akonadi item" );
   }
 
