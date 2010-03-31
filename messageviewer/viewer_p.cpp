@@ -812,7 +812,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
   return true;
 }
 
-
+// FIXME: This is blatant code duplication with KMSaveAttachmentsCommand::slotSaveAll!!
 void ViewerPrivate::saveAttachments( const KMime::Content::List & contents )
 {
   KUrl url, dirUrl;
