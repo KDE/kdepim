@@ -1445,14 +1445,6 @@ void ViewerPrivate::setOverrideEncoding( const QString & encoding )
   update( Viewer::Force );
 }
 
-
-void ViewerPrivate::setPrintFont( const QFont& font )
-{
-
-  mCSSHelper->setPrintFont( font );
-}
-
-
 void ViewerPrivate::printMessage( const Akonadi::Item &message )
 {
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );

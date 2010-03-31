@@ -226,11 +226,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   QWidget* configWidget();
 
-  /** Set the font used for printing.
-  * @param font the selected font
-  */
-  void setPrintFont( const QFont& font );
-
   const AttachmentStrategy * attachmentStrategy() const;
   void setAttachmentStrategy( const AttachmentStrategy * strategy );
 

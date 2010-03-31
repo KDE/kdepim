@@ -321,12 +321,6 @@ Akonadi::Item Viewer::messageItem() const
   return d->mMessageItem;
 }
 
-void Viewer::setPrintFont( const QFont& font )
-{
-  Q_D(Viewer);
-  d->mCSSHelper->setPrintFont( font );
-}
-
 bool Viewer::event(QEvent *e)
 {
   Q_D(Viewer);

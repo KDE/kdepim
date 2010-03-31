@@ -341,8 +341,6 @@ public:
   /** Set the override character encoding. */
   void setOverrideEncoding( const QString & encoding );
 
-  void setPrintFont( const QFont& font );
-
   /** Set printing mode */
   virtual void setPrinting(bool enable) { mPrinting = enable; }
 
