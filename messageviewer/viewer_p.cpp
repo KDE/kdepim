@@ -567,7 +567,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
       }
 
       if ( bKeepPartAsIs ) {
-          resultingData += dataNode->encodedContent();
+        resultingData += dataNode->encodedContent();
       } else {
 
         // B) Store the body of this part.
@@ -609,7 +609,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
     } else {
       kDebug() << "dataNode != curNode:  Replace curNode by dataNode.";
       bool rootNodeReplaceFlag = weAreReplacingTheRootNode || !curNode->parent();
-      if( rootNodeReplaceFlag ) {
+      if ( rootNodeReplaceFlag ) {
         kDebug() << "                      Root node will be replaced.";
       } else {
         kDebug() << "                      Root node will NOT be replaced.";
