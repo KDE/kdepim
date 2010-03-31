@@ -134,7 +134,11 @@ void TaskCollection::Private::calculateAndEmitProgress()
         return;
     m_totalSize = total;
     m_processedSize = processed;
-    emit q->progress( m_lastProgressMessage, processed, total );
+    if ( processed )
+        emit q->progress( m_lastProgressMessage, processed, total );
+    else
+        // use knight-rider mode until we have some progress
+        emit q->progress( m_lastProgressMessage, processed, 0 );
 }
 
 TaskCollection::TaskCollection( QObject * parent ) : QObject( parent ), d( new Private( this ) )
