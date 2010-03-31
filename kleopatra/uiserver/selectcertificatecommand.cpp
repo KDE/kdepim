@@ -36,7 +36,7 @@
 
 #include <dialogs/certificateselectiondialog.h>
 
-#include <utils/exception.h>
+#include <kleo/exception.h>
 
 #include <gpgme++/key.h>
 

@@ -45,8 +45,9 @@
 #include <utils/classify.h>
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
-#include <utils/exception.h>
 #include <utils/archivedefinition.h>
+
+#include <kleo/exception.h>
 
 #include <kmime/kmime_header_parsing.h>
 

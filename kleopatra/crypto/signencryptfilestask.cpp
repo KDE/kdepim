@@ -40,9 +40,9 @@
 #include <utils/stl_util.h>
 #include <utils/path-helper.h>
 #include <utils/kleo_assert.h>
-#include <utils/exception.h>
 #include <utils/auditlog.h>
 
+#include <kleo/exception.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 #include <kleo/signjob.h>

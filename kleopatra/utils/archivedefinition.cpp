@@ -34,10 +34,10 @@
 
 #include "archivedefinition.h"
 
-#include <utils/exception.h>
 #include <utils/input.h>
 #include <utils/path-helper.h>
 
+#include <kleo/exception.h>
 #include <kleo/cryptobackendfactory.h>
 
 #include <KConfigGroup>

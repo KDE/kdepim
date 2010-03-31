@@ -57,9 +57,11 @@ set(libkleo_backend_chiasmus_SRCS
 
 
 set(libkleo_core_SRCS
+   kleo/checksumdefinition.cpp
    kleo/cryptobackend.cpp
    kleo/cryptobackendfactory.cpp
    kleo/enum.cpp
+   kleo/exception.cpp
    kleo/dn.cpp
    kleo/job.cpp
    kleo/multideletejob.cpp

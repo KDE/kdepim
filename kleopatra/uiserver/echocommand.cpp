@@ -36,7 +36,8 @@
 
 #include <utils/input.h>
 #include <utils/output.h>
-#include <utils/exception.h>
+
+#include <kleo/exception.h>
 
 #include <gpg-error.h>
 

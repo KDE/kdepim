@@ -44,7 +44,8 @@
 #include <utils/output.h>
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
-#include <utils/exception.h>
+
+#include <kleo/exception.h>
 
 #include "emailoperationspreferences.h"
 

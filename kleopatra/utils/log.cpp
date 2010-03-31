@@ -33,8 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "log.h"
-#include "exception.h"
 #include "iodevicelogger.h"
+
+#include <kleo/exception.h>
 
 #include <KLocalizedString>
 #include <KRandom>

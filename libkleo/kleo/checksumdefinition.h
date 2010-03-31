@@ -1,15 +1,15 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/checksumdefinition.h
+    checksumdefinition.h
 
-    This file is part of Kleopatra, the KDE keymanager
+    This file is part of libkleopatra, the KDE keymanagement library
     Copyright (c) 2010 Klarälvdalens Datakonsult AB
 
-    Kleopatra is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+    Libkleopatra is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public License as
+    published by the Free Software Foundation; either version 2 of the
+    License, or (at your option) any later version.
 
-    Kleopatra is distributed in the hope that it will be useful,
+    Libkleopatra is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
@@ -30,11 +30,13 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UTILS_CHECKSUMDEFINITION_H__
-#define __KLEOPATRA_UTILS_CHECKSUMDEFINITION_H__
+#ifndef __KLEO_CHECKSUMDEFINITION_H__
+#define __KLEO_CHECKSUMDEFINITION_H__
 
-#include <QString>
-#include <QStringList>
+#include "kleo/kleo_export.h"
+
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include <vector>
 
@@ -44,7 +46,7 @@ namespace boost {
 
 namespace Kleo {
 
-    class ChecksumDefinition {
+    class KLEO_EXPORT ChecksumDefinition {
     protected:
         ChecksumDefinition( const QString & id, const QString & label, const QString & outputFileName, const QStringList & extensions );
     public:
@@ -79,5 +81,5 @@ namespace Kleo {
         
 }
 
-#endif /* __KLEOPATRA_UTILS_CHECKSUMDEFINITION_H__ */
+#endif /* __KLEO_CHECKSUMDEFINITION_H__ */
 

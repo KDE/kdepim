@@ -45,8 +45,8 @@
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
-#include <utils/exception.h>
 
+#include <kleo/exception.h>
 #include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/error.h>
