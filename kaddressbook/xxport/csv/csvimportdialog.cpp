@@ -414,7 +414,9 @@ void CSVImportDialog::delimiterClicked( int id, bool reload )
       break;
     case 4: // other
       mDelimiterEdit->setFocus( Qt::OtherFocusReason );
-      mModel->setDelimiter( mDelimiterEdit->text().at( 0 ) );
+      if ( !mDelimiterEdit->text().isEmpty() ) {
+        mModel->setDelimiter( mDelimiterEdit->text().at( 0 ) );
+      }
       break;
     case 2: // tab
       mModel->setDelimiter( '\t' );
