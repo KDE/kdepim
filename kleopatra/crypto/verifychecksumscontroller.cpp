@@ -64,6 +64,7 @@
 #include <gpg-error.h>
 
 #include <deque>
+#include <limits>
 #include <set>
 
 using namespace Kleo;
