@@ -304,6 +304,10 @@ QString Formatting::toolTip( const Key & key, int flags ) {
     if ( flags & OwnerTrust )
         if ( key.protocol() == OpenPGP )
             result += format_row( i18n("Ownertrust"), ownerTrustShort( key ) );
+        else if ( key.isRoot() )
+            result += format_row( i18n("Trusted issuer?"),
+                                  key.userID(0).validity() == UserID::Ultimate ? i18n("Yes") :
+                                  /* else */                                     i18n("No") );
     if ( flags & StorageLocation )
         if ( const char * card = subkey.cardSerialNumber() )
             result += format_row( i18n("Stored"), i18nc("stored...","on SmartCard with serial no. %1", QString::fromUtf8( card ) ) );
