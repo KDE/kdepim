@@ -124,7 +124,7 @@ namespace {
             QHash<QString,VerifyChecksumsDialog::Status> oldStatusMap;
             swap( statusMap, oldStatusMap );
 
-            for ( QHash<QString,VerifyChecksumsDialog::Status>::const_iterator it = oldStatusMap.begin(), end = oldStatusMap.end() ; it != end ; ++it )
+            for ( QHash<QString,VerifyChecksumsDialog::Status>::const_iterator it = oldStatusMap.constBegin(), end = oldStatusMap.constEnd() ; it != end ; ++it )
                 emitDataChangedFor( it.key() );
         }
 
