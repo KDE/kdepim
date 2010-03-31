@@ -493,29 +493,29 @@ QString NodeHelper::replacePrefixes( const QString& str,
 QString NodeHelper::cleanSubject( KMime::Message::Ptr message )
 {
   return cleanSubject( message, replySubjPrefixes + forwardSubjPrefixes,
-           true, QString() ).trimmed();
+                       true, QString() ).trimmed();
 }
 
 QString NodeHelper::cleanSubject( KMime::Message::Ptr message, const QStringList & prefixRegExps,
-                                 bool replace,
-                                 const QString & newPrefix )
+                                  bool replace,
+                                  const QString & newPrefix )
 {
   return NodeHelper::replacePrefixes( message->subject()->asUnicodeString(), prefixRegExps, replace,
-                                     newPrefix );
+                                      newPrefix );
 }
 
 void NodeHelper::attachUnencryptedMessage( KMime::Message::Ptr message,
-                                           KMime::Message::Ptr unencrypted)
+                                           KMime::Message::Ptr unencrypted )
 {
- if ( !message )
-  return;
+  if ( !message )
+    return;
 
   mUnencryptedMessages[message] = unencrypted;
 }
 
 void NodeHelper::setOverrideCodec( KMime::Content* node, const QTextCodec* codec )
 {
-  if (! node )
+  if ( !node )
     return;
 
   mOverrideCodecs[node] = codec;
@@ -597,11 +597,11 @@ bool NodeHelper::isHeuristicalAttachment( KMime::Content *node )
   return false;
 }
 
-QString NodeHelper::fileName(const KMime::Content* node)
+QString NodeHelper::fileName( const KMime::Content *node )
 {
-  QString name = const_cast<KMime::Content*>(node)->contentDisposition()->filename();
+  QString name = const_cast<KMime::Content*>( node )->contentDisposition()->filename();
   if ( name.isEmpty() )
-    name = const_cast<KMime::Content*>(node)->contentType()->name();
+    name = const_cast<KMime::Content*>( node )->contentType()->name();
 
   name = name.trimmed();
   return name;

@@ -193,12 +193,13 @@ public:
     // functions like contentDisposition() yet
     static bool isAttachment( KMime::Content* node );
     static bool isHeuristicalAttachment( KMime::Content* node );
+
     /**
      * Returns a usable filename for a node, that can be the filename from the
      * content disposition header, or if that one is empty, the name from the
      * content type header.
      */
-    static QString fileName(const KMime::Content* node);
+    static QString fileName( const KMime::Content *node );
 
     // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
     // UrlHandlerManager.
