@@ -77,8 +77,11 @@ namespace Gui {
         void setSign( bool on );
         void setEncrypt( bool on );
 
+        void setQuickMode( bool on );
+
         // To wrap up inputs:
         void pickProtocol();
+        void adjustLabel();
 
         // Intermediate
 
@@ -89,6 +92,8 @@ namespace Gui {
         GpgME::Protocol selectedProtocol() const;
         std::vector<GpgME::Key> resolvedSigningKeys() const;
         std::vector<GpgME::Key> resolvedEncryptionKeys() const;
+
+        bool isQuickMode() const;
 
     private:
         Q_PRIVATE_SLOT( d, void slotCompleteChanged() )

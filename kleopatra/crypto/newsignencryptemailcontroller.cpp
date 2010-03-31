@@ -2,7 +2,7 @@
     crypto/newsignencryptemailcontroller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009,2010 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,6 +40,8 @@
 #include "sender.h"
 #include "recipient.h"
 
+#include "emailoperationspreferences.h"
+
 #include <crypto/gui/signencryptemailconflictdialog.h>
 
 
@@ -49,8 +51,6 @@
 #include <utils/kleo_assert.h>
 
 #include <kleo/exception.h>
-
-#include "emailoperationspreferences.h"
 
 #include <gpgme++/key.h>
 
@@ -210,21 +210,43 @@ bool NewSignEncryptEMailController::areCertificatesResolved() const {
     return d->certificatesResolved;
 }
 
+static bool is_dialog_quick_mode( bool sign, bool encrypt ) {
+    const EMailOperationsPreferences prefs;
+    return ( !sign    || prefs.quickSignEMail() )
+        && ( !encrypt || prefs.quickEncryptEMail() )
+        ;
+}
+
+static void save_dialog_quick_mode( bool on ) {
+    EMailOperationsPreferences prefs;
+    prefs.setQuickSignEMail( on );
+    prefs.setQuickEncryptEMail( on );
+    prefs.writeConfig();
+}
+
 void NewSignEncryptEMailController::startResolveCertificates( const std::vector<Mailbox> & r, const std::vector<Mailbox> & s ) {
     d->certificatesResolved = false;
     d->resolvingInProgress = true;
+
     const std::vector<Sender> senders = mailbox2sender( s );
     const std::vector<Recipient> recipients = mailbox2recipient( r );
+    const bool quickMode = is_dialog_quick_mode( d->sign, d->encrypt );
+
+    d->dialog->setQuickMode( quickMode );
     d->dialog->setSenders( senders );
     d->dialog->setRecipients( recipients );
     d->dialog->pickProtocol();
-    if ( d->dialog->isComplete() )
+    d->dialog->adjustLabel();
+
+    if ( quickMode && d->dialog->isComplete() )
         QMetaObject::invokeMethod( this, "slotDialogAccepted", Qt::QueuedConnection );
     else
         d->ensureDialogVisible();
 }
 
 void NewSignEncryptEMailController::Private::slotDialogAccepted() {
+    if ( dialog->isQuickMode() != is_dialog_quick_mode( sign, encrypt ) )
+        save_dialog_quick_mode( dialog->isQuickMode() );
     resolvingInProgress = false;
     certificatesResolved = true;
     signers = dialog->resolvedSigningKeys();

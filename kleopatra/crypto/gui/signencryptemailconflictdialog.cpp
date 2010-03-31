@@ -367,12 +367,14 @@ public:
 private:
     void showHideWidgets() {
         const Protocol proto = q->selectedProtocol();
+        const bool quickMode = q->isQuickMode();
 
-        const bool needProtocolSelection = presetProtocol == UnknownProtocol ;
+        const bool needProtocolSelection = !quickMode || presetProtocol == UnknownProtocol ;
 
-        const bool needShowAllRecipientsCB = needProtocolSelection
-            ? needShowAllRecipients( OpenPGP ) || needShowAllRecipients( CMS )
-            : needShowAllRecipients( proto )
+        const bool needShowAllRecipientsCB =
+            quickMode             ? false :
+            needProtocolSelection ? needShowAllRecipients( OpenPGP ) || needShowAllRecipients( CMS ) :
+            /* else */              needShowAllRecipients( proto )
             ;
 
         ui.showAllRecipientsCB.setVisible( needShowAllRecipientsCB );
@@ -496,11 +498,12 @@ private:
 
 private:
     struct Ui {
-        QLabel topLB;
+        QLabel conflictTopLB, quickModeTopLB;
         QCheckBox showAllRecipientsCB;
         QRadioButton pgpRB, cmsRB;
         QGroupBox selectSigningCertificatesGB;
         QGroupBox selectEncryptionCertificatesGB;
+        QCheckBox quickModeCB;
         QDialogButtonBox buttonBox;
         QVBoxLayout vlay;
         QHBoxLayout  hlay;
@@ -511,16 +514,23 @@ private:
             return buttonBox.button( QDialogButtonBox::Ok )->setEnabled( enable );
         }
 
+        void setConflict( bool on ) {
+            conflictTopLB.setVisible( on );
+            quickModeTopLB.setVisible( !on );
+        }
+
         explicit Ui( SignEncryptEMailConflictDialog * q )
-            : topLB( i18n("Kleopatra cannot unambiguously determine matching certificates "
+            : conflictTopLB( i18n("Kleopatra cannot unambiguously determine matching certificates "
                           "for all recipients/senders of the message.\n"
                           "Please select the correct certificates for each recipient:"),
                      q ),
+              quickModeTopLB( i18n("Please verify that correct certificates have been selected for each recipient:"), q ),
               showAllRecipientsCB( i18n("Show all recipients"), q ),
               pgpRB( i18n("OpenPGP"), q ),
               cmsRB( i18n("S/MIME"), q ),
               selectSigningCertificatesGB( i18n("Select Signing Certificate"), q ),
               selectEncryptionCertificatesGB( i18n("Select Encryption Certificate"), q ),
+              quickModeCB( i18n("Only show this dialog in case of conflicts (experimental)"), q ),
               buttonBox( QDialogButtonBox::Ok|QDialogButtonBox::Cancel, Qt::Horizontal, q ),
               vlay( q ),
               hlay(),
@@ -528,18 +538,22 @@ private:
               signers(),
               recipients()
         {
-            KDAB_SET_OBJECT_NAME( topLB );
+            KDAB_SET_OBJECT_NAME( conflictTopLB );
+            KDAB_SET_OBJECT_NAME( quickModeTopLB );
             KDAB_SET_OBJECT_NAME( showAllRecipientsCB );
             KDAB_SET_OBJECT_NAME( pgpRB );
             KDAB_SET_OBJECT_NAME( cmsRB );
             KDAB_SET_OBJECT_NAME( selectSigningCertificatesGB );
             KDAB_SET_OBJECT_NAME( selectEncryptionCertificatesGB );
+            KDAB_SET_OBJECT_NAME( quickModeCB );
             KDAB_SET_OBJECT_NAME( buttonBox );
             KDAB_SET_OBJECT_NAME( hlay );
             KDAB_SET_OBJECT_NAME( glay );
             KDAB_SET_OBJECT_NAME( vlay );
 
             q->setWindowTitle( i18n("Select Certificates For Message") );
+
+            conflictTopLB.hide();
 
             selectSigningCertificatesGB.setFlat( true );
             selectEncryptionCertificatesGB.setFlat( true );
@@ -551,7 +565,8 @@ private:
 
             vlay.setSizeConstraint( QLayout::SetMinimumSize );
 
-            vlay.addWidget( &topLB );
+            vlay.addWidget( &conflictTopLB );
+            vlay.addWidget( &quickModeTopLB );
 
             hlay.addWidget( &showAllRecipientsCB );
             hlay.addStretch( 1 );
@@ -565,6 +580,7 @@ private:
 
             vlay.addStretch( 1 );
 
+            vlay.addWidget( &quickModeCB, 0, Qt::AlignCenter );
             vlay.addWidget( &buttonBox );
 
             connect( &buttonBox, SIGNAL(accepted()), q, SLOT(accept()) );
@@ -728,6 +744,17 @@ std::vector<Key> SignEncryptEMailConflictDialog::resolvedEncryptionKeys() const 
     return d->encrypt ? get_keys( d->ui.recipients, selectedProtocol() ) : std::vector<Key>() ;
 }
 
+void SignEncryptEMailConflictDialog::setQuickMode( bool on ) {
+    d->ui.quickModeCB.setChecked( on );
+}
+
+bool SignEncryptEMailConflictDialog::isQuickMode() const {
+    return d->ui.quickModeCB.isChecked();
+}
+
+void SignEncryptEMailConflictDialog::adjustLabel() {
+    d->ui.setConflict( !isComplete() );
+}
 
 #include "moc_signencryptemailconflictdialog.cpp"
 #include "signencryptemailconflictdialog.moc"
