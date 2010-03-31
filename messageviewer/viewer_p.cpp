@@ -2322,7 +2322,10 @@ void ViewerPrivate::updateReaderWin()
   }
 
   if ( mSavedRelativePosition ) {
-    mViewer->page()->currentFrame()->setScrollBarValue( Qt::Vertical, qRound( mViewer->page()->viewportSize().height() * mSavedRelativePosition ) );
+    // FIXME: This doesn't work, Qt resets the scrollbar value somewhere in the event handler.
+    //        Using a singleshot timer wouldn't work either, since that introduces visible scrolling.
+    const float max = mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+    mViewer->page()->currentFrame()->setScrollBarValue( Qt::Vertical, max * mSavedRelativePosition );
     mSavedRelativePosition = 0;
   }
   mRecursionCountForDisplayMessage--;
@@ -2514,6 +2517,7 @@ void ViewerPrivate::injectAttachments()
   disconnect( mPartHtmlWriter, SIGNAL(finished()), this, SLOT( injectAttachments() ) );
   // inject attachments in header view
   // we have to do that after the otp has run so we also see encrypted parts
+
   QWebElement doc = mViewer->page()->currentFrame()->documentElement();
   QWebElement injectionPoint = doc.findFirst( "div#attachmentInjectionPoint" );
   if( injectionPoint.isNull() )
@@ -2902,9 +2906,15 @@ void ViewerPrivate::slotSaveMessage()
 
 void ViewerPrivate::saveRelativePosition()
 {
-  int pos = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
-  int height = mViewer->page()->viewportSize().height();
-  mSavedRelativePosition = static_cast<float>( pos / height );
+  const bool hasScrollbar = mViewer->page()->mainFrame()->scrollBarGeometry( Qt::Vertical ).isValid();
+  if ( hasScrollbar ) {
+    const float pos = mViewer->page()->mainFrame()->scrollBarValue( Qt::Vertical );
+    const float height = mViewer->page()->mainFrame()->scrollBarMaximum( Qt::Vertical );
+    mSavedRelativePosition = pos / height;
+  }
+  else {
+    mSavedRelativePosition = 0;
+  }
 }
 
 //TODO(Andras) inline them
