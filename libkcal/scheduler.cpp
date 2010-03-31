@@ -310,7 +310,8 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
                   "Maybe it has already been deleted, or the calendar that "
                   "contains it is disabled. Press 'Store' to create a new "
                   "one or 'Throw away' to discard this update." ),
-              i18n("Discard this update?"), i18n("Store"), i18n("Throw away") ) == KMessageBox::Yes ) {
+              i18n("Discard this update?"), i18n("Store"),
+              i18n("Throw away"), "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
     kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
 
     CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
