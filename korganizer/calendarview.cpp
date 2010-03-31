@@ -839,6 +839,18 @@ void CalendarView::edit_cut()
     KNotification::beep();
     return;
   }
+
+  if ( incidence->type() == "Todo" ) {
+    /* TODO: setRelation( Incidence * ) and relations() are methods of
+       the base class ( Incidence ).
+       So why does CalendarView's makeSubTodosIndependents( Todo * )
+       and todo_unsub( Todo * ) receive to-dos instead of Incidences?
+       Should be changed to Incidence *, even if we're never passing Events*,
+       so we don't need to cast.
+    */
+    makeSubTodosIndependents( static_cast<Todo *>( incidence ) );
+  }
+
   mChanger->cutIncidence( incidence, this );
   checkClipboard();
 }
