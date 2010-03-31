@@ -143,8 +143,10 @@ Q_SIGNALS:
 
 private:
     void slotOperationFinished() {
-        if ( dialog )
+        if ( dialog ) {
             dialog->setProgress( 100, 100 );
+            dialog->setErrors( errors );
+        }
 
         if ( !errors.empty() )
             q->setLastError( gpg_error( GPG_ERR_GENERAL ),
