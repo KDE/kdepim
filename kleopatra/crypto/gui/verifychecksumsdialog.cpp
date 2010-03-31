@@ -47,7 +47,7 @@
 #include <QHash>
 #include <QTreeView>
 #include <QSortFilterProxyModel>
-#include <QFileSystemModel>
+#include <QDirModel>
 #include <QProgressBar>
 #include <QDialogButtonBox>
 
@@ -70,11 +70,11 @@ namespace {
     };
     BOOST_STATIC_ASSERT((sizeof statusColor/sizeof *statusColor == VerifyChecksumsDialog::NumStatii));
 
-    class ColorizedFileSystemModel : public QFileSystemModel {
+    class ColorizedFileSystemModel : public QDirModel {
         Q_OBJECT
     public:
         explicit ColorizedFileSystemModel( QObject * parent=0 )
-            : QFileSystemModel( parent ),
+            : QDirModel( parent ),
               statusMap()
         {
 
@@ -88,7 +88,7 @@ namespace {
                     if ( const Qt::GlobalColor c = statusColor[*it] )
                         return c;
             }
-            return QFileSystemModel::data( mi, role );
+            return QDirModel::data( mi, role );
         }
 
     public Q_SLOTS:
@@ -156,7 +156,7 @@ namespace {
         QLabel label;
         QTreeView view;
 
-        BaseWidget( QFileSystemModel * model, QWidget * parent, QVBoxLayout * vlay )
+        BaseWidget( QDirModel * model, QWidget * parent, QVBoxLayout * vlay )
             : proxy(),
               label( parent ),
               view( parent )
@@ -176,10 +176,10 @@ namespace {
 
         void setBase( const QString & base ) {
             label.setText( base );
-            if ( QFileSystemModel * fsm = qobject_cast<QFileSystemModel*>( proxy.sourceModel() ) )
-                view.setRootIndex( proxy.mapFromSource( fsm->index( base ) ) );
+            if ( QDirModel * fsm = qobject_cast<QDirModel*>( proxy.sourceModel() ) )
+                view.setRootIndex( /*proxy.mapFromSource*/( fsm->index( base ) ) );
             else
-                qWarning( "%s: expect a QFileSystemModel-derived class as proxy.sourceModel(), got %s",
+                qWarning( "%s: expect a QDirModel-derived class as proxy.sourceModel(), got %s",
                           Q_FUNC_INFO, proxy.sourceModel() ? proxy.sourceModel()->metaObject()->className() : "null pointer" );
         }
     };
@@ -246,7 +246,7 @@ private:
             return buttonBox.button( QDialogButtonBox::Close );
         }
 
-        void setBases( const QStringList & bases, QFileSystemModel * model ) {
+        void setBases( const QStringList & bases, QDirModel * model ) {
 
             // create new BaseWidgets:
             for ( unsigned int i = baseWidgets.size(), end = bases.size() ; i < end ; ++i )
