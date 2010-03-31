@@ -342,6 +342,7 @@ private:
   static const int MAX_CHUNK_SIZE = 64*1024;
   KUrl mUrl;
   QList<unsigned long> mMsgList;
+  QList<KMMsgBase *> mUngetMsgs;
   unsigned int mMsgListIndex;
   KMMessage *mStandAloneMessage;
   QByteArray mData;
