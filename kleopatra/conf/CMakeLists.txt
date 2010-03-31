@@ -14,9 +14,12 @@ if ( BUILD_libkleopatraclient )
    set( _kcm_kleopatra_libkleopatraclient_extra_SRCS
      smimevalidationconfigurationwidget.cpp
      smimevalidationconfigurationpage.cpp
+     cryptooperationsconfigwidget.cpp
+     cryptooperationsconfigpage.cpp
      )
    kde4_add_ui_files( _kcm_kleopatra_libkleopatraclient_extra_SRCS
      smimevalidationconfigurationwidget.ui
+     cryptooperationsconfigwidget.ui
      )
    kde4_add_kcfg_files( _kcm_kleopatra_libkleopatraclient_extra_SRCS
      ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/smimevalidationpreferences.kcfgc
@@ -28,6 +31,7 @@ if ( BUILD_libkleopatraclient )
 
    set( _kcm_kleopatra_libkleopatraclient_extra_install_FILES
      kleopatra_config_smimevalidation.desktop
+     kleopatra_config_cryptooperations.desktop
      )
 
 else ( BUILD_libkleopatraclient )

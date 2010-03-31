@@ -1,0 +1,18 @@
+[Desktop Entry]
+Icon=applications-graphics
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-DocPath=kleopatra/configuration-cryptooperations.html
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kcm_kleopatra
+X-KDE-FactoryName=kleopatra_config_cryptooperations
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kleopatra
+X-KDE-ParentComponents=kleopatra
+X-KDE-CfgDlgHierarchy=Kleopatra
+
+Name=Crypto Operations
+Comment=Configuration of Crypto Operations
+Comment[zh_TW]=設定顏色與字型
+X-KDE-Keywords=sign,encrypt,email,quick mode,checksum,configuration
