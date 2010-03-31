@@ -50,6 +50,8 @@
 #include <kmime/kmime_content.h>
 #include <KPIMUtils/Email>
 
+#include <KStandardDirs>
+
 #include <QProcess>
 #include <algorithm>
 
@@ -152,6 +154,24 @@ namespace {
       bool handleClick( const KUrl &, ViewerPrivate * ) const;
       bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const;
       QString statusBarMessage( const KUrl &, ViewerPrivate * ) const;
+  };
+
+  // Handler that prevents dragging of internal images added by KMail, such as the envelope image
+  // in the enterprise header
+  class InternalImageURLHandler : public URLHandler {
+  public:
+      InternalImageURLHandler() : URLHandler()
+        {}
+      ~InternalImageURLHandler()
+        {}
+      bool handleDrag( const KUrl &url, ViewerPrivate *window ) const;
+      bool willHandleDrag( const KUrl &url, ViewerPrivate *window ) const;
+      bool handleClick( const KUrl &, ViewerPrivate * ) const
+        { return false; }
+      bool handleContextMenuRequest( const KUrl &, const QPoint &, ViewerPrivate * ) const
+        { return false; }
+      QString statusBarMessage( const KUrl &, ViewerPrivate * ) const
+        { return QString(); }
   };
 
   class FallBackURLHandler : public URLHandler {
@@ -288,6 +308,7 @@ URLHandlerManager::URLHandlerManager() {
   registerHandler( new AttachmentURLHandler() );
   registerHandler( mBodyPartURLHandlerManager = new BodyPartURLHandlerManager() );
   registerHandler( new ShowAuditLogURLHandler() );
+  registerHandler( new InternalImageURLHandler );
   registerHandler( new FallBackURLHandler() );
 }
 
@@ -763,6 +784,25 @@ namespace {
       return QString();
     else
       return i18n("Show GnuPG Audit Log for this operation");
+  }
+}
+
+namespace {
+  bool InternalImageURLHandler::handleDrag( const KUrl &url, ViewerPrivate *window ) const
+  {
+    Q_UNUSED( window );
+    Q_UNUSED( url );
+
+    // This will only be called when willHandleDrag() was true. Return false here, that will
+    // notify ViewerPrivate::eventFilter() that no drag was started.
+    return false;
+  }
+
+  bool InternalImageURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
+  {
+    Q_UNUSED( window );
+    const QString imagePath = KStandardDirs::locate( "data", "libmessageviewer/pics/" );
+    return url.path().contains( imagePath );
   }
 }
 

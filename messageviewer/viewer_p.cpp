@@ -1249,6 +1249,7 @@ void ViewerPrivate::initHtmlWidget(void)
 
   mViewer->setFocusPolicy( Qt::WheelFocus );
   mViewer->page()->view()->installEventFilter( this );
+  mViewer->installEventFilter( this );
 
   if ( !htmlWriter() ) {
     mPartHtmlWriter = new WebKitPartHtmlWriter( mViewer, 0 );
@@ -1307,15 +1308,35 @@ bool ViewerPrivate::eventFilter( QObject *, QEvent *e )
   }
 
   if ( e->type() == QEvent::MouseMove ) {
+
     QMouseEvent* me = static_cast<QMouseEvent*>( e );
 
-    if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
-      if ( mCanStartDrag && !mHoveredUrl.isEmpty() && mHoveredUrl.protocol() == "attachment" ) {
-        mCanStartDrag = false;
-        URLHandlerManager::instance()->handleDrag( mHoveredUrl, this );
-        slotUrlOn( QString(), QString(), QString() );
-        return true;
+    // First, update the hovered URL
+    const QPoint local = mViewer->page()->view()->mapFromGlobal( me->globalPos() );
+    const QWebHitTestResult hit = mViewer->page()->currentFrame()->hitTestContent( local );
+    if ( !hit.linkUrl().isEmpty() || !hit.imageUrl().isEmpty() ) {
+      if ( !hit.linkUrl().isEmpty() ) {
+        mHoveredUrl = hit.linkUrl();
+      } else {
+        mHoveredUrl = hit.imageUrl();
       }
+    } else {
+      mHoveredUrl.clear();
+    }
+
+    // If we are potentially handling a drag, deal with that.
+    if ( mCanStartDrag && me->buttons() & Qt::LeftButton ) {
+
+      if ( ( mLastClickPosition - me->pos() ).manhattanLength() > KGlobalSettings::dndEventDelay() ) {
+        if ( URLHandlerManager::instance()->handleDrag( mHoveredUrl, this ) ) {
+
+          // If the URL handler manager started a drag, don't handle this in the future
+          mCanStartDrag = false;
+        }
+      }
+
+      // Don't tell WebKit about this mouse move event, or it might start its own drag!
+      return true;
     }
   }
 
@@ -2170,11 +2191,8 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   if ( link.trimmed().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
-    mHoveredUrl = KUrl();
     return;
   }
-
-  mHoveredUrl = url;
 
   const QString msg = URLHandlerManager::instance()->statusBarMessage( url, this );
 
