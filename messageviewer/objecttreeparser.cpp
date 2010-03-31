@@ -276,6 +276,8 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
     KMime::ContentIndex contentIndex = node->index();
     if ( htmlWriter() /*&& contentIndex.isValid()*/ )
       htmlWriter()->queue( QString::fromLatin1("<a id=\"att%1\"></a>").arg( contentIndex.toString() ) );
+
+    // First, try if an external plugin can handle this MIME part
     if ( const Interface::BodyPartFormatter * formatter
           = BodyPartFormatterFactory::instance()->createFor( node->contentType()->mediaType(),
                                                              node->contentType()->subType() ) ) {
@@ -291,6 +293,7 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
       switch ( result ) {
       case Interface::BodyPartFormatter::AsIcon:
         processResult.setNeverDisplayInline( true );
+        mNodeHelper->setNodeDisplayedEmbedded( node, false );
         // fall through:
       case Interface::BodyPartFormatter::Failed:
         defaultHandling( node, processResult );
@@ -302,6 +305,8 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
        }
 
       writeAttachmentMarkFooter();
+
+    // No external plugin can handle the MIME part, handle it internally
     } else {
       const BodyPartFormatter * bpf
         = BodyPartFormatter::createFor( node->contentType()->mediaType(), node->contentType()->subType() );
