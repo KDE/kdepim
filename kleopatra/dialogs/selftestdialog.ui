@@ -5,21 +5,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>376</width>
-    <height>500</height>
+    <width>448</width>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle" >
    <string>Kleopatra Self-Test Results</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3" >
+  <layout class="QVBoxLayout" name="verticalLayout_6" >
    <property name="sizeConstraint" >
     <enum>QLayout::SetMinimumSize</enum>
    </property>
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Details are available in tooltips.&lt;/para>&lt;para>Note that all but the first failure might be due to prior tests failing.&lt;/para></string>
+      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Click on a test for details.&lt;/para>&lt;para>Note that all but the first failure might be due to prior tests failing.&lt;/para></string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>
@@ -31,33 +31,88 @@
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="childrenCollapsible" >
-      <bool>false</bool>
-     </property>
-     <widget class="QTreeView" name="resultsTV" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-        <horstretch>0</horstretch>
-        <verstretch>1</verstretch>
-       </sizepolicy>
+     <widget class="QWidget" name="layoutWidget" >
+      <layout class="QVBoxLayout" name="verticalLayout_5" >
+       <item>
+        <widget class="QTreeView" name="resultsTV" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize" >
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="rootIsDecorated" >
+          <bool>false</bool>
+         </property>
+         <property name="allColumnsShowFocus" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="showAllCB" >
+         <property name="text" >
+          <string>Show all test results</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="detailsGB" >
+      <property name="title" >
+       <string>Details</string>
       </property>
-      <property name="minimumSize" >
-       <size>
-        <width>0</width>
-        <height>100</height>
-       </size>
-      </property>
-      <property name="rootIsDecorated" >
-       <bool>false</bool>
-      </property>
-      <property name="allColumnsShowFocus" >
-       <bool>true</bool>
-      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3" >
+       <item>
+        <widget class="Kleo::ScrollArea" name="scrollArea_2" >
+         <property name="minimumSize" >
+          <size>
+           <width>0</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="frameShape" >
+          <enum>QFrame::NoFrame</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy" >
+          <enum>Qt::ScrollBarAlwaysOff</enum>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents_2" >
+          <property name="geometry" >
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>336</width>
+            <height>100</height>
+           </rect>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_4" >
+           <property name="margin" >
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="detailsLB" >
+             <property name="textFormat" >
+              <enum>Qt::RichText</enum>
+             </property>
+             <property name="wordWrap" >
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QGroupBox" name="proposedCorrectiveActionGB" >
-      <property name="enabled" >
-       <bool>false</bool>
-      </property>
       <property name="title" >
        <string>Proposed Corrective Action</string>
       </property>
@@ -91,6 +146,9 @@
            </property>
            <item>
             <widget class="QLabel" name="proposedCorrectiveActionLB" >
+             <property name="textFormat" >
+              <enum>Qt::RichText</enum>
+             </property>
              <property name="wordWrap" >
               <bool>true</bool>
              </property>
