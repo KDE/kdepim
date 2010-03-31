@@ -349,6 +349,8 @@ public:
   void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
+  void resetStateForNewMessage();
+
     /** Set the Akonadi item that will be displayed.
   * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
   *               an empty page is shown.

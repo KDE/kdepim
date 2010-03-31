@@ -1459,15 +1459,21 @@ void ViewerPrivate::printMessage( KMime::Message::Ptr message )
   setMessage( message, Viewer::Force );
 }
 
+void ViewerPrivate::resetStateForNewMessage()
+{
+  mNodeHelper->clear();
+  mMimePartModel->setRoot( 0 );
+  mSavedRelativePosition = 0;
+  if ( mPrinting )
+    mLevelQuote = -1;
+}
 
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
+  resetStateForNewMessage();
   enableMessageDisplay(); // just to make sure it's on
   mMonitor.setItemMonitored( mMessageItem, false );
   Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
-
-  mNodeHelper->clear();
-  mMimePartModel->setRoot( 0 );
 
   mMessage = KMime::Message::Ptr(); //forget the old message if it was set
   mMessageItem = item;
@@ -1490,13 +1496,7 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
 
 void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode updateMode )
 {
-  mNodeHelper->clear();
-  mMimePartModel->setRoot( 0 );
-
-  if ( mPrinting )
-    mLevelQuote = -1;
-
-  // connect to the updates if we have hancy headers
+  resetStateForNewMessage();
 
   mMessage = aMsg;
 
@@ -2153,6 +2153,7 @@ void ViewerPrivate::update( Viewer::UpdateMode updateMode )
   if ( updateMode == Viewer::Force ) {
     // stop the timer to avoid calling updateReaderWin twice
       mUpdateReaderWinTimer.stop();
+      saveRelativePosition();
       updateReaderWin();
   }
   else if (mUpdateReaderWinTimer.isActive()) {
@@ -2237,7 +2238,6 @@ void ViewerPrivate::slotFind()
 void ViewerPrivate::slotToggleFixedFont()
 {
   mUseFixedFont = !mUseFixedFont;
-  saveRelativePosition();
   update( Viewer::Force );
 }
 
@@ -2553,13 +2553,10 @@ void ViewerPrivate::injectAttachments()
   injectionPoint.setInnerXml( html );
 }
 
-
 void ViewerPrivate::slotSettingsChanged()
 {
-  saveRelativePosition();
   update( Viewer::Force );
 }
-
 
 void ViewerPrivate::slotMimeTreeContextMenuRequested( const QPoint& pos )
 {
@@ -2753,10 +2750,7 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
 
 void ViewerPrivate::slotLevelQuote( int l )
 {
-  kDebug() << "Old Level:" << mLevelQuote << "New Level:" << l;
-
   mLevelQuote = l;
-  saveRelativePosition();
   update( Viewer::Force );
 }
 
@@ -2902,7 +2896,6 @@ void ViewerPrivate::slotSaveMessage()
     file.close();
   return;
 }
-
 
 void ViewerPrivate::saveRelativePosition()
 {
