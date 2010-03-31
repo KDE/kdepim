@@ -26,6 +26,8 @@ namespace Akonadi {
   class ContactViewer;
 }
 
+class KJob;
+
 namespace MessageViewer {
 
 class VCardViewer : public KDialog
@@ -35,15 +37,18 @@ class VCardViewer : public KDialog
       VCardViewer(QWidget *parent, const QByteArray& vCard);
       virtual ~VCardViewer();
 
-    protected:
-      virtual void slotUser1();
-      virtual void slotUser2();
-      virtual void slotUser3();
+    private Q_SLOTS:
+      void slotUser1();
+      void slotUser2();
+      void slotUser3();
+
+      void slotDuplicatedContactChecked( KJob* );
+      void slotVCardAdded( KJob* );
 
     private:
-      Akonadi::ContactViewer *  mContactViewer;
-      KABC::Addressee::List  mAddresseeList;
+      Akonadi::ContactViewer *mContactViewer;
 
+      KABC::Addressee::List mAddresseeList;
       KABC::Addressee::List::Iterator itAddresseeList;
 };
 
