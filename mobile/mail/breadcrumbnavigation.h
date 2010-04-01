@@ -72,16 +72,23 @@ class KForwardingItemSelectionModel : public QItemSelectionModel
 {
   Q_OBJECT
 public:
-  KForwardingItemSelectionModel(QItemSelectionModel *selectionModel, QAbstractItemModel* model, QObject *parent);
+  enum Direction
+  {
+    Forward,
+    Reverse
+  };
+  KForwardingItemSelectionModel(QAbstractItemModel* model, QItemSelectionModel *selectionModel, QObject *parent = 0);
+  KForwardingItemSelectionModel(QAbstractItemModel* model, QItemSelectionModel *selectionModel, Direction direction, QObject *parent = 0);
 
-//   virtual void select(QModelIndex& index, SelectionFlags command);
-//   virtual void select(QItemSelection& selection, SelectionFlags command);
+  virtual void select(const QModelIndex& index, SelectionFlags command);
+  virtual void select(const QItemSelection& selection, SelectionFlags command);
 
 private slots:
   void navigationSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
 private:
   QItemSelectionModel *m_selectionModel;
+  Direction m_direction;
 };
 
 #endif

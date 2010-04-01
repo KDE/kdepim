@@ -69,7 +69,7 @@ MainView::MainView(QWidget* parent) :
   breadcrumbNavigationModel->setSourceModel( etm );
   breadcrumbNavigationModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
 
-  KForwardingItemSelectionModel *oneway = new KForwardingItemSelectionModel(m_collectionSelection, etm, this);
+  KForwardingItemSelectionModel *oneway = new KForwardingItemSelectionModel(etm, m_collectionSelection, this);
 
   KNavigatingProxyModel *childEntitiesModel = new KNavigatingProxyModel( oneway, this );
   childEntitiesModel->setSourceModel( etm );

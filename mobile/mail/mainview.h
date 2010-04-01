@@ -25,11 +25,6 @@
 
 class QItemSelectionModel;
 
-namespace Future
-{
-class KProxyItemSelectionModel;
-}
-
 /** The new KMMainWidget ;-) */
 class MainView : public QDeclarativeView
 {
@@ -44,7 +39,7 @@ class MainView : public QDeclarativeView
   private:
     QItemSelectionModel *m_collectionSelection;
     QItemSelectionModel *m_childCollectionSelection;
-    Future::KProxyItemSelectionModel *m_breadcrumbCollectionSelection;
+    QItemSelectionModel *m_breadcrumbCollectionSelection;
 };
 
 #endif
