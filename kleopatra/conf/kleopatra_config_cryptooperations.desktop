@@ -14,5 +14,4 @@ X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Crypto Operations
 Comment=Configuration of Crypto Operations
-Comment[zh_TW]=設定顏色與字型
 X-KDE-Keywords=sign,encrypt,email,quick mode,checksum,configuration
