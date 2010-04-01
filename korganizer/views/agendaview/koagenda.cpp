@@ -197,6 +197,10 @@ KOAgenda::KOAgenda( KOEventView *eventView, int columns, int rows, int rowSize, 
   mColumns = columns;
   mRows = rows;
   mGridSpacingY = rowSize;
+  if ( mGridSpacingY < 4 || mGridSpacingY > 30 ) {
+    mGridSpacingY = 10;
+  }
+
   mAllDayMode = false;
   mEventView = eventView;
 
@@ -245,6 +249,16 @@ Item::Id KOAgenda::lastSelectedItemId() const
 void KOAgenda::init()
 {
   mGridSpacingX = 100;
+  mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
+  if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
+    mDesiredGridSpacingY = 10;
+  }
+
+ // make sure that there are not more than 24 per day
+  mGridSpacingY = (double)height() / (double)mRows;
+  if ( mGridSpacingY < mDesiredGridSpacingY ) {
+    mGridSpacingY = mDesiredGridSpacingY;
+  }
 
   mResizeBorderWidth = 8;
   mScrollBorderWidth = 8;
@@ -422,13 +436,15 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
   switch ( de->type() ) {
   case QEvent::DragEnter:
   case QEvent::DragMove:
-    if ( !Akonadi::canDecode( md ) )
+    if ( !Akonadi::canDecode( md ) ) {
       return false;
+    }
 
-    if ( Akonadi::mimeDataHasTodo( md ) )
+    if ( Akonadi::mimeDataHasTodo( md ) ) {
       de->accept();
-    else
+    } else {
       de->ignore();
+    }
     return true;
     break;
   case QEvent::DragLeave:
@@ -436,8 +452,9 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
     break;
   case QEvent::Drop:
   {
-    if ( !Akonadi::canDecode( md ) )
+    if ( !Akonadi::canDecode( md ) ) {
       return false;
+    }
 
     const QList<KUrl> todoUrls = Akonadi::todoItemUrls( md );
     const QList<Todo::Ptr> todos = Akonadi::todos( md, mCalendar->timeSpec() );
@@ -455,10 +472,11 @@ bool KOAgenda::eventFilter_drag( QObject *object, QDropEvent *de )
       pos = viewportToContents( viewportPos );
     }
     QPoint gpos = contentsToGrid( pos );
-    if ( !todoUrls.isEmpty() )
+    if ( !todoUrls.isEmpty() ) {
       emit droppedToDos( todoUrls, gpos, mAllDayMode );
-    else
+    } else {
       emit droppedToDos( todos, gpos, mAllDayMode );
+    }
     return true;
   }
   break;
@@ -826,12 +844,12 @@ void KOAgenda::performItemAction( const QPoint &viewportPos )
       placeSubCells( mActionItem );
       emit startDragSignal( mActionItem->incidence() );
       setCursor( Qt::ArrowCursor );
+      if ( mChanger ) {
+        mChanger->cancelChange( mActionItem->incidence() );
+      }
       mActionItem = 0;
       mActionType = NOP;
       mItemMoved = false;
-      if ( mItemMoved && mChanger ) {
-        mChanger->endChange( mActionItem->incidence() );
-      }
       return;
     }
   } else {
@@ -1041,14 +1059,14 @@ void KOAgenda::endItemAction()
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
           mChanger->changeIncidence( oldIncSaved, inc,
-                                     KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY, this );
+                                   KOGlobals::RECURRENCE_MODIFIED_ONE_ONLY, this );
 #ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item
           Akonadi::Item item;
           item.setPayload( newInc );
           mActionItem->setIncidence( item );
           mActionItem->dissociateFromMultiItem();
 #endif
-          mChanger->addIncidence( newInc, this );
+          mChanger->addIncidence( newInc, inc.parentCollection(), this );
           emit enableAgendaUpdate( true );
         } else {
           KMessageBox::sorry(
@@ -1081,7 +1099,7 @@ void KOAgenda::endItemAction()
           item.setPayload( newInc );
           mActionItem->setIncidence( item );
 #endif
-          mChanger->addIncidence( newInc, this );
+          mChanger->addIncidence( newInc, inc.parentCollection(), this );
           emit enableAgendaUpdate( true );
           mChanger->changeIncidence( oldIncSaved, inc,
                                      KOGlobals::RECURRENCE_MODIFIED_ALL_FUTURE, this );
@@ -1121,8 +1139,12 @@ void KOAgenda::endItemAction()
       }
 
       // Notify about change
-      // the agenda view will apply the changes to the actual Incidence*!
-      mChanger->endChange( inc );
+      // The agenda view will apply the changes to the actual Incidence*!
+      // Bug #228696 don't call endChanged now it's async in Akonadi so it can
+      // be called before that modified item was done.  And endChange is
+      // calling when we move item.
+      // Not perfect need to improve it!
+      //mChanger->endChange( inc );
       emit itemModified( modif );
     } else {
       // the item was moved, but not further modified, since it's not recurring
@@ -1688,11 +1710,14 @@ void KOAgenda::insertMultiItem( const Item &event, const QDate &qd, int XBegin,
   marcus_bains();
 }
 
-QList<KOAgendaItem*> KOAgenda::agendaItems( const Akonadi::Item &aitem ) const {
+QList<KOAgendaItem*> KOAgenda::agendaItems( const Akonadi::Item &aitem ) const
+{
   QList<KOAgendaItem*> items;
-  Q_FOREACH ( KOAgendaItem* const item, mItems )
-    if ( item && item->incidence() == aitem )
+  Q_FOREACH ( KOAgendaItem * const item, mItems ) {
+    if ( item && item->incidence() == aitem ) {
       items.push_back( item );
+    }
+  }
   return items;
 }
 
@@ -1842,10 +1867,15 @@ int KOAgenda::minimumWidth() const
 void KOAgenda::updateConfig()
 {
   double oldGridSpacingY = mGridSpacingY;
+
   mDesiredGridSpacingY = KOPrefs::instance()->mHourSize;
- // make sure that there are not more than 24 per day
+  if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
+    mDesiredGridSpacingY = 10;
+  }
+
+  // make sure that there are not more than 24 per day
   mGridSpacingY = (double)height() / (double)mRows;
-  if ( mGridSpacingY<mDesiredGridSpacingY ) {
+  if ( mGridSpacingY < mDesiredGridSpacingY ) {
     mGridSpacingY = mDesiredGridSpacingY;
   }
 

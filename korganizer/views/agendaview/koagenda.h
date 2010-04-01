@@ -189,7 +189,7 @@ class KOAgenda : public Q3ScrollView
       item exists, the selection is not changed.
     */
     void selectItemByItemId( const Akonadi::Item::Id &id );
-    void selectItem( const Akonadi::Item& item );
+    void selectItem( const Akonadi::Item &item );
 
     bool removeAgendaItem( KOAgendaItem *item );
     void showAgendaItem( KOAgendaItem *item );
