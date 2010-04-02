@@ -926,7 +926,6 @@ void ActionManager::file_close()
 bool ActionManager::openURL( const KUrl &url, bool merge )
 {
   kDebug();
-
   if ( url.isEmpty() ) {
     kDebug() << "Error! Empty URL.";
     return false;
@@ -942,11 +941,19 @@ bool ActionManager::openURL( const KUrl &url, bool merge )
     if ( !KStandardDirs::exists( mFile ) ) {
       mMainWindow->showStatusMessage( i18n( "New calendar '%1'.", url.prettyUrl() ) );
       mCalendarView->setModified();
+      if ( mRecent ) {
+        mRecent->addUrl( url );
+      }
+
     } else {
       bool success = mCalendarView->openCalendar( mFile, merge );
       if ( success ) {
         showStatusMessageOpen( url, merge );
+        if ( mRecent ) {
+          mRecent->addUrl( url );
+        }
       }
+
     }
     setTitle();
   } else {
@@ -958,6 +965,10 @@ bool ActionManager::openURL( const KUrl &url, bool merge )
         KIO::NetAccess::removeTempFile( tmpFile );
         if ( success ) {
           showStatusMessageOpen( url, merge );
+          if ( mRecent ) {
+            mRecent->addUrl( url );
+          }
+
         }
       } else {
         if ( success ) {
