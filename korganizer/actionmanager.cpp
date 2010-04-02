@@ -277,7 +277,8 @@ void ActionManager::initActions()
       KStandardAction::save( this, SLOT(file_save()), mACollection );
     }
     KStandardAction::print( mCalendarView, SLOT(print()), mACollection );
-    KStandardAction::printPreview( mCalendarView, SLOT(printPreview()), mACollection );
+    QAction * preview = KStandardAction::printPreview( mCalendarView, SLOT(printPreview()), mACollection );
+    preview->setEnabled( !KMimeTypeTrader::self()->query("application/pdf", "KParts/ReadOnlyPart").isEmpty() );
   }
 
   //~~~~~~~~~~~~~~~~~~~~~~~~ IMPORT / EXPORT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
