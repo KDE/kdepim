@@ -74,9 +74,9 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
   Q_OBJECT
 
   public:
-    explicit CalendarAdaptor(Akonadi::Calendar *calendar, QWidget *parent)
+    explicit CalendarAdaptor(Akonadi::Calendar *calendar, QWidget *parent, bool storeDefaultCollection = false )
       : KCal::Calendar( KOPrefs::instance()->timeSpec() )
-      , mCalendar( calendar ), mParent( parent ), mDeleteCalendar( false )
+      , mCalendar( calendar ), mParent( parent ), mDeleteCalendar( false ), mStoreDefaultCollection( storeDefaultCollection )
     {
       Q_ASSERT(mCalendar);
     }
@@ -189,10 +189,19 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
     {
       if( !incidence )
         return false;
+      Akonadi::Collection collection;
 
-      Akonadi::Collection collection = Akonadi::selectCollection( mParent );
+      if ( mStoreDefaultCollection && mDefaultCollection.isValid() )
+        collection = mDefaultCollection;
+      else
+        collection = Akonadi::selectCollection( mParent );
+
       if ( !collection.isValid() )
         return false;
+
+      if ( mStoreDefaultCollection && !mDefaultCollection.isValid() )
+        mDefaultCollection = collection;
+
       kDebug() << "\"" << incidence->summary() << "\"";
 
       Akonadi::Item item;
@@ -358,9 +367,12 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
       }
     }
 
+    Akonadi::Collection mDefaultCollection;
     Akonadi::Calendar *mCalendar;
     QWidget *mParent;
     bool mDeleteCalendar;
+    bool mStoreDefaultCollection;
+
 };
 
 }
