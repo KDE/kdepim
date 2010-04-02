@@ -2280,6 +2280,8 @@ void CalendarView::pasteIncidence()
 
 void CalendarView::showIncidence( Incidence *incidence )
 {
+  if( !incidence ) 
+    return;	  
   KOEventViewerDialog *eventViewer = new KOEventViewerDialog( calendar(), this );
   eventViewer->setIncidence( incidence, QDate() );
 
