@@ -13,5 +13,13 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=Crypto Operations
+Name[en_GB]=Crypto Operations
+Name[pt]=Operações de Criptografia
+Name[sv]=Krypteringsåtgärder
+Name[uk]=Дії з шифрування
 Comment=Configuration of Crypto Operations
+Comment[en_GB]=Configuration of Crypto Operations
+Comment[pt]=Configuração das Operações de Criptografia
+Comment[sv]=Anpassning av krypteringsåtgärder
+Comment[uk]=Налаштування дій з шифрування
 X-KDE-Keywords=sign,encrypt,email,quick mode,checksum,configuration
