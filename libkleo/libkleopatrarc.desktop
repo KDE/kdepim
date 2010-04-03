@@ -112,6 +112,7 @@ Name[en_GB]=sha1sum
 Name[pt]=sha1sum
 Name[sv]=SHA1-summa
 Name[uk]=sha1sum
+Name[x-test]=xxsha1sumxx
 create-command=sha1sum -- %f
 verify-command=sha1sum -c --
 
@@ -124,6 +125,7 @@ Name[en_GB]=md5sum
 Name[pt]=md5sum
 Name[sv]=MD5-summa
 Name[uk]=md5sum
+Name[x-test]=xxmd5sumxx
 create-command=md5sum -- %f
 verify-command=md5sum -c --
 
