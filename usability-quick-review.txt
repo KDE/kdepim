@@ -21,18 +21,11 @@ Propsal:     To end of Folder
 Propsal:     Stay in Folder
 Propsal:     In all Folders
 
-- Store IMap password checkbox should checked by default in account diag
-
 - Remove kmail statusbar entry '0 messages' when leaving the part (see how kaddressbook removes his '%n contacts matching')
 
 - GnuPG log viewer (tools->gnupg log viewer) opens in a waaay to small window
 
 - in (d)imap first count the folders to be updated and set the amount of steps for the progress bar in the statubar to be relevant to that so the progressbar will work accross the whole update, and not per folder.  Since the current way makes it unusable from a usability perspective
-
-korganizer
-- why does it start with 2 default resources? One is enough.
-- rename default resource to "Default calendar resource"
-
 
 Summary News Feeds
 - No rss dcop service available.
