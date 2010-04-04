@@ -3916,7 +3916,7 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
           offset = -offset;
           if ( incidence->type() == "Todo" ) {
             offsetStr = i18n( "N days/hours/minutes before the due datetime",
-                              "%1 before the due" );
+                              "%1 before the to-do is due" );
           } else {
             offsetStr = i18n( "N days/hours/minutes before the end datetime",
                               "%1 before the end" );
@@ -3924,7 +3924,7 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
         } else if ( offset > 0 ) {
           if ( incidence->type() == "Todo" ) {
             offsetStr = i18n( "N days/hours/minutes after the due datetime",
-                              "%1 after the due" );
+                              "%1 after the to-do is due" );
           } else {
             offsetStr = i18n( "N days/hours/minutes after the end datetime",
                               "%1 after the end" );
@@ -3952,10 +3952,11 @@ QStringList IncidenceFormatter::reminderStringList( Incidence *incidence, bool s
       }
 
       if ( alarm->repeatCount() > 0 ) {
-        QString repeatStr = i18n( "repeats once", "repeats %n times", alarm->repeatCount() );
-        repeatStr = i18n( "repeats X times, every Y time interval", "(%1, every %2)" ).
-                    arg( repeatStr ).
-                    arg( secs2Duration( alarm->snoozeTime().asSeconds() ) );
+        QString countStr = i18n( "repeats once", "repeats %n times", alarm->repeatCount() );
+        QString intervalStr = i18n( "interval is N days/hours/minutes", "interval is %1" ).
+                              arg( secs2Duration( alarm->snoozeTime().asSeconds() ) );
+        QString repeatStr = i18n( "(repeat string, interval string)", "(%1, %2)" ).
+                            arg( countStr, intervalStr );
         remStr = remStr + ' ' + repeatStr;
 
       }
