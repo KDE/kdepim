@@ -223,6 +223,9 @@ AddressesDialog::AddressesDialog( QWidget *widget, const char *name )
   initConnections();
 
   d->ui->mAvailableView->setFocus();
+
+  setMainWidget( page );
+  page->setMinimumSize( 750, 400 );
 }
 
 AddressesDialog::~AddressesDialog()
@@ -979,6 +982,8 @@ AddressesDialog::filterChanged( const QString& txt )
   if ( txt.isEmpty() )
     showAll = true;
 
+  int personalVisible = 0;
+  int recentVisible = 0;
   while ( it.current() ) {
     AddresseeViewItem* item = static_cast<AddresseeViewItem*>( it.current() );
     ++it;
@@ -991,10 +996,23 @@ AddressesDialog::filterChanged( const QString& txt )
     if ( item->category() == AddresseeViewItem::Entry ) {
       bool matches = item->matches( txt ) ;
       item->setVisible( matches );
-      if ( matches && static_cast<QListViewItem*>(item)->parent() ) {
-          static_cast<QListViewItem*>(item)->parent()->setOpen( true );//open the parents with found entries
+      QListViewItem *parent = static_cast<QListViewItem*>( item )->parent();
+      if ( matches && parent ) {
+        parent->setOpen( true );//open the parents with found entries
+        if ( parent == d->personal ) {
+          personalVisible++;
+        } else {
+          recentVisible++;
+        }
       }
     }
+  }
+
+  if ( !showAll && personalVisible == 0 ) {
+    d->personal->setVisible( false );
+  }
+  if ( !showAll && recentVisible == 0 ) {
+    d->recent->setVisible( false );
   }
 }
 
