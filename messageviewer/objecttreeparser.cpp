@@ -1698,8 +1698,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &
     if ( !smimeCrypto || !htmlWriter() )
       return false;
 
-    const KConfigGroup reader( GlobalSettings::self()->config(), "Reader" );
-    if ( !reader.readEntry( "AutoImportKeys", false ) )
+    if ( !GlobalSettings::self()->autoImportKeys() )
       return false;
 
     const QByteArray certData = node->decodedContent();

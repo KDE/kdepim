@@ -440,8 +440,6 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
   if ( !strategy )
     strategy = HeaderStrategy::rich();
 
-  KConfigGroup configReader( GlobalSettings::self()->config(), "Reader" );
-
   // ### from kmreaderwin begin
   // The direction of the header is determined according to the direction
   // of the application layout.

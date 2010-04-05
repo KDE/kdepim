@@ -1141,8 +1141,7 @@ void ViewerPrivate::parseMsg()
     mNodeHelper->setSignatureState( mMessage.get(), signatureState );
   }
 
-  const KConfigGroup reader( GlobalSettings::self()->config(), "Reader" );
-  if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
+  if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() ) {
 
     // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
     // of german government:
