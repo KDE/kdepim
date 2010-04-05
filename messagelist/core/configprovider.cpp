@@ -39,6 +39,7 @@ void ConfigProvider::setConfig ( KSharedConfig::Ptr config )
 {
   mConfig = config;
   Settings::self()->setSharedConfig( config );
+  Settings::self()->readConfig();
 }
 
 ConfigProvider* MessageList::Core::ConfigProvider::self()
