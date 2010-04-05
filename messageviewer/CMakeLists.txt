@@ -31,7 +31,6 @@ vcardviewer.cpp
 iconnamecache.cpp
 mailsourceviewer.cpp
 mimetreemodel.cpp
-global.cpp
 spamheaderanalyzer.cpp
 antispamconfig.cpp
 globalsettings.cpp

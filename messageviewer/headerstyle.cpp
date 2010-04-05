@@ -37,7 +37,6 @@ using KPIMUtils::LinkLocator;
 #include "spamheaderanalyzer.h"
 #include "globalsettings.h"
 #include "nodehelper.h"
-#include "global.h"
 
 #include <kpimutils/email.h>
 #include "kxface.h"
@@ -441,7 +440,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
   if ( !strategy )
     strategy = HeaderStrategy::rich();
 
-  KConfigGroup configReader( Global::instance()->config(), "Reader" );
+  KConfigGroup configReader( GlobalSettings::self()->config(), "Reader" );
 
   // ### from kmreaderwin begin
   // The direction of the header is determined according to the direction
@@ -983,12 +982,12 @@ const HeaderStyle * HeaderStyle::enterprise() {
 
 QString HeaderStyle::dateStr(const KDateTime &dateTime) const
 {
-    KConfigGroup general( Global::instance()->config(), "General");
-    time_t unixTime = dateTime.toTime_t();
+  KConfigGroup general( GlobalSettings::self()->config(), "General");
+  time_t unixTime = dateTime.toTime_t();
 //kDebug()<<"####  Date ="<<header.Date().AsString().c_str();
 
-    return KMime::DateFormatter::formatDate(
-                                            static_cast<KMime::DateFormatter::FormatType>(general.readEntry( "dateFormat",
+  return KMime::DateFormatter::formatDate(
+              static_cast<KMime::DateFormatter::FormatType>(general.readEntry( "dateFormat",
             int( KMime::DateFormatter::Fancy ) )),
                   unixTime, general.readEntry( "customDateFormat" ));
 }

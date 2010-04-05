@@ -103,7 +103,6 @@
 #include "attachmentstrategy.h"
 #include "csshelper.h"
 #include "editorwatcher.h"
-#include "global.h"
 #include "globalsettings.h"
 #include "headerstyle.h"
 #include "headerstrategy.h"
@@ -182,9 +181,6 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
   mHtmlLoadExtOverride = false;
   mHtmlLoadExternal = false;
 
-  Global::instance()->setConfig( config );
-  GlobalSettings::self()->setSharedConfig( Global::instance()->config() );
-  GlobalSettings::self()->readConfig(); //need to re-read the config as the config object might be different than the default mailviewerrc
   mUpdateReaderWinTimer.setObjectName( "mUpdateReaderWinTimer" );
   mResizeTimer.setObjectName( "mResizeTimer" );
 
@@ -1145,7 +1141,7 @@ void ViewerPrivate::parseMsg()
     mNodeHelper->setSignatureState( mMessage.get(), signatureState );
   }
 
-  const KConfigGroup reader( Global::instance()->config(), "Reader" );
+  const KConfigGroup reader( GlobalSettings::self()->config(), "Reader" );
   if ( reader.readEntry( "store-displayed-messages-unencrypted", false ) ) {
 
     // Hack to make sure the S/MIME CryptPlugs follows the strict requirement

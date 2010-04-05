@@ -31,7 +31,8 @@
 
 
 #include "headerstrategy.h"
-#include "global.h"
+
+#include "globalsettings.h"
 
 #include <kdebug.h>
 #include <kconfig.h>
@@ -200,7 +201,7 @@ private:
 CustomHeaderStrategy::CustomHeaderStrategy()
   : HeaderStrategy()
 {
-  KConfigGroup customHeader( Global::instance()->config(), "Custom Headers" );
+  KConfigGroup customHeader( GlobalSettings::self()->config(), "Custom Headers" );
   if ( customHeader.hasKey( "headers to display" ) ) {
     mHeadersToDisplay = customHeader.readEntry( "headers to display", QStringList() );
     for ( QStringList::iterator it = mHeadersToDisplay.begin() ; it != mHeadersToDisplay.end() ; ++ it )

@@ -31,7 +31,6 @@
 */
 
 #include "htmlstatusbar.h"
-#include "global.h"
 #include "globalsettings.h"
 
 #include <klocale.h>
@@ -140,7 +139,7 @@ QString HtmlStatusBar::toolTip() const
 
 QColor HtmlStatusBar::fgColor() const
 {
-  KConfigGroup conf( Global::instance()->config(), "Reader" );
+  KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
   QColor defaultColor, color;
   switch ( mode() ) {
   case Util::Html:
@@ -165,7 +164,7 @@ QColor HtmlStatusBar::fgColor() const
 }
 
 QColor HtmlStatusBar::bgColor() const {
-  KConfigGroup conf( Global::instance()->config(), "Reader" );
+  KConfigGroup conf( GlobalSettings::self()->config(), "Reader" );
 
   QColor defaultColor, color;
   switch ( mode() ) {

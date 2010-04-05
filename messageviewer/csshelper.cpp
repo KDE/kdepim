@@ -31,7 +31,6 @@
 
 
 #include "csshelper.h"
-#include "global.h"
 #include "globalsettings.h"
 
 #include <kconfig.h>
@@ -48,7 +47,7 @@ namespace MessageViewer {
 CSSHelper::CSSHelper( const QPaintDevice *pd ) :
   CSSHelperBase( pd )
 {
-  KSharedConfigPtr config = Global::instance()->config();
+  KConfig *config = GlobalSettings::self()->config();
 
   KConfigGroup reader( config, "Reader" );
   KConfigGroup fonts( config, "Fonts" );

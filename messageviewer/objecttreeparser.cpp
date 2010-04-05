@@ -49,7 +49,6 @@
 #include "interfaces/bodypartformatter.h"
 #include "globalsettings.h"
 #include "util.h"
-#include "global.h"
 #include "kleojobexecutor.h"
 #include "nodehelper.h"
 #include "iconnamecache.h"
@@ -1699,7 +1698,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &
     if ( !smimeCrypto || !htmlWriter() )
       return false;
 
-    const KConfigGroup reader( Global::instance()->config(), "Reader" );
+    const KConfigGroup reader( GlobalSettings::self()->config(), "Reader" );
     if ( !reader.readEntry( "AutoImportKeys", false ) )
       return false;
 
