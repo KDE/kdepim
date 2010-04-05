@@ -1118,11 +1118,11 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       QListBoxItem *item = completionBox()->item( currentIndex );
       if ( item && itemIsHeader(item) ) {
         completionBox()->setSelected( currentIndex, true );
-      }
-    } else if ( ke->key() == Key_Tab || ke->key() == Key_Backtab ) {
+       }
+   } else if ( e->type() == QEvent::KeyRelease && ke->key() == Key_Tab || ke->key() == Key_Backtab ) {
       /// first, find the header of the current section
       QListBoxItem *myHeader = 0;
-      int i = currentIndex;
+      int i = QMAX( currentIndex - 1, 0 );
       while ( i>=0 ) {
         if ( itemIsHeader( completionBox()->item(i) ) ) {
           myHeader = completionBox()->item( i );
@@ -1140,14 +1140,14 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       uint j = ke->key() == Key_Tab ? currentIndex : i==0 ? completionBox()->count()-1 : (i-1) % completionBox()->count();
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
           if ( itemIsHeader(nextHeader) ) {
-              break;
+            break;
           }
           j = (j + iterationstep) % completionBox()->count();
       }
       if ( nextHeader && nextHeader != myHeader ) {
         QListBoxItem *item = completionBox()->item( j + 1 );
         if ( item && !itemIsHeader(item) ) {
-          completionBox()->setSelected( j+1, true );
+          completionBox()->setSelected( item, true );
           completionBox()->setCurrentItem( item );
           completionBox()->ensureCurrentVisible();
         }
