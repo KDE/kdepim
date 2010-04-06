@@ -711,7 +711,13 @@ protected:
 
 public:
   const char * name() const { return "enterprise"; }
-  const HeaderStyle * next() const { return mobile(); }
+  const HeaderStyle * next() const {
+#if defined KDEPIM_MOBILE_UI
+    return mobile();
+#else
+    return brief();
+#endif
+  }
   const HeaderStyle * prev() const { return fancy(); }
 
   QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
