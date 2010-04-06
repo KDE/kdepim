@@ -25,12 +25,7 @@ Rectangle {
   signal clicked
   
   radius: 12
-
-  gradient: Gradient {
-    id: mGrad
-    GradientStop { position: 0.0; color: "lightgrey" }
-    GradientStop { position: 0.8; color: "grey" }
-  }
+  color: "#00000000" // Set a transparant color.
 
   Image {
     source: icon

@@ -92,38 +92,39 @@ Rectangle {
     contentWidth: 240
     content: [
         Text {
+          id: actionLabel
           text: "Actions"
           style: Text.Sunken
           anchors.horizontalCenter: parent.horizontalCenter
         },  
         Button {
           id: moveButton
-          anchors.top: parent.top;
-          anchors.margins: 12
-          width: parent.width
+          anchors.top: actionLabel.bottom;
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
           height: parent.height / 6
           buttonText: "Move"
         },
         Button {
           id: deleteButton
           anchors.top: moveButton.bottom;
-          anchors.margins: 12
-          width: parent.width
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
           height: parent.height / 6
           buttonText: "Delete"
         },
         Button {
           id: previousButton
           anchors.top: deleteButton.bottom;
-          anchors.margins: 12
-          width: parent.width
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
           height: parent.height / 6
           buttonText: "Previous"
         },
         Button {
           anchors.top: previousButton.bottom;
-          anchors.margins: 12
-          width: parent.width
+          anchors.horizontalCenter: parent.horizontalCenter;
+          width: parent.width - 10
           height: parent.height / 6
           buttonText: "Next"
         }
