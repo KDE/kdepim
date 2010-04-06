@@ -99,8 +99,8 @@ public:
         const QString & vCardName,
         bool printing = false, bool topLevel = false ) const = 0;
 
-  QString dateStr(const KDateTime &dateTime) const;
-  QByteArray dateShortStr(const KDateTime &dateTime) const;
+  static QString dateStr(const KDateTime &dateTime);
+  static QByteArray dateShortStr(const KDateTime &dateTime);
 
 };
 }

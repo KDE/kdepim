@@ -78,6 +78,20 @@ static QString strToHtml( const QString & str,
   return LinkLocator::convertToHtml( str, flags );
 }
 
+// Prepare the date string (when printing always use the localized date)
+static QString dateString( KMime::Message::Ptr message, bool printing, bool shortDate ) {
+  if( printing ) {
+    KDateTime dateTime = message->date()->dateTime();
+    KLocale * locale = KGlobal::locale();
+    return locale->formatDateTime( dateTime );
+  } else {
+    if ( shortDate )
+      return MessageViewer::HeaderStyle::dateStr( message->date()->dateTime() );
+    else
+      return MessageViewer::HeaderStyle::dateShortStr( message->date()->dateTime() );
+  }
+}
+
 //
 // BriefHeaderStyle
 //   Show everything in a single line, don't show header field names.
@@ -123,16 +137,6 @@ QString BriefHeaderStyle::format( KMime::Message::Ptr message,
   else
     subjectDir = directionOf( i18n("No Subject") );
 
-  // Prepare the date string (when printing always use the localized date)
-  QString dateString;
-  if( printing ) {
-    KDateTime dateTime = message->date()->dateTime();
-    KLocale * locale = KGlobal::locale();
-    dateString = locale->formatDateTime( dateTime );
-  } else {
-    dateString = dateStr( message->date()->dateTime() );
-  }
-
   QString headerStr = "<div class=\"header\" dir=\"" + dir + "\">\n";
 
   if ( strategy->showHeader( "subject" ) )
@@ -161,7 +165,7 @@ QString BriefHeaderStyle::format( KMime::Message::Ptr message,
     headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly );
 
   if ( strategy->showHeader( "date" ) )
-    headerParts << strToHtml(dateShortStr(message->date()->dateTime()));
+    headerParts << strToHtml( dateString( message, printing, /* shortDate = */ true ) );
 
   // remove all empty (modulo whitespace) entries and joins them via ", \n"
   headerStr += " (" + headerParts.filter( QRegExp( "\\S" ) ).join( ",\n" ) + ')';
@@ -222,17 +226,6 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message,
   else
     subjectDir = directionOf( i18n("No Subject") );
 
-  // Prepare the date string (when printing always use the localized date)
-  QString dateString;
-  if( printing ) {
-    KDateTime dateTime = message->date()->dateTime();
-    KLocale* locale = KGlobal::locale();
-    dateString = locale->formatDateTime( dateTime );
-  }
-  else {
-    dateString = dateStr(message->date()->dateTime());
-  }
-
   QString headerStr;
 
   if ( strategy->headersToDisplay().isEmpty()
@@ -253,7 +246,7 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message,
                       .arg(subjectDir);
 
   if ( strategy->showHeader( "date" ) )
-    headerStr.append(i18n("Date: ") + strToHtml(dateString)+"<br/>\n");
+    headerStr.append(i18n("Date: ") + strToHtml( dateString(message, printing, /* short = */ false ) ) + "<br/>\n" );
 
   if ( strategy->showHeader( "from" ) ) {
 /*FIXME(Andras) review if it is still needed
@@ -458,17 +451,6 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
     subjectDir = directionOf( NodeHelper::cleanSubject( message ) );
   else
     subjectDir = directionOf( i18n("No Subject") );
-
-  // Prepare the date string (when printing always use the localized date)
-  QString dateString;
-  if( printing ) {
-    KDateTime dateTime = message->date()->dateTime();
-    KLocale* locale = KGlobal::locale();
-    dateString = locale->formatDateTime( dateTime );
-  }
-  else {
-    dateString = dateStr(message->date()->dateTime());
-  }
 
   // Spam header display.
   // If the spamSpamStatus config value is true then we look for headers
@@ -676,8 +658,8 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
     headerStr.append(QString("<tr><th>%1</th>\n"
                   "<td dir=\"%2\">%3</td></tr>\n")
                           .arg(i18n("Date: "))
-                  .arg( directionOf( dateStr(message->date()->dateTime() ) ) )
-                          .arg(strToHtml(dateString)));
+                  .arg( directionOf( dateStr( message->date()->dateTime() ) ) )
+                          .arg(strToHtml( dateString( message, printing, /* short = */ false ) ) ) );
   if ( GlobalSettings::self()->showUserAgent() ) {
     if ( strategy->showHeader( "user-agent" ) ) {
       if ( message->headerByType("User-Agent") ) {
@@ -794,18 +776,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   // remove all empty (modulo whitespace) entries and joins them via ", \n"
   QString headerPart = ' ' + headerParts.filter( QRegExp( "\\S" ) ).join( ", " );
 
-//TODO(Andras) this is duplicate code, try to factor out!
-  // Prepare the date string (when printing always use the localized date)
-  QString dateString;
-  if( printing ) {
-    KDateTime dateTime = message->date()->dateTime();
-    KLocale* locale = KGlobal::locale();
-    dateString = locale->formatDateTime( dateTime );
-  }
-  else {
-    dateString = dateStr(message->date()->dateTime());
-  }
-
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
   imgpath.prepend( "file://" );
   imgpath.append("enterprise_");
@@ -821,7 +791,8 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
       "background-image: url("+imgpath+"s_right.png); width: 10px; min-height: 100%;\">&nbsp;</div>";
 
   headerStr +=
-    "<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"+dateString+"</span></div>"
+    "<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"
+    + dateString( message, printing, /* shortDate */ false ) + "</span></div>"
     // #0057ae
     "<table style=\"background: "+activeColorDark.name()+"; border-collapse:collapse; top: 14px; min-width: 200px; \" cellpadding=0> \n"
     "  <tr> \n"
@@ -949,9 +920,6 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   // Use always the brief strategy for the mobile headers.
   strategy = HeaderStrategy::brief();
 
-  // Prepare the date string (when printing always use the localized date)
-  QString dateString  = dateStr( message->date()->dateTime() );
-
   // From
   QString linkColor ="color: #0E49A1; text-decoration: none";
   QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
@@ -991,7 +959,8 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   //headerStr += "  <td style=\"margin-left: 7px;\">" + messagePath + "</td>\n";
 
   headerStr += "  <td>&nbsp;</td>\n";
-  headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: " + dateString + "</td>\n";
+  headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: ";
+  headerStr += dateString( message, printing, /* shortDate = */ false ) + "</td>\n";
   headerStr += "</tr>\n";
   headerStr += "</table>\n";
   headerStr += "</div>\n";
@@ -1085,7 +1054,7 @@ const HeaderStyle * HeaderStyle::mobile() {
 }
 #endif
 
-QString HeaderStyle::dateStr(const KDateTime &dateTime) const
+QString HeaderStyle::dateStr(const KDateTime &dateTime)
 {
   KConfigGroup general( GlobalSettings::self()->config(), "General");
   time_t unixTime = dateTime.toTime_t();
@@ -1097,7 +1066,7 @@ QString HeaderStyle::dateStr(const KDateTime &dateTime) const
                   unixTime, general.readEntry( "customDateFormat" ));
 }
 
-QByteArray HeaderStyle::dateShortStr(const KDateTime &dateTime) const
+QByteArray HeaderStyle::dateShortStr(const KDateTime &dateTime)
 {
     time_t unixTime = dateTime.toTime_t();
 
