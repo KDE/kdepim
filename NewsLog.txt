@@ -6,15 +6,11 @@ Problems addressed
 * kolab/issue4270: alarm of an event with two lines shows strange half line title.(rt#6093)
 * kolab/issue4271: In korganizer's resource view, creating a subresource containing a / originates a crash
 * kolab/issue4268: Calendar: Black triangle shows that events are somewhere up, but the user scrolled already to 0:00 (rt#6091)
-* kolab/issue4267: information about the alarm are missing in the event views (rt#6090)
-* kolab/issue4194: Task without starttime should have default alarm type "before the end" (rt#6045)
-* kolab/issue4280: Due time "00:00" is set for no time associated todos if todo resource disabled+enabled (rt#6096)
+* kolab/issue4267(partly): information about the alarm are missing in the event views (rt#6090)
 * kolab/issue4266: birthday resource should be named "Geburtstage" if German language is used (rt#6089)
-* kolab/issue2762: Sometimes whole day events overlap in the view (rt#5936)
 * kolab/issue3099: Replying to stored mail crashes Kontact
 * kolab/issue4284: Journal: Link Add Journal entry in the week view is not working (rt#6103)
 * kolab/issue4285: The default size of the reminder should be larger (rt#6104)
-* kolab/issue4282: Adding a new event from an invitation update mail shows unnecssary message dialog 'store/throw away' (rt#6094)
 * kolab/issue3469: KNotes: Deleted notes reappear
 * kolab/issue4272: Sometimes it is not possible to delete a folder
 * kolab/issue4248: Configure Filter dialog: Some filter conditions are not translated to German (rt#6074)
