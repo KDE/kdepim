@@ -30,6 +30,7 @@ install(FILES
   Button.qml
   HeaderView.qml
   SlideoutPanel.qml
+  SlideoutPanelContainer.qml
   kmail-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
