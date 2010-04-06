@@ -338,6 +338,7 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   mMimePartModel->setRoot( mMessage.get() );
 
   mMessageItem.setPayloadFromData( mMessage->encodedContent() );
+  mStoredMessagePayload = mMessage->encodedContent();
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
 //TODO(Andras) error checking?   connect( job, SIGNAL(result(KJob*)), SLOT(imapItemUpdateResult(KJob*)) );
 
@@ -1122,6 +1123,7 @@ void ViewerPrivate::parseMsg()
   }
 
   // show message content
+
   MailViewerSource otpSource( this );
   ObjectTreeParser otp( &otpSource, mNodeHelper );
   otp.setAllowAsync( true );
@@ -1489,7 +1491,10 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
       kWarning() << "Payload is not a MessagePtr!";
     return;
   }
+
   mMessage = mMessageItem.payload<KMime::Message::Ptr>();
+  mStoredMessagePayload = mMessageItem.payloadData();
+
   update( updateMode );
 }
 
@@ -1498,6 +1503,8 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
   resetStateForNewMessage();
 
   mMessage = aMsg;
+  if ( mMessage )
+    mStoredMessagePayload = mMessage->encodedContent();
 
   if ( mMessage ) {
     mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
@@ -2250,7 +2257,7 @@ void ViewerPrivate::slotToggleMimePartTree()
 
 void ViewerPrivate::slotShowMessageSource()
 {
-  const QString rawMessage = QString::fromAscii( mMessageItem.payloadData() );
+  const QString rawMessage = QString::fromAscii( mStoredMessagePayload );
   const QString processedMessage = QString::fromAscii( mMessage->encodedContent() );
   const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
 
@@ -2738,6 +2745,7 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
       file.close();
 
       mMessageItem.setPayloadFromData( mMessage->encodedContent() );
+      mStoredMessagePayload = mMessage->encodedContent();
       Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
     }
   }

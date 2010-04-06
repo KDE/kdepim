@@ -589,6 +589,7 @@ public:
   bool mHtmlMail, mHtmlLoadExternal, mHtmlOverride, mHtmlLoadExtOverride;
   KMime::Message::Ptr mMessage; //the current message, if it was set manually
   Akonadi::Item mMessageItem; //the message item from Akonadi
+  QByteArray mStoredMessagePayload;
   // widgets:
   QSplitter * mSplitter;
   KHBox *mBox;
