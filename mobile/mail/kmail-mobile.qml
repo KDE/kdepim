@@ -134,6 +134,7 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Move"
+            onClicked: actionPanel.collapse();
           },
           Button {
             id: deleteButton
@@ -142,6 +143,7 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Delete"
+            onClicked: actionPanel.collapse();
           },
           Button {
             id: previousButton
@@ -150,6 +152,7 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Previous"
+            onClicked: actionPanel.collapse();
           },
           Button {
             anchors.top: previousButton.bottom;
@@ -157,6 +160,7 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Next"
+            onClicked: actionPanel.collapse();
           }
       ]
     }
