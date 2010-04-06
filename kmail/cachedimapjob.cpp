@@ -427,16 +427,18 @@ void CachedImapJob::slotPutMessageDataReq(KIO::Job *job, QByteArray &data)
 void CachedImapJob::slotPutMessageInfoData(KJob *job, const QString &data, const QString &)
 {
   KMFolderCachedImap * imapFolder = static_cast<KMFolderCachedImap*>(mDestFolder->storage());
-  KMAcctCachedImap *account = imapFolder->account();
-  ImapAccountBase::JobIterator it = account->findJob( static_cast<KIO::Job*>(job) );
-  if ( it == account->jobsEnd() ) return;
+  if ( imapFolder ) {
+    KMAcctCachedImap *account = imapFolder->account();
+    ImapAccountBase::JobIterator it = account->findJob( static_cast<KIO::Job*>(job) );
+    if ( it == account->jobsEnd() ) return;
 
-  if ( data.contains("UID") && mMsg )
-  {
-    ulong uid = (data.right(data.length()-4)).toLong();
-    kDebug() << "Server told us uid is:" << uid;
-    mMsg->setUID( uid );
-    Q_ASSERT( mMsg->UID() == uid );
+    if ( data.contains("UID") && mMsg )
+    {
+      ulong uid = (data.right(data.length()-4)).toLong();
+      kDebug() << "Server told us uid is:" << uid;
+      mMsg->setUID( uid );
+      Q_ASSERT( mMsg->UID() == uid );
+    }
   }
 }
 
