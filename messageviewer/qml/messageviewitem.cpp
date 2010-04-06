@@ -41,7 +41,7 @@ MessageViewItem::MessageViewItem(QDeclarativeItem* parent)
   , m_dy( 0 )
 {
   m_viewer = new Viewer( 0 );
-  m_viewer->setHeaderStyleAndStrategy( HeaderStyle::enterprise(), HeaderStrategy::all() );
+  m_viewer->setHeaderStyleAndStrategy( HeaderStyle::mobile(), HeaderStrategy::all() );
   m_proxy = new QGraphicsProxyWidget( this );
   m_proxy->setWidget( m_viewer );
   m_proxy->installEventFilter( this );

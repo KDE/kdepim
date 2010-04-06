@@ -18,6 +18,7 @@ enterprise_top_left.png
 enterprise_top.png
 enterprise_top_right.png
 enterprise_w.png
+mobile_bg.png
 )
 
 install( FILES ${pics} DESTINATION ${DATA_INSTALL_DIR}/libmessageviewer/pics)

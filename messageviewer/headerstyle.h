@@ -72,6 +72,7 @@ public:
   static const HeaderStyle * plain();
   static const HeaderStyle * fancy();
   static const HeaderStyle * enterprise();
+  static const HeaderStyle * mobile();
 
   //
   // Methods for handling the styles:

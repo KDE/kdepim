@@ -729,7 +729,7 @@ protected:
 
 public:
   const char * name() const { return "enterprise"; }
-  const HeaderStyle * next() const { return brief(); }
+  const HeaderStyle * next() const { return mobile(); }
   const HeaderStyle * prev() const { return fancy(); }
 
   QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
@@ -915,6 +915,85 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
 
 // #####################
 
+class MobileHeaderStyle : public HeaderStyle {
+  friend class HeaderStyle;
+protected:
+  MobileHeaderStyle() : HeaderStyle() {}
+  virtual ~MobileHeaderStyle() {}
+
+public:
+  const char * name() const { return "mobile"; }
+  const HeaderStyle * next() const { return brief(); }
+  const HeaderStyle * prev() const { return enterprise(); }
+
+  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
+                  const QString & vCardName, bool printing, bool topLevel ) const;
+};
+
+QString MobileHeaderStyle::format( KMime::Message::Ptr message,
+                                   const HeaderStrategy * strategy,
+                                   const QString & vCardName, bool printing, bool topLevel ) const
+{
+  if ( !message ) return QString();
+
+  // Bertjan: This is a highly simplified header for mobile devices. It lacks
+  //          currently about almost everything except for the stuff that was in
+  //          the mockup of Nuno. We might want to add additional items such as
+  //          encryption I guess.
+
+  // Use always the brief strategy for the mobile headers.
+  strategy = HeaderStrategy::brief();
+
+  // Prepare the date string (when printing always use the localized date)
+  QString dateString  = dateStr( message->date()->dateTime() );
+
+  // From
+  QString linkColor ="color: #0E49A1; text-decoration: none";
+  QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
+  if ( !vCardName.isEmpty() )
+    fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
+
+  // Background image
+  QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
+  imgpath.prepend( "file://" );
+  imgpath.append("mobile_");
+
+  QString headerStr;
+  headerStr += "<div style=\"position: absolute;\n";
+  headerStr += "            top: 10px;\n";
+  headerStr += "            left: 0px;\n";
+  headerStr += "            width: 100%;\n";
+  headerStr += "            height: 94px;\n";
+  headerStr += "            background-image: url('file:///home/bertjan/kde-trunk/install/share/apps/libmessageviewer/pics/mobile_bg.png');\n";
+  headerStr += "            background-repeat: repeat-x;\">\n";
+  headerStr += "<table style=\"margin-left: 0px; margin-top:2px; width: 100%\">\n";
+  headerStr += "<tr style=\"height: 30px; vertical-align: middle; font-size: 20px; color: #0E49A1;\">\n";
+  headerStr += "<td style=\"text-align: right; margin-right: 7px;\">" + i18n( "From: " ) + "</td>\n";
+
+  headerStr += "<td>" + fromPart + "</td>\n";
+
+   //<a href=\"mailto:Sebastian%20Sauer%20%3Cmail%40dipe.org%3E\">Sebastian Sauer</a></td>\n";
+
+  headerStr += "</tr>\n";
+  headerStr += "<tr style=\"height: 30px; font-size: 20px; color: #24353F;\">\n";
+  headerStr += "<td style=\"text-align: right; margin-right: 7px;\">subject:</td>\n";
+  headerStr += "<td>Een test onderwerp</td>\n";
+  headerStr += "</tr>\n";
+  headerStr += "<tr style=\"margin-top: 2px; height: 27px; font-size: 15px; color: #24353F;\">\n";
+  headerStr += "<td style=\"text-align: right; margin-right: 7px;\">in:</td>\n";
+  headerStr += "<td style=\"margin-left: 7px;\">Account - Inbox - Work</td>\n";
+  headerStr += "<td style=\"text-align: right; margin-right: 15px;\">sent: " + dateString + "</td>\n";
+  headerStr += "</tr>\n";
+  headerStr += "</table>\n";
+  headerStr += "</div>\n";
+  headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
+
+//  qDebug() << headerStr;
+  return headerStr;
+}
+
+// #####################
+
 //
 // HeaderStyle abstract base:
 //
@@ -953,6 +1032,7 @@ static const HeaderStyle * briefStyle = 0;
 static const HeaderStyle * plainStyle = 0;
 static const HeaderStyle * fancyStyle = 0;
 static const HeaderStyle * enterpriseStyle = 0;
+static const HeaderStyle * mobileStyle = 0;
 
 const HeaderStyle * HeaderStyle::brief() {
   if ( !briefStyle )
@@ -976,6 +1056,12 @@ const HeaderStyle * HeaderStyle::enterprise() {
   if ( !enterpriseStyle )
     enterpriseStyle = new EnterpriseHeaderStyle();
   return enterpriseStyle;
+}
+
+const HeaderStyle * HeaderStyle::mobile() {
+  if ( !mobileStyle )
+    mobileStyle = new MobileHeaderStyle();
+  return mobileStyle;
 }
 
 QString HeaderStyle::dateStr(const KDateTime &dateTime) const
