@@ -1282,6 +1282,12 @@ void ObjectTreeParser::stdChildHandling( const Akonadi::Item &item, KMime::Conte
     mTextualContentCharset = otp.textualContentCharset();
 }
 
+QString ObjectTreeParser::defaultToltecReplacementText()
+{
+  return i18n( "This message is a <i>Toltec</i> Groupware object, it can only be viewed with "
+               "Microsoft Outlook in combination with the Toltec connector." );
+}
+
 bool ObjectTreeParser::processToltecMail( KMime::Content *node )
 {
   if ( !node || !htmlWriter() || !GlobalSettings::self()->showToltecReplacementText() ||

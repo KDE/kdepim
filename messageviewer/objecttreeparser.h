@@ -323,6 +323,10 @@ public:
   void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
   bool showRawToltecMail() const { return mShowRawToltecMail; }
 
+  /// Default text for processToltecMail(), which is used in messageviewer.kcfg, therefore it
+  /// needs to be static here.
+  static QString defaultToltecReplacementText();
+
   const AttachmentStrategy * attachmentStrategy() const {
     return mAttachmentStrategy;
   }
