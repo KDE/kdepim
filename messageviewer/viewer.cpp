@@ -42,12 +42,9 @@
 
 namespace MessageViewer {
 
-Viewer::Viewer(QWidget *aParent,
-                         KSharedConfigPtr config,
-                         QWidget *mainWindow,
-                         KActionCollection* actionCollection,
-                         Qt::WindowFlags aFlags )
-  : QWidget(aParent, aFlags ), d_ptr(new ViewerPrivate(this, config, mainWindow, actionCollection) )
+Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *actionCollection,
+                Qt::WindowFlags aFlags )
+  : QWidget( aParent, aFlags ), d_ptr( new ViewerPrivate( this, mainWindow, actionCollection ) )
 {
   connect( d_ptr, SIGNAL( replaceMsgByUnencryptedVersion() ),
           SIGNAL( replaceMsgByUnencryptedVersion() ) );

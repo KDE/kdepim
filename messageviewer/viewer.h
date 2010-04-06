@@ -89,14 +89,13 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   public:
   /**
    * Create a mail viewer widget
-   * @param config a config object from where the configuration is read
    * @param parent parent widget
    * @param mainWindow the application's main window
    * @param actionCollection the action collection where the widget's actions will belong to
    * @param f window flags
    */
-  Viewer( QWidget *parent,  KSharedConfigPtr config = KSharedConfigPtr(), QWidget *mainWindow = 0,
-               KActionCollection *actionCollection = 0, Qt::WindowFlags f = 0 );
+  Viewer( QWidget *parent, QWidget *mainWindow = 0, KActionCollection *actionCollection = 0,
+          Qt::WindowFlags f = 0 );
   virtual ~Viewer();
 
   /**

@@ -134,10 +134,8 @@ using namespace MessageCore;
 
 const int ViewerPrivate::delay = 150;
 
-ViewerPrivate::ViewerPrivate(Viewer *aParent,
-                         KSharedConfigPtr config,
-                         QWidget *mainWindow,
-                         KActionCollection* actionCollection)
+ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
+                              KActionCollection *actionCollection )
   : QObject(aParent),
     mNodeHelper( new NodeHelper ),
     mFindBar( 0 ),

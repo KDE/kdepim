@@ -182,10 +182,7 @@ class ViewerPrivate : public QObject {
   Q_OBJECT
 public:
 
-  ViewerPrivate(Viewer *aParent,
-                    KSharedConfigPtr config,
-                    QWidget *mainWindow,
-                    KActionCollection* actionCollection);
+  ViewerPrivate( Viewer *aParent, QWidget *mainWindow, KActionCollection *actionCollection );
 
   virtual ~ViewerPrivate();
 
