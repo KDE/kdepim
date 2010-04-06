@@ -318,6 +318,11 @@ public:
     mIncludeSignatures = include;
   }
 
+  // Controls whether Toltec invitations are displayed in their raw form or as a replacement text,
+  // which is used in processToltecMail().
+  void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
+  bool showRawToltecMail() const { return mShowRawToltecMail; }
+
   const AttachmentStrategy * attachmentStrategy() const {
     return mAttachmentStrategy;
   }
@@ -516,6 +521,7 @@ private:
   bool mIncludeSignatures;
   bool mHasPendingAsyncJobs;
   bool mAllowAsync;
+  bool mShowRawToltecMail;
   const AttachmentStrategy * mAttachmentStrategy;
   // DataUrl Icons cache
   QString mCollapseIcon;

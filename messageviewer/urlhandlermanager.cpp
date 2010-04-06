@@ -477,6 +477,13 @@ namespace {
         w->update( Viewer::Force );
         return true;
       }
+
+      if ( url.path() == "showRawToltecMail" ) {
+        w->saveRelativePosition();
+        w->setShowRawToltecMail( true );
+        w->update( Viewer::Force );
+        return true;
+      }
     }
     return false;
   }

@@ -147,6 +147,7 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
     mIncludeSignatures( includeSignatures ),
     mHasPendingAsyncJobs( false ),
     mAllowAsync( false ),
+    mShowRawToltecMail( false ),
     mAttachmentStrategy( strategy )
 {
   assert( source );
@@ -1284,10 +1285,12 @@ void ObjectTreeParser::stdChildHandling( const Akonadi::Item &item, KMime::Conte
 bool ObjectTreeParser::processToltecMail( KMime::Content *node )
 {
   if ( !node || !htmlWriter() || !GlobalSettings::self()->showToltecReplacementText() ||
-       !NodeHelper::isToltecMessage( node ) )
+       !NodeHelper::isToltecMessage( node ) || mShowRawToltecMail )
     return false;
 
   htmlWriter()->queue( GlobalSettings::self()->toltecReplacementText() );
+  htmlWriter()->queue( "<br><br><a href=\"kmail:showRawToltecMail\">" +
+                       i18n( "Show Raw Message" ) + "</a>" );
   return true;
 }
 

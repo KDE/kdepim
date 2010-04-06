@@ -168,6 +168,7 @@ ViewerPrivate::ViewerPrivate(Viewer *aParent,
     mDecrytMessageOverwrite( false ),
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true ),
+    mShowRawToltecMail( false ),
     mDisregardUmask( false ),
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
@@ -1120,7 +1121,7 @@ void ViewerPrivate::parseMsg()
       }
   }
 
-  if ( !mMessage || !NodeHelper::isToltecMessage( mMessage.get() ) ) {
+  if ( !mMessage || !NodeHelper::isToltecMessage( mMessage.get() ) || mShowRawToltecMail ) {
     htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
   }
 
@@ -1128,6 +1129,7 @@ void ViewerPrivate::parseMsg()
   MailViewerSource otpSource( this );
   ObjectTreeParser otp( &otpSource, mNodeHelper );
   otp.setAllowAsync( true );
+  otp.setShowRawToltecMail( mShowRawToltecMail );
   otp.parseObjectTree( mMessageItem, mMessage.get() );
 
   bool emitReplaceMsgByUnencryptedVersion = false;
@@ -1469,6 +1471,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
+  mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
   if ( mPrinting )
     mLevelQuote = -1;
 }

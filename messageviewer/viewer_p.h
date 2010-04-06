@@ -442,6 +442,11 @@ public:
   /* show or hide the list that points to the attachments */
   void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true );
 
+  // This controls whether a Toltec invitation is shown in its raw form or as a replacement text.
+  // This can be toggled with the "kmail:showRawToltecMail" link.
+  bool showRawToltecMail() const { return mShowRawToltecMail; }
+  void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
+
   void emitNoDrag() {emit noDrag(); }
 
   void scrollToAttachment( const KMime::Content *node );
@@ -638,6 +643,7 @@ public:
   bool mDecrytMessageOverwrite;
   bool mShowSignatureDetails;
   bool mShowAttachmentQuicklist;
+  bool mShowRawToltecMail;
   bool mExternalWindow;
   bool mDisregardUmask;
   int mRecursionCountForDisplayMessage;
