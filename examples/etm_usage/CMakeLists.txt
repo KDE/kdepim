@@ -51,6 +51,5 @@ target_link_libraries(etm_usage messageviewer messagelist kdepim kpgp kleo akona
                       ${KDEPIMLIBS_KMIME_LIBS}
 )
 
-install(TARGETS etm_usage
-        DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS etm_usage ${INSTALL_TARGETS_DEFAULT_ARGS})
 
