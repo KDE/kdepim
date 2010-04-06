@@ -437,49 +437,42 @@ namespace {
       }
 
       if ( url.path() == "showAttachmentQuicklist" ) {
-        w->saveRelativePosition();
         w->setShowAttachmentQuicklist( true );
         w->update( Viewer::Force );
         return true;
       }
 
       if ( url.path() == "hideAttachmentQuicklist" ) {
-        w->saveRelativePosition();
         w->setShowAttachmentQuicklist( false );
         w->update( Viewer::Force );
         return true;
       }
 
       if ( url.path() == "showFullToAddressList" ) {
-        w->saveRelativePosition();
         w->setShowFullToAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
 
       if ( url.path() == "hideFullToAddressList" ) {
-        w->saveRelativePosition();
         w->setShowFullToAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
 
       if ( url.path() == "showFullCcAddressList" ) {
-        w->saveRelativePosition();
         w->setShowFullCcAddressList( true );
         w->update( Viewer::Force );
         return true;
       }
 
       if ( url.path() == "hideFullCcAddressList" ) {
-        w->saveRelativePosition();
         w->setShowFullCcAddressList( false );
         w->update( Viewer::Force );
         return true;
       }
 
       if ( url.path() == "showRawToltecMail" ) {
-        w->saveRelativePosition();
         w->setShowRawToltecMail( true );
         w->update( Viewer::Force );
         return true;
