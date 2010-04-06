@@ -915,6 +915,8 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
 
 // #####################
 
+#ifdef KDEPIM_MOBILE_UI
+
 class MobileHeaderStyle : public HeaderStyle {
   friend class HeaderStyle;
 protected:
@@ -934,6 +936,9 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
                                    const HeaderStrategy * strategy,
                                    const QString & vCardName, bool printing, bool topLevel ) const
 {
+  Q_UNUSED( printing );
+  Q_UNUSED( topLevel );
+
   if ( !message ) return QString();
 
   // Bertjan: This is a highly simplified header for mobile devices. It lacks
@@ -992,9 +997,11 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   headerStr += "</div>\n";
   headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
 
-  //qDebug() << headerStr;
+  //kDebug() << headerStr;
   return headerStr;
 }
+
+#endif
 
 // #####################
 
@@ -1016,16 +1023,22 @@ const HeaderStyle * HeaderStyle::create( Type type ) {
   case Plain:  return plain();
   case Fancy:   return fancy();
   case Enterprise: return enterprise();
+#ifdef KDEPIM_MOBILE_UI
+  case Mobile: return mobile();
+#endif
   }
   kFatal() << "Unknown header style ( type ==" << (int)type << ") requested!";
   return 0; // make compiler happy
 }
 
 const HeaderStyle * HeaderStyle::create( const QString & type ) {
-  QString lowerType = type.toLower();
+  const QString lowerType = type.toLower();
   if ( lowerType == "brief" ) return brief();
   if ( lowerType == "plain" )  return plain();
   if ( lowerType == "enterprise" )  return enterprise();
+#ifdef KDEPIM_MOBILE_UI
+  if ( lowerType ==  "mobile" )  return mobile();
+#endif
   //if ( lowerType == "fancy" ) return fancy(); // not needed, see below
   // don't kFatal here, b/c the strings are user-provided
   // (KConfig), so fail gracefully to the default:
@@ -1036,7 +1049,9 @@ static const HeaderStyle * briefStyle = 0;
 static const HeaderStyle * plainStyle = 0;
 static const HeaderStyle * fancyStyle = 0;
 static const HeaderStyle * enterpriseStyle = 0;
+#ifdef KDEPIM_MOBILE_UI
 static const HeaderStyle * mobileStyle = 0;
+#endif
 
 const HeaderStyle * HeaderStyle::brief() {
   if ( !briefStyle )
@@ -1062,11 +1077,13 @@ const HeaderStyle * HeaderStyle::enterprise() {
   return enterpriseStyle;
 }
 
+#ifdef KDEPIM_MOBILE_UI
 const HeaderStyle * HeaderStyle::mobile() {
   if ( !mobileStyle )
     mobileStyle = new MobileHeaderStyle();
   return mobileStyle;
 }
+#endif
 
 QString HeaderStyle::dateStr(const KDateTime &dateTime) const
 {

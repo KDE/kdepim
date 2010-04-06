@@ -63,7 +63,15 @@ public:
   //
   // Factory methods:
   //
-  enum Type { Brief, Plain, Fancy, Enterprise };
+  enum Type {
+    Brief,
+    Plain,
+    Fancy,
+    Enterprise
+#ifdef KDEPIM_MOBILE_UI
+    , Mobile
+#endif
+  };
 
   static const HeaderStyle * create( Type type );
   static const HeaderStyle * create( const QString & type );
@@ -72,7 +80,9 @@ public:
   static const HeaderStyle * plain();
   static const HeaderStyle * fancy();
   static const HeaderStyle * enterprise();
+#ifdef KDEPIM_MOBILE_UI
   static const HeaderStyle * mobile();
+#endif
 
   //
   // Methods for handling the styles:
