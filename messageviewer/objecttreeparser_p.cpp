@@ -69,6 +69,11 @@ void CryptoBodyPartMemento::setRunning( bool running ) {
   m_running = running;
 }
 
+void CryptoBodyPartMemento::detach()
+{
+  disconnect( this, SIGNAL(update(Viewer::UpdateMode)), 0, 0 );
+}
+
 DecryptVerifyBodyPartMemento::DecryptVerifyBodyPartMemento( DecryptVerifyJob * job, const QByteArray & cipherText )
   : CryptoBodyPartMemento(),
     m_cipherText( cipherText ),

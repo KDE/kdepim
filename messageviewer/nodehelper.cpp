@@ -134,7 +134,9 @@ void NodeHelper::clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMement
   for ( QMap<QByteArray, Interface::BodyPartMemento*>::iterator
         it = bodyPartMementoMap.begin(), end = bodyPartMementoMap.end();
         it != end; ++it ) {
-    delete it.value();
+    Interface::BodyPartMemento *memento = it.value();
+    memento->detach();
+    delete memento;
   }
   bodyPartMementoMap.clear();
 }

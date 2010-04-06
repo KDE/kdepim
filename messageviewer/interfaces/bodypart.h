@@ -58,6 +58,8 @@ namespace Interface {
   class BodyPartMemento {
   public:
     virtual ~BodyPartMemento() {}
+
+    virtual void detach() = 0;
 #if 0
 //FIXME(Andras) review, port
     /** If your BodyPartMemento implementation also implements the

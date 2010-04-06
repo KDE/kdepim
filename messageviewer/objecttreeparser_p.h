@@ -69,6 +69,8 @@ public:
   const QString & auditLogAsHtml() const { return m_auditLog; }
   GpgME::Error auditLogError() const { return m_auditLogError; }
 
+  void detach();
+
 signals:
   void update(Viewer::UpdateMode);
 
