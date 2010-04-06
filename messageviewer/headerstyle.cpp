@@ -992,7 +992,7 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   headerStr += "</div>\n";
   headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
 
-  qDebug() << headerStr;
+  //qDebug() << headerStr;
   return headerStr;
 }
 
