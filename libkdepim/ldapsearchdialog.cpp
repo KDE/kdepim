@@ -22,6 +22,7 @@
 #include "ldapclient.h"
 
 #include <kabc/addresslineedit.h>
+#include <kpimutils/email.h>
 
 #include <kapplication.h>
 #include <kcombobox.h>
@@ -484,7 +485,7 @@ QString LdapSearchDialog::selectedEMails() const
           if ( name.isEmpty() ) {
             result << email;
           } else {
-            result << name + " <" + email + '>';
+            result << KPIMUtils::quoteNameIfNecessary( name ) + " <" + email + '>';
           }
         }
       }
