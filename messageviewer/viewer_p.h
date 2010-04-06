@@ -608,7 +608,11 @@ public:
   QTimer mResizeTimer;
   QString mOverrideEncoding;
   QString mOldGlobalOverrideEncoding; // used to detect changes of the global override character encoding
+
+  /// This is true if the viewer currently is displaying a message. Can be false, for example when
+  /// the splash/busy page is displayed.
   bool mMsgDisplay;
+
   bool mNoMDNsWhenEncrypted;
 
   CSSHelper * mCSSHelper;

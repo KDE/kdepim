@@ -94,7 +94,6 @@ void Viewer::displaySplashPage( const QString &info )
   d->displaySplashPage( info );
 }
 
-
 void Viewer::enableMessageDisplay()
 {
   Q_D(Viewer);

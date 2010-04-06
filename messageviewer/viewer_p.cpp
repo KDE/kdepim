@@ -145,6 +145,7 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mUpdateReaderWinTimer( 0 ),
     mResizeTimer( 0 ),
     mOldGlobalOverrideEncoding( "---" ), // init with dummy value
+    mMsgDisplay( true ),
     mCSSHelper( 0 ),
     mMainWindow( mainWindow ),
     mActionCollection( actionCollection ),
@@ -185,7 +186,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
 
   mExternalWindow  = ( aParent == mainWindow );
   mSplitterSizes << 180 << 100;
-  mMsgDisplay = true;
   mPrinting = false;
 
   createWidgets();
@@ -1035,8 +1035,6 @@ void ViewerPrivate::enableMessageDisplay()
   adjustLayout();
 }
 
-
-
 void ViewerPrivate::displayMessage()
 {
   /*FIXME(Andras) port to Akonadi
@@ -1660,7 +1658,8 @@ void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 #endif
 }
 
-void ViewerPrivate::adjustLayout() {
+void ViewerPrivate::adjustLayout()
+{
   if ( GlobalSettings::self()->mimeTreeLocation() == GlobalSettings::EnumMimeTreeLocation::bottom )
     mSplitter->addWidget( mMimePartTree );
   else
@@ -1668,7 +1667,7 @@ void ViewerPrivate::adjustLayout() {
   mSplitter->setSizes( mSplitterSizes );
 
   if ( GlobalSettings::self()->mimeTreeMode() == GlobalSettings::EnumMimeTreeMode::Always &&
-    mMsgDisplay )
+       mMsgDisplay )
     mMimePartTree->show();
   else
     mMimePartTree->hide();
