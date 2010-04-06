@@ -486,28 +486,31 @@ namespace {
     {
       if ( url.path() == "showHTML" )
         return i18n("Turn on HTML rendering for this message.");
-      if ( url.path() == "loadExternal" )
+      else if ( url.path() == "loadExternal" )
         return i18n("Load external references from the Internet for this message.");
-      if ( url.path() == "goOnline" )
+      else if ( url.path() == "goOnline" )
         return i18n("Work online.");
-      if ( url.path() == "decryptMessage" )
+      else if ( url.path() == "decryptMessage" )
         return i18n("Decrypt message.");
-      if ( url.path() == "showSignatureDetails" )
+      else if ( url.path() == "showSignatureDetails" )
         return i18n("Show signature details.");
-      if ( url.path() == "hideSignatureDetails" )
+      else if ( url.path() == "hideSignatureDetails" )
         return i18n("Hide signature details.");
-      if ( url.path() == "showAttachmentQuicklist" )
+      else if ( url.path() == "showAttachmentQuicklist" )
         return i18n( "Show attachment list." );
-      if ( url.path() == "hideAttachmentQuicklist" )
+      else if ( url.path() == "hideAttachmentQuicklist" )
         return i18n( "Hide attachment list." );
-      if ( url.path() == "showFullToAddressList" )
+      else if ( url.path() == "showFullToAddressList" )
         return i18n( "Show full \"To\" list" );
-      if ( url.path() == "hideFullToAddressList" )
+      else if ( url.path() == "hideFullToAddressList" )
         return i18n( "Hide full \"To\" list" );
-      if ( url.path() == "showFullCcAddressList" )
+      else if ( url.path() == "showFullCcAddressList" )
         return i18n( "Show full \"Cc\" list" );
-      if ( url.path() == "hideFullCcAddressList" )
+      else if ( url.path() == "hideFullCcAddressList" )
         return i18n( "Hide full \"Cc\" list" );
+      else if ( url.path() == "showRawToltecMail" )
+        return i18n( "Show Raw Message" );
+      else return QString();
     }
     return QString() ;
   }
