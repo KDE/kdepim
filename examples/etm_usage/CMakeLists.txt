@@ -36,6 +36,7 @@ set(etm_usage_SRCS
     tab5widget.cpp
     tab6widget.cpp
     tab7widget.cpp
+    unreadmailswidget.cpp
     entitytreemodelfactory.cpp
 )
 

@@ -31,6 +31,7 @@
 #include "tab5widget.h"
 #include "tab6widget.h"
 #include "tab7widget.h"
+#include "unreadmailswidget.h"
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   : QMainWindow(parent, flags)
@@ -47,6 +48,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new Tab6Widget(tabWidget), "Checkable Collections");
   tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
   tabWidget->addTab(new Tab7Widget(tabWidget), "Tagged Items");
+  tabWidget->addTab(new UnreadMailsWidget(tabWidget), "Unread Mails");
 
   setCentralWidget(tabWidget);
 }
