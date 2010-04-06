@@ -24,7 +24,7 @@
 
 #include <QWidget>
 
-#include "krecursivefilterproxymodel.h"
+#include <akonadi/krecursivefilterproxymodel.h>
 
 
 class QTreeView;
