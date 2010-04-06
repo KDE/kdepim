@@ -25,7 +25,7 @@ mailreaderView::mailreaderView(QWidget *parent)
 {
     ui_mailreaderview.setupUi(this);
     QHBoxLayout *layout = new QHBoxLayout;
-    m_readerWin = new MessageViewer::Viewer( this, KSharedConfig::openConfig("mailreaderrc"), parent, dynamic_cast<KXmlGuiWindow*>(parent)->actionCollection());
+    m_readerWin = new MessageViewer::Viewer( this, parent, dynamic_cast<KXmlGuiWindow*>(parent)->actionCollection());
     m_readerWin->setAttachmentStrategy( MessageViewer::AttachmentStrategy::inlined() );
     layout->addWidget(m_readerWin);
     setLayout(layout);
