@@ -39,7 +39,7 @@
 #include "nodehelper.h"
 #include "objecttreesourceif.h"
 
-#include <kleo/cryptobackend.h>
+#include <libkleo/kleo/cryptobackend.h>
 #include <gpgme++/verificationresult.h>
 
 #include <QList>
