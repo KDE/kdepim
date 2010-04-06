@@ -43,15 +43,6 @@ Rectangle {
         anchors.fill: parent
         anchors.margins: 12
 
-      /*CollectionView {
-        id: collectionList
-        anchors.fill: parent
-        anchors.margins: 12
-        model: collectionModel
-        onCollectionSelected: {
-          folderPanel.collapse()
-          messageViewListFixingTimerHack.start()
-        }*/
         BreadcrumbNavigationView {
           id : collectionView
           width: 1/3 * folderPanel.contentWidth
@@ -186,13 +177,6 @@ Rectangle {
     ]
   }
 
-  /** Placeholder to prevent mailviewers show up under the tabs */
-  Rectangle {
-    x: 0
-    width: folderPanel.handleWidth
-    height: parent.height
-  }
-
   Component {
     id : messageViewDelegate
   
@@ -206,8 +190,8 @@ Rectangle {
   
   ListView {
     id: messageViewList
-    x: folderPanel.handleWidth
-    width: parent.width - folderPanel.handleWidth
+    anchors.left: parent.left
+    width: parent.width
     height: parent.height
     model: itemModel
     delegate: messageViewDelegate
@@ -217,21 +201,6 @@ Rectangle {
     orientation: ListView.Horizontal
     snapMode: ListView.SnapOneItem
     flickDeceleration: 200
-  }
-
-  Button {
-    id: floatingDeleteButton
-    anchors.right: parent.right
-    anchors.bottom: parent.bottom
-    anchors.margins: 20
-    z: 5
-
-    width: 80
-    height: 80
-    opacity: 0.5
-    visible: messageViewList.count > 0
-    icon: KDE.iconPath( "user-trash", 64 )
-    onClicked: console.log( "please, delete current akonadi item" );
   }
 
   Connections {
