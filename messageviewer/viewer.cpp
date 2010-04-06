@@ -75,10 +75,10 @@ void Viewer::setMessage(KMime::Message::Ptr message, UpdateMode updateMode )
 }
 
 
-void Viewer::setMessageItem(const Akonadi::Item &item, UpdateMode updateMode)
+void Viewer::setMessageItem( const Akonadi::Item &item, UpdateMode updateMode )
 {
   Q_D(Viewer);
-  if ( item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
+  if ( !item.isValid() || item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
     d->setMessageItem( item, updateMode );
   } else {
     Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item, this );

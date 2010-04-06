@@ -1481,10 +1481,12 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
 
   mMessage = KMime::Message::Ptr(); //forget the old message if it was set
   mMessageItem = item;
-  mMonitor.setItemMonitored( mMessageItem, true );
+  if ( mMessageItem.isValid() )
+    mMonitor.setItemMonitored( mMessageItem, true );
 
   if ( !mMessageItem.hasPayload<KMime::Message::Ptr>() ) {
-    kWarning() << "Payload is not a MessagePtr!";
+    if ( mMessageItem.isValid() )
+      kWarning() << "Payload is not a MessagePtr!";
     return;
   }
   mMessage = mMessageItem.payload<KMime::Message::Ptr>();
