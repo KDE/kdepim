@@ -967,28 +967,32 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   headerStr += "            background-image: url('file:///home/bertjan/kde-trunk/install/share/apps/libmessageviewer/pics/mobile_bg.png');\n";
   headerStr += "            background-repeat: repeat-x;\">\n";
   headerStr += "<table style=\"margin-left: 0px; margin-top:2px; width: 100%\">\n";
+
+  // From line
   headerStr += "<tr style=\"height: 30px; vertical-align: middle; font-size: 20px; color: #0E49A1;\">\n";
-  headerStr += "<td style=\"text-align: right; margin-right: 7px;\">" + i18n( "From: " ) + "</td>\n";
-
-  headerStr += "<td>" + fromPart + "</td>\n";
-
-   //<a href=\"mailto:Sebastian%20Sauer%20%3Cmail%40dipe.org%3E\">Sebastian Sauer</a></td>\n";
-
+  headerStr += "  <td style=\"width: 120px; text-align: right; margin-right: 7px;\">" + i18n( "From:" ) + "</td>\n";
+  headerStr += "  <td colspan=\"2\">" + fromPart + "</td>\n";
   headerStr += "</tr>\n";
+
+  // Subject line
   headerStr += "<tr style=\"height: 30px; font-size: 20px; color: #24353F;\">\n";
-  headerStr += "<td style=\"text-align: right; margin-right: 7px;\">subject:</td>\n";
-  headerStr += "<td>Een test onderwerp</td>\n";
+  headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "Subject:" ) + "</td>\n";
+  headerStr += "  <td colspan=\"2\" style=\"white-space: nowrap\">" + message->subject()->asUnicodeString() + "</td>\n";
   headerStr += "</tr>\n";
+
   headerStr += "<tr style=\"margin-top: 2px; height: 27px; font-size: 15px; color: #24353F;\">\n";
-  headerStr += "<td style=\"text-align: right; margin-right: 7px;\">in:</td>\n";
-  headerStr += "<td style=\"margin-left: 7px;\">Account - Inbox - Work</td>\n";
-  headerStr += "<td style=\"text-align: right; margin-right: 15px;\">sent: " + dateString + "</td>\n";
+  // TODO: Put these back in when we can somehow determine the path
+  //headerStr += "  <td style=\"text-align: right; margin-right: 7px;\">" + i18n( "in:" )+ "</td>\n";
+  //headerStr += "  <td style=\"margin-left: 7px;\">" + messagePath + "</td>\n";
+
+  headerStr += "  <td>&nbsp;</td>\n";
+  headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: " + dateString + "</td>\n";
   headerStr += "</tr>\n";
   headerStr += "</table>\n";
   headerStr += "</div>\n";
   headerStr += "<div style=\"margin-left: 40px; position: absolute; top: 110px;\">\n";
 
-//  qDebug() << headerStr;
+  qDebug() << headerStr;
   return headerStr;
 }
 
