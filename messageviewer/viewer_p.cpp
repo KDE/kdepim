@@ -1119,7 +1119,10 @@ void ViewerPrivate::parseMsg()
           mNodeHelper->writeNodeToTempFile( vCardContent );
       }
   }
-  htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
+
+  if ( !mMessage || !NodeHelper::isToltecMessage( mMessage.get() ) ) {
+    htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
+  }
 
   // show message content
   MailViewerSource otpSource( this );

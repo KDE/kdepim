@@ -1281,8 +1281,22 @@ void ObjectTreeParser::stdChildHandling( const Akonadi::Item &item, KMime::Conte
     mTextualContentCharset = otp.textualContentCharset();
 }
 
+bool ObjectTreeParser::processToltecMail( KMime::Content *node )
+{
+  if ( !node || !htmlWriter() || !GlobalSettings::self()->showToltecReplacementText() ||
+       !NodeHelper::isToltecMessage( node ) )
+    return false;
+
+  htmlWriter()->queue( GlobalSettings::self()->toltecReplacementText() );
+  return true;
+}
+
 bool ObjectTreeParser::processMultiPartMixedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
 {
+  if ( processToltecMail( node ) ) {
+    return true;
+  }
+
   KMime::Content * child = NodeHelper::firstChild( node );
   if ( !child )
     return false;

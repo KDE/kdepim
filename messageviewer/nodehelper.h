@@ -163,6 +163,8 @@ public:
 
     static KMime::Content *firstChild( const KMime::Content* node );
 
+    static bool isToltecMessage( KMime::Content* node );
+
     /**
      * Returns the charset for the given node. If no charset is specified
      * for the node, the defaultCharset() is returned.

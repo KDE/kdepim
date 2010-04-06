@@ -391,6 +391,17 @@ private:
                       bool& decryptionStarted,
                       PartMetaData &partMetaData );
 
+  /**
+   * This is called for all multipart/mixed nodes. It checks if that belongs to a Toltec mail,
+   * by checking various criteria.
+   * If it is a toltec mail, a special text, instead of the confusing toltec text, will be
+   * displayed.
+   *
+   * @return true if the mail was indeed a toltec mail, in which case the node should not be
+   *              processed further
+   */
+  bool processToltecMail( KMime::Content *node );
+
   bool processMailmanMessage( const Akonadi::Item &item, KMime::Content* node );
 
   /** Checks whether @p str contains external references. To be precise,

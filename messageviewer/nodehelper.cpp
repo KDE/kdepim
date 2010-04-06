@@ -298,6 +298,37 @@ KMime::Content *NodeHelper::firstChild( const KMime::Content* node )
   return child;
 }
 
+bool NodeHelper::isToltecMessage( KMime::Content* node )
+{
+  if ( !node->contentType( false ) )
+    return false;
+
+  if ( node->contentType()->mediaType().toLower() != "multipart" ||
+       node->contentType()->subType().toLower() != "mixed" )
+    return false;
+
+  if ( node->contents().size() != 3 )
+    return false;
+
+  const KMime::Headers::Base *libraryHeader = node->headerByType( "X-Library" );
+  if ( !libraryHeader )
+    return false;
+
+  if ( QString::fromLatin1( libraryHeader->as7BitString( false ) ).toLower() !=
+       QLatin1String( "toltec" ) )
+    return false;
+
+  const KMime::Headers::Base *kolabTypeHeader = node->headerByType( "X-Kolab-Type" );
+  if ( !kolabTypeHeader )
+    return false;
+
+  if ( !QString::fromLatin1( kolabTypeHeader->as7BitString( false ) ).toLower().startsWith(
+         QLatin1String( "application/x-vnd.kolab" ) ) )
+    return false;
+
+  return true;
+}
+
 QByteArray NodeHelper::charset( KMime::Content *node )
 {
   if ( node->contentType( false ) )
