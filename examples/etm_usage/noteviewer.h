@@ -19,7 +19,7 @@
     USA.
 */
 
-#ifndef NOTEVIEWER-H
+#ifndef NOTEVIEWER_H
 #define NOTEVIEWER_H
 
 #include <QWidget>
