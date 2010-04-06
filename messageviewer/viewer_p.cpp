@@ -1464,6 +1464,7 @@ void ViewerPrivate::printMessage( KMime::Message::Ptr message )
 
 void ViewerPrivate::resetStateForNewMessage()
 {
+  enableMessageDisplay(); // just to make sure it's on
   mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
@@ -1475,7 +1476,6 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
   resetStateForNewMessage();
-  enableMessageDisplay(); // just to make sure it's on
   mMonitor.setItemMonitored( mMessageItem, false );
   Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
 
