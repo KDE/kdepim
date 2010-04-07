@@ -135,12 +135,10 @@ void MainView::setSelectedChildCollectionRow(int row)
 {
   if ( row < 0 )
   {
-    m_breadcrumbCollectionSelection->clearSelection();
+    m_collectionSelection->clearSelection();
     return;
   }
   QModelIndex index = m_childCollectionSelection->model()->index( row, 0 );
-  kDebug() << row << index << index.data();
-//   return;
   m_childCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
 
@@ -148,12 +146,10 @@ void MainView::setSelectedBreadcrumbCollectionRow(int row)
 {
   if ( row < 0 )
   {
-    m_breadcrumbCollectionSelection->clearSelection();
+    m_collectionSelection->clearSelection();
     return;
   }
   QModelIndex index = m_breadcrumbCollectionSelection->model()->index( row, 0 );
-  kDebug() << row << index << index.data() << m_breadcrumbCollectionSelection->model();
-//   return;
   m_breadcrumbCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
 
