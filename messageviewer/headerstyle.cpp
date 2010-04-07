@@ -943,7 +943,7 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   headerStr += "            left: 0px;\n";
   headerStr += "            width: 100%;\n";
   headerStr += "            height: 94px;\n";
-  headerStr += "            background-image: url('file:///home/bertjan/kde-trunk/install/share/apps/libmessageviewer/pics/mobile_bg.png');\n";
+  headerStr += "            background-image: url('" + imgpath + "bg.png');\n";
   headerStr += "            background-repeat: repeat-x;\">\n";
   headerStr += "<table style=\"margin-left: 0px; margin-top:2px; width: 100%\">\n";
 
