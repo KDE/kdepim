@@ -23,6 +23,7 @@
 
 #include <qapplication.h>
 #include <qclipboard.h>
+#include <qmap.h>
 
 #include <kiconloader.h>
 #include <kdebug.h>
@@ -180,6 +181,7 @@ bool DndFactory::copyIncidences( const Incidence::List &incidences )
   QClipboard *cb = QApplication::clipboard();
   CalendarLocal cal( mCalendar->timeZoneId() );
   Incidence::List::ConstIterator it;
+
   for ( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
     if ( *it ) {
       cal.addIncidence( ( *it )->clone() );
@@ -213,14 +215,34 @@ Incidence::List DndFactory::pasteIncidences( const QDate &newDate, const QTime *
     return list;
   }
 
+  // All pasted incidences get new uids, must keep track of old uids,
+  // so we can update child's parents
+  QMap<QString,Incidence*> oldUidToNewInc;
+
   Incidence::List::ConstIterator it;
   const Incidence::List incs = cal.incidences();
   for ( it = incs.constBegin(); it != incs.constEnd(); ++it ) {
     Incidence *inc = d->pasteIncidence( *it, newDate, newTime );
     if ( inc ) {
       list.append( inc );
+      oldUidToNewInc[( *it )->uid()] = inc;
     }
   }
+
+  // update relations
+  for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
+    Incidence *inc = *it;
+    if ( oldUidToNewInc.contains( inc->relatedToUid() ) ) {
+      Incidence *parentInc = oldUidToNewInc[inc->relatedToUid()];
+      inc->setRelatedToUid( parentInc->uid() );
+      inc->setRelatedTo( parentInc );
+    } else {
+      // not related to anything in the clipboard
+      inc->setRelatedToUid( QString() );
+      inc->setRelatedTo( 0 );
+    }
+  }
+
   return list;
 }
 
@@ -238,5 +260,7 @@ Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTim
   Incidence::List incList = cal.incidences();
   Incidence *inc = incList.isEmpty() ? 0 : incList.first();
 
-  return d->pasteIncidence( inc, newDate, newTime );
+  Incidence *newInc = d->pasteIncidence( inc, newDate, newTime );
+  newInc->setRelatedTo( 0 );
+  return newInc;
 }
