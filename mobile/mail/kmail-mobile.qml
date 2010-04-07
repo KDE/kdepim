@@ -215,7 +215,7 @@ Rectangle {
 
   Connections {
     target: collectionView
-    onChildCollectionSelected : { application.selectedChildCollectionRow(row); }
+    onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
   }
 
   Timer {
@@ -230,6 +230,6 @@ Rectangle {
 
   Connections {
     target: collectionView
-    onBreadcrumbCollectionSelected : { application.selectedBreadcrumbCollectionRow(row); }
+    onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
 }
