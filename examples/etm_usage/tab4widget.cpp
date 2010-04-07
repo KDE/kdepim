@@ -73,7 +73,7 @@ Tab4Widget::Tab4Widget(QWidget* parent, Qt::WindowFlags f)
   QHBoxLayout *layout = new QHBoxLayout(this);
   QSplitter *splitter = new QSplitter(this);
   layout->addWidget(splitter);
-;
+
   m_etw = new Tab4TreeWidget(splitter);
   m_etw->init();
 
