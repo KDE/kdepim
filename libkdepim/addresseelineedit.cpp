@@ -1232,10 +1232,11 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
         completionBox()->setCurrentItem( item );
         item->setSelected( true );
       }
-    } else if ( keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab ) {
+    } else if ( event->type() == QEvent::KeyRelease &&
+                keyEvent->key() == Qt::Key_Tab || keyEvent->key() == Qt::Key_Backtab ) {
       /// first, find the header of the current section
       QListWidgetItem *myHeader = 0;
-      int index = currentIndex;
+      int index = qMax( currentIndex - 1, 0 );
       while ( index >= 0 ) {
         if ( itemIsHeader( completionBox()->item( index ) ) ) {
           myHeader = completionBox()->item( index );
@@ -1257,7 +1258,7 @@ bool KPIM::AddresseeLineEdit::eventFilter( QObject *object, QEvent *event )
                completionBox()->count() - 1 : ( index - 1 ) % completionBox()->count();
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
           if ( itemIsHeader(nextHeader) ) {
-              break;
+            break;
           }
           j = ( j + iterationStep ) % completionBox()->count();
       }
