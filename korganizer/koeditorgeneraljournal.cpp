@@ -170,7 +170,7 @@ void KOEditorGeneralJournal::fillJournal( Journal *journal )
     journal->setDescription( mDescriptionEdit->toPlainText(),
                              false );
   }
-  KDateTime tmpDT( mDateEdit->date(), QTime( 0, 0, 0 ), KOPrefs::instance()->timeSpec() );
+  KDateTime tmpDT( mDateEdit->date(), KOPrefs::instance()->timeSpec() );
   bool hasTime = mTimeCheckBox->isChecked();
   journal->setAllDay( !hasTime );
   if ( hasTime ) {
