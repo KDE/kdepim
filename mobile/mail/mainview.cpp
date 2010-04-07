@@ -58,18 +58,18 @@ MainView::MainView(QWidget* parent) :
 
   m_collectionSelection = new QItemSelectionModel( etm, this );
 
-  KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel(m_collectionSelection, this);
-  currentCollectionSelectionModel->setFilterBehavior(KSelectionProxyModel::ExactSelection);
+  KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel( m_collectionSelection, this );
+  currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
   currentCollectionSelectionModel->setSourceModel( etm );
 
-  Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection = new Future::KBreadcrumbSelectionModel(m_collectionSelection, Future::KBreadcrumbSelectionModel::Forward, this);
+  Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection = new Future::KBreadcrumbSelectionModel( m_collectionSelection, Future::KBreadcrumbSelectionModel::Forward, this );
   breadcrumbCollectionSelection->setIncludeActualSelection(false);
 
-  KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, this);
+  KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, this );
   breadcrumbNavigationModel->setSourceModel( etm );
   breadcrumbNavigationModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
 
-  KForwardingItemSelectionModel *oneway = new KForwardingItemSelectionModel(etm, m_collectionSelection, this);
+  KForwardingItemSelectionModel *oneway = new KForwardingItemSelectionModel( etm, m_collectionSelection, this );
 
   KNavigatingProxyModel *childEntitiesModel = new KNavigatingProxyModel( oneway, this );
   childEntitiesModel->setSourceModel( etm );
@@ -83,9 +83,9 @@ MainView::MainView(QWidget* parent) :
   childCollectionFilter->setSourceModel( childEntitiesModel );
   childCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
 
-  m_breadcrumbCollectionSelection = new Future::KProxyItemSelectionModel(breadcrumbNavigationModel, m_collectionSelection, this);
+  m_breadcrumbCollectionSelection = new Future::KProxyItemSelectionModel( breadcrumbNavigationModel, m_collectionSelection, this );
 
-  m_childCollectionSelection = new Future::KProxyItemSelectionModel(childCollectionFilter, m_collectionSelection, this);
+  m_childCollectionSelection = new Future::KProxyItemSelectionModel( childCollectionFilter, m_collectionSelection, this );
 
   MessageListProxy *messageProxy = new MessageListProxy( this );
   messageProxy->setSourceModel( itemFilter );
