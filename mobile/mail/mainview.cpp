@@ -83,7 +83,9 @@ MainView::MainView(QWidget* parent) :
   childCollectionFilter->setSourceModel( childEntitiesModel );
   childCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
 
-  m_breadcrumbCollectionSelection = new Future::KProxyItemSelectionModel( breadcrumbNavigationModel, m_collectionSelection, this );
+  Future::KProxyItemSelectionModel *proxyBreadcrumbCollectionSelection = new Future::KProxyItemSelectionModel( breadcrumbNavigationModel, m_collectionSelection, this );
+
+  m_breadcrumbCollectionSelection = new KForwardingItemSelectionModel( breadcrumbNavigationModel, proxyBreadcrumbCollectionSelection, KForwardingItemSelectionModel::Reverse, this );
 
   m_childCollectionSelection = new Future::KProxyItemSelectionModel( childCollectionFilter, m_collectionSelection, this );
 
