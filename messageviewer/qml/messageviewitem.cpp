@@ -127,7 +127,7 @@ bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
 
 qint64 MessageViewItem::messageItemId() const
 {
-  return 0; // TODO
+  return m_viewer->messageItem().id();
 }
 
 void MessageViewItem::setMessageItemId(qint64 id)
