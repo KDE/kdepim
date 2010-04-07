@@ -183,18 +183,13 @@ Rectangle {
           id: attachmentList
           anchors.fill: parent
           
-          // FIXME: We got rid of the messageViewList so we need other means.
-          //model: messageViewList.currentItem.messageTreeModel
+          model: messageView.messageTreeModel
           delegate: attachmentDelegate
 
           MouseArea {
             anchors.fill: parent
             onClicked: {
-//               console.log( "current index: " + messageViewList.currentIndex );
-//               console.log( "current item: " + messageViewList.currentItem );
-//               console.log( "model: " + messageViewList.model );
-//               console.log( "model count: " + messageViewList.model.count );
-//               console.log( "current mime tree count: " + messageViewList.currentItem.messageTreeModel.count );
+              console.log( "current mime tree count: " + messageView.messageTreeModel );
             }
           }
         }
