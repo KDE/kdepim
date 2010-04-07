@@ -64,6 +64,7 @@ MainView::MainView(QWidget* parent) :
 
   Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection = new Future::KBreadcrumbSelectionModel( m_collectionSelection, Future::KBreadcrumbSelectionModel::Forward, this );
   breadcrumbCollectionSelection->setIncludeActualSelection(false);
+  breadcrumbCollectionSelection->setSelectionDepth( 2 );
 
   KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, this );
   breadcrumbNavigationModel->setSourceModel( etm );
