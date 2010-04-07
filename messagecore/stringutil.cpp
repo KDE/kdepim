@@ -748,7 +748,10 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
                 + "\" "+cssStyle+">";
       }
       if ( display == DisplayNameOnly ) {
-        result += quoteHtmlChars( mailbox.name(), true );
+        if ( !mailbox.name().isEmpty() ) // Fallback to the email address when the name is not set.
+          result += quoteHtmlChars( mailbox.name(), true );
+        else
+          result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
       } else {
         result += quoteHtmlChars( mailbox.prettyAddress(), true );
       }
