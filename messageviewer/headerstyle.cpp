@@ -927,8 +927,9 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   strategy = HeaderStrategy::brief();
 
   // From
-  QString linkColor ="color: #0E49A1; text-decoration: none";
+  QString linkColor ="style=\"color: #0E49A1; text-decoration: none\"";
   QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
+
   if ( !vCardName.isEmpty() )
     fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
 
