@@ -43,6 +43,7 @@ class LIBKCAL_EXPORT DndFactory
 {
   public:
     DndFactory( Calendar * );
+    ~DndFactory();
 
     /**
       Create a drag object.
@@ -58,8 +59,19 @@ class LIBKCAL_EXPORT DndFactory
     void cutIncidence( Incidence * );
     /** copy the incidence to clipboard */
     bool copyIncidence( Incidence * );
+
+    /** cuts a list of incidences to the clipboard */
+    bool cutIncidences( const Incidence::List &incidences );
+
+    /** copies a list of incidences to the clipboard */
+    bool copyIncidences( const Incidence::List &incidences );
+
     /** pastes the event or todo and returns a pointer to the new incidence pasted. */
     Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
+
+    /** pastes and returns the incidences from the clipboard
+        If no date and time are given, the incidences will be pasted at their original time */
+    Incidence::List pasteIncidences( const QDate &newDate = QDate(), const QTime *newTime = 0 );
 
   private:
     Calendar *mCalendar;
