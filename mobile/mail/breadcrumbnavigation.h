@@ -53,13 +53,14 @@ public:
 
   virtual void setSourceModel(QAbstractItemModel* sourceModel);
 
-  virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-
 private slots:
   void updateNavigation();
   void navigationSelectionChanged( const QItemSelection &, const QItemSelection & );
+  void sourceRowsInserted( const QModelIndex &parent, int start, int end );
+  void sourceRowsRemoved( const QModelIndex &parent, int start, int end );
 
 private:
+  void silentSelect(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command);
 
 private:
   using KSelectionProxyModel::setFilterBehavior;
