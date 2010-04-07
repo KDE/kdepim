@@ -214,7 +214,8 @@ Incidence::List DndFactory::pasteIncidences( const QDate &newDate, const QTime *
   }
 
   Incidence::List::ConstIterator it;
-  for ( it = cal.incidences().constBegin(); it != cal.incidences().constEnd(); ++it ) {
+  const Incidence::List incs = cal.incidences();
+  for ( it = incs.constBegin(); it != incs.constEnd(); ++it ) {
     Incidence *inc = d->pasteIncidence( *it, newDate, newTime );
     if ( inc ) {
       list.append( inc );
