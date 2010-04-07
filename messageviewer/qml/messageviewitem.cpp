@@ -97,9 +97,9 @@ bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
     if ( mev->button() == Qt::LeftButton ) {
       Direction dir = direction();
       if ( dir == Left ) {
-        emit previousMessageRequest();
-      } else if ( dir == Right ) {
         emit nextMessageRequest();
+      } else if ( dir == Right ) {
+        emit previousMessageRequest();
       }
 
       m_mousePressed = false;
