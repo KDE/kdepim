@@ -58,6 +58,7 @@ Rectangle {
 
 
   SlideoutPanelContainer {
+    id: panelContainer
     anchors.fill: parent
 
     SlideoutPanel {
@@ -159,7 +160,7 @@ Rectangle {
       id: attachmentPanel
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
-      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - 2 * panelContainer.margin
       contentWidth: 400
       content: [
         Component {
