@@ -30,35 +30,29 @@ Rectangle {
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
-  Component {
-    id : messageViewDelegate
-
-    MessageView {
-      id: messageView
-      width: messageViewList.width
-      height: messageViewList.height
-      messageItemId: model.itemId
-    }
-  }
-
-  ListView {
-    id: messageViewList
+  MessageView {
+    id: messageView
+    z: 0
     anchors.left: parent.left
     width: parent.width
     height: parent.height
-    model: itemModel
-    delegate: messageViewDelegate
-    preferredHighlightBegin: 0
-    preferredHighlightEnd: 0
-    highlightRangeMode: "StrictlyEnforceRange"
-    orientation: ListView.Horizontal
-    snapMode: ListView.SnapOneItem
-    flickDeceleration: 200
+    messageItemId: -1
+    
+    onNextMessageRequest: {
+      // Only go to the next message when currently a valid item is set.
+      if ( messageView.messageItemId >= 0 )
+        headerList.nextMessage();
+    }
+    
+    onPreviousMessageRequest: {
+      // Only go to the previous message when currently a valid item is set.
+      if ( messageView.messageItemId >= 0 )
+        headerList.previousMessage();
+    }
   }
 
 
   SlideoutPanelContainer {
-    id: panelContainer
     anchors.fill: parent
 
     SlideoutPanel {
@@ -80,9 +74,7 @@ Rectangle {
             selectedItemModel : selectedCollectionModel
             childItemsModel : childCollectionsModel
             onCollectionSelected: {
-              console.log( "XXX" );
               //folderPanel.collapse()
-              messageViewListFixingTimerHack.start()
             }
           }
 
@@ -94,11 +86,10 @@ Rectangle {
             anchors.right: parent.right
             anchors.left: collectionView.right
             onMessageSelected: {
-              console.log( "YYY" );
-              var existingSpeed = messageViewList.highlightMoveSpeed;
-              messageViewList.highlightMoveSpeed = -1;
-              messageViewList.currentIndex = headerList.currentIndex
-              messageViewList.highlightMoveSpeed = existingSpeed;
+              // Prevent reloading of the message, perhaps this should be done
+              // in messageview itself.
+              if ( messageView.messageItemId != headerList.currentMessage )
+                messageView.messageItemId = headerList.currentMessage;
               folderPanel.collapse()
             }
           }
@@ -143,7 +134,12 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Previous"
-            onClicked: actionPanel.collapse();
+            onClicked: { 
+              if ( messageView.messageItemId >= 0 )
+                headerList.previousMessage();
+
+              actionPanel.collapse();
+            }
           },
           Button {
             anchors.top: previousButton.bottom;
@@ -151,7 +147,12 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Next"
-            onClicked: actionPanel.collapse();
+            onClicked: {
+              if ( messageView.messageItemId >= 0 )
+                headerList.nextMessage();
+
+              actionPanel.collapse();
+            }
           }
       ]
     }
@@ -160,7 +161,7 @@ Rectangle {
       id: attachmentPanel
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
-      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - 2 * panelContainer.margin
+      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: 400
       content: [
         Component {
@@ -181,17 +182,19 @@ Rectangle {
         ListView {
           id: attachmentList
           anchors.fill: parent
-          model: messageViewList.currentItem.messageTreeModel
+          
+          // FIXME: We got rid of the messageViewList so we need other means.
+          //model: messageViewList.currentItem.messageTreeModel
           delegate: attachmentDelegate
 
           MouseArea {
             anchors.fill: parent
             onClicked: {
-              console.log( "current index: " + messageViewList.currentIndex );
-              console.log( "current item: " + messageViewList.currentItem );
-              console.log( "model: " + messageViewList.model );
-              console.log( "model count: " + messageViewList.model.count );
-              console.log( "current mime tree count: " + messageViewList.currentItem.messageTreeModel.count );
+//               console.log( "current index: " + messageViewList.currentIndex );
+//               console.log( "current item: " + messageViewList.currentItem );
+//               console.log( "model: " + messageViewList.model );
+//               console.log( "model count: " + messageViewList.model.count );
+//               console.log( "current mime tree count: " + messageViewList.currentItem.messageTreeModel.count );
             }
           }
         }
@@ -202,16 +205,6 @@ Rectangle {
   Connections {
     target: collectionView
     onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
-  }
-
-  Timer {
-    id: messageViewListFixingTimerHack
-    interval: 500
-    repeat: false
-    running: false
-    onTriggered: {
-      messageViewList.currentIndex = 0
-    }
   }
 
   Connections {

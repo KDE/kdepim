@@ -32,6 +32,23 @@ Item {
   signal messageSelected
 
   SystemPalette { id: palette; colorGroup: "Active" }
+  
+  function nextMessage() {
+    if ( currentIndex < (model.messageCount - 1) ) {
+      currentIndex = currentIndex + 1;
+      currentMessage = model.messageId( currentIndex );
+      headerViewTopLevel.messageSelected();
+    }
+  }
+  
+  function previousMessage() {
+    if ( currentIndex > 0  ) {
+      currentIndex = currentIndex - 1;
+      currentMessage = model.messageId( currentIndex );
+      headerViewTopLevel.messageSelected();
+    }
+  }
+  
   Component {
     id: messageListDelegate
 
