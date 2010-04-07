@@ -62,16 +62,11 @@ Rectangle {
 
     SlideoutPanel {
       id: folderPanel
-      anchors.fill: parent
-      anchors.topMargin: 20
-      anchors.rightMargin: 20
-      anchors.bottomMargin: 10
       titleText: "Folders"
       handleHeight: 150
       content: [
         Item {
           anchors.fill: parent
-          anchors.margins: 12
 
           BreadcrumbNavigationView {
             id : collectionView
@@ -112,12 +107,7 @@ Rectangle {
 
     SlideoutPanel {
       id: actionPanel
-      anchors.fill: parent
-      anchors.topMargin: 20
-      anchors.rightMargin: 20
-      anchors.bottomMargin: 10
       titleText: "Actions"
-      handlePosition: folderPanel.handleHeight
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -167,10 +157,6 @@ Rectangle {
 
     SlideoutPanel {
       id: attachmentPanel
-      anchors.fill: parent
-      anchors.topMargin: 20
-      anchors.rightMargin: 20
-      anchors.bottomMargin: 10
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
@@ -194,7 +180,6 @@ Rectangle {
         ListView {
           id: attachmentList
           anchors.fill: parent
-          anchors.margins: 12
           model: messageViewList.currentItem.messageTreeModel
           delegate: attachmentDelegate
 
