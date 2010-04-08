@@ -160,6 +160,7 @@ Rectangle {
 
     SlideoutPanel {
       id: attachmentPanel
+      visible: messageView.messageTreeModel.attachmentCount >= 2
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
@@ -190,7 +191,7 @@ Rectangle {
           MouseArea {
             anchors.fill: parent
             onClicked: {
-              console.log( "current mime tree count: " + messageView.messageTreeModel );
+              console.log( "current mime tree count: " + messageView.messageTreeModel.attachmentCount );
             }
           }
         }

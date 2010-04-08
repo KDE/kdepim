@@ -23,6 +23,8 @@
 
 AttachmentProxyModel::AttachmentProxyModel(QObject* parent): QSortFilterProxyModel(parent)
 {
+  // moc doesn't allow property NOTIFY to use signals in the base class apparently...
+  connect( this, SIGNAL(modelReset()), SIGNAL(rowCountChanged()) );
 }
 
 bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const

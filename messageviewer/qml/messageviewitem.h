@@ -40,6 +40,7 @@ class MessageViewItem : public QDeclarativeItem
   Q_PROPERTY( int messageItemId READ messageItemId WRITE setMessageItemId )
   Q_PROPERTY( QObject* messageTreeModel READ messageTreeModel )
   Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
+  Q_PROPERTY( QObject* messageTreeModel READ messageTreeModel CONSTANT )
   Q_PROPERTY( double swipeLength READ swipeLength WRITE setSwipeLength )
 
   public:

@@ -26,12 +26,15 @@
 class AttachmentProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
-  Q_PROPERTY( int attachmentCount READ rowCount )
+  Q_PROPERTY( int attachmentCount READ rowCount NOTIFY rowCountChanged )
 
   public:
     explicit AttachmentProxyModel(QObject* parent = 0);
 
     bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+
+  signals:
+    void rowCountChanged();
 };
 
 
