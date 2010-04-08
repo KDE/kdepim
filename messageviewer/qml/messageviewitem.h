@@ -21,10 +21,17 @@
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
 #include <QtCore/QTimer>
-#include <QDeclarativeItem>
+#include <QtDeclarative/QDeclarativeItem>
 
 class KDescendantsProxyModel;
+class KUrl;
+
+namespace Akonadi {
+class Item;
+}
+
 namespace MessageViewer {
+
 class Viewer;
 
 class MessageViewItem : public QDeclarativeItem
@@ -49,6 +56,8 @@ class MessageViewItem : public QDeclarativeItem
   signals:
     void nextMessageRequest();
     void previousMessageRequest();
+    /** Emitted for urls not handled by MessageViewer::Viewer. */
+    void urlClicked( const Akonadi::Item &item, const KUrl &url );
 
   protected:
     void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
@@ -64,6 +73,7 @@ class MessageViewItem : public QDeclarativeItem
     };
 
     Direction direction() const;
+
 
   private:
     Viewer *m_viewer;

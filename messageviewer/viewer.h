@@ -275,6 +275,11 @@ signals:
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   /** The user presses the right mouse button. 'url' may be 0. */
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
+
+  /**
+   * The message viewer handles some types of urls itself, most notably http(s)
+   * and ftp(s). When it can't handle the url it will emit this signal.
+   */
   void urlClicked( const Akonadi::Item &, const KUrl& );
 
   /** The user has clicked onto an URL that is no attachment. */

@@ -52,6 +52,8 @@ MessageViewItem::MessageViewItem(QDeclarativeItem* parent)
   m_attachmentProxy = new KDescendantsProxyModel( this );
   m_attachmentProxy->setSourceModel( m_viewer->messageTreeModel() );
 
+  connect( m_viewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)), SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
+
   m_clickDetectionTimer.setInterval( 150 );
   m_clickDetectionTimer.setSingleShot( true );
 }
