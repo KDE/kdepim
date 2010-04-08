@@ -150,6 +150,26 @@ void Task::setDueDate( const QDateTime& date )
 {
   mDueDate = date;
   mHasDueDate = true;
+  mFloatingStatus = HasTime;
+}
+
+void Task::setDueDate( const QDate &date )
+{
+  mDueDate = date;
+  mHasDueDate = true;
+  mFloatingStatus = AllDay;
+}
+
+
+void Task::setDueDate( const QString &date )
+{
+  if ( date.length() > 10 ) {
+    // This is a date + time
+     setDueDate( stringToDateTime( date ) );
+  } else {
+     // This is only a date
+    setDueDate( stringToDate( date ) );
+  }
 }
 
 QDateTime Task::dueDate() const
@@ -225,13 +245,13 @@ bool Task::loadAttribute( QDomElement& element )
     else
       // Default
       setStatus( KCal::Incidence::StatusNone );
-  } else if ( tagName == "due-date" )
-    setDueDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "parent" )
+  } else if ( tagName == "due-date" ) {
+    setDueDate( element.text() );
+  } else if ( tagName == "parent" ) {
     setParent( element.text() );
-  else if ( tagName == "x-completed-date" )
+  } else if ( tagName == "x-completed-date" ) {
     setCompletedDate( stringToDateTime( element.text() ) );
-  else if ( tagName == "start-date" ) {
+  } else if ( tagName == "start-date" ) {
     setHasStartDate( true );
     setStartDate( element.text() );
   } else
