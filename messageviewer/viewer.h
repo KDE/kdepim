@@ -306,6 +306,9 @@ protected:
   /** Watch for palette changes */
   virtual bool event(QEvent *e);
 
+#ifdef KDEPIM_MOBILE_UI
+  friend class MessageViewItem;
+#endif
   ViewerPrivate* const d_ptr;
 };
 

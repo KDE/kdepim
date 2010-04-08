@@ -19,16 +19,20 @@
 
 #include "messageviewitem.h"
 
-#include <messageviewer/headerstyle.h>
-#include <messageviewer/headerstrategy.h>
-#include <messageviewer/viewer.h>
-
 #include <math.h>
 
-#include <qabstractitemmodel.h>
-#include <QGraphicsProxyWidget>
+#include <QtCore/QAbstractItemModel>
+#include <QtGui/QApplication>
+#include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
+
 #include <kdescendantsproxymodel_p.h>
+
+#include <messageviewer/headerstyle.h>
+#include <messageviewer/headerstrategy.h>
+#include <messageviewer/mailwebview.h>
+#include <messageviewer/viewer.h>
+#include <messageviewer/viewer_p.h>
 
 using namespace MessageViewer;
 
@@ -47,10 +51,14 @@ MessageViewItem::MessageViewItem(QDeclarativeItem* parent)
   m_proxy->installEventFilter( this );
   m_attachmentProxy = new KDescendantsProxyModel( this );
   m_attachmentProxy->setSourceModel( m_viewer->messageTreeModel() );
+
+  m_clickDetectionTimer.setInterval( 150 );
+  m_clickDetectionTimer.setSingleShot( true );
 }
 
 MessageViewItem::~MessageViewItem()
 {
+  m_proxy->removeEventFilter( this );
   delete m_viewer;
 }
 
@@ -90,16 +98,28 @@ bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
     QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
     if ( mev->button() == Qt::LeftButton ) {
       m_mousePressed = true;
+      m_clickDetectionTimer.stop(); // Make sure that it isn't running atm
+      m_clickDetectionTimer.start();
       return true;
     }
   } else if ( ev->type() == QEvent::GraphicsSceneMouseRelease ) {
+    const bool wasActive = m_clickDetectionTimer.isActive();
     QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
     if ( mev->button() == Qt::LeftButton ) {
-      Direction dir = direction();
-      if ( dir == Left ) {
-        emit nextMessageRequest();
-      } else if ( dir == Right ) {
-        emit previousMessageRequest();
+
+      if ( wasActive ) { // Timer didn't time out, we're dealing with a click
+        // We'll have to simulate a click on the MessageViewer MailWebView now.
+        QMouseEvent *event = new QMouseEvent( QEvent::MouseButtonPress, mev->pos().toPoint(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+        m_viewer->d_ptr->mViewer->event( event );
+        event = new QMouseEvent( QEvent::MouseButtonRelease, mev->pos().toPoint(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+        m_viewer->d_ptr->mViewer->event( event );
+      } else {
+        Direction dir = direction();
+        if ( dir == Left ) {
+          emit nextMessageRequest();
+        } else if ( dir == Right ) {
+          emit previousMessageRequest();
+        }
       }
 
       m_mousePressed = false;
@@ -119,6 +139,7 @@ bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
       for ( int i = 0; i < -m_dy; ++i )
         m_viewer->slotScrollDown();
     }
+
     return true;
   }
 

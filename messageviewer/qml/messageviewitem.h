@@ -20,6 +20,7 @@
 #ifndef MESSAGEVIEWER_MESSAGEVIEWITEM_H
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
+#include <QtCore/QTimer>
 #include <QDeclarativeItem>
 
 class KDescendantsProxyModel;
@@ -70,6 +71,7 @@ class MessageViewItem : public QDeclarativeItem
     KDescendantsProxyModel *m_attachmentProxy;
 
     /// Handle mouse events
+    QTimer m_clickDetectionTimer;
     bool m_mousePressed;
     int m_dx;
     int m_dy;

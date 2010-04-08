@@ -38,7 +38,9 @@ class MailWebView : public KWebView
     void popupMenu( const QString &url, const QPoint &point );
 
   protected:
-
+#ifdef KDEPIM_MOBILE_UI
+    friend class MessageViewItem;
+#endif
     /// Reimplemented to catch context menu events and emit popupMenu()
     virtual bool event( QEvent *event );
 };
