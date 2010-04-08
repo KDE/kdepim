@@ -129,6 +129,16 @@ void NodeHelper::clear()
   mDisplayEmbeddedNodes.clear();
 }
 
+void NodeHelper::clearNode( KMime::Content *node )
+{
+  mProcessedNodes.removeAll( node );
+  mEncryptionState.remove( node );
+  mSignatureState.remove( node );
+  //mUnencryptedMessages.remove( node );
+  mOverrideCodecs.remove( node );
+  mDisplayEmbeddedNodes.remove( node );
+}
+
 void NodeHelper::clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap)
 {
   for ( QMap<QByteArray, Interface::BodyPartMemento*>::iterator
@@ -342,7 +352,7 @@ QByteArray NodeHelper::charset( KMime::Content *node )
 KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
 {
   if ( !node )
-    return 0;
+     return 0;
 
   KMime::Content *next = 0;
   KMime::Content *parent = node->parent();
@@ -545,6 +555,8 @@ void NodeHelper::attachUnencryptedMessage( KMime::Message::Ptr message,
 
   mUnencryptedMessages[message] = unencrypted;
 }
+
+
 
 void NodeHelper::setOverrideCodec( KMime::Content* node, const QTextCodec* codec )
 {
@@ -790,5 +802,12 @@ QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
   return result.toLatin1();
 }
 
+QString NodeHelper::fromAsString( KMime::Content* node )
+{
+  KMime::Message* topLevel = dynamic_cast<KMime::Message*>(node->topLevel());
+  if ( topLevel )
+    return topLevel->from()->asUnicodeString();
+  return QString();
 }
 
+}

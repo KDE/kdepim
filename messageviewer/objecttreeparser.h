@@ -350,16 +350,11 @@ private:
 
   /** 1. Create a new partNode using 'content' data and Content-Description
           found in 'cntDesc'.
-      2. Make this node the child of 'node'.
-      3. Insert the respective entries in the Mime Tree Viewer.
-      3. Parse the 'node' to display the content.
+      2. Parse the 'node' to display the content.
    */
-  //  Function will be replaced once KMime is alive.
-  void insertAndParseNewChildNode( const Akonadi::Item &item,
-                                   KMime::Content & node,
+  void createAndParseTempNode( const Akonadi::Item &item,
                                    const char * content,
-                                   const char * cntDesc,
-                                   bool append=false );
+                                   const char * cntDesc);
   /** if data is 0:
       Feeds the HTML widget with the contents of the opaque signed
           data found in partNode 'sign'.

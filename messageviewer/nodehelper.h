@@ -76,6 +76,8 @@ public:
     void setNodeUnprocessed( KMime::Content* node, bool recurse );
     bool nodeProcessed( KMime::Content* node ) const;
     void clear();
+    /** Remove all reference for this node from the internal structures (encryption state, etc.) */
+    void clearNode( KMime::Content* node );
 
     void setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state );
     KMMsgEncryptionState encryptionState( KMime::Content *node ) const;
@@ -230,6 +232,8 @@ public:
 
     static QByteArray autoDetectCharset(const QByteArray &_encoding, const QStringList &encodingList, const QString &text);
     static QByteArray toUsAscii(const QString& _str, bool *ok);
+
+    static QString fromAsString( KMime::Content* node );
 private:
 
     /** Check for prefixes @p prefixRegExps in #subject(). If none
