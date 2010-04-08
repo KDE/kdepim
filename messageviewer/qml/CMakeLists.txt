@@ -3,6 +3,7 @@ if (QT_QTDECLARATIVE_FOUND)
   kde4_add_plugin( messageviewerqmlplugin WITH_PREFIX
     plugin.cpp
     messageviewitem.cpp
+    attachmentproxymodel.cpp
   )
   target_link_libraries(messageviewerqmlplugin messageviewer
     ${KDE4_KDECORE_LIBRARY}

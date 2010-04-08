@@ -65,6 +65,13 @@ class MimeTreeModel::Private
       return i18n( "body part" );
     }
 
+    QString mimeTypeForContent( KMime::Content *content )
+    {
+      if ( !content->contentType( false ) )
+        return QString();
+      return QString::fromLatin1( content->contentType()->mimeType() );
+    }
+
     QString typeForContent( KMime::Content *content )
     {
       if ( !content->contentType( false ) )
@@ -193,6 +200,8 @@ QVariant MimeTreeModel::data(const QModelIndex & index, int role) const
     return QVariant::fromValue( d->root->indexForContent( content ) );
   if ( role == ContentRole )
     return QVariant::fromValue( content );
+  if ( role == MimeTypeRole )
+    return d->mimeTypeForContent( content );
   return QVariant();
 }
 

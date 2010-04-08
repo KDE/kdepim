@@ -23,7 +23,7 @@
 #include <QtCore/QTimer>
 #include <QtDeclarative/QDeclarativeItem>
 
-class KDescendantsProxyModel;
+class QSortFilterProxyModel;
 class KUrl;
 
 namespace Akonadi {
@@ -78,7 +78,7 @@ class MessageViewItem : public QDeclarativeItem
   private:
     Viewer *m_viewer;
     QGraphicsProxyWidget *m_proxy;
-    KDescendantsProxyModel *m_attachmentProxy;
+    QSortFilterProxyModel *m_attachmentProxy;
 
     /// Handle mouse events
     QTimer m_clickDetectionTimer;

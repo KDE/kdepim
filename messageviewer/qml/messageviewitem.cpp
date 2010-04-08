@@ -33,6 +33,7 @@
 #include <messageviewer/mailwebview.h>
 #include <messageviewer/viewer.h>
 #include <messageviewer/viewer_p.h>
+#include "attachmentproxymodel.h"
 
 using namespace MessageViewer;
 
@@ -49,8 +50,10 @@ MessageViewItem::MessageViewItem(QDeclarativeItem* parent)
   m_proxy = new QGraphicsProxyWidget( this );
   m_proxy->setWidget( m_viewer );
   m_proxy->installEventFilter( this );
-  m_attachmentProxy = new KDescendantsProxyModel( this );
-  m_attachmentProxy->setSourceModel( m_viewer->messageTreeModel() );
+  KDescendantsProxyModel *flatProxy = new KDescendantsProxyModel( this );
+  flatProxy->setSourceModel( m_viewer->messageTreeModel() );
+  m_attachmentProxy = new AttachmentProxyModel( this );
+  m_attachmentProxy->setSourceModel( flatProxy );
 
   connect( m_viewer, SIGNAL(urlClicked(Akonadi::Item,KUrl)), SIGNAL(urlClicked(Akonadi::Item,KUrl)) );
 
