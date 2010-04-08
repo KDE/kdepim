@@ -118,7 +118,8 @@ bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
         m_viewer->d_ptr->mViewer->event( event );
         event = new QMouseEvent( QEvent::MouseButtonRelease, mev->pos().toPoint(), Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
         m_viewer->d_ptr->mViewer->event( event );
-      } else {
+      } else if ( qAbs( m_dx ) >= ( m_swipeLength * width() ) ) {
+        // We don't trigger a next or previous *always*. Only when the configured swipelength is met.
         Direction dir = direction();
         if ( dir == Left ) {
           emit nextMessageRequest();
@@ -177,6 +178,17 @@ void MessageViewItem::setSplashMessage(const QString& message)
 QObject* MessageViewItem::messageTreeModel() const
 {
   return m_attachmentProxy;
+}
+
+double MessageViewItem::swipeLength() const
+{
+  return m_swipeLength;
+}
+
+void MessageViewItem::setSwipeLength( double length )
+{
+  Q_ASSERT( length >= 0 && length <= 1 );
+  m_swipeLength = length;
 }
 
 #include "messageviewitem.moc"

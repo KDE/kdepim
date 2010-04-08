@@ -37,6 +37,7 @@ Rectangle {
     width: parent.width
     height: parent.height
     messageItemId: -1
+    swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
     
     onNextMessageRequest: {
       // Only go to the next message when currently a valid item is set.

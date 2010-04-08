@@ -38,8 +38,9 @@ class MessageViewItem : public QDeclarativeItem
 {
   Q_OBJECT
   Q_PROPERTY( int messageItemId READ messageItemId WRITE setMessageItemId )
-  Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
   Q_PROPERTY( QObject* messageTreeModel READ messageTreeModel )
+  Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
+  Q_PROPERTY( double swipeLength READ swipeLength WRITE setSwipeLength )
 
   public:
     explicit MessageViewItem( QDeclarativeItem *parent = 0 );
@@ -52,6 +53,15 @@ class MessageViewItem : public QDeclarativeItem
     void setSplashMessage( const QString &message );
 
     QObject* messageTreeModel() const;
+
+    /**
+     * The length, expressed as percentage of the width, which trigers the next
+     * or previous requests.
+     *
+     * Value must be between 0 and 1.
+     */
+    double swipeLength() const;
+    void setSwipeLength( double length );
 
   signals:
     void nextMessageRequest();
@@ -74,11 +84,12 @@ class MessageViewItem : public QDeclarativeItem
 
     Direction direction() const;
 
-
   private:
     Viewer *m_viewer;
     QGraphicsProxyWidget *m_proxy;
     QSortFilterProxyModel *m_attachmentProxy;
+
+    double m_swipeLength;
 
     /// Handle mouse events
     QTimer m_clickDetectionTimer;
