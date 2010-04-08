@@ -22,6 +22,12 @@
 #include "messagelistproxy.h"
 #include "breadcrumbnavigation.h"
 
+#include <QApplication>
+
+#include <KStandardDirs>
+#include <KConfig>
+#include <KConfigGroup>
+
 #include <libkdepim/kdescendantsproxymodel_p.h>
 
 #include <akonadi/changerecorder.h>
@@ -38,11 +44,11 @@
 
 #include <akonadi_next/kbreadcrumbselectionmodel.h>
 #include <akonadi_next/kproxyitemselectionmodel.h>
-#include <KStandardDirs>
 
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeComponent>
+#include <akonadi_next/etmstatesaver.h>
 
 MainView::MainView(QWidget* parent) :
   QDeclarativeView(parent),
@@ -132,6 +138,30 @@ MainView::MainView(QWidget* parent) :
 
   const QString qmlPath = KStandardDirs::locate( "appdata", "kmail-mobile.qml" );
   setSource( qmlPath );
+
+  connect( etm, SIGNAL(modelAboutToBeReset()), SLOT(saveState()) );
+  connect( etm, SIGNAL(modelReset()), SLOT(restoreState()) );
+  connect( qApp, SIGNAL(aboutToQuit()), SLOT(saveState()) );
+
+  restoreState();
+}
+
+void MainView::saveState()
+{
+  ETMStateSaver saver;
+  saver.setSelectionModel(m_collectionSelection);
+
+  KConfigGroup cfg( KGlobal::config(), "SelectionState" );
+  saver.saveState( cfg );
+  cfg.sync();
+}
+
+void MainView::restoreState()
+{
+  ETMStateSaver *saver = new ETMStateSaver;
+  saver->setSelectionModel(m_collectionSelection);
+  KConfigGroup cfg( KGlobal::config(), "SelectionState" );
+  saver->restoreState( cfg );
 }
 
 void MainView::setSelectedChildCollectionRow(int row)

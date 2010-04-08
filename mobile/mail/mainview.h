@@ -36,6 +36,10 @@ class MainView : public QDeclarativeView
     void setSelectedChildCollectionRow( int row );
     void setSelectedBreadcrumbCollectionRow( int row );
 
+  private slots:
+    void saveState();
+    void restoreState();
+
   private:
     QItemSelectionModel *m_collectionSelection;
     QItemSelectionModel *m_childCollectionSelection;
