@@ -138,8 +138,8 @@ class KOAgenda : public Q3ScrollView
 
     void changeColumns( int columns );
 
-    int columns() { return mColumns; }
-    int rows() { return mRows; }
+    int columns() const { return mColumns; }
+    int rows() const { return mRows; }
 
     double gridSpacingX() const { return mGridSpacingX; }
     double gridSpacingY() const { return mGridSpacingY; }
