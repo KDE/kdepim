@@ -24,6 +24,7 @@ set( akonadi_next_SRCS
   kbreadcrumbselectionmodel.cpp
   kviewstatesaver.cpp
   kproxyitemselectionmodel.cpp
+  etmstatesaver.cpp
   collectionchildorderattribute.cpp
   modeltest.cpp
   quotacolorproxymodel.cpp
