@@ -24,7 +24,9 @@
 
 #include "kviewstatesaver.h"
 
-class ETMStateSaver : public Future::KViewStateSaver
+#include "akonadi_next_export.h"
+
+class AKONADI_NEXT_EXPORT ETMStateSaver : public Future::KViewStateSaver
 {
   Q_OBJECT
 public:

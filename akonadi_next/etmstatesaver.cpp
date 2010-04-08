@@ -30,7 +30,7 @@
 using namespace Akonadi;
 
 ETMStateSaver::ETMStateSaver(QObject* parent)
-  : KViewStateSaver(parent)
+  : Future::KViewStateSaver(parent)
 {
 }
 
