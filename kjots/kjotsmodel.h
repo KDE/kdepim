@@ -42,9 +42,11 @@ class KJotsEntity : public QObject
   Q_OBJECT
   Q_PROPERTY(QString title READ title)
   Q_PROPERTY(QString content READ content)
+  Q_PROPERTY(qint64 entityId READ entityId)
   Q_PROPERTY(bool isBook READ isBook)
   Q_PROPERTY(bool isPage READ isPage)
   Q_PROPERTY(QVariantList entities READ entities)
+  Q_PROPERTY(QVariantList breadcrumbs READ breadcrumbs)
 
 public:
   KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
@@ -56,7 +58,11 @@ public:
 
   QString content();
 
+  qint64 entityId();
+
   QVariantList entities();
+
+  QVariantList breadcrumbs();
 
 private:
   QPersistentModelIndex m_index;

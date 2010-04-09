@@ -58,6 +58,19 @@ QString KJotsEntity::content()
   return QString();
 }
 
+qint64 KJotsEntity::entityId()
+{
+  Item item = m_index.data(EntityTreeModel::ItemRole).value<Item>();
+  if (!item.isValid())
+  {
+    Collection col = m_index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if ( !col.isValid() )
+      return -1;
+    return col.id();
+  }
+  return item.id();
+}
+
 bool KJotsEntity::isBook()
 {
   Collection col = m_index.data(EntityTreeModel::CollectionRole).value<Collection>();
@@ -90,6 +103,22 @@ QVariantList KJotsEntity::entities()
     QObject *obj = new KJotsEntity(childIndex);
     list << QVariant::fromValue(obj);
     childIndex = m_index.child(row++, column);
+  }
+  return list;
+}
+
+QVariantList KJotsEntity::breadcrumbs()
+{
+  QVariantList list;
+  int row = 0;
+  const int column = 0;
+  QModelIndex parent = m_index.parent();
+
+  while ( parent.isValid() )
+  {
+    QObject *obj = new KJotsEntity(parent);
+    list << QVariant::fromValue(obj);
+    parent = parent.parent();
   }
   return list;
 }

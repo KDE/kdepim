@@ -687,11 +687,14 @@ QString KJotsWidget::renderSelectionToHtml()
   }
 
   hash.insert( QLatin1String( "entities" ), objectList);
+  hash.insert( QLatin1String( "i18n_TABLE_OF_CONTENTS" ),
+              i18nc("Header for 'Table of contents' section of rendered output", "Table of contents") );
   Context c(hash);
 
   Template t = m_templateEngine->loadByName( QLatin1String( "template.html" ) );
 
   QString result = t->render(&c);
+
   // TODO: handle errors.
   return result;
 }
