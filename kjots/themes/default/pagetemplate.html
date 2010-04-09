@@ -1,6 +1,14 @@
-<div>
-<h3>{{ entity.title }}</h3>
-<div>
+<div class="page" >
+<h3><a href="#page_{{ entity.entityId }}" class="page_title">{{ entity.title }}</h3>
+<div class="page_content">
 {{ entity.content|safe }}
+</div>
+<div class="page_breadcrumb">
+<table class="breadcrumbs" border="1" cellspacing="2" cellpadding="10"><tr>
+  <td><a href="#page_{{ entity.entityId }}">{{ entity.title }}</a></td>
+{% for parent in entity.breadcrumbs %}
+  <td><a href="#book_{{ parent.entityId }}">{{ parent.title }}</a></td>
+{% endfor %}
+</tr></table>
 </div>
 </div>

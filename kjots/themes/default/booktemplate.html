@@ -1,8 +1,15 @@
 <div>
-<table border="1" cellspacing="1" cellpadding="1" width="100%"><tr><td>
-<h2>{{ entity.title }}</h2>
+
+<h2><a href="#book_{{ entity.entityId }}" name="book_{{ entity.entityId }}">{{ entity.title }}</a></h2>
+<h3>{{ i18n_TABLE_OF_CONTENTS }}</h3>
+
+<div class="toc">
+{% include "book_toc_list.html" %}
+</div>
+
 <div>
 {% for entity in entity.entities %}
+  <hr />
   {% if entity.isBook %}
     {% include "booktemplate.html" %}
   {% else %}
@@ -12,5 +19,4 @@
   {% endif %}
 {% endfor %}
 </div>
-</td></tr></table>
 </div>
