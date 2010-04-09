@@ -44,9 +44,25 @@ QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model
     return QModelIndex();
 
   if ( key.startsWith( QLatin1Char( 'c' ) ) )
-    return model->match( QModelIndex(), EntityTreeModel::CollectionIdRole, id, 1, Qt::MatchRecursive ).first();
+  {
+    QModelIndexList list = model->match( QModelIndex(), EntityTreeModel::CollectionIdRole, id, 1, Qt::MatchRecursive );
+    if ( list.isEmpty() )
+    {
+      kWarning() << "Cannot find collection with id " << id;
+      return QModelIndex();
+    }
+    return list.first();
+  }
   else if ( key.startsWith( QLatin1Char( 'i' ) ) )
-    return model->match( QModelIndex(), EntityTreeModel::ItemIdRole, id, 1, Qt::MatchRecursive ).first();
+  {
+    QModelIndexList list = model->match( QModelIndex(), EntityTreeModel::ItemIdRole, id, 1, Qt::MatchRecursive );
+    if ( list.isEmpty() )
+    {
+      kWarning() << "Cannot find item with id " << id;
+      return QModelIndex();
+    }
+    return list.first();
+   }
   return QModelIndex();
 }
 
