@@ -1,9 +1,7 @@
 /*
 * This file is part of Akonadi
 *
-* Copyright 2010 KDAB
-*
-* Author Bertjan Broeksema <b.broeksema@home.nl>
+* Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
