@@ -246,9 +246,6 @@ set(libkdgantt1_SRCS
       macro_optional_add_subdirectory(kmail)
     endif (QT_QT3SUPPORT_FOUND)
     if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
-      macro_optional_add_subdirectory(kmail-mobile)
-      # TODO: move kmail-mobile to mobile/kmail. Please coordinate with
-      # vkrause, steveire, bbroeksema
       macro_optional_add_subdirectory(mobile)
     endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
 
