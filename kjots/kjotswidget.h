@@ -101,6 +101,8 @@ signals:
 
 protected:
   QString renderSelectionToHtml();
+  QString renderSelectionToXml();
+  QString renderSelectionToPlainText();
   QString getThemeFromUser();
 
   void selectNext( int role, int step );
@@ -110,7 +112,9 @@ protected:
 protected slots:
   void renderSelection();
   void changeTheme();
-  void exportSelection();
+  void exportSelectionToHtml();
+  void exportSelectionToPlainText();
+  void exportSelectionToXml();
 
   void deletePage();
   void deleteBook();
