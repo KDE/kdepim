@@ -26,6 +26,9 @@ import Qt 4.7
 Item {
   property alias model: attachmentListView.model
   property int rowHeight: 48
+  property int attachmentListWidth: 300
+  property int actionListWidth: 240
+  property int requestedWidth: (attachmentListView.currentIndex < 0 || attachmentListView.currentIndex >= model.attachmentCount) ? attachmentListWidth : attachmentListWidth + actionListWidth
 
   /** Emittted when an attachment has been selected. */
   signal attachmentSelected
@@ -35,7 +38,7 @@ Item {
 
     Item {
       id: wrapper
-      width: attachmentListView.width
+      width: attachmentListWidth
       height: rowHeight
       clip: true
 
@@ -58,7 +61,7 @@ Item {
           var nonCurrentClicked = false
           if ( !wrapper.ListView.isCurrentItem ) { nonCurrentClicked = true }
           wrapper.ListView.view.currentIndex = model.index
-          if ( nonCurrentClicked ) { attachmentSelected() }
+          if ( nonCurrentClicked ) { attachmentSelected(); }
         }
       }
     }
@@ -68,7 +71,7 @@ Item {
     id: attachmentListView
     anchors.top: parent.top
     anchors.left: parent.left
-    anchors.right: parent.right
+    anchors.right: actionView.left
     height: Math.min( model.attachmentCount * rowHeight, parent.height )
     interactive: model.attachmentCount * rowHeight > parent.height
     delegate: attachmentDelegate
@@ -80,6 +83,34 @@ Item {
         attachmentListView.currentIndex = -1
       }
     }
+  }
+
+  // TODO might be better to use a state instead of spreading the conditions all over the place
+  Item {
+    id: actionView
+    visible: attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount
+    width: (attachmentListView.currentIndex < 0 || attachmentListView.currentIndex >= model.attachmentCount) ? 0 : actionListWidth
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+    Button {
+      id: openButton
+      anchors.top: parent.top
+      anchors.horizontalCenter: parent.horizontalCenter;
+      width: parent.width - 10
+      height: parent.height / 6
+      buttonText: "Open"
+    }
+    Button {
+      id: saveButton
+      anchors.top: openButton.bottom;
+      anchors.horizontalCenter: parent.horizontalCenter;
+      width: parent.width - 10
+      height: parent.height / 6
+      buttonText: "Save"
+    }
+
   }
 
 }

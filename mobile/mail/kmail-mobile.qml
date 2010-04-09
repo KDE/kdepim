@@ -164,9 +164,10 @@ Rectangle {
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
-      contentWidth: 400
+      contentWidth: attachmentView.requestedWidth
       content: [
         AttachmentList {
+          id: attachmentView
           model: messageView.attachmentModel
           anchors.fill: parent
         }
