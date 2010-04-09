@@ -27,20 +27,20 @@ include_directories(
 target_link_libraries(plasma_applet_akonotes_note
                       ${KDE4_PLASMA_LIBS}
                       ${KDE4_KIO_LIBS}
-                      ${KDE4_AKONADI_LIBS}
-                      ${KDE4_AKONADI_KMIME_LIBS}
+                      ${KDEPIMLIBS_AKONADI_LIBS}
+                      ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
-                      ${KDE4_KMIME_LIBS}
+                      ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 target_link_libraries(plasma_applet_akonotes_list
                       ${KDE4_PLASMA_LIBS}
                       ${KDE4_KIO_LIBS}
-                      ${KDE4_AKONADI_LIBS}
-                      ${KDE4_AKONADI_KMIME_LIBS}
+                      ${KDEPIMLIBS_AKONADI_LIBS}
+                      ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
                       ${Grantlee_GUI_LIBRARIES}
-                      ${KDE4_KMIME_LIBS}
+                      ${KDEPIMLIBS_KMIME_LIBS}
 )
 
 install(TARGETS plasma_applet_akonotes_note
