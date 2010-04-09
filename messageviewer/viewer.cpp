@@ -152,19 +152,19 @@ void Viewer::slotSaveMessage()
   d->slotSaveMessage();
 }
 
-void Viewer::slotScrollUp()
+void Viewer::slotScrollUp( int pixels )
 {
   Q_D(Viewer);
   QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
-  point -= QPoint(0, 10);
+  point -= QPoint( 0, qAbs( pixels ) );
   d->mViewer->page()->mainFrame()->setScrollPosition( point );
 }
 
-void Viewer::slotScrollDown()
+void Viewer::slotScrollDown( int pixels )
 {
   Q_D(Viewer);
   QPoint point = d->mViewer->page()->mainFrame()->scrollPosition();
-  point += QPoint(0, 10);
+  point += QPoint( 0, qAbs( pixels ) );
   d->mViewer->page()->mainFrame()->setScrollPosition( point );
 }
 

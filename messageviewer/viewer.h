@@ -292,9 +292,14 @@ signals:
 
 public slots:
 
-  /** HTML Widget scrollbar and layout handling. */
-  void slotScrollUp();
-  void slotScrollDown();
+  /**
+   * HTML Widget scrollbar and layout handling.
+   *
+   * Scrolling always happens in the direction of the slot that is called. I.e.
+   * the methods take the absolute value of
+   */
+  void slotScrollUp( int pixels = 10 );
+  void slotScrollDown( int pixels = 10 );
   void slotScrollPrior();
   void slotScrollNext();
   void slotJumpDown();

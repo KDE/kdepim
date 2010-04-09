@@ -139,11 +139,9 @@ bool MessageViewItem::eventFilter( QObject *obj, QEvent *ev )
     m_dy += mev->pos().y() - mev->lastPos().y(); // Moving up gives positive values
     Direction dir = direction();
     if ( dir == Up ) {
-      for ( int i = 0; i < m_dy; ++i )
-        m_viewer->slotScrollUp();
+      m_viewer->slotScrollUp( m_dy );
     } else if ( dir == Down ) {
-      for ( int i = 0; i < -m_dy; ++i )
-        m_viewer->slotScrollDown();
+      m_viewer->slotScrollDown( m_dy );
     }
 
     return true;
