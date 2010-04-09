@@ -133,7 +133,7 @@ else(KDEPIM_ONLY_KLEO)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "http://soprano.sourceforge.net" TRUE "${SOPRANO_MIN_VERSION}" "Soprano is needed for Nepomuk")
   include(SopranoAddOntology)
 
-  find_package(Grantlee)
+  macro_optional_find_package(Grantlee)
   macro_log_feature(Grantlee_FOUND "Grantlee" "The Grantlee Template System" "http://www.grantlee.org" FALSE "" "Templating and theming for KJots." )
 
   find_package(Nepomuk)
@@ -247,6 +247,9 @@ set(libkdgantt1_SRCS
     endif (QT_QT3SUPPORT_FOUND)
     if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
       macro_optional_add_subdirectory(kmail-mobile)
+      # TODO: move kmail-mobile to mobile/kmail. Please coordinate with
+      # vkrause, steveire, bbroeksema
+      macro_optional_add_subdirectory(mobile)
     endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
 
     if(KDEPIM_BUILD_EXAMPLES)
