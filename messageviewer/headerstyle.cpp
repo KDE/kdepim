@@ -940,7 +940,7 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
 
   QString headerStr;
   headerStr += "<div style=\"position: absolute;\n";
-  headerStr += "            top: 10px;\n";
+  headerStr += "            top: 5px;\n";
   headerStr += "            left: 0px;\n";
   headerStr += "            width: 100%;\n";
   headerStr += "            height: 94px;\n";
