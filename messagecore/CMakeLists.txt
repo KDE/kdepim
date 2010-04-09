@@ -34,7 +34,7 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KABC_LIBS}
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
-  kdepim
+  ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES
