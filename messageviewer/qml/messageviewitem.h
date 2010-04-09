@@ -38,9 +38,8 @@ class MessageViewItem : public QDeclarativeItem
 {
   Q_OBJECT
   Q_PROPERTY( int messageItemId READ messageItemId WRITE setMessageItemId )
-  Q_PROPERTY( QObject* messageTreeModel READ messageTreeModel )
   Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
-  Q_PROPERTY( QObject* messageTreeModel READ messageTreeModel CONSTANT )
+  Q_PROPERTY( QObject* attachmentModel READ attachmentModel CONSTANT )
   Q_PROPERTY( double swipeLength READ swipeLength WRITE setSwipeLength )
 
   public:
@@ -53,7 +52,7 @@ class MessageViewItem : public QDeclarativeItem
     QString splashMessage() const;
     void setSplashMessage( const QString &message );
 
-    QObject* messageTreeModel() const;
+    QObject* attachmentModel() const;
 
     /**
      * The length, expressed as percentage of the width, which trigers the next

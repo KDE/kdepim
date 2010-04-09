@@ -20,6 +20,7 @@
 #include "attachmentproxymodel.h"
 #include <messageviewer/mimetreemodel.h>
 #include <KDebug>
+#include <QStringList>
 
 AttachmentProxyModel::AttachmentProxyModel(QObject* parent): QSortFilterProxyModel(parent)
 {
@@ -29,12 +30,23 @@ AttachmentProxyModel::AttachmentProxyModel(QObject* parent): QSortFilterProxyMod
 
 bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
 {
-  const QModelIndex sourceTypeIndex = sourceModel()->index( source_row, 1, source_parent );
-  const QString mimeType = sourceTypeIndex.data( MessageViewer::MimeTreeModel::MimeTypeRole ).toString();
-  kDebug() << mimeType;
-  // TODO complete blacklist, filter out main body part
-  if ( mimeType.startsWith( QLatin1String( "multipart/" ) ) || mimeType == QLatin1String( "application/pgp-signature" ) )
+  const QModelIndex sourceIndex = sourceModel()->index( source_row, 0, source_parent );
+  const QString mimeType = sourceIndex.data( MessageViewer::MimeTreeModel::MimeTypeRole ).toString();
+
+  // filter out structutral nodes and crypto stuff
+  const QStringList blacklist = QStringList()
+    << QLatin1String( "application/pgp-encrypted" )
+    << QLatin1String( "application/pkcs7-mime" )
+    << QLatin1String( "application/pgp-signature" )
+    << QLatin1String( "application/pkcs7-signature" )
+    << QLatin1String( "application/x-pkcs7-signature" );
+  if ( mimeType.startsWith( QLatin1String( "multipart/" ) ) || blacklist.contains( mimeType ) )
     return false;
+
+  // filter out the main body part
+  if ( sourceIndex.data( MessageViewer::MimeTreeModel::MainBodyPartRole ).toBool() )
+    return false;
+
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
 }
 

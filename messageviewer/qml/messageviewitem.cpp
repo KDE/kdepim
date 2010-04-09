@@ -173,7 +173,7 @@ void MessageViewItem::setSplashMessage(const QString& message)
     m_viewer->displaySplashPage( message );
 }
 
-QObject* MessageViewItem::messageTreeModel() const
+QObject* MessageViewItem::attachmentModel() const
 {
   return m_attachmentProxy;
 }

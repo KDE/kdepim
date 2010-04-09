@@ -20,6 +20,7 @@
 #include "mimetreemodel.h"
 
 #include <kmime/kmime_content.h>
+#include <KMime/Message>
 
 #include <KDebug>
 #include <KIcon>
@@ -202,6 +203,12 @@ QVariant MimeTreeModel::data(const QModelIndex & index, int role) const
     return QVariant::fromValue( content );
   if ( role == MimeTypeRole )
     return d->mimeTypeForContent( content );
+  if ( role == MainBodyPartRole ) {
+    KMime::Message* topLevelMsg = dynamic_cast<KMime::Message*>( d->root );
+    if ( !topLevelMsg )
+      return false;
+    return topLevelMsg->mainBodyPart() == content;
+  }
   return QVariant();
 }
 

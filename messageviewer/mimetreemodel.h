@@ -39,7 +39,8 @@ class MimeTreeModel : public QAbstractItemModel
     enum Role {
       ContentIndexRole = Qt::UserRole + 1,
       ContentRole,
-      MimeTypeRole
+      MimeTypeRole,
+      MainBodyPartRole
     };
     MimeTreeModel( QObject *parent = 0 );
     ~MimeTreeModel();
