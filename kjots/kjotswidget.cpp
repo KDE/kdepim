@@ -34,6 +34,10 @@
 #include <QTextDocument>
 #include <QTextDocumentFragment>
 #include <QTimer>
+#include <QPrintDialog>
+#include <QPainter>
+#include <QPrinter>
+#include <QAbstractTextDocumentLayout>
 
 // Akonadi
 #include <akonadi/control.h>
@@ -325,6 +329,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( action, SIGNAL(triggered()), SLOT(exportSelectionToXml()) );
   exportMenu->menu()->addAction( action );
 
+  KStandardAction::print(this, SLOT(printSelection()), actionCollection);
+
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 
   connect( treeview->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(updateMenu()) );
@@ -375,7 +381,7 @@ void KJotsWidget::delayedInitialization()
 
   // Actions for a single item selection.
   entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
-//   entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)) );
+  entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)) );
   entryActions.insert( actionCollection->action("rename_entry") );
   entryActions.insert( actionCollection->action("change_color") );
   entryActions.insert( actionCollection->action("save_to") );
@@ -398,7 +404,7 @@ void KJotsWidget::delayedInitialization()
 
   // Actions that are used when multiple items are selected.
   multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
-//   multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)));
+  multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)));
   multiselectionActions.insert( actionCollection->action("del_mult") );
   multiselectionActions.insert( actionCollection->action("save_to") );
   multiselectionActions.insert( actionCollection->action("change_color") );
@@ -911,6 +917,115 @@ void KJotsWidget::exportSelectionToXml()
     exportFile.close();
   }
   m_loader->setTheme(currentTheme);
+}
+
+void KJotsWidget::printSelection()
+{
+
+  QPrinter *printer = new QPrinter();
+  printer->setDocName("KJots Print");
+  printer->setFullPage(false);
+  printer->setCreator("KJots");
+  //Not supported in Qt?
+  //printer->setPageSelection(QPrinter::ApplicationSide);
+
+  //KPrinter::pageList() only works with ApplicationSide. ApplicationSide
+  //requires min/max pages. How am I supposed to tell how many pages there
+  //are before I setup the printer?
+
+  QPrintDialog printDialog(printer, this);
+
+  QAbstractPrintDialog::PrintDialogOptions options = printDialog.enabledOptions();
+  options &= ~QAbstractPrintDialog::PrintPageRange;
+  if (activeEditor()->textCursor().hasSelection())
+    options |= QAbstractPrintDialog::PrintSelection;
+  printDialog.setEnabledOptions(options);
+
+  printDialog.setWindowTitle(i18n("Send To Printer"));
+  if (printDialog.exec() == QDialog::Accepted) {
+    QTextDocument printDocument;
+    if ( printer->printRange() == QPrinter::Selection )
+    {
+      printDocument.setHtml( activeEditor()->textCursor().selection().toHtml() );
+    } else {
+      QTextCursor printCursor ( &printDocument );
+      QString currentTheme = m_loader->themeName();
+      m_loader->setTheme( "print_output" );
+      printDocument.setHtml( renderSelectionToHtml() );
+      m_loader->setTheme( currentTheme );
+    }
+
+    QPainter p(printer);
+
+    // Check that there is a valid device to print to.
+    if (p.isActive()) {
+      QTextDocument *doc = &printDocument;
+
+      QRectF body = QRectF(QPointF(0, 0), doc->pageSize());
+      QPointF pageNumberPos;
+
+      QAbstractTextDocumentLayout *layout = doc->documentLayout();
+      layout->setPaintDevice(p.device());
+
+      const int dpiy = p.device()->logicalDpiY();
+
+      const int margin = (int) ((2/2.54)*dpiy); // 2 cm margins
+      QTextFrameFormat fmt = doc->rootFrame()->frameFormat();
+      fmt.setMargin(margin);
+      doc->rootFrame()->setFrameFormat(fmt);
+
+      body = QRectF(0, 0, p.device()->width(), p.device()->height());
+      pageNumberPos = QPointF(body.width() - margin,
+                      body.height() - margin
+                      + QFontMetrics(doc->defaultFont(), p.device()).ascent()
+                      + 5 * p.device()->logicalDpiY() / 72);
+
+      doc->setPageSize(body.size());
+
+      int docCopies = printer->numCopies();
+      for (int copy = 0; copy < docCopies; ++copy) {
+
+        int lastPage = layout->pageCount();
+        for ( int page = 1; page <= lastPage ; page++ ) {
+          p.save();
+          p.translate(body.left(), body.top() - (page - 1) * body.height());
+          QRectF view(0, (page - 1) * body.height(), body.width(), body.height());
+
+          QAbstractTextDocumentLayout *layout = doc->documentLayout();
+          QAbstractTextDocumentLayout::PaintContext ctx;
+
+          p.setClipRect(view);
+          ctx.clip = view;
+
+          // don't use the system palette text as default text color, on HP/UX
+          // for example that's white, and white text on white paper doesn't
+          // look that nice
+          ctx.palette.setColor(QPalette::Text, Qt::black);
+
+          layout->draw(&p, ctx);
+
+          if (!pageNumberPos.isNull()) {
+            p.setClipping(false);
+            p.setFont(QFont(doc->defaultFont()));
+            const QString pageString = QString::number(page);
+
+            p.drawText(qRound(pageNumberPos.x() - p.fontMetrics().width(pageString)),
+              qRound(pageNumberPos.y() + view.top()),
+              pageString);
+          }
+
+          p.restore();
+
+          if ( (page+1) <= lastPage ) {
+            printer->newPage();
+          }
+        }
+      }
+    }
+  }
+
+  delete printer;
+
 }
 
 void KJotsWidget::selectNext( int role, int step )

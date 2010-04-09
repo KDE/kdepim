@@ -115,6 +115,7 @@ protected slots:
   void exportSelectionToHtml();
   void exportSelectionToPlainText();
   void exportSelectionToXml();
+  void printSelection();
 
   void deletePage();
   void deleteBook();
