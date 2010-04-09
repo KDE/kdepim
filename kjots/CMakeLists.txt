@@ -1,6 +1,5 @@
 project(kjots)
 
-
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -23,7 +22,7 @@ include_directories(
   ${KDE4_INCLUDES}
   ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  ${Grantlee_INCLUDE_DIRS}
+  ${Grantlee_INCLUDE_DIR}
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS})
