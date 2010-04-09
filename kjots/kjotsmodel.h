@@ -42,6 +42,7 @@ class KJotsEntity : public QObject
   Q_OBJECT
   Q_PROPERTY(QString title READ title)
   Q_PROPERTY(QString content READ content)
+  Q_PROPERTY(QString plainContent READ plainContent)
   Q_PROPERTY(qint64 entityId READ entityId)
   Q_PROPERTY(bool isBook READ isBook)
   Q_PROPERTY(bool isPage READ isPage)
@@ -58,6 +59,7 @@ public:
 
   QString content() const;
 
+  QString plainContent() const;
 
   qint64 entityId() const;
 

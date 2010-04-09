@@ -35,6 +35,7 @@
 #include "note.h"
 #include <grantlee/markupdirector.h>
 #include <grantlee/texthtmlbuilder.h>
+#include <grantlee/plaintextmarkupbuilder.h>
 
 Q_DECLARE_METATYPE(QTextDocument*)
 
@@ -56,6 +57,21 @@ QString KJotsEntity::content() const
     return QString();
 
   Grantlee::TextHTMLBuilder builder;
+  Grantlee::MarkupDirector director(&builder);
+
+  director.processDocument(document);
+  QString result = builder.getResult();
+
+  return result;
+}
+
+QString KJotsEntity::plainContent() const
+{
+  QTextDocument *document = m_index.data( KJotsModel::DocumentRole ).value<QTextDocument*>();
+  if (!document)
+    return QString();
+
+  Grantlee::PlainTextMarkupBuilder builder;
   Grantlee::MarkupDirector director(&builder);
 
   director.processDocument(document);
