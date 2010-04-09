@@ -51,18 +51,19 @@ class KJotsEntity : public QObject
 public:
   KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
 
-  bool isBook();
-  bool isPage();
+  bool isBook() const;
+  bool isPage() const;
 
-  QString title();
+  QString title() const;
 
-  QString content();
+  QString content() const;
 
-  qint64 entityId();
 
-  QVariantList entities();
+  qint64 entityId() const;
 
-  QVariantList breadcrumbs();
+  QVariantList entities() const;
+
+  QVariantList breadcrumbs() const;
 
 private:
   QPersistentModelIndex m_index;

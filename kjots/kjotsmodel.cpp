@@ -44,12 +44,12 @@ KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
   m_index = QPersistentModelIndex(index);
 }
 
-QString KJotsEntity::title()
+QString KJotsEntity::title() const
 {
   return m_index.data().toString();
 }
 
-QString KJotsEntity::content()
+QString KJotsEntity::content() const
 {
   QTextDocument *document = m_index.data( KJotsModel::DocumentRole ).value<QTextDocument*>();
   if (!document)
@@ -64,7 +64,7 @@ QString KJotsEntity::content()
   return result;
 }
 
-qint64 KJotsEntity::entityId()
+qint64 KJotsEntity::entityId() const
 {
   Item item = m_index.data(EntityTreeModel::ItemRole).value<Item>();
   if (!item.isValid())
@@ -77,7 +77,7 @@ qint64 KJotsEntity::entityId()
   return item.id();
 }
 
-bool KJotsEntity::isBook()
+bool KJotsEntity::isBook() const
 {
   Collection col = m_index.data(EntityTreeModel::CollectionRole).value<Collection>();
 
@@ -88,7 +88,7 @@ bool KJotsEntity::isBook()
   return false;
 }
 
-bool KJotsEntity::isPage()
+bool KJotsEntity::isPage() const
 {
   Item item = m_index.data(EntityTreeModel::ItemRole).value<Item>();
   if (item.isValid())
@@ -98,7 +98,7 @@ bool KJotsEntity::isPage()
   return false;
 }
 
-QVariantList KJotsEntity::entities()
+QVariantList KJotsEntity::entities() const
 {
   QVariantList list;
   int row = 0;
@@ -113,7 +113,7 @@ QVariantList KJotsEntity::entities()
   return list;
 }
 
-QVariantList KJotsEntity::breadcrumbs()
+QVariantList KJotsEntity::breadcrumbs() const
 {
   QVariantList list;
   int row = 0;
