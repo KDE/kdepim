@@ -30,7 +30,6 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kactionmenu.h>
-#include <kaddrbookexternal.h>
 #include <kascii.h>
 #include <kbookmarkmanager.h>
 #include <kcharsets.h>
@@ -51,6 +50,9 @@
 #include <kxmlguifactory.h>
 #include <kicon.h>
 #include <kde_file.h>
+
+#include <libkdepim/addemailaddressjob.h>
+#include <libkdepim/openemailaddressjob.h>
 
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
@@ -1468,12 +1470,14 @@ void ArticleWidget::slotAddBookmark()
 
 void ArticleWidget::slotAddToAddressBook()
 {
-  KPIM::KAddrBookExternal::addEmail( mCurrentURL.path(), this );
+  KPIM::AddEmailAddressJob *job = new KPIM::AddEmailAddressJob( mCurrentURL.path(), this, this );
+  job->start();
 }
 
 void ArticleWidget::slotOpenInAddressBook()
 {
-  KPIM::KAddrBookExternal::openEmail( mCurrentURL.path(), mCurrentURL.path(), this );
+  KPIM::OpenEmailAddressJob *job = new KPIM::OpenEmailAddressJob( mCurrentURL.path(), this, this );
+  job->start();
 }
 
 void ArticleWidget::slotOpenAttachment()
