@@ -166,34 +166,9 @@ Rectangle {
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: 400
       content: [
-        Component {
-          id: attachmentDelegate
-          Item {
-            id: wrapper
-            width: attachmentList.width
-            height: 48
-            clip: true
-            Rectangle {
-              anchors.fill: parent
-              opacity: 0.25
-              border.color: palette.mid
-            }
-            Text { anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
-          }
-        },
-        ListView {
-          id: attachmentList
-          anchors.fill: parent
-          
+        AttachmentList {
           model: messageView.attachmentModel
-          delegate: attachmentDelegate
-
-          MouseArea {
-            anchors.fill: parent
-            onClicked: {
-              console.log( "current mime tree count: " + messageView.attachmentModel.attachmentCount );
-            }
-          }
+          anchors.fill: parent
         }
       ]
     }

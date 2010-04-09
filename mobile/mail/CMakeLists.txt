@@ -27,6 +27,7 @@ target_link_libraries(kmail-mobile
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
+  AttachmentList.qml
   Button.qml
   HeaderView.qml
   kmail-mobile.qml
