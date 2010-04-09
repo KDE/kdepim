@@ -25,13 +25,15 @@ import Qt 4.7
  */
 Item {
   property alias model: attachmentListView.model
+  property int rowHeight: 48
 
   Component {
     id: attachmentDelegate
+
     Item {
       id: wrapper
       width: attachmentListView.width
-      height: 48
+      height: rowHeight
       clip: true
 
       Rectangle {
@@ -57,16 +59,13 @@ Item {
 
    ListView {
     id: attachmentListView
-    anchors.fill: parent
-
+    anchors.top: parent.top
+    anchors.left: parent.left
+    anchors.right: parent.right
+    height: Math.min( model.attachmentCount * rowHeight, parent.height )
+    interactive: model.attachmentCount * rowHeight > parent.height
     delegate: attachmentDelegate
-
-    MouseArea {
-      anchors.fill: parent
-      onClicked: {
-        console.log( "current attachment count: " + model.attachmentCount );
-      }
-    }
+    clip: true
   }
 
 }
