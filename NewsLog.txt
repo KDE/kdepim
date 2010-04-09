@@ -1,3 +1,20 @@
+Friday, April 9th 2010
+
+Problems addressed
+------------------
+
+* kolab/issue4267: information about the alarm are missing in the event views (rt#6090)
+* kolab/issue2470: Calendar: "Next Month" button doesn't change the displayed month (rt#5961) 
+* kolab/issue4256: Event attendees tab, Select Addressee.. Enter Filter, empty topics are shown (rt#6081)
+* kolab/issue4240: Wish: Maillist icons for invitations and update mails (rt#6065)
+* kolab/issue3882: Composer: Pressing TAB in the address completion popup list doesn't change to the next
+                   addressbook
+* kolab/issue4280: Due time "00:00" is set for no time associated todos if todo resource disabled+enabled (rt#6096)
+* kolab/issue4301: calendar display for single events isn't correct
+* kolab/issue2762: Sometimes whole day events overlap in the view (rt#5936)
+* kolab/issue4219: Tasks: Copy, Select nothing, Paste of a subtask copies it as subtask
+
+
 Friday, April 1st 2010
 
 Problems addressed
