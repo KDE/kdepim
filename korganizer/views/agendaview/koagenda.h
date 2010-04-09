@@ -138,8 +138,8 @@ class KOAgenda : public Q3ScrollView
 
     void changeColumns( int columns );
 
-    int columns() { return mColumns; }
-    int rows() { return mRows; }
+    int columns() const { return mColumns; }
+    int rows() const { return mRows; }
 
     double gridSpacingX() const { return mGridSpacingX; }
     double gridSpacingY() const { return mGridSpacingY; }
@@ -189,7 +189,7 @@ class KOAgenda : public Q3ScrollView
       item exists, the selection is not changed.
     */
     void selectItemByItemId( const Akonadi::Item::Id &id );
-    void selectItem( const Akonadi::Item& item );
+    void selectItem( const Akonadi::Item &item );
 
     bool removeAgendaItem( KOAgendaItem *item );
     void showAgendaItem( KOAgendaItem *item );
