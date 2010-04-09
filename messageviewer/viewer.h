@@ -58,12 +58,6 @@ class KToggleAction;
 class KUrl;
 class KConfigSkeleton;
 
-namespace {
-  class AttachmentURLHandler;
-  class FallBackURLHandler;
-  class HtmlAnchorHandler;
-}
-
 namespace MessageViewer {
   class AttachmentStrategy;
   class ViewerPrivate;
