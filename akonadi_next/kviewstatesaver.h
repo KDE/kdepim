@@ -25,7 +25,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QPair>
 
-#include "kdeui_export.h"
+#include "akonadi_next_export.h"
 
 class QTreeView;
 class QListView;
@@ -138,7 +138,7 @@ class KViewStateSaverPrivate;
   @author Stephen Kelly <stephen@kdab.com>
   @since 4.5
 */
-class KDEUI_EXPORT KViewStateSaver : public QObject
+class AKONADI_NEXT_EXPORT KViewStateSaver : public QObject
 {
   Q_OBJECT
 public:
