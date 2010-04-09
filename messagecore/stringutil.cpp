@@ -18,8 +18,6 @@
 */
 #include "stringutil.h"
 
-#include <libkdepim/kaddrbookexternal.h>
-
 #include <kmime/kmime_charfreq.h>
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_util.h>
@@ -38,6 +36,45 @@
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
+
+/// Moved here from KAddrBookExternal
+
+#include <akonadi/contact/contactgroupexpandjob.h>
+#include <akonadi/contact/contactgroupsearchjob.h>
+
+static QString expandDistributionList( const QString &listName, bool &emptyList )
+{
+  emptyList = false;
+  if ( listName.isEmpty() )
+    return QString();
+
+  // search the contact group by name
+  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob;
+  job->setQuery( Akonadi::ContactGroupSearchJob::Name, listName );
+  if ( !job->exec() )
+    return QString();
+
+  const KABC::ContactGroup::List groups = job->contactGroups();
+  if ( groups.isEmpty() )
+    return QString();
+
+  // expand the contact group to a list of email addresses
+  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
+  if ( !expandJob->exec() )
+    return QString();
+
+  const KABC::Addressee::List contacts = expandJob->contacts();
+
+  QStringList emails;
+  foreach ( const KABC::Addressee &contact, contacts )
+    emails.append( contact.fullEmail() );
+
+  const QString listOfEmails = emails.join( ", " );
+  emptyList = listOfEmails.isEmpty();
+
+  return listOfEmails;
+}
+///
 
 using namespace KMime;
 using namespace KMime::Types;
@@ -837,7 +874,7 @@ QString expandAliases( const QString& recipients, const QString &defaultDomain,
 
     // try to expand distribution list
     bool distributionListIsEmpty = false;
-    QString expandedList = KPIM::KAddrBookExternal::expandDistributionList( receiver, distributionListIsEmpty );
+    const QString expandedList = expandDistributionList( receiver, distributionListIsEmpty );
     if ( distributionListIsEmpty ) {
       expandedRecipients += receiver;
       distributionListEmpty << receiver;
