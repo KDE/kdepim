@@ -15,6 +15,7 @@ include_directories( ${Boost_INCLUDE_DIR} )
 
 set(kdepim_LIB_SRCS
    addemailaddressjob.cpp
+   addcontactjob.cpp
    openemailaddressjob.cpp
    kdescendantsproxymodel.cpp
    ktimeedit.cpp

@@ -19,10 +19,7 @@
 
 #include "vcardviewer.h"
 
-#include <akonadi/collectiondialog.h>
-#include <akonadi/contact/contactsearchjob.h>
 #include <akonadi/contact/contactviewer.h>
-#include <akonadi/itemcreatejob.h>
 
 #include <kabc/vcardconverter.h>
 #include <kabc/addressee.h>
@@ -31,6 +28,8 @@ using KABC::Addressee;
 
 #include <klocale.h>
 #include <kmessagebox.h>
+
+#include <libkdepim/addcontactjob.h>
 
 #include <QtCore/QPointer>
 #include <QtCore/QString>
@@ -81,15 +80,10 @@ VCardViewer::~VCardViewer()
 
 void VCardViewer::slotUser1()
 {
-  KABC::Addressee contact = *itAddresseeList;
+  const KABC::Addressee contact = *itAddresseeList;
 
-  // check whether a contact with the same email address exists already
-  Akonadi::ContactSearchJob *searchJob = new Akonadi::ContactSearchJob( this );
-  searchJob->setLimit( 1 );
-  searchJob->setQuery( Akonadi::ContactSearchJob::Email, contact.preferredEmail(), Akonadi::ContactSearchJob::ExactMatch );
-  searchJob->setProperty( "newContact", QVariant::fromValue( contact ) );
-
-  connect( searchJob, SIGNAL( result( KJob* ) ), SLOT( slotDuplicatedContactChecked( KJob* ) ) );
+  KPIM::AddContactJob *job = new KPIM::AddContactJob( contact, this, this );
+  job->start();
 }
 
 void VCardViewer::slotUser2()
@@ -108,63 +102,6 @@ void VCardViewer::slotUser3()
   if ( itAddresseeList == mAddresseeList.begin() )
     enableButton(User3, false);
   enableButton(User2, true);
-}
-
-void VCardViewer::slotDuplicatedContactChecked( KJob *job )
-{
-  const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
-
-  if ( job->error() ) {
-    // TODO: show error message to user
-    return;
-  }
-
-  const KABC::Addressee::List contacts = searchJob->contacts();
-
-  if ( !contacts.isEmpty() ) { // contact is already part of the address book...
-    const QString text = i18n( "The VCard's primary email address is already in "
-                               "your address book; however, you may save the VCard "
-                               "into a file and import it into the address book manually." );
-    KMessageBox::information( this, text );
-    return;
-  }
-
-  // ask user in which address book the new contact shall be stored
-  const QStringList mimeTypes( KABC::Addressee::mimeType() );
-  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( this );
-  dlg->setMimeTypeFilter( mimeTypes );
-  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  dlg->setCaption( i18n( "Select Address Book" ) );
-  dlg->setDescription( i18n( "Select the address book the new contact shall be saved in:" ) );
-
-  if ( dlg->exec() == QDialog::Accepted ) {
-    const Akonadi::Collection addressBook = dlg->selectedCollection();
-    if ( addressBook.isValid() ) {
-      // create the new item
-      Akonadi::Item item;
-      item.setMimeType( KABC::Addressee::mimeType() );
-      item.setPayload<KABC::Addressee>( searchJob->property( "newContact" ).value<KABC::Addressee>() );
-
-      // save the new item in akonadi storage
-      Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, addressBook );
-      connect( job, SIGNAL( result( KJob* ) ), SLOT( slotVCardAdded( KJob* ) ) );
-    }
-  }
-
-  delete dlg;
-}
-
-void VCardViewer::slotVCardAdded( KJob *job )
-{
-  if ( job->error() ) {
-    // TODO: show error message to user
-    return;
-  }
-
-  const QString text = i18n( "The VCard was added to your address book; "
-                             "you can add more information to this "
-                             "entry by opening the address book." );
-  KMessageBox::information( this, text, QString(), "addedtokabc" );
 }
 
 #include "vcardviewer.moc"

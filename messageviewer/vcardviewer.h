@@ -42,9 +42,6 @@ class VCardViewer : public KDialog
       void slotUser2();
       void slotUser3();
 
-      void slotDuplicatedContactChecked( KJob* );
-      void slotVCardAdded( KJob* );
-
     private:
       Akonadi::ContactViewer *mContactViewer;
 

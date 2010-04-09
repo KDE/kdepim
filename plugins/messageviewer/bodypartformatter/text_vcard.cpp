@@ -40,7 +40,8 @@
 #include <kiconloader.h>
 
 #include <akonadi/contact/standardcontactformatter.h>
-#include <kaddrbookexternal.h>
+
+#include <libkdepim/addcontactjob.h>
 
 #include "messageviewer/interfaces/bodypartformatter.h"
 #include "messageviewer/interfaces/bodypart.h"
@@ -119,7 +120,10 @@ namespace {
        if ( index == -1 || index >= al.count() ) return true;
        KABC::Addressee a = al[index];
        if ( a.isEmpty() ) return true;
-       KPIM::KAddrBookExternal::addVCard( a, 0 );
+
+       KPIM::AddContactJob *job = new KPIM::AddContactJob( a, 0 );
+       job->start();
+
        return true;
      }
 
