@@ -33,6 +33,8 @@
 #include <kpimtextedit/textutils.h>
 
 #include "note.h"
+#include <grantlee/markupdirector.h>
+#include <grantlee/texthtmlbuilder.h>
 
 Q_DECLARE_METATYPE(QTextDocument*)
 
@@ -49,13 +51,17 @@ QString KJotsEntity::title()
 
 QString KJotsEntity::content()
 {
-  Item item = m_index.data(EntityTreeModel::ItemRole).value<Item>();
-  if (item.isValid())
-  {
-    KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
-    return page->mainBodyPart()->decodedText();
-  }
-  return QString();
+  QTextDocument *document = m_index.data( KJotsModel::DocumentRole ).value<QTextDocument*>();
+  if (!document)
+    return QString();
+
+  Grantlee::TextHTMLBuilder builder;
+  Grantlee::MarkupDirector director(&builder);
+
+  director.processDocument(document);
+  QString result = builder.getResult();
+
+  return result;
 }
 
 qint64 KJotsEntity::entityId()

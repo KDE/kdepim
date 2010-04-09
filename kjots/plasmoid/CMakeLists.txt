@@ -39,6 +39,7 @@ target_link_libraries(plasma_applet_akonotes_list
                       ${KDE4_AKONADI_LIBS}
                       ${KDE4_AKONADI_KMIME_LIBS}
                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+                      ${Grantlee_GUI_LIBRARIES}
                       ${KDE4_KMIME_LIBS}
 )
 
