@@ -23,7 +23,7 @@ include_directories(
   ${KDE4_INCLUDES}
   ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
-  ${Grantlee_INCLUDE_DIR}
+  ${Grantlee_INCLUDE_DIRS}
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS})
