@@ -19,10 +19,11 @@ else("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   option(KJOTS_BUILD_KONTACT_PLUGIN "Build kjots with support for kontact" TRUE)
 endif("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 
-include_directories( 
-  ${KDE4_INCLUDES} 
-  ${KDEPIMLIBS_INCLUDE_DIRS} 
+include_directories(
+  ${KDE4_INCLUDES}
+  ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+  ${Grantlee_INCLUDE_DIRS}
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS})
@@ -91,6 +92,7 @@ target_link_libraries(kjots
   ${KDE4_AKONADI_LIBS}
   ${KDE4_KMIME_LIBS}
   ${KDE4_AKONADI_KMIME_LIBS}
+  ${Grantlee_CORE_LIBRARIES}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
 )
 
@@ -139,6 +141,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
     ${KDE4_AKONADI_LIBS}
     ${KDE4_AKONADI_KMIME_LIBS}
     ${KDE4_KMIME_LIBS}
+    ${Grantlee_CORE_LIBRARIES}
     ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   )
 

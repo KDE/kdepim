@@ -50,9 +50,9 @@
 #include <akonadi/session.h>
 
 // Grantlee
-// #include <grantlee/template.h>
-// #include <grantlee/engine.h>
-// #include <grantlee/context.h>
+#include <grantlee/template.h>
+#include <grantlee/engine.h>
+#include <grantlee/context.h>
 
 // KDE
 #include <KAction>
@@ -92,7 +92,7 @@ Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
 
 using namespace Akonadi;
-// using namespace Grantlee;
+using namespace Grantlee;
 
 KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::WindowFlags f )
     : QWidget( parent, f ), m_xmlGuiClient( xmlGuiClient )
@@ -107,17 +107,15 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   QHBoxLayout *layout = new QHBoxLayout( this );
 
-#if 0
   KStandardDirs KStd;
-  Engine *engine = Engine::instance();
-  engine->setPluginDirs( KStd.findDirs( "lib", QLatin1String( "grantlee" ) ) );
+  m_templateEngine = new Engine();
+  m_templateEngine->setPluginPaths( KStd.findDirs( "lib", QString() ) );
 
   m_loader = FileSystemTemplateLoader::Ptr( new FileSystemTemplateLoader() );
   m_loader->setTemplateDirs( KStd.findDirs( "data", QLatin1String( "kjots/themes" ) ) );
   m_loader->setTheme( QLatin1String( "default" ) );
 
-  engine->addTemplateLoader( m_loader );
-#endif
+  m_templateEngine->addTemplateLoader( m_loader );
 
   treeview = new KJotsTreeView( xmlGuiClient, splitter );
 
@@ -674,8 +672,6 @@ void KJotsWidget::newBookResult( KJob* job )
 
 QString KJotsWidget::renderSelectionToHtml()
 {
-  return QString();
-#if 0
   QHash<QString, QVariant> hash;
 
   QList<QVariant> objectList;
@@ -693,13 +689,11 @@ QString KJotsWidget::renderSelectionToHtml()
   hash.insert( QLatin1String( "entities" ), objectList);
   Context c(hash);
 
-  Engine *engine = Engine::instance();
-  Template t = engine->loadByName( QLatin1String( "template.html" ) );
+  Template t = m_templateEngine->loadByName( QLatin1String( "template.html" ) );
 
   QString result = t->render(&c);
   // TODO: handle errors.
   return result;
-#endif
 }
 
 void KJotsWidget::renderSelection()
@@ -762,7 +756,6 @@ void KJotsWidget::changeTheme()
 
 void KJotsWidget::exportSelection()
 {
-#if 0
   QString currentTheme = m_loader->themeName();
   QString themeName = getThemeFromUser();
   if (themeName.isEmpty())
@@ -785,7 +778,6 @@ void KJotsWidget::exportSelection()
     exportFile.close();
   }
   m_loader->setTheme(currentTheme);
-#endif
 }
 
 

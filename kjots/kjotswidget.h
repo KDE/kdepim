@@ -28,10 +28,11 @@
 
 #include <QWidget>
 #include <QModelIndexList>
+#include <QItemSelection>
+
 #include <akonadi/item.h>
 
-// #include <grantlee/templateloader.h>
-#include <QItemSelection>
+#include <grantlee/templateloader.h>
 
 class QCheckBox;
 class QTextCursor;
@@ -53,6 +54,11 @@ namespace Akonadi
 {
 class EntityTreeModel;
 class Session;
+}
+
+namespace Grantlee
+{
+class Engine;
 }
 
 class KJotsEdit;
@@ -145,9 +151,11 @@ private:
   KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;
   KSelectionProxyModel *selProxy;
-//   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
+
+  Grantlee::Engine *m_templateEngine;
+  Grantlee::FileSystemTemplateLoader::Ptr m_loader;
 
   KFindDialog *searchDialog;
   QStringList searchHistory;
