@@ -44,19 +44,7 @@ KJotsEntity::KJotsEntity(const QModelIndex &index, QObject *parent)
 
 QString KJotsEntity::title()
 {
-  Item item = m_index.data(EntityTreeModel::ItemRole).value<Item>();
-  if (item.isValid())
-  {
-    KMime::Message::Ptr page = item.payload<KMime::Message::Ptr>();
-    return page->subject()->asUnicodeString();
-  } else {
-    Collection col = m_index.data(EntityTreeModel::CollectionRole).value<Collection>();
-    if (col.isValid())
-    {
-      return col.name();
-    }
-  }
-  return QString();
+  return m_index.data().toString();
 }
 
 QString KJotsEntity::content()
