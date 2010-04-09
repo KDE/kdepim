@@ -27,6 +27,9 @@ Item {
   property alias model: attachmentListView.model
   property int rowHeight: 48
 
+  /** Emittted when an attachment has been selected. */
+  signal attachmentSelected
+
   Component {
     id: attachmentDelegate
 
@@ -39,7 +42,7 @@ Item {
       Rectangle {
         id: background
         anchors.fill: parent
-        opacity: (isCurrentItem ? 0.25 : 0)
+        opacity: (wrapper.ListView.isCurrentItem ? 0.25 : 0)
       }
       Text {
         anchors.fill: parent;
@@ -52,6 +55,10 @@ Item {
         anchors.fill: parent
         onClicked: {
           console.log( "TODO - attachment selected: " + model.display );
+          var nonCurrentClicked = false
+          if ( !wrapper.ListView.isCurrentItem ) { nonCurrentClicked = true }
+          wrapper.ListView.view.currentIndex = model.index
+          if ( nonCurrentClicked ) { attachmentSelected() }
         }
       }
     }
@@ -66,6 +73,13 @@ Item {
     interactive: model.attachmentCount * rowHeight > parent.height
     delegate: attachmentDelegate
     clip: true
+
+    Connections {
+      target: model
+      onModelReset: {
+        attachmentListView.currentIndex = -1
+      }
+    }
   }
 
 }
