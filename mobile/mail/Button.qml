@@ -42,8 +42,11 @@ Rectangle {
   MouseArea {
     anchors.fill: parent
     hoverEnabled: true
-    onEntered: { border.color = "lightblue"; border.width = 2 }
-    onExited: border.width = 0
+    onPressed: {
+      border.color = "lightblue";
+      border.width = 2
+    }
+    onReleased: border.width = 0
     onClicked: parent.clicked()
   }
 }
