@@ -18,26 +18,15 @@
 * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 * 02110-1301  USA
 */
+#ifndef MAINVIEW_H
+#define MAINVIEW_H
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
+#include <QtDeclarative/QDeclarativeView>
 
-#include "mainview.h"
-
-
-int main( int argc, char **argv )
+class MainView : public QDeclarativeView
 {
-  const QByteArray& ba = QByteArray( "tasks-mobile" );
-  const KLocalizedString name = ki18n( "Tasks Mobile" );
+public:
+    explicit MainView( QWidget *parent = 0 );
+};
 
-  KAboutData aboutData( ba, ba, name, ba, name );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
-
-  MainView view;
-  view.show();
-
-  return app.exec();
-}
-
+#endif // MAINVIEW_H

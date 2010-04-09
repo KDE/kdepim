@@ -30,7 +30,7 @@ Rectangle {
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
-  Rectanle { // TaskView
+  Rectangle { // TaskView
     id: taskView
     anchors.left: parent.left
     width: parent.width
@@ -96,7 +96,7 @@ Rectangle {
 //               folderPanel.collapse()
 //             }
 //           }
-//         }
+        }
       ]
     }
 
@@ -111,52 +111,52 @@ Rectangle {
             text: "Actions"
             style: Text.Sunken
             anchors.horizontalCenter: parent.horizontalCenter
-          },
-          Button {
-            id: moveButton
-            anchors.top: actionLabel.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: "Move"
-            onClicked: actionPanel.collapse();
-          },
-          Button {
-            id: deleteButton
-            anchors.top: moveButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: "Delete"
-            onClicked: actionPanel.collapse();
-          },
-          Button {
-            id: previousButton
-            anchors.top: deleteButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: "Previous"
-            onClicked: { 
-//               if ( messageView.messageItemId >= 0 )
-//                 headerList.previousMessage();
-
-              actionPanel.collapse();
-            }
-          },
-          Button {
-            anchors.top: previousButton.bottom;
-            anchors.horizontalCenter: parent.horizontalCenter;
-            width: parent.width - 10
-            height: parent.height / 6
-            buttonText: "Next"
-            onClicked: {
-//               if ( messageView.messageItemId >= 0 )
-//                 headerList.nextMessage();
-
-              actionPanel.collapse();
-            }
           }
+//           Button {
+//             id: moveButton
+//             anchors.top: actionLabel.bottom;
+//             anchors.horizontalCenter: parent.horizontalCenter;
+//             width: parent.width - 10
+//             height: parent.height / 6
+//             buttonText: "Move"
+//             onClicked: actionPanel.collapse();
+//           },
+//           Button {
+//             id: deleteButton
+//             anchors.top: moveButton.bottom;
+//             anchors.horizontalCenter: parent.horizontalCenter;
+//             width: parent.width - 10
+//             height: parent.height / 6
+//             buttonText: "Delete"
+//             onClicked: actionPanel.collapse();
+//           },
+//           Button {
+//             id: previousButton
+//             anchors.top: deleteButton.bottom;
+//             anchors.horizontalCenter: parent.horizontalCenter;
+//             width: parent.width - 10
+//             height: parent.height / 6
+//             buttonText: "Previous"
+//             onClicked: { 
+// //               if ( messageView.messageItemId >= 0 )
+// //                 headerList.previousMessage();
+// 
+//               actionPanel.collapse();
+//             }
+//           },
+//           Button {
+//             anchors.top: previousButton.bottom;
+//             anchors.horizontalCenter: parent.horizontalCenter;
+//             width: parent.width - 10
+//             height: parent.height / 6
+//             buttonText: "Next"
+//             onClicked: {
+// //               if ( messageView.messageItemId >= 0 )
+// //                 headerList.nextMessage();
+// 
+//               actionPanel.collapse();
+//             }
+//           }
       ]
     }
 

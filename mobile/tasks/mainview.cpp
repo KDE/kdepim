@@ -19,25 +19,20 @@
 * 02110-1301  USA
 */
 
-#include <kapplication.h>
-#include <kaboutdata.h>
-#include <kcmdlineargs.h>
-
 #include "mainview.h"
 
+#include <QtDeclarative/QDeclarativeEngine>
 
-int main( int argc, char **argv )
+#include <KDebug>
+#include <KGlobal>
+#include <KStandardDirs>
+
+MainView::MainView( QWidget *parent ) : QDeclarativeView( parent )
 {
-  const QByteArray& ba = QByteArray( "tasks-mobile" );
-  const KLocalizedString name = ki18n( "Tasks Mobile" );
+  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
+    engine()->addImportPath( importPath );
 
-  KAboutData aboutData( ba, ba, name, ba, name );
-  KCmdLineArgs::init( argc, argv, &aboutData );
-  KApplication app;
-
-  MainView view;
-  view.show();
-
-  return app.exec();
+  const QString qmlPath = KStandardDirs::locate( "data", "mobile/tasks.qml" );
+  kDebug() << qmlPath;
+  setSource( qmlPath );
 }
-

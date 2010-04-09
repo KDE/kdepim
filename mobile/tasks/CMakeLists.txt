@@ -5,13 +5,14 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(mobile_tasks_SRCS
+  mainview.cpp
   main.cpp
 )
 
 kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 
 target_link_libraries(tasks-mobile
-#    ${QT_QTDECLARATIVE_LIBRARY}
+  ${QT_QTDECLARATIVE_LIBRARY}
 #    ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
 #    ${KDEPIMLIBS_AKONADI_LIBRARY}
 #    akonadi_next
