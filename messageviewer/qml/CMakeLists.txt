@@ -1,4 +1,4 @@
-if (QT_QTDECLARATIVE_FOUND)
+if (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
 
   kde4_add_plugin( messageviewerqmlplugin WITH_PREFIX
     plugin.cpp
@@ -18,4 +18,4 @@ if (QT_QTDECLARATIVE_FOUND)
   install( TARGETS messageviewerqmlplugin DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )
 
   add_subdirectory(tests)
-endif (QT_QTDECLARATIVE_FOUND)
+endif (QT_QTDECLARATIVE_FOUND AND KDEPIM_MOBILE_UI)
