@@ -6,7 +6,10 @@ configure_file(config-messageviewer.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-m
 
 add_subdirectory(tests)
 add_subdirectory(pics)
-add_subdirectory(qml)
+
+if(KDEPIM_MOBILE_UI)
+  add_subdirectory(qml)
+endif(KDEPIM_MOBILE_UI)
 
 set(libmessageviewer_SRCS
 
