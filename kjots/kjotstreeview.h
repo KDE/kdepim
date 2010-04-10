@@ -30,7 +30,7 @@ class KJotsTreeView : public Akonadi::EntityTreeView
 {
   Q_OBJECT
 public:
-  KJotsTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
+  explicit KJotsTreeView( KXMLGUIClient *xmlGuiClient, QWidget *parent = 0 );
 
   void delayedInitialization();
   QString captionForSelection( const QString &sep ) const;

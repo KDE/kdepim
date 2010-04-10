@@ -398,7 +398,7 @@ void KJotsBook::saveAndBackupBook()
 /*!
     \brief Deletes a book by removing the data file.
     This does not affect the list display, and can be called for reasons other than
-    choosing to delete an entry from the list. If you want the object to dissappear
+    choosing to delete an entry from the list. If you want the object to disappear
     from the list, then you have to delete it.
 */
 void KJotsBook::deleteBook ( void )

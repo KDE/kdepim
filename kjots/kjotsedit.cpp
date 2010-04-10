@@ -33,6 +33,7 @@
 #include <QContextMenuEvent>
 #include <QClipboard>
 #include <QItemSelectionModel>
+#include <QPointer>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -243,7 +244,7 @@ void KJotsEdit::onAutoDecimal( void )
 void KJotsEdit::onLinkify ( void )
 {
     selectLinkText();
-    KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this);
+    QPointer<KJotsLinkDialog> linkDialog = new KJotsLinkDialog(this);
     linkDialog->setLinkText(currentLinkText());
     linkDialog->setLinkUrl(currentLinkUrl());
 

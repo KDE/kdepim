@@ -50,7 +50,7 @@ class KJotsEntity : public QObject
   Q_PROPERTY(QVariantList breadcrumbs READ breadcrumbs)
 
 public:
-  KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
+  explicit KJotsEntity( const QModelIndex &index, QObject *parent = 0 );
 
   bool isBook() const;
   bool isPage() const;

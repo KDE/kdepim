@@ -36,6 +36,7 @@
 #include <QTimer>
 #include <QPrintDialog>
 #include <QPainter>
+#include <QPointer>
 #include <QPrinter>
 #include <QAbstractTextDocumentLayout>
 
@@ -933,16 +934,17 @@ void KJotsWidget::printSelection()
   //requires min/max pages. How am I supposed to tell how many pages there
   //are before I setup the printer?
 
-  QPrintDialog printDialog(printer, this);
 
-  QAbstractPrintDialog::PrintDialogOptions options = printDialog.enabledOptions();
+  QPointer<QPrintDialog> printDialog = new QPrintDialog(printer, this);
+
+  QAbstractPrintDialog::PrintDialogOptions options = printDialog->enabledOptions();
   options &= ~QAbstractPrintDialog::PrintPageRange;
   if (activeEditor()->textCursor().hasSelection())
     options |= QAbstractPrintDialog::PrintSelection;
-  printDialog.setEnabledOptions(options);
+  printDialog->setEnabledOptions(options);
 
-  printDialog.setWindowTitle(i18n("Send To Printer"));
-  if (printDialog.exec() == QDialog::Accepted) {
+  printDialog->setWindowTitle(i18n("Send To Printer"));
+  if (printDialog->exec() == QDialog::Accepted) {
     QTextDocument printDocument;
     if ( printer->printRange() == QPrinter::Selection )
     {
@@ -1023,6 +1025,7 @@ void KJotsWidget::printSelection()
       }
     }
   }
+  delete printDialog;
 
   delete printer;
 
