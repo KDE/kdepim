@@ -25,7 +25,6 @@
 #include <kmime/kmime_message.h>
 #include <KPIMUtils/Email>
 #include <KPIMIdentities/IdentityManager>
-#include <Akonadi/Contact/ContactSearchJob>
 
 #include <kascii.h>
 #include <KConfigGroup>
@@ -37,45 +36,6 @@
 #include <QHostInfo>
 #include <QRegExp>
 #include <QStringList>
-
-/// Moved here from KAddrBookExternal
-
-#include <akonadi/contact/contactgroupexpandjob.h>
-#include <akonadi/contact/contactgroupsearchjob.h>
-
-static QString expandDistributionList( const QString &listName, bool &emptyList )
-{
-  emptyList = false;
-  if ( listName.isEmpty() )
-    return QString();
-
-  // search the contact group by name
-  Akonadi::ContactGroupSearchJob *job = new Akonadi::ContactGroupSearchJob;
-  job->setQuery( Akonadi::ContactGroupSearchJob::Name, listName );
-  if ( !job->exec() )
-    return QString();
-
-  const KABC::ContactGroup::List groups = job->contactGroups();
-  if ( groups.isEmpty() )
-    return QString();
-
-  // expand the contact group to a list of email addresses
-  Akonadi::ContactGroupExpandJob *expandJob = new Akonadi::ContactGroupExpandJob( groups.first() );
-  if ( !expandJob->exec() )
-    return QString();
-
-  const KABC::Addressee::List contacts = expandJob->contacts();
-
-  QStringList emails;
-  foreach ( const KABC::Addressee &contact, contacts )
-    emails.append( contact.fullEmail() );
-
-  const QString listOfEmails = emails.join( ", " );
-  emptyList = listOfEmails.isEmpty();
-
-  return listOfEmails;
-}
-///
 
 using namespace KMime;
 using namespace KMime::Types;
@@ -284,27 +244,6 @@ QMap<QString, QString> parseMailtoUrl ( const KUrl& url )
   to = to.isEmpty() ?  values.value( "to" ) : to + QString( ", " ) + values.value( "to" );
   values.insert( "to", to );
   return values;
-}
-
-QString expandNickName( const QString& nickName )
-{
-  if ( nickName.isEmpty() )
-    return QString();
-
-  const QString lowerNickName = nickName.toLower();
-
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  job->setQuery( Akonadi::ContactSearchJob::NickName, lowerNickName );
-  if ( !job->exec() )
-    return QString();
-
-  const KABC::Addressee::List contacts = job->contacts();
-  foreach ( const KABC::Addressee &contact, contacts ) {
-    if ( contact.nickName().toLower() == lowerNickName )
-      return contact.fullEmail();
-  }
-
-  return QString();
 }
 
 QString stripSignature ( const QString & msg, bool clearSigned )
@@ -921,60 +860,6 @@ bool addressIsInAddressList( const QString& address,
       return true;
   }
   return false;
-}
-
-QString expandAliases( const QString& recipients, const QString &defaultDomain,
-                       QStringList &distributionListEmpty )
-{
-  if ( recipients.isEmpty() )
-    return QString();
-
-  QStringList recipientList = KPIMUtils::splitAddressList( recipients );
-  QString expandedRecipients;
-  for ( QStringList::Iterator it = recipientList.begin();
-        it != recipientList.end(); ++it ) {
-    if ( !expandedRecipients.isEmpty() )
-      expandedRecipients += ", ";
-    QString receiver = (*it).trimmed();
-
-    // try to expand distribution list
-    bool distributionListIsEmpty = false;
-    const QString expandedList = expandDistributionList( receiver, distributionListIsEmpty );
-    if ( distributionListIsEmpty ) {
-      expandedRecipients += receiver;
-      distributionListEmpty << receiver;
-      continue;
-    }
-
-    if ( !expandedList.isEmpty()) {
-      expandedRecipients += expandedList;
-      continue;
-    }
-
-    // try to expand nick name
-    QString expandedNickName = expandNickName( receiver );
-    if ( !expandedNickName.isEmpty() ) {
-      expandedRecipients += expandedNickName;
-      continue;
-    }
-
-    // check whether the address is missing the domain part
-    QByteArray displayName, addrSpec, comment;
-    KPIMUtils::splitAddress( receiver.toLatin1(), displayName, addrSpec, comment );
-    if ( !addrSpec.contains('@') ) {
-      if ( !defaultDomain.isEmpty() ) {
-        expandedRecipients += KPIMUtils::normalizedAddress( displayName, addrSpec + '@' +
-                                                            defaultDomain, comment );
-      }
-      else {
-        expandedRecipients += guessEmailAddressFromLoginName( addrSpec );
-      }
-    }
-    else
-      expandedRecipients += receiver;
-  }
-
-  return expandedRecipients;
 }
 
 QString guessEmailAddressFromLoginName( const QString& loginName )

@@ -69,12 +69,6 @@ namespace StringUtil
   MESSAGECORE_EXPORT QMap<QString, QString> parseMailtoUrl( const KUrl &url );
 
   /**
-   * Finds the email address of which the contact has the given nickname and returns it.
-   * Be careful, this method uses an eventloop that is exec()'d!
-   */
-  MESSAGECORE_EXPORT QString expandNickName( const QString& nickName );
-
-  /**
    * Strips the signature blocks from a message text. "-- " is considered as a signature block separator.
    @param msg. The message to remove the signature block from.
    @param clearSigned. Before a message is cryptographically signed
@@ -220,15 +214,6 @@ namespace StringUtil
    */
   MESSAGECORE_EXPORT bool addressIsInAddressList( const QString& address,
                                                   const QStringList& addresses );
-
-  /**
-   * Expands aliases (distribution lists and nick names) and appends a
-   * domain part to all email addresses which are missing the domain part.
-   * The domain part that is appended is @p defaultDomain.
-   */
-  MESSAGECORE_EXPORT QString expandAliases( const QString& recipients,
-                                            const QString &defaultDomain,
-                                            QStringList &distributionListIsEmpty );
 
   /**
    * Uses the hostname as domain part and tries to determine the real name
