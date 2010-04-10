@@ -1,0 +1,9 @@
+File=customtemplates_kfg.kcfg
+ClassName=CTemplates
+Mutators=true
+ItemAccessors=true
+SetUserTexts=true
+visibility=TEMPLATEPARSER_EXPORT
+IncludeFiles=templateparser_export.h
+
+

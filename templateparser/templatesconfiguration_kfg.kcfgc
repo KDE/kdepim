@@ -1,0 +1,8 @@
+File=templatesconfiguration_kfg.kcfg
+ClassName=Templates
+Mutators=true
+ItemAccessors=true
+SetUserTexts=true
+visibility=TEMPLATEPARSER_EXPORT
+IncludeFiles=templateparser_export.h
+

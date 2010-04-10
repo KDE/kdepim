@@ -42,6 +42,7 @@
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/nodehelper.h>
 
+#include <messagecore/nodehelper.h>
 
 QTEST_KDEMAIN( SignEncryptTest, GUI )
 
@@ -147,8 +148,8 @@ void SignEncryptTest::testHeaders()
   QVERIFY( encPart );
   MessageViewer::ProcessResult pResult( nh );
   otp.processMultiPartEncryptedSubtype( Akonadi::Item(), resultMessage, pResult );
-  QVERIFY( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );\
-  KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
+  QVERIFY( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
+  KMime::Content* signedPart = MessageCore::NodeHelper::firstChild( resultMessage );
 
   mimeType = QString::fromLocal8Bit( "multipart/signed" ).toUtf8();
   QVERIFY( signedPart->contentType( false ) );

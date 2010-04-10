@@ -37,6 +37,8 @@ using namespace KMime;
 #include <messagecomposer/textpart.h>
 using namespace Message;
 
+#include <messagecore/nodehelper.h>
+
 #include <messageviewer/objecttreeparser.h>
 #include <messageviewer/nodehelper.h>
 
@@ -215,7 +217,7 @@ void ComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
   composer = 0;
 
   // as we have an additional attachment, just ignore it when checking for sign/encrypt
-  KMime::Content * b = MessageViewer::NodeHelper::firstChild( message );
+  KMime::Content * b = MessageCore::NodeHelper::firstChild( message );
   QVERIFY( ComposerTestUtil::verifySignatureAndEncryption( b,
                                                            QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ).toUtf8(),
                                                            Kleo::OpenPGPMIMEFormat, true ) );
@@ -225,7 +227,7 @@ void ComposerTest::testSignEncryptLateAttachmentsOpenPGPMime()
 
   // now check the attachment separately
   kDebug() << "message:" << message->encodedContent();
-  QVERIFY( MessageViewer::NodeHelper::nextSibling( MessageViewer::NodeHelper::firstChild( message ) )->body() == "abc" );
+  QVERIFY( MessageCore::NodeHelper::nextSibling( MessageCore::NodeHelper::firstChild( message ) )->body() == "abc" );
 //   kDebug() << "attachment:" << attNode->encodedContent();
 
 }

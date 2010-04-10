@@ -23,6 +23,8 @@
 #include "interfaces/bodypart.h"
 #include "util.h"
 
+#include <messagecore/nodehelper.h>
+
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
 #include <kmimetype.h>
@@ -297,19 +299,6 @@ void NodeHelper::addTempFile( const QString& file )
   mTempFiles.append( file );
 }
 
-
-KMime::Content *NodeHelper::firstChild( const KMime::Content* node )
-{
-  if ( !node )
-    return 0;
-
-  KMime::Content *child = 0;
-  if ( !node->contents().isEmpty() )
-    child = node->contents().at(0);
-
-  return child;
-}
-
 bool NodeHelper::isToltecMessage( KMime::Content* node )
 {
   if ( !node->contentType( false ) )
@@ -349,42 +338,6 @@ QByteArray NodeHelper::charset( KMime::Content *node )
     return node->defaultCharset();
 }
 
-KMime::Content *NodeHelper::nextSibling( const KMime::Content* node )
-{
-  if ( !node )
-     return 0;
-
-  KMime::Content *next = 0;
-  KMime::Content *parent = node->parent();
-  if ( parent ) {
-    KMime::Content::List contents = parent->contents();
-    int index = contents.indexOf( const_cast<KMime::Content*>(node) ) + 1;
-    if ( index < contents.size() ) //next on the same level
-      next =  contents.at( index );
-  }
-
-  return next;
-}
-
-KMime::Content *NodeHelper::next( KMime::Content *node, bool allowChildren )
-{
-  if ( allowChildren ) {
-    if ( KMime::Content *child = firstChild( node ) ) {
-      return child;
-    }
-  }
-  if ( KMime::Content *sibling = nextSibling( node ) ) {
-    return sibling;
-  }
-  for ( KMime::Content *parent = node->parent() ; parent ;
-        parent = parent->parent() ) {
-    if ( KMime::Content *sibling = nextSibling( parent ) ) {
-      return sibling;
-    }
-  }
-  return 0;
-}
-
 KMMsgEncryptionState NodeHelper::overallEncryptionState( KMime::Content *node ) const
 {
     KMMsgEncryptionState myState = KMMsgEncryptionStateUnknown;
@@ -393,7 +346,7 @@ KMMsgEncryptionState NodeHelper::overallEncryptionState( KMime::Content *node ) 
 
     if( encryptionState( node ) == KMMsgNotEncrypted ) {
         // NOTE: children are tested ONLY when parent is not encrypted
-        KMime::Content *child = firstChild( node );
+        KMime::Content *child = MessageCore::NodeHelper::firstChild( node );
         if ( child )
             myState = overallEncryptionState( child );
         else
@@ -403,7 +356,7 @@ KMMsgEncryptionState NodeHelper::overallEncryptionState( KMime::Content *node ) 
         myState = encryptionState( node );
     }
     // siblings are tested always
-    KMime::Content * next = nextSibling( node );
+    KMime::Content * next = MessageCore::NodeHelper::nextSibling( node );
     if( next ) {
         KMMsgEncryptionState otherState = overallEncryptionState( next );
         switch( otherState ) {
@@ -441,7 +394,7 @@ KMMsgSignatureState NodeHelper::overallSignatureState( KMime::Content* node ) co
 
     if( signatureState( node ) == KMMsgNotSigned ) {
         // children are tested ONLY when parent is not signed
-        KMime::Content* child = firstChild( node );
+        KMime::Content* child = MessageCore::NodeHelper::firstChild( node );
         if( child )
             myState = overallSignatureState( child );
         else
@@ -451,7 +404,7 @@ KMMsgSignatureState NodeHelper::overallSignatureState( KMime::Content* node ) co
         myState = signatureState( node );
     }
     // siblings are tested always
-    KMime::Content *next = nextSibling( node );
+    KMime::Content *next = MessageCore::NodeHelper::nextSibling( node );
     if( next ) {
         KMMsgSignatureState otherState = overallSignatureState( next );
         switch( otherState ) {
@@ -607,39 +560,13 @@ QByteArray NodeHelper::path(const KMime::Content* node)
 
   // count number of siblings with the same type as us:
   int nth = 0;
-  for ( KMime::Content *c = NodeHelper::firstChild(p); c != node; c = NodeHelper::nextSibling(c) ) {
+  for ( KMime::Content *c = MessageCore::NodeHelper::firstChild(p); c != node; c = MessageCore::NodeHelper::nextSibling(c) ) {
     if ( c->contentType()->mediaType() == const_cast<KMime::Content*>(node)->contentType()->mediaType() && c->contentType()->subType() == const_cast<KMime::Content*>(node)->contentType()->subType() ) {
       ++nth;
     }
   }
   QString subpath;
   return NodeHelper::path(p) + subpath.sprintf( ":%X/%X[%X]", const_cast<KMime::Content*>(node)->contentType()->mediaType().constData(), const_cast<KMime::Content*>(node)->contentType()->subType().constData(), nth ).toLocal8Bit();
-}
-
-bool NodeHelper::isAttachment( KMime::Content *node )
-{
-  if ( node->head().isEmpty() )
-    return false;
-  if ( node->contentType( false ) &&
-       node->contentType()->mediaType().toLower() == "message" &&
-       node->contentType()->subType().toLower() == "rfc822" ) {
-    // Messages are always attachments. Normally message attachments created from KMail have a content
-    // disposition, but some mail clients omit that.
-    return true;
-  }
-  if ( !node->contentDisposition( false ) )
-    return false;
-  return node->contentDisposition()->disposition() == KMime::Headers::CDattachment;
-}
-
-bool NodeHelper::isHeuristicalAttachment( KMime::Content *node )
-{
-  if ( isAttachment( node ) )
-    return true;
-  if ( ( node->contentType( false ) && !node->contentType()->name().isEmpty() ) ||
-       ( node->contentDisposition( false ) && !node->contentDisposition()->filename().isEmpty() ) )
-    return true;
-  return false;
 }
 
 QString NodeHelper::fileName( const KMime::Content *node )

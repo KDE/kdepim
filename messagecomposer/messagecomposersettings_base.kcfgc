@@ -1,0 +1,10 @@
+File=messagecomposer.kcfg
+ClassName=MessageComposerSettingsBase
+NameSpace=MessageComposer
+Visibility=MESSAGECOMPOSER_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=qapplication.h,messagecomposer_export.h
+

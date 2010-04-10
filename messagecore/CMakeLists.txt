@@ -14,10 +14,14 @@ set(messagecore_LIB_SRCS
    attachmentloadjob.cpp
    attachmentfromurljob.cpp
    attachmentfrommimecontentjob.cpp
+   attachmentcollector.cpp
    attachmentpropertiesdialog.cpp
    messagestatus.cpp
    annotationdialog.cpp
    stringutil.cpp
+   nodehelper.cpp
+   mailinglist-magic.cpp
+   kmfawidgets.cpp
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
@@ -35,6 +39,7 @@ target_link_libraries(messagecore
   ${KDEPIMLIBS_KPIMUTILS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_AKONADI_CONTACT_LIBS}
+  ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
 )
 
 target_link_libraries(messagecore LINK_INTERFACE_LIBRARIES

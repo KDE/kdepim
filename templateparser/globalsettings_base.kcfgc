@@ -1,0 +1,9 @@
+File=templateparser.kcfg
+ClassName=GlobalSettings
+NameSpace=TemplateParser
+Visibility=TEMPLATEPARSER_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=templateparser_export.h,templatesconfiguration.h

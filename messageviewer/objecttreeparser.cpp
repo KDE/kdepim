@@ -110,6 +110,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <memory>
+#include <messagecore/nodehelper.h>
 
 using KPIMUtils::LinkLocator;
 using namespace MessageViewer;
@@ -226,7 +227,7 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
   if ( showOnlyOneMimePart() ) {
     // ... this node and all descendants
     mNodeHelper->setNodeUnprocessed( node, false );
-    if ( NodeHelper::firstChild( node ) ) {
+    if ( MessageCore::NodeHelper::firstChild( node ) ) {
       mNodeHelper->setNodeUnprocessed( node, true );
     }
   } else if ( !node->parent() ) {
@@ -240,7 +241,7 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
   if ( isRoot && htmlWriter() )
     htmlWriter()->queue( "<div style=\"position: relative\">\n" );
 
-  for( ; node ; node = NodeHelper::nextSibling( node ) )
+  for( ; node ; node = MessageCore::NodeHelper::nextSibling( node ) )
   {
     if ( mNodeHelper->nodeProcessed( node ) ) {
       continue;
@@ -879,7 +880,9 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
       std::stringstream ss;
       ss << decryptResult << '\n' << verifyResult;
       kDebug() << ss.str().c_str();
-      signatureFound = verifyResult.signatures().size() > 0;
+      // TODO(leo) which do we want?
+      signatureFound = !verifyResult.error();
+//       signatureFound = verifyResult.signatures().size() > 0;
       signatures = verifyResult.signatures();
       bDecryptionOk = !decryptResult.error();
       passphraseError =  decryptResult.error().isCanceled()
@@ -1272,7 +1275,7 @@ bool ObjectTreeParser::processMultiPartMixedSubtype( const Akonadi::Item &item, 
     return true;
   }
 
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( !child )
     return false;
 
@@ -1283,7 +1286,7 @@ bool ObjectTreeParser::processMultiPartMixedSubtype( const Akonadi::Item &item, 
 
 bool ObjectTreeParser::processMultiPartAlternativeSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
 {
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( !child )
     return false;
 
@@ -1337,7 +1340,7 @@ bool ObjectTreeParser::processMultiPartParallelSubtype( const Akonadi::Item &ite
 
 bool ObjectTreeParser::processMultiPartSignedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
 {
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( node->contents().size() != 2 ) {
     kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
               << "processing as multipart/mixed";
@@ -1391,7 +1394,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( const Akonadi::Item &item,
 
 bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result )
 {
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( !child )
     return false;
 
@@ -1432,7 +1435,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
 
   CryptoProtocolSaver cpws( this, useThisCryptProto );
 
-  KMime::Content * dataChild = NodeHelper::firstChild( data );
+  KMime::Content * dataChild = MessageCore::NodeHelper::firstChild( data );
   if ( dataChild ) {
     stdChildHandling( item, dataChild );
     return true;
@@ -1463,6 +1466,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
                                     actuallyEncrypted,
                                     decryptionStarted,
                                     messagePart );
+  kDebug() << "decrypted, signed?:" << signatureFound;
 
   if ( decryptionStarted ) {
     writeDecryptionInProgressBlock();
@@ -1503,6 +1507,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
                                         signatures,
                                         false );
       mNodeHelper->setSignatureState( node, KMMsgFullySigned);
+      kDebug() << "setting FULLY SIGNED to:" << node;
     } else {
       decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
       
@@ -1577,7 +1582,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item,
 
 bool ObjectTreeParser::processApplicationOctetStreamSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result )
 {
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
     otp.parseObjectTree( item, child );
@@ -1663,7 +1668,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( const Akonadi::Item
 
 bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result )
 {
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
     otp.parseObjectTree( item, child );
@@ -1790,6 +1795,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &
       const bool bOkDecrypt = okDecryptMIME( *node, decryptedData, signatureFound, signatures,
                                              false, passphraseError, actuallyEncrypted,
                                              decryptionStarted, messagePart );
+      kDebug() << "PKCS7 found signature?" << signatureFound;
       if ( decryptionStarted ) {
         writeDecryptionInProgressBlock();
         return true;
@@ -1799,6 +1805,8 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &
         kDebug() << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !";
         isEncrypted = true;
         mNodeHelper->setEncryptionState( node, KMMsgFullyEncrypted );
+        if( signatureFound )
+          mNodeHelper->setSignatureState( node, KMMsgFullySigned );
         signTestNode = 0;
         // paint the frame
         messagePart.isDecryptable = true;
@@ -3263,11 +3271,11 @@ KMime::Content* ObjectTreeParser::findType( KMime::Content* content, const QByte
     if( ( !content->contentType()->isEmpty() )
         && ( mimeType.isEmpty()  || ( mimeType == content->contentType()->mimeType() ) ) )
         return content;
-    KMime::Content *child = NodeHelper::firstChild( content );
+    KMime::Content *child = MessageCore::NodeHelper::firstChild( content );
     if ( child && deep ) //first child
         return findType( child, mimeType, deep, wide );
 
-    KMime::Content *next = NodeHelper::nextSibling( content );
+    KMime::Content *next = MessageCore::NodeHelper::nextSibling( content );
     if (next &&  wide ) //next on the same level
       return findType( next, mimeType, deep, wide );
 
@@ -3281,11 +3289,11 @@ KMime::Content* ObjectTreeParser::findType( KMime::Content* content, const QByte
         && ( subType.isEmpty()  ||  subType == content->contentType()->subType() ) )
         return content;
     }
-    KMime::Content *child = NodeHelper::firstChild( content );
+    KMime::Content *child = MessageCore::NodeHelper::firstChild( content );
     if ( child && deep ) //first child
         return findType( child, mediaType, subType, deep, wide );
 
-    KMime::Content *next = NodeHelper::nextSibling( content );
+    KMime::Content *next = MessageCore::NodeHelper::nextSibling( content );
     if (next &&  wide ) //next on the same level
       return findType( next, mediaType, subType, deep, wide );
 
@@ -3299,11 +3307,11 @@ KMime::Content* ObjectTreeParser::findTypeNot( KMime::Content * content, const Q
           && ( subType.isEmpty() || content->contentType()->subType() != subType )
           )
         return content;
-    KMime::Content *child = NodeHelper::firstChild( content );
+    KMime::Content *child = MessageCore::NodeHelper::firstChild( content );
     if ( child && deep )
         return findTypeNot( child, mediaType, subType, deep, wide );
 
-    KMime::Content *next = NodeHelper::nextSibling( content );
+    KMime::Content *next = MessageCore::NodeHelper::nextSibling( content );
     if ( next && wide )
         return findTypeNot( next,  mediaType, subType, deep, wide );
     return 0;

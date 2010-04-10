@@ -44,6 +44,8 @@
 
 #include <QList>
 
+#define MARCS_DEBUG 1
+
 class QString;
 
 namespace Akonadi {

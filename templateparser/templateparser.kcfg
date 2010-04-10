@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+  <include>kglobalsettings.h</include>
+  <kcfgfile name="templateparserrc" />
+  <group name="TemplateParser">
+
+      <entry name="StripSignature" type="Bool">
+        <label>Remove the signature when replying</label>
+        <default>true</default>
+      </entry>
+       <entry name="SmartQuote" type="Bool" key="smart-quote">
+        <label>Use smart &amp;quoting</label>
+        <default>true</default>
+      </entry>
+      <entry name="CustomTemplates" type="StringList" key="CustomTemplates" />
+
+    <entry name="TemplateNewMessage" type="String" key="TemplateNewMessage">
+      <label>Message template for new message</label>
+      <whatsthis></whatsthis>
+      <default code="true">TemplatesConfiguration::defaultNewMessage()</default>
+    </entry>
+    <entry name="TemplateReply" type="String" key="TemplateReply">
+      <label>Message template for reply</label>
+      <whatsthis></whatsthis>
+      <default code="true">TemplatesConfiguration::defaultReply()</default>
+    </entry>
+    <entry name="TemplateReplyAll" type="String" key="TemplateReplyAll">
+      <label>Message template for reply to all</label>
+      <whatsthis></whatsthis>
+      <default code="true">TemplatesConfiguration::defaultReplyAll()</default>
+    </entry>
+    <entry name="TemplateForward" type="String" key="TemplateForward">
+      <label>Message template for forward</label>
+      <whatsthis></whatsthis>
+      <default code="true">TemplatesConfiguration::defaultForward()</default>
+    </entry>
+    <entry name="QuoteString" type="String" key="QuoteString">
+      <label>Quote characters</label>
+      <whatsthis></whatsthis>
+      <default code="true">TemplatesConfiguration::defaultQuoteString()</default>
+    </entry>
+
+
+</group>
+</kcfg>

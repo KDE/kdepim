@@ -20,11 +20,16 @@
 #define _MESSAGECORE_STRINGUTIL_H
 
 #include "messagecore_export.h"
+#include "kmime/kmime_message.h"
 
 #include <QString>
 #include <QStringList>
 
 class KUrl;
+
+namespace KPIMIdentities {
+  class IdentityManager;
+}
 
 namespace KMime
 {
@@ -51,6 +56,17 @@ namespace MessageCore
  */
 namespace StringUtil
 {
+  /**
+   * Strips all the user's addresses from an address list. This is used
+   * when replying.
+   */
+  MESSAGECORE_EXPORT QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager* identMan );
+
+
+  /**
+   * Parses a mailto: url and extracts the information in the QMap (field name as key).
+   */
+  MESSAGECORE_EXPORT QMap<QString, QString> parseMailtoUrl( const KUrl &url );
 
   /**
    * Finds the email address of which the contact has the given nickname and returns it.
@@ -88,7 +104,6 @@ namespace StringUtil
   MESSAGECORE_EXPORT QByteArray html2source( const QByteArray & src );
 
 
-
   /**
    * This function generates a displayable string from a list of email
    * addresses.
@@ -112,6 +127,25 @@ namespace StringUtil
   MESSAGECORE_EXPORT QString quoteHtmlChars( const QString& str,
                      bool removeLineBreaks = false );
 
+
+ /**
+   * Remove all private header fields: *Status: and X-KMail-*
+   **/
+  MESSAGECORE_EXPORT void removePrivateHeaderFields( const KMime::Message::Ptr &msg );
+  
+  /**
+   * Return the message contents with the headers that should not be
+   * sent stripped off.
+   */
+  MESSAGECORE_EXPORT QByteArray asSendableString( const KMime::Message::Ptr &msg );
+
+  /**
+   * Return the message header with the headers that should not be
+   * sent stripped off.
+   */
+  MESSAGECORE_EXPORT QByteArray headerAsSendableString( const KMime::Message::Ptr &msg );
+
+  
   /**
    * Used to determine if the visible part of the anchor contains
    * only the name part and not the given emailAddr or the full address.

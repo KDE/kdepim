@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+
+  <include>kglobalsettings.h</include>
+  <kcfgfile name="mailcomposerrc" />
+  <group name="Composer">
+
+  <entry name="ReplyPrefixes" type="StringList" key="reply-prefixes">
+    <default>Re\\s*:,Re\\[\\d+\\]:,Re\\d+:</default>
+  </entry>
+      <entry name="ReplaceReplyPrefix" type="Bool" key="replace-reply-prefix">
+        <label>Replace recognized prefi&amp;x with "Re:"</label>
+        <default>true</default>
+      </entry>
+      
+      <entry name="ForwardPrefixes" type="StringList" key="forward-prefixes">
+        <default>Fwd:,FW:</default>
+      </entry>
+
+      <entry name="ReplaceForwardPrefix" type="Bool" key="replace-forward-prefix">
+        <label>Replace recognized prefix with "&amp;Fwd:"</label>
+        <default>true</default>
+      </entry>
+
+      <entry name="CustomMsgIDSuffix" type="String" key="myMessageIdSuffix">
+        <default></default>
+      </entry>
+      <entry name="UseCustomMessageIdSuffix" type="bool" key="useCustomMessageIdSuffix">
+        <default>false</default>
+      </entry>
+
+      <entry name="QuoteSelectionOnly" type="Bool">
+        <label>Only quote selected text when replying</label>
+        <default>true</default>
+      </entry>
+
+    
+  </group>
+</kcfg>

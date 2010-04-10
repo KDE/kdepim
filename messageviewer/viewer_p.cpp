@@ -127,6 +127,7 @@
 #include <kio/jobuidelegate.h>
 
 #include <gpgme++/error.h>
+#include <messagecore/nodehelper.h>
 
 using namespace MailTransport;
 using namespace MessageViewer;
@@ -489,7 +490,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
 
     KMime::Content* curNode = node;
     KMime::Content* dataNode = curNode;
-    KMime::Content * child = NodeHelper::firstChild( node );
+    KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
     const QString type = curNode->contentType()->mediaType().toLower();
     const QString subType = curNode->contentType()->subType().toLower();
     const bool bIsMultipart = type == "multipart";
@@ -570,7 +571,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
         if( headerContent && bIsMultipart && !dataNode->contents().isEmpty() )  {
           kDebug() << "is valid Multipart, processing children:";
           QByteArray boundary = headerContent->contentType()->boundary();
-          curNode = NodeHelper::firstChild( dataNode );
+          curNode = MessageCore::NodeHelper::firstChild( dataNode );
           // store children of multipart
           while( curNode ) {
             kDebug() << "--boundary";
@@ -589,7 +590,7 @@ void ViewerPrivate::objectTreeToDecryptedMsg( KMime::Content* node,
                                       theMessage,
                                       false,
                                       recCount + 1 );
-            curNode = NodeHelper::nextSibling( curNode );
+            curNode = MessageCore::NodeHelper::nextSibling( curNode );
           }
           kDebug() << "--boundary--";
           resultingData += "\n--";
@@ -910,12 +911,12 @@ void ViewerPrivate::saveAttachments( const KMime::Content::List & contents )
 KMime::Content::List ViewerPrivate::allContents( const KMime::Content * content )
 {
   KMime::Content::List result;
-  KMime::Content *child = NodeHelper::firstChild( content );
+  KMime::Content *child = MessageCore::NodeHelper::firstChild( content );
   if ( child ) {
     result += child;
     result += allContents( child );
   }
-  KMime::Content *next = NodeHelper::nextSibling( content );
+  KMime::Content *next = MessageCore::NodeHelper::nextSibling( content );
   if ( next ) {
     result += next;
     result += allContents( next );
@@ -2061,7 +2062,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
     return QString();
 
   QString html;
-  KMime::Content * child = NodeHelper::firstChild( node );
+  KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
 
   if ( child) {
     QString subHtml = renderAttachments( child, nextColor( bgColor ) );
@@ -2129,7 +2130,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
     }
   }
 
-  KMime::Content *next  = NodeHelper::nextSibling( node );
+  KMime::Content *next  = MessageCore::NodeHelper::nextSibling( node );
   if ( next )
     html += renderAttachments( next, nextColor ( bgColor ) );
 

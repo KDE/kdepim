@@ -157,14 +157,6 @@ public:
      */
     void addTempFile( const QString& file );
 
-    //
-    //static methods - TODO factor out in a separate namespace ?
-    //
-    static KMime::Content *nextSibling( const KMime::Content* node );
-    static KMime::Content *next( KMime::Content *node, bool allowChildren = true );
-
-    static KMime::Content *firstChild( const KMime::Content* node );
-
     static bool isToltecMessage( KMime::Content* node );
 
     /**
@@ -192,11 +184,6 @@ public:
     static const QTextCodec* codecForName(const QByteArray& _str);
 
     static QByteArray path(const KMime::Content* node);
-
-    // The node parameters here should be const, be there is no const version of
-    // functions like contentDisposition() yet
-    static bool isAttachment( KMime::Content* node );
-    static bool isHeuristicalAttachment( KMime::Content* node );
 
     /**
      * Returns a usable filename for a node, that can be the filename from the

@@ -22,6 +22,7 @@
 #include <kmime/kmime_header_parsing.h>
 #include <kmime/kmime_util.h>
 #include <kmime/kmime_headers.h>
+#include <kmime/kmime_message.h>
 #include <KPIMUtils/Email>
 #include <KPIMIdentities/IdentityManager>
 #include <Akonadi/Contact/ContactSearchJob>
@@ -257,6 +258,32 @@ static bool flushPart( QString &msg, QStringList &textParts,
   const bool appendEmptyLine = !textParts.isEmpty();
   textParts.clear();
   return appendEmptyLine;
+}
+
+QStringList stripMyAddressesFromAddressList( const QStringList& list, const KPIMIdentities::IdentityManager* identMan )
+{
+  QStringList addresses = list;
+  for( QStringList::Iterator it = addresses.begin();
+       it != addresses.end(); ) {
+    kDebug() << "Check whether" << *it <<"is one of my addresses";
+    if( identMan->thatIsMe( KPIMUtils::extractEmailAddress( *it ) ) ) {
+      kDebug() << "Removing" << *it <<"from the address list";
+      it = addresses.erase( it );
+    }
+    else
+      ++it;
+  }
+  return addresses;
+}
+
+QMap<QString, QString> parseMailtoUrl ( const KUrl& url )
+{
+  kDebug() << url.pathOrUrl();
+  QMap<QString, QString> values = url.queryItems( KUrl::CaseInsensitiveKeys );
+  QString to = KPIMUtils::decodeMailtoUrl( url );
+  to = to.isEmpty() ?  values.value( "to" ) : to + QString( ", " ) + values.value( "to" );
+  values.insert( "to", to );
+  return values;
 }
 
 QString expandNickName( const QString& nickName )
@@ -759,6 +786,44 @@ QString quoteHtmlChars( const QString& str, bool removeLineBreaks )
   result.squeeze();
   return result;
 }
+
+void removePrivateHeaderFields( const KMime::Message::Ptr &msg ) {
+  msg->removeHeader("Status");
+  msg->removeHeader("X-Status");
+  msg->removeHeader("X-KMail-EncryptionState");
+  msg->removeHeader("X-KMail-SignatureState");
+  msg->removeHeader("X-KMail-MDN-Sent");
+  msg->removeHeader("X-KMail-Transport");
+  msg->removeHeader("X-KMail-Identity");
+  msg->removeHeader("X-KMail-Fcc");
+  msg->removeHeader("X-KMail-Redirect-From");
+  msg->removeHeader("X-KMail-Link-Message");
+  msg->removeHeader("X-KMail-Link-Type");
+  msg->removeHeader("X-KMail-QuotePrefix");
+  msg->removeHeader("X-KMail-CursorPos");
+  msg->removeHeader( "X-KMail-Templates" );
+  msg->removeHeader( "X-KMail-Drafts" );
+  msg->removeHeader( "X-KMail-Tag" );
+}
+
+QByteArray asSendableString( const KMime::Message::Ptr &msg )
+{
+  KMime::Message message;
+  message.setContent( msg->encodedContent() );
+  removePrivateHeaderFields( KMime::Message::Ptr( &message ) );
+  message.removeHeader("Bcc");
+  return message.encodedContent();
+}
+
+QByteArray headerAsSendableString( const KMime::Message::Ptr &msg )
+{
+  KMime::Message message;
+  message.setContent( msg->encodedContent() );
+  removePrivateHeaderFields( KMime::Message::Ptr( &message ) );
+  message.removeHeader("Bcc");
+  return message.head();
+}
+
 
 QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
                            Display display, const QString& cssStyle,

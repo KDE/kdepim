@@ -36,6 +36,8 @@
 #include <messageviewer/nodehelper.h>
 #include <messageviewer/csshelper.h>
 
+#include <messagecore/nodehelper.h>
+
 #include <KDebug>
 #include <QDir>
 #include <QFile>
@@ -68,7 +70,7 @@ std::vector<GpgME::Key> ComposerTestUtil::getKeys( bool smime )
 {
 
   setenv("GNUPGHOME", KDESRCDIR "/gnupg_home" , 1 );
-  setenv("LC_ALL", "C", 1); \
+  setenv("LC_ALL", "C", 1); 
   setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromAscii( "/.kde-unit-test" ) ), 1);
 
   Kleo::KeyListJob * job = 0;
@@ -128,7 +130,7 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
     Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
-    Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == signedContent );
+    Q_ASSERT( MessageCore::NodeHelper::firstChild( resultMessage )->body() == signedContent );
 
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
@@ -151,15 +153,11 @@ bool ComposerTestUtil::verifySignature( KMime::Content* content, QByteArray sign
       Q_ASSERT( signedPart );
     }
     // process the result..
-    kDebug() << resultMessage->topLevel();
-    kDebug() << "before:" << resultMessage->encodedContent();
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
-    kDebug() << "after:" << resultMessage->encodedContent();
     Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
     // make sure the good sig is of what we think it is
-    kDebug() << "body:" << MessageViewer::NodeHelper::firstChild( resultMessage )->body();
-    Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == signedContent );
+    Q_ASSERT( otp.rawReplyString() == signedContent );
 
     return true;
   }
@@ -189,7 +187,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_ASSERT( encPart );
 
     // process the result..
-  //   kDebug() << resultMessage->topLevel();
+   // kDebug() << resultMessage->topLevel();
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 
@@ -200,8 +198,8 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     QString ref = QString::fromUtf8( encrContent ).trimmed();
     Q_ASSERT( body == ref );
 */
-    kDebug() << "testing:" << MessageViewer::NodeHelper::firstChild( resultMessage )->encodedContent() << encrContent;
-    Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == encrContent );
+//     kDebug() << "raw:" << otp.rawReplyString();
+    Q_ASSERT( otp.rawReplyString()== encrContent );
 
     return true;
     
@@ -222,8 +220,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_ASSERT( encPart );
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
-    kDebug() << "testing:" << MessageViewer::NodeHelper::firstChild( resultMessage )->encodedContent() << encrContent;
-    Q_ASSERT( MessageViewer::NodeHelper::firstChild( resultMessage )->body() == encrContent );
+    Q_ASSERT( otp.rawReplyString() == encrContent );
 
     return true;
   }
@@ -252,20 +249,16 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     Q_ASSERT( encPart );
 
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
-//     kDebug() << "message:" << resultMessage->encodedContent();
+    kDebug() << "message:" << resultMessage->encodedContent();
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 
-    KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
-//       kDebug() << "resultMessage signedpart:" << signedPart->encodedContent();
-    otp.processMultiPartSignedSubtype( Akonadi::Item(), signedPart, pResult );
-    Q_ASSERT( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
+    KMime::Content* signedPart = MessageCore::NodeHelper::firstChild( resultMessage );
+      kDebug() << "resultMessage:" << resultMessage->encodedContent();
+      kDebug() << "resultMessage rawresultstr:" << otp.rawReplyString() << "signed?" << resultMessage;
+    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
-    if( withAttachment ) {
-      // if there's an attachment we need to dig deeper
-      Q_ASSERT( MessageViewer::NodeHelper::firstChild( MessageViewer::NodeHelper::firstChild( signedPart ) )->body() == origContent );
-    } else {
-      Q_ASSERT( MessageViewer::NodeHelper::firstChild( signedPart )->body() == origContent );
-    }
+    kDebug() << "raw reply and orig: " << otp.rawReplyString() << origContent;
+    Q_ASSERT( otp.rawReplyString() == origContent );
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {
     otp.processTextPlainSubtype( Akonadi::Item(), resultMessage, pResult );
@@ -286,10 +279,8 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 
-    KMime::Content* signedPart = MessageViewer::NodeHelper::firstChild( resultMessage );
-    otp.processMultiPartSignedSubtype( Akonadi::Item(), signedPart, pResult );
-    Q_ASSERT( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
-    Q_ASSERT( MessageViewer::NodeHelper::firstChild( signedPart )->body() == origContent );
+    Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
+    Q_ASSERT( otp.rawReplyString() == origContent );
 
     return true;
   }
