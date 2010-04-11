@@ -1471,6 +1471,7 @@ void ViewerPrivate::resetStateForNewMessage()
   mNodeHelper->clear();
   mMimePartModel->setRoot( 0 );
   mSavedRelativePosition = 0;
+  setShowSignatureDetails( false );
   mShowRawToltecMail = !GlobalSettings::self()->showToltecReplacementText();
   if ( mPrinting )
     mLevelQuote = -1;
