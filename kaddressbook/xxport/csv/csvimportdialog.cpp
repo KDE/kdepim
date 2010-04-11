@@ -513,7 +513,12 @@ void CSVImportDialog::applyTemplate()
   mComboQuote->setCurrentIndex( quoteType );
   textQuoteChanged( mComboQuote->currentText(), false );
 
+  // do block signals here, otherwise it will trigger a reload of the model and
+  // the following skipFirstRowChanged call end up with an empty model
+  mSkipFirstRow->blockSignals( true );
   mSkipFirstRow->setChecked( skipFirstRow );
+  mSkipFirstRow->blockSignals( false );
+
   skipFirstRowChanged( skipFirstRow, false );
 
   if ( mDevice )
