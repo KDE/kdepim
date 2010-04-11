@@ -28,15 +28,15 @@ class Ui_Settings;
 namespace MessageViewer {
 
 /**
-Configure widget that can be used in a KConfigDialog.
-
-	@author Andras Mantia <andras@kdab.net>
-*/
+ * Configure widget that can be used in a KConfigDialog.
+ *
+ * @author Andras Mantia <andras@kdab.net>
+ */
 class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
 Q_OBJECT
 public:
-    ConfigureWidget(QWidget *parent = 0);
+    ConfigureWidget( QWidget *parent = 0 );
 
     ~ConfigureWidget();
 

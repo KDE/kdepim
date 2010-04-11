@@ -116,42 +116,50 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
     ScrollTo = 10
   };
 
-  /** The display update mode: Force updates the display immediately, Delayed updates
-  after some time (150ms by default */
+  /**
+   * The display update mode: Force updates the display immediately, Delayed updates
+   * after some time (150ms by default
+   */
   enum UpdateMode {
     Force = 0,
     Delayed
   };
 
-  /** Set the message that shall be shown.
-  * @param msg - the message to be shown. If 0, an empty page is displayed.
-  * @param updateMode - update the display immediately or not. See UpdateMode.
-  */
+  /**
+   * Set the message that shall be shown.
+   * @param msg - the message to be shown. If 0, an empty page is displayed.
+   * @param updateMode - update the display immediately or not. See UpdateMode.
+   */
   void setMessage( KMime::Message::Ptr message, UpdateMode updateMode = Delayed );
 
-  /** Set the Akonadi item that will be displayed.
-  * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
-  *               an empty page is shown.
-  * @param updateMode - update the display immediately or not. See UpdateMode.
-  */
+  /**
+   * Set the Akonadi item that will be displayed.
+   * @param item - the Akonadi item to be displayed. If it doesn't hold a mail (KMime::Message::Ptr as payload data),
+   *               an empty page is shown.
+   * @param updateMode - update the display immediately or not. See UpdateMode.
+   */
   void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
-  /** Instead of settings a message to be shown sets a message part
-      to be shown */
+  /**
+   * Instead of settings a message to be shown sets a message part
+   * to be shown
+   */
   void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
                    const QString& aFileName, const QString& pname );
 
-  /** Convenience method to clear the reader and discard the current message. Sets the internal message pointer
-  * returned by message() to 0.
-  * @param updateMode - update the display immediately or not. See UpdateMode.
-  */
+  /**
+   * Convenience method to clear the reader and discard the current message. Sets the internal message pointer
+   * returned by message() to 0.
+   * @param updateMode - update the display immediately or not. See UpdateMode.
+   */
   void clear( UpdateMode updateMode = Delayed ) { setMessage( KMime::Message::Ptr(), updateMode ); }
 
   void update( UpdateMode updateMode = Delayed );
 
-  /** Sets a message as the current one and print it immediately.
-  *   @param message the message to display and print
-  */
+  /**
+   * Sets a message as the current one and print it immediately.
+   * @param message the message to display and print
+   */
   void printMessage( KMime::Message::Ptr message );
   void printMessage( const Akonadi::Item &msg );
 
@@ -170,18 +178,19 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   /** Get the load external references override setting */
   bool htmlLoadExtOverride() const;
 
-/** Override default load external references setting */
+  /** Override default load external references setting */
   void setHtmlLoadExtOverride( bool override );
 
-     /** Is html mail to be supported? Takes into account override */
+  /** Is html mail to be supported? Takes into account override */
   bool htmlMail() const;
 
   /** Is loading ext. references to be supported? Takes into account override */
   bool htmlLoadExternal() const;
 
-  /** Display a generic HTML splash page instead of a message.
-  * @param info - the text to be displayed in HTML format
-  */
+  /**
+   * Display a generic HTML splash page instead of a message.
+   * @param info - the text to be displayed in HTML format
+   */
   void displaySplashPage( const QString& info );
 
   /** Enable the displaying of messages again after an splash (or other) page was displayed */
@@ -246,8 +255,11 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   QAbstractItemModel* messageTreeModel() const;
 
 signals:
-  /** Emitted after parsing of a message to have it stored
-      in unencrypted state in it's folder. */
+
+  /**
+   * Emitted after parsing of a message to have it stored
+   * in unencrypted state in it's folder.
+   */
   void replaceMsgByUnencryptedVersion();
 
   /** The user presses the right mouse button. 'url' may be 0. */
@@ -289,7 +301,7 @@ public slots:
   void slotShowMessageSource();
 
 protected:
-    /** Some necessary event handling. */
+  /** Some necessary event handling. */
   virtual void closeEvent(QCloseEvent *);
   virtual void resizeEvent(QResizeEvent *);
   /** Watch for palette changes */
