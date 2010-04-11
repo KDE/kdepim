@@ -198,21 +198,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   /** Enforce message decryption. */
   void setDecryptMessageOverwrite( bool overwrite = true );
 
-  /** Returns whether the message should be decryted. */
-  bool decryptMessage() const;
-
-  /** Show signature details. */
-  bool showSignatureDetails() const;
-
-  /** Show signature details. */
-  void setShowSignatureDetails( bool showDetails = true ) ;
-
-  /** show or hide the list that points to the attachments */
-  bool showAttachmentQuicklist() const;
-
-  /** show or hide the list that points to the attachments */
-  void setShowAttachmentQuicklist( bool showAttachmentQuicklist = true );
-
   /**
    * Get an instance for the configuration widget. The caller has the ownership and must delete the widget. See also configObject();
    * The caller should also call the widget's slotSettingsChanged() if the configuration has changed.

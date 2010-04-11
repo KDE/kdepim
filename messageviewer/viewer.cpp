@@ -267,36 +267,6 @@ void Viewer::setDecryptMessageOverwrite( bool overwrite )
   d->setDecryptMessageOverwrite( overwrite );
 }
 
-bool Viewer::decryptMessage() const
-{
-  Q_D(const Viewer);
-  return d->decryptMessage();
-}
-
-bool Viewer::showSignatureDetails() const
-{
-  Q_D(const Viewer);
-  return d->showSignatureDetails();
-}
-
-void Viewer::setShowSignatureDetails( bool showDetails )
-{
-  Q_D(Viewer);
-  d->setShowSignatureDetails( showDetails );
-}
-
-bool Viewer::showAttachmentQuicklist() const
-{
-  Q_D(const Viewer);
-  return d->showAttachmentQuicklist();
-}
-
-void Viewer::setShowAttachmentQuicklist( bool showAttachmentQuicklist  )
-{
-  Q_D(Viewer);
-  d->setShowAttachmentQuicklist( showAttachmentQuicklist );
-}
-
 QWidget* Viewer::configWidget()
 {
   Q_D(Viewer);
