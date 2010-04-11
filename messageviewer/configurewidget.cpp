@@ -57,10 +57,10 @@ ConfigureWidget::~ConfigureWidget()
 
 void ConfigureWidget::readCurrentFallbackCodec()
 {
-  QStringList encodings = NodeHelper::supportedEncodings( false );
-  QStringList::ConstIterator it( encodings.begin() );
-  QStringList::ConstIterator end( encodings.end() );
-  QString currentEncoding = GlobalSettings::self()->fallbackCharacterEncoding();
+  const QStringList encodings = NodeHelper::supportedEncodings( false );
+  QStringList::ConstIterator it( encodings.constBegin() );
+  const QStringList::ConstIterator end( encodings.constEnd() );
+  const QString currentEncoding = GlobalSettings::self()->fallbackCharacterEncoding();
   uint i = 0;
   int indexOfLatin9 = 0;
   bool found = false;
@@ -89,7 +89,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
   QStringList encodings = NodeHelper::supportedEncodings( false );
   encodings.prepend( i18n( "Auto" ) );
   QStringList::ConstIterator it( encodings.constBegin() );
-  QStringList::ConstIterator end( encodings.constEnd() );
+  const QStringList::ConstIterator end( encodings.constEnd() );
   int i = 0;
   for( ; it != end; ++it ) {
     if( NodeHelper::encodingForName(*it) == currentOverrideEncoding ) {
