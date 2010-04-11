@@ -31,6 +31,9 @@
    <string>Viewer settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <property name="margin">
+    <number>0</number>
+   </property>
    <item row="0" column="0" colspan="2">
     <widget class="QCheckBox" name="kcfg_showColorBar">
      <property name="text">
@@ -132,12 +135,12 @@
         <string>Fallback character e&amp;ncoding:</string>
        </property>
        <property name="buddy">
-        <cstring>kcfg_FallbackCharacterEncoding</cstring>
+        <cstring>fallbackCharacterEncoding</cstring>
        </property>
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="KComboBox" name="kcfg_FallbackCharacterEncoding">
+      <widget class="KComboBox" name="fallbackCharacterEncoding">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>
@@ -158,12 +161,12 @@
         <string>&amp;Override character encoding:</string>
        </property>
        <property name="buddy">
-        <cstring>kcfg_OverrideCharacterEncoding</cstring>
+        <cstring>overrideCharacterEncoding</cstring>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="KComboBox" name="kcfg_OverrideCharacterEncoding">
+      <widget class="KComboBox" name="overrideCharacterEncoding">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
          <horstretch>0</horstretch>

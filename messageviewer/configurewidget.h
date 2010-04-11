@@ -25,6 +25,8 @@
 #include <QWidget>
 class Ui_Settings;
 
+class KConfigDialogManager;
+
 namespace MessageViewer {
 
 /**
@@ -36,14 +38,19 @@ class MESSAGEVIEWER_EXPORT ConfigureWidget : public QWidget
 {
 Q_OBJECT
 public:
-    ConfigureWidget( QWidget *parent = 0 );
+  ConfigureWidget( QWidget *parent = 0 );
 
-    ~ConfigureWidget();
+  ~ConfigureWidget();
 
-private slots:
-  void slotSettingsChanged();
+  void writeConfig();
+  void readConfig();
 
 signals:
+
+  /**
+   * Emitted when the user changes the setting in some widget. Useful to enable the "Apply"
+   * button after this has been emitted.
+   */
   void settingsChanged();
 
 private:
@@ -51,7 +58,6 @@ private:
   void readCurrentOverrideCodec();
 
   Ui_Settings *mSettingsUi;
-
 };
 
 }

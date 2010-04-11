@@ -18,10 +18,13 @@
 */
 
 #include "configurewidget.h"
+
 #include "ui_settings.h"
 #include "util.h"
 #include "globalsettings.h"
 #include "nodehelper.h"
+
+#include <KConfigDialogManager>
 
 using namespace MessageViewer;
 
@@ -30,29 +33,54 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
 {
   mSettingsUi = new Ui_Settings;
   mSettingsUi->setupUi( this );
+
   QStringList encodings = NodeHelper::supportedEncodings( false );
-  mSettingsUi->kcfg_FallbackCharacterEncoding->addItems( encodings );
-  QString fallbackCharsetWhatsThis =
-    i18n( GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis().toUtf8() );
-  mSettingsUi->kcfg_FallbackCharacterEncoding->setWhatsThis( fallbackCharsetWhatsThis );
-
+  mSettingsUi->fallbackCharacterEncoding->addItems( encodings );
   encodings.prepend( i18n( "Auto" ) );
-  mSettingsUi->kcfg_OverrideCharacterEncoding->addItems( encodings );
-  mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex(0);
+  mSettingsUi->overrideCharacterEncoding->addItems( encodings );
+  mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
 
-  QString overrideCharsetWhatsThis =
-    i18n( GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis().toUtf8() );
-  mSettingsUi->kcfg_OverrideCharacterEncoding->setWhatsThis( overrideCharsetWhatsThis );
+  mSettingsUi->fallbackCharacterEncoding->setWhatsThis(
+      GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis() );
+  mSettingsUi->overrideCharacterEncoding->setWhatsThis(
+      GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis() );
+  mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
+      GlobalSettings::self()->showEmoticonsItem()->whatsThis() );
+  mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
+      GlobalSettings::self()->shrinkQuotesItem()->whatsThis() );
+  mSettingsUi->kcfg_ShowExpandQuotesMark->setWhatsThis(
+      GlobalSettings::self()->showExpandQuotesMarkItem()->whatsThis() );
 
-  readCurrentFallbackCodec();
-  readCurrentOverrideCodec();
+  connect( mSettingsUi->kcfg_ShowExpandQuotesMark, SIGNAL( toggled( bool ) ),
+           mSettingsUi->kcfg_CollapseQuoteLevelSpin, SLOT( setEnabled( bool ) ) );
+  connect( mSettingsUi->fallbackCharacterEncoding, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( settingsChanged() ) );
+  connect( mSettingsUi->overrideCharacterEncoding, SIGNAL( currentIndexChanged( int ) ),
+           this, SIGNAL( settingsChanged() ) );
 }
-
 
 ConfigureWidget::~ConfigureWidget()
 {
   delete mSettingsUi;
   mSettingsUi = 0;
+}
+
+void ConfigureWidget::readConfig()
+{
+  readCurrentFallbackCodec();
+  readCurrentOverrideCodec();
+  mSettingsUi->kcfg_CollapseQuoteLevelSpin->setEnabled(
+      GlobalSettings::self()->showExpandQuotesMark() );
+}
+
+void ConfigureWidget::writeConfig()
+{
+  GlobalSettings::self()->setFallbackCharacterEncoding(
+      NodeHelper::encodingForName( mSettingsUi->fallbackCharacterEncoding->currentText() ) );
+  GlobalSettings::self()->setOverrideCharacterEncoding(
+      mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
+        QString() :
+        NodeHelper::encodingForName( mSettingsUi->overrideCharacterEncoding->currentText() ) );
 }
 
 void ConfigureWidget::readCurrentFallbackCodec()
@@ -69,21 +97,21 @@ void ConfigureWidget::readCurrentFallbackCodec()
     if ( encoding == "ISO-8859-15" )
         indexOfLatin9 = i;
     if( encoding == currentEncoding ) {
-      mSettingsUi->kcfg_FallbackCharacterEncoding->setCurrentIndex( i );
+      mSettingsUi->fallbackCharacterEncoding->setCurrentIndex( i );
       found = true;
       break;
     }
     i++;
   }
   if ( !found ) // nothing matched, use latin9
-    mSettingsUi->kcfg_FallbackCharacterEncoding->setCurrentIndex( indexOfLatin9 );
+    mSettingsUi->fallbackCharacterEncoding->setCurrentIndex( indexOfLatin9 );
 }
 
 void ConfigureWidget::readCurrentOverrideCodec()
 {
   const QString &currentOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
   if ( currentOverrideEncoding.isEmpty() ) {
-    mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex( 0 );
+    mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
     return;
   }
   QStringList encodings = NodeHelper::supportedEncodings( false );
@@ -93,7 +121,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
   int i = 0;
   for( ; it != end; ++it ) {
     if( NodeHelper::encodingForName(*it) == currentOverrideEncoding ) {
-      mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex( i );
+      mSettingsUi->overrideCharacterEncoding->setCurrentIndex( i );
       break;
     }
     i++;
@@ -102,20 +130,9 @@ void ConfigureWidget::readCurrentOverrideCodec()
     // the current value of overrideCharacterEncoding is an unknown encoding => reset to Auto
     kWarning() << "Unknown override character encoding" << currentOverrideEncoding
                << ". Resetting to Auto.";
-    mSettingsUi->kcfg_OverrideCharacterEncoding->setCurrentIndex( 0 );
+    mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
     GlobalSettings::self()->setOverrideCharacterEncoding( QString() );
   }
 }
-
-
-void ConfigureWidget::slotSettingsChanged()
-{
-  GlobalSettings::self()->setOverrideCharacterEncoding(
-      NodeHelper::encodingForName( mSettingsUi->kcfg_OverrideCharacterEncoding->currentText() ) );
-  GlobalSettings::self()->setFallbackCharacterEncoding(
-      NodeHelper::encodingForName( mSettingsUi->kcfg_FallbackCharacterEncoding->currentText() ) );
-  emit settingsChanged();
-}
-
 
 #include "configurewidget.moc"
