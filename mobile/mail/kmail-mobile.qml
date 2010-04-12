@@ -57,6 +57,7 @@ Rectangle {
     anchors.fill: parent
 
     SlideoutPanel {
+      anchors.fill: parent
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
@@ -99,8 +100,10 @@ Rectangle {
     }
 
     SlideoutPanel {
+      anchors.fill: parent
       id: actionPanel
       titleText: "Actions"
+      handlePosition: 150
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -159,6 +162,8 @@ Rectangle {
     }
 
     SlideoutPanel {
+      anchors.fill: parent
+      handlePosition: 150
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
