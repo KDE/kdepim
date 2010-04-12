@@ -467,6 +467,9 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
 
   if ( allowAsync() ) {
 
+    Q_ASSERT( nodeHelper() );
+    Q_ASSERT( sourceObject() );
+
     ContactPhotoMemento *photoMemento =
         dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message.get(), "contactphoto" ) );
     if ( !photoMemento ) {
@@ -967,8 +970,10 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message ) const
 // HeaderStyle abstract base:
 //
 
-HeaderStyle::HeaderStyle() {
-
+HeaderStyle::HeaderStyle()
+  : mStrategy( 0 ), mPrinting( false ), mTopLevel( true ), mNodeHelper( 0 ), mAllowAsync( false ),
+    mSourceObject( 0 )
+{
 }
 
 HeaderStyle::~HeaderStyle() {
