@@ -69,8 +69,8 @@ MainView::MainView(QWidget* parent) :
 
   m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
   m_collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  m_collectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
   m_collectionFilter->setSourceModel( m_selectedSubTree );
-  SON(m_collectionFilter);
 
   KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel( m_collectionSelection, this );
   currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
