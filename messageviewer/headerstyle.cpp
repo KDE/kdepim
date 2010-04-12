@@ -1041,7 +1041,7 @@ HeaderStyle * HeaderStyle::enterprise() {
 }
 
 #ifdef KDEPIM_MOBILE_UI
-const HeaderStyle * HeaderStyle::mobile() {
+HeaderStyle * HeaderStyle::mobile() {
   if ( !mobileStyle )
     mobileStyle = new MobileHeaderStyle();
   return mobileStyle;
