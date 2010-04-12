@@ -51,6 +51,7 @@ findbar/findbar.cpp
 pluginloaderbase.cpp
 kxface.cpp
 csshelperbase.cpp
+contactphotomemento.cpp
 )
 
 

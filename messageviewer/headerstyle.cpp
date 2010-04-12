@@ -37,6 +37,7 @@ using KPIMUtils::LinkLocator;
 #include "spamheaderanalyzer.h"
 #include "globalsettings.h"
 #include "nodehelper.h"
+#include "contactphotomemento.h"
 
 #include <kpimutils/email.h>
 #include "kxface.h"
@@ -459,55 +460,56 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
 
   QString userHTML;
 
-  Akonadi::ContactSearchJob *job = new Akonadi::ContactSearchJob();
-  job->setLimit( 1 );
-  job->setQuery( Akonadi::ContactSearchJob::Email, KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() ) );
-  if ( !job->exec() )
-    return QString();
-
-  const KABC::Addressee::List addresses = job->contacts();
-
   QString photoURL;
   int photoWidth = 60;
   int photoHeight = 60;
-  if( addresses.count() == 1 )
-  {
-    // picture
-    if ( addresses[0].photo().isIntern() )
-    {
-      // get photo data and convert to data: url
-        //kDebug() << "INTERNAL photo found";
-      QImage photo = addresses[0].photo().data();
-      if ( !photo.isNull() )
+  bool useOtherPhotoSources = false;
+
+  if ( allowAsync() ) {
+
+    ContactPhotoMemento *photoMemento =
+        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message.get(), "contactphoto" ) );
+    if ( !photoMemento ) {
+      const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
+      photoMemento = new ContactPhotoMemento( email );
+      nodeHelper()->setBodyPartMemento( message.get(), "contactphoto", photoMemento );
+      QObject::connect( photoMemento, SIGNAL( update( Viewer::UpdateMode ) ),
+                        sourceObject(), SLOT( update( Viewer::UpdateMode ) ) );
+    }
+
+    if ( photoMemento->finished() ) {
+
+      useOtherPhotoSources = true;
+      if ( photoMemento->photo().isIntern() )
       {
-        photoWidth = photo.width();
-        photoHeight = photo.height();
-        // scale below 60, otherwise it can get way too large
-        if ( photoHeight > 60 ) {
-          double ratio = ( double )photoHeight / ( double )photoWidth;
-          photoHeight = 60;
-          photoWidth = (int)( 60 / ratio );
-          photo = photo.scaled( photoWidth, photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+        // get photo data and convert to data: url
+        QImage photo = photoMemento->photo().data();
+        if ( !photo.isNull() )
+        {
+          photoWidth = photo.width();
+          photoHeight = photo.height();
+          // scale below 60, otherwise it can get way too large
+          if ( photoHeight > 60 ) {
+            double ratio = ( double )photoHeight / ( double )photoWidth;
+            photoHeight = 60;
+            photoWidth = (int)( 60 / ratio );
+            photo = photo.scaled( photoWidth, photoHeight, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+          }
+          photoURL = imgToDataUrl( photo );
         }
-        photoURL = imgToDataUrl( photo );
+      }
+      else
+      {
+        photoURL = photoMemento->photo().url();
+        if ( photoURL.startsWith('/') )
+          photoURL.prepend( "file:" );
       }
     }
-    else
-    {
-        //kDebug() << "URL found";
-      photoURL = addresses[0].photo().url();
-      if ( photoURL.startsWith('/') )
-        photoURL.prepend( "file:" );
-    }
-  }
-  else // TODO: find a usable one
-  {
-    // Note: Currently more than 1 result is disabled because of the setLimit() call on the search
-    //       job anyway
-    userHTML = "&nbsp;";
+  } else {
+    useOtherPhotoSources = true;
   }
 
-  if( photoURL.isEmpty() && message->headerByType( "Face" )) {
+  if( photoURL.isEmpty() && message->headerByType( "Face" ) && useOtherPhotoSources ) {
     // no photo, look for a Face header
     QString faceheader = message->headerByType( "Face" )->asUnicodeString();
     if ( !faceheader.isEmpty() ) {
@@ -540,7 +542,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
     }
   }
 
-  if( photoURL.isEmpty() && message->headerByType( "X-Face" ))
+  if( photoURL.isEmpty() && message->headerByType( "X-Face" ) && useOtherPhotoSources )
   {
     // no photo, look for a X-Face header
     QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
