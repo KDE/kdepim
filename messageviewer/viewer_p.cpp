@@ -1231,6 +1231,9 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content*
   headerStyle()->setVCardName( href );
   headerStyle()->setPrinting( mPrinting );
   headerStyle()->setTopLevel( topLevel );
+  headerStyle()->setAllowAsync( true );
+  headerStyle()->setSourceObject( this );
+  headerStyle()->setNodeHelper( mNodeHelper );
   return headerStyle()->format( aMsg );
 }
 

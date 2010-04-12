@@ -108,6 +108,15 @@ public:
   void setTopLevel( bool topLevel ) { mTopLevel = topLevel; }
   bool isTopLevel() const { return mTopLevel; }
 
+  void setNodeHelper( NodeHelper *nodeHelper ) { mNodeHelper = nodeHelper; }
+  NodeHelper* nodeHelper() const { return mNodeHelper; }
+
+  void setAllowAsync( bool allowAsync ) { mAllowAsync = allowAsync; }
+  bool allowAsync() const { return mAllowAsync; }
+
+  void setSourceObject( QObject *sourceObject ) { mSourceObject = sourceObject; }
+  QObject* sourceObject() const { return mSourceObject; }
+
   static QString dateStr(const KDateTime &dateTime);
   static QByteArray dateShortStr(const KDateTime &dateTime);
 
@@ -117,6 +126,9 @@ private:
   QString mVCardName;
   bool mPrinting;
   bool mTopLevel;
+  NodeHelper *mNodeHelper;
+  bool mAllowAsync;
+  QObject *mSourceObject;
 };
 }
 
