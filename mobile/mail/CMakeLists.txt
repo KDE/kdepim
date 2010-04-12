@@ -20,6 +20,7 @@ kde4_add_executable(kmail-mobile ${kmail_mobile_srcs} )
 target_link_libraries(kmail-mobile
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
+    ${KDEPIMLIBS_KMIME_LIBRARY}
     ${KDEPIMLIBS_AKONADI_LIBRARY}
     akonadi_next
     kdepim
