@@ -200,7 +200,7 @@ void MainView::setSelectedBreadcrumbCollectionRow(int row)
   m_breadcrumbCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
 
-bool MainView::hasChildCollectionHasChildren( int row )
+bool MainView::childCollectionHasChildren( int row )
 {
   if ( row < 0)
     return false;

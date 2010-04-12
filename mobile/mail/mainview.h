@@ -44,7 +44,7 @@ class MainView : public QDeclarativeView
     void setSelectedChildCollectionRow( int row );
     void setSelectedBreadcrumbCollectionRow( int row );
 
-    bool hasChildCollectionHasChildren( int row );
+    bool childCollectionHasChildren( int row );
 
   private slots:
     void saveState();
