@@ -97,7 +97,7 @@ namespace HTMLPrettyFormatter
 
 class MailSourceViewer : public KTabWidget
 {
-Q_OBJECT;
+Q_OBJECT
 public:
   MailSourceViewer( QWidget *parent = 0 );
   ~MailSourceViewer();
