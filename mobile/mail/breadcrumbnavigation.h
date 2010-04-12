@@ -45,19 +45,21 @@ private:
 
 };
 
+class KForwardingItemSelectionModel;
+
 class KNavigatingProxyModel : public Akonadi::SelectionProxyModel
 {
   Q_OBJECT
 public:
-  KNavigatingProxyModel(QItemSelectionModel* selectionModel, QObject* parent = 0);
+  KNavigatingProxyModel(KForwardingItemSelectionModel* selectionModel, QObject* parent = 0);
 
   virtual void setSourceModel(QAbstractItemModel* sourceModel);
 
 private slots:
   void updateNavigation();
   void navigationSelectionChanged( const QItemSelection &, const QItemSelection & );
-  void sourceRowsInserted( const QModelIndex &parent, int start, int end );
-  void sourceRowsRemoved( const QModelIndex &parent, int start, int end );
+  void _sourceRowsInserted( const QModelIndex &parent, int start, int end );
+  void _sourceRowsRemoved( const QModelIndex &parent, int start, int end );
 
 private:
   void silentSelect(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command);
@@ -65,7 +67,7 @@ private:
 private:
   using KSelectionProxyModel::setFilterBehavior;
 
-  QItemSelectionModel *m_selectionModel;
+  KForwardingItemSelectionModel *m_selectionModel;
 
 };
 
@@ -83,6 +85,9 @@ public:
 
   virtual void select(const QModelIndex& index, SelectionFlags command);
   virtual void select(const QItemSelection& selection, SelectionFlags command);
+
+signals:
+  void resetNavigation();
 
 private slots:
   void navigationSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);

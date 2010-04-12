@@ -56,7 +56,7 @@ bool KBreadcrumbNavigationProxyModel::showHiddenAscendantData() const
   return m_showHiddenAscendantData;
 }
 
-KNavigatingProxyModel::KNavigatingProxyModel(QItemSelectionModel* selectionModel, QObject* parent)
+KNavigatingProxyModel::KNavigatingProxyModel(KForwardingItemSelectionModel* selectionModel, QObject* parent)
   : Akonadi::SelectionProxyModel(selectionModel, parent), m_selectionModel(selectionModel)
 {
 }
@@ -74,16 +74,21 @@ void KNavigatingProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
 {
   connect( m_selectionModel, SIGNAL( selectionChanged( const QItemSelection &, const QItemSelection & ) ),
       SLOT( navigationSelectionChanged( const QItemSelection &, const QItemSelection & ) ) );
+  connect( m_selectionModel, SIGNAL(resetNavigation()), SLOT(updateNavigation()) );
+
+  disconnect(sourceModel, SIGNAL(modelReset()), this, SLOT(updateNavigation()));
+  disconnect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(_sourceRowsInserted(QModelIndex,int,int)));
+  disconnect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(_sourceRowsRemoved(QModelIndex,int,int)));
 
   KSelectionProxyModel::setSourceModel(sourceModel);
   updateNavigation();
 
   connect(sourceModel, SIGNAL(modelReset()), SLOT(updateNavigation()));
-  connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(sourceRowsInserted(QModelIndex,int,int)));
-  connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(sourceRowsRemoved(QModelIndex,int,int)));
+  connect(sourceModel, SIGNAL(rowsInserted(QModelIndex,int,int)), SLOT(_sourceRowsInserted(QModelIndex,int,int)));
+  connect(sourceModel, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT(_sourceRowsRemoved(QModelIndex,int,int)));
 }
 
-void KNavigatingProxyModel::sourceRowsInserted(const QModelIndex& parent, int start, int end)
+void KNavigatingProxyModel::_sourceRowsInserted(const QModelIndex& parent, int start, int end)
 {
   if (filterBehavior() != ExactSelection || parent.isValid())
     return;
@@ -93,7 +98,7 @@ void KNavigatingProxyModel::sourceRowsInserted(const QModelIndex& parent, int st
   silentSelect(sel, QItemSelectionModel::Select);
 }
 
-void KNavigatingProxyModel::sourceRowsRemoved(const QModelIndex& parent, int start, int end)
+void KNavigatingProxyModel::_sourceRowsRemoved(const QModelIndex& parent, int start, int end)
 {
   if (filterBehavior() != ExactSelection || parent.isValid())
     return;
@@ -168,4 +173,6 @@ void KForwardingItemSelectionModel::select(const QItemSelection& selection, QIte
 void KForwardingItemSelectionModel::navigationSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
   select(selected, ClearAndSelect);
+  if (selected == selection())
+    resetNavigation();
 }
