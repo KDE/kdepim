@@ -103,6 +103,9 @@ Rectangle {
       anchors.fill: parent
       id: actionPanel
       titleText: "Actions"
+      // ### QML has a bug where the children property is broken.
+      // As a workaround, we need to set handlePosition here and
+      // set anchors.fill parent on the panels. Remove when Qt is fixed.
       handlePosition: 150
       handleHeight: 150
       contentWidth: 240
@@ -163,7 +166,7 @@ Rectangle {
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition: 150
+      handlePosition: 300
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
