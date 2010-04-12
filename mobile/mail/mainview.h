@@ -25,6 +25,14 @@
 
 class QItemSelectionModel;
 
+class KNavigatingProxyModel;
+class KSelectionProxyModel;
+
+namespace Akonadi
+{
+class EntityMimeTypeFilterModel;
+}
+
 /** The new KMMainWidget ;-) */
 class MainView : public QDeclarativeView
 {
@@ -36,6 +44,8 @@ class MainView : public QDeclarativeView
     void setSelectedChildCollectionRow( int row );
     void setSelectedBreadcrumbCollectionRow( int row );
 
+    bool hasChildCollectionHasChildren( int row );
+
   private slots:
     void saveState();
     void restoreState();
@@ -44,6 +54,10 @@ class MainView : public QDeclarativeView
     QItemSelectionModel *m_collectionSelection;
     QItemSelectionModel *m_childCollectionSelection;
     QItemSelectionModel *m_breadcrumbCollectionSelection;
+    Akonadi::EntityMimeTypeFilterModel *m_childCollectionFilter;
+    KNavigatingProxyModel *m_childEntitiesModel;
+    Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
+    KSelectionProxyModel *m_selectedSubTree;
 };
 
 #endif

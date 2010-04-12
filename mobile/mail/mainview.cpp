@@ -64,6 +64,14 @@ MainView::MainView(QWidget* parent) :
 
   m_collectionSelection = new QItemSelectionModel( etm, this );
 
+  m_selectedSubTree = new KSelectionProxyModel( m_collectionSelection );
+  m_selectedSubTree->setSourceModel( etm );
+
+  m_collectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
+  m_collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  m_collectionFilter->setSourceModel( m_selectedSubTree );
+  SON(m_collectionFilter);
+
   KSelectionProxyModel *currentCollectionSelectionModel = new KSelectionProxyModel( m_collectionSelection, this );
   currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
   currentCollectionSelectionModel->setSourceModel( etm );
@@ -78,23 +86,23 @@ MainView::MainView(QWidget* parent) :
 
   KForwardingItemSelectionModel *oneway = new KForwardingItemSelectionModel( etm, m_collectionSelection, this );
 
-  KNavigatingProxyModel *childEntitiesModel = new KNavigatingProxyModel( oneway, this );
-  childEntitiesModel->setSourceModel( etm );
+  m_childEntitiesModel = new KNavigatingProxyModel( oneway, this );
+  m_childEntitiesModel->setSourceModel( etm );
 
   Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel();
-  itemFilter->setSourceModel( childEntitiesModel );
+  itemFilter->setSourceModel( m_childEntitiesModel );
   itemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  Akonadi::EntityMimeTypeFilterModel *childCollectionFilter = new Akonadi::EntityMimeTypeFilterModel();
-  childCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  childCollectionFilter->setSourceModel( childEntitiesModel );
-  childCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  m_childCollectionFilter = new Akonadi::EntityMimeTypeFilterModel();
+  m_childCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+  m_childCollectionFilter->setSourceModel( m_childEntitiesModel );
+  m_childCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
 
   Future::KProxyItemSelectionModel *proxyBreadcrumbCollectionSelection = new Future::KProxyItemSelectionModel( breadcrumbNavigationModel, m_collectionSelection, this );
 
   m_breadcrumbCollectionSelection = new KForwardingItemSelectionModel( breadcrumbNavigationModel, proxyBreadcrumbCollectionSelection, KForwardingItemSelectionModel::Reverse, this );
 
-  m_childCollectionSelection = new Future::KProxyItemSelectionModel( childCollectionFilter, m_collectionSelection, this );
+  m_childCollectionSelection = new Future::KProxyItemSelectionModel( m_childCollectionFilter, m_collectionSelection, this );
 
   MessageListProxy *messageProxy = new MessageListProxy( this );
   messageProxy->setSourceModel( itemFilter );
@@ -108,6 +116,10 @@ MainView::MainView(QWidget* parent) :
   viewetm->setSelectionModel( m_collectionSelection );
   viewetm->show();
 
+  QTreeView *viewCollectionFilter = new QTreeView;
+  viewCollectionFilter->setModel( m_collectionFilter );
+  viewCollectionFilter->show();
+
   QTreeView *view1 = new QTreeView;
   view1->setModel( currentCollectionSelectionModel );
   view1->show();
@@ -118,7 +130,7 @@ MainView::MainView(QWidget* parent) :
   view2->show();
 
   QTreeView *view3 = new QTreeView;
-  view3->setModel( childCollectionFilter );
+  view3->setModel( m_childCollectionFilter );
   view3->setSelectionModel(m_childCollectionSelection);
   view3->show();
 
@@ -132,7 +144,7 @@ MainView::MainView(QWidget* parent) :
   // written KReaggregationProxyModel :)
   engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( currentCollectionSelectionModel ) ) );
   engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( breadcrumbNavigationModel ) ) );
-  engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( childCollectionFilter ) ) );
+  engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( m_childCollectionFilter ) ) );
   engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( messageProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -184,6 +196,21 @@ void MainView::setSelectedBreadcrumbCollectionRow(int row)
   }
   QModelIndex index = m_breadcrumbCollectionSelection->model()->index( row, 0 );
   m_breadcrumbCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
+}
+
+bool MainView::hasChildCollectionHasChildren( int row )
+{
+  if ( row < 0)
+    return false;
+  QModelIndex idx = m_childCollectionFilter->index( row, 0 );
+  QModelIndex idx2 = m_childCollectionFilter->mapToSource( idx );
+  QModelIndex idx3 = m_childEntitiesModel->mapToSource( idx2 );
+  QModelIndex idx4 = m_selectedSubTree->mapFromSource( idx3 );
+  QModelIndex idx5 = m_collectionFilter->mapFromSource( idx4 );
+  if ( !idx5.isValid() )
+    return false;
+
+  return idx5.model()->rowCount( idx5 ) > 0;
 }
 
 #include "mainview.moc"
