@@ -113,6 +113,7 @@ public:
 KViewStateSaver::KViewStateSaver(QObject* parent)
   : QObject(parent), d_ptr( new KViewStateSaverPrivate(this) )
 {
+  qRegisterMetaType<QModelIndex>( "QModelIndex" );
   // Delete myself if not finished after two seconds.
   QTimer::singleShot(2000, this, SLOT(deleteLater()));
 }
