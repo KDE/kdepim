@@ -50,6 +50,8 @@
 #include <QtDeclarative/QDeclarativeComponent>
 #include <akonadi_next/etmstatesaver.h>
 
+#define SON(o) o->setObjectName(#o)
+
 MainView::MainView(QWidget* parent) :
   QDeclarativeView(parent),
   m_childCollectionSelection( 0 )
