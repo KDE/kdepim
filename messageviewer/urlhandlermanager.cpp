@@ -804,6 +804,9 @@ namespace {
   bool InternalImageURLHandler::willHandleDrag( const KUrl &url, ViewerPrivate *window ) const
   {
     Q_UNUSED( window );
+    if ( url.protocol() == "data" && url.path().startsWith( "image" ) )
+      return true;
+
     const QString imagePath = KStandardDirs::locate( "data", "libmessageviewer/pics/" );
     return url.path().contains( imagePath );
   }
