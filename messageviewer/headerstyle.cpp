@@ -511,9 +511,8 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
     // no photo, look for a Face header
     QString faceheader = message->headerByType( "Face" )->asUnicodeString();
     if ( !faceheader.isEmpty() ) {
-      QImage faceimage;
 
-        kDebug() << "Found Face: header";
+      kDebug() << "Found Face: header";
 
       QByteArray facestring = faceheader.toUtf8();
       // Spec says header should be less than 998 bytes
@@ -529,14 +528,14 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
             photoWidth = 48;
             photoHeight = 48;
           } else {
-              kDebug() << "Face: header image is" << faceimage.width() << "by"
-                       << faceimage.height() << "not 48x48 Pixels";
+            kDebug() << "Face: header image is" << faceimage.width() << "by"
+                     << faceimage.height() << "not 48x48 Pixels";
           }
         } else {
-            kDebug() << "Failed to load decoded png from Face: header";
+          kDebug() << "Failed to load decoded png from Face: header";
         }
       } else {
-          kDebug() << "Face: header too long at" << facestring.length();
+        kDebug() << "Face: header too long at" << facestring.length();
       }
     }
   }
@@ -544,7 +543,6 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
   if( photoURL.isEmpty() && message->headerByType( "X-Face" ))
   {
     // no photo, look for a X-Face header
-    QString xfaceURL;
     QString xfhead = message->headerByType( "X-Face" )->asUnicodeString();
     if ( !xfhead.isEmpty() )
     {
@@ -566,11 +564,11 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
 
   // the subject line and box below for details
   if ( strategy->showHeader( "subject" ) ) {
-      const int flags = LinkLocator::PreserveSpaces |
+    const int flags = LinkLocator::PreserveSpaces |
                 ( GlobalSettings::self()->showEmoticons() ?
                   LinkLocator::ReplaceSmileys : 0 );
 
-      headerStr += QString("<div dir=\"%1\">%2</div>\n")
+    headerStr += QString("<div dir=\"%1\">%2</div>\n")
                       .arg(subjectDir)
                       .arg(!message->subject(false)?
                             i18n("No Subject") :
