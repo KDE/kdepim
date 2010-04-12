@@ -362,13 +362,13 @@ const HeaderStrategy * Viewer::headerStrategy() const
   return d->headerStrategy();
 }
 
-const HeaderStyle * Viewer::headerStyle() const
+HeaderStyle * Viewer::headerStyle() const
 {
   Q_D( const Viewer );
   return d->headerStyle();
 }
 
-void Viewer::setHeaderStyleAndStrategy( const HeaderStyle * style,
+void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
                                         const HeaderStrategy * strategy )
 {
   Q_D( Viewer );

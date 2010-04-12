@@ -73,35 +73,50 @@ public:
 #endif
   };
 
-  static const HeaderStyle * create( Type type );
-  static const HeaderStyle * create( const QString & type );
+  static HeaderStyle * create( Type type );
+  static HeaderStyle * create( const QString & type );
 
-  static const HeaderStyle * brief();
-  static const HeaderStyle * plain();
-  static const HeaderStyle * fancy();
-  static const HeaderStyle * enterprise();
+  static HeaderStyle * brief();
+  static HeaderStyle * plain();
+  static HeaderStyle * fancy();
+  static HeaderStyle * enterprise();
 #ifdef KDEPIM_MOBILE_UI
-  static const HeaderStyle * mobile();
+  static HeaderStyle * mobile();
 #endif
 
   //
   // Methods for handling the styles:
   //
   virtual const char * name() const = 0;
-  virtual const HeaderStyle * next() const = 0;
-  virtual const HeaderStyle * prev() const = 0;
+  virtual HeaderStyle * next() const = 0;
+  virtual HeaderStyle * prev() const = 0;
 
   //
   // HeaderStyle interface:
   //
-  virtual QString format( KMime::Message::Ptr message,
-        const HeaderStrategy * strategy,
-        const QString & vCardName,
-        bool printing = false, bool topLevel = false ) const = 0;
+  virtual QString format( KMime::Message::Ptr message ) const = 0;
+
+  void setHeaderStrategy( const HeaderStrategy *strategy ) { mStrategy = strategy; }
+  const HeaderStrategy* headerStrategy() const { return mStrategy; }
+
+  void setVCardName( const QString &vCardName ) { mVCardName = vCardName; }
+  QString vCardName() const { return mVCardName; }
+
+  void setPrinting( bool printing ) { mPrinting = printing; }
+  bool isPrinting() const { return mPrinting; }
+
+  void setTopLevel( bool topLevel ) { mTopLevel = topLevel; }
+  bool isTopLevel() const { return mTopLevel; }
 
   static QString dateStr(const KDateTime &dateTime);
   static QByteArray dateShortStr(const KDateTime &dateTime);
 
+private:
+
+  const HeaderStrategy *mStrategy;
+  QString mVCardName;
+  bool mPrinting;
+  bool mTopLevel;
 };
 }
 

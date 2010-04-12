@@ -1227,7 +1227,11 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content*
   if ( vCardNode )
     href = NodeHelper::asHREF( vCardNode, "body" );
 
-  return headerStyle()->format( aMsg, headerStrategy(), href, mPrinting, topLevel );
+  headerStyle()->setHeaderStrategy( headerStrategy() );
+  headerStyle()->setVCardName( href );
+  headerStyle()->setPrinting( mPrinting );
+  headerStyle()->setTopLevel( topLevel );
+  return headerStyle()->format( aMsg );
 }
 
 void ViewerPrivate::showVCard( KMime::Content* msgPart ) {
@@ -1406,8 +1410,8 @@ void ViewerPrivate::writeConfig( bool sync )
 }
 
 
-void ViewerPrivate::setHeaderStyleAndStrategy( const HeaderStyle * style,
-                                             const HeaderStrategy * strategy ) {
+void ViewerPrivate::setHeaderStyleAndStrategy( HeaderStyle * style,
+                                               const HeaderStrategy * strategy ) {
   mHeaderStyle = style ? style : HeaderStyle::fancy();
   mHeaderStrategy = strategy ? strategy : HeaderStrategy::rich();
   update( Viewer::Force );

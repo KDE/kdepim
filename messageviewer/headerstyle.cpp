@@ -105,18 +105,16 @@ protected:
 
 public:
   const char * name() const { return "brief"; }
-  const HeaderStyle * next() const { return plain(); }
-  const HeaderStyle * prev() const { return fancy(); }
+  HeaderStyle * next() const { return plain(); }
+  HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
-                  const QString & vCardName, bool printing, bool topLevel ) const;
+  QString format( KMime::Message::Ptr message ) const;
 };
 
-QString BriefHeaderStyle::format( KMime::Message::Ptr message,
-                                  const HeaderStrategy * strategy,
-                                  const QString & vCardName, bool printing, bool topLevel ) const {
-  Q_UNUSED( topLevel );
+QString BriefHeaderStyle::format( KMime::Message::Ptr message ) const {
   if ( !message ) return QString();
+
+  const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
     strategy = HeaderStrategy::brief();
 
@@ -153,8 +151,8 @@ QString BriefHeaderStyle::format( KMime::Message::Ptr message,
       fromStr = message->fromStrip(); // let's use that
 */
     QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly );
-    if ( !vCardName.isEmpty() )
-      fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\">" + i18n("[vCard]") + "</a>";
+    if ( !vCardName().isEmpty() )
+      fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\">" + i18n("[vCard]") + "</a>";
     headerParts << fromPart;
   }
 
@@ -165,7 +163,7 @@ QString BriefHeaderStyle::format( KMime::Message::Ptr message,
     headerParts << i18n("BCC: ") + StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly );
 
   if ( strategy->showHeader( "date" ) )
-    headerParts << strToHtml( dateString( message, printing, /* shortDate = */ true ) );
+    headerParts << strToHtml( dateString( message, isPrinting(), /* shortDate = */ true ) );
 
   // remove all empty (modulo whitespace) entries and joins them via ", \n"
   headerStr += " (" + headerParts.filter( QRegExp( "\\S" ) ).join( ",\n" ) + ')';
@@ -191,21 +189,18 @@ protected:
 
 public:
   const char * name() const { return "plain"; }
-  const HeaderStyle * next() const { return fancy(); }
-  const HeaderStyle * prev() const { return brief(); }
+  HeaderStyle * next() const { return fancy(); }
+  HeaderStyle * prev() const { return brief(); }
 
-  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
-                  const QString & vCardName, bool printing, bool topLevel ) const;
+  QString format( KMime::Message::Ptr message ) const;
 
 private:
   QString formatAllMessageHeaders( KMime::Message::Ptr message ) const;
 };
 
-QString PlainHeaderStyle::format( KMime::Message::Ptr message,
-                                  const HeaderStrategy * strategy,
-                                  const QString & vCardName, bool printing, bool topLevel ) const {
-  Q_UNUSED( topLevel );
+QString PlainHeaderStyle::format( KMime::Message::Ptr message ) const {
   if ( !message ) return QString();
+  const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
     strategy = HeaderStrategy::rich();
 
@@ -246,7 +241,7 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message,
                       .arg(subjectDir);
 
   if ( strategy->showHeader( "date" ) )
-    headerStr.append(i18n("Date: ") + strToHtml( dateString(message, printing, /* short = */ false ) ) + "<br/>\n" );
+    headerStr.append(i18n("Date: ") + strToHtml( dateString(message, isPrinting(), /* short = */ false ) ) + "<br/>\n" );
 
   if ( strategy->showHeader( "from" ) ) {
 /*FIXME(Andras) review if it is still needed
@@ -255,8 +250,8 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message,
 */
     headerStr.append( i18n("From: ") +
                       StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayFullAddress, "", StringUtil::ShowLink ) );
-    if ( !vCardName.isEmpty() )
-      headerStr.append("&nbsp;&nbsp;<a href=\"" + vCardName +
+    if ( !vCardName().isEmpty() )
+      headerStr.append("&nbsp;&nbsp;<a href=\"" + vCardName() +
             "\">" + i18n("[vCard]") + "</a>" );
 
     if ( strategy->showHeader( "organization" )
@@ -314,17 +309,15 @@ protected:
 
 public:
   const char * name() const { return "fancy"; }
-  const HeaderStyle * next() const { return enterprise(); }
-  const HeaderStyle * prev() const { return plain(); }
+  HeaderStyle * next() const { return enterprise(); }
+  HeaderStyle * prev() const { return plain(); }
 
-  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
-                  const QString & vCardName, bool printing, bool topLevel ) const;
+  QString format( KMime::Message::Ptr message ) const;
   static QString imgToDataUrl( const QImage & image );
 
 private:
   static QString drawSpamMeter( SpamError spamError, double percent, double confidence,
-      const QString & filterHeader, const QString & confidenceHeader );
-
+  const QString & filterHeader, const QString & confidenceHeader );
 };
 
 QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, double confidence,
@@ -425,11 +418,9 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
 }
 
 
-QString FancyHeaderStyle::format( KMime::Message::Ptr message,
-                                  const HeaderStrategy * strategy,
-                                  const QString & vCardName, bool printing, bool topLevel ) const {
-  Q_UNUSED( topLevel );
+QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
   if ( !message ) return QString();
+  const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
     strategy = HeaderStrategy::rich();
 
@@ -617,7 +608,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
                                     StringUtil::emailAddrAsAnchor(
                                       resentFrom, StringUtil::DisplayFullAddress ) )
                             : QString("") )
-                + ( !vCardName.isEmpty() ? "&nbsp;&nbsp;<a href=\"" + vCardName + "\">"
+                + ( !vCardName().isEmpty() ? "&nbsp;&nbsp;<a href=\"" + vCardName() + "\">"
                               + i18n("[vCard]") + "</a>"
                             : QString("") )
                 + ( !message->headerByType("Organization")
@@ -659,7 +650,7 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message,
                   "<td dir=\"%2\">%3</td></tr>\n")
                           .arg(i18n("Date: "))
                   .arg( directionOf( dateStr( message->date()->dateTime() ) ) )
-                          .arg(strToHtml( dateString( message, printing, /* short = */ false ) ) ) );
+                          .arg(strToHtml( dateString( message, isPrinting(), /* short = */ false ) ) ) );
   if ( GlobalSettings::self()->showUserAgent() ) {
     if ( strategy->showHeader( "user-agent" ) ) {
       if ( message->headerByType("User-Agent") ) {
@@ -711,24 +702,22 @@ protected:
 
 public:
   const char * name() const { return "enterprise"; }
-  const HeaderStyle * next() const {
+  HeaderStyle * next() const {
 #if defined KDEPIM_MOBILE_UI
     return mobile();
 #else
     return brief();
 #endif
   }
-  const HeaderStyle * prev() const { return fancy(); }
+  HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
-                  const QString & vCardName, bool printing, bool topLevel ) const;
+  QString format( KMime::Message::Ptr message ) const;
 };
 
-QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
-                                        const HeaderStrategy * strategy,
-                                        const QString & vCardName, bool printing, bool topLevel ) const
+QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
 {
   if ( !message ) return QString();
+  const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy ) {
     strategy = HeaderStrategy::brief();
   }
@@ -759,7 +748,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
                                   background().color();
   QColor activeColorDark = activeColor.dark(130);
   // reverse colors for encapsulated
-  if( !topLevel ){
+  if( !isTopLevel() ){
     activeColorDark = activeColor.dark(50);
     fontColor = QColor(Qt::black);
     linkColor = "class =\"black\"";
@@ -789,7 +778,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
   QString headerStr;
 
   // 3D borders
-  if(topLevel)
+  if(isTopLevel())
     headerStr +=
       "<div style=\"position: fixed; top: 0px; left: 0px; background-color: #606060; "
       "background-image: url("+imgpath+"s_left.png); width: 10px; min-height: 100%;\">&nbsp;</div>"
@@ -798,7 +787,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
 
   headerStr +=
     "<div style=\"margin-left: 10px; top: 0px;\"><span style=\"font-size: 10px; font-weight: bold;\">"
-    + dateString( message, printing, /* shortDate */ false ) + "</span></div>"
+    + dateString( message, isPrinting(), /* shortDate */ false ) + "</span></div>"
     // #0057ae
     "<table style=\"background: "+activeColorDark.name()+"; border-collapse:collapse; top: 14px; min-width: 200px; \" cellpadding=0> \n"
     "  <tr> \n"
@@ -826,8 +815,8 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
     // We by design use the stripped mail address here, it is more enterprise-like.
     QString fromPart = StringUtil::emailAddrAsAnchor( message->from(),
                                                       StringUtil::DisplayNameOnly, linkColor );
-    if ( !vCardName.isEmpty() )
-      fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" "+linkColor+">" + i18n("[vCard]") + "</a>";
+    if ( !vCardName().isEmpty() )
+      fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\" "+linkColor+">" + i18n("[vCard]") + "</a>";
     //TDDO strategy date
     //if ( strategy->showHeader( "date" ) )
     headerStr +=
@@ -862,7 +851,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
     " </table> \n";
 
   // kmail icon
-  if( topLevel ) {
+  if( isTopLevel() ) {
     headerStr +=
       "<div class=\"noprint\" style=\"position: absolute; top: -14px; right: 30px; width: 91px; height: 91px;\">\n"
       "<img style=\"float: right;\" src=\""+imgpath+"icon.png\">\n"
@@ -875,7 +864,7 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message,
       "</div>\n";
   }
 
-  if ( printing ) {
+  if ( isPrinting() ) {
     //provide a bit more left padding when printing
     //kolab/issue3254 (printed mail cut at the left side)
     headerStr += "<div style=\"padding: 6px; padding-left: 10px;\">";
@@ -902,20 +891,14 @@ protected:
 
 public:
   const char * name() const { return "mobile"; }
-  const HeaderStyle * next() const { return brief(); }
-  const HeaderStyle * prev() const { return enterprise(); }
+  HeaderStyle * next() const { return brief(); }
+  HeaderStyle * prev() const { return enterprise(); }
 
-  QString format( KMime::Message::Ptr message, const HeaderStrategy * strategy,
-                  const QString & vCardName, bool printing, bool topLevel ) const;
+  QString format( KMime::Message::Ptr message ) const;
 };
 
-QString MobileHeaderStyle::format( KMime::Message::Ptr message,
-                                   const HeaderStrategy * strategy,
-                                   const QString & vCardName, bool printing, bool topLevel ) const
+QString MobileHeaderStyle::format( KMime::Message::Ptr message ) const
 {
-  Q_UNUSED( printing );
-  Q_UNUSED( topLevel );
-
   if ( !message ) return QString();
 
   // Bertjan: This is a highly simplified header for mobile devices. It lacks
@@ -924,14 +907,14 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
   //          encryption I guess.
 
   // Use always the brief strategy for the mobile headers.
-  strategy = HeaderStrategy::brief();
+  const HeaderStrategy *strategy = HeaderStrategy::brief();
 
   // From
   QString linkColor ="style=\"color: #0E49A1; text-decoration: none\"";
   QString fromPart = StringUtil::emailAddrAsAnchor( message->from(), StringUtil::DisplayNameOnly, linkColor );
 
-  if ( !vCardName.isEmpty() )
-    fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
+  if ( !vCardName().isEmpty() )
+    fromPart += "&nbsp;&nbsp;<a href=\"" + vCardName() + "\" " + linkColor + ">" + i18n( "[vCard]" ) + "</a>";
 
   // Background image
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
@@ -967,7 +950,7 @@ QString MobileHeaderStyle::format( KMime::Message::Ptr message,
 
   headerStr += "  <td>&nbsp;</td>\n";
   headerStr += "  <td colspan=\"2\" style=\"text-align: right; margin-right: 15px;\">sent: ";
-  headerStr += dateString( message, printing, /* shortDate = */ false ) + "</td>\n";
+  headerStr += dateString( message, isPrinting(), /* shortDate = */ false ) + "</td>\n";
   headerStr += "</tr>\n";
   headerStr += "</table>\n";
   headerStr += "</div>\n";
@@ -993,7 +976,7 @@ HeaderStyle::~HeaderStyle() {
 
 }
 
-const HeaderStyle * HeaderStyle::create( Type type ) {
+HeaderStyle * HeaderStyle::create( Type type ) {
   switch ( type ) {
   case Brief:  return brief();
   case Plain:  return plain();
@@ -1007,7 +990,7 @@ const HeaderStyle * HeaderStyle::create( Type type ) {
   return 0; // make compiler happy
 }
 
-const HeaderStyle * HeaderStyle::create( const QString & type ) {
+HeaderStyle * HeaderStyle::create( const QString & type ) {
   const QString lowerType = type.toLower();
   if ( lowerType == "brief" ) return brief();
   if ( lowerType == "plain" )  return plain();
@@ -1021,33 +1004,33 @@ const HeaderStyle * HeaderStyle::create( const QString & type ) {
   return fancy();
 }
 
-static const HeaderStyle * briefStyle = 0;
-static const HeaderStyle * plainStyle = 0;
-static const HeaderStyle * fancyStyle = 0;
-static const HeaderStyle * enterpriseStyle = 0;
+HeaderStyle * briefStyle = 0;
+HeaderStyle * plainStyle = 0;
+HeaderStyle * fancyStyle = 0;
+HeaderStyle * enterpriseStyle = 0;
 #ifdef KDEPIM_MOBILE_UI
-static const HeaderStyle * mobileStyle = 0;
+HeaderStyle * mobileStyle = 0;
 #endif
 
-const HeaderStyle * HeaderStyle::brief() {
+HeaderStyle * HeaderStyle::brief() {
   if ( !briefStyle )
     briefStyle = new BriefHeaderStyle();
   return briefStyle;
 }
 
-const HeaderStyle * HeaderStyle::plain() {
+HeaderStyle * HeaderStyle::plain() {
   if ( !plainStyle )
     plainStyle = new PlainHeaderStyle();
   return plainStyle;
 }
 
-const HeaderStyle * HeaderStyle::fancy() {
+HeaderStyle * HeaderStyle::fancy() {
   if ( !fancyStyle )
     fancyStyle = new FancyHeaderStyle();
   return fancyStyle;
 }
 
-const HeaderStyle * HeaderStyle::enterprise() {
+HeaderStyle * HeaderStyle::enterprise() {
   if ( !enterpriseStyle )
     enterpriseStyle = new EnterpriseHeaderStyle();
   return enterpriseStyle;

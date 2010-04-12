@@ -232,9 +232,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   const HeaderStrategy * headerStrategy() const;
 
-  const HeaderStyle * headerStyle() const;
+  HeaderStyle * headerStyle() const;
 
-  void setHeaderStyleAndStrategy( const HeaderStyle * style,
+  void setHeaderStyleAndStrategy( HeaderStyle * style,
                                   const HeaderStrategy * strategy );
   MailWebView *htmlPart() const;
 

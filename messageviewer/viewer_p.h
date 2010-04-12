@@ -310,13 +310,13 @@ public:
   void writeConfig( bool withSync=true );
 
    /** Get the message header style. */
-  const HeaderStyle * headerStyle() const {
+  HeaderStyle * headerStyle() const {
     return mHeaderStyle;
   }
 
   /** Set the header style and strategy. We only want them to be set
       together. */
-  void setHeaderStyleAndStrategy( const HeaderStyle * style,
+  void setHeaderStyleAndStrategy( HeaderStyle * style,
                                   const HeaderStrategy * strategy );
 
   /** Get the message header strategy. */
@@ -601,7 +601,7 @@ public:
 
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
-  const HeaderStyle * mHeaderStyle;
+  HeaderStyle * mHeaderStyle;
   /** where did the user save the attachment last time */
   QString mSaveAttachDir;
   static const int delay;
