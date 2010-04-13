@@ -42,6 +42,13 @@ public:
 
   ~ConfigureWidget();
 
+  //
+  // Read and write config settings to the GlobalSettings.
+  // Note that this does not deal with all settings, some of those settings need to saved and read
+  // with a KConfigDialogManager, since this widgets correctly sets the objectname to the pattern
+  // required by KConfigDialogManager.
+  //
+
   void writeConfig();
   void readConfig();
 
