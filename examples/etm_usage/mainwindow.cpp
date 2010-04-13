@@ -32,6 +32,8 @@
 #include "tab6widget.h"
 #include "tab7widget.h"
 #include "unreadmailswidget.h"
+#include "recursiveitemlistwidget.h"
+
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   : QMainWindow(parent, flags)
@@ -49,6 +51,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new Tab5Widget(tabWidget), "Categorized Items");
   tabWidget->addTab(new Tab7Widget(tabWidget), "Tagged Items");
   tabWidget->addTab(new UnreadMailsWidget(tabWidget), "Unread Mails");
+  tabWidget->addTab(new RecursiveItemListWidget(tabWidget), "Items only");
 
   setCentralWidget(tabWidget);
 }
