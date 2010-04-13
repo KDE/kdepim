@@ -64,7 +64,6 @@ namespace MessageViewer {
   class CSSHelper;
   class HeaderStrategy;
   class HeaderStyle;
-  class MailWebView;
 }
 
 namespace MessageViewer {
@@ -236,8 +235,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   void setHeaderStyleAndStrategy( HeaderStyle * style,
                                   const HeaderStrategy * strategy );
-  MailWebView *htmlPart() const;
-
   void writeConfig( bool withSync=true );
 
   KUrl urlClicked() const;
@@ -253,6 +250,12 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
   QAbstractItemModel* messageTreeModel() const;
 
 signals:
+
+  /**
+   * Emitted when a status bar message is shown. Note that the status bar message is also set to
+   * KPIM::BroadcastStatus in addition.
+   */
+  void showStatusBarMessage( const QString &message );
 
   /**
    * Emitted after parsing of a message to have it stored

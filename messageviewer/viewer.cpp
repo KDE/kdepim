@@ -58,6 +58,8 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
   connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
            SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );
+  connect( d_ptr, SIGNAL( showStatusBarMessage( const QString & ) ),
+           this, SIGNAL( showStatusBarMessage( const QString & ) ) );
 
   setMessage( KMime::Message::Ptr(), Delayed );
 }
@@ -373,12 +375,6 @@ void Viewer::setHeaderStyleAndStrategy( HeaderStyle * style,
 {
   Q_D( Viewer );
   d->setHeaderStyleAndStrategy( style, strategy );
-}
-
-MailWebView *Viewer::htmlPart() const
-{
-  Q_D( const Viewer );
-  return d->htmlPart();
 }
 
 KAction *Viewer::copyURLAction()

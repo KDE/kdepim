@@ -2213,6 +2213,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
 
   if ( link.trimmed().isEmpty() ) {
     KPIM::BroadcastStatus::instance()->reset();
+    emit showStatusBarMessage( QString() );
     return;
   }
 
@@ -2221,6 +2222,7 @@ void ViewerPrivate::slotUrlOn(const QString& link, const QString& title, const Q
   if ( msg.isEmpty() )
     kWarning() << "Unhandled URL hover!";
   KPIM::BroadcastStatus::instance()->setTransientStatusMsg( msg );
+  emit showStatusBarMessage( msg );
 }
 
 void ViewerPrivate::slotUrlPopup(const QString &aUrl, const QPoint& aPos)

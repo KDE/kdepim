@@ -76,6 +76,7 @@ namespace MessageViewer {
   class ConfigureWidget;
   class WebKitPartHtmlWriter;
   class HtmlStatusBar;
+  class MailWebView;
 }
 
 namespace MessageViewer {
@@ -575,6 +576,7 @@ public slots:
   void update(Viewer::UpdateMode updateMode = Viewer::Delayed);
 
 signals:
+  void showStatusBarMessage( const QString &message );
   void replaceMsgByUnencryptedVersion();
   void popupMenu(KMime::Message &msg, const KUrl &url, const QPoint& mousePos);
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
