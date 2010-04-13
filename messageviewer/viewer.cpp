@@ -82,8 +82,7 @@ void Viewer::setMessageItem( const Akonadi::Item &item, UpdateMode updateMode )
   if ( !item.isValid() || item.loadedPayloadParts().contains( Akonadi::MessagePart::Body ) ) {
     d->setMessageItem( item, updateMode );
   } else {
-    Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item, this );
-    job->fetchScope().fetchFullPayload( true );
+    Akonadi::ItemFetchJob* job = createFetchJob( item );
     connect( job, SIGNAL(result(KJob*)), d, SLOT(itemFetchResult(KJob*)) );
     d->displaySplashPage( i18n( "Loading message..." ) );
   }
@@ -466,6 +465,14 @@ QAbstractItemModel* Viewer::messageTreeModel() const
   return d_func()->mMimePartModel;
 }
 
+Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
+{
+  Akonadi::ItemFetchJob* job = new Akonadi::ItemFetchJob( item );
+  job->fetchScope().fetchAllAttributes();
+  job->fetchScope().setAncestorRetrieval( Akonadi::ItemFetchScope::Parent );
+  job->fetchScope().fetchFullPayload( true );
+  return job;
+}
 
 }
 

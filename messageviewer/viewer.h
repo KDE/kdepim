@@ -58,15 +58,17 @@ class KToggleAction;
 class KUrl;
 class KConfigSkeleton;
 
+namespace Akonadi {
+  class ItemFetchJob;
+}
+
 namespace MessageViewer {
   class AttachmentStrategy;
   class ViewerPrivate;
   class CSSHelper;
   class HeaderStrategy;
   class HeaderStyle;
-}
 
-namespace MessageViewer {
 //TODO(Andras) once only those methods are public that really need to be public, probably export the whole class instead of just some methods
 
 /**
@@ -248,6 +250,14 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   /** A QAIM tree model of the message structure. */
   QAbstractItemModel* messageTreeModel() const;
+
+  /**
+   * Create an item fetch job that is suitable for using to fetch the message item that will
+   * be displayed on this viewer.
+   * It will set the correct fetch scope.
+   * You still need to connect to the job's result signal.
+   */
+  static Akonadi::ItemFetchJob* createFetchJob( const Akonadi::Item &item );
 
 signals:
 
