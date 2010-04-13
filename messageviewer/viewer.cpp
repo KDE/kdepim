@@ -417,12 +417,6 @@ void Viewer::slotUrlClicked()
   d->slotUrlClicked();
 }
 
-void Viewer::saveRelativePosition()
-{
-  Q_D( Viewer );
-  d->saveRelativePosition();
-}
-
 KUrl Viewer::urlClicked() const
 {
   Q_D( const Viewer );

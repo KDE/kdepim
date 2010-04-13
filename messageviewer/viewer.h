@@ -240,8 +240,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   void writeConfig( bool withSync=true );
 
-  void saveRelativePosition();
-
   KUrl urlClicked() const;
 
   bool noMDNsWhenEncrypted() const;
