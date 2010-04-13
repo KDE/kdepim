@@ -839,7 +839,6 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
 
 
     kDebug() << "going to call CRYPTPLUG" << cryptPlugLibName;
-    mSource->emitNoDrag(); // in case pineentry pops up, don't let kmheaders start a drag afterwards
 
     // Check whether the memento contains a result from last time:
     const DecryptVerifyBodyPartMemento * m
@@ -1917,7 +1916,6 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
     return false;
   }
 
-  mSource->emitNoDrag();
   AutoQPointer<ChiasmusKeySelector> selectorDlg;
   selectorDlg = new ChiasmusKeySelector( /*mReader*/0, i18n( "Chiasmus Decryption Key Selection" ),
                                          keys, GlobalSettings::chiasmusDecryptionKey(),
@@ -2900,7 +2898,6 @@ void ObjectTreeParser::writeBodyStr( const QByteArray& aStr, const QTextCodec *a
               isPgpMessage = true;
               if( block.type() == Kpgp::PgpMessageBlock )
               {
-                mSource->emitNoDrag();
                 // try to decrypt this OpenPGP block
                 couldDecrypt = block.decrypt();
                 isEncrypted = block.isEncrypted();

@@ -74,9 +74,6 @@ public:
     
     virtual QString createMessageHeader( KMime::Message::Ptr message) = 0;
 
-    /** Disable drag and drop in the sourceObject */
-    virtual void emitNoDrag() = 0;
-
     /** Return the wanted attachment startegy */
     virtual const AttachmentStrategy * attachmentStrategy() = 0;
 

@@ -41,7 +41,6 @@ class MailViewerSource : public ObjectTreeSourceIf {
   int levelQuote();
   const QTextCodec * overrideCodec();
   QString createMessageHeader( KMime::Message::Ptr message);
-  void emitNoDrag();
   const AttachmentStrategy * attachmentStrategy();
   HtmlWriter * htmlWriter();
   CSSHelper* cssHelper();

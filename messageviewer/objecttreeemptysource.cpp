@@ -73,11 +73,6 @@ QString EmptySource::createMessageHeader( KMime::Message::Ptr message )
   return QString(); //do nothing
 }
 
-void EmptySource::emitNoDrag()
-{
- //do nothing  
-}
-
 QObject *EmptySource::sourceObject()
 {
   return 0;

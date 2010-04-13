@@ -54,7 +54,6 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
            SIGNAL( popupMenu(const Akonadi::Item &, const KUrl &, const QPoint&) ) );
   connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ),
            SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
-  connect( d_ptr, SIGNAL( noDrag() ), SIGNAL( noDrag() ) );
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
   connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
            SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );

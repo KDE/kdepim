@@ -445,8 +445,6 @@ public:
   bool showRawToltecMail() const { return mShowRawToltecMail; }
   void setShowRawToltecMail( bool showRawToltecMail ) { mShowRawToltecMail = showRawToltecMail; }
 
-  void emitNoDrag() {emit noDrag(); }
-
   void scrollToAttachment( const KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
 
@@ -582,7 +580,6 @@ signals:
   void popupMenu(const Akonadi::Item &msg, const KUrl &url, const QPoint& mousePos);
   void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
-  void noDrag();
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
 

@@ -277,8 +277,6 @@ signals:
   /** The user has clicked onto an URL that is no attachment. */
   void urlClicked(const KUrl &url, int button);
 
-  /** Pgp displays a password dialog */
-  void noDrag(void);
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName,
                    const QString& pname, const QString & encoding );

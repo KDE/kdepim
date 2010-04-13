@@ -71,11 +71,6 @@ QString MailViewerSource::createMessageHeader( KMime::Message::Ptr message )
   return mViewer->writeMsgHeader( message );
 }
 
-void MailViewerSource::emitNoDrag()
-{
-  mViewer->emitNoDrag();
-}
-
 QObject *MailViewerSource::sourceObject()
 {
   return mViewer;
