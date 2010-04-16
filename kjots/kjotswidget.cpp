@@ -952,7 +952,7 @@ void KJotsWidget::printSelection()
     } else {
       QTextCursor printCursor ( &printDocument );
       QString currentTheme = m_loader->themeName();
-      m_loader->setTheme( "print_output" );
+      m_loader->setTheme( "default" );
       printDocument.setHtml( renderSelectionToHtml() );
       m_loader->setTheme( currentTheme );
     }
