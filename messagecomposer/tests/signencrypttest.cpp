@@ -36,7 +36,10 @@
 
 #include <messagecomposer/composer.h>
 #include <messagecomposer/encryptjob.h>
+#include <messagecomposer/maintextjob.h>
 #include <messagecomposer/signjob.h>
+#include <messagecomposer/globalpart.h>
+#include <messagecomposer/textpart.h>
 
 #include <messageviewer/objecttreeparser.h>
 #include <messageviewer/objecttreeemptysource.h>
@@ -59,14 +62,27 @@ void SignEncryptTest::testContent() {
   QVERIFY( sJob );
   QVERIFY( eJob );
 
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
 
+  QList<QByteArray> charsets;
+  charsets << "us-ascii";
+  composer->globalPart()->setCharsets( charsets );
+  Message::TextPart* part = new Message::TextPart( this );
+  part->setWordWrappingEnabled(false);
+  part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
+
+
+  Message::MainTextJob *mainTextJob = new Message::MainTextJob( part, composer );
+
+  QVERIFY( composer );
+  QVERIFY( mainTextJob );
+
+
+  mainTextJob->exec();
+  
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "test@kolab.org" );
 
-  sJob->setContent( content );
+  sJob->setContent( mainTextJob->content() );
   sJob->setSigningKeys( keys );
   sJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
   
@@ -135,29 +151,6 @@ void SignEncryptTest::testHeaders()
   QCOMPARE( result->contentType()->charset(), charset );
   QCOMPARE( result->contentType()->parameter( QString::fromLocal8Bit( "protocol" ) ), QString::fromLocal8Bit( "application/pgp-encrypted" ) );
   QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
-
-  // now unwrap the encrypted message to get the signed one, and check those headers
-
-  KMime::Message* resultMessage =  new KMime::Message;
-  resultMessage->setContent( result->encodedContent() );
-  resultMessage->parse();
-  MessageViewer::EmptySource es;
-  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
-  MessageViewer::ObjectTreeParser otp( &es, nh, 0, false, false, true );
-  KMime::Content* encPart = MessageViewer::ObjectTreeParser::findType( resultMessage, "application", "pgp-encrypted", true, true );
-  QVERIFY( encPart );
-  MessageViewer::ProcessResult pResult( nh );
-  otp.processMultiPartEncryptedSubtype( Akonadi::Item(), resultMessage, pResult );
-  QVERIFY( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
-  KMime::Content* signedPart = MessageCore::NodeHelper::firstChild( resultMessage );
-
-  mimeType = QString::fromLocal8Bit( "multipart/signed" ).toUtf8();
-  QVERIFY( signedPart->contentType( false ) );
-  QCOMPARE( signedPart->contentType()->mimeType(), mimeType );
-  QCOMPARE( signedPart->contentType()->charset(), charset );
-  QCOMPARE( signedPart->contentType()->parameter( QString::fromLocal8Bit( "micalg" ) ), QString::fromLocal8Bit( "pgp-sha1" ) );
-  QCOMPARE( signedPart->contentType()->parameter( QString::fromLocal8Bit( "protocol" ) ), QString::fromLocal8Bit( "application/pgp-signature" ) );
-  QCOMPARE( signedPart->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
 }
 
 #include "signencrypttest.moc"

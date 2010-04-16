@@ -190,6 +190,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
    // kDebug() << resultMessage->topLevel();
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
+//     kDebug() << "msg:" << resultMessage->encodedContent();
 
     // make sure the decoded content is what we encrypted
     // processMultiPartEncrypted will add a child part with the unencrypted data
@@ -199,6 +200,7 @@ bool ComposerTestUtil::verifyEncryption( KMime::Content* content, QByteArray enc
     Q_ASSERT( body == ref );
 */
 //     kDebug() << "raw:" << otp.rawReplyString();
+//     kDebug() << "textContent:" << otp.textualContent();
     Q_ASSERT( otp.rawReplyString()== encrContent );
 
     return true;
@@ -249,15 +251,16 @@ bool ComposerTestUtil::verifySignatureAndEncryption( KMime::Content* content, QB
     Q_ASSERT( encPart );
 
     otp.parseObjectTree( Akonadi::Item(), resultMessage );
-    kDebug() << "message:" << resultMessage->encodedContent();
+//     kDebug() << "message:" << resultMessage->encodedContent();
     Q_ASSERT( nh->encryptionState( resultMessage ) == MessageViewer::KMMsgFullyEncrypted );
 
-    KMime::Content* signedPart = MessageCore::NodeHelper::firstChild( resultMessage );
-      kDebug() << "resultMessage:" << resultMessage->encodedContent();
-      kDebug() << "resultMessage rawresultstr:" << otp.rawReplyString() << "signed?" << resultMessage;
+    KMime::Content* signedPart = MessageCore::NodeHelper::nextSibling( encPart );
+//       kDebug() << "resultMessage:" << resultMessage->encodedContent();
+//       kDebug() << "resultMessage rawresultstr:" << otp.rawReplyString() << "signed?" << resultMessage;
+//       kDebug() << "signed Part:" << signedPart->encodedContent() << "Signed?" << ( nh->signatureState( signedPart ) == MessageViewer::KMMsgFullySigned );
     Q_ASSERT( nh->signatureState( resultMessage ) == MessageViewer::KMMsgFullySigned );
 
-    kDebug() << "raw reply and orig: " << otp.rawReplyString() << origContent;
+//     kDebug() << "raw reply and orig: " << otp.rawReplyString() << origContent;
     Q_ASSERT( otp.rawReplyString() == origContent );
     return true;
   } else if( f & Kleo::InlineOpenPGPFormat ) {

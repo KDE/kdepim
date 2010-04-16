@@ -35,55 +35,79 @@
 #include <messagecomposer/composer.h>
 #include <messagecomposer/encryptjob.h>
 #include <messagecomposer/transparentjob.h>
+#include <messagecomposer/maintextjob.h>
+#include <messagecomposer/textpart.h>
+#include <messagecomposer/globalpart.h>
 
 #include <messageviewer/objecttreeparser.h>
 #include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/nodehelper.h>
 
 #include <stdlib.h>
+#include <KCharsets>
 
 QTEST_KDEMAIN( EncryptJobTest, GUI )
 
 void EncryptJobTest::testContentDirect() {
 
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
 
   Message::Composer *composer = new Message::Composer;
+  QList<QByteArray> charsets;
+  charsets << "us-ascii";
+  composer->globalPart()->setCharsets( charsets );
+  Message::TextPart* part = new Message::TextPart( this );
+  part->setWordWrappingEnabled(false);
+  part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
+
+  
+  Message::MainTextJob *mainTextJob = new Message::MainTextJob( part, composer );
+  
+  QVERIFY( composer );
+  QVERIFY( mainTextJob );
+
+
+  mainTextJob->exec();
+
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );
 
-  QVERIFY( composer );
   QVERIFY( eJob );
-
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
 
   QStringList recipients;
   recipients << QString::fromLocal8Bit( "test@kolab.org" );
 
-  eJob->setContent( content );
+  eJob->setContent( mainTextJob->content() );
   eJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
   eJob->setRecipients( recipients );
   eJob->setEncryptionKeys( keys );
-  
+
   bool encrWorked = checkEncryption( eJob );
   QVERIFY( encrWorked );
+  
 
 }
 
-
 void EncryptJobTest::testContentChained()
 {
-  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
-
-  QByteArray data( QString::fromLocal8Bit( "one flew over the cuckoo's nest" ).toUtf8() );
-  KMime::Content* content = new KMime::Content;
-  content->setBody( data );
-
-  Message::TransparentJob* tJob =  new Message::TransparentJob;
-  tJob->setContent( content );
-
   Message::Composer *composer = new Message::Composer;
+  QList<QByteArray> charsets;
+  charsets << "us-ascii";
+  composer->globalPart()->setCharsets( charsets );
+  Message::TextPart* part = new Message::TextPart( this );
+  part->setWordWrappingEnabled(false);
+  part->setCleanPlainText( QString::fromLatin1("one flew over the cuckoo's nest"));
+
+
+  Message::MainTextJob *mainTextJob = new Message::MainTextJob( part, composer );
+
+  QVERIFY( composer );
+  QVERIFY( mainTextJob );
+
+  mainTextJob->exec();  
+  
+  std::vector< GpgME::Key > keys = ComposerTestUtil::getKeys();
+  kDebug() << "done getting keys";
   Message::EncryptJob* eJob = new Message::EncryptJob( composer );
 
   QStringList recipients;
@@ -92,9 +116,8 @@ void EncryptJobTest::testContentChained()
   eJob->setCryptoMessageFormat( Kleo::OpenPGPMIMEFormat );
   eJob->setRecipients( recipients );
   eJob->setEncryptionKeys( keys );
+  eJob->setContent( mainTextJob->content() );
  
-  eJob->appendSubjob( tJob );
-
   bool eWorked = checkEncryption( eJob );
   QVERIFY( eWorked );
 
@@ -137,7 +160,7 @@ void EncryptJobTest::testHeaders()
   QCOMPARE( result->contentType()->charset(), charset );
   QCOMPARE( result->contentType()->parameter( QString::fromLocal8Bit( "protocol" ) ), QString::fromLocal8Bit( "application/pgp-encrypted" ) );
   QCOMPARE( result->contentTransferEncoding()->encoding(), KMime::Headers::CE7Bit );
-}
+} 
 
 
 bool EncryptJobTest::checkEncryption( Message::EncryptJob* eJob )
