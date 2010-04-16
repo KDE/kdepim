@@ -27,6 +27,7 @@
 
 #include <KRichTextWidget>
 
+class QItemSelection;
 class QItemSelectionModel;
 
 class KActionCollection;
@@ -53,6 +54,8 @@ protected:
     virtual bool event( QEvent *event );
 
 protected slots:
+    void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void tryDisableEditing();
     void onBookshelfSelection ( void );
     void onAutoBullet ( void );
     void onLinkify ( void );
@@ -65,7 +68,6 @@ protected slots:
     void insertDate();
 
 private:
-    void disableEditing ( void );
     void createAutoDecimalList();
     KActionCollection *actionCollection;
     bool allowAutoDecimal;

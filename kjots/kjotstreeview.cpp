@@ -68,6 +68,9 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
       popup->addAction(m_xmlGuiClient->actionCollection()->action("save_to"));
     popup->addSeparator();
 
+    popup->addAction(m_xmlGuiClient->actionCollection()->action("lock"));
+    popup->addAction(m_xmlGuiClient->actionCollection()->action("unlock"));
+
     if ( singleselection )
     {
       Item item = rows.at( 0 ).data( KJotsModel::ItemRole ).value<Item>();

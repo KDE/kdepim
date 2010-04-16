@@ -150,6 +150,8 @@ private slots:
   void onRepeatReplace();
   void onEndReplace();
 
+  void actionLock();
+  void actionUnlock();
 
 private:
   KXMLGUIClient  *m_xmlGuiClient;

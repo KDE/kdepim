@@ -33,6 +33,8 @@
 //Added by qt3to4:
 #include <kactionmenu.h>
 
+#include <Akonadi/AttributeFactory>
+
 #include <kio/job.h>
 #include <kio/copyjob.h>
 #include <kio/netaccess.h>
@@ -67,6 +69,7 @@
 #include "kjotsedit.h"
 #include "kjotsbrowser.h"
 #include "kjotswidget.h"
+#include "kjotslockattribute.h"
 
 
 //----------------------------------------------------------------------
@@ -91,6 +94,8 @@ KJotsMain::KJotsMain()
 
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
+
+    Akonadi::AttributeFactory::registerAttribute<KJotsLockAttribute>();
 
 }
 

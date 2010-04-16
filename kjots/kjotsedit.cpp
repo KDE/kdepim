@@ -50,6 +50,7 @@
 
 #include <kdebug.h>
 #include "kjotsmodel.h"
+#include "kjotslockattribute.h"
 
 
 Q_DECLARE_METATYPE(QTextDocument*)
@@ -71,6 +72,9 @@ KJotsEdit::KJotsEdit ( QItemSelectionModel *selectionModel, QWidget *parent )
             | SupportFormatPainting );
 
     setFocusPolicy(Qt::StrongFocus);
+
+    connect( m_selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)) );
+    connect( m_selectionModel->model(), SIGNAL(dataChanged(QModelIndex,QModelIndex)), SLOT(tryDisableEditing()) );
 }
 
 KJotsEdit::~KJotsEdit()
@@ -114,18 +118,31 @@ void KJotsEdit::insertDate()
   insertPlainText(KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::ShortDate) + ' ');
 }
 
-void KJotsEdit::disableEditing ( void )
+void KJotsEdit::selectionChanged( const QItemSelection& selected, const QItemSelection& deselected )
 {
-// TODO: PORT
-#if 0
-    if ( currentPage ) {
-        currentPage->setCursor(textCursor());
-        setDocument(0);
-        currentPage = 0;
-    }
-#endif
-    setReadOnly(true);
-    setEnabled(false);
+  Q_UNUSED( selected )
+  Q_UNUSED( deselected )
+  tryDisableEditing();
+}
+
+void KJotsEdit::tryDisableEditing()
+{
+  if ( !m_selectionModel->hasSelection() )
+    return setReadOnly(true);
+
+  QModelIndexList list = m_selectionModel->selectedRows();
+  if ( list.size() != 1 )
+    return setReadOnly(true);
+
+  Item item = list.first().data( EntityTreeModel::ItemRole ).value<Item>();
+
+  if ( !item.isValid() )
+    return setReadOnly(true);
+
+  if ( item.hasAttribute<KJotsLockAttribute>() )
+    return setReadOnly(true);
+
+  setReadOnly(false);
 }
 
 void KJotsEdit::onBookshelfSelection ( void )

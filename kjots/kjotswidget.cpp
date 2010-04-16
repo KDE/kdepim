@@ -89,10 +89,12 @@
 #include "kjotsreplacenextdialog.h"
 #include "note.h"
 #include "KJotsSettings.h"
+#include "kjotslockjob.h"
 
 #include <kdebug.h>
 
 #include <memory>
+#include "kjotslockattribute.h"
 
 Q_DECLARE_METATYPE(QTextDocument*)
 Q_DECLARE_METATYPE(QTextCursor)
@@ -128,6 +130,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   ItemFetchScope scope;
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
   scope.fetchAttribute< EntityDisplayAttribute >();
+  scope.fetchAttribute< KJotsLockAttribute >();
 
   ChangeRecorder *monitor = new ChangeRecorder( this );
   monitor->fetchCollection( true );
@@ -266,6 +269,17 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   action = actionCollection->addAction( "copy_link_address" );
   action->setText( i18n( "Copy Link Address" ) );
+
+  action = actionCollection->addAction( "lock" );
+  action->setText(i18n( "Lock Selected" ) );
+  action->setIcon( KIcon( "emblem-locked" ) );
+  connect( action, SIGNAL(triggered()), SLOT(actionLock()) );
+
+  action = actionCollection->addAction( "unlock" );
+  action->setText( i18n( "Unlock Selected" ) );
+  action->setIcon( KIcon( "emblem-unlocked" ) );
+  connect( action, SIGNAL(triggered()), SLOT(actionUnlock()) );
+
 
   action = KStandardAction::cut( editor, SLOT(cut()), actionCollection );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
@@ -1128,8 +1142,7 @@ bool KJotsWidget::canGoPreviousBook() const
 
 void KJotsWidget::selectionChanged( const QItemSelection &selected, const QItemSelection &deselected )
 {
-//   Q_UNUSED( selected );
-//   Q_UNUSED( deselected );
+  Q_UNUSED( selected );
 
   emit canGoNextBookChanged( canGoPreviousBook() );
   emit canGoNextPageChanged( canGoNextPage() );
@@ -1586,6 +1599,60 @@ bool KJotsWidget::queryClose()
 
   KJotsSettings::self()->writeConfig();
   return true;
+}
+
+void KJotsWidget::actionLock()
+{
+  QModelIndexList selection = treeview->selectionModel()->selectedRows();
+
+  if ( selection.isEmpty() )
+    return;
+
+  Collection::List collections;
+  Item::List items;
+  foreach ( const QModelIndex &idx, selection )
+  {
+    Collection col = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    if ( col.isValid() )
+    {
+      collections << col;
+    } else {
+      Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+      if ( item.isValid() )
+        items << item;
+    }
+  }
+  if ( collections.isEmpty() && items.isEmpty() )
+    return;
+
+  KJotsLockJob *job = new KJotsLockJob(collections, items, this);
+}
+
+void KJotsWidget::actionUnlock()
+{
+  QModelIndexList selection = treeview->selectionModel()->selectedRows();
+
+  if ( selection.isEmpty() )
+    return;
+
+  Collection::List collections;
+  Item::List items;
+  foreach ( const QModelIndex &idx, selection )
+  {
+    Collection col = idx.data( EntityTreeModel::CollectionRole ).value<Collection>();
+    if ( col.isValid() )
+    {
+      collections << col;
+    } else {
+      Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+      if ( item.isValid() )
+        items << item;
+    }
+  }
+  if ( collections.isEmpty() && items.isEmpty() )
+    return;
+
+  KJotsLockJob *job = new KJotsLockJob(collections, items, KJotsLockJob::UnlockJob, this);
 }
 
 #include "kjotswidget.moc"
