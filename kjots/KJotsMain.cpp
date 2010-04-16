@@ -114,9 +114,7 @@ void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &
 
 bool KJotsMain::queryClose()
 {
-  return true;
-  // TODO: Port
-//     return component->queryClose();
+  return component->queryClose();
 }
 
 void KJotsMain::onQuit()

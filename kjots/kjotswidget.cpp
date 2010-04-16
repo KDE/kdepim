@@ -88,6 +88,7 @@
 #include "kjotsconfigdlg.h"
 #include "kjotsreplacenextdialog.h"
 #include "note.h"
+#include "KJotsSettings.h"
 
 #include <kdebug.h>
 
@@ -105,10 +106,10 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   Akonadi::Control::widgetNeedsAkonadi( this );
   Akonadi::Control::start( this );
 
-  QSplitter *splitter = new QSplitter( this );
+  m_splitter = new QSplitter( this );
 
-  splitter->setStretchFactor(1, 1);
-  splitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
+  m_splitter->setStretchFactor(1, 1);
+  m_splitter->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
   QHBoxLayout *layout = new QHBoxLayout( this );
 
@@ -122,7 +123,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   m_templateEngine->addTemplateLoader( m_loader );
 
-  treeview = new KJotsTreeView( xmlGuiClient, splitter );
+  treeview = new KJotsTreeView( xmlGuiClient, m_splitter );
 
   ItemFetchScope scope;
   scope.fetchFullPayload( true ); // Need to have full item when adding it to the internal data structure
@@ -151,7 +152,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   connect( selProxy, SIGNAL( rowsRemoved(const QModelIndex &, int, int)), SLOT(renderSelection()) );
 
 
-  stackedWidget = new QStackedWidget( splitter );
+  stackedWidget = new QStackedWidget( m_splitter );
 
   KActionCollection *actionCollection = xmlGuiClient->actionCollection();
 
@@ -159,7 +160,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   editor->createActions( actionCollection );
   stackedWidget->addWidget( editor );
 
-  layout->addWidget( splitter );
+  layout->addWidget( m_splitter );
 
   browser = new KTextBrowser( stackedWidget );
   stackedWidget->addWidget( browser );
@@ -331,6 +332,11 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   exportMenu->menu()->addAction( action );
 
   KStandardAction::print(this, SLOT(printSelection()), actionCollection);
+
+  if ( !KJotsSettings::splitterSizes().isEmpty() )
+  {
+    m_splitter->setSizes( KJotsSettings::splitterSizes() );
+  }
 
   QTimer::singleShot( 0, this, SLOT(delayedInitialization()) );
 
@@ -1572,6 +1578,14 @@ void KJotsWidget::dataChanged( const QModelIndex &topLeft, const QModelIndex &bo
   {
     emit captionChanged( treeview->captionForSelection( " / " ) );
   }
+}
+
+bool KJotsWidget::queryClose()
+{
+  KJotsSettings::setSplitterSizes(m_splitter->sizes());
+
+  KJotsSettings::self()->writeConfig();
+  return true;
 }
 
 #include "kjotswidget.moc"

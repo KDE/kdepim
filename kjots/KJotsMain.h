@@ -43,7 +43,10 @@ class KJotsMain : public KXmlGuiWindow
         void activeAnchorChanged(const QString &, const QString &);
 
     protected:
-        bool queryClose();
+        /**
+          Reimplemented from KMainWindow
+        */
+        /* reimp */ bool queryClose();
 
 private:
     KJotsWidget* component;

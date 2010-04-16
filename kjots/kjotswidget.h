@@ -37,6 +37,7 @@
 class QCheckBox;
 class QTextCursor;
 class QTextEdit;
+class QSplitter;
 class QStackedWidget;
 class QModelIndex;
 
@@ -74,6 +75,8 @@ public:
   ~KJotsWidget();
 
   QTextEdit* activeEditor();
+
+  bool queryClose();
 
 public slots:
   void prevPage();
@@ -158,6 +161,7 @@ private:
   KSelectionProxyModel *selProxy;
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
+  QSplitter *m_splitter;
 
   Grantlee::Engine *m_templateEngine;
   Grantlee::FileSystemTemplateLoader::Ptr m_loader;
