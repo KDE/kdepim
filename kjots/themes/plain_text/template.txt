@@ -1,0 +1,3 @@
+{% for entity in entities %}{% if entity.isBook %}{% include "book_template.txt" %}
+{% else %}{% if entity.isPage %}
+{% endif %}{% endif %}{% endfor %}
