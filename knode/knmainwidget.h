@@ -39,7 +39,6 @@ class KToolBar;
 class KXMLGUIClient;
 class KNHeaderView;
 class KNCollectionView;
-class KNProgress;
 class KNConfigManager;
 class KNAccountManager;
 class KNGroupManager;
@@ -190,7 +189,6 @@ protected:
 
   //GUI
   //KAccel          *a_ccel;
-  KNProgress      *p_rogBar;
   KNode::ArticleWidget *mArticleViewer;
   KNCollectionView *c_olView;
   KNHeaderView      *h_drView;

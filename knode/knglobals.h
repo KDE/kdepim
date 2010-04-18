@@ -39,7 +39,6 @@ class KNFilterManager;
 class KNMainWidget;
 class KNScoringManager;
 class KNMemoryManager;
-class KXMLGUIClient;
 namespace KNode {
   class Scheduler;
   class Settings;
