@@ -29,9 +29,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     <entry name="StoreDisplayedMessagesUnencrypted" type="Bool" key="store-displayed-messages-unencrypted">
       <default>false</default>
     </entry>
-    <entry name="UseDefaultColors" type="Bool" key="defaultColors">
-      <default>true</default>
-    </entry>
     <entry name="FallbackCharacterEncoding" type="String"
     key="FallbackCharacterEncoding">
       <default code="true">QString(

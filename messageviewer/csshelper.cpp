@@ -59,7 +59,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
 
   mForegroundColor = KColorScheme( QPalette::Active ).foreground().color();
   mBackgroundColor = KColorScheme( QPalette::Active ).background().color();
-  if ( !reader.readEntry( "defaultColors", true ) ) {
+  if ( !MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     mLinkColor =
       reader.readEntry( "LinkColor", mLinkColor );
     mVisitedLinkColor =

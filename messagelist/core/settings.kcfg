@@ -18,9 +18,6 @@
   </group>
 
   <group name="MessageListView::Colors">
-    <entry name="UseDefaultColors" type="Bool" key="defaultColors">
-      <default>true</default>
-    </entry>
     <entry name="NewMessageColor" type="Color">
       <default>#FF0000</default>
     </entry>

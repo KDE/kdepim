@@ -413,7 +413,7 @@ void StorageModel::Private::loadSettings()
   // Custom/System colors
   Core::Settings *settings = Core::Settings::self();
 
-  if ( settings->useDefaultColors() ) {
+  if ( MessageCore::GlobalSettings::self()->useDefaultColors() ) {
     Core::MessageItem::setNewMessageColor( QColor( "red" ) );
     Core::MessageItem::setUnreadMessageColor( QColor( "blue" ) );
     Core::MessageItem::setImportantMessageColor( QColor( 0x0, 0x7F, 0x0 ) );

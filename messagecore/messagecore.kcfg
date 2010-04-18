@@ -22,4 +22,10 @@
     </entry>
   </group>
 
+  <group name="Reader">
+    <entry name="UseDefaultColors" type="Bool" key="defaultColors">
+      <default>true</default>
+    </entry>
+  </group>
+
 </kcfg>
