@@ -1356,8 +1356,6 @@ void ViewerPrivate::readConfig()
   delete mCSSHelper;
   mCSSHelper = new CSSHelper( mViewer );
 
-  mNoMDNsWhenEncrypted = GlobalSettings::self()->notSendWhenEncrypted();
-
   mUseFixedFont = GlobalSettings::self()->useFixedFont();
   if ( mToggleFixFontAction )
     mToggleFixFontAction->setChecked( mUseFixedFont );

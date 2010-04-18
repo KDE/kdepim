@@ -448,10 +448,6 @@ public:
   void scrollToAttachment( const KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
 
-
-  bool noMDNsWhenEncrypted() const { return mNoMDNsWhenEncrypted; }
-
-
   bool disregardUmask() const;
   void setDisregardUmask( bool b);
 
@@ -610,8 +606,6 @@ public:
   /// This is true if the viewer currently is displaying a message. Can be false, for example when
   /// the splash/busy page is displayed.
   bool mMsgDisplay;
-
-  bool mNoMDNsWhenEncrypted;
 
   CSSHelper * mCSSHelper;
   bool mUseFixedFont;

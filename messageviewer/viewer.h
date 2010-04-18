@@ -241,8 +241,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   KUrl urlClicked() const;
 
-  bool noMDNsWhenEncrypted() const;
-
   void readConfig();
 
   bool disregardUmask() const;

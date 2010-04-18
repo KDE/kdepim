@@ -436,12 +436,6 @@ void Viewer::slotShowMessageSource()
   d->slotShowMessageSource();
 }
 
-bool Viewer::noMDNsWhenEncrypted() const
-{
-  Q_D( const Viewer );
-  return d->noMDNsWhenEncrypted();
-}
-
 void Viewer::readConfig()
 {
   Q_D( Viewer );
