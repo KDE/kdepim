@@ -28,7 +28,6 @@
 #include "core/model.h"
 #include "core/model_p.h"
 #include "core/settings.h"
-#include "core/configprovider.h"
 
 #include "utils/configureaggregationsdialog.h"
 #include "utils/configureaggregationsdialog_p.h"
@@ -171,7 +170,7 @@ void Manager::unregisterWidget( Widget *pWidget )
 
 unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *storageModel )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(),
+  KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelSelectedMessages" );
 
   // QVariant supports unsigned int OR unsigned long long int, NOT unsigned long int... doh...
@@ -182,7 +181,7 @@ unsigned long Manager::preSelectedMessageForStorageModel( const StorageModel *st
 
 void Manager::savePreSelectedMessageForStorageModel( const StorageModel * storageModel, unsigned long uniqueIdOfMessage )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(),
+  KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelSelectedMessages" );
 
 
@@ -207,7 +206,7 @@ const Aggregation * Manager::aggregation( const QString &id )
 
 const Aggregation * Manager::defaultAggregation()
 {
-  KConfigGroup conf( ConfigProvider::self()->config(),
+  KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
   QString aggregationId = conf.readEntry( QString( "DefaultSet" ), "" );
@@ -246,7 +245,7 @@ void Manager::saveAggregationForStorageModel( const StorageModel *storageModel, 
 
 void Manager::saveAggregationForStorageModel( const QString &modelId, const QString &id, bool storageUsesPrivateAggregation )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(),
+  KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
   if ( storageUsesPrivateAggregation )
@@ -283,7 +282,7 @@ const Aggregation * Manager::aggregationForStorageModel( const StorageModel *sto
 
 const Aggregation * Manager::aggregationForStorageModel( const QString &storageId, bool *storageUsesPrivateAggregation )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(),
+  KConfigGroup conf( Settings::self()->config(),
                      "MessageListView::StorageModelAggregations" );
 
   QString aggregationId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( storageId ), "" );
@@ -485,7 +484,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
   if ( !storageModel )
     return SortOrder();
 
-  KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelSortOrder" );
   SortOrder ret;
   ret.readConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
   return ret;
@@ -494,7 +493,7 @@ const SortOrder Manager::sortOrderForStorageModel( const StorageModel *storageMo
 void Manager::saveSortOrderForStorageModel( const StorageModel *storageModel,
                                             const SortOrder& order, bool storageUsesPrivateSortOrder )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelSortOrder" );
+  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelSortOrder" );
   order.writeConfig( conf, storageModel->id(), storageUsesPrivateSortOrder );
 }
 
@@ -509,7 +508,7 @@ const Theme * Manager::theme( const QString &id )
 
 const Theme * Manager::defaultTheme()
 {
-  KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
 
   QString themeId = conf.readEntry( QString( "DefaultSet" ), "" );
 
@@ -548,7 +547,7 @@ void Manager::saveThemeForStorageModel( const StorageModel *storageModel, const 
 
 void Manager::saveThemeForStorageModel( const QString &storageModelIndex, const QString &id, bool storageUsesPrivateTheme )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
 
   if ( storageUsesPrivateTheme )
     conf.writeEntry( QString( "SetForStorageModel%1" ).arg( storageModelIndex ), id );
@@ -587,7 +586,7 @@ const Theme * Manager::themeForStorageModel( const StorageModel *storageModel, b
 
 const Theme * Manager::themeForStorageModel( const QString &id, bool *storageUsesPrivateTheme )
 {
-  KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup conf( Settings::self()->config(), "MessageListView::StorageModelThemes" );
   QString themeId = conf.readEntry( QString( "SetForStorageModel%1" ).arg( id ), "" );
 
   Theme * opt = 0;
@@ -945,7 +944,7 @@ void Manager::loadConfiguration()
   {
     // load Aggregations
 
-    KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::Aggregations" );
+    KConfigGroup conf( Settings::self()->config(), "MessageListView::Aggregations" );
 
     mAggregations.clear();
 
@@ -980,7 +979,7 @@ void Manager::loadConfiguration()
   {
     // load Themes
 
-    KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::Themes" );
+    KConfigGroup conf( Settings::self()->config(), "MessageListView::Themes" );
 
     mThemes.clear();
 
@@ -1028,7 +1027,7 @@ void Manager::saveConfiguration()
   {
     // store aggregations
 
-    KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::Aggregations" );
+    KConfigGroup conf( Settings::self()->config(), "MessageListView::Aggregations" );
     //conf.clear();
 
     conf.writeEntry( "Count", mAggregations.count() );
@@ -1044,7 +1043,7 @@ void Manager::saveConfiguration()
   {
     // store themes
 
-    KConfigGroup conf( ConfigProvider::self()->config(), "MessageListView::Themes" );
+    KConfigGroup conf( Settings::self()->config(), "MessageListView::Themes" );
     //conf.clear();
 
     conf.writeEntry( "Count", mThemes.count() );
@@ -1057,6 +1056,6 @@ void Manager::saveConfiguration()
     }
   }
 
-  ConfigProvider::self()->config()->sync();
+  Settings::self()->config()->sync();
 }
 

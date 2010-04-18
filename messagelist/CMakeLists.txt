@@ -13,7 +13,6 @@ include_directories(
 
 set(libmessagelist_SRCS
     core/aggregation.cpp
-    core/configprovider.cpp
     core/delegate.cpp
     core/filter.cpp
     core/item.cpp

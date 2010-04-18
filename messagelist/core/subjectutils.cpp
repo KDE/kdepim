@@ -20,17 +20,17 @@
 
 #include "subjectutils_p.h"
 
+#include "messagelist/core/settings.h"
+
 #include <KConfigGroup>
 #include <KDebug>
 
 #include <QRegExp>
 #include <QStringList>
 
-#include "configprovider.h"
-
 QString MessageList::Core::SubjectUtils::stripOffPrefixes( const QString &subject )
 {
-  KConfigGroup composerGroup( ConfigProvider::self()->config(), "Composer" );
+  KConfigGroup composerGroup( Settings::self()->config(), "Composer" );
 
   QStringList replyPrefixes = composerGroup.readEntry( "reply-prefixes", QStringList() );
   if ( replyPrefixes.isEmpty() ) {

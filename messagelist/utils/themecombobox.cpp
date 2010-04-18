@@ -23,7 +23,7 @@
 #include "messagelist/storagemodel.h"
 #include "messagelist/core/manager.h"
 #include "messagelist/core/theme.h"
-#include "messagelist/core/configprovider.h"
+#include "messagelist/core/settings.h"
 
 #include <KDE/KGlobal>
 
@@ -48,7 +48,7 @@ QString ThemeComboBox::currentTheme() const
 
 void ThemeComboBox::writeDefaultConfig() const
 {
-  KConfigGroup group( ConfigProvider::self()->config(), "MessageListView::StorageModelThemes" );
+  KConfigGroup group( Settings::self()->config(), "MessageListView::StorageModelThemes" );
 
   const QString themeID = currentTheme();
   group.writeEntry( QString( "DefaultSet" ), themeID );
