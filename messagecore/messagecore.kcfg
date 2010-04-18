@@ -16,4 +16,10 @@
     </entry>
   </group>
 
+  <group name="Fonts">
+    <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
+      <default>true</default>
+    </entry>
+  </group>
+
 </kcfg>

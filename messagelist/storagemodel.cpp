@@ -19,6 +19,7 @@
 #include "storagemodel.h"
 
 #include <messagecore/stringutil.h>
+#include <messagecore/globalsettings.h>
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/collection.h>
@@ -424,7 +425,7 @@ void StorageModel::Private::loadSettings()
     Core::MessageItem::setToDoMessageColor( settings->todoMessageColor() );
   }
 
-  if ( settings->useDefaultFonts() ) {
+  if ( MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     Core::MessageItem::setGeneralFont( KGlobalSettings::generalFont() );
     Core::MessageItem::setNewMessageFont( KGlobalSettings::generalFont() );
     Core::MessageItem::setUnreadMessageFont( KGlobalSettings::generalFont() );

@@ -36,9 +36,6 @@
   </group>
 
   <group name="MessageListView::Fonts">
-    <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
-      <default>true</default>
-    </entry>
     <entry name="MessageListFont" type="Font">
       <default>KGlobalSettings::generalFont()</default>
     </entry>

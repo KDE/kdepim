@@ -9,9 +9,6 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
   <kcfgfile name="mailviewerrc" />
 
   <group name="Fonts">
-    <entry name="UseDefaultFonts" type="Bool" key="defaultFonts">
-      <default>true</default>
-    </entry>
     <entry name="FixedFont" type="Font" key="fixed-font">
       <default code="true">KGlobalSettings::fixedFont()</default>
     </entry>

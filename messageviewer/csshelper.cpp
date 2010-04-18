@@ -33,6 +33,8 @@
 #include "csshelper.h"
 #include "globalsettings.h"
 
+#include "messagecore/globalsettings.h"
+
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kapplication.h>
@@ -80,7 +82,7 @@ CSSHelper::CSSHelper( const QPaintDevice *pd ) :
     }
   }
 
-  if ( !fonts.readEntry( "defaultFonts", true ) ) {
+  if ( !MessageCore::GlobalSettings::self()->useDefaultFonts() ) {
     mBodyFont = fonts.readEntry(  "body-font",  mBodyFont );
     mPrintFont = fonts.readEntry( "print-font", mPrintFont );
     mFixedFont = fonts.readEntry( "fixed-font", mFixedFont );
