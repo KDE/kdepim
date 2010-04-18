@@ -58,8 +58,6 @@ Manager::Manager()
 
   mDateFormatter = new KMime::DateFormatter();
 
-  mDisplayMessageToolTips = true;
-
   mPixmapMessageNew = new QPixmap( SmallIcon( "mail-unread-new" ) );
   mPixmapMessageUnread = new QPixmap( SmallIcon( "mail-unread" ) );
   mPixmapMessageRead = new QPixmap( SmallIcon( "mail-read" ) );
@@ -1016,7 +1014,6 @@ void Manager::loadConfiguration()
 
 void Manager::saveGlobalConfiguration()
 {
-  Settings::self()->setMessageToolTipEnabled( mDisplayMessageToolTips );
   Settings::self()->writeConfig();
 }
 

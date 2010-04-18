@@ -632,18 +632,9 @@ void Pane::focusView()
 
 void Pane::reloadGlobalConfiguration()
 {
-  // Synchronize both configurations
-  Core::Settings::self()->setMessageToolTipEnabled(
-    Core::Manager::instance()->displayMessageToolTips()
-  );
   d->updateTabControls();
 
   Core::Settings::self()->writeConfig();
-}
-
-void Pane::setAutoHideTabBarWithSingleTab( bool b )
-{
-  Core::Settings::self()->setAutoHideTabBarWithSingleTab( b );
 }
 
 #include "pane.moc"

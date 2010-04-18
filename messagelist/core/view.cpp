@@ -29,6 +29,7 @@
 #include "core/messageitem.h"
 #include "core/model.h"
 #include "core/theme.h"
+#include "core/settings.h"
 #include "core/storagemodelbase.h"
 #include "core/widgetbase.h"
 
@@ -722,7 +723,7 @@ void View::slotHeaderContextMenuRequested( const QPoint &pnt )
   menu.addSeparator();
   act = menu.addAction( i18n( "Display Tooltips" ) );
   act->setCheckable( true );
-  act->setChecked( Manager::instance()->displayMessageToolTips() );
+  act->setChecked( Settings::self()->messageToolTipEnabled() );
   act->setData( QVariant( static_cast< int >( gHeaderContextMenuDisplayToolTipsId ) ) );
 
   QObject::connect(
@@ -764,8 +765,7 @@ void View::slotHeaderContextMenuTriggered( QAction * act )
       applyThemeColumns();
     } else if ( columnIdx == gHeaderContextMenuDisplayToolTipsId )
     {
-      // "Display Tooltips"
-      Manager::instance()->setDisplayMessageToolTips( act->isChecked() );
+      Settings::self()->setMessageToolTipEnabled( act->isChecked() );
     }
     return;
   }
@@ -2205,7 +2205,7 @@ bool View::event( QEvent *e )
   if ( !he )
     return true; // eh ?
 
-  if ( !Manager::instance()->displayMessageToolTips() )
+  if ( !Settings::self()->messageToolTipEnabled() )
     return true; // don't display tooltips
 
   QPoint pnt = viewport()->mapFromGlobal( mapToGlobal( he->pos() ) );

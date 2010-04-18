@@ -182,20 +182,6 @@ public:
     { return mCachedLocalizedUnknownText; };
 
   /**
-   * Returns true if the display of tooltips in the View instances is enabled
-   * in the configuration and false otherwise.
-   */
-  bool displayMessageToolTips() const
-    { return mDisplayMessageToolTips; };
-
-  /**
-   * Sets if the display of tooltips in the View instances is enabled
-   * and false otherwise.
-   */
-  void setDisplayMessageToolTips( bool displayMessageToolTips )
-    { mDisplayMessageToolTips = displayMessageToolTips; };
-
-  /**
    * Returns the unique id of the last selected message for the specified StorageModel.
    * Returns 0 if this value isn't stored in the configuration.
    */

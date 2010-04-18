@@ -319,11 +319,6 @@ public:
    */
   void reloadGlobalConfiguration();
 
-
-  /**
-   * Allow to change auto hide tab bar config
-   */
-  void setAutoHideTabBarWithSingleTab( bool );
   /**
    * Sets the current folder to be displayed by this Pane.
    * If the specified folder is already open in one of the tabs
