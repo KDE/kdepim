@@ -226,9 +226,7 @@ void MessageAnalyzer::processFlags(const Akonadi::Item::Flags& flags)
   KPIM::MessageStatus status;
   status.setStatusFromFlags( flags );
 
-  // the \Seen flag is in MailboxDataObject instead of Email...
-  NepomukFast::MailboxDataObject mdb( m_item.url(), graphUri() );
-  mdb.setIsReads( QList<bool>() << status.isRead() );
+  m_email.setIsReads( QList<bool>() << status.isRead() );
 
   if ( status.isImportant() )
     addTranslatedTag( "important", i18n("Important"), "mail-mark-important" );
