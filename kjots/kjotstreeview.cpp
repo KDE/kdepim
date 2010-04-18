@@ -64,7 +64,8 @@ void KJotsTreeView::contextMenuEvent(QContextMenuEvent* event)
       popup->addAction(m_xmlGuiClient->actionCollection()->action("copy_link_address"));
       popup->addAction(m_xmlGuiClient->actionCollection()->action("change_color"));
 
-      popup->addAction(m_xmlGuiClient->actionCollection()->action("sort_children"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action("sort_children_alpha"));
+      popup->addAction(m_xmlGuiClient->actionCollection()->action("sort_children_by_date"));
     }
     if ( !noselection )
       popup->addAction(m_xmlGuiClient->actionCollection()->action("save_to"));

@@ -293,9 +293,13 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setIcon( KIcon( "emblem-unlocked" ) );
   connect( action, SIGNAL(triggered()), SLOT(actionUnlock()) );
 
-  action = actionCollection->addAction( "sort_children" );
-  action->setText( i18n( "Sort children" ) );
-  connect( action, SIGNAL(triggered()), SLOT(actionSortChildren()) );
+  action = actionCollection->addAction( "sort_children_alpha" );
+  action->setText( i18n( "Sort children alphabetically" ) );
+  connect( action, SIGNAL(triggered()), SLOT(actionSortChildrenAlpha()) );
+
+  action = actionCollection->addAction( "sort_children_by_date" );
+  action->setText( i18n( "Sort children by creation date" ) );
+  connect( action, SIGNAL(triggered()), SLOT(actionSortChildrenByDate()) );
 
   action = KStandardAction::cut( editor, SLOT(cut()), actionCollection );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
@@ -438,7 +442,8 @@ void KJotsWidget::delayedInitialization()
   // Actions that are used only when a book is selected.
   bookActions.insert( actionCollection->action("save_to_book") );
   bookActions.insert( actionCollection->action("del_folder") );
-  bookActions.insert( actionCollection->action("sort_children") );
+  bookActions.insert( actionCollection->action("sort_children_alpha") );
+  bookActions.insert( actionCollection->action("sort_children_by_date") );
 
   // Actions that are used when multiple items are selected.
   multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
@@ -1674,14 +1679,28 @@ void KJotsWidget::actionUnlock()
   KJotsLockJob *job = new KJotsLockJob(collections, items, KJotsLockJob::UnlockJob, this);
 }
 
-void KJotsWidget::actionSortChildren()
+void KJotsWidget::actionSortChildrenAlpha()
 {
   QModelIndexList selection = treeview->selectionModel()->selectedRows();
 
-  if ( selection.isEmpty() )
-    return;
+  foreach( const QModelIndex &index, selection )
+  {
+    const QPersistentModelIndex persistent( index );
+    m_sortProxyModel->sortChildrenAlphabetically( m_orderProxy->mapToSource( index ) );
+    m_orderProxy->clearOrder( persistent );
+  }
+}
 
-  // TODO
+void KJotsWidget::actionSortChildrenByDate()
+{
+  QModelIndexList selection = treeview->selectionModel()->selectedRows();
+
+  foreach( const QModelIndex &index, selection )
+  {
+    const QPersistentModelIndex persistent( index );
+    m_sortProxyModel->sortChildrenByCreationTime( m_orderProxy->mapToSource( index ) );
+    m_orderProxy->clearOrder( persistent );
+  }
 }
 
 #include "kjotswidget.moc"

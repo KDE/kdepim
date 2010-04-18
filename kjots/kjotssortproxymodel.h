@@ -24,6 +24,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include <akonadi/collection.h>
+
 class KJotsSortProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
@@ -31,9 +33,18 @@ public:
   KJotsSortProxyModel(QObject* parent = 0);
   ~KJotsSortProxyModel();
 
+  void sortChildrenAlphabetically( const QModelIndex &parent );
+  void sortChildrenByCreationTime( const QModelIndex &parent );
+
 protected:
   virtual bool lessThan(const QModelIndex& left, const QModelIndex& right) const;
 
+private:
+  Akonadi::Collection::Id collectionId( const QModelIndex &parent ) const;
+
+private:
+  QSet<Akonadi::Collection::Id> m_alphaSorted;
+  QSet<Akonadi::Collection::Id> m_dateTimeSorted;
 };
 
 #endif

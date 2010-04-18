@@ -154,7 +154,8 @@ private slots:
 
   void actionLock();
   void actionUnlock();
-  void actionSortChildren();
+  void actionSortChildrenAlpha();
+  void actionSortChildrenByDate();
 
 private:
   KXMLGUIClient  *m_xmlGuiClient;
