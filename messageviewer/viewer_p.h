@@ -422,7 +422,7 @@ public:
   /** Get the load external references override setting */
   bool htmlLoadExtOverride() const;
 
-/** Override default load external references setting */
+  /** Override default load external references setting */
   void setHtmlLoadExtOverride( bool override );
 
   /** Enforce message decryption. */
@@ -562,7 +562,7 @@ public slots:
   /** Copy the selected text to the clipboard */
   void slotCopySelectedText();
 
-    /** Select message body. */
+  /** Select message body. */
   void selectAll();
 
   void slotUrlClicked();
@@ -601,8 +601,6 @@ public:
   const AttachmentStrategy * mAttachmentStrategy;
   const HeaderStrategy * mHeaderStrategy;
   HeaderStyle * mHeaderStyle;
-  /** where did the user save the attachment last time */
-  QString mSaveAttachDir;
   static const int delay;
   QTimer mUpdateReaderWinTimer;
   QTimer mResizeTimer;
