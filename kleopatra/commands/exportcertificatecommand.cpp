@@ -252,7 +252,7 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
     ++jobsPending;
     const QPointer<ExportJob> exportJob( job.release() );
 
-    outFileForSender[exportJob] = fileName;
+    outFileForSender[exportJob.data()] = fileName;
     ( protocol == CMS ? cmsJob : pgpJob ) = exportJob;
 }
 
