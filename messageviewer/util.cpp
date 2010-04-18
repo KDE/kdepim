@@ -39,6 +39,8 @@
 
 #include "iconnamecache.h"
 
+#include "messagecore/globalsettings.h"
+
 #include <kcharsets.h>
 #include <kglobal.h>
 #include <klocale.h>
@@ -104,6 +106,16 @@ bool Util::handleUrlOnMac( const KUrl& url )
   Q_UNUSED( url );
   return false;
 #endif
+}
+
+int Util::getWritePermissions()
+{
+  // #79685, #232001 by default use the umask the user defined, but let it be configurable
+  if ( MessageCore::GlobalSettings::self()->disregardUmask() ) {
+    return S_IRUSR | S_IWUSR;
+  } else {
+    return -1;
+  }
 }
 
 

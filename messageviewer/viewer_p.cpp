@@ -752,9 +752,9 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
       return false;
     }
 
-    // #79685 by default use the umask the user defined, but let it be configurable
-    if ( MessageCore::GlobalSettings::self()->disregardUmask() )
-      fchmod( file.handle(), S_IRUSR | S_IWUSR );
+    const int permissions = Util::getWritePermissions();
+    if ( permissions )
+      fchmod( file.handle(), permissions );
     ds.setDevice( &file );
   } else
   {
@@ -2899,9 +2899,9 @@ void ViewerPrivate::slotSaveMessage()
     //TODO handle huge attachment (and on demand attachment loading), especially saving them to
     //remote destination
 
-    // #79685 by default use the umask the user defined, but let it be configurable
-    if ( MessageCore::GlobalSettings::self()->disregardUmask() )
-      fchmod( file.handle(), S_IRUSR | S_IWUSR );
+    const int permissions = Util::getWritePermissions();
+    if ( permissions >= 0 )
+      fchmod( file.handle(), permissions );
     ds.setDevice( &file );
   } else
   {

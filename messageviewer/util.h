@@ -75,6 +75,13 @@ namespace Util {
     bool MESSAGEVIEWER_EXPORT handleUrlOnMac( const KUrl& url );
 
     /**
+     * evaluates GlobalSettings->disregardUmask()
+     * and returns resulting permissions for storing files
+     * @return specific file permissions or -1 for default permissions
+     */
+    int MESSAGEVIEWER_EXPORT getWritePermissions();
+
+    /**
      * Finds the filename of an icon based on the given mimetype or filenames.
      *
      * Always use this functions when looking up icon names for mime types, don't use
