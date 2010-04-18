@@ -2037,11 +2037,11 @@ KToggleAction *ViewerPrivate::actionForAttachmentStrategy( const AttachmentStrat
 void ViewerPrivate::readGlobalOverrideCodec()
 {
   // if the global character encoding wasn't changed then there's nothing to do
- if ( GlobalSettings::self()->overrideCharacterEncoding() == mOldGlobalOverrideEncoding )
+ if ( MessageCore::GlobalSettings::self()->overrideCharacterEncoding() == mOldGlobalOverrideEncoding )
     return;
 
-  setOverrideEncoding( GlobalSettings::self()->overrideCharacterEncoding() );
-  mOldGlobalOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
+  setOverrideEncoding( MessageCore::GlobalSettings::self()->overrideCharacterEncoding() );
+  mOldGlobalOverrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
 }
 
 

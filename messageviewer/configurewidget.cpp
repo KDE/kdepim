@@ -24,6 +24,8 @@
 #include "globalsettings.h"
 #include "nodehelper.h"
 
+#include "messagecore/globalsettings.h"
+
 #include <KConfigDialogManager>
 
 using namespace MessageViewer;
@@ -41,9 +43,9 @@ ConfigureWidget::ConfigureWidget( QWidget *parent )
   mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
 
   mSettingsUi->fallbackCharacterEncoding->setWhatsThis(
-      GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis() );
+      MessageCore::GlobalSettings::self()->fallbackCharacterEncodingItem()->whatsThis() );
   mSettingsUi->overrideCharacterEncoding->setWhatsThis(
-      GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis() );
+      MessageCore::GlobalSettings::self()->overrideCharacterEncodingItem()->whatsThis() );
   mSettingsUi->kcfg_ShowEmoticons->setWhatsThis(
       GlobalSettings::self()->showEmoticonsItem()->whatsThis() );
   mSettingsUi->kcfg_ShrinkQuotes->setWhatsThis(
@@ -75,9 +77,9 @@ void ConfigureWidget::readConfig()
 
 void ConfigureWidget::writeConfig()
 {
-  GlobalSettings::self()->setFallbackCharacterEncoding(
+  MessageCore::GlobalSettings::self()->setFallbackCharacterEncoding(
       NodeHelper::encodingForName( mSettingsUi->fallbackCharacterEncoding->currentText() ) );
-  GlobalSettings::self()->setOverrideCharacterEncoding(
+  MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding(
       mSettingsUi->overrideCharacterEncoding->currentIndex() == 0 ?
         QString() :
         NodeHelper::encodingForName( mSettingsUi->overrideCharacterEncoding->currentText() ) );
@@ -88,7 +90,7 @@ void ConfigureWidget::readCurrentFallbackCodec()
   const QStringList encodings = NodeHelper::supportedEncodings( false );
   QStringList::ConstIterator it( encodings.constBegin() );
   const QStringList::ConstIterator end( encodings.constEnd() );
-  const QString currentEncoding = GlobalSettings::self()->fallbackCharacterEncoding();
+  const QString currentEncoding = MessageCore::GlobalSettings::self()->fallbackCharacterEncoding();
   uint i = 0;
   int indexOfLatin9 = 0;
   bool found = false;
@@ -109,7 +111,7 @@ void ConfigureWidget::readCurrentFallbackCodec()
 
 void ConfigureWidget::readCurrentOverrideCodec()
 {
-  const QString &currentOverrideEncoding = GlobalSettings::self()->overrideCharacterEncoding();
+  const QString &currentOverrideEncoding = MessageCore::GlobalSettings::self()->overrideCharacterEncoding();
   if ( currentOverrideEncoding.isEmpty() ) {
     mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
     return;
@@ -131,7 +133,7 @@ void ConfigureWidget::readCurrentOverrideCodec()
     kWarning() << "Unknown override character encoding" << currentOverrideEncoding
                << ". Resetting to Auto.";
     mSettingsUi->overrideCharacterEncoding->setCurrentIndex( 0 );
-    GlobalSettings::self()->setOverrideCharacterEncoding( QString() );
+    MessageCore::GlobalSettings::self()->setOverrideCharacterEncoding( QString() );
   }
 }
 

@@ -24,6 +24,7 @@
 #include "util.h"
 
 #include <messagecore/nodehelper.h>
+#include "messagecore/globalsettings.h"
 
 #include <kmime/kmime_content.h>
 #include <kmime/kmime_message.h>
@@ -532,7 +533,7 @@ const QTextCodec * NodeHelper::codec( KMime::Content* node )
   if ( !c ) {
     // Ok, no override and nothing in the message, let's use the fallback
     // the user configured
-    c = codecForName( GlobalSettings::self()->fallbackCharacterEncoding().toLatin1() );
+    c = codecForName( MessageCore::GlobalSettings::self()->fallbackCharacterEncoding().toLatin1() );
   }
   if ( !c ) {
     // no charset means us-ascii (RFC 2045), so using local encoding should
