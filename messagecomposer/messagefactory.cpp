@@ -649,6 +649,12 @@ void MessageFactory::setMailingListAddresses(const QStringList& listAddresses)
   m_mailingListAddresses << listAddresses;
 }
 
+void MessageFactory::setFolderIdentity(Akonadi::Entity::Id folderIdentityId)
+{
+  m_folderId = folderIdentityId;
+}
+
+
 bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
 {
   // extract where to send to:
@@ -760,14 +766,9 @@ uint MessageFactory::identityUoid( const KMime::Message::Ptr &msg )
   if ( !ok || id == 0 )
     id = m_identityManager->identityForAddress( msg->to()->asUnicodeString() + QString::fromLatin1(", ") + msg->cc()->asUnicodeString() ).uoid();
 
-  /* TODO(leo) port to remove dependency from kmkernel
-                when looking for other ways to find id, when not in msg itself
-  if ( id == 0 && item.isValid() ) {
-    if ( item.parentCollection().isValid() ) {
-      QSharedPointer<FolderCollection> fd = FolderCollection::forCollection( item.parentCollection() );
-      id = fd->identity();
-    }
-  } */
+  if ( id == 0 && m_folderId > 0 ) {
+    id = m_folderId;
+  } 
   return id;
 }
 

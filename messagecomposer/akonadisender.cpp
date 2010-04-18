@@ -26,6 +26,7 @@
 #include <KConfigGroup>
 
 #include "messagehelper.h"
+#include "messagecomposersettings.h"
 
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
@@ -80,26 +81,8 @@ AkonadiSender::AkonadiSender()
 
 bool AkonadiSender::doSend( const KMime::Message::Ptr &aMsg, short sendNow  )
 {
-#if 0
-  KMFolder * const outbox = kmkernel->outboxFolder();
-  const KMFolderOpener openOutbox( outbox, "AkonadiSender" );
-
-  Q_ASSERT( aMsg );
-  //TODO Port to Akonadi
-  aMsg->setStatus( MessageStatus::statusQueued() );
-  if ( const int err = openOutbox.folder()->addMsg( aMsg ) ) {
-    Q_UNUSED( err );
-    KMessageBox::information( 0, i18n( "Cannot add message to outbox folder" ) );
-    return false;
-  }
-#else
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-
   if( sendNow == -1 ) {
-    // TODO port
-//     sendNow = GlobalSettings::self()->sendImmediate(); // -1 == use default setting
-    sendNow = sendNow;
+    sendNow = MessageComposer::MessageComposerSettings::self()->sendImmediate(); // -1 == use default setting
   }
   if ( !sendNow ) {
     return true;

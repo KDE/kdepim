@@ -166,6 +166,13 @@ public:
    */
   void setMailingListAddresses( const QStringList& listAddresses );
 
+  /**
+   *  Set the identity that is set for the folder in which the given message is.
+   *   It is used as a fallback when finding the identity if it can't be found in
+   *   any other way.
+   */
+  void setFolderIdentity( Akonadi::Item::Id folderIdentityId );
+  
 
   /**
    * When creating MDNs, the user needs to be asked for confirmation in specific
@@ -218,6 +225,8 @@ private:
   // Required parts to create messages
   KMime::Message::Ptr m_origMsg;
   Akonadi::Entity::Id m_origId;
+  Akonadi::Item::Id m_folderId;
+  
   // Optional settings the calling class may set
   MessageComposer::ReplyStrategy m_replyStrategy;
   QString m_selection, m_template;
