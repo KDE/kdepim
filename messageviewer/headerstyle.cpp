@@ -42,6 +42,7 @@ using KPIMUtils::LinkLocator;
 #include <kpimutils/email.h>
 #include "kxface.h"
 #include <messagecore/stringutil.h>
+#include "messagecore/globalsettings.h"
 
 #include <akonadi/contact/contactsearchjob.h>
 #include <kdebug.h>
@@ -1050,19 +1051,16 @@ HeaderStyle * HeaderStyle::mobile() {
 
 QString HeaderStyle::dateStr(const KDateTime &dateTime)
 {
-  KConfigGroup general( GlobalSettings::self()->config(), "General");
-  time_t unixTime = dateTime.toTime_t();
-//kDebug()<<"####  Date ="<<header.Date().AsString().c_str();
-
+  const time_t unixTime = dateTime.toTime_t();
   return KMime::DateFormatter::formatDate(
-              static_cast<KMime::DateFormatter::FormatType>(general.readEntry( "dateFormat",
-            int( KMime::DateFormatter::Fancy ) )),
-                  unixTime, general.readEntry( "customDateFormat" ));
+              static_cast<KMime::DateFormatter::FormatType>(
+                  MessageCore::GlobalSettings::self()->dateFormat() ),
+              unixTime, MessageCore::GlobalSettings::self()->customDateFormat() );
 }
 
 QByteArray HeaderStyle::dateShortStr(const KDateTime &dateTime)
 {
-    time_t unixTime = dateTime.toTime_t();
+    const time_t unixTime = dateTime.toTime_t();
 
     QByteArray result = ctime(&unixTime);
 

@@ -9,6 +9,11 @@
       <label>Disregard the users umask setting and use "read-write for the user only" instead</label>
       <default>false</default>
     </entry>
+    <entry name="dateFormat" type="Int">
+      <default code="true">int( KMime::DateFormatter::Fancy )</default>
+    </entry>
+    <entry name="customDateFormat" type="string">
+    </entry>
   </group>
 
 </kcfg>

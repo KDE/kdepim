@@ -35,6 +35,8 @@
 #include "utils/configurethemesdialog.h"
 #include "utils/configurethemesdialog_p.h"
 
+#include "messagecore/globalsettings.h"
+
 #include <QPixmap>
 
 #include <kmime/kmime_dateformatter.h> // kdepimlibs
@@ -928,14 +930,10 @@ void Manager::reloadGlobalConfiguration()
 void Manager::loadGlobalConfiguration()
 {
   // Load the date format
-  KConfigGroup config( ConfigProvider::self()->config(), "General" );
-
-  KMime::DateFormatter::FormatType t = (KMime::DateFormatter::FormatType) config.readEntry(
-      "dateFormat",
-      ( int )KMime::DateFormatter::Fancy
-    );
-  mDateFormatter->setCustomFormat( config.readEntry( "customDateFormat", QString() ) );
-  mDateFormatter->setFormat( t );
+  const KMime::DateFormatter::FormatType type = static_cast<KMime::DateFormatter::FormatType>(
+       MessageCore::GlobalSettings::self()->dateFormat() );
+  mDateFormatter->setCustomFormat( MessageCore::GlobalSettings::self()->customDateFormat() );
+  mDateFormatter->setFormat( type );
 
   mDisplayMessageToolTips = Settings::self()->messageToolTipEnabled();
 }
