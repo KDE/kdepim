@@ -60,6 +60,7 @@ set (kjots_common_SRCS
      kjotsbookmarks.cpp
      kjotsreplacenextdialog.cpp
      kjotsmodel.cpp
+     kjotssortproxymodel.cpp
      kjotswidget.cpp
      kjotsbrowser.cpp
      kjotslinkdialog.cpp

@@ -84,6 +84,7 @@
 
 // KJots
 #include "kjotsbookmarks.h"
+#include "kjotssortproxymodel.h"
 #include "kjotsmodel.h"
 #include "kjotsedit.h"
 #include "kjotstreeview.h"
@@ -142,8 +143,11 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   m_kjotsModel = new KJotsModel( monitor, this );
 
+  m_sortProxyModel = new KJotsSortProxyModel( this );
+  m_sortProxyModel->setSourceModel( m_kjotsModel );
+
   m_orderProxy = new EntityOrderProxyModel( this );
-  m_orderProxy->setSourceModel( m_kjotsModel );
+  m_orderProxy->setSourceModel( m_sortProxyModel );
 
   KConfigGroup cfg( KGlobal::config(), "KJotsEntityOrder" );
 
@@ -289,6 +293,9 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
   action->setIcon( KIcon( "emblem-unlocked" ) );
   connect( action, SIGNAL(triggered()), SLOT(actionUnlock()) );
 
+  action = actionCollection->addAction( "sort_children" );
+  action->setText( i18n( "Sort children" ) );
+  connect( action, SIGNAL(triggered()), SLOT(actionSortChildren()) );
 
   action = KStandardAction::cut( editor, SLOT(cut()), actionCollection );
   connect( editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)) );
@@ -431,6 +438,7 @@ void KJotsWidget::delayedInitialization()
   // Actions that are used only when a book is selected.
   bookActions.insert( actionCollection->action("save_to_book") );
   bookActions.insert( actionCollection->action("del_folder") );
+  bookActions.insert( actionCollection->action("sort_children") );
 
   // Actions that are used when multiple items are selected.
   multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
@@ -1664,6 +1672,16 @@ void KJotsWidget::actionUnlock()
     return;
 
   KJotsLockJob *job = new KJotsLockJob(collections, items, KJotsLockJob::UnlockJob, this);
+}
+
+void KJotsWidget::actionSortChildren()
+{
+  QModelIndexList selection = treeview->selectionModel()->selectedRows();
+
+  if ( selection.isEmpty() )
+    return;
+
+  // TODO
 }
 
 #include "kjotswidget.moc"

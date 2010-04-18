@@ -65,6 +65,7 @@ class Engine;
 
 class KJotsEdit;
 class KJotsTreeView;
+class KJotsSortProxyModel;
 
 class KJotsWidget : public QWidget
 {
@@ -153,6 +154,7 @@ private slots:
 
   void actionLock();
   void actionUnlock();
+  void actionSortChildren();
 
 private:
   KXMLGUIClient  *m_xmlGuiClient;
@@ -162,6 +164,7 @@ private:
   KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;
   KSelectionProxyModel *selProxy;
+  KJotsSortProxyModel *m_sortProxyModel;
   Akonadi::EntityOrderProxyModel *m_orderProxy;
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
