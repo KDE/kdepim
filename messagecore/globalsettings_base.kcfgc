@@ -1,0 +1,10 @@
+File=messagecore.kcfg
+ClassName=GlobalSettingsBase
+NameSpace=MessageCore
+Visibility=MESSAGECORE_EXPORT
+Mutators=true
+Singleton=true
+ItemAccessors=true
+SetUserTexts=true
+IncludeFiles=messagecore_export.h
+

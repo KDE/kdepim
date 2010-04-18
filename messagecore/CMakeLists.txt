@@ -22,6 +22,11 @@ set(messagecore_LIB_SRCS
    nodehelper.cpp
    mailinglist-magic.cpp
    kmfawidgets.cpp
+   globalsettings.cpp
+)
+
+kde4_add_kcfg_files(messagecore_LIB_SRCS
+  globalsettings_base.kcfgc
 )
 
 kde4_add_ui_files(messagecore_LIB_SRCS
