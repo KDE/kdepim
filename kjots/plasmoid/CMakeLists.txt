@@ -22,6 +22,7 @@ kde4_add_plugin(plasma_applet_akonotes_list ${akonotes_noteslist_plasmoid_SRCS})
 include_directories(
                       ${CMAKE_CURRENT_SOURCE_DIR}/..
                       ${KDEPIMLIBS_INCLUDE_DIRS}
+                      ${CMAKE_SOURCE_DIR}/akonadi/
                       )
 
 target_link_libraries(plasma_applet_akonotes_note
@@ -31,6 +32,7 @@ target_link_libraries(plasma_applet_akonotes_note
                       ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
                       ${KDEPIMLIBS_KMIME_LIBS}
+                      akonadi_next
 )
 
 target_link_libraries(plasma_applet_akonotes_list
@@ -41,6 +43,7 @@ target_link_libraries(plasma_applet_akonotes_list
                       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
                       ${Grantlee_GUI_LIBRARIES}
                       ${KDEPIMLIBS_KMIME_LIBS}
+                      akonadi_next
 )
 
 install(TARGETS plasma_applet_akonotes_note

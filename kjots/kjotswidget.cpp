@@ -54,6 +54,8 @@
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>
 
+#include "akonadi_next/entityorderproxymodel.h"
+
 // Grantlee
 #include <grantlee/template.h>
 #include <grantlee/engine.h>
@@ -140,7 +142,14 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   m_kjotsModel = new KJotsModel( monitor, this );
 
-  treeview->setModel( m_kjotsModel );
+  m_orderProxy = new EntityOrderProxyModel( this );
+  m_orderProxy->setSourceModel( m_kjotsModel );
+
+  KConfigGroup cfg( KGlobal::config(), "KJotsEntityOrder" );
+
+  m_orderProxy->setOrderConfig( cfg );
+
+  treeview->setModel( m_orderProxy );
   treeview->setSelectionMode( QAbstractItemView::ExtendedSelection );
   treeview->setEditTriggers( QAbstractItemView::DoubleClicked );
 
@@ -1598,6 +1607,8 @@ bool KJotsWidget::queryClose()
   KJotsSettings::setSplitterSizes(m_splitter->sizes());
 
   KJotsSettings::self()->writeConfig();
+  m_orderProxy->saveOrder();
+
   return true;
 }
 

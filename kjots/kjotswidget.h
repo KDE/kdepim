@@ -54,6 +54,7 @@ class KXMLGUIClient;
 namespace Akonadi
 {
 class EntityTreeModel;
+class EntityOrderProxyModel;
 class Session;
 }
 
@@ -161,6 +162,7 @@ private:
   KActionMenu    *bookmarkMenu;
   Akonadi::EntityTreeModel *m_kjotsModel;
   KSelectionProxyModel *selProxy;
+  Akonadi::EntityOrderProxyModel *m_orderProxy;
   KJotsTreeView *treeview;
   Akonadi::Session *m_session;
   QSplitter *m_splitter;

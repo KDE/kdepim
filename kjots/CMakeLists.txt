@@ -24,6 +24,7 @@ include_directories(
   ${KDEPIMLIBS_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${Grantlee_INCLUDE_DIRS}
+  ${CMAKE_SOURCE_DIR}/akonadi/
 )
 
 set(kjotsLibs ${KDE4_KIO_LIBS})
@@ -97,6 +98,7 @@ target_link_libraries(kjots
   ${Grantlee_CORE_LIBRARIES}
   ${Grantlee_GUI_LIBRARIES}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+  akonadi_next
 )
 
 if(KJOTS_BUILD_KONTACT_PLUGIN)
@@ -147,6 +149,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
     ${Grantlee_CORE_LIBRARIES}
     ${Grantlee_GUI_LIBRARIES}
     ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
+    akonadi_next
   )
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
