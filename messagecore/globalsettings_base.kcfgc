@@ -6,5 +6,5 @@ Mutators=true
 Singleton=true
 ItemAccessors=true
 SetUserTexts=true
-IncludeFiles=messagecore_export.h
+IncludeFiles=messagecore/messagecore_export.h
 

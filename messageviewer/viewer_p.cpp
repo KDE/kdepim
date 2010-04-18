@@ -128,6 +128,7 @@
 
 #include <gpgme++/error.h>
 #include <messagecore/nodehelper.h>
+#include "messagecore/globalsettings.h"
 
 using namespace MailTransport;
 using namespace MessageViewer;
@@ -169,7 +170,6 @@ ViewerPrivate::ViewerPrivate( Viewer *aParent, QWidget *mainWindow,
     mShowSignatureDetails( false ),
     mShowAttachmentQuicklist( true ),
     mShowRawToltecMail( false ),
-    mDisregardUmask( false ),
     mRecursionCountForDisplayMessage( 0 ),
     mCurrentContent( 0 ),
     mJob( 0 ),
@@ -753,7 +753,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
     }
 
     // #79685 by default use the umask the user defined, but let it be configurable
-    if ( disregardUmask() )
+    if ( MessageCore::GlobalSettings::self()->disregardUmask() )
       fchmod( file.handle(), S_IRUSR | S_IWUSR );
     ds.setDevice( &file );
   } else
@@ -2900,7 +2900,7 @@ void ViewerPrivate::slotSaveMessage()
     //remote destination
 
     // #79685 by default use the umask the user defined, but let it be configurable
-    if ( disregardUmask() )
+    if ( MessageCore::GlobalSettings::self()->disregardUmask() )
       fchmod( file.handle(), S_IRUSR | S_IWUSR );
     ds.setDevice( &file );
   } else
@@ -3058,16 +3058,6 @@ void ViewerPrivate::setUseFixedFont( bool useFixedFont )
   {
     mToggleFixFontAction->setChecked( mUseFixedFont );
   }
-}
-
-bool ViewerPrivate::disregardUmask() const
-{
-  return mDisregardUmask;
-}
-
-void ViewerPrivate::setDisregardUmask( bool b)
-{
-  mDisregardUmask = b;
 }
 
 void ViewerPrivate::attachmentEncryptWithChiasmus( KMime::Content *content )

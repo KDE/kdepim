@@ -243,9 +243,6 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
 
   void readConfig();
 
-  bool disregardUmask() const;
-  void setDisregardUmask( bool b);
-
   /** A QAIM tree model of the message structure. */
   QAbstractItemModel* messageTreeModel() const;
 

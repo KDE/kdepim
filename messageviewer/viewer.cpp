@@ -442,18 +442,6 @@ void Viewer::readConfig()
   d->readConfig();
 }
 
-bool Viewer::disregardUmask() const
-{
-  Q_D( const Viewer );
-  return d->disregardUmask();
-}
-
-void Viewer::setDisregardUmask( bool b)
-{
-  Q_D( Viewer );
-  d->setDisregardUmask( b );
-}
-
 QAbstractItemModel* Viewer::messageTreeModel() const
 {
   return d_func()->mMimePartModel;

@@ -448,9 +448,6 @@ public:
   void scrollToAttachment( const KMime::Content *node );
   void setUseFixedFont( bool useFixedFont );
 
-  bool disregardUmask() const;
-  void setDisregardUmask( bool b);
-
   void attachmentView( KMime::Content *atmNode );
   void attachmentEncryptWithChiasmus( KMime::Content * content );
 
@@ -638,7 +635,6 @@ public:
   bool mShowAttachmentQuicklist;
   bool mShowRawToltecMail;
   bool mExternalWindow;
-  bool mDisregardUmask;
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;

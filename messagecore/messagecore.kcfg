@@ -4,4 +4,11 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
   <kcfgfile name="messagecorerc" />
 
+  <group name="General">
+    <entry name="disregardUmask" type="Bool">
+      <label>Disregard the users umask setting and use "read-write for the user only" instead</label>
+      <default>false</default>
+    </entry>
+  </group>
+
 </kcfg>
