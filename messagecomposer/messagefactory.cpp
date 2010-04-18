@@ -644,12 +644,12 @@ void MessageFactory::setTemplate( const QString& templ )
   m_template = templ;
 }
 
-void MessageFactory::setMailingListAddresses(const QStringList& listAddresses)
+void MessageFactory::setMailingListAddresses( const QStringList& listAddresses )
 {
   m_mailingListAddresses << listAddresses;
 }
 
-void MessageFactory::setFolderIdentity(Akonadi::Entity::Id folderIdentityId)
+void MessageFactory::setFolderIdentity( Akonadi::Entity::Id folderIdentityId )
 {
   m_folderId = folderIdentityId;
 }
@@ -690,7 +690,7 @@ bool MessageFactory::MDNReturnPathEmpty( KMime::Message::Ptr msg )
   return returnPath.isEmpty();
 }
 
-bool MessageFactory::MDNReturnPathNotInRecieptTo(KMime::Message::Ptr msg)
+bool MessageFactory::MDNReturnPathNotInRecieptTo( KMime::Message::Ptr msg )
 {
   // extract where to send to:
   QString receiptTo = msg->headerByType("Disposition-Notification-To") ? msg->headerByType("Disposition-Notification-To")->asUnicodeString() : QString::fromLatin1("");
@@ -709,7 +709,7 @@ bool MessageFactory::MDNReturnPathNotInRecieptTo(KMime::Message::Ptr msg)
   return !receiptTo.contains( returnPath, Qt::CaseSensitive );
 }
 
-bool MessageFactory::MDNMDNUnknownOption(KMime::Message::Ptr msg)
+bool MessageFactory::MDNMDNUnknownOption( KMime::Message::Ptr msg )
 {
 
   // RFC 2298: An importance of "required" indicates that
