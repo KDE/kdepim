@@ -18,14 +18,17 @@
 */
 
 #include "attachmentproxymodel.h"
-#include <messageviewer/mimetreemodel.h>
 #include <KDebug>
 #include <QStringList>
+#include <messageviewer/nodehelper.h>
 
-AttachmentProxyModel::AttachmentProxyModel(QObject* parent): QSortFilterProxyModel(parent)
+Q_DECLARE_METATYPE(KMime::Content*)
+
+AttachmentProxyModel::AttachmentProxyModel(QObject* parent) :
+  QSortFilterProxyModel(parent),
+  m_nodeHelper( new MessageViewer::NodeHelper )
 {
-  // moc doesn't allow property NOTIFY to use signals in the base class apparently...
-  connect( this, SIGNAL(modelReset()), SIGNAL(rowCountChanged()) );
+  connect( this, SIGNAL(modelReset()), SLOT(slotModelReset()) );
 }
 
 bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const
@@ -48,6 +51,32 @@ bool AttachmentProxyModel::filterAcceptsRow(int source_row, const QModelIndex& s
     return false;
 
   return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+}
+
+void AttachmentProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
+{
+  QSortFilterProxyModel::setSourceModel(sourceModel);
+  QHash<int, QByteArray> names = roleNames();
+  names.insert( MessageViewer::MimeTreeModel::MimeTypeRole, "mimeType" );
+  names.insert( AttachmentProxyModel::AttachmentUrlRole, "attachmentUrl" );
+  setRoleNames( names );
+}
+
+QVariant AttachmentProxyModel::data(const QModelIndex& index, int role) const
+{
+  if ( role == AttachmentUrlRole ) {
+    KMime::Content *content = index.data( MessageViewer::MimeTreeModel::ContentRole ).value<KMime::Content*>();
+    return m_nodeHelper->writeNodeToTempFile( content );
+  }
+  return QSortFilterProxyModel::data(index, role);
+}
+
+void AttachmentProxyModel::slotModelReset()
+{
+  m_nodeHelper->removeTempFiles();
+  m_nodeHelper->clear();
+  // moc doesn't allow property NOTIFY to use signals in the base class apparently...
+  emit rowCountChanged();
 }
 
 #include "attachmentproxymodel.moc"

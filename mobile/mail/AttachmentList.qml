@@ -24,6 +24,7 @@ import Qt 4.7
  * @param model An attachment model
  */
 Item {
+  id: _attachmentList
   property alias model: attachmentListView.model
   property int rowHeight: 48
   property int attachmentListWidth: 300
@@ -59,15 +60,22 @@ Item {
         onClicked: {
           console.log( "TODO - attachment selected: " + model.display );
           var nonCurrentClicked = false
-          if ( !wrapper.ListView.isCurrentItem ) { nonCurrentClicked = true }
+          if ( wrapper.ListView.view.currentIndex != model.index ) { nonCurrentClicked = true }
           wrapper.ListView.view.currentIndex = model.index
+          wrapper.ListView.view.currentMimeType = model.mimeType;
+          if ( model.mimeType.indexOf( "image" ) == 0 ) {
+            wrapper.ListView.view.currentAttachmentUrl = model.attachmentUrl;
+          }
           if ( nonCurrentClicked ) { attachmentSelected(); }
         }
       }
     }
   }
 
-   ListView {
+  ListView {
+    property string currentMimeType
+    property string currentAttachmentUrl
+
     id: attachmentListView
     anchors.top: parent.top
     anchors.left: parent.left
@@ -81,15 +89,16 @@ Item {
       target: model
       onModelReset: {
         attachmentListView.currentIndex = -1
+        attachmentListView.currentMimeType = "";
+        attachmentListView.currentAttachmentUrl = "";
       }
     }
   }
 
-  // TODO might be better to use a state instead of spreading the conditions all over the place
   Item {
     id: actionView
-    visible: attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount
-    width: (attachmentListView.currentIndex < 0 || attachmentListView.currentIndex >= model.attachmentCount) ? 0 : actionListWidth
+    visible: false
+    width: 0
     anchors.top: parent.top
     anchors.right: parent.right
     anchors.bottom: parent.bottom
@@ -112,5 +121,33 @@ Item {
     }
 
   }
+
+  Item {
+    id: previewView
+    visible: false
+    width: 0
+    anchors.top: parent.top
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+
+    Image {
+      anchors.fill: parent
+      source: attachmentListView.currentAttachmentUrl
+    }
+  }
+
+  states: [
+    State {
+      name: "actionState"
+      when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) != 0
+      PropertyChanges { target: actionView; width: actionListWidth; visible: true }
+    },
+
+    State {
+      name: "previewState"
+      when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) == 0
+      PropertyChanges { target: previewView; width: actionListWidth; visible: true }
+    }
+  ]
 
 }
