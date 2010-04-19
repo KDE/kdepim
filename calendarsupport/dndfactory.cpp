@@ -63,7 +63,7 @@ class Akonadi::DndFactory::Private
 {
   public:
   Private( CalendarAdaptor *cal, bool deleteCalendar )
-    : mCalendar ( cal ), mDeleteCalendar( deleteCalendar )
+    : mDeleteCalendar( deleteCalendar ), mCalendar ( cal )
     {}
   bool mDeleteCalendar;
   CalendarAdaptor *mCalendar;
