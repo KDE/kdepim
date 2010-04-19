@@ -21,45 +21,17 @@
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
-#include <QtDeclarative/QDeclarativeView>
-
-class QItemSelectionModel;
-
-class KNavigatingProxyModel;
-class KSelectionProxyModel;
-
-namespace Akonadi
-{
-class EntityMimeTypeFilterModel;
-}
+#include "kdeclarativemainview.h"
 
 /** The new KMMainWidget ;-) */
-class MainView : public QDeclarativeView
+class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
   public:
     explicit MainView(QWidget* parent = 0);
 
   public slots:
-    void setSelectedChildCollectionRow( int row );
-    void setSelectedBreadcrumbCollectionRow( int row );
-
-    bool childCollectionHasChildren( int row );
-
     void launchAccountWizard();
-
-  private slots:
-    void saveState();
-    void restoreState();
-
-  private:
-    QItemSelectionModel *m_collectionSelection;
-    QItemSelectionModel *m_childCollectionSelection;
-    QItemSelectionModel *m_breadcrumbCollectionSelection;
-    Akonadi::EntityMimeTypeFilterModel *m_childCollectionFilter;
-    KNavigatingProxyModel *m_childEntitiesModel;
-    Akonadi::EntityMimeTypeFilterModel *m_collectionFilter;
-    KSelectionProxyModel *m_selectedSubTree;
 };
 
 #endif

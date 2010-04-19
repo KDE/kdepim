@@ -24,6 +24,7 @@ target_link_libraries(kmail-mobile
     ${KDEPIMLIBS_AKONADI_LIBRARY}
     akonadi_next
     kdepim
+    mobileui
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

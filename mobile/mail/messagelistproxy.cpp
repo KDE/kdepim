@@ -22,7 +22,7 @@
 #include <akonadi/item.h>
 #include <KMime/Message>
 
-MessageListProxy::MessageListProxy(QObject* parent) : QSortFilterProxyModel(parent)
+MessageListProxy::MessageListProxy(QObject* parent) : ListProxy(parent)
 {
 }
 

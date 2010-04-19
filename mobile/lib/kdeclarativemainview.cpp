@@ -48,7 +48,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
     engine()->addImportPath( importPath );
 
-  const QString qmlPath = KStandardDirs::locate( "data", "mobile/" + appName + ".qml" );
+  const QString qmlPath = KStandardDirs::locate( "appdata", appName + ".qml" );
   setSource( qmlPath );
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
@@ -108,14 +108,17 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   d->mChildCollectionSelection = new Future::KProxyItemSelectionModel( d->mChildCollectionFilter, d->mCollectionSelection, this );
 
-  listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
-  listProxy->setSourceModel( itemFilter );
+  if ( listProxy ) {
+    listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
+    listProxy->setSourceModel( itemFilter );
+  }
 
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
   engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( currentCollectionSelectionModel ) ) );
   engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( breadcrumbNavigationModel ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mChildCollectionFilter ) ) );
-  engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
+  if ( listProxy )
+    engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   connect( etm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );

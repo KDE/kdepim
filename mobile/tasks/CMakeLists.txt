@@ -35,5 +35,5 @@ target_link_libraries(tasks-mobile
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   tasks.qml
-  DESTINATION ${DATA_INSTALL_DIR}/mobile
+  DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )

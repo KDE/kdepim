@@ -20,11 +20,11 @@
 #ifndef MESSAGELISTPROXY_H
 #define MESSAGELISTPROXY_H
 
-#include <QtGui/QSortFilterProxyModel>
+#include "listproxy.h"
 #include <akonadi/entitytreemodel.h>
 
 /** Proxy model to provide roles for accessing KMime::Message properties from QML. */
-class MessageListProxy : public QSortFilterProxyModel
+class MessageListProxy : public ListProxy
 {
   Q_OBJECT
   Q_PROPERTY( int messageCount READ messageCount )
