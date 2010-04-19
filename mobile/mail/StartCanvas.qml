@@ -41,7 +41,17 @@ Rectangle {
     }
     Component {
       id : accountDelegate
-      Text { text : model.display; height : 20 }
+      Item {
+        id : _wrapper1
+        height : 20
+        Text { text : model.display; height : 20 }
+        width : 100
+        MouseArea {
+          anchors.fill : parent
+
+          onClicked : { console.log( "Account clicked: " + model.display ); }
+        }
+      }
     }
     ListView {
       id : accountsList
@@ -70,36 +80,43 @@ Rectangle {
 
     Component {
       id : favDelegate
-      Text { text : model.text; height : 20; }
-    }
-
-    Rectangle {
-      id : labelItem
-      anchors.top : parent.top
-      anchors.horizontalCenter : parent.horizontalCenter
-      Row {
-        spacing : 2
-        height : parent.height
-        Text { id: favText; text : "Favorites"; height : 20  }
-
-        Button {
-          id : configureFavsButton
-          x: favText.width + 50
-          width : 200
-          height : 20
-          buttonText : "Configure Favorites"
-          onClicked : {
-            console.log( "Configure clicked" );
-          }
+      Item {
+        id : _wrapper2
+        height : 20
+        width : 100
+        Text { text : model.text; height : 20; }
+        MouseArea {
+          anchors.fill : parent
+          onClicked : { console.log("favorite clicked: " + model.index ); }
         }
       }
-      height : 20
     }
+
+    Text {
+      id: favText;
+      anchors.top : parent.top
+      text : "Favorites"
+      height : 20
+      width : 100
+    }
+    Button {
+      id : configureFavsButton
+      anchors.top : parent.top
+      anchors.left : favText.right
+      width : 100
+      height : 20
+      buttonText : "Configure Favorites"
+      onClicked : {
+        console.log( "Configure clicked" );
+      }
+    }
+
     ListView {
       id : favsView
-      anchors.top : labelItem.bottom
-      anchors.horizontalCenter : parent.horizontalCenter
+      anchors.top : favText.bottom
+      anchors.left : favText.left
       height : 200
+      width : 100
       model : favsModel
       delegate : favDelegate
     }
@@ -108,7 +125,6 @@ Rectangle {
       height : 20
       width : 200
       anchors.top : favsView.bottom
-      anchors.horizontalCenter : parent.horizontalCenter
       buttonText : "Write new Email"
       onClicked : {
         console.log( "Write new clicked" );
@@ -118,7 +134,6 @@ Rectangle {
     Button {
       id : newAccountButton
       anchors.top : newEmailButton.bottom
-      anchors.horizontalCenter : parent.horizontalCenter
       height : 20
       width : 200
       buttonText : "Add Account"
