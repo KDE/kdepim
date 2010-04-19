@@ -131,6 +131,7 @@ Item {
     width: _attachmentList.width - attachmentListWidth - 6
 
     Flickable {
+      id: previewScrollArea
       anchors.fill: parent
       contentWidth: previewImage.width
       contentHeight: previewImage.height
@@ -139,6 +140,28 @@ Item {
         id: previewImage
         source: attachmentListView.currentAttachmentUrl
       }
+    }
+
+    Button {
+      id: previewSaveButton
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      anchors.margins: 12
+      width: 48
+      height: 48
+      icon: KDE.iconPath( "document-save", width );
+      states: [
+        State {
+          name: "movingState"
+          when: previewScrollArea.moving
+          PropertyChanges { target: previewSaveButton; opacity: 0.25 }
+        }
+      ]
+      transitions: [
+        Transition {
+          NumberAnimation { properties: "opacity"; duration: 200 }
+        }
+      ]
     }
   }
 
