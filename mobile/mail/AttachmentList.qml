@@ -29,7 +29,7 @@ Item {
   property int rowHeight: 48
   property int attachmentListWidth: 300
   property int actionListWidth: 240
-  property int requestedWidth: (attachmentListView.currentIndex < 0 || attachmentListView.currentIndex >= model.attachmentCount) ? attachmentListWidth : attachmentListWidth + actionListWidth
+  property int requestedWidth: attachmentListWidth
 
   /** Emittted when an attachment has been selected. */
   signal attachmentSelected
@@ -125,10 +125,10 @@ Item {
   Item {
     id: previewView
     visible: false
-    width: 0
     anchors.top: parent.top
     anchors.right: parent.right
     anchors.bottom: parent.bottom
+    width: _attachmentList.width - attachmentListWidth - 6
 
     Flickable {
       anchors.fill: parent
@@ -147,12 +147,14 @@ Item {
       name: "actionState"
       when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) != 0
       PropertyChanges { target: actionView; width: actionListWidth; visible: true }
+      PropertyChanges { target: _attachmentList; requestedWidth: attachmentListWidth + actionListWidth }
     },
 
     State {
       name: "previewState"
       when: (attachmentListView.currentIndex >= 0 && attachmentListView.currentIndex < model.attachmentCount) && attachmentListView.currentMimeType.indexOf( "image" ) == 0
-      PropertyChanges { target: previewView; width: actionListWidth; visible: true }
+      PropertyChanges { target: previewView; visible: true }
+      PropertyChanges { target: _attachmentList; requestedWidth: 1000 } // limited by SlideoutPanel to maximum width anyway
     }
   ]
 
