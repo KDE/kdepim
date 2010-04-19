@@ -18,6 +18,7 @@
 */
 
 import Qt 4.7
+import org.kde 4.5
 
 /**
  * Shows a list view of the specified attachment model of a MessageView component.
