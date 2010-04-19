@@ -81,21 +81,21 @@ Rectangle {
              }
            }
 
-//           HeaderView {
-//             id: headerList
-//             model: itemModel
-//             anchors.top: parent.top
-//             anchors.bottom: parent.bottom
-//             anchors.right: parent.right
-//             anchors.left: collectionView.right
-//             onMessageSelected: {
-//               // Prevent reloading of the message, perhaps this should be done
-//               // in messageview itself.
-//               if ( messageView.messageItemId != headerList.currentMessage )
-//                 messageView.messageItemId = headerList.currentMessage;
-//               folderPanel.collapse()
-//             }
-//           }
+           ItemListView {
+             id: headerList
+             model: itemModel
+             anchors.top: parent.top
+             anchors.bottom: parent.bottom
+             anchors.right: parent.right
+             anchors.left: collectionView.right
+             onItemSelected: {
+               // Prevent reloading of the message, perhaps this should be done
+               // in messageview itself.
+               if ( messageView.messageItemId != headerList.currentMessage )
+                 messageView.messageItemId = headerList.currentMessage;
+               folderPanel.collapse()
+             }
+           }
         }
       ]
     }
@@ -201,13 +201,13 @@ Rectangle {
     }
   }
 
-//   Connections {
-//     target: collectionView
-//     onChildCollectionSelected : { application.setSelectedChildCollectionRow(row); }
-//   }
-// 
-//   Connections {
-//     target: collectionView
-//     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
-//   }
+   Connections {
+     target: collectionView
+     onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
+   }
+
+   Connections {
+     target: collectionView
+     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
+   }
 }
