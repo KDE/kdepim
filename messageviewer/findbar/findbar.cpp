@@ -149,6 +149,9 @@ void FindBar::setFoundMatch( bool match )
   if (!m_search->text().isEmpty()) {
     KColorScheme::BackgroundRole bgColorScheme;
 
+    m_findPrevBtn->setEnabled( match );
+    m_findNextBtn->setEnabled( match );
+
     if (match)
       bgColorScheme = KColorScheme::PositiveBackground;
     else
