@@ -49,7 +49,6 @@ namespace MessageHelper {
     of setAutomaticFields(), see below, is still required. */
   void MESSAGECOMPOSER_EXPORT initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::IdentityManager* identMan, uint id = 0 );
 
-  /// TODO(leo) nothing is using this. comment out until required, as it uses an identitymanager we don't have
   /** Set the from, to, cc, bcc, encrytion etc headers as specified in the
   * given identity. */
   void MESSAGECOMPOSER_EXPORT applyIdentity( const KMime::Message::Ptr &message, const KPIMIdentities::IdentityManager* identMan,  uint id );

@@ -61,9 +61,8 @@ void initHeader( const KMime::Message::Ptr &message, const KPIMIdentities::Ident
 #error forgot to include kdepim-version.h
 #endif
 
-// TODO port
-//   message->userAgent()->fromUnicodeString( KProtocolManager::userAgentForApplication( "KMail", QString::fromLocal8Bit(KMAIL_VERSION), extraInfo ), "utf-8" );
-
+  // using kdepim revision string instead of KMAIL_VERSION, as we no longer depend on kmail itself
+  message->userAgent()->fromUnicodeString( KProtocolManager::userAgentForApplication( QString::fromLocal8Bit("KMail"), QString::fromLocal8Bit(KDEPIM_SVN_REVISION_STRING), extraInfo ), QLatin1String("utf-8").latin1() );
   // This will allow to change Content-Type:
   message->contentType()->setMimeType( "text/plain" );
 }
@@ -230,14 +229,14 @@ QString replacePrefixes( const QString& str, const QStringList &prefixRegExps,
 
 void setAutomaticFields(const KMime::Message::Ptr &msg, bool aIsMulti)
 {
-//TODO review and port  header.MimeVersion().FromString("1.0");
+  msg->setHeader( new KMime::Headers::Generic( "MIME-Version", msg.get(), QLatin1String("1.0"), QLatin1String("utf-8").latin1() ) );
 
   if (aIsMulti || msg->contents().size() > 1)
   {
     // Set the type to 'Multipart' and the subtype to 'Mixed'
     msg->contentType()->setMimeType( "multipart/mixed" );
     // Create a random printable string and set it as the boundary parameter
-//TODO review and port    contentType.CreateBoundary(0);
+    msg->contentType()->setBoundary( KMime::multiPartBoundary() );
   }
 }
 

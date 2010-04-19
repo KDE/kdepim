@@ -170,9 +170,16 @@ public:
    *  Set the identity that is set for the folder in which the given message is.
    *   It is used as a fallback when finding the identity if it can't be found in
    *   any other way.
+   *  Also used if putRepliesInSameFolder is set to true.
    */
   void setFolderIdentity( Akonadi::Item::Id folderIdentityId );
-  
+
+  /**
+   * Whether or not to put the reply to a message in the same folder as the message itself.
+   *  If so, specify the folder id in which to put them. Default is -1, which means to not put
+   *  replies in the same folder at all.
+   */
+  void putRepliesInSameFolder( Akonadi::Item::Id parentColId = -1 );
 
   /**
    * When creating MDNs, the user needs to be asked for confirmation in specific
@@ -219,13 +226,13 @@ private:
   QString replaceHeadersInString( const KMime::Message::Ptr &msg, const QString & s );
   QByteArray getRefStr( const KMime::Message::Ptr &msg );
   
-  // HACK user of MessageFactory needs to set the IdentityManager on startup, so the factory can composer m essages properly.
   // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze
   KPIMIdentities::IdentityManager* m_identityManager;
   // Required parts to create messages
   KMime::Message::Ptr m_origMsg;
   Akonadi::Entity::Id m_origId;
   Akonadi::Item::Id m_folderId;
+  Akonadi::Item::Id m_parentFolderId;
   
   // Optional settings the calling class may set
   MessageComposer::ReplyStrategy m_replyStrategy;

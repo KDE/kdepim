@@ -68,9 +68,6 @@ namespace Util {
       */
     bool makeMultiPartSigned( Kleo::CryptoMessageFormat f );
 
-    // TODO should these be exported?
-    // They are used in the unit tests, but are they useful to the outside world?
-
     MESSAGECOMPOSER_EXPORT QByteArray selectCharset( const QList<QByteArray> &charsets,
                                                     const QString &text );
 

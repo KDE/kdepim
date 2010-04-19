@@ -113,7 +113,6 @@ KMime::Content* Message::Util::composeHeadersAndBody( KMime::Content* orig, QByt
       resultingBody += encodedBody;
     else {
       kDebug() << "Got no encoded payload trying to save as plaintext inline pgp!";
-      // TODO handle gracefully
     }
 
     result->setBody( resultingBody );

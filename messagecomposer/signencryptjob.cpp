@@ -178,7 +178,7 @@ void SignEncryptJob::process()
   d->content->assemble();
   QByteArray content;
   if( d->format & Kleo::InlineOpenPGPFormat ) {
-    content = KMime::LFtoCRLF( d->content->body() ); // TODO is this right?
+    content = KMime::LFtoCRLF( d->content->body() );
   } else {
     content = KMime::LFtoCRLF( d->content->encodedContent() );
   }

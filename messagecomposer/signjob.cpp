@@ -168,7 +168,7 @@ void SignJob::process()
   kDebug() << "signing content before LFtoCRLF:" << d->content->encodedContent();
   if( d->format & Kleo::InlineOpenPGPFormat  &&
     !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
-    content = KMime::LFtoCRLF( d->content->body() ); // TODO is this right?
+    content = KMime::LFtoCRLF( d->content->body() );
   } else if( !( d->format & Kleo::SMIMEOpaqueFormat ) ) {
     content = KMime::LFtoCRLF( d->content->encodedContent() );
   } else { // SMimeOpaque doesn't need LFtoCRLF, else it gets munged

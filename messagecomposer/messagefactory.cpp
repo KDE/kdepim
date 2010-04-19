@@ -42,6 +42,7 @@ MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Ite
   : m_identityManager( 0 )
   , m_origMsg( KMime::Message::Ptr() )
   , m_origId( 0 )
+  , m_parentFolderId( 0 )
   , m_replyStrategy( MessageComposer::ReplySmart )
   , m_quote( true )
   , m_allowDecryption( true )
@@ -66,16 +67,6 @@ MessageFactory::MessageReply MessageFactory::createReply()
   replyToStr = m_origMsg->replyTo()->asUnicodeString();
 
   msg->contentType()->setCharset(QString::fromLatin1("utf-8").toLatin1());
-  /* TODO move to calling code
-  // determine the mailing list posting address
-  Akonadi::Collection parentCollection = item.parentCollection();
-  QSharedPointer<FolderCollection> fd;
-  if ( parentCollection.isValid() ) {
-    fd = FolderCollection::forCollection( parentCollection );
-    if ( fd->isMailingListEnabled() && !fd->mailingListPostAddress().isEmpty() ) {
-      mailingListAddresses << fd->mailingListPostAddress();
-    }
-  } */
 
   if ( m_origMsg->headerByType("List-Post") && m_origMsg->headerByType("List-Post")->asUnicodeString().contains( QString::fromLatin1("mailto:"), Qt::CaseInsensitive ) ) {
     QString listPost = m_origMsg->headerByType("List-Post")->asUnicodeString();
@@ -268,11 +259,10 @@ MessageFactory::MessageReply MessageFactory::createReply()
       parser.process( m_origMsg );
   }
   link( msg, m_id, KPIM::MessageStatus::statusReplied() );
-/* TODO(leo) still needed? worth passing as a flag?
-  if ( parentCollection.isValid() && fd->putRepliesInSameFolder() ) {
-    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( parentCollection.id() ), "utf-8" );
+  if ( m_parentFolderId > 0 ) {
+    KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );
     msg->setHeader( header );
-  } */
+  }
 #if 0
   // replies to an encrypted message should be encrypted as well
   if ( encryptionState() == KMMsgPartiallyEncrypted ||
@@ -322,7 +312,6 @@ KMime::Message::Ptr MessageFactory::createForward()
     secondPart->setHead( m_origMsg->head() );
     msg->addContent( secondPart );
     msg->assemble();
-    //TODO Port it msg->cleanupHeader();
   }
 
   // Normal message (multipart or text/plain|html)
@@ -502,29 +491,6 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
 
   QString special; // fill in case of error, warning or failure
 
-  /* TODO(leo) most of this is ported, but what about sending the DispositionMode to failed, and clearing the modifiers?
-  // RFC 2298: An importance of "required" indicates that
-  // interpretation of the parameter is necessary for proper
-  // generation of an MDN in response to this request.  If a UA does
-  // not understand the meaning of the parameter, it MUST NOT generate
-  // an MDN with any disposition type other than "failed" in response
-  // to the request.
-  QString notificationOptions = m_origMsg->headerByType("Disposition-Notification-Options") ? msg->headerByType("Disposition-Notification-Options")->asUnicodeString() : "";
-  if ( notificationOptions.contains( "required", Qt::CaseSensitive ) ) {
-    // ### hacky; should parse...
-    // There is a required option that we don't understand. We need to
-    // ask the user what we should do:
-    if ( !allowGUI ) return KMime::Message::Ptr(); // don't setMDNSentState here!
-    mode = requestAdviceOnMDN( "mdnUnknownOption" );
-    s = KMime::MDN::SentManually;
-
-    special = i18n("Header \"Disposition-Notification-Options\" contained "
-                   "required, but unknown parameter");
-    d = KMime::MDN::Failed;
-    m.clear(); // clear modifiers
-  }
- */
-
   // extract where to send from:
   QString finalRecipient = m_identityManager->identityForUoidOrDefault( identityUoid( m_origMsg ) ).fullEmailAddr();
 
@@ -589,7 +555,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
 
   receipt->assemble();
 
-  kDebug() << "final message:" + receipt->body();//TODO port asString();
+  kDebug() << "final message:" + receipt->encodedContent();
 
   //
   // Set "MDN sent" status:
@@ -654,6 +620,10 @@ void MessageFactory::setFolderIdentity( Akonadi::Entity::Id folderIdentityId )
   m_folderId = folderIdentityId;
 }
 
+void MessageFactory::putRepliesInSameFolder( Akonadi::Entity::Id parentColId )
+{
+  m_parentFolderId = parentColId;
+}
 
 bool MessageFactory::MDNConfirmMultipleRecipients( KMime::Message::Ptr msg )
 {
