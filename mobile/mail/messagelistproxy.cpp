@@ -43,11 +43,6 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
   return QSortFilterProxyModel::data(index, role);
 }
 
-int MessageListProxy::messageCount() const
-{
-  return rowCount();
-}
-
 qint64 MessageListProxy::messageId( int row ) const
 {
   if ( row < 0 || row >= rowCount() )

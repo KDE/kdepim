@@ -27,7 +27,6 @@
 class MessageListProxy : public ListProxy
 {
   Q_OBJECT
-  Q_PROPERTY( int messageCount READ messageCount )
 
   public:
     explicit MessageListProxy(QObject* parent = 0);
@@ -40,7 +39,6 @@ class MessageListProxy : public ListProxy
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
 
-    int messageCount() const; /// Returns the number of rows c.q. items
     Q_INVOKABLE qint64 messageId( int row ) const;
 };
 

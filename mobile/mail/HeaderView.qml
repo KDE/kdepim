@@ -34,7 +34,7 @@ Item {
   SystemPalette { id: palette; colorGroup: "Active" }
   
   function nextMessage() {
-    if ( currentIndex < (model.messageCount - 1) ) {
+    if ( currentIndex < (model.itemCount - 1) ) {
       currentIndex = currentIndex + 1;
       currentMessage = model.messageId( currentIndex );
       headerViewTopLevel.messageSelected();
