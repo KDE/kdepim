@@ -60,8 +60,8 @@ Rectangle {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleText: "Start"
-      handleHeight: 150
+      titleIcon: KDE.iconPath( "kmail", 48 )
+      handleHeight: 78
       content: [
         StartCanvas {
           anchors.fill : parent
@@ -74,7 +74,7 @@ Rectangle {
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
-      handlePosition: 150
+      handlePosition: startPanel.handleHeight
       content: [
         Item {
           anchors.fill: parent
@@ -120,7 +120,7 @@ Rectangle {
       // ### QML has a bug where the children property is broken.
       // As a workaround, we need to set handlePosition here and
       // set anchors.fill parent on the panels. Remove when Qt is fixed.
-      handlePosition: 300
+      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -180,11 +180,11 @@ Rectangle {
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition: 450
+      handlePosition: actionPanel.handlePosition + actionPanel.handleHeight
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handleHeight: parent.height - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: attachmentView.requestedWidth
       content: [
         AttachmentList {
