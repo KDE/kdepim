@@ -49,7 +49,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
     engine()->addImportPath( importPath );
 
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
-#if Q_WS_MAEMO_5
+#ifdef Q_WS_MAEMO_5
   setWindowState( Qt::WindowFullScreen );
 #endif
 
