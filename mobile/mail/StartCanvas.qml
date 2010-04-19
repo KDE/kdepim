@@ -24,54 +24,73 @@ import Qt 4.7
 Item {
   id : _topContext
 
-  Rectangle {
-    id : favoritesList
-    color : "blue"
-    anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.left : parent.left
-    width : parent.width / 3
+  ListModel {
+    id : favsModel
+    ListElement { text : "Favorite 1" }
+    ListElement { text : "Favorite 2" }
+    ListElement { text : "Favorite 3" }
+    ListElement { text : "Favorite 4" }
+    ListElement { text : "Favorite 5" }
+    ListElement { text : "Favorite 6" }
+  }
+
+  Component {
+    id : favDelegate
+    Text { text : model.text; height : 20; }
   }
 
   Rectangle {
-    id : accountsList
-    color : "red"
+    id : labelItem
     anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.left : favoritesList.right
-    width : parent.width / 3
+    anchors.horizontalCenter : parent.horizontalCenter
+    Row {
+      spacing : 2
+      height : parent.height
+      Text { id: favText; text : "Favorites"; height : 20  }
+
+      Button {
+        id : configureFavsButton
+        x: favText.width + 50
+        width : 200
+        height : 20
+        buttonText : "Configure Favorites"
+        onClicked : {
+          console.log( "Configure clicked" );
+        }
+      }
+    }
+    height : 20
   }
-
-  Rectangle {
-    id : actionsList
-    color : "yellow"
-    anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.left : accountsList.right
-    width : parent.width / 3
-
-    Text {
-      id: actionLabel
-      text: "Actions"
-      style: Text.Sunken
-      anchors.horizontalCenter: parent.horizontalCenter
+  ListView {
+    id : favsView
+    anchors.top : labelItem.bottom
+    anchors.horizontalCenter : parent.horizontalCenter
+    height : 200
+    model : favsModel
+    delegate : favDelegate
+  }
+  Button {
+    id : newEmailButton
+    height : 20
+    width : 200
+    anchors.top : favsView.bottom
+    anchors.horizontalCenter : parent.horizontalCenter
+    buttonText : "Write new Email"
+    onClicked : {
+      console.log( "Write new clicked" );
     }
-    Button {
-      id: newMailButton
-      anchors.top: actionLabel.bottom;
-      anchors.horizontalCenter: parent.horizontalCenter;
-      width: parent.width - 10
-      height: parent.height / 6
-      buttonText: "New Mail"
-    }
-    Button {
-      id: newAccountButton
-      anchors.top: newMailButton.bottom;
-      anchors.horizontalCenter: parent.horizontalCenter;
-      width: parent.width - 10
-      height: parent.height / 6
-      buttonText: "New Account"
-      onClicked : { application.launchAccountWizard(); }
+
+  }
+  Button {
+    id : newAccountButton
+    anchors.top : newEmailButton.bottom
+    anchors.horizontalCenter : parent.horizontalCenter
+    height : 20
+    width : 200
+    buttonText : "Add Account"
+    onClicked : {
+      console.log( "Add Account clicked" );
+      application.launchAccountWizard();
     }
   }
 }
