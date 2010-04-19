@@ -38,8 +38,6 @@ class MessageListProxy : public ListProxy
 
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
-
-    Q_INVOKABLE qint64 messageId( int row ) const;
 };
 
 #endif

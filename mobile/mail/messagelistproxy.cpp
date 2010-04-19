@@ -43,23 +43,9 @@ QVariant MessageListProxy::data(const QModelIndex& index, int role) const
   return QSortFilterProxyModel::data(index, role);
 }
 
-qint64 MessageListProxy::messageId( int row ) const
-{
-  if ( row < 0 || row >= rowCount() )
-    return -1;
-
-  QModelIndex idx = index( row, 0 );
-  if ( !idx.isValid() )
-    return -1;
-
-  const Akonadi::Item item = QSortFilterProxyModel::data( idx, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
-  kDebug() << item.id();
-  return item.id();
-}
-
 void MessageListProxy::setSourceModel(QAbstractItemModel* sourceModel)
 {
-  QSortFilterProxyModel::setSourceModel(sourceModel);
+  ListProxy::setSourceModel(sourceModel);
   QHash<int, QByteArray> names = roleNames();
   names.insert( Akonadi::EntityTreeModel::ItemIdRole, "itemId" );
   names.insert( SubjectRole, "subject" );

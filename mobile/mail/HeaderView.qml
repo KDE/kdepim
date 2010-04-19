@@ -36,7 +36,7 @@ Item {
   function nextMessage() {
     if ( currentIndex < (model.itemCount - 1) ) {
       currentIndex = currentIndex + 1;
-      currentMessage = model.messageId( currentIndex );
+      currentMessage = model.itemId( currentIndex );
       headerViewTopLevel.messageSelected();
     }
   }
@@ -44,7 +44,7 @@ Item {
   function previousMessage() {
     if ( currentIndex > 0  ) {
       currentIndex = currentIndex - 1;
-      currentMessage = model.messageId( currentIndex );
+      currentMessage = model.itemId( currentIndex );
       headerViewTopLevel.messageSelected();
     }
   }
