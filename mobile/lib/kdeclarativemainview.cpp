@@ -119,6 +119,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   }
 
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
+  engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( etm ) ) );
   engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( currentCollectionSelectionModel ) ) );
   engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( breadcrumbNavigationModel ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mChildCollectionFilter ) ) );
