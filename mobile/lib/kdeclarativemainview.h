@@ -49,9 +49,6 @@ protected:
 public:
   virtual ~KDeclarativeMainView();
 
-  /** Returns wheter or not the child collection at row @param row has children. */
-  bool childCollectionHasChildren( int row );
-
   /**
     * By default the view fetches the full payloads for the list. Use this method
     * to fetch only a specific part.
@@ -64,6 +61,9 @@ public:
 public slots:
   void setSelectedChildCollectionRow( int row );
   void setSelectedBreadcrumbCollectionRow( int row );
+
+  /** Returns wheter or not the child collection at row @param row has children. */
+  bool childCollectionHasChildren( int row );
 
 private:
   KDeclarativeMainViewPrivate * const d;
