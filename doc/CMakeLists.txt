@@ -17,9 +17,9 @@ endif(BUILD_kalarm)
 
 add_subdirectory(kioslave)
 
-if (BUILD_kjots AND GrantLee_FOUND)
+if (BUILD_kjots)
   add_subdirectory(kjots)
-endif (BUILD_kjots AND GrantLee_FOUND)
+endif (BUILD_kjots)
 
 if(BUILD_kleopatra)
   add_subdirectory(kleopatra)
