@@ -97,6 +97,7 @@ Rectangle {
 
           HeaderView {
             id: headerList
+            opacity : { headerList.count > 0 ? 1 : 0; }
             model: itemModel
             anchors.top: parent.top
             anchors.bottom: parent.bottom
@@ -108,6 +109,46 @@ Rectangle {
               if ( messageView.messageItemId != headerList.currentMessage )
                 messageView.messageItemId = headerList.currentMessage;
               folderPanel.collapse()
+            }
+          }
+          Rectangle {
+            id : headerActionOverlay
+            opacity : { headerList.count > 0 ? 0 : 1; }
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.left: collectionView.right
+            Button {
+              id : newEmailButton
+              anchors.top : parent.top
+              anchors.left : parent.left
+              anchors.right : parent.right
+              height : 30
+              buttonText : "Write new E-Mail"
+              onClicked : {
+                console.log("Write new");
+              }
+            }
+            Button {
+              id : searchEmailButton
+              anchors.top : newEmailButton.bottom
+              anchors.left : parent.left
+              anchors.right : parent.right
+              height : 30
+              buttonText : "Search for E-Mail"
+              onClicked : {
+                console.log("Search email");
+              }
+            }
+            Button {
+              anchors.top : searchEmailButton.bottom
+              anchors.left : parent.left
+              anchors.right : parent.right
+              height : 30
+              buttonText : "Configure Account"
+              onClicked : {
+                console.log("Configure");
+              }
             }
           }
         }

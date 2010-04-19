@@ -28,6 +28,7 @@ Item {
   id: headerViewTopLevel
   property alias model: messageListView.model
   property alias currentIndex: messageListView.currentIndex
+  property alias count : messageListView.count
   property int currentMessage: -1
   signal messageSelected
 
