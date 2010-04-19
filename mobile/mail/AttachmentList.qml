@@ -130,9 +130,15 @@ Item {
     anchors.right: parent.right
     anchors.bottom: parent.bottom
 
-    Image {
+    Flickable {
       anchors.fill: parent
-      source: attachmentListView.currentAttachmentUrl
+      contentWidth: previewImage.width
+      contentHeight: previewImage.height
+      clip: true
+      Image {
+        id: previewImage
+        source: attachmentListView.currentAttachmentUrl
+      }
     }
   }
 
