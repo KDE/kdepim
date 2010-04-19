@@ -48,6 +48,11 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
     engine()->addImportPath( importPath );
 
+  setResizeMode( QDeclarativeView::SizeRootObjectToView );
+#if Q_WS_MAEMO_5
+  setWindowState( Qt::WindowFullScreen );
+#endif
+
   const QString qmlPath = KStandardDirs::locate( "appdata", appName + ".qml" );
   setSource( qmlPath );
 
