@@ -51,6 +51,7 @@
 #include <akonadi_next/etmstatesaver.h>
 
 #define SON(o) o->setObjectName(#o)
+#include <KProcess>
 
 MainView::MainView(QWidget* parent) :
   QDeclarativeView(parent),
@@ -213,6 +214,18 @@ bool MainView::childCollectionHasChildren( int row )
     return false;
 
   return idx5.model()->rowCount( idx5 ) > 0;
+}
+
+void MainView::launchAccountWizard()
+{
+  int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), QStringList()
+                                                                    << QLatin1String( "--type" )
+                                                                    << QLatin1String( "message/rfc822" ) );
+  if ( !pid )
+  {
+    // Handle error
+    qDebug() << "error creating accountwizard";
+  }
 }
 
 #include "mainview.moc"

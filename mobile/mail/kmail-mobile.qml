@@ -38,13 +38,13 @@ Rectangle {
     height: parent.height
     messageItemId: -1
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
-    
+
     onNextMessageRequest: {
       // Only go to the next message when currently a valid item is set.
       if ( messageView.messageItemId >= 0 )
         headerList.nextMessage();
     }
-    
+
     onPreviousMessageRequest: {
       // Only go to the previous message when currently a valid item is set.
       if ( messageView.messageItemId >= 0 )
@@ -56,11 +56,25 @@ Rectangle {
   SlideoutPanelContainer {
     anchors.fill: parent
 
+
+    SlideoutPanel {
+      anchors.fill: parent
+      id: startPanel
+      titleText: "Start"
+      handleHeight: 150
+      content: [
+        StartCanvas {
+          anchors.fill : parent
+        }
+      ]
+    }
+
     SlideoutPanel {
       anchors.fill: parent
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
+      handlePosition: 150
       content: [
         Item {
           anchors.fill: parent
@@ -106,7 +120,7 @@ Rectangle {
       // ### QML has a bug where the children property is broken.
       // As a workaround, we need to set handlePosition here and
       // set anchors.fill parent on the panels. Remove when Qt is fixed.
-      handlePosition: 150
+      handlePosition: 300
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -141,7 +155,7 @@ Rectangle {
             width: parent.width - 10
             height: parent.height / 6
             buttonText: "Previous"
-            onClicked: { 
+            onClicked: {
               if ( messageView.messageItemId >= 0 )
                 headerList.previousMessage();
 
@@ -166,7 +180,7 @@ Rectangle {
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition: 300
+      handlePosition: 450
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );

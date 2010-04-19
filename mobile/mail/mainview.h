@@ -46,6 +46,8 @@ class MainView : public QDeclarativeView
 
     bool childCollectionHasChildren( int row );
 
+    void launchAccountWizard();
+
   private slots:
     void saveState();
     void restoreState();
