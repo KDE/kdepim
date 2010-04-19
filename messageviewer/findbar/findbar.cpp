@@ -112,7 +112,7 @@ void FindBar::slotClearSearch()
   clearSelections();
 }
 
-void FindBar::autoSearch( QString str )
+void FindBar::autoSearch( const QString& str )
 {
   m_findPrevBtn->setEnabled( !str.isEmpty() );
   m_findNextBtn->setEnabled( !str.isEmpty() );
