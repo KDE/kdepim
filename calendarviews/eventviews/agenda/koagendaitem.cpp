@@ -909,7 +909,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   if ( mSelected ) {
-    bgColor = bgColor.light( KOGlobals::BRIGHTNESS_FACTOR );
+    bgColor = bgColor.light( KOEventView::BRIGHTNESS_FACTOR );
   }
 
   QColor textColor = KOHelper::getTextColor( bgColor );
