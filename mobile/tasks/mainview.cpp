@@ -30,9 +30,11 @@
 #include <kcal/incidence.h>
 #include <akonadi/kcal/incidencemimetypevisitor.h>
 
+#include "tasklistproxy.h"
+
 using namespace Akonadi;
 
-MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", /* FIXME: TaskProxy */ 0, parent )
+MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskListProxy(), parent )
 {
   setMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
 
