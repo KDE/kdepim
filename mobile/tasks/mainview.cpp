@@ -27,12 +27,13 @@
 #include <KGlobal>
 #include <KStandardDirs>
 
-MainView::MainView( QWidget *parent ) : QDeclarativeView( parent )
-{
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
-    engine()->addImportPath( importPath );
+#include <kcal/incidence.h>
+#include <akonadi/kcal/incidencemimetypevisitor.h>
 
-  const QString qmlPath = KStandardDirs::locate( "data", "mobile/tasks.qml" );
-  kDebug() << qmlPath;
-  setSource( qmlPath );
+using namespace Akonadi;
+
+MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", /* FIXME: TaskProxy */ 0, parent )
+{
+  setMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
+
 }

@@ -21,9 +21,9 @@
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
-#include <QtDeclarative/QDeclarativeView>
+#include "kdeclarativemainview.h"
 
-class MainView : public QDeclarativeView
+class MainView : public KDeclarativeMainView
 {
 public:
     explicit MainView( QWidget *parent = 0 );

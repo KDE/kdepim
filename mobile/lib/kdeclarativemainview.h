@@ -23,24 +23,54 @@
 
 #include <QtDeclarative/QDeclarativeView>
 
+#include "mobileui_export.h"
+
+class ListProxy;
+class KDeclarativeMainViewPrivate;
+
 /**
- * Main view for mobile applications.
+ * Main view for mobile applications. This class is just to share code and therefore
+ * should not be instantiated by itself.
  */
-class KDeclarativeMainView : public QDeclarativeView
+class MOBILEUI_EXPORT KDeclarativeMainView : public QDeclarativeView
 {
-public:
+  Q_OBJECT;
+
+protected:
   /**
    * Creates a new main view for a mobile application.
    *
    * @param appName is used to find the QML file in ${DATA_DIR}/mobile/appname.qml
+   * @param listProxy proxy for the list view of the application. KDeclarativeMainView
+                      takes ownwership over the pointer.
    */
-  KDeclarativeMainView( const QString &appName, QWidget *parent = 0 );
+  KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = 0 );
 
+public:
   virtual ~KDeclarativeMainView();
 
-protected:
-  /** This is called on construction before the qml file is loaded. */
-  virtual void init() = 0;
+  /** Returns wheter or not the child collection at row @param row has children. */
+  bool childCollectionHasChildren( int row );
+
+  /**
+    * By default the view fetches the full payloads for the list. Use this method
+    * to fetch only a specific part.
+    */
+  void setListPayloadPart( const QByteArray &payloadPart );
+
+  /** Mime type of the items handled by this application. */
+  void setMimeType( const QString &mimeType );
+
+public slots:
+  void setSelectedChildCollectionRow( int row );
+  void setSelectedBreadcrumbCollectionRow( int row );
+
+private:
+  KDeclarativeMainViewPrivate * const d;
+
+  /// Disable copying
+  KDeclarativeMainView( const KDeclarativeMainView &other );
+  KDeclarativeMainView &operator=( const KDeclarativeMainView &other );
 };
 
 #endif // KDECLARATIVEMAINVIEW_H
