@@ -66,20 +66,20 @@ Rectangle {
         Item {
           anchors.fill: parent
 
-//           BreadcrumbNavigationView {
-//             id : collectionView
-//             width: 1/3 * folderPanel.contentWidth
-//             anchors.top: parent.top
-//             anchors.bottom: parent.bottom
-//             anchors.left: parent.left
-//             anchors.rightMargin: 4
-//             breadcrumbItemsModel : breadcrumbCollectionsModel
-//             selectedItemModel : selectedCollectionModel
-//             childItemsModel : childCollectionsModel
-//             onCollectionSelected: {
-//               //folderPanel.collapse()
-//             }
-//           }
+           BreadcrumbNavigationView {
+             id : collectionView
+             width: 1/3 * folderPanel.contentWidth
+             anchors.top: parent.top
+             anchors.bottom: parent.bottom
+             anchors.left: parent.left
+             anchors.rightMargin: 4
+             breadcrumbItemsModel : breadcrumbCollectionsModel
+             selectedItemModel : selectedCollectionModel
+             childItemsModel : childCollectionsModel
+             onCollectionSelected: {
+               //folderPanel.collapse()
+             }
+           }
 
 //           HeaderView {
 //             id: headerList
@@ -162,7 +162,7 @@ Rectangle {
 
     SlideoutPanel {
       id: attachmentPanel
-      visible: messageView.messageTreeModel.attachmentCount >= 2
+      visible: false //messageView.messageTreeModel.attachmentCount >= 2
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
