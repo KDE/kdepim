@@ -17,6 +17,7 @@ include_directories(
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 set(mobile_tasks_SRCS
+  tasklistproxy.cpp
   mainview.cpp
   main.cpp
 )
