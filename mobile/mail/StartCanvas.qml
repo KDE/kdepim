@@ -21,7 +21,7 @@
 
 import Qt 4.7
 
-Item {
+Rectangle {
   id : _topContext
 
   Rectangle {
