@@ -263,16 +263,11 @@ MessageFactory::MessageReply MessageFactory::createReply()
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );
     msg->setHeader( header );
   }
-#if 0
-  // replies to an encrypted message should be encrypted as well
-  if ( encryptionState() == KMMsgPartiallyEncrypted ||
-       encryptionState() == KMMsgFullyEncrypted ) {
-    msg->setEncryptionState( KMMsgFullyEncrypted );
-  }
 
-#else //TODO port to akonadi
-  kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+  if( m_origMsg->hasHeader( QLatin1String("X-KMail-EncryptActionEnabled").latin1() ) &&
+        m_origMsg->headerByType( QLatin1String("X-KMail-EncryptActionEnabled").latin1() )->as7BitString() == "true" ) {
+    msg->setHeader( new KMime::Headers::Generic( "X-KMail-EncryptActionEnabled", msg.get(), QLatin1String("true"), QLatin1String("utf-8" ) ) );
+  }
 
   MessageReply reply;
   reply.msg = msg;
