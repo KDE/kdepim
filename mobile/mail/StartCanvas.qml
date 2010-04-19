@@ -24,6 +24,8 @@ import Qt 4.7
 Rectangle {
   id : _topContext
 
+  signal accountSelected( int row )
+
   Rectangle {
     anchors.top : parent.top
     anchors.bottom : parent.bottom
@@ -49,7 +51,7 @@ Rectangle {
         MouseArea {
           anchors.fill : parent
 
-          onClicked : { console.log( "Account clicked: " + model.display ); }
+          onClicked : { console.log( "Account clicked: " + model.display ); _topContext.accountSelected( model.index ); }
         }
       }
     }

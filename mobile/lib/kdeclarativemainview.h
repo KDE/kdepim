@@ -59,6 +59,7 @@ public:
   void setMimeType( const QString &mimeType );
 
 public slots:
+  void setSelectedAccount( int row );
   void setSelectedChildCollectionRow( int row );
   void setSelectedBreadcrumbCollectionRow( int row );
 

@@ -187,3 +187,15 @@ void KDeclarativeMainView::setSelectedBreadcrumbCollectionRow( int row )
   QModelIndex index = d->mBreadcrumbCollectionSelection->model()->index( row, 0 );
   d->mBreadcrumbCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
+
+void KDeclarativeMainView::setSelectedAccount( int row )
+{
+  if ( row < 0 )
+  {
+    d->mCollectionSelection->clearSelection();
+    return;
+  }
+  QModelIndex index = d->mCollectionSelection->model()->index( row, 0 );
+  d->mCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
+}
+

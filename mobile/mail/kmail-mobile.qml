@@ -64,6 +64,7 @@ Rectangle {
       handleHeight: 78
       content: [
         StartCanvas {
+          id : startPage
           anchors.fill : parent
         }
       ]
@@ -193,6 +194,14 @@ Rectangle {
           anchors.fill: parent
         }
       ]
+    }
+  }
+
+  Connections {
+    target: startPage
+    onAccountSelected : {
+      application.setSelectedAccount(row);
+      // TODO: Figure out how to expand the slider programatically.
     }
   }
 
