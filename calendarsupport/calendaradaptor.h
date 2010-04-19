@@ -72,6 +72,10 @@ template<class T> inline Akonadi::Item incidenceToItem(T* incidence) {
 class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
 {
   Q_OBJECT
+    // prevent warning about hidden virtual method
+    using QObject::event;
+    using KCal::Calendar::addIncidence;
+    using KCal::Calendar::deleteIncidence;
 
   public:
     explicit CalendarAdaptor(Akonadi::Calendar *calendar, QWidget *parent, bool storeDefaultCollection = false )
