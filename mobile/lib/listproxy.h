@@ -22,8 +22,10 @@
 
 #include <QtGui/QSortFilterProxyModel>
 
+#include "mobileui_export.h"
+
 /** Proxy model to provide roles for accessing Akonadi::Items properties from QML. */
-class ListProxy : public QSortFilterProxyModel
+class MOBILEUI_EXPORT ListProxy : public QSortFilterProxyModel
 {
   Q_OBJECT
   Q_PROPERTY( int itemCount READ rowCount )
