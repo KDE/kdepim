@@ -28,7 +28,6 @@
 #include <qlineedit.h>
 #include <QWhatsThis>
 #include <qtoolbox.h>
-#include <QHeaderView>
 
 #include <klocale.h>
 #include <kglobal.h>
