@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -24,6 +25,7 @@ Item {
   property alias model: itemListView.model
   property alias currentIndex: itemListView.currentIndex
   property int currentItemId: -1
+  property alias delegate: itemListView.delegate
 
   signal itemSelected
 
@@ -43,100 +45,9 @@ Item {
     }
   }
 
-  Component {
-    id: itemListDelegate
-
-    Item {
-      width: itemListView.width
-      height: 32
-      clip: true
-
-      Rectangle {
-        id: background
-        x: 1; y: 2; width: parent.width - 2; height: parent.height - 4
-        border.color: palette.mid
-        opacity: 0.25
-        radius: 5
-      }
-
-      MouseArea {
-        anchors.fill: parent
-        onClicked: {
-//          var nonCurrentClicked = false
-//          if ( parent.parent.parent.currentIndex == model.index ) { nonCurrentClicked = true }
-//          parent.ListView.view.currentIndex = model.index
-//          headerViewTopLevel.currentItemId = model.itemId
-//          if ( nonCurrentClicked ) { headerViewTopLevel.messageSelected() }
-        }
-      }
-
-      Column {
-        anchors.fill: background
-        anchors.top: background.top
-        anchors.left: background.left
-        spacing: 10
-        Text {
-          id: subjectLabel
-          text: "TEST!!!"
-          font.bold: true
-        }
-      }
-
-
-//      Column {
-//        anchors.fill: background
-//        anchors.top: background.top
-//        anchors.left: background.left
-//        spacing: 10
-//        Text {
-//          id: subjectLabel
-//          text: model.subject
-//          font.bold: true
-//        }
-//        Column {
-//          id: currentMessageDetails
-//          opacity: 0
-//          spacing: 4
-//          Text {
-//            text: "From: " + model.from
-//            color: palette.highlightedText
-//          }
-//          Text {
-//            text: "Date: " + model.date
-//            color: palette.highlightedText
-//          }
-//        }
-//      }
-
-//      states: [
-//        State {
-//          name: "currentState"
-//          when: wrapper.ListView.isCurrentItem
-//          PropertyChanges { target: wrapper; height: 100 }
-//          PropertyChanges { target: currentMessageDetails; opacity: 1 }
-//          PropertyChanges { target: background; color: palette.highlight; opacity: 1.0 }
-//          PropertyChanges { target: subjectLabel; color: palette.highlightedText }
-//        }
-//      ]
-//      transitions: [
-//        Transition {
-//          NumberAnimation { property: "height"; duration: 200 }
-//          NumberAnimation { target: currentMessageDetails; property: "opacity"; duration: 200 }
-//          ColorAnimation { target: currentMessageDetails; property: "color"; duration: 200 }
-//          ColorAnimation { target: background; property: "color"; duration: 200 }
-//          ColorAnimation { target: subjectLabel; property: "color"; duration: 200 }
-//        }
-//      ]
-    }
-  }
-
-  ListView
-  {
+  ListView {
     id: itemListView
     anchors.fill: parent
-    delegate: itemListDelegate
-    // for debugging current item selection
-    //highlight: highlight
     highlightFollowsCurrentItem: true
     highlightRangeMode: "StrictlyEnforceRange"
     preferredHighlightBegin: height/2 - currentItem.height/2

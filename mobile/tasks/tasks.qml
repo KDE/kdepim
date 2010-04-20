@@ -81,6 +81,23 @@ KPIM.MainView {
 
            ItemListView {
              id: headerList
+             delegate: [
+               ItemListViewDelegate {
+                 summaryContent: [
+                   Text {
+                     text: "Task: " + model.summary
+                     font.bold: true
+                   }
+                 ]
+                 detailsContent: [
+                   Text {
+                     text: "Details: " + model.description
+                     color: palette.highlightedText
+                   }
+                 ]
+               }
+             ]
+
              model: itemModel
              anchors.top: parent.top
              anchors.bottom: parent.bottom
@@ -165,7 +182,7 @@ KPIM.MainView {
       handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: 400
-      content: [
+//      content: [
 //         Component {
 //           id: attachmentDelegate
 //           Item {
@@ -195,7 +212,7 @@ KPIM.MainView {
 //             }
 //           }
 //         }
-      ]
+//      ]
     }
   }
 
