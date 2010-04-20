@@ -30,6 +30,8 @@ Item {
   height: 32
   clip: true
 
+  SystemPalette { id: palette; colorGroup: "Active" }
+
   Rectangle {
     id: background
     x: 1; y: 2; width: parent.width - 2; height: parent.height - 4
