@@ -153,10 +153,7 @@ KPIM.MainView {
              height: parent.height / 6
              buttonText: "Previous"
              onClicked: {
-               if ( itemList.currentIndex > 0 ) { // if ( messageView.messageItemId >= 0 )
-                 console.log( itemList )
-                 itemList.previousItem()
-               }
+               itemList.previousItem()
                actionPanel.collapse()
              }
            },
@@ -167,10 +164,7 @@ KPIM.MainView {
              height: parent.height / 6
              buttonText: "Next"
              onClicked: {
-               console.log(  )
-               if ( itemList.currentIndex < itemModel.itemCount )
-                  itemList.nextItem();
-
+               itemList.nextItem();
                actionPanel.collapse();
              }
            }
