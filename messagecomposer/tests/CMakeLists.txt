@@ -39,6 +39,7 @@ endmacro( add_messagecomposer_cryptotest )
 
 # Utility stuff.
 add_messagecomposer_test( utiltest.cpp )
+add_messagecomposer_test( messagefactorytest.cpp )
 
 # Non-content jobs.
 add_messagecomposer_test( skeletonmessagejobtest.cpp )
