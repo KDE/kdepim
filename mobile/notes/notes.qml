@@ -63,10 +63,10 @@ KPIM.MainView {
              }
            }
 
-           ItemListView {
+           KPIM.ItemListView {
              id: headerList
              delegate: [
-               ItemListViewDelegate {
+               KPIM.ItemListViewDelegate {
                  summaryContent: [
                    Text {
                      text: "Title: " + model.title
