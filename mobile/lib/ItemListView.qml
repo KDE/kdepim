@@ -26,6 +26,7 @@ Item {
   property alias currentIndex: itemListView.currentIndex
   property int currentItemId: -1
   property alias delegate: itemListView.delegate
+  property alias count: itemListView.count
 
   signal itemSelected
 

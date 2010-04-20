@@ -67,24 +67,24 @@ KPIM.MainView {
           }
 
           ContactListView {
-            id: headerList
-            opacity : { headerList.count > 0 ? 1 : 0; }
+            id: contactList
+            opacity : { contactList.count > 0 ? 1 : 0; }
             model: itemModel
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: collectionView.right
-            onMessageSelected: {
+            onItemSelected: {
               // Prevent reloading of the message, perhaps this should be done
               // in messageview itself.
-              if ( messageView.messageItemId != headerList.currentMessage )
-                messageView.messageItemId = headerList.currentMessage;
+              if ( messageView.messageItemId != contactList.currentMessage )
+                messageView.messageItemId = contactList.currentMessage;
               folderPanel.collapse()
             }
           }
           Rectangle {
             id : headerActionOverlay
-            opacity : { headerList.count > 0 ? 0 : 1; }
+            opacity : { contactList.count > 0 ? 0 : 1; }
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
@@ -170,7 +170,7 @@ KPIM.MainView {
             buttonText: "Previous"
             onClicked: {
               if ( messageView.messageItemId >= 0 )
-                headerList.previousMessage();
+                contactList.previousItem();
 
               actionPanel.collapse();
             }
@@ -183,7 +183,7 @@ KPIM.MainView {
             buttonText: "Next"
             onClicked: {
               if ( messageView.messageItemId >= 0 )
-                headerList.nextMessage();
+                contactList.nextItem();
 
               actionPanel.collapse();
             }

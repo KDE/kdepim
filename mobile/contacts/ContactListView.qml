@@ -17,90 +17,29 @@
     02110-1301, USA.
 */
 
-import Qt 4.6
+import Qt 4.6 as Qt
 import org.kde 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
 
-/** TODO: refactor to share common code with the other item list views. */
-Item {
-  id: headerViewTopLevel
-  property alias model: messageListView.model
-  property alias currentIndex: messageListView.currentIndex
-  property alias count : messageListView.count
-  property int currentMessage: -1
-  signal messageSelected
-
-  SystemPalette { id: palette; colorGroup: "Active" }
-
-  function nextMessage() {
-    if ( currentIndex < (model.itemCount - 1) ) {
-      currentIndex = currentIndex + 1;
-      currentMessage = model.itemId( currentIndex );
-      headerViewTopLevel.messageSelected();
-    }
-  }
-
-  function previousMessage() {
-    if ( currentIndex > 0  ) {
-      currentIndex = currentIndex - 1;
-      currentMessage = model.itemId( currentIndex );
-      headerViewTopLevel.messageSelected();
-    }
-  }
-
-  Component {
-    id: messageListDelegate
-
-    Item {
-      id: wrapper
-      width: messageListView.width
-      height: 72
-      clip: true
-
-      Rectangle {
-        id: background
-        x: 1; y: 2; width: parent.width - 2; height: parent.height - 4
-        border.color: palette.mid
-        opacity: 0.25
-        radius: 5
-      }
-      MouseArea {
-        anchors.fill: parent
-        onClicked: {
-          var nonCurrentClicked = false
-          if ( headerViewTopLevel.currentIndex == model.index ) { nonCurrentClicked = true }
-          wrapper.ListView.view.currentIndex = model.index
-          headerViewTopLevel.currentMessage = model.itemId
-          if ( nonCurrentClicked ) { headerViewTopLevel.messageSelected() }
+KPIM.ItemListView {
+  delegate: [
+    KPIM.ItemListViewDelegate {
+      summaryContent: [
+        Qt.Image {
+          anchors.left: parent.left
+          anchors.top: parent.top
+          anchors.margins: 4
+          pixmap: model.picture
+          scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
+          transformOrigin: "TopLeft"
+        },
+        Qt.Text {
+          anchors.top: parent.top
+          anchors.margins: 4
+          x: parent.height + anchors.margins
+          text: model.name
         }
-      }
-
-      Image {
-        anchors.left: wrapper.left
-        anchors.top: wrapper.top
-        anchors.margins: 4
-        pixmap: model.picture
-        scale: (wrapper.height - 2 * anchors.margins) / Math.max( width, height )
-        transformOrigin: "TopLeft"
-      }
-      Text {
-        anchors.top: wrapper.top
-        anchors.margins: 4
-        x: wrapper.height + anchors.margins
-        text: model.name
-      }
+      ]
     }
-  }
-
-  ListView
-  {
-    id: messageListView
-    anchors.fill: parent
-    delegate : messageListDelegate
-    highlightFollowsCurrentItem: true
-    highlightRangeMode: "StrictlyEnforceRange"
-    preferredHighlightBegin: height/2 - currentItem.height/2
-    preferredHighlightEnd: height/2 + currentItem.height/2
-    focus: true
-    clip: true
-  }
+  ]
 }
