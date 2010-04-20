@@ -1522,7 +1522,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
       todo->setAllDay( allDay );
       todo->setHasDueDate( true );
       if ( !mChanger->addIncidence( todo, this ) ) {
-        KODialogManager::errorSaveIncidence( this, todo );
+        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
       }
     }
   }
@@ -1547,7 +1547,7 @@ void KOAgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
     if ( !mChanger->addIncidence( todo, this ) ) {
-      KODialogManager::errorSaveIncidence( this, todo );
+      Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
     }
   }
 }
