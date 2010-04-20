@@ -21,12 +21,10 @@
 import Qt 4.7
 import org.kde 4.5
 import org.kde.akonadi 4.5
-import org.kde.messageviewer 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
 
-Rectangle {
+KPIM.MainView {
   id: tasksMobile
-  height: 480
-  width: 800
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
