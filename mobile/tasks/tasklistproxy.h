@@ -21,22 +21,27 @@
 
 #include "listproxy.h"
 
-#include <akonadi/entitytreemodel.h>
-
 class TaskListProxy : public ListProxy
 {
 public:
   enum Role {
-    Summary = Akonadi::EntityTreeModel::UserRole,
+    Summary,
     Description
   };
 
 public:
-  explicit TaskListProxy( QObject* parent = 0 );
+  explicit TaskListProxy( int customRoleBaseline, QObject* parent = 0 );
 
   virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
 
   virtual void setSourceModel( QAbstractItemModel* sourceModel );
+
+private:
+  int absoluteCustomRole( int role ) const { return role + mCustomRoleBaseline; }
+  int relativeCustomRole( int role ) const { return role - mCustomRoleBaseline; }
+
+private:
+  int mCustomRoleBaseline;
 };
 
 #endif // TASKLISTPROXY_H

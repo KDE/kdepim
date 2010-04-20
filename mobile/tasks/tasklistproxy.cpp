@@ -20,9 +20,13 @@
 
 #include <kcal/incidence.h>
 
+#include <akonadi/entitytreemodel.h>
+
 using namespace Akonadi;
 
-TaskListProxy::TaskListProxy( QObject* parent ) : ListProxy( parent )
+TaskListProxy::TaskListProxy( int customRoleBaseline, QObject* parent )
+  : ListProxy( parent ),
+    mCustomRoleBaseline( customRoleBaseline )
 { }
 
 QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
@@ -31,7 +35,7 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
 
   if ( item.isValid() && item.hasPayload<KCal::Incidence::Ptr>() ) {
     const KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
-    switch ( role ) {
+    switch ( relativeCustomRole( role ) ) {
     case Summary:
       return incidence->summary();
     case Description:
@@ -48,8 +52,8 @@ void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( Summary, "summary" );
-  names.insert( Description, "description" );
+  names.insert( absoluteCustomRole( Summary ), "summary" );
+  names.insert( absoluteCustomRole( Description ), "description" );
   setRoleNames( names );
 }
 
