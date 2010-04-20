@@ -28,9 +28,10 @@
 #include "koagendaitem.h"
 #include "koprefs.h"
 #include "koglobals.h"
-#include "komessagebox.h"
 #include "kohelper.h"
 #include "korganizer/baseview.h"
+
+#include <libkdepim/pimmessagebox.h>
 
 #include <KCal/DndFactory>
 #include <KCal/ICalDrag>

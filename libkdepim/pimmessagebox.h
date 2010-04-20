@@ -24,13 +24,15 @@
 #ifndef PIMMESSAGEBOX_H
 #define PIMMESSAGEBOX_H
 
+#include "kdepim_export.h"
+
 #include <kguiitem.h>
 #include <KStandardGuiItem>
 #include <kmessagebox.h>
 #include <QMessageBox>
 #include <QString>
 
-class PIMMessageBox
+class KDEPIM_EXPORT PIMMessageBox
 {
   public:
     static int fourBtnMsgBox( QWidget *parent, QMessageBox::Icon type,
