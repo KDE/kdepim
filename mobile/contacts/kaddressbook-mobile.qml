@@ -77,8 +77,8 @@ KPIM.MainView {
             onItemSelected: {
               // Prevent reloading of the message, perhaps this should be done
               // in messageview itself.
-              if ( messageView.messageItemId != contactList.currentMessage )
-                messageView.messageItemId = contactList.currentMessage;
+              if ( messageView.messageItemId != contactList.currentItemId )
+                messageView.messageItemId = contactList.currentItemId;
               folderPanel.collapse()
             }
           }

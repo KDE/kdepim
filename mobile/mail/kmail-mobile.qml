@@ -41,13 +41,13 @@ KPIM.MainView {
     onNextMessageRequest: {
       // Only go to the next message when currently a valid item is set.
       if ( messageView.messageItemId >= 0 )
-        headerList.nextMessage();
+        headerList.nextItem();
     }
 
     onPreviousMessageRequest: {
       // Only go to the previous message when currently a valid item is set.
       if ( messageView.messageItemId >= 0 )
-        headerList.previousMessage();
+        headerList.previousItem();
     }
   }
 
@@ -104,11 +104,11 @@ KPIM.MainView {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: collectionView.right
-            onMessageSelected: {
+            onItemSelected: {
               // Prevent reloading of the message, perhaps this should be done
               // in messageview itself.
-              if ( messageView.messageItemId != headerList.currentMessage )
-                messageView.messageItemId = headerList.currentMessage;
+              if ( messageView.messageItemId != headerList.currentItemId )
+                messageView.messageItemId = headerList.currentItemId;
               folderPanel.collapse()
             }
           }
@@ -201,7 +201,7 @@ KPIM.MainView {
             buttonText: "Previous"
             onClicked: {
               if ( messageView.messageItemId >= 0 )
-                headerList.previousMessage();
+                headerList.previousItem();
 
               actionPanel.collapse();
             }
@@ -214,7 +214,7 @@ KPIM.MainView {
             buttonText: "Next"
             onClicked: {
               if ( messageView.messageItemId >= 0 )
-                headerList.nextMessage();
+                headerList.nextItem();
 
               actionPanel.collapse();
             }
