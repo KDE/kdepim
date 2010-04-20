@@ -74,16 +74,20 @@ Item {
         }
       }
 
-      Row {
-        anchors.fill: background
-        Image {
-          pixmap: model.picture
-        }
-        Text {
-          text: model.name
-        }
+      Image {
+        anchors.left: wrapper.left
+        anchors.top: wrapper.top
+        anchors.margins: 4
+        pixmap: model.picture
+        scale: (wrapper.height - 2 * anchors.margins) / Math.max( width, height )
+        transformOrigin: "TopLeft"
       }
-
+      Text {
+        anchors.top: wrapper.top
+        anchors.margins: 4
+        x: wrapper.height + anchors.margins
+        text: model.name
+      }
     }
   }
 

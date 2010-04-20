@@ -21,6 +21,7 @@
 #include "contactlistproxy.h"
 #include <kabc/addressee.h>
 #include <QPixmap>
+#include <KIconLoader>
 
 ContactListProxy::ContactListProxy(QObject* parent) : ListProxy( parent )
 {
@@ -35,6 +36,8 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
       case NameRole:
         return addressee.name();
       case PictureRole:
+        if ( addressee.photo().isEmpty() )
+          return KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge );
         return QPixmap::fromImage( addressee.photo().data() );
     }
   }
