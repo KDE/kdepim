@@ -33,7 +33,7 @@ Item {
   signal messageSelected
 
   SystemPalette { id: palette; colorGroup: "Active" }
-  
+
   function nextMessage() {
     if ( currentIndex < (model.itemCount - 1) ) {
       currentIndex = currentIndex + 1;
@@ -41,7 +41,7 @@ Item {
       headerViewTopLevel.messageSelected();
     }
   }
-  
+
   function previousMessage() {
     if ( currentIndex > 0  ) {
       currentIndex = currentIndex - 1;
@@ -49,7 +49,7 @@ Item {
       headerViewTopLevel.messageSelected();
     }
   }
-  
+
   Component {
     id: messageListDelegate
 
