@@ -1032,7 +1032,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
   item->setItemDate( startDt.toTimeSpec( KOPrefs::instance()->timeSpec() ).date() );
 
   const bool result = mChanger->changeIncidence( oldIncidence, aitem,
-                                                 IncidenceChangerBase::DATE_MODIFIED, this );
+                                                 Akonadi::IncidenceChanger::DATE_MODIFIED, this );
   mChanger->endChange( aitem );
 
   // Update the view correctly if an agenda item move was aborted by
@@ -1062,7 +1062,7 @@ void KOAgendaView::updateEventDates( KOAgendaItem *item )
 void KOAgendaView::doUpdateItem()
 {
   if ( Akonadi::hasIncidence( mUpdateItem ) ) {
-    changeIncidenceDisplay( mUpdateItem, IncidenceChangerBase::INCIDENCEEDITED );
+    changeIncidenceDisplay( mUpdateItem, Akonadi::IncidenceChanger::INCIDENCEEDITED );
     mUpdateItem = Item();
   }
 }
@@ -1267,7 +1267,7 @@ void KOAgendaView::changeIncidenceDisplayAdded( const Item &aitem )
 void KOAgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
 {
   switch ( mode ) {
-    case IncidenceChangerBase::INCIDENCEADDED:
+    case Akonadi::IncidenceChanger::INCIDENCEADDED:
     {
       // Add an event. No need to recreate the whole view!
       // recreating everything even causes troubles: dropping to the
@@ -1278,7 +1278,7 @@ void KOAgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
       updateEventIndicators();
       break;
     }
-    case IncidenceChangerBase::INCIDENCEEDITED:
+    case Akonadi::IncidenceChanger::INCIDENCEEDITED:
     {
       if ( mAllowAgendaUpdate ) {
         //PENDING(AKONADI_PORT) try harder not to recreate the items here, this causes flicker with the delayed notification from Akonadi, after a dnd operation
@@ -1288,7 +1288,7 @@ void KOAgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
       updateEventIndicators();
       break;
     }
-    case IncidenceChangerBase::INCIDENCEDELETED:
+    case Akonadi::IncidenceChanger::INCIDENCEDELETED:
     {
       mAgenda->removeIncidence( aitem );
       mAllDayAgenda->removeIncidence( aitem );
@@ -1510,7 +1510,7 @@ void KOAgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpo
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
-        mChanger->changeIncidence( oldTodo, existingTodoItem, IncidenceChangerBase::DATE_MODIFIED, this );
+        mChanger->changeIncidence( oldTodo, existingTodoItem, Akonadi::IncidenceChanger::DATE_MODIFIED, this );
         mChanger->endChange( existingTodoItem );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
@@ -1675,7 +1675,7 @@ void KOAgendaView::updateEventIndicators()
   updateEventIndicatorBottom( mAgenda->visibleContentsYMax() );
 }
 
-void KOAgendaView::setIncidenceChanger( IncidenceChangerBase *changer )
+void KOAgendaView::setIncidenceChanger( Akonadi::IncidenceChanger *changer )
 {
   mChanger = changer;
   mAgenda->setIncidenceChanger( changer );

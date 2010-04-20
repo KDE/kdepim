@@ -53,9 +53,6 @@ namespace Akonadi
   class Calendar;
 }
 
-namespace KOrg {
-  class IncidenceChangerBase;
-}
 using namespace KOrg;
 
 namespace KCal {
@@ -159,7 +156,7 @@ class KOAgenda : public Q3ScrollView
 
     void setCalendar( Akonadi::Calendar *cal )
     { mCalendar = cal; }
-    void setIncidenceChanger( IncidenceChangerBase *changer )
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer )
     { mChanger = changer; }
 
     QList<KOAgendaItem*> agendaItems( const Akonadi::Item &item ) const;
@@ -411,7 +408,7 @@ class KOAgenda : public Q3ScrollView
     int mOldUpperScrollValue;
 
     bool mReturnPressed;
-    KOrg::IncidenceChangerBase *mChanger;
+    Akonadi::IncidenceChanger *mChanger;
 
     KOEventView *mEventView;
 };

@@ -64,7 +64,6 @@ namespace KOrg {
     class Decoration;
   }
 #endif
-  class IncidenceChangerBase;
 }
 using namespace KOrg;
 
@@ -179,7 +178,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( IncidenceChangerBase *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     void zoomInHorizontally( const QDate &date=QDate() );
     void zoomOutHorizontally( const QDate &date=QDate() );
