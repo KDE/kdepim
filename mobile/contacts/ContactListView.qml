@@ -40,6 +40,22 @@ KPIM.ItemListView {
           text: model.name
         }
       ]
+      detailsContent: [
+        Qt.Image {
+          anchors.left: parent.left
+          anchors.top: parent.top
+          anchors.margins: 4
+          pixmap: model.picture
+          scale: (parent.height - 2 * anchors.margins) / Math.max( width, height )
+          transformOrigin: "TopLeft"
+        },
+        Qt.Text {
+          anchors.top: parent.top
+          anchors.margins: 4
+          x: parent.height + anchors.margins
+          text: model.name
+        }
+      ]
     }
   ]
 }

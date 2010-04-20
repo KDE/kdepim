@@ -19,15 +19,20 @@
 
 import Qt 4.7
 
+/** Delegate base class for use in ItemListView */
 Item {
   id: itemViewTopLevel
+  /// content in summary mode
   property alias summaryContent: itemSummary.data
-  property alias summaryContentHeight: itemSummary.height
-  property alias detailsContent: itemDetailsContent.data
-  property alias detailsContentHeight: itemDetailsContent.height
+  /// height of an item in summary mode
+  property int summaryContentHeight: 32
+  /// content in details mode
+  property alias detailsContent: itemDetails.data
+  /// height of an item in detail mode
+  property int detailsContentHeight: 100
 
   width: itemListView.width
-  height: 32
+  height: summaryContentHeight
   clip: true
 
   SystemPalette { id: palette; colorGroup: "Active" }
@@ -43,35 +48,23 @@ Item {
   MouseArea {
     anchors.fill: parent
     onClicked: {
-//      var nonCurrentClicked = false
-//      if ( itemViewTopLevel.currentIndex == model.index ) { nonCurrentClicked = true }
       itemViewTopLevel.ListView.view.currentIndex = model.index
-//      itemViewTopLevel.ListView.view.currentItemId = model.itemId
-//      currentIdemIdChanged( model.itemId )
-//      if ( nonCurrentClicked ) { itemViewTopLevel.itemSelected() }
     }
   }
 
-  Column {
+  Item {
     anchors.fill: background
-    anchors.top: background.top
-    anchors.left: background.left
-    anchors.leftMargin: 5
-    anchors.topMargin: 5
-    spacing: 10
+    anchors.margins: 4
 
     Item {
       id: itemSummary
-      height: 12
+      anchors.fill: parent
     }
 
     Item {
       id: itemDetails
-      anchors.top: itemSummary.bottom
+      anchors.fill: parent
       opacity: 0
-      Item {
-        id: itemDetailsContent
-      }
     }
   }
 
@@ -79,7 +72,7 @@ Item {
     State {
       name: "currentState"
       when: itemViewTopLevel.ListView.isCurrentItem
-      PropertyChanges { target: itemViewTopLevel; height: 100 }
+      PropertyChanges { target: itemViewTopLevel; height: detailsContentHeight }
       PropertyChanges { target: itemDetails; opacity: 1 }
       PropertyChanges { target: background; color: palette.highlight; opacity: 1.0 }
     }
