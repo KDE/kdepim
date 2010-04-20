@@ -9,7 +9,6 @@ include_directories(
 )
 
 set(kmail_mobile_srcs
-  breadcrumbnavigation.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
