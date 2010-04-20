@@ -35,8 +35,6 @@ target_link_libraries(tasks-mobile
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
-  ItemListViewDelegate.qml
-  ItemListView.qml
   tasks.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
 )

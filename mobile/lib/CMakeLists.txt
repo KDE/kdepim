@@ -19,6 +19,8 @@ install(TARGETS mobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
   Button.qml
+  ItemListView.qml
+  ItemListViewDelegate.qml
   MainView.qml
   WindowBar.qml
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)

@@ -20,12 +20,12 @@
 import Qt 4.7
 
 Item {
+  id: itemViewTopLevel
   property alias summaryContent: itemSummary.data
   property alias summaryContentHeight: itemSummary.height
   property alias detailsContent: itemDetailsContent.data
   property alias detailsContentHeight: itemDetailsContent.height
 
-  id: wrapper
   width: itemListView.width
   height: 32
   clip: true
@@ -41,11 +41,12 @@ Item {
   MouseArea {
     anchors.fill: parent
     onClicked: {
-      var nonCurrentClicked = false
-      if ( itemViewTopLevel.currentIndex == model.index ) { nonCurrentClicked = true }
-      wrapper.ListView.view.currentIndex = model.index
-      itemViewTopLevel.currentItemId = model.itemId
-      if ( nonCurrentClicked ) { itemViewTopLevel.itemSelected() }
+//      var nonCurrentClicked = false
+//      if ( itemViewTopLevel.currentIndex == model.index ) { nonCurrentClicked = true }
+      itemViewTopLevel.ListView.view.currentIndex = model.index
+//      itemViewTopLevel.ListView.view.currentItemId = model.itemId
+//      currentIdemIdChanged( model.itemId )
+//      if ( nonCurrentClicked ) { itemViewTopLevel.itemSelected() }
     }
   }
 
@@ -75,8 +76,8 @@ Item {
   states: [
     State {
       name: "currentState"
-      when: wrapper.ListView.isCurrentItem
-      PropertyChanges { target: wrapper; height: 100 }
+      when: itemViewTopLevel.ListView.isCurrentItem
+      PropertyChanges { target: itemViewTopLevel; height: 100 }
       PropertyChanges { target: itemDetails; opacity: 1 }
       PropertyChanges { target: background; color: palette.highlight; opacity: 1.0 }
     }
