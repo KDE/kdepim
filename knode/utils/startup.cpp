@@ -46,6 +46,9 @@ void Startup::loadLibrariesIconsAndTranslations() const
 
   KGlobal::locale()->insertCatalog( "libkdepim" );
   KGlobal::locale()->insertCatalog( "libkpgp" );
+  KGlobal::locale()->insertCatalog( "libmessagecomposer" );
+  KGlobal::locale()->insertCatalog( "libmessageviewer" );
+
 }
 
 
