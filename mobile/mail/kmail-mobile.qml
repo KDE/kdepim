@@ -118,7 +118,7 @@ KPIM.MainView {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: collectionView.right
-            Button {
+            KPIM.Button {
               id : newEmailButton
               anchors.top : parent.top
               anchors.left : parent.left
@@ -129,7 +129,7 @@ KPIM.MainView {
                 console.log("Write new");
               }
             }
-            Button {
+            KPIM.Button {
               id : searchEmailButton
               anchors.top : newEmailButton.bottom
               anchors.left : parent.left
@@ -140,7 +140,7 @@ KPIM.MainView {
                 console.log("Search email");
               }
             }
-            Button {
+            KPIM.Button {
               anchors.top : searchEmailButton.bottom
               anchors.left : parent.left
               anchors.right : parent.right
@@ -172,7 +172,7 @@ KPIM.MainView {
             style: Text.Sunken
             anchors.horizontalCenter: parent.horizontalCenter
           },
-          Button {
+          KPIM.Button {
             id: moveButton
             anchors.top: actionLabel.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
@@ -181,7 +181,7 @@ KPIM.MainView {
             buttonText: "Move"
             onClicked: actionPanel.collapse();
           },
-          Button {
+          KPIM.Button {
             id: deleteButton
             anchors.top: moveButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
@@ -190,7 +190,7 @@ KPIM.MainView {
             buttonText: "Delete"
             onClicked: actionPanel.collapse();
           },
-          Button {
+          KPIM.Button {
             id: previousButton
             anchors.top: deleteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
@@ -204,7 +204,7 @@ KPIM.MainView {
               actionPanel.collapse();
             }
           },
-          Button {
+          KPIM.Button {
             anchors.top: previousButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10

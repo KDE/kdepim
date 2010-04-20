@@ -20,6 +20,7 @@
 */
 
 import Qt 4.7
+import org.kde.pim.mobileui 4.5
 
 Rectangle {
   id : _topContext

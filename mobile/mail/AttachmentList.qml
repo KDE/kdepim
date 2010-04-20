@@ -19,6 +19,7 @@
 
 import Qt 4.7
 import org.kde 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
 
 /**
  * Shows a list view of the specified attachment model of a MessageView component.
@@ -104,7 +105,7 @@ Item {
     anchors.right: parent.right
     anchors.bottom: parent.bottom
 
-    Button {
+    KPIM.Button {
       id: openButton
       anchors.top: parent.top
       anchors.horizontalCenter: parent.horizontalCenter;
@@ -112,7 +113,7 @@ Item {
       height: parent.height / 6
       buttonText: "Open"
     }
-    Button {
+    KPIM.Button {
       id: saveButton
       anchors.top: openButton.bottom;
       anchors.horizontalCenter: parent.horizontalCenter;
@@ -143,7 +144,7 @@ Item {
       }
     }
 
-    Button {
+    KPIM.Button {
       id: previewSaveButton
       anchors.bottom: parent.bottom
       anchors.right: parent.right
