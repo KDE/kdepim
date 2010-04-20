@@ -22,6 +22,7 @@ import Qt 4.7
 import org.kde 4.5
 import org.kde.akonadi 4.5
 import org.kde.messageviewer 4.5
+import org.kde.pim.mobileui 4.5
 
 Rectangle {
   id: kmailMobile
@@ -61,6 +62,7 @@ Rectangle {
       anchors.fill: parent
       id: startPanel
       titleIcon: KDE.iconPath( "kmail", 48 )
+      handlePosition: 30
       handleHeight: 78
       content: [
         StartCanvas {
@@ -75,7 +77,7 @@ Rectangle {
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
-      handlePosition: startPanel.handleHeight
+      handlePosition: startPanel.handlePosition + startPanel.handleHeight
       content: [
         Item {
           anchors.fill: parent
@@ -226,7 +228,7 @@ Rectangle {
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: attachmentView.requestedWidth
       content: [
         AttachmentList {
@@ -236,6 +238,11 @@ Rectangle {
         }
       ]
     }
+  }
+
+  WindowBar {
+    anchors.top: parent.top
+    anchors.left: parent.left
   }
 
   Connections {
@@ -255,4 +262,5 @@ Rectangle {
     target: collectionView
     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow(row); }
   }
+
 }

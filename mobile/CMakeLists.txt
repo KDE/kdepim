@@ -1,4 +1,5 @@
 add_subdirectory(lib)
+add_subdirectory(pics)
 
 include_directories(lib)
 

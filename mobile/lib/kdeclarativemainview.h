@@ -66,12 +66,12 @@ public slots:
   /** Returns wheter or not the child collection at row @param row has children. */
   bool childCollectionHasChildren( int row );
 
+  /** Triggers de-fullscreen/task switcher */
+  void triggerTaskSwitcher();
+
 private:
   KDeclarativeMainViewPrivate * const d;
-
-  /// Disable copying
-  KDeclarativeMainView( const KDeclarativeMainView &other );
-  KDeclarativeMainView &operator=( const KDeclarativeMainView &other );
+  Q_DISABLE_COPY( KDeclarativeMainView )
 };
 
 #endif // KDECLARATIVEMAINVIEW_H

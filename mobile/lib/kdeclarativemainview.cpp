@@ -24,6 +24,8 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QApplication>
+#include <QtDBus/qdbusconnection.h>
+#include <QtDBus/qdbusmessage.h>
 
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
@@ -199,3 +201,11 @@ void KDeclarativeMainView::setSelectedAccount( int row )
   d->mCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
 }
 
+void KDeclarativeMainView::triggerTaskSwitcher()
+{
+#ifdef Q_WS_MAEMO_5
+  QDBusConnection::sessionBus().call( QDBusMessage::createSignal( QLatin1String( "/" ), QLatin1String( "com.nokia.hildon_desktop" ), QLatin1String( "exit_app_view" ) ), QDBus::NoBlock );
+#else
+  kDebug() << "not implemented for this platform";
+#endif
+}
