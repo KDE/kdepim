@@ -66,6 +66,7 @@ KPIM.MainView {
         StartCanvas {
           id : startPage
           anchors.fill : parent
+          anchors.leftMargin : 50
         }
       ]
     }
@@ -113,6 +114,7 @@ KPIM.MainView {
           }
           Rectangle {
             id : headerActionOverlay
+            color: "#00000000" // Set a transparant color.
             opacity : { headerList.count > 0 ? 0 : 1; }
             anchors.top: parent.top
             anchors.bottom: parent.bottom

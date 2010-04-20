@@ -24,10 +24,12 @@ import org.kde.pim.mobileui 4.5
 
 Rectangle {
   id : _topContext
+  color: "#00000000" // Set a transparant color.
 
   signal accountSelected( int row )
 
   Rectangle {
+    color: "#00000000" // Set a transparant color.
     anchors.top : parent.top
     anchors.bottom : parent.bottom
     anchors.left : parent.left
@@ -35,6 +37,7 @@ Rectangle {
     width : _topContext.width / 3
     Rectangle {
       id : startLabel
+      color: "#00000000" // Set a transparant color.
       anchors.top : parent.top
       anchors.left : parent.left
       anchors.right : parent.right
@@ -67,6 +70,7 @@ Rectangle {
     }
   }
   Rectangle {
+    color: "#00000000" // Set a transparant color.
     anchors.top : parent.top
     anchors.left : startColumn.right
     anchors.right : parent.right
