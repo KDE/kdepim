@@ -38,7 +38,7 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
   if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
-    const KMime::Message::Ptr note = item.payload<KCal::Incidence::Ptr>();
+    const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
     switch ( relativeCustomRole( role ) ) {
     case Title:
       note->subject()->asUnicodeString();
