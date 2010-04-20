@@ -35,16 +35,16 @@ KPIM.MainView {
     height: parent.height
 
 //     z: 0
-//     
+//
 //     messageItemId: -1
 //     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
-//     
+//
 //     onNextMessageRequest: {
 //       // Only go to the next message when currently a valid item is set.
 //       if ( messageView.messageItemId >= 0 )
 //         headerList.nextMessage();
 //     }
-//     
+//
 //     onPreviousMessageRequest: {
 //       // Only go to the previous message when currently a valid item is set.
 //       if ( messageView.messageItemId >= 0 )
@@ -203,10 +203,10 @@ KPIM.MainView {
 //         ListView {
 //           id: attachmentList
 //           anchors.fill: parent
-//           
+//
 //           model: messageView.messageTreeModel
 //           delegate: attachmentDelegate
-// 
+//
 //           MouseArea {
 //             anchors.fill: parent
 //             onClicked: {
