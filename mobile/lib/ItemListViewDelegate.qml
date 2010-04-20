@@ -88,7 +88,6 @@ Item {
       NumberAnimation { target: itemDetails; property: "opacity"; duration: 200 }
       ColorAnimation { target: itemDetails; property: "color"; duration: 200 }
       ColorAnimation { target: background; property: "color"; duration: 200 }
-      ColorAnimation { target: itemDescription; property: "color"; duration: 200 }
     }
   ]
 }

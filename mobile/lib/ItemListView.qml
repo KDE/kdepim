@@ -33,7 +33,7 @@ Item {
     if ( currentIndex < (model.itemCount - 1) ) {
       currentIndex = currentIndex + 1;
       currentItemId = model.itemId( currentIndex );
-      headerViewTopLevel.messageSelected();
+      itemSelected();
     }
   }
 
@@ -41,7 +41,7 @@ Item {
     if ( currentIndex > 0  ) {
       currentIndex = currentIndex - 1;
       currentItemId = model.itemId( currentIndex );
-      headerViewTopLevel.messageSelected();
+      itemSelected();
     }
   }
 

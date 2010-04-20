@@ -80,7 +80,7 @@ KPIM.MainView {
            }
 
            KPIM.ItemListView {
-             id: headerList
+             id: itemList
              delegate: [
                KPIM.ItemListViewDelegate {
                  summaryContent: [
@@ -106,8 +106,8 @@ KPIM.MainView {
              onItemSelected: {
                // Prevent reloading of the message, perhaps this should be done
                // in messageview itself.
-               if ( messageView.messageItemId != headerList.currentMessage )
-                 messageView.messageItemId = headerList.currentMessage;
+//               if ( messageView.messageItemId != headerList.currentMessage )
+//                 messageView.messageItemId = headerList.currentMessage;
                folderPanel.collapse()
              }
            }
@@ -126,52 +126,54 @@ KPIM.MainView {
             text: "Actions"
             style: Text.Sunken
             anchors.horizontalCenter: parent.horizontalCenter
-          }
-//           Button {
-//             id: moveButton
-//             anchors.top: actionLabel.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Move"
-//             onClicked: actionPanel.collapse();
-//           },
-//           Button {
-//             id: deleteButton
-//             anchors.top: moveButton.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Delete"
-//             onClicked: actionPanel.collapse();
-//           },
-//           Button {
-//             id: previousButton
-//             anchors.top: deleteButton.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Previous"
-//             onClicked: { 
-// //               if ( messageView.messageItemId >= 0 )
-// //                 headerList.previousMessage();
-// 
-//               actionPanel.collapse();
-//             }
-//           },
-//           Button {
-//             anchors.top: previousButton.bottom;
-//             anchors.horizontalCenter: parent.horizontalCenter;
-//             width: parent.width - 10
-//             height: parent.height / 6
-//             buttonText: "Next"
-//             onClicked: {
-// //               if ( messageView.messageItemId >= 0 )
-// //                 headerList.nextMessage();
-// 
-//               actionPanel.collapse();
-//             }
-//           }
+          },
+          KPIM.Button {
+            id: moveButton
+            anchors.top: actionLabel.bottom;
+            anchors.horizontalCenter: parent.horizontalCenter;
+            width: parent.width - 10
+            height: parent.height / 6
+            buttonText: "Move"
+            onClicked: actionPanel.collapse();
+          },
+          KPIM.Button {
+             id: deleteButton
+             anchors.top: moveButton.bottom;
+             anchors.horizontalCenter: parent.horizontalCenter;
+             width: parent.width - 10
+             height: parent.height / 6
+             buttonText: "Delete"
+             onClicked: actionPanel.collapse();
+           },
+           KPIM.Button {
+             id: previousButton
+             anchors.top: deleteButton.bottom;
+             anchors.horizontalCenter: parent.horizontalCenter;
+             width: parent.width - 10
+             height: parent.height / 6
+             buttonText: "Previous"
+             onClicked: {
+               if ( itemList.currentIndex > 0 ) { // if ( messageView.messageItemId >= 0 )
+                 console.log( itemList )
+                 itemList.previousItem()
+               }
+               actionPanel.collapse()
+             }
+           },
+           KPIM.Button {
+             anchors.top: previousButton.bottom;
+             anchors.horizontalCenter: parent.horizontalCenter;
+             width: parent.width - 10
+             height: parent.height / 6
+             buttonText: "Next"
+             onClicked: {
+               console.log(  )
+               if ( itemList.currentIndex < itemModel.itemCount )
+                  itemList.nextItem();
+
+               actionPanel.collapse();
+             }
+           }
       ]
     }
 
