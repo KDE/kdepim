@@ -41,7 +41,7 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
     const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
     switch ( relativeCustomRole( role ) ) {
     case Title:
-      note->subject()->asUnicodeString();
+      return note->subject()->asUnicodeString();
     case Content:
       return note->mainBodyPart()->decodedText();
     }
