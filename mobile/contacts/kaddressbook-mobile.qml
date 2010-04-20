@@ -64,12 +64,9 @@ KPIM.MainView {
             breadcrumbItemsModel : breadcrumbCollectionsModel
             selectedItemModel : selectedCollectionModel
             childItemsModel : childCollectionsModel
-            onCollectionSelected: {
-              //folderPanel.collapse()
-            }
           }
 
-          /*HeaderView {
+          ContactListView {
             id: headerList
             opacity : { headerList.count > 0 ? 1 : 0; }
             model: itemModel
@@ -84,15 +81,15 @@ KPIM.MainView {
                 messageView.messageItemId = headerList.currentMessage;
               folderPanel.collapse()
             }
-          }*/
-          /*Rectangle {
+          }
+          Rectangle {
             id : headerActionOverlay
             opacity : { headerList.count > 0 ? 0 : 1; }
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.left: collectionView.right
-            Button {
+            KPIM.Button {
               id : newEmailButton
               anchors.top : parent.top
               anchors.left : parent.left
@@ -103,7 +100,7 @@ KPIM.MainView {
                 console.log("Write new");
               }
             }
-            Button {
+            KPIM.Button {
               id : searchEmailButton
               anchors.top : newEmailButton.bottom
               anchors.left : parent.left
@@ -114,7 +111,7 @@ KPIM.MainView {
                 console.log("Search email");
               }
             }
-            Button {
+            KPIM.Button {
               anchors.top : searchEmailButton.bottom
               anchors.left : parent.left
               anchors.right : parent.right
@@ -124,7 +121,7 @@ KPIM.MainView {
                 console.log("Configure");
               }
             }
-          }*/
+          }
         }
       ]
     }
@@ -140,13 +137,13 @@ KPIM.MainView {
       handleHeight: 150
       contentWidth: 240
       content: [
-          /*Text {
+          Text {
             id: actionLabel
             text: "Actions"
             style: Text.Sunken
             anchors.horizontalCenter: parent.horizontalCenter
           },
-          Button {
+          KPIM.Button {
             id: moveButton
             anchors.top: actionLabel.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
@@ -155,7 +152,7 @@ KPIM.MainView {
             buttonText: "Move"
             onClicked: actionPanel.collapse();
           },
-          Button {
+          KPIM.Button {
             id: deleteButton
             anchors.top: moveButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
@@ -164,7 +161,7 @@ KPIM.MainView {
             buttonText: "Delete"
             onClicked: actionPanel.collapse();
           },
-          Button {
+          KPIM.Button {
             id: previousButton
             anchors.top: deleteButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
@@ -178,7 +175,7 @@ KPIM.MainView {
               actionPanel.collapse();
             }
           },
-          Button {
+          KPIM.Button {
             anchors.top: previousButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
@@ -190,24 +187,7 @@ KPIM.MainView {
 
               actionPanel.collapse();
             }
-          }*/
-      ]
-    }
-
-    SlideoutPanel {
-      anchors.fill: parent
-      handlePosition: actionPanel.handlePosition + actionPanel.handleHeight
-      id: attachmentPanel
-      visible: messageView.attachmentModel.attachmentCount >= 1
-      titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
-      contentWidth: attachmentView.requestedWidth
-      content: [
-        /*AttachmentList {
-          id: attachmentView
-          model: messageView.attachmentModel
-          anchors.fill: parent
-        }*/
+          }
       ]
     }
   }

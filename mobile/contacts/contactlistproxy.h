@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,16 +18,27 @@
     02110-1301, USA.
 */
 
-#include "mainview.h"
-#include "contactlistproxy.h"
+#ifndef CONTACTLISTPROXY_H
+#define CONTACTLISTPROXY_H
 
-#include <QtDeclarative/QDeclarativeEngine>
+#include "listproxy.h"
 
-#include <kabc/addressee.h>
+#include <akonadi/entitytreemodel.h>
 
-MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
+/** Adaptor proxy for contact access from QML. */
+class ContactListProxy : public ListProxy
 {
-  setMimeType( KABC::Addressee::mimeType() );
-}
+  Q_OBJECT
+  public:
+    enum Role {
+      NameRole = Akonadi::EntityTreeModel::UserRole + 1,
+      PictureRole
+    };
 
-#include "mainview.moc"
+    explicit ContactListProxy( QObject* parent = 0 );
+
+    QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
+    void setSourceModel(QAbstractItemModel* sourceModel);
+};
+
+#endif

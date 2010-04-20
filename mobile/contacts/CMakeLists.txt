@@ -9,6 +9,7 @@ include_directories(
 set(kab_mobile_srcs
   mainview.cpp
   main.cpp
+  contactlistproxy.cpp
 )
 
 kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
@@ -26,5 +27,6 @@ target_link_libraries(kaddressbook-mobile
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   kaddressbook-mobile.qml
+  ContactListView.qml
   DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
 )
