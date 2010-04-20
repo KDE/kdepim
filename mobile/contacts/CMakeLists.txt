@@ -1,0 +1,30 @@
+project( kaddressbook-mobile )
+
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+
+include_directories(
+  ${CMAKE_SOURCE_DIR}/akonadi/
+)
+
+set(kab_mobile_srcs
+  mainview.cpp
+  main.cpp
+)
+
+kde4_add_executable(kaddressbook-mobile ${kab_mobile_srcs} )
+
+target_link_libraries(kaddressbook-mobile
+    ${QT_QTDECLARATIVE_LIBRARY}
+    ${KDEPIMLIBS_AKONADI_CONTACTS_LIBRARY}
+    ${KDEPIMLIBS_KABC_LIBRARY}
+    ${KDEPIMLIBS_AKONADI_LIBRARY}
+    akonadi_next
+    kdepim
+    mobileui
+)
+
+install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES
+  kaddressbook-mobile.qml
+  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook-mobile
+)
