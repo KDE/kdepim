@@ -45,16 +45,10 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   : QDeclarativeView( parent )
   , d( new KDeclarativeMainViewPrivate )
 {
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
-    engine()->addImportPath( importPath );
-
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #ifdef Q_WS_MAEMO_5
   setWindowState( Qt::WindowFullScreen );
 #endif
-
-  const QString qmlPath = KStandardDirs::locate( "appdata", appName + ".qml" );
-  setSource( qmlPath );
 
   d->mChangeRecorder = new Akonadi::ChangeRecorder( this );
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
@@ -132,6 +126,12 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
   d->restoreState();
+
+  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
+    engine()->addImportPath( importPath );
+
+  const QString qmlPath = KStandardDirs::locate( "appdata", appName + ".qml" );
+  setSource( qmlPath );
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()
