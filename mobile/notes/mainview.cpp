@@ -30,9 +30,73 @@
 #include <akonadi/entitytreemodel.h>
 
 #include "notelistproxy.h"
+#include <QDeclarativeContext>
+#include <KMime/KMimeMessage>
 
+using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
   setMimeType( "text/x-vnd.akonadi.note" );
 }
+
+QString MainView::noteTitle(Entity::Id id)
+{
+  if ( id < 0 )
+    return QString();
+
+  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel").value<QObject *>();
+  QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
+  kDebug() << itemModel << itemModelObject;
+  if ( !itemModel )
+    return QString();
+
+  QModelIndexList indexList = itemModel->match(itemModel->index(0, 0), EntityTreeModel::ItemRole, QVariant::fromValue( Item( id ) ), 1, Qt::MatchRecursive );
+  kDebug() << indexList;
+  if ( indexList.isEmpty() )
+    return QString();
+
+  Item item = indexList.first().data( EntityTreeModel::ItemRole ).value<Item>();
+
+  kDebug() << item.id();
+  if ( !item.isValid() )
+    return QString();
+
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+   return QString();
+
+  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+
+  return note->subject()->asUnicodeString();
+}
+
+QString MainView::noteContent(Entity::Id id)
+{
+  if ( id < 0 )
+    return QString();
+
+  QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel").value<QObject *>();
+  QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
+  if ( !itemModel )
+    return QString();
+
+  QModelIndexList indexList = itemModel->match(itemModel->index(0, 0), EntityTreeModel::ItemRole, QVariant::fromValue( Item( id ) ), 1, Qt::MatchRecursive );
+  kDebug() << indexList;
+  if ( indexList.isEmpty() )
+    return QString();
+
+  Item item = indexList.first().data( EntityTreeModel::ItemRole ).value<Item>();
+
+  kDebug() << item.id();
+  if ( !item.isValid() )
+    return QString();
+
+  if ( !item.hasPayload<KMime::Message::Ptr>() )
+   return QString();
+
+  KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+
+  // TODO: Rich mimetype.
+  return note->mainBodyPart()->decodedText();
+}
+

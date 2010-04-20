@@ -24,10 +24,17 @@
 
 #include "kdeclarativemainview.h"
 
+#include <akonadi/entity.h>
+
 class MainView : public KDeclarativeMainView
 {
 public:
     explicit MainView( QWidget *parent = 0 );
+
+public slots:
+    QString noteTitle( qint64 id );
+    QString noteContent( qint64 id );
+
 };
 
 #endif // MAINVIEW_H

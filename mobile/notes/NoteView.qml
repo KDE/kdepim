@@ -24,8 +24,13 @@ import Qt 4.7
 Rectangle {
   id : _topContext
   color: "#00000000" // Set a transparant color.
-  property int noteId
+  property int noteId : -1
   anchors.fill : parent
+
+  onNoteIdChanged : {
+    titleInput.text = application.noteTitle( noteId );
+    contentEdit.text = application.noteContent( noteId );
+  }
 
   Rectangle {
     border.color : "blue"
