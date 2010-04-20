@@ -19,19 +19,21 @@
 */
 
 #include "mainview.h"
-#include "messagelistproxy.h"
 
-#include <KMime/Message>
-
-#include "kdebug.h"
+#include <KDE/KDebug>
+#include <KDE/KProcess>
 #include <kselectionproxymodel.h>
 
-#include <KProcess>
+#include <KMime/Message>
+#include <akonadi/kmime/messageparts.h>
+
+#include "messagelistproxy.h"
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
   setMimeType( KMime::Message::mimeType() );
+  setListPayloadPart( Akonadi::MessagePart::Header );
 }
 
 void MainView::launchAccountWizard()
@@ -42,7 +44,7 @@ void MainView::launchAccountWizard()
   if ( !pid )
   {
     // Handle error
-    qDebug() << "error creating accountwizard";
+    kDebug() << "error creating accountwizard";
   }
 }
 
