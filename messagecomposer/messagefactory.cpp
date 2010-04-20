@@ -266,7 +266,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
 
   if( m_origMsg->hasHeader( QLatin1String("X-KMail-EncryptActionEnabled").latin1() ) &&
         m_origMsg->headerByType( QLatin1String("X-KMail-EncryptActionEnabled").latin1() )->as7BitString() == "true" ) {
-    msg->setHeader( new KMime::Headers::Generic( "X-KMail-EncryptActionEnabled", msg.get(), QLatin1String("true"), QLatin1String("utf-8" ) ) );
+    msg->setHeader( new KMime::Headers::Generic( "X-KMail-EncryptActionEnabled", msg.get(), QLatin1String("true"), "utf-8" ) );
   }
 
   MessageReply reply;
