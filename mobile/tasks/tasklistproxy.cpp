@@ -51,7 +51,5 @@ void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
   names.insert( Summary, "summary" );
   names.insert( Description, "description" );
   setRoleNames( names );
-
-  kDebug() << names << sourceModel->roleNames();
 }
 
