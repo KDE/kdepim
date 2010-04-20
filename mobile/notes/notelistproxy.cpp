@@ -1,0 +1,58 @@
+/*
+    Copyright (C) 2010 Klarälvdalens Datakonsult AB,
+        a KDAB Group company, info@kdab.net,
+        author Stephen Kelly <stephen@kdab.com>
+
+    This library is free software; you can redistribute it and/or modify it
+    under the terms of the GNU Library General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or (at your
+    option) any later version.
+
+    This library is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
+    License for more details.
+
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to the
+    Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+    02110-1301, USA.
+*/
+
+#include "notelistproxy.h"
+
+#include <KMime/Message>
+
+using namespace Akonadi;
+
+NoteListProxy::NoteListProxy( QObject* parent ) : ListProxy( parent )
+{ }
+
+QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
+{
+  const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+
+  if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
+    const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
+    switch ( role ) {
+//     case Summary:
+//       return note->summary();
+//     case Description:
+//       return incidence->description();
+    }
+  }
+
+  return QSortFilterProxyModel::data(index, role);
+}
+
+void NoteListProxy::setSourceModel( QAbstractItemModel* sourceModel )
+{
+  ListProxy::setSourceModel(sourceModel);
+
+  QHash<int, QByteArray> names = roleNames();
+  names.insert( EntityTreeModel::ItemIdRole, "itemId" );
+  names.insert( Summary, "title" );
+  names.insert( Description, "content" );
+  setRoleNames( names );
+}
+
