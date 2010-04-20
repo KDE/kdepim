@@ -29,9 +29,17 @@ KPIM.MainView {
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
-  Rectangle { // NoteView
+  gradient: Gradient {
+    GradientStop { position: 0.0; color: "lightgrey" }
+    GradientStop { position: 0.5; color: "grey" }
+  }
+  NoteView {
     id: noteView
     anchors.left: parent.left
+    anchors.topMargin : 40
+    anchors.bottomMargin : 10
+    anchors.leftMargin : 50
+    anchors.rightMargin : 10
     width: parent.width
     height: parent.height
   }
@@ -92,8 +100,8 @@ KPIM.MainView {
              onItemSelected: {
                // Prevent reloading of the message, perhaps this should be done
                // in messageview itself.
-               if ( messageView.messageItemId != headerList.currentMessage )
-                 messageView.messageItemId = headerList.currentMessage;
+               if ( noteView.noteId != headerList.currentMessage )
+                 noteView.noteId = headerList.currentMessage;
                folderPanel.collapse()
              }
            }

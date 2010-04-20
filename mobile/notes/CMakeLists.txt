@@ -26,5 +26,6 @@ target_link_libraries(notes-mobile
 install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   notes.qml
+  NoteView.qml
   DESTINATION ${DATA_INSTALL_DIR}/notes-mobile
 )
