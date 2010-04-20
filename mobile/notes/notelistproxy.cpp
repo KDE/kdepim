@@ -21,11 +21,16 @@
 
 #include "notelistproxy.h"
 
-#include <KMime/Message>
+#include <kcal/incidence.h>
+
+#include <akonadi/entitytreemodel.h>
+#include <KMime/KMimeMessage>
 
 using namespace Akonadi;
 
-NoteListProxy::NoteListProxy( QObject* parent ) : ListProxy( parent )
+NoteListProxy::NoteListProxy( int customRoleBaseline, QObject* parent )
+  : ListProxy( parent ),
+    mCustomRoleBaseline( customRoleBaseline )
 { }
 
 QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
@@ -33,12 +38,12 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
   if ( item.isValid() && item.hasPayload<KMime::Message::Ptr>() ) {
-    const KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
-    switch ( role ) {
-//     case Summary:
-//       return note->summary();
-//     case Description:
-//       return incidence->description();
+    const KMime::Message::Ptr note = item.payload<KCal::Incidence::Ptr>();
+    switch ( relativeCustomRole( role ) ) {
+    case Title:
+      note->subject()->asUnicodeString();
+    case Content:
+      return note->mainBodyPart()->decodedText();
     }
   }
 
@@ -51,8 +56,8 @@ void NoteListProxy::setSourceModel( QAbstractItemModel* sourceModel )
 
   QHash<int, QByteArray> names = roleNames();
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
-  names.insert( Summary, "title" );
-  names.insert( Description, "content" );
+  names.insert( absoluteCustomRole( Title ), "title" );
+  names.insert( absoluteCustomRole( Content ), "content" );
   setRoleNames( names );
 }
 

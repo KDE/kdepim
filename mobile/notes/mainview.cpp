@@ -27,14 +27,12 @@
 #include <KGlobal>
 #include <KStandardDirs>
 
-#include <kcal/incidence.h>
-#include <akonadi/kcal/incidencemimetypevisitor.h>
+#include <akonadi/entitytreemodel.h>
 
 #include "notelistproxy.h"
 
-using namespace Akonadi;
 
-MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy(), parent )
+MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
   setMimeType( "text/x-vnd.akonadi.note" );
 }
