@@ -28,6 +28,7 @@ set( kcalakonadi_LIB_SRC
      mailscheduler.cpp
      freebusymanager.cpp
      dndfactory.cpp
+     incidencechanger.cpp
 )
 
 kde4_add_kcfg_files(kcalakonadi_LIB_SRC koprefs_base.kcfgc )

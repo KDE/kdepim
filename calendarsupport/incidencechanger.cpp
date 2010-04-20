@@ -23,8 +23,6 @@
 */
 
 #include "incidencechanger.h"
-#include "koglobals.h"
-#include "koprefs.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendaradaptor.h>
@@ -56,7 +54,8 @@ using namespace Akonadi;
 
 class IncidenceChanger::Private {
 public:
-  Private() {
+  Private( const Collection &defaultCollection ) {
+    mDefaultCollection = defaultCollection;
   }
   ~Private() {
   }
@@ -66,10 +65,13 @@ public:
 
   QHash<Akonadi::Item::Id, int> m_latestVersionByItemId;
   QHash<const KJob*, Item> m_oldItemByJob;
+  Collection mDefaultCollection;
 };
 
-IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal, QObject *parent )
-  : IncidenceChangerBase( cal, parent ), d( new Private )
+IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
+                                    QObject *parent,
+                                    const Collection &defaultCollection )
+  : QObject( parent ), mCalendar( cal ), d( new Private( defaultCollection ) )
 {
 }
 
@@ -94,8 +96,10 @@ bool IncidenceChanger::beginChange( const Item &item )
 
   const Incidence::Ptr incidence = Akonadi::incidence( item );
   Q_ASSERT( incidence );
-  kDebug() << "id=" << item.id() << "uid=" << incidence->uid() << "version=" << item.revision()
-           << "summary=" << incidence->summary() << "type=" << incidence->type() << "storageCollectionId=" << item.storageCollectionId();
+  kDebug() << "id=" << item.id() << "uid=" << incidence->uid() <<
+    "version=" << item.revision() << "summary=" << incidence->summary() <<
+    "type=" << incidence->type() << "storageCollectionId=" <<
+    item.storageCollectionId();
 
   if ( !d->m_changes.contains( item.id() ) ) { // no nested changes allowed
     d->m_changes.push_back( item.id() );
@@ -114,16 +118,20 @@ bool IncidenceChanger::sendGroupwareMessage( const Item &aitem,
                                              QWidget *parent )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
-  if ( !incidence )
+  if ( !incidence ) {
     return false;
+  }
   if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) &&
        incidence->attendeeCount() > 0 &&
        !KOPrefs::instance()->mUseGroupwareCommunication ) {
     emit schedule( method, aitem );
     return true;
   } else if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
-    return
-      Akonadi::Groupware::instance()->sendICalMessage( parent, method, incidence.get(), action,  false );
+    return Akonadi::Groupware::instance()->sendICalMessage( parent,
+                                                            method,
+                                                            incidence.get(),
+                                                            action,
+                                                            false );
   }
   return true;
 }
@@ -256,7 +264,7 @@ void IncidenceChanger::changeIncidenceFinished( KJob* j )
                               job->errorString( )) );
   } else {
     //PENDING(AKONADI_PORT) emit a real action here, not just UNKNOWN_MODIFIED
-    emit incidenceChanged( oldItem, newItem, IncidenceChangerBase::UNKNOWN_MODIFIED );
+    emit incidenceChanged( oldItem, newItem, UNKNOWN_MODIFIED );
   }
 
   d->m_latestVersionByItemId[newItem.id()] = newItem.revision();
@@ -302,7 +310,7 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
     if ( !Akonadi::Groupware::instance()->doNotNotify() && notifyOrganizer ) {
       Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
       scheduler.performTransaction( tmp.get(), KCal::iTIPReply );
-    }
+      }
     //reset the doNotNotify flag
     Akonadi::Groupware::instance()->setDoNotNotify( false );
   }
@@ -407,7 +415,8 @@ bool IncidenceChanger::assignIncidence( Incidence *inc1, Incidence *inc2 )
   return v.assign( inc1, inc2 );
 }
 
-bool IncidenceChanger::myAttendeeStatusChanged( const Incidence* newInc, const Incidence* oldInc )
+bool IncidenceChanger::myAttendeeStatusChanged( const Incidence* newInc,
+                                                const Incidence* oldInc )
 {
   Attendee *oldMe = oldInc->attendeeByMails( KOPrefs::instance()->allEmails() );
   Attendee *newMe = newInc->attendeeByMails( KOPrefs::instance()->allEmails() );
@@ -420,7 +429,7 @@ bool IncidenceChanger::myAttendeeStatusChanged( const Incidence* newInc, const I
 
 bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
                                         const Item &newItem,
-                                        IncidenceChangerBase::WhatChanged action,
+                                        WhatChanged action,
                                         QWidget *parent )
 {
   const Incidence::Ptr newinc = Akonadi::incidence( newItem );
@@ -457,17 +466,21 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
   return true;
 }
 
-bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence, QWidget *parent )
+bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
+                                     QWidget *parent )
 {
-  kDebug()<<" KOPrefs::instance()->defaultCollection() :"<<KOPrefs::instance()->defaultCollection();
-  const Akonadi::Collection c = Akonadi::selectCollection(parent, KOPrefs::instance()->defaultCollection());
+  const Akonadi::Collection c = Akonadi::selectCollection( parent,
+                                                           d->mDefaultCollection );
+
   if ( !c.isValid() ) {
     return false;
   }
+
   return addIncidence( incidence, c, parent );
 }
 
-bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence, const Collection &collection, QWidget* parent )
+bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
+                                     const Collection &collection, QWidget* parent )
 {
   if( !incidence || !collection.isValid() ) {
     return false;
@@ -481,7 +494,8 @@ bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence, const Coll
   ItemCreateJob *job = new ItemCreateJob( item, collection);
   // The connection needs to be queued to be sure addIncidenceFinished is called after the kjob finished
   // it's eventloop. That's needed cause Akonadi::Groupware uses synchron job->exec() calls.
-  connect( job, SIGNAL( result(KJob*)), this, SLOT( addIncidenceFinished(KJob*) ), Qt::QueuedConnection );
+  connect( job, SIGNAL( result(KJob*)),
+           this, SLOT( addIncidenceFinished(KJob*) ), Qt::QueuedConnection );
   return true;
 }
 
@@ -511,5 +525,16 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
     }
   }
 }
+
+/* static */
+void IncidenceChanger::errorSaveIncidence( QWidget *parent,
+                                           const Incidence::Ptr &incidence )
+{
+  KMessageBox::sorry(
+    parent,
+    i18n( "Unable to save %1 \"%2\".",
+          i18n( incidence->type() ), incidence->summary() ) );
+}
+
 
 #include "incidencechanger.moc"

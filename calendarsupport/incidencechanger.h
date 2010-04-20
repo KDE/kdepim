@@ -24,21 +24,51 @@
 #ifndef INCIDENCECHANGER_H
 #define INCIDENCECHANGER_H
 
-#include "korganizer/incidencechangerbase.h"
-#include "korganizer_export.h"
+#include "akonadi-kcal_next_export.h"
+
+#include "utils.h"
+#include "groupware.h"
+
+#include <KCal/Incidence>
+#include <KCal/Scheduler>
+
+#include <QtCore/QObject>
 
 class KJob;
 
 namespace Akonadi {
-  class Calendar;
-}
 
-class KORGANIZERPRIVATE_EXPORT IncidenceChanger : public KOrg::IncidenceChangerBase
+class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 {
   Q_OBJECT
   public:
-    IncidenceChanger( Akonadi::Calendar *cal, QObject *parent );
+  IncidenceChanger( Akonadi::Calendar *cal,
+                    QObject *parent,
+                    const Collection &defaultCollection );
     ~IncidenceChanger();
+
+  enum HowChanged {
+      INCIDENCEADDED,
+      INCIDENCEEDITED,
+      INCIDENCEDELETED,
+      NOCHANGE
+    };
+
+    enum WhatChanged {
+      PRIORITY_MODIFIED,
+      COMPLETION_MODIFIED,
+      CATEGORY_MODIFIED,
+      DATE_MODIFIED,
+      RELATION_MODIFIED,
+      ALARM_MODIFIED,
+      DESCRIPTION_MODIFIED,
+      SUMMARY_MODIFIED,
+      COMPLETION_MODIFIED_WITH_RECURRENCE,
+      RECURRENCE_MODIFIED_ONE_ONLY,
+      RECURRENCE_MODIFIED_ALL_FUTURE,
+      UNKNOWN_MODIFIED,
+      NOTHING_MODIFIED
+    };
 
     /** Locks the incidence */
     bool beginChange( const Akonadi::Item & incidence );
@@ -56,22 +86,43 @@ class KORGANIZERPRIVATE_EXPORT IncidenceChanger : public KOrg::IncidenceChangerB
                                Akonadi::Groupware::HowChanged action,
                                QWidget *parent );
 
-    bool addIncidence( const KCal::Incidence::Ptr &incidence, QWidget *parent );
+    bool addIncidence( const KCal::Incidence::Ptr &incidence,
+                       QWidget *parent );
+
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
                        const Akonadi::Collection &collection, QWidget *parent );
-    bool changeIncidence( const KCal::Incidence::Ptr &oldinc, const Akonadi::Item &newItem,
-                          IncidenceChangerBase::WhatChanged, QWidget *parent );
+
+    bool changeIncidence( const KCal::Incidence::Ptr &oldinc,
+                          const Akonadi::Item &newItem,
+                          WhatChanged,
+                          QWidget *parent );
+
     bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent );
 
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
 
+    static void errorSaveIncidence( QWidget *parent, const Incidence::Ptr &incidence );
+
   public slots:
     void cancelAttendees( const Akonadi::Item &incidence );
 
   protected:
-    bool myAttendeeStatusChanged( const KCal::Incidence *newInc, const KCal::Incidence *oldInc );
+    bool myAttendeeStatusChanged( const KCal::Incidence *newInc,
+                                  const KCal::Incidence *oldInc );
+
+    Akonadi::Calendar *mCalendar;
+
+Q_SIGNALS:
+    void incidenceAdded( const Akonadi::Item & );
+    void incidenceChanged( const Akonadi::Item &oldinc,
+                           const Akonadi::Item &newInc, WhatChanged  );
+
+    void incidenceToBeDeleted( const Akonadi::Item & );
+    void incidenceDeleted( const Akonadi::Item & );
+
+    void schedule( iTIPMethod method, const Akonadi::Item &incidence );
 
   private Q_SLOTS:
     void addIncidenceFinished( KJob* job );
@@ -82,5 +133,6 @@ class KORGANIZERPRIVATE_EXPORT IncidenceChanger : public KOrg::IncidenceChangerB
     class Private;
     Private * const d;
 };
+}
 
 #endif
