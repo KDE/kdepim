@@ -47,7 +47,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
                     const Collection &defaultCollection );
     ~IncidenceChanger();
 
-  enum HowChanged {
+    enum HowChanged {
       INCIDENCEADDED,
       INCIDENCEEDITED,
       INCIDENCEDELETED,
@@ -116,8 +116,10 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 
 Q_SIGNALS:
     void incidenceAdded( const Akonadi::Item & );
+
     void incidenceChanged( const Akonadi::Item &oldinc,
-                           const Akonadi::Item &newInc, WhatChanged  );
+                           const Akonadi::Item &newInc,
+                           Akonadi::IncidenceChanger::WhatChanged );
 
     void incidenceToBeDeleted( const Akonadi::Item & );
     void incidenceDeleted( const Akonadi::Item & );
