@@ -158,6 +158,7 @@ KPIM.MainView {
 //           }
       ]
     }
+  }
 
    Connections {
      target: collectionView
