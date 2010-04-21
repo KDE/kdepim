@@ -33,8 +33,8 @@ class MainView : public KDeclarativeMainView
     explicit MainView( QWidget *parent = 0 );
 
   public slots:
-    QString noteTitle( qint64 id );
-    QString noteContent( qint64 id );
+    QString noteTitle( int row );
+    QString noteContent( int row );
 
 };
 

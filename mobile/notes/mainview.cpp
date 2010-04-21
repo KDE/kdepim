@@ -40,25 +40,25 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteL
   addMimeType( "text/x-vnd.akonadi.note" );
 }
 
-QString MainView::noteTitle(Entity::Id id)
+QString MainView::noteTitle(int row)
 {
-  if ( id < 0 )
+  if ( row < 0 )
     return QString();
 
   QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel").value<QObject *>();
   QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
-  kDebug() << itemModel << itemModelObject;
+
   if ( !itemModel )
     return QString();
 
-  QModelIndexList indexList = itemModel->match(itemModel->index(0, 0), EntityTreeModel::ItemRole, QVariant::fromValue( Item( id ) ), 1, Qt::MatchRecursive );
-  kDebug() << indexList;
-  if ( indexList.isEmpty() )
+  static const int column = 0;
+  QModelIndex idx = itemModel->index(row, column);
+
+  if ( !idx.isValid() )
     return QString();
 
-  Item item = indexList.first().data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  kDebug() << item.id();
   if ( !item.isValid() )
     return QString();
 
@@ -70,24 +70,25 @@ QString MainView::noteTitle(Entity::Id id)
   return note->subject()->asUnicodeString();
 }
 
-QString MainView::noteContent(Entity::Id id)
+QString MainView::noteContent(int row)
 {
-  if ( id < 0 )
+  if ( row < 0 )
     return QString();
 
   QObject *itemModelObject = engine()->rootContext()->contextProperty( "itemModel").value<QObject *>();
   QAbstractItemModel *itemModel = qobject_cast<QAbstractItemModel *>( itemModelObject );
+
   if ( !itemModel )
     return QString();
 
-  QModelIndexList indexList = itemModel->match(itemModel->index(0, 0), EntityTreeModel::ItemRole, QVariant::fromValue( Item( id ) ), 1, Qt::MatchRecursive );
-  kDebug() << indexList;
-  if ( indexList.isEmpty() )
+  static const int column = 0;
+  QModelIndex idx = itemModel->index(row, column);
+
+  if ( !idx.isValid() )
     return QString();
 
-  Item item = indexList.first().data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
 
-  kDebug() << item.id();
   if ( !item.isValid() )
     return QString();
 

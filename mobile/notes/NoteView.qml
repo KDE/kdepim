@@ -24,12 +24,13 @@ import Qt 4.7
 Rectangle {
   id : _topContext
   color: "#00000000" // Set a transparant color.
+  property int currentNoteRow : -1
   property int noteId : -1
   anchors.fill : parent
 
-  onNoteIdChanged : {
-    titleInput.text = application.noteTitle( noteId );
-    contentEdit.text = application.noteContent( noteId );
+  onCurrentNoteRowChanged : {
+    titleInput.text = application.noteTitle( currentNoteRow );
+    contentEdit.text = application.noteContent( currentNoteRow );
   }
 
   Rectangle {

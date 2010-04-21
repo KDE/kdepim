@@ -109,7 +109,10 @@ KPIM.MainView {
                // Prevent reloading of the message, perhaps this should be done
                // in messageview itself.
                if ( noteView.noteId != headerList.currentItemId )
+               {
                  noteView.noteId = headerList.currentItemId;
+                 noteView.currentNoteRow = headerList.currentIndex;
+               }
                folderPanel.collapse()
              }
            }
