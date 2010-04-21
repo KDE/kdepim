@@ -186,7 +186,6 @@ KPIM.MainView {
     SlideoutPanel {
       id: attachmentPanel
 
-      handlePosition : 300
       anchors.fill : parent
       visible: false //messageView.messageTreeModel.attachmentCount >= 2
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
