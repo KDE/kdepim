@@ -20,6 +20,7 @@
 #include "skeletonmessagejob.h"
 
 #include "infopart.h"
+#include "globalpart.h"
 #include "jobbase_p.h"
 
 #include <QTextCodec>
@@ -39,6 +40,7 @@ class Message::SkeletonMessageJobPrivate : public JobBasePrivate
     SkeletonMessageJobPrivate( SkeletonMessageJob *qq )
       : JobBasePrivate( qq )
       , infoPart( 0 )
+      , globalPart( 0 )
       , message( 0 )
     {
     }
@@ -46,6 +48,7 @@ class Message::SkeletonMessageJobPrivate : public JobBasePrivate
     void doStart(); // slot
 
     InfoPart *infoPart;
+    GlobalPart* globalPart;
     KMime::Message *message;
 
     Q_DECLARE_PUBLIC( SkeletonMessageJob )
@@ -122,15 +125,25 @@ void SkeletonMessageJobPrivate::doStart()
     message->setHeader( extra );
   }
 
+  // MDN
+  {
+    if( globalPart->MDNRequested() ) {
+      QString addr = infoPart->replyTo().isEmpty() ? infoPart->from() : infoPart->replyTo();
+      KMime::Headers::Generic* mdn = new KMime::Headers::Generic( "Disposition-Notification-To", message, addr, "utf-8" );
+      message->setHeader( mdn );
+    }
+  }
+
   q->emitResult(); // Success.
 }
 
 
-SkeletonMessageJob::SkeletonMessageJob( InfoPart *infoPart, QObject *parent )
+SkeletonMessageJob::SkeletonMessageJob( InfoPart *infoPart, GlobalPart* globalPart, QObject *parent )
   : JobBase( *new SkeletonMessageJobPrivate( this ), parent )
 {
   Q_D( SkeletonMessageJob );
   d->infoPart = infoPart;
+  d->globalPart = globalPart;
 }
 
 SkeletonMessageJob::~SkeletonMessageJob()
@@ -148,6 +161,20 @@ void SkeletonMessageJob::setInfoPart( InfoPart *part )
   Q_D( SkeletonMessageJob );
   d->infoPart = part;
 }
+
+
+GlobalPart *SkeletonMessageJob::globalPart() const
+{
+  Q_D( const SkeletonMessageJob );
+  return d->globalPart;
+}
+
+void SkeletonMessageJob::setGlobalPart( GlobalPart *part )
+{
+  Q_D( SkeletonMessageJob );
+  d->globalPart = part;
+}
+
 
 KMime::Message *SkeletonMessageJob::message() const
 {

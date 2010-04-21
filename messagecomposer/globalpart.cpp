@@ -29,6 +29,7 @@ class GlobalPart::Private
     bool fallbackCharsetEnabled;
     QList<QByteArray> charsets;
     bool allow8Bit;
+    bool MDNRequested;
 };
 
 GlobalPart::GlobalPart( QObject *parent )
@@ -99,6 +100,16 @@ bool GlobalPart::is8BitAllowed() const
 void GlobalPart::set8BitAllowed( bool allowed )
 {
   d->allow8Bit = allowed;
+}
+
+bool GlobalPart::MDNRequested() const
+{
+  return d->MDNRequested;
+}
+
+void GlobalPart::setMDNRequested(bool requestMDN)
+{
+  d->MDNRequested = requestMDN;
 }
 
 #include "globalpart.moc"

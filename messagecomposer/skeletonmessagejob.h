@@ -31,6 +31,7 @@ namespace Message {
 
 class SkeletonMessageJobPrivate;
 class InfoPart;
+class GlobalPart;
 
 /**
   A message containing only the headers...
@@ -40,11 +41,14 @@ class MESSAGECOMPOSER_EXPORT SkeletonMessageJob : public JobBase
   Q_OBJECT
 
   public:
-    explicit SkeletonMessageJob( InfoPart *infoPart = 0, QObject *parent = 0 );
+    explicit SkeletonMessageJob( InfoPart *infoPart = 0, GlobalPart* globalPart = 0, QObject *parent = 0 );
     virtual ~SkeletonMessageJob();
 
     InfoPart *infoPart() const;
     void setInfoPart( InfoPart *part );
+
+    GlobalPart* globalPart() const;
+    void setGlobalPart( GlobalPart* part );
 
     KMime::Message *message() const;
 

@@ -49,6 +49,10 @@ class MESSAGECOMPOSER_EXPORT GlobalPart : public MessagePart
     bool is8BitAllowed() const;
     void set8BitAllowed( bool allowed );
 
+    // default is false
+    bool MDNRequested() const;
+    void setMDNRequested( bool requestMDN );
+
   private:
     class Private;
     Private *const d;

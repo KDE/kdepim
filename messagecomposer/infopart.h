@@ -47,6 +47,9 @@ class MESSAGECOMPOSER_EXPORT InfoPart : public MessagePart
     QStringList bcc() const;
     void setBcc( const QStringList &bcc );
 
+    QString replyTo() const;
+    void setReplyTo( const QString& replyTo );
+
     QString subject() const;
     void setSubject( const QString &subject );
 

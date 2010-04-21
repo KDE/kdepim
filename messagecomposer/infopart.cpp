@@ -30,6 +30,7 @@ class InfoPart::Private
     QStringList bcc;
     QString subject;
     QString fcc;
+    QString replyTo;
     int transportId;
     KMime::Headers::Base::List extraHeaders;
 };
@@ -95,6 +96,17 @@ void InfoPart::setSubject( const QString &subject )
 {
   d->subject = subject;
 }
+
+QString InfoPart::replyTo() const
+{
+  return d->replyTo;
+}
+
+void InfoPart::setReplyTo(const QString& replyTo)
+{
+  d->replyTo = replyTo;
+}
+
 
 int InfoPart::transportId() const
 {
