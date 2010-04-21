@@ -28,10 +28,11 @@
 
 class MainView : public KDeclarativeMainView
 {
-public:
+  Q_OBJECT
+  public:
     explicit MainView( QWidget *parent = 0 );
 
-public slots:
+  public slots:
     QString noteTitle( qint64 id );
     QString noteContent( qint64 id );
 
