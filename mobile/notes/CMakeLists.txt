@@ -24,6 +24,7 @@ target_link_libraries(notes-mobile
 )
 
 install(TARGETS notes-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES notes-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   notes.qml
   NoteView.qml

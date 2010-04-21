@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=KAddressbook Mobile
+Exec=kaddressbook-mobile
+
+Icon=kaddressbook-mobile
+Type=Application

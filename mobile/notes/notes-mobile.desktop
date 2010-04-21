@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=KDE Notes Mobile
+Exec=tasks-mobile
+
+Icon=notes-mobile
+Type=Application

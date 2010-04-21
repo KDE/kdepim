@@ -26,6 +26,7 @@ target_link_libraries(kaddressbook-mobile
 )
 
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES kaddressbook-mobile.qml DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   kaddressbook-mobile.qml
   ContactListView.qml

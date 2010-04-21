@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=KDE Tasks Mobile
+Exec=tasks-mobile
+
+Icon=tasks-mobile
+Type=Application

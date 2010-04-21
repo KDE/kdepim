@@ -34,6 +34,7 @@ target_link_libraries(tasks-mobile
 )
 
 install(TARGETS tasks-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES tasks-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   tasks.qml
   DESTINATION ${DATA_INSTALL_DIR}/tasks-mobile
