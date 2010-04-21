@@ -31,7 +31,7 @@ KPIM.MainView {
     id: contactView
     z: 0
     anchors.fill: parent
-    contactItemId: -1
+    itemId: -1
   }
 
   SlideoutPanelContainer {
@@ -85,8 +85,8 @@ KPIM.MainView {
             onItemSelected: {
               // Prevent reloading of the message, perhaps this should be done
               // in contactView itself.
-              if ( contactView.contactItemId != contactList.currentItemId )
-                contactView.contactItemId = contactList.currentItemId;
+              if ( contactView.itemId != contactList.currentItemId )
+                contactView.itemId = contactList.currentItemId;
               folderPanel.collapse()
             }
           }
@@ -177,7 +177,7 @@ KPIM.MainView {
             height: parent.height / 6
             buttonText: "Previous"
             onClicked: {
-              if ( contactView.contactItemId >= 0 )
+              if ( contactView.itemId >= 0 )
                 contactList.previousItem();
 
               actionPanel.collapse();
@@ -190,7 +190,7 @@ KPIM.MainView {
             height: parent.height / 6
             buttonText: "Next"
             onClicked: {
-              if ( contactView.contactItemId >= 0 )
+              if ( contactView.itemId >= 0 )
                 contactList.nextItem();
 
               actionPanel.collapse();

@@ -46,12 +46,12 @@ void ContactViewItem::geometryChanged(const QRectF& newGeometry, const QRectF& o
   m_proxy->resize( newGeometry.size() );
 }
 
-qint64 ContactViewItem::contactItemId() const
+qint64 ContactViewItem::itemId() const
 {
   return m_viewer->contact().id();
 }
 
-void ContactViewItem::setContactItemId(qint64 id)
+void ContactViewItem::setItemId(qint64 id)
 {
   m_viewer->setContact( Akonadi::Item( id ) );
 }

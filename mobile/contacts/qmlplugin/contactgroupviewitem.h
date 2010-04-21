@@ -17,26 +17,26 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_CONTACT_CONTACTVIEWITEM_H
-#define AKONADI_CONTACT_CONTACTVIEWITEM_H
+#ifndef AKONADI_CONTACT_CONTACTGROUPVIEWITEM_H
+#define AKONADI_CONTACT_CONTACTGROUPVIEWITEM_H
 
 #include <QtCore/QTimer>
 #include <QtDeclarative/QDeclarativeItem>
 
 namespace Akonadi {
 
-class ContactViewer;
+class ContactGroupViewer;
 
 namespace Contact {
 
-class ContactViewItem : public QDeclarativeItem
+class ContactGroupViewItem : public QDeclarativeItem
 {
   Q_OBJECT
   Q_PROPERTY( int itemId READ itemId WRITE setItemId )
 
   public:
-    explicit ContactViewItem( QDeclarativeItem *parent = 0 );
-    ~ContactViewItem();
+    explicit ContactGroupViewItem( QDeclarativeItem *parent = 0 );
+    ~ContactGroupViewItem();
 
     qint64 itemId() const;
     void setItemId( qint64 id );
@@ -45,7 +45,7 @@ class ContactViewItem : public QDeclarativeItem
     void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
 
   private:
-    ContactViewer *m_viewer;
+    ContactGroupViewer *m_viewer;
     QGraphicsProxyWidget *m_proxy;
 };
 

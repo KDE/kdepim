@@ -17,30 +17,43 @@
     02110-1301, USA.
 */
 
-#include "plugin.h"
-#include "contactviewitem.h"
 #include "contactgroupviewitem.h"
 
-#include <kcomponentdata.h>
-#include <kdebug.h>
-#include <QtDeclarative/qdeclarative.h>
+#include <akonadi/contact/contactgroupviewer.h>
+#include <QtGui/QGraphicsProxyWidget>
+#include <akonadi/item.h>
 
+
+using namespace Akonadi;
 using namespace Akonadi::Contact;
 
-Plugin::Plugin(QObject* parent): QDeclarativeExtensionPlugin(parent)
+ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem* parent)
+  : QDeclarativeItem(parent)
 {
-  kDebug();
-  if ( !KGlobal::hasMainComponent() )
-    new KComponentData( "AkonadiContactQmlPlugin", "libakonadi-contact", KComponentData::RegisterAsMainComponent );
+  m_viewer = new ContactGroupViewer( 0 );
+  m_proxy = new QGraphicsProxyWidget( this );
+  m_proxy->setWidget( m_viewer );
 }
 
-void Plugin::registerTypes(const char* uri)
+ContactGroupViewItem::~ContactGroupViewItem()
 {
-  kDebug() << uri;
-  qmlRegisterType<ContactViewItem>( uri, 4, 5, "ContactView" );
-  qmlRegisterType<ContactGroupViewItem>( uri, 4, 5, "ContactGroupView" );
+  delete m_viewer;
 }
 
-#include "plugin.moc"
+void ContactGroupViewItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
+{
+  QDeclarativeItem::geometryChanged(newGeometry, oldGeometry);
+  m_proxy->resize( newGeometry.size() );
+}
 
-Q_EXPORT_PLUGIN2( akonadicontactplugin, Akonadi::Contact::Plugin )
+qint64 ContactGroupViewItem::itemId() const
+{
+  return m_viewer->contactGroup().id();
+}
+
+void ContactGroupViewItem::setItemId(qint64 id)
+{
+  m_viewer->setContactGroup( Akonadi::Item( id ) );
+}
+
+#include "contactgroupviewitem.moc"
