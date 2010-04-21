@@ -19,7 +19,7 @@ kde4_add_executable(notes-mobile ${notes_mobile_SRCS} )
 target_link_libraries(notes-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
-  mobileui
+  kdepimmobileui
   kdepim
 )
 

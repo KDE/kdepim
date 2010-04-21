@@ -21,7 +21,7 @@ target_link_libraries(kaddressbook-mobile
     ${KDEPIMLIBS_AKONADI_LIBRARY}
     akonadi_next
     kdepim
-    mobileui
+    kdepimmobileui
 )
 
 install(TARGETS kaddressbook-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

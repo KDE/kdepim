@@ -26,7 +26,7 @@ kde4_add_executable(tasks-mobile ${mobile_tasks_SRCS} )
 target_link_libraries(tasks-mobile
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
-  mobileui
+  kdepimmobileui
 #    ${KDEPIMLIBS_AKONADI_KMIME_LIBRARY}
 #    ${KDEPIMLIBS_AKONADI_LIBRARY}
 #    akonadi_next

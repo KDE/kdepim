@@ -7,15 +7,17 @@ set(mobileui_SRCS
     kdeclarativemainview.cpp
 )
 
-kde4_add_library(mobileui SHARED ${mobileui_SRCS})
 
-target_link_libraries(mobileui
+kde4_add_library(kdepimmobileui SHARED ${mobileui_SRCS})
+set_target_properties(kdepimmobileui PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_VERSION})
+
+target_link_libraries(kdepimmobileui
   ${QT_QTDECLARATIVE_LIBRARY}
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   akonadi_next
 )
 
-install(TARGETS mobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
   Button.qml
