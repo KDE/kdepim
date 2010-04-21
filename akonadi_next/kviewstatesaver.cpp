@@ -114,8 +114,6 @@ KViewStateSaver::KViewStateSaver(QObject* parent)
   : QObject(parent), d_ptr( new KViewStateSaverPrivate(this) )
 {
   qRegisterMetaType<QModelIndex>( "QModelIndex" );
-  // Delete myself if not finished after two seconds.
-  QTimer::singleShot(2000, this, SLOT(deleteLater()));
 }
 
 KViewStateSaver::~KViewStateSaver()
@@ -178,6 +176,9 @@ void KViewStateSaver::setScrollArea(QAbstractScrollArea* scrollArea)
 void KViewStateSaverPrivate::restoreState()
 {
   Q_Q(KViewStateSaver);
+  // Delete myself if not finished after two seconds.
+  QTimer::singleShot(2000, q, SLOT(deleteLater()));
+
   if ( !hasPendingChanges() )
     return;
 
@@ -224,7 +225,6 @@ void KViewStateSaverPrivate::restoreState()
 
   if ( m_scrollArea )
   {
-    Q_Q(KViewStateSaver);
     QTimer::singleShot( 0, q, SLOT( restoreScrollBarState() ) );
   }
 
