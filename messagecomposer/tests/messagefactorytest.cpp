@@ -20,13 +20,25 @@
 
 #include "messagefactorytest.h"
 
+#include "cryptofunctions.h"
+
 #include <messagecore/stringutil.h>
+#include <messagecore/nodehelper.h>
+
 #include "messagecomposer/composer.h"
 #include "messagecomposer/messagefactory.h"
 #include "messagecomposer/globalpart.h"
 #include "messagecomposer/infopart.h"
+#include <messagecomposer/messageinfo.h>
 #include "messagecomposer/textpart.h"
+
+#include "testhtmlwriter.h"
+#include "testcsshelper.h"
+#include <messageviewer/nodehelper.h>
+#include <messageviewer/objecttreeparser.h>
+
 #include "qtest_messagecomposer.h"
+#include <kmime/kmime_dateformatter.h>
 
 #include <kpimidentities/identitymanager.h>
 #include <qtest_kde.h>
@@ -107,10 +119,14 @@ void MessageFactoryTest::testCreateRedirect()
   kDebug() << rdir->encodedContent();
   
   QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
-      
+
+  QRegExp rx( QString::fromAscii( "Resent-Message-ID: ([^\n]*)" ) );
+  rx.indexIn( QString::fromAscii( rdir->head() ) );
+  
   QString baseline = QString::fromLatin1( "From: me@me.me\n"
                                           "Subject: Test Email Subject\n"
                                           "Date: %2\n"
+                                          "Disposition-Notification-To: me@me.me\n"
                                           "MIME-Version: 1.0\n"
                                           "Content-Transfer-Encoding: 7Bit\n"
                                           "Content-Type: text/plain; charset=\"us-ascii\"\n"
@@ -122,15 +138,53 @@ void MessageFactoryTest::testCreateRedirect()
                                           "X-KMail-Recipients: redir@redir.com\n"
                                           "\n"
                                           "All happy families are alike; each unhappy family is unhappy in its own way." );
-  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( msgId ).arg( datetime );
+  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( rx.cap(1) ).arg( datetime );
 
   kDebug() << baseline.toLatin1();
 
 //   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
   QVERIFY( rdir->encodedContent() == baseline.toLatin1() );
+}
+
+void MessageFactoryTest::testCreateMDN()
+{
+  KMime::Message::Ptr msg = createTestMessage();
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+
+  MessageFactory factory( msg, 0 );
+  
+  factory.setIdentityManager( identMan );
+
+  MessageInfo::instance()->setMDNSentState( msg.get(), KMMsgMDNNone );
+  KMime::Message::Ptr mdn = factory.createMDN( KMime::MDN::AutomaticAction, KMime::MDN::Displayed, KMime::MDN::SentAutomatically );
+
+  QVERIFY( mdn );
+  kDebug() << "mdn" << mdn->encodedContent();
+/*
+  // parse the result and make sure it is valid in various ways
+  TestHtmlWriter testWriter;
+  TestCSSHelper testCSSHelper;
+  TestObjectTreeSource testSource( &testWriter, &testCSSHelper );
+  MessageViewer::NodeHelper* nh = new MessageViewer::NodeHelper;
+  MessageViewer::ObjectTreeParser otp( &testSource, nh, 0, false, false, true, 0 );
+  MessageViewer::ProcessResult pResult( nh ); */
+
+//   kDebug() << MessageCore::NodeHelper::firstChild( mdn->mainBodyPart() )->encodedContent();
+//   kDebug() << MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body();
+
+
+  QString mdnContent = QString::fromLatin1( "The message sent on %1 to %2 with subject \"%3\" has been displayed. "
+                                "This is no guarantee that the message has been read or understood." );
+  mdnContent = mdnContent.arg( KMime::DateFormatter::formatDate( KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() ) )
+                         .arg( msg->to()->asUnicodeString() ).arg( msg->subject()->asUnicodeString() );
+
+  kDebug() << "comparing with:" << mdnContent;
+  
+  QVERIFY( MessageCore::NodeHelper::next(  MessageViewer::ObjectTreeParser::findType( mdn.get(), "multipart", "report", true, true ) )->body() == mdnContent.toLatin1() );
 
 }
+
 
 KMime::Message::Ptr MessageFactoryTest::createTestMessage()
 {
@@ -140,6 +194,7 @@ KMime::Message::Ptr MessageFactoryTest::createTestMessage()
   composer->infoPart()->setTo( QStringList( QString::fromLatin1( "you@you.you" ) ) );
   composer->textPart()->setWrappedPlainText( QString::fromLatin1( "All happy families are alike; each unhappy family is unhappy in its own way." ) );
   composer->infoPart()->setSubject( QLatin1String( "Test Email Subject" ) );
+  composer->globalPart()->setMDNRequested( true );
   composer->exec();
   
   KMime::Message::Ptr message = KMime::Message::Ptr( composer->resultMessages().first() );

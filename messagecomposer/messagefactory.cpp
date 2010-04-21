@@ -755,6 +755,8 @@ QString MessageFactory::replaceHeadersInString( const KMime::Message::Ptr &msg, 
     QRegExp rxDate( QString::fromLatin1("\\$\\{date\\}") );
     Q_ASSERT( rxDate.isValid() );
 
+    kDebug() << "creating mdn date:" << msg->date()->dateTime().dateTime().toTime_t() << KMime::DateFormatter::formatDate(
+        KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() );
     QString sDate = KMime::DateFormatter::formatDate(
         KMime::DateFormatter::Localized, msg->date()->dateTime().dateTime().toTime_t() );
 

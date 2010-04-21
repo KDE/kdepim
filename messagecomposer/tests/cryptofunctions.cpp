@@ -45,27 +45,6 @@
 #include <stdlib.h>
 #include <gpgme++/keylistresult.h>
 
-// We can't use EmptySource, since that doesn't provide a HTML writer. Therefore, derive
-// from EmptySource so we can provide our own HTML writer.
-// This is only needed because ObjectTreeParser has a bug and doesn't decrypt inline PGP messages
-// when there is no HTML writer, see FIXME comment in ObjectTreeParser::writeBodyString().
-class TestObjectTreeSource : public MessageViewer::EmptySource
-{
-  public:
-    TestObjectTreeSource( MessageViewer::HtmlWriter *writer,
-                          MessageViewer::CSSHelper *cssHelper )
-      : mWriter( writer ), mCSSHelper( cssHelper )
-    {
-    }
-
-    virtual MessageViewer::HtmlWriter * htmlWriter() { return mWriter; }
-    virtual MessageViewer::CSSHelper * cssHelper() { return mCSSHelper; }
-
-  private:
-    MessageViewer::HtmlWriter *mWriter;
-    MessageViewer::CSSHelper *mCSSHelper;
-};
-
 std::vector<GpgME::Key> ComposerTestUtil::getKeys( bool smime )
 {
 
