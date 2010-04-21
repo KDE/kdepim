@@ -20,6 +20,7 @@
 
 #include "contactlistproxy.h"
 #include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 #include <QPixmap>
 #include <KIconLoader>
 
@@ -34,11 +35,19 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
     const KABC::Addressee addressee = item.payload<KABC::Addressee>();
     switch ( role ) {
       case NameRole:
-        return addressee.name();
+        return addressee.realName();
       case PictureRole:
         if ( addressee.photo().isEmpty() )
           return KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge );
         return QPixmap::fromImage( addressee.photo().data() );
+    }
+  } else if ( item.isValid() && item.hasPayload<KABC::ContactGroup>() ) {
+    const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+    switch( role ) {
+      case NameRole:
+        return group.name();
+      case PictureRole:
+        return KIconLoader::global()->loadIcon( "x-mail-distribution-list", KIconLoader::Dialog, KIconLoader::SizeHuge );
     }
   }
 
