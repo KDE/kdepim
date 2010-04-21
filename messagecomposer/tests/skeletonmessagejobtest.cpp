@@ -130,6 +130,7 @@ void SkeletonMessageJobTest::testAddresses()
   // An InfoPart should belong to a Composer, even if we don't use the composer itself.
   Composer *composer = new Composer;
   InfoPart *infoPart = composer->infoPart();
+  GlobalPart *globalPart = composer->globalPart();
   Q_ASSERT( infoPart );
 
   QFETCH( QString, from );
@@ -140,7 +141,7 @@ void SkeletonMessageJobTest::testAddresses()
   infoPart->setTo( to );
   infoPart->setCc( cc );
   infoPart->setBcc( bcc );
-  SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, composer );
+  SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, globalPart, composer );
   QVERIFY( sjob->exec() );
   KMime::Message *message = sjob->message();
 
