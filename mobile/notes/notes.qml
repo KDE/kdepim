@@ -79,15 +79,23 @@ KPIM.MainView {
                KPIM.ItemListViewDelegate {
                  summaryContent: [
                    Text {
+                     anchors.fill: parent
                      text: "Title: " + model.title
                      font.bold: true
                    }
                  ]
                  detailsContent: [
-                   Text {
-                     text: "Content: " + model.content
-                     color: palette.highlightedText
-                   }
+                  Column {
+                    anchors.fill: parent
+                    Text {
+                      text: "Title: " + model.title
+                      color: palette.highlightedText
+                    }
+                    Text {
+                      text: "Content: " + model.content
+                      color: palette.highlightedText
+                    }
+                  }
                  ]
                }
              ]
