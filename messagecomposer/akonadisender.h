@@ -63,10 +63,9 @@ protected:
 
 private:
   /**
-    Queue one message using MailTransport::MessageQueueJob.
-    This involves translating the message to KMime.
+    Queue or send immediately one message using MailTransport::MessageQueueJob.
   */
-  void queueMessage( const KMime::Message::Ptr &msg );
+  void sendOrQueueMessage( const KMime::Message::Ptr &msg, MessageSender::SendMethod method = MessageSender::SendDefault );
 
 private slots:
   void queueJobResult( KJob *job );

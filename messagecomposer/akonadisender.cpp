@@ -85,15 +85,17 @@ bool AkonadiSender::doSend( const KMime::Message::Ptr &aMsg, short sendNow  )
     sendNow = MessageComposer::MessageComposerSettings::self()->sendImmediate(); // -1 == use default setting
   }
   if ( !sendNow ) {
-    return true;
+    sendOrQueueMessage( aMsg, MessageSender::SendLater );
   } else {
-    return sendQueued();
+    sendOrQueueMessage( aMsg, MessageSender::SendImmediate );
   }
+  return true;
 }
 
 bool AkonadiSender::doSendQueued( const QString &customTransport )
 {
   //TODO: Fix sending using a different transport
+  kDebug() << "Sending queued message with custom transport:" << customTransport;
   mCustomTransport = customTransport;
 
   // Watch progress of the MDA.
@@ -115,10 +117,9 @@ bool AkonadiSender::doSendQueued( const QString &customTransport )
   return true;
 }
 
-void AkonadiSender::queueMessage( const KMime::Message::Ptr &message )
+void AkonadiSender::sendOrQueueMessage( const KMime::Message::Ptr &message, MessageSender::SendMethod method )
 {
   Q_ASSERT( message );
-  MessageCore::StringUtil::removePrivateHeaderFields( message );
   kDebug() << "KMime::Message: \n[\n" << message->encodedContent().left( 1000 ) << "\n]\n";
 
   MessageQueueJob *qjob = new MessageQueueJob( this );
@@ -150,6 +151,10 @@ void AkonadiSender::queueMessage( const KMime::Message::Ptr &message )
   kDebug() << "Using transport (" << transportName << "," << transport->id() << ")";
   qjob->transportAttribute().setTransportId( transport->id() );
 
+  // if we want to manually queue it for sending later, then do it
+  if( method == MessageSender::SendLater )
+    qjob->dispatchModeAttribute().setDispatchMode( MailTransport::DispatchModeAttribute::Manual );
+
   // Get addresses.
   QStringList to, cc, bcc;
   QString from;
@@ -159,8 +164,7 @@ void AkonadiSender::queueMessage( const KMime::Message::Ptr &message )
   qjob->addressAttribute().setCc( cc );
   qjob->addressAttribute().setBcc( bcc );
 
-  // Default sent-mail collection for now.
-  // Send immediately (queuing is done by KMail's outbox for now...)
+  MessageCore::StringUtil::removePrivateHeaderFields( message );
 
   // Queue the message.
   connect( qjob, SIGNAL(result(KJob*)), this, SLOT(queueJobResult(KJob*)) );

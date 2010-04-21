@@ -496,6 +496,8 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   KMime::Message::Ptr receipt( new KMime::Message() );
   MessageHelper::initFromMessage( receipt, m_origMsg, m_identityManager );
   receipt->contentType()->from7BitString( "multipart/report" );
+  receipt->contentType()->setBoundary( KMime::multiPartBoundary() );
+  receipt->contentType()->setCharset( "us-ascii" );
   receipt->removeHeader("Content-Transfer-Encoding");
   // Modify the ContentType directly (replaces setAutomaticFields(true))
   receipt->contentType()->setParameter( QString::fromLatin1("report-type"), QString::fromLatin1("disposition-notification") );
@@ -506,6 +508,8 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   // text/plain part:
   KMime::Content* firstMsgPart = new KMime::Content( m_origMsg.get() );
   firstMsgPart->contentType()->setMimeType( "text/plain" );
+  firstMsgPart->contentType()->setCharset( "us-ascii" );
+  firstMsgPart->contentTransferEncoding()->from7BitString( "7bit" );
   firstMsgPart->setBody( description.toUtf8() );
   receipt->addContent( firstMsgPart );
 
@@ -513,7 +517,7 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   KMime::Content* secondMsgPart = new KMime::Content( m_origMsg.get() );
   secondMsgPart->contentType()->setMimeType( "message/disposition-notification" );
   //secondMsgPart.setCharset( "us-ascii" );
-  //secondMsgPart.setCteStr( "7bit" );
+  secondMsgPart->contentTransferEncoding()->from7BitString( "7bit" );
   secondMsgPart->setBody( KMime::MDN::dispositionNotificationBodyContent(
                             finalRecipient,
                             m_origMsg->headerByType("Original-Recipient") ? m_origMsg->headerByType("Original-Recipient")->as7BitString() : "",
@@ -543,12 +547,13 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
 
   receipt->to()->fromUnicodeString( receiptTo, "utf-8" );
   receipt->subject()->from7BitString( "Message Disposition Notification" );
-  KMime::Headers::Generic *header = new KMime::Headers::Generic( "In-Reply-To", receipt.get(), m_origMsg->messageID()->as7BitString() );
+  KMime::Headers::InReplyTo *header = new KMime::Headers::InReplyTo( receipt.get(), m_origMsg->messageID()->asUnicodeString(), "utf-8" );
   receipt->setHeader( header );
 
   receipt->references()->from7BitString( getRefStr( m_origMsg ) );
 
   receipt->assemble();
+
 
   kDebug() << "final message:" + receipt->encodedContent();
 

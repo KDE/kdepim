@@ -26,6 +26,7 @@
 
 #include <messagecomposer/composer.h>
 #include <messagecomposer/infopart.h>
+#include <messagecomposer/globalpart.h>
 #include <messagecomposer/skeletonmessagejob.h>
 using namespace Message;
 
@@ -45,12 +46,13 @@ void SkeletonMessageJobTest::testSubject()
   // An InfoPart should belong to a Composer, even if we don't use the composer itself.
   Composer *composer = new Composer;
   InfoPart *infoPart = composer->infoPart();
+  GlobalPart* globalPart = composer->globalPart();
   Q_ASSERT( infoPart );
 
   QFETCH( QString, subject );
   //kDebug() << subject;
   infoPart->setSubject( subject );
-  SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, composer );
+  SkeletonMessageJob *sjob = new SkeletonMessageJob( infoPart, globalPart, composer );
   QVERIFY( sjob->exec() );
   KMime::Message *message = sjob->message();
   QVERIFY( message->subject( false ) );
