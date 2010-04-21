@@ -3,6 +3,7 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories (
     ${Boost_INCLUDE_DIR}
     ${CMAKE_SOURCE_DIR}/libkleo
+    ${CMAKE_BUILD_DIR}/messagecomposer
 )
 
 # Convenience macro to add messagecomposer unit tests.

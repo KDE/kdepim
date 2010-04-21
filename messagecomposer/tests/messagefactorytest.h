@@ -32,6 +32,7 @@ class MessageFactoryTest : public QObject
 
     void testCreateReply();
     void testCreateForward();
+    void testCreateRedirect();
 
   private:
     KMime::Message::Ptr createTestMessage();

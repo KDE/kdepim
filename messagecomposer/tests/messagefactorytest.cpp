@@ -20,6 +20,7 @@
 
 #include "messagefactorytest.h"
 
+#include <messagecore/stringutil.h>
 #include "messagecomposer/composer.h"
 #include "messagecomposer/messagefactory.h"
 #include "messagecomposer/globalpart.h"
@@ -84,6 +85,50 @@ void MessageFactoryTest::testCreateForward()
   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
   QVERIFY( fw->subject()->asUnicodeString() == QLatin1String( "Fwd: Test Email Subject" ) );
   QVERIFY( fw->body() == fwdMsg.toLatin1() );
+
+}
+
+
+void MessageFactoryTest::testCreateRedirect()
+{
+  KMime::Message::Ptr msg = createTestMessage();
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+
+  MessageFactory factory( msg, 0 );
+  factory.setIdentityManager( identMan );
+
+  QString redirectTo = QLatin1String("redir@redir.com");
+  KMime::Message::Ptr rdir =  factory.createRedirect( redirectTo );
+
+  QDateTime date = rdir->date()->dateTime().dateTime();
+  QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+  datetime = rdir->date()->asUnicodeString();
+
+  kDebug() << rdir->encodedContent();
+  
+  QString msgId = MessageCore::StringUtil::generateMessageId( msg->sender()->asUnicodeString(), QString() );
+      
+  QString baseline = QString::fromLatin1( "From: me@me.me\n"
+                                          "Subject: Test Email Subject\n"
+                                          "Date: %2\n"
+                                          "MIME-Version: 1.0\n"
+                                          "Content-Transfer-Encoding: 7Bit\n"
+                                          "Content-Type: text/plain; charset=\"us-ascii\"\n"
+                                          "Resent-Message-ID: %3\n"
+                                          "Resent-Date: %4\n"
+                                          "To: %1\n"
+                                          "Resent-To:  <>\n"
+                                          "X-KMail-Redirect-From: me@me.me (by way of  <>)\n"
+                                          "X-KMail-Recipients: redir@redir.com\n"
+                                          "\n"
+                                          "All happy families are alike; each unhappy family is unhappy in its own way." );
+  baseline = baseline.arg( redirectTo ).arg( datetime ).arg( msgId ).arg( datetime );
+
+  kDebug() << baseline.toLatin1();
+
+//   QString fwdStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> All happy families are alike; each unhappy family is unhappy in its own way.\n" );
+  QVERIFY( rdir->subject()->asUnicodeString() == QLatin1String( "Test Email Subject" ) );
+  QVERIFY( rdir->encodedContent() == baseline.toLatin1() );
 
 }
 

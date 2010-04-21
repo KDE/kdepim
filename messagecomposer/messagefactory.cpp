@@ -369,6 +369,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   // copy the message 1:1
   KMime::Message::Ptr msg( new KMime::Message );
   msg->setContent( m_origMsg->encodedContent() );
+  msg->parse();
 
   uint id = 0;
   QString strId = msg->headerByType( "X-KMail-Identity" ) ? msg->headerByType( "X-KMail-Identity" )->asUnicodeString().trimmed() : QString::fromLocal8Bit("");
@@ -407,8 +408,9 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   header = new KMime::Headers::Generic( "Resent-Date", msg.get(), newDate, "utf-8" );
   msg->setHeader( header );
 
-  header = new KMime::Headers::Generic( "Resent-To", msg.get(), toStr, "utf-8" );
-  msg->setHeader( header );
+  KMime::Headers::To* headerT = new KMime::Headers::To( msg.get(), toStr, "utf-8" );
+  msg->setHeader( headerT );
+  
   header = new KMime::Headers::Generic( "Resent-To", msg.get(), strFrom, "utf-8" );
   msg->setHeader( header );
 
@@ -416,6 +418,7 @@ KMime::Message::Ptr MessageFactory::createRedirect( const QString &toStr )
   msg->setHeader( header );
   header = new KMime::Headers::Generic( "X-KMail-Recipients", msg.get(), toStr, "utf-8" );
   msg->setHeader( header );
+  msg->assemble();
 
   link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
   return msg;
