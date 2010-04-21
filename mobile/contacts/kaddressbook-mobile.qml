@@ -22,9 +22,17 @@ import Qt 4.7
 import org.kde 4.5
 import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.akonadi.contacts 4.5 as Akonadi
 
 KPIM.MainView {
   id: kaddressbookMobile
+
+  Akonadi.ContactView {
+    id: contactView
+    z: 0
+    anchors.fill: parent
+    contactItemId: -1
+  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
@@ -76,9 +84,9 @@ KPIM.MainView {
             anchors.left: collectionView.right
             onItemSelected: {
               // Prevent reloading of the message, perhaps this should be done
-              // in messageview itself.
-              if ( messageView.messageItemId != contactList.currentItemId )
-                messageView.messageItemId = contactList.currentItemId;
+              // in contactView itself.
+              if ( contactView.contactItemId != contactList.currentItemId )
+                contactView.contactItemId = contactList.currentItemId;
               folderPanel.collapse()
             }
           }
@@ -169,7 +177,7 @@ KPIM.MainView {
             height: parent.height / 6
             buttonText: "Previous"
             onClicked: {
-              if ( messageView.messageItemId >= 0 )
+              if ( contactView.contactItemId >= 0 )
                 contactList.previousItem();
 
               actionPanel.collapse();
@@ -182,7 +190,7 @@ KPIM.MainView {
             height: parent.height / 6
             buttonText: "Next"
             onClicked: {
-              if ( messageView.messageItemId >= 0 )
+              if ( contactView.contactItemId >= 0 )
                 contactList.nextItem();
 
               actionPanel.collapse();
