@@ -33,6 +33,13 @@ KPIM.MainView {
     anchors.fill: parent
     itemId: -1
   }
+  Akonadi.ContactGroupView {
+    id: contactGroupView
+    z: 0
+    anchors.fill: parent
+    itemId: -1
+    visible: false
+  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
@@ -83,10 +90,16 @@ KPIM.MainView {
             anchors.right: parent.right
             anchors.left: collectionView.right
             onItemSelected: {
-              // Prevent reloading of the message, perhaps this should be done
-              // in contactView itself.
-              if ( contactView.itemId != contactList.currentItemId )
+              if ( itemModel.typeForIndex( contactList.currentIndex ) == "contact" ) {
                 contactView.itemId = contactList.currentItemId;
+                contactView.visible = true;
+                contactGroupView.visible = false;
+              }
+              if ( itemModel.typeForIndex( contactList.currentIndex ) == "group" ) {
+                contactGroupView.itemId = contactList.currentItemId;
+                contactView.visible = false;
+                contactGroupView.visible = true;
+              }
               folderPanel.collapse()
             }
           }

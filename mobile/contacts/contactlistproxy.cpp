@@ -40,6 +40,8 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
         if ( addressee.photo().isEmpty() )
           return KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Dialog, KIconLoader::SizeHuge );
         return QPixmap::fromImage( addressee.photo().data() );
+      case TypeRole:
+        return QLatin1String( "contact" );
     }
   } else if ( item.isValid() && item.hasPayload<KABC::ContactGroup>() ) {
     const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
@@ -48,7 +50,12 @@ QVariant ContactListProxy::data(const QModelIndex& index, int role) const
         return group.name();
       case PictureRole:
         return KIconLoader::global()->loadIcon( "x-mail-distribution-list", KIconLoader::Dialog, KIconLoader::SizeHuge );
+      case TypeRole:
+        return QLatin1String( "group" );
     }
+  } else {
+    if ( role == TypeRole )
+      return QString();
   }
 
   return QSortFilterProxyModel::data( index, role );
@@ -64,5 +71,9 @@ void ContactListProxy::setSourceModel(QAbstractItemModel* sourceModel)
   setRoleNames( names );
 }
 
+QString ContactListProxy::typeForIndex(int row) const
+{
+  return index( row, 0 ).data( TypeRole ).toString();
+}
 
 #include "contactlistproxy.h"

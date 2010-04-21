@@ -53,7 +53,8 @@ qint64 ContactGroupViewItem::itemId() const
 
 void ContactGroupViewItem::setItemId(qint64 id)
 {
-  m_viewer->setContactGroup( Akonadi::Item( id ) );
+  if ( itemId() != id )
+    m_viewer->setContactGroup( Akonadi::Item( id ) );
 }
 
 #include "contactgroupviewitem.moc"

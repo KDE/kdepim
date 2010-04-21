@@ -32,13 +32,17 @@ class ContactListProxy : public ListProxy
   public:
     enum Role {
       NameRole = Akonadi::EntityTreeModel::UserRole + 1,
-      PictureRole
+      PictureRole,
+      TypeRole
     };
 
     explicit ContactListProxy( QObject* parent = 0 );
 
     QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
     void setSourceModel(QAbstractItemModel* sourceModel);
+
+  public slots:
+    QString typeForIndex( int row ) const;
 };
 
 #endif
