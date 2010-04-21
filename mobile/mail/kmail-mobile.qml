@@ -168,15 +168,9 @@ KPIM.MainView {
       handleHeight: 150
       contentWidth: 240
       content: [
-          Text {
-            id: actionLabel
-            text: "Actions"
-            style: Text.Sunken
-            anchors.horizontalCenter: parent.horizontalCenter
-          },
           KPIM.Button {
             id: moveButton
-            anchors.top: actionLabel.bottom;
+            anchors.top: parent.top;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
