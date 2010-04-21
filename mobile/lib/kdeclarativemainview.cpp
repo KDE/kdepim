@@ -161,7 +161,7 @@ void KDeclarativeMainView::setListPayloadPart( const QByteArray &payloadPart )
   d->mChangeRecorder->itemFetchScope().fetchPayloadPart( payloadPart );
 }
 
-void KDeclarativeMainView::setMimeType( const QString &mimeType )
+void KDeclarativeMainView::addMimeType( const QString &mimeType )
 {
   d->mChangeRecorder->setMimeTypeMonitored( mimeType );
 }

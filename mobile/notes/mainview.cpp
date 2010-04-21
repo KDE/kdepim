@@ -37,7 +37,7 @@ using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "notes", new NoteListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
-  setMimeType( "text/x-vnd.akonadi.note" );
+  addMimeType( "text/x-vnd.akonadi.note" );
 }
 
 QString MainView::noteTitle(Entity::Id id)

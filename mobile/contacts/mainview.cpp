@@ -23,10 +23,12 @@
 #include <QtDeclarative/QDeclarativeEngine>
 
 #include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "kaddressbook-mobile", new ContactListProxy, parent )
 {
-  setMimeType( KABC::Addressee::mimeType() );
+  addMimeType( KABC::Addressee::mimeType() );
+  addMimeType( KABC::ContactGroup::mimeType() );
 }
 
 #include "mainview.moc"

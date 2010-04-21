@@ -32,7 +32,7 @@
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
 {
-  setMimeType( KMime::Message::mimeType() );
+  addMimeType( KMime::Message::mimeType() );
   setListPayloadPart( Akonadi::MessagePart::Header );
 }
 

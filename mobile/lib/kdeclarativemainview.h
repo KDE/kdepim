@@ -54,7 +54,7 @@ public:
   void setListPayloadPart( const QByteArray &payloadPart );
 
   /** Mime type of the items handled by this application. */
-  void setMimeType( const QString &mimeType );
+  void addMimeType( const QString &mimeType );
 
 public slots:
   void setSelectedAccount( int row );

@@ -37,6 +37,6 @@ using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "tasks", new TaskListProxy( Akonadi::EntityTreeModel::UserRole ), parent )
 {
-  setMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
+  addMimeType( IncidenceMimeTypeVisitor::todoMimeType() );
 
 }
