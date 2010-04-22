@@ -22,7 +22,6 @@ struct DeclarativeAkonadiItemPrivate
   };
 
 /// Members
-  QWidget *mItemViewer;
   QGraphicsProxyWidget *mProxy;
 
   /// Handle mouse events for clicks and swipes
@@ -33,13 +32,12 @@ struct DeclarativeAkonadiItemPrivate
   double mSwipeLength;
 
 /// Methods
-  DeclarativeAkonadiItemPrivate( QWidget *itemViewer );
+  DeclarativeAkonadiItemPrivate();
   Direction direction() const;
 };
 
-DeclarativeAkonadiItemPrivate::DeclarativeAkonadiItemPrivate( QWidget *itemViewer )
-  : mItemViewer( itemViewer )
-  , mProxy( 0 )
+DeclarativeAkonadiItemPrivate::DeclarativeAkonadiItemPrivate()
+  : mProxy( 0 )
   , mMousePressed( false )
   , mDx( 0 )
   , mDy( 0 )
@@ -72,25 +70,36 @@ DeclarativeAkonadiItemPrivate::Direction DeclarativeAkonadiItemPrivate::directio
 
 /// DeclarativeAkonadiItem
 
-DeclarativeAkonadiItem::DeclarativeAkonadiItem( QWidget *itemViewer, QDeclarativeItem *parent )
+DeclarativeAkonadiItem::DeclarativeAkonadiItem( QDeclarativeItem *parent )
   : QDeclarativeItem( parent )
-  , d_ptr( new DeclarativeAkonadiItemPrivate( itemViewer ) )
+  , d_ptr( new DeclarativeAkonadiItemPrivate )
 {
   Q_D( DeclarativeAkonadiItem );
 
   d->mClickDetectionTimer.setInterval( 150 );
   d->mClickDetectionTimer.setSingleShot( true );
 
-  d->mProxy->setParent( new QGraphicsProxyWidget( this ) );
-  d->mProxy->setWidget( d->mItemViewer );
+  d->mProxy = new QGraphicsProxyWidget( this );
   d->mProxy->installEventFilter( this );
 }
 
 DeclarativeAkonadiItem::~DeclarativeAkonadiItem()
 {
   Q_D( DeclarativeAkonadiItem );
-  d->mProxy->removeEventFilter( this );
+  // Weird, the proxy seems to be already deleted at this point. If we get crashes
+  // related to events we need to do this different.
+  //d->mProxy->removeEventFilter( this );
   delete d_ptr;
+}
+
+void DeclarativeAkonadiItem::setWidget( QWidget *widget )
+{
+  Q_D( DeclarativeAkonadiItem );
+
+  if ( QWidget *curWidget = d->mProxy->widget() )
+    delete curWidget;
+
+  d->mProxy->setWidget( widget );
 }
 
 double DeclarativeAkonadiItem::swipeLength() const
@@ -131,15 +140,15 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
     QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
     if ( mev->button() == Qt::LeftButton ) {
       if ( wasActive ) // Timer didn't time out, we're dealing with a click
-        slotSimulateMouseClick( mev->pos().toPoint() );
+        simulateMouseClick( mev->pos().toPoint() );
       else if ( qAbs( d->mDx ) >= ( d->mSwipeLength * width() ) ) {
         // We don't trigger a next or previous *always*. Only when the configured
         // swipelength is met.
         const DeclarativeAkonadiItemPrivate::Direction dir = d->direction();
         if ( dir == DeclarativeAkonadiItemPrivate::Left ) {
-          emit nextMessageRequest();
+          emit nextItemRequest();
         } else if ( dir == DeclarativeAkonadiItemPrivate::Right ) {
-          emit previousMessageRequest();
+          emit previousItemRequest();
         }
       }
 
@@ -155,9 +164,9 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
 
     const DeclarativeAkonadiItemPrivate::Direction dir = d->direction();
     if ( dir == DeclarativeAkonadiItemPrivate::Up )
-      slotScrollUp( d->mDy );
+      scrollUp( d->mDy );
     else if ( dir == DeclarativeAkonadiItemPrivate::Down )
-      slotScrollDown( d->mDy );
+      scrollDown( d->mDy );
 
     return true;
   }
@@ -165,12 +174,12 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
   return QObject::eventFilter( obj, ev );
 }
 
-void DeclarativeAkonadiItem::slotScrollDown( double /* dist */ )
+void DeclarativeAkonadiItem::scrollDown( int /* dist */ )
 { }
 
-void DeclarativeAkonadiItem::slotScrollUp( double /* dist */ )
+void DeclarativeAkonadiItem::scrollUp( int /* dist */ )
 { }
 
-void DeclarativeAkonadiItem::slotSimulateMouseClick( const QPointF &/* pos */ )
+void DeclarativeAkonadiItem::simulateMouseClick( const QPoint &/* pos */ )
 { }
 

@@ -13,10 +13,6 @@ class MOBILEUI_EXPORT DeclarativeAkonadiItem : public QDeclarativeItem
   Q_PROPERTY( int itemId READ itemId WRITE setItemId )
   Q_PROPERTY( double swipeLength READ swipeLength WRITE setSwipeLength )
 
-protected:
-  explicit DeclarativeAkonadiItem( QWidget *itemViewer, QDeclarativeItem *parent = 0 );
-  ~DeclarativeAkonadiItem();
-
 public:
   /**
    * Set/get the Akonadi::Item::Id. We use quint64 here so we can deal with
@@ -35,10 +31,19 @@ public:
   void setSwipeLength( double length );
 
 signals:
-  void nextMessageRequest();
-  void previousMessageRequest();
+  void nextItemRequest();
+  void previousItemRequest();
 
 protected:
+  explicit DeclarativeAkonadiItem( QDeclarativeItem *parent = 0 );
+  ~DeclarativeAkonadiItem();
+
+  /**
+   * Sets the widget that show the current item. If a widget currently is set,
+   * it will be deleted.
+   */
+  void setWidget( QWidget *widget );
+
   /** Reimplement QObject::eventFilter() for swiping */
   virtual bool eventFilter( QObject *obj, QEvent *event );
 
@@ -52,8 +57,8 @@ protected:
    *
    * @param dist the distance in pixels to scroll.
    */
-  virtual void slotScrollDown( double dist );
-  virtual void slotScrollUp( double dist );
+  virtual void scrollDown( int dist );
+  virtual void scrollUp( int dist );
 
   /**
    * A mouse click was detected by the custom event handling. If you need to
@@ -63,7 +68,7 @@ protected:
    *       mouse buttons as it is operated with a finger. Therefore, on normal
    *       systems this method is only triggered for left mouse button clicks.
    */
-  virtual void slotSimulateMouseClick( const QPointF &pos );
+  virtual void simulateMouseClick( const QPoint &pos );
 
 private:
   DeclarativeAkonadiItemPrivate * const d_ptr;
