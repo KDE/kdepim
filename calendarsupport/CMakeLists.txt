@@ -5,6 +5,10 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
+if(KDEPIM_MOBILE_UI)
+#  add_subdirectory(qml)
+endif(KDEPIM_MOBILE_UI)
+
 ########### next target ###############
 
 set( kcalakonadi_LIB_SRC
