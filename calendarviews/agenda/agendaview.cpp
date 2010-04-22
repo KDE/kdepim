@@ -641,6 +641,7 @@ void AgendaView::updateView()
 void AgendaView::updateConfig()
 {
   mAgenda->updateConfig();
+
   mAllDayAgenda->updateConfig();
 
   mTimeLabelsZone->updateAll();

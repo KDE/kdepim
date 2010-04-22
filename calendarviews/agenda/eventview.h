@@ -170,7 +170,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     void saveConfig( KConfigGroup &configGroup );
 
-    // TODO_SPLIT: review these collections
+    //----------------------------------------------------------------------------
+    // TODO_SPLIT: review these collection stuff
     Akonadi::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
     Akonadi::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
     void setCustomCollectionSelectionProxyModel( Akonadi::CollectionSelectionProxyModel* model );
@@ -179,6 +180,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     static Akonadi::CollectionSelection* globalCollectionSelection();
     static void setGlobalCollectionSelection( Akonadi::CollectionSelection* selection );
+    //----------------------------------------------------------------------------
 
     /**
      * returns the view at the given widget coordinate. This is usually the view itself,
@@ -196,7 +198,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     /**
      * provides a hint back to the caller on the maximum number of dates
-     * that the view supports.  A return value of 0 means no maximum.
+     * that the view supports. A return value of 0 means no maximum.
      */
     virtual int maxDatesHint() const = 0;
 
@@ -228,7 +230,8 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       @param incidenceList a list of incidences to show.
       @param date is the QDate on which the incidences are being shown.
     */
-    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date ) = 0;
+    virtual void showIncidences( const Akonadi::Item::List &incidenceList,
+                                 const QDate &date ) = 0;
 
     /**
       Updates the current display to reflect changes that may have happened
@@ -253,7 +256,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void changeIncidenceDisplay( const Akonadi::Item &, int ) = 0;
 
     /**
-      Re-reads the KOrganizer configuration and picks up relevant
+      Re-reads the configuration and picks up relevant
       changes which are applicable to the view.
     */
     virtual void updateConfig();
@@ -337,7 +340,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     /**
      * instructs the receiver to toggle the completion state of the Incidence
-     * (which must be a  Todo type).
+     * (which must be a Todo type).
      */
     void toggleTodoCompletedSignal( const Akonadi::Item & );
 

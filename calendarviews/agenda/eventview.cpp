@@ -557,7 +557,7 @@ QByteArray EventView::identifier() const
   return d->identifier;
 }
 
-void EventView::setIdentifier( const QByteArray& identifier )
+void EventView::setIdentifier( const QByteArray &identifier )
 {
   d->identifier = identifier;
 }
