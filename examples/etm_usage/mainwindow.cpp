@@ -34,6 +34,7 @@
 #include "unreadmailswidget.h"
 #include "recursiveitemlistwidget.h"
 #include "entityfindingwidget.h"
+#include "collectionmonitoredwidget.h"
 
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new UnreadMailsWidget(tabWidget), "Unread Mails");
   tabWidget->addTab(new RecursiveItemListWidget(tabWidget), "Items only");
   tabWidget->addTab(new EntityFindingWidget(tabWidget), "Find entities");
+  tabWidget->addTab(new CollectionMonitoredWidget(tabWidget), "SetCollectionMonitored");
 
   setCentralWidget(tabWidget);
 }
