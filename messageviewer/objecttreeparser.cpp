@@ -879,9 +879,7 @@ bool ObjectTreeParser::okDecryptMIME( KMime::Content& data,
       std::stringstream ss;
       ss << decryptResult << '\n' << verifyResult;
       kDebug() << ss.str().c_str();
-      // TODO(leo) which do we want?
-      signatureFound = !verifyResult.error();
-//       signatureFound = verifyResult.signatures().size() > 0;
+      signatureFound = verifyResult.signatures().size() > 0;
       signatures = verifyResult.signatures();
       bDecryptionOk = !decryptResult.error();
       passphraseError =  decryptResult.error().isCanceled()
