@@ -2,7 +2,7 @@
     utils/archivedefinition.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2009 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009, 2010 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -63,6 +63,8 @@ static const QLatin1String NAME_ENTRY( "Name" );
 static const QLatin1String COMMAND_ENTRY( "pack-command" );
 static const QLatin1String EXTENSIONS_ENTRY( "extensions" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
+static const QLatin1String NULL_SEPARATED_STDIN_INDICATOR( "0|" );
+static const QLatin1Char   NEWLINE_SEPARATED_STDIN_INDICATOR( '|' );
 
 namespace {
 
@@ -91,6 +93,15 @@ namespace {
                 throw ArchiveDefinitionError( id(), i18n("'extensions' entry is empty/missing") );
             KShell::Errors errors;
             QString cmdline = group.readEntry( COMMAND_ENTRY );
+            if ( cmdline.startsWith( NULL_SEPARATED_STDIN_INDICATOR ) ) {
+                setArgumentPassingMethod(NullSeparatedInputFile );
+                cmdline.remove( 0, 2 );
+            } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
+                setArgumentPassingMethod( NewlineSeparatedInputFile );
+                cmdline.remove( 0, 1 );
+            }
+            if ( argumentPassingMethod() != CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
+                throw ArchiveDefinitionError( id(), i18n("Cannot use both %f and |") );
             cmdline.replace( FILE_PLACEHOLDER, QLatin1String("__files_go_here__") );
             QStringList l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
             l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
@@ -119,7 +130,20 @@ namespace {
                 m_prefixArguments = l.mid( 1, idx-1 );
                 m_postfixArguments = l.mid( idx+1 );
             }
-            qDebug() << "ArchiveDefinition[" << id() << ']' << m_command << m_prefixArguments << FILE_PLACEHOLDER << m_postfixArguments;
+            switch ( argumentPassingMethod() ) {
+            case CommandLine:
+                qDebug() << "ArchiveDefinition[" << id() << ']' << m_command << m_prefixArguments << FILE_PLACEHOLDER << m_postfixArguments;
+                break;
+            case NewlineSeparatedInputFile:
+                qDebug() << "ArchiveDefinition[" << id() << ']' << "find | " << m_command << m_prefixArguments;
+                break;
+            case NullSeparatedInputFile:
+                qDebug() << "ArchiveDefinition[" << id() << ']' << "find -print0 | " << m_command << m_prefixArguments;
+                break;
+            case NumArgumentPassingMethods:
+                assert( !"Should not happen" );
+                break;
+            }
         }
 
     private:
@@ -136,12 +160,19 @@ namespace {
 }
 
 ArchiveDefinition::ArchiveDefinition( const QString & id, const QString & label, const QStringList & extensions )
-    : m_id( id ), m_label( label ), m_extensions( extensions )
+    : m_id( id ), m_label( label ), m_extensions( extensions ), m_method( CommandLine )
 {
 
 }
 
 ArchiveDefinition::~ArchiveDefinition() {}
+
+static QByteArray make_input( const QStringList & files, char sep ) {
+    QByteArray result;
+    Q_FOREACH( const QString & file, files )
+        result += QFile::encodeName( file ) + sep;
+    return result;
+}
 
 shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) const {
     const QString base = heuristicBaseDirectory( files );
@@ -150,9 +181,25 @@ shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) co
     qDebug() << "heuristicBaseDirectory(" << files << ") ->" << base;
     const QStringList relative = makeRelativeTo( base, files );
     qDebug() << "relative" << relative;
-    return Input::createFromProcessStdOut( doGetCommand(),
-                                           doGetArguments( relative ),
-                                           QDir( base ) );
+    switch ( m_method ) {
+    case CommandLine:
+        return Input::createFromProcessStdOut( doGetCommand(),
+                                               doGetArguments( relative ),
+                                               QDir( base ) );
+    case NewlineSeparatedInputFile:
+        return Input::createFromProcessStdOut( doGetCommand(),
+                                               doGetArguments( relative ),
+                                               QDir( base ),
+                                               make_input( relative, '\n' ) );
+    case NullSeparatedInputFile:
+        return Input::createFromProcessStdOut( doGetCommand(),
+                                               doGetArguments( relative ),
+                                               QDir( base ),
+                                               make_input( relative, '\0' ) );
+    case NumArgumentPassingMethods:
+        assert( "!Should not happen" );
+    }
+    return shared_ptr<Input>(); // make compiler happy
 }
 
 // static
