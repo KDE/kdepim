@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KAddressbook Mobile
+Name[x-test]=xxKAddressbook Mobilexx
 Exec=kaddressbook-mobile
 
 Icon=kaddressbook-mobile

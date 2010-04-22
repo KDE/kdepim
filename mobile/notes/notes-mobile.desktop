@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Notes Mobile
+Name[x-test]=xxKDE Notes Mobilexx
 Exec=tasks-mobile
 
 Icon=notes-mobile

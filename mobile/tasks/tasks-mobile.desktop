@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Tasks Mobile
+Name[x-test]=xxKDE Tasks Mobilexx
 Exec=tasks-mobile
 
 Icon=tasks-mobile

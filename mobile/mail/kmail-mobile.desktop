@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KMail Mobile
+Name[x-test]=xxKMail Mobilexx
 Exec=kmail-mobile
 
 Icon=kmail-mobile
