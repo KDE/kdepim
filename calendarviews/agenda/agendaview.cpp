@@ -214,13 +214,12 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   // resize dummy widget so the allday agenda lines up with the hourly agenda
   dummyAllDayLeft->setFixedWidth( mTimeLabelsZone->width() - mTimeBarHeaderFrame->width() );
 
-  /* Update widgets to reflect user preferences */
-//  updateConfig();
   createDayLabels();
 
   /* Connect the agendas */
-//(   connectAgenda( mAgenda, mAgendaPopup, mAllDayAgenda );
-//  connectAgenda( mAllDayAgenda, mAllDayAgendaPopup, mAgenda );
+  //TODO_SPLIT
+  connectAgenda( mAgenda,0/* mAgendaPopup*/, mAllDayAgenda );
+  connectAgenda( mAllDayAgenda,0/* mAllDayAgendaPopup*/, mAgenda );
 
   connect( mAgenda,
            SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
@@ -253,7 +252,7 @@ void AgendaView::setCalendar( Akonadi::Calendar *cal )
 }
 
 void AgendaView::connectAgenda( Agenda *agenda, QMenu *popup,
-                                      Agenda *otherAgenda )
+                                Agenda *otherAgenda )
 {
 
   Q_UNUSED( popup );
