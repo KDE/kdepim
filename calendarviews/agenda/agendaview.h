@@ -22,7 +22,7 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-//TODO_SPLIT: MUDAR NOMES
+
 #ifndef AGENDAVIEW_H
 #define AGENDAVIEW_H
 
@@ -100,20 +100,20 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
     virtual ~AgendaView();
 
-    /** Returns maximum number of days supported by the singleagendaview */
-    virtual int maxDatesHint();
+    /** Returns maximum number of days supported by the agendaview */
+    virtual int maxDatesHint() const;
 
     /** Returns number of currently shown dates. */
-    virtual int currentDateCount();
+    virtual int currentDateCount() const;
 
     /** returns the currently selected events */
-    virtual Akonadi::Item::List selectedIncidences();
+    virtual Akonadi::Item::List selectedIncidences() const;
 
     /** returns the currently selected incidence's dates */
-    virtual DateList selectedIncidenceDates();
+    virtual DateList selectedIncidenceDates() const;
 
     /** return the default start/end date/time for new events   */
-    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
+    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
 
     /** Remove all events from view */
     void clearView();
@@ -122,19 +122,21 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     //CalPrinter::PrintType printType();
 
     /** start-datetime of selection */
-    virtual QDateTime selectionStart() { return mTimeSpanBegin; }
+    virtual QDateTime selectionStart() const { return mTimeSpanBegin; }
 
     /** end-datetime of selection */
-    virtual QDateTime selectionEnd() { return mTimeSpanEnd; }
+    virtual QDateTime selectionEnd() const { return mTimeSpanEnd; }
 
     /** returns true if selection is for whole day */
-    bool selectedIsAllDay() { return mTimeSpanInAllDay; }
+    bool selectedIsAllDay() const { return mTimeSpanInAllDay; }
+
     /** make selected start/end invalid */
     void deleteSelectedDateTime();
-    /** returns if only a single cell is selected, or a range of cells */
-    bool selectedIsSingleCell();
 
-    /* reimp from BaseView */
+    /** returns if only a single cell is selected, or a range of cells */
+    bool selectedIsSingleCell() const;
+
+    /* reimp from EventView */
     virtual void setCalendar( Akonadi::Calendar *cal );
 
     /** Show only incidences from the given collection selection. */

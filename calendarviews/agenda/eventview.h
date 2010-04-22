@@ -57,7 +57,7 @@ class QMenu;
 
 
 /**
-  KOEventView is the abstract base class from wich all other
+  EventView is the abstract base class from wich all other
   calendar views for event data are derived.  It provides methods for
   displaying
   appointments and events on one or more days.  The actual number of
@@ -97,73 +97,72 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     /**
       Return calendar object of this view.
     */
-    virtual Akonadi::Calendar *calendar();
-
+    virtual Akonadi::Calendar *calendar() const;
 
     Akonadi::CalendarSearch* calendarSearch() const;
 
-    static bool usesCompletedTodoPixmap( const Akonadi::Item &aitem,
+    /**
+       A todo can have two pixmaps, one for completed and one for incomplete.
+    */
+    static bool usesCompletedTodoPixmap( const Akonadi::Item &aItem,
                                          const QDate &date );
 
     /**
-      @return a list of selected events.  Most views can probably only
+      @return a list of selected events. Most views can probably only
       select a single event at a time, but some may be able to select
       more than one.
     */
-    virtual Akonadi::Item::List selectedIncidences() = 0;
+    virtual Akonadi::Item::List selectedIncidences() const = 0;
 
     /**
       Returns a list of the dates of selected events. Most views can
       probably only select a single event at a time, but some may be able
       to select more than one.
     */
-    virtual DateList selectedIncidenceDates() = 0;
+    virtual DateList selectedIncidenceDates() const = 0;
 
     /**
        Returns the start of the selection, or an invalid QDateTime if there is no selection
        or the view doesn't support selecting cells.
      */
-    virtual QDateTime selectionStart() { return QDateTime(); }
+    virtual QDateTime selectionStart() const { return QDateTime(); }
 
     /**
        Returns the end of the selection, or an invalid QDateTime if there is no selection
        or the view doesn't support selecting cells.
      */
-    virtual QDateTime selectionEnd() { return QDateTime(); }
-
-    //TODO_SPLIT, por isto no wrapper
-    //virtual CalPrinterBase::PrintType printType();
+    virtual QDateTime selectionEnd() const { return QDateTime(); }
 
     /**
       Returns the number of currently shown dates.
       A return value of 0 means no idea.
     */
-    virtual int currentDateCount() = 0;
+    virtual int currentDateCount() const = 0;
 
     /**
      * returns whether this view should be displayed full window.
      * Base implementation returns false.
      */
-    virtual bool usesFullWindow();
+    virtual bool usesFullWindow() const;
 
     /**
      * returns whether this view supports zoom.
      * Base implementation returns false.
      */
-    virtual bool supportsZoom();
+    virtual bool supportsZoom() const;
 
     /**
      * returns whether this view supports date range selection
      * Base implementation returns true.
      */
-    virtual bool supportsDateRangeSelection();
+    virtual bool supportsDateRangeSelection() const;
 
     virtual bool hasConfigurationDialog() const;
 
-    virtual void showConfigurationDialog( QWidget* parent );
+    virtual void showConfigurationDialog( QWidget *parent );
 
     QByteArray identifier() const;
-    void setIdentifier( const QByteArray& identifier );
+    void setIdentifier( const QByteArray &identifier );
 
     /**
      * reads the view configuration. View-specific configuration can be
@@ -211,7 +210,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * provides a hint back to the caller on the maximum number of dates
      * that the view supports.  A return value of 0 means no maximum.
      */
-    virtual int maxDatesHint() = 0;
+    virtual int maxDatesHint() const = 0;
 
     /** This view is a view for displaying events. */
 
@@ -283,8 +282,10 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       Sets the default start/end date/time for new events.
       Return true if anything was changed
     */
-    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
+    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;
+
     void focusChanged( QWidget*, QWidget* );
+
     /**
      Perform the default action for an incidence, e.g. open the event editor,
      when double-clicking an event in the agenda view.

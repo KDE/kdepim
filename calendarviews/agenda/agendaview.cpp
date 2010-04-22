@@ -545,18 +545,18 @@ void AgendaView::enableAgendaUpdate( bool enable )
   mAllowAgendaUpdate = enable;
 }
 
-int AgendaView::maxDatesHint()
+int AgendaView::maxDatesHint() const
 {
   // Not sure about the max number of events, so return 0 for now.
   return 0;
 }
 
-int AgendaView::currentDateCount()
+int AgendaView::currentDateCount() const
 {
   return mSelectedDates.count();
 }
 
-Akonadi::Item::List AgendaView::selectedIncidences()
+Akonadi::Item::List AgendaView::selectedIncidences() const
 {
   Akonadi::Item::List selected;
 
@@ -573,7 +573,7 @@ Akonadi::Item::List AgendaView::selectedIncidences()
   return selected;
 }
 
-DateList AgendaView::selectedIncidenceDates()
+DateList AgendaView::selectedIncidenceDates() const
 {
   DateList selected;
   QDate qd;
@@ -591,7 +591,7 @@ DateList AgendaView::selectedIncidenceDates()
   return selected;
 }
 
-bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay )
+bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
 {
   if ( selectionStart().isValid() ) {
     QDateTime start = selectionStart();
@@ -614,7 +614,7 @@ bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &
 }
 
 /** returns if only a single cell is selected, or a range of cells */
-bool AgendaView::selectedIsSingleCell()
+bool AgendaView::selectedIsSingleCell() const
 {
   if ( !selectionStart().isValid() || !selectionEnd().isValid() ) {
     return false;
@@ -1526,7 +1526,7 @@ void AgendaView::readSettings( KConfig *config )
   // the size depends on the number of plugins used
   // we don't want to read invalid/corrupted settings or else agenda becomes invisible
   if ( sizes.count() >= 2 && !sizes.contains( 0 ) ) {
-      mSplitterAgenda->setSizes( sizes );
+    mSplitterAgenda->setSizes( sizes );
   }
 
   updateConfig();

@@ -7,3 +7,5 @@
 * KOEventView::printType stays in korganizer, in the container
 
 * See if i can remove EventView::maxDatesHint(), doesn't seem to be used anywhere
+
+* Remove KOEditorPopup stuff

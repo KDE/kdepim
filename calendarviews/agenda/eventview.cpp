@@ -27,8 +27,6 @@
 #include "agendaview.h" // TODO AKONADI_PORT
 #include "prefs.h"
 
-//TODO_SPLIT
-//#include "koeventpopupmenu.h"
 #include <libkdepim/pimmessagebox.h>
 #include <akonadi/kcal/collectionselection.h>
 #include <akonadi/kcal/collectionselectionproxymodel.h>
@@ -48,7 +46,7 @@
 
 using namespace Akonadi;
 CollectionSelection* EventView::sGlobalCollectionSelection = 0;
-//---------------------------------------------------------------------------
+
 
 /* static */
 void EventView::setGlobalCollectionSelection( CollectionSelection* s )
@@ -129,13 +127,17 @@ void EventView::Private::setUpModels()
 
 void EventView::Private::reconnectCollectionSelection()
 {
-  if ( q->globalCollectionSelection() )
+  if ( q->globalCollectionSelection() ) {
     q->globalCollectionSelection()->disconnect( q );
+  }
 
-  if ( customCollectionSelection )
+  if ( customCollectionSelection ) {
     customCollectionSelection->disconnect( q );
+  }
 
-  QObject::connect( q->collectionSelection(), SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)), q, SLOT(collectionSelectionChanged()) );
+  QObject::connect( q->collectionSelection(),
+                    SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)),
+                    q, SLOT(collectionSelectionChanged()) );
 }
 
 
@@ -153,15 +155,9 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), mChanger( 0 ), d( n
   connect( QApplication::instance(), SIGNAL(focusChanged(QWidget*,QWidget*)), this, SLOT(focusChanged(QWidget*,QWidget*)) );
 }
 
-//---------------------------------------------------------------------------
-
 EventView::~EventView()
 {
 }
-
-//---------------------------------------------------------------------------
-
-
 
 void EventView::defaultAction( const Item &aitem )
 {
@@ -180,7 +176,6 @@ void EventView::defaultAction( const Item &aitem )
   }
 }
 
-//---------------------------------------------------------------------------
 int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
 {
   const Incidence::Ptr inc = Akonadi::incidence( aitem );
@@ -221,15 +216,15 @@ int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
 
 void EventView::setCalendar( Akonadi::Calendar *cal )
 {
-  if (  d->calendar != cal ) {
+  if ( d->calendar != cal ) {
     d->calendar = cal;
-    if (  cal && d->collectionSelectionModel ) {
-      d->collectionSelectionModel->setSourceModel(  cal->model() );
+    if ( cal && d->collectionSelectionModel ) {
+      d->collectionSelectionModel->setSourceModel( cal->model() );
     }
   }
 }
 
-Akonadi::Calendar *EventView::calendar()
+Akonadi::Calendar *EventView::calendar() const
 {
   return d->calendar;
 }
@@ -261,17 +256,17 @@ void EventView::updateConfig()
 {
 }
 
-bool EventView::usesFullWindow()
+bool EventView::usesFullWindow() const
 {
   return false;
 }
 
-bool EventView::supportsZoom()
+bool EventView::supportsZoom() const
 {
   return false;
 }
 
-bool EventView::supportsDateRangeSelection()
+bool EventView::supportsDateRangeSelection() const
 {
   return true;
 }
@@ -281,11 +276,12 @@ bool EventView::hasConfigurationDialog() const
   return false;
 }
 
-void EventView::setDateRange( const KDateTime& start, const KDateTime& end )
+void EventView::setDateRange( const KDateTime &start, const KDateTime &end )
 {
 #if 0 //AKONADI_PORT the old code called showDates() (below), which triggers a repaint, which the old code relies on
-  if ( d->startDateTime == start && d->endDateTime == end )
+  if ( d->startDateTime == start && d->endDateTime == end ) {
     return;
+  }
 #endif
   d->startDateTime = start;
   d->endDateTime = end;
@@ -468,7 +464,7 @@ void EventView::clearSelection()
 {
 }
 
-bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay )
+bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const
 {
   Q_UNUSED( startDt );
   Q_UNUSED( endDt );
@@ -543,8 +539,9 @@ CollectionSelection* EventView::globalCollectionSelection()
 bool EventView::usesCompletedTodoPixmap( const Item &aitem, const QDate &date )
 {
   const Todo::Ptr todo = Akonadi::todo( aitem );
-  if ( !todo )
+  if ( !todo ) {
     return false;
+  }
 
   if ( todo->isCompleted() ) {
     return true;
@@ -574,6 +571,5 @@ void EventView::setIdentifier( const QByteArray& identifier )
 {
   d->identifier = identifier;
 }
-
 
 #include "eventview.moc"
