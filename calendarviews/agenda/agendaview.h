@@ -23,8 +23,8 @@
   without including the source code for Qt in the source distribution.
 */
 //TODO_SPLIT: MUDAR NOMES
-#ifndef _AGENDAVIEW_H
-#define _AGENDAVIEW_H
+#ifndef AGENDAVIEW_H
+#define AGENDAVIEW_H
 
 #include "eventviews_export.h"
 
