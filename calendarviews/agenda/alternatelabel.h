@@ -22,22 +22,22 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOALTERNATELABEL_H
-#define KOALTERNATELABEL_H
+#ifndef ALTERNATELABEL_H
+#define ALTERNATELABEL_H
 
 #include <QtGui/QLabel>
 #include <QtCore/QString>
 
 #include <kurl.h>
 
-class KOAlternateLabel : public QLabel
+class AlternateLabel : public QLabel
 {
   Q_OBJECT
   public:
-    KOAlternateLabel( const QString &shortlabel, const QString &longlabel,
+    AlternateLabel( const QString &shortlabel, const QString &longlabel,
                       const QString &extensivelabel = QString(),
                       QWidget *parent = 0 );
-    ~KOAlternateLabel();
+    ~AlternateLabel();
 
     virtual QSize minimumSizeHint() const;
 

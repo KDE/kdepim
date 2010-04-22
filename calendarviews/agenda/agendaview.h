@@ -22,12 +22,16 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOAGENDAVIEW_H
-#define KOAGENDAVIEW_H
+//TODO_SPLIT: MUDAR NOMES
+#ifndef SINGLE_AGENDAVIEW_H
+#define SINGLE_AGENDAVIEW_H
 
-#include "agendaview.h"
-#include "calprinter.h"
+#include "eventviews_export.h"
+
+#include "eventview.h"
+
 #include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/incidencechanger.h>
 
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
@@ -35,13 +39,14 @@
 #include <QFrame>
 #include <QPixmap>
 #include <QVector>
+#include <QLabel>
 
 class TimeLabels;
 class TimeLabelsZone;
 
-class KOAgenda;
-class KOAgendaItem;
-class KOAgendaView;
+class Agenda;
+class AgendaItem;
+class AgendaView;
 
 class KConfig;
 class KHBox;
@@ -58,16 +63,8 @@ namespace Akonadi {
   class CollectionSelection;
 }
 
-namespace KOrg {
-#ifndef KORG_NODECOS
-  namespace CalendarDecoration {
-    class Decoration;
-  }
-#endif
-}
-using namespace KOrg;
 
-class EventIndicator : public QFrame
+class EVENTVIEWS_EXPORT EventIndicator : public QFrame
 {
   Q_OBJECT
   public:
@@ -93,17 +90,17 @@ class EventIndicator : public QFrame
 };
 
 /**
-  KOAgendaView is the agenda-like view that displays events in a single
+  AgendaView is the agenda-like view that displays events in a single
   or multi-day view.
 */
-class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::CalendarObserver
+class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar::CalendarObserver
 {
   Q_OBJECT
   public:
-    explicit KOAgendaView( QWidget *parent = 0, bool isSideBySide = false );
-    virtual ~KOAgendaView();
+    explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
+    virtual ~AgendaView();
 
-    /** Returns maximum number of days supported by the koagendaview */
+    /** Returns maximum number of days supported by the singleagendaview */
     virtual int maxDatesHint();
 
     /** Returns number of currently shown dates. */
@@ -121,7 +118,8 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     /** Remove all events from view */
     void clearView();
 
-    CalPrinter::PrintType printType();
+    // TODO_SPLIT isto fica no wrapper
+    //CalPrinter::PrintType printType();
 
     /** start-datetime of selection */
     virtual QDateTime selectionStart() { return mTimeSpanBegin; }
@@ -144,7 +142,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     void setCollection( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collection() const;
 
-    KOAgenda *agenda() const { return mAgenda; }
+    Agenda *agenda() const { return mAgenda; }
     QSplitter *splitter() const { return mSplitterAgenda; }
 
     /* reimplemented from KCal::Calendar::CalendarObserver */
@@ -213,7 +211,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     /** Fill agenda using the current set value for the start date */
     void fillAgenda();
 
-    void connectAgenda( KOAgenda *agenda, QMenu *popup, KOAgenda *otherAgenda );
+    void connectAgenda( Agenda *agenda, QMenu *popup, Agenda *otherAgenda );
 
     /**
       Set the masks on the agenda widgets indicating, which days are holidays.
@@ -229,7 +227,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
 
   protected slots:
     /** Update event belonging to agenda item */
-    void updateEventDates( KOAgendaItem *item );
+    void updateEventDates( AgendaItem *item );
     /** update just the display of the given incidence, called by a single-shot timer */
     void doUpdateItem();
 
@@ -249,13 +247,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     void setupTimeLabel( TimeLabels *timeLabel );
     int timeLabelsWidth();
     void displayIncidence( const Akonadi::Item &incidence );
-#ifndef KORG_NODECOS
-    typedef QList<KOrg::CalendarDecoration::Decoration *> DecorationList;
-    bool loadDecorations( const QStringList &decorations, DecorationList &decoList );
     void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
-    void placeDecorations( DecorationList &decoList, const QDate &date,
-                           KHBox *labelBox, bool forWeek );
-#endif
 
   private:
     // view widgets
@@ -272,16 +264,17 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     QSplitter *mSplitterAgenda;
     QList<QLabel *> mTimeBarHeaders;
 
-    KOAgenda *mAllDayAgenda;
-    KOAgenda *mAgenda;
+    Agenda *mAllDayAgenda;
+    Agenda *mAgenda;
 
     TimeLabelsZone *mTimeLabelsZone;
 
     DateList mSelectedDates;  // List of dates to be displayed
     int mViewType;
 
-    KOEventPopupMenu *mAgendaPopup;
-    KOEventPopupMenu *mAllDayAgendaPopup;
+    //TODO_SPLIT: tirar isto para cima
+    //KOEventPopupMenu *mAgendaPopup;
+      //KOEventPopupMenu *mAllDayAgendaPopup;
 
     EventIndicator *mEventIndicatorTop;
     EventIndicator *mEventIndicatorBottom;

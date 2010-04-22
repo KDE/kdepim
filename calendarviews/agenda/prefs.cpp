@@ -23,10 +23,11 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "koprefs.h"
-#include "kocore.h"
+#include "prefs.h"
+//TODO_SPLIT
+//#include "kocore.h"
 
-#include "categoryconfig.h"
+//#include "categoryconfig.h"
 
 #include <kmime/kmime_header_parsing.h>
 #include <kpimidentities/identitymanager.h>
@@ -55,10 +56,10 @@
 
 using namespace KPIMIdentities;
 
-KOPrefs *KOPrefs::mInstance = 0;
-static K3StaticDeleter<KOPrefs> insd;
+Prefs *Prefs::mInstance = 0;
+static K3StaticDeleter<Prefs> insd;
 
-KOPrefs::KOPrefs() : KOPrefsBase()
+Prefs::Prefs() : PrefsBase()
 {
   mDefaultCategoryColor = QColor( 151, 235, 121 );
   mDefaultResourceColor = QColor(); //Default is a color invalid
@@ -82,15 +83,15 @@ KOPrefs::KOPrefs() : KOPrefsBase()
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
 }
 
-KOPrefs::~KOPrefs()
+Prefs::~Prefs()
 {
   kDebug();
 }
 
-KOPrefs *KOPrefs::instance()
+Prefs *Prefs::instance()
 {
   if ( !mInstance ) {
-    insd.setObject( mInstance, new KOPrefs() );
+    insd.setObject( mInstance, new Prefs() );
 
     mInstance->readConfig();
   }
@@ -98,7 +99,7 @@ KOPrefs *KOPrefs::instance()
   return mInstance;
 }
 
-void KOPrefs::usrSetDefaults()
+void Prefs::usrSetDefaults()
 {
   // Default should be set a bit smarter, respecting username and locale
   // settings for example.
@@ -122,7 +123,7 @@ void KOPrefs::usrSetDefaults()
   KConfigSkeleton::usrSetDefaults();
 }
 
-void KOPrefs::fillMailDefaults()
+void Prefs::fillMailDefaults()
 {
   userEmailItem()->swapDefault();
   QString defEmail = userEmailItem()->value();
@@ -137,7 +138,7 @@ void KOPrefs::fillMailDefaults()
   }
 }
 
-void KOPrefs::setTimeZoneDefault()
+void Prefs::setTimeZoneDefault()
 {
   KTimeZone zone = KSystemTimeZones::local();
   if ( !zone.isValid() ) {
@@ -150,17 +151,17 @@ void KOPrefs::setTimeZoneDefault()
   mTimeSpec = zone;
 }
 
-KDateTime::Spec KOPrefs::timeSpec()
+KDateTime::Spec Prefs::timeSpec()
 {
   return KSystemTimeZones::local();
 }
 
-void KOPrefs::setTimeSpec( const KDateTime::Spec &spec )
+void Prefs::setTimeSpec( const KDateTime::Spec &spec )
 {
   mTimeSpec = spec;
 }
 
-void KOPrefs::usrReadConfig()
+void Prefs::usrReadConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -169,14 +170,14 @@ void KOPrefs::usrReadConfig()
 
   // Category colors
   KConfigGroup colorsConfig( config(), "Category Colors2" );
-  CategoryConfig cc( this );
+/*  CategoryConfig cc( this );
   const QStringList cats = cc.customCategories();
   Q_FOREACH( const QString& i, cats ) {
     QColor c = colorsConfig.readEntry( i, mDefaultCategoryColor );
     if ( c != mDefaultCategoryColor ) {
       setCategoryColor( i, c );
     }
-  }
+    }*/
 
   // Resource colors
   KConfigGroup rColorsConfig( config(), "Resources Colors" );
@@ -210,7 +211,7 @@ void KOPrefs::usrReadConfig()
   fillMailDefaults();
 }
 
-void KOPrefs::usrWriteConfig()
+void Prefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -258,12 +259,12 @@ void KOPrefs::usrWriteConfig()
   KConfigSkeleton::usrWriteConfig();
 }
 
-void KOPrefs::setCategoryColor( const QString &cat, const QColor &color )
+void Prefs::setCategoryColor( const QString &cat, const QColor &color )
 {
   mCategoryColors.insert( cat, color );
 }
 
-QColor KOPrefs::categoryColor( const QString &cat ) const
+QColor Prefs::categoryColor( const QString &cat ) const
 {
   QColor color;
 
@@ -278,35 +279,35 @@ QColor KOPrefs::categoryColor( const QString &cat ) const
   }
 }
 
-bool KOPrefs::hasCategoryColor( const QString &cat ) const
+bool Prefs::hasCategoryColor( const QString &cat ) const
 {
     return mCategoryColors[ cat ].isValid();
 }
 
-QString KOPrefs::defaultCalendar() const
+QString Prefs::defaultCalendar() const
 {
   return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
 }
 
-Akonadi::Collection KOPrefs::defaultCollection() const
+Akonadi::Collection Prefs::defaultCollection() const
 {
   return mDefaultCollection;
 }
 
-void KOPrefs::setDefaultCollection( const Akonadi::Collection& col )
+void Prefs::setDefaultCollection( const Akonadi::Collection& col )
 {
   mDefaultCollection = col;
   if ( !col.isValid() )
     mDefaultCalendar ="";
 }
 
-void KOPrefs::setResourceColor ( const QString &cal, const QColor &color )
+void Prefs::setResourceColor ( const QString &cal, const QColor &color )
 {
   // kDebug() << cal << "color:" << color.name();
   mResourceColors.insert( cal, color );
 }
 
-QColor KOPrefs::resourceColor( const QString &cal )
+QColor Prefs::resourceColor( const QString &cal )
 {
   QColor color;
   if ( !cal.isEmpty() ) {
@@ -344,7 +345,7 @@ QColor KOPrefs::resourceColor( const QString &cal )
   }
 }
 
-QString KOPrefs::fullName()
+QString Prefs::fullName()
 {
   QString tusername;
   if ( mEmailControlCenter ) {
@@ -364,7 +365,7 @@ QString KOPrefs::fullName()
   return tname;
 }
 
-QString KOPrefs::email()
+QString Prefs::email()
 {
   if ( mEmailControlCenter ) {
     KEMailSettings settings;
@@ -374,22 +375,23 @@ QString KOPrefs::email()
   }
 }
 
-QStringList KOPrefs::allEmails()
+QStringList Prefs::allEmails()
 {
   // Grab emails from the email identities
-  QStringList lst = KOCore::self()->identityManager()->allEmails();
+  QStringList lst;/* = KOCore::self()->identityManager()->allEmails();
   // Add emails configured in korganizer
   lst += mAdditionalMails;
   // Add the email entered as the userEmail here
   lst += email();
-
+                  */
   // Warning, this list could contain duplicates.
   return lst;
 }
 
-QStringList KOPrefs::fullEmails()
+QStringList Prefs::fullEmails()
 {
   QStringList fullEmails;
+  /*
   // The user name and email from the config dialog:
   fullEmails << QString( "%1 <%2>" ).arg( fullName() ).arg( email() );
 
@@ -408,11 +410,14 @@ QStringList KOPrefs::fullEmails()
   }
 
   // Warning, this list could contain duplicates.
+  // */
   return fullEmails;
 }
 
-bool KOPrefs::thatIsMe( const QString &_email )
+bool Prefs::thatIsMe(const QString &_email )
 {
+  // TODO_SPLIT: tirar o unused
+  Q_UNUSED( _email );
   // NOTE: this method is called for every created agenda view item,
   // so we need to keep performance in mind
 
@@ -428,7 +433,7 @@ bool KOPrefs::thatIsMe( const QString &_email )
   // in case email contains a full name, strip it out.
   // the below is the simpler but slower version of the following code:
   // const QString email = KPIM::getEmailAddress( _email );
-  const QByteArray tmp = _email.toUtf8();
+/*  const QByteArray tmp = _email.toUtf8();
   const char *cursor = tmp.constData();
   const char *end = tmp.data() + tmp.length();
   KMime::Types::Mailbox mbox;
@@ -449,16 +454,16 @@ bool KOPrefs::thatIsMe( const QString &_email )
   if ( mAdditionalMails.contains( email ) ) {
     return true;
   }
-
+*/
   return false;
 }
 
-QStringList KOPrefs::timeScaleTimezones()
+QStringList Prefs::timeScaleTimezones()
 {
   return mTimeScaleTimeZones;
 }
 
-void KOPrefs::setTimeScaleTimezones( const QStringList &list )
+void Prefs::setTimeScaleTimezones( const QStringList &list )
 {
   mTimeScaleTimeZones = list;
 }

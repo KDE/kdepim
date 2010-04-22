@@ -22,8 +22,8 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOAGENDAITEM_H
-#define KOAGENDAITEM_H
+#ifndef AGENDAITEM_H
+#define AGENDAITEM_H
 
 #include "cellitem.h"
 
@@ -33,7 +33,7 @@
 #include <QList>
 #include <QWidget>
 
-class KOAgendaItem;
+class AgendaItem;
 
 namespace KCal {
   class Incidence;
@@ -55,19 +55,19 @@ struct MultiItemInfo
 {
   int mStartCellXLeft, mStartCellXRight;
   int mStartCellYTop, mStartCellYBottom;
-  KOAgendaItem *mFirstMultiItem;
-  KOAgendaItem *mPrevMultiItem;
-  KOAgendaItem *mNextMultiItem;
-  KOAgendaItem *mLastMultiItem;
+  AgendaItem *mFirstMultiItem;
+  AgendaItem *mPrevMultiItem;
+  AgendaItem *mNextMultiItem;
+  AgendaItem *mLastMultiItem;
 };
 
 /**
-  @class KOAgendaItem
+  @class AgendaItem
 
   @brief This class describes the widgets that represent the various calendar
          items in the agenda view
 
-  The KOAgendaItem has to make sure that it receives all mouse events, which
+  The AgendaItem has to make sure that it receives all mouse events, which
   are to be used for dragging and resizing. That means it has to be installed
   as event filter for its children, if it has children, and it has to pass
   mouse events from the children to itself. See eventFilter().
@@ -88,13 +88,13 @@ struct MultiItemInfo
   for that longer sequence including all (shown and hidden) items.
 */
 
-class KOAgendaItem : public QWidget, public KOrg::CellItem
+class AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
-    KOAgendaItem( Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
+    AgendaItem( Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
                   const QDate &qd, QWidget *parent );
-    ~KOAgendaItem();
+    ~AgendaItem();
 
     int cellXLeft() const { return mCellXLeft; }
     int cellXRight() const { return mCellXRight; }
@@ -134,33 +134,33 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
     void expandRight( int dx );
 
     bool isMultiItem();
-    KOAgendaItem *prevMoveItem() const
+    AgendaItem *prevMoveItem() const
     { return (mStartMoveInfo) ? (mStartMoveInfo->mPrevMultiItem) : 0; }
 
-    KOAgendaItem *nextMoveItem() const
+    AgendaItem *nextMoveItem() const
     { return (mStartMoveInfo) ? (mStartMoveInfo->mNextMultiItem) : 0; }
 
     MultiItemInfo *moveInfo() const { return mStartMoveInfo; }
 
-    void setMultiItem( KOAgendaItem *first,KOAgendaItem *prev,
-                       KOAgendaItem *next, KOAgendaItem *last );
+    void setMultiItem( AgendaItem *first,AgendaItem *prev,
+                       AgendaItem *next, AgendaItem *last );
 
-    KOAgendaItem *prependMoveItem( KOAgendaItem * );
+    AgendaItem *prependMoveItem( AgendaItem * );
 
-    KOAgendaItem *appendMoveItem( KOAgendaItem * );
+    AgendaItem *appendMoveItem( AgendaItem * );
 
-    KOAgendaItem *removeMoveItem( KOAgendaItem * );
+    AgendaItem *removeMoveItem( AgendaItem * );
 
-    KOAgendaItem *firstMultiItem() const
+    AgendaItem *firstMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mFirstMultiItem) : 0; }
 
-    KOAgendaItem *prevMultiItem() const
+    AgendaItem *prevMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mPrevMultiItem) : 0; }
 
-    KOAgendaItem *nextMultiItem() const
+    AgendaItem *nextMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mNextMultiItem) : 0; }
 
-    KOAgendaItem *lastMultiItem() const
+    AgendaItem *lastMultiItem() const
     { return (mMultiItemInfo) ? (mMultiItemInfo->mLastMultiItem) : 0; }
 
     bool dissociateFromMultiItem();
@@ -175,21 +175,21 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
     void setText ( const QString &text ) { mLabelText = text; }
     QString text () { return mLabelText; }
 
-    QList<KOAgendaItem*> &conflictItems();
-    void setConflictItems( QList<KOAgendaItem*> );
-    void addConflictItem( KOAgendaItem *ci );
+    QList<AgendaItem*> &conflictItems();
+    void setConflictItems( QList<AgendaItem*> );
+    void addConflictItem( AgendaItem *ci );
 
     QString label() const;
 
     /** Tells whether this item overlaps item @p o */
-    bool overlaps( KOrg::CellItem *o ) const;
+    bool overlaps( CellItem *o ) const;
 
     void setResourceColor( const QColor &color ) { mResourceColor = color; }
     QColor resourceColor() { return mResourceColor; }
 
   signals:
-    void removeAgendaItem( KOAgendaItem * );
-    void showAgendaItem( KOAgendaItem * );
+    void removeAgendaItem( AgendaItem * );
+    void showAgendaItem( AgendaItem * );
 
   public slots:
     void updateIcons();
@@ -245,7 +245,7 @@ class KOAgendaItem : public QWidget, public KOrg::CellItem
     // Multi item pointers
     MultiItemInfo *mMultiItemInfo;
 
-    QList<KOAgendaItem*> mConflictItems;
+    QList<AgendaItem*> mConflictItems;
 
     static QPixmap *alarmPxmp;
     static QPixmap *recurPxmp;

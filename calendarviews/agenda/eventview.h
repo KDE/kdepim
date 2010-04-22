@@ -23,25 +23,41 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOEVENTVIEW_H
-#define KOEVENTVIEW_H
+#ifndef EVENTVIEW_H
+#define EVENTVIEW_H
+
+//TODO_SPLIT: remove agenda
+//#include "agenda.h"
+
+#include "eventviews_export.h"
+
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/calendarsearch.h>
+#include <akonadi/kcal/collectionselection.h>
+#include <akonadi/kcal/incidencechanger.h>
 
 #include <KCal/Todo>
-#include "korganizer/baseview.h"
+
+#include <KConfigGroup>
+
+#include <QWidget>
+
 
 namespace KCal {
   class Incidence;
 }
 namespace Akonadi {
   class Item;
+  class Calendar;
 }
 using namespace KCal;
 
-class KOEventPopupMenu;
+class EventPopupMenu;
 class QMenu;
 
+
 /**
-  KOEventView is the abstract base class from which all other
+  KOEventView is the abstract base class from wich all other
   calendar views for event data are derived.  It provides methods for
   displaying
   appointments and events on one or more days.  The actual number of
@@ -52,29 +68,144 @@ class QMenu;
 
   @short Abstract class from which all event views are derived.
   @author Preston Brown <pbrown@kde.org>
-  @see KOListView, KOAgendaView, KOMonthView
+  @see KOListView, AgendaView, KOMonthView
 */
-class KOEventView : public KOrg::BaseView
+class EVENTVIEWS_EXPORT EventView : public QWidget
 {
   Q_OBJECT
   public:
-    enum {
-      // This value is passed to QColor's lighter(int factor) for selected events
-      BRIGHTNESS_FACTOR = 125
-    };
-
     /**
      * Constructs a view.
      * @param cal is a pointer to the calendar object from which events
      *        will be retrieved for display.
      * @param parent is the parent QWidget.
      */
-    explicit KOEventView( QWidget *parent=0 );
+    explicit EventView( QWidget *parent = 0 );
 
     /**
      * Destructor.  Views will do view-specific cleanups here.
      */
-    virtual ~KOEventView();
+    virtual ~EventView();
+
+    enum {
+      // This value is passed to QColor's lighter(int factor) for selected events
+      BRIGHTNESS_FACTOR = 125
+    };
+
+    virtual void setCalendar( Akonadi::Calendar *cal );
+
+    /**
+      Return calendar object of this view.
+    */
+    virtual Akonadi::Calendar *calendar();
+
+
+    Akonadi::CalendarSearch* calendarSearch() const;
+
+    static bool usesCompletedTodoPixmap( const Akonadi::Item &aitem,
+                                         const QDate &date );
+
+    /**
+      @return a list of selected events.  Most views can probably only
+      select a single event at a time, but some may be able to select
+      more than one.
+    */
+    virtual Akonadi::Item::List selectedIncidences() = 0;
+
+    /**
+      Returns a list of the dates of selected events. Most views can
+      probably only select a single event at a time, but some may be able
+      to select more than one.
+    */
+    virtual DateList selectedIncidenceDates() = 0;
+
+    /**
+       Returns the start of the selection, or an invalid QDateTime if there is no selection
+       or the view doesn't support selecting cells.
+     */
+    virtual QDateTime selectionStart() { return QDateTime(); }
+
+    /**
+       Returns the end of the selection, or an invalid QDateTime if there is no selection
+       or the view doesn't support selecting cells.
+     */
+    virtual QDateTime selectionEnd() { return QDateTime(); }
+
+    //TODO_SPLIT, por isto no wrapper
+    //virtual CalPrinterBase::PrintType printType();
+
+    /**
+      Returns the number of currently shown dates.
+      A return value of 0 means no idea.
+    */
+    virtual int currentDateCount() = 0;
+
+    /**
+     * returns whether this view should be displayed full window.
+     * Base implementation returns false.
+     */
+    virtual bool usesFullWindow();
+
+    /**
+     * returns whether this view supports zoom.
+     * Base implementation returns false.
+     */
+    virtual bool supportsZoom();
+
+    /**
+     * returns whether this view supports date range selection
+     * Base implementation returns true.
+     */
+    virtual bool supportsDateRangeSelection();
+
+    virtual bool hasConfigurationDialog() const;
+
+    virtual void showConfigurationDialog( QWidget* parent );
+
+    QByteArray identifier() const;
+    void setIdentifier( const QByteArray& identifier );
+
+    /**
+     * reads the view configuration. View-specific configuration can be
+     * restored via doRestoreConfig()
+     *
+     * @param configGroup the group to read settings from
+     * @see doRestoreConfig()
+     */
+    void restoreConfig( const KConfigGroup &configGroup );
+
+    /**
+     * writes out the view configuration. View-specific configuration can be
+     * saved via doSaveConfig()
+     *
+     * @param configGroup the group to store settings in
+     * @see doSaveConfig()
+     */
+    void saveConfig( KConfigGroup &configGroup );
+
+    // TODO_SPLIT: review these collections
+    Akonadi::CollectionSelectionProxyModel *takeCustomCollectionSelectionProxyModel();
+    Akonadi::CollectionSelectionProxyModel *customCollectionSelectionProxyModel() const;
+    void setCustomCollectionSelectionProxyModel( Akonadi::CollectionSelectionProxyModel* model );
+
+    Akonadi::CollectionSelection *customCollectionSelection() const;
+
+    static Akonadi::CollectionSelection* globalCollectionSelection();
+    static void setGlobalCollectionSelection( Akonadi::CollectionSelection* selection );
+
+    /**
+     * returns the view at the given widget coordinate. This is usually the view itself,
+     * except for composite views, where a subview will be returned. The default implementation returns @p this .
+     */
+    virtual EventView* viewAt( const QPoint &p );
+
+    void setDateRange( const KDateTime &start, const KDateTime &end );
+
+    KDateTime startDateTime() const;
+    KDateTime endDateTime() const;
+
+    KDateTime actualStartDateTime() const;
+    KDateTime actualEndDateTime() const;
 
     /**
      * provides a hint back to the caller on the maximum number of dates
@@ -82,18 +213,8 @@ class KOEventView : public KOrg::BaseView
      */
     virtual int maxDatesHint() = 0;
 
-    /**
-     * Construct a standard context menu for an event.
-     */
-    KOEventPopupMenu *eventPopup();
-
-    /**
-     * Construct a standard context that allows to create a new event.
-     */
-    QMenu *newEventPopup();
-
     /** This view is a view for displaying events. */
-    bool isEventView() { return true; }
+
 
     int showMoveRecurDialog( const Akonadi::Item &inc, const QDate &date );
 
@@ -109,22 +230,60 @@ class KOEventView : public KOrg::BaseView
      */
     void setTypeAheadReceiver( QObject *o );
 
-    /*
-     * Returns true if the view item, that represents a to-do, should use the "completed"
-     * pixmap.
-     *
-     * @param todo The to-do associated with the view item.
-     * @param date The date in which the item appears in the view, for non recuring to-dos
-     * this is the same as the start date, but, for recurring to-dos this is the date of
-     * a particular occurrence.
-     *
+    /**
+     * returns the selection of collection to be used by this view (custom if set, or global otherwise)
      */
-    static bool usesCompletedTodoPixmap( const Akonadi::Item &todo, const QDate &date );
-
-    bool supportsDateNavigation() const { return true; }
+    Akonadi::CollectionSelection* collectionSelection() const;
 
   public slots:
 
+    /**
+      Shows given incidences. Depending on the actual view it might not
+      be possible to show all given events.
+
+      @param incidenceList a list of incidences to show.
+      @param date is the QDate on which the incidences are being shown.
+    */
+    virtual void showIncidences( const Akonadi::Item::List &incidenceList, const QDate &date ) = 0;
+
+    /**
+      Updates the current display to reflect changes that may have happened
+      in the calendar since the last display refresh.
+    */
+    virtual void updateView() = 0;
+    virtual void dayPassed( const QDate & );
+
+    /**
+      Assign a new incidence change helper object.
+     */
+    virtual void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
+
+    /**
+      Write all unsaved data back to calendar store.
+    */
+    virtual void flushView();
+
+    /**
+      Updates the current display to reflect the changes to one particular incidence.
+    */
+    virtual void changeIncidenceDisplay( const Akonadi::Item &, int ) = 0;
+
+    /**
+      Re-reads the KOrganizer configuration and picks up relevant
+      changes which are applicable to the view.
+    */
+    virtual void updateConfig();
+
+    /**
+      Clear selection. The incidenceSelected signal is not emitted.
+    */
+    virtual void clearSelection();
+
+    /**
+      Sets the default start/end date/time for new events.
+      Return true if anything was changed
+    */
+    virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
     void focusChanged( QWidget*, QWidget* );
     /**
      Perform the default action for an incidence, e.g. open the event editor,
@@ -149,16 +308,140 @@ class KOEventView : public KOrg::BaseView
      */
     void shiftedEvent( const QDate &olddate, const QDate &ewdate );
 
+    void incidenceSelected( const Akonadi::Item &, const QDate );
+
+    /**
+     * instructs the receiver to show the incidence in read-only mode.
+     */
+    void showIncidenceSignal( const Akonadi::Item & );
+
+    /**
+     * instructs the receiver to begin editing the incidence specified in
+     * some manner.  Doesn't make sense to connect to more than one
+     * receiver.
+     */
+    void editIncidenceSignal( const Akonadi::Item & );
+
+    /**
+     * instructs the receiver to delete the Incidence in some manner; some
+     * possibilities include automatically, with a confirmation dialog
+     * box, etc.  Doesn't make sense to connect to more than one receiver.
+     */
+    void deleteIncidenceSignal( const Akonadi::Item & );
+
+    /**
+    * instructs the receiver to cut the Incidence
+    */
+    void cutIncidenceSignal( const Akonadi::Item & );
+
+    /**
+    * instructs the receiver to copy the incidence
+    */
+    void copyIncidenceSignal( const Akonadi::Item & );
+
+    /**
+    * instructs the receiver to paste the incidence
+    */
+    void pasteIncidenceSignal();
+
+    /**
+     * instructs the receiver to toggle the alarms of the Incidence.
+     */
+    void toggleAlarmSignal( const Akonadi::Item & );
+
+    /**
+     * instructs the receiver to toggle the completion state of the Incidence
+     * (which must be a  Todo type).
+     */
+    void toggleTodoCompletedSignal( const Akonadi::Item & );
+
+    /**
+     * Copy the incidence to the specified resource.
+     */
+    void copyIncidenceToResourceSignal( const Akonadi::Item &, const QString & );
+
+    /**
+     * Move the incidence to the specified resource.
+     */
+    void moveIncidenceToResourceSignal( const Akonadi::Item &, const QString & );
+
+    /** Dissociate from a recurring incidence the occurrence on the given
+     *  date to a new incidence or dissociate all occurrences from the
+     *  given date onwards.
+     */
+    void dissociateOccurrencesSignal( const Akonadi::Item &, const QDate & );
+
+    void startMultiModify( const QString & );
+    void endMultiModify();
+
+    /**
+     * instructs the receiver to create a new event in given collection. Doesn't make
+     * sense to connect to more than one receiver.
+     */
+    void newEventSignal( const Akonadi::Collection::List & );
+    /**
+     * instructs the receiver to create a new event with the specified beginning
+     * time. Doesn't make sense to connect to more than one receiver.
+     */
+    void newEventSignal( const Akonadi::Collection::List &, const QDate & );
+    /**
+     * instructs the receiver to create a new event with the specified beginning
+     * time. Doesn't make sense to connect to more than one receiver.
+     */
+    void newEventSignal( const Akonadi::Collection::List &, const QDateTime & );
+    /**
+     * instructs the receiver to create a new event, with the specified
+     * beginning end ending times.  Doesn't make sense to connect to more
+     * than one receiver.
+     */
+    void newEventSignal( const Akonadi::Collection::List &, const QDateTime &, const QDateTime & );
+
+    void newTodoSignal( const QDate & );
+    void newSubTodoSignal( const Akonadi::Item & );
+
+    void newJournalSignal( const QDate & );
+
   protected slots:
-    void popupShow();
-    void popupEdit();
-    void popupDelete();
-    void popupCut();
-    void popupCopy();
-    virtual void showNewEventPopup();
+    virtual void collectionSelectionChanged();
+    virtual void calendarReset();
+
+  private slots:
+    void backendErrorOccurred();
+    void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
+    void rowsInserted( const QModelIndex &parent, int start, int end );
+    void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
   protected:
     Akonadi::Item mCurrentIncidence;  // Incidence selected e.g. for a context menu
+    Akonadi::IncidenceChanger *mChanger;
+
+   /**
+     * reimplement to read view-specific settings
+     */
+    virtual void doRestoreConfig( const KConfigGroup &configGroup );
+
+    /**
+     * reimplement to write vie- specific settings
+     */
+    virtual void doSaveConfig( KConfigGroup &configGroup );
+
+    /**
+      @deprecated
+     */
+    virtual void showDates( const QDate& start, const QDate& end ) = 0;
+
+    /**
+     * from the requested date range (passed via setDateRange()), calculates the adjusted date range actually displayed by the view, depending
+     * on the view's supported range (e.g., a month view always displays one month)
+     * The default implementation returns the range unmodified
+     */
+    virtual QPair<KDateTime,KDateTime> actualDateRange( const KDateTime& start, const KDateTime& end ) const;
+
+    virtual void incidencesAdded( const Akonadi::Item::List& incidences );
+    virtual void incidencesAboutToBeRemoved( const Akonadi::Item::List& incidences );
+    virtual void incidencesChanged( const Akonadi::Item::List& incidences );
+
+    virtual void handleBackendError( const QString &error );
 
   private:
     /*
@@ -178,6 +461,10 @@ class KOEventView : public KOrg::BaseView
     bool mTypeAhead;
     QObject *mTypeAheadReceiver;
     QList<QEvent*> mTypeAheadEvents;
+    static Akonadi::CollectionSelection* sGlobalCollectionSelection;
+
+    class Private;
+    Private *const d;
 };
 
 #endif

@@ -24,6 +24,8 @@
 #ifndef TIMELABELSZONE_H
 #define TIMELABELSZONE_H
 
+#include "eventviews_export.h"
+
 #include "timelabels.h"
 
 #include <KDateTime>
@@ -31,15 +33,15 @@
 #include <QWidget>
 #include <QList>
 
-class KOAgendaView;
-class KOAgenda;
+class AgendaView;
+class Agenda;
 class QHBoxLayout;
 
-class TimeLabelsZone : public QWidget
+class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
   Q_OBJECT
   public:
-    explicit TimeLabelsZone( QWidget *parent, KOAgenda *agenda = 0 );
+    explicit TimeLabelsZone( QWidget *parent, Agenda *agenda = 0 );
 
     /** Add a new time label with the given spec.
         If spec is not valid, use the display timespec.
@@ -50,14 +52,14 @@ class TimeLabelsZone : public QWidget
     void updateAll();
     void reset();
     void init();
-    void setAgendaView( KOAgendaView *agenda );
+    void setAgendaView( AgendaView *agenda );
 
     TimeLabels::List timeLabels() const;
 
   private:
     void setupTimeLabel( TimeLabels *timeLabel );
-    KOAgenda *mAgenda;
-    KOAgendaView *mParent;
+    Agenda *mAgenda;
+    AgendaView *mParent;
 
   //  QWidget *mTimeLabelsFrame;
     QHBoxLayout *mTimeLabelsLayout;

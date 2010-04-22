@@ -22,11 +22,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "koglobals.h"
-#include "koprefs.h"
-#include "korganizer_part.h"
-
-#include "reminderclient.h"
+#include "globals.h"
+#include "prefs.h"
 
 #include <kholidays/holidays.h>
 using namespace KHolidays;
@@ -46,60 +43,52 @@ using namespace KHolidays;
 #include <QPixmap>
 #include <QIcon>
 
-KOGlobals *KOGlobals::mSelf = 0;
+Globals *Globals::mSelf = 0;
 
-static K3StaticDeleter<KOGlobals> koGlobalsDeleter;
+static K3StaticDeleter<Globals> koGlobalsDeleter;
 
-KOGlobals *KOGlobals::self()
+Globals *Globals::self()
 {
   if ( !mSelf ) {
-    koGlobalsDeleter.setObject( mSelf, new KOGlobals );
+    koGlobalsDeleter.setObject( mSelf, new Globals );
   }
 
   return mSelf;
 }
 
-KOGlobals::KOGlobals()
+Globals::Globals()
   : mOwnInstance( "korganizer" ), mHolidays( 0 )
 {
   KIconLoader::global()->addAppDir( "kdepim" );
-
-  mReminderClient = new KPIM::ReminderClient;
 }
 
-KConfig *KOGlobals::config() const
+KConfig *Globals::config() const
 {
   KSharedConfig::Ptr c = mOwnInstance.config();
   return c.data();
 }
 
-KOGlobals::~KOGlobals()
+Globals::~Globals()
 {
-  delete mReminderClient;
   delete mHolidays;
 }
 
-const KCalendarSystem *KOGlobals::calendarSystem() const
+const KCalendarSystem *Globals::calendarSystem() const
 {
   return KGlobal::locale()->calendar();
 }
 
-KPIM::ReminderClient *KOGlobals::reminderClient() const
-{
-  return mReminderClient;
-}
-
-bool KOGlobals::reverseLayout()
+bool Globals::reverseLayout()
 {
   return QApplication::isRightToLeft();
 }
 
-QPixmap KOGlobals::smallIcon( const QString &name ) const
+QPixmap Globals::smallIcon( const QString &name ) const
 {
   return SmallIcon( name );
 }
 
-QStringList KOGlobals::holiday( const QDate &date ) const
+QStringList Globals::holiday( const QDate &date ) const
 {
   QStringList hdays;
 
@@ -113,12 +102,12 @@ QStringList KOGlobals::holiday( const QDate &date ) const
   return hdays;
 }
 
-bool KOGlobals::isWorkDay( const QDate &date ) const
+bool Globals::isWorkDay( const QDate &date ) const
 {
-  int mask( ~( KOPrefs::instance()->mWorkWeekMask ) );
+  int mask( ~( Prefs::instance()->mWorkWeekMask ) );
 
   bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
-  if ( KOPrefs::instance()->mExcludeHolidays && mHolidays ) {
+  if ( Prefs::instance()->mExcludeHolidays && mHolidays ) {
     const Holiday::List list = mHolidays->holidays( date );
     for ( int i = 0; i < list.count(); ++i ) {
       nonWorkDay = nonWorkDay || ( list.at( i ).dayType() == Holiday::NonWorkday );
@@ -127,18 +116,18 @@ bool KOGlobals::isWorkDay( const QDate &date ) const
   return !nonWorkDay;
 }
 
-int KOGlobals::getWorkWeekMask()
+int Globals::getWorkWeekMask()
 {
-  return KOPrefs::instance()->mWorkWeekMask;
+  return Prefs::instance()->mWorkWeekMask;
 }
 
-void KOGlobals::setHolidays( HolidayRegion *h )
+void Globals::setHolidays( HolidayRegion *h )
 {
   delete mHolidays;
   mHolidays = h;
 }
 
-HolidayRegion *KOGlobals::holidays() const
+HolidayRegion *Globals::holidays() const
 {
   return mHolidays;
 }

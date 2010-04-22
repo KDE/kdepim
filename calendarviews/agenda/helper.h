@@ -21,17 +21,12 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOHELPER_H
-#define KOHELPER_H
-
-#include "korganizer_export.h"
+#ifndef HELPER_H
+#define HELPER_H
 
 #include <KCal/Incidence>
 
 #include <QColor>
-
-namespace KOrg {
-}
 
 namespace Akonadi {
   class Collection;
@@ -42,12 +37,12 @@ class QDate;
 
 // Provides static methods that are useful to all views.
 
-namespace KOHelper
+namespace Helper
 {
   /**
     Returns a nice QColor for text, give the input color &c.
   */
-  KORGANIZERPRIVATE_EXPORT QColor getTextColor( const QColor &c );
+  QColor getTextColor( const QColor &c );
 
   /**
     This method returns the proper resource / subresource color for the view.
@@ -57,20 +52,20 @@ namespace KOHelper
     @param incidence the incidence for which the color is needed (to
                      determine which  subresource needs to be used)
   */
-  KORGANIZERPRIVATE_EXPORT QColor resourceColor( const Akonadi::Item & incidence );
+  QColor resourceColor( const Akonadi::Item & incidence );
 
-  KORGANIZERPRIVATE_EXPORT QColor resourceColor( const Akonadi::Collection &collection );
+  QColor resourceColor( const Akonadi::Collection &collection );
 
   /**
     Returns the number of years between the @p start QDate and the @p end QDate
   */
-  KORGANIZERPRIVATE_EXPORT qint64 yearDiff( const QDate &start, const QDate &end );
+  qint64 yearDiff( const QDate &start, const QDate &end );
 
 
   /**
     Return true if it's the standard calendar
   */
-  KORGANIZERPRIVATE_EXPORT bool isStandardCalendar( const Akonadi::Collection &collection );
+  bool isStandardCalendar( const Akonadi::Collection &collection );
 }
 
 #endif

@@ -23,18 +23,16 @@
 */
 
 #include "timelabelszone.h"
-#include "koprefs.h"
-#include "views/agendaview/koagenda.h"
-#include "views/agendaview/koagendaview.h"
+#include "prefs.h"
+#include "agenda.h"
+#include "agendaview.h"
 
 #include <ksystemtimezone.h>
 
 #include <QHBoxLayout>
 
-using namespace KOrg;
-
-TimeLabelsZone::TimeLabelsZone( QWidget *parent, KOAgenda *agenda )
-  : QWidget( parent ), mAgenda( agenda ), mParent( dynamic_cast<KOAgendaView*>( parent ) )
+TimeLabelsZone::TimeLabelsZone( QWidget *parent, Agenda *agenda )
+  : QWidget( parent ), mAgenda( agenda ), mParent( dynamic_cast<AgendaView*>( parent ) )
 {
   mTimeLabelsLayout = new QHBoxLayout( this );
   mTimeLabelsLayout->setMargin( 0 );
@@ -63,9 +61,9 @@ void TimeLabelsZone::reset()
 
 void TimeLabelsZone::init()
 {
-  addTimeLabels( KOPrefs::instance()->timeSpec() );
+  addTimeLabels( Prefs::instance()->timeSpec() );
 
-  foreach ( const QString &zoneStr, KOPrefs::instance()->timeScaleTimezones() ) {
+  foreach ( const QString &zoneStr, Prefs::instance()->timeScaleTimezones() ) {
     KTimeZone zone = KSystemTimeZones::zone( zoneStr );
     if ( zone.isValid() ) {
       addTimeLabels( zone );
@@ -124,7 +122,7 @@ TimeLabels::List TimeLabelsZone::timeLabels() const
   return mTimeLabelsList;
 }
 
-void TimeLabelsZone::setAgendaView( KOAgendaView *agenda )
+void TimeLabelsZone::setAgendaView( AgendaView *agenda )
 {
   mAgenda = agenda->agenda();
   mParent = agenda;

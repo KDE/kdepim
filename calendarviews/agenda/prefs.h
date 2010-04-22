@@ -21,11 +21,11 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOPREFS_H
-#define KOPREFS_H
+#ifndef PREFS_H
+#define PREFS_H
 
-#include "korganizer_export.h"
-#include "koprefs_base.h"
+
+#include "prefs_base.h"
 #include <akonadi/collection.h>
 #include <kdatetime.h>
 
@@ -35,14 +35,14 @@ class QFont;
 class QColor;
 class QStringList;
 
-class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
+class Prefs : public PrefsBase
 {
   public:
-    virtual ~KOPrefs();
+    virtual ~Prefs();
 
-    /** Get instance of KOPrefs. It is made sure that there is only one
+    /** Get instance of Prefs. It is made sure that there is only one
     instance. */
-    static KOPrefs *instance();
+    static Prefs *instance();
 
     /** Set preferences to default values */
     void usrSetDefaults();
@@ -60,11 +60,11 @@ class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
     void fillMailDefaults();
 
   private:
-    /** Constructor disabled for public. Use instance() to create a KOPrefs
+    /** Constructor disabled for public. Use instance() to create a Prefs
     object. */
-    KOPrefs();
+    Prefs();
 
-    static KOPrefs *mInstance;
+    static Prefs *mInstance;
 
   public:
     // preferences data
@@ -118,7 +118,7 @@ class KORGANIZER_CORE_EXPORT KOPrefs : public KOPrefsBase
     QString mDefaultCalendar;
     Akonadi::Collection mDefaultCollection;
 
-  public: // Do not use - except in KOPrefsDialogMain
+  public: // Do not use - except in PrefsDialogMain
     QString mName;
     QString mEmail;
 };

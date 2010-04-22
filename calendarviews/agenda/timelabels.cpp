@@ -27,16 +27,14 @@
 #include "timelabels.h"
 #include "timelabelszone.h"
 #include "timescaleconfigdialog.h"
-#include "koprefs.h"
-#include "views/agendaview/koagenda.h"
+#include "prefs.h"
+#include "agenda.h"
 
 #include <KIcon>
 
 #include <QAction>
 #include <QMenu>
 #include <QPainter>
-
-using namespace KOrg;
 
 TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
                         TimeLabelsZone *parent, Qt::WFlags f )
@@ -48,7 +46,7 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
   mRows = rows;
   mMiniWidth = 0;
 
-  mCellHeight = KOPrefs::instance()->mHourSize * 4;
+  mCellHeight = Prefs::instance()->mHourSize * 4;
 
   enableClipper( true );
 
@@ -99,9 +97,9 @@ void TimeLabels::colorMousePos()
 {
   QPalette pal;
   pal.setColor( QPalette::Window, // for Oxygen
-                KOPrefs::instance()->agendaMarcusBainsLineLineColor() );
+                Prefs::instance()->agendaMarcusBainsLineLineColor() );
   pal.setColor( QPalette::WindowText, // for Plastique
-                KOPrefs::instance()->agendaMarcusBainsLineLineColor() );
+                Prefs::instance()->agendaMarcusBainsLineLineColor() );
   mMousePos->setPalette( pal );
 }
 
@@ -122,7 +120,7 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
     beginning = 0;
   } else {
     beginning = ( mSpec.timeZone().currentOffset() -
-                  KOPrefs::instance()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
+                  Prefs::instance()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
   }
 
   p->setBrush( palette().window() ); // TODO: theming, see if we want sth here...
@@ -142,7 +140,7 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   QFontMetrics fm = fontMetrics();
   QString hour;
   int timeHeight = fm.ascent();
-  QFont hourFont = KOPrefs::instance()->agendaTimeLabelsFont();
+  QFont hourFont = Prefs::instance()->agendaTimeLabelsFont();
   p->setFont( font() );
 
   //TODO: rewrite this using KLocale's time formats. "am/pm" doesn't make sense
@@ -242,7 +240,7 @@ void TimeLabels::updateConfig()
     return;
   }
 
-  setFont( KOPrefs::instance()->agendaTimeLabelsFont() );
+  setFont( Prefs::instance()->agendaTimeLabelsFont() );
 
   QString test = "20";
   if ( KGlobal::locale()->use12Clock() ) {
@@ -262,7 +260,7 @@ void TimeLabels::updateConfig()
   setFixedWidth( mMiniWidth );
 
   // update HourSize
-  mCellHeight = KOPrefs::instance()->mHourSize * 4;
+  mCellHeight = Prefs::instance()->mHourSize * 4;
   // If the agenda is zoomed out so that more than 24 would be shown,
   // the agenda only shows 24 hours, so we need to take the cell height
   // from the agenda, which is larger than the configured one!
@@ -291,7 +289,7 @@ void TimeLabels::positionChanged( int pos )
 }
 
 /**  */
-void TimeLabels::setAgenda( KOAgenda *agenda )
+void TimeLabels::setAgenda( Agenda *agenda )
 {
   mAgenda = agenda;
 
@@ -321,8 +319,8 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     popup.addAction( KIcon( "edit-delete" ),
                      i18n( "&Remove Timezone %1", mSpec.timeZone().name() ) );
   if ( !mSpec.isValid() ||
-       !KOPrefs::instance()->timeScaleTimezones().count() ||
-       mSpec == KOPrefs::instance()->timeSpec() ) {
+       !Prefs::instance()->timeScaleTimezones().count() ||
+       mSpec == Prefs::instance()->timeSpec() ) {
     removeTimeZone->setEnabled( false );
   }
 
@@ -334,9 +332,9 @@ void TimeLabels::contextMenuEvent( QContextMenuEvent *event )
     }
     delete dialog;
   } else if ( activatedAction == removeTimeZone ) {
-    QStringList list = KOPrefs::instance()->timeScaleTimezones();
+    QStringList list = Prefs::instance()->timeScaleTimezones();
     list.removeAll( mSpec.timeZone().name() );
-    KOPrefs::instance()->setTimeScaleTimezones( list );
+    Prefs::instance()->setTimeScaleTimezones( list );
     mTimeLabelsZone->reset();
     hide();
     deleteLater();

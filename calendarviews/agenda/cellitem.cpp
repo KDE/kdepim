@@ -31,8 +31,6 @@
 #include <QList>
 #include <QMultiHash>
 
-using namespace KOrg;
-
 QString CellItem::label() const
 {
   return i18n( "<placeholder>undefined</placeholder>" );
@@ -42,14 +40,14 @@ QList<CellItem*> CellItem::placeItem( QList<CellItem*> cells, CellItem *placeIte
 {
   kDebug(5855) << "Placing" << placeItem->label();
 
-  QList<KOrg::CellItem*> conflictItems;
+  QList<CellItem*> conflictItems;
   int maxSubCells = 0;
-  QMultiHash<int,KOrg::CellItem*> subCellDict;
+  QMultiHash<int,CellItem*> subCellDict;
 
   // Find all items which are in same cell
-  QList<KOrg::CellItem*>::iterator it;
+  QList<CellItem*>::iterator it;
   for ( it = cells.begin(); it != cells.end(); ++it ) {
-    KOrg::CellItem *item = *it;
+    CellItem *item = *it;
     if ( item == placeItem ) {
       continue;
     }
@@ -88,7 +86,7 @@ QList<CellItem*> CellItem::placeItem( QList<CellItem*> cells, CellItem *placeIte
     conflictItems.append( placeItem );
     placeItem->setSubCells( maxSubCells );
 
-    QList<KOrg::CellItem*>::iterator it;
+    QList<CellItem*>::iterator it;
     for ( it = conflictItems.begin(); it != conflictItems.end(); ++it ) {
       (*it)->setSubCells( maxSubCells );
     }

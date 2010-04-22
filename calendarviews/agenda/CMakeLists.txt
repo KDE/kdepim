@@ -11,7 +11,7 @@ set( eventviews_LIB_SRCS
      eventview.cpp
      agenda.cpp
      agendaitem.cpp
-     singleagendaview.cpp
+     agendaview.cpp
      timelabels.cpp
      timelabelszone.cpp
      prefs.cpp

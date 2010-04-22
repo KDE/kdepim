@@ -26,17 +26,19 @@
 #ifndef TIMELABELS_H
 #define TIMELABELS_H
 
+#include "eventviews_export.h"
+
 #include <KDateTime>
 
 #include <q3scrollview.h>
 
-class KOAgenda;
+class Agenda;
 class TimeLabelsZone;
 
 class QFrame;
 class QPaintEvent;
 
-class TimeLabels : public Q3ScrollView
+class EVENTVIEWS_EXPORT TimeLabels : public Q3ScrollView
 {
   Q_OBJECT
   public:
@@ -52,7 +54,7 @@ class TimeLabels : public Q3ScrollView
     void updateConfig();
 
     /**  */
-    void setAgenda( KOAgenda *agenda );
+    void setAgenda( Agenda *agenda );
 
     /**  */
     virtual void paintEvent( QPaintEvent *e );
@@ -101,7 +103,7 @@ class TimeLabels : public Q3ScrollView
     int mRows;
     double mCellHeight;
     int mMiniWidth;
-    KOAgenda *mAgenda;
+    Agenda *mAgenda;
     TimeLabelsZone *mTimeLabelsZone;
 
     QFrame *mMousePos;  // shows a marker for the current mouse position in y direction

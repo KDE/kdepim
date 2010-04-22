@@ -24,8 +24,8 @@
 
 #include "timescaleconfigdialog.h"
 
-#include "koglobals.h"
-#include "koprefs.h"
+#include "globals.h"
+#include "prefs.h"
 
 #include <kdebug.h>
 #include <kstandarddirs.h>
@@ -77,12 +77,12 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( QWidget *parent )
   connect( this, SIGNAL( okClicked() ), SLOT( okClicked() ) );
   connect( this, SIGNAL( cancelClicked() ), SLOT( reject() ) );
 
-  listWidget->addItems( KOPrefs::instance()->timeScaleTimezones() );
+  listWidget->addItems( Prefs::instance()->timeScaleTimezones() );
 }
 
 void TimeScaleConfigDialog::okClicked()
 {
-  KOPrefs::instance()->setTimeScaleTimezones( zones() );
+  Prefs::instance()->setTimeScaleTimezones( zones() );
   accept();
 }
 

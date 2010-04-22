@@ -21,16 +21,16 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KORG_CELLITEM_H
-#define KORG_CELLITEM_H
+#ifndef CELLITEM_H
+#define CELLITEM_H
 
-#include "korganizer/korganizer_export.h"
+#include "eventviews_export.h"
+
+// TODO_SPLIT: exportar o cellitem porque vai ser usado pelo korganizer printing
 #include <QString>
 #include <QList>
 
-namespace KOrg {
-
-class KORGANIZERPRIVATE_EXPORT CellItem
+class EVENTVIEWS_EXPORT CellItem
 {
   public:
     CellItem()
@@ -62,7 +62,5 @@ class KORGANIZERPRIVATE_EXPORT CellItem
     int mSubCells;
     int mSubCell;
 };
-
-}
 
 #endif

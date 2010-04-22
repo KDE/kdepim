@@ -22,11 +22,11 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "koalternatelabel.h"
+#include "alternatelabel.h"
 
-#include "koalternatelabel.moc"
+#include "alternatelabel.moc"
 
-KOAlternateLabel::KOAlternateLabel( const QString &shortlabel,
+AlternateLabel::AlternateLabel( const QString &shortlabel,
                                     const QString &longlabel,
                                     const QString &extensivelabel,
                                     QWidget *parent )
@@ -40,38 +40,38 @@ KOAlternateLabel::KOAlternateLabel( const QString &shortlabel,
   squeezeTextToLabel();
 }
 
-KOAlternateLabel::~KOAlternateLabel()
+AlternateLabel::~AlternateLabel()
 {
 }
 
-void KOAlternateLabel::useShortText()
+void AlternateLabel::useShortText()
 {
   mTextTypeFixed = true;
   QLabel::setText( mShortText );
   setToolTip( mExtensiveText );
 }
 
-void KOAlternateLabel::useLongText()
+void AlternateLabel::useLongText()
 {
   mTextTypeFixed = true;
   QLabel::setText( mLongText );
   this->setToolTip( mExtensiveText );
 }
 
-void KOAlternateLabel::useExtensiveText()
+void AlternateLabel::useExtensiveText()
 {
   mTextTypeFixed = true;
   QLabel::setText( mExtensiveText );
   this->setToolTip( "" );
 }
 
-void KOAlternateLabel::useDefaultText()
+void AlternateLabel::useDefaultText()
 {
   mTextTypeFixed = false;
   squeezeTextToLabel();
 }
 
-void KOAlternateLabel::squeezeTextToLabel()
+void AlternateLabel::squeezeTextToLabel()
 {
   if ( mTextTypeFixed ) {
     return;
@@ -93,19 +93,19 @@ void KOAlternateLabel::squeezeTextToLabel()
   }
 }
 
-void KOAlternateLabel::resizeEvent( QResizeEvent * )
+void AlternateLabel::resizeEvent( QResizeEvent * )
 {
   squeezeTextToLabel();
 }
 
-QSize KOAlternateLabel::minimumSizeHint() const
+QSize AlternateLabel::minimumSizeHint() const
 {
   QSize sh = QLabel::minimumSizeHint();
   sh.setWidth( -1 );
   return sh;
 }
 
-void KOAlternateLabel::setText( const QString &text )
+void AlternateLabel::setText( const QString &text )
 {
   mLongText = text;
   squeezeTextToLabel();

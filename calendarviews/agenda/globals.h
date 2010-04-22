@@ -21,10 +21,9 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOGLOBALS_H
-#define KOGLOBALS_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
-#include "korganizer_export.h"
 #include <kcomponentdata.h>
 #include <QPixmap>
 
@@ -38,10 +37,10 @@ namespace KHolidays {
   class HolidayRegion;
 }
 
-class KORGANIZERPRIVATE_EXPORT KOGlobals
+class Globals
 {
   public:
-    static KOGlobals *self();
+    static Globals *self();
 
     KConfig *config() const;
 
@@ -49,9 +48,7 @@ class KORGANIZERPRIVATE_EXPORT KOGlobals
 
     const KCalendarSystem *calendarSystem() const;
 
-    KPIM::ReminderClient *reminderClient() const;
-
-    ~KOGlobals();
+    ~Globals();
 
     QPixmap smallIcon( const QString &name ) const;
 
@@ -73,14 +70,12 @@ class KORGANIZERPRIVATE_EXPORT KOGlobals
     const KComponentData &componentData() const { return mOwnInstance; }
 
   protected:
-    KOGlobals();
+    Globals();
 
   private:
-    static KOGlobals *mSelf;
+    static Globals *mSelf;
 
     KComponentData mOwnInstance;
-
-    KPIM::ReminderClient *mReminderClient;
 
     KHolidays::HolidayRegion *mHolidays;
 };

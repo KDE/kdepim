@@ -23,11 +23,11 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "koagendaitem.h"
-#include "koeventview.h"
-#include "koglobals.h"
-#include "kohelper.h"
-#include "koprefs.h"
+#include "agendaitem.h"
+#include "eventview.h"
+#include "globals.h"
+#include "helper.h"
+#include "prefs.h"
 
 #include <libkdepim/kvcarddrag.h>
 
@@ -52,24 +52,23 @@
 #include <QToolTip>
 
 using namespace Akonadi;
-using namespace KOrg;
 
 //-----------------------------------------------------------------------------
 
-QPixmap *KOAgendaItem::alarmPxmp = 0;
-QPixmap *KOAgendaItem::recurPxmp = 0;
-QPixmap *KOAgendaItem::readonlyPxmp = 0;
-QPixmap *KOAgendaItem::replyPxmp = 0;
-QPixmap *KOAgendaItem::groupPxmp = 0;
-QPixmap *KOAgendaItem::groupPxmpTent = 0;
-QPixmap *KOAgendaItem::organizerPxmp = 0;
-QPixmap *KOAgendaItem::eventPxmp = 0;
-QPixmap *KOAgendaItem::todoPxmp = 0;
-QPixmap *KOAgendaItem::completedPxmp = 0;
+QPixmap *AgendaItem::alarmPxmp = 0;
+QPixmap *AgendaItem::recurPxmp = 0;
+QPixmap *AgendaItem::readonlyPxmp = 0;
+QPixmap *AgendaItem::replyPxmp = 0;
+QPixmap *AgendaItem::groupPxmp = 0;
+QPixmap *AgendaItem::groupPxmpTent = 0;
+QPixmap *AgendaItem::organizerPxmp = 0;
+QPixmap *AgendaItem::eventPxmp = 0;
+QPixmap *AgendaItem::todoPxmp = 0;
+QPixmap *AgendaItem::completedPxmp = 0;
 
 //-----------------------------------------------------------------------------
 
-KOAgendaItem::KOAgendaItem( Akonadi::Calendar *calendar, const Item &item,
+AgendaItem::AgendaItem( Akonadi::Calendar *calendar, const Item &item,
                             const QDate &qd, QWidget *parent )
   : QWidget( parent ), mCalendar( calendar ), mIncidence( item ),
     mDate( qd ), mValid( true ), mCloned( false ), mSpecialEvent( false )
@@ -83,7 +82,7 @@ KOAgendaItem::KOAgendaItem( Akonadi::Calendar *calendar, const Item &item,
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    qint64 years = KOHelper::yearDiff( incidence->dtStart().date(), qd );
+    qint64 years = Helper::yearDiff( incidence->dtStart().date(), qd );
     if ( years > 0 ) {
       incidence = Incidence::Ptr( incidence->clone() );
       incidence->setReadOnly( false );
@@ -122,11 +121,11 @@ KOAgendaItem::KOAgendaItem( Akonadi::Calendar *calendar, const Item &item,
   setAcceptDrops( true );
 }
 
-KOAgendaItem::~KOAgendaItem()
+AgendaItem::~AgendaItem()
 {
 }
 
-void KOAgendaItem::updateIcons()
+void AgendaItem::updateIcons()
 {
   if ( !mValid ) {
     return;
@@ -137,13 +136,13 @@ void KOAgendaItem::updateIcons()
   mIconRecur = incidence->recurs();
   mIconAlarm = incidence->isAlarmEnabled();
   if ( incidence->attendeeCount() > 1 ) {
-    if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) ) {
+    if ( Prefs::instance()->thatIsMe( incidence->organizer().email() ) ) {
       mIconReply = false;
       mIconGroup = false;
       mIconGroupTent = false;
       mIconOrganizer = true;
     } else {
-      Attendee *me = incidence->attendeeByMails( KOPrefs::instance()->allEmails() );
+      Attendee *me = incidence->attendeeByMails( Prefs::instance()->allEmails() );
       if ( me ) {
         if ( me->status() == Attendee::NeedsAction && me->RSVP() ) {
           mIconReply = true;
@@ -172,7 +171,7 @@ void KOAgendaItem::updateIcons()
   update();
 }
 
-void KOAgendaItem::select( bool selected )
+void AgendaItem::select( bool selected )
 {
   if ( mSelected == selected ) {
     return;
@@ -182,24 +181,24 @@ void KOAgendaItem::select( bool selected )
   update();
 }
 
-bool KOAgendaItem::dissociateFromMultiItem()
+bool AgendaItem::dissociateFromMultiItem()
 {
   if ( !isMultiItem() ) {
     return false;
   }
 
-  KOAgendaItem *firstItem = firstMultiItem();
+  AgendaItem *firstItem = firstMultiItem();
   if ( firstItem == this ) {
     firstItem = nextMultiItem();
   }
 
-  KOAgendaItem *lastItem = lastMultiItem();
+  AgendaItem *lastItem = lastMultiItem();
   if ( lastItem == this ) {
     lastItem = prevMultiItem();
   }
 
-  KOAgendaItem *prevItem = prevMultiItem();
-  KOAgendaItem *nextItem = nextMultiItem();
+  AgendaItem *prevItem = prevMultiItem();
+  AgendaItem *nextItem = nextMultiItem();
 
   if ( prevItem ) {
     prevItem->setMultiItem( firstItem, prevItem->prevMultiItem(), nextItem, lastItem );
@@ -212,7 +211,7 @@ bool KOAgendaItem::dissociateFromMultiItem()
   return true;
 }
 
-void KOAgendaItem::setIncidence( const Item &incidence )
+void AgendaItem::setIncidence( const Item &incidence )
 {
   mValid = false;
   if ( Akonadi::hasIncidence( incidence ) ) {
@@ -225,7 +224,7 @@ void KOAgendaItem::setIncidence( const Item &incidence )
 /*
   Return height of item in units of agenda cells
 */
-int KOAgendaItem::cellHeight() const
+int AgendaItem::cellHeight() const
 {
   return mCellYBottom - mCellYTop + 1;
 }
@@ -233,42 +232,42 @@ int KOAgendaItem::cellHeight() const
 /*
   Return height of item in units of agenda cells
 */
-int KOAgendaItem::cellWidth() const
+int AgendaItem::cellWidth() const
 {
   return mCellXRight - mCellXLeft + 1;
 }
 
-void KOAgendaItem::setItemDate( const QDate &qd )
+void AgendaItem::setItemDate( const QDate &qd )
 {
   mDate = qd;
 }
 
-void KOAgendaItem::setCellXY( int X, int YTop, int YBottom )
+void AgendaItem::setCellXY( int X, int YTop, int YBottom )
 {
   mCellXLeft = X;
   mCellYTop = YTop;
   mCellYBottom = YBottom;
 }
 
-void KOAgendaItem::setCellXRight( int XRight )
+void AgendaItem::setCellXRight( int XRight )
 {
   mCellXRight = XRight;
 }
 
-void KOAgendaItem::setCellX( int XLeft, int XRight )
+void AgendaItem::setCellX( int XLeft, int XRight )
 {
   mCellXLeft = XLeft;
   mCellXRight = XRight;
 }
 
-void KOAgendaItem::setCellY( int YTop, int YBottom )
+void AgendaItem::setCellY( int YTop, int YBottom )
 {
   mCellYTop = YTop;
   mCellYBottom = YBottom;
 }
 
-void KOAgendaItem::setMultiItem( KOAgendaItem *first, KOAgendaItem *prev,
-                                 KOAgendaItem *next, KOAgendaItem *last )
+void AgendaItem::setMultiItem( AgendaItem *first, AgendaItem *prev,
+                                 AgendaItem *next, AgendaItem *last )
 {
   if ( !mMultiItemInfo ) {
     mMultiItemInfo = new MultiItemInfo;
@@ -279,18 +278,18 @@ void KOAgendaItem::setMultiItem( KOAgendaItem *first, KOAgendaItem *prev,
   mMultiItemInfo->mLastMultiItem = last;
 }
 
-bool KOAgendaItem::isMultiItem()
+bool AgendaItem::isMultiItem()
 {
   return mMultiItemInfo;
 }
 
-KOAgendaItem *KOAgendaItem::prependMoveItem( KOAgendaItem *e )
+AgendaItem *AgendaItem::prependMoveItem( AgendaItem *e )
 {
   if ( !e ) {
     return e;
   }
 
-  KOAgendaItem *first = 0, *last = 0;
+  AgendaItem *first = 0, *last = 0;
   if ( isMultiItem() ) {
     first = mMultiItemInfo->mFirstMultiItem;
     last = mMultiItemInfo->mLastMultiItem;
@@ -305,7 +304,7 @@ KOAgendaItem *KOAgendaItem::prependMoveItem( KOAgendaItem *e )
   e->setMultiItem( 0, 0, first, last );
   first->setMultiItem( e, e, first->nextMultiItem(), first->lastMultiItem() );
 
-  KOAgendaItem *tmp = first->nextMultiItem();
+  AgendaItem *tmp = first->nextMultiItem();
   while ( tmp ) {
     tmp->setMultiItem( e, tmp->prevMultiItem(), tmp->nextMultiItem(), tmp->lastMultiItem() );
     tmp = tmp->nextMultiItem();
@@ -325,13 +324,13 @@ KOAgendaItem *KOAgendaItem::prependMoveItem( KOAgendaItem *e )
   return e;
 }
 
-KOAgendaItem *KOAgendaItem::appendMoveItem( KOAgendaItem *e )
+AgendaItem *AgendaItem::appendMoveItem( AgendaItem *e )
 {
   if ( !e ) {
     return e;
   }
 
-  KOAgendaItem *first = 0, *last = 0;
+  AgendaItem *first = 0, *last = 0;
   if ( isMultiItem() ) {
     first = mMultiItemInfo->mFirstMultiItem;
     last = mMultiItemInfo->mLastMultiItem;
@@ -344,7 +343,7 @@ KOAgendaItem *KOAgendaItem::appendMoveItem( KOAgendaItem *e )
   }
 
   e->setMultiItem( first, last, 0, 0 );
-  KOAgendaItem *tmp = first;
+  AgendaItem *tmp = first;
 
   while ( tmp ) {
     tmp->setMultiItem( tmp->firstMultiItem(), tmp->prevMultiItem(), tmp->nextMultiItem(), e );
@@ -365,12 +364,12 @@ KOAgendaItem *KOAgendaItem::appendMoveItem( KOAgendaItem *e )
   return e;
 }
 
-KOAgendaItem *KOAgendaItem::removeMoveItem( KOAgendaItem *e )
+AgendaItem *AgendaItem::removeMoveItem( AgendaItem *e )
 {
   if ( isMultiItem() ) {
-    KOAgendaItem *first = mMultiItemInfo->mFirstMultiItem;
-    KOAgendaItem *next, *prev;
-    KOAgendaItem *last = mMultiItemInfo->mLastMultiItem;
+    AgendaItem *first = mMultiItemInfo->mFirstMultiItem;
+    AgendaItem *next, *prev;
+    AgendaItem *last = mMultiItemInfo->mLastMultiItem;
     if ( !first ) {
       first = this;
     }
@@ -386,7 +385,7 @@ KOAgendaItem *KOAgendaItem::removeMoveItem( KOAgendaItem *e )
       last->setMultiItem( last->firstMultiItem(), last->prevMultiItem(), 0, 0 );
     }
 
-    KOAgendaItem *tmp =  first;
+    AgendaItem *tmp =  first;
     if ( first == last ) {
       delete mMultiItemInfo;
       tmp = 0;
@@ -412,16 +411,16 @@ KOAgendaItem *KOAgendaItem::removeMoveItem( KOAgendaItem *e )
   return e;
 }
 
-void KOAgendaItem::startMove()
+void AgendaItem::startMove()
 {
-  KOAgendaItem *first = this;
+  AgendaItem *first = this;
   if ( isMultiItem() && mMultiItemInfo->mFirstMultiItem ) {
     first=mMultiItemInfo->mFirstMultiItem;
   }
   first->startMovePrivate();
 }
 
-void KOAgendaItem::startMovePrivate()
+void AgendaItem::startMovePrivate()
 {
   mStartMoveInfo = new MultiItemInfo;
   mStartMoveInfo->mStartCellXLeft = mCellXLeft;
@@ -444,7 +443,7 @@ void KOAgendaItem::startMovePrivate()
   }
 }
 
-void KOAgendaItem::resetMove()
+void AgendaItem::resetMove()
 {
   if ( mStartMoveInfo ) {
     if ( mStartMoveInfo->mFirstMultiItem ) {
@@ -455,7 +454,7 @@ void KOAgendaItem::resetMove()
   }
 }
 
-void KOAgendaItem::resetMovePrivate()
+void AgendaItem::resetMovePrivate()
 {
   if ( mStartMoveInfo ) {
     mCellXLeft = mStartMoveInfo->mStartCellXLeft;
@@ -475,8 +474,8 @@ void KOAgendaItem::resetMovePrivate()
 
       if ( !mStartMoveInfo->mFirstMultiItem ) {
         // This was the first multi-item when the move started, delete all previous
-        KOAgendaItem *toDel = mStartMoveInfo->mPrevMultiItem;
-        KOAgendaItem *nowDel = 0;
+        AgendaItem *toDel = mStartMoveInfo->mPrevMultiItem;
+        AgendaItem *nowDel = 0;
         while ( toDel ) {
           nowDel = toDel;
           if ( nowDel->moveInfo() ) {
@@ -489,8 +488,8 @@ void KOAgendaItem::resetMovePrivate()
       }
       if ( !mStartMoveInfo->mLastMultiItem ) {
         // This was the last multi-item when the move started, delete all next
-        KOAgendaItem *toDel = mStartMoveInfo->mNextMultiItem;
-        KOAgendaItem *nowDel = 0;
+        AgendaItem *toDel = mStartMoveInfo->mNextMultiItem;
+        AgendaItem *nowDel = 0;
         while ( toDel ) {
           nowDel = toDel;
           if ( nowDel->moveInfo() ) {
@@ -517,22 +516,22 @@ void KOAgendaItem::resetMovePrivate()
   }
 }
 
-void KOAgendaItem::endMove()
+void AgendaItem::endMove()
 {
-  KOAgendaItem *first = firstMultiItem();
+  AgendaItem *first = firstMultiItem();
   if ( !first ) {
     first = this;
   }
   first->endMovePrivate();
 }
 
-void KOAgendaItem::endMovePrivate()
+void AgendaItem::endMovePrivate()
 {
   if ( mStartMoveInfo ) {
     // if first, delete all previous
     if ( !firstMultiItem() || firstMultiItem() == this ) {
-      KOAgendaItem *toDel = mStartMoveInfo->mPrevMultiItem;
-      KOAgendaItem *nowDel = 0;
+      AgendaItem *toDel = mStartMoveInfo->mPrevMultiItem;
+      AgendaItem *nowDel = 0;
       while ( toDel ) {
         nowDel = toDel;
         if ( nowDel->moveInfo() ) {
@@ -543,8 +542,8 @@ void KOAgendaItem::endMovePrivate()
     }
     // if last, delete all next
     if ( !lastMultiItem() || lastMultiItem() == this ) {
-      KOAgendaItem *toDel=mStartMoveInfo->mNextMultiItem;
-      KOAgendaItem *nowDel = 0;
+      AgendaItem *toDel=mStartMoveInfo->mNextMultiItem;
+      AgendaItem *nowDel = 0;
       while ( toDel ) {
         nowDel = toDel;
         if ( nowDel->moveInfo() ) {
@@ -562,7 +561,7 @@ void KOAgendaItem::endMovePrivate()
   }
 }
 
-void KOAgendaItem::moveRelative( int dx, int dy )
+void AgendaItem::moveRelative( int dx, int dy )
 {
   int newXLeft = cellXLeft() + dx;
   int newXRight = cellXRight() + dx;
@@ -572,7 +571,7 @@ void KOAgendaItem::moveRelative( int dx, int dy )
   setCellXRight( newXRight );
 }
 
-void KOAgendaItem::expandTop( int dy, const bool allowOverLimit )
+void AgendaItem::expandTop( int dy, const bool allowOverLimit )
 {
   int newYTop = cellYTop() + dy;
   int newYBottom = cellYBottom();
@@ -582,7 +581,7 @@ void KOAgendaItem::expandTop( int dy, const bool allowOverLimit )
   setCellY( newYTop, newYBottom );
 }
 
-void KOAgendaItem::expandBottom( int dy )
+void AgendaItem::expandBottom( int dy )
 {
   int newYTop = cellYTop();
   int newYBottom = cellYBottom() + dy;
@@ -592,7 +591,7 @@ void KOAgendaItem::expandBottom( int dy )
   setCellY( newYTop, newYBottom );
 }
 
-void KOAgendaItem::expandLeft( int dx )
+void AgendaItem::expandLeft( int dx )
 {
   int newXLeft = cellXLeft() + dx;
   int newXRight = cellXRight();
@@ -602,7 +601,7 @@ void KOAgendaItem::expandLeft( int dx )
   setCellX( newXLeft, newXRight );
 }
 
-void KOAgendaItem::expandRight( int dx )
+void AgendaItem::expandRight( int dx )
 {
   int newXLeft = cellXLeft();
   int newXRight = cellXRight() + dx;
@@ -612,7 +611,7 @@ void KOAgendaItem::expandRight( int dx )
   setCellX( newXLeft, newXRight );
 }
 
-void KOAgendaItem::dragEnterEvent( QDragEnterEvent *e )
+void AgendaItem::dragEnterEvent( QDragEnterEvent *e )
 {
 #ifndef KORG_NODND
   const QMimeData *md = e->mimeData();
@@ -629,7 +628,7 @@ void KOAgendaItem::dragEnterEvent( QDragEnterEvent *e )
 #endif
 }
 
-void KOAgendaItem::addAttendee( const QString &newAttendee )
+void AgendaItem::addAttendee( const QString &newAttendee )
 {
   if ( !mValid ) {
     return;
@@ -648,7 +647,7 @@ void KOAgendaItem::addAttendee( const QString &newAttendee )
   }
 }
 
-void KOAgendaItem::dropEvent( QDropEvent *e )
+void AgendaItem::dropEvent( QDropEvent *e )
 {
   // TODO: Organize this better: First check for attachment
   // (not only file, also any other url!), then if it's a vcard,
@@ -684,35 +683,35 @@ void KOAgendaItem::dropEvent( QDropEvent *e )
 #endif // KORG_NODND
 }
 
-QList<KOAgendaItem*> &KOAgendaItem::conflictItems()
+QList<AgendaItem*> &AgendaItem::conflictItems()
 {
   return mConflictItems;
 }
 
-void KOAgendaItem::setConflictItems( QList<KOAgendaItem*> ci )
+void AgendaItem::setConflictItems( QList<AgendaItem*> ci )
 {
   mConflictItems = ci;
-  QList<KOAgendaItem*>::iterator it;
+  QList<AgendaItem*>::iterator it;
   for ( it = mConflictItems.begin(); it != mConflictItems.end(); ++it ) {
     (*it)->addConflictItem( this );
   }
 }
 
-void KOAgendaItem::addConflictItem( KOAgendaItem *ci )
+void AgendaItem::addConflictItem( AgendaItem *ci )
 {
   if ( !mConflictItems.contains( ci ) ) {
     mConflictItems.append( ci );
   }
 }
 
-QString KOAgendaItem::label() const
+QString AgendaItem::label() const
 {
   return mLabelText;
 }
 
-bool KOAgendaItem::overlaps( KOrg::CellItem *o ) const
+bool AgendaItem::overlaps( CellItem *o ) const
 {
-  KOAgendaItem *other = static_cast<KOAgendaItem *>( o );
+  AgendaItem *other = static_cast<AgendaItem *>( o );
 
   if ( cellXLeft() <= other->cellXRight() && cellXRight() >= other->cellXLeft() ) {
     if ( ( cellYTop() <= other->cellYBottom() ) && ( cellYBottom() >= other->cellYTop() ) ) {
@@ -734,7 +733,7 @@ static void conditionalPaint( QPainter *p, bool condition, int &x, int y,
   x += pxmp.width() + ft;
 }
 
-void KOAgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
+void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
 {
   const Event::Ptr event = Akonadi::event( mIncidence );
   if ( !event ) {
@@ -745,9 +744,9 @@ void KOAgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     mSpecialEvent = true;
     if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tPxmp = KOGlobals::self()->smallIcon( "view-calendar-wedding-anniversary" );
+      tPxmp = Globals::self()->smallIcon( "view-calendar-wedding-anniversary" );
     } else {
-      tPxmp = KOGlobals::self()->smallIcon( "view-calendar-birthday" );
+      tPxmp = Globals::self()->smallIcon( "view-calendar-birthday" );
     }
     conditionalPaint( p, true, x, y, ft, tPxmp );
   } else {
@@ -762,21 +761,21 @@ void KOAgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
   }
 }
 
-void KOAgendaItem::paintTodoIcon( QPainter *p, int &x, int y, int ft )
+void AgendaItem::paintTodoIcon( QPainter *p, int &x, int y, int ft )
 {
   if ( !Akonadi::hasTodo( mIncidence ) ) {
     return;
   }
 
-  const bool isCompleted = KOEventView::usesCompletedTodoPixmap( mIncidence, mDate );
+  const bool isCompleted = EventView::usesCompletedTodoPixmap( mIncidence, mDate );
 
   conditionalPaint( p, !isCompleted, x, y, ft, *todoPxmp );
   conditionalPaint( p, isCompleted, x, y, ft, *completedPxmp );
 }
 
-void KOAgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
+void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
 {
-  if ( !KOPrefs::instance()->enableAgendaItemIcons() ) {
+  if ( !Prefs::instance()->enableAgendaItemIcons() ) {
     return;
   }
 
@@ -795,7 +794,7 @@ void KOAgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
   conditionalPaint( p, mIconOrganizer, x, y, ft, *organizerPxmp );
 }
 
-void KOAgendaItem::paintEvent( QPaintEvent *ev )
+void AgendaItem::paintEvent( QPaintEvent *ev )
 {
   if ( !mValid ) {
     return;
@@ -823,26 +822,26 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   // Also look at #17984
 
   if ( !alarmPxmp ) {
-    alarmPxmp     = new QPixmap( KOGlobals::self()->smallIcon( "task-reminder" ) );
-    recurPxmp     = new QPixmap( KOGlobals::self()->smallIcon( "appointment-recurring" ) );
-    readonlyPxmp  = new QPixmap( KOGlobals::self()->smallIcon( "object-locked" ) );
-    replyPxmp     = new QPixmap( KOGlobals::self()->smallIcon( "mail-reply-sender" ) );
-    groupPxmp     = new QPixmap( KOGlobals::self()->smallIcon( "meeting-attending" ) );
-    groupPxmpTent = new QPixmap( KOGlobals::self()->smallIcon( "meeting-attending-tentative" ) );
-    organizerPxmp = new QPixmap( KOGlobals::self()->smallIcon( "meeting-organizer" ) );
-    eventPxmp     = new QPixmap( KOGlobals::self()->smallIcon( "view-calendar-day" ) );
-    todoPxmp      = new QPixmap( KOGlobals::self()->smallIcon( "view-calendar-tasks" ) );
-    completedPxmp = new QPixmap( KOGlobals::self()->smallIcon( "task-complete" ) );
+    alarmPxmp     = new QPixmap( Globals::self()->smallIcon( "task-reminder" ) );
+    recurPxmp     = new QPixmap( Globals::self()->smallIcon( "appointment-recurring" ) );
+    readonlyPxmp  = new QPixmap( Globals::self()->smallIcon( "object-locked" ) );
+    replyPxmp     = new QPixmap( Globals::self()->smallIcon( "mail-reply-sender" ) );
+    groupPxmp     = new QPixmap( Globals::self()->smallIcon( "meeting-attending" ) );
+    groupPxmpTent = new QPixmap( Globals::self()->smallIcon( "meeting-attending-tentative" ) );
+    organizerPxmp = new QPixmap( Globals::self()->smallIcon( "meeting-organizer" ) );
+    eventPxmp     = new QPixmap( Globals::self()->smallIcon( "view-calendar-day" ) );
+    todoPxmp      = new QPixmap( Globals::self()->smallIcon( "view-calendar-tasks" ) );
+    completedPxmp = new QPixmap( Globals::self()->smallIcon( "task-complete" ) );
   }
 
   QColor bgColor;
 
-  if ( Akonadi::hasTodo( mIncidence ) && !KOPrefs::instance()->todosUseCategoryColors() ) {
+  if ( Akonadi::hasTodo( mIncidence ) && !Prefs::instance()->todosUseCategoryColors() ) {
     if ( Akonadi::todo( mIncidence )->isOverdue() ) {
-      bgColor = KOPrefs::instance()->agendaCalendarItemsToDosOverdueBackgroundColor();
+      bgColor = Prefs::instance()->agendaCalendarItemsToDosOverdueBackgroundColor();
     } else if ( Akonadi::todo( mIncidence )->dtDue().date() ==
                 QDateTime::currentDateTime().date() ) {
-      bgColor = KOPrefs::instance()->agendaCalendarItemsToDosDueTodayBackgroundColor();
+      bgColor = Prefs::instance()->agendaCalendarItemsToDosDueTodayBackgroundColor();
     }
   }
 
@@ -855,9 +854,9 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     cat = categories.first();
   }
   if ( cat.isEmpty() ) {
-    categoryColor = KOPrefs::instance()->unsetCategoryColor();
+    categoryColor = Prefs::instance()->unsetCategoryColor();
   } else {
-    categoryColor = KOPrefs::instance()->categoryColor( cat );
+    categoryColor = Prefs::instance()->categoryColor( cat );
   }
 
   QColor resourceColor = mResourceColor;
@@ -866,16 +865,16 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   QColor frameColor;
-  if ( KOPrefs::instance()->agendaViewColors() == KOPrefs::ResourceOnly ||
-       KOPrefs::instance()->agendaViewColors() == KOPrefs::CategoryInsideResourceOutside ) {
+  if ( Prefs::instance()->agendaViewColors() == Prefs::ResourceOnly ||
+       Prefs::instance()->agendaViewColors() == Prefs::CategoryInsideResourceOutside ) {
     frameColor = bgColor.isValid() ? bgColor : resourceColor;
   } else {
     frameColor = bgColor.isValid() ? bgColor : categoryColor;
   }
 
   if ( !bgColor.isValid() ) {
-    if ( KOPrefs::instance()->agendaViewColors() == KOPrefs::ResourceOnly ||
-         KOPrefs::instance()->agendaViewColors() == KOPrefs::ResourceInsideCategoryOutside ) {
+    if ( Prefs::instance()->agendaViewColors() == Prefs::ResourceOnly ||
+         Prefs::instance()->agendaViewColors() == Prefs::ResourceInsideCategoryOutside ) {
       bgColor = resourceColor;
     } else {
       bgColor = categoryColor;
@@ -883,12 +882,12 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   if ( cat.isEmpty() &&
-       KOPrefs::instance()->agendaViewColors() == KOPrefs::ResourceInsideCategoryOutside ) {
+       Prefs::instance()->agendaViewColors() == Prefs::ResourceInsideCategoryOutside ) {
     frameColor = bgColor;
   }
 
   if ( cat.isEmpty() &&
-       KOPrefs::instance()->agendaViewColors() == KOPrefs::CategoryInsideResourceOutside ) {
+       Prefs::instance()->agendaViewColors() == Prefs::CategoryInsideResourceOutside ) {
     bgColor = frameColor;
   }
 
@@ -900,7 +899,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     frameColor = frameColor.dark( 115 );
   }
 
-  if ( !KOPrefs::instance()->hasCategoryColor( cat ) ) {
+  if ( !Prefs::instance()->hasCategoryColor( cat ) ) {
     categoryColor = resourceColor;
   }
 
@@ -909,13 +908,13 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   if ( mSelected ) {
-    bgColor = bgColor.light( KOEventView::BRIGHTNESS_FACTOR );
+    bgColor = bgColor.light( EventView::BRIGHTNESS_FACTOR );
   }
 
-  QColor textColor = KOHelper::getTextColor( bgColor );
+  QColor textColor = Helper::getTextColor( bgColor );
   p.setPen( textColor );
 
-  p.setFont( KOPrefs::instance()->agendaViewFont() );
+  p.setFont( Prefs::instance()->agendaViewFont() );
   QFontMetrics fm = p.fontMetrics();
 
   int singleLineHeight = fm.boundingRect( mLabelText ).height();
@@ -933,22 +932,22 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
   QString longH;
   if ( !isMultiItem() ) {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ).time() );
+      incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
     if ( !Akonadi::hasTodo( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
                     KGlobal::locale()->formatTime(
-                      incidence->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() ).time() ) );
+                      incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() ) );
     } else {
       longH = shortH;
     }
   } else if ( !mMultiItemInfo->mFirstMultiItem ) {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ).time() );
+      incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
     longH = shortH;
   } else {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() ).time() );
+      incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
     longH = i18n( "- %1", shortH );
   }
 
@@ -1035,14 +1034,14 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     shortH = longH = "";
 
     if ( const Event::Ptr event = Akonadi::event( mIncidence ) ) {
-      if ( event->isMultiDay( KOPrefs::instance()->timeSpec() ) ) {
+      if ( event->isMultiDay( Prefs::instance()->timeSpec() ) ) {
         // multi-day, all-day event
         shortH =
           i18n( "%1 - %2",
                 KGlobal::locale()->formatDate(
-                  incidence->dtStart().toTimeSpec( KOPrefs::instance()->timeSpec() ).date() ),
+                  incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).date() ),
                 KGlobal::locale()->formatDate(
-                  incidence->dtEnd().toTimeSpec( KOPrefs::instance()->timeSpec() ).date() ) );
+                  incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).date() ) );
         longH = shortH;
 
         // paint headline
@@ -1100,7 +1099,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
     x += ( hTxtWidth - hw ) / 2;
   }
   p.setBackground( QBrush( frameColor ) );
-  p.setPen( KOHelper::getTextColor( frameColor ) );
+  p.setPen( Helper::getTextColor( frameColor ) );
   KWordWrap::drawFadeoutText( &p, x, ( margin + hlHeight + fm.ascent() ) / 2 - 2,
                               hTxtWidth, headline );
 
@@ -1121,7 +1120,7 @@ void KOAgendaItem::paintEvent( QPaintEvent *ev )
 
 }
 
-void KOAgendaItem::drawRoundedRect( QPainter *p, const QRect &rect,
+void AgendaItem::drawRoundedRect( QPainter *p, const QRect &rect,
                                     bool selected, const QColor &bgColor,
                                     bool frame, int ft, bool roundTop,
                                     bool roundBottom )
@@ -1341,7 +1340,7 @@ void KOAgendaItem::drawRoundedRect( QPainter *p, const QRect &rect,
   p->restore();
 }
 
-bool KOAgendaItem::eventFilter( QObject *obj, QEvent *event )
+bool AgendaItem::eventFilter( QObject *obj, QEvent *event )
 {
   if ( event->type() == QEvent::Paint ) {
     return mValid;
@@ -1351,10 +1350,10 @@ bool KOAgendaItem::eventFilter( QObject *obj, QEvent *event )
   }
 }
 
-bool KOAgendaItem::event( QEvent *event )
+bool AgendaItem::event( QEvent *event )
 {
   if ( event->type() == QEvent::ToolTip ) {
-    if( !KOPrefs::instance()->mEnableToolTips ) {
+    if( !Prefs::instance()->mEnableToolTips ) {
       return true;
     } else if ( mValid ) {
       QHelpEvent *helpEvent = static_cast<QHelpEvent*>( event );
@@ -1363,11 +1362,11 @@ bool KOAgendaItem::event( QEvent *event )
         IncidenceFormatter::toolTipStr(
           Akonadi::displayName( mIncidence.parentCollection() ),
           Akonadi::incidence( mIncidence ).get(),
-          mDate, true, KOPrefs::instance()->timeSpec() ),
+          mDate, true, Prefs::instance()->timeSpec() ),
         this );
     }
   }
   return QWidget::event( event );
 }
 
-#include "koagendaitem.moc"
+#include "agendaitem.moc"

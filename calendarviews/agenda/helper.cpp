@@ -22,8 +22,8 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "kohelper.h"
-#include "koprefs.h"
+#include "helper.h"
+#include "prefs.h"
 
 #include <Akonadi/Collection>
 #include <akonadi/item.h>
@@ -32,36 +32,36 @@
 
 using namespace Akonadi;
 
-QColor KOHelper::getTextColor( const QColor &c )
+QColor Helper::getTextColor( const QColor &c )
 {
   double luminance = ( c.red() * 0.299 ) + ( c.green() * 0.587 ) + ( c.blue() * 0.114 );
   return ( luminance > 128.0 ) ? QColor( 0, 0, 0 ) : QColor( 255, 255, 255 );
 }
 
-QColor KOHelper::resourceColor( const Collection &coll ) {
+QColor Helper::resourceColor( const Collection &coll ) {
   if ( !coll.isValid() )
     return QColor();
   const QString id = QString::number( coll.id() );
-  return KOPrefs::instance()->resourceColor( id );
+  return Prefs::instance()->resourceColor( id );
 }
 
-QColor KOHelper::resourceColor( const Item &item ) {
+QColor Helper::resourceColor( const Item &item ) {
   if ( !item.isValid() )
     return QColor();
   const QString id = QString::number( item.storageCollectionId() );
-  return KOPrefs::instance()->resourceColor( id );
+  return Prefs::instance()->resourceColor( id );
 }
 
 
 
-qint64 KOHelper::yearDiff( const QDate &start, const QDate &end )
+qint64 Helper::yearDiff( const QDate &start, const QDate &end )
 {
   return static_cast<qint64>( start.daysTo( end ) / 365.25 );
 }
 
-bool KOHelper::isStandardCalendar( const Akonadi::Collection &coll ) {
+bool Helper::isStandardCalendar( const Akonadi::Collection &coll ) {
   if ( !coll.isValid() )
     return false;
   const QString id = QString::number( coll.id() );
-  return ( id == KOPrefs::instance()->defaultCalendar() );
+  return ( id == Prefs::instance()->defaultCalendar() );
 }

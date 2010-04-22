@@ -23,34 +23,126 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "koeventview.h"
-#include "kocore.h"
-#include "views/agendaview/koagendaview.h" // TODO AKONADI_PORT
-#include "koprefs.h"
-#include "koeventpopupmenu.h"
+#include "eventview.h"
+#include "agendaview.h" // TODO AKONADI_PORT
+#include "prefs.h"
 
+//TODO_SPLIT
+//#include "koeventpopupmenu.h"
 #include <libkdepim/pimmessagebox.h>
-
-#include <Akonadi/Item>
-
 #include <akonadi/kcal/collectionselection.h>
+#include <akonadi/kcal/collectionselectionproxymodel.h>
+#include <akonadi/kcal/collectionselection.h>
+#include <akonadi/akonadi_next/entitymodelstatesaver.h>
 #include <akonadi/kcal/utils.h>
+#include <Akonadi/Item>
 
 #include <QApplication>
 #include <QKeyEvent>
 #include <KCal/Incidence>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
+#include <KRandom>
 
 #include <QMenu>
 
 using namespace Akonadi;
-
+CollectionSelection* EventView::sGlobalCollectionSelection = 0;
 //---------------------------------------------------------------------------
 
-KOEventView::KOEventView( QWidget *parent )
-  : KOrg::BaseView( parent )
+/* static */
+void EventView::setGlobalCollectionSelection( CollectionSelection* s )
 {
+  sGlobalCollectionSelection = s;
+}
+
+class EventView::Private
+{
+  EventView *const q;
+
+  public:
+    explicit Private( EventView* qq )
+      : q( qq ),
+        calendar( 0 ),
+        customCollectionSelection( 0 ),
+        collectionSelectionModel( 0 ),
+        stateSaver( 0 )
+    {
+      QByteArray cname = q->metaObject()->className();
+      cname.replace( ":", "_" );
+      identifier = cname + "_" + KRandom::randomString( 8 ).toLatin1();
+      calendarSearch = new CalendarSearch( q );
+      connect( calendarSearch->model(), SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
+               q, SLOT( rowsInserted( const QModelIndex&, int, int ) ) );
+      connect( calendarSearch->model(), SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
+               q, SLOT( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ) );
+      connect( calendarSearch->model(), SIGNAL( dataChanged( const QModelIndex&, const QModelIndex& ) ),
+               q, SLOT( dataChanged( const QModelIndex&, const QModelIndex& ) ) );
+      connect( calendarSearch->model(), SIGNAL( modelReset() ), q, SLOT( calendarReset() ) );
+    }
+
+    ~Private()
+    {
+      delete collectionSelectionModel;
+    }
+
+    Akonadi::Calendar *calendar;
+    CalendarSearch *calendarSearch;
+    CollectionSelection *customCollectionSelection;
+    CollectionSelectionProxyModel* collectionSelectionModel;
+    EntityModelStateSaver* stateSaver;
+    QByteArray identifier;
+    KDateTime startDateTime;
+    KDateTime endDateTime;
+    KDateTime actualStartDateTime;
+    KDateTime actualEndDateTime;
+    void setUpModels();
+    void reconnectCollectionSelection();
+};
+
+void EventView::Private::setUpModels()
+{
+  delete stateSaver;
+  stateSaver = 0;
+  delete customCollectionSelection;
+  customCollectionSelection = 0;
+  if ( collectionSelectionModel ) {
+    customCollectionSelection = new CollectionSelection( collectionSelectionModel->selectionModel() );
+    stateSaver = new EntityModelStateSaver( collectionSelectionModel, q );
+    stateSaver->addRole( Qt::CheckStateRole, "CheckState" );
+    calendarSearch->setSelectionModel( collectionSelectionModel->selectionModel() );
+
+  } else {
+    calendarSearch->setSelectionModel( globalCollectionSelection()->model() );
+  }
+#if 0
+  QDialog* dlg = new QDialog( q );
+  dlg->setModal( false );
+  QVBoxLayout* layout = new QVBoxLayout( dlg );
+  EntityTreeView* testview = new EntityTreeView( dlg );
+  layout->addWidget( testview );
+  testview->setModel( calendarSearch->model() );
+  dlg->show();
+#endif
+  reconnectCollectionSelection();
+}
+
+void EventView::Private::reconnectCollectionSelection()
+{
+  if ( q->globalCollectionSelection() )
+    q->globalCollectionSelection()->disconnect( q );
+
+  if ( customCollectionSelection )
+    customCollectionSelection->disconnect( q );
+
+  QObject::connect( q->collectionSelection(), SIGNAL(selectionChanged(Akonadi::Collection::List,Akonadi::Collection::List)), q, SLOT(collectionSelectionChanged()) );
+}
+
+
+EventView::EventView( QWidget *parent ) : QWidget( parent ), mChanger( 0 ), d( new Private( this ) )
+{
+  //TODO_SPLIT, tirar o unused
+  Q_UNUSED( parent );
   mReturnPressed = false;
   mTypeAhead = false;
   mTypeAheadReceiver = 0;
@@ -63,108 +155,15 @@ KOEventView::KOEventView( QWidget *parent )
 
 //---------------------------------------------------------------------------
 
-KOEventView::~KOEventView()
+EventView::~EventView()
 {
 }
 
 //---------------------------------------------------------------------------
 
-KOEventPopupMenu *KOEventView::eventPopup()
-{
-  KOEventPopupMenu *eventPopup = new KOEventPopupMenu(this);
 
-  connect( eventPopup, SIGNAL(editIncidenceSignal(Akonadi::Item)),
-           SIGNAL(editIncidenceSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(showIncidenceSignal(Akonadi::Item)),
-           SIGNAL(showIncidenceSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(deleteIncidenceSignal(Akonadi::Item)),
-           SIGNAL(deleteIncidenceSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(cutIncidenceSignal(Akonadi::Item)),
-           SIGNAL(cutIncidenceSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(copyIncidenceSignal(Akonadi::Item)),
-           SIGNAL(copyIncidenceSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(pasteIncidenceSignal()),
-           SIGNAL(pasteIncidenceSignal()));
-  connect( eventPopup, SIGNAL(toggleAlarmSignal(Akonadi::Item)),
-           SIGNAL(toggleAlarmSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(toggleTodoCompletedSignal(Akonadi::Item)),
-           SIGNAL(toggleTodoCompletedSignal(Akonadi::Item)));
-  connect( eventPopup, SIGNAL(copyIncidenceToResourceSignal(Akonadi::Item,const QString &)),
-           SIGNAL(copyIncidenceToResourceSignal(Akonadi::Item,const QString &)));
-  connect( eventPopup, SIGNAL(moveIncidenceToResourceSignal(Akonadi::Item,const QString &)),
-           SIGNAL(moveIncidenceToResourceSignal(Akonadi::Item,const QString &)));
-  connect( eventPopup, SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)),
-           SIGNAL(dissociateOccurrencesSignal(Akonadi::Item,QDate)) );
 
-  return eventPopup;
-}
-
-QMenu *KOEventView::newEventPopup()
-{
-  KXMLGUIClient *client = KOCore::self()->xmlguiClient( this );
-  if ( !client ) {
-    kError() << "no xmlGuiClient.";
-    return 0;
-  }
-  if ( !client->factory() ) {
-    kError() << "no factory";
-    return 0; // can happen if called too early
-  }
-
-  return static_cast<QMenu*>
-      ( client->factory()->container( "rmb_selection_popup", client ) );
-}
-//---------------------------------------------------------------------------
-
-void KOEventView::popupShow()
-{
-  emit showIncidenceSignal(mCurrentIncidence);
-}
-
-//---------------------------------------------------------------------------
-
-void KOEventView::popupEdit()
-{
-  emit editIncidenceSignal(mCurrentIncidence);
-}
-
-//---------------------------------------------------------------------------
-
-void KOEventView::popupDelete()
-{
-  emit deleteIncidenceSignal(mCurrentIncidence);
-}
-
-//---------------------------------------------------------------------------
-
-void KOEventView::popupCut()
-{
-  emit cutIncidenceSignal(mCurrentIncidence);
-}
-
-//---------------------------------------------------------------------------
-
-void KOEventView::popupCopy()
-{
-  emit copyIncidenceSignal(mCurrentIncidence);
-}
-
-//---------------------------------------------------------------------------
-
-void KOEventView::showNewEventPopup()
-{
-  QMenu *popup = newEventPopup();
-  if ( !popup ) {
-    kError() << "popup creation failed";
-    return;
-  }
-
-  popup->popup( QCursor::pos() );
-}
-
-//---------------------------------------------------------------------------
-
-void KOEventView::defaultAction( const Item &aitem )
+void EventView::defaultAction( const Item &aitem )
 {
   kDebug();
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
@@ -182,13 +181,13 @@ void KOEventView::defaultAction( const Item &aitem )
 }
 
 //---------------------------------------------------------------------------
-int KOEventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
+int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
 {
   const Incidence::Ptr inc = Akonadi::incidence( aitem );
   int answer = KMessageBox::Ok;
   KGuiItem itemFuture( i18n( "Also &Future Items" ) );
 
-  KDateTime dateTime( date, KOPrefs::instance()->timeSpec() );
+  KDateTime dateTime( date, Prefs::instance()->timeSpec() );
   bool isFirst = !inc->recurrence()->getPreviousDateTime( dateTime ).isValid();
   bool isLast  = !inc->recurrence()->getNextDateTime( dateTime ).isValid();
 
@@ -220,16 +219,120 @@ int KOEventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
   return answer;
 }
 
-bool KOEventView::processKeyEvent( QKeyEvent *ke )
+void EventView::setCalendar( Akonadi::Calendar *cal )
 {
+  if (  d->calendar != cal ) {
+    d->calendar = cal;
+    if (  cal && d->collectionSelectionModel ) {
+      d->collectionSelectionModel->setSourceModel(  cal->model() );
+    }
+  }
+}
+
+Akonadi::Calendar *EventView::calendar()
+{
+  return d->calendar;
+}
+
+Akonadi::CalendarSearch* EventView::calendarSearch() const
+{
+  return d->calendarSearch;
+}
+
+void EventView::dayPassed( const QDate & )
+{
+  updateView();
+}
+
+void EventView::setIncidenceChanger( IncidenceChanger *changer )
+{
+  mChanger = changer;
+}
+
+void EventView::flushView()
+{}
+
+EventView* EventView::viewAt( const QPoint & )
+{
+  return this;
+}
+
+void EventView::updateConfig()
+{
+}
+
+bool EventView::usesFullWindow()
+{
+  return false;
+}
+
+bool EventView::supportsZoom()
+{
+  return false;
+}
+
+bool EventView::supportsDateRangeSelection()
+{
+  return true;
+}
+
+bool EventView::hasConfigurationDialog() const
+{
+  return false;
+}
+
+void EventView::setDateRange( const KDateTime& start, const KDateTime& end )
+{
+#if 0 //AKONADI_PORT the old code called showDates() (below), which triggers a repaint, which the old code relies on
+  if ( d->startDateTime == start && d->endDateTime == end )
+    return;
+#endif
+  d->startDateTime = start;
+  d->endDateTime = end;
+  showDates( start.date(), end.date() );
+  const QPair<KDateTime,KDateTime> adjusted = actualDateRange( start, end );
+  d->actualStartDateTime = adjusted.first;
+  d->actualEndDateTime = adjusted.second;
+  d->calendarSearch->setStartDate( d->actualStartDateTime );
+  d->calendarSearch->setEndDate( d->actualEndDateTime );
+}
+
+KDateTime EventView::startDateTime() const
+{
+  return d->startDateTime;
+}
+
+KDateTime EventView::endDateTime() const
+{
+  return d->endDateTime;
+}
+
+KDateTime EventView::actualStartDateTime() const
+{
+  return d->actualStartDateTime;
+}
+
+KDateTime EventView::actualEndDateTime() const
+{
+  return d->actualEndDateTime;
+}
+
+void EventView::showConfigurationDialog( QWidget* )
+{
+}
+
+
+bool EventView::processKeyEvent( QKeyEvent *ke )
+{ // TODO_SPLIT
+  Q_UNUSED( ke );
   // If Return is pressed bring up an editor for the current selected time span.
-  if ( ke->key() == Qt::Key_Return ) {
+/*  if ( ke->key() == Qt::Key_Return ) {
     if ( ke->type() == QEvent::KeyPress ) {
       mReturnPressed = true;
     } else if ( ke->type() == QEvent::KeyRelease ) {
       if ( mReturnPressed ) {
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
-        if ( KOAgendaView *view = dynamic_cast<KOAgendaView*>( this ) ) {
+        if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
           if ( view->collection() >= 0 ) {
             emit newEventSignal( Akonadi::Collection::List() << Collection( view->collection() ) );
           } else {
@@ -283,7 +386,8 @@ bool KOEventView::processKeyEvent( QKeyEvent *ke )
       if ( !mTypeAhead ) {
         mTypeAhead = true;
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
-        if ( KOAgendaView *view = dynamic_cast<KOAgendaView*>( this ) ) {
+        // TODO_SPLIT rename singleagendaview to agendaview
+        if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
           if ( view->collection() >= 0 ) {
             emit newEventSignal( Akonadi::Collection::List() << Collection( view->collection() ) );
           } else {
@@ -295,22 +399,22 @@ bool KOEventView::processKeyEvent( QKeyEvent *ke )
       }
       return true;
     }
-  }
+    } */
   return false;
 }
 
-void KOEventView::setTypeAheadReceiver( QObject *o )
+void EventView::setTypeAheadReceiver( QObject *o )
 {
   mTypeAheadReceiver = o;
 }
 
-void KOEventView::focusChanged( QWidget*, QWidget* now )
+void EventView::focusChanged( QWidget*, QWidget* now )
 {
   if ( mTypeAhead && now && now == mTypeAheadReceiver )
     finishTypeAhead();
 }
 
-void KOEventView::finishTypeAhead()
+void EventView::finishTypeAhead()
 {
   if ( mTypeAheadReceiver ) {
     foreach ( QEvent *e, mTypeAheadEvents ) {
@@ -322,7 +426,121 @@ void KOEventView::finishTypeAhead()
   mTypeAhead = false;
 }
 
-bool KOEventView::usesCompletedTodoPixmap( const Item& aitem, const QDate &date )
+CollectionSelection* EventView::collectionSelection() const
+{
+  return d->customCollectionSelection ? d->customCollectionSelection : globalCollectionSelection();
+}
+
+void EventView::setCustomCollectionSelectionProxyModel( Akonadi::CollectionSelectionProxyModel* model )
+{
+  if ( d->collectionSelectionModel == model )
+    return;
+
+  delete d->collectionSelectionModel;
+  d->collectionSelectionModel = model;
+  d->setUpModels();
+}
+
+void EventView::collectionSelectionChanged()
+{
+
+}
+
+CollectionSelectionProxyModel *EventView::customCollectionSelectionProxyModel() const
+{
+  return d->collectionSelectionModel;
+}
+
+CollectionSelectionProxyModel *EventView::takeCustomCollectionSelectionProxyModel()
+{
+  CollectionSelectionProxyModel* m = d->collectionSelectionModel;
+  d->collectionSelectionModel = 0;
+  d->setUpModels();
+  return m;
+}
+
+CollectionSelection *EventView::customCollectionSelection() const
+{
+  return d->customCollectionSelection;
+}
+
+void EventView::clearSelection()
+{
+}
+
+bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay )
+{
+  Q_UNUSED( startDt );
+  Q_UNUSED( endDt );
+  Q_UNUSED( allDay );
+  return false;
+}
+
+void EventView::doRestoreConfig( const KConfigGroup & )
+{
+}
+
+void EventView::doSaveConfig( KConfigGroup & )
+{
+}
+
+QPair<KDateTime,KDateTime> EventView::actualDateRange( const KDateTime& start, const KDateTime& end ) const
+{
+  return qMakePair( start, end );
+}
+
+void EventView::incidencesAdded( const Akonadi::Item::List & )
+{
+}
+
+void EventView::incidencesAboutToBeRemoved( const Akonadi::Item::List & )
+{
+}
+
+void EventView::incidencesChanged( const Akonadi::Item::List& )
+{
+}
+
+void EventView::handleBackendError( const QString &errorString )
+{
+  kError() << errorString;
+}
+
+
+void EventView::backendErrorOccurred()
+{
+  handleBackendError( d->calendarSearch->errorString() );
+}
+
+void EventView::calendarReset()
+{
+}
+
+void EventView::dataChanged( const QModelIndex& topLeft, const QModelIndex& bottomRight )
+{
+  Q_ASSERT( topLeft.parent() == bottomRight.parent() );
+
+  incidencesChanged( Akonadi::itemsFromModel( d->calendarSearch->model(), topLeft.parent(),
+                     topLeft.row(), bottomRight.row() ) );
+}
+
+void EventView::rowsInserted( const QModelIndex& parent, int start, int end )
+{
+  incidencesAdded( Akonadi::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
+}
+
+void EventView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int end )
+{
+  incidencesAboutToBeRemoved( Akonadi::itemsFromModel( d->calendarSearch->model(), parent, start, end ) );
+}
+
+CollectionSelection* EventView::globalCollectionSelection()
+{
+  return sGlobalCollectionSelection;
+}
+
+/* static */
+bool EventView::usesCompletedTodoPixmap( const Item &aitem, const QDate &date )
 {
   const Todo::Ptr todo = Akonadi::todo( aitem );
   if ( !todo )
@@ -335,10 +553,10 @@ bool KOEventView::usesCompletedTodoPixmap( const Item& aitem, const QDate &date 
     if ( todo->allDay() ) {
       time = QTime( 0, 0 );
     } else {
-      time = todo->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() ).time();
+      time = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() ).time();
     }
 
-    KDateTime itemDateTime( date, time, KOPrefs::instance()->timeSpec() );
+    KDateTime itemDateTime( date, time, Prefs::instance()->timeSpec() );
 
     return itemDateTime < todo->dtDue( false );
 
@@ -347,5 +565,15 @@ bool KOEventView::usesCompletedTodoPixmap( const Item& aitem, const QDate &date 
   }
 }
 
-#include "koeventview.moc"
+QByteArray EventView::identifier() const
+{
+  return d->identifier;
+}
 
+void EventView::setIdentifier( const QByteArray& identifier )
+{
+  d->identifier = identifier;
+}
+
+
+#include "eventview.moc"

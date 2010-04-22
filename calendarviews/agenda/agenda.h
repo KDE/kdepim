@@ -21,11 +21,15 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOAGENDA_H
-#define KOAGENDA_H
+#ifndef AGENDA_H
+#define AGENDA_H
 
-#include "koeventview.h"
+#include "eventviews_export.h"
+
+#include "eventview.h"
+#include "agendaview.h"
 #include <kcal/incidence.h>
+#include <akonadi/kcal/incidencechanger.h>
 
 #include <Akonadi/Item>
 
@@ -36,8 +40,9 @@
 #include <QTimer>
 #include <QVector>
 
-class KOAgenda;
-class KOAgendaItem;
+class Agenda;
+class AgendaItem;
+class AgendaView;
 
 class QDropEvent;
 class QEvent;
@@ -53,8 +58,6 @@ namespace Akonadi
   class Calendar;
 }
 
-using namespace KOrg;
-
 namespace KCal {
   class Event;
   class Todo;
@@ -65,7 +68,7 @@ class MarcusBains : public QFrame
 {
   Q_OBJECT
   public:
-    MarcusBains( KOAgenda *agenda = 0 );
+    MarcusBains( Agenda *agenda = 0 );
     void updateLocationRecalc( bool recalculate = false );
     virtual ~MarcusBains();
 
@@ -76,20 +79,20 @@ class MarcusBains : public QFrame
     int todayColumn();
     QTimer *mTimer;
     QLabel *mTimeBox;  // Label showing the current time
-    KOAgenda *mAgenda;
+    Agenda *mAgenda;
     QTime mOldTime;
     int mOldTodayCol;
 };
 
-class KOAgenda : public Q3ScrollView
+class EVENTVIEWS_EXPORT Agenda : public Q3ScrollView
 {
   Q_OBJECT
   public:
-    KOAgenda ( KOEventView *eventView, int columns, int rows, int columnSize,
+    Agenda ( EventView *eventView, int columns, int rows, int columnSize,
                QWidget *parent=0, Qt::WFlags f = 0 );
-    explicit KOAgenda ( KOEventView *eventView, int columns,
+    explicit Agenda ( EventView *eventView, int columns,
                         QWidget *parent = 0, Qt::WFlags f = 0 );
-    virtual ~KOAgenda();
+    virtual ~Agenda();
 
     Akonadi::Item selectedIncidence() const;
     QDate selectedIncidenceDate() const;
@@ -117,9 +120,9 @@ class KOAgenda : public Q3ScrollView
 
     void setStartTime( const QTime &startHour );
 
-    KOAgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
+    AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
                                int YBottom );
-    KOAgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
+    AgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
                                      int XEnd );
     void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
                            int YTop, int YBottom );
@@ -159,7 +162,7 @@ class KOAgenda : public Q3ScrollView
     void setIncidenceChanger( Akonadi::IncidenceChanger *changer )
     { mChanger = changer; }
 
-    QList<KOAgendaItem*> agendaItems( const Akonadi::Item &item ) const;
+    QList<AgendaItem*> agendaItems( const Akonadi::Item &item ) const;
 
   public slots:
     void scrollUp();
@@ -177,7 +180,7 @@ class KOAgenda : public Q3ScrollView
       deselected. This function emits the itemSelected(bool) signal to inform
       about selection/deselection of events.
     */
-    void selectItem( KOAgendaItem * );
+    void selectItem( AgendaItem * );
 
     /**
       Selects the item associated with a given Akonadi Item id.
@@ -188,8 +191,8 @@ class KOAgenda : public Q3ScrollView
     void selectItemByItemId( const Akonadi::Item::Id &id );
     void selectItem( const Akonadi::Item &item );
 
-    bool removeAgendaItem( KOAgendaItem *item );
-    void showAgendaItem( KOAgendaItem *item );
+    bool removeAgendaItem( AgendaItem *item );
+    void showAgendaItem( AgendaItem *item );
 
   signals:
     void newEventSignal();
@@ -200,9 +203,11 @@ class KOAgenda : public Q3ScrollView
     void editIncidenceSignal( const Akonadi::Item & );
     void deleteIncidenceSignal( const Akonadi::Item & );
     void showIncidencePopupSignal( const Akonadi::Item &, const QDate &);
+
+    //TODO_SPIT: change it's name to something like RMBClicked
     void showNewEventPopupSignal();
 
-    void itemModified( KOAgendaItem *item );
+    void itemModified( AgendaItem *item );
     void incidenceSelected( const Akonadi::Item &, const QDate & );
     void startMultiModify( const QString & );
     void endMultiModify();
@@ -269,7 +274,7 @@ class KOAgenda : public Q3ScrollView
         @param pos The current mouse position
         @param item The affected item
     */
-    MouseActionType isInResizeArea( bool horizontal, const QPoint &pos, KOAgendaItem *item );
+    MouseActionType isInResizeArea( bool horizontal, const QPoint &pos, AgendaItem *item );
     /** Return whether the cell specified by the grid point belongs to the current select
     */
     bool ptInSelection( const QPoint &gpos ) const;
@@ -293,7 +298,7 @@ class KOAgenda : public Q3ScrollView
     void endItemAction();
 
     /** Set cursor, when no item action is in progress */
-    void setNoActionCursor( KOAgendaItem *moveItem, const QPoint &viewportPos );
+    void setNoActionCursor( AgendaItem *moveItem, const QPoint &viewportPos );
     /** Sets the cursor according to the given action type.
         @param actionType The type of action for which the cursor should be set.
         @param acting If true, the corresponding action is running (e.g. the
@@ -303,13 +308,13 @@ class KOAgenda : public Q3ScrollView
     void setActionCursor( int actionType, bool acting=false );
 
     /** calculate the width of the column subcells of the given item */
-    double calcSubCellWidth( KOAgendaItem *item );
+    double calcSubCellWidth( AgendaItem *item );
     /** Move and resize the given item to the correct position */
-    void placeAgendaItem( KOAgendaItem *item, double subCellWidth );
+    void placeAgendaItem( AgendaItem *item, double subCellWidth );
     /** Place agenda item in agenda and adjust other cells if necessary */
-    void placeSubCells( KOAgendaItem *placeItem );
+    void placeSubCells( AgendaItem *placeItem );
     /** Place the agenda item at the correct position (ignoring conflicting items) */
-    void adjustItemPosition( KOAgendaItem *item );
+    void adjustItemPosition( AgendaItem *item );
 
     /** Process the keyevent, including the ignored keyevents of eventwidgets.
      * Implements pgup/pgdn and cursor key navigation in the view.
@@ -346,7 +351,7 @@ class KOAgenda : public Q3ScrollView
     double mGridSpacingY;
     double mDesiredGridSpacingY;
 
-    // size of border, where mouse action will resize the KOAgendaItem
+    // size of border, where mouse action will resize the AgendaItem
     int mResizeBorderWidth;
 
     // size of border, where mouse mve will cause a scroll of the agenda
@@ -380,14 +385,14 @@ class KOAgenda : public Q3ScrollView
     // List of dates to be displayed
     DateList mSelectedDates;
 
-    // The KOAgendaItem, which has been right-clicked last
-    QPointer<KOAgendaItem> mClickedItem;
+    // The AgendaItem, which has been right-clicked last
+    QPointer<AgendaItem> mClickedItem;
 
-    // The KOAgendaItem, which is being moved/resized
-    QPointer<KOAgendaItem> mActionItem;
+    // The AgendaItem, which is being moved/resized
+    QPointer<AgendaItem> mActionItem;
 
     // Currently selected item
-    QPointer<KOAgendaItem> mSelectedItem;
+    QPointer<AgendaItem> mSelectedItem;
     // Id of the last selected item. Used for reselecting in situations
     // where the selected item points to a no longer valid incidence, for
     // example during resource reload.
@@ -401,8 +406,8 @@ class KOAgenda : public Q3ScrollView
     bool mItemMoved;
 
     // List of all Items contained in agenda
-    QList<KOAgendaItem*> mItems;
-    QList<KOAgendaItem*> mItemsToDelete;
+    QList<AgendaItem*> mItems;
+    QList<AgendaItem*> mItemsToDelete;
 
     int mOldLowerScrollValue;
     int mOldUpperScrollValue;
@@ -410,7 +415,7 @@ class KOAgenda : public Q3ScrollView
     bool mReturnPressed;
     Akonadi::IncidenceChanger *mChanger;
 
-    KOEventView *mEventView;
+    EventView *mEventView;
 };
 
 #endif // KOAGENDA_H
