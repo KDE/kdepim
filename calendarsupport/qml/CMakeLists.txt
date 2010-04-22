@@ -15,4 +15,4 @@ target_link_libraries(messageviewerqmlplugin messageviewer
 install( FILES qmldir DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )
 install( TARGETS messageviewerqmlplugin DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )
 
-add_subdirectory(tests)
+#add_subdirectory(tests)
