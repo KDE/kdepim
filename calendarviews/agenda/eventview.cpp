@@ -261,11 +261,6 @@ bool EventView::supportsZoom() const
   return false;
 }
 
-bool EventView::supportsDateRangeSelection() const
-{
-  return true;
-}
-
 bool EventView::hasConfigurationDialog() const
 {
   return false;

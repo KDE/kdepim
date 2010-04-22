@@ -145,12 +145,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     virtual bool supportsZoom() const;
 
-    /**
-     * returns whether this view supports date range selection
-     * Base implementation returns true.
-     */
-    virtual bool supportsDateRangeSelection() const;
-
     virtual bool hasConfigurationDialog() const;
 
     virtual void showConfigurationDialog( QWidget *parent );

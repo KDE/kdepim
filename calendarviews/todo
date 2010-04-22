@@ -11,3 +11,5 @@
 * Remove KOEditorPopup stuff
 
 * Implement usesFullWindow in korganizer's agenda container, as it doesn't belong in libeventviews.
+
+* Implement supportsDateRangeSelection in korganizer's agenda container
