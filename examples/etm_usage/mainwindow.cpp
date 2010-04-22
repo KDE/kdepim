@@ -33,6 +33,7 @@
 #include "tab7widget.h"
 #include "unreadmailswidget.h"
 #include "recursiveitemlistwidget.h"
+#include "entityfindingwidget.h"
 
 
 MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
@@ -52,6 +53,7 @@ MainWindow::MainWindow(QWidget* parent, Qt::WindowFlags flags)
   tabWidget->addTab(new Tab7Widget(tabWidget), "Tagged Items");
   tabWidget->addTab(new UnreadMailsWidget(tabWidget), "Unread Mails");
   tabWidget->addTab(new RecursiveItemListWidget(tabWidget), "Items only");
+  tabWidget->addTab(new EntityFindingWidget(tabWidget), "Find entities");
 
   setCentralWidget(tabWidget);
 }
