@@ -140,12 +140,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual int currentDateCount() const = 0;
 
     /**
-     * returns whether this view should be displayed full window.
-     * Base implementation returns false.
-     */
-    virtual bool usesFullWindow() const;
-
-    /**
      * returns whether this view supports zoom.
      * Base implementation returns false.
      */
@@ -211,9 +205,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * that the view supports.  A return value of 0 means no maximum.
      */
     virtual int maxDatesHint() const = 0;
-
-    /** This view is a view for displaying events. */
-
 
     int showMoveRecurDialog( const Akonadi::Item &inc, const QDate &date );
 

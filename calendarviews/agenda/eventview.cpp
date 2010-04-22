@@ -256,11 +256,6 @@ void EventView::updateConfig()
 {
 }
 
-bool EventView::usesFullWindow() const
-{
-  return false;
-}
-
 bool EventView::supportsZoom() const
 {
   return false;

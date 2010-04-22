@@ -9,3 +9,5 @@
 * See if i can remove EventView::maxDatesHint(), doesn't seem to be used anywhere
 
 * Remove KOEditorPopup stuff
+
+* Implement usesFullWindow in korganizer's agenda container, as it doesn't belong in libeventviews.
