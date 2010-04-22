@@ -107,7 +107,6 @@ void KNJobData::cancel()
   mCanceled = true;
   if ( mJob ) {
     mJob->kill();
-    mJob = 0;
   }
   if ( mProgressItem ) {
     mProgressItem->setStatus( "Canceled" );
