@@ -1,3 +1,7 @@
+include_directories(
+  ${CMAKE_SOURCE_DIR}/mobile/lib
+)
+
 kde4_add_plugin( messageviewerqmlplugin WITH_PREFIX
   plugin.cpp
   messageviewitem.cpp
@@ -10,6 +14,7 @@ target_link_libraries(messageviewerqmlplugin messageviewer
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${QT_QTDECLARATIVE_LIBRARY}
   kdepim
+  kdepimmobileui
 )
 
 install( FILES qmldir DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )

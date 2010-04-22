@@ -35,18 +35,18 @@ KPIM.MainView {
     anchors.left: parent.left
     width: parent.width
     height: parent.height
-    messageItemId: -1
+    itemId: -1
     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
 
-    onNextMessageRequest: {
+    onNextItemRequest: {
       // Only go to the next message when currently a valid item is set.
-      if ( messageView.messageItemId >= 0 )
+      if ( messageView.itemId >= 0 )
         headerList.nextItem();
     }
 
-    onPreviousMessageRequest: {
+    onPreviousItemRequest: {
       // Only go to the previous message when currently a valid item is set.
-      if ( messageView.messageItemId >= 0 )
+      if ( messageView.itemId >= 0 )
         headerList.previousItem();
     }
   }
@@ -54,7 +54,6 @@ KPIM.MainView {
 
   SlideoutPanelContainer {
     anchors.fill: parent
-
 
     SlideoutPanel {
       anchors.fill: parent
@@ -107,8 +106,8 @@ KPIM.MainView {
             onItemSelected: {
               // Prevent reloading of the message, perhaps this should be done
               // in messageview itself.
-              if ( messageView.messageItemId != headerList.currentItemId )
-                messageView.messageItemId = headerList.currentItemId;
+              if ( messageView.itemId != headerList.currentItemId )
+                messageView.itemId = headerList.currentItemId;
               folderPanel.collapse()
             }
           }
@@ -194,7 +193,7 @@ KPIM.MainView {
             height: parent.height / 6
             buttonText: "Previous"
             onClicked: {
-              if ( messageView.messageItemId >= 0 )
+              if ( messageView.itemId >= 0 )
                 headerList.previousItem();
 
               actionPanel.collapse();
@@ -207,7 +206,7 @@ KPIM.MainView {
             height: parent.height / 6
             buttonText: "Next"
             onClicked: {
-              if ( messageView.messageItemId >= 0 )
+              if ( messageView.itemId >= 0 )
                 headerList.nextItem();
 
               actionPanel.collapse();
