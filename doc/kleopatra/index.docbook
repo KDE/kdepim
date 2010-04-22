@@ -1741,6 +1741,161 @@ is-at-least-ownertrust=marginal
 
     </sect1>
 
+    <sect1 id="admin-archive-definitions">
+
+      <title>
+        Configuring Archivers for Use with Sign/Encrypt Files
+      </title>
+
+      <para>
+        &kleopatra; allows the administrator (and power-user) to
+        configure the list of archivers that are presented in the
+        Sign/Encrypt Files dialog.
+      </para>
+
+      <para>
+        Each archiver is defined in
+        <filename>libkleopatrarc</filename> as a separate
+        <literal>Archive&nbsp;Definition&nbsp;#<replaceable>n</replaceable></literal>
+        group, with the following mandatory keys:
+      </para>
+
+      <variablelist>
+
+        <varlistentry>
+          <term><literal>extensions</literal></term>
+          <listitem>
+            <para>
+              A comma-separated list of filename extensions that
+              usually indicate this archive format.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>id</literal></term>
+          <listitem>
+            <para>
+              A unique ID used to identify this archiver
+              internally. If in doubt, use the name of the command.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>Name</literal> (translated)</term>
+          <listitem>
+            <para>
+              The user-visible name of this archiver, as shown in the
+              corresponding drop-down menu of the Sign/Encrypt Files
+              dialog.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term><literal>pack-command</literal></term>
+          <listitem>
+            <para>
+              The actual command to archive files. You can use any
+              command, as long as no shell is required to execute
+              it. The program file is looked up using the
+              <varname>PATH</varname> environment variable, unless you
+              use an absolute file path.
+            </para>
+          </listitem>
+        </varlistentry>
+
+      </variablelist>
+
+      <para>
+        There are three ways to pass filenames to the pack
+        command. For each of these,
+        <literal>pack-command</literal> provides a particular syntax:
+      </para>
+
+      <variablelist>
+
+        <varlistentry>
+          <term>As command-line arguments</term>
+          <listitem>
+            <para>
+              Example (tar):
+              <programlisting>
+                pack-command=tar cf -<!--
+                --></programlisting>
+              Example (zip):
+              <programlisting>
+                pack-command=zip -r - %f<!--
+                --></programlisting>
+              In this case, filenames are passed on the command line,
+              just like you would when using the command
+              prompt. &kleopatra; does not use a shell to execute the
+              command. Therefore, this is a safe way of passing
+              filenames, but it might run into command line length
+              restrictons on some platforms.
+
+              A literal <literal>%f</literal>, if present, is replaced
+              by the names of the files to archive. Otherwise,
+              filenames are appended to the command line. Thus, the
+              zip Example above could equivalently be written like this:
+              <programlisting>
+                pack-command=zip -r -<!--
+                --></programlisting>
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Via standard-in, separated by newlines: prepend <literal>|</literal></term>
+          <listitem>
+            <para>
+              Example (GNU-tar):
+              <programlisting>
+                pack-command=|gtar cf - -T-<!--
+                --></programlisting>
+              Example (ZIP):
+              <programlisting>
+                pack-command=|zip -@ -<!--
+                --></programlisting>
+
+              In this case, filenames are passed to the archiver on
+              <acronym>stdin</acronym>, one per line. This avoids
+              problems on platforms which place a low limit on the
+              number of command line arguments that are allowed, but
+              fails when filenames, in fact, contain newlines.
+            </para>
+            <note>
+              <para>
+                &kleopatra; currently only supports
+                <acronym>LF</acronym> as a newline separator, not
+                <acronym>CRLF</acronym>. This might change in future
+                versions, based on user feedback.
+              </para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>Via standard-in, separated by NUL-bytes: prepend <literal>0|</literal></term>
+          <listitem>
+            <para>
+              Example (GNU-tar):
+              <programlisting>
+                pack-command=0|gtar cf - -T- --null<!--
+                --></programlisting>
+              This is the same as above, except that NUL bytes are
+              used to separate filenames. Since NUL bytes are
+              forbidden in filenames, this is the most robust way of
+              passing filenames, but not all archivers support it.
+            </para>
+          </listitem>
+        </varlistentry>
+
+      </variablelist>
+
+    </sect1> <!-- Archive Definitions -->
+
   </chapter> <!-- Administrator's Guide -->
 
 <chapter id="credits-and-license">
