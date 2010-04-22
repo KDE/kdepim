@@ -26,6 +26,7 @@ macro( add_messagecomposer_cryptotest _source )
       messageviewer
       messagecore
       kleo
+      ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
       ${KDEPIMLIBS_KPIMTEXTEDIT_LIBRARY}
       ${KDEPIMLIBS_AKONADI_LIBRARY}
       ${QT_QTTEST_LIBRARY}
