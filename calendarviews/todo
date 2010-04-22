@@ -15,3 +15,5 @@
 * Implement supportsDateRangeSelection in korganizer's agenda container
 
 * Review collectionSelection stuff in eventview.h
+
+* Review BaseView::viewAt( const QPoint &p)
