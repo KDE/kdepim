@@ -58,10 +58,3 @@ qint64 Helper::yearDiff( const QDate &start, const QDate &end )
 {
   return static_cast<qint64>( start.daysTo( end ) / 365.25 );
 }
-
-bool Helper::isStandardCalendar( const Akonadi::Collection &coll ) {
-  if ( !coll.isValid() )
-    return false;
-  const QString id = QString::number( coll.id() );
-  return ( id == Prefs::instance()->defaultCalendar() );
-}

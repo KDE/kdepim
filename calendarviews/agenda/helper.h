@@ -60,12 +60,6 @@ namespace Helper
     Returns the number of years between the @p start QDate and the @p end QDate
   */
   qint64 yearDiff( const QDate &start, const QDate &end );
-
-
-  /**
-    Return true if it's the standard calendar
-  */
-  bool isStandardCalendar( const Akonadi::Collection &collection );
 }
 
 #endif

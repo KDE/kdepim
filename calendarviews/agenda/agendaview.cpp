@@ -1522,7 +1522,8 @@ void AgendaView::readSettings( KConfig *config )
   KConfigGroup group = config->group( "Views" );
 
   QList<int> sizes = group.readEntry( "Separator AgendaView", QList<int>() );
-
+  kDebug() << this << "DEBUG sizes are " << sizes.count()<<"; and sizes0 = "<<
+    sizes[0]<<" ; " << sizes[1];
   // the size depends on the number of plugins used
   // we don't want to read invalid/corrupted settings or else agenda becomes invisible
   if ( sizes.count() >= 2 && !sizes.contains( 0 ) ) {
