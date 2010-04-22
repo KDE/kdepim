@@ -1,3 +1,7 @@
 * When we extract to-do view we need another level in the hierarchy -> calendarviews/eventviews/agenda
                                                                                                /month
                                                                                     /todo
+
+* Make the configuration specific to agenda, remove korganizer stuff
+
+* KOEventView::printType stays in korganizer, in the container
