@@ -196,12 +196,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     KDateTime actualStartDateTime() const;
     KDateTime actualEndDateTime() const;
 
-    /**
-     * provides a hint back to the caller on the maximum number of dates
-     * that the view supports. A return value of 0 means no maximum.
-     */
-    virtual int maxDatesHint() const = 0;
-
     int showMoveRecurDialog( const Akonadi::Item &inc, const QDate &date );
 
     /**

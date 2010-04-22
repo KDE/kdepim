@@ -544,12 +544,6 @@ void AgendaView::enableAgendaUpdate( bool enable )
   mAllowAgendaUpdate = enable;
 }
 
-int AgendaView::maxDatesHint() const
-{
-  // Not sure about the max number of events, so return 0 for now.
-  return 0;
-}
-
 int AgendaView::currentDateCount() const
 {
   return mSelectedDates.count();

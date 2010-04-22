@@ -100,9 +100,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     explicit AgendaView( QWidget *parent = 0, bool isSideBySide = false );
     virtual ~AgendaView();
 
-    /** Returns maximum number of days supported by the agendaview */
-    virtual int maxDatesHint() const;
-
     /** Returns number of currently shown dates. */
     virtual int currentDateCount() const;
 

@@ -4,10 +4,6 @@
 
 * Make the configuration specific to agenda, remove korganizer stuff
 
-* See if i can remove EventView::maxDatesHint(), doesn't seem to be used anywhere
-
 * Remove KOEditorPopup stuff
-
-* Implement supportsDateRangeSelection in korganizer's agenda container
 
 * Review collectionSelection stuff in eventview.h
