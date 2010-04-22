@@ -1,0 +1,176 @@
+#include "declarativeakonadiitem.h"
+
+#include <math.h>
+
+#include <QtCore/QTimer>
+#include <QtGui/QGraphicsProxyWidget>
+#include <QtGui/QGraphicsSceneMouseEvent>
+
+static double sDirectionThreshHold = 8.5; /// Threshold in pixels
+
+/// DeclarativeAkonadiItemPrivate
+
+struct DeclarativeAkonadiItemPrivate
+{
+/// Enum
+  enum Direction {
+    Unknown, /// Need more events to determin the actual direction.
+    Up,
+    Down,
+    Left,
+    Right
+  };
+
+/// Members
+  QWidget *mItemViewer;
+  QGraphicsProxyWidget *mProxy;
+
+  /// Handle mouse events for clicks and swipes
+  QTimer mClickDetectionTimer;
+  bool mMousePressed;
+  int mDx;
+  int mDy;
+  double mSwipeLength;
+
+/// Methods
+  DeclarativeAkonadiItemPrivate( QWidget *itemViewer );
+  Direction direction() const;
+};
+
+DeclarativeAkonadiItemPrivate::DeclarativeAkonadiItemPrivate( QWidget *itemViewer )
+  : mItemViewer( itemViewer )
+  , mProxy( 0 )
+  , mMousePressed( false )
+  , mDx( 0 )
+  , mDy( 0 )
+  , mSwipeLength( 0 )
+{ }
+
+DeclarativeAkonadiItemPrivate::Direction DeclarativeAkonadiItemPrivate::direction() const
+{
+  const double length = sqrt( ( mDx ^ 2 )  + ( mDy ^ 2 ) );
+  if (length < sDirectionThreshHold )
+    return Unknown;
+
+  bool horizontal = false;
+  if ( mDx != 0 ) {
+    // We Use an X shape to determine the direction of the move.
+    // tan(45) == 1; && tan(-45) == -1; Same for 135 and 225 degrees
+    double angle = mDy / mDx;
+    horizontal = angle > -1 && angle <= 1;
+  }
+
+  Direction dir;
+  if ( horizontal ) {
+    dir = mDx > 0 ? Right : Left;
+  } else {
+    dir = mDy > 0 ? Up : Down;
+  }
+
+  return dir;
+}
+
+/// DeclarativeAkonadiItem
+
+DeclarativeAkonadiItem::DeclarativeAkonadiItem( QWidget *itemViewer, QDeclarativeItem *parent )
+  : QDeclarativeItem( parent )
+  , d_ptr( new DeclarativeAkonadiItemPrivate( itemViewer ) )
+{
+  Q_D( DeclarativeAkonadiItem );
+
+  d->mClickDetectionTimer.setInterval( 150 );
+  d->mClickDetectionTimer.setSingleShot( true );
+
+  d->mProxy->setParent( new QGraphicsProxyWidget( this ) );
+  d->mProxy->setWidget( d->mItemViewer );
+  d->mProxy->installEventFilter( this );
+}
+
+DeclarativeAkonadiItem::~DeclarativeAkonadiItem()
+{
+  Q_D( DeclarativeAkonadiItem );
+  d->mProxy->removeEventFilter( this );
+  delete d_ptr;
+}
+
+double DeclarativeAkonadiItem::swipeLength() const
+{
+  Q_D( const DeclarativeAkonadiItem );
+  return d->mSwipeLength;
+}
+
+void DeclarativeAkonadiItem::setSwipeLength( double length )
+{
+  Q_D( DeclarativeAkonadiItem );
+  Q_ASSERT( length >= 0 && length <= 1 );
+  d->mSwipeLength = length;
+}
+
+void DeclarativeAkonadiItem::geometryChanged( const QRectF &newGeometry,
+                                              const QRectF&oldGeometry )
+{
+  Q_D( DeclarativeAkonadiItem );
+  QDeclarativeItem::geometryChanged( newGeometry, oldGeometry );
+  d->mProxy->resize( newGeometry.size() );
+}
+
+bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
+{
+  Q_D( DeclarativeAkonadiItem );
+
+  if ( ev->type() == QEvent::GraphicsSceneMousePress ) {
+    QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
+    if ( mev->button() == Qt::LeftButton ) {
+      d->mMousePressed = true;
+      d->mClickDetectionTimer.stop(); // Make sure that it isn't running atm
+      d->mClickDetectionTimer.start();
+      return true;
+    }
+  } else if ( ev->type() == QEvent::GraphicsSceneMouseRelease ) {
+    const bool wasActive = d->mClickDetectionTimer.isActive();
+    QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
+    if ( mev->button() == Qt::LeftButton ) {
+      if ( wasActive ) // Timer didn't time out, we're dealing with a click
+        slotSimulateMouseClick( mev->pos().toPoint() );
+      else if ( qAbs( d->mDx ) >= ( d->mSwipeLength * width() ) ) {
+        // We don't trigger a next or previous *always*. Only when the configured
+        // swipelength is met.
+        const DeclarativeAkonadiItemPrivate::Direction dir = d->direction();
+        if ( dir == DeclarativeAkonadiItemPrivate::Left ) {
+          emit nextMessageRequest();
+        } else if ( dir == DeclarativeAkonadiItemPrivate::Right ) {
+          emit previousMessageRequest();
+        }
+      }
+
+      d->mMousePressed = false;
+      d->mDx = 0;
+      d->mDy = 0;
+      return true;
+    }
+  } else if ( QEvent::GraphicsSceneMouseMove && d->mMousePressed ) {
+    QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
+    d->mDx += mev->pos().x() - mev->lastPos().x(); // Moving to right gives positive values
+    d->mDy += mev->pos().y() - mev->lastPos().y(); // Moving up gives positive values
+
+    const DeclarativeAkonadiItemPrivate::Direction dir = d->direction();
+    if ( dir == DeclarativeAkonadiItemPrivate::Up )
+      slotScrollUp( d->mDy );
+    else if ( dir == DeclarativeAkonadiItemPrivate::Down )
+      slotScrollDown( d->mDy );
+
+    return true;
+  }
+
+  return QObject::eventFilter( obj, ev );
+}
+
+void DeclarativeAkonadiItem::slotScrollDown( double /* dist */ )
+{ }
+
+void DeclarativeAkonadiItem::slotScrollUp( double /* dist */ )
+{ }
+
+void DeclarativeAkonadiItem::slotSimulateMouseClick( const QPointF &/* pos */ )
+{ }
+
