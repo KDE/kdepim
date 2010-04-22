@@ -30,16 +30,16 @@
 #include "globals.h"
 #include "helper.h"
 
-#include <KCal/DndFactory>
-#include <KCal/ICalDrag>
-#include <KCal/Todo>
-#include <KCal/VCalDrag>
-
 #include <libkdepim/pimmessagebox.h>
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/utils.h>
 #include <akonadi/kcal/incidencechanger.h>
+
+#include <KCal/DndFactory>
+#include <KCal/ICalDrag>
+#include <KCal/Todo>
+#include <KCal/VCalDrag>
 
 #include <KDebug>
 #include <KGlobal>
