@@ -20,84 +20,27 @@
 #ifndef MESSAGEVIEWER_MESSAGEVIEWITEM_H
 #define MESSAGEVIEWER_MESSAGEVIEWITEM_H
 
-#include <QtCore/QTimer>
-#include <QtDeclarative/QDeclarativeItem>
-
-class QSortFilterProxyModel;
-class KUrl;
+#include <mobile/lib/declarativeakonadiitem.h>
 
 namespace Akonadi {
-class Item;
-}
+class KCalItemBrowser;
 
-namespace MessageViewer {
+namespace KCal {
 
-class Viewer;
-
-class MessageViewItem : public QDeclarativeItem
+class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
-  Q_PROPERTY( int messageItemId READ messageItemId WRITE setMessageItemId )
-  Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
-  Q_PROPERTY( QObject* attachmentModel READ attachmentModel CONSTANT )
-  Q_PROPERTY( double swipeLength READ swipeLength WRITE setSwipeLength )
-
   public:
-    explicit MessageViewItem( QDeclarativeItem *parent = 0 );
-    ~MessageViewItem();
+    explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
 
-    qint64 messageItemId() const;
-    void setMessageItemId( qint64 id );
-
-    QString splashMessage() const;
-    void setSplashMessage( const QString &message );
-
-    QObject* attachmentModel() const;
-
-    /**
-     * The length, expressed as percentage of the width, which trigers the next
-     * or previous requests.
-     *
-     * Value must be between 0 and 1.
-     */
-    double swipeLength() const;
-    void setSwipeLength( double length );
-
-  signals:
-    void nextMessageRequest();
-    void previousMessageRequest();
-    /** Emitted for urls not handled by MessageViewer::Viewer. */
-    void urlClicked( const Akonadi::Item &item, const KUrl &url );
-
-  protected:
-    void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
-    bool eventFilter( QObject *obj, QEvent *event );
+    qint64 itemId() const;
+    void setItemId(qint64 id);
 
   private:
-    enum Direction {
-      Unknown, /// Need more events to determin the actual direction.
-      Up,
-      Down,
-      Left,
-      Right
-    };
-
-    Direction direction() const;
-
-  private:
-    Viewer *m_viewer;
-    QGraphicsProxyWidget *m_proxy;
-    QSortFilterProxyModel *m_attachmentProxy;
-
-    double m_swipeLength;
-
-    /// Handle mouse events
-    QTimer m_clickDetectionTimer;
-    bool m_mousePressed;
-    int m_dx;
-    int m_dy;
+    KCalItemBrowser *m_viewer;
 };
 
+}
 }
 
 #endif

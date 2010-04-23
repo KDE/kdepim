@@ -18,27 +18,27 @@
 */
 
 #include "plugin.h"
-#include "messageviewitem.h"
+#include "kcalitembrowseritem.h"
 
 #include <kcomponentdata.h>
 #include <kdebug.h>
 #include <QtDeclarative/qdeclarative.h>
 
-using namespace MessageViewer;
+using namespace Akonadi::KCal;
 
 Plugin::Plugin(QObject* parent): QDeclarativeExtensionPlugin(parent)
 {
   kDebug();
   if ( !KGlobal::hasMainComponent() )
-    new KComponentData( "MessageViewerQmlPlugin", "libmessageviewer", KComponentData::RegisterAsMainComponent );
+    new KComponentData( "KcalQmlPlugin", "libakonadi-kcal_next", KComponentData::RegisterAsMainComponent );
 }
 
 void Plugin::registerTypes(const char* uri)
 {
   kDebug() << uri;
-  qmlRegisterType<MessageViewer::MessageViewItem>( uri, 4, 5, "MessageView" );
+  qmlRegisterType<Akonadi::KCal::KCalItemBrowserItem>( uri, 4, 5, "IncidenceView" );
 }
 
 #include "plugin.moc"
 
-Q_EXPORT_PLUGIN2( kdeintegrationplugin, MessageViewer::Plugin )
+Q_EXPORT_PLUGIN2( kdeintegrationplugin, Akonadi::KCal::Plugin )

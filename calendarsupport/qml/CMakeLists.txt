@@ -1,18 +1,16 @@
-kde4_add_plugin( messageviewerqmlplugin WITH_PREFIX
+kde4_add_plugin( kcalqmlplugin WITH_PREFIX
   plugin.cpp
   kcalitembrowseritem.cpp
-#  attachmentproxymodel.cpp
 )
-target_link_libraries(messageviewerqmlplugin messageviewer
-  ${KDE4_KDECORE_LIBRARY}
-  ${QT_QTGUI_LIBRARY}
-  ${KDEPIMLIBS_KMIME_LIBRARY}
+target_link_libraries(kcalqmlplugin
   ${KDEPIMLIBS_AKONADI_LIBRARY}
+  ${KDE4_KDECORE_LIBRARY}
   ${QT_QTDECLARATIVE_LIBRARY}
-  kdepim
+  akonadi-kcal_next
+  kdepimmobileui
 )
 
-install( FILES qmldir DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )
-install( TARGETS messageviewerqmlplugin DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/messageviewer )
+install( FILES qmldir DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/kcal )
+install( TARGETS kcalqmlplugin DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/kcal )
 
 #add_subdirectory(tests)

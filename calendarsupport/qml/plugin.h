@@ -23,7 +23,8 @@
 #include <qdeclarativeextensionplugin.h>
 #include <kglobal.h>
 
-namespace MessageViewer {
+namespace Akonadi {
+namespace KCal {
 
 class KDE_EXPORT Plugin : public QDeclarativeExtensionPlugin
 {
@@ -33,6 +34,7 @@ class KDE_EXPORT Plugin : public QDeclarativeExtensionPlugin
     virtual void registerTypes(const char* uri);
 };
 
+}
 }
 
 #endif
