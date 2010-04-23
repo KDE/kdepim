@@ -123,6 +123,7 @@ FolderViewItem * FavoriteFolderView::createItem(
 
   FolderViewItem *item = new FolderViewItem( this, name, folder, proto, type );
   item->setAlwaysDisplayCounts( true );
+  item->updateCounts();
   return item;
 }
 
@@ -134,7 +135,7 @@ void FavoriteFolderView::storeFavorites()
   QTreeWidgetItemIterator it( this );
   while( FolderViewItem * item = static_cast<FolderViewItem *>( *it ) )
   {
-    lIds.append( item->folder()->id() );  
+    lIds.append( item->folder()->id() );
     lNames.append( item->labelText() );
     ++it;
   }
@@ -179,7 +180,7 @@ public:
   // in
   QDropEvent *event;
   FavoriteFolderView *view;
-  // out 
+  // out
   Action action;
   FolderViewItem *reference;
   FolderView::DropInsertPosition position;
@@ -240,10 +241,10 @@ static void computeFoldersDropAction( FoldersDropAction *act )
     return;
   }
 
-  r.setTop( r.top() + ( r.height() / 2 ) );  
+  r.setTop( r.top() + ( r.height() / 2 ) );
   r.setHeight( r.height() / 2 );
   act->validityRect = r.united( mouseRect );
-  act->position = FolderView::BelowReference;  
+  act->position = FolderView::BelowReference;
   act->description = i18n( "Insert Folders Below %1", act->reference->labelText() );
 }
 
