@@ -1912,6 +1912,174 @@ is-at-least-ownertrust=marginal
 
     </sect1> <!-- Archive Definitions -->
 
+    <sect1 id="admin-checksum-definitions">
+
+      <title>
+        Configuring Checksum Programs for Use with Create/Verify Checksums
+      </title>
+
+      <para>
+        &kleopatra; allows the administrator (and power-user) to
+        configure the list of checksum programs that the user can
+        choose from in the config dialog and that &kleopatra; is able
+        to auto-detect when asked to verify a given file's checksum.
+      </para>
+
+      <note>
+        <para>
+          To be usable by &kleopatra;, output of checksum programs
+          (both the written checksum file, as well as the output on
+          <acronym>stdout</acronym> when verifying checksums) needs to
+          be compatible with <acronym>GNU</acronym>
+          <command>md5sum</command> and
+          <command>sha1sum</command>.
+        </para>
+
+        <para>
+          Specifically, the checksum file needs to be line-based with
+          each line having the following format:
+
+          <programlisting><replaceable>CHECKSUM</replaceable> ' ' ( ' ' | '*' ) <replaceable>FILENAME</replaceable></programlisting>
+
+          where <replaceable>CHECKSUM</replaceable> consists of
+          hex-characters only. If <replaceable>FILENAME</replaceable>
+          contains a newline character, the line must instead read:
+
+          <programlisting>\<replaceable>CHECKSUM</replaceable> ' ' ( ' ' | '*' ) <replaceable>ESCAPED-FILENAME</replaceable></programlisting>
+
+          where <replaceable>ESCAPED-FILENAME</replaceable> is the
+          filename with newlines replaced by <literal>\n</literal>s,
+          and backslashes doubled
+          (<literal>\</literal>&#x21A6;<literal>\\</literal>).
+        </para>
+
+        <para>
+          Similarly, the output of
+          <xref linkend="checksum-definition-verify-command"/> must be of the form
+
+          <programlisting><replaceable>FILENAME</replaceable> ( ': OK' | ': FAILED' )</programlisting>
+
+          separated by newlines. Newlines and other characters are
+          <emphasis>not</emphasis> escaped in the output.<!--
+          --><footnote>
+            <para>
+              Yes, these programs were not written with graphical
+              frontends in mind, and &kleopatra; will fail to
+              correctly parse pathological filenames that contain
+              ":&nbsp;OK" plus newline in them.
+            </para>
+          </footnote>
+        </para>
+      </note>
+
+      <para>
+        Each checksum program is defined in
+        <filename>libkleopatrarc</filename> as a separate
+        <literal>Checksum&nbsp;Definition&nbsp;#<replaceable>n</replaceable></literal>
+        group, with the following mandatory keys:
+      </para>
+
+      <variablelist>
+
+        <varlistentry id="checksum-definition-file-patterns">
+          <term><literal>file-patterns</literal></term>
+          <listitem>
+            <para>
+              A list of regular expressions that describe which files
+              should be considered checksum files for this checksum
+              program. The syntax is the one used for string lists in
+              KDE config files.
+              <note>
+                <para>
+                  Since regular expressions usually contain
+                  backslashes, care must be taken to properly escape
+                  them in the config file. The use of a config file
+                  editing tool is recommended.
+                </para>
+              </note>
+              The platform defines whether the patterns are treated
+              case-sensitive or case-insensitive.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-output-file">
+          <term><literal>output-file</literal></term>
+          <listitem>
+            <para>
+              The typical output filename for this checksum program
+              (should match one of the
+              <xref linkend="checksum-definition-file-patterns"/>, of
+              course). This is what &kleopatra; will use as the
+              output filename when creating checksum files of this
+              type.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-id">
+          <term><literal>id</literal></term>
+          <listitem>
+            <para>
+              A unique ID used to identify this checksum program
+              internally. If in doubt, use the name of the command.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-Name">
+          <term><literal>Name</literal> (translated)</term>
+          <listitem>
+            <para>
+              The user-visible name of this checksum program, as shown
+              in the drop-down menu in &kleopatra;'s config dialog.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-create-command">
+          <term><literal>create-command</literal></term>
+          <listitem>
+            <para>
+              The actual command with which to create checksum
+              files. The syntax, restrictions and argument passing
+              options are the same as described for
+              <xref linkend="archive-definition-pack-command"/> in
+              <xref linkend="admin-archive-definitions"/>.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="checksum-definition-verify-command">
+          <term><literal>verify-command</literal></term>
+          <listitem>
+            <para>
+              Same as
+              <xref linkend="checksum-definition-create-command"/>,
+              but for checksum verification.
+            </para>
+          </listitem>
+        </varlistentry>
+
+      </variablelist>
+
+      <para>
+        Here is a complete example:
+        <programlisting>
+          [Checksum Definition #1]
+          file-patterns=sha1sum.txt
+          output-file=sha1sum.txt
+          id=sha1sum-gnu
+          Name=sha1sum (GNU)
+          Name[de]=sha1sum (GNU)
+          ...
+          create-command=sha1sum -- %f
+          verify-command=sha1sum -c -- %f
+        </programlisting>
+      </para>
+
+    </sect1> <!-- Checksum Definition -->
+
   </chapter> <!-- Administrator's Guide -->
 
 <chapter id="credits-and-license">
