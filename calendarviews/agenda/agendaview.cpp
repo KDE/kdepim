@@ -26,7 +26,6 @@
 #include "agenda.h"
 #include "agendaitem.h"
 #include "alternatelabel.h"
-//#include "koeventpopupmenu.h"
 #include "globals.h"
 #include "prefs.h"
 #include "timelabelszone.h"
@@ -150,9 +149,6 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   mAllDayAgenda = new Agenda( this, 1, mAllDayFrame );
   QWidget *dummyAllDayRight = new QWidget( mAllDayFrame );
 
-  // Create the event context menu for the all-day agenda
-//  mAllDayAgendaPopup = eventPopup();
-
   /* Create the main agenda widget and the related widgets */
   QWidget *agendaFrame = new QWidget( mSplitterAgenda );
   mAgendaLayout = new QGridLayout( agendaFrame );
@@ -181,9 +177,6 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   // Create time labels
   mTimeLabelsZone = new TimeLabelsZone( this, mAgenda );
   mAgendaLayout->addWidget( mTimeLabelsZone, 1, 0 );
-
-  // Create event context menu for agenda
-//  mAgendaPopup = eventPopup();
 
   // Scrolling
   connect( mAgenda, SIGNAL(zoomView(const int,QPoint,const Qt::Orientation)),
@@ -217,9 +210,9 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   createDayLabels();
 
   /* Connect the agendas */
-  //TODO_SPLIT
-  connectAgenda( mAgenda,0/* mAgendaPopup*/, mAllDayAgenda );
-  connectAgenda( mAllDayAgenda,0/* mAllDayAgendaPopup*/, mAgenda );
+
+  connectAgenda( mAgenda, mAllDayAgenda );
+  connectAgenda( mAllDayAgenda, mAgenda );
 
   connect( mAgenda,
            SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
@@ -234,9 +227,6 @@ AgendaView::~AgendaView()
   if ( calendar() ) {
     calendar()->unregisterObserver( this );
   }
-
-//  delete mAgendaPopup;
-//  delete mAllDayAgendaPopup;
 }
 
 void AgendaView::setCalendar( Akonadi::Calendar *cal )
@@ -251,21 +241,14 @@ void AgendaView::setCalendar( Akonadi::Calendar *cal )
   mAllDayAgenda->setCalendar( calendar() );
 }
 
-void AgendaView::connectAgenda( Agenda *agenda, QMenu *popup,
-                                Agenda *otherAgenda )
+void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 {
-
-  Q_UNUSED( popup );
-
-/*
-  TODO_SPLIT
-  connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
-           popup, SLOT(showIncidencePopup(Akonadi::Item,QDate)) );
-
   connect( agenda, SIGNAL(showNewEventPopupSignal()),
            SLOT(showNewEventPopup()) );
 
-*/
+  connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
+           SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
+
   agenda->setCalendar( calendar() );
 
   // Create/Show/Edit/Delete Event

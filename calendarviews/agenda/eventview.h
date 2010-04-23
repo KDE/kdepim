@@ -52,9 +52,7 @@ namespace Akonadi {
 }
 using namespace KCal;
 
-class EventPopupMenu;
 class QMenu;
-
 
 /**
   EventView is the abstract base class from wich all other

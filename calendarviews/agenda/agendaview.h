@@ -199,6 +199,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     void createTimeBarHeaders();
 
   signals:
+
+    void showIncidencePopupSignal(Akonadi::Item,QDate);
     void zoomViewHorizontally( const QDate &, int count );
 
     void timeSpanSelectionChanged();
@@ -210,7 +212,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     /** Fill agenda using the current set value for the start date */
     void fillAgenda();
 
-    void connectAgenda( Agenda *agenda, QMenu *popup, Agenda *otherAgenda );
+    void connectAgenda( Agenda *agenda, Agenda *otherAgenda );
 
     /**
       Set the masks on the agenda widgets indicating, which days are holidays.
@@ -270,10 +272,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
 
     DateList mSelectedDates;  // List of dates to be displayed
     int mViewType;
-
-    //TODO_SPLIT: tirar isto para cima
-    //KOEventPopupMenu *mAgendaPopup;
-      //KOEventPopupMenu *mAllDayAgendaPopup;
 
     EventIndicator *mEventIndicatorTop;
     EventIndicator *mEventIndicatorBottom;
