@@ -12,14 +12,16 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <q3header.h>
-#include <QCheckBox>
-
-#include <klocale.h>
-#include <kmessagebox.h>
+#include "kngroupselectdialog.h"
 
 #include "utilities.h"
-#include "kngroupselectdialog.h"
+
+#include <q3header.h>
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <klocale.h>
+#include <kmessagebox.h>
 #include <QPushButton>
 
 

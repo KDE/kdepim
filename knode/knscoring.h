@@ -15,16 +15,16 @@
 #ifndef KNSCORING_H
 #define KNSCORING_H
 
-#include <kscoring.h>
+#include "knarticle.h"
+#include "kscoring.h"
 
-class KNRemoteArticle;
 using namespace KPIM;
 
 /** Article interface for the scoring system. */
 class KNScorableArticle : public ScorableArticle
 {
 public:
-  KNScorableArticle(KNRemoteArticle*);
+  KNScorableArticle( KNRemoteArticle::Ptr a );
   virtual ~KNScorableArticle();
 
   virtual void addScore(short s);
@@ -38,7 +38,7 @@ public:
   static NotifyCollection* notifyC;
 
 private:
-  KNRemoteArticle *_a;
+  KNRemoteArticle::Ptr _a;
 };
 
 

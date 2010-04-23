@@ -54,6 +54,11 @@ class KNGroupInfo {
 class KNGroupListData : public KNJobItem {
 
   public:
+    /**
+      Shared pointer to a KNGroupListData. To be used instead of raw KNGroupListData*.
+    */
+    typedef boost::shared_ptr<KNGroupListData> Ptr;
+
     KNGroupListData();
     ~KNGroupListData();
 
@@ -130,7 +135,7 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     KNArticleManager *a_rticleMgr;
 
   signals:
-    void newListReady(KNGroupListData* d);
+    void newListReady( KNGroupListData::Ptr d );
 
     void groupAdded(KNGroup* g);
     void groupRemoved(KNGroup* g);

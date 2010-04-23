@@ -12,15 +12,16 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#ifndef KNODE_KNSTATUSFILTER_H
-#define KNODE_KNSTATUSFILTER_H
+#ifndef KNODE_STATUSFILTER_H
+#define KNODE_STATUSFILTER_H
 
+#include "knarticle.h"
+
+#include <KConfigGroup>
 #include <QComboBox>
 #include <QBitArray>
 
 class QCheckBox;
-class KConfig;
-class KNRemoteArticle;
 
 namespace KNode {
 
@@ -39,7 +40,7 @@ class StatusFilter
     void load(const KConfigGroup &conf);
     void save(KConfigGroup &conf);
 
-    bool doFilter(KNRemoteArticle *a);
+    bool doFilter( KNRemoteArticle::Ptr a);
 
   protected:
     QBitArray data;
@@ -87,4 +88,4 @@ class StatusFilterWidget : public QWidget
 
 }
 
-#endif // KNODE_KNSTATUSFILTER_H
+#endif // KNODE_STATUSFILTER_H

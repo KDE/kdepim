@@ -14,24 +14,23 @@
 
 #include "knfoldermanager.h"
 
-#include "utils/scoped_cursor_override.h"
-
-#include <QDir>
-#include <kmessagebox.h>
-#include <kstandarddirs.h>
-#include <kdebug.h>
-
 #include "knglobals.h"
 #include "knconfigmanager.h"
 #include "knfolder.h"
 #include "utilities.h"
-#include "knfoldermanager.h"
 #include "knarticlemanager.h"
 #include "kncleanup.h"
 #include "knmemorymanager.h"
 #include "knmainwidget.h"
+#include "utils/scoped_cursor_override.h"
+
+#include <KDebug>
+#include <KMessageBox>
+#include <KStandardDirs>
+#include <QDir>
 
 using namespace KNode::Utilities;
+
 
 KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 {
@@ -253,7 +252,7 @@ int KNFolderManager::unsentForAccount(int accId)
 
   for ( List::Iterator it = mFolderList.begin(); it != mFolderList.end(); ++it ) {
     for ( int idx = 0; idx < (*it)->length(); ++idx ) {
-      KNLocalArticle *a = (*it)->at( idx );
+      KNLocalArticle::Ptr a = (*it)->at( idx );
       if ( a->serverId() == accId && a->doPost() && !a->posted() )
         cnt++;
     }
@@ -307,7 +306,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
   KNLoadHelper helper(knGlobals.topWidget);
   QFile *file = helper.getFile(i18n("Import MBox Folder"));
   KNLocalArticle::List list;
-  KNLocalArticle *art;
+  KNLocalArticle::Ptr art;
   QByteArray str;
   int artStart=0, artEnd=0;
   bool done=true;
@@ -346,7 +345,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
           buffer = file->read( size);
 
           if ( !buffer.isEmpty() ) {
-            art = new KNLocalArticle(0);
+            art = KNLocalArticle::Ptr( new KNLocalArticle(0) );
             art->setEditDisabled(true);
             art->setContent( buffer );
             art->parse();
@@ -364,7 +363,7 @@ void KNFolderManager::importFromMBox(KNFolder *f)
             buffer = file->read( size );
 
             if ( !buffer.isEmpty() ) {
-              art = new KNLocalArticle(0);
+              art = KNLocalArticle::Ptr( new KNLocalArticle(0) );
               art->setEditDisabled(true);
               art->setContent( buffer );
               art->parse();
@@ -414,7 +413,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
 
     QTextStream ts(file);
     ts.setCodec( "ISO 8859-1" );
-    KNLocalArticle *a;
+    KNLocalArticle::Ptr a;
 
     for(int idx=0; idx<f->length(); idx++) {
       a=f->at(idx);

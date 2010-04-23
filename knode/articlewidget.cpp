@@ -88,7 +88,6 @@ ArticleWidget::ArticleWidget( QWidget *parent,
                               KXMLGUIClient *guiClient,
                               KActionCollection *actionCollection, bool isMainViewer ) :
   QWidget( parent ),
-  mArticle( 0 ),
   mViewer( 0 ),
   mCSSHelper( 0 ),
   mHeaderStyle( "fancy" ),
@@ -140,7 +139,7 @@ ArticleWidget::~ArticleWidget()
     // if the article manager is still loading the current article,
     // cancel the job.
     knGlobals.articleManager()->cancelJobs( mArticle );
-    delete mArticle;
+    mArticle.reset();
   }
   removeTempFiles();
 }
@@ -377,12 +376,8 @@ void ArticleWidget::writeConfig()
 
 
 
-void ArticleWidget::setArticle( KNArticle *article )
+void ArticleWidget::setArticle( KNArticle::Ptr article )
 {
-  // don't leak orphant articles
-  if ( mArticle && mArticle->isOrphant() )
-    delete mArticle;
-
   mShowHtml = knGlobals.settings()->alwaysShowHTML();
   mRot13 = false;
   mRot13Toggle->setChecked( false );
@@ -1072,7 +1067,7 @@ void ArticleWidget::removeTempFiles( )
 void ArticleWidget::processJob( KNJobData * job )
 {
   if ( job->type() == KNJobData::JTfetchSource || job->type() == KNJobData::JTfetchArticle ) {
-    KNRemoteArticle *a = static_cast<KNRemoteArticle*>( job->data() );
+    KNRemoteArticle::Ptr a = boost::static_pointer_cast<KNRemoteArticle>( job->data() );
     if ( !job->canceled() ) {
       if ( !job->success() )
         KMessageBox::error( this, i18n("An error occurred while downloading the article source:\n%1",
@@ -1081,7 +1076,7 @@ void ArticleWidget::processJob( KNJobData * job )
         new KNSourceViewWindow( a->head() + '\n' + a->body() );
     }
     delete job;
-    delete a;
+    a.reset();
   }
   else
     delete job;
@@ -1100,7 +1095,7 @@ void ArticleWidget::configChanged()
 }
 
 
-bool ArticleWidget::articleVisible( KNArticle *article )
+bool ArticleWidget::articleVisible( KNArticle::Ptr article )
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() == article )
@@ -1109,15 +1104,15 @@ bool ArticleWidget::articleVisible( KNArticle *article )
 }
 
 
-void ArticleWidget::articleRemoved( KNArticle *article )
+void ArticleWidget::articleRemoved( KNArticle::Ptr article )
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() == article )
-      (*it)->setArticle( 0 );
+      (*it)->setArticle( KNArticle::Ptr() );
 }
 
 
-void ArticleWidget::articleChanged( KNArticle *article )
+void ArticleWidget::articleChanged( KNArticle::Ptr article )
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() == article )
@@ -1125,7 +1120,7 @@ void ArticleWidget::articleChanged( KNArticle *article )
 }
 
 
-void ArticleWidget::articleLoadError( KNArticle *article, const QString &error )
+void ArticleWidget::articleLoadError( KNArticle::Ptr article, const QString &error )
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
   if ( (*it)->article() == article )
@@ -1137,14 +1132,14 @@ void ArticleWidget::collectionRemoved( KNArticleCollection *coll )
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() && (*it)->article()->collection() == coll )
-      (*it)->setArticle( 0 );
+      (*it)->setArticle( KNArticle::Ptr() );
 }
 
 
 void ArticleWidget::cleanup()
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
-    (*it)->setArticle( 0 ); //delete orphant articles => avoid crash in destructor
+    (*it)->setArticle( KNArticle::Ptr() ); //delete orphant articles => avoid crash in destructor
 }
 
 
@@ -1251,7 +1246,7 @@ void ArticleWidget::slotTimeout()
 {
   if ( mArticle && mArticle->type() == KNArticle::ATremote && !mArticle->isOrphant() ) {
     KNRemoteArticle::List l;
-    l.append( static_cast<KNRemoteArticle*>( mArticle ) );
+    l.append( boost::static_pointer_cast<KNRemoteArticle>( mArticle ) );
     knGlobals.articleManager()->setRead( l, true );
   }
 }
@@ -1298,10 +1293,10 @@ void ArticleWidget::slotViewSource()
     // download remote article
     if ( mArticle && mArticle->type() == KNArticle::ATremote ) {
       KNGroup *g = static_cast<KNGroup*>( mArticle->collection() );
-      KNRemoteArticle *a = new KNRemoteArticle( g ); //we need "g" to access the nntp-account
+      KNRemoteArticle::Ptr a = KNRemoteArticle::Ptr( new KNRemoteArticle( g ) ); //we need "g" to access the nntp-account
       a->messageID( true )->from7BitString( mArticle->messageID()->as7BitString( false ) );
       a->lines( true )->from7BitString( mArticle->lines( true )->as7BitString( false ) );
-      a->setArticleNumber( static_cast<KNRemoteArticle*>( mArticle)->articleNumber() );
+      a->setArticleNumber( boost::static_pointer_cast<KNRemoteArticle>( mArticle )->articleNumber() );
       emitJob( new ArticleFetchJob( this, g->account(), a, false ) );
     }
   }
@@ -1311,16 +1306,16 @@ void ArticleWidget::slotViewSource()
 void ArticleWidget::slotReply()
 {
   if ( mArticle && mArticle->type() == KNArticle::ATremote )
-    KNGlobals::self()->articleFactory()->createReply( static_cast<KNRemoteArticle*>( mArticle ),
-                                       mViewer->selectedText(), true, false );
+    KNGlobals::self()->articleFactory()->createReply( boost::static_pointer_cast<KNRemoteArticle>( mArticle ),
+                                                      mViewer->selectedText(), true, false );
 }
 
 
 void ArticleWidget::slotRemail()
 {
   if ( mArticle && mArticle->type()==KNArticle::ATremote )
-    KNGlobals::self()->articleFactory()->createReply( static_cast<KNRemoteArticle*>( mArticle ),
-                                       mViewer->selectedText(), false, true );
+    KNGlobals::self()->articleFactory()->createReply( boost::static_pointer_cast<KNRemoteArticle>( mArticle ),
+                                                      mViewer->selectedText(), false, true );
 }
 
 

@@ -15,13 +15,12 @@
 #ifndef KNODE_KNARTICLEWINDOW_H
 #define KNODE_KNARTICLEWINDOW_H
 
+#include "knarticle.h"
+
 #include <kxmlguiwindow.h>
 
 #include <QByteArray>
 #include <QList>
-
-class KNArticle;
-class KNArticleCollection;
 
 namespace KNode {
 
@@ -36,7 +35,7 @@ class ArticleWindow : public KXmlGuiWindow  {
     /** Create a new article window.
      * @param art The article to show in this window.
      */
-    ArticleWindow( KNArticle *art );
+    ArticleWindow( KNArticle::Ptr art );
     /// Destroy this article viewer window.
     ~ArticleWindow();
     /** Returns the article widget of this window. */
@@ -56,12 +55,12 @@ class ArticleWindow : public KXmlGuiWindow  {
      * @param force Really close the windows.
      * @return true if all windows have been closed.
      */
-    static bool closeAllWindowsForArticle( KNArticle *art, bool force = true );
+    static bool closeAllWindowsForArticle( KNArticle::Ptr art, bool force = true );
     /** Raise the article window for the given article.
      * @param art The article.
      * @return false if no article window was found.
      */
-    static bool raiseWindowForArticle( KNArticle *art );
+    static bool raiseWindowForArticle( KNArticle::Ptr art );
     /** Raise the article window showing a specific article.
      * @param mid Message-ID of the article.
      * @return false if no article was found.

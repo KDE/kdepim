@@ -12,21 +12,20 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QString>
+#include "knscoring.h"
+
+#include "knaccountmanager.h"
+#include "knglobals.h"
+#include "kngroupmanager.h"
+#include "kscoringeditor.h"
+#include "utilities.h"
 
 #include <kwindowsystem.h>
-#include <kscoringeditor.h>
-
-#include "knscoring.h"
-#include "knaccountmanager.h"
-#include "kngroupmanager.h"
-#include "utilities.h"
-#include "knglobals.h"
 
 //----------------------------------------------------------------------------
 NotifyCollection* KNScorableArticle::notifyC = 0;
 
-KNScorableArticle::KNScorableArticle(KNRemoteArticle* a)
+KNScorableArticle::KNScorableArticle( KNRemoteArticle::Ptr a )
   : ScorableArticle(), _a(a)
 {
 }
@@ -134,9 +133,9 @@ void KNScoringManager::configure()
 
   if (dlg) {
     dlg->show();
-#ifdef Q_OS_UNIX    
+#ifdef Q_OS_UNIX
     KWindowSystem::activateWindow(dlg->winId());
-#endif    
+#endif
   }
 }
 

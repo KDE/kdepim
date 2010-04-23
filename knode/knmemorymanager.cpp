@@ -12,15 +12,16 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <kdebug.h>
-
 #include "knmemorymanager.h"
+
 #include "knfolder.h"
 #include "knglobals.h"
 #include "knarticlemanager.h"
 #include "kngroupmanager.h"
 #include "knfoldermanager.h"
 #include "settings.h"
+
+#include <KDebug>
 
 
 KNMemoryManager::KNMemoryManager()
@@ -82,7 +83,7 @@ void KNMemoryManager::prepareLoad(KNArticleCollection *c)
 }
 
 
-void KNMemoryManager::updateCacheEntry(KNArticle *a)
+void KNMemoryManager::updateCacheEntry( KNArticle::Ptr a )
 {
   ArticleItem *ai;
   int oldSize=0;
@@ -103,7 +104,7 @@ void KNMemoryManager::updateCacheEntry(KNArticle *a)
 }
 
 
-void KNMemoryManager::removeCacheEntry(KNArticle *a)
+void KNMemoryManager::removeCacheEntry( KNArticle::Ptr a )
 {
   ArticleItem *ai;
 
@@ -133,7 +134,7 @@ KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollec
 }
 
 
-KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry(KNArticle *a, bool take)
+KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry( KNArticle::Ptr a, bool take )
 {
   for ( ArticleItem::List::Iterator it = mArtList.begin(); it != mArtList.end(); ++it ) {
     if ( (*it)->art == a ) {
@@ -190,7 +191,7 @@ void KNMemoryManager::checkMemoryUsageArticles()
       if ( a_rtCacheSize <= maxSize )
         break;
       // unloadArticle() will remove the cache entry and thus invalidate the iterator!
-      KNArticle *art = (*it)->art;
+      KNArticle::Ptr art = (*it)->art;
       ++it;
       knGlobals.articleManager()->unloadArticle( art, false );   // *try* to unload
     }

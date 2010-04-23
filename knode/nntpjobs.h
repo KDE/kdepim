@@ -29,7 +29,7 @@ class GroupListJob : public KNJobData
 {
   Q_OBJECT
   public:
-    GroupListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool incremental = false );
+    GroupListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i, bool incremental = false );
 
     virtual void execute();
 
@@ -48,7 +48,7 @@ class GroupListJob : public KNJobData
 class GroupLoadJob : public KNJobData
 {
   public:
-    GroupLoadJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    GroupLoadJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i );
 
     virtual void execute();
 };
@@ -62,7 +62,7 @@ class ArticleListJob : public KNJobData
 {
   Q_OBJECT
   public:
-    ArticleListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool silent = false );
+    ArticleListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i, bool silent = false );
 
     virtual void execute();
     /** Returns whether an error message should be shown. */
@@ -84,7 +84,7 @@ class ArticleFetchJob : public KNJobData
 {
   Q_OBJECT
   public:
-    ArticleFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool parse = true );
+    ArticleFetchJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i, bool parse = true );
 
     virtual void execute();
 
@@ -102,7 +102,7 @@ class ArticlePostJob : public KNJobData
 {
   Q_OBJECT
   public:
-    ArticlePostJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i );
+    ArticlePostJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i );
 
     virtual void execute();
 

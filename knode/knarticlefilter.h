@@ -70,8 +70,8 @@ class KNArticleFilter {
   protected:
 
     enum ApOn { articles=0 , threads=1 };
-    bool applyFilter(KNRemoteArticle *a);
-    bool applyFilter(KNLocalArticle *a);
+    bool applyFilter( KNRemoteArticle::Ptr a );
+    bool applyFilter( KNLocalArticle::Ptr a );
 
     QString n_ame;
     int i_d, c_ount;

@@ -27,21 +27,21 @@
 #include "settings.h"
 
 
-KNHdrViewItem::KNHdrViewItem( KNHeaderView *ref, KNArticle *a ) :
+KNHdrViewItem::KNHdrViewItem( KNHeaderView *ref, KNArticle::Ptr a ) :
   K3ListViewItem( ref )
 {
   init( a );
 }
 
 
-KNHdrViewItem::KNHdrViewItem( KNHdrViewItem *ref, KNArticle *a ) :
+KNHdrViewItem::KNHdrViewItem( KNHdrViewItem *ref, KNArticle::Ptr a ) :
   K3ListViewItem( ref )
 {
   init( a );
 }
 
 
-void KNHdrViewItem::init( KNArticle *a )
+void KNHdrViewItem::init( KNArticle::Ptr a )
 {
   art = a;
   mActive = false;
@@ -58,7 +58,9 @@ KNHdrViewItem::~KNHdrViewItem()
       static_cast<KNHeaderView*>( lv )->activeRemoved();
   }
 
-  if (art) art->setListItem( 0 );
+  if (art) {
+    art->setListItem( 0, art );
+  }
 }
 
 
@@ -75,7 +77,7 @@ void KNHdrViewItem::expandChildren()
 
 int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
 {
-  KNArticle *otherArticle = static_cast<KNHdrViewItem*>( i )->art;
+  KNArticle::Ptr otherArticle = static_cast<KNHdrViewItem*>( i )->art;
   int diff = 0;
   time_t date1 = 0, date2 = 0;
 
@@ -86,7 +88,7 @@ int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
 
     case 2:
        if (art->type() == KNArticle::ATremote) {
-         diff = static_cast<KNRemoteArticle*>( art )->score() - static_cast<KNRemoteArticle*>( otherArticle )->score();
+         diff = boost::static_pointer_cast<KNRemoteArticle>( art )->score() - boost::static_pointer_cast<KNRemoteArticle>( otherArticle )->score();
          return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
        } else
          return 0;
@@ -99,10 +101,11 @@ int KNHdrViewItem::compare( Q3ListViewItem *i, int col, bool ) const
        date1 = art->date()->dateTime().toTime_t();
        date2 = otherArticle->date()->dateTime().toTime_t();
        if (art->type() == KNArticle::ATremote && static_cast<KNHeaderView*>( listView() )->sortByThreadChangeDate()) {
-         if (static_cast<KNRemoteArticle*>( art )->subThreadChangeDate() > date1)
-           date1 = static_cast<KNRemoteArticle*>( art )->subThreadChangeDate();
-         if (static_cast<KNRemoteArticle*>( otherArticle )->subThreadChangeDate() > date2)
-           date2 = static_cast<KNRemoteArticle*>( otherArticle )->subThreadChangeDate();
+         if ( boost::static_pointer_cast<KNRemoteArticle>( art )->subThreadChangeDate() > date1 )
+           date1 = boost::static_pointer_cast<KNRemoteArticle>( art )->subThreadChangeDate();
+         if ( boost::static_pointer_cast<KNRemoteArticle>( otherArticle )->subThreadChangeDate() > date2 ) {
+           date2 = boost::static_pointer_cast<KNRemoteArticle>( otherArticle )->subThreadChangeDate();
+         }
        }
        diff = date1 - date2;
        return (diff < 0 ? -1 : diff > 0 ? 1 : 0);
@@ -227,7 +230,7 @@ QString KNHdrViewItem::text( int col ) const
 
   if ( col == hv->paintInfo()->scoreCol ) {
     if ( art->type() == KNArticle::ATremote )
-      return QString::number( static_cast<KNRemoteArticle*>( art )->score() );
+      return QString::number( boost::static_pointer_cast<KNRemoteArticle>( art )->score() );
     else
       return QString();
   }
@@ -271,7 +274,7 @@ int KNHdrViewItem::countUnreadInThread()
   int count = 0;
   if ( knGlobals.settings()->showUnread() ) {
     if (art->type() == KNArticle::ATremote) {
-      count = static_cast<KNRemoteArticle*>( art )->unreadFollowUps();
+      count = boost::static_pointer_cast<KNRemoteArticle>( art )->unreadFollowUps();
     }
   }
   return count;
@@ -281,8 +284,8 @@ int KNHdrViewItem::countUnreadInThread()
 bool KNHdrViewItem::greyOut()
 {
   if (art->type() == KNArticle::ATremote) {
-    return !static_cast<KNRemoteArticle*>( art )->hasUnreadFollowUps()
-        && static_cast<KNRemoteArticle*>( art )->isRead();
+    return !boost::static_pointer_cast<KNRemoteArticle>( art )->hasUnreadFollowUps()
+        && boost::static_pointer_cast<KNRemoteArticle>( art )->isRead();
   } else
     return false;
 }
@@ -291,7 +294,7 @@ bool KNHdrViewItem::greyOut()
 bool KNHdrViewItem::firstColBold()
 {
   if(art->type() == KNArticle::ATremote)
-    return static_cast<KNRemoteArticle*>( art )->isNew();
+    return boost::static_pointer_cast<KNRemoteArticle>( art )->isNew();
   else
     return false;
 }
@@ -300,7 +303,7 @@ bool KNHdrViewItem::firstColBold()
 QColor KNHdrViewItem::normalColor()
 {
   if (art->type()==KNArticle::ATremote)
-    return static_cast<KNRemoteArticle*>( art )->color();
+    return boost::static_pointer_cast<KNRemoteArticle>( art )->color();
   else
     return knGlobals.settings()->unreadThreadColor();
 }

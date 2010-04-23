@@ -14,6 +14,9 @@
 #ifndef KNODE_ARTICLEWIDGET_H
 #define KNODE_ARTICLEWIDGET_H
 
+#include "knarticle.h"
+#include "knjobdata.h"
+
 #include <QByteArray>
 #include <QMap>
 #include <QWidget>
@@ -22,16 +25,12 @@
 
 #include <kmime/kmime_content.h>
 
-#include "knjobdata.h"
-
-class QStringList;
 class QTimer;
 
 class KAction;
 class KActionCollection;
 class KActionMenu;
 class KHTMLPart;
-class KUrl;
 class KSelectAction;
 class KToggleAction;
 class KXMLGUIClient;
@@ -40,7 +39,6 @@ namespace Kpgp {
   class Block;
 }
 
-class KNArticle;
 class KNArticleCollection;
 
 namespace KNode {
@@ -70,29 +68,29 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /** display the given article
      * @param article The article to display.
      */
-    void setArticle( KNArticle *article );
+    void setArticle( KNArticle::Ptr article );
     /// returns the currently shown article
-    KNArticle *article() const { return mArticle; }
+    KNArticle::Ptr article() const { return mArticle; }
 
     /// notify all instances about a config change
     static void configChanged();
     /** check whether the given article is displayed in any instance
      * @param article The article to check.
      */
-    static bool articleVisible( KNArticle *article );
+    static bool articleVisible( KNArticle::Ptr article );
     /** notify all instances that the given article has been removed
      * @param article The removed article.
      */
-    static void articleRemoved( KNArticle *article );
+    static void articleRemoved( KNArticle::Ptr article );
     /** notify all instances that the given article has changed
      * @param article The changed article.
      */
-    static void articleChanged( KNArticle *article );
+    static void articleChanged( KNArticle::Ptr article );
     /** notify all instances about an error during loading the given article
      * @param article The article that couldn't be loaded.
      * @param error The error message.
      */
-    static void articleLoadError( KNArticle *article, const QString &error );
+    static void articleLoadError( KNArticle::Ptr article, const QString &error );
     /** notify all instances that the given collection has been removed
      * @param coll The removed article collection (a group or a folder).
      */
@@ -223,7 +221,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
   private:
     /// the currently shown article
-    KNArticle *mArticle;
+    KNArticle::Ptr mArticle;
     /// attachments of the current article
     KMime::Content::List mAttachments;
     /// mapping of temporary file names to part numbers

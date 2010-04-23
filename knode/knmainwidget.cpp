@@ -14,6 +14,8 @@
 
 #include "knmainwidget.h"
 
+#include "headerview.h"
+
 #include <Q3Accel>
 #include <QEvent>
 #include <QLabel>
@@ -472,7 +474,7 @@ void KNMainWidget::openURL(const KUrl &url)
 
       if (g) {
         if ( !ArticleWindow::raiseWindowForArticle( groupname.toLatin1() ) ) { //article not yet opened
-          KNRemoteArticle *a=new KNRemoteArticle(g);
+          KNRemoteArticle::Ptr a( new KNRemoteArticle(g) );
           QString messageID = '<' + groupname + '>';
           a->messageID()->from7BitString(messageID.toLatin1());
           ArticleWindow *awin = new ArticleWindow( a );
@@ -1014,7 +1016,7 @@ void KNMainWidget::getSelectedArticles(KNArticle::List &l)
 
   for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
-      l.append( static_cast<KNArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+      l.append( boost::static_pointer_cast<KNArticle>( static_cast<KNHdrViewItem*>( i )->art ) );
 }
 
 
@@ -1024,16 +1026,16 @@ void KNMainWidget::getSelectedArticles(KNRemoteArticle::List &l)
 
   for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
-      l.append( static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+      l.append( boost::static_pointer_cast<KNRemoteArticle>( static_cast<KNHdrViewItem*>(i)->art ) );
 }
 
 
 void KNMainWidget::getSelectedThreads(KNRemoteArticle::List &l)
 {
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
   for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive())) {
-      art=static_cast<KNRemoteArticle*> ((static_cast<KNHdrViewItem*>(i))->art);
+      art = boost::static_pointer_cast<KNRemoteArticle>( static_cast<KNHdrViewItem*>( i )->art );
       // ignore the article if it is already in the list
       // (multiple aritcles are selected in one thread)
       if ( !l.contains(art)  )
@@ -1048,7 +1050,7 @@ void KNMainWidget::getSelectedArticles( KNLocalArticle::List &l )
 
   for(Q3ListViewItem *i=h_drView->firstChild(); i; i=i->itemBelow())
     if(i->isSelected() || (static_cast<KNHdrViewItem*>(i)->isActive()))
-      l.append( static_cast<KNLocalArticle*> ((static_cast<KNHdrViewItem*>(i))->art) );
+      l.append( boost::static_pointer_cast<KNLocalArticle>( static_cast<KNHdrViewItem*>(i)->art ) );
 }
 
 
@@ -1069,7 +1071,7 @@ void KNMainWidget::slotArticleSelected(Q3ListViewItem *i)
   kDebug(5003) <<"KNMainWidget::slotArticleSelected(QListViewItem *i)";
   if(b_lockui)
     return;
-  KNArticle *selectedArticle=0;
+  KNArticle::Ptr selectedArticle;
 
   if(i)
     selectedArticle=(static_cast<KNHdrViewItem*>(i))->art;
@@ -1314,11 +1316,11 @@ void KNMainWidget::slotOpenArticle(Q3ListViewItem *item)
     return;
 
   if (item) {
-    KNArticle *art=(static_cast<KNHdrViewItem*>(item))->art;
+    KNArticle::Ptr art = (static_cast<KNHdrViewItem*>(item))->art;
 
     if ((art->type()==KNArticle::ATlocal) && ((f_olManager->currentFolder()==f_olManager->outbox())||
                                                (f_olManager->currentFolder()==f_olManager->drafts()))) {
-      a_rtFactory->edit( static_cast<KNLocalArticle*>(art) );
+      a_rtFactory->edit( boost::static_pointer_cast<KNLocalArticle>( art ) );
     } else {
       if ( !ArticleWindow::raiseWindowForArticle( art ) ) {
         ArticleWindow *w = new ArticleWindow( art );
@@ -1789,7 +1791,7 @@ void KNMainWidget::slotScoreLower()
     return;
 
   if ( mArticleViewer->article() && mArticleViewer->article()->type() == KNArticle::ATremote ) {
-    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>( mArticleViewer->article() );
+    KNRemoteArticle::Ptr ra = boost::static_pointer_cast<KNRemoteArticle>( mArticleViewer->article() );
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), -10);
   }
 }
@@ -1802,7 +1804,7 @@ void KNMainWidget::slotScoreRaise()
     return;
 
   if ( mArticleViewer->article() && mArticleViewer->article()->type() == KNArticle::ATremote ) {
-    KNRemoteArticle *ra = static_cast<KNRemoteArticle*>( mArticleViewer->article() );
+    KNRemoteArticle::Ptr ra = boost::static_pointer_cast<KNRemoteArticle>( mArticleViewer->article() );
     s_coreManager->addRule(KNScorableArticle(ra), g_rpManager->currentGroup()->groupname(), +10);
   }
 }
@@ -1899,7 +1901,7 @@ void KNMainWidget::slotArtEdit()
     return;
 
   if ( mArticleViewer->article() && mArticleViewer->article()->type() == KNArticle::ATlocal )
-    a_rtFactory->edit( static_cast<KNLocalArticle*>( mArticleViewer->article() ) );
+    a_rtFactory->edit( boost::static_pointer_cast<KNLocalArticle>( mArticleViewer->article() ) );
 }
 
 
@@ -1926,7 +1928,7 @@ void KNMainWidget::slotFetchArticleWithID()
         id = QString("<%1>").arg(id);
 
       if ( !ArticleWindow::raiseWindowForArticle( id.toLatin1() ) ) { //article not yet opened
-        KNRemoteArticle *a=new KNRemoteArticle(g_rpManager->currentGroup());
+        KNRemoteArticle::Ptr a( new KNRemoteArticle( g_rpManager->currentGroup() ) );
         a->messageID()->from7BitString(id.toLatin1());
         ArticleWindow *awin = new ArticleWindow( a );
         awin->show();

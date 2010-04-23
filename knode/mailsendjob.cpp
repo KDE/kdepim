@@ -24,7 +24,7 @@
 
 using namespace MailTransport;
 
-KNode::MailSendJob::MailSendJob( KNJobConsumer * c, int transportId, KNJobItem * i ) :
+KNode::MailSendJob::MailSendJob( KNJobConsumer * c, int transportId, KNJobItem::Ptr i ) :
   KNJobData( KNJobData::JTmail, c, 0, i ),
   mTransportId( transportId )
 {
@@ -32,7 +32,7 @@ KNode::MailSendJob::MailSendJob( KNJobConsumer * c, int transportId, KNJobItem *
 
 void KNode::MailSendJob::execute()
 {
-  KNLocalArticle *art = static_cast<KNLocalArticle*>( data() );
+  KNLocalArticle::Ptr art = boost::static_pointer_cast<KNLocalArticle>( data() );
 
   TransportJob* job = TransportManager::self()->createTransportJob( mTransportId );
   if ( !job ) {

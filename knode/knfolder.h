@@ -58,10 +58,12 @@ class KNFolder : public KNArticleCollection  {
     void writeConfig();
 
     //article access
-    KNLocalArticle* at(int i)           { return static_cast<KNLocalArticle*>(KNArticleCollection::at(i)); }
-    KNLocalArticle* byId(int id)        { return static_cast<KNLocalArticle*>(KNArticleCollection::byId(id)); }
-    KNLocalArticle* byMessageId( const QByteArray &mid )
-                                        { return static_cast<KNLocalArticle*>(KNArticleCollection::byMessageId(mid)); }
+    KNLocalArticle::Ptr at( int i )
+      { return boost::static_pointer_cast<KNLocalArticle>( KNArticleCollection::at( i ) ); }
+    KNLocalArticle::Ptr byId( int id )
+      { return boost::static_pointer_cast<KNLocalArticle>( KNArticleCollection::byId( id ) ); }
+    KNLocalArticle::Ptr byMessageId( const QByteArray &mId )
+      { return boost::static_pointer_cast<KNLocalArticle>( KNArticleCollection::byMessageId( mId ) ); }
 
     //parent
     void setParent(KNCollection *p);
@@ -69,7 +71,12 @@ class KNFolder : public KNArticleCollection  {
     //load, save and delete
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
-    bool loadArticle(KNLocalArticle *a);
+    /**
+      Load the full content of an article.
+      @param a the article to load.
+      @return true if the article is successfully loaded.
+    */
+    bool loadArticle( KNLocalArticle::Ptr a );
     bool saveArticles( KNLocalArticle::List &l );
     void removeArticles( KNLocalArticle::List &l, bool del = true );
     void deleteAll();
@@ -93,8 +100,8 @@ class KNFolder : public KNArticleCollection  {
         public:
           DynData()  {}
           ~DynData() {}
-          void setData(KNLocalArticle *a);
-          void getData(KNLocalArticle *a);
+          void setData( KNLocalArticle::Ptr a );
+          void getData( KNLocalArticle::Ptr a );
 
           int id,
               so,

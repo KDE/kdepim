@@ -22,6 +22,8 @@
 #include <QList>
 #include <libkdepim/progressmanager.h>
 
+#include <boost/shared_ptr.hpp>
+
 class KJob;
 
 namespace KIO {
@@ -57,7 +59,7 @@ class KNJobConsumer {
 
     /** Find any job related to a job item and cancel it.
      */
-    void cancelJobs( KNJobItem *item );
+    void cancelJobs( boost::shared_ptr<KNJobItem> item );
 
   protected:
     /** The actual work is done here */
@@ -72,6 +74,11 @@ class KNJobConsumer {
 class KNJobItem {
 
   public:
+    /**
+      Shared pointer to a KNJobItem. To be used instead of raw KNJobItem*.
+    */
+    typedef boost::shared_ptr<KNJobItem> Ptr;
+
     KNJobItem()           {}
     virtual ~KNJobItem()  {}
 
@@ -107,13 +114,13 @@ class KNJobData : public QObject
                     JTmail,
                     JTfetchSource   };
 
-    KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i);
+    KNJobData( jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i );
     ~KNJobData();
 
     jobType type() const                  { return t_ype; }
 
     KNServerInfo* account() const         { return a_ccount; }
-    KNJobItem* data() const               { return d_ata; }
+    KNJobItem::Ptr data() const           { return d_ata; }
 
     /** Returns the error code (see KIO::Error). */
     int error() const { return mError; }
@@ -192,7 +199,7 @@ class KNJobData : public QObject
 
   protected:
     jobType t_ype;
-    KNJobItem *d_ata;
+    KNJobItem::Ptr d_ata;
     KNServerInfo *a_ccount;
     /** The job error code (see KIO::Error). */
     int mError;

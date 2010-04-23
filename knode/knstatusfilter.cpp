@@ -12,15 +12,13 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "knstatusfilter.h"
+
 #include <QCheckBox>
 #include <QGridLayout>
 
 #include <kdialog.h>
 #include <klocale.h>
-#include <kconfig.h>
-
-#include "knarticle.h"
-#include "knstatusfilter.h"
 
 #define EN_R  0
 #define EN_N  1
@@ -82,7 +80,7 @@ void KNode::StatusFilter::save( KConfigGroup &group )
 
 
 
-bool KNode::StatusFilter::doFilter( KNRemoteArticle *a )
+bool KNode::StatusFilter::doFilter( KNRemoteArticle::Ptr a )
 {
   bool ret=true;
 

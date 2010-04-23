@@ -13,19 +13,18 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <kwindowsystem.h>
+#include "knarticlewindow.h"
 
-#include <kstandardaction.h>
-#include <kconfig.h>
-#include <kaction.h>
-#include <kactioncollection.h>
-
-#include "knarticle.h"
 #include "articlewidget.h"
 #include "utilities.h"
 #include "knglobals.h"
 #include "knmainwidget.h"
-#include "knarticlewindow.h"
+
+#include <kwindowsystem.h>
+#include <kstandardaction.h>
+#include <kconfig.h>
+#include <kaction.h>
+#include <kactioncollection.h>
 
 using namespace KNode;
 
@@ -46,7 +45,7 @@ bool ArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bool
 }
 
 
-bool ArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
+bool ArticleWindow::closeAllWindowsForArticle( KNArticle::Ptr art, bool force )
 {
   ArticleWindow::List list = mInstances;
   for ( ArticleWindow::List::Iterator it = list.begin(); it != list.end(); ++it )
@@ -60,7 +59,7 @@ bool ArticleWindow::closeAllWindowsForArticle( KNArticle *art, bool force )
 }
 
 
-bool ArticleWindow::raiseWindowForArticle( KNArticle *art )
+bool ArticleWindow::raiseWindowForArticle( KNArticle::Ptr art )
 {
   for ( ArticleWindow::List::Iterator it = mInstances.begin(); it != mInstances.end(); ++it )
     if ( (*it)->mArticleWidget->article() && (*it)->mArticleWidget->article() == art ) {
@@ -90,7 +89,7 @@ bool ArticleWindow::raiseWindowForArticle( const QByteArray &mid )
 
 //==================================================================================
 
-ArticleWindow::ArticleWindow( KNArticle *art )
+ArticleWindow::ArticleWindow( KNArticle::Ptr art )
   : KXmlGuiWindow( 0 )
 {
   setObjectName( "articleWindow" );

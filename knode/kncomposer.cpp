@@ -164,7 +164,7 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 }
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
+KNComposer::KNComposer( KNLocalArticle::Ptr a, const QString &text, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail )
     : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a),
       u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
@@ -733,7 +733,7 @@ bool KNComposer::applyChanges()
   const KPIMIdentities::Identity identity = KNGlobals::self()->identityManager()->identityForUoid( v_iew->selectedIdentity() );
   if ( !identity.isNull() ) {
     KMime::Headers::Generic *xKnodeIdentity = new KMime::Headers::Generic( "X-KNode-Identity",
-                                                                          a_rticle,
+                                                                          a_rticle.get(),
                                                                           QByteArray::number( identity.uoid() ) );
     a_rticle->setHeader( xKnodeIdentity );
   }
@@ -808,14 +808,14 @@ bool KNComposer::applyChanges()
         if(a->isAttached())
           a->updateContentInfo();
         else
-          a->attach(a_rticle);
+          a->attach( a_rticle.get() );
       }
     }
   }
 
   for ( QList<KNAttachment::Ptr>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     if ( (*it)->isAttached() )
-      (*it)->detach( a_rticle );
+      (*it)->detach( a_rticle.get() );
 
   text=a_rticle->textContent();
 
@@ -1470,8 +1470,8 @@ void KNComposer::slotGroupsBtnClicked()
 
   connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
     knGlobals.groupManager(), SLOT(slotLoadGroupList(KNNntpAccount*)));
-  connect(knGlobals.groupManager(), SIGNAL(newListReady(KNGroupListData*)),
-    dlg, SLOT(slotReceiveList(KNGroupListData*)));
+  connect( KNGlobals::self()->groupManager(), SIGNAL(newListReady(KNGroupListData::Ptr)),
+           dlg, SLOT(slotReceiveList(KNGroupListData::Ptr)) );
 
   if(dlg->exec())
     v_iew->setGroups( dlg->selectedGroups() );

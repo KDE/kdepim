@@ -184,13 +184,8 @@ bool KNFolder::loadHdrs()
     return false;
   }
 
-  if(!resize(c_ount)) {
-    closeFiles();
-    return false;
-  }
-
   QByteArray tmp;
-  KNLocalArticle *art;
+  KNLocalArticle::Ptr art;
   DynData dynamic;
   int pos1=0, pos2=0, cnt=0, byteCount;
 
@@ -215,7 +210,7 @@ bool KNFolder::loadHdrs()
       }
     }
 
-    art=new KNLocalArticle(this);
+    art = KNLocalArticle::Ptr( new KNLocalArticle(this) );
 
     //set index-data
     dynamic.getData(art);
@@ -233,7 +228,6 @@ bool KNFolder::loadHdrs()
     if(tmp.isEmpty()) {
       if( m_boxFile.error() == QFile::NoError ) {
         kWarning(5003) <<"found broken entry in mbox-file: Ignored!";
-        delete art;
         continue;
       }
       else {
@@ -280,16 +274,7 @@ bool KNFolder::loadHdrs()
       art->lines()->from7BitString(tmp.mid(pos1,pos2-pos1));
     }
 
-    if(!append(art)) {
-      kError(5003) <<"KNFolder::loadHdrs() : cannot append article!";
-      delete art;
-      clear();
-      closeFiles();
-
-      knGlobals.setStatusMsg( QString() );
-      return false;
-    }
-
+    append( art );
     cnt++;
   }
 
@@ -312,7 +297,7 @@ bool KNFolder::unloadHdrs(bool force)
   if (!force && isNotUnloadable())
     return false;
 
-  KNLocalArticle *a;
+  KNLocalArticle::Ptr a;
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
     if (a->hasContent() && !knGlobals.articleManager()->unloadArticle(a, force))
@@ -324,7 +309,7 @@ bool KNFolder::unloadHdrs(bool force)
   return true;
 }
 
-bool KNFolder::loadArticle(KNLocalArticle *a)
+bool KNFolder::loadArticle( KNLocalArticle::Ptr a )
 {
   if(a->hasContent())
     return true;
@@ -398,16 +383,9 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
         l.append( (*it) );
         oldFolder->removeArticles( l, false );
       }
-      if ( !append( (*it) ) ) {
-        kError(5003) <<"KNFolder::saveArticle(KNLocalArticle::List *l) : cannot append article!";
-        ret = false;
-        continue;
-        (*it)->setCollection(0);
-      }
-      else {
-        (*it)->setCollection(this);
-        addCnt++;
-      }
+      append( (*it) );
+      (*it)->setCollection(this);
+      addCnt++;
     }
 
     if ( byId( (*it)->id() ) == (*it) ) {
@@ -473,7 +451,7 @@ void KNFolder::removeArticles( KNLocalArticle::List &l, bool del )
 
   int idx = 0, delCnt = 0, *positions;
   positions = new int[l.count()];
-  KNLocalArticle *a = 0;
+  KNLocalArticle::Ptr a;
 
   for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it, ++idx ) {
     if ( (*it)->isLocked() )
@@ -545,7 +523,7 @@ void KNFolder::syncIndex(bool force)
     return;
   }
 
-  KNLocalArticle *a;
+  KNLocalArticle::Ptr a;
   DynData d;
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
@@ -570,7 +548,7 @@ void KNFolder::closeFiles()
 //==============================================================================
 
 
-void KNFolder::DynData::setData(KNLocalArticle *a)
+void KNFolder::DynData::setData( KNLocalArticle::Ptr a )
 {
   id=a->id();
   so=a->startOffset();
@@ -587,7 +565,7 @@ void KNFolder::DynData::setData(KNLocalArticle *a)
 }
 
 
-void KNFolder::DynData::getData(KNLocalArticle *a)
+void KNFolder::DynData::getData( KNLocalArticle::Ptr a )
 {
   a->setId(id);
   KDateTime dt;

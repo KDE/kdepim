@@ -91,7 +91,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
 {
   int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr(), firstNew=-1;
   bool unavailable=false;
-  KNRemoteArticle *art, *ref;
+  KNRemoteArticle::Ptr art, ref;
 
   KNode::Cleanup *conf = g->activeCleanupConfig();
 
@@ -193,7 +193,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
 
 void KNCleanUp::compactFolder(KNFolder *f)
 {
-  KNLocalArticle *art;
+  KNLocalArticle::Ptr art;
 
   if (!f)
     return;

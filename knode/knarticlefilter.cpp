@@ -183,7 +183,7 @@ void KNArticleFilter::save()
 void KNArticleFilter::doFilter(KNGroup *g)
 {
   c_ount=0;
-  KNRemoteArticle *art=0, *ref=0;
+  KNRemoteArticle::Ptr art, ref;
   KNRemoteArticle::List orphant_threads;
   int idRef;
   int mergeCnt=0;
@@ -200,7 +200,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
     art=g->at(idx);
     art->setFiltered(false);
     art->setVisibleFollowUps(false);
-    art->setDisplayedReference(0);
+    art->setDisplayedReference( KNRemoteArticle::Ptr() );
   }
 
   for(int idx=0; idx<g->length(); idx++) {
@@ -238,9 +238,9 @@ void KNArticleFilter::doFilter(KNGroup *g)
     if(art->filterResult()) {
       c_ount++;
 
-      ref = (art->idRef()>0) ? g->byId(art->idRef()) : 0;
+      ref = ( art->idRef() > 0 ) ? g->byId( art->idRef() ) : KNRemoteArticle::Ptr();
       while(ref && !ref->filterResult())
-        ref = (ref->idRef()>0) ? g->byId(ref->idRef()) : 0;
+        ref = ( ref->idRef() > 0 ) ? g->byId( ref->idRef() ) : KNRemoteArticle::Ptr();
 
       art->setDisplayedReference(ref);
       if(ref)
@@ -285,7 +285,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
 void KNArticleFilter::doFilter(KNFolder *f)
 {
   c_ount=0;
-  KNLocalArticle *art=0;
+  KNLocalArticle::Ptr art;
 
   if(!l_oaded) load();
 
@@ -340,7 +340,7 @@ void KNArticleFilter::setTranslatedName(const QString &s)
 
 
 
-bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
+bool KNArticleFilter::applyFilter( KNRemoteArticle::Ptr a )
 {
   bool result=true;
 
@@ -352,7 +352,7 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
   if(result) {
     QString tmp;
     if ( !a->from()->isEmpty() )
-      tmp = a->from()->displayNames().first() + QLatin1String("##") 
+      tmp = a->from()->displayNames().first() + QLatin1String("##")
           + QString::fromLatin1( a->from()->addresses().first() );
     result=from.doFilter(tmp);
   }
@@ -366,7 +366,7 @@ bool KNArticleFilter::applyFilter(KNRemoteArticle *a)
 }
 
 
-bool KNArticleFilter::applyFilter(KNLocalArticle *a)
+bool KNArticleFilter::applyFilter( KNLocalArticle::Ptr a )
 {
   bool result=true;
 

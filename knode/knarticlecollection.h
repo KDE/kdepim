@@ -15,11 +15,10 @@
 #ifndef KNARTICLECOLLECTION_H
 #define KNARTICLECOLLECTION_H
 
+#include "knarticle.h"
 #include "kncollection.h"
 
 #include <QByteArray>
-
-class KNArticle;
 
 
 /** Article storage used by KNArticleCollection.
@@ -35,16 +34,14 @@ class KNArticleVector {
     // list-info
     void setMaster(KNArticleVector *m)   { m_aster=m; }
 
-    bool isEmpty()    { return ( (l_ist==0) || (l_en==0) ); }
-    int length()      { return l_en; }
-    int size()        { return s_ize; }
+    bool isEmpty()    { return mList.isEmpty(); }
+    int size()        { return mList.size(); }
 
     // list-handling
-    bool resize(int s=0);
     /**
       Appends an article to this store.
     */
-    bool append( KNArticle *a );
+    void append( KNArticle::Ptr a );
     /**
       Remove the element at position @p pos in this store.
     */
@@ -55,13 +52,13 @@ class KNArticleVector {
 
     // sorting
     void setSortMode(SortingType s)   { s_ortType=s; }
-    static int compareById(const void *a1, const void *a2);
-    static int compareByMsgId(const void *a1, const void *a2);
+    static bool compareById( KNArticle::Ptr a1, KNArticle::Ptr a2 );
+    static bool compareByMsgId( KNArticle::Ptr a1, KNArticle::Ptr a2 );
 
     // article access
-    KNArticle* at(int i)  { return ( (i>=0 && i<l_en) ? l_ist[i] : 0 ); }
-    KNArticle* bsearch(int id);
-    KNArticle* bsearch( const QByteArray &id );
+    KNArticle::Ptr at( int i )  { return mList.value( i ); }
+    KNArticle::Ptr bsearch( int id );
+    KNArticle::Ptr bsearch( const QByteArray &id );
 
     int indexForId(int id);
     int indexForMsgId( const QByteArray &id );
@@ -70,9 +67,7 @@ class KNArticleVector {
     void sort();
 
     KNArticleVector *m_aster;
-    int l_en,
-        s_ize;
-    KNArticle **l_ist;
+    QList<KNArticle::Ptr> mList;
     SortingType s_ortType;
 };
 
@@ -87,9 +82,8 @@ class KNArticleCollection : public KNCollection {
 
     /** Returns true if this collection doesn't contain any article. */
     bool isEmpty()                { return a_rticles.isEmpty(); }
-    bool isLoaded()               { return (c_ount==0 || a_rticles.length()>0); }
-    int size()                    { return a_rticles.size(); }
-    int length()                  { return a_rticles.length(); }
+    bool isLoaded()               { return ( c_ount==0 || !a_rticles.isEmpty() ); }
+    int length()                  { return a_rticles.size(); }
 
     // cache behavior
     bool isNotUnloadable()               { return n_otUnloadable; }
@@ -101,19 +95,27 @@ class KNArticleCollection : public KNCollection {
     void articleUnlocked()        { l_ockedArticles--; }
 
     // list-handling
-    bool resize(int s=0);
     /**
       Appends an article to this collection.
     */
-    bool append( KNArticle *a );
+    void append( KNArticle::Ptr a );
     void clear();
     void compact();
     void setLastID();
 
     // article access
-    KNArticle* at(int i)          { return a_rticles.at(i); }
-    KNArticle* byId(int id);
-    KNArticle* byMessageId( const QByteArray &mid );
+    /**
+      Returns the article at index @p i in this collection, or an empty KNArticle::Ptr if it is not found.
+    */
+    KNArticle::Ptr at( int i )    { return a_rticles.at(i); }
+    /**
+      Returns the article whose id is @p id, or an empty KNArticle::Ptr if it is not found.
+    */
+    KNArticle::Ptr byId( int id );
+    /**
+      Returns the article whose message-id is @p mid, or an empty KNArticle::Ptr if it is not found.
+    */
+    KNArticle::Ptr byMessageId( const QByteArray &mid );
 
     // search index
     void syncSearchIndex();

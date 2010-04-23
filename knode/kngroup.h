@@ -42,6 +42,11 @@ namespace KNode {
 class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::SettingsContainerInterface
 {
   public:
+    /**
+      Shared pointer to a KNGroup. To be used in job.
+    */
+    typedef boost::shared_ptr<KNGroup> Ptr;
+
     /** The posting rights status of this group. */
     enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
 
@@ -112,11 +117,13 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
     int statThrWithNew();
     int statThrWithUnread();
 
-    /** article access */
-    KNRemoteArticle* at(int i)          { return static_cast<KNRemoteArticle*> (KNArticleCollection::at(i)); }
-    KNRemoteArticle* byId(int id)       { return static_cast<KNRemoteArticle*> (KNArticleCollection::byId(id)); }
-    KNRemoteArticle* byMessageId( const QByteArray &mId )
-                                        { return static_cast<KNRemoteArticle*> (KNArticleCollection::byMessageId(mId)); }
+    // article access
+    KNRemoteArticle::Ptr at( int i )
+      { return boost::static_pointer_cast<KNRemoteArticle>( KNArticleCollection::at( i ) ); }
+    KNRemoteArticle::Ptr byId( int id )
+      { return boost::static_pointer_cast<KNRemoteArticle>( KNArticleCollection::byId( id ) ); }
+    KNRemoteArticle::Ptr byMessageId( const QByteArray &mId )
+      { return boost::static_pointer_cast<KNRemoteArticle>( KNArticleCollection::byMessageId( mId ) ); }
 
     /** Load the stored headers from disk. */
     bool loadHdrs();
@@ -187,7 +194,11 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
 
   protected:
     void buildThreads(int cnt, KNJobData *parent=0);
-    KNRemoteArticle* findReference(KNRemoteArticle *a);
+    /**
+      Returns the first message that appears in the References header of @p a
+      and which exists in this group.
+    */
+    KNRemoteArticle::Ptr findReference( KNRemoteArticle::Ptr a );
 
     int       n_ewCount,
               l_astFetchCount,
@@ -230,8 +241,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
       public:
         dynDataVer0()     { id=-1; idRef=-1; read=0; thrLevel=0; score=50; }
         ~dynDataVer0()    {}
-        void setData(KNRemoteArticle *a);
-        void getData(KNRemoteArticle *a);
+        void setData( KNRemoteArticle::Ptr a );
+        void getData( KNRemoteArticle::Ptr a );
 
         int id;
         int idRef;
@@ -243,8 +254,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
 
       public:
         dynDataVer1()     { id=-1; idRef=-1; read=0; thrLevel=0; score=0, ignoredWatched=0; }
-        void setData(KNRemoteArticle *a);
-        void getData(KNRemoteArticle *a);
+        void setData( KNRemoteArticle::Ptr a );
+        void getData( KNRemoteArticle::Ptr a );
 
         int id;
         int idRef;

@@ -37,8 +37,10 @@ class KNArticleCollection;
 class KNArticle : public KMime::NewsArticle, public KNJobItem {
 
   public:
+    /// Shared pointer to a KNArticle. To be used instead of raw KNArticle*.
+    typedef boost::shared_ptr<KNArticle> Ptr;
     /// List of articles.
-    typedef QList<KNArticle*> List;
+    typedef QList<KNArticle::Ptr> List;
 
     enum articleType {
       ATmimeContent,
@@ -62,7 +64,12 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
 
     //list item handling
     KNHdrViewItem* listItem() const           { return i_tem; }
-    void setListItem(KNHdrViewItem *i);
+    /**
+      Sets the headerview item associated to this article.
+      @param i The item associated to this item or 0 to break the link to the previous item.
+      @param a The shared pointer of <strong>this</strong> article.
+    */
+    void setListItem( KNHdrViewItem *i, KNArticle::Ptr a );
     virtual void updateListItem() {}
 
     //network lock (reimplemented from KNJobItem)
@@ -98,8 +105,10 @@ class KNGroup;
 class KNRemoteArticle : public KNArticle {
 
   public:
+    /// Shared pointer to a KNRemoteArticle. To be used instead of raw KNRemoteArticle*.
+    typedef boost::shared_ptr<KNRemoteArticle> Ptr;
     /// List of remote articles.
-    typedef QList<KNRemoteArticle*> List;
+    typedef QList<KNRemoteArticle::Ptr> List;
 
     KNRemoteArticle(KNGroup *g);
     ~KNRemoteArticle();
@@ -137,8 +146,8 @@ class KNRemoteArticle : public KNArticle {
                                                         i_dRef=i;
                                                       else
                                                         i_dRef=0; }
-    KNRemoteArticle* displayedReference()           { return d_ref; }
-    void setDisplayedReference(KNRemoteArticle *dr) { d_ref=dr; }
+    KNRemoteArticle::Ptr displayedReference()           { return d_ref; }
+    void setDisplayedReference( KNRemoteArticle::Ptr dr ) { d_ref=dr; }
     bool threadMode()                             { return f_lags.get(9); }
     void setThreadMode(bool b=true)               { f_lags.set(9, b); }
     unsigned char threadingLevel()                { return t_hrLevel; }
@@ -182,7 +191,7 @@ class KNRemoteArticle : public KNArticle {
   protected:
     int a_rticleNumber;
     int i_dRef;                      // id of a reference-article (0 == none)
-    KNRemoteArticle *d_ref;          // displayed reference-article (may differ from i_dRef)
+    KNRemoteArticle::Ptr d_ref;      // displayed reference-article (may differ from i_dRef)
     unsigned char t_hrLevel;         // quality of threading
     short s_core;                    // guess what ;-)
     QColor c_olor;                   // color for the header list
@@ -203,8 +212,10 @@ class KNRemoteArticle : public KNArticle {
 class KNLocalArticle : public KNArticle {
 
   public:
+    /// Shared pointer to a KNLocalArticle. To be used instead of raw KNLocalArticle*.
+    typedef boost::shared_ptr<KNLocalArticle> Ptr;
     /// List of local articles.
-    typedef QList<KNLocalArticle*> List;
+    typedef QList<KNLocalArticle::Ptr> List;
 
     KNLocalArticle(KNArticleCollection *c=0);
     ~KNLocalArticle();

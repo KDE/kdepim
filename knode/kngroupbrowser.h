@@ -15,16 +15,10 @@
 #ifndef KNGROUPBROWSER_H
 #define KNGROUPBROWSER_H
 
-#include <q3listview.h>
-//Added by qt3to4:
-#include <QIcon>
-#include <QPixmap>
-#include <QLabel>
-#include <QGridLayout>
+#include "kngroupmanager.h"
 
 #include <kdialog.h>
-
-#include "kngroupmanager.h"
+#include <q3listview.h>
 
 class KLineEdit;
 class QCheckBox;
@@ -75,7 +69,7 @@ class KNGroupBrowser : public KDialog {
     virtual void itemChangedState(CheckItem *it, bool s)=0;
 
   public slots:
-    void slotReceiveList(KNGroupListData* d);
+    void slotReceiveList( KNGroupListData::Ptr d );
 
   signals:
     void loadList(KNNntpAccount *a);

@@ -19,10 +19,9 @@
 #include <klocale.h>
 #include <QDir>
 
-
-KNode::GroupListJob::GroupListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool incremental ) :
-  KNJobData( KNJobData::JTFetchGroups, c, a, i ),
-  mIncremental( incremental )
+KNode::GroupListJob::GroupListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i, bool incremental )
+  : KNJobData( KNJobData::JTFetchGroups, c, a, i ),
+    mIncremental( incremental )
 {
 }
 
@@ -30,7 +29,7 @@ void KNode::GroupListJob::execute()
 {
   mGroupList.clear();
 
-  KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+  KNGroupListData::Ptr target = boost::static_pointer_cast<KNGroupListData>( data() );
 
   KUrl destination = baseUrl();
   QStringList query;
@@ -52,7 +51,7 @@ void KNode::GroupListJob::execute()
 void KNode::GroupListJob::slotEntries( KIO::Job * job, const KIO::UDSEntryList & list )
 {
   Q_UNUSED( job );
-   KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+  KNGroupListData::Ptr target = boost::static_pointer_cast<KNGroupListData>( data() );
 
   QString name, desc;
   bool subscribed;
@@ -93,7 +92,7 @@ void KNode::GroupListJob::slotResult( KJob * job )
   if ( job->error() )
     setError( job->error(), job->errorString() );
   else {
-    KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+    KNGroupListData::Ptr target = boost::static_pointer_cast<KNGroupListData>( data() );
 
     // TODO: use thread weaver here?
     if ( mIncremental ) {
@@ -116,14 +115,14 @@ void KNode::GroupListJob::slotResult( KJob * job )
 
 
 
-KNode::GroupLoadJob::GroupLoadJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+KNode::GroupLoadJob::GroupLoadJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i ) :
   KNJobData( KNJobData::JTLoadGroups, c, a, i )
 {
 }
 
 void KNode::GroupLoadJob::execute( )
 {
-  KNGroupListData *target = static_cast<KNGroupListData *>( data() );
+  KNGroupListData::Ptr target = boost::static_pointer_cast<KNGroupListData>( data() );
 
   setStatus( i18n("Loading group list from disk...") );
   // TODO: use the thread weaver here
@@ -135,7 +134,7 @@ void KNode::GroupLoadJob::execute( )
 
 
 
-KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool silent ) :
+KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i, bool silent ) :
     KNJobData( JTfetchNewHeaders, c, a, i ),
     mSilent( silent )
 {
@@ -145,7 +144,7 @@ void KNode::ArticleListJob::execute()
 {
   mArticleList.clear();
 
-  KNGroup* target = static_cast<KNGroup*>( data() );
+  KNGroup::Ptr target = boost::static_pointer_cast<KNGroup>( data() );
 
   KUrl destination = baseUrl();
   destination.setPath( target->groupname() );
@@ -176,7 +175,7 @@ void KNode::ArticleListJob::slotResult( KJob * _job )
   else {
     createProgressItem();
 
-    KNGroup* target = static_cast<KNGroup*>( data() );
+    KNGroup::Ptr target = boost::static_pointer_cast<KNGroup>( data() );
     target->setLastFetchCount( 0 );
 
     setStatus( i18n("Sorting...") );
@@ -201,7 +200,7 @@ void KNode::ArticleListJob::slotResult( KJob * _job )
 
 
 
-KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i, bool parse ) :
+KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i, bool parse ) :
     KNJobData( JTfetchArticle, c, a, i ),
     mParseArticle( parse )
 {
@@ -209,7 +208,7 @@ KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KN
 
 void KNode::ArticleFetchJob::execute()
 {
-  KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
+  KNRemoteArticle::Ptr target = boost::static_pointer_cast<KNRemoteArticle>( data() );
 
   KUrl url = baseUrl();
 
@@ -234,7 +233,7 @@ void KNode::ArticleFetchJob::slotResult( KJob * job )
   if ( job->error() )
     setError( job->error(), job->errorString() );
   else {
-    KNRemoteArticle *target = static_cast<KNRemoteArticle*>( data() );
+    KNRemoteArticle::Ptr target = boost::static_pointer_cast<KNRemoteArticle>( data() );
     KIO::StoredTransferJob *j = static_cast<KIO::StoredTransferJob*>( job );
     QByteArray buffer = j->data();
     buffer.replace( "\r\n", "\n" ); // TODO: do this in the io-slave?
@@ -248,14 +247,14 @@ void KNode::ArticleFetchJob::slotResult( KJob * job )
 
 
 
-KNode::ArticlePostJob::ArticlePostJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem * i ) :
+KNode::ArticlePostJob::ArticlePostJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i ) :
     KNJobData( JTpostArticle, c, a, i )
 {
 }
 
 void KNode::ArticlePostJob::execute( )
 {
-  KNLocalArticle *target = static_cast<KNLocalArticle*>( data() );
+  KNLocalArticle::Ptr target = boost::static_pointer_cast<KNLocalArticle>( data() );
 
   KUrl url = baseUrl();
 

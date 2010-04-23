@@ -407,7 +407,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
   connect(gDialog, SIGNAL(loadList(KNNntpAccount*)), this, SLOT(slotLoadGroupList(KNNntpAccount*)));
   connect(gDialog, SIGNAL(fetchList(KNNntpAccount*)), this, SLOT(slotFetchGroupList(KNNntpAccount*)));
   connect(gDialog, SIGNAL(checkNew(KNNntpAccount*,QDate)), this, SLOT(slotCheckForNewGroups(KNNntpAccount*,QDate)));
-  connect(this, SIGNAL(newListReady(KNGroupListData*)), gDialog, SLOT(slotReceiveList(KNGroupListData*)));
+  connect( this, SIGNAL(newListReady(KNGroupListData::Ptr)), gDialog, SLOT(slotReceiveList(KNGroupListData::Ptr)) );
 
   QWidget *oldTopWidget = knGlobals.topWidget;
   // if the list of groups is empty, the parent of the message box
@@ -518,7 +518,7 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
   }
 
   g->setMaxFetch( knGlobals.settings()->maxToFetch() );
-  emitJob( new ArticleListJob( this, g->account(), g ) );
+  emitJob( new ArticleListJob( this, g->account(), boost::shared_ptr<KNJobItem>( g ) ) );
 }
 
 
@@ -582,10 +582,7 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
   for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
     if ( (*it)->account() == a ) {
       (*it)->setMaxFetch( knGlobals.settings()->maxToFetch() );
-      if ( silent )
-        emitJob( new ArticleListJob( this, (*it)->account(), (*it), true ) );
-      else
-        emitJob( new ArticleListJob( this, (*it)->account(), (*it) ) );
+      emitJob( new ArticleListJob( this, (*it)->account(), boost::shared_ptr<KNJobItem>( *it ), silent ) );
     }
   }
 }
@@ -594,46 +591,46 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
 void KNGroupManager::processJob(KNJobData *j)
 {
   if ( j->type()==KNJobData::JTLoadGroups || j->type()==KNJobData::JTFetchGroups ) {
-    KNGroupListData *d=static_cast<KNGroupListData*>(j->data());
+    KNGroupListData::Ptr d = boost::static_pointer_cast<KNGroupListData>( j->data() );
 
     if (!j->canceled()) {
       if (j->success()) {
         if ( j->type() == KNJobData::JTFetchGroups ) {
           // update the descriptions of the subscribed groups
-          for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it ) {
-            if ( (*it)->account() == j->account() ) {
-	      Q_FOREACH( const KNGroupInfo& inf, *d->groups )
-                if ( inf.name == (*it)->groupname() ) {
-                  (*it)->setDescription( inf.description );
-                  (*it)->setStatus( inf.status );
+          foreach ( KNGroup *grp, mGroupList ) {
+            if ( grp->account() == j->account() ) {
+              foreach ( const KNGroupInfo &inf, *(d->groups) ) {
+                if ( inf.name == grp->groupname() ) {
+                  grp->setDescription( inf.description );
+                  grp->setStatus( inf.status );
                   break;
                 }
+              }
             }
           }
         }
-        emit(newListReady(d));
+        emit( newListReady( d ) );
       } else {
         KMessageBox::error(knGlobals.topWidget, j->errorString());
-        emit(newListReady(0));
+        emit( newListReady( KNGroupListData::Ptr() ) );
       }
-    } else
-      emit(newListReady(0));
+    } else {
+      emit( newListReady( KNGroupListData::Ptr() ) );
+    }
 
     delete j;
-    delete d;
-
 
   } else {               //KNJobData::JTfetchNewHeaders
-    KNGroup *group=static_cast<KNGroup*>(j->data());
+    KNGroup::Ptr group = boost::static_pointer_cast<KNGroup>( j->data() );
 
     if (!j->canceled()) {
       if (j->success()) {
         if(group->lastFetchCount()>0) {
           group->scoreArticles();
           group->processXPostBuffer(true);
-          emit groupUpdated(group);
+          emit groupUpdated( group.get() );
           group->writeConfig();
-          knGlobals.memoryManager()->updateCacheEntry(group);
+          knGlobals.memoryManager()->updateCacheEntry( group.get() );
         }
       } else {
         // ok, hack (?):
@@ -652,8 +649,9 @@ void KNGroupManager::processJob(KNJobData *j)
         }
       }
     }
-    if(group==c_urrentGroup)
+    if( group.get() == c_urrentGroup ) {
       a_rticleMgr->showHdrs(false);
+    }
 
     delete j;
   }
@@ -663,17 +661,15 @@ void KNGroupManager::processJob(KNJobData *j)
 // load group list from disk (if this fails: ask user if we should fetch the list)
 void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
 {
-  KNGroupListData *d = new KNGroupListData();
+  KNGroupListData::Ptr d = KNGroupListData::Ptr( new KNGroupListData() );
   d->path = a->path();
 
   if(!QFileInfo(d->path+"groups").exists()) {
     if (KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,i18n("You do not have any groups for this account;\ndo you want to fetch a current list?"), QString(), KGuiItem(i18n("Fetch List")), KGuiItem(i18n("Do Not Fetch")))) {
-      delete d;
       slotFetchGroupList(a);
       return;
     } else {
-      emit(newListReady(d));
-      delete d;
+      emit( newListReady( d ) );
       return;
     }
   }
@@ -688,7 +684,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
 // fetch group list from server
 void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
 {
-  KNGroupListData *d = new KNGroupListData();
+  KNGroupListData::Ptr d = KNGroupListData::Ptr( new KNGroupListData() );
   d->path = a->path();
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
@@ -701,7 +697,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
 // check for new groups (created after the given date)
 void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
 {
-  KNGroupListData *d = new KNGroupListData();
+  KNGroupListData::Ptr d = KNGroupListData::Ptr( new KNGroupListData() );
   d->path = a->path();
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();

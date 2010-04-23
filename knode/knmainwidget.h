@@ -14,6 +14,7 @@
 #ifndef KNMAINWIDGET_H
 #define KNMAINWIDGET_H
 
+#include "knarticle.h"
 #include "knode_export.h"
 
 #include "resource.h"
@@ -29,7 +30,6 @@ class QSplitter;
 class QTreeWidget;
 class QTreeWidgetItem;
 class K3ListView;
-class KUrl;
 class KAction;
 class KToggleAction;
 class KSelectAction;
@@ -51,9 +51,6 @@ class KNFilterSelectAction;
 namespace KNode {
   class ArticleWidget;
 }
-class KNArticle;
-class KNLocalArticle;
-class KNRemoteArticle;
 class KActionCollection;
 
 /** This is the central part of the KNode GUI. */
@@ -181,10 +178,10 @@ protected:
   bool eventFilter(QObject *, QEvent *);
 
   // convenience methods...
-  void getSelectedArticles( QList<KNArticle*> &l );
-  void getSelectedArticles( QList<KNRemoteArticle*> &l );
-  void getSelectedThreads( QList<KNRemoteArticle*> &l );
-  void getSelectedArticles( QList<KNLocalArticle*> &l );
+  void getSelectedArticles( KNArticle::List &l );
+  void getSelectedArticles( KNRemoteArticle::List &l );
+  void getSelectedThreads( KNRemoteArticle::List &l );
+  void getSelectedArticles( KNLocalArticle::List &l );
   void closeCurrentThread();
 
   //GUI

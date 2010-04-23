@@ -12,25 +12,22 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include "kngroupbrowser.h"
+
+#include "knconfigmanager.h"
+#include "knglobals.h"
+#include "knnntpaccount.h"
+#include "scheduler.h"
+
+#include <kseparator.h>
+#include <kdebug.h>
+#include <klineedit.h>
 #include <QCheckBox>
 #include <QTimer>
 #include <QApplication>
-//Added by qt3to4:
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
-
-#include <kseparator.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kdebug.h>
-#include <klineedit.h>
-
-#include "scheduler.h"
-#include "knglobals.h"
-#include "knconfigmanager.h"
-#include "knnntpaccount.h"
-#include "kngroupbrowser.h"
 #include <QLabel>
 #include <QPushButton>
 
@@ -163,7 +160,7 @@ KNGroupBrowser::~KNGroupBrowser()
 }
 
 
-void KNGroupBrowser::slotReceiveList(KNGroupListData* d)
+void KNGroupBrowser::slotReceiveList( KNGroupListData::Ptr d )
 {
   enableButton(User1,true);
   enableButton(User2,true);

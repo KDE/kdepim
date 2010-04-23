@@ -95,7 +95,7 @@ void KNArticleManager::saveContentToFile(KMime::Content *c, QWidget *parent)
 }
 
 
-void KNArticleManager::saveArticleToFile(KNArticle *a, QWidget *parent)
+void KNArticleManager::saveArticleToFile( KNArticle::Ptr a, QWidget *parent )
 {
   QString fName = a->subject()->asUnicodeString();
   QString s = "";
@@ -196,13 +196,13 @@ void KNArticleManager::showHdrs(bool clear)
   knGlobals.top->secureProcessEvents();
 
   if(g_roup) {
-    KNRemoteArticle *art, *ref, *current;
+    KNRemoteArticle::Ptr art, ref, current;
 
-    current = static_cast<KNRemoteArticle*>( knGlobals.top->articleViewer()->article() );
+    current = boost::static_pointer_cast<KNRemoteArticle>( knGlobals.top->articleViewer()->article() );
 
     if(current && (current->collection() != g_roup)) {
-      current=0;
-      knGlobals.top->articleViewer()->setArticle( 0 );
+      current.reset();
+      knGlobals.top->articleViewer()->setArticle( KNRemoteArticle::Ptr() );
     }
 
     if(g_roup->isLocked())
@@ -215,7 +215,7 @@ void KNArticleManager::showHdrs(bool clear)
         art=g_roup->at(i);
         art->setFilterResult(true);
         art->setFiltered(true);
-        ref=(art->idRef()!=0) ? g_roup->byId(art->idRef()) : 0;
+        ref = ( art->idRef() ? g_roup->byId( art->idRef() ) : KNRemoteArticle::Ptr() );
         art->setDisplayedReference(ref);
         if(ref)
           ref->setVisibleFollowUps(true);
@@ -269,7 +269,7 @@ void KNArticleManager::showHdrs(bool clear)
       else {
 
         if(!art->listItem() && art->filterResult()) {
-          art->setListItem(new KNHdrViewItem(v_iew));
+          art->setListItem( new KNHdrViewItem( v_iew ), art );
           art->initListItem();
         } else if(art->listItem())
           art->updateListItem();
@@ -303,7 +303,7 @@ void KNArticleManager::showHdrs(bool clear)
 
   else { //folder
 
-    KNLocalArticle *art;
+    KNLocalArticle::Ptr art;
     if(f_ilter) {
       f_ilter->doFilter(f_older);
     } else {
@@ -317,7 +317,7 @@ void KNArticleManager::showHdrs(bool clear)
       art=f_older->at(idx);
 
       if(!art->listItem() &&  art->filterResult()) {
-        art->setListItem( new KNHdrViewItem(v_iew, art) );
+        art->setListItem( new KNHdrViewItem( v_iew ), art );
         art->updateListItem();
       } else if(art->listItem())
         art->updateListItem();
@@ -327,7 +327,7 @@ void KNArticleManager::showHdrs(bool clear)
 
   if(setFirstChild && v_iew->firstChild()) {
     v_iew->setCurrentItem(v_iew->firstChild());
-    knGlobals.top->articleViewer()->setArticle( 0 );
+    knGlobals.top->articleViewer()->setArticle( KNArticle::Ptr() );
   }
 
   knGlobals.setStatusMsg( QString() );
@@ -347,7 +347,7 @@ void KNArticleManager::updateListViewItems()
   if(!g_roup && !f_older) return;
 
   if(g_roup) {
-    KNRemoteArticle *art;
+    KNRemoteArticle::Ptr art;
 
     for(int i=0; i<g_roup->length(); i++) {
       art=g_roup->at(i);
@@ -355,7 +355,7 @@ void KNArticleManager::updateListViewItems()
         art->updateListItem();
     }
   } else { //folder
-    KNLocalArticle *art;
+    KNLocalArticle::Ptr art;
 
     for(int idx=0; idx<f_older->length(); idx++) {
       art=f_older->at(idx);
@@ -368,7 +368,7 @@ void KNArticleManager::updateListViewItems()
 
 void KNArticleManager::setAllThreadsOpen(bool b)
 {
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
   if(g_roup) {
     ScopedCursorOverride cursor( Qt::WaitCursor );
     d_isableExpander = true;
@@ -432,7 +432,7 @@ KNArticleCollection* KNArticleManager::collection()
 }
 
 
-bool KNArticleManager::loadArticle(KNArticle *a)
+bool KNArticleManager::loadArticle( KNArticle::Ptr a )
 {
   if (!a)
     return false;
@@ -456,7 +456,7 @@ bool KNArticleManager::loadArticle(KNArticle *a)
   }
   else { // local article
     KNFolder *f=static_cast<KNFolder*>(a->collection());
-   if( f && f->loadArticle( static_cast<KNLocalArticle*>(a) ) )
+   if( f && f->loadArticle( boost::static_pointer_cast<KNLocalArticle>( a ) ) )
       knGlobals.memoryManager()->updateCacheEntry(a);
     else
       return false;
@@ -465,7 +465,7 @@ bool KNArticleManager::loadArticle(KNArticle *a)
 }
 
 
-bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
+bool KNArticleManager::unloadArticle( KNArticle::Ptr a, bool force )
 {
   if(!a || a->isLocked() )
     return false;
@@ -479,7 +479,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
     return false;
 
   if (!force && ( a->type()== KNArticle::ATlocal ) &&
-      KNGlobals::self()->articleFactory()->findComposer( static_cast<KNLocalArticle*>( a ) ) != 0 )
+      ( KNGlobals::self()->articleFactory()->findComposer( boost::static_pointer_cast<KNLocalArticle>( a ) ) != 0 ) )
     return false;
 
   if ( !ArticleWindow::closeAllWindowsForArticle( a, force ) )
@@ -488,8 +488,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
 
   ArticleWidget::articleRemoved( a );
   if ( a->type() != KNArticle::ATlocal )
-    KNGlobals::self()->articleFactory()->deleteComposerForArticle( static_cast<KNLocalArticle*>( a ) );
-
+    KNGlobals::self()->articleFactory()->deleteComposerForArticle( boost::static_pointer_cast<KNLocalArticle>( a ) );
   a->updateListItem();
   knGlobals.memoryManager()->removeCacheEntry(a);
 
@@ -501,13 +500,13 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 {
   if(!f) return;
 
-  KNLocalArticle *loc;
+  KNLocalArticle::Ptr loc;
   KNLocalArticle::List l2;
 
   for ( KNArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
     if ( !(*it)->hasContent() )
       continue;
-    loc=new KNLocalArticle(0);
+    loc = KNLocalArticle::Ptr( new KNLocalArticle(0) );
     loc->setEditDisabled(true);
     loc->setContent( (*it)->encodedContent() );
     loc->parse();
@@ -520,7 +519,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 
     if ( !f->isLoaded() && !knGlobals.folderManager()->loadHeaders( f ) ) {
       for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
-        delete (*it);
+        (*it).reset();
       l2.clear();
       f->setNotUnloadable(false);
       return;
@@ -529,7 +528,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
     if( !f->saveArticles( l2 ) ) {
       for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it ) {
         if ( (*it)->isOrphant() )
-          delete (*it); // ok, this is ugly; we simply delete orphant articles
+          (*it).reset(); // ok, this is ugly; we simply delete orphant articles
         else
           (*it)->KMime::Content::clear(); // no need to keep them in memory
       }
@@ -564,7 +563,7 @@ void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
   } else {
     for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
       if ( (*it)->isOrphant() )
-        delete (*it); // ok, this is ugly; we simply delete orphant articles
+        (*it).reset(); // ok, this is ugly; we simply delete orphant articles
     KNHelper::displayInternalFileError();
   }
 
@@ -601,7 +600,7 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
   }
   else {
     for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
-      delete (*it);
+      (*it).reset();
   }
 
   return true;
@@ -621,7 +620,7 @@ void KNArticleManager::setAllRead( bool read, int lastcount )
   if ( lastcount > groupLength || lastcount < 0 )
     offset = groupLength;
 
-  KNRemoteArticle *a;
+  KNRemoteArticle::Ptr a;
   for ( int i = groupLength - offset; i < groupLength; i++ ) {
     a = g_roup->at( i );
     if ( a->getReadFlag() != read && !a->isIgnored() ) {
@@ -659,7 +658,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
   if ( l.isEmpty() )
     return;
 
-  KNRemoteArticle *ref = 0;
+  KNRemoteArticle::Ptr ref;
   KNGroup *g=static_cast<KNGroup*>( l.first()->collection() );
   int changeCnt=0, idRef=0;
 
@@ -669,7 +668,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
 
       QList<QByteArray> groups = (*it)->newsgroups()->groups();
       KNGroup *targetGroup=0;
-      KNRemoteArticle *xp=0;
+      KNRemoteArticle::Ptr xp;
       KNRemoteArticle::List al;
       QByteArray mid = (*it)->messageID()->as7BitString( false );
 
@@ -743,7 +742,7 @@ void KNArticleManager::setAllNotNew()
 {
   if ( !g_roup )
     return;
-  KNRemoteArticle *a;
+  KNRemoteArticle::Ptr a;
   for ( int i = 0; i < g_roup->length(); ++i) {
     a = g_roup->at(i);
     if ( a->isNew() ) {
@@ -762,7 +761,8 @@ bool KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
   if(l.isEmpty())
     return true;
 
-  KNRemoteArticle *a=l.first(), *ref=0;
+  KNRemoteArticle::Ptr a = l.first();
+  KNRemoteArticle::Ptr ref;
   bool watch = (!a->isWatched());
   KNGroup *g=static_cast<KNGroup*>(a->collection() );
   int changeCnt=0, idRef=0;
@@ -815,7 +815,7 @@ bool KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
   if(l.isEmpty())
     return true;
 
-  KNRemoteArticle *ref = 0;
+  KNRemoteArticle::Ptr ref;
   bool ignore = !l.first()->isIgnored();
   KNGroup *g = static_cast<KNGroup*>( l.first()->collection() );
   int changeCnt = 0, idRef = 0;
@@ -909,7 +909,7 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
 void KNArticleManager::processJob(KNJobData *j)
 {
   if(j->type()==KNJobData::JTfetchArticle && !j->canceled()) {
-    KNRemoteArticle *a = static_cast<KNRemoteArticle*>( j->data() );
+    KNRemoteArticle::Ptr a = boost::static_pointer_cast<KNRemoteArticle>( j->data() );
     if(j->success()) {
       ArticleWidget::articleChanged( a );
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
@@ -941,26 +941,27 @@ void KNArticleManager::processJob(KNJobData *j)
 }
 
 
-void KNArticleManager::createThread(KNRemoteArticle *a)
+void KNArticleManager::createThread( KNRemoteArticle::Ptr a )
 {
-  KNRemoteArticle *ref=a->displayedReference();
+  KNRemoteArticle::Ptr ref = a->displayedReference();
 
   if(ref) {
     if(!ref->listItem())
       createThread(ref);
-    a->setListItem(new KNHdrViewItem(ref->listItem()));
+    a->setListItem( new KNHdrViewItem( ref->listItem() ), a );
   }
   else
-    a->setListItem(new KNHdrViewItem(v_iew));
+    a->setListItem( new KNHdrViewItem( v_iew ), a );
 
   a->setThreadMode( knGlobals.settings()->showThreads() );
   a->initListItem();
 }
 
 
-void KNArticleManager::createCompleteThread(KNRemoteArticle *a)
+void KNArticleManager::createCompleteThread( KNRemoteArticle::Ptr a )
 {
-  KNRemoteArticle *ref=a->displayedReference(), *art, *top;
+  KNRemoteArticle::Ptr ref = a->displayedReference();
+  KNRemoteArticle::Ptr art, top;
   bool inThread=false;
   bool showThreads = knGlobals.settings()->showThreads();
 
@@ -977,7 +978,7 @@ void KNArticleManager::createCompleteThread(KNRemoteArticle *a)
     if(art->filterResult() && !art->listItem()) {
 
       if(art->displayedReference()==top) {
-        art->setListItem(new KNHdrViewItem(top->listItem()));
+        art->setListItem( new KNHdrViewItem( top->listItem() ), art );
         art->setThreadMode(showThreads);
         art->initListItem();
       }
@@ -1056,12 +1057,12 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
     return;
   d_isableExpander = true;
 
-  KNRemoteArticle *top, *art, *ref;
+  KNRemoteArticle::Ptr top, art, ref;
   KNHdrViewItem *hdrItem;
   bool inThread=false;
   bool showThreads = knGlobals.settings()->showThreads();
   hdrItem=static_cast<KNHdrViewItem*>(p);
-  top=static_cast<KNRemoteArticle*>(hdrItem->art);
+  top = boost::static_pointer_cast<KNRemoteArticle>( hdrItem->art );
 
   if (p->childCount() == 0) {
     ScopedCursorOverride cursor( Qt::WaitCursor );
@@ -1071,7 +1072,7 @@ void KNArticleManager::slotItemExpanded(Q3ListViewItem *p)
       if(art->filterResult() && !art->listItem()) {
 
         if(art->displayedReference()==top) {
-          art->setListItem(new KNHdrViewItem(hdrItem));
+          art->setListItem( new KNHdrViewItem( hdrItem ), art );
           art->setThreadMode(showThreads);
           art->initListItem();
         }

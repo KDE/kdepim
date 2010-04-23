@@ -46,32 +46,30 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     //factory methods
     void createPosting(KNNntpAccount *a);
     void createPosting(KNGroup *g);
-    void createReply( KNRemoteArticle *a, const QString &selectedText = QString(), bool post = true, bool mail = false );
-    void createForward(KNArticle *a);
-    void createCancel(KNArticle *a);
-    void createSupersede(KNArticle *a);
+    void createReply( KNRemoteArticle::Ptr a, const QString &selectedText = QString(), bool post = true, bool mail = false );
+    void createForward( KNArticle::Ptr a );
+    void createCancel( KNArticle::Ptr a );
+    void createSupersede( KNArticle::Ptr a );
     void createMail(KMime::Types::Mailbox *address);
 
     /// Send a mail via an external program.
     void sendMailExternal( const QString &address = QString(), const QString &subject = QString(), const QString &body = QString() );
 
     //article handling
-    void edit(KNLocalArticle *a);
+    void edit( KNLocalArticle::Ptr a );
     void sendArticles( KNLocalArticle::List &l, bool now = true );
     void sendOutbox();
 
     //composer handling
     bool closeComposeWindows();    // try to close all composers, return false if user objects
-    void deleteComposerForArticle(KNLocalArticle *a);
-    KNComposer* findComposer(KNLocalArticle *a);
+    void deleteComposerForArticle( KNLocalArticle::Ptr a );
+    KNComposer* findComposer( KNLocalArticle::Ptr a );
     void configChanged();
 
   protected:
     //job handling
     void processJob(KNJobData *j); //reimplemented from KNJobConsumer
 
-    //article generation
-    // col: group or account
     /**
       Generate a new article to edit before posting.
       @param col the group or server this article article will be sent to.
@@ -79,10 +77,10 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
       @param withXHeaders
       @param origPost original article (in case of reply).
     */
-    KNLocalArticle* newArticle(KNCollection *col, const QByteArray &defChset, bool withXHeaders=true, KNArticle *origPost=0);
+    KNLocalArticle::Ptr newArticle( KNCollection *col, const QByteArray &defChset, bool withXHeaders = true, KNArticle::Ptr origPost = KNArticle::Ptr() );
 
     //cancel & supersede
-    bool cancelAllowed(KNArticle *a);
+    bool cancelAllowed( KNArticle::Ptr a );
 
     //send-errors
     void showSendErrorDialog();

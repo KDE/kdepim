@@ -298,7 +298,7 @@ bool KNHeaderView::nextUnreadArticle()
     return false;
 
   KNHdrViewItem *next, *current;
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
 
   current = static_cast<KNHdrViewItem*>( currentItem() );
   if ( !current )
@@ -307,7 +307,7 @@ bool KNHeaderView::nextUnreadArticle()
   if(!current)
     return false;
 
-  art = static_cast<KNRemoteArticle*>( current->art );
+  art = boost::static_pointer_cast<KNRemoteArticle>( current->art );
 
   if ( !current->isActive() && !art->isRead() ) // take current article, if unread & not selected
     next = current;
@@ -318,7 +318,7 @@ bool KNHeaderView::nextUnreadArticle()
   }
 
   while ( next ) {
-    art = static_cast<KNRemoteArticle*>( next->art );
+    art = boost::static_pointer_cast<KNRemoteArticle>( next->art );
     if ( !art->isRead() )
       break;
     else {
@@ -341,7 +341,7 @@ bool KNHeaderView::nextUnreadArticle()
 bool KNHeaderView::nextUnreadThread()
 {
   KNHdrViewItem *next, *current;
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
 
   if ( !knGlobals.groupManager()->currentGroup() )
     return false;
@@ -353,7 +353,7 @@ bool KNHeaderView::nextUnreadThread()
   if ( !current )
     return false;
 
-  art = static_cast<KNRemoteArticle*>( current->art );
+  art = boost::static_pointer_cast<KNRemoteArticle>( current->art );
 
   if ( current->depth() == 0 && !current->isActive() && (!art->isRead() || art->hasUnreadFollowUps()) )
     next = current; // take current article, if unread & not selected
@@ -361,7 +361,7 @@ bool KNHeaderView::nextUnreadThread()
     next = static_cast<KNHdrViewItem*>( current->itemBelow() );
 
   while ( next ) {
-    art = static_cast<KNRemoteArticle*>( next->art );
+    art = boost::static_pointer_cast<KNRemoteArticle>( next->art );
 
     if ( next->depth() == 0 ) {
       if ( !art->isRead() || art->hasUnreadFollowUps() )

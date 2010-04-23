@@ -47,10 +47,13 @@ void KNArticle::clear()
 }
 
 
-void KNArticle::setListItem(KNHdrViewItem *it)
+void KNArticle::setListItem( KNHdrViewItem *it, KNArticle::Ptr a )
 {
+  Q_ASSERT_X( this == a.get(), "KNArticle::setListItem", "By contract, setListItem second parameter must be a reference to 'this' article" );
   i_tem=it;
-  if(i_tem) i_tem->art=this;
+  if( i_tem ) {
+    i_tem->art = a;
+  }
 }
 
 
@@ -70,7 +73,7 @@ void KNArticle::setLocked(bool b)
 
 
 KNRemoteArticle::KNRemoteArticle(KNGroup *g)
- : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), d_ref(0), t_hrLevel(0), s_core(0),
+ : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), t_hrLevel(0), s_core(0),
    c_olor(knGlobals.settings()->unreadThreadColor()),
    u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
 {
@@ -164,9 +167,10 @@ void KNRemoteArticle::updateListItem()
 
 void KNRemoteArticle::thread(KNRemoteArticle::List &l)
 {
-  KNRemoteArticle *tmp=0, *ref=this;
+  KNRemoteArticle::Ptr tmp;
   KNGroup *g=static_cast<KNGroup*>(c_ol);
   int idRef=i_dRef, topID=-1;
+  KNRemoteArticle::Ptr ref = g->byId( id() ); // get self reference
 
   while(idRef!=0) {
     ref=g->byId(idRef);
@@ -206,8 +210,8 @@ void KNRemoteArticle::setForceDefaultCharset(bool b)
 
 void KNRemoteArticle::propagateThreadChangedDate()
 {
-  KNRemoteArticle *ref=this;
   KNGroup *g=static_cast<KNGroup*>(c_ol);
+  KNRemoteArticle::Ptr ref = g->byId( id() );
   int idRef=i_dRef;
 
   while (idRef!=0) {

@@ -187,7 +187,7 @@ bool KNGroup::loadHdrs()
   QFile f;
   int cnt=0, id, lines, fileFormatVersion, artNumber;
   unsigned int timeT;
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
 
   QString dir(path());
   if (dir.isNull())
@@ -196,11 +196,6 @@ bool KNGroup::loadHdrs()
   f.setFileName(dir+g_roupname+".static");
 
   if(f.open(QIODevice::ReadOnly)) {
-
-    if(!resize(c_ount)) {
-      f.close();
-      return false;
-    }
 
     while ( !f.atEnd() ) {
       buffer = f.readLine();
@@ -222,7 +217,7 @@ bool KNGroup::loadHdrs()
       }
       QList<QByteArray>::ConstIterator it = splits.constBegin();
 
-      art = new KNRemoteArticle( this );
+      art = KNRemoteArticle::Ptr( new KNRemoteArticle( this ) );
 
       art->messageID()->from7BitString( *it );
       ++it;
@@ -274,16 +269,12 @@ bool KNGroup::loadHdrs()
             continue;
           hdrValue = buffer.right( buffer.length() - (pos + 2) );
           if ( hdrValue.length() > 0 )
-            art->setHeader( new KMime::Headers::Generic( hdrName, art, hdrValue ) );
+            art->setHeader( new KMime::Headers::Generic( hdrName, art.get(), hdrValue ) );
         }
       }
 
-      if(append(art)) cnt++;
-      else {
-        f.close();
-        clear();
-        return false;
-      }
+      append( art );
+      cnt++;
     }
 
     setLastID();
@@ -381,7 +372,7 @@ bool KNGroup::unloadHdrs(bool force)
   if (!force && isNotUnloadable())
     return false;
 
-  KNRemoteArticle *a;
+  KNRemoteArticle::Ptr a;
   for(int idx=0; idx<length(); idx++) {
     a=at(idx);
     if (a->hasContent() && !knGlobals.articleManager()->unloadArticle(a, force))
@@ -397,7 +388,7 @@ bool KNGroup::unloadHdrs(bool force)
 // Attention: this method is called from the network thread!
 void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
 {
-  KNRemoteArticle *art=0, *art2=0;
+  KNRemoteArticle::Ptr art, art2;
   int new_cnt=0, added_cnt=0;
   int todo = list.count();
   QTime timer;
@@ -409,8 +400,6 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
 
   timer.start();
 
-  //resize the list
-  if ( !resize( size() + list.count() ) ) return;
 
   // recreate msg-ID index
   syncSearchIndex();
@@ -442,7 +431,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
   for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
 
     //new Header-Object
-    art=new KNRemoteArticle(this);
+    art = KNRemoteArticle::Ptr( new KNRemoteArticle(this) );
     art->setNew(true);
 
     const QList<uint> fields = (*it).listFields();
@@ -486,7 +475,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
           art->lines()->setNumberOfLines( hdrValue.toInt() );
         } else {
           // optional extra headers
-          art->setHeader( new KMime::Headers::Generic( hdrName.toLatin1(), art, hdrValue.toLatin1() ) );
+          art->setHeader( new KMime::Headers::Generic( hdrName.toLatin1(), art.get(), hdrValue.toLatin1() ) );
         }
       }
     }
@@ -497,16 +486,11 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
     if(art2) { // ok, we already have this article
       art2->setNew(true);
       art2->setArticleNumber(art->articleNumber());
-      delete art;
       new_cnt++;
-    }
-    else if (append(art)) {
+    } else {
+      append( art );
       added_cnt++;
       new_cnt++;
-    }
-    else {
-      delete art;
-      return;
     }
 
     if (timer.elapsed() > 200) {           // don't flicker
@@ -538,7 +522,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
 int KNGroup::saveStaticData(int cnt,bool ovr)
 {
   int idx, savedCnt = 0;
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
 
   QString dir(path());
   if (dir.isNull())
@@ -609,7 +593,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 void KNGroup::saveDynamicData(int cnt,bool ovr)
 {
   dynDataVer1 data;
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
 
   if(length()>0) {
     QString dir(path());
@@ -642,7 +626,7 @@ void KNGroup::syncDynamicData()
 {
   dynDataVer1 data;
   int cnt=0, readCnt=0, sOfData;
-  KNRemoteArticle *art;
+  KNRemoteArticle::Ptr art;
 
   if(length()>0) {
 
@@ -691,7 +675,7 @@ void KNGroup::appendXPostID(const QString &id)
 void KNGroup::processXPostBuffer(bool deleteAfterwards)
 {
   QStringList remainder;
-  KNRemoteArticle *xp;
+  KNRemoteArticle::Ptr xp;
   KNRemoteArticle::List al;
 
   for (QStringList::Iterator it = c_rosspostIDBuffer.begin(); it != c_rosspostIDBuffer.end(); ++it) {
@@ -715,7 +699,7 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
       start=end-cnt,
       foundCnt=0, bySubCnt=0, refCnt=0,
       resortCnt=0, idx, oldRef; // idRef;
-  KNRemoteArticle *art, *ref;
+  KNRemoteArticle::Ptr art, ref;
   QTime timer;
 
   timer.start();
@@ -774,7 +758,7 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
   if(foundCnt<refCnt) {    // some references could not been found
 
     //try to sort by subject
-    KNRemoteArticle *oldest;
+    KNRemoteArticle::Ptr oldest;
     KNRemoteArticle::List list;
 
     for(idx=start; idx<end; ++idx) {
@@ -900,10 +884,10 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
 }
 
 
-KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
+KNRemoteArticle::Ptr KNGroup::findReference( KNRemoteArticle::Ptr a )
 {
   QByteArray ref_mid;
-  KNRemoteArticle *ref_art=0;
+  KNRemoteArticle::Ptr ref_art;
 
   QList<QByteArray> references = a->references()->identifiers();
 
@@ -941,7 +925,7 @@ void KNGroup::scoreArticles(bool onlynew)
     KScoringManager *sm = knGlobals.scoringManager();
     sm->initCache(groupname());
     for(int idx=0; idx<todo; idx++) {
-      KNRemoteArticle *a = at(len-idx-1);
+      KNRemoteArticle::Ptr a = at( len-idx-1 );
       if ( !a ) {
         kWarning( 5003 ) <<"found no article at" << len-idx-1;
         continue;
@@ -985,7 +969,7 @@ void KNGroup::reorganize()
   knGlobals.setStatusMsg(i18n(" Reorganizing headers..."));
 
   for(int idx=0; idx<length(); idx++) {
-    KNRemoteArticle *a = at(idx);
+    KNRemoteArticle::Ptr a = at( idx );
     Q_ASSERT( a );
     a->setId(idx+1); //new ids
     a->setIdRef(-1);
@@ -1002,7 +986,7 @@ void KNGroup::reorganize()
 
 void KNGroup::updateThreadInfo()
 {
-  KNRemoteArticle *ref;
+  KNRemoteArticle::Ptr ref;
   bool brokenThread=false;
 
   for(int idx=0; idx<length(); idx++) {
@@ -1083,7 +1067,7 @@ QString KNGroup::prepareForExecution()
 
 //***************************************************************************
 
-void KNGroup::dynDataVer0::setData(KNRemoteArticle *a)
+void KNGroup::dynDataVer0::setData( KNRemoteArticle::Ptr a )
 {
   id=a->id();
   idRef=a->idRef();
@@ -1093,7 +1077,7 @@ void KNGroup::dynDataVer0::setData(KNRemoteArticle *a)
 }
 
 
-void KNGroup::dynDataVer0::getData(KNRemoteArticle *a)
+void KNGroup::dynDataVer0::getData( KNRemoteArticle::Ptr a )
 {
   a->setId(id);
   a->setIdRef(idRef);
@@ -1103,7 +1087,7 @@ void KNGroup::dynDataVer0::getData(KNRemoteArticle *a)
 }
 
 
-void KNGroup::dynDataVer1::setData(KNRemoteArticle *a)
+void KNGroup::dynDataVer1::setData( KNRemoteArticle::Ptr a )
 {
   id=a->id();
   idRef=a->idRef();
@@ -1118,7 +1102,7 @@ void KNGroup::dynDataVer1::setData(KNRemoteArticle *a)
 }
 
 
-void KNGroup::dynDataVer1::getData(KNRemoteArticle *a)
+void KNGroup::dynDataVer1::getData( KNRemoteArticle::Ptr a )
 {
   a->setId(id);
   a->setIdRef(idRef);

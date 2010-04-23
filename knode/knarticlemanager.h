@@ -50,7 +50,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     //content handling
     void deleteTempFiles();
     void saveContentToFile(KMime::Content *c, QWidget *parent);
-    void saveArticleToFile(KNArticle *a, QWidget *parent);
+    void saveArticleToFile( KNArticle::Ptr a, QWidget *parent );
     QString saveContentToTemp(KMime::Content *c);
     void openContent(KMime::Content *c);
 
@@ -72,8 +72,11 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     KNArticleCollection* collection();
 
     //article loading
-    bool loadArticle(KNArticle *a);
-    bool unloadArticle(KNArticle *a, bool force=true);
+    /**
+      Loads the full content of the article @p a.
+    */
+    bool loadArticle( KNArticle::Ptr a);
+    bool unloadArticle( KNArticle::Ptr a, bool force=true );
 
     //article storage
     void copyIntoFolder(KNArticle::List &l, KNFolder *f);
@@ -109,8 +112,8 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
   protected:
     void processJob(KNJobData *j);
-    void createThread(KNRemoteArticle *a);
-    void createCompleteThread(KNRemoteArticle *a);
+    void createThread( KNRemoteArticle::Ptr a );
+    void createCompleteThread( KNRemoteArticle::Ptr a );
 
     KNHeaderView *v_iew;
     KNGroup *g_roup;

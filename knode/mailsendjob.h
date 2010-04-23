@@ -24,7 +24,7 @@ class MailSendJob : public KNJobData
 {
   Q_OBJECT
   public:
-    MailSendJob( KNJobConsumer *c, int transportId, KNJobItem *i );
+    MailSendJob( KNJobConsumer *c, int transportId, KNJobItem::Ptr i );
 
     virtual void execute();
 

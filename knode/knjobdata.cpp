@@ -54,11 +54,11 @@ void KNJobConsumer::jobDone( KNJobData *j )
     processJob( j );
 }
 
-void KNJobConsumer::cancelJobs( KNJobItem *item )
+void KNJobConsumer::cancelJobs( KNJobItem::Ptr item )
 {
   Q_FOREACH( KNJobData *job, mJobs ) {
     if ( job->data() == item ) {
-      job->d_ata = 0;
+      job->d_ata.reset();
       job->cancel();
     }
   }
@@ -72,7 +72,7 @@ void KNJobConsumer::processJob( KNJobData *j )
 
 
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
-KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i) :
+KNJobData::KNJobData( jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i ) :
   t_ype(t), d_ata(i), a_ccount(a),
   mError( 0 ),
   mCanceled( false ),

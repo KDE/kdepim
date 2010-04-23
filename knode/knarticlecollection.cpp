@@ -12,145 +12,62 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kdebug.h>
-
-#include "knglobals.h"
 #include "knarticlecollection.h"
+
 #include "knarticle.h"
 
+#include <KDebug>
 #include <QByteArray>
 
-static const int sizeIncr=50;
 
 KNArticleVector::KNArticleVector(KNArticleVector *master, SortingType sorting)
-  : m_aster(master), l_en(0), s_ize(0), l_ist(0), s_ortType(sorting)
+  : m_aster( master ),
+    s_ortType( sorting )
 {
 }
-
 
 KNArticleVector::~KNArticleVector()
 {
   clear();
 }
 
-
-bool KNArticleVector::resize(int s)
+void KNArticleVector::append( KNArticle::Ptr a )
 {
-  KNArticle **bak=l_ist;
-  int nSize;
-
-  if(s==0)
-    nSize=s_ize+sizeIncr;
-  else
-    nSize=((s/sizeIncr)+1)*sizeIncr;
-
-  l_ist=(KNArticle**) realloc(l_ist, sizeof(KNArticle*)*nSize);
-
-  if(!l_ist) {
-    KMessageBox::error(knGlobals.topWidget, i18n("Memory allocation failed.\nYou should close this application now\nto avoid data loss."));
-    l_ist=bak;
-    return false;
-  }
-  else {
-    s_ize=nSize;
-    //kDebug(5003) <<"size :" << siz;
-    return true;
-  }
-
+  mList.append( a );
 }
-
-
-bool KNArticleVector::append( KNArticle *a )
-{
-  if( (l_en+1 > s_ize) && !resize()) // array too small => try to realloc
-    return false; // allocation failed !!
-
-  l_ist[l_en++]=a;
-
-  return true;
-}
-
 
 void KNArticleVector::remove( int pos, bool autoDel )
 {
-
-  if(pos < 0 || pos > l_en-1)
-    return;
-
-  if(autoDel)
-    delete l_ist[pos];
-
-  l_ist[pos]=0;
+  if ( autoDel && pos >= 0 && pos < mList.size() ) {
+    mList.takeAt( pos ).reset();
+  }
 }
 
 
 void KNArticleVector::clear()
 {
-  if(l_ist){
-    if(m_aster==0)
-      for(int i=0; i<l_en; i++) delete l_ist[i];
-    free(l_ist);
-  }
-
-  l_ist=0; l_en=0; s_ize=0;
+  mList.clear();
 }
 
 
 void KNArticleVector::compact()
 {
-  int newLen, nullStart=0, nullCnt=0, ptrStart=0, ptrCnt=0;
-
-  for(int idx=0; idx<l_en; idx++) {
-    if(l_ist[idx]==0) {
-      ptrStart=-1;
-      ptrCnt=-1;
-      nullStart=idx;
-      nullCnt=1;
-      for(int idx2=idx+1; idx2<l_en; idx2++) {
-        if(l_ist[idx2]==0) nullCnt++;
-        else {
-          ptrStart=idx2;
-          ptrCnt=1;
-          break;
-        }
-      }
-      if(ptrStart!=-1) {
-        for(int idx2=ptrStart+1; idx2<l_en; idx2++) {
-          if(l_ist[idx2]!=0) ptrCnt++;
-          else break;
-        }
-        memmove(&(l_ist[nullStart]), &(l_ist[ptrStart]), ptrCnt*sizeof(KNArticle*));
-        for(int idx2=nullStart+ptrCnt; idx2<nullStart+ptrCnt+nullCnt; idx2++)
-          l_ist[idx2]=0;
-        idx=nullStart+ptrCnt-1;
-        }
-      else break;
-    }
-  }
-  newLen=0;
-  while(l_ist[newLen]!=0) newLen++;
-  l_en=newLen;
+  mList.removeAll( KNArticle::Ptr() );
 }
 
 
 void KNArticleVector::syncWithMaster()
 {
-  if(!m_aster) return;
+  if (!m_aster) return;
 
-  if(resize(m_aster->l_en)) {
-    memcpy(l_ist, m_aster->l_ist, (m_aster->l_en) * sizeof(KNArticle*));
-    l_en=m_aster->l_en;
-    sort();
-  }
+  mList = m_aster->mList;
+  sort();
 }
 
 
 void KNArticleVector::sort()
 {
-  int (*cmp)(const void*,const void*) = 0;
+  bool (*cmp)( KNArticle::Ptr, KNArticle::Ptr ) = 0;
 
   switch(s_ortType) {
     case STid:
@@ -166,60 +83,34 @@ void KNArticleVector::sort()
 
   if(cmp) {
     //compact(); // remove null-pointers
-    qsort(l_ist, l_en, sizeof(KNArticle*), cmp);
+    qSort( mList.begin(), mList.end(), cmp );
   }
 }
 
 
-int KNArticleVector::compareById(const void *p1, const void *p2)
+bool KNArticleVector::compareById( KNArticle::Ptr a1, KNArticle::Ptr a2 )
 {
-  KNArticle *a1, *a2;
-  int rc=0, id1, id2;
-
-  a1=*((KNArticle**)(p1));
-  a2=*((KNArticle**)(p2));
-
-  id1=a1->id(),
-  id2=a2->id();
-
-  if( id1 < id2 ) rc=-1;
-  else if( id1 > id2 ) rc=1;
-
-  return rc;
+  return ( a1->id() < a2->id() );
 }
 
 
-int KNArticleVector::compareByMsgId(const void *p1, const void *p2)
+bool KNArticleVector::compareByMsgId( KNArticle::Ptr a1, KNArticle::Ptr a2 )
 {
-  KNArticle *a1, *a2;
-  QByteArray mid1, mid2;
-
-  a1=*(KNArticle**)(p1);
-  a2=*(KNArticle**)(p2);
-
-  mid1=a1->messageID(true)->as7BitString(false);
-  mid2=a2->messageID(true)->as7BitString(false);
-
-  if(mid1.isNull()) mid1="";
-  if(mid2.isNull()) mid2="";
-
-  return strcmp( mid1.data(), mid2.data() );
+  QByteArray mid1 = a1->messageID( true )->as7BitString( false );
+  QByteArray mid2 = a2->messageID( true )->as7BitString( false );
+  return ( mid1 < mid2 );
 }
 
 
-KNArticle* KNArticleVector::bsearch(int id)
+KNArticle::Ptr KNArticleVector::bsearch( int id )
 {
-  int idx=indexForId(id);
-
-  return ( idx>-1 ? l_ist[idx] : 0 );
+  return at( indexForId( id ) );
 }
 
 
-KNArticle* KNArticleVector::bsearch( const QByteArray &id )
+KNArticle::Ptr KNArticleVector::bsearch( const QByteArray &id )
 {
-  int idx=indexForMsgId(id);
-
-  return ( idx>-1 ? l_ist[idx] : 0 );
+  return at ( indexForMsgId( id ) );
 }
 
 
@@ -227,14 +118,13 @@ int KNArticleVector::indexForId(int id)
 {
   if(s_ortType!=STid) return -1;
 
-  int start=0, end=l_en, mid=0, currentId=0;
+  int start = 0, mid = 0, currentId = 0;
+  int end = mList.size();
   bool found=false;
-  KNArticle *current=0;
 
   while(start!=end && !found) {
     mid=(start+end)/2;
-    current=l_ist[mid];
-    currentId=current->id();
+    currentId = mList[ mid ]->id();
 
     if(currentId==id)
       found=true;
@@ -247,7 +137,7 @@ int KNArticleVector::indexForId(int id)
   if(found)
     return mid;
   else {
-    kDebug(5003) << "id" << id << "not found";
+    kDebug() << "id" << id << "not found";
     return -1;
   }
 }
@@ -257,16 +147,15 @@ int KNArticleVector::indexForMsgId( const QByteArray &id )
 {
   if(s_ortType!=STmsgId) return -1;
 
-  int start=0, end=l_en, mid=0;
+  int start = 0, mid = 0;
+  int end = mList.size();
   QByteArray currentMid;
   bool found=false;
-  KNArticle *current=0;
   int cnt=0;
 
   while(start!=end && !found) {
     mid=(start+end)/2;
-    current=l_ist[mid];
-    currentMid=current->messageID(true)->as7BitString(false);
+    currentMid = mList[ mid ]->messageID( true )->as7BitString( false );
 
     if(currentMid==id)
       found=true;
@@ -314,28 +203,13 @@ KNArticleCollection::~KNArticleCollection()
   clear();
 }
 
-
-
-bool KNArticleCollection::resize(int s)
+void KNArticleCollection::append( KNArticle::Ptr a )
 {
-  return a_rticles.resize(s);
-}
-
-
-
-bool KNArticleCollection::append( KNArticle *a )
-{
-  if ( a_rticles.append( a ) ) {
-    if(a->id()==-1)
-      a->setId(++l_astID);
-
-    return true;
+  a_rticles.append( a );
+  if( a->id() == -1 ) {
+    a->setId( ++l_astID );
   }
-  return false;
-
 }
-
-
 
 void KNArticleCollection::clear()
 {
@@ -353,13 +227,13 @@ void KNArticleCollection::compact()
 }
 
 
-KNArticle* KNArticleCollection::byId(int id)
+KNArticle::Ptr KNArticleCollection::byId( int id )
 {
   return a_rticles.bsearch(id);
 }
 
 
-KNArticle* KNArticleCollection::byMessageId( const QByteArray &mid )
+KNArticle::Ptr KNArticleCollection::byMessageId( const QByteArray &mid )
 {
   if(m_idIndex.isEmpty()) {
     m_idIndex.syncWithMaster();
@@ -371,10 +245,11 @@ KNArticle* KNArticleCollection::byMessageId( const QByteArray &mid )
 
 void KNArticleCollection::setLastID()
 {
-  if(a_rticles.length()>0)
-    l_astID=a_rticles.at(a_rticles.length()-1)->id();
-  else
+  if ( !a_rticles.isEmpty() ) {
+    l_astID = a_rticles.at( a_rticles.size()-1 )->id();
+  } else {
     l_astID=0;
+  }
 }
 
 

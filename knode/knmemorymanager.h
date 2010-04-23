@@ -15,10 +15,10 @@
 #ifndef KNMEMORYMANAGER_H
 #define KNMEMORYMANAGER_H
 
-#include <qglobal.h>
+#include "knarticle.h"
+
 #include <QList>
 
-class KNArticle;
 class KNArticleCollection;
 
 /** Memory manager. */
@@ -35,19 +35,19 @@ class KNMemoryManager {
     void prepareLoad(KNArticleCollection *c);
 
     /** Article-Handling */
-    void updateCacheEntry(KNArticle *a);
-    void removeCacheEntry(KNArticle *a);
+    void updateCacheEntry( KNArticle::Ptr a );
+    void removeCacheEntry( KNArticle::Ptr a );
 
   protected:
 
     /** Article cache item. */
     class ArticleItem {
     public:
-      ArticleItem(KNArticle *a) { art=a; sync(); }
+      ArticleItem( KNArticle::Ptr a ) { art=a; sync(); }
       ~ArticleItem()            {}
       void sync();
 
-      KNArticle *art;
+      KNArticle::Ptr art;
       int storageSize;
 
       /// List of article cache items.
@@ -69,7 +69,7 @@ class KNMemoryManager {
     };
 
     CollectionItem* findCacheEntry(KNArticleCollection *c, bool take=false);
-    ArticleItem* findCacheEntry(KNArticle *a, bool take=false);
+    ArticleItem* findCacheEntry( KNArticle::Ptr a, bool take = false );
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 
