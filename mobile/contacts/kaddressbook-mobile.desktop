@@ -2,6 +2,10 @@
 Version=1.0
 Encoding=UTF-8
 Name=KAddressbook Mobile
+Name[en_GB]=KAddressbook Mobile
+Name[pt]=KAddressBook Móvel
+Name[sv]=Adressbok för mobil
+Name[uk]=Мобільна KAddressBook
 Name[x-test]=xxKAddressbook Mobilexx
 Exec=kaddressbook-mobile
 

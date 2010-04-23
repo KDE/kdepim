@@ -2,6 +2,10 @@
 Version=1.0
 Encoding=UTF-8
 Name=KMail Mobile
+Name[en_GB]=KMail Mobile
+Name[pt]=KMail Móvel
+Name[sv]=Kmail för mobil
+Name[uk]=Мобільний KMail
 Name[x-test]=xxKMail Mobilexx
 Exec=kmail-mobile
 

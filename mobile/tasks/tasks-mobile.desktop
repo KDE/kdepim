@@ -2,6 +2,10 @@
 Version=1.0
 Encoding=UTF-8
 Name=KDE Tasks Mobile
+Name[en_GB]=KDE Tasks Mobile
+Name[pt]=Tarefas do KDE Móveis
+Name[sv]=KDE:s uppgifter i mobil
+Name[uk]=Мобільні завдання KDE
 Name[x-test]=xxKDE Tasks Mobilexx
 Exec=tasks-mobile
 
