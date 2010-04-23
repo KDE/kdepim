@@ -28,6 +28,7 @@ using namespace Akonadi::KCal;
 KCalItemBrowserItem::KCalItemBrowserItem(QDeclarativeItem* parent) : DeclarativeAkonadiItem(parent)
 {
   m_viewer = new KCalItemBrowser( 0 );
+  m_viewer->setFrameStyle( QFrame::NoFrame );
   setWidget( m_viewer );
 }
 
