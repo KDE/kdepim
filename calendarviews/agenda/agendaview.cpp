@@ -1664,19 +1664,28 @@ void AgendaView::setUpdateNeeded()
 void AgendaView::calendarIncidenceAdded( const Item &incidence )
 {
   Q_UNUSED( incidence );
-  mPendingChanges = true;
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
+  }
 }
 
 void AgendaView::calendarIncidenceChanged( const Item &incidence )
 {
   Q_UNUSED( incidence );
-  mPendingChanges = true;
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
+  }
 }
 
 void AgendaView::calendarIncidenceRemoved( const Item &incidence )
 {
   Q_UNUSED( incidence );
-  mPendingChanges = true;
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
+  }
 }
 
 #include "agendaview.moc"
