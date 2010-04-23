@@ -5,6 +5,8 @@
 #include <QtCore/QTimer>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
+#include <qabstractscrollarea.h>
+#include <qscrollbar.h>
 
 static double sDirectionThreshHold = 8.5; /// Threshold in pixels
 
@@ -174,11 +176,19 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
   return QObject::eventFilter( obj, ev );
 }
 
-void DeclarativeAkonadiItem::scrollDown( int /* dist */ )
-{ }
+void DeclarativeAkonadiItem::scrollDown( int dist )
+{
+  QAbstractScrollArea *sa = qFindChild<QAbstractScrollArea*>( d_ptr->mProxy->widget() );
+  if ( sa ) {
+    // TODO make this actually scroll by the given pixel value
+    sa->verticalScrollBar()->setValue( sa->verticalScrollBar()->value() - dist );
+  }
+}
 
-void DeclarativeAkonadiItem::scrollUp( int /* dist */ )
-{ }
+void DeclarativeAkonadiItem::scrollUp( int dist )
+{
+  scrollDown( dist );
+}
 
 void DeclarativeAkonadiItem::simulateMouseClick( const QPoint &/* pos */ )
 { }
