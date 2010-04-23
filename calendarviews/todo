@@ -4,6 +4,6 @@
 
 * Make the configuration specific to agenda, remove korganizer stuff
 
-* Remove KOEditorPopup stuff
-
 * Review collectionSelection stuff in eventview.h
+
+* Rightclick on empty space doesnt work
