@@ -1842,11 +1842,10 @@ is-at-least-ownertrust=marginal
         <literal>pack-command</literal> provides a particular syntax:
       </para>
 
-      <variablelist>
+      <orderedlist>
 
-        <varlistentry>
-          <term>As command-line arguments</term>
-          <listitem>
+        <listitem>
+          <para>As command-line arguments.</para>
             <para>
               Example (tar):
               <programlisting>pack-command=tar cf -</programlisting>
@@ -1865,12 +1864,10 @@ is-at-least-ownertrust=marginal
               zip Example above could equivalently be written like this:
               <programlisting>pack-command=zip -r -</programlisting>
             </para>
-          </listitem>
-        </varlistentry>
+        </listitem>
 
-        <varlistentry>
-          <term>Via standard-in, separated by newlines: prepend <literal>|</literal></term>
-          <listitem>
+        <listitem>
+          <para>Via standard-in, separated by newlines: prepend <literal>|</literal>.</para>
             <para>
               Example (GNU-tar):
               <programlisting>pack-command=|gtar cf - -T-</programlisting>
@@ -1891,12 +1888,10 @@ is-at-least-ownertrust=marginal
                 versions, based on user feedback.
               </para>
             </note>
-          </listitem>
-        </varlistentry>
+        </listitem>
 
-        <varlistentry>
-          <term>Via standard-in, separated by NUL-bytes: prepend <literal>0|</literal></term>
-          <listitem>
+        <listitem>
+          <para>Via standard-in, separated by NUL-bytes: prepend <literal>0|</literal>.</para>
             <para>
               Example (GNU-tar):
               <programlisting>pack-command=0|gtar cf - -T- --null</programlisting>
@@ -1905,10 +1900,9 @@ is-at-least-ownertrust=marginal
               forbidden in filenames, this is the most robust way of
               passing filenames, but not all archivers support it.
             </para>
-          </listitem>
-        </varlistentry>
+        </listitem>
 
-      </variablelist>
+      </orderedlist>
 
     </sect1> <!-- Archive Definitions -->
 
