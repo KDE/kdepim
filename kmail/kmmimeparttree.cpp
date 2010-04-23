@@ -36,6 +36,7 @@
 #include "kmmsgpart.h"
 #include "kmkernel.h"
 #include "kmcommands.h"
+#include "kmfolder.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -191,9 +192,12 @@ void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
     if ( isAttachment ) {
       popup.addAction( SmallIcon( "edit-copy" ), i18n( "Copy" ),
                        this, SLOT( slotCopy() ) );
-      if ( GlobalSettings::self()->allowAttachmentDeletion() )
-        popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
+      if ( GlobalSettings::self()->allowAttachmentDeletion() ) {
+        QAction *act = popup.addAction( SmallIcon( "edit-delete" ), i18n( "Delete Attachment" ),
                          this, SLOT( slotDelete() ) );
+        const bool canChange = mReaderWin->message()->parent() ? !mReaderWin->message()->parent()->isReadOnly() : false;
+        act->setEnabled( canChange );
+      }
       if ( GlobalSettings::self()->allowAttachmentEditing() )
         popup.addAction( SmallIcon( "document-properties" ), i18n( "Edit Attachment" ),
                          this, SLOT( slotEdit() ) );
