@@ -93,6 +93,8 @@ public:
   KMMessage* message();
 
   void setSearchPattern( const KMSearchPattern &pattern );
+protected:
+  bool canMoveSelectedMessages();
 
 protected slots:
   /** Update status line widget. */
