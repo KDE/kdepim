@@ -455,7 +455,7 @@ import a CRL manually into the local CRL cache.</para>
 
 <note><para>For CRL import to work, the
 <application>dirmngr</application> tool must be in the search
-<varname>PATH</varname>. If this menu item is disabled, you should
+<envar>PATH</envar>. If this menu item is disabled, you should
 contact the system administrator and ask them to install
 <application>dirmngr</application>.</para></note>
 
@@ -1800,7 +1800,7 @@ is-at-least-ownertrust=marginal
               The actual command to archive files. You can use any
               command, as long as no shell is required to execute
               it. The program file is looked up using the
-              <varname>PATH</varname> environment variable, unless you
+              <envar>PATH</envar> environment variable, unless you
               use an absolute file path. Quoting is supported as if a
               shell was used:
               <programlisting>pack-command="/opt/ZIP v2.32/bin/zip" -r -</programlisting>
