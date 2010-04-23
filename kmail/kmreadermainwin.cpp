@@ -144,6 +144,10 @@ void KMReaderMainWin::showMsg( const QString & encoding, KMMessage *msg,
   mMsg = msg;
   mMsgActions->setCurrentMessage( msg );
   menuBar()->show();
+
+  const bool canChange = mReaderWin->message()->parent() ? !mReaderWin->message()->parent()->isReadOnly() : false;
+  mTrashAction->setEnabled( canChange );
+
   toolBar( "mainToolBar" )->show();
 
   connect ( msg->parent(), SIGNAL( destroyed( QObject* ) ), this, SLOT( slotFolderRemoved( QObject* ) ) );
