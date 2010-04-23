@@ -1,0 +1,8 @@
+[Desktop Entry]
+Version=1.0
+Encoding=UTF-8
+Name=KOrganizer Mobile
+Exec=korganizer-mobile
+
+Icon=korganizer
+Type=Application
