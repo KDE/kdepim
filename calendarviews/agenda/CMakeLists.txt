@@ -31,23 +31,23 @@ set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 target_link_libraries(eventviews
                       ${QT_QT3SUPPORT_LIBRARY}
-   ${QT_QTCORE_LIBRARY}
-   ${QT_QTGUI_LIBRARY}
-   ${QT_QTUITOOLS_LIBRARY}
-   ${KDE4_KDEUI_LIBS}
-   ${KDE4_KMIME_LIBRARY}
-   ${KDE4_KDE3SUPPORT_LIBRARY}
-   ${KDEPIMLIBS_KCAL_LIBS}
-   ${KDE4_KUTILS_LIBS}
-   ${ZLIB_LIBRARY}
-   ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
-   ${KDE4_KIO_LIBS}
-   ${KDEPIMLIBS_AKONADI_LIBS}
-   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
-   ${KDEPIMLIBS_KHOLIDAYS_LIBS}
-   kdepim
-   akonadi-kcal_next
-   akonadi_next
+                      ${QT_QTCORE_LIBRARY}
+                      ${QT_QTGUI_LIBRARY}
+                      ${QT_QTUITOOLS_LIBRARY}
+                      ${KDE4_KDEUI_LIBS}
+                      ${KDE4_KMIME_LIBRARY}
+                      ${KDE4_KDE3SUPPORT_LIBRARY}
+                      ${KDEPIMLIBS_KCAL_LIBS}
+                      ${KDE4_KUTILS_LIBS}
+                      ${ZLIB_LIBRARY}
+                      ${KDEPIMLIBS_KPIMIDENTITIES_LIBRARY}
+                      ${KDE4_KIO_LIBS}
+                      ${KDEPIMLIBS_AKONADI_LIBS}
+                      ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
+                      ${KDEPIMLIBS_KHOLIDAYS_LIBS}
+                      kdepim
+                      akonadi-kcal_next
+                      akonadi_next
 )
 
 set_target_properties(eventviews PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
