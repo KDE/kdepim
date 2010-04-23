@@ -1762,7 +1762,7 @@ is-at-least-ownertrust=marginal
 
       <variablelist>
 
-        <varlistentry>
+        <varlistentry id="archive-definition-extensions">
           <term><literal>extensions</literal></term>
           <listitem>
             <para>
@@ -1772,7 +1772,7 @@ is-at-least-ownertrust=marginal
           </listitem>
         </varlistentry>
 
-        <varlistentry>
+        <varlistentry id="archive-definition-id">
           <term><literal>id</literal></term>
           <listitem>
             <para>
@@ -1782,7 +1782,7 @@ is-at-least-ownertrust=marginal
           </listitem>
         </varlistentry>
 
-        <varlistentry>
+        <varlistentry id="archive-definition-Name">
           <term><literal>Name</literal> (translated)</term>
           <listitem>
             <para>
@@ -1793,7 +1793,7 @@ is-at-least-ownertrust=marginal
           </listitem>
         </varlistentry>
 
-        <varlistentry>
+        <varlistentry id="archive-definition-pack-command">
           <term><literal>pack-command</literal></term>
           <listitem>
             <para>
@@ -1810,7 +1810,7 @@ is-at-least-ownertrust=marginal
 
       </variablelist>
 
-      <note>
+      <note id="backslashes-in-config-keys">
         <para>
           Since backslash (<literal>\</literal>) is an escape
           character in KDE config files, you need to double them when
