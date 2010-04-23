@@ -66,7 +66,7 @@ class KNODE_EXPORT KNGlobals
     KNMainWidget          *top;
 
     /** Returns the article factory. */
-    KNArticleFactory      *artFactory;
+    KNArticleFactory *articleFactory();
     /** Returns KNode's main configuration. */
     KConfig               *config();
     /** Returns the current instance. */
@@ -119,6 +119,7 @@ class KNODE_EXPORT KNGlobals
     KNScoringManager *mScoreManager;
     KNMemoryManager       *mMemManager;
     KNode::Settings *mSettings;
+    KNArticleFactory *mArticleFactory;
     KPIMIdentities::IdentityManager * mIdentityManager;
 };
 

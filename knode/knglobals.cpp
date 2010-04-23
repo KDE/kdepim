@@ -14,6 +14,7 @@
 
 #include "knglobals.h"
 
+#include "knarticlefactory.h"
 #include "knconfigmanager.h"
 #include "knaccountmanager.h"
 #include "kngroupmanager.h"
@@ -52,6 +53,7 @@ KNGlobals::KNGlobals() :
   mScoreManager( 0 ),
   mMemManager( 0 ),
   mSettings( 0 ),
+  mArticleFactory( 0 ),
   mIdentityManager( 0 )
 {
   kDebug();
@@ -123,6 +125,14 @@ KNArticleManager* KNGlobals::articleManager()
   if(!mArtManager)
     mArtManager = new KNArticleManager();
   return mArtManager;
+}
+
+KNArticleFactory* KNGlobals::articleFactory()
+{
+  if ( !mArticleFactory ) {
+    mArticleFactory = new KNArticleFactory();
+  }
+  return mArticleFactory;
 }
 
 KNFilterManager* KNGlobals::filterManager()

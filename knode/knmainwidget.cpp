@@ -192,8 +192,7 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   a_ccManager = knGlobals.accountManager();
 
   //Article Factory
-  a_rtFactory=new KNArticleFactory();
-  knGlobals.artFactory=a_rtFactory;
+  a_rtFactory = KNGlobals::self()->articleFactory();
 
   // Score Manager
   s_coreManager = knGlobals.scoringManager();

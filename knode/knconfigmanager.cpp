@@ -100,8 +100,7 @@ void KNConfigDialog::slotConfigCommitted()
   KNode::ArticleWidget::configChanged();
   if(knGlobals.top)
     knGlobals.top->configChanged();
-  if(knGlobals.artFactory)
-    knGlobals.artFactory->configChanged();
+  KNGlobals::self()->articleFactory()->configChanged();
 }
 
 

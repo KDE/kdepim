@@ -1191,7 +1191,7 @@ void ArticleWidget::slotURLClicked( const KUrl &url, bool forceOpen)
   if ( url.protocol() == "mailto" ) {
     KMime::Types::Mailbox addr;
     addr.fromUnicodeString( url.path() );
-    knGlobals.artFactory->createMail( &addr );
+    KNGlobals::self()->articleFactory()->createMail( &addr );
     return;
   }
   // handle news URL's
@@ -1311,7 +1311,7 @@ void ArticleWidget::slotViewSource()
 void ArticleWidget::slotReply()
 {
   if ( mArticle && mArticle->type() == KNArticle::ATremote )
-    knGlobals.artFactory->createReply( static_cast<KNRemoteArticle*>( mArticle ),
+    KNGlobals::self()->articleFactory()->createReply( static_cast<KNRemoteArticle*>( mArticle ),
                                        mViewer->selectedText(), true, false );
 }
 
@@ -1319,26 +1319,26 @@ void ArticleWidget::slotReply()
 void ArticleWidget::slotRemail()
 {
   if ( mArticle && mArticle->type()==KNArticle::ATremote )
-    knGlobals.artFactory->createReply( static_cast<KNRemoteArticle*>( mArticle ),
+    KNGlobals::self()->articleFactory()->createReply( static_cast<KNRemoteArticle*>( mArticle ),
                                        mViewer->selectedText(), false, true );
 }
 
 
 void ArticleWidget::slotForward()
 {
-  knGlobals.artFactory->createForward( mArticle );
+  KNGlobals::self()->articleFactory()->createForward( mArticle );
 }
 
 
 void ArticleWidget::slotCancel()
 {
-  knGlobals.artFactory->createCancel( mArticle );
+  KNGlobals::self()->articleFactory()->createCancel( mArticle );
 }
 
 
 void ArticleWidget::slotSupersede()
 {
-  knGlobals.artFactory->createSupersede( mArticle );
+  KNGlobals::self()->articleFactory()->createSupersede( mArticle );
 }
 
 

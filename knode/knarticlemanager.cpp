@@ -479,7 +479,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
     return false;
 
   if (!force && ( a->type()== KNArticle::ATlocal ) &&
-      (knGlobals.artFactory->findComposer(static_cast<KNLocalArticle*>(a))!=0))
+      KNGlobals::self()->articleFactory()->findComposer( static_cast<KNLocalArticle*>( a ) ) != 0 )
     return false;
 
   if ( !ArticleWindow::closeAllWindowsForArticle( a, force ) )
@@ -488,7 +488,7 @@ bool KNArticleManager::unloadArticle(KNArticle *a, bool force)
 
   ArticleWidget::articleRemoved( a );
   if ( a->type() != KNArticle::ATlocal )
-    knGlobals.artFactory->deleteComposerForArticle(static_cast<KNLocalArticle*>(a));
+    KNGlobals::self()->articleFactory()->deleteComposerForArticle( static_cast<KNLocalArticle*>( a ) );
 
   a->updateListItem();
   knGlobals.memoryManager()->removeCacheEntry(a);
