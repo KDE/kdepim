@@ -22,34 +22,35 @@ import Qt 4.7
 import org.kde 4.5
 import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.kcal 4.5 as KCal
 
 KPIM.MainView {
   id: tasksMobile
 
   SystemPalette { id: palette; colorGroup: "Active" }
 
-  Rectangle { // TaskView
+  KCal.IncidenceView {
     id: taskView
-    anchors.left: parent.left
+    anchors { fill: parent; topMargin: 48; leftMargin: 48 }
     width: parent.width
     height: parent.height
 
-//     z: 0
-//
-//     messageItemId: -1
-//     swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
-//
-//     onNextMessageRequest: {
-//       // Only go to the next message when currently a valid item is set.
-//       if ( messageView.messageItemId >= 0 )
-//         headerList.nextMessage();
-//     }
-//
-//     onPreviousMessageRequest: {
-//       // Only go to the previous message when currently a valid item is set.
-//       if ( messageView.messageItemId >= 0 )
-//         headerList.previousMessage();
-//     }
+    z: 0
+
+    itemId: -1
+    swipeLength: 0.2 // Require at least 20% of screenwidth to trigger next or prev
+
+    onNextItemRequest: {
+      // Only go to the next message when currently a valid item is set.
+      if ( taskView.itemId >= 0 )
+        itemList.nextItem();
+    }
+
+    onPreviousItemRequest: {
+      // Only go to the previous message when currently a valid item is set.
+      if ( taskView.itemId >= 0 )
+        itemList.previousItem();
+    }
   }
 
 
@@ -114,10 +115,7 @@ KPIM.MainView {
              anchors.right: parent.right
              anchors.left: collectionView.right
              onItemSelected: {
-               // Prevent reloading of the message, perhaps this should be done
-               // in messageview itself.
-//               if ( messageView.messageItemId != headerList.currentMessage )
-//                 messageView.messageItemId = headerList.currentMessage;
+               taskView.itemId = itemList.currentItemId;
                folderPanel.collapse()
              }
            }
