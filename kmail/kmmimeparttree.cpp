@@ -184,9 +184,11 @@ void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
                    SLOT( slotSaveAsEncoded() ) );
   */
 
-  if ( topLevelItemCount() > 0)
-    popup.addAction( i18n( "Save All Attachments..." ), this,
+  if ( topLevelItemCount() > 0) {
+    QAction *act = popup.addAction( i18n( "Save All Attachments..." ), this,
                      SLOT( slotSaveAll() ) );
+    act->setEnabled( !selectedItems().isEmpty() );
+  }
 
   // edit + delete only for attachments
   if ( !isRoot ) {
