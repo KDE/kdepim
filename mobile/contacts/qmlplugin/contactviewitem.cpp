@@ -20,6 +20,7 @@
 #include "contactviewitem.h"
 
 #include <akonadi/contact/contactviewer.h>
+#include <akonadi/contact/contactdefaultactions.h>
 #include <akonadi/item.h>
 
 using namespace Akonadi;
@@ -29,6 +30,8 @@ ContactViewItem::ContactViewItem(QDeclarativeItem* parent)
   : DeclarativeAkonadiItem( parent )
 {
   m_viewer = new ContactViewer( 0 );
+  ContactDefaultActions *actions = new ContactDefaultActions( this );
+  actions->connectToView( m_viewer );
   setWidget( m_viewer );
 }
 

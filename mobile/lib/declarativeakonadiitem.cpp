@@ -1,12 +1,15 @@
 #include "declarativeakonadiitem.h"
 
-#include <math.h>
+#include <KDebug>
 
 #include <QtCore/QTimer>
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsSceneMouseEvent>
 #include <qabstractscrollarea.h>
 #include <qscrollbar.h>
+#include <QCoreApplication>
+
+#include <math.h>
 
 static double sDirectionThreshHold = 8.5; /// Threshold in pixels
 
@@ -87,10 +90,9 @@ DeclarativeAkonadiItem::DeclarativeAkonadiItem( QDeclarativeItem *parent )
 
 DeclarativeAkonadiItem::~DeclarativeAkonadiItem()
 {
-  Q_D( DeclarativeAkonadiItem );
   // Weird, the proxy seems to be already deleted at this point. If we get crashes
   // related to events we need to do this different.
-  //d->mProxy->removeEventFilter( this );
+  //d_ptr->mProxy->removeEventFilter( this );
   delete d_ptr;
 }
 
@@ -190,6 +192,17 @@ void DeclarativeAkonadiItem::scrollUp( int dist )
   scrollDown( dist );
 }
 
-void DeclarativeAkonadiItem::simulateMouseClick( const QPoint &/* pos */ )
-{ }
+void DeclarativeAkonadiItem::simulateMouseClick( const QPoint &pos )
+{
+  if ( !d_ptr->mProxy->widget() )
+    return;
+  QWidget *receiver = d_ptr->mProxy->widget()->childAt( pos );
+  if ( receiver ) {
+    // TODO: this will fail for receiver not being at 0,0
+    QMouseEvent *event = new QMouseEvent( QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+    QCoreApplication::sendEvent( receiver, event );
+    event = new QMouseEvent( QEvent::MouseButtonRelease, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+    QCoreApplication::sendEvent( receiver, event );
+  }
+}
 
