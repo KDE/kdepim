@@ -16,7 +16,6 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${etm_usage_SOURCE_DIR})
 include_directories( ${KDE4_INCLUDES}
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_SOURCE_DIR}/akonadi
-  ${CMAKE_SOURCE_DIR}/akonadi_next
   ${CMAKE_CURRENT_BINARY_DIR}
   ${kdepim_SOURCE_DIR}
   ${Boost_INCLUDE_DIRS}
