@@ -93,7 +93,7 @@ KPIM.MainView {
         Item {
           anchors.fill: parent
 
-          BreadcrumbNavigationView {
+          AkonadiBreadcrumbNavigationView {
             id : collectionView
             width: 1/3 * folderPanel.contentWidth
             anchors.top: parent.top
