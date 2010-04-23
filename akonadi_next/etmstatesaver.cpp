@@ -36,7 +36,7 @@ ETMStateSaver::ETMStateSaver(QObject* parent)
 
 QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model, const QString& key) const
 {
-  if ( key.startsWith( 'x' ) )
+  if ( key.startsWith( QLatin1Char( 'x' ) ) )
     return QModelIndex();
 
   Entity::Id id = key.mid( 1 ).toLongLong();
