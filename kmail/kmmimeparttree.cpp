@@ -184,8 +184,9 @@ void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
                    SLOT( slotSaveAsEncoded() ) );
   */
 
-  popup.addAction( i18n( "Save All Attachments..." ), this,
-                   SLOT( slotSaveAll() ) );
+  if ( topLevelItemCount() > 0)
+    popup.addAction( i18n( "Save All Attachments..." ), this,
+                     SLOT( slotSaveAll() ) );
 
   // edit + delete only for attachments
   if ( !isRoot ) {
@@ -206,7 +207,8 @@ void KMMimePartTree::slotContextMenuRequested( const QPoint& p )
     if ( item && item->node()->nodeId() > 0 )
       popup.addAction( i18n( "Properties" ), this, SLOT( slotProperties() ) );
   }
-  popup.exec( viewport()->mapToGlobal( p ) );
+  if ( !popup.isEmpty() )
+    popup.exec( viewport()->mapToGlobal( p ) );
 }
 
 //-----------------------------------------------------------------------------
