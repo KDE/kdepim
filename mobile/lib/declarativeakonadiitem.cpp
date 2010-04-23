@@ -157,7 +157,7 @@ bool DeclarativeAkonadiItem::eventFilter( QObject *obj, QEvent *ev )
       d->mDy = 0;
       return true;
     }
-  } else if ( QEvent::GraphicsSceneMouseMove && d->mMousePressed ) {
+  } else if ( ev->type() == QEvent::GraphicsSceneMouseMove && d->mMousePressed ) {
     QGraphicsSceneMouseEvent *mev = static_cast<QGraphicsSceneMouseEvent*>( ev );
     d->mDx += mev->pos().x() - mev->lastPos().x(); // Moving to right gives positive values
     d->mDy += mev->pos().y() - mev->lastPos().y(); // Moving up gives positive values
