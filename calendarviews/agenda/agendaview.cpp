@@ -244,7 +244,7 @@ void AgendaView::setCalendar( Akonadi::Calendar *cal )
 void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 {
   connect( agenda, SIGNAL(showNewEventPopupSignal()),
-           SLOT(showNewEventPopup()) );
+           SIGNAL(showNewEventPopupSignal()) );
 
   connect( agenda, SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)),
            SIGNAL(showIncidencePopupSignal(Akonadi::Item,QDate)));
