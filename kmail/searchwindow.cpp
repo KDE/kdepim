@@ -767,6 +767,23 @@ void SearchWindow::enableGUI()
 }
 
 
+bool SearchWindow::canMoveSelectedMessages()
+{
+    QList<KMMsgBase*> msgList;
+    KMFolder* folder = 0;
+    int msgIndex = -1;
+    for (QTreeWidgetItemIterator it(mLbxMatches); (*it); ++it) {
+      if ((*it)->isSelected()) {
+        KMMsgDict::instance()->getLocation((*it)->text(MSGID_COLUMN).toUInt(),
+                                           &folder, &msgIndex);
+        if ( folder && !folder->canDeleteMessages() ) {
+          return false;
+        }
+      }
+    }
+    return true;
+}
+
 //-----------------------------------------------------------------------------
 QList<KMMsgBase*> SearchWindow::selectedMessages()
 {
@@ -857,6 +874,8 @@ void SearchWindow::slotContextMenuRequested( QTreeWidgetItem *lvi )
     QMenu *msgMoveMenu = new QMenu(menu);
     mKMMainWidget->mainFolderView()->folderToPopupMenu( MainFolderView::MoveMessage,
         this, msgMoveMenu );
+    msgMoveMenu->setEnabled( canMoveSelectedMessages() );
+
     QMenu *msgCopyMenu = new QMenu(menu);
     mKMMainWidget->mainFolderView()->folderToPopupMenu( MainFolderView::CopyMessage,
         this, msgCopyMenu );
