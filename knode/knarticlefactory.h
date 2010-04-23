@@ -15,21 +15,20 @@
 #ifndef KNARTICLEFACTORY_H
 #define KNARTICLEFACTORY_H
 
+#include "knarticle.h"
+#include "kncollection.h"
+#include "kngroup.h"
+#include "knjobdata.h"
+#include "knnntpaccount.h"
+
 #include <QByteArray>
 #include <QList>
 #include <QListWidgetItem>
 #include <kdialog.h>
 
-#include "knjobdata.h"
-#include "knarticle.h"
-
 class QLabel;
-
-class KNGroup;
-class KNCollection;
 class KNComposer;
 class KNSendErrorDialog;
-class KNNntpAccount;
 
 
 /** Article factory, responsible for creating and sending news articles. */
@@ -44,8 +43,8 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
     ~KNArticleFactory();
 
     //factory methods
-    void createPosting(KNNntpAccount *a);
-    void createPosting(KNGroup *g);
+    void createPosting( KNNntpAccount::Ptr a );
+    void createPosting( KNGroup::Ptr g );
     void createReply( KNRemoteArticle::Ptr a, const QString &selectedText = QString(), bool post = true, bool mail = false );
     void createForward( KNArticle::Ptr a );
     void createCancel( KNArticle::Ptr a );
@@ -77,7 +76,7 @@ class KNArticleFactory : public QObject , public KNJobConsumer {
       @param withXHeaders
       @param origPost original article (in case of reply).
     */
-    KNLocalArticle::Ptr newArticle( KNCollection *col, const QByteArray &defChset, bool withXHeaders = true, KNArticle::Ptr origPost = KNArticle::Ptr() );
+    KNLocalArticle::Ptr newArticle( KNCollection::Ptr col, const QByteArray &defChset, bool withXHeaders = true, KNArticle::Ptr origPost = KNArticle::Ptr() );
 
     //cancel & supersede
     bool cancelAllowed( KNArticle::Ptr a );

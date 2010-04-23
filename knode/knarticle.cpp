@@ -30,7 +30,8 @@ using namespace KNode::Utilities;
 using namespace KMime;
 
 
-KNArticle::KNArticle(KNArticleCollection *c) : i_d(-1), c_ol(c), i_tem(0)
+KNArticle::KNArticle( KNArticleCollection::Ptr c )
+  : i_d( -1 ), c_ol( c ), i_tem( 0 )
 {
 }
 
@@ -72,7 +73,7 @@ void KNArticle::setLocked(bool b)
 //=========================================================================================
 
 
-KNRemoteArticle::KNRemoteArticle(KNGroup *g)
+KNRemoteArticle::KNRemoteArticle( KNGroup::Ptr g )
  : KNArticle(g), a_rticleNumber(-1), i_dRef(-1), t_hrLevel(0), s_core(0),
    c_olor(knGlobals.settings()->unreadThreadColor()),
    u_nreadFups(0), n_ewFups(0), s_ubThreadChangeDate(0)
@@ -168,7 +169,7 @@ void KNRemoteArticle::updateListItem()
 void KNRemoteArticle::thread(KNRemoteArticle::List &l)
 {
   KNRemoteArticle::Ptr tmp;
-  KNGroup *g=static_cast<KNGroup*>(c_ol);
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( c_ol );
   int idRef=i_dRef, topID=-1;
   KNRemoteArticle::Ptr ref = g->byId( id() ); // get self reference
 
@@ -200,7 +201,7 @@ void KNRemoteArticle::thread(KNRemoteArticle::List &l)
 void KNRemoteArticle::setForceDefaultCharset(bool b)
 {
   if (!b) { // restore default
-    KNGroup *g=static_cast<KNGroup*>(c_ol);
+    KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( c_ol );
     setDefaultCharset( Locale::defaultCharset( g ) );
   }
   KNArticle::setForceDefaultCharset( b );
@@ -210,7 +211,7 @@ void KNRemoteArticle::setForceDefaultCharset(bool b)
 
 void KNRemoteArticle::propagateThreadChangedDate()
 {
-  KNGroup *g=static_cast<KNGroup*>(c_ol);
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( c_ol );
   KNRemoteArticle::Ptr ref = g->byId( id() );
   int idRef=i_dRef;
 
@@ -230,7 +231,7 @@ void KNRemoteArticle::propagateThreadChangedDate()
 //=========================================================================================
 
 
-KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
+KNLocalArticle::KNLocalArticle( KNArticleCollection::Ptr c )
   : KNArticle(c), s_Offset(0), e_Offset(0), s_erverId(-1)
 {
   setDefaultCharset( Locale::defaultCharset() );

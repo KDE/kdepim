@@ -14,6 +14,16 @@
 
 #include "knfolder.h"
 
+#include "articlewidget.h"
+#include "knarticlefactory.h"
+#include "knarticlemanager.h"
+#include "knarticlewindow.h"
+#include "kncollectionviewitem.h"
+#include "knfoldermanager.h"
+#include "knglobals.h"
+#include "knhdrviewitem.h"
+#include "knmainwidget.h"
+#include "utilities.h"
 #include "utils/scoped_cursor_override.h"
 
 #include <QFileInfo>
@@ -22,27 +32,18 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "articlewidget.h"
-#include "knarticlemanager.h"
-#include "kncollectionviewitem.h"
-#include "knhdrviewitem.h"
-#include "utilities.h"
-#include "knglobals.h"
-#include "knarticlefactory.h"
-#include "knarticlewindow.h"
-#include "knmainwidget.h"
-
 using namespace KNode;
 using namespace KNode::Utilities;
 
 
 KNFolder::KNFolder()
-  : KNArticleCollection(0), i_d(-1), p_arentId(-1), i_ndexDirty(false), w_asOpen(true)
+  : KNArticleCollection( KNArticleCollection::Ptr() ),
+    i_d(-1), p_arentId(-1), i_ndexDirty(false), w_asOpen(true)
 {
 }
 
 
-KNFolder::KNFolder(int id, const QString &name, KNFolder *parent)
+KNFolder::KNFolder( int id, const QString &name, KNFolder::Ptr parent )
   : KNArticleCollection(parent), i_d(id), i_ndexDirty(false), w_asOpen(true)
 {
   QString fname=path()+QString("custom_%1").arg(i_d);
@@ -61,7 +62,7 @@ KNFolder::KNFolder(int id, const QString &name, KNFolder *parent)
 }
 
 
-KNFolder::KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent)
+KNFolder::KNFolder( int id, const QString &name, const QString &prefix, KNFolder::Ptr parent )
   : KNArticleCollection(parent), i_d(id), i_ndexDirty(false), w_asOpen(true)
 {
   QString fname=path()+QString("%1_%2").arg(prefix).arg(i_d);
@@ -158,10 +159,10 @@ void KNFolder::writeConfig()
 }
 
 
-void KNFolder::setParent(KNCollection *p)
+void KNFolder::setParent( KNCollection::Ptr p )
 {
   p_arent = p;
-  p_arentId = p ? (static_cast<KNFolder*>(p))->id() : -1;
+  p_arentId = p ? ( boost::static_pointer_cast<KNFolder>( p ) )->id() : -1;
 }
 
 
@@ -210,7 +211,7 @@ bool KNFolder::loadHdrs()
       }
     }
 
-    art = KNLocalArticle::Ptr( new KNLocalArticle(this) );
+    art = KNLocalArticle::Ptr( new KNLocalArticle( thisFolderPtr() ) );
 
     //set index-data
     dynamic.getData(art);
@@ -370,9 +371,9 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
   for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
 
     clear=false;
-    if ( (*it)->id() == -1 || (*it)->collection() != this ) {
+    if ( (*it)->id() == -1 || (*it)->collection().get() != this ) {
       if ( (*it)->id() != -1 ) {
-        KNFolder *oldFolder = static_cast<KNFolder*>( (*it)->collection() );
+        KNFolder::Ptr oldFolder = boost::static_pointer_cast<KNFolder>( (*it)->collection() );
         if ( !(*it)->hasContent() )
           if( !( clear = oldFolder->loadArticle( (*it) ) ) ) {
             ret = false;
@@ -384,7 +385,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
         oldFolder->removeArticles( l, false );
       }
       append( (*it) );
-      (*it)->setCollection(this);
+      (*it)->setCollection( thisFolderPtr() );
       addCnt++;
     }
 
@@ -437,7 +438,7 @@ bool KNFolder::saveArticles( KNLocalArticle::List &l )
   if(addCnt>0) {
     c_ount=length();
     updateListItem();
-    knGlobals.articleManager()->updateViewForCollection(this);
+    knGlobals.articleManager()->updateViewForCollection( thisFolderPtr() );
   }
 
   return ret;
@@ -581,4 +582,21 @@ void KNFolder::DynData::getData( KNLocalArticle::Ptr a )
   a->setCanceled(flags[4]);
   a->setEditDisabled(flags[5]);
 }
+
+
+KNFolder::Ptr KNFolder::thisFolderPtr()
+{
+  return KNGlobals::self()->folderManager()->folder( id() );
+}
+
+
+
+
+
+
+
+
+
+
+
 

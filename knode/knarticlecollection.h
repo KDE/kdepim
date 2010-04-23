@@ -77,7 +77,17 @@ class KNArticleVector {
 class KNArticleCollection : public KNCollection {
 
   public:
-    KNArticleCollection(KNCollection *p=0);
+    /**
+     * Shared pointer to a KNArticle. To be used instead of raw KNArticleCollection*.
+     */
+    typedef boost::shared_ptr<KNArticleCollection> Ptr;
+    /**
+     * List of KNArticleCollection.
+     */
+    typedef QList<KNArticleCollection::Ptr> List;
+
+
+    KNArticleCollection( KNCollection::Ptr p = KNCollection::Ptr() );
     ~KNArticleCollection();
 
     /** Returns true if this collection doesn't contain any article. */

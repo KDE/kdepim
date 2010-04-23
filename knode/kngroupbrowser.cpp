@@ -32,7 +32,7 @@
 #include <QPushButton>
 
 
-KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount *a,
+KNGroupBrowser::KNGroupBrowser(QWidget *parent, const QString &caption, KNNntpAccount::Ptr a,
                                ButtonCodes buttons, bool newCBact, const QString &user1, const QString &user2) :
   KDialog( parent ),
   incrementalFilter(false), a_ccount(a)

@@ -15,18 +15,16 @@
 #define KNODE_ARTICLEWIDGET_H
 
 #include "knarticle.h"
+#include "knarticlecollection.h"
 #include "knjobdata.h"
 
 #include <QByteArray>
 #include <QMap>
 #include <QWidget>
-
 #include <kurl.h>
-
 #include <kmime/kmime_content.h>
 
 class QTimer;
-
 class KAction;
 class KActionCollection;
 class KActionMenu;
@@ -38,8 +36,6 @@ class KXMLGUIClient;
 namespace Kpgp {
   class Block;
 }
-
-class KNArticleCollection;
 
 namespace KNode {
 
@@ -94,7 +90,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /** notify all instances that the given collection has been removed
      * @param coll The removed article collection (a group or a folder).
      */
-    static void collectionRemoved( KNArticleCollection *coll );
+    static void collectionRemoved( KNArticleCollection::Ptr coll );
     /// cleanup all instances
     static void cleanup();
 

@@ -23,14 +23,14 @@
 
 
 KNCollectionViewItem::KNCollectionViewItem( FolderTreeWidget *parent, Protocol protocol, FolderType type) :
-  FolderTreeWidgetItem(parent, QString(), protocol, type), coll(0)
+  FolderTreeWidgetItem( parent, QString(), protocol, type )
 {
   setUp();
 }
 
 
 KNCollectionViewItem::KNCollectionViewItem( FolderTreeWidgetItem *parent, Protocol protocol, FolderType type, int unread, int total ) :
-  FolderTreeWidgetItem(parent, QString(), protocol, type), coll(0)
+  FolderTreeWidgetItem( parent, QString(), protocol, type )
 {
   setUp();
   setUnreadCount( unread );
@@ -97,7 +97,7 @@ bool KNCollectionViewItem::operator<( const QTreeWidgetItem &other ) const
 }
 
 
-void KNCollectionViewItem::setCollection( KNCollection *c )
+void KNCollectionViewItem::setCollection( KNCollection::Ptr c )
 {
   coll = c;
   setUp();

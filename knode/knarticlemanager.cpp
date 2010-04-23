@@ -54,8 +54,6 @@ using namespace KNode::Utilities;
 
 KNArticleManager::KNArticleManager() : QObject(0)
 {
-  g_roup=0;
-  f_older=0;
   f_ilterMgr = knGlobals.filterManager();
   f_ilter = f_ilterMgr->currentFilter();
   s_earchDlg=0;
@@ -335,7 +333,7 @@ void KNArticleManager::showHdrs(bool clear)
 }
 
 
-void KNArticleManager::updateViewForCollection(KNArticleCollection *c)
+void KNArticleManager::updateViewForCollection( KNArticleCollection::Ptr c )
 {
   if(g_roup==c || f_older==c)
     showHdrs(false);
@@ -405,7 +403,7 @@ void KNArticleManager::search()
 }
 
 
-void KNArticleManager::setGroup(KNGroup *g)
+void KNArticleManager::setGroup( KNGroup::Ptr g )
 {
   g_roup = g;
   if ( g )
@@ -413,7 +411,7 @@ void KNArticleManager::setGroup(KNGroup *g)
 }
 
 
-void KNArticleManager::setFolder(KNFolder *f)
+void KNArticleManager::setFolder( KNFolder::Ptr f )
 {
   f_older = f;
   if ( f )
@@ -421,14 +419,14 @@ void KNArticleManager::setFolder(KNFolder *f)
 }
 
 
-KNArticleCollection* KNArticleManager::collection()
+KNArticleCollection::Ptr KNArticleManager::collection()
 {
   if(g_roup)
     return g_roup;
   if(f_older)
    return f_older;
 
-  return 0;
+  return KNArticleCollection::Ptr();
 }
 
 
@@ -448,14 +446,14 @@ bool KNArticleManager::loadArticle( KNArticle::Ptr a )
   }
 
   if ( a->type() == KNArticle::ATremote ) {
-    KNGroup *g=static_cast<KNGroup*>(a->collection());
+    KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( a->collection() );
     if(g)
       emitJob( new ArticleFetchJob( this, g->account(), a ) );
     else
       return false;
   }
   else { // local article
-    KNFolder *f=static_cast<KNFolder*>(a->collection());
+    KNFolder::Ptr f = boost::static_pointer_cast<KNFolder>( a->collection() );
    if( f && f->loadArticle( boost::static_pointer_cast<KNLocalArticle>( a ) ) )
       knGlobals.memoryManager()->updateCacheEntry(a);
     else
@@ -496,7 +494,7 @@ bool KNArticleManager::unloadArticle( KNArticle::Ptr a, bool force )
 }
 
 
-void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
+void KNArticleManager::copyIntoFolder( KNArticle::List &l, KNFolder::Ptr f )
 {
   if(!f) return;
 
@@ -506,7 +504,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
   for ( KNArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
     if ( !(*it)->hasContent() )
       continue;
-    loc = KNLocalArticle::Ptr( new KNLocalArticle(0) );
+    loc = KNLocalArticle::Ptr( new KNLocalArticle( KNArticleCollection::Ptr() ) );
     loc->setEditDisabled(true);
     loc->setContent( (*it)->encodedContent() );
     loc->parse();
@@ -544,7 +542,7 @@ void KNArticleManager::copyIntoFolder(KNArticle::List &l, KNFolder *f)
 }
 
 
-void KNArticleManager::moveIntoFolder(KNLocalArticle::List &l, KNFolder *f)
+void KNArticleManager::moveIntoFolder( KNLocalArticle::List &l, KNFolder::Ptr f )
 {
   if(!f) return;
   kDebug(5003) <<" Target folder:" << f->name();
@@ -592,7 +590,7 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
   for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
     knGlobals.memoryManager()->removeCacheEntry( (*it) );
 
-  KNFolder *f=static_cast<KNFolder*>(l.first()->collection());
+  KNFolder::Ptr f = boost::static_pointer_cast<KNFolder>( l.first()->collection() );
   if ( f ) {
     f->removeArticles( l, true );
     knGlobals.memoryManager()->updateCacheEntry( f );
@@ -659,7 +657,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
     return;
 
   KNRemoteArticle::Ptr ref;
-  KNGroup *g=static_cast<KNGroup*>( l.first()->collection() );
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( l.first()->collection() );
   int changeCnt=0, idRef=0;
 
   for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
@@ -667,7 +665,7 @@ void KNArticleManager::setRead(KNRemoteArticle::List &l, bool r, bool handleXPos
         handleXPosts && (*it)->newsgroups()->isCrossposted() ) {
 
       QList<QByteArray> groups = (*it)->newsgroups()->groups();
-      KNGroup *targetGroup=0;
+      KNGroup::Ptr targetGroup;
       KNRemoteArticle::Ptr xp;
       KNRemoteArticle::List al;
       QByteArray mid = (*it)->messageID()->as7BitString( false );
@@ -764,7 +762,7 @@ bool KNArticleManager::toggleWatched(KNRemoteArticle::List &l)
   KNRemoteArticle::Ptr a = l.first();
   KNRemoteArticle::Ptr ref;
   bool watch = (!a->isWatched());
-  KNGroup *g=static_cast<KNGroup*>(a->collection() );
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( a->collection() );
   int changeCnt=0, idRef=0;
 
   for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
@@ -817,7 +815,7 @@ bool KNArticleManager::toggleIgnored(KNRemoteArticle::List &l)
 
   KNRemoteArticle::Ptr ref;
   bool ignore = !l.first()->isIgnored();
-  KNGroup *g = static_cast<KNGroup*>( l.first()->collection() );
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( l.first()->collection() );
   int changeCnt = 0, idRef = 0;
 
   for ( KNRemoteArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
@@ -881,7 +879,7 @@ void  KNArticleManager::rescoreArticles(KNRemoteArticle::List &l)
   if ( l.isEmpty() )
     return;
 
-  KNGroup *g = static_cast<KNGroup*>( l.first()->collection() );
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( l.first()->collection() );
   KScoringManager *sm = knGlobals.scoringManager();
   sm->initCache(g->groupname());
 

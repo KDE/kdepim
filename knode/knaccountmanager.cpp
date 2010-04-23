@@ -12,8 +12,15 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QDir>
+#include "knaccountmanager.h"
 
+#include "knconfigmanager.h"
+#include "knfoldermanager.h"
+#include "knglobals.h"
+#include "kngroupmanager.h"
+#include "utilities.h"
+
+#include <QDir>
 #include <kdebug.h>
 #include <kconfig.h>
 #include <klocale.h>
@@ -21,19 +28,13 @@
 #include <kstandarddirs.h>
 #include <kwallet.h>
 
-#include "kngroupmanager.h"
-#include "knnntpaccount.h"
-#include "knglobals.h"
-#include "knconfigmanager.h"
-#include "utilities.h"
-#include "knaccountmanager.h"
-#include "knfoldermanager.h"
+
 
 KWallet::Wallet* KNAccountManager::mWallet = 0;
 bool KNAccountManager::mWalletOpenFailed = false;
 
 KNAccountManager::KNAccountManager( KNGroupManager *gm, QObject * parent )
-  : QObject( parent ), gManager( gm ), c_urrentAccount( 0 ),
+  : QObject( parent ), gManager( gm ),
   mAsyncOpening( false )
 {
   loadAccounts();
@@ -42,7 +43,6 @@ KNAccountManager::KNAccountManager( KNGroupManager *gm, QObject * parent )
 
 KNAccountManager::~KNAccountManager()
 {
-  qDeleteAll( mAccounts );
   mAccounts.clear();
   delete mWallet;
   mWallet = 0;
@@ -51,7 +51,7 @@ KNAccountManager::~KNAccountManager()
 
 void KNAccountManager::prepareShutdown()
 {
-  for ( List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
+  for ( KNNntpAccount::List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->writeConfig();
 }
 
@@ -64,48 +64,46 @@ void KNAccountManager::loadAccounts()
     return;
   }
   QDir d(dir);
-  KNNntpAccount *a;
+  KNNntpAccount::Ptr a;
   QStringList entries(d.entryList(QStringList("nntp.*"), QDir::Dirs));
 
   QStringList::Iterator it;
   for(it = entries.begin(); it != entries.end(); ++it) {
-    a = new KNNntpAccount();
+    a = KNNntpAccount::Ptr( new KNNntpAccount() );
     if (a->readInfo(dir+(*it) + "/info")) {
       mAccounts.append(a);
       gManager->loadGroups(a);
       emit accountAdded(a);
     } else {
-      delete a;
       kError(5003) <<"Unable to load account" << (*it) <<"!";
     }
   }
 }
 
 
-KNNntpAccount* KNAccountManager::account( int id )
+KNNntpAccount::Ptr KNAccountManager::account( int id )
 {
   if ( id <= 0 )
-    return 0;
-  for ( List::ConstIterator it = mAccounts.constBegin(); it != mAccounts.constEnd(); ++it )
+    return KNNntpAccount::Ptr();
+  for ( KNNntpAccount::List::ConstIterator it = mAccounts.constBegin(); it != mAccounts.constEnd(); ++it )
     if ( (*it)->id() == id )
       return *it;
-  return 0;
+  return KNNntpAccount::Ptr();
 }
 
 
-void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
+void KNAccountManager::setCurrentAccount( KNNntpAccount::Ptr a )
 {
   c_urrentAccount = a;
 }
 
 
 // a is new account allocated and configured by the caller
-bool KNAccountManager::newAccount(KNNntpAccount *a)
+bool KNAccountManager::newAccount( KNNntpAccount::Ptr a )
 {
   // find a unused id for the new account...
   QString dir( KStandardDirs::locateLocal( "data", "knode/" ) );
   if (dir.isNull()) {
-    delete a;
     KNHelper::displayInternalFileError();
     return false;
   }
@@ -124,7 +122,6 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
     emit(accountAdded(a));
     return true;
   } else {
-    delete a;
     KMessageBox::error(knGlobals.topWidget, i18n("Cannot create a folder for this account."));
     return false;
   }
@@ -132,7 +129,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 
 
 // a==0: remove current account
-bool KNAccountManager::removeAccount(KNNntpAccount *a)
+bool KNAccountManager::removeAccount( KNNntpAccount::Ptr a )
 {
   if(!a) a=c_urrentAccount;
   if(!a) return false;
@@ -167,7 +164,9 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
       dir.rmdir(QString("nntp.%1/").arg(a->id()));
     }
 
-    if(c_urrentAccount==a) setCurrentAccount(0);
+    if( c_urrentAccount == a ) {
+      setCurrentAccount( KNNntpAccount::Ptr() );
+    }
 
     emit(accountRemoved(a));
     mAccounts.removeAll( a );  // finally delete a
@@ -178,7 +177,7 @@ bool KNAccountManager::removeAccount(KNNntpAccount *a)
 }
 
 
-void KNAccountManager::editProperties(KNNntpAccount *a)
+void KNAccountManager::editProperties( KNNntpAccount::Ptr a )
 {
   if(!a) a=c_urrentAccount;
   if(!a) return;
@@ -188,7 +187,7 @@ void KNAccountManager::editProperties(KNNntpAccount *a)
 }
 
 
-void KNAccountManager::accountRenamed(KNNntpAccount *a)
+void KNAccountManager::accountRenamed( KNNntpAccount::Ptr a )
 {
   if(!a) a=c_urrentAccount;
   if(!a) return;
@@ -197,10 +196,10 @@ void KNAccountManager::accountRenamed(KNNntpAccount *a)
 }
 
 
-KNNntpAccount* KNAccountManager::first() const
+KNNntpAccount::Ptr KNAccountManager::first() const
 {
   if ( mAccounts.isEmpty() )
-    return 0;
+    return KNNntpAccount::Ptr();
   return mAccounts.first();
 }
 
@@ -231,7 +230,7 @@ void KNAccountManager::loadPasswordsAsync()
 
 void KNAccountManager::loadPasswords()
 {
-  for ( List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
+  for ( KNNntpAccount::List::Iterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
     (*it)->readPassword();
   emit passwordsChanged();
 }

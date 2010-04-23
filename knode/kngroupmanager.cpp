@@ -40,6 +40,7 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kcharsets.h>
+#include "knaccountmanager.h"
 
 
 using namespace KNode;
@@ -235,14 +236,12 @@ QList<KNGroupInfo>* KNGroupListData::extractList()
 KNGroupManager::KNGroupManager( QObject * parent )
   : QObject( parent )
 {
-  c_urrentGroup=0;
   a_rticleMgr = knGlobals.articleManager();
 }
 
 
 KNGroupManager::~KNGroupManager()
 {
-  qDeleteAll( mGroupList );
 }
 
 
@@ -255,9 +254,9 @@ void KNGroupManager::syncGroups()
 }
 
 
-void KNGroupManager::loadGroups(KNNntpAccount *a)
+void KNGroupManager::loadGroups( KNNntpAccount::Ptr a )
 {
-  KNGroup *group;
+  KNGroup::Ptr group;
 
   QString dir(a->path());
   if (dir.isNull())
@@ -266,19 +265,18 @@ void KNGroupManager::loadGroups(KNNntpAccount *a)
 
   QStringList entries(d.entryList(QStringList("*.grpinfo")));
   for(QStringList::Iterator it=entries.begin(); it != entries.end(); ++it) {
-    group=new KNGroup(a);
+    group = KNGroup::Ptr( new KNGroup( a ) );
     if (group->readInfo(dir+(*it))) {
       mGroupList.append( group );
       emit groupAdded(group);
     } else {
-      delete group;
       kError(5003) <<"Unable to load" << (*it) <<"!";
     }
   }
 }
 
 
-void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
+void KNGroupManager::getSubscribed( KNNntpAccount::Ptr a, QStringList &l )
 {
   l.clear();
   for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
@@ -287,7 +285,7 @@ void KNGroupManager::getSubscribed(KNNntpAccount *a, QStringList &l)
 }
 
 
-KNGroup::List KNGroupManager::groupsOfAccount( KNNntpAccount *a )
+KNGroup::List KNGroupManager::groupsOfAccount( KNNntpAccount::Ptr a )
 {
   KNGroup::List ret;
   for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
@@ -297,7 +295,7 @@ KNGroup::List KNGroupManager::groupsOfAccount( KNNntpAccount *a )
 }
 
 
-bool KNGroupManager::loadHeaders(KNGroup *g)
+bool KNGroupManager::loadHeaders( KNGroup::Ptr g )
 {
   if (!g)
     return false;
@@ -317,7 +315,7 @@ bool KNGroupManager::loadHeaders(KNGroup *g)
 }
 
 
-bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
+bool KNGroupManager::unloadHeaders( KNGroup::Ptr g, bool force )
 {
   if(!g || g->isLocked())
     return false;
@@ -337,23 +335,23 @@ bool KNGroupManager::unloadHeaders(KNGroup *g, bool force)
 }
 
 
-KNGroup* KNGroupManager::group(const QString &gName, const KNServerInfo *s)
+KNGroup::Ptr KNGroupManager::group( const QString &gName, const KNServerInfo::Ptr s )
 {
   for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
     if ( (*it)->account() == s && (*it)->groupname() == gName )
       return (*it);
 
-  return 0;
+  return KNGroup::Ptr();
 }
 
 
-KNGroup* KNGroupManager::firstGroupOfAccount(const KNServerInfo *s)
+KNGroup::Ptr KNGroupManager::firstGroupOfAccount( const KNServerInfo::Ptr s )
 {
   for ( KNGroup::List::Iterator it = mGroupList.begin(); it != mGroupList.end(); ++it )
     if ( (*it)->account() == s )
       return (*it);
 
-  return 0;
+  return KNGroup::Ptr();
 }
 
 
@@ -369,7 +367,7 @@ void KNGroupManager::expireAll(KNCleanUp *cup)
 }
 
 
-void KNGroupManager::expireAll(KNNntpAccount *a)
+void KNGroupManager::expireAll( KNNntpAccount::Ptr a )
 {
   KNCleanUp *cup = new KNCleanUp();
 
@@ -392,7 +390,7 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
       if ( loadHeaders( (*it) ) )
         a_rticleMgr->showHdrs();
       else
-        a_rticleMgr->setGroup(0);
+        a_rticleMgr->setGroup( KNGroup::Ptr() );
     }
   }
 
@@ -400,13 +398,13 @@ void KNGroupManager::expireAll(KNNntpAccount *a)
 }
 
 
-void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
+void KNGroupManager::showGroupDialog( KNNntpAccount::Ptr a, QWidget *parent )
 {
   KNGroupDialog* gDialog=new KNGroupDialog((parent!=0)? parent:knGlobals.topWidget, a);
 
-  connect(gDialog, SIGNAL(loadList(KNNntpAccount*)), this, SLOT(slotLoadGroupList(KNNntpAccount*)));
-  connect(gDialog, SIGNAL(fetchList(KNNntpAccount*)), this, SLOT(slotFetchGroupList(KNNntpAccount*)));
-  connect(gDialog, SIGNAL(checkNew(KNNntpAccount*,QDate)), this, SLOT(slotCheckForNewGroups(KNNntpAccount*,QDate)));
+  connect( gDialog, SIGNAL(loadList(KNNntpAccount::Ptr)), this, SLOT(slotLoadGroupList(KNNntpAccount::Ptr)) );
+  connect( gDialog, SIGNAL(fetchList(KNNntpAccount::Ptr)), this, SLOT(slotFetchGroupList(KNNntpAccount::Ptr)) );
+  connect( gDialog, SIGNAL(checkNew(KNNntpAccount::Ptr,QDate)), this, SLOT(slotCheckForNewGroups(KNNntpAccount::Ptr,QDate)) );
   connect( this, SIGNAL(newListReady(KNGroupListData::Ptr)), gDialog, SLOT(slotReceiveList(KNGroupListData::Ptr)) );
 
   QWidget *oldTopWidget = knGlobals.topWidget;
@@ -416,7 +414,7 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
   int accept = gDialog->exec();
   knGlobals.topWidget = oldTopWidget;
   if(accept) {
-    KNGroup *g=0;
+    KNGroup::Ptr g;
 
     QStringList lst;
     gDialog->toUnsubscribe(&lst);
@@ -441,11 +439,9 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
 }
 
 
-void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
+void KNGroupManager::subscribeGroup( const KNGroupInfo *gi, KNNntpAccount::Ptr a )
 {
-  KNGroup *grp;
-
-  grp=new KNGroup(a);
+  KNGroup::Ptr grp = KNGroup::Ptr( new KNGroup( a ) );
   grp->setGroupname(gi->name);
   grp->setDescription(gi->description);
   grp->setStatus(gi->status);
@@ -455,9 +451,9 @@ void KNGroupManager::subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a)
 }
 
 
-bool KNGroupManager::unsubscribeGroup(KNGroup *g)
+bool KNGroupManager::unsubscribeGroup( KNGroup::Ptr g )
 {
-  KNNntpAccount *acc;
+  KNNntpAccount::Ptr acc;
   if(!g) g=c_urrentGroup;
   if(!g) return false;
 
@@ -475,7 +471,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
   if (dir.exists()) {
     if (unloadHeaders(g, true)) {
       if(c_urrentGroup==g) {
-        setCurrentGroup(0);
+        setCurrentGroup( KNGroup::Ptr() );
         a_rticleMgr->updateStatusString();
       }
 
@@ -490,7 +486,6 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
 
       emit groupRemoved(g);
       mGroupList.removeAll( g );
-      delete g;
 
       return true;
     }
@@ -500,7 +495,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
 }
 
 
-void KNGroupManager::showGroupProperties(KNGroup *g)
+void KNGroupManager::showGroupProperties( KNGroup::Ptr g )
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
@@ -508,7 +503,7 @@ void KNGroupManager::showGroupProperties(KNGroup *g)
 }
 
 
-void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
+void KNGroupManager::checkGroupForNewHeaders( KNGroup::Ptr g )
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
@@ -518,11 +513,11 @@ void KNGroupManager::checkGroupForNewHeaders(KNGroup *g)
   }
 
   g->setMaxFetch( knGlobals.settings()->maxToFetch() );
-  emitJob( new ArticleListJob( this, g->account(), boost::shared_ptr<KNJobItem>( g ) ) );
+  emitJob( new ArticleListJob( this, g->account(), g ) );
 }
 
 
-void KNGroupManager::expireGroupNow(KNGroup *g)
+void KNGroupManager::expireGroupNow( KNGroup::Ptr g )
 {
   if(!g) return;
 
@@ -542,12 +537,12 @@ void KNGroupManager::expireGroupNow(KNGroup *g)
     if( loadHeaders(g) )
       a_rticleMgr->showHdrs();
     else
-      a_rticleMgr->setGroup(0);
+      a_rticleMgr->setGroup( KNGroup::Ptr() );
   }
 }
 
 
-void KNGroupManager::reorganizeGroup(KNGroup *g)
+void KNGroupManager::reorganizeGroup( KNGroup::Ptr g )
 {
   if(!g) g=c_urrentGroup;
   if(!g) return;
@@ -557,7 +552,7 @@ void KNGroupManager::reorganizeGroup(KNGroup *g)
 }
 
 
-void KNGroupManager::setCurrentGroup(KNGroup *g)
+void KNGroupManager::setCurrentGroup( KNGroup::Ptr g )
 {
   c_urrentGroup=g;
   a_rticleMgr->setGroup(g);
@@ -575,7 +570,7 @@ void KNGroupManager::setCurrentGroup(KNGroup *g)
 }
 
 
-void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
+void KNGroupManager::checkAll( KNNntpAccount::Ptr a, bool silent )
 {
   if(!a) return;
 
@@ -585,6 +580,12 @@ void KNGroupManager::checkAll(KNNntpAccount *a, bool silent)
       emitJob( new ArticleListJob( this, (*it)->account(), boost::shared_ptr<KNJobItem>( *it ), silent ) );
     }
   }
+}
+
+void KNGroupManager::checkAll( int id, bool silent )
+{
+  KNNntpAccount::Ptr account = KNGlobals::self()->accountManager()->account( id );
+  checkAll( account, silent );
 }
 
 
@@ -597,7 +598,7 @@ void KNGroupManager::processJob(KNJobData *j)
       if (j->success()) {
         if ( j->type() == KNJobData::JTFetchGroups ) {
           // update the descriptions of the subscribed groups
-          foreach ( KNGroup *grp, mGroupList ) {
+          foreach ( const KNGroup::Ptr &grp, mGroupList ) {
             if ( grp->account() == j->account() ) {
               foreach ( const KNGroupInfo &inf, *(d->groups) ) {
                 if ( inf.name == grp->groupname() ) {
@@ -628,9 +629,9 @@ void KNGroupManager::processJob(KNJobData *j)
         if(group->lastFetchCount()>0) {
           group->scoreArticles();
           group->processXPostBuffer(true);
-          emit groupUpdated( group.get() );
+          emit groupUpdated( group );
           group->writeConfig();
-          knGlobals.memoryManager()->updateCacheEntry( group.get() );
+          knGlobals.memoryManager()->updateCacheEntry( group );
         }
       } else {
         // ok, hack (?):
@@ -649,7 +650,7 @@ void KNGroupManager::processJob(KNJobData *j)
         }
       }
     }
-    if( group.get() == c_urrentGroup ) {
+    if( group == c_urrentGroup ) {
       a_rticleMgr->showHdrs(false);
     }
 
@@ -659,7 +660,7 @@ void KNGroupManager::processJob(KNJobData *j)
 
 
 // load group list from disk (if this fails: ask user if we should fetch the list)
-void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
+void KNGroupManager::slotLoadGroupList( KNNntpAccount::Ptr a )
 {
   KNGroupListData::Ptr d = KNGroupListData::Ptr( new KNGroupListData() );
   d->path = a->path();
@@ -682,7 +683,7 @@ void KNGroupManager::slotLoadGroupList(KNNntpAccount *a)
 
 
 // fetch group list from server
-void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
+void KNGroupManager::slotFetchGroupList( KNNntpAccount::Ptr a )
 {
   KNGroupListData::Ptr d = KNGroupListData::Ptr( new KNGroupListData() );
   d->path = a->path();
@@ -695,7 +696,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
 
 
 // check for new groups (created after the given date)
-void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
+void KNGroupManager::slotCheckForNewGroups( KNNntpAccount::Ptr a, QDate date )
 {
   KNGroupListData::Ptr d = KNGroupListData::Ptr( new KNGroupListData() );
   d->path = a->path();

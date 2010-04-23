@@ -15,11 +15,11 @@
 #ifndef KNODE_KNCOLLECTIONVIEW_H
 #define KNODE_KNCOLLECTIONVIEW_H
 
-#include <foldertreewidget.h>
+#include "kngroup.h"
+#include "knfolder.h"
+#include "knnntpaccount.h"
 
-class KNNntpAccount;
-class KNGroup;
-class KNFolder;
+#include <foldertreewidget.h>
 
 class QContextMenuEvent;
 class QDropEvent;
@@ -43,19 +43,19 @@ class KNCollectionView : public FolderTreeWidget
     void writeConfig();
 
   public slots:
-    void addAccount(KNNntpAccount* a);
-    void removeAccount(KNNntpAccount* a);
-    void updateAccount(KNNntpAccount* a);
+    void addAccount( KNNntpAccount::Ptr a );
+    void removeAccount( KNNntpAccount::Ptr a );
+    void updateAccount( KNNntpAccount::Ptr a );
     void reloadAccounts();
 
-    void addGroup(KNGroup* g);
-    void removeGroup(KNGroup* g);
-    void updateGroup(KNGroup* g);
+    void addGroup( KNGroup::Ptr g );
+    void removeGroup( KNGroup::Ptr g );
+    void updateGroup( KNGroup::Ptr g );
 
-    void addFolder(KNFolder* f);
-    void removeFolder(KNFolder* f);
-    void activateFolder(KNFolder* f);
-    void updateFolder(KNFolder* f);
+    void addFolder( KNFolder::Ptr f );
+    void removeFolder( KNFolder::Ptr f );
+    void activateFolder( KNFolder::Ptr f );
+    void updateFolder( KNFolder::Ptr f );
     void addPendingFolders();
     void reloadFolders();
 

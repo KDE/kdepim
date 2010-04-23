@@ -15,6 +15,7 @@
 #ifndef KNCONFIGWIDGETS_H
 #define KNCONFIGWIDGETS_H
 
+#include "knnntpaccount.h"
 #include "knode_export.h"
 
 #include <kpagedialog.h>
@@ -43,7 +44,6 @@ namespace Kpgp {
 class KNArticleFilter;
 class KNDisplayedHeader;
 class KNFilterManager;
-class KNNntpAccount;
 
 namespace KNode {
   class Cleanup;
@@ -73,26 +73,29 @@ class KNODE_EXPORT NntpAccountListWidget : public KCModule, private Ui::NntpAcco
         /** Creates a new account list item.
          * @param a The account.
          */
-        explicit AccountListItem( KNNntpAccount *a ) :  mAccount( a ) {}
+        explicit AccountListItem( KNNntpAccount::Ptr a )
+          : mAccount( a )
+          {}
         /** Returns the account assiciated with this item. */
-        KNNntpAccount *account() const { return mAccount; }
+        KNNntpAccount::Ptr account() const
+          { return mAccount; }
       private:
-        KNNntpAccount *mAccount;
+        KNNntpAccount::Ptr mAccount;
     };
 
   public slots:
     /** Add an list view item for the given account.
      * @param a The new account.
      */
-    void slotAddItem( KNNntpAccount *a );
+    void slotAddItem( KNNntpAccount::Ptr a );
     /** Remove the list view item of the given account.
      * @param a The account.
      */
-    void slotRemoveItem( KNNntpAccount *a );
+    void slotRemoveItem( KNNntpAccount::Ptr a );
     /** Update the item of the given account.
      * @param a The account.
      */
-    void slotUpdateItem(KNNntpAccount *a);
+    void slotUpdateItem( KNNntpAccount::Ptr a );
 
   protected slots:
     /** Item selection has changed. */

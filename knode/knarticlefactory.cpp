@@ -64,7 +64,7 @@ KNArticleFactory::~KNArticleFactory()
 }
 
 
-void KNArticleFactory::createPosting(KNNntpAccount *a)
+void KNArticleFactory::createPosting( KNNntpAccount::Ptr a )
 {
   if(!a)
     return;
@@ -85,7 +85,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
 }
 
 
-void KNArticleFactory::createPosting(KNGroup *g)
+void KNArticleFactory::createPosting( KNGroup::Ptr g )
 {
   if(!g)
     return;
@@ -112,7 +112,7 @@ void KNArticleFactory::createReply( KNRemoteArticle::Ptr a, const QString &selec
   if(!a)
     return;
 
-  KNGroup *g=static_cast<KNGroup*>(a->collection());
+  KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( a->collection() );
 
   QByteArray chset;
   if ( knGlobals.settings()->useOwnCharset() ) {
@@ -366,11 +366,11 @@ void KNArticleFactory::createCancel( KNArticle::Ptr a )
     default :               return;
   }
 
-  KNGroup *grp = 0;
-  KNNntpAccount *nntp=0;
+  KNGroup::Ptr grp;
+  KNNntpAccount::Ptr nntp;
 
   if ( a->type() == KNArticle::ATremote )
-    nntp=(static_cast<KNGroup*>(a->collection()))->account();
+    nntp = boost::static_pointer_cast<KNGroup>( a->collection() )->account();
   else {
     if(!nntp)
       nntp=knGlobals.accountManager()->first();
@@ -440,11 +440,11 @@ void KNArticleFactory::createSupersede( KNArticle::Ptr a )
        i18n("Do you really want to supersede this article?"), QString(), KGuiItem(i18n("Supersede")), KStandardGuiItem::cancel() ) )
     return;
 
-  KNGroup *grp = 0;
-  KNNntpAccount *nntp;
+  KNGroup::Ptr grp;
+  KNNntpAccount::Ptr nntp;
 
   if ( a->type() == KNArticle::ATremote )
-    nntp=(static_cast<KNGroup*>(a->collection()))->account();
+    nntp = boost::static_pointer_cast<KNGroup>( a->collection() )->account();
   else {
     KNLocalArticle::Ptr la = boost::static_pointer_cast<KNLocalArticle>( a );
     la->setCanceled(true);
@@ -579,11 +579,11 @@ void KNArticleFactory::edit( KNLocalArticle::Ptr a )
   KPIMIdentities::Identity id = KNGlobals::self()->settings()->identity();
 
   if(a->doPost()) {
-    KNNntpAccount *acc=knGlobals.accountManager()->account(a->serverId());
+    KNNntpAccount::Ptr acc = knGlobals.accountManager()->account( a->serverId() );
     if(acc) {
       KMime::Headers::Newsgroups *grps=a->newsgroups();
       if ( !grps->isEmpty() ) {
-        KNGroup *grp = knGlobals.groupManager()->group(grps->groups().first(), acc);
+        KNGroup::Ptr grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
         if ( grp && !grp->identity().isNull() ) {
           id = grp->identity();
         } else if ( !acc->identity().isNull() ) {
@@ -608,7 +608,7 @@ void KNArticleFactory::edit( KNLocalArticle::Ptr a )
 void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
 {
   KNJobData *job=0;
-  KNServerInfo *ser=0;
+  KNServerInfo::Ptr ser;
 
   KNLocalArticle::List unsent, sent;
   for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it ) {
@@ -676,7 +676,7 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
 void KNArticleFactory::sendOutbox()
 {
   KNLocalArticle::List lst;
-  KNFolder *ob=0;
+  KNFolder::Ptr ob;
 
   if(!knGlobals.folderManager()->loadOutbox()) {
     KMessageBox::error(knGlobals.topWidget, i18n("Unable to load the outbox-folder."));
@@ -786,24 +786,24 @@ void KNArticleFactory::processJob(KNJobData *j)
 }
 
 
-KNLocalArticle::Ptr KNArticleFactory::newArticle( KNCollection *col, const QByteArray &defChset, bool withXHeaders, KNArticle::Ptr origPost )
+KNLocalArticle::Ptr KNArticleFactory::newArticle( KNCollection::Ptr col, const QByteArray &defChset, bool withXHeaders, KNArticle::Ptr origPost )
 {
   if ( knGlobals.settings()->generateMessageID() && knGlobals.settings()->hostname().isEmpty() ) {
     KMessageBox::sorry(knGlobals.topWidget, i18n("Please set a hostname for the generation\nof the message-id or disable it."));
     return KNLocalArticle::Ptr();
   }
 
-  KNLocalArticle::Ptr art( new KNLocalArticle( 0 ) );
+  KNLocalArticle::Ptr art( new KNLocalArticle( KNArticleCollection::Ptr() ) );
   KPIMIdentities::Identity id;
 
   if (col) {
     if (col->type() == KNCollection::CTgroup) {
-      id = (static_cast<KNGroup *>(col))->identity();
+      id = boost::static_pointer_cast<KNGroup>( col )->identity();
       if ( id.isNull() ) {
-        id = (static_cast<KNGroup *>(col))->account()->identity();
+        id = boost::static_pointer_cast<KNGroup>( col )->account()->identity();
       }
     } else if (col->type() == KNCollection::CTnntpAccount) {
-      id = (static_cast<KNNntpAccount *>(col))->identity();
+      id = boost::static_pointer_cast<KNNntpAccount>( col )->identity();
     }
   }
   if ( id.isNull() ) {

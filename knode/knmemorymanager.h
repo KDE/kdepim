@@ -16,6 +16,7 @@
 #define KNMEMORYMANAGER_H
 
 #include "knarticle.h"
+#include "knarticlecollection.h"
 
 #include <QList>
 
@@ -29,10 +30,10 @@ class KNMemoryManager {
     ~KNMemoryManager();
 
     /** Collection-Handling */
-    void updateCacheEntry(KNArticleCollection *c);
-    void removeCacheEntry(KNArticleCollection *c);
+    void updateCacheEntry( KNArticleCollection::Ptr c );
+    void removeCacheEntry( KNArticleCollection::Ptr c );
     /** try to free enough memory for this collection */
-    void prepareLoad(KNArticleCollection *c);
+    void prepareLoad( KNArticleCollection::Ptr c );
 
     /** Article-Handling */
     void updateCacheEntry( KNArticle::Ptr a );
@@ -57,19 +58,23 @@ class KNMemoryManager {
     /** Group/folder cache item. */
     class CollectionItem {
     public:
-      CollectionItem(KNArticleCollection *c) { col=c; sync(); }
+      explicit CollectionItem( KNArticleCollection::Ptr c )
+      {
+        col = c;
+        sync();
+      }
       ~CollectionItem()                      { }
       void sync();
 
-      KNArticleCollection *col;
+      KNArticleCollection::Ptr col;
       int storageSize;
 
       /// List of collection cache items.
       typedef QList<KNMemoryManager::CollectionItem*> List;
     };
 
-    CollectionItem* findCacheEntry(KNArticleCollection *c, bool take=false);
-    ArticleItem* findCacheEntry( KNArticle::Ptr a, bool take = false );
+    CollectionItem * findCacheEntry( KNArticleCollection::Ptr c, bool take = false );
+    ArticleItem * findCacheEntry( KNArticle::Ptr a, bool take = false );
     void checkMemoryUsageCollections();
     void checkMemoryUsageArticles();
 

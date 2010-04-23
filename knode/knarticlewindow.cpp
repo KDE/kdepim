@@ -31,7 +31,7 @@ using namespace KNode;
 QList<KNode::ArticleWindow*> ArticleWindow::mInstances;
 
 
-bool ArticleWindow::closeAllWindowsForCollection( KNArticleCollection *col, bool force )
+bool ArticleWindow::closeAllWindowsForCollection( KNArticleCollection::Ptr col, bool force )
 {
   ArticleWindow::List list = mInstances;
   for ( ArticleWindow::List::Iterator it = list.begin(); it != list.end(); ++it )

@@ -1128,7 +1128,7 @@ void ArticleWidget::articleLoadError( KNArticle::Ptr article, const QString &err
 }
 
 
-void ArticleWidget::collectionRemoved( KNArticleCollection *coll )
+void ArticleWidget::collectionRemoved( KNArticleCollection::Ptr coll )
 {
   for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() && (*it)->article()->collection() == coll )
@@ -1292,7 +1292,7 @@ void ArticleWidget::slotViewSource()
   } else {
     // download remote article
     if ( mArticle && mArticle->type() == KNArticle::ATremote ) {
-      KNGroup *g = static_cast<KNGroup*>( mArticle->collection() );
+      KNGroup::Ptr g = boost::static_pointer_cast<KNGroup>( mArticle->collection() );
       KNRemoteArticle::Ptr a = KNRemoteArticle::Ptr( new KNRemoteArticle( g ) ); //we need "g" to access the nntp-account
       a->messageID( true )->from7BitString( mArticle->messageID()->as7BitString( false ) );
       a->lines( true )->from7BitString( mArticle->lines( true )->as7BitString( false ) );

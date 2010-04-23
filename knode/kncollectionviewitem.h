@@ -15,9 +15,9 @@
 #ifndef KNCOLLECTIONVIEWITEM_H
 #define KNCOLLECTIONVIEWITEM_H
 
-#include <foldertreewidget.h>
+#include "kncollection.h"
 
-class KNCollection;
+#include <foldertreewidget.h>
 
 using namespace KPIM;
 
@@ -39,11 +39,11 @@ class KNCollectionViewItem : public FolderTreeWidgetItem  {
     /**
       Sets the collection this item represents.
     */
-    void setCollection( KNCollection *c );
+    void setCollection( KNCollection::Ptr c );
     /**
       Returns the collection this item represents.
     */
-    KNCollection *collection() const
+    KNCollection::Ptr collection() const
       { return coll; };
 
   protected:
@@ -57,7 +57,7 @@ class KNCollectionViewItem : public FolderTreeWidgetItem  {
     /** Inialize this item. */
     void setUp();
 
-    KNCollection *coll;
+    KNCollection::Ptr coll;
 };
 
 #endif

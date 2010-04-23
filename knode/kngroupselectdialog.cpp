@@ -25,7 +25,7 @@
 #include <QPushButton>
 
 
-KNGroupSelectDialog::KNGroupSelectDialog( QWidget *parent, KNNntpAccount *a, const QStringList &groups ) :
+KNGroupSelectDialog::KNGroupSelectDialog( QWidget *parent, KNNntpAccount::Ptr a, const QStringList &groups ) :
   KNGroupBrowser(parent, i18n("Select Destinations"), a)
 {
   selView=new Q3ListView(page);

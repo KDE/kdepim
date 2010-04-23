@@ -61,18 +61,18 @@ class KNGroupBrowser : public KDialog {
         KNGroupInfo info;
     };
 
-    KNGroupBrowser( QWidget *parent, const QString &caption, KNNntpAccount *a, ButtonCodes buttons = 0,
+    KNGroupBrowser( QWidget *parent, const QString &caption, KNNntpAccount::Ptr a, ButtonCodes buttons = 0,
                     bool newCBact = false, const QString &user1 = QString(), const QString &user2 = QString() );
     ~KNGroupBrowser();
 
-    KNNntpAccount* account()const      { return a_ccount; }
+    KNNntpAccount::Ptr account() const { return a_ccount; }
     virtual void itemChangedState(CheckItem *it, bool s)=0;
 
   public slots:
     void slotReceiveList( KNGroupListData::Ptr d );
 
   signals:
-    void loadList(KNNntpAccount *a);
+    void loadList( KNNntpAccount::Ptr a );
 
   protected:
     virtual void updateItemState(CheckItem *it)=0;
@@ -95,7 +95,7 @@ class KNGroupBrowser : public KDialog {
     QString lastFilter;
     bool incrementalFilter;
 
-    KNNntpAccount *a_ccount;
+    KNNntpAccount::Ptr a_ccount;
     QList<KNGroupInfo> *allList, *matchList;
 
   protected slots:

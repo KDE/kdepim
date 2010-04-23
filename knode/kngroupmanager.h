@@ -15,14 +15,13 @@
 #ifndef KNGROUPMANAGER_H
 #define KNGROUPMANAGER_H
 
+#include "kngroup.h"
+#include "knjobdata.h"
+#include "knnntpaccount.h"
+
 #include <QObject>
 #include <qlist.h>
 
-#include "knjobdata.h"
-#include "kngroup.h"
-
-class KNNntpAccount;
-class KNServerInfo;
 class KNArticleManager;
 class KNCleanUp;
 
@@ -91,55 +90,81 @@ class KNGroupManager : public QObject , public KNJobConsumer {
     ~KNGroupManager();
 
     // group access
-    void loadGroups(KNNntpAccount *a);
-    void getSubscribed(KNNntpAccount *a, QStringList &l);
-    KNGroup::List groupsOfAccount( KNNntpAccount *a );
+    void loadGroups( KNNntpAccount::Ptr a );
+    void getSubscribed( KNNntpAccount::Ptr a, QStringList &l );
+    /**
+     * Returns the list of (subscribed) groups in the account @p a.
+     */
+    KNGroup::List groupsOfAccount( KNNntpAccount::Ptr a );
 
-    bool loadHeaders(KNGroup *g);
-    bool unloadHeaders(KNGroup *g, bool force=true);
+    bool loadHeaders( KNGroup::Ptr g );
+    bool unloadHeaders( KNGroup::Ptr g, bool force = true );
 
-    KNGroup* group(const QString &gName, const KNServerInfo *s);
-    KNGroup* firstGroupOfAccount(const KNServerInfo *s);
-    KNGroup* currentGroup() const              { return c_urrentGroup; }
+    /**
+     * Returns a group named @p gName in the server @p s, or null if none is found.
+     */
+    KNGroup::Ptr group( const QString &gName, const KNServerInfo::Ptr s );
+    /**
+     * Returns the first group in the server @p s, or null if it is empty.
+     */
+    KNGroup::Ptr firstGroupOfAccount( const KNServerInfo::Ptr s );
+    KNGroup::Ptr currentGroup() const { return c_urrentGroup; }
     bool hasCurrentGroup() const               { return (c_urrentGroup!=0); }
-    void setCurrentGroup(KNGroup *g);
+    void setCurrentGroup( KNGroup::Ptr g );
 
     // group handling
-    void showGroupDialog(KNNntpAccount *a, QWidget *parent=0);
-    void subscribeGroup(const KNGroupInfo *gi, KNNntpAccount *a);
-    bool unsubscribeGroup(KNGroup *g=0);
-    void showGroupProperties(KNGroup *g=0);
-    void expireGroupNow(KNGroup *g=0);
-    void reorganizeGroup(KNGroup *g=0);
+    void showGroupDialog( KNNntpAccount::Ptr a, QWidget *parent = 0 );
+    void subscribeGroup( const KNGroupInfo *gi, KNNntpAccount::Ptr a );
+    bool unsubscribeGroup( KNGroup::Ptr g = KNGroup::Ptr() );
+    /**
+     * Shows the property dialog of @p g or if null, the properties of the currentGroup().
+     */
+    void showGroupProperties( KNGroup::Ptr g = KNGroup::Ptr() );
+    void expireGroupNow( KNGroup::Ptr g = KNGroup::Ptr() );
+    void reorganizeGroup( KNGroup::Ptr g = KNGroup::Ptr() );
 
-    void checkGroupForNewHeaders(KNGroup *g=0);
-    void checkAll(KNNntpAccount *a, bool silent=false);
+    void checkGroupForNewHeaders( KNGroup::Ptr g = KNGroup::Ptr() );
+    void checkAll( KNNntpAccount::Ptr a, bool silent = false );
+    /**
+     * Convenient method to call checkAll(KNNntpAccount::Ptr,bool) with the account
+     * whose id is @p id.
+     */
+    void checkAll( int id, bool silent = false );
 
     void expireAll(KNCleanUp *cup);
-    void expireAll(KNNntpAccount *a);
+    void expireAll( KNNntpAccount::Ptr a );
     void syncGroups();
 
   public slots:
     /** load group list from disk (if this fails: ask user if we should fetch the list) */
-    void slotLoadGroupList(KNNntpAccount *a);
+    void slotLoadGroupList( KNNntpAccount::Ptr a );
     /** fetch group list from server */
-    void slotFetchGroupList(KNNntpAccount *a);
+    void slotFetchGroupList( KNNntpAccount::Ptr a );
     /** check for new groups (created after the given date) */
-    void slotCheckForNewGroups(KNNntpAccount *a, QDate date);
+    void slotCheckForNewGroups( KNNntpAccount::Ptr a, QDate date );
 
   protected:
     /** Reimplemented from KNJobConsumer */
     void processJob(KNJobData *j);
     KNGroup::List mGroupList;
-    KNGroup *c_urrentGroup;
+    KNGroup::Ptr c_urrentGroup;
     KNArticleManager *a_rticleMgr;
 
   signals:
     void newListReady( KNGroupListData::Ptr d );
 
-    void groupAdded(KNGroup* g);
-    void groupRemoved(KNGroup* g);
-    void groupUpdated(KNGroup* g);
+    /**
+     * Emitted when a group is added.
+     */
+    void groupAdded( KNGroup::Ptr g );
+    /**
+     * Emitted when a group is removed.
+     */
+    void groupRemoved( KNGroup::Ptr g );
+    /**
+     * Emitted when a group is updated.
+     */
+    void groupUpdated( KNGroup::Ptr g );
 
 };
 

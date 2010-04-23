@@ -15,6 +15,7 @@
 #ifndef KNSERVERINFO_H
 #define KNSERVERINFO_H
 
+#include <boost/shared_ptr.hpp>
 #include <QString>
 
 class KConfigGroup;
@@ -29,6 +30,11 @@ class KNServerInfo {
 
   public:
     enum Encryption { None, SSL, TLS };
+
+    /**
+      Shared pointer to a KNServerInfo. To be used instead of raw KNServerInfo*.
+    */
+    typedef boost::shared_ptr<KNServerInfo> Ptr;
 
     KNServerInfo();
     ~KNServerInfo();

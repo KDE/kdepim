@@ -16,6 +16,7 @@
 #define KNODE_KNARTICLEWINDOW_H
 
 #include "knarticle.h"
+#include "knarticlecollection.h"
 
 #include <kxmlguiwindow.h>
 
@@ -49,7 +50,7 @@ class ArticleWindow : public KXmlGuiWindow  {
      * @param force Really close the windows.
      * @return true if all windows have been closed.
      */
-    static bool closeAllWindowsForCollection( KNArticleCollection *col, bool force = true );
+    static bool closeAllWindowsForCollection( KNArticleCollection::Ptr col, bool force = true );
     /** Clise all windows showing the given article.
      * @param art Close all windows showing this article.
      * @param force Really close the windows.

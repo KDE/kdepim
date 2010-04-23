@@ -168,7 +168,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
   // handle authentication errors, ie. request password and try again
   if ( job->error() == KIO::ERR_COULD_NOT_LOGIN ) {
     kDebug(5003) <<"authentication error";
-    KNServerInfo *account = job->account();
+    KNServerInfo::Ptr account = job->account();
     if ( account ) {
       QString user = account->user();
       QString pass = account->pass();

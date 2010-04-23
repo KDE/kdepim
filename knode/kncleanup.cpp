@@ -57,17 +57,17 @@ void KNCleanUp::start()
   d_lg = new ProgressDialog( mColList.count() );
   d_lg->show();
 
-  for ( QList<KNArticleCollection*>::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
+  for ( KNArticleCollection::List::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->type() == KNCollection::CTgroup ) {
       d_lg->showMessage( i18n( "Deleting expired articles in <b>%1</b>", (*it)->name() ) ); // krazy:exclude=qmethods
       qApp->processEvents();
-      expireGroup( static_cast<KNGroup*>( (*it) ) );
+      expireGroup( boost::static_pointer_cast<KNGroup>( (*it) ) );
       d_lg->doProgress();
     }
     else if ( (*it)->type() == KNCollection::CTfolder ) {
       d_lg->showMessage( i18n("Compacting folder <b>%1</b>", (*it)->name() ) ); // krazy:exclude=qmethods
       qApp->processEvents();
-      compactFolder( static_cast<KNFolder*>( (*it) ) );
+      compactFolder( boost::static_pointer_cast<KNFolder>( (*it) ) );
       d_lg->doProgress();
     }
   }
@@ -87,7 +87,7 @@ void KNCleanUp::reset()
 }
 
 
-void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
+void KNCleanUp::expireGroup( KNGroup::Ptr g, bool showResult )
 {
   int expDays=0, idRef=0, foundId=-1, delCnt=0, leftCnt=0, newCnt=0, firstArtNr=g->firstNr(), firstNew=-1;
   bool unavailable=false;
@@ -191,7 +191,7 @@ void KNCleanUp::expireGroup( KNGroup *g, bool showResult )
 }
 
 
-void KNCleanUp::compactFolder(KNFolder *f)
+void KNCleanUp::compactFolder( KNFolder::Ptr f )
 {
   KNLocalArticle::Ptr art;
 

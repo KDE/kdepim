@@ -15,16 +15,16 @@
 #ifndef KNCLEANUP_H
 #define KNCLEANUP_H
 
-#include <QList>
+#include "knarticlecollection.h"
+#include "kngroup.h"
 
+#include <QList>
 #include <KDialog>
 
 class QProgressBar;
 class QCloseEvent;
 class QLabel;
 
-class KNArticleCollection;
-class KNGroup;
 class KNFolder;
 
 namespace KNode {
@@ -39,16 +39,20 @@ class KNCleanUp {
     KNCleanUp();
     ~KNCleanUp();
 
-    void appendCollection(KNArticleCollection *c)   { mColList.append( c ); }
+    /**
+     * Add a collection to handle.
+     */
+    void appendCollection( KNArticleCollection::Ptr c )
+      { mColList.append( c ); }
     void start();
     void reset();
 
-    void expireGroup( KNGroup *g, bool showResult = false );
+    void expireGroup( KNGroup::Ptr g, bool showResult = false );
     /** Compacts the given folder, ie. remove all deleted messages from the
      * mbox file.
      * @param f The folder to compact.
      */
-    void compactFolder(KNFolder *f);
+    void compactFolder( KNFolder::Ptr f );
 
   protected:
 
@@ -78,7 +82,7 @@ class KNCleanUp {
     };
 
     ProgressDialog *d_lg;
-    QList<KNArticleCollection*> mColList;
+    KNArticleCollection::List mColList;
 
 };
 

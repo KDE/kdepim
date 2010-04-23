@@ -24,7 +24,7 @@ class KNGroupDialog : public KNGroupBrowser {
   Q_OBJECT
 
   public:
-    KNGroupDialog(QWidget *parent, KNNntpAccount *a);
+    KNGroupDialog( QWidget *parent, KNNntpAccount::Ptr a );
     ~KNGroupDialog();
 
     void toSubscribe(QList<KNGroupInfo> *l);
@@ -53,8 +53,8 @@ class KNGroupDialog : public KNGroupBrowser {
   void slotDatePickerEnabled( bool );
 
   signals:
-    void fetchList(KNNntpAccount *a);
-    void checkNew(KNNntpAccount *a,QDate date);
+    void fetchList( KNNntpAccount::Ptr a );
+    void checkNew( KNNntpAccount::Ptr a, QDate date );
 };
 
 #endif

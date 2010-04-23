@@ -43,7 +43,7 @@ using namespace KNode::Utilities;
 #define SORT_DEPTH 5
 
 
-KNGroup::KNGroup(KNCollection *p)
+KNGroup::KNGroup( KNCollection::Ptr p )
   : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0), i_gnoreCount(0),
     f_irstNr(0), l_astNr(0), m_axFetch(0), d_ynDataFormat(1), f_irstNew(-1), l_ocked(false),
     u_seCharset(false), s_tatus(unknown),
@@ -158,12 +158,12 @@ void KNGroup::writeConfig()
 }
 
 
-KNNntpAccount* KNGroup::account()
+KNNntpAccount::Ptr KNGroup::account()
 {
-  KNCollection *p=parent();
+  KNCollection::Ptr p = parent();
   while(p->type()!=KNCollection::CTnntpAccount) p=p->parent();
 
-  return (KNNntpAccount*)p_arent;
+  return boost::static_pointer_cast<KNNntpAccount>( p_arent );
 }
 
 const KPIMIdentities::Identity & KNGroup::identity() const
@@ -217,7 +217,7 @@ bool KNGroup::loadHdrs()
       }
       QList<QByteArray>::ConstIterator it = splits.constBegin();
 
-      art = KNRemoteArticle::Ptr( new KNRemoteArticle( this ) );
+      art = KNRemoteArticle::Ptr( new KNRemoteArticle( thisGroupPtr() ) );
 
       art->messageID()->from7BitString( *it );
       ++it;
@@ -431,7 +431,7 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
   for( KIO::UDSEntryList::ConstIterator it = list.begin(); it != list.end(); ++it ) {
 
     //new Header-Object
-    art = KNRemoteArticle::Ptr( new KNRemoteArticle(this) );
+    art = KNRemoteArticle::Ptr( new KNRemoteArticle( thisGroupPtr() ) );
     art->setNew(true);
 
     const QList<uint> fields = (*it).listFields();
@@ -450,13 +450,13 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
 
         if ( hdrName == "Subject" ) {
           QByteArray subject;
-          Locale::recodeString( hdrValue.toLatin1(), this, subject );
+          Locale::recodeString( hdrValue.toLatin1(), thisGroupPtr(), subject );
           art->subject()->from7BitString( subject );
           if ( art->subject()->isEmpty() )
             art->subject()->fromUnicodeString( i18n("no subject"), art->defaultCharset() );
         } else if ( hdrName == "From" ) {
           QByteArray from;
-          Locale::recodeString( hdrValue.toLatin1(), this, from );
+          Locale::recodeString( hdrValue.toLatin1(), thisGroupPtr(), from );
           art->from()->from7BitString( from );
           if ( art->from()->as7BitString().isEmpty() ) {
             // If the address incorrect (e.g. "toto <toto AT domain>"), the from is empty !
@@ -1059,10 +1059,11 @@ int KNGroup::statThrWithUnread()
 
 QString KNGroup::prepareForExecution()
 {
-  if (knGlobals.groupManager()->loadHeaders(this))
+  if ( KNGlobals::self()->groupManager()->loadHeaders( thisGroupPtr() ) ) {
     return QString();
-  else
+  } else {
     return i18n("Cannot load saved headers: %1", groupname());
+  }
 }
 
 //***************************************************************************
@@ -1119,4 +1120,9 @@ KNode::Cleanup * KNGroup::activeCleanupConfig()
   if (!cleanupConfig()->useDefault())
     return cleanupConfig();
   return account()->activeCleanupConfig();
+}
+
+KNGroup::Ptr KNGroup::thisGroupPtr()
+{
+    return KNGlobals::self()->groupManager()->group( groupname(), account() );
 }

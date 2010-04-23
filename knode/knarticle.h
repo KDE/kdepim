@@ -24,7 +24,6 @@
 #include <kmime/kmime_newsarticle.h>
 #include <kmime/boolflags.h>
 
-
 class KNLoadHelper;
 class KNHdrViewItem;
 class KNArticleCollection;
@@ -33,7 +32,6 @@ class KNArticleCollection;
     usual headers of a RFC822-message. Further more it contains an
     unique id and can store a pointer to a @ref QListViewItem. It is
     used as a base class for all visible articles. */
-
 class KNArticle : public KMime::NewsArticle, public KNJobItem {
 
   public:
@@ -48,7 +46,7 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
       ATlocal
     };
 
-    KNArticle(KNArticleCollection *c);
+    KNArticle( boost::shared_ptr<KNArticleCollection> c );
     ~KNArticle();
 
     virtual void clear();
@@ -81,13 +79,13 @@ class KNArticle : public KMime::NewsArticle, public KNJobItem {
     void setNotUnloadable(bool b=true)   { f_lags.set(1, b); }
 
     //article-collection
-    KNArticleCollection* collection() const          { return c_ol; }
-    void setCollection(KNArticleCollection *c)  { c_ol=c; }
+    boost::shared_ptr<KNArticleCollection> collection() const { return c_ol; }
+    void setCollection( boost::shared_ptr<KNArticleCollection> c ) { c_ol = c; }
     bool isOrphant() const                           { return (i_d==-1); }
 
   protected:
     int i_d; //unique in the given collection
-    KNArticleCollection *c_ol;
+    boost::shared_ptr<KNArticleCollection> c_ol;
     KNHdrViewItem *i_tem;
 
     KMime::BoolFlags f_lags;
@@ -110,7 +108,7 @@ class KNRemoteArticle : public KNArticle {
     /// List of remote articles.
     typedef QList<KNRemoteArticle::Ptr> List;
 
-    KNRemoteArticle(KNGroup *g);
+    KNRemoteArticle( boost::shared_ptr<KNGroup> g );
     ~KNRemoteArticle();
 
     // type
@@ -217,7 +215,7 @@ class KNLocalArticle : public KNArticle {
     /// List of local articles.
     typedef QList<KNLocalArticle::Ptr> List;
 
-    KNLocalArticle(KNArticleCollection *c=0);
+    KNLocalArticle( boost::shared_ptr<KNArticleCollection> c = boost::shared_ptr<KNArticleCollection>() );
     ~KNLocalArticle();
 
     //type

@@ -19,7 +19,7 @@
 #include <klocale.h>
 #include <QDir>
 
-KNode::GroupListJob::GroupListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i, bool incremental )
+KNode::GroupListJob::GroupListJob( KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i, bool incremental )
   : KNJobData( KNJobData::JTFetchGroups, c, a, i ),
     mIncremental( incremental )
 {
@@ -115,7 +115,7 @@ void KNode::GroupListJob::slotResult( KJob * job )
 
 
 
-KNode::GroupLoadJob::GroupLoadJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i ) :
+KNode::GroupLoadJob::GroupLoadJob( KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i ) :
   KNJobData( KNJobData::JTLoadGroups, c, a, i )
 {
 }
@@ -134,7 +134,7 @@ void KNode::GroupLoadJob::execute( )
 
 
 
-KNode::ArticleListJob::ArticleListJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i, bool silent ) :
+KNode::ArticleListJob::ArticleListJob( KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i, bool silent ) :
     KNJobData( JTfetchNewHeaders, c, a, i ),
     mSilent( silent )
 {
@@ -200,7 +200,7 @@ void KNode::ArticleListJob::slotResult( KJob * _job )
 
 
 
-KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i, bool parse ) :
+KNode::ArticleFetchJob::ArticleFetchJob( KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i, bool parse ) :
     KNJobData( JTfetchArticle, c, a, i ),
     mParseArticle( parse )
 {
@@ -212,7 +212,7 @@ void KNode::ArticleFetchJob::execute()
 
   KUrl url = baseUrl();
 
-  url.addPath( static_cast<KNGroup*>( target->collection() )->groupname() );
+  url.addPath( boost::static_pointer_cast<KNGroup>( target->collection() )->groupname() );
 
   // By default, fetch articles by their server-side Id.
   // (some server does not understand the "ARTICLE <msg-id>" command correctly (bug #193550))
@@ -247,7 +247,7 @@ void KNode::ArticleFetchJob::slotResult( KJob * job )
 
 
 
-KNode::ArticlePostJob::ArticlePostJob( KNJobConsumer * c, KNServerInfo * a, KNJobItem::Ptr i ) :
+KNode::ArticlePostJob::ArticlePostJob( KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i ) :
     KNJobData( JTpostArticle, c, a, i )
 {
 }

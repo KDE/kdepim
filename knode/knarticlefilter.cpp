@@ -180,7 +180,7 @@ void KNArticleFilter::save()
 
 
 
-void KNArticleFilter::doFilter(KNGroup *g)
+void KNArticleFilter::doFilter( KNGroup::Ptr g )
 {
   c_ount=0;
   KNRemoteArticle::Ptr art, ref;
@@ -191,10 +191,10 @@ void KNArticleFilter::doFilter(KNGroup *g)
 
   if(!l_oaded) load();
 
-  subject.expand(g);  // replace placeholders
-  from.expand(g);
-  messageId.expand(g);
-  references.expand(g);
+  subject.expand( g.get() );  // replace placeholders
+  from.expand( g.get() );
+  messageId.expand( g.get() );
+  references.expand( g.get() );
 
   for(int idx=0; idx<g->length(); idx++) {
     art=g->at(idx);
@@ -282,7 +282,7 @@ void KNArticleFilter::doFilter(KNGroup *g)
 }
 
 
-void KNArticleFilter::doFilter(KNFolder *f)
+void KNArticleFilter::doFilter( KNFolder::Ptr f )
 {
   c_ount=0;
   KNLocalArticle::Ptr art;

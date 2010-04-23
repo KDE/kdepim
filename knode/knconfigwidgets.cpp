@@ -66,9 +66,9 @@ KNode::NntpAccountListWidget::NntpAccountListWidget( const KComponentData &inst,
   // the settings dialog is non-modal, so we have to react to changes
   // made outside of the dialog
   KNAccountManager *am = knGlobals.accountManager();
-  connect( am, SIGNAL( accountAdded( KNNntpAccount* ) ), SLOT( slotAddItem( KNNntpAccount* ) ) );
-  connect( am, SIGNAL( accountRemoved( KNNntpAccount* ) ), SLOT( slotRemoveItem( KNNntpAccount* ) ) );
-  connect( am, SIGNAL( accountModified( KNNntpAccount* ) ), SLOT( slotUpdateItem( KNNntpAccount* ) ) );
+  connect( am, SIGNAL( accountAdded( KNNntpAccount::Ptr ) ), SLOT( slotAddItem( KNNntpAccount::Ptr ) ) );
+  connect( am, SIGNAL( accountRemoved( KNNntpAccount::Ptr ) ), SLOT( slotRemoveItem( KNNntpAccount::Ptr ) ) );
+  connect( am, SIGNAL( accountModified( KNNntpAccount::Ptr ) ), SLOT( slotUpdateItem( KNNntpAccount::Ptr ) ) );
 
   slotSelectionChanged();     // disable Delete & Edit initially
 }
@@ -77,13 +77,13 @@ KNode::NntpAccountListWidget::NntpAccountListWidget( const KComponentData &inst,
 void KNode::NntpAccountListWidget::load()
 {
   mAccountList->clear();
-  KNAccountManager::List list = knGlobals.accountManager()->accounts();
-  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it )
+  KNNntpAccount::List list = knGlobals.accountManager()->accounts();
+  for ( KNNntpAccount::List::Iterator it = list.begin(); it != list.end(); ++it )
     slotAddItem( *it );
 }
 
 
-void KNode::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
+void KNode::NntpAccountListWidget::slotAddItem( KNNntpAccount::Ptr a )
 {
   AccountListItem *item;
   item = new AccountListItem( a );
@@ -94,7 +94,7 @@ void KNode::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
 }
 
 
-void KNode::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
+void KNode::NntpAccountListWidget::slotRemoveItem( KNNntpAccount::Ptr a )
 {
   AccountListItem *item;
   for ( int i = 0; i < mAccountList->count(); ++i ) {
@@ -109,7 +109,7 @@ void KNode::NntpAccountListWidget::slotRemoveItem(KNNntpAccount *a)
 }
 
 
-void KNode::NntpAccountListWidget::slotUpdateItem(KNNntpAccount *a)
+void KNode::NntpAccountListWidget::slotUpdateItem( KNNntpAccount::Ptr a )
 {
   AccountListItem *item;
   for ( int i = 0; i < mAccountList->count(); ++i ) {
@@ -143,14 +143,12 @@ void KNode::NntpAccountListWidget::slotSelectionChanged()
 
 void KNode::NntpAccountListWidget::slotAddBtnClicked()
 {
-  KNNntpAccount *acc = new KNNntpAccount();
+  KNNntpAccount::Ptr acc = KNNntpAccount::Ptr( new KNNntpAccount() );
 
   if(acc->editProperties(this)) {
     if(knGlobals.accountManager()->newAccount(acc))
       acc->writeConfig();
   }
-  else
-    delete acc;
 }
 
 

@@ -78,7 +78,7 @@ QByteArray Locale::defaultCharset()
   return toMimeCharset( knGlobals.settings()->charset() ).toLatin1();
 }
 
-QByteArray Locale::defaultCharset( KNGroup *g )
+QByteArray Locale::defaultCharset( KNGroup::Ptr g )
 {
   if ( g && g->useCharset() ) {
     return toMimeCharset( g->defaultCharset() ).toLatin1();
@@ -90,7 +90,7 @@ QByteArray Locale::defaultCharset( KNGroup *g )
 
 
 
-void Locale::recodeString( const QString &s, KNGroup *g, QByteArray &result )
+void Locale::recodeString( const QString &s, KNGroup::Ptr g, QByteArray &result )
 {
   Q_ASSERT( g );
 

@@ -15,6 +15,8 @@
 #ifndef KNACCOUNTMANAGER_H
 #define KNACCOUNTMANAGER_H
 
+#include "knnntpaccount.h"
+
 #include <QObject>
 #include <qglobal.h>
 #include <QList>
@@ -24,7 +26,6 @@ namespace KWallet {
 }
 
 class KNGroupManager;
-class KNNntpAccount;
 
 
 /** Account manager.
@@ -43,42 +44,39 @@ class KNAccountManager : public QObject
      */
     ~KNAccountManager();
 
-    /// List of accounts
-    typedef QList<KNNntpAccount*> List;
-
     /** Save all accounts. */
     void prepareShutdown();
 
     /** Sets the current account.
      * @param a The current account.
      */
-    void setCurrentAccount( KNNntpAccount *a );
+    void setCurrentAccount( KNNntpAccount::Ptr a );
 
     /** Add a new account.
      *  @param a A new account allocated and configured by the caller.
      */
-    bool newAccount( KNNntpAccount *a );
+    bool newAccount( KNNntpAccount::Ptr a );
     /** Remove an existing account.
      *  @param a The account to remove, if @p a is 0, the current account will
      *  be removed.
      */
-    bool removeAccount( KNNntpAccount *a = 0 );
+    bool removeAccount( KNNntpAccount::Ptr a = KNNntpAccount::Ptr() );
     /** Show the properties dialog for the given account.
      * @param a The account to edit, uses the current if @p a is 0.
      */
-    void editProperties( KNNntpAccount *a = 0 );
-    void accountRenamed(KNNntpAccount *a=0);
+    void editProperties( KNNntpAccount::Ptr a = KNNntpAccount::Ptr() );
+    void accountRenamed( KNNntpAccount::Ptr a = KNNntpAccount::Ptr() );
 
     /** Returns true if there is a current account. */
     bool hasCurrentAccount() const { return c_urrentAccount != 0; }
     /** Returns the current account. */
-    KNNntpAccount* currentAccount() const       { return c_urrentAccount; }
+    KNNntpAccount::Ptr currentAccount() const { return c_urrentAccount; }
     /** Returns the account with the given id. */
-    KNNntpAccount* account( int id );
+    KNNntpAccount::Ptr account( int id );
     /** Returns the list of all accounts. */
-    List accounts() const { return mAccounts; }
+    KNNntpAccount::List accounts() const { return mAccounts; }
     /** Returns the first account (used as fallback sometimes). */
-    KNNntpAccount* first() const;
+    KNNntpAccount::Ptr first() const;
 
     /** Loads the passwords of all accounts, allows on-demand wallet opening */
     void loadPasswords();
@@ -91,12 +89,12 @@ class KNAccountManager : public QObject
   protected:
     void loadAccounts();
     KNGroupManager *gManager;
-    KNNntpAccount *c_urrentAccount;
+    KNNntpAccount::Ptr c_urrentAccount;
 
   signals:
-    void accountAdded(KNNntpAccount *a);
-    void accountRemoved(KNNntpAccount *a);   // don't do anything with a, it will be deleted soon
-    void accountModified(KNNntpAccount *a);
+    void accountAdded( KNNntpAccount::Ptr a );
+    void accountRemoved( KNNntpAccount::Ptr a );   // don't do anything with a, it will be deleted soon
+    void accountModified( KNNntpAccount::Ptr a );
     /** Emitted if passwords have been loaded from the wallet */
     void passwordsChanged();
 
@@ -108,7 +106,7 @@ class KNAccountManager : public QObject
     static void prepareWallet();
 
   private:
-    List mAccounts;
+    KNNntpAccount::List mAccounts;
     static KWallet::Wallet *mWallet;
     static bool mWalletOpenFailed;
     bool mAsyncOpening;

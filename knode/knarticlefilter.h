@@ -15,14 +15,14 @@
 #ifndef KNARTICLEFILTER_H
 #define KNARTICLEFILTER_H
 
+#include "kngroup.h"
+#include "knfolder.h"
 #include "knstatusfilter.h"
 #include "knrangefilter.h"
 #include "knstringfilter.h"
 
 class KNRemoteArticle;
 class KNLocalArticle;
-class KNGroup;
-class KNFolder;
 
 namespace KNode {
   class SearchDialog;
@@ -46,8 +46,8 @@ class KNArticleFilter {
     void load();
     void save();
 
-    void doFilter(KNGroup *g);
-    void doFilter(KNFolder *f);
+    void doFilter( KNGroup::Ptr g );
+    void doFilter( KNFolder::Ptr f );
     int count()const                     { return c_ount; }
     int id()const                        { return i_d; }
     int applyOn()                   { return static_cast<int>(apon); }

@@ -52,21 +52,21 @@ KNCollectionView::KNCollectionView( QWidget *parent ) :
 
   // connect to the account manager
   KNAccountManager* am = knGlobals.accountManager();
-  connect(am, SIGNAL(accountAdded(KNNntpAccount*)), SLOT(addAccount(KNNntpAccount*)));
-  connect(am, SIGNAL(accountRemoved(KNNntpAccount*)), SLOT(removeAccount(KNNntpAccount*)));
-  connect(am, SIGNAL(accountModified(KNNntpAccount*)), SLOT(updateAccount(KNNntpAccount*)));
+  connect( am, SIGNAL( accountAdded( KNNntpAccount::Ptr ) ), SLOT( addAccount( KNNntpAccount::Ptr ) ) );
+  connect( am, SIGNAL( accountRemoved( KNNntpAccount::Ptr ) ), SLOT( removeAccount( KNNntpAccount::Ptr ) ) );
+  connect( am, SIGNAL( accountModified( KNNntpAccount::Ptr ) ), SLOT( updateAccount( KNNntpAccount::Ptr ) ) );
 
   // connect to the group manager
   KNGroupManager* gm = knGlobals.groupManager();
-  connect(gm, SIGNAL(groupAdded(KNGroup*)), SLOT(addGroup(KNGroup*)));
-  connect(gm, SIGNAL(groupRemoved(KNGroup*)), SLOT(removeGroup(KNGroup*)));
-  connect(gm, SIGNAL(groupUpdated(KNGroup*)), SLOT(updateGroup(KNGroup*)));
+  connect( gm, SIGNAL( groupAdded( KNGroup::Ptr ) ), SLOT( addGroup( KNGroup::Ptr ) ) );
+  connect( gm, SIGNAL( groupRemoved( KNGroup::Ptr ) ), SLOT( removeGroup( KNGroup::Ptr ) ) );
+  connect( gm, SIGNAL( groupUpdated( KNGroup::Ptr ) ), SLOT( updateGroup( KNGroup::Ptr ) ) );
 
   // connect to the folder manager
   KNFolderManager* fm = knGlobals.folderManager();
-  connect(fm, SIGNAL(folderAdded(KNFolder*)), SLOT(addPendingFolders()));
-  connect(fm, SIGNAL(folderRemoved(KNFolder*)), SLOT(removeFolder(KNFolder*)));
-  connect(fm, SIGNAL(folderActivated(KNFolder*)), SLOT(activateFolder(KNFolder*)));
+  connect( fm, SIGNAL( folderAdded( KNFolder::Ptr ) ), SLOT( addPendingFolders() ) );
+  connect( fm, SIGNAL( folderRemoved( KNFolder::Ptr ) ), SLOT( removeFolder( KNFolder::Ptr ) ) );
+  connect( fm, SIGNAL( folderActivated( KNFolder::Ptr ) ), SLOT( activateFolder( KNFolder::Ptr ) ) );
 
   // Edition of label
   setEditTriggers( QAbstractItemView::NoEditTriggers );
@@ -102,7 +102,7 @@ void KNCollectionView::writeConfig()
 
 
 
-void KNCollectionView::addAccount(KNNntpAccount *a)
+void KNCollectionView::addAccount( KNNntpAccount::Ptr a )
 {
   // add account item
   KNCollectionViewItem* item = new KNCollectionViewItem( this, FolderTreeWidgetItem::News );
@@ -119,21 +119,21 @@ void KNCollectionView::addAccount(KNNntpAccount *a)
 }
 
 
-void KNCollectionView::removeAccount(KNNntpAccount *a)
+void KNCollectionView::removeAccount( KNNntpAccount::Ptr a )
 {
   if(!a->listItem())
     return;
   KNCollectionViewItem *child = 0;
   KNCollectionViewItem *aitem = a->listItem();
   while ( ( child = static_cast<KNCollectionViewItem*>( aitem->takeChild( 0 ) ) ) ) {
-    removeGroup( static_cast<KNGroup*>( child->collection() ) );
+    removeGroup( boost::static_pointer_cast<KNGroup>( child->collection() ) );
   }
   delete aitem;
   a->setListItem(0);
 }
 
 
-void KNCollectionView::updateAccount(KNNntpAccount *a)
+void KNCollectionView::updateAccount( KNNntpAccount::Ptr a )
 {
   a->updateListItem();
 }
@@ -141,8 +141,8 @@ void KNCollectionView::updateAccount(KNNntpAccount *a)
 
 void KNCollectionView::reloadAccounts()
 {
-  KNAccountManager::List list = knGlobals.accountManager()->accounts();
-  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
+  KNNntpAccount::List list = knGlobals.accountManager()->accounts();
+  for ( KNNntpAccount::List::Iterator it = list.begin(); it != list.end(); ++it ) {
     removeAccount( *it );
     addAccount( *it );
   }
@@ -150,7 +150,7 @@ void KNCollectionView::reloadAccounts()
 
 
 
-void KNCollectionView::addGroup(KNGroup *g)
+void KNCollectionView::addGroup( KNGroup::Ptr g )
 {
   if (!g->account()->listItem())
     return;
@@ -162,7 +162,7 @@ void KNCollectionView::addGroup(KNGroup *g)
 }
 
 
-void KNCollectionView::removeGroup(KNGroup *g)
+void KNCollectionView::removeGroup( KNGroup::Ptr g )
 {
   if (!g->listItem())
     return;
@@ -172,14 +172,14 @@ void KNCollectionView::removeGroup(KNGroup *g)
 }
 
 
-void KNCollectionView::updateGroup(KNGroup *g)
+void KNCollectionView::updateGroup( KNGroup::Ptr g )
 {
   g->updateListItem();
 }
 
 
 
-void KNCollectionView::addFolder(KNFolder *f)
+void KNCollectionView::addFolder( KNFolder::Ptr f )
 {
   KNCollectionViewItem *it;
 
@@ -189,7 +189,7 @@ void KNCollectionView::addFolder(KNFolder *f)
   } else {
     // make sure the parent folder has already been added
     if (!f->parent()->listItem())
-      addFolder( static_cast<KNFolder*>(f->parent()) );
+      addFolder( boost::static_pointer_cast<KNFolder>( f->parent() ) );
     // handle special folders
     FolderTreeWidgetItem::FolderType type = FolderTreeWidgetItem::Other;
     switch ( f->id() ) {
@@ -207,14 +207,14 @@ void KNCollectionView::addFolder(KNFolder *f)
 }
 
 
-void KNCollectionView::removeFolder(KNFolder* f)
+void KNCollectionView::removeFolder( KNFolder::Ptr f)
 {
   if(!f->listItem())
     return;
   KNCollectionViewItem *child = 0;
   KNCollectionViewItem *it = f->listItem();
   while ( ( child = static_cast<KNCollectionViewItem*>( it->takeChild( 0 ) ) ) ) {
-    removeFolder( static_cast<KNFolder*>( child->collection() ) );
+    removeFolder( boost::static_pointer_cast<KNFolder>( child->collection() ) );
   }
   delete f->listItem();
   f->setListItem(0);
@@ -233,12 +233,12 @@ void KNCollectionView::reloadFolders()
 
 void KNCollectionView::addPendingFolders()
 {
-  KNFolderManager::List folders = knGlobals.folderManager()->folders();
-  for ( KNFolderManager::List::Iterator it = folders.begin(); it != folders.end(); ++it )
+  KNFolder::List folders = knGlobals.folderManager()->folders();
+  for ( KNFolder::List::Iterator it = folders.begin(); it != folders.end(); ++it )
     if ( !(*it)->listItem() )
       addFolder( (*it) );
   // now open the folders if they were open in the last session
-  for ( KNFolderManager::List::Iterator it = folders.begin(); it != folders.end(); ++it ) {
+  for ( KNFolder::List::Iterator it = folders.begin(); it != folders.end(); ++it ) {
     if ( (*it)->listItem()) {
       (*it)->listItem()->setExpanded( (*it)->wasOpen() );
     }
@@ -246,14 +246,14 @@ void KNCollectionView::addPendingFolders()
 }
 
 
-void KNCollectionView::activateFolder(KNFolder* f)
+void KNCollectionView::activateFolder( KNFolder::Ptr f )
 {
   if(f->listItem())
     setActive( f->listItem() );
 }
 
 
-void KNCollectionView::updateFolder(KNFolder* f)
+void KNCollectionView::updateFolder( KNFolder::Ptr f )
 {
   f->updateListItem();
 }
@@ -389,7 +389,7 @@ void KNCollectionView::handleDragNDropEvent( QDropEvent *event, bool enforceDrop
   if ( fti && fti->collection() && fti->collection()->type()==KNCollection::CTfolder ) {
     const QMimeData *md = event->mimeData();
     if( md && md->hasFormat( "x-knode-drag/folder" ) ) {
-      KNFolder *dest = static_cast<KNFolder*>( fti->collection() );
+      KNFolder::Ptr dest = boost::static_pointer_cast<KNFolder>( fti->collection() );
       KNFolderManager *folderManager = KNGlobals::self()->folderManager();
       if ( !enforceDrop ) {
         // Notify that the move is possible.
@@ -456,7 +456,7 @@ void KNCollectionView::startDrag( Qt::DropActions supportedActions )
     return;
   }
 
-  KNFolder *folder = static_cast<KNFolder*>( item->collection() );
+  KNFolder::Ptr folder = boost::static_pointer_cast<KNFolder>( item->collection() );
 
   // Can not drag special folders
   if ( folder->isRootFolder() || folder->isStandardFolder() ) {

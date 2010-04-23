@@ -20,6 +20,7 @@
 #include "knconfigwidgets.h"
 #include "kngroupmanager.h"
 #include "knglobals.h"
+#include "knaccountmanager.h"
 
 #include <QTimer>
 #include <kconfig.h>
@@ -70,13 +71,13 @@ void KNNntpAccountIntervalChecking::deinstallTimer()
 
 void KNNntpAccountIntervalChecking::slotCheckNews()
 {
-  knGlobals.groupManager()->checkAll(a_ccount, true);
+  knGlobals.groupManager()->checkAll( a_ccount->id(), true );
 }
 
 
 
 KNNntpAccount::KNNntpAccount()
-  : KNCollection(0), KNServerInfo(),
+  : KNCollection( KNCollection::Ptr() ), KNServerInfo(),
     mIdentityUoid( -1 ),
     f_etchDescriptions(true), w_asOpen(false), i_ntervalChecking(false), c_heckInterval(10)
 {
@@ -221,5 +222,12 @@ void KNNntpAccount::setIdentity( const KPIMIdentities::Identity &identity )
 {
   mIdentityUoid = ( identity.isNull() ? -1 : identity.uoid() );
 }
+
+
+KNCollection::Ptr KNNntpAccount::selfPtr()
+{
+  return KNGlobals::self()->accountManager()->account( id() );
+}
+
 
 #include "knnntpaccount.moc"

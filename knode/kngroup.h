@@ -16,17 +16,16 @@
 #define KNGROUP_H
 
 #include "configuration/settings_container_interface.h"
+#include "knarticle.h"
 #include "knarticlecollection.h"
 #include "knjobdata.h"
 #include "knglobals.h"
-#include "knarticle.h"
+#include "knnntpaccount.h"
 
 #include <kio/job.h>
 #include <KPIMIdentities/Identity>
 #include <QByteArray>
 #include <QList>
-
-class KNNntpAccount;
 
 namespace KNode {
   class Cleanup;
@@ -43,18 +42,18 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
 {
   public:
     /**
-      Shared pointer to a KNGroup. To be used in job.
+      Shared pointer to a KNGroup. To be used instead of raw KNGroup*.
     */
     typedef boost::shared_ptr<KNGroup> Ptr;
 
     /** The posting rights status of this group. */
     enum Status { unknown=0, readOnly=1, postingAllowed=2, moderated=3 };
 
-    KNGroup(KNCollection *p=0);
+    KNGroup( KNCollection::Ptr p = KNCollection::Ptr() );
     ~KNGroup();
 
     /// List of groups.
-    typedef QList<KNGroup*> List;
+    typedef QList<KNGroup::Ptr> List;
 
     /** type */
     collectionType type()               { return CTgroup; }
@@ -159,7 +158,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
     void setUseCharset(bool b)                { u_seCharset=b; }
 
     /** Returns the account this group belongs to. */
-    KNNntpAccount* account();
+    KNNntpAccount::Ptr account();
 
     /**
       Returns the identity configured for this group.
@@ -263,6 +262,19 @@ class KNGroup : public KNArticleCollection , public KNJobItem, public KNode::Set
         short thrLevel, score;
         char ignoredWatched;
     };
+
+    /**
+     * Returns a shared pointer pointing to this group.
+     */
+    KNGroup::Ptr thisGroupPtr();
+
+    /**
+     * Reimplemented from KNArticleCollection::selfPtr().
+     */
+    virtual KNCollection::Ptr selfPtr()
+    {
+      return thisGroupPtr();
+    }
 
 };
 

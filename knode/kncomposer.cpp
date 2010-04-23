@@ -688,11 +688,11 @@ bool KNComposer::hasValidData()
   if ( a_ctPGPsign->isChecked() ) {
     // try to get the signing key
     QByteArray signingKey = KNGlobals::self()->settings()->identity().pgpSigningKey();
-    KNNntpAccount *acc = knGlobals.accountManager()->account( a_rticle->serverId() );
+    KNNntpAccount::Ptr acc = knGlobals.accountManager()->account( a_rticle->serverId() );
     if ( acc ) {
       KMime::Headers::Newsgroups *grps = a_rticle->newsgroups();
       if ( !grps->isEmpty() ) {
-        KNGroup *grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
+        KNGroup::Ptr grp = knGlobals.groupManager()->group( grps->groups().first(), acc );
         if ( grp && !grp->identity().isNull() ) {
           signingKey = grp->identity().pgpSigningKey();
         } else if ( !acc->identity().isNull() ) {
@@ -1449,7 +1449,7 @@ void KNComposer::slotToBtnClicked()
 void KNComposer::slotGroupsBtnClicked()
 {
   int id=a_rticle->serverId();
-  KNNntpAccount *nntp=0;
+  KNNntpAccount::Ptr nntp;
 
   if(id!=-1)
     nntp=knGlobals.accountManager()->account(id);
@@ -1468,8 +1468,8 @@ void KNComposer::slotGroupsBtnClicked()
 
   KNGroupSelectDialog *dlg = new KNGroupSelectDialog( this, nntp, v_iew->groups() );
 
-  connect(dlg, SIGNAL(loadList(KNNntpAccount*)),
-    knGlobals.groupManager(), SLOT(slotLoadGroupList(KNNntpAccount*)));
+  connect( dlg, SIGNAL(loadList(KNNntpAccount::Ptr)),
+           knGlobals.groupManager(), SLOT(slotLoadGroupList(KNNntpAccount::Ptr)) );
   connect( KNGlobals::self()->groupManager(), SIGNAL(newListReady(KNGroupListData::Ptr)),
            dlg, SLOT(slotReceiveList(KNGroupListData::Ptr)) );
 

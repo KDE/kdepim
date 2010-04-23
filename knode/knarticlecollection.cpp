@@ -188,7 +188,7 @@ int KNArticleVector::indexForMsgId( const QByteArray &id )
 
 
 
-KNArticleCollection::KNArticleCollection(KNCollection *p)
+KNArticleCollection::KNArticleCollection( KNCollection::Ptr p )
   : KNCollection(p), l_astID(0), l_ockedArticles(0), n_otUnloadable(false)
 {
   a_rticles.setSortMode(KNArticleVector::STid);

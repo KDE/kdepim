@@ -15,23 +15,19 @@
 #ifndef KNARTICLEMANAGER_H
 #define KNARTICLEMANAGER_H
 
+#include "knarticle.h"
+#include "knfolder.h"
+#include "kngroup.h"
+#include "knjobdata.h"
+
 #include <QList>
 
-#include "knjobdata.h"
-#include "knarticle.h"
-
 class Q3ListViewItem;
-
 class KTemporaryFile;
-
-class KNArticle;
 class KNHeaderView;
 class KNArticleCollection;
-class KNGroup;
-class KNFolder;
 class KNArticleFilter;
 class KNFilterManager;
-class KNJobData;
 
 namespace KNode {
   class SearchDialog;
@@ -56,7 +52,7 @@ class KNArticleManager : public QObject, public KNJobConsumer {
 
     //listview handling
     void showHdrs(bool clear=true);
-    void updateViewForCollection(KNArticleCollection *c);
+    void updateViewForCollection( KNArticleCollection::Ptr c );
     void updateListViewItems();
     void setAllThreadsOpen(bool b=true);
 
@@ -67,9 +63,9 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void search();
 
     //collection handling
-    void setGroup(KNGroup *g);
-    void setFolder(KNFolder *f);
-    KNArticleCollection* collection();
+    void setGroup( KNGroup::Ptr g );
+    void setFolder( KNFolder::Ptr f );
+    KNArticleCollection::Ptr collection();
 
     //article loading
     /**
@@ -79,8 +75,8 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     bool unloadArticle( KNArticle::Ptr a, bool force=true );
 
     //article storage
-    void copyIntoFolder(KNArticle::List &l, KNFolder *f);
-    void moveIntoFolder(KNLocalArticle::List &l, KNFolder *f);
+    void copyIntoFolder( KNArticle::List &l, KNFolder::Ptr f );
+    void moveIntoFolder( KNLocalArticle::List &l, KNFolder ::Ptr f );
     bool deleteArticles(KNLocalArticle::List &l, bool ask=true);
 
     //article handling
@@ -116,8 +112,8 @@ class KNArticleManager : public QObject, public KNJobConsumer {
     void createCompleteThread( KNRemoteArticle::Ptr a );
 
     KNHeaderView *v_iew;
-    KNGroup *g_roup;
-    KNFolder *f_older;
+    KNGroup::Ptr g_roup;
+    KNFolder::Ptr f_older;
     KNArticleFilter *f_ilter;
     KNFilterManager *f_ilterMgr;
     KNode::SearchDialog *s_earchDlg;

@@ -15,10 +15,11 @@
 #ifndef KNFOLDERMANAGER_H
 #define KNFOLDERMANAGER_H
 
+#include "knfolder.h"
+
 #include <QList>
 #include <QObject>
 
-class KNFolder;
 class KNArticleManager;
 class KNCleanUp;
 
@@ -32,74 +33,77 @@ class KNFolderManager : public QObject
     KNFolderManager(KNArticleManager *a);
     ~KNFolderManager();
 
-    /// List of folders.
-    typedef QList<KNFolder*> List;
-
     //folder access
-    void setCurrentFolder(KNFolder *f);
-    KNFolder* currentFolder() const       { return c_urrentFolder; }
+    void setCurrentFolder( KNFolder::Ptr f );
+    KNFolder::Ptr currentFolder() const { return c_urrentFolder; }
     bool hasCurrentFolder() const         { return (c_urrentFolder!=0); }
-    KNFolder* folder(int id);
-    List folders() const { return mFolderList; }
+    KNFolder::Ptr folder( int id );
+    KNFolder::List folders() const { return mFolderList; }
 
     /// Returns the root folder.
-    KNFolder* root() const                { return mFolderList[0]; }
+    KNFolder::Ptr root() const { return mFolderList[0]; }
     /// Returns the drafts folder.
-    KNFolder* drafts() const              { return mFolderList[1]; }
+    KNFolder::Ptr drafts() const { return mFolderList[1]; }
     /// Returns the outbox folder.
-    KNFolder* outbox() const              { return mFolderList[2]; }
+    KNFolder::Ptr outbox() const { return mFolderList[2]; }
     /// Returns the sent folder.
-    KNFolder* sent() const                { return mFolderList[3]; }
+    KNFolder::Ptr sent() const { return mFolderList[3]; }
 
     //header loading
-    bool loadHeaders(KNFolder *f);
-    bool unloadHeaders(KNFolder *f, bool force=true);
+    bool loadHeaders( KNFolder::Ptr f );
+    bool unloadHeaders( KNFolder::Ptr f, bool force = true );
     bool loadDrafts()                     { return loadHeaders(drafts()); }
     bool loadOutbox()                     { return loadHeaders(outbox()); }
     bool loadSent()                       { return loadHeaders(sent()); }
 
     // returns the new folder
-    KNFolder* newFolder(KNFolder *p);
-    bool deleteFolder(KNFolder *f);
-    void emptyFolder(KNFolder *f);
+    KNFolder::Ptr newFolder( KNFolder::Ptr p );
+    bool deleteFolder( KNFolder::Ptr f );
+    void emptyFolder( KNFolder::Ptr f );
 
     /**
       Returns true if the folder @p f can be moved under
       a new parent @p p.
     */
-    bool canMoveFolder( KNFolder *f, KNFolder *p );
+    bool canMoveFolder( KNFolder::Ptr f, KNFolder::Ptr p );
     /**
       Move the folder @p f to a new parent @p p.
       @returns false if the move is not possible.
     */
-    bool moveFolder(KNFolder *f, KNFolder *p);
+    bool moveFolder( KNFolder::Ptr f, KNFolder::Ptr p );
 
     //unsent articles
     int unsentForAccount(int accId);
 
     //compacting
-    void compactFolder(KNFolder *f);
+    void compactFolder( KNFolder::Ptr f );
     void compactAll(KNCleanUp *cup);
     void compactAll();
 
     // import + export
-    void importFromMBox(KNFolder *f);
-    void exportToMBox(KNFolder *f);
+    void importFromMBox( KNFolder::Ptr f );
+    void exportToMBox( KNFolder::Ptr f );
 
     //synchronization
     void syncFolders();
 
   signals:
     // signals for the collection tree to update the UI
-    void folderAdded(KNFolder *f);
-    void folderRemoved(KNFolder *f);
-    void folderActivated(KNFolder *f);
+    /**
+     * Emitted when a folder is added.
+     */
+    void folderAdded( KNFolder::Ptr f );
+    /**
+     * Emitted when a folder is removed.
+     */
+    void folderRemoved( KNFolder::Ptr f );
+    void folderActivated( KNFolder::Ptr f );
 
   protected:
     int loadCustomFolders();
 
-    KNFolder  *c_urrentFolder;
-    List mFolderList;
+    KNFolder::Ptr c_urrentFolder;
+    KNFolder::List mFolderList;
     int l_astId;
     KNArticleManager *a_rtManager;
 

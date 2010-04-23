@@ -34,7 +34,7 @@
 #include <QPushButton>
 
 
-KNGroupDialog::KNGroupDialog(QWidget *parent, KNNntpAccount *a) :
+KNGroupDialog::KNGroupDialog( QWidget *parent, KNNntpAccount::Ptr a ) :
   KNGroupBrowser(parent, i18n("Subscribe to Newsgroups"),a, User1 | User2, true, i18n("New &List"), i18n("New &Groups...") )
 {
   rightLabel->setText(i18n("Current changes:"));

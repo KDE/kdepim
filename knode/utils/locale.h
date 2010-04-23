@@ -24,8 +24,8 @@
 #define KNODE_UTILITIES_LOCALE_H
 
 #include "knode_export.h"
+#include "kngroup.h"
 
-class KNGroup;
 class QByteArray;
 class QString;
 class QStringList;
@@ -79,7 +79,7 @@ class KNODE_EXPORT Locale {
       Returns the charset defined in a group configuration.
       This calls defaultCharset() if no default charset is configured for this group.
     */
-    static QByteArray defaultCharset( KNGroup *g );
+    static QByteArray defaultCharset( KNGroup::Ptr g );
 
 
     // Incoming data
@@ -91,7 +91,7 @@ class KNODE_EXPORT Locale {
                try the recoding.
       @param result a bytearray filled with the 7bits equivalent of @p s encoded as defined in RFC-2047.
     */
-    static void recodeString( const QString &s, KNGroup *g, QByteArray &result );
+    static void recodeString( const QString &s, KNGroup::Ptr g, QByteArray &result );
 
     /**
       Convert raw data @p raw to a RFC-2047 string.

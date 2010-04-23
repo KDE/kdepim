@@ -37,7 +37,7 @@ KNMemoryManager::~KNMemoryManager()
 }
 
 
-void KNMemoryManager::updateCacheEntry(KNArticleCollection *c)
+void KNMemoryManager::updateCacheEntry( KNArticleCollection::Ptr c )
 {
   CollectionItem *ci;
   int oldSize=0;
@@ -58,7 +58,7 @@ void KNMemoryManager::updateCacheEntry(KNArticleCollection *c)
 }
 
 
-void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
+void KNMemoryManager::removeCacheEntry( KNArticleCollection::Ptr c )
 {
   CollectionItem *ci;
   ci=findCacheEntry(c, true);
@@ -73,7 +73,7 @@ void KNMemoryManager::removeCacheEntry(KNArticleCollection *c)
 }
 
 
-void KNMemoryManager::prepareLoad(KNArticleCollection *c)
+void KNMemoryManager::prepareLoad( KNArticleCollection::Ptr c )
 {
   CollectionItem ci(c);
 
@@ -119,7 +119,7 @@ void KNMemoryManager::removeCacheEntry( KNArticle::Ptr a )
 }
 
 
-KNMemoryManager::CollectionItem* KNMemoryManager::findCacheEntry(KNArticleCollection *c, bool take)
+KNMemoryManager::CollectionItem * KNMemoryManager::findCacheEntry( KNArticleCollection::Ptr c, bool take )
 {
   for ( CollectionItem::List::Iterator it = mColList.begin(); it != mColList.end(); ++it ) {
     if ( (*it)->col == c ) {
@@ -152,7 +152,7 @@ KNMemoryManager::ArticleItem* KNMemoryManager::findCacheEntry( KNArticle::Ptr a,
 void KNMemoryManager::checkMemoryUsageCollections()
 {
   int maxSize = knGlobals.settings()->collCacheSize() * 1024;
-  KNArticleCollection *c=0;
+  KNArticleCollection::Ptr c;
 
   if (c_ollCacheSize > maxSize) {
     CollectionItem::List tempList( mColList ); // work on a copy, KNGroup-/Foldermanager will
@@ -166,10 +166,10 @@ void KNMemoryManager::checkMemoryUsageCollections()
       ++it;
 
       if (c->type() == KNCollection::CTgroup)
-        knGlobals.groupManager()->unloadHeaders(static_cast<KNGroup*>(c), false);   // *try* to unload
+        knGlobals.groupManager()->unloadHeaders( boost::static_pointer_cast<KNGroup>( c ), false );   // *try* to unload
       else
         if (c->type() == KNCollection::CTfolder)
-          knGlobals.folderManager()->unloadHeaders(static_cast<KNFolder*>(c), false);   // *try* to unload
+          knGlobals.folderManager()->unloadHeaders( boost::static_pointer_cast<KNFolder>( c ), false );   // *try* to unload
     }
   }
 

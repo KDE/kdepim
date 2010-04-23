@@ -32,9 +32,18 @@ class KNFolder : public KNArticleCollection  {
   friend class KNCleanUp;
 
   public:
+    /**
+     * Shared pointer to a KNFolder. To be used instead of raw KNFolder*.
+     */
+    typedef boost::shared_ptr<KNFolder> Ptr;
+    /**
+     * List of folders.
+     */
+    typedef QList<KNFolder::Ptr> List;
+
     KNFolder();
-    KNFolder(int id, const QString &name, KNFolder *parent=0);
-    KNFolder(int id, const QString &name, const QString &prefix, KNFolder *parent=0);
+    KNFolder(int id, const QString &name, KNFolder::Ptr parent = KNFolder::Ptr() );
+    KNFolder( int id, const QString &name, const QString &prefix, KNFolder::Ptr parent = KNFolder::Ptr() );
     ~KNFolder();
 
     //type
@@ -66,7 +75,7 @@ class KNFolder : public KNArticleCollection  {
       { return boost::static_pointer_cast<KNLocalArticle>( KNArticleCollection::byMessageId( mId ) ); }
 
     //parent
-    void setParent(KNCollection *p);
+    void setParent( KNCollection::Ptr p );
 
     //load, save and delete
     bool loadHdrs();
@@ -110,6 +119,21 @@ class KNFolder : public KNArticleCollection  {
           time_t ti;
           bool flags[6];
       };
+
+  private:
+    /**
+     * Returns a shared pointer pointing to this folder.
+     */
+    KNFolder::Ptr thisFolderPtr();
+
+    /**
+     * Reimplemented from KNArticleCollection::selfPtr().
+     */
+    virtual KNCollection::Ptr selfPtr()
+    {
+      return thisFolderPtr();
+    }
+
 };
 
 #endif

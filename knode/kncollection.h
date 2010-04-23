@@ -15,6 +15,7 @@
 #ifndef KNCOLLECTION_H
 #define KNCOLLECTION_H
 
+#include <boost/shared_ptr.hpp>
 #include <QString>
 
 class KNCollectionViewItem;
@@ -33,10 +34,16 @@ class KNCollection {
                             CTfolder, CTcategory,
                             CTvirtualGroup };
 
+    /**
+     * Shared pointer to a KNCollection. To be used instead of raw KNCollection*.
+     */
+    typedef boost::shared_ptr<KNCollection> Ptr;
+
+
     /** Create a new collection.
      * @param p The parent collection.
      */
-    KNCollection(KNCollection *p);
+    KNCollection( KNCollection::Ptr p );
     virtual ~KNCollection();
 
     /// Returns the collection type.
@@ -61,9 +68,9 @@ class KNCollection {
     virtual void writeConfig() = 0;
 
     /// Returns the parent collection.
-    KNCollection* parent() const { return p_arent; }
+    KNCollection::Ptr parent() const { return p_arent; }
     /// Sets the parent collection.
-    virtual void setParent( KNCollection *p ) { p_arent = p; }
+    virtual void setParent( KNCollection::Ptr p ) { p_arent = p; }
 
     /// Returns the collection name.
     virtual const QString& name() { return n_ame; }
@@ -77,8 +84,13 @@ class KNCollection {
     void decCount(int i)              { c_ount-=i; }
 
   protected:
+    /**
+     * Returns a shared pointer pointing to this collection.
+     */
+    virtual KNCollection::Ptr selfPtr() = 0;
+
     /// A pointer to the parent collection.
-    KNCollection *p_arent;
+    KNCollection::Ptr p_arent;
     /// The list view item representing this collection in the folder tree.
     KNCollectionViewItem *l_istItem;
     /// The name of this collection.

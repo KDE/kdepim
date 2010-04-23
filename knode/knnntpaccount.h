@@ -56,6 +56,15 @@ class KNNntpAccountIntervalChecking : public QObject  {
 class KNNntpAccount : public KNCollection , public KNServerInfo, public KNode::SettingsContainerInterface
 {
   public:
+    /**
+     * Shared pointer to a KNNntpAccount. To be used instead of raw KNNntpAccount*.
+     */
+    typedef boost::shared_ptr<KNNntpAccount> Ptr;
+    /**
+     * List of accounts.
+     */
+    typedef QList<KNNntpAccount::Ptr> List;
+
     KNNntpAccount();
     ~KNNntpAccount();
 
@@ -127,6 +136,10 @@ class KNNntpAccount : public KNCollection , public KNServerInfo, public KNode::S
     /** helper class for news interval checking, manages the QTimer */
     KNNntpAccountIntervalChecking *a_ccountIntervalChecking;
 
+    /**
+     * Reimplemented from KNArticleCollection::selfPtr().
+     */
+    virtual KNCollection::Ptr selfPtr();
 };
 
 #endif

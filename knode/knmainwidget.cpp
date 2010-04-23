@@ -397,13 +397,13 @@ void KNMainWidget::openURL(const KUrl &url)
   kDebug(5003) << url;
   QString host = url.host();
   short int port = url.port();
-  KNNntpAccount *acc=0;
+  KNNntpAccount::Ptr acc;
 
   if (url.url().left(7) == "news://") {
 
     // lets see if we already have an account for this host...
-    KNAccountManager::List list = a_ccManager->accounts();
-    for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
+    KNNntpAccount::List list = a_ccManager->accounts();
+    for ( KNNntpAccount::List::Iterator it = list.begin(); it != list.end(); ++it ) {
       if ( (*it)->server().toLower() == host.toLower() && ( port==-1 || (*it)->port() == port ) ) {
         acc = *it;
         break;
@@ -411,7 +411,7 @@ void KNMainWidget::openURL(const KUrl &url)
     }
 
     if(!acc) {
-      acc=new KNNntpAccount();
+      acc = KNNntpAccount::Ptr( new KNNntpAccount() );
       acc->setName(host);
       acc->setServer(host);
 
@@ -450,7 +450,7 @@ void KNMainWidget::openURL(const KUrl &url)
       if ( groupname.isEmpty() ) {
         item=acc->listItem();
       } else {
-        KNGroup *grp= g_rpManager->group(groupname, acc);
+        KNGroup::Ptr grp = g_rpManager->group( groupname, acc );
 
         if(!grp) {
           KNGroupInfo inf(groupname, "");
@@ -468,7 +468,7 @@ void KNMainWidget::openURL(const KUrl &url)
       }
     } else {
       QString groupname = decodedUrl.mid( url.protocol().length()+1 );
-      KNGroup *g = g_rpManager->currentGroup();
+      KNGroup::Ptr g = g_rpManager->currentGroup();
       if (g == 0)
         g = g_rpManager->firstGroupOfAccount(acc);
 
@@ -1133,10 +1133,10 @@ void KNMainWidget::slotCollectionSelected()
   kDebug(5003) <<"KNMainWidget::slotCollectionSelected(QListViewItem *i)";
   if(b_lockui)
     return;
-  KNCollection *c=0;
-  KNNntpAccount *selectedAccount=0;
-  KNGroup *selectedGroup=0;
-  KNFolder *selectedFolder=0;
+  KNCollection::Ptr c;
+  KNNntpAccount::Ptr selectedAccount;
+  KNGroup::Ptr selectedGroup;
+  KNFolder::Ptr selectedFolder;
 
   s_earchLineEdit->clear();
   h_drView->clear();
@@ -1152,7 +1152,7 @@ void KNMainWidget::slotCollectionSelected()
     c = static_cast<KNCollectionViewItem*>( i )->collection();
     switch(c->type()) {
       case KNCollection::CTnntpAccount :
-        selectedAccount=static_cast<KNNntpAccount*>(c);
+        selectedAccount = boost::static_pointer_cast<KNNntpAccount>( c );
         if( !i->isExpanded() ) {
           i->setExpanded( true );
         }
@@ -1160,14 +1160,14 @@ void KNMainWidget::slotCollectionSelected()
       case KNCollection::CTgroup :
         if ( !h_drView->hasFocus() && !mArticleViewer->hasFocus() )
           h_drView->setFocus();
-        selectedGroup=static_cast<KNGroup*>(c);
+        selectedGroup = boost::static_pointer_cast<KNGroup>( c );
         selectedAccount=selectedGroup->account();
       break;
 
       case KNCollection::CTfolder :
         if ( !h_drView->hasFocus() && !mArticleViewer->hasFocus() )
           h_drView->setFocus();
-        selectedFolder=static_cast<KNFolder*>(c);
+        selectedFolder = boost::static_pointer_cast<KNFolder>( c );
       break;
 
       default: break;
@@ -1259,7 +1259,7 @@ void KNMainWidget::slotCollectionRenamed(QTreeWidgetItem *i)
     updateCaption();
     a_rtManager->updateStatusString();
     if ( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTnntpAccount ) {
-      a_ccManager->accountRenamed( static_cast<KNNntpAccount*>( static_cast<KNCollectionViewItem*>( i )->collection() ) );
+      a_ccManager->accountRenamed( boost::static_pointer_cast<KNNntpAccount>( static_cast<KNCollectionViewItem*>( i )->collection() ) );
     }
     disableAccels(false);
   }
@@ -1295,7 +1295,7 @@ void KNMainWidget::slotCollectionRMB( QTreeWidgetItem *i, const QPoint &pos )
     if( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTgroup ) {
       popup = popupMenu( "group_popup" );
     } else if ( static_cast<KNCollectionViewItem*>( i )->collection()->type() == KNCollection::CTfolder ) {
-      if ( static_cast<KNFolder*>( static_cast<KNCollectionViewItem*>( i )->collection() )->isRootFolder() ) {
+      if ( boost::static_pointer_cast<KNFolder>( static_cast<KNCollectionViewItem*>( i )->collection() )->isRootFolder() ) {
         popup = popupMenu( "root_folder_popup" );
       } else {
         popup = popupMenu( "folder_popup" );
@@ -1426,8 +1426,8 @@ void KNMainWidget::slotAccDelete()
 
 void KNMainWidget::slotAccGetNewHdrsAll()
 {
-  KNAccountManager::List list = a_ccManager->accounts();
-  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it )
+  KNNntpAccount::List list = a_ccManager->accounts();
+  for ( KNNntpAccount::List::Iterator it = list.begin(); it != list.end(); ++it )
     g_rpManager->checkAll( *it );
 }
 
@@ -1528,7 +1528,7 @@ void KNMainWidget::slotGrpSetUnread()
 void KNMainWidget::slotFolNew()
 {
   kDebug(5003) <<"KNMainWidget::slotFolNew()";
-  KNFolder *f = f_olManager->newFolder(0);
+  KNFolder::Ptr f = f_olManager->newFolder( KNFolder::Ptr() );
 
   if (f) {
     f_olManager->setCurrentFolder(f);
@@ -1542,7 +1542,7 @@ void KNMainWidget::slotFolNewChild()
 {
   kDebug(5003) <<"KNMainWidget::slotFolNew()";
   if(f_olManager->currentFolder()) {
-    KNFolder *f = f_olManager->newFolder(f_olManager->currentFolder());
+    KNFolder::Ptr f = f_olManager->newFolder( f_olManager->currentFolder() );
 
     if (f) {
       f_olManager->setCurrentFolder(f);

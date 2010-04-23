@@ -72,7 +72,7 @@ void KNJobConsumer::processJob( KNJobData *j )
 
 
 // the assingment of a_ccount may cause race conditions, check again.... (CG)
-KNJobData::KNJobData( jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i ) :
+KNJobData::KNJobData( jobType t, KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i ) :
   t_ype(t), d_ata(i), a_ccount(a),
   mError( 0 ),
   mCanceled( false ),
@@ -150,7 +150,7 @@ void KNJobData::createProgressItem()
 {
   if ( mProgressItem )
     return;
-  KNNntpAccount *acc = static_cast<KNNntpAccount*>( account() );
+  KNNntpAccount::Ptr acc = boost::static_pointer_cast<KNNntpAccount>( account() );
   QString msg = i18n( "KNode" );
   if ( type() == JTmail )
     msg = i18n( "Sending message" );

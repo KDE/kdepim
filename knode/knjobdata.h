@@ -15,6 +15,8 @@
 #ifndef KNJOBDATA_H
 #define KNJOBDATA_H
 
+#include "knserverinfo.h"
+
 #include <QPointer>
 #include <kurl.h>
 #include <kio/global.h>
@@ -22,7 +24,6 @@
 #include <QList>
 #include <libkdepim/progressmanager.h>
 
-#include <boost/shared_ptr.hpp>
 
 class KJob;
 
@@ -32,7 +33,6 @@ class Job;
 
 class KNJobItem;
 class KNJobData;
-class KNServerInfo;
 
 
 /** Base class for classes that want to create and schedule jobs. */
@@ -114,12 +114,12 @@ class KNJobData : public QObject
                     JTmail,
                     JTfetchSource   };
 
-    KNJobData( jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem::Ptr i );
+    KNJobData( jobType t, KNJobConsumer *c, KNServerInfo::Ptr a, KNJobItem::Ptr i );
     ~KNJobData();
 
     jobType type() const                  { return t_ype; }
 
-    KNServerInfo* account() const         { return a_ccount; }
+    KNServerInfo::Ptr account() const { return a_ccount; }
     KNJobItem::Ptr data() const           { return d_ata; }
 
     /** Returns the error code (see KIO::Error). */
@@ -200,7 +200,7 @@ class KNJobData : public QObject
   protected:
     jobType t_ype;
     KNJobItem::Ptr d_ata;
-    KNServerInfo *a_ccount;
+    KNServerInfo::Ptr a_ccount;
     /** The job error code (see KIO::Error). */
     int mError;
     /** The error message. */

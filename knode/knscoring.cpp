@@ -107,8 +107,8 @@ KNScoringManager::~KNScoringManager()
 QStringList KNScoringManager::getGroups() const
 {
   QStringList res;
-  KNAccountManager::List list = knGlobals.accountManager()->accounts();
-  for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
+  KNNntpAccount::List list = knGlobals.accountManager()->accounts();
+  for ( KNNntpAccount::List::Iterator it = list.begin(); it != list.end(); ++it ) {
     QStringList groups;
     knGlobals.groupManager()->getSubscribed( (*it), groups);
     res += groups;

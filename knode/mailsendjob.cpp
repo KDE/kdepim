@@ -25,7 +25,7 @@
 using namespace MailTransport;
 
 KNode::MailSendJob::MailSendJob( KNJobConsumer * c, int transportId, KNJobItem::Ptr i ) :
-  KNJobData( KNJobData::JTmail, c, 0, i ),
+  KNJobData( KNJobData::JTmail, c, KNServerInfo::Ptr(), i ),
   mTransportId( transportId )
 {
 }
