@@ -20,8 +20,7 @@
 #ifndef AKONADI_CONTACT_CONTACTVIEWITEM_H
 #define AKONADI_CONTACT_CONTACTVIEWITEM_H
 
-#include <QtCore/QTimer>
-#include <QtDeclarative/QDeclarativeItem>
+#include "declarativeakonadiitem.h"
 
 namespace Akonadi {
 
@@ -29,24 +28,18 @@ class ContactViewer;
 
 namespace Contact {
 
-class ContactViewItem : public QDeclarativeItem
+class ContactViewItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
-  Q_PROPERTY( int itemId READ itemId WRITE setItemId )
 
   public:
     explicit ContactViewItem( QDeclarativeItem *parent = 0 );
-    ~ContactViewItem();
 
     qint64 itemId() const;
     void setItemId( qint64 id );
 
-  protected:
-    void geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry);
-
   private:
     ContactViewer *m_viewer;
-    QGraphicsProxyWidget *m_proxy;
 };
 
 }

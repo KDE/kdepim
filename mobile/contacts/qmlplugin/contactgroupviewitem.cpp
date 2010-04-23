@@ -20,30 +20,16 @@
 #include "contactgroupviewitem.h"
 
 #include <akonadi/contact/contactgroupviewer.h>
-#include <QtGui/QGraphicsProxyWidget>
 #include <akonadi/item.h>
-
 
 using namespace Akonadi;
 using namespace Akonadi::Contact;
 
 ContactGroupViewItem::ContactGroupViewItem(QDeclarativeItem* parent)
-  : QDeclarativeItem(parent)
+  : DeclarativeAkonadiItem( parent )
 {
   m_viewer = new ContactGroupViewer( 0 );
-  m_proxy = new QGraphicsProxyWidget( this );
-  m_proxy->setWidget( m_viewer );
-}
-
-ContactGroupViewItem::~ContactGroupViewItem()
-{
-  delete m_viewer;
-}
-
-void ContactGroupViewItem::geometryChanged(const QRectF& newGeometry, const QRectF& oldGeometry)
-{
-  QDeclarativeItem::geometryChanged(newGeometry, oldGeometry);
-  m_proxy->resize( newGeometry.size() );
+  setWidget( m_viewer );
 }
 
 qint64 ContactGroupViewItem::itemId() const

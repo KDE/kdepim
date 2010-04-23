@@ -32,13 +32,37 @@ KPIM.MainView {
     z: 0
     anchors.fill: parent
     itemId: -1
-  }
+
+    onNextItemRequest: {
+      // Only go to the next message when currently a valid item is set.
+      if ( contactView.itemId >= 0 )
+        contactList.nextItem();
+    }
+
+    onPreviousItemRequest: {
+      // Only go to the previous message when currently a valid item is set.
+      if ( contactView.itemId >= 0 )
+        contactList.previousItem();
+    }
+}
   Akonadi.ContactGroupView {
     id: contactGroupView
     z: 0
     anchors.fill: parent
     itemId: -1
     visible: false
+
+    onNextItemRequest: {
+      // Only go to the next message when currently a valid item is set.
+      if ( contactGroupView.itemId >= 0 )
+        contactList.nextItem();
+    }
+
+    onPreviousItemRequest: {
+      // Only go to the previous message when currently a valid item is set.
+      if ( contactGroupView.itemId >= 0 )
+        contactList.previousItem();
+    }
   }
 
   SlideoutPanelContainer {
