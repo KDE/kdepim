@@ -1836,6 +1836,10 @@ is-at-least-ownertrust=marginal
         </para>
       </note>
 
+      <sect2 id="admin-archive-definitions-filename-passing">
+
+      <title>Input Filename Passing for <literal>pack-command</literal></title>
+
       <para>
         There are three ways to pass filenames to the pack
         command. For each of these,
@@ -1903,6 +1907,8 @@ is-at-least-ownertrust=marginal
         </listitem>
 
       </orderedlist>
+
+      </sect2> <!-- Input Filename Passing for pack-command -->
 
     </sect1> <!-- Archive Definitions -->
 
