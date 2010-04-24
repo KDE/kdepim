@@ -36,6 +36,7 @@
 class AgendaView;
 class Agenda;
 class QHBoxLayout;
+class QScrollArea;
 
 class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
@@ -54,17 +55,15 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
     void init();
     void setAgendaView( AgendaView *agenda );
 
-    TimeLabels::List timeLabels() const;
+    QList<QScrollArea*> timeLabels() const;
 
   private:
-    void setupTimeLabel( TimeLabels *timeLabel );
+    void setupTimeLabel( QScrollArea *area );
     Agenda *mAgenda;
     AgendaView *mParent;
 
-  //  QWidget *mTimeLabelsFrame;
     QHBoxLayout *mTimeLabelsLayout;
-    TimeLabels *mTimeLabels;
-    TimeLabels::List mTimeLabelsList;
+    QList<QScrollArea*> mTimeLabelsList;
 };
 
 #endif

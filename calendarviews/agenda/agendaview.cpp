@@ -45,6 +45,7 @@
 #include <KHBox>
 #include <KVBox>
 
+#include <QScrollArea>
 #include <QDrag>
 #include <QGridLayout>
 #include <QPainter>
@@ -205,7 +206,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   updateTimeBarWidth();
   // resize dummy widget so the allday agenda lines up with the hourly agenda
-  dummyAllDayLeft->setFixedWidth( mTimeLabelsZone->width() - mTimeBarHeaderFrame->width() );
+  dummyAllDayLeft->setFixedWidth( mTimeLabelsZone->timeLabelsWidth() - mTimeBarHeaderFrame->width() );
 
   createDayLabels();
 
@@ -636,7 +637,8 @@ void AgendaView::createTimeBarHeaders()
   qDeleteAll( mTimeBarHeaders );
   mTimeBarHeaders.clear();
 
-  foreach ( TimeLabels *timeLabel, mTimeLabelsZone->timeLabels() ) {
+  foreach ( QScrollArea *area, mTimeLabelsZone->timeLabels() ) {
+    TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
     QLabel *label = new QLabel( timeLabel->header().replace( '/', "/ " ),
                                 mTimeBarHeaderFrame );
     label->setAlignment( Qt::AlignBottom | Qt::AlignLeft );

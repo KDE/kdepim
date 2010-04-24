@@ -29,6 +29,7 @@
 
 #include <ksystemtimezone.h>
 
+#include <QScrollArea>
 #include <QHBoxLayout>
 
 TimeLabelsZone::TimeLabelsZone( QWidget *parent, Agenda *agenda )
@@ -43,7 +44,7 @@ TimeLabelsZone::TimeLabelsZone( QWidget *parent, Agenda *agenda )
 
 void TimeLabelsZone::reset()
 {
-  foreach ( TimeLabels *label, mTimeLabelsList ) {
+  foreach ( QScrollArea *label, mTimeLabelsList ) {
     label->hide();
     label->deleteLater();
   }
@@ -73,21 +74,35 @@ void TimeLabelsZone::init()
 
 void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
 {
+  QScrollArea *area = new QScrollArea( this );
   TimeLabels *labels = new TimeLabels( spec, 24, this );
-  mTimeLabelsList.prepend( labels );
-  mTimeLabelsLayout->insertWidget( 0, labels );
-  setupTimeLabel( labels );
+  mTimeLabelsList.prepend( area );
+  area->setWidget( labels );
+  area->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  area->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  area->setBackgroundRole( QPalette::Window );
+  area->setFrameStyle( QFrame::NoFrame );
+  area->show();
+  mTimeLabelsLayout->insertWidget( 0, area );
+
+  setupTimeLabel( area );
 }
 
-void TimeLabelsZone::setupTimeLabel( TimeLabels *timeLabel )
+void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
 {
   if ( mAgenda ) {
-    timeLabel->setAgenda( mAgenda );
     connect( mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
-            timeLabel, SLOT(positionChanged()) );
+             area->verticalScrollBar(), SLOT(setValue(int)) );
+
+    TimeLabels *timeLabels = static_cast<TimeLabels*>( area->widget() );
+    timeLabels->setAgenda( mAgenda );
+
+    kDebug() << this << "DEBUG VALUE IS " << mAgenda->verticalScrollBar()->value();
+    area->verticalScrollBar()->setValue( mAgenda->verticalScrollBar()->value() );
+
   }
   if ( mParent ) {
-    connect( timeLabel->verticalScrollBar(), SIGNAL(valueChanged(int)),
+    connect( area->verticalScrollBar(), SIGNAL(valueChanged(int)),
              mParent, SLOT(setContentsPos(int)) );
   }
 }
@@ -97,27 +112,26 @@ int TimeLabelsZone::timeLabelsWidth()
   if ( mTimeLabelsList.isEmpty() ) {
     return 0;
   } else {
-    return mTimeLabelsList.first()->width() * mTimeLabelsList.count();
+    return mTimeLabelsList.first()->widget()->width() * mTimeLabelsList.count();
   }
 }
 
 void TimeLabelsZone::updateAll()
 {
-  foreach ( TimeLabels *timeLabel, mTimeLabelsList ) {
+  foreach ( QScrollArea *area, mTimeLabelsList ) {
+    TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
     timeLabel->updateConfig();
-    timeLabel->positionChanged();
-    timeLabel->repaintContents();
   }
 }
 
 void TimeLabelsZone::setTimeLabelsWidth( int width )
 {
-  foreach ( TimeLabels *timeLabel, mTimeLabelsList ) {
+  foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
     timeLabel->setFixedWidth( width / mTimeLabelsList.count() );
   }
 }
 
-TimeLabels::List TimeLabelsZone::timeLabels() const
+QList<QScrollArea*> TimeLabelsZone::timeLabels() const
 {
   return mTimeLabelsList;
 }
@@ -126,7 +140,7 @@ void TimeLabelsZone::setAgendaView( AgendaView *agenda )
 {
   mAgenda = agenda->agenda();
   mParent = agenda;
-  foreach ( TimeLabels *timeLabel, mTimeLabelsList ) {
+  foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
     setupTimeLabel( timeLabel );
   }
 }

@@ -30,33 +30,26 @@
 #include "prefs.h"
 #include "agenda.h"
 
+#include <QScrollArea>
 #include <KIcon>
-
+#include <QFrame>
 #include <QAction>
 #include <QMenu>
 #include <QPainter>
 
 TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
                         TimeLabelsZone *parent, Qt::WFlags f )
-  : Q3ScrollView( parent, /*name*/0, f )
+  : QFrame( parent, f )
 {
   mTimeLabelsZone = parent;
   mSpec = spec;
-
   mRows = rows;
   mMiniWidth = 0;
 
   mCellHeight = Prefs::instance()->mHourSize * 4;
 
-  enableClipper( true );
-
-  setHScrollBarMode( AlwaysOff );
-  setVScrollBarMode( AlwaysOff );
   setFrameStyle( Plain );
 
-  resizeContents( 50, int( mRows * mCellHeight ) );
-
-  viewport()->setBackgroundRole( QPalette::Background );
   setBackgroundRole( QPalette::Background );
 
   mMousePos = new QFrame( this );
@@ -64,19 +57,19 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
   mMousePos->setFrameStyle( QFrame::HLine | QFrame::Plain );
   mMousePos->setFixedSize( width(), 1 );
   colorMousePos();
-  addChild( mMousePos, 0, 0 );
-
   mAgenda = 0;
 
   if ( mSpec.isValid() ) {
     setToolTip( i18n( "Timezone:" ) + mSpec.timeZone().name() );
   }
-}
+
+  updateConfig();
+ }
 
 void TimeLabels::mousePosChanged( const QPoint &pos )
 {
   colorMousePos();
-  moveChild( mMousePos, 0, pos.y() );
+  mMousePos->move( 0, pos.y() );
 
   // The repaint somehow prevents that the red line leaves a black artifact when
   // moved down. It's not a full solution, though.
@@ -108,13 +101,76 @@ void TimeLabels::setCellHeight( double height )
   mCellHeight = height;
 }
 
-/*
-  Optimization so that only the "dirty" portion of the scroll view is redrawn.
-  Unfortunately, this is not called by default paintEvent() method.
+/**
+   Calculates the minimum width.
 */
-void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
+int TimeLabels::minimumWidth() const
 {
+  return mMiniWidth;
+}
+
+/** updates widget's internal state */
+void TimeLabels::updateConfig()
+{
+  setFont( Prefs::instance()->agendaTimeLabelsFont() );
+
+  QString test = "20";
+  if ( KGlobal::locale()->use12Clock() ) {
+    test = "12";
+  }
+  mMiniWidth = fontMetrics().width( test );
+  if ( KGlobal::locale()->use12Clock() ) {
+    test = "pm";
+  } else {
+    test = "00";
+  }
+  QFont sFont = font();
+  sFont.setPointSize( sFont.pointSize() / 2 );
+  QFontMetrics fmS( sFont );
+  mMiniWidth += fmS.width( test ) + frameWidth() * 2 + 4 ;
+  // update geometry restrictions based on new settings
+  setFixedWidth( mMiniWidth );
+
+  /** Can happen if all resources are disabled */
+  if ( !mAgenda ) {
+     return;
+  }
+
+  // update HourSize
+  mCellHeight = Prefs::instance()->mHourSize * 4;
+  // If the agenda is zoomed out so that more than 24 would be shown,
+  // the agenda only shows 24 hours, so we need to take the cell height
+  // from the agenda, which is larger than the configured one!
+  if ( mCellHeight < 4 * mAgenda->gridSpacingY() ) {
+       mCellHeight = 4 * mAgenda->gridSpacingY();
+  }
+  repaint();
+}
+
+/**  */
+void TimeLabels::setAgenda( Agenda *agenda )
+{
+  mAgenda = agenda;
+
+  connect( mAgenda, SIGNAL(mousePosSignal(const QPoint &)),
+           this, SLOT(mousePosChanged(const QPoint &)) );
+  connect( mAgenda, SIGNAL(enterAgenda()), this, SLOT(showMousePos()) );
+  connect( mAgenda, SIGNAL(leaveAgenda()), this, SLOT(hideMousePos()) );
+  connect( mAgenda, SIGNAL(gridSpacingYChanged(double)),
+           this, SLOT(setCellHeight(double)) );
+}
+
+/** This is called in response to repaint() */
+void TimeLabels::paintEvent( QPaintEvent * )
+{
+  QPainter p( this );
+
   int beginning;
+
+  int cw = width();
+  int ch = height();
+  int cx = 0;
+  int cy = 0;
 
   if ( !mSpec.isValid() ) {
     beginning = 0;
@@ -123,17 +179,13 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
                   Prefs::instance()->timeSpec().timeZone().currentOffset() ) / ( 60 * 60 );
   }
 
-  p->setBrush( palette().window() ); // TODO: theming, see if we want sth here...
-  p->fillRect( cx, cy, cw, ch, p->brush() );
-
   // bug:  the parameters cx and cw are the areas that need to be
   //       redrawn, not the area of the widget.  unfortunately, this
   //       code assumes the latter...
 
   // now, for a workaround...
-  cx = contentsX() + frameWidth() * 2;
-  cw = contentsWidth();
-
+  cx = frameWidth() * 2;
+  cw = width();
   // end of workaround
   int cell = ( (int)( cy / mCellHeight ) ) + beginning;  // the hour we start drawing with
   double y = ( cell - beginning ) * mCellHeight;
@@ -141,13 +193,13 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   QString hour;
   int timeHeight = fm.ascent();
   QFont hourFont = Prefs::instance()->agendaTimeLabelsFont();
-  p->setFont( font() );
+  p.setFont( font() );
 
   //TODO: rewrite this using KLocale's time formats. "am/pm" doesn't make sense
   // in some locale's
   QString suffix;
-  if ( ! KGlobal::locale()->use12Clock() ) {
-      suffix = "00";
+  if ( !KGlobal::locale()->use12Clock() ) {
+    suffix = "00";
   } else {
     suffix = "am";
     if ( cell > 11 ) {
@@ -186,10 +238,10 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
     } else {
       pen.setColor( palette().color( QPalette::WindowText ) );
     }
-    p->setPen( pen );
+    p.setPen( pen );
 
     // hour, full line
-    p->drawLine( cx, int( y ), cw + 2, int( y ) );
+    p.drawLine( cx, int( y ), cw + 2, int( y ) );
 
     hour.setNum( cell % 24 );
     // handle different timezones
@@ -212,11 +264,11 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
     // center and draw the time label
     int timeWidth = fm.width( hour );
     int offset = startW - timeWidth - tw2 -1 ;
-    p->setFont( hourFont );
-    p->drawText( offset, int( y + timeHeight ), hour );
-    p->setFont( suffixFont );
+    p.setFont( hourFont );
+    p.drawText( offset, int( y + timeHeight ), hour );
+    p.setFont( suffixFont );
     offset = startW - tw2;
-    p->drawText( offset, int( y + timeHeight - divTimeHeight ), suffix );
+    p.drawText( offset, int( y + timeHeight - divTimeHeight ), suffix );
 
     // increment indices
     y += mCellHeight;
@@ -224,88 +276,9 @@ void TimeLabels::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   }
 }
 
-/**
-   Calculates the minimum width.
-*/
-int TimeLabels::minimumWidth() const
+QSize TimeLabels::sizeHint() const
 {
-  return mMiniWidth;
-}
-
-/** updates widget's internal state */
-void TimeLabels::updateConfig()
-{
-  /** Can happen if all resources are disabled */
-  if ( !mAgenda ) {
-    return;
-  }
-
-  setFont( Prefs::instance()->agendaTimeLabelsFont() );
-
-  QString test = "20";
-  if ( KGlobal::locale()->use12Clock() ) {
-      test = "12";
-  }
-  mMiniWidth = fontMetrics().width( test );
-  if ( KGlobal::locale()->use12Clock() ) {
-    test = "pm";
-  } else {
-    test = "00";
-  }
-  QFont sFont = font();
-  sFont.setPointSize( sFont.pointSize() / 2 );
-  QFontMetrics fmS( sFont );
-  mMiniWidth += fmS.width( test ) + frameWidth() * 2 + 4 ;
-  // update geometry restrictions based on new settings
-  setFixedWidth( mMiniWidth );
-
-  // update HourSize
-  mCellHeight = Prefs::instance()->mHourSize * 4;
-  // If the agenda is zoomed out so that more than 24 would be shown,
-  // the agenda only shows 24 hours, so we need to take the cell height
-  // from the agenda, which is larger than the configured one!
-  if ( mCellHeight < 4 * mAgenda->gridSpacingY() ) {
-       mCellHeight = 4 * mAgenda->gridSpacingY();
-  }
-  resizeContents( mMiniWidth, int( mRows * mCellHeight + 1 ) );
-}
-
-/** update time label positions */
-void TimeLabels::positionChanged()
-{
-  if ( mAgenda ) {
-    int adjustment = mAgenda->contentsY();
-    if ( adjustment != contentsY() ) {
-      setContentsPos( 0, adjustment );
-    }
-  }
-}
-
-void TimeLabels::positionChanged( int pos )
-{
-  if ( pos != contentsY() ) {
-    setContentsPos( 0, pos );
-  }
-}
-
-/**  */
-void TimeLabels::setAgenda( Agenda *agenda )
-{
-  mAgenda = agenda;
-
-  connect( mAgenda, SIGNAL(mousePosSignal(const QPoint &)),
-           this, SLOT(mousePosChanged(const QPoint &)) );
-  connect( mAgenda, SIGNAL(enterAgenda()), this, SLOT(showMousePos()) );
-  connect( mAgenda, SIGNAL(leaveAgenda()), this, SLOT(hideMousePos()) );
-  connect( mAgenda, SIGNAL(gridSpacingYChanged(double)),
-           this, SLOT(setCellHeight(double)) );
-}
-
-/** This is called in response to repaint() */
-void TimeLabels::paintEvent( QPaintEvent * )
-{
-  QPainter painter( this );
-  drawContents( &painter, contentsX(), contentsY(), visibleWidth(), visibleHeight() );
+  return QSize( mMiniWidth, mRows * mCellHeight );
 }
 
 void TimeLabels::contextMenuEvent( QContextMenuEvent *event )

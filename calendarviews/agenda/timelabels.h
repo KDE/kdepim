@@ -29,16 +29,14 @@
 #include "eventviews_export.h"
 
 #include <KDateTime>
-
-#include <q3scrollview.h>
+#include <QFrame>
 
 class Agenda;
 class TimeLabelsZone;
 
-class QFrame;
 class QPaintEvent;
 
-class EVENTVIEWS_EXPORT TimeLabels : public Q3ScrollView
+class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 {
   Q_OBJECT
   public:
@@ -75,18 +73,7 @@ class EVENTVIEWS_EXPORT TimeLabels : public Q3ScrollView
     */
     QString headerToolTip() const;
 
-  public slots:
-    /** update time label positions */
-    void positionChanged();
-    /** update time label positions */
-    void positionChanged( int pos );
-
-  protected:
-    /*reimp from Q3ScrollView*/
-    void drawContents( QPainter *p, int cx, int cy, int cw, int ch );
-    //the following line is here to shutup gcc warning:
-    //‘virtual void Q3ScrollView::drawContents(QPainter*)’ was hidden
-    using Q3Frame::drawContents;
+    QSize sizeHint() const;
 
   private slots:
     /** update the position of the marker showing the mouse position */
