@@ -2,6 +2,7 @@
 Version=1.0
 Encoding=UTF-8
 Name=KOrganizer Mobile
+Name[x-test]=xxKOrganizer Mobilexx
 Exec=korganizer-mobile
 
 Icon=korganizer
