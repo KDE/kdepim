@@ -188,12 +188,12 @@ shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) co
                                                QDir( base ) );
     case NewlineSeparatedInputFile:
         return Input::createFromProcessStdOut( doGetCommand(),
-                                               doGetArguments( relative ),
+                                               doGetArguments( QStringList() ),
                                                QDir( base ),
                                                make_input( relative, '\n' ) );
     case NullSeparatedInputFile:
         return Input::createFromProcessStdOut( doGetCommand(),
-                                               doGetArguments( relative ),
+                                               doGetArguments( QStringList() ),
                                                QDir( base ),
                                                make_input( relative, '\0' ) );
     case NumArgumentPassingMethods:
