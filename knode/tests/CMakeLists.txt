@@ -1,6 +1,10 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 
-include_directories( ${CMAKE_SOURCE_DIR}/knode ${KDE4_INCLUDES} )
+include_directories(
+    ${CMAKE_SOURCE_DIR}/knode
+    ${KDE4_INCLUDES}
+    ${Boost_INCLUDE_DIR}
+    )
 
 
 set( knodetest_SRCS
