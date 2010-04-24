@@ -531,16 +531,18 @@ static QString process( const SumFile & sumFile, bool * fatal, const QStringList
 
     qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( arguments.join(" ") ) );
     p.start( program, arguments );
+    QByteArray remainder; // used for filenames with newlines in them
     while ( p.state() != QProcess::NotRunning ) {
         p.waitForReadyRead();
         while ( p.canReadLine() ) {
             const QByteArray line = p.readLine();
             const int colonIdx = line.lastIndexOf( ':' );
             if ( colonIdx < 0 ) {
-                qDebug( "%s: failed to parse line '%s'", Q_FUNC_INFO, line.data() );
+                remainder += line; // no colon -> probably filename with a newline
                 continue;
             }
-            const QString file = QFile::decodeName( line.left( colonIdx ) );
+            const QString file = QFile::decodeName( remainder + line.left( colonIdx ) );
+            remainder.clear();
             const VerifyChecksumsDialog::Status result = string2status( line.mid( colonIdx+1 ).trimmed() );
             status( sumFile.dir.absoluteFilePath( file ), result );
         }
