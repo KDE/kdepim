@@ -1,6 +1,7 @@
 project (calendarviewsapp)
 
 include_directories(
+    ${Boost_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../agenda
     ${CMAKE_CURRENT_BINARY_DIR}/../agenda)
 
