@@ -46,6 +46,8 @@
 #include <QStringList>
 #include <QDebug>
 #include <QFileInfo>
+#include <QProcess>
+#include <QByteArray>
 
 #include <boost/shared_ptr.hpp>
 
@@ -60,6 +62,8 @@ static const QLatin1String VERIFY_COMMAND_ENTRY( "verify-command" );
 static const QLatin1String FILE_PATTERNS_ENTRY( "file-patterns" );
 static const QLatin1String OUTPUT_FILE_ENTRY( "output-file" );
 static const QLatin1String FILE_PLACEHOLDER( "%f" );
+static const QLatin1String NULL_SEPARATED_STDIN_INDICATOR( "0|" );
+static const QLatin1Char   NEWLINE_SEPARATED_STDIN_INDICATOR( '|' );
 
 // ChecksumOperations group
 static const QLatin1String CHECKSUM_DEFINITION_ID_ENTRY( "checksum-definition-id" );
@@ -101,6 +105,15 @@ namespace {
 
             // create-command
             cmdline = group.readEntry( CREATE_COMMAND_ENTRY );
+            if ( cmdline.startsWith( NULL_SEPARATED_STDIN_INDICATOR ) ) {
+                setCreateCommandArgumentPassingMethod( NullSeparatedInputFile );
+                cmdline.remove( 0, 2 );
+            } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
+                setCreateCommandArgumentPassingMethod( NewlineSeparatedInputFile );
+                cmdline.remove( 0, 1 );
+            }
+            if ( createCommandArgumentPassingMethod() != CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
+                throw ChecksumDefinitionError( id(), i18n("Cannot use both %f and | in create-command") );
             cmdline.replace( FILE_PLACEHOLDER, QLatin1String("__files_go_here__") );
             l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
             l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
@@ -129,10 +142,32 @@ namespace {
                 m_createPrefixArguments = l.mid( 1, idx1-1 );
                 m_createPostfixArguments = l.mid( idx1+1 );
             }
-            qDebug() << "ChecksumDefinition[" << id() << ']' << m_createCommand << m_createPrefixArguments << FILE_PLACEHOLDER << m_createPostfixArguments;
+            switch ( createCommandArgumentPassingMethod() ) {
+            case CommandLine:
+                qDebug() << "ChecksumDefinition[" << id() << ']' << m_createCommand << m_createPrefixArguments << FILE_PLACEHOLDER << m_createPostfixArguments;
+                break;
+            case NewlineSeparatedInputFile:
+                qDebug() << "ChecksumDefinition[" << id() << ']' << "find | " << m_createCommand << m_createPrefixArguments;
+                break;
+            case NullSeparatedInputFile:
+                qDebug() << "ChecksumDefinition[" << id() << ']' << "find -print0 | " << m_createCommand << m_createPrefixArguments;
+                break;
+            case NumArgumentPassingMethods:
+                assert( !"Should not happen" );
+                break;
+            }
 
             // verify-command
             cmdline = group.readEntry( VERIFY_COMMAND_ENTRY );
+            if ( cmdline.startsWith( NULL_SEPARATED_STDIN_INDICATOR ) ) {
+                setVerifyCommandArgumentPassingMethod( NullSeparatedInputFile );
+                cmdline.remove( 0, 2 );
+            } else if ( cmdline.startsWith( NEWLINE_SEPARATED_STDIN_INDICATOR ) ) {
+                setVerifyCommandArgumentPassingMethod( NewlineSeparatedInputFile );
+                cmdline.remove( 0, 1 );
+            }
+            if ( verifyCommandArgumentPassingMethod() != CommandLine && cmdline.contains( FILE_PLACEHOLDER ) )
+                throw ChecksumDefinitionError( id(), i18n("Cannot use both %f and | in verify-command") );
             cmdline.replace( FILE_PLACEHOLDER, QLatin1String("__files_go_here__") );
             l = KShell::splitArgs( cmdline, KShell::AbortOnMeta|KShell::TildeExpand, &errors );
             l = l.replaceInStrings( QLatin1String("__files_go_here__"), FILE_PLACEHOLDER );
@@ -161,7 +196,20 @@ namespace {
                 m_verifyPrefixArguments = l.mid( 1, idx2-1 );
                 m_verifyPostfixArguments = l.mid( idx2+1 );
             }
-            qDebug() << "ChecksumDefinition[" << id() << ']' << m_verifyCommand << m_verifyPrefixArguments << FILE_PLACEHOLDER << m_verifyPostfixArguments;
+            switch ( verifyCommandArgumentPassingMethod() ) {
+            case CommandLine:
+                qDebug() << "ChecksumDefinition[" << id() << ']' << m_verifyCommand << m_verifyPrefixArguments << FILE_PLACEHOLDER << m_verifyPostfixArguments;
+                break;
+            case NewlineSeparatedInputFile:
+                qDebug() << "ChecksumDefinition[" << id() << ']' << "find | " << m_verifyCommand << m_verifyPrefixArguments;
+                break;
+            case NullSeparatedInputFile:
+                qDebug() << "ChecksumDefinition[" << id() << ']' << "find -print0 | " << m_verifyCommand << m_verifyPrefixArguments;
+                break;
+            case NumArgumentPassingMethods:
+                assert( !"Should not happen" );
+                break;
+            }
         }
 
     private:
@@ -186,7 +234,9 @@ ChecksumDefinition::ChecksumDefinition( const QString & id, const QString & labe
     : m_id( id ),
       m_label( label.isEmpty() ? id : label ),
       m_outputFileName( outputFileName ),
-      m_patterns( patterns )
+      m_patterns( patterns ),
+      m_createMethod( CommandLine ),
+      m_verifyMethod( CommandLine )
 {
 
 }
@@ -201,6 +251,7 @@ QString ChecksumDefinition::verifyCommand() const {
     return doGetVerifyCommand();
 }
 
+#if 0
 QStringList ChecksumDefinition::createCommandArguments( const QStringList & files ) const {
     return doGetCreateArguments( files );
 }
@@ -208,7 +259,64 @@ QStringList ChecksumDefinition::createCommandArguments( const QStringList & file
 QStringList ChecksumDefinition::verifyCommandArguments( const QStringList & files ) const {
     return doGetVerifyArguments( files );
 }
+#endif
 
+static QByteArray make_input( const QStringList & files, char sep ) {
+    QByteArray result;
+    Q_FOREACH( const QString & file, files )
+        result += QFile::encodeName( file ) + sep;
+    return result;
+}
+
+static bool start_command( QProcess * p, const char * functionName,
+                           const QString & cmd, const QStringList & args,
+                           const QStringList & files, ChecksumDefinition::ArgumentPassingMethod method )
+{
+    if ( !p ) {
+        qWarning( "%s: process == NULL", functionName );
+        return false;
+    }
+
+    switch ( method ) {
+
+    case ChecksumDefinition::NumArgumentPassingMethods:
+        assert( !"Should not happen" );
+
+    case ChecksumDefinition::CommandLine:
+        qDebug( "[%p] Starting %s %s", p, qPrintable( cmd ), qPrintable( args.join(" ") ) );
+        p->start( cmd, args, QIODevice::ReadOnly );
+        return true;
+
+    case ChecksumDefinition::NewlineSeparatedInputFile:
+    case ChecksumDefinition::NullSeparatedInputFile:
+        p->start( cmd, args, QIODevice::ReadWrite );
+        if ( !p->waitForStarted() )
+            return false;
+        const char sep =
+            method == ChecksumDefinition::NewlineSeparatedInputFile ? '\n' :
+            /* else */                            '\0' ;
+        const QByteArray stdin = make_input( files, sep );
+        if ( p->write( stdin ) != stdin.size() )
+            return false;
+        p->closeWriteChannel();
+        return true;
+    }
+
+    return false; // make compiler happy
+
+}
+
+bool ChecksumDefinition::startCreateCommand( QProcess * p, const QStringList & files ) const {
+    return start_command( p, Q_FUNC_INFO,
+                          doGetCreateCommand(), doGetCreateArguments( files ),
+                          files, m_createMethod );
+}
+
+bool ChecksumDefinition::startVerifyCommand( QProcess * p, const QStringList & files ) const {
+    return start_command( p, Q_FUNC_INFO,
+                          doGetVerifyCommand(), doGetVerifyArguments( files ),
+                          files, m_verifyMethod );
+}
 
 // static
 std::vector< shared_ptr<ChecksumDefinition> > ChecksumDefinition::getChecksumDefinitions() {

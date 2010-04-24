@@ -525,10 +525,8 @@ static QString process( const SumFile & sumFile, bool * fatal, const QStringList
     const QString absFilePath = sumFile.dir.absoluteFilePath( sumFile.sumFile );
 
     const QString program = sumFile.checksumDefinition->verifyCommand();
-    const QStringList arguments = sumFile.checksumDefinition->verifyCommandArguments( QStringList( absFilePath ) );
+    sumFile.checksumDefinition->startVerifyCommand( &p, QStringList( absFilePath ) );
 
-    qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( arguments.join(" ") ) );
-    p.start( program, arguments );
     QByteArray remainder; // used for filenames with newlines in them
     while ( p.state() != QProcess::NotRunning ) {
         p.waitForReadyRead();

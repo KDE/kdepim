@@ -458,9 +458,7 @@ static QString process( const Dir & dir, bool * fatal ) {
     p.setWorkingDirectory( dir.dir.absolutePath() );
     p.setStandardOutputFile( dir.dir.absoluteFilePath( file.QFile::fileName() /*!sic*/ ) );
     const QString program = dir.checksumDefinition->createCommand();
-    const QStringList arguments = dir.checksumDefinition->createCommandArguments( dir.inputFiles );
-    qDebug( "[%p] Starting %s %s", &p, qPrintable( program ), qPrintable( arguments.join(" ") ) );
-    p.start( program, arguments );
+    dir.checksumDefinition->startCreateCommand( &p, dir.inputFiles );
     p.waitForFinished();
     qDebug( "[%p] Exit code %d.", &p, p.exitCode() );
 
