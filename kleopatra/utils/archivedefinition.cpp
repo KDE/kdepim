@@ -197,7 +197,7 @@ shared_ptr<Input> ArchiveDefinition::createInput( const QStringList & files ) co
                                                QDir( base ),
                                                make_input( relative, '\0' ) );
     case NumArgumentPassingMethods:
-        assert( "!Should not happen" );
+        assert( !"Should not happen" );
     }
     return shared_ptr<Input>(); // make compiler happy
 }
