@@ -239,6 +239,7 @@ namespace {
     static QDebug operator<<( QDebug s, const Outputter & o ) {
         if ( const quint64 size = o.data.size() )
             s << " << (" << size << "bytes)";
+        return s;
     }
 }
 
