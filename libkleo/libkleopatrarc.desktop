@@ -3,7 +3,7 @@ extensions=tar
 id=tar
 Name=TAR (PGP®-compatible)
 Name[de]=TAR (PGP®-kompatibel)
-pack-command=tar cf -
+pack-command=0|tar cf - -T- --null
 
 [Archive Definition #1]
 extensions=zip
@@ -17,14 +17,14 @@ extensions=tar.bz2,tbz2
 id=bzip2
 Name=TAR (with bzip2 compression)
 Name[de]=TAR (mit bzip2-Kompression)
-pack-command=tar cfj -
+pack-command=0|tar cfj - -T- --null
 
 [Checksum Definition #1]
 file-patterns=sha1sum.txt
 output-file=sha1sum.txt
 id=sha1sum
 Name=sha1sum
-create-command=sha1sum -- %f
+create-command=0|xargs -0 sha1sum --
 verify-command=sha1sum -c --
 
 [Checksum Definition #2]
@@ -32,7 +32,7 @@ file-patterns=md5sum.txt
 output-file=md5sum.txt
 id=md5sum
 Name=md5sum
-create-command=md5sum -- %f
+create-command=0|xargs -0 md5sum --
 verify-command=md5sum -c --
 
 [Key Filter #0]
