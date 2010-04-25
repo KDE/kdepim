@@ -644,7 +644,12 @@ int KMFolderCachedImap::rename( const QString &aName, KMFolderDir *aParent )
 KMFolder *KMFolderCachedImap::trashFolder() const
 {
   QString trashStr = account()->trash();
-  return kmkernel->dimapFolderMgr()->findIdString( trashStr );
+  KMFolder *folder = kmkernel->dimapFolderMgr()->findIdString( trashStr );
+  if ( !folder )
+    folder = kmkernel->folderMgr()->findIdString( trashStr );
+  if ( !folder )
+    folder = kmkernel->imapFolderMgr()->findIdString( trashStr );
+  return folder;
 }
 
 void KMFolderCachedImap::setLastUid( ulong uid )

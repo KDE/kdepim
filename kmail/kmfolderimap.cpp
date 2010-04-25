@@ -125,7 +125,12 @@ void KMFolderImap::reallyDoClose()
 KMFolder* KMFolderImap::trashFolder() const
 {
   QString trashStr = account()->trash();
-  return kmkernel->imapFolderMgr()->findIdString( trashStr );
+  KMFolder *folder = kmkernel->imapFolderMgr()->findIdString( trashStr );
+  if ( !folder )
+    folder = kmkernel->folderMgr()->findIdString( trashStr );
+  if ( !folder )
+    folder = kmkernel->dimapFolderMgr()->findIdString( trashStr );
+  return folder;
 }
 
 //-----------------------------------------------------------------------------
