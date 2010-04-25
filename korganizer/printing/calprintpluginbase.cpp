@@ -950,17 +950,17 @@ void CalPrintPluginBase::drawAgendaItem( PrintCellItem *item, QPainter &p,
     } else {
       if ( event->location().isEmpty() ) {
         str = i18nc( "starttime - endtime summary",
-                    "%1-%2 %3",
-                    KGlobal::locale()->formatTime( startTime.toLocalZone().time() ),
-                    KGlobal::locale()->formatTime( endTime.toLocalZone().time() ),
-                    event->summary() );
+                     "%1-%2 %3",
+                     KGlobal::locale()->formatTime( item->start().toLocalZone().time() ),
+                     KGlobal::locale()->formatTime( item->end().toLocalZone().time() ),
+                     event->summary() );
       } else {
         str = i18nc( "starttime - endtime summary, location",
-                    "%1-%2 %3, %4",
-                    KGlobal::locale()->formatTime( startTime.toLocalZone().time() ),
-                    KGlobal::locale()->formatTime( endTime.toLocalZone().time() ),
-                    event->summary(),
-                    event->location() );
+                     "%1-%2 %3, %4",
+                     KGlobal::locale()->formatTime( item->start().toLocalZone().time() ),
+                     KGlobal::locale()->formatTime( item->end().toLocalZone().time() ),
+                     event->summary(),
+                     event->location() );
       }
     }
     if ( includeDescription ) {
