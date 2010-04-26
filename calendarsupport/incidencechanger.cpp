@@ -54,7 +54,7 @@ using namespace Akonadi;
 
 class IncidenceChanger::Private {
 public:
-  Private( const Collection &defaultCollection ) {
+  Private( const Collection &defaultCollection ) : mGroupware( 0 ) {
     mDefaultCollection = defaultCollection;
   }
   ~Private() {
@@ -66,6 +66,8 @@ public:
   QHash<Akonadi::Item::Id, int> m_latestVersionByItemId;
   QHash<const KJob*, Item> m_oldItemByJob;
   Collection mDefaultCollection;
+
+  Groupware *mGroupware;
 };
 
 IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
@@ -78,6 +80,11 @@ IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
 IncidenceChanger::~IncidenceChanger()
 {
   delete d;
+}
+
+void IncidenceChanger::setGroupware( Groupware *groupware )
+{
+  d->mGroupware = groupware;
 }
 
 bool IncidenceChanger::beginChange( const Item &item )
@@ -127,11 +134,11 @@ bool IncidenceChanger::sendGroupwareMessage( const Item &aitem,
     emit schedule( method, aitem );
     return true;
   } else if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
-    return Akonadi::Groupware::instance()->sendICalMessage( parent,
-                                                            method,
-                                                            incidence.get(),
-                                                            action,
-                                                            false );
+    if ( !d->mGroupware ) {
+      kError() << "Groupware communication enabled but no groupware instance set";
+      return false;
+    }
+    return d->mGroupware->sendICalMessage( parent, method, incidence.get(), action, false );
   }
   return true;
 }
@@ -307,12 +314,14 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
       }
     }
 
-    if ( !Akonadi::Groupware::instance()->doNotNotify() && notifyOrganizer ) {
-      Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
-      scheduler.performTransaction( tmp.get(), KCal::iTIPReply );
+    if ( d->mGroupware ) {
+      if ( !d->mGroupware->doNotNotify() && notifyOrganizer ) {
+        Akonadi::MailScheduler scheduler( static_cast<Akonadi::Calendar*>(mCalendar) );
+        scheduler.performTransaction( tmp.get(), KCal::iTIPReply );
       }
-    //reset the doNotNotify flag
-    Akonadi::Groupware::instance()->setDoNotNotify( false );
+      //reset the doNotNotify flag
+      d->mGroupware->setDoNotNotify( false );
+    }
   }
   emit incidenceDeleted( items.first() );
 }
@@ -451,10 +460,14 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
     //        pattern...
     bool success = true;
     if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
-      success = Akonadi::Groupware::instance()->sendICalMessage(
-        parent,
-        KCal::iTIPRequest,
-        newinc.get(), Akonadi::Groupware::INCIDENCEEDITED, attendeeStatusChanged );
+      if ( !d->mGroupware ) {
+          kError() << "Groupware communication enabled but no groupware instance set";
+      } else {
+        success = d->mGroupware->sendICalMessage( parent, KCal::iTIPRequest,
+                                                  newinc.get(),
+                                                  Akonadi::Groupware::INCIDENCEEDITED,
+                                                  attendeeStatusChanged );
+      }
     }
 
     if ( !success ) {
@@ -517,7 +530,9 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
 
   Q_ASSERT( incidence );
   if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
-    if ( !Akonadi::Groupware::instance()->sendICalMessage(
+    if ( !d->mGroupware ) {
+      kError() << "Groupware communication enabled but no groupware instance set";
+    } else if ( !d->mGroupware->sendICalMessage(
            0, //PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
            KCal::iTIPRequest,
            incidence.get(), Akonadi::Groupware::INCIDENCEADDED, false ) ) {

@@ -24,6 +24,7 @@
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendarmodel.h>
+#include <akonadi/kcal/incidencechanger.h>
 #include <akonadi/kcal/incidencemimetypevisitor.h>
 
 #include <akonadi/changerecorder.h>
@@ -80,8 +81,11 @@ void MainWindow::delayedInit()
 
   mCalendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
 
+  IncidenceChanger *incidenceChanger = new IncidenceChanger( mCalendar, this, Collection() );
+
   mEventView = new AgendaView( this );
   mEventView->setCalendar( mCalendar );
+  mEventView->setIncidenceChanger( incidenceChanger );
   mEventView->setDateRange( KDateTime::currentLocalDateTime().addDays( -1 ),
                             KDateTime::currentLocalDateTime().addDays( 1 ) );
   mEventView->updateConfig();

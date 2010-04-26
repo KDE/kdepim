@@ -42,9 +42,9 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 {
   Q_OBJECT
   public:
-  IncidenceChanger( Akonadi::Calendar *cal,
-                    QObject *parent,
-                    const Collection &defaultCollection );
+    IncidenceChanger( Akonadi::Calendar *cal,
+                      QObject *parent,
+                      const Collection &defaultCollection );
     ~IncidenceChanger();
 
     enum HowChanged {
@@ -69,6 +69,8 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
       UNKNOWN_MODIFIED,
       NOTHING_MODIFIED
     };
+
+    void setGroupware( Groupware *groupware );
 
     /** Locks the incidence */
     bool beginChange( const Akonadi::Item & incidence );
