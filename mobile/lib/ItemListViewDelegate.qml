@@ -83,12 +83,12 @@ Item {
       PropertyChanges { target: background; color: palette.highlight; opacity: 1.0 }
     }
   ]
-  transitions: [
-    Transition {
-      NumberAnimation { property: "height"; duration: 200 }
-      NumberAnimation { target: itemDetails; property: "opacity"; duration: 200 }
-      NumberAnimation { target: itemSummary; property: "opacity"; duration: 200 }
-      ColorAnimation { target: background; property: "color"; duration: 200 }
-    }
-  ]
+//  transitions: [
+//    Transition {
+//      NumberAnimation { property: "height"; duration: 200 }
+//      NumberAnimation { target: itemDetails; property: "opacity"; duration: 200 }
+//      NumberAnimation { target: itemSummary; property: "opacity"; duration: 200 }
+//      ColorAnimation { target: background; property: "color"; duration: 200 }
+//    }
+//  ]
 }
