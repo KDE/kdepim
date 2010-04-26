@@ -21,6 +21,7 @@
 
 import Qt 4.7
 import org.kde.pim.mobileui 4.5
+import org.kde.akonadi 4.5
 
 Rectangle {
   id : _topContext
@@ -47,14 +48,12 @@ Rectangle {
     }
     Component {
       id : accountDelegate
-      Item {
+      CollectionDelegate {
+        fullClickArea : true
         id : _wrapper1
-        height : 20
-        Text { text : model.display; height : 20 }
-        width : 100
-        MouseArea {
-          anchors.fill : parent
-
+        height : _topContext.height / 6
+        width : ListView.view.width
+        onIndexSelected : {
           onClicked : { console.log( "Account clicked: " + model.display ); _topContext.accountSelected( model.index ); }
         }
       }
