@@ -28,6 +28,8 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
 {
   m_view = new AgendaView( 0 );
   connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)), SIGNAL(itemSelected()) );
+  connect( this, SIGNAL(nextItemRequest()), SLOT(gotoNext()) );
+  connect( this, SIGNAL(previousItemRequest()), SLOT(gotoPrevious()) );
   setWidget( m_view );
 }
 
@@ -81,5 +83,21 @@ qint64 AgendaViewItem::selectedItemId() const
   return m_view->selectedIncidences().first().id();
 }
 
+void AgendaViewItem::gotoNext()
+{
+  const QDate start = endDate().addDays( 1 );
+  const QDate end = start.addDays( startDate().daysTo( endDate() ) );
+  kDebug() << start << end;
+  m_view->showDates( start, end );
+}
+
+void AgendaViewItem::gotoPrevious()
+{
+  const QDate end = startDate().addDays( - 1 );
+  const QDate start = end.addDays( - startDate().daysTo( endDate() ) );
+  kDebug() << start << end;
+  m_view->showDates( start, end );
+
+}
 
 #include "agendaviewitem.moc"

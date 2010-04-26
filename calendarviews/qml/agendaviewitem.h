@@ -50,6 +50,12 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
     qint64 selectedItemId() const;
 
+  public slots:
+    /** Show the following date range of equal length right after the current one. */
+    void gotoNext();
+    /** Show the preceeding date range. */
+    void gotoPrevious();
+
   signals:
     void itemSelected();
 
