@@ -237,6 +237,8 @@ KPIM.MainView {
     target: startPage
     onAccountSelected : {
       application.setSelectedAccount(row);
+      startPanel.collapse();
+      folderPanel.expand();
       // TODO: Figure out how to expand the slider programatically.
     }
   }
