@@ -168,6 +168,11 @@ void KDeclarativeMainView::addMimeType( const QString &mimeType )
   d->mChangeRecorder->setMimeTypeMonitored( mimeType );
 }
 
+QStringList KDeclarativeMainView::mimeTypes() const
+{
+  return d->mChangeRecorder->mimeTypesMonitored();
+}
+
 void KDeclarativeMainView::setSelectedChildCollectionRow( int row )
 {
   if ( row < 0 )

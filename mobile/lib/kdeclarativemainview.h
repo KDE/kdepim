@@ -66,6 +66,8 @@ public:
   /** Mime type of the items handled by this application. */
   void addMimeType( const QString &mimeType );
 
+  QStringList mimeTypes() const;
+
 public slots:
   void setSelectedAccount( int row );
   void setSelectedChildCollectionRow( int row );
