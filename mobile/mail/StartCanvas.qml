@@ -76,23 +76,22 @@ Rectangle {
     anchors.bottom : parent.bottom
     ListModel {
       id : favsModel
-      ListElement { text : "Favorite 1" }
-      ListElement { text : "Favorite 2" }
-      ListElement { text : "Favorite 3" }
-      ListElement { text : "Favorite 4" }
-      ListElement { text : "Favorite 5" }
-      ListElement { text : "Favorite 6" }
+      ListElement { display : "Favorite 1" }
+      ListElement { display : "Favorite 2" }
+      ListElement { display : "Favorite 3" }
+      ListElement { display : "Favorite 4" }
+      ListElement { display : "Favorite 5" }
+      ListElement { display : "Favorite 6" }
     }
 
     Component {
       id : favDelegate
-      Item {
+      CollectionDelegate {
         id : _wrapper2
-        height : 20
-        width : 100
-        Text { text : model.text; height : 20; }
-        MouseArea {
-          anchors.fill : parent
+        fullClickArea : true
+        height : _topContext.height / 6
+        width : ListView.view.width
+        onIndexSelected : {
           onClicked : { console.log("favorite clicked: " + model.index ); }
         }
       }
