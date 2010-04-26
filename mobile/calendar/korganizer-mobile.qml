@@ -19,6 +19,7 @@
 */
 
 import Qt 4.7
+import org.qt 4.7 // Qt widget wrappers
 import org.kde 4.5
 import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
@@ -90,46 +91,17 @@ KPIM.MainView {
              }
            }
 
-           KPIM.ItemListView {
-             id: itemList
-             delegate: [
-               KPIM.ItemListViewDelegate {
-                 summaryContent: [
-                   Text {
-                     anchors.fill: parent
-                     text: "Event: " + model.summary
-                     font.bold: true
-                   }
-                 ]
-                 detailsContent: [
-                    Column {
-                      anchors.fill: parent
-                      Text {
-                        text: "Event: " + model.summary
-                        color: palette.highlightedText
-                        font.bold: true
-                      }
-                      Text {
-                        text: "Details: " + model.description
-                        color: palette.highlightedText
-                      }
-                    }
-                 ]
-               }
-             ]
-
-             model: itemModel
-             anchors.top: parent.top
-             anchors.bottom: parent.bottom
-             anchors.right: parent.right
+           Text {
+             id: dateText
              anchors.left: collectionView.right
-             onItemSelected: {
-               eventView.itemId = itemList.currentItemId;
-               folderPanel.collapse();
-               eventView.visible = true;
-               agendaView.visible = false;
-             }
+             text: "Choose a date:"
            }
+
+           QmlDateEdit {
+             anchors.left: collectionView.right
+             anchors.top: dateText.bottom
+           }
+
         }
       ]
     }
