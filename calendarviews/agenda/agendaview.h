@@ -149,6 +149,11 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     void calendarIncidenceChanged( const Akonadi::Item &incidence );
     void calendarIncidenceRemoved( const Akonadi::Item &incidence );
 
+    /** First shown day */
+    QDate startDate() const;
+    /** Last shown day */
+    QDate endDate() const;
+
   public slots:
     virtual void updateView();
     virtual void updateConfig();

@@ -21,6 +21,8 @@ import Qt 4.6
 import org.kde.calendarviews 4.5 as CalendarViews
 
 CalendarViews.AgendaView {
+  startDate: "2010-04-20"
+  endDate: "2010-04-27"
   width: 800
   height: 480
 }

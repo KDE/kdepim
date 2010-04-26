@@ -21,6 +21,7 @@
 #define CALENDARVIEWS_AGENDAVIEWITEM_H
 
 #include "declarativeakonadiitem.h"
+#include <QtCore/QDate>
 
 class AgendaView;
 namespace CalendarViews {
@@ -28,6 +29,8 @@ namespace CalendarViews {
 class AgendaViewItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
+  Q_PROPERTY( QDate startDate READ startDate WRITE setStartDate )
+  Q_PROPERTY( QDate endDate READ endDate WRITE setEndDate )
 
   public:
     explicit AgendaViewItem( QDeclarativeItem *parent = 0 );
@@ -35,6 +38,11 @@ class AgendaViewItem : public DeclarativeAkonadiItem
 
     virtual qint64 itemId() const { return -1; }
     virtual void setItemId( qint64 /*id*/ ) {}
+
+    QDate startDate() const;
+    void setStartDate( const QDate &startDate );
+    QDate endDate() const;
+    void setEndDate( const QDate &endDate );
 
   private:
     AgendaView *m_view;

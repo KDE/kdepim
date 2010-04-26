@@ -993,6 +993,20 @@ void AgendaView::doUpdateItem()
   }
 }
 
+QDate AgendaView::startDate() const
+{
+  if ( mSelectedDates.isEmpty() )
+    return QDate();
+  return mSelectedDates.first();
+}
+
+QDate AgendaView::endDate() const
+{
+  if ( mSelectedDates.isEmpty() )
+    return QDate();
+  return mSelectedDates.last();
+}
+
 void AgendaView::showDates( const QDate &start, const QDate &end )
 {
   if ( !mSelectedDates.isEmpty() &&
@@ -1257,7 +1271,7 @@ void AgendaView::fillAgenda()
   mAgenda->setDateList( mSelectedDates );
 
   bool somethingReselected = false;
-  const Item::List incidences = calendar()->incidences();
+  const Item::List incidences = calendar() ? calendar()->incidences() : Item::List();
 
   foreach ( const Item &aitem, incidences ) {
     displayIncidence( aitem );

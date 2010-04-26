@@ -34,4 +34,28 @@ AgendaViewItem::~AgendaViewItem()
 {
 }
 
+QDate AgendaViewItem::startDate() const
+{
+  return QDate( m_view->startDate() );
+}
+
+void AgendaViewItem::setStartDate(const QDate& startDate)
+{
+  kDebug() << startDate;
+  if ( startDate.isValid() )
+    m_view->showDates( startDate, endDate() );
+}
+
+QDate AgendaViewItem::endDate() const
+{
+  return QDate( m_view->endDate() );
+}
+
+void AgendaViewItem::setEndDate(const QDate& endDate)
+{
+  kDebug() << endDate;
+  if ( endDate.isValid() )
+    m_view->showDates( startDate(), endDate );
+}
+
 #include "agendaviewitem.moc"
