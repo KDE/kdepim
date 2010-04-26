@@ -413,7 +413,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
 
   case QEvent::Enter:
     emit enterAgenda();
-    QWidget::eventFilter( object, event );
+    return QWidget::eventFilter( object, event );
 
 #ifndef KORG_NODND
   case QEvent::DragEnter:
