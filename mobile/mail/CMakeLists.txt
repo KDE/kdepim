@@ -35,3 +35,5 @@ install(FILES
   kmail-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )
+
+kde4_install_icons( ${ICON_INSTALL_DIR} )
