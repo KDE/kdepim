@@ -55,7 +55,7 @@ Rectangle {
         height : _topContext.height / 6
         width : ListView.view.width
         onIndexSelected : {
-          onClicked : { console.log( "Account clicked: " + model.display ); _topContext.accountSelected( model.index ); }
+          console.log( "Account clicked: " + model.display ); _topContext.accountSelected( model.index );
         }
       }
     }
@@ -93,7 +93,7 @@ Rectangle {
         height : _topContext.height / 6
         width : ListView.view.width
         onIndexSelected : {
-          onClicked : { console.log("favorite clicked: " + model.index ); }
+          console.log("favorite clicked: " + model.index );
         }
       }
     }
