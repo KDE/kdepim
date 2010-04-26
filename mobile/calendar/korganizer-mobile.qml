@@ -23,6 +23,7 @@ import org.kde 4.5
 import org.kde.akonadi 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kcal 4.5 as KCal
+import org.kde.calendarviews 4.5 as CalendarViews
 
 KPIM.MainView {
   id: korganizerMobile
@@ -32,8 +33,7 @@ KPIM.MainView {
   KCal.IncidenceView {
     id: eventView
     anchors { fill: parent; topMargin: 48; leftMargin: 48 }
-    width: parent.width
-    height: parent.height
+    visible: false
 
     z: 0
 
@@ -53,6 +53,15 @@ KPIM.MainView {
     }
   }
 
+  Rectangle {
+    id: agendaView
+    anchors.fill: parent
+    color: palette.window
+
+    CalendarViews.AgendaView {
+      anchors { fill: parent; topMargin: 10; leftMargin: 40 }
+    }
+  }
 
   SlideoutPanelContainer {
     anchors.fill: parent
@@ -88,7 +97,7 @@ KPIM.MainView {
                  summaryContent: [
                    Text {
                      anchors.fill: parent
-                     text: "Task: " + model.summary
+                     text: "Event: " + model.summary
                      font.bold: true
                    }
                  ]
@@ -96,7 +105,7 @@ KPIM.MainView {
                     Column {
                       anchors.fill: parent
                       Text {
-                        text: "Task: " + model.summary
+                        text: "Event: " + model.summary
                         color: palette.highlightedText
                         font.bold: true
                       }
@@ -116,7 +125,9 @@ KPIM.MainView {
              anchors.left: collectionView.right
              onItemSelected: {
                eventView.itemId = itemList.currentItemId;
-               folderPanel.collapse()
+               folderPanel.collapse();
+               eventView.visible = true;
+               agendaView.visible = false;
              }
            }
         }
@@ -175,47 +186,6 @@ KPIM.MainView {
       ]
     }
 
-    SlideoutPanel {
-      id: attachmentPanel
-
-      anchors.fill : parent
-      visible: false //messageView.messageTreeModel.attachmentCount >= 2
-      titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
-      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
-      contentWidth: 400
-//      content: [
-//         Component {
-//           id: attachmentDelegate
-//           Item {
-//             id: wrapper
-//             width: attachmentList.width
-//             height: 48
-//             clip: true
-//             Rectangle {
-//               anchors.fill: parent
-//               opacity: 0.25
-//               border.color: palette.mid
-//             }
-//             Text { anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
-//           }
-//         },
-//         ListView {
-//           id: attachmentList
-//           anchors.fill: parent
-//
-//           model: messageView.messageTreeModel
-//           delegate: attachmentDelegate
-//
-//           MouseArea {
-//             anchors.fill: parent
-//             onClicked: {
-//               console.log( "current mime tree count: " + messageView.messageTreeModel.attachmentCount );
-//             }
-//           }
-//         }
-//      ]
-    }
   }
 
    Connections {
