@@ -1039,6 +1039,11 @@ void AgendaView::showIncidences( const Item::List &incidences, const QDate &date
 {
   Q_UNUSED( date );
 
+  if ( !calendar() ) {
+    kError() << "No Calendar set";
+    return;
+  }
+
   // we must check if they are not filtered; if they are, remove the filter
   CalFilter *filter = calendar()->filter();
   bool wehaveall = true;
@@ -1201,6 +1206,10 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
 
 void AgendaView::changeIncidenceDisplayAdded( const Item &aitem )
 {
+  if ( !calendar() ) {
+    kError() << "No Calendar set";
+    return;
+  }
   Todo::Ptr todo = Akonadi::todo( aitem );
   CalFilter *filter = calendar()->filter();
   if ( ( filter && !filter->filterIncidence( Akonadi::incidence( aitem ).get() ) ) ||
@@ -1507,6 +1516,10 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
 }
 void AgendaView::startDrag( const Item &incidence )
 {
+  if ( !calendar() ) {
+    kError() << "No Calendar set";
+    return;
+  }
   if ( QDrag *drag = Akonadi::createDrag( incidence, calendar()->timeSpec(), this ) ) {
     drag->exec();
   }
