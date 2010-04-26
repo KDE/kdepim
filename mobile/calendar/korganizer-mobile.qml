@@ -71,8 +71,49 @@ KPIM.MainView {
     anchors.fill: parent
 
     SlideoutPanel {
+      anchors.fill: parent
+      id: startPanel
+      titleIcon: KDE.iconPath( "korganizer", 48 )
+      handlePosition: 30
+      handleHeight: 78
+      content: [
+        KPIM.StartCanvas {
+          id : startPage
+          anchors.fill : parent
+          anchors.leftMargin : 50
+
+          contextActions : [
+//            KPIM.Button {
+//              id : start_newEmailButton
+//              height : 20
+//              width : 200
+//              anchors.top : parent.top
+//              buttonText : "Write new Email"
+//              onClicked : {
+//                console.log( "Write new clicked" );
+//              }
+
+//            },
+//            KPIM.Button {
+//              id : start_newAccountButton
+//              anchors.top : start_newEmailButton.bottom
+//              height : 20
+//              width : 200
+//              buttonText : "Add Account"
+//              onClicked : {
+//                console.log( "Add Account clicked" );
+//                application.launchAccountWizard();
+//              }
+//            }
+          ]
+        }
+      ]
+    }
+
+    SlideoutPanel {
       id: folderPanel
       titleText: "Folders"
+      handlePosition: 108
       handleHeight: 150
       anchors.fill : parent
       content: [
@@ -175,7 +216,7 @@ KPIM.MainView {
       id: actionPanel
       titleText: "Actions"
       handleHeight: 150
-      handlePosition : 150
+      handlePosition : 258
       anchors.fill : parent
       contentWidth: 240
       content: [
