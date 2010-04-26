@@ -18,7 +18,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.6
+import Qt 4.7
 import org.kde 4.5
 
 Item {
