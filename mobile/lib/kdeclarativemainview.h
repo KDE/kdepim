@@ -67,6 +67,8 @@ public slots:
   /** Triggers de-fullscreen/task switcher */
   void triggerTaskSwitcher();
 
+  void launchAccountWizard();
+
 private:
   KDeclarativeMainViewPrivate * const d;
   Q_DISABLE_COPY( KDeclarativeMainView )

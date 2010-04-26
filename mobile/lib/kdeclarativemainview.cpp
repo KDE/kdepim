@@ -28,6 +28,7 @@
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KStandardDirs>
+#include <KDE/KProcess>
 
 #include <kselectionproxymodel.h>
 
@@ -206,4 +207,19 @@ void KDeclarativeMainView::triggerTaskSwitcher()
 #else
   kDebug() << "not implemented for this platform";
 #endif
+}
+
+void KDeclarativeMainView::launchAccountWizard()
+{
+  QStringList args;
+
+  foreach ( const QString &mimetype, d->mChangeRecorder->mimeTypesMonitored() )
+   args << QLatin1String( "--type" ) << mimetype;
+
+  int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), args );
+  if ( !pid )
+  {
+    // Handle error
+    kDebug() << "error creating accountwizard";
+  }
 }

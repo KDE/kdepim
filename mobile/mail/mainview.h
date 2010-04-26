@@ -29,9 +29,6 @@ class MainView : public KDeclarativeMainView
   Q_OBJECT
   public:
     explicit MainView(QWidget* parent = 0);
-
-  public slots:
-    void launchAccountWizard();
 };
 
 #endif

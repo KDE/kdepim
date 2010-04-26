@@ -21,7 +21,6 @@
 #include "mainview.h"
 
 #include <KDE/KDebug>
-#include <KDE/KProcess>
 #include <kselectionproxymodel.h>
 
 #include <KMime/Message>
@@ -36,17 +35,6 @@ MainView::MainView(QWidget* parent) :
   setListPayloadPart( Akonadi::MessagePart::Header );
 }
 
-void MainView::launchAccountWizard()
-{
-  int pid = KProcess::startDetached( QLatin1String( "accountwizard" ), QStringList()
-                                                                    << QLatin1String( "--type" )
-                                                                    << QLatin1String( "message/rfc822" ) );
-  if ( !pid )
-  {
-    // Handle error
-    kDebug() << "error creating accountwizard";
-  }
-}
 
 #include "mainview.moc"
 
