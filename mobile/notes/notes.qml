@@ -49,10 +49,50 @@ KPIM.MainView {
     anchors.fill: parent
 
     SlideoutPanel {
+      anchors.fill: parent
+      id: startPanel
+      titleIcon: KDE.iconPath( "kmail", 48 )
+      handlePosition: 30
+      handleHeight: 78
+      content: [
+        KPIM.StartCanvas {
+          id : startPage
+          anchors.fill : parent
+          anchors.leftMargin : 50
+
+          contextActions : [
+            KPIM.Button {
+              id : start_newNoteButton
+              height : 20
+              width : 200
+              anchors.top : parent.top
+              buttonText : "New Note"
+              onClicked : {
+                console.log( "New Note clicked" );
+              }
+
+            },
+            KPIM.Button {
+              id : start_newNotebookButton
+              anchors.top : start_newNoteButton.bottom
+              height : 20
+              width : 200
+              buttonText : "Add Notebook"
+              onClicked : {
+                console.log( "Add Notebook clicked" );
+                application.launchAccountWizard();
+              }
+            }
+          ]
+        }
+      ]
+    }
+
+    SlideoutPanel {
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
-      handlePosition: 30
+      handlePosition: startPanel.handlePosition + startPanel.handleHeight
       anchors.fill : parent
       content: [
         Item {
@@ -124,7 +164,7 @@ KPIM.MainView {
       id: actionPanel
       titleText: "Actions"
       handleHeight: 150
-      handlePosition: 180
+      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
       anchors.fill : parent
       contentWidth: 240
       content: [
