@@ -38,6 +38,8 @@ class CheckableItemProxyModelPrivate
 
   QItemSelectionModel *m_itemSelectionModel;
 
+  void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
 };
 
 CheckableItemProxyModel::CheckableItemProxyModel(QObject* parent)
@@ -51,6 +53,7 @@ void CheckableItemProxyModel::setSelectionModel(QItemSelectionModel* itemSelecti
   Q_D(CheckableItemProxyModel);
   d->m_itemSelectionModel = itemSelectionModel;
   Q_ASSERT(sourceModel() ? d->m_itemSelectionModel->model() == sourceModel() : true);
+  connect(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)), SLOT(selectionChanged(QItemSelection,QItemSelection)));
 }
 
 Qt::ItemFlags CheckableItemProxyModel::flags(const QModelIndex& index) const
@@ -81,7 +84,8 @@ bool CheckableItemProxyModel::setData(const QModelIndex& index, const QVariant& 
       return false;
 
     Qt::CheckState state = static_cast<Qt::CheckState>(value.toInt());
-    d->m_itemSelectionModel->select(mapToSource(index), state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
+    const QModelIndex srcIndex = mapToSource(index);
+    d->m_itemSelectionModel->select(QItemSelection(srcIndex, srcIndex), state == Qt::Checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
     return true;
   }
   return QSortFilterProxyModel::setData(index, value, role);
@@ -93,4 +97,14 @@ void CheckableItemProxyModel::setSourceModel(QAbstractItemModel* sourceModel)
   Q_ASSERT(d_ptr->m_itemSelectionModel ? d_ptr->m_itemSelectionModel->model() == sourceModel : true);
 }
 
+void CheckableItemProxyModelPrivate::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+{
+  Q_Q(CheckableItemProxyModel);
+  foreach (const QItemSelectionRange &range, selected)
+    q->dataChanged(range.topLeft(), range.bottomRight());
+  foreach (const QItemSelectionRange &range, deselected)
+    q->dataChanged(range.topLeft(), range.bottomRight());
+}
+
+#include "checkableitemproxymodel.moc"
 

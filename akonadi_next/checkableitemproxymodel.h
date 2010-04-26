@@ -49,6 +49,8 @@ public:
 private:
   Q_DECLARE_PRIVATE(CheckableItemProxyModel)
   CheckableItemProxyModelPrivate * const d_ptr;
+
+  Q_PRIVATE_SLOT(d_func(), void selectionChanged(const QItemSelection &, const QItemSelection &) )
 };
 
 #endif

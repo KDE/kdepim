@@ -34,7 +34,7 @@ class KProxyItemSelectionModelPrivate
 public:
   KProxyItemSelectionModelPrivate(KProxyItemSelectionModel *proxySelectionModel, QAbstractItemModel *model,
                                           QItemSelectionModel *selectionModel)
-    : q_ptr( proxySelectionModel ), m_model(model), m_proxySelector(selectionModel)
+    : q_ptr( proxySelectionModel ), m_model(model), m_proxySelector(selectionModel), m_ignoreCurrentChanged(false)
   {
     createProxyChain();
   }
