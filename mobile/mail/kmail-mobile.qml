@@ -66,6 +66,31 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
+
+          contextActions : [
+            KPIM.Button {
+              id : start_newEmailButton
+              height : 20
+              width : 200
+              anchors.top : parent.top
+              buttonText : "Write new Email"
+              onClicked : {
+                console.log( "Write new clicked" );
+              }
+
+            },
+            KPIM.Button {
+              id : start_newAccountButton
+              anchors.top : start_newEmailButton.bottom
+              height : 20
+              width : 200
+              buttonText : "Add Account"
+              onClicked : {
+                console.log( "Add Account clicked" );
+                application.launchAccountWizard();
+              }
+            }
+          ]
         }
       ]
     }

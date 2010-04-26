@@ -26,6 +26,7 @@ import org.kde.akonadi 4.5
 Rectangle {
   id : _topContext
   color: "#00000000" // Set a transparant color.
+  property alias contextActions : contextContainer.children
 
   signal accountSelected( int row )
 
@@ -125,27 +126,10 @@ Rectangle {
       model : favsModel
       delegate : favDelegate
     }
-    Button {
-      id : newEmailButton
-      height : 20
-      width : 200
+    Item {
       anchors.top : favsView.bottom
-      buttonText : "Write new Email"
-      onClicked : {
-        console.log( "Write new clicked" );
-      }
-
-    }
-    Button {
-      id : newAccountButton
-      anchors.top : newEmailButton.bottom
-      height : 20
-      width : 200
-      buttonText : "Add Account"
-      onClicked : {
-        console.log( "Add Account clicked" );
-        application.launchAccountWizard();
-      }
+      anchors.bottom : parent.bottom
+      id : contextContainer
     }
   }
 }
