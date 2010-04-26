@@ -30,7 +30,6 @@ install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   AttachmentList.qml
-  StartCanvas.qml
   HeaderView.qml
   kmail-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile

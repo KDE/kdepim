@@ -25,5 +25,6 @@ install(FILES
   ItemListView.qml
   ItemListViewDelegate.qml
   MainView.qml
+  StartCanvas.qml
   WindowBar.qml
   DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/pim/mobileui)

@@ -62,7 +62,7 @@ KPIM.MainView {
       handlePosition: 30
       handleHeight: 78
       content: [
-        StartCanvas {
+        KPIM.StartCanvas {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
