@@ -537,7 +537,7 @@ bool Agenda::eventFilter_key( QObject *, QKeyEvent *ke )
 bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
 {
   QPoint viewportPos;
-  if ( object != this && object != this ) {
+  if ( object != this ) {
     viewportPos = static_cast<QWidget *>( object )->mapToParent( me->pos() );
   } else {
     viewportPos = me->pos();
