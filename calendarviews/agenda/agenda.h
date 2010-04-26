@@ -338,8 +338,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     virtual void contentsMousePressEvent ( QMouseEvent * );
 
-    void emitNewEventForSelection();
-
   protected slots:
     /** delete the items that are queued for deletion */
     void deleteItemsToDelete();
