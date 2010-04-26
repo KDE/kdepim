@@ -198,10 +198,12 @@ void DeclarativeAkonadiItem::simulateMouseClick( const QPoint &pos )
     return;
   QWidget *receiver = d_ptr->mProxy->widget()->childAt( pos );
   if ( receiver ) {
-    // TODO: this will fail for receiver not being at 0,0
-    QMouseEvent *event = new QMouseEvent( QEvent::MouseButtonPress, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+    QPoint mappedPos = pos;
+    if ( receiver != d_ptr->mProxy->widget() )
+      mappedPos = receiver->mapFrom( d_ptr->mProxy->widget(), pos );
+    QMouseEvent *event = new QMouseEvent( QEvent::MouseButtonPress, mappedPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
     QCoreApplication::sendEvent( receiver, event );
-    event = new QMouseEvent( QEvent::MouseButtonRelease, pos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
+    event = new QMouseEvent( QEvent::MouseButtonRelease, mappedPos, Qt::LeftButton, Qt::LeftButton, Qt::NoModifier );
     QCoreApplication::sendEvent( receiver, event );
   }
 }
