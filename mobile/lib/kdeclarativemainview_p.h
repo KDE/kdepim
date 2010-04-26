@@ -27,6 +27,7 @@
 
 #include "breadcrumbnavigation.h"
 
+class ListProxy;
 class KDeclarativeMainViewPrivate : public QObject
 {
   Q_OBJECT
@@ -40,6 +41,9 @@ public: /// members
   QItemSelectionModel                *mCollectionSelection;           // Deleted by ~QObect
   KSelectionProxyModel               *mSelectedSubTree;               // Deleted by ~QObect
   Akonadi::EntityMimeTypeFilterModel *mCollectionFilter;              // Deleted by ~QObect
+  Akonadi::EntityTreeModel           *mEtm;
+  ListProxy                          *mListProxy;
+  Akonadi::EntityMimeTypeFilterModel *mItemFilter;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

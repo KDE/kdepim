@@ -61,6 +61,9 @@ KPIM.MainView {
 
     CalendarViews.AgendaView {
       anchors { fill: parent; topMargin: 10; leftMargin: 40 }
+      calendar: calendarModel
+      startDate: "2010-04-26"
+      endDate: "2010-05-02"
     }
   }
 

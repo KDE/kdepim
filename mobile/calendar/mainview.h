@@ -25,7 +25,8 @@
 
 class MainView : public KDeclarativeMainView
 {
-public:
+  Q_OBJECT
+  public:
     explicit MainView( QWidget *parent = 0 );
 };
 

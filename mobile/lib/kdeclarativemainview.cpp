@@ -55,13 +55,13 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mChangeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
   d->mChangeRecorder->itemFetchScope().fetchFullPayload(); // By default fetch the full payload
 
-  Akonadi::EntityTreeModel *etm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
-  etm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
+  d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
+  d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
-  d->mCollectionSelection = new QItemSelectionModel( etm, this );
+  d->mCollectionSelection = new QItemSelectionModel( d->mEtm, this );
 
   d->mSelectedSubTree = new KSelectionProxyModel( d->mCollectionSelection );
-  d->mSelectedSubTree->setSourceModel( etm );
+  d->mSelectedSubTree->setSourceModel( d->mEtm );
 
   d->mCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
   d->mCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
@@ -71,7 +71,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   KSelectionProxyModel *currentCollectionSelectionModel // Deleted by ~QObect
       = new KSelectionProxyModel( d->mCollectionSelection, this );
   currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  currentCollectionSelectionModel->setSourceModel( etm );
+  currentCollectionSelectionModel->setSourceModel( d->mEtm );
 
   Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection
       = new Future::KBreadcrumbSelectionModel( d->mCollectionSelection, Future::KBreadcrumbSelectionModel::Forward, this );
@@ -80,18 +80,18 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel
       = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, this );
-  breadcrumbNavigationModel->setSourceModel( etm );
+  breadcrumbNavigationModel->setSourceModel( d->mEtm );
   breadcrumbNavigationModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
 
   KForwardingItemSelectionModel *oneway
-      = new KForwardingItemSelectionModel( etm, d->mCollectionSelection, this );
+      = new KForwardingItemSelectionModel( d->mEtm, d->mCollectionSelection, this );
 
   d->mChildEntitiesModel = new KNavigatingProxyModel( oneway, this );
-  d->mChildEntitiesModel->setSourceModel( etm );
+  d->mChildEntitiesModel->setSourceModel( d->mEtm );
 
-  Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel();
-  itemFilter->setSourceModel( d->mChildEntitiesModel );
-  itemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel();
+  d->mItemFilter->setSourceModel( d->mChildEntitiesModel );
+  d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
   d->mChildCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
   d->mChildCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
@@ -108,13 +108,14 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   d->mChildCollectionSelection = new Future::KProxyItemSelectionModel( d->mChildCollectionFilter, d->mCollectionSelection, this );
 
+  d->mListProxy = listProxy;
   if ( listProxy ) {
     listProxy->setParent( this ); // Make sure the proxy gets deleted when this gets deleted.
-    listProxy->setSourceModel( itemFilter );
+    listProxy->setSourceModel( d->mItemFilter );
   }
 
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
-  engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( etm ) ) );
+  engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
   engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( currentCollectionSelectionModel ) ) );
   engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( breadcrumbNavigationModel ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mChildCollectionFilter ) ) );
@@ -122,8 +123,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
     engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
-  connect( etm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
-  connect( etm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
+  connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
+  connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
   d->restoreState();
@@ -209,6 +210,16 @@ void KDeclarativeMainView::triggerTaskSwitcher()
 #endif
 }
 
+Akonadi::EntityTreeModel* KDeclarativeMainView::entityTreeModel() const
+{
+  return d->mEtm;
+}
+
+QAbstractItemModel* KDeclarativeMainView::itemModel() const
+{
+  return d->mListProxy ? static_cast<QAbstractItemModel*>( d->mListProxy ) : static_cast<QAbstractItemModel*>( d->mItemFilter );
+}
+
 void KDeclarativeMainView::launchAccountWizard()
 {
   QStringList args;
@@ -223,3 +234,4 @@ void KDeclarativeMainView::launchAccountWizard()
     kDebug() << "error creating accountwizard";
   }
 }
+

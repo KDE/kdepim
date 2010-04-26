@@ -14,6 +14,7 @@ target_link_libraries( calendarviewerqmlplugin
   ${KDEPIMLIBS_AKONADI_LIBRARY}
   ${QT_QTDECLARATIVE_LIBRARY}
   kdepimmobileui
+  akonadi-kcal_next
 )
 
 install( FILES qmldir DESTINATION ${PLUGIN_INSTALL_DIR}/imports/org/kde/calendarviews )

@@ -21,11 +21,21 @@
 
 #include "mainview.h"
 
+#include <akonadi/entitytreemodel.h>
 #include <akonadi/kcal/incidencemimetypevisitor.h>
+#include <akonadi/kcal/calendar.h>
+#include <ksystemtimezone.h>
+#include <qdeclarativeengine.h>
+#include <qdeclarativecontext.h>
 
 using namespace Akonadi;
 
 MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile", 0 /* TODO */, parent )
 {
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
+
+  Akonadi::Calendar* calendar = new Akonadi::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local(), this );
+  engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( calendar ) ) );
 }
+
+#include "mainview.moc"

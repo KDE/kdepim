@@ -58,4 +58,19 @@ void AgendaViewItem::setEndDate(const QDate& endDate)
     m_view->showDates( startDate(), endDate );
 }
 
+QObject* AgendaViewItem::calendar() const
+{
+  return m_view->calendar();
+}
+
+void AgendaViewItem::setCalendar(QObject* calendarObj)
+{
+  Akonadi::Calendar* cal = qobject_cast<Akonadi::Calendar*>( calendarObj );
+  kDebug() << calendarObj << cal;
+  if ( cal ) {
+    m_view->setCalendar( cal );
+    m_view->updateConfig();
+  }
+}
+
 #include "agendaviewitem.moc"

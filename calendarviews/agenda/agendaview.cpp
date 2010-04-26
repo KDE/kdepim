@@ -1278,7 +1278,7 @@ void AgendaView::fillAgenda()
   mAgenda->setDateList( mSelectedDates );
 
   bool somethingReselected = false;
-  const Item::List incidences = calendar()->incidences();
+  const Item::List incidences = calendar() ? calendar()->incidences() : Item::List();
 
   foreach ( const Item &aitem, incidences ) {
     displayIncidence( aitem );

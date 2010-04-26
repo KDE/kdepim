@@ -23,6 +23,11 @@
 
 #include "mobileui_export.h"
 
+class QAbstractItemModel;
+namespace Akonadi {
+class EntityTreeModel;
+}
+
 class ListProxy;
 class KDeclarativeMainViewPrivate;
 
@@ -43,6 +48,11 @@ protected:
                       takes ownwership over the pointer.
    */
   KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent = 0 );
+
+  /** Returns the central ETM. */
+  Akonadi::EntityTreeModel* entityTreeModel() const;
+  /** Returns the filtered and QML-adapted item model. */
+  QAbstractItemModel* itemModel() const;
 
 public:
   virtual ~KDeclarativeMainView();
