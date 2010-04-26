@@ -31,7 +31,6 @@ kde4_add_library(eventviews SHARED ${eventviews_LIB_SRCS})
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
 target_link_libraries(eventviews
-                      ${QT_QT3SUPPORT_LIBRARY}
                       ${QT_QTCORE_LIBRARY}
                       ${QT_QTGUI_LIBRARY}
                       ${QT_QTUITOOLS_LIBRARY}

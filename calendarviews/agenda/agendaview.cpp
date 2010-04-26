@@ -45,6 +45,7 @@
 #include <KHBox>
 #include <KVBox>
 
+#include <QScrollBar>
 #include <QScrollArea>
 #include <QDrag>
 #include <QGridLayout>
@@ -147,8 +148,10 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   // The widget itself
   QWidget *dummyAllDayLeft = new QWidget( mAllDayFrame );
-  mAllDayAgenda = new Agenda( this, 1, mAllDayFrame );
-  QWidget *dummyAllDayRight = new QWidget( mAllDayFrame );
+  QScrollArea *allDayScrollArea = new QScrollArea( mAllDayFrame );
+  mAllDayAgenda = new Agenda( this, allDayScrollArea, 1, allDayScrollArea );
+  allDayScrollArea->setWidget( mAllDayAgenda );
+  allDayScrollArea->setWidgetResizable( true );
 
   /* Create the main agenda widget and the related widgets */
   QWidget *agendaFrame = new QWidget( mSplitterAgenda );
@@ -171,8 +174,14 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   mAgendaLayout->addWidget( dummyAgendaRight, 0, 2 );
 
   // Create agenda
-  mAgenda = new Agenda( this, 1, 96, Prefs::instance()->mHourSize, agendaFrame );
-  mAgendaLayout->addWidget( mAgenda, 1, 1, 1, 2 );
+  mScrollArea = new QScrollArea( agendaFrame );
+
+  //TODO_SPLIT
+  QMetaObject::invokeMethod( this, "hack", Qt::QueuedConnection );
+
+  mAgenda = new Agenda( this, mScrollArea, 1, 96, Prefs::instance()->mHourSize, agendaFrame );
+
+  mAgendaLayout->addWidget( mScrollArea, 1, 1, 1, 2 );
   mAgendaLayout->setColumnStretch( 1, 1 );
 
   // Create time labels
@@ -199,8 +208,6 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   if ( !isSideBySide ) {
     /* Make the all-day and normal agendas line up with each other */
-    dummyAllDayRight->setFixedWidth( mAgenda->verticalScrollBar()->width() -
-                                     mAgendaLayout->horizontalSpacing() );
     dummyAgendaRight->setFixedWidth( mAgenda->verticalScrollBar()->width() );
   }
 
@@ -415,14 +422,14 @@ void AgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Orienta
     }
   } else {
     // Vertical zoom
-    QPoint posConstentsOld = mAgenda->gridToContents(pos);
+    QPoint posConstentsOld = mAgenda->gridToContents( pos );
     if ( delta > 0 ) {
       zoomOutVertically();
     } else {
       zoomInVertically();
     }
-    QPoint posConstentsNew = mAgenda->gridToContents(pos);
-    mAgenda->scrollBy( 0, posConstentsNew.y() - posConstentsOld.y() );
+    QPoint posConstentsNew = mAgenda->gridToContents( pos );
+    mAgenda->verticalScrollBar()->scroll( 0, posConstentsNew.y() - posConstentsOld.y() );
   }
 }
 
@@ -1271,7 +1278,7 @@ void AgendaView::fillAgenda()
   mAgenda->setDateList( mSelectedDates );
 
   bool somethingReselected = false;
-  const Item::List incidences = calendar() ? calendar()->incidences() : Item::List();
+  const Item::List incidences = calendar()->incidences();
 
   foreach ( const Item &aitem, incidences ) {
     displayIncidence( aitem );
@@ -1702,6 +1709,11 @@ void AgendaView::calendarIncidenceRemoved( const Item &incidence )
     mPendingChanges = true;
     QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
   }
+}
+
+void AgendaView::hack()
+{
+  mScrollArea->setWidget( mAgenda );
 }
 
 #include "agendaview.moc"

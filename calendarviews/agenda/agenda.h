@@ -33,7 +33,6 @@
 
 #include <Akonadi/Item>
 
-#include <q3scrollview.h>
 #include <QFrame>
 #include <QList>
 #include <QPointer>
@@ -44,6 +43,7 @@ class Agenda;
 class AgendaItem;
 class AgendaView;
 
+class QScrollArea;
 class QDropEvent;
 class QEvent;
 class QKeyEvent;
@@ -84,18 +84,32 @@ class MarcusBains : public QFrame
     int mOldTodayCol;
 };
 
-class EVENTVIEWS_EXPORT Agenda : public Q3ScrollView
+class EVENTVIEWS_EXPORT Agenda : public QWidget
 {
   Q_OBJECT
   public:
-    Agenda ( EventView *eventView, int columns, int rows, int columnSize,
-               QWidget *parent=0, Qt::WFlags f = 0 );
-    explicit Agenda ( EventView *eventView, int columns,
-                        QWidget *parent = 0, Qt::WFlags f = 0 );
+    Agenda ( EventView *eventView, QScrollArea *scrollArea,
+             int columns, int rows, int columnSize,
+             QWidget *parent = 0, Qt::WFlags f = 0);
+
+    explicit Agenda ( EventView *eventView,
+                      QScrollArea *scrollArea, int columns,
+                      QWidget *parent = 0, Qt::WFlags f = 0 );
+
     virtual ~Agenda();
 
     Akonadi::Item selectedIncidence() const;
     QDate selectedIncidenceDate() const;
+    QScrollArea *mScrollArea;
+    QSize sizeHint() const;
+    QSize minimumSizeHint() const;
+    QSize minimumSize() const;
+    QSizePolicy sizePolicy() const;
+    int contentsY() const { return -y(); };
+    int contentsX() const { return x(); };
+    void setContentsPos( int x, int y );
+
+    QScrollBar* verticalScrollBar();
 
     /**
       Returns the uid of the last incidence that was selected. This
@@ -105,6 +119,8 @@ class EVENTVIEWS_EXPORT Agenda : public Q3ScrollView
     Akonadi::Item::Id lastSelectedItemId() const;
 
     bool eventFilter ( QObject *, QEvent * );
+
+    void paintEvent( QPaintEvent * );
 
     QPoint contentsToGrid ( const QPoint &pos ) const;
     QPoint gridToContents ( const QPoint &gpos ) const;
@@ -121,9 +137,11 @@ class EVENTVIEWS_EXPORT Agenda : public Q3ScrollView
     void setStartTime( const QTime &startHour );
 
     AgendaItem *insertItem ( const Akonadi::Item &incidence, const QDate &qd, int X, int YTop,
-                               int YBottom );
+                             int YBottom );
+
     AgendaItem *insertAllDayItem ( const Akonadi::Item &event, const QDate &qd, int XBegin,
-                                     int XEnd );
+                                   int XEnd );
+
     void insertMultiItem ( const Akonadi::Item &event, const QDate &qd, int XBegin, int XEnd,
                            int YTop, int YBottom );
 
@@ -145,8 +163,6 @@ class EVENTVIEWS_EXPORT Agenda : public Q3ScrollView
     double gridSpacingY() const { return mGridSpacingY; }
     void clear();
 
-    /** Calculates the minimum width */
-    virtual int minimumWidth() const;
     /** Update configuration from preference settings */
     void updateConfig();
 
@@ -246,9 +262,6 @@ class EVENTVIEWS_EXPORT Agenda : public Q3ScrollView
       @p ch grid height
     */
     void drawContents( QPainter *p, int cx, int cy, int cw, int ch );
-    //the following line is here to shutup gcc warning:
-    //‘virtual void Q3ScrollView::drawContents(QPainter*)’ was hidden
-    using Q3Frame::drawContents;
 
     int columnWidth( int column ) const;
     virtual void resizeEvent ( QResizeEvent * );

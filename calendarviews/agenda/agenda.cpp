@@ -46,6 +46,8 @@
 #include <KLocale>
 #include <KMessageBox>
 
+#include <QScrollBar>
+#include <QScrollArea>
 #include <QDateTime>
 #include <QApplication>
 #include <QCursor>
@@ -68,11 +70,10 @@ using namespace Akonadi;
 
 ///////////////////////////////////////////////////////////////////////////////
 MarcusBains::MarcusBains( Agenda *agenda )
-  : QFrame( agenda->viewport() ), mAgenda( agenda )
+  : QFrame( agenda ), mAgenda( agenda )
 {
-  mTimeBox = new QLabel( this );
+  mTimeBox = new QLabel( mAgenda );
   mTimeBox->setAlignment( Qt::AlignRight | Qt::AlignBottom );
-  mAgenda->addChild( mTimeBox );
 
   mTimer = new QTimer( this );
   mTimer->setSingleShot( true );
@@ -155,7 +156,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   if ( recalculate ) {
     setFixedSize( int( mAgenda->gridSpacingX() ), 1 );
   }
-  mAgenda->moveChild( this, x, y );
+  move( x, y );
   raise();
 
   /* Label */
@@ -175,7 +176,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   } else {
     x++;
   }
-  mAgenda->moveChild( mTimeBox, x, y );
+  mTimeBox->move( x, y );
   mTimeBox->raise();
 
   if ( showSeconds || recalculate ) {
@@ -190,9 +191,10 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
 /*
   Create an agenda widget with rows rows and columns columns.
 */
-Agenda::Agenda( EventView *eventView, int columns, int rows, int rowSize, QWidget *parent,
-                    Qt::WFlags f )
-  : Q3ScrollView( parent, /*name*/0, f ), mHolidayMask( 0 ), mChanger( 0 )
+Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
+                int columns, int rows, int rowSize, QWidget *parent,
+                Qt::WFlags f )
+  : QWidget( parent, f ), mHolidayMask( 0 ), mChanger( 0 )
 {
   mColumns = columns;
   mRows = rows;
@@ -203,24 +205,31 @@ Agenda::Agenda( EventView *eventView, int columns, int rows, int rowSize, QWidge
 
   mAllDayMode = false;
   mEventView = eventView;
+  mScrollArea = scrollArea;
+
+//  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+  mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
 
   init();
-
-  viewport()->setMouseTracking( true );
 }
 
 /*
   Create an agenda widget with columns columns and one row. This is used for
   all-day events.
 */
-Agenda::Agenda( EventView *eventView, int columns, QWidget *parent, Qt::WFlags f )
-  : Q3ScrollView( parent, /*name*/0, f ), mHolidayMask( 0 ), mChanger( 0 )
+Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
+                int columns, QWidget *parent, Qt::WFlags f )
+  : QWidget( parent, f ), mHolidayMask( 0 ), mChanger( 0 )
 {
   mColumns = columns;
   mRows = 1;
   mGridSpacingY = 24;
   mAllDayMode = true;
-  setVScrollBarMode( AlwaysOff );
+  mScrollArea = scrollArea;
+  mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+  mScrollArea->verticalScrollBar()->hide();
+  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+
   mEventView = eventView;
 
   init();
@@ -248,7 +257,7 @@ Item::Id Agenda::lastSelectedItemId() const
 
 void Agenda::init()
 {
-  mGridSpacingX = 100;
+  mGridSpacingX = ((double)mScrollArea->width())/mColumns;
   mDesiredGridSpacingY = Prefs::instance()->mHourSize;
   if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
     mDesiredGridSpacingY = 10;
@@ -264,8 +273,6 @@ void Agenda::init()
   mScrollBorderWidth = 8;
   mScrollDelay = 30;
   mScrollOffset = 10;
-
-  enableClipper( true );
 
   // Grab key strokes for keyboard navigation of agenda. Seems to have no
   // effect. Has to be fixed.
@@ -297,20 +304,19 @@ void Agenda::init()
   setAcceptDrops( true );
   installEventFilter( this );
 
-  resizeContents( int( mGridSpacingX * mColumns ),
-                  int( mGridSpacingY * mRows ) );
+/*  resizeContents( int( mGridSpacingX * mColumns ), int( mGridSpacingY * mRows ) ); */
 
-  viewport()->update();
-  viewport()->setAttribute( Qt::WA_NoSystemBackground, true );
-  viewport()->setFocusPolicy( Qt::WheelFocus );
+  mScrollArea->viewport()->update();
+//  mScrollArea->viewport()->setAttribute( Qt::WA_NoSystemBackground, true );
+  mScrollArea->viewport()->setFocusPolicy( Qt::WheelFocus );
 
-  setMinimumSize( 30, int( mGridSpacingY + 1 ) );
+  setMinimumSize( mGridSpacingX*mColumns, int( mGridSpacingY + 1 ) );
 //  setMaximumHeight( mGridSpacingY * mRows + 5 );
 
   // Disable horizontal scrollbar. This is a hack. The geometry should be
   // controlled in a way that the contents horizontally always fits. Then it is
   // not necessary to turn off the scrollbar.
-  setHScrollBarMode( AlwaysOff );
+//  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
   setStartTime( Prefs::instance()->mDayBegins.time() );
 
@@ -324,14 +330,14 @@ void Agenda::init()
     mMarcusBains = 0;
   } else {
     mMarcusBains = new MarcusBains( this );
-    addChild( mMarcusBains );
   }
 }
 
 void Agenda::clear()
 {
   foreach ( AgendaItem *item, mItems ) {
-    removeChild( item );
+    Q_UNUSED( item );
+//    removeChild( item );
   }
   qDeleteAll( mItems );
   qDeleteAll( mItemsToDelete );
@@ -347,14 +353,14 @@ void Agenda::clearSelection()
 {
   mHasSelection = false;
   mActionType = NOP;
-  updateContents();
+  update();
 }
 
 void Agenda::marcus_bains()
 {
-    if ( mMarcusBains ) {
-      mMarcusBains->updateLocationRecalc( true );
-    }
+  if ( mMarcusBains ) {
+    mMarcusBains->updateLocationRecalc( true );
+  }
 }
 
 void Agenda::changeColumns( int columns )
@@ -399,14 +405,15 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
     if ( !mActionItem ) {
       setCursor( Qt::ArrowCursor );
     }
-    if ( object == viewport() ) {
+
+    if ( object == this ) {
       emit leaveAgenda();
     }
     return true;
 
   case QEvent::Enter:
     emit enterAgenda();
-    return Q3ScrollView::eventFilter( object, event );
+    QWidget::eventFilter( object, event );
 
 #ifndef KORG_NODND
   case QEvent::DragEnter:
@@ -418,7 +425,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
 #endif
 
   default:
-    return Q3ScrollView::eventFilter( object, event );
+    return QWidget::eventFilter( object, event );
   }
 }
 
@@ -426,7 +433,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
 {
   // FIXME: Implement dropping of events!
   QPoint viewportPos;
-  if ( object != viewport() && object != this ) {
+  if ( object != this ) {
     viewportPos = static_cast<QWidget *>( object )->mapToParent( de->pos() );
   } else {
     viewportPos = de->pos();
@@ -469,7 +476,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
     if ( object == this ) {
       pos = viewportPos + QPoint( contentsX(), contentsY() );
     } else {
-      pos = viewportToContents( viewportPos );
+      pos = viewportPos;// viewportToContents( viewportPos );
     }
     QPoint gpos = contentsToGrid( pos );
     if ( !todoUrls.isEmpty() ) {
@@ -494,25 +501,25 @@ bool Agenda::eventFilter_wheel ( QObject *object, QWheelEvent *e )
   QPoint viewportPos;
   bool accepted=false;
   if  ( ( e->modifiers() & Qt::ShiftModifier ) == Qt::ShiftModifier ) {
-    if ( object != viewport() ) {
+    if ( object != this ) {
       viewportPos = ( (QWidget *) object )->mapToParent( e->pos() );
     } else {
       viewportPos = e->pos();
     }
     //kDebug() << type:" << e->type() << "delta:" << e->delta();
     emit zoomView( -e->delta(),
-                   contentsToGrid( viewportToContents( viewportPos ) ), Qt::Horizontal );
+                   contentsToGrid(  viewportPos  ), Qt::Horizontal );
     accepted = true;
   }
 
   if  ( ( e->modifiers() & Qt::ControlModifier ) == Qt::ControlModifier ){
-    if ( object != viewport() ) {
+    if ( object != this ) {
       viewportPos = ( (QWidget *)object )->mapToParent( e->pos() );
     } else {
       viewportPos = e->pos();
     }
-    emit zoomView( -e->delta(), contentsToGrid( viewportToContents( viewportPos ) ), Qt::Vertical );
-    emit mousePosSignal( gridToContents( contentsToGrid( viewportToContents( viewportPos ) ) ) );
+    emit zoomView( -e->delta(), contentsToGrid(  viewportPos  ), Qt::Vertical );
+    emit mousePosSignal( gridToContents( contentsToGrid( viewportPos  ) ) );
     accepted = true;
   }
   if ( accepted ) {
@@ -530,7 +537,7 @@ bool Agenda::eventFilter_key( QObject *, QKeyEvent *ke )
 bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
 {
   QPoint viewportPos;
-  if ( object != viewport() && object != this ) {
+  if ( object != this && object != this ) {
     viewportPos = static_cast<QWidget *>( object )->mapToParent( me->pos() );
   } else {
     viewportPos = me->pos();
@@ -538,7 +545,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
 
   switch ( me->type() )  {
   case QEvent::MouseButtonPress:
-    if ( object != viewport() ) {
+    if ( object != this ) {
       if ( me->button() == Qt::RightButton ) {
         mClickedItem = dynamic_cast<AgendaItem *>( object );
         if ( mClickedItem ) {
@@ -567,14 +574,14 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     } else {
       if ( me->button() == Qt::RightButton ) {
         // if mouse pointer is not in selection, select the cell below the cursor
-        QPoint gpos = contentsToGrid( viewportToContents( viewportPos ) );
+        QPoint gpos = contentsToGrid( viewportPos  );
         if ( !ptInSelection( gpos ) ) {
           mSelectionStartCell = gpos;
           mSelectionEndCell = gpos;
           mHasSelection = true;
           emit newStartSelectSignal();
           emit newTimeSpanSignal( mSelectionStartCell, mSelectionEndCell );
-          updateContents();
+//          updateContents();
         }
         showNewEventPopupSignal();
       } else {
@@ -594,15 +601,15 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
     }
     // This nasty gridToContents(contentsToGrid(..)) is needed to
     // avoid an offset of a few pixels. Don't ask me why...
-    emit mousePosSignal( gridToContents( contentsToGrid( viewportToContents( viewportPos ) ) ) );
+    emit mousePosSignal( gridToContents( contentsToGrid( viewportPos )  ) );
     break;
 
   case QEvent::MouseMove:
   {
     // This nasty gridToContents(contentsToGrid(..)) is needed to
     // avoid an offset of a few pixels. Don't ask me why...
-    QPoint indicatorPos = gridToContents( contentsToGrid( viewportToContents( viewportPos ) ) );
-    if ( object != viewport() ) {
+    QPoint indicatorPos = gridToContents( contentsToGrid(  viewportPos  ) );
+    if ( object != this ) {
       AgendaItem *moveItem = dynamic_cast<AgendaItem *>( object );
       const Item aitem = moveItem ? moveItem->incidence() : Item();
       Incidence::Ptr incidence = Akonadi::incidence( aitem );
@@ -647,7 +654,7 @@ bool Agenda::eventFilter_mouse( QObject *object, QMouseEvent *me )
   }
 
   case QEvent::MouseButtonDblClick:
-    if ( object == viewport() ) {
+    if ( object == this ) {
       selectItem( 0 );
       emit newEventSignal();
     } else {
@@ -688,7 +695,7 @@ void Agenda::startSelectAction( const QPoint &viewportPos )
   mSelectionStartPoint = viewportPos;
   mHasSelection = true;
 
-  QPoint pos = viewportToContents( viewportPos );
+  QPoint pos =  viewportPos ;
   QPoint gpos = contentsToGrid( pos );
 
   // Store new selection
@@ -697,20 +704,20 @@ void Agenda::startSelectAction( const QPoint &viewportPos )
   mSelectionStartCell = gpos;
   mSelectionEndCell = gpos;
 
-  updateContents();
+//  updateContents();
 }
 
 void Agenda::performSelectAction( const QPoint &viewportPos )
 {
-  QPoint pos = viewportToContents( viewportPos );
+  QPoint pos =  viewportPos ;
   QPoint gpos = contentsToGrid( pos );
 
-  QPoint clipperPos = clipper()->mapFromGlobal( viewport()->mapToGlobal( viewportPos ) );
+  QPoint clipperPos = QPoint();
 
   // Scroll if cursor was moved to upper or lower end of agenda.
   if ( clipperPos.y() < mScrollBorderWidth ) {
     mScrollUpTimer.start(mScrollDelay);
-  } else if ( visibleHeight() - clipperPos.y() < mScrollBorderWidth ) {
+  } else if ( mScrollArea->height() < mScrollBorderWidth  ) {
     mScrollDownTimer.start( mScrollDelay );
   } else {
     mScrollUpTimer.stop();
@@ -729,7 +736,7 @@ void Agenda::performSelectAction( const QPoint &viewportPos )
       mSelectionEndCell = mEndCell;
     }
 
-    updateContents();
+    update();
   }
 }
 
@@ -751,8 +758,8 @@ void Agenda::endSelectAction( const QPoint &currentPos )
 }
 
 Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
-                                                    const QPoint &pos,
-                                                    AgendaItem *item )
+                                                const QPoint &pos,
+                                                AgendaItem *item )
 {
   if ( !item ) {
     return NOP;
@@ -805,7 +812,7 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
 
 void Agenda::startItemAction( const QPoint &viewportPos )
 {
-  QPoint pos = viewportToContents( viewportPos );
+  QPoint pos =  viewportPos ;
   mStartCell = contentsToGrid( pos );
   mEndCell = mStartCell;
 
@@ -828,15 +835,16 @@ void Agenda::performItemAction( const QPoint &viewportPos )
 //  point = clipper()->mapFromGlobal(point);
 //  kDebug() << "clipper:" << point.x() << "," << point.y();
 //  kDebug() << "visible height:" << visibleHeight();
-  QPoint pos = viewportToContents( viewportPos );
+  QPoint pos =  viewportPos ;
 //  kDebug() << "contents:" << x << "," << y;
   QPoint gpos = contentsToGrid( pos );
-  QPoint clipperPos = clipper()->mapFromGlobal( viewport()->mapToGlobal( viewportPos ) );
+  QPoint clipperPos = QPoint();//clipper()->mapFromGlobal( viewport()->mapToGlobal( viewportPos ) );
 
   // Cursor left active agenda area.
   // This starts a drag.
-  if ( clipperPos.y() < 0 || clipperPos.y() >= visibleHeight() ||
-       clipperPos.x() < 0 || clipperPos.x() >= visibleWidth() ) {
+//  if ( clipperPos.y() < 0 || clipperPos.y() >= visibleHeight() ||
+//       clipperPos.x() < 0 || clipperPos.x() >= visibleWidth() ) {
+  if (  false ) { //
     if ( mActionType == MOVE ) {
       mScrollUpTimer.stop();
       mScrollDownTimer.stop();
@@ -859,7 +867,7 @@ void Agenda::performItemAction( const QPoint &viewportPos )
   // Scroll if item was moved to upper or lower end of agenda.
   if ( clipperPos.y() < mScrollBorderWidth ) {
     mScrollUpTimer.start( mScrollDelay );
-  } else if ( visibleHeight() - clipperPos.y() < mScrollBorderWidth ) {
+  } else if ( mScrollArea->height() < mScrollBorderWidth ) {
     mScrollDownTimer.start( mScrollDelay );
   } else {
     mScrollUpTimer.stop();
@@ -922,7 +930,8 @@ void Agenda::performItemAction( const QPoint &viewportPos )
                                 int( mGridSpacingY * newFirst->cellHeight() ) );
               QPoint cpos = gridToContents(
                 QPoint( newFirst->cellXLeft(), newFirst->cellYTop() ) );
-              addChild( newFirst, cpos.x(), cpos.y() );
+              newFirst->setParent( this );
+              newFirst->move( cpos.x(), cpos.y() );
             } else {
               newFirst = insertItem( moveItem->incidence(), moveItem->itemDate(),
                 moveItem->cellXLeft() - 1, rows() + newY, rows() - 1 ) ;
@@ -938,7 +947,7 @@ void Agenda::performItemAction( const QPoint &viewportPos )
             firstItem = moveItem->nextMultiItem();
             moveItem->hide();
             mItems.removeAll( moveItem );
-            removeChild( moveItem );
+//            removeChild( moveItem );
             mActionItem->removeMoveItem( moveItem );
             moveItem=firstItem;
             // adjust next day's item
@@ -957,7 +966,7 @@ void Agenda::performItemAction( const QPoint &viewportPos )
             lastItem = moveItem->prevMultiItem();
             moveItem->hide();
             mItems.removeAll( moveItem );
-            removeChild( moveItem );
+//            removeChild( moveItem );
             moveItem->removeMoveItem( moveItem );
             moveItem = lastItem;
             moveItem->expandBottom( newY + 1 );
@@ -971,7 +980,8 @@ void Agenda::performItemAction( const QPoint &viewportPos )
               moveItem->resize( int( mGridSpacingX * newLast->cellWidth() ),
                                 int( mGridSpacingY * newLast->cellHeight() ) );
               QPoint cpos = gridToContents( QPoint( newLast->cellXLeft(), newLast->cellYTop() ) ) ;
-              addChild( newLast, cpos.x(), cpos.y() );
+              newLast->setParent( this );
+              newLast->move( cpos.x(), cpos.y() );
             } else {
               newLast = insertItem( moveItem->incidence(), moveItem->itemDate(),
                 moveItem->cellXLeft() + 1, 0, newY - rows() - 1 ) ;
@@ -1197,7 +1207,7 @@ void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &viewportPos 
 //  point = clipper()->mapFromGlobal( point );
 //  kDebug() << "clipper:" << point.x() << "," << point.y();
 
-  QPoint pos = viewportToContents( viewportPos );
+  QPoint pos =  viewportPos ;
   const Item item = moveItem ? moveItem->incidence() : Item();
 
   const bool noResize = Akonadi::hasTodo( item );
@@ -1239,7 +1249,7 @@ void Agenda::adjustItemPosition( AgendaItem *item )
     clXLeft = item->cellXRight() + 1;
   }
   QPoint cpos = gridToContents( QPoint( clXLeft, item->cellYTop() ) );
-  moveChild( item, cpos.x(), cpos.y() );
+  item->move( cpos.x(), cpos.y() );
 }
 
 void Agenda::placeAgendaItem( AgendaItem *item, double subCellWidth )
@@ -1280,7 +1290,7 @@ void Agenda::placeAgendaItem( AgendaItem *item, double subCellWidth )
     height = -height;
   }
   item->resize( width, height );
-  moveChild( item, xpos, ypos );
+  item->move( xpos, ypos );
 }
 
 /*
@@ -1343,11 +1353,21 @@ int Agenda::columnWidth( int column ) const
   int end = gridToContents( QPoint( column, 0 ) ).x();
   return end - start;
 }
+
+void Agenda::paintEvent( QPaintEvent * )
+{
+  QPainter p( this );
+  drawContents( &p, 0, 0, mGridSpacingX * mColumns, mGridSpacingY * mRows );
+}
+
 /*
   Draw grid in the background of the agenda.
 */
 void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 {
+  if ( !mAllDayMode ) {
+    kDebug() << this << "DEBUG drawContents, cw = " << cw;
+  }
   QPixmap db( cw, ch );
   db.fill(); // We don't want to see leftovers from previous paints
   QPainter dbp( &db );
@@ -1356,8 +1376,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 //    QPixmap bgImage( Prefs::instance()->agendaGridBackgroundImage() );
 //    dbp.drawPixmap( 0, 0, cw, ch, bgImage ); FIXME
 //  }
-  dbp.fillRect( 0, 0, cw, ch,
-                Prefs::instance()->agendaGridBackgroundColor() );
+
   dbp.translate( -cx, -cy );
 
   double lGridSpacingY = mGridSpacingY * 2;
@@ -1573,7 +1592,7 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
 
   mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( mCalendar, incidence, qd, viewport() );
+  AgendaItem *agendaItem = new AgendaItem( mCalendar, incidence, qd, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1593,7 +1612,8 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
   agendaItem->setResourceColor( Helper::resourceColor( incidence ) );
   agendaItem->installEventFilter( this );
 
-  addChild( agendaItem, int( X * mGridSpacingX ), int( YTop * mGridSpacingY ) );
+  agendaItem->move( int( X * mGridSpacingX ), int( YTop * mGridSpacingY ) );
+
   mItems.append( agendaItem );
 
   placeSubCells( agendaItem );
@@ -1618,7 +1638,7 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
 
   mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( mCalendar, incidence, qd, viewport() );
+  AgendaItem *agendaItem = new AgendaItem( mCalendar, incidence, qd, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1635,7 +1655,7 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
 
   agendaItem->installEventFilter( this );
   agendaItem->setResourceColor( Helper::resourceColor( incidence ) );
-  addChild( agendaItem, int( XBegin * mGridSpacingX ), 0 );
+  agendaItem->move( int( XBegin * mGridSpacingX ), 0 ) ;
   mItems.append( agendaItem );
 
   placeSubCells( agendaItem );
@@ -1740,7 +1760,9 @@ void Agenda::showAgendaItem( AgendaItem *agendaItem )
   }
 
   agendaItem->hide();
-  addChild( agendaItem );
+
+  agendaItem->setParent( this );
+
   if ( !mItems.contains( agendaItem ) ) {
     mItems.append( agendaItem );
   }
@@ -1755,7 +1777,7 @@ bool Agenda::removeAgendaItem( AgendaItem *item )
   bool taken = false;
   AgendaItem *thisItem = item;
   QList<AgendaItem*> conflictItems = thisItem->conflictItems();
-  removeChild( thisItem );
+//  removeChild( thisItem );
 
   taken = ( mItems.removeAll( thisItem ) > 0 );
 
@@ -1791,37 +1813,42 @@ void Agenda::deleteItemsToDelete()
   if (mAllDayMode) {
     return QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
   } else {
-    return QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+  return QSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
   }
-}
-*/
+}*/
+
 
 /*
   Overridden from QScrollView to provide proper resizing of AgendaItems.
 */
 void Agenda::resizeEvent ( QResizeEvent *ev )
 {
-//  kDebug();
 
   QSize newSize( ev->size() );
-  if (mAllDayMode) {
-    mGridSpacingX = double( newSize.width() - 2 * frameWidth() ) / (double)mColumns;
-    mGridSpacingY = newSize.height() - 2 * frameWidth();
+  if ( !mAllDayMode ) {
+    kDebug() << this << "DEBUG newSize is " << newSize;
+  }
+
+  if ( mAllDayMode ) {
+    mGridSpacingX = double( newSize.width() /*- 2 * frameWidth() */) / (double)mColumns;
+    mGridSpacingY = newSize.height() /*- 2 * frameWidth()*/;
   } else {
-    int scrollbarWidth = vScrollBarMode() != AlwaysOff ? verticalScrollBar()->width() : 0;
-    mGridSpacingX = double(
-      newSize.width() - scrollbarWidth - 2 * frameWidth() ) / double( mColumns );
+
+    mGridSpacingX = double(newSize.width() /*- 2 * frameWidth() */) / double( mColumns );
     // make sure that there are not more than 24 per day
     mGridSpacingY = double(
-      newSize.height() - 2 * frameWidth() ) / double( mRows );
+      newSize.height() /*- 2 * frameWidth()*/ ) / double( mRows );
     if ( mGridSpacingY < mDesiredGridSpacingY ) {
       mGridSpacingY = mDesiredGridSpacingY;
     }
   }
   calculateWorkingHours();
+
   QTimer::singleShot( 0, this, SLOT(resizeAllContents()) );
   emit gridSpacingYChanged( mGridSpacingY * 4 );
-  Q3ScrollView::resizeEvent(ev);
+
+  QWidget::resizeEvent( ev );
+  updateGeometry();
 }
 
 void Agenda::resizeAllContents()
@@ -1841,27 +1868,27 @@ void Agenda::resizeAllContents()
   }
   checkScrollBoundaries();
   marcus_bains();
+  repaint();
 }
 
 void Agenda::scrollUp()
 {
-  scrollBy( 0, -mScrollOffset );
+  mScrollArea->verticalScrollBar()->scroll( 0, -mScrollOffset );
 }
 
 void Agenda::scrollDown()
 {
-  scrollBy( 0, mScrollOffset );
+  mScrollArea->verticalScrollBar()->scroll( 0, mScrollOffset );
 }
 
-/*
-  Calculates the minimum width
-*/
-int Agenda::minimumWidth() const
+QSize Agenda::minimumSize() const
 {
-  // FIXME:: develop a way to dynamically determine the minimum width
-  int min = 100;
+  return sizeHint();
+}
 
-  return min;
+QSize Agenda::minimumSizeHint() const
+{
+  return sizeHint();
 }
 
 void Agenda::updateConfig()
@@ -1881,7 +1908,7 @@ void Agenda::updateConfig()
 
   //can be two doubles equal?, it's better to compare them with an epsilon
   if ( fabs( oldGridSpacingY - mGridSpacingY ) > 0.1 ) {
-    resizeContents( int( mGridSpacingX * mColumns ), int( mGridSpacingY * mRows ) );
+//    resizeContents( int( mGridSpacingX * mColumns ), int( mGridSpacingY * mRows ) );
   }
 
   calculateWorkingHours();
@@ -1901,9 +1928,7 @@ void Agenda::checkScrollBoundaries()
 void Agenda::checkScrollBoundaries( int v )
 {
   int yMin = int( (v) / mGridSpacingY );
-  int yMax = int( ( v + visibleHeight() ) / mGridSpacingY );
-
-//  kDebug() << "--- yMin:" << yMin << "  yMax:" << yMax;
+  int yMax = int( ( v + mScrollArea->height() ) / mGridSpacingY );
 
   if ( yMin != mOldLowerScrollValue ) {
     mOldLowerScrollValue = yMin;
@@ -1924,7 +1949,7 @@ int Agenda::visibleContentsYMin()
 int Agenda::visibleContentsYMax()
 {
   int v = verticalScrollBar()->value();
-  return int( ( v + visibleHeight() ) / mGridSpacingY );
+  return int( ( v + mScrollArea->height() ) / mGridSpacingY );
 }
 
 void Agenda::deselectItem()
@@ -2020,13 +2045,13 @@ void Agenda::calculateWorkingHours()
 
 DateList Agenda::dateList() const
 {
-    return mSelectedDates;
+  return mSelectedDates;
 }
 
 void Agenda::setDateList( const DateList &selectedDates )
 {
-    mSelectedDates = selectedDates;
-    marcus_bains();
+  mSelectedDates = selectedDates;
+  marcus_bains();
 }
 
 void Agenda::setHolidayMask( QVector<bool> *mask )
@@ -2036,7 +2061,22 @@ void Agenda::setHolidayMask( QVector<bool> *mask )
 
 void Agenda::contentsMousePressEvent ( QMouseEvent *event )
 {
-  Q3ScrollView::contentsMousePressEvent( event );
+  Q_UNUSED( event );
+}
+
+QSize Agenda::sizeHint() const
+{
+  return QSize( parentWidget()->width(), mGridSpacingY * mRows );
+}
+
+QScrollBar * Agenda::verticalScrollBar()
+{
+  return mScrollArea->verticalScrollBar();
+}
+
+void Agenda::setContentsPos( int x, int y )
+{
+  mScrollArea->ensureVisible( x, y, 0, 0 );
 }
 
 #include "agenda.moc"

@@ -36,6 +36,7 @@
 #include <Akonadi/Collection>
 #include <Akonadi/Item>
 
+#include <QScrollArea>
 #include <QFrame>
 #include <QPixmap>
 #include <QVector>
@@ -155,6 +156,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     QDate endDate() const;
 
   public slots:
+    void hack(); //TODO_SPLIT
     virtual void updateView();
     virtual void updateConfig();
     virtual void showDates( const QDate &start, const QDate &end );
@@ -277,7 +279,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
 
     DateList mSelectedDates;  // List of dates to be displayed
     int mViewType;
-
+    QScrollArea *mScrollArea;
     EventIndicator *mEventIndicatorTop;
     EventIndicator *mEventIndicatorBottom;
 

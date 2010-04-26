@@ -29,6 +29,7 @@
 
 #include <ksystemtimezone.h>
 
+#include <QScrollBar>
 #include <QScrollArea>
 #include <QHBoxLayout>
 
@@ -90,14 +91,12 @@ void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
 
 void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
 {
-  if ( mAgenda ) {
+  if ( mAgenda && mAgenda->verticalScrollBar() ) {
     connect( mAgenda->verticalScrollBar(), SIGNAL(valueChanged(int)),
              area->verticalScrollBar(), SLOT(setValue(int)) );
 
     TimeLabels *timeLabels = static_cast<TimeLabels*>( area->widget() );
     timeLabels->setAgenda( mAgenda );
-
-    kDebug() << this << "DEBUG VALUE IS " << mAgenda->verticalScrollBar()->value();
     area->verticalScrollBar()->setValue( mAgenda->verticalScrollBar()->value() );
 
   }
