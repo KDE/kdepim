@@ -94,16 +94,78 @@ KPIM.MainView {
              }
            }
 
-           Text {
-             id: dateText
+           Column {
              anchors.left: collectionView.right
-             text: "Choose a date:"
-           }
-
-           QmlDateEdit {
-             anchors.left: collectionView.right
-             anchors.top: dateText.bottom
-           }
+             spacing: 2
+             Row {
+               Text {
+                 id: dateText
+                 height: 30
+                 verticalAlignment: "AlignVCenter"
+                 text: "Show the date:"
+               }
+               QmlDateEdit {
+                 anchors.left: dateText.right // WTF is the QmlDateEdit overlapping the dateText when this is not set?
+                 id: dateEdit
+                 height: 30
+               }
+             }
+             Text {
+               height: 30
+               verticalAlignment: "AlignVCenter"
+               text: "Using the following calendar view:"
+             }
+             Row {
+               spacing: 2
+               KPIM.Button {
+                 id: dayButton
+                 buttonText: "Day"
+                 height: 40
+                 width: 100
+               }
+               KPIM.Button {
+                 id: weekButton
+                 buttonText: "Week"
+                 height: 40
+                 width: 100
+               }
+               KPIM.Button {
+                 id: monthButton
+                 buttonText: "Month"
+                 height: 40
+                 width: 100
+               }
+               KPIM.Button {
+                 id: yearButton
+                 buttonText: "Year"
+                 height: 40
+                 width: 100
+               }
+            }
+            Rectangle {
+              width:parent.width
+              height: 2
+              color: "#000000"
+            }
+            KPIM.Button {
+              id: newAppointmentButton
+              buttonText: "New appointment"
+              height: 40
+              width: 150
+            }
+            KPIM.Button {
+              id: searchAppointmentButton
+              buttonText: "Search appointment"
+              height: 40
+              width: 150
+            }
+            KPIM.Button {
+              id: configureAccountButton
+              buttonText: "Configure account"
+              height: 40
+              width: 150
+            }
+          }
 
         }
       ]
