@@ -23,11 +23,19 @@
 
 #include "kdeclarativemainview.h"
 
+#include <QItemSelectionModel>
+
+#include <akonadi/collection.h>
+#include <akonadi/entitytreemodel.h>
+
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
   public:
     explicit MainView( QWidget *parent = 0 );
+
+private:
+  Akonadi::EntityTreeModel *m_etm;
 };
 
 #endif // MAINVIEW_H
