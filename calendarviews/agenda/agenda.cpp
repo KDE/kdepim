@@ -1068,15 +1068,23 @@ void Agenda::endItemAction()
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
-          mChanger->changeIncidence( oldIncSaved, inc,
-                                   IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this );
+          if ( mChanger ) {
+            mChanger->changeIncidence( oldIncSaved, inc,
+                                       IncidenceChanger::RECURRENCE_MODIFIED_ONE_ONLY, this );
+          } else {
+            kError() << "No IncidenceChanger set";
+          }
 #ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item
           Akonadi::Item item;
           item.setPayload( newInc );
           mActionItem->setIncidence( item );
           mActionItem->dissociateFromMultiItem();
 #endif
-          mChanger->addIncidence( newInc, inc.parentCollection(), this );
+          if ( mChanger ) {
+            mChanger->addIncidence( newInc, inc.parentCollection(), this );
+          } else {
+            kError() << "No IncidenceChanger set";
+          }
           emit enableAgendaUpdate( true );
         } else {
           KMessageBox::sorry(
@@ -1109,10 +1117,18 @@ void Agenda::endItemAction()
           item.setPayload( newInc );
           mActionItem->setIncidence( item );
 #endif
-          mChanger->addIncidence( newInc, inc.parentCollection(), this );
+          if ( mChanger ) {
+            mChanger->addIncidence( newInc, inc.parentCollection(), this );
+          } else {
+            kError() << "No IncidenceChanger set";
+          }
           emit enableAgendaUpdate( true );
-          mChanger->changeIncidence( oldIncSaved, inc,
-                                     IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, this );
+          if ( mChanger ) {
+            mChanger->changeIncidence( oldIncSaved, inc,
+                                        IncidenceChanger::RECURRENCE_MODIFIED_ALL_FUTURE, this );
+          } else {
+            kError() << "No IncidenceChanger set";
+          }
         } else {
           KMessageBox::sorry(
             this,
@@ -1159,11 +1175,19 @@ void Agenda::endItemAction()
     } else {
       // the item was moved, but not further modified, since it's not recurring
       // make sure the view updates anyhow, with the right item
-      mChanger->endChange( inc );
+      if ( mChanger ) {
+        mChanger->endChange( inc );
+      } else {
+        kError() << "No IncidenceChanger set";
+      }
       emit itemModified( mActionItem );
     }
   } else {
-    mChanger->endChange( inc );
+    if ( mChanger ) {
+      mChanger->endChange( inc );
+    } else {
+      kError() << "No IncidenceChanger set";
+    }
   }
 
   mActionItem = 0;
