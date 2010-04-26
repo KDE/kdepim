@@ -68,7 +68,6 @@ KPIM.MainView {
   SlideoutPanelContainer {
     anchors.fill: parent
 
-
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
@@ -76,10 +75,47 @@ KPIM.MainView {
       handlePosition: 30
       handleHeight: 78
       content: [
-        /*StartCanvas {
+        KPIM.StartCanvas {
           id : startPage
           anchors.fill : parent
-        }*/
+          anchors.leftMargin : 50
+
+          contextActions : [
+            KPIM.Button {
+              id : start_newContactButton
+              height : 20
+              width : 200
+              anchors.top : parent.top
+              buttonText : "New Contact"
+              onClicked : {
+                console.log( "New Contact clicked" );
+              }
+
+            },
+            KPIM.Button {
+              id : start_newGroupButton
+              height : 20
+              width : 200
+              anchors.top : start_newContactButton.bottom
+              buttonText : "New Distribution Group"
+              onClicked : {
+                console.log( "New Group clicked" );
+              }
+
+            },
+            KPIM.Button {
+              id : start_newAccountButton
+              anchors.top : start_newGroupButton.bottom
+              height : 20
+              width : 200
+              buttonText : "Add Account"
+              onClicked : {
+                console.log( "Add Account clicked" );
+                application.launchAccountWizard();
+              }
+            }
+          ]
+        }
       ]
     }
 
