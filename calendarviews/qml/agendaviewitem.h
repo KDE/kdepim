@@ -32,6 +32,7 @@ class AgendaViewItem : public DeclarativeAkonadiItem
   Q_PROPERTY( QDate startDate READ startDate WRITE setStartDate )
   Q_PROPERTY( QDate endDate READ endDate WRITE setEndDate )
   Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
+  Q_PROPERTY( qint64 selectedItemId READ selectedItemId NOTIFY itemSelected )
 
   public:
     explicit AgendaViewItem( QDeclarativeItem *parent = 0 );
@@ -46,6 +47,11 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     void setEndDate( const QDate &endDate );
     QObject *calendar() const;
     void setCalendar( QObject* calendarObj );
+
+    qint64 selectedItemId() const;
+
+  signals:
+    void itemSelected();
 
   private:
     AgendaView *m_view;

@@ -52,6 +52,19 @@ KPIM.MainView {
       if ( eventView.itemId >= 0 )
         itemList.previousItem();
     }
+
+    KPIM.Button {
+      anchors.bottom: parent.bottom
+      anchors.right: parent.right
+      anchors.margins: 12
+      width: 48
+      height: 48
+      icon: KDE.iconPath( "edit-undo", width );
+      onClicked: {
+        eventView.visible = false;
+        agendaView.visible = true;
+      }
+    }
   }
 
   Rectangle {
@@ -64,6 +77,15 @@ KPIM.MainView {
       calendar: calendarModel
       startDate: "2010-04-26"
       endDate: "2010-05-02"
+
+      onItemSelected: {
+        console.log( "XXXX" + selectedItemId );
+        if ( selectedItemId > 0 ) {
+          eventView.itemId = selectedItemId;
+          eventView.visible = true;
+          agendaView.visible = false;
+        }
+      }
     }
   }
 

@@ -27,6 +27,7 @@ AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
   DeclarativeAkonadiItem( parent )
 {
   m_view = new AgendaView( 0 );
+  connect( m_view, SIGNAL(incidenceSelected(Akonadi::Item,QDate)), SIGNAL(itemSelected()) );
   setWidget( m_view );
 }
 
@@ -72,5 +73,13 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
     m_view->updateConfig();
   }
 }
+
+qint64 AgendaViewItem::selectedItemId() const
+{
+  if ( m_view->selectedIncidences().size() < 1 )
+    return -1;
+  return m_view->selectedIncidences().first().id();
+}
+
 
 #include "agendaviewitem.moc"
