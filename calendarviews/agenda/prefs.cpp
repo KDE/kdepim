@@ -40,7 +40,7 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kemailsettings.h>
-#include <k3staticdeleter.h>
+
 #include <kstringhandler.h>
 #include <ksystemtimezone.h>
 
@@ -57,7 +57,6 @@
 using namespace KPIMIdentities;
 
 Prefs *Prefs::mInstance = 0;
-static K3StaticDeleter<Prefs> insd;
 
 Prefs::Prefs() : PrefsBase()
 {
@@ -91,7 +90,7 @@ Prefs::~Prefs()
 Prefs *Prefs::instance()
 {
   if ( !mInstance ) {
-    insd.setObject( mInstance, new Prefs() );
+    mInstance = new Prefs();
 
     mInstance->readConfig();
   }

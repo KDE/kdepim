@@ -28,7 +28,6 @@
 #include <kholidays/holidays.h>
 using namespace KHolidays;
 
-#include <k3staticdeleter.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kconfig.h>
@@ -45,12 +44,10 @@ using namespace KHolidays;
 
 Globals *Globals::mSelf = 0;
 
-static K3StaticDeleter<Globals> koGlobalsDeleter;
-
 Globals *Globals::self()
 {
   if ( !mSelf ) {
-    koGlobalsDeleter.setObject( mSelf, new Globals );
+    mSelf = new Globals;
   }
 
   return mSelf;
