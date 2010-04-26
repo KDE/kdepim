@@ -63,9 +63,9 @@ EventIndicator::EventIndicator( Location loc, QWidget *parent )
   mLocation = loc;
 
   if ( mLocation == Top ) {
-    mPixmap = Globals::self()->smallIcon( "arrow-up-double" );
+    mPixmap = EventViewGlobals::self()->smallIcon( "arrow-up-double" );
   } else {
-    mPixmap = Globals::self()->smallIcon( "arrow-down-double" );
+    mPixmap = EventViewGlobals::self()->smallIcon( "arrow-down-double" );
   }
 
   setMinimumHeight( mPixmap.height() );
@@ -85,7 +85,7 @@ void EventIndicator::paintEvent( QPaintEvent *event )
   for ( i=0; i<mColumns; ++i ) {
     if ( mEnabled[i] ) {
       int cellWidth = contentsRect().right() / mColumns;
-      int xOffset = Globals::self()->reverseLayout() ?
+      int xOffset = EventViewGlobals::self()->reverseLayout() ?
                     ( mColumns - 1 - i ) * cellWidth + cellWidth / 2 - mPixmap.width() / 2 :
                     i * cellWidth + cellWidth / 2 - mPixmap.width() / 2;
       painter.drawPixmap( QPoint( xOffset, 0 ), mPixmap );
@@ -481,7 +481,7 @@ void AgendaView::createDayLabels()
   KVBox *bottomWeekLabelBox = new KVBox( mBottomDayLabels );
   mLayoutBottomDayLabels->addWidget( bottomWeekLabelBox );
 
-  const KCalendarSystem *calsys = Globals::self()->calendarSystem();
+  const KCalendarSystem *calsys = EventViewGlobals::self()->calendarSystem();
 
   DateList::ConstIterator dit;
   for ( dit = mSelectedDates.constBegin(); dit != mSelectedDates.constEnd(); ++dit ) {
@@ -509,7 +509,7 @@ void AgendaView::createDayLabels()
     }
 
     // if a holiday region is selected, show the holiday name
-    QStringList texts = Globals::self()->holiday( date );
+    QStringList texts = EventViewGlobals::self()->holiday( date );
     QStringList::ConstIterator textit = texts.constBegin();
     for ( ; textit != texts.constEnd(); ++textit ) {
       // Compute a small version of the holiday string for AlternateLabel
@@ -1527,7 +1527,7 @@ void AgendaView::startDrag( const Item &incidence )
 
 void AgendaView::readSettings()
 {
-  readSettings( Globals::self()->config() );
+  readSettings( EventViewGlobals::self()->config() );
 }
 
 void AgendaView::readSettings( KConfig *config )
@@ -1562,12 +1562,12 @@ void AgendaView::setHolidayMasks()
   mHolidayMask.resize( mSelectedDates.count() + 1 );
 
   for ( int i = 0; i < mSelectedDates.count(); ++i ) {
-    mHolidayMask[i] = !Globals::self()->isWorkDay( mSelectedDates[ i ] );
+    mHolidayMask[i] = !EventViewGlobals::self()->isWorkDay( mSelectedDates[ i ] );
   }
 
   // Store the information about the day before the visible area (needed for
   // overnight working hours) in the last bit of the mask:
-  bool showDay = !Globals::self()->isWorkDay( mSelectedDates[ 0 ].addDays( -1 ) );
+  bool showDay = !EventViewGlobals::self()->isWorkDay( mSelectedDates[ 0 ].addDays( -1 ) );
   mHolidayMask[ mSelectedDates.count() ] = showDay;
 
   mAgenda->setHolidayMask( &mHolidayMask );

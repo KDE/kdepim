@@ -37,10 +37,10 @@ namespace KHolidays {
   class HolidayRegion;
 }
 
-class Globals
+class EventViewGlobals
 {
   public:
-    static Globals *self();
+    static EventViewGlobals *self();
 
     KConfig *config() const;
 
@@ -48,7 +48,7 @@ class Globals
 
     const KCalendarSystem *calendarSystem() const;
 
-    ~Globals();
+    ~EventViewGlobals();
 
     QPixmap smallIcon( const QString &name ) const;
 
@@ -70,10 +70,10 @@ class Globals
     const KComponentData &componentData() const { return mOwnInstance; }
 
   protected:
-    Globals();
+    EventViewGlobals();
 
   private:
-    static Globals *mSelf;
+    static EventViewGlobals *mSelf;
 
     KComponentData mOwnInstance;
 
