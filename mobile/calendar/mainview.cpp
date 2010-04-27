@@ -37,8 +37,18 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
 {
   addMimeType( IncidenceMimeTypeVisitor::eventMimeType() );
 
-  Akonadi::Calendar* calendar = new Akonadi::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local(), this );
-  engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( calendar ) ) );
+  m_calendar = new Akonadi::Calendar( entityTreeModel(), itemModel(), KSystemTimeZones::local(), this );
+  engine()->rootContext()->setContextProperty( "calendarModel", QVariant::fromValue( static_cast<QObject*>( m_calendar ) ) );
+}
+
+void MainView::showFavoriteCalendar()
+{
+  m_calendar->setUnfilteredModel(favoriteSelectedItems());
+}
+
+void MainView::showRegularCalendar()
+{
+  m_calendar->setUnfilteredModel(regularSelectedItems());
 }
 
 #include "mainview.moc"

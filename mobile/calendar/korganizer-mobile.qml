@@ -299,16 +299,31 @@ KPIM.MainView {
     target: startPage
     onAccountSelected : {
       application.setSelectedAccount(row);
+      application.showRegularCalendar();
+      startPanel.collapse();
+    }
+  }
+  Connections {
+    target: startPage
+    onFavoriteSelected : {
+      application.loadFavorite(favName);
+      application.showFavoriteCalendar();
       startPanel.collapse();
     }
   }
   Connections {
     target: collectionView
-    onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
+    onChildCollectionSelected : {
+      application.setSelectedChildCollectionRow( row );
+      application.showRegularCalendar();
+    }
   }
 
   Connections {
     target: collectionView
-    onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
+    onBreadcrumbCollectionSelected : {
+      application.setSelectedBreadcrumbCollectionRow( row );
+      application.showRegularCalendar();
+    }
   }
 }

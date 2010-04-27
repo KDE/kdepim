@@ -25,7 +25,7 @@
 
 namespace Akonadi
 {
-class EntityTreeModel;
+class Calendar;
 }
 
 class MainView : public KDeclarativeMainView
@@ -34,8 +34,12 @@ class MainView : public KDeclarativeMainView
 public:
     explicit MainView( QWidget *parent = 0 );
 
+public:
+    void showFavoriteCalendar();
+    void showRegularCalendar();
+
 private:
-  Akonadi::EntityTreeModel *m_etm;
+  Akonadi::Calendar *m_calendar;
 };
 
 #endif // MAINVIEW_H
