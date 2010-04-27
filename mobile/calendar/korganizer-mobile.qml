@@ -108,12 +108,30 @@ KPIM.MainView {
           favoritesModel : favoritesList
 
           contextActions : [
-            KPIM.Button {
-              height : 480 / 6
-              width : parent.width
-              anchors.top : parent.top
-              buttonText : "Add Favorite"
-              onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
+            Column {
+              anchors.fill: parent
+              height: 480 / 6 * 3
+              KPIM.Button {
+                height : 480 / 6
+                width : parent.width
+                buttonText : "New appointment"
+                font.bold:  true
+                onClicked : { console.log("Create new appointment") }
+              }
+              KPIM.Button {
+                height : 480 / 6
+                width : parent.width
+                buttonText : "Add Account"
+                font.bold:  true
+                onClicked : { application.launchAccountWizard() }
+              }
+              KPIM.Button {
+                height : 480 / 6
+                width : parent.width
+                buttonText : "Add Favorite"
+                font.bold:  true
+                onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
+              }
             }
           ]
         },
