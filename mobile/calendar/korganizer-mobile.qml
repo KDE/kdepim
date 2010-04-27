@@ -303,13 +303,21 @@ KPIM.MainView {
 
   }
 
-   Connections {
-     target: collectionView
-     onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
-   }
+  Connections {
+    target: startPage
+    onAccountSelected : {
+      application.setSelectedAccount(row);
+      startPanel.collapse();
+      folderPanel.expand();
+    }
+  }
+  Connections {
+    target: collectionView
+    onChildCollectionSelected : { application.setSelectedChildCollectionRow( row ); }
+  }
 
-   Connections {
-     target: collectionView
-     onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
-   }
+  Connections {
+    target: collectionView
+    onBreadcrumbCollectionSelected : { application.setSelectedBreadcrumbCollectionRow( row ); }
+  }
 }
