@@ -121,7 +121,15 @@ KPIM.MainView {
           id : favoriteSelector
           anchors.fill : parent
           visible : false
-          onFinished : { favoriteSelector.visible = false; startPage.visible = true; application.saveFavorite(favoriteSelector.favoriteName); }
+          onCanceled: {
+            favoriteSelector.visible = false;
+            startPage.visible = true;
+          }
+          onFinished : {
+            favoriteSelector.visible = false;
+            startPage.visible = true;
+            application.saveFavorite( favoriteSelector.favoriteName );
+          }
         }
       ]
     }
