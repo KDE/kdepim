@@ -59,13 +59,17 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   mDefaultFilter->setEnabled( false );
   m_filterProxy = new CalFilterProxyModel( q );
   m_filterProxy->setFilter( mDefaultFilter );
-
+  m_filterProxy->setSourceModel( model );
 
   // user information...
   mOwner.setName( i18n( "Unknown Name" ) );
   mOwner.setEmail( i18n( "unknown@nowhere" ) );
 
-  q->setUnfilteredModel( model );
+  connect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
+  connect( m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()) );
+  connect( m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
+  connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
+  connect( m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -409,21 +413,21 @@ void Calendar::setUnfilteredModel( QAbstractItemModel *model ) {
 
   if ( d->m_model )
   {
-    disconnect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
-    disconnect( d->m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()) );
-    disconnect( d->m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
-    disconnect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
-    disconnect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+    disconnect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), d, SLOT(dataChanged(QModelIndex,QModelIndex)) );
+    disconnect( d->m_model, SIGNAL(layoutChanged()), d, SLOT(layoutChanged()) );
+    disconnect( d->m_model, SIGNAL(modelReset()), d, SLOT(modelReset()) );
+    disconnect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), d, SLOT(rowsInserted(QModelIndex,int,int)) );
+    disconnect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), d, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
   }
   d->m_model = model;
   d->m_filterProxy->setSourceModel( model );
   if ( model )
   {
-    connect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
-    connect( d->m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()) );
-    connect( d->m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
-    connect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
-    connect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+    connect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), d, SLOT(dataChanged(QModelIndex,QModelIndex)) );
+    connect( d->m_model, SIGNAL(layoutChanged()), d, SLOT(layoutChanged()) );
+    connect( d->m_model, SIGNAL(modelReset()), d, SLOT(modelReset()) );
+    connect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), d, SLOT(rowsInserted(QModelIndex,int,int)) );
+    connect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), d, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
   }
 }
 
