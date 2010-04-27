@@ -44,50 +44,50 @@
 using namespace KHolidays;
 using namespace EventViews;
 
-EventViewGlobals *EventViewGlobals::mSelf = 0;
+Globals *Globals::mSelf = 0;
 
-EventViewGlobals *EventViewGlobals::self()
+Globals *Globals::self()
 {
   if ( !mSelf ) {
-    mSelf = new EventViewGlobals;
+    mSelf = new Globals;
   }
 
   return mSelf;
 }
 
-EventViewGlobals::EventViewGlobals()
+Globals::Globals()
   : mOwnInstance( "korganizer" ), mHolidays( 0 )
 {
   KIconLoader::global()->addAppDir( "kdepim" );
 }
 
-KConfig *EventViewGlobals::config() const
+KConfig *Globals::config() const
 {
   KSharedConfig::Ptr c = mOwnInstance.config();
   return c.data();
 }
 
-EventViewGlobals::~EventViewGlobals()
+Globals::~Globals()
 {
   delete mHolidays;
 }
 
-const KCalendarSystem *EventViewGlobals::calendarSystem() const
+const KCalendarSystem *Globals::calendarSystem() const
 {
   return KGlobal::locale()->calendar();
 }
 
-bool EventViewGlobals::reverseLayout()
+bool Globals::reverseLayout()
 {
   return QApplication::isRightToLeft();
 }
 
-QPixmap EventViewGlobals::smallIcon( const QString &name ) const
+QPixmap Globals::smallIcon( const QString &name ) const
 {
   return SmallIcon( name );
 }
 
-QStringList EventViewGlobals::holiday( const QDate &date ) const
+QStringList Globals::holiday( const QDate &date ) const
 {
   QStringList hdays;
 
@@ -101,7 +101,7 @@ QStringList EventViewGlobals::holiday( const QDate &date ) const
   return hdays;
 }
 
-bool EventViewGlobals::isWorkDay( const QDate &date ) const
+bool Globals::isWorkDay( const QDate &date ) const
 {
   int mask( ~( Prefs::instance()->mWorkWeekMask ) );
 
@@ -115,18 +115,18 @@ bool EventViewGlobals::isWorkDay( const QDate &date ) const
   return !nonWorkDay;
 }
 
-int EventViewGlobals::getWorkWeekMask()
+int Globals::getWorkWeekMask()
 {
   return Prefs::instance()->mWorkWeekMask;
 }
 
-void EventViewGlobals::setHolidays( HolidayRegion *h )
+void Globals::setHolidays( HolidayRegion *h )
 {
   delete mHolidays;
   mHolidays = h;
 }
 
-HolidayRegion *EventViewGlobals::holidays() const
+HolidayRegion *Globals::holidays() const
 {
   return mHolidays;
 }

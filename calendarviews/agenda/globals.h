@@ -40,10 +40,10 @@ namespace KHolidays {
 namespace EventViews
 {
 
-class EventViewGlobals
+class Globals
 {
   public:
-    static EventViewGlobals *self();
+    static Globals *self();
 
     KConfig *config() const;
 
@@ -51,7 +51,7 @@ class EventViewGlobals
 
     const KCalendarSystem *calendarSystem() const;
 
-    ~EventViewGlobals();
+    ~Globals();
 
     QPixmap smallIcon( const QString &name ) const;
 
@@ -73,10 +73,10 @@ class EventViewGlobals
     const KComponentData &componentData() const { return mOwnInstance; }
 
   protected:
-    EventViewGlobals();
+    Globals();
 
   private:
-    static EventViewGlobals *mSelf;
+    static Globals *mSelf;
 
     KComponentData mOwnInstance;
 

@@ -745,9 +745,9 @@ void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     mSpecialEvent = true;
     if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tPxmp = EventViewGlobals::self()->smallIcon( "view-calendar-wedding-anniversary" );
+      tPxmp = Globals::self()->smallIcon( "view-calendar-wedding-anniversary" );
     } else {
-      tPxmp = EventViewGlobals::self()->smallIcon( "view-calendar-birthday" );
+      tPxmp = Globals::self()->smallIcon( "view-calendar-birthday" );
     }
     conditionalPaint( p, true, x, y, ft, tPxmp );
   } else {
@@ -823,16 +823,16 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   // Also look at #17984
 
   if ( !alarmPxmp ) {
-    alarmPxmp     = new QPixmap( EventViewGlobals::self()->smallIcon( "task-reminder" ) );
-    recurPxmp     = new QPixmap( EventViewGlobals::self()->smallIcon( "appointment-recurring" ) );
-    readonlyPxmp  = new QPixmap( EventViewGlobals::self()->smallIcon( "object-locked" ) );
-    replyPxmp     = new QPixmap( EventViewGlobals::self()->smallIcon( "mail-reply-sender" ) );
-    groupPxmp     = new QPixmap( EventViewGlobals::self()->smallIcon( "meeting-attending" ) );
-    groupPxmpTent = new QPixmap( EventViewGlobals::self()->smallIcon( "meeting-attending-tentative" ) );
-    organizerPxmp = new QPixmap( EventViewGlobals::self()->smallIcon( "meeting-organizer" ) );
-    eventPxmp     = new QPixmap( EventViewGlobals::self()->smallIcon( "view-calendar-day" ) );
-    todoPxmp      = new QPixmap( EventViewGlobals::self()->smallIcon( "view-calendar-tasks" ) );
-    completedPxmp = new QPixmap( EventViewGlobals::self()->smallIcon( "task-complete" ) );
+    alarmPxmp     = new QPixmap( Globals::self()->smallIcon( "task-reminder" ) );
+    recurPxmp     = new QPixmap( Globals::self()->smallIcon( "appointment-recurring" ) );
+    readonlyPxmp  = new QPixmap( Globals::self()->smallIcon( "object-locked" ) );
+    replyPxmp     = new QPixmap( Globals::self()->smallIcon( "mail-reply-sender" ) );
+    groupPxmp     = new QPixmap( Globals::self()->smallIcon( "meeting-attending" ) );
+    groupPxmpTent = new QPixmap( Globals::self()->smallIcon( "meeting-attending-tentative" ) );
+    organizerPxmp = new QPixmap( Globals::self()->smallIcon( "meeting-organizer" ) );
+    eventPxmp     = new QPixmap( Globals::self()->smallIcon( "view-calendar-day" ) );
+    todoPxmp      = new QPixmap( Globals::self()->smallIcon( "view-calendar-tasks" ) );
+    completedPxmp = new QPixmap( Globals::self()->smallIcon( "task-complete" ) );
   }
 
   QColor bgColor;

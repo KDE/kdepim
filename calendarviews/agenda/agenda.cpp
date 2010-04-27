@@ -98,7 +98,7 @@ int MarcusBains::todayColumn()
   int col = 0;
   for ( it = dateList.constBegin(); it != dateList.constEnd(); ++it ) {
     if ( (*it) == currentDate ) {
-      return EventViewGlobals::self()->reverseLayout() ? mAgenda->columns() - 1 - col : col;
+      return Globals::self()->reverseLayout() ? mAgenda->columns() - 1 - col : col;
     }
     ++col;
   }
@@ -767,7 +767,7 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
   }
   QPoint gridpos = contentsToGrid( pos );
   QPoint contpos = gridToContents(
-    gridpos + QPoint( ( EventViewGlobals::self()->reverseLayout() ) ? 1 : 0, 0 ) );
+    gridpos + QPoint( ( Globals::self()->reverseLayout() ) ? 1 : 0, 0 ) );
 
 //kDebug() << "contpos=" << contpos << ", pos=" << pos << ", gpos=" << gpos;
 //kDebug() << "clXLeft=" << clXLeft << ", clXRight=" << clXRight;
@@ -775,21 +775,21 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
   if ( horizontal ) {
     int clXLeft = item->cellXLeft();
     int clXRight = item->cellXRight();
-    if ( EventViewGlobals::self()->reverseLayout() ) {
+    if ( Globals::self()->reverseLayout() ) {
       int tmp = clXLeft;
       clXLeft = clXRight;
       clXRight = tmp;
     }
     int gridDistanceX = int( pos.x() - contpos.x() );
     if ( gridDistanceX < mResizeBorderWidth && clXLeft == gridpos.x() ) {
-      if ( EventViewGlobals::self()->reverseLayout() ) {
+      if ( Globals::self()->reverseLayout() ) {
         return RESIZERIGHT;
       } else {
         return RESIZELEFT;
       }
     } else if ( ( mGridSpacingX - gridDistanceX ) < mResizeBorderWidth &&
                 clXRight == gridpos.x() ) {
-      if ( EventViewGlobals::self()->reverseLayout() ) {
+      if ( Globals::self()->reverseLayout() ) {
         return RESIZELEFT;
       } else {
         return RESIZERIGHT;
@@ -1270,7 +1270,7 @@ void Agenda::adjustItemPosition( AgendaItem *item )
   item->resize( int( mGridSpacingX * item->cellWidth() ),
                 int( mGridSpacingY * item->cellHeight() ) );
   int clXLeft = item->cellXLeft();
-  if ( EventViewGlobals::self()->reverseLayout() ) {
+  if ( Globals::self()->reverseLayout() ) {
     clXLeft = item->cellXRight() + 1;
   }
   QPoint cpos = gridToContents( QPoint( clXLeft, item->cellYTop() ) );
@@ -1306,7 +1306,7 @@ void Agenda::placeAgendaItem( AgendaItem *item, double subCellWidth )
     xpos = pt.x() + int( subCellPos );
     ypos = pt.y();
   }
-  if ( EventViewGlobals::self()->reverseLayout() ) { // RTL language/layout
+  if ( Globals::self()->reverseLayout() ) { // RTL language/layout
     xpos += width;
     width = -width;
   }
@@ -1370,7 +1370,7 @@ void Agenda::placeSubCells( AgendaItem *placeItem )
 int Agenda::columnWidth( int column ) const
 {
   int start = gridToContents( QPoint( column, 0 ) ).x();
-  if ( EventViewGlobals::self()->reverseLayout() ) {
+  if ( Globals::self()->reverseLayout() ) {
     column--;
   } else {
     column++;
@@ -1419,7 +1419,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
         gxStart = gxEnd;
         gxEnd = tmp;
       }
-      int xoffset = ( EventViewGlobals::self()->reverseLayout()?1:0 );
+      int xoffset = ( Globals::self()->reverseLayout()?1:0 );
       while ( gxStart <= gxEnd ) {
         int xStart = gridToContents( QPoint( gxStart + xoffset, 0 ) ).x();
         int xWidth = columnWidth( gxStart ) + 1;
@@ -1510,7 +1510,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 */
 QPoint Agenda::contentsToGrid ( const QPoint &pos ) const
 {
-  int gx = int( EventViewGlobals::self()->reverseLayout() ?
+  int gx = int( Globals::self()->reverseLayout() ?
                 mColumns - pos.x() / mGridSpacingX : pos.x()/mGridSpacingX );
   int gy = int( pos.y() / mGridSpacingY );
   return QPoint( gx, gy );
@@ -1521,7 +1521,7 @@ QPoint Agenda::contentsToGrid ( const QPoint &pos ) const
 */
 QPoint Agenda::gridToContents( const QPoint &gpos ) const
 {
-  int x = int( EventViewGlobals::self()->reverseLayout() ?
+  int x = int( Globals::self()->reverseLayout() ?
                ( mColumns - gpos.x() ) * mGridSpacingX : gpos.x() * mGridSpacingX );
   int y = int( gpos.y() * mGridSpacingY );
   return QPoint( x, y );
