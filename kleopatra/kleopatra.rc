@@ -7,7 +7,6 @@
 		<Separator/>
                 <Action name="file_lookup_certificates"/>
 		<Action name="file_import_certificates"/>
-		<Action name="file_import_crls"/>
                 <Separator/>
 		<Action name="file_export_certificates"/>
 		<Action name="file_export_secret_keys"/>
