@@ -68,17 +68,18 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
+          startText: "Tasks start page"
 
           contextActions : [
-//            KPIM.Button {
-//              id : start_newEmailButton
-//              height : 20
-//              width : 200
-//              anchors.top : parent.top
-//              buttonText : "Write new Email"
-//              onClicked : {
-//                console.log( "Write new clicked" );
-//              }
+            KPIM.Button {
+              id : start_newEmailButton
+              width: parent.width
+              height: 480 / 6
+              buttonText : "Start new task"
+              onClicked : {
+                console.log( "Write new task clicked" );
+              }
+            }
 
 //            },
 //            KPIM.Button {

@@ -20,116 +20,111 @@
 */
 
 import Qt 4.7
-import org.kde.pim.mobileui 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.akonadi 4.5
 
-Rectangle {
+Item {
   id : _topContext
-  color: "#00000000" // Set a transparant color.
-  property alias contextActions : contextContainer.children
+  property alias startText: startText.text
+  property alias contextActions: contextContainer.children
 
   signal accountSelected( int row )
 
-  Rectangle {
-    color: "#00000000" // Set a transparant color.
-    anchors.top : parent.top
-    anchors.bottom : parent.bottom
-    anchors.left : parent.left
-    id : startColumn
-    width : _topContext.width / 3
-    Rectangle {
-      id : startLabel
-      color: "#00000000" // Set a transparant color.
-      anchors.top : parent.top
-      anchors.left : parent.left
-      anchors.right : parent.right
-      height : 200
-      width : _topContext.width / 3
-      Text { text : "Komo Start" }
-    }
-    Component {
-      id : accountDelegate
-      CollectionDelegate {
-        fullClickArea : true
-        id : _wrapper1
-        height : _topContext.height / 6
-        width : ListView.view.width
-        onIndexSelected : {
-          console.log( "Account clicked: " + model.display ); _topContext.accountSelected( model.index );
-        }
-      }
-    }
-    ListView {
-      id : accountsList
-      anchors.top : startLabel.bottom
-      anchors.left : parent.left
-      anchors.right : parent.right
-      height : 200
-      model : accountsModel
-      delegate : accountDelegate
+  Component {
+    id : accountDelegate
+    CollectionDelegate {
+      fullClickArea : true
+      height : accountsList.height / 6
+      width : accountsList.width
+      onIndexSelected : { _topContext.accountSelected( model.index ); }
     }
   }
-  Rectangle {
-    color: "#00000000" // Set a transparant color.
-    anchors.top : parent.top
-    anchors.left : startColumn.right
-    anchors.right : parent.right
-    anchors.bottom : parent.bottom
-    ListModel {
-      id : favsModel
-      ListElement { display : "Favorite 1" }
-      ListElement { display : "Favorite 2" }
-      ListElement { display : "Favorite 3" }
-      ListElement { display : "Favorite 4" }
-      ListElement { display : "Favorite 5" }
-      ListElement { display : "Favorite 6" }
-    }
 
-    Component {
-      id : favDelegate
-      CollectionDelegate {
-        id : _wrapper2
-        fullClickArea : true
-        height : _topContext.height / 6
-        width : ListView.view.width
-        onIndexSelected : {
-          console.log("favorite clicked: " + model.index );
+  Component {
+    id : favDelegate
+    CollectionDelegate {
+      fullClickArea : true
+      height : _topContext.height / 6
+      width : ListView.view.width
+      onIndexSelected : {
+        onClicked : { console.log("favorite clicked: " + model.index ); }
+      }
+    }
+  }
+
+  // TODO: Replace by real favorites
+  ListModel {
+    id : favsModel
+    ListElement { display : "Favorite 1" }
+    ListElement { display : "Favorite 2" }
+    ListElement { display : "Favorite 3" }
+    ListElement { display : "Favorite 4" }
+    ListElement { display : "Favorite 5" }
+    ListElement { display : "Favorite 6" }
+  }
+
+  Row {
+    anchors.topMargin: 30
+    anchors.fill: parent
+    spacing: 10
+
+    Column {
+      width: parent.width / 3
+      height: parent.height
+      spacing: 5
+
+      Text {
+        width: parent.width
+        id: startText
+        font {
+          bold: true
+          pointSize: 14
         }
       }
-    }
 
-    Text {
-      id: favText;
-      anchors.top : parent.top
-      text : "Favorites"
-      height : 20
-      width : 100
-    }
-    Button {
-      id : configureFavsButton
-      anchors.top : parent.top
-      anchors.left : favText.right
-      width : 100
-      height : 20
-      buttonText : "Configure Favorites"
-      onClicked : {
-        console.log( "Configure clicked" );
+      ListView {
+        id : accountsList
+        clip: true
+        width: parent.width
+        height : parent.height
+        model : accountsModel
+        delegate : accountDelegate
       }
     }
 
-    ListView {
-      id : favsView
-      anchors.top : favText.bottom
-      anchors.left : favText.left
-      height : 200
-      width : 100
-      model : favsModel
-      delegate : favDelegate
-    }
-    Item {
-      anchors.top : favsView.bottom
-      anchors.bottom : parent.bottom
-      id : contextContainer
+    Column {
+      width: parent.width / 3 * 2
+      height: parent.height
+      spacing: 5
+
+      Item {
+        id : contextContainer
+        height: childrenRect.height
+        width: parent.width
+      }
+
+      Rectangle {
+        color: "gray"
+        width: parent.width
+        height: 2
+      }
+
+      Text {
+        id: favoritesText
+        width: parent.width
+        height: 14
+        text: "Favorites:"
+        font.bold: true
+      }
+
+      ListView {
+        id : favsView
+        width: parent.width
+        height: parent.height - contextContainer.height - favoritesText.height - 2 - 4 * 5
+        model : favsModel
+        delegate : favDelegate
+        clip: true
+      }
     }
   }
 }

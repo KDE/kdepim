@@ -66,25 +66,25 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-
-          contextActions : [
+          startText: "Mail start page"
+          contextActions: [
             KPIM.Button {
               id : start_newEmailButton
-              height : 20
-              width : 200
-              anchors.top : parent.top
+              width: parent.width
+              height: 480 / 6
               buttonText : "Write new Email"
+              font.bold: true
               onClicked : {
                 console.log( "Write new clicked" );
               }
-
             },
             KPIM.Button {
               id : start_newAccountButton
               anchors.top : start_newEmailButton.bottom
-              height : 20
-              width : 200
+              width: parent.width
+              height: 480 / 6
               buttonText : "Add Account"
+              font.bold: true
               onClicked : {
                 console.log( "Add Account clicked" );
                 application.launchAccountWizard();
@@ -259,13 +259,15 @@ KPIM.MainView {
   }
 
   Connections {
-    target: startPage
+    //target: startPage
+    /*
     onAccountSelected : {
       application.setSelectedAccount(row);
       startPanel.collapse();
       folderPanel.expand();
       // TODO: Figure out how to expand the slider programatically.
     }
+    */
   }
 
   Connections {

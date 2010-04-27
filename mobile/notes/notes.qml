@@ -59,6 +59,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
+          startText: "Notes start page"
 
           contextActions : [
             KPIM.Button {

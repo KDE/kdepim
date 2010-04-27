@@ -103,6 +103,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
+          startText: "Calendar start page"
 
           contextActions : [
 //            KPIM.Button {
@@ -129,8 +130,8 @@ KPIM.MainView {
 //            }
            KPIM.Button {
              id : start_newEmailButton
-             height : 20
-             width : 200
+             height : 480/6
+             width : parent.width
              anchors.top : parent.top
              buttonText : "Add Favorite"
              onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
@@ -154,7 +155,7 @@ KPIM.MainView {
       anchors.fill : parent
       content: [
         Item {
-          anchors.fill: parent
+          anchors.fill: parenteffect
 
            AkonadiBreadcrumbNavigationView {
              id : collectionView
@@ -182,7 +183,7 @@ KPIM.MainView {
                  text: "Show the date:"
                }
                QmlDateEdit {
-                 anchors.left: dateText.right // WTF is the QmlDateEdit overlapping the dateText when this is not set?
+                 anchors.left: parent.right// WTF is the QmlDateEdit overlapping the dateText when this is not set?
                  id: dateEdit
                  height: 30
                }

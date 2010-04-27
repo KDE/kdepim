@@ -21,7 +21,8 @@ import Qt 4.7
 
 Rectangle {
   property string icon
-  property string buttonText
+  property alias buttonText: buttonText.text
+  property alias font: buttonText.font
   signal clicked
   
   radius: 12
@@ -34,9 +35,9 @@ Rectangle {
   }
 
   Text {
+    id: buttonText
     anchors.horizontalCenter: parent.horizontalCenter
     anchors.verticalCenter: parent.verticalCenter
-    text: buttonText
   }
     
   MouseArea {
