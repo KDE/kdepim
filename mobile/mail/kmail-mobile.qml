@@ -73,25 +73,19 @@ KPIM.MainView {
             Column {
               anchors.fill: parent
               height: 480 / 6 * 3
-
               KPIM.Button {
                 width: parent.width
                 height: 480 / 6
                 buttonText : "Write new Email"
                 font.bold: true
-                onClicked : {
-                  console.log( "Write new clicked" );
-                }
+                onClicked : { console.log( "Write new clicked" ); }
               }
               KPIM.Button {
                 width: parent.width
                 height: 480 / 6
                 buttonText : "Add Account"
                 font.bold: true
-                onClicked : {
-                  console.log( "Add Account clicked" );
-                  application.launchAccountWizard();
-                }
+                onClicked : { application.launchAccountWizard(); }
               }
               KPIM.Button {
                 height : 480 / 6
