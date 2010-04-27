@@ -342,12 +342,12 @@ void KDeclarativeMainView::loadFavorite(const QString& name)
   saver->restoreState( cfg );
 }
 
-QItemSelectionModel* KDeclarativeMainView::regularSelectionModel()
+QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
 {
   return d->mCollectionSelection;
 }
 
-QItemSelectionModel* KDeclarativeMainView::favoriteSelectionModel()
+QItemSelectionModel* KDeclarativeMainView::favoriteSelectionModel() const
 {
   return d->mFavSelection;
 }
