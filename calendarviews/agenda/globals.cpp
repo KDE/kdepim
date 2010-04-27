@@ -115,11 +115,6 @@ bool Globals::isWorkDay( const QDate &date ) const
   return !nonWorkDay;
 }
 
-int Globals::getWorkWeekMask()
-{
-  return Prefs::instance()->mWorkWeekMask;
-}
-
 void Globals::setHolidays( HolidayRegion *h )
 {
   delete mHolidays;

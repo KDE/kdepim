@@ -57,7 +57,6 @@ class Globals
 
     QStringList holiday( const QDate &qd ) const;
     bool isWorkDay( const QDate &qd ) const;
-    int getWorkWeekMask();
 
     /**
        Set which holidays the user wants to use.
