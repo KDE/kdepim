@@ -23,7 +23,7 @@
 #include <qdeclarativeextensionplugin.h>
 #include <kglobal.h>
 
-namespace CalendarViews {
+namespace EventViews {
 
 class KDE_EXPORT Plugin : public QDeclarativeExtensionPlugin
 {

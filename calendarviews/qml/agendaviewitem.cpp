@@ -21,7 +21,7 @@
 
 #include <calendarviews/agenda/agendaview.h>
 
-using namespace CalendarViews;
+using namespace EventViews;
 
 AgendaViewItem::AgendaViewItem(QDeclarativeItem* parent) :
   DeclarativeAkonadiItem( parent )

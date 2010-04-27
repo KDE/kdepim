@@ -23,8 +23,9 @@
 #include "declarativeakonadiitem.h"
 #include <QtCore/QDate>
 
+namespace EventViews {
+  
 class AgendaView;
-namespace CalendarViews {
 
 class AgendaViewItem : public DeclarativeAkonadiItem
 {

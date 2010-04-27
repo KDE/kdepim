@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <QtDeclarative/qdeclarative.h>
 
-using namespace CalendarViews;
+using namespace EventViews;
 
 Plugin::Plugin(QObject* parent): QDeclarativeExtensionPlugin(parent)
 {
@@ -36,9 +36,9 @@ Plugin::Plugin(QObject* parent): QDeclarativeExtensionPlugin(parent)
 void Plugin::registerTypes(const char* uri)
 {
   kDebug() << uri;
-  qmlRegisterType<CalendarViews::AgendaViewItem>( uri, 4, 5, "AgendaView" );
+  qmlRegisterType<EventViews::AgendaViewItem>( uri, 4, 5, "AgendaView" );
 }
 
 #include "plugin.moc"
 
-Q_EXPORT_PLUGIN2( kdeintegrationplugin, CalendarViews::Plugin )
+Q_EXPORT_PLUGIN2( kdeintegrationplugin, EventViews::Plugin )
