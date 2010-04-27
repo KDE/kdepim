@@ -36,7 +36,6 @@ target_link_libraries(eventviews
                       ${QT_QTUITOOLS_LIBRARY}
                       ${KDE4_KDEUI_LIBS}
                       ${KDE4_KMIME_LIBRARY}
-                      ${KDE4_KDE3SUPPORT_LIBRARY}
                       ${KDEPIMLIBS_KCAL_LIBS}
                       ${KDE4_KUTILS_LIBS}
                       ${ZLIB_LIBRARY}
