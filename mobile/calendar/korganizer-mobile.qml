@@ -127,7 +127,21 @@ KPIM.MainView {
 //                application.launchAccountWizard();
 //              }
 //            }
+           KPIM.Button {
+             id : start_newEmailButton
+             height : 20
+             width : 200
+             anchors.top : parent.top
+             buttonText : "Add Favorite"
+             onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
+           }
           ]
+        },
+        FavoriteSelector {
+          id : favoriteSelector
+          anchors.fill : parent
+          visible : false
+          onFinished : { favoriteSelector.visible = false; startPage.visible = true; }
         }
       ]
     }
