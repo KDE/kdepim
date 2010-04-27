@@ -35,18 +35,19 @@
 #include <akonadi/kcal/utils.h>
 #include <Akonadi/Item>
 
-#include <QApplication>
-#include <QKeyEvent>
 #include <KCal/Incidence>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 #include <KRandom>
 
 #include <QMenu>
+#include <QApplication>
+#include <QKeyEvent>
 
 using namespace Akonadi;
-CollectionSelection* EventView::sGlobalCollectionSelection = 0;
+using namespace EventViews;
 
+CollectionSelection* EventView::sGlobalCollectionSelection = 0;
 
 /* static */
 void EventView::setGlobalCollectionSelection( CollectionSelection* s )

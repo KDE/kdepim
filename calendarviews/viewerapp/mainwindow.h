@@ -30,7 +30,11 @@ namespace Akonadi
   class ChangeRecorder;
 }
 
-class EventView;
+
+namespace EventViews
+{
+  class EventView;
+}
 
 class MainWindow : public QMainWindow
 {
@@ -47,7 +51,7 @@ class MainWindow : public QMainWindow
 
     Akonadi::Calendar *mCalendar;
 
-    EventView* mEventView;
+    EventViews::EventView* mEventView;
 
   private Q_SLOTS:
     void delayedInit();

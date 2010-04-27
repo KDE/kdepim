@@ -26,6 +26,8 @@
 
 #include "alternatelabel.moc"
 
+using namespace EventViews;
+
 AlternateLabel::AlternateLabel( const QString &shortlabel,
                                     const QString &longlabel,
                                     const QString &extensivelabel,

@@ -30,12 +30,15 @@
 #include "prefs.h"
 #include "agenda.h"
 
-#include <QScrollArea>
 #include <KIcon>
+
+#include <QScrollArea>
 #include <QFrame>
 #include <QAction>
 #include <QMenu>
 #include <QPainter>
+
+using namespace EventViews;
 
 TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
                         TimeLabelsZone *parent, Qt::WFlags f )

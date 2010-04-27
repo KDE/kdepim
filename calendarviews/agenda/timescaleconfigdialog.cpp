@@ -41,6 +41,8 @@
 #include <QLayout>
 #include <QListWidget>
 
+using namespace EventViews;
+
 TimeScaleConfigDialog::TimeScaleConfigDialog( QWidget *parent )
   : KDialog( parent )
 {

@@ -52,6 +52,7 @@
 #include <QToolTip>
 
 using namespace Akonadi;
+using namespace EventViews;
 
 //-----------------------------------------------------------------------------
 
@@ -82,7 +83,7 @@ AgendaItem::AgendaItem( Akonadi::Calendar *calendar, const Item &item,
   Q_ASSERT( incidence );
   if ( incidence->customProperty( "KABC", "BIRTHDAY" ) == "YES" ||
        incidence->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-    qint64 years = Helper::yearDiff( incidence->dtStart().date(), qd );
+    qint64 years = EventViews::yearDiff( incidence->dtStart().date(), qd );
     if ( years > 0 ) {
       incidence = Incidence::Ptr( incidence->clone() );
       incidence->setReadOnly( false );
@@ -911,7 +912,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     bgColor = bgColor.light( EventView::BRIGHTNESS_FACTOR );
   }
 
-  QColor textColor = Helper::getTextColor( bgColor );
+  QColor textColor = EventViews::getTextColor( bgColor );
   p.setPen( textColor );
 
   p.setFont( Prefs::instance()->agendaViewFont() );
@@ -1099,7 +1100,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     x += ( hTxtWidth - hw ) / 2;
   }
   p.setBackground( QBrush( frameColor ) );
-  p.setPen( Helper::getTextColor( frameColor ) );
+  p.setPen( EventViews::getTextColor( frameColor ) );
   KWordWrap::drawFadeoutText( &p, x, ( margin + hlHeight + fm.ascent() ) / 2 - 2,
                               hTxtWidth, headline );
 

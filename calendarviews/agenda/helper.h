@@ -37,7 +37,7 @@ class QDate;
 
 // Provides static methods that are useful to all views.
 
-namespace Helper
+namespace EventViews
 {
   /**
     Returns a nice QColor for text, give the input color &c.
@@ -52,7 +52,7 @@ namespace Helper
     @param incidence the incidence for which the color is needed (to
                      determine which  subresource needs to be used)
   */
-  QColor resourceColor( const Akonadi::Item & incidence );
+  QColor resourceColor( const Akonadi::Item &incidence );
 
   QColor resourceColor( const Akonadi::Collection &collection );
 

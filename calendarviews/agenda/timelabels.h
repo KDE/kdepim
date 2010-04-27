@@ -29,12 +29,14 @@
 #include "eventviews_export.h"
 
 #include <KDateTime>
+
 #include <QFrame>
+
+namespace EventViews
+{
 
 class Agenda;
 class TimeLabelsZone;
-
-class QPaintEvent;
 
 class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 {
@@ -95,5 +97,7 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
 
     QFrame *mMousePos;  // shows a marker for the current mouse position in y direction
 };
+
+} // namespace EventViews
 
 #endif

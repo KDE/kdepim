@@ -31,6 +31,8 @@
 #include <QList>
 #include <QMultiHash>
 
+using namespace EventViews;
+
 QString CellItem::label() const
 {
   return i18n( "<placeholder>undefined</placeholder>" );

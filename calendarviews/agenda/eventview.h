@@ -54,6 +54,8 @@ using namespace KCal;
 
 class QMenu;
 
+namespace EventViews
+{
 /**
   EventView is the abstract base class from wich all other
   calendar views for event data are derived.  It provides methods for
@@ -447,5 +449,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     class Private;
     Private *const d;
 };
+
+} // namespace EventViews
 
 #endif

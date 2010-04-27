@@ -26,9 +26,11 @@
 
 #include "eventviews_export.h"
 
-// TODO_SPLIT: exportar o cellitem porque vai ser usado pelo korganizer printing
 #include <QString>
 #include <QList>
+
+namespace EventViews
+{
 
 class EVENTVIEWS_EXPORT CellItem
 {
@@ -62,5 +64,7 @@ class EVENTVIEWS_EXPORT CellItem
     int mSubCells;
     int mSubCell;
 };
+
+} // namespace EventViews
 
 #endif

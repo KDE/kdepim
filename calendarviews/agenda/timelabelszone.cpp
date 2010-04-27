@@ -33,6 +33,8 @@
 #include <QScrollArea>
 #include <QHBoxLayout>
 
+using namespace EventViews;
+
 TimeLabelsZone::TimeLabelsZone( QWidget *parent, Agenda *agenda )
   : QWidget( parent ), mAgenda( agenda ), mParent( dynamic_cast<AgendaView*>( parent ) )
 {

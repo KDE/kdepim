@@ -25,18 +25,21 @@
 #ifndef ALTERNATELABEL_H
 #define ALTERNATELABEL_H
 
+#include <kurl.h>
+
 #include <QtGui/QLabel>
 #include <QtCore/QString>
 
-#include <kurl.h>
+namespace EventViews
+{
 
 class AlternateLabel : public QLabel
 {
   Q_OBJECT
   public:
     AlternateLabel( const QString &shortlabel, const QString &longlabel,
-                      const QString &extensivelabel = QString(),
-                      QWidget *parent = 0 );
+                    const QString &extensivelabel = QString(),
+                    QWidget *parent = 0 );
     ~AlternateLabel();
 
     virtual QSize minimumSizeHint() const;
@@ -54,5 +57,7 @@ class AlternateLabel : public QLabel
     bool mTextTypeFixed;
     QString mShortText, mLongText, mExtensiveText;
 };
+
+}
 
 #endif

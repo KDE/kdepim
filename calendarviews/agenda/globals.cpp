@@ -26,7 +26,6 @@
 #include "prefs.h"
 
 #include <kholidays/holidays.h>
-using namespace KHolidays;
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -41,6 +40,9 @@ using namespace KHolidays;
 #include <QApplication>
 #include <QPixmap>
 #include <QIcon>
+
+using namespace KHolidays;
+using namespace EventViews;
 
 EventViewGlobals *EventViewGlobals::mSelf = 0;
 

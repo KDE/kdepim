@@ -33,8 +33,6 @@
 #include <QList>
 #include <QWidget>
 
-class AgendaItem;
-
 namespace KCal {
   class Incidence;
 }
@@ -50,6 +48,10 @@ class QDropEvent;
 class QPainter;
 class QPaintEvent;
 class QPixmap;
+
+namespace EventViews {
+
+class AgendaItem;
 
 struct MultiItemInfo
 {
@@ -258,5 +260,7 @@ class AgendaItem : public QWidget, public CellItem
     static QPixmap *todoPxmp;
     static QPixmap *completedPxmp;
 };
+
+} // namespace EventViews
 
 #endif

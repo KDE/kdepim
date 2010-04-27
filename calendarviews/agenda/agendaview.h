@@ -42,13 +42,6 @@
 #include <QVector>
 #include <QLabel>
 
-class TimeLabels;
-class TimeLabelsZone;
-
-class Agenda;
-class AgendaItem;
-class AgendaView;
-
 class KConfig;
 class KHBox;
 
@@ -64,6 +57,15 @@ namespace Akonadi {
   class CollectionSelection;
 }
 
+namespace EventViews
+{
+
+class TimeLabels;
+class TimeLabelsZone;
+
+class Agenda;
+class AgendaItem;
+class AgendaView;
 
 class EVENTVIEWS_EXPORT EventIndicator : public QFrame
 {
@@ -301,5 +303,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     bool mIsSideBySide;
     bool mPendingChanges;
 };
+
+}
 
 #endif

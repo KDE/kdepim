@@ -32,29 +32,27 @@
 
 using namespace Akonadi;
 
-QColor Helper::getTextColor( const QColor &c )
+QColor EventViews::getTextColor( const QColor &c )
 {
   double luminance = ( c.red() * 0.299 ) + ( c.green() * 0.587 ) + ( c.blue() * 0.114 );
   return ( luminance > 128.0 ) ? QColor( 0, 0, 0 ) : QColor( 255, 255, 255 );
 }
 
-QColor Helper::resourceColor( const Collection &coll ) {
+QColor EventViews::resourceColor( const Collection &coll ) {
   if ( !coll.isValid() )
     return QColor();
   const QString id = QString::number( coll.id() );
   return Prefs::instance()->resourceColor( id );
 }
 
-QColor Helper::resourceColor( const Item &item ) {
+QColor EventViews::resourceColor( const Item &item ) {
   if ( !item.isValid() )
     return QColor();
   const QString id = QString::number( item.storageCollectionId() );
   return Prefs::instance()->resourceColor( id );
 }
 
-
-
-qint64 Helper::yearDiff( const QDate &start, const QDate &end )
+qint64 EventViews::yearDiff( const QDate &start, const QDate &end )
 {
   return static_cast<qint64>( start.daysTo( end ) / 365.25 );
 }

@@ -54,6 +54,7 @@
 #include <KWordWrap>
 
 using namespace Akonadi;
+using namespace EventViews;
 
 EventIndicator::EventIndicator( Location loc, QWidget *parent )
   : QFrame( parent )

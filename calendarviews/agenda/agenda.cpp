@@ -67,6 +67,7 @@
 #include <cmath>
 
 using namespace Akonadi;
+using namespace EventViews;
 
 ///////////////////////////////////////////////////////////////////////////////
 MarcusBains::MarcusBains( Agenda *agenda )
@@ -1633,7 +1634,7 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
                       int( ( YBottom + 1 ) * mGridSpacingY ) );
   agendaItem->setCellXY( X, YTop, YBottom );
   agendaItem->setCellXRight( X );
-  agendaItem->setResourceColor( Helper::resourceColor( incidence ) );
+  agendaItem->setResourceColor( EventViews::resourceColor( incidence ) );
   agendaItem->installEventFilter( this );
 
   agendaItem->move( int( X * mGridSpacingX ), int( YTop * mGridSpacingY ) );
@@ -1678,7 +1679,7 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
   agendaItem->resize( int( endIt ) - int( startIt ), int( mGridSpacingY ) );
 
   agendaItem->installEventFilter( this );
-  agendaItem->setResourceColor( Helper::resourceColor( incidence ) );
+  agendaItem->setResourceColor( EventViews::resourceColor( incidence ) );
   agendaItem->move( int( XBegin * mGridSpacingX ), 0 ) ;
   mItems.append( agendaItem );
 

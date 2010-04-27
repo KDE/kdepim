@@ -24,9 +24,12 @@
 #ifndef TIMESCALECONFIGDIALOG_H
 #define TIMESCALECONFIGDIALOG_H
 
+#include "ui_timescaleedit_base.h"
+
 #include <KDialog>
 
-#include "ui_timescaleedit_base.h"
+namespace EventViews
+{
 
 class TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
 {
@@ -45,5 +48,7 @@ class TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
   private:
     QStringList zones();
 };
+
+} // namespace EventViews
 
 #endif

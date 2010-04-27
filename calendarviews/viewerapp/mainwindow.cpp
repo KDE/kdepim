@@ -37,6 +37,7 @@
 #include <KSystemTimeZones>
 
 using namespace Akonadi;
+using namespace EventViews;
 
 MainWindow::MainWindow()
   : QMainWindow(),

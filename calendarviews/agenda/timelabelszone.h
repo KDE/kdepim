@@ -33,10 +33,14 @@
 #include <QWidget>
 #include <QList>
 
-class AgendaView;
-class Agenda;
 class QHBoxLayout;
 class QScrollArea;
+
+namespace EventViews
+{
+
+class AgendaView;
+class Agenda;
 
 class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
@@ -65,5 +69,7 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
     QHBoxLayout *mTimeLabelsLayout;
     QList<QScrollArea*> mTimeLabelsList;
 };
+
+} // namespace EventViews
 
 #endif

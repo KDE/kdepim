@@ -39,10 +39,6 @@
 #include <QTimer>
 #include <QVector>
 
-class Agenda;
-class AgendaItem;
-class AgendaView;
-
 class QScrollArea;
 class QDropEvent;
 class QEvent;
@@ -63,6 +59,13 @@ namespace KCal {
   class Todo;
 }
 using namespace KCal;
+
+namespace EventViews
+{
+
+class Agenda;
+class AgendaItem;
+class AgendaView;
 
 class MarcusBains : public QFrame
 {
@@ -429,4 +432,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     EventView *mEventView;
 };
 
-#endif // KOAGENDA_H
+} // namespace EventViews
+
+#endif // AGENDA_H

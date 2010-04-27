@@ -35,6 +35,9 @@ class QFont;
 class QColor;
 class QStringList;
 
+namespace EventViews
+{
+
 class Prefs : public PrefsBase
 {
   public:
@@ -122,5 +125,7 @@ class Prefs : public PrefsBase
     QString mName;
     QString mEmail;
 };
+
+} // namespace EventViews
 
 #endif

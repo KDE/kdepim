@@ -37,6 +37,9 @@ namespace KHolidays {
   class HolidayRegion;
 }
 
+namespace EventViews
+{
+
 class EventViewGlobals
 {
   public:
@@ -79,5 +82,7 @@ class EventViewGlobals
 
     KHolidays::HolidayRegion *mHolidays;
 };
+
+}
 
 #endif

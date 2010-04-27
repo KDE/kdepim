@@ -40,7 +40,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kemailsettings.h>
-
 #include <kstringhandler.h>
 #include <ksystemtimezone.h>
 
@@ -55,6 +54,8 @@
 #include <unistd.h>
 
 using namespace KPIMIdentities;
+
+using namespace EventViews;
 
 Prefs *Prefs::mInstance = 0;
 
