@@ -152,6 +152,7 @@ KPIM.MainView {
                if ( noteView.noteId != headerList.currentItemId )
                {
                  noteView.noteId = headerList.currentItemId;
+                 noteView.currentNoteRow = -1;
                  noteView.currentNoteRow = headerList.currentIndex;
                }
                folderPanel.collapse()
