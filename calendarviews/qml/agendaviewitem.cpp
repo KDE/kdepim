@@ -76,6 +76,27 @@ void AgendaViewItem::setCalendar(QObject* calendarObj)
   }
 }
 
+void AgendaViewItem::showRange( const QDate &date, int range )
+{
+  Q_ASSERT( range >= 0 && range <= 3 );
+
+  switch( Range( range ) ) {
+  case Day:
+    setStartDate( date );
+    setEndDate( date );
+    break;
+  case Week:
+    // Todo: Take in account sunday or monday as first day of week.
+    setStartDate( date.addDays( - date.dayOfWeek() ) );
+    setEndDate( date.addDays( 6 - date.dayOfWeek() ) );
+    break;
+  case Month:
+    setStartDate( date.addDays( - date.day() + 1 ) );
+    setEndDate( date.addDays( date.daysInMonth() - date.day() ) );
+    break;
+  }
+}
+
 qint64 AgendaViewItem::selectedItemId() const
 {
   if ( m_view->selectedIncidences().size() < 1 )

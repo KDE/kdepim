@@ -29,10 +29,18 @@ namespace CalendarViews {
 class AgendaViewItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
+  Q_ENUMS( Range )
   Q_PROPERTY( QDate startDate READ startDate WRITE setStartDate )
   Q_PROPERTY( QDate endDate READ endDate WRITE setEndDate )
   Q_PROPERTY( QObject* calendar READ calendar WRITE setCalendar )
   Q_PROPERTY( qint64 selectedItemId READ selectedItemId NOTIFY itemSelected )
+
+  public:
+    enum Range {
+      Day = 0,
+      Week,
+      Month
+    };
 
   public:
     explicit AgendaViewItem( QDeclarativeItem *parent = 0 );
@@ -47,6 +55,9 @@ class AgendaViewItem : public DeclarativeAkonadiItem
     void setEndDate( const QDate &endDate );
     QObject *calendar() const;
     void setCalendar( QObject* calendarObj );
+
+    /** Show the appropriate range for given date. */
+    Q_INVOKABLE void showRange( const QDate &date, /* Range */ int range ); // TODO: Figure out how to export enums to QML
 
     qint64 selectedItemId() const;
 
