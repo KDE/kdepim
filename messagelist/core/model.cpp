@@ -3092,6 +3092,13 @@ ModelPrivate::ViewItemJobResult ModelPrivate::viewItemJobStepInternalForJobPass1
       mOrphanChildrenHash.insert( childMessage, childMessage );
     }
 
+    if ( mNewestItem == dyingMessage ) {
+      mNewestItem = 0;
+    }
+    if ( mOldestItem == dyingMessage ) {
+      mOldestItem = 0;
+    }
+
     delete dyingMessage;
 
     curIndex++;
