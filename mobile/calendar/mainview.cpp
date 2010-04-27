@@ -40,6 +40,11 @@
 #include <kselectionproxymodel.h>
 #include <QListView>
 #include <akonadi_next/kproxyitemselectionmodel.h>
+#include <akonadi_next/etmstatesaver.h>
+#include <KGlobal>
+#include <KConfigGroup>
+#include <KSharedConfig>
+#include <KSharedConfigPtr>
 
 using namespace Akonadi;
 
@@ -62,11 +67,11 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   collectionFilter->setSourceModel(m_etm);
 
-  QItemSelectionModel *favSelection = new QItemSelectionModel(collectionFilter, this);
+  m_favSelection = new QItemSelectionModel(collectionFilter, this);
 
   // Need to proxy the selection because the favSelection operates on collectionFilter, but the
   // KSelectionProxyModel *list below operates on m_etm.
-  Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel(m_etm, favSelection, this);
+  Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel(m_etm, m_favSelection, this);
 
   // Show the list of currently selected items.
   KSelectionProxyModel *collectionList = new KSelectionProxyModel(selectionProxy, this);
@@ -85,12 +90,12 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   // Make it possible to uncheck currently selected items in the list
   CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel(this);
   currentSelectionCheckableProxyModel->setSourceModel(collectionList);
-  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel(collectionList, favSelection);
+  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel(collectionList, m_favSelection);
   currentSelectionCheckableProxyModel->setSelectionModel(proxySelector);
 
   // Make it possible to check/uncheck items in the column view.
   CheckableItemProxyModel *checkableSelectionModel = new CheckableItemProxyModel(this);
-  checkableSelectionModel->setSelectionModel(favSelection);
+  checkableSelectionModel->setSelectionModel(m_favSelection);
   checkableSelectionModel->setSourceModel(collectionFilter);
 
 #if 1
@@ -118,5 +123,29 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   engine()->rootContext()->setContextProperty( "checkableSelectionModel", QVariant::fromValue( static_cast<QObject*>( checkableSelectionModel ) ) );
 
 }
+
+void MainView::saveFavorite(const QString& name)
+{
+  ETMStateSaver saver;
+  saver.setSelectionModel( m_favSelection );
+
+  KConfigGroup cfg( KGlobal::config(), "Favorite_" + name );
+  saver.saveState( cfg );
+  cfg.sync();
+}
+
+void MainView::loadFavorite(const QString& name)
+{
+  ETMStateSaver *saver = new ETMStateSaver;
+  saver->setSelectionModel( m_favSelection );
+  KConfigGroup cfg( KGlobal::config(), "Favorite_" + name );
+  if ( !cfg.isValid() )
+  {
+    delete saver;
+    return;
+  }
+  saver->restoreState( cfg );
+}
+
 
 #include "mainview.moc"

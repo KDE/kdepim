@@ -31,11 +31,16 @@
 class MainView : public KDeclarativeMainView
 {
   Q_OBJECT
-  public:
+public:
     explicit MainView( QWidget *parent = 0 );
+
+public slots:
+    void saveFavorite( const QString &name );
+    void loadFavorite( const QString &name );
 
 private:
   Akonadi::EntityTreeModel *m_etm;
+  QItemSelectionModel *m_favSelection;
 };
 
 #endif // MAINVIEW_H
