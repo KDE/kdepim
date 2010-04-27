@@ -67,30 +67,55 @@ KPIM.MainView {
           anchors.fill : parent
           anchors.leftMargin : 50
           startText: "Mail start page"
+          favoritesModel : favoritesList
+
           contextActions: [
-            KPIM.Button {
-              id : start_newEmailButton
-              width: parent.width
-              height: 480 / 6
-              buttonText : "Write new Email"
-              font.bold: true
-              onClicked : {
-                console.log( "Write new clicked" );
+            Column {
+              anchors.fill: parent
+              height: 480 / 6 * 3
+
+              KPIM.Button {
+                width: parent.width
+                height: 480 / 6
+                buttonText : "Write new Email"
+                font.bold: true
+                onClicked : {
+                  console.log( "Write new clicked" );
+                }
               }
-            },
-            KPIM.Button {
-              id : start_newAccountButton
-              anchors.top : start_newEmailButton.bottom
-              width: parent.width
-              height: 480 / 6
-              buttonText : "Add Account"
-              font.bold: true
-              onClicked : {
-                console.log( "Add Account clicked" );
-                application.launchAccountWizard();
+              KPIM.Button {
+                width: parent.width
+                height: 480 / 6
+                buttonText : "Add Account"
+                font.bold: true
+                onClicked : {
+                  console.log( "Add Account clicked" );
+                  application.launchAccountWizard();
+                }
+              }
+              KPIM.Button {
+                height : 480 / 6
+                width : parent.width
+                buttonText : "Add Favorite"
+                font.bold:  true
+                onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
               }
             }
           ]
+        },
+        FavoriteSelector {
+          id : favoriteSelector
+          anchors.fill : parent
+          visible : false
+          onCanceled: {
+            favoriteSelector.visible = false;
+            startPage.visible = true;
+          }
+          onFinished : {
+            favoriteSelector.visible = false;
+            startPage.visible = true;
+            application.saveFavorite( favoriteSelector.favoriteName );
+          }
         }
       ]
     }
