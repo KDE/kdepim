@@ -73,6 +73,7 @@ KPIM.MainView {
     color: palette.window
 
     CalendarViews.AgendaView {
+      id: agenda
       anchors { fill: parent; topMargin: 10; leftMargin: 40 }
       calendar: calendarModel
       startDate: "2010-04-26"
@@ -107,36 +108,13 @@ KPIM.MainView {
           favoritesModel : favoritesList
 
           contextActions : [
-//            KPIM.Button {
-//              id : start_newEmailButton
-//              height : 20
-//              width : 200
-//              anchors.top : parent.top
-//              buttonText : "Write new Email"
-//              onClicked : {
-//                console.log( "Write new clicked" );
-//              }
-
-//            },
-//            KPIM.Button {
-//              id : start_newAccountButton
-//              anchors.top : start_newEmailButton.bottom
-//              height : 20
-//              width : 200
-//              buttonText : "Add Account"
-//              onClicked : {
-//                console.log( "Add Account clicked" );
-//                application.launchAccountWizard();
-//              }
-//            }
-           KPIM.Button {
-             id : start_newEmailButton
-             height : 480/6
-             width : parent.width
-             anchors.top : parent.top
-             buttonText : "Add Favorite"
-             onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
-           }
+            KPIM.Button {
+              height : 480 / 6
+              width : parent.width
+              anchors.top : parent.top
+              buttonText : "Add Favorite"
+              onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
+            }
           ]
         },
         FavoriteSelector {
@@ -156,7 +134,7 @@ KPIM.MainView {
       anchors.fill : parent
       content: [
         Item {
-          anchors.fill: parenteffect
+          anchors.fill: parent //effect
 
            AkonadiBreadcrumbNavigationView {
              id : collectionView
@@ -175,6 +153,7 @@ KPIM.MainView {
 
            Column {
              anchors.left: collectionView.right
+             anchors.right: parent.right
              spacing: 2
              Row {
                Text {
@@ -184,8 +163,8 @@ KPIM.MainView {
                  text: "Show the date:"
                }
                QmlDateEdit {
-                 anchors.left: parent.right// WTF is the QmlDateEdit overlapping the dateText when this is not set?
                  id: dateEdit
+                 anchors.left: parent.right// WTF is the QmlDateEdit overlapping the dateText when this is not set?
                  height: 30
                }
              }
@@ -196,29 +175,37 @@ KPIM.MainView {
              }
              Row {
                spacing: 2
+               width: parent.width
+
                KPIM.Button {
                  id: dayButton
                  buttonText: "Day"
-                 height: 40
-                 width: 100
+                 height: 480 / 6
+                 width: parent.width / 3
+                 onClicked: {
+                   agenda.showRange( dateEdit.date, 0 /* "Day" */ );
+                   folderPanel.collapse();
+                 }
                }
                KPIM.Button {
                  id: weekButton
                  buttonText: "Week"
-                 height: 40
-                 width: 100
+                 height: 480 / 6
+                 width: parent.width / 3
+                 onClicked: {
+                   agenda.showRange( dateEdit.date, 1 /* "Week" */ );
+                   folderPanel.collapse();
+                 }
                }
                KPIM.Button {
                  id: monthButton
                  buttonText: "Month"
-                 height: 40
-                 width: 100
-               }
-               KPIM.Button {
-                 id: yearButton
-                 buttonText: "Year"
-                 height: 40
-                 width: 100
+                 height: 480 / 6
+                 width: parent.width / 3
+                 onClicked: {
+                   agenda.showRange( dateEdit.date, 2 /* "Month" */ );
+                   folderPanel.collapse();
+                 }
                }
             }
             Rectangle {
@@ -228,21 +215,25 @@ KPIM.MainView {
             }
             KPIM.Button {
               id: newAppointmentButton
+              height: 480 / 6
+              width: parent.width
+              anchors.horizontalCenter: parent.horizontalCenter
               buttonText: "New appointment"
-              height: 40
-              width: 150
+
             }
             KPIM.Button {
               id: searchAppointmentButton
+              height: 480 / 6
+              width: parent.width
+              anchors.horizontalCenter: parent.horizontalCenter
               buttonText: "Search appointment"
-              height: 40
-              width: 150
             }
             KPIM.Button {
               id: configureAccountButton
+              anchors.horizontalCenter: parent.horizontalCenter
+              height: 480 / 6
+              width: parent.width
               buttonText: "Configure account"
-              height: 40
-              width: 150
             }
           }
 
@@ -309,7 +300,6 @@ KPIM.MainView {
     onAccountSelected : {
       application.setSelectedAccount(row);
       startPanel.collapse();
-      folderPanel.expand();
     }
   }
   Connections {
