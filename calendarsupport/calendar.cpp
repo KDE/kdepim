@@ -404,7 +404,7 @@ QAbstractItemModel* Calendar::unfilteredModel() const {
 
 void Calendar::setUnfilteredModel( QAbstractItemModel *model ) {
 
-  if ( d->model == model )
+  if ( d->m_model == model )
     return;
 
   if ( d->m_model )
