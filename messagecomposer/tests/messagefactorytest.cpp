@@ -49,7 +49,7 @@ QTEST_KDEMAIN( MessageFactoryTest, NoGUI )
 
 void MessageFactoryTest::testCreateReply()
 {
-  KMime::Message::Ptr msg = createTestMessage();
+  KMime::Message::Ptr msg = createPlainTestMessage();
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
   MessageFactory factory( msg, 0 );
@@ -68,9 +68,59 @@ void MessageFactoryTest::testCreateReply()
   
 }
 
+
+void MessageFactoryTest::testCreateReplyHtml()
+{
+  KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("html_utf8_encoded.mbox") );
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+
+  kDebug() << "html message:" << msg->encodedContent();
+
+  MessageFactory factory( msg, 0 );
+  factory.setIdentityManager( identMan );
+
+  MessageFactory::MessageReply reply =  factory.createReply();
+  QVERIFY( reply.replyAll = true );
+  kDebug() << "html reply" << reply.msg->encodedContent();
+
+  QDateTime date = msg->date()->dateTime().dateTime();
+  QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+  datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
+  QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> encoded?\n" );
+  QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
+  QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: reply to please" ) );
+  QVERIFY( reply.msg->body() == replyStr.toLatin1() );
+
+}
+
+void MessageFactoryTest::testCreateReplyUTF16Base64()
+{
+  KMime::Message::Ptr msg = loadMessageFromFile( QLatin1String("plain_utf16.mbox") );
+  KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
+
+  kDebug() << "plain base64 msg message:" << msg->encodedContent();
+
+  MessageFactory factory( msg, 0 );
+  factory.setIdentityManager( identMan );
+
+  MessageFactory::MessageReply reply =  factory.createReply();
+  QVERIFY( reply.replyAll = true );
+  kDebug() << "html reply" << reply.msg->encodedContent();
+
+  QDateTime date = msg->date()->dateTime().dateTime();
+  QString datetime = KGlobal::locale()->formatDate( date.date(), KLocale::LongDate );
+  datetime += QLatin1String( " " ) + KGlobal::locale()->formatTime( date.time(), true );
+  QString replyStr = QString::fromLatin1( "On " + datetime.toLatin1() + " you wrote:\n> quote me please.\n" );
+  QVERIFY( reply.msg->contentType()->mimeType() == "text/plain" );
+  QVERIFY( reply.msg->subject()->asUnicodeString() == QLatin1String( "Re: asking for reply" ) );
+  QVERIFY( reply.msg->body() == replyStr.toLatin1() );
+
+}
+
+
 void MessageFactoryTest::testCreateForward()
 {
-  KMime::Message::Ptr msg = createTestMessage();
+  KMime::Message::Ptr msg = createPlainTestMessage();
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
   MessageFactory factory( msg, 0 );
@@ -103,7 +153,7 @@ void MessageFactoryTest::testCreateForward()
 
 void MessageFactoryTest::testCreateRedirect()
 {
-  KMime::Message::Ptr msg = createTestMessage();
+  KMime::Message::Ptr msg = createPlainTestMessage();
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
   MessageFactory factory( msg, 0 );
@@ -149,7 +199,7 @@ void MessageFactoryTest::testCreateRedirect()
 
 void MessageFactoryTest::testCreateMDN()
 {
-  KMime::Message::Ptr msg = createTestMessage();
+  KMime::Message::Ptr msg = createPlainTestMessage();
   KPIMIdentities::IdentityManager* identMan = new KPIMIdentities::IdentityManager;
 
   MessageFactory factory( msg, 0 );
@@ -186,7 +236,7 @@ void MessageFactoryTest::testCreateMDN()
 }
 
 
-KMime::Message::Ptr MessageFactoryTest::createTestMessage()
+KMime::Message::Ptr MessageFactoryTest::createPlainTestMessage()
 {
   Composer *composer = new Composer;
   composer->globalPart()->setFallbackCharsetEnabled( true );
@@ -202,3 +252,18 @@ KMime::Message::Ptr MessageFactoryTest::createTestMessage()
 
   return message;
 }
+
+KMime::Message::Ptr MessageFactoryTest::loadMessageFromFile(QString filename)
+{
+  QFile file( QLatin1String( MAIL_DATA_DIR "/" + filename.toLatin1() ) );
+  Q_ASSERT( file.open( QIODevice::ReadOnly ) );
+  const QByteArray data = KMime::CRLFtoLF( file.readAll() );
+  Q_ASSERT( !data.isEmpty() );
+  KMime::Message::Ptr msg( new KMime::Message );
+  msg->setContent( data );
+  msg->parse();
+  return msg;
+
+}
+
+#include "messagefactorytest.moc"

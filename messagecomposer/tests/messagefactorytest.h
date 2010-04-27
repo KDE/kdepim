@@ -31,12 +31,15 @@ class MessageFactoryTest : public QObject
   private Q_SLOTS:
 
     void testCreateReply();
+    void testCreateReplyHtml();
+    void testCreateReplyUTF16Base64();
     void testCreateForward();
     void testCreateRedirect();
     void testCreateMDN();
 
   private:
-    KMime::Message::Ptr createTestMessage();
+    KMime::Message::Ptr createPlainTestMessage();
+    KMime::Message::Ptr loadMessageFromFile( QString filename );
     
 };
 
