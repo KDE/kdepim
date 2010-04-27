@@ -1,7 +1,7 @@
 /*
 * This file is part of Akonadi
 *
-* Copyright (c) 2010 Volker Krause <vkrause@kde.org> 
+* Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -23,11 +23,10 @@
 
 #include "kdeclarativemainview.h"
 
-#include <QItemSelectionModel>
-#include <QStringListModel>
-
-#include <akonadi/collection.h>
-#include <akonadi/entitytreemodel.h>
+namespace Akonadi
+{
+class EntityTreeModel;
+}
 
 class MainView : public KDeclarativeMainView
 {
@@ -35,18 +34,8 @@ class MainView : public KDeclarativeMainView
 public:
     explicit MainView( QWidget *parent = 0 );
 
-public slots:
-    void saveFavorite( const QString &name );
-    void loadFavorite( const QString &name );
-
-private:
-  QAbstractItemModel* getFavoritesListModel();
-  QStringList getFavoritesList();
-
 private:
   Akonadi::EntityTreeModel *m_etm;
-  QItemSelectionModel *m_favSelection;
-  QStringListModel *m_favsListModel;
 };
 
 #endif // MAINVIEW_H

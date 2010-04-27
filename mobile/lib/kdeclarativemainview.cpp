@@ -22,11 +22,17 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtGui/QApplication>
+#include <QtGui/QColumnView>
+#include <QtGui/QTreeView>
+#include <QtGui/QListView>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
 
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
+#include <KDE/KConfigGroup>
+#include <KDE/KSharedConfig>
+#include <KDE/KSharedConfigPtr>
 #include <KDE/KStandardDirs>
 #include <KDE/KProcess>
 
@@ -37,6 +43,8 @@
 
 #include <akonadi_next/kbreadcrumbselectionmodel.h>
 #include <akonadi_next/kproxyitemselectionmodel.h>
+#include <akonadi_next/etmstatesaver.h>
+#include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"
 
@@ -60,7 +68,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   d->mCollectionSelection = new QItemSelectionModel( d->mEtm, this );
 
-  d->mSelectedSubTree = new KSelectionProxyModel( d->mCollectionSelection );
+  d->mSelectedSubTree = new Akonadi::SelectionProxyModel( d->mCollectionSelection );
   d->mSelectedSubTree->setSourceModel( d->mEtm );
 
   d->mCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
@@ -122,6 +130,74 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   if ( listProxy )
     engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
+
+  Akonadi::EntityMimeTypeFilterModel *favCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
+  favCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  favCollectionFilter->setSourceModel( d->mEtm );
+
+  d->mFavSelection = new QItemSelectionModel( favCollectionFilter, this );
+
+  // Need to proxy the selection because the favSelection operates on collectionFilter, but the
+  // KSelectionProxyModel *list below operates on mEtm.
+  Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel( d->mEtm, d->mFavSelection, this );
+
+  // Show the list of currently selected items.
+  Akonadi::SelectionProxyModel *favCollectionList = new Akonadi::SelectionProxyModel( selectionProxy, this );
+  favCollectionList->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  favCollectionList->setSourceModel( d->mEtm );
+
+  // Show the list of currently selected items.
+  KSelectionProxyModel *favSelectedChildren = new KSelectionProxyModel(selectionProxy, this);
+  favSelectedChildren->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
+  favSelectedChildren->setSourceModel( d->mEtm );
+
+  Akonadi::EntityMimeTypeFilterModel *favItemFilter = new Akonadi::EntityMimeTypeFilterModel( this );
+  favItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  favItemFilter->setSourceModel( favSelectedChildren );
+
+  // Make it possible to uncheck currently selected items in the list
+  CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel( this );
+  currentSelectionCheckableProxyModel->setSourceModel( favCollectionList );
+  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel( favCollectionList, d->mFavSelection );
+  currentSelectionCheckableProxyModel->setSelectionModel( proxySelector );
+
+  // Make it possible to check/uncheck items in the column view.
+  CheckableItemProxyModel *favoriteSelectionModel = new CheckableItemProxyModel( this );
+  favoriteSelectionModel->setSelectionModel( d->mFavSelection );
+  favoriteSelectionModel->setSourceModel( favCollectionFilter );
+
+  QAbstractItemModel *favsList = d->getFavoritesListModel();
+
+#if 0
+  QTreeView *etmView = new QTreeView;
+  etmView->setModel( d->mEtm );
+  etmView->show();
+  etmView->setWindowTitle( "ETM" );
+
+  QListView *currentlyCheckedView = new QListView;
+  currentlyCheckedView->setModel( currentSelectionCheckableProxyModel );
+  currentlyCheckedView->show();
+  currentlyCheckedView->setWindowTitle( "Currently checked collections" );
+
+  QColumnView *columnView = new QColumnView;
+  columnView->setModel( favoriteSelectionModel );
+  columnView->show();
+  columnView->setWindowTitle( "All collections. Checkable" );
+
+  QListView *childItemsView = new QListView;
+  childItemsView->setModel( favItemFilter );
+  childItemsView->show();
+  childItemsView->setWindowTitle( "List of items in checked collections" );
+
+  QListView *favoritesView = new QListView;
+  favoritesView->setModel( favsList );
+  favoritesView->show();
+  favoritesView->setWindowTitle( "Available Favorites" );
+#endif
+
+  engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
+  engine()->rootContext()->setContextProperty( "selectedFavoriteItems", QVariant::fromValue( static_cast<QObject*>( favItemFilter ) ) );
+  engine()->rootContext()->setContextProperty( "favoriteSelectionModel", QVariant::fromValue( static_cast<QObject*>( favoriteSelectionModel ) ) );
 
   connect( d->mEtm, SIGNAL(modelAboutToBeReset()), d, SLOT(saveState()) );
   connect( d->mEtm, SIGNAL(modelReset()), d, SLOT(restoreState()) );
@@ -238,5 +314,29 @@ void KDeclarativeMainView::launchAccountWizard()
     // Handle error
     kDebug() << "error creating accountwizard";
   }
+}
+
+void KDeclarativeMainView::saveFavorite(const QString& name)
+{
+  ETMStateSaver saver;
+  saver.setSelectionModel( d->mFavSelection );
+
+  KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
+  saver.saveState( cfg );
+  cfg.sync();
+  d->mFavsListModel->setStringList( d->getFavoritesList() );
+}
+
+void KDeclarativeMainView::loadFavorite(const QString& name)
+{
+  ETMStateSaver *saver = new ETMStateSaver;
+  saver->setSelectionModel( d->mFavSelection );
+  KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
+  if ( !cfg.isValid() )
+  {
+    delete saver;
+    return;
+  }
+  saver->restoreState( cfg );
 }
 

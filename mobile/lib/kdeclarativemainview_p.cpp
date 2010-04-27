@@ -50,3 +50,23 @@ void KDeclarativeMainViewPrivate::saveState()
   cfg.sync();
 }
 
+QStringList KDeclarativeMainViewPrivate::getFavoritesList()
+{
+  QStringList names;
+  foreach ( const QString &group, KGlobal::config()->groupList() )
+    if ( group.startsWith( sFavoritePrefix ) )
+      names.append( QString( group ).remove( 0, sFavoritePrefixLength ) );
+  return names;
+}
+
+QAbstractItemModel* KDeclarativeMainViewPrivate::getFavoritesListModel()
+{
+  mFavsListModel = new QStringListModel( getFavoritesList(), this );
+
+  QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
+  sortModel->setSourceModel( mFavsListModel );
+  sortModel->setDynamicSortFilter( true );
+  sortModel->sort(0, Qt::AscendingOrder);
+
+  return sortModel;
+}

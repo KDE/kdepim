@@ -81,6 +81,10 @@ public slots:
 
   void launchAccountWizard();
 
+  void saveFavorite( const QString &name );
+  void loadFavorite( const QString &name );
+
+
 private:
   KDeclarativeMainViewPrivate * const d;
   Q_DISABLE_COPY( KDeclarativeMainView )

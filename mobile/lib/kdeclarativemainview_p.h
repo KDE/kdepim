@@ -21,11 +21,15 @@
 
 #include <QtCore/QObject>
 #include <QtGui/QItemSelectionModel>
+#include <QtGui/QStringListModel>
 
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 
 #include "breadcrumbnavigation.h"
+
+static const char * const sFavoritePrefix = "Favorite_";
+static const int sFavoritePrefixLength = 9;
 
 class ListProxy;
 class KDeclarativeMainViewPrivate : public QObject
@@ -44,9 +48,14 @@ public: /// members
   Akonadi::EntityTreeModel           *mEtm;
   ListProxy                          *mListProxy;
   Akonadi::EntityMimeTypeFilterModel *mItemFilter;
+  QItemSelectionModel                *mFavSelection;
+  QStringListModel                   *mFavsListModel;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
+
+  QAbstractItemModel* getFavoritesListModel();
+  QStringList getFavoritesList();
 
 public slots:
   void saveState();
