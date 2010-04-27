@@ -50,6 +50,7 @@ public: /// members
   Akonadi::EntityMimeTypeFilterModel *mItemFilter;
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
+  QAbstractItemModel                 *mFavSelectedChildItems;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

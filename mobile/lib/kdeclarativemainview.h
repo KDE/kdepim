@@ -22,6 +22,7 @@
 #include <QtDeclarative/QDeclarativeView>
 
 #include "mobileui_export.h"
+#include <QItemSelectionModel>
 
 class QAbstractItemModel;
 namespace Akonadi {
@@ -84,6 +85,11 @@ public slots:
   void saveFavorite( const QString &name );
   void loadFavorite( const QString &name );
 
+protected:
+  QItemSelectionModel* regularSelectionModel() const;
+  QItemSelectionModel* favoriteSelectionModel() const;
+  QAbstractItemModel *regularSelectedItems() const;
+  QAbstractItemModel *favoriteSelectedItems() const;
 
 private:
   KDeclarativeMainViewPrivate * const d;

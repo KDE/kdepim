@@ -155,6 +155,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   favItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   favItemFilter->setSourceModel( favSelectedChildren );
 
+  d->mFavSelectedChildItems = favItemFilter;
+
   // Make it possible to uncheck currently selected items in the list
   CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel( this );
   currentSelectionCheckableProxyModel->setSourceModel( favCollectionList );
@@ -340,3 +342,22 @@ void KDeclarativeMainView::loadFavorite(const QString& name)
   saver->restoreState( cfg );
 }
 
+QItemSelectionModel* KDeclarativeMainView::regularSelectionModel()
+{
+  return d->mCollectionSelection;
+}
+
+QItemSelectionModel* KDeclarativeMainView::favoriteSelectionModel()
+{
+  return d->mFavSelection;
+}
+
+QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
+{
+  return d->mItemFilter;
+}
+
+QAbstractItemModel* KDeclarativeMainView::favoriteSelectedItems() const
+{
+  return d->mFavSelectedChildItems;
+}
