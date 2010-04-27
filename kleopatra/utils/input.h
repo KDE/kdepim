@@ -63,9 +63,9 @@ namespace Kleo {
         static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command );
         static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args );
         static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QByteArray & stdin );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QByteArray & stdin );
-        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory, const QByteArray & stdin );
+        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QByteArray & stdin_ );
+        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QByteArray & stdin_ );
+        static boost::shared_ptr<Input> createFromProcessStdOut( const QString & command, const QStringList & args, const QDir & workingDirectory, const QByteArray & stdin_ );
         static boost::shared_ptr<Input> createFromClipboard();
     };
 }
