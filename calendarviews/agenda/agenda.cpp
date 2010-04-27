@@ -133,7 +133,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   int y = int( minutes  *  mAgenda->gridSpacingY() / minutesPerCell );
   int x = int( mAgenda->gridSpacingX() * todayCol );
 
-  bool hideIt = !( Prefs::instance()->mMarcusBainsEnabled );
+  bool hideIt = !( Prefs::instance()->marcusBainsEnabled() );
   if ( !isHidden() && ( hideIt || ( todayCol < 0 ) ) ) {
      hide();
      mTimeBox->hide();
@@ -259,7 +259,7 @@ Item::Id Agenda::lastSelectedItemId() const
 void Agenda::init()
 {
   mGridSpacingX = ((double)mScrollArea->width())/mColumns;
-  mDesiredGridSpacingY = Prefs::instance()->mHourSize;
+  mDesiredGridSpacingY = Prefs::instance()->hourSize();
   if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
     mDesiredGridSpacingY = 10;
   }
@@ -319,7 +319,7 @@ void Agenda::init()
   // not necessary to turn off the scrollbar.
 //  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
-  setStartTime( Prefs::instance()->mDayBegins.time() );
+  setStartTime( Prefs::instance()->dayBegins().time() );
 
   calculateWorkingHours();
 
@@ -750,7 +750,7 @@ void Agenda::endSelectAction( const QPoint &currentPos )
 
   emit newTimeSpanSignal( mSelectionStartCell, mSelectionEndCell );
 
-  if ( Prefs::instance()->mSelectionStartsEditor ) {
+  if ( Prefs::instance()->selectionStartsEditor() ) {
     if ( ( mSelectionStartPoint - currentPos ).manhattanLength() >
          QApplication::startDragDistance() ) {
        emit newEventSignal();
@@ -1920,7 +1920,7 @@ void Agenda::updateConfig()
 {
   double oldGridSpacingY = mGridSpacingY;
 
-  mDesiredGridSpacingY = Prefs::instance()->mHourSize;
+  mDesiredGridSpacingY = Prefs::instance()->hourSize();
   if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
     mDesiredGridSpacingY = 10;
   }
@@ -2058,11 +2058,11 @@ void Agenda::calculateWorkingHours()
 {
   mWorkingHoursEnable = !mAllDayMode;
 
-  QTime tmp = Prefs::instance()->mWorkingHoursStart.time();
+  QTime tmp = Prefs::instance()->workingHoursStart().time();
   mWorkingHoursYTop = int( 4 * mGridSpacingY *
                            ( tmp.hour() + tmp.minute() / 60. +
                              tmp.second() / 3600. ) );
-  tmp = Prefs::instance()->mWorkingHoursEnd.time();
+  tmp = Prefs::instance()->workingHoursEnd().time();
   mWorkingHoursYBottom = int( 4 * mGridSpacingY *
                               ( tmp.hour() + tmp.minute() / 60. +
                                 tmp.second() / 3600. ) - 1 );

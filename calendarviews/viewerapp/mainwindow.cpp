@@ -21,6 +21,7 @@
 
 #include "agenda.h"
 #include "agendaview.h"
+#include "prefs.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendarmodel.h>
@@ -58,6 +59,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::delayedInit()
 {
+  Prefs::instance()->setEnableToolTips( true );
+
   mChangeRecorder = new ChangeRecorder( this );
   mChangeRecorder->setCollectionMonitored( Collection::root(), true );
 

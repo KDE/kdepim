@@ -49,7 +49,7 @@ TimeLabels::TimeLabels( const KDateTime::Spec &spec, int rows,
   mRows = rows;
   mMiniWidth = 0;
 
-  mCellHeight = Prefs::instance()->mHourSize * 4;
+  mCellHeight = Prefs::instance()->hourSize() * 4;
 
   setFrameStyle( Plain );
 
@@ -140,7 +140,7 @@ void TimeLabels::updateConfig()
   }
 
   // update HourSize
-  mCellHeight = Prefs::instance()->mHourSize * 4;
+  mCellHeight = Prefs::instance()->hourSize() * 4;
   // If the agenda is zoomed out so that more than 24 would be shown,
   // the agenda only shows 24 hours, so we need to take the cell height
   // from the agenda, which is larger than the configured one!

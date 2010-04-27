@@ -42,6 +42,7 @@
 
 #include <KCalendarSystem>
 #include <KGlobalSettings>
+#include <KGlobal>
 #include <KHBox>
 #include <KVBox>
 
@@ -180,7 +181,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   //TODO_SPLIT
   QMetaObject::invokeMethod( this, "hack", Qt::QueuedConnection );
 
-  mAgenda = new Agenda( this, mScrollArea, 1, 96, Prefs::instance()->mHourSize, agendaFrame );
+  mAgenda = new Agenda( this, mScrollArea, 1, 96, Prefs::instance()->hourSize(), agendaFrame );
 
   mAgendaLayout->addWidget( mScrollArea, 1, 1, 1, 2 );
   mAgendaLayout->setColumnStretch( 1, 1 );
@@ -308,7 +309,7 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 void AgendaView::zoomInVertically( )
 {
   if ( !mIsSideBySide ) {
-    Prefs::instance()->mHourSize++;
+    Prefs::instance()->setHourSize( Prefs::instance()->hourSize() + 1 );
   }
   mAgenda->updateConfig();
   mAgenda->checkScrollBoundaries();
@@ -322,9 +323,9 @@ void AgendaView::zoomInVertically( )
 void AgendaView::zoomOutVertically( )
 {
 
-  if ( Prefs::instance()->mHourSize > 4 || mIsSideBySide ) {
+  if ( Prefs::instance()->hourSize() > 4 || mIsSideBySide ) {
     if ( !mIsSideBySide ) {
-      Prefs::instance()->mHourSize--;
+      Prefs::instance()->setHourSize( Prefs::instance()->hourSize() - 1 );;
     }
     mAgenda->updateConfig();
     mAgenda->checkScrollBoundaries();
@@ -585,7 +586,7 @@ bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &
     if ( start.secsTo( end ) == 15 * 60 ) {
       // One cell in the agenda view selected, e.g.
       // because of a double-click, => Use the default duration
-      QTime defaultDuration( Prefs::instance()->mDefaultDuration.time() );
+      QTime defaultDuration( Prefs::instance()->defaultDuration().time() );
       int addSecs = ( defaultDuration.hour() * 3600 ) + ( defaultDuration.minute() * 60 );
       end = start.addSecs( addSecs );
     }

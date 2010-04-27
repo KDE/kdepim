@@ -36,6 +36,7 @@
 #include <Akonadi/Item>
 
 #include <KCal/Incidence>
+#include <KLocale>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 #include <KRandom>

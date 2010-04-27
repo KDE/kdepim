@@ -28,6 +28,7 @@
 #include "globals.h"
 #include "helper.h"
 #include "prefs.h"
+#include "prefs_base.h" // for enums
 
 #include <libkdepim/kvcarddrag.h>
 
@@ -866,16 +867,17 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   QColor frameColor;
-  if ( Prefs::instance()->agendaViewColors() == Prefs::ResourceOnly ||
-       Prefs::instance()->agendaViewColors() == Prefs::CategoryInsideResourceOutside ) {
+  // TODO PrefsBase enums should probably be redefined in Prefs
+  if ( Prefs::instance()->agendaViewColors() == PrefsBase::ResourceOnly ||
+       Prefs::instance()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
     frameColor = bgColor.isValid() ? bgColor : resourceColor;
   } else {
     frameColor = bgColor.isValid() ? bgColor : categoryColor;
   }
 
   if ( !bgColor.isValid() ) {
-    if ( Prefs::instance()->agendaViewColors() == Prefs::ResourceOnly ||
-         Prefs::instance()->agendaViewColors() == Prefs::ResourceInsideCategoryOutside ) {
+    if ( Prefs::instance()->agendaViewColors() == PrefsBase::ResourceOnly ||
+         Prefs::instance()->agendaViewColors() == PrefsBase::ResourceInsideCategoryOutside ) {
       bgColor = resourceColor;
     } else {
       bgColor = categoryColor;
@@ -883,12 +885,12 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   if ( cat.isEmpty() &&
-       Prefs::instance()->agendaViewColors() == Prefs::ResourceInsideCategoryOutside ) {
+       Prefs::instance()->agendaViewColors() == PrefsBase::ResourceInsideCategoryOutside ) {
     frameColor = bgColor;
   }
 
   if ( cat.isEmpty() &&
-       Prefs::instance()->agendaViewColors() == Prefs::CategoryInsideResourceOutside ) {
+       Prefs::instance()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
     bgColor = frameColor;
   }
 
@@ -1354,7 +1356,7 @@ bool AgendaItem::eventFilter( QObject *obj, QEvent *event )
 bool AgendaItem::event( QEvent *event )
 {
   if ( event->type() == QEvent::ToolTip ) {
-    if( !Prefs::instance()->mEnableToolTips ) {
+    if( !Prefs::instance()->enableToolTips() ) {
       return true;
     } else if ( mValid ) {
       QHelpEvent *helpEvent = static_cast<QHelpEvent*>( event );

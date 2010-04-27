@@ -103,10 +103,10 @@ QStringList Globals::holiday( const QDate &date ) const
 
 bool Globals::isWorkDay( const QDate &date ) const
 {
-  int mask( ~( Prefs::instance()->mWorkWeekMask ) );
+  int mask( ~( Prefs::instance()->workWeekMask() ) );
 
   bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
-  if ( Prefs::instance()->mExcludeHolidays && mHolidays ) {
+  if ( Prefs::instance()->excludeHolidays() && mHolidays ) {
     const Holiday::List list = mHolidays->holidays( date );
     for ( int i = 0; i < list.count(); ++i ) {
       nonWorkDay = nonWorkDay || ( list.at( i ).dayType() == Holiday::NonWorkday );

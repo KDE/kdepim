@@ -3,6 +3,9 @@
 
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
 
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -24,24 +27,26 @@
 #ifndef PREFS_H
 #define PREFS_H
 
+#include "eventviews_export.h"
 
-#include "prefs_base.h"
-#include <akonadi/collection.h>
-#include <kdatetime.h>
+#include <KDateTime>
 
-#include <QHash>
+namespace Akonadi
+{
+  class Collection;
+}
 
-class QFont;
 class QColor;
+class QFont;
 class QStringList;
 
 namespace EventViews
 {
 
-class Prefs : public PrefsBase
+class EVENTVIEWS_EXPORT Prefs
 {
   public:
-    virtual ~Prefs();
+    ~Prefs();
 
     /** Get instance of Prefs. It is made sure that there is only one
     instance. */
@@ -56,6 +61,82 @@ class Prefs : public PrefsBase
     /** Write preferences to config file */
     void usrWriteConfig();
 
+  public:
+    void setMarcusBainsShowSeconds( bool showSeconds );
+    bool marcusBainsShowSeconds() const;
+
+    void setAgendaMarcusBainsLineLineColor( const QColor &color );
+    QColor agendaMarcusBainsLineLineColor() const;
+
+    void setMarcusBainsEnabled( bool enabled );
+    bool marcusBainsEnabled() const;
+
+    void setAgendaMarcusBainsLineFont( const QFont &font );
+    QFont agendaMarcusBainsLineFont() const;
+
+    void setHourSize( int size );
+    int hourSize() const;
+
+    void setDayBegins( const QDateTime &dateTime );
+    QDateTime dayBegins() const;
+
+    void setWorkingHoursStart( const QDateTime &dateTime );
+    QDateTime workingHoursStart() const;
+
+    void setWorkingHoursEnd( const QDateTime &dateTime );
+    QDateTime workingHoursEnd() const;
+
+    void setSelectionStartsEditor( bool startEditor );
+    bool selectionStartsEditor() const;
+
+    void setAgendaGridWorkHoursBackgroundColor( const QColor &color );
+    QColor agendaGridWorkHoursBackgroundColor() const;
+
+    void setAgendaGridHighlightColor( const QColor &color );
+    QColor agendaGridHighlightColor() const;
+
+    void setAgendaGridBackgroundColor( const QColor &color );
+    QColor agendaGridBackgroundColor() const;
+
+    void setEnableAgendaItemIcons( const bool enable );
+    bool enableAgendaItemIcons() const;
+
+    void setTodosUseCategoryColors( bool useColors );
+    bool todosUseCategoryColors() const;
+
+    void setAgendaCalendarItemsToDosOverdueBackgroundColor( const QColor &color );
+    QColor agendaCalendarItemsToDosOverdueBackgroundColor() const;
+
+    void setAgendaCalendarItemsToDosDueTodayBackgroundColor( const QColor &color );
+    QColor agendaCalendarItemsToDosDueTodayBackgroundColor() const;
+
+    void setUnsetCategoryColor( const QColor &color );
+    QColor unsetCategoryColor() const;
+
+    void setAgendaViewColors( int colors );
+    int agendaViewColors() const;
+
+    void setAgendaViewFont( const QFont &font );
+    QFont agendaViewFont() const;
+
+    void setEnableToolTips( bool enable );
+    bool enableToolTips() const;
+
+    void setDefaultDuration( const QDateTime &dateTime );
+    QDateTime defaultDuration() const;
+
+    void setShowTodosAgendaView( bool show );
+    bool showTodosAgendaView() const;
+
+    void setAgendaTimeLabelsFont( const QFont &font );
+    QFont agendaTimeLabelsFont() const;
+
+    void setWorkWeekMask( int mask );
+    int workWeekMask() const;
+
+    void setExcludeHolidays( bool exclude );
+    bool excludeHolidays() const;
+
   protected:
     void setTimeZoneDefault();
 
@@ -63,8 +144,6 @@ class Prefs : public PrefsBase
     void fillMailDefaults();
 
   private:
-    /** Constructor disabled for public. Use instance() to create a Prefs
-    object. */
     Prefs();
 
     static Prefs *mInstance;
@@ -72,15 +151,15 @@ class Prefs : public PrefsBase
   public:
     // preferences data
     void setFullName( const QString & );
-    QString fullName();
+    QString fullName() const;
     void setEmail( const QString & );
-    QString email();
+    QString email() const;
     /// Returns all email addresses for the user.
-    QStringList allEmails();
+    QStringList allEmails() const;
     /// Returns all email addresses together with the full username for the user.
-    QStringList fullEmails();
+    QStringList fullEmails() const;
     /// Return true if the given email belongs to the user
-    bool thatIsMe( const QString &email );
+    bool thatIsMe( const QString &email ) const;
 
     void setCategoryColor( const QString &cat, const QColor &color );
     QColor categoryColor( const QString &cat ) const;
@@ -90,15 +169,19 @@ class Prefs : public PrefsBase
     QColor resourceColor( const QString & );
 
     void setTimeSpec( const KDateTime::Spec &spec );
-    KDateTime::Spec timeSpec();
+    KDateTime::Spec timeSpec() const;
 
-    QString mHtmlExportFile;
+    void setHtmlExportFile( const QString &fileName );
+    QString htmlExportFile() const;
 
     // Groupware passwords
-    QString mPublishPassword;
-    QString mRetrievePassword;
+    void setPublishPassword( const QString &password );
+    QString publishPassword() const;
 
-    QStringList timeScaleTimezones();
+    void setRetrievePassword( const QString &password );
+    QString retrievePassword() const;
+
+    QStringList timeScaleTimezones() const;
     void setTimeScaleTimezones( const QStringList &list );
 
     QString defaultCalendar() const;
@@ -106,26 +189,12 @@ class Prefs : public PrefsBase
     Akonadi::Collection defaultCollection() const;
 
   private:
-    QHash<QString,QColor> mCategoryColors;
-    QColor mDefaultCategoryColor;
-
-    QHash<QString,QColor> mResourceColors;
-    QColor mDefaultResourceColor;
-
-    QFont mDefaultMonthViewFont;
-    QFont mDefaultAgendaTimeLabelsFont;
-
-    KDateTime::Spec mTimeSpec;
-    QStringList mTimeScaleTimeZones;
-
-    QString mDefaultCalendar;
-    Akonadi::Collection mDefaultCollection;
-
-  public: // Do not use - except in PrefsDialogMain
-    QString mName;
-    QString mEmail;
+    class Private;
+    Private *const d;
 };
 
 } // namespace EventViews
 
 #endif
+
+// kate: space-indent on; indent-width 2; replace-tabs on;

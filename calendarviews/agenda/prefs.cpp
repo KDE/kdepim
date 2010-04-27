@@ -4,6 +4,9 @@
   Copyright (c) 2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
 
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
+
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -24,10 +27,15 @@
 */
 
 #include "prefs.h"
+
+#include "prefs_base.h"
+
 //TODO_SPLIT
 //#include "kocore.h"
 
 //#include "categoryconfig.h"
+
+#include <akonadi/collection.h>
 
 #include <kmime/kmime_header_parsing.h>
 #include <kpimidentities/identitymanager.h>
@@ -40,10 +48,12 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kemailsettings.h>
+#include <kdatetime.h>
 #include <kstringhandler.h>
 #include <ksystemtimezone.h>
 
 #include <QDir>
+#include <QHash>
 #include <QString>
 #include <QFont>
 #include <QColor>
@@ -59,7 +69,47 @@ using namespace EventViews;
 
 Prefs *Prefs::mInstance = 0;
 
-Prefs::Prefs() : PrefsBase()
+class Prefs::Private : public PrefsBase
+{
+  public:
+    Private( Prefs *parent ) : PrefsBase(), q( parent ) {}
+
+    void init();
+
+    void usrSetDefaults();
+    void usrReadConfig();
+    void usrWriteConfig();
+
+    void fillMailDefaults();
+    void setTimeZoneDefault();
+
+  public:
+    QString mHtmlExportFile;
+
+    // Groupware passwords
+    QString mPublishPassword;
+    QString mRetrievePassword;
+
+    QHash<QString,QColor> mCategoryColors;
+    QColor mDefaultCategoryColor;
+
+    QHash<QString,QColor> mResourceColors;
+    QColor mDefaultResourceColor;
+
+    QFont mDefaultMonthViewFont;
+    QFont mDefaultAgendaTimeLabelsFont;
+
+    KDateTime::Spec mTimeSpec;
+    QStringList mTimeScaleTimeZones;
+
+    QString mDefaultCalendar;
+    Akonadi::Collection mDefaultCollection;
+
+  private:
+    Prefs *q;
+};
+
+void Prefs::Private::init()
 {
   mDefaultCategoryColor = QColor( 151, 235, 121 );
   mDefaultResourceColor = QColor(); //Default is a color invalid
@@ -83,23 +133,7 @@ Prefs::Prefs() : PrefsBase()
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
 }
 
-Prefs::~Prefs()
-{
-  kDebug();
-}
-
-Prefs *Prefs::instance()
-{
-  if ( !mInstance ) {
-    mInstance = new Prefs();
-
-    mInstance->readConfig();
-  }
-
-  return mInstance;
-}
-
-void Prefs::usrSetDefaults()
+void Prefs::Private::usrSetDefaults()
 {
   // Default should be set a bit smarter, respecting username and locale
   // settings for example.
@@ -113,6 +147,7 @@ void Prefs::usrSetDefaults()
   if ( !tmp.isEmpty() ) {
     setUserEmail( tmp );
   }
+
   fillMailDefaults();
 
   setAgendaTimeLabelsFont( mDefaultAgendaTimeLabelsFont );
@@ -123,45 +158,7 @@ void Prefs::usrSetDefaults()
   KConfigSkeleton::usrSetDefaults();
 }
 
-void Prefs::fillMailDefaults()
-{
-  userEmailItem()->swapDefault();
-  QString defEmail = userEmailItem()->value();
-  userEmailItem()->swapDefault();
-
-  if ( userEmail() == defEmail ) {
-    // No korg settings - but maybe there's a kcontrol[/kmail] setting available
-    KEMailSettings settings;
-    if ( !settings.getSetting( KEMailSettings::EmailAddress ).isEmpty() ) {
-      mEmailControlCenter = true;
-    }
-  }
-}
-
-void Prefs::setTimeZoneDefault()
-{
-  KTimeZone zone = KSystemTimeZones::local();
-  if ( !zone.isValid() ) {
-    kError() << "KSystemTimeZones::local() return 0";
-    return;
-  }
-
-  kDebug () << "----- time zone:" << zone.name();
-
-  mTimeSpec = zone;
-}
-
-KDateTime::Spec Prefs::timeSpec()
-{
-  return KSystemTimeZones::local();
-}
-
-void Prefs::setTimeSpec( const KDateTime::Spec &spec )
-{
-  mTimeSpec = spec;
-}
-
-void Prefs::usrReadConfig()
+void Prefs::Private::usrReadConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -187,7 +184,7 @@ void Prefs::usrReadConfig()
   for ( it3 = colorKeyList.begin(); it3 != colorKeyList.end(); ++it3 ) {
     QColor color = rColorsConfig.readEntry( *it3, mDefaultResourceColor );
     //kDebug() << "key:" << (*it3) << "value:" << color;
-    setResourceColor( *it3, color );
+    q->setResourceColor( *it3, color );
   }
 
   if ( !mTimeSpec.isValid() ) {
@@ -205,13 +202,13 @@ void Prefs::usrReadConfig()
   mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
-  setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
+  q->setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
   KConfigSkeleton::usrReadConfig();
   fillMailDefaults();
 }
 
-void Prefs::usrWriteConfig()
+void Prefs::Private::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -250,18 +247,382 @@ void Prefs::usrWriteConfig()
 #endif
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
+  defaultCalendarConfig.writeEntry( "Default Calendar", q->defaultCalendar() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
-  timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
+  timeScaleConfig.writeEntry( "Timescale Timezones", q->timeScaleTimezones() );
 
 
   KConfigSkeleton::usrWriteConfig();
 }
 
+void Prefs::Private::fillMailDefaults()
+{
+  userEmailItem()->swapDefault();
+  QString defEmail = userEmailItem()->value();
+  userEmailItem()->swapDefault();
+
+  if ( userEmail() == defEmail ) {
+    // No korg settings - but maybe there's a kcontrol[/kmail] setting available
+    KEMailSettings settings;
+    if ( !settings.getSetting( KEMailSettings::EmailAddress ).isEmpty() ) {
+      mEmailControlCenter = true;
+    }
+  }
+}
+
+void Prefs::Private::setTimeZoneDefault()
+{
+  KTimeZone zone = KSystemTimeZones::local();
+  if ( !zone.isValid() ) {
+    kError() << "KSystemTimeZones::local() return 0";
+    return;
+  }
+
+  kDebug () << "----- time zone:" << zone.name();
+
+  mTimeSpec = zone;
+}
+
+Prefs::Prefs() : d( new Private( this ) )
+{
+  d->init();
+}
+
+Prefs::~Prefs()
+{
+  kDebug();
+}
+
+Prefs *Prefs::instance()
+{
+  if ( !mInstance ) {
+    mInstance = new Prefs();
+
+    mInstance->d->readConfig();
+  }
+
+  return mInstance;
+}
+
+void Prefs::usrSetDefaults()
+{
+  d->usrSetDefaults();
+}
+
+void Prefs::usrReadConfig()
+{
+  d->usrReadConfig();
+}
+
+void Prefs::usrWriteConfig()
+{
+  d->usrWriteConfig();
+}
+
+void Prefs::setMarcusBainsShowSeconds( bool showSeconds )
+{
+  d->mMarcusBainsShowSeconds = showSeconds;
+}
+
+bool Prefs::marcusBainsShowSeconds() const
+{
+  return d->mMarcusBainsShowSeconds;
+}
+
+void Prefs::setAgendaMarcusBainsLineLineColor( const QColor &color )
+{
+  d->mAgendaMarcusBainsLineLineColor = color;
+}
+
+QColor Prefs::agendaMarcusBainsLineLineColor() const
+{
+  return d->mAgendaMarcusBainsLineLineColor;
+}
+
+void Prefs::setMarcusBainsEnabled( bool enabled )
+{
+  d->mMarcusBainsEnabled = enabled;
+}
+
+bool Prefs::marcusBainsEnabled() const
+{
+  return d->mMarcusBainsEnabled;
+}
+
+void Prefs::setAgendaMarcusBainsLineFont( const QFont &font )
+{
+  d->mAgendaMarcusBainsLineFont = font;
+}
+
+QFont Prefs::agendaMarcusBainsLineFont() const
+{
+  return d->mAgendaMarcusBainsLineFont;
+}
+
+void Prefs::setHourSize( int size )
+{
+  d->mHourSize = size;
+}
+
+int Prefs::hourSize() const
+{
+  return d->mHourSize;
+}
+
+void Prefs::setDayBegins( const QDateTime &dateTime )
+{
+  d->mDayBegins = dateTime;
+}
+
+QDateTime Prefs::dayBegins() const
+{
+  return d->mDayBegins;
+}
+
+void Prefs::setWorkingHoursStart( const QDateTime &dateTime )
+{
+  d->mWorkingHoursStart = dateTime;
+}
+
+QDateTime Prefs::workingHoursStart() const
+{
+  return d->mWorkingHoursStart;
+}
+
+void Prefs::setWorkingHoursEnd( const QDateTime &dateTime )
+{
+  d->mWorkingHoursEnd = dateTime;
+}
+
+QDateTime Prefs::workingHoursEnd() const
+{
+  return d->mWorkingHoursEnd;
+}
+
+void Prefs::setSelectionStartsEditor( bool startEditor )
+{
+  d->mSelectionStartsEditor = startEditor;
+}
+
+bool Prefs::selectionStartsEditor() const
+{
+  return d->mSelectionStartsEditor;
+}
+
+void Prefs::setAgendaGridWorkHoursBackgroundColor( const QColor &color )
+{
+  d->mAgendaGridWorkHoursBackgroundColor = color;
+}
+
+QColor Prefs::agendaGridWorkHoursBackgroundColor() const
+{
+  return d->mAgendaGridWorkHoursBackgroundColor;
+}
+
+void Prefs::setAgendaGridHighlightColor( const QColor &color )
+{
+  d->mAgendaGridHighlightColor = color;
+}
+
+QColor Prefs::agendaGridHighlightColor() const
+{
+  return d->mAgendaGridHighlightColor;
+}
+
+void Prefs::setAgendaGridBackgroundColor( const QColor &color )
+{
+  d->mAgendaGridBackgroundColor = color;
+}
+
+QColor Prefs::agendaGridBackgroundColor() const
+{
+  return d->mAgendaGridBackgroundColor;
+}
+
+void Prefs::setEnableAgendaItemIcons( const bool enable )
+{
+  d->mEnableAgendaItemIcons = enable;
+}
+
+bool Prefs::enableAgendaItemIcons() const
+{
+  return d->mEnableAgendaItemIcons;
+}
+
+void Prefs::setTodosUseCategoryColors( bool useColors )
+{
+  d->mTodosUseCategoryColors = useColors;
+}
+
+bool Prefs::todosUseCategoryColors() const
+{
+  return d->mTodosUseCategoryColors;
+}
+
+void Prefs::setAgendaCalendarItemsToDosOverdueBackgroundColor( const QColor &color )
+{
+  d->mAgendaCalendarItemsToDosOverdueBackgroundColor = color;
+}
+
+QColor Prefs::agendaCalendarItemsToDosOverdueBackgroundColor() const
+{
+  return d->mAgendaCalendarItemsToDosOverdueBackgroundColor;
+}
+
+void Prefs::setAgendaCalendarItemsToDosDueTodayBackgroundColor( const QColor &color )
+{
+  d->mAgendaCalendarItemsToDosDueTodayBackgroundColor = color;
+}
+
+QColor Prefs::agendaCalendarItemsToDosDueTodayBackgroundColor() const
+{
+  return d->mAgendaCalendarItemsToDosDueTodayBackgroundColor;
+}
+
+void Prefs::setUnsetCategoryColor( const QColor &color )
+{
+  d->mUnsetCategoryColor = color;
+}
+
+QColor Prefs::unsetCategoryColor() const
+{
+  return d->mUnsetCategoryColor;
+}
+
+void Prefs::setAgendaViewColors( int colors )
+{
+  d->mAgendaViewColors = colors;
+}
+
+int Prefs::agendaViewColors() const
+{
+  return d->mAgendaViewColors;
+}
+
+void Prefs::setAgendaViewFont( const QFont &font )
+{
+  d->mAgendaViewFont = font;
+}
+
+QFont Prefs::agendaViewFont() const
+{
+  return d->mAgendaViewFont;
+}
+
+void Prefs::setEnableToolTips( bool enable )
+{
+  d->mEnableToolTips = enable;
+}
+
+bool Prefs::enableToolTips() const
+{
+  return d->mEnableToolTips;
+}
+
+void Prefs::setDefaultDuration( const QDateTime &dateTime )
+{
+  d->mDefaultDuration = dateTime;
+}
+
+QDateTime Prefs::defaultDuration() const
+{
+  return d->mDefaultDuration;
+}
+
+void Prefs::setShowTodosAgendaView( bool show )
+{
+  d->mShowTodosAgendaView = show;
+}
+
+bool Prefs::showTodosAgendaView() const
+{
+  return d->mShowTodosAgendaView;
+}
+
+void Prefs::setAgendaTimeLabelsFont( const QFont &font )
+{
+  d->mAgendaTimeLabelsFont = font;
+}
+
+QFont Prefs::agendaTimeLabelsFont() const
+{
+  return d->mAgendaTimeLabelsFont;
+}
+
+void Prefs::setWorkWeekMask( int mask )
+{
+  d->mWorkWeekMask = mask;
+}
+
+int Prefs::workWeekMask() const
+{
+  return d->mWorkWeekMask;
+}
+
+void Prefs::setExcludeHolidays( bool exclude )
+{
+  d->mExcludeHolidays = exclude;
+}
+
+bool Prefs::excludeHolidays() const
+{
+  return d->mExcludeHolidays;
+}
+
+void Prefs::setTimeZoneDefault()
+{
+  d->setTimeZoneDefault();
+}
+
+void Prefs::fillMailDefaults()
+{
+  d->fillMailDefaults();
+}
+
+KDateTime::Spec Prefs::timeSpec() const
+{
+  return KSystemTimeZones::local();
+}
+
+void Prefs::setTimeSpec( const KDateTime::Spec &spec )
+{
+  d->mTimeSpec = spec;
+}
+
+void Prefs::setHtmlExportFile( const QString &fileName )
+{
+  d->mHtmlExportFile = fileName;
+}
+
+QString Prefs::htmlExportFile() const
+{
+  return d->mHtmlExportFile;
+}
+
+void Prefs::setPublishPassword( const QString &password )
+{
+  d->mPublishPassword = password;
+}
+
+QString Prefs::publishPassword() const
+{
+  return d->mPublishPassword;
+}
+
+void Prefs::setRetrievePassword( const QString &password )
+{
+  d->mRetrievePassword = password;
+}
+
+QString Prefs::retrievePassword() const
+{
+  return d->mRetrievePassword;
+}
+
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )
 {
-  mCategoryColors.insert( cat, color );
+  d->mCategoryColors.insert( cat, color );
 }
 
 QColor Prefs::categoryColor( const QString &cat ) const
@@ -269,90 +630,91 @@ QColor Prefs::categoryColor( const QString &cat ) const
   QColor color;
 
   if ( !cat.isEmpty() ) {
-    color = mCategoryColors.value( cat );
+    color = d->mCategoryColors.value( cat );
   }
 
   if ( color.isValid() ) {
     return color;
   } else {
-    return mDefaultCategoryColor;
+    return d->mDefaultCategoryColor;
   }
 }
 
 bool Prefs::hasCategoryColor( const QString &cat ) const
 {
-    return mCategoryColors[ cat ].isValid();
+    return d->mCategoryColors[ cat ].isValid();
 }
 
 QString Prefs::defaultCalendar() const
 {
-  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
+  return d->mDefaultCollection.isValid() ? QString::number( d->mDefaultCollection.id() ) : d->mDefaultCalendar;
 }
 
 Akonadi::Collection Prefs::defaultCollection() const
 {
-  return mDefaultCollection;
+  return d->mDefaultCollection;
 }
 
 void Prefs::setDefaultCollection( const Akonadi::Collection& col )
 {
-  mDefaultCollection = col;
-  if ( !col.isValid() )
-    mDefaultCalendar ="";
+  d->mDefaultCollection = col;
+  if ( !col.isValid() ) {
+    d->mDefaultCalendar ="";
+  }
 }
 
 void Prefs::setResourceColor ( const QString &cal, const QColor &color )
 {
   // kDebug() << cal << "color:" << color.name();
-  mResourceColors.insert( cal, color );
+  d->mResourceColors.insert( cal, color );
 }
 
 QColor Prefs::resourceColor( const QString &cal )
 {
   QColor color;
   if ( !cal.isEmpty() ) {
-    if ( mResourceColors.contains( cal ) ) {
-      color = mResourceColors.value( cal );
+    if ( d->mResourceColors.contains( cal ) ) {
+      color = d->mResourceColors.value( cal );
       if ( !color.isValid() )
         return color;
     }
   } else {
-    return mDefaultResourceColor;
+    return d->mDefaultResourceColor;
   }
 
   // assign default color if enabled
-  if ( !cal.isEmpty() && !color.isValid() && assignDefaultResourceColors() ) {
+  if ( !cal.isEmpty() && !color.isValid() && d->assignDefaultResourceColors() ) {
     QColor defColor( 0x37, 0x7A, 0xBC );
-    if ( defaultResourceColorSeed() > 0 &&
-         defaultResourceColorSeed() - 1 < (int)defaultResourceColors().size() ) {
-        defColor = QColor( defaultResourceColors()[defaultResourceColorSeed()-1] );
+    if ( d->defaultResourceColorSeed() > 0 &&
+         d->defaultResourceColorSeed() - 1 < (int)d->defaultResourceColors().size() ) {
+        defColor = QColor( d->defaultResourceColors()[d->defaultResourceColorSeed()-1] );
     } else {
         int h, s, v;
         defColor.getHsv( &h, &s, &v );
-        h = ( defaultResourceColorSeed() % 12 ) * 30;
-        s -= s * static_cast<int>( ( ( defaultResourceColorSeed() / 12 ) % 2 ) * 0.5 );
+        h = ( d->defaultResourceColorSeed() % 12 ) * 30;
+        s -= s * static_cast<int>( ( ( d->defaultResourceColorSeed() / 12 ) % 2 ) * 0.5 );
         defColor.setHsv( h, s, v );
     }
-    setDefaultResourceColorSeed( defaultResourceColorSeed() + 1 );
+    d->setDefaultResourceColorSeed( d->defaultResourceColorSeed() + 1 );
     setResourceColor( cal, defColor );
-    color = mResourceColors[cal];
+    color = d->mResourceColors[cal];
   }
 
   if ( color.isValid() ) {
     return color;
   } else {
-    return mDefaultResourceColor;
+    return d->mDefaultResourceColor;
   }
 }
 
-QString Prefs::fullName()
+QString Prefs::fullName() const
 {
   QString tusername;
-  if ( mEmailControlCenter ) {
+  if ( d->mEmailControlCenter ) {
     KEMailSettings settings;
     tusername = settings.getSetting( KEMailSettings::RealName );
   } else {
-    tusername = userName();
+    tusername = d->userName();
   }
 
   // Quote the username as it might contain commas and other quotable chars.
@@ -365,17 +727,17 @@ QString Prefs::fullName()
   return tname;
 }
 
-QString Prefs::email()
+QString Prefs::email() const
 {
-  if ( mEmailControlCenter ) {
+  if ( d->mEmailControlCenter ) {
     KEMailSettings settings;
     return settings.getSetting( KEMailSettings::EmailAddress );
   } else {
-    return userEmail();
+    return d->userEmail();
   }
 }
 
-QStringList Prefs::allEmails()
+QStringList Prefs::allEmails() const
 {
   // Grab emails from the email identities
   QStringList lst;/* = KOCore::self()->identityManager()->allEmails();
@@ -388,7 +750,7 @@ QStringList Prefs::allEmails()
   return lst;
 }
 
-QStringList Prefs::fullEmails()
+QStringList Prefs::fullEmails() const
 {
   QStringList fullEmails;
   /*
@@ -414,7 +776,7 @@ QStringList Prefs::fullEmails()
   return fullEmails;
 }
 
-bool Prefs::thatIsMe(const QString &_email )
+bool Prefs::thatIsMe(const QString &_email ) const
 {
   // TODO_SPLIT: tirar o unused
   Q_UNUSED( _email );
@@ -458,12 +820,14 @@ bool Prefs::thatIsMe(const QString &_email )
   return false;
 }
 
-QStringList Prefs::timeScaleTimezones()
+QStringList Prefs::timeScaleTimezones() const
 {
-  return mTimeScaleTimeZones;
+  return d->mTimeScaleTimeZones;
 }
 
 void Prefs::setTimeScaleTimezones( const QStringList &list )
 {
-  mTimeScaleTimeZones = list;
+  d->mTimeScaleTimeZones = list;
 }
+
+// kate: space-indent on; indent-width 2; replace-tabs on;
