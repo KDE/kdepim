@@ -79,42 +79,64 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
+          startText: "Addressbook start page"
+          favoritesModel : favoritesList
 
           contextActions : [
-            KPIM.Button {
-              id : start_newContactButton
-              height : 20
-              width : 200
-              anchors.top : parent.top
-              buttonText : "New Contact"
-              onClicked : {
-                console.log( "New Contact clicked" );
-              }
+            Flickable { // Use a flickable because we've more than 3 actions.
+              clip: true
+              anchors.fill: parent
+              height: 480 / 6 * 3
+              contentWidth: width
+              contentHeight: 480 / 6 * 4
+              Column {
+                anchors.fill: parent
+                KPIM.Button {
+                  height : 480 / 6
+                  width : parent.width - 75
+                  buttonText : "New Contact"
+                  font.bold: true
+                  onClicked : { console.log( "New Contact clicked" ); }
+                }
+                KPIM.Button {
+                  height : 480 / 6
+                  width : parent.width - 75
+                  buttonText : "New Distribution Group"
+                  font.bold: true
+                  onClicked : { console.log( "New Group clicked" ); }
 
-            },
-            KPIM.Button {
-              id : start_newGroupButton
-              height : 20
-              width : 200
-              anchors.top : start_newContactButton.bottom
-              buttonText : "New Distribution Group"
-              onClicked : {
-                console.log( "New Group clicked" );
-              }
-
-            },
-            KPIM.Button {
-              id : start_newAccountButton
-              anchors.top : start_newGroupButton.bottom
-              height : 20
-              width : 200
-              buttonText : "Add Account"
-              onClicked : {
-                console.log( "Add Account clicked" );
-                application.launchAccountWizard();
+                }
+                KPIM.Button {
+                  height: 480 / 6
+                  width : parent.width - 75
+                  buttonText : "Add Account"
+                  font.bold: true
+                  onClicked : { application.launchAccountWizard(); }
+                }
+                KPIM.Button {
+                  height: 480 / 6
+                  width : parent.width - 75
+                  buttonText : "Favorites"
+                  font.bold: true
+                  onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
+                }
               }
             }
           ]
+        },
+        FavoriteSelector {
+          id : favoriteSelector
+          anchors.fill : parent
+          visible : false
+          onCanceled: {
+            favoriteSelector.visible = false;
+            startPage.visible = true;
+          }
+          onFinished : {
+            favoriteSelector.visible = false;
+            startPage.visible = true;
+            application.saveFavorite( favoriteSelector.favoriteName );
+          }
         }
       ]
     }
