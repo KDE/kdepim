@@ -311,14 +311,6 @@ void Agenda::init()
 //  mScrollArea->viewport()->setAttribute( Qt::WA_NoSystemBackground, true );
   mScrollArea->viewport()->setFocusPolicy( Qt::WheelFocus );
 
-  setMinimumSize( mGridSpacingX*mColumns, int( mGridSpacingY + 1 ) );
-//  setMaximumHeight( mGridSpacingY * mRows + 5 );
-
-  // Disable horizontal scrollbar. This is a hack. The geometry should be
-  // controlled in a way that the contents horizontally always fits. Then it is
-  // not necessary to turn off the scrollbar.
-//  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-
   setStartTime( Prefs::instance()->dayBegins().time() );
 
   calculateWorkingHours();
@@ -1914,6 +1906,11 @@ QSize Agenda::minimumSize() const
 QSize Agenda::minimumSizeHint() const
 {
   return sizeHint();
+}
+
+int Agenda::minimumHeight() const
+{
+  return mGridSpacingY * mRows;
 }
 
 void Agenda::updateConfig()

@@ -177,11 +177,10 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   // Create agenda
   mScrollArea = new QScrollArea( agendaFrame );
-
-  //TODO_SPLIT
-  QMetaObject::invokeMethod( this, "hack", Qt::QueuedConnection );
-
   mAgenda = new Agenda( this, mScrollArea, 1, 96, Prefs::instance()->hourSize(), agendaFrame );
+
+  mScrollArea->setWidget( mAgenda );
+  mScrollArea->setWidgetResizable( true );
 
   mAgendaLayout->addWidget( mScrollArea, 1, 1, 1, 2 );
   mAgendaLayout->setColumnStretch( 1, 1 );
@@ -1729,11 +1728,6 @@ void AgendaView::calendarIncidenceRemoved( const Item &incidence )
     mPendingChanges = true;
     QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
   }
-}
-
-void AgendaView::hack()
-{
-  mScrollArea->setWidget( mAgenda );
 }
 
 #include "agendaview.moc"

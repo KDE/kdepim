@@ -158,7 +158,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     QDate endDate() const;
 
   public slots:
-    void hack(); //TODO_SPLIT
     virtual void updateView();
     virtual void updateConfig();
     virtual void showDates( const QDate &start, const QDate &end );
