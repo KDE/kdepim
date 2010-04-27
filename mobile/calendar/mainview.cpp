@@ -29,6 +29,7 @@
 #include <qdeclarativecontext.h>
 #include <Akonadi/ChangeRecorder>
 #include <Akonadi/EntityTreeModel>
+#include <akonadi/entitymimetypefiltermodel.h>
 #include <Akonadi/ItemFetchScope>
 
 #include <QItemSelectionModel>
@@ -51,42 +52,67 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
 
   Akonadi::ChangeRecorder *changeRecorder = new Akonadi::ChangeRecorder( this );
   changeRecorder->setCollectionMonitored( Akonadi::Collection::root() );
+  changeRecorder->itemFetchScope().fetchFullPayload(true);
   foreach ( const QString &mimeType, mimeTypes() )
     changeRecorder->setMimeTypeMonitored( mimeType );
 
   m_etm = new Akonadi::EntityTreeModel( changeRecorder, this );
-  m_etm->setItemPopulationStrategy( Akonadi::EntityTreeModel::NoItemPopulation );
 
-  QItemSelectionModel *favSelection = new QItemSelectionModel(m_etm, this);
+  Akonadi::EntityMimeTypeFilterModel *collectionFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+  collectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  collectionFilter->setSourceModel(m_etm);
+
+  QItemSelectionModel *favSelection = new QItemSelectionModel(collectionFilter, this);
+
+  // Need to proxy the selection because the favSelection operates on collectionFilter, but the
+  // KSelectionProxyModel *list below operates on m_etm.
+  Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel(m_etm, favSelection, this);
 
   // Show the list of currently selected items.
-  KSelectionProxyModel *list = new KSelectionProxyModel(favSelection, this);
-  list->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  KSelectionProxyModel *collectionList = new KSelectionProxyModel(selectionProxy, this);
+  collectionList->setFilterBehavior( KSelectionProxyModel::ExactSelection );
+  collectionList->setSourceModel(m_etm);
+
+  // Show the list of currently selected items.
+  KSelectionProxyModel *list = new KSelectionProxyModel(selectionProxy, this);
+  list->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
   list->setSourceModel(m_etm);
+
+  Akonadi::EntityMimeTypeFilterModel *itemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+  itemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  itemFilter->setSourceModel(list);
 
   // Make it possible to uncheck currently selected items in the list
   CheckableItemProxyModel *currentSelectionCheckableProxyModel = new CheckableItemProxyModel(this);
-  currentSelectionCheckableProxyModel->setSourceModel(list);
-  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel(list, favSelection);
-  currentSelectionCheckableProxyModel->setSelectionModel( proxySelector );
+  currentSelectionCheckableProxyModel->setSourceModel(collectionList);
+  Future::KProxyItemSelectionModel *proxySelector = new Future::KProxyItemSelectionModel(collectionList, favSelection);
+  currentSelectionCheckableProxyModel->setSelectionModel(proxySelector);
 
   // Make it possible to check/uncheck items in the column view.
   CheckableItemProxyModel *checkableSelectionModel = new CheckableItemProxyModel(this);
   checkableSelectionModel->setSelectionModel(favSelection);
-  checkableSelectionModel->setSourceModel(m_etm);
+  checkableSelectionModel->setSourceModel(collectionFilter);
 
 #if 1
-  QListView *listView = new QListView;
-  listView->setModel(currentSelectionCheckableProxyModel);
-  listView->show();
+  QTreeView *etmView = new QTreeView;
+  etmView->setModel(m_etm);
+  etmView->show();
+  etmView->setWindowTitle("ETM");
 
-  QColumnView *colView = new QColumnView;
-  colView->setModel(checkableSelectionModel);
-  colView->show();
+  QListView *currentlyCheckedView = new QListView;
+  currentlyCheckedView->setModel(currentSelectionCheckableProxyModel);
+  currentlyCheckedView->show();
+  currentlyCheckedView->setWindowTitle("Currently checked collections");
 
-  QTreeView *tree = new QTreeView;
-  tree->setModel(checkableSelectionModel);
-  tree->show();
+  QColumnView *columnView = new QColumnView;
+  columnView->setModel(checkableSelectionModel);
+  columnView->show();
+  columnView->setWindowTitle("All collections. Checkable");
+
+  QListView *childItemsView = new QListView;
+  childItemsView->setModel(itemFilter);
+  childItemsView->show();
+  childItemsView->setWindowTitle("List of items in checked collections");
 #endif
 
   engine()->rootContext()->setContextProperty( "checkableSelectionModel", QVariant::fromValue( static_cast<QObject*>( checkableSelectionModel ) ) );
