@@ -1023,6 +1023,11 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
     return;
   }
 
+  if ( !start.isValid() || !end.isValid() || start > end || start.daysTo( end ) > 31 ) {
+    kWarning() << "got bizare parameters: " << start << end << " - aborting here";
+    return;
+  }
+
   mSelectedDates.clear();
 
   QDate d = start;

@@ -82,17 +82,14 @@ void AgendaViewItem::showRange( const QDate &date, int range )
 
   switch( Range( range ) ) {
   case Day:
-    setStartDate( date );
-    setEndDate( date );
+    m_view->showDates( date, date );
     break;
   case Week:
     // Todo: Take in account sunday or monday as first day of week.
-    setStartDate( date.addDays( - date.dayOfWeek() ) );
-    setEndDate( date.addDays( 6 - date.dayOfWeek() ) );
+    m_view->showDates( date.addDays( - date.dayOfWeek() ), date.addDays( 6 - date.dayOfWeek() ) );
     break;
   case Month:
-    setStartDate( date.addDays( - date.day() + 1 ) );
-    setEndDate( date.addDays( date.daysInMonth() - date.day() ) );
+    m_view->showDates( date.addDays( - date.day() + 1 ), date.addDays( date.daysInMonth() - date.day() ) );
     break;
   }
 }
