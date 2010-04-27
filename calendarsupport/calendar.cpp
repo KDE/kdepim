@@ -58,7 +58,6 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   // Setup default filter, which does nothing
   mDefaultFilter->setEnabled( false );
   m_filterProxy = new CalFilterProxyModel( q );
-  m_filterProxy->setSourceModel( m_model );
   m_filterProxy->setFilter( mDefaultFilter );
 
 
@@ -66,12 +65,7 @@ Calendar::Private::Private( QAbstractItemModel* treeModel, QAbstractItemModel *m
   mOwner.setName( i18n( "Unknown Name" ) );
   mOwner.setEmail( i18n( "unknown@nowhere" ) );
 
-  connect( m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
-  connect( m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()) );
-  connect( m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
-  connect( m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
-  connect( m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
-
+  q->setUnfilteredModel( model );
   /*
   connect( m_monitor, SIGNAL(itemLinked(const Akonadi::Item,Akonadi::Collection)),
            this, SLOT(itemAdded(const Akonadi::Item,Akonadi::Collection)) );
@@ -406,6 +400,31 @@ QAbstractItemModel* Calendar::model() const {
 
 QAbstractItemModel* Calendar::unfilteredModel() const {
   return d->m_model;
+}
+
+void Calendar::setUnfilteredModel( QAbstractItemModel *model ) {
+
+  if ( d->model == model )
+    return;
+
+  if ( d->m_model )
+  {
+    disconnect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
+    disconnect( d->m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()) );
+    disconnect( d->m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
+    disconnect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
+    disconnect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+  }
+  d->m_model = model;
+  d->m_filterProxy->setSourceModel( model );
+  if ( model )
+  {
+    connect( d->m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)) );
+    connect( d->m_model, SIGNAL(layoutChanged()), this, SLOT(layoutChanged()) );
+    connect( d->m_model, SIGNAL(modelReset()), this, SLOT(modelReset()) );
+    connect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)) );
+    connect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+  }
 }
 
 // This method will be called probably multiple times if a series of changes where done. One finished the endChange() method got called.

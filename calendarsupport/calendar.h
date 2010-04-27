@@ -730,6 +730,7 @@ public:
     QAbstractItemModel* model() const;
 
     QAbstractItemModel* unfilteredModel() const;
+    void setUnfilteredModel( QAbstractItemModel *model );
 
     QAbstractItemModel* treeModel() const;
 
