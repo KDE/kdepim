@@ -24,6 +24,7 @@
 #include "kdeclarativemainview.h"
 
 #include <QItemSelectionModel>
+#include <QStringListModel>
 
 #include <akonadi/collection.h>
 #include <akonadi/entitytreemodel.h>
@@ -39,8 +40,13 @@ public slots:
     void loadFavorite( const QString &name );
 
 private:
+  QAbstractItemModel* getFavoritesListModel();
+  QStringList getFavoritesList();
+
+private:
   Akonadi::EntityTreeModel *m_etm;
   QItemSelectionModel *m_favSelection;
+  QStringListModel *m_favsListModel;
 };
 
 #endif // MAINVIEW_H

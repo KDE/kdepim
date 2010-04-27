@@ -27,6 +27,7 @@ Item {
   id : _topContext
   property alias startText: startText.text
   property alias contextActions: contextContainer.children
+  property alias favoritesModel : favsView.model
 
   signal accountSelected( int row )
 
@@ -50,17 +51,6 @@ Item {
         onClicked : { console.log("favorite clicked: " + model.index ); }
       }
     }
-  }
-
-  // TODO: Replace by real favorites
-  ListModel {
-    id : favsModel
-    ListElement { display : "Favorite 1" }
-    ListElement { display : "Favorite 2" }
-    ListElement { display : "Favorite 3" }
-    ListElement { display : "Favorite 4" }
-    ListElement { display : "Favorite 5" }
-    ListElement { display : "Favorite 6" }
   }
 
   Row {
@@ -121,7 +111,6 @@ Item {
         id : favsView
         width: parent.width
         height: parent.height - contextContainer.height - favoritesText.height - 2 - 4 * 5
-        model : favsModel
         delegate : favDelegate
         clip: true
       }

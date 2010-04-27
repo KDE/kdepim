@@ -45,6 +45,7 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <KSharedConfigPtr>
+#include <QStringListModel>
 
 using namespace Akonadi;
 
@@ -98,6 +99,8 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   checkableSelectionModel->setSelectionModel(m_favSelection);
   checkableSelectionModel->setSourceModel(collectionFilter);
 
+  QAbstractItemModel *favsList = getFavoritesListModel();
+
 #if 1
   QTreeView *etmView = new QTreeView;
   etmView->setModel(m_etm);
@@ -118,10 +121,40 @@ MainView::MainView( QWidget *parent ) : KDeclarativeMainView( "korganizer-mobile
   childItemsView->setModel(itemFilter);
   childItemsView->show();
   childItemsView->setWindowTitle("List of items in checked collections");
+
+  QListView *favoritesView = new QListView;
+  favoritesView->setModel(favsList);
+  favoritesView->show();
+  favoritesView->setWindowTitle("Available Favorites");
 #endif
 
-  engine()->rootContext()->setContextProperty( "checkableSelectionModel", QVariant::fromValue( static_cast<QObject*>( checkableSelectionModel ) ) );
+  engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
 
+  engine()->rootContext()->setContextProperty( "checkableSelectionModel", QVariant::fromValue( static_cast<QObject*>( checkableSelectionModel ) ) );
+}
+
+static const char * const sFavoritePrefix = "Favorite_";
+static const int sFavoritePrefixLength = 9;
+
+QStringList MainView::getFavoritesList()
+{
+  QStringList names;
+  foreach ( const QString &group, KGlobal::config()->groupList() )
+    if ( group.startsWith( sFavoritePrefix ) )
+      names.append( QString( group ).remove( 0, sFavoritePrefixLength ) );
+  return names;
+}
+
+QAbstractItemModel* MainView::getFavoritesListModel()
+{
+  m_favsListModel = new QStringListModel( getFavoritesList(), this );
+
+  QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
+  sortModel->setSourceModel( m_favsListModel );
+  sortModel->setDynamicSortFilter( true );
+  sortModel->sort(0, Qt::AscendingOrder);
+
+  return sortModel;
 }
 
 void MainView::saveFavorite(const QString& name)
@@ -129,16 +162,17 @@ void MainView::saveFavorite(const QString& name)
   ETMStateSaver saver;
   saver.setSelectionModel( m_favSelection );
 
-  KConfigGroup cfg( KGlobal::config(), "Favorite_" + name );
+  KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   saver.saveState( cfg );
   cfg.sync();
+  m_favsListModel->setStringList( getFavoritesList() );
 }
 
 void MainView::loadFavorite(const QString& name)
 {
   ETMStateSaver *saver = new ETMStateSaver;
   saver->setSelectionModel( m_favSelection );
-  KConfigGroup cfg( KGlobal::config(), "Favorite_" + name );
+  KConfigGroup cfg( KGlobal::config(), sFavoritePrefix + name );
   if ( !cfg.isValid() )
   {
     delete saver;

@@ -104,6 +104,7 @@ KPIM.MainView {
           anchors.fill : parent
           anchors.leftMargin : 50
           startText: "Calendar start page"
+          favoritesModel : favoritesList
 
           contextActions : [
 //            KPIM.Button {
