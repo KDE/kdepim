@@ -30,6 +30,7 @@ Item {
   property alias favoritesModel : favsView.model
 
   signal accountSelected( int row )
+  signal favoriteSelected( string favName )
 
   Component {
     id : accountDelegate
@@ -48,7 +49,8 @@ Item {
       height : _topContext.height / 6
       width : ListView.view.width
       onIndexSelected : {
-        console.log("favorite clicked: " + model.index );
+        console.log("favorite clicked: " + model.display );
+        favoriteSelected(model.display); 
       }
     }
   }
