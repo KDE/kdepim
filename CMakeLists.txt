@@ -220,8 +220,8 @@ set(libkdgantt1_SRCS
   add_subdirectory( ontologies ) # must be the first one.
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
+  add_subdirectory(calendarviews)
   if (QT_QT3SUPPORT_FOUND) # not directly, but depends on kmail/korganizer
-    add_subdirectory(calendarviews)
     add_subdirectory(libkdepimdbusinterfaces)
   endif (QT_QT3SUPPORT_FOUND)
   add_subdirectory(libkleo)
