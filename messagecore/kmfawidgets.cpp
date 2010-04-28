@@ -20,7 +20,6 @@
 #include "kmfawidgets.h"
 
 #include <akonadi/contact/emailaddressselectiondialog.h> // for the button in KMFilterActionWithAddress
-#include <kabc/addressee.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kurlrequester.h>
@@ -66,13 +65,8 @@ void KMFilterActionWithAddressWidget::slotAddrBook()
     return;
 
   QStringList addrList;
-  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, dlg.selectedAddresses() ) {
-    KABC::Addressee contact;
-    contact.setNameFromString( selection.name() );
-    contact.insertEmail( selection.email() );
-
-    addrList << contact.fullEmail();
-  }
+  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, dlg.selectedAddresses() )
+    addrList << selection.quotedEmail();
 
   QString txt = mLineEdit->text().trimmed();
 
