@@ -169,8 +169,6 @@ void EventView::Private::reconnectCollectionSelection()
 
 EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( this ) )
 {
-  //TODO_SPLIT, tirar o unused
-  Q_UNUSED( parent );
 
   //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(), which triggered finishTypeAhead.
   //But the global focus widget in QApplication is changed later, thus subsequent keyevents still went to this view, triggering another editor, for each keypress
@@ -354,8 +352,8 @@ void EventView::showConfigurationDialog( QWidget* )
 
 
 bool EventView::processKeyEvent( QKeyEvent *ke )
-{ // TODO_SPLIT
-  Q_UNUSED( ke );
+{ // TODO_SPLIT: review this
+
   // If Return is pressed bring up an editor for the current selected time span.
 /*  if ( ke->key() == Qt::Key_Return ) {
     if ( ke->type() == QEvent::KeyPress ) {
@@ -417,7 +415,6 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
       if ( !mTypeAhead ) {
         mTypeAhead = true;
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
-        // TODO_SPLIT rename singleagendaview to agendaview
         if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
           if ( view->collection() >= 0 ) {
             emit newEventSignal( Akonadi::Collection::List() << Collection( view->collection() ) );

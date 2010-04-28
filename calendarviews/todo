@@ -6,6 +6,4 @@
 
 * Review collectionSelection stuff in eventview.h
 
-* Remove Q3Support
-
 * We should only export agendaview, now we need to export agenda and timelabels because of multiagendaview, which still isn't extracted from korganizer.

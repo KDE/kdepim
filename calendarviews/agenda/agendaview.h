@@ -118,9 +118,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     /** Remove all events from view */
     void clearView();
 
-    // TODO_SPLIT isto fica no wrapper
-    //CalPrinter::PrintType printType();
-
     /** start-datetime of selection */
     virtual QDateTime selectionStart() const { return mTimeSpanBegin; }
 

@@ -1053,8 +1053,8 @@ QStringList Prefs::fullEmails() const
 
 bool Prefs::thatIsMe(const QString &_email ) const
 {
-  // TODO_SPLIT: tirar o unused
-  Q_UNUSED( _email );
+  // TODO_SPLIT: review this
+
   // NOTE: this method is called for every created agenda view item,
   // so we need to keep performance in mind
 

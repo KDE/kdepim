@@ -1425,16 +1425,6 @@ void AgendaView::clearView()
   mAllDayAgenda->clear();
   mAgenda->clear();
 }
-/*
-  TODO_SPLIT
-CalPrinter::PrintType AgendaView::printType()
-{
-  if ( currentDateCount() == 1 ) {
-    return CalPrinter::Day;
-  } else {
-    return CalPrinter::Week;
-  }
-  } */
 
 void AgendaView::updateEventIndicatorTop( int newY )
 {
@@ -1454,10 +1444,6 @@ void AgendaView::updateEventIndicatorBottom( int newY )
 
 void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
 {
-  //TODO_SPLIT, tirar os unused
-  Q_UNUSED(items);
-  Q_UNUSED( allDay );
-  Q_UNUSED( gpos );
 
 #ifdef AKONADI_PORT_DISABLED // one item -> multiple items, Incidence* -> akonadi item url (we might have to fetch the items here first!)
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
