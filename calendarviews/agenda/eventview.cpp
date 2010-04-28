@@ -3,6 +3,8 @@
 
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,16 +26,17 @@
 */
 
 #include "eventview.h"
-#include "agendaview.h" // TODO AKONADI_PORT
+
 #include "prefs.h"
 
 #include <libkdepim/pimmessagebox.h>
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/calendarsearch.h>
 #include <akonadi/kcal/collectionselection.h>
 #include <akonadi/kcal/collectionselectionproxymodel.h>
-#include <akonadi/kcal/collectionselection.h>
-#include <akonadi/akonadi_next/entitymodelstatesaver.h>
+#include <akonadi/kcal/incidencechanger.h>
 #include <akonadi/kcal/utils.h>
-#include <Akonadi/Item>
+#include <akonadi/akonadi_next/entitymodelstatesaver.h>
 
 #include <kholidays/holidayregion.h>
 #include <KCal/Incidence>
@@ -297,6 +300,16 @@ EventView* EventView::viewAt( const QPoint & )
 
 void EventView::updateConfig()
 {
+}
+
+QDateTime EventView::selectionStart() const
+{
+  return QDateTime();
+}
+
+QDateTime EventView::selectionEnd() const
+{
+  return QDateTime();
 }
 
 bool EventView::supportsZoom() const
@@ -636,3 +649,4 @@ void EventView::setIdentifier( const QByteArray &identifier )
 }
 
 #include "eventview.moc"
+// kate: space-indent on; indent-width 2; replace-tabs on;

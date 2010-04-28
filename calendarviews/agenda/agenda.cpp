@@ -44,6 +44,7 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KMessageBox>
+#include <KUrl>
 
 #include <QScrollBar>
 #include <QScrollArea>

@@ -32,17 +32,9 @@
 
 #include "eventview.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/incidencechanger.h>
+#include <KCal/Todo>
 
-#include <Akonadi/Collection>
-#include <Akonadi/Item>
-
-#include <QScrollArea>
 #include <QFrame>
-#include <QPixmap>
-#include <QVector>
-#include <QLabel>
 
 class KConfig;
 class KHBox;
@@ -52,8 +44,6 @@ class QGridLayout;
 class QMenu;
 class QPaintEvent;
 class QSplitter;
-
-using namespace KCal;
 
 namespace Akonadi {
   class CollectionSelection;
@@ -112,7 +102,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView
     virtual Akonadi::Item::List selectedIncidences() const;
 
     /** returns the currently selected incidence's dates */
-    virtual DateList selectedIncidenceDates() const;
+    virtual KCal::DateList selectedIncidenceDates() const;
 
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay ) const;

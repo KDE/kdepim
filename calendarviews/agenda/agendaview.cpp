@@ -46,6 +46,7 @@
 #include <KVBox>
 #include <KIconLoader>
 #include <KComponentData>
+#include <KConfigGroup>
 
 #include <QApplication>
 #include <QScrollBar>

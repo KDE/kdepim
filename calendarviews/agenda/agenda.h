@@ -36,16 +36,17 @@
 #include <QFrame>
 #include <QList>
 #include <QPointer>
+#include <QScrollArea>
 #include <QTimer>
 #include <QVector>
 
-class QScrollArea;
 class QDropEvent;
 class QEvent;
 class QKeyEvent;
 class QLabel;
 class QMouseEvent;
 class QResizeEvent;
+class QScrollBar;
 class QTime;
 class QWheelEvent;
 

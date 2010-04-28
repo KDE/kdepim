@@ -4,6 +4,8 @@
   Copyright (c) 1999 Preston Brown <pbrown@kde.org>
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -28,28 +30,27 @@
 
 #include "eventviews_export.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarsearch.h>
-#include <akonadi/kcal/collectionselection.h>
-#include <akonadi/kcal/incidencechanger.h>
-
-#include <KCal/Todo>
-
-#include <KConfigGroup>
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
 
 #include <QWidget>
 
-
-namespace KCal {
-  class Incidence;
-}
 namespace Akonadi {
-  class Item;
   class Calendar;
+  class CalendarSearch;
+  class CollectionSelection;
+  class CollectionSelectionProxyModel;
+  class IncidenceChanger;
 }
 
 namespace boost {
   template <typename T> class shared_ptr;
+}
+
+namespace KCal {
+  class Incidence;
+  template <typename T> class SortableList;
+  typedef SortableList<QDate> DateList;
 }
 
 namespace KHolidays {
@@ -57,9 +58,11 @@ namespace KHolidays {
     typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
 }
 
-using namespace KCal;
-
+class KConfigGroup;
+class QDate;
+class QDateTime;
 class QMenu;
+class QModelIndex;
 
 namespace EventViews
 {
@@ -132,19 +135,19 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       probably only select a single event at a time, but some may be able
       to select more than one.
     */
-    virtual DateList selectedIncidenceDates() const = 0;
+    virtual KCal::DateList selectedIncidenceDates() const = 0;
 
     /**
        Returns the start of the selection, or an invalid QDateTime if there is no selection
        or the view doesn't support selecting cells.
      */
-    virtual QDateTime selectionStart() const { return QDateTime(); }
+    virtual QDateTime selectionStart() const;
 
     /**
        Returns the end of the selection, or an invalid QDateTime if there is no selection
        or the view doesn't support selecting cells.
      */
-    virtual QDateTime selectionEnd() const { return QDateTime(); }
+    virtual QDateTime selectionEnd() const;
 
     /**
       Returns the number of currently shown dates.
@@ -302,7 +305,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * selected dates has changed.
      *   @param datelist the new list of selected dates
      */
-    void datesSelected( const DateList datelist );
+    void datesSelected( const KCal::DateList &datelist );
 
     /**
      * Emitted when an event is moved using the mouse in an agenda
@@ -462,3 +465,4 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 } // namespace EventViews
 
 #endif
+// kate: space-indent on; indent-width 2; replace-tabs on;
