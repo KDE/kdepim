@@ -597,7 +597,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         } else {
           file = new KTempFile( QString::null, QString::null, 0600 );
         }
-        file->setAutoDelete( true );
         file->file()->open( IO_WriteOnly );
         QTextStream stream( file->file() );
         stream.writeRawBytes( a->decodedData().data(), a->size() );
@@ -645,7 +644,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         } else {
           file = new KTempFile( QString::null, QString::null, 0600 );
         }
-        file->setAutoDelete( true );
         file->file()->open( IO_WriteOnly );
         QTextStream stream( file->file() );
         stream.writeRawBytes( a->decodedData().data(), a->size() );
