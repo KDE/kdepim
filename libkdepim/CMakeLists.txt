@@ -22,7 +22,6 @@ set(kdepim_LIB_SRCS
    kprefsdialog.cpp
    kdateedit.cpp
    kvcarddrag.cpp
-   addressesdialog.cpp
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
