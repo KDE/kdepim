@@ -1066,7 +1066,11 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
        ( e->type() == QEvent::KeyPress || e->type() == QEvent::KeyRelease ) &&
        completionBox()->isVisible() ) {
     QKeyEvent *ke = static_cast<QKeyEvent*>( e );
-    unsigned int currentIndex = completionBox()->currentItem();
+    int currentIndex = completionBox()->currentItem();
+    if ( currentIndex < 0 ) {
+      return true;
+    }
+
     if ( ke->key() == Key_Up ) {
       //kdDebug() << "EVENTFILTER: Key_Up currentIndex=" << currentIndex << endl;
       // figure out if the item we would be moving to is one we want
@@ -1119,10 +1123,13 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       if ( item && itemIsHeader(item) ) {
         completionBox()->setSelected( currentIndex, true );
        }
-   } else if ( e->type() == QEvent::KeyRelease && ke->key() == Key_Tab || ke->key() == Key_Backtab ) {
+    } else if ( e->type() == QEvent::KeyRelease &&
+                ( ke->key() == Key_Tab || ke->key() == Key_Backtab ) ) {
+      //kdDebug() << "EVENTFILTER: Key_Tab. currentIndex=" << currentIndex << endl;
       /// first, find the header of the current section
       QListBoxItem *myHeader = 0;
-      int i = QMAX( currentIndex - 1, 0 );
+      const int iterationstep = ke->key() == Key_Tab ?  1 : -1;
+      int i = QMIN( QMAX( currentIndex - iterationstep, 0 ), completionBox()->count() - 1 );
       while ( i>=0 ) {
         if ( itemIsHeader( completionBox()->item(i) ) ) {
           myHeader = completionBox()->item( i );
@@ -1132,12 +1139,21 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       }
       Q_ASSERT( myHeader ); // we should always be able to find a header
 
-      // find the next header (searching backwards, for Key_Backtab
+      // find the next header (searching backwards, for Key_Backtab)
       QListBoxItem *nextHeader = 0;
-      const int iterationstep = ke->key() == Key_Tab ?  1 : -1;
       // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
-      uint j = ke->key() == Key_Tab ? currentIndex : i==0 ? completionBox()->count()-1 : (i-1) % completionBox()->count();
+      uint j;
+      if ( ke->key() == Key_Tab ) {
+        j = currentIndex;
+      } else {
+        i = completionBox()->index( myHeader );
+        if ( i == 0 ) {
+          j = completionBox()->count() - 1;
+        } else {
+          j = ( i - 1 ) % completionBox()->count();
+        }
+      }
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
           if ( itemIsHeader(nextHeader) ) {
             break;
