@@ -6,7 +6,7 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
   <include>klocale.h</include>
-  <kcfgfile name="korganizerrc"/>
+  <kcfgfile name="eventviewsrc"/>
 
 <!-- PREFERENCES DIALOG -->
 
@@ -669,7 +669,7 @@
       <default>false</default>
     </entry>
 
-    <entry key="ShowMenuBar" type="Bool">     
+    <entry key="ShowMenuBar" type="Bool">
       <default>true</default>
        <!-- label and whatsthis are already provided by KStandardAction::showMenubar -->
       <label></label>
