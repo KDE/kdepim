@@ -36,6 +36,10 @@ namespace Akonadi
   class Collection;
 }
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
 class KCoreConfigSkeleton;
 class QColor;
 class QFont;
@@ -47,24 +51,20 @@ namespace EventViews
 class EVENTVIEWS_EXPORT Prefs
 {
   public:
-    ~Prefs();
 
-    /** Create an instance of Prefs with a given application specific override config
+    /** Creates an instance of Prefs with just base config
+    */
+    Prefs();
 
-        If there is an instance it will be delete and replaced by the newly create one.
+    /** Creates an instance of Prefs with base config and application override config
 
         The passed @p appConfig will be queried for matching items whenever one of the
         accessors is called. If one is found it is used for setting/getting the value
         otherwise the one from the eventviews base config is used.
     */
-    static void createInstance( KCoreConfigSkeleton *appConfig );
+    explicit Prefs( KCoreConfigSkeleton *appConfig );
 
-    /** Get instance of Prefs. It is made sure that there is only one instance.
-
-        If there is no instance yet, a default one with not application specific override
-        will be created, i.e. only eventviewsrc will be used
-    */
-    static Prefs *instance();
+    ~Prefs();
 
     void readConfig();
 
@@ -149,12 +149,6 @@ class EVENTVIEWS_EXPORT Prefs
     void setExcludeHolidays( bool exclude );
     bool excludeHolidays() const;
 
-  private:
-    Prefs();
-    Prefs( KCoreConfigSkeleton *appConfig );
-
-    static Prefs *mInstance;
-
   public:
     // preferences data
     void setFullName( const QString & );
@@ -199,6 +193,8 @@ class EVENTVIEWS_EXPORT Prefs
     class Private;
     Private *const d;
 };
+
+typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 } // namespace EventViews
 

@@ -67,8 +67,6 @@ using namespace KPIMIdentities;
 
 using namespace EventViews;
 
-Prefs *Prefs::mInstance = 0;
-
 class BaseConfig : public PrefsBase
 {
   public:
@@ -581,23 +579,7 @@ Prefs::Prefs( KCoreConfigSkeleton *appConfig ) : d( new Private( this, appConfig
 Prefs::~Prefs()
 {
   kDebug();
-}
-
-void Prefs::createInstance( KCoreConfigSkeleton *appConfig )
-{
-  delete mInstance;
-  mInstance = new Prefs( appConfig );
-  mInstance->readConfig();
-}
-
-Prefs *Prefs::instance()
-{
-  if ( !mInstance ) {
-    mInstance = new Prefs();
-    mInstance->readConfig();
-  }
-
-  return mInstance;
+  delete d;
 }
 
 void Prefs::readConfig()

@@ -48,7 +48,8 @@ MainWindow::MainWindow( const QStringList &viewNames )
     mChangeRecorder( 0 ),
     mCalendar( 0 ),
     mIncidenceChanger( 0 ),
-    mSettings( 0 )
+    mSettings( 0 ),
+    mViewPreferences( 0 )
 {
   mUi.setupUi( this );
   mUi.tabWidget->clear();
@@ -62,6 +63,7 @@ MainWindow::MainWindow( const QStringList &viewNames )
 
 MainWindow::~MainWindow()
 {
+  delete mViewPreferences;
   delete mSettings;
 }
 
@@ -74,6 +76,7 @@ void MainWindow::addView( const QString &viewName )
   }
 
   if ( eventView != 0 ) {
+    eventView->setPreferences( *mViewPreferences );
     eventView->setCalendar( mCalendar );
     eventView->setIncidenceChanger( mIncidenceChanger );
     eventView->setDateRange( KDateTime::currentLocalDateTime().addDays( -1 ),
@@ -92,7 +95,7 @@ void MainWindow::delayedInit()
 
   // create view preferences so that matching values are retrieved from
   // application settings
-  Prefs::createInstance( mSettings );
+  mViewPreferences = new PrefsPtr( new Prefs( mSettings ) );
 
   mChangeRecorder = new ChangeRecorder( this );
   mChangeRecorder->setCollectionMonitored( Collection::root(), true );

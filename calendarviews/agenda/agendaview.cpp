@@ -185,7 +185,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   QWidget *dummyAllDayRight = new QWidget( mAllDayFrame );
 
   // Create time labels
-  mTimeLabelsZone = new TimeLabelsZone( this, mAgenda );
+  mTimeLabelsZone = new TimeLabelsZone( this, this, mAgenda );
   mAgendaLayout->addWidget( mTimeLabelsZone, 1, 0 );
 
   // Scrolling
@@ -309,7 +309,7 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 void AgendaView::zoomInVertically( )
 {
   if ( !mIsSideBySide ) {
-    Prefs::instance()->setHourSize( Prefs::instance()->hourSize() + 1 );
+    preferences()->setHourSize( preferences()->hourSize() + 1 );
   }
   mAgenda->updateConfig();
   mAgenda->checkScrollBoundaries();
@@ -323,9 +323,9 @@ void AgendaView::zoomInVertically( )
 void AgendaView::zoomOutVertically( )
 {
 
-  if ( Prefs::instance()->hourSize() > 4 || mIsSideBySide ) {
+  if ( preferences()->hourSize() > 4 || mIsSideBySide ) {
     if ( !mIsSideBySide ) {
-      Prefs::instance()->setHourSize( Prefs::instance()->hourSize() - 1 );;
+      preferences()->setHourSize( preferences()->hourSize() - 1 );;
     }
     mAgenda->updateConfig();
     mAgenda->checkScrollBoundaries();
@@ -586,7 +586,7 @@ bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &
     if ( start.secsTo( end ) == 15 * 60 ) {
       // One cell in the agenda view selected, e.g.
       // because of a double-click, => Use the default duration
-      QTime defaultDuration( Prefs::instance()->defaultDuration().time() );
+      QTime defaultDuration( preferences()->defaultDuration().time() );
       int addSecs = ( defaultDuration.hour() * 3600 ) + ( defaultDuration.minute() * 60 );
       end = start.addSecs( addSecs );
     }
@@ -740,7 +740,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
     startDt = incidence->dtStart();
     // convert to calendar timespec because we then manipulate it
     // with time coming from the calendar
-    startDt = startDt.toTimeSpec( Prefs::instance()->timeSpec() );
+    startDt = startDt.toTimeSpec( preferences()->timeSpec() );
     startDt = startDt.addDays( daysOffset );
     if ( !startDt.isDateOnly() ) {
       startDt.setTime( startTime );
@@ -749,8 +749,8 @@ void AgendaView::updateEventDates( AgendaItem *item )
     if ( !endDt.isDateOnly() ) {
       endDt.setTime( endTime );
     }
-    if ( incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ) == startDt &&
-         ev->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ) == endDt ) {
+    if ( incidence->dtStart().toTimeSpec( preferences()->timeSpec() ) == startDt &&
+         ev->dtEnd().toTimeSpec( preferences()->timeSpec() ) == endDt ) {
       // No change
       mChanger->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
@@ -760,7 +760,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
     startDt = td->hasStartDate() ? td->dtStart() : td->dtDue();
     // convert to calendar timespec because we then manipulate it with time coming from
     // the calendar
-    startDt = startDt.toTimeSpec( Prefs::instance()->timeSpec() );
+    startDt = startDt.toTimeSpec( preferences()->timeSpec() );
     startDt.setDate( thisDate.addDays( td->dtDue().daysTo( startDt ) ) );
     if ( !startDt.isDateOnly() ) {
       startDt.setTime( startTime );
@@ -772,7 +772,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
       endDt.setTime( endTime );
     }
 
-    if ( td->dtDue().toTimeSpec( Prefs::instance()->timeSpec() )  == endDt ) {
+    if ( td->dtDue().toTimeSpec( preferences()->timeSpec() )  == endDt ) {
       // No change
       mChanger->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
@@ -964,7 +964,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
     }
     td->setDtDue( endDt.toTimeSpec( td->dtDue().timeSpec() ) );
   }
-  item->setItemDate( startDt.toTimeSpec( Prefs::instance()->timeSpec() ).date() );
+  item->setItemDate( startDt.toTimeSpec( preferences()->timeSpec() ).date() );
 
   const bool result = mChanger->changeIncidence( oldIncidence, aitem,
                                                  IncidenceChanger::DATE_MODIFIED, this );
@@ -1066,17 +1066,17 @@ void AgendaView::showIncidences( const Item::List &incidences, const QDate &date
     calendar()->setFilter( 0 );
   }
 
-  KDateTime start = Akonadi::incidence( incidences.first() )->dtStart().toTimeSpec( Prefs::instance()->timeSpec() );
-  KDateTime end = Akonadi::incidence( incidences.first() )->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() );
+  KDateTime start = Akonadi::incidence( incidences.first() )->dtStart().toTimeSpec( preferences()->timeSpec() );
+  KDateTime end = Akonadi::incidence( incidences.first() )->dtEnd().toTimeSpec( preferences()->timeSpec() );
   Item first = incidences.first();
   Q_FOREACH( const Item &aitem, incidences ) {
-    if ( Akonadi::incidence( aitem )->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ) < start ) {
+    if ( Akonadi::incidence( aitem )->dtStart().toTimeSpec( preferences()->timeSpec() ) < start ) {
       first = aitem;
     }
     start = qMin( start,
-                  Akonadi::incidence( aitem )->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ) );
+                  Akonadi::incidence( aitem )->dtStart().toTimeSpec( preferences()->timeSpec() ) );
     end = qMax( start,
-                Akonadi::incidence( aitem )->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ) );
+                Akonadi::incidence( aitem )->dtEnd().toTimeSpec( preferences()->timeSpec() ) );
   }
 
   end.toTimeSpec( start );    // allow direct comparison of dates
@@ -1145,10 +1145,10 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
     mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol );
   } else if ( incidence->allDay() ) {
       mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX );
-  } else if ( event && event->isMultiDay( Prefs::instance()->timeSpec() ) ) {
+  } else if ( event && event->isMultiDay( preferences()->timeSpec() ) ) {
     int startY = mAgenda->timeToY(
-      event->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
-    QTime endtime( event->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+      event->dtStart().toTimeSpec( preferences()->timeSpec() ).time() );
+    QTime endtime( event->dtEnd().toTimeSpec( preferences()->timeSpec() ).time() );
     if ( endtime == QTime( 0, 0, 0 ) ) {
       endtime = QTime( 23, 59, 59 );
     }
@@ -1175,15 +1175,15 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
     int startY = 0, endY = 0;
     if ( event ) {
       startY = mAgenda->timeToY(
-        incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
-      QTime endtime( event->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+        incidence->dtStart().toTimeSpec( preferences()->timeSpec() ).time() );
+      QTime endtime( event->dtEnd().toTimeSpec( preferences()->timeSpec() ).time() );
       if ( endtime == QTime( 0, 0, 0 ) ) {
         endtime = QTime( 23, 59, 59 );
       }
       endY = mAgenda->timeToY( endtime ) - 1;
     }
     if ( todo ) {
-      QTime t = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() ).time();
+      QTime t = todo->dtDue().toTimeSpec( preferences()->timeSpec() ).time();
 
       if ( t == QTime( 0, 0 ) ) {
         t = QTime( 23, 59 );
@@ -1220,7 +1220,7 @@ void AgendaView::changeIncidenceDisplayAdded( const Item &aitem )
   Todo::Ptr todo = Akonadi::todo( aitem );
   CalFilter *filter = calendar()->filter();
   if ( ( filter && !filter->filterIncidence( Akonadi::incidence( aitem ).get() ) ) ||
-       ( ( todo && !Prefs::instance()->showTodosAgendaView() ) ) ) {
+       ( ( todo && !preferences()->showTodosAgendaView() ) ) ) {
     return;
   }
 
@@ -1333,18 +1333,18 @@ void AgendaView::displayIncidence( const Item &aitem )
   Todo::Ptr todo = Akonadi::todo( aitem );
   Event::Ptr event = Akonadi::event( aitem );
 
-  KDateTime firstVisibleDateTime( mSelectedDates.first(), Prefs::instance()->timeSpec() );
-  KDateTime lastVisibleDateTime( mSelectedDates.last(), Prefs::instance()->timeSpec() );
+  KDateTime firstVisibleDateTime( mSelectedDates.first(), preferences()->timeSpec() );
+  KDateTime lastVisibleDateTime( mSelectedDates.last(), preferences()->timeSpec() );
 
   lastVisibleDateTime.setTime( QTime( 23, 59, 59, 59 ) );
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
   DateTimeList dateTimeList;
 
-  KDateTime incDtStart = incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() );
-  KDateTime incDtEnd   = incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() );
+  KDateTime incDtStart = incidence->dtStart().toTimeSpec( preferences()->timeSpec() );
+  KDateTime incDtEnd   = incidence->dtEnd().toTimeSpec( preferences()->timeSpec() );
 
   if ( todo &&
-       ( !Prefs::instance()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
+       ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
     return;
   }
 
@@ -1365,7 +1365,7 @@ void AgendaView::displayIncidence( const Item &aitem )
 
     if ( todo && todo->hasDueDate() && !todo->isOverdue() ) {
       // If it's not overdue it will be shown at the original date (not today)
-      dateToAdd = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() );
+      dateToAdd = todo->dtDue().toTimeSpec( preferences()->timeSpec() );
 
       // To-dos are drawn with the bottom of the rectangle at dtDue
       // if dtDue is at 00:00, then it should be displayed in the previous day, at 23:59
@@ -1391,7 +1391,7 @@ void AgendaView::displayIncidence( const Item &aitem )
   }
 
   // ToDo items shall be displayed today if they are already overdude
-  KDateTime dateTimeToday = KDateTime( today, Prefs::instance()->timeSpec() );
+  KDateTime dateTimeToday = KDateTime( today, preferences()->timeSpec() );
   if ( todo &&
        todo->isOverdue() &&
        dateTimeToday >= firstVisibleDateTime &&
@@ -1403,7 +1403,7 @@ void AgendaView::displayIncidence( const Item &aitem )
       /* If there's a recurring instance showing up today don't add "today" again
        * we don't want the event to appear duplicated */
       for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-        if ( t->toTimeSpec( Prefs::instance()->timeSpec() ).date() == today ) {
+        if ( t->toTimeSpec( preferences()->timeSpec() ).date() == today ) {
           doAdd = false;
           break;
         }
@@ -1416,7 +1416,7 @@ void AgendaView::displayIncidence( const Item &aitem )
   }
 
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-    insertIncidence( aitem, t->toTimeSpec( Prefs::instance()->timeSpec() ).date() );
+    insertIncidence( aitem, t->toTimeSpec( preferences()->timeSpec() ).date() );
   }
 }
 
@@ -1466,7 +1466,7 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
 
   QDate day = mSelectedDates[gpos.x()];
   QTime time = mAgenda->gyToTime( gpos.y() );
-  KDateTime newTime( day, time, Prefs::instance()->timeSpec() );
+  KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
   Todo::Ptr todo = Akonadi::todo( todoItem );
@@ -1509,7 +1509,7 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
 
   QDate day = mSelectedDates[gpos.x()];
   QTime time = mAgenda->gyToTime( gpos.y() );
-  KDateTime newTime( day, time, Prefs::instance()->timeSpec() );
+  KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
   Q_FOREACH( const Todo::Ptr &todo, items ) {

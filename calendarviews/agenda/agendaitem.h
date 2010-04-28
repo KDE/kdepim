@@ -52,6 +52,7 @@ class QPixmap;
 namespace EventViews {
 
 class AgendaItem;
+class EventView;
 
 struct MultiItemInfo
 {
@@ -94,7 +95,7 @@ class AgendaItem : public QWidget, public CellItem
 {
   Q_OBJECT
   public:
-    AgendaItem( Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
+    AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const Akonadi::Item &incidence,
                 const QDate &qd, QWidget *parent );
     ~AgendaItem();
 
@@ -233,6 +234,7 @@ class AgendaItem : public QWidget, public CellItem
     int mSubCell;   // subcell number of this item
     int mSubCells;  // Total number of subcells in cell of this item
 
+    EventView *mEventView;
     Akonadi::Calendar *mCalendar;
     Akonadi::Item mIncidence;
     QDate mDate;

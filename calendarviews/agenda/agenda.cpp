@@ -69,8 +69,8 @@ using namespace Akonadi;
 using namespace EventViews;
 
 ///////////////////////////////////////////////////////////////////////////////
-MarcusBains::MarcusBains( Agenda *agenda )
-  : QFrame( agenda ), mAgenda( agenda )
+MarcusBains::MarcusBains( EventView *eventView, Agenda *agenda )
+  : QFrame( agenda ), mEventView( eventView ), mAgenda( agenda )
 {
   mTimeBox = new QLabel( mAgenda );
   mTimeBox->setAlignment( Qt::AlignRight | Qt::AlignBottom );
@@ -112,8 +112,8 @@ void MarcusBains::updateLocation()
 
 void MarcusBains::updateLocationRecalc( bool recalculate )
 {
-  bool showSeconds = Prefs::instance()->marcusBainsShowSeconds();
-  QColor color = Prefs::instance()->agendaMarcusBainsLineLineColor();
+  bool showSeconds = mEventView->preferences()->marcusBainsShowSeconds();
+  QColor color = mEventView->preferences()->agendaMarcusBainsLineLineColor();
 
   QTime tim = QTime::currentTime();
   if ( ( tim.hour() == 0 ) && ( mOldTime.hour() == 23 ) ) {
@@ -132,7 +132,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   int y = int( minutes  *  mAgenda->gridSpacingY() / minutesPerCell );
   int x = int( mAgenda->gridSpacingX() * todayCol );
 
-  bool hideIt = !( Prefs::instance()->marcusBainsEnabled() );
+  bool hideIt = !( mEventView->preferences()->marcusBainsEnabled() );
   if ( !isHidden() && ( hideIt || ( todayCol < 0 ) ) ) {
      hide();
      mTimeBox->hide();
@@ -146,7 +146,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
 
   /* Line */
   // It seems logical to adjust the line width with the label's font weight
-  int fw = Prefs::instance()->agendaMarcusBainsLineFont().weight();
+  int fw = mEventView->preferences()->agendaMarcusBainsLineFont().weight();
   setLineWidth( 1 + abs( fw - QFont::Normal ) / QFont::Light );
   setFrameStyle( QFrame::HLine | QFrame::Plain );
   QPalette pal = palette();
@@ -160,7 +160,7 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   raise();
 
   /* Label */
-  mTimeBox->setFont( Prefs::instance()->agendaMarcusBainsLineFont() );
+  mTimeBox->setFont( mEventView->preferences()->agendaMarcusBainsLineFont() );
   QPalette pal1 = mTimeBox->palette();
   pal1.setColor( QPalette::WindowText, color );
   mTimeBox->setPalette( pal1 );
@@ -253,7 +253,7 @@ Item::Id Agenda::lastSelectedItemId() const
 void Agenda::init()
 {
   mGridSpacingX = ((double)mScrollArea->width())/mColumns;
-  mDesiredGridSpacingY = Prefs::instance()->hourSize();
+  mDesiredGridSpacingY = mEventView->preferences()->hourSize();
   if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
     mDesiredGridSpacingY = 10;
   }
@@ -314,7 +314,7 @@ void Agenda::init()
   if( mAllDayMode ) {
     mMarcusBains = 0;
   } else {
-    mMarcusBains = new MarcusBains( this );
+    mMarcusBains = new MarcusBains( mEventView, this );
   }
 }
 
@@ -730,7 +730,7 @@ void Agenda::endSelectAction( const QPoint &currentPos )
 
   emit newTimeSpanSignal( mSelectionStartCell, mSelectionEndCell );
 
-  if ( Prefs::instance()->selectionStartsEditor() ) {
+  if ( mEventView->preferences()->selectionStartsEditor() ) {
     if ( ( mSelectionStartPoint - currentPos ).manhattanLength() >
          QApplication::startDragDistance() ) {
        emit newEventSignal();
@@ -1045,7 +1045,7 @@ void Agenda::endItemAction()
         emit startMultiModify( i18n( "Dissociate event from recurrence" ) );
         Incidence::Ptr oldIncSaved( incidence->clone() );
         Incidence::Ptr newInc( mCalendar->dissociateOccurrence(
-          inc, mActionItem->itemDate(), Prefs::instance()->timeSpec() ) );
+          inc, mActionItem->itemDate(), mEventView->preferences()->timeSpec() ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
@@ -1089,7 +1089,7 @@ void Agenda::endItemAction()
         emit startMultiModify( i18n( "Split future recurrences" ) );
         Incidence::Ptr oldIncSaved( incidence->clone() );
         Incidence::Ptr newInc( mCalendar->dissociateOccurrence(
-          inc, mActionItem->itemDate(), Prefs::instance()->timeSpec(), false ) );
+          inc, mActionItem->itemDate(), mEventView->preferences()->timeSpec(), false ) );
         if ( newInc ) {
           emit enableAgendaUpdate( false );
 #ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item
@@ -1374,8 +1374,8 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   db.fill(); // We don't want to see leftovers from previous paints
   QPainter dbp( &db );
   // TODO: CHECK THIS
-//  if ( ! Prefs::instance()->agendaGridBackgroundImage().isEmpty() ) {
-//    QPixmap bgImage( Prefs::instance()->agendaGridBackgroundImage() );
+//  if ( ! mEventView->preferences()->agendaGridBackgroundImage().isEmpty() ) {
+//    QPixmap bgImage( mEventView->preferences()->agendaGridBackgroundImage() );
 //    dbp.drawPixmap( 0, 0, cw, ch, bgImage ); FIXME
 //  }
 
@@ -1407,14 +1407,14 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
                  ( !mHolidayMask->at( gxStart - 1 ) ) ) ) {
             if ( pt2.y() > cy ) {
               dbp.fillRect( xStart, cy, xWidth, pt2.y() - cy + 1,
-                            Prefs::instance()->agendaGridWorkHoursBackgroundColor() );
+                            mEventView->preferences()->agendaGridWorkHoursBackgroundColor() );
             }
           }
           if ( ( gxStart < int( mHolidayMask->count() - 1 ) ) &&
                ( !mHolidayMask->at( gxStart ) ) ) {
             if ( pt1.y() < cy + ch - 1 ) {
               dbp.fillRect( xStart, pt1.y(), xWidth, cy + ch - pt1.y() + 1,
-                            Prefs::instance()->agendaGridWorkHoursBackgroundColor() );
+                            mEventView->preferences()->agendaGridWorkHoursBackgroundColor() );
             }
           }
         } else {
@@ -1422,7 +1422,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
           // (needed for overnight shifts)
           if ( gxStart < int( mHolidayMask->count() - 1 ) && !mHolidayMask->at( gxStart ) ) {
             dbp.fillRect( xStart, pt1.y(), xWidth, pt2.y() - pt1.y() + 1,
-                          Prefs::instance()->agendaGridWorkHoursBackgroundColor() );
+                          mEventView->preferences()->agendaGridWorkHoursBackgroundColor() );
           }
         }
         ++gxStart;
@@ -1438,26 +1438,26 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
       // draw start day
       pt = gridToContents( mSelectionStartCell );
       pt1 = gridToContents( QPoint( mSelectionStartCell.x() + 1, mRows + 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), Prefs::instance()->agendaGridHighlightColor() );
+      dbp.fillRect( QRect( pt, pt1 ), mEventView->preferences()->agendaGridHighlightColor() );
       // draw all other days between the start day and the day of the selection end
       for ( int c = mSelectionStartCell.x() + 1; c < mSelectionEndCell.x(); ++c ) {
         pt = gridToContents( QPoint( c, 0 ) );
         pt1 = gridToContents( QPoint( c + 1, mRows + 1 ) );
-        dbp.fillRect( QRect( pt, pt1 ), Prefs::instance()->agendaGridHighlightColor() );
+        dbp.fillRect( QRect( pt, pt1 ), mEventView->preferences()->agendaGridHighlightColor() );
       }
       // draw end day
       pt = gridToContents( QPoint( mSelectionEndCell.x(), 0 ) );
       pt1 = gridToContents( mSelectionEndCell + QPoint( 1, 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), Prefs::instance()->agendaGridHighlightColor() );
+      dbp.fillRect( QRect( pt, pt1 ), mEventView->preferences()->agendaGridHighlightColor() );
     } else { // single day selection
       pt = gridToContents( mSelectionStartCell );
       pt1 = gridToContents( mSelectionEndCell + QPoint( 1, 1 ) );
-      dbp.fillRect( QRect( pt, pt1 ), Prefs::instance()->agendaGridHighlightColor() );
+      dbp.fillRect( QRect( pt, pt1 ), mEventView->preferences()->agendaGridHighlightColor() );
     }
   }
 
-  QPen hourPen( Prefs::instance()->agendaGridBackgroundColor().dark( 150 ) );
-  QPen halfHourPen( Prefs::instance()->agendaGridBackgroundColor().dark( 125 ) );
+  QPen hourPen( mEventView->preferences()->agendaGridBackgroundColor().dark( 150 ) );
+  QPen halfHourPen( mEventView->preferences()->agendaGridBackgroundColor().dark( 125 ) );
   dbp.setPen( hourPen );
 
   // Draw vertical lines of grid, start with the last line not yet visible
@@ -1594,7 +1594,7 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
 
   mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( mCalendar, incidence, qd, this );
+  AgendaItem *agendaItem = new AgendaItem( mEventView, mCalendar, incidence, qd, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1611,7 +1611,7 @@ AgendaItem *Agenda::insertItem( const Item &incidence, const QDate &qd,
                       int( ( YBottom + 1 ) * mGridSpacingY ) );
   agendaItem->setCellXY( X, YTop, YBottom );
   agendaItem->setCellXRight( X );
-  agendaItem->setResourceColor( EventViews::resourceColor( incidence ) );
+  agendaItem->setResourceColor( EventViews::resourceColor( incidence, mEventView->preferences() ) );
   agendaItem->installEventFilter( this );
 
   agendaItem->move( int( X * mGridSpacingX ), int( YTop * mGridSpacingY ) );
@@ -1640,7 +1640,7 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
 
   mActionType = NOP;
 
-  AgendaItem *agendaItem = new AgendaItem( mCalendar, incidence, qd, this );
+  AgendaItem *agendaItem = new AgendaItem( mEventView, mCalendar, incidence, qd, this );
   connect( agendaItem, SIGNAL(removeAgendaItem(AgendaItem *)),
            SLOT(removeAgendaItem(AgendaItem *)) );
   connect( agendaItem, SIGNAL(showAgendaItem(AgendaItem *)),
@@ -1656,7 +1656,7 @@ AgendaItem *Agenda::insertAllDayItem( const Item &incidence, const QDate &qd,
   agendaItem->resize( int( endIt ) - int( startIt ), int( mGridSpacingY ) );
 
   agendaItem->installEventFilter( this );
-  agendaItem->setResourceColor( EventViews::resourceColor( incidence ) );
+  agendaItem->setResourceColor( EventViews::resourceColor( incidence, mEventView->preferences() ) );
   agendaItem->move( int( XBegin * mGridSpacingX ), 0 ) ;
   mItems.append( agendaItem );
 
@@ -1899,7 +1899,7 @@ void Agenda::updateConfig()
 {
   double oldGridSpacingY = mGridSpacingY;
 
-  mDesiredGridSpacingY = Prefs::instance()->hourSize();
+  mDesiredGridSpacingY = mEventView->preferences()->hourSize();
   if ( mDesiredGridSpacingY < 4 || mDesiredGridSpacingY > 30 ) {
     mDesiredGridSpacingY = 10;
   }
@@ -2037,11 +2037,11 @@ void Agenda::calculateWorkingHours()
 {
   mWorkingHoursEnable = !mAllDayMode;
 
-  QTime tmp = Prefs::instance()->workingHoursStart().time();
+  QTime tmp = mEventView->preferences()->workingHoursStart().time();
   mWorkingHoursYTop = int( 4 * mGridSpacingY *
                            ( tmp.hour() + tmp.minute() / 60. +
                              tmp.second() / 3600. ) );
-  tmp = Prefs::instance()->workingHoursEnd().time();
+  tmp = mEventView->preferences()->workingHoursEnd().time();
   mWorkingHoursYBottom = int( 4 * mGridSpacingY *
                               ( tmp.hour() + tmp.minute() / 60. +
                                 tmp.second() / 3600. ) - 1 );
@@ -2090,14 +2090,14 @@ AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView, QWidget
     mAgenda = new Agenda( eventView, this, 1 );
     setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   } else {
-    mAgenda = new Agenda( eventView, this, 1, 96, Prefs::instance()->hourSize() );
+    mAgenda = new Agenda( eventView, this, 1, 96, eventView->preferences()->hourSize() );
   }
 
   setWidgetResizable( true );
   setWidget( mAgenda );
   setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
-  mAgenda->setStartTime( Prefs::instance()->dayBegins().time() );
+  mAgenda->setStartTime( eventView->preferences()->dayBegins().time() );
 }
 
 AgendaScrollArea::~AgendaScrollArea()

@@ -71,7 +71,7 @@ class MarcusBains : public QFrame
 {
   Q_OBJECT
   public:
-    MarcusBains( Agenda *agenda = 0 );
+    explicit MarcusBains( EventView *eventView, Agenda *agenda = 0 );
     void updateLocationRecalc( bool recalculate = false );
     virtual ~MarcusBains();
 
@@ -79,6 +79,7 @@ class MarcusBains : public QFrame
     void updateLocation();
 
   private:
+    EventView *mEventView;
     int todayColumn();
     QTimer *mTimer;
     QLabel *mTimeBox;  // Label showing the current time

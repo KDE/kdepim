@@ -67,7 +67,8 @@ class EventView::Private
         calendar( 0 ),
         customCollectionSelection( 0 ),
         collectionSelectionModel( 0 ),
-        stateSaver( 0 )
+        stateSaver( 0 ),
+        mPrefs( new Prefs() )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
@@ -101,6 +102,7 @@ class EventView::Private
     void reconnectCollectionSelection();
 
     KHolidays::HolidayRegionPtr mHolidayRegion;
+    PrefsPtr mPrefs;
 };
 
 void EventView::Private::setUpModels()
@@ -192,7 +194,7 @@ int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
   int answer = KMessageBox::Ok;
   KGuiItem itemFuture( i18n( "Also &Future Items" ) );
 
-  KDateTime dateTime( date, Prefs::instance()->timeSpec() );
+  KDateTime dateTime( date, preferences()->timeSpec() );
   bool isFirst = !inc->recurrence()->getPreviousDateTime( dateTime ).isValid();
   bool isLast  = !inc->recurrence()->getNextDateTime( dateTime ).isValid();
 
@@ -237,6 +239,23 @@ void EventView::setCalendar( Akonadi::Calendar *cal )
 Akonadi::Calendar *EventView::calendar() const
 {
   return d->calendar;
+}
+
+void EventView::setPreferences( const PrefsPtr &preferences )
+{
+  if ( d->mPrefs != preferences ) {
+    if ( preferences ) {
+        d->mPrefs = preferences;
+    } else {
+        d->mPrefs = PrefsPtr( new Prefs() );
+    }
+    updateConfig();
+  }
+}
+
+PrefsPtr EventView::preferences() const
+{
+  return d->mPrefs;
 }
 
 Akonadi::CalendarSearch* EventView::calendarSearch() const
@@ -504,10 +523,10 @@ void EventView::handleBackendError( const QString &errorString )
 
 bool EventView::isWorkDay( const QDate &date ) const
 {
-  int mask( ~( Prefs::instance()->workWeekMask() ) );
+  int mask( ~( preferences()->workWeekMask() ) );
 
   bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
-  if ( Prefs::instance()->excludeHolidays() && d->mHolidayRegion ) {
+  if ( preferences()->excludeHolidays() && d->mHolidayRegion ) {
     const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
     for ( int i = 0; i < list.count(); ++i ) {
       nonWorkDay = nonWorkDay || ( list.at( i ).dayType() == KHolidays::Holiday::NonWorkday );
@@ -576,10 +595,10 @@ bool EventView::usesCompletedTodoPixmap( const Item &aitem, const QDate &date )
     if ( todo->allDay() ) {
       time = QTime( 0, 0 );
     } else {
-      time = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() ).time();
+      time = todo->dtDue().toTimeSpec( preferences()->timeSpec() ).time();
     }
 
-    KDateTime itemDateTime( date, time, Prefs::instance()->timeSpec() );
+    KDateTime itemDateTime( date, time, preferences()->timeSpec() );
 
     return itemDateTime < todo->dtDue( false );
 

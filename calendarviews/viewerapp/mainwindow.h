@@ -31,9 +31,14 @@ namespace Akonadi
   class IncidenceChanger;
 }
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
 namespace EventViews
 {
-  class EventView;
+  class Prefs;
+  typedef boost::shared_ptr<Prefs> PrefsPtr;
 }
 
 class QAction;
@@ -59,6 +64,8 @@ class MainWindow : public QMainWindow
     Akonadi::IncidenceChanger *mIncidenceChanger;
 
     Settings *mSettings;
+
+    EventViews::PrefsPtr *mViewPreferences;
 
   private:
     void addView( const QString &viewName );

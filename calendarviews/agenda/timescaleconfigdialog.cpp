@@ -40,10 +40,25 @@
 #include <QLayout>
 #include <QListWidget>
 
+#include <boost/shared_ptr.hpp>
+
 using namespace EventViews;
 
-TimeScaleConfigDialog::TimeScaleConfigDialog( QWidget *parent )
-  : KDialog( parent )
+class TimeScaleConfigDialog::Private
+{
+  public:
+    Private( TimeScaleConfigDialog *parent, const PrefsPtr &preferences )
+      : q( parent ), mPreferences( preferences )
+    {
+    }
+
+  public:
+    TimeScaleConfigDialog *const q;
+    PrefsPtr mPreferences;
+};
+
+TimeScaleConfigDialog::TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent )
+  : KDialog( parent ), d( new Private( this, preferences ) )
 {
   setCaption( i18n( "Timezone" ) );
   setButtons( Ok | Cancel );
@@ -78,12 +93,17 @@ TimeScaleConfigDialog::TimeScaleConfigDialog( QWidget *parent )
   connect( this, SIGNAL( okClicked() ), SLOT( okClicked() ) );
   connect( this, SIGNAL( cancelClicked() ), SLOT( reject() ) );
 
-  listWidget->addItems( Prefs::instance()->timeScaleTimezones() );
+  listWidget->addItems( d->mPreferences->timeScaleTimezones() );
+}
+
+TimeScaleConfigDialog::~TimeScaleConfigDialog()
+{
+  delete d;
 }
 
 void TimeScaleConfigDialog::okClicked()
 {
-  Prefs::instance()->setTimeScaleTimezones( zones() );
+  d->mPreferences->setTimeScaleTimezones( zones() );
   accept();
 }
 

@@ -28,15 +28,22 @@
 
 #include <KDialog>
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
 namespace EventViews
 {
+  class Prefs;
+  typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 class TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
 {
   Q_OBJECT
 
   public:
-    TimeScaleConfigDialog( QWidget *parent );
+    TimeScaleConfigDialog( const PrefsPtr &preferences, QWidget *parent );
+    ~TimeScaleConfigDialog();
 
   private slots:
     void add();
@@ -47,6 +54,10 @@ class TimeScaleConfigDialog : public KDialog, private Ui::TimeScaleEditWidget
 
   private:
     QStringList zones();
+
+  private:
+    class Private;
+    Private *const d;
 };
 
 } // namespace EventViews

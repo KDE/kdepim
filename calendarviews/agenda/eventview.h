@@ -66,6 +66,9 @@ class QMenu;
 
 namespace EventViews
 {
+  class Prefs;
+  typedef boost::shared_ptr<Prefs> PrefsPtr;
+
 /**
   EventView is the abstract base class from wich all other
   calendar views for event data are derived.  It provides methods for
@@ -109,13 +112,16 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     virtual Akonadi::Calendar *calendar() const;
 
+    virtual void setPreferences( const PrefsPtr &preferences );
+
+    PrefsPtr preferences() const;
+
     Akonadi::CalendarSearch* calendarSearch() const;
 
     /**
        A todo can have two pixmaps, one for completed and one for incomplete.
     */
-    static bool usesCompletedTodoPixmap( const Akonadi::Item &aItem,
-                                         const QDate &date );
+    bool usesCompletedTodoPixmap( const Akonadi::Item &aItem, const QDate &date );
 
     /**
       @return a list of selected events. Most views can probably only

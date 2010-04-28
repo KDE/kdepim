@@ -46,7 +46,7 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
 {
   Q_OBJECT
   public:
-    explicit TimeLabelsZone( QWidget *parent, Agenda *agenda = 0 );
+    explicit TimeLabelsZone( QWidget *parent, EventView *eventView, Agenda *agenda = 0 );
 
     /** Add a new time label with the given spec.
         If spec is not valid, use the display timespec.
@@ -64,6 +64,7 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
   private:
     void setupTimeLabel( QScrollArea *area );
     Agenda *mAgenda;
+    EventView *mEventView;
     AgendaView *mParent;
 
     QHBoxLayout *mTimeLabelsLayout;
