@@ -428,6 +428,7 @@ void Calendar::setUnfilteredModel( QAbstractItemModel *model ) {
     connect( d->m_model, SIGNAL(modelReset()), d, SLOT(modelReset()) );
     connect( d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), d, SLOT(rowsInserted(QModelIndex,int,int)) );
     connect( d->m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)), d, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)) );
+    d->modelReset();
   }
 }
 
