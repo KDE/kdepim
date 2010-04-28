@@ -42,14 +42,18 @@
 using namespace Akonadi;
 using namespace EventViews;
 
-MainWindow::MainWindow()
+MainWindow::MainWindow( const QStringList &viewNames )
   : QMainWindow(),
+    mViewNames( viewNames ),
     mChangeRecorder( 0 ),
     mCalendar( 0 ),
-    mEventView( 0 ),
+    mIncidenceChanger( 0 ),
     mSettings( 0 )
 {
   mUi.setupUi( this );
+  mUi.tabWidget->clear();
+
+  connect( mUi.addViewMenu, SIGNAL( triggered( QAction* ) ), this, SLOT( addViewTriggered( QAction* ) ) );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
@@ -59,6 +63,26 @@ MainWindow::MainWindow()
 MainWindow::~MainWindow()
 {
   delete mSettings;
+}
+
+void MainWindow::addView( const QString &viewName )
+{
+  EventView *eventView = 0;
+
+  if ( viewName == QLatin1String( "agenda" ) ) {
+    eventView = new AgendaView( this );
+  }
+
+  if ( eventView != 0 ) {
+    eventView->setCalendar( mCalendar );
+    eventView->setIncidenceChanger( mIncidenceChanger );
+    eventView->setDateRange( KDateTime::currentLocalDateTime().addDays( -1 ),
+                             KDateTime::currentLocalDateTime().addDays( 1 ) );
+    eventView->updateConfig();
+    mUi.tabWidget->addTab( eventView, viewName );
+  } else {
+    kError() << "Cannot create view" << viewName;
+  }
 }
 
 void MainWindow::delayedInit()
@@ -94,17 +118,18 @@ void MainWindow::delayedInit()
 
   mCalendar = new Akonadi::Calendar( calendarModel, filterModel, KSystemTimeZones::local() );
 
-  IncidenceChanger *incidenceChanger = new IncidenceChanger( mCalendar, this, Collection() );
+  mIncidenceChanger = new IncidenceChanger( mCalendar, this, Collection() );
 
-  mEventView = new AgendaView( this );
-  mEventView->setCalendar( mCalendar );
-  mEventView->setIncidenceChanger( incidenceChanger );
-  mEventView->setDateRange( KDateTime::currentLocalDateTime().addDays( -1 ),
-                            KDateTime::currentLocalDateTime().addDays( 1 ) );
-  mEventView->updateConfig();
+  Q_FOREACH( const QString &viewName, mViewNames ) {
+    addView( viewName );
+  }
+}
 
-  setCentralWidget( mEventView );
-  mEventView->show();
+void MainWindow::addViewTriggered( QAction *action )
+{
+  QString viewName = action->text().toLower();
+  viewName.remove( QLatin1Char( '&' ) );
+  addView( viewName );
 }
 
 #include "mainwindow.moc"

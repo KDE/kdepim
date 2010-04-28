@@ -26,7 +26,7 @@
 static const char description[] = I18N_NOOP( "A test app for embedding calendarviews" );
 
 static const char version[] = "0.1";
-
+#include <KDebug>
 int main( int argc, char **argv )
 {
     KAboutData about( "viewerapp", 0, ki18n( "ViewerApp" ), version, ki18n( description ),
@@ -35,11 +35,20 @@ int main( int argc, char **argv )
     about.addAuthor( ki18n( "Kevin Krammer" ), KLocalizedString(), "krake@kdab.com" );
     KCmdLineArgs::init( argc, argv, &about );
 
-    //TODO add options to specify the view(s)
+    KCmdLineOptions options;
+    options.add("+[viewname]", ki18n("Optional list of view names to instantiate"));
+
+    KCmdLineArgs::addCmdLineOptions( options );
 
     KApplication app;
 
-    MainWindow *widget = new MainWindow;
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    QStringList viewNames;
+    for ( int i = 0; i < args->count(); ++i ) {
+      viewNames << args->arg( i ).toLower();
+    }
+
+    MainWindow *widget = new MainWindow( viewNames ) ;
 
     widget->show();
 
