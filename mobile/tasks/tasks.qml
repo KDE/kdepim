@@ -129,18 +129,37 @@ KPIM.MainView {
                KPIM.ItemListViewDelegate {
                  summaryContent: [
                    Text {
-                     anchors.fill: parent
+                     anchors.top: parent.top
+                     anchors.left: parent.left
                      text: "Task: " + model.summary
                      font.bold: true
+                   },
+                   Text {
+                     anchors.top: parent.top
+                     anchors.right: parent.right
+                     text: model.percentComplete + "%"
                    }
                  ]
                  detailsContent: [
                     Column {
                       anchors.fill: parent
-                      Text {
-                        text: "Task: " + model.summary
-                        color: palette.highlightedText
-                        font.bold: true
+                      Item {
+                        width: parent.width
+                        height: summaryLabel.height
+                        Text {
+                          id: summaryLabel
+                          anchors.top: parent.top
+                          anchors.left: parent.left
+                          text: "Task: " + model.summary
+                          font.bold: true
+                          color: palette.highlightedText
+                        }
+                        Text {
+                          anchors.top: parent.top
+                          anchors.right: parent.right
+                          text: model.percentComplete + "%"
+                          color: palette.highlightedText
+                        }
                       }
                       Text {
                         text: "Details: " + model.description

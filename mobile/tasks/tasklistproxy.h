@@ -26,7 +26,8 @@ class TaskListProxy : public ListProxy
 public:
   enum Role {
     Summary,
-    Description
+    Description,
+    PercentComplete
   };
 
 public:
