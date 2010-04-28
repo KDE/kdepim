@@ -594,7 +594,7 @@ QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDiges
   
   int id = 0;
  
-  foreach( KMime::Message::Ptr fMsg, msgs ) {
+  foreach( const KMime::Message::Ptr fMsg, msgs ) {
     if( id == 0 && fMsg->hasHeader( "X-KMail-Identity" ) )
       id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
 
