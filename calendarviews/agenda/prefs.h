@@ -36,6 +36,7 @@ namespace Akonadi
   class Collection;
 }
 
+class KCoreConfigSkeleton;
 class QColor;
 class QFont;
 class QStringList;
@@ -48,18 +49,26 @@ class EVENTVIEWS_EXPORT Prefs
   public:
     ~Prefs();
 
-    /** Get instance of Prefs. It is made sure that there is only one
-    instance. */
+    /** Create an instance of Prefs with a given application specific override config
+
+        If there is an instance it will be delete and replaced by the newly create one.
+
+        The passed @p appConfig will be queried for matching items whenever one of the
+        accessors is called. If one is found it is used for setting/getting the value
+        otherwise the one from the eventviews base config is used.
+    */
+    static void createInstance( KCoreConfigSkeleton *appConfig );
+
+    /** Get instance of Prefs. It is made sure that there is only one instance.
+
+        If there is no instance yet, a default one with not application specific override
+        will be created, i.e. only eventviewsrc will be used
+    */
     static Prefs *instance();
 
-    /** Set preferences to default values */
-    void usrSetDefaults();
+    void readConfig();
 
-    /** Read preferences from config file */
-    void usrReadConfig();
-
-    /** Write preferences to config file */
-    void usrWriteConfig();
+    void writeConfig();
 
   public:
     void setMarcusBainsShowSeconds( bool showSeconds );
@@ -98,7 +107,7 @@ class EVENTVIEWS_EXPORT Prefs
     void setAgendaGridBackgroundColor( const QColor &color );
     QColor agendaGridBackgroundColor() const;
 
-    void setEnableAgendaItemIcons( const bool enable );
+    void setEnableAgendaItemIcons( bool enable );
     bool enableAgendaItemIcons() const;
 
     void setTodosUseCategoryColors( bool useColors );
@@ -119,6 +128,9 @@ class EVENTVIEWS_EXPORT Prefs
     void setAgendaViewFont( const QFont &font );
     QFont agendaViewFont() const;
 
+    void setMonthViewFont( const QFont &font );
+    QFont monthViewFont() const;
+
     void setEnableToolTips( bool enable );
     bool enableToolTips() const;
 
@@ -137,14 +149,9 @@ class EVENTVIEWS_EXPORT Prefs
     void setExcludeHolidays( bool exclude );
     bool excludeHolidays() const;
 
-  protected:
-    void setTimeZoneDefault();
-
-    /** Fill empty mail fields with default values. */
-    void fillMailDefaults();
-
   private:
     Prefs();
+    Prefs( KCoreConfigSkeleton *appConfig );
 
     static Prefs *mInstance;
 

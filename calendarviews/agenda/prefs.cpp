@@ -69,19 +69,19 @@ using namespace EventViews;
 
 Prefs *Prefs::mInstance = 0;
 
-class Prefs::Private : public PrefsBase
+class BaseConfig : public PrefsBase
 {
   public:
-    Private( Prefs *parent ) : PrefsBase(), q( parent ) {}
+    BaseConfig();
 
-    void init();
+    void setResourceColor( const QString &resource, const QColor &color );
 
-    void usrSetDefaults();
-    void usrReadConfig();
-    void usrWriteConfig();
+    void setTimeScaleTimezones( const QStringList &timeZones );
+    QStringList timeScaleTimezones() const;
 
-    void fillMailDefaults();
-    void setTimeZoneDefault();
+    QString defaultCalendar() const;
+    Akonadi::Collection defaultCollection() const;
+    void setDefaultCollection( const Akonadi::Collection& col );
 
   public:
     QString mHtmlExportFile;
@@ -105,11 +105,16 @@ class Prefs::Private : public PrefsBase
     QString mDefaultCalendar;
     Akonadi::Collection mDefaultCollection;
 
-  private:
-    Prefs *q;
+  protected:
+    void usrSetDefaults();
+    void usrReadConfig();
+    void usrWriteConfig();
+
+    void fillMailDefaults();
+    void setTimeZoneDefault();
 };
 
-void Prefs::Private::init()
+BaseConfig::BaseConfig() : PrefsBase()
 {
   mDefaultCategoryColor = QColor( 151, 235, 121 );
   mDefaultResourceColor = QColor(); //Default is a color invalid
@@ -124,8 +129,8 @@ void Prefs::Private::init()
   mDefaultMonthViewFont.setPointSize(
     qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );
 
-  KConfigSkeleton::setCurrentGroup( "General" );
-
+  // TODO move this to the kcfg file
+  setCurrentGroup( "General" );
   addItemPath( "Html Export File", mHtmlExportFile,
       QDir::homePath() + '/' + i18nc( "Default export file", "calendar.html" ) );
 
@@ -133,7 +138,40 @@ void Prefs::Private::init()
   monthViewFontItem()->setDefaultValue( mDefaultMonthViewFont );
 }
 
-void Prefs::Private::usrSetDefaults()
+void BaseConfig::setResourceColor( const QString &resource, const QColor &color )
+{
+  mResourceColors.insert( resource, color );
+}
+
+void BaseConfig::setTimeScaleTimezones( const QStringList &list )
+{
+  mTimeScaleTimeZones = list;
+}
+
+QStringList BaseConfig::timeScaleTimezones() const
+{
+  return mTimeScaleTimeZones;
+}
+
+QString BaseConfig::defaultCalendar() const
+{
+  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
+}
+
+Akonadi::Collection BaseConfig::defaultCollection() const
+{
+  return mDefaultCollection;
+}
+
+void BaseConfig::setDefaultCollection( const Akonadi::Collection& col )
+{
+  mDefaultCollection = col;
+  if ( !col.isValid() ) {
+    mDefaultCalendar ="";
+  }
+}
+
+void BaseConfig::usrSetDefaults()
 {
   // Default should be set a bit smarter, respecting username and locale
   // settings for example.
@@ -155,10 +193,10 @@ void Prefs::Private::usrSetDefaults()
 
   setTimeZoneDefault();
 
-  KConfigSkeleton::usrSetDefaults();
+  PrefsBase::usrSetDefaults();
 }
 
-void Prefs::Private::usrReadConfig()
+void BaseConfig::usrReadConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -184,7 +222,7 @@ void Prefs::Private::usrReadConfig()
   for ( it3 = colorKeyList.begin(); it3 != colorKeyList.end(); ++it3 ) {
     QColor color = rColorsConfig.readEntry( *it3, mDefaultResourceColor );
     //kDebug() << "key:" << (*it3) << "value:" << color;
-    q->setResourceColor( *it3, color );
+    setResourceColor( *it3, color );
   }
 
   if ( !mTimeSpec.isValid() ) {
@@ -202,13 +240,13 @@ void Prefs::Private::usrReadConfig()
   mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
-  q->setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
+  setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
   KConfigSkeleton::usrReadConfig();
   fillMailDefaults();
 }
 
-void Prefs::Private::usrWriteConfig()
+void BaseConfig::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
 
@@ -247,16 +285,16 @@ void Prefs::Private::usrWriteConfig()
 #endif
 
   KConfigGroup defaultCalendarConfig( config(), "Calendar" );
-  defaultCalendarConfig.writeEntry( "Default Calendar", q->defaultCalendar() );
+  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
 
   KConfigGroup timeScaleConfig( config(), "Timescale" );
-  timeScaleConfig.writeEntry( "Timescale Timezones", q->timeScaleTimezones() );
+  timeScaleConfig.writeEntry( "Timescale Timezones", timeScaleTimezones() );
 
 
   KConfigSkeleton::usrWriteConfig();
 }
 
-void Prefs::Private::fillMailDefaults()
+void BaseConfig::fillMailDefaults()
 {
   userEmailItem()->swapDefault();
   QString defEmail = userEmailItem()->value();
@@ -271,7 +309,7 @@ void Prefs::Private::fillMailDefaults()
   }
 }
 
-void Prefs::Private::setTimeZoneDefault()
+void BaseConfig::setTimeZoneDefault()
 {
   KTimeZone zone = KSystemTimeZones::local();
   if ( !zone.isValid() ) {
@@ -284,9 +322,260 @@ void Prefs::Private::setTimeZoneDefault()
   mTimeSpec = zone;
 }
 
+class Prefs::Private
+{
+  public:
+    Private( Prefs *parent ) : mAppConfig( 0 ), q( parent ) {}
+    Private( Prefs *parent, KCoreConfigSkeleton *appConfig )
+      : mAppConfig( appConfig ), q( parent ) {}
+
+    void fillMailDefaults();
+    void setTimeZoneDefault();
+
+    KConfigSkeletonItem *appConfigItem( const KConfigSkeletonItem *baseConfigItem ) const;
+
+    void setBool( KCoreConfigSkeleton::ItemBool *baseConfigItem, bool value );
+    bool getBool( const KCoreConfigSkeleton::ItemBool *baseConfigItem ) const;
+
+    void setInt( KCoreConfigSkeleton::ItemInt *baseConfigItem, int value );
+    int getInt( const KCoreConfigSkeleton::ItemInt *baseConfigItem ) const;
+
+    void setString( KCoreConfigSkeleton::ItemString *baseConfigItem, const QString &value );
+    QString getString( const KCoreConfigSkeleton::ItemString *baseConfigItem ) const;
+
+    void setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigItem, const QDateTime &value );
+    QDateTime getDateTime( const KCoreConfigSkeleton::ItemDateTime *baseConfigItem ) const;
+
+    void setStringList( KCoreConfigSkeleton::ItemStringList *baseConfigItem, const QStringList &value );
+    QStringList getStringList( const KCoreConfigSkeleton::ItemStringList *baseConfigItem ) const;
+
+    void setColor( KConfigSkeleton::ItemColor *baseConfigItem, const QColor &value );
+    QColor getColor( const KConfigSkeleton::ItemColor *baseConfigItem ) const;
+
+    void setFont( KConfigSkeleton::ItemFont *baseConfigItem, const QFont &value );
+    QFont getFont( const KConfigSkeleton::ItemFont *baseConfigItem ) const;
+
+  public:
+    BaseConfig mBaseConfig;
+    KCoreConfigSkeleton *mAppConfig;
+
+  private:
+    Prefs *q;
+};
+
+KConfigSkeletonItem *Prefs::Private::appConfigItem( const KConfigSkeletonItem *baseConfigItem ) const
+{
+  Q_ASSERT( baseConfigItem );
+
+  if ( mAppConfig ) {
+    return mAppConfig->findItem( baseConfigItem->name() );
+  }
+
+  return 0;
+}
+
+void Prefs::Private::setBool( KCoreConfigSkeleton::ItemBool *baseConfigItem, bool value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemBool *item = dynamic_cast<KCoreConfigSkeleton::ItemBool*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type Bool";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+bool Prefs::Private::getBool( const KCoreConfigSkeleton::ItemBool *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemBool *item = dynamic_cast<KCoreConfigSkeleton::ItemBool*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type Bool";
+  }
+  return baseConfigItem->value();
+}
+
+void Prefs::Private::setInt( KCoreConfigSkeleton::ItemInt *baseConfigItem, int value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemInt *item = dynamic_cast<KCoreConfigSkeleton::ItemInt*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type Int";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+int Prefs::Private::getInt( const KCoreConfigSkeleton::ItemInt *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemInt *item = dynamic_cast<KCoreConfigSkeleton::ItemInt*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type Int";
+  }
+  return baseConfigItem->value();
+}
+
+void Prefs::Private::setString( KCoreConfigSkeleton::ItemString *baseConfigItem, const QString &value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemString *item = dynamic_cast<KCoreConfigSkeleton::ItemString*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type String";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+QString Prefs::Private::getString( const KCoreConfigSkeleton::ItemString *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemString *item = dynamic_cast<KCoreConfigSkeleton::ItemString*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type String";
+  }
+  return baseConfigItem->value();
+}
+
+void Prefs::Private::setDateTime( KCoreConfigSkeleton::ItemDateTime *baseConfigItem, const QDateTime &value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemDateTime *item = dynamic_cast<KCoreConfigSkeleton::ItemDateTime*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type DateTime";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+QDateTime Prefs::Private::getDateTime( const KCoreConfigSkeleton::ItemDateTime *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemDateTime *item = dynamic_cast<KCoreConfigSkeleton::ItemDateTime*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type DateTime";
+  }
+  return baseConfigItem->value();
+}
+
+void Prefs::Private::setStringList( KCoreConfigSkeleton::ItemStringList *baseConfigItem, const QStringList &value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemStringList *item = dynamic_cast<KCoreConfigSkeleton::ItemStringList*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type StringList";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+QStringList Prefs::Private::getStringList( const KCoreConfigSkeleton::ItemStringList *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KCoreConfigSkeleton::ItemStringList *item = dynamic_cast<KCoreConfigSkeleton::ItemStringList*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type StringList";
+  }
+  return baseConfigItem->value();
+}
+
+void Prefs::Private::setColor( KConfigSkeleton::ItemColor *baseConfigItem, const QColor &value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KConfigSkeleton::ItemColor *item = dynamic_cast<KConfigSkeleton::ItemColor*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type Color";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+QColor Prefs::Private::getColor( const KConfigSkeleton::ItemColor *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KConfigSkeleton::ItemColor *item = dynamic_cast<KConfigSkeleton::ItemColor*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type Color";
+  }
+  return baseConfigItem->value();
+}
+
+void Prefs::Private::setFont( KConfigSkeleton::ItemFont *baseConfigItem, const QFont &value )
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KConfigSkeleton::ItemFont *item = dynamic_cast<KConfigSkeleton::ItemFont*>( appItem );
+    if ( item ) {
+      item->setValue( value );
+    } else {
+      kError() << "Application config item" << appItem->name() << "is not of type Font";
+    }
+  } else {
+    baseConfigItem->setValue( value );
+  }
+}
+
+QFont Prefs::Private::getFont( const KConfigSkeleton::ItemFont *baseConfigItem ) const
+{
+  KConfigSkeletonItem *appItem = appConfigItem( baseConfigItem );
+  if ( appItem ) {
+    KConfigSkeleton::ItemFont *item = dynamic_cast<KConfigSkeleton::ItemFont*>( appItem );
+    if ( item ) {
+      return item->value();
+    }
+    kError() << "Application config item" << appItem->name() << "is not of type Font";
+  }
+  return baseConfigItem->value();
+}
+
 Prefs::Prefs() : d( new Private( this ) )
 {
-  d->init();
+}
+
+Prefs::Prefs( KCoreConfigSkeleton *appConfig ) : d( new Private( this, appConfig ) )
+{
 }
 
 Prefs::~Prefs()
@@ -294,290 +583,297 @@ Prefs::~Prefs()
   kDebug();
 }
 
+void Prefs::createInstance( KCoreConfigSkeleton *appConfig )
+{
+  delete mInstance;
+  mInstance = new Prefs( appConfig );
+  mInstance->readConfig();
+}
+
 Prefs *Prefs::instance()
 {
   if ( !mInstance ) {
     mInstance = new Prefs();
-
-    mInstance->d->readConfig();
+    mInstance->readConfig();
   }
 
   return mInstance;
 }
 
-void Prefs::usrSetDefaults()
+void Prefs::readConfig()
 {
-  d->usrSetDefaults();
+  d->mBaseConfig.readConfig();
+  if ( d->mAppConfig ) {
+    d->mAppConfig->readConfig();
+  }
 }
 
-void Prefs::usrReadConfig()
+void Prefs::writeConfig()
 {
-  d->usrReadConfig();
-}
-
-void Prefs::usrWriteConfig()
-{
-  d->usrWriteConfig();
+  d->mBaseConfig.writeConfig();
+  if ( d->mAppConfig ) {
+    d->mAppConfig->writeConfig();
+  }
 }
 
 void Prefs::setMarcusBainsShowSeconds( bool showSeconds )
 {
-  d->mMarcusBainsShowSeconds = showSeconds;
+  d->setBool( d->mBaseConfig.marcusBainsShowSecondsItem(), showSeconds );
 }
 
 bool Prefs::marcusBainsShowSeconds() const
 {
-  return d->mMarcusBainsShowSeconds;
+  return d->getBool( d->mBaseConfig.marcusBainsShowSecondsItem() );
 }
 
 void Prefs::setAgendaMarcusBainsLineLineColor( const QColor &color )
 {
-  d->mAgendaMarcusBainsLineLineColor = color;
+  d->setColor( d->mBaseConfig.agendaMarcusBainsLineLineColorItem(), color );
 }
 
 QColor Prefs::agendaMarcusBainsLineLineColor() const
 {
-  return d->mAgendaMarcusBainsLineLineColor;
+  return d->getColor( d->mBaseConfig.agendaMarcusBainsLineLineColorItem() );
 }
 
 void Prefs::setMarcusBainsEnabled( bool enabled )
 {
-  d->mMarcusBainsEnabled = enabled;
+  d->setBool( d->mBaseConfig.marcusBainsEnabledItem(), enabled );
 }
 
 bool Prefs::marcusBainsEnabled() const
 {
-  return d->mMarcusBainsEnabled;
+  return d->getBool( d->mBaseConfig.marcusBainsEnabledItem() );
 }
 
 void Prefs::setAgendaMarcusBainsLineFont( const QFont &font )
 {
-  d->mAgendaMarcusBainsLineFont = font;
+  d->setFont( d->mBaseConfig.agendaMarcusBainsLineFontItem(), font );
 }
 
 QFont Prefs::agendaMarcusBainsLineFont() const
 {
-  return d->mAgendaMarcusBainsLineFont;
+  return d->getFont( d->mBaseConfig.agendaMarcusBainsLineFontItem() );
 }
 
 void Prefs::setHourSize( int size )
 {
-  d->mHourSize = size;
+  d->setInt( d->mBaseConfig.hourSizeItem(), size );
 }
 
 int Prefs::hourSize() const
 {
-  return d->mHourSize;
+  return d->getInt( d->mBaseConfig.hourSizeItem() );
 }
 
 void Prefs::setDayBegins( const QDateTime &dateTime )
 {
-  d->mDayBegins = dateTime;
+  d->setDateTime( d->mBaseConfig.dayBeginsItem(), dateTime );
 }
 
 QDateTime Prefs::dayBegins() const
 {
-  return d->mDayBegins;
+  return d->getDateTime( d->mBaseConfig.dayBeginsItem() );
 }
 
 void Prefs::setWorkingHoursStart( const QDateTime &dateTime )
 {
-  d->mWorkingHoursStart = dateTime;
+  d->setDateTime( d->mBaseConfig.workingHoursStartItem(), dateTime );
 }
 
 QDateTime Prefs::workingHoursStart() const
 {
-  return d->mWorkingHoursStart;
+  return d->getDateTime( d->mBaseConfig.workingHoursStartItem() );
 }
 
 void Prefs::setWorkingHoursEnd( const QDateTime &dateTime )
 {
-  d->mWorkingHoursEnd = dateTime;
+  d->setDateTime( d->mBaseConfig.workingHoursEndItem(), dateTime );
 }
 
 QDateTime Prefs::workingHoursEnd() const
 {
-  return d->mWorkingHoursEnd;
+  return d->getDateTime( d->mBaseConfig.workingHoursEndItem() );
 }
 
 void Prefs::setSelectionStartsEditor( bool startEditor )
 {
-  d->mSelectionStartsEditor = startEditor;
+  d->setBool( d->mBaseConfig.selectionStartsEditorItem(), startEditor );
 }
 
 bool Prefs::selectionStartsEditor() const
 {
-  return d->mSelectionStartsEditor;
+  return d->getBool( d->mBaseConfig.selectionStartsEditorItem() );
 }
 
 void Prefs::setAgendaGridWorkHoursBackgroundColor( const QColor &color )
 {
-  d->mAgendaGridWorkHoursBackgroundColor = color;
+  d->setColor( d->mBaseConfig.agendaGridWorkHoursBackgroundColorItem(), color );
 }
 
 QColor Prefs::agendaGridWorkHoursBackgroundColor() const
 {
-  return d->mAgendaGridWorkHoursBackgroundColor;
+  return d->getColor( d->mBaseConfig.agendaGridWorkHoursBackgroundColorItem() );
 }
 
 void Prefs::setAgendaGridHighlightColor( const QColor &color )
 {
-  d->mAgendaGridHighlightColor = color;
+  d->setColor( d->mBaseConfig.agendaGridHighlightColorItem(), color );
 }
 
 QColor Prefs::agendaGridHighlightColor() const
 {
-  return d->mAgendaGridHighlightColor;
+  return d->getColor( d->mBaseConfig.agendaGridHighlightColorItem() );
 }
 
 void Prefs::setAgendaGridBackgroundColor( const QColor &color )
 {
-  d->mAgendaGridBackgroundColor = color;
+  d->setColor( d->mBaseConfig.agendaGridBackgroundColorItem(), color );
 }
 
 QColor Prefs::agendaGridBackgroundColor() const
 {
-  return d->mAgendaGridBackgroundColor;
+  return d->getColor( d->mBaseConfig.agendaGridBackgroundColorItem() );
 }
 
-void Prefs::setEnableAgendaItemIcons( const bool enable )
+void Prefs::setEnableAgendaItemIcons( bool enable )
 {
-  d->mEnableAgendaItemIcons = enable;
+  d->setBool( d->mBaseConfig.enableAgendaItemIconsItem(), enable );
 }
 
 bool Prefs::enableAgendaItemIcons() const
 {
-  return d->mEnableAgendaItemIcons;
+  return d->getBool( d->mBaseConfig.enableAgendaItemIconsItem() );
 }
 
 void Prefs::setTodosUseCategoryColors( bool useColors )
 {
-  d->mTodosUseCategoryColors = useColors;
+  d->setBool( d->mBaseConfig.todosUseCategoryColorsItem(), useColors );
 }
 
 bool Prefs::todosUseCategoryColors() const
 {
-  return d->mTodosUseCategoryColors;
+  return d->getBool( d->mBaseConfig.todosUseCategoryColorsItem() );
 }
 
 void Prefs::setAgendaCalendarItemsToDosOverdueBackgroundColor( const QColor &color )
 {
-  d->mAgendaCalendarItemsToDosOverdueBackgroundColor = color;
+  d->setColor( d->mBaseConfig.agendaCalendarItemsToDosOverdueBackgroundColorItem(), color );
 }
 
 QColor Prefs::agendaCalendarItemsToDosOverdueBackgroundColor() const
 {
-  return d->mAgendaCalendarItemsToDosOverdueBackgroundColor;
+  return d->getColor( d->mBaseConfig.agendaCalendarItemsToDosOverdueBackgroundColorItem() );
 }
 
 void Prefs::setAgendaCalendarItemsToDosDueTodayBackgroundColor( const QColor &color )
 {
-  d->mAgendaCalendarItemsToDosDueTodayBackgroundColor = color;
+  d->setColor( d->mBaseConfig.agendaCalendarItemsToDosDueTodayBackgroundColorItem(), color );
 }
 
 QColor Prefs::agendaCalendarItemsToDosDueTodayBackgroundColor() const
 {
-  return d->mAgendaCalendarItemsToDosDueTodayBackgroundColor;
+  return d->getColor( d->mBaseConfig.agendaCalendarItemsToDosDueTodayBackgroundColorItem() );
 }
 
 void Prefs::setUnsetCategoryColor( const QColor &color )
 {
-  d->mUnsetCategoryColor = color;
+  d->setColor( d->mBaseConfig.unsetCategoryColorItem(), color );
 }
 
 QColor Prefs::unsetCategoryColor() const
 {
-  return d->mUnsetCategoryColor;
+  return d->getColor( d->mBaseConfig.unsetCategoryColorItem() );
 }
 
 void Prefs::setAgendaViewColors( int colors )
 {
-  d->mAgendaViewColors = colors;
+  d->setInt( d->mBaseConfig.agendaViewColorsItem(), colors );
 }
 
 int Prefs::agendaViewColors() const
 {
-  return d->mAgendaViewColors;
+  return d->getInt( d->mBaseConfig.agendaViewColorsItem() );
 }
 
 void Prefs::setAgendaViewFont( const QFont &font )
 {
-  d->mAgendaViewFont = font;
+  d->setFont( d->mBaseConfig.agendaViewFontItem(), font );
 }
 
 QFont Prefs::agendaViewFont() const
 {
-  return d->mAgendaViewFont;
+  return d->getFont( d->mBaseConfig.agendaViewFontItem() );
+}
+
+void Prefs::setMonthViewFont( const QFont &font )
+{
+  d->setFont( d->mBaseConfig.monthViewFontItem(), font );
+}
+
+QFont Prefs::monthViewFont() const
+{
+  return d->getFont( d->mBaseConfig.monthViewFontItem() );
 }
 
 void Prefs::setEnableToolTips( bool enable )
 {
-  d->mEnableToolTips = enable;
+  d->setBool( d->mBaseConfig.enableToolTipsItem(), enable );
 }
 
 bool Prefs::enableToolTips() const
 {
-  return d->mEnableToolTips;
+  return d->getBool( d->mBaseConfig.enableToolTipsItem() );
 }
 
 void Prefs::setDefaultDuration( const QDateTime &dateTime )
 {
-  d->mDefaultDuration = dateTime;
+  d->setDateTime( d->mBaseConfig.defaultDurationItem(), dateTime );
 }
 
 QDateTime Prefs::defaultDuration() const
 {
-  return d->mDefaultDuration;
+  return d->getDateTime( d->mBaseConfig.defaultDurationItem() );
 }
 
 void Prefs::setShowTodosAgendaView( bool show )
 {
-  d->mShowTodosAgendaView = show;
+  d->setBool( d->mBaseConfig.showTodosAgendaViewItem(), show );
 }
 
 bool Prefs::showTodosAgendaView() const
 {
-  return d->mShowTodosAgendaView;
+  return d->getBool( d->mBaseConfig.showTodosAgendaViewItem() );
 }
 
 void Prefs::setAgendaTimeLabelsFont( const QFont &font )
 {
-  d->mAgendaTimeLabelsFont = font;
+  d->setFont( d->mBaseConfig.agendaTimeLabelsFontItem(), font );
 }
 
 QFont Prefs::agendaTimeLabelsFont() const
 {
-  return d->mAgendaTimeLabelsFont;
+  return d->getFont( d->mBaseConfig.agendaTimeLabelsFontItem() );
 }
 
 void Prefs::setWorkWeekMask( int mask )
 {
-  d->mWorkWeekMask = mask;
+  d->setInt( d->mBaseConfig.workWeekMaskItem(), mask );
 }
 
 int Prefs::workWeekMask() const
 {
-  return d->mWorkWeekMask;
+  return d->getInt( d->mBaseConfig.workWeekMaskItem() );
 }
 
 void Prefs::setExcludeHolidays( bool exclude )
 {
-  d->mExcludeHolidays = exclude;
+  d->setBool( d->mBaseConfig.excludeHolidaysItem(), exclude );
 }
 
 bool Prefs::excludeHolidays() const
 {
-  return d->mExcludeHolidays;
-}
-
-void Prefs::setTimeZoneDefault()
-{
-  d->setTimeZoneDefault();
-}
-
-void Prefs::fillMailDefaults()
-{
-  d->fillMailDefaults();
+  return d->getBool( d->mBaseConfig.excludeHolidaysItem() );
 }
 
 KDateTime::Spec Prefs::timeSpec() const
@@ -587,42 +883,42 @@ KDateTime::Spec Prefs::timeSpec() const
 
 void Prefs::setTimeSpec( const KDateTime::Spec &spec )
 {
-  d->mTimeSpec = spec;
+  d->mBaseConfig.mTimeSpec = spec;
 }
 
 void Prefs::setHtmlExportFile( const QString &fileName )
 {
-  d->mHtmlExportFile = fileName;
+  d->mBaseConfig.mHtmlExportFile = fileName;
 }
 
 QString Prefs::htmlExportFile() const
 {
-  return d->mHtmlExportFile;
+  return d->mBaseConfig.mHtmlExportFile;
 }
 
 void Prefs::setPublishPassword( const QString &password )
 {
-  d->mPublishPassword = password;
+  d->mBaseConfig.mPublishPassword = password;
 }
 
 QString Prefs::publishPassword() const
 {
-  return d->mPublishPassword;
+  return d->mBaseConfig.mPublishPassword;
 }
 
 void Prefs::setRetrievePassword( const QString &password )
 {
-  d->mRetrievePassword = password;
+  d->mBaseConfig.mRetrievePassword = password;
 }
 
 QString Prefs::retrievePassword() const
 {
-  return d->mRetrievePassword;
+  return d->mBaseConfig.mRetrievePassword;
 }
 
 void Prefs::setCategoryColor( const QString &cat, const QColor &color )
 {
-  d->mCategoryColors.insert( cat, color );
+  d->mBaseConfig.mCategoryColors.insert( cat, color );
 }
 
 QColor Prefs::categoryColor( const QString &cat ) const
@@ -630,91 +926,88 @@ QColor Prefs::categoryColor( const QString &cat ) const
   QColor color;
 
   if ( !cat.isEmpty() ) {
-    color = d->mCategoryColors.value( cat );
+    color = d->mBaseConfig.mCategoryColors.value( cat );
   }
 
   if ( color.isValid() ) {
     return color;
   } else {
-    return d->mDefaultCategoryColor;
+    return d->mBaseConfig.mDefaultCategoryColor;
   }
 }
 
 bool Prefs::hasCategoryColor( const QString &cat ) const
 {
-    return d->mCategoryColors[ cat ].isValid();
+    return d->mBaseConfig.mCategoryColors[ cat ].isValid();
 }
 
 QString Prefs::defaultCalendar() const
 {
-  return d->mDefaultCollection.isValid() ? QString::number( d->mDefaultCollection.id() ) : d->mDefaultCalendar;
+  return d->mBaseConfig.defaultCalendar();
 }
 
 Akonadi::Collection Prefs::defaultCollection() const
 {
-  return d->mDefaultCollection;
+  return d->mBaseConfig.defaultCollection();
 }
 
 void Prefs::setDefaultCollection( const Akonadi::Collection& col )
 {
-  d->mDefaultCollection = col;
-  if ( !col.isValid() ) {
-    d->mDefaultCalendar ="";
-  }
+  d->mBaseConfig.setDefaultCollection( col );
 }
 
 void Prefs::setResourceColor ( const QString &cal, const QColor &color )
 {
-  // kDebug() << cal << "color:" << color.name();
-  d->mResourceColors.insert( cal, color );
+  d->mBaseConfig.setResourceColor( cal, color );
 }
 
 QColor Prefs::resourceColor( const QString &cal )
 {
   QColor color;
   if ( !cal.isEmpty() ) {
-    if ( d->mResourceColors.contains( cal ) ) {
-      color = d->mResourceColors.value( cal );
+    if ( d->mBaseConfig.mResourceColors.contains( cal ) ) {
+      color = d->mBaseConfig.mResourceColors.value( cal );
       if ( !color.isValid() )
         return color;
     }
   } else {
-    return d->mDefaultResourceColor;
+    return d->mBaseConfig.mDefaultResourceColor;
   }
 
   // assign default color if enabled
-  if ( !cal.isEmpty() && !color.isValid() && d->assignDefaultResourceColors() ) {
+  if ( !cal.isEmpty() && !color.isValid() && d->getBool( d->mBaseConfig.assignDefaultResourceColorsItem() ) ) {
     QColor defColor( 0x37, 0x7A, 0xBC );
-    if ( d->defaultResourceColorSeed() > 0 &&
-         d->defaultResourceColorSeed() - 1 < (int)d->defaultResourceColors().size() ) {
-        defColor = QColor( d->defaultResourceColors()[d->defaultResourceColorSeed()-1] );
+    const int seed = d->getInt( d->mBaseConfig.defaultResourceColorSeedItem() );
+    const QStringList colors = d->getStringList( d->mBaseConfig.defaultResourceColorsItem() );
+    if ( seed > 0 && seed - 1 < (int)colors.size() ) {
+        defColor = QColor( colors[seed-1] );
     } else {
         int h, s, v;
         defColor.getHsv( &h, &s, &v );
-        h = ( d->defaultResourceColorSeed() % 12 ) * 30;
-        s -= s * static_cast<int>( ( ( d->defaultResourceColorSeed() / 12 ) % 2 ) * 0.5 );
+        h = ( seed % 12 ) * 30;
+        s -= s * static_cast<int>( ( ( seed / 12 ) % 2 ) * 0.5 );
         defColor.setHsv( h, s, v );
     }
-    d->setDefaultResourceColorSeed( d->defaultResourceColorSeed() + 1 );
-    setResourceColor( cal, defColor );
-    color = d->mResourceColors[cal];
+    d->setInt( d->mBaseConfig.defaultResourceColorSeedItem(), ( seed + 1 ));
+    d->mBaseConfig.setResourceColor( cal, defColor );
+    color = d->mBaseConfig.mResourceColors[cal];
   }
 
   if ( color.isValid() ) {
     return color;
   } else {
-    return d->mDefaultResourceColor;
+    return d->mBaseConfig.mDefaultResourceColor;
   }
 }
 
 QString Prefs::fullName() const
 {
   QString tusername;
-  if ( d->mEmailControlCenter ) {
+  if ( d->getBool( d->mBaseConfig.emailControlCenterItem() ) ) {
     KEMailSettings settings;
     tusername = settings.getSetting( KEMailSettings::RealName );
   } else {
-    tusername = d->userName();
+    tusername = d->getString( d->mBaseConfig.userNameItem() );
   }
 
   // Quote the username as it might contain commas and other quotable chars.
@@ -729,11 +1022,11 @@ QString Prefs::fullName() const
 
 QString Prefs::email() const
 {
-  if ( d->mEmailControlCenter ) {
+  if ( d->getBool( d->mBaseConfig.emailControlCenterItem() ) ) {
     KEMailSettings settings;
     return settings.getSetting( KEMailSettings::EmailAddress );
   } else {
-    return d->userEmail();
+    return d->getString( d->mBaseConfig.userEmailItem() );
   }
 }
 
@@ -822,12 +1115,12 @@ bool Prefs::thatIsMe(const QString &_email ) const
 
 QStringList Prefs::timeScaleTimezones() const
 {
-  return d->mTimeScaleTimeZones;
+  return d->mBaseConfig.timeScaleTimezones();
 }
 
 void Prefs::setTimeScaleTimezones( const QStringList &list )
 {
-  d->mTimeScaleTimeZones = list;
+  d->mBaseConfig.setTimeScaleTimezones( list );
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;
