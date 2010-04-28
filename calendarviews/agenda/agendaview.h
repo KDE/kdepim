@@ -3,6 +3,9 @@
 
   Copyright (c) 2000,2001,2003 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
+
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -119,13 +122,13 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     void clearView();
 
     /** start-datetime of selection */
-    virtual QDateTime selectionStart() const { return mTimeSpanBegin; }
+    virtual QDateTime selectionStart() const;
 
     /** end-datetime of selection */
-    virtual QDateTime selectionEnd() const { return mTimeSpanEnd; }
+    virtual QDateTime selectionEnd() const;
 
     /** returns true if selection is for whole day */
-    bool selectedIsAllDay() const { return mTimeSpanInAllDay; }
+    bool selectedIsAllDay() const;
 
     /** make selected start/end invalid */
     void deleteSelectedDateTime();
@@ -141,8 +144,8 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     void setCollection( Akonadi::Collection::Id id );
     Akonadi::Collection::Id collection() const;
 
-    Agenda *agenda() const { return mAgenda; }
-    QSplitter *splitter() const { return mSplitterAgenda; }
+    Agenda *agenda() const;
+    QSplitter *splitter() const;
 
     /* reimplemented from KCal::Calendar::CalendarObserver */
     void calendarIncidenceAdded( const Akonadi::Item &incidence );
@@ -203,7 +206,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
 
     void createTimeBarHeaders();
 
-  signals:
+  Q_SIGNALS:
     void showNewEventPopupSignal();
     void showIncidencePopupSignal(Akonadi::Item,QDate);
     void zoomViewHorizontally( const QDate &, int count );
@@ -231,7 +234,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     */
     void updateEventIndicators();
 
-  protected slots:
+  protected Q_SLOTS:
     /** Update event belonging to agenda item */
     void updateEventDates( AgendaItem *item );
     /** update just the display of the given incidence, called by a single-shot timer */
@@ -256,49 +259,11 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     void placeDecorationsFrame( KHBox *frame, bool decorationsFound, bool isTop );
 
   private:
-    // view widgets
-    QGridLayout *mGridLayout;
-    QFrame *mTopDayLabels;
-    KHBox *mTopDayLabelsFrame;
-    QBoxLayout *mLayoutTopDayLabels;
-    QFrame *mBottomDayLabels;
-    KHBox *mBottomDayLabelsFrame;
-    QBoxLayout *mLayoutBottomDayLabels;
-    KHBox *mAllDayFrame;
-    QWidget *mTimeBarHeaderFrame;
-    QGridLayout *mAgendaLayout;
-    QSplitter *mSplitterAgenda;
-    QList<QLabel *> mTimeBarHeaders;
-
-    Agenda *mAllDayAgenda;
-    Agenda *mAgenda;
-
-    TimeLabelsZone *mTimeLabelsZone;
-
-    DateList mSelectedDates;  // List of dates to be displayed
-    int mViewType;
-    EventIndicator *mEventIndicatorTop;
-    EventIndicator *mEventIndicatorBottom;
-
-    QVector<int> mMinY;
-    QVector<int> mMaxY;
-
-    QVector<bool> mHolidayMask;
-
-    QDateTime mTimeSpanBegin;
-    QDateTime mTimeSpanEnd;
-    bool mTimeSpanInAllDay;
-    bool mAllowAgendaUpdate;
-
-    Akonadi::Item mUpdateItem;
-
-    //CollectionSelection *mCollectionSelection;
-    Akonadi::Collection::Id mCollectionId;
-
-    bool mIsSideBySide;
-    bool mPendingChanges;
+    class Private;
+    Private *const d;
 };
 
 }
 
 #endif
+// kate: space-indent on; indent-width 2; replace-tabs on;
