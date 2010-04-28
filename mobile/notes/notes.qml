@@ -133,7 +133,7 @@ KPIM.MainView {
                       color: palette.highlightedText
                     }
                     Text {
-                      text: "Content: " + model.content
+                      text: "Content: " + model.plainContent
                       color: palette.highlightedText
                     }
                   }

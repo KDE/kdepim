@@ -21,6 +21,8 @@
 
 #include "notelistproxy.h"
 
+#include <QTextDocument>
+
 #include <kcal/incidence.h>
 
 #include <akonadi/entitytreemodel.h>
@@ -44,6 +46,13 @@ QVariant NoteListProxy::data( const QModelIndex& index, int role ) const
       return note->subject()->asUnicodeString();
     case Content:
       return note->mainBodyPart()->decodedText();
+    case PlainContent:
+      {
+QTextDocument doc;
+doc.setHtml(note->mainBodyPart()->decodedText());
+
+return doc.toPlainText();
+      }
     }
   }
 
@@ -58,6 +67,7 @@ void NoteListProxy::setSourceModel( QAbstractItemModel* sourceModel )
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
   names.insert( absoluteCustomRole( Title ), "title" );
   names.insert( absoluteCustomRole( Content ), "content" );
+  names.insert( absoluteCustomRole( PlainContent ), "plainContent" );
   setRoleNames( names );
 }
 
