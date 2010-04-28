@@ -49,14 +49,6 @@
 using namespace Akonadi;
 using namespace EventViews;
 
-CollectionSelection* EventView::sGlobalCollectionSelection = 0;
-
-/* static */
-void EventView::setGlobalCollectionSelection( CollectionSelection* s )
-{
-  sGlobalCollectionSelection = s;
-}
-
 class EventView::Private
 {
   EventView *const q;
@@ -68,7 +60,11 @@ class EventView::Private
         customCollectionSelection( 0 ),
         collectionSelectionModel( 0 ),
         stateSaver( 0 ),
-        mPrefs( new Prefs() )
+        mReturnPressed( false ),
+        mTypeAhead( false ),
+        mTypeAheadReceiver( 0 ),
+        mPrefs( new Prefs() ),
+        mChanger( 0 )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
@@ -88,6 +84,10 @@ class EventView::Private
       delete collectionSelectionModel;
     }
 
+    void setUpModels();
+    void reconnectCollectionSelection();
+
+  public:
     Akonadi::Calendar *calendar;
     CalendarSearch *calendarSearch;
     CollectionSelection *customCollectionSelection;
@@ -98,12 +98,31 @@ class EventView::Private
     KDateTime endDateTime;
     KDateTime actualStartDateTime;
     KDateTime actualEndDateTime;
-    void setUpModels();
-    void reconnectCollectionSelection();
+
+    /* When we receive a QEvent with a key_Return release
+     * we will only show a new event dialog if we previously received a
+     * key_Return press, otherwise a new event dialog appears when
+     * you hit return in some yes/no dialog */
+    bool mReturnPressed;
+
+    bool mTypeAhead;
+    QObject *mTypeAheadReceiver;
+    QList<QEvent*> mTypeAheadEvents;
+    static Akonadi::CollectionSelection* sGlobalCollectionSelection;
 
     KHolidays::HolidayRegionPtr mHolidayRegion;
     PrefsPtr mPrefs;
+
+    IncidenceChanger *mChanger;
 };
+
+CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
+
+/* static */
+void EventView::setGlobalCollectionSelection( CollectionSelection* s )
+{
+  Private::sGlobalCollectionSelection = s;
+}
 
 void EventView::Private::setUpModels()
 {
@@ -148,13 +167,10 @@ void EventView::Private::reconnectCollectionSelection()
 }
 
 
-EventView::EventView( QWidget *parent ) : QWidget( parent ), mChanger( 0 ), d( new Private( this ) )
+EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( this ) )
 {
   //TODO_SPLIT, tirar o unused
   Q_UNUSED( parent );
-  mReturnPressed = false;
-  mTypeAhead = false;
-  mTypeAheadReceiver = 0;
 
   //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(), which triggered finishTypeAhead.
   //But the global focus widget in QApplication is changed later, thus subsequent keyevents still went to this view, triggering another editor, for each keypress
@@ -270,7 +286,7 @@ void EventView::dayPassed( const QDate & )
 
 void EventView::setIncidenceChanger( IncidenceChanger *changer )
 {
-  mChanger = changer;
+  d->mChanger = changer;
 }
 
 void EventView::flushView()
@@ -420,25 +436,25 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
 
 void EventView::setTypeAheadReceiver( QObject *o )
 {
-  mTypeAheadReceiver = o;
+  d->mTypeAheadReceiver = o;
 }
 
 void EventView::focusChanged( QWidget*, QWidget* now )
 {
-  if ( mTypeAhead && now && now == mTypeAheadReceiver )
+  if ( d->mTypeAhead && now && now == d->mTypeAheadReceiver )
     finishTypeAhead();
 }
 
 void EventView::finishTypeAhead()
 {
-  if ( mTypeAheadReceiver ) {
-    foreach ( QEvent *e, mTypeAheadEvents ) {
-      QApplication::sendEvent( mTypeAheadReceiver, e );
+  if ( d->mTypeAheadReceiver ) {
+    foreach ( QEvent *e, d->mTypeAheadEvents ) {
+      QApplication::sendEvent( d->mTypeAheadReceiver, e );
     }
   }
-  qDeleteAll( mTypeAheadEvents );
-  mTypeAheadEvents.clear();
-  mTypeAhead = false;
+  qDeleteAll( d->mTypeAheadEvents );
+  d->mTypeAheadEvents.clear();
+  d->mTypeAhead = false;
 }
 
 CollectionSelection* EventView::collectionSelection() const
@@ -489,6 +505,11 @@ bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
   Q_UNUSED( endDt );
   Q_UNUSED( allDay );
   return false;
+}
+
+Akonadi::IncidenceChanger *EventView::changer() const
+{
+  return d->mChanger;
 }
 
 void EventView::doRestoreConfig( const KConfigGroup & )
@@ -577,7 +598,7 @@ void EventView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int 
 
 CollectionSelection* EventView::globalCollectionSelection()
 {
-  return sGlobalCollectionSelection;
+  return Private::sGlobalCollectionSelection;
 }
 
 /* static */

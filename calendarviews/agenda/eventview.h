@@ -26,9 +26,6 @@
 #ifndef EVENTVIEW_H
 #define EVENTVIEW_H
 
-//TODO_SPLIT: remove agenda
-//#include "agenda.h"
-
 #include "eventviews_export.h"
 
 #include <akonadi/kcal/calendar.h>
@@ -231,7 +228,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     Akonadi::CollectionSelection* collectionSelection() const;
 
-  public slots:
+  public Q_SLOTS:
 
     /**
       Shows given incidences. Depending on the actual view it might not
@@ -296,7 +293,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     void setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion );
 
-  signals:
+  Q_SIGNALS:
     /**
      * when the view changes the dates that are selected in one way or
      * another, this signal is emitted.  It should be connected back to
@@ -406,19 +403,18 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     void newJournalSignal( const QDate & );
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void collectionSelectionChanged();
     virtual void calendarReset();
 
-  private slots:
+  private Q_SLOTS:
     void backendErrorOccurred();
     void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
     void rowsInserted( const QModelIndex &parent, int start, int end );
     void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
   protected:
-    Akonadi::Item mCurrentIncidence;  // Incidence selected e.g. for a context menu
-    Akonadi::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *changer() const;
 
    /**
      * reimplement to read view-specific settings
@@ -459,18 +455,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void finishTypeAhead();
 
   private:
-
-    /* When we receive a QEvent with a key_Return release
-     * we will only show a new event dialog if we previously received a
-     * key_Return press, otherwise a new event dialog appears when
-     * you hit return in some yes/no dialog */
-    bool mReturnPressed;
-
-    bool mTypeAhead;
-    QObject *mTypeAheadReceiver;
-    QList<QEvent*> mTypeAheadEvents;
-    static Akonadi::CollectionSelection* sGlobalCollectionSelection;
-
     class Private;
     Private *const d;
 };

@@ -717,7 +717,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   if ( !incidence ) {
     return;
   }
-  if ( !mChanger || !mChanger->beginChange( aitem ) ) {
+  if ( !changer() || !changer()->beginChange( aitem ) ) {
     return;
   }
   Incidence::Ptr oldIncidence( incidence->clone() );
@@ -752,7 +752,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
     if ( incidence->dtStart().toTimeSpec( preferences()->timeSpec() ) == startDt &&
          ev->dtEnd().toTimeSpec( preferences()->timeSpec() ) == endDt ) {
       // No change
-      mChanger->endChange( aitem );
+      changer()->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -774,7 +774,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
     if ( td->dtDue().toTimeSpec( preferences()->timeSpec() )  == endDt ) {
       // No change
-      mChanger->endChange( aitem );
+      changer()->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -966,9 +966,9 @@ void AgendaView::updateEventDates( AgendaItem *item )
   }
   item->setItemDate( startDt.toTimeSpec( preferences()->timeSpec() ).date() );
 
-  const bool result = mChanger->changeIncidence( oldIncidence, aitem,
+  const bool result = changer()->changeIncidence( oldIncidence, aitem,
                                                  IncidenceChanger::DATE_MODIFIED, this );
-  mChanger->endChange( aitem );
+  changer()->endChange( aitem );
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
@@ -1476,12 +1476,12 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
     if ( Todo::Ptr existingTodo = Akonadi::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
-      if ( mChanger && mChanger->beginChange( existingTodoItem ) ) {
+      if ( changer() && changer()->beginChange( existingTodoItem ) ) {
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
-        mChanger->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
-        mChanger->endChange( existingTodoItem );
+        changer()->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
+        changer()->endChange( existingTodoItem );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );
@@ -1491,7 +1491,7 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
       todo->setDtDue( newTime );
       todo->setAllDay( allDay );
       todo->setHasDueDate( true );
-      if ( !mChanger->addIncidence( todo, this ) ) {
+      if ( !changer()->addIncidence( todo, this ) ) {
         Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
       }
     }
@@ -1516,7 +1516,7 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     todo->setDtDue( newTime );
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
-    if ( !mChanger->addIncidence( todo, this ) ) {
+    if ( !changer()->addIncidence( todo, this ) ) {
       Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
     }
   }
@@ -1651,7 +1651,7 @@ void AgendaView::updateEventIndicators()
 
 void AgendaView::setIncidenceChanger( IncidenceChanger *changer )
 {
-  mChanger = changer;
+  EventView::setIncidenceChanger( changer );
   mAgenda->setIncidenceChanger( changer );
   mAllDayAgenda->setIncidenceChanger( changer );
 }
