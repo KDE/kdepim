@@ -193,9 +193,8 @@ void MarcusBains::updateLocationRecalc( bool recalculate )
   Create an agenda widget with rows rows and columns columns.
 */
 Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
-                int columns, int rows, int rowSize, QWidget *parent,
-                Qt::WFlags f )
-  : QWidget( parent, f ), mHolidayMask( 0 ), mChanger( 0 )
+                int columns, int rows, int rowSize )
+  : QWidget( scrollArea ), mHolidayMask( 0 ), mChanger( 0 )
 {
   mColumns = columns;
   mRows = rows;
@@ -208,9 +207,6 @@ Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
   mEventView = eventView;
   mScrollArea = scrollArea;
 
-//  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-  mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-
   init();
 }
 
@@ -219,17 +215,14 @@ Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
   all-day events.
 */
 Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
-                int columns, QWidget *parent, Qt::WFlags f )
-  : QWidget( parent, f ), mHolidayMask( 0 ), mChanger( 0 )
+                int columns )
+  : QWidget( scrollArea ), mHolidayMask( 0 ), mChanger( 0 )
 {
   mColumns = columns;
   mRows = 1;
   mGridSpacingY = 24;
   mAllDayMode = true;
   mScrollArea = scrollArea;
-  mScrollArea->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-  mScrollArea->verticalScrollBar()->hide();
-  mScrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 
   mEventView = eventView;
 
@@ -311,8 +304,6 @@ void Agenda::init()
 //  mScrollArea->viewport()->setAttribute( Qt::WA_NoSystemBackground, true );
   mScrollArea->viewport()->setFocusPolicy( Qt::WheelFocus );
 
-  setStartTime( Prefs::instance()->dayBegins().time() );
-
   calculateWorkingHours();
 
   connect( verticalScrollBar(), SIGNAL(valueChanged(int)),
@@ -328,10 +319,6 @@ void Agenda::init()
 
 void Agenda::clear()
 {
-  foreach ( AgendaItem *item, mItems ) {
-    Q_UNUSED( item );
-//    removeChild( item );
-  }
   qDeleteAll( mItems );
   qDeleteAll( mItemsToDelete );
   mItems.clear();
@@ -1382,9 +1369,6 @@ void Agenda::paintEvent( QPaintEvent * )
 */
 void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 {
-  if ( !mAllDayMode ) {
-    kDebug() << this << "DEBUG drawContents, cw = " << cw;
-  }
   QPixmap db( cw, ch );
   db.fill(); // We don't want to see leftovers from previous paints
   QPainter dbp( &db );
@@ -1842,9 +1826,6 @@ void Agenda::resizeEvent ( QResizeEvent *ev )
 {
 
   QSize newSize( ev->size() );
-  if ( !mAllDayMode ) {
-    kDebug() << this << "DEBUG newSize is " << newSize;
-  }
 
   if ( mAllDayMode ) {
     mGridSpacingX = double( newSize.width() /*- 2 * frameWidth() */) / (double)mColumns;
@@ -2099,6 +2080,35 @@ QScrollBar * Agenda::verticalScrollBar()
 void Agenda::setContentsPos( int x, int y )
 {
   mScrollArea->ensureVisible( x, y, 0, 0 );
+}
+
+AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView, QWidget *parent )
+  : QScrollArea( parent )
+{
+  if ( isAllDay ) {
+    mAgenda = new Agenda( eventView, this, 1 );
+
+    // TODO_SPLIT: remove this hack, the old code to align both agenda's should work now
+    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
+    verticalScrollBar()->hide();
+  } else {
+    mAgenda = new Agenda( eventView, this, 1, 96, Prefs::instance()->hourSize() );
+  }
+
+  setWidgetResizable( true );
+  setWidget( mAgenda );
+  setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+
+  mAgenda->setStartTime( Prefs::instance()->dayBegins().time() );
+}
+
+AgendaScrollArea::~AgendaScrollArea()
+{
+}
+
+Agenda *AgendaScrollArea::agenda()
+{
+  return mAgenda;
 }
 
 #include "agenda.moc"

@@ -280,7 +280,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
 
     DateList mSelectedDates;  // List of dates to be displayed
     int mViewType;
-    QScrollArea *mScrollArea;
     EventIndicator *mEventIndicatorTop;
     EventIndicator *mEventIndicatorBottom;
 

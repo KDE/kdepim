@@ -92,12 +92,10 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
   Q_OBJECT
   public:
     Agenda ( EventView *eventView, QScrollArea *scrollArea,
-             int columns, int rows, int columnSize,
-             QWidget *parent = 0, Qt::WFlags f = 0);
+             int columns, int rows, int rowSize );
 
-    explicit Agenda ( EventView *eventView,
-                      QScrollArea *scrollArea, int columns,
-                      QWidget *parent = 0, Qt::WFlags f = 0 );
+    Agenda ( EventView *eventView,
+             QScrollArea *scrollArea, int columns );
 
     virtual ~Agenda();
 
@@ -431,6 +429,19 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     Akonadi::IncidenceChanger *mChanger;
 
     EventView *mEventView;
+};
+
+class AgendaScrollArea : public QScrollArea
+{
+  public:
+    AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
+    ~AgendaScrollArea();
+
+    Agenda* agenda();
+
+  private:
+    Agenda *mAgenda;
+
 };
 
 } // namespace EventViews

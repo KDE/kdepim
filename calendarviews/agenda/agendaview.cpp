@@ -150,10 +150,8 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   // The widget itself
   QWidget *dummyAllDayLeft = new QWidget( mAllDayFrame );
-  QScrollArea *allDayScrollArea = new QScrollArea( mAllDayFrame );
-  mAllDayAgenda = new Agenda( this, allDayScrollArea, 1, allDayScrollArea );
-  allDayScrollArea->setWidget( mAllDayAgenda );
-  allDayScrollArea->setWidgetResizable( true );
+  AgendaScrollArea *allDayScrollArea = new AgendaScrollArea( true, this, mAllDayFrame );
+  mAllDayAgenda = allDayScrollArea->agenda();
 
   /* Create the main agenda widget and the related widgets */
   QWidget *agendaFrame = new QWidget( mSplitterAgenda );
@@ -176,13 +174,10 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
   mAgendaLayout->addWidget( dummyAgendaRight, 0, 2 );
 
   // Create agenda
-  mScrollArea = new QScrollArea( agendaFrame );
-  mAgenda = new Agenda( this, mScrollArea, 1, 96, Prefs::instance()->hourSize(), agendaFrame );
+  AgendaScrollArea *scrollArea = new AgendaScrollArea( false, this, agendaFrame );
+  mAgenda = scrollArea->agenda();
 
-  mScrollArea->setWidget( mAgenda );
-  mScrollArea->setWidgetResizable( true );
-
-  mAgendaLayout->addWidget( mScrollArea, 1, 1, 1, 2 );
+  mAgendaLayout->addWidget( scrollArea, 1, 1, 1, 2 );
   mAgendaLayout->setColumnStretch( 1, 1 );
 
   // Create time labels
