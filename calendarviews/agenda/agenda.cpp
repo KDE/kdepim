@@ -207,6 +207,8 @@ Agenda::Agenda( EventView *eventView, QScrollArea *scrollArea,
   mEventView = eventView;
   mScrollArea = scrollArea;
 
+  setMouseTracking( true );
+
   init();
 }
 
