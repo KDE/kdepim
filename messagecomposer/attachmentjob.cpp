@@ -101,6 +101,19 @@ void AttachmentJob::doStart()
   Q_D( AttachmentJob );
   Q_ASSERT( d->part );
 
+  if( d->part->mimeType() == "multipart/digest" ) {
+    // this is actually a digest, so we don't want any additional headers
+    // the attachment is really a complete multipart/digest subtype
+    // and us adding our own headers would break it. so copy over the content
+    // and leave it alone
+    KMime::Content* part = new KMime::Content;
+    part->setContent( d->part->data() );
+    part->parse();
+    d->subjobContents << part;
+    process();
+    return;
+  }
+  
   // Set up a subjob to generate the attachment content.
   SinglepartJob *sjob = new SinglepartJob( this );
   sjob->setData( d->part->data() );
@@ -108,7 +121,7 @@ void AttachmentJob::doStart()
   // Figure out a charset to encode parts of the headers with.
   const QString dataToEncode = d->part->name() + d->part->description() + d->part->fileName();
   const QByteArray charset = Util::selectCharset( globalPart()->charsets( true ), dataToEncode );
-
+  
   // Set up the headers.
   sjob->contentTransferEncoding()->setEncoding( d->part->encoding() );
 

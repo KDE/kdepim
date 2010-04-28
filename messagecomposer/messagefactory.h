@@ -121,6 +121,18 @@ public:
                                   QList<KMime::MDN::DispositionModifier> m=QList<KMime::MDN::DispositionModifier>() );
 
   /**
+   * Create a new forwarded MIME digest. If the user is trying to forward multiple messages
+   *  at once all inline, they can choose to have them be compiled into a single digest
+   *  message.
+   *
+   * This will return a header message and individual message parts to be set as
+   *  attachments.
+   *
+   * @param msgs List of messages to be composed into a digest
+   */
+  QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( QList<KMime::Message::Ptr> msgs );
+  
+  /**
    * Set the identity manager to be used when creating messages.
    * Required to be set before create* is called, otherwise the created messages
    *  might have the wrong identity data.

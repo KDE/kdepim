@@ -578,6 +578,53 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   return receipt;
 }
 
+QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( QList< KMime::Message::Ptr > msgs )
+{
+  KMime::Message::Ptr msg( new KMime::Message );
+  KMime::Content* digest = new KMime::Content( msg.get() );
+
+  QString mainPartText = i18n("\nThis is a MIME digest forward. The content of the"
+                         " message is contained in the attachment(s).\n\n\n");
+  
+  digest->contentType()->setMimeType( "multipart/digest" );
+  digest->contentType()->setBoundary( KMime::multiPartBoundary() );
+  digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( msgs.size() ), "utf8" );
+  digest->contentDisposition()->setFilename( QLatin1String( "digest" ) );
+  digest->fromUnicodeString( mainPartText );
+  
+  int id = 0;
+ 
+  foreach( KMime::Message::Ptr fMsg, msgs ) {
+    if( id == 0 && fMsg->hasHeader( "X-KMail-Identity" ) )
+      id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
+
+    MessageCore::StringUtil::removePrivateHeaderFields( fMsg );
+    fMsg->bcc()->clear();
+    
+    KMime::Content* part = new KMime::Content( digest );
+
+    part->contentType()->setMimeType( "message/rfc822" );
+    part->contentType()->setCharset( fMsg->contentType()->charset() );
+    part->contentID()->setIdentifier( fMsg->contentID()->identifier() );
+    part->contentDescription()->fromUnicodeString( fMsg->contentDescription()->asUnicodeString(), "utf8" );
+    part->contentDisposition()->setFilename( QLatin1String( "forwarded message" ) );
+    part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
+    part->assemble();
+
+    link( fMsg, m_origId, KPIM::MessageStatus::statusForwarded() );
+    digest->addContent( part );
+  }
+  digest->assemble();
+
+  id = m_folderId;
+  MessageHelper::initHeader( msg, m_identityManager, id );
+
+//   kDebug() << "digest:" << digest->contents().size() << digest->encodedContent();
+
+  return QPair< KMime::Message::Ptr, KMime::Content* >( msg, digest );
+}
+
+
 void MessageFactory::setIdentityManager( KPIMIdentities::IdentityManager* ident)
 {
   m_identityManager = ident;
