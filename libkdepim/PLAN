@@ -7,9 +7,6 @@ addresseelineedit
 completionordereditor
 kmailcompletion
 
-# Move to kdepimlibs/akonadi/contact + api review
-addressesdialog          # rename to EmailAddressDialog
-
 # Make private and move to kdepimlibs/akonadi/contact
 sendsmsdialog
 
@@ -37,8 +34,6 @@ uistatesaver
 kprefsdialog
 
 # Get rid of
-distributionlist     # replace with Akonadi::ContactGroup everywhere
-kaddrbookexternal    # replace with native _async_ Akonadi calls
 kresourceprefs       # drop together with kresources, in the meanwhile move to kresources/ subdir as static library
 recentaddresses      # replace with live searches?
 
