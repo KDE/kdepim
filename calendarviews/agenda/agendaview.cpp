@@ -5,7 +5,6 @@
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Kevin Krammer, krake@kdab.com
 
-
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -114,7 +113,7 @@ void EventIndicator::enableColumn( int column, bool enable )
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
 
-class AgendaView::Private
+class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
 {
   AgendaView *const q;
 
@@ -178,7 +177,40 @@ class AgendaView::Private
 
     bool mIsSideBySide;
     bool mPendingChanges;
+
+  protected:
+    /* reimplemented from KCal::Calendar::CalendarObserver */
+    void calendarIncidenceAdded( const Akonadi::Item &incidence );
+    void calendarIncidenceChanged( const Akonadi::Item &incidence );
+    void calendarIncidenceRemoved( const Akonadi::Item &incidence );
 };
+
+void AgendaView::Private::calendarIncidenceAdded( const Item &incidence )
+{
+  Q_UNUSED( incidence );
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
+  }
+}
+
+void AgendaView::Private::calendarIncidenceChanged( const Item &incidence )
+{
+  Q_UNUSED( incidence );
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
+  }
+}
+
+void AgendaView::Private::calendarIncidenceRemoved( const Item &incidence )
+{
+  Q_UNUSED( incidence );
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////
 
@@ -291,7 +323,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
 AgendaView::~AgendaView()
 {
   if ( calendar() ) {
-    calendar()->unregisterObserver( this );
+    calendar()->unregisterObserver( d );
   }
 
   delete d;
@@ -300,11 +332,11 @@ AgendaView::~AgendaView()
 void AgendaView::setCalendar( Akonadi::Calendar *cal )
 {
   if ( calendar() ) {
-    calendar()->unregisterObserver( this );
+    calendar()->unregisterObserver( d );
   }
   Q_ASSERT( cal );
   EventView::setCalendar( cal );
-  calendar()->registerObserver( this );
+  calendar()->registerObserver( d );
   d->mAgenda->setCalendar( calendar() );
   d->mAllDayAgenda->setCalendar( calendar() );
 }
@@ -1764,33 +1796,6 @@ bool AgendaView::filterByCollectionSelection( const Item &incidence )
 void AgendaView::setUpdateNeeded()
 {
   d->mPendingChanges = true;
-}
-
-void AgendaView::calendarIncidenceAdded( const Item &incidence )
-{
-  Q_UNUSED( incidence );
-  if ( !d->mPendingChanges ) {
-    d->mPendingChanges = true;
-    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
-  }
-}
-
-void AgendaView::calendarIncidenceChanged( const Item &incidence )
-{
-  Q_UNUSED( incidence );
-  if ( !d->mPendingChanges ) {
-    d->mPendingChanges = true;
-    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
-  }
-}
-
-void AgendaView::calendarIncidenceRemoved( const Item &incidence )
-{
-  Q_UNUSED( incidence );
-  if ( !d->mPendingChanges ) {
-    d->mPendingChanges = true;
-    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
-  }
 }
 
 #include "agendaview.moc"

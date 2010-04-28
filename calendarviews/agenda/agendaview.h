@@ -6,7 +6,6 @@
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Kevin Krammer, krake@kdab.com
 
-
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
@@ -99,7 +98,7 @@ class EVENTVIEWS_EXPORT EventIndicator : public QFrame
   AgendaView is the agenda-like view that displays events in a single
   or multi-day view.
 */
-class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar::CalendarObserver
+class EVENTVIEWS_EXPORT AgendaView : public EventView
 {
   Q_OBJECT
   public:
@@ -146,11 +145,6 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
 
     Agenda *agenda() const;
     QSplitter *splitter() const;
-
-    /* reimplemented from KCal::Calendar::CalendarObserver */
-    void calendarIncidenceAdded( const Akonadi::Item &incidence );
-    void calendarIncidenceChanged( const Akonadi::Item &incidence );
-    void calendarIncidenceRemoved( const Akonadi::Item &incidence );
 
     /** First shown day */
     QDate startDate() const;
