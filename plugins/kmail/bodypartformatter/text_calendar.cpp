@@ -827,8 +827,12 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = openAttachment( name, iCal );
       }
 
-      if ( result )
-        c.closeIfSecondaryWindow();
+      if ( result ) {
+        // do not close the secondary window if an attachment was opened (kolab/issue4317)
+        if ( !path.startsWith( "ATTACH:" ) ) {
+          c.closeIfSecondaryWindow();
+        }
+      }
       return result;
     }
 
