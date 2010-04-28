@@ -1892,7 +1892,14 @@ QSize Agenda::minimumSizeHint() const
 
 int Agenda::minimumHeight() const
 {
-  return mGridSpacingY * mRows;
+  // all day agenda never has scrollbars and the scrollarea will
+  // resize it to fit exactly on the viewport.
+
+  if ( mAllDayMode ) {
+    return 0;
+  } else {
+    return mGridSpacingY * mRows;
+  }
 }
 
 void Agenda::updateConfig()
@@ -2070,7 +2077,11 @@ void Agenda::contentsMousePressEvent ( QMouseEvent *event )
 
 QSize Agenda::sizeHint() const
 {
-  return QSize( parentWidget()->width(), mGridSpacingY * mRows );
+  if ( mAllDayMode ) {
+    return QWidget::sizeHint();
+  } else {
+    return QSize( parentWidget()->width(), mGridSpacingY * mRows );
+  }
 }
 
 QScrollBar * Agenda::verticalScrollBar()
