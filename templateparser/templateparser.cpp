@@ -451,14 +451,16 @@ void TemplateParser::processWithTemplate( const QString &tmpl )
       } else if ( cmd.startsWith( QLatin1String("OADDRESSEESADDR") ) ) {
         kDebug() << "Command: OADDRESSEESADDR";
         i += strlen( "OADDRESSEESADDR" );
-        const QString to = mOrigMsg->to()->asUnicodeString();
-        const QString cc = mOrigMsg->cc()->asUnicodeString();
-        if ( !to.isEmpty() )
-          body.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
-        if ( !to.isEmpty() && !cc.isEmpty() )
-          body.append( QLatin1Char( '\n' ) );
-        if ( !cc.isEmpty() )
-          body.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+        if ( mOrigMsg ) {
+            const QString to = mOrigMsg->to()->asUnicodeString();
+            const QString cc = mOrigMsg->cc()->asUnicodeString();
+            if ( !to.isEmpty() )
+              body.append( i18n( "To:" ) + QLatin1Char( ' ' ) + to );
+            if ( !to.isEmpty() && !cc.isEmpty() )
+              body.append( QLatin1Char( '\n' ) );
+            if ( !cc.isEmpty() )
+              body.append( i18n( "CC:" ) + QLatin1Char( ' ' ) +  cc );
+	}
 
       } else if ( cmd.startsWith( QLatin1String("CCADDR") ) ) {
         kDebug() << "Command: CCADDR";
