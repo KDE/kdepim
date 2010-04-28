@@ -19,6 +19,8 @@
 
 #include "mainwindow.h"
 
+#include "settings.h"
+
 #include "agenda.h"
 #include "agendaview.h"
 #include "prefs.h"
@@ -44,7 +46,8 @@ MainWindow::MainWindow()
   : QMainWindow(),
     mChangeRecorder( 0 ),
     mCalendar( 0 ),
-    mEventView( 0 )
+    mEventView( 0 ),
+    mSettings( 0 )
 {
   mUi.setupUi( this );
 
@@ -55,11 +58,17 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
+  delete mSettings;
 }
 
 void MainWindow::delayedInit()
 {
-  Prefs::instance()->setEnableToolTips( true );
+  // create our application settings
+  mSettings = new Settings;
+
+  // create view preferences so that matching values are retrieved from
+  // application settings
+  Prefs::createInstance( mSettings );
 
   mChangeRecorder = new ChangeRecorder( this );
   mChangeRecorder->setCollectionMonitored( Collection::root(), true );

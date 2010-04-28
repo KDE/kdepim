@@ -3,12 +3,15 @@ project (calendarviewsapp)
 include_directories(
     ${Boost_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/../agenda
-    ${CMAKE_CURRENT_BINARY_DIR}/../agenda)
+    ${CMAKE_CURRENT_BINARY_DIR}/../agenda
+)
 
 set(viewerapp_SRCS
     main.cpp
     mainwindow.cpp
 )
+
+kde4_add_kcfg_files(viewerapp_SRCS settings.kcfgc )
 
 kde4_add_ui_files(viewerapp_SRCS
     mainwindow.ui

@@ -1,0 +1,9 @@
+# Code generation options for kconfig_compiler
+File=settings.kcfg
+ClassName=Settings
+Singleton=false
+Mutators=true
+MemberVariables=private
+GlobalEnums=true
+ItemAccessors=true
+SetUserTexts=true
