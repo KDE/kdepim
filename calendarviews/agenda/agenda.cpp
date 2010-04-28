@@ -27,7 +27,6 @@
 #include "agenda.h"
 #include "agendaitem.h"
 #include "prefs.h"
-#include "globals.h"
 #include "helper.h"
 
 #include <libkdepim/pimmessagebox.h>
@@ -98,7 +97,7 @@ int MarcusBains::todayColumn()
   int col = 0;
   for ( it = dateList.constBegin(); it != dateList.constEnd(); ++it ) {
     if ( (*it) == currentDate ) {
-      return Globals::self()->reverseLayout() ? mAgenda->columns() - 1 - col : col;
+      return QApplication::isRightToLeft() ? mAgenda->columns() - 1 - col : col;
     }
     ++col;
   }
@@ -748,7 +747,7 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
   }
   QPoint gridpos = contentsToGrid( pos );
   QPoint contpos = gridToContents(
-    gridpos + QPoint( ( Globals::self()->reverseLayout() ) ? 1 : 0, 0 ) );
+    gridpos + QPoint( ( QApplication::isRightToLeft() ) ? 1 : 0, 0 ) );
 
 //kDebug() << "contpos=" << contpos << ", pos=" << pos << ", gpos=" << gpos;
 //kDebug() << "clXLeft=" << clXLeft << ", clXRight=" << clXRight;
@@ -756,21 +755,21 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
   if ( horizontal ) {
     int clXLeft = item->cellXLeft();
     int clXRight = item->cellXRight();
-    if ( Globals::self()->reverseLayout() ) {
+    if ( QApplication::isRightToLeft() ) {
       int tmp = clXLeft;
       clXLeft = clXRight;
       clXRight = tmp;
     }
     int gridDistanceX = int( pos.x() - contpos.x() );
     if ( gridDistanceX < mResizeBorderWidth && clXLeft == gridpos.x() ) {
-      if ( Globals::self()->reverseLayout() ) {
+      if ( QApplication::isRightToLeft() ) {
         return RESIZERIGHT;
       } else {
         return RESIZELEFT;
       }
     } else if ( ( mGridSpacingX - gridDistanceX ) < mResizeBorderWidth &&
                 clXRight == gridpos.x() ) {
-      if ( Globals::self()->reverseLayout() ) {
+      if ( QApplication::isRightToLeft() ) {
         return RESIZELEFT;
       } else {
         return RESIZERIGHT;
@@ -1251,7 +1250,7 @@ void Agenda::adjustItemPosition( AgendaItem *item )
   item->resize( int( mGridSpacingX * item->cellWidth() ),
                 int( mGridSpacingY * item->cellHeight() ) );
   int clXLeft = item->cellXLeft();
-  if ( Globals::self()->reverseLayout() ) {
+  if ( QApplication::isRightToLeft() ) {
     clXLeft = item->cellXRight() + 1;
   }
   QPoint cpos = gridToContents( QPoint( clXLeft, item->cellYTop() ) );
@@ -1287,7 +1286,7 @@ void Agenda::placeAgendaItem( AgendaItem *item, double subCellWidth )
     xpos = pt.x() + int( subCellPos );
     ypos = pt.y();
   }
-  if ( Globals::self()->reverseLayout() ) { // RTL language/layout
+  if ( QApplication::isRightToLeft() ) { // RTL language/layout
     xpos += width;
     width = -width;
   }
@@ -1351,7 +1350,7 @@ void Agenda::placeSubCells( AgendaItem *placeItem )
 int Agenda::columnWidth( int column ) const
 {
   int start = gridToContents( QPoint( column, 0 ) ).x();
-  if ( Globals::self()->reverseLayout() ) {
+  if ( QApplication::isRightToLeft() ) {
     column--;
   } else {
     column++;
@@ -1397,7 +1396,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
         gxStart = gxEnd;
         gxEnd = tmp;
       }
-      int xoffset = ( Globals::self()->reverseLayout()?1:0 );
+      int xoffset = ( QApplication::isRightToLeft() ? 1 : 0 );
       while ( gxStart <= gxEnd ) {
         int xStart = gridToContents( QPoint( gxStart + xoffset, 0 ) ).x();
         int xWidth = columnWidth( gxStart ) + 1;
@@ -1488,7 +1487,7 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 */
 QPoint Agenda::contentsToGrid ( const QPoint &pos ) const
 {
-  int gx = int( Globals::self()->reverseLayout() ?
+  int gx = int( QApplication::isRightToLeft() ?
                 mColumns - pos.x() / mGridSpacingX : pos.x()/mGridSpacingX );
   int gy = int( pos.y() / mGridSpacingY );
   return QPoint( gx, gy );
@@ -1499,7 +1498,7 @@ QPoint Agenda::contentsToGrid ( const QPoint &pos ) const
 */
 QPoint Agenda::gridToContents( const QPoint &gpos ) const
 {
-  int x = int( Globals::self()->reverseLayout() ?
+  int x = int( QApplication::isRightToLeft() ?
                ( mColumns - gpos.x() ) * mGridSpacingX : gpos.x() * mGridSpacingX );
   int y = int( gpos.y() * mGridSpacingY );
   return QPoint( x, y );

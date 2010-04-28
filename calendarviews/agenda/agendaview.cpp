@@ -26,7 +26,6 @@
 #include "agenda.h"
 #include "agendaitem.h"
 #include "alternatelabel.h"
-#include "globals.h"
 #include "prefs.h"
 #include "timelabelszone.h"
 
@@ -46,7 +45,10 @@
 #include <KGlobal>
 #include <KHBox>
 #include <KVBox>
+#include <KIconLoader>
+#include <KComponentData>
 
+#include <QApplication>
 #include <QScrollBar>
 #include <QScrollArea>
 #include <QDrag>
@@ -66,9 +68,9 @@ EventIndicator::EventIndicator( Location loc, QWidget *parent )
   mLocation = loc;
 
   if ( mLocation == Top ) {
-    mPixmap = Globals::self()->smallIcon( "arrow-up-double" );
+    mPixmap = SmallIcon( "arrow-up-double" );
   } else {
-    mPixmap = Globals::self()->smallIcon( "arrow-down-double" );
+    mPixmap = SmallIcon( "arrow-down-double" );
   }
 
   setMinimumHeight( mPixmap.height() );
@@ -88,7 +90,7 @@ void EventIndicator::paintEvent( QPaintEvent *event )
   for ( i=0; i<mColumns; ++i ) {
     if ( mEnabled[i] ) {
       int cellWidth = contentsRect().right() / mColumns;
-      int xOffset = Globals::self()->reverseLayout() ?
+      int xOffset = QApplication::isRightToLeft() ?
                     ( mColumns - 1 - i ) * cellWidth + cellWidth / 2 - mPixmap.width() / 2 :
                     i * cellWidth + cellWidth / 2 - mPixmap.width() / 2;
       painter.drawPixmap( QPoint( xOffset, 0 ), mPixmap );
@@ -481,7 +483,7 @@ void AgendaView::createDayLabels()
   KVBox *bottomWeekLabelBox = new KVBox( mBottomDayLabels );
   mLayoutBottomDayLabels->addWidget( bottomWeekLabelBox );
 
-  const KCalendarSystem *calsys = Globals::self()->calendarSystem();
+  const KCalendarSystem *calsys = KGlobal::locale()->calendar();
 
   DateList::ConstIterator dit;
   for ( dit = mSelectedDates.constBegin(); dit != mSelectedDates.constEnd(); ++dit ) {
@@ -509,7 +511,7 @@ void AgendaView::createDayLabels()
     }
 
     // if a holiday region is selected, show the holiday name
-    QStringList texts = Globals::self()->holiday( date );
+    const QStringList texts = holidayNames( date );
     QStringList::ConstIterator textit = texts.constBegin();
     for ( ; textit != texts.constEnd(); ++textit ) {
       // Compute a small version of the holiday string for AlternateLabel
@@ -1532,14 +1534,14 @@ void AgendaView::startDrag( const Item &incidence )
 
 void AgendaView::readSettings()
 {
-  readSettings( Globals::self()->config() );
+  readSettings( KGlobal::activeComponent().config().data() );
 }
 
-void AgendaView::readSettings( KConfig *config )
+void AgendaView::readSettings( const KConfig *config )
 {
-  KConfigGroup group = config->group( "Views" );
+  const KConfigGroup group = config->group( "Views" );
 
-  QList<int> sizes = group.readEntry( "Separator AgendaView", QList<int>() );
+  const QList<int> sizes = group.readEntry( "Separator AgendaView", QList<int>() );
 
   // the size depends on the number of plugins used
   // we don't want to read invalid/corrupted settings or else agenda becomes invisible
@@ -1567,12 +1569,12 @@ void AgendaView::setHolidayMasks()
   mHolidayMask.resize( mSelectedDates.count() + 1 );
 
   for ( int i = 0; i < mSelectedDates.count(); ++i ) {
-    mHolidayMask[i] = !Globals::self()->isWorkDay( mSelectedDates[ i ] );
+    mHolidayMask[i] = !isWorkDay( mSelectedDates[ i ] );
   }
 
   // Store the information about the day before the visible area (needed for
   // overnight working hours) in the last bit of the mask:
-  bool showDay = !Globals::self()->isWorkDay( mSelectedDates[ 0 ].addDays( -1 ) );
+  bool showDay = !isWorkDay( mSelectedDates[ 0 ].addDays( -1 ) );
   mHolidayMask[ mSelectedDates.count() ] = showDay;
 
   mAgenda->setHolidayMask( &mHolidayMask );

@@ -24,7 +24,6 @@
 
 #include "timescaleconfigdialog.h"
 
-#include "globals.h"
 #include "prefs.h"
 
 #include <kdebug.h>

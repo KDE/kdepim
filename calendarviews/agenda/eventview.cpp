@@ -35,6 +35,7 @@
 #include <akonadi/kcal/utils.h>
 #include <Akonadi/Item>
 
+#include <kholidays/holidayregion.h>
 #include <KCal/Incidence>
 #include <KLocale>
 #include <KXMLGUIClient>
@@ -98,6 +99,8 @@ class EventView::Private
     KDateTime actualEndDateTime;
     void setUpModels();
     void reconnectCollectionSelection();
+
+    KHolidays::HolidayRegionPtr mHolidayRegion;
 };
 
 void EventView::Private::setUpModels()
@@ -176,6 +179,11 @@ void EventView::defaultAction( const Item &aitem )
   } else {
     emit editIncidenceSignal(aitem);
   }
+}
+
+void EventView::setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion )
+{
+  d->mHolidayRegion = holidayRegion;
 }
 
 int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
@@ -494,6 +502,32 @@ void EventView::handleBackendError( const QString &errorString )
   kError() << errorString;
 }
 
+bool EventView::isWorkDay( const QDate &date ) const
+{
+  int mask( ~( Prefs::instance()->workWeekMask() ) );
+
+  bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
+  if ( Prefs::instance()->excludeHolidays() && d->mHolidayRegion ) {
+    const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
+    for ( int i = 0; i < list.count(); ++i ) {
+      nonWorkDay = nonWorkDay || ( list.at( i ).dayType() == KHolidays::Holiday::NonWorkday );
+    }
+  }
+  return !nonWorkDay;
+}
+
+QStringList EventView::holidayNames( const QDate &date ) const
+{
+  QStringList hdays;
+
+  if ( d->mHolidayRegion ) {
+    const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
+    Q_FOREACH( const KHolidays::Holiday &holiday, list ) {
+        hdays.append( holiday.text() );
+    }
+  }
+  return hdays;
+}
 
 void EventView::backendErrorOccurred()
 {

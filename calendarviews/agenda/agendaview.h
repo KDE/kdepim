@@ -172,7 +172,7 @@ class EVENTVIEWS_EXPORT AgendaView : public EventView, public Akonadi::Calendar:
     void startDrag( const Akonadi::Item & );
 
     void readSettings();
-    void readSettings( KConfig * );
+    void readSettings( const KConfig * );
     void writeSettings( KConfig * );
 
     void setContentsPos( int y );

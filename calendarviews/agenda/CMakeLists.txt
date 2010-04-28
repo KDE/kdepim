@@ -16,7 +16,6 @@ set( eventviews_LIB_SRCS
      timelabels.cpp
      timelabelszone.cpp
      prefs.cpp
-     globals.cpp
      helper.cpp
      alternatelabel.cpp
      timescaleconfigdialog.cpp

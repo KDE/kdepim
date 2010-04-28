@@ -50,6 +50,16 @@ namespace Akonadi {
   class Item;
   class Calendar;
 }
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
+namespace KHolidays {
+    class HolidayRegion;
+    typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
+}
+
 using namespace KCal;
 
 class QMenu;
@@ -274,6 +284,12 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     void defaultAction( const Akonadi::Item &incidence );
 
+    /**
+       Set which holidays the user wants to use.
+       @param holidayRegion a HolidayRegion object initialized with the desired locale.
+    */
+    void setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion );
+
   signals:
     /**
      * when the view changes the dates that are selected in one way or
@@ -425,6 +441,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     virtual void incidencesChanged( const Akonadi::Item::List& incidences );
 
     virtual void handleBackendError( const QString &error );
+
+    bool isWorkDay( const QDate &date ) const;
+    QStringList holidayNames( const QDate &date ) const;
 
   private:
     /*
