@@ -2089,10 +2089,7 @@ AgendaScrollArea::AgendaScrollArea( bool isAllDay, EventView *eventView, QWidget
 {
   if ( isAllDay ) {
     mAgenda = new Agenda( eventView, this, 1 );
-
-    // TODO_SPLIT: remove this hack, the old code to align both agenda's should work now
-    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOn );
-    verticalScrollBar()->hide();
+    setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
   } else {
     mAgenda = new Agenda( eventView, this, 1, 96, Prefs::instance()->hourSize() );
   }

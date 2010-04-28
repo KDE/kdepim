@@ -40,6 +40,7 @@
 
 #include <KCal/CalFilter>
 
+#include <QStyle>
 #include <KCalendarSystem>
 #include <KGlobalSettings>
 #include <KGlobal>
@@ -179,6 +180,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   mAgendaLayout->addWidget( scrollArea, 1, 1, 1, 2 );
   mAgendaLayout->setColumnStretch( 1, 1 );
+  QWidget *dummyAllDayRight = new QWidget( mAllDayFrame );
 
   // Create time labels
   mTimeLabelsZone = new TimeLabelsZone( this, mAgenda );
@@ -204,6 +206,8 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 
   if ( !isSideBySide ) {
     /* Make the all-day and normal agendas line up with each other */
+    dummyAllDayRight->setFixedWidth( style()->pixelMetric( QStyle::PM_ScrollBarExtent ) -
+                                     mAgendaLayout->horizontalSpacing() );
     dummyAgendaRight->setFixedWidth( mAgenda->verticalScrollBar()->width() );
   }
 
