@@ -77,6 +77,8 @@ struct AddressesDialog::AddressesDialogPrivate {
 
   AddresseeViewItem           *personal;
   AddresseeViewItem           *recent;
+  AddresseeViewItem           *topdist;
+  QPtrList<AddresseeViewItem> dists;
 
   AddresseeViewItem           *toItem;
   AddresseeViewItem           *ccItem;
@@ -334,6 +336,7 @@ AddressesDialog::updateRecentAddresses()
     addAddresseeToAvailable( *it, d->recent );
 
   if ( d->recent->childCount() > 0 ) {
+    d->recent->setOpen( true );
     d->recent->setVisible( true );
   }
 }
@@ -475,8 +478,10 @@ AddressesDialog::updateAvailableAddressees()
   d->recent = 0;
   updateRecentAddresses();
 
+  d->topdist = 0;
   addDistributionLists();
   if ( d->personal->childCount() > 0 ) {
+    d->personal->setOpen( true );
     d->personal->setVisible( true );
   }
 
@@ -727,10 +732,9 @@ AddressesDialog::addSelectedTo()
   addAddresseesToSelected( d->toItem, selectedAvailableAddresses );
   selectedAvailableAddresses.clear();
 
-  if ( d->toItem->childCount() > 0 )
+  if ( d->toItem->childCount() > 0 ) {
     d->toItem->setVisible( true );
-  else
-  {
+  } else {
     delete d->toItem;
     d->toItem = 0;
   }
@@ -749,10 +753,9 @@ AddressesDialog::addSelectedCC()
   addAddresseesToSelected( d->ccItem, selectedAvailableAddresses );
   selectedAvailableAddresses.clear();
 
-  if ( d->ccItem->childCount() > 0 )
+  if ( d->ccItem->childCount() > 0 ) {
     d->ccItem->setVisible( true );
-  else
-  {
+  } else {
     delete d->ccItem;
     d->ccItem = 0;
   }
@@ -771,10 +774,9 @@ AddressesDialog::addSelectedBCC()
   addAddresseesToSelected( d->bccItem, selectedAvailableAddresses );
   selectedAvailableAddresses.clear();
 
-  if ( d->bccItem->childCount() > 0 )
+  if ( d->bccItem->childCount() > 0 ) {
     d->bccItem->setVisible( true );
-  else
-  {
+  } else {
     delete d->bccItem;
     d->bccItem = 0;
   }
@@ -984,25 +986,30 @@ AddressesDialog::filterChanged( const QString& txt )
 
   int personalVisible = 0;
   int recentVisible = 0;
+  int distlistVisible = 0;
   while ( it.current() ) {
     AddresseeViewItem* item = static_cast<AddresseeViewItem*>( it.current() );
     ++it;
     if ( showAll ) {
+      item->setOpen( true );
       item->setVisible( true );
-      if ( item->category() == AddresseeViewItem::Group )
-        item->setOpen( false );//close to not have too many entries
+      // allen: I do not like the following behavior. comment out and see if anyone screams
+      //if ( item->category() == AddresseeViewItem::Group )
+      //  item->setOpen( false );//close to not have too many entries
       continue;
     }
     if ( item->category() == AddresseeViewItem::Entry ) {
-      bool matches = item->matches( txt ) ;
+      bool matches = item->matches( txt );
       item->setVisible( matches );
       QListViewItem *parent = static_cast<QListViewItem*>( item )->parent();
       if ( matches && parent ) {
         parent->setOpen( true );//open the parents with found entries
         if ( parent == d->personal ) {
           personalVisible++;
-        } else {
+        } else if ( parent == d->recent ) {
           recentVisible++;
+        } else { // distlist
+          distlistVisible++;
         }
       }
     }
@@ -1013,6 +1020,31 @@ AddressesDialog::filterChanged( const QString& txt )
   }
   if ( !showAll && recentVisible == 0 ) {
     d->recent->setVisible( false );
+  }
+  if ( !showAll ) {
+    if ( distlistVisible == 0 ) {
+      d->topdist->setVisible( false );
+    } else {
+      QPtrListIterator<AddresseeViewItem> it( d->dists );
+      for ( ; it.current(); ++it ) {
+        QListViewItem *p = *it;
+        p->setVisible( true );
+        AddresseeViewItem *p2 = static_cast<AddresseeViewItem*>( p->firstChild() );
+        int pcount = 0;
+        while ( p2 ) {
+          if ( p2->matches( txt ) ) {
+            p2->setVisible( true );
+            pcount++;
+          } else {
+            p2->setVisible( false );
+          }
+          p2 = static_cast<AddresseeViewItem*>( p2->nextSibling() );
+        }
+        if ( !pcount ) {
+          p->setVisible( false );
+        }
+      }
+    }
   }
 }
 
@@ -1102,14 +1134,16 @@ AddressesDialog::addDistributionLists()
   if ( distLists.isEmpty() )
     return;
 
-  AddresseeViewItem *topItem = new AddresseeViewItem( d->ui->mAvailableView,
-                                                      i18n( "Distribution Lists" ) );
+  if ( !d->topdist ) {
+    d->topdist = new AddresseeViewItem( d->ui->mAvailableView, i18n( "Distribution Lists" ) );
+  }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
   QValueList<KPIM::DistributionList>::ConstIterator listIt;
 #else
   QStringList::Iterator listIt;
 #endif
+  int total = 0;
   for ( listIt = distLists.begin(); listIt != distLists.end(); ++listIt ) {
 #ifdef KDEPIM_NEW_DISTRLISTS
     KPIM::DistributionList dlist = *listIt;
@@ -1119,7 +1153,8 @@ AddressesDialog::addDistributionLists()
     KABC::DistributionList::Entry::List entries = dlist.entries();
 #endif
 
-    AddresseeViewItem *item = new AddresseeViewItem( topItem, dlist.name() );
+    AddresseeViewItem *item = new AddresseeViewItem( d->topdist, dlist.name() );
+    d->dists.append( item );
     connect( item, SIGNAL( addressSelected( AddresseeViewItem*, bool ) ),
              this, SLOT( availableAddressSelected( AddresseeViewItem*, bool ) ) );
 
@@ -1128,8 +1163,18 @@ AddressesDialog::addDistributionLists()
 #else
     KABC::DistributionList::Entry::List::Iterator itemIt;
 #endif
-    for ( itemIt = entries.begin(); itemIt != entries.end(); ++itemIt )
+    for ( itemIt = entries.begin(); itemIt != entries.end(); ++itemIt ) {
       addAddresseeToAvailable( (*itemIt).addressee, item, false );
+    }
+    if ( item->childCount() > 0 ) {
+      item->setOpen( true );
+      item->setVisible( true );
+    }
+    total += item->childCount();
+  }
+  if ( total > 0 ) {
+    d->topdist->setOpen( true );
+    d->topdist->setVisible( true );
   }
 }
 
