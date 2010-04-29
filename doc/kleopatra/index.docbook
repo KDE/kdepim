@@ -1713,6 +1713,26 @@ button.</para>
 
 </sect1>
 
+    <sect1 id="configuration-smime-validation">
+      <title>
+        Configuring aspects of <guilabel>S/MIME Validation</guilabel>
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
+    <sect1 id="configuration-gnupg-system">
+      <title>
+        Configuring the <guilabel>GnuPG System</guilabel>
+      </title>
+
+      <para>
+      </para>
+
+    </sect1>
+
 </chapter>
 
 <chapter id="admin"><title>Administrator's Guide</title>
