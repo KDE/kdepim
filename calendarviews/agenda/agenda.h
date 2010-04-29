@@ -28,19 +28,12 @@
 
 #include "eventviews_export.h"
 
-#include "eventview.h"
-#include "agendaview.h"
-#include <kcal/incidence.h>
-#include <akonadi/kcal/incidencechanger.h>
+#include <KCal/Todo>
 
 #include <Akonadi/Item>
 
 #include <QFrame>
-#include <QList>
-#include <QPointer>
 #include <QScrollArea>
-#include <QTimer>
-#include <QVector>
 
 class QDropEvent;
 class QEvent;
@@ -55,13 +48,13 @@ class QWheelEvent;
 namespace Akonadi
 {
   class Calendar;
+  class IncidenceChanger;
 }
 
 namespace KCal {
   class Event;
   class Todo;
 }
-using namespace KCal;
 
 namespace EventViews
 {
@@ -69,6 +62,7 @@ namespace EventViews
 class Agenda;
 class AgendaItem;
 class AgendaView;
+class EventView;
 
 class MarcusBains : public QFrame
 {
@@ -172,8 +166,8 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setHolidayMask( QVector<bool> * );
 
-    void setDateList( const DateList &selectedDates );
-    DateList dateList() const;
+    void setDateList( const KCal::DateList &selectedDates );
+    KCal::DateList dateList() const;
 
     void setCalendar( Akonadi::Calendar *cal );
 

@@ -29,6 +29,7 @@
 #include "timescaleconfigdialog.h"
 #include "prefs.h"
 #include "agenda.h"
+#include "eventview.h"
 
 #include <KIcon>
 

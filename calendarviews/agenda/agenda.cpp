@@ -27,9 +27,11 @@
   without including the source code for Qt in the source distribution.
 */
 #include "agenda.h"
+
 #include "agendaitem.h"
-#include "prefs.h"
+#include "eventview.h"
 #include "helper.h"
+#include "prefs.h"
 
 #include <libkdepim/pimmessagebox.h>
 
@@ -63,7 +65,9 @@
 #include <QKeyEvent>
 #include <QFrame>
 #include <QDropEvent>
+#include <QPointer>
 #include <QResizeEvent>
+#include <QTimer>
 #include <QMouseEvent>
 
 #include <cmath>

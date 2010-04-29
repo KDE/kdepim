@@ -55,6 +55,7 @@
 #include <QGridLayout>
 #include <QPainter>
 #include <QSplitter>
+#include <QTimer>
 #include <KWordWrap>
 
 using namespace Akonadi;
