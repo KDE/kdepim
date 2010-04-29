@@ -85,6 +85,15 @@ public:
     is not stored in any folder. Marks this message as forwarded. */
   KMime::Message::Ptr createForward();
 
+  /**
+   * Create a forward from the given list of messages, attaching each
+   *  message to be forwarded to the new forwarded message.
+   *
+   * If no list is passed, use the original message passed in the MessageFactory
+   *  constructor.
+   */
+  QPair< KMime::Message::Ptr, QList< KMime::Content* > > createAttachedForward( QList<KMime::Message::Ptr> msgs = QList<KMime::Message::Ptr>() );
+
   /** Create a new message that is a redirect to this message, filling all
     required header fields with the proper values. The returned message
     is not stored in any folder. Marks this message as replied.
