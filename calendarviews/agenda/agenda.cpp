@@ -363,14 +363,14 @@ Item::Id Agenda::lastSelectedItemId() const
 
 void Agenda::init()
 {
-  d->mGridSpacingX = ((double)d->mScrollArea->width())/d->mColumns;
+  d->mGridSpacingX = static_cast<double>( d->mScrollArea->width() ) / d->mColumns;
   d->mDesiredGridSpacingY = d->mEventView->preferences()->hourSize();
   if ( d->mDesiredGridSpacingY < 4 || d->mDesiredGridSpacingY > 30 ) {
     d->mDesiredGridSpacingY = 10;
   }
 
  // make sure that there are not more than 24 per day
-  d->mGridSpacingY = (double)height() / (double)d->mRows;
+  d->mGridSpacingY = static_cast<double>( height() ) / d->mRows;
   if ( d->mGridSpacingY < d->mDesiredGridSpacingY ) {
     d->mGridSpacingY = d->mDesiredGridSpacingY;
   }
@@ -1962,14 +1962,12 @@ void Agenda::resizeEvent ( QResizeEvent *ev )
   QSize newSize( ev->size() );
 
   if ( d->mAllDayMode ) {
-    d->mGridSpacingX = double( newSize.width() /*- 2 * frameWidth() */) / (double)d->mColumns;
-    d->mGridSpacingY = newSize.height() /*- 2 * frameWidth()*/;
+    d->mGridSpacingX = static_cast<double>( newSize.width() ) / d->mColumns;
+    d->mGridSpacingY = newSize.height();
   } else {
-
-    d->mGridSpacingX = double(newSize.width() /*- 2 * frameWidth() */) / double( d->mColumns );
+    d->mGridSpacingX = static_cast<double>( newSize.width() ) / d->mColumns;
     // make sure that there are not more than 24 per day
-    d->mGridSpacingY = double(
-      newSize.height() /*- 2 * frameWidth()*/ ) / double( d->mRows );
+    d->mGridSpacingY = static_cast<double>( newSize.height() ) / d->mRows;
     if ( d->mGridSpacingY < d->mDesiredGridSpacingY ) {
       d->mGridSpacingY = d->mDesiredGridSpacingY;
     }
@@ -2045,7 +2043,7 @@ void Agenda::updateConfig()
   }
 
   // make sure that there are not more than 24 per day
-  d->mGridSpacingY = (double)height() / (double)d->mRows;
+  d->mGridSpacingY = static_cast<double>( height() ) / d->mRows;
   if ( d->mGridSpacingY < d->mDesiredGridSpacingY ) {
     d->mGridSpacingY = d->mDesiredGridSpacingY;
   }
