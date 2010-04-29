@@ -60,24 +60,39 @@
 using namespace Akonadi;
 using namespace EventViews;
 
-EventIndicator::EventIndicator( Location loc, QWidget *parent )
-  : QFrame( parent )
+class EventIndicator::Private
 {
-  mColumns = 1;
-  mEnabled.resize( mColumns );
-  mLocation = loc;
+  EventIndicator *const q;
 
-  if ( mLocation == Top ) {
-    mPixmap = SmallIcon( "arrow-up-double" );
-  } else {
-    mPixmap = SmallIcon( "arrow-down-double" );
-  }
+  public:
+    Private( EventIndicator *parent, EventIndicator::Location loc )
+      : q( parent ), mColumns( 1 ), mLocation( loc )
+    {
+      mEnabled.resize( mColumns );
 
-  setMinimumHeight( mPixmap.height() );
+      if ( mLocation == Top ) {
+        mPixmap = SmallIcon( "arrow-up-double" );
+      } else {
+        mPixmap = SmallIcon( "arrow-down-double" );
+      }
+    }
+
+  public:
+    int mColumns;
+    Location mLocation;
+    QPixmap mPixmap;
+    QVector<bool> mEnabled;
+};
+
+EventIndicator::EventIndicator( Location loc, QWidget *parent )
+  : QFrame( parent ), d( new Private( this, loc ) )
+{
+  setMinimumHeight( d->mPixmap.height() );
 }
 
 EventIndicator::~EventIndicator()
 {
+  delete d;
 }
 
 void EventIndicator::paintEvent( QPaintEvent *event )
@@ -86,29 +101,28 @@ void EventIndicator::paintEvent( QPaintEvent *event )
 
   QPainter painter( this );
 
-  int i;
-  for ( i=0; i<mColumns; ++i ) {
-    if ( mEnabled[i] ) {
-      int cellWidth = contentsRect().right() / mColumns;
+  for ( int i = 0; i < d->mColumns; ++i ) {
+    if ( d->mEnabled[ i ] ) {
+      int cellWidth = contentsRect().right() / d->mColumns;
       int xOffset = QApplication::isRightToLeft() ?
-                    ( mColumns - 1 - i ) * cellWidth + cellWidth / 2 - mPixmap.width() / 2 :
-                    i * cellWidth + cellWidth / 2 - mPixmap.width() / 2;
-      painter.drawPixmap( QPoint( xOffset, 0 ), mPixmap );
+                    ( d->mColumns - 1 - i ) * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2 :
+                    i * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2;
+      painter.drawPixmap( QPoint( xOffset, 0 ), d->mPixmap );
     }
   }
 }
 
 void EventIndicator::changeColumns( int columns )
 {
-  mColumns = columns;
-  mEnabled.resize( mColumns );
+  d->mColumns = columns;
+  d->mEnabled.resize( d->mColumns );
 
   update();
 }
 
 void EventIndicator::enableColumn( int column, bool enable )
 {
-  mEnabled[column] = enable;
+  d->mEnabled[ column ] = enable;
 }
 
 ////////////////////////////////////////////////////////////////////////////

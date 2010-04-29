@@ -78,10 +78,8 @@ class EVENTVIEWS_EXPORT EventIndicator : public QFrame
     void paintEvent( QPaintEvent *event );
 
   private:
-    int mColumns;
-    Location mLocation;
-    QPixmap mPixmap;
-    QVector<bool> mEnabled;
+    class Private;
+    Private *const d;
 };
 
 /**
