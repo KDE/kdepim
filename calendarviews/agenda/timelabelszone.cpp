@@ -109,7 +109,7 @@ void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
   }
 }
 
-int TimeLabelsZone::timeLabelsWidth()
+int TimeLabelsZone::timeLabelsWidth() const
 {
   if ( mTimeLabelsList.isEmpty() ) {
     return 0;

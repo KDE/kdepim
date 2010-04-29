@@ -52,7 +52,7 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
         If spec is not valid, use the display timespec.
     */
     void addTimeLabels( const KDateTime::Spec &spec );
-    int timeLabelsWidth();
+    int timeLabelsWidth() const;
     void setTimeLabelsWidth( int width );
     void updateAll();
     void reset();
