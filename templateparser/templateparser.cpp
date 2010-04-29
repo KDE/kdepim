@@ -1352,7 +1352,6 @@ QString TemplateParser::asQuotedString( const KMime::Message::Ptr &msg, const QS
 
   const QString indentStr = MessageCore::StringUtil::formatString( aIndentStr,
                                                                    msg->from()->asUnicodeString() );
-  /* TODO(leo) get col width without kmkernel call */
   if ( GlobalSettings::self()->smartQuote() && mWrap)
     content = MessageCore::StringUtil::smartQuote( content, mColWrap - indentStr.length() );
   content.replace( '\n', '\n' + indentStr );
