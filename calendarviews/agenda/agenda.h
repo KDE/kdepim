@@ -94,7 +94,6 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     Akonadi::Item selectedIncidence() const;
     QDate selectedIncidenceDate() const;
-    QScrollArea *mScrollArea;
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSize minimumSize() const;
