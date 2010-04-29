@@ -375,8 +375,8 @@ void Agenda::init()
     d->mGridSpacingY = d->mDesiredGridSpacingY;
   }
 
-  d->mResizeBorderWidth = 8;
-  d->mScrollBorderWidth = 8;
+  d->mResizeBorderWidth = 12;
+  d->mScrollBorderWidth = 12;
   d->mScrollDelay = 30;
   d->mScrollOffset = 10;
 
@@ -2006,12 +2006,14 @@ void Agenda::resizeAllContents()
 
 void Agenda::scrollUp()
 {
-  d->mScrollArea->verticalScrollBar()->scroll( 0, -d->mScrollOffset );
+  int currentValue = verticalScrollBar()->value();
+  verticalScrollBar()->setValue( currentValue - d->mScrollOffset );
 }
 
 void Agenda::scrollDown()
 {
-  d->mScrollArea->verticalScrollBar()->scroll( 0, d->mScrollOffset );
+  int currentValue = verticalScrollBar()->value();
+  verticalScrollBar()->setValue( currentValue + d->mScrollOffset );
 }
 
 QSize Agenda::minimumSize() const
