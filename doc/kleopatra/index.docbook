@@ -273,7 +273,7 @@ optional a <guilabel>Comment</guilabel>.</para>
 <term><guilabel>Create a personal X.509 key pair and certification request</guilabel></term>
 <listitem>
 <para>X.509 key pairs are created locally, but certified centrally by a 
-certification authority (&ca;). CAs can certify other CAs, creating a central, 
+certification authority (&ca;). &ca;s can certify other &ca;s, creating a central, 
 hierarchical chain of trust.</para>
 <para>The next step in the wizard is to type in your personal data
 for the certificate. The fields to fill out are:
