@@ -820,17 +820,16 @@ void Agenda::startSelectAction( const QPoint &viewportPos )
 //  updateContents();
 }
 
-void Agenda::performSelectAction( const QPoint &viewportPos )
+void Agenda::performSelectAction( const QPoint &pos )
 {
-  QPoint pos =  viewportPos ;
-  QPoint gpos = contentsToGrid( pos );
-
-  QPoint clipperPos = QPoint();
+  const QPoint gpos = contentsToGrid( pos );
 
   // Scroll if cursor was moved to upper or lower end of agenda.
-  if ( clipperPos.y() < d->mScrollBorderWidth ) {
+  if ( pos.y() - contentsY() < d->mScrollBorderWidth &&
+       contentsY() > 0 ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
-  } else if ( d->mScrollArea->height() < d->mScrollBorderWidth  ) {
+  } else if ( contentsY() + d->mScrollArea->viewport()->height() -
+              d->mScrollBorderWidth < pos.y() ) {
     d->mScrollDownTimer.start( d->mScrollDelay );
   } else {
     d->mScrollUpTimer.stop();
