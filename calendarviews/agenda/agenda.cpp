@@ -519,6 +519,7 @@ bool Agenda::eventFilter ( QObject *object, QEvent *event )
     }
 
     if ( object == this ) {
+      // so timelabels hide the mouse cursor
       emit leaveAgenda();
     }
     return true;
@@ -1511,6 +1512,9 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
 //    QPixmap bgImage( mEventView->preferences()->agendaGridBackgroundImage() );
 //    dbp.drawPixmap( 0, 0, cw, ch, bgImage ); FIXME
 //  }
+
+  dbp.fillRect( 0, 0, cw, ch,
+                d->mEventView->preferences()->agendaGridBackgroundColor() );
 
   dbp.translate( -cx, -cy );
 
