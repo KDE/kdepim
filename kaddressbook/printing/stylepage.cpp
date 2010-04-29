@@ -48,8 +48,8 @@ StylePage::StylePage( QWidget* parent,  const char* name )
 
   initFieldCombo();
 
-  mSortTypeCombo->addItem( i18n( "Ascending" ) );
-  mSortTypeCombo->addItem( i18n( "Descending" ) );
+  mSortTypeCombo->addItem( i18nc( "Ascending sort order", "Ascending" ) );
+  mSortTypeCombo->addItem( i18nc( "Descending sort order", "Descending" ) );
 
   connect( mStyleCombo, SIGNAL( activated( int ) ), SIGNAL( styleChanged( int ) ) );
 }

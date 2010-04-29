@@ -55,10 +55,10 @@ QString ContactFields::label( Field field )
     case CarPhone: return KABC::Addressee::carPhoneLabel(); break;
     case Isdn: return KABC::Addressee::isdnLabel(); break;
     case Pager: return KABC::Addressee::pagerLabel(); break;
-    case PreferredEmail: return i18n( "EMail (preferred)" ); break;
-    case Email2: return i18n( "EMail (2)" ); break;
-    case Email3: return i18n( "EMail (3)" ); break;
-    case Email4: return i18n( "EMail (4)" ); break;
+    case PreferredEmail: return i18nc( "Preferred email address", "EMail (preferred)" ); break;
+    case Email2: return i18nc( "Second email address", "EMail (2)" ); break;
+    case Email3: return i18nc( "Third email address", "EMail (3)" ); break;
+    case Email4: return i18nc( "Fourth email address", "EMail (4)" ); break;
     case Mailer: return KABC::Addressee::mailerLabel(); break;
     case Title: return KABC::Addressee::titleLabel(); break;
     case Role: return KABC::Addressee::roleLabel(); break;

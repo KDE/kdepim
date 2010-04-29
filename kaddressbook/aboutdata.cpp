@@ -18,9 +18,10 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include "aboutdata.h"
+
 #include "kdepim-version.h"
 
-#include "aboutdata.h"
 #include <klocale.h>
 
 AboutData::AboutData()

@@ -31,6 +31,7 @@
 #include <kmessagebox.h>
 #include <kprogressdialog.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
 #include <QtGui/QItemSelectionModel>
@@ -95,17 +96,21 @@ void XXPortManager::slotImport( const QString &identifier )
     return;
 
   const QStringList mimeTypes( KABC::Addressee::mimeType() );
-  Akonadi::CollectionDialog dlg( mParentWidget );
-  dlg.setMimeTypeFilter( mimeTypes );
-  dlg.setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  dlg.setCaption( i18n( "Select Address Book" ) );
-  dlg.setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
-  dlg.setDefaultCollection( mDefaultAddressBook );
 
-  if ( !dlg.exec() )
+  QPointer<Akonadi::CollectionDialog> dlg = new Akonadi::CollectionDialog( mParentWidget );
+  dlg->setMimeTypeFilter( mimeTypes );
+  dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
+  dlg->setCaption( i18n( "Select Address Book" ) );
+  dlg->setDescription( i18n( "Select the address book the imported contact(s) shall be saved in:" ) );
+  dlg->setDefaultCollection( mDefaultAddressBook );
+
+  if ( !dlg->exec() || !dlg ) {
+    delete dlg;
     return;
+  }
 
-  const Akonadi::Collection collection = dlg.selectedCollection();
+  const Akonadi::Collection collection = dlg->selectedCollection();
+  delete dlg;
 
   if ( !mImportProgressDialog ) {
     mImportProgressDialog = new KProgressDialog( mParentWidget, i18n( "Import Contacts" ) );
@@ -149,13 +154,17 @@ void XXPortManager::slotExport( const QString &identifier )
   if ( !mItemModel || !mSelectionModel )
     return;
 
-  ContactSelectionDialog dlg( mItemModel, mSelectionModel, mParentWidget );
-  dlg.setMessageText( i18n( "Which contact do you want to export?" ) );
-  dlg.setDefaultAddressBook( mDefaultAddressBook );
-  if ( !dlg.exec() )
+  QPointer<ContactSelectionDialog> dlg = new ContactSelectionDialog( mItemModel, mSelectionModel, mParentWidget );
+  dlg->setMessageText( i18n( "Which contact do you want to export?" ) );
+  dlg->setDefaultAddressBook( mDefaultAddressBook );
+  if ( !dlg->exec() || !dlg ) {
+    delete dlg;
     return;
+  }
 
-  const KABC::AddresseeList contacts = dlg.selectedContacts();
+  const KABC::AddresseeList contacts = dlg->selectedContacts();
+  delete dlg;
+
   if ( contacts.isEmpty() ) {
     KMessageBox::sorry( 0, i18n( "You have not selected any contacts to export." ) );
     return;

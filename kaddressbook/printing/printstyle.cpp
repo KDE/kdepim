@@ -61,14 +61,14 @@ bool PrintStyle::setPreview( const QString& fileName )
 
   const QString path = KStandardDirs::locate( "appdata", "printing/" + fileName );
   if ( path.isEmpty() ) {
-    kDebug(5720) << "PrintStyle::setPreview: preview not locatable.";
+    kDebug() << "preview not locatable.";
     return false;
   } else {
     if ( preview.load( path ) ) {
       setPreview( preview );
       return true;
     } else {
-      kDebug(5720) <<"PrintStyle::setPreview: preview at '" << path <<"' cannot be loaded.";
+      kDebug() <<"preview at '" << path <<"' cannot be loaded.";
       return false;
     }
   }

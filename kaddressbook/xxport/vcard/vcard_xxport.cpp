@@ -20,6 +20,7 @@
 #include "vcard_xxport.h"
 
 #include <QtCore/QFile>
+#include <QtCore/QPointer>
 #include <QtGui/QCheckBox>
 #include <QtGui/QFont>
 #include <QtGui/QFrame>
@@ -217,9 +218,11 @@ KABC::Addressee::List VCardXXPort::importContacts() const
         else if ( !anyFailures )
           KMessageBox::information( parentWidget(), i18n( "The vCard does not contain any contacts." ) );
       } else {
-        VCardViewerDialog dlg( addrList, parentWidget() );
-        dlg.exec();
-        addrList = dlg.contacts();
+        QPointer<VCardViewerDialog> dlg = new VCardViewerDialog( addrList, parentWidget() );
+        if ( dlg->exec() && dlg )
+          addrList = dlg->contacts();
+
+        delete dlg;
       }
     }
   }
@@ -257,9 +260,11 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
   if ( addrList.isEmpty() )
     return addrList;
 
-  VCardExportSelectionDialog dlg( parentWidget() );
-  if ( !dlg.exec() )
+  QPointer<VCardExportSelectionDialog> dlg = new VCardExportSelectionDialog( parentWidget() );
+  if ( !dlg->exec() || !dlg ) {
+    delete dlg;
     return list;
+  }
 
   KABC::Addressee::List::ConstIterator it;
   for ( it = addrList.begin(); it != addrList.end(); ++it ) {
@@ -284,20 +289,20 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     addr.setEmails( (*it).emails() );
     addr.setCategories( (*it).categories() );
 
-    if ( dlg.exportPrivateFields() ) {
+    if ( dlg->exportPrivateFields() ) {
       addr.setBirthday( (*it).birthday() );
       addr.setNote( (*it).note() );
     }
 
-    if ( dlg.exportPictureFields() ) {
-      if ( dlg.exportPrivateFields() )
+    if ( dlg->exportPictureFields() ) {
+      if ( dlg->exportPrivateFields() )
         addr.setPhoto( (*it).photo() );
 
-      if ( dlg.exportBusinessFields() )
+      if ( dlg->exportBusinessFields() )
         addr.setLogo( (*it).logo() );
     }
 
-    if ( dlg.exportBusinessFields() ) {
+    if ( dlg->exportBusinessFields() ) {
       addr.setTitle( (*it).title() );
       addr.setRole( (*it).role() );
       addr.setOrganization( (*it).organization() );
@@ -319,11 +324,11 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
       int type = (*phoneIt).type();
 
-      if ( type & KABC::PhoneNumber::Home && dlg.exportPrivateFields() )
+      if ( type & KABC::PhoneNumber::Home && dlg->exportPrivateFields() )
         addr.insertPhoneNumber( *phoneIt );
-      else if ( type & KABC::PhoneNumber::Work && dlg.exportBusinessFields() )
+      else if ( type & KABC::PhoneNumber::Work && dlg->exportBusinessFields() )
         addr.insertPhoneNumber( *phoneIt );
-      else if ( dlg.exportOtherFields() )
+      else if ( dlg->exportOtherFields() )
         addr.insertPhoneNumber( *phoneIt );
     }
 
@@ -332,24 +337,26 @@ KABC::Addressee::List VCardXXPort::filterContacts( const KABC::Addressee::List &
     for ( addrIt = addresses.begin(); addrIt != addresses.end(); ++addrIt ) {
       int type = (*addrIt).type();
 
-      if ( type & KABC::Address::Home && dlg.exportPrivateFields() )
+      if ( type & KABC::Address::Home && dlg->exportPrivateFields() )
         addr.insertAddress( *addrIt );
-      else if ( type & KABC::Address::Work && dlg.exportBusinessFields() )
+      else if ( type & KABC::Address::Work && dlg->exportBusinessFields() )
         addr.insertAddress( *addrIt );
-      else if ( dlg.exportOtherFields() )
+      else if ( dlg->exportOtherFields() )
         addr.insertAddress( *addrIt );
     }
 
-    if ( dlg.exportOtherFields() )
+    if ( dlg->exportOtherFields() )
       addr.setCustoms( (*it).customs() );
 
-    if ( dlg.exportEncryptionKeys() ) {
+    if ( dlg->exportEncryptionKeys() ) {
       addKey( addr, KABC::Key::PGP );
       addKey( addr, KABC::Key::X509 );
     }
 
     list.append( addr );
   }
+
+  delete dlg;
 
   return list;
 }

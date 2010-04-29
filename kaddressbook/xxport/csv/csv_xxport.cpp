@@ -29,6 +29,7 @@
 #include <ktemporaryfile.h>
 #include <kurl.h>
 
+#include <QtCore/QPointer>
 #include <QtCore/QTextCodec>
 #include <QtCore/QTextStream>
 
@@ -133,9 +134,13 @@ void CsvXXPort::exportToFile( QFile *file, const KABC::Addressee::List &contacts
 
 KABC::Addressee::List CsvXXPort::importContacts() const
 {
-  CSVImportDialog dlg( parentWidget() );
-  if ( !dlg.exec() )
-    return KABC::Addressee::List();
+  KABC::Addressee::List contacts;
 
-  return dlg.contacts();
+  QPointer<CSVImportDialog> dlg = new CSVImportDialog( parentWidget() );
+  if ( dlg->exec() && dlg )
+    contacts = dlg->contacts();
+
+  delete dlg;
+
+  return contacts;
 }

@@ -108,9 +108,7 @@ void PrintingWizard::slotStyleSelected( int index )
   mStyle = mStyleList.value( index );
   if ( !mStyle ) {
     PrintStyleFactory *factory = mStyleFactories.at( index );
-    kDebug(5720) << "PrintingWizardImpl::slotStyleSelected:"
-                 << "creating print style"
-                 << factory->description();
+    kDebug() << "creating print style" << factory->description();
 
     mStyle = factory->create();
     mStyleList.insert( index, mStyle );
@@ -143,8 +141,7 @@ void PrintingWizard::print()
   const ContactSorter sorter( mStylePage->sortField(), mStylePage->sortOrder() );
   sorter.sort( contacts );
 
-  kDebug(5720) <<"PrintingWizardImpl::print: printing"
-                << contacts.count() << "contacts.";
+  kDebug() <<"printing" << contacts.count() << "contacts.";
   // ... print:
   enableButton( KDialog::User3, false ); // back button
   enableButton( KDialog::Cancel, false );

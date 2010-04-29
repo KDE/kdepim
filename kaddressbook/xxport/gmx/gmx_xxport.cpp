@@ -460,7 +460,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list ) const
        "Company,Department,Change_date,Preferred,Status\n";
 
   addresseeId = 1;
-  while ( ( addressee = addresseeMap[ addresseeId ] ) != NULL ) {
+  while ( ( addressee = addresseeMap[ addresseeId ] ) != 0 ) {
 
     const KABC::PhoneNumber::List cellPhones =
       addressee->phoneNumbers( KABC::PhoneNumber::Cell );

@@ -134,7 +134,7 @@ void MikesStyle::print( const KABC::Addressee::List &contacts, PrintProgress *pr
 
   document.print( printer );
 
-  progress->addMessage( i18n( "Done" ) );
+  progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
 

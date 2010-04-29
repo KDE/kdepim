@@ -23,6 +23,7 @@
 #include "qcsvmodel.h"
 #include "templateselectiondialog.h"
 
+#include <QtCore/QPointer>
 #include <QtCore/QTextCodec>
 #include <QtCore/QThread>
 #include <QtCore/QUuid>
@@ -52,12 +53,12 @@
 
 enum { Local = 0, Latin1 = 1, Uni = 2, MSBug = 3, Codec = 4 };
 
-class ContactFieldComboBox : public QComboBox
+class ContactFieldComboBox : public KComboBox
 {
   public:
 
     ContactFieldComboBox( QWidget *parent = 0 )
-      : QComboBox( parent )
+      : KComboBox( parent )
     {
       fillFieldMap();
 
@@ -486,16 +487,20 @@ void CSVImportDialog::slotButtonClicked( int button )
 
 void CSVImportDialog::applyTemplate()
 {
-  TemplateSelectionDialog dlg( this );
-  if ( !dlg.templatesAvailable() ) {
-    KMessageBox::sorry( this, i18n( "There are no templates available yet." ), i18n( "No templates available" ) );
+  QPointer<TemplateSelectionDialog> dlg = new TemplateSelectionDialog( this );
+  if ( !dlg->templatesAvailable() ) {
+    KMessageBox::sorry( this, i18nc( "@label", "There are no templates available yet." ), i18nc( "@title:window", "No templates available" ) );
+    delete dlg;
     return;
   }
 
-  if ( !dlg.exec() )
+  if ( !dlg->exec() || !dlg ) {
+    delete dlg;
     return;
+  }
 
-  const QString templateFileName = dlg.selectedTemplate();
+  const QString templateFileName = dlg->selectedTemplate();
+  delete dlg;
 
   KConfig config( templateFileName, KConfig::SimpleConfig );
 
