@@ -860,14 +860,11 @@ linkend="view-hierarchical-key-list"/> is on.</para>
                 explicitly enabled in the backend configuration
                 (<option>allow-mark-trusted</option> in
                 <filename>gpg-agent.conf</filename>, or <xref
-                linkend="settings-configure-gpgme-backend"/>
-                <menuchoice><guilabel>GPG
-                Agent</guilabel><guilabel>Allow clients to make keys
-                as "trusted"</guilabel></menuchoice> or <xref
-                linkend="settings-configure-kleopatra"/>
-                <menuchoice><guilabel>S/MIME
-                Validation</guilabel><guilabel>Allow to mark root
-                certificates as trusted</guilabel></menuchoice>).
+                linkend="settings-configure-kleopatra"/> under either
+                <menuchoice><guimenu>GnuPG&nbsp;System</guimenu><guisubmenu>GPG&nbsp;Agent</guisubmenu><guimenuitem>Allow clients to make
+                keys as "trusted"</guimenuitem></menuchoice> or
+                <menuchoice><guimenu>S/MIME&nbsp;Validation</guimenu><guimenuitem>Allow to mark root
+                certificates as trusted</guimenuitem></menuchoice>).
               </para>
               <para>
                 Enabling that functionality in the backend can lead to
@@ -1416,8 +1413,8 @@ linkend="settings-configure-kleopatra"/>.</para>
 <para>On this page, you can configure which &ldap; servers to use for
 certificate searches. You can also configure their order, as well as
 some selected &ldap;-related settings from the dynamic backend
-configuration dialog, available via <xref
-linkend="settings-configure-gpgme-backend"/>.</para>
+configuration dialog, available as <guilabel>GnuPG System</guilabel>
+in <xref linkend="settings-configure-kleopatra"/></para>
 
 <para>To add a new server, click on the <guilabel>New</guilabel> button. 
 Then you can set
