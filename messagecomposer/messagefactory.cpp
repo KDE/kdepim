@@ -258,6 +258,10 @@ MessageFactory::MessageReply MessageFactory::createReply()
     else
       parser.process( m_origMsg );
   }
+  if( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
+    msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
+  }
+    
   link( msg, m_id, KPIM::MessageStatus::statusReplied() );
   if ( m_parentFolderId > 0 ) {
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );

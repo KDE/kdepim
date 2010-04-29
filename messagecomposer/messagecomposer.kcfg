@@ -38,6 +38,11 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>true</default>
     </entry>
 
+      <entry name="ForceReplyCharset" type="Bool" key="force-reply-charset">
+        <label>Keep original charset when replying or forwarding if possible</label>
+        <default>false</default>
+      </entry>
+
     
   </group>
 
