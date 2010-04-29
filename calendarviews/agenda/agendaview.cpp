@@ -312,7 +312,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
     /* Make the all-day and normal agendas line up with each other */
     dummyAllDayRight->setFixedWidth( style()->pixelMetric( QStyle::PM_ScrollBarExtent ) -
                                      d->mAgendaLayout->horizontalSpacing() );
-    dummyAgendaRight->setFixedWidth( d->mAgenda->verticalScrollBar()->width() );
+    dummyAgendaRight->setFixedWidth( dummyAllDayRight->width() );
   }
 
   updateTimeBarWidth();
