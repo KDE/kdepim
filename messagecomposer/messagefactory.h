@@ -236,6 +236,14 @@ private:
   uint identityUoid(const KMime::Message::Ptr &msg );
 
   QString replaceHeadersInString( const KMime::Message::Ptr &msg, const QString & s );
+
+  /*
+   * If force charset option is enabled, try to set the original charset
+   *  in the newly created message. If unable to encode, fall back to
+   *  preferred charsets, and if all fail, use UTF-8.
+   */
+  void applyCharset( const KMime::Message::Ptr msg );
+  
   QByteArray getRefStr( const KMime::Message::Ptr &msg );
   
   // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze

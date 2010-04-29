@@ -21,6 +21,7 @@
 
 #include "messageinfo.h"
 #include "messagecomposersettings.h"
+#include "util.h"
 
 #include <akonadi/item.h>
 #include <messageviewer/kcursorsaver.h>
@@ -36,6 +37,8 @@
 #include "templateparser/templateparser.h"
 #include <messagecore/mailinglist-magic.h>
 #include <KLocalizedString>
+#include <kcharsets.h>
+#include <QTextCodec>
 
 
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id )
@@ -258,9 +261,8 @@ MessageFactory::MessageReply MessageFactory::createReply()
     else
       parser.process( m_origMsg );
   }
-  if( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
-    msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
-  }
+
+  applyCharset( msg );
     
   link( msg, m_id, KPIM::MessageStatus::statusReplied() );
   if ( m_parentFolderId > 0 ) {
@@ -272,6 +274,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
         m_origMsg->headerByType( QLatin1String("X-KMail-EncryptActionEnabled").latin1() )->as7BitString() == "true" ) {
     msg->setHeader( new KMime::Headers::Generic( "X-KMail-EncryptActionEnabled", msg.get(), QLatin1String("true"), "utf-8" ) );
   }
+  msg->assemble();
 
   MessageReply reply;
   reply.msg = msg;
@@ -338,7 +341,10 @@ KMime::Message::Ptr MessageFactory::createForward()
   else
     parser.process( m_origMsg );
 
+  applyCharset( msg );
+
   link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
+  msg->assemble();
   return msg;
 }
 
@@ -823,6 +829,30 @@ QString MessageFactory::replaceHeadersInString( const KMime::Message::Ptr &msg, 
       idx += replacement.length();
     }
     return result;
+}
+
+void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
+{
+  if( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
+    msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
+
+    QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+    if( !codec ) {
+      kError() << "Could not get text codec for charset" << msg->contentType()->charset();
+    } else if( !codec->canEncode( QString::fromLatin1( msg->body() ) ) ) { // charset can't encode body, fall back to preferred
+      const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
+      QList<QByteArray> chars;
+      foreach( QString charset, charsets )
+        chars << charset.toAscii();
+      QByteArray fallbackCharset = Message::Util::selectCharset( chars, QString::fromLatin1( msg->body() ) );
+      if( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
+        fallbackCharset = "UTF-8";
+      codec = KGlobal::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
+      msg->setBody( codec->fromUnicode( QString::fromLatin1( msg->body() ) ) );
+    } else {
+      msg->setBody( codec->fromUnicode( QString::fromLatin1( msg->body() ) ) );
+    }
+  }
 }
 
 

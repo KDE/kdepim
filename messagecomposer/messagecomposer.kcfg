@@ -43,6 +43,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
         <default>false</default>
       </entry>
 
+      <entry name="PreferredCharsets" key="pref-charsets" type="StringList">
+          <default>us-ascii,iso-8859-1,locale,utf-8</default>
+      </entry>
     
   </group>
 
