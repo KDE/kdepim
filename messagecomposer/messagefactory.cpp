@@ -839,18 +839,18 @@ void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
     QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
     if( !codec ) {
       kError() << "Could not get text codec for charset" << msg->contentType()->charset();
-    } else if( !codec->canEncode( QString::fromLatin1( msg->body() ) ) ) { // charset can't encode body, fall back to preferred
+    } else if( !codec->canEncode( QString::fromUtf8( msg->body() ) ) ) { // charset can't encode body, fall back to preferred
       const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
       QList<QByteArray> chars;
       foreach( QString charset, charsets )
         chars << charset.toAscii();
-      QByteArray fallbackCharset = Message::Util::selectCharset( chars, QString::fromLatin1( msg->body() ) );
+      QByteArray fallbackCharset = Message::Util::selectCharset( chars, QString::fromUtf8( msg->body() ) );
       if( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
         fallbackCharset = "UTF-8";
       codec = KGlobal::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
-      msg->setBody( codec->fromUnicode( QString::fromLatin1( msg->body() ) ) );
+      msg->setBody( codec->fromUnicode( QString::fromUtf8( msg->body() ) ) );
     } else {
-      msg->setBody( codec->fromUnicode( QString::fromLatin1( msg->body() ) ) );
+      msg->setBody( codec->fromUnicode( QString::fromUtf8( msg->body() ) ) );
     }
   }
 }
