@@ -1303,62 +1303,130 @@ updated.</para>
 
 <sect1 id="menusettings"><title><guimenu>Settings</guimenu> Menu</title>
 
-<variablelist>
-<!-- missing items
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu><guimenuitem>Perform Selftest</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+      <variablelist>
 
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="settings-self-test">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Perform Self-Test</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Performs a set of self-tests and presents their result.</action>
+            </para>
+            <para>
+              This is the same set of tests that is run at startup by
+              default. If you disabled startup-time self-tests, you
+              can re-enable them here.
+            </para>
+<!-- ### xref
+            <para>
+              See <xref linkend="function-selftest"/> for details.
+            </para>
 -->
-<varlistentry id="settings-show-statusbar">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem></menuchoice></term>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Toggles the visibility of the bottom status bar.</action></para>
-</listitem>
-</varlistentry>
-<!-- missing item
-<varlistentry>
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Toolbars...</guimenuitem></menuchoice></term>
-<listitem>
-<para>???</para>
-</listitem>
-</varlistentry>
--->
-<varlistentry id="settings-configure-shortcuts">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem></menuchoice></term>
+        <varlistentry id="settings-toolbars">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guisubmenu>Toolbars</guisubmenu></menuchoice></term>
+          <listitem>
+            <para>
+              <action>Shows/hides &kleopatra; toolbars.</action>
+            </para>
+            <para>
+              &kleopatra; has two toolbars:
+              <orderedlist>
+                <listitem>
+                  <para>
+                    <guilabel>Main Toolbar</guilabel>
+                  </para>
+                  <para>
+                    This toolbar carries a selection of common
+                    functions. You can configure which functions you
+                    would like to see here using
+                    <xref linkend="settings-configure-toolbars"/>.
+                  </para>
+                </listitem>
+                <listitem>
+                  <para>
+                    <guilabel>Search Toolbar</guilabel>
+                  </para>
+                  <para>
+                    This toolbar carries the search and filtering controls.
+                  </para>
+                </listitem>
+              </orderedlist>
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Opens the standard &kde; shortcut configuration dialog,
-where you can assign and re-assign keyboard shortcuts for all menu
-items.</action></para>
-</listitem>
-</varlistentry>
+        <varlistentry id="settings-show-statusbar">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Show Statusbar</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Toggles the visibility of the bottom status
+              bar.</action>
+            </para>
+          </listitem>
+        </varlistentry>
 
-<varlistentry id="settings-configure-kleopatra">
-<term><menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem></menuchoice></term>
+        <varlistentry id="settings-configure-shortcuts">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Configure Shortcuts...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Opens the standard &kde; shortcut configuration
+              dialog, where you can assign and re-assign keyboard
+              shortcuts for all menu items.</action>
+            </para>
+          </listitem>
+        </varlistentry>
 
-<listitem>
-<para><action>Opens &kleopatra;'s configure dialog.</action></para>
+        <varlistentry id="settings-configure-toolbars">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Configure Toolbars...</guimenuitem>
+            </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Opens the standard &kde; toolbar configuration
+              dialog,</action> where you can choose which actions to
+              include in &kleopatra;s toolbars.for all menu
+              items.
+            </para>
+          </listitem>
+        </varlistentry>
 
-<para>See <xref linkend="configuration"/> for more details.</para>
-</listitem>
-</varlistentry>
+        <varlistentry id="settings-configure-kleopatra">
+          <term>
+            <menuchoice>
+              <guimenu>Settings</guimenu><guimenuitem>Configure &kleopatra;...</guimenuitem>
+          </menuchoice>
+          </term>
+          <listitem>
+            <para>
+              <action>Opens &kleopatra;'s configure dialog.</action>
+            </para>
+            <para>
+              See <xref linkend="configuration"/> for details.
+            </para>
+          </listitem>
+        </varlistentry>
 
-</variablelist>
+      </variablelist>
 
-</sect1>
+    </sect1> <!-- Settings Menu -->
 
 <sect1 id="menuwindow"><title><guimenu>Window</guimenu> Menu</title>
 <para>The <guimenu>Window</guimenu> menu allows you to manage the tabs.
