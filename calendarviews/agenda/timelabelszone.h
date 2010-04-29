@@ -53,7 +53,10 @@ class EVENTVIEWS_EXPORT TimeLabelsZone : public QWidget
     */
     void addTimeLabels( const KDateTime::Spec &spec );
     int timeLabelsWidth() const;
+
+    /* sets the width of each individual label */
     void setTimeLabelsWidth( int width );
+
     void updateAll();
     void reset();
     void init();

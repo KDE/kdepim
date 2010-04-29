@@ -59,8 +59,8 @@ void TimeLabelsZone::reset()
   // Update some related geometry from the agenda view
   updateAll();
   if ( mParent ) {
-    mParent->createDayLabels();
     mParent->updateTimeBarWidth();
+    mParent->createDayLabels();
   }
 }
 
@@ -129,7 +129,7 @@ void TimeLabelsZone::updateAll()
 void TimeLabelsZone::setTimeLabelsWidth( int width )
 {
   foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
-    timeLabel->setFixedWidth( width / mTimeLabelsList.count() );
+    timeLabel->widget()->setFixedWidth( width );
   }
 }
 

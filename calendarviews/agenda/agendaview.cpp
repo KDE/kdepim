@@ -762,14 +762,10 @@ void AgendaView::updateTimeBarWidth()
     }
   }
 
-  if ( num > 0 ) {
-    width += ( num * 2 ) + 2;
-    if ( num > 1 ) {
-      width += ( num * fm.averageCharWidth() );
-    }
-  }
+  width = width + fm.width( "/" );
+  int timeBarWidth = ( width + 1 ) * num;
 
-  d->mTimeBarHeaderFrame->setFixedWidth( width );
+  d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth );
   d->mTimeLabelsZone->setTimeLabelsWidth( width );
 }
 
