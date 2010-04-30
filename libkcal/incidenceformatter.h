@@ -39,7 +39,7 @@ class LIBKCAL_EXPORT InvitationFormatterHelper
   public:
     virtual QString generateLinkURL( const QString &id ) { return id; }
     virtual QString makeLink( const QString &id, const QString &text );
-    virtual Calendar* calendar() const { return 0; }
+    virtual Calendar *calendar() const { return 0; }
 };
 
 /**
@@ -65,8 +65,14 @@ class LIBKCAL_EXPORT IncidenceFormatter
 
     static QString formatICalInvitation( QString invitation, Calendar *mCalendar,
                                          InvitationFormatterHelper *helper );
-    static QString formatICalInvitationNoHtml( QString invitation, Calendar *mCalendar,
-                                               InvitationFormatterHelper *helper );
+    static QString KDE_DEPRECATED formatICalInvitationNoHtml( QString invitation,
+                                                              Calendar *mCalendar,
+                                                              InvitationFormatterHelper *helper );
+    static QString formatICalInvitationNoHtml( QString invitation,
+                                               Calendar *mCalendar,
+                                               InvitationFormatterHelper *helper,
+                                               const QString &sender );
+
     // Format a TNEF attachment to an HTML mail
     static QString formatTNEFInvitation( const QByteArray& tnef,
                                          Calendar *mCalendar,
@@ -111,7 +117,8 @@ class LIBKCAL_EXPORT IncidenceFormatter
     static QString formatICalInvitationHelper( QString invitation,
                                                Calendar *mCalendar,
                                                InvitationFormatterHelper *helper,
-                                               bool noHtmlMode );
+                                               bool noHtmlMode,
+                                               const QString &sender );
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;

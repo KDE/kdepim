@@ -67,7 +67,7 @@ namespace {
       //mKIMProxy = ::KIMProxy::instance( kapp->dcopClient() );
     }
 
-    Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer ) const {
+    Result format( BodyPart *bodyPart, KMail::HtmlWriter *writer, KMail::Callback & ) const {
 
        if ( !writer ) return AsIcon;
 

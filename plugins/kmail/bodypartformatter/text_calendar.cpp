@@ -162,7 +162,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
 {
   public:
     Result format( KMail::Interface::BodyPart *bodyPart,
-                   KMail::HtmlWriter *writer ) const
+                   KMail::HtmlWriter *writer, KMail::Callback &callback ) const
     {
       if ( !writer )
         // Guard against crashes in createReply()
@@ -179,7 +179,8 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       } else {
         source = bodyPart->asText();
       }
-      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper );
+      QString html =
+        IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper, callback.sender() );
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
