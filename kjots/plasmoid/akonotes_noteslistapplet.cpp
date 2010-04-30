@@ -29,7 +29,7 @@
 #include <akonadi/control.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/entitytreemodel.h>
-#include <akonadi/entityrightsfiltermodel.h>
+#include <akonadi_next/entityrightsfiltermodel.h>
 #include <akonadi/itemmodel.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/session.h>

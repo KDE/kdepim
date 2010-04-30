@@ -24,13 +24,13 @@
 
 #include <QWidget>
 
-#include <akonadi/krecursivefilterproxymodel.h>
+#include <akonadi_next/krecursivefilterproxymodel.h>
 
 
 class QTreeView;
 class EntityTreeWidget;
 
-class UnreadMailsTree : public KRecursiveFilterProxyModel
+class UnreadMailsTree : public Future::KRecursiveFilterProxyModel
 {
   Q_OBJECT
 public:
