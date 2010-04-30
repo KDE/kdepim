@@ -12,66 +12,43 @@
   <property name="windowTitle" >
    <string>Color &amp; Font Configuration</string>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="0" >
+  <layout class="QVBoxLayout" name="verticalLayout_2" >
+   <item>
     <widget class="QTabWidget" name="tabWidget" >
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>625</width>
-        <height>412</height>
-       </rect>
-      </property>
       <attribute name="title" >
-       <string>General</string>
+       <string>Tooltips</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="0" column="0" >
-        <widget class="QGroupBox" name="groupBox" >
-         <property name="title" >
-          <string>Tooltips</string>
+      <layout class="QVBoxLayout" name="verticalLayout" >
+       <item>
+        <widget class="QLabel" name="label" >
+         <property name="text" >
+          <string>Show the following information in certificate list tooltips:</string>
          </property>
-         <layout class="QGridLayout" >
-          <item row="0" column="0" >
-           <widget class="QCheckBox" name="tooltipValidityCheckBox" >
-            <property name="text" >
-             <string>Show validity</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" >
-           <widget class="QCheckBox" name="tooltipOwnerCheckBox" >
-            <property name="text" >
-             <string>Show owner information</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" >
-           <widget class="QCheckBox" name="tooltipDetailsCheckBox" >
-            <property name="text" >
-             <string>Show certificate details</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </widget>
        </item>
-       <item row="0" column="1" >
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Horizontal</enum>
+       <item>
+        <widget class="QCheckBox" name="tooltipValidityCheckBox" >
+         <property name="text" >
+          <string>Show validity</string>
          </property>
-         <property name="sizeHint" stdset="0" >
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
+        </widget>
        </item>
-       <item row="1" column="0" >
+       <item>
+        <widget class="QCheckBox" name="tooltipOwnerCheckBox" >
+         <property name="text" >
+          <string>Show owner information</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="tooltipDetailsCheckBox" >
+         <property name="text" >
+          <string>Show technical details</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -87,16 +64,8 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab_2" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>625</width>
-        <height>412</height>
-       </rect>
-      </property>
       <attribute name="title" >
-       <string>Certificate Filters</string>
+       <string>Certificate Categories</string>
       </attribute>
       <layout class="QGridLayout" >
        <item row="0" column="0" >
