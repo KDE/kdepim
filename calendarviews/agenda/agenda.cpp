@@ -4,6 +4,7 @@
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
   Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
   Author: Kevin Krammer, krake@kdab.com
+  Author: Sergio Martins, sergio@kdab.com
 
   Marcus Bains line.
   Copyright (c) 2001 Ali Rahimi <ali@mit.edu>
@@ -922,11 +923,10 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
   }
 }
 
-void Agenda::startItemAction( const QPoint &viewportPos )
+void Agenda::startItemAction( const QPoint &pos )
 {
   Q_ASSERT( d->mActionItem );
 
-  QPoint pos =  viewportPos ;
   d->mStartCell = contentsToGrid( pos );
   d->mEndCell = d->mStartCell;
 
@@ -941,24 +941,14 @@ void Agenda::startItemAction( const QPoint &viewportPos )
   setActionCursor( d->mActionType, true );
 }
 
-void Agenda::performItemAction( const QPoint &viewportPos )
+void Agenda::performItemAction( const QPoint &pos )
 {
-//  kDebug() << "viewportPos:" << viewportPos.x() << "," << viewportPos.y();
-//  QPoint point = viewport()->mapToGlobal(viewportPos);
-//  kDebug() << "Global:" << point.x() << "," << point.y();
-//  point = clipper()->mapFromGlobal(point);
-//  kDebug() << "clipper:" << point.x() << "," << point.y();
-//  kDebug() << "visible height:" << visibleHeight();
-  QPoint pos =  viewportPos ;
-//  kDebug() << "contents:" << x << "," << y;
   QPoint gpos = contentsToGrid( pos );
-  QPoint clipperPos = QPoint();//clipper()->mapFromGlobal( viewport()->mapToGlobal( viewportPos ) );
 
   // Cursor left active agenda area.
   // This starts a drag.
-//  if ( clipperPos.y() < 0 || clipperPos.y() >= visibleHeight() ||
-//       clipperPos.x() < 0 || clipperPos.x() >= visibleWidth() ) {
-  if (  false ) { //
+  if ( pos.y() < 0 || pos.y() >= contentsY() + d->mScrollArea->viewport()->height() ||
+       pos.x() < 0 || pos.x() >= width() ) {
     if ( d->mActionType == MOVE ) {
       d->mScrollUpTimer.stop();
       d->mScrollDownTimer.stop();
@@ -979,9 +969,10 @@ void Agenda::performItemAction( const QPoint &viewportPos )
   }
 
   // Scroll if item was moved to upper or lower end of agenda.
-  if ( clipperPos.y() < d->mScrollBorderWidth ) {
+  if ( pos.y() - contentsY() < d->mScrollBorderWidth ) {
     d->mScrollUpTimer.start( d->mScrollDelay );
-  } else if ( d->mScrollArea->height() < d->mScrollBorderWidth ) {
+  } else if ( contentsY() + d->mScrollArea->viewport()->height() -
+              d->mScrollBorderWidth < pos.y() ) {
     d->mScrollDownTimer.start( d->mScrollDelay );
   } else {
     d->mScrollUpTimer.stop();
