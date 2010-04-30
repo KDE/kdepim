@@ -929,7 +929,7 @@ performs a validation of the (selected) keys. Validation here means
 that all relevant CRLs are fetched, and the certificate chain is
 checked for correctness. As a result, invalid or expired keys will be
 marked according to your color and font preferences set in the <link
-linkend="configuration-appearance"><guilabel>Appearance</guilabel>
+linkend="configuration-appearance-certificate-filters"><guilabel>Appearance</guilabel>
 page</link> of &kleopatra;'s <link linkend="configuration">configure
 dialog</link>.</para>
 
@@ -1765,57 +1765,193 @@ list.</para>
       </note>
     </sect1>
 
-<sect1 id="configuration-appearance"><title>Configuring visual <guilabel>Appearance</guilabel></title>
+    <sect1 id="configuration-appearance">
+      <title>Configuring <guilabel>Appearance</guilabel></title>
 
-<para>&kleopatra; allows you to customize the appearance of
-(validated) keys in the list view. This includes the foreground (text)
-and background colors, as well as the font.</para>
+      <sect2 id="configuration-appearance-tooltips">
+          <title>Configuring <guilabel>Tooltips</guilabel></title>
 
-<para>Each <guilabel>Key Category</guilabel> on the left is assigned a
-set of colors and a font in which keys belonging to that category are
-displayed. The category list also acts as a preview of the
-settings. Categories can be freely defined by the administrator or the
-power user, see <xref linkend="admin-key-filters"/> in <xref
-linkend="admin"/>.</para>
+        <para>
+          In the main certificate list, &kleopatra; can show details
+          about a certificate in a tooltip. The information displayed
+          is the same as in <!--link
+          linkend="dialog-certificate-details-overview"-->the
+          <guilabel>Overview</guilabel> tab of the
+          <guilabel>Certificate Details</guilabel>
+          dialog<!--/link-->. Tooltips, however, can be restricted to
+          show only a subset of information for a less verbose
+          experience.
+        </para>
+        <note>
+          <para>
+            The <guilabel>Key-ID</guilabel> is
+            <emphasis>always</emphasis> shown. This is to ensure that
+            tooltips for different certificates do, in fact, differ
+            (this is especially important if only <xref
+            linkend="tooltips-validity"/> has been selected).
+          </para>
+        </note>
+        <para>
+          You can independently enable or disable the following
+          information sets:
+        </para>
+        <variablelist>
+          <varlistentry id="tooltips-validity">
+            <term><guilabel>Show validity</guilabel></term>
+            <listitem>
+              <para>
+                Shows information about the validity of a certificate:
+                its current status, issuer-&dn; (&smime; only), expiry
+                dates (if any) and certificate usage flags.
+              </para>
+              <para>
+                Example:
+                <programlisting><!--
+                  -->This certificate is currently valid.
+<!--              -->Issuer:            CN=Test-ZS 7,O=Intevation GmbH,C=DE
+<!--              -->Validity:          from 25.08.2009 10:42 through 19.10.2010 10:42
+<!--              -->Certificate usage: Signing EMails and Files, Encrypting EMails and Files
+<!--              -->Key-ID:            DC9D9E43<!--
+                  --></programlisting>
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="tooltips-owner">
+            <term><guilabel>Show owner information</guilabel></term>
+            <listitem>
+              <para>
+                Shows information about the owner of the certificate:
+                subject-&dn; (&smime; only), user-IDs (including
+                emails addresses) and ownertrust (&openpgp; only).
+              </para>
+              <para>
+                &openpgp; example:
+                <programlisting><!--
+                  -->User-ID:           Gpg4winUserA &lt;gpg4winusera@test.hq&gt;
+<!--              -->Key-ID:            C6BF6664
+<!--              -->Ownertrust:        ultimate<!--
+                  --></programlisting>
+                &smime; example:
+                <programlisting><!--
+                  -->Subject:           CN=Gpg4winTestuserA,OU=Testlab,O=Gpg4win Project,C=DE
+<!--              -->a.k.a.:            Gpg4winUserA@test.hq
+<!--              -->Key-ID:            DC9D9E43<!--
+                  --></programlisting>
+              </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry id="tooltips-details">
+            <term><guilabel>Show technical details</guilabel></term>
+            <listitem>
+              <para>
+                Shows technical information about the certificate:
+                serial number (&smime; only), type, fingerprint and storage location.
+              </para>
+              <para>
+                Example:
+                <programlisting><!--
+                  -->Serial Number:     27
+<!--              -->Certificate type:  1,024-bit RSA (secret certificate available)
+<!--              -->Key-ID:            DC9D9E43
+<!--              -->Fingerprint:       854F62EEEBB41BFDD3BE05D124971E09DC9D9E43
+<!--              -->Stored:            on this computer<!--
+                  --></programlisting>
+              </para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
 
-<para>To change the text (foreground) color of a category, select it
-in the list, and press the <guilabel>Set Text Color...</guilabel>
-button. The standard &kde; color selection dialog will appear where
-you can select or create a new color.</para>
+      </sect2>
 
-<para>Changing the background color is done in the same way, just press
-<guilabel>Set Background Color...</guilabel> instead.</para>
+      <sect2 id="configuration-appearance-certificate-filters">
+        <title>Configuring <guilabel>Certificate Categories</guilabel></title>
 
-<para>To change the font, you basically have two options:</para>
+        <para>
+          &kleopatra; allows you to customize the appearance of
+          certificates in the list view. This includes showing a small
+          icon, but you can also influence the foreground (text) and
+          background colors, as well as the font.
+        </para>
+        <para>
+          Each certificate category in the list is assigned a set of
+          colors, an icon (optional) and a font in which certificates
+          from that category are displayed. The category list also
+          acts as a preview of the settings. Categories can be freely
+          defined by the administrator or the power user, see <xref
+          linkend="admin-key-filters"/> in <xref linkend="admin"/>.
+        </para>
+        <para>
+          To set or change the icon of a category, select it in the
+          list, and press the <guibutton>Set Icon...</guibutton>
+          button. The standard &kde; icon selection dialog will appear
+          where you can select an existing icon from the &kde;
+          collection, or load a custom one.
+        </para>
+        <para>
+          To remove an icon again, you need to press the
+          <guibutton>Default Appearance</guibutton> button.
+        </para>
+        <para>
+          To change the text (&ie; foreground) color of a category,
+          select it in the list, and press the <guibutton>Set Text
+          Color...</guibutton> button. The standard &kde; color
+          selection dialog will appear where you can select an
+          existing color or create a new one.
+        </para>
+        <para>
+          Changing the background color is done in the same way, just press
+          <guibutton>Set Background Color...</guibutton> instead.
+        </para>
+        <para>
+          To change the font, you basically have two options:
+        </para>
+        <orderedlist>
+          <listitem>
+            <para>
+              Modify the standard font, used for all list views in
+              &kde;.
+            </para>
+          </listitem>
+          <listitem>
+            <para>
+              Use a custom font.
+            </para>
+          </listitem>
+        </orderedlist>
+        <para>
+          The first option has the advantage that the font will follow
+          whichever style you choose &kde;-wide, whereas the latter
+          gives you full control over the font to use. The choice is
+          yours.
+        </para>
+        <para>
+          To use the modified standard font, select the category in the
+          list, and check or uncheck the font modifiers
+          <guilabel>Italic</guilabel>, <guilabel>Bold</guilabel>, and/or
+          <guilabel>Strikeout</guilabel>. You can immediately see the effect on
+          the font in the category list.
+        </para>
+        <para>
+          To use a custom font, press the <guibutton>Set
+          Font...</guibutton> button. The standard &kde; font
+          selection dialog will appear where you can select the new
+          font.
+        </para>
+        <note>
+          <para>
+            You can still use the font modifiers to change the custom
+            font, just as for modifying the standard font.
+          </para>
+        </note>
+        <para>
+          To switch back to the standard font, you need to press the
+          <guibutton>Default Appearance</guibutton> button.
+        </para>
 
-<orderedlist>
-<listitem><para>Modify the standard font, used for all list views in
-&kde;</para></listitem>
-<listitem><para>Use a custom font.</para></listitem>
-</orderedlist>
+      </sect2>
 
-<para>The first option has the advantage that the font will follow
-whichever style you choose &kde;-wide, whereas the latter gives you
-full control over the font to use. The choice is yours.</para>
-
-<para>To use the modified standard font, select the category in the
-list, and check or uncheck the font modifiers
-<guilabel>Italic</guilabel>, <guilabel>Bold</guilabel>, and/or
-<guilabel>Strikeout</guilabel>. You can immediately see the effect on
-the font in the category list.</para>
-
-<para>To use a custom font, press the <guilabel>Set Font...</guilabel>
-button. The standard &kde; font selection dialog will appear where you
-can select the new font. Note that you can still use the font
-modifiers to change the custom font, just as for modifying the
-standard font.</para>
-
-<para>To switch back to the standard font, you need to press the
-<guilabel>Default Appearance</guilabel> button.</para>
-
-</sect1>
-
-<sect1 id="configuration-dn-order"><title>Configuring the <guilabel>&dn; Attribute Order</guilabel></title>
+      <sect2 id="configuration-dn-order">
+        <title>Configuring <guilabel>DN-Attribute Order</guilabel></title>
 
 <para>Although &dn;s are hierarchical, the order of the individual
 components (called relative &dn;s (RDNs), or &dn; attributes) is not
@@ -1894,7 +2030,9 @@ button.</para>
 <guilabel>Move one up</guilabel> (<guilabel>Move one down</guilabel>)
 button.</para>
 
-</sect1>
+      </sect2>
+
+    </sect1>
 
     <sect1 id="configuration-smime-validation">
       <title>Configuring aspects of <guilabel>S/MIME Validation</guilabel></title>
@@ -2098,7 +2236,7 @@ C=DE
 
       <para>
 	&kleopatra; allows the user to configure the <link
-	linkend="configuration-appearance">visual appearance</link> of
+	linkend="configuration-appearance-certificate-filters">visual appearance</link> of
 	keys based on a concept called <guilabel>Key
 	Categories</guilabel>. <guilabel>Key Categories</guilabel> are
 	also used to filter the list of certificates. This section
@@ -2126,7 +2264,7 @@ C=DE
 	#<replaceable>n</replaceable></literal> group are
 	<varname>Name</varname>, containing the name of the category
 	as displayed in the <link
-	linkend="configuration-appearance">config dialog</link>, and
+	linkend="configuration-appearance-certificate-filters">config dialog</link>, and
 	<varname>id</varname>, which is used as a reference for the
 	filter in other configuration sections (such as <literal>View
 	#<replaceable>n</replaceable></literal>).
@@ -2136,7 +2274,7 @@ C=DE
 	<xref linkend="table-key-filters-appearance"/> lists all keys
 	that define the display properties of keys belonging to that
 	category (&ie; those keys that can be adjusted in the <link
-	linkend="configuration-appearance">config dialog</link>),
+	linkend="configuration-appearance-certificate-filters">config dialog</link>),
 	whereas <xref linkend="table-key-filters-criteria"/> lists all
 	keys that define the criteria the filter matches keys against.
       </para>
