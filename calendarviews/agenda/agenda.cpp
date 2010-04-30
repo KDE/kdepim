@@ -881,9 +881,6 @@ Agenda::MouseActionType Agenda::isInResizeArea( bool horizontal,
   QPoint contpos = gridToContents(
     gridpos + QPoint( ( QApplication::isRightToLeft() ) ? 1 : 0, 0 ) );
 
-//kDebug() << "contpos=" << contpos << ", pos=" << pos << ", gpos=" << gpos;
-//kDebug() << "clXLeft=" << clXLeft << ", clXRight=" << clXRight;
-
   if ( horizontal ) {
     int clXLeft = item->cellXLeft();
     int clXRight = item->cellXRight();
@@ -1134,7 +1131,6 @@ void Agenda::performItemAction( const QPoint &pos )
 void Agenda::endItemAction()
 {
   //PENDING(AKONADI_PORT) review all this cloning and changer calls
-  // kDebug();
   d->mActionType = NOP;
   d->mScrollUpTimer.stop();
   d->mScrollDownTimer.stop();
@@ -1328,15 +1324,8 @@ void Agenda::setActionCursor( int actionType, bool acting )
   }
 }
 
-void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &viewportPos )
+void Agenda::setNoActionCursor( AgendaItem *moveItem, const QPoint &pos )
 {
-//  kDebug() << "viewportPos:" << viewportPos.x() << "," << viewportPos.y();
-//  QPoint point = viewport()->mapToGlobal( viewportPos );
-//  kDebug() << "Global:" << point.x() << "," << point.y();
-//  point = clipper()->mapFromGlobal( point );
-//  kDebug() << "clipper:" << point.x() << "," << point.y();
-
-  QPoint pos =  viewportPos ;
   const Item item = moveItem ? moveItem->incidence() : Item();
 
   const bool noResize = Akonadi::hasTodo( item );
@@ -1359,9 +1348,9 @@ double Agenda::calcSubCellWidth( AgendaItem *item )
   int maxSubCells = item->subCells();
   double newSubCellWidth;
   if ( d->mAllDayMode ) {
-    newSubCellWidth = double( pt1.y() ) / maxSubCells;
+    newSubCellWidth = static_cast<double>( pt1.y() ) / maxSubCells;
   } else {
-    newSubCellWidth = double( pt1.x() ) / maxSubCells;
+    newSubCellWidth = static_cast<double>( pt1.x() ) / maxSubCells;
   }
   return newSubCellWidth;
 }
@@ -1498,10 +1487,10 @@ void Agenda::drawContents( QPainter *p, int cx, int cy, int cw, int ch )
   db.fill(); // We don't want to see leftovers from previous paints
   QPainter dbp( &db );
   // TODO: CHECK THIS
-//  if ( ! mEventView->preferences()->agendaGridBackgroundImage().isEmpty() ) {
-//    QPixmap bgImage( mEventView->preferences()->agendaGridBackgroundImage() );
-//    dbp.drawPixmap( 0, 0, cw, ch, bgImage ); FIXME
-//  }
+  //  if ( ! mEventView->preferences()->agendaGridBackgroundImage().isEmpty() ) {
+  //    QPixmap bgImage( d->mEventView->preferences()->agendaGridBackgroundImage() );
+  //    dbp.drawPixmap( 0, 0, cw, ch, bgImage ); FIXME
+  //  }
 
   dbp.fillRect( 0, 0, cw, ch,
                 d->mEventView->preferences()->agendaGridBackgroundColor() );
@@ -1637,13 +1626,11 @@ QPoint Agenda::gridToContents( const QPoint &gpos ) const
 */
 int Agenda::timeToY( const QTime &time ) const
 {
-//  kDebug() << "Time:" << time.toString();
+
   int minutesPerCell = 24 * 60 / d->mRows;
-//  kDebug() << "minutesPerCell:" << minutesPerCell;
   int timeMinutes = time.hour() * 60 + time.minute();
-//  kDebug() << "timeMinutes:" << timeMinutes;
   int Y = ( timeMinutes + ( minutesPerCell / 2 ) ) / minutesPerCell;
-//  kDebug() << "y:" << Y;
+
   return Y;
 }
 
@@ -1653,7 +1640,6 @@ int Agenda::timeToY( const QTime &time ) const
 */
 QTime Agenda::gyToTime( int gy ) const
 {
-//  kDebug() << gy;
   int secondsPerCell = 24 * 60 * 60 / d->mRows;
   int timeSeconds = secondsPerCell * gy;
 
