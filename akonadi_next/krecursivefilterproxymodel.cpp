@@ -33,6 +33,10 @@ using namespace Future;
 // to be cleared, even if only a part of it is dirty.
 // Stephen Kelly, 30 April 2010.
 
+
+namespace Future
+{
+
 class KRecursiveFilterProxyModelPrivate
 {
   Q_DECLARE_PUBLIC(KRecursiveFilterProxyModel)
@@ -121,6 +125,8 @@ public:
   bool completeInsert;
   bool completeRemove;
 };
+
+}
 
 void KRecursiveFilterProxyModelPrivate::sourceDataChanged(const QModelIndex &source_top_left, const QModelIndex &source_bottom_right)
 {

@@ -22,6 +22,8 @@
 
 #include "akonadi_next_export.h"
 
+#include <akonadi/collection.h>
+
 #include "krecursivefilterproxymodel.h"
 
 namespace Akonadi {
