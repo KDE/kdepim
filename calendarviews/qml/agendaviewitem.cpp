@@ -19,6 +19,7 @@
 
 #include "agendaviewitem.h"
 
+#include <akonadi/kcal/calendar.h>
 #include <calendarviews/agenda/agendaview.h>
 
 using namespace EventViews;
