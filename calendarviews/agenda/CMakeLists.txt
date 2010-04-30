@@ -24,7 +24,10 @@ set( eventviews_LIB_SRCS
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
 
-kde4_add_ui_files(eventviews_LIB_SRCS timescaleedit_base.ui)
+kde4_add_ui_files(eventviews_LIB_SRCS
+    timescaleedit_base.ui
+    recurrenceactionsscopewidget.ui
+)
 
 kde4_add_library(eventviews SHARED ${eventviews_LIB_SRCS})
 
