@@ -61,7 +61,7 @@ namespace Kleo {
 
         QTreeView * view() const { return m_view; }
 
-        AbstractKeyListModel * model() const { return m_hierarchicalModel ? hierarchicalModel() : flatModel() ; }
+        AbstractKeyListModel * model() const { return m_isHierarchical ? hierarchicalModel() : flatModel() ; }
 
         AbstractKeyListModel * flatModel() const { return m_flatModel; }
         AbstractKeyListModel * hierarchicalModel() const { return m_hierarchicalModel; }
