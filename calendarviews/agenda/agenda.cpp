@@ -34,7 +34,7 @@
 #include "helper.h"
 #include "prefs.h"
 
-#include <libkdepim/pimmessagebox.h>
+#include "recurrenceactions.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/utils.h>
@@ -1139,8 +1139,8 @@ void Agenda::endItemAction()
   // FIXME: do the cloning here...
   Akonadi::Item inc = d->mActionItem->incidence();
   const Incidence::Ptr incidence = Akonadi::incidence( inc );
- d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
-                                     d->mStartCell.y() == d->mEndCell.y() );
+  d->mItemMoved = d->mItemMoved && !( d->mStartCell.x() == d->mEndCell.x() &&
+                                      d->mStartCell.y() == d->mEndCell.y() );
 
   if ( d->mItemMoved ) {
     bool modify = false;
@@ -1148,11 +1148,11 @@ void Agenda::endItemAction()
       int res = d->mEventView->showMoveRecurDialog( d->mActionItem->incidence(),
                                                     d->mActionItem->itemDate() );
       switch ( res ) {
-      case KMessageBox::Ok: // All occurrences
+      case RecurrenceActions::AllOccurrences: // All occurrences
         // Moving the whole sequene of events is handled by the itemModified below.
         modify = true;
         break;
-      case KMessageBox::Yes:
+      case RecurrenceActions::SelectedOccurrence:
       { // Just this occurrence
         // Dissociate this occurrence:
         // create clone of event, set relation to old event, set cloned event
@@ -1196,7 +1196,7 @@ void Agenda::endItemAction()
         }
         break;
       }
-      case KMessageBox::No/*Future*/:
+      case RecurrenceActions::FutureOccurrences/*Future*/:
       { // All future occurrences
         // Dissociate this occurrence:
         // create clone of event, set relation to old event, set cloned event

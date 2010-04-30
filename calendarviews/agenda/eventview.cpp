@@ -29,7 +29,8 @@
 
 #include "prefs.h"
 
-#include <libkdepim/pimmessagebox.h>
+#include "recurrenceactions.h"
+
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendarsearch.h>
 #include <akonadi/kcal/collectionselection.h>
@@ -44,6 +45,7 @@
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 #include <KRandom>
+#include <KGuiItem>
 
 #include <QMenu>
 #include <QApplication>
@@ -208,39 +210,38 @@ void EventView::setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegi
 int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
 {
   const Incidence::Ptr inc = Akonadi::incidence( aitem );
-  int answer = KMessageBox::Ok;
-  KGuiItem itemFuture( i18n( "Also &Future Items" ) );
 
   KDateTime dateTime( date, preferences()->timeSpec() );
-  bool isFirst = !inc->recurrence()->getPreviousDateTime( dateTime ).isValid();
-  bool isLast  = !inc->recurrence()->getNextDateTime( dateTime ).isValid();
 
-  QString message;
+  int availableOccurrences = RecurrenceActions::availableOccurrences( inc, dateTime );
 
-  if ( !isFirst && !isLast ) {
-    itemFuture.setEnabled( true );
-    message = i18n( "The item you try to change is a recurring item. "
-                    "Shall the changes be applied only to this single occurrence, "
-                    "also to future items, or to all items in the recurrence?" );
-  } else {
-    itemFuture.setEnabled( false );
-    message = i18n( "The item you try to change is a recurring item. "
-                    "Shall the changes be applied only to this single occurrence "
-                    "or to all items in the recurrence?" );
+  const QString caption = i18nc( "@title:window", "Changing Recurring Item" );
+  KGuiItem itemFuture( i18n( "Also &Future Items" ) );
+  KGuiItem itemSelected( i18n( "Only &This Item" ) );
+  KGuiItem itemAll( i18n( "&All Occurrences" ) );
+
+  switch ( availableOccurrences ) {
+    case RecurrenceActions::NoOccurrence:
+        return RecurrenceActions::NoOccurrence;
+    case RecurrenceActions::SelectedOccurrence:
+      return RecurrenceActions::SelectedOccurrence;
+
+    default:
+      if ( availableOccurrences & RecurrenceActions::FutureOccurrences ) {
+        const QString message = i18n( "The item you are trying to change is a recurring item. "
+                                      "Should the changes be applied only to this single occurrence, "
+                                      "also to future items, or to all items in the recurrence?" );
+        return RecurrenceActions::questionSelectedFutureAllCancel( message, caption, itemSelected, itemFuture, itemAll, this );
+      } else {
+        const QString message = i18n( "The item you are trying to change is a recurring item. "
+                                      "Should the changes be applied only to this single occurrence "
+                                      "or to all items in the recurrence?" );
+        return RecurrenceActions::questionSelectedAllCancel( message, caption, itemSelected, itemAll, this );
+      }
+      break;
   }
 
-  if ( !( isFirst && isLast ) ) {
-    answer = PIMMessageBox::fourBtnMsgBox(
-      this,
-      QMessageBox::Question,
-      message,
-      i18n( "Changing Recurring Item" ),
-      KGuiItem( i18n( "Only &This Item" ) ),
-      itemFuture,
-      KGuiItem( i18n( "&All Occurrences" ) ) );
-  }
-
-  return answer;
+  return RecurrenceActions::NoOccurrence;
 }
 
 void EventView::setCalendar( Akonadi::Calendar *cal )

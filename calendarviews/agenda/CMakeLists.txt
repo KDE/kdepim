@@ -19,6 +19,7 @@ set( eventviews_LIB_SRCS
      helper.cpp
      alternatelabel.cpp
      timescaleconfigdialog.cpp
+     recurrenceactions.cpp
 )
 
 kde4_add_kcfg_files(eventviews_LIB_SRCS prefs_base.kcfgc )
