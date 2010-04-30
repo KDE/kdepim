@@ -21,7 +21,6 @@
 #define AKONADI_ENTITYRIGHTSFILTERMODEL_H
 
 #include "akonadi_next_export.h"
-#include "entitytreemodel.h"
 
 #include "krecursivefilterproxymodel.h"
 
@@ -56,7 +55,7 @@ class EntityRightsFilterModelPrivate;
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.4
  */
-class AKONADI_NEXT_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
+class AKONADI_NEXT_EXPORT EntityRightsFilterModel : public Future::KRecursiveFilterProxyModel
 {
   Q_OBJECT
 

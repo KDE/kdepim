@@ -21,7 +21,7 @@
 
 #include "entityrightsfiltermodel.h"
 
-#include "entitytreemodel.h"
+#include <akonadi/entitytreemodel.h>
 
 #include <kdebug.h>
 
@@ -68,7 +68,7 @@ class EntityRightsFilterModelPrivate
 }
 
 EntityRightsFilterModel::EntityRightsFilterModel( QObject *parent )
-  : KRecursiveFilterProxyModel( parent ),
+  : Future::KRecursiveFilterProxyModel( parent ),
     d_ptr( new EntityRightsFilterModelPrivate( this ) )
 {
 }
@@ -107,7 +107,7 @@ Qt::ItemFlags EntityRightsFilterModel::flags( const QModelIndex &index ) const
   if ( d->rightsMatches( index ) )
     return KRecursiveFilterProxyModel::flags( index );
   else
-    return KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+    return Future::KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
 }
 
 QModelIndexList EntityRightsFilterModel::match( const QModelIndex& start, int role, const QVariant& value, int hits, Qt::MatchFlags flags ) const
