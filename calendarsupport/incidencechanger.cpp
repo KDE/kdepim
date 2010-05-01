@@ -65,6 +65,7 @@ public:
 
   QHash<Akonadi::Item::Id, int> m_latestVersionByItemId;
   QHash<const KJob*, Item> m_oldItemByJob;
+  QHash<QString, IncidenceChanger::WhatChanged> m_actionByOldUid;
   Collection mDefaultCollection;
 
   Groupware *mGroupware;
@@ -270,8 +271,11 @@ void IncidenceChanger::changeIncidenceFinished( KJob* j )
                               tmp->summary(),
                               job->errorString( )) );
   } else {
-    //PENDING(AKONADI_PORT) emit a real action here, not just UNKNOWN_MODIFIED
-    emit incidenceChanged( oldItem, newItem, UNKNOWN_MODIFIED );
+    QString uid = Akonadi::incidence( oldItem )->uid();
+    WhatChanged whatChanged = d->m_actionByOldUid.contains( uid ) ?
+                              d->m_actionByOldUid[uid] : UNKNOWN_MODIFIED;
+    emit incidenceChanged( oldItem, newItem, whatChanged );
+    d->m_actionByOldUid.remove( uid );
   }
 
   d->m_latestVersionByItemId[newItem.id()] = newItem.revision();
@@ -476,6 +480,7 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
       return false;
     }
   }
+  d->m_actionByOldUid[oldinc->uid()] = action;
   return true;
 }
 
