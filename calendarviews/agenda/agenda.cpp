@@ -590,7 +590,7 @@ bool Agenda::eventFilter_drag( QObject *object, QDropEvent *de )
     if ( object == this ) {
       pos = viewportPos + QPoint( contentsX(), contentsY() );
     } else {
-      pos = viewportPos;// viewportToContents( viewportPos );
+      pos = viewportPos;
     }
     QPoint gpos = contentsToGrid( pos );
     if ( !todoUrls.isEmpty() ) {

@@ -485,15 +485,17 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
 }
 
 bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
-                                     QWidget *parent )
+                                     QWidget *parent, bool &userCanceled )
 {
   const Akonadi::Collection c = Akonadi::selectCollection( parent,
                                                            d->mDefaultCollection );
 
   if ( !c.isValid() ) {
+    userCanceled = true;
     return false;
   }
 
+  userCanceled = false;
   return addIncidence( incidence, c, parent );
 }
 

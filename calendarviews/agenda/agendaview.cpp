@@ -1601,8 +1601,12 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     todo->setDtDue( newTime );
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
-    if ( !changer()->addIncidence( todo, this ) ) {
-      Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+
+    bool userCanceled;
+    if ( !changer()->addIncidence( todo, this, userCanceled ) ) {
+      if ( !userCanceled ) {
+        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+      }
     }
   }
 }
