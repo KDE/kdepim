@@ -183,6 +183,7 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( thi
 
 EventView::~EventView()
 {
+  delete d;
 }
 
 void EventView::defaultAction( const Item &aitem )
