@@ -136,7 +136,7 @@ public:
 
 
 ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
-                                    NodeHelper* nodeHelper,
+                                    MessageViewer::NodeHelper* nodeHelper,
                                     const Kleo::CryptoBackend::Protocol * protocol,
                                     bool showOnlyOneMimePart, bool keepEncryptions,
                                     bool includeSignatures,
