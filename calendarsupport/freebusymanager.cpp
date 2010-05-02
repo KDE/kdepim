@@ -495,9 +495,9 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
   }
 
   if ( KOPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
-    sourceURL.setFileName( email + QLatin1String( ".ifb" ) );
+    sourceURL.addPath( email + QLatin1String( ".ifb" ) );
   } else {
-    sourceURL.setFileName( emailName + QLatin1String( ".ifb" ) );
+    sourceURL.addPath( emailName + QLatin1String( ".ifb" ) );
   }
   sourceURL.setUser( KOPrefs::instance()->mFreeBusyRetrieveUser );
   sourceURL.setPass( KOPrefs::instance()->mFreeBusyRetrievePassword );
