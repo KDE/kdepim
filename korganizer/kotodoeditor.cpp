@@ -256,7 +256,16 @@ bool KOTodoEditor::processInput()
       // Don't do anything
     } else {
       fillTodo( mTodo );
-      rc = mChanger->changeIncidence( oldTodo, mTodo, KOGlobals::NOTHING_MODIFIED, this );
+
+      KOGlobals::WhatChanged whatChanged;
+
+      if ( !oldTodo->isCompleted() && todo->isCompleted() ) {
+        whatChanged = KOGlobals::COMPLETION_MODIFIED;
+      } else {
+        whatChanged = KOGlobals::UNKNOWN_MODIFIED;
+      }
+
+      rc = mChanger->changeIncidence( oldTodo, mTodo, whatChanged, this );
     }
     delete todo;
     delete oldTodo;
