@@ -42,7 +42,8 @@ class NepomukFeederAgent : public NepomukFeederAgentBase
       if ( collection.hasAttribute<Akonadi::EntityHiddenAttribute>() )
         return;
 
-      Akonadi::EntityDisplayAttribute *attr = collection.attribute<Akonadi::EntityDisplayAttribute>();
+      const Akonadi::EntityDisplayAttribute *attr = collection.attribute<Akonadi::EntityDisplayAttribute>();
+
       if ( attr && !attr->displayName().isEmpty() )
         r.setLabel( attr->displayName() );
       else
