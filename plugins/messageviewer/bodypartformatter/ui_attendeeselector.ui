@@ -1,8 +1,9 @@
-<ui version="4.0" >
- <author>Volker Krause &lt;vkrause@kde.org></author>
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <author>Volker Krause &lt;vkrause@kde.org&gt;</author>
  <class>AttendeeSelectorWidget</class>
- <widget class="QWidget" name="AttendeeSelectorWidget" >
-  <property name="geometry" >
+ <widget class="QWidget" name="AttendeeSelectorWidget">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -10,42 +11,42 @@
     <height>238</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
-   <item row="0" column="1" >
-    <widget class="KPushButton" name="addButton" >
-     <property name="enabled" >
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="KPIM::AddresseeLineEdit" name="attendeeEdit"/>
+   </item>
+   <item row="0" column="1">
+    <widget class="KPushButton" name="addButton">
+     <property name="enabled">
       <bool>false</bool>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Add</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="1" >
-    <widget class="KPushButton" name="removeButton" >
-     <property name="enabled" >
+   <item row="1" column="0" rowspan="2">
+    <widget class="QListWidget" name="attendeeList"/>
+   </item>
+   <item row="1" column="1">
+    <widget class="KPushButton" name="removeButton">
+     <property name="enabled">
       <bool>false</bool>
      </property>
-     <property name="text" >
+     <property name="text">
       <string>Remove</string>
      </property>
     </widget>
    </item>
-   <item rowspan="2" row="1" column="0" >
-    <widget class="K3ListBox" name="attendeeList" />
-   </item>
-   <item row="0" column="0" >
-    <widget class="KPIM::AddresseeLineEdit" name="attendeeEdit" />
-   </item>
-   <item row="2" column="1" >
+   <item row="2" column="1">
     <spacer>
-     <property name="orientation" >
+     <property name="orientation">
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeType" >
+     <property name="sizeType">
       <enum>QSizePolicy::Expanding</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
        <height>140</height>
@@ -67,14 +68,15 @@
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
-   <class>K3ListBox</class>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
  <includes>
-  <include location="local" >kpushbutton.h</include>
-  <include location="local" >kpushbutton.h</include>
-  <include location="local" >k3listbox.h</include>
-  <include location="local" >libkdepim/addresseelineedit.h</include>
+  <include location="local">kpushbutton.h</include>
+  <include location="local">kpushbutton.h</include>
+  <include location="local">libkdepim/addresseelineedit.h</include>
  </includes>
  <resources/>
  <connections/>

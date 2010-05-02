@@ -39,7 +39,6 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDE4_KDECORE_LIBS}
   ${KDEPIMLIBS_KCAL_LIBS}
   kdepim
-  ${KDE4_KDE3SUPPORT_LIBS}
   ${QT_QT3SUPPORT_LIBRARY}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
