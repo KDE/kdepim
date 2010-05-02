@@ -871,20 +871,25 @@ void KOPrefsDialogColorsAndFonts::updateResources()
 
 void KOPrefsDialogColorsAndFonts::setResourceColor()
 {
-  mResourceDict.insert( mResourceIdentifier[mResourceCombo->currentIndex()],
-                        mResourceButton->color() );
+  if ( mResourceCombo->currentIndex() > 0 ) {
+    mResourceDict.insert( mResourceIdentifier[mResourceCombo->currentIndex()],
+                          mResourceButton->color() );
+  }
   slotWidChanged();
 }
 
 void KOPrefsDialogColorsAndFonts::updateResourceColor()
 {
-  QString res = mResourceIdentifier[mResourceCombo->currentIndex()];
-  QColor color = mCategoryDict.value( res );
-  if ( !color.isValid() )  {
-    color = KOPrefs::instance()->resourceColor( res );
-  }
-  if ( color.isValid() ) {
-    mResourceButton->setColor( color );
+  if ( mResourceCombo->currentIndex() > 0 ) {
+    QString res = mResourceIdentifier[mResourceCombo->currentIndex()];
+
+    QColor color = mCategoryDict.value( res );
+    if ( !color.isValid() )  {
+      color = KOPrefs::instance()->resourceColor( res );
+    }
+    if ( color.isValid() ) {
+      mResourceButton->setColor( color );
+    }
   }
 }
 extern "C"
@@ -938,7 +943,7 @@ KOPrefsDialogGroupScheduling::KOPrefsDialogGroupScheduling( const KComponentData
   aMailsLabel->setWhatsThis( whatsThis );
   topLayout->addWidget( aMailsLabel, 3, 0, 1, 2 );
   mAMails = new Q3ListView( topFrame );
-  mAMails->setResizeMode(Q3ListView::LastColumn); 
+  mAMails->setResizeMode(Q3ListView::LastColumn);
   mAMails->setWhatsThis( whatsThis );
 
   mAMails->addColumn( i18nc( "@title:column email addresses", "Email" ), 300 );
