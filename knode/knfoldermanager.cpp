@@ -102,7 +102,7 @@ bool KNFolderManager::loadHeaders( KNFolder::Ptr f )
   knGlobals.memoryManager()->prepareLoad(f);
 
   if (f->loadHdrs()) {
-    knGlobals.memoryManager()->updateCacheEntry( f );
+    knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
     return true;
   }
 
@@ -119,7 +119,7 @@ bool KNFolderManager::unloadHeaders( KNFolder::Ptr f, bool force )
     return false;
 
   if (f->unloadHdrs(force))
-    knGlobals.memoryManager()->removeCacheEntry(f);
+    knGlobals.memoryManager()->removeCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
   else
     return false;
 
@@ -191,7 +191,7 @@ void KNFolderManager::emptyFolder( KNFolder::Ptr f )
 {
   if(!f || f->isRootFolder())
     return;
-  knGlobals.memoryManager()->removeCacheEntry(f);
+  knGlobals.memoryManager()->removeCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
   f->deleteAll();
 }
 

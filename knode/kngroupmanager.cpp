@@ -307,7 +307,7 @@ bool KNGroupManager::loadHeaders( KNGroup::Ptr g )
   knGlobals.memoryManager()->prepareLoad(g);
 
   if (g->loadHdrs()) {
-    knGlobals.memoryManager()->updateCacheEntry( g );
+    knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( g ) );
     return true;
   }
 
@@ -327,7 +327,7 @@ bool KNGroupManager::unloadHeaders( KNGroup::Ptr g, bool force )
     return false;
 
   if (g->unloadHdrs(force))
-    knGlobals.memoryManager()->removeCacheEntry(g);
+    knGlobals.memoryManager()->removeCacheEntry( boost::static_pointer_cast<KNArticleCollection>( g ) );
   else
     return false;
 
@@ -631,7 +631,7 @@ void KNGroupManager::processJob(KNJobData *j)
           group->processXPostBuffer(true);
           emit groupUpdated( group );
           group->writeConfig();
-          knGlobals.memoryManager()->updateCacheEntry( group );
+          knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( group ) );
         }
       } else {
         // ok, hack (?):
