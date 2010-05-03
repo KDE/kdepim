@@ -3364,10 +3364,8 @@ QString IncidenceFormatter::ToolTipVisitor::generateToolTip( Incidence* incidenc
     tmp += IncidenceFormatter::reminderStringList( incidence ).join( ", " );
   }
 
-  if ( incidence->attendees().count() > 1 ) {
-    tmp += "<br>";
-    tmp += tooltipFormatAttendees( incidence );
-  }
+  tmp += "<br>";
+  tmp += tooltipFormatAttendees( incidence );
 
   int categoryCount = incidence->categories().count();
   if ( categoryCount > 0 ) {
