@@ -129,7 +129,11 @@
        </widget>
       </item>
       <item row="1" column="1" >
-       <widget class="KleopatraClient::Gui::CertificateRequester" native="1" name="OCSPResponderSignature" />
+       <widget class="KleopatraClient::Gui::CertificateRequester" native="1" name="OCSPResponderSignature" >
+        <property name="whatsThis" >
+         <string>Choose here the certificate with which the OCSP server signs its replies.</string>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -137,7 +141,7 @@
    <item>
     <widget class="QCheckBox" name="doNotCheckCertPolicyCB" >
      <property name="whatsThis" >
-      <string>By default GnuPG uses the file ~/.gnupg/policies.txt to check if a certificate policy is allowed. If this option is selected, policies are not checked.</string>
+      <string>By default, GnuPG uses the file ~/.gnupg/policies.txt to check if a certificate policy is allowed. If this option is selected, policies are not checked.</string>
      </property>
      <property name="text" >
       <string>Do not check certificate policies</string>
@@ -157,7 +161,7 @@
    <item>
     <widget class="QCheckBox" name="allowMarkTrustedCB" >
      <property name="whatsThis" >
-      <string>If this option is checked while a root CA certificate is being imported, you will be asked to confirm its fingerprint and state whether or not you consider this root certificate to be trusted. A root certificate needs to be trusted before the certificates it certified become trusted, but lightly allowing trusted root certificates into your certificate store will undermine the security of the system.</string>
+      <string>If this option is checked while a root CA certificate is being imported, you will be asked to confirm its fingerprint and to state whether or not you consider this root certificate to be trusted. A root certificate needs to be trusted before the certificates it certified become trusted, but lightly allowing trusted root certificates into your certificate store will undermine the security of the system.</string>
      </property>
      <property name="text" >
       <string>Allow to mark root certificates as trusted</string>
@@ -194,7 +198,7 @@
        <item row="1" column="0" colspan="2" >
         <widget class="QCheckBox" name="ignoreHTTPDPCB" >
          <property name="whatsThis" >
-          <string>When looking for the location of a CRL, the to-be-tested certificate usually contains what are known as "CRL Distribution Point" (DP) entries, which are URLs describing the way to access the URL. The first found DP entry is used.  With this option all entries using the HTTP scheme are ignored when looking for a suitable DP.</string>
+          <string>When looking for the location of a CRL, the to-be-tested certificate usually contains what are known as "CRL Distribution Point" (DP) entries, which are URLs describing the way to access the CRL. The first-found DP entry is used.  With this option, all entries using the HTTP scheme are ignored when looking for a suitable DP.</string>
          </property>
          <property name="text" >
           <string>Ignore HTTP CRL distribution point of certificates</string>
@@ -231,7 +235,7 @@
        <item row="3" column="1" >
         <widget class="QLineEdit" name="customHTTPProxy" >
          <property name="whatsThis" >
-          <string>Enter here the location of your HTTP Proxy, which will be used for all HTTP requests relating to S/MIME. The syntax is host:port, for instance myproxy.nowhere.com:3128.</string>
+          <string>&lt;p&gt;If no system proxy is set, or you need to use a different proxy for GpgSM, you can enter its location here.&lt;/p&gt;&lt;p&gt;It will be used for all HTTP requests relating to S/MIME.&lt;/p&gt;&lt;p&gt;The syntax is host:port, for instance myproxy.nowhere.com:3128.&lt;/p&gt;</string>
          </property>
         </widget>
        </item>
@@ -268,7 +272,7 @@
        <item row="1" column="0" colspan="2" >
         <widget class="QCheckBox" name="ignoreLDAPDPCB" >
          <property name="whatsThis" >
-          <string>When looking for the location of a CRL, the to-be-tested certificate usually contains what are known as "CRL Distribution Point" (DP) entries, which are URLs describing the way to access the URL. The first found DP entry is used.  With this option all entries using the LDAP scheme are ignored when looking for a suitable DP.</string>
+          <string>When looking for the location of a CRL, the to-be-tested certificate usually contains what are known as "CRL Distribution Point" (DP) entries, which are URLs describing the way to access the CRL. The first found DP entry is used.  With this option, all entries using the LDAP scheme are ignored when looking for a suitable DP.</string>
          </property>
          <property name="text" >
           <string>Ignore LDAP CRL distribution point of certificates</string>
@@ -288,7 +292,7 @@
        <item row="2" column="1" >
         <widget class="QLineEdit" name="customLDAPProxy" >
          <property name="whatsThis" >
-          <string>Entering a LDAP server here will make all LDAP requests go to that server first. More precisely, this setting overrides any specified host and port part in a LDAP URL and will also be used if host and port have been omitted from the URL. Other LDAP servers will be used only if the connection to the "proxy" failed.
+          <string>Entering an LDAP server here will make all LDAP requests go to that server first. More precisely, this setting overrides any specified host and port part in a LDAP URL and will also be used if host and port have been omitted from the URL. Other LDAP servers will be used only if the connection to the "proxy" failed.
 The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP port) is used.</string>
          </property>
         </widget>
