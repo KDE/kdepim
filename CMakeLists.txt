@@ -221,6 +221,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(calendarviews)
+  add_subdirectory( incidenceeditors )
   if (QT_QT3SUPPORT_FOUND) # not directly, but depends on kmail/korganizer
     add_subdirectory(libkdepimdbusinterfaces)
   endif (QT_QT3SUPPORT_FOUND)
