@@ -584,9 +584,7 @@ static QString displayViewFormatEvent( Calendar *calendar, Event *event,
     tmpStr += "</tr>";
   }
 
-  if ( event->attendees().count() > 1 ) {
-    tmpStr += displayViewFormatAttendees( event );
-  }
+  tmpStr += displayViewFormatAttendees( event );
 
   int categoryCount = event->categories().count();
   if ( categoryCount > 0 ) {
@@ -714,9 +712,7 @@ static QString displayViewFormatTodo( Calendar *calendar, Todo *todo,
     tmpStr += "</tr>";
   }
 
-  if ( todo->attendees().count() > 1 ) {
-    tmpStr += displayViewFormatAttendees( todo );
-  }
+  tmpStr += displayViewFormatAttendees( todo );
 
   int categoryCount = todo->categories().count();
   if ( categoryCount > 0 ) {
