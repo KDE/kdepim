@@ -1121,7 +1121,7 @@ uncommon).</para>
           </listitem>
         </varlistentry>
 
-        <varlistentry>
+        <varlistentry id="certificates-dump-certificate">
           <term>
             <menuchoice>
               <guimenu>Certificates</guimenu><guimenuitem>Dump Certificate</guimenuitem>
