@@ -1,0 +1,28 @@
+
+This document will be used to specify the goals, needs, requirements for the GSoC project:
+Theming support to KDE-PIM applications -Port to the Grantlee library.
+
+Student: Ronny Yabar.
+Mentors: Thomas McGuire, Stephen Kelly.
+
+
+---2010-04-28 - 2010-05-03---
+
+Goal:
+- Write a simple application to get familiar with Grantlee.(Done).
+
+TODO:
+- Replace QWebView with KWebView.
+- Use a KComboBox to change bewtween themes: (nokia.html, kde.html, opensuse.html).
+
+Problems:
+- QwebView is not loading the themes images.(Not solved).
+
+
+---2010-05-04 - 2010-05-10---
+
+Goals:
+- Extract all the HTML for the headers in the HeaderStyle classes.
+- Create the themes for those Header Styles (Not beauty yet).
+
+
