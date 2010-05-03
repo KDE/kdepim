@@ -1,25 +1,7 @@
-/*
-  Example of theming using Grantlee.
-
-  Copyright (c) 2010 Ronny Yabar Aizcorbe <ronnycontacto@gmail.com>
-
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License version 3 only, as published by the Free Software Foundation.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License version 3 for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library.  If not, see <http://www.gnu.org/licenses/>.
-
-*/
-
 #include "mailwindow.h"
 
 #include <QDateTime>
+#include <QDir>
 
 #include <grantlee/context.h>
 #include <grantlee/engine.h>
@@ -49,8 +31,9 @@ void MailWindow::renderMail()
     Grantlee::Template t = engine->loadByName( themeName );
 
     QString message;
-    message += "Hello KDE and PIM community, let us have fun.\n";
-    message += "Happy Summer of Code to all the students.\n";
+            message += "I've created the branch branches/work/soc-pim ";
+            message += "The branch is intended to be shared by all PIM-related GSoC projects,";
+            message += "Happy Summer of Code to all the students.\n";
 
     QDateTime dateTime = QDateTime::currentDateTime();
 
@@ -64,7 +47,7 @@ void MailWindow::renderMail()
     Grantlee::Context c( data );
     QString content = t->render(&c);
 
-    webView->setHtml( content );
+    webView->setHtml( content , QUrl::fromLocalFile(QDir::currentPath()) );
     splitter->addWidget( webView );
 }
 
