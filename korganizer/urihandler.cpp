@@ -78,8 +78,11 @@ bool UriHandler::process( const QString &uri )
       */
       QString iconPath =
         KIconLoader::global()->iconPath( "view-pim-contacts", KIconLoader::SizeSmall );
+#if 0
       QString tmpStr = "kaddressbook --editor-only --uid ";
       tmpStr += KShell::quoteArg( uri.mid( ::qstrlen( KDEPIMPROTOCOL_CONTACT ) ) );
+#endif
+      QString tmpStr = "kaddressbook";
       KRun::runCommand( tmpStr, "KAddressBook", iconPath, 0 );
       return true;
     }
