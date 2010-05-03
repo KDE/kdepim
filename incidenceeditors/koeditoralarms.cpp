@@ -26,6 +26,7 @@
 #include "koeditoralarms.h"
 #include <KPIMUtils/Email>
 using namespace KPIMUtils;
+using namespace KCal;
 
 class AlarmListViewItem : public QTreeWidgetItem
 {

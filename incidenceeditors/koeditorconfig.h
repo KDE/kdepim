@@ -31,6 +31,9 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QStringList>
 
+namespace IncidenceEditors
+{
+
 /**
  * Configuration details. An application can inherit from this class
  * to provide application specific configurations to the editor.
@@ -82,5 +85,7 @@ class INCIDENCEEDITORS_EXPORT KOEditorConfig
     class Private;
     Private *const d;
 };
+
+} // namespace IncidenceEditors
 
 #endif

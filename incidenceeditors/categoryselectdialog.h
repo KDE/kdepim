@@ -27,9 +27,12 @@
 
 #include <KDialog>
 
-class CategoryConfig;
 class AutoCheckTreeWidget;
 class CategorySelectWidgetBase;
+
+namespace IncidenceEditors
+{
+  class CategoryConfig;
 
 class CategorySelectWidget : public QWidget
 {
@@ -93,5 +96,7 @@ class INCIDENCEEDITORS_EXPORT CategorySelectDialog : public KDialog
     class CategorySelectDialogPrivate;
     CategorySelectDialogPrivate *d;
 };
+
+} // namespace IncidenceEditors
 
 #endif

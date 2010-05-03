@@ -45,6 +45,9 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+using namespace Akonadi;
+using namespace IncidenceEditors;
+
 KOTodoEditor::KOTodoEditor( QWidget *parent )
   : KOIncidenceEditor( QString(),
                        QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType(),

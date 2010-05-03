@@ -46,6 +46,9 @@
 
 #include <QString>
 
+namespace IncidenceEditors
+{
+
 class INCIDENCEEDITORS_EXPORT TemplateManagementDialog: public KDialog
 {
   Q_OBJECT
@@ -86,5 +89,7 @@ class INCIDENCEEDITORS_EXPORT TemplateManagementDialog: public KDialog
     QString m_newTemplate;
     bool m_changed;
 };
+
+} // namespace IncidenceEditors
 
 #endif

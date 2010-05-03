@@ -34,6 +34,11 @@ set( incidenceeditors_LIB_SRCS
     templatemanagementdialog.cpp
     designerfields.cpp
     embeddedurlpage.cpp
+    koprefs.cpp
+    categoryconfig.cpp
+    categoryselectdialog.cpp
+    categoryhierarchyreader.cpp
+    autochecktreewidget.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_LIB_SRCS

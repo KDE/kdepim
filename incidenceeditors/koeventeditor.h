@@ -39,7 +39,9 @@ class KOEditorRecurrenceDialog;
 namespace Akonadi {
   class Item;
 }
-using namespace Akonadi;
+
+namespace IncidenceEditors
+{
 
 /**
   This class provides a dialog for editing an event.
@@ -136,5 +138,7 @@ class INCIDENCEEDITORS_EXPORT KOEventEditor : public KOIncidenceEditor
     KOEditorRecurrence *mRecurrence;
     KOEditorFreeBusy *mFreeBusy;
 };
+
+} // namespace IncidenceEditors
 
 #endif

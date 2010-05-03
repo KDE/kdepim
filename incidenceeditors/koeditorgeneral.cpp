@@ -55,6 +55,9 @@
 #include <QTimer>
 #include <QWidget>
 
+using namespace IncidenceEditors;
+using namespace KCal;
+
 FocusLineEdit::FocusLineEdit( QWidget *parent )
   : KLineEdit( parent ), mFirst( true )
 {
@@ -455,7 +458,7 @@ void KOEditorGeneral::updateAlarmWidgets()
       } else if ( offset % 60 == 0 ) { // divides evenly into hours?
         useoffset = offset / 60;
         mAlarmIncrCombo->setCurrentIndex( 1 );
-      } else { 
+      } else {
         mAlarmIncrCombo->setCurrentIndex( 0 );
       }
       mAlarmTimeEdit->setValue( useoffset );

@@ -29,7 +29,6 @@
 namespace KCal {
   class Todo;
 }
-using namespace KCal;
 
 namespace KPIM {
   class KDateEdit;
@@ -55,15 +54,15 @@ class KOEditorGeneralTodo : public KOEditorGeneral
     void setDefaults( const QDateTime &due, bool allDay );
 
     /** Read todo object and setup widgets accordingly */
-    void readTodo( Todo *todo, const QDate &date, bool tmpl = false );
+    void readTodo( KCal::Todo *todo, const QDate &date, bool tmpl = false );
 
     /** Write todo settings to event object */
-    void fillTodo( Todo * );
+    void fillTodo( KCal::Todo * );
 
     /** Check if the input is valid. */
     bool validateInput();
 
-    void updateRecurrenceSummary( Todo *todo );
+    void updateRecurrenceSummary( KCal::Todo *todo );
 
   signals:
     void dueDateEditToggle( bool );
@@ -83,7 +82,7 @@ class KOEditorGeneralTodo : public KOEditorGeneral
 
   protected:
     void setCompletedDate();
-    virtual bool setAlarmOffset( Alarm *alarm, int value ) const;
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
 
   private:
     KPIM::KTimeZoneComboBox *mTimeZoneComboStart;

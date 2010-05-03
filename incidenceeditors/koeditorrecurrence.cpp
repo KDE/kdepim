@@ -47,6 +47,8 @@
 #include <QSpinBox>
 #include <QStackedWidget>
 
+using namespace KCal;
+
 /////////////////////////// RecurBase ///////////////////////////////
 
 RecurBase::RecurBase( QWidget *parent ) : QWidget( parent )

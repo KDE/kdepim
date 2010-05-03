@@ -35,6 +35,9 @@
 #include <QFrame>
 #include <QLabel>
 
+using namespace IncidenceEditors;
+using namespace KCal;
+
 FreeBusyUrlDialog::FreeBusyUrlDialog( KCal::Attendee *attendee, QWidget *parent )
   : KDialog( parent )
 {

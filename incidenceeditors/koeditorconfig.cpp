@@ -26,6 +26,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QStringList>
 
+using namespace IncidenceEditors;
+
 class KOEditorConfig::Private
 {
   public:

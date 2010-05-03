@@ -49,7 +49,6 @@ namespace KCal {
   class Incidence;
   class ICalTimeZones;
 }
-using namespace KCal;
 
 class FocusLineEdit : public KLineEdit
 {
@@ -84,10 +83,10 @@ class KOEditorGeneral : public QObject
     void setDefaults( bool allDay );
 
     /** Read event object and setup widgets accordingly */
-    void readIncidence( Incidence *incidence );
+    void readIncidence( KCal::Incidence *incidence );
 
     /** Write event settings to event object */
-    void fillIncidence( Incidence * );
+    void fillIncidence( KCal::Incidence * );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -122,9 +121,9 @@ class KOEditorGeneral : public QObject
     void openURL( const KUrl & );
 
   protected:
-    Alarm *alarmFromSimplePage() const;
+    KCal::Alarm *alarmFromSimplePage() const;
 
-    virtual bool setAlarmOffset( Alarm *alarm, int value ) const = 0;
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const = 0;
 
     QWidget                 *mParent;
     KLineEdit               *mSummaryEdit;
@@ -153,12 +152,12 @@ class KOEditorGeneral : public QObject
       AdvancedAlarmLabel
     };
 
-    ICalTimeZones *mTimeZones;
+    KCal::ICalTimeZones *mTimeZones;
 
   private:
     void toggleDescriptionRichButtons( bool rich );
     QByteArray mType; // as in Incidence::type()
-    Alarm::List mAlarmList;
+    KCal::Alarm::List mAlarmList;
 };
 
 #endif

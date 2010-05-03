@@ -55,6 +55,9 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+using namespace Akonadi;
+using namespace IncidenceEditors;
+
 KOIncidenceEditor::KOIncidenceEditor( const QString &caption,
                                       const QStringList& mimetypes,
                                       QWidget *parent )

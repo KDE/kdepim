@@ -32,6 +32,9 @@ class QString;
 
 class KConfig;
 
+namespace IncidenceEditors
+{
+
 class INCIDENCEEDITORS_EXPORT CategoryConfig : public QObject
 {
   Q_OBJECT
@@ -51,5 +54,7 @@ private:
   Private* const d;
   Q_PRIVATE_SLOT( d, void configChanged() )
 };
+
+} // namespace IncidenceEditors
 
 #endif

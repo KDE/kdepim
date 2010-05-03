@@ -28,19 +28,21 @@
 
 #include <KDialog>
 
-class FreeBusyUrlWidget;
 class KLineEdit;
 
 namespace KCal {
   class Attendee;
 }
-using namespace KCal;
+
+namespace IncidenceEditors
+{
+  class FreeBusyUrlWidget;
 
 class INCIDENCEEDITORS_EXPORT FreeBusyUrlDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlDialog( Attendee *, QWidget *parent = 0 );
+    explicit FreeBusyUrlDialog( KCal::Attendee *, QWidget *parent = 0 );
 
   public slots:
     void slotOk();
@@ -53,7 +55,7 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
 {
   Q_OBJECT
   public:
-    explicit FreeBusyUrlWidget( Attendee *, QWidget *parent = 0 );
+    explicit FreeBusyUrlWidget( KCal::Attendee *, QWidget *parent = 0 );
     ~FreeBusyUrlWidget();
 
     void loadConfig();
@@ -61,7 +63,9 @@ class INCIDENCEEDITORS_EXPORT FreeBusyUrlWidget : public QWidget
 
   private:
     KLineEdit *mUrlEdit;
-    Attendee *mAttendee;
+    KCal::Attendee *mAttendee;
 };
+
+} // namespace IncidenceEditors
 
 #endif

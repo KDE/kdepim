@@ -38,7 +38,6 @@ class KDIntervalColorRectangle;
 namespace KCal {
   class FreeBusy;
 }
-using namespace KCal;
 
 class KDateTime;
 
@@ -52,12 +51,12 @@ class KOEditorFreeBusy : public KOAttendeeEditor
     void setUpdateEnabled( bool enabled );
     bool updateEnabled() const;
 
-    void insertAttendee( Attendee *, bool readFBList = true );
-    void removeAttendee( Attendee * );
+    void insertAttendee( KCal::Attendee *, bool readFBList = true );
+    void removeAttendee( KCal::Attendee * );
     void clearAttendees();
 
-    void readIncidence( Incidence *incidence );
-    void fillIncidence( Incidence *incidence );
+    void readIncidence( KCal::Incidence *incidence );
+    void fillIncidence( KCal::Incidence *incidence );
 
     void triggerReload();
     void cancelReload();
@@ -92,12 +91,12 @@ class KOEditorFreeBusy : public KOAttendeeEditor
 
   protected:
     void timerEvent( QTimerEvent * );
-    Attendee *currentAttendee() const;
+    KCal::Attendee *currentAttendee() const;
     /* reimpl */
     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();
     void clearSelection() const;
-    void changeStatusForMe( Attendee::PartStat status );
+    void changeStatusForMe( KCal::Attendee::PartStat status );
     virtual bool eventFilter( QObject *watched, QEvent *event );
 
   private slots:

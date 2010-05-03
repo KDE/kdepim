@@ -30,14 +30,11 @@ namespace KCal {
   class Event;
 }
 
-using namespace KCal;
-
 namespace KPIM {
   class KDateEdit;
   class KTimeEdit;
   class KTimeZoneComboBox;
 }
-using namespace KPIM;
 
 class KOEditorGeneralEvent : public KOEditorGeneral
 {
@@ -63,15 +60,15 @@ class KOEditorGeneralEvent : public KOEditorGeneral
                      date information isn't set and the currently entered
                      time/date in the editor dialog is preserved.
     */
-    void readEvent( Event *event, const QDate &date, bool tmpl = false );
+    void readEvent( KCal::Event *event, const QDate &date, bool tmpl = false );
 
     /** Write event settings to event object */
-    void fillEvent( Event * );
+    void fillEvent( KCal::Event * );
 
     /** Check if the input is valid. */
     bool validateInput();
 
-    void updateRecurrenceSummary( Event *event );
+    void updateRecurrenceSummary( KCal::Event *event );
 
     QFrame *invitationBar() const { return mInvitationBar; }
 
@@ -103,7 +100,7 @@ class KOEditorGeneralEvent : public KOEditorGeneral
     void declineInvitation();
 
   protected:
-    virtual bool setAlarmOffset( Alarm *alarm, int value ) const;
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
 
   private:
     QLabel                  *mStartDateLabel;

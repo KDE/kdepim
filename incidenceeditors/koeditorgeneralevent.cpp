@@ -48,6 +48,9 @@
 #include <QPushButton>
 #include <QSpinBox>
 
+using namespace IncidenceEditors;
+using namespace KCal;
+
 KOEditorGeneralEvent::KOEditorGeneralEvent( QObject *parent )
   : KOEditorGeneral( parent )
 {

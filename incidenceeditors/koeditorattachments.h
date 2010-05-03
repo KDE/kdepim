@@ -36,7 +36,6 @@ namespace KCal {
   class Attachment;
   class Incidence;
 }
-using namespace KCal;
 
 class KAction;
 class KJob;

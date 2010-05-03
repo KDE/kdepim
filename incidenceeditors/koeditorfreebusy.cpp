@@ -54,6 +54,8 @@
 #include <QToolTip>
 #include <QVBoxLayout>
 
+using namespace IncidenceEditors;
+
 // The FreeBusyItem is the whole line for a given attendee.
 // Individual "busy" periods are created as sub-items of this item.
 //

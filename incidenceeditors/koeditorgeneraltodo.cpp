@@ -46,6 +46,9 @@
 #include <QPushButton>
 #include <QSpinBox>
 
+using namespace IncidenceEditors;
+using namespace KCal;
+
 KOEditorGeneralTodo::KOEditorGeneralTodo( QObject *parent )
     : KOEditorGeneral( parent )
 {
@@ -299,7 +302,7 @@ void KOEditorGeneralTodo::readTodo( Todo *todo, const QDate &date, bool tmpl )
   KDateTime dueDT = todo->dtDue();
 
   if ( todo->hasDueDate() ) {
-    enableAlarm( true );    
+    enableAlarm( true );
     if ( todo->recurs() && date.isValid() ) {
       KDateTime dt( date, QTime( 0, 0, 0 ) );
       dt = dt.addSecs( -1 );

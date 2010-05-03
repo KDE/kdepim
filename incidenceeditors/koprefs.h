@@ -35,6 +35,9 @@ class QFont;
 class QColor;
 class QStringList;
 
+namespace IncidenceEditors
+{
+
 class INCIDENCEEDITORS_EXPORT KOPrefs : public KOPrefsBase
 {
   public:
@@ -100,5 +103,7 @@ class INCIDENCEEDITORS_EXPORT KOPrefs : public KOPrefsBase
     QString mName;
     QString mEmail;
 };
+
+} // namespace IncidenceEditors
 
 #endif

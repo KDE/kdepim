@@ -56,6 +56,10 @@
 #include "kojournaleditor.h"
 #include "kogroupwareintegration.h"
 
+using namespace Akonadi;
+using namespace IncidenceEditors;
+using namespace KCal;
+
 class CalItemModel : public Akonadi::ItemModel
 {
   public:

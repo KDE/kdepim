@@ -47,13 +47,13 @@ namespace Akonadi {
   class CollectionComboBox;
   class Monitor;
 }
-using namespace Akonadi;
-
-using namespace KCal;
 
 class KUrl;
 
 class QTabWidget;
+
+namespace IncidenceEditors
+{
 
 /**
   This is the base class for the calendar component editors.
@@ -183,5 +183,7 @@ class INCIDENCEEDITORS_EXPORT KOIncidenceEditor : public KDialog
     Akonadi::Item mIncidence;
     Akonadi::Monitor *mMonitor;
 };
+
+} // namespace IncidenceEditors
 
 #endif

@@ -33,9 +33,8 @@ namespace KCal {
   class Attendee;
   class Incidence;
 }
-using namespace KCal;
 
-typedef CustomListViewItem<Attendee *> AttendeeListItem;
+typedef CustomListViewItem<KCal::Attendee *> AttendeeListItem;
 
 /** KOAttendeeListView is a child class of K3ListView  which supports
  *  dropping of attendees (e.g. from kaddressbook) onto it. If an attendeee
@@ -58,7 +57,7 @@ class KOAttendeeListView : public K3ListView
     virtual void contentsDragMoveEvent( QDragMoveEvent *e );
 
   signals:
-    void dropped( Attendee * );
+    void dropped( KCal::Attendee * );
 #endif
 };
 
@@ -73,10 +72,10 @@ class KOEditorDetails : public KOAttendeeEditor
     void setDefaults();
 
     /** Read incidence and setup widgets accordingly */
-    void readIncidence( Incidence *incidence );
+    void readIncidence( KCal::Incidence *incidence );
 
     /** Write settings to incidence */
-    void fillIncidence( Incidence *incidence );
+    void fillIncidence( KCal::Incidence *incidence );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -84,16 +83,16 @@ class KOEditorDetails : public KOAttendeeEditor
     /** Returns whether at least one attendee was added */
     bool hasAttendees();
 
-    void insertAttendee( Attendee *, bool goodEmailAddress=true );
+    void insertAttendee( KCal::Attendee *, bool goodEmailAddress=true );
 
   protected slots:
     void removeAttendee();
-    void slotInsertAttendee( Attendee *a );
+    void slotInsertAttendee( KCal::Attendee *a );
 
   protected:
-    void changeStatusForMe( Attendee::PartStat status );
+    void changeStatusForMe( KCal::Attendee::PartStat status );
 
-    Attendee *currentAttendee() const;
+    KCal::Attendee *currentAttendee() const;
     /* reimpl */
     Q3ListViewItem *hasExampleAttendee() const;
     void updateCurrentItem();

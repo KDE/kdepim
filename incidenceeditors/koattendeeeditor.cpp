@@ -43,6 +43,9 @@
 #include <QColorGroup>
 #include <Q3ListViewItem>
 
+using namespace IncidenceEditors;
+using namespace KCal;
+
 KOAttendeeEditor::KOAttendeeEditor( QWidget *parent )
   : QWidget( parent ), mDisableItemUpdate( true )
 {

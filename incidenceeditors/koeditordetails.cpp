@@ -47,6 +47,9 @@
 #include <QDragMoveEvent>
 #endif
 
+using namespace IncidenceEditors;
+using namespace KCal;
+
 template <>
 CustomListViewItem<KCal::Attendee *>::~CustomListViewItem()
 {

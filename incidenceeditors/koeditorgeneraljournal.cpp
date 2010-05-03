@@ -45,6 +45,8 @@
 #include <QPushButton>
 #include <QTimer>
 
+using namespace KCal;
+
 KOEditorGeneralJournal::KOEditorGeneralJournal( QObject *parent )
   : KOEditorGeneral( parent )
 {

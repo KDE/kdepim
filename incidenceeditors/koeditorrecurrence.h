@@ -36,12 +36,10 @@
 namespace KPIM {
   class KDateEdit;
 }
-using namespace KPIM;
 
 namespace KCal {
   class Incidence;
 }
-using namespace KCal;
 
 class KComboBox;
 
@@ -196,8 +194,8 @@ class ExceptionsBase
 {
   public:
     virtual ~ExceptionsBase(){}
-    virtual void setDates( const DateList & ) = 0;
-    virtual DateList dates() = 0;
+    virtual void setDates( const KCal::DateList & ) = 0;
+    virtual KCal::DateList dates() = 0;
 };
 
 class ExceptionsWidget : public QWidget, public ExceptionsBase
@@ -206,8 +204,8 @@ class ExceptionsWidget : public QWidget, public ExceptionsBase
   public:
     explicit ExceptionsWidget( QWidget *parent = 0 );
 
-    void setDates( const DateList & );
-    DateList dates();
+    void setDates( const KCal::DateList & );
+    KCal::DateList dates();
 
   protected slots:
     void addException();
@@ -217,7 +215,7 @@ class ExceptionsWidget : public QWidget, public ExceptionsBase
   private:
     KPIM::KDateEdit *mExceptionDateEdit;
     QListWidget *mExceptionList;
-    DateList mExceptionDates;
+    KCal::DateList mExceptionDates;
 };
 
 class ExceptionsDialog : public KDialog, public ExceptionsBase
@@ -225,8 +223,8 @@ class ExceptionsDialog : public KDialog, public ExceptionsBase
   public:
     explicit ExceptionsDialog( QWidget *parent );
 
-    void setDates( const DateList & );
-    DateList dates();
+    void setDates( const KCal::DateList & );
+    KCal::DateList dates();
 
   private:
     ExceptionsWidget *mExceptions;
@@ -316,10 +314,10 @@ class KOEditorRecurrence : public QWidget
     void setDefaults( const QDateTime &from, const QDateTime &to, bool allday );
 
     /** Read event object and setup widgets accordingly */
-    void readIncidence( Incidence * );
+    void readIncidence( KCal::Incidence * );
 
     /** Write event settings to event object */
-    void fillIncidence( Incidence * );
+    void fillIncidence( KCal::Incidence * );
 
     /** Check if the input is valid. */
     bool validateInput();

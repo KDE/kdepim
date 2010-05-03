@@ -32,6 +32,8 @@
 #include <QVBoxLayout>
 #include <QHeaderView>
 
+using namespace IncidenceEditors;
+
 class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog_base
 {
   public:

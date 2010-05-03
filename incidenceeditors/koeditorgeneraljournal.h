@@ -31,7 +31,6 @@
 namespace KCal {
   class Journal;
 }
-using namespace KCal;
 
 namespace KPIM {
   class KDateEdit;
@@ -54,9 +53,9 @@ class KOEditorGeneralJournal : public KOEditorGeneral
     /** Set time widget to default values */
     void setTime( const QTime &time );
     /** Read journal object and setup widgets accordingly */
-    void readJournal( Journal *, const QDate &date, bool tmpl = false );
+    void readJournal( KCal::Journal *, const QDate &date, bool tmpl = false );
     /** Write journal settings to event object */
-    void fillJournal( Journal * );
+    void fillJournal( KCal::Journal * );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -65,7 +64,7 @@ class KOEditorGeneralJournal : public KOEditorGeneral
     void finishSetup();
 
   protected:
-    virtual bool setAlarmOffset( Alarm *alarm, int value ) const;
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
 
   private:
     QWidget *mParent;

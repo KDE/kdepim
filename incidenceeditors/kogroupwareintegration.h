@@ -21,6 +21,9 @@
 
 #include "incidenceeditors_export.h"
 
+namespace IncidenceEditors
+{
+
 class INCIDENCEEDITORS_EXPORT KOGroupwareIntegration
 {
   public:
@@ -30,5 +33,7 @@ class INCIDENCEEDITORS_EXPORT KOGroupwareIntegration
   private:
     static bool sActivated;
 };
+
+} // namespace IncidenceEditors
 
 #endif

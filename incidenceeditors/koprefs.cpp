@@ -24,7 +24,6 @@
 */
 
 #include "koprefs.h"
-#include "kocore.h"
 
 #include "categoryconfig.h"
 
@@ -51,6 +50,7 @@
 #include <time.h>
 #include <unistd.h>
 
+using namespace IncidenceEditors;
 using namespace KPIMIdentities;
 
 KOPrefs *KOPrefs::mInstance = 0;

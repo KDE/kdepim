@@ -29,6 +29,8 @@
 #include <QString>
 #include <QStringList>
 
+using namespace IncidenceEditors;
+
 static QStringList categoryDefaults()
 {
   QStringList l;

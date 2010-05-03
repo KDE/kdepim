@@ -46,6 +46,8 @@
 #include <QStringList>
 #include <QTimer>
 
+using namespace IncidenceEditors;
+
 TemplateManagementDialog::TemplateManagementDialog(
   QWidget *parent, const QStringList &templates, const QString &type )
   : KDialog( parent ), m_templates( templates ), m_type( type ), m_changed( false )

@@ -39,7 +39,9 @@ class KOEditorRecurrenceDialog;
 namespace Akonadi {
   class Item;
 }
-using namespace Akonadi;
+
+namespace IncidenceEditors
+{
 
 /**
   This class provides a dialog for editing a Todo.
@@ -128,5 +130,7 @@ class INCIDENCEEDITORS_EXPORT KOTodoEditor : public KOIncidenceEditor
     KOEditorRecurrenceDialog *mRecurrenceDialog;
     KOEditorRecurrence *mRecurrence;
 };
+
+} // namespace IncidenceEditors
 
 #endif

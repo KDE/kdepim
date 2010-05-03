@@ -36,7 +36,9 @@ class KOEditorGeneralJournal;
 namespace Akonadi {
   class Item;
 }
-using namespace Akonadi;
+
+namespace IncidenceEditors
+{
 
 /**
   This class provides a dialog for editing a Journal.
@@ -125,5 +127,7 @@ class INCIDENCEEDITORS_EXPORT KOJournalEditor : public KOIncidenceEditor
 
     KOEditorGeneralJournal *mGeneral;
 };
+
+} // namespace IncidenceEditors
 
 #endif
