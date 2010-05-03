@@ -227,19 +227,30 @@ int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
     case RecurrenceActions::SelectedOccurrence:
       return RecurrenceActions::SelectedOccurrence;
 
-    default:
-      if ( availableOccurrences & RecurrenceActions::FutureOccurrences ) {
+    case RecurrenceActions::AllOccurrences: {
+      Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
+
+      // if there are all kinds of ooccurrences (i.e. past present and futur) the user might
+      // want the option only apply to current and future occurrences, leaving the past ones
+      // untouched.
+      // provide a third choice for that ("Also future")
+      if ( availableOccurrences == RecurrenceActions::AllOccurrences ) {
         const QString message = i18n( "The item you are trying to change is a recurring item. "
                                       "Should the changes be applied only to this single occurrence, "
                                       "also to future items, or to all items in the recurrence?" );
         return RecurrenceActions::questionSelectedFutureAllCancel( message, caption, itemSelected, itemFuture, itemAll, this );
-      } else {
-        const QString message = i18n( "The item you are trying to change is a recurring item. "
-                                      "Should the changes be applied only to this single occurrence "
-                                      "or to all items in the recurrence?" );
-        return RecurrenceActions::questionSelectedAllCancel( message, caption, itemSelected, itemAll, this );
       }
+    }
+
+    default: {
+      Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
+      // selected occurrence and either past or future occurrences
+      const QString message = i18n( "The item you are trying to change is a recurring item. "
+                                    "Should the changes be applied only to this single occurrence "
+                                    "or to all items in the recurrence?" );
+      return RecurrenceActions::questionSelectedAllCancel( message, caption, itemSelected, itemAll, this );
       break;
+    }
   }
 
   return RecurrenceActions::NoOccurrence;
