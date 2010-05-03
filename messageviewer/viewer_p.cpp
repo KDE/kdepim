@@ -339,7 +339,6 @@ bool ViewerPrivate::deleteAttachment(KMime::Content * node, bool showWarning)
   mMimePartModel->setRoot( mMessage.get() );
 
   mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-  mStoredMessagePayload = mMessage->encodedContent();
   Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
 //TODO(Andras) error checking?   connect( job, SIGNAL(result(KJob*)), SLOT(imapItemUpdateResult(KJob*)) );
 
@@ -1500,7 +1499,6 @@ void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMo
   }
 
   mMessage = mMessageItem.payload<KMime::Message::Ptr>();
-  mStoredMessagePayload = mMessageItem.payloadData();
 
   update( updateMode );
 }
@@ -1510,8 +1508,6 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
   resetStateForNewMessage();
 
   mMessage = aMsg;
-  if ( mMessage )
-    mStoredMessagePayload = mMessage->encodedContent();
 
   if ( mMessage ) {
     mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
@@ -2272,8 +2268,8 @@ void ViewerPrivate::slotToggleMimePartTree()
 
 void ViewerPrivate::slotShowMessageSource()
 {
-  const QString rawMessage = QString::fromAscii( mStoredMessagePayload );
-  const QString processedMessage = QString::fromAscii( mMessage->encodedContent() );
+  const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
+  const QString processedMessage = QString::fromAscii( mMessage->encodedContent() ); //TODO: remove?
   const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
@@ -2760,7 +2756,6 @@ void ViewerPrivate::slotAttachmentEditDone( EditorWatcher* editorWatcher )
       file.close();
 
       mMessageItem.setPayloadFromData( mMessage->encodedContent() );
-      mStoredMessagePayload = mMessage->encodedContent();
       Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( mMessageItem );
     }
   }
