@@ -2910,6 +2910,7 @@ void KMMainWidget::updateCustomTemplateMenus()
              this, SLOT(slotCustomReplyAllToMsg( const QString& )) );
     connect( mCustomTemplateMenus, SIGNAL(forwardTemplateSelected( const QString& )),
              this, SLOT(slotCustomForwardMsg( const QString& )) );
+    connect( KMKernel::self(), SIGNAL(customTemplatesChanged()), mCustomTemplateMenus, SLOT(update()) );
   }
 
   mMsgActions->forwardMenu()->addSeparator();

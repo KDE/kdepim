@@ -244,8 +244,8 @@ void KDGanttSemiSizingControl::init()
     _but->setSizePolicy( QSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
     connect( _but, SIGNAL( clicked() ), this, SLOT(changeState()) );
     _layout = 0;
-    _but->setWhatsThis( "Click on this button to show the \nlegend at the bottom of the widget");
-    _but->setToolTip( "Show / hide legend");
+    _but->setWhatsThis( tr("Click on this button to show the \nlegend at the bottom of the widget"));
+    _but->setToolTip( tr("Show / hide legend"));
 
 
 }

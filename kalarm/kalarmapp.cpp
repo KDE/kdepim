@@ -1124,7 +1124,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 			KAAlarm alarmToExecute;
 			// Check all the alarms in turn.
 			// Note that the main alarm is fetched before any other alarms.
-			for (KAAlarm alarm = event->firstAlarm();  alarm.valid();  alarm = event->nextAlarm(alarm))
+			for (KAAlarm alarm = event->firstAlarm();  alarm.isValid();  alarm = event->nextAlarm(alarm))
 			{
 				// Check if the alarm is due yet.
 				KDateTime nextDT = alarm.dateTime(true).effectiveKDateTime();
@@ -1164,7 +1164,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 					kDebug() << "REPEAT_AT_LOGIN";
 					// Check if the main alarm is already being displayed.
 					// (We don't want to display both at the same time.)
-					if (alarmToExecute.valid())
+					if (alarmToExecute.isValid())
 						continue;
 
 					// Set the time to display if it's a display alarm
@@ -1271,7 +1271,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 
 			// If there is an alarm to execute, do this last after rescheduling/cancelling
 			// any others. This ensures that the updated event is only saved once to the calendar.
-			if (alarmToExecute.valid())
+			if (alarmToExecute.isValid())
 				execAlarm(*event, alarmToExecute, true, !alarmToExecute.repeatAtLogin());
 			else
 			{
@@ -1281,7 +1281,7 @@ bool KAlarmApp::handleEvent(const QString& eventID, EventFunc function)
 					// Only trigger one alarm from the event - we don't want multiple
 					// identical messages, for example.
 					KAAlarm alarm = event->firstAlarm();
-					if (alarm.valid())
+					if (alarm.isValid())
 						execAlarm(*event, alarm, false);
 				}
 				if (updateCalAndDisplay)

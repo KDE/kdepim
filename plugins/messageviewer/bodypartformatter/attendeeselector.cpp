@@ -49,7 +49,7 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
 QStringList AttendeeSelector::attendees() const
 {
   QStringList rv;
-  for ( uint i = 0; i < ui.attendeeList->count(); ++i ) {
+  for ( int i = 0; i < ui.attendeeList->count(); ++i ) {
     const QString addr = ui.attendeeList->item( i )->text();
 
     // Build a nice address for this attendee including the CN.
@@ -64,14 +64,13 @@ QStringList AttendeeSelector::attendees() const
 void AttendeeSelector::addClicked()
 {
   if ( !ui.attendeeEdit->text().isEmpty() )
-    ui.attendeeList->insertItem( ui.attendeeEdit->text() );
+    ui.attendeeList->addItem( ui.attendeeEdit->text() );
   ui.attendeeEdit->clear();
 }
 
 void AttendeeSelector::removeClicked()
 {
-  if ( ui.attendeeList->currentItem() >= 0 )
-    ui.attendeeList->removeItem( ui.attendeeList->currentItem() );
+  delete ui.attendeeList->takeItem( ui.attendeeList->currentRow() );
 }
 
 void AttendeeSelector::textChanged( const QString &text )

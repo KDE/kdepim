@@ -26,7 +26,7 @@
 #include "koeventview.h"
 #include "kocore.h"
 #include "views/agendaview/koagendaview.h" // TODO AKONADI_PORT
-#include "koprefs.h"
+#include <kcalprefs.h>
 #include "koeventpopupmenu.h"
 
 #include <libkdepim/pimmessagebox.h>
@@ -188,7 +188,7 @@ int KOEventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
   int answer = KMessageBox::Ok;
   KGuiItem itemFuture( i18n( "Also &Future Items" ) );
 
-  KDateTime dateTime( date, KOPrefs::instance()->timeSpec() );
+  KDateTime dateTime( date, KCalPrefs::instance()->timeSpec() );
   bool isFirst = !inc->recurrence()->getPreviousDateTime( dateTime ).isValid();
   bool isLast  = !inc->recurrence()->getNextDateTime( dateTime ).isValid();
 
@@ -196,13 +196,13 @@ int KOEventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
 
   if ( !isFirst && !isLast ) {
     itemFuture.setEnabled( true );
-    message = i18n( "The item you try to change is a recurring item. "
-                    "Shall the changes be applied only to this single occurrence, "
+    message = i18n( "The item you are trying to change is a recurring item. "
+                    "Should the changes be applied only to this single occurrence, "
                     "also to future items, or to all items in the recurrence?" );
   } else {
     itemFuture.setEnabled( false );
-    message = i18n( "The item you try to change is a recurring item. "
-                    "Shall the changes be applied only to this single occurrence "
+    message = i18n( "The item you are trying to change is a recurring item. "
+                    "Should the changes be applied only to this single occurrence "
                     "or to all items in the recurrence?" );
   }
 
@@ -335,10 +335,10 @@ bool KOEventView::usesCompletedTodoPixmap( const Item& aitem, const QDate &date 
     if ( todo->allDay() ) {
       time = QTime( 0, 0 );
     } else {
-      time = todo->dtDue().toTimeSpec( KOPrefs::instance()->timeSpec() ).time();
+      time = todo->dtDue().toTimeSpec( KCalPrefs::instance()->timeSpec() ).time();
     }
 
-    KDateTime itemDateTime( date, time, KOPrefs::instance()->timeSpec() );
+    KDateTime itemDateTime( date, time, KCalPrefs::instance()->timeSpec() );
 
     return itemDateTime < todo->dtDue( false );
 

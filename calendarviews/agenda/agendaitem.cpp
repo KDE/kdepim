@@ -25,13 +25,11 @@
 
 #include "agendaitem.h"
 #include "eventview.h"
-#include "globals.h"
 #include "helper.h"
 #include "prefs.h"
 #include "prefs_base.h" // for enums
 
-#include <libkdepim/kvcarddrag.h>
-
+#include <KABC/VCardDrag>
 #include <KCal/Event>
 #include <KCal/ICalDrag>
 #include <KCal/Incidence>
@@ -43,6 +41,7 @@
 
 #include <KPIMUtils/Email>
 
+#include <KIconLoader>
 #include <KLocale>
 #include <KMessageBox>
 #include <KWordWrap>
@@ -70,9 +69,9 @@ QPixmap *AgendaItem::completedPxmp = 0;
 
 //-----------------------------------------------------------------------------
 
-AgendaItem::AgendaItem( Akonadi::Calendar *calendar, const Item &item,
-                            const QDate &qd, QWidget *parent )
-  : QWidget( parent ), mCalendar( calendar ), mIncidence( item ),
+AgendaItem::AgendaItem( EventView *eventView, Akonadi::Calendar *calendar, const Item &item,
+                        const QDate &qd, QWidget *parent )
+  : QWidget( parent ), mEventView( eventView ), mCalendar( calendar ), mIncidence( item ),
     mDate( qd ), mValid( true ), mCloned( false ), mSpecialEvent( false )
 {
   if ( !Akonadi::hasIncidence( mIncidence ) ) {
@@ -138,13 +137,13 @@ void AgendaItem::updateIcons()
   mIconRecur = incidence->recurs();
   mIconAlarm = incidence->isAlarmEnabled();
   if ( incidence->attendeeCount() > 1 ) {
-    if ( Prefs::instance()->thatIsMe( incidence->organizer().email() ) ) {
+    if ( mEventView->preferences()->thatIsMe( incidence->organizer().email() ) ) {
       mIconReply = false;
       mIconGroup = false;
       mIconGroupTent = false;
       mIconOrganizer = true;
     } else {
-      Attendee *me = incidence->attendeeByMails( Prefs::instance()->allEmails() );
+      Attendee *me = incidence->attendeeByMails( mEventView->preferences()->allEmails() );
       if ( me ) {
         if ( me->status() == Attendee::NeedsAction && me->RSVP() ) {
           mIconReply = true;
@@ -622,7 +621,7 @@ void AgendaItem::dragEnterEvent( QDragEnterEvent *e )
     e->ignore();
     return;
   }
-  if ( KPIM::KVCardDrag::canDecode( md ) || md->hasText() ) {
+  if ( KABC::VCardDrag::canDecode( md ) || md->hasText() ) {
     e->accept();
   } else {
     e->ignore();
@@ -672,12 +671,11 @@ void AgendaItem::dropEvent( QDropEvent *e )
 
   KABC::Addressee::List list;
 
-  if ( KPIM::KVCardDrag::fromMimeData( md, list ) ) {
-    KABC::Addressee::List::Iterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
-      QString em( (*it).fullEmail() );
+  if ( KABC::VCardDrag::fromMimeData( md, list ) ) {
+    Q_FOREACH( const KABC::Addressee &addressee, list ) {
+      QString em( addressee.fullEmail() );
       if ( em.isEmpty() ) {
-        em = (*it).realName();
+        em = addressee.realName();
       }
       addAttendee( em );
     }
@@ -746,9 +744,9 @@ void AgendaItem::paintEventIcon( QPainter *p, int &x, int y, int ft )
   if ( event->customProperty( "KABC", "BIRTHDAY" ) == "YES" ) {
     mSpecialEvent = true;
     if ( event->customProperty( "KABC", "ANNIVERSARY" ) == "YES" ) {
-      tPxmp = Globals::self()->smallIcon( "view-calendar-wedding-anniversary" );
+      tPxmp = SmallIcon( "view-calendar-wedding-anniversary" );
     } else {
-      tPxmp = Globals::self()->smallIcon( "view-calendar-birthday" );
+      tPxmp = SmallIcon( "view-calendar-birthday" );
     }
     conditionalPaint( p, true, x, y, ft, tPxmp );
   } else {
@@ -769,7 +767,7 @@ void AgendaItem::paintTodoIcon( QPainter *p, int &x, int y, int ft )
     return;
   }
 
-  const bool isCompleted = EventView::usesCompletedTodoPixmap( mIncidence, mDate );
+  const bool isCompleted = mEventView->usesCompletedTodoPixmap( mIncidence, mDate );
 
   conditionalPaint( p, !isCompleted, x, y, ft, *todoPxmp );
   conditionalPaint( p, isCompleted, x, y, ft, *completedPxmp );
@@ -777,7 +775,7 @@ void AgendaItem::paintTodoIcon( QPainter *p, int &x, int y, int ft )
 
 void AgendaItem::paintIcons( QPainter *p, int &x, int y, int ft )
 {
-  if ( !Prefs::instance()->enableAgendaItemIcons() ) {
+  if ( !mEventView->preferences()->enableAgendaItemIcons() ) {
     return;
   }
 
@@ -824,26 +822,26 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   // Also look at #17984
 
   if ( !alarmPxmp ) {
-    alarmPxmp     = new QPixmap( Globals::self()->smallIcon( "task-reminder" ) );
-    recurPxmp     = new QPixmap( Globals::self()->smallIcon( "appointment-recurring" ) );
-    readonlyPxmp  = new QPixmap( Globals::self()->smallIcon( "object-locked" ) );
-    replyPxmp     = new QPixmap( Globals::self()->smallIcon( "mail-reply-sender" ) );
-    groupPxmp     = new QPixmap( Globals::self()->smallIcon( "meeting-attending" ) );
-    groupPxmpTent = new QPixmap( Globals::self()->smallIcon( "meeting-attending-tentative" ) );
-    organizerPxmp = new QPixmap( Globals::self()->smallIcon( "meeting-organizer" ) );
-    eventPxmp     = new QPixmap( Globals::self()->smallIcon( "view-calendar-day" ) );
-    todoPxmp      = new QPixmap( Globals::self()->smallIcon( "view-calendar-tasks" ) );
-    completedPxmp = new QPixmap( Globals::self()->smallIcon( "task-complete" ) );
+    alarmPxmp     = new QPixmap( SmallIcon( "task-reminder" ) );
+    recurPxmp     = new QPixmap( SmallIcon( "appointment-recurring" ) );
+    readonlyPxmp  = new QPixmap( SmallIcon( "object-locked" ) );
+    replyPxmp     = new QPixmap( SmallIcon( "mail-reply-sender" ) );
+    groupPxmp     = new QPixmap( SmallIcon( "meeting-attending" ) );
+    groupPxmpTent = new QPixmap( SmallIcon( "meeting-attending-tentative" ) );
+    organizerPxmp = new QPixmap( SmallIcon( "meeting-organizer" ) );
+    eventPxmp     = new QPixmap( SmallIcon( "view-calendar-day" ) );
+    todoPxmp      = new QPixmap( SmallIcon( "view-calendar-tasks" ) );
+    completedPxmp = new QPixmap( SmallIcon( "task-complete" ) );
   }
 
   QColor bgColor;
 
-  if ( Akonadi::hasTodo( mIncidence ) && !Prefs::instance()->todosUseCategoryColors() ) {
+  if ( Akonadi::hasTodo( mIncidence ) && !mEventView->preferences()->todosUseCategoryColors() ) {
     if ( Akonadi::todo( mIncidence )->isOverdue() ) {
-      bgColor = Prefs::instance()->agendaCalendarItemsToDosOverdueBackgroundColor();
+      bgColor = mEventView->preferences()->agendaCalendarItemsToDosOverdueBackgroundColor();
     } else if ( Akonadi::todo( mIncidence )->dtDue().date() ==
                 QDateTime::currentDateTime().date() ) {
-      bgColor = Prefs::instance()->agendaCalendarItemsToDosDueTodayBackgroundColor();
+      bgColor = mEventView->preferences()->agendaCalendarItemsToDosDueTodayBackgroundColor();
     }
   }
 
@@ -856,9 +854,9 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     cat = categories.first();
   }
   if ( cat.isEmpty() ) {
-    categoryColor = Prefs::instance()->unsetCategoryColor();
+    categoryColor = mEventView->preferences()->unsetCategoryColor();
   } else {
-    categoryColor = Prefs::instance()->categoryColor( cat );
+    categoryColor = mEventView->preferences()->categoryColor( cat );
   }
 
   QColor resourceColor = mResourceColor;
@@ -868,16 +866,16 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
 
   QColor frameColor;
   // TODO PrefsBase enums should probably be redefined in Prefs
-  if ( Prefs::instance()->agendaViewColors() == PrefsBase::ResourceOnly ||
-       Prefs::instance()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
+  if ( mEventView->preferences()->agendaViewColors() == PrefsBase::ResourceOnly ||
+       mEventView->preferences()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
     frameColor = bgColor.isValid() ? bgColor : resourceColor;
   } else {
     frameColor = bgColor.isValid() ? bgColor : categoryColor;
   }
 
   if ( !bgColor.isValid() ) {
-    if ( Prefs::instance()->agendaViewColors() == PrefsBase::ResourceOnly ||
-         Prefs::instance()->agendaViewColors() == PrefsBase::ResourceInsideCategoryOutside ) {
+    if ( mEventView->preferences()->agendaViewColors() == PrefsBase::ResourceOnly ||
+         mEventView->preferences()->agendaViewColors() == PrefsBase::ResourceInsideCategoryOutside ) {
       bgColor = resourceColor;
     } else {
       bgColor = categoryColor;
@@ -885,12 +883,12 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   }
 
   if ( cat.isEmpty() &&
-       Prefs::instance()->agendaViewColors() == PrefsBase::ResourceInsideCategoryOutside ) {
+       mEventView->preferences()->agendaViewColors() == PrefsBase::ResourceInsideCategoryOutside ) {
     frameColor = bgColor;
   }
 
   if ( cat.isEmpty() &&
-       Prefs::instance()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
+       mEventView->preferences()->agendaViewColors() == PrefsBase::CategoryInsideResourceOutside ) {
     bgColor = frameColor;
   }
 
@@ -902,7 +900,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     frameColor = frameColor.dark( 115 );
   }
 
-  if ( !Prefs::instance()->hasCategoryColor( cat ) ) {
+  if ( !mEventView->preferences()->hasCategoryColor( cat ) ) {
     categoryColor = resourceColor;
   }
 
@@ -917,7 +915,7 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QColor textColor = EventViews::getTextColor( bgColor );
   p.setPen( textColor );
 
-  p.setFont( Prefs::instance()->agendaViewFont() );
+  p.setFont( mEventView->preferences()->agendaViewFont() );
   QFontMetrics fm = p.fontMetrics();
 
   int singleLineHeight = fm.boundingRect( mLabelText ).height();
@@ -935,22 +933,22 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
   QString longH;
   if ( !isMultiItem() ) {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+      incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     if ( !Akonadi::hasTodo( mIncidence ) ) {
       longH = i18n( "%1 - %2",
                     shortH,
                     KGlobal::locale()->formatTime(
-                      incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() ) );
+                      incidence->dtEnd().toTimeSpec( mEventView->preferences()->timeSpec() ).time() ) );
     } else {
       longH = shortH;
     }
   } else if ( !mMultiItemInfo->mFirstMultiItem ) {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+      incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     longH = shortH;
   } else {
     shortH = KGlobal::locale()->formatTime(
-      incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+      incidence->dtEnd().toTimeSpec( mEventView->preferences()->timeSpec() ).time() );
     longH = i18n( "- %1", shortH );
   }
 
@@ -1037,14 +1035,14 @@ void AgendaItem::paintEvent( QPaintEvent *ev )
     shortH = longH = "";
 
     if ( const Event::Ptr event = Akonadi::event( mIncidence ) ) {
-      if ( event->isMultiDay( Prefs::instance()->timeSpec() ) ) {
+      if ( event->isMultiDay( mEventView->preferences()->timeSpec() ) ) {
         // multi-day, all-day event
         shortH =
           i18n( "%1 - %2",
                 KGlobal::locale()->formatDate(
-                  incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).date() ),
+                  incidence->dtStart().toTimeSpec( mEventView->preferences()->timeSpec() ).date() ),
                 KGlobal::locale()->formatDate(
-                  incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).date() ) );
+                  incidence->dtEnd().toTimeSpec( mEventView->preferences()->timeSpec() ).date() ) );
         longH = shortH;
 
         // paint headline
@@ -1356,7 +1354,7 @@ bool AgendaItem::eventFilter( QObject *obj, QEvent *event )
 bool AgendaItem::event( QEvent *event )
 {
   if ( event->type() == QEvent::ToolTip ) {
-    if( !Prefs::instance()->enableToolTips() ) {
+    if( !mEventView->preferences()->enableToolTips() ) {
       return true;
     } else if ( mValid ) {
       QHelpEvent *helpEvent = static_cast<QHelpEvent*>( event );
@@ -1365,7 +1363,7 @@ bool AgendaItem::event( QEvent *event )
         IncidenceFormatter::toolTipStr(
           Akonadi::displayName( mIncidence.parentCollection() ),
           Akonadi::incidence( mIncidence ).get(),
-          mDate, true, Prefs::instance()->timeSpec() ),
+          mDate, true, mEventView->preferences()->timeSpec() ),
         this );
     }
   }

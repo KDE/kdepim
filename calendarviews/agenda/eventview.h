@@ -4,6 +4,8 @@
   Copyright (c) 1999 Preston Brown <pbrown@kde.org>
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,36 +28,47 @@
 #ifndef EVENTVIEW_H
 #define EVENTVIEW_H
 
-//TODO_SPLIT: remove agenda
-//#include "agenda.h"
-
 #include "eventviews_export.h"
 
-#include <akonadi/kcal/calendar.h>
-#include <akonadi/kcal/calendarsearch.h>
-#include <akonadi/kcal/collectionselection.h>
-#include <akonadi/kcal/incidencechanger.h>
-
-#include <KCal/Todo>
-
-#include <KConfigGroup>
+#include <Akonadi/Collection>
+#include <Akonadi/Item>
 
 #include <QWidget>
 
+namespace Akonadi {
+  class Calendar;
+  class CalendarSearch;
+  class CollectionSelection;
+  class CollectionSelectionProxyModel;
+  class IncidenceChanger;
+}
+
+namespace boost {
+  template <typename T> class shared_ptr;
+}
 
 namespace KCal {
   class Incidence;
+  template <typename T> class SortableList;
+  typedef SortableList<QDate> DateList;
 }
-namespace Akonadi {
-  class Item;
-  class Calendar;
-}
-using namespace KCal;
 
+namespace KHolidays {
+    class HolidayRegion;
+    typedef boost::shared_ptr<HolidayRegion> HolidayRegionPtr;
+}
+
+class KConfigGroup;
+class QDate;
+class QDateTime;
 class QMenu;
+class QModelIndex;
 
 namespace EventViews
 {
+  class Prefs;
+  typedef boost::shared_ptr<Prefs> PrefsPtr;
+
 /**
   EventView is the abstract base class from wich all other
   calendar views for event data are derived.  It provides methods for
@@ -99,13 +112,16 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     virtual Akonadi::Calendar *calendar() const;
 
+    virtual void setPreferences( const PrefsPtr &preferences );
+
+    PrefsPtr preferences() const;
+
     Akonadi::CalendarSearch* calendarSearch() const;
 
     /**
        A todo can have two pixmaps, one for completed and one for incomplete.
     */
-    static bool usesCompletedTodoPixmap( const Akonadi::Item &aItem,
-                                         const QDate &date );
+    bool usesCompletedTodoPixmap( const Akonadi::Item &aItem, const QDate &date );
 
     /**
       @return a list of selected events. Most views can probably only
@@ -119,19 +135,19 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
       probably only select a single event at a time, but some may be able
       to select more than one.
     */
-    virtual DateList selectedIncidenceDates() const = 0;
+    virtual KCal::DateList selectedIncidenceDates() const = 0;
 
     /**
        Returns the start of the selection, or an invalid QDateTime if there is no selection
        or the view doesn't support selecting cells.
      */
-    virtual QDateTime selectionStart() const { return QDateTime(); }
+    virtual QDateTime selectionStart() const;
 
     /**
        Returns the end of the selection, or an invalid QDateTime if there is no selection
        or the view doesn't support selecting cells.
      */
-    virtual QDateTime selectionEnd() const { return QDateTime(); }
+    virtual QDateTime selectionEnd() const;
 
     /**
       Returns the number of currently shown dates.
@@ -215,7 +231,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      */
     Akonadi::CollectionSelection* collectionSelection() const;
 
-  public slots:
+  public Q_SLOTS:
 
     /**
       Shows given incidences. Depending on the actual view it might not
@@ -274,7 +290,13 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     */
     void defaultAction( const Akonadi::Item &incidence );
 
-  signals:
+    /**
+       Set which holidays the user wants to use.
+       @param holidayRegion a HolidayRegion object initialized with the desired locale.
+    */
+    void setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion );
+
+  Q_SIGNALS:
     /**
      * when the view changes the dates that are selected in one way or
      * another, this signal is emitted.  It should be connected back to
@@ -283,7 +305,7 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
      * selected dates has changed.
      *   @param datelist the new list of selected dates
      */
-    void datesSelected( const DateList datelist );
+    void datesSelected( const KCal::DateList &datelist );
 
     /**
      * Emitted when an event is moved using the mouse in an agenda
@@ -384,19 +406,18 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     void newJournalSignal( const QDate & );
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void collectionSelectionChanged();
     virtual void calendarReset();
 
-  private slots:
+  private Q_SLOTS:
     void backendErrorOccurred();
     void dataChanged( const QModelIndex &topLeft, const QModelIndex &bottomRight );
     void rowsInserted( const QModelIndex &parent, int start, int end );
     void rowsAboutToBeRemoved( const QModelIndex &parent, int start, int end );
 
   protected:
-    Akonadi::Item mCurrentIncidence;  // Incidence selected e.g. for a context menu
-    Akonadi::IncidenceChanger *mChanger;
+    Akonadi::IncidenceChanger *changer() const;
 
    /**
      * reimplement to read view-specific settings
@@ -426,6 +447,9 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 
     virtual void handleBackendError( const QString &error );
 
+    bool isWorkDay( const QDate &date ) const;
+    QStringList holidayNames( const QDate &date ) const;
+
   private:
     /*
      * This is called when the new event dialog is shown. It sends
@@ -434,18 +458,6 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
     void finishTypeAhead();
 
   private:
-
-    /* When we receive a QEvent with a key_Return release
-     * we will only show a new event dialog if we previously received a
-     * key_Return press, otherwise a new event dialog appears when
-     * you hit return in some yes/no dialog */
-    bool mReturnPressed;
-
-    bool mTypeAhead;
-    QObject *mTypeAheadReceiver;
-    QList<QEvent*> mTypeAheadEvents;
-    static Akonadi::CollectionSelection* sGlobalCollectionSelection;
-
     class Private;
     Private *const d;
 };
@@ -453,3 +465,4 @@ class EVENTVIEWS_EXPORT EventView : public QWidget
 } // namespace EventViews
 
 #endif
+// kate: space-indent on; indent-width 2; replace-tabs on;

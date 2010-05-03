@@ -26,7 +26,6 @@
 
 #include "addresseelineedit.h"
 #include "completionordereditor.h"
-#include "distributionlist.h"
 
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/CollectionFetchJob>
@@ -985,17 +984,6 @@ void AddresseeLineEdit::enableCompletion( bool enable )
 
 void AddresseeLineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
 {
-  if ( KPIM::DistributionList::isDistributionList( addr ) ) {
-
-    //for CompletionAuto
-    d->addCompletionItem( addr.formattedName(), weight, source );
-
-    //for CompletionShell, CompletionPopup
-    QStringList sl( addr.formattedName() );
-    d->addCompletionItem( addr.formattedName(), weight, source, &sl );
-
-    return;
-  }
   const QStringList emails = addr.emails();
   QStringList::ConstIterator it;
   const int prefEmailWeight = 1;     //increment weight by prefEmailWeight

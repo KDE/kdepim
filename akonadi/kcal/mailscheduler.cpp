@@ -25,7 +25,7 @@
 #include "mailscheduler.h"
 #include "mailclient.h"
 #include "identitymanager.h"
-#include "koprefs.h"
+#include "kcalprefs.h"
 #include "calendar.h"
 #include "calendaradaptor.h"
 
@@ -59,34 +59,34 @@ MailScheduler::~MailScheduler()
 
 bool MailScheduler::publish( KCal::IncidenceBase *incidence, const QString &recipients )
 {
-  QString from = KOPrefs::instance()->email();
-  bool bccMe = KOPrefs::instance()->mBcc;
+  QString from = KCalPrefs::instance()->email();
+  bool bccMe = KCalPrefs::instance()->mBcc;
   QString messageText = mFormat->createScheduleMessage( incidence, KCal::iTIPPublish );
 
   MailClient mailer;
   return mailer.mailTo(
     incidence,
     Akonadi::identityManager()->identityForAddress( from ),
-    from, bccMe, recipients, messageText, KOPrefs::instance()->mMailTransport );
+    from, bccMe, recipients, messageText, KCalPrefs::instance()->mMailTransport );
 }
 
 bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method, const QString &recipients )
 {
-  QString from = KOPrefs::instance()->email();
-  bool bccMe = KOPrefs::instance()->mBcc;
+  QString from = KCalPrefs::instance()->email();
+  bool bccMe = KCalPrefs::instance()->mBcc;
   QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
   return mailer.mailTo(
     incidence,
     Akonadi::identityManager()->identityForAddress( from ),
-    from, bccMe, recipients, messageText, KOPrefs::instance()->mMailTransport );
+    from, bccMe, recipients, messageText, KCalPrefs::instance()->mMailTransport );
 }
 
 bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iTIPMethod method )
 {
-  QString from = KOPrefs::instance()->email();
-  bool bccMe = KOPrefs::instance()->mBcc;
+  QString from = KCalPrefs::instance()->email();
+  bool bccMe = KCalPrefs::instance()->mBcc;
   QString messageText = mFormat->createScheduleMessage( incidence, method );
 
   MailClient mailer;
@@ -98,7 +98,7 @@ bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iT
     status = mailer.mailAttendees(
       incidence,
       Akonadi::identityManager()->identityForAddress( from ),
-      bccMe, messageText, KOPrefs::instance()->mMailTransport );
+      bccMe, messageText, KCalPrefs::instance()->mMailTransport );
   } else {
     QString subject;
     Incidence *inc = dynamic_cast<Incidence*>( incidence );
@@ -108,7 +108,7 @@ bool MailScheduler::performTransaction( KCal::IncidenceBase *incidence, KCal::iT
     status = mailer.mailOrganizer(
       incidence,
       Akonadi::identityManager()->identityForAddress( from ),
-      from, bccMe, messageText, subject, KOPrefs::instance()->mMailTransport );
+      from, bccMe, messageText, subject, KCalPrefs::instance()->mMailTransport );
   }
   return status;
 }

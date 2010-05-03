@@ -38,18 +38,18 @@ QColor EventViews::getTextColor( const QColor &c )
   return ( luminance > 128.0 ) ? QColor( 0, 0, 0 ) : QColor( 255, 255, 255 );
 }
 
-QColor EventViews::resourceColor( const Collection &coll ) {
+QColor EventViews::resourceColor( const Collection &coll, const PrefsPtr &preferences ) {
   if ( !coll.isValid() )
     return QColor();
   const QString id = QString::number( coll.id() );
-  return Prefs::instance()->resourceColor( id );
+  return preferences->resourceColor( id );
 }
 
-QColor EventViews::resourceColor( const Item &item ) {
+QColor EventViews::resourceColor( const Item &item, const PrefsPtr &preferences ) {
   if ( !item.isValid() )
     return QColor();
   const QString id = QString::number( item.storageCollectionId() );
-  return Prefs::instance()->resourceColor( id );
+  return preferences->resourceColor( id );
 }
 
 qint64 EventViews::yearDiff( const QDate &start, const QDate &end )

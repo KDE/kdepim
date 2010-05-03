@@ -27,6 +27,8 @@
 
 #include <kldap/ldapsearchdialog.h>
 
+#include <QtCore/QPointer>
+
 LDAPXXPort::LDAPXXPort( QWidget *parentWidget )
   : XXPort( parentWidget )
 {
@@ -36,14 +38,17 @@ KABC::Addressee::List LDAPXXPort::importContacts() const
 {
   KABC::Addressee::List contacts;
 
-  KLDAP::LdapSearchDialog dlg( parentWidget() );
-  dlg.exec();
+  QPointer<KLDAP::LdapSearchDialog> dlg = new KLDAP::LdapSearchDialog( parentWidget() );
 
-  return dlg.selectedContacts();
+  if ( dlg->exec() && dlg )
+    contacts = dlg->selectedContacts();
+
+  delete dlg;
+
+  return contacts;
 }
 
-bool LDAPXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
+bool LDAPXXPort::exportContacts( const KABC::Addressee::List& ) const
 {
-    Q_UNUSED(contacts);
-    return false;
+  return false;
 }

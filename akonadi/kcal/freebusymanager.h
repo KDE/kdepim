@@ -42,6 +42,7 @@
 
 #include <KUrl>
 
+#include <QPointer>
 #include <QByteArray>
 #include <QObject>
 #include <QString>
@@ -67,7 +68,7 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyDownloadJob : public QObject
   Q_OBJECT
   public:
     FreeBusyDownloadJob( const QString &email, const KUrl &url,
-                   FreeBusyManager *manager );
+                         FreeBusyManager *manager, QWidget *parentWidget = 0 );
 
     virtual ~FreeBusyDownloadJob();
 
@@ -94,7 +95,7 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     void setCalendar( Akonadi::Calendar * );
 
     /// KOrganizer publishes the free/busy list
-    void publishFreeBusy();
+    void publishFreeBusy( QWidget *parentWidget = 0 );
 
     /**
       KOrganizer downloads somebody else's free/busy list
@@ -105,7 +106,8 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
                      retrieved.
         @return true if a download is initiated, and false otherwise
     */
-    bool retrieveFreeBusy( const QString &email, bool forceDownload );
+    bool retrieveFreeBusy( const QString &email, bool forceDownload,
+                           QWidget *parentWidget = 0 );
 
     void cancelRetrieval();
 
@@ -182,6 +184,9 @@ class AKONADI_KCAL_NEXT_EXPORT FreeBusyManager : public QObject, public KCal::Fr
     int mTimerID;
     bool mUploadingFreeBusy;
     bool mBrokenUrl;
+
+    // the parentWidget to use while doing our "recursive" retrieval
+    QPointer<QWidget>  mParentWidgetForRetrieval;
 };
 
 }

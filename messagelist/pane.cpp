@@ -18,9 +18,12 @@
 
 #include "pane.h"
 
+#include <KDE/KActionCollection>
+#include <KDE/KActionMenu>
 #include <KDE/KIcon>
 #include <KDE/KLocale>
 #include <KDE/KMenu>
+#include <KDE/KXMLGUIClient>
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QAbstractProxyModel>
@@ -42,7 +45,7 @@ class Pane::Private
 {
 public:
   Private( Pane *owner )
-    : q( owner ), mXmlGuiClient( 0 ) { }
+    : q( owner ), mXmlGuiClient( 0 ), mActionMenu( 0 ) { }
 
   void onSelectionChanged( const QItemSelection &selected, const QItemSelection &deselected );
   void onNewTabClicked();
@@ -57,6 +60,7 @@ public:
   Pane * const q;
 
   KXMLGUIClient *mXmlGuiClient;
+  KActionMenu *mActionMenu;
 
   QAbstractItemModel *mModel;
   QItemSelectionModel *mSelectionModel;
@@ -144,6 +148,17 @@ void Pane::setXmlGuiClient( KXMLGUIClient *xmlGuiClient )
   for ( int i=0; i<count(); i++ ) {
     Widget *w = qobject_cast<Widget *>( widget( i ) );
     w->setXmlGuiClient( d->mXmlGuiClient );
+  }
+
+  // Setup "View->Message List" actions.
+  if ( xmlGuiClient ) {
+    if ( d->mActionMenu ) {
+      d->mXmlGuiClient->actionCollection()->removeAction( d->mActionMenu );
+    }
+    d->mActionMenu = new KActionMenu( KIcon(), i18n( "Message List" ), this );
+    d->mXmlGuiClient->actionCollection()->addAction( "view_message_list", d->mActionMenu );
+    const Widget * const w = static_cast<Widget*>( currentWidget() );
+    w->view()->fillViewMenu( d->mActionMenu->menu() );
   }
 }
 

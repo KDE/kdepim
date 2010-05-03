@@ -52,8 +52,8 @@ public:
     ArchivedAt    = 1 << 7  /** Archive-At header exists */
   };
 public:
-  static MESSAGECORE_EXPORT MailingList detect(  const KMime::Message::Ptr &msg );
-  static MESSAGECORE_EXPORT QString name( const KMime::Message::Ptr &message, QByteArray &header_name,
+  static MailingList detect(  const KMime::Message::Ptr &msg );
+  static QString name( const KMime::Message::Ptr &message, QByteArray &header_name,
                        QString &header_value );
 public:
   /**

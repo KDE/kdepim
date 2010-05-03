@@ -13,7 +13,22 @@
   <property name="windowTitle">
    <string>CalendarViews Viewer</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Tab 1</string>
+       </attribute>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -23,8 +38,20 @@
      <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="addViewMenu">
+    <property name="title">
+     <string>Add View</string>
+    </property>
+    <addaction name="actionAgenda"/>
+   </widget>
+   <addaction name="addViewMenu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionAgenda">
+   <property name="text">
+    <string>Agenda</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

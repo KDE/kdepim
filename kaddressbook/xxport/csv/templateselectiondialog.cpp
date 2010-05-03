@@ -168,7 +168,7 @@ class TemplateSelectionDelegate : public QStyledItemDelegate
 
         if ( buttonRect.contains( mouseEvent->pos() ) ) {
           const QString templateName = index.data( Qt::DisplayRole ).toString();
-          if ( KMessageBox::questionYesNo( 0, i18n( "Do you really want to delete template '%1'?", templateName ) ) == KMessageBox::Yes ) {
+          if ( KMessageBox::questionYesNo( 0, i18nc( "@label", "Do you really want to delete template '%1'?", templateName ) ) == KMessageBox::Yes ) {
             model->removeRows( index.row(), 1 );
             return true;
           }

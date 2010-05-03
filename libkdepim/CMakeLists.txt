@@ -21,8 +21,6 @@ set(kdepim_LIB_SRCS
    ktimeedit.cpp
    kprefsdialog.cpp
    kdateedit.cpp
-   kvcarddrag.cpp
-   addressesdialog.cpp
    maillistdrag.cpp
    addresseelineedit.cpp
    kdatepickerpopup.cpp
@@ -37,7 +35,6 @@ set(kdepim_LIB_SRCS
    broadcaststatus.cpp
    kwidgetlister.cpp
    recentaddresses.cpp
-   distributionlist.cpp
    sendsmsdialog.cpp
    kmailcompletion.cpp
    uistatesaver.cpp

@@ -265,10 +265,7 @@ void CustomTemplates::save()
   TemplateParser::GlobalSettings::self()->setCustomTemplates( list );
   TemplateParser::GlobalSettings::self()->writeConfig();
 
-  // update all menus related to custom templates
-  // TODO(leo) turn into as signal, listen from kmail
-  //kmkernel->updatedTemplates();
-  // emit templatesUpdated();
+  emit templatesUpdated();
 }
 
 void CustomTemplates::slotInsertCommand( const QString &cmd, int adjustCursor )

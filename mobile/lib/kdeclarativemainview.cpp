@@ -133,6 +133,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   Akonadi::EntityMimeTypeFilterModel *favCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
   favCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  favCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
   favCollectionFilter->setSourceModel( d->mEtm );
 
   d->mFavSelection = new QItemSelectionModel( favCollectionFilter, this );

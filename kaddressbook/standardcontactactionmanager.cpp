@@ -32,6 +32,7 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
+#include <QtCore/QPointer>
 #include <QtGui/QItemSelectionModel>
 
 using namespace Akonadi;
@@ -167,14 +168,14 @@ class StandardContactActionManager::Private
 
     void addAddressBookTriggered()
     {
-      AgentTypeDialog dlg( mParentWidget );
-      dlg.setWindowTitle( i18n( "Add Address Book" ) );
-      dlg.agentFilterProxyModel()->addMimeTypeFilter( KABC::Addressee::mimeType() );
-      dlg.agentFilterProxyModel()->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
-      dlg.agentFilterProxyModel()->addCapabilityFilter( "Resource" ); // show only resources, no agents
+      QPointer<AgentTypeDialog> dlg = new AgentTypeDialog( mParentWidget );
+      dlg->setWindowTitle( i18n( "Add Address Book" ) );
+      dlg->agentFilterProxyModel()->addMimeTypeFilter( KABC::Addressee::mimeType() );
+      dlg->agentFilterProxyModel()->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
+      dlg->agentFilterProxyModel()->addCapabilityFilter( "Resource" ); // show only resources, no agents
 
-      if ( dlg.exec() ) {
-        const AgentType agentType = dlg.agentType();
+      if ( dlg->exec() && dlg ) {
+        const AgentType agentType = dlg->agentType();
 
         if ( agentType.isValid() ) {
           AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType );
@@ -183,6 +184,8 @@ class StandardContactActionManager::Private
           job->start();
         }
       }
+
+      delete dlg;
     }
 
     void addAddressBookResult( KJob *job )

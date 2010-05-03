@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE kcfg SYSTEM
+    "http://www.kde.org/standards/kcfg/1.0/kcfg.dtd">
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <include>klocale.h</include>
+  <kcfgfile name="viewerapprc"/>
+
+<!-- PREFERENCES DIALOG -->
+
+<!-- Views Page: General Tab -->
+  <group name="General View">
+    <entry type="Bool" key="Enable ToolTips">
+      <label>Enable tooltips for displaying summaries</label>
+      <whatsthis>Check this box to display summary tooltips when hovering the mouse over an event or a to-do.</whatsthis>
+      <default>true</default>
+    </entry>
+  </group>
+
+<!-- Views Page: Agenda View Tab -->
+  <group name="Agenda View">
+    <entry type="Int" key="Hour Size">
+      <label>Hour size</label>
+      <whatsthis>Select the height of the hour rows in the agenda grid, in pixels. Increasing this value will make each row in the agenda grid taller.</whatsthis>
+      <tooltip>Set the height (in pixels) for an hour in the agenda grid</tooltip>
+      <default>10</default>
+      <min>4</min>
+      <max>30</max>
+    </entry>
+
+    <entry type="Bool" key="Show Icons in Agenda View" name="EnableAgendaItemIcons">
+      <label>Show icons in agenda view items</label>
+      <whatsthis>Check this box to display icons (alarm, recursion, etc.) in agenda view items.</whatsthis>
+      <tooltip>Display icons in agenda view items</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" name="ShowTodosAgendaView">
+      <label>Show to-dos</label>
+      <whatsthis>Check this box to display to-dos in the agenda view.</whatsthis>
+      <tooltip>Display to-dos in the agenda view</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" key="Show current-time line" name="MarcusBainsEnabled">
+      <label>Show current-time (Marcus Bains) line</label>
+      <whatsthis>Check this box to display a line in the day or week view indicating the current-time line (Marcus Bains line).</whatsthis>
+      <tooltip>Display the current-time indicator</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" key="Current-time line shows seconds" name="MarcusBainsShowSeconds">
+      <label>Show seconds on the current-time (Marcus Bains) line</label>
+      <whatsthis>Check this box if you want to show seconds on the current-time line.</whatsthis>
+      <tooltip>Display seconds with the current-time indicator</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" name="SelectionStartsEditor">
+      <label>Time range selection in agenda view starts event editor</label>
+      <whatsthis>Check this box to start the event editor automatically when you select a time range in the daily and weekly view. To select a time range, drag the mouse from the start time to the end time of the event you are about to plan.</whatsthis>
+      <tooltip>Enable automatic event editor with time range selection</tooltip>
+      <default>false</default>
+    </entry>
+
+    <entry type="Enum" key="AgendaViewColors">
+      <label>Color Usage</label>
+      <choices>
+        <choice name="CategoryInsideResourceOutside">
+          <label>Category inside, calendar outside</label>
+          <whatsthis>Select the "Category inside, calendar outside" option if you would like to draw calendar items in their associated category color, with the item's border drawn in the color of its calendar.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw agenda items in their category color inside and calendar color for their border</tooltip>
+        </choice>
+        <choice name="ResourceInsideCategoryOutside">
+          <label>Calendar inside, category outside</label>
+          <whatsthis>Select the "Calendar inside, category outside" option if you would like to draw calendar items in their associated calendar color, with the item's border drawn in the color of its category.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw agenda items in their calendar color inside and category color for their border</tooltip>
+        </choice>
+        <choice name="CategoryOnly">
+          <label>Only category</label>
+          <whatsthis>Select the "Only category" option if you would like to draw calendar items (both inside and border) in the color of their associated category.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw agenda items using their category color for the inside and border</tooltip>
+        </choice>
+        <choice name="ResourceOnly">
+          <label>Only calendar</label>
+          <whatsthis>Select the "Only calendar" option if you would like to draw calendar items (both inside and border) in the color of their calendar.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw agenda items using their calendar color for the inside and border</tooltip>
+        </choice>
+      </choices>
+      <default>CategoryInsideResourceOutside</default>
+    </entry>
+
+    <entry type="Enum" name="AgendaViewCalendarDisplay">
+      <label>Multiple Calendar Display</label>
+      <choices>
+        <choice name="CalendarsMerged">
+          <label>Merge all calendars into one view</label>
+          <whatsthis>Select the "Merge all calendars into one view" option if you would like all your calendars to be shown together in one agenda view.</whatsthis>
+          <tooltip>Show all calendars merged together</tooltip>
+        </choice>
+        <choice name="CalendarsSideBySide">
+          <label>Show calendars side by side</label>
+          <whatsthis>Select the "Show calendars side by side" option if you would like to see two calendars at once, in a side-by-side view.</whatsthis>
+          <tooltip>Show two calendars side-by-side</tooltip>
+        </choice>
+        <choice name="AllCalendarViews">
+          <label>Switch between views with tabs</label>
+          <whatsthis>Select "Switch between views with tabs" if you would like to alternate between calendars using the tab key.</whatsthis>
+          <tooltip>Tab through calendars</tooltip>
+        </choice>
+      </choices>
+      <default>CalendarsMerged</default>
+    </entry>
+  </group>
+
+<!-- Views Page: Month View Tab -->
+  <group name="Month View">
+<!--    <entry type="Bool" key="Enable Month-View Scrollbars" name="EnableMonthScroll">
+      <label>Enable scrollbars in month view cells</label>
+      <whatsthis>Check this box to display scrollbars when clicking on a cell in the month view; they will only appear when needed though.</whatsthis>
+      <default>false</default>
+    </entry> -->
+
+    <entry type="Bool" key="Show Icons in Month View" name="EnableMonthItemIcons">
+      <label>Show icons in month view items</label>
+      <whatsthis>Check this box to display icons (alarm, recursion, etc.) in month view items.</whatsthis>
+      <tooltip>Display icons in month view items</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" name="ShowTodosMonthView">
+      <label>Show to-dos</label>
+      <whatsthis>Check this box to display to-dos in the month view.</whatsthis>
+      <tooltip>Display to-dos in the month view</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" name="ShowJournalsMonthView">
+      <label>Show journals</label>
+      <whatsthis>Check this box to display journals in the month view.</whatsthis>
+      <tooltip>Display journals in the month view</tooltip>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" key="Full View Month">
+      <label>Month view uses full window</label>
+      <whatsthis>Check this box to use the full KOrganizer window when displaying the month view. If this box is checked, you will gain some space for the monthly view, but other widgets, such as the date navigator, the item details and the calendars list, will not be displayed.</whatsthis>
+      <default>false</default>
+    </entry>
+
+    <entry type="Enum" key="MonthViewColors">
+      <label>Color Usage</label>
+      <choices>
+        <choice name="MonthItemCategoryInsideResourceOutside">
+          <label>Category inside, calendar outside</label>
+          <whatsthis>Select the "Category inside, calendar outside" option if you would like to draw calendar items in their associated category color, with the item's border drawn in the color of its calendar.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw month items in their category color inside and calendar color for their border</tooltip>
+        </choice>
+        <choice name="MonthItemResourceInsideCategoryOutside">
+          <label>Calendar inside, category outside</label>
+          <whatsthis>Select the "Calendar inside, category outside" option if you would like to draw calendar items in their associated calendar color, with the item's border drawn in the color of its category.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw month items in their calendar color inside and category color for their border</tooltip>
+        </choice>
+        <choice name="MonthItemCategoryOnly">
+          <label>Only category</label>
+          <whatsthis>Select the "Only category" option if you would like to draw calendar items (both inside and border) in the color of their associated category.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw month items using their category color for the inside and border</tooltip>
+        </choice>
+        <choice name="MonthItemResourceOnly">
+          <label>Only calendar</label>
+          <whatsthis>Select the "Only calendar" option if you would like to draw calendar items (both inside and border) in the color of their calendar.  Please use the Colors and Fonts configuration page for setting these colors.</whatsthis>
+          <tooltip>Draw month items using their calendar color for the inside and border</tooltip>
+        </choice>
+      </choices>
+      <default>MonthItemCategoryInsideResourceOutside</default>
+    </entry>
+  </group>
+
+<!-- Views Page: Todo View Tab -->
+  <group name="Todo View">
+    <entry type="Bool" key="Sort Completed Todos Separately">
+      <label>Always display completed to-dos at the bottom of the list</label>
+      <whatsthis>Check this box if you want all completed to-dos to be always grouped at the bottom of the to-do list.</whatsthis>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" key="Full View Todo">
+      <label>To-do list view uses full window</label>
+      <whatsthis>Check this box to use the full KOrganizer window when displaying the to-do list view. If this box is checked, you will gain some space for the to-do list view, but other widgets, such as the date navigator, the to-do details and the calendars list, will not be displayed.</whatsthis>
+      <default>true</default>
+    </entry>
+
+    <entry type="Bool" key="Record Todos In Journals">
+      <label>Record completed to-dos in journal entries</label>
+      <whatsthis>Check this box to record the completion of a to-do in a new entry of your journal automatically.</whatsthis>
+      <default>false</default>
+    </entry>
+  </group>
+
+<!-- Colors and Fonts Page: Colors Tab -->
+  <group name="Colors">
+    <entry type="Color" key="Holiday Color">
+      <label>Holiday color</label>
+      <whatsthis>Select the holiday color here. The holiday color will be used for the holiday name in the month view and the holiday number in the date navigator.</whatsthis>
+      <default>255, 100, 100</default>
+    </entry>
+
+    <entry type="Color" key="AgendaBackgroundColor" name="AgendaBgColor">
+      <label>Agenda view background color</label>
+      <whatsthis>Select the agenda view background color here.</whatsthis>
+      <default>255, 255, 255</default>
+    </entry>
+
+    <entry type="Color" key="Agenda MarcusBainsLine Line Color">
+      <label>Agenda view current-time line color</label>
+      <whatsthis>Select a color to use for the current-time (Marcus Bains) line.</whatsthis>
+      <tooltip>Use this color for the Agenda View current-time (Marcus Bains) line</tooltip>
+      <default>0,0,255</default>  <!-- eventviews.kcfg default is 255,0,0 -->
+    </entry>
+
+    <entry type="Color" key="WorkingHoursColor">
+      <label>Working hours color</label>
+      <whatsthis>Select the working hours color for the agenda view here.</whatsthis>
+      <default>255, 235, 154</default>
+    </entry>
+
+    <entry type="Color" key="Todo due today Color" name="TodoDueTodayColor">
+      <label>To-do due today color</label>
+      <whatsthis>Select the to-do due today color here.</whatsthis>
+      <default>255, 200, 50</default>
+    </entry>
+
+    <entry type="Color" key="Todo overdue Color" name="TodoOverdueColor">
+      <label>To-do overdue color</label>
+      <whatsthis>Select the to-do overdue color here.</whatsthis>
+      <default>255, 100, 100</default>
+    </entry>
+
+    <entry type="Color" key="Unset Category Color">
+      <label>"No category" color (for "Only category" drawing schemes)</label>
+      <whatsthis>Select a color to use for the "no category" or "unset category" situation, when an item does not belong to any category. This color is used when drawing items in the agenda or month views using the "Only category" scheme.</whatsthis>
+      <tooltip>Use this color when drawing items without a category</tooltip>
+      <default>151, 235, 121</default>
+    </entry>
+  </group>
+
+<!-- Colors and Fonts Page: Fonts Tab -->
+  <group name="Fonts">
+    <entry key="Agenda TimeLabels Font" type="Font">
+      <label>Time bar</label>
+      <whatsthis>Press this button to configure the time bar font. The time bar is the widget that shows the hours in the agenda view. This button will open the &quot;Select Font&quot; dialog, allowing you to choose the hour font for the time bar.</whatsthis>
+    </entry>
+
+    <entry type="Font" key="MonthView Font">
+      <label>Month view</label>
+      <whatsthis>Press this button to configure the month view font. This button will open the &quot;Select Font&quot; dialog, allowing you to choose the font for the items in the month view.</whatsthis>
+    </entry>
+
+    <entry type="Font" key="AgendaView Font">
+      <label>Agenda view</label>
+      <whatsthis>Press this button to configure the agenda view font. This button will open the &quot;Select Font&quot; dialog, allowing you to choose the font for the events in the agenda view.</whatsthis>
+    </entry>
+
+    <entry key="Agenda MarcusBainsLine Font" type="Font">
+      <label>Current-time line</label>
+      <whatsthis>Press this button to configure the current-time line font. This button will open the &quot;Select Font&quot; dialog, allowing you to choose the font for the current-time line in the agenda view.</whatsthis>
+    </entry>
+  </group>
+
+<!-- Group Scheduling Page -->
+  <group name="Group Scheduling">
+    <entry type="Bool" key="Use Groupware Communication">
+      <label>Use Groupware communication</label>
+      <whatsthis>Check this box to enable automatic generation of mails when creating, updating or deleting events (or to-dos) involving other attendees. You should check this box if you want to use the groupware functionality (e.g. Configuring Kontact as a KDE Kolab client).</whatsthis>
+      <default>false</default>
+    </entry>
+  </group>
+</kcfg>

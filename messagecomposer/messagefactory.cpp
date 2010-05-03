@@ -21,6 +21,7 @@
 
 #include "messageinfo.h"
 #include "messagecomposersettings.h"
+#include "util.h"
 
 #include <akonadi/item.h>
 #include <messageviewer/kcursorsaver.h>
@@ -36,6 +37,8 @@
 #include "templateparser/templateparser.h"
 #include <messagecore/mailinglist-magic.h>
 #include <KLocalizedString>
+#include <kcharsets.h>
+#include <QTextCodec>
 
 
 MessageFactory::MessageFactory( const KMime::Message::Ptr& origMsg, Akonadi::Item::Id id )
@@ -258,6 +261,9 @@ MessageFactory::MessageReply MessageFactory::createReply()
     else
       parser.process( m_origMsg );
   }
+
+  applyCharset( msg );
+    
   link( msg, m_id, KPIM::MessageStatus::statusReplied() );
   if ( m_parentFolderId > 0 ) {
     KMime::Headers::Generic *header = new KMime::Headers::Generic( "X-KMail-Fcc", msg.get(), QString::number( m_parentFolderId ), "utf-8" );
@@ -268,6 +274,7 @@ MessageFactory::MessageReply MessageFactory::createReply()
         m_origMsg->headerByType( QLatin1String("X-KMail-EncryptActionEnabled").latin1() )->as7BitString() == "true" ) {
     msg->setHeader( new KMime::Headers::Generic( "X-KMail-EncryptActionEnabled", msg.get(), QLatin1String("true"), "utf-8" ) );
   }
+  msg->assemble();
 
   MessageReply reply;
   reply.msg = msg;
@@ -288,7 +295,7 @@ KMime::Message::Ptr MessageFactory::createForward()
       ( m_origMsg->contentType()->isText() && m_origMsg->contentType()->subType() != "html"
         && m_origMsg->contentType()->subType() != "plain" ) ) ) {
     MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
-  msg->removeHeader("Content-Type");
+    msg->removeHeader("Content-Type");
     msg->removeHeader("Content-Transfer-Encoding");
 
     msg->contentType()->setMimeType( "multipart/mixed" );
@@ -333,9 +340,65 @@ KMime::Message::Ptr MessageFactory::createForward()
     parser.process( m_template, m_origMsg );
   else
     parser.process( m_origMsg );
+    
+  applyCharset( msg );
 
   link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
+  msg->assemble();
   return msg;
+}
+
+QPair< KMime::Message::Ptr, QList< KMime::Content* > > MessageFactory::createAttachedForward(QList< KMime::Message::Ptr > msgs)
+{
+  // create forwarded message with original message as attachment
+  // remove headers that shouldn't be forwarded
+  KMime::Message::Ptr msg( new KMime::Message );
+  QList< KMime::Content* > attachments;
+
+  if( msgs.count() == 0 )
+    msgs << m_origMsg;
+  
+  if( msgs.count() >= 2 ) {
+    // don't respect X-KMail-Identity headers because they might differ for
+    // the selected mails
+    MessageHelper::initHeader( msg, m_identityManager, m_origId );
+  } else if( msgs.count() == 1 ) {
+    MessageHelper::initFromMessage( msg, msgs.first(), m_identityManager );
+    msg->subject()->fromUnicodeString( MessageHelper::forwardSubject( msgs.first() ),"utf-8" );
+  }
+
+  MessageHelper::setAutomaticFields( msg, true );
+  MessageViewer::KCursorSaver busy( MessageViewer::KBusyPtr::busy() );
+  // iterate through all the messages to be forwarded
+  foreach ( const KMime::Message::Ptr& fwdMsg, msgs ) {
+    // remove headers that shouldn't be forwarded
+    MessageCore::StringUtil::removePrivateHeaderFields( fwdMsg );
+    fwdMsg->removeHeader("BCC");
+    // set the part
+    KMime::Content *msgPart = new KMime::Content( fwdMsg.get() );
+    msgPart->contentType()->setMimeType( "message/rfc822" );
+
+    msgPart->contentDisposition()->setFilename( QLatin1String( "forwarded message" ) );
+    msgPart->contentDisposition()->setDisposition( KMime::Headers::CDinline );
+    msgPart->contentDescription()->fromUnicodeString( fwdMsg->from()->asUnicodeString() + QLatin1String( ": " ) + fwdMsg->subject()->asUnicodeString(), "utf-8" );
+    msgPart->setBody( fwdMsg->encodedContent() );
+    msgPart->assemble();
+
+#if 0
+    // THIS HAS TO BE AFTER setCte()!!!!
+    msgPart->setCharset( "" );
+#else
+    kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
+#endif
+    link( fwdMsg, m_origId, KPIM::MessageStatus::statusForwarded() );
+    attachments << msgPart;
+  }
+  
+  applyCharset( msg );
+
+  link( msg, m_id, KPIM::MessageStatus::statusForwarded() );
+//   msg->assemble();
+  return QPair< KMime::Message::Ptr, QList< KMime::Content* > >( msg, QList< KMime::Content* >() << attachments );
 }
 
 
@@ -578,6 +641,53 @@ KMime::Message::Ptr MessageFactory::createMDN( KMime::MDN::ActionMode a,
   return receipt;
 }
 
+QPair< KMime::Message::Ptr, KMime::Content* > MessageFactory::createForwardDigestMIME( QList< KMime::Message::Ptr > msgs )
+{
+  KMime::Message::Ptr msg( new KMime::Message );
+  KMime::Content* digest = new KMime::Content( msg.get() );
+
+  QString mainPartText = i18n("\nThis is a MIME digest forward. The content of the"
+                         " message is contained in the attachment(s).\n\n\n");
+  
+  digest->contentType()->setMimeType( "multipart/digest" );
+  digest->contentType()->setBoundary( KMime::multiPartBoundary() );
+  digest->contentDescription()->fromUnicodeString( QString::fromLatin1("Digest of %1 messages.").arg( msgs.size() ), "utf8" );
+  digest->contentDisposition()->setFilename( QLatin1String( "digest" ) );
+  digest->fromUnicodeString( mainPartText );
+  
+  int id = 0;
+ 
+  foreach( const KMime::Message::Ptr fMsg, msgs ) {
+    if( id == 0 && fMsg->hasHeader( "X-KMail-Identity" ) )
+      id = fMsg->headerByType( "X-KMail-Identity" )->asUnicodeString().toInt();
+
+    MessageCore::StringUtil::removePrivateHeaderFields( fMsg );
+    fMsg->bcc()->clear();
+    
+    KMime::Content* part = new KMime::Content( digest );
+
+    part->contentType()->setMimeType( "message/rfc822" );
+    part->contentType()->setCharset( fMsg->contentType()->charset() );
+    part->contentID()->setIdentifier( fMsg->contentID()->identifier() );
+    part->contentDescription()->fromUnicodeString( fMsg->contentDescription()->asUnicodeString(), "utf8" );
+    part->contentDisposition()->setFilename( QLatin1String( "forwarded message" ) );
+    part->fromUnicodeString( QString::fromLatin1( fMsg->encodedContent() ) );
+    part->assemble();
+
+    link( fMsg, m_origId, KPIM::MessageStatus::statusForwarded() );
+    digest->addContent( part );
+  }
+  digest->assemble();
+
+  id = m_folderId;
+  MessageHelper::initHeader( msg, m_identityManager, id );
+
+//   kDebug() << "digest:" << digest->contents().size() << digest->encodedContent();
+
+  return QPair< KMime::Message::Ptr, KMime::Content* >( msg, digest );
+}
+
+
 void MessageFactory::setIdentityManager( KPIMIdentities::IdentityManager* ident)
 {
   m_identityManager = ident;
@@ -772,6 +882,30 @@ QString MessageFactory::replaceHeadersInString( const KMime::Message::Ptr &msg, 
       idx += replacement.length();
     }
     return result;
+}
+
+void MessageFactory::applyCharset( const KMime::Message::Ptr msg )
+{
+  if( MessageComposer::MessageComposerSettings::forceReplyCharset() ) {
+    msg->contentType()->setCharset( m_origMsg->contentType()->charset() );
+
+    QTextCodec *codec = KGlobal::charsets()->codecForName( QString::fromLatin1( msg->contentType()->charset() ) );
+    if( !codec ) {
+      kError() << "Could not get text codec for charset" << msg->contentType()->charset();
+    } else if( !codec->canEncode( QString::fromUtf8( msg->body() ) ) ) { // charset can't encode body, fall back to preferred
+      const QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
+      QList<QByteArray> chars;
+      foreach( QString charset, charsets )
+        chars << charset.toAscii();
+      QByteArray fallbackCharset = Message::Util::selectCharset( chars, QString::fromUtf8( msg->body() ) );
+      if( fallbackCharset.isEmpty() ) // UTF-8 as fall-through
+        fallbackCharset = "UTF-8";
+      codec = KGlobal::charsets()->codecForName( QString::fromLatin1( fallbackCharset ) );
+      msg->setBody( codec->fromUnicode( QString::fromUtf8( msg->body() ) ) );
+    } else {
+      msg->setBody( codec->fromUnicode( QString::fromUtf8( msg->body() ) ) );
+    }
+  }
 }
 
 

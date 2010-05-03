@@ -164,7 +164,8 @@ bool MainTextJobPrivate::encodeTexts()
     return false;
   }
   encodedPlainText = codec->fromUnicode( sourcePlainText );
-  encodedHtml = codec->fromUnicode( textPart->cleanHtml() );
+  if( !textPart->cleanHtml().isEmpty() )
+    encodedHtml = codec->fromUnicode( textPart->cleanHtml() );
   kDebug() << "Done.";
   return true;
 }

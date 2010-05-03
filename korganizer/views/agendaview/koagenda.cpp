@@ -25,6 +25,7 @@
   without including the source code for Qt in the source distribution.
 */
 #include "koagenda.h"
+#include <kcalprefs.h>
 #include "koagendaitem.h"
 #include "koprefs.h"
 #include "koglobals.h"
@@ -1055,7 +1056,7 @@ void KOAgenda::endItemAction()
         emit startMultiModify( i18n( "Dissociate event from recurrence" ) );
         Incidence::Ptr oldIncSaved( incidence->clone() );
         Incidence::Ptr newInc( mCalendar->dissociateOccurrence(
-          inc, mActionItem->itemDate(), KOPrefs::instance()->timeSpec() ) );
+          inc, mActionItem->itemDate(), KCalPrefs::instance()->timeSpec() ) );
         if ( newInc ) {
           // don't recreate items, they already have the correct position
           emit enableAgendaUpdate( false );
@@ -1091,7 +1092,7 @@ void KOAgenda::endItemAction()
         emit startMultiModify( i18n( "Split future recurrences" ) );
         Incidence::Ptr oldIncSaved( incidence->clone() );
         Incidence::Ptr newInc( mCalendar->dissociateOccurrence(
-          inc, mActionItem->itemDate(), KOPrefs::instance()->timeSpec(), false ) );
+          inc, mActionItem->itemDate(), KCalPrefs::instance()->timeSpec(), false ) );
         if ( newInc ) {
           emit enableAgendaUpdate( false );
 #ifdef AKONADI_PORT_DISABLED // this needs to be done when the async item adding is done and we have the real akonadi item

@@ -534,7 +534,7 @@ void KNArticleManager::copyIntoFolder( KNArticle::List &l, KNFolder::Ptr f )
     } else {
       for ( KNLocalArticle::List::Iterator it = l2.begin(); it != l2.end(); ++it )
         (*it)->KMime::Content::clear(); // no need to keep them in memory
-      knGlobals.memoryManager()->updateCacheEntry(f);
+      knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
     }
 
     f->setNotUnloadable(false);
@@ -556,8 +556,8 @@ void KNArticleManager::moveIntoFolder( KNLocalArticle::List &l, KNFolder::Ptr f 
 
   if ( f->saveArticles( l ) ) {
     for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
-      knGlobals.memoryManager()->updateCacheEntry( (*it) );
-    knGlobals.memoryManager()->updateCacheEntry(f);
+      knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticle>(*it) );
+    knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
   } else {
     for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
       if ( (*it)->isOrphant() )
@@ -588,12 +588,12 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
   }
 
   for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )
-    knGlobals.memoryManager()->removeCacheEntry( (*it) );
+    knGlobals.memoryManager()->removeCacheEntry( boost::static_pointer_cast<KNArticle>(*it) );
 
   KNFolder::Ptr f = boost::static_pointer_cast<KNFolder>( l.first()->collection() );
   if ( f ) {
     f->removeArticles( l, true );
-    knGlobals.memoryManager()->updateCacheEntry( f );
+    knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticleCollection>( f ) );
     return false; // composers for those articles were already removed in removeArticles
   }
   else {
@@ -911,7 +911,7 @@ void KNArticleManager::processJob(KNJobData *j)
     if(j->success()) {
       ArticleWidget::articleChanged( a );
       if(!a->isOrphant()) //orphant articles are deleted by the displaying widget
-        knGlobals.memoryManager()->updateCacheEntry(a);
+        knGlobals.memoryManager()->updateCacheEntry( boost::static_pointer_cast<KNArticle>( a ) );
       if(a->listItem())
         a->updateListItem();
     } else {

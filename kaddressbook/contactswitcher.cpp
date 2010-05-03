@@ -32,8 +32,8 @@ ContactSwitcher::ContactSwitcher( QWidget *parent )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
 
-  mPreviousButton = new QPushButton( i18n( "Previous" ) );
-  mNextButton = new QPushButton( i18n( "Next" ) );
+  mPreviousButton = new QPushButton( i18nc( "Previous contact", "Previous" ) );
+  mNextButton = new QPushButton( i18nc( "Next contact", "Next" ) );
   mStatusLabel = new QLabel();
 
   layout->addWidget( mPreviousButton );

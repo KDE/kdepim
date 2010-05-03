@@ -26,6 +26,7 @@
 */
 
 #include "kotodoview.h"
+#include <kcalprefs.h>
 #include "calprinter.h"
 #include "categoryconfig.h"
 #include "kocorehelper.h"
@@ -420,8 +421,8 @@ void KOTodoView::addTodo( const QString &summary,
 
   Todo::Ptr todo( new Todo );
   todo->setSummary( summary.trimmed() );
-  todo->setOrganizer( Person( KOPrefs::instance()->fullName(),
-                              KOPrefs::instance()->email() ) );
+  todo->setOrganizer( Person( KCalPrefs::instance()->fullName(),
+                              KCalPrefs::instance()->email() ) );
 
   todo->setCategories( categories );
 
@@ -429,8 +430,11 @@ void KOTodoView::addTodo( const QString &summary,
     todo->setRelatedTo( parent.get() );
   }
 
-  if ( !mChanger->addIncidence( todo, this ) ) {
-    Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+  bool userCanceled;
+  if ( !mChanger->addIncidence( todo, this, userCanceled ) ) {
+    if ( !userCanceled ) {
+      Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+    }
   }
 }
 
@@ -645,8 +649,11 @@ void KOTodoView::copyTodoToDate( const QDate &date )
   due.setDate( date );
   todo->setDtDue( due );
 
-  if ( !mChanger->addIncidence( todo, this ) ) {
-    Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+  bool userCanceled;
+  if ( !mChanger->addIncidence( todo, this, userCanceled ) ) {
+    if ( !userCanceled ) {
+      Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+    }
   }
 }
 

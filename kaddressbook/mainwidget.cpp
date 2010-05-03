@@ -29,7 +29,6 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QSplitter>
 #include <QtGui/QStackedWidget>
-#include <QtGui/QTextBrowser>
 
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -56,6 +55,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kselectionproxymodel.h>
+#include <ktextbrowser.h>
 #include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
@@ -291,7 +291,7 @@ void MainWidget::setupGui()
   mDetailsViewStack->addWidget( mContactGroupDetails );
 
   // the details widget for empty items
-  mEmptyDetails = new QTextBrowser( mDetailsViewStack );
+  mEmptyDetails = new KTextBrowser( mDetailsViewStack );
   mDetailsViewStack->addWidget( mEmptyDetails );
 
   // the contact switcher for the simple gui mode
@@ -416,7 +416,7 @@ void MainWidget::print()
 
   QPrintDialog printDialog( &printer, this );
   printDialog.setWindowTitle( i18n( "Print Contacts" ) );
-  if ( !printDialog.exec() )
+  if ( !printDialog.exec() ) //krazy:exclude=crashy
     return;
 
   KABPrinting::PrintingWizard wizard( &printer, allContactsModel(),

@@ -3,6 +3,8 @@
 
   Copyright (c) 2000,2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -24,22 +26,26 @@
 */
 
 #include "eventview.h"
-#include "agendaview.h" // TODO AKONADI_PORT
+
 #include "prefs.h"
 
-#include <libkdepim/pimmessagebox.h>
+#include "recurrenceactions.h"
+
+#include <akonadi/kcal/calendar.h>
+#include <akonadi/kcal/calendarsearch.h>
 #include <akonadi/kcal/collectionselection.h>
 #include <akonadi/kcal/collectionselectionproxymodel.h>
-#include <akonadi/kcal/collectionselection.h>
-#include <akonadi/akonadi_next/entitymodelstatesaver.h>
+#include <akonadi/kcal/incidencechanger.h>
 #include <akonadi/kcal/utils.h>
-#include <Akonadi/Item>
+#include <akonadi/akonadi_next/entitymodelstatesaver.h>
 
+#include <kholidays/holidayregion.h>
 #include <KCal/Incidence>
 #include <KLocale>
 #include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 #include <KRandom>
+#include <KGuiItem>
 
 #include <QMenu>
 #include <QApplication>
@@ -47,14 +53,6 @@
 
 using namespace Akonadi;
 using namespace EventViews;
-
-CollectionSelection* EventView::sGlobalCollectionSelection = 0;
-
-/* static */
-void EventView::setGlobalCollectionSelection( CollectionSelection* s )
-{
-  sGlobalCollectionSelection = s;
-}
 
 class EventView::Private
 {
@@ -66,7 +64,12 @@ class EventView::Private
         calendar( 0 ),
         customCollectionSelection( 0 ),
         collectionSelectionModel( 0 ),
-        stateSaver( 0 )
+        stateSaver( 0 ),
+        mReturnPressed( false ),
+        mTypeAhead( false ),
+        mTypeAheadReceiver( 0 ),
+        mPrefs( new Prefs() ),
+        mChanger( 0 )
     {
       QByteArray cname = q->metaObject()->className();
       cname.replace( ":", "_" );
@@ -86,6 +89,10 @@ class EventView::Private
       delete collectionSelectionModel;
     }
 
+    void setUpModels();
+    void reconnectCollectionSelection();
+
+  public:
     Akonadi::Calendar *calendar;
     CalendarSearch *calendarSearch;
     CollectionSelection *customCollectionSelection;
@@ -96,9 +103,31 @@ class EventView::Private
     KDateTime endDateTime;
     KDateTime actualStartDateTime;
     KDateTime actualEndDateTime;
-    void setUpModels();
-    void reconnectCollectionSelection();
+
+    /* When we receive a QEvent with a key_Return release
+     * we will only show a new event dialog if we previously received a
+     * key_Return press, otherwise a new event dialog appears when
+     * you hit return in some yes/no dialog */
+    bool mReturnPressed;
+
+    bool mTypeAhead;
+    QObject *mTypeAheadReceiver;
+    QList<QEvent*> mTypeAheadEvents;
+    static Akonadi::CollectionSelection* sGlobalCollectionSelection;
+
+    KHolidays::HolidayRegionPtr mHolidayRegion;
+    PrefsPtr mPrefs;
+
+    IncidenceChanger *mChanger;
 };
+
+CollectionSelection* EventView::Private::sGlobalCollectionSelection = 0;
+
+/* static */
+void EventView::setGlobalCollectionSelection( CollectionSelection* s )
+{
+  Private::sGlobalCollectionSelection = s;
+}
 
 void EventView::Private::setUpModels()
 {
@@ -143,13 +172,8 @@ void EventView::Private::reconnectCollectionSelection()
 }
 
 
-EventView::EventView( QWidget *parent ) : QWidget( parent ), mChanger( 0 ), d( new Private( this ) )
+EventView::EventView( QWidget *parent ) : QWidget( parent ), d( new Private( this ) )
 {
-  //TODO_SPLIT, tirar o unused
-  Q_UNUSED( parent );
-  mReturnPressed = false;
-  mTypeAhead = false;
-  mTypeAheadReceiver = 0;
 
   //AKONADI_PORT review: the FocusLineEdit in the editor emits focusReceivedSignal(), which triggered finishTypeAhead.
   //But the global focus widget in QApplication is changed later, thus subsequent keyevents still went to this view, triggering another editor, for each keypress
@@ -159,6 +183,7 @@ EventView::EventView( QWidget *parent ) : QWidget( parent ), mChanger( 0 ), d( n
 
 EventView::~EventView()
 {
+  delete d;
 }
 
 void EventView::defaultAction( const Item &aitem )
@@ -178,42 +203,57 @@ void EventView::defaultAction( const Item &aitem )
   }
 }
 
+void EventView::setHolidayRegion( const KHolidays::HolidayRegionPtr &holidayRegion )
+{
+  d->mHolidayRegion = holidayRegion;
+}
+
 int EventView::showMoveRecurDialog( const Item &aitem, const QDate &date )
 {
   const Incidence::Ptr inc = Akonadi::incidence( aitem );
-  int answer = KMessageBox::Ok;
+
+  KDateTime dateTime( date, preferences()->timeSpec() );
+
+  int availableOccurrences = RecurrenceActions::availableOccurrences( inc, dateTime );
+
+  const QString caption = i18nc( "@title:window", "Changing Recurring Item" );
   KGuiItem itemFuture( i18n( "Also &Future Items" ) );
+  KGuiItem itemSelected( i18n( "Only &This Item" ) );
+  KGuiItem itemAll( i18n( "&All Occurrences" ) );
 
-  KDateTime dateTime( date, Prefs::instance()->timeSpec() );
-  bool isFirst = !inc->recurrence()->getPreviousDateTime( dateTime ).isValid();
-  bool isLast  = !inc->recurrence()->getNextDateTime( dateTime ).isValid();
+  switch ( availableOccurrences ) {
+    case RecurrenceActions::NoOccurrence:
+        return RecurrenceActions::NoOccurrence;
+    case RecurrenceActions::SelectedOccurrence:
+      return RecurrenceActions::SelectedOccurrence;
 
-  QString message;
+    case RecurrenceActions::AllOccurrences: {
+      Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
 
-  if ( !isFirst && !isLast ) {
-    itemFuture.setEnabled( true );
-    message = i18n( "The item you try to change is a recurring item. "
-                    "Shall the changes be applied only to this single occurrence, "
-                    "also to future items, or to all items in the recurrence?" );
-  } else {
-    itemFuture.setEnabled( false );
-    message = i18n( "The item you try to change is a recurring item. "
-                    "Shall the changes be applied only to this single occurrence "
-                    "or to all items in the recurrence?" );
+      // if there are all kinds of ooccurrences (i.e. past present and futur) the user might
+      // want the option only apply to current and future occurrences, leaving the past ones
+      // untouched.
+      // provide a third choice for that ("Also future")
+      if ( availableOccurrences == RecurrenceActions::AllOccurrences ) {
+        const QString message = i18n( "The item you are trying to change is a recurring item. "
+                                      "Should the changes be applied only to this single occurrence, "
+                                      "also to future items, or to all items in the recurrence?" );
+        return RecurrenceActions::questionSelectedFutureAllCancel( message, caption, itemSelected, itemFuture, itemAll, this );
+      }
+    }
+
+    default: {
+      Q_ASSERT( availableOccurrences & RecurrenceActions::SelectedOccurrence );
+      // selected occurrence and either past or future occurrences
+      const QString message = i18n( "The item you are trying to change is a recurring item. "
+                                    "Should the changes be applied only to this single occurrence "
+                                    "or to all items in the recurrence?" );
+      return RecurrenceActions::questionSelectedAllCancel( message, caption, itemSelected, itemAll, this );
+      break;
+    }
   }
 
-  if ( !( isFirst && isLast ) ) {
-    answer = PIMMessageBox::fourBtnMsgBox(
-      this,
-      QMessageBox::Question,
-      message,
-      i18n( "Changing Recurring Item" ),
-      KGuiItem( i18n( "Only &This Item" ) ),
-      itemFuture,
-      KGuiItem( i18n( "&All Occurrences" ) ) );
-  }
-
-  return answer;
+  return RecurrenceActions::NoOccurrence;
 }
 
 void EventView::setCalendar( Akonadi::Calendar *cal )
@@ -231,6 +271,23 @@ Akonadi::Calendar *EventView::calendar() const
   return d->calendar;
 }
 
+void EventView::setPreferences( const PrefsPtr &preferences )
+{
+  if ( d->mPrefs != preferences ) {
+    if ( preferences ) {
+        d->mPrefs = preferences;
+    } else {
+        d->mPrefs = PrefsPtr( new Prefs() );
+    }
+    updateConfig();
+  }
+}
+
+PrefsPtr EventView::preferences() const
+{
+  return d->mPrefs;
+}
+
 Akonadi::CalendarSearch* EventView::calendarSearch() const
 {
   return d->calendarSearch;
@@ -243,7 +300,7 @@ void EventView::dayPassed( const QDate & )
 
 void EventView::setIncidenceChanger( IncidenceChanger *changer )
 {
-  mChanger = changer;
+  d->mChanger = changer;
 }
 
 void EventView::flushView()
@@ -256,6 +313,16 @@ EventView* EventView::viewAt( const QPoint & )
 
 void EventView::updateConfig()
 {
+}
+
+QDateTime EventView::selectionStart() const
+{
+  return QDateTime();
+}
+
+QDateTime EventView::selectionEnd() const
+{
+  return QDateTime();
 }
 
 bool EventView::supportsZoom() const
@@ -311,8 +378,8 @@ void EventView::showConfigurationDialog( QWidget* )
 
 
 bool EventView::processKeyEvent( QKeyEvent *ke )
-{ // TODO_SPLIT
-  Q_UNUSED( ke );
+{ // TODO_SPLIT: review this
+
   // If Return is pressed bring up an editor for the current selected time span.
 /*  if ( ke->key() == Qt::Key_Return ) {
     if ( ke->type() == QEvent::KeyPress ) {
@@ -374,7 +441,6 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
       if ( !mTypeAhead ) {
         mTypeAhead = true;
         // TODO(AKONADI_PORT) Remove this hack when the calendarview is ported to CalendarSearch
-        // TODO_SPLIT rename singleagendaview to agendaview
         if ( AgendaView *view = dynamic_cast<AgendaView*>( this ) ) {
           if ( view->collection() >= 0 ) {
             emit newEventSignal( Akonadi::Collection::List() << Collection( view->collection() ) );
@@ -393,25 +459,25 @@ bool EventView::processKeyEvent( QKeyEvent *ke )
 
 void EventView::setTypeAheadReceiver( QObject *o )
 {
-  mTypeAheadReceiver = o;
+  d->mTypeAheadReceiver = o;
 }
 
 void EventView::focusChanged( QWidget*, QWidget* now )
 {
-  if ( mTypeAhead && now && now == mTypeAheadReceiver )
+  if ( d->mTypeAhead && now && now == d->mTypeAheadReceiver )
     finishTypeAhead();
 }
 
 void EventView::finishTypeAhead()
 {
-  if ( mTypeAheadReceiver ) {
-    foreach ( QEvent *e, mTypeAheadEvents ) {
-      QApplication::sendEvent( mTypeAheadReceiver, e );
+  if ( d->mTypeAheadReceiver ) {
+    foreach ( QEvent *e, d->mTypeAheadEvents ) {
+      QApplication::sendEvent( d->mTypeAheadReceiver, e );
     }
   }
-  qDeleteAll( mTypeAheadEvents );
-  mTypeAheadEvents.clear();
-  mTypeAhead = false;
+  qDeleteAll( d->mTypeAheadEvents );
+  d->mTypeAheadEvents.clear();
+  d->mTypeAhead = false;
 }
 
 CollectionSelection* EventView::collectionSelection() const
@@ -464,6 +530,11 @@ bool EventView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &a
   return false;
 }
 
+Akonadi::IncidenceChanger *EventView::changer() const
+{
+  return d->mChanger;
+}
+
 void EventView::doRestoreConfig( const KConfigGroup & )
 {
 }
@@ -494,6 +565,32 @@ void EventView::handleBackendError( const QString &errorString )
   kError() << errorString;
 }
 
+bool EventView::isWorkDay( const QDate &date ) const
+{
+  int mask( ~( preferences()->workWeekMask() ) );
+
+  bool nonWorkDay = ( mask & ( 1 << ( date.dayOfWeek() - 1 ) ) );
+  if ( preferences()->excludeHolidays() && d->mHolidayRegion ) {
+    const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
+    for ( int i = 0; i < list.count(); ++i ) {
+      nonWorkDay = nonWorkDay || ( list.at( i ).dayType() == KHolidays::Holiday::NonWorkday );
+    }
+  }
+  return !nonWorkDay;
+}
+
+QStringList EventView::holidayNames( const QDate &date ) const
+{
+  QStringList hdays;
+
+  if ( d->mHolidayRegion ) {
+    const KHolidays::Holiday::List list = d->mHolidayRegion->holidays( date );
+    Q_FOREACH( const KHolidays::Holiday &holiday, list ) {
+        hdays.append( holiday.text() );
+    }
+  }
+  return hdays;
+}
 
 void EventView::backendErrorOccurred()
 {
@@ -524,7 +621,7 @@ void EventView::rowsAboutToBeRemoved( const QModelIndex& parent, int start, int 
 
 CollectionSelection* EventView::globalCollectionSelection()
 {
-  return sGlobalCollectionSelection;
+  return Private::sGlobalCollectionSelection;
 }
 
 /* static */
@@ -542,10 +639,10 @@ bool EventView::usesCompletedTodoPixmap( const Item &aitem, const QDate &date )
     if ( todo->allDay() ) {
       time = QTime( 0, 0 );
     } else {
-      time = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() ).time();
+      time = todo->dtDue().toTimeSpec( preferences()->timeSpec() ).time();
     }
 
-    KDateTime itemDateTime( date, time, Prefs::instance()->timeSpec() );
+    KDateTime itemDateTime( date, time, preferences()->timeSpec() );
 
     return itemDateTime < todo->dtDue( false );
 
@@ -565,3 +662,4 @@ void EventView::setIdentifier( const QByteArray &identifier )
 }
 
 #include "eventview.moc"
+// kate: space-indent on; indent-width 2; replace-tabs on;

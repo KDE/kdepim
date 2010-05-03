@@ -85,6 +85,15 @@ public:
     is not stored in any folder. Marks this message as forwarded. */
   KMime::Message::Ptr createForward();
 
+  /**
+   * Create a forward from the given list of messages, attaching each
+   *  message to be forwarded to the new forwarded message.
+   *
+   * If no list is passed, use the original message passed in the MessageFactory
+   *  constructor.
+   */
+  QPair< KMime::Message::Ptr, QList< KMime::Content* > > createAttachedForward( QList<KMime::Message::Ptr> msgs = QList<KMime::Message::Ptr>() );
+
   /** Create a new message that is a redirect to this message, filling all
     required header fields with the proper values. The returned message
     is not stored in any folder. Marks this message as replied.
@@ -120,6 +129,18 @@ public:
                                   int mdnQuoteOriginal = 0,
                                   QList<KMime::MDN::DispositionModifier> m=QList<KMime::MDN::DispositionModifier>() );
 
+  /**
+   * Create a new forwarded MIME digest. If the user is trying to forward multiple messages
+   *  at once all inline, they can choose to have them be compiled into a single digest
+   *  message.
+   *
+   * This will return a header message and individual message parts to be set as
+   *  attachments.
+   *
+   * @param msgs List of messages to be composed into a digest
+   */
+  QPair< KMime::Message::Ptr, KMime::Content* > createForwardDigestMIME( QList<KMime::Message::Ptr> msgs );
+  
   /**
    * Set the identity manager to be used when creating messages.
    * Required to be set before create* is called, otherwise the created messages
@@ -224,6 +245,14 @@ private:
   uint identityUoid(const KMime::Message::Ptr &msg );
 
   QString replaceHeadersInString( const KMime::Message::Ptr &msg, const QString & s );
+
+  /*
+   * If force charset option is enabled, try to set the original charset
+   *  in the newly created message. If unable to encode, fall back to
+   *  preferred charsets, and if all fail, use UTF-8.
+   */
+  void applyCharset( const KMime::Message::Ptr msg );
+  
   QByteArray getRefStr( const KMime::Message::Ptr &msg );
   
   // TODO move IdentityManager used in KMail to kdepimlibs when not in freeze

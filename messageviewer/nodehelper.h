@@ -76,8 +76,6 @@ public:
     void setNodeUnprocessed( KMime::Content* node, bool recurse );
     bool nodeProcessed( KMime::Content* node ) const;
     void clear();
-    /** Remove all reference for this node from the internal structures (encryption state, etc.) */
-    void clearNode( KMime::Content* node );
 
     void setEncryptionState( KMime::Content* node, const KMMsgEncryptionState state );
     KMMsgEncryptionState encryptionState( KMime::Content *node ) const;
@@ -109,6 +107,10 @@ public:
 
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
+
+    void attachExtraContent( KMime::Message::Ptr node, KMime::Content* content );
+    void removeExtraContent( KMime::Message::Ptr node );
+    QList<KMime::Content*> extraContents( KMime::Message::Ptr node );
 
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
@@ -246,6 +248,7 @@ private:
     QStringList mTempFiles;
     QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
+    QMap<KMime::Message::Ptr, QList<KMime::Content*> > mExtraContents;
 };
 
 }

@@ -1744,12 +1744,12 @@ void KMComposeWin::setMsg( const KMime::Message::Ptr &newMsg, bool mayAutoSign,
   // Set the editor text and charset
   mEditor->setText( otp.textualContent() );
   bool shouldSetCharset = true;
-  if ( !( mContext == Reply || mContext == ReplyToAll || mContext == Forward ) && GlobalSettings::forceReplyCharset() )
+  if ( !( mContext == Reply || mContext == ReplyToAll || mContext == Forward ) && MessageComposer::MessageComposerSettings::forceReplyCharset() )
     shouldSetCharset = false;
   if ( shouldSetCharset && !otp.textualContentCharset().isEmpty() )
-    setCharset( otp.textualContentCharset() );
-  else
-    setAutoCharset();
+    mOriginalPreferredCharset = otp.textualContentCharset();
+  // always set auto charset, but prefer original when composing if force reply is set.
+  setAutoCharset();
 
   // Set the HTML text and collect HTML images
   if ( isHTMLMail( mMsg.get() ) ) {
@@ -2237,7 +2237,11 @@ QList< Message::Composer* > KMComposeWin::generateCryptoMessages( bool sign, boo
 void KMComposeWin::fillGlobalPart( Message::GlobalPart *globalPart )
 {
   globalPart->setParentWidgetForGui( this );
-  globalPart->setCharsets( mCodecAction->mimeCharsets() );
+  QList< QByteArray > charsets = mCodecAction->mimeCharsets();
+  if( !mOriginalPreferredCharset.isEmpty() ) {
+    charsets.insert( 0, mOriginalPreferredCharset );
+  }
+  globalPart->setCharsets( charsets );
   globalPart->setMDNRequested( mRequestMDNAction->isChecked() );
 }
 
@@ -2588,10 +2592,18 @@ bool KMComposeWin::queryExit ()
 void KMComposeWin::addAttach( KMime::Content *msgPart )
 {
   KPIM::AttachmentPart::Ptr part( new KPIM::AttachmentPart );
-  part->setName( msgPart->contentDescription()->asUnicodeString() );
-  part->setFileName( msgPart->contentDisposition()->filename() );
-  part->setMimeType( msgPart->contentType()->mimeType() );
-  part->setData( msgPart->decodedContent() );
+  if( msgPart->contentType()->mimeType() == "multipart/digest" ||
+      msgPart->contentType()->mimeType() == "message/rfc822" ) {
+    // if it is a digest or a full message, use the encodedContent() of the attachment,
+    // which already has the proper headers
+    part->setData( msgPart->encodedContent() );
+    part->setMimeType( msgPart->contentType()->mimeType() );
+  } else {
+    part->setName( msgPart->contentDescription()->asUnicodeString() );
+    part->setFileName( msgPart->contentDisposition()->filename() );
+    part->setMimeType( msgPart->contentType()->mimeType() );
+    part->setData( msgPart->decodedContent() );
+  }
   mAttachmentController->addAttachment( part );
 }
 //-----------------------------------------------------------------------------

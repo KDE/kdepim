@@ -54,6 +54,7 @@
 #include "kotodoeditor.h"
 #include "koeventeditor.h"
 #include "kojournaleditor.h"
+#include "kogroupwareintegration.h"
 
 class CalItemModel : public Akonadi::ItemModel
 {
@@ -146,6 +147,10 @@ class MainWidget : public QWidget
         m_collectionproxymodel( new Akonadi::CollectionFilterProxyModel( this ) ),
         m_itemmodel( new CalItemModel( this ) )
     {
+      if ( !KOGroupwareIntegration::isActive() ) {
+        KOGroupwareIntegration::activate();
+      }
+
       m_collectionproxymodel->setSourceModel(m_collectionmodel);
       m_collectionproxymodel->addMimeTypeFilter( QString::fromLatin1( "text/calendar" ) );
 
@@ -190,6 +195,8 @@ class MainWidget : public QWidget
                this, SLOT(selectionChanged()) );
       connect( m_itemview, SIGNAL(activated(QModelIndex)),
                this, SLOT(itemActivated()) );
+
+      m_changer = new IncidenceChanger( 0, this, Collection() );
     }
     virtual ~MainWidget() {}
 
@@ -231,12 +238,11 @@ class MainWidget : public QWidget
 
       if ( incidence->type() == "Event" ) {
         KOEventEditor *editor = new KOEventEditor( this );
-        editor->init();
+        editor->setIncidenceChanger( m_changer );
         editor->editIncidence( item, QDate() );
         editor->show();
       } else if( incidence->type() == "Todo" ) {
         KOTodoEditor *editor = new KOTodoEditor( this );
-        editor->init();
         /*
         createCategoryEditor();
         connect( editor, SIGNAL(deleteIncidenceSignal(Incidence *)),
@@ -251,12 +257,13 @@ class MainWidget : public QWidget
         connect( editor, SIGNAL(deleteAttendee(Incidence *)),
                  mMainView, SIGNAL(cancelAttendees(Incidence *)) );
         */
+        editor->setIncidenceChanger( m_changer );
         editor->editIncidence( item, QDate() );
         editor->show();
 
       } else if( incidence->type() == "Journal" ) {
         KOJournalEditor *editor = new KOJournalEditor( this );
-        editor->init();
+        editor->setIncidenceChanger( m_changer );
         editor->editIncidence( item, QDate() );
         editor->show();
       } else {
@@ -271,6 +278,7 @@ class MainWidget : public QWidget
     CalItemModel *m_itemmodel;
     QSortFilterProxyModel *m_itemproxymodel;
     Akonadi::ItemView *m_itemview;
+    IncidenceChanger *m_changer;
 };
 
 int main( int argc, char **argv )

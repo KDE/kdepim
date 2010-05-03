@@ -136,7 +136,7 @@ public:
 
 
 ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
-                                    NodeHelper* nodeHelper,
+                                    MessageViewer::NodeHelper* nodeHelper,
                                     const Kleo::CryptoBackend::Protocol * protocol,
                                     bool showOnlyOneMimePart, bool keepEncryptions,
                                     bool includeSignatures,
@@ -208,8 +208,7 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
   if ( !otp.textualContentCharset().isEmpty() )
     mTextualContentCharset = otp.textualContentCharset();
 
-  mNodeHelper->clearNode( newNode );
-  delete newNode;
+  mNodeHelper->attachExtraContent( item.payload<KMime::Message::Ptr>(), newNode );
 }
 
 

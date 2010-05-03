@@ -22,6 +22,7 @@
 #include "editdlgtypes.moc"
 #include "editdlgprivate.h"
 
+#include "autoqpointer.h"
 #include "buttongroup.h"
 #include "checkbox.h"
 #include "colourbutton.h"
@@ -54,13 +55,13 @@
 #include <QVBoxLayout>
 #include <QDragEnterEvent>
 
+#include <akonadi/contact/emailaddressselectiondialog.h>
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kio/netaccess.h>
 #include <kfileitem.h>
 #include <kmessagebox.h>
 #include <khbox.h>
-#include <kabc/addresseedialog.h>
 #include <kdebug.h>
 
 #include <kcal/icaldrag.h>
@@ -1367,10 +1368,17 @@ void EditEmailAlarmDlg::type_trySuccessMessage(ShellProcess*, const QString&)
 */
 void EditEmailAlarmDlg::openAddressBook()
 {
-	KABC::Addressee a = KABC::AddresseeDialog::getAddressee(this);
-	if (a.isEmpty())
+	// Use AutoQPointer to guard against crash on application exit while
+	// the dialogue is still open. It prevents double deletion (both on
+	// deletion of MainWindow, and on return from this function).
+	AutoQPointer<Akonadi::EmailAddressSelectionDialog> dlg = new Akonadi::EmailAddressSelectionDialog(this);
+	if (dlg->exec() != QDialog::Accepted)
 		return;
-	Person person(a.realName(), a.preferredEmail());
+
+	Akonadi::EmailAddressSelectionView::Selection::List selections = dlg->selectedAddresses();
+	if (selections.isEmpty())
+		return;
+	Person person(selections.first().name(), selections.first().email());
 	QString addrs = mEmailToEdit->text().trimmed();
 	if (!addrs.isEmpty())
 		addrs += ", ";

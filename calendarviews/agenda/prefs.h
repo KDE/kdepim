@@ -36,6 +36,11 @@ namespace Akonadi
   class Collection;
 }
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
+
+class KCoreConfigSkeleton;
 class QColor;
 class QFont;
 class QStringList;
@@ -46,20 +51,24 @@ namespace EventViews
 class EVENTVIEWS_EXPORT Prefs
 {
   public:
+
+    /** Creates an instance of Prefs with just base config
+    */
+    Prefs();
+
+    /** Creates an instance of Prefs with base config and application override config
+
+        The passed @p appConfig will be queried for matching items whenever one of the
+        accessors is called. If one is found it is used for setting/getting the value
+        otherwise the one from the eventviews base config is used.
+    */
+    explicit Prefs( KCoreConfigSkeleton *appConfig );
+
     ~Prefs();
 
-    /** Get instance of Prefs. It is made sure that there is only one
-    instance. */
-    static Prefs *instance();
+    void readConfig();
 
-    /** Set preferences to default values */
-    void usrSetDefaults();
-
-    /** Read preferences from config file */
-    void usrReadConfig();
-
-    /** Write preferences to config file */
-    void usrWriteConfig();
+    void writeConfig();
 
   public:
     void setMarcusBainsShowSeconds( bool showSeconds );
@@ -98,7 +107,7 @@ class EVENTVIEWS_EXPORT Prefs
     void setAgendaGridBackgroundColor( const QColor &color );
     QColor agendaGridBackgroundColor() const;
 
-    void setEnableAgendaItemIcons( const bool enable );
+    void setEnableAgendaItemIcons( bool enable );
     bool enableAgendaItemIcons() const;
 
     void setTodosUseCategoryColors( bool useColors );
@@ -119,6 +128,9 @@ class EVENTVIEWS_EXPORT Prefs
     void setAgendaViewFont( const QFont &font );
     QFont agendaViewFont() const;
 
+    void setMonthViewFont( const QFont &font );
+    QFont monthViewFont() const;
+
     void setEnableToolTips( bool enable );
     bool enableToolTips() const;
 
@@ -136,17 +148,6 @@ class EVENTVIEWS_EXPORT Prefs
 
     void setExcludeHolidays( bool exclude );
     bool excludeHolidays() const;
-
-  protected:
-    void setTimeZoneDefault();
-
-    /** Fill empty mail fields with default values. */
-    void fillMailDefaults();
-
-  private:
-    Prefs();
-
-    static Prefs *mInstance;
 
   public:
     // preferences data
@@ -192,6 +193,8 @@ class EVENTVIEWS_EXPORT Prefs
     class Private;
     Private *const d;
 };
+
+typedef boost::shared_ptr<Prefs> PrefsPtr;
 
 } // namespace EventViews
 

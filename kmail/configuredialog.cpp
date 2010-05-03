@@ -2616,6 +2616,7 @@ ComposerPageCustomTemplatesTab::ComposerPageCustomTemplatesTab( QWidget * parent
 
   connect( mWidget, SIGNAL( changed() ),
            this, SLOT( slotEmitChanged( void ) ) );
+  connect( mWidget, SIGNAL( templatesUpdated() ), KMKernel::self(), SLOT( updatedTemplates() ) );
 }
 
 void ComposerPage::CustomTemplatesTab::doLoadFromGlobalSettings()
@@ -2800,7 +2801,7 @@ void ComposerPage::CharsetTab::doLoadOther()
 {
   KConfigGroup composer( KMKernel::config(), "Composer" );
 
-  QStringList charsets = GlobalSettings::preferedCharsets();
+  QStringList charsets = MessageComposer::MessageComposerSettings::preferredCharsets();
   for ( QStringList::Iterator it = charsets.begin() ;
         it != charsets.end() ; ++it )
     if ( (*it) == QString::fromLatin1("locale") ) {
@@ -2810,7 +2811,7 @@ void ComposerPage::CharsetTab::doLoadOther()
     }
 
   mCharsetListEditor->setStringList( charsets );
-  mKeepReplyCharsetCheck->setChecked( GlobalSettings::forceReplyCharset() );
+  mKeepReplyCharsetCheck->setChecked( MessageComposer::MessageComposerSettings::forceReplyCharset() );
 }
 
 void ComposerPage::CharsetTab::save()
@@ -2822,8 +2823,8 @@ void ComposerPage::CharsetTab::save()
   for ( ; it != charsetList.end() ; ++it )
     if ( (*it).endsWith( QLatin1String("(locale)") ) )
       (*it) = "locale";
-  GlobalSettings::setPreferedCharsets( charsetList );
-  GlobalSettings::setForceReplyCharset( mKeepReplyCharsetCheck->isChecked() );
+  MessageComposer::MessageComposerSettings::setPreferredCharsets( charsetList );
+  MessageComposer::MessageComposerSettings::setForceReplyCharset( mKeepReplyCharsetCheck->isChecked() );
 }
 
 QString ComposerPage::HeadersTab::helpAnchor() const

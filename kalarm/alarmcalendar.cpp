@@ -455,7 +455,7 @@ void AlarmCalendar::updateKAEvents(AlarmResource* resource, KCal::CalendarLocal*
 			continue;    // ignore events without alarms
 
 		KAEvent* event = new KAEvent(kcalevent);
-		if (!event->valid())
+		if (!event->isValid())
 		{
 			kWarning() << "Ignoring unusable event" << kcalevent->uid();
 			delete event;
@@ -622,7 +622,7 @@ bool AlarmCalendar::importAlarms(QWidget* parent, AlarmResource* resource)
 		for (int i = 0, end = events.count();  i < end;  ++i)
 		{
 			const Event* event = events[i];
-			if (event->alarms().isEmpty()  ||  !KAEvent(event).valid())
+			if (event->alarms().isEmpty()  ||  !KAEvent(event).isValid())
 				continue;    // ignore events without alarms, or usable alarms
 			KCalEvent::Status type = KCalEvent::status(event);
 			if (type == KCalEvent::TEMPLATE)
@@ -1208,7 +1208,7 @@ KAEvent* AlarmCalendar::templateEvent(const QString& templateName)
 * Return all events in the calendar which contain alarms.
 * Optionally the event type can be filtered, using an OR of event types.
 */
-KAEvent::List AlarmCalendar::events(AlarmResource* resource, KCalEvent::Status type)
+KAEvent::List AlarmCalendar::events(AlarmResource* resource, KCalEvent::Statuses type)
 {
 	KAEvent::List list;
 	if (!mCalendar  ||  (resource && mCalType != RESOURCES))
@@ -1258,7 +1258,7 @@ Event::List AlarmCalendar::kcalEvents(AlarmResource* resource, KCalEvent::Status
 		Event* event = list[i];
 		if (event->alarms().isEmpty()
 		||  (type != KCalEvent::EMPTY  &&  !(type & KCalEvent::status(event)))
-		||  !KAEvent(event).valid())
+		||  !KAEvent(event).isValid())
 			list.removeAt(i);
 		else
 			++i;
@@ -1270,7 +1270,7 @@ Event::List AlarmCalendar::kcalEvents(AlarmResource* resource, KCalEvent::Status
 * Return all events which have alarms falling within the specified time range.
 * 'type' is the OR'ed desired event types.
 */
-KAEvent::List AlarmCalendar::events(const KDateTime& from, const KDateTime& to, KCalEvent::Status type)
+KAEvent::List AlarmCalendar::events(const KDateTime& from, const KDateTime& to, KCalEvent::Statuses type)
 {
 	kDebug() << from << "-" << to;
 	KAEvent::List evnts;

@@ -2,6 +2,8 @@
   This file is part of KOrganizer.
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,12 +28,8 @@
 #include "agenda.h"
 #include "agendaitem.h"
 #include "alternatelabel.h"
-#include "globals.h"
 #include "prefs.h"
 #include "timelabelszone.h"
-
-//TODO_SPLIT
-//#include "akonadicollectionview.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/collectionselection.h>
@@ -40,41 +38,62 @@
 
 #include <KCal/CalFilter>
 
+#include <QStyle>
 #include <KCalendarSystem>
 #include <KGlobalSettings>
 #include <KGlobal>
 #include <KHBox>
 #include <KVBox>
+#include <KIconLoader>
+#include <KComponentData>
+#include <KConfigGroup>
 
+#include <QApplication>
 #include <QScrollBar>
 #include <QScrollArea>
 #include <QDrag>
 #include <QGridLayout>
 #include <QPainter>
 #include <QSplitter>
+#include <QTimer>
 #include <KWordWrap>
 
 using namespace Akonadi;
 using namespace EventViews;
 
-EventIndicator::EventIndicator( Location loc, QWidget *parent )
-  : QFrame( parent )
+class EventIndicator::Private
 {
-  mColumns = 1;
-  mEnabled.resize( mColumns );
-  mLocation = loc;
+  EventIndicator *const q;
 
-  if ( mLocation == Top ) {
-    mPixmap = Globals::self()->smallIcon( "arrow-up-double" );
-  } else {
-    mPixmap = Globals::self()->smallIcon( "arrow-down-double" );
-  }
+  public:
+    Private( EventIndicator *parent, EventIndicator::Location loc )
+      : q( parent ), mColumns( 1 ), mLocation( loc )
+    {
+      mEnabled.resize( mColumns );
 
-  setMinimumHeight( mPixmap.height() );
+      if ( mLocation == Top ) {
+        mPixmap = SmallIcon( "arrow-up-double" );
+      } else {
+        mPixmap = SmallIcon( "arrow-down-double" );
+      }
+    }
+
+  public:
+    int mColumns;
+    Location mLocation;
+    QPixmap mPixmap;
+    QVector<bool> mEnabled;
+};
+
+EventIndicator::EventIndicator( Location loc, QWidget *parent )
+  : QFrame( parent ), d( new Private( this, loc ) )
+{
+  setMinimumHeight( d->mPixmap.height() );
 }
 
 EventIndicator::~EventIndicator()
 {
+  delete d;
 }
 
 void EventIndicator::paintEvent( QPaintEvent *event )
@@ -83,150 +102,236 @@ void EventIndicator::paintEvent( QPaintEvent *event )
 
   QPainter painter( this );
 
-  int i;
-  for ( i=0; i<mColumns; ++i ) {
-    if ( mEnabled[i] ) {
-      int cellWidth = contentsRect().right() / mColumns;
-      int xOffset = Globals::self()->reverseLayout() ?
-                    ( mColumns - 1 - i ) * cellWidth + cellWidth / 2 - mPixmap.width() / 2 :
-                    i * cellWidth + cellWidth / 2 - mPixmap.width() / 2;
-      painter.drawPixmap( QPoint( xOffset, 0 ), mPixmap );
+  for ( int i = 0; i < d->mColumns; ++i ) {
+    if ( d->mEnabled[ i ] ) {
+      int cellWidth = contentsRect().right() / d->mColumns;
+      int xOffset = QApplication::isRightToLeft() ?
+                    ( d->mColumns - 1 - i ) * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2 :
+                    i * cellWidth + cellWidth / 2 - d->mPixmap.width() / 2;
+      painter.drawPixmap( QPoint( xOffset, 0 ), d->mPixmap );
     }
   }
 }
 
 void EventIndicator::changeColumns( int columns )
 {
-  mColumns = columns;
-  mEnabled.resize( mColumns );
+  d->mColumns = columns;
+  d->mEnabled.resize( d->mColumns );
 
   update();
 }
 
 void EventIndicator::enableColumn( int column, bool enable )
 {
-  mEnabled[column] = enable;
+  d->mEnabled[ column ] = enable;
 }
 
 ////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////
+
+class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
+{
+  AgendaView *const q;
+
+  public:
+    explicit Private( AgendaView *parent, bool isSideBySide )
+      : q( parent ),
+        mTopDayLabels( 0 ),
+        mLayoutTopDayLabels( 0 ),
+        mTopDayLabelsFrame( 0 ),
+        mLayoutBottomDayLabels( 0 ),
+        mBottomDayLabels( 0 ),
+        mBottomDayLabelsFrame( 0 ),
+        mTimeLabelsZone( 0 ),
+        mAllowAgendaUpdate( true ),
+        mUpdateItem( 0 ),
+        mCollectionId( -1 ),
+        mIsSideBySide( isSideBySide ),
+        mPendingChanges( true )
+    {
+    }
+
+  public:
+    // view widgets
+    QGridLayout *mGridLayout;
+    QFrame *mTopDayLabels;
+    QBoxLayout *mLayoutTopDayLabels;
+    KHBox *mTopDayLabelsFrame;
+    QBoxLayout *mLayoutBottomDayLabels;
+    QFrame *mBottomDayLabels;
+    KHBox *mBottomDayLabelsFrame;
+    KHBox *mAllDayFrame;
+    QWidget *mTimeBarHeaderFrame;
+    QGridLayout *mAgendaLayout;
+    QSplitter *mSplitterAgenda;
+    QList<QLabel *> mTimeBarHeaders;
+
+    Agenda *mAllDayAgenda;
+    Agenda *mAgenda;
+
+    TimeLabelsZone *mTimeLabelsZone;
+
+    DateList mSelectedDates;  // List of dates to be displayed
+    int mViewType;
+    EventIndicator *mEventIndicatorTop;
+    EventIndicator *mEventIndicatorBottom;
+
+    QVector<int> mMinY;
+    QVector<int> mMaxY;
+
+    QVector<bool> mHolidayMask;
+
+    QDateTime mTimeSpanBegin;
+    QDateTime mTimeSpanEnd;
+    bool mTimeSpanInAllDay;
+    bool mAllowAgendaUpdate;
+
+    Akonadi::Item mUpdateItem;
+
+    //CollectionSelection *mCollectionSelection;
+    Akonadi::Collection::Id mCollectionId;
+
+    bool mIsSideBySide;
+    bool mPendingChanges;
+
+  protected:
+    /* reimplemented from KCal::Calendar::CalendarObserver */
+    void calendarIncidenceAdded( const Akonadi::Item &incidence );
+    void calendarIncidenceChanged( const Akonadi::Item &incidence );
+    void calendarIncidenceRemoved( const Akonadi::Item &incidence );
+};
+
+void AgendaView::Private::calendarIncidenceAdded( const Item &incidence )
+{
+  Q_UNUSED( incidence );
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
+  }
+}
+
+void AgendaView::Private::calendarIncidenceChanged( const Item &incidence )
+{
+  Q_UNUSED( incidence );
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
+  }
+}
+
+void AgendaView::Private::calendarIncidenceRemoved( const Item &incidence )
+{
+  Q_UNUSED( incidence );
+  if ( !mPendingChanges ) {
+    mPendingChanges = true;
+    QMetaObject::invokeMethod( q, "updateView", Qt::QueuedConnection );
+  }
+}
+
 ////////////////////////////////////////////////////////////////////////////
 
-AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent ),
-  mTimeLabelsZone( 0 ),
-  mAllowAgendaUpdate( true ),
-  mUpdateItem( 0 ),
-  mCollectionId( -1 ),
-  mIsSideBySide( isSideBySide ),
-  mPendingChanges( true )
+AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
+  : EventView( parent ), d( new Private( this, isSideBySide ) )
 {
-  mSelectedDates.append( QDate::currentDate() );
+  d->mSelectedDates.append( QDate::currentDate() );
 
-  mLayoutTopDayLabels = 0;
-  mTopDayLabelsFrame = 0;
-  mTopDayLabels = 0;
-  mLayoutBottomDayLabels = 0;
-  mBottomDayLabelsFrame = 0;
-  mBottomDayLabels = 0;
-
-  mGridLayout = new QGridLayout( this );
-  mGridLayout->setMargin( 0 );
+  d->mGridLayout = new QGridLayout( this );
+  d->mGridLayout->setMargin( 0 );
 
   /* Create agenda splitter */
-  mSplitterAgenda = new QSplitter( Qt::Vertical, this );
-  mGridLayout->addWidget( mSplitterAgenda, 1, 0 );
-  mSplitterAgenda->setOpaqueResize( KGlobalSettings::opaqueResize() );
+  d->mSplitterAgenda = new QSplitter( Qt::Vertical, this );
+  d->mGridLayout->addWidget( d->mSplitterAgenda, 1, 0 );
+  d->mSplitterAgenda->setOpaqueResize( KGlobalSettings::opaqueResize() );
 
   /* Create day name labels for agenda columns */
-  mTopDayLabelsFrame = new KHBox( mSplitterAgenda );
-  mTopDayLabelsFrame->setSpacing( 2 );
+  d->mTopDayLabelsFrame = new KHBox( d->mSplitterAgenda );
+  d->mTopDayLabelsFrame->setSpacing( 2 );
 
   /* Create all-day agenda widget */
-  mAllDayFrame = new KHBox( mSplitterAgenda );
-  mAllDayFrame->setSpacing( 2 );
+  d->mAllDayFrame = new KHBox( d->mSplitterAgenda );
+  d->mAllDayFrame->setSpacing( 2 );
 
   // Alignment and description widgets
-  mTimeBarHeaderFrame = new KHBox( mAllDayFrame );
+  d->mTimeBarHeaderFrame = new KHBox( d->mAllDayFrame );
 
   // The widget itself
-  QWidget *dummyAllDayLeft = new QWidget( mAllDayFrame );
-  QScrollArea *allDayScrollArea = new QScrollArea( mAllDayFrame );
-  mAllDayAgenda = new Agenda( this, allDayScrollArea, 1, allDayScrollArea );
-  allDayScrollArea->setWidget( mAllDayAgenda );
-  allDayScrollArea->setWidgetResizable( true );
+  QWidget *dummyAllDayLeft = new QWidget( d->mAllDayFrame );
+  AgendaScrollArea *allDayScrollArea = new AgendaScrollArea( true, this, d->mAllDayFrame );
+  d->mAllDayAgenda = allDayScrollArea->agenda();
 
   /* Create the main agenda widget and the related widgets */
-  QWidget *agendaFrame = new QWidget( mSplitterAgenda );
-  mAgendaLayout = new QGridLayout( agendaFrame );
-  mAgendaLayout->setMargin( 0 );
-  mAgendaLayout->setHorizontalSpacing( 2 );
-  mAgendaLayout->setVerticalSpacing( 0 );
+  QWidget *agendaFrame = new QWidget( d->mSplitterAgenda );
+  d->mAgendaLayout = new QGridLayout( agendaFrame );
+  d->mAgendaLayout->setMargin( 0 );
+  d->mAgendaLayout->setHorizontalSpacing( 2 );
+  d->mAgendaLayout->setVerticalSpacing( 0 );
   if ( isSideBySide ) {
-    mTimeBarHeaderFrame->hide();
+    d->mTimeBarHeaderFrame->hide();
   }
 
   // Create event indicator bars
-  mEventIndicatorTop = new EventIndicator( EventIndicator::Top, agendaFrame );
-  mAgendaLayout->addWidget( mEventIndicatorTop, 0, 1 );
-  mEventIndicatorBottom = new EventIndicator( EventIndicator::Bottom, agendaFrame );
-  mAgendaLayout->addWidget( mEventIndicatorBottom, 2, 1 );
+  d->mEventIndicatorTop = new EventIndicator( EventIndicator::Top, agendaFrame );
+  d->mAgendaLayout->addWidget( d->mEventIndicatorTop, 0, 1 );
+  d->mEventIndicatorBottom = new EventIndicator( EventIndicator::Bottom, agendaFrame );
+  d->mAgendaLayout->addWidget( d->mEventIndicatorBottom, 2, 1 );
 
   // Alignment and description widgets
   QWidget *dummyAgendaRight = new QWidget( agendaFrame );
-  mAgendaLayout->addWidget( dummyAgendaRight, 0, 2 );
+  d->mAgendaLayout->addWidget( dummyAgendaRight, 0, 2 );
 
   // Create agenda
-  mScrollArea = new QScrollArea( agendaFrame );
-  mAgenda = new Agenda( this, mScrollArea, 1, 96, Prefs::instance()->hourSize(), agendaFrame );
+  AgendaScrollArea *scrollArea = new AgendaScrollArea( false, this, agendaFrame );
+  d->mAgenda = scrollArea->agenda();
 
-  mScrollArea->setWidget( mAgenda );
-  mScrollArea->setWidgetResizable( true );
-
-  mAgendaLayout->addWidget( mScrollArea, 1, 1, 1, 2 );
-  mAgendaLayout->setColumnStretch( 1, 1 );
+  d->mAgendaLayout->addWidget( scrollArea, 1, 1, 1, 2 );
+  d->mAgendaLayout->setColumnStretch( 1, 1 );
+  QWidget *dummyAllDayRight = new QWidget( d->mAllDayFrame );
 
   // Create time labels
-  mTimeLabelsZone = new TimeLabelsZone( this, mAgenda );
-  mAgendaLayout->addWidget( mTimeLabelsZone, 1, 0 );
+  d->mTimeLabelsZone = new TimeLabelsZone( this, this, d->mAgenda );
+  d->mAgendaLayout->addWidget( d->mTimeLabelsZone, 1, 0 );
 
   // Scrolling
-  connect( mAgenda, SIGNAL(zoomView(const int,QPoint,const Qt::Orientation)),
+  connect( d->mAgenda, SIGNAL(zoomView(const int,QPoint,const Qt::Orientation)),
            SLOT(zoomView(const int,QPoint,const Qt::Orientation)) );
 
   // Event indicator updates
-  connect( mAgenda, SIGNAL(lowerYChanged(int)),
+  connect( d->mAgenda, SIGNAL(lowerYChanged(int)),
            SLOT(updateEventIndicatorTop(int)) );
-  connect( mAgenda, SIGNAL(upperYChanged(int)),
+  connect( d->mAgenda, SIGNAL(upperYChanged(int)),
            SLOT(updateEventIndicatorBottom(int)) );
 
   if ( isSideBySide ) {
-    mTimeLabelsZone->hide();
+    d->mTimeLabelsZone->hide();
   }
 
   /* Create a frame at the bottom which may be used by decorations */
-  mBottomDayLabelsFrame = new KHBox( mSplitterAgenda );
-  mBottomDayLabelsFrame->setSpacing( 2 );
+  d->mBottomDayLabelsFrame = new KHBox( d->mSplitterAgenda );
+  d->mBottomDayLabelsFrame->setSpacing( 2 );
 
   if ( !isSideBySide ) {
     /* Make the all-day and normal agendas line up with each other */
-    dummyAgendaRight->setFixedWidth( mAgenda->verticalScrollBar()->width() );
+    dummyAllDayRight->setFixedWidth( style()->pixelMetric( QStyle::PM_ScrollBarExtent ) -
+                                     d->mAgendaLayout->horizontalSpacing() );
+    dummyAgendaRight->setFixedWidth( dummyAllDayRight->width() );
   }
 
   updateTimeBarWidth();
   // resize dummy widget so the allday agenda lines up with the hourly agenda
-  dummyAllDayLeft->setFixedWidth( mTimeLabelsZone->timeLabelsWidth() - mTimeBarHeaderFrame->width() );
+  dummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->timeLabelsWidth() -
+                                  d->mTimeBarHeaderFrame->width() );
 
   createDayLabels();
 
   /* Connect the agendas */
 
-  connectAgenda( mAgenda, mAllDayAgenda );
-  connectAgenda( mAllDayAgenda, mAgenda );
+  connectAgenda( d->mAgenda, d->mAllDayAgenda );
+  connectAgenda( d->mAllDayAgenda, d->mAgenda );
 
-  connect( mAgenda,
+  connect( d->mAgenda,
            SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
            SLOT(newTimeSpanSelected(const QPoint &,const QPoint &)) );
-  connect( mAllDayAgenda,
+  connect( d->mAllDayAgenda,
            SIGNAL(newTimeSpanSignal(const QPoint &,const QPoint &)),
            SLOT(newTimeSpanSelectedAllDay(const QPoint &,const QPoint &)) );
 }
@@ -234,20 +339,22 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide ) : EventView( parent
 AgendaView::~AgendaView()
 {
   if ( calendar() ) {
-    calendar()->unregisterObserver( this );
+    calendar()->unregisterObserver( d );
   }
+
+  delete d;
 }
 
 void AgendaView::setCalendar( Akonadi::Calendar *cal )
 {
   if ( calendar() ) {
-    calendar()->unregisterObserver( this );
+    calendar()->unregisterObserver( d );
   }
   Q_ASSERT( cal );
   EventView::setCalendar( cal );
-  calendar()->registerObserver( this );
-  mAgenda->setCalendar( calendar() );
-  mAllDayAgenda->setCalendar( calendar() );
+  calendar()->registerObserver( d );
+  d->mAgenda->setCalendar( calendar() );
+  d->mAllDayAgenda->setCalendar( calendar() );
 }
 
 void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
@@ -307,13 +414,13 @@ void AgendaView::connectAgenda( Agenda *agenda, Agenda *otherAgenda )
 
 void AgendaView::zoomInVertically( )
 {
-  if ( !mIsSideBySide ) {
-    Prefs::instance()->setHourSize( Prefs::instance()->hourSize() + 1 );
+  if ( !d->mIsSideBySide ) {
+    preferences()->setHourSize( preferences()->hourSize() + 1 );
   }
-  mAgenda->updateConfig();
-  mAgenda->checkScrollBoundaries();
+  d->mAgenda->updateConfig();
+  d->mAgenda->checkScrollBoundaries();
 
-  mTimeLabelsZone->updateAll();
+  d->mTimeLabelsZone->updateAll();
 
   updateView();
 
@@ -322,14 +429,14 @@ void AgendaView::zoomInVertically( )
 void AgendaView::zoomOutVertically( )
 {
 
-  if ( Prefs::instance()->hourSize() > 4 || mIsSideBySide ) {
-    if ( !mIsSideBySide ) {
-      Prefs::instance()->setHourSize( Prefs::instance()->hourSize() - 1 );;
+  if ( preferences()->hourSize() > 4 || d->mIsSideBySide ) {
+    if ( !d->mIsSideBySide ) {
+      preferences()->setHourSize( preferences()->hourSize() - 1 );;
     }
-    mAgenda->updateConfig();
-    mAgenda->checkScrollBoundaries();
+    d->mAgenda->updateConfig();
+    d->mAgenda->checkScrollBoundaries();
 
-    mTimeLabelsZone->updateAll();
+    d->mTimeLabelsZone->updateAll();
     updateView();
   }
 }
@@ -341,12 +448,12 @@ void AgendaView::zoomInHorizontally( const QDate &date )
   QDate dateToZoom = date;
   int ndays, count;
 
-  begin = mSelectedDates.first();
-  ndays = begin.daysTo( mSelectedDates.last() );
+  begin = d->mSelectedDates.first();
+  ndays = begin.daysTo( d->mSelectedDates.last() );
 
   // zoom with Action and are there a selected Incidence?, Yes, I zoom in to it.
   if ( ! dateToZoom.isValid () ) {
-    dateToZoom = mAgenda->selectedIncidenceDate();
+    dateToZoom = d->mAgenda->selectedIncidenceDate();
   }
 
   if ( !dateToZoom.isValid() ) {
@@ -374,12 +481,12 @@ void AgendaView::zoomOutHorizontally( const QDate &date )
   QDate dateToZoom = date;
   int ndays, count;
 
-  begin = mSelectedDates.first();
-  ndays = begin.daysTo( mSelectedDates.last() );
+  begin = d->mSelectedDates.first();
+  ndays = begin.daysTo( d->mSelectedDates.last() );
 
   // zoom with Action and are there a selected Incidence?, Yes, I zoom out to it.
   if ( ! dateToZoom.isValid () ) {
-    dateToZoom = mAgenda->selectedIncidenceDate();
+    dateToZoom = d->mAgenda->selectedIncidenceDate();
   }
 
   if ( !dateToZoom.isValid() ) {
@@ -400,18 +507,19 @@ void AgendaView::zoomOutHorizontally( const QDate &date )
 
 void AgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Orientation orient )
 {
+  // TODO find out why this is necessary. seems to be some kind of performance hack
   static QDate zoomDate;
   static QTimer *t = new QTimer( this );
 
   //Zoom to the selected incidence, on the other way
   // zoom to the date on screen after the first mousewheel move.
   if ( orient == Qt::Horizontal ) {
-    QDate date=mAgenda->selectedIncidenceDate();
+    const QDate date = d->mAgenda->selectedIncidenceDate();
     if ( date.isValid() ) {
       zoomDate=date;
     } else {
       if ( !t->isActive() ) {
-        zoomDate= mSelectedDates[pos.x()];
+        zoomDate= d->mSelectedDates[ pos.x() ];
       }
       t->setSingleShot( true );
       t->start ( 1000 );
@@ -423,14 +531,14 @@ void AgendaView::zoomView( const int delta, const QPoint &pos, const Qt::Orienta
     }
   } else {
     // Vertical zoom
-    QPoint posConstentsOld = mAgenda->gridToContents( pos );
+    const QPoint posConstentsOld = d->mAgenda->gridToContents( pos );
     if ( delta > 0 ) {
       zoomOutVertically();
     } else {
       zoomInVertically();
     }
-    QPoint posConstentsNew = mAgenda->gridToContents( pos );
-    mAgenda->verticalScrollBar()->scroll( 0, posConstentsNew.y() - posConstentsOld.y() );
+    const QPoint posConstentsNew = d->mAgenda->gridToContents( pos );
+    d->mAgenda->verticalScrollBar()->scroll( 0, posConstentsNew.y() - posConstentsOld.y() );
   }
 }
 
@@ -440,14 +548,14 @@ void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, boo
 
     if ( isTop ) {
       // inserts in the first position
-      mSplitterAgenda->insertWidget( 0, frame );
+      d->mSplitterAgenda->insertWidget( 0, frame );
     } else {
       // inserts in the last position
-      frame->setParent( mSplitterAgenda );
+      frame->setParent( d->mSplitterAgenda );
     }
   } else {
     frame->setParent( this );
-    mGridLayout->addWidget( frame, 0, 0 );
+    d->mGridLayout->addWidget( frame, 0, 0 );
   }
 }
 
@@ -456,41 +564,39 @@ void AgendaView::createDayLabels()
   // ### Before deleting and recreating we could check if mSelectedDates changed...
   // It would remove some flickering and gain speed (since this is called by
   // each updateView() call)
-  delete mTopDayLabels;
-  delete mBottomDayLabels;
+  delete d->mTopDayLabels;
+  delete d->mBottomDayLabels;
 
   QFontMetrics fm = fontMetrics();
 
-  mTopDayLabels = new QFrame ( mTopDayLabelsFrame );
-  mTopDayLabelsFrame->setStretchFactor( mTopDayLabels, 1 );
-  mLayoutTopDayLabels = new QHBoxLayout( mTopDayLabels );
-  mLayoutTopDayLabels->setMargin( 0 );
+  d->mTopDayLabels = new QFrame ( d->mTopDayLabelsFrame );
+  d->mTopDayLabelsFrame->setStretchFactor( d->mTopDayLabels, 1 );
+  d->mLayoutTopDayLabels = new QHBoxLayout( d->mTopDayLabels );
+  d->mLayoutTopDayLabels->setMargin( 0 );
   // this spacer moves the day labels over to line up with the day columns
   QSpacerItem *spacer =
-    new QSpacerItem( mTimeLabelsZone->timeLabelsWidth(), 1, QSizePolicy::Fixed );
-  mLayoutTopDayLabels->addSpacerItem( spacer );
-  KVBox *topWeekLabelBox = new KVBox( mTopDayLabels );
-  mLayoutTopDayLabels->addWidget( topWeekLabelBox );
-  if ( mIsSideBySide ) {
+    new QSpacerItem( d->mTimeLabelsZone->timeLabelsWidth(), 1, QSizePolicy::Fixed );
+  d->mLayoutTopDayLabels->addSpacerItem( spacer );
+  KVBox *topWeekLabelBox = new KVBox( d->mTopDayLabels );
+  d->mLayoutTopDayLabels->addWidget( topWeekLabelBox );
+  if ( d->mIsSideBySide ) {
     topWeekLabelBox->hide();
   }
 
-  mBottomDayLabels = new QFrame( mBottomDayLabelsFrame );
-  mBottomDayLabelsFrame->setStretchFactor( mBottomDayLabels, 1 );
-  mLayoutBottomDayLabels = new QHBoxLayout( mBottomDayLabels );
-  mLayoutBottomDayLabels->setMargin( 0 );
-  KVBox *bottomWeekLabelBox = new KVBox( mBottomDayLabels );
-  mLayoutBottomDayLabels->addWidget( bottomWeekLabelBox );
+  d->mBottomDayLabels = new QFrame( d->mBottomDayLabelsFrame );
+  d->mBottomDayLabelsFrame->setStretchFactor( d->mBottomDayLabels, 1 );
+  d->mLayoutBottomDayLabels = new QHBoxLayout( d->mBottomDayLabels );
+  d->mLayoutBottomDayLabels->setMargin( 0 );
+  KVBox *bottomWeekLabelBox = new KVBox( d->mBottomDayLabels );
+  d->mLayoutBottomDayLabels->addWidget( bottomWeekLabelBox );
 
-  const KCalendarSystem *calsys = Globals::self()->calendarSystem();
+  const KCalendarSystem *calsys = KGlobal::locale()->calendar();
 
-  DateList::ConstIterator dit;
-  for ( dit = mSelectedDates.constBegin(); dit != mSelectedDates.constEnd(); ++dit ) {
-    QDate date = *dit;
-    KVBox *topDayLabelBox = new KVBox( mTopDayLabels );
-    mLayoutTopDayLabels->addWidget( topDayLabelBox );
-    KVBox *bottomDayLabelBox = new KVBox( mBottomDayLabels );
-    mLayoutBottomDayLabels->addWidget( bottomDayLabelBox );
+  Q_FOREACH( const QDate &date, d->mSelectedDates ) {
+    KVBox *topDayLabelBox = new KVBox( d->mTopDayLabels );
+    d->mLayoutTopDayLabels->addWidget( topDayLabelBox );
+    KVBox *bottomDayLabelBox = new KVBox( d->mBottomDayLabels );
+    d->mLayoutBottomDayLabels->addWidget( bottomDayLabelBox );
 
     int dW = calsys->dayOfWeek( date );
     QString veryLongStr = KGlobal::locale()->formatDate( date );
@@ -510,47 +616,46 @@ void AgendaView::createDayLabels()
     }
 
     // if a holiday region is selected, show the holiday name
-    QStringList texts = Globals::self()->holiday( date );
-    QStringList::ConstIterator textit = texts.constBegin();
-    for ( ; textit != texts.constEnd(); ++textit ) {
+    const QStringList texts = holidayNames( date );
+    Q_FOREACH( const QString &text, texts ) {
       // Compute a small version of the holiday string for AlternateLabel
-      const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, (*textit), -1 );
+      const KWordWrap *ww = KWordWrap::formatText( fm, topDayLabelBox->rect(), 0, text, -1 );
       AlternateLabel *label =
-        new AlternateLabel( ww->truncatedString(), (*textit), (*textit), topDayLabelBox );
+        new AlternateLabel( ww->truncatedString(), text, text, topDayLabelBox );
       label->setMinimumWidth( 1 );
       label->setAlignment( Qt::AlignCenter );
       delete ww;
     }
   }
 
-  if ( !mIsSideBySide ) {
-    mLayoutTopDayLabels->addSpacing( mAgenda->verticalScrollBar()->width() );
-    mLayoutBottomDayLabels->addSpacing( mAgenda->verticalScrollBar()->width() );
+  if ( !d->mIsSideBySide ) {
+    d->mLayoutTopDayLabels->addSpacing( d->mAgenda->verticalScrollBar()->width() );
+    d->mLayoutBottomDayLabels->addSpacing( d->mAgenda->verticalScrollBar()->width() );
   }
-  mTopDayLabels->show();
-  mBottomDayLabels->show();
+  d->mTopDayLabels->show();
+  d->mBottomDayLabels->show();
 }
 
 void AgendaView::enableAgendaUpdate( bool enable )
 {
-  mAllowAgendaUpdate = enable;
+  d->mAllowAgendaUpdate = enable;
 }
 
 int AgendaView::currentDateCount() const
 {
-  return mSelectedDates.count();
+  return d->mSelectedDates.count();
 }
 
 Akonadi::Item::List AgendaView::selectedIncidences() const
 {
   Akonadi::Item::List selected;
 
-  Akonadi::Item agendaitem = mAgenda->selectedIncidence();
+  Akonadi::Item agendaitem = d->mAgenda->selectedIncidence();
   if ( agendaitem.isValid() ) {
     selected.append( agendaitem );
   }
 
-  Akonadi::Item dayitem = mAllDayAgenda->selectedIncidence();
+  Akonadi::Item dayitem = d->mAllDayAgenda->selectedIncidence();
   if ( dayitem.isValid() ) {
     selected.append( dayitem );
   }
@@ -563,12 +668,12 @@ DateList AgendaView::selectedIncidenceDates() const
   DateList selected;
   QDate qd;
 
-  qd = mAgenda->selectedIncidenceDate();
+  qd = d->mAgenda->selectedIncidenceDate();
   if ( qd.isValid() ) {
     selected.append( qd );
   }
 
-  qd = mAllDayAgenda->selectedIncidenceDate();
+  qd = d->mAllDayAgenda->selectedIncidenceDate();
   if ( qd.isValid() ) {
     selected.append( qd );
   }
@@ -585,7 +690,7 @@ bool AgendaView::eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &
     if ( start.secsTo( end ) == 15 * 60 ) {
       // One cell in the agenda view selected, e.g.
       // because of a double-click, => Use the default duration
-      QTime defaultDuration( Prefs::instance()->defaultDuration().time() );
+      QTime defaultDuration( preferences()->defaultDuration().time() );
       int addSecs = ( defaultDuration.hour() * 3600 ) + ( defaultDuration.minute() * 60 );
       end = start.addSecs( addSecs );
     }
@@ -610,7 +715,7 @@ bool AgendaView::selectedIsSingleCell() const
     return ( days < 1 );
   } else {
     int secs = selectionStart().secsTo( selectionEnd() );
-    return ( secs <= 24 * 60 * 60 / mAgenda->rows() );
+    return ( secs <= 24 * 60 * 60 / d->mAgenda->rows() );
   }
 }
 
@@ -625,11 +730,11 @@ void AgendaView::updateView()
 */
 void AgendaView::updateConfig()
 {
-  mAgenda->updateConfig();
+  d->mAgenda->updateConfig();
 
-  mAllDayAgenda->updateConfig();
+  d->mAllDayAgenda->updateConfig();
 
-  mTimeLabelsZone->updateAll();
+  d->mTimeLabelsZone->updateAll();
 
   updateTimeBarWidth();
 
@@ -642,18 +747,18 @@ void AgendaView::updateConfig()
 
 void AgendaView::createTimeBarHeaders()
 {
-  qDeleteAll( mTimeBarHeaders );
-  mTimeBarHeaders.clear();
+  qDeleteAll( d->mTimeBarHeaders );
+  d->mTimeBarHeaders.clear();
 
-  foreach ( QScrollArea *area, mTimeLabelsZone->timeLabels() ) {
+  foreach ( QScrollArea *area, d->mTimeLabelsZone->timeLabels() ) {
     TimeLabels *timeLabel = static_cast<TimeLabels*>( area->widget() );
     QLabel *label = new QLabel( timeLabel->header().replace( '/', "/ " ),
-                                mTimeBarHeaderFrame );
+                                d->mTimeBarHeaderFrame );
     label->setAlignment( Qt::AlignBottom | Qt::AlignLeft );
     label->setMargin( 2 );
     label->setWordWrap( true );
     label->setToolTip( timeLabel->headerToolTip() );
-    mTimeBarHeaders.append( label );
+    d->mTimeBarHeaders.append( label );
   }
 }
 
@@ -664,23 +769,19 @@ void AgendaView::updateTimeBarWidth()
   QFontMetrics fm( font() );
 
   int num = 0;
-  int width = mTimeLabelsZone->timeLabelsWidth();
-  foreach ( QLabel *l, mTimeBarHeaders ) {
+  int width = d->mTimeLabelsZone->timeLabelsWidth();
+  foreach ( QLabel *l, d->mTimeBarHeaders ) {
     num++;
     foreach ( const QString &word, l->text().split( ' ' ) ) {
       width = qMax( width, fm.width( word ) );
     }
   }
 
-  if ( num > 0 ) {
-    width += ( num * 2 ) + 2;
-    if ( num > 1 ) {
-      width += ( num * fm.averageCharWidth() );
-    }
-  }
+  width = width + fm.width( "/" );
+  int timeBarWidth = ( width + 1 ) * num;
 
-  mTimeBarHeaderFrame->setFixedWidth( width );
-  mTimeLabelsZone->setTimeLabelsWidth( width );
+  d->mTimeBarHeaderFrame->setFixedWidth( timeBarWidth );
+  d->mTimeLabelsZone->setTimeLabelsWidth( width );
 }
 
 void AgendaView::updateEventDates( AgendaItem *item )
@@ -695,9 +796,9 @@ void AgendaView::updateEventDates( AgendaItem *item )
   // by the number of days the agenda item was really moved. Smart, isn't it?)
   QDate thisDate;
   if ( item->cellXLeft() < 0 ) {
-    thisDate = ( mSelectedDates.first() ).addDays( item->cellXLeft() );
+    thisDate = ( d->mSelectedDates.first() ).addDays( item->cellXLeft() );
   } else {
-    thisDate = mSelectedDates[ item->cellXLeft() ];
+    thisDate = d->mSelectedDates[ item->cellXLeft() ];
   }
   QDate oldThisDate( item->itemDate() );
   int daysOffset = 0;
@@ -716,7 +817,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   if ( !incidence ) {
     return;
   }
-  if ( !mChanger || !mChanger->beginChange( aitem ) ) {
+  if ( !changer() || !changer()->beginChange( aitem ) ) {
     return;
   }
   Incidence::Ptr oldIncidence( incidence->clone() );
@@ -725,12 +826,12 @@ void AgendaView::updateEventDates( AgendaItem *item )
   if ( incidence->allDay() ) {
     daysLength = item->cellWidth() - 1;
   } else {
-    startTime = mAgenda->gyToTime( item->cellYTop() );
+    startTime = d->mAgenda->gyToTime( item->cellYTop() );
     if ( item->lastMultiItem() ) {
-      endTime = mAgenda->gyToTime( item->lastMultiItem()->cellYBottom() + 1 );
+      endTime = d->mAgenda->gyToTime( item->lastMultiItem()->cellYBottom() + 1 );
       daysLength = item->lastMultiItem()->cellXLeft() - item->cellXLeft();
     } else {
-      endTime = mAgenda->gyToTime( item->cellYBottom() + 1 );
+      endTime = d->mAgenda->gyToTime( item->cellYBottom() + 1 );
     }
   }
 
@@ -739,7 +840,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
     startDt = incidence->dtStart();
     // convert to calendar timespec because we then manipulate it
     // with time coming from the calendar
-    startDt = startDt.toTimeSpec( Prefs::instance()->timeSpec() );
+    startDt = startDt.toTimeSpec( preferences()->timeSpec() );
     startDt = startDt.addDays( daysOffset );
     if ( !startDt.isDateOnly() ) {
       startDt.setTime( startTime );
@@ -748,10 +849,10 @@ void AgendaView::updateEventDates( AgendaItem *item )
     if ( !endDt.isDateOnly() ) {
       endDt.setTime( endTime );
     }
-    if ( incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ) == startDt &&
-         ev->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ) == endDt ) {
+    if ( incidence->dtStart().toTimeSpec( preferences()->timeSpec() ) == startDt &&
+         ev->dtEnd().toTimeSpec( preferences()->timeSpec() ) == endDt ) {
       // No change
-      mChanger->endChange( aitem );
+      changer()->endChange( aitem );
       QTimer::singleShot( 0, this, SLOT(updateView()) );
       return;
     }
@@ -759,7 +860,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
     startDt = td->hasStartDate() ? td->dtStart() : td->dtDue();
     // convert to calendar timespec because we then manipulate it with time coming from
     // the calendar
-    startDt = startDt.toTimeSpec( Prefs::instance()->timeSpec() );
+    startDt = startDt.toTimeSpec( preferences()->timeSpec() );
     startDt.setDate( thisDate.addDays( td->dtDue().daysTo( startDt ) ) );
     if ( !startDt.isDateOnly() ) {
       startDt.setTime( startTime );
@@ -771,10 +872,10 @@ void AgendaView::updateEventDates( AgendaItem *item )
       endDt.setTime( endTime );
     }
 
-    if ( td->dtDue().toTimeSpec( Prefs::instance()->timeSpec() )  == endDt ) {
+    if ( td->dtDue().toTimeSpec( preferences()->timeSpec() )  == endDt ) {
       // No change
-      mChanger->endChange( aitem );
-      QTimer::singleShot( 0, this, SLOT(updateView()) );
+      changer()->endChange( aitem );
+      QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
       return;
     }
   }
@@ -963,17 +1064,17 @@ void AgendaView::updateEventDates( AgendaItem *item )
     }
     td->setDtDue( endDt.toTimeSpec( td->dtDue().timeSpec() ) );
   }
-  item->setItemDate( startDt.toTimeSpec( Prefs::instance()->timeSpec() ).date() );
+  item->setItemDate( startDt.toTimeSpec( preferences()->timeSpec() ).date() );
 
-  const bool result = mChanger->changeIncidence( oldIncidence, aitem,
+  const bool result = changer()->changeIncidence( oldIncidence, aitem,
                                                  IncidenceChanger::DATE_MODIFIED, this );
-  mChanger->endChange( aitem );
+  changer()->endChange( aitem );
 
   // Update the view correctly if an agenda item move was aborted by
   // cancelling one of the subsequent dialogs.
   if ( !result ) {
-    mPendingChanges = true;
-    QTimer::singleShot( 0, this, SLOT(updateView()) );
+    d->mPendingChanges = true;
+    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
     return;
   }
 
@@ -986,8 +1087,8 @@ void AgendaView::updateEventDates( AgendaItem *item )
   // Only the actually moved agenda item is already at the correct position and mustn't be
   // recreated. All others have to!!!
   if ( incidence->recurs() ) {
-    mUpdateItem = aitem;
-    QTimer::singleShot( 0, this, SLOT(doUpdateItem()) );
+    d->mUpdateItem = aitem;
+    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
   }
 
   enableAgendaUpdate( true );
@@ -995,32 +1096,32 @@ void AgendaView::updateEventDates( AgendaItem *item )
 
 void AgendaView::doUpdateItem()
 {
-  if ( Akonadi::hasIncidence( mUpdateItem ) ) {
-    changeIncidenceDisplay( mUpdateItem, IncidenceChanger::INCIDENCEEDITED );
-    mUpdateItem = Item();
+  if ( Akonadi::hasIncidence( d->mUpdateItem ) ) {
+    changeIncidenceDisplay( d->mUpdateItem, IncidenceChanger::INCIDENCEEDITED );
+    d->mUpdateItem = Item();
   }
 }
 
 QDate AgendaView::startDate() const
 {
-  if ( mSelectedDates.isEmpty() )
+  if ( d->mSelectedDates.isEmpty() )
     return QDate();
-  return mSelectedDates.first();
+  return d->mSelectedDates.first();
 }
 
 QDate AgendaView::endDate() const
 {
-  if ( mSelectedDates.isEmpty() )
+  if ( d->mSelectedDates.isEmpty() )
     return QDate();
-  return mSelectedDates.last();
+  return d->mSelectedDates.last();
 }
 
 void AgendaView::showDates( const QDate &start, const QDate &end )
 {
-  if ( !mSelectedDates.isEmpty() &&
-       mSelectedDates.first() == start &&
-       mSelectedDates.last() == end &&
-       !mPendingChanges ) {
+  if ( !d->mSelectedDates.isEmpty() &&
+       d->mSelectedDates.first() == start &&
+       d->mSelectedDates.last() == end &&
+       !d->mPendingChanges ) {
     return;
   }
 
@@ -1029,12 +1130,12 @@ void AgendaView::showDates( const QDate &start, const QDate &end )
     return;
   }
 
-  mSelectedDates.clear();
+  d->mSelectedDates.clear();
 
-  QDate d = start;
-  while ( d <= end ) {
-    mSelectedDates.append( d );
-    d = d.addDays( 1 );
+  QDate date = start;
+  while ( date <= end ) {
+    d->mSelectedDates.append( date );
+    date = date.addDays( 1 );
   }
 
   // and update the view
@@ -1065,17 +1166,16 @@ void AgendaView::showIncidences( const Item::List &incidences, const QDate &date
     calendar()->setFilter( 0 );
   }
 
-  KDateTime start = Akonadi::incidence( incidences.first() )->dtStart().toTimeSpec( Prefs::instance()->timeSpec() );
-  KDateTime end = Akonadi::incidence( incidences.first() )->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() );
+  const KDateTime::Spec timeSpec = preferences()->timeSpec();
+  KDateTime start = Akonadi::incidence( incidences.first() )->dtStart().toTimeSpec( timeSpec );
+  KDateTime end = Akonadi::incidence( incidences.first() )->dtEnd().toTimeSpec( timeSpec );
   Item first = incidences.first();
   Q_FOREACH( const Item &aitem, incidences ) {
-    if ( Akonadi::incidence( aitem )->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ) < start ) {
+    if ( Akonadi::incidence( aitem )->dtStart().toTimeSpec( timeSpec ) < start ) {
       first = aitem;
     }
-    start = qMin( start,
-                  Akonadi::incidence( aitem )->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ) );
-    end = qMax( start,
-                Akonadi::incidence( aitem )->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ) );
+    start = qMin( start, Akonadi::incidence( aitem )->dtStart().toTimeSpec( timeSpec ) );
+    end = qMax( start, Akonadi::incidence( aitem )->dtEnd().toTimeSpec( timeSpec ) );
   }
 
   end.toTimeSpec( start );    // allow direct comparison of dates
@@ -1085,7 +1185,7 @@ void AgendaView::showIncidences( const Item::List &incidences, const QDate &date
     showDates( start.date(), start.date().addDays( currentDateCount() - 1 ) );
   }
 
-  mAgenda->selectItem( first );
+  d->mAgenda->selectItem( first );
 }
 
 void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
@@ -1099,7 +1199,7 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
   Event::Ptr event = Akonadi::event( aitem );
   Todo::Ptr todo = Akonadi::todo( aitem );
 
-  int curCol = mSelectedDates.first().daysTo( curDate );
+  int curCol = d->mSelectedDates.first().daysTo( curDate );
 
   // In case incidence->dtStart() isn't visible (crosses bounderies)
   if ( curCol < 0 ) {
@@ -1107,19 +1207,19 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
   }
 
   // The date for the event is not displayed, just ignore it
-  if ( curCol >= mSelectedDates.count() ) {
+  if ( curCol >= d->mSelectedDates.count() ) {
     return;
   }
 
   // Default values, which can never be reached
-  mMinY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) ) + 1;
-  mMaxY[curCol] = mAgenda->timeToY( QTime( 0, 0 ) ) - 1;
+  d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) ) + 1;
+  d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) ) - 1;
 
   int beginX;
   int endX;
   QDate columnDate;
   if ( event ) {
-    QDate firstVisibleDate = mSelectedDates.first();
+    QDate firstVisibleDate = d->mSelectedDates.first();
     // its crossing bounderies, lets calculate beginX and endX
     if ( curDate < firstVisibleDate ) {
       beginX = curCol + firstVisibleDate.daysTo( curDate );
@@ -1140,49 +1240,50 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
   } else {
     return;
   }
+
+  const KDateTime::Spec timeSpec = preferences()->timeSpec();
+
   if ( todo && todo->isOverdue() ) {
-    mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol );
+    d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, curCol, curCol );
   } else if ( incidence->allDay() ) {
-      mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX );
-  } else if ( event && event->isMultiDay( Prefs::instance()->timeSpec() ) ) {
-    int startY = mAgenda->timeToY(
-      event->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
-    QTime endtime( event->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+      d->mAllDayAgenda->insertAllDayItem( aitem, columnDate, beginX, endX );
+  } else if ( event && event->isMultiDay( timeSpec ) ) {
+    int startY = d->mAgenda->timeToY( event->dtStart().toTimeSpec( timeSpec ).time() );
+    QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
     if ( endtime == QTime( 0, 0, 0 ) ) {
       endtime = QTime( 23, 59, 59 );
     }
-    int endY = mAgenda->timeToY( endtime ) - 1;
+    int endY = d->mAgenda->timeToY( endtime ) - 1;
     if ( ( beginX <= 0 && curCol == 0 ) || beginX == curCol ) {
-      mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY );
+      d->mAgenda->insertMultiItem( aitem, columnDate, beginX, endX, startY, endY );
 
     }
     if ( beginX == curCol ) {
-      mMaxY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) );
-      if ( startY < mMinY[curCol] ) {
-        mMinY[curCol] = startY;
+      d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) );
+      if ( startY < d->mMinY[curCol] ) {
+        d->mMinY[curCol] = startY;
       }
     } else if ( endX == curCol ) {
-      mMinY[curCol] = mAgenda->timeToY( QTime( 0, 0 ) );
-      if ( endY > mMaxY[curCol] ) {
-        mMaxY[curCol] = endY;
+      d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) );
+      if ( endY > d->mMaxY[curCol] ) {
+        d->mMaxY[curCol] = endY;
       }
     } else {
-      mMinY[curCol] = mAgenda->timeToY( QTime( 0, 0 ) );
-      mMaxY[curCol] = mAgenda->timeToY( QTime( 23, 59 ) );
+      d->mMinY[curCol] = d->mAgenda->timeToY( QTime( 0, 0 ) );
+      d->mMaxY[curCol] = d->mAgenda->timeToY( QTime( 23, 59 ) );
     }
   } else {
     int startY = 0, endY = 0;
     if ( event ) {
-      startY = mAgenda->timeToY(
-        incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
-      QTime endtime( event->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() ).time() );
+      startY = d->mAgenda->timeToY( incidence->dtStart().toTimeSpec( timeSpec ).time() );
+      QTime endtime( event->dtEnd().toTimeSpec( timeSpec ).time() );
       if ( endtime == QTime( 0, 0, 0 ) ) {
         endtime = QTime( 23, 59, 59 );
       }
-      endY = mAgenda->timeToY( endtime ) - 1;
+      endY = d->mAgenda->timeToY( endtime ) - 1;
     }
     if ( todo ) {
-      QTime t = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() ).time();
+      QTime t = todo->dtDue().toTimeSpec( timeSpec ).time();
 
       if ( t == QTime( 0, 0 ) ) {
         t = QTime( 23, 59 );
@@ -1190,22 +1291,22 @@ void AgendaView::insertIncidence( const Item &aitem, const QDate &curDate )
 
       int halfHour = 1800;
       if ( t.addSecs( -halfHour ) < t ) {
-        startY = mAgenda->timeToY( t.addSecs( -halfHour ) );
-        endY   = mAgenda->timeToY( t ) - 1;
+        startY = d->mAgenda->timeToY( t.addSecs( -halfHour ) );
+        endY   = d->mAgenda->timeToY( t ) - 1;
       } else {
         startY = 0;
-        endY   = mAgenda->timeToY( t.addSecs( halfHour ) ) - 1;
+        endY   = d->mAgenda->timeToY( t.addSecs( halfHour ) ) - 1;
       }
     }
     if ( endY < startY ) {
       endY = startY;
     }
-    mAgenda->insertItem( aitem, columnDate, curCol, startY, endY );
-    if ( startY < mMinY[curCol] ) {
-      mMinY[curCol] = startY;
+    d->mAgenda->insertItem( aitem, columnDate, curCol, startY, endY );
+    if ( startY < d->mMinY[curCol] ) {
+      d->mMinY[curCol] = startY;
     }
-    if ( endY > mMaxY[curCol] ) {
-      mMaxY[curCol] = endY;
+    if ( endY > d->mMaxY[curCol] ) {
+      d->mMaxY[curCol] = endY;
     }
   }
 }
@@ -1219,7 +1320,7 @@ void AgendaView::changeIncidenceDisplayAdded( const Item &aitem )
   Todo::Ptr todo = Akonadi::todo( aitem );
   CalFilter *filter = calendar()->filter();
   if ( ( filter && !filter->filterIncidence( Akonadi::incidence( aitem ).get() ) ) ||
-       ( ( todo && !Prefs::instance()->showTodosAgendaView() ) ) ) {
+       ( ( todo && !preferences()->showTodosAgendaView() ) ) ) {
     return;
   }
 
@@ -1242,7 +1343,7 @@ void AgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
     }
     case IncidenceChanger::INCIDENCEEDITED:
     {
-      if ( mAllowAgendaUpdate ) {
+      if ( d->mAllowAgendaUpdate ) {
         //PENDING(AKONADI_PORT) try harder not to recreate the items here, this causes flicker with the delayed notification from Akonadi, after a dnd operation
         removeIncidence( aitem );
         changeIncidenceDisplayAdded( aitem );
@@ -1252,8 +1353,8 @@ void AgendaView::changeIncidenceDisplay( const Item &aitem, int mode )
     }
     case IncidenceChanger::INCIDENCEDELETED:
     {
-      mAgenda->removeIncidence( aitem );
-      mAllDayAgenda->removeIncidence( aitem );
+      d->mAgenda->removeIncidence( aitem );
+      d->mAllDayAgenda->removeIncidence( aitem );
       updateEventIndicators();
       break;
     }
@@ -1269,28 +1370,28 @@ void AgendaView::fillAgenda( const QDate & )
 
 void AgendaView::fillAgenda()
 {
-  mPendingChanges = false;
+  d->mPendingChanges = false;
 
   /* Remember the item Ids of the selected items. In case one of the
    * items was deleted and re-added, we want to reselect it. */
-  const Item::Id selectedAgendaId = mAgenda->lastSelectedItemId();
-  const Item::Id selectedAllDayAgendaId = mAllDayAgenda->lastSelectedItemId();
+  const Item::Id selectedAgendaId = d->mAgenda->lastSelectedItemId();
+  const Item::Id selectedAllDayAgendaId = d->mAllDayAgenda->lastSelectedItemId();
 
   enableAgendaUpdate( true );
   clearView();
 
-  mAllDayAgenda->changeColumns( mSelectedDates.count() );
-  mAgenda->changeColumns( mSelectedDates.count() );
-  mEventIndicatorTop->changeColumns( mSelectedDates.count() );
-  mEventIndicatorBottom->changeColumns( mSelectedDates.count() );
+  d->mAllDayAgenda->changeColumns( d->mSelectedDates.count() );
+  d->mAgenda->changeColumns( d->mSelectedDates.count() );
+  d->mEventIndicatorTop->changeColumns( d->mSelectedDates.count() );
+  d->mEventIndicatorBottom->changeColumns( d->mSelectedDates.count() );
 
   createDayLabels();
   setHolidayMasks();
 
-  mMinY.resize( mSelectedDates.count() );
-  mMaxY.resize( mSelectedDates.count() );
+  d->mMinY.resize( d->mSelectedDates.count() );
+  d->mMaxY.resize( d->mSelectedDates.count() );
 
-  mAgenda->setDateList( mSelectedDates );
+  d->mAgenda->setDateList( d->mSelectedDates );
 
   bool somethingReselected = false;
   const Item::List incidences = calendar() ? calendar()->incidences() : Item::List();
@@ -1298,17 +1399,17 @@ void AgendaView::fillAgenda()
   foreach ( const Item &aitem, incidences ) {
     displayIncidence( aitem );
     if ( aitem.id() == selectedAgendaId ) {
-      mAgenda->selectItem( aitem );
+      d->mAgenda->selectItem( aitem );
       somethingReselected = true;
     }
 
     if ( aitem.id() == selectedAllDayAgendaId ) {
-      mAllDayAgenda->selectItem( aitem );
+      d->mAllDayAgenda->selectItem( aitem );
       somethingReselected = true;
     }
   }
 
-  mAgenda->checkScrollBoundaries();
+  d->mAgenda->checkScrollBoundaries();
   updateEventIndicators();
 
   //  mAgenda->viewport()->update();
@@ -1332,18 +1433,19 @@ void AgendaView::displayIncidence( const Item &aitem )
   Todo::Ptr todo = Akonadi::todo( aitem );
   Event::Ptr event = Akonadi::event( aitem );
 
-  KDateTime firstVisibleDateTime( mSelectedDates.first(), Prefs::instance()->timeSpec() );
-  KDateTime lastVisibleDateTime( mSelectedDates.last(), Prefs::instance()->timeSpec() );
+  const KDateTime::Spec timeSpec = preferences()->timeSpec();
+
+  KDateTime firstVisibleDateTime( d->mSelectedDates.first(), timeSpec );
+  KDateTime lastVisibleDateTime( d->mSelectedDates.last(), timeSpec );
 
   lastVisibleDateTime.setTime( QTime( 23, 59, 59, 59 ) );
   firstVisibleDateTime.setTime( QTime( 0, 0 ) );
   DateTimeList dateTimeList;
 
-  KDateTime incDtStart = incidence->dtStart().toTimeSpec( Prefs::instance()->timeSpec() );
-  KDateTime incDtEnd   = incidence->dtEnd().toTimeSpec( Prefs::instance()->timeSpec() );
+  const KDateTime incDtStart = incidence->dtStart().toTimeSpec( timeSpec );
+  const KDateTime incDtEnd   = incidence->dtEnd().toTimeSpec( timeSpec );
 
-  if ( todo &&
-       ( !Prefs::instance()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
+  if ( todo && ( !preferences()->showTodosAgendaView() || !todo->hasDueDate() ) ) {
     return;
   }
 
@@ -1353,10 +1455,9 @@ void AgendaView::displayIncidence( const Item &aitem )
     // if there's a multiday event that starts before firstVisibleDateTime but ends after
     // lets include it. timesInInterval() ignores incidences that aren't totaly inside
     // the range
-    KDateTime startDateTimeWithOffset = firstVisibleDateTime.addDays( -eventDuration );
-    dateTimeList =
-      incidence->recurrence()->timesInInterval( startDateTimeWithOffset,
-                                                lastVisibleDateTime );
+    const KDateTime startDateTimeWithOffset = firstVisibleDateTime.addDays( -eventDuration );
+    dateTimeList = incidence->recurrence()->timesInInterval( startDateTimeWithOffset,
+                                                             lastVisibleDateTime );
   } else {
     KDateTime dateToAdd; // date to add to our date list
     KDateTime incidenceStart;
@@ -1364,7 +1465,7 @@ void AgendaView::displayIncidence( const Item &aitem )
 
     if ( todo && todo->hasDueDate() && !todo->isOverdue() ) {
       // If it's not overdue it will be shown at the original date (not today)
-      dateToAdd = todo->dtDue().toTimeSpec( Prefs::instance()->timeSpec() );
+      dateToAdd = todo->dtDue().toTimeSpec( timeSpec );
 
       // To-dos are drawn with the bottom of the rectangle at dtDue
       // if dtDue is at 00:00, then it should be displayed in the previous day, at 23:59
@@ -1390,7 +1491,7 @@ void AgendaView::displayIncidence( const Item &aitem )
   }
 
   // ToDo items shall be displayed today if they are already overdude
-  KDateTime dateTimeToday = KDateTime( today, Prefs::instance()->timeSpec() );
+  const KDateTime dateTimeToday = KDateTime( today, timeSpec );
   if ( todo &&
        todo->isOverdue() &&
        dateTimeToday >= firstVisibleDateTime &&
@@ -1402,7 +1503,7 @@ void AgendaView::displayIncidence( const Item &aitem )
       /* If there's a recurring instance showing up today don't add "today" again
        * we don't want the event to appear duplicated */
       for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-        if ( t->toTimeSpec( Prefs::instance()->timeSpec() ).date() == today ) {
+        if ( t->toTimeSpec( timeSpec ).date() == today ) {
           doAdd = false;
           break;
         }
@@ -1415,72 +1516,57 @@ void AgendaView::displayIncidence( const Item &aitem )
   }
 
   for ( t = dateTimeList.begin(); t != dateTimeList.end(); ++t ) {
-    insertIncidence( aitem, t->toTimeSpec( Prefs::instance()->timeSpec() ).date() );
+    insertIncidence( aitem, t->toTimeSpec( timeSpec ).date() );
   }
 }
 
 void AgendaView::clearView()
 {
-  mAllDayAgenda->clear();
-  mAgenda->clear();
+  d->mAllDayAgenda->clear();
+  d->mAgenda->clear();
 }
-/*
-  TODO_SPLIT
-CalPrinter::PrintType AgendaView::printType()
-{
-  if ( currentDateCount() == 1 ) {
-    return CalPrinter::Day;
-  } else {
-    return CalPrinter::Week;
-  }
-  } */
 
 void AgendaView::updateEventIndicatorTop( int newY )
 {
-  for ( int i = 0; i < mMinY.size(); ++i ) {
-    mEventIndicatorTop->enableColumn( i, newY > mMinY[i] );
+  for ( int i = 0; i < d->mMinY.size(); ++i ) {
+    d->mEventIndicatorTop->enableColumn( i, newY > d->mMinY[i] );
   }
-  mEventIndicatorTop->update();
+  d->mEventIndicatorTop->update();
 }
 
 void AgendaView::updateEventIndicatorBottom( int newY )
 {
-  for ( int i = 0; i < mMaxY.size(); ++i ) {
-    mEventIndicatorBottom->enableColumn( i, newY <= mMaxY[i] );
+  for ( int i = 0; i < d->mMaxY.size(); ++i ) {
+    d->mEventIndicatorBottom->enableColumn( i, newY <= d->mMaxY[i] );
   }
-  mEventIndicatorBottom->update();
+  d->mEventIndicatorBottom->update();
 }
 
 void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos, bool allDay )
 {
-  //TODO_SPLIT, tirar os unused
-  Q_UNUSED(items);
-  Q_UNUSED( allDay );
-  Q_UNUSED( gpos );
 
 #ifdef AKONADI_PORT_DISABLED // one item -> multiple items, Incidence* -> akonadi item url (we might have to fetch the items here first!)
   if ( gpos.x() < 0 || gpos.y() < 0 ) {
     return;
   }
 
-  QDate day = mSelectedDates[gpos.x()];
-  QTime time = mAgenda->gyToTime( gpos.y() );
-  KDateTime newTime( day, time, Prefs::instance()->timeSpec() );
+  const QDate day = d->mSelectedDates[gpos.x()];
+  const QTime time = d->mAgenda->gyToTime( gpos.y() );
+  KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
   Todo::Ptr todo = Akonadi::todo( todoItem );
   if ( todo &&  dynamic_cast<Akonadi::Calendar*>( calendar() ) ) {
-    const Item existingTodoItem =
-      dynamic_cast<Akonadi::Calendar*>( calendar() )->itemForIncidence( calendar()->todo( todo->uid() ) );
+    const Item existingTodoItem = calendar()->itemForIncidence( calendar()->todo( todo->uid() ) );
     if ( Todo::Ptr existingTodo = Akonadi::todo( existingTodoItem ) ) {
       kDebug() << "Drop existing Todo";
       Todo::Ptr oldTodo( existingTodo->clone() );
-      if ( mChanger && mChanger->beginChange( existingTodoItem ) ) {
+      if ( changer() && changer()->beginChange( existingTodoItem ) ) {
         existingTodo->setDtDue( newTime );
         existingTodo->setAllDay( allDay );
         existingTodo->setHasDueDate( true );
-        mChanger->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
-        mChanger->endChange( existingTodoItem );
+        changer()->changeIncidence( oldTodo, existingTodoItem, IncidenceChanger::DATE_MODIFIED, this );
+        changer()->endChange( existingTodoItem );
       } else {
         KMessageBox::sorry( this, i18n( "Unable to modify this to-do, "
                                         "because it cannot be locked." ) );
@@ -1490,7 +1576,7 @@ void AgendaView::slotTodosDropped( const QList<KUrl> &items, const QPoint &gpos,
       todo->setDtDue( newTime );
       todo->setAllDay( allDay );
       todo->setHasDueDate( true );
-      if ( !mChanger->addIncidence( todo, this ) ) {
+      if ( !changer()->addIncidence( todo, this ) ) {
         Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
       }
     }
@@ -1506,17 +1592,21 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     return;
   }
 
-  QDate day = mSelectedDates[gpos.x()];
-  QTime time = mAgenda->gyToTime( gpos.y() );
-  KDateTime newTime( day, time, Prefs::instance()->timeSpec() );
+  const QDate day = d->mSelectedDates[gpos.x()];
+  const QTime time = d->mAgenda->gyToTime( gpos.y() );
+  KDateTime newTime( day, time, preferences()->timeSpec() );
   newTime.setDateOnly( allDay );
 
   Q_FOREACH( const Todo::Ptr &todo, items ) {
     todo->setDtDue( newTime );
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
-    if ( !mChanger->addIncidence( todo, this ) ) {
-      Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+
+    bool userCanceled;
+    if ( !changer()->addIncidence( todo, this, userCanceled ) ) {
+      if ( !userCanceled ) {
+        Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
+      }
     }
   }
 }
@@ -1533,19 +1623,19 @@ void AgendaView::startDrag( const Item &incidence )
 
 void AgendaView::readSettings()
 {
-  readSettings( Globals::self()->config() );
+  readSettings( KGlobal::activeComponent().config().data() );
 }
 
-void AgendaView::readSettings( KConfig *config )
+void AgendaView::readSettings( const KConfig *config )
 {
-  KConfigGroup group = config->group( "Views" );
+  const KConfigGroup group = config->group( "Views" );
 
-  QList<int> sizes = group.readEntry( "Separator AgendaView", QList<int>() );
+  const QList<int> sizes = group.readEntry( "Separator AgendaView", QList<int>() );
 
   // the size depends on the number of plugins used
   // we don't want to read invalid/corrupted settings or else agenda becomes invisible
   if ( sizes.count() >= 2 && !sizes.contains( 0 ) ) {
-    mSplitterAgenda->setSizes( sizes );
+    d->mSplitterAgenda->setSizes( sizes );
   }
 
   updateConfig();
@@ -1555,48 +1645,48 @@ void AgendaView::writeSettings( KConfig *config )
 {
   KConfigGroup group = config->group( "Views" );
 
-  QList<int> list = mSplitterAgenda->sizes();
+  QList<int> list = d->mSplitterAgenda->sizes();
   group.writeEntry( "Separator AgendaView", list );
 }
 
 void AgendaView::setHolidayMasks()
 {
-  if ( mSelectedDates.isEmpty() || !mSelectedDates[0].isValid() ) {
+  if ( d->mSelectedDates.isEmpty() || !d->mSelectedDates[0].isValid() ) {
     return;
   }
 
-  mHolidayMask.resize( mSelectedDates.count() + 1 );
+  d->mHolidayMask.resize( d->mSelectedDates.count() + 1 );
 
-  for ( int i = 0; i < mSelectedDates.count(); ++i ) {
-    mHolidayMask[i] = !Globals::self()->isWorkDay( mSelectedDates[ i ] );
+  for ( int i = 0; i < d->mSelectedDates.count(); ++i ) {
+    d->mHolidayMask[i] = !isWorkDay( d->mSelectedDates[ i ] );
   }
 
   // Store the information about the day before the visible area (needed for
   // overnight working hours) in the last bit of the mask:
-  bool showDay = !Globals::self()->isWorkDay( mSelectedDates[ 0 ].addDays( -1 ) );
-  mHolidayMask[ mSelectedDates.count() ] = showDay;
+  bool showDay = !isWorkDay( d->mSelectedDates[ 0 ].addDays( -1 ) );
+  d->mHolidayMask[ d->mSelectedDates.count() ] = showDay;
 
-  mAgenda->setHolidayMask( &mHolidayMask );
-  mAllDayAgenda->setHolidayMask( &mHolidayMask );
+  d->mAgenda->setHolidayMask( &d->mHolidayMask );
+  d->mAllDayAgenda->setHolidayMask( &d->mHolidayMask );
 }
 
 void AgendaView::setContentsPos( int y )
 {
-  if ( y != mAgenda->contentsY() ) {
-    mAgenda->setContentsPos( 0, y );
+  if ( y != d->mAgenda->contentsY() ) {
+    d->mAgenda->setContentsPos( 0, y );
   }
 }
 
 void AgendaView::clearSelection()
 {
-  mAgenda->deselectItem();
-  mAllDayAgenda->deselectItem();
+  d->mAgenda->deselectItem();
+  d->mAllDayAgenda->deselectItem();
 }
 
 void AgendaView::newTimeSpanSelectedAllDay( const QPoint &start, const QPoint &end )
 {
   newTimeSpanSelected( start, end );
-  mTimeSpanInAllDay = true;
+  d->mTimeSpanInAllDay = true;
 }
 
 void AgendaView::handleNewEventRequest()
@@ -1606,59 +1696,71 @@ void AgendaView::handleNewEventRequest()
 
 void AgendaView::newTimeSpanSelected( const QPoint &start, const QPoint &end )
 {
-  if ( !mSelectedDates.count() ) {
+  if ( !d->mSelectedDates.count() ) {
     return;
   }
 
-  mTimeSpanInAllDay = false;
+  d->mTimeSpanInAllDay = false;
 
-  QDate dayStart = mSelectedDates[ qBound( 0, start.x(), (int)mSelectedDates.size() - 1 ) ];
-  QDate dayEnd = mSelectedDates[ qBound( 0, end.x(), (int)mSelectedDates.size() - 1 ) ];
+  const QDate dayStart =d-> mSelectedDates[ qBound( 0, start.x(), (int)d->mSelectedDates.size() - 1 ) ];
+  const QDate dayEnd = d->mSelectedDates[ qBound( 0, end.x(), (int)d->mSelectedDates.size() - 1 ) ];
 
-  QTime timeStart = mAgenda->gyToTime( start.y() );
-  QTime timeEnd = mAgenda->gyToTime( end.y() + 1 );
+  const QTime timeStart = d->mAgenda->gyToTime( start.y() );
+  const QTime timeEnd = d->mAgenda->gyToTime( end.y() + 1 );
 
-  QDateTime dtStart( dayStart, timeStart );
-  QDateTime dtEnd( dayEnd, timeEnd );
+  d->mTimeSpanBegin = QDateTime( dayStart, timeStart );;
+  d->mTimeSpanEnd = QDateTime( dayEnd, timeEnd );
+}
 
-  mTimeSpanBegin = dtStart;
-  mTimeSpanEnd = dtEnd;
+QDateTime AgendaView::selectionStart() const
+{
+  return d->mTimeSpanBegin;
+}
+
+QDateTime AgendaView::selectionEnd() const
+{
+  return d->mTimeSpanEnd;
+}
+
+bool AgendaView::selectedIsAllDay() const
+{
+  return d->mTimeSpanInAllDay;
 }
 
 void AgendaView::deleteSelectedDateTime()
 {
-  mTimeSpanBegin.setDate( QDate() );
-  mTimeSpanEnd.setDate( QDate() );
-  mTimeSpanInAllDay = false;
+  d->mTimeSpanBegin.setDate( QDate() );
+  d->mTimeSpanEnd.setDate( QDate() );
+  d->mTimeSpanInAllDay = false;
 }
 
 void AgendaView::removeIncidence( const Item &incidence )
 {
-  mAgenda->removeIncidence( incidence );
-  mAllDayAgenda->removeIncidence( incidence );
+  d->mAgenda->removeIncidence( incidence );
+  d->mAllDayAgenda->removeIncidence( incidence );
 }
 
 void AgendaView::updateEventIndicators()
 {
-  mMinY = mAgenda->minContentsY();
-  mMaxY = mAgenda->maxContentsY();
+  d->mMinY = d->mAgenda->minContentsY();
+  d->mMaxY = d->mAgenda->maxContentsY();
 
-  mAgenda->checkScrollBoundaries();
-  updateEventIndicatorTop( mAgenda->visibleContentsYMin() );
-  updateEventIndicatorBottom( mAgenda->visibleContentsYMax() );
+  d->mAgenda->checkScrollBoundaries();
+  updateEventIndicatorTop( d->mAgenda->visibleContentsYMin() );
+  updateEventIndicatorBottom( d->mAgenda->visibleContentsYMax() );
 }
 
 void AgendaView::setIncidenceChanger( IncidenceChanger *changer )
 {
-  mChanger = changer;
-  mAgenda->setIncidenceChanger( changer );
-  mAllDayAgenda->setIncidenceChanger( changer );
+  EventView::setIncidenceChanger( changer );
+  d->mAgenda->setIncidenceChanger( changer );
+  d->mAllDayAgenda->setIncidenceChanger( changer );
 }
 
 void AgendaView::clearTimeSpanSelection()
 {
-  mAgenda->clearSelection();
-  mAllDayAgenda->clearSelection();
+  d->mAgenda->clearSelection();
+  d->mAllDayAgenda->clearSelection();
   deleteSelectedDateTime();
 }
 
@@ -1674,15 +1776,24 @@ void AgendaView::setCollectionSelection( CollectionSelection *sel )
 
 void AgendaView::setCollection( Collection::Id coll )
 {
-  if ( mCollectionId == coll ) {
-    return;
+  if ( d->mCollectionId != coll ) {
+    d->mCollectionId = coll;
   }
-  mCollectionId = coll;
 }
 
 Akonadi::Collection::Id AgendaView::collection() const
 {
-  return mCollectionId;
+  return d->mCollectionId;
+}
+
+Agenda *AgendaView::agenda() const
+{
+  return d->mAgenda;
+}
+
+QSplitter *AgendaView::splitter() const
+{
+  return d->mSplitterAgenda;
 }
 
 bool AgendaView::filterByCollectionSelection( const Item &incidence )
@@ -1691,43 +1802,17 @@ bool AgendaView::filterByCollectionSelection( const Item &incidence )
     return customCollectionSelection()->contains( incidence.parentCollection().id() );
   }
 
-  if ( mCollectionId < 0 ) {
+  if ( d->mCollectionId < 0 ) {
     return true;
   } else {
-    return mCollectionId == incidence.storageCollectionId();
+    return d->mCollectionId == incidence.storageCollectionId();
   }
 }
 
 void AgendaView::setUpdateNeeded()
 {
-  mPendingChanges = true;
-}
-
-void AgendaView::calendarIncidenceAdded( const Item &incidence )
-{
-  Q_UNUSED( incidence );
-  if ( !mPendingChanges ) {
-    mPendingChanges = true;
-    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
-  }
-}
-
-void AgendaView::calendarIncidenceChanged( const Item &incidence )
-{
-  Q_UNUSED( incidence );
-  if ( !mPendingChanges ) {
-    mPendingChanges = true;
-    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
-  }
-}
-
-void AgendaView::calendarIncidenceRemoved( const Item &incidence )
-{
-  Q_UNUSED( incidence );
-  if ( !mPendingChanges ) {
-    mPendingChanges = true;
-    QMetaObject::invokeMethod( this, "updateView", Qt::QueuedConnection );
-  }
+  d->mPendingChanges = true;
 }
 
 #include "agendaview.moc"
+// kate: space-indent on; indent-width 2; replace-tabs on;

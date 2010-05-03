@@ -36,6 +36,7 @@ namespace EventViews
 {
 
 class Agenda;
+class EventView;
 class TimeLabelsZone;
 
 class EVENTVIEWS_EXPORT TimeLabels : public QFrame
@@ -45,6 +46,7 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     typedef QList<TimeLabels *> List;
 
     explicit TimeLabels( const KDateTime::Spec &spec, int rows,
+                         EventView *eventView,
                          TimeLabelsZone *parent = 0, Qt::WFlags f = 0 );
 
     /** Calculates the minimum width */
@@ -92,6 +94,7 @@ class EVENTVIEWS_EXPORT TimeLabels : public QFrame
     int mRows;
     double mCellHeight;
     int mMiniWidth;
+    EventView *mEventView;
     Agenda *mAgenda;
     TimeLabelsZone *mTimeLabelsZone;
 

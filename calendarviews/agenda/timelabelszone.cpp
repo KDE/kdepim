@@ -35,8 +35,9 @@
 
 using namespace EventViews;
 
-TimeLabelsZone::TimeLabelsZone( QWidget *parent, Agenda *agenda )
-  : QWidget( parent ), mAgenda( agenda ), mParent( dynamic_cast<AgendaView*>( parent ) )
+TimeLabelsZone::TimeLabelsZone( QWidget *parent, EventView *eventView, Agenda *agenda )
+  : QWidget( parent ), mAgenda( agenda ), mEventView( eventView ),
+    mParent( dynamic_cast<AgendaView*>( parent ) )
 {
   mTimeLabelsLayout = new QHBoxLayout( this );
   mTimeLabelsLayout->setMargin( 0 );
@@ -58,16 +59,16 @@ void TimeLabelsZone::reset()
   // Update some related geometry from the agenda view
   updateAll();
   if ( mParent ) {
-    mParent->createDayLabels();
     mParent->updateTimeBarWidth();
+    mParent->createDayLabels();
   }
 }
 
 void TimeLabelsZone::init()
 {
-  addTimeLabels( Prefs::instance()->timeSpec() );
+  addTimeLabels( mEventView->preferences()->timeSpec() );
 
-  foreach ( const QString &zoneStr, Prefs::instance()->timeScaleTimezones() ) {
+  foreach ( const QString &zoneStr, mEventView->preferences()->timeScaleTimezones() ) {
     KTimeZone zone = KSystemTimeZones::zone( zoneStr );
     if ( zone.isValid() ) {
       addTimeLabels( zone );
@@ -78,7 +79,7 @@ void TimeLabelsZone::init()
 void TimeLabelsZone::addTimeLabels( const KDateTime::Spec &spec )
 {
   QScrollArea *area = new QScrollArea( this );
-  TimeLabels *labels = new TimeLabels( spec, 24, this );
+  TimeLabels *labels = new TimeLabels( spec, 24, mEventView, this );
   mTimeLabelsList.prepend( area );
   area->setWidget( labels );
   area->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
@@ -108,7 +109,7 @@ void TimeLabelsZone::setupTimeLabel( QScrollArea *area )
   }
 }
 
-int TimeLabelsZone::timeLabelsWidth()
+int TimeLabelsZone::timeLabelsWidth() const
 {
   if ( mTimeLabelsList.isEmpty() ) {
     return 0;
@@ -128,7 +129,7 @@ void TimeLabelsZone::updateAll()
 void TimeLabelsZone::setTimeLabelsWidth( int width )
 {
   foreach ( QScrollArea *timeLabel, mTimeLabelsList ) {
-    timeLabel->setFixedWidth( width / mTimeLabelsList.count() );
+    timeLabel->widget()->setFixedWidth( width );
   }
 }
 

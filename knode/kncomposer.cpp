@@ -21,10 +21,9 @@
 #include <QLabel>
 #include <QtDBus/QtDBus>
 #include <qgroupbox.h>
-#include "addressesdialog.h"
-using KPIM::AddressesDialog;
 #include "recentaddresses.h"
 using KPIM::RecentAddresses;
+#include <akonadi/contact/emailaddressselectiondialog.h>
 #include <kcharsets.h>
 #include <kmessagebox.h>
 #include <kactioncollection.h>
@@ -1420,27 +1419,20 @@ void KNComposer::slotSubjectChanged(const QString &t)
 
 void KNComposer::slotToBtnClicked()
 {
-  AddressesDialog dlg( this );
-  QString txt;
+  Akonadi::EmailAddressSelectionDialog dlg( this );
+  dlg.view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+
+  if ( !dlg.exec() )
+    return;
+
+  QStringList addresses;
+  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, dlg.selectedAddresses() )
+    addresses << selection.quotedEmail();
+
   QString to = v_iew->emailRecipient();
-  dlg.setShowBCC(false);
-  dlg.setShowCC(false);
-#if 0
-  QStringList lst;
-
-
-  txt = mEdtTo->text().trimmed();
-  if ( !txt.isEmpty() ) {
-      lst = KMMessage::splitEmailAddrList( txt );
-      dlg.setSelectedTo( lst );
-  }
-#endif
-  dlg.setRecentAddresses( RecentAddresses::self(knGlobals.config())->kabcAddresses() );
-  if (dlg.exec()==QDialog::Rejected) return;
-
-  if(!to.isEmpty())
-      to+=", ";
-  to+=dlg.emailAddresses( AddressesDialog::ToReceiver ).join(", ");
+  if ( !to.isEmpty() )
+      to += ", ";
+  to += addresses.join( ", " );
 
   v_iew->setEmailRecipient( to );
 }

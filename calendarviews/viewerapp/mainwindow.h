@@ -28,33 +28,52 @@ namespace Akonadi
 {
   class Calendar;
   class ChangeRecorder;
+  class IncidenceChanger;
 }
 
+namespace boost {
+  template <typename T> class shared_ptr;
+}
 
 namespace EventViews
 {
-  class EventView;
+  class Prefs;
+  typedef boost::shared_ptr<Prefs> PrefsPtr;
 }
+
+class QAction;
+class Settings;
 
 class MainWindow : public QMainWindow
 {
   Q_OBJECT
   public:
-    MainWindow();
+    explicit MainWindow( const QStringList &viewNames );
 
     ~MainWindow();
 
   private:
+    const QStringList mViewNames;
+
     Ui_MainWindow mUi;
 
     Akonadi::ChangeRecorder *mChangeRecorder;
 
     Akonadi::Calendar *mCalendar;
 
-    EventViews::EventView* mEventView;
+    Akonadi::IncidenceChanger *mIncidenceChanger;
+
+    Settings *mSettings;
+
+    EventViews::PrefsPtr *mViewPreferences;
+
+  private:
+    void addView( const QString &viewName );
 
   private Q_SLOTS:
     void delayedInit();
+
+    void addViewTriggered( QAction *action );
 };
 
 #endif

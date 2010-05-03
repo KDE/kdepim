@@ -2,6 +2,8 @@
   This file is part of KOrganizer.
   Copyright (c) 2001 Cornelius Schumacher <schumacher@kde.org>
   Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (C) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.net
+  Author: Kevin Krammer, krake@kdab.com
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -26,39 +28,33 @@
 
 #include "eventviews_export.h"
 
-#include "eventview.h"
-#include "agendaview.h"
-#include <kcal/incidence.h>
-#include <akonadi/kcal/incidencechanger.h>
+#include <KCal/Todo>
 
 #include <Akonadi/Item>
 
 #include <QFrame>
-#include <QList>
-#include <QPointer>
-#include <QTimer>
-#include <QVector>
+#include <QScrollArea>
 
-class QScrollArea;
 class QDropEvent;
 class QEvent;
 class QKeyEvent;
 class QLabel;
 class QMouseEvent;
 class QResizeEvent;
+class QScrollBar;
 class QTime;
 class QWheelEvent;
 
 namespace Akonadi
 {
   class Calendar;
+  class IncidenceChanger;
 }
 
 namespace KCal {
   class Event;
   class Todo;
 }
-using namespace KCal;
 
 namespace EventViews
 {
@@ -66,25 +62,22 @@ namespace EventViews
 class Agenda;
 class AgendaItem;
 class AgendaView;
+class EventView;
 
 class MarcusBains : public QFrame
 {
   Q_OBJECT
   public:
-    MarcusBains( Agenda *agenda = 0 );
+    explicit MarcusBains( EventView *eventView, Agenda *agenda = 0 );
     void updateLocationRecalc( bool recalculate = false );
     virtual ~MarcusBains();
 
-  public slots:
+  public Q_SLOTS:
     void updateLocation();
 
   private:
-    int todayColumn();
-    QTimer *mTimer;
-    QLabel *mTimeBox;  // Label showing the current time
-    Agenda *mAgenda;
-    QTime mOldTime;
-    int mOldTodayCol;
+    class Private;
+    Private *const d;
 };
 
 class EVENTVIEWS_EXPORT Agenda : public QWidget
@@ -92,18 +85,15 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
   Q_OBJECT
   public:
     Agenda ( EventView *eventView, QScrollArea *scrollArea,
-             int columns, int rows, int columnSize,
-             QWidget *parent = 0, Qt::WFlags f = 0);
+             int columns, int rows, int rowSize );
 
-    explicit Agenda ( EventView *eventView,
-                      QScrollArea *scrollArea, int columns,
-                      QWidget *parent = 0, Qt::WFlags f = 0 );
+    Agenda ( EventView *eventView,
+             QScrollArea *scrollArea, int columns );
 
     virtual ~Agenda();
 
     Akonadi::Item selectedIncidence() const;
     QDate selectedIncidenceDate() const;
-    QScrollArea *mScrollArea;
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
     QSize minimumSize() const;
@@ -160,11 +150,12 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void changeColumns( int columns );
 
-    int columns() const { return mColumns; }
-    int rows() const { return mRows; }
+    int columns() const;
+    int rows() const;
 
-    double gridSpacingX() const { return mGridSpacingX; }
-    double gridSpacingY() const { return mGridSpacingY; }
+    double gridSpacingX() const;
+    double gridSpacingY() const;
+
     void clear();
 
     /** Update configuration from preference settings */
@@ -174,17 +165,16 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     void setHolidayMask( QVector<bool> * );
 
-    void setDateList( const DateList &selectedDates );
-    DateList dateList() const;
+    void setDateList( const KCal::DateList &selectedDates );
+    KCal::DateList dateList() const;
 
-    void setCalendar( Akonadi::Calendar *cal )
-    { mCalendar = cal; }
-    void setIncidenceChanger( Akonadi::IncidenceChanger *changer )
-    { mChanger = changer; }
+    void setCalendar( Akonadi::Calendar *cal );
+
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     QList<AgendaItem*> agendaItems( const Akonadi::Item &item ) const;
 
-  public slots:
+  public Q_SLOTS:
     void scrollUp();
     void scrollDown();
 
@@ -214,7 +204,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
     bool removeAgendaItem( AgendaItem *item );
     void showAgendaItem( AgendaItem *item );
 
-  signals:
+  Q_SIGNALS:
     void newEventSignal();
     void newTimeSpanSignal( const QPoint &, const QPoint & );
     void newStartSelectSignal();
@@ -342,7 +332,7 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
 
     virtual void contentsMousePressEvent ( QMouseEvent * );
 
-  protected slots:
+  protected Q_SLOTS:
     /** delete the items that are queued for deletion */
     void deleteItemsToDelete();
     /** Resizes all the child elements after the size of the agenda
@@ -354,85 +344,26 @@ class EVENTVIEWS_EXPORT Agenda : public QWidget
   private:
     void init();
     void marcus_bains();
-    bool mAllDayMode;
 
-    // We need the calendar for drag'n'drop and for paint the ResourceColor
-    Akonadi::Calendar *mCalendar;
+  private:
+    class Private;
+    Private *const d;
+};
 
-    // Width and height of agenda cells. mDesiredGridSpacingY is the height
-    // set in the config. The actual height might be larger since otherwise
-    // more than 24 hours might be displayed.
-    double mGridSpacingX;
-    double mGridSpacingY;
-    double mDesiredGridSpacingY;
+class AgendaScrollArea : public QScrollArea
+{
+  public:
+    AgendaScrollArea( bool allDay, EventView *eventView, QWidget *parent );
+    ~AgendaScrollArea();
 
-    // size of border, where mouse action will resize the AgendaItem
-    int mResizeBorderWidth;
+    Agenda* agenda();
 
-    // size of border, where mouse mve will cause a scroll of the agenda
-    int mScrollBorderWidth;
-    int mScrollDelay;
-    int mScrollOffset;
+  private:
+    Agenda *mAgenda;
 
-    QTimer mScrollUpTimer;
-    QTimer mScrollDownTimer;
-
-    // Number of Columns/Rows of agenda grid
-    int mColumns;
-    int mRows;
-
-    // Cells to store Move and Resize coordiantes while performing the action
-    QPoint mStartCell;
-    QPoint mEndCell;
-
-    // Working Hour coordiantes
-    bool mWorkingHoursEnable;
-    QVector<bool> *mHolidayMask;
-    int mWorkingHoursYTop;
-    int mWorkingHoursYBottom;
-
-    // Selection
-    bool mHasSelection;
-    QPoint mSelectionStartPoint;
-    QPoint mSelectionStartCell;
-    QPoint mSelectionEndCell;
-
-    // List of dates to be displayed
-    DateList mSelectedDates;
-
-    // The AgendaItem, which has been right-clicked last
-    QPointer<AgendaItem> mClickedItem;
-
-    // The AgendaItem, which is being moved/resized
-    QPointer<AgendaItem> mActionItem;
-
-    // Currently selected item
-    QPointer<AgendaItem> mSelectedItem;
-    // Id of the last selected item. Used for reselecting in situations
-    // where the selected item points to a no longer valid incidence, for
-    // example during resource reload.
-    Akonadi::Item::Id mSelectedId;
-
-    // The Marcus Bains Line widget.
-    MarcusBains *mMarcusBains;
-
-    MouseActionType mActionType;
-
-    bool mItemMoved;
-
-    // List of all Items contained in agenda
-    QList<AgendaItem*> mItems;
-    QList<AgendaItem*> mItemsToDelete;
-
-    int mOldLowerScrollValue;
-    int mOldUpperScrollValue;
-
-    bool mReturnPressed;
-    Akonadi::IncidenceChanger *mChanger;
-
-    EventView *mEventView;
 };
 
 } // namespace EventViews
 
 #endif // AGENDA_H
+// kate: space-indent on; indent-width 2; replace-tabs on;

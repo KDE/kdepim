@@ -23,7 +23,7 @@
 #include <akonadi/entitytreemodel.h>
 #include <kdebug.h>
 
-#include <akonadi/krecursivefilterproxymodel.h>
+#include <akonadi_next/krecursivefilterproxymodel.h>
 
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
@@ -58,7 +58,7 @@ Qt::ItemFlags ReadableCollectionProxyModel::flags( const QModelIndex & index ) c
     Akonadi::Collection collection = sourceModel()->data( sourceIndex, Akonadi::EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
 
     if ( ! ( collection.rights() & Akonadi::Collection::CanCreateItem ) ) {
-      return KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+      return Future::KRecursiveFilterProxyModel::flags( index ) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
     return Akonadi::EntityRightsFilterModel::flags( index );
   }

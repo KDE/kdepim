@@ -45,7 +45,6 @@ class QAbstractItemModel;
 class QModelIndex;
 class QSplitter;
 class QStackedWidget;
-class QTextBrowser;
 class QuickSearchWidget;
 class XXPortManager;
 
@@ -105,7 +104,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     QSplitter *mMainWidgetSplitter;
     Akonadi::ContactViewer *mContactDetails;
     Akonadi::ContactGroupViewer *mContactGroupDetails;
-    QTextBrowser *mEmptyDetails;
+    QWidget *mEmptyDetails;
     Akonadi::StandardContactActionManager *mActionManager;
 
     XXPortManager *mXXPortManager;

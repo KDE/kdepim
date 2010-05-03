@@ -53,7 +53,7 @@ include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 include(MacroBoolTo01)
-find_package(KdepimLibs 4.3.85 REQUIRED)
+find_package(KdepimLibs 4.4.61 REQUIRED)
 
 
 ############### Load the CTest options ###############
@@ -221,6 +221,7 @@ set(libkdgantt1_SRCS
   add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(calendarviews)
+  add_subdirectory( incidenceeditors )
   if (QT_QT3SUPPORT_FOUND) # not directly, but depends on kmail/korganizer
     add_subdirectory(libkdepimdbusinterfaces)
   endif (QT_QT3SUPPORT_FOUND)

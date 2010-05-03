@@ -204,7 +204,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
 
   document.print( printer );
 
-  progress->addMessage( i18n( "Done" ) );
+  progress->addMessage( i18nc( "Finished printing", "Done" ) );
 }
 
 

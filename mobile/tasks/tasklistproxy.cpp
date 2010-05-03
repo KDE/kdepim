@@ -18,7 +18,7 @@
 */
 #include "tasklistproxy.h"
 
-#include <kcal/incidence.h>
+#include <kcal/todo.h>
 
 #include <akonadi/entitytreemodel.h>
 
@@ -33,13 +33,15 @@ QVariant TaskListProxy::data( const QModelIndex& index, int role ) const
 {
   const Akonadi::Item item = QSortFilterProxyModel::data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
-  if ( item.isValid() && item.hasPayload<KCal::Incidence::Ptr>() ) {
-    const KCal::Incidence::Ptr incidence = item.payload<KCal::Incidence::Ptr>();
+  if ( item.isValid() && item.hasPayload<KCal::Todo::Ptr>() ) {
+    const KCal::Todo::Ptr incidence = item.payload<KCal::Todo::Ptr>();
     switch ( relativeCustomRole( role ) ) {
     case Summary:
       return incidence->summary();
     case Description:
       return incidence->description();
+    case PercentComplete:
+      return incidence->percentComplete();
     }
   }
 
@@ -54,6 +56,7 @@ void TaskListProxy::setSourceModel( QAbstractItemModel* sourceModel )
   names.insert( EntityTreeModel::ItemIdRole, "itemId" );
   names.insert( absoluteCustomRole( Summary ), "summary" );
   names.insert( absoluteCustomRole( Description ), "description" );
+  names.insert( absoluteCustomRole( PercentComplete ), "percentComplete" );
   setRoleNames( names );
 }
 

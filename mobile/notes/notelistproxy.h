@@ -29,7 +29,8 @@ class NoteListProxy : public ListProxy
 public:
   enum Role {
     Title,
-    Content
+    Content,
+    PlainContent
   };
 
 public:

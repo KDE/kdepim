@@ -19,14 +19,15 @@
 
 #include "kmfawidgets.h"
 
-#include <kabc/addresseedialog.h> // for the button in KMFilterActionWithAddress
+#include <akonadi/contact/emailaddressselectiondialog.h> // for the button in KMFilterActionWithAddress
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kurlrequester.h>
 #include <kfiledialog.h>
 #include <kstandarddirs.h>
 
-#include <QHBoxLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QTreeView>
 
 //=============================================================================
 //
@@ -58,15 +59,14 @@ KMFilterActionWithAddressWidget::KMFilterActionWithAddressWidget( QWidget* paren
 
 void KMFilterActionWithAddressWidget::slotAddrBook()
 {
-  KABC::Addressee::List lst = KABC::AddresseeDialog::getAddressees( this );
-
-  if ( lst.empty() )
+  Akonadi::EmailAddressSelectionDialog dlg( this );
+  dlg.view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
+  if ( !dlg.exec() )
     return;
 
   QStringList addrList;
-
-  for( KABC::Addressee::List::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it )
-    addrList << (*it).fullEmail();
+  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, dlg.selectedAddresses() )
+    addrList << selection.quotedEmail();
 
   QString txt = mLineEdit->text().trimmed();
 

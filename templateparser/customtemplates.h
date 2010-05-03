@@ -66,6 +66,7 @@ class TEMPLATEPARSER_EXPORT CustomTemplates : public QWidget, public Ui::CustomT
   signals:
 
     void changed();
+    void templatesUpdated();
 
   protected:
 
