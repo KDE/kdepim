@@ -14,40 +14,40 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 set( incidenceeditors_LIB_SRCS
     ${libkdgantt1_SRCS}
-    koeditorconfig.cpp
-    koincidenceeditor.cpp
-    koeventeditor.cpp
-    kotodoeditor.cpp
-    kojournaleditor.cpp
-    koeditorgeneral.cpp
-    koeditorgeneralevent.cpp
-    koeditorgeneraltodo.cpp
-    koeditorgeneraljournal.cpp
-    koeditordetails.cpp
-    koeditoralarms.cpp
-    koeditorrecurrence.cpp
-    koeditorattachments.cpp
-    koeditorfreebusy.cpp
-    koattendeeeditor.cpp
-    kogroupwareintegration.cpp
-    freebusyurldialog.cpp
-    templatemanagementdialog.cpp
-    designerfields.cpp
-    embeddedurlpage.cpp
-    koprefs.cpp
-    categoryconfig.cpp
-    categoryselectdialog.cpp
-    categoryhierarchyreader.cpp
+    attendeeeditor.cpp
     autochecktreewidget.cpp
+    categoryconfig.cpp
+    categoryhierarchyreader.cpp
+    categoryselectdialog.cpp
+    designerfields.cpp
+    editoralarms.cpp
+    editorattachments.cpp
+    editorconfig.cpp
+    editordetails.cpp
+    editorfreebusy.cpp
+    editorgeneral.cpp
+    editorgeneralevent.cpp
+    editorgeneraljournal.cpp
+    editorgeneraltodo.cpp
+    editorrecurrence.cpp
+    embeddedurlpage.cpp
+    eventeditor.cpp
+    freebusyurldialog.cpp
+    groupwareintegration.cpp
+    incidenceeditor.cpp
+    journaleditor.cpp
+    prefs.cpp
+    templatemanagementdialog.cpp
+    todoeditor.cpp
 )
 
 kde4_add_ui_files( incidenceeditors_LIB_SRCS
    categoryselectdialog_base.ui
-   koeditoralarms_base.ui
+   editoralarms_base.ui
    template_management_dialog_base.ui
 )
 
-kde4_add_kcfg_files(incidenceeditors_LIB_SRCS koprefs_base.kcfgc )
+kde4_add_kcfg_files(incidenceeditors_LIB_SRCS prefs_base.kcfgc )
 
 kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
 

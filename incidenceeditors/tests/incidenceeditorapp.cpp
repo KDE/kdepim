@@ -51,10 +51,10 @@
 
 #include <KCal/Incidence>
 
-#include "kotodoeditor.h"
-#include "koeventeditor.h"
-#include "kojournaleditor.h"
-#include "kogroupwareintegration.h"
+#include "todoeditor.h"
+#include "eventeditor.h"
+#include "journaleditor.h"
+#include "groupwareintegration.h"
 
 using namespace Akonadi;
 using namespace IncidenceEditors;
@@ -151,8 +151,8 @@ class MainWidget : public QWidget
         m_collectionproxymodel( new Akonadi::CollectionFilterProxyModel( this ) ),
         m_itemmodel( new CalItemModel( this ) )
     {
-      if ( !KOGroupwareIntegration::isActive() ) {
-        KOGroupwareIntegration::activate();
+      if ( !GroupwareIntegration::isActive() ) {
+        GroupwareIntegration::activate();
       }
 
       m_collectionproxymodel->setSourceModel(m_collectionmodel);
@@ -241,12 +241,12 @@ class MainWidget : public QWidget
                << "summary=" << incidence->summary() << "type=" << incidence->type();
 
       if ( incidence->type() == "Event" ) {
-        KOEventEditor *editor = new KOEventEditor( this );
+        EventEditor *editor = new EventEditor( this );
         editor->setIncidenceChanger( m_changer );
         editor->editIncidence( item, QDate() );
         editor->show();
       } else if( incidence->type() == "Todo" ) {
-        KOTodoEditor *editor = new KOTodoEditor( this );
+        TodoEditor *editor = new TodoEditor( this );
         /*
         createCategoryEditor();
         connect( editor, SIGNAL(deleteIncidenceSignal(Incidence *)),
@@ -266,7 +266,7 @@ class MainWidget : public QWidget
         editor->show();
 
       } else if( incidence->type() == "Journal" ) {
-        KOJournalEditor *editor = new KOJournalEditor( this );
+        JournalEditor *editor = new JournalEditor( this );
         editor->setIncidenceChanger( m_changer );
         editor->editIncidence( item, QDate() );
         editor->show();
