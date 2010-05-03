@@ -1,6 +1,7 @@
 <?xml version="1.0" ?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!ENTITY kleopatra "<application>Kleopatra</application>">
+  <!ENTITY uiserver "UiServer">
   <!ENTITY kwatchgnupg "<application>KWatchGnuPG</application>">
   <!ENTITY gpgsm "<application>GpgSM</application>">
   <!ENTITY gpg "<application>GPG</application>">
@@ -2028,6 +2029,59 @@ button.</para>
 <guilabel>Current attribute order</guilabel> list, and press the
 <guilabel>Move one up</guilabel> (<guilabel>Move one down</guilabel>)
 button.</para>
+
+      </sect2>
+
+    </sect1>
+
+    <sect1 id="configuration-crypto-operations">
+      <title>Configuring <guilabel>Crypto Operations</guilabel></title>
+
+      <sect2 id="configuration-crypto-operations-email">
+        <title>Configuring <guilabel>EMail Operations</guilabel></title>
+
+        <para>
+          Here you can configure some aspects of the email operations
+          of &kleopatra;'s &uiserver;. Currently, you can only
+          configure whether to use <quote>Quick Mode</quote> for
+          signing and encrypting emails, respectively.
+        </para>
+        <para>
+          When <quote>Quick Mode</quote> is enabled, no dialog is
+          shown when signing (encrypting) emails, respectively, unless
+          there is a conflict that needs manual resolution.
+        </para>
+
+      </sect2>
+
+      <sect2 id="configuration-crypto-operations-file">
+        <title>Configuring <guilabel>File Operations</guilabel></title>
+
+        <para>
+          Here you can configure some aspects of the file operations
+          of &kleopatra;'s &uiserver;. Currently, you can only choose
+          the checksum program to use for <!--link ### xref
+          linkend="uiserver-checksum-create-files"--><command>CHECKSUM_CREATE_FILES</command><!--/link-->.
+        </para>
+        <para>
+          Use <guilabel>Checksum program to use</guilabel> to choose
+          which of the configured checksum programs should be used
+          when creating checksum files.
+        </para>
+        <para>
+          When verifying checksums, the program to use is
+          automatically found, based on the names of the checksum files
+          found.
+        </para>
+        <note>
+          <para>
+            The administrator and power user can completly define
+            which checksum programs to make available to &kleopatra;
+            through so-called <quote>Checksum Definitions</quote> in
+            the config file. See <xref linkend="admin-checksum-definitions"/>
+            in <xref linkend="admin"/> for details.
+          </para>
+        </note>
 
       </sect2>
 
