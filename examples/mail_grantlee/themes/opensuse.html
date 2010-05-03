@@ -1,0 +1,102 @@
+{# OpenSuse Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+.body {
+    background-color:#FFF;
+}
+
+.footer {
+    background-image:url('../images/opensuse_footer.png');
+    margin: 0 0 0 1px;
+    height:98px;
+    width:90px;
+}
+
+table {
+    width:90px;
+    height:120px;
+    padding:5px 10px 0px 200px;
+    margin:0px;
+    background-image:url('../images/opensuse_header.png');
+}
+
+td {
+    color:#003E35;
+}
+
+td.data_header {
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-size: 18px;
+    line-height: 20px;
+    letter-spacing: -1px;
+    padding-top:5px;
+    font-weight: 100;
+    width:20%;
+    text-align:left;
+}
+
+td.data {
+    font-family: Gill Sans, Verdana;
+    font-size: 11px;
+    line-height: 14px;
+    padding: 5px 5px 5px 12px;
+    margin: 5px 0 0 0;
+}
+
+.message {
+    width:574px;
+    padding: 15px 9px 5px 10px;
+    font-family:  'Hoefler Text', Georgia, 'Times New Roman', serif;
+    font-size:15px;
+    margin: 0 0 0 1px;
+    text-align: justify;
+    font-weight: normal;
+    color: #243D0D;
+    background-color:#FAFBF8;
+    border-width: 3px;
+    border-style: solid;
+    border-color: #73BA25;
+}
+
+{% endblock %}
+
+{% block title %} OpenSuse {% endblock %}
+
+{% block content %}
+
+<table>
+  <tr>
+    <td class="data_header"> Subject </td>
+    <td class="data">: {{ subject }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> From </td>
+    <td class="data">: {{ from }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> To </td>
+    <td class="data">: {{ to }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> Date </td>
+    <td class="data">: {{ date }} </td>
+  </tr>
+</table>
+
+{% endblock %}
+
+{% block mail_message %}
+  <div class="message">
+    {{ message }}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <div class="footer"></div>
+{% endblock %}

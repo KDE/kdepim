@@ -1,0 +1,119 @@
+{# KDE Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+.body {
+    background-color:#FFF;
+}
+
+.header, table, .footer, .main {
+    width:600px;
+}
+
+.main {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #154187;
+}
+
+.header {
+    background-image:url('../images/kde_header.png');
+    height:90px;
+}
+
+.footer {
+    background-image:url('../images/kde_footer.png');
+    height:70px;
+}
+
+table {
+    height:80px;
+    background-color:#F2F6F8;
+    border-bottom:dotted;
+}
+
+td {
+    color:#164B8A;
+}
+
+td.data_header {
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: -1px;
+    padding: 0 0 0 10px;
+    font-weight: bold;
+    width:20%;
+}
+
+td.data {
+    font-family: Gill Sans, Verdana;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.message {
+    width:575px;
+    padding: 5px 10px 5px 10px;
+    font-family: Gill Sans, Verdana;
+    font-size:13px;
+    margin-top: 5px 10px 0 0;
+    text-align: justify;
+    font-weight: normal;
+    color: #222;
+}
+
+{% endblock %}
+
+{% block title %} KDE {% endblock %}
+
+{% block content %}
+
+<div class="main">
+
+<div class="header">
+    <img src=":../images/kde_logo.png" alt="KDE" align="right" hspace="5" vspace="3">
+</div>
+
+<table>
+  <tr>
+    <td rowspan="4"> <img src="../images/kdepim_logo.png" alt="KDE" align="center"> </td>
+    <td class="data_header"> Subject </td>
+    <td class="data">: {{ subject }} </td>
+    <td rowspan="4" class="data_header" align="center">
+          Attachment: <br />
+          <a href="" title="PDF Document">
+            <img src="../images/okular.png" alt="Okular" border="0">
+          </a>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> From </td>
+    <td class="data">: {{ from }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> To </td>
+    <td class="data">: {{ to }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> Date </td>
+    <td class="data">: {{ date }} </td>
+  </tr>
+</table>
+
+{% endblock %}
+
+{% block mail_message %}
+  <div class="message">
+    {{ message }}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <div class="footer"></div>
+{% endblock %}

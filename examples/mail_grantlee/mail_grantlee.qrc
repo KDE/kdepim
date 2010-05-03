@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/kde_footer.png</file>
+        <file>images/kde_header.png</file>
+        <file>images/kde_logo.png</file>
+        <file>images/kdepim_logo.png</file>
+        <file>images/nokia_footer.png</file>
+        <file>images/nokia_header.png</file>
+        <file>images/nokia-logo.png</file>
+        <file>images/nokia_n900.png</file>
+        <file>images/okular.png</file>
+        <file>images/opensuse_footer.png</file>
+        <file>images/opensuse_header.png</file>
+        <file>images/opensuse_logo.png</file>
+    </qresource>
+</RCC>

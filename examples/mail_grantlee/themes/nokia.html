@@ -1,0 +1,108 @@
+{# Nokia Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+.body {
+    background-color:#FFF;
+}
+
+.header , table, .footer {
+    width:600px;
+}
+
+.message, table {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #000;
+}
+
+.header {
+    background-image:url('../images/nokia_header.png');
+    height:90px;
+}
+
+.footer {
+    background-image:url('../images/nokia_footer.png');
+    height:30px;
+}
+
+table {
+    padding:10px 10px 5px 10px;
+    margin:0px;
+    background-image:url('../images/nokia_n900.png');
+}
+
+td {
+    color:#000;
+}
+
+td.data_header {
+    font-family: times, Times New Roman, times-roman, georgia, serif;
+    font-size: 17px;
+    line-height: 20px;
+    letter-spacing: -1px;
+    padding: 0 0 0 10px;
+    font-weight: bold;
+    width:20%;
+}
+
+td.data {
+    font-family: Gill Sans, Verdana;
+    font-size: 11px;
+    line-height: 14px;
+}
+
+.message {
+    width:575px;
+    padding: 5px 10px 5px 10px;
+    font-family: Gill Sans, Verdana;
+    font-size:13px;
+    margin-top: 5px 10px 0 0;
+    text-align: justify;
+    font-weight: normal;
+    color: #222;
+}
+
+{% endblock %}
+
+{% block title %} Nokia {% endblock %}
+
+{% block content %}
+
+<div class="header"></div>
+
+<table>
+  <tr>
+    <td class="data_header"> Subject </td>
+    <td class="data">: {{ subject }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> From </td>
+    <td class="data">: {{ from }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> To </td>
+    <td class="data">: {{ to }} </td>
+  </tr>
+
+  <tr>
+    <td class="data_header"> Date </td>
+    <td class="data">: {{ date }} </td>
+  </tr>
+</table>
+
+{% endblock %}
+
+{% block mail_message %}
+  <div class="message">
+    {{ message }}
+  </div>
+{% endblock %}
+
+{% block footer %}
+  <div class="footer"></div>
+{% endblock %}
