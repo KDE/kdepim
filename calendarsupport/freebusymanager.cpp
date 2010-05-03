@@ -72,14 +72,13 @@ using namespace KCal;
 using namespace Akonadi;
 
 FreeBusyDownloadJob::FreeBusyDownloadJob( const QString &email, const KUrl &url,
-                                          FreeBusyManager *manager )
+                                          FreeBusyManager *manager,
+                                          QWidget *parentWidget )
   : QObject( manager ), mManager( manager ), mEmail( email )
 {
   KIO::Job *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
 
-  //pass the mainwindow to the job so any prompts are active
-  Q_ASSERT( QApplication::activeModalWidget() );
-  job->ui()->setWindow( QApplication::activeModalWidget() );
+  job->ui()->setWindow( QPointer<QWidget>( parentWidget ) );
 
   connect( job, SIGNAL(result(KJob *)), SLOT(slotResult(KJob *)) );
   connect( job, SIGNAL(data(KIO::Job *,const QByteArray &)),
@@ -118,7 +117,7 @@ void FreeBusyDownloadJob::slotResult( KJob *job )
 FreeBusyManager::FreeBusyManager( QObject *parent ) :
   QObject( parent ),
   mCalendar( 0 ), mTimerID( 0 ), mUploadingFreeBusy( false ),
-  mBrokenUrl( false )
+  mBrokenUrl( false ), mParentWidgetForRetrieval( 0 )
 {
 }
 
@@ -224,7 +223,7 @@ void FreeBusyManager::setBrokenUrl( bool isBroken )
   This method is called when the user has selected to publish its
   free/busy list or when the delay have passed.
 */
-void FreeBusyManager::publishFreeBusy()
+void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 {
   // Already uploading? Skip this one then.
   if ( mUploadingFreeBusy ) {
@@ -233,7 +232,7 @@ void FreeBusyManager::publishFreeBusy()
   KUrl targetURL ( KCalPrefs::instance()->freeBusyPublishUrl() );
   if ( targetURL.isEmpty() )  {
     KMessageBox::sorry(
-      QApplication::activeModalWidget(),
+      parentWidget,
       i18n( "<qt><p>No URL configured for uploading your free/busy list. "
             "Please set it in KOrganizer's configuration dialog, on the "
             "\"Free/Busy\" page.</p>"
@@ -249,7 +248,7 @@ void FreeBusyManager::publishFreeBusy()
   }
   if ( !targetURL.isValid() ) {
     KMessageBox::sorry(
-      QApplication::activeModalWidget(),
+      parentWidget,
       i18n( "<qt>The target URL '%1' provided is invalid.</qt>", targetURL.prettyUrl() ),
       i18n( "Invalid URL" ) );
     mBrokenUrl = true;
@@ -328,9 +327,7 @@ void FreeBusyManager::publishFreeBusy()
 
     KIO::Job *job = KIO::file_copy( src, targetURL, -1, KIO::Overwrite | KIO::HideProgressInfo );
 
-    //pass the mainwindow to the job so any prompts are active
-    Q_ASSERT( QApplication::activeModalWidget() );
-    job->ui()->setWindow( QApplication::activeModalWidget() );
+    job->ui()->setWindow( QPointer<QWidget>( parentWidget ) );
 
     connect( job, SIGNAL(result(KJob *)), SLOT(slotUploadFreeBusyResult(KJob *)) );
   }
@@ -359,12 +356,15 @@ void FreeBusyManager::slotUploadFreeBusyResult( KJob *_job )
     mUploadingFreeBusy = false;
 }
 
-bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload )
+bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload,
+                                        QWidget *parentWidget )
 {
   kDebug() << email;
   if ( email.isEmpty() ) {
     return false;
   }
+
+  mParentWidgetForRetrieval = parentWidget;
 
   if ( KCalPrefs::instance()->thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
@@ -411,7 +411,8 @@ bool FreeBusyManager::processRetrieveQueue()
     return false;
   }
 
-  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( email, sourceURL, this );
+  FreeBusyDownloadJob *job = new FreeBusyDownloadJob( email, sourceURL, this,
+                                                      mParentWidgetForRetrieval );
   job->setObjectName( QLatin1String( "freebusy_download_job" ) );
   connect( job, SIGNAL(freeBusyDownloaded(KCal::FreeBusy *,const QString &)),
            SIGNAL(freeBusyRetrieved(KCal::FreeBusy *,const QString &)) );
