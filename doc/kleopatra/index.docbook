@@ -3068,8 +3068,8 @@ Local Variables:
 mode: sgml
 sgml-minimize-attributes:nil
 sgml-general-insert-case:lower
-sgml-indent-step:0
-sgml-indent-data:nil
+sgml-indent-step:2
+sgml-indent-data:t
 End:
 
 // vim:ts=2:sw=2:tw=78:noet
