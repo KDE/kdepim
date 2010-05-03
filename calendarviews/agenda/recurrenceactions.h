@@ -41,7 +41,7 @@ namespace KCal
   For example the user might be given the choice to not only modify a selected occurrence
   of an incidence but also all that follow that one, etc.
 
-  @author Kevin Krammer, krake@kdab.company
+  @author Kevin Krammer, krake@kdab.com
   @since 4.6
 */
 namespace RecurrenceActions
