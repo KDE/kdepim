@@ -21,30 +21,26 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#ifndef KOPREFS_H
-#define KOPREFS_H
+#ifndef KCALPREFS_H
+#define KCALPREFS_H
 
-#include "koprefs_base.h"
+#include "kcalprefs_base.h"
 
 #include <kdatetime.h>
 
-#include <QHash>
-
-class QFont;
-class QColor;
 class QStringList;
 
-class KOPrefs : public KOPrefsBase
+class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
 {
   public:
-    /** Constructor disabled for public. Use instance() to create a KOPrefs
+    /** Constructor disabled for public. Use instance() to create a KCalPrefs
     object. */
-    KOPrefs();
-    virtual ~KOPrefs();
+    KCalPrefs();
+    virtual ~KCalPrefs();
 
-    /** Get instance of KOPrefs. It is made sure that there is only one
+    /** Get instance of KCalPrefs. It is made sure that there is only one
     instance. */
-    static KOPrefs *instance();
+    static KCalPrefs *instance();
 
     /** Set preferences to default values */
     void usrSetDefaults();
@@ -77,26 +73,18 @@ class KOPrefs : public KOPrefsBase
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec();
 
-    QString mMailTransport;    
-    QString mHtmlExportFile;
+    QStringList timeScaleTimezones() const;
+    void setTimeScaleTimezones( const QStringList &list );
+
+    QString mMailTransport;
 
     // Groupware passwords
     QString mPublishPassword;
     QString mRetrievePassword;
 
-    QStringList timeScaleTimezones() const;
-    void setTimeScaleTimezones( const QStringList &list );
-
   private:
-    QFont mDefaultMonthViewFont;
-    QFont mDefaultAgendaTimeLabelsFont;
-
     KDateTime::Spec mTimeSpec;
     QStringList mTimeScaleTimeZones;
-
-  public: // Do not use - except in KOPrefsDialogMain
-    QString mName;
-    QString mEmail;
 };
 
 #endif

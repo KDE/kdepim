@@ -129,12 +129,12 @@ bool IncidenceChanger::sendGroupwareMessage( const Item &aitem,
   if ( !incidence ) {
     return false;
   }
-  if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) &&
+  if ( KCalPrefs::instance()->thatIsMe( incidence->organizer().email() ) &&
        incidence->attendeeCount() > 0 &&
-       !KOPrefs::instance()->mUseGroupwareCommunication ) {
+       !KCalPrefs::instance()->mUseGroupwareCommunication ) {
     emit schedule( method, aitem );
     return true;
-  } else if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+  } else if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
     if ( !d->mGroupware ) {
       kError() << "Groupware communication enabled but no groupware instance set";
       return false;
@@ -148,7 +148,7 @@ void IncidenceChanger::cancelAttendees( const Item &aitem )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
   Q_ASSERT( incidence );
-  if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+  if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
     if ( KMessageBox::questionYesNo(
            0,
            i18n( "Some attendees were removed from the incidence. "
@@ -299,8 +299,8 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
                               job->errorString( )) );
     return;
   }
-  if ( !KOPrefs::instance()->thatIsMe( tmp->organizer().email() ) ) {
-    const QStringList myEmails = KOPrefs::instance()->allEmails();
+  if ( !KCalPrefs::instance()->thatIsMe( tmp->organizer().email() ) ) {
+    const QStringList myEmails = KCalPrefs::instance()->allEmails();
     bool notifyOrganizer = false;
     for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
       QString email = *it;
@@ -431,8 +431,8 @@ bool IncidenceChanger::assignIncidence( Incidence *inc1, Incidence *inc2 )
 bool IncidenceChanger::myAttendeeStatusChanged( const Incidence* newInc,
                                                 const Incidence* oldInc )
 {
-  Attendee *oldMe = oldInc->attendeeByMails( KOPrefs::instance()->allEmails() );
-  Attendee *newMe = newInc->attendeeByMails( KOPrefs::instance()->allEmails() );
+  Attendee *oldMe = oldInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
+  Attendee *newMe = newInc->attendeeByMails( KCalPrefs::instance()->allEmails() );
   if ( oldMe && newMe && ( oldMe->status() != newMe->status() ) ) {
     return true;
   }
@@ -463,7 +463,7 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
     //        it wants with the event. If no groupware is used,use the null
     //        pattern...
     bool success = true;
-    if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+    if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
       if ( !d->mGroupware ) {
           kError() << "Groupware communication enabled but no groupware instance set";
       } else {
@@ -538,7 +538,7 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
   }
 
   Q_ASSERT( incidence );
-  if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+  if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
     if ( !d->mGroupware ) {
       kError() << "Groupware communication enabled but no groupware instance set";
     } else if ( !d->mGroupware->sendICalMessage(

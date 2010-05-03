@@ -130,7 +130,6 @@
       <whatsthis>Enter here your e-mail address. This e-mail address will be used to identify the owner of the calendar, and displayed in events and to-dos you create.</whatsthis>
       <default code="true">i18n(&quot;nobody@nowhere&quot;)</default>
     </entry>
-
   </group>
 
 </kcfg>

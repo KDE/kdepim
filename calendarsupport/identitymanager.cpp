@@ -23,15 +23,15 @@
 */
 
 #include "identitymanager.h"
-#include "koprefs.h"
+#include "kcalprefs.h"
 
 // This is called to create a default identity in case emailidentities has none
 // (i.e. the user never used KMail before)
-// We provide the values from KOPrefs, since those are configurable in korganizer.
+// We provide the values from KCalPrefs, since those are configurable in korganizer.
 void Akonadi::IdentityManager::createDefaultIdentity( QString &fullName, QString &emailAddress )
 {
-  fullName = KOPrefs::instance()->fullName();
-  emailAddress = KOPrefs::instance()->email();
+  fullName = KCalPrefs::instance()->fullName();
+  emailAddress = KCalPrefs::instance()->email();
 }
 
 K_GLOBAL_STATIC( Akonadi::IdentityManager, globalIdentityManager )

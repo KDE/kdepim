@@ -28,14 +28,14 @@ set( kcalakonadi_LIB_SRC
      groupware.cpp
      identitymanager.cpp
      mailclient.cpp
-     koprefs.cpp
+     kcalprefs.cpp
      mailscheduler.cpp
      freebusymanager.cpp
      dndfactory.cpp
      incidencechanger.cpp
 )
 
-kde4_add_kcfg_files(kcalakonadi_LIB_SRC koprefs_base.kcfgc )
+kde4_add_kcfg_files(kcalakonadi_LIB_SRC kcalprefs_base.kcfgc )
 
 qt4_add_dbus_interface(kcalakonadi_LIB_SRC ${CMAKE_CURRENT_SOURCE_DIR}/org.freedesktop.Akonadi.CalendarSearchAgent.xml calendarsearchinterface)
 

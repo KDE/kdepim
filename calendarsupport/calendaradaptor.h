@@ -26,7 +26,7 @@
 #include "akonadi-kcal_next_export.h"
 
 #include "groupware.h"
-#include "koprefs.h"
+#include "kcalprefs.h"
 #include "mailscheduler.h"
 
 #include <akonadi/kcal/calendar.h>
@@ -79,7 +79,7 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
 
   public:
     explicit CalendarAdaptor(Akonadi::Calendar *calendar, QWidget *parent, bool storeDefaultCollection = false )
-      : KCal::Calendar( KOPrefs::instance()->timeSpec() )
+      : KCal::Calendar( KCalPrefs::instance()->timeSpec() )
       , mCalendar( calendar ), mParent( parent ), mDeleteCalendar( false ), mStoreDefaultCollection( storeDefaultCollection )
     {
       Q_ASSERT(mCalendar);
@@ -260,7 +260,7 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
       }
 
       Q_ASSERT( incidence );
-      if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+      if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
         if ( !Groupware::instance()->sendICalMessage(
                mParent,
                KCal::iTIPRequest,
@@ -289,8 +289,8 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
                                   job->errorString( )) );
         return;
       }
-      if ( !KOPrefs::instance()->thatIsMe( tmp->organizer().email() ) ) {
-        const QStringList myEmails = KOPrefs::instance()->allEmails();
+      if ( !KCalPrefs::instance()->thatIsMe( tmp->organizer().email() ) ) {
+        const QStringList myEmails = KCalPrefs::instance()->allEmails();
         bool notifyOrganizer = false;
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
           QString email = *it;
@@ -325,12 +325,12 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
       const Incidence::Ptr incidence = Akonadi::incidence( aitem );
       if ( !incidence )
         return false;
-      if ( KOPrefs::instance()->thatIsMe( incidence->organizer().email() ) &&
+      if ( KCalPrefs::instance()->thatIsMe( incidence->organizer().email() ) &&
            incidence->attendeeCount() > 0 &&
-           !KOPrefs::instance()->mUseGroupwareCommunication ) {
+           !KCalPrefs::instance()->mUseGroupwareCommunication ) {
         schedule( method, aitem );
         return true;
-      } else if ( KOPrefs::instance()->mUseGroupwareCommunication ) {
+      } else if ( KCalPrefs::instance()->mUseGroupwareCommunication ) {
         return
           Groupware::instance()->sendICalMessage( mParent, method, incidence.get(), action,  false );
       }

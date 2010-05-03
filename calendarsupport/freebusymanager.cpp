@@ -36,7 +36,7 @@
 */
 
 #include "freebusymanager.h"
-#include "koprefs.h"
+#include "kcalprefs.h"
 #include "calendar.h"
 
 #include <akonadi/contact/contactsearchjob.h>
@@ -133,7 +133,7 @@ void FreeBusyManager::setCalendar( Akonadi::Calendar *c )
 KCal::FreeBusy *FreeBusyManager::ownerFreeBusy()
 {
   KDateTime start = KDateTime::currentUtcDateTime();
-  KDateTime end = start.addDays( KOPrefs::instance()->mFreeBusyPublishDays );
+  KDateTime end = start.addDays( KCalPrefs::instance()->mFreeBusyPublishDays );
 
   Event::List events;
   Akonadi::Item::List items = mCalendar ? mCalendar->rawEvents( start.date(), end.date() ) : Akonadi::Item::List();
@@ -141,7 +141,7 @@ KCal::FreeBusy *FreeBusyManager::ownerFreeBusy()
     events << item.payload<Event::Ptr>().get();
   }
   FreeBusy *freebusy = new FreeBusy( events, start, end );
-  freebusy->setOrganizer( Person( KOPrefs::instance()->fullName(), KOPrefs::instance()->email() ) );
+  freebusy->setOrganizer( Person( KCalPrefs::instance()->fullName(), KCalPrefs::instance()->email() ) );
   return freebusy;
 }
 
@@ -164,8 +164,8 @@ QString FreeBusyManager::freeBusyToIcal( KCal::FreeBusy *freebusy )
 void FreeBusyManager::slotPerhapsUploadFB()
 {
   // user has automatic uploading disabled, bail out
-  if ( !KOPrefs::instance()->freeBusyPublishAuto() ||
-       KOPrefs::instance()->freeBusyPublishUrl().isEmpty() ) {
+  if ( !KCalPrefs::instance()->freeBusyPublishAuto() ||
+       KCalPrefs::instance()->freeBusyPublishUrl().isEmpty() ) {
      return;
   }
 
@@ -230,7 +230,7 @@ void FreeBusyManager::publishFreeBusy()
   if ( mUploadingFreeBusy ) {
     return;
   }
-  KUrl targetURL ( KOPrefs::instance()->freeBusyPublishUrl() );
+  KUrl targetURL ( KCalPrefs::instance()->freeBusyPublishUrl() );
   if ( targetURL.isEmpty() )  {
     KMessageBox::sorry(
       QApplication::activeModalWidget(),
@@ -255,8 +255,8 @@ void FreeBusyManager::publishFreeBusy()
     mBrokenUrl = true;
     return;
   }
-  targetURL.setUser( KOPrefs::instance()->mFreeBusyPublishUser );
-  targetURL.setPass( KOPrefs::instance()->mFreeBusyPublishPassword );
+  targetURL.setUser( KCalPrefs::instance()->mFreeBusyPublishUser );
+  targetURL.setPass( KCalPrefs::instance()->mFreeBusyPublishPassword );
 
   mUploadingFreeBusy = true;
 
@@ -268,8 +268,8 @@ void FreeBusyManager::publishFreeBusy()
 
   // Save the time of the next free/busy uploading
   mNextUploadTime = QDateTime::currentDateTime();
-  if ( KOPrefs::instance()->mFreeBusyPublishDelay > 0 ) {
-    mNextUploadTime = mNextUploadTime.addSecs( KOPrefs::instance()->mFreeBusyPublishDelay * 60 );
+  if ( KCalPrefs::instance()->mFreeBusyPublishDelay > 0 ) {
+    mNextUploadTime = mNextUploadTime.addSecs( KCalPrefs::instance()->mFreeBusyPublishDelay * 60 );
   }
 
   QString messageText = ownerFreeBusyAsString();
@@ -292,32 +292,32 @@ void FreeBusyManager::publishFreeBusy()
 
     // Put target string together
     KUrl targetURL;
-    if( KOPrefs::instance()->mPublishKolab ) {
+    if( KCalPrefs::instance()->mPublishKolab ) {
       // we use Kolab
       QString server;
-      if ( KOPrefs::instance()->mPublishKolabServer == QLatin1String( "%SERVER%" ) ||
-           KOPrefs::instance()->mPublishKolabServer.isEmpty() ) {
+      if ( KCalPrefs::instance()->mPublishKolabServer == QLatin1String( "%SERVER%" ) ||
+           KCalPrefs::instance()->mPublishKolabServer.isEmpty() ) {
         server = emailHost;
       } else {
-        server = KOPrefs::instance()->mPublishKolabServer;
+        server = KCalPrefs::instance()->mPublishKolabServer;
       }
 
       targetURL.setProtocol( "webdavs" );
       targetURL.setHost( server );
 
-      QString fbname = KOPrefs::instance()->mPublishUserName;
+      QString fbname = KCalPrefs::instance()->mPublishUserName;
       int at = fbname.indexOf( '@' );
       if ( at > 1 && fbname.length() > (uint)at ) {
         fbname = fbname.left(at);
       }
       targetURL.setPath( "/freebusy/" + fbname + ".ifb" );
-      targetURL.setUser( KOPrefs::instance()->mPublishUserName );
-      targetURL.setPass( KOPrefs::instance()->mPublishPassword );
+      targetURL.setUser( KCalPrefs::instance()->mPublishUserName );
+      targetURL.setPass( KCalPrefs::instance()->mPublishPassword );
     } else {
       // we use something else
-      targetURL = KOPrefs::instance()->mPublishAnyURL.replace( "%SERVER%", emailHost );
-      targetURL.setUser( KOPrefs::instance()->mPublishUserName );
-      targetURL.setPass( KOPrefs::instance()->mPublishPassword );
+      targetURL = KCalPrefs::instance()->mPublishAnyURL.replace( "%SERVER%", emailHost );
+      targetURL.setUser( KCalPrefs::instance()->mPublishUserName );
+      targetURL.setPass( KCalPrefs::instance()->mPublishPassword );
     }
 #endif
 
@@ -366,7 +366,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
     return false;
   }
 
-  if ( KOPrefs::instance()->thatIsMe( email ) ) {
+  if ( KCalPrefs::instance()->thatIsMe( email ) ) {
     // Don't download our own free-busy list from the net
     kDebug() << "freebusy of owner";
     emit freeBusyRetrieved( ownerFreeBusy(), email );
@@ -380,7 +380,7 @@ bool FreeBusyManager::retrieveFreeBusy( const QString &email, bool forceDownload
   }
 
   // Don't download free/busy if the user does not want it.
-  if ( !KOPrefs::instance()->mFreeBusyRetrieveAuto && !forceDownload ) {
+  if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto && !forceDownload ) {
     return false;
   }
 
@@ -459,7 +459,7 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
     }
   }
   // None found. Check if we do automatic FB retrieving then
-  if ( !KOPrefs::instance()->mFreeBusyRetrieveAuto ) {
+  if ( !KCalPrefs::instance()->mFreeBusyRetrieveAuto ) {
     // No, so no FB list here
     return KUrl();
   }
@@ -478,9 +478,9 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
 
   // Build the URL
   KUrl sourceURL;
-  sourceURL = KOPrefs::instance()->mFreeBusyRetrieveUrl;
+  sourceURL = KCalPrefs::instance()->mFreeBusyRetrieveUrl;
 
-  if ( KOPrefs::instance()->mFreeBusyCheckHostname ) {
+  if ( KCalPrefs::instance()->mFreeBusyCheckHostname ) {
     // Don't try to fetch free/busy data for users not on the specified servers
     // This tests if the hostnames match, or one is a subset of the other
     const QString hostDomain = sourceURL.host();
@@ -494,13 +494,13 @@ KUrl FreeBusyManager::freeBusyUrl( const QString &email ) const
     }
   }
 
-  if ( KOPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
+  if ( KCalPrefs::instance()->mFreeBusyFullDomainRetrieval ) {
     sourceURL.addPath( email + QLatin1String( ".ifb" ) );
   } else {
     sourceURL.addPath( emailName + QLatin1String( ".ifb" ) );
   }
-  sourceURL.setUser( KOPrefs::instance()->mFreeBusyRetrieveUser );
-  sourceURL.setPass( KOPrefs::instance()->mFreeBusyRetrievePassword );
+  sourceURL.setUser( KCalPrefs::instance()->mFreeBusyRetrieveUser );
+  sourceURL.setPass( KCalPrefs::instance()->mFreeBusyRetrievePassword );
 
   return sourceURL;
 }

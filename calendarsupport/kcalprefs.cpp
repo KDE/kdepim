@@ -23,7 +23,7 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include "koprefs.h"
+#include "kcalprefs.h"
 #include "identitymanager.h"
 
 #include <kmime/kmime_header_parsing.h>
@@ -42,7 +42,6 @@
 
 #include <QDir>
 #include <QString>
-#include <QFont>
 #include <QColor>
 #include <QMap>
 #include <QStringList>
@@ -52,32 +51,18 @@
 
 using namespace KPIMIdentities;
 
-K_GLOBAL_STATIC( KOPrefs, globalPrefs )
+K_GLOBAL_STATIC( KCalPrefs, globalPrefs )
 
-KOPrefs::KOPrefs() : KOPrefsBase()
+KCalPrefs::KCalPrefs() : KCalPrefsBase()
 {
-  mDefaultAgendaTimeLabelsFont = KGlobalSettings::generalFont();
-  // make a large default time bar font, at least 16 points.
-  mDefaultAgendaTimeLabelsFont.setPointSize(
-    qMax( mDefaultAgendaTimeLabelsFont.pointSize() + 4, 16 ) );
-
-  mDefaultMonthViewFont = KGlobalSettings::generalFont();
-  // make it a bit smaller
-  mDefaultMonthViewFont.setPointSize(
-    qMax( mDefaultMonthViewFont.pointSize() - 2, 6 ) );
-
-  KConfigSkeleton::setCurrentGroup( QLatin1String( "General" ) );
-
-  addItemPath( QLatin1String( "Html Export File" ), mHtmlExportFile,
-      QDir::homePath() + QLatin1Char( '/' ) + i18nc( "Default export file", "calendar.html" ) );
 }
 
-KOPrefs::~KOPrefs()
+KCalPrefs::~KCalPrefs()
 {
   kDebug();
 }
 
-KOPrefs *KOPrefs::instance()
+KCalPrefs *KCalPrefs::instance()
 {
   static bool firstCall = true;
 
@@ -89,7 +74,7 @@ KOPrefs *KOPrefs::instance()
   return globalPrefs;
 }
 
-void KOPrefs::usrSetDefaults()
+void KCalPrefs::usrSetDefaults()
 {
   // Default should be set a bit smarter, respecting username and locale
   // settings for example.
@@ -110,7 +95,30 @@ void KOPrefs::usrSetDefaults()
   KConfigSkeleton::usrSetDefaults();
 }
 
-void KOPrefs::fillMailDefaults()
+void KCalPrefs::setTimeZoneDefault()
+{
+  KTimeZone zone = KSystemTimeZones::local();
+  if ( !zone.isValid() ) {
+    kError() << "KSystemTimeZones::local() return 0";
+    return;
+  }
+
+  kDebug () << "----- time zone:" << zone.name();
+
+  mTimeSpec = zone;
+}
+
+KDateTime::Spec KCalPrefs::timeSpec()
+{
+  return KSystemTimeZones::local();
+}
+
+void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
+{
+  mTimeSpec = spec;
+}
+
+void KCalPrefs::fillMailDefaults()
 {
   userEmailItem()->swapDefault();
   QString defEmail = userEmailItem()->value();
@@ -125,30 +133,7 @@ void KOPrefs::fillMailDefaults()
   }
 }
 
-void KOPrefs::setTimeZoneDefault()
-{
-  KTimeZone zone = KSystemTimeZones::local();
-  if ( !zone.isValid() ) {
-    kError() << "KSystemTimeZones::local() return 0";
-    return;
-  }
-
-  kDebug () << "----- time zone:" << zone.name();
-
-  mTimeSpec = zone;
-}
-
-KDateTime::Spec KOPrefs::timeSpec()
-{
-  return KSystemTimeZones::local();
-}
-
-void KOPrefs::setTimeSpec( const KDateTime::Spec &spec )
-{
-  mTimeSpec = spec;
-}
-
-void KOPrefs::usrReadConfig()
+void KCalPrefs::usrReadConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
   mMailTransport = generalConfig.readEntry( "MailTransport", QString() );
@@ -164,14 +149,12 @@ void KOPrefs::usrReadConfig()
       KStringHandler::obscure( config()->readEntry( "Retrieve Server Password" ) );
   }
 #endif
-  KConfigGroup timeScaleConfig( config(), "Timescale" );
-  setTimeScaleTimezones( timeScaleConfig.readEntry( "Timescale Timezones", QStringList() ) );
 
   KConfigSkeleton::usrReadConfig();
   fillMailDefaults();
 }
 
-void KOPrefs::usrWriteConfig()
+void KCalPrefs::usrWriteConfig()
 {
   KConfigGroup generalConfig( config(), "General" );
   if( ! mMailTransport.isNull() )
@@ -197,13 +180,10 @@ void KOPrefs::usrWriteConfig()
   }
 #endif
 
-  KConfigGroup timeScaleConfig( config(), QLatin1String( "Timescale" ) );
-  timeScaleConfig.writeEntry( QLatin1String( "Timescale Timezones" ), timeScaleTimezones() );
-
   KConfigSkeleton::usrWriteConfig();
 }
 
-QString KOPrefs::fullName()
+QString KCalPrefs::fullName()
 {
   QString tusername;
   if ( mEmailControlCenter ) {
@@ -223,7 +203,7 @@ QString KOPrefs::fullName()
   return tname;
 }
 
-QString KOPrefs::email()
+QString KCalPrefs::email()
 {
   if ( mEmailControlCenter ) {
     KEMailSettings settings;
@@ -233,7 +213,7 @@ QString KOPrefs::email()
   }
 }
 
-QStringList KOPrefs::allEmails()
+QStringList KCalPrefs::allEmails()
 {
   // Grab emails from the email identities
   QStringList lst = Akonadi::identityManager()->allEmails();
@@ -246,7 +226,7 @@ QStringList KOPrefs::allEmails()
   return lst;
 }
 
-QStringList KOPrefs::fullEmails()
+QStringList KCalPrefs::fullEmails()
 {
   QStringList fullEmails;
   // The user name and email from the config dialog:
@@ -270,7 +250,7 @@ QStringList KOPrefs::fullEmails()
   return fullEmails;
 }
 
-bool KOPrefs::thatIsMe( const QString &_email )
+bool KCalPrefs::thatIsMe( const QString &_email )
 {
   // NOTE: this method is called for every created agenda view item,
   // so we need to keep performance in mind
@@ -312,12 +292,3 @@ bool KOPrefs::thatIsMe( const QString &_email )
   return false;
 }
 
-QStringList KOPrefs::timeScaleTimezones() const
-{
-  return mTimeScaleTimeZones;
-}
-
-void KOPrefs::setTimeScaleTimezones( const QStringList &list )
-{
-  mTimeScaleTimeZones = list;
-}

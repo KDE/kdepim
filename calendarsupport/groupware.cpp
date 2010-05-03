@@ -36,7 +36,7 @@
 
 #include "groupware.h"
 #include "freebusymanager.h"
-#include "koprefs.h"
+#include "kcalprefs.h"
 #include "mailscheduler.h"
 #include "calendar.h"
 #include "calendaradaptor.h"
@@ -142,7 +142,7 @@ bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
           (*it)->setStatus( KCal::Attendee::Accepted );
         } else if ( action.startsWith( QLatin1String( "tentative" ) ) ) {
           (*it)->setStatus( KCal::Attendee::Tentative );
-        } else if ( KOPrefs::instance()->outlookCompatCounterProposals() &&
+        } else if ( KCalPrefs::instance()->outlookCompatCounterProposals() &&
                     action.startsWith( QLatin1String( "counter" ) ) ) {
           (*it)->setStatus( KCal::Attendee::Tentative );
         } else if ( action.startsWith( QLatin1String( "delegated" ) ) ) {
@@ -151,7 +151,7 @@ bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
         break;
       }
     }
-    if ( KOPrefs::instance()->outlookCompatCounterProposals() ||
+    if ( KCalPrefs::instance()->outlookCompatCounterProposals() ||
          !action.startsWith( QLatin1String( "counter" ) ) ) {
       scheduler.acceptTransaction( incidence, method, status, receiver );
     }
@@ -203,7 +203,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
     return true;
   }
 
-  bool isOrganizer = KOPrefs::instance()->thatIsMe( incidence->organizer().email() );
+  bool isOrganizer = KCalPrefs::instance()->thatIsMe( incidence->organizer().email() );
   int rc = 0;
   /*
    * There are two scenarios:
@@ -292,7 +292,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
              KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
     } else {
       if ( action == INCIDENCEDELETED ) {
-        const QStringList myEmails = KOPrefs::instance()->allEmails();
+        const QStringList myEmails = KCalPrefs::instance()->allEmails();
         bool askConfirmation = false;
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
           QString email = *it;
@@ -357,10 +357,10 @@ bool Groupware::sendICalMessage( QWidget *parent,
 void Groupware::sendCounterProposal( KCal::Event *oldEvent, KCal::Event *newEvent ) const
 {
   if ( !oldEvent || !newEvent || *oldEvent == *newEvent ||
-       !KOPrefs::instance()->mUseGroupwareCommunication ) {
+       !KCalPrefs::instance()->mUseGroupwareCommunication ) {
     return;
   }
-  if ( KOPrefs::instance()->outlookCompatCounterProposals() ) {
+  if ( KCalPrefs::instance()->outlookCompatCounterProposals() ) {
     Incidence *tmp = oldEvent->clone();
     tmp->setSummary( i18n( "Counter proposal: %1", newEvent->summary() ) );
     tmp->setDescription( newEvent->description() );
