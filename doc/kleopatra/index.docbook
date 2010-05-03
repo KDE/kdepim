@@ -838,12 +838,15 @@ linkend="view-hierarchical-key-list"/> is on.</para>
                 root certificate. However, that function must be
                 explicitly enabled in the backend configuration
                 (<option>allow-mark-trusted</option> in
-                <filename>gpg-agent.conf</filename>, or <xref
-                linkend="settings-configure-kleopatra"/> under either
-                <menuchoice><guimenu>GnuPG&nbsp;System</guimenu><guisubmenu>GPG&nbsp;Agent</guisubmenu><guimenuitem>Allow clients to make
-                keys as "trusted"</guimenuitem></menuchoice> or
-                <menuchoice><guimenu>S/MIME&nbsp;Validation</guimenu><guimenuitem>Allow to mark root
-                certificates as trusted</guimenuitem></menuchoice>).
+                <filename>gpg-agent.conf</filename>, or either
+                <menuchoice><guimenu>GnuPG&nbsp;System</guimenu>
+                <guisubmenu>GPG&nbsp;Agent</guisubmenu>
+                <guimenuitem>Allow clients to mark keys as
+                "trusted"</guimenuitem></menuchoice> or <link
+                linkend="configuration-smime-validation-allow-mark-trusted"><menuchoice><guimenu>S/MIME&nbsp;Validation</guimenu>
+                <guimenuitem>Allow to mark root certificates as
+                trusted</guimenuitem></menuchoice></link> under <xref
+                linkend="settings-configure-kleopatra"/>).
               </para>
               <para>
                 Enabling that functionality in the backend can lead to
