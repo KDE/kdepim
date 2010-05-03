@@ -129,18 +129,15 @@ void NodeHelper::clear()
     clearBodyPartMemento( it.value() );
   }
   mBodyPartMementoMap.clear();
+
+  for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    qDeleteAll( it.value() );
+//     kDebug() << "mExtraContents deleted for" << it.key().get() ;
+  }
+  mExtraContents.clear();
   mDisplayEmbeddedNodes.clear();
 }
 
-void NodeHelper::clearNode( KMime::Content *node )
-{
-  mProcessedNodes.removeAll( node );
-  mEncryptionState.remove( node );
-  mSignatureState.remove( node );
-  //mUnencryptedMessages.remove( node );
-  mOverrideCodecs.remove( node );
-  mDisplayEmbeddedNodes.remove( node );
-}
 
 void NodeHelper::clearBodyPartMemento(QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap)
 {
@@ -732,10 +729,33 @@ QByteArray NodeHelper::toUsAscii(const QString& _str, bool *ok)
 
 QString NodeHelper::fromAsString( KMime::Content* node )
 {
-  KMime::Message* topLevel = dynamic_cast<KMime::Message*>(node->topLevel());
+  KMime::Message* topLevel = dynamic_cast<KMime::Message*>( node->topLevel() );
   if ( topLevel )
     return topLevel->from()->asUnicodeString();
   return QString();
 }
+
+void NodeHelper::attachExtraContent( KMime::Message::Ptr node, KMime::Content* content )
+{
+//   kDebug() << "mExtraContents added for" << node.get() ;
+  mExtraContents[node].append( content );
+}
+
+void NodeHelper::removeExtraContent(KMime::Message::Ptr node )
+{
+  if ( mExtraContents.contains( node ) ) {
+    qDeleteAll( mExtraContents[node] );
+    mExtraContents.remove( node );
+  }    
+}
+
+QList< KMime::Content* > NodeHelper::extraContents( KMime::Message::Ptr node )
+{
+ if ( mExtraContents.contains( node ) ) {
+    return mExtraContents[node];
+ } else
+   return QList< KMime::Content* >();
+}
+
 
 }

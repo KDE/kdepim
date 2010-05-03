@@ -208,8 +208,7 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
   if ( !otp.textualContentCharset().isEmpty() )
     mTextualContentCharset = otp.textualContentCharset();
 
-  mNodeHelper->clearNode( newNode );
-  delete newNode;
+  mNodeHelper->attachExtraContent( item.payload<KMime::Message::Ptr>(), newNode );
 }
 
 
