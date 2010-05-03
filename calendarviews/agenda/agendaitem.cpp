@@ -29,7 +29,8 @@
 #include "prefs.h"
 #include "prefs_base.h" // for enums
 
-#include <KABC/VCardDrag>
+#include <libkdepim/kvcarddrag.h>
+
 #include <KCal/Event>
 #include <KCal/ICalDrag>
 #include <KCal/Incidence>
@@ -621,7 +622,7 @@ void AgendaItem::dragEnterEvent( QDragEnterEvent *e )
     e->ignore();
     return;
   }
-  if ( KABC::VCardDrag::canDecode( md ) || md->hasText() ) {
+  if ( KPIM::KVCardDrag::canDecode( md ) || md->hasText() ) {
     e->accept();
   } else {
     e->ignore();
@@ -671,11 +672,12 @@ void AgendaItem::dropEvent( QDropEvent *e )
 
   KABC::Addressee::List list;
 
-  if ( KABC::VCardDrag::fromMimeData( md, list ) ) {
-    Q_FOREACH( const KABC::Addressee &addressee, list ) {
-      QString em( addressee.fullEmail() );
+  if ( KPIM::KVCardDrag::fromMimeData( md, list ) ) {
+    KABC::Addressee::List::Iterator it;
+    for ( it = list.begin(); it != list.end(); ++it ) {
+      QString em( (*it).fullEmail() );
       if ( em.isEmpty() ) {
-        em = addressee.realName();
+        em = (*it).realName();
       }
       addAttendee( em );
     }
