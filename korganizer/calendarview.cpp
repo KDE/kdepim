@@ -614,6 +614,14 @@ void CalendarView::updateConfig( const QByteArray &receiver )
   if ( receiver != "korganizer" ) {
     return;
   }
+#ifndef KORG_NOPRINTER
+  if ( mCalPrinter ) {
+    mCalPrinter->deleteLater();
+    mCalPrinter = 0;
+  }
+#endif
+
+
 
   KOGlobals::self()->setHolidays( new HolidayRegion( KOPrefs::instance()->mHolidays ) );
 
@@ -2280,8 +2288,8 @@ void CalendarView::pasteIncidence()
 
 void CalendarView::showIncidence( Incidence *incidence )
 {
-  if( !incidence ) 
-    return;	  
+  if( !incidence )
+    return;
   KOEventViewerDialog *eventViewer = new KOEventViewerDialog( calendar(), this );
   eventViewer->setIncidence( incidence, QDate() );
 
