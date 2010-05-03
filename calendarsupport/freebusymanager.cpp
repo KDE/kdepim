@@ -78,7 +78,7 @@ FreeBusyDownloadJob::FreeBusyDownloadJob( const QString &email, const KUrl &url,
 {
   KIO::Job *job = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
 
-  job->ui()->setWindow( QPointer<QWidget>( parentWidget ) );
+  job->ui()->setWindow( parentWidget );
 
   connect( job, SIGNAL(result(KJob *)), SLOT(slotResult(KJob *)) );
   connect( job, SIGNAL(data(KIO::Job *,const QByteArray &)),
@@ -327,7 +327,7 @@ void FreeBusyManager::publishFreeBusy( QWidget *parentWidget )
 
     KIO::Job *job = KIO::file_copy( src, targetURL, -1, KIO::Overwrite | KIO::HideProgressInfo );
 
-    job->ui()->setWindow( QPointer<QWidget>( parentWidget ) );
+    job->ui()->setWindow( parentWidget );
 
     connect( job, SIGNAL(result(KJob *)), SLOT(slotUploadFreeBusyResult(KJob *)) );
   }
