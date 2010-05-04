@@ -1729,9 +1729,17 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
     case Attendee::Accepted:
       if ( todo->revision() > 0 ) {
         if ( !sender.isEmpty() ) {
-          return i18n( "This task has been updated by assignee %1" ).arg( sender );
+          if ( todo->isCompleted() ) {
+            return i18n( "This task has been completed by assignee %1" ).arg( sender );
+          } else {
+            return i18n( "This task has been updated by assignee %1" ).arg( sender );
+          }
         } else {
-          return i18n( "This task has been updated by an assignee" );
+          if ( todo->isCompleted() ) {
+            return i18n( "This task has been completed by an assignee" );
+          } else {
+            return i18n( "This task has been updated by an assignee" );
+          }
         }
       } else {
         if ( delegatorName.isEmpty() ) {
@@ -2106,6 +2114,18 @@ class IncidenceFormatter::IncidenceCompareVisitor
     {
       if ( !oldTodo || !newTodo ) {
         return;
+      }
+
+      if ( !oldTodo->isCompleted() && newTodo->isCompleted() ) {
+        mChanges += i18n( "The task has been completed" );
+      }
+      if ( oldTodo->isCompleted() && !newTodo->isCompleted() ) {
+        mChanges += i18n( "The task is no longer completed" );
+      }
+      if ( !oldTodo->isCompleted() && !newTodo->isCompleted() &&
+           oldTodo->percentComplete() != newTodo->percentComplete() ) {
+        mChanges += i18n( "The task completed percentage has changed from %1 to %2" ).
+                    arg( oldTodo->percentComplete(), newTodo->percentComplete() );
       }
 
       if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
