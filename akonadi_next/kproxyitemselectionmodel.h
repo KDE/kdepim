@@ -93,7 +93,7 @@ class KProxyItemSelectionModelPrivate;
   @since 4.5
 
 */
-class KDEUI_EXPORT KProxyItemSelectionModel : public QItemSelectionModel
+class AKONADI_NEXT_EXPORT KProxyItemSelectionModel : public QItemSelectionModel
 {
     Q_OBJECT
 public:
