@@ -26,7 +26,8 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitymimetypefiltermodel.h>
 
-#include "breadcrumbnavigation.h"
+#include "akonadibreadcrumbnavigationfactory.h"
+
 
 static const char * const sFavoritePrefix = "Favorite_";
 static const int sFavoritePrefixLength = 9;
@@ -37,13 +38,7 @@ class KDeclarativeMainViewPrivate : public QObject
   Q_OBJECT
 
 public: /// members
-  QItemSelectionModel                *mBreadcrumbCollectionSelection; // Deleted by ~QObect
   Akonadi::ChangeRecorder            *mChangeRecorder;                // Deleted by ~QObect
-  Akonadi::EntityMimeTypeFilterModel *mChildCollectionFilter;         // Deleted by ~QObect
-  QItemSelectionModel                *mChildCollectionSelection;      // Deleted by ~QObect
-  KNavigatingProxyModel              *mChildEntitiesModel;            // Deleted by ~QObect
-  QItemSelectionModel                *mCollectionSelection;           // Deleted by ~QObect
-  KSelectionProxyModel               *mSelectedSubTree;               // Deleted by ~QObect
   QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObect
   Akonadi::EntityTreeModel           *mEtm;
   ListProxy                          *mListProxy;
@@ -51,6 +46,7 @@ public: /// members
   QItemSelectionModel                *mFavSelection;
   QStringListModel                   *mFavsListModel;
   QAbstractItemModel                 *mFavSelectedChildItems;
+  Akonadi::BreadcrumbNavigationFactory *mBnf;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

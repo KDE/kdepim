@@ -40,6 +40,7 @@
 
 #include <akonadi/entitytreemodel.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/selectionproxymodel.h>
 
 #include <akonadi_next/kbreadcrumbselectionmodel.h>
 #include <akonadi_next/kproxyitemselectionmodel.h>
@@ -67,14 +68,12 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
-  Akonadi::BreadcrumbNavigationFactory bnf;
-  bnf.setModel(d->mEtm, this);
+  d->mBnf = new Akonadi::BreadcrumbNavigationFactory(this);
+  d->mBnf->setModel(d->mEtm, this);
 
   d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
-  d->mItemFilter->setSourceModel( bnf.unfilteredChildItemModel() );
+  d->mItemFilter->setSourceModel( d->mBnf->unfilteredChildItemModel() );
   d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
-
-  d->mChildCollectionFilter = bnf.childItemModel();
 
   d->mListProxy = listProxy;
   if ( listProxy ) {
@@ -84,9 +83,9 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
   engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
-  engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( bnf.selectedItemModel() ) ) );
-  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( bnf.breadcrumbItemModel() ) ) );
-  engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mChildCollectionFilter ) ) );
+  engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->selectedItemModel() ) ) );
+  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->breadcrumbItemModel() ) ) );
+  engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mBnf->childItemModel() ) ) );
   if ( listProxy )
     engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );
   engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
@@ -182,19 +181,7 @@ KDeclarativeMainView::~KDeclarativeMainView()
 
 bool KDeclarativeMainView::childCollectionHasChildren( int row )
 {
-  if ( row < 0 )
-    return false;
-
-  QModelIndex idx = d->mChildCollectionFilter->index( row, 0 );
-  QModelIndex idx2 = d->mChildCollectionFilter->mapToSource( idx );
-  QModelIndex idx3 = d->mChildEntitiesModel->mapToSource( idx2 );
-  QModelIndex idx4 = d->mSelectedSubTree->mapFromSource( idx3 );
-  QModelIndex idx5 = d->mCollectionFilter->mapFromSource( idx4 );
-
-  if ( !idx5.isValid() )
-    return false;
-
-  return idx5.model()->rowCount( idx5 ) > 0;
+  return d->mBnf->childCollectionHasChildren( row );
 }
 
 void KDeclarativeMainView::setListPayloadPart( const QByteArray &payloadPart )
@@ -214,35 +201,22 @@ QStringList KDeclarativeMainView::mimeTypes() const
 
 void KDeclarativeMainView::setSelectedChildCollectionRow( int row )
 {
-  if ( row < 0 )
-  {
-    d->mCollectionSelection->clearSelection();
-    return;
-  }
-  QModelIndex index = d->mChildCollectionSelection->model()->index( row, 0 );
-  d->mChildCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
+  d->mBnf->selectChild( row );
 }
 
 void KDeclarativeMainView::setSelectedBreadcrumbCollectionRow( int row )
 {
-  if ( row < 0 )
-  {
-    d->mCollectionSelection->clearSelection();
-    return;
-  }
-  QModelIndex index = d->mBreadcrumbCollectionSelection->model()->index( row, 0 );
-  d->mBreadcrumbCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
+  d->mBnf->selectBreadcrumb( row );
 }
 
 void KDeclarativeMainView::setSelectedAccount( int row )
 {
+  d->mBnf->selectionModel()->clearSelection();
   if ( row < 0 )
   {
-    d->mCollectionSelection->clearSelection();
     return;
   }
-  QModelIndex index = d->mCollectionSelection->model()->index( row, 0 );
-  d->mCollectionSelection->select( QItemSelection(index, index), QItemSelectionModel::Rows | QItemSelectionModel::ClearAndSelect );
+  d->mBnf->selectChild( row );
 }
 
 void KDeclarativeMainView::triggerTaskSwitcher()
@@ -305,7 +279,7 @@ void KDeclarativeMainView::loadFavorite(const QString& name)
 
 QItemSelectionModel* KDeclarativeMainView::regularSelectionModel() const
 {
-  return d->mCollectionSelection;
+  return d->mBnf->selectionModel();
 }
 
 QItemSelectionModel* KDeclarativeMainView::favoriteSelectionModel() const

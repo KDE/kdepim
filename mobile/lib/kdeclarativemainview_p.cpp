@@ -25,17 +25,14 @@
 #include <akonadi_next/etmstatesaver.h>
 
 KDeclarativeMainViewPrivate::KDeclarativeMainViewPrivate()
-  : mBreadcrumbCollectionSelection( 0 )
-  , mChangeRecorder( 0 )
-  , mCollectionSelection( 0 )
-  , mSelectedSubTree( 0 )
+  : mChangeRecorder( 0 )
   , mCollectionFilter( 0 )
 { }
 
 void KDeclarativeMainViewPrivate::restoreState()
 {
   ETMStateSaver *saver = new ETMStateSaver;
-  saver->setSelectionModel( mCollectionSelection );
+  saver->setSelectionModel( mBnf->selectionModel() );
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );
   saver->restoreState( cfg );
 }
@@ -43,7 +40,7 @@ void KDeclarativeMainViewPrivate::restoreState()
 void KDeclarativeMainViewPrivate::saveState()
 {
   ETMStateSaver saver;
-  saver.setSelectionModel( mCollectionSelection );
+  saver.setSelectionModel( mBnf->selectionModel() );
 
   KConfigGroup cfg( KGlobal::config(), "SelectionState" );
   saver.saveState( cfg );
