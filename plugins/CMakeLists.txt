@@ -1,6 +1,6 @@
-if(KMAIL_SUPPORTED)
+if(MESSAGEVIEWER_SUPPORTED)
   add_subdirectory( messageviewer )
-endif(KMAIL_SUPPORTED)
+endif(MESSAGEVIEWER_SUPPORTED)
 
 add_subdirectory( ktexteditor )
 

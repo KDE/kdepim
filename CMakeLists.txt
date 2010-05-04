@@ -241,6 +241,7 @@ set(libkdgantt1_SRCS
       macro_optional_add_subdirectory(wizards)
     endif (QT_QT3SUPPORT_FOUND AND KDEPIMLIBS_KRESOURCES_LIBRARY)
     # The following components depend on QGpgME.
+    set(MESSAGEVIEWER_SUPPORTED TRUE)
     add_subdirectory(messageviewer)
     macro_optional_add_subdirectory(messagecomposer)
     if (QT_QT3SUPPORT_FOUND)
