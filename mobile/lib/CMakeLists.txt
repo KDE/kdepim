@@ -4,6 +4,7 @@ set(mobileui_SRCS
     listproxy.cpp
     breadcrumbnavigation.cpp
     kbreadcrumbnavigationcomponentfactory.cpp
+    akonadibreadcrumbnavigationfactory.cpp
     declarativeakonadiitem.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
