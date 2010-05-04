@@ -792,9 +792,9 @@ QString emailAddrAsAnchor( const KMime::Types::Mailbox::List &mailboxList,
         if ( !mailbox.name().isEmpty() ) // Fallback to the email address when the name is not set.
           result += quoteHtmlChars( mailbox.name(), true );
         else
-          result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
+          result += quoteHtmlChars( mailbox.prettyAddress(), true );
       } else {
-        result += quoteHtmlChars( mailbox.prettyAddress(), true );
+        result += quoteHtmlChars( mailbox.prettyAddress( KMime::Types::Mailbox::QuoteWhenNecessary ), true );
       }
       if( link == ShowLink ) {
         result += "</a>, ";
