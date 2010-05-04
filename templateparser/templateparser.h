@@ -114,12 +114,10 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
 
   
     virtual void process( const KMime::Message::Ptr &aorig_msg,
-                          const Akonadi::Collection& afolder = Akonadi::Collection(),
-                          bool append = false );
+                          const Akonadi::Collection& afolder = Akonadi::Collection() );
     virtual void process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
-                         const Akonadi::Collection& afolder = Akonadi::Collection(), bool append = false );
-    virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,const Akonadi::Collection& afolder = Akonadi::Collection(),
-                          bool append = false );
+                         const Akonadi::Collection& afolder = Akonadi::Collection() );
+    virtual void processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,const Akonadi::Collection& afolder = Akonadi::Collection() );
 
     virtual void processWithTemplate( const QString &tmpl );
 
@@ -149,7 +147,6 @@ class TEMPLATEPARSER_EXPORT TemplateParser : public QObject
     bool mAllowDecryption;
     bool mDebug;
     QString mQuoteString;
-    bool mAppend;
     QString mTo, mCC;
     KMime::Content *mOrigRoot;
     KPIMIdentities::IdentityManager* m_identityManager;

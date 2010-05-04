@@ -65,7 +65,7 @@ static const int PipeTimeout = 15 * 1000;
 TemplateParser::TemplateParser( const KMime::Message::Ptr &amsg, const Mode amode ) :
   mMode( amode ), mFolder( 0 ), mIdentity( 0 ),
   mAllowDecryption( false ),
-  mDebug( false ), mQuoteString( "> " ), mAppend( false ), mOrigRoot( 0 ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
+  mDebug( false ), mQuoteString( "> " ), mOrigRoot( 0 ), m_identityManager( 0 ), mWrap( true ), mColWrap( 80 )
 {
   mMsg = amsg;
 }
@@ -217,13 +217,12 @@ QString TemplateParser::getLName( const QString &str )
   return res;
 }
 
-void TemplateParser::process( const KMime::Message::Ptr &aorig_msg, const Akonadi::Collection & afolder, bool append )
+void TemplateParser::process( const KMime::Message::Ptr &aorig_msg, const Akonadi::Collection & afolder )
 {
   if( aorig_msg == 0 ) {
     kDebug() << "aorig_msg == 0!";
     return;
   }
-  mAppend = append;
   mOrigMsg = aorig_msg;
   mFolder = afolder;
   QString tmpl = findTemplate();
@@ -232,9 +231,8 @@ void TemplateParser::process( const KMime::Message::Ptr &aorig_msg, const Akonad
 }
 
 void TemplateParser::process( const QString &tmplName, const KMime::Message::Ptr &aorig_msg,
-                              const Akonadi::Collection &afolder, bool append )
+                              const Akonadi::Collection &afolder)
 {
-  mAppend = append;
   mOrigMsg = aorig_msg;
   mFolder = afolder;
   QString tmpl = findCustomTemplate( tmplName );
@@ -242,10 +240,10 @@ void TemplateParser::process( const QString &tmplName, const KMime::Message::Ptr
 }
 
 void TemplateParser::processWithIdentity( uint uoid, const KMime::Message::Ptr &aorig_msg,
-                                          const Akonadi::Collection &afolder, bool append )
+                                          const Akonadi::Collection &afolder)
 {
   mIdentity = uoid;
-  return process( aorig_msg, afolder, append );
+  return process( aorig_msg, afolder );
 }
 
 void TemplateParser::processWithTemplate( const QString &tmpl )
@@ -968,71 +966,63 @@ KMime::Content* TemplateParser::parsedObjectTree()
 
 void TemplateParser::addProcessedBodyToMessage( const QString &body )
 {
-  if ( mAppend ) {
 
-    // ### What happens here if the body is multipart or in some way encoded?
-    QByteArray msg_body = mMsg->body();
-    msg_body.append( body.toUtf8() );
-    mMsg->setBody( msg_body );
+  // Get the attachments of the original mail
+  KMime::Content *root = parsedObjectTree();
+  MessageCore::AttachmentCollector ac;
+  ac.collectAttachmentsFrom( root );
+
+  // Now, delete the old content and set the new content, which
+  // is either only the new text or the new text with some attachments.
+  KMime::Content::List parts = mMsg->contents();
+  foreach ( KMime::Content *content, parts )
+    mMsg->removeContent( content, true /*delete*/ );
+
+  // Set To and CC from the template
+  if ( !mTo.isEmpty() ) {
+    mMsg->to()->fromUnicodeString( mMsg->to()->asUnicodeString() + ',' + mTo, "utf-8" );
   }
-  else {
+  if ( !mCC.isEmpty() )
+    mMsg->cc()->fromUnicodeString( mMsg->cc()->asUnicodeString() + ',' + mCC, "utf-8" );
 
-    // Get the attachments of the original mail
-    KMime::Content *root = parsedObjectTree();
-    MessageCore::AttachmentCollector ac;
-    ac.collectAttachmentsFrom( root );
+  // If we have no attachment, simply create a text/plain part and
+  // set the processed template text as the body
+  if ( ac.attachments().empty() || mMode != Forward ) {
+    mMsg->contentType()->clear(); // to get rid of old boundary
+    mMsg->contentType()->setMimeType( "text/plain" );
+    mMsg->setBody( body.toUtf8() );
+    mMsg->assemble();
+  }
 
-    // Now, delete the old content and set the new content, which
-    // is either only the new text or the new text with some attachments.
-    KMime::Content::List parts = mMsg->contents();
-    foreach ( KMime::Content *content, parts )
-      mMsg->removeContent( content, true /*delete*/ );
+  // If we have some attachments, create a multipart/mixed mail and
+  // add the normal body as well as the attachments
+  else
+  {
+    const QByteArray boundary = KMime::multiPartBoundary();
+    mMsg->contentType()->setMimeType( "multipart/mixed" );
+    mMsg->contentType()->setBoundary( boundary );
 
-    // Set To and CC from the template
-    if ( !mTo.isEmpty() ) {
-      mMsg->to()->fromUnicodeString( mMsg->to()->asUnicodeString() + ',' + mTo, "utf-8" );
-    }
-    if ( !mCC.isEmpty() )
-      mMsg->cc()->fromUnicodeString( mMsg->cc()->asUnicodeString() + ',' + mCC, "utf-8" );
+    KMime::Content *textPart = new KMime::Content( mMsg.get() );
+    textPart->contentType()->setMimeType( "text/plain" );
+    textPart->fromUnicodeString( body );
+    mMsg->addContent( textPart );
 
-    // If we have no attachment, simply create a text/plain part and
-    // set the processed template text as the body
-    if ( ac.attachments().empty() || mMode != Forward ) {
-      mMsg->contentType()->clear(); // to get rid of old boundary
-      mMsg->contentType()->setMimeType( "text/plain" );
-      mMsg->setBody( body.toUtf8() );
-      mMsg->assemble();
-    }
-
-    // If we have some attachments, create a multipart/mixed mail and
-    // add the normal body as well as the attachments
-    else
-    {
-      const QByteArray boundary = KMime::multiPartBoundary();
-      mMsg->contentType()->setMimeType( "multipart/mixed" );
-      mMsg->contentType()->setBoundary( boundary );
-
-      KMime::Content *textPart = new KMime::Content( mMsg.get() );
-      textPart->contentType()->setMimeType( "text/plain" );
-      textPart->fromUnicodeString( body );
-      mMsg->addContent( textPart );
-
-      int attachmentNumber = 1;
-      foreach( KMime::Content *attachment, ac.attachments() ) {
-        mMsg->addContent( attachment );
-        // If the content type has no name or filename parameter, add one, since otherwise the name
-        // would be empty in the attachment view of the composer, which looks confusing
-        if ( attachment->contentType( false ) ) {
-          if ( !attachment->contentType()->hasParameter( "name" ) &&
-               !attachment->contentType()->hasParameter( "filename" ) ) {
-            attachment->contentType()->setParameter( "name", i18n( "Attachment %1", attachmentNumber ) );
-          }
+    int attachmentNumber = 1;
+    foreach( KMime::Content *attachment, ac.attachments() ) {
+      mMsg->addContent( attachment );
+      // If the content type has no name or filename parameter, add one, since otherwise the name
+      // would be empty in the attachment view of the composer, which looks confusing
+      if ( attachment->contentType( false ) ) {
+        if ( !attachment->contentType()->hasParameter( "name" ) &&
+              !attachment->contentType()->hasParameter( "filename" ) ) {
+          attachment->contentType()->setParameter( "name", i18n( "Attachment %1", attachmentNumber ) );
         }
-        attachmentNumber++;
       }
-      mMsg->assemble();
+      attachmentNumber++;
     }
+    mMsg->assemble();
   }
+
 }
 
 QString TemplateParser::findCustomTemplate( const QString &tmplName )
