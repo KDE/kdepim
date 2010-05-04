@@ -61,8 +61,7 @@ class INCIDENCEEDITORS_EXPORT Prefs : public PrefsBase
     /** Constructor disabled for public. Use instance() to create a Prefs
     object. */
     Prefs();
-
-    static Prefs *mInstance;
+    friend class PrefsPrivate;
 
   public:
     void setCategoryColor( const QString &cat, const QColor &color );

@@ -36,7 +36,6 @@
 #include <kconfig.h>
 #include <klocale.h>
 #include <kdebug.h>
-#include <k3staticdeleter.h>
 #include <kstringhandler.h>
 #include <ksystemtimezone.h>
 
@@ -53,8 +52,16 @@
 using namespace IncidenceEditors;
 using namespace KPIMIdentities;
 
-Prefs *Prefs::mInstance = 0;
-static K3StaticDeleter<Prefs> insd;
+namespace IncidenceEditors {
+class PrefsPrivate {
+  public:
+    PrefsPrivate() : prefs( new Prefs ) {}
+    ~PrefsPrivate() { delete prefs; }
+    Prefs* prefs;
+};
+}
+
+K_GLOBAL_STATIC( PrefsPrivate, sInstance )
 
 Prefs::Prefs() : PrefsBase()
 {
@@ -87,13 +94,11 @@ Prefs::~Prefs()
 
 Prefs *Prefs::instance()
 {
-  if ( !mInstance ) {
-    insd.setObject( mInstance, new Prefs() );
-
-    mInstance->readConfig();
+  if ( !sInstance.exists() ) {
+    sInstance->prefs->readConfig();
   }
 
-  return mInstance;
+  return sInstance->prefs;
 }
 
 void Prefs::usrSetDefaults()
