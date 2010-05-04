@@ -217,4 +217,4 @@ bool KBreadcrumbNavigationComponentFactory::childCollectionHasChildren(int row)
   return idx.model()->rowCount( idx ) > 0;
 }
 
-#include "breadcrumbnavigationcontext.moc"
+#include "kbreadcrumbnavigationcomponentfactory.moc"

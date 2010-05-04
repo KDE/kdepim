@@ -62,8 +62,8 @@ protected:
   virtual QAbstractItemModel* getChildItemsModel(QAbstractItemModel *model);
 
 private:
-  Q_DECLARE_PRIVATE(KBreadcrumbNavigationFactory)
-  KBreadcrumbNavigationFactoryPrivate * const d_ptr;
+  Q_DECLARE_PRIVATE(KBreadcrumbNavigationComponentFactory)
+  KBreadcrumbNavigationComponentFactoryPrivate * const d_ptr;
 
 };
 
