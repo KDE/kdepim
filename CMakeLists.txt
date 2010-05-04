@@ -264,9 +264,7 @@ set(libkdgantt1_SRCS
 
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
-    if (QT_QT3SUPPORT_FOUND)
-      macro_optional_add_subdirectory(korganizer)
-    endif (QT_QT3SUPPORT_FOUND)
+    macro_optional_add_subdirectory(korganizer)
 
     if (SHAREDDESKTOPONTOLOGIES_VERSION VERSION_GREATER 0.3.59)
       add_subdirectory( nepomuk_email_feeder )
