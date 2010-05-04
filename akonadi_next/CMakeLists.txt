@@ -24,6 +24,7 @@ set( akonadi_next_SRCS
   entityrightsfiltermodel.cpp
   kbreadcrumbselectionmodel.cpp
   krecursivefilterproxymodel.cpp
+  kmodelindexproxymapper.cpp
   kviewstatesaver.cpp
   kproxyitemselectionmodel.cpp
   etmstatesaver.cpp
