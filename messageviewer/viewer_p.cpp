@@ -2081,12 +2081,12 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
       QString align = "left";
       if ( headerStyle() == HeaderStyle::enterprise() )
         align = "right";
-      if ( node->contentType()->mediaType().toLower() == "message" || node == mMessage.get() )
+      if ( node->contentType()->mediaType().toLower() == "message" || node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
         html += QString::fromLatin1("<div style=\"background:%1; %2"
                 "vertical-align:middle; float:%3; %4\">").arg( bgColor.name() ).arg( margin )
                                                          .arg( align ).arg( visibility );
       html += subHtml;
-      if ( node->contentType()->mediaType().toLower() == "message" || node == mMessage.get() )
+      if ( node->contentType()->mediaType().toLower() == "message" ||  node->contentType()->mediaType().toLower() == "multipart" || node == mMessage.get() )
         html += "</div>";
     }
   } else {
@@ -2551,6 +2551,9 @@ void ViewerPrivate::injectAttachments()
 
   QColor background = KColorScheme( QPalette::Active, KColorScheme::View ).background().color();
   QString html = renderAttachments( mMessage.get(), background );
+  Q_FOREACH( KMime::Content* node, mNodeHelper->extraContents( mMessage ) ) {
+    html += renderAttachments( node, background );
+  }
   if ( html.isEmpty() )
     return;
 

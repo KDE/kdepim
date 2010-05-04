@@ -99,7 +99,17 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   if ( !node )
     return;
   mProcessedNodes.removeAll( node );
-kDebug() << "Node UNprocessed: " << node;
+
+  //avoid double addition of extra nodes, eg. encrypted attachments
+  for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    if ( node == dynamic_cast<KMime::Content*>( it.key().get() ) ) {
+      qDeleteAll( it.value() );
+      kDebug() << "mExtraContents deleted for" << it.key().get() ;
+      mExtraContents.remove( it.key() );
+    }
+  }
+
+  kDebug() << "Node UNprocessed: " << node;
   if ( recurse ) {
     KMime::Content::List contents = node->contents();
     Q_FOREACH( KMime::Content *c, contents )
@@ -132,7 +142,7 @@ void NodeHelper::clear()
 
   for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
     qDeleteAll( it.value() );
-//     kDebug() << "mExtraContents deleted for" << it.key().get() ;
+    kDebug() << "mExtraContents deleted for" << it.key().get() ;
   }
   mExtraContents.clear();
   mDisplayEmbeddedNodes.clear();
@@ -737,7 +747,7 @@ QString NodeHelper::fromAsString( KMime::Content* node )
 
 void NodeHelper::attachExtraContent( KMime::Message::Ptr node, KMime::Content* content )
 {
-//   kDebug() << "mExtraContents added for" << node.get() ;
+   kDebug() << "mExtraContents added for" << node.get() ;
   mExtraContents[node].append( content );
 }
 

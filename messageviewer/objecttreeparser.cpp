@@ -196,7 +196,7 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
   KMime::Content *newNode = new KMime::Content();
   newNode->setContent( content );
   newNode->parse();
-
+  kDebug()  << "MEDIATYPE: " << newNode->contentType()->mediaType();
   if ( !newNode->head().isEmpty() ) {
     newNode->contentDescription()->from7BitString( cntDesc );
   }
