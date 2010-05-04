@@ -11,7 +11,7 @@ include_directories(
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 if (QT_QT3SUPPORT_FOUND)
-  add_definition( -DHAVE_QT3SUPPORT )
+  add_definitions( -DHAVE_QT3SUPPORT )
 endif ()
 
 ########### next target ###############
