@@ -64,9 +64,10 @@ using namespace IncidenceEditors;
 class FreeBusyItem : public KDGanttViewTaskItem
 {
   public:
-    FreeBusyItem( Attendee *attendee, KDGanttView *parent ) :
+    FreeBusyItem( Attendee *attendee, KDGanttView *parent,
+                  QWidget *parentWidget ) :
       KDGanttViewTaskItem( parent, parent->lastItem() ), mAttendee( attendee ), mTimerID( 0 ),
-      mIsDownloading( false )
+      mIsDownloading( false ), mParentWidget( parentWidget )
     {
       Q_ASSERT( attendee );
       updateItem();
@@ -111,7 +112,8 @@ class FreeBusyItem : public KDGanttViewTaskItem
     void startDownload( bool forceDownload ) {
       mIsDownloading = true;
       Akonadi::FreeBusyManager *m = Akonadi::Groupware::instance()->freeBusyManager();
-      if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload ) ) {
+      if ( !m->retrieveFreeBusy( attendee()->email(), forceDownload,
+                                 mParentWidget ) ) {
         mIsDownloading = false;
       }
     }
@@ -129,6 +131,8 @@ class FreeBusyItem : public KDGanttViewTaskItem
 
     // Only run one download job at a time
     bool mIsDownloading;
+
+    QWidget *mParentWidget;
 };
 
 void FreeBusyItem::updateItem()
@@ -398,7 +402,7 @@ void EditorFreeBusy::removeAttendee( Attendee *attendee )
 
 void EditorFreeBusy::insertAttendee( Attendee *attendee, bool readFBList )
 {
-  FreeBusyItem *item = new FreeBusyItem( attendee, mGanttView );
+  FreeBusyItem *item = new FreeBusyItem( attendee, mGanttView, this );
   if ( readFBList ) {
     updateFreeBusyData( item );
   } else {
