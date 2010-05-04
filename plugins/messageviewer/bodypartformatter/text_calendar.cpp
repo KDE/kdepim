@@ -49,7 +49,7 @@
 #include <kcal/incidenceformatter.h>
 
 #include <akonadi/kcal/groupware.h>
-#include <korganizer/incidenceeditor/kogroupwareintegration.h>
+#include <incidenceeditors/groupwareintegration.h>
 #include <kmail/kmcommands.h>
 
 #include <kpimutils/email.h>
@@ -636,8 +636,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     bool saveFile( const QString& receiver, const QString& iCal,
                    const QString& type ) const
     {
-      if ( !KOGroupwareIntegration::isActive() ) {
-        KOGroupwareIntegration::activate();
+      if ( !IncidenceEditors::GroupwareIntegration::isActive() ) {
+        IncidenceEditors::GroupwareIntegration::activate();
       }
       return Akonadi::Groupware::instance()->handleInvitation( receiver, iCal, type );
     }
