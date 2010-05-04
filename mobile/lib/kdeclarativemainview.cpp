@@ -98,7 +98,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mFavSelection = new QItemSelectionModel( favCollectionFilter, this );
 
   // Need to proxy the selection because the favSelection operates on collectionFilter, but the
-  // KSelectionProxyModel *list below operates on mEtm.
+  // KSelectionProxyModel *favCollectionList and favSelectedChildren below operates on mEtm.
   Future::KProxyItemSelectionModel *selectionProxy = new Future::KProxyItemSelectionModel( d->mEtm, d->mFavSelection, this );
 
   // Show the list of currently selected items.
