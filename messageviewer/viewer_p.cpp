@@ -251,7 +251,16 @@ KMime::Content * ViewerPrivate::nodeFromUrl( const KUrl & url )
 
 KMime::Content* ViewerPrivate::nodeForContentIndex( const KMime::ContentIndex& index )
 {
-  return  mMessage->content( index );
+  KMime::Content* result = mMessage->content( index );
+  if ( !result ) {
+    QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage );
+    Q_FOREACH(KMime::Content* c, extras) {
+      result = c->content( index );
+      if ( result )
+        break;
+    }
+  }
+  return result;
 }
 
 
