@@ -41,8 +41,6 @@
 #include <messagecomposer/globalpart.h>
 #include <messagecomposer/textpart.h>
 
-#include <messageviewer/objecttreeparser.h>
-#include <messageviewer/objecttreeemptysource.h>
 #include <messageviewer/nodehelper.h>
 
 #include <messagecore/nodehelper.h>
