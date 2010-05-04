@@ -24,7 +24,9 @@
 
 #include "incidenceeditor.h"
 #include "editorconfig.h"
+#ifdef HAVE_QT3SUPPORT
 #include "editordetails.h"
+#endif
 #include "designerfields.h"
 #include "embeddedurlpage.h"
 #include "templatemanagementdialog.h"
@@ -237,8 +239,10 @@ void IncidenceEditor::setupAttendeesTab()
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
   topLayout->setMargin(0);
 
+#ifdef HAVE_QT3SUPPORT
   mAttendeeEditor = mDetails = new EditorDetails( spacingHint(), topFrame );
   topLayout->addWidget( mDetails );
+#endif
 }
 
 void IncidenceEditor::accept()
@@ -268,7 +272,9 @@ void IncidenceEditor::cancelRemovedAttendees( const Akonadi::Item &item )
   if ( thatIsMe ) {
     Incidence::Ptr inc( incidence->clone() );
     inc->registerObserver( 0 );
+#ifdef HAVE_QT3SUPPORT
     mAttendeeEditor->cancelAttendeeIncidence( inc.get() );
+#endif
     if ( inc->attendeeCount() > 0 ) {
       emit deleteAttendee( item );
     }
@@ -550,7 +556,9 @@ void IncidenceEditor::addAttendees( const QStringList &attendees )
   for ( it = attendees.begin(); it != attendees.end(); ++it ) {
     QString name, email;
     KABC::Addressee::parseEmailAddress( *it, name, email );
+#ifdef HAVE_QT3SUPPORT
     mAttendeeEditor->insertAttendee( new Attendee( name, email ) );
+#endif
   }
 }
 

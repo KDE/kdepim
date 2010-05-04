@@ -10,5 +10,6 @@ target_link_libraries(incidenceeditorapp
   ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
   incidenceeditors
   akonadi-kcal_next
+  kdepimdbusinterfaces
 )
 #install(TARGETS incidenceeditorapp ${INSTALL_TARGETS_DEFAULT_ARGS})

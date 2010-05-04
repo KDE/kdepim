@@ -10,12 +10,13 @@ include_directories(
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+if (QT_QT3SUPPORT_FOUND)
+  add_definition( -DHAVE_QT3SUPPORT )
+endif ()
 
 ########### next target ###############
 
 set( incidenceeditors_LIB_SRCS
-    ${libkdgantt1_SRCS}
-    attendeeeditor.cpp
     autochecktreewidget.cpp
     categoryconfig.cpp
     categoryhierarchyreader.cpp
@@ -24,8 +25,6 @@ set( incidenceeditors_LIB_SRCS
     editoralarms.cpp
     editorattachments.cpp
     editorconfig.cpp
-    editordetails.cpp
-    editorfreebusy.cpp
     editorgeneral.cpp
     editorgeneralevent.cpp
     editorgeneraljournal.cpp
@@ -41,6 +40,16 @@ set( incidenceeditors_LIB_SRCS
     templatemanagementdialog.cpp
     todoeditor.cpp
 )
+
+if (QT_QT3SUPPORT_FOUND)
+  set( incidenceeditors_LIB_SRCS
+    ${incidenceeditors_LIB_SRCS}
+    ${libkdgantt1_SRCS}
+    attendeeeditor.cpp
+    editordetails.cpp
+    editorfreebusy.cpp
+  )
+endif ()
 
 kde4_add_ui_files( incidenceeditors_LIB_SRCS
    categoryselectdialog_base.ui
@@ -63,7 +72,6 @@ target_link_libraries(incidenceeditors
    ${KDE4_KDEUI_LIBS}
    ${KDE4_KPARTS_LIBS}
    ${KDE4_KMIME_LIBRARY}
-   ${KDE4_KDE3SUPPORT_LIBRARY}
    ${KDEPIMLIBS_KCAL_LIBS}
    ${KDEPIMLIBS_AKONADI_LIBS}
    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
@@ -72,6 +80,10 @@ target_link_libraries(incidenceeditors
    korganizer_core
    akonadi-kcal_next
 )
+
+if (QT_QT3SUPPORT_FOUND)
+  target_link_libraries(incidenceeditors ${KDE4_KDE3SUPPORT_LIBRARY})
+endif ()
 
 set_target_properties(incidenceeditors PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 install(TARGETS incidenceeditors ${INSTALL_TARGETS_DEFAULT_ARGS})
