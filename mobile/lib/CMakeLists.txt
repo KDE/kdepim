@@ -3,6 +3,7 @@ include_directories(${CMAKE_SOURCE_DIR}/akonadi/)
 set(mobileui_SRCS
     listproxy.cpp
     breadcrumbnavigation.cpp
+    kbreadcrumbnavigationcomponentfactory.cpp
     declarativeakonadiitem.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
