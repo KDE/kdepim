@@ -47,6 +47,7 @@
 #include <akonadi_next/checkableitemproxymodel.h>
 
 #include "listproxy.h"
+#include "akonadibreadcrumbnavigationfactory.h"
 
 using namespace Akonadi;
 
@@ -66,55 +67,14 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   d->mEtm = new Akonadi::EntityTreeModel( d->mChangeRecorder, this );
   d->mEtm->setItemPopulationStrategy( Akonadi::EntityTreeModel::LazyPopulation );
 
-  d->mCollectionSelection = new QItemSelectionModel( d->mEtm, this );
+  Akonadi::BreadcrumbNavigationFactory bnf;
+  bnf.setModel(d->mEtm, this);
 
-  d->mSelectedSubTree = new Akonadi::SelectionProxyModel( d->mCollectionSelection );
-  d->mSelectedSubTree->setSourceModel( d->mEtm );
-
-  d->mCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
-  d->mCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-  d->mCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  d->mCollectionFilter->setSourceModel( d->mSelectedSubTree );
-
-  KSelectionProxyModel *currentCollectionSelectionModel // Deleted by ~QObect
-      = new KSelectionProxyModel( d->mCollectionSelection, this );
-  currentCollectionSelectionModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-  currentCollectionSelectionModel->setSourceModel( d->mEtm );
-
-  Future::KBreadcrumbSelectionModel *breadcrumbCollectionSelection
-      = new Future::KBreadcrumbSelectionModel( d->mCollectionSelection, Future::KBreadcrumbSelectionModel::Forward, this );
-  breadcrumbCollectionSelection->setIncludeActualSelection(false);
-  breadcrumbCollectionSelection->setSelectionDepth( 2 );
-
-  KBreadcrumbNavigationProxyModel *breadcrumbNavigationModel
-      = new KBreadcrumbNavigationProxyModel( breadcrumbCollectionSelection, this );
-  breadcrumbNavigationModel->setSourceModel( d->mEtm );
-  breadcrumbNavigationModel->setFilterBehavior( KSelectionProxyModel::ExactSelection );
-
-  KForwardingItemSelectionModel *oneway
-      = new KForwardingItemSelectionModel( d->mEtm, d->mCollectionSelection, this );
-
-  d->mChildEntitiesModel = new KNavigatingProxyModel( oneway, this );
-  d->mChildEntitiesModel->setSourceModel( d->mEtm );
-
-  d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel();
-  d->mItemFilter->setSourceModel( d->mChildEntitiesModel );
+  d->mItemFilter = new Akonadi::EntityMimeTypeFilterModel(this);
+  d->mItemFilter->setSourceModel( bnf.unfilteredChildItemModel() );
   d->mItemFilter->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
 
-  d->mChildCollectionFilter = new Akonadi::EntityMimeTypeFilterModel( this );
-  d->mChildCollectionFilter->setHeaderGroup( Akonadi::EntityTreeModel::CollectionTreeHeaders );
-  d->mChildCollectionFilter->setSourceModel( d->mChildEntitiesModel );
-  d->mChildCollectionFilter->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
-
-  Future::KProxyItemSelectionModel *proxyBreadcrumbCollectionSelection
-      = new Future::KProxyItemSelectionModel( breadcrumbNavigationModel, d->mCollectionSelection, this );
-
-  d->mBreadcrumbCollectionSelection = new KForwardingItemSelectionModel( breadcrumbNavigationModel,
-                                                                         proxyBreadcrumbCollectionSelection,
-                                                                         KForwardingItemSelectionModel::Reverse,
-                                                                         this );
-
-  d->mChildCollectionSelection = new Future::KProxyItemSelectionModel( d->mChildCollectionFilter, d->mCollectionSelection, this );
+  d->mChildCollectionFilter = bnf.childItemModel();
 
   d->mListProxy = listProxy;
   if ( listProxy ) {
@@ -124,8 +84,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   // It shouldn't be necessary to have three of these once I've written KReaggregationProxyModel :)
   engine()->rootContext()->setContextProperty( "accountsModel", QVariant::fromValue( static_cast<QObject*>( d->mEtm ) ) );
-  engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( currentCollectionSelectionModel ) ) );
-  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( breadcrumbNavigationModel ) ) );
+  engine()->rootContext()->setContextProperty( "selectedCollectionModel", QVariant::fromValue( static_cast<QObject*>( bnf.selectedItemModel() ) ) );
+  engine()->rootContext()->setContextProperty( "breadcrumbCollectionsModel", QVariant::fromValue( static_cast<QObject*>( bnf.breadcrumbItemModel() ) ) );
   engine()->rootContext()->setContextProperty( "childCollectionsModel", QVariant::fromValue( static_cast<QObject*>( d->mChildCollectionFilter ) ) );
   if ( listProxy )
     engine()->rootContext()->setContextProperty( "itemModel", QVariant::fromValue( static_cast<QObject*>( listProxy ) ) );

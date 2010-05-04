@@ -44,7 +44,7 @@ public: /// members
   KNavigatingProxyModel              *mChildEntitiesModel;            // Deleted by ~QObect
   QItemSelectionModel                *mCollectionSelection;           // Deleted by ~QObect
   KSelectionProxyModel               *mSelectedSubTree;               // Deleted by ~QObect
-  Akonadi::EntityMimeTypeFilterModel *mCollectionFilter;              // Deleted by ~QObect
+  QAbstractItemModel                 *mCollectionFilter;              // Deleted by ~QObect
   Akonadi::EntityTreeModel           *mEtm;
   ListProxy                          *mListProxy;
   Akonadi::EntityMimeTypeFilterModel *mItemFilter;
