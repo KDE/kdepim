@@ -94,19 +94,9 @@ bool AkonadiSender::doSend( const KMime::Message::Ptr &aMsg, short sendNow  )
 
 bool AkonadiSender::doSendQueued( const QString &customTransport )
 {
-  //TODO: Fix sending using a different transport
   kDebug() << "Sending queued message with custom transport:" << customTransport;
   mCustomTransport = customTransport;
-
-  // Watch progress of the MDA.
-  mProgressItem = ProgressManager::createProgressItem( 0,
-      DispatcherInterface().dispatcherInstance(),
-      QString::fromAscii( "Sender" ),
-      i18n( "Sending messages" ),
-      i18n( "Initiating sending process..." ),
-      true );
-  kDebug() << "Created ProgressItem" << mProgressItem;
-
+  
   DispatcherInterface *dispatcher = new DispatcherInterface();
   if( mCustomTransport.isEmpty() ) {
     dispatcher->dispatchManually();
