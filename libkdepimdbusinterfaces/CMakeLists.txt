@@ -24,6 +24,8 @@ target_link_libraries(kdepimdbusinterfaces
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTDBUS_LIBRARY}
+    ${KDEPIMLIBS_AKONADI_LIBS}
+    ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} 
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}

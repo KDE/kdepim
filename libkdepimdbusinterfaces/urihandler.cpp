@@ -27,6 +27,7 @@
 #include <knodeinterface.h>
 #include <kmailinterface.h>
 #include <korganizerinterface.h>
+#include <akonadi/contact/contacteditordialog.h>
 
 #include <kiconloader.h>
 #include <krun.h>
@@ -37,7 +38,7 @@
 
 #include <QObject>
 
-bool UriHandler::process( const QString &uri )
+bool UriHandler::process( const QString &uri, const Akonadi::Item& item )
 {
   kDebug() << uri;
 
@@ -59,31 +60,13 @@ bool UriHandler::process( const QString &uri )
     KToolInvocation::invokeMailer( uri.mid(7), QString() );
     return true;
   } else if ( uri.startsWith( QLatin1String( "uid:" ) ) ) {
-    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered(
-           "org.kde.kaddressbook" ) ) {
-/*FIXME: use external contact viewer
-      kapp->updateRemoteUserTimestamp( "org.kde.kaddressbook" );
-      org::kde::KAddressbook::Core kaddressbook(
-        "org.kde.kaddressbook", "/KAddressBook", QDBusConnection::sessionBus() );
-      kaddressbook.showContactEditor( uri.mid( ::qstrlen( "uid:" ) ) );
-*/
-      return true;
-    } else {
-      /*
-        KaddressBook is not already running.  Pass it the UID of the contact via
-        the command line while starting it - it is neater.
-        We start it without its main interface
-      */
-      QString iconPath =
-        KIconLoader::global()->iconPath( "view-pim-contacts", KIconLoader::SizeSmall );
-#if 0      
-      QString tmpStr = "kaddressbook --editor-only --uid ";
-      tmpStr += KShell::quoteArg( uri.mid( ::qstrlen( "uid:" ) ) );
-#endif
-      QString tmpStr = "kaddressbook";      
-      KRun::runCommand( tmpStr, "KAddressBook", iconPath, 0 );
-      return true;
-    }
+
+    Akonadi::ContactEditorDialog *dlg = new Akonadi::ContactEditorDialog( Akonadi::ContactEditorDialog::EditMode, ( QWidget* )0 );
+    if ( item.isValid() )
+      dlg->setContact( item );
+    dlg->show();
+    return true;
+
   } else if ( uri.startsWith( QLatin1String( "urn:x-ical" ) ) ) {
     // make sure korganizer is running or the part is shown
     KToolInvocation::startServiceByDesktopPath( "korganizer" );
