@@ -1283,7 +1283,7 @@ DateTimeList RecurrenceRule::timesInInterval( const QDateTime &dtStart,
   if ( mDuration >= 0 ) {
     QDateTime endRecur = endDt();
     if ( endRecur.isValid() ) {
-      if ( start >= endRecur ) {
+      if ( start > endRecur ) {
         return result;    // beyond end of recurrence
       }
       if ( end > endRecur ) {
@@ -1313,7 +1313,7 @@ DateTimeList RecurrenceRule::timesInInterval( const QDateTime &dtStart,
     if ( !mCached ) {
       buildCache();
     }
-    if ( mCachedDateEnd.isValid() && start >= mCachedDateEnd ) {
+    if ( mCachedDateEnd.isValid() && start > mCachedDateEnd ) {
       return result;    // beyond end of recurrence
     }
     int i = findGE( mCachedDates, start, 0 );
