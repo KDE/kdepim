@@ -236,6 +236,7 @@ const Identity& Identity::null()
 
 bool Identity::isNull() const {
   return mIdentity.isEmpty() && mFullName.isEmpty() && mEmailAddr.isEmpty() &&
+    mEmailAliases.empty() &&
     mOrganization.isEmpty() && mReplyToAddr.isEmpty() && mBcc.isEmpty() &&
     mVCardFile.isEmpty() &&
     mFcc.isEmpty() && mDrafts.isEmpty() && mTemplates.isEmpty() &&
@@ -251,6 +252,7 @@ bool Identity::operator==( const Identity & other ) const {
   bool same = mUoid == other.mUoid &&
       mIdentity == other.mIdentity && mFullName == other.mFullName &&
       mEmailAddr == other.mEmailAddr && mOrganization == other.mOrganization &&
+      mEmailAliases == other.mEmailAliases &&
       mReplyToAddr == other.mReplyToAddr && mBcc == other.mBcc &&
       mVCardFile == other.mVCardFile &&
       mFcc == other.mFcc &&
@@ -271,6 +273,7 @@ bool Identity::operator==( const Identity & other ) const {
   if ( mIdentity != other.mIdentity ) kdDebug() << "mIdentity differs : " << mIdentity << " != " << other.mIdentity << endl;
   if ( mFullName != other.mFullName ) kdDebug() << "mFullName differs : " << mFullName << " != " << other.mFullName << endl;
   if ( mEmailAddr != other.mEmailAddr ) kdDebug() << "mEmailAddr differs : " << mEmailAddr << " != " << other.mEmailAddr << endl;
+  if ( mEmailAliases != other.mEmailAliases ) kdDebug() << "mEmailAliases differs : " << mEmailAliases.join(";") << " != " << other.mEmailAliases.join(";") << endl;
   if ( mOrganization != other.mOrganization ) kdDebug() << "mOrganization differs : " << mOrganization << " != " << other.mOrganization << endl;
   if ( mReplyToAddr != other.mReplyToAddr ) kdDebug() << "mReplyToAddr differs : " << mReplyToAddr << " != " << other.mReplyToAddr << endl;
   if ( mBcc != other.mBcc ) kdDebug() << "mBcc differs : " << mBcc << " != " << other.mBcc << endl;
@@ -320,6 +323,7 @@ void Identity::readConfig( const KConfigBase * config )
   mIdentity = config->readEntry("Identity");
   mFullName = config->readEntry("Name");
   mEmailAddr = config->readEntry("Email Address");
+  mEmailAliases = config->readListEntry("Email Aliases");
   mVCardFile = config->readPathEntry("VCardFile");
   mOrganization = config->readEntry("Organization");
   mPGPSigningKey = config->readEntry("PGP Signing Key").latin1();
@@ -362,6 +366,7 @@ void Identity::writeConfig( KConfigBase * config ) const
   config->writeEntry("SMIME Encryption Key", mSMIMEEncryptionKey.data());
   config->writeEntry("Preferred Crypto Message Format", Kleo::cryptoMessageFormatToString( mPreferredCryptoMessageFormat ) );
   config->writeEntry("Email Address", mEmailAddr);
+  config->writeEntry("Email Aliases", mEmailAliases);
   config->writeEntry("Reply-To Address", mReplyToAddr);
   config->writeEntry("Bcc", mBcc);
   config->writePathEntry("VCardFile", mVCardFile);
@@ -385,7 +390,8 @@ QDataStream & KPIM::operator<<( QDataStream & stream, const KPIM::Identity & i )
 		<< i.pgpEncryptionKey()
 		<< i.smimeSigningKey()
 		<< i.smimeEncryptionKey()
-		<< i.emailAddr()
+		<< i.primaryEmailAddress()
+		<< i.emailAliases()
 		<< i.replyToAddr()
 		<< i.bcc()
 		<< i.vCardFile()
@@ -411,6 +417,7 @@ QDataStream & KPIM::operator>>( QDataStream & stream, KPIM::Identity & i ) {
 		>> i.mSMIMESigningKey
 		>> i.mSMIMEEncryptionKey
 		>> i.mEmailAddr
+		>> i.mEmailAliases
 		>> i.mReplyToAddr
 		>> i.mBcc
 		>> i.mVCardFile
@@ -484,11 +491,26 @@ void Identity::setSMIMEEncryptionKey(const QCString &str)
 }
 
 //-----------------------------------------------------------------------------
-void Identity::setEmailAddr(const QString &str)
+void Identity::setPrimaryEmailAddress( const QString & str )
 {
   mEmailAddr = str;
 }
 
+void Identity::setEmailAliases( const QStringList & list )
+{
+  mEmailAliases = list;
+}
+
+bool Identity::matchesEmailAddress( const QString & addr ) const
+{
+  const QString lower = addr.lower();
+  if ( lower == mEmailAddr.lower() )
+    return true;
+  for ( QStringList::const_iterator it = mEmailAliases.begin(), end = mEmailAliases.end() ; it != end ; ++it )
+    if ( (*it).lower() == lower )
+      return true;
+  return false;
+}
 
 //-----------------------------------------------------------------------------
 void Identity::setVCardFile(const QString &str)

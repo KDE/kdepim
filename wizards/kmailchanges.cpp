@@ -296,7 +296,7 @@ void CreateDisconnectedImapAccount::apply()
 
     KPIM::Identity& identity = identityManager.newFromScratch( accountName );
     identity.setFullName( mRealName );
-    identity.setEmailAddr( mEmail );
+    identity.setPrimaryEmailAddress( mEmail );
     identityManager.commit();
   }
 

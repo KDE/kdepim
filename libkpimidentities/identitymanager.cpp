@@ -211,7 +211,7 @@ void IdentityManager::writeConfig() const {
       // Also write the default identity to emailsettings
       KEMailSettings es;
       es.setSetting( KEMailSettings::RealName, (*it).fullName() );
-      es.setSetting( KEMailSettings::EmailAddress, (*it).emailAddr() );
+      es.setSetting( KEMailSettings::EmailAddress, (*it).primaryEmailAddress() );
       es.setSetting( KEMailSettings::Organization, (*it).organization() );
       es.setSetting( KEMailSettings::ReplyToAddress, (*it).replyToAddr() );
     }
@@ -304,16 +304,14 @@ const Identity & IdentityManager::identityForUoidOrDefault( uint uoid ) const
 
 const Identity & IdentityManager::identityForAddress( const QString & addresses ) const
 {
-  QStringList addressList = KPIM::splitEmailAddrList( addresses );
-  for ( ConstIterator it = begin() ; it != end() ; ++it ) {
-    for( QStringList::ConstIterator addrIt = addressList.begin();
-         addrIt != addressList.end(); ++addrIt ) {
-      // I use QString::utf8() instead of QString::latin1() because I want
-      // a QCString and not a char*. It doesn't matter because emailAddr()
-      // returns a 7-bit string.
-      if( (*it).emailAddr().lower() ==
-          KPIM::getEmailAddress( *addrIt ).lower() ) {
-        return (*it);
+  const QStringList addressList = KPIM::splitEmailAddrList( addresses );
+  for( QStringList::ConstIterator addrIt = addressList.begin();
+       addrIt != addressList.end(); ++addrIt ) {
+    const QString addr = KPIM::getEmailAddress( *addrIt ).lower();
+    for ( ConstIterator it = begin() ; it != end() ; ++it ) {
+      const Identity & id = *it;
+      if ( id.matchesEmailAddress( addr ) ) {
+        return id;
       }
     }
   }
@@ -499,7 +497,7 @@ QStringList KPIM::IdentityManager::allEmails() const
 {
   QStringList lst;
   for ( ConstIterator it = begin() ; it != end() ; ++it ) {
-    lst << (*it).emailAddr();
+    lst << (*it).primaryEmailAddress();
   }
   return lst;
 }
