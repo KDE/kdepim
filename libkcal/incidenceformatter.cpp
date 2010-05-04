@@ -267,14 +267,20 @@ static QString displayViewFormatAttendees( Incidence *incidence )
   QString tmpStr, str;
 
   // Add organizer link
-  tmpStr += "<tr>";
-  tmpStr += "<td><b>" + i18n( "Organizer:" ) + "</b></td>";
-  tmpStr += "<td>" +
-            displayViewLinkPerson( incidence->organizer().email(),
-                                   incidence->organizer().name(),
-                                   QString::null ) +
-            "</td>";
-  tmpStr += "</tr>";
+  int attendeeCount = incidence->attendees().count();
+  if ( attendeeCount > 1 ||
+       ( !incidence->organizer().email().isEmpty() && !iamOrganizer( incidence ) ) ||
+       ( attendeeCount == 1 &&
+         incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
+    tmpStr += "<tr>";
+    tmpStr += "<td><b>" + i18n( "Organizer:" ) + "</b></td>";
+    tmpStr += "<td>" +
+              displayViewLinkPerson( incidence->organizer().email(),
+                                     incidence->organizer().name(),
+                                     QString::null ) +
+              "</td>";
+    tmpStr += "</tr>";
+  }
 
   // Add "chair"
   str = displayViewFormatAttendeeRoleList( incidence, Attendee::Chair );
@@ -3268,9 +3274,16 @@ static QString tooltipFormatAttendees( Incidence *incidence )
   QString tmpStr, str;
 
   // Add organizer link
-  tmpStr += "<i>" + i18n( "Organizer:" ) + "</i>" + "&nbsp;";
-  tmpStr += tooltipPerson( incidence->organizer().email(),
-                           incidence->organizer().name() );
+  int attendeeCount = incidence->attendees().count();
+  if ( attendeeCount > 1 ||
+       ( !incidence->organizer().email().isEmpty() && !iamOrganizer( incidence ) ) ||
+       ( attendeeCount == 1 &&
+         incidence->organizer().email() != incidence->attendees().first()->email() ) ) {
+    tmpStr += "<i>" + i18n( "Organizer:" ) + "</i>" + "&nbsp;";
+    tmpStr += tooltipPerson( incidence->organizer().email(),
+                             incidence->organizer().name() );
+  }
+
   // Add "chair"
   str = tooltipFormatAttendeeRoleList( incidence, Attendee::Chair );
   if ( !str.isEmpty() ) {
