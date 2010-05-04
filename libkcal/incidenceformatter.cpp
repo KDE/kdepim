@@ -1531,10 +1531,11 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
     return i18n( "This invitation has been published" );
   case Scheduler::Request:
     if ( event->revision() > 0 ) {
-      return i18n( "This invitation has been updated" );
+      return i18n( "This invitation has been updated by the organizer %1" ).
+        arg( event->organizer().fullName() );
     }
     if ( iamOrganizer( event ) ) {
-      return i18n( "I sent this invitation" );
+      return i18n( "I created this invitation" );
     } else {
       if ( senderIsOrganizer( event, sender ) ) {
         if ( !event->organizer().fullName().isEmpty() ) {
@@ -1588,11 +1589,19 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg, const 
     case Attendee::NeedsAction:
       return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
     case Attendee::Accepted:
-      if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 accepts this invitation" ).arg( attendeeName );
+      if ( event->revision() > 0 ) {
+        if ( !sender.isEmpty() ) {
+          return i18n( "This invitation has been updated by attendee %1" ).arg( sender );
+        } else {
+          return i18n( "This invitation has been updated by an attendee" );
+        }
       } else {
-        return i18n( "%1 accepts this invitation on behalf of %2" ).
-          arg( attendeeName ).arg( delegatorName );
+        if ( delegatorName.isEmpty() ) {
+          return i18n( "%1 accepts this invitation" ).arg( attendeeName );
+        } else {
+          return i18n( "%1 accepts this invitation on behalf of %2" ).
+            arg( attendeeName ).arg( delegatorName );
+        }
       }
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
@@ -1659,10 +1668,11 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
     return i18n("This task has been published");
   case Scheduler::Request:
     if ( todo->revision() > 0 ) {
-      return i18n( "This task has been updated" );
+      return i18n( "This task has been updated by the organizer %1" ).
+        arg( todo->organizer().fullName() );
     } else {
       if ( iamOrganizer( todo ) ) {
-        return i18n( "This is a task I created" );
+        return i18n( "I created this task" );
       } else {
         if ( senderIsOrganizer( todo, sender ) ) {
           if ( !todo->organizer().fullName().isEmpty() ) {
@@ -1717,11 +1727,19 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg, const QSt
     case Attendee::NeedsAction:
       return i18n( "%1 indicates this task assignment still needs some action" ).arg( attendeeName );
     case Attendee::Accepted:
-      if ( delegatorName.isEmpty() ) {
-        return i18n( "%1 accepts this task" ).arg( attendeeName );
+      if ( todo->revision() > 0 ) {
+        if ( !sender.isEmpty() ) {
+          return i18n( "This task has been updated by assignee %1" ).arg( sender );
+        } else {
+          return i18n( "This task has been updated by an assignee" );
+        }
       } else {
-        return i18n( "%1 accepts this task on behalf of %2" ).
-          arg( attendeeName ).arg( delegatorName );
+        if ( delegatorName.isEmpty() ) {
+          return i18n( "%1 accepts this task" ).arg( attendeeName );
+        } else {
+          return i18n( "%1 accepts this task on behalf of %2" ).
+            arg( attendeeName ).arg( delegatorName );
+        }
       }
     case Attendee::Tentative:
       if ( delegatorName.isEmpty() ) {
@@ -2056,6 +2074,7 @@ class IncidenceFormatter::IncidenceCompareVisitor
     }
     bool visit( Todo *todo )
     {
+      compareTodos( todo, dynamic_cast<Todo*>( mExistingIncidence ) );
       compareIncidences( todo, mExistingIncidence );
       return !mChanges.isEmpty();
     }
@@ -2081,6 +2100,39 @@ class IncidenceFormatter::IncidenceCompareVisitor
       if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
         mChanges += i18n( "The invitation ending time has been changed from %1 to %2" )
                     .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
+    }
+
+    void compareTodos( Todo *newTodo, Todo *oldTodo )
+    {
+      if ( !oldTodo || !newTodo ) {
+        return;
+      }
+
+      if ( !oldTodo->hasStartDate() && newTodo->hasStartDate() ) {
+        mChanges += i18n( "A task starting time has been added" );
+      }
+      if ( oldTodo->hasStartDate() && !newTodo->hasStartDate() ) {
+        mChanges += i18n( "The task starting time has been removed" );
+      }
+      if ( oldTodo->hasStartDate() && newTodo->hasStartDate() &&
+           oldTodo->dtStart() != newTodo->dtStart() ) {
+        mChanges += i18n( "The task starting time has been changed from %1 to %2" ).
+                    arg( dateTimeToString( oldTodo->dtStart(), oldTodo->doesFloat(), false ),
+                         dateTimeToString( newTodo->dtStart(), newTodo->doesFloat(), false ) );
+      }
+
+      if ( !oldTodo->hasDueDate() && newTodo->hasDueDate() ) {
+        mChanges += i18n( "A task due time has been added" );
+      }
+      if ( oldTodo->hasDueDate() && !newTodo->hasDueDate() ) {
+        mChanges += i18n( "The task due time has been removed" );
+      }
+      if ( oldTodo->hasDueDate() && newTodo->hasDueDate() &&
+           oldTodo->dtDue() != newTodo->dtDue() ) {
+        mChanges += i18n( "The task due time has been changed from %1 to %2" ).
+                    arg( dateTimeToString( oldTodo->dtDue(), oldTodo->doesFloat(), false ),
+                         dateTimeToString( newTodo->dtDue(), newTodo->doesFloat(), false ) );
+      }
     }
 
     void compareIncidences( Incidence *newInc, Incidence *oldInc )
@@ -2312,10 +2364,25 @@ QString IncidenceFormatter::formatICalInvitationHelper( QString invitation,
     return QString::null;
   html += bodyVisitor.result();
 
-  if ( msg->method() == Scheduler::Request ) { // ### Scheduler::Publish/Refresh/Add as well?
+  if ( msg->method() == Scheduler::Request ) {
     IncidenceCompareVisitor compareVisitor;
     if ( compareVisitor.act( incBase, existingIncidence ) ) {
-      html += i18n("<p align=\"left\">The following changes have been made by the organizer:</p>");
+      html += "<p align=\"left\">";
+      html += i18n( "The following changes have been made by the organizer:" );
+      html += "</p>";
+      html += compareVisitor.result();
+    }
+  }
+  if ( msg->method() == Scheduler::Reply ) {
+    IncidenceCompareVisitor compareVisitor;
+    if ( compareVisitor.act( incBase, existingIncidence ) ) {
+      html += "<p align=\"left\">";
+      if ( !sender.isEmpty() ) {
+        html += i18n( "The following changes have been made by %1:" ).arg( sender );
+      } else {
+        html += i18n( "The following changes have been made by an attendee:" );
+      }
+      html += "</p>";
       html += compareVisitor.result();
     }
   }
