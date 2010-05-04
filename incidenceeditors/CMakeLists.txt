@@ -6,6 +6,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/libkdepimdbusinterfaces
     ${CMAKE_SOURCE_DIR}/akonadi/kcal
     ${CMAKE_BINARY_DIR}/akonadi/kcal
+    ${Boost_INCLUDE_DIR}
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
