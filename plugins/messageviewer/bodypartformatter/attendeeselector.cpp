@@ -43,7 +43,7 @@ AttendeeSelector::AttendeeSelector(QWidget * parent)
   connect( ui.attendeeEdit, SIGNAL(textChanged(const QString&)), SLOT(textChanged(const QString&)) );
   connect( ui.attendeeEdit, SIGNAL(returnPressed(const QString&)), SLOT(addClicked()) );
 
-  connect( ui.attendeeList, SIGNAL(selectionChanged()), SLOT(selectionChanged()) );
+  connect( ui.attendeeList, SIGNAL(itemSelectionChanged()), SLOT(selectionChanged()) );
 }
 
 QStringList AttendeeSelector::attendees() const
