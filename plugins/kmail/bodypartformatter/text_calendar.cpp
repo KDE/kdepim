@@ -401,7 +401,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( recv, msg, subject, statusString, type != Forward );
     }
 
-    void ensureKorganizerRunning() const
+    void ensureKorganizerRunning( bool switchTo ) const
     {
       QString error;
       QCString dcopService;
@@ -413,7 +413,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QCString dummy;
         if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
           DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
-          ref.call( "newInstance()" ); // activate korganizer window
+          if ( switchTo ) {
+            ref.call( "newInstance()" ); // activate korganizer window
+          }
+
           DCOPReply reply = ref.call( "load()" );
           if ( reply.isValid() && (bool)reply ) {
             kdDebug() << "Loaded " << dcopService << " successfully" << endl;
@@ -445,7 +448,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
-      ensureKorganizerRunning();
+      ensureKorganizerRunning( false );
 
       return true;
     }
@@ -659,7 +662,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     void showCalendar( const QDate &date ) const
     {
-      ensureKorganizerRunning();
+      ensureKorganizerRunning( true );
       // raise korganizer part in kontact or the korganizer app
       kapp->dcopClient()->send( "korganizer", "korganizer", "newInstance()", QByteArray() );
       QByteArray arg;
