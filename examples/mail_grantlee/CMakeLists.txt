@@ -22,6 +22,14 @@ include_directories(
 
 configure_file(grantlee_paths.h.cmake ${PROJECT_BINARY_DIR}/grantlee_paths.h)
 
+## TODO: Install these to the proper KDE locations.
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+${PROJECT_SOURCE_DIR}/themes ${PROJECT_BINARY_DIR}/themes)
+
+execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory
+${PROJECT_SOURCE_DIR}/images ${PROJECT_BINARY_DIR}/images)
+
 set(mail_grantlee_SRCS
   main.cpp
   mailwindow.cpp

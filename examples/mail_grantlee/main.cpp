@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MailWindow w;
-    w.resize( 620,600 );
+    w.resize(620,600);
     w.show();
     return a.exec();
 }

@@ -23,6 +23,8 @@
 #include <QtGui/QMainWindow>
 #include <QSplitter>
 #include <QWebView>
+#include <QComboBox>
+#include <QLabel>
 
 namespace Grantlee
 {
@@ -37,10 +39,14 @@ public:
     MailWindow(QWidget *parent = 0);
     ~MailWindow();
 
+private Q_SLOTS:
+    void renderMail( const QString &themeName );
+
 private:
-    void renderMail();
     QSplitter *splitter;
     QWebView *webView;
+    QComboBox *comboThemes;
+    QLabel *label;
 
     Grantlee::Engine *engine;
 };
