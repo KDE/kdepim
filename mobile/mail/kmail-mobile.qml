@@ -119,7 +119,6 @@ KPIM.MainView {
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
-      handlePosition: startPanel.handlePosition + startPanel.handleHeight
       content: [
         Item {
           anchors.fill: parent
@@ -204,10 +203,6 @@ KPIM.MainView {
       anchors.fill: parent
       id: actionPanel
       titleText: "Actions"
-      // ### QML has a bug where the children property is broken.
-      // As a workaround, we need to set handlePosition here and
-      // set anchors.fill parent on the panels. Remove when Qt is fixed.
-      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -261,7 +256,6 @@ KPIM.MainView {
 
     SlideoutPanel {
       anchors.fill: parent
-      handlePosition: actionPanel.handlePosition + actionPanel.handleHeight
       id: attachmentPanel
       visible: messageView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );

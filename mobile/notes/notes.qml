@@ -93,7 +93,6 @@ KPIM.MainView {
       id: folderPanel
       titleText: "Folders"
       handleHeight: 150
-      handlePosition: startPanel.handlePosition + startPanel.handleHeight
       anchors.fill : parent
       content: [
         Item {
@@ -166,7 +165,6 @@ KPIM.MainView {
       id: actionPanel
       titleText: "Actions"
       handleHeight: 150
-      handlePosition: folderPanel.handlePosition + folderPanel.handleHeight
       anchors.fill : parent
       contentWidth: 240
       content: [

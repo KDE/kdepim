@@ -155,7 +155,6 @@ KPIM.MainView {
     SlideoutPanel {
       id: folderPanel
       titleText: "Folders"
-      handlePosition: 108
       handleHeight: 150
       anchors.fill : parent
       content: [
@@ -271,7 +270,6 @@ KPIM.MainView {
       id: actionPanel
       titleText: "Actions"
       handleHeight: 150
-      handlePosition : 258
       anchors.fill : parent
       contentWidth: 240
       content: [

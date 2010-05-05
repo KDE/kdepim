@@ -188,7 +188,6 @@ KPIM.MainView {
       id: actionPanel
       titleText: "Actions"
       handleHeight: 150
-      handlePosition : 258
       anchors.fill : parent
       contentWidth: 240
       content: [
@@ -242,7 +241,6 @@ KPIM.MainView {
       anchors.fill : parent
       visible: false //messageView.messageTreeModel.attachmentCount >= 2
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handlePosition: folderPanel.handleHeight + actionPanel.handleHeight
       handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
       contentWidth: 400
 //      content: [
