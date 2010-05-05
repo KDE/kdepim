@@ -757,23 +757,6 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
     linkColor = "class =\"black\"";
   }
 
-//TODO(Andras) this looks like  duplicate code, try to factor out!
-  QStringList headerParts;
-  if ( strategy->showHeader( "to" ) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor );
-  }
-
-  if ( strategy->showHeader( "cc" ) && message->cc(false) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly, linkColor );
-  }
-
-  if ( strategy->showHeader( "bcc" ) && message->bcc(false) ) {
-    headerParts << StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly, linkColor );
-  }
-
-  // remove all empty (modulo whitespace) entries and joins them via ", \n"
-  QString headerPart = ' ' + headerParts.filter( QRegExp( "\\S" ) ).join( ", " );
-
   QString imgpath( KStandardDirs::locate("data","libmessageviewer/pics/") );
   imgpath.prepend( "file://" );
   imgpath.append("enterprise_");
@@ -829,14 +812,38 @@ QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
       "     </tr> ";
   }
 
-  // to, cc, bcc
-  headerStr +=
-    "     <tr> "
-    "      <td style=\"font-size: 10px; text-align: right; padding-left: 5px; padding-right: 24px; "+borderSettings+"\">"+i18nc("To field of the mail header.", "To: ")+"</td> "
-    "      <td style=\""+borderSettings+"\">"
-    +headerPart+
-    "      </td> "
-    "     </tr> ";
+  // to line
+  if ( strategy->showHeader( "to" ) ) {
+    headerStr +=
+      "     <tr> "
+      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("To: ") + "</td> "
+      "      <td style=\"" + borderSettings + "\">" +
+      StringUtil::emailAddrAsAnchor( message->to(), StringUtil::DisplayFullAddress, linkColor ) +
+      "      </td> "
+      "     </tr>\n";
+  }
+
+  // cc line, if any
+  if ( strategy->showHeader( "cc" ) && message->cc( false ) ) {
+    headerStr +=
+      "     <tr> "
+      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("CC: ") + "</td> "
+      "      <td style=\"" + borderSettings + "\">" +
+      StringUtil::emailAddrAsAnchor( message->cc(), StringUtil::DisplayNameOnly, linkColor ) +
+      "      </td> "
+      "     </tr>\n";
+  }
+
+  // bcc line, if any
+  if ( strategy->showHeader( "bcc" ) && message->bcc( false ) ) {
+    headerStr +=
+      "     <tr> "
+      "      <td style=\"font-size: 6px; text-align: right; padding-left: 5px; padding-right: 24px; " + borderSettings + "\">" + i18n("BCC: ") + "</td> "
+      "      <td style=\"" + borderSettings + "\">" +
+      StringUtil::emailAddrAsAnchor( message->bcc(), StringUtil::DisplayNameOnly, linkColor ) +
+      "      </td> "
+      "     </tr>\n";
+  }
 
   // header-bottom
   headerStr +=
