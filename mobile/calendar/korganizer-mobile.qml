@@ -171,9 +171,6 @@ KPIM.MainView {
              breadcrumbItemsModel : breadcrumbCollectionsModel
              selectedItemModel : selectedCollectionModel
              childItemsModel : childCollectionsModel
-             onCollectionSelected: {
-               //folderPanel.collapse()
-             }
            }
 
            Column {
