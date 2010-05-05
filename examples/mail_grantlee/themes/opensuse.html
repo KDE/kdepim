@@ -75,20 +75,8 @@ td.data {
     <td class="data">: {{ subject }} </td>
   </tr>
 
-  <tr>
-    <td class="data_header"> From </td>
-    <td class="data">: {{ from }} </td>
-  </tr>
+  {% include "data_headers.html" %}
 
-  <tr>
-    <td class="data_header"> To </td>
-    <td class="data">: {{ to }} </td>
-  </tr>
-
-  <tr>
-    <td class="data_header"> Date </td>
-    <td class="data">: {{ date }} </td>
-  </tr>
 </table>
 
 {% endblock %}

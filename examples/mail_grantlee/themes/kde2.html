@@ -1,4 +1,4 @@
-{# Nokia Template #}
+{# KDE Template #}
 
 {% extends "base.html" %}
 
@@ -8,34 +8,34 @@
     background-color:#FFF;
 }
 
-.header , table, .footer {
+.header, table, .footer, .main {
     width:600px;
 }
 
-.message, table {
+.main {
     border-width: 2px;
     border-style: solid;
-    border-color: #000;
+    border-color: #154187;
 }
 
 .header {
-    background-image:url('images/nokia_header.png');
+    background-image:url('{% media_finder "kde_header.png" %}');
     height:90px;
 }
 
 .footer {
-    background-image:url('images/nokia_footer.png');
-    height:30px;
+    background-image:url("{% media_finder "kde_footer.png" %}");
+    height:70px;
 }
 
 table {
-    padding:10px 10px 5px 10px;
-    margin:0px;
-    background-image:url('images/nokia_n900.png');
+    height:80px;
+    background-color:#F2F6F8;
+    border-bottom:dotted;
 }
 
 td {
-    color:#000;
+    color:#164B8A;
 }
 
 td.data_header {
@@ -67,19 +67,33 @@ td.data {
 
 {% endblock %}
 
-{% block title %} Nokia {% endblock %}
+{% block title %} KDE {% endblock %}
 
 {% block content %}
 
-<div class="header"></div>
+<div class="main">
+
+<div class="header">
+    <img src="{% media_finder "kde_logo.png" %}" alt="KDE" align="right" hspace="5" vspace="3" />
+</div>
 
 <table>
   <tr>
+    <td rowspan="4"> <img src="{% media_finder "kdepim_logo.png" %}" alt="KDE" align="center" /> </td>
     <td class="data_header"> Subject </td>
     <td class="data">: {{ subject }} </td>
+
+    {% if attachments %}
+    <td rowspan="4" class="data_header" align="center">
+          Attachment: <br />
+          <a href="" title="PDF Document">
+            <img src="{% media_finder "okular.png" %}" alt="Okular" border="0">
+          </a>
+    </td>
+    {% endif %}
   </tr>
 
-  {% include "data_headers.html" %}
+ {% include "data_headers.html" %}
 
 </table>
 
@@ -87,19 +101,8 @@ td.data {
 
 {% block mail_message %}
   <div class="message">
-
     {{ message }}
-
-    {% if attachments %}
-    <ul>
-    {% for attachment in attachments %}
-      <img src="images/gwenview.png" width="16"><a href="">{{ attachment }} </a> <br />
-    {% endfor %}
-    </ul>
-    {% endif %}
-
   </div>
-
 {% endblock %}
 
 {% block footer %}

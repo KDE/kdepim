@@ -74,36 +74,27 @@ td.data {
 <div class="main">
 
 <div class="header">
-    <img src="images/kde_logo.png" alt="KDE" align="right" hspace="5" vspace="3">
+    <img src="images/kde_logo.png" alt="KDE" align="right" hspace="5" vspace="3" />
 </div>
 
 <table>
   <tr>
-    <td rowspan="4"> <img src="images/kdepim_logo.png" alt="KDE" align="center"> </td>
+    <td rowspan="4"> <img src="images/kdepim_logo.png" alt="KDE" align="center" /> </td>
     <td class="data_header"> Subject </td>
     <td class="data">: {{ subject }} </td>
+
+    {% if attachments %}
     <td rowspan="4" class="data_header" align="center">
           Attachment: <br />
           <a href="" title="PDF Document">
             <img src="images/okular.png" alt="Okular" border="0">
           </a>
     </td>
+    {% endif %}
   </tr>
 
-  <tr>
-    <td class="data_header"> From </td>
-    <td class="data">: {{ from }} </td>
-  </tr>
+ {% include "data_headers.html" %}
 
-  <tr>
-    <td class="data_header"> To </td>
-    <td class="data">: {{ to }} </td>
-  </tr>
-
-  <tr>
-    <td class="data_header"> Date </td>
-    <td class="data">: {{ date }} </td>
-  </tr>
 </table>
 
 {% endblock %}
