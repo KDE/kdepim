@@ -104,6 +104,7 @@ CalendarSearch::Private::Private( CalendarSearch* qq )
 
     Session *session = new Session( "CalendarSearch-" + KRandom::randomString( 8 ).toLatin1(), q );
     monitor = new ChangeRecorder( q );
+    monitor->setSession( session );
 
     ItemFetchScope scope;
     scope.fetchFullPayload( true );
