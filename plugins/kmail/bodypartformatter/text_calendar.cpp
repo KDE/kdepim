@@ -360,7 +360,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( recv, msg, subject, status, type != Forward );
     }
 
-    void ensureKorganizerRunning() const
+    void ensureKorganizerRunning( bool switchTo ) const
     {
       QString error;
       QString dbusService;
@@ -370,7 +370,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
         QDBusInterface iface( "org.kde.korganizer", "/korganizer_PimApplication", "org.kde.KUniqueApplication" );
         if ( iface.isValid() ) {
-          iface.call( "newInstance" );
+          if ( switchTo ) {
+            iface.call( "newInstance" );
+          }
           QDBusReply<bool> r = iface.call( "load" );
           if ( !r.isValid() || !r.value() ) {
             kWarning() << "Loading korganizer failed: " << iface.lastError().message();
@@ -403,7 +405,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // Now ensure that korganizer is running; otherwise start it, to prevent surprises
       // (https://intevation.de/roundup/kolab/issue758)
-      ensureKorganizerRunning();
+      ensureKorganizerRunning( false );
 
       return true;
     }
@@ -617,7 +619,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
     void showCalendar( const QDate &date ) const
     {
-      ensureKorganizerRunning();
+      ensureKorganizerRunning( true );
       QDBusInterface *kontact = new QDBusInterface( "org.kde.kontact", "/KontactInterface", "org.kde.kontact.KontactInterface", QDBusConnection::sessionBus() );
       if ( kontact->isValid() )
         kontact->call( "selectPlugin", "kontact_korganizerplugin" );
