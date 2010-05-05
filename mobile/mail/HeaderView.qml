@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as Qt
+import Qt 4.7 as QML
 import org.kde.pim.mobileui 4.5 as KPIM
 
 /** Akonadi Message Header List View
@@ -26,24 +26,24 @@ KPIM.ItemListView {
   delegate: [
     KPIM.ItemListViewDelegate {
       summaryContent: [
-        Qt.Text {
+        QML.Text {
           anchors.fill: parent
           text: model.subject
         }
       ]
       detailsContent: [
-        Qt.Column {
+        QML.Column {
           anchors.fill: parent
-          Qt.Text {
+          QML.Text {
             text: model.subject
             font.bold: true
             color: palette.highlightedText
           }
-          Qt.Text {
+          QML.Text {
             text: "From: " + model.from
             color: palette.highlightedText
           }
-          Qt.Text {
+          QML.Text {
             text: "Date: " + model.date
             color: palette.highlightedText
           }

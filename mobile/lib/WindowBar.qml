@@ -17,16 +17,16 @@
     02110-1301, USA.
 */
 
-import Qt 4.7 as Qt
+import Qt 4.7 as QML
 import org.kde 4.5
 
 /** Window bar containing the task switcher buttom for full screen apps. */
-Qt.Image {
+QML.Image {
   source: KDE.locate( "data", "mobileui/top.png" );
   anchors.top: parent.top
   anchors.left: parent.left
 
-  Qt.MouseArea {
+  QML.MouseArea {
     anchors.top: parent.top
     anchors.left: parent.left
     width: 80
