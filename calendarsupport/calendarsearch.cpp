@@ -286,18 +286,24 @@ CalendarSearch::IncidenceTypes CalendarSearch::incidenceTypes() const
 
 void CalendarSearch::setIncidenceTypes( IncidenceTypes types )
 {
-  if ( int( types ) != int( d->incidenceTypes ) ) {
+  if ( static_cast<int>( types ) != static_cast<int>( d->incidenceTypes ) ) {
     const bool showEvents = types.testFlag( Events );
     const bool showTodos = types.testFlag( Todos );
     const bool showJournals = types.testFlag( Journals );
 
+
+    // TODO_AKONADI: Debug why the model isn't repopulated after calling setMimeTypeMonitored
+    // (which resets the model), calling this isn't needed though, because we use the incidence filter below.
+    // d->monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), showEvents );
+    // d->monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), showTodos );
+    // d->monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), showJournals );
+
+
     d->incidenceTypes = types;
-    d->monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::eventMimeType(), showEvents );
-    d->monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::todoMimeType(), showTodos );
-    d->monitor->setMimeTypeMonitored( Akonadi::IncidenceMimeTypeVisitor::journalMimeType(), showJournals );
     d->incidenceFilterProxyModel->setShowEvents( showEvents );
     d->incidenceFilterProxyModel->setShowTodos( showTodos );
     d->incidenceFilterProxyModel->setShowJournals( showJournals );
+
   }
 }
 
