@@ -49,9 +49,11 @@
 
 using namespace Akonadi;
 
+/*
 static QString dateToString( const KDateTime& dt ) {
   return dt.isValid() ? dt.toString() : QString();
 }
+*/
 
 class CalendarSearch::Private {
     CalendarSearch* const q;
