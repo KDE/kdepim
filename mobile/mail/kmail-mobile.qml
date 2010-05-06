@@ -213,14 +213,14 @@ KPIM.MainView {
             buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
-          KPIM.Button {
-            id: deleteButton
+          KPIM.Action{
+            id : deleteButton
             anchors.top: moveButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: KDE.i18n( "Delete" )
-            onClicked: actionPanel.collapse();
+            action : application.getAction("akonadi_item_delete")
+            onTriggered : actionPanel.collapse();
           },
           KPIM.Button {
             id: previousButton
