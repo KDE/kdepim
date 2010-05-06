@@ -24,6 +24,7 @@ import org.kde.pim.mobileui 4.5 as KPIM
 Item {
   anchors.topMargin: 12
   anchors.leftMargin: 48
+  anchors.rightMargin: 2
 
   Text {
     id: subjectLabel
@@ -33,18 +34,45 @@ Item {
     anchors.left: parent.left
   }
 
-  TextInput {
+  Rectangle {
     id: subject
-    anchors.left: subjectLabel.right
-    anchors.top: parent.top
-    anchors.right: parent.right
+    anchors {
+      left: subjectLabel.right
+      top: parent.top
+      right: parent.right
+    }
+    height: subjectInput.height
+    border { color: "black"; width: 1 }
+
+    TextInput {
+      id: subjectInput
+      anchors.fill: parent
+    }
   }
 
-  TextEdit {
+  Rectangle {
     id: messageContent
-    anchors.top: subject.bottom
-    anchors.left: parent.left
-    anchors.right: parent.right
+    anchors {
+      top: subject.bottom
+      left: parent.left
+      right: parent.right
+      bottom: sendButton.top
+      topMargin: 2
+    }
+    border { color: "black"; width: 1 }
+
+    TextEdit {
+      id: messageContentInput
+      anchors.fill: parent
+    }
+  }
+
+  KPIM.Button {
+    id: sendButton
     anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    anchors.left: parent.left
+    buttonText: KDE.i18n( "Send" )
+    height: parent.height / 6
   }
 }
