@@ -37,10 +37,12 @@
 */
 
 #include "dndfactory.h"
+#include "calendaradaptor.h"
+
+#include <kcal/calendarlocal.h>
+#include <kcal/dndfactory.h>
 #include <kcal/vcaldrag.h>
 #include <kcal/icaldrag.h>
-#include "calendaradaptor.h"
-#include <kcal/calendarlocal.h>
 
 #include <kiconloader.h>
 #include <kdebug.h>
@@ -63,10 +65,17 @@ class Akonadi::DndFactory::Private
 {
   public:
   Private( CalendarAdaptor *cal, bool deleteCalendar )
-    : mDeleteCalendar( deleteCalendar ), mCalendar ( cal )
+    : mDeleteCalendar( deleteCalendar ), mCalendar( cal ),
+      mDndFactory( new KCal::DndFactory( cal ) )
     {}
+
+  ~Private() {
+    delete mDndFactory;
+  }
+
   bool mDeleteCalendar;
   CalendarAdaptor *mCalendar;
+  KCal::DndFactory *mDndFactory;
 
 };
 //@endcond
@@ -83,237 +92,88 @@ DndFactory::~DndFactory()
 
 QMimeData *DndFactory::createMimeData()
 {
-  QMimeData *mimeData = new QMimeData;
-
-  ICalDrag::populateMimeData( mimeData, d->mCalendar );
-  VCalDrag::populateMimeData( mimeData, d->mCalendar );
-
-  return mimeData;
+  return d->mDndFactory->createMimeData();
 }
 
 QDrag *DndFactory::createDrag( QWidget *owner )
 {
-  QDrag *drag = new QDrag( owner );
-  drag->setMimeData( createMimeData() );
-
-  return drag;
+  return d->mDndFactory->createDrag( owner );
 }
 
 QMimeData *DndFactory::createMimeData( Incidence *incidence )
 {
-  CalendarLocal cal( d->mCalendar->timeSpec() );
-  Incidence *i = incidence->clone();
-  cal.addIncidence( i );
-
-  QMimeData *mimeData = new QMimeData;
-
-  ICalDrag::populateMimeData( mimeData, &cal );
-  VCalDrag::populateMimeData( mimeData, &cal );
-
-  KUrl uri = i->uri();
-  if ( uri.isValid() ) {
-    QMap<QString, QString> metadata;
-    metadata[QLatin1String( "labels" )] = KUrl::toPercentEncoding( i->summary() );
-    uri.populateMimeData( mimeData, metadata );
-  }
-
-  return mimeData;
+  return d->mDndFactory->createMimeData( incidence );
 }
 
 QDrag *DndFactory::createDrag( Incidence *incidence, QWidget *owner )
 {
-  QDrag *drag = new QDrag( owner );
-  drag->setMimeData( createMimeData( incidence ) );
-
-  if ( incidence->type() == "Event" ) {
-    drag->setPixmap( BarIcon( QLatin1String( "view-calendar-day" ) ) );
-  } else if ( incidence->type() == "Todo" ) {
-    drag->setPixmap( BarIcon( QLatin1String( "view-calendar-tasks" ) ) );
-  }
-
-  return drag;
+  return d->mDndFactory->createDrag( incidence, owner );
 }
 
 KCal::Calendar *DndFactory::createDropCalendar( const QMimeData *md )
 {
-  return createDropCalendar( md, d->mCalendar->timeSpec() );
+  return d->mDndFactory->createDropCalendar( md );
 }
 
+/* static */
 KCal::Calendar *DndFactory::createDropCalendar( const QMimeData *md, const KDateTime::Spec &timeSpec )
 {
-  KCal::Calendar *cal = new KCal::CalendarLocal( timeSpec );
+ KCal::Calendar *cal = new KCal::CalendarLocal( timeSpec );
 
-  if ( ICalDrag::fromMimeData( md, cal ) ||
-       VCalDrag::fromMimeData( md, cal ) ){
-    return cal;
-  }
-  delete cal;
-  return 0;
+ if ( ICalDrag::fromMimeData( md, cal ) ||
+      VCalDrag::fromMimeData( md, cal ) ) {
+   return cal;
+ }
+ delete cal;
+ return 0;
 }
 
 KCal::Calendar *DndFactory::createDropCalendar( QDropEvent *de )
 {
-  KCal::Calendar *cal = createDropCalendar( de->mimeData() );
-  if ( cal ) {
-    de->accept();
-    return cal;
-  }
-  return 0;
+  return d->mDndFactory->createDropCalendar( de );
 }
 
 KCal::Event *DndFactory::createDropEvent( const QMimeData *md )
 {
-  kDebug();
-  Event *ev = 0;
-  KCal::Calendar *cal = createDropCalendar( md );
-
-  if ( cal ) {
-    Event::List events = cal->events();
-    if ( !events.isEmpty() ) {
-      ev = new Event( *events.first() );
-    }
-    delete cal;
-  }
-  return ev;
+  return d->mDndFactory->createDropEvent( md );
 }
 
 KCal::Event *DndFactory::createDropEvent( QDropEvent *de )
 {
-  Event *ev = createDropEvent( de->mimeData() );
-
-  if ( ev ) {
-    de->accept();
-  }
-
-  return ev;
+  return d->mDndFactory->createDropEvent( de );
 }
 
 KCal::Todo *DndFactory::createDropTodo( const QMimeData *md )
 {
-  kDebug();
-  KCal::Todo *todo = 0;
-  KCal::Calendar *cal = createDropCalendar( md );
-
-  if ( cal ) {
-    Todo::List todos = cal->todos();
-    if ( !todos.isEmpty() ) {
-      todo = new KCal::Todo( *todos.first() );
-    }
-    delete cal;
-  }
-
-  return todo;
+  return d->mDndFactory->createDropTodo( md );
 }
 
 KCal::Todo *DndFactory::createDropTodo( QDropEvent *de )
 {
-  KCal::Todo *todo = createDropTodo( de->mimeData() );
-
-  if ( todo ) {
-    de->accept();
-  }
-
-  return todo;
+  return d->mDndFactory->createDropTodo( de );
 }
 
 void DndFactory::cutIncidence( const Akonadi::Item &selectedInc )
 {
   if ( copyIncidence( selectedInc ) ) {
+    // Don't call the kcal's version, call deleteIncidence( Item, )
+    // which creates a ItemDeleteJob.
     d->mCalendar->deleteIncidence( selectedInc, d->mDeleteCalendar );
   }
 }
 
 bool DndFactory::copyIncidence( const Akonadi::Item &item )
 {
-  if ( !item.isValid() ) {
+  if ( Akonadi::hasIncidence( item ) ) {
+    return d->mDndFactory->copyIncidence( Akonadi::incidence( item ).get() );
+  } else {
     return false;
   }
-  const Incidence::Ptr incidence = Akonadi::incidence( item );
-  if ( !incidence ) {
-    return false;
-  }
-
-  QClipboard *cb = QApplication::clipboard();
-
-  KCal::CalendarLocal cal( d->mCalendar->timeSpec() );
-
-  Incidence *inc = incidence.get()->clone();
-  cal.addIncidence( inc );
-
-  QMimeData *mimeData = new QMimeData;
-  cb->setMimeData( mimeData );
-
-  ICalDrag::populateMimeData( mimeData, &cal );
-  VCalDrag::populateMimeData( mimeData, &cal );
-
-  return true;
 }
 
 Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTime )
 {
-  QClipboard *cb = QApplication::clipboard();
-  KCal::Calendar *cal = createDropCalendar( cb->mimeData() );
-
-  if ( !cal ) {
-    kDebug() << "Can't parse clipboard";
-    return 0;
-  }
-  Incidence *ret = 0;
-
-  Incidence::List incList = cal->incidences();
-  Incidence *inc = incList.first();
-
-  if ( !incList.isEmpty() && inc ) {
-    inc = inc->clone();
-
-    inc->recreate();
-
-    if ( inc->type() == "Event" ) {
-
-      Event *anEvent = static_cast<Event*>( inc );
-      // Calculate length of event
-      int daysOffset = anEvent->dtStart().date().daysTo(
-        anEvent->dtEnd().date() );
-      // new end date if event starts at the same time on the new day
-      KDateTime endDate( anEvent->dtEnd() );
-      endDate.setDate( newDate.addDays( daysOffset ) );
-
-      KDateTime startDate( anEvent->dtStart() );
-      startDate.setDate( newDate );
-      if ( newTime ) {
-        // additional offset for new time of day
-        int addSecsOffset( anEvent->dtStart().time().secsTo( *newTime ) );
-        endDate=endDate.addSecs( addSecsOffset );
-        startDate.setTime( *newTime );
-      }
-      anEvent->setDtStart( startDate );
-      anEvent->setDtEnd( endDate );
-
-    } else if ( inc->type() == "Todo" ) {
-      Todo *anTodo = static_cast<Todo*>( inc );
-      KDateTime dueDate( anTodo->dtDue() );
-      dueDate.setDate( newDate );
-      if ( newTime ) {
-        dueDate.setTime( *newTime );
-      }
-      anTodo->setDtDue( dueDate );
-    } else if ( inc->type() == "Journal" ) {
-      Journal *anJournal = static_cast<Journal*>( inc );
-      KDateTime startDate( anJournal->dtStart() );
-      startDate.setDate( newDate );
-      if ( newTime ) {
-        startDate.setTime( *newTime );
-      } else {
-        startDate.setTime( QTime( 0, 0, 0 ) );
-      }
-      anJournal->setDtStart( startDate );
-    } else {
-      kDebug() << "Trying to paste unknown incidence of type" << inc->type();
-    }
-
-    ret = inc;
-  }
-  delete cal;
-  return ret;
+  return d->mDndFactory->pasteIncidence( newDate, newTime );
 }
-}
+
+} // namespace

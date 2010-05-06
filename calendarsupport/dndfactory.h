@@ -37,8 +37,10 @@
 
 #include "akonadi-kcal_next_export.h"
 
-#include <KDE/KDateTime>
 #include <kcal/calendar.h>
+
+#include <KDE/KDateTime>
+
 class QDate;
 class QTime;
 class QDrag;
