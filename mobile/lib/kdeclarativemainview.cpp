@@ -133,6 +133,9 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   QAbstractItemModel *favsList = d->getFavoritesListModel();
 
+
+  d->mItemSelectionModel = new QItemSelectionModel( listProxy, this );
+
 #if 0
   QTreeView *etmView = new QTreeView;
   etmView->setModel( d->mEtm );
@@ -158,6 +161,12 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   favoritesView->setModel( favsList );
   favoritesView->show();
   favoritesView->setWindowTitle( "Available Favorites" );
+
+  QListView *itemListView = new QListView;
+  itemListView->setModel( listProxy );
+  itemListView->setSelectionModel( d->mItemSelectionModel );
+  itemListView->show();
+  itemListView->setWindowTitle( "ItemList view" );
 #endif
 
   engine()->rootContext()->setContextProperty( "favoritesList", QVariant::fromValue( static_cast<QObject*>( favsList ) ) );
@@ -222,6 +231,13 @@ void KDeclarativeMainView::setSelectedChildCollectionRow( int row )
 void KDeclarativeMainView::setSelectedBreadcrumbCollectionRow( int row )
 {
   d->mBnf->selectBreadcrumb( row );
+}
+
+void KDeclarativeMainView::setListSelectedRow( int row )
+{
+  static const int column = 0;
+  QModelIndex idx =d->mItemSelectionModel->model()->index( row, column );
+  d->mItemSelectionModel->select( QItemSelection( idx, idx ), QItemSelectionModel::ClearAndSelect );
 }
 
 void KDeclarativeMainView::setSelectedAccount( int row )

@@ -53,7 +53,10 @@ Item {
       itemViewTopLevel.ListView.view.currentIndex = model.index;
       itemViewTopLevel.ListView.view.parent.currentItemId = model.itemId;
       // only clicks on the current (expanded) item triggers displaying
-      if ( currentClicked ) { itemViewTopLevel.ListView.view.parent.itemSelected(); }
+      if ( currentClicked ) {
+        itemViewTopLevel.ListView.view.parent.itemSelected();
+        application.setListSelectedRow(model.index);
+      }
     }
   }
 

@@ -47,6 +47,7 @@ public: /// members
   QStringListModel                   *mFavsListModel;
   QAbstractItemModel                 *mFavSelectedChildItems;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
+  QItemSelectionModel                *mItemSelectionModel;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();

@@ -72,6 +72,8 @@ public slots:
   void setSelectedChildCollectionRow( int row );
   void setSelectedBreadcrumbCollectionRow( int row );
 
+  void setListSelectedRow( int row );
+
   /** Returns wheter or not the child collection at row @param row has children. */
   bool childCollectionHasChildren( int row );
 
