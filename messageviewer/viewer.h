@@ -295,6 +295,7 @@ signals:
   void requestConfigSync();
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName,
                    const QString& pname, const QString & encoding );
+  void showMessage( KMime::Message::Ptr message, const QString& encoding );
 
 public slots:
 

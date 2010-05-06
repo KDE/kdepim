@@ -57,6 +57,7 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
   connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
            SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );
+  connect( d_ptr, SIGNAL( showMessage(KMime::Message::Ptr, const QString& )), this, SIGNAL( showMessage(KMime::Message::Ptr, const QString&)) );
   connect( d_ptr, SIGNAL( showStatusBarMessage( const QString & ) ),
            this, SIGNAL( showStatusBarMessage( const QString & ) ) );
 

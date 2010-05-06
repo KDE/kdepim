@@ -159,6 +159,10 @@ public:
      */
     void addTempFile( const QString& file );
 
+    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
+    // UrlHandlerManager.
+    QString asHREF( const KMime::Content* node, const QString &place );
+
     static bool isToltecMessage( KMime::Content* node );
 
     /**
@@ -193,10 +197,6 @@ public:
      * content type header.
      */
     static QString fileName( const KMime::Content *node );
-
-    // Get a href in the form attachment:<nodeId>?place=<place>, used by ObjectTreeParser and
-    // UrlHandlerManager.
-    static QString asHREF( const KMime::Content* node, const QString &place );
 
     /**
      * Fixes an encoding received by a KDE function and returns the proper,

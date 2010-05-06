@@ -253,11 +253,16 @@ KMime::Content* ViewerPrivate::nodeForContentIndex( const KMime::ContentIndex& i
 {
   KMime::Content* result = mMessage->content( index );
   if ( !result ) {
+    //if the content was not found, it might be in an extra node. Get the index of the extra node (the first part of the url),
+    //and use the remaining part as a ContentIndex to find the node insde the extra node
+    QString url = index.toString();
+    int i = url.left( url.indexOf('.') ).toInt();
+    url = url.mid( url.indexOf('.') + 1 );
+    KMime::ContentIndex idx(url);
     QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage );
-    Q_FOREACH(KMime::Content* c, extras) {
-      result = c->content( index );
-      if ( result )
-        break;
+    if ( i >= 0 && i < extras.size() ) {
+      KMime::Content* c = extras[i];
+      result = c->content( idx );
     }
   }
   return result;
@@ -1233,7 +1238,7 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content*
     kFatal() << "trying to writeMsgHeader() without a header strategy set!";
   QString href;
   if ( vCardNode )
-    href = NodeHelper::asHREF( vCardNode, "body" );
+    href = mNodeHelper->asHREF( vCardNode, "body" );
 
   headerStyle()->setHeaderStrategy( headerStrategy() );
   headerStyle()->setVCardName( href );
@@ -1663,21 +1668,7 @@ void ViewerPrivate::showHideMimeTree( )
 void ViewerPrivate::atmViewMsg( KMime::Message::Ptr message )
 {
   Q_ASSERT( message );
-
-#if 0 // TODO: Port to Akonadi
-  // FIXME(Andras)  port it
-  msg->setMsgSerNum( 0 ); // because lookups will fail
-  // some information that is needed for imap messages with LOD
-  msg->setParent( message()->parent() );
-  msg->setUID(message()->UID());
-  msg->setReadyToShow(true);
-
-  KMReaderMainWin *win = new KMReaderMainWin();
-  win->showMsg( overrideEncoding(), msg );
-  win->show();
-#else
-  kWarning() << "Port to Akonadi: Viewing message with subject" << message->subject()->asUnicodeString();
-#endif
+  emit showMessage( message, overrideEncoding() );
 }
 
 void ViewerPrivate::adjustLayout()
@@ -2123,7 +2114,7 @@ QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bg
       html += "<div style=\"float:left;\">";
       html += QString::fromLatin1( "<span style=\"white-space:nowrap; border-width: 0px; border-left-width: 5px; border-color: %1; 2px; border-left-style: solid;\">" ).arg( bgColor.name() );
       mNodeHelper->writeNodeToTempFile( node );
-      QString href = NodeHelper::asHREF( node, "header" );
+      QString href = mNodeHelper->asHREF( node, "header" );
       html += QString::fromLatin1( "<a href=\"" ) + href +
               QString::fromLatin1( "\">" );
       html += "<img style=\"vertical-align:middle;\" src=\"" + icon + "\"/>&nbsp;";
@@ -2497,7 +2488,8 @@ void ViewerPrivate::attachmentView( KMime::Content *atmNode )
 
     const bool isEncapsulatedMessage = atmNode->parent() && atmNode->parent()->bodyIsMessage();
     if ( isEncapsulatedMessage ) {
-      atmViewMsg( atmNode->parent()->bodyAsMessage() );
+       atmViewMsg( atmNode->parent()->bodyAsMessage() );
+//        emit showReader( atmNode, htmlMail(), fileName, pname, overrideEncoding() );
     } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
                ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
                  (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {

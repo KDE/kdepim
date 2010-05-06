@@ -619,11 +619,13 @@ void NodeHelper::setBodyPartMemento( KMime::Content* node, const QByteArray &whi
 
 bool NodeHelper::isNodeDisplayedEmbedded( KMime::Content* node ) const
 {
+  kDebug() << "IS NODE: " << mDisplayEmbeddedNodes.contains( node );
   return mDisplayEmbeddedNodes.contains( node );
 }
 
 void NodeHelper::setNodeDisplayedEmbedded( KMime::Content* node, bool displayedEmbedded )
 {
+  kDebug() << "SET NODE: " << node << displayedEmbedded;
   if ( displayedEmbedded )
     mDisplayEmbeddedNodes.insert( node );
   else
@@ -634,8 +636,22 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
 {
   if ( !node )
     return QString();
-  else
-    return QString( "attachment:%1?place=%2" ).arg( node->index().toString() ).arg( place );
+  else {
+    QString indexStr = node->index().toString();
+    //if the node is an extra node, prepent the index of the extra node to the url
+    for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+      QList<KMime::Content*> extraNodes = it.value();
+      for ( uint i = 0; i < extraNodes.size(); ++i )  {
+        if ( node->topLevel() == extraNodes[i] ) {
+          indexStr.prepend( QString("%1.").arg(i) );
+          it = mExtraContents.end();
+          --it;
+          break;
+        }
+      }
+    }
+    return QString( "attachment:%1?place=%2" ).arg( indexStr ).arg( place );
+  }
 }
 
 QString NodeHelper::fixEncoding( const QString &encoding )
@@ -747,7 +763,7 @@ QString NodeHelper::fromAsString( KMime::Content* node )
 
 void NodeHelper::attachExtraContent( KMime::Message::Ptr node, KMime::Content* content )
 {
-   kDebug() << "mExtraContents added for" << node.get() ;
+   kDebug() << "mExtraContents added for" << node.get() << " extra content: " << content;
   mExtraContents[node].append( content );
 }
 

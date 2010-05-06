@@ -200,6 +200,7 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
   if ( !newNode->head().isEmpty() ) {
     newNode->contentDescription()->from7BitString( cntDesc );
   }
+  mNodeHelper->attachExtraContent( item.payload<KMime::Message::Ptr>(), newNode );
 
   ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
   otp.parseObjectTree( item, newNode );
@@ -207,8 +208,6 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
   mTextualContent += otp.textualContent();
   if ( !otp.textualContentCharset().isEmpty() )
     mTextualContentCharset = otp.textualContentCharset();
-
-  mNodeHelper->attachExtraContent( item.payload<KMime::Message::Ptr>(), newNode );
 }
 
 
@@ -1210,7 +1209,7 @@ bool ObjectTreeParser::processTextPlainSubtype( const Akonadi::Item &item, KMime
     QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
                 "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
     if ( !fileName.isEmpty() )
-      htmlStr += "<a href=\"" +NodeHelper::asHREF( curNode, "body" ) + "\">"
+      htmlStr += "<a href=\"" + mNodeHelper->asHREF( curNode, "body" ) + "\">"
                   + label + "</a>";
     else
       htmlStr += label;
@@ -1569,6 +1568,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item,
     htmlWriter()->queue( writeSigstatFooter( messagePart ) );
   }
 
+  kDebug() << "SET NODE DISPLAYED EMBEDDED " << node;
   mNodeHelper->setNodeDisplayedEmbedded( node, true );
   mNodeHelper->setPartMetaData( node, messagePart );
 
@@ -2018,7 +2018,7 @@ bool ObjectTreeParser::processApplicationMsTnefSubtype( const Akonadi::Item &ite
     QString htmlStr = "<table cellspacing=\"1\" class=\"textAtm\">"
                 "<tr class=\"textAtmH\"><td dir=\"" + dir + "\">";
     if ( !fileName.isEmpty() )
-    htmlStr += "<a href=\"" +NodeHelper::asHREF( node, "body" ) + "\">"
+    htmlStr += "<a href=\"" + mNodeHelper->asHREF( node, "body" ) + "\">"
                 + label + "</a>";
     else
       htmlStr += label;
@@ -2388,7 +2388,7 @@ QString ObjectTreeParser::writeSigstatHeader( PartMetaData & block,
       htmlStr += "<table cellspacing=\"1\" "+cellPadding+" class=\"rfc822\">"
           "<tr class=\"rfc822H\"><td dir=\"" + dir + "\">";
       if( node ) {
-          htmlStr += "<a href=\"" + NodeHelper::asHREF( node, "body" ) + "\">"
+          htmlStr += "<a href=\"" + mNodeHelper->asHREF( node, "body" ) + "\">"
                     + i18n("Encapsulated message") + "</a>";
       } else {
           htmlStr += i18n("Encapsulated message");
