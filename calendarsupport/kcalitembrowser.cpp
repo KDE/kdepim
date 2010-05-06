@@ -40,6 +40,17 @@ KCalItemBrowser::~KCalItemBrowser()
 {
 }
 
+
+QString KCalItemBrowser::itemPath() const
+{
+  return mItemPath;
+}
+
+void KCalItemBrowser::setItemPath(const QString& path)
+{
+  mItemPath = path;
+}
+
 QString KCalItemBrowser::itemToRichText( const Item& item )
 {
     if ( !item.hasPayload<IncidencePtr>() ) {
@@ -47,6 +58,11 @@ QString KCalItemBrowser::itemToRichText( const Item& item )
     }
 
     IncidencePtr incidence = item.payload<IncidencePtr>();
-    return KCal::IncidenceFormatter::extensiveDisplayStr( incidence.get(), KDateTime::Spec() );
+    QString headerData;
+    if ( !mItemPath.isEmpty() )
+    {
+      headerData += "<table><tr><td>" + mItemPath + "</td></tr></table>";
+    }
+    return headerData + KCal::IncidenceFormatter::extensiveDisplayStr( incidence.get(), KDateTime::Spec() );
 }
 

@@ -82,6 +82,7 @@ KPIM.MainView {
       onItemSelected: {
         console.log( "XXXX" + selectedItemId );
         if ( selectedItemId > 0 ) {
+          eventView.itemPath = application.pathToItem(selectedItemId);
           eventView.itemId = selectedItemId;
           eventView.visible = true;
           agendaView.visible = false;

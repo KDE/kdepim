@@ -42,4 +42,15 @@ void KCalItemBrowserItem::setItemId(qint64 id)
   m_viewer->setItem( Akonadi::Item( id ) );
 }
 
+QString KCalItemBrowserItem::itemPath() const
+{
+  return m_viewer->itemPath();
+}
+
+void KCalItemBrowserItem::setItemPath(const QString& messagePath)
+{
+  m_viewer->setItemPath( messagePath );
+}
+
+
 #include "kcalitembrowseritem.moc"

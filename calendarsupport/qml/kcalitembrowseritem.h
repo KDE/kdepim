@@ -30,11 +30,15 @@ namespace KCal {
 class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
+  Q_PROPERTY( QString itemPath READ itemPath WRITE setItemPath )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
 
     qint64 itemId() const;
     void setItemId(qint64 id);
+
+    QString itemPath() const;
+    void setItemPath( const QString &itemPath );
 
   private:
     KCalItemBrowser *m_viewer;

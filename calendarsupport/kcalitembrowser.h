@@ -32,12 +32,17 @@ class AKONADI_KCAL_NEXT_EXPORT KCalItemBrowser : public ItemBrowser
     KCalItemBrowser( QWidget *parent = 0 );
     virtual ~KCalItemBrowser();
 
+    QString itemPath() const;
+    void setItemPath( const QString &path );
+
   protected:
     virtual QString itemToRichText( const Item &item );
 
   private:
     class Private;
     Private* const d;
+
+    QString mItemPath;
 
     Q_DISABLE_COPY( KCalItemBrowser )
 };
