@@ -305,13 +305,14 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
   // in case this is an update and we didn't find the to-be-updated incidence,
   // ask whether we should create a new one, or drop the update
   if ( existingIncidences.count() > 0 || inc->revision() == 0 ||
-          KMessageBox::questionYesNo( 0,
-              i18n("The event, task or journal to be updated could not be found. "
-                  "Maybe it has already been deleted, or the calendar that "
-                  "contains it is disabled. Press 'Store' to create a new "
-                  "one or 'Throw away' to discard this update." ),
-              i18n("Discard this update?"), i18n("Store"),
-              i18n("Throw away"), "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
+       KMessageBox::questionYesNo(
+         0,
+         i18n("The event, task or journal to be updated could not be found. "
+              "Maybe it has already been deleted, or the calendar that "
+              "contains it is disabled. Press 'Store' to create a new "
+              "one or 'Throw away' to discard this update." ),
+         i18n("Discard this update?"), i18n("Store"),
+         i18n("Throw away"), "AcceptCantFindIncidence" ) == KMessageBox::Yes ) {
     kdDebug(5800) << "Storing new incidence with scheduling uid=" << inc->schedulingID() << " and uid=" << inc->uid() << endl;
 
     CalendarResources *stdcal = dynamic_cast<CalendarResources *>( mCalendar );
@@ -332,6 +333,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
       stdcal->setDialogParentWidget( 0 );
     }
 
+  TryAgain:
     bool success = false;
     if ( stdcal ) {
       success = stdcal->addIncidence( inc );
@@ -340,9 +342,31 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
     }
 
     if ( !success ) {
+      ErrorFormat *e = stdcal ? stdcal->exception() : 0;
+
+      if ( e && e->errorCode() == KCal::ErrorFormat::UserCancel &&
+           KMessageBox::warningYesNo(
+             0,
+             i18n( "You canceled the save operation. Therefore, the appointment will not be "
+                   "stored in your calendar even though you accepted the invitation. "
+                   "Are you certain you want to discard this invitation? " ),
+             i18n( "Discard this invitation?" ),
+             i18n( "Discard" ), i18n( "Go Back to Folder Selection" ) ) == KMessageBox::Yes ) {
+        KMessageBox::information(
+          0,
+          i18n( "The invitation \"%1\" was not saved to your calendar "
+                "but you are still listed as an attendee for that appointment.\n"
+                "If you mistakenly accepted the invitation or do not plan to attend, please notify "
+                "the organizer %2 and ask them to remove you from the attendee list.").
+          arg( inc->summary(),  inc->organizer().fullName() ) );
+        deleteTransaction( incidence );
+        return true;
+      } else {
+        goto TryAgain;
+      }
+
       // We can have a failure if the user pressed [cancel] in the resource
       // selectdialog, so check the exception.
-      ErrorFormat *e = stdcal ? stdcal->exception() : 0;
       if ( !e ||
            ( e && ( e->errorCode() != KCal::ErrorFormat::UserCancel &&
                     e->errorCode() != KCal::ErrorFormat::NoWritableFound ) ) ) {
@@ -354,7 +378,7 @@ bool Scheduler::acceptRequest( IncidenceBase *incidence,
       return false;
     }
   }
-  deleteTransaction(incidence);
+  deleteTransaction( incidence );
   return true;
 }
 
