@@ -81,7 +81,10 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
     const QString uid = incGroup.readEntry( "UID" );
     const QDateTime dt = incGroup.readEntry( "RemindAt", QDateTime() );
     if ( !uid.isEmpty() ) {
-      createReminder( mCalendar, mCalendar->incidence( uid ), dt, QString() );
+      Incidence *i = mCalendar->incidence( uid );
+      if ( i && !i->alarms().isEmpty() ) {
+        createReminder( mCalendar, i, dt, QString() );
+      }
     }
   }
   if ( numReminders ) {
