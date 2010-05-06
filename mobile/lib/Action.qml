@@ -21,6 +21,7 @@
 
 
 import Qt 4.7
+import org.kde 4.5
 
 Rectangle {
   property variant action
@@ -29,8 +30,8 @@ Rectangle {
 
   Binding {
     target : image
-    property : "source"
-    value : action.icon
+    property : "pixmap"
+    value : KDE.iconToPixmap(action.icon, 35)
   }
 
   Binding {
@@ -44,7 +45,7 @@ Rectangle {
 
   Image {
     id : image
-    anchors.fill: parent
+    anchors.verticalCenter : parent.verticalCenter
     anchors.margins: 5
   }
 
