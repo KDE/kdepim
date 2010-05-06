@@ -24,6 +24,7 @@ target_link_libraries(kdepimmobileui
 install(TARGETS kdepimmobileui ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES
   qmldir
+  Action.qml
   Button.qml
   ItemListView.qml
   ItemListViewDelegate.qml

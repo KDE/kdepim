@@ -1,4 +1,5 @@
 Button 4.5 Button.qml
+Action 4.5 Action.qml
 ItemListView 4.5 ItemListView.qml
 ItemListViewDelegate 4.5 ItemListViewDelegate.qml
 MainView 4.5 MainView.qml
