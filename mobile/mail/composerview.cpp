@@ -19,18 +19,12 @@
 
 #include "composerview.h"
 
-#include <KDE/KDebug>
-#include <kselectionproxymodel.h>
-
-#include <KMime/Message>
-#include <akonadi/kmime/messageparts.h>
-
-#include "messagelistproxy.h"
+#include <klocalizedstring.h>
 
 ComposerView::ComposerView(QWidget* parent) :
   KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent )
 {
-
+  setWindowTitle( i18n( "New mail" ) );
 }
 
 #include "composerview.moc"

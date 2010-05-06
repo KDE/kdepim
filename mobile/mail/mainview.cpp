@@ -23,6 +23,7 @@
 
 #include <KDE/KDebug>
 #include <kselectionproxymodel.h>
+#include <klocalizedstring.h>
 
 #include <KMime/Message>
 #include <akonadi/kmime/messageparts.h>
@@ -34,6 +35,7 @@ MainView::MainView(QWidget* parent) :
 {
   addMimeType( KMime::Message::mimeType() );
   setListPayloadPart( Akonadi::MessagePart::Header );
+  setWindowTitle( i18n( "KMail Mobile" ) );
 }
 
 void MainView::startComposer()
