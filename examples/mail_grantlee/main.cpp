@@ -24,7 +24,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     MailWindow w;
-    w.resize(620,600);
+    w.resize(630,430);
+    w.setWindowTitle("KMail themes powered by Grantlee");
     w.show();
     return a.exec();
 }

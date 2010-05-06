@@ -25,7 +25,6 @@ MailWindow::MailWindow(QWidget *parent)
     engine->addTemplateLoader( loader );
 
     // set the directories where the templates will be located.
-    //loader->setTemplateDirs( QStringList() << GRANTLEE_TEMPLATE_PATH );
     loader->setTemplateDirs( QStringList() << GRANTLEE_TEMPLATE_PATH << (QDir::currentPath() + "/images/"));
 
     // set the templates directory to find template tags and filters
@@ -34,10 +33,9 @@ MailWindow::MailWindow(QWidget *parent)
     // create the combo and insert some items.
     label = new QLabel( "Theme" );
     comboThemes = new QComboBox();
-    comboThemes ->addItem( "kde" );
-    comboThemes ->addItem( "kde2" );
-    comboThemes ->addItem( "nokia" );
-    comboThemes ->addItem( "opensuse" );
+    comboThemes->addItem( "kde" );
+    comboThemes->addItem( "nokia" );
+    comboThemes->addItem( "opensuse" );
 
     // load a new theme when the combo current item changed.
     connect( comboThemes , SIGNAL( activated( const QString )),

@@ -19,19 +19,19 @@
 }
 
 .header {
-    background-image:url('images/nokia_header.png');
+    background-image:url('{% media_finder "nokia_header.png" %}');
     height:90px;
 }
 
 .footer {
-    background-image:url('images/nokia_footer.png');
+    background-image:url('{% media_finder "nokia_footer.png" %}');
     height:30px;
 }
 
 table {
     padding:10px 10px 5px 10px;
     margin:0px;
-    background-image:url('images/nokia_n900.png');
+    background-image:url('{% media_finder "nokia_n900.png" %}');
 }
 
 td {
@@ -88,12 +88,12 @@ td.data {
 {% block mail_message %}
   <div class="message">
 
-    {{ message }}
+    {{ message | safe }}
 
     {% if attachments %}
     <ul>
     {% for attachment in attachments %}
-      <img src="images/gwenview.png" width="16"><a href="">{{ attachment }} </a> <br />
+      <img src="{% media_finder "gwenview.png" %}" width="16"><a href="">{{ attachment }} </a> <br />
     {% endfor %}
     </ul>
     {% endif %}

@@ -13,7 +13,7 @@ table, .footer {
 }
 
 .footer {
-    background-image:url('images/opensuse_footer.png');
+    background-image:url('{% media_finder "opensuse_footer.png" %}');
     margin: 0 0 0 1px;
     height:98px;
 }
@@ -22,10 +22,10 @@ table {
     height:120px;
     padding:5px 10px 0px 200px;
     margin:0px;
-    background-image:url('images/opensuse_header.png');
+    background-image:url('{% media_finder "opensuse_header.png" %}');
 }
 
-td {
+td, .sign {
     color:#003E35;
 }
 
@@ -63,6 +63,17 @@ td.data {
     border-color: #73BA25;
 }
 
+.image, .sign {
+    text-align:left;
+}
+
+.sign {
+    color: #333333;
+    font-family: Copperplate / Copperplate Gothic Light, sans-serif;
+    font-size:20px;
+
+}
+
 {% endblock %}
 
 {% block title %} OpenSuse {% endblock %}
@@ -83,8 +94,12 @@ td.data {
 
 {% block mail_message %}
   <div class="message">
-    {{ message }}
+    {{ message | safe }} <br />
+
+    <span class="sign">openSUSE</span> <br />
+    <img src="{% media_finder "opensuse_detail.png" %}" width="90" class="image">
   </div>
+
 {% endblock %}
 
 {% block footer %}

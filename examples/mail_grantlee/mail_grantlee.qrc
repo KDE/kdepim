@@ -12,6 +12,7 @@
         <file>images/opensuse_footer.png</file>
         <file>images/opensuse_header.png</file>
         <file>images/opensuse_logo.png</file>
+        <file>images/opensuse_detail.png</file>
         <file>images/gwenview.png</file>
     </qresource>
 </RCC>
