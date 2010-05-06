@@ -139,9 +139,16 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    *               an empty page is shown.
    * @param updateMode - update the display immediately or not. See UpdateMode.
    */
-  void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
+  void setMessageItem( const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
+  /**
+   * The path to the message in terms of Akonadi collection hierarchy.
+   */
   QString messagePath() const;
+
+  /**
+   * Set the path to the message in terms of Akonadi collection hierarchy.
+   */
   void setMessagePath( const QString &path );
 
   /**

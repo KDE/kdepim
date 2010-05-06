@@ -88,7 +88,7 @@ QString MessageViewItem::messagePath() const
   return m_viewer->messagePath();
 }
 
-void MessageViewItem::setMessagePath(const QString& messagePath)
+void MessageViewItem::setMessagePath( const QString& messagePath )
 {
   m_viewer->setMessagePath( messagePath );
 }

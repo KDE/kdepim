@@ -90,25 +90,25 @@ void Viewer::setMessageItem( const Akonadi::Item &item, UpdateMode updateMode )
 
 QString Viewer::messagePath() const
 {
-  Q_D(const Viewer);
+  Q_D( const Viewer );
   return d->mMessagePath;
 }
 
-void Viewer::setMessagePath(const QString& path)
+void Viewer::setMessagePath( const QString& path )
 {
-  Q_D(Viewer);
+  Q_D( Viewer );
   d->mMessagePath = path;
 }
 
 void Viewer::displaySplashPage( const QString &info )
 {
-  Q_D(Viewer);
+  Q_D( Viewer );
   d->displaySplashPage( info );
 }
 
 void Viewer::enableMessageDisplay()
 {
-  Q_D(Viewer);
+  Q_D( Viewer );
   d->enableMessageDisplay();
 }
 

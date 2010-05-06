@@ -176,7 +176,7 @@ KDeclarativeMainView::~KDeclarativeMainView()
   delete d;
 }
 
-QString KDeclarativeMainView::pathToItem(Entity::Id id)
+QString KDeclarativeMainView::pathToItem( Entity::Id id )
 {
   QString path;
   const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );
