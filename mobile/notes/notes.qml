@@ -51,7 +51,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: startPanel
-      titleIcon: KDE.iconPath( "kmail", 48 )
+      titleIcon: KDE.iconPath( "view-pim-notes", 48 )
       handlePosition: 30
       handleHeight: 78
       content: [
@@ -59,7 +59,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Notes start page"
+          startText: KDE.i18n( "Notes start page" )
 
           contextActions : [
             KPIM.Button {
@@ -67,7 +67,7 @@ KPIM.MainView {
               height : 20
               width : 200
               anchors.top : parent.top
-              buttonText : "New Note"
+              buttonText : KDE.i18n( "New Note" )
               onClicked : {
                 console.log( "New Note clicked" );
               }
@@ -78,7 +78,7 @@ KPIM.MainView {
               anchors.top : start_newNoteButton.bottom
               height : 20
               width : 200
-              buttonText : "Add Notebook"
+              buttonText : KDE.i18n( "Add Notebook" )
               onClicked : {
                 console.log( "Add Notebook clicked" );
                 application.launchAccountWizard();
@@ -91,7 +91,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: folderPanel
-      titleText: "Folders"
+      titleText: KDE.i18n( "Notebooks" )
       handleHeight: 150
       anchors.fill : parent
       content: [
@@ -117,7 +117,7 @@ KPIM.MainView {
                  summaryContent: [
                    Text {
                      anchors.fill: parent
-                     text: "Title: " + model.title
+                     text: KDE.i18na( "Title: %1", [model.title] )
                      font.bold: true
                    }
                  ]
@@ -125,11 +125,11 @@ KPIM.MainView {
                   Column {
                     anchors.fill: parent
                     Text {
-                      text: "Title: " + model.title
+                      text: KDE.i18na( "Title: %1", [model.title] )
                       color: palette.highlightedText
                     }
                     Text {
-                      text: "Content: " + model.plainContent
+                      text: KDE.i18na( "Content: %1", [model.plainContent] )
                       color: palette.highlightedText
                     }
                   }
@@ -160,7 +160,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: actionPanel
-      titleText: "Actions"
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       anchors.fill : parent
       contentWidth: 240

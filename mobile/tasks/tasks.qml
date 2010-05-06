@@ -68,14 +68,14 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Tasks start page"
+          startText: KDE.i18n( "Tasks start page" )
 
           contextActions : [
             KPIM.Button {
               id : start_newEmailButton
               width: parent.width
               height: 480 / 6
-              buttonText : "Start new task"
+              buttonText : KDE.i18n( "Start new task" )
               onClicked : {
                 console.log( "Write new task clicked" );
               }
@@ -100,7 +100,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: folderPanel
-      titleText: "Folders"
+      titleText: KDE.i18n( "Folders" )
       handlePosition : 108
       handleHeight: 150
       anchors.fill : parent
@@ -128,13 +128,13 @@ KPIM.MainView {
                    Text {
                      anchors.top: parent.top
                      anchors.left: parent.left
-                     text: "Task: " + model.summary
+                     text: KDE.i18na( "Task: %1", [model.summary] )
                      font.bold: true
                    },
                    Text {
                      anchors.top: parent.top
                      anchors.right: parent.right
-                     text: model.percentComplete + "%"
+                     text: KDE.i18na( "%1%", [model.percentComplete] )
                    }
                  ]
                  detailsContent: [
@@ -147,19 +147,19 @@ KPIM.MainView {
                           id: summaryLabel
                           anchors.top: parent.top
                           anchors.left: parent.left
-                          text: "Task: " + model.summary
+                          text: KDE.i18na( "Task: %1",  [model.summary] )
                           font.bold: true
                           color: palette.highlightedText
                         }
                         Text {
                           anchors.top: parent.top
                           anchors.right: parent.right
-                          text: model.percentComplete + "%"
+                          text: KDE.i18na( "%1%", [model.percentComplete] )
                           color: palette.highlightedText
                         }
                       }
                       Text {
-                        text: "Details: " + model.description
+                        text: KDE.i18na( "Details: %1", [model.description] )
                         color: palette.highlightedText
                       }
                     }
@@ -183,7 +183,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: actionPanel
-      titleText: "Actions"
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       anchors.fill : parent
       contentWidth: 240
@@ -194,7 +194,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Move"
+            buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
           KPIM.Button {
@@ -203,7 +203,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Delete"
+             buttonText: KDE.i18n( "Delete" )
              onClicked: actionPanel.collapse();
            },
            KPIM.Button {
@@ -212,7 +212,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Previous"
+             buttonText: KDE.i18n( "Previous" )
              onClicked: {
                itemList.previousItem()
                actionPanel.collapse()
@@ -223,7 +223,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Next"
+             buttonText: KDE.i18n( "Next" )
              onClicked: {
                itemList.nextItem();
                actionPanel.collapse();

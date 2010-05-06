@@ -104,7 +104,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Calendar start page"
+          startText: KDE.i18n( "Calendar start page" )
           favoritesModel : favoritesList
 
           contextActions : [
@@ -114,21 +114,21 @@ KPIM.MainView {
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
-                buttonText : "New appointment"
+                buttonText : KDE.i18n( "New Appointment" )
                 font.bold:  true
                 onClicked : { console.log("Create new appointment") }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
-                buttonText : "Add Account"
+                buttonText : KDE.i18n( "Add Calendar" )
                 font.bold:  true
                 onClicked : { application.launchAccountWizard() }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
-                buttonText : "Add Favorite"
+                buttonText : KDE.i18n( "Add Favorite" )
                 font.bold:  true
                 onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
               }
@@ -154,7 +154,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: folderPanel
-      titleText: "Folders"
+      titleText: KDE.i18n( "Calendars" )
       handleHeight: 150
       anchors.fill : parent
       content: [
@@ -182,7 +182,7 @@ KPIM.MainView {
                  id: dateText
                  height: 30
                  verticalAlignment: "AlignVCenter"
-                 text: "Show the date:"
+                 text: KDE.i18n( "Show the date:" )
                }
                QmlDateEdit {
                  id: dateEdit
@@ -193,7 +193,7 @@ KPIM.MainView {
              Text {
                height: 30
                verticalAlignment: "AlignVCenter"
-               text: "Using the following calendar view:"
+               text: KDE.i18n( "Using the following calendar view:" )
              }
              Row {
                spacing: 2
@@ -201,7 +201,7 @@ KPIM.MainView {
 
                KPIM.Button {
                  id: dayButton
-                 buttonText: "Day"
+                 buttonText: KDE.i18n( "Day" )
                  height: 480 / 6
                  width: parent.width / 3
                  onClicked: {
@@ -211,7 +211,7 @@ KPIM.MainView {
                }
                KPIM.Button {
                  id: weekButton
-                 buttonText: "Week"
+                 buttonText: KDE.i18n( "Week" )
                  height: 480 / 6
                  width: parent.width / 3
                  onClicked: {
@@ -221,7 +221,7 @@ KPIM.MainView {
                }
                KPIM.Button {
                  id: monthButton
-                 buttonText: "Month"
+                 buttonText: KDE.i18n( "Month" )
                  height: 480 / 6
                  width: parent.width / 3
                  onClicked: {
@@ -240,7 +240,7 @@ KPIM.MainView {
               height: 480 / 6
               width: parent.width
               anchors.horizontalCenter: parent.horizontalCenter
-              buttonText: "New appointment"
+              buttonText: KDE.i18n( "New Appointment" )
 
             }
             KPIM.Button {
@@ -248,14 +248,14 @@ KPIM.MainView {
               height: 480 / 6
               width: parent.width
               anchors.horizontalCenter: parent.horizontalCenter
-              buttonText: "Search appointment"
+              buttonText: KDE.i18n( "Search Appointment" )
             }
             KPIM.Button {
               id: configureAccountButton
               anchors.horizontalCenter: parent.horizontalCenter
               height: 480 / 6
               width: parent.width
-              buttonText: "Configure account"
+              buttonText: KDE.i18n( "Configure Account" )
             }
           }
 
@@ -265,7 +265,7 @@ KPIM.MainView {
 
     SlideoutPanel {
       id: actionPanel
-      titleText: "Actions"
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       anchors.fill : parent
       contentWidth: 240
@@ -276,7 +276,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Move"
+            buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
           KPIM.Button {
@@ -285,7 +285,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Delete"
+             buttonText: KDE.i18n( "Delete" )
              onClicked: actionPanel.collapse();
            },
            KPIM.Button {
@@ -294,7 +294,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Previous"
+             buttonText: KDE.i18n( "Previous" )
              onClicked: {
                itemList.previousItem()
                actionPanel.collapse()
@@ -305,7 +305,7 @@ KPIM.MainView {
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: "Next"
+             buttonText: KDE.i18n( "Next" )
              onClicked: {
                itemList.nextItem();
                actionPanel.collapse();

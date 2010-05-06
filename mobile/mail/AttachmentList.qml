@@ -111,7 +111,7 @@ Item {
       anchors.horizontalCenter: parent.horizontalCenter;
       width: parent.width - 10
       height: parent.height / 6
-      buttonText: "Open"
+      buttonText: KDE.i18n( "Open" )
     }
     KPIM.Button {
       id: saveButton
@@ -119,7 +119,7 @@ Item {
       anchors.horizontalCenter: parent.horizontalCenter;
       width: parent.width - 10
       height: parent.height / 6
-      buttonText: "Save"
+      buttonText: KDE.i18n( "Save" )
     }
 
   }

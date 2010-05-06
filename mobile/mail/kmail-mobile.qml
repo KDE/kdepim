@@ -66,7 +66,7 @@ KPIM.MainView {
           id : startPage
           anchors.fill : parent
           anchors.leftMargin : 50
-          startText: "Mail start page"
+          startText: KDE.i18n( "Mail start page" )
           favoritesModel : favoritesList
 
           contextActions: [
@@ -209,7 +209,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Move"
+            buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
           KPIM.Button {
@@ -218,7 +218,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Delete"
+            buttonText: KDE.i18n( "Delete" )
             onClicked: actionPanel.collapse();
           },
           KPIM.Button {
@@ -227,7 +227,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Previous"
+            buttonText: KDE.i18n( "Previous" )
             onClicked: {
               if ( messageView.itemId >= 0 )
                 headerList.previousItem();
