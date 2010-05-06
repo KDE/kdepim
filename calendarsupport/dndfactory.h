@@ -7,6 +7,9 @@
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
   Copyright (c) 2010 Laurent Montel <montel@kde.org>
 
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Author: Sergio Martins <sergio@kdab.com>
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
   License as published by the Free Software Foundation; either
@@ -39,6 +42,8 @@
 
 #include <kcal/calendar.h>
 
+#include <Akonadi/Item>
+
 #include <KDE/KDateTime>
 
 class QDate;
@@ -58,7 +63,7 @@ class Calendar;
 
 namespace Akonadi {
 class CalendarAdaptor;
-class Item;
+
 /**
   @brief
   vCalendar/iCalendar Drag-and-Drop object factory.
@@ -142,6 +147,19 @@ class AKONADI_KCAL_NEXT_EXPORT DndFactory
       Paste the event or todo and return a pointer to the new incidence pasted.
     */
   KCal::Incidence *pasteIncidence( const QDate &, const QTime *newTime = 0 );
+
+  /** pastes and returns the incidences from the clipboard
+      If no date and time are given, the incidences will be pasted at
+      their original date/time */
+  KCal::Incidence::List pasteIncidences( const QDate &newDate = QDate(),
+                                         const QTime *newTime = 0 );
+
+
+  /** cuts a list of incidences to the clipboard */
+  bool cutIncidences( const Akonadi::Item::List &item );
+
+  /** copies a list of incidences to the clipboard */
+  bool copyIncidences( const Akonadi::Item::List &item );
 
   private:
     //@cond PRIVATE

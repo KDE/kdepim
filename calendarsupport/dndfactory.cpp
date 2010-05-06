@@ -8,6 +8,9 @@
   Copyright (c) 2008 Thomas Thrainer <tom_t@gmx.at>
   Copyright (c) 2010 Laurent Montel <montel@kde.org>
 
+  Copyright (c) 2010 Klarälvdalens Datakonsult AB, a KDAB Group company <info@kdab.net>
+  Author: Sergio Martins <sergio@kdab.com>
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
   License as published by the Free Software Foundation; either
@@ -174,6 +177,39 @@ bool DndFactory::copyIncidence( const Akonadi::Item &item )
 Incidence *DndFactory::pasteIncidence( const QDate &newDate, const QTime *newTime )
 {
   return d->mDndFactory->pasteIncidence( newDate, newTime );
+}
+
+bool DndFactory::copyIncidences( const Item::List &items )
+{
+  Incidence::List incList;
+  Q_FOREACH ( const Item &item, items ) {
+    if ( Akonadi::hasIncidence( item ) ) {
+      incList.append( Akonadi::incidence( item ).get() );
+    }
+  }
+
+  return d->mDndFactory->copyIncidences( incList );
+}
+
+bool DndFactory::cutIncidences( const Item::List &items )
+{
+  if ( copyIncidences( items ) ) {
+    Item::List::ConstIterator it;
+    for ( it = items.constBegin(); it != items.constEnd(); ++it ) {
+      // Don't call the kcal's version, call deleteIncidence( Item, )
+      // which creates a ItemDeleteJob.
+      d->mCalendar->deleteIncidence( *it );
+    }
+    return true;
+  } else {
+    return false;
+  }
+}
+
+KCal::Incidence::List DndFactory::pasteIncidences( const QDate &newDate,
+                                                   const QTime *newTime )
+{
+  return d->mDndFactory->pasteIncidences( newDate, newTime );
 }
 
 } // namespace
