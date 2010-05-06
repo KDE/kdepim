@@ -84,6 +84,8 @@ public slots:
   void saveFavorite( const QString &name );
   void loadFavorite( const QString &name );
 
+  QObject* getAction( const QString &name ) const;
+
 protected:
   QItemSelectionModel* regularSelectionModel() const;
   QItemSelectionModel* favoriteSelectionModel() const;

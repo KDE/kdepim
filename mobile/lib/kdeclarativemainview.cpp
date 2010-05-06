@@ -50,6 +50,9 @@
 
 #include "listproxy.h"
 #include "akonadibreadcrumbnavigationfactory.h"
+#include <KActionCollection>
+#include <akonadi/standardactionmanager.h>
+#include <KAction>
 
 using namespace Akonadi;
 
@@ -135,6 +138,13 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
 
   d->mItemSelectionModel = new QItemSelectionModel( listProxy, this );
+
+  // TODO: Get this from a KXMLGUIClient?
+  d->mActionCollection = new KActionCollection( this );
+
+  Akonadi::StandardActionManager *standardActionManager = new Akonadi::StandardActionManager( d->mActionCollection, this );
+  standardActionManager->setItemSelectionModel( d->mItemSelectionModel );
+  standardActionManager->createAction( Akonadi::StandardActionManager::DeleteItems );
 
 #if 0
   QTreeView *etmView = new QTreeView;
@@ -317,4 +327,9 @@ QAbstractItemModel* KDeclarativeMainView::regularSelectedItems() const
 QAbstractItemModel* KDeclarativeMainView::favoriteSelectedItems() const
 {
   return d->mFavSelectedChildItems;
+}
+
+QObject* KDeclarativeMainView::getAction( const QString &name ) const
+{
+  return d->mActionCollection->action( name );
 }

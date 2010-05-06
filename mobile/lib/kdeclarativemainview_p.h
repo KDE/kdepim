@@ -28,6 +28,7 @@
 
 #include "akonadibreadcrumbnavigationfactory.h"
 
+class KActionCollection;
 
 static const char * const sFavoritePrefix = "Favorite_";
 static const int sFavoritePrefixLength = 9;
@@ -48,6 +49,7 @@ public: /// members
   QAbstractItemModel                 *mFavSelectedChildItems;
   Akonadi::BreadcrumbNavigationFactory *mBnf;
   QItemSelectionModel                *mItemSelectionModel;
+  KActionCollection                  *mActionCollection;
 
 public: /// Methods
   KDeclarativeMainViewPrivate();
