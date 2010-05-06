@@ -32,7 +32,7 @@ QML.Image {
     width: 80
     height: 40
     onClicked: {
-      application.triggerTaskSwitcher();
+      window.triggerTaskSwitcher();
     }
   }
 }

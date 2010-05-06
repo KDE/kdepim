@@ -25,6 +25,7 @@
 #include <QtCore/QTimer>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
+#include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 
 
@@ -35,6 +36,8 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #ifdef Q_WS_MAEMO_5
   setWindowState( Qt::WindowFullScreen );
 #endif
+
+  engine()->rootContext()->setContextProperty( "window", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
     engine()->addImportPath( importPath );
