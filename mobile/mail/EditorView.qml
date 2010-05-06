@@ -20,6 +20,7 @@
 import Qt 4.7
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
+import org.kde.kpimidentities 4.5 as KPIMIdentities
 
 Item {
   anchors.topMargin: 12
@@ -67,12 +68,36 @@ Item {
     }
   }
 
+  Text {
+    id: identityLabel
+    anchors {
+      left: parent.left
+      bottom: parent.bottom
+      top: messageContent.bottom
+    }
+    text: KDE.i18n( "Identity:" );
+    verticalAlignment: "AlignVCenter"
+  }
+
+  KPIMIdentities.IdentityComboBox {
+    id: identityCombo
+    anchors {
+      left: identityLabel.right
+      bottom: parent.bottom
+      top: messageContent.bottom
+      right: sendButton.left
+    }
+    height: parent.height / 6
+  }
+
   KPIM.Button {
     id: sendButton
-    anchors.bottom: parent.bottom
-    anchors.right: parent.right
-    anchors.left: parent.left
+    anchors {
+      bottom: parent.bottom
+      right: parent.right
+    }
     buttonText: KDE.i18n( "Send" )
     height: parent.height / 6
+    width: parent.width / 4
   }
 }

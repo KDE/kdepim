@@ -16,19 +16,25 @@
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
 */
-
-#include "composerview.h"
 #include "declarativeidentitycombobox.h"
 
-#include <klocalizedstring.h>
+#include <kpimidentities/identitycombo.h>
+#include <QtGui/QGraphicsProxyWidget>
+#include <kpimidentities/identitymanager.h>
 
-QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
-
-ComposerView::ComposerView(QWidget* parent) :
-  KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent )
+DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
+  QDeclarativeItem ( parent ),
+  m_proxy( new QGraphicsProxyWidget( this ) ),
+  m_manager( new KPIMIdentities::IdentityManager )
 {
-  setWindowTitle( i18n( "New mail" ) );
-  qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
+  KPIMIdentities::IdentityCombo* combo = new KPIMIdentities::IdentityCombo( m_manager.data(), 0 );
+  m_proxy->setWidget( combo );
 }
 
-#include "composerview.moc"
+void DeclarativeIdentityComboBox::geometryChanged ( const QRectF& newGeometry, const QRectF& oldGeometry )
+{
+  QDeclarativeItem::geometryChanged ( newGeometry, oldGeometry );
+  m_proxy->resize( newGeometry.size() );
+}
+
+#include "declarativeidentitycombobox.moc"

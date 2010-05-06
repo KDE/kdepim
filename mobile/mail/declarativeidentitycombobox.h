@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2010 <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,18 +17,25 @@
     02110-1301, USA.
 */
 
-#include "composerview.h"
-#include "declarativeidentitycombobox.h"
+#ifndef DECLRARATIVEIDENTITYCOMBOBOX_H
+#define DECLRARATIVEIDENTITYCOMBOBOX_H
 
-#include <klocalizedstring.h>
+#include <QtDeclarative/QDeclarativeItem>
+#include <kpimidentities/identitymanager.h>
 
-QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
+class QGraphicsProxyWidget;
 
-ComposerView::ComposerView(QWidget* parent) :
-  KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent )
+class DeclarativeIdentityComboBox : public QDeclarativeItem
 {
-  setWindowTitle( i18n( "New mail" ) );
-  qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
-}
+  Q_OBJECT
+  public:
+    explicit DeclarativeIdentityComboBox( QDeclarativeItem *parent = 0 );
 
-#include "composerview.moc"
+    void geometryChanged( const QRectF &newGeometry, const QRectF &oldGeometry );
+
+  private:
+    QGraphicsProxyWidget *m_proxy;
+    QScopedPointer<KPIMIdentities::IdentityManager> m_manager;
+};
+
+#endif

@@ -10,6 +10,7 @@ include_directories(
 
 set(kmail_mobile_srcs
   composerview.cpp
+  declarativeidentitycombobox.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
