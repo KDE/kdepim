@@ -21,36 +21,30 @@ import Qt 4.7
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 
-KPIM.MainView {
+Item {
+  anchors.topMargin: 12
+  anchors.leftMargin: 48
 
-  EditorView {
-    id: editorView
-    anchors.fill: parent
+  Text {
+    id: subjectLabel
+    text: KDE.i18n( "Subject:" );
+    anchors.leftMargin: 48
+    anchors.top: parent.top
+    anchors.left: parent.left
   }
 
-  SlideoutPanelContainer {
-    anchors.fill: parent
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: folderPanel
-      titleText: KDE.i18n( "Recipients" )
-      handleHeight: 150
-    }
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: actionPanel
-      titleText: KDE.i18n( "Actions" )
-      handleHeight: 150
-      contentWidth: 240
-    }
-
-    SlideoutPanel {
-      anchors.fill: parent
-      id: attachmentPanel
-      titleIcon: KDE.iconPath( "mail-attachment", 48 );
-    }
+  TextInput {
+    id: subject
+    anchors.left: subjectLabel.right
+    anchors.top: parent.top
+    anchors.right: parent.right
   }
 
+  TextEdit {
+    id: messageContent
+    anchors.top: subject.bottom
+    anchors.left: parent.left
+    anchors.right: parent.right
+    anchors.bottom: parent.bottom
+  }
 }
