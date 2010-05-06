@@ -44,7 +44,7 @@ KPIM.ItemListView {
             color: palette.highlightedText
           }
           QML.Text {
-            text: KDE.i18n( "Date: %1",  [model.date] )
+            text: KDE.i18na( "Date: %1",  [model.date] )
             color: palette.highlightedText
           }
         }
