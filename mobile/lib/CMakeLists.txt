@@ -8,6 +8,7 @@ set(mobileui_SRCS
     declarativeakonadiitem.cpp
     kdeclarativemainview_p.cpp
     kdeclarativemainview.cpp
+    kdeclarativefullscreenview.cpp
 )
 
 

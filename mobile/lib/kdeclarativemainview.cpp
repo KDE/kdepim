@@ -54,7 +54,7 @@
 using namespace Akonadi;
 
 KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *listProxy, QWidget *parent )
-  : QDeclarativeView( parent )
+  : KDeclarativeFullScreenView( appName, parent )
   , d( new KDeclarativeMainViewPrivate )
 {
   KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
@@ -169,12 +169,6 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   connect( qApp, SIGNAL(aboutToQuit()), d, SLOT(saveState()) );
 
   d->restoreState();
-
-  foreach ( const QString &importPath, KGlobal::dirs()->findDirs( "module", "imports" ) )
-    engine()->addImportPath( importPath );
-
-  const QString qmlPath = KStandardDirs::locate( "appdata", appName + ".qml" );
-  setSource( qmlPath );
 }
 
 KDeclarativeMainView::~KDeclarativeMainView()
@@ -220,15 +214,6 @@ void KDeclarativeMainView::setSelectedAccount( int row )
     return;
   }
   d->mBnf->selectChild( row );
-}
-
-void KDeclarativeMainView::triggerTaskSwitcher()
-{
-#ifdef Q_WS_MAEMO_5
-  QDBusConnection::sessionBus().call( QDBusMessage::createSignal( QLatin1String( "/" ), QLatin1String( "com.nokia.hildon_desktop" ), QLatin1String( "exit_app_view" ) ), QDBus::NoBlock );
-#else
-  kDebug() << "not implemented for this platform";
-#endif
 }
 
 Akonadi::EntityTreeModel* KDeclarativeMainView::entityTreeModel() const
