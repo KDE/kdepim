@@ -76,21 +76,21 @@ KPIM.MainView {
               KPIM.Button {
                 width: parent.width
                 height: 480 / 6
-                buttonText : "Write new Email"
+                buttonText : KDE.i18n( "Write new Email" )
                 font.bold: true
                 onClicked : { console.log( "Write new clicked" ); }
               }
               KPIM.Button {
                 width: parent.width
                 height: 480 / 6
-                buttonText : "Add Account"
+                buttonText : KDE.i18n( "Add Account" )
                 font.bold: true
                 onClicked : { application.launchAccountWizard(); }
               }
               KPIM.Button {
                 height : 480 / 6
                 width : parent.width
-                buttonText : "Add Favorite"
+                buttonText : KDE.i18n( "Add Favorite" )
                 font.bold:  true
                 onClicked : { favoriteSelector.visible = true; startPage.visible = false; }
               }
@@ -117,7 +117,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: folderPanel
-      titleText: "Folders"
+      titleText: KDE.i18n( "Folders" )
       handleHeight: 150
       content: [
         Item {
@@ -165,7 +165,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Write new E-Mail"
+              buttonText : KDE.i18n( "Write new E-Mail" )
               onClicked : {
                 console.log("Write new");
               }
@@ -176,7 +176,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Search for E-Mail"
+              buttonText : KDE.i18n( "Search for E-Mail" )
               onClicked : {
                 console.log("Search email");
               }
@@ -186,7 +186,7 @@ KPIM.MainView {
               anchors.left : parent.left
               anchors.right : parent.right
               height : 30
-              buttonText : "Configure Account"
+              buttonText : KDE.i18n( "Configure Account" )
               onClicked : {
                 console.log("Configure");
               }
@@ -199,7 +199,7 @@ KPIM.MainView {
     SlideoutPanel {
       anchors.fill: parent
       id: actionPanel
-      titleText: "Actions"
+      titleText: KDE.i18n( "Actions" )
       handleHeight: 150
       contentWidth: 240
       content: [
@@ -240,7 +240,7 @@ KPIM.MainView {
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
             height: parent.height / 6
-            buttonText: "Next"
+            buttonText: KDE.i18n( "Next" )
             onClicked: {
               if ( messageView.itemId >= 0 )
                 headerList.nextItem();
