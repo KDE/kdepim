@@ -31,6 +31,7 @@
 #include <KDE/KDebug>
 #include <KDE/KGlobal>
 #include <KDE/KConfigGroup>
+#include <KDE/KLocale>
 #include <KDE/KSharedConfig>
 #include <KDE/KSharedConfigPtr>
 #include <KDE/KStandardDirs>
@@ -56,6 +57,8 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   : QDeclarativeView( parent )
   , d( new KDeclarativeMainViewPrivate )
 {
+  KGlobal::locale()->insertCatalog( QLatin1String( "libkdepimmobileui" ) );
+
   setResizeMode( QDeclarativeView::SizeRootObjectToView );
 #ifdef Q_WS_MAEMO_5
   setWindowState( Qt::WindowFullScreen );
