@@ -38,6 +38,7 @@ class MessageViewItem : public DeclarativeAkonadiItem
   Q_OBJECT
   Q_PROPERTY( QString splashMessage READ splashMessage WRITE setSplashMessage )
   Q_PROPERTY( QObject* attachmentModel READ attachmentModel CONSTANT )
+  Q_PROPERTY( QString messagePath READ messagePath WRITE setMessagePath )
 
   public:
     explicit MessageViewItem( QDeclarativeItem *parent = 0 );
@@ -45,6 +46,9 @@ class MessageViewItem : public DeclarativeAkonadiItem
 
     QString splashMessage() const;
     void setSplashMessage( const QString &message );
+
+    QString messagePath() const;
+    void setMessagePath( const QString &messagePath );
 
     QObject* attachmentModel() const;
 

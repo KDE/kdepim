@@ -637,6 +637,7 @@ public:
   int mRecursionCountForDisplayMessage;
   KMime::Content *mCurrentContent;
   QString mCurrentFileName;
+  QString mMessagePath;
   QMap<EditorWatcher*, KMime::Content*> mEditorWatchers;
   Kleo::SpecialJob *mJob;
   Viewer *const q;

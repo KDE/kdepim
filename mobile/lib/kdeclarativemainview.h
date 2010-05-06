@@ -75,6 +75,8 @@ public slots:
   /** Returns wheter or not the child collection at row @param row has children. */
   bool childCollectionHasChildren( int row );
 
+  QString pathToItem( qint64 id );
+
   void launchAccountWizard();
 
   void saveFavorite( const QString &name );

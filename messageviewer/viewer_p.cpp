@@ -1242,6 +1242,7 @@ QString ViewerPrivate::writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content*
   headerStyle()->setAllowAsync( true );
   headerStyle()->setSourceObject( this );
   headerStyle()->setNodeHelper( mNodeHelper );
+  headerStyle()->setMessagePath( mMessagePath );
   return headerStyle()->format( aMsg );
 }
 

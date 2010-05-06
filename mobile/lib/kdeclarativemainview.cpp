@@ -176,6 +176,24 @@ KDeclarativeMainView::~KDeclarativeMainView()
   delete d;
 }
 
+QString KDeclarativeMainView::pathToItem(Entity::Id id)
+{
+  QString path;
+  const QModelIndexList list = EntityTreeModel::modelIndexesForItem( d->mEtm, Item( id ) );
+  if ( list.isEmpty() )
+    return QString();
+
+  QModelIndex idx = list.first().parent();
+  while ( idx.isValid() )
+  {
+    path.prepend( idx.data().toString() );
+    idx = idx.parent();
+    if ( idx.isValid() )
+      path.prepend( " / " );
+  }
+  return path;
+}
+
 bool KDeclarativeMainView::childCollectionHasChildren( int row )
 {
   return d->mBnf->childCollectionHasChildren( row );

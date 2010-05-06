@@ -83,6 +83,16 @@ void MessageViewItem::setSplashMessage(const QString& message)
     m_viewer->displaySplashPage( message );
 }
 
+QString MessageViewItem::messagePath() const
+{
+  return m_viewer->messagePath();
+}
+
+void MessageViewItem::setMessagePath(const QString& messagePath)
+{
+  m_viewer->setMessagePath( messagePath );
+}
+
 QObject* MessageViewItem::attachmentModel() const
 {
   return m_attachmentProxy;

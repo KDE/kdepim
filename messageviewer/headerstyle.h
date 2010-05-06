@@ -96,6 +96,9 @@ public:
   //
   virtual QString format( KMime::Message::Ptr message ) const = 0;
 
+  void setMessagePath( const QString &path ) { mMessagePath = path; }
+  QString messagePath() const { return mMessagePath; }
+
   void setHeaderStrategy( const HeaderStrategy *strategy ) { mStrategy = strategy; }
   const HeaderStrategy* headerStrategy() const { return mStrategy; }
 
@@ -122,6 +125,7 @@ public:
 
 private:
 
+  QString mMessagePath;
   const HeaderStrategy *mStrategy;
   QString mVCardName;
   bool mPrinting;

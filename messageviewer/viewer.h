@@ -141,6 +141,9 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   void setMessageItem(const Akonadi::Item& item, UpdateMode updateMode = Delayed );
 
+  QString messagePath() const;
+  void setMessagePath( const QString &path );
+
   /**
    * Instead of settings a message to be shown sets a message part
    * to be shown
