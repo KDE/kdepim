@@ -9,6 +9,7 @@ include_directories(
 )
 
 set(kmail_mobile_srcs
+  composerview.cpp
   mainview.cpp
   main.cpp
   messagelistproxy.cpp
@@ -31,6 +32,7 @@ install(FILES kmail-mobile.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 install(FILES
   AttachmentList.qml
   HeaderView.qml
+  kmail-composer.qml
   kmail-mobile.qml
   DESTINATION ${DATA_INSTALL_DIR}/kmail-mobile
 )

@@ -78,7 +78,7 @@ KPIM.MainView {
                 height: 480 / 6
                 buttonText : KDE.i18n( "Write new Email" )
                 font.bold: true
-                onClicked : { console.log( "Write new clicked" ); }
+                onClicked : { application.startComposer(); }
               }
               KPIM.Button {
                 width: parent.width
@@ -166,9 +166,7 @@ KPIM.MainView {
               anchors.right : parent.right
               height : 30
               buttonText : KDE.i18n( "Write new E-Mail" )
-              onClicked : {
-                console.log("Write new");
-              }
+              onClicked : { application.startComposer(); }
             }
             KPIM.Button {
               id : searchEmailButton

@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2010 Stephen Kelly <steveire@gmail.com>
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,31 +17,17 @@
     02110-1301, USA.
 */
 
-#include "mainview.h"
-#include "composerview.h"
+#ifndef COMPOSERVIEW_H
+#define COMPOSERVIEW_H
 
-#include <KDE/KDebug>
-#include <kselectionproxymodel.h>
+#include "kdeclarativefullscreenview.h"
 
-#include <KMime/Message>
-#include <akonadi/kmime/messageparts.h>
-
-#include "messagelistproxy.h"
-
-MainView::MainView(QWidget* parent) :
-  KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
+/** The new KMMainWidget ;-) */
+class ComposerView : public KDeclarativeFullScreenView
 {
-  addMimeType( KMime::Message::mimeType() );
-  setListPayloadPart( Akonadi::MessagePart::Header );
-}
+  Q_OBJECT
+  public:
+    explicit ComposerView(QWidget* parent = 0);
+};
 
-void MainView::startComposer()
-{
-  ComposerView *composer = new ComposerView;
-  composer->show();
-}
-
-
-
-#include "mainview.moc"
-
+#endif

@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2010 Stephen Kelly <steveire@gmail.com>
     Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
@@ -18,31 +17,35 @@
     02110-1301, USA.
 */
 
-#include "mainview.h"
-#include "composerview.h"
+import Qt 4.7
+import org.kde 4.5
+import org.kde.pim.mobileui 4.5 as KPIM
 
-#include <KDE/KDebug>
-#include <kselectionproxymodel.h>
+KPIM.MainView {
 
-#include <KMime/Message>
-#include <akonadi/kmime/messageparts.h>
+  SlideoutPanelContainer {
+    anchors.fill: parent
 
-#include "messagelistproxy.h"
+    SlideoutPanel {
+      anchors.fill: parent
+      id: folderPanel
+      titleText: KDE.i18n( "Recipients" )
+      handleHeight: 150
+    }
 
-MainView::MainView(QWidget* parent) :
-  KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )
-{
-  addMimeType( KMime::Message::mimeType() );
-  setListPayloadPart( Akonadi::MessagePart::Header );
+    SlideoutPanel {
+      anchors.fill: parent
+      id: actionPanel
+      titleText: KDE.i18n( "Actions" )
+      handleHeight: 150
+      contentWidth: 240
+    }
+
+    SlideoutPanel {
+      anchors.fill: parent
+      id: attachmentPanel
+      titleIcon: KDE.iconPath( "mail-attachment", 48 );
+    }
+  }
+
 }
-
-void MainView::startComposer()
-{
-  ComposerView *composer = new ComposerView;
-  composer->show();
-}
-
-
-
-#include "mainview.moc"
-
