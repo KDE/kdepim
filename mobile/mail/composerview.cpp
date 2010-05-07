@@ -22,18 +22,40 @@
 #include "declarativeeditor.h"
 #include "declarativeidentitycombobox.h"
 
+#include <kpimidentities/identitycombo.h>
+#include <messagecomposer/kmeditor.h>
+
 #include <klocalizedstring.h>
+#include <KDebug>
+#include <qdeclarativecontext.h>
+#include <qdeclarativeengine.h>
 
 QML_DECLARE_TYPE( DeclarativeEditor )
 QML_DECLARE_TYPE( DeclarativeIdentityComboBox )
 
 ComposerView::ComposerView(QWidget* parent) :
-  KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent )
+  KDeclarativeFullScreenView( QLatin1String( "kmail-composer" ), parent ),
+  m_identityCombo( 0 ),
+  m_editor( 0 )
 {
   setWindowTitle( i18n( "New mail" ) );
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
+
+  connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
+}
+
+void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
+{
+  if ( status != QDeclarativeView::Ready )
+    return;
+
+  Q_ASSERT( m_identityCombo );
+  Q_ASSERT( m_editor );
+
+  kDebug() << m_identityCombo;
+  kDebug() << m_editor;
 }
 
 #include "composerview.moc"

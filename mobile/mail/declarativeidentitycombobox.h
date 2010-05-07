@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 <vkrause@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,21 +20,20 @@
 #ifndef DECLRARATIVEIDENTITYCOMBOBOX_H
 #define DECLRARATIVEIDENTITYCOMBOBOX_H
 
-#include <QtDeclarative/QDeclarativeItem>
+#include "declarativecomposerwidgetbase.h"
+
 #include <kpimidentities/identitymanager.h>
+#include <kpimidentities/identitycombo.h>
 
 class QGraphicsProxyWidget;
 
-class DeclarativeIdentityComboBox : public QDeclarativeItem
+class DeclarativeIdentityComboBox : public DeclarativeComposerWidgetBase<KPIMIdentities::IdentityCombo, &ComposerView::setIdentityCombo>
 {
   Q_OBJECT
   public:
     explicit DeclarativeIdentityComboBox( QDeclarativeItem *parent = 0 );
 
-    void geometryChanged( const QRectF &newGeometry, const QRectF &oldGeometry );
-
   private:
-    QGraphicsProxyWidget *m_proxy;
     QScopedPointer<KPIMIdentities::IdentityManager> m_manager;
 };
 

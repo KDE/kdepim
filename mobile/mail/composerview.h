@@ -22,12 +22,32 @@
 
 #include "kdeclarativefullscreenview.h"
 
+namespace KPIMIdentities
+{
+  class IdentityCombo;
+}
+
+namespace Message
+{
+  class KMeditor;
+}
+
 /** The new KMMainWidget ;-) */
 class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
   public:
     explicit ComposerView(QWidget* parent = 0);
+
+    void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_identityCombo = combo; }
+    void setEditor( Message::KMeditor* editor ) { m_editor = editor; }
+
+  private slots:
+    void qmlLoaded ( QDeclarativeView::Status );
+
+  private:
+    KPIMIdentities::IdentityCombo *m_identityCombo;
+    Message::KMeditor *m_editor;
 };
 
 #endif

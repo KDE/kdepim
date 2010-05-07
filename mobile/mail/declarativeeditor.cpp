@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2010 <vkrause@kde.org>
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,21 +20,11 @@
 #include "declarativeeditor.h"
 
 #include <messagecomposer/kmeditor.h>
-#include <QtGui/QGraphicsProxyWidget>
 
 DeclarativeEditor::DeclarativeEditor ( QDeclarativeItem* parent ) :
-  QDeclarativeItem ( parent ),
-  m_proxy( new QGraphicsProxyWidget( this ) )
+  DeclarativeComposerWidgetBase< Message::KMeditor, &ComposerView::setEditor>( parent )
 {
-  Message::KMeditor *editor = new Message::KMeditor;
-  editor->setCheckSpellingEnabled( true );
-  m_proxy->setWidget( editor );
-}
-
-void DeclarativeEditor::geometryChanged ( const QRectF& newGeometry, const QRectF& oldGeometry )
-{
-  QDeclarativeItem::geometryChanged ( newGeometry, oldGeometry );
-  m_proxy->resize( newGeometry.size() );
+  m_widget = new Message::KMeditor;
 }
 
 #include "declarativeeditor.moc"

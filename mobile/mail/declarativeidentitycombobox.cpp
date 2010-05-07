@@ -18,23 +18,14 @@
 */
 #include "declarativeidentitycombobox.h"
 
-#include <kpimidentities/identitycombo.h>
-#include <QtGui/QGraphicsProxyWidget>
 #include <kpimidentities/identitymanager.h>
 
 DeclarativeIdentityComboBox::DeclarativeIdentityComboBox ( QDeclarativeItem* parent ) :
-  QDeclarativeItem ( parent ),
-  m_proxy( new QGraphicsProxyWidget( this ) ),
+  DeclarativeComposerWidgetBase< KPIMIdentities::IdentityCombo, &ComposerView::setIdentityCombo> ( parent ),
   m_manager( new KPIMIdentities::IdentityManager )
 {
-  KPIMIdentities::IdentityCombo* combo = new KPIMIdentities::IdentityCombo( m_manager.data(), 0 );
-  m_proxy->setWidget( combo );
-}
-
-void DeclarativeIdentityComboBox::geometryChanged ( const QRectF& newGeometry, const QRectF& oldGeometry )
-{
-  QDeclarativeItem::geometryChanged ( newGeometry, oldGeometry );
-  m_proxy->resize( newGeometry.size() );
+  m_widget = new KPIMIdentities::IdentityCombo( m_manager.data(), 0 );
+  m_proxy->setWidget( m_widget );
 }
 
 #include "declarativeidentitycombobox.moc"
