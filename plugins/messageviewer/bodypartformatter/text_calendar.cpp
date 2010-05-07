@@ -795,6 +795,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       } else {
         // put the attachment in a temporary file and launch it
         KTemporaryFile *file = new KTemporaryFile();
+        file->setAutoRemove( false );
         QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
         if ( !patterns.empty() ) {
           file->setSuffix( QString( patterns.first() ).remove( '*' ) );
@@ -841,6 +842,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       } else {
         // put the attachment in a temporary file and save it
         KTemporaryFile *file = new KTemporaryFile();
+        file->setAutoRemove( false );
         QStringList patterns = KMimeType::mimeType( a->mimeType() )->patterns();
         if ( !patterns.empty() ) {
           file->setSuffix( QString( patterns.first() ).remove( '*' ) );
