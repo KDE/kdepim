@@ -21,12 +21,18 @@
 
 #include <KDebug>
 #include <KStandardDirs>
+#include <KMessageBox>
+#include <klocalizedstring.h>
 
+#include <QtCore/qcoreapplication.h>
 #include <QtCore/QTimer>
 #include <QtDBus/qdbusconnection.h>
 #include <QtDBus/qdbusmessage.h>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+
+#include <boost/bind.hpp>
+#include <algorithm>
 
 
 KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileName, QWidget* parent) :
@@ -36,6 +42,8 @@ KDeclarativeFullScreenView::KDeclarativeFullScreenView(const QString& qmlFileNam
 #ifdef Q_WS_MAEMO_5
   setWindowState( Qt::WindowFullScreen );
 #endif
+
+  connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(slotStatusChanged(QDeclarativeView::Status)) );
 
   engine()->rootContext()->setContextProperty( "window", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
@@ -55,5 +63,14 @@ void KDeclarativeFullScreenView::triggerTaskSwitcher()
 #endif
 }
 
+void KDeclarativeFullScreenView::slotStatusChanged ( QDeclarativeView::Status status )
+{
+  if ( status == QDeclarativeView::Error ) {
+    QStringList errorMessages;
+    std::transform( errors().constBegin(), errors().constEnd(), std::back_inserter( errorMessages ), boost::bind( &QDeclarativeError::toString, _1 ) );
+    KMessageBox::error( this, i18n( "Application loading failed: %1", errorMessages.join( QLatin1String( "\n" ) ) ) );
+    QCoreApplication::instance()->exit( 1 );
+  }
+}
 
 #include "kdeclarativefullscreenview.moc"

@@ -42,6 +42,7 @@ class MOBILEUI_EXPORT KDeclarativeFullScreenView : public QDeclarativeView
   public slots:
     /** Triggers de-fullscreen/task switcher */
     void triggerTaskSwitcher();
+    void slotStatusChanged ( QDeclarativeView::Status );
 
   private slots:
     void setQmlFile( const QString &source ) { setSource( source ); }
