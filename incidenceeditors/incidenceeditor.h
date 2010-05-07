@@ -40,7 +40,6 @@
 class AttendeeEditor;
 class EditorDetails;
 
-class DesignerFields;
 class EmbeddedURLPage;
 
 namespace Akonadi {
@@ -54,6 +53,7 @@ class QTabWidget;
 
 namespace IncidenceEditors
 {
+  class DesignerFields;
 
 /**
   This is the base class for the calendar component editors.

@@ -27,11 +27,11 @@
 
 #include <KDialog>
 
-class AutoCheckTreeWidget;
 class CategorySelectWidgetBase;
 
 namespace IncidenceEditors
 {
+  class AutoCheckTreeWidget;
   class CategoryConfig;
 
 class CategorySelectWidget : public QWidget

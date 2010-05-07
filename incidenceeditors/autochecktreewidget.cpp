@@ -15,17 +15,19 @@
 
     You should have received a copy of the GNU Library General Public License
     along with this library; see the file COPYING.LIB.  If not, write to
-    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, 
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
 #include "autochecktreewidget.h"
 
 #include <QAbstractItemModel>
 
+using namespace IncidenceEditors;
+
 //@cond PRIVATE
 class AutoCheckTreeWidget::Private {
   public:
-    Private() 
+    Private()
       : mAutoCheckChildren( false ),
         mAutoCheck( true ) {}
 
@@ -34,14 +36,14 @@ class AutoCheckTreeWidget::Private {
 };
 //@endcond
 
-AutoCheckTreeWidget::AutoCheckTreeWidget( QWidget *parent ) 
+AutoCheckTreeWidget::AutoCheckTreeWidget( QWidget *parent )
   : QTreeWidget( parent ), d( new Private() )
 {
   connect( model(), SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),
            this, SLOT( slotRowsInserted( const QModelIndex &, int, int ) ) );
-  connect( model(), 
+  connect( model(),
            SIGNAL( dataChanged( const QModelIndex &, const QModelIndex & ) ),
-           this, 
+           this,
            SLOT( slotDataChanged( const QModelIndex &, const QModelIndex & ) ) );
 }
 

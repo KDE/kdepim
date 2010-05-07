@@ -47,9 +47,7 @@
 #include <QDragMoveEvent>
 #endif
 
-using namespace IncidenceEditors;
-using namespace KCal;
-
+namespace IncidenceEditors {
 template <>
 CustomListViewItem<KCal::Attendee *>::~CustomListViewItem()
 {
@@ -72,6 +70,11 @@ void CustomListViewItem<KCal::Attendee *>::updateItem()
   setText( 5, mData->delegate() );
   setText( 6, mData->delegator() );
 }
+
+}
+
+using namespace IncidenceEditors;
+using namespace KCal;
 
 AttendeeListView::AttendeeListView ( QWidget *parent )
   : K3ListView( parent )

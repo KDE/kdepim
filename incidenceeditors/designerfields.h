@@ -22,12 +22,16 @@
 #ifndef DESIGNERFIELDS_H
 #define DESIGNERFIELDS_H
 
+#include "incidenceeditors_export.h"
+
 #include <QMap>
 #include <QPair>
 #include <QStringList>
 #include <QWidget>
 
-class DesignerFields : public QWidget
+namespace IncidenceEditors {
+
+class INCIDENCEEDITORS_EXPORT DesignerFields : public QWidget
 {
     Q_OBJECT
   public:
@@ -63,5 +67,7 @@ class DesignerFields : public QWidget
     QString mTitle;
     QString mIdentifier;
 };
+
+} // namespace IncidenceEditors
 
 #endif

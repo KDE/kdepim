@@ -21,7 +21,12 @@
 #ifndef AUTOCHECKTREEWIDGET_H
 #define AUTOCHECKTREEWIDGET_H
 
+#include "incidenceeditors_export.h"
+
 #include <QTreeWidget>
+
+namespace IncidenceEditors
+{
 
 /**
   A tree widget which supports auto selecting child items, when clicking
@@ -32,7 +37,7 @@
 
   @author Mathias Soeken <msoeken@tzi.de>
  */
-class AutoCheckTreeWidget : public QTreeWidget {
+class INCIDENCEEDITORS_EXPORT AutoCheckTreeWidget : public QTreeWidget {
   Q_OBJECT
 
   Q_PROPERTY( bool autoCheckChildren
@@ -111,5 +116,7 @@ class AutoCheckTreeWidget : public QTreeWidget {
     Private *const d;
     //@endcond
 };
+
+} // namespace IncidenceEditors
 
 #endif

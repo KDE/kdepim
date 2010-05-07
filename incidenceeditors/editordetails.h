@@ -34,7 +34,9 @@ namespace KCal {
   class Incidence;
 }
 
-typedef CustomListViewItem<KCal::Attendee *> AttendeeListItem;
+namespace IncidenceEditors {
+  typedef CustomListViewItem<KCal::Attendee *> AttendeeListItem;
+}
 
 /** AttendeeListView is a child class of K3ListView  which supports
  *  dropping of attendees (e.g. from kaddressbook) onto it. If an attendeee

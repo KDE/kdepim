@@ -74,7 +74,6 @@ target_link_libraries(incidenceeditors
    ${KDEPIMLIBS_AKONADI_KCAL_LIBRARY}
    kdepim
    kdepimdbusinterfaces
-   korganizer_core
    akonadi-kcal_next
 )
 

@@ -41,6 +41,8 @@
 #include <QVBoxLayout>
 #include <QDateTimeEdit>
 
+using namespace IncidenceEditors;
+
 DesignerFields::DesignerFields( const QString &uiFile, QWidget *parent,
   const char *name )
   : QWidget( parent )
