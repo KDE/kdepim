@@ -224,6 +224,10 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    */
   QWidget* configWidget();
 
+  /**
+   * Initiates a delete, by sending a signal to delete the message item */
+  void deleteMessage();
+
   const AttachmentStrategy * attachmentStrategy() const;
   void setAttachmentStrategy( const AttachmentStrategy * strategy );
 
@@ -296,6 +300,8 @@ signals:
   void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName,
                    const QString& pname, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
+
+  void deleteMessage( const Akonadi::Item & );
 
 public slots:
 

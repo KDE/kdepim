@@ -469,6 +469,14 @@ Akonadi::ItemFetchJob* Viewer::createFetchJob( const Akonadi::Item &item )
   return job;
 }
 
+void Viewer::deleteMessage()
+{
+  Q_D( Viewer );
+  emit deleteMessage( d->messageItem() );
+}
+
+
+
 }
 
 #include "viewer.moc"

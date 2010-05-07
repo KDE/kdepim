@@ -258,7 +258,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url
 
   PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
-    if ( (*it)->handleClick( &part, path ) )
+    if ( (*it)->handleClick( w->viewer(), &part, path ) )
       return true;
   }
 

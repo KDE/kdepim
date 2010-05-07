@@ -38,6 +38,7 @@
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/webkitparthtmlwriter.h>
 #include <messageviewer/globalsettings.h>
+#include <messageviewer/viewer.h>
 
 #include <kcal/calendarlocal.h>
 #ifndef KDEPIM_NO_KRESOURCES
@@ -433,7 +434,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
     bool mailICal( const Akonadi::Item& item, const QString &receiver, const QString &to, const QString &iCal,
                    const QString &subject, const QString &status,
-                   bool delMessage ) const
+                   bool delMessage, MessageViewer::Viewer *viewerInstance ) const
     {
       kDebug() << "Mailing message:" << iCal;
 
@@ -465,17 +466,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       body->setBody( iCal.toUtf8() );
       msg->addContent( body );
 
-#if 0
-      if ( delMessage &&  GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()() )
-        /* We want the triggering mail to be moved to the trash once this one
-         * has been sent successfully. Set a link header which accomplishes that. */
-        msg->link( mMsg, MessageStatus::statusDeleted() );
-#endif
-
       // Try and match the receiver with an identity.
       // Setting the identity here is important, as that is used to select the correct
       // transport later
       const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().identityForAddress( findReceiver( item.payload<KMime::Message::Ptr>().get() ) );
+      kDebug() << "Full email: " << identity.fullEmailAddr();
       const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
       if ( !nullIdentity ) {
         KMime::Headers::Generic *x_header = new KMime::Headers::Generic(
@@ -484,7 +479,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         msg->setHeader( x_header );
       }
 
-#if 0 // Shouldn't be necessary anymore
+#if 0 //TODO: Review // Shouldn't be necessary anymore
       const bool identityHasTransport = !identity.transport().isEmpty();
       if ( !nullIdentity && identityHasTransport )
         msg->setHeaderField( "X-KMail-Transport", identity.transport() );
@@ -496,6 +491,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           return false; // user canceled transport selection dialog
         msg->setHeaderField( "X-KMail-Transport", transport );
       }
+#else
+  kDebug() << "AKONADI PORT: Disabled code in " << Q_FUNC_INFO;
 #endif
 
       // Outlook will only understand the reply if the From: header is the
@@ -550,12 +547,16 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         kWarning() << "Error queuing message in outbox:" << job->errorText();
         return false;
       }
+      //we have no notification about when was a mail sent, so treat it as sent when it is queued for sending
+      if ( delMessage &&  MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
+        viewerInstance->deleteMessage();
+      }
 #endif
 
       return true;
     }
 
-    bool mail( const Akonadi::Item &item, Incidence* incidence, const QString &status,
+    bool mail( const Akonadi::Item &item, MessageViewer::Viewer *viewerInstance, Incidence* incidence, const QString &status,
                iTIPMethod method = iTIPReply, const QString &receiver = QString(), const QString &to = QString(),
                MailType type = Answer ) const
     {
@@ -593,7 +594,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
-      return mailICal( item, receiver, recv, msg, subject, status, type != Forward );
+      return mailICal( item, receiver, recv, msg, subject, status, type != Forward, viewerInstance );
     }
 
     void ensureKorganizerRunning( bool switchTo ) const
@@ -634,7 +635,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
     }
 
     bool handleInvitation( const QString& iCal, Attendee::PartStat status,
-                           MessageViewer::Interface::BodyPart *part ) const
+                           MessageViewer::Interface::BodyPart *part, MessageViewer::Viewer *viewerInstance ) const
     {
       bool ok = true;
       const QString receiver = findReceiver( part->content() );
@@ -710,12 +711,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           newMyself->setDelegate( delegateString );
           newMyself->setRSVP( delegatorRSVP );
         }
-        ok =  mail( part->item(), incidence, dir, iTIPReply, receiver );
+        ok =  mail( part->item(), viewerInstance, incidence, dir, iTIPReply, receiver );
 
         // check if we need to inform our delegator about this as well
         if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
           if ( delegatorRSVP || status == Attendee::Declined )
-            ok = mail( part->item(), incidence, dir, iTIPReply, receiver, delegator );
+            ok = mail( part->item(), viewerInstance, incidence, dir, iTIPReply, receiver, delegator );
         }
 
       } else if ( !myself && (status != Attendee::Declined) ) {
@@ -733,16 +734,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                                     QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
-          ok = mail( part->item(), incidence, dir, iTIPReply, receiver );
+          ok = mail( part->item(), viewerInstance, incidence, dir, iTIPReply, receiver );
         }
       } else {
-#if 0 // TODO: port to Akonadi
         if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
-          callback.deleteInvitation();
-#else
-        kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
-
+          viewerInstance->deleteMessage();
       }
       delete incidence;
 
@@ -765,7 +761,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( part->item(), incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
+        ok = mail( part->item(), viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
       return ok;
     }
@@ -860,18 +856,14 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       delete iface;
     }
 
-    bool handleIgnore( const QString& /* TODO port me! , MessageViewer::Callback& c */ ) const
+    bool handleIgnore( MessageViewer::Viewer* viewerInstance ) const
     {
-#if 0 // TODO port to Akonadi
       // simply move the message to trash
-      c.deleteInvitation();
-#else
-      kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+      viewerInstance->deleteMessage();
       return true;
     }
 
-    bool handleDeclineCounter( const QString &iCal, MessageViewer::Interface::BodyPart* part ) const
+    bool handleDeclineCounter( const QString &iCal, MessageViewer::Interface::BodyPart* part, MessageViewer::Viewer *viewerInstance ) const
     {
       const QString receiver = findReceiver( part->content() );
       if ( receiver.isEmpty() )
@@ -891,7 +883,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           }
         }
       }
-      return mail( part->item(), incidence, "declinecounter", KCal::iTIPDeclineCounter,
+      return mail( part->item(), viewerInstance, incidence, "declinecounter", KCal::iTIPDeclineCounter,
                    receiver, QString(), DeclineCounter );
     }
 
@@ -906,7 +898,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool handleClick( MessageViewer::Interface::BodyPart *part,
+    bool handleClick( MessageViewer::Viewer *viewerInstance, MessageViewer::Interface::BodyPart *part,
                       const QString &path ) const
     {
 #ifndef KDEPIM_NO_KRESOURCES
@@ -934,20 +926,20 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
       bool result = false;
       if ( path == "accept" )
-        result = handleInvitation( iCal, Attendee::Accepted, part );
+        result = handleInvitation( iCal, Attendee::Accepted, part, viewerInstance );
       if ( path == "accept_conditionally" )
-        result = handleInvitation( iCal, Attendee::Tentative, part );
+        result = handleInvitation( iCal, Attendee::Tentative, part, viewerInstance );
       if ( path == "counter" )
         result = counterProposal( iCal, part );
       if ( path == "ignore" )
-        result = handleIgnore( iCal/*,TODO port me! c*/ );
+        result = handleIgnore( viewerInstance );
       if ( path == "decline" )
-        result = handleInvitation( iCal, Attendee::Declined, part );
+        result = handleInvitation( iCal, Attendee::Declined, part, viewerInstance );
       if ( path == "decline_counter" ) {
-        result = handleDeclineCounter( iCal, part );
+        result = handleDeclineCounter( iCal, part, viewerInstance );
       }
       if ( path == "delegate" )
-        result = handleInvitation( iCal, Attendee::Delegated, part );
+        result = handleInvitation( iCal, Attendee::Delegated, part, viewerInstance );
       if ( path == "forward" ) {
         const QString receiver = findReceiver( part->content() );
         incidence = icalToString( iCal );
@@ -957,7 +949,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( part->item(), incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
+        result = mail( part->item(), viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
         incidence = icalToString( iCal );
@@ -968,12 +960,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         // These should just be saved with their type as the dir
         const QString p = (path == "accept_counter" ? QString("reply") : path);
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
-#if 0 // TODO port to Akonadi
           if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
-            c.deleteInvitation();
-#else
-          kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
+            viewerInstance->deleteMessage();
           result = true;
         }
       }
@@ -1005,26 +993,20 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           //fall through
         case KMessageBox::Yes: // means "do not send"
           if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
-#if 0 // TODO port to Akonadi
             if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
-              ( new KMTrashMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+              viewerInstance->deleteMessage();
               result = true;
             }
-#endif
           }
           showCalendar( incidence->dtStart().date() );
           break;
         }
       }
 
-#if 0 // TODO port to Akonadi
       if ( path == "delete" ) {
-        ( new KMTrashMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+        viewerInstance->deleteMessage();
         result = true;
       }
-#else
-      kWarning() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
-#endif
 
       if ( path.startsWith( QLatin1String( "ATTACH:" ) ) ) {
         QString name = path;

@@ -37,6 +37,8 @@ class QString;
 class QPoint;
 
 namespace MessageViewer {
+
+  class Viewer;
   
 namespace Interface {
 
@@ -76,7 +78,7 @@ namespace Interface {
   @return true if the click was handled by this handler, false
   otherwise.
     */
-    virtual bool handleClick( BodyPart * part, const QString & path ) const = 0;
+    virtual bool handleClick( Viewer* viewerInstance, BodyPart * part, const QString & path ) const = 0;
 
     /** Called when RMB-clicking on a link in the reader. Should
   show a context menu at the specified point with the

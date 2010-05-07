@@ -110,7 +110,7 @@ namespace {
 
   class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler {
   public:
-     bool handleClick( BodyPart * bodyPart, const QString & path ) const {
+     bool handleClick(  MessageViewer::Viewer* /*viewerInstance*/, BodyPart * bodyPart, const QString & path ) const {
 
        const QString vCard = bodyPart->asText();
        if ( vCard.isEmpty() ) return true;
