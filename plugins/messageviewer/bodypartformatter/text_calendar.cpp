@@ -182,7 +182,7 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
         source = bodyPart->asText();
       }
       KMime::Message::Ptr message = bodyPart->item().payload<KMime::Message::Ptr>();
-      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper /*TODO enable when r1121244 is merged , message->sender()->asUnicodeString() */);
+      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper, message->sender()->asUnicodeString() );
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
