@@ -61,12 +61,8 @@ bool SinglepartJobPrivate::chooseCTE()
 {
   Q_Q( SinglepartJob );
 
-  kDebug() << "encodings for data:" << data;
   QList<KMime::Headers::contentEncoding> allowed = KMime::encodingsForData( data );
 
-  foreach( KMime::Headers::contentEncoding enc, allowed )
-    kDebug() << "allowed:" << KMime::nameForEncoding( enc );
-  
   if( !q->globalPart()->is8BitAllowed() ) {
     allowed.removeAll( KMime::Headers::CE8Bit );
   }
@@ -198,8 +194,6 @@ void SinglepartJob::process()
     d->resultContent->setHeader( d->contentTransferEncoding );
     d->contentTransferEncoding->setParent( d->resultContent );
 
-    kDebug() << "decoded" << d->contentTransferEncoding->decoded()
-      << "needToEncode" << d->contentTransferEncoding->needToEncode();
   }
   if( d->contentType ) {
     d->resultContent->setHeader( d->contentType );
@@ -208,8 +202,6 @@ void SinglepartJob::process()
   
   // Set data.
   d->resultContent->setBody( d->data );
-
-  kDebug() << "encoded content" << d->resultContent->encodedContent();
 
   emitResult();
 }
