@@ -83,7 +83,8 @@
 #include <QVBoxLayout>
 #include <QScrollBar>
 #include <QScrollArea>
-#include <QPrintPreviewDialog>
+#include <QPrinter>
+#include <QPrintDialog>
 
 //libkdepim
 #include "libkdepim/broadcaststatus.h"
@@ -2512,10 +2513,13 @@ void ViewerPrivate::slotPrintMsg()
   disconnect( mPartHtmlWriter, SIGNAL( finished() ), this, SLOT( slotPrintMsg() ) );
   if ( !mMessage ) return;
 
-  QPointer<QPrintPreviewDialog> dlg = new QPrintPreviewDialog( mViewer );
-  connect( dlg, SIGNAL( paintRequested( QPrinter * ) ),
-           mViewer->page()->mainFrame(), SLOT( print( QPrinter * ) ) );
-  dlg->exec();
+  QPrinter printer;
+
+  QPointer<QPrintDialog> dlg = new QPrintDialog( &printer, mViewer );
+  if ( dlg->exec() == QDialog::Accepted && dlg ) {
+    mViewer->page()->mainFrame()->print( &printer );
+  }
+
   delete dlg;
 }
 
