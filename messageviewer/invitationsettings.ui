@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MiscInviteTab</class>
- <widget class="QWidget" name="MiscInviteTab">
+ <class>InvitationSettings</class>
+ <widget class="QWidget" name="InvitationSettings">
   <property name="geometry">
    <rect>
     <x>0</x>
