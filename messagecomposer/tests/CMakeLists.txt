@@ -68,7 +68,7 @@ set(testkmeditor_SRCS testkmeditor.cpp )
 
 kde4_add_executable(testkmeditor TEST ${testkmeditor_SRCS})
 
-target_link_libraries(testkmeditor messagecomposer ${KDE4_KDEUI_LIBS} )
+target_link_libraries(testkmeditor messagecomposer ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS} )
 
 ########### next target ###############
 
