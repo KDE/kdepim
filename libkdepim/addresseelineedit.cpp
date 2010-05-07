@@ -29,6 +29,7 @@
 
 #include <Akonadi/Contact/ContactSearchJob>
 #include <Akonadi/CollectionFetchJob>
+#include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 
 #include <kldap/ldapclient.h>
@@ -720,7 +721,8 @@ void AddresseeLineEdit::Private::slotAkonadiCollectionsReceived( const Akonadi::
 {
   foreach ( const Akonadi::Collection &collection, collections ) {
     if ( collection.isValid() ) {
-      const QString sourceString = collection.name();
+      const Akonadi::EntityDisplayAttribute *attribute = collection.attribute<Akonadi::EntityDisplayAttribute>();
+      const QString sourceString = (attribute ? attribute->displayName() : collection.name());
       const int index = q->addCompletionSource( sourceString, 1 );
       kDebug() << "\treceived: " << sourceString << "index: " << index;
       s_static->akonadiCollectionToCompletionSourceMap.insert( collection.id(), index );
