@@ -271,7 +271,9 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::C
 }
 
 Item Akonadi::itemFromIndex( const QModelIndex& idx ) {
-  return idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  Item item = idx.data( EntityTreeModel::ItemRole ).value<Item>();
+  item.setParentCollection( idx.data( EntityTreeModel::ParentCollectionRole ).value<Collection>() );
+  return item;
 }
 
 Item::List Akonadi::itemsFromModel( const QAbstractItemModel* model,
