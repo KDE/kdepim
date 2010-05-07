@@ -22,7 +22,9 @@
 #include "declarativeeditor.h"
 #include "declarativeidentitycombobox.h"
 
+#include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
+#include <kpimidentities/identitymanager.h>
 #include <messagecomposer/kmeditor.h>
 
 #include <klocalizedstring.h>
@@ -56,6 +58,10 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
 
   kDebug() << m_identityCombo;
   kDebug() << m_editor;
+
+  KPIMIdentities::IdentityManager manager;
+  KPIMIdentities::Identity ident = manager.identityForUoid( m_identityCombo->currentIdentity() );
+  ident.signature().insertIntoTextEdit( m_editor, KPIMIdentities::Signature::End );
 }
 
 #include "composerview.moc"

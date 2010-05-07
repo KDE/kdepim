@@ -25,6 +25,7 @@ DeclarativeEditor::DeclarativeEditor ( QDeclarativeItem* parent ) :
   DeclarativeComposerWidgetBase< Message::KMeditor, &ComposerView::setEditor>( parent )
 {
   m_widget = new Message::KMeditor;
+  m_proxy->setWidget( m_widget );
 }
 
 #include "declarativeeditor.moc"
