@@ -52,9 +52,6 @@ class QMenu;
 class QPaintEvent;
 class QSplitter;
 
-namespace KCal {
-  class ResourceCalendar;
-}
 using namespace KCal;
 
 namespace Akonadi {
@@ -67,7 +64,6 @@ namespace KOrg {
     class Decoration;
   }
 #endif
-  class IncidenceChangerBase;
 }
 using namespace KOrg;
 
@@ -117,7 +113,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     virtual Akonadi::Item::List selectedIncidences();
 
     /** returns the currently selected incidence's dates */
-    virtual DateList selectedDates();
+    virtual DateList selectedIncidenceDates();
 
     /** return the default start/end date/time for new events   */
     virtual bool eventDurationHint( QDateTime &startDt, QDateTime &endDt, bool &allDay );
@@ -142,7 +138,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
 
     /* reimp from BaseView */
     virtual void setCalendar( Akonadi::Calendar *cal );
-     
+
     /** Show only incidences from the given collection selection. */
 //    void setCollectionSelection( CollectionSelection* selection );
     void setCollection( Akonadi::Collection::Id id );
@@ -182,7 +178,7 @@ class KOAgendaView : public KOrg::AgendaView, public Akonadi::Calendar::Calendar
     void slotTodosDropped( const QList<KUrl>& todos, const QPoint &, bool );
 
     void enableAgendaUpdate( bool enable );
-    void setIncidenceChanger( IncidenceChangerBase *changer );
+    void setIncidenceChanger( Akonadi::IncidenceChanger *changer );
 
     void zoomInHorizontally( const QDate &date=QDate() );
     void zoomOutHorizontally( const QDate &date=QDate() );
