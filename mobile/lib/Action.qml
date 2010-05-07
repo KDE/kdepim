@@ -40,6 +40,14 @@ Rectangle {
     value : { action.text.replace("&", ""); }
   }
 
+  visible : action.enabled
+  Connections {
+    target : action
+    onChanged : {
+      parent.visible = action.enabled
+    }
+  }
+
   radius: 12
   color: "#00000000" // Set a transparant color.
 
