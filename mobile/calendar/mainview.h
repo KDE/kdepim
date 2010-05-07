@@ -38,6 +38,8 @@ public slots:
     void showFavoriteCalendar();
     void showRegularCalendar();
 
+    void setCurrentEventItemId( qint64 id );
+
 private:
   Akonadi::Calendar *m_calendar;
 };

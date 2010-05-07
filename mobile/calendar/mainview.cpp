@@ -51,4 +51,13 @@ void MainView::showRegularCalendar()
   m_calendar->setUnfilteredModel(regularSelectedItems());
 }
 
+void MainView::setCurrentEventItemId(qint64 id)
+{
+  QModelIndexList list = itemModel()->match(itemModel()->index(0, 0), EntityTreeModel::ItemIdRole, id, 1 );
+  if (list.isEmpty())
+    return;
+
+  setListSelectedRow(list.first().row());
+}
+
 #include "mainview.moc"

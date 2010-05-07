@@ -44,13 +44,19 @@ KPIM.MainView {
     onNextItemRequest: {
       // Only go to the next message when currently a valid item is set.
       if ( eventView.itemId >= 0 )
+      {
         itemList.nextItem();
+        application.setCurrentEventItemId(eventView.itemId);
+      }
     }
 
     onPreviousItemRequest: {
       // Only go to the previous message when currently a valid item is set.
       if ( eventView.itemId >= 0 )
+      {
         itemList.previousItem();
+        application.setCurrentEventItemId(eventView.itemId);
+      }
     }
 
     KPIM.Button {
@@ -84,6 +90,7 @@ KPIM.MainView {
         if ( selectedItemId > 0 ) {
           eventView.itemPath = application.pathToItem(selectedItemId);
           eventView.itemId = selectedItemId;
+          application.setCurrentEventItemId(selectedItemId);
           eventView.visible = true;
           agendaView.visible = false;
         }
@@ -280,14 +287,14 @@ KPIM.MainView {
             buttonText: KDE.i18n( "Move" )
             onClicked: actionPanel.collapse();
           },
-          KPIM.Button {
+          KPIM.Action {
              id: deleteButton
              anchors.top: moveButton.bottom;
              anchors.horizontalCenter: parent.horizontalCenter;
              width: parent.width - 10
              height: parent.height / 6
-             buttonText: KDE.i18n( "Delete" )
-             onClicked: actionPanel.collapse();
+             action : application.getAction("akonadi_item_delete")
+             onTriggered : actionPanel.collapse();
            },
            KPIM.Button {
              id: previousButton
