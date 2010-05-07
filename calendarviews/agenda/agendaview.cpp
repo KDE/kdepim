@@ -1602,9 +1602,9 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     todo->setAllDay( allDay );
     todo->setHasDueDate( true );
 
-    bool userCanceled;
-    if ( !changer()->addIncidence( todo, this, userCanceled ) ) {
-      if ( !userCanceled ) {
+    Akonadi::Collection selectedCollection;
+    if ( !changer()->addIncidence( todo, this, selectedCollection ) ) {
+      if ( !selectedCollection.isValid() ) {
         Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
       }
     }

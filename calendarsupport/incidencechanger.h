@@ -89,8 +89,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
                                QWidget *parent );
 
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
-                       QWidget *parent,
-                       bool &userCanceled );
+                       QWidget *parent, Akonadi::Collection &selectedCollection );
 
     bool addIncidence( const KCal::Incidence::Ptr &incidence,
                        const Akonadi::Collection &collection, QWidget *parent );

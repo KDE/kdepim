@@ -499,23 +499,22 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
   return true;
 }
 
-bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
-                                     QWidget *parent, bool &userCanceled )
-{
-  const Akonadi::Collection c = Akonadi::selectCollection( parent,
-                                                           d->mDefaultCollection );
 
-  if ( !c.isValid() ) {
-    userCanceled = true;
+bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
+                                     QWidget *parent, Akonadi::Collection &selectedCollection )
+{
+  selectedCollection = Akonadi::selectCollection( parent,
+                                                  d->mDefaultCollection );
+
+  if ( !selectedCollection.isValid() ) {
     return false;
   }
 
-  userCanceled = false;
-  return addIncidence( incidence, c, parent );
+  return addIncidence( incidence, selectedCollection, parent );
 }
 
 bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
-                                     const Collection &collection, QWidget* parent )
+                                     const Collection &collection, QWidget *parent )
 {
   if( !incidence || !collection.isValid() ) {
     return false;
