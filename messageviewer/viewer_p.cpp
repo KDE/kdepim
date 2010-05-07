@@ -2271,13 +2271,11 @@ void ViewerPrivate::slotToggleMimePartTree()
 void ViewerPrivate::slotShowMessageSource()
 {
   const QString rawMessage = QString::fromAscii(  mMessage->encodedContent() );
-  const QString processedMessage = QString::fromAscii( mMessage->encodedContent() ); //TODO: remove?
   const QString htmlSource = mViewer->page()->mainFrame()->documentElement().toOuterXml();
 
   MailSourceViewer *viewer = new MailSourceViewer(); // deletes itself upon close
   viewer->setWindowTitle( i18n("Message as Plain Text") );
   viewer->setRawSource( rawMessage );
-  viewer->setProcessedSource( processedMessage );
   viewer->setDisplayedSource( htmlSource );
   if( mUseFixedFont ) {
     viewer->setFont( KGlobalSettings::fixedFont() );

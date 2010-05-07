@@ -149,12 +149,6 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
   mRawBrowser->setLineWrapMode( QTextEdit::NoWrap );
   mRawBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
 
-  mProcessedBrowser = new KTextBrowser();
-  addTab( mProcessedBrowser, i18nc( "Mail message after being processed, might be alterred from original", "Processed Source") );
-  setTabToolTip( 1, i18n( "Processed mail, for example after decrypting an encrypted part of the mail" ) );
-  mProcessedBrowser->setLineWrapMode( QTextEdit::NoWrap );
-  mProcessedBrowser->setTextInteractionFlags( Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard );
-
 #ifndef NDEBUG
     mHtmlBrowser = new KTextBrowser();
     addTab( mHtmlBrowser, i18nc( "Mail message as shown, in HTML format", "HTML Source" ) );
@@ -180,7 +174,6 @@ MailSourceViewer::MailSourceViewer( QWidget *parent )
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ),
                   IconSize( KIconLoader::Small ) ) );
   mRawSourceHighLighter = new MailSourceHighlighter( mRawBrowser );
-  mProcessedSourceHighLighter = new MailSourceHighlighter( mProcessedBrowser );
 }
 
 MailSourceViewer::~MailSourceViewer()
@@ -192,11 +185,6 @@ void MailSourceViewer::setRawSource( const QString &source )
   mRawBrowser->setText( source );
 }
 
-void MailSourceViewer::setProcessedSource( const QString &source )
-{
-  mProcessedBrowser->setText( source );
-}
-
 void MailSourceViewer::setDisplayedSource( const QString &source )
 {
 #ifndef NDEBUG
@@ -204,18 +192,6 @@ void MailSourceViewer::setDisplayedSource( const QString &source )
 #else
   Q_UNUSED( source );
 #endif
-}
-
-void MailSourceViewer::showEvent( QShowEvent *event )
-{
-  Q_UNUSED( event );
-  if ( mRawBrowser->document()->toPlainText() == mProcessedBrowser->document()->toPlainText() ){
-    if ( count() == 2 ) {
-      tabBar()->hide();
-    }
-    setCurrentIndex( 0 );
-    widget( 1 )->hide();
-  }
 }
 
 #include "mailsourceviewer.moc"
