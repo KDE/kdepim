@@ -136,8 +136,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
 
   QAbstractItemModel *favsList = d->getFavoritesListModel();
 
-
-  d->mItemSelectionModel = new QItemSelectionModel( listProxy, this );
+  d->mItemSelectionModel = new QItemSelectionModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ), this );
 
   // TODO: Get this from a KXMLGUIClient?
   d->mActionCollection = new KActionCollection( this );
@@ -173,7 +172,7 @@ KDeclarativeMainView::KDeclarativeMainView( const QString &appName, ListProxy *l
   favoritesView->setWindowTitle( "Available Favorites" );
 
   QListView *itemListView = new QListView;
-  itemListView->setModel( listProxy );
+  itemListView->setModel( listProxy ? static_cast<QAbstractItemModel *>( listProxy ) : static_cast<QAbstractItemModel *>( d->mItemFilter ) );
   itemListView->setSelectionModel( d->mItemSelectionModel );
   itemListView->show();
   itemListView->setWindowTitle( "ItemList view" );
