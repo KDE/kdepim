@@ -10,6 +10,7 @@ include_directories(
 
 set(kmail_mobile_srcs
   composerview.cpp
+  declarativeeditor.cpp
   declarativeidentitycombobox.cpp
   mainview.cpp
   main.cpp
@@ -26,6 +27,8 @@ target_link_libraries(kmail-mobile
     akonadi_next
     kdepim
     kdepimmobileui
+    messagecomposer
+    messagecore
 )
 
 install(TARGETS kmail-mobile ${INSTALL_TARGETS_DEFAULT_ARGS})

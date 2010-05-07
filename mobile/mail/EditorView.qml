@@ -21,6 +21,7 @@ import Qt 4.7
 import org.kde 4.5
 import org.kde.pim.mobileui 4.5 as KPIM
 import org.kde.kpimidentities 4.5 as KPIMIdentities
+import org.kde.messagecomposer 4.5 as MessageComposer
 
 Item {
   anchors.topMargin: 12
@@ -51,7 +52,7 @@ Item {
     }
   }
 
-  Rectangle {
+  MessageComposer.Editor {
     id: messageContent
     anchors {
       top: subject.bottom
@@ -59,12 +60,6 @@ Item {
       right: parent.right
       bottom: sendButton.top
       topMargin: 2
-    }
-    border { color: "black"; width: 1 }
-
-    TextEdit {
-      id: messageContentInput
-      anchors.fill: parent
     }
   }
 
