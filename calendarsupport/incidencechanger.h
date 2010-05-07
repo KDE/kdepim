@@ -102,7 +102,9 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 
     bool deleteIncidence( const Akonadi::Item &incidence, QWidget *parent );
 
+    bool cutIncidences( const Akonadi::Item::List &incidences, QWidget *parent );
     bool cutIncidence( const Akonadi::Item &incidence, QWidget *parent );
+
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
 

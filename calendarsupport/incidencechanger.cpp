@@ -330,24 +330,39 @@ void IncidenceChanger::deleteIncidenceFinished( KJob* j )
   emit incidenceDeleted( items.first() );
 }
 
-bool IncidenceChanger::cutIncidence( const Item& aitem, QWidget *parent )
+bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
 {
-  if ( !aitem.isValid() ) {
-    return true;
-  }
+  Item::List::ConstIterator it;
+  bool doDelete = true;
+  Item::List itemsToCut;
+  for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
+    if ( Akonadi::hasIncidence( ( *it ) ) ) {
+      doDelete = sendGroupwareMessage( *it, KCal::iTIPCancel,
+                                       Akonadi::Groupware::INCIDENCEDELETED, parent );
+      if ( doDelete ) {
+        emit incidenceToBeDeleted( *it );
+        itemsToCut.append( *it );
+      }
+    }
+   }
+  Akonadi::CalendarAdaptor *cal = new Akonadi::CalendarAdaptor( mCalendar, parent );
+  Akonadi::DndFactory factory( cal, true /*delete calendarAdaptor*/ );
 
-  //kDebug() << "\"" << incidence->summary() << "\"";
-  bool doDelete = sendGroupwareMessage( aitem, KCal::iTIPCancel,
-                                        Akonadi::Groupware::INCIDENCEDELETED, parent );
-  if( doDelete ) {
-    // @TODO: the factory needs to do the locking!
-    Akonadi::CalendarAdaptor *cal = new Akonadi::CalendarAdaptor( mCalendar, parent );
-    Akonadi::DndFactory factory( cal, true /*delete calendarAdaptor*/ );
-    emit incidenceToBeDeleted( aitem );
-    factory.cutIncidence( aitem );
-    emit incidenceDeleted( aitem );
+  if ( factory.cutIncidences( itemsToCut ) ) {
+    for ( it = itemsToCut.constBegin(); it != itemsToCut.constEnd(); ++it ) {
+      emit incidenceDeleted( *it );
+    }
+    return !itemsToCut.isEmpty();
+  } else {
+    return false;
   }
-  return doDelete;
+}
+
+bool IncidenceChanger::cutIncidence( const Item &item, QWidget *parent )
+{
+  Item::List items;
+  items.append( item );
+  return cutIncidences( items, parent );
 }
 
 namespace {
