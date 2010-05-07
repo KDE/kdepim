@@ -180,7 +180,8 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       } else {
         source = bodyPart->asText();
       }
-      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper );
+      KMime::Message::Ptr message = bodyPart->item().payload<KMime::Message::Ptr>();
+      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper /*TODO enable when r1121244 is merged , message->sender()->asUnicodeString() */);
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
@@ -430,14 +431,13 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       DeclineCounter
     };
 
-    bool mailICal( const QString &receiver, const QString &to, const QString &iCal,
+    bool mailICal( const Akonadi::Item& item, const QString &receiver, const QString &to, const QString &iCal,
                    const QString &subject, const QString &status,
                    bool delMessage ) const
     {
       kDebug() << "Mailing message:" << iCal;
 
       KMime::Message::Ptr msg( new KMime::Message );
-#if 0 //TODO finish porting
       if ( MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->subject()->fromUnicodeString( status, "utf-8" );
         QString tsubject = subject;
@@ -452,25 +452,18 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           msg->subject()->fromUnicodeString( subject, "utf-8" );
         }
       } else {
-#endif
         msg->subject()->fromUnicodeString( subject, "utf-8" );
-#if 0
       }
-#endif
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
-#if 0
       if ( !MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
-        msg->setHeaderField( "Content-Type",
-                             "text/calendar; method=reply; charset=\"utf-8\"" );
+        msg->contentType()->from7BitString( "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->setBody( iCal.toUtf8() );
       }
-#else
       KMime::Content *body = new KMime::Content;
       body->contentType()->setMimeType( "text/calendar" );
       body->setBody( iCal.toUtf8() );
       msg->addContent( body );
-#endif
 
 #if 0
       if ( delMessage &&  GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()() )
@@ -482,11 +475,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // Try and match the receiver with an identity.
       // Setting the identity here is important, as that is used to select the correct
       // transport later
-#if 0
-      const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().identityForAddress( receiver() );
-#else
-      const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().defaultIdentity();
-#endif
+      const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().identityForAddress( findReceiver( item.payload<KMime::Message::Ptr>().get() ) );
       const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
       if ( !nullIdentity ) {
         KMime::Headers::Generic *x_header = new KMime::Headers::Generic(
@@ -509,17 +498,15 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 #endif
 
-#if 0 //TODO: finish port
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
       if ( !MessageViewer::GlobalSettings::self()->legacyMangleFromToHeaders() ) {
         if ( identity != KPIMIdentities::Identity::null() ) {
-          msg->setFrom( identity.fullEmailAddr() );
+          msg->from()->fromUnicodeString( identity.fullEmailAddr(), "utf-8" );
         }
         // Remove BCC from identity on ical invitations (https://intevation.de/roundup/kolab/issue474)
-        msg->setBcc( "" );
+        msg->bcc()->clear();;
       }
-#endif
 
 #if 0 // For now assume automatic sending
       KMail::Composer *cWin = KMail::makeComposer();
@@ -606,7 +593,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
-      return mailICal( receiver, recv, msg, subject, status, type != Forward );
+      return mailICal( item, receiver, recv, msg, subject, status, type != Forward );
     }
 
     void ensureKorganizerRunning( bool switchTo ) const
@@ -1046,8 +1033,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       }
 
 #if 0 // TODO port to Akonadi
-      if ( result )
-        c.closeIfSecondaryWindow();
+      if ( result ) {
+         // do not close the secondary window if an attachment was opened (kolab/issue4317)
+         if ( !path.startsWith( "ATTACH:" ) ) {
+             c.closeIfSecondaryWindow();
+        }
+      }
 #else
       kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
 #endif
