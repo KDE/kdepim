@@ -36,7 +36,6 @@ set( incidenceeditors_LIB_SRCS
     groupwareintegration.cpp
     incidenceeditor.cpp
     journaleditor.cpp
-    prefs.cpp
     templatemanagementdialog.cpp
     todoeditor.cpp
 )
@@ -56,8 +55,6 @@ kde4_add_ui_files( incidenceeditors_LIB_SRCS
    editoralarms_base.ui
    template_management_dialog_base.ui
 )
-
-kde4_add_kcfg_files(incidenceeditors_LIB_SRCS prefs_base.kcfgc )
 
 kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
 

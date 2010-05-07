@@ -59,7 +59,7 @@ class Event;
 class Todo;
 class Incidence;
 class Calendar;
-};
+}
 
 namespace Akonadi {
 class CalendarAdaptor;

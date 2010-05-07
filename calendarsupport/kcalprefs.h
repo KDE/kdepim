@@ -26,6 +26,8 @@
 
 #include "kcalprefs_base.h"
 
+#include <akonadi/collection.h>
+
 #include <kdatetime.h>
 
 class QStringList;
@@ -73,18 +75,22 @@ class AKONADI_KCAL_NEXT_EXPORT KCalPrefs : public KCalPrefsBase
     void setTimeSpec( const KDateTime::Spec &spec );
     KDateTime::Spec timeSpec();
 
-    QStringList timeScaleTimezones() const;
-    void setTimeScaleTimezones( const QStringList &list );
-
     QString mMailTransport;
 
     // Groupware passwords
     QString mPublishPassword;
     QString mRetrievePassword;
 
+    QString defaultCalendar() const;
+
+    void setDefaultCollection( const Akonadi::Collection& );
+    Akonadi::Collection defaultCollection() const;
+
   private:
     KDateTime::Spec mTimeSpec;
-    QStringList mTimeScaleTimeZones;
+
+    QString mDefaultCalendar;
+    Akonadi::Collection mDefaultCollection;
 };
 
 #endif

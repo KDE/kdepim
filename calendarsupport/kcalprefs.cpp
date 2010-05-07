@@ -95,6 +95,33 @@ void KCalPrefs::usrSetDefaults()
   KConfigSkeleton::usrSetDefaults();
 }
 
+KDateTime::Spec KCalPrefs::timeSpec()
+{
+  return KSystemTimeZones::local();
+}
+
+void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
+{
+  mTimeSpec = spec;
+}
+
+QString KCalPrefs::defaultCalendar() const
+{
+  return mDefaultCollection.isValid() ? QString::number( mDefaultCollection.id() ) : mDefaultCalendar;
+}
+
+Akonadi::Collection KCalPrefs::defaultCollection() const
+{
+  return mDefaultCollection;
+}
+
+void KCalPrefs::setDefaultCollection( const Akonadi::Collection& col )
+{
+  mDefaultCollection = col;
+  if ( !col.isValid() )
+    mDefaultCalendar ="";
+}
+
 void KCalPrefs::setTimeZoneDefault()
 {
   KTimeZone zone = KSystemTimeZones::local();
@@ -106,16 +133,6 @@ void KCalPrefs::setTimeZoneDefault()
   kDebug () << "----- time zone:" << zone.name();
 
   mTimeSpec = zone;
-}
-
-KDateTime::Spec KCalPrefs::timeSpec()
-{
-  return KSystemTimeZones::local();
-}
-
-void KCalPrefs::setTimeSpec( const KDateTime::Spec &spec )
-{
-  mTimeSpec = spec;
 }
 
 void KCalPrefs::fillMailDefaults()
@@ -141,6 +158,9 @@ void KCalPrefs::usrReadConfig()
   if ( !mTimeSpec.isValid() ) {
     setTimeZoneDefault();
   }
+
+  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
+  mDefaultCalendar = defaultCalendarConfig.readEntry( "Default Calendar", QString() );
 
 #if 0
   config()->setGroup( "FreeBusy" );
@@ -179,6 +199,9 @@ void KCalPrefs::usrWriteConfig()
     config()->deleteEntry( "Retrieve Server Password" );
   }
 #endif
+
+  KConfigGroup defaultCalendarConfig( config(), "Calendar" );
+  defaultCalendarConfig.writeEntry( "Default Calendar", defaultCalendar() );
 
   KConfigSkeleton::usrWriteConfig();
 }

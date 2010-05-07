@@ -21,7 +21,6 @@
 #include "eventeditor.h"
 #include "journaleditor.h"
 #include "todoeditor.h"
-#include "prefs.h"
 
 #include <kcalprefs.h>
 
@@ -47,7 +46,6 @@ class KOrganizerEditorConfig : public EditorConfig
 
     virtual KConfigSkeleton *config() const
     {
-      // TODO: should we have a way to return both KCalPrefs::instance() and Prefs::instance()? I guess so.
       return KCalPrefs::instance();
     }
 
@@ -78,55 +76,55 @@ class KOrganizerEditorConfig : public EditorConfig
 
     virtual bool showTimeZoneSelectorInIncidenceEditor() const
     {
-      return Prefs::instance()->showTimeZoneSelectorInIncidenceEditor();
+      return KCalPrefs::instance()->showTimeZoneSelectorInIncidenceEditor();
     }
 
     virtual QDateTime defaultDuration() const
     {
-      return Prefs::instance()->defaultDuration();
+      return KCalPrefs::instance()->defaultDuration();
     }
 
     virtual QDateTime startTime() const
     {
-      return Prefs::instance()->startTime();
+      return KCalPrefs::instance()->startTime();
     }
 
     virtual int reminderTime() const
     {
-      return Prefs::instance()->reminderTime();
+      return KCalPrefs::instance()->reminderTime();
     }
 
     virtual int reminderTimeUnits() const
     {
-      return Prefs::instance()->reminderTimeUnits();
+      return KCalPrefs::instance()->reminderTimeUnits();
     }
 
     virtual bool defaultTodoReminders() const
     {
-      return Prefs::instance()->defaultTodoReminders();
+      return KCalPrefs::instance()->defaultTodoReminders();
     }
 
     virtual bool defaultEventReminders() const
     {
-      return Prefs::instance()->defaultEventReminders();
+      return KCalPrefs::instance()->defaultEventReminders();
     }
 
     virtual QStringList activeDesignerFields() const
     {
-      return Prefs::instance()->activeDesignerFields();
+      return KCalPrefs::instance()->activeDesignerFields();
     }
 
     virtual QStringList &templates( const QString &type )
     {
       if ( type == "Event" ) {
         //TODO remove mEventTemplates+etc from Prefs::instance()
-        return Prefs::instance()->mEventTemplates;
+        return KCalPrefs::instance()->mEventTemplates;
       }
       if ( type == "Todo" ) {
-        return Prefs::instance()->mTodoTemplates;
+        return KCalPrefs::instance()->mTodoTemplates;
       }
       if ( type == "Journal" ) {
-        return Prefs::instance()->mJournalTemplates;
+        return KCalPrefs::instance()->mJournalTemplates;
       }
       return EditorConfig::templates(type);
     }
