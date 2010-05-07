@@ -218,7 +218,7 @@ KPIM.MainView {
             anchors.top: moveButton.bottom;
             anchors.horizontalCenter: parent.horizontalCenter;
             width: parent.width - 10
-            height: parent.height / 6
+            hardcoded_height: parent.height / 6
             action : application.getAction("akonadi_item_delete")
             onTriggered : actionPanel.collapse();
           },

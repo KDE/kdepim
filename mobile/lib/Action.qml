@@ -24,7 +24,10 @@ import Qt 4.7
 import org.kde 4.5
 
 Rectangle {
+  id : _topContext
   property variant action
+  property int hardcoded_height : 70
+  property bool hidden : !action.enabled
 
   signal triggered()
 
@@ -40,11 +43,13 @@ Rectangle {
     value : { action.text.replace("&", ""); }
   }
 
+  height : action.enabled ? hardcoded_height : 0
   visible : action.enabled
   Connections {
     target : action
     onChanged : {
-      parent.visible = action.enabled
+      parent.height = action.enabled ? hardcoded_height : 0;
+      _topContext.visible = action.enabled
     }
   }
 
