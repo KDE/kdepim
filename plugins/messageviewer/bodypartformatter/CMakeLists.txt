@@ -1,5 +1,6 @@
 
 include_directories(
+    ${CMAKE_SOURCE_DIR}/messageviewer
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${Boost_INCLUDE_DIRS}
 )
@@ -44,6 +45,7 @@ target_link_libraries(messageviewer_bodypartformatter_text_calendar
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   akonadi-kcal_next
   incidenceeditors
+  messageviewer
 )
 
 install(TARGETS messageviewer_bodypartformatter_text_calendar  DESTINATION ${PLUGIN_INSTALL_DIR})

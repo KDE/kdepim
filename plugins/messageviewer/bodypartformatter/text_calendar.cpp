@@ -37,6 +37,7 @@
 #include <messageviewer/interfaces/bodypart.h>
 #include <messageviewer/interfaces/bodyparturlhandler.h>
 #include <messageviewer/webkitparthtmlwriter.h>
+#include <messageviewer/globalsettings.h>
 
 #include <kcal/calendarlocal.h>
 #ifndef KDEPIM_NO_KRESOURCES
@@ -437,7 +438,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       KMime::Message::Ptr msg( new KMime::Message );
 #if 0 //TODO finish porting
-      if ( GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+      if ( MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->subject()->fromUnicodeString( status, "utf-8" );
         QString tsubject = subject;
         tsubject.remove( i18n( "Answer: " ) );
@@ -459,7 +460,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       msg->to()->fromUnicodeString( to, "utf-8" );
       msg->from()->fromUnicodeString( receiver, "utf-8" );
 #if 0
-      if ( !GlobalSettings::self()->exchangeCompatibleInvitations() ) {
+      if ( !MessageViewer::GlobalSettings::self()->exchangeCompatibleInvitations() ) {
         msg->setHeaderField( "Content-Type",
                              "text/calendar; method=reply; charset=\"utf-8\"" );
         msg->setBody( iCal.toUtf8() );
@@ -472,7 +473,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 #endif
 
 #if 0
-      if ( delMessage && deleteInvitationAfterReply() )
+      if ( delMessage &&  GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply()() )
         /* We want the triggering mail to be moved to the trash once this one
          * has been sent successfully. Set a link header which accomplishes that. */
         msg->link( mMsg, MessageStatus::statusDeleted() );
@@ -511,7 +512,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 #if 0 //TODO: finish port
       // Outlook will only understand the reply if the From: header is the
       // same as the To: header of the invitation message.
-      if ( !GlobalSettings::self()->legacyMangleFromToHeaders() ) {
+      if ( !MessageViewer::GlobalSettings::self()->legacyMangleFromToHeaders() ) {
         if ( identity != KPIMIdentities::Identity::null() ) {
           msg->setFrom( identity.fullEmailAddr() );
         }
@@ -567,7 +568,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool mail( Incidence* incidence, /* TODO: port me!  MessageViewer::Callback& callback,*/ const QString &status,
+    bool mail( const Akonadi::Item &item, Incidence* incidence, const QString &status,
                iTIPMethod method = iTIPReply, const QString &receiver = QString(), const QString &to = QString(),
                MailType type = Answer ) const
     {
@@ -597,7 +598,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // Set the organizer to the sender, if the ORGANIZER hasn't been set.
       if ( incidence->organizer().isEmpty() ) {
         QString tname, temail;
-        KPIMUtils::extractEmailAddressAndName( /* TODO: port me! callback.sender()*/ QString(), temail, tname );
+        KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+        KPIMUtils::extractEmailAddressAndName( message->sender()->asUnicodeString(), temail, tname );
         incidence->setOrganizer( Person( tname, temail ) );
       }
 
@@ -658,14 +660,14 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // get comment for tentative acceptance
       Incidence* incidence = icalToString( iCal );
 
-      if ( /* TODO: port me! callback.askForComment( status )*/ false ) {
+      if ( askForComment( status ) ) {
         bool ok = false;
         QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
-          if ( /* TODO: port me! callback.outlookCompatibleInvitationReplyComments() */ false ) {
+          if ( MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
@@ -721,12 +723,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           newMyself->setDelegate( delegateString );
           newMyself->setRSVP( delegatorRSVP );
         }
-        ok =  mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, receiver );
+        ok =  mail( part->item(), incidence, dir, iTIPReply, receiver );
 
         // check if we need to inform our delegator about this as well
         if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
           if ( delegatorRSVP || status == Attendee::Declined )
-            ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, receiver, delegator );
+            ok = mail( part->item(), incidence, dir, iTIPReply, receiver, delegator );
         }
 
       } else if ( !myself && (status != Attendee::Declined) ) {
@@ -744,11 +746,11 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                                     QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
-          ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPReply, receiver );
+          ok = mail( part->item(), incidence, dir, iTIPReply, receiver );
         }
       } else {
 #if 0 // TODO: port to Akonadi
-        if ( callback.deleteInvitationAfterReply() )
+        if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
           callback.deleteInvitation();
 #else
         kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
@@ -776,7 +778,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( incidence, /* TODO: port me! callback,*/ dir, iTIPRequest, receiver, delegateString, Delegation );
+        ok = mail( part->item(), incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
       return ok;
     }
@@ -886,21 +888,21 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       if ( receiver.isEmpty() )
         return true;
       Incidence* incidence = icalToString( iCal );
-      if ( /* TODO: port me! callback.askForComment( Attendee::Declined )*/ true ) {
+      if ( askForComment( Attendee::Declined ) ) {
         bool ok = false;
         QString comment = KInputDialog::getMultiLineText( i18n("Decline Counter Proposal"),
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
-          if ( /* TODO: port me! callback.outlookCompatibleInvitationReplyComments()*/ false ) {
+          if ( MessageViewer::GlobalSettings::self()->outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
           }
         }
       }
-      return mail( incidence, /* TODO: port me! callback,*/ "declinecounter", KCal::iTIPDeclineCounter,
+      return mail( part->item(), incidence, "declinecounter", KCal::iTIPDeclineCounter,
                    receiver, QString(), DeclineCounter );
     }
 
@@ -966,7 +968,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( incidence, /*TODO port me! c,*/ "forward", iTIPRequest, receiver, fwdTo, Forward );
+        result = mail( part->item(), incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
         incidence = icalToString( iCal );
@@ -978,7 +980,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         const QString p = (path == "accept_counter" ? QString("reply") : path);
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
 #if 0 // TODO port to Akonadi
-          if ( c.deleteInvitationAfterReply() )
+          if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
             c.deleteInvitation();
 #else
           kDebug() << "AKONADI PORT: Disabled code in  " << Q_FUNC_INFO;
@@ -1015,7 +1017,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         case KMessageBox::Yes: // means "do not send"
           if ( saveFile( "Receiver Not Searched", iCal, QString( "reply" ) ) ) {
 #if 0 // TODO port to Akonadi
-            if ( c.deleteInvitationAfterReply() ) {
+            if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() ) {
               ( new KMTrashMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
               result = true;
             }
@@ -1126,6 +1128,18 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
 
       return QString();
     }
+
+    bool askForComment( KCal::Attendee::PartStat status ) const
+    {
+      if ( ( status != KCal::Attendee::Accepted
+              && MessageViewer::GlobalSettings::self()->askForCommentWhenReactingToInvitation()
+              == MessageViewer::GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AskForAllButAcceptance )
+          || MessageViewer::GlobalSettings::self()->askForCommentWhenReactingToInvitation()
+          == MessageViewer::GlobalSettings::EnumAskForCommentWhenReactingToInvitation::AlwaysAsk )
+          return true;
+      return false;
+    }
+
 };
 
 class Plugin : public MessageViewer::Interface::BodyPartFormatterPlugin
