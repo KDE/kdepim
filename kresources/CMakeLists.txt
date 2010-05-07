@@ -20,13 +20,9 @@ ENDMACRO(QT4_ADD_DBUS_INTERFACE2)
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
-if (QT_QT3SUPPORT_FOUND)
-  add_subdirectory( lib )
-endif (QT_QT3SUPPORT_FOUND)
 add_subdirectory( blog )
 add_subdirectory( remote )
 
 if(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
-  add_subdirectory( groupdav )
   add_subdirectory( groupwise )
 endif(KDEPIM_BUILD_EVERYTHING AND QT_QT3SUPPORT_FOUND)
