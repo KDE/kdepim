@@ -32,12 +32,13 @@
 
 class AlarmListViewItem;
 
+
 class EditorAlarms : public KDialog
 {
   Q_OBJECT
   public:
     explicit EditorAlarms( const QByteArray &type,
-                             KCal::Alarm::List *alarms, QWidget *parent = 0 );
+                           KCal::Alarm::List *alarms, QWidget *parent = 0 );
     ~EditorAlarms();
 
   protected slots:

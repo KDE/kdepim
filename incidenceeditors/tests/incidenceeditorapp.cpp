@@ -48,6 +48,7 @@
 #include <akonadi/agentfilterproxymodel.h>
 #include <akonadi/control.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/kcal/incidencechanger.h>
 
 #include <KCal/Incidence>
 

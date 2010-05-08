@@ -27,11 +27,7 @@
 
 #include "incidenceeditors_export.h"
 
-#include <akonadi/kcal/incidencechanger.h>
-
 #include <Akonadi/Item>
-
-#include <KCal/Incidence>
 
 #include <KDialog>
 
@@ -42,7 +38,12 @@ class EditorDetails;
 
 class EmbeddedURLPage;
 
+namespace KCal {
+  class Incidence;
+}
+
 namespace Akonadi {
+  class IncidenceChanger;
   class CollectionComboBox;
   class Monitor;
 }
