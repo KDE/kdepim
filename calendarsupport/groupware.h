@@ -44,7 +44,6 @@ namespace KCal {
   class Event;
   class Incidence;
 }
-using namespace KCal;
 
 class QString;
 

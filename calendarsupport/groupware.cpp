@@ -52,6 +52,7 @@
 #include <QFile>
 #include <QTimer>
 
+using namespace KCal;
 using namespace Akonadi;
 
 FreeBusyManager *Groupware::mFreeBusyManager = 0;

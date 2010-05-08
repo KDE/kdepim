@@ -57,6 +57,7 @@
 #include <QtGui/QDropEvent>
 #include <QtGui/QPixmap>
 
+using namespace KCal;
 using namespace Akonadi;
 
 /**

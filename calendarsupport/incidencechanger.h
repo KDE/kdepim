@@ -107,7 +107,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     static bool incidencesEqual( KCal::Incidence *inc1, KCal::Incidence *inc2 );
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
 
-    static void errorSaveIncidence( QWidget *parent, const Incidence::Ptr &incidence );
+    static void errorSaveIncidence( QWidget *parent, const KCal::Incidence::Ptr &incidence );
 
   public slots:
     void cancelAttendees( const Akonadi::Item &incidence );
@@ -128,7 +128,7 @@ Q_SIGNALS:
     void incidenceToBeDeleted( const Akonadi::Item & );
     void incidenceDeleted( const Akonadi::Item & );
 
-    void schedule( iTIPMethod method, const Akonadi::Item &incidence );
+    void schedule( KCal::iTIPMethod method, const Akonadi::Item &incidence );
 
   private Q_SLOTS:
     void addIncidenceFinished( KJob* job );
