@@ -58,6 +58,7 @@
 #include <QVBoxLayout>
 
 using namespace Akonadi;
+using namespace KCal;
 using namespace IncidenceEditors;
 
 IncidenceEditor::IncidenceEditor( const QString &caption, const QStringList& mimetypes, QWidget *parent )

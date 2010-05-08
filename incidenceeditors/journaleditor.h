@@ -82,7 +82,7 @@ class INCIDENCEEDITORS_EXPORT JournalEditor : public IncidenceEditor
     void setTime( const QTime &time );
 
     /** Write Journal settings to journal object */
-    void fillJournal( Journal * );
+    void fillJournal( KCal::Journal * );
 
     /** Check if the input is valid. */
     bool validateInput();
@@ -123,7 +123,7 @@ class INCIDENCEEDITORS_EXPORT JournalEditor : public IncidenceEditor
     // Journal which represents the initial dialog setup when creating a new journal.
     // If cancel is pressed and the dialog has different information than
     // this journal then the user will be asked if he really wants to cancel
-    Journal mInitialJournal;
+    KCal::Journal mInitialJournal;
 
     EditorGeneralJournal *mGeneral;
 };

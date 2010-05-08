@@ -130,7 +130,7 @@ class INCIDENCEEDITORS_EXPORT EventEditor : public IncidenceEditor
     // Event which represents the initial dialog setup when creating a new event.
     // If cancel is pressed and the dialog has different information than
     // this event then the user will be asked if he really wants to cancel
-    Event::Ptr mInitialEvent;
+    KCal::Event::Ptr mInitialEvent;
     Akonadi::Item mInitialEventItem;
 
     EditorGeneralEvent *mGeneral;

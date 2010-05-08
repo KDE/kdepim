@@ -142,7 +142,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
     void setupDesignerTabs( const QString &type );
 
     void readDesignerFields( const Akonadi::Item &item );
-    void writeDesignerFields( Incidence * );
+    void writeDesignerFields( KCal::Incidence * );
 
     /**
       Returns true if the user made any alteration
@@ -154,7 +154,7 @@ class INCIDENCEEDITORS_EXPORT IncidenceEditor : public KDialog
 
     void setupEmbeddedURLPage( const QString &label, const QString &url,
                                const QString &mimetype );
-    void createEmbeddedURLPages( const Incidence *inc );
+    void createEmbeddedURLPages( const KCal::Incidence *inc );
 
     /**
       Process user input and create or update event.

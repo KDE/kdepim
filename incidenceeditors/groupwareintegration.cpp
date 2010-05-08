@@ -36,6 +36,7 @@
 
 #include <KSystemTimeZones>
 
+using namespace KCal;
 using namespace IncidenceEditors;
 
 class KOrganizerEditorConfig : public EditorConfig

@@ -45,6 +45,7 @@
 #include <QTabWidget>
 #include <QVBoxLayout>
 
+using namespace KCal;
 using namespace Akonadi;
 using namespace IncidenceEditors;
 

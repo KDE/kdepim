@@ -54,6 +54,7 @@
 #include <QToolTip>
 #include <QVBoxLayout>
 
+using namespace KCal;
 using namespace IncidenceEditors;
 
 // The FreeBusyItem is the whole line for a given attendee.
