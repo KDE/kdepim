@@ -31,6 +31,7 @@ class ContactGroupViewer;
 class ContactViewer;
 class ContactsFilterModel;
 class EntityMimeTypeFilterModel;
+class EntityModelStateSaver;
 class EntityTreeView;
 class Item;
 class ItemView;
@@ -106,6 +107,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Akonadi::ContactGroupViewer *mContactGroupDetails;
     QWidget *mEmptyDetails;
     Akonadi::StandardContactActionManager *mActionManager;
+    Akonadi::EntityModelStateSaver *mCollectionSelectionStateSaver;
 
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;
