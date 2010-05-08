@@ -178,20 +178,34 @@ void FreeBusyItem::setFreeBusyPeriods( FreeBusy *fb )
     QList<KCal::FreeBusyPeriod> busyPeriods = fb->fullBusyPeriods();
     for ( QList<KCal::FreeBusyPeriod>::Iterator it = busyPeriods.begin();
           it != busyPeriods.end(); ++it ) {
+      FreeBusyPeriod per = *it;
+
       KDGanttViewTaskItem *newSubItem = new KDGanttViewTaskItem( this );
-      newSubItem->setStartTime( (*it).start().toTimeSpec( timeSpec ).dateTime() );
-      newSubItem->setEndTime( (*it).end().toTimeSpec( timeSpec ).dateTime() );
+      newSubItem->setStartTime( per.start().toTimeSpec( timeSpec ).dateTime() );
+      newSubItem->setEndTime( per.end().toTimeSpec( timeSpec ).dateTime() );
       newSubItem->setColors( Qt::red, Qt::red, Qt::red );
-      QString toolTip;
-      if ( !(*it).summary().isEmpty() ) {
-        toolTip += "<b>" + (*it).summary() + "</b><br/>";
+
+      QString toolTip = "<qt>";
+      toolTip += "<b>" + i18nc( "@info:tooltip", "Freebusy Period" ) + "</b>";
+      toolTip += "<hr>";
+      if ( !per.summary().isEmpty() ) {
+        toolTip += "<i>" + i18nc( "@info:tooltip", "Summary:" ) + "</i>" + "&nbsp;";
+        toolTip += per.summary();
+        toolTip += "<br>";
       }
-      if ( !(*it).location().isEmpty() ) {
-        toolTip += i18nc( "@info:tooltip", "Location: %1", (*it).location() );
+      if ( !per.location().isEmpty() ) {
+        toolTip += "<i>" + i18nc( "@info:tooltip", "Location:" ) + "</i>" + "&nbsp;";
+        toolTip += per.location();
+        toolTip += "<br>";
       }
-      if ( !toolTip.isEmpty() ) {
-        newSubItem->setTooltipText( toolTip );
-      }
+      toolTip += "<i>" + i18nc( "@info:tooltip period start time", "Start:" ) + "</i>" + "&nbsp;";
+      toolTip += KGlobal::locale()->formatDateTime( per.start().toTimeSpec( timeSpec ).dateTime() );
+      toolTip += "<br>";
+      toolTip += "<i>" + i18nc( "@info:tooltip period end time", "End:" ) + "</i>" + "&nbsp;";
+      toolTip += KGlobal::locale()->formatDateTime( per.end().toTimeSpec( timeSpec ).dateTime() );
+      toolTip += "<br>";
+      toolTip += "</qt>";
+      newSubItem->setTooltipText( toolTip );
     }
     setFreeBusy( fb );
     setShowNoInformation( false );
