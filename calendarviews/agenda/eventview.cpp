@@ -51,6 +51,7 @@
 #include <QApplication>
 #include <QKeyEvent>
 
+using namespace KCal;
 using namespace Akonadi;
 using namespace EventViews;
 
