@@ -33,12 +33,11 @@
 namespace KCal {
   class IncidenceBase;
 }
-using namespace KCal;
+
 
 namespace KPIMIdentities {
   class Identity;
 }
-using namespace KPIMIdentities;
 
 namespace Akonadi
 {
@@ -49,15 +48,15 @@ class AKONADI_KCAL_NEXT_EXPORT MailClient : public QObject
     MailClient();
     virtual ~MailClient();
 
-    bool mailAttendees( IncidenceBase *, const Identity &identity, bool bccMe,
-                        const QString &attachment=QString(),
+    bool mailAttendees( KCal::IncidenceBase *, const KPIMIdentities::Identity &identity,
+                        bool bccMe, const QString &attachment=QString(),
                         const QString &mailTransport = QString() );
-    bool mailOrganizer( IncidenceBase *, const Identity &identity,
+    bool mailOrganizer( KCal::IncidenceBase *, const KPIMIdentities::Identity &identity,
                         const QString &from, bool bccMe,
                         const QString &attachment=QString(),
                         const QString &sub=QString(),
                         const QString &mailTransport = QString() );
-    bool mailTo( IncidenceBase *, const Identity &identity,
+    bool mailTo( KCal::IncidenceBase *, const KPIMIdentities::Identity &identity,
                  const QString &from, bool bccMe, const QString &recipients,
                  const QString &attachment=QString(), const QString &mailTransport = QString() );
 
@@ -78,7 +77,7 @@ class AKONADI_KCAL_NEXT_EXPORT MailClient : public QObject
       @param mailTransport defines the mail transport method. See here the
       kdepimlibs/mailtransport library.
     */
-    bool send( const Identity &identity, const QString &from, const QString &to,
+    bool send( const KPIMIdentities::Identity &identity, const QString &from, const QString &to,
                const QString &cc, const QString &subject, const QString &body,
                bool hidden=false, bool bccMe=false, const QString &attachment=QString(),
                const QString &mailTransport = QString() );

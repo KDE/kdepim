@@ -70,6 +70,10 @@
 #include <KToolInvocation>
 #include <KProtocolManager>
 
+using namespace KCal;
+using namespace KPIMIdentities;
+
+
 Akonadi::MailClient::MailClient() : QObject()
 {
 }
@@ -79,9 +83,9 @@ Akonadi::MailClient::~MailClient()
 }
 
 bool Akonadi::MailClient::mailAttendees( IncidenceBase *incidence,
-                                  const Identity &identity,
-                                  bool bccMe, const QString &attachment,
-                                  const QString &mailTransport )
+                                         const Identity &identity,
+                                         bool bccMe, const QString &attachment,
+                                         const QString &mailTransport )
 {
   Attendee::List attendees = incidence->attendees();
   if ( attendees.count() == 0 ) {
