@@ -8,10 +8,9 @@ X-KDE-ModuleType=Library
 X-KDE-Library=kcm_kleopatra
 X-KDE-FactoryName=kleopatra_config_gnupgsystem
 X-KDE-HasReadOnlyMode=false
-X-KDE-ParentApp=kleopatra,kmail
-X-KDE-ParentComponents=kleopatra,kmail,kontact_kmailplugin
-X-KDE-CfgDlgHierarchy=Kleopatra,KMail
-X-KDE-Weight=550
+X-KDE-ParentApp=kleopatra
+X-KDE-ParentComponents=kleopatra
+X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=GnuPG System
 Name[ar]=نظام GnuPG
