@@ -14,5 +14,6 @@
         <file>images/opensuse_logo.png</file>
         <file>images/opensuse_detail.png</file>
         <file>images/gwenview.png</file>
+        <file>images/konsole_background.png</file>
     </qresource>
 </RCC>

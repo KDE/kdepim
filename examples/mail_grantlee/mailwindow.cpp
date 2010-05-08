@@ -1,3 +1,22 @@
+/*
+  Example of theming using Grantlee.
+
+  Copyright (c) 2010 Ronny Yabar Aizcorbe <ronnycontacto@gmail.com>
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License version 3 only, as published by the Free Software Foundation.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License version 3 for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+
+*/
+
 #include "mailwindow.h"
 
 #include <QDateTime>
@@ -36,6 +55,7 @@ MailWindow::MailWindow(QWidget *parent)
     comboThemes->addItem( "kde" );
     comboThemes->addItem( "nokia" );
     comboThemes->addItem( "opensuse" );
+    comboThemes->addItem( "konsole" );
 
     // load a new theme when the combo current item changed.
     connect( comboThemes , SIGNAL( activated( const QString )),
@@ -56,7 +76,7 @@ void MailWindow::renderMail( const QString &themeName )
 
     // mail message
     QString message;
-    message += "I've created the branch branches/work/soc-pim ";
+    message += "I've created the branch branches/work/soc-pim &quot;Kmail &amp; Co&quot; ";
     message += "The branch is intended to be shared by all PIM-related GSoC projects,";
     message += "Happy Summer of Code to all the students.\n";
 

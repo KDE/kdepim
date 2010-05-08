@@ -1,0 +1,86 @@
+{# Konsole Template #}
+
+{% extends "base.html" %}
+
+{% block style %}
+
+.main {
+    background-image:url('{% media_finder "konsole_background.png" %}');
+    width:605px;
+    height:350px;
+}
+
+hr {
+  width:95%;
+  margin-right:15px;
+  margin-left:10px;
+}
+
+
+.message, table {
+    width:570px;
+}
+
+table {
+    padding:40px 10px 5px 10px;
+    margin:0px;
+
+}
+
+td, .message {
+    color:#DCDCDC;
+}
+
+td.data_header {
+    font-family: Century Gothic;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: -1px;
+    padding: 0 0 0 10px;
+    font-weight: bold;
+    width:20%;
+}
+
+td.data {
+    font-family: Century Gothic;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.message {
+    padding: 5px 10px 5px 10px;
+    font-family: Gill Sans, Verdana;
+    font-size:13px;
+    margin-top: 5px 10px 0 0;
+    text-align: justify;
+    font-weight: normal;
+}
+
+{% endblock %}
+
+{% block title %} Konsole {% endblock %}
+
+{% block content %}
+
+<div class="main">
+<table>
+  <tr>
+    <td class="data_header"> Subject </td>
+    <td class="data">: [Kde-pim] Work branches for GSoC </td>
+  </tr>
+
+  {% include "data_headers.html" %}
+
+</table>
+<hr></hr>
+
+{% endblock %}
+
+{% block mail_message %}
+  <div class="message">
+    {{ message|safe }}
+  </div>
+
+  <span class="sign">KDE Developers</span>
+  </div>
+{% endblock %}
