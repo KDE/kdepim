@@ -29,6 +29,7 @@ set( akonadi_next_SRCS
   kproxyitemselectionmodel.cpp
   etmstatesaver.cpp
   collectionchildorderattribute.cpp
+  collectionselectionproxymodel.cpp
   modeltest.cpp
   quotacolorproxymodel.cpp
   checkableitemproxymodel.cpp

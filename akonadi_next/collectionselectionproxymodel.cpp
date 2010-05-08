@@ -24,31 +24,33 @@
 */
 
 #include "collectionselectionproxymodel.h"
-#include "calendarmodel.h"
-#include "utils.h"
 
-#include <QItemSelectionModel>
-#include <KDebug>
+#include <akonadi/entitytreemodel.h>
+
+#include <QtGui/QItemSelectionModel>
 
 using namespace Akonadi;
 
 class CollectionSelectionProxyModel::Private
 {
-public:
-    explicit Private() : selectionModel( 0 ) {}
+  public:
+    explicit Private()
+      : selectionModel( 0 ), checkableColumn( 0 )
+    {
+    }
+
     QItemSelectionModel *selectionModel;
+    int checkableColumn;
 };
 
-CollectionSelectionProxyModel::CollectionSelectionProxyModel( QObject *parent ) : QSortFilterProxyModel( parent ), d( new Private ) {}
+CollectionSelectionProxyModel::CollectionSelectionProxyModel( QObject *parent )
+  : QSortFilterProxyModel( parent ), d( new Private )
+{
+}
 
 CollectionSelectionProxyModel::~CollectionSelectionProxyModel()
 {
   delete d;
-}
-
-QItemSelectionModel *CollectionSelectionProxyModel::selectionModel() const
-{
-  return d->selectionModel;
 }
 
 void CollectionSelectionProxyModel::setSelectionModel( QItemSelectionModel *selectionModel )
@@ -56,50 +58,81 @@ void CollectionSelectionProxyModel::setSelectionModel( QItemSelectionModel *sele
   d->selectionModel = selectionModel;
 }
 
+QItemSelectionModel *CollectionSelectionProxyModel::selectionModel() const
+{
+  return d->selectionModel;
+}
+
+void CollectionSelectionProxyModel::setCheckableColumn( int column )
+{
+  d->checkableColumn = column;
+}
+
+int CollectionSelectionProxyModel::checkableColumn() const
+{
+  return d->checkableColumn;
+}
+
 Qt::ItemFlags CollectionSelectionProxyModel::flags( const QModelIndex &index ) const
 {
-    if ( !index.isValid() )
-        return QSortFilterProxyModel::flags( index );
-    const Akonadi::Collection collection = Akonadi::collectionFromIndex( index );
-    if ( collection.contentMimeTypes().isEmpty() )
-        return QSortFilterProxyModel::flags( index ) | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
-    return QSortFilterProxyModel::flags(index) | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
+  if ( !index.isValid() ) {
+    return QSortFilterProxyModel::flags( index );
+  }
+
+  const Akonadi::Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+  if ( collection.contentMimeTypes().isEmpty() ) {
+    return QSortFilterProxyModel::flags( index ) | Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  }
+
+  return QSortFilterProxyModel::flags(index) | Qt::ItemIsSelectable | Qt::ItemIsEnabled | Qt::ItemIsUserCheckable;
 }
 
 QVariant CollectionSelectionProxyModel::data( const QModelIndex &index, int role ) const
 {
-  if ( !index.isValid() )
-      return QVariant();
+  if ( !index.isValid() ) {
+    return QVariant();
+  }
+
   if ( d->selectionModel ) {
     if ( role == Qt::CheckStateRole ) {
-      if ( index.column() != CalendarModel::CollectionTitle )
+      if ( index.column() != d->checkableColumn ) {
         return QVariant();
-      const Akonadi::Collection collection = Akonadi::collectionFromIndex( index );
-      if ( collection.contentMimeTypes().isEmpty() )
+      }
+
+      const Akonadi::Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+      if ( collection.contentMimeTypes().isEmpty() ) {
           return QVariant();
+      }
+
       return d->selectionModel->isSelected( index ) ? Qt::Checked : Qt::Unchecked;
     }
   }
-  return QSortFilterProxyModel::data(index, role);
+
+  return QSortFilterProxyModel::data( index, role );
 }
 
 bool CollectionSelectionProxyModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   if ( d->selectionModel && role == Qt::CheckStateRole ) {
-    if ( index.column() != CalendarModel::CollectionTitle )
+    if ( index.column() != d->checkableColumn ) {
         return false;
-    const Akonadi::Collection collection = Akonadi::collectionFromIndex( index );
-    if ( !collection.isValid() )
-      return false;
+    }
 
-    const bool checked = value.toInt() == Qt::Checked;
+    const Akonadi::Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Akonadi::Collection>();
+    if ( !collection.isValid() ) {
+      return false;
+    }
+
+    const bool checked = (value.toInt() == Qt::Checked);
     d->selectionModel->select( index, checked ? QItemSelectionModel::Select : QItemSelectionModel::Deselect );
+
     return true;
   }
-  return QSortFilterProxyModel::setData(index, value, role);
+
+  return QSortFilterProxyModel::setData( index, value, role );
 }
 
-bool CollectionSelectionProxyModel::filterAcceptsColumn( int source_column, const QModelIndex& source_parent ) const
+bool CollectionSelectionProxyModel::filterAcceptsColumn( int sourceColumn, const QModelIndex& ) const
 {
-    return source_column == CalendarModel::CollectionTitle;
+  return (sourceColumn == d->checkableColumn);
 }

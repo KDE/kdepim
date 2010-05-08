@@ -34,9 +34,9 @@
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendarsearch.h>
 #include <akonadi/kcal/collectionselection.h>
-#include <akonadi/kcal/collectionselectionproxymodel.h>
 #include <akonadi/kcal/incidencechanger.h>
 #include <akonadi/kcal/utils.h>
+#include <akonadi/akonadi_next/collectionselectionproxymodel.h>
 #include <akonadi/akonadi_next/entitymodelstatesaver.h>
 
 #include <kholidays/holidayregion.h>
