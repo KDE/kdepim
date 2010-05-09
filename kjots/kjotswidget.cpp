@@ -381,7 +381,8 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 void KJotsWidget::delayedInitialization()
 {
   migrateNoteData( "kjotsmigrator" );
-  migrateNoteData( "kres-migrator", "notes" );
+  // Disable nigration of data from KNotes as that app still exists in 4.5.
+//   migrateNoteData( "kres-migrator", "notes" );
 
   //TODO: Save previous searches in settings file?
   searchDialog = new KFindDialog ( this, 0, QStringList(), false );
