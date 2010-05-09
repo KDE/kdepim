@@ -23,6 +23,7 @@
 */
 
 #include "incidencechanger.h"
+#include "groupware.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <akonadi/kcal/calendaradaptor.h>
@@ -122,7 +123,7 @@ bool IncidenceChanger::beginChange( const Item &item )
 
 bool IncidenceChanger::sendGroupwareMessage( const Item &aitem,
                                              KCal::iTIPMethod method,
-                                             Akonadi::Groupware::HowChanged action,
+                                             HowChanged action,
                                              QWidget *parent )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
@@ -236,7 +237,7 @@ bool IncidenceChanger::deleteIncidence( const Item &aitem, QWidget *parent )
 
   kDebug() << "\"" << incidence->summary() << "\"";
   bool doDelete = sendGroupwareMessage( aitem, KCal::iTIPCancel,
-                                        Akonadi::Groupware::INCIDENCEDELETED, parent );
+                                        INCIDENCEDELETED, parent );
   if( !doDelete ) {
     return false;
   }
@@ -338,7 +339,7 @@ bool IncidenceChanger::cutIncidences( const Item::List &list, QWidget *parent )
   for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
     if ( Akonadi::hasIncidence( ( *it ) ) ) {
       doDelete = sendGroupwareMessage( *it, KCal::iTIPCancel,
-                                       Akonadi::Groupware::INCIDENCEDELETED, parent );
+                                       INCIDENCEDELETED, parent );
       if ( doDelete ) {
         emit incidenceToBeDeleted( *it );
         itemsToCut.append( *it );
@@ -484,7 +485,7 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
       } else {
         success = d->mGroupware->sendICalMessage( parent, KCal::iTIPRequest,
                                                   newinc.get(),
-                                                  Akonadi::Groupware::INCIDENCEEDITED,
+                                                  INCIDENCEEDITED,
                                                   attendeeStatusChanged );
       }
     }
@@ -558,7 +559,7 @@ void IncidenceChanger::addIncidenceFinished( KJob* j ) {
     } else if ( !d->mGroupware->sendICalMessage(
            0, //PENDING(AKONADI_PORT) set parent, ideally the one passed in addIncidence...
            KCal::iTIPRequest,
-           incidence.get(), Akonadi::Groupware::INCIDENCEADDED, false ) ) {
+           incidence.get(), INCIDENCEADDED, false ) ) {
       kError() << "sendIcalMessage failed.";
     }
   }

@@ -27,7 +27,6 @@
 #include "akonadi-kcal_next_export.h"
 
 #include "utils.h"
-#include "groupware.h"
 
 #include <KCal/Incidence>
 #include <KCal/Scheduler>
@@ -37,6 +36,9 @@
 class KJob;
 
 namespace Akonadi {
+
+class Groupware;
+class Calendar;
 
 class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 {
@@ -85,7 +87,7 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
 
     bool sendGroupwareMessage( const Akonadi::Item &incidence,
                                KCal::iTIPMethod method,
-                               Akonadi::Groupware::HowChanged action,
+                               HowChanged action,
                                QWidget *parent );
 
     bool addIncidence( const KCal::Incidence::Ptr &incidence,

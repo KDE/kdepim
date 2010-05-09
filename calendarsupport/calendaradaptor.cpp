@@ -233,7 +233,7 @@ bool CalendarAdaptor::deleteIncidence( const Akonadi::Item &aitem, bool deleteCa
 
   kDebug() << "\"" << incidence->summary() << "\"";
   bool doDelete = sendGroupwareMessage( aitem, KCal::iTIPCancel,
-                                        Groupware::INCIDENCEDELETED );
+                                        IncidenceChanger::INCIDENCEDELETED );
   if( !doDelete ) {
     if ( mDeleteCalendar )
       deleteLater();
@@ -270,7 +270,7 @@ void CalendarAdaptor::addIncidenceFinished( KJob* j )
     if ( !Groupware::instance()->sendICalMessage(
            mParent,
            KCal::iTIPRequest,
-           incidence.get(), Groupware::INCIDENCEADDED, false ) ) {
+           incidence.get(), IncidenceChanger::INCIDENCEADDED, false ) ) {
       kError() << "sendIcalMessage failed.";
     }
   }
@@ -327,7 +327,7 @@ void CalendarAdaptor::deleteIncidenceFinished( KJob* j )
 
 bool CalendarAdaptor::sendGroupwareMessage( const Akonadi::Item &aitem,
                                             KCal::iTIPMethod method,
-                                            Groupware::HowChanged action )
+                                            IncidenceChanger::HowChanged action )
 {
   const Incidence::Ptr incidence = Akonadi::incidence( aitem );
   if ( !incidence ) {

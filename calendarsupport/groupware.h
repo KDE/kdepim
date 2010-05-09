@@ -36,6 +36,8 @@
 #ifndef AKONADI_KCAL_GROUPWARE_H
 #define AKONADI_KCAL_GROUPWARE_H
 
+#include "incidencechanger.h"
+
 #include "akonadi-kcal_next_export.h"
 #include <KCal/ICalFormat>
 
@@ -66,12 +68,6 @@ class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
 {
   Q_OBJECT
   public:
-    enum HowChanged {
-      INCIDENCEADDED,
-      INCIDENCEEDITED,
-      INCIDENCEDELETED,
-      NOCHANGE
-    };
 
     static Groupware *create( Akonadi::Calendar *, GroupwareUiDelegate * );
     static Groupware *instance();
@@ -84,7 +80,7 @@ class AKONADI_KCAL_NEXT_EXPORT Groupware : public QObject
     */
     bool sendICalMessage( QWidget *parent, KCal::iTIPMethod method,
                           KCal::Incidence *incidence,
-                          HowChanged action,
+                          IncidenceChanger::HowChanged action,
                           bool attendeeStatusChanged );
 
     /**

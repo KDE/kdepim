@@ -28,6 +28,7 @@
 #include "groupware.h"
 #include "kcalprefs.h"
 #include "mailscheduler.h"
+#include "incidencechanger.h"
 
 #include <akonadi/kcal/calendar.h>
 #include <Akonadi/Item>
@@ -129,7 +130,7 @@ class AKONADI_KCAL_NEXT_EXPORT CalendarAdaptor : public KCal::Calendar
   private:
     bool sendGroupwareMessage( const Akonadi::Item &aitem,
                                KCal::iTIPMethod method,
-                               Groupware::HowChanged action );
+                               IncidenceChanger::HowChanged action );
 
     //Coming from CalendarView
     void schedule( KCal::iTIPMethod method, const Akonadi::Item &item );

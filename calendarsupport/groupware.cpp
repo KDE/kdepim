@@ -166,7 +166,8 @@ bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
       // accept counter proposal
       scheduler.acceptCounterProposal( incidence );
       // send update to all attendees
-      sendICalMessage( 0, iTIPRequest, incidence, INCIDENCEEDITED, false );
+      sendICalMessage( 0, iTIPRequest, incidence, IncidenceChanger::INCIDENCEEDITED,
+                       false );
     }
   } else {
     kError() << "Unknown incoming action" << action;
@@ -184,7 +185,10 @@ bool Groupware::handleInvitation( const QString& receiver, const QString& iCal,
 class KOInvitationFormatterHelper : public InvitationFormatterHelper
 {
   public:
-    virtual QString generateLinkURL( const QString &id ) { return QLatin1String( "kmail:groupware_request_" ) + id; }
+    virtual QString generateLinkURL( const QString &id )
+    {
+      return QLatin1String( "kmail:groupware_request_" ) + id;
+    }
 };
 
 /* This function sends mails if necessary, and makes sure the user really
@@ -194,10 +198,10 @@ class KOInvitationFormatterHelper : public InvitationFormatterHelper
  * Return false means revert the changes
  */
 bool Groupware::sendICalMessage( QWidget *parent,
-                                   KCal::iTIPMethod method,
-                                   Incidence *incidence,
-                                   HowChanged action,
-                                   bool attendeeStatusChanged )
+                                 KCal::iTIPMethod method,
+                                 Incidence *incidence,
+                                 IncidenceChanger::HowChanged action,
+                                 bool attendeeStatusChanged )
 {
   // If there are no attendees, don't bother
   if ( incidence->attendees().isEmpty() ) {
@@ -229,12 +233,12 @@ bool Groupware::sendICalMessage( QWidget *parent,
 
       QString txt;
       switch( action ) {
-      case INCIDENCEEDITED:
+      case IncidenceChanger::INCIDENCEEDITED:
         txt = i18n( "You changed the invitation \"%1\".\n"
                     "Do you want to email the attendees an update message?",
                     incidence->summary() );
         break;
-      case INCIDENCEDELETED:
+      case IncidenceChanger::INCIDENCEDELETED:
         Q_ASSERT( incidence->type() == "Event" || incidence->type() == "Todo" );
         if ( incidence->type() == "Event" ) {
           txt = i18n( "You removed the invitation \"%1\".\n"
@@ -246,7 +250,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
                       incidence->summary() );
         }
         break;
-      case INCIDENCEADDED:
+      case IncidenceChanger::INCIDENCEADDED:
         if ( incidence->type() == "Event" ) {
           txt = i18n( "The event \"%1\" includes other people.\n"
                       "Do you want to email the invitation to the attendees?",
@@ -292,7 +296,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
              parent, txt, QString(),
              KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
     } else {
-      if ( action == INCIDENCEDELETED ) {
+      if ( action == IncidenceChanger::INCIDENCEDELETED ) {
         const QStringList myEmails = KCalPrefs::instance()->allEmails();
         bool askConfirmation = false;
         for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
@@ -317,7 +321,7 @@ bool Groupware::sendICalMessage( QWidget *parent,
           parent, txt, i18n( "Group Scheduling Email" ),
           KGuiItem( i18n( "Send Update" ) ), KGuiItem( i18n( "Do Not Send" ) ) );
         setDoNotNotify( rc == KMessageBox::No );
-      } else if ( action == INCIDENCEADDED ) {
+      } else if ( action == IncidenceChanger::INCIDENCEADDED ) {
         // We just got this event from the groupware stack, so add it right away
         // the notification mail was sent on the KMail side.
         return true;

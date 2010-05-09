@@ -34,6 +34,7 @@
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/incidencechanger.h>
+#include <akonadi/kcal/groupware.h>
 
 #include <Akonadi/CollectionComboBox>
 #include <Akonadi/KCal/IncidenceMimeTypeVisitor>
