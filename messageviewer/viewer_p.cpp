@@ -745,7 +745,10 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
       QByteArray cstr = gotRawReplyString
                          ? rawReplyString
                          : dataNode->decodedContent();
-      data = KMime::CRLFtoLF( cstr );
+       if ( dataNode->contentType()->isText() && cstr.size() > 0 )  {
+        data = KMime::CRLFtoLF( cstr );
+       } else
+        data = cstr; 
     }
   }
   QDataStream ds;
@@ -1635,7 +1638,7 @@ void ViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
     htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
     htmlWriter()->queue( "<pre>" );
 
-    QString str = aMsgPart->decodedText();
+    QString str = aMsgPart->decodedContent();
     // A QString cannot handle binary data. So if it's shorter than the
     // attachment, we assume the attachment is binary:
     if( str.length() < aMsgPart->decodedContent().size() ) {
@@ -2172,6 +2175,7 @@ void ViewerPrivate::update( Viewer::UpdateMode updateMode )
     // stop the timer to avoid calling updateReaderWin twice
       mUpdateReaderWinTimer.stop();
       saveRelativePosition();
+      mNodeHelper->setNodeUnprocessed( mMessage.get(), true );
       updateReaderWin();
   }
   else if (mUpdateReaderWinTimer.isActive()) {
