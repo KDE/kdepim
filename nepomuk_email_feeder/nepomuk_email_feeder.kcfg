@@ -15,4 +15,15 @@
       <default>NoIndexing</default>
     </entry>
   </group>
+  <group name="InitialIndexing">
+    <entry name="IndexAggressiveness" type="Enum">
+      <label>Aggressiveness for initial indexing.</label>
+      <choices>
+        <choice name="CachedOnly"/>
+        <choice name="LocalAndCached"/>
+        <choice name="Everything"/>
+      </choices>
+      <default>LocalAndCached</default>
+    </entry>
+  </group>
 </kcfg>

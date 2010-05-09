@@ -43,6 +43,9 @@ class NepomukEMailFeeder : public NepomukFeederAgent<NepomukFast::Mailbox>, publ
 
     void addSearch(const QString& query, const QString& queryLanguage, const Akonadi::Collection& resultCollection);
     void removeSearch(const Akonadi::Collection& resultCollection);
+
+  protected:
+    ItemFetchScope fetchScopeForcollection(const Akonadi::Collection& collection);
 };
 
 }

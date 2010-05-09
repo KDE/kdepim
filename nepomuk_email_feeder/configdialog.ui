@@ -10,7 +10,40 @@
     <height>300</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
+  <layout class="QVBoxLayout" name="verticalLayout_3">
+   <item>
+    <widget class="KButtonGroup" name="kcfg_IndexAggressiveness">
+     <property name="title">
+      <string>Initial Index Aggressiveness</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <item>
+       <widget class="QRadioButton" name="cachedOnly">
+        <property name="text">
+         <string>Cache content only</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="localAndCached">
+        <property name="text">
+         <string>Local and cached content</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="everything">
+        <property name="text">
+         <string>Everything</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item>
     <widget class="KButtonGroup" name="kcfg_IndexEncryptedContent">
      <property name="title">
