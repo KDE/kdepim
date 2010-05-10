@@ -1503,7 +1503,9 @@ void ViewerPrivate::resetStateForNewMessage()
 void ViewerPrivate::setMessageItem( const Akonadi::Item &item,  Viewer::UpdateMode updateMode )
 {
   resetStateForNewMessage();
-  mMonitor.setItemMonitored( mMessageItem, false );
+  foreach( const Akonadi::Entity::Id monitoredId, mMonitor.itemsMonitored() ) {
+    mMonitor.setItemMonitored( Akonadi::Item( monitoredId ), false );
+  }
   Q_ASSERT( mMonitor.itemsMonitored().isEmpty() );
 
   mMessage = KMime::Message::Ptr(); //forget the old message if it was set
