@@ -24,6 +24,7 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include <config-enterprise.h>
 #include "editorattachments.h"
 
 #include <KABC/VCardDrag>
@@ -70,7 +71,13 @@ class AttachmentIconItem : public QListWidgetItem
       if ( att ) {
         mAttachment = new KCal::Attachment( *att );
       } else {
+        // for the enteprise, inline attachments are the default
+#ifdef KDEPIM_ENTERPRISE_BUILD
+        mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
+                                                    // as we want inline by default
+#else
         mAttachment = new KCal::Attachment( QString() );
+#endif
       }
       readAttachment();
       setFlags( flags() | Qt::ItemIsDragEnabled );
@@ -233,8 +240,8 @@ AttachmentEditDialog::AttachmentEditDialog( AttachmentIconItem *item,
            "attachments that change often or may be moved (or removed) from "
            "their current location." ) );
 
-  if ( item->attachment()->isUri() ) {
-    label = new QLabel( i18nc( "@label", "Location:" ), page );
+  if ( item->attachment()->isUri() || !item->attachment()->data() ) {
+      label = new QLabel( i18nc( "@label", "Location:" ), page );
     grid->addWidget( label, 4, 0 );
     mURLRequester = new KUrlRequester( item->uri(), page );
     mURLRequester->setToolTip(
