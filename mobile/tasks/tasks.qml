@@ -233,44 +233,18 @@ KPIM.MainView {
     }
 
     SlideoutPanel {
+      anchors.fill: parent
       id: attachmentPanel
-
-      anchors.fill : parent
-      visible: false //messageView.messageTreeModel.attachmentCount >= 2
+      visible: taskView.attachmentModel.attachmentCount >= 1
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
-      handleHeight: parent.height - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
-      contentWidth: 400
-//      content: [
-//         Component {
-//           id: attachmentDelegate
-//           Item {
-//             id: wrapper
-//             width: attachmentList.width
-//             height: 48
-//             clip: true
-//             Rectangle {
-//               anchors.fill: parent
-//               opacity: 0.25
-//               border.color: palette.mid
-//             }
-//             Text { anchors.fill: parent; text: model.display; horizontalAlignment: "AlignHCenter"; verticalAlignment: "AlignVCenter"; color: "black" }
-//           }
-//         },
-//         ListView {
-//           id: attachmentList
-//           anchors.fill: parent
-//
-//           model: messageView.messageTreeModel
-//           delegate: attachmentDelegate
-//
-//           MouseArea {
-//             anchors.fill: parent
-//             onClicked: {
-//               console.log( "current mime tree count: " + messageView.messageTreeModel.attachmentCount );
-//             }
-//           }
-//         }
-//      ]
+      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      content: [
+        KPIM.AttachmentList {
+          id: attachmentView
+          model: taskView.attachmentModel
+          anchors.fill: parent
+        }
+      ]
     }
   }
 
