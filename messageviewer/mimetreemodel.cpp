@@ -63,6 +63,12 @@ class MimeTreeModel::Private
         if ( !name.isEmpty() )
           return name;
       }
+      if ( content->contentDisposition( false ) )
+      {
+        const QString name = content->contentDisposition()->filename();
+        if ( !name.isEmpty() )
+          return name;
+      }
       return i18n( "body part" );
     }
 
