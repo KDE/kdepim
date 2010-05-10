@@ -724,27 +724,36 @@ void EditorAttachments::slotEdit()
 
 void EditorAttachments::slotRemove()
 {
-  QList<QListWidgetItem *> toDelete;
+  QList<QListWidgetItem *> selected;
+  QStringList labels;
+
   for ( int itemIndex = 0; itemIndex < mAttachments->count(); ++itemIndex ) {
     QListWidgetItem *it = mAttachments->item( itemIndex );
     if ( it->isSelected() ) {
-      AttachmentIconItem *item = static_cast<AttachmentIconItem *>( it );
-
-      if ( !item ) {
-        continue;
-      }
-
-      if ( KMessageBox::questionYesNo(
-             this,
-             i18nc( "@info",
-                    "Do you really want to remove the attachment labeled \"%1\"?", item->label() ),
-             i18nc( "@title:window", "Remove Attachment?" ) ) == KMessageBox::Yes ) {
-        toDelete.append( it );
+      AttachmentIconItem *attitem = static_cast<AttachmentIconItem *>( it );
+      if ( attitem ) {
+        KCal::Attachment *att = attitem->attachment();
+        labels << att->label();
+        selected << it;
       }
     }
   }
 
-  qDeleteAll( toDelete );
+  if ( selected.isEmpty() ) {
+    return;
+  }
+
+  QString labelsStr = labels.join( "<br>" );
+
+  if ( KMessageBox::questionYesNo(
+         this,
+         i18nc( "@info",
+                "Do you really want to remove these attachments?<nl>%1</nl>", labelsStr ),
+         i18nc( "@title:window", "Remove Attachments?" ) ) != KMessageBox::Yes ) {
+    return;
+  }
+
+  qDeleteAll( selected );
 }
 
 void EditorAttachments::slotShow()
