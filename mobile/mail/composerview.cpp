@@ -81,13 +81,7 @@ void ComposerView::send()
   composer->globalPart()->setParentWidgetForGui( this );
   composer->infoPart()->setTo( QStringList() << "volker@kdab.com" );
   composer->infoPart()->setFrom( "volker@kdab.com" );
-  composer->textPart()->setCleanPlainText( m_editor->toCleanPlainText() );
-  composer->textPart()->setWrappedPlainText( m_editor->toWrappedPlainText() );
-  if( m_editor->isFormattingUsed() ) {
-    composer->textPart()->setCleanHtml( m_editor->toCleanHtml() );
-    composer->textPart()->setEmbeddedImages( m_editor->embeddedImages() );
-  }
-
+  m_editor->fillComposerTextPart( composer->textPart() );
   connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
   composer->start();
 }
