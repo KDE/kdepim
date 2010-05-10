@@ -321,6 +321,20 @@ KPIM.MainView {
            }
       ]
     }
+    SlideoutPanel {
+      anchors.fill: parent
+      id: attachmentPanel
+      visible: eventView.attachmentModel.attachmentCount >= 1
+      titleIcon: KDE.iconPath( "mail-attachment", 48 );
+      handleHeight: parent.height - startPanel.handlePosition - startPanel.handleHeight - actionPanel.handleHeight - folderPanel.handleHeight - anchors.topMargin - anchors.bottomMargin
+      content: [
+        KPIM.AttachmentList {
+          id: attachmentView
+          model: eventView.attachmentModel
+          anchors.fill: parent
+        }
+      ]
+    }
 
   }
 
