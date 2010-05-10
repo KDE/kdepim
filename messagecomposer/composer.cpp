@@ -81,8 +81,8 @@ class Message::ComposerPrivate : public JobBasePrivate
     Kleo::CryptoMessageFormat format;
     std::vector<GpgME::Key> signers;
     QList<QPair<QStringList, std::vector<GpgME::Key> > > encData;
-    
-    KMime::Message::List resultMessages;
+
+    QList<KMime::Message::Ptr> resultMessages;
 
     // Stuff that the application plays with.
     GlobalPart *globalPart;
@@ -457,7 +457,7 @@ void ComposerPrivate::composeFinalStep( KMime::Content* headers, KMime::Content*
   content->assemble();
 
   QByteArray allData = headers->head() + content->encodedContent();
-  KMime::Message* resultMessage =  new KMime::Message;
+  KMime::Message::Ptr resultMessage( new KMime::Message );
   resultMessage->setContent( allData );
   resultMessage->parse(); // Not strictly necessary.
   resultMessages.append( resultMessage );
@@ -480,12 +480,12 @@ Composer::~Composer()
 {
 }
 
-KMime::Message::List Composer::resultMessages() const
+QList<KMime::Message::Ptr> Composer::resultMessages() const
 {
   Q_D( const Composer );
   Q_ASSERT( d->finished );
   Q_ASSERT( !error() );
-  KMime::Message::List results = d->resultMessages;
+  QList<KMime::Message::Ptr> results = d->resultMessages;
   return results;
 }
 

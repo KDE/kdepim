@@ -101,7 +101,7 @@ void ComposerView::composerResult ( KJob* job )
     const Message::InfoPart *infoPart = composer->infoPart();
     MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
     qjob->transportAttribute().setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
-    qjob->setMessage( KMime::Message::Ptr( composer->resultMessages().first() ) ); // ### dangerous API, fix that in Composer
+    qjob->setMessage( composer->resultMessages().first() );
     qjob->addressAttribute().setTo( infoPart->to() );
     qjob->addressAttribute().setCc( infoPart->cc() );
     qjob->addressAttribute().setBcc( infoPart->bcc() );

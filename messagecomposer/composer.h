@@ -56,7 +56,7 @@ class MESSAGECOMPOSER_EXPORT Composer : public JobBase
     explicit Composer( QObject *parent = 0 );
     virtual ~Composer();
 
-    KMime::Message::List resultMessages() const;
+    QList<KMime::Message::Ptr> resultMessages() const;
 
     GlobalPart *globalPart();
     InfoPart *infoPart();
