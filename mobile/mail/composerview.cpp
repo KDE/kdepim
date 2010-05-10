@@ -82,6 +82,7 @@ void ComposerView::send()
   composer->infoPart()->setSubject( subject() );
   composer->infoPart()->setTo( QStringList() << "volker@kdab.com" );
   composer->infoPart()->setFrom( "volker@kdab.com" );
+  composer->infoPart()->setUserAgent( "KMail Mobile" );
   m_editor->fillComposerTextPart( composer->textPart() );
   connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
   composer->start();
