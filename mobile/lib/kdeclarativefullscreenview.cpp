@@ -30,6 +30,7 @@
 #include <QtDBus/qdbusmessage.h>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
+#include <QtDeclarative/QDeclarativeError>
 
 #include <boost/bind.hpp>
 #include <algorithm>
