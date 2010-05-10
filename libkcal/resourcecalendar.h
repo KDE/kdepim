@@ -143,7 +143,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Add incidence to resource.
       @deprecated use addIncidence(Incidence *,const QString &) instead.
     */
-    KDE_DEPRECATED virtual bool addIncidence( Incidence * );
+    virtual KDE_DEPRECATED bool addIncidence( Incidence * );
 
     /**
       Add incidence to resource and subresource.
@@ -165,7 +165,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Add event to resource.
       @deprecated use addEvent(Event *,const QString&) instead.
     */
-    KDE_DEPRECATED virtual bool addEvent( Event *event ) = 0;
+    virtual KDE_DEPRECATED bool addEvent( Event *event ) = 0;
     virtual bool addEvent( Event *event, const QString &subresource ) = 0;
 
     /**
@@ -269,7 +269,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Add a todo to the todolist.
       @deprecated use addTodo(Todo *,const QString &) instead.
     */
-    KDE_DEPRECATED virtual bool addTodo( Todo *todo ) = 0;
+    virtual KDE_DEPRECATED bool addTodo( Todo *todo ) = 0;
     virtual bool addTodo( Todo *todo,  const QString &subresource ) = 0;
 
     /**
@@ -296,7 +296,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       Add a Journal entry to the resource.
       @deprecated use addJournal(Journal *,const QString &) instead.
     */
-    KDE_DEPRECATED virtual bool addJournal( Journal * ) = 0;
+    virtual KDE_DEPRECATED bool addJournal( Journal * ) = 0;
     virtual bool addJournal( Journal *journal, const QString &subresource ) = 0;
 
     /**
