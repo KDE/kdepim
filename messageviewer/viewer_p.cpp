@@ -1527,6 +1527,9 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
   resetStateForNewMessage();
 
   mMessage = aMsg;
+  Akonadi::Item item(42 /* we want .isValid() to succeed */ );
+  item.setPayload( mMessage );
+  mMessageItem = item;
 
   if ( mMessage ) {
     mNodeHelper->setOverrideCodec( mMessage.get(), overrideCodec() );
