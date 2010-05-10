@@ -749,11 +749,26 @@ void EditorAttachments::slotRemove()
          this,
          i18nc( "@info",
                 "Do you really want to remove these attachments?<nl>%1</nl>", labelsStr ),
-         i18nc( "@title:window", "Remove Attachments?" ) ) != KMessageBox::Yes ) {
+         i18nc( "@title:window", "Remove Attachments?" ),
+         KStandardGuiItem::yes(), KStandardGuiItem::no(),
+         "calendarRemoveAttachments" ) != KMessageBox::Yes ) {
     return;
   }
 
-  qDeleteAll( selected );
+  for ( QList<QListWidgetItem *>::iterator it( selected.begin() ), end( selected.end() );
+        it != end ; ++it ) {
+    int row = mAttachments->row( *it );
+    QListWidgetItem *next = mAttachments->item( ++row );
+    QListWidgetItem *prev = mAttachments->item( --row );
+    if ( next ) {
+      next->setSelected( true );
+    } else if ( prev ) {
+      prev->setSelected( true );
+    }
+    delete *it;
+  }
+
+  mAttachments->update();
 }
 
 void EditorAttachments::slotShow()
