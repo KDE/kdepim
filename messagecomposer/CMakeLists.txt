@@ -35,6 +35,7 @@ set( messagecomposer_src
      skeletonmessagejob.cpp
 
      kmeditor.cpp
+     signaturecontroller.cpp
 )
 
 kde4_add_kcfg_files(messagecomposer_src

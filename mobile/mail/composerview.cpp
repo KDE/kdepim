@@ -26,6 +26,7 @@
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
 #include <messagecomposer/kmeditor.h>
+#include <messagecomposer/signaturecontroller.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
@@ -59,9 +60,10 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   kDebug() << m_identityCombo;
   kDebug() << m_editor;
 
-  KPIMIdentities::IdentityManager manager;
-  KPIMIdentities::Identity ident = manager.identityForUoid( m_identityCombo->currentIdentity() );
-  ident.signature().insertIntoTextEdit( m_editor, KPIMIdentities::Signature::End );
+  Message::SignatureController *signatureController = new Message::SignatureController( this );
+  signatureController->setEditor( m_editor );
+  signatureController->setIdentityCombo( m_identityCombo );
+  signatureController->applyCurrentSignature();
 }
 
 #include "composerview.moc"
