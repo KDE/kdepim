@@ -1023,7 +1023,9 @@ AddressesDialog::filterChanged( const QString& txt )
   }
   if ( !showAll ) {
     if ( distlistVisible == 0 ) {
-      d->topdist->setVisible( false );
+      if ( d->topdist ) {
+        d->topdist->setVisible( false );
+      }
     } else {
       QPtrListIterator<AddresseeViewItem> it( d->dists );
       for ( ; it.current(); ++it ) {
