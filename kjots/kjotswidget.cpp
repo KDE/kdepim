@@ -335,7 +335,7 @@ KJotsWidget::KJotsWidget( QWidget * parent, KXMLGUIClient *xmlGuiClient, Qt::Win
 
   // "Add bookmark" and "make text bold" actions have conflicting shortcuts (ctrl + b)
   // Make add_bookmark use ctrl+shift+b to resolve that.
-  QAction *bm_action = actionCollection->action("bookmark_add");
+  QAction *bm_action = actionCollection->action("add_bookmark");
   bm_action->setShortcuts( QList<QKeySequence>() << ( QKeySequence( Qt::CTRL + Qt::SHIFT + Qt::Key_B ) ) );
 
   KStandardAction::find( this, SLOT( onShowSearch() ), actionCollection );
