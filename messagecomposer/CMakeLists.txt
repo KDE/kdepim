@@ -35,6 +35,7 @@ set( messagecomposer_src
      skeletonmessagejob.cpp
 
      kmeditor.cpp
+     inserttextfilejob.cpp
      signaturecontroller.cpp
 )
 
