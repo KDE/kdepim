@@ -47,7 +47,7 @@ ComposerView::ComposerView(QWidget* parent) :
   m_identityCombo( 0 ),
   m_editor( 0 )
 {
-  setWindowTitle( i18n( "New mail" ) );
+  setSubject( QString() );
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
@@ -79,6 +79,7 @@ void ComposerView::send()
   Message::Composer* composer = new Message::Composer( this );
   composer->globalPart()->setCharsets( QList<QByteArray>() << "utf-8" );
   composer->globalPart()->setParentWidgetForGui( this );
+  composer->infoPart()->setSubject( subject() );
   composer->infoPart()->setTo( QStringList() << "volker@kdab.com" );
   composer->infoPart()->setFrom( "volker@kdab.com" );
   m_editor->fillComposerTextPart( composer->textPart() );
@@ -107,6 +108,22 @@ void ComposerView::composerResult ( KJob* job )
 void ComposerView::sendResult ( KJob* job )
 {
   kDebug() << job->error() << job->errorText();
+  if ( !job->error() )
+    deleteLater();
+}
+
+QString ComposerView::subject() const
+{
+  return m_subject;
+}
+
+void ComposerView::setSubject ( const QString& subject )
+{
+  m_subject = subject;
+  if ( !subject.isEmpty() )
+    setWindowTitle( subject );
+  else
+    setWindowTitle( i18n( "New mail" ) );
 }
 
 #include "composerview.moc"

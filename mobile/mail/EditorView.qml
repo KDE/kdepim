@@ -52,6 +52,8 @@ Item {
     }
   }
 
+  Binding { target: window; property: "subject"; value: subjectInput.text }
+
   MessageComposer.Editor {
     id: messageContent
     anchors {

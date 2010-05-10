@@ -38,11 +38,16 @@ namespace Message
 class ComposerView : public KDeclarativeFullScreenView
 {
   Q_OBJECT
+  Q_PROPERTY( QString subject READ subject WRITE setSubject )
+
   public:
     explicit ComposerView(QWidget* parent = 0);
 
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_identityCombo = combo; }
     void setEditor( Message::KMeditor* editor ) { m_editor = editor; }
+
+    QString subject() const;
+    void setSubject( const QString &subject );
 
   public slots:
     /// Send clicked in the user interface
@@ -56,6 +61,7 @@ class ComposerView : public KDeclarativeFullScreenView
   private:
     KPIMIdentities::IdentityCombo *m_identityCombo;
     Message::KMeditor *m_editor;
+    QString m_subject;
 };
 
 #endif
