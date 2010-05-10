@@ -1527,7 +1527,7 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
   resetStateForNewMessage();
 
   mMessage = aMsg;
-  Akonadi::Item item(42 /* we want .isValid() to succeed */ );
+  Akonadi::Item item;
   item.setPayload( mMessage );
   mMessageItem = item;
 
