@@ -505,7 +505,7 @@ EditorAttachments::EditorAttachments( int spacing, QWidget *parent )
                                       "&Remove" ), this );
   connect( mDeleteAction, SIGNAL(triggered(bool)), this, SLOT(slotRemove()) );
   ac->addAction( "remove", mDeleteAction );
-  mDeleteAction->setShortcut(
+  mDeleteAction->setShortcut( Qt::Key_Delete );
   mPopupMenu->addAction( mDeleteAction );
   mPopupMenu->addSeparator();
 
