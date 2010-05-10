@@ -40,6 +40,7 @@ qint64 KCalItemBrowserItem::itemId() const
 void KCalItemBrowserItem::setItemId(qint64 id)
 {
   m_viewer->setItem( Akonadi::Item( id ) );
+  emit attachmentModelChanged();
 }
 
 QString KCalItemBrowserItem::itemPath() const
@@ -51,6 +52,12 @@ void KCalItemBrowserItem::setItemPath(const QString& messagePath)
 {
   m_viewer->setItemPath( messagePath );
 }
+
+QObject* KCalItemBrowserItem::attachmentModel() const
+{
+  return m_viewer->attachmentModel();
+}
+
 
 
 #include "kcalitembrowseritem.moc"

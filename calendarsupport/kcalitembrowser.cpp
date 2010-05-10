@@ -31,7 +31,7 @@ typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 using namespace Akonadi;
 
 KCalItemBrowser::KCalItemBrowser( QWidget* parent )
-    : ItemBrowser( parent ), d( 0 )
+    : ItemBrowser( parent ), d( 0 ), mAttachmentModel( 0 )
 {
   fetchScope().fetchFullPayload();
 }
@@ -57,6 +57,7 @@ QString KCalItemBrowser::itemToRichText( const Item& item )
         return QString();
     }
 
+    mAttachmentModel->setItem( item );
     IncidencePtr incidence = item.payload<IncidencePtr>();
     QString headerData;
     if ( !mItemPath.isEmpty() )
@@ -64,5 +65,14 @@ QString KCalItemBrowser::itemToRichText( const Item& item )
       headerData += "<table><tr><td>" + mItemPath + "</td></tr></table>";
     }
     return headerData + KCal::IncidenceFormatter::extensiveDisplayStr( incidence.get(), KDateTime::Spec() );
+}
+
+QAbstractItemModel* KCalItemBrowser::attachmentModel() const
+{
+  if ( !mAttachmentModel )
+  {
+    mAttachmentModel = new IncidenceAttachmentModel( const_cast<KCalItemBrowser *>( this ) );
+  }
+  return mAttachmentModel;
 }
 

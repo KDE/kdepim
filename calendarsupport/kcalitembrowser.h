@@ -23,6 +23,8 @@
 #include "akonadi-kcal_next_export.h"
 #include "itembrowser.h"
 
+#include <akonadi_next/incidenceattachmentmodel.h>
+
 namespace Akonadi {
 class Item;
 
@@ -35,6 +37,8 @@ class AKONADI_KCAL_NEXT_EXPORT KCalItemBrowser : public ItemBrowser
     QString itemPath() const;
     void setItemPath( const QString &path );
 
+    QAbstractItemModel* attachmentModel() const;
+
   protected:
     virtual QString itemToRichText( const Item &item );
 
@@ -43,6 +47,7 @@ class AKONADI_KCAL_NEXT_EXPORT KCalItemBrowser : public ItemBrowser
     Private* const d;
 
     QString mItemPath;
+    mutable IncidenceAttachmentModel *mAttachmentModel;
 
     Q_DISABLE_COPY( KCalItemBrowser )
 };
