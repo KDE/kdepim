@@ -94,5 +94,6 @@ Item {
     buttonText: KDE.i18n( "Send" )
     height: parent.height / 6
     width: parent.width / 4
+    onClicked: window.send()
   }
 }

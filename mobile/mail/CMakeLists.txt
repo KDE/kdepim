@@ -6,6 +6,7 @@ add_subdirectory(tests)
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/akonadi/
+  ${CMAKE_SOURCE_DIR}/libkleo/
 )
 
 set(kmail_mobile_srcs

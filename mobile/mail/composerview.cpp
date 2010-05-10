@@ -25,8 +25,14 @@
 #include <kpimidentities/identity.h>
 #include <kpimidentities/identitycombo.h>
 #include <kpimidentities/identitymanager.h>
+#include <mailtransport/messagequeuejob.h>
+#include <mailtransport/transportmanager.h>
 #include <messagecomposer/kmeditor.h>
 #include <messagecomposer/signaturecontroller.h>
+#include <messagecomposer/composer.h>
+#include <messagecomposer/globalpart.h>
+#include <messagecomposer/infopart.h>
+#include <messagecomposer/textpart.h>
 
 #include <klocalizedstring.h>
 #include <KDebug>
@@ -64,6 +70,49 @@ void ComposerView::qmlLoaded ( QDeclarativeView::Status status )
   signatureController->setEditor( m_editor );
   signatureController->setIdentityCombo( m_identityCombo );
   signatureController->applyCurrentSignature();
+}
+
+void ComposerView::send()
+{
+  kDebug();
+  // ### temporary, more code can be shared with kmail here
+  Message::Composer* composer = new Message::Composer( this );
+  composer->globalPart()->setCharsets( QList<QByteArray>() << "utf-8" );
+  composer->globalPart()->setParentWidgetForGui( this );
+  composer->infoPart()->setTo( QStringList() << "volker@kdab.com" );
+  composer->infoPart()->setFrom( "volker@kdab.com" );
+  composer->textPart()->setCleanPlainText( m_editor->toCleanPlainText() );
+  composer->textPart()->setWrappedPlainText( m_editor->toWrappedPlainText() );
+  if( m_editor->isFormattingUsed() ) {
+    composer->textPart()->setCleanHtml( m_editor->toCleanHtml() );
+    composer->textPart()->setEmbeddedImages( m_editor->embeddedImages() );
+  }
+
+  connect( composer, SIGNAL(result(KJob*)), SLOT(composerResult(KJob*)) );
+  composer->start();
+}
+
+void ComposerView::composerResult ( KJob* job )
+{
+  kDebug() << job->error() << job->errorText();
+  if ( !job->error() ) {
+    Message::Composer *composer = qobject_cast<Message::Composer*>( job );
+    Q_ASSERT( composer );
+    const Message::InfoPart *infoPart = composer->infoPart();
+    MailTransport::MessageQueueJob *qjob = new MailTransport::MessageQueueJob( this );
+    qjob->transportAttribute().setTransportId( MailTransport::TransportManager::self()->defaultTransportId() );
+    qjob->setMessage( KMime::Message::Ptr( composer->resultMessages().first() ) ); // ### dangerous API, fix that in Composer
+    qjob->addressAttribute().setTo( infoPart->to() );
+    qjob->addressAttribute().setCc( infoPart->cc() );
+    qjob->addressAttribute().setBcc( infoPart->bcc() );
+    connect( qjob, SIGNAL(result(KJob*)), SLOT(sendResult(KJob*)) );
+    qjob->start();
+  }
+}
+
+void ComposerView::sendResult ( KJob* job )
+{
+  kDebug() << job->error() << job->errorText();
 }
 
 #include "composerview.moc"

@@ -22,6 +22,8 @@
 
 #include "kdeclarativefullscreenview.h"
 
+class KJob;
+
 namespace KPIMIdentities
 {
   class IdentityCombo;
@@ -42,8 +44,14 @@ class ComposerView : public KDeclarativeFullScreenView
     void setIdentityCombo( KPIMIdentities::IdentityCombo* combo ) { m_identityCombo = combo; }
     void setEditor( Message::KMeditor* editor ) { m_editor = editor; }
 
+  public slots:
+    /// Send clicked in the user interface
+    void send();
+
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
+    void composerResult( KJob* job );
+    void sendResult( KJob* job );
 
   private:
     KPIMIdentities::IdentityCombo *m_identityCombo;
