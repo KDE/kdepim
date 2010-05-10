@@ -200,7 +200,6 @@ void FindBar::closeBar()
   // Make sure that all old searches are cleared
   m_search->setText( QString() );
   clearSelections();
-  setFoundMatch( false );
   hide();
 }
 
