@@ -3,29 +3,20 @@ Friday, May 7th 2010
 Problems addressed
 ------------------
 
-* kolab/issue4316: Pressing Cancel in Recurrence dialog does not discard changes
 * kolab/issue4315: Add attachment for event/task: Store inline should be set by default
 * kolab/issue4314: Can't open attachment of an invitation mail (rt#6109)
 * kolab/issue4317: Open invitation window closes, if an attachment is opened (rt#6111)
 * kolab/issue4256: Event attendees tab, Select Addressee.. Enter Filter, empty topics are shown. (rt#6081)
 * kolab/issue3882: Composer: Pressing TAB in the address completion popup list doesn't change to the next addressbook
-* kolab/issue4340: event edit dialog: Selected attachment should be deleted with shortcut "Remove"/German "Entf" (rt#6124)
 * kolab/issue4338: Toggle alarm "on" should create a 15 mins for start alarm. (rt#6131)
-* kolab/issue4307: D'n'D a contact to calendar/todo sidebar icon added an empty attachment
 * kolab/issue4119: Enter a distribution list as attendee into an event, should expand the members of the dist list into 
                    the attendee field (rt#6027)
-* kolab/issue4348: create an invitation for someone else (not organizer, not attendee) (rt#6138)
 * kolab/issue4349: Wish: remove standard event icon in the agenda view (rt#6139)
 * kolab/issue4363: An event with one attendee doesn't display the organizer in preview pane
-* kolab/issue4264: Advanced alarm dialog of an event/a todo: Change German "Hinzufügen" into "Neu" (rt#6087)
 * kolab/issue4339: Small translation improvement: German "Kalender/Termin(iCS.." should be "Termin/Kalender (ICS.." (rt#6122)
-* kolab/issue2762: Sometimes whole day events overlap in the view. (rt#5936)
 * kolab/issue4331: email addresses with comma or special characters should be displayed with quotes in the mail headers (rt#6128)
-* kolab/issue4360: Todo with attendee is changed by the attendee, but the text of the update mail is wrong (rt#6149)
-* kolab/issue4332: event update mail which really is an invitation (rt#6125)
 * kolab/issue3999: Kontact sometimes changes from mail part to the calendar part
-* kolab/issue4093: In "enterprise" mail header CC and BCC addresses are displayed under the TO field (rt#5996)
-* kolab/issue4359: Invitation, canceled at the resource dialog, but organizer gets accept mail (rt#6147)
+* kolab/issue4093(partly): In "enterprise" mail header CC and BCC addresses are displayed under the TO field (rt#5996)
 * kolab/issue4351: Reminder: Focus after pressing remind me later, should be on the next event (rt#6141)
 * kolab/issue4350: Sometimes the date headers in the agenda view are grainy and doubled (rt#6140)
 * Add support for alias email addresses in the identity configuration
