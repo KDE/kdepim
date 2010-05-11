@@ -78,6 +78,8 @@ class KOTodoView : public BaseView
 
     bool usesFullWindow();
 
+    virtual KOrg::CalPrinterBase::PrintType printType();
+
   public Q_SLOTS:
     virtual void setIncidenceChanger( IncidenceChangerBase *changer );
     virtual void showDates( const QDate &start, const QDate &end );

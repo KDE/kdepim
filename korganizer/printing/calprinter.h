@@ -105,7 +105,7 @@ class CalPrintDialog : public KDialog
 {
   Q_OBJECT
   public:
-    explicit CalPrintDialog( KOrg::PrintPlugin::List plugins, QWidget *parent = 0, bool mUniqItem = false );
+    explicit CalPrintDialog( int initialPrintType, KOrg::PrintPlugin::List plugins, QWidget *parent = 0, bool mUniqItem = false );
     virtual ~CalPrintDialog();
     KOrg::PrintPlugin *selectedPlugin();
     void setOrientation( CalPrinter::ePrintOrientation orientation );

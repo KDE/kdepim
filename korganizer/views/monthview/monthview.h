@@ -69,6 +69,8 @@ class MonthView : public KOEventView
 
     bool usesFullWindow();
 
+    virtual CalPrinterBase::PrintType printType();
+
   public slots:
     virtual void updateView();
 

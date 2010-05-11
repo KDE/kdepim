@@ -58,6 +58,7 @@ class KOTimeSpentView : public KOrg::BaseView
     virtual void showIncidences( const Incidence::List &incidenceList, const QDate &date );
 
     void changeIncidenceDisplay( Incidence *, int );
+    virtual KOrg::CalPrinterBase::PrintType printType();
 
   private:
     TimeSpentWidget *mView;

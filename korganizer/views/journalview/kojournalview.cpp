@@ -213,4 +213,9 @@ void KOJournalView::getHighlightMode( bool &highlightEvents,
   highlightEvents   = !highlightJournals;
 }
 
+CalPrinterBase::PrintType KOJournalView::printType()
+{
+  return CalPrinterBase::Journallist;
+}
+
 #include "kojournalview.moc"
