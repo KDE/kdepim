@@ -51,6 +51,7 @@ class Message::ComposerPrivate : public JobBasePrivate
       , finished( false )
       , sign( false )
       , encrypt( false )
+      , noCrypto( false )
       , globalPart( 0 )
       , infoPart( 0 )
       , textPart( 0 )
@@ -77,6 +78,7 @@ class Message::ComposerPrivate : public JobBasePrivate
     bool finished;
     bool sign;
     bool encrypt;
+    bool noCrypto;
 
     Kleo::CryptoMessageFormat format;
     std::vector<GpgME::Key> signers;
@@ -162,7 +164,7 @@ void ComposerPrivate::composeStep2()
     while( iter.hasNext() ) {
       AttachmentPart::Ptr part = iter.next();
       kDebug() << "Checking attachment crypto policy..." << part->isSigned() << part->isEncrypted();
-      if( sign != part->isSigned() || encrypt != part->isEncrypted() ) { // different policy
+      if( !noCrypto && ( sign != part->isSigned() || encrypt != part->isEncrypted() ) ) { // different policy
         kDebug() << "got attachment with different crypto policy!";
         lateAttachmentParts.append( part );
         iter.remove();
@@ -568,6 +570,13 @@ void Composer::setEncryptionKeys( QList<QPair<QStringList, std::vector<GpgME::Ke
   Q_D( Composer );
 
   d->encData = encData;
+}
+
+void Composer::setNoCrypto(bool noCrypto)
+{
+  Q_D( Composer );
+
+  d->noCrypto = noCrypto;
 }
 
     
