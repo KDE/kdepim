@@ -25,7 +25,12 @@
 #ifndef INCIDENCEGENERALEDITOR_H
 #define INCIDENCEGENERALEDITOR_H
 
+#include <QtCore/QDateTime>
 #include <QtGui/QWidget>
+
+#include <KDateTime>
+
+class QDateTime;
 
 namespace KCal {
 class ICalTimeZones;
@@ -40,17 +45,43 @@ class IncidenceGeneralEditor : public QWidget
   Q_OBJECT
   public:
     ~IncidenceGeneralEditor();
-  
+
+  public slots:
+    void setDuration();
+
+  signals:
+    void dateTimeStrChanged( const QString &dateTimeStr );
+    
   protected: /// Methods
+    enum Mode {
+      Event,
+      Todo
+    };
+    
     /**
      * Disable creation of plain IncidenceGeneralEditor widgets. Use one of the
      * sub-classes instead.
      */
-    explicit IncidenceGeneralEditor( QWidget *parent = 0 );
+    explicit IncidenceGeneralEditor( Mode mode, QWidget *parent = 0 );
+
+  private slots:
+    void emitDateTimeStr();
+    void setTimeEditorsEnabled( bool enabled );
 
   protected: /// Members
-    KCal::ICalTimeZones *mTimeZones;
+    KCal::ICalTimeZones  *mTimeZones;
     Ui::IncidenceGeneral *mUi;
+
+  private: /// Members
+    Mode mMode;
+    
+    // current start and end date and time
+    QDateTime mCurrStartDateTime;
+    QDateTime mCurrEndDateTime;
+
+    // specs
+    KDateTime::Spec mStartSpec;
+    KDateTime::Spec mEndSpec;
 };
 
 class EventGeneralEditor : public IncidenceGeneralEditor
@@ -59,8 +90,12 @@ class EventGeneralEditor : public IncidenceGeneralEditor
   public:
     explicit EventGeneralEditor( QWidget *parent = 0 );
 
+  signals:
+    void allDayChanged( bool changed );
 
-  private:
+
+  private slots:
+    virtual void slotHasTimeCheckboxToggled( bool checked );
 
 };
 
@@ -69,7 +104,6 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
   Q_OBJECT
   public:
     explicit TodoGeneralEditor( QWidget *parent = 0 );
-
 
   private:
 
