@@ -172,6 +172,7 @@ class AgendaView::Private : public Akonadi::Calendar::CalendarObserver
     TimeLabelsZone *mTimeLabelsZone;
 
     DateList mSelectedDates;  // List of dates to be displayed
+    DateList mSaveSelectedDates; // Save the list of dates between updateViews
     int mViewType;
     EventIndicator *mEventIndicatorTop;
     EventIndicator *mEventIndicatorBottom;
@@ -321,7 +322,7 @@ AgendaView::AgendaView( QWidget *parent, bool isSideBySide )
   dummyAllDayLeft->setFixedWidth( d->mTimeLabelsZone->timeLabelsWidth() -
                                   d->mTimeBarHeaderFrame->width() );
 
-  createDayLabels();
+  createDayLabels( true );
 
   /* Connect the agendas */
 
@@ -559,11 +560,15 @@ void AgendaView::placeDecorationsFrame( KHBox *frame, bool decorationsFound, boo
   }
 }
 
-void AgendaView::createDayLabels()
+void AgendaView::createDayLabels( bool force )
 {
-  // ### Before deleting and recreating we could check if mSelectedDates changed...
-  // It would remove some flickering and gain speed (since this is called by
-  // each updateView() call)
+  // Check if mSelectedDates has changed, if not just return
+  // Removes some flickering and gains speed (since this is called by each updateView())
+  if ( !force && d->mSaveSelectedDates == d->mSelectedDates ) {
+    return;
+  }
+  d->mSaveSelectedDates = d->mSelectedDates;
+
   delete d->mTopDayLabels;
   delete d->mBottomDayLabels;
 
@@ -740,7 +745,7 @@ void AgendaView::updateConfig()
 
   setHolidayMasks();
 
-  createDayLabels();
+  createDayLabels( true );
 
   updateView();
 }
@@ -1385,7 +1390,7 @@ void AgendaView::fillAgenda()
   d->mEventIndicatorTop->changeColumns( d->mSelectedDates.count() );
   d->mEventIndicatorBottom->changeColumns( d->mSelectedDates.count() );
 
-  createDayLabels();
+  createDayLabels( false );
   setHolidayMasks();
 
   d->mMinY.resize( d->mSelectedDates.count() );
