@@ -37,7 +37,18 @@ set( messagecomposer_src
      kmeditor.cpp
      inserttextfilejob.cpp
      signaturecontroller.cpp
+     composerlineedit.cpp
 )
+
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(WARN_TOOMANY_RECIPIENTS_DEFAULT true)
+  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT true)
+else(KDEPIM_ENTERPRISE_BUILD)
+  set(WARN_TOOMANY_RECIPIENTS_DEFAULT false)
+  set(ALLOW_SEMICOLON_AS_ADDRESS_SEPARATOR_DEFAULT false)
+endif(KDEPIM_ENTERPRISE_BUILD)
+
+configure_file(messagecomposer.kcfg.cmake ${CMAKE_CURRENT_BINARY_DIR}/messagecomposer.kcfg)
 
 kde4_add_kcfg_files(messagecomposer_src
   messagecomposersettings_base.kcfgc 

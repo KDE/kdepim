@@ -1,5 +1,7 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+  Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+
+  Based on kmail/kmlineeditspell.h/cpp
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -17,21 +19,22 @@
   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef __KMAIL_KMLINEEDITSPELL_H__
-#define __KMAIL_KMLINEEDITSPELL_H__
+#ifndef MESSAGECOMPOSER_COMPOSERLINEEDIT_H
+#define MESSAGECOMPOSER_COMPOSERLINEEDIT_H
 
+#include "messagecomposer_export.h"
 #include <libkdepim/addresseelineedit.h>
-#include <QKeyEvent>
-#include <QMenu>
-#include <QDropEvent>
 
-class KMLineEdit : public KPIM::AddresseeLineEdit
+namespace MessageComposer {
+
+class MESSAGECOMPOSER_EXPORT ComposerLineEdit : public KPIM::AddresseeLineEdit
 {
   Q_OBJECT
 
   public:
-    explicit KMLineEdit( bool useCompletion, QWidget *parent = 0,
-                         const char *name = 0 );
+    explicit ComposerLineEdit( bool useCompletion, QWidget *parent = 0 );
+
+    void setRecentAddressConfig( KConfig* config );
 
   signals:
     void focusUp();
@@ -52,6 +55,11 @@ class KMLineEdit : public KPIM::AddresseeLineEdit
   private:
     void dropEvent( QDropEvent *event );
     void insertEmails( const QStringList & emails );
+
+  private:
+    KConfig* m_recentAddressConfig;
 };
 
-#endif // __KMAIL_KMLINEEDITSPELL_H__
+}
+
+#endif

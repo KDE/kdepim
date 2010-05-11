@@ -1,5 +1,7 @@
 /* -*- mode: C++; c-file-style: "gnu" -*-
-  This file is part of KMail, the KDE mail client.
+  Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+
+  Based on kmail/kmlineeditspell.h/cpp
   Copyright (c) 1997 Markus Wuebben <markus.wuebben@kde.org>
 
   This program is free software; you can redistribute it and/or modify
@@ -18,13 +20,11 @@
 */
 
 
-#include "kmlineeditspell.h"
+#include "composerlineedit.h"
 
 #include "recentaddresses.h"
-#include "kmkernel.h"
-#include "globalsettings.h"
+#include "messagecomposersettings.h"
 #include "messageviewer/autoqpointer.h"
-#include "stringutil.h"
 
 #include <messagecore/stringutil.h>
 
@@ -39,24 +39,23 @@
 #include <kcompletionbox.h>
 #include <klocale.h>
 
-#include <QEvent>
 #include <QFile>
 #include <QCursor>
 #include <QKeyEvent>
 #include <QDropEvent>
 
+using namespace MessageComposer;
 
-KMLineEdit::KMLineEdit(bool useCompletion,
-                       QWidget *parent, const char *name)
-    : KPIM::AddresseeLineEdit(parent,useCompletion)
+ComposerLineEdit::ComposerLineEdit(bool useCompletion, QWidget *parent)
+    : KPIM::AddresseeLineEdit(parent, useCompletion),
+    m_recentAddressConfig( MessageComposerSettings::self()->config() )
 {
-  setObjectName( name );
-  allowSemicolonAsSeparator( GlobalSettings::allowSemicolonAsAddressSeparator() );
+  allowSemicolonAsSeparator( MessageComposerSettings::allowSemicolonAsAddressSeparator() );
 }
 
 
 //-----------------------------------------------------------------------------
-void KMLineEdit::keyPressEvent(QKeyEvent *e)
+void ComposerLineEdit::keyPressEvent(QKeyEvent *e)
 {
   if ((e->key() == Qt::Key_Enter || e->key() == Qt::Key_Return) &&
       !completionBox()->isVisible())
@@ -79,14 +78,14 @@ void KMLineEdit::keyPressEvent(QKeyEvent *e)
 }
 
 
-void KMLineEdit::insertEmails( const QStringList & emails )
+void ComposerLineEdit::insertEmails( const QStringList & emails )
 {
   if ( emails.empty() )
     return;
 
   QString contents = text();
   if ( !contents.isEmpty() )
-    contents += ',';
+    contents += QLatin1Char(',');
   // only one address, don't need kpopup to choose
   if ( emails.size() == 1 ) {
     setText( contents + emails.front() );
@@ -94,7 +93,7 @@ void KMLineEdit::insertEmails( const QStringList & emails )
   }
   //multiple emails, let the user choose one
   KMenu menu( this );
-  menu.setObjectName( "Addresschooser" );
+  menu.setObjectName( QLatin1String("Addresschooser") );
   for ( QStringList::const_iterator it = emails.begin(), end = emails.end() ; it != end; ++it )
     menu.addAction( *it );
   const QAction *result = menu.exec( QCursor::pos() );
@@ -103,7 +102,7 @@ void KMLineEdit::insertEmails( const QStringList & emails )
   setText( contents + KGlobal::locale()->removeAcceleratorMarker( result->text() ) );
 }
 
-void KMLineEdit::dropEvent(QDropEvent *event)
+void ComposerLineEdit::dropEvent(QDropEvent *event)
 {
   const QMimeData *md = event->mimeData();
 
@@ -130,7 +129,7 @@ void KMLineEdit::dropEvent(QDropEvent *event)
 
       // First, let's deal with mailto Urls. The path() part contains the
       // email-address.
-      if ( url.protocol() == "mailto" ) {
+      if ( url.protocol() == QLatin1String("mailto") ) {
         KABC::Addressee addressee;
         addressee.insertEmail( KPIMUtils::decodeMailtoUrl( url ), true /* preferred */ );
         list += addressee;
@@ -166,7 +165,7 @@ void KMLineEdit::dropEvent(QDropEvent *event)
   }
 }
 
-void KMLineEdit::contextMenuEvent( QContextMenuEvent*e )
+void ComposerLineEdit::contextMenuEvent( QContextMenuEvent*e )
 {
    QMenu *popup = createStandardContextMenu();
    popup->addSeparator();
@@ -176,50 +175,54 @@ void KMLineEdit::contextMenuEvent( QContextMenuEvent*e )
    delete popup;
 }
 
-void KMLineEdit::editRecentAddresses()
+void ComposerLineEdit::editRecentAddresses()
 {
   MessageViewer::AutoQPointer<KPIM::RecentAddressDialog> dlg( new KPIM::RecentAddressDialog( this ) );
-  dlg->setAddresses( KPIM::RecentAddresses::self( KMKernel::config().data() )->addresses() );
+  dlg->setAddresses( KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses() );
   if ( dlg->exec() && dlg ) {
-    KPIM::RecentAddresses::self( KMKernel::config().data() )->clear();
+    KPIM::RecentAddresses::self( m_recentAddressConfig )->clear();
     const QStringList addrList = dlg->addresses();
     for ( QStringList::const_iterator it = addrList.begin(), end = addrList.end() ; it != end ; ++it )
-      KPIM::RecentAddresses::self( KMKernel::config().data() )->add( *it );
+      KPIM::RecentAddresses::self( MessageComposerSettings::self()->config() )->add( *it );
     loadContacts();
   }
 }
 
 
 //-----------------------------------------------------------------------------
-void KMLineEdit::loadContacts()
+void ComposerLineEdit::loadContacts()
 {
   //AddresseeLineEdit::loadContacts();
 
-  if ( GlobalSettings::self()->showRecentAddressesInComposer() ){
-    if ( KMKernel::self() ) {
-      QStringList recent =
-        KPIM::RecentAddresses::self( KMKernel::config().data() )->addresses();
-      QStringList::Iterator it = recent.begin();
-      QString name, email;
+  if ( MessageComposerSettings::self()->showRecentAddressesInComposer() ){
+    QStringList recent =
+      KPIM::RecentAddresses::self( m_recentAddressConfig )->addresses();
+    QStringList::Iterator it = recent.begin();
+    QString name, email;
 
-      KSharedConfig::Ptr config = KSharedConfig::openConfig( "kpimcompletionorder" );
-      KConfigGroup group( config, "CompletionWeights" );
-      int weight = group.readEntry( "Recent Addresses", 10 );
-      int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
-      for ( ; it != recent.end(); ++it ) {
-        KABC::Addressee addr;
-        KPIMUtils::extractEmailAddressAndName( *it, email, name );
-        name = KPIMUtils::quoteNameIfNecessary( name );
-        if ( ( name[0] == '"' ) && ( name[name.length() - 1] == '"' ) ) {
-          name.remove( 0, 1 );
-          name.truncate( name.length() - 1 );
-        }
-        addr.setNameFromString( name );
-        addr.insertEmail( email, true );
-        addContact( addr, weight, idx );
+    KSharedConfig::Ptr config = KSharedConfig::openConfig( QLatin1String("kpimcompletionorder") );
+    KConfigGroup group( config, "CompletionWeights" );
+    int weight = group.readEntry( "Recent Addresses", 10 );
+    int idx = addCompletionSource( i18n( "Recent Addresses" ), weight );
+    for ( ; it != recent.end(); ++it ) {
+      KABC::Addressee addr;
+      KPIMUtils::extractEmailAddressAndName( *it, email, name );
+      name = KPIMUtils::quoteNameIfNecessary( name );
+      if ( ( name[0] == QLatin1Char('"') ) && ( name[name.length() - 1] == QLatin1Char('"') ) ) {
+        name.remove( 0, 1 );
+        name.truncate( name.length() - 1 );
       }
+      addr.setNameFromString( name );
+      addr.insertEmail( email, true );
+      addContact( addr, weight, idx );
     }
   }
 }
 
-#include "kmlineeditspell.moc"
+void ComposerLineEdit::setRecentAddressConfig ( KConfig* config )
+{
+  m_recentAddressConfig = config;
+}
+
+
+#include "composerlineedit.moc"
