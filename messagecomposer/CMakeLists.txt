@@ -38,6 +38,7 @@ set( messagecomposer_src
      inserttextfilejob.cpp
      signaturecontroller.cpp
      composerlineedit.cpp
+     recipient.cpp
 )
 
 if(KDEPIM_ENTERPRISE_BUILD)
