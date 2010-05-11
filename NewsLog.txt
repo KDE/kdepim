@@ -6,7 +6,6 @@ Problems addressed
 * kolab/issue4315: Add attachment for event/task: Store inline should be set by default
 * kolab/issue4314: Can't open attachment of an invitation mail (rt#6109)
 * kolab/issue4317: Open invitation window closes, if an attachment is opened (rt#6111)
-* kolab/issue4256: Event attendees tab, Select Addressee.. Enter Filter, empty topics are shown. (rt#6081)
 * kolab/issue3882: Composer: Pressing TAB in the address completion popup list doesn't change to the next addressbook
 * kolab/issue4338: Toggle alarm "on" should create a 15 mins for start alarm. (rt#6131)
 * kolab/issue4119: Enter a distribution list as attendee into an event, should expand the members of the dist list into 
