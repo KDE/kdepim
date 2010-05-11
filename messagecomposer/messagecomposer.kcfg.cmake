@@ -74,6 +74,13 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Maximum number of recipient editor lines.</label>
       <default>200</default>
     </entry>
+    <entry name="SecondRecipientTypeDefault" type="Enum">
+      <choices>
+        <choice name="To"/>
+        <choice name="Cc"/>
+      </choices>
+      <default>To</default>
+    </entry>
 
   </group>
 
