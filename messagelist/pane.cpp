@@ -415,10 +415,9 @@ void Pane::setCurrentFolder( const Akonadi::Collection &col, bool preferEmptyTab
   Widget *w = static_cast<Widget*>( currentWidget() );
 
   if ( w ) {
-    QItemSelectionModel *s = new QItemSelectionModel( d->mModel, w );
+    QItemSelectionModel *s = d->mWidgetSelectionHash[w];
     MessageList::StorageModel *m = new MessageList::StorageModel( d->mModel, s, w );
     w->setStorageModel( m, preSelectionMode );
-    d->mWidgetSelectionHash[w] = s;
     if ( !overrideLabel.isEmpty() ) {
        int index = indexOf( w );
        setTabText( index, overrideLabel );
