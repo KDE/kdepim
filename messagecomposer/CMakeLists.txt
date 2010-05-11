@@ -40,6 +40,7 @@ set( messagecomposer_src
      composerlineedit.cpp
      recipient.cpp
      distributionlistdialog.cpp
+     recipientspicker.cpp
 )
 
 if(KDEPIM_ENTERPRISE_BUILD)

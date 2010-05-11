@@ -1,6 +1,6 @@
 /*
-    This file is part of KMail.
-
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    This file was part of KMail.
     Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -18,8 +18,8 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef RECIPIENTSPICKER_H
-#define RECIPIENTSPICKER_H
+#ifndef MESSAGECOMPOSER_RECIPIENTSPICKER_H
+#define MESSAGECOMPOSER_RECIPIENTSPICKER_H
 
 #include <messagecomposer/recipient.h>
 
@@ -34,7 +34,10 @@ namespace KLDAP {
 class LdapSearchDialog;
 }
 
-class RecipientsPicker : public KDialog
+namespace MessageComposer {
+
+// ### temporary export
+class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
 {
   Q_OBJECT
 
@@ -78,5 +81,7 @@ class RecipientsPicker : public KDialog
 
     Recipient::Type mDefaultType;
 };
+
+}
 
 #endif

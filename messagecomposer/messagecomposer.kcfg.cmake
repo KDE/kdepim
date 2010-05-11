@@ -70,6 +70,11 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <default>true</default>
     </entry>
 
+    <entry name="MaximumRecipients" type="Int">
+      <label>Maximum number of recipient editor lines.</label>
+      <default>200</default>
+    </entry>
+
   </group>
 
   <group name="sending mail">

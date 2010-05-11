@@ -1,6 +1,6 @@
 /*
-    This file is part of KMail.
-
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    This file was part of KMail.
     Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -21,16 +21,18 @@
 
 
 #include "recipientspicker.h"
-#include "globalsettings.h"
+#include "messagecomposersettings.h"
 
 #include <akonadi/contact/emailaddressselectionview.h>
 #include <kabc/contactgroup.h>
+#include <kldap/ldapsearchdialog.h>
+#include <kpimutils/email.h>
+
 #include <kconfiggroup.h>
 #include <khbox.h>
-#include <kldap/ldapsearchdialog.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kpimutils/email.h>
+#include <KLineEdit>
 
 #include <QBoxLayout>
 #include <QFormLayout>
@@ -43,11 +45,13 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
+using namespace MessageComposer;
+
 RecipientsPicker::RecipientsPicker( QWidget *parent )
   : KDialog( parent ),
     mLdapSearchDialog( 0 )
 {
-  setObjectName( "RecipientsPicker" );
+  setObjectName( QLatin1String("RecipientsPicker") );
   setWindowTitle( i18n( "Select Recipient" ) );
   setButtons( None );
 
@@ -72,7 +76,7 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
   connect( mSearchLDAPButton, SIGNAL( clicked() ), SLOT( slotSearchLDAP() ) );
   topLayout->addWidget( mSearchLDAPButton );
 
-  KConfig config( "kabldaprc" );
+  KConfig config( QLatin1String("kabldaprc") );
   KConfigGroup group = config.group( "LDAP" );
   int numHosts = group.readEntry( "NumSelectedHosts", 0 );
   if ( !numHosts )
@@ -161,13 +165,13 @@ void RecipientsPicker::pick( Recipient::Type type )
 
   const int count = selections.count();
 
-  if ( count > GlobalSettings::self()->maximumRecipients() ) {
+  if ( count > MessageComposerSettings::self()->maximumRecipients() ) {
     KMessageBox::sorry( this,
         i18np( "You selected 1 recipient. The maximum supported number of "
                "recipients is %2. Please adapt the selection.",
                "You selected %1 recipients. The maximum supported number of "
                "recipients is %2. Please adapt the selection.", count,
-               GlobalSettings::self()->maximumRecipients() ) );
+               MessageComposerSettings::self()->maximumRecipients() ) );
     return;
   }
 
