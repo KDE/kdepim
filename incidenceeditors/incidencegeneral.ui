@@ -420,7 +420,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
       <item row="0" column="0">
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="mStartLabel">
         <property name="text">
          <string>&amp;Start:</string>
         </property>
@@ -469,7 +469,7 @@
        </widget>
       </item>
       <item row="1" column="0">
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="mEndLabel">
         <property name="text">
          <string>&amp;End:</string>
         </property>
@@ -532,7 +532,7 @@
         <item>
          <widget class="QStackedWidget" name="mAlarmStack">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="page">
            <layout class="QHBoxLayout" name="horizontalLayout_5">

@@ -52,8 +52,13 @@ EventGeneralEditor::EventGeneralEditor( QWidget *parent )
   : IncidenceGeneralEditor( parent )
 {
   mUi->mTodoSpecifics->setVisible( false );
+  mUi->mStartCheck->setVisible( false );
+  mUi->mDueCheck->setVisible( false );
 }
 
 TodoGeneralEditor::TodoGeneralEditor( QWidget *parent )
   : IncidenceGeneralEditor( parent )
-{ }
+{
+  mUi->mStartLabel->setVisible( false );
+  mUi->mEndLabel->setVisible( false );
+}
