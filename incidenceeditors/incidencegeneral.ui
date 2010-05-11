@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>677</width>
-    <height>649</height>
+    <height>662</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -468,22 +468,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
-       <widget class="KComboBox" name="mTimeZoneComboStart">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_6">
         <property name="text">
@@ -530,23 +514,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
-       <widget class="KComboBox" name="mTimeZoneComboDue">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="0" colspan="5">
+      <item row="5" column="0" colspan="7">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="mAlarmBell">
@@ -701,7 +669,7 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0" colspan="5">
+      <item row="3" column="0" colspan="7">
        <widget class="QWidget" name="mRecurrenceSpecifics" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
@@ -734,7 +702,7 @@
         </layout>
        </widget>
       </item>
-      <item row="2" column="0" colspan="5">
+      <item row="2" column="0" colspan="7">
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
          <widget class="QCheckBox" name="mTimeCheck">
@@ -815,6 +783,32 @@
         </item>
        </layout>
       </item>
+      <item row="0" column="4" colspan="3">
+       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4" colspan="3">
+       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboDue2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -835,13 +829,16 @@
     </widget>
    </item>
    <item row="8" column="0" colspan="3">
-    <widget class="QWidget" name="mAttachmentPlaceHolder" native="true">
-     <zorder>mDescriptionEdit</zorder>
-    </widget>
+    <widget class="QWidget" name="mAttachmentPlaceHolder" native="true"/>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>KPIM::KTimeZoneComboBox</class>
+   <extends>KComboBox</extends>
+   <header>libkdepim/ktimezonecombobox.h</header>
+  </customwidget>
   <customwidget>
    <class>KPIM::KTimeEdit</class>
    <extends>QComboBox</extends>
@@ -914,38 +911,6 @@
     <hint type="destinationlabel">
      <x>268</x>
      <y>229</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mTimeCheck</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>mTimeZoneComboStart</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>100</x>
-     <y>262</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>423</x>
-     <y>202</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>mTimeCheck</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>mTimeZoneComboDue</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>41</x>
-     <y>261</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>387</x>
-     <y>231</y>
     </hint>
    </hints>
   </connection>
