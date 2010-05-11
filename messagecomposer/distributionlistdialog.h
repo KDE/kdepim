@@ -1,6 +1,6 @@
 /*
-    This file is part of KMail.
-
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    This file was part of KMail.
     Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -18,8 +18,8 @@
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
 */
-#ifndef DISTRIBUTIONLISTDIALOG_H
-#define DISTRIBUTIONLISTDIALOG_H
+#ifndef MESSAGECOMPOSER_DISTRIBUTIONLISTDIALOG_H
+#define MESSAGECOMPOSER_DISTRIBUTIONLISTDIALOG_H
 
 #include <messagecomposer/recipient.h>
 #include <kdialog.h>
@@ -28,7 +28,10 @@ class KJob;
 class KLineEdit;
 class QTreeWidget;
 
-class DistributionListDialog : public KDialog
+namespace MessageComposer {
+
+// ### temporary, remove export once RecipientEditors extraction is complete
+class MESSAGECOMPOSER_EXPORT DistributionListDialog : public KDialog
 {
   Q_OBJECT
   public:
@@ -47,5 +50,7 @@ class DistributionListDialog : public KDialog
     KLineEdit *mTitleEdit;
     QTreeWidget *mRecipientsList;
 };
+
+}
 
 #endif

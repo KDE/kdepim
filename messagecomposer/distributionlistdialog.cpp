@@ -1,6 +1,6 @@
 /*
-    This file is part of KMail.
-
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    This file was part of KMail.
     Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
 
     This library is free software; you can redistribute it and/or
@@ -39,8 +39,10 @@
 #include <QTreeWidgetItem>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
-#include "distributionlistdialog.moc"
 
+using namespace MessageComposer;
+
+namespace MessageComposer {
 class DistributionListItem : public QTreeWidgetItem
 {
   public:
@@ -90,6 +92,7 @@ class DistributionListItem : public QTreeWidgetItem
     QString mEmail;
     bool mIsTransient;
 };
+}
 
 
 DistributionListDialog::DistributionListDialog( QWidget *parent )
@@ -265,3 +268,5 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
 
   accept();
 }
+
+#include "distributionlistdialog.moc"

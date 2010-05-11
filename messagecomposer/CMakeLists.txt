@@ -39,6 +39,7 @@ set( messagecomposer_src
      signaturecontroller.cpp
      composerlineedit.cpp
      recipient.cpp
+     distributionlistdialog.cpp
 )
 
 if(KDEPIM_ENTERPRISE_BUILD)
