@@ -1,6 +1,6 @@
 /*
-    This file is part of KMail.
-
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    This file was part of KMail.
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -50,6 +50,8 @@
 
 #include <boost/bind.hpp>
 #include <algorithm>
+
+using namespace MessageComposer;
 
 RecipientComboBox::RecipientComboBox( QWidget *parent )
   : KComboBox( parent )
@@ -762,7 +764,7 @@ void SideWidget::setTotal( int recipients, int lines )
 
 void SideWidget::updateTotalToolTip()
 {
-  QString text = "<qt>";
+  QString text = QLatin1String( "<qt>" );
 
   QString to;
   QString cc;
@@ -771,7 +773,7 @@ void SideWidget::updateTotalToolTip()
   Recipient::List recipients = mView->recipients();
   Recipient::List::ConstIterator it;
   for( it = recipients.constBegin(); it != recipients.constEnd(); ++it ) {
-    QString emailLine = "&nbsp;&nbsp;" + Qt::escape( (*it).email() ) + "<br/>";
+    QString emailLine = QLatin1String("&nbsp;&nbsp;") + Qt::escape( (*it).email() ) + QLatin1String("<br/>");
     switch( (*it).type() ) {
       case Recipient::To:
         to += emailLine;
@@ -795,7 +797,7 @@ void SideWidget::updateTotalToolTip()
     text += i18nc("@info:tooltip %1 list of emails", "<interface>BCC:</interface><nl/>%1", bcc);
   }
 
-  text.append( "</qt>" );
+  text.append( QLatin1String("</qt>") );
   mTotalLabel->setToolTip( text );
 }
 
@@ -903,7 +905,7 @@ QString RecipientsEditor::recipientString( Recipient::Type type )
     Recipient::List::ConstIterator it;
     for( it = recipients.constBegin(); it != recipients.constEnd(); ++it ) {
       if ( (*it).type() == type ) {
-        if ( !str.isEmpty() ) str += ", ";
+        if ( !str.isEmpty() ) str += QLatin1String(", ");
         str.append( (*it).email() );
       }
     }

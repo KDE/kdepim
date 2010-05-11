@@ -26,7 +26,9 @@
 
 #include <QWidget>
 
+namespace MessageComposer {
 class RecipientsEditor;
+}
 
 class Composer : public QWidget
 {
@@ -36,9 +38,9 @@ class Composer : public QWidget
 
   public slots:
     void slotClose();
-    
+
   private:
-    RecipientsEditor *mRecipients;
+    MessageComposer::RecipientsEditor *mRecipients;
 };
 
 #endif

@@ -77,3 +77,10 @@ set(testkmeditorwin_SRCS testkmeditorwin.cpp )
 kde4_add_executable(testkmeditorwin TEST ${testkmeditorwin_SRCS})
 
 target_link_libraries(testkmeditorwin messagecomposer ${KDE4_KDEUI_LIBS} )
+
+
+########### recipientseditor test ###############
+
+set(recipienteditortest_SRCS recipientseditortest.cpp)
+kde4_add_executable(recipienteditortest TEST ${recipienteditortest_SRCS})
+target_link_libraries(recipienteditortest ${KDE4_KIO_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} kmailprivate kdepim)

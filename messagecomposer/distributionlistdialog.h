@@ -30,8 +30,7 @@ class QTreeWidget;
 
 namespace MessageComposer {
 
-// ### temporary, remove export once RecipientEditors extraction is complete
-class MESSAGECOMPOSER_EXPORT DistributionListDialog : public KDialog
+class DistributionListDialog : public KDialog
 {
   Q_OBJECT
   public:

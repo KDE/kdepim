@@ -1,6 +1,6 @@
 /*
-    This file is part of KMail.
-
+    Copyright (c) 2010 Volker Krause <vkrause@kde.org>
+    This file was part of KMail.
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -21,10 +21,10 @@
     with any edition of Qt, and distribute the resulting executable,
     without including the source code for Qt in the source distribution.
 */
-#ifndef RECIPIENTSEDITOR_H
-#define RECIPIENTSEDITOR_H
+#ifndef MESSAGECOMPOSER_RECIPIENTSEDITOR_H
+#define MESSAGECOMPOSER_RECIPIENTSEDITOR_H
 
-#include "kmail_export.h"
+#include "messagecomposer_export.h"
 
 #include <kcombobox.h>
 
@@ -37,7 +37,6 @@ class KWindowPositioner;
 
 class QLabel;
 class QPushButton;
-class SideWidget;
 
 namespace KMime {
   namespace Types {
@@ -46,8 +45,9 @@ namespace KMime {
 }
 
 namespace MessageComposer {
-  class RecipientsPicker;
-}
+
+class RecipientsPicker;
+class SideWidget;
 
 class RecipientComboBox : public KComboBox
 {
@@ -279,7 +279,7 @@ class SideWidget : public QWidget
     mutable KWindowPositioner *mPickerPositioner;
 };
 
-class KMAIL_EXPORT RecipientsEditor : public QWidget
+class MESSAGECOMPOSER_EXPORT RecipientsEditor : public QWidget
 {
     Q_OBJECT
   public:
@@ -360,5 +360,7 @@ class KMAIL_EXPORT RecipientsEditor : public QWidget
     SideWidget* mSideWidget;
     bool mModified;
 };
+
+}
 
 #endif

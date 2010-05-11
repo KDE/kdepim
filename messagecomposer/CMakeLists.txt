@@ -41,6 +41,8 @@ set( messagecomposer_src
      recipient.cpp
      distributionlistdialog.cpp
      recipientspicker.cpp
+     recipientseditor.cpp
+     kwindowpositioner.cpp
 )
 
 if(KDEPIM_ENTERPRISE_BUILD)

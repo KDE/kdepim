@@ -23,14 +23,14 @@
 */
 
 #include "recipientseditortest.h"
-#include "recipientseditor.h"
+#include <messagecomposer/recipientseditor.h>
 
 #include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
-#include "aboutdata.h"
+#include <kaboutdata.h>
 
 #include <QPushButton>
 #include <QLayout>
@@ -39,6 +39,8 @@
 #include <QTextEdit>
 #include <QGridLayout>
 
+using namespace MessageComposer;
+
 Composer::Composer( QWidget *parent )
   : QWidget( parent )
 {
@@ -46,7 +48,7 @@ Composer::Composer( QWidget *parent )
   topLayout->setMargin( 4 );
   topLayout->setSpacing( 4 );
 
-  QLabel *label = new QLabel( "From:", this );
+  QLabel *label = new QLabel( QLatin1String("From:"), this );
   topLayout->addWidget( label, 0, 0 );
   QLineEdit *edit = new QLineEdit( this );
   topLayout->addWidget( edit, 0, 1 );
@@ -62,7 +64,7 @@ Composer::Composer( QWidget *parent )
   topLayout->addWidget( editor, 2, 0, 1, 2 );
   topLayout->setRowStretch( 2, 1 );
 
-  QPushButton *button = new QPushButton( "&Close", this );
+  QPushButton *button = new QPushButton( QLatin1String("&Close"), this );
   topLayout->addWidget( button, 3, 0, 1, 2 );
   connect( button, SIGNAL( clicked() ), SLOT( slotClose() ) );
 }
