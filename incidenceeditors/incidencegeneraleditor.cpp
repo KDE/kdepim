@@ -21,6 +21,7 @@
 #include "incidencegeneraleditor.h"
 
 #include <KCal/Incidence>
+#include <KCal/ICalTimeZones>
 
 #include "ui_incidencegeneral.h"
 
@@ -28,6 +29,7 @@ using namespace KCal;
 
 IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   : QWidget( parent )
+  , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceGeneral )
 {
   mUi->setupUi( this );
@@ -35,7 +37,15 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   mUi->mRecurrenceEditButton->setIcon(
     KIconLoader::global()->loadIcon(
       "task-recurring", KIconLoader::Desktop, KIconLoader::SizeSmall ) );
+  mUi->mTimeZoneComboStart->setAdditionalTimeZones( mTimeZones );
+  mUi->mTimeZoneComboDue->setAdditionalTimeZones( mTimeZones );
   mUi->mSecrecyCombo->addItems( Incidence::secrecyList() );
+}
+
+IncidenceGeneralEditor::~IncidenceGeneralEditor()
+{
+  delete mTimeZones;
+  delete mUi;
 }
 
 EventGeneralEditor::EventGeneralEditor( QWidget *parent )

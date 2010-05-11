@@ -27,6 +27,10 @@
 
 #include <QtGui/QWidget>
 
+namespace KCal {
+class ICalTimeZones;
+}
+
 namespace Ui {
 class IncidenceGeneral;
 }
@@ -34,6 +38,9 @@ class IncidenceGeneral;
 class IncidenceGeneralEditor : public QWidget
 {
   Q_OBJECT
+  public:
+    ~IncidenceGeneralEditor();
+  
   protected: /// Methods
     /**
      * Disable creation of plain IncidenceGeneralEditor widgets. Use one of the
@@ -41,8 +48,8 @@ class IncidenceGeneralEditor : public QWidget
      */
     explicit IncidenceGeneralEditor( QWidget *parent = 0 );
 
-
   protected: /// Members
+    KCal::ICalTimeZones *mTimeZones;
     Ui::IncidenceGeneral *mUi;
 };
 

@@ -797,7 +797,7 @@
        </widget>
       </item>
       <item row="1" column="4" colspan="3">
-       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboDue2">
+       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboDue">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
