@@ -17,6 +17,7 @@ endif ()
 ########### next target ###############
 
 set( incidenceeditors_LIB_SRCS
+    incidencegeneraleditor.cpp
     autochecktreewidget.cpp
     categoryconfig.cpp
     categoryhierarchyreader.cpp
@@ -53,6 +54,7 @@ endif ()
 kde4_add_ui_files( incidenceeditors_LIB_SRCS
    categoryselectdialog_base.ui
    editoralarms_base.ui
+   incidencegeneral.ui
    template_management_dialog_base.ui
 )
 

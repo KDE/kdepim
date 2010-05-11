@@ -31,6 +31,7 @@
 #endif
 #include "editorgeneraltodo.h"
 #include "editorrecurrence.h"
+#include "incidencegeneraleditor.h"
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/incidencechanger.h>
@@ -121,6 +122,7 @@ void TodoEditor::setupGeneral()
 
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, i18nc( "@title:tab general to-do settings", "&General" ) );
+  mTabWidget->addTab( new TodoGeneralEditor( this ), "&New General" );
 
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
