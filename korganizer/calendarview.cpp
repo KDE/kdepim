@@ -1803,12 +1803,14 @@ void CalendarView::print()
 
   CalPrinter::PrintType printType = CalPrinter::Month;
 
+  Incidence::List selectedIncidences;
   if ( currentView ) {
     printType = currentView->printType();
+    selectedIncidences = currentView->selectedIncidences();
   }
 
   DateList tmpDateList = mDateNavigator->selectedDates();
-  mCalPrinter->print( printType, tmpDateList.first(), tmpDateList.last() );
+  mCalPrinter->print( printType, tmpDateList.first(), tmpDateList.last(), selectedIncidences );
 #endif
 }
 
@@ -1821,13 +1823,15 @@ void CalendarView::printPreview()
 
   CalPrinter::PrintType printType = CalPrinter::Month;
 
+  Incidence::List selectedIncidences;
   if ( currentView ) {
     printType = currentView->printType();
+    selectedIncidences = currentView->selectedIncidences();
   }
 
   DateList tmpDateList = mDateNavigator->selectedDates();
   mCalPrinter->print( printType, tmpDateList.first(), tmpDateList.last(),
-                      Incidence::List(), true );
+                      selectedIncidences, true );
 #endif
 }
 
