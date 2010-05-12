@@ -11,6 +11,7 @@ set( messagecomposer_src
      util.cpp
 
      attachmentmodel.cpp
+     attachmentfrompublickeyjob.cpp
 
      akonadisender.cpp
      messagehelper.cpp

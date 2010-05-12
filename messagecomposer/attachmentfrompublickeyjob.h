@@ -18,17 +18,19 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef KMAIL_ATTACHMENTFROMPUBLICKEY_H
-#define KMAIL_ATTACHMENTFROMPUBLICKEY_H
+#ifndef MESSAGE_ATTACHMENTFROMPUBLICKEY_H
+#define MESSAGE_ATTACHMENTFROMPUBLICKEY_H
 
 #include <messagecore/attachmentloadjob.h>
 
-namespace KMail {
+#include "messagecomposer_export.h"
+
+namespace Message {
 
 /**
 */
 // TODO I have no idea how to test this.  Have a fake keyring???
-class AttachmentFromPublicKeyJob : public KPIM::AttachmentLoadJob
+class MESSAGECOMPOSER_EXPORT AttachmentFromPublicKeyJob : public KPIM::AttachmentLoadJob
 {
   Q_OBJECT
 

@@ -33,10 +33,10 @@
 #include <kleo/exportjob.h>
 #include <libkleo/ui/progressdialog.h>
 
-using namespace KMail;
+using namespace Message;
 using namespace KPIM;
 
-class KMail::AttachmentFromPublicKeyJob::Private
+class Message::AttachmentFromPublicKeyJob::Private
 {
   public:
     Private( AttachmentFromPublicKeyJob *qq );
