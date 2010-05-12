@@ -25,10 +25,16 @@
 #ifndef INCIDENCEGENERALEDITOR_H
 #define INCIDENCEGENERALEDITOR_H
 
+#include <boost/shared_ptr.hpp>
+
 #include <QtCore/QDateTime>
 #include <QtGui/QWidget>
 
 #include <KDateTime>
+
+#include <KCal/Alarm>
+#include <KCal/Event>
+#include <KCal/Todo>
 
 class QDateTime;
 
@@ -62,20 +68,35 @@ class IncidenceGeneralEditor : public QWidget
      * sub-classes instead.
      */
     explicit IncidenceGeneralEditor( QWidget *parent = 0 );
-
+    
     void emitDateTimeStr();
-
-  private slots:
-    void enableRichTextDescription( bool enable );
+    void load( const KCal::Incidence::ConstPtr &incidence );
     
   protected slots:
     virtual void enableTimeEditors( bool enabled ) = 0;
     virtual void slotHasTimeCheckboxToggled( bool checked );
 
-  private:
+  protected:
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const = 0;
+
+  private slots:
+    void editAlarms();
+    void enableRichTextDescription( bool enable );
+    void updateAlarmWidgets();
+  
+  private: /// Methods
+    KCal::Alarm *alarmFromSimplePage() const;
     void initDescriptionToolBar();
-    
+
   protected: /// Members
+    enum AlarmStackPages {
+      SimpleAlarmPage,
+      AdvancedAlarmLabel
+    };
+
+    KCal::Incidence::ConstPtr mIncidence;
+    
+    KCal::Alarm::List     mAlarmList;
     KCal::ICalTimeZones  *mTimeZones;
     Ui::IncidenceGeneral *mUi;
 
@@ -94,6 +115,8 @@ class EventGeneralEditor : public IncidenceGeneralEditor
   public:
     explicit EventGeneralEditor( QWidget *parent = 0 );
 
+    void load( const KCal::Event::Ptr &event );
+
   signals:
     void allDayChanged( bool changed );
 
@@ -102,9 +125,11 @@ class EventGeneralEditor : public IncidenceGeneralEditor
     virtual void slotHasTimeCheckboxToggled( bool checked );
 
   private:
-    void initTextEditToolBar();
     void enableTimeEditors( bool enabled );
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
 
+  private:
+//     KCal::Todo::Ptr mEvent;
 };
 
 class TodoGeneralEditor : public IncidenceGeneralEditor
@@ -112,6 +137,8 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
   Q_OBJECT
   public:
     explicit TodoGeneralEditor( QWidget *parent = 0 );
+
+    void load( const KCal::Todo::Ptr &todo );
 
   private slots:
     void enableTimeEditors( bool enabled );
@@ -124,10 +151,11 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
                          QWidget *timeEdit,
                          KPIM::KTimeZoneComboBox *timeZoneCmb,
                          bool enable );
+    virtual bool setAlarmOffset( KCal::Alarm *alarm, int value ) const;
     
     
   private:
-
+//     KCal::Todo::Ptr mTodo;
 };
 
 #endif // INCIDENCEGENERALEDITOR_H

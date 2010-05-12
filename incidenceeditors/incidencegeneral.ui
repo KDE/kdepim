@@ -233,6 +233,9 @@
       </item>
       <item row="0" column="3">
        <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -302,6 +305,9 @@
       </item>
       <item row="1" column="3">
        <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -445,9 +451,9 @@
         <item>
          <widget class="QStackedWidget" name="mAlarmStack">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
-          <widget class="QWidget" name="page">
+          <widget class="QWidget" name="SimpleAlarmPage">
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QCheckBox" name="mAlarmButton">
@@ -492,7 +498,7 @@
                <number>99999</number>
               </property>
               <property name="value">
-               <number>1</number>
+               <number>15</number>
               </property>
              </widget>
             </item>
@@ -535,10 +541,10 @@
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="page_2">
+          <widget class="QWidget" name="AdvancedAlarmLabel">
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
-             <widget class="QLabel" name="label_10">
+             <widget class="QLabel" name="mAlarmInfoLabel">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -556,6 +562,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="mAlarmEditButton">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -915,12 +924,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>159</x>
-     <y>328</y>
+     <x>188</x>
+     <y>265</y>
     </hint>
     <hint type="destinationlabel">
-     <x>234</x>
-     <y>335</y>
+     <x>256</x>
+     <y>266</y>
     </hint>
    </hints>
   </connection>
@@ -931,12 +940,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>189</x>
-     <y>325</y>
+     <x>188</x>
+     <y>265</y>
     </hint>
     <hint type="destinationlabel">
-     <x>322</x>
-     <y>334</y>
+     <x>343</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>mAlarmButton</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>mAlarmEditButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>143</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>395</x>
+     <y>259</y>
     </hint>
    </hints>
   </connection>

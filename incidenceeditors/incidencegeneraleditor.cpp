@@ -26,9 +26,12 @@
 #include <KCal/Incidence>
 #include <KCal/ICalTimeZones>
 
+#include "editoralarms.h"
+#include "editorconfig.h"
 #include "ui_incidencegeneral.h"
 
 using namespace KCal;
+using namespace IncidenceEditors;
 
 IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   : QWidget( parent )
@@ -53,8 +56,71 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
                                              KRichTextWidget::SupportAlignment |
                                              KRichTextWidget::SupportFormatPainting );
 
-  initDescriptionToolBar(); 
+  initDescriptionToolBar();
+  
+  connect( mUi->mAlarmEditButton, SIGNAL(clicked()), SLOT(editAlarms()) );
   connect( mUi->mHasTimeCheckbox, SIGNAL(toggled(bool)), SLOT(slotHasTimeCheckboxToggled(bool)) );
+}
+
+void IncidenceGeneralEditor::load( const KCal::Incidence::ConstPtr &incidence )
+{
+  mIncidence = incidence;
+
+//   setSummary( incidence->summary() );
+//   mLocationEdit->setText( incidence->location() );
+//   setDescription( incidence->description(), incidence->descriptionIsRich() );
+// 
+//   switch( incidence->secrecy() ) {
+//   case Incidence::SecrecyPublic:
+//     mSecrecyCombo->setCurrentIndex( 0 );
+//     break;
+//   case Incidence::SecrecyPrivate:
+//     mSecrecyCombo->setCurrentIndex( 1 );
+//     break;
+//   case Incidence::SecrecyConfidential:
+//     mSecrecyCombo->setCurrentIndex( 2 );
+//     break;
+//   }
+// 
+//   // set up alarm stuff
+//   mAlarmList.clear();
+//   Alarm::List::ConstIterator it;
+//   Alarm::List alarms = incidence->alarms();
+//   for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
+//     Alarm *al = new Alarm( *(*it) );
+//     al->setParent( 0 );
+//     mAlarmList.append( al );
+//   }
+//   updateDefaultAlarmTime();
+//   updateAlarmWidgets();
+// 
+//   setCategories( incidence->categories() );
+// 
+//   mAttachments->readIncidence( incidence );
+}
+
+Alarm *IncidenceGeneralEditor::alarmFromSimplePage() const
+{
+  if ( mUi->mAlarmButton->isChecked() ) {
+    Alarm *alarm = new Alarm( 0 );
+    alarm->setDisplayAlarm( "" );
+    alarm->setEnabled( true );
+    QString tmpStr = mUi->mAlarmTimeEdit->text();
+    int j = mUi->mAlarmTimeEdit->value() * -60;
+    if ( mUi->mAlarmIncrCombo->currentIndex() == 1 ) {
+      j = j * 60;
+    } else if ( mUi->mAlarmIncrCombo->currentIndex() == 2 ) {
+      j = j * ( 60 * 24 );
+    }
+
+    if ( setAlarmOffset( alarm, j ) ) {
+      return alarm;
+    } else {
+      return 0;
+    }
+  } else {
+    return 0;
+  }
 }
 
 void IncidenceGeneralEditor::initDescriptionToolBar()
@@ -103,6 +169,23 @@ void IncidenceGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
   enableTimeEditors( checked );
 }
 
+void IncidenceGeneralEditor::editAlarms()
+{
+  if ( mUi->mAlarmStack->indexOf( mUi->mAlarmStack->currentWidget() ) == SimpleAlarmPage ) {
+    mAlarmList.clear();
+    Alarm *al = alarmFromSimplePage();
+    if ( al ) {
+      mAlarmList.append( al );
+    }
+  }
+
+  QPointer<EditorAlarms> dlg = new EditorAlarms( mIncidence->type(), &mAlarmList, mUi->mAlarmEditButton );
+  if ( dlg->exec() != KDialog::Cancel ) {
+    updateAlarmWidgets();
+  }
+  delete dlg;
+}
+
 void IncidenceGeneralEditor::enableRichTextDescription( bool rich )
 {
   mUi->mDescriptionEdit->setActionsEnabled( rich );
@@ -110,6 +193,56 @@ void IncidenceGeneralEditor::enableRichTextDescription( bool rich )
     mUi->mDescriptionEdit->switchToPlainText();
   } else {
     mUi->mDescriptionEdit->enableRichTextMode();
+  }
+}
+
+void IncidenceGeneralEditor::updateAlarmWidgets()
+{
+  if ( mAlarmList.isEmpty() ) {
+    mUi->mAlarmStack->setCurrentIndex( SimpleAlarmPage );
+    bool on = false;
+    if ( mIncidence->type() == "Event" ) {
+      on = EditorConfig::instance()->defaultEventReminders();
+    } else if ( mIncidence->type() == "Todo" ) {
+      on = EditorConfig::instance()->defaultTodoReminders();
+    }
+    mUi->mAlarmButton->setChecked( on );
+  } else if ( mAlarmList.count() > 1 ) {
+    mUi->mAlarmEditButton->setEnabled( true );
+    mUi->mAlarmStack->setCurrentIndex( AdvancedAlarmLabel );
+    mUi->mAlarmInfoLabel->setText( i18ncp( "@label",
+                                           "1 reminder configured",
+                                           "%1  reminders configured",
+                                           mAlarmList.count() ) );
+  } else {
+    mUi->mAlarmEditButton->setEnabled( true );
+    Alarm *alarm = mAlarmList.first();
+    // Check if it is the trivial type of alarm, which can be
+    // configured with a simply spin box...
+
+    if ( alarm->type() == Alarm::Display && alarm->text().isEmpty() &&
+         alarm->repeatCount() == 0 && !alarm->hasTime() &&
+         alarm->hasStartOffset() && alarm->startOffset().asSeconds() < 0 ) {
+      mUi->mAlarmStack->setCurrentIndex( SimpleAlarmPage );
+      mUi->mAlarmButton->setChecked( true );
+      int offset = alarm->startOffset().asSeconds();
+
+      offset = offset / -60; // make minutes
+      int useoffset = offset;
+      if ( offset % ( 24 * 60 ) == 0 ) { // divides evenly into days?
+        useoffset = offset / ( 24 * 60 );
+        mUi->mAlarmIncrCombo->setCurrentIndex( 2 );
+      } else if ( offset % 60 == 0 ) { // divides evenly into hours?
+        useoffset = offset / 60;
+        mUi->mAlarmIncrCombo->setCurrentIndex( 1 );
+      } else {
+        mUi->mAlarmIncrCombo->setCurrentIndex( 0 );
+      }
+      mUi->mAlarmTimeEdit->setValue( useoffset );
+    } else {
+      mUi->mAlarmStack->setCurrentIndex( AdvancedAlarmLabel );
+      mUi->mAlarmInfoLabel->setText( i18nc( "@label", "1 advanced reminder configured" ) );
+    }
   }
 }
 
@@ -224,6 +357,12 @@ void EventGeneralEditor::enableTimeEditors( bool enabled )
   mUi->mTimeZoneComboEnd->setEnabled( enabled );
 }
 
+bool EventGeneralEditor::setAlarmOffset( Alarm *alarm, int value ) const
+{
+  alarm->setStartOffset( value );
+  return true;
+}
+
 void EventGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
 {
   IncidenceGeneralEditor::slotHasTimeCheckboxToggled( checked );
@@ -249,6 +388,11 @@ TodoGeneralEditor::TodoGeneralEditor( QWidget *parent )
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(showAlarm()) );
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(dateChanged()) );
+}
+
+void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo )
+{
+  IncidenceGeneralEditor::load( todo );
 }
 
 void TodoGeneralEditor::enableTimeEditors( bool enabled )
@@ -311,3 +455,16 @@ void TodoGeneralEditor::updateHasTimeCheckBox()
   }
 }
 
+bool TodoGeneralEditor::setAlarmOffset( Alarm *alarm, int value ) const
+{
+  if ( mUi->mEndDateEdit->isEnabled() ) {
+    alarm->setEndOffset( value );
+    return true;
+  } else if ( mUi->mStartDateEdit->isEnabled() ) {
+    alarm->setStartOffset( value );
+    return true;
+  } else {
+    // Can't have alarms
+    return false;
+  }
+}

@@ -56,7 +56,7 @@ TodoEditor::TodoEditor( QWidget *parent )
   : IncidenceEditor( QString(),
                        QStringList() << Akonadi::IncidenceMimeTypeVisitor::todoMimeType(),
                        parent ),
-    mRelatedTodo(), mGeneral( 0 ), mRecurrence( 0 )
+    mRelatedTodo(), mGeneral( 0 ), mNewGeneral(0), mRecurrence( 0 )
 {
   mInitialTodo = Todo::Ptr( new Todo );
   mInitialTodoItem.setPayload( mInitialTodo );
@@ -119,10 +119,11 @@ void TodoEditor::init()
 void TodoEditor::setupGeneral()
 {
   mGeneral = new EditorGeneralTodo( this );
+  mNewGeneral = new TodoGeneralEditor( this );
 
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, i18nc( "@title:tab general to-do settings", "&General" ) );
-  mTabWidget->addTab( new TodoGeneralEditor( this ), "&New General" );
+  mTabWidget->addTab( mNewGeneral, "&New General" );
 
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
@@ -292,6 +293,7 @@ bool TodoEditor::read( const Item &todoItem, const QDate &date, bool tmpl )
   }
 
   mGeneral->readTodo( todo.get(), date, tmpl );
+  mNewGeneral->load( todo );
 #ifdef HAVE_QT3SUPPORT
   mDetails->readIncidence( todo.get() );
 #endif
