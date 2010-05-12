@@ -24,6 +24,7 @@
 #include <KToolBar>
 
 #include <KCal/Incidence>
+#include <KCal/IncidenceFormatter>
 #include <KCal/ICalTimeZones>
 
 #include "editoralarms.h"
@@ -63,13 +64,17 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   connect( mUi->mHasTimeCheckbox, SIGNAL(toggled(bool)), SLOT(slotHasTimeCheckboxToggled(bool)) );
 }
 
-void IncidenceGeneralEditor::load( const KCal::Incidence::ConstPtr &incidence )
+void IncidenceGeneralEditor::load( const KCal::Incidence::Ptr &incidence )
 {
   mIncidence = incidence;
   mUi->mSummaryEdit->setText( incidence->summary() );
   mUi->mLocationEdit->setText( incidence->location() );
   mUi->mCategoriesLabel->setText( incidence->categories().join( "," ) );
 
+  enableTimeEditors( !incidence->allDay() );
+  
+  mUi->mHasTimeCheckbox->setChecked( !incidence->allDay() );
+  
   switch( incidence->secrecy() ) {
   case Incidence::SecrecyPublic:
     mUi->mSecrecyCombo->setCurrentIndex( 0 );
@@ -84,6 +89,8 @@ void IncidenceGeneralEditor::load( const KCal::Incidence::ConstPtr &incidence )
 
   setDescription( incidence->description(), incidence->descriptionIsRich() );
 
+  updateRecurrenceSummary( incidence );
+  
   // set up alarm stuff
   mAlarmList.clear();
   Alarm::List::ConstIterator it;
@@ -122,6 +129,12 @@ Alarm *IncidenceGeneralEditor::alarmFromSimplePage() const
   } else {
     return 0;
   }
+}
+
+void IncidenceGeneralEditor::enableAlarmEditor( bool enable )
+{
+  mUi->mAlarmStack->setEnabled( enable );
+  mUi->mAlarmEditButton->setEnabled( enable );
 }
 
 void IncidenceGeneralEditor::initDescriptionToolBar()
@@ -263,6 +276,15 @@ void IncidenceGeneralEditor::updateDefaultAlarmTime()
 
   mUi->mAlarmTimeEdit->setValue( reminderTime );
   mUi->mAlarmIncrCombo->setCurrentIndex( index );
+}
+
+void IncidenceGeneralEditor::updateRecurrenceSummary( const KCal::Incidence::Ptr &incidence )
+{
+  if ( incidence->recurs() ) {
+    mUi->mRecurrenceLabel->setText( IncidenceFormatter::recurrenceString( incidence.get() ) );
+  } else {
+    mUi->mRecurrenceLabel->setText( QString() );
+  }
 }
 
 
@@ -410,9 +432,73 @@ TodoGeneralEditor::TodoGeneralEditor( QWidget *parent )
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(dateChanged()) );
 }
 
-void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo )
+void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo,
+                              const QDate &date,
+                              bool tmpl )
 {
   IncidenceGeneralEditor::load( todo );
+
+  KDateTime dueDT = todo->dtDue();
+
+  if ( todo->hasStartDate() ) {
+    KDateTime startDT = todo->dtStart();
+    if ( todo->recurs() && date.isValid() && todo->hasDueDate() ) {
+      int days = todo->dtStart( true ).daysTo( todo->dtDue( true ) );
+      startDT.setDate( dueDT.date().addDays( -days ) );
+    }
+
+    if ( startDT.isUtc() )
+      startDT = startDT.toLocalZone();
+    
+    mUi->mStartDateEdit->setDate( startDT.date() );
+    mUi->mStartTimeEdit->setTime( startDT.time() );
+    mUi->mStartCheck->setChecked( true );
+    mStartSpec = todo->dtStart().timeSpec();
+    mUi->mTimeZoneComboStart->selectTimeSpec( todo->dtStart().timeSpec() );
+  } else {
+    mUi->mStartDateEdit->setEnabled( false );
+    mUi->mStartTimeEdit->setEnabled( false );
+    mUi->mStartDateEdit->setDate( QDate::currentDate() );
+    mUi->mStartTimeEdit->setTime( QTime::currentTime() );
+    mUi->mStartCheck->setChecked( false );
+    mUi->mTimeZoneComboStart->setEnabled( false );
+  }
+
+  if ( todo->hasDueDate() ) {
+    enableAlarmEditor( true );
+    if ( todo->recurs() && date.isValid() ) {
+      KDateTime dt( date, QTime( 0, 0, 0 ) );
+      dt = dt.addSecs( -1 );
+      dueDT.setDate( todo->recurrence()->getNextDateTime( dt ).date() );
+    }
+    if ( dueDT.isUtc() ) {
+      dueDT = dueDT.toLocalZone();
+    }
+    mUi->mEndDateEdit->setDate( dueDT.date() );
+    mUi->mEndTimeEdit->setTime( dueDT.time() );
+    mUi->mDueCheck->setChecked( true );
+    mEndSpec = todo->dtDue().timeSpec();
+    mUi->mTimeZoneComboEnd->selectTimeSpec( todo->dtDue().timeSpec() );
+  } else {
+    enableAlarmEditor( false );
+    mUi->mEndDateEdit->setEnabled( false );
+    mUi->mEndTimeEdit->setEnabled( false );
+    mUi->mEndDateEdit->setDate( QDate::currentDate() );
+    mUi->mEndTimeEdit->setTime( QTime::currentTime() );
+    mUi->mDueCheck->setChecked( false );
+    mUi->mTimeZoneComboEnd->setEnabled( false );
+  }
+
+//   mAlreadyComplete = false;
+  mUi->mCompletedCombo->setCurrentIndex( todo->percentComplete() / 10 );
+  if ( todo->isCompleted() && todo->hasCompletedDate() ) {
+//     mCompleted = todo->completed().toTimeSpec( KSystemTimeZones::local() ).dateTime();
+//     mAlreadyComplete = true;
+  }
+//   setCompletedDate();
+
+  mUi->mPriorityCombo->setCurrentIndex( todo->priority() );
+//   mStartDateModified = false;
 }
 
 void TodoGeneralEditor::enableTimeEditors( bool enabled )

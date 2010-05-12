@@ -71,7 +71,9 @@ class IncidenceGeneralEditor : public QWidget
     explicit IncidenceGeneralEditor( QWidget *parent = 0 );
     
     void emitDateTimeStr();
-    void load( const KCal::Incidence::ConstPtr &incidence );
+    void enableAlarmEditor( bool enable );
+    
+    void load( const KCal::Incidence::Ptr &incidence );
     
   protected slots:
     virtual void enableTimeEditors( bool enabled ) = 0;
@@ -85,6 +87,7 @@ class IncidenceGeneralEditor : public QWidget
     void enableRichTextDescription( bool enable );
     void updateAlarmWidgets();
     void updateDefaultAlarmTime();
+    void updateRecurrenceSummary( const KCal::Incidence::Ptr &incidence );
     
   
   private: /// Methods
@@ -144,7 +147,9 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
   public:
     explicit TodoGeneralEditor( QWidget *parent = 0 );
 
-    void load( const KCal::Todo::Ptr &todo );
+    void load( const KCal::Todo::Ptr &todo,
+               const QDate &date,
+               bool tmpl );
 
   private slots:
     void enableTimeEditors( bool enabled );

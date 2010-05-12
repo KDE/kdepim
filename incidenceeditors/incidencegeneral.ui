@@ -48,7 +48,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
+   <item row="0" column="2">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -64,7 +64,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="3">
     <widget class="QLabel" name="mAttendeeSummaryLabel">
      <property name="text">
       <string>No attendees</string>
@@ -90,7 +90,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="1">
+   <item row="1" column="2">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -125,7 +125,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
+   <item row="2" column="2">
     <widget class="KSqueezedTextLabel" name="mCategoriesLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -150,14 +150,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="3">
     <widget class="QPushButton" name="pushButton">
      <property name="text">
       <string>&amp;Select...</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" colspan="3">
+   <item row="3" column="0" rowspan="2" colspan="4">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -401,37 +401,42 @@
        </layout>
       </item>
       <item row="3" column="0" colspan="4">
-       <widget class="QWidget" name="mRecurrenceSpecifics" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="mRecurrenceLabel">
-           <property name="text">
-            <string>No recurrence</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="mRecurrenceEditButton">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Recurrence:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="mRecurrenceEditButton">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="mRecurrenceLabel">
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_4">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
       </item>
       <item row="4" column="0" colspan="4">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -600,7 +605,7 @@
      </layout>
     </widget>
    </item>
-   <item row="4" column="0">
+   <item row="5" column="0">
     <widget class="QLabel" name="label_3">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -625,7 +630,7 @@
      </property>
     </widget>
    </item>
-   <item row="4" column="1" colspan="2">
+   <item row="5" column="1" colspan="3">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="KComboBox" name="mSecrecyCombo">
@@ -661,7 +666,7 @@
      </item>
     </layout>
    </item>
-   <item row="5" column="0" colspan="3">
+   <item row="6" column="0" colspan="4">
     <widget class="QWidget" name="mTodoSpecifics" native="true">
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="1">
@@ -767,12 +772,12 @@
          <string>&amp;Priority:</string>
         </property>
         <property name="buddy">
-         <cstring>comboBox_3</cstring>
+         <cstring>mPriorityCombo</cstring>
         </property>
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QComboBox" name="comboBox_3">
+       <widget class="QComboBox" name="mPriorityCombo">
         <property name="whatsThis">
          <string extracomment="@info:whatsthis">Sets the priority of this to-do on a scale from one to nine, with one being the highest priority, five being a medium priority, and nine being the lowest. In programs that have a different scale, the numbers will be adjusted to match the appropriate scale.</string>
         </property>
@@ -847,10 +852,10 @@
      </layout>
     </widget>
    </item>
-   <item row="6" column="0" colspan="3">
+   <item row="7" column="0" colspan="4">
     <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
    </item>
-   <item row="7" column="0" colspan="3">
+   <item row="8" column="0" colspan="4">
     <widget class="KRichTextWidget" name="mDescriptionEdit">
      <property name="toolTip">
       <string extracomment="@info:tooltip">Set the description in plain text or rich text.</string>
@@ -863,7 +868,7 @@
      </property>
     </widget>
    </item>
-   <item row="8" column="0" colspan="3">
+   <item row="9" column="0" colspan="4">
     <widget class="QWidget" name="mAttachmentPlaceHolder" native="true"/>
    </item>
   </layout>

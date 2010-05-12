@@ -293,7 +293,7 @@ bool TodoEditor::read( const Item &todoItem, const QDate &date, bool tmpl )
   }
 
   mGeneral->readTodo( todo.get(), date, tmpl );
-  mNewGeneral->load( todo );
+  mNewGeneral->load( todo, date, tmpl );
 #ifdef HAVE_QT3SUPPORT
   mDetails->readIncidence( todo.get() );
 #endif
