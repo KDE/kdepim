@@ -48,7 +48,7 @@ QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model
     QModelIndex idx = EntityTreeModel::modelIndexForCollection( model, Collection( id ) );
     if ( !idx.isValid() )
     {
-      kWarning() << "Cannot find collection with id " << id;
+      kDebug() << "Collection with id" << id << "is not in model yet";
       return QModelIndex();
     }
     return idx;
@@ -58,7 +58,7 @@ QModelIndex ETMStateSaver::indexFromConfigString(const QAbstractItemModel *model
     QModelIndexList list = EntityTreeModel::modelIndexesForItem( model, Item( id ) );
     if ( list.isEmpty() )
     {
-      kWarning() << "Cannot find item with id " << id;
+      kDebug() << "Item with id" << id << "is not in model yet";
       return QModelIndex();
     }
     return list.first();
