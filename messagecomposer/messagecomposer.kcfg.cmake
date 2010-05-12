@@ -81,6 +81,9 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       </choices>
       <default>To</default>
     </entry>
+    <entry name="ShowMessagePartDialogOnAttach" type="Bool" key="showMessagePartDialogOnAttach">
+      <default>false</default>
+    </entry>
 
   </group>
 
