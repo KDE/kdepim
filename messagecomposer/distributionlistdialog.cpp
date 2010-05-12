@@ -160,8 +160,16 @@ void DistributionListDialog::slotDelayedSetRecipients( KJob *job )
   const Akonadi::ContactSearchJob *searchJob = qobject_cast<Akonadi::ContactSearchJob*>( job );
   const KABC::Addressee::List contacts = searchJob->contacts();
 
-  const QString name = searchJob->property( "name" ).toString();
   const QString email = searchJob->property( "email" ).toString();
+  QString name = searchJob->property( "name" ).toString();
+  if ( name.isEmpty() ) {
+    const int index = email.indexOf( QLatin1Char( '@' ) );
+    if ( index != -1 ) {
+      name = email.left( index );
+    } else {
+      name = email;
+    }
+  }
 
   DistributionListItem *item = new DistributionListItem( mRecipientsList );
 
@@ -254,7 +262,7 @@ void DistributionListDialog::slotDelayedUser1( KJob *job )
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( contactItem, targetCollection );
         job->exec();
 
-        group.append( KABC::ContactGroup::ContactGroupReference( QString::number( job->item().id() ) ) );
+        group.append( KABC::ContactGroup::ContactReference( QString::number( job->item().id() ) ) );
       } else {
         group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
       }
