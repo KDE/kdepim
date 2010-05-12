@@ -502,9 +502,11 @@ bool IncidenceChanger::changeIncidence( const KCal::Incidence::Ptr &oldinc,
 
 
 bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
-                                     QWidget *parent, Akonadi::Collection &selectedCollection )
+                                     QWidget *parent, Akonadi::Collection &selectedCollection,
+                                     int &dialogCode )
 {
   selectedCollection = Akonadi::selectCollection( parent,
+                                                  dialogCode,
                                                   d->mDefaultCollection );
 
   if ( !selectedCollection.isValid() ) {

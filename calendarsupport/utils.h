@@ -35,6 +35,7 @@
 #include <KCal/Todo>
 
 #include <KDateTime>
+
 #include <QModelIndex>
 
 namespace KCal {
@@ -158,11 +159,14 @@ namespace Akonadi
   /**
   * Shows a modal dialog that allows to select a collection.
   *
+  * @param will contain the dialogCode, QDialog::Accepted if the user pressed Ok,
+  *        QDialog::Rejected otherwise
   * @param parent The optional parent of the modal dialog.
   * @return The select collection or an invalid collection if
   * there was no collection selected.
   */
-  AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent, const Akonadi::Collection& defaultCollection = Akonadi::Collection());
+  AKONADI_KCAL_NEXT_EXPORT Akonadi::Collection selectCollection( QWidget *parent, int dialogCode,
+                                                                 const Akonadi::Collection& defaultCollection = Akonadi::Collection() );
 
   AKONADI_KCAL_NEXT_EXPORT Akonadi::Item itemFromIndex( const QModelIndex &index );
 

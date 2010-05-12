@@ -251,7 +251,9 @@ QList<Todo::Ptr> Akonadi::todos( const QMimeData* mimeData, const KDateTime::Spe
   return todos;
 }
 
-Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::Collection &defaultCollection )
+Akonadi::Collection Akonadi::selectCollection( QWidget *parent,
+                                               int dialogCode,
+                                               const Akonadi::Collection &defaultCollection )
 {
   QPointer<CollectionDialog> dlg( new CollectionDialog( parent ) );
   QStringList mimetypes;
@@ -261,11 +263,14 @@ Akonadi::Collection Akonadi::selectCollection( QWidget *parent, const Akonadi::C
 
   dlg->setMimeTypeFilter( mimetypes );
   dlg->setAccessRightsFilter( Akonadi::Collection::CanCreateItem );
-  if ( defaultCollection.isValid() )
+  if ( defaultCollection.isValid() ) {
     dlg->setDefaultCollection( defaultCollection );
+  }
   Akonadi::Collection collection;
-  if ( dlg->exec() == QDialog::Accepted )
+  dialogCode = dlg->exec();
+  if ( dialogCode == QDialog::Accepted ) {
     collection = dlg->selectedCollection();
+  }
   delete dlg;
   return collection;
 }

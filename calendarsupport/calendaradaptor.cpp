@@ -197,7 +197,8 @@ bool CalendarAdaptor::addIncidence( const Incidence::Ptr &incidence )
   if ( mStoreDefaultCollection && mDefaultCollection.isValid() ) {
     collection = mDefaultCollection;
   } else {
-    collection = Akonadi::selectCollection( mParent );
+    int dialogCode = 0;
+    collection = Akonadi::selectCollection( mParent, dialogCode );
   }
 
   if ( !collection.isValid() ) {

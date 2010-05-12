@@ -47,6 +47,7 @@
 #include <KIconLoader>
 #include <KComponentData>
 #include <KConfigGroup>
+#include <KWordWrap>
 
 #include <QApplication>
 #include <QScrollBar>
@@ -56,7 +57,7 @@
 #include <QPainter>
 #include <QSplitter>
 #include <QTimer>
-#include <KWordWrap>
+#include <QDialog>
 
 using namespace Akonadi;
 using namespace EventViews;
@@ -1608,8 +1609,9 @@ void AgendaView::slotTodosDropped( const QList<Todo::Ptr> &items, const QPoint &
     todo->setHasDueDate( true );
 
     Akonadi::Collection selectedCollection;
-    if ( !changer()->addIncidence( todo, this, selectedCollection ) ) {
-      if ( !selectedCollection.isValid() ) {
+    int dialogCode;
+    if ( !changer()->addIncidence( todo, this, selectedCollection, dialogCode ) ) {
+      if ( dialogCode != QDialog::Rejected ) {
         Akonadi::IncidenceChanger::errorSaveIncidence( this, todo );
       }
     }
