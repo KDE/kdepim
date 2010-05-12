@@ -150,6 +150,15 @@ void DistributionListDialog::setRecipients( const Recipient::List &recipients )
 
         const KABC::Addressee::List contacts = job->contacts();
         if ( contacts.isEmpty() ) {
+          if ( name.isEmpty() ) {
+            const int index = email.indexOf( QLatin1Char( '@' ) );
+            if ( index != -1 ) {
+              name = email.left( index );
+            } else {
+              name = email;
+            }
+          }
+
           KABC::Addressee contact;
           contact.setNameFromString( name );
           contact.insertEmail( email );
@@ -234,7 +243,7 @@ void DistributionListDialog::slotUser1()
         Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( contactItem, targetCollection );
         job->exec();
 
-        group.append( KABC::ContactGroup::ContactGroupReference( QString::number( job->item().id() ) ) );
+        group.append( KABC::ContactGroup::ContactReference( QString::number( job->item().id() ) ) );
       } else {
         group.append( KABC::ContactGroup::Data( item->addressee().realName(), item->email() ) );
       }
