@@ -55,6 +55,14 @@ include(CheckIncludeFiles)
 include(MacroBoolTo01)
 find_package(KdepimLibs 4.4.61 REQUIRED)
 
+### remove the following when requiring kdelibs 4.5 ###
+if ( NOT KDE4_KCMUTILS_LIBS )
+  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
+endif()
+if ( NOT KDE4_KEMOTICONS_LIBS )
+  set( KDE4_KEMOTICONS_LIBS ${KDE4_KUTILS_LIBS} )
+endif()
+### end of 4.4 compat code ###
 
 ############### Load the CTest options ###############
 # Set a timeout value of 5 minutes per test
