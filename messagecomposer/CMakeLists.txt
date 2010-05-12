@@ -10,6 +10,8 @@ set( messagecomposer_src
      composer.cpp
      util.cpp
 
+     attachmentmodel.cpp
+
      akonadisender.cpp
      messagehelper.cpp
      messagefactory.cpp

@@ -20,6 +20,8 @@
 #ifndef KMAIL_ATTACHMENTMODEL_H
 #define KMAIL_ATTACHMENTMODEL_H
 
+#include "messagecomposer_export.h"
+
 #include <QtCore/QAbstractItemModel>
 
 #include <KDE/KUrl>
@@ -27,7 +29,7 @@
 #include <messagecore/attachmentpart.h>
 #include <akonadi/item.h>
 
-namespace KMail {
+namespace Message {
 
 /**
   Columns:
@@ -39,7 +41,7 @@ namespace KMail {
   encrypt
   sign
 */
-class AttachmentModel : public QAbstractItemModel
+class MESSAGECOMPOSER_EXPORT AttachmentModel : public QAbstractItemModel
 {
   Q_OBJECT
 

@@ -31,12 +31,10 @@
 
 #include <kmime/kmime_util.h>
 #include <akonadi/item.h>
-#include "foldercollection.h"
-#include "kmcommands.h"
 
 #include <kpimutils/kfileio.h>
 
-using namespace KMail;
+using namespace Message;
 using namespace KPIM;
 
 static Qt::CheckState boolToCheckState( bool checked ) // local
@@ -48,7 +46,7 @@ static Qt::CheckState boolToCheckState( bool checked ) // local
   }
 }
 
-class KMail::AttachmentModel::Private
+class Message::AttachmentModel::Private
 {
   public:
     Private( AttachmentModel *qq );
