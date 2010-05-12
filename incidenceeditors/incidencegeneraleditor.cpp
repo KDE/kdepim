@@ -20,6 +20,9 @@
 
 #include "incidencegeneraleditor.h"
 
+#include <KActionCollection>
+#include <KToolBar>
+
 #include <KCal/Incidence>
 #include <KCal/ICalTimeZones>
 
@@ -27,11 +30,10 @@
 
 using namespace KCal;
 
-IncidenceGeneralEditor::IncidenceGeneralEditor( Mode mode, QWidget *parent )
+IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   : QWidget( parent )
   , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceGeneral )
-  , mMode( mode )
 {
   mUi->setupUi( this );
   mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
@@ -42,7 +44,73 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( Mode mode, QWidget *parent )
   mUi->mTimeZoneComboEnd->setAdditionalTimeZones( mTimeZones );
   mUi->mSecrecyCombo->addItems( Incidence::secrecyList() );
 
-  connect( mUi->mHasTimeCheckbox, SIGNAL(toggled(bool)), SLOT(setTimeEditorsEnabled(bool)) );
+  mUi->mDescriptionEdit->setRichTextSupport( KRichTextWidget::SupportBold |
+                                             KRichTextWidget::SupportBold |
+                                             KRichTextWidget::SupportItalic |
+                                             KRichTextWidget::SupportUnderline |
+                                             KRichTextWidget::SupportStrikeOut |
+                                             KRichTextWidget::SupportChangeListStyle |
+                                             KRichTextWidget::SupportAlignment |
+                                             KRichTextWidget::SupportFormatPainting );
+
+  initDescriptionToolBar(); 
+  connect( mUi->mHasTimeCheckbox, SIGNAL(toggled(bool)), SLOT(slotHasTimeCheckboxToggled(bool)) );
+}
+
+void IncidenceGeneralEditor::initDescriptionToolBar()
+{
+
+  QCheckBox *richTextCheck = new QCheckBox( i18nc( "@option:check", "Rich text" ), this );
+  richTextCheck->setWhatsThis(
+    i18nc( "@info:whatsthis",
+           "Select this option if you would like to enter rich text into "
+           "the description field of this event or to-do." ) );
+  richTextCheck->setToolTip( i18nc( "@info:tooltip", "Toggle Rich Text" ) );
+
+  connect( richTextCheck, SIGNAL(toggled(bool)),
+           this, SLOT(enableRichTextDescription(bool)) );
+           
+  KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
+  mUi->mDescriptionEdit->createActions( collection );
+
+  KToolBar *mEditToolBar = new KToolBar( mUi->mEditToolBarPlaceHolder );
+  mEditToolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
+  mEditToolBar->addWidget( richTextCheck );
+  mEditToolBar->addAction( collection->action( "format_text_bold" ) );
+  mEditToolBar->addAction( collection->action( "format_text_italic" ) );
+  mEditToolBar->addAction( collection->action( "format_text_underline" ) );
+  mEditToolBar->addAction( collection->action( "format_text_strikeout" ) );
+  mEditToolBar->addSeparator();
+
+  mEditToolBar->addAction( collection->action( "format_list_style" ) );
+  mEditToolBar->addSeparator();
+
+  mEditToolBar->addAction( collection->action( "format_align_left" ) );
+  mEditToolBar->addAction( collection->action( "format_align_center" ) );
+  mEditToolBar->addAction( collection->action( "format_align_right" ) );
+  mEditToolBar->addAction( collection->action( "format_align_justify" ) );
+  mEditToolBar->addSeparator();
+
+  mEditToolBar->addAction( collection->action( "format_painter" ) );
+  mUi->mDescriptionEdit->setActionsEnabled( richTextCheck->isChecked() );
+
+  QGridLayout *layout = new QGridLayout( mUi->mEditToolBarPlaceHolder );
+  layout->addWidget( mEditToolBar );
+}
+
+void IncidenceGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
+{
+  enableTimeEditors( checked );
+}
+
+void IncidenceGeneralEditor::enableRichTextDescription( bool rich )
+{
+  mUi->mDescriptionEdit->setActionsEnabled( rich );
+  if ( !rich ) {
+    mUi->mDescriptionEdit->switchToPlainText();
+  } else {
+    mUi->mDescriptionEdit->enableRichTextMode();
+  }
 }
 
 /// public slots
@@ -119,45 +187,6 @@ void IncidenceGeneralEditor::emitDateTimeStr()
   emit dateTimeStrChanged( str );
 }
 
-void IncidenceGeneralEditor::setTimeEditorsEnabled( bool enabled )
-{
-  /// TodoEditor
-  switch ( mMode ) {
-  case Todo:
-    if( mUi->mStartCheck->isChecked() ) {
-      mUi->mStartTimeEdit->setEnabled( enabled );
-      mUi->mTimeZoneComboStart->setEnabled( enabled );
-      mUi->mTimeZoneComboStart->setFloating( !enabled, mStartSpec );
-    }
-    if( mUi->mDueCheck->isChecked() ) {
-      mUi->mEndTimeEdit->setEnabled( enabled );
-      mUi->mTimeZoneComboEnd->setEnabled( enabled );
-      mUi->mTimeZoneComboEnd->setFloating( !enabled, mEndSpec );
-    }
-    break;
-  case Event:
-    /// EventEditor
-    mUi->mStartTimeEdit->setEnabled( enabled );
-    mUi->mEndTimeEdit->setEnabled( enabled );
-
-    if ( !enabled ) {
-      mUi->mTimeZoneComboStart->setFloating( true );
-      mUi->mTimeZoneComboEnd->setFloating( true );
-    } else {
-      mUi->mTimeZoneComboStart->selectLocalTimeSpec();
-      mUi->mTimeZoneComboEnd->selectLocalTimeSpec();
-    }
-
-    mStartSpec = mUi->mTimeZoneComboStart->selectedTimeSpec();
-    mEndSpec = mUi->mTimeZoneComboEnd->selectedTimeSpec();
-    mUi->mTimeZoneComboStart->setEnabled( enabled );
-    mUi->mTimeZoneComboEnd->setEnabled( enabled );
-
-    setDuration();
-    emitDateTimeStr();
-  }
-}  
-
 IncidenceGeneralEditor::~IncidenceGeneralEditor()
 {
   delete mTimeZones;
@@ -167,7 +196,7 @@ IncidenceGeneralEditor::~IncidenceGeneralEditor()
 /// Event Editor specifics
 
 EventGeneralEditor::EventGeneralEditor( QWidget *parent )
-  : IncidenceGeneralEditor( IncidenceGeneralEditor::Event, parent )
+  : IncidenceGeneralEditor( parent )
 {
   mUi->mTodoSpecifics->setVisible( false );
   mUi->mStartCheck->setVisible( false );
@@ -176,8 +205,32 @@ EventGeneralEditor::EventGeneralEditor( QWidget *parent )
   connect( mUi->mHasTimeCheckbox, SIGNAL(toggled(bool)), SLOT(slotHasTimeCheckboxToggled(bool)) );
 }
 
+void EventGeneralEditor::enableTimeEditors( bool enabled )
+{
+  mUi->mStartTimeEdit->setEnabled( enabled );
+  mUi->mEndTimeEdit->setEnabled( enabled );
+
+  if ( !enabled ) {
+    mUi->mTimeZoneComboStart->setFloating( true );
+    mUi->mTimeZoneComboEnd->setFloating( true );
+  } else {
+    mUi->mTimeZoneComboStart->selectLocalTimeSpec();
+    mUi->mTimeZoneComboEnd->selectLocalTimeSpec();
+  }
+
+  mStartSpec = mUi->mTimeZoneComboStart->selectedTimeSpec();
+  mEndSpec = mUi->mTimeZoneComboEnd->selectedTimeSpec();
+  mUi->mTimeZoneComboStart->setEnabled( enabled );
+  mUi->mTimeZoneComboEnd->setEnabled( enabled );
+}
+
 void EventGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
 {
+  IncidenceGeneralEditor::slotHasTimeCheckboxToggled( checked );
+
+  setDuration();
+  emitDateTimeStr();
+  
   //if(alarmButton->isChecked()) alarmStuffDisable(noTime);
   emit allDayChanged( !checked );
 }
@@ -185,9 +238,76 @@ void EventGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
 /// Todo Editor specifics
 
 TodoGeneralEditor::TodoGeneralEditor( QWidget *parent )
-  : IncidenceGeneralEditor( IncidenceGeneralEditor::Todo, parent )
+  : IncidenceGeneralEditor( parent )
 {
   mUi->mStartLabel->setVisible( false );
   mUi->mEndLabel->setVisible( false );
+
+  connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(enableStartEdit(bool)) );
+//   connect( mUi->mStartCheck, SIGNAL(toggled(bool)), SLOT(startDateModified()) );
+  connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(enableEndEdit(bool)) );
+//   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(showAlarm()) );
+//   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
+//   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(dateChanged()) );
+}
+
+void TodoGeneralEditor::enableTimeEditors( bool enabled )
+{
+  if( mUi->mStartCheck->isChecked() ) {
+    mUi->mStartTimeEdit->setEnabled( enabled );
+    mUi->mTimeZoneComboStart->setEnabled( enabled );
+    mUi->mTimeZoneComboStart->setFloating( !enabled, mStartSpec );
+  }
+  if( mUi->mDueCheck->isChecked() ) {
+    mUi->mEndTimeEdit->setEnabled( enabled );
+    mUi->mTimeZoneComboEnd->setEnabled( enabled );
+    mUi->mTimeZoneComboEnd->setFloating( !enabled, mEndSpec );
+  }
+}
+
+void TodoGeneralEditor::enableTimeEdit( QWidget *dateEdit,
+                                        QWidget *timeEdit,
+                                        KPIM::KTimeZoneComboBox *timeZoneCmb,
+                                        bool enable )
+{
+  dateEdit->setEnabled( enable );
+
+  updateHasTimeCheckBox();
+
+  if ( enable ) {
+    timeEdit->setEnabled( mUi->mHasTimeCheckbox->isChecked() );
+    timeZoneCmb->setEnabled( mUi->mHasTimeCheckbox->isChecked() );
+  } else {
+    timeEdit->setEnabled( false );
+    timeZoneCmb->setEnabled( false );
+  }
+
+  timeZoneCmb->setFloating( !timeZoneCmb->isEnabled() );
+}
+
+void TodoGeneralEditor::enableStartEdit( bool enable )
+{
+  enableTimeEdit( mUi->mStartDateEdit,
+                  mUi->mStartTimeEdit,
+                  mUi->mTimeZoneComboStart,
+                  enable );
+}
+
+void TodoGeneralEditor::enableEndEdit( bool enable )
+{
+  enableTimeEdit( mUi->mEndDateEdit,
+                  mUi->mEndTimeEdit,
+                  mUi->mTimeZoneComboEnd,
+                  enable );
+}
+
+void TodoGeneralEditor::updateHasTimeCheckBox()
+{
+  if( mUi->mDueCheck->isChecked() || mUi->mStartCheck->isChecked() ) {
+    mUi->mHasTimeCheckbox->setEnabled( true );
+  } else {
+    mUi->mHasTimeCheckbox->setEnabled( false );
+    mUi->mHasTimeCheckbox->setChecked( false );
+  }
 }
 

@@ -9,14 +9,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>677</width>
+    <width>608</width>
     <height>662</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="gridLayout_3">
    <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="sizePolicy">
@@ -48,7 +48,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="1">
     <widget class="KLineEdit" name="klineedit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -64,7 +64,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
+   <item row="0" column="2">
     <widget class="QLabel" name="mAttendeeSummaryLabel">
      <property name="text">
       <string>No attendees</string>
@@ -90,7 +90,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="1" column="1">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -125,7 +125,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="1">
     <widget class="KSqueezedTextLabel" name="mCategoriesLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -150,14 +150,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="2" column="2">
     <widget class="QPushButton" name="pushButton">
      <property name="text">
       <string>&amp;Select...</string>
      </property>
     </widget>
    </item>
-   <item row="5" column="0" colspan="4">
+   <item row="3" column="0" colspan="3">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -171,31 +171,41 @@
      <property name="title">
       <string>Date &amp;&amp; Time</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_3">
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QLabel" name="mStartLabel">
-        <property name="text">
-         <string>&amp;Start:</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>mStartDateEdit</cstring>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QLabel" name="mStartLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&amp;Start:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="buddy">
+           <cstring>mStartDateEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="mStartCheck">
+          <property name="whatsThis">
+           <string>Sets the start date for this to-do</string>
+          </property>
+          <property name="text">
+           <string extracomment="@option:check to-do start datetime">Sta&amp;rt:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="0" column="1">
-       <widget class="QCheckBox" name="mStartCheck">
-        <property name="whatsThis">
-         <string>Sets the start date for this to-do</string>
-        </property>
-        <property name="text">
-         <string extracomment="@option:check to-do start datetime">Sta&amp;rt:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
        <widget class="KPIM::KDateEdit" name="mStartDateEdit">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -211,7 +221,7 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
+      <item row="0" column="2">
        <widget class="KPIM::KTimeEdit" name="mStartTimeEdit">
         <property name="enabled">
          <bool>false</bool>
@@ -221,30 +231,53 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="mEndLabel">
-        <property name="text">
-         <string>&amp;End:</string>
+      <item row="0" column="3">
+       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
         </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-        <property name="buddy">
-         <cstring>mEndDateEdit</cstring>
+        <property name="whatsThis">
+         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item>
+         <widget class="QLabel" name="mEndLabel">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>&amp;End:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="buddy">
+           <cstring>mEndDateEdit</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="mDueCheck">
+          <property name="whatsThis">
+           <string>Sets the due date for this to-do.</string>
+          </property>
+          <property name="text">
+           <string extracomment="to-do due datetime">&amp;Due:</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item row="1" column="1">
-       <widget class="QCheckBox" name="mDueCheck">
-        <property name="whatsThis">
-         <string>Sets the due date for this to-do.</string>
-        </property>
-        <property name="text">
-         <string extracomment="to-do due datetime">&amp;Due:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
        <widget class="KPIM::KDateEdit" name="mEndDateEdit">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
@@ -257,7 +290,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="3">
+      <item row="1" column="2">
        <widget class="KPIM::KTimeEdit" name="mEndTimeEdit">
         <property name="enabled">
          <bool>false</bool>
@@ -267,7 +300,134 @@
         </property>
        </widget>
       </item>
-      <item row="5" column="0" colspan="7">
+      <item row="1" column="3">
+       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="whatsThis">
+         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" colspan="4">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <item>
+         <widget class="QCheckBox" name="mHasTimeCheckbox">
+          <property name="whatsThis">
+           <string>Set if this to-do's start and due dates have times associated with them.</string>
+          </property>
+          <property name="text">
+           <string>Ti&amp;me associated</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="text">
+           <string>Duration:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="mDurationLabel">
+          <property name="text">
+           <string>0 hours</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_9">
+          <property name="text">
+           <string>Show time as:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_2">
+          <property name="toolTip">
+           <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
+          </property>
+          <item>
+           <property name="text">
+            <string extracomment="@item:inlistbox show event as busy time">Busy</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string extracomment="@item:inlistbox show event as free time">Free</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="3" column="0" colspan="4">
+       <widget class="QWidget" name="mRecurrenceSpecifics" native="true">
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <widget class="QLabel" name="mRecurrenceLabel">
+           <property name="text">
+            <string>No recurrence</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="mRecurrenceEditButton">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="4" column="0" colspan="4">
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="mAlarmBell">
@@ -379,6 +539,12 @@
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
              <widget class="QLabel" name="label_10">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="text">
                <string>XXX reminders configured</string>
               </property>
@@ -422,169 +588,10 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0" colspan="7">
-       <widget class="QWidget" name="mRecurrenceSpecifics" native="true">
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QLabel" name="mRecurrenceLabel">
-           <property name="text">
-            <string>No recurrence</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="mRecurrenceEditButton">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item row="2" column="0" colspan="7">
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QCheckBox" name="mHasTimeCheckbox">
-          <property name="whatsThis">
-           <string>Set if this to-do's start and due dates have times associated with them.</string>
-          </property>
-          <property name="text">
-           <string>Ti&amp;me associated</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_7">
-          <property name="text">
-           <string>Duration:</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="mDurationLabel">
-          <property name="text">
-           <string>0 hours</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_9">
-          <property name="text">
-           <string>Show time as:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBox_2">
-          <property name="toolTip">
-           <string extracomment="@info:tooltip">Set this event as Busy or Free time</string>
-          </property>
-          <item>
-           <property name="text">
-            <string extracomment="@item:inlistbox show event as busy time">Busy</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string extracomment="@item:inlistbox show event as free time">Free</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="0" column="4" colspan="3">
-       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboStart">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="4" colspan="3">
-       <widget class="KPIM::KTimeZoneComboBox" name="mTimeZoneComboEnd">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="whatsThis">
-         <string extracomment="@info:whatsthis">Select the timezone for this event. It will also affect recurrences</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </widget>
    </item>
-   <item row="8" column="0" colspan="4">
-    <widget class="QWidget" name="mEditToolBar" native="true"/>
-   </item>
-   <item row="9" column="0" colspan="4">
-    <widget class="KRichTextWidget" name="mDescriptionEdit">
-     <property name="toolTip">
-      <string extracomment="@info:tooltip">Set the description in plain text or rich text.</string>
-     </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
-     </property>
-     <property name="tabChangesFocus">
-      <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="10" column="0" colspan="4">
-    <widget class="QWidget" name="mAttachmentPlaceHolder" native="true"/>
-   </item>
-   <item row="6" column="0">
+   <item row="4" column="0">
     <widget class="QLabel" name="label_3">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
@@ -609,7 +616,7 @@
      </property>
     </widget>
    </item>
-   <item row="6" column="1" colspan="3">
+   <item row="4" column="1" colspan="2">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="KComboBox" name="mSecrecyCombo">
@@ -645,7 +652,7 @@
      </item>
     </layout>
    </item>
-   <item row="7" column="0" colspan="4">
+   <item row="5" column="0" colspan="3">
     <widget class="QWidget" name="mTodoSpecifics" native="true">
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="1">
@@ -830,6 +837,25 @@
       </item>
      </layout>
     </widget>
+   </item>
+   <item row="6" column="0" colspan="3">
+    <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
+   </item>
+   <item row="7" column="0" colspan="3">
+    <widget class="KRichTextWidget" name="mDescriptionEdit">
+     <property name="toolTip">
+      <string extracomment="@info:tooltip">Set the description in plain text or rich text.</string>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Sets the description for this event, to-do or journal. This will be displayed in a reminder if one is set, as well as in a tooltip when you hover over the event.</string>
+     </property>
+     <property name="tabChangesFocus">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="3">
+    <widget class="QWidget" name="mAttachmentPlaceHolder" native="true"/>
    </item>
   </layout>
  </widget>

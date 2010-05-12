@@ -36,6 +36,10 @@ namespace KCal {
 class ICalTimeZones;
 }
 
+namespace KPIM {
+class KTimeZoneComboBox;
+}
+
 namespace Ui {
 class IncidenceGeneral;
 }
@@ -53,28 +57,28 @@ class IncidenceGeneralEditor : public QWidget
     void dateTimeStrChanged( const QString &dateTimeStr );
     
   protected: /// Methods
-    enum Mode {
-      Event,
-      Todo
-    };
-    
     /**
      * Disable creation of plain IncidenceGeneralEditor widgets. Use one of the
      * sub-classes instead.
      */
-    explicit IncidenceGeneralEditor( Mode mode, QWidget *parent = 0 );
+    explicit IncidenceGeneralEditor( QWidget *parent = 0 );
+
+    void emitDateTimeStr();
 
   private slots:
-    void emitDateTimeStr();
-    void setTimeEditorsEnabled( bool enabled );
+    void enableRichTextDescription( bool enable );
+    
+  protected slots:
+    virtual void enableTimeEditors( bool enabled ) = 0;
+    virtual void slotHasTimeCheckboxToggled( bool checked );
 
+  private:
+    void initDescriptionToolBar();
+    
   protected: /// Members
     KCal::ICalTimeZones  *mTimeZones;
     Ui::IncidenceGeneral *mUi;
 
-  private: /// Members
-    Mode mMode;
-    
     // current start and end date and time
     QDateTime mCurrStartDateTime;
     QDateTime mCurrEndDateTime;
@@ -97,6 +101,10 @@ class EventGeneralEditor : public IncidenceGeneralEditor
   private slots:
     virtual void slotHasTimeCheckboxToggled( bool checked );
 
+  private:
+    void initTextEditToolBar();
+    void enableTimeEditors( bool enabled );
+
 };
 
 class TodoGeneralEditor : public IncidenceGeneralEditor
@@ -105,6 +113,19 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
   public:
     explicit TodoGeneralEditor( QWidget *parent = 0 );
 
+  private slots:
+    void enableTimeEditors( bool enabled );
+    void enableStartEdit( bool enable );
+    void enableEndEdit( bool enable );
+    void updateHasTimeCheckBox();
+
+  private:
+    void enableTimeEdit( QWidget *dateEdit,
+                         QWidget *timeEdit,
+                         KPIM::KTimeZoneComboBox *timeZoneCmb,
+                         bool enable );
+    
+    
   private:
 
 };
