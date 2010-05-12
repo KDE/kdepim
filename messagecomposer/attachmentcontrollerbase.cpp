@@ -56,6 +56,8 @@
 #include <messagecomposersettings.h>
 #include <KIO/Job>
 
+#include <KMime/Content>
+
 using namespace KMail;
 using namespace KPIM;
 
@@ -361,9 +363,9 @@ void AttachmentControllerBase::createActions()
   d->attachMyPublicKeyAction = new KAction( i18n( "Attach &My Public Key" ), this );
   connect( d->attachMyPublicKeyAction, SIGNAL(triggered(bool)), this, SLOT(attachMyPublicKey()) );
 
-  d->addAction = new KAction( KIcon( "mail-attachment" ), i18n( "&Attach File..." ), this );
+  d->addAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ), i18n( "&Attach File..." ), this );
   d->addAction->setIconText( i18n( "Attach" ) );
-  d->addContextAction = new KAction( KIcon( "mail-attachment" ),
+  d->addContextAction = new KAction( KIcon( QLatin1String( "mail-attachment" ) ),
       i18n( "Add Attachment..." ), this );
   connect( d->addAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
   connect( d->addContextAction, SIGNAL(triggered(bool)), this, SLOT(showAddAttachmentDialog()) );
@@ -385,9 +387,9 @@ void AttachmentControllerBase::createActions()
   d->editWithContextAction = new KAction( i18n( "Edit With..." ), this );
   connect( d->editWithContextAction, SIGNAL(triggered(bool)), this, SLOT(editSelectedAttachmentWith()) );
 
-  d->saveAsAction = new KAction( KIcon( "document-save-as"),
+  d->saveAsAction = new KAction( KIcon( QLatin1String( "document-save-as" ) ),
                                  i18n( "&Save Attachment As..." ), this );
-  d->saveAsContextAction = new KAction( KIcon( "document-save-as"),
+  d->saveAsContextAction = new KAction( KIcon( QLatin1String( "document-save-as" ) ),
                                         i18n( "Save As..." ), this );
   connect( d->saveAsAction, SIGNAL(triggered(bool)),
       this, SLOT(saveSelectedAttachmentAs()) );
@@ -416,12 +418,12 @@ void AttachmentControllerBase::createActions()
 
   // Insert the actions into the composer window's menu.
   KActionCollection *collection = d->mActionCollection;
-  collection->addAction( "attach_public_key", d->attachPublicKeyAction );
-  collection->addAction( "attach_my_public_key", d->attachMyPublicKeyAction );
-  collection->addAction( "attach", d->addAction );
-  collection->addAction( "remove", d->removeAction );
-  collection->addAction( "attach_save", d->saveAsAction );
-  collection->addAction( "attach_properties", d->propertiesAction );
+  collection->addAction( QLatin1String( "attach_public_key" ), d->attachPublicKeyAction );
+  collection->addAction( QLatin1String( "attach_my_public_key" ), d->attachMyPublicKeyAction );
+  collection->addAction( QLatin1String( "attach" ), d->addAction );
+  collection->addAction( QLatin1String( "remove" ), d->removeAction );
+  collection->addAction( QLatin1String( "attach_save" ), d->saveAsAction );
+  collection->addAction( QLatin1String( "attach_properties" ), d->propertiesAction );
 
   emit actionsCreated();
 }
@@ -473,12 +475,12 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
   }
 
   bool success = KRun::runUrl( KUrl::fromPath( tempFile->fileName() ),
-                               part->mimeType(),
+                               QString::fromLatin1( part->mimeType() ),
                                d->wParent,
                                true /*tempFile*/,
                                false /*runExecutables*/ );
   if( !success ) {
-    if( KMimeTypeTrader::self()->preferredService( part->mimeType() ).isNull() ) {
+    if( KMimeTypeTrader::self()->preferredService( QString::fromLatin1( part->mimeType() ) ).isNull() ) {
       // KRun showed an Open-With dialog, and it was canceled.
     } else {
       // KRun failed.
@@ -528,7 +530,7 @@ void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool op
 
   MessageViewer::EditorWatcher *watcher = new MessageViewer::EditorWatcher(
       KUrl::fromPath( tempFile->fileName() ),
-      part->mimeType(), openWith,
+      QString::fromLatin1( part->mimeType() ), openWith,
       this, d->wParent );
   connect( watcher, SIGNAL(editDone(MessageViewer::EditorWatcher*)),
            this, SLOT(editDone(MessageViewer::EditorWatcher*)) );
@@ -618,7 +620,7 @@ void AttachmentControllerBase::showAddAttachmentDialog()
       QString( /*startDir*/ ), QString( /*encoding*/ ), QString( /*filter*/ ),
       i18n( "Attach File" ), KFileDialog::Other, d->wParent );
 
-  dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), "document-open") );
+  dialog->okButton()->setGuiItem( KGuiItem( i18n("&Attach"), QLatin1String( "document-open" ) ) );
   dialog->setMode( KFile::Files );
   if( dialog->exec() == KDialog::Accepted ) {
     const KUrl::List files = dialog->selectedUrls();

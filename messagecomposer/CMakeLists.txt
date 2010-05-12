@@ -10,6 +10,7 @@ set( messagecomposer_src
      composer.cpp
      util.cpp
 
+     attachmentcontrollerbase.cpp
      attachmentmodel.cpp
      attachmentfrompublickeyjob.cpp
 

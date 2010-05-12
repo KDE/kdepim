@@ -33,6 +33,8 @@
 #include <akonadi/item.h>
 #include <KJob>
 
+#include "messagecomposer_export.h"
+
 class KActionCollection;
 
 namespace Message {
@@ -41,7 +43,7 @@ class AttachmentModel;
 
 namespace KMail {
 
-class AttachmentControllerBase : public QObject
+class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
 {
   Q_OBJECT
 
