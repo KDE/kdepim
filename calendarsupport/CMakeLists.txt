@@ -22,9 +22,7 @@ set( kcalakonadi_LIB_SRC
      daterangefilterproxymodel.cpp
      incidencefilterproxymodel.cpp
      kcalmodel.cpp
-     kcalitembrowser.cpp
      incidenceviewer.cpp
-     itembrowser.cpp
      utils.cpp
      groupware.cpp
      identitymanager.cpp
