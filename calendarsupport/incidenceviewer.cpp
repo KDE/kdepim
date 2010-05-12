@@ -68,17 +68,28 @@ class IncidenceViewer::Private
 {
   public:
     Private( IncidenceViewer *parent )
-      : mParent( parent ), mParentCollectionFetchJob( 0 )
+      : mParent( parent ), mDelayedClear( false ), mParentCollectionFetchJob( 0 ),
+        mAttachmentModel( 0 )
     {
       mBrowser = new TextBrowser;
     }
 
     void updateView()
     {
-      const QString html = KCal::IncidenceFormatter::extensiveDisplayStr( Akonadi::displayName( mParentCollection ),
-                                                                          Akonadi::incidence( mCurrentItem ).get(),
-                                                                          mDate, KSystemTimeZones::local() );
-      mBrowser->setHtml( html );
+      QString text;
+
+      if ( mCurrentItem.isValid() ) {
+        text = KCal::IncidenceFormatter::extensiveDisplayStr( Akonadi::displayName( mParentCollection ),
+                                                              Akonadi::incidence( mCurrentItem ).get(),
+                                                              mDate, KSystemTimeZones::local() );
+        text.prepend( mHeaderText );
+        mBrowser->setHtml( text );
+      } else {
+        text = mDefaultText;
+        if ( !mDelayedClear )
+          mBrowser->setHtml( text );
+      }
+
     }
 
     void slotParentCollectionFetched( KJob *job )
@@ -100,6 +111,9 @@ class IncidenceViewer::Private
     TextBrowser *mBrowser;
     Item mCurrentItem;
     QDate mDate;
+    QString mHeaderText;
+    QString mDefaultText;
+    bool mDelayedClear;
     Collection mParentCollection;
     CollectionFetchJob *mParentCollectionFetchJob;
     IncidenceAttachmentModel *mAttachmentModel;
@@ -112,12 +126,15 @@ IncidenceViewer::IncidenceViewer( QWidget *parent )
   layout->setMargin( 0 );
 
   d->mBrowser->setNotifyClick( true );
+  d->mBrowser->setMinimumHeight( 1 );
 
   layout->addWidget( d->mBrowser );
 
   // always fetch full payload for incidences
   fetchScope().fetchFullPayload();
   fetchScope().setAncestorRetrieval( ItemFetchScope::Parent );
+
+  d->updateView();
 }
 
 IncidenceViewer::~IncidenceViewer()
@@ -138,10 +155,27 @@ QAbstractItemModel* IncidenceViewer::attachmentModel() const
   return d->mAttachmentModel;
 }
 
+void IncidenceViewer::setDelayedClear( bool delayed )
+{
+  d->mDelayedClear = delayed;
+}
+
+void IncidenceViewer::setDefaultMessage( const QString &message )
+{
+  d->mDefaultText = message;
+}
+
+void IncidenceViewer::setHeaderText( const QString &text )
+{
+  d->mHeaderText = text;
+}
+
 void IncidenceViewer::setIncidence( const Akonadi::Item &incidence, const QDate &date )
 {
   d->mDate = date;
   ItemMonitor::setItem( incidence );
+
+  d->updateView();
 }
 
 void IncidenceViewer::itemChanged( const Item &item )
@@ -151,7 +185,8 @@ void IncidenceViewer::itemChanged( const Item &item )
 
   d->mCurrentItem = item;
 
-  d->mAttachmentModel->setItem( d->mCurrentItem );
+  if ( d->mAttachmentModel )
+    d->mAttachmentModel->setItem( d->mCurrentItem );
 
   if ( d->mParentCollectionFetchJob ) {
     disconnect( d->mParentCollectionFetchJob, SIGNAL( result( KJob* ) ),

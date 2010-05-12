@@ -82,6 +82,22 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceViewer : public QWidget, public Akonadi:
      */
     QAbstractItemModel *attachmentModel() const;
 
+    /**
+     * Sets whether the view shall be cleared as soon as an empty incidence is
+     * set (default) or @p delayed when the next valid incidence is set.
+     */
+    void setDelayedClear( bool delayed );
+
+    /**
+     * Sets the default @p message that shall be shown if no incidence is set.
+     */
+    void setDefaultMessage( const QString &message );
+
+    /**
+     * Sets an additional @p text that is shown above the incidence.
+     */
+    void setHeaderText( const QString &text );
+
   public Q_SLOTS:
     /**
      * Sets the @p incidence that shall be displayed in the viewer.
