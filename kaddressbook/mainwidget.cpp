@@ -31,7 +31,7 @@
 #include "xxportmanager.h"
 
 #include <akonadi/akonadi_next/collectionselectionproxymodel.h>
-#include <akonadi/akonadi_next/entitymodelstatesaver.h>
+#include <akonadi/akonadi_next/etmstatesaver.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/contact/contactdefaultactions.h>
@@ -52,6 +52,7 @@
 #include <kactioncollection.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
+#include <kapplication.h>
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
@@ -135,11 +136,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   proxyModel->setDynamicSortFilter( true );
   proxyModel->setSortCaseSensitivity( Qt::CaseInsensitive );
 
-  mCollectionSelectionStateSaver = new Akonadi::EntityModelStateSaver( proxyModel, this );
-  mCollectionSelectionStateSaver->addRole( Qt::CheckStateRole, "CheckState" );
-
-  QItemSelectionModel* selectionModel = new QItemSelectionModel( proxyModel );
-  proxyModel->setSelectionModel( selectionModel );
+  mCollectionSelectionModel = new QItemSelectionModel( proxyModel );
+  proxyModel->setSelectionModel( mCollectionSelectionModel );
   proxyModel->setSourceModel( mCollectionTree );
 
   mXXPortManager->setItemModel( allContactsModel() );
@@ -152,8 +150,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
            mXXPortManager, SLOT( setDefaultAddressBook( const Akonadi::Collection& ) ) );
 
-  KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( selectionModel,
-                                                                                        this );
+  KSelectionProxyModel *selectionProxyModel = new KSelectionProxyModel( mCollectionSelectionModel,
+                                                                        this );
   selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
   selectionProxyModel->setFilterBehavior( KSelectionProxyModel::ChildrenOfExactSelection );
 
@@ -219,45 +217,20 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
     const KConfigGroup group( Settings::self()->config(), "UiState_ContactView" );
     KPIM::UiStateSaver::restoreState( mItemView, group );
   }
-  {
-    const KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
-    Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mCollectionView );
-    restorer->restoreState( group );
-  }
-  {
-    const KConfigGroup group( Settings::self()->config(), "CollectionSelection" );
-    mCollectionSelectionStateSaver->restoreConfig( group );
-  }
-  {
-    const KConfigGroup group( Settings::self()->config(), "ItemViewState" );
-    Akonadi::EntityTreeViewStateSaver *restorer = new Akonadi::EntityTreeViewStateSaver( mItemView );
-    restorer->restoreState( group );
-  }
 
   guiClient->actionCollection()->action( "options_show_simplegui" )->setChecked( Settings::self()->useSimpleMode() );
+
+  connect( GlobalContactModel::instance()->model(), SIGNAL( modelAboutToBeReset() ), SLOT( saveState() ) );
+  connect( GlobalContactModel::instance()->model(), SIGNAL( modelReset() ), SLOT( restoreState() ) );
+  connect( kapp, SIGNAL( aboutToQuit() ), SLOT( saveState() ) );
+
+  restoreState();
 }
 
 MainWidget::~MainWidget()
 {
   mModelColumnManager->store();
 
-  {
-    KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
-    Akonadi::EntityTreeViewStateSaver saver( mCollectionView );
-    saver.saveState( group );
-    group.sync();
-  }
-  {
-    KConfigGroup group( Settings::self()->config(), "CollectionSelection" );
-    mCollectionSelectionStateSaver->saveConfig( group );
-    group.sync();
-  }
-  {
-    KConfigGroup group( Settings::self()->config(), "ItemViewState" );
-    Akonadi::EntityTreeViewStateSaver saver( mItemView );
-    saver.saveState( group );
-    group.sync();
-  }
   {
     if ( !Settings::self()->useSimpleMode() ) {
       // Do not save the splitter values when in simple mode, because we can't
@@ -272,7 +245,74 @@ MainWidget::~MainWidget()
     KPIM::UiStateSaver::saveState( mItemView, group );
   }
 
+  saveState();
+
   Settings::self()->writeConfig();
+}
+
+void MainWidget::restoreState()
+{
+  // collection view
+  {
+    ETMStateSaver *saver = new ETMStateSaver;
+    saver->setTreeView( mCollectionView );
+
+    const KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
+    saver->restoreState( group );
+  }
+
+  // collection view
+  {
+    ETMStateSaver *saver = new ETMStateSaver;
+    saver->setSelectionModel( mCollectionSelectionModel );
+
+    const KConfigGroup group( Settings::self()->config(), "CollectionViewCheckState" );
+    saver->restoreState( group );
+  }
+
+  // item view
+  {
+    ETMStateSaver *saver = new ETMStateSaver;
+    saver->setTreeView( mItemView );
+    saver->setSelectionModel( mItemView->selectionModel() );
+
+    const KConfigGroup group( Settings::self()->config(), "ItemViewState" );
+    saver->restoreState( group );
+  }
+}
+
+void MainWidget::saveState()
+{
+  // collection view
+  {
+    ETMStateSaver saver;
+    saver.setTreeView( mCollectionView );
+
+    KConfigGroup group( Settings::self()->config(), "CollectionViewState" );
+    saver.saveState( group );
+    group.sync();
+  }
+
+  // collection view
+  {
+    ETMStateSaver saver;
+    saver.setSelectionModel( mCollectionSelectionModel );
+
+    KConfigGroup group( Settings::self()->config(), "CollectionViewCheckState" );
+    saver.saveState( group );
+    group.sync();
+  }
+
+  // item view
+  {
+    ETMStateSaver saver;
+    saver.setTreeView( mItemView );
+    saver.setSelectionModel( mItemView->selectionModel() );
+
+    KConfigGroup group( Settings::self()->config(), "ItemViewState" );
+    saver.saveState( group );
+    group.sync();
+  }
 }
 
 void MainWidget::setupGui()

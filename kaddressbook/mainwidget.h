@@ -31,7 +31,6 @@ class ContactGroupViewer;
 class ContactViewer;
 class ContactsFilterModel;
 class EntityMimeTypeFilterModel;
-class EntityModelStateSaver;
 class EntityTreeView;
 class Item;
 class ItemView;
@@ -43,6 +42,7 @@ class KActionCollection;
 class KXMLGUIClient;
 class ModelColumnManager;
 class QAbstractItemModel;
+class QItemSelectionModel;
 class QModelIndex;
 class QSplitter;
 class QStackedWidget;
@@ -73,6 +73,9 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     void setCollectionViewVisible( bool visible );
 
     void setSimpleGuiMode( bool on );
+
+    void restoreState();
+    void saveState();
 
   private:
     void setupGui();
@@ -107,7 +110,7 @@ class KADDRESSBOOK_EXPORT MainWidget : public QWidget
     Akonadi::ContactGroupViewer *mContactGroupDetails;
     QWidget *mEmptyDetails;
     Akonadi::StandardContactActionManager *mActionManager;
-    Akonadi::EntityModelStateSaver *mCollectionSelectionStateSaver;
+    QItemSelectionModel *mCollectionSelectionModel;
 
     XXPortManager *mXXPortManager;
     ModelColumnManager *mModelColumnManager;
