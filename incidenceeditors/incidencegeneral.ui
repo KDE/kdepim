@@ -48,7 +48,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2">
+   <item row="0" column="1">
     <widget class="KLineEdit" name="mSummaryEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -64,7 +64,7 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
+   <item row="0" column="2">
     <widget class="QLabel" name="mAttendeeSummaryLabel">
      <property name="text">
       <string>No attendees</string>
@@ -90,7 +90,7 @@
      </property>
     </widget>
    </item>
-   <item row="1" column="2">
+   <item row="1" column="1">
     <widget class="KLineEdit" name="mLocationEdit">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
@@ -125,7 +125,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="2">
+   <item row="2" column="1">
     <widget class="KSqueezedTextLabel" name="mCategoriesLabel">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -150,14 +150,14 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="3">
+   <item row="2" column="2">
     <widget class="QPushButton" name="pushButton">
      <property name="text">
       <string>&amp;Select...</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0" rowspan="2" colspan="4">
+   <item row="3" column="0" rowspan="2" colspan="3">
     <widget class="QGroupBox" name="groupBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -436,6 +436,50 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string extracomment="@info:tooltip">Set the secrecy level</string>
+          </property>
+          <property name="whatsThis">
+           <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
+          </property>
+          <property name="text">
+           <string extracomment="@label">Acc&amp;ess:</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="buddy">
+           <cstring>mSecrecyCombo</cstring>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="KComboBox" name="mSecrecyCombo">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string extracomment="@info:tooltip">Set the secrecy level</string>
+          </property>
+          <property name="whatsThis">
+           <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
+          </property>
+          <property name="sizeAdjustPolicy">
+           <enum>QComboBox::AdjustToContents</enum>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item row="4" column="0" colspan="4">
@@ -605,72 +649,17 @@
      </layout>
     </widget>
    </item>
-   <item row="5" column="0">
-    <widget class="QLabel" name="label_3">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string extracomment="@info:tooltip">Set the secrecy level</string>
-     </property>
-     <property name="whatsThis">
-      <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
-     </property>
-     <property name="text">
-      <string extracomment="@label">Acc&amp;ess:</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-     <property name="buddy">
-      <cstring>mSecrecyCombo</cstring>
-     </property>
-    </widget>
-   </item>
-   <item row="5" column="1" colspan="3">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="KComboBox" name="mSecrecyCombo">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string extracomment="@info:tooltip">Set the secrecy level</string>
-       </property>
-       <property name="whatsThis">
-        <string extracomment="@info:whatsthis">Sets whether the access to this event or to-do is restricted. Please note that KOrganizer currently does not use this setting, so the implementation of the restrictions will depend on the groupware server. This means that events or to-dos marked as private or confidential may be visible to others.</string>
-       </property>
-       <property name="sizeAdjustPolicy">
-        <enum>QComboBox::AdjustToContents</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer_7">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-    </layout>
-   </item>
-   <item row="6" column="0" colspan="4">
+   <item row="5" column="0" colspan="3">
     <widget class="QWidget" name="mTodoSpecifics" native="true">
      <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="1">
+      <item row="1" column="1">
        <widget class="QLabel" name="mCompletedLabel">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="text">
          <string extracomment="percent completed">co&amp;mpleted</string>
         </property>
@@ -679,16 +668,19 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
+      <item row="1" column="0">
        <widget class="QComboBox" name="mCompletedCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="toolTip">
          <string/>
         </property>
         <property name="whatsThis">
          <string extracomment="@info:whatsthis">Sets the current completion status of this to-do as a percentage.</string>
-        </property>
-        <property name="sizeAdjustPolicy">
-         <enum>QComboBox::AdjustToContents</enum>
         </property>
         <item>
          <property name="text">
@@ -747,7 +739,7 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="2">
+      <item row="1" column="4">
        <spacer name="horizontalSpacer">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -763,7 +755,7 @@
         </property>
        </spacer>
       </item>
-      <item row="0" column="3">
+      <item row="1" column="5">
        <widget class="QLabel" name="label_12">
         <property name="whatsThis">
          <string extracomment="@label">Sets the priority of this to-do on a scale from one to nine, with one being the highest priority, five being a medium priority, and nine being the lowest. In programs that have a different scale, the numbers will be adjusted to match the appropriate scale.</string>
@@ -771,13 +763,22 @@
         <property name="text">
          <string>&amp;Priority:</string>
         </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
         <property name="buddy">
          <cstring>mPriorityCombo</cstring>
         </property>
        </widget>
       </item>
-      <item row="0" column="4">
+      <item row="1" column="6">
        <widget class="QComboBox" name="mPriorityCombo">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="whatsThis">
          <string extracomment="@info:whatsthis">Sets the priority of this to-do on a scale from one to nine, with one being the highest priority, five being a medium priority, and nine being the lowest. In programs that have a different scale, the numbers will be adjusted to match the appropriate scale.</string>
         </property>
@@ -836,26 +837,19 @@
         </item>
        </widget>
       </item>
-      <item row="0" column="5">
-       <spacer name="horizontalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+      <item row="1" column="2">
+       <widget class="KPIM::KDateEdit" name="mCompletionDateEdit"/>
+      </item>
+      <item row="1" column="3">
+       <widget class="KPIM::KTimeEdit" name="mCompletionTimeEdit"/>
       </item>
      </layout>
     </widget>
    </item>
-   <item row="7" column="0" colspan="4">
+   <item row="6" column="0" colspan="3">
     <widget class="QWidget" name="mEditToolBarPlaceHolder" native="true"/>
    </item>
-   <item row="8" column="0" colspan="4">
+   <item row="7" column="0" colspan="3">
     <widget class="KRichTextWidget" name="mDescriptionEdit">
      <property name="toolTip">
       <string extracomment="@info:tooltip">Set the description in plain text or rich text.</string>
@@ -868,7 +862,7 @@
      </property>
     </widget>
    </item>
-   <item row="9" column="0" colspan="4">
+   <item row="8" column="0" colspan="3">
     <widget class="QWidget" name="mAttachmentPlaceHolder" native="true"/>
    </item>
   </layout>

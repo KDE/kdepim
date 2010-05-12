@@ -20,8 +20,9 @@
 
 #include "incidencegeneraleditor.h"
 
-#include <KActionCollection>
-#include <KToolBar>
+#include <KDE/KActionCollection>
+#include <KDE/KSystemTimeZones>
+#include <KDE/KToolBar>
 
 #include <KCal/Incidence>
 #include <KCal/IncidenceFormatter>
@@ -430,6 +431,7 @@ TodoGeneralEditor::TodoGeneralEditor( QWidget *parent )
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(showAlarm()) );
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SIGNAL(dueDateEditToggle(bool)) );
 //   connect( mUi->mDueCheck, SIGNAL(toggled(bool)), SLOT(dateChanged()) );
+  connect( mUi->mCompletedCombo, SIGNAL(activated(int)), SLOT(completedChanged(int)) );
 }
 
 void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo,
@@ -489,16 +491,24 @@ void TodoGeneralEditor::load( const KCal::Todo::Ptr &todo,
     mUi->mTimeZoneComboEnd->setEnabled( false );
   }
 
-//   mAlreadyComplete = false;
+  mAlreadyComplete = false;
   mUi->mCompletedCombo->setCurrentIndex( todo->percentComplete() / 10 );
   if ( todo->isCompleted() && todo->hasCompletedDate() ) {
-//     mCompleted = todo->completed().toTimeSpec( KSystemTimeZones::local() ).dateTime();
-//     mAlreadyComplete = true;
+    mCompleted = todo->completed().toTimeSpec( KSystemTimeZones::local() ).dateTime();
+    mAlreadyComplete = true;
   }
-//   setCompletedDate();
+  setCompletedDate();
 
   mUi->mPriorityCombo->setCurrentIndex( todo->priority() );
 //   mStartDateModified = false;
+}
+
+void TodoGeneralEditor::completedChanged( int index )
+{
+  if ( index == 10 ) {
+    mCompleted = QDateTime::currentDateTime();
+  }
+  setCompletedDate();
 }
 
 void TodoGeneralEditor::enableTimeEditors( bool enabled )
@@ -549,6 +559,22 @@ void TodoGeneralEditor::enableEndEdit( bool enable )
                   mUi->mEndTimeEdit,
                   mUi->mTimeZoneComboEnd,
                   enable );
+}
+
+void TodoGeneralEditor::setCompletedDate()
+{
+  if ( mUi->mCompletedCombo->currentIndex() == 10 && mCompleted.isValid() ) {
+    mUi->mCompletedLabel->setText( i18nc( "to-do completed on datetime", "co&mpleted on" ) );
+//        .arg(KGlobal::locale()->formatDateTime(mCompleted)));
+    mUi->mCompletionDateEdit->show();
+    mUi->mCompletionTimeEdit->show();
+    mUi->mCompletionDateEdit->setDate( mCompleted.date() );
+    mUi->mCompletionTimeEdit->setTime( mCompleted.time() );
+  } else {
+    mUi->mCompletedLabel->setText( i18nc( "to-do completed", "co&mpleted" ) );
+    mUi->mCompletionDateEdit->hide();
+    mUi->mCompletionTimeEdit->hide();
+  }
 }
 
 void TodoGeneralEditor::updateHasTimeCheckBox()

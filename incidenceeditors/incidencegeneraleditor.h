@@ -152,9 +152,11 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
                bool tmpl );
 
   private slots:
+    void completedChanged(int);
     void enableTimeEditors( bool enabled );
     void enableStartEdit( bool enable );
     void enableEndEdit( bool enable );
+    void setCompletedDate();
     void updateHasTimeCheckBox();
 
   private:
@@ -167,6 +169,8 @@ class TodoGeneralEditor : public IncidenceGeneralEditor
     
   private:
 //     KCal::Todo::Ptr mTodo;
+    bool mAlreadyComplete;
+    QDateTime mCompleted;
 };
 
 #endif // INCIDENCEGENERALEDITOR_H
