@@ -22,6 +22,8 @@
 
 #include "kdeclarativefullscreenview.h"
 
+#include <KActionCollection>
+
 class KJob;
 
 namespace KPIMIdentities
@@ -49,9 +51,12 @@ class ComposerView : public KDeclarativeFullScreenView
     QString subject() const;
     void setSubject( const QString &subject );
 
+    KActionCollection* actionCollection() const;
+
   public slots:
     /// Send clicked in the user interface
     void send();
+    QObject* getAction( const QString &name ) const;
 
   private slots:
     void qmlLoaded ( QDeclarativeView::Status );
@@ -62,6 +67,7 @@ class ComposerView : public KDeclarativeFullScreenView
     KPIMIdentities::IdentityCombo *m_identityCombo;
     Message::KMeditor *m_editor;
     QString m_subject;
+    KActionCollection *mActionCollection;
 };
 
 #endif

@@ -328,6 +328,11 @@ QAbstractItemModel* KDeclarativeMainView::favoriteSelectedItems() const
   return d->mFavSelectedChildItems;
 }
 
+KActionCollection* KDeclarativeMainView::actionCollection() const
+{
+  return d->mActionCollection;
+}
+
 QObject* KDeclarativeMainView::getAction( const QString &name ) const
 {
   return d->mActionCollection->action( name );

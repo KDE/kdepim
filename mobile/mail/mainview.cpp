@@ -29,6 +29,8 @@
 #include <akonadi/kmime/messageparts.h>
 
 #include "messagelistproxy.h"
+#include <KActionCollection>
+#include <KAction>
 
 MainView::MainView(QWidget* parent) :
   KDeclarativeMainView( QLatin1String( "kmail-mobile" ), new MessageListProxy, parent )

@@ -50,6 +50,30 @@ KPIM.MainView {
       anchors.fill: parent
       id: attachmentPanel
       titleIcon: KDE.iconPath( "mail-attachment", 48 );
+      handleHeight: 30
+      contentWidth: attachmentView.requestedWidth
+      content: [
+        KPIM.AttachmentList {
+          id: attachmentView
+          model: attachmentModel
+          anchors.top: parent.top
+          anchors.left : parent.left
+          anchors.right : parent.right
+          height : ( parent.height / 6 ) * 5
+        },
+        KPIM.Action {
+          id : newAttachmentButton
+//           color : "lightsteelblue"
+          anchors.top : attachmentView.top
+          anchors.left : parent.left
+          anchors.right : parent.right
+          height : parent.height / 6
+          action : application.getAction("add_attachment")
+          onTriggered : {
+            console.log("New Attachment");
+          }
+        }
+      ]
     }
   }
 

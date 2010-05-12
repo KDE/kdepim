@@ -23,6 +23,9 @@
 #include <QItemSelectionModel>
 
 class QAbstractItemModel;
+
+class KActionCollection;
+
 namespace Akonadi {
 class EntityTreeModel;
 }
@@ -66,6 +69,8 @@ public:
   void addMimeType( const QString &mimeType );
 
   QStringList mimeTypes() const;
+
+  KActionCollection* actionCollection() const;
 
 public slots:
   void setSelectedAccount( int row );

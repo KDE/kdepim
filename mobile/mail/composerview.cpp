@@ -36,6 +36,8 @@
 
 #include <klocalizedstring.h>
 #include <KDebug>
+#include <KIcon>
+#include <KAction>
 #include <qdeclarativecontext.h>
 #include <qdeclarativeengine.h>
 
@@ -51,6 +53,14 @@ ComposerView::ComposerView(QWidget* parent) :
 
   qmlRegisterType<DeclarativeEditor>( "org.kde.messagecomposer", 4, 5, "Editor" );
   qmlRegisterType<DeclarativeIdentityComboBox>( "org.kde.kpimidentities", 4, 5, "IdentityComboBox" );
+
+  // TODO: Really make this application-global;
+  mActionCollection = new KActionCollection( this );
+  KAction *action = mActionCollection->addAction( "add_attachment" );
+  action->setText( i18n( "Add Attachment" ) );
+  action->setIcon( KIcon( "list-add" ) );
+
+  engine()->rootContext()->setContextProperty( "application", QVariant::fromValue( static_cast<QObject*>( this ) ) );
 
   connect( this, SIGNAL(statusChanged(QDeclarativeView::Status)), SLOT(qmlLoaded(QDeclarativeView::Status)) );
 }
@@ -125,6 +135,17 @@ void ComposerView::setSubject ( const QString& subject )
     setWindowTitle( subject );
   else
     setWindowTitle( i18n( "New mail" ) );
+}
+
+KActionCollection* ComposerView::actionCollection() const
+{
+  return mActionCollection;
+}
+
+QObject* ComposerView::getAction( const QString &name ) const
+{
+  kDebug() << mActionCollection << mActionCollection->action( name );
+  return mActionCollection->action( name );
 }
 
 #include "composerview.moc"
