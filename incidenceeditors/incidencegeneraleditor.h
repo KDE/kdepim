@@ -36,6 +36,7 @@
 #include <KCal/Event>
 #include <KCal/Todo>
 
+class QCheckBox;
 class QDateTime;
 
 namespace KCal {
@@ -83,10 +84,13 @@ class IncidenceGeneralEditor : public QWidget
     void editAlarms();
     void enableRichTextDescription( bool enable );
     void updateAlarmWidgets();
+    void updateDefaultAlarmTime();
+    
   
   private: /// Methods
     KCal::Alarm *alarmFromSimplePage() const;
     void initDescriptionToolBar();
+    void setDescription( const QString &text, bool isRich );
 
   protected: /// Members
     enum AlarmStackPages {
@@ -98,7 +102,9 @@ class IncidenceGeneralEditor : public QWidget
     
     KCal::Alarm::List     mAlarmList;
     KCal::ICalTimeZones  *mTimeZones;
+
     Ui::IncidenceGeneral *mUi;
+    QCheckBox            *mRichTextCheck;
 
     // current start and end date and time
     QDateTime mCurrStartDateTime;

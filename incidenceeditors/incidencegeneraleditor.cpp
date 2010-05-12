@@ -37,6 +37,7 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
   : QWidget( parent )
   , mTimeZones( new ICalTimeZones )
   , mUi( new Ui::IncidenceGeneral )
+  , mRichTextCheck( new QCheckBox( i18nc( "@option:check", "Rich text" ), this ) )
 {
   mUi->setupUi( this );
   mUi->mAlarmBell->setPixmap( SmallIcon( "task-reminder" ) );
@@ -65,37 +66,37 @@ IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
 void IncidenceGeneralEditor::load( const KCal::Incidence::ConstPtr &incidence )
 {
   mIncidence = incidence;
+  mUi->mSummaryEdit->setText( incidence->summary() );
+  mUi->mLocationEdit->setText( incidence->location() );
+  mUi->mCategoriesLabel->setText( incidence->categories().join( "," ) );
 
-//   setSummary( incidence->summary() );
-//   mLocationEdit->setText( incidence->location() );
-//   setDescription( incidence->description(), incidence->descriptionIsRich() );
-// 
-//   switch( incidence->secrecy() ) {
-//   case Incidence::SecrecyPublic:
-//     mSecrecyCombo->setCurrentIndex( 0 );
-//     break;
-//   case Incidence::SecrecyPrivate:
-//     mSecrecyCombo->setCurrentIndex( 1 );
-//     break;
-//   case Incidence::SecrecyConfidential:
-//     mSecrecyCombo->setCurrentIndex( 2 );
-//     break;
-//   }
-// 
-//   // set up alarm stuff
-//   mAlarmList.clear();
-//   Alarm::List::ConstIterator it;
-//   Alarm::List alarms = incidence->alarms();
-//   for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
-//     Alarm *al = new Alarm( *(*it) );
-//     al->setParent( 0 );
-//     mAlarmList.append( al );
-//   }
-//   updateDefaultAlarmTime();
-//   updateAlarmWidgets();
-// 
-//   setCategories( incidence->categories() );
-// 
+  switch( incidence->secrecy() ) {
+  case Incidence::SecrecyPublic:
+    mUi->mSecrecyCombo->setCurrentIndex( 0 );
+    break;
+  case Incidence::SecrecyPrivate:
+    mUi->mSecrecyCombo->setCurrentIndex( 1 );
+    break;
+  case Incidence::SecrecyConfidential:
+    mUi->mSecrecyCombo->setCurrentIndex( 2 );
+    break;
+  }
+
+  setDescription( incidence->description(), incidence->descriptionIsRich() );
+
+  // set up alarm stuff
+  mAlarmList.clear();
+  Alarm::List::ConstIterator it;
+  Alarm::List alarms = incidence->alarms();
+  for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
+    Alarm *al = new Alarm( *(*it) );
+    al->setParent( 0 );
+    mAlarmList.append( al );
+  }
+  
+  updateDefaultAlarmTime();
+  updateAlarmWidgets();
+
 //   mAttachments->readIncidence( incidence );
 }
 
@@ -125,15 +126,13 @@ Alarm *IncidenceGeneralEditor::alarmFromSimplePage() const
 
 void IncidenceGeneralEditor::initDescriptionToolBar()
 {
-
-  QCheckBox *richTextCheck = new QCheckBox( i18nc( "@option:check", "Rich text" ), this );
-  richTextCheck->setWhatsThis(
+  mRichTextCheck->setWhatsThis(
     i18nc( "@info:whatsthis",
            "Select this option if you would like to enter rich text into "
            "the description field of this event or to-do." ) );
-  richTextCheck->setToolTip( i18nc( "@info:tooltip", "Toggle Rich Text" ) );
+  mRichTextCheck->setToolTip( i18nc( "@info:tooltip", "Toggle Rich Text" ) );
 
-  connect( richTextCheck, SIGNAL(toggled(bool)),
+  connect( mRichTextCheck, SIGNAL(toggled(bool)),
            this, SLOT(enableRichTextDescription(bool)) );
            
   KActionCollection *collection = new KActionCollection( this ); //krazy:exclude=tipsandthis
@@ -141,7 +140,7 @@ void IncidenceGeneralEditor::initDescriptionToolBar()
 
   KToolBar *mEditToolBar = new KToolBar( mUi->mEditToolBarPlaceHolder );
   mEditToolBar->setToolButtonStyle( Qt::ToolButtonIconOnly );
-  mEditToolBar->addWidget( richTextCheck );
+  mEditToolBar->addWidget( mRichTextCheck );
   mEditToolBar->addAction( collection->action( "format_text_bold" ) );
   mEditToolBar->addAction( collection->action( "format_text_italic" ) );
   mEditToolBar->addAction( collection->action( "format_text_underline" ) );
@@ -158,10 +157,19 @@ void IncidenceGeneralEditor::initDescriptionToolBar()
   mEditToolBar->addSeparator();
 
   mEditToolBar->addAction( collection->action( "format_painter" ) );
-  mUi->mDescriptionEdit->setActionsEnabled( richTextCheck->isChecked() );
+  mUi->mDescriptionEdit->setActionsEnabled( mRichTextCheck->isChecked() );
 
   QGridLayout *layout = new QGridLayout( mUi->mEditToolBarPlaceHolder );
   layout->addWidget( mEditToolBar );
+}
+
+void IncidenceGeneralEditor::setDescription( const QString &text, bool isRich )
+{
+  mRichTextCheck->setChecked( isRich );
+  if ( isRich )
+    mUi->mDescriptionEdit->setHtml( text );
+  else
+    mUi->mDescriptionEdit->setPlainText( text );
 }
 
 void IncidenceGeneralEditor::slotHasTimeCheckboxToggled( bool checked )
@@ -245,6 +253,18 @@ void IncidenceGeneralEditor::updateAlarmWidgets()
     }
   }
 }
+
+void IncidenceGeneralEditor::updateDefaultAlarmTime()
+{
+  const int reminderTime = EditorConfig::instance()->reminderTime();
+  int index = EditorConfig::instance()->reminderTimeUnits();
+  if ( index < 0 || index > 2 )
+    index = 0;
+
+  mUi->mAlarmTimeEdit->setValue( reminderTime );
+  mUi->mAlarmIncrCombo->setCurrentIndex( index );
+}
+
 
 /// public slots
 
