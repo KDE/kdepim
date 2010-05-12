@@ -15,7 +15,7 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
       <label>Replace recognized prefi&amp;x with "Re:"</label>
         <default>true</default>
     </entry>
-      
+
     <entry name="ForwardPrefixes" type="StringList" key="forward-prefixes">
       <default>Fwd:,FW:</default>
     </entry>
@@ -83,6 +83,11 @@ xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/sta
     </entry>
     <entry name="ShowMessagePartDialogOnAttach" type="Bool" key="showMessagePartDialogOnAttach">
       <default>false</default>
+    </entry>
+
+    <entry name="MaximumAttachmentSize" type="Int">
+        <label>The maximum size in MB that email attachments are allowed to have (-1 for no limit).</label>
+        <default>-1</default>
     </entry>
 
   </group>
