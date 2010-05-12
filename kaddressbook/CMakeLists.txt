@@ -64,7 +64,7 @@ set( kaddressbook_LIB_SRCS
 
 kde4_add_kcfg_files(kaddressbook_LIB_SRCS settings.kcfgc)
 kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
-target_link_libraries(kaddressbookprivate kdepim akonadi_next ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KUTILS_LIBS} )
+target_link_libraries(kaddressbookprivate kdepim akonadi_next ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_AKONADI_CONTACT_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KCMUTILS_LIBS} )
 
 if(QGPGME_FOUND)
   target_link_libraries(kaddressbookprivate ${QGPGME_LIBRARIES})
@@ -87,7 +87,7 @@ kde4_add_app_icon(kaddressbook_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-pim-
 kde4_add_executable(kaddressbook ${kaddressbook_SRCS})
 
 target_link_libraries(kaddressbook  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
-                              ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
+                              ${KDE4_KIO_LIBS} ${KDE4_KCMUTILS_LIBS} ${KDE4_PHONON_LIBS})
 target_link_libraries(kaddressbook ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KDEUI_LIBS} kaddressbookprivate)
 
 if(QGPGME_FOUND)

@@ -92,7 +92,7 @@ kde4_add_executable(kjots ${kjots_SRCS})
 
 target_link_libraries(kjots
   ${kjotsLibs}
-  ${KDE4_KUTILS_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
   ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
   ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
@@ -140,7 +140,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
 
 
   target_link_libraries(kjotspart
-    ${KDE4_KUTILS_LIBS}
+    ${KDE4_KCMUTILS_LIBS}
     ${KDE4_KPARTS_LIBS}
     kdepim
     ${KDEPIMLIBS_KMIME_LIBS}
@@ -164,7 +164,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
 
   kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS})
 
-  target_link_libraries(kcm_kjots  ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
+  target_link_libraries(kcm_kjots  ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS})
 
   install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
 
