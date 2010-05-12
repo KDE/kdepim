@@ -48,7 +48,7 @@ MainWidget::MainWidget( MainWindow* parent )
     splitter->addWidget( mIncidenceList );
 
     // Event view
-    mIncidenceViewer = new Akonadi::KCalItemBrowser( this );
+    mIncidenceViewer = new Akonadi::IncidenceViewer( this );
     topSplitter->addWidget( mIncidenceViewer );
 
 

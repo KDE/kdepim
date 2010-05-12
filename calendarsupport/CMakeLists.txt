@@ -23,6 +23,7 @@ set( kcalakonadi_LIB_SRC
      incidencefilterproxymodel.cpp
      kcalmodel.cpp
      kcalitembrowser.cpp
+     incidenceviewer.cpp
      itembrowser.cpp
      utils.cpp
      groupware.cpp
@@ -51,7 +52,7 @@ target_link_libraries( akonadi-kcal_next  ${KDEPIMLIBS_AKONADI_LIBS}
   ${KDEPIMLIBS_MAILTRANSPORT_LIBS}
   ${KDE4_KDEUI_LIBS}
   ${KDE4_KIO_LIBS}
-  akonadi_next
+  akonadi_next kdepimdbusinterfaces
 )
 
 set_target_properties( akonadi-kcal_next PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

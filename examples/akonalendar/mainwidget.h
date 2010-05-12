@@ -31,7 +31,7 @@
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include "kcal/kcalmodel.h"
-#include "kcal/kcalitembrowser.h"
+#include "kcal/incidenceviewer.h"
 
 class MainWindow;
 
@@ -52,7 +52,7 @@ class MainWidget : public QWidget
       // Views
       Akonadi::CollectionView *mCollectionList;
       QTreeView *mIncidenceList;
-      Akonadi::KCalItemBrowser *mIncidenceViewer;
+      Akonadi::IncidenceViewer *mIncidenceViewer;
 
       // Models
       Akonadi::CollectionModel *mCollectionModel;

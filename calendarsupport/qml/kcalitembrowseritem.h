@@ -24,14 +24,13 @@
 #include <QAbstractItemModel>
 
 namespace Akonadi {
-class KCalItemBrowser;
+class IncidenceViewer;
 
 namespace KCal {
 
 class KCalItemBrowserItem : public DeclarativeAkonadiItem
 {
   Q_OBJECT
-  Q_PROPERTY( QString itemPath READ itemPath WRITE setItemPath )
   Q_PROPERTY( QObject* attachmentModel READ attachmentModel NOTIFY attachmentModelChanged )
   public:
     explicit KCalItemBrowserItem( QDeclarativeItem *parent = 0 );
@@ -39,16 +38,13 @@ class KCalItemBrowserItem : public DeclarativeAkonadiItem
     qint64 itemId() const;
     void setItemId(qint64 id);
 
-    QString itemPath() const;
-    void setItemPath( const QString &itemPath );
-
     QObject *attachmentModel() const;
 
   signals:
     void attachmentModelChanged();
 
   private:
-    KCalItemBrowser *m_viewer;
+    IncidenceViewer *m_viewer;
 };
 
 }
