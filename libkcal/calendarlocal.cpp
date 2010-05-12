@@ -313,7 +313,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
         if ( alarm->hasStartOffset() ) {
           offset = alarm->startOffset().asSeconds();
         } else if ( alarm->hasEndOffset() ) {
-          offset = alarm->endOffset();
+          offset = alarm->endOffset().asSeconds();
           if ( !endOffsetValid ) {
             if ( incidence->type() == "Event" ) {
               endOffset = Duration( e->dtStart(), e->dtEnd() );
@@ -332,13 +332,8 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
           alarmStart =
             offset.end( alarm->hasEndOffset() ? e->dtEnd() : e->dtStart() );
         } else if ( incidence->type() == "Todo" ) {
-          if ( alarm->hasEndOffset() ) {
-            if ( t->hasDueDate() ) {
-              alarmStart = offset.end( t->dtDue() );
-            } else if ( t->hasStartDate() ) {
-              alarmStart = offset.end( t->dtStart() );
-            }
-          }
+          alarmStart =
+            offset.end( alarm->hasEndOffset() ? t->dtDue() : t->dtStart() );
         }
 
         if ( alarmStart.isValid() && alarmStart > to ) {
@@ -349,11 +344,7 @@ void CalendarLocal::appendRecurringAlarms( Alarm::List &alarms,
         if ( incidence->type() == "Event" ) {
           baseStart = e->dtStart();
         } else if ( incidence->type() == "Todo" ) {
-          if ( t->hasStartDate() ) {
-            baseStart = t->dtStart();
-          } else if ( t->hasDueDate() ) {
-            baseStart = t->dtDue();
-          }
+          baseStart = t->dtDue();
         }
         if ( alarmStart.isValid() && from > alarmStart ) {
           alarmStart = from;   // don't look earlier than the earliest alarm
