@@ -336,7 +336,6 @@ AttachmentControllerBase::AttachmentControllerBase( Message::AttachmentModel *mo
 {
   d->model = model;
   connect( model, SIGNAL(attachUrlsRequested(KUrl::List)), this, SLOT(addAttachments(KUrl::List)) );
-  connect( model, SIGNAL(attachItemsRequester(Akonadi::Item::List ) ), this, SLOT( addAttachmentItems( Akonadi::Item::List ) ) );
   connect( model, SIGNAL(attachmentRemoved(KPIM::AttachmentPart::Ptr)),
       this, SLOT(attachmentRemoved(KPIM::AttachmentPart::Ptr)) );
   connect( model, SIGNAL(attachmentCompressRequested(KPIM::AttachmentPart::Ptr,bool)),
