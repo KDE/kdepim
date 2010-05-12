@@ -203,7 +203,9 @@ void AttachmentPart::setData( const QByteArray &data )
 {
   d->data = data;
   if( d->autoEncoding ) {
-    d->encoding = KMime::encodingsForData( data ).first();
+    QList<KMime::Headers::contentEncoding> possibleEncodings = KMime::encodingsForData( data );
+    possibleEncodings.removeAll( KMime::Headers::CE8Bit );
+    d->encoding = possibleEncodings.first();
   };
   d->size = sizeWithEncoding( d->data, d->encoding );
 }
