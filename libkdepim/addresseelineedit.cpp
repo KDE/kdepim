@@ -32,7 +32,6 @@
 #include <Akonadi/EntityDisplayAttribute>
 #include <Akonadi/ItemFetchScope>
 
-#include <kldap/ldapclient.h>
 #include <kldap/ldapserver.h>
 #include <kmime/kmime_util.h>
 

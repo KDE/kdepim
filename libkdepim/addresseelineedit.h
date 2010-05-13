@@ -30,8 +30,9 @@
 #include "kmailcompletion.h"
 #include "kdepim_export.h"
 
+#include "ldap/ldapclient.h"
+
 #include <kabc/addressee.h>
-#include <kldap/ldapclient.h>
 #include <Akonadi/Job>
 #include <Akonadi/Collection>
 

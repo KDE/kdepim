@@ -25,7 +25,7 @@
 
 #include <akonadi/contact/emailaddressselectionview.h>
 #include <kabc/contactgroup.h>
-#include <kldap/ldapsearchdialog.h>
+#include <libkdepim/ldap/ldapsearchdialog.h>
 #include <kpimutils/email.h>
 
 #include <kconfiggroup.h>

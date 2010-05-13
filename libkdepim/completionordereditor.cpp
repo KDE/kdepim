@@ -30,7 +30,8 @@
 
 #include "completionordereditor.h"
 #include "completionordereditor_p.h"
-#include <kldap/ldapclient.h>
+#include "ldap/ldapclient.h"
+
 #include <kldap/ldapserver.h>
 
 #ifndef KDEPIM_NO_KRESOURCES

@@ -25,6 +25,8 @@ set(kdepim_LIB_SRCS
    addresseelineedit.cpp
    kdatepickerpopup.cpp
    ktimezonecombobox.cpp
+   ldap/ldapclient.cpp
+   ldap/ldapsearchdialog.cpp
    overlaywidget.cpp
    progressmanager.cpp
    agentprogressmonitor.cpp
@@ -57,6 +59,7 @@ target_link_libraries(kdepim
   ${KDEPIMLIBS_KLDAP_LIBS}
   ${KDEPIMLIBS_KPIMIDENTITIES_LIBS}
   ${KDE4_KPARTS_LIBS}
+  ${KDE4_KCMUTILS_LIBS}
   ${KDE4_KMIME_LIBRARY}
   ${KDEPIMLIBS_KPIMTEXTEDIT_LIBS}
   ${KDEPIMLIBS_KMIME_LIBS}
@@ -100,6 +103,19 @@ if (QT_QTDESIGNER_FOUND)
   install(TARGETS kdepimwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 endif (QT_QTDESIGNER_FOUND)
 
+########### next target ###############
+
+set( kcm_ldap_SRCS
+     ldap/addhostdialog.cpp
+     ldap/kcmldap.cpp
+)
+
+kde4_add_plugin(kcm_ldap ${kcm_ldap_SRCS})
+
+target_link_libraries(kcm_ldap ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} kdepim)
+
+install(TARGETS kcm_ldap DESTINATION ${PLUGIN_INSTALL_DIR})
+install(FILES ldap/kcmldap.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 
 ########### install files ###############
 
