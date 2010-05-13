@@ -118,7 +118,7 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
      <property name="buddy">
-      <cstring>pushButton</cstring>
+      <cstring>mSelectCategoriesButton</cstring>
      </property>
     </widget>
    </item>
@@ -143,12 +143,12 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <property name="buddy">
-      <cstring>pushButton</cstring>
+      <cstring>mSelectCategoriesButton</cstring>
      </property>
     </widget>
    </item>
    <item row="2" column="2">
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="mSelectCategoriesButton">
      <property name="text">
       <string>&amp;Select...</string>
      </property>
