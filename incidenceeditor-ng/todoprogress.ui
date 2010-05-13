@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TodoProgressEditor</class>
+ <widget class="QWidget" name="TodoProgressEditor">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>520</width>
+    <height>33</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="QComboBox" name="mCompletedCombo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string/>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Sets the current completion status of this to-do as a percentage.</string>
+     </property>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">0 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">10 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">20 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">30 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">40 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">50 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">60 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">70 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">80 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">90 %</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="@item:inlistbox Percent complete">100 %</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="mCompletedLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string extracomment="percent completed">co&amp;mpleted</string>
+     </property>
+     <property name="buddy">
+      <cstring>mCompletedCombo</cstring>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="KPIM::KDateEdit" name="mCompletionDateEdit"/>
+   </item>
+   <item>
+    <widget class="KPIM::KTimeEdit" name="mCompletionTimeEdit"/>
+   </item>
+   <item>
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Minimum</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_12">
+     <property name="whatsThis">
+      <string extracomment="@label">Sets the priority of this to-do on a scale from one to nine, with one being the highest priority, five being a medium priority, and nine being the lowest. In programs that have a different scale, the numbers will be adjusted to match the appropriate scale.</string>
+     </property>
+     <property name="text">
+      <string>&amp;Priority:</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+     <property name="buddy">
+      <cstring>mPriorityCombo</cstring>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="mPriorityCombo">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="whatsThis">
+      <string extracomment="@info:whatsthis">Sets the priority of this to-do on a scale from one to nine, with one being the highest priority, five being a medium priority, and nine being the lowest. In programs that have a different scale, the numbers will be adjusted to match the appropriate scale.</string>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QComboBox::AdjustToContents</enum>
+     </property>
+     <item>
+      <property name="text">
+       <string extracomment="unspecified priority">unspecified</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="highest priority">1 (highest)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>2</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>3</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>4</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="medium priority">5 (medium)</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>6</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>7</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>8</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string extracomment="lowest priority">9 (lowest)</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPIM::KTimeEdit</class>
+   <extends>QComboBox</extends>
+   <header>libkdepim/ktimeedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KPIM::KDateEdit</class>
+   <extends>QComboBox</extends>
+   <header>libkdepim/kdateedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
