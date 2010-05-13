@@ -84,6 +84,15 @@ void SkeletonMessageJobPrivate::doStart()
     message->setHeader( to );
   }
 
+  // Reply To:
+  {
+    KMime::Headers::ReplyTo *replyTo = new KMime::Headers::ReplyTo( message );
+    KMime::Types::Mailbox address;
+    address.fromUnicodeString( infoPart->replyTo() );
+    replyTo->addAddress( address );
+    message->setHeader( replyTo );
+  }
+
   // Cc:
   {
     KMime::Headers::Cc *cc = new KMime::Headers::Cc( message );
