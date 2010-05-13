@@ -17,6 +17,9 @@ endif ()
 ########### next target ###############
 
 set( incidenceeditors_LIB_SRCS
+    incidenceeditor-ng/incidenceeditor.cpp
+    incidenceeditor-ng/combinedincidenceeditor.cpp
+
     incidencegeneraleditor.cpp
     autochecktreewidget.cpp
     categoryconfig.cpp
