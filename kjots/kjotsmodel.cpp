@@ -190,7 +190,7 @@ bool KJotsModel::setData( const QModelIndex& index, const QVariant& value, int r
     KMime::Message::Ptr note = item.payload<KMime::Message::Ptr>();
     QTextDocument *document = value.value<QTextDocument*>();
 
-    bool isRichText = KPIMTextEdit::TextUtils::isFormattingUsed( document );
+    bool isRichText = KPIMTextEdit::TextUtils::containsFormatting( document );
 
     note->contentType()->setMimeType( isRichText ? "text/html" : "text/plain" );
     note->mainBodyPart()->fromUnicodeString( isRichText ? document->toHtml() : document->toPlainText() );
