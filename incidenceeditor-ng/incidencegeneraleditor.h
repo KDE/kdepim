@@ -26,6 +26,8 @@ namespace Ui {
 class IncidenceGeneralEditor;
 }
 
+namespace IncidenceEditorNG {
+
 /**
  * The IncidenceGeneralEditor keeps track of the following Incidence parts:
  * - Summary
@@ -56,5 +58,7 @@ class IncidenceGeneralEditor : public IncidenceEditor
     QStringList mSelectedCategories;
     Ui::IncidenceGeneralEditor *mUi;
 };
+
+} // IncidenceEditorNG
 
 #endif // INCIDENCEGENERALEDITOR_H

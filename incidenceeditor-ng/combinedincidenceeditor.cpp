@@ -19,6 +19,8 @@
 
 #include "combinedincidenceeditor.h"
 
+using namespace IncidenceEditorNG;
+
 /// public methods
 
 bool CombinedIncidenceEditor::isDirty() const

@@ -20,7 +20,9 @@
 #ifndef COMBINEDINCIDENCEEDITOR_H
 #define COMBINEDINCIDENCEEDITOR_H
 
-#include <incidenceeditor-ng/incidenceeditor.h>
+#include "incidenceeditor.h"
+
+namespace IncidenceEditorNG {
 
 /**
  * The CombinedIncidenceEditor combines optional widgets with zero or more
@@ -48,5 +50,7 @@ class CombinedIncidenceEditor : public IncidenceEditor
   private:
     int mDirtyEditorCount;
 };
+
+} // IncidenceEditorNG
 
 #endif // COMBINEDINCIDENCEEDITOR_H

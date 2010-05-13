@@ -19,6 +19,8 @@
 
 #include "incidenceeditor.h"
 
+using namespace IncidenceEditorNG;
+
 IncidenceEditor::IncidenceEditor( QWidget *parent )
   : QWidget( parent )
   , mWasDirty( false )

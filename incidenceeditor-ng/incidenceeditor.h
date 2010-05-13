@@ -26,6 +26,8 @@
 
 #include <KCal/Incidence>
 
+namespace IncidenceEditorNG {
+
 /**
  * KCal Incidences are complicated objects. The user interfaces to create/modify
  * are therefore complex too. The IncedenceEditor class is a divide and conquer
@@ -84,5 +86,7 @@ class IncidenceEditor : public QWidget
     KCal::Incidence::ConstPtr mLoadedIncidence;
     bool mWasDirty;
 };
+
+} // IncidenceEditorNG
 
 #endif // INCIDENCEEDITOR_H
