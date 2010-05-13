@@ -20,7 +20,7 @@ set( incidenceeditors_LIB_SRCS
     incidenceeditor-ng/incidenceeditor.cpp
     incidenceeditor-ng/combinedincidenceeditor.cpp
 
-    incidencegeneraleditor.cpp
+    #incidencegeneraleditor.cpp
     autochecktreewidget.cpp
     categoryconfig.cpp
     categoryhierarchyreader.cpp
@@ -57,7 +57,7 @@ endif ()
 kde4_add_ui_files( incidenceeditors_LIB_SRCS
    categoryselectdialog_base.ui
    editoralarms_base.ui
-   incidencegeneral.ui
+   #incidencegeneral.ui
    template_management_dialog_base.ui
 )
 

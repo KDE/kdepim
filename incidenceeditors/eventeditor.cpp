@@ -145,7 +145,7 @@ void EventEditor::setupGeneral()
 
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, i18nc( "@title:tab general event settings", "&General" ) );
-  mTabWidget->addTab( new EventGeneralEditor( this ), "&New General" );
+//   mTabWidget->addTab( new EventGeneralEditor( this ), "&New General" );
   topFrame->setWhatsThis( i18nc( "@info:whatsthis",
                                  "The General tab allows you to set the most "
                                  "common options for the event." ) );
