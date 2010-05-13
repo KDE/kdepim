@@ -19,6 +19,7 @@ endif ()
 set( incidenceeditors_LIB_SRCS
     incidenceeditor-ng/incidenceeditor.cpp
     incidenceeditor-ng/combinedincidenceeditor.cpp
+    incidenceeditor-ng/incidencegeneraleditor.cpp
 
     #incidencegeneraleditor.cpp
     autochecktreewidget.cpp
@@ -59,6 +60,7 @@ kde4_add_ui_files( incidenceeditors_LIB_SRCS
    editoralarms_base.ui
    #incidencegeneral.ui
    template_management_dialog_base.ui
+   incidenceeditor-ng/incidencegeneraleditor.ui
 )
 
 kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
