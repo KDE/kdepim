@@ -62,6 +62,13 @@ class IncidenceEditor : public QWidget
      */
     void dirtyStatusChanged( bool isDirty );
 
+  public slots:
+    /**
+     * Checks if the dirty status has changed until last check and emits the
+     * dirtyStatusChanged signal if needed.
+     */
+    void checkDirtyStatus();
+    
   protected:
     /** Only subclasses can instantiate IncidenceEditors */
     IncidenceEditor( QWidget *parent = 0 );
@@ -73,8 +80,9 @@ class IncidenceEditor : public QWidget
       return  boost::dynamic_pointer_cast<const IncidenceT>( mLoadedIncidence );
     }
 
-  private:
+  protected:
     KCal::Incidence::ConstPtr mLoadedIncidence;
+    bool mWasDirty;
 };
 
 #endif // INCIDENCEEDITOR_H

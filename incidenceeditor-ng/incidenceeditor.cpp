@@ -21,7 +21,18 @@
 
 IncidenceEditor::IncidenceEditor( QWidget *parent )
   : QWidget( parent )
+  , mWasDirty( false )
 { }
 
 IncidenceEditor::~IncidenceEditor()
 { }
+
+void IncidenceEditor::checkDirtyStatus()
+{
+  const bool dirty = isDirty();
+  if ( mWasDirty != dirty ) {
+    mWasDirty = dirty;
+    emit dirtyStatusChanged( dirty );
+  }
+}
+
