@@ -823,7 +823,7 @@ void AgendaView::updateEventDates( AgendaItem *item )
   if ( !incidence ) {
     return;
   }
-  if ( !changer() || !changer()->beginChange( aitem ) ) {
+  if ( !changer() ) {
     return;
   }
   Incidence::Ptr oldIncidence( incidence->clone() );
