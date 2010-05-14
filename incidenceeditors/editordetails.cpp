@@ -359,6 +359,7 @@ void EditorDetails::updateCurrentItem()
 void EditorDetails::slotInsertAttendee( Attendee *a )
 {
   insertAttendee( a );
+  mNewAttendees.append( a );
 }
 
 void EditorDetails::changeStatusForMe( Attendee::PartStat status )

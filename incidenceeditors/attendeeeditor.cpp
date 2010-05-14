@@ -252,6 +252,7 @@ void AttendeeEditor::insertAttendeeFromAddressee( const KABC::Addressee &a, cons
                                   partStat, at ? at->role() : Attendee::ReqParticipant, a.uid() );
   newAt->setRSVP( rsvp );
   insertAttendee( newAt, true );
+  mNewAttendees.append( newAt );
 }
 
 void AttendeeEditor::fillOrganizerCombo()
@@ -288,15 +289,7 @@ void AttendeeEditor::addNewAttendee()
     i18nc( "@item:intext sample attendee name", "Firstname Lastname" ),
     i18nc( "@item:intext sample attendee email name", "name" ) + "@example.net", true );
   insertAttendee( a, false );
-
-  for ( int i=0; i<mDelAttendees.count(); ++i ) {
-    if ( *mDelAttendees.value( i ) == *a ) {
-      delete mDelAttendees.value( i );
-      mDelAttendees.removeAt( i );
-      break;
-    }
-  }
-
+  mNewAttendees.append( a );
   updateAttendeeInput();
   // We don't want the hint again
   mNameEdit->setClickMessage( "" );
@@ -308,6 +301,8 @@ void AttendeeEditor::readIncidence( Incidence *incidence )
 {
   qDeleteAll( mDelAttendees );
   mDelAttendees.clear();
+  qDeleteAll( mNewAttendees );
+  mNewAttendees.clear();
 
   const bool itsMe = EditorConfig::instance()->thatIsMe( incidence->organizer().email() );
   if ( itsMe || incidence->organizer().isEmpty() ) {
@@ -516,7 +511,16 @@ void AttendeeEditor::cancelAttendeeIncidence( Incidence *incidence )
   incidence->clearAttendees();
 
   foreach ( Attendee *att, mDelAttendees ) {
-    incidence->addAttendee( new Attendee( *att ), false );
+    bool isNewAttendee = false;
+    foreach ( Attendee *newAtt, mNewAttendees ) {
+      if ( *att == *newAtt ) {
+        isNewAttendee = true;
+        break;
+      }
+    }
+    if ( !isNewAttendee ) {
+      incidence->addAttendee( new Attendee( *att ) );
+    }
   }
 
   qDeleteAll( mDelAttendees );
