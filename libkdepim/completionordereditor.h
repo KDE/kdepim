@@ -55,6 +55,7 @@ class CompletionItem
   public:
     virtual ~CompletionItem() {}
     virtual QString label() const = 0;
+    virtual QIcon icon() const = 0;
     virtual int completionWeight() const = 0;
     virtual void setCompletionWeight( int weight ) = 0;
     virtual void save( CompletionOrderEditor* ) = 0;

@@ -75,6 +75,11 @@ class LDAPCompletionItem : public CompletionItem
       return i18n( "LDAP server %1", mLdapClient->server().host() );
     }
 
+    virtual QIcon icon() const
+    {
+      return KIcon( "view-ldap-resource" );
+    }
+
     virtual int completionWeight() const
     {
       return mLdapClient->completionWeight();
@@ -110,9 +115,19 @@ class SimpleCompletionItem : public CompletionItem
       mWeight = group.readEntry( mIdentifier, weight );
     }
 
+    void setIcon( const QIcon &icon )
+    {
+      mIcon = icon;
+    }
+
     virtual QString label() const
     {
       return mLabel;
+    }
+
+    virtual QIcon icon() const
+    {
+      return mIcon;
     }
 
     virtual int completionWeight() const
@@ -136,6 +151,7 @@ class SimpleCompletionItem : public CompletionItem
     QString mLabel;
     QString mIdentifier;
     int mWeight;
+    QIcon mIcon;
 };
 
 /////////
@@ -153,6 +169,7 @@ class CompletionViewItem : public QTreeWidgetItem
     {
       mItem = item;
       setText( 0, mItem->label() );
+      setIcon( 0, mItem->icon() );
     }
 
     CompletionItem* item() const
@@ -230,6 +247,7 @@ void CompletionOrderEditor::addCompletionItemForIndex( const QModelIndex &index 
     return;
 
   SimpleCompletionItem *item = new SimpleCompletionItem( this, index.data().toString(), QString::number( collection.id() ), 60 );
+  item->setIcon( index.data( Qt::DecorationRole ).value<QIcon>() );
 
   new CompletionViewItem( mListView, item, 0 );
 }
