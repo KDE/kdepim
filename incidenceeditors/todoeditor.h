@@ -35,10 +35,13 @@ class QDateTime;
 class EditorGeneralTodo;
 class EditorRecurrence;
 class EditorRecurrenceDialog;
-class TodoGeneralEditor;
 
 namespace Akonadi {
   class Item;
+}
+
+namespace IncidenceEditorsNG {
+class IncidenceEditorGeneralPage;
 }
 
 namespace IncidenceEditors
@@ -128,7 +131,7 @@ class INCIDENCEEDITORS_EXPORT TodoEditor : public IncidenceEditor
     KCal::Todo::Ptr mRelatedTodo;
 
     EditorGeneralTodo *mGeneral;
-    TodoGeneralEditor *mNewGeneral;
+    IncidenceEditorsNG::IncidenceEditorGeneralPage *mNewGeneral;
     EditorRecurrenceDialog *mRecurrenceDialog;
     EditorRecurrence *mRecurrence;
 };

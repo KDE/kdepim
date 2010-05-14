@@ -20,6 +20,7 @@ set( incidenceeditors_LIB_SRCS
     incidenceeditor-ng/incidenceeditor.cpp
     incidenceeditor-ng/combinedincidenceeditor.cpp
     incidenceeditor-ng/incidencegeneraleditor.cpp
+    incidenceeditor-ng/incidenceeditorgeneralpage.cpp
 
     #incidencegeneraleditor.cpp
     autochecktreewidget.cpp

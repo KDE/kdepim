@@ -31,7 +31,8 @@
 #endif
 #include "editorgeneraltodo.h"
 #include "editorrecurrence.h"
-#include "incidencegeneraleditor.h"
+
+#include "incidenceeditor-ng/incidenceeditorgeneralpage.h"
 
 #include <akonadi/kcal/utils.h> //krazy:exclude=camelcase since kdepim/akonadi
 #include <akonadi/kcal/incidencechanger.h>
@@ -119,11 +120,11 @@ void TodoEditor::init()
 void TodoEditor::setupGeneral()
 {
   mGeneral = new EditorGeneralTodo( this );
-//   mNewGeneral = new TodoGeneralEditor( this );
+  mNewGeneral = new IncidenceEditorsNG::IncidenceEditorGeneralPage( this );
 
   QFrame *topFrame = new QFrame();
   mTabWidget->addTab( topFrame, i18nc( "@title:tab general to-do settings", "&General" ) );
-//   mTabWidget->addTab( mNewGeneral, "&New General" );
+  mTabWidget->addTab( mNewGeneral, "&New General" );
 
   QVBoxLayout *topLayout = new QVBoxLayout( topFrame );
 
@@ -293,7 +294,7 @@ bool TodoEditor::read( const Item &todoItem, const QDate &date, bool tmpl )
   }
 
   mGeneral->readTodo( todo.get(), date, tmpl );
-//   mNewGeneral->load( todo, date, tmpl );
+  mNewGeneral->load( todo ); //, date, tmpl );
 #ifdef HAVE_QT3SUPPORT
   mDetails->readIncidence( todo.get() );
 #endif
