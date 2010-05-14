@@ -407,6 +407,7 @@ KMime::Message::Ptr MessageFactory::createResend()
   KMime::Message::Ptr msg( new KMime::Message );
   MessageHelper::initFromMessage( msg, m_origMsg, m_identityManager );
   msg->setContent( m_origMsg->encodedContent() );
+  msg->parse();
   msg->removeHeader( "Message-Id" );
   uint originalIdentity = identityUoid( m_origMsg );
 
