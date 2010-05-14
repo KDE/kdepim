@@ -57,3 +57,5 @@ void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )
   else
     mDirtyLabel->setText( "Clean!" );
 }
+
+#include "moc_incidenceeditorgeneralpage.cpp"

@@ -122,3 +122,5 @@ void IncidenceGeneralEditor::setCategories( const QStringList &categories )
   mUi->mCategoriesLabel->setText( categories.join( "," ) );
   checkDirtyStatus();
 }
+
+#include "moc_incidencegeneraleditor.cpp"

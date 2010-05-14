@@ -76,3 +76,5 @@ void CombinedIncidenceEditor::save( KCal::Incidence::Ptr incidence )
 
   checkDirtyStatus();
 }
+
+#include "moc_combinedincidenceeditor.cpp"
