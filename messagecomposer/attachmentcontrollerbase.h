@@ -106,6 +106,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
     Q_PRIVATE_SLOT( d, void selectedAttachmentProperties() )
     Q_PRIVATE_SLOT( d, void editDone( MessageViewer::EditorWatcher* ) )
     Q_PRIVATE_SLOT( d, void attachPublicKeyJobResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void slotAttachmentContentCreated( KJob * ) )
 };
 
 } // namespace KMail

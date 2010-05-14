@@ -23,7 +23,10 @@
 #include "attachmentcontrollerbase.h"
 
 #include "messagecomposer/attachmentmodel.h"
+#include "messagecomposer/attachmentjob.h"
 #include "messagecomposer/attachmentfrompublickeyjob.h"
+#include "messagecomposer/composer.h"
+#include "messagecomposer/globalpart.h"
 #include "messageviewer/editorwatcher.h"
 
 #include <akonadi/itemfetchjob.h>
@@ -79,6 +82,7 @@ class KMail::AttachmentControllerBase::Private
     void selectedAttachmentProperties(); // slot
     void editDone( MessageViewer::EditorWatcher *watcher ); // slot
     void attachPublicKeyJobResult( KJob *job ); // slot
+    void slotAttachmentContentCreated( KJob *job ); // slot
     void addAttachmentPart( AttachmentPart::Ptr part );
 
     AttachmentControllerBase *const q;
@@ -88,7 +92,6 @@ class KMail::AttachmentControllerBase::Private
     QWidget *wParent;
     QHash<MessageViewer::EditorWatcher*,AttachmentPart::Ptr> editorPart;
     QHash<MessageViewer::EditorWatcher*,KTemporaryFile*> editorTempFile;
-    QList<KTemporaryFile*> mAttachmentTempList;
 
     QMenu *contextMenu;
     AttachmentPart::List selectedParts;
@@ -138,7 +141,6 @@ AttachmentControllerBase::Private::Private( AttachmentControllerBase *qq )
 
 AttachmentControllerBase::Private::~Private()
 {
-  qDeleteAll( mAttachmentTempList );
 }
 
 void AttachmentControllerBase::setSelectedParts( const AttachmentPart::List &selectedParts)
@@ -499,10 +501,24 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::viewAttachment( AttachmentPart::Ptr part )
 {
-  KMime::Content *content = new KMime::Content;
-  content->setContent( part->data() );
-  content->parse();
-  emit showAttachment( content, part->charset() );
+  Message::Composer *composer = new Message::Composer;
+  composer->globalPart()->setFallbackCharsetEnabled( true );
+  Message::AttachmentJob *attachmentJob = new Message::AttachmentJob( part, composer );
+  connect( attachmentJob, SIGNAL( result( KJob*) ),
+           this, SLOT( slotAttachmentContentCreated( KJob* ) ) );
+  attachmentJob->start();
+}
+
+void AttachmentControllerBase::Private::slotAttachmentContentCreated( KJob *job )
+{
+  if ( !job->error() ) {
+    const Message::AttachmentJob * const attachmentJob = dynamic_cast<Message::AttachmentJob*>( job );
+    Q_ASSERT( attachmentJob );
+    emit q->showAttachment( attachmentJob->content(), QByteArray() );
+  } else {
+    // TODO: show warning to the user
+    kWarning() << "Error creating KMime::Content for attachment:" << job->errorText();
+  }
 }
 
 void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool openWith )
