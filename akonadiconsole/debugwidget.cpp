@@ -53,6 +53,7 @@ DebugWidget::DebugWidget( QWidget *parent )
   layout->addWidget( splitter );
 
   mConnectionPages = new QTabWidget( splitter );
+  mConnectionPages->setTabsClosable( true );
 
   mGeneralView = new QTextEdit( splitter );
   mGeneralView->setReadOnly( true );
@@ -60,6 +61,8 @@ DebugWidget::DebugWidget( QWidget *parent )
   ConnectionPage *page = new ConnectionPage( "All" );
   page->showAllConnections( true );
   mConnectionPages->addTab( page, "All" );
+
+  connect( mConnectionPages, SIGNAL( tabCloseRequested( int ) ), SLOT( tabCloseRequested( int ) ) );
 
   org::freedesktop::Akonadi::TracerNotification *iface = new org::freedesktop::Akonadi::TracerNotification( QString(), "/tracing/notifications", QDBusConnection::sessionBus(), this );
 
@@ -83,13 +86,16 @@ DebugWidget::DebugWidget( QWidget *parent )
   QHBoxLayout *buttonLayout = new QHBoxLayout;
   layout->addLayout( buttonLayout );
 
-  QPushButton *clearAllButton = new QPushButton( "Clear All", this );
-  QPushButton *clearGeneralButton = new QPushButton( "Clear General", this );
+  QPushButton *clearAllButton = new QPushButton( "Clear All Tabs", this );
+  QPushButton *clearCurrentButton = new QPushButton( "Clear Current Tab", this );
+  QPushButton *clearGeneralButton = new QPushButton( "Clear Information View", this );
 
   buttonLayout->addWidget( clearAllButton );
+  buttonLayout->addWidget( clearCurrentButton );
   buttonLayout->addWidget( clearGeneralButton );
 
-  connect( clearAllButton, SIGNAL( clicked() ), page, SLOT( clear() ) );
+  connect( clearAllButton, SIGNAL( clicked() ), this, SLOT( clearAllTabs() ) );
+  connect( clearCurrentButton, SIGNAL( clicked() ), this, SLOT( clearCurrentTab() ) );
   connect( clearGeneralButton, SIGNAL( clicked() ), mGeneralView, SLOT( clear() ) );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
@@ -118,6 +124,43 @@ void DebugWidget::connectionEnded( const QString &identifier, const QString& )
 
   mPageHash.remove( identifier );
   delete widget;
+}
+
+void DebugWidget::tabCloseRequested( int index )
+{
+  if ( index != 0 ) {
+    QWidget *page = mConnectionPages->widget( index );
+    QMutableHashIterator<QString, ConnectionPage*> it( mPageHash );
+    while ( it.hasNext() ) {
+      it.next();
+      if ( it.value() == page ) {
+        it.remove();
+        break;
+      }
+    }
+
+    mConnectionPages->removeTab( index );
+  }
+}
+
+void DebugWidget::clearAllTabs()
+{
+  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->widget( 0 ) );
+  if ( page )
+    page->clear();
+
+  QMutableHashIterator<QString, ConnectionPage*> it( mPageHash );
+  while ( it.hasNext() )
+    it.next().value()->clear();
+}
+
+void DebugWidget::clearCurrentTab()
+{
+  ConnectionPage *page = qobject_cast<ConnectionPage*>( mConnectionPages->currentWidget() );
+  if ( !page )
+    return;
+
+  page->clear();
 }
 
 void DebugWidget::signalEmitted( const QString &signalName, const QString &msg )

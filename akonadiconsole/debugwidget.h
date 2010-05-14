@@ -47,6 +47,10 @@ class DebugWidget : public QWidget
 
     void enableDebugger( bool enable );
 
+    void tabCloseRequested( int index );
+    void clearAllTabs();
+    void clearCurrentTab();
+
   private:
     QTextEdit *mGeneralView;
     QTabWidget *mConnectionPages;
