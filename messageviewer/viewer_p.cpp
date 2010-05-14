@@ -3255,7 +3255,7 @@ void ViewerPrivate::toggleFullAddressList( const QString &field )
     altText = i18n("Show full address list");
   }
 
-  QString link = "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"" + imgpath + imgSrc + "\""
+  QString link = "<span style=\"text-align: right;\"><a href=\"" + urlHandle + "\"><img src=\"file://" + imgpath + imgSrc + "\""
                  "alt=\"" + altText + "\" /></a></span>";
   tag.setInnerXml( link );
 
