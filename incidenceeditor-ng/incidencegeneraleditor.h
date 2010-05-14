@@ -20,13 +20,13 @@
 #ifndef INCIDENCEGENERALEDITOR_H
 #define INCIDENCEGENERALEDITOR_H
 
-#include "incidenceeditor.h"
+#include "incidenceeditor-ng.h"
 
 namespace Ui {
 class IncidenceGeneralEditor;
 }
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorsNG {
 
 /**
  * The IncidenceGeneralEditor keeps track of the following Incidence parts:
@@ -36,6 +36,7 @@ namespace IncidenceEditorNG {
  */
 class IncidenceGeneralEditor : public IncidenceEditor
 {
+  Q_OBJECT
   public:
     IncidenceGeneralEditor( QWidget *parent = 0 );
     
@@ -59,6 +60,6 @@ class IncidenceGeneralEditor : public IncidenceEditor
     Ui::IncidenceGeneralEditor *mUi;
 };
 
-} // IncidenceEditorNG
+} // IncidenceEditorsNG
 
 #endif // INCIDENCEGENERALEDITOR_H

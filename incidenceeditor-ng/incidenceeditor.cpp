@@ -17,9 +17,9 @@
 
 */
 
-#include "incidenceeditor.h"
+#include "incidenceeditor-ng.h"
 
-using namespace IncidenceEditorNG;
+using namespace IncidenceEditorsNG;
 
 IncidenceEditor::IncidenceEditor( QWidget *parent )
   : QWidget( parent )
@@ -38,3 +38,4 @@ void IncidenceEditor::checkDirtyStatus()
   }
 }
 
+#include "moc_incidenceeditor-ng.cpp"

@@ -17,8 +17,8 @@
 
 */
 
-#ifndef INCIDENCEEDITOR_H
-#define INCIDENCEEDITOR_H
+#ifndef INCIDENCEEDITOR_NG_H
+#define INCIDENCEEDITOR_NG_H
 
 #include <boost/shared_ptr.hpp>
 
@@ -26,7 +26,7 @@
 
 #include <KCal/Incidence>
 
-namespace IncidenceEditorNG {
+namespace IncidenceEditorsNG {
 
 /**
  * KCal Incidences are complicated objects. The user interfaces to create/modify
@@ -36,7 +36,7 @@ namespace IncidenceEditorNG {
  */
 class IncidenceEditor : public QWidget
 {
-  Q_OBJECT;
+  Q_OBJECT
   public:
     virtual ~IncidenceEditor();
 
@@ -87,6 +87,6 @@ class IncidenceEditor : public QWidget
     bool mWasDirty;
 };
 
-} // IncidenceEditorNG
+} // IncidenceEditorsNG
 
 #endif // INCIDENCEEDITOR_H

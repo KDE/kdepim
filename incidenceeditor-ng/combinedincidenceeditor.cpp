@@ -19,7 +19,7 @@
 
 #include "combinedincidenceeditor.h"
 
-using namespace IncidenceEditorNG;
+using namespace IncidenceEditorsNG;
 
 /// public methods
 

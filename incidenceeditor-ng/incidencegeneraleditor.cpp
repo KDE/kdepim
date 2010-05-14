@@ -25,7 +25,7 @@
 #include "ui_incidencegeneraleditor.h"
 
 using namespace IncidenceEditors;
-using namespace IncidenceEditorNG;
+using namespace IncidenceEditorsNG;
 
 
 IncidenceGeneralEditor::IncidenceGeneralEditor( QWidget *parent )
