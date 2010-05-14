@@ -45,6 +45,8 @@ void CombinedIncidenceEditor::combine( IncidenceEditor *other )
 
 void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
 {
+  const int prevDirtyCount = mDirtyEditorCount;
+
   Q_ASSERT( mDirtyEditorCount >= 0 );
 
   if ( isDirty )
@@ -53,17 +55,26 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
     --mDirtyEditorCount;
 
   Q_ASSERT( mDirtyEditorCount >= 0 );
+
+  if ( prevDirtyCount == 0 )
+    emit dirtyStatusChanged( true );
+  if ( mDirtyEditorCount == 0 )
+    emit dirtyStatusChanged( false );
 }
 
 void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
 {
   foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
+    // load() may fire dirtyStatusChanged(), reset mDirtyEditorCount to make sure
+    // we don't end up with an invalid dirty count.
+    mDirtyEditorCount = 0;
     editor->load( incidence );
     Q_ASSERT( !editor->isDirty() );
   }
 
   mWasDirty = false;
   mDirtyEditorCount = 0;
+  emit dirtyStatusChanged( false );
 }
 
 void CombinedIncidenceEditor::save( KCal::Incidence::Ptr incidence )
