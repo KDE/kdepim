@@ -26,6 +26,7 @@
 
 #include "incidencegeneraleditor.h"
 #include "incidencedescriptioneditor.h"
+#include "incidenceattachmenteditor.h"
 
 using namespace IncidenceEditorsNG;
 
@@ -33,12 +34,16 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   : CombinedIncidenceEditor( parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
+  layout->setSpacing( 0 );
 
   IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( this );
   layout->addWidget( ieGeneral );
 
   IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
   layout->addWidget( ieDescription );
+
+  IncidenceAttachmentEditor *ieAttachment = new IncidenceAttachmentEditor( this );
+  layout->addWidget( ieAttachment );
   
 //   QSpacerItem *verticalSpacer =
 //     new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
@@ -53,6 +58,7 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   // Combine the various editors with this page.
   combine( ieGeneral );
   combine( ieDescription );
+  combine( ieAttachment );
 }
 
 void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )

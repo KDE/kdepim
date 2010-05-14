@@ -1,0 +1,267 @@
+/*
+  This file is part of KOrganizer.
+
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (C) 2005 Reinhold Kainhofer <reinhold@kainhofer.com>
+  Copyright (c) 2005 Rafal Rzepecki <divide@users.sourceforge.net>
+  Copyright (c) 2010 Bertjan Broeksema <b.broeksema@home.nl>
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License along
+  with this program; if not, write to the Free Software Foundation, Inc.,
+  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+  As a special exception, permission is given to link this program
+  with any edition of Qt, and distribute the resulting executable,
+  without including the source code for Qt in the source distribution.
+
+  NOTE: May, 2010. Extracted this code from
+        kdepim/incidenceeditors/editorattachments.{h,cpp}
+*/
+
+#include "attachmenticonview.h"
+
+#include <QtCore/QMimeData>
+#include <QtGui/QDrag>
+#include <QtGui/QKeyEvent>
+
+#include <KDE/KIconLoader>
+#include <KDE/KLocale>
+#include <KDE/KMimeType>
+#include <KDE/KTemporaryFile>
+#include <KDE/KUrl>
+
+#include <KCal/Attachment>
+
+using namespace IncidenceEditorsNG;
+
+class AttachmentIconItem : public QListWidgetItem
+{
+  public:
+    AttachmentIconItem( KCal::Attachment *att, QListWidget *parent )
+      : QListWidgetItem( parent )
+    {
+      if ( att ) {
+        mAttachment = new KCal::Attachment( *att );
+      } else {
+        // for the enteprise, inline attachments are the default
+#ifdef KDEPIM_ENTERPRISE_BUILD
+        mAttachment = new KCal::Attachment( '\0' ); //use the non-uri constructor
+                                                    // as we want inline by default
+#else
+        mAttachment = new KCal::Attachment( QString() );
+#endif
+      }
+      readAttachment();
+      setFlags( flags() | Qt::ItemIsDragEnabled );
+    }
+    ~AttachmentIconItem() { delete mAttachment; }
+    KCal::Attachment *attachment() const
+    {
+      return mAttachment;
+    }
+    const QString uri() const
+    {
+      return mAttachment->uri();
+    }
+    void setUri( const QString &uri )
+    {
+      mAttachment->setUri( uri );
+      readAttachment();
+    }
+    using QListWidgetItem::setData;
+    void setData( const QByteArray &data )
+    {
+      mAttachment->setDecodedData( data );
+      readAttachment();
+    }
+    const QString mimeType() const
+    {
+      return mAttachment->mimeType();
+    }
+    void setMimeType( const QString &mime )
+    {
+      mAttachment->setMimeType( mime );
+      readAttachment();
+    }
+    const QString label() const
+    {
+      return mAttachment->label();
+    }
+    void setLabel( const QString &description )
+    {
+      if ( mAttachment->label() == description )
+        return;
+      mAttachment->setLabel( description );
+      readAttachment();
+    }
+    bool isBinary() const
+    {
+      return mAttachment->isBinary();
+    }
+    QPixmap icon() const
+    {
+      return icon( KMimeType::mimeType( mAttachment->mimeType() ),
+                   mAttachment->uri(), mAttachment->isBinary() );
+    }
+    static QPixmap icon( KMimeType::Ptr mimeType, const QString &uri,
+                         bool binary = false )
+    {
+      QString iconStr = mimeType->iconName( uri );
+      QStringList overlays;
+      if ( !uri.isEmpty() && !binary ) {
+        overlays << "emblem-link";
+      }
+
+      return KIconLoader::global()->loadIcon( iconStr, KIconLoader::Desktop, 0,
+                                              KIconLoader::DefaultState,
+                                              overlays );
+    }
+
+    void readAttachment()
+    {
+      if ( mAttachment->label().isEmpty() ) {
+        if ( mAttachment->isUri() ) {
+          setText( mAttachment->uri() );
+        } else {
+          setText( i18nc( "@label attachment contains binary data", "[Binary data]" ) );
+        }
+      } else {
+        setText( mAttachment->label() );
+      }
+
+      setFlags( flags() | Qt::ItemIsEditable );
+
+      if ( mAttachment->mimeType().isEmpty() ||
+           !( KMimeType::mimeType( mAttachment->mimeType() ) ) ) {
+        KMimeType::Ptr mimeType;
+        if ( mAttachment->isUri() ) {
+          mimeType = KMimeType::findByUrl( mAttachment->uri() );
+        } else {
+          mimeType = KMimeType::findByContent( mAttachment->decodedData() );
+        }
+        mAttachment->setMimeType( mimeType->name() );
+      }
+
+      setIcon( icon() );
+    }
+
+  private:
+    KCal::Attachment *mAttachment;
+};
+
+AttachmentIconView::AttachmentIconView( QWidget *parent )
+  : QListWidget( parent )
+{
+  setMovement( Static );
+  setAcceptDrops( true );
+  setSelectionMode( ExtendedSelection );
+  setSelectionRectVisible( false );
+  setIconSize( QSize( KIconLoader::SizeLarge, KIconLoader::SizeLarge ) );
+  setFlow( LeftToRight );
+  setDragDropMode( DragDrop );
+  setDragEnabled( true );
+  setEditTriggers( EditKeyPressed );
+  setContextMenuPolicy( Qt::CustomContextMenu );
+}
+
+KUrl AttachmentIconView::tempFileForAttachment( KCal::Attachment *attachment ) const
+{
+  if ( mTempFiles.contains( attachment ) ) {
+    return mTempFiles.value( attachment );
+  }
+  KTemporaryFile *file = new KTemporaryFile();
+  file->setParent( const_cast<AttachmentIconView*>( this ) );
+
+  QStringList patterns = KMimeType::mimeType( attachment->mimeType() )->patterns();
+
+  if ( !patterns.empty() ) {
+    file->setSuffix( QString( patterns.first() ).remove( '*' ) );
+  }
+  file->setAutoRemove( true );
+  file->open();
+  // read-only not to give the idea that it could be written to
+  file->setPermissions( QFile::ReadUser );
+  file->write( QByteArray::fromBase64( attachment->data() ) );
+  mTempFiles.insert( attachment, file->fileName() );
+  file->close();
+  return mTempFiles.value( attachment );
+}
+
+QMimeData* AttachmentIconView::mimeData(const QList< QListWidgetItem* > items) const
+{
+  // create a list of the URL:s that we want to drag
+  KUrl::List urls;
+  QStringList labels;
+  foreach( QListWidgetItem *it, items ) {
+    if ( it->isSelected() ) {
+      AttachmentIconItem *item = static_cast<AttachmentIconItem *>( it );
+      if ( item->isBinary() ) {
+        urls.append( tempFileForAttachment( item->attachment() ) );
+      } else {
+        urls.append( item->uri() );
+      }
+      labels.append( KUrl::toPercentEncoding( item->label() ) );
+    }
+  }
+  if ( selectionMode() == NoSelection ) {
+    AttachmentIconItem *item = static_cast<AttachmentIconItem *>( currentItem() );
+    if ( item ) {
+      urls.append( item->uri() );
+      labels.append( KUrl::toPercentEncoding( item->label() ) );
+    }
+  }
+
+  QMap<QString, QString> metadata;
+  metadata["labels"] = labels.join( ":" );
+
+  QMimeData *mimeData = new QMimeData;
+  urls.populateMimeData( mimeData, metadata );
+  return mimeData;
+}
+
+QMimeData* AttachmentIconView::mimeData() const
+{
+  return mimeData( selectedItems() );
+}
+
+void AttachmentIconView::startDrag( Qt::DropActions supportedActions )
+{
+  Q_UNUSED( supportedActions );
+  QPixmap pixmap;
+  if ( selectedItems().size() > 1 ) {
+    pixmap = KIconLoader::global()->loadIcon( "mail-attachment", KIconLoader::Desktop );
+  }
+  if ( pixmap.isNull() ) {
+    pixmap = static_cast<AttachmentIconItem *>( currentItem() )->icon();
+  }
+
+  const QPoint hotspot( pixmap.width() / 2, pixmap.height() / 2 );
+
+  QDrag *drag = new QDrag( this );
+  drag->setMimeData( mimeData() );
+
+  drag->setPixmap( pixmap );
+  drag->setHotSpot( hotspot );
+  drag->exec( Qt::CopyAction );
+}
+
+void AttachmentIconView::keyPressEvent(QKeyEvent* event)
+{
+  if ( ( event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter )
+    && currentItem() && state() != EditingState ) {
+    emit itemDoubleClicked( currentItem() ); // ugly, but itemActivated() also includes single click
+    return;
+  }
+  QListWidget::keyPressEvent( event );
+}
+

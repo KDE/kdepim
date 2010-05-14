@@ -21,6 +21,8 @@ set( incidenceeditors_LIB_SRCS
     incidenceeditor-ng/combinedincidenceeditor.cpp
     incidenceeditor-ng/incidencegeneraleditor.cpp
     incidenceeditor-ng/incidencedescriptioneditor.cpp
+    incidenceeditor-ng/incidenceattachmenteditor.cpp
+    incidenceeditor-ng/attachmenticonview.cpp
     incidenceeditor-ng/incidenceeditorgeneralpage.cpp
 
     #incidencegeneraleditor.cpp
@@ -65,6 +67,7 @@ kde4_add_ui_files( incidenceeditors_LIB_SRCS
    # IncidenceEditorsNG ui files
    incidenceeditor-ng/incidencegeneraleditor.ui
    incidenceeditor-ng/incidencedescription.ui
+   incidenceeditor-ng/incidenceattachmenteditor.ui
 )
 
 kde4_add_library(incidenceeditors SHARED ${incidenceeditors_LIB_SRCS})
