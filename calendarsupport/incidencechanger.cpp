@@ -366,6 +366,11 @@ bool IncidenceChanger::cutIncidence( const Item &item, QWidget *parent )
   return cutIncidences( items, parent );
 }
 
+void IncidenceChanger::setDefaultCollection( const Collection &defaultCollection )
+{
+  d->mDefaultCollection = defaultCollection;
+}
+
 namespace {
 class YetAnotherComparisonVisitor : public IncidenceBase::Visitor
 {
