@@ -97,7 +97,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   // Parse the message
   EmptySource emptySource;
   ObjectTreeParser otp( &emptySource );
-  otp.parseObjectTree( Akonadi::Item(), msg.get() );
+  otp.parseObjectTree( msg.get() );
 
   // Check that the textual content and the charset have the expected values
   QCOMPARE( otp.textualContent(), QString( "This is the message text." ) );
@@ -119,7 +119,7 @@ void ObjectTreeParserTester::test_parsePlainMessage()
   msg->setContent( content );
   msg->parse();
   ObjectTreeParser otp2( &emptySource );
-  otp2.parseObjectTree( Akonadi::Item(), msg.get() );
+  otp2.parseObjectTree( msg.get() );
   QCOMPARE( otp2.textualContentCharset().constData(), msg->defaultCharset().constData() );
 }
 
@@ -135,7 +135,7 @@ void ObjectTreeParserTester::test_parseEncapsulatedMessage()
   NodeHelper nodeHelper;
   TestObjectTreeSource emptySource( &testWriter, &testCSSHelper );
   ObjectTreeParser otp( &emptySource, &nodeHelper );
-  otp.parseObjectTree( Akonadi::Item(), msg.get() );
+  otp.parseObjectTree( msg.get() );
 
   // Check that the OTP didn't modify the message in weird ways
   QCOMPARE( msg->contents().size(), 2 );

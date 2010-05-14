@@ -108,9 +108,9 @@ public:
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
 
-    void attachExtraContent( KMime::Message::Ptr node, KMime::Content* content );
-    void removeExtraContent( KMime::Message::Ptr node );
-    QList<KMime::Content*> extraContents( KMime::Message::Ptr node );
+    void attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content );
+    void removeExtraContent( KMime::Content *topLevelNode );
+    QList<KMime::Content*> extraContents( KMime::Content *topLevelNode );
 
      /** Get a QTextCodec suitable for this message part */
     const QTextCodec * codec( KMime::Content* node );
@@ -248,7 +248,7 @@ private:
     QStringList mTempFiles;
     QStringList mTempDirs;
     QMap<KMime::Content*, PartMetaData> mPartMetaDatas;
-    QMap<KMime::Message::Ptr, QList<KMime::Content*> > mExtraContents;
+    QMap<KMime::Message::Content*, QList<KMime::Content*> > mExtraContents;
 };
 
 }

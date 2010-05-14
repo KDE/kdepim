@@ -169,6 +169,13 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       if ( !writer )
         // Guard against crashes in createReply()
         return Ok;
+
+      KMime::Message * const message = dynamic_cast<KMime::Message*>( bodyPart->topLevelContent() );
+      if ( !message ) {
+        kWarning() << "Huh, the top-level content is not a message? Can't handle the invitation then!";
+        return Failed;
+      }
+
       CalendarLocal cl( KSystemTimeZones::local() );
       KMInvitationFormatterHelper helper( bodyPart );
       QString source;
@@ -181,10 +188,11 @@ class Formatter : public MessageViewer::Interface::BodyPartFormatter
       } else {
         source = bodyPart->asText();
       }
-      KMime::Message::Ptr message = bodyPart->item().payload<KMime::Message::Ptr>();
-      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper, message->sender()->asUnicodeString() );
+      const QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper,
+                                                             message->sender()->asUnicodeString() );
 
-      if ( html.isEmpty() ) return AsIcon;
+      if ( html.isEmpty() )
+        return AsIcon;
       writer->queue( html );
 
       return Ok;
@@ -432,7 +440,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       DeclineCounter
     };
 
-    bool mailICal( const Akonadi::Item& item, const QString &receiver, const QString &to, const QString &iCal,
+    bool mailICal( const QString &receiver, const QString &to, const QString &iCal,
                    const QString &subject, const QString &status,
                    bool delMessage, MessageViewer::Viewer *viewerInstance ) const
     {
@@ -469,7 +477,8 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // Try and match the receiver with an identity.
       // Setting the identity here is important, as that is used to select the correct
       // transport later
-      const KPIMIdentities::Identity &identity = KPIMIdentities::IdentityManager().identityForAddress( findReceiver( item.payload<KMime::Message::Ptr>().get() ) );
+      const KPIMIdentities::Identity identity =
+         KPIMIdentities::IdentityManager().identityForAddress( findReceiver( viewerInstance->message().get() ) );
       kDebug() << "Full email: " << identity.fullEmailAddr();
       const bool nullIdentity = ( identity == KPIMIdentities::Identity::null() );
       if ( !nullIdentity ) {
@@ -556,7 +565,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       return true;
     }
 
-    bool mail( const Akonadi::Item &item, MessageViewer::Viewer *viewerInstance, Incidence* incidence, const QString &status,
+    bool mail( MessageViewer::Viewer *viewerInstance, Incidence* incidence, const QString &status,
                iTIPMethod method = iTIPReply, const QString &receiver = QString(), const QString &to = QString(),
                MailType type = Answer ) const
     {
@@ -586,7 +595,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       // Set the organizer to the sender, if the ORGANIZER hasn't been set.
       if ( incidence->organizer().isEmpty() ) {
         QString tname, temail;
-        KMime::Message::Ptr message = item.payload<KMime::Message::Ptr>();
+        KMime::Message::Ptr message = viewerInstance->message();
         KPIMUtils::extractEmailAddressAndName( message->sender()->asUnicodeString(), temail, tname );
         incidence->setOrganizer( Person( tname, temail ) );
       }
@@ -594,7 +603,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
       QString recv = to;
       if ( recv.isEmpty() )
         recv = incidence->organizer().fullName();
-      return mailICal( item, receiver, recv, msg, subject, status, type != Forward, viewerInstance );
+      return mailICal( receiver, recv, msg, subject, status, type != Forward, viewerInstance );
     }
 
     void ensureKorganizerRunning( bool switchTo ) const
@@ -711,12 +720,12 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           newMyself->setDelegate( delegateString );
           newMyself->setRSVP( delegatorRSVP );
         }
-        ok =  mail( part->item(), viewerInstance, incidence, dir, iTIPReply, receiver );
+        ok =  mail( viewerInstance, incidence, dir, iTIPReply, receiver );
 
         // check if we need to inform our delegator about this as well
         if ( newMyself && (status == Attendee::Accepted || status == Attendee::Declined) && !delegator.isEmpty() ) {
           if ( delegatorRSVP || status == Attendee::Declined )
-            ok = mail( part->item(), viewerInstance, incidence, dir, iTIPReply, receiver, delegator );
+            ok = mail( viewerInstance, incidence, dir, iTIPReply, receiver, delegator );
         }
 
       } else if ( !myself && (status != Attendee::Declined) ) {
@@ -734,7 +743,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
                                     QString() );
           incidence->clearAttendees();
           incidence->addAttendee( newMyself );
-          ok = mail( part->item(), viewerInstance, incidence, dir, iTIPReply, receiver );
+          ok = mail( viewerInstance, incidence, dir, iTIPReply, receiver );
         }
       } else {
         if ( MessageViewer::GlobalSettings::self()->deleteInvitationEmailsAfterSendingReply() )
@@ -761,7 +770,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString iCal = format.createScheduleMessage( incidence, iTIPRequest );
         saveFile( receiver, iCal, dir );
 
-        ok = mail( part->item(), viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
+        ok = mail( viewerInstance, incidence, dir, iTIPRequest, receiver, delegateString, Delegation );
       }
       return ok;
     }
@@ -883,7 +892,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
           }
         }
       }
-      return mail( part->item(), viewerInstance, incidence, "declinecounter", KCal::iTIPDeclineCounter,
+      return mail( viewerInstance, incidence, "declinecounter", KCal::iTIPDeclineCounter,
                    receiver, QString(), DeclineCounter );
     }
 
@@ -949,7 +958,7 @@ class UrlHandler : public MessageViewer::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( part->item(), viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
+        result = mail( viewerInstance, incidence, "forward", iTIPRequest, receiver, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
         incidence = icalToString( iCal );

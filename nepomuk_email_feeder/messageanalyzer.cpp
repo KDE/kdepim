@@ -74,7 +74,7 @@ MessageAnalyzer::MessageAnalyzer(const Akonadi::Item& item, const QUrl& graphUri
     if ( Settings::self()->indexEncryptedContent() != Settings::NoIndexing ) {
       m_otp = new MessageViewer::ObjectTreeParser( this, m_nodeHelper );
       m_otp->setAllowAsync( true );
-      m_otp->parseObjectTree( item, msg.get() );
+      m_otp->parseObjectTree( msg.get() );
     }
 
     if ( !m_otp || !m_otp->hasPendingAsyncJobs() )
@@ -252,7 +252,7 @@ void MessageAnalyzer::update(MessageViewer::Viewer::UpdateMode mode)
   Q_UNUSED( mode );
   kDebug() << m_otp->hasPendingAsyncJobs();
   const KMime::Message::Ptr msg = m_item.payload<KMime::Message::Ptr>();
-  m_otp->parseObjectTree( m_item, msg.get() );
+  m_otp->parseObjectTree( msg.get() );
   if ( !m_otp->hasPendingAsyncJobs() )
     processContent( msg );
 }

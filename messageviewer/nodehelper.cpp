@@ -101,10 +101,10 @@ void NodeHelper::setNodeUnprocessed(KMime::Content* node, bool recurse )
   mProcessedNodes.removeAll( node );
 
   //avoid double addition of extra nodes, eg. encrypted attachments
-  for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
-    if ( node == dynamic_cast<KMime::Content*>( it.key().get() ) ) {
+  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    if ( node == dynamic_cast<KMime::Content*>( it.key() ) ) {
       qDeleteAll( it.value() );
-      kDebug() << "mExtraContents deleted for" << it.key().get() ;
+      kDebug() << "mExtraContents deleted for" << it.key();
       mExtraContents.remove( it.key() );
     }
   }
@@ -140,9 +140,9 @@ void NodeHelper::clear()
   }
   mBodyPartMementoMap.clear();
 
-  for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+  for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
     qDeleteAll( it.value() );
-    kDebug() << "mExtraContents deleted for" << it.key().get() ;
+    kDebug() << "mExtraContents deleted for" << it.key();
   }
   mExtraContents.clear();
   mDisplayEmbeddedNodes.clear();
@@ -639,7 +639,7 @@ QString NodeHelper::asHREF( const KMime::Content* node, const QString &place )
   else {
     QString indexStr = node->index().toString();
     //if the node is an extra node, prepent the index of the extra node to the url
-    for ( QMap<KMime::Message::Ptr, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
+    for ( QMap<KMime::Content*, QList<KMime::Content*> >::iterator it = mExtraContents.begin(); it != mExtraContents.end(); ++it) {
       QList<KMime::Content*> extraNodes = it.value();
       for ( uint i = 0; i < extraNodes.size(); ++i )  {
         if ( node->topLevel() == extraNodes[i] ) {
@@ -761,24 +761,24 @@ QString NodeHelper::fromAsString( KMime::Content* node )
   return QString();
 }
 
-void NodeHelper::attachExtraContent( KMime::Message::Ptr node, KMime::Content* content )
+void NodeHelper::attachExtraContent( KMime::Content *topLevelNode, KMime::Content* content )
 {
-   kDebug() << "mExtraContents added for" << node.get() << " extra content: " << content;
-  mExtraContents[node].append( content );
+   kDebug() << "mExtraContents added for" << topLevelNode << " extra content: " << content;
+  mExtraContents[topLevelNode].append( content );
 }
 
-void NodeHelper::removeExtraContent(KMime::Message::Ptr node )
+void NodeHelper::removeExtraContent( KMime::Content *topLevelNode )
 {
-  if ( mExtraContents.contains( node ) ) {
-    qDeleteAll( mExtraContents[node] );
-    mExtraContents.remove( node );
+  if ( mExtraContents.contains( topLevelNode ) ) {
+    qDeleteAll( mExtraContents[topLevelNode] );
+    mExtraContents.remove( topLevelNode );
   }    
 }
 
-QList< KMime::Content* > NodeHelper::extraContents( KMime::Message::Ptr node )
+QList< KMime::Content* > NodeHelper::extraContents( KMime::Content *topLevelnode )
 {
- if ( mExtraContents.contains( node ) ) {
-    return mExtraContents[node];
+ if ( mExtraContents.contains( topLevelnode ) ) {
+    return mExtraContents[topLevelnode];
  } else
    return QList< KMime::Content* >();
 }

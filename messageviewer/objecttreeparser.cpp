@@ -187,9 +187,7 @@ ObjectTreeParser::~ObjectTreeParser()
   }
 }
 
-void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
-                                                   const char* content,
-                                                   const char* cntDesc )
+void ObjectTreeParser::createAndParseTempNode( const char* content, const char* cntDesc )
 {
   kDebug() << "CONTENT: " << QByteArray( content ).left( 100 ) << " CNTDESC: " << cntDesc;
 
@@ -204,10 +202,10 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
   if ( !newNode->head().isEmpty() ) {
     newNode->contentDescription()->from7BitString( cntDesc );
   }
-  mNodeHelper->attachExtraContent( item.payload<KMime::Message::Ptr>(), newNode );
+  mNodeHelper->attachExtraContent( mTopLevelContent, newNode );
 
   ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-  otp.parseObjectTree( item, newNode );
+  otp.parseObjectTreeInternal( newNode );
   mRawReplyString += otp.rawReplyString();
   mTextualContent += otp.textualContent();
   if ( !otp.textualContentCharset().isEmpty() )
@@ -217,8 +215,14 @@ void ObjectTreeParser::createAndParseTempNode( const Akonadi::Item &item,
 
 //-----------------------------------------------------------------------------
 
-void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Content * node ) {
+void ObjectTreeParser::parseObjectTree( KMime::Content * node )
+{
+  mTopLevelContent = node;
+  parseObjectTreeInternal( node );
+}
 
+void ObjectTreeParser::parseObjectTreeInternal( KMime::Content * node )
+{
   if ( !node )
     return;
 
@@ -259,7 +263,7 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
     if ( const Interface::BodyPartFormatter * formatter
           = BodyPartFormatterFactory::instance()->createFor( node->contentType()->mediaType(),
                                                              node->contentType()->subType() ) ) {
-      PartNodeBodyPart part( item, node, mNodeHelper, codecFor( node ) );
+      PartNodeBodyPart part( mTopLevelContent, node, mNodeHelper, codecFor( node ) );
       // Set the default display strategy for this body part relying on the
       // identity of Interface::BodyPart::Display and AttachmentStrategy::Display
       part.setDefaultDisplay( (Interface::BodyPart::Display) attachmentStrategy()->defaultDisplay( node ) );
@@ -294,7 +298,7 @@ void ObjectTreeParser::parseObjectTree( const Akonadi::Item &item, KMime::Conten
                  << node->contentType()->subType() << ')';
       }
       writeAttachmentMarkHeader( node );
-      if ( bpf && !bpf->process( this, item, node, processResult ) ) {
+      if ( bpf && !bpf->process( this, node, processResult ) ) {
         defaultHandling( node, processResult );
       }
       writeAttachmentMarkFooter();
@@ -407,8 +411,7 @@ static int signatureToStatus( const GpgME::Signature &sig )
   }
 }
 
-bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( const Akonadi::Item &item,
-                                                         KMime::Content* data,
+bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( KMime::Content* data,
                                                          KMime::Content& sign,
                                                          const QString& fromAddress,
                                                          bool doCheck,
@@ -663,8 +666,8 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( const Akonadi::Item &it
       bIsOpaqueSigned = true;
 
       CryptoProtocolSaver cpws( this, cryptProto );
-      createAndParseTempNode( item, doCheck ? cleartext.data() : cleartextData->data(),
-                                  "opaque signed data" );
+      createAndParseTempNode( doCheck ? cleartext.data() : cleartextData->data(),
+                              "opaque signed data" );
 
       if ( htmlWriter() )
         htmlWriter()->queue( writeSigstatFooter( messagePart ) );
@@ -723,7 +726,7 @@ bool ObjectTreeParser::writeOpaqueOrMultipartSignedData( const Akonadi::Item &it
     }
 
     ObjectTreeParser otp( mSource, mNodeHelper, cryptProto, true );
-    otp.parseObjectTree( item, data );
+    otp.parseObjectTreeInternal( data );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
@@ -990,7 +993,7 @@ bool ObjectTreeParser::containsExternalReferences( const QString & str )
   return false;
 }
 
-bool ObjectTreeParser::processTextHtmlSubtype( const Akonadi::Item &item, KMime::Content * curNode, ProcessResult & ) {
+bool ObjectTreeParser::processTextHtmlSubtype( KMime::Content * curNode, ProcessResult & ) {
   const QByteArray partBody( curNode->decodedContent() );
 
   mRawReplyString = partBody;
@@ -1071,7 +1074,7 @@ bool ObjectTreeParser::isMailmanMessage( KMime::Content * curNode )
   return false;
 }
 
-bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::Content* curNode ) {
+bool ObjectTreeParser::processMailmanMessage( KMime::Content* curNode ) {
   const QString str = QString::fromLatin1( curNode->decodedContent() );
 
   //###
@@ -1108,7 +1111,7 @@ bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::
   // at least one message found: build a mime tree
   digestHeaderStr = "Content-Type: text/plain\nContent-Description: digest header\n\n";
   digestHeaderStr += str.mid( 0, thisDelim );
-  createAndParseTempNode( item, digestHeaderStr.toLatin1(), "Digest Header" );
+  createAndParseTempNode( digestHeaderStr.toLatin1(), "Digest Header" );
   //mReader->queueHtml("<br><hr><br>");
   // temporarily change curent node's Content-Type
   // to get our embedded RfC822 messages properly inserted
@@ -1143,7 +1146,7 @@ bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::
         subject.truncate( thisEoL );
     }
     kDebug() << "        embedded message found: \"" << subject;
-    createAndParseTempNode( item, partStr.toLatin1(), subject.toLatin1() );
+    createAndParseTempNode( partStr.toLatin1(), subject.toLatin1() );
     //mReader->queueHtml("<br><hr><br>");
     thisDelim = nextDelim+1;
     nextDelim = str.indexOf(delim1, thisDelim, Qt::CaseInsensitive );
@@ -1167,11 +1170,11 @@ bool ObjectTreeParser::processMailmanMessage( const Akonadi::Item &item, KMime::
     thisDelim = thisDelim+1;
   partStr = "Content-Type: text/plain\nContent-Description: digest footer\n\n";
   partStr += str.mid( thisDelim );
-  createAndParseTempNode( item, partStr.toLatin1(), "Digest Footer" );
+  createAndParseTempNode( partStr.toLatin1(), "Digest Footer" );
   return true;
 }
 
-bool ObjectTreeParser::processTextPlainSubtype( const Akonadi::Item &item, KMime::Content *curNode, ProcessResult & result )
+bool ObjectTreeParser::processTextPlainSubtype( KMime::Content *curNode, ProcessResult & result )
 {
   const bool isFirstTextPart = ( curNode->topLevel()->textContent() == curNode );
 
@@ -1226,7 +1229,7 @@ bool ObjectTreeParser::processTextPlainSubtype( const Akonadi::Item &item, KMime
   // process old style not-multipart Mailman messages to
   // enable verification of the embedded messages' signatures
   if ( !isMailmanMessage( curNode ) ||
-        !processMailmanMessage( item, curNode ) ) {
+        !processMailmanMessage( curNode ) ) {
       writeBodyString( mRawReplyString, NodeHelper::fromAsString( curNode ),
                       codecFor( curNode ), result, !bDrawFrame );
       mNodeHelper->setNodeDisplayedEmbedded( curNode, true );
@@ -1237,13 +1240,13 @@ bool ObjectTreeParser::processTextPlainSubtype( const Akonadi::Item &item, KMime
   return true;
 }
 
-void ObjectTreeParser::stdChildHandling( const Akonadi::Item &item, KMime::Content * child ) {
+void ObjectTreeParser::stdChildHandling( KMime::Content * child ) {
   if ( !child )
     return;
 
   ObjectTreeParser otp( *this );
   otp.setShowOnlyOneMimePart( false );
-  otp.parseObjectTree( item, child );
+  otp.parseObjectTreeInternal( child );
   mRawReplyString += otp.rawReplyString();
   mTextualContent += otp.textualContent();
   if ( !otp.textualContentCharset().isEmpty() )
@@ -1268,7 +1271,7 @@ bool ObjectTreeParser::processToltecMail( KMime::Content *node )
   return true;
 }
 
-bool ObjectTreeParser::processMultiPartMixedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
+bool ObjectTreeParser::processMultiPartMixedSubtype( KMime::Content * node, ProcessResult & )
 {
   if ( processToltecMail( node ) ) {
     return true;
@@ -1279,11 +1282,11 @@ bool ObjectTreeParser::processMultiPartMixedSubtype( const Akonadi::Item &item, 
     return false;
 
   // normal treatment of the parts in the mp/mixed container
-  stdChildHandling( item, child );
+  stdChildHandling( child );
   return true;
 }
 
-bool ObjectTreeParser::processMultiPartAlternativeSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
+bool ObjectTreeParser::processMultiPartAlternativeSubtype( KMime::Content * node, ProcessResult & )
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( !child )
@@ -1313,38 +1316,38 @@ bool ObjectTreeParser::processMultiPartAlternativeSubtype( const Akonadi::Item &
         (dataHtml && dataPlain && dataPlain->body().isEmpty()) ) {
     if ( dataPlain )
       mNodeHelper->setNodeProcessed( dataPlain, false);
-    stdChildHandling( item, dataHtml );
+    stdChildHandling( dataHtml );
     mSource->setHtmlMode( Util::MultipartHtml );
     return true;
   }
 
   if ( !htmlWriter() || (!mSource->htmlMail() && dataPlain) ) {
     mNodeHelper->setNodeProcessed( dataHtml, false );
-    stdChildHandling( item, dataPlain );
+    stdChildHandling( dataPlain );
     mSource->setHtmlMode( Util::MultipartPlain );
     return true;
   }
 
-  stdChildHandling( item, child );
+  stdChildHandling( child );
   return true;
 }
 
-bool ObjectTreeParser::processMultiPartDigestSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result ) {
-  return processMultiPartMixedSubtype( item, node, result );
+bool ObjectTreeParser::processMultiPartDigestSubtype( KMime::Content * node, ProcessResult & result ) {
+  return processMultiPartMixedSubtype( node, result );
 }
 
-bool ObjectTreeParser::processMultiPartParallelSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result ) {
-  return processMultiPartMixedSubtype( item, node, result );
+bool ObjectTreeParser::processMultiPartParallelSubtype( KMime::Content * node, ProcessResult & result ) {
+  return processMultiPartMixedSubtype( node, result );
 }
 
-bool ObjectTreeParser::processMultiPartSignedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & )
+bool ObjectTreeParser::processMultiPartSignedSubtype( KMime::Content * node, ProcessResult & )
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( node->contents().size() != 2 ) {
     kDebug() << "mulitpart/signed must have exactly two child parts!" << endl
               << "processing as multipart/mixed";
     if ( child )
-      stdChildHandling( item, child );
+      stdChildHandling( child );
     return child;
   }
 
@@ -1357,7 +1360,7 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( const Akonadi::Item &item,
   mNodeHelper->setNodeProcessed( signature, true);
 
   if ( !includeSignatures() ) {
-    stdChildHandling( item, signedData );
+    stdChildHandling( signedData );
     return true;
   }
 
@@ -1379,19 +1382,19 @@ bool ObjectTreeParser::processMultiPartSignedSubtype( const Akonadi::Item &item,
 
   if ( !protocol ) {
     mNodeHelper->setNodeProcessed( signature, true );
-    stdChildHandling( item, signedData );
+    stdChildHandling( signedData );
     return true;
   }
 
   CryptoProtocolSaver saver( this, protocol );
   mNodeHelper->setSignatureState( node, KMMsgFullySigned);
 
-  writeOpaqueOrMultipartSignedData( item, signedData, *signature,
+  writeOpaqueOrMultipartSignedData( signedData, *signature,
                                     NodeHelper::fromAsString( node ) );
   return true;
 }
 
-bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result )
+bool ObjectTreeParser::processMultiPartEncryptedSubtype( KMime::Content * node, ProcessResult & result )
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( !child )
@@ -1428,7 +1431,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
   */
 
   if ( !data ) {
-    stdChildHandling( item, child );
+    stdChildHandling( child );
     return true;
   }
 
@@ -1436,7 +1439,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
 
   KMime::Content * dataChild = MessageCore::NodeHelper::firstChild( data );
   if ( dataChild ) {
-    stdChildHandling( item, dataChild );
+    stdChildHandling( dataChild );
     return true;
   }
 
@@ -1497,8 +1500,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
     // MUA 'should' have sent.  :-D       (khz, 12.09.2002)
     //
     if ( signatureFound ) {
-      writeOpaqueOrMultipartSignedData( item,
-                                        0,
+      writeOpaqueOrMultipartSignedData( 0,
                                         *node,
                                         NodeHelper::fromAsString( node ),
                                         false,
@@ -1510,7 +1512,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
     } else {
       decryptedData = KMime::CRLFtoLF( decryptedData ); //KMime works with LF only inside insertAndParseNewChildNode
       
-      createAndParseTempNode( item, decryptedData.constData(),"encrypted data" );
+      createAndParseTempNode( decryptedData.constData(),"encrypted data" );
     }
   } else {
     mRawReplyString += decryptedData;
@@ -1528,8 +1530,7 @@ bool ObjectTreeParser::processMultiPartEncryptedSubtype( const Akonadi::Item &it
 }
 
 
-bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item,
-                                                    KMime::Content * node, ProcessResult & )
+bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, ProcessResult & )
 {
   if ( htmlWriter() && !attachmentStrategy()->inlineNestedMessages() && !showOnlyOneMimePart() )
     return false;
@@ -1561,7 +1562,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item,
 
     // Process the message, i.e. paint it by processing it with an OTP
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.parseObjectTree( item, message.get() );
+    otp.parseObjectTreeInternal( message.get() );
 
     // Don't add the resulting textual content to our textual content here.
     // That is unwanted when inline forwarding a message, since the encapsulated message will
@@ -1580,12 +1581,12 @@ bool ObjectTreeParser::processMessageRfc822Subtype( const Akonadi::Item &item,
 }
 
 
-bool ObjectTreeParser::processApplicationOctetStreamSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result )
+bool ObjectTreeParser::processApplicationOctetStreamSubtype( KMime::Content * node, ProcessResult & result )
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.parseObjectTree( item, child );
+    otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
@@ -1646,7 +1647,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( const Akonadi::Item
 
       if ( bOkDecrypt ) {
         // fixing the missing attachments bug #1090-b
-        createAndParseTempNode( item, decryptedData.constData(), "encrypted data" );
+        createAndParseTempNode( decryptedData.constData(), "encrypted data" );
       } else {
         mRawReplyString += decryptedData;
         if ( htmlWriter() ) {
@@ -1666,12 +1667,12 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( const Akonadi::Item
   return false;
 }
 
-bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &item, KMime::Content * node, ProcessResult & result )
+bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( KMime::Content * node, ProcessResult & result )
 {
   KMime::Content * child = MessageCore::NodeHelper::firstChild( node );
   if ( child ) {
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );
-    otp.parseObjectTree( item, child );
+    otp.parseObjectTreeInternal( child );
     mRawReplyString += otp.rawReplyString();
     mTextualContent += otp.textualContent();
     if ( !otp.textualContentCharset().isEmpty() )
@@ -1814,7 +1815,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &
           htmlWriter()->queue( writeSigstatHeader( messagePart,
                                                     cryptoProtocol(),
                                                     NodeHelper::fromAsString( node ) ) );
-        createAndParseTempNode( item, decryptedData.constData(), "encrypted data" );
+        createAndParseTempNode( decryptedData.constData(), "encrypted data" );
         if ( htmlWriter() )
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
       } else {
@@ -1856,8 +1857,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( const Akonadi::Item &
     else
       kDebug() << "pkcs7 mime  -  type unknown  -  opaque signed data ?";
 
-    bool sigFound = writeOpaqueOrMultipartSignedData( item,
-                                                      0,
+    bool sigFound = writeOpaqueOrMultipartSignedData( 0,
                                                       *signTestNode,
                                                       NodeHelper::fromAsString( node ),
                                                       true,
@@ -1960,7 +1960,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   return true;
   }
 
-  bool ObjectTreeParser::processApplicationChiasmusTextSubtype( const Akonadi::Item &item, KMime::Content * curNode, ProcessResult & result )
+  bool ObjectTreeParser::processApplicationChiasmusTextSubtype( KMime::Content * curNode, ProcessResult & result )
   {
   if ( !htmlWriter() ) {
     mRawReplyString = curNode->decodedContent();
@@ -1994,7 +1994,7 @@ bool ObjectTreeParser::decryptChiasmus( const QByteArray& data, QByteArray& body
   return true;
 }
 
-bool ObjectTreeParser::processApplicationMsTnefSubtype( const Akonadi::Item &item, KMime::Content *node, ProcessResult &result )
+bool ObjectTreeParser::processApplicationMsTnefSubtype( KMime::Content *node, ProcessResult &result )
 {
   Q_UNUSED( result );
   if ( !htmlWriter() )

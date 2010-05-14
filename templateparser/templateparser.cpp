@@ -945,7 +945,7 @@ QString TemplateParser::messageText( bool allowSelectionOnly )
   MessageViewer::EmptySource emptySource;
   MessageViewer::ObjectTreeParser otp( &emptySource ); // all defaults are ok
   otp.setAllowAsync( false );
-  otp.parseObjectTree( Akonadi::Item(), mOrigRoot );
+  otp.parseObjectTree( mOrigRoot );
 
   return asPlainTextFromObjectTree( mOrigMsg, mOrigRoot, &otp, shouldStripSignature(), mAllowDecryption );
 }
@@ -959,7 +959,7 @@ KMime::Content* TemplateParser::parsedObjectTree()
 
   MessageViewer::EmptySource emptySource;
   MessageViewer::ObjectTreeParser otp(&emptySource); // all defaults are ok
-  otp.parseObjectTree( Akonadi::Item(), mOrigRoot );
+  otp.parseObjectTree( mOrigRoot );
 
   return mOrigRoot;
 }
@@ -1220,7 +1220,7 @@ void TemplateParser::parseTextStringFromContent( KMime::Content * root,
     // now parse the TEXT message part we want to quote
     MessageViewer::EmptySource emptySource;
     MessageViewer::ObjectTreeParser otp( &emptySource, 0, 0, true, false, true );
-    otp.parseObjectTree( Akonadi::Item(), curNode );
+    otp.parseObjectTree( curNode );
     parsedString = otp.rawReplyString();
     codec = otp.nodeHelper()->codec( curNode );
   }
@@ -1315,7 +1315,7 @@ QString TemplateParser::asPlainText( const KMime::Message::Ptr &msg,
   root->parse();
   MessageViewer::EmptySource emptySource;
   MessageViewer::ObjectTreeParser otp(&emptySource);
-  otp.parseObjectTree( Akonadi::Item(), root );
+  otp.parseObjectTree( root );
   QString result = asPlainTextFromObjectTree( msg, root, &otp, aStripSignature, allowDecryption );
   delete root;
   return result;

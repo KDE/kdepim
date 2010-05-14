@@ -260,7 +260,7 @@ KMime::Content* ViewerPrivate::nodeForContentIndex( const KMime::ContentIndex& i
     int i = url.left( url.indexOf('.') ).toInt();
     url = url.mid( url.indexOf('.') + 1 );
     KMime::ContentIndex idx(url);
-    QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage );
+    QList<KMime::Content*> extras = mNodeHelper->extraContents( mMessage.get() );
     if ( i >= 0 && i < extras.size() ) {
       KMime::Content* c = extras[i];
       result = c->content( idx );
@@ -736,7 +736,7 @@ bool ViewerPrivate::saveContent( KMime::Content* content, const KUrl& url, bool 
 
           // process this node and all it's siblings and descendants
           mNodeHelper->setNodeUnprocessed( dataNode, true );
-          otp.parseObjectTree( Akonadi::Item(), dataNode );
+          otp.parseObjectTree( dataNode );
 
           rawReplyString = otp.rawReplyString();
           gotRawReplyString = true;
@@ -1146,7 +1146,7 @@ void ViewerPrivate::parseMsg()
   ObjectTreeParser otp( &otpSource, mNodeHelper );
   otp.setAllowAsync( true );
   otp.setShowRawToltecMail( mShowRawToltecMail );
-  otp.parseObjectTree( mMessageItem, mMessage.get() );
+  otp.parseObjectTree( mMessage.get() );
 
   bool emitReplaceMsgByUnencryptedVersion = false;
 
@@ -1550,7 +1550,7 @@ void ViewerPrivate::setMessagePart( KMime::Content * node )
   if ( node ) {
     MailViewerSource otpSource( this );
     ObjectTreeParser otp( &otpSource, mNodeHelper, 0, true );
-    otp.parseObjectTree( Akonadi::Item(), node );
+    otp.parseObjectTree( node );
   }
   // ### this, too
   htmlWriter()->queue( "</body></html>" );
@@ -2067,7 +2067,7 @@ static QColor nextColor( const QColor & c )
   return QColor::fromHsv( (h + 50) % 360, qMax(s, 64), v );
 }
 
-QString ViewerPrivate::renderAttachments(KMime::Content * node, const QColor &bgColor )
+QString ViewerPrivate::renderAttachments( KMime::Content * node, const QColor &bgColor )
 {
 
   if ( !node )
@@ -2564,7 +2564,7 @@ void ViewerPrivate::injectAttachments()
 
   QColor background = KColorScheme( QPalette::Active, KColorScheme::View ).background().color();
   QString html = renderAttachments( mMessage.get(), background );
-  Q_FOREACH( KMime::Content* node, mNodeHelper->extraContents( mMessage ) ) {
+  Q_FOREACH( KMime::Content* node, mNodeHelper->extraContents( mMessage.get() ) ) {
     html += renderAttachments( node, background );
   }
   if ( html.isEmpty() )

@@ -267,7 +267,9 @@ public:
 
   Viewer *viewer() const { return q; }
 
-  Akonadi::Item messageItem() { return mMessageItem; }
+  Akonadi::Item messageItem() const { return mMessageItem; }
+
+  KMime::Message::Ptr message() const { return mMessage; }
 
   /** Returns whether the message should be decryted. */
   bool decryptMessage() const;

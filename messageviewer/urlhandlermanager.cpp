@@ -256,7 +256,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleClick( const KUrl & url
   if ( !node )
     return false;
 
-  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
     if ( (*it)->handleClick( w->viewer(), &part, path ) )
       return true;
@@ -271,7 +271,7 @@ bool URLHandlerManager::BodyPartURLHandlerManager::handleContextMenuRequest( con
   if ( !node )
     return false;
 
-  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it )
     if ( (*it)->handleContextMenuRequest( &part, path, p ) )
       return true;
@@ -284,7 +284,7 @@ QString URLHandlerManager::BodyPartURLHandlerManager::statusBarMessage( const KU
   if ( !node )
     return QString();
 
-  PartNodeBodyPart part( w->messageItem(), node, w->nodeHelper(), w->overrideCodec() );
+  PartNodeBodyPart part( w->message().get(), node, w->nodeHelper(), w->overrideCodec() );
   for ( BodyPartHandlerList::const_iterator it = mHandlers.begin() ; it != mHandlers.end() ; ++it ) {
     const QString msg = (*it)->statusBarMessage( &part, path );
     if ( !msg.isEmpty() )
