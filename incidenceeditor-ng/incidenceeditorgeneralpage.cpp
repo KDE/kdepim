@@ -25,6 +25,7 @@
 #include <QtGui/QVBoxLayout>
 
 #include "incidencegeneraleditor.h"
+#include "incidencedescriptioneditor.h"
 
 using namespace IncidenceEditorsNG;
 
@@ -36,18 +37,22 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   IncidenceGeneralEditor *ieGeneral = new IncidenceGeneralEditor( this );
   layout->addWidget( ieGeneral );
 
-  QSpacerItem *verticalSpacer =
-    new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
-  layout->addItem( verticalSpacer );
+  IncidenceDescriptionEditor *ieDescription = new IncidenceDescriptionEditor( this );
+  layout->addWidget( ieDescription );
+  
+//   QSpacerItem *verticalSpacer =
+//     new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
+//   layout->addItem( verticalSpacer );
 
   mDirtyLabel = new QLabel( "Clean!", this );
   layout->addWidget( mDirtyLabel );
 
+  connect( this, SIGNAL(dirtyStatusChanged(bool)),
+           SLOT(updateDirtyLabel(bool)));
+  
   // Combine the various editors with this page.
   combine( ieGeneral );
-
-  connect( ieGeneral, SIGNAL(dirtyStatusChanged(bool)),
-           SLOT(updateDirtyLabel(bool)));
+  combine( ieDescription );
 }
 
 void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )
