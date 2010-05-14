@@ -37,10 +37,7 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
   QSpacerItem *verticalSpacer =
     new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
   layout->addItem( verticalSpacer );
+
+  // Combine the various editors with this page.
+  combine( ieGeneral );
 }
-
-void IncidenceEditorGeneralPage::load( KCal::Incidence::ConstPtr incidence )
-{ }
-
-void IncidenceEditorGeneralPage::save( KCal::Incidence::Ptr incidence )
-{ }

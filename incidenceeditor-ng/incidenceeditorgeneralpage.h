@@ -30,9 +30,6 @@ class IncidenceEditorGeneralPage : public CombinedIncidenceEditor
   Q_OBJECT
   public:
     IncidenceEditorGeneralPage( QWidget *parent = 0 );
-
-    virtual void load( KCal::Incidence::ConstPtr incidence );
-    virtual void save( KCal::Incidence::Ptr incidence );
 };
 
 } // IncidenceEditorsNG
