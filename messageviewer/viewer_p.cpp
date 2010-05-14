@@ -282,10 +282,6 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
     return;
   }
 
-  QString atmName = name;
-  if ( name.isEmpty() )
-    atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
-
   // determine the MIME type of the attachment
   KMimeType::Ptr mimetype;
   // prefer the value of the Content-Type header
@@ -297,6 +293,9 @@ void ViewerPrivate::openAttachment( KMime::Content* node, const QString & name )
   }
 
   // special case treatment on mac
+  QString atmName = name;
+  if ( name.isEmpty() )
+    atmName = mNodeHelper->tempFileUrlFromNode( node ).toLocalFile();
   if ( Util::handleUrlOnMac( atmName ) )
     return;
 
