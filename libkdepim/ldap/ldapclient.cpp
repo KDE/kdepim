@@ -42,7 +42,7 @@
 
 using namespace KLDAP;
 
-K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kldaprc", KConfig::NoGlobals ) )
+K_GLOBAL_STATIC_WITH_ARGS( KConfig, s_config, ( "kabldaprc", KConfig::NoGlobals ) )
 
 class LdapClient::Private
 {
@@ -515,7 +515,7 @@ void LdapClientSearch::Private::readConfig()
 
     q->connect( &mDataTimer, SIGNAL( timeout() ), SLOT( slotDataTimer() ) );
   }
-  mConfigFile = KStandardDirs::locateLocal( "config", "kldaprc" );
+  mConfigFile = KStandardDirs::locateLocal( "config", "kabldaprc" );
   KDirWatch::self()->addFile( mConfigFile );
 }
 
