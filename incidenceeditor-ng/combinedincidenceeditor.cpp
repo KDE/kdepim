@@ -57,12 +57,22 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
 
 void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
 {
-  foreach ( IncidenceEditor *editor, mCombinedEditors  )
+  foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
     editor->load( incidence );
+    Q_ASSERT( !editor->isDirty() );
+  }
+
+  mWasDirty = false;
+  mDirtyEditorCount = 0;
 }
 
 void CombinedIncidenceEditor::save( KCal::Incidence::Ptr incidence )
 {
-  foreach ( IncidenceEditor *editor, mCombinedEditors  )
+  foreach ( IncidenceEditor *editor, mCombinedEditors  ) {
     editor->save( incidence );
+    editor->load( incidence );
+    Q_ASSERT( !editor->isDirty() );
+  }
+
+  checkDirtyStatus();
 }

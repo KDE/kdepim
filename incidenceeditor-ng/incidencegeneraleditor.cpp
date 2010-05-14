@@ -53,7 +53,9 @@ void IncidenceGeneralEditor::load( KCal::Incidence::ConstPtr incidence )
     mUi->mSummaryEdit->clear();
     mUi->mLocationEdit->clear();
     mUi->mCategoriesLabel->clear();
+    mSelectedCategories.clear();
   }
+
   mWasDirty = false;
 }
 
@@ -92,10 +94,9 @@ void IncidenceGeneralEditor::selectCategories()
   connect( this, SIGNAL(updateCategoryConfig()),
            categoryDialog, SLOT(updateCategoryConfig()) );
 
-  if ( categoryDialog->exec() ) {
+  if ( categoryDialog->exec() )
     setCategories( categoryDialog->selectedCategories() );
-    checkDirtyStatus();
-  }
+
   delete categoryDialog;
 }
 
@@ -103,9 +104,9 @@ bool IncidenceGeneralEditor::categoriesChanged() const
 {
   // If no Incidence was loaded, mSelectedCategories should be empty.
   bool categoriesEqual = mSelectedCategories.isEmpty();
-  
+
   if ( mLoadedIncidence ) { // There was an Incidence loaded
-    bool categoriesEqual = ( mLoadedIncidence->categories().size() == mSelectedCategories.size() );
+    categoriesEqual = ( mLoadedIncidence->categories().size() == mSelectedCategories.size() );
     if ( categoriesEqual ) {
       QStringListIterator it( mLoadedIncidence->categories() );
       while ( it.hasNext() && categoriesEqual )
@@ -119,4 +120,5 @@ void IncidenceGeneralEditor::setCategories( const QStringList &categories )
 {
   mSelectedCategories = categories;
   mUi->mCategoriesLabel->setText( categories.join( "," ) );
+  checkDirtyStatus();
 }
