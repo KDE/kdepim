@@ -143,6 +143,7 @@ AttachmentControllerBase::Private::~Private()
 
 void AttachmentControllerBase::setSelectedParts( const AttachmentPart::List &selectedParts)
 {
+  d->selectedParts = selectedParts;
   const int selectedCount = selectedParts.count();
 
   d->openContextAction->setEnabled( selectedCount > 0 );
