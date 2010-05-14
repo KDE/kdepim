@@ -428,7 +428,7 @@ void MailingList::writeConfig( KConfigGroup & config ) const
    */
 }
 
-void MailingList::readConfig( KConfigGroup & config )
+void MailingList::readConfig( const KConfigGroup & config )
 {
   mFeatures =  config.readEntry( "MailingListFeatures", 0 );
   mHandler = static_cast<MailingList::Handler>(
