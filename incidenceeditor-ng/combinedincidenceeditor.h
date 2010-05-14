@@ -38,6 +38,14 @@ class CombinedIncidenceEditor : public IncidenceEditor
      * initial values or if one of the combined editors is dirty.
      */
     virtual bool isDirty() const;
+
+    /**
+     * Loads all data from @param inicidence into the combined editors. Note, if
+     * you reimplement the load method in a subclass, make sure to call this
+     * implementation too.
+     */
+    virtual void load( KCal::Incidence::ConstPtr incidence );
+    virtual void save( KCal::Incidence::Ptr incidence );
     
   protected:
     CombinedIncidenceEditor( QWidget *parent = 0);
@@ -48,6 +56,7 @@ class CombinedIncidenceEditor : public IncidenceEditor
     void handleDirtyStatusChange( bool isDirty );
     
   private:
+    QVector<IncidenceEditor*> mCombinedEditors;
     int mDirtyEditorCount;
 };
 

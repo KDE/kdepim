@@ -37,6 +37,8 @@ CombinedIncidenceEditor::CombinedIncidenceEditor( QWidget *parent )
 
 void CombinedIncidenceEditor::combine( IncidenceEditor *other )
 {
+  Q_ASSERT( other );
+  mCombinedEditors.append( other );
   connect( other, SIGNAL(dirtyStatusChanged(bool)),
            SLOT(handleDirtyStatusChange(bool)) );
 }
@@ -51,4 +53,16 @@ void CombinedIncidenceEditor::handleDirtyStatusChange( bool isDirty )
     --mDirtyEditorCount;
 
   Q_ASSERT( mDirtyEditorCount >= 0 );
+}
+
+void CombinedIncidenceEditor::load( KCal::Incidence::ConstPtr incidence )
+{
+  foreach ( IncidenceEditor *editor, mCombinedEditors  )
+    editor->load( incidence );
+}
+
+void CombinedIncidenceEditor::save( KCal::Incidence::Ptr incidence )
+{
+  foreach ( IncidenceEditor *editor, mCombinedEditors  )
+    editor->save( incidence );
 }
