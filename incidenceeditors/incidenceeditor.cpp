@@ -558,7 +558,7 @@ void IncidenceEditor::addAttendees( const QStringList &attendees )
     QString name, email;
     KABC::Addressee::parseEmailAddress( *it, name, email );
 #ifdef HAVE_QT3SUPPORT
-    mAttendeeEditor->insertAttendee( new Attendee( name, email ) );
+    mAttendeeEditor->insertAttendee( new Attendee( name, email, true, Attendee::NeedsAction ) );
 #endif
   }
 }
