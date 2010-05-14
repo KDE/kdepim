@@ -214,6 +214,8 @@ QString ResourceKolabBase::findWritableResource( const ResourceType &type,
                                                  const ResourceMap& resources,
                                                  const QString& text )
 {
+  mErrorCode = NoError;
+
   // I have to use the label (shown in the dialog) as key here. But given how the
   // label is made up, it should be unique. If it's not, well the dialog would suck anyway...
   QMap<QString, QString> possible;
@@ -254,6 +256,7 @@ QString ResourceKolabBase::findWritableResource( const ResourceType &type,
     }
 
     KMessageBox::error( 0, errorText );
+    mErrorCode = NoWritableFound;
     return QString::null;
   }
   if ( possible.count() == 1 )
@@ -268,8 +271,11 @@ QString ResourceKolabBase::findWritableResource( const ResourceType &type,
   // Several found, ask the user
   QString chosenLabel = KPIM::FolderSelectDialog::getItem( i18n( "Select Resource Folder" ),
                                                            t, possible.keys() );
-  if ( chosenLabel.isEmpty() ) // cancelled
+  if ( chosenLabel.isEmpty() ) {
+    // cancelled
+    mErrorCode = UserCancel;
     return QString::null;
+  }
   return possible[chosenLabel];
 }
 

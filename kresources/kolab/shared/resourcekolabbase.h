@@ -174,6 +174,13 @@ protected:
                                 const ResourceMap& resources,
                                 const QString& text = QString::null );
 
+  enum ErrorCode {
+    NoError,
+    NoWritableFound,   /**< No writable resource is available */
+    UserCancel         /**< User canceled the operation */
+  };
+  ErrorCode mErrorCode;
+
   bool mSilent;
 
   /**

@@ -555,7 +555,16 @@ bool ResourceKolab::addIncidence( KCal::Incidence* incidence, const QString& _su
       }
       subResource = findWritableResource( type, *map, text );
       if ( subResource.isEmpty() ) {
-        setException( new ErrorFormat( ErrorFormat::NoWritableFound ) );
+        switch( mErrorCode ) {
+        case NoWritableFound:
+          setException( new ErrorFormat( ErrorFormat::NoWritableFound ) );
+          break;
+        case UserCancel:
+          setException( new ErrorFormat( ErrorFormat::UserCancel ) );
+          break;
+        case NoError:
+          break;
+        }
       }
     }
 
