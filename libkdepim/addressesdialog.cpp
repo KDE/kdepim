@@ -183,11 +183,11 @@ void AddresseeViewItem::setSelected(bool selected)
 {
     if (selected == isSelected())
     {
-        return;
+      return;
     }
 
-    emit addressSelected( this, selected );
-    QListViewItem::setSelected(selected);
+  emit addressSelected( this, selected );
+  QListViewItem::setSelected(selected);
 }
 
 int
@@ -986,10 +986,10 @@ AddressesDialog::filterChanged( const QString& txt )
 
   int personalVisible = 0;
   int recentVisible = 0;
-  int distlistVisible = 0;
   while ( it.current() ) {
     AddresseeViewItem* item = static_cast<AddresseeViewItem*>( it.current() );
     ++it;
+
     if ( showAll ) {
       item->setOpen( true );
       item->setVisible( true );
@@ -998,54 +998,66 @@ AddressesDialog::filterChanged( const QString& txt )
       //  item->setOpen( false );//close to not have too many entries
       continue;
     }
+
     if ( item->category() == AddresseeViewItem::Entry ) {
       bool matches = item->matches( txt );
       item->setVisible( matches );
       QListViewItem *parent = static_cast<QListViewItem*>( item )->parent();
       if ( matches && parent ) {
-        parent->setOpen( true );//open the parents with found entries
         if ( parent == d->personal ) {
           personalVisible++;
         } else if ( parent == d->recent ) {
           recentVisible++;
-        } else { // distlist
-          distlistVisible++;
         }
       }
+    }
+    if ( item->category() == AddresseeViewItem::Group ) {
+      item->setOpen( true );
+      item->setVisible( true );
     }
   }
 
   if ( !showAll && personalVisible == 0 ) {
+    d->personal->setOpen( false );
     d->personal->setVisible( false );
   }
   if ( !showAll && recentVisible == 0 ) {
+    d->recent->setOpen( false );
     d->recent->setVisible( false );
   }
+
+  int distlistgroupVisible = 0;
   if ( !showAll ) {
-    if ( distlistVisible == 0 ) {
-      if ( d->topdist ) {
-        d->topdist->setVisible( false );
+    QPtrListIterator<AddresseeViewItem> it( d->dists );
+    for ( ; it.current(); ++it ) {
+      QListViewItem *p = *it;
+      p->setVisible( true );
+      AddresseeViewItem *p2 = static_cast<AddresseeViewItem*>( p->firstChild() );
+      int pcount = 0;
+      while ( p2 ) {
+        if ( p2->matches( txt ) ) {
+          p2->setVisible( true );
+          pcount++;
+        } else {
+          p2->setVisible( false );
+        }
+        p2 = static_cast<AddresseeViewItem*>( p2->nextSibling() );
       }
+      if ( !pcount && !p->text( 0 ).contains( txt, false ) ) {
+        p->setVisible( false );
+      }
+      distlistgroupVisible += pcount;
+      if ( p->text( 0 ).contains( txt, false ) ) {
+        distlistgroupVisible++;
+      }
+    }
+  }
+  if ( d->topdist ) {
+    if ( showAll || distlistgroupVisible > 0 ) {
+      d->topdist->setOpen( true );
     } else {
-      QPtrListIterator<AddresseeViewItem> it( d->dists );
-      for ( ; it.current(); ++it ) {
-        QListViewItem *p = *it;
-        p->setVisible( true );
-        AddresseeViewItem *p2 = static_cast<AddresseeViewItem*>( p->firstChild() );
-        int pcount = 0;
-        while ( p2 ) {
-          if ( p2->matches( txt ) ) {
-            p2->setVisible( true );
-            pcount++;
-          } else {
-            p2->setVisible( false );
-          }
-          p2 = static_cast<AddresseeViewItem*>( p2->nextSibling() );
-        }
-        if ( !pcount ) {
-          p->setVisible( false );
-        }
-      }
+      d->topdist->setOpen( false );
+      d->topdist->setVisible( false );
     }
   }
 }
