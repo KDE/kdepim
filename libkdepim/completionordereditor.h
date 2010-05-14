@@ -33,10 +33,12 @@
 
 #include "kdepim_export.h"
 
-#include <KConfig>
-#include <KDialog>
+#include <KDE/KConfig>
+#include <KDE/KDialog>
 
 class KPushButton;
+class QAbstractItemModel;
+class QModelIndex;
 class QTreeWidget;
 
 namespace KLDAP {
@@ -50,41 +52,47 @@ class CompletionOrderEditor;
 // Base class for items in the list
 class CompletionItem
 {
-public:
-  virtual ~CompletionItem() {}
-  virtual QString label() const = 0;
-  virtual int completionWeight() const = 0;
-  virtual void setCompletionWeight( int weight ) = 0;
-  virtual void save( CompletionOrderEditor* ) = 0;
+  public:
+    virtual ~CompletionItem() {}
+    virtual QString label() const = 0;
+    virtual int completionWeight() const = 0;
+    virtual void setCompletionWeight( int weight ) = 0;
+    virtual void save( CompletionOrderEditor* ) = 0;
 };
 
 
-class KDEPIM_EXPORT CompletionOrderEditor : public KDialog {
+class KDEPIM_EXPORT CompletionOrderEditor : public KDialog
+{
   Q_OBJECT
 
-public:
-  CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch, QWidget* parent );
-  ~CompletionOrderEditor();
+  public:
+    CompletionOrderEditor( KLDAP::LdapClientSearch* ldapSearch, QWidget* parent );
+    ~CompletionOrderEditor();
 
-  KConfig* configFile() { return &mConfig; }
+    KConfig* configFile() { return &mConfig; }
 
-Q_SIGNALS:
-  void completionOrderChanged();
+  Q_SIGNALS:
+    void completionOrderChanged();
 
-private Q_SLOTS:
-  void slotSelectionChanged();
-  void slotMoveUp();
-  void slotMoveDown();
-  virtual void slotOk();
+  private Q_SLOTS:
+    void rowsInserted( const QModelIndex &parent, int start, int end );
+    void slotSelectionChanged();
+    void slotMoveUp();
+    void slotMoveDown();
+    virtual void slotOk();
 
-private:
-  KConfig mConfig;
-  QList<CompletionItem*> mItems;
-  QTreeWidget* mListView;
-  KPushButton* mUpButton;
-  KPushButton* mDownButton;
+  private:
+    void loadCompletionItems();
+    void addCompletionItemForIndex( const QModelIndex& );
 
-  bool mDirty;
+    KConfig mConfig;
+    QTreeWidget* mListView;
+    KPushButton* mUpButton;
+    KPushButton* mDownButton;
+    QAbstractItemModel *mCollectionModel;
+    KLDAP::LdapClientSearch *mLdapSearch;
+
+    bool mDirty;
 };
 
 } // namespace
