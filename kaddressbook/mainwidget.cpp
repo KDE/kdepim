@@ -579,17 +579,6 @@ void MainWidget::setSimpleGuiMode( bool on )
   mDetailsPane->setVisible( true );
   mContactSwitcher->setVisible( on );
 
-  // If simple mode is on, we use a model that provides all available contacts
-  // in a list, otherwise we use the model that provides all contacts of the
-  // currently selected collection.
-  if ( on )
-    mContactsFilterModel->setSourceModel( allContactsModel() );
-  else
-    mContactsFilterModel->setSourceModel( mItemTree );
-
-  if ( mCollectionView->model() )
-    mCollectionView->setCurrentIndex( mCollectionView->model()->index( 0, 0 ) );
-
   if ( mItemView->model() )
     mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
 
