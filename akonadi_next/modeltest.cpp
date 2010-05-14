@@ -49,6 +49,8 @@ ModelTest::ModelTest ( QAbstractItemModel *_model, QObject *parent ) : QObject (
     connect ( model, SIGNAL ( layoutAboutToBeChanged () ), this, SLOT ( runAllTests() ) );
     connect ( model, SIGNAL ( layoutChanged () ), this, SLOT ( runAllTests() ) );
     connect ( model, SIGNAL ( modelReset () ), this, SLOT ( runAllTests() ) );
+    connect ( model, SIGNAL ( modelAboutToBeReset () ), this, SLOT ( modelAboutToBeReset() ) );
+    connect ( model, SIGNAL ( modelReset () ), this, SLOT ( modelReset() ) );
     connect ( model, SIGNAL ( rowsAboutToBeInserted ( const QModelIndex &, int, int ) ),
               this, SLOT ( runAllTests() ) );
     connect ( model, SIGNAL ( rowsAboutToBeRemoved ( const QModelIndex &, int, int ) ),
@@ -309,7 +311,11 @@ void ModelTest::checkChildren ( const QModelIndex &parent, int currentDepth )
     int columns = model->columnCount ( parent );
 
     if ( rows > 0 )
+    {
+
+      Q_ASSERT(parent.column() <= 0);
         Q_ASSERT ( model->hasChildren ( parent ) );
+    }
 
     // Some further testing against rows(), columns(), and hasChildren()
     Q_ASSERT ( rows >= 0 );
@@ -503,6 +509,17 @@ void ModelTest::rowsInserted ( const QModelIndex & parent, int start, int end )
     Q_ASSERT ( c.next == model->data ( model->index ( end + 1, 0, c.parent ) ) );
 }
 
+
+void ModelTest::modelAboutToBeReset()
+{
+  qDebug() << "@@@@@@@@@@@" << "modelAboutToBeReset";
+}
+
+void ModelTest::modelReset()
+{
+  qDebug() << "@@@@@@@@@@@" << "modelReset";
+}
+
 void ModelTest::layoutAboutToBeChanged()
 {
     for ( int i = 0; i < qBound ( 0, model->rowCount(), 100 ); ++i )
@@ -584,6 +601,12 @@ void ModelTest::rowsMoved(const QModelIndex &srcParent, int start, int end, cons
 void ModelTest::rowsAboutToBeRemoved ( const QModelIndex &parent, int start, int end )
 {
 qDebug() << "ratbr" << parent << start << end;
+    for (int ii=start; ii <= end; ii++)
+    {
+      qDebug() << "itemwillbe removed:" << model->data ( model->index ( ii, 0, parent ));
+    }
+
+
     Changing c;
     c.parent = parent;
     c.oldSize = model->rowCount ( parent );
