@@ -94,7 +94,7 @@ public:
   //
   // HeaderStyle interface:
   //
-  virtual QString format( KMime::Message::Ptr message ) const = 0;
+  virtual QString format( KMime::Message *message ) const = 0;
 
   void setMessagePath( const QString &path ) { mMessagePath = path; }
   QString messagePath() const { return mMessagePath; }

@@ -72,7 +72,7 @@ public:
     /** The override codec that should be used for the mail */
     virtual const QTextCodec * overrideCodec() = 0;
     
-    virtual QString createMessageHeader( KMime::Message::Ptr message ) = 0;
+    virtual QString createMessageHeader( KMime::Message *message ) = 0;
 
     /** Return the wanted attachment startegy */
     virtual const AttachmentStrategy * attachmentStrategy() = 0;

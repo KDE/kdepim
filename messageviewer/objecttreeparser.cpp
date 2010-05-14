@@ -1558,7 +1558,7 @@ bool ObjectTreeParser::processMessageRfc822Subtype( KMime::Content * node, Proce
                                              message.get() ) );
 
     // Paint the message header
-    htmlWriter()->queue( mSource->createMessageHeader( message ) );
+    htmlWriter()->queue( mSource->createMessageHeader( message.get() ) );
 
     // Process the message, i.e. paint it by processing it with an OTP
     ObjectTreeParser otp( mSource, mNodeHelper, cryptoProtocol() );

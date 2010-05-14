@@ -289,12 +289,12 @@ public:
     HTML begin/end parts are written around the message. */
   void displayMessage();
 
-  /** Parse the root message and add it's contents to the reader window. */
-  void parseMsg();
+  /** Parse the given content and generate HTML out of it for display */
+  void parseContent( KMime::Content *content );
 
   /** Creates a nice mail header depending on the current selected
     header style. */
-  QString writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content* vCardNode = 0,
+  QString writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCardNode = 0,
                           bool topLevel = false );
 
   /** show window containing information about a vCard. */
@@ -367,9 +367,6 @@ public:
 
   /** Instead of settings a message to be shown sets a message part
       to be shown */
-  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                       const QString& aFileName, const QString& pname );
-
   void setMessagePart( KMime::Content * node );
 
   /** Show or hide the Mime Tree Viewer if configuration
@@ -576,7 +573,7 @@ signals:
   void urlClicked(const KUrl &url, int button);
   void urlClicked( const Akonadi::Item &msg, const KUrl &url );
   void requestConfigSync();
-  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName, const QString& pname, const QString & encoding );
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
 
 public:

@@ -55,8 +55,8 @@ Viewer::Viewer( QWidget *aParent, QWidget *mainWindow, KActionCollection *action
   connect( d_ptr, SIGNAL( urlClicked( const Akonadi::Item &, const KUrl & ) ),
            SIGNAL( urlClicked( const Akonadi::Item &,  const KUrl& ) ) );
   connect( d_ptr, SIGNAL( requestConfigSync() ), SIGNAL( requestConfigSync() ) );
-  connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString&, const QString&, const QString & ) ),
-           SIGNAL( showReader( KMime::Content*, bool, const QString&, const QString&, const QString & )) );
+  connect( d_ptr, SIGNAL( showReader( KMime::Content* , bool , const QString& ) ),
+           SIGNAL( showReader( KMime::Content*, bool, const QString& )) );
   connect( d_ptr, SIGNAL( showMessage(KMime::Message::Ptr, const QString& )), this, SIGNAL( showMessage(KMime::Message::Ptr, const QString&)) );
   connect( d_ptr, SIGNAL( showStatusBarMessage( const QString & ) ),
            this, SIGNAL( showStatusBarMessage( const QString & ) ) );
@@ -436,11 +436,10 @@ void Viewer::update( Viewer::UpdateMode updateMode )
   d->update( updateMode );
 }
 
-void Viewer::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                              const QString& aFileName, const QString& pname )
+void Viewer::setMessagePart( KMime::Content* aMsgPart )
 {
   Q_D( Viewer );
-  d->setMessagePart( aMsgPart, aHTML, aFileName, pname );
+  d->setMessagePart( aMsgPart );
 }
 
 void Viewer::slotShowMessageSource()

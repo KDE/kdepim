@@ -155,8 +155,7 @@ class MESSAGEVIEWER_EXPORT Viewer: public QWidget
    * Instead of settings a message to be shown sets a message part
    * to be shown
    */
-  void setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                   const QString& aFileName, const QString& pname );
+  void setMessagePart( KMime::Content* aMsgPart );
 
   /**
    * Convenience method to clear the reader and discard the current message. Sets the internal message pointer
@@ -297,8 +296,11 @@ signals:
   void urlClicked(const KUrl &url, int button);
 
   void requestConfigSync();
-  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString& aFileName,
-                   const QString& pname, const QString & encoding );
+
+  /// Emitted when the content should be shown in a seperate window
+  void showReader( KMime::Content* aMsgPart, bool aHTML, const QString & encoding );
+
+  /// Emitted when the message should be shown in a seperate window
   void showMessage( KMime::Message::Ptr message, const QString& encoding );
 
   void deleteMessage( const Akonadi::Item & );

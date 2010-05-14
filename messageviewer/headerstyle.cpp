@@ -81,7 +81,7 @@ static QString strToHtml( const QString & str,
 }
 
 // Prepare the date string (when printing always use the localized date)
-static QString dateString( KMime::Message::Ptr message, bool printing, bool shortDate ) {
+static QString dateString( KMime::Message *message, bool printing, bool shortDate ) {
   if( printing ) {
     KDateTime dateTime = message->date()->dateTime();
     KLocale * locale = KGlobal::locale();
@@ -110,10 +110,10 @@ public:
   HeaderStyle * next() const { return plain(); }
   HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 };
 
-QString BriefHeaderStyle::format( KMime::Message::Ptr message ) const {
+QString BriefHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
 
   const HeaderStrategy *strategy = headerStrategy();
@@ -194,13 +194,13 @@ public:
   HeaderStyle * next() const { return fancy(); }
   HeaderStyle * prev() const { return brief(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 
 private:
-  QString formatAllMessageHeaders( KMime::Message::Ptr message ) const;
+  QString formatAllMessageHeaders( KMime::Message *message ) const;
 };
 
-QString PlainHeaderStyle::format( KMime::Message::Ptr message ) const {
+QString PlainHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
   const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
@@ -284,7 +284,7 @@ QString PlainHeaderStyle::format( KMime::Message::Ptr message ) const {
   return headerStr;
 }
 
-QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message::Ptr message ) const {
+QString PlainHeaderStyle::formatAllMessageHeaders( KMime::Message *message ) const {
   QByteArray head = message->head();
   KMime::Headers::Generic *header = message->nextHeader(head);
   QString result;
@@ -314,7 +314,7 @@ public:
   HeaderStyle * next() const { return enterprise(); }
   HeaderStyle * prev() const { return plain(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
   static QString imgToDataUrl( const QImage & image );
 
 private:
@@ -420,7 +420,7 @@ QString FancyHeaderStyle::drawSpamMeter( SpamError spamError, double percent, do
 }
 
 
-QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
+QString FancyHeaderStyle::format( KMime::Message *message ) const {
   if ( !message ) return QString();
   const HeaderStrategy *strategy = headerStrategy();
   if ( !strategy )
@@ -472,11 +472,11 @@ QString FancyHeaderStyle::format( KMime::Message::Ptr message ) const {
     Q_ASSERT( sourceObject() );
 
     ContactPhotoMemento *photoMemento =
-        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message.get(), "contactphoto" ) );
+        dynamic_cast<ContactPhotoMemento*>( nodeHelper()->bodyPartMemento( message, "contactphoto" ) );
     if ( !photoMemento ) {
       const QString email = KPIMUtils::firstEmailAddress( message->from()->asUnicodeString() );
       photoMemento = new ContactPhotoMemento( email );
-      nodeHelper()->setBodyPartMemento( message.get(), "contactphoto", photoMemento );
+      nodeHelper()->setBodyPartMemento( message, "contactphoto", photoMemento );
       QObject::connect( photoMemento, SIGNAL( update( Viewer::UpdateMode ) ),
                         sourceObject(), SLOT( update( Viewer::UpdateMode ) ) );
     }
@@ -714,10 +714,10 @@ public:
   }
   HeaderStyle * prev() const { return fancy(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 };
 
-QString EnterpriseHeaderStyle::format( KMime::Message::Ptr message ) const
+QString EnterpriseHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
   const HeaderStrategy *strategy = headerStrategy();
@@ -904,10 +904,10 @@ public:
   HeaderStyle * next() const { return brief(); }
   HeaderStyle * prev() const { return enterprise(); }
 
-  QString format( KMime::Message::Ptr message ) const;
+  QString format( KMime::Message *message ) const;
 };
 
-QString MobileHeaderStyle::format( KMime::Message::Ptr message ) const
+QString MobileHeaderStyle::format( KMime::Message *message ) const
 {
   if ( !message ) return QString();
 

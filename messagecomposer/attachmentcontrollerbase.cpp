@@ -498,23 +498,10 @@ void AttachmentControllerBase::openAttachment( AttachmentPart::Ptr part )
 
 void AttachmentControllerBase::viewAttachment( AttachmentPart::Ptr part )
 {
-  QString pname;
-  pname = part->name().trimmed();
-  if( pname.isEmpty() ) {
-    pname = part->description();
-  }
-  if( pname.isEmpty() ) {
-    pname = QString::fromLatin1( "unnamed" );
-  }
-
-  KTemporaryFile *atmTempFile = new KTemporaryFile();
-  atmTempFile->open();
-  d->mAttachmentTempList.append( atmTempFile );
-  KPIMUtils::kByteArrayToFile( part->/*bodyDecodedBinary()*/data(), atmTempFile->fileName(),
-                               false, false, false );
   KMime::Content *content = new KMime::Content;
   content->setContent( part->data() );
-  showAttachment( content, atmTempFile->fileName(), pname, part->charset() );
+  content->parse();
+  emit showAttachment( content, part->charset() );
 }
 
 void AttachmentControllerBase::editAttachment( AttachmentPart::Ptr part, bool openWith )

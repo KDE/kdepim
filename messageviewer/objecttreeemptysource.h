@@ -38,7 +38,7 @@ class MESSAGEVIEWER_EXPORT EmptySource : public ObjectTreeSourceIf {
   void setHtmlMode( Util::HtmlMode mode );
   int levelQuote();
   const QTextCodec * overrideCodec();
-  QString createMessageHeader( KMime::Message::Ptr message );
+  QString createMessageHeader( KMime::Message *message );
   const AttachmentStrategy * attachmentStrategy();
   HtmlWriter * htmlWriter();
   CSSHelper* cssHelper();

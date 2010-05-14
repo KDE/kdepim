@@ -494,13 +494,13 @@ QString NodeHelper::replacePrefixes( const QString& str,
     return str;
 }
 
-QString NodeHelper::cleanSubject( KMime::Message::Ptr message )
+QString NodeHelper::cleanSubject( KMime::Message *message )
 {
   return cleanSubject( message, replySubjPrefixes + forwardSubjPrefixes,
                        true, QString() ).trimmed();
 }
 
-QString NodeHelper::cleanSubject( KMime::Message::Ptr message, const QStringList & prefixRegExps,
+QString NodeHelper::cleanSubject( KMime::Message *message, const QStringList & prefixRegExps,
                                   bool replace,
                                   const QString & newPrefix )
 {

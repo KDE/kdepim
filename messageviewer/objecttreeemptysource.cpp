@@ -67,7 +67,7 @@ const QTextCodec * EmptySource::overrideCodec()
   return 0;
 }
 
-QString EmptySource::createMessageHeader( KMime::Message::Ptr message )
+QString EmptySource::createMessageHeader( KMime::Message *message )
 {
   Q_UNUSED( message );
   return QString(); //do nothing

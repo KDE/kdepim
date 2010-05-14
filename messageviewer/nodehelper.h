@@ -103,7 +103,7 @@ public:
      *  Return this mails subject, with all "forward" and "reply"
      *  prefixes removed
      */
-    static QString cleanSubject( KMime::Message::Ptr message );
+    static QString cleanSubject( KMime::Message *message );
 
     /** Attach an unencrypted message to an encrypted one */
     void attachUnencryptedMessage( KMime::Message::Ptr message, KMime::Message::Ptr unencrypted );
@@ -231,7 +231,7 @@ private:
         sequence of whitespace-delimited prefixes at the beginning of
         #subject() is replaced by @p newPrefix
     **/
-    static QString cleanSubject( KMime::Message::Ptr message, const QStringList& prefixRegExps,
+    static QString cleanSubject( KMime::Message *message, const QStringList& prefixRegExps,
                                  bool replace, const QString& newPrefix );
 
     void clearBodyPartMemento( QMap<QByteArray, Interface::BodyPartMemento*> bodyPartMementoMap );

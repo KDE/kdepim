@@ -1069,8 +1069,6 @@ void ViewerPrivate::displayMessage()
   if ( !mMainWindow )
       q->setWindowTitle( mMessage->subject()->asUnicodeString() );
 
-  mNodeHelper->removeTempFiles();
-
   // Don't update here, parseMsg() can overwrite the HTML mode, which would lead to flicker.
   // It is updated right after parseMsg() instead.
   mColorBar->setMode( Util::Normal, HtmlStatusBar::NoUpdate );
@@ -1085,7 +1083,7 @@ void ViewerPrivate::displayMessage()
     htmlWriter()->queue( QString::fromLatin1("<div style=\"background:%1;color:%2;border:1px solid %3\">%4</div>").arg( background.name(), foreground.name(), foreground.name(), Qt::escape( attr->message() ) ) );
     htmlWriter()->queue( QLatin1String("<p></p>") );
   }
-  parseMsg();
+  parseContent( mMessage.get() );
   mColorBar->update();
 
   htmlWriter()->queue("</body></html>");
@@ -1102,65 +1100,66 @@ static bool message_was_saved_decrypted_before( KMime::Message::Ptr msg )
   return msg->messageID()->asUnicodeString().trimmed().startsWith( "<DecryptedMsg." );
 }
 
-void ViewerPrivate::parseMsg()
+void ViewerPrivate::parseContent( KMime::Content *content )
 {
-  assert( mMessage != 0 );
+  assert( content != 0 );
 
-  QString cntDesc = i18n("( body part )");
-
-  if ( mMessage->subject( false ) )
-      cntDesc = mMessage->subject()->asUnicodeString();
-
-  QString cntEnc= "7bit";
-  if ( mMessage->contentTransferEncoding( false ) )
-      cntEnc = mMessage->contentTransferEncoding()->asUnicodeString();
-
-// Check if any part of this message is a v-card
-// v-cards can be either text/x-vcard or text/directory, so we need to check
-// both.
-  KMime::Content* vCardContent = findContentByType( mMessage.get(), "text/x-vcard" );
+  // Check if any part of this message is a v-card
+  // v-cards can be either text/x-vcard or text/directory, so we need to check
+  // both.
+  KMime::Content* vCardContent = findContentByType( content, "text/x-vcard" );
   if ( !vCardContent )
-      vCardContent = findContentByType( mMessage.get(), "text/directory" );
+    vCardContent = findContentByType( content, "text/directory" );
 
   bool hasVCard = false;
 
   if( vCardContent ) {
-  // ### FIXME: We should only do this if the vCard belongs to the sender,
-  // ### i.e. if the sender's email address is contained in the vCard.
-      const QByteArray vCard = vCardContent->decodedContent();
-      KABC::VCardConverter t;
-      if ( !t.parseVCards( vCard ).isEmpty() ) {
-          hasVCard = true;
-          mNodeHelper->writeNodeToTempFile( vCardContent );
-      }
+    // ### FIXME: We should only do this if the vCard belongs to the sender,
+    // ### i.e. if the sender's email address is contained in the vCard.
+    const QByteArray vCard = vCardContent->decodedContent();
+    KABC::VCardConverter t;
+    if ( !t.parseVCards( vCard ).isEmpty() ) {
+      hasVCard = true;
+      mNodeHelper->writeNodeToTempFile( vCardContent );
+    }
   }
 
-  if ( !mMessage || !NodeHelper::isToltecMessage( mMessage.get() ) || mShowRawToltecMail ) {
-    htmlWriter()->queue( writeMsgHeader( mMessage, hasVCard ? vCardContent : 0, true ) );
+  if ( !NodeHelper::isToltecMessage( content ) || mShowRawToltecMail ) {
+    KMime::Message *message = dynamic_cast<KMime::Message*>( content );
+    if ( message ) {
+      htmlWriter()->queue( writeMsgHeader( message, hasVCard ? vCardContent : 0, true ) );
+    }
   }
 
-  // show message content
-
+  // Pass control to the OTP now, which does the real work
+  mNodeHelper->removeTempFiles();
+  mNodeHelper->setNodeUnprocessed( mMessage.get(), true );
   MailViewerSource otpSource( this );
-  ObjectTreeParser otp( &otpSource, mNodeHelper );
+  ObjectTreeParser otp( &otpSource, mNodeHelper, 0, mMessage.get() != content /* show only single node */ );
   otp.setAllowAsync( true );
   otp.setShowRawToltecMail( mShowRawToltecMail );
-  otp.parseObjectTree( mMessage.get() );
+  otp.parseObjectTree( content );
 
-  bool emitReplaceMsgByUnencryptedVersion = false;
-
+#if 0 // Disabled: Setting the signature state to nodehelper is not enough, it should actually
+      // be added to the store, so that the message list correctly displays the signature state
+      // of messages that were parsed at least once
   // store encrypted/signed status information in the KMMessage
   //  - this can only be done *after* calling parseObjectTree()
-  KMMsgEncryptionState encryptionState = mNodeHelper->overallEncryptionState( mMessage.get() );
-  KMMsgSignatureState  signatureState  = mNodeHelper->overallSignatureState( mMessage.get() );
-  mNodeHelper->setEncryptionState( mMessage.get(), encryptionState );
+  KMMsgEncryptionState encryptionState = mNodeHelper->overallEncryptionState( content );
+  KMMsgSignatureState  signatureState  = mNodeHelper->overallSignatureState( content );
+  mNodeHelper->setEncryptionState( content, encryptionState );
   // Don't reset the signature state to "not signed" (e.g. if one canceled the
   // decryption of a signed messages which has already been decrypted before).
   if ( signatureState != KMMsgNotSigned ||
-       mNodeHelper->signatureState( mMessage.get() ) == KMMsgSignatureStateUnknown ) {
-    mNodeHelper->setSignatureState( mMessage.get(), signatureState );
+       mNodeHelper->signatureState( content ) == KMMsgSignatureStateUnknown ) {
+    mNodeHelper->setSignatureState( content, signatureState );
   }
+#else
+  kWarning() << "Port code: Remember signature state in the store";
+#endif
 
+#if 0 // BROKEN
+  bool emitReplaceMsgByUnencryptedVersion = false;
   if ( GlobalSettings::self()->storeDisplayedMessagesUnencrypted() ) {
 
     // Hack to make sure the S/MIME CryptPlugs follows the strict requirement
@@ -1229,10 +1228,14 @@ void ViewerPrivate::parseMsg()
   } else {
     showHideMimeTree();
   }
+
+#else
+  kWarning() << "Port to Akonadi: store unencrypted version of message";
+#endif
 }
 
 
-QString ViewerPrivate::writeMsgHeader( KMime::Message::Ptr aMsg, KMime::Content* vCardNode,
+QString ViewerPrivate::writeMsgHeader( KMime::Message *aMsg, KMime::Content* vCardNode,
                                        bool topLevel )
 {
   if ( !headerStyle() )
@@ -1541,123 +1544,34 @@ void ViewerPrivate::setMessage( KMime::Message::Ptr aMsg, Viewer::UpdateMode upd
 
 void ViewerPrivate::setMessagePart( KMime::Content * node )
 {
-  htmlWriter()->reset();
-  mColorBar->hide();
-  htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont ) );
-  htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) );
-  // end ###
-  if ( node ) {
-    MailViewerSource otpSource( this );
-    ObjectTreeParser otp( &otpSource, mNodeHelper, 0, true );
-    otp.parseObjectTree( node );
-  }
-  // ### this, too
-  htmlWriter()->queue( "</body></html>" );
-  htmlWriter()->flush();
-}
-
-
-void ViewerPrivate::setMessagePart( KMime::Content* aMsgPart, bool aHTML,
-                              const QString& aFileName, const QString& pname )
-{
   // Cancel scheduled updates of the reader window, as that would stop the
   // timer of the HTML writer, which would make viewing attachment not work
   // anymore as not all HTML is written to the HTML part.
   // We're updating the reader window here ourselves anyway.
   mUpdateReaderWinTimer.stop();
 
-  KCursorSaver busy(KBusyPtr::busy());
-  if ( aMsgPart->contentType()->mediaType() == "message" ) {
-      // if called from compose win
-
-      KMime::Message::Ptr msg( new KMime::Message );
-      assert(aMsgPart!=0);
-      msg->setContent(aMsgPart->decodedContent());
-      msg->parse();
-      mMainWindow->setWindowTitle( msg->subject()->asUnicodeString() );
-      setMessage( msg, Viewer::Force );
-  } else if ( aMsgPart->contentType()->mediaType() == "text" ) {
-      if ( aMsgPart->contentType()->subType() == "x-vcard" ||
-          aMsgPart->contentType()->subType() == "directory" ) {
-        showVCard( aMsgPart );
-        return;
+  if ( node ) {
+    if ( node->bodyIsMessage() ) {
+      mMainWindow->setWindowTitle( node->bodyAsMessage()->subject()->asUnicodeString() );
+    } else {
+      QString windowTitle = NodeHelper::fileName( node );
+      if ( windowTitle.isEmpty() ) {
+        windowTitle = node->contentDescription()->asUnicodeString();
       }
-      htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont ) );
-      htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
-
-      if (aHTML && aMsgPart->contentType()->subType() == "html" ) { // HTML
-        // ### this is broken. It doesn't stip off the HTML header and footer!
-        htmlWriter()->queue( overrideCodec()? overrideCodec()->toUnicode(aMsgPart->decodedContent() ) : aMsgPart->decodedText() );
-        mColorBar->setHtmlMode();
-      } else { // plain text
-        const QByteArray str = aMsgPart->decodedContent();
-        MailViewerSource otpSource( this );
-        ObjectTreeParser otp( &otpSource, mNodeHelper );
-        otp.writeBodyStr( str,
-                          overrideCodec() ? overrideCodec() : mNodeHelper->codec( aMsgPart ),
-                          mMessage ? mMessage->from()->asUnicodeString() : QString() );
+      if ( !windowTitle.isEmpty() ) {
+        mMainWindow->setWindowTitle( i18n( "View Attachment: %1", windowTitle ) );
       }
-      htmlWriter()->queue("</body></html>");
-      htmlWriter()->flush();
-      mMainWindow->setWindowTitle(i18n("View Attachment: %1", pname));
-  } else if (aMsgPart->contentType()->mediaType() == "image"  ||
-             aMsgPart->contentType()->mimeType() ==  "application/postscript" )
-  {
-      if (aFileName.isEmpty()) return;  // prevent crash
-      // Open the window with a size so the image fits in (if possible):
-      QImageReader *iio = new QImageReader();
-      iio->setFileName(aFileName);
-      if( iio->canRead() ) {
-          QImage img = iio->read();
-          QRect desk = KGlobalSettings::desktopGeometry(mMainWindow);
-          // determine a reasonable window size
-          int width, height;
-          if( img.width() < 50 )
-              width = 70;
-          else if( img.width()+20 < desk.width() )
-              width = img.width()+20;
-          else
-              width = desk.width();
-          if( img.height() < 50 )
-              height = 70;
-          else if( img.height()+20 < desk.height() )
-              height = img.height()+20;
-          else
-              height = desk.height();
-          mMainWindow->resize( width, height );
-      }
-      // Just write the img tag to HTML:
-      htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont ) );
-      htmlWriter()->write( mCSSHelper->htmlHead( mUseFixedFont ) );
-      htmlWriter()->write( "<img src=\"file:" +
-                           KUrl::toPercentEncoding( aFileName ) +
-                           "\" border=\"0\">\n"
-                           "</body></html>\n" );
-      htmlWriter()->end();
-      q->setWindowTitle( i18n("View Attachment: %1", pname ) );
-      q->show();
-      delete iio;
-  } else {
-    htmlWriter()->begin( mCSSHelper->cssDefinitions( mUseFixedFont ) );
-    htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
-    htmlWriter()->queue( "<pre>" );
-
-    QString str = aMsgPart->decodedContent();
-    // A QString cannot handle binary data. So if it's shorter than the
-    // attachment, we assume the attachment is binary:
-    if( str.length() < aMsgPart->decodedContent().size() ) {
-      str.prepend( i18np("[KMail: Attachment contains binary data. Trying to show first character.]",
-          "[KMail: Attachment contains binary data. Trying to show first %1 characters.]",
-                               str.length()) + QChar::fromLatin1('\n') );
     }
-    htmlWriter()->queue( Qt::escape( str ) );
-    htmlWriter()->queue( "</pre>" );
+
+    htmlWriter()->begin( QString() );
+    htmlWriter()->queue( mCSSHelper->htmlHead( mUseFixedFont ) );
+
+    parseContent( node );
+
     htmlWriter()->queue("</body></html>");
     htmlWriter()->flush();
-    mMainWindow->setWindowTitle(i18n("View Attachment: %1", pname));
   }
 }
-
 
 void ViewerPrivate::showHideMimeTree( )
 {
@@ -2179,7 +2093,6 @@ void ViewerPrivate::update( Viewer::UpdateMode updateMode )
     // stop the timer to avoid calling updateReaderWin twice
       mUpdateReaderWinTimer.stop();
       saveRelativePosition();
-      mNodeHelper->setNodeUnprocessed( mMessage.get(), true );
       updateReaderWin();
   }
   else if (mUpdateReaderWinTimer.isActive()) {
@@ -2487,11 +2400,6 @@ void ViewerPrivate::slotHideAttachments()
 void ViewerPrivate::attachmentView( KMime::Content *atmNode )
 {
   if ( atmNode ) {
-    QString fileName = mNodeHelper->tempFileUrlFromNode( atmNode ).toLocalFile();
-
-    QString pname = NodeHelper::fileName( atmNode );
-    if (pname.isEmpty()) pname = atmNode->contentDescription()->asUnicodeString();
-    if (pname.isEmpty()) pname = "unnamed";
 
     const bool isEncapsulatedMessage = atmNode->parent() && atmNode->parent()->bodyIsMessage();
     if ( isEncapsulatedMessage ) {
@@ -2500,9 +2408,9 @@ void ViewerPrivate::attachmentView( KMime::Content *atmNode )
     } else if ((kasciistricmp(atmNode->contentType()->mediaType(), "text")==0) &&
                ( (kasciistricmp(atmNode->contentType()->subType(), "x-vcard")==0) ||
                  (kasciistricmp(atmNode->contentType()->subType(), "directory")==0) )) {
-      setMessagePart( atmNode, htmlMail(), fileName, pname );
+      setMessagePart( atmNode );
     } else {
-      emit showReader( atmNode, htmlMail(), fileName, pname, overrideEncoding() );
+      emit showReader( atmNode, htmlMail(), overrideEncoding() );
     }
   }
 }

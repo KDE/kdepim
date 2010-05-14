@@ -78,7 +78,7 @@ class MESSAGECOMPOSER_EXPORT AttachmentControllerBase : public QObject
   signals:
     void actionsCreated();
     void refreshSelection();
-    void showAttachment( KMime::Content *content, const QString &fileName, const QString &partname, const QByteArray &charset );
+    void showAttachment( KMime::Content *content, const QByteArray &charset );
 
   protected:
     void exportPublicKey( const QString &fingerprint );
