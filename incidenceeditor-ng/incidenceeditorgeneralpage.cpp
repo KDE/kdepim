@@ -20,7 +20,9 @@
 
 #include "incidenceeditorgeneralpage.h"
 
-#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QSpacerItem>
+#include <QtGui/QVBoxLayout>
 
 #include "incidencegeneraleditor.h"
 
@@ -38,6 +40,20 @@ IncidenceEditorGeneralPage::IncidenceEditorGeneralPage( QWidget *parent )
     new QSpacerItem( 20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding );
   layout->addItem( verticalSpacer );
 
+  mDirtyLabel = new QLabel( "Clean!", this );
+  layout->addWidget( mDirtyLabel );
+
   // Combine the various editors with this page.
   combine( ieGeneral );
+
+  connect( ieGeneral, SIGNAL(dirtyStatusChanged(bool)),
+           SLOT(updateDirtyLabel(bool)));
+}
+
+void IncidenceEditorGeneralPage::updateDirtyLabel( bool isDirty )
+{
+  if ( isDirty )
+    mDirtyLabel->setText( "Dirty!" );
+  else
+    mDirtyLabel->setText( "Clean!" );
 }
