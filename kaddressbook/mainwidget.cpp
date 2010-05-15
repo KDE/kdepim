@@ -38,7 +38,7 @@
 #include <akonadi/contact/contacteditordialog.h>
 #include <akonadi/contact/contactgroupeditordialog.h>
 #include <akonadi/contact/contactgroupviewer.h>
-#include <akonadi/contact/contactsfiltermodel.h>
+#include <akonadi/contact/contactsfilterproxymodel.h>
 #include <akonadi/contact/contactstreemodel.h>
 #include <akonadi/contact/contactviewer.h>
 #include <akonadi/control.h>
@@ -160,7 +160,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderGroup( Akonadi::EntityTreeModel::ItemListHeaders );
 
-  mContactsFilterModel = new Akonadi::ContactsFilterModel( this );
+  mContactsFilterModel = new Akonadi::ContactsFilterProxyModel( this );
   mContactsFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            mContactsFilterModel, SLOT( setFilterString( const QString& ) ) );
