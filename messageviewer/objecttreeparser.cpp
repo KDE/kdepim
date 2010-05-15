@@ -142,6 +142,7 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
                                     bool includeSignatures,
                                     const AttachmentStrategy * strategy )
   : mSource( source ),
+    mTopLevelContent( 0 ),
     mCryptoProtocol( protocol ),
     mShowOnlyOneMimePart( showOnlyOneMimePart ),
     mKeepEncryptions( keepEncryptions ),
@@ -167,6 +168,7 @@ ObjectTreeParser::ObjectTreeParser( ObjectTreeSourceIf *source,
 ObjectTreeParser::ObjectTreeParser( const ObjectTreeParser & other )
   : mSource( other.mSource ),
     mNodeHelper( other.nodeHelper() ), //TODO(Andras) hm, review what happens if mDeleteNodeHelper was true in the source
+    mTopLevelContent( other.mTopLevelContent ),
     mCryptoProtocol( other.cryptoProtocol() ),
     mShowOnlyOneMimePart( other.showOnlyOneMimePart() ),
     mKeepEncryptions( other.keepEncryptions() ),
