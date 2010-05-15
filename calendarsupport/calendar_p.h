@@ -146,12 +146,12 @@ public:
   QHash<Akonadi::Item::Id, UnseenItem> m_childToUnseenParent; // child to parent map, unknown/not cached parent items
   QMap<UnseenItem, QList<Akonadi::Item::Id> > m_unseenParentToChildren;
 
-  QMultiHash<QString, Akonadi::Item> m_itemsForDate;// on start dates of non-recurring, single-day Incidences
+  QMultiHash<QString, Akonadi::Item::Id> m_itemIdsForDate;// on start dates/due dates of non-recurring, single-day Incidences
 
   void clear();
   void readFromModel();
 
-public Q_SLOTS:  
+public Q_SLOTS:
   void itemsAdded( const Akonadi::Item::List &items );
   void itemsRemoved( const Akonadi::Item::List &items );
 
