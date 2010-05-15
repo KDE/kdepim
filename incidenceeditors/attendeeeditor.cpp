@@ -220,7 +220,7 @@ void AttendeeEditor::openAddressBook()
   QPointer<Akonadi::EmailAddressSelectionDialog> dia = new Akonadi::EmailAddressSelectionDialog( this );
   dia->view()->view()->setSelectionMode( QAbstractItemView::MultiSelection );
   if ( dia->exec() == QDialog::Accepted ) {
-    foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, dia->selectedAddresses() ) {
+    foreach ( const Akonadi::EmailAddressSelection &selection, dia->selectedAddresses() ) {
       KABC::Addressee contact;
       contact.setName( selection.name() );
       contact.insertEmail( selection.email() );

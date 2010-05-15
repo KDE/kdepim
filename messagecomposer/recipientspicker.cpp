@@ -23,7 +23,7 @@
 #include "recipientspicker.h"
 #include "messagecomposersettings.h"
 
-#include <akonadi/contact/emailaddressselectionview.h>
+#include <akonadi/contact/emailaddressselectionwidget.h>
 #include <kabc/contactgroup.h>
 #include <libkdepim/ldap/ldapsearchdialog.h>
 #include <kpimutils/email.h>
@@ -59,7 +59,7 @@ RecipientsPicker::RecipientsPicker( QWidget *parent )
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
-  mView = new Akonadi::EmailAddressSelectionView( mainWidget() );
+  mView = new Akonadi::EmailAddressSelectionWidget( mainWidget() );
   mView->view()->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mView->view()->setAlternatingRowColors( true );
   mView->view()->setSortingEnabled( true );
@@ -161,7 +161,7 @@ void RecipientsPicker::pick( Recipient::Type type )
 {
   kDebug() << int( type );
 
-  const Akonadi::EmailAddressSelectionView::Selection::List selections = mView->selectedAddresses();
+  const Akonadi::EmailAddressSelection::List selections = mView->selectedAddresses();
 
   const int count = selections.count();
 
@@ -175,7 +175,7 @@ void RecipientsPicker::pick( Recipient::Type type )
     return;
   }
 
-  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, selections ) {
+  foreach ( const Akonadi::EmailAddressSelection &selection, selections ) {
     Recipient recipient;
     recipient.setType( type );
     recipient.setEmail( selection.quotedEmail() );

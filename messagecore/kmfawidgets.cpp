@@ -65,7 +65,7 @@ void KMFilterActionWithAddressWidget::slotAddrBook()
     return;
 
   QStringList addrList;
-  foreach ( const Akonadi::EmailAddressSelectionView::Selection &selection, dlg.selectedAddresses() )
+  foreach ( const Akonadi::EmailAddressSelection &selection, dlg.selectedAddresses() )
     addrList << selection.quotedEmail();
 
   QString txt = mLineEdit->text().trimmed();

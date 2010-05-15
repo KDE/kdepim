@@ -27,7 +27,7 @@
 #include <kdialog.h>
 
 namespace Akonadi {
-class EmailAddressSelectionView;
+class EmailAddressSelectionWidget;
 }
 
 namespace KLDAP {
@@ -70,7 +70,7 @@ class MESSAGECOMPOSER_EXPORT RecipientsPicker : public KDialog
     void slotSelectionChanged();
 
   private:
-    Akonadi::EmailAddressSelectionView *mView;
+    Akonadi::EmailAddressSelectionWidget *mView;
 
     QPushButton *mToButton;
     QPushButton *mCcButton;
