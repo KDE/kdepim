@@ -1,3 +1,7 @@
+add_definitions(-DWANT_DEPRECATED_KCAL_API)
+add_definitions(-DWANT_DEPRECATED_KABC_API)
+add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+
 # taken from Akonadi which took it from FindQt4.cmake to add additional includes, should probably be merged back there
 MACRO(QT4_ADD_DBUS_INTERFACE2 _sources _interface _basename _include)
   GET_FILENAME_COMPONENT(_infile ${_interface} ABSOLUTE)

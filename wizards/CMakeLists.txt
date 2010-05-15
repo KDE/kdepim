@@ -1,5 +1,9 @@
 project(wizards)
 
+add_definitions(-DWANT_DEPRECATED_KCAL_API)
+add_definitions(-DWANT_DEPRECATED_KABC_API)
+add_definitions(-DWANT_DEPRECATED_KRESOURCE_API)
+
 include_directories(
     ${CMAKE_SOURCE_DIR}/knotes 
     ${CMAKE_SOURCE_DIR}/kresources/lib
