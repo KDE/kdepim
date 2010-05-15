@@ -55,11 +55,14 @@ using namespace Akonadi;
 
 class IncidenceChanger::Private {
 public:
-  Private( const Collection &defaultCollection ) : mGroupware( 0 ) {
-    mDefaultCollection = defaultCollection;
+  Private( const Collection &defaultCollection ) :
+    mDefaultCollection( defaultCollection ),
+    mGroupware( 0 ),
+    mDestinationPolicy( IncidenceChanger::ASK_DESTINATION ) {
   }
-  ~Private() {
-  }
+
+  ~Private() {}
+
   QList<Akonadi::Item::Id> m_changes; //list of item ids that are modified atm
   KCal::Incidence::Ptr m_incidenceBeingChanged; // clone of the incidence currently being modified, for rollback and to check if something actually changed
   Item m_itemBeingChanged;
@@ -70,6 +73,7 @@ public:
   Collection mDefaultCollection;
 
   Groupware *mGroupware;
+  DestinationPolicy mDestinationPolicy;
 };
 
 IncidenceChanger::IncidenceChanger( Akonadi::Calendar *cal,
@@ -510,15 +514,20 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
                                      QWidget *parent, Akonadi::Collection &selectedCollection,
                                      int &dialogCode )
 {
-  selectedCollection = Akonadi::selectCollection( parent,
-                                                  dialogCode,
-                                                  d->mDefaultCollection );
-
-  if ( !selectedCollection.isValid() ) {
-    return false;
+  if ( d->mDestinationPolicy == ASK_DESTINATION ||
+       !d->mDefaultCollection.isValid() )  {
+    selectedCollection = Akonadi::selectCollection( parent,
+                                                    dialogCode,
+                                                    d->mDefaultCollection );
+  } else {
+    selectedCollection = d->mDefaultCollection;
   }
 
-  return addIncidence( incidence, selectedCollection, parent );
+  if ( selectedCollection.isValid() ) {
+    return addIncidence( incidence, selectedCollection, parent );
+  } else {
+    return false;
+  }
 }
 
 bool IncidenceChanger::addIncidence( const Incidence::Ptr &incidence,
@@ -582,5 +591,14 @@ void IncidenceChanger::errorSaveIncidence( QWidget *parent,
           i18n( incidence->type() ), incidence->summary() ) );
 }
 
+void IncidenceChanger::setDestinationPolicy( DestinationPolicy destinationPolicy )
+{
+  d->mDestinationPolicy = destinationPolicy;
+}
+
+IncidenceChanger::DestinationPolicy IncidenceChanger::destinationPolicy() const
+{
+  return d->mDestinationPolicy;
+}
 
 #include "incidencechanger.moc"

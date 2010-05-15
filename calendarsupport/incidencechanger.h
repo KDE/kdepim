@@ -72,6 +72,11 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
       NOTHING_MODIFIED
     };
 
+    enum DestinationPolicy {
+      ASK_DESTINATION,          // user is asked in which collection
+      USE_DEFAULT_DESTINATION   // the default collection is used, unless it's invalid
+    };
+
     void setGroupware( Groupware *groupware );
 
     /** Locks the incidence */
@@ -113,6 +118,9 @@ class AKONADI_KCAL_NEXT_EXPORT IncidenceChanger : public QObject
     static bool assignIncidence( KCal::Incidence *inc1, KCal::Incidence *inc2 );
 
     static void errorSaveIncidence( QWidget *parent, const KCal::Incidence::Ptr &incidence );
+
+    void setDestinationPolicy( DestinationPolicy destinationPolicy );
+    DestinationPolicy destinationPolicy() const;
 
   public slots:
     void cancelAttendees( const Akonadi::Item &incidence );
