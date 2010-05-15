@@ -89,7 +89,7 @@ namespace {
           Akonadi::StandardContactFormatter formatter;
           formatter.setContact( a );
 
-          writer->queue( formatter.toHtml( Akonadi::StandardContactFormatter::DivForm ) );
+          writer->queue( formatter.toHtml( Akonadi::StandardContactFormatter::EmbeddableForm ) );
 
           QString addToLinkText = i18n( "[Add this contact to the address book]" );
           QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
