@@ -45,7 +45,7 @@ RecursiveItemListWidget::RecursiveItemListWidget(QWidget* parent, Qt::WindowFlag
   changeRecorder->itemFetchScope().fetchFullPayload( true );
   m_etm = new Akonadi::ContactsTreeModel(changeRecorder, this);
 
-  m_etm->setCollectionFetchStrategy( Akonadi::EntityTreeModel::InvisibleFetch );
+  m_etm->setCollectionFetchStrategy( Akonadi::EntityTreeModel::InvisibleCollectionFetch );
 
   Akonadi::EntityMimeTypeFilterModel *list = new Akonadi::EntityMimeTypeFilterModel( this );
   list->setSourceModel(m_etm);
