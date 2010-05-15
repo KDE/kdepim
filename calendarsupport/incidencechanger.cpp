@@ -520,6 +520,7 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
                                                     dialogCode,
                                                     d->mDefaultCollection );
   } else {
+    dialogCode = QDialog::Accepted;
     selectedCollection = d->mDefaultCollection;
   }
 
