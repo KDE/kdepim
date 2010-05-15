@@ -515,7 +515,7 @@ bool IncidenceChanger::addIncidence( const KCal::Incidence::Ptr &incidence,
                                      int &dialogCode )
 {
   if ( d->mDestinationPolicy == ASK_DESTINATION ||
-       !d->mDefaultCollection.isValid() )  {
+       !d->mDefaultCollection.isValid() ) {
     selectedCollection = Akonadi::selectCollection( parent,
                                                     dialogCode,
                                                     d->mDefaultCollection );
